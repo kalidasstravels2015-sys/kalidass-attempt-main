@@ -1,0 +1,295 @@
+/* empty css                                            */
+import { d as createAstro, c as createComponent, r as renderComponent, a as renderTemplate, m as maybeRenderHead, b as addAttribute } from '../../../chunks/astro/server_B-UY_wom.mjs';
+import 'kleur/colors';
+import { $ as $$Layout } from '../../../chunks/Layout_DqQjb86R.mjs';
+import { s as serviceDetails } from '../../../chunks/serviceDetails_CAUNQnnT.mjs';
+import { jsxs, jsx } from 'react/jsx-runtime';
+import 'react';
+import { Moon, MapPin, Heart, Wine, MessageCircle, Calculator, ArrowRight } from 'lucide-react';
+export { renderers } from '../../../renderers.mjs';
+
+const ServiceCard = ({ title, title_ta, subtitle, subtitle_ta, icon: Icon, desc, desc_ta, link, badge, badge_ta, ctaText, ctaText_ta }) => {
+  const Wrapper = link ? "a" : "div";
+  const wrapperProps = link ? { href: link } : {};
+  return /* @__PURE__ */ jsxs(
+    Wrapper,
+    {
+      ...wrapperProps,
+      className: `group relative bg-white rounded-2xl border border-slate-200 shadow-sm ${link ? "hover:shadow-xl hover:border-indigo-600 cursor-pointer" : ""} transition-all duration-300 flex flex-col h-full overflow-hidden no-underline`,
+      children: [
+        /* @__PURE__ */ jsx("div", { className: `absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-slate-200 to-slate-200 ${link ? "group-hover:from-indigo-600 group-hover:to-indigo-400" : ""} transition-all duration-300` }),
+        badge && /* @__PURE__ */ jsxs("div", { className: "absolute top-4 right-4 bg-green-100 text-green-800 text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1 z-10 border border-green-200", children: [
+          /* @__PURE__ */ jsx(Calculator, { className: "w-3 h-3" }),
+          /* @__PURE__ */ jsx("span", { className: "lang-en", children: badge }),
+          /* @__PURE__ */ jsx("span", { className: "lang-ta", children: badge_ta || badge })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "p-8 flex-grow", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex justify-between items-start mb-6", children: [
+            /* @__PURE__ */ jsx("div", { className: `w-14 h-14 bg-indigo-50 rounded-xl flex items-center justify-center ${link ? "group-hover:bg-indigo-600" : ""} transition-colors duration-300`, children: /* @__PURE__ */ jsx(Icon, { className: `w-7 h-7 text-indigo-600 ${link ? "group-hover:text-white" : ""} transition-colors duration-300` }) }),
+            link && /* @__PURE__ */ jsx("div", { className: "opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0", children: /* @__PURE__ */ jsx(ArrowRight, { className: "w-5 h-5 text-indigo-600" }) })
+          ] }),
+          /* @__PURE__ */ jsxs("h3", { className: "text-2xl font-bold text-slate-900 mb-1", children: [
+            /* @__PURE__ */ jsx("span", { className: "lang-en", children: title }),
+            /* @__PURE__ */ jsx("span", { className: "lang-ta", children: title_ta || title })
+          ] }),
+          /* @__PURE__ */ jsxs("p", { className: "text-xs font-bold text-indigo-600 uppercase tracking-wider mb-4", children: [
+            /* @__PURE__ */ jsx("span", { className: "lang-en", children: subtitle }),
+            /* @__PURE__ */ jsx("span", { className: "lang-ta", children: subtitle_ta || subtitle })
+          ] }),
+          /* @__PURE__ */ jsxs("p", { className: "text-slate-600 text-sm leading-relaxed", children: [
+            /* @__PURE__ */ jsx("span", { className: "lang-en", children: desc }),
+            /* @__PURE__ */ jsx("span", { className: "lang-ta", children: desc_ta || desc })
+          ] })
+        ] }),
+        link && /* @__PURE__ */ jsxs("div", { className: "bg-slate-50 p-4 border-t border-slate-100 flex justify-between items-center group-hover:bg-indigo-50 transition-colors", children: [
+          /* @__PURE__ */ jsxs("span", { className: `text-xs font-bold ${ctaText === "Book Now" ? "text-green-600" : "text-slate-500"} group-hover:text-indigo-700`, children: [
+            /* @__PURE__ */ jsx("span", { className: "lang-en", children: ctaText || "View Packages" }),
+            /* @__PURE__ */ jsx("span", { className: "lang-ta", children: ctaText_ta || "தொகுப்புகளைப் பார்க்கவும்" })
+          ] }),
+          /* @__PURE__ */ jsx(ArrowRight, { className: "w-4 h-4 text-slate-400 group-hover:text-indigo-600" })
+        ] })
+      ]
+    }
+  );
+};
+function ActingDrivers() {
+  return /* @__PURE__ */ jsxs("div", { className: "font-sans text-slate-900 bg-slate-50", children: [
+    /* @__PURE__ */ jsxs("section", { className: "relative bg-slate-900 text-white py-24 lg:py-32 overflow-hidden", children: [
+      /* @__PURE__ */ jsx("div", { className: "absolute inset-0 z-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center" }),
+      /* @__PURE__ */ jsx("div", { className: "absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/90 to-transparent z-0" }),
+      /* @__PURE__ */ jsxs("div", { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center", children: [
+        /* @__PURE__ */ jsxs("span", { className: "inline-block py-1 px-3 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-indigo-200 text-xs font-bold uppercase tracking-wider mb-6 backdrop-blur-sm", children: [
+          /* @__PURE__ */ jsx("span", { className: "lang-en", children: "Private Chauffeur Services" }),
+          /* @__PURE__ */ jsx("span", { className: "lang-ta", children: "தனிப்பட்ட ஓட்டுநர் சேவைகள்" })
+        ] }),
+        /* @__PURE__ */ jsxs("h1", { className: "text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 leading-tight", children: [
+          /* @__PURE__ */ jsxs("span", { className: "lang-en", children: [
+            "Your Car. ",
+            /* @__PURE__ */ jsx("br", { className: "hidden md:block" })
+          ] }),
+          /* @__PURE__ */ jsxs("span", { className: "lang-ta", children: [
+            "உங்கள் கார். ",
+            /* @__PURE__ */ jsx("br", { className: "hidden md:block" })
+          ] }),
+          /* @__PURE__ */ jsxs("span", { className: "text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-blue-400", children: [
+            /* @__PURE__ */ jsx("span", { className: "lang-en", children: "Our Professional Pilot." }),
+            /* @__PURE__ */ jsx("span", { className: "lang-ta", children: "எங்கள் தொழில்முறை ஓட்டுநர்." })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs("p", { className: "text-xl text-slate-300 mb-10 max-w-2xl mx-auto leading-relaxed font-light", children: [
+          /* @__PURE__ */ jsx("span", { className: "lang-en", children: "Love your car but hate the traffic? Whether it's a night drive to Madurai, moving your car to another district, or taking parents to the hospital—we have a specialist for that." }),
+          /* @__PURE__ */ jsx("span", { className: "lang-ta", children: "உங்கள் காரை நேசிக்கிறீர்கள் ஆனால் போக்குவரத்தை வெறுக்கிறீர்களா? மதுரைக்கு இரவுப் பயணம், உங்கள் காரை வேறு மாவட்டத்திற்கு மாற்றுவது அல்லது பெற்றோரை மருத்துவமனைக்கு அழைத்துச் செல்வது என எதுவாக இருந்தாலும் - எங்களிடம் அதற்கான நிபுணர் உள்ளார்." })
+        ] })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsx("section", { className: "py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-24 relative z-20", children: /* @__PURE__ */ jsxs("div", { className: "grid md:grid-cols-2 gap-6 lg:gap-8", children: [
+      /* @__PURE__ */ jsx(
+        ServiceCard,
+        {
+          title: "Highway Acting Driver",
+          title_ta: "நெடுஞ்சாலை துணை ஓட்டுநர்",
+          subtitle: "Outstation Night Driver",
+          subtitle_ta: "வெளியூர் இரவு ஓட்டுநர்",
+          icon: Moon,
+          desc: "Driving 7+ hours to Madurai or Coimbatore is exhausting. Sleep in the backseat while our specialist night driver handles the highway trucks and high-beams.",
+          desc_ta: "மதுரை அல்லது கோயம்புத்தூருக்கு 7+ மணிநேரம் ஓட்டுவது சோர்வாக இருக்கும். நெடுஞ்சாலை லாரிகள் மற்றும் ஹை-பீம்களை எங்கள் சிறப்பு இரவு ஓட்டுநர் கையாளும் போது நீங்கள் பின் இருக்கையில் தூங்குங்கள்.",
+          link: "/services/acting-drivers/highway-copilot",
+          badge: "Calculator Inside",
+          badge_ta: "கால்குலேட்டர் உள்ளது",
+          ctaText: "View Details",
+          ctaText_ta: "விவரங்களைப் பார்க்க"
+        }
+      ),
+      /* @__PURE__ */ jsx(
+        ServiceCard,
+        {
+          title: "Vehicle Relocation",
+          title_ta: "வாகன இடமாற்றம்",
+          subtitle: "Inter-District Transfer",
+          subtitle_ta: "மாவட்டங்களுக்கு இடையேயான பரிமாற்றம்",
+          icon: MapPin,
+          desc: "Need your car moved from Chennai to your hometown (or vice versa)? We pick it up, inspect it via video call, and drive it safely to your doorstep.",
+          desc_ta: "உங்கள் காரை சென்னையிலிருந்து உங்கள் சொந்த ஊருக்கு (அல்லது நேர்மாறாக) மாற்ற வேண்டுமா? நாங்கள் அதை எடுத்து, வீடியோ அழைப்பு மூலம் ஆய்வு செய்து, உங்கள் வீட்டு வாசலில் பாதுகாப்பாக ஓட்டிச் செல்கிறோம்.",
+          link: "/services/acting-drivers/vehicle-relocation",
+          badge: "Calculator Inside",
+          badge_ta: "கால்குலேட்டர் உள்ளது",
+          ctaText: "View Details",
+          ctaText_ta: "விவரங்களைப் பார்க்க"
+        }
+      ),
+      /* @__PURE__ */ jsx(
+        ServiceCard,
+        {
+          title: "Senior Citizen Assist",
+          title_ta: "மூத்த குடிமக்கள் உதவி",
+          subtitle: "Care-Giver Driver",
+          subtitle_ta: "பராமரிப்பாளர் ஓட்டுநர்",
+          icon: Heart,
+          desc: "For elderly parents visiting Apollo/Sankara Nethralaya or temples. A patient, mature driver who helps with bags, handles parking, and waits during appointments.",
+          desc_ta: "அப்போலோ/சங்கர நேத்ராலயா அல்லது கோவில்களுக்குச் செல்லும் வயதான பெற்றோருக்கு. பைகளை எடுத்துச் செல்ல உதவும், பார்க்கிங்கை கையாளும் மற்றும் சந்திப்புகளின் போது காத்திருக்கும் பொறுமையான, முதிர்ந்த ஓட்டுநர்."
+        }
+      ),
+      /* @__PURE__ */ jsx(
+        ServiceCard,
+        {
+          title: "Party & City Drop",
+          title_ta: "பார்ட்டி & சிட்டி டிராப்",
+          subtitle: "Designated Driver",
+          subtitle_ta: "நியமிக்கப்பட்ட ஓட்டுநர்",
+          icon: Wine,
+          desc: "Dinner at Nungambakkam or a wedding reception? Don't worry about parking or DUI checks. Enjoy your evening responsibly; we drive you home safely.",
+          desc_ta: "நுங்கம்பாக்கத்தில் இரவு உணவு அல்லது திருமண வரவேற்பு? பார்க்கிங் அல்லது DUI சோதனைகள் பற்றி கவலைப்பட வேண்டாம். உங்கள் மாலையை பொறுப்புடன் அனுபவிக்கவும்; நாங்கள் உங்களை பாதுகாப்பாக வீட்டிற்கு அழைத்துச் செல்கிறோம்."
+        }
+      )
+    ] }) }),
+    /* @__PURE__ */ jsx("section", { className: "bg-gradient-to-br from-green-600 to-green-700 text-white py-16", children: /* @__PURE__ */ jsxs("div", { className: "max-w-4xl mx-auto px-4 text-center", children: [
+      /* @__PURE__ */ jsx("div", { className: "mb-6", children: /* @__PURE__ */ jsx("div", { className: "flex justify-center", children: /* @__PURE__ */ jsx(MessageCircle, { className: "w-16 h-16 mb-4 animate-pulse" }) }) }),
+      /* @__PURE__ */ jsxs("h2", { className: "text-3xl md:text-4xl font-bold mb-4", children: [
+        /* @__PURE__ */ jsx("span", { className: "lang-en", children: "Have Questions? Let's Chat!" }),
+        /* @__PURE__ */ jsx("span", { className: "lang-ta", children: "கேள்விகள் உள்ளதா? பேசலாம்!" })
+      ] }),
+      /* @__PURE__ */ jsxs("p", { className: "text-green-50 text-lg mb-8 max-w-2xl mx-auto", children: [
+        /* @__PURE__ */ jsx("span", { className: "lang-en", children: "Get instant answers about our services, pricing, or custom requirements. Our team is ready to help you find the perfect transport solution." }),
+        /* @__PURE__ */ jsx("span", { className: "lang-ta", children: "எங்கள் சேவைகள், விலை அல்லது தனிப்பயன் தேவைகள் பற்றிய உடனடி பதில்களைப் பெறுங்கள். சரியான போக்குவரத்து தீர்வைக் கண்டறிய எங்கள் குழு உங்களுக்கு உதவ தயாராக உள்ளது." })
+      ] }),
+      /* @__PURE__ */ jsxs(
+        "a",
+        {
+          href: "https://wa.me/919092303060?text=Hi%2C%20I%27m%20interested%20in%20Acting%20Driver%20Services.%20I%20have%20some%20questions.",
+          target: "_blank",
+          rel: "noopener noreferrer",
+          className: "inline-flex items-center justify-center gap-3 bg-white text-green-600 hover:bg-green-50 px-10 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-xl hover:-translate-y-1",
+          children: [
+            /* @__PURE__ */ jsx(MessageCircle, { className: "w-6 h-6" }),
+            /* @__PURE__ */ jsx("span", { className: "lang-en", children: "Chat on WhatsApp" }),
+            /* @__PURE__ */ jsx("span", { className: "lang-ta", children: "வாட்ஸ்அப்பில் அரட்டையடிக்கவும்" })
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsxs("p", { className: "text-green-100 text-sm mt-6", children: [
+        /* @__PURE__ */ jsx("span", { className: "lang-en", children: "💬 Typical response time: Under 5 minutes during business hours" }),
+        /* @__PURE__ */ jsx("span", { className: "lang-ta", children: "💬 வழக்கமான பதில் நேரம்: வணிக நேரங்களில் 5 நிமிடங்களுக்குள்" })
+      ] })
+    ] }) })
+  ] });
+}
+
+const $$Astro = createAstro("https://kalidasstravels.in");
+async function getStaticPaths() {
+  return [
+    { params: { category: "acting-drivers" }, props: { title: "Acting Drivers", description: "Professional drivers for your personal vehicle" } },
+    { params: { category: "corporate" }, props: { title: "Corporate Employee Transport Services", description: "Reliable, compliant, and cost-effective transport solutions for businesses" } },
+    { params: { category: "airport-transfer" }, props: { title: "Airport Transfer", description: "Seamless airport pickups and drops" } },
+    { params: { category: "temple-tours" }, props: { title: "Temple Tours", description: "Spiritual journeys across Tamil Nadu" } },
+    { params: { category: "popular-destinations" }, props: { title: "Popular Destinations", description: "Explore heritage sites, beaches, and city tours" } }
+  ];
+}
+const $$category = createComponent(($$result, $$props, $$slots) => {
+  const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);
+  Astro2.self = $$category;
+  const { category } = Astro2.params;
+  const { title, description } = Astro2.props;
+  const getServicesForCategory = (catSlug) => {
+    return serviceDetails.filter((service) => {
+      const cat = service.category;
+      const slug = service.slug;
+      if (catSlug === "acting-drivers") {
+        return cat === "Acting Driver Services" || slug === "driver-car-for-weddings";
+      }
+      if (catSlug === "corporate") {
+        return cat === "Corporate Travel" || cat === "Premium Fleet Rental" || slug === "outstation-car-rental-per-km";
+      }
+      if (catSlug === "airport-transfer") {
+        return cat === "Airport Transfers" || slug === "luggage-parcel-delivery-chennai";
+      }
+      if (catSlug === "temple-tours") {
+        return cat === "Temple Tours";
+      }
+      if (catSlug === "popular-destinations") {
+        const destinations = [
+          "pondicherry-one-day-trip",
+          "mahabalipuram-ecr-temple-route",
+          "one-day-chennai-city-tour",
+          "kanchipuram-temple-trip",
+          "vellore-golden-temple"
+        ];
+        return destinations.includes(slug);
+      }
+      return false;
+    });
+  };
+  const categoryServices = getServicesForCategory(category);
+  const categoryImages = {
+    "acting-drivers": "/images/services/acting-drivers.jpg",
+    "corporate": "/images/services/corporate.jpg",
+    "airport-transfer": "/images/services/airport-transfer.jpg",
+    "temple-tours": "/images/services/temple-tours.jpg",
+    "popular-destinations": "/images/temple/Mahabalipuram-ECR-Temples.jpg"
+  };
+  const serviceImages = {
+    "tirupati-package": "/images/temple/Tirupati-Balaji.jpg",
+    "thiruvannamalai-girivalam-trip": "/images/temple/Thiruvannamalai-Girivalam.jpg",
+    "rameswaram-2-days": "/images/temple/Rameswaram.avif",
+    "navagraha-tour": "/images/temple/Navagraha.jpg",
+    "kanchipuram-temple-trip": "/images/temple/Kanchipuram-Temple.jpg",
+    "chidambaram-temple-trip": "/images/temple/Chidambaram-Natarajar-Temple.jpg",
+    "sabarimala-trip": "/images/temple/Sabarimala-Temple.jpg",
+    "pondicherry-one-day-trip": "https://images.pexels.com/photos/32009229/pexels-photo-32009229.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "vellore-golden-temple": "/images/temple/Vellore-Golden.jpg",
+    "mahabalipuram-ecr-temple-route": "/images/temple/Mahabalipuram-ECR-Temples.jpg",
+    "one-day-chennai-city-tour": "/images/temple/chennai-city.jpg"
+  };
+  const serviceCategoryImages = {
+    "Acting Driver Services": "/images/services/acting-drivers.jpg",
+    "Corporate Travel": "/images/services/corporate.jpg",
+    "Airport Transfers": "/images/services/airport-transfer.jpg",
+    "Temple Tours": "/images/services/temple-tours.jpg",
+    "Premium Fleet Rental": "/images/services/corporate.jpg"
+  };
+  const heroImage = categoryImages[category] || "/images/logo.png";
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": `${title} - Kalidass Travels`,
+    "description": description,
+    "url": Astro2.url.href,
+    "image": `https://kalidasstravels.in${heroImage}`
+  };
+  return renderTemplate`${renderComponent($$result, "Layout", $$Layout, { "title": `${title} - Kalidass Travels`, "description": description, "image": heroImage, "schema": schema }, { "default": ($$result2) => renderTemplate`${category === "acting-drivers" ? renderTemplate`${renderComponent($$result2, "ActingDrivers", ActingDrivers, { "client:load": true, "client:component-hydration": "load", "client:component-path": "D:/websites/kalidass-attempt-main/src/components/ActingDrivers.jsx", "client:component-export": "default" })}` : category === "corporate" ? renderTemplate`${maybeRenderHead()}<main class="bg-slate-50 min-h-screen font-sans"> <!-- Corporate Hero Section --> <section class="relative bg-slate-900 text-white pt-32 pb-24 px-6 overflow-hidden"> <div class="absolute inset-0 z-0"> <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/95 to-slate-900/40 z-10"></div> <img src="/images/services/corporate.jpg" alt="Corporate Mobility" class="w-full h-full object-cover opacity-30"> </div> <div class="max-w-7xl mx-auto relative z-20 text-center md:text-left"> <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-300 text-xs font-bold tracking-widest uppercase mb-6"> <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+Enterprise Solutions
+</div> <h1 class="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight leading-tight">
+The Complete <br class="hidden md:block"> <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">Corporate Mobility Suite</span> </h1> <p class="text-lg md:text-xl text-slate-300 max-w-2xl mb-10 leading-relaxed">
+One strategic partner for all your business travel needs. From automated daily commutes to premium executive movement, we drive your business forward.
+</p> </div> </section> <!-- Main Service Grid (The Branch) --> <section id="branch-grid" class="max-w-7xl mx-auto px-6 -mt-16 relative z-30 pb-20"> <div class="grid md:grid-cols-2 gap-6"> <!-- Card 1: Employee Transportation --> <div class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 relative overflow-hidden"> <div class="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div> <div class="relative z-10"> <div class="w-14 h-14 bg-blue-600 rounded-xl flex items-center justify-center text-white text-2xl mb-6 shadow-blue-200 shadow-lg"> <i class="fa-solid fa-users-line"></i> </div> <h3 class="text-2xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors">Employee Transportation</h3> <p class="text-slate-600 mb-6 leading-relaxed">
+Safe, punctual daily commute solutions for your workforce. Features automated rostering, real-time tracking, and route optimization to reduce costs.
+</p> <ul class="space-y-2 mb-6 text-sm text-slate-500"> <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> 24/7 Shift Support</li> <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> GPS & Panic Button</li> <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> Women Safety Protocols (Safe-Drop Confirmation & Escort Guard Provision)</li> </ul> <a href="/services/employee-transportation" class="inline-flex items-center text-blue-600 font-semibold group-hover:gap-2 transition-all">
+Explore ETS <i class="fa-solid fa-arrow-right ml-2"></i> </a> </div> </div> <!-- Card 2: On-Demand Business Travel --> <div class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 relative overflow-hidden"> <div class="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div> <div class="relative z-10"> <div class="w-14 h-14 bg-blue-600 rounded-xl flex items-center justify-center text-white text-2xl mb-6 shadow-blue-200 shadow-lg"> <i class="fa-solid fa-briefcase"></i> </div> <h3 class="text-2xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors">On-Demand Business Travel</h3> <p class="text-slate-600 mb-6 leading-relaxed">
+Flexible spot rentals for client visits, airport transfers, and inter-city travel. Book reliable sedans and SUVs instantly for your team.
+</p> <ul class="space-y-2 mb-6 text-sm text-slate-500"> <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> Airport Meet & Greet</li> <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> Hourly Packages</li> </ul> <a href="/services/business-travel" class="inline-flex items-center text-blue-600 font-semibold group-hover:gap-2 transition-all">
+Book a Ride <i class="fa-solid fa-arrow-right ml-2"></i> </a> </div> </div> <!-- Card 3: Executive & VIP Fleet --> <div class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 relative overflow-hidden"> <div class="absolute top-0 right-0 w-32 h-32 bg-slate-100 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div> <div class="relative z-10"> <div class="w-14 h-14 bg-slate-800 rounded-xl flex items-center justify-center text-white text-2xl mb-6 shadow-slate-300 shadow-lg"> <i class="fa-solid fa-crown"></i> </div> <h3 class="text-2xl font-bold text-slate-900 mb-3 group-hover:text-slate-700 transition-colors">Executive & VIP Fleet</h3> <p class="text-slate-600 mb-6 leading-relaxed">
+Premium chauffeur-driven luxury cars (Innova Crysta, Altis, Benz) for leadership teams and high-profile guests. Impeccable service guaranteed.
+</p> <ul class="space-y-2 mb-6 text-sm text-slate-500"> <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> Uniformed & Verified Chauffeurs</li> <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> Amenities Onboard</li> </ul> <a href="/services/executive-fleet" class="inline-flex items-center text-slate-800 font-semibold group-hover:gap-2 transition-all">
+View Fleet <i class="fa-solid fa-arrow-right ml-2"></i> </a> </div> </div> <!-- Card 4: Events & MICE Logistics --> <div class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 relative overflow-hidden"> <div class="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div> <div class="relative z-10"> <div class="w-14 h-14 bg-blue-600 rounded-xl flex items-center justify-center text-white text-2xl mb-6 shadow-blue-200 shadow-lg"> <i class="fa-solid fa-calendar-check"></i> </div> <h3 class="text-2xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors">Events & MICE Logistics</h3> <p class="text-slate-600 mb-6 leading-relaxed">
+End-to-end transport management for corporate events, team offsites, and conferences. We handle bulk bookings with buses and tempo travellers.
+</p> <ul class="space-y-2 mb-6 text-sm text-slate-500"> <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> On-site Coordinators</li> <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> Large Fleet Access</li> </ul> <a href="/services/events-mice" class="inline-flex items-center text-blue-600 font-semibold group-hover:gap-2 transition-all">
+Plan Event <i class="fa-solid fa-arrow-right ml-2"></i> </a> </div> </div> </div> </section> </main>` : renderTemplate`<main class="bg-gray-50 min-h-screen py-20"> <!-- Standard Hero Header for other categories --> <div class="bg-black text-white pt-32 pb-16 px-6 relative overflow-hidden"> <div class="absolute inset-0 bg-gradient-to-br from-red-900/40 to-black z-0"></div> <div class="max-w-7xl mx-auto relative z-10 text-center"> <span class="inline-block py-1 px-3 rounded-full bg-red-600/20 border border-red-500/30 text-red-400 text-xs font-semibold tracking-wider mb-4 uppercase">
+Service Category
+</span> <h1 class="text-3xl md:text-5xl font-bold mb-4 leading-tight">${title}</h1> <p class="text-gray-300 text-lg max-w-2xl mx-auto">${description}</p> </div> </div> <!-- Standard Service Cards Grid --> <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20"> <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"> ${categoryServices.map((service) => renderTemplate`<a${addAttribute(`/services/${service.slug}`, "href")} class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 group flex flex-col h-full overflow-hidden"> <div class="h-48 overflow-hidden relative"> <img${addAttribute(serviceImages[service.slug] || serviceCategoryImages[service.category] || "/images/logo.png", "src")}${addAttribute(service.title, "alt")} class="w-full h-full object-cover group-hover:scale-105 transition duration-500"> <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80"></div> </div> <div class="p-6 flex-1 flex flex-col"> <div class="flex items-center justify-between mb-4"> <span class="text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded uppercase tracking-wide"> ${service.category} </span> <i class="fa-solid fa-arrow-right text-gray-300 group-hover:text-red-600 transition-colors"></i> </div> <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-red-600 transition-colors"> ${service.title} </h3> ${service.overview && renderTemplate`<p class="text-gray-500 text-sm line-clamp-3 mb-4"> ${service.overview} </p>`} <!-- Mini Tariff Preview --> ${service.tariff && service.tariff.rows.length > 0 && renderTemplate`<div class="bg-gray-50 rounded p-3 text-xs text-gray-600 mb-4"> <div class="flex justify-between font-semibold border-b border-gray-200 pb-1 mb-1"> <span>${service.tariff.headers[0]}</span> <span>${service.tariff.headers[service.tariff.headers.length - 1]}</span> </div> <div class="flex justify-between"> <span>${service.tariff.rows[0][0]}</span> <span class="font-bold text-gray-900">${service.tariff.rows[0][service.tariff.rows[0].length - 1]}</span> </div> </div>`} </div> <div class="mt-auto pt-4 px-6 pb-6 border-t border-gray-100 flex items-center justify-between text-sm font-medium"> <span class="text-gray-600">View Details</span> <span class="text-red-600 group-hover:translate-x-1 transition-transform">
+Book Now &rarr;
+</span> </div> </a>`)} </div> </div> </main>`}` })}`;
+}, "D:/websites/kalidass-attempt-main/src/pages/services/category/[category].astro", void 0);
+
+const $$file = "D:/websites/kalidass-attempt-main/src/pages/services/category/[category].astro";
+const $$url = "/services/category/[category]";
+
+const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: $$category,
+  file: $$file,
+  getStaticPaths,
+  url: $$url
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const page = () => _page;
+
+export { page };
