@@ -382,59 +382,6 @@ const localBusinessSchema = {
       Skip to content
     </a>
 
-    <!-- Seasonal Offer Ticker (Dismissible) -->
-    <div
-      id="seasonal-offer"
-      class="bg-gradient-to-r from-orange-400 to-red-500 text-white text-sm py-2 px-4 relative z-50 hidden"
-    >
-      <div class="max-w-7xl mx-auto flex justify-between items-center">
-        <div class="flex-1 text-center font-medium">
-          <span class="animate-pulse mr-2" aria-hidden="true">🕉️</span>
-          <span class="hidden md:inline"
-            >Sabarimala Season 2025-26 Started!
-          </span>
-          Book your Mandala Pooja Trip now.
-          <a
-            href="/services/sabarimala-trip"
-            class="underline ml-2 font-bold hover:text-yellow-200"
-            >View Package <span aria-hidden="true">&rarr;</span></a
-          >
-        </div>
-        <button
-          id="close-offer"
-          class="ml-4 text-white/80 hover:text-white focus:outline-none focus:ring-2 focus:ring-white rounded"
-          aria-label="Close offer"
-        >
-          <svg
-            class="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            ><path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"></path></svg
-          >
-        </button>
-      </div>
-    </div>
-    <script is:inline>
-      // Show offer only if not dismissed previously AND not on corporate page
-      const isCorporatePage = window.location.pathname.includes(
-        "/services/category/corporate",
-      );
-      if (!sessionStorage.getItem("offerDismissed") && !isCorporatePage) {
-        const offer = document.getElementById("seasonal-offer");
-        if (offer) offer.classList.remove("hidden");
-      }
-      document.getElementById("close-offer")?.addEventListener("click", () => {
-        document.getElementById("seasonal-offer").style.display = "none";
-        sessionStorage.setItem("offerDismissed", "true");
-      });
-    </script>
-
     <!-- Navbar -->
     <nav
       class="sticky top-0 z-40 shadow-md bg-white"

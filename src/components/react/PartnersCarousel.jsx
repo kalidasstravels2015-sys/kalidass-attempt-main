@@ -37,6 +37,16 @@ const partners = [
         logo: "/images/partners/tn-police.webp",
         alt: "Tamil Nadu Police - Trusted vehicle provider for official duties"
     },
+    {
+        name: "Mahindra Logistics",
+        logo: "/images/partners/MAHINDRA_LOGISTICS_LOGO.jpg",
+        alt: "Mahindra Logistics - Official transport partner"
+    },
+    {
+        name: "Kaleesuwari",
+        logo: "/images/partners/kaleesuwari.png",
+        alt: "Kaleesuwari Refinery Private Limited - Trusted corporate partner"
+    },
 ];
 
 const PartnersCarousel = ({ currentLang }) => {
