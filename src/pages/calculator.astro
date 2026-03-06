@@ -1,12 +1,22 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import QuotationEngine from '../components/QuotationEngine.jsx';
-import DriverFeeEstimator from '../components/DriverFeeEstimator.astro';
-import VehicleRelocationCalculator from '../components/VehicleRelocationCalculator.jsx';
+import Layout from "../layouts/Layout.astro";
+import QuotationEngine from "../components/QuotationEngine.jsx";
+import DriverFeeEstimator from "../components/DriverFeeEstimator.astro";
+import VehicleRelocationCalculator from "../components/VehicleRelocationCalculator.jsx";
+import Breadcrumbs from "../components/SEO/Breadcrumbs.astro";
+
+const breadcrumbItems = [
+  { name: "Home", item: "/" },
+  { name: "Calculator", item: "/calculator" },
+];
 ---
 
-<Layout title="Travel Cost Estimator | Kalidass Travels" description="Calculate costs for Taxi, Acting Drivers, and Vehicle Relocation services.">
-  <div class="bg-slate-50 min-h-screen pt-24 pb-12">
+<Layout
+  title="Travel Cost Estimator | Kalidass Travels"
+  description="Calculate costs for Taxi, Acting Drivers, and Vehicle Relocation services."
+>
+  <Breadcrumbs items={breadcrumbItems} />
+  <div class="bg-slate-50 min-h-screen pt-12 pb-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
         <h1 class="text-4xl font-bold text-slate-900 mb-4">
@@ -14,18 +24,24 @@ import VehicleRelocationCalculator from '../components/VehicleRelocationCalculat
           <span class="lang-ta">பயண செலவு கணிப்பான்</span>
         </h1>
         <p class="text-lg text-slate-600 max-w-2xl mx-auto">
-          <span class="lang-en">Get instant price estimates for Taxi, Acting Drivers, and Vehicle Relocation services.</span>
-          <span class="lang-ta">எங்கள் ஆக்டிங் டிரைவர் மற்றும் வாகன இடமாற்ற சேவைகளுக்கான பயண செலவுகளை உடனடியாக மதிப்பிடுங்கள்.</span>
+          <span class="lang-en"
+            >Get instant price estimates for Taxi, Acting Drivers, and Vehicle
+            Relocation services.</span
+          >
+          <span class="lang-ta"
+            >எங்கள் ஆக்டிங் டிரைவர் மற்றும் வாகன இடமாற்ற சேவைகளுக்கான பயண
+            செலவுகளை உடனடியாக மதிப்பிடுங்கள்.</span
+          >
         </p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         {/* Oneway / Round Trip Calculator */}
         <div class="w-full flex justify-center">
-          <QuotationEngine 
-            client:load 
-            showAirportTab={false} 
-            showBookingButton={false} 
+          <QuotationEngine
+            client:load
+            showAirportTab={false}
+            showBookingButton={false}
             title="Taxi Fare Estimator"
             variant="card"
           />

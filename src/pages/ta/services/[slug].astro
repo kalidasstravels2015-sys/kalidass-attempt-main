@@ -1,6 +1,7 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import serviceDetails from '../../../data/serviceDetails.json';
+import Breadcrumbs from '../../../components/SEO/Breadcrumbs.astro';
 
 export async function getStaticPaths() {
   return serviceDetails.map((service) => ({
@@ -42,7 +43,7 @@ const tourImages: Record<string, string> = {
   "kanchipuram-temple-trip": "/images/temple/Kanchipuram-Temple.jpg",
   "chidambaram-temple-trip": "/images/temple/Chidambaram-Natarajar-Temple.jpg",
   "sabarimala-trip": "/images/temple/Sabarimala-Temple.jpg",
-  "pondicherry-one-day-trip": "https://images.pexels.com/photos/32009229/pexels-photo-32009229.jpeg?auto=compress&cs=tinysrgb&w=800",
+  "pondicherry-one-day-trip": "/images/temple/pondicherry.webp",
   "vellore-golden-temple": "/images/temple/Vellore-Golden.jpg",
   "mahabalipuram-ecr-temple-route": "/images/temple/Mahabalipuram-ECR-Temples.jpg",
   "one-day-chennai-city-tour": "/images/temple/chennai-city.jpg" 
@@ -81,6 +82,25 @@ const schema = {
   },
   "url": Astro.url.href
 };
+
+const faqSchema = service.faq ? {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": service.faq.map((item: any) => ({
+    "@type": "Question",
+    "name": item.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.a
+    }
+  }))
+} : null;
+
+const breadcrumbItems = [
+  { name: 'Services', item: '/ta/services' },
+  { name: service.category_ta || service.category, item: `/ta/services/category/${service.slug.split('-')[0]}` },
+  { name: service.title_ta || service.title, item: `/ta/services/${service.slug}` }
+];
 ---
 
 <Layout 
@@ -92,7 +112,9 @@ const schema = {
   schema={schema}
   lang="ta"
 >
+  {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
   <main class="bg-gray-50 min-h-screen pb-20">
+    <Breadcrumbs items={breadcrumbItems} />
     <!-- Hero Header -->
     <div class="bg-black text-white pt-32 pb-16 px-6 relative overflow-hidden">
       
@@ -130,6 +152,55 @@ const schema = {
       </div>
     </div>
 
+    <!-- GEO Optimization: Quick Highlights for AI Engines -->
+    <div class="max-w-4xl mx-auto px-6 py-8">
+      <div class="bg-indigo-50 border-l-4 border-indigo-500 p-6 rounded-r-xl shadow-sm">
+        <h2 class="text-indigo-900 font-bold mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-sparkles text-indigo-500"></i>
+          <span class="lang-en">At a Glance: {service.title}</span>
+          <span class="lang-ta">சுருக்கம்: {service.title_ta || service.title}</span>
+        </h2>
+        <div class="grid md:grid-cols-2 gap-4 text-sm text-indigo-800">
+          <div class="flex items-start gap-2">
+            <i class="fa-solid fa-check-circle mt-1"></i>
+            <div>
+              <strong class="lang-en">Best For:</strong>
+              <strong class="lang-ta">சிறந்தது:</strong>
+              <span class="lang-en ml-1">{isTour ? 'Pilgrims & Heritage Lovers' : 'Business & Daily Commute'}</span>
+              <span class="lang-ta ml-1">{isTour ? 'ஆன்மீக பயணிகள்' : 'வணிகப் பயணம்'}</span>
+            </div>
+          </div>
+          <div class="flex items-start gap-2">
+            <i class="fa-solid fa-location-dot mt-1"></i>
+            <div>
+              <strong class="lang-en">Pickup:</strong>
+              <strong class="lang-ta">பிக்கப்:</strong>
+              <span class="lang-en ml-1">Anywhere in Chennai</span>
+              <span class="lang-ta ml-1">சென்னை எங்கும்</span>
+            </div>
+          </div>
+          <div class="flex items-start gap-2">
+            <i class="fa-solid fa-shield-halved mt-1"></i>
+            <div>
+              <strong class="lang-en">Safety:</strong>
+              <strong class="lang-ta">பாதுகாப்பு:</strong>
+              <span class="lang-en ml-1">Verified Drivers & Sanitized Cars</span>
+              <span class="lang-ta ml-1">சரிபார்க்கப்பட்ட ஓட்டுநர்கள்</span>
+            </div>
+          </div>
+          <div class="flex items-start gap-2">
+            <i class="fa-solid fa-calendar-check mt-1"></i>
+            <div>
+              <strong class="lang-en">Booking:</strong>
+              <strong class="lang-ta">முன்பதிவு:</strong>
+              <span class="lang-en ml-1">Instant via WhatsApp</span>
+              <span class="lang-ta ml-1">வாட்ஸ்அப் மூலம் உடனடியாக</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="max-w-4xl mx-auto px-6 -mt-8 relative z-20">
       <div class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
         
@@ -155,7 +226,7 @@ const schema = {
               
               <!-- Horizontal Scroll Container -->
               <div class="flex overflow-x-auto pb-4 gap-4 md:gap-0 md:justify-between snap-x scrollbar-hide">
-                {service.routePlan.map((stop, index) => (
+                {service.routePlan.map((stop: any, index: number) => (
                   <div class="flex flex-col items-center text-center gap-3 min-w-[140px] md:min-w-0 flex-1 snap-center relative z-10">
                     <div class="w-9 h-9 rounded-full bg-white border-4 border-red-500 flex items-center justify-center shadow-sm shrink-0">
                       <span class="text-xs font-bold text-gray-700">{index + 1}</span>
@@ -184,7 +255,7 @@ const schema = {
             <div class="lang-en">
               {service.tariff.headers.length > 3 && service.tariff.headers[service.tariff.headers.length - 1].toLowerCase().includes('total') ? (
                 <div class="space-y-4">
-                  {service.tariff.rows.map((row, rowIndex) => (
+                  {service.tariff.rows.map((row: any, rowIndex: number) => (
                     <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
                       <div class="flex justify-between items-center mb-2">
                         <h3 class="font-bold text-gray-900 text-lg">{row[0]}</h3>
@@ -198,7 +269,7 @@ const schema = {
                         </summary>
                         <div class="mt-3 pt-3 border-t border-gray-100 bg-gray-50 rounded p-3">
                           <p class="text-xs text-gray-500 mb-2 uppercase tracking-wider font-semibold">Fare Components</p>
-                          {service.tariff.headers.slice(1, -1).map((header, index) => (
+                          {service.tariff.headers.slice(1, -1).map((header: any, index: number) => (
                             <div class="flex justify-between items-center mb-2 last:mb-0">
                               <div class="flex items-center gap-2">
                                 <span class="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center text-[10px] text-gray-500">
@@ -228,15 +299,15 @@ const schema = {
                   <table class="w-full text-left border-collapse">
                     <thead>
                       <tr class="bg-gray-50 border-b border-gray-200">
-                        {service.tariff.headers.map((header) => (
+                        {service.tariff.headers.map((header: any) => (
                           <th class="py-3 px-4 text-sm font-semibold text-gray-700 uppercase tracking-wider">{header}</th>
                         ))}
                       </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
-                      {service.tariff.rows.map((row) => (
+                      {service.tariff.rows.map((row: any) => (
                         <tr class="hover:bg-gray-50 transition-colors">
-                          {row.map((cell, index) => (
+                          {row.map((cell: any, index: number) => (
                             <td class={`py-3 px-4 text-gray-800 font-medium ${index === row.length - 1 ? 'font-bold text-green-700' : ''}`}>
                               {cell}
                             </td>
@@ -258,7 +329,7 @@ const schema = {
             <div class="lang-ta">
               {(service.tariff.headers_ta || service.tariff.headers).length > 3 && (service.tariff.headers_ta || service.tariff.headers)[(service.tariff.headers_ta || service.tariff.headers).length - 1].toLowerCase().includes('total') ? (
                 <div class="space-y-4">
-                  {(service.tariff.rows_ta || service.tariff.rows).map((row, rowIndex) => (
+                  {(service.tariff.rows_ta || service.tariff.rows).map((row: any, rowIndex: number) => (
                     <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
                       <div class="flex justify-between items-center mb-2">
                         <h3 class="font-bold text-gray-900 text-lg">{row[0]}</h3>
@@ -272,7 +343,7 @@ const schema = {
                         </summary>
                         <div class="mt-3 pt-3 border-t border-gray-100 bg-gray-50 rounded p-3">
                           <p class="text-xs text-gray-500 mb-2 uppercase tracking-wider font-semibold">கட்டண விவரங்கள்</p>
-                          {(service.tariff.headers_ta || service.tariff.headers).slice(1, -1).map((header, index) => (
+                          {(service.tariff.headers_ta || service.tariff.headers).slice(1, -1).map((header: any, index: number) => (
                             <div class="flex justify-between items-center mb-2 last:mb-0">
                               <div class="flex items-center gap-2">
                                 <span class="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center text-[10px] text-gray-500">
@@ -302,15 +373,15 @@ const schema = {
                   <table class="w-full text-left border-collapse">
                     <thead>
                       <tr class="bg-gray-50 border-b border-gray-200">
-                        {(service.tariff.headers_ta || service.tariff.headers).map((header) => (
+                        {(service.tariff.headers_ta || service.tariff.headers).map((header: any) => (
                           <th class="py-3 px-4 text-sm font-semibold text-gray-700 uppercase tracking-wider">{header}</th>
                         ))}
                       </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
-                      {(service.tariff.rows_ta || service.tariff.rows).map((row) => (
+                      {(service.tariff.rows_ta || service.tariff.rows).map((row: any) => (
                         <tr class="hover:bg-gray-50 transition-colors">
-                          {row.map((cell, index) => (
+                          {row.map((cell: any, index: number) => (
                             <td class={`py-3 px-4 text-gray-800 font-medium ${index === row.length - 1 ? 'font-bold text-green-700' : ''}`}>
                               {cell}
                             </td>
@@ -342,7 +413,7 @@ const schema = {
                 <span class="lang-ta">சேர்க்கப்பட்டுள்ளது</span>
               </h3>
               <ul class="space-y-3 lang-en">
-                {service.includes.map((item) => (
+                {service.includes.map((item: any) => (
                   <li class="flex items-start gap-3 text-gray-600 text-sm">
                     <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-green-500 shrink-0"></span>
                     {item}
@@ -350,7 +421,7 @@ const schema = {
                 ))}
               </ul>
               <ul class="space-y-3 lang-ta">
-                {(service.includes_ta || service.includes).map((item) => (
+                {(service.includes_ta || service.includes).map((item: any) => (
                   <li class="flex items-start gap-3 text-gray-600 text-sm">
                     <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-green-500 shrink-0"></span>
                     {item}
@@ -369,7 +440,7 @@ const schema = {
                 <span class="lang-ta">சேர்க்கப்படவில்லை</span>
               </h3>
               <ul class="space-y-3 lang-en">
-                {service.excludes.map((item) => (
+                {service.excludes.map((item: any) => (
                   <li class="flex items-start gap-3 text-gray-500 text-sm">
                     <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-red-300 shrink-0"></span>
                     {item}
@@ -377,7 +448,7 @@ const schema = {
                 ))}
               </ul>
               <ul class="space-y-3 lang-ta">
-                {(service.excludes_ta || service.excludes).map((item) => (
+                {(service.excludes_ta || service.excludes).map((item: any) => (
                   <li class="flex items-start gap-3 text-gray-500 text-sm">
                     <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-red-300 shrink-0"></span>
                     {item}
@@ -454,7 +525,7 @@ const schema = {
                   <span class="lang-ta">{isTour ? "முக்கிய குறிப்புகள்" : "முக்கிய தகவல்கள்"}</span>
                 </h3>
                 <ul class="grid md:grid-cols-2 gap-3 lang-en">
-                  {service.travelGuide.tips.map((tip) => (
+                  {service.travelGuide.tips.map((tip: any) => (
                     <li class="flex items-start gap-2 text-sm text-gray-600">
                       <i class={`fa-solid fa-check mt-1 ${isTour ? 'text-green-500' : 'text-blue-500'}`}></i>
                       <span>{tip}</span>
@@ -462,7 +533,7 @@ const schema = {
                   ))}
                 </ul>
                 <ul class="grid md:grid-cols-2 gap-3 lang-ta">
-                  {(service.travelGuide.tips_ta || service.travelGuide.tips).map((tip) => (
+                  {(service.travelGuide.tips_ta || service.travelGuide.tips).map((tip: any) => (
                     <li class="flex items-start gap-2 text-sm text-gray-600">
                       <i class={`fa-solid fa-check mt-1 ${isTour ? 'text-green-500' : 'text-blue-500'}`}></i>
                       <span>{tip}</span>
@@ -483,7 +554,7 @@ const schema = {
               <span class="lang-ta">அடிக்கடி கேட்கப்படும் கேள்விகள்</span>
             </h3>
             <div class="grid gap-4">
-              {service.faq.map((item) => (
+              {service.faq.map((item: any) => (
                 <div class="bg-gray-50 rounded-lg p-4 border border-gray-100">
                   <p class="font-semibold text-gray-900 text-sm mb-2 flex items-start gap-2">
                     <span class="text-red-600">Q:</span> 
@@ -508,14 +579,14 @@ const schema = {
               <span class="lang-ta">முக்கிய குறிப்புகள்</span>
             </h4>
             <ul class="space-y-2 lang-en">
-              {service.notes.map((note) => (
+              {service.notes.map((note: any) => (
                 <li class="text-blue-800 text-sm flex items-start gap-2">
                   <i class="fa-solid fa-info-circle mt-1 opacity-70"></i> {note}
                 </li>
               ))}
             </ul>
             <ul class="space-y-2 lang-ta">
-              {(service.notes_ta || service.notes).map((note) => (
+              {(service.notes_ta || service.notes).map((note: any) => (
                 <li class="text-blue-800 text-sm flex items-start gap-2">
                   <i class="fa-solid fa-info-circle mt-1 opacity-70"></i> {note}
                 </li>

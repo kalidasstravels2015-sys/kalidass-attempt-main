@@ -27,7 +27,7 @@ export const GET: APIRoute = async ({ params, request }) => {
     "kanchipuram-temple-trip": "/images/temple/Kanchipuram-Temple.webp",
     "chidambaram-temple-trip": "/images/temple/Chidambaram-Natarajar-Temple.webp",
     "sabarimala-trip": "/images/temple/Sabarimala-Temple.webp",
-    "pondicherry-one-day-trip": "https://images.pexels.com/photos/32009229/pexels-photo-32009229.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "pondicherry-one-day-trip": "/images/temple/pondicherry.webp",
     "vellore-golden-temple": "/images/temple/Vellore-Golden.webp",
     "mahabalipuram-ecr-temple-route": "/images/temple/Mahabalipuram-ECR-Temples.webp",
     "one-day-chennai-city-tour": "/images/temple/chennai-city.webp" 

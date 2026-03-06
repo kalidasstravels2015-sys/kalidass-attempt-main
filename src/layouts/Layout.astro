@@ -8,6 +8,7 @@ interface Props {
   url?: string;
   schema?: object;
   lang?: string;
+  keywords?: string;
 }
 
 import siteContent from "../data/siteContent.json";
@@ -22,6 +23,7 @@ const {
   url = Astro.url.href,
   schema,
   lang = "en",
+  keywords = "taxi service Chennai, temple tours Tamil Nadu, corporate travel Chennai, airport taxi Chennai, outstation cabs Chennai, Kalidass Travels",
 } = Astro.props;
 
 // --- Internationalization Logic ---
@@ -153,6 +155,41 @@ const localBusinessSchema = {
     ],
   },
 };
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Kalidass Travels",
+  alternateName: "Kalidass Travel Agency",
+  url: "https://kalidasstravels.in",
+  logo: "https://kalidasstravels.in/images/logo.png",
+  contactPoint: [
+    {
+      "@type": "ContactPoint",
+      telephone: "+919092303060",
+      contactType: "customer service",
+      areaServed: "IN",
+      availableLanguage: ["en", "ta"],
+    },
+  ],
+  sameAs: [
+    "https://www.facebook.com/kalidasstravels", // Update if confirmed
+    "https://twitter.com/kalidasstravels", // Update if confirmed
+    "https://www.instagram.com/kalidasstravels", // Update if confirmed
+  ],
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Kalidass Travels",
+  url: "https://kalidasstravels.in",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: "https://kalidasstravels.in/search?q={search_term_string}",
+    "query-input": "required name=search_term_string",
+  },
+};
 ---
 
 <!doctype html>
@@ -190,6 +227,14 @@ const localBusinessSchema = {
     <meta name="theme-color" content="#4f46e5" />
     <link rel="icon" type="image/png" href="/images/favicon.png" />
     <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <meta name="author" content="Kalidass Travels" />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="bingbot" content="index, follow" />
     <link rel="canonical" href={url} />
     <!-- PWA manifest removed -->
 
@@ -225,6 +270,14 @@ const localBusinessSchema = {
     <script
       type="application/ld+json"
       set:html={JSON.stringify(schema || localBusinessSchema)}
+    />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(organizationSchema)}
+    />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(websiteSchema)}
     />
 
     <style is:global>

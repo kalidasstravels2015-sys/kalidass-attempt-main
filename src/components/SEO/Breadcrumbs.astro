@@ -1,0 +1,61 @@
+---
+interface Props {
+  items: { name: string; item: string }[];
+}
+
+const { items } = Astro.props;
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: items.map((item, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: item.name,
+    item: `https://kalidasstravels.in${item.item}`,
+  })),
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+<nav aria-label="Breadcrumb" class="py-4 px-6 max-w-4xl mx-auto">
+  <ol class="flex list-none p-0 text-sm text-gray-500">
+    <li class="flex items-center">
+      <a href="/" class="hover:text-red-600 transition-colors">
+        <span class="lang-en">Home</span>
+        <span class="lang-ta">முகப்பு</span>
+      </a>
+      <svg class="h-4 w-4 mx-2" fill="currentColor" viewBox="0 0 20 20"
+        ><path
+          fill-rule="evenodd"
+          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+          clip-rule="evenodd"></path></svg
+      >
+    </li>
+    {
+      items.map((item, index) => (
+        <li class="flex items-center">
+          {index === items.length - 1 ? (
+            <span class="text-gray-900 font-medium" aria-current="page">
+              {item.name}
+            </span>
+          ) : (
+            <>
+              <a href={item.item} class="hover:text-red-600 transition-colors">
+                {item.name}
+              </a>
+              <svg class="h-4 w-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fill-rule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
