@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
     Plane,
     Clock,
-    Map,
     FileText,
     ShieldCheck,
     CheckCircle,

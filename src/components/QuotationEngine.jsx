@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useId } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Car, MapPin, Calendar, Calculator, Send, Plane, ArrowRight, Repeat, Users, User, Phone, AlertCircle, Navigation } from 'lucide-react';
 import { trackEvent } from '../lib/analytics';
 import LocationPicker from './LocationPicker';
@@ -569,14 +569,14 @@ _Please confirm availability._`;
             {['Pickup', 'Drop'].map((type) => (
               <div key={type} className="relative group">
                 <label
-                  htmlFor={`${formId}-${type.toLowerCase()}`}
+                  htmlFor={`${stableFormId}-${type.toLowerCase()}`}
                   className="block text-xs font-bold text-slate-600 uppercase mb-1.5"
                 >
                   {type === 'Pickup' ? (isTa ? 'பிக்கப்' : 'Pickup') : (isTa ? 'டிராப்' : 'Drop')} {isTa ? 'இடம்' : 'Location'}
                 </label>
                 <div className="relative flex items-center bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus-within:ring-2 focus-within:ring-indigo-500/20">
                   <input
-                    id={`${formId}-${type.toLowerCase()}`}
+                    id={`${stableFormId}-${type.toLowerCase()}`}
                     ref={type === 'Pickup' ? pickupInputRef : dropInputRef}
                     type="text"
                     value={type === 'Pickup' ? pickup : drop}
@@ -623,11 +623,11 @@ _Please confirm availability._`;
             <div className="grid grid-cols-2 gap-4">
               {/* Passengers */}
               <div className="relative group">
-                <label htmlFor={`${formId}-passengers`} className="block text-xs font-bold text-slate-600 uppercase mb-1.5">{isTa ? 'பயணிகள்' : 'Passengers'}</label>
+                <label htmlFor={`${stableFormId}-passengers`} className="block text-xs font-bold text-slate-600 uppercase mb-1.5">{isTa ? 'பயணிகள்' : 'Passengers'}</label>
                 <div className="flex items-center bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus-within:ring-2 focus-within:ring-indigo-500/20">
                   <Users className="text-indigo-500 mr-3 w-5 h-5" aria-hidden="true" />
                   <select
-                    id={`${formId}-passengers`}
+                    id={`${stableFormId}-passengers`}
                     value={passengers}
                     onChange={(e) => { setPassengers(e.target.value); setShowResult(false); }}
                     className="bg-transparent w-full outline-none text-sm text-slate-700 font-medium appearance-none"
@@ -639,7 +639,7 @@ _Please confirm availability._`;
 
               {/* Vehicle */}
               <div className="relative group">
-                <label htmlFor={`${formId}-vehicle`} className="block text-xs font-bold text-slate-600 uppercase mb-1.5">{isTa ? 'வாகனம்' : 'Vehicle'}</label>
+                <label htmlFor={`${stableFormId}-vehicle`} className="block text-xs font-bold text-slate-600 uppercase mb-1.5">{isTa ? 'வாகனம்' : 'Vehicle'}</label>
                 <div className="flex items-center bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus-within:ring-2 focus-within:ring-indigo-500/20">
                   {vehicle.includes('Tempo') ? (
                     <Navigation className="text-indigo-500 mr-3 w-5 h-5" aria-hidden="true" />
@@ -647,7 +647,7 @@ _Please confirm availability._`;
                     <Car className="text-indigo-500 mr-3 w-5 h-5" aria-hidden="true" />
                   )}
                   <select
-                    id={`${formId}-vehicle`}
+                    id={`${stableFormId}-vehicle`}
                     value={vehicle}
                     onChange={(e) => { setVehicle(e.target.value); setShowResult(false); }}
                     className="bg-transparent w-full outline-none text-sm text-slate-700 font-medium appearance-none cursor-pointer"
@@ -659,11 +659,11 @@ _Please confirm availability._`;
 
               {/* Name */}
               <div className="relative group col-span-2 md:col-span-1">
-                <label htmlFor={`${formId}-name`} className="block text-xs font-bold text-slate-600 uppercase mb-1.5">{isTa ? 'பெயர்' : 'Name'}</label>
+                <label htmlFor={`${stableFormId}-name`} className="block text-xs font-bold text-slate-600 uppercase mb-1.5">{isTa ? 'பெயர்' : 'Name'}</label>
                 <div className={getInputClass('name')}>
                   <User className="text-slate-400 mr-3 w-5 h-5" aria-hidden="true" />
                   <input
-                    id={`${formId}-name`}
+                    id={`${stableFormId}-name`}
                     type="text"
                     value={name}
                     onChange={(e) => { setName(e.target.value); activeValidate('name', e.target.value); }}
@@ -676,11 +676,11 @@ _Please confirm availability._`;
 
               {/* Phone */}
               <div className="relative group col-span-2 md:col-span-1">
-                <label htmlFor={`${formId}-phone`} className="block text-xs font-bold text-slate-600 uppercase mb-1.5">{isTa ? 'தொலைபேசி' : 'Phone'}</label>
+                <label htmlFor={`${stableFormId}-phone`} className="block text-xs font-bold text-slate-600 uppercase mb-1.5">{isTa ? 'தொலைபேசி' : 'Phone'}</label>
                 <div className={getInputClass('phone')}>
                   <Phone className="text-slate-400 mr-3 w-5 h-5" aria-hidden="true" />
                   <input
-                    id={`${formId}-phone`}
+                    id={`${stableFormId}-phone`}
                     type="tel"
                     value={phone}
                     onChange={(e) => { setPhone(e.target.value); activeValidate('phone', e.target.value); }}
@@ -694,11 +694,11 @@ _Please confirm availability._`;
               {/* Days Input if Round Trip */}
               {activeTab === 'round' && (
                 <div className="relative group">
-                  <label htmlFor={`${formId}-days`} className="block text-xs font-bold text-slate-600 uppercase mb-1.5">{isTa ? 'நாட்கள்' : 'Days'}</label>
+                  <label htmlFor={`${stableFormId}-days`} className="block text-xs font-bold text-slate-600 uppercase mb-1.5">{isTa ? 'நாட்கள்' : 'Days'}</label>
                   <div className="flex items-center bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus-within:ring-2 focus-within:ring-indigo-500/20">
                     <Calendar className="text-indigo-500 mr-3 w-5 h-5" aria-hidden="true" />
                     <input
-                      id={`${formId}-days`}
+                      id={`${stableFormId}-days`}
                       type="text"
                       inputMode="numeric"
                       value={days || ''}

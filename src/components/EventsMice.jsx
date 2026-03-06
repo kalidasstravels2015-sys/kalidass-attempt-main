@@ -4,7 +4,6 @@ import {
     MapPin,
     Calendar,
     ClipboardCheck,
-    Bus,
     Phone,
     Mail,
     ArrowRight,
