@@ -7,7 +7,7 @@
     "images": [
       "/images/hero/airavatesvara.webp",
       "/images/hero/coimbatore.webp",
-      "/images/hero/madurai.jpg"
+      "/images/hero/madurai.webp"
     ],
     "cto": "Call Now",
     "phone": "+91 90923 03060",
@@ -37,7 +37,7 @@
       "title": "Acting Drivers",
       "description": "Your car, Our Professional Pilot",
       "icon": "user-tie",
-      "image": "/images/services/acting-drivers.jpg",
+      "image": "/images/services/acting-drivers.webp",
       "link": "/services/category/acting-drivers",
       "title_ta": "ஆக்டிங் டிரைவர்கள்",
       "description_ta": "உங்கள் கார், எங்கள் தொழில்முறை பைலட்"
@@ -46,7 +46,7 @@
       "title": "Corporate",
       "description": "The complete corporate mobility suite",
       "icon": "building",
-      "image": "/images/services/corporate.jpg",
+      "image": "/images/services/corporate.webp",
       "link": "/services/category/corporate",
       "title_ta": "கார்ப்பரேட்",
       "description_ta": "முழுமையான கார்ப்பரேட் மொபிலிட்டி சூட்"
@@ -55,7 +55,7 @@
       "title": "Temple Tours",
       "description": "Round trips for Tirupati, Navagraha, and heritage temple circuits with local expertise.",
       "icon": "gopuram",
-      "image": "/images/services/temple-tours.jpg",
+      "image": "/images/services/temple-tours.webp",
       "link": "/services/category/temple-tours",
       "title_ta": "கோவில் சுற்றுலா",
       "description_ta": "Round trips for திருப்பதி, நவகிரக, and heritage temple circuits with local expertise."
@@ -64,7 +64,7 @@
       "title": "Popular Destinations",
       "description": "Explore heritage sites, beaches, and city tours.",
       "icon": "map-pin",
-      "image": "/images/temple/Mahabalipuram-ECR-Temples.jpg",
+      "image": "/images/temple/Mahabalipuram-ECR-Temples.webp",
       "link": "/services/category/popular-destinations",
       "title_ta": "பிரபலமான இடங்கள்",
       "description_ta": "Explore heritage sites, beaches, and city tours."
