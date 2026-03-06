@@ -103,7 +103,7 @@ export const GET: APIRoute = async ({ params, request }) => {
 
   const markup = html(htmlString);
 
-  const svg = await satori(markup, {
+  const svg = await satori(markup as any, {
     width: 1200,
     height: 630,
     fonts: [

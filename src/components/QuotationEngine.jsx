@@ -31,7 +31,7 @@ const ERROR_MSGS = {
 
 
 
-export default function QuotationEngine({ currentLang = 'en', showAirportTab = true, showBookingButton = true, title = null, variant = "default" }) {
+export default function QuotationEngine({ currentLang = 'en', showAirportTab = true, showBookingButton = true, title = '', variant = "default" }) {
   const lang = useLanguage(currentLang);
   const isTa = lang === 'ta';
   const labels = siteContent.ui_labels;

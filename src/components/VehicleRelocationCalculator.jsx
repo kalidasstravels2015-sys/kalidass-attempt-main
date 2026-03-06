@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import tnBusFares from '../data/tnBusFares.json';
 
-export default function VehicleRelocationCalculator() {
+export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
   // Calculator State
   const [pickup, setPickup] = useState('');
   const [drop, setDrop] = useState('');
