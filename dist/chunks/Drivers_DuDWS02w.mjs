@@ -1,0 +1,21 @@
+import { c as createComponent, m as maybeRenderHead, r as renderComponent, a as renderTemplate } from './astro/server_B-UY_wom.mjs';
+import 'kleur/colors';
+import { $ as $$OptimizedImage } from './OptimizedImage_BicJadH1.mjs';
+import { s as siteContent } from './Layout_D-d8fNH6.mjs';
+import { ShieldCheck, Clock, Languages, Star, ArrowRight } from 'lucide-react';
+/* empty css                                   */
+
+const $$Drivers = createComponent(($$result, $$props, $$slots) => {
+  const drivers = siteContent.drivers;
+  return renderTemplate`${maybeRenderHead()}<section class="py-20 bg-slate-50" data-astro-cid-skmb3zj4> <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-astro-cid-skmb3zj4> <div class="text-center mb-16" data-astro-cid-skmb3zj4> <h2 class="text-2xl md:text-4xl font-extrabold text-gray-900 inline-block relative mb-4" data-astro-cid-skmb3zj4>
+Our Professional Drivers
+<div class="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-20 h-1.5 bg-red-600 rounded-full" data-astro-cid-skmb3zj4></div> </h2> <p class="text-base text-gray-600 max-w-2xl mx-auto mt-4" data-astro-cid-skmb3zj4>
+Experienced, verified, and multilingual drivers at your service.
+</p> </div> <div class="flex overflow-x-auto gap-6 pb-8 snap-x scrollbar-hide" data-astro-cid-skmb3zj4> ${drivers.map((driver) => renderTemplate`<div class="flex-none w-72 snap-center bg-white rounded-2xl shadow-sm border border-slate-200 p-4 hover:shadow-md transition-all duration-300 group" data-astro-cid-skmb3zj4> <div class="relative mb-4 overflow-hidden rounded-xl" data-astro-cid-skmb3zj4> ${renderComponent($$result, "OptimizedImage", $$OptimizedImage, { "src": driver.image, "class": "w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500", "alt": driver.name, "data-astro-cid-skmb3zj4": true })} <span class="absolute bottom-2 left-2 bg-indigo-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm" data-astro-cid-skmb3zj4> ${driver.tag} </span> </div> <h3 class="font-bold text-lg text-slate-900" data-astro-cid-skmb3zj4>${driver.name}</h3> <div class="inline-flex items-center gap-1.5 mt-1 mb-2 px-2 py-0.5 bg-green-50 border border-green-100 rounded-md text-[10px] font-bold text-green-700" data-astro-cid-skmb3zj4> ${renderComponent($$result, "ShieldCheck", ShieldCheck, { "className": "w-3 h-3", "data-astro-cid-skmb3zj4": true })}
+PVC Verified
+</div> <div class="text-sm text-slate-600 mt-1 space-y-2" data-astro-cid-skmb3zj4> <div class="flex items-center gap-2" data-astro-cid-skmb3zj4> ${renderComponent($$result, "Clock", Clock, { "className": "w-4 h-4 text-slate-400", "data-astro-cid-skmb3zj4": true })} <span data-astro-cid-skmb3zj4>${driver.experience}</span> </div> <div class="flex items-center gap-2" data-astro-cid-skmb3zj4> ${renderComponent($$result, "Languages", Languages, { "className": "w-4 h-4 text-slate-400", "data-astro-cid-skmb3zj4": true })} <span data-astro-cid-skmb3zj4>${driver.languages}</span> </div> </div> <div class="flex text-yellow-400 mt-4 gap-0.5" data-astro-cid-skmb3zj4> ${renderComponent($$result, "Star", Star, { "className": "w-4 h-4 fill-current", "data-astro-cid-skmb3zj4": true })} ${renderComponent($$result, "Star", Star, { "className": "w-4 h-4 fill-current", "data-astro-cid-skmb3zj4": true })} ${renderComponent($$result, "Star", Star, { "className": "w-4 h-4 fill-current", "data-astro-cid-skmb3zj4": true })} ${renderComponent($$result, "Star", Star, { "className": "w-4 h-4 fill-current", "data-astro-cid-skmb3zj4": true })} ${renderComponent($$result, "Star", Star, { "className": "w-4 h-4 fill-current", "data-astro-cid-skmb3zj4": true })} </div> </div>`)} </div> <div class="text-center mt-8" data-astro-cid-skmb3zj4> <a href="/drivers" class="inline-flex items-center gap-2 text-indigo-600 font-semibold hover:text-indigo-700 transition-colors duration-200 group" data-astro-cid-skmb3zj4>
+View All Drivers
+${renderComponent($$result, "ArrowRight", ArrowRight, { "className": "w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-200", "data-astro-cid-skmb3zj4": true })} </a> </div> </div> </section> `;
+}, "D:/websites/kalidass-attempt-main/src/components/Drivers.astro", void 0);
+
+export { $$Drivers as $ };
