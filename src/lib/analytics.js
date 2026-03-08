@@ -1,6 +1,6 @@
 import { onCLS, onLCP, onFCP, onTTFB, onINP } from 'web-vitals';
 
-const GA_MEASUREMENT_ID = import.meta.env.PUBLIC_GA_ID || 'G-STG8DWJ76K';
+const GA_MEASUREMENT_ID = import.meta.env.PUBLIC_GA_ID || 'G-61YQMR8J7H';
 
 export const initAnalytics = () => {
     if (typeof window === 'undefined') return;

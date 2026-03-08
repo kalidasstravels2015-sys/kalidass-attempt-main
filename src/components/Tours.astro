@@ -1,4 +1,7 @@
 ---
+const { lang = "en" } = Astro.props;
+const isTamil = lang === "ta";
+
 import OptimizedImage from "./OptimizedImage.astro";
 import serviceDetails from "../data/serviceDetails.json";
 
@@ -73,68 +76,77 @@ const tourImageAlts: Record<string, string> = {
         <h2
           class="text-2xl md:text-4xl font-extrabold text-gray-900 inline-block relative mb-3"
         >
-          <span class="lang-en">Popular Temple Trips</span>
-          <span class="lang-ta">பிரபலமான கோவில் சுற்றுலா</span>
+          {isTamil ? "பிரபலமான கோவில் சுற்றுலா" : "Popular Temple Trips"}
           <div
             class="absolute bottom-[-8px] left-1/2 transform -translate-x-1/2 w-16 h-1 bg-orange-600 rounded-full"
           >
           </div>
         </h2>
         <p class="text-base text-gray-600 max-w-2xl mx-auto mt-2">
-          <span class="lang-en">Sacred pilgrimages and spiritual journeys.</span
-          >
-          <span class="lang-ta">புனித யாத்திரைகள் மற்றும் ஆன்மீக பயணங்கள்.</span
-          >
+          {
+            isTamil
+              ? "புனித யாத்திரைகள் மற்றும் ஆன்மீக பயணங்கள்."
+              : "Sacred pilgrimages and spiritual journeys."
+          }
         </p>
       </div>
 
       <div class="flex overflow-x-auto gap-4 px-2 pb-6 scrollbar-hide snap-x">
         {
-          templeTrips.map((tour) => (
-            <a
-              href={`/services/${tour.slug}`}
-              class="block flex-none w-64 sm:w-72 snap-center bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group cursor-pointer hover:shadow-md transition"
-            >
-              <div class="h-36 sm:h-40 overflow-hidden relative">
-                <OptimizedImage
-                  src={
-                    tourImages[tour.slug] ||
-                    "https://images.unsplash.com/photo-1596700414605-e45f1b1c7c9a?q=80&w=600"
-                  }
-                  alt={tourImageAlts[tour.slug] || tour.title}
-                  class="w-full h-full object-cover group-hover:scale-105 transition duration-700"
-                />
-                <span class="absolute top-2 left-2 bg-orange-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
-                  <span class="lang-en">PILGRIMAGE</span>
-                  <span class="lang-ta">யாத்திரை</span>
-                </span>
-              </div>
-              <div class="p-4">
-                <h3 class="font-bold text-base text-gray-900 mb-1 line-clamp-1">
-                  <span class="lang-en">{tour.title}</span>
-                  <span class="lang-ta">{tour.title_ta}</span>
-                </h3>
-                <p class="text-xs text-gray-500 mb-3 line-clamp-2">
-                  <span class="lang-en">{tour.overview}</span>
-                  <span class="lang-ta">{tour.overview_ta}</span>
-                </p>
-                <div class="flex items-center text-orange-600 font-bold text-xs uppercase tracking-wide group-hover:text-orange-700">
-                  <span class="lang-en">Book {tour.title}</span>
-                  <span class="lang-ta">{tour.title_ta} முன்பதிவு</span>
-                  <i class="fas fa-arrow-right ml-1 group-hover:translate-x-1 transition" />
+          templeTrips.map((tour) => {
+            const link = isTamil
+              ? `/ta/services/${tour.slug}/`
+              : `/services/${tour.slug}/`;
+            return (
+              <a
+                href={link}
+                class="block flex-none w-64 sm:w-72 snap-center bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group cursor-pointer hover:shadow-md transition"
+              >
+                <div class="h-36 sm:h-40 overflow-hidden relative bg-gray-200 skeleton-shimmer">
+                  <OptimizedImage
+                    src={
+                      tourImages[tour.slug] ||
+                      "https://images.unsplash.com/photo-1596700414605-e45f1b1c7c9a?q=80&w=600"
+                    }
+                    alt={
+                      tourImageAlts[tour.slug] ||
+                      (isTamil ? tour.title_ta : tour.title)
+                    }
+                    class="w-full h-full object-cover group-hover:scale-105 transition duration-700 relative z-10"
+                  />
+                  <span class="absolute top-2 left-2 bg-orange-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
+                    {isTamil ? "யாத்திரை" : "PILGRIMAGE"}
+                  </span>
                 </div>
-              </div>
-            </a>
-          ))
+                <div class="p-4">
+                  <h3 class="font-bold text-base text-gray-900 mb-1 line-clamp-1">
+                    {isTamil ? tour.title_ta : tour.title}
+                  </h3>
+                  <p class="text-xs text-gray-500 mb-3 line-clamp-2">
+                    {isTamil ? tour.overview_ta : tour.overview}
+                  </p>
+                  <div class="flex items-center text-orange-600 font-bold text-xs uppercase tracking-wide group-hover:text-orange-700">
+                    <span>
+                      {isTamil
+                        ? `${tour.title_ta} முன்பதிவு`
+                        : `Book ${tour.title}`}
+                    </span>
+                    <i class="fas fa-arrow-right ml-1 group-hover:translate-x-1 transition" />
+                  </div>
+                </div>
+              </a>
+            );
+          })
         }
       </div>
       <div class="text-center mt-4">
         <a
-          href="/services/category/temple-tours"
+          href={isTamil
+            ? "/ta/services/category/temple-tours/"
+            : "/services/category/temple-tours/"}
           class="inline-flex items-center text-orange-600 font-bold text-sm hover:text-orange-700 transition"
         >
-          <span class="lang-en">View All</span>
-          <span class="lang-ta">அனைத்தையும் காண்க</span>
+          {isTamil ? "அனைத்தையும் காண்க" : "View All"}
           <i class="fas fa-arrow-right ml-2"></i>
         </a>
       </div>
@@ -146,70 +158,77 @@ const tourImageAlts: Record<string, string> = {
         <h2
           class="text-2xl md:text-4xl font-extrabold text-gray-900 inline-block relative mb-3"
         >
-          <span class="lang-en">Popular Destinations</span>
-          <span class="lang-ta">பிரபலமான இடங்கள்</span>
+          {isTamil ? "பிரபலமான இடங்கள்" : "Popular Destinations"}
           <div
             class="absolute bottom-[-8px] left-1/2 transform -translate-x-1/2 w-16 h-1 bg-green-600 rounded-full"
           >
           </div>
         </h2>
         <p class="text-base text-gray-600 max-w-2xl mx-auto mt-2">
-          <span class="lang-en"
-            >Explore heritage sites, beaches, and city tours.</span
-          >
-          <span class="lang-ta"
-            >பாரம்பரிய இடங்கள், கடற்கரைகள் மற்றும் நகர சுற்றுலா.</span
-          >
+          {
+            isTamil
+              ? "பாரம்பரிய இடங்கள், கடற்கரைகள் மற்றும் நகர சுற்றுலா."
+              : "Explore heritage sites, beaches, and city tours."
+          }
         </p>
       </div>
 
       <div class="flex overflow-x-auto gap-4 px-2 pb-6 scrollbar-hide snap-x">
         {
-          popularDestinations.map((tour) => (
-            <a
-              href={`/services/${tour.slug}`}
-              class="block flex-none w-64 sm:w-72 snap-center bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group cursor-pointer hover:shadow-md transition"
-            >
-              <div class="h-36 sm:h-40 overflow-hidden relative">
-                <OptimizedImage
-                  src={
-                    tourImages[tour.slug] ||
-                    "https://images.unsplash.com/photo-1596700414605-e45f1b1c7c9a?q=80&w=600"
-                  }
-                  alt={tourImageAlts[tour.slug] || tour.title}
-                  class="w-full h-full object-cover group-hover:scale-105 transition duration-700"
-                />
-                <span class="absolute top-2 left-2 bg-green-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
-                  <span class="lang-en">DESTINATION</span>
-                  <span class="lang-ta">சுற்றுலா தலம்</span>
-                </span>
-              </div>
-              <div class="p-4">
-                <h3 class="font-bold text-base text-gray-900 mb-1 line-clamp-1">
-                  <span class="lang-en">{tour.title}</span>
-                  <span class="lang-ta">{tour.title_ta}</span>
-                </h3>
-                <p class="text-xs text-gray-500 mb-3 line-clamp-2">
-                  <span class="lang-en">{tour.overview}</span>
-                  <span class="lang-ta">{tour.overview_ta}</span>
-                </p>
-                <div class="flex items-center text-green-600 font-bold text-xs uppercase tracking-wide group-hover:text-green-700">
-                  <span class="lang-en">Explore {tour.title}</span>
-                  <span class="lang-ta">{tour.title_ta} சுற்றுலா</span>
-                  <i class="fas fa-arrow-right ml-1 group-hover:translate-x-1 transition" />
+          popularDestinations.map((tour) => {
+            const link = isTamil
+              ? `/ta/services/${tour.slug}/`
+              : `/services/${tour.slug}/`;
+            return (
+              <a
+                href={link}
+                class="block flex-none w-64 sm:w-72 snap-center bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group cursor-pointer hover:shadow-md transition"
+              >
+                <div class="h-36 sm:h-40 overflow-hidden relative bg-gray-200 skeleton-shimmer">
+                  <OptimizedImage
+                    src={
+                      tourImages[tour.slug] ||
+                      "https://images.unsplash.com/photo-1596700414605-e45f1b1c7c9a?q=80&w=600"
+                    }
+                    alt={
+                      tourImageAlts[tour.slug] ||
+                      (isTamil ? tour.title_ta : tour.title)
+                    }
+                    class="w-full h-full object-cover group-hover:scale-105 transition duration-700 relative z-10"
+                  />
+                  <span class="absolute top-2 left-2 bg-green-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
+                    {isTamil ? "சுற்றுலா தலம்" : "DESTINATION"}
+                  </span>
                 </div>
-              </div>
-            </a>
-          ))
+                <div class="p-4">
+                  <h3 class="font-bold text-base text-gray-900 mb-1 line-clamp-1">
+                    {isTamil ? tour.title_ta : tour.title}
+                  </h3>
+                  <p class="text-xs text-gray-500 mb-3 line-clamp-2">
+                    {isTamil ? tour.overview_ta : tour.overview}
+                  </p>
+                  <div class="flex items-center text-green-600 font-bold text-xs uppercase tracking-wide group-hover:text-green-700">
+                    <span>
+                      {isTamil
+                        ? `${tour.title_ta} சுற்றுலா`
+                        : `Explore ${tour.title}`}
+                    </span>
+                    <i class="fas fa-arrow-right ml-1 group-hover:translate-x-1 transition" />
+                  </div>
+                </div>
+              </a>
+            );
+          })
         }
       </div>
       <div class="text-center mt-6">
         <a
-          href="/services/category/popular-destinations"
+          href={isTamil
+            ? "/ta/services/category/popular-destinations/"
+            : "/services/category/popular-destinations/"}
           class="inline-flex items-center text-green-600 font-bold text-sm hover:text-green-700 transition"
         >
-          <span class="lang-en">View All</span>
-          <span class="lang-ta">அனைத்தையும் காண்க</span>
+          {isTamil ? "அனைத்தையும் காண்க" : "View All"}
           <i class="fas fa-arrow-right ml-2"></i>
         </a>
       </div>

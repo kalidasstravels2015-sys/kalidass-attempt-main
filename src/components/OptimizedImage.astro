@@ -3,24 +3,26 @@ import type { ImageMetadata } from "astro";
 import { Image } from "astro:assets";
 
 interface Props {
-    src: string;
-    alt: string;
-    class?: string;
-    loading?: "eager" | "lazy";
-    sizes?: string;
+  src: string;
+  alt: string;
+  class?: string;
+  loading?: "eager" | "lazy";
+  decoding?: "async" | "auto" | "sync";
+  sizes?: string;
 }
 
 const {
-    src,
-    alt,
-    class: className,
-    loading = "lazy",
-    sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+  src,
+  alt,
+  class: className,
+  loading = "lazy",
+  decoding = "async",
+  sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
 } = Astro.props;
 
 // glob all images from src/assets/images
 const images = import.meta.glob<{ default: ImageMetadata }>(
-    "/src/assets/images/**/*.{jpeg,jpg,png,gif,webp,svg}",
+  "/src/assets/images/**/*.{jpeg,jpg,png,gif,webp,svg}",
 );
 
 // The src from JSON is usually like "/images/hero/abc.webp"
@@ -30,35 +32,48 @@ const imagePath = `/src/assets${src}`;
 
 let imageData: ImageMetadata | null = null;
 if (!isRemote) {
-    if (images[imagePath]) {
-        try {
-            const mod = await images[imagePath]();
-            imageData = mod.default;
-        } catch (e) {
-            console.error(`Failed to load image: ${imagePath}`, e);
-        }
-    } else {
-        // Image not found in src/assets, so it must be in public/
-        // We will fall back to using the img tag with the public path.
+  if (images[imagePath]) {
+    try {
+      const mod = await images[imagePath]();
+      imageData = mod.default;
+    } catch (e) {
+      console.error(`Failed to load image: ${imagePath}`, e);
     }
+  } else {
+    // Image not found in src/assets, so it must be in public/
+    // We will fall back to using the img tag with the public path.
+  }
 }
 ---
 
 {
-    isRemote ? (
-        <img src={src} alt={alt} class={className} loading={loading} />
-    ) : imageData ? (
-        <Image
-            src={imageData}
-            alt={alt}
-            class={className}
-            widths={[240, 540, 720, 1080, 1600]}
-            sizes={sizes}
-            format="webp"
-            loading={loading}
-            quality={80}
-        />
-    ) : (
-        <img src={src} alt={alt} class={className} loading={loading} />
-    )
+  isRemote ? (
+    <img
+      src={src}
+      alt={alt}
+      class={className}
+      loading={loading}
+      decoding={decoding}
+    />
+  ) : imageData ? (
+    <Image
+      src={imageData}
+      alt={alt}
+      class={className}
+      widths={[240, 540, 720, 1080, 1600]}
+      sizes={sizes}
+      format="webp"
+      loading={loading}
+      decoding={decoding}
+      quality={80}
+    />
+  ) : (
+    <img
+      src={src}
+      alt={alt}
+      class={className}
+      loading={loading}
+      decoding={decoding}
+    />
+  )
 }

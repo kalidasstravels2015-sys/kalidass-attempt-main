@@ -744,7 +744,7 @@ _Please confirm availability._`;
                     <div className="flex justify-between items-end mb-4">
                       <div>
                         <p className="text-xs text-emerald-700 font-bold uppercase">{isTa ? 'மொத்த மதிப்பீடு' : 'Total Estimate'}</p>
-                        <p className="text-3xl font-black text-slate-800">₹ {estimate.toLocaleString()}</p>
+                        <p className="text-3xl font-black text-slate-800">₹ {estimate.toLocaleString('en-IN')}</p>
                       </div>
                       <div className="text-[10px] text-slate-500 text-right">
                         {isTa ? 'கட்டணம்' : 'Rate'}: ₹{rates[vehicle]}/km
@@ -968,7 +968,7 @@ _Please confirm availability._`;
                 <div className="flex justify-between items-center">
                   <div>
                     <p className="text-[10px] text-emerald-700 font-bold uppercase">{isTa ? 'மொத்த மதிப்பீடு' : 'Total Estimate'}</p>
-                    <p className="text-2xl font-black text-slate-800">₹ {estimate > 0 ? estimate.toLocaleString() : '0'}</p>
+                    <p className="text-2xl font-black text-slate-800">₹ {estimate > 0 ? estimate.toLocaleString('en-IN') : '0'}</p>
                   </div>
                   <div className="text-[10px] text-slate-500 text-right">
                     {distance ? `${distance.toFixed(1)} km` : ''}

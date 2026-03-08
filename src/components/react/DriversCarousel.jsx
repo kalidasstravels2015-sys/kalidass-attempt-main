@@ -9,18 +9,19 @@ const DriverCard = ({ driver, lang }) => {
 
     return (
         <div className="flex-none w-72 snap-center bg-white rounded-2xl shadow-sm border border-slate-200 p-4 hover:shadow-md transition-all duration-300 group">
-            <div className="relative mb-4 overflow-hidden rounded-xl">
+            <div className="relative mb-4 overflow-hidden rounded-xl bg-slate-200 skeleton-shimmer">
                 <img
                     src={driver.image}
-                    className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-64 object-cover transform group-hover:scale-105 transition-all duration-500 relative z-10"
                     alt={isTa ? (driver.name_ta || driver.name) : driver.name}
                     loading="lazy"
+                    onLoad={(e) => e.target.style.opacity = 1}
+                    style={{ opacity: 0 }}
                 />
-                <div className="absolute top-2 left-2 flex flex-col gap-1.5">
+                <div className="absolute top-2 left-2 flex flex-col gap-1.5 z-20">
                     <span className="bg-indigo-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm w-fit">
                         {isTa ? (driver.tag_ta || driver.tag) : driver.tag}
                     </span>
-                    {/* crossing_border badge removed per user request */}
                 </div>
             </div>
 

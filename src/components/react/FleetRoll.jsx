@@ -12,19 +12,21 @@ const FleetCard = ({ vehicle, lang, isVisible }) => {
         <div className="flex-shrink-0 w-80 snap-center md:w-auto md:snap-align-none transition-opacity duration-500 opacity-100 h-full">
             <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col">
                 {/* Image */}
-                <div className="relative h-56 overflow-hidden bg-slate-100">
+                <div className="relative h-56 overflow-hidden bg-slate-200 skeleton-shimmer">
                     {isVisible && (
                         <>
                             <img
                                 src={vehicle.image}
                                 alt={isTa ? (vehicle.name_ta || vehicle.name) : vehicle.name}
-                                className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
+                                className="w-full h-full object-cover transition-all duration-700 hover:scale-110 relative z-10"
                                 loading="lazy"
+                                onLoad={(e) => e.target.style.opacity = 1}
+                                style={{ opacity: 0 }}
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-20"></div>
 
                             {/* Badges */}
-                            <div className="absolute top-4 left-4 flex flex-col gap-2">
+                            <div className="absolute top-4 left-4 flex flex-col gap-2 z-30">
                                 {vehicle.details.some(d => d.toLowerCase().includes('sanitized')) && (
                                     <span className="bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1 w-fit">
                                         <ShieldCheck className="w-3 h-3" />
@@ -39,7 +41,7 @@ const FleetCard = ({ vehicle, lang, isVisible }) => {
                                 )}
                             </div>
 
-                            <div className="absolute bottom-4 left-4">
+                            <div className="absolute bottom-4 left-4 z-30">
                                 <h3 className="text-2xl font-bold text-white tracking-tight">
                                     {isTa ? (vehicle.name_ta || vehicle.name) : vehicle.name}
                                 </h3>

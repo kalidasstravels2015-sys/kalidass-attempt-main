@@ -1,0 +1,82 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import serviceDetails from "../../../data/serviceDetails.json";
+
+// Group services by category
+const servicesByCategory = serviceDetails.reduce(
+  (acc: Record<string, typeof serviceDetails>, service) => {
+    const category = service.category_ta || service.category;
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(service);
+    return acc;
+  },
+  {},
+);
+
+const categories = Object.keys(servicesByCategory);
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "அனைத்து சேவைகள் - Kalidass Travels",
+  description:
+    "திருப்பதி சுற்றுலா, கார்ப்பரேட் பயணம் மற்றும் வெளியூர் டாக்ஸி உள்ளிட்ட எங்களது விரிவான பயண சேவைகளை ஆராயுங்கள்.",
+  url: Astro.url.href,
+  image: "https://kalidasstravels.in/images/logo.png",
+};
+---
+
+<Layout
+  title="அனைத்து சேவைகள் - Kalidass Travels"
+  description="எங்களது முழுமையான பயண சேவைகளைப் பாருங்கள். ஆன்மீகக் கோவில் சுற்றுலா முதல் சென்னையின் தொழில்முறை கார்ப்பரேட் டாக்ஸி சேவைகள் வரை."
+  schema={schema}
+  lang="ta"
+>
+  <main class="bg-gray-50 min-h-screen py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4 font-heading">
+          எங்களது முழுமையான சேவைகள்
+        </h1>
+        <p class="text-lg text-gray-600 font-medium">
+          எங்களது விரிவான பயண தீர்வுகளை ஆராயுங்கள்
+        </p>
+      </div>
+
+      <div class="space-y-16">
+        {
+          categories.map((category) => (
+            <section>
+              <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b border-gray-200 pb-2 font-heading">
+                {category}
+              </h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {servicesByCategory[category].map((service) => (
+                  <a
+                    href={`/ta/services/${service.slug}/`}
+                    class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100 group"
+                  >
+                    <h3 class="text-lg font-semibold text-gray-900 group-hover:text-red-600 transition-colors mb-2 font-heading">
+                      {service.title_ta || service.title}
+                    </h3>
+                    {(service.overview_ta || service.overview) && (
+                      <p class="text-gray-500 text-sm line-clamp-2">
+                        {service.overview_ta || service.overview}
+                      </p>
+                    )}
+                    <div class="mt-4 text-red-600 text-sm font-medium flex items-center gap-1">
+                      கூடுதல் விவரங்கள்{" "}
+                      <i class="fa-solid fa-arrow-right text-xs" />
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </section>
+          ))
+        }
+      </div>
+    </div>
+  </main>
+</Layout>

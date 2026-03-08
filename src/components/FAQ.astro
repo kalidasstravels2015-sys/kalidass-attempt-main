@@ -1,513 +1,527 @@
 ---
-
+const { lang = "en" } = Astro.props;
+const isTamil = lang === "ta";
 ---
 
 <section class="py-12 bg-gray-50 border-t border-gray-200">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-10">
-            <h2 class="text-3xl font-extrabold text-gray-900 mb-4">
-                <span class="lang-en"
-                    >Common Questions About Taxi Services in Chennai</span
-                >
-                <span class="lang-ta"
-                    >சென்னை டாக்ஸி சேவைகள் பற்றிய பொதுவான கேள்விகள்</span
-                >
-            </h2>
-            <p class="text-gray-600">
-                <span class="lang-en"
-                    >Find answers to frequently asked questions about our temple
-                    tours, corporate travel, and outstation cabs.</span
-                >
-                <span class="lang-ta"
-                    >எங்கள் கோவில் சுற்றுலா, கார்ப்பரேட் பயணம் மற்றும் வெளியூர்
-                    டாக்ஸி சேவைகள் பற்றிய கேள்விகளுக்கான பதில்கள்.</span
-                >
-            </p>
-        </div>
-
-        <div class="space-y-4">
-            <!-- FAQ Item 1 -->
-            <details class="group bg-white rounded-lg shadow-sm">
-                <summary
-                    class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
-                >
-                    <span class="text-gray-900 font-semibold lang-en"
-                        >Do you offer one-way drops from Chennai to other
-                        cities?</span
-                    >
-                    <span class="text-gray-900 font-semibold lang-ta"
-                        >சென்னையிலிருந்து மற்ற நகரங்களுக்கு ஒரு வழி பயணம்
-                        உள்ளதா?</span
-                    >
-                    <span class="transition group-open:rotate-180">
-                        <svg
-                            fill="none"
-                            height="24"
-                            shape-rendering="geometricPrecision"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="1.5"
-                            viewBox="0 0 24 24"
-                            width="24"><path d="M6 9l6 6 6-6"></path></svg
-                        >
-                    </span>
-                </summary>
-                <div class="text-gray-600 px-6 pb-6">
-                    <p class="lang-en">
-                        Yes, we provide affordable one-way drop taxi services
-                        from Chennai to major cities like Bangalore, Coimbatore,
-                        Trichy, and Madurai. You only pay for the one-way
-                        distance traveled.
-                    </p>
-                    <p class="lang-ta">
-                        ஆம், சென்னையிலிருந்து பெங்களூர், கோயம்புத்தூர், திருச்சி
-                        மற்றும் மதுரை போன்ற முக்கிய நகரங்களுக்கு ஒரு வழி டாக்ஸி
-                        சேவைகளை நாங்கள் வழங்குகிறோம்.
-                    </p>
-                </div>
-            </details>
-
-            <!-- FAQ Item 2 -->
-            <details class="group bg-white rounded-lg shadow-sm">
-                <summary
-                    class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
-                >
-                    <span class="text-gray-900 font-semibold lang-en"
-                        >What vehicles are available for temple tour packages?</span
-                    >
-                    <span class="text-gray-900 font-semibold lang-ta"
-                        >கோவில் சுற்றுலாக்களுக்கு என்ன வாகனங்கள் உள்ளன?</span
-                    >
-                    <span class="transition group-open:rotate-180">
-                        <svg
-                            fill="none"
-                            height="24"
-                            shape-rendering="geometricPrecision"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="1.5"
-                            viewBox="0 0 24 24"
-                            width="24"><path d="M6 9l6 6 6-6"></path></svg
-                        >
-                    </span>
-                </summary>
-                <div class="text-gray-600 px-6 pb-6">
-                    <p class="lang-en">
-                        We have a diverse fleet suitable for all group sizes,
-                        including Swift Dzire (4 pax), Toyota Etios (4 pax),
-                        Innova Crysta (6-7 pax), and Tempo Traveller (12+ pax)
-                        for larger family pilgrimages to Tirupati, Rameswaram,
-                        and Navagraha temples.
-                    </p>
-                    <p class="lang-ta">
-                        எங்களிடம் ஸ்விஃப்ட் டிசையர், டொயோட்டா எட்டியோஸ், இன்னோவா
-                        கிரிஸ்டா மற்றும் பெரிய குடும்பங்களுக்கு டெம்போ டிராவலர்
-                        போன்ற பல்வேறு வாகனங்கள் உள்ளன.
-                    </p>
-                </div>
-            </details>
-
-            <!-- FAQ Item 3 -->
-            <details class="group bg-white rounded-lg shadow-sm">
-                <summary
-                    class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
-                >
-                    <span class="text-gray-900 font-semibold lang-en"
-                        >Are driver batta and toll charges included?</span
-                    >
-                    <span class="text-gray-900 font-semibold lang-ta"
-                        >டிரைவர் பேட்டா மற்றும் டோல் கட்டணங்கள்
-                        சேர்க்கப்பட்டுள்ளதா?</span
-                    >
-                    <span class="transition group-open:rotate-180">
-                        <svg
-                            fill="none"
-                            height="24"
-                            shape-rendering="geometricPrecision"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="1.5"
-                            viewBox="0 0 24 24"
-                            width="24"><path d="M6 9l6 6 6-6"></path></svg
-                        >
-                    </span>
-                </summary>
-                <div class="text-gray-600 px-6 pb-6">
-                    <p class="lang-en">
-                        Our package estimates usually include driver batta.
-                        However, toll gate charges, parking fees, and interstate
-                        permit taxes are to be paid directly by the guest as per
-                        actuals.
-                    </p>
-                    <p class="lang-ta">
-                        எங்கள் கட்டண மதிப்பீட்டில் டிரைவர் பேட்டா அடங்கும்.
-                        ஆனால், டோல் கட்டணம், பார்க்கிங் மற்றும் மாநில வரி
-                        ஆகியவற்றை வாடிக்கையாளர்கள் செலுத்த வேண்டும்.
-                    </p>
-                </div>
-            </details>
-
-            <!-- FAQ Item 4 -->
-            <details class="group bg-white rounded-lg shadow-sm">
-                <summary
-                    class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
-                >
-                    <span class="text-gray-900 font-semibold lang-en"
-                        >Do you offer airport pickup and drop services?</span
-                    >
-                    <span class="text-gray-900 font-semibold lang-ta"
-                        >விமான நிலைய பிக்கப் மற்றும் டிராப் சேவைகள் உள்ளதா?</span
-                    >
-                    <span class="transition group-open:rotate-180">
-                        <svg
-                            fill="none"
-                            height="24"
-                            shape-rendering="geometricPrecision"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="1.5"
-                            viewBox="0 0 24 24"
-                            width="24"><path d="M6 9l6 6 6-6"></path></svg
-                        >
-                    </span>
-                </summary>
-                <div class="text-gray-600 px-6 pb-6">
-                    <p class="lang-en">
-                        Yes, we provide 24/7 reliable airport taxi services for
-                        Chennai International Airport (MAA). Pre-book your ride
-                        to ensure on-time pickup or drop-off.
-                    </p>
-                    <p class="lang-ta">
-                        ஆம், சென்னை சர்வதேச விமான நிலையத்திற்கு 24/7 டாக்ஸி
-                        சேவைகளை வழங்குகிறோம்.
-                    </p>
-                </div>
-            </details>
-
-            <!-- FAQ Item 5 -->
-            <details class="group bg-white rounded-lg shadow-sm">
-                <summary
-                    class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
-                >
-                    <span class="text-gray-900 font-semibold lang-en"
-                        >Can I book a cab for local Chennai sightseeing?</span
-                    >
-                    <span class="text-gray-900 font-semibold lang-ta"
-                        >சென்னை உள்ளூர் சுற்றுலாவுக்கு டாக்ஸி முன்பதிவு
-                        செய்யலாமா?</span
-                    >
-                    <span class="transition group-open:rotate-180">
-                        <svg
-                            fill="none"
-                            height="24"
-                            shape-rendering="geometricPrecision"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="1.5"
-                            viewBox="0 0 24 24"
-                            width="24"><path d="M6 9l6 6 6-6"></path></svg
-                        >
-                    </span>
-                </summary>
-                <div class="text-gray-600 px-6 pb-6">
-                    <p class="lang-en">
-                        Absolutely! We offer 8hrs/80km and 12hrs/120km packages
-                        for local city tours, shopping, and beach visits within
-                        Chennai.
-                    </p>
-                    <p class="lang-ta">
-                        நிச்சயமாக! சென்னை நகர சுற்றுலா மற்றும் ஷாப்பிங்கிற்கு 8
-                        மணிநேரம்/80கிமீ பேக்கேஜுகளை வழங்குகிறோம்.
-                    </p>
-                </div>
-            </details>
-
-            <!-- FAQ Item 6 -->
-            <details class="group bg-white rounded-lg shadow-sm">
-                <summary
-                    class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
-                >
-                    <span class="text-gray-900 font-semibold lang-en"
-                        >Is it safe for night travel?</span
-                    >
-                    <span class="text-gray-900 font-semibold lang-ta"
-                        >இரவு பயணம் பாதுகாப்பானதா?</span
-                    >
-                    <span class="transition group-open:rotate-180">
-                        <svg
-                            fill="none"
-                            height="24"
-                            shape-rendering="geometricPrecision"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="1.5"
-                            viewBox="0 0 24 24"
-                            width="24"><path d="M6 9l6 6 6-6"></path></svg
-                        >
-                    </span>
-                </summary>
-                <div class="text-gray-600 px-6 pb-6">
-                    <p class="lang-en">
-                        Yes, safety is our priority. All our drivers are
-                        background-verified and experienced in night driving. We
-                        also track our vehicles for added security.
-                    </p>
-                    <p class="lang-ta">
-                        ஆம், பாதுகாப்பு எங்கள் முன்னுரிமை. எங்கள் ஓட்டுநர்கள்
-                        அனைவரும் சரிபார்க்கப்பட்டவர்கள் மற்றும் இரவு பயணங்களில்
-                        அனுபவம் வாய்ந்தவர்கள்.
-                    </p>
-                </div>
-            </details>
-
-            <!-- FAQ Item 7 -->
-            <details class="group bg-white rounded-lg shadow-sm">
-                <summary
-                    class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
-                >
-                    <span class="text-gray-900 font-semibold lang-en"
-                        >How do I pay for the ride?</span
-                    >
-                    <span class="text-gray-900 font-semibold lang-ta"
-                        >கட்டணம் எப்படி செலுத்துவது?</span
-                    >
-                    <span class="transition group-open:rotate-180">
-                        <svg
-                            fill="none"
-                            height="24"
-                            shape-rendering="geometricPrecision"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="1.5"
-                            viewBox="0 0 24 24"
-                            width="24"><path d="M6 9l6 6 6-6"></path></svg
-                        >
-                    </span>
-                </summary>
-                <div class="text-gray-600 px-6 pb-6">
-                    <p class="lang-en">
-                        You can pay via cash, Google Pay, PhonePe, or bank
-                        transfer directly to the driver or owner after the trip
-                        completion.
-                    </p>
-                    <p class="lang-ta">
-                        பயணம் முடிந்த பிறகு ரொக்கம், Google Pay அல்லது PhonePe
-                        மூலம் செலுத்தலாம்.
-                    </p>
-                </div>
-            </details>
-
-            <!-- FAQ Item 8 -->
-            <details class="group bg-white rounded-lg shadow-sm">
-                <summary
-                    class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
-                >
-                    <span class="text-gray-900 font-semibold lang-en"
-                        >Do you offer corporate employee transportation?</span
-                    >
-                    <span class="text-gray-900 font-semibold lang-ta"
-                        >கார்ப்பரேட் ஊழியர் போக்குவரத்து சேவை உள்ளதா?</span
-                    >
-                    <span class="transition group-open:rotate-180">
-                        <svg
-                            fill="none"
-                            height="24"
-                            shape-rendering="geometricPrecision"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="1.5"
-                            viewBox="0 0 24 24"
-                            width="24"><path d="M6 9l6 6 6-6"></path></svg
-                        >
-                    </span>
-                </summary>
-                <div class="text-gray-600 px-6 pb-6">
-                    <p class="lang-en">
-                        Yes, we specialize in corporate employee pickup and
-                        drops, as well as monthly cab services for companies in
-                        OMR, Guindy, and Siruseri IT parks.
-                    </p>
-                    <p class="lang-ta">
-                        ஆம், கார்ப்பரேட் நிறுவனங்களுக்கு மாதாந்திர வாடகை
-                        அடிப்படையில் ஊழியர் போக்குவரத்து சேவையை வழங்குகிறோம்.
-                    </p>
-                </div>
-            </details>
-
-            <!-- FAQ Item 9 -->
-            <details class="group bg-white rounded-lg shadow-sm">
-                <summary
-                    class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
-                >
-                    <span class="text-gray-900 font-semibold lang-en"
-                        >Can I customize my tour package?</span
-                    >
-                    <span class="text-gray-900 font-semibold lang-ta"
-                        >சுற்றுலா திட்டத்தை மாற்றியமைக்க முடியுமா?</span
-                    >
-                    <span class="transition group-open:rotate-180">
-                        <svg
-                            fill="none"
-                            height="24"
-                            shape-rendering="geometricPrecision"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="1.5"
-                            viewBox="0 0 24 24"
-                            width="24"><path d="M6 9l6 6 6-6"></path></svg
-                        >
-                    </span>
-                </summary>
-                <div class="text-gray-600 px-6 pb-6">
-                    <p class="lang-en">
-                        Yes, all our temple tour and holiday packages are fully
-                        customizable. Tell us your preferred destinations, and
-                        we will plan the itinerary for you.
-                    </p>
-                    <p class="lang-ta">
-                        ஆம், உங்கள் விருப்பத்திற்கு ஏற்ப சுற்றுலா இடங்களை
-                        மாற்றியமைத்துத் தருவோம்.
-                    </p>
-                </div>
-            </details>
-
-            <!-- FAQ Item 10 -->
-            <details class="group bg-white rounded-lg shadow-sm">
-                <summary
-                    class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
-                >
-                    <span class="text-gray-900 font-semibold lang-en"
-                        >How far in advance should I book?</span
-                    >
-                    <span class="text-gray-900 font-semibold lang-ta"
-                        >எவ்வளவு முன்னதாக முன்பதிவு செய்ய வேண்டும்?</span
-                    >
-                    <span class="transition group-open:rotate-180">
-                        <svg
-                            fill="none"
-                            height="24"
-                            shape-rendering="geometricPrecision"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="1.5"
-                            viewBox="0 0 24 24"
-                            width="24"><path d="M6 9l6 6 6-6"></path></svg
-                        >
-                    </span>
-                </summary>
-                <div class="text-gray-600 px-6 pb-6">
-                    <p class="lang-en">
-                        For local trips, 4 hours notice is sufficient. For
-                        outstation and long temple tours, we recommend booking
-                        at least 24-48 hours in advance to secure the best
-                        vehicle.
-                    </p>
-                    <p class="lang-ta">
-                        உள்ளூர் பயணங்களுக்கு 4 மணிநேரம் முன்னதாகவும், வெளியூர்
-                        பயணங்களுக்கு 24-48 மணிநேரம் முன்னதாகவும் முன்பதிவு
-                        செய்வது சிறந்தது.
-                    </p>
-                </div>
-            </details>
-        </div>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-10">
+      <h2 class="text-3xl font-extrabold text-gray-900 mb-4">
+        {
+          isTamil
+            ? "சென்னை டாக்ஸி சேவைகள் பற்றிய பொதுவான கேள்விகள்"
+            : "Common Questions About Taxi Services in Chennai"
+        }
+      </h2>
+      <p class="text-gray-600">
+        {
+          isTamil
+            ? "எங்கள் கோவில் சுற்றுலா, கார்ப்பரேட் பயணம் மற்றும் வெளியூர் டாக்ஸி சேவைகள் பற்றிய கேள்விகளுக்கான பதில்கள்."
+            : "Find answers to frequently asked questions about our temple tours, corporate travel, and outstation cabs."
+        }
+      </p>
     </div>
+
+    <div class="space-y-4">
+      <!-- FAQ Item 1 -->
+      <details class="group bg-white rounded-lg shadow-sm">
+        <summary
+          class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
+        >
+          <span class="text-gray-900 font-semibold">
+            {
+              isTamil
+                ? "சென்னையிலிருந்து மற்ற நகரங்களுக்கு ஒரு வழி பயணம் உள்ளதா?"
+                : "Do you offer one-way drops from Chennai to other cities?"
+            }
+          </span>
+          <span class="transition group-open:rotate-180">
+            <svg
+              fill="none"
+              height="24"
+              shape-rendering="geometricPrecision"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"><path d="M6 9l6 6 6-6"></path></svg
+            >
+          </span>
+        </summary>
+        <div class="text-gray-600 px-6 pb-6">
+          <p>
+            {
+              isTamil
+                ? "ஆம், சென்னையிலிருந்து பெங்களூர், கோயம்புத்தூர், திருச்சி மற்றும் மதுரை போன்ற முக்கிய நகரங்களுக்கு ஒரு வழி டாக்ஸி சேவைகளை நாங்கள் வழங்குகிறோம்."
+                : "Yes, we provide affordable one-way drop taxi services from Chennai to major cities like Bangalore, Coimbatore, Trichy, and Madurai. You only pay for the one-way distance traveled."
+            }
+          </p>
+        </div>
+      </details>
+
+      <!-- FAQ Item 2 -->
+      <details class="group bg-white rounded-lg shadow-sm">
+        <summary
+          class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
+        >
+          <span class="text-gray-900 font-semibold">
+            {
+              isTamil
+                ? "கோவில் சுற்றுலாக்களுக்கு என்ன வாகனங்கள் உள்ளன?"
+                : "What vehicles are available for temple tour packages?"
+            }
+          </span>
+          <span class="transition group-open:rotate-180">
+            <svg
+              fill="none"
+              height="24"
+              shape-rendering="geometricPrecision"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"><path d="M6 9l6 6 6-6"></path></svg
+            >
+          </span>
+        </summary>
+        <div class="text-gray-600 px-6 pb-6">
+          <p>
+            {
+              isTamil
+                ? "எங்களிடம் ஸ்விஃப்ட் டிசையர், டொயோட்டா எட்டியோஸ், இன்னோவா கிரிஸ்டா மற்றும் பெரிய குடும்பங்களுக்கு டெம்போ டிராவலர் போன்ற பல்வேறு வாகனங்கள் உள்ளன."
+                : "We have a diverse fleet suitable for all group sizes, including Swift Dzire (4 pax), Toyota Etios (4 pax), Innova Crysta (6-7 pax), and Tempo Traveller (12+ pax) for larger family pilgrimages to Tirupati, Rameswaram, and Navagraha temples."
+            }
+          </p>
+        </div>
+      </details>
+
+      <!-- FAQ Item 3 -->
+      <details class="group bg-white rounded-lg shadow-sm">
+        <summary
+          class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
+        >
+          <span class="text-gray-900 font-semibold">
+            {
+              isTamil
+                ? "டிரைவர் பேட்டா மற்றும் டோல் கட்டணங்கள் சேர்க்கப்பட்டுள்ளதா?"
+                : "Are driver batta and toll charges included?"
+            }
+          </span>
+          <span class="transition group-open:rotate-180">
+            <svg
+              fill="none"
+              height="24"
+              shape-rendering="geometricPrecision"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"><path d="M6 9l6 6 6-6"></path></svg
+            >
+          </span>
+        </summary>
+        <div class="text-gray-600 px-6 pb-6">
+          <p>
+            {
+              isTamil
+                ? "எங்கள் கட்டண மதிப்பீட்டில் டிரைவர் பேட்டா அடங்கும். ஆனால், டோல் கட்டணம், பார்க்கிங் மற்றும் மாநில வரி ஆகியவற்றை வாடிக்கையாளர்கள் செலுத்த வேண்டும்."
+                : "Our package estimates usually include driver batta. However, toll gate charges, parking fees, and interstate permit taxes are to be paid directly by the guest as per actuals."
+            }
+          </p>
+        </div>
+      </details>
+
+      <!-- FAQ Item 4 -->
+      <details class="group bg-white rounded-lg shadow-sm">
+        <summary
+          class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
+        >
+          <span class="text-gray-900 font-semibold">
+            {
+              isTamil
+                ? "விமான நிலைய பிக்கப் மற்றும் டிராப் சேவைகள் உள்ளதா?"
+                : "Do you offer airport pickup and drop services?"
+            }
+          </span>
+          <span class="transition group-open:rotate-180">
+            <svg
+              fill="none"
+              height="24"
+              shape-rendering="geometricPrecision"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"><path d="M6 9l6 6 6-6"></path></svg
+            >
+          </span>
+        </summary>
+        <div class="text-gray-600 px-6 pb-6">
+          <p>
+            {
+              isTamil
+                ? "ஆம், சென்னை சர்வதேச விமான நிலையத்திற்கு 24/7 டாக்ஸி சேவைகளை வழங்குகிறோம்."
+                : "Yes, we provide 24/7 reliable airport taxi services for Chennai International Airport (MAA). Pre-book your ride to ensure on-time pickup or drop-off."
+            }
+          </p>
+        </div>
+      </details>
+
+      <!-- FAQ Item 5 -->
+      <details class="group bg-white rounded-lg shadow-sm">
+        <summary
+          class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
+        >
+          <span class="text-gray-900 font-semibold">
+            {
+              isTamil
+                ? "சென்னை உள்ளூர் சுற்றுலாவுக்கு டாக்ஸி முன்பதிவு செய்யலாமா?"
+                : "Can I book a cab for local Chennai sightseeing?"
+            }
+          </span>
+          <span class="transition group-open:rotate-180">
+            <svg
+              fill="none"
+              height="24"
+              shape-rendering="geometricPrecision"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"><path d="M6 9l6 6 6-6"></path></svg
+            >
+          </span>
+        </summary>
+        <div class="text-gray-600 px-6 pb-6">
+          <p>
+            {
+              isTamil
+                ? "நிச்சயமாக! சென்னை நகர சுற்றுலா மற்றும் ஷாப்பிங்கிற்கு 8 மணிநேரம்/80கிமீ பேக்கேஜுகளை வழங்குகிறோம்."
+                : "Absolutely! We offer 8hrs/80km and 12hrs/120km packages for local city tours, shopping, and beach visits within Chennai."
+            }
+          </p>
+        </div>
+      </details>
+
+      <!-- FAQ Item 6 -->
+      <details class="group bg-white rounded-lg shadow-sm">
+        <summary
+          class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
+        >
+          <span class="text-gray-900 font-semibold">
+            {
+              isTamil
+                ? "இரவு பயணம் பாதுகாப்பானதா?"
+                : "Is it safe for night travel?"
+            }
+          </span>
+          <span class="transition group-open:rotate-180">
+            <svg
+              fill="none"
+              height="24"
+              shape-rendering="geometricPrecision"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"><path d="M6 9l6 6 6-6"></path></svg
+            >
+          </span>
+        </summary>
+        <div class="text-gray-600 px-6 pb-6">
+          <p>
+            {
+              isTamil
+                ? "ஆம், பாதுகாப்பு எங்கள் முன்னுரிமை. எங்கள் ஓட்டுநர்கள் அனைவரும் சரிபார்க்கப்பட்டவர்கள் மற்றும் இரவு பயணங்களில் அனுபவம் வாய்ந்தவர்கள்."
+                : "Yes, safety is our priority. All our drivers are background-verified and experienced in night driving. We also track our vehicles for added security."
+            }
+          </p>
+        </div>
+      </details>
+
+      <!-- FAQ Item 7 -->
+      <details class="group bg-white rounded-lg shadow-sm">
+        <summary
+          class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
+        >
+          <span class="text-gray-900 font-semibold">
+            {
+              isTamil
+                ? "கட்டணம் எப்படி செலுத்துவது?"
+                : "How do I pay for the ride?"
+            }
+          </span>
+          <span class="transition group-open:rotate-180">
+            <svg
+              fill="none"
+              height="24"
+              shape-rendering="geometricPrecision"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"><path d="M6 9l6 6 6-6"></path></svg
+            >
+          </span>
+        </summary>
+        <div class="text-gray-600 px-6 pb-6">
+          <p>
+            {
+              isTamil
+                ? "பயணம் முடிந்த பிறகு ரொக்கம், Google Pay அல்லது PhonePe மூலம் செலுத்தலாம்."
+                : "You can pay via cash, Google Pay, PhonePe, or bank transfer directly to the driver or owner after the trip completion."
+            }
+          </p>
+        </div>
+      </details>
+
+      <!-- FAQ Item 8 -->
+      <details class="group bg-white rounded-lg shadow-sm">
+        <summary
+          class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
+        >
+          <span class="text-gray-900 font-semibold">
+            {
+              isTamil
+                ? "கார்ப்பரேட் ஊழியர் போக்குவரத்து சேவை உள்ளதா?"
+                : "Do you offer corporate employee transportation?"
+            }
+          </span>
+          <span class="transition group-open:rotate-180">
+            <svg
+              fill="none"
+              height="24"
+              shape-rendering="geometricPrecision"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"><path d="M6 9l6 6 6-6"></path></svg
+            >
+          </span>
+        </summary>
+        <div class="text-gray-600 px-6 pb-6">
+          <p>
+            {
+              isTamil
+                ? "ஆம், கார்ப்பரேட் நிறுவனங்களுக்கு மாதாந்திர வாடகை அடிப்படையில் ஊழியர் போக்குவரத்து சேவையை வழங்குகிறோம்."
+                : "Yes, we specialize in corporate employee pickup and drops, as well as monthly cab services for companies in OMR, Guindy, and Siruseri IT parks."
+            }
+          </p>
+        </div>
+      </details>
+
+      <!-- FAQ Item 9 -->
+      <details class="group bg-white rounded-lg shadow-sm">
+        <summary
+          class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
+        >
+          <span class="text-gray-900 font-semibold">
+            {
+              isTamil
+                ? "சுற்றுலா திட்டத்தை மாற்றியமைக்க முடியுமா?"
+                : "Can I customize my tour package?"
+            }
+          </span>
+          <span class="transition group-open:rotate-180">
+            <svg
+              fill="none"
+              height="24"
+              shape-rendering="geometricPrecision"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"><path d="M6 9l6 6 6-6"></path></svg
+            >
+          </span>
+        </summary>
+        <div class="text-gray-600 px-6 pb-6">
+          <p>
+            {
+              isTamil
+                ? "ஆம், உங்கள் விருப்பத்திற்கு ஏற்ப சுற்றுலா இடங்களை மாற்றியமைத்துத் தருவோம்."
+                : "Yes, all our temple tour and holiday packages are fully customizable. Tell us your preferred destinations, and we will plan the itinerary for you."
+            }
+          </p>
+        </div>
+      </details>
+
+      <!-- FAQ Item 10 -->
+      <details class="group bg-white rounded-lg shadow-sm">
+        <summary
+          class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
+        >
+          <span class="text-gray-900 font-semibold">
+            {
+              isTamil
+                ? "எவ்வளவு முன்னதாக முன்பதிவு செய்ய வேண்டும்?"
+                : "How far in advance should I book?"
+            }
+          </span>
+          <span class="transition group-open:rotate-180">
+            <svg
+              fill="none"
+              height="24"
+              shape-rendering="geometricPrecision"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"><path d="M6 9l6 6 6-6"></path></svg
+            >
+          </span>
+        </summary>
+        <div class="text-gray-600 px-6 pb-6">
+          <p>
+            {
+              isTamil
+                ? "உள்ளூர் பயணங்களுக்கு 4 மணிநேரம் முன்னதாகவும், வெளியூர் பயணங்களுக்கு 24-48 மணிநேரம் முன்னதாகவும் முன்பதிவு செய்வது சிறந்தது."
+                : "For local trips, 4 hours notice is sufficient. For outstation and long temple tours, we recommend booking at least 24-48 hours in advance to secure the best vehicle."
+            }
+          </p>
+        </div>
+      </details>
+    </div>
+  </div>
 </section>
 
-<script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-            {
-                "@type": "Question",
-                "name": "Do you offer one-way drops from Chennai to other cities?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes, we provide affordable one-way drop taxi services from Chennai to major cities like Bangalore, Coimbatore, Trichy, and Madurai. You only pay for the one-way distance traveled."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "What vehicles are available for temple tour packages?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "We have a diverse fleet suitable for all group sizes, including Swift Dzire (4 pax), Toyota Etios (4 pax), Innova Crysta (6-7 pax), and Tempo Traveller (12+ pax) for larger family pilgrimages."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "Are driver batta and toll charges included?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Our package estimates usually include driver batta. However, toll gate charges, parking fees, and interstate permit taxes are to be paid directly by the guest as per actuals."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "Do you offer airport pickup and drop services?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes, we provide 24/7 reliable airport taxi services for Chennai International Airport (MAA)."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "Can I book a cab for local Chennai sightseeing?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Absolutely! We offer 8hrs/80km and 12hrs/120km packages for local city tours, shopping, and beach visits within Chennai."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "Is it safe for night travel?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes, safety is our priority. All our drivers are background-verified and experienced in night driving."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "How do I pay for the ride?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "You can pay via cash, Google Pay, PhonePe, or bank transfer directly to the driver or owner after the trip completion."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "Do you offer corporate employee transportation?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes, we specialize in corporate employee pickup and drops, as well as monthly cab services for companies in OMR, Guindy, and Siruseri IT parks."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "Can I customize my tour package?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes, all our temple tour and holiday packages are fully customizable."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "How far in advance should I book?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "For local trips, 4 hours notice is sufficient. For outstation and long temple tours, we recommend booking at least 24-48 hours in advance."
-                }
-            }
-        ]
-    }
-</script>
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: isTamil
+          ? "சென்னையிலிருந்து மற்ற ஊர்களுக்கு ஒரு வழி டிராப் (one-way drop) வசதி உள்ளதா?"
+          : "Do you offer one-way drops from Chennai to other cities?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: isTamil
+            ? "ஆம், சென்னையிலிருந்து பெங்களூர், கோயம்புத்தூர், திருச்சி மற்றும் மதுரை போன்ற முக்கிய நகரங்களுக்கு மலிவான ஒரு வழி டிராப் டாக்ஸி சேவைகளை நாங்கள் வழங்குகிறோம். நீங்கள் ஒரு வழி தூரத்திற்கு மட்டுமே பணம் செலுத்தினால் போதும்."
+            : "Yes, we provide affordable one-way drop taxi services from Chennai to major cities like Bangalore, Coimbatore, Trichy, and Madurai. You only pay for the one-way distance traveled.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: isTamil
+          ? "கோவில் சுற்றுலா பேக்கேஜ்களுக்கு என்னென்ன வாகனங்கள் உள்ளன?"
+          : "What vehicles are available for temple tour packages?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: isTamil
+            ? "எங்களிடம் ஸ்விஃப்ட் டிசையர் (4 பேர்), டொயோட்டா எட்டியோஸ் (4 பேர்), இன்னோவா கிரிஸ்டா (6-7 பேர்) மற்றும் டெம்போ டிராவலர் (12+ பேர்) என அனைத்து குழு அளவுக்கும் ஏற்ற வாகனங்கள் உள்ளன."
+            : "We have a diverse fleet suitable for all group sizes, including Swift Dzire (4 pax), Toyota Etios (4 pax), Innova Crysta (6-7 pax), and Tempo Traveller (12+ pax) for larger family pilgrimages.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: isTamil
+          ? "ஓட்டுநர் கட்டணம் (Batta) மற்றும் டோல் கட்டணங்கள் அடங்குமா?"
+          : "Are driver batta and toll charges included?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: isTamil
+            ? "எங்கள் பேக்கேஜ் மதிப்பீடுகளில் வழக்கமாக ஓட்டுநர் கட்டணம் அடங்கும். இருப்பினும், டோல் கேட் கட்டணங்கள், பார்க்கிங் கட்டணங்கள் மற்றும் மாநிலங்களுக்கு இடையேயான பெர்மிட் வரிகள் ஆகியவை வாடிக்கையாளர் நேரடியாகச் செலுத்த வேண்டும்."
+            : "Our package estimates usually include driver batta. However, toll gate charges, parking fees, and interstate permit taxes are to be paid directly by the guest as per actuals.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: isTamil
+          ? "நீங்கள் ஏர்போர்ட் பிக்கப் மற்றும் டிராப் சேவைகளை வழங்குகிறீர்களா?"
+          : "Do you offer airport pickup and drop services?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: isTamil
+            ? "ஆம், சென்னை சர்வதேச விமான நிலையத்திற்கு (MAA) 24/7 நம்பகமான ஏர்போர்ட் டாக்ஸி சேவைகளை நாங்கள் வழங்குகிறோம்."
+            : "Yes, we provide 24/7 reliable airport taxi services for Chennai International Airport (MAA).",
+        },
+      },
+      {
+        "@type": "Question",
+        name: isTamil
+          ? "சென்னை உள்ளூர் சுற்றிப் பார்ப்பதற்கு கார் முன்பதிவு செய்யலாமா?"
+          : "Can I book a cab for local Chennai sightseeing?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: isTamil
+            ? "நிச்சயமாக! சென்னையின் உள்ளூர் நகரச் சுற்றுப்பயணம் மற்றும் ஷாப்பிங்கிற்காக 8மணி/80கிமீ மற்றும் 12மணி/120கிமீ பேக்கேஜ்களை நாங்கள் வழங்குகிறோம்."
+            : "Absolutely! We offer 8hrs/80km and 12hrs/120km packages for local city tours, shopping, and beach visits within Chennai.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: isTamil
+          ? "இரவு நேரப் பயணம் பாதுகாப்பானதா?"
+          : "Is it safe for night travel?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: isTamil
+            ? "ஆம், பாதுகாப்பு எங்களது முன்னுரிமை. எங்களது அனைத்து ஓட்டுநர்களும் பின்னணி சரிபார்க்கப்பட்டவர்கள் மற்றும் இரவு நேர வாகன ஓட்டுதலில் அனுபவம் வாய்ந்தவர்கள்."
+            : "Yes, safety is our priority. All our drivers are background-verified and experienced in night driving.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: isTamil
+          ? "உங்கள் சேவையின் கூடுதல் சிறப்பம்சங்கள் என்ன?"
+          : "What are the key highlights of your service?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: isTamil
+            ? "சுத்தமான மற்றும் சுகாதாரமான கார்கள், அனுபவம் வாய்ந்த மற்றும் மரியாதையான ஓட்டுநர்கள், மறைமுக கட்டணங்கள் இல்லாத வெளிப்படையான விலை மற்றும் 24/7 வாடிக்கையாளர் ஆதரவு ஆகியவை எங்கள் சிறப்பம்சமாகும்."
+            : "Clean and sanitized cars, experienced and polite drivers, transparent pricing with no hidden costs, and 24/7 customer support.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: isTamil
+          ? "வெளியூர் பயணத்தின் போது ஓட்டுநருக்கு உணவிற்காக எவ்வளவு கொடுக்க வேண்டும்?"
+          : "How much should I pay for driver food during outstation trips?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: isTamil
+            ? "ஓட்டுநருக்கான உணவு மற்றும் தங்குமிட ஏற்பாடுகளை ஓட்டுநரே கவனித்துக்கொள்வார். நீங்கள் அதற்காக கூடுதல் கட்டணம் செலுத்தத் தேவையில்லை."
+            : "The driver will take care of their own food and accommodation arrangements. You do not need to pay extra for this.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: isTamil
+          ? "சுற்றுலா இடங்களை எங்களது விருப்பத்திற்கேற்ப மாற்றிக் கொள்ளலாமா?"
+          : "Can I customize the tour itinerary?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: isTamil
+            ? "ஆம், உங்கள் விருப்பத்திற்கு ஏற்ப சுற்றுலா இடங்களை மாற்றியமைத்துத் தருவோம்."
+            : "Yes, all our temple tour and holiday packages are fully customizable. Tell us your preferred destinations, and we will plan the itinerary for you.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: isTamil
+          ? "எவ்வளவு முன்னதாக முன்பதிவு செய்ய வேண்டும்?"
+          : "How far in advance should I book?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: isTamil
+            ? "உள்ளூர் பயணங்களுக்கு 4 மணிநேரம் முன்னதாகவும், வெளியூர் பயணங்களுக்கு 24-48 மணிநேரம் முன்னதாகவும் முன்பதிவு செய்வது சிறந்தது."
+            : "For local trips, 4 hours notice is sufficient. For outstation and long temple tours, we recommend booking at least 24-48 hours in advance to secure the best vehicle.",
+        },
+      },
+    ],
+  })}
+/>

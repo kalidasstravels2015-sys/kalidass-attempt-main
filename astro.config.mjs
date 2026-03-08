@@ -8,6 +8,7 @@ import compress from '@playform/compress';
 
 export default defineConfig({
   site: 'https://kalidasstravels.in',
+  prefetch: true,
   integrations: [
     tailwind(),
     react(),

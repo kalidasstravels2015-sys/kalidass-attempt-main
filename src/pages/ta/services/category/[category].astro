@@ -1,0 +1,237 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+import serviceDetails from '../../../../data/serviceDetails.json';
+import ActingDrivers from '../../../../components/ActingDrivers.jsx';
+
+export async function getStaticPaths() {
+  return [
+    { params: { category: 'acting-drivers' }, props: { title: 'ஆக்டிங் டிரைவர்கள்', description: 'உங்கள் சொந்த வாகனத்திற்காக தொழில்முறை டிரைவர்கள்' } },
+    { params: { category: 'corporate' }, props: { title: 'கார்ப்பரேட் அலுவலக போக்குவரத்து சேவைகள்', description: 'வணிகங்களுக்கான நம்பகமான மற்றும் செலவு குறைந்த போக்குவரத்து தீர்வுகள்' } },
+    { params: { category: 'airport-transfer' }, props: { title: 'விமான நிலைய டிராப் & பிக்கப்', description: 'சிரமமில்லாத விமான நிலைய பிக்கப் மற்றும் டிராப் வசதிகள்' } },
+    { params: { category: 'temple-tours' }, props: { title: 'கோவில் சுற்றுலா', description: 'தமிழ்நாடு முழுவதும் ஆன்மீகக் கோவில் பயணங்கள்' } },
+    { params: { category: 'popular-destinations' }, props: { title: 'பிரபலமான இடங்கள்', description: 'பாரம்பரிய இடங்கள், கடற்கரைகள் மற்றும் நகரச் சுற்றுப்பயணம்' } },
+  ];
+}
+
+const { category } = Astro.params;
+const { title, description } = Astro.props;
+const isTamil = true;
+
+// Logic to map the 36 services to the 4 main categories
+const getServicesForCategory = (catSlug: string) => {
+  return serviceDetails.filter(service => {
+    const cat = service.category;
+    const slug = service.slug;
+
+    if (catSlug === 'acting-drivers') {
+      return cat === 'Acting Driver Services' || slug === 'driver-car-for-weddings';
+    }
+    if (catSlug === 'corporate') {
+      return cat === 'Corporate Travel' || cat === 'Premium Fleet Rental' || slug === 'outstation-car-rental-per-km';
+    }
+    if (catSlug === 'airport-transfer') {
+      return cat === 'Airport Transfers' || slug === 'luggage-parcel-delivery-chennai';
+    }
+    if (catSlug === 'temple-tours') {
+      return cat === 'Temple Tours';
+    }
+    if (catSlug === 'popular-destinations') {
+      const destinations = [
+        "pondicherry-one-day-trip",
+        "mahabalipuram-ecr-temple-route",
+        "one-day-chennai-city-tour",
+        "kanchipuram-temple-trip",
+        "vellore-golden-temple"
+      ];
+      return destinations.includes(slug);
+    }
+    return false;
+  });
+};
+
+const categoryServices = getServicesForCategory(category);
+
+const categoryImages: Record<string, string> = {
+  'acting-drivers': '/images/services/acting-drivers.webp',
+  'corporate': '/images/services/corporate.webp',
+  'airport-transfer': '/images/services/airport-transfer.webp',
+  'temple-tours': '/images/services/temple-tours.webp',
+  'popular-destinations': '/images/temple/Mahabalipuram-ECR-Temples.webp'
+};
+
+const serviceImages: Record<string, string> = {
+  "tirupati-package": "/images/temple/Tirupati-Balaji.webp",
+  "thiruvannamalai-girivalam-trip": "/images/temple/Thiruvannamalai-Girivalam.webp",
+  "rameswaram-2-days": "/images/temple/Rameswaram.webp",
+  "navagraha-tour": "/images/temple/Navagraha.webp",
+  "kanchipuram-temple-trip": "/images/temple/Kanchipuram-Temple.webp",
+  "chidambaram-temple-trip": "/images/temple/Chidambaram-Natarajar-Temple.webp",
+  "sabarimala-trip": "/images/temple/Sabarimala-Temple.webp",
+  "pondicherry-one-day-trip": "/images/temple/pondicherry.webp",
+  "vellore-golden-temple": "/images/temple/Vellore-Golden.webp",
+  "mahabalipuram-ecr-temple-route": "/images/temple/Mahabalipuram-ECR-Temples.webp",
+  "one-day-chennai-city-tour": "/images/temple/chennai-city.webp" 
+};
+
+const serviceCategoryImages: Record<string, string> = {
+  "Acting Driver Services": "/images/services/acting-drivers.webp",
+  "Corporate Travel": "/images/services/corporate.webp",
+  "Airport Transfers": "/images/services/airport-transfer.webp",
+  "Temple Tours": "/images/services/temple-tours.webp",
+  "Premium Fleet Rental": "/images/services/corporate.webp"
+};
+
+const heroImage = categoryImages[category] || '/images/logo.png';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": `${title} - Kalidass Travels`,
+  "description": description,
+  "url": Astro.url.href,
+  "image": `https://kalidasstravels.in${heroImage}`
+};
+---
+
+<Layout 
+  title={`${title} - Kalidass Travels`}
+  description={description}
+  image={heroImage}
+  schema={schema}
+  lang="ta"
+>
+  {category === 'acting-drivers' ? (
+    <ActingDrivers client:load currentLang="ta" />
+  ) : category === 'corporate' ? (
+    <main class="bg-slate-50 min-h-screen font-sans">
+      <!-- Corporate Hero Section -->
+      <section class="relative bg-slate-900 text-white pt-32 pb-24 px-6 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+          <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/95 to-slate-900/40 z-10"></div>
+          <img src="/images/services/corporate.webp" alt="கார்ப்பரேட் பயணம்" class="w-full h-full object-cover opacity-30" />
+        </div>
+        
+        <div class="max-w-7xl mx-auto relative z-20 text-center md:text-left">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-300 text-xs font-bold tracking-widest uppercase mb-6">
+            <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+            தொழில்முறை தீர்வுகள்
+          </div>
+          <h1 class="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight leading-tight font-heading">
+            முழுமையான <br class="hidden md:block" />
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-200">கார்ப்பரேட் மொபிலிட்டி சூட்</span>
+          </h1>
+          <p class="text-lg md:text-xl text-slate-300 max-w-2xl mb-10 leading-relaxed font-medium">
+            உங்கள் வணிகப் பயணத் தேவைகள் அனைத்திற்கும் ஒரு சிறந்த கூட்டாளர். தினசரி அலுவலகப் போக்குவரத்து முதல் பிரீமியம் எக்ஸிகியூட்டிவ் வாகனங்கள் வரை, உங்கள் வணிகத்தை முன்னோக்கி நகர்த்துகிறோம்.
+          </p>
+        </div>
+      </section>
+
+      <!-- Main Service Grid -->
+      <section id="branch-grid" class="max-w-7xl mx-auto px-6 -mt-16 relative z-30 pb-20">
+        <div class="grid md:grid-cols-2 gap-6">
+          
+          <!-- Card 1: Employee Transportation -->
+          <div class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
+            <div class="relative z-10">
+              <div class="w-14 h-14 bg-blue-600 rounded-xl flex items-center justify-center text-white text-2xl mb-6 shadow-blue-200 shadow-lg">
+                <i class="fa-solid fa-users-line"></i>
+              </div>
+              <h3 class="text-2xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors font-heading text-heading">ஊழியர் போக்குவரத்து</h3>
+              <p class="text-slate-600 mb-6 leading-relaxed">
+                உங்கள் பணியாளர்களுக்கு பாதுகாப்பான, நேரத்திற்கு அலுவலகம் செல்வதற்கான போக்குவரத்து தீர்வுகள். தானியங்கி வழித்தடம், நிகழ்நேர கண்காணிப்பு ஆகிய வசதிகளுடன்.
+              </p>
+              <ul class="space-y-2 mb-6 text-sm text-slate-500">
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> 24/7 ஷிப்ட் வசதி</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> GPS & பானிக் பட்டன்</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> பெண்கள் பாதுகாப்பு விதிமுறைகள்</li>
+              </ul>
+              <a href="/ta/services/employee-transportation/" class="inline-flex items-center text-blue-600 font-semibold group-hover:gap-2 transition-all">
+                ETS விவரங்கள் <i class="fa-solid fa-arrow-right ml-2"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 2: On-Demand Business Travel -->
+          <div class="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
+            <div class="relative z-10">
+              <div class="w-14 h-14 bg-blue-600 rounded-xl flex items-center justify-center text-white text-2xl mb-6 shadow-blue-200 shadow-lg">
+                <i class="fa-solid fa-briefcase"></i>
+              </div>
+              <h3 class="text-2xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors font-heading text-heading">தேவைக்கேற்ப வணிகப் பயணம்</h3>
+              <p class="text-slate-600 mb-6 leading-relaxed">
+                வாடிக்கையாளர் சந்திப்புகள், விமான நிலைய இடமாற்றங்களுக்கு நெகிழ்வான டாக்ஸி வாடகை. செடான் மற்றும் எஸ்யூவி வாகனங்களை உடனடியாக முன்பதிவு செய்யுங்கள்.
+              </p>
+              <ul class="space-y-2 mb-6 text-sm text-slate-500">
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> விமான நிலைய வரவேற்பு</li>
+                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> மணிநேர பேக்கேஜ்கள்</li>
+              </ul>
+              <a href="/ta/services/business-travel/" class="inline-flex items-center text-blue-600 font-semibold group-hover:gap-2 transition-all">
+                 வாகனம் முன்பதிவு <i class="fa-solid fa-arrow-right ml-2"></i>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+  ) : (
+    <main class="bg-gray-50 min-h-screen py-20">
+      <!-- Standard Hero Header for other categories -->
+      <div class="bg-black text-white pt-32 pb-16 px-6 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-red-900/40 to-black z-0"></div>
+        <div class="max-w-7xl mx-auto relative z-10 text-center">
+          <span class="inline-block py-1 px-3 rounded-full bg-red-600/20 border border-red-500/30 text-red-400 text-xs font-semibold tracking-wider mb-4 uppercase">
+            சேவை வகை
+          </span>
+          <h1 class="text-3xl md:text-5xl font-bold mb-4 leading-tight font-heading">{title}</h1>
+          <p class="text-gray-300 text-lg max-w-2xl mx-auto font-medium">{description}</p>
+        </div>
+      </div>
+
+      <!-- Standard Service Cards Grid -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {categoryServices.map((service) => (
+            <a 
+              href={`/ta/services/${service.slug}/`}
+              class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 group flex flex-col h-full overflow-hidden"
+            >
+              <div class="h-48 overflow-hidden relative">
+                <img 
+                  src={serviceImages[service.slug] || serviceCategoryImages[service.category] || '/images/logo.png'} 
+                  alt={service.title_ta || service.title} 
+                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500" 
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80"></div>
+              </div>
+              <div class="p-6 flex-1 flex flex-col">
+                <div class="flex items-center justify-between mb-4">
+                  <span class="text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded uppercase tracking-wide">
+                    {service.category_ta || service.category}
+                  </span>
+                  <i class="fa-solid fa-arrow-right text-gray-300 group-hover:text-red-600 transition-colors"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-red-600 transition-colors font-heading text-heading">
+                  {service.title_ta || service.title}
+                </h3>
+                {(service.overview_ta || service.overview) && (
+                  <p class="text-gray-500 text-sm line-clamp-3 mb-4">
+                    {service.overview_ta || service.overview}
+                  </p>
+                )}
+              </div>
+              <div class="mt-auto pt-4 px-6 pb-6 border-t border-gray-100 flex items-center justify-between text-sm font-medium">
+                <span class="text-gray-600">விவரங்களைக் காண்க</span>
+                <span class="text-red-600 group-hover:translate-x-1 transition-transform">
+                  முன்பதிவு &rarr;
+                </span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </main>
+  )}
+</Layout>

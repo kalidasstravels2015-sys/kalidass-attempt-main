@@ -18,42 +18,42 @@ import TariffCalculator from "../../components/react/TariffCalculator.jsx";
 const ogImage = "/images/logo.png";
 
 const schema = {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    name: "Kalidass Travels",
-    image: "https://kalidasstravels.in/images/logo.png",
-    telephone: "+919092303060",
-    email: "bookings@kalidasstravels.in",
-    address: {
-        "@type": "PostalAddress",
-        addressLocality: "Chennai",
-        addressRegion: "Tamil Nadu",
-        addressCountry: "IN",
-    },
-    url: "https://kalidasstravels.in/ta",
-    priceRange: "₹₹",
-    inLanguage: "ta-IN",
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: "Kalidass Travels",
+  image: "https://kalidasstravels.in/images/logo.png",
+  telephone: "+919092303060",
+  email: "bookings@kalidasstravels.in",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Chennai",
+    addressRegion: "Tamil Nadu",
+    addressCountry: "IN",
+  },
+  url: "https://kalidasstravels.in/ta",
+  priceRange: "₹₹",
+  inLanguage: "ta-IN",
 };
 ---
 
 <Layout
-    title="காளிதாஸ் டிராவல்ஸ் - சென்னை சிறந்த டாக்ஸி சேவை"
-    description="சென்னையில் சிறந்த கோவில் சுற்றுலா மற்றும் வெளியூர் டாக்ஸி சேவை. பாதுகாப்பான பயணம், குறைந்த கட்டணம்."
-    schema={schema}
-    image={ogImage}
-    lang="ta"
+  title="காளிதாஸ் டிராவல்ஸ் - சென்னை சிறந்த டாக்ஸி சேவை"
+  description="சென்னையில் சிறந்த கோவில் சுற்றுலா மற்றும் வெளியூர் டாக்ஸி சேவை. பாதுகாப்பான பயணம், குறைந்த கட்டணம்."
+  schema={schema}
+  image={ogImage}
+  lang="ta"
 >
-    <Hero />
-    <BookingPanel lang="ta" />
-    <Services />
-    <FleetRoll client:visible currentLang="ta" />
-    <Tours />
+  <Hero lang="ta" />
+  <BookingPanel lang="ta" />
+  <Services lang="ta" />
+  <FleetRoll client:visible currentLang="ta" />
+  <Tours lang="ta" />
 
-    <!-- Lazy Loaded Interactive Sections -->
-    <PartnersCarousel client:visible currentLang="ta" />
-    <DriversCarousel client:visible currentLang="ta" />
-    <ReviewsCarousel client:visible currentLang="ta" />
-    <FAQ />
-    <TariffCalculator client:idle currentLang="ta" />
-    <SafetySection />
+  <!-- Lazy Loaded Interactive Sections -->
+  <PartnersCarousel client:visible currentLang="ta" />
+  <DriversCarousel client:visible currentLang="ta" />
+  <ReviewsCarousel client:visible currentLang="ta" />
+  <FAQ lang="ta" />
+  <TariffCalculator client:idle currentLang="ta" />
+  <SafetySection lang="ta" />
 </Layout>
