@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Car, MapPin, Calendar, Calculator, Send, Plane, ArrowRight, Repeat, Users, User, Phone, AlertCircle, Navigation, ShieldCheck, Clock, X } from 'lucide-react';
+import { Car, MapPin, Calendar, Calculator, Send, ArrowRight, Repeat, Users, User, AlertCircle, Navigation, ShieldCheck, Clock, X } from 'lucide-react';
 import { trackEvent } from '../lib/analytics';
 import LocationPicker from './LocationPicker';
 import { useLanguage } from '../hooks/useLanguage';

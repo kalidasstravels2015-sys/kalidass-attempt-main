@@ -6,7 +6,6 @@ import {
     UserCheck,
     Coffee,
     Wifi,
-    Phone,
     Mail,
     ArrowRight,
     CheckCircle,
@@ -16,7 +15,6 @@ import {
     Download,
     MessageCircle
 } from 'lucide-react';
-import jsPDF from 'jspdf';
 
 // --- Sub-Components ---
 
@@ -102,7 +100,8 @@ export default function ExecutiveFleet() {
         });
     };
 
-    const generatePDF = () => {
+    const generatePDF = async () => {
+        const { default: jsPDF } = await import('jspdf');
         const doc = new jsPDF();
         const currentDate = new Date().toLocaleDateString('en-IN', {
             day: '2-digit',

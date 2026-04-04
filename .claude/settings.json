@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:claude.ai)",
+      "Bash(git -C d:/websites/kalidass-attempt-main ls-files dist/)",
+      "Bash(npm run:*)",
+      "Bash(npm i:*)"
+    ]
+  }
+}

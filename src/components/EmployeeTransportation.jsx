@@ -4,7 +4,6 @@ import {
     ShieldCheck,
     Clock,
     FileText,
-    Phone,
     MapPin,
     ChevronDown,
     ChevronUp,
@@ -17,7 +16,6 @@ import {
     Download,
     Mail
 } from 'lucide-react';
-import jsPDF from 'jspdf';
 
 // --- Sub-Components ---
 
@@ -128,7 +126,8 @@ export default function EmployeeTransportation() {
         });
     };
 
-    const generatePDF = () => {
+    const generatePDF = async () => {
+        const { default: jsPDF } = await import('jspdf');
         const doc = new jsPDF();
         const currentDate = new Date().toLocaleDateString('en-IN', {
             day: '2-digit',

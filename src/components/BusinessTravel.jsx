@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import {
-    Plane,
     Clock,
     FileText,
     ShieldCheck,
     CheckCircle,
-    Phone,
     Mail,
     ArrowRight,
     Star,
@@ -17,7 +15,6 @@ import {
     Download,
     MessageCircle
 } from 'lucide-react';
-import jsPDF from 'jspdf';
 
 // --- Sub-Components ---
 
@@ -107,7 +104,8 @@ export default function BusinessTravel() {
         });
     };
 
-    const generatePDF = () => {
+    const generatePDF = async () => {
+        const { default: jsPDF } = await import('jspdf');
         const doc = new jsPDF();
         const currentDate = new Date().toLocaleDateString('en-IN', {
             day: '2-digit',
