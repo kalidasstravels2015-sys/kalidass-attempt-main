@@ -4,7 +4,11 @@
       "WebFetch(domain:claude.ai)",
       "Bash(git -C d:/websites/kalidass-attempt-main ls-files dist/)",
       "Bash(npm run:*)",
-      "Bash(npm i:*)"
+      "Bash(npm i:*)",
+      "Bash(git -C d:/websites/kalidass-attempt-main status)",
+      "Bash(git -C d:/websites/kalidass-attempt-main diff --stat)",
+      "Bash(git -C d:/websites/kalidass-attempt-main log --oneline -5)",
+      "Bash(git -C d:/websites/kalidass-attempt-main show 5d36b84 --stat)"
     ]
   }
 }
