@@ -7,5 +7,5 @@ const { lang = "en" } = Astro.props;
     id="booking-panel"
     class="relative z-20 py-16 md:py-24 px-4 max-w-3xl mx-auto scroll-mt-20"
 >
-    <QuotationEngine client:load currentLang={lang} />
+    <QuotationEngine client:load currentLang={lang} showAirportTab={true} />
 </section>

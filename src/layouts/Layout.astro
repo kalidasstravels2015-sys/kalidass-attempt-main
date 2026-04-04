@@ -323,6 +323,38 @@ const websiteSchema = {
         scroll-behavior: smooth;
       }
 
+      /* Language-based Visibility */
+      .lang-en {
+        display: inline;
+      }
+      .lang-ta {
+        display: none;
+      }
+
+      body.lang-ta .lang-en {
+        display: none;
+      }
+      body.lang-ta .lang-ta {
+        display: inline;
+      }
+
+      /* Block-level language support if needed */
+      div.lang-en,
+      p.lang-en,
+      section.lang-en {
+        display: block !important;
+      }
+      body.lang-ta div.lang-en,
+      body.lang-ta p.lang-en,
+      body.lang-ta section.lang-en {
+        display: none !important;
+      }
+      body.lang-ta div.lang-ta,
+      body.lang-ta p.lang-ta,
+      body.lang-ta section.lang-ta {
+        display: block !important;
+      }
+
       /* Tamil Font Overrides */
       body.lang-ta,
       body.lang-ta .font-sans {
