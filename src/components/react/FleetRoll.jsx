@@ -3,7 +3,7 @@ import siteContent from '../../data/siteContent.json';
 import { useLanguage } from '../../hooks/useLanguage';
 import { ShieldCheck, Users, Briefcase, Zap, Info } from 'lucide-react';
 
-const FleetCard = ({ vehicle, lang, isVisible }) => {
+const FleetCard = ({ vehicle, lang, isVisible, priority }) => {
     const isTa = lang === 'ta';
     const isTempo = vehicle.name.includes('Tempo');
     const isSUV = vehicle.name.toLowerCase().includes('innova') || vehicle.name.toLowerCase().includes('bolero') || vehicle.name.toLowerCase().includes('sumo');
@@ -19,16 +19,15 @@ const FleetCard = ({ vehicle, lang, isVisible }) => {
                                 src={vehicle.image}
                                 alt={isTa ? (vehicle.name_ta || vehicle.name) : vehicle.name}
                                 className="w-full h-full object-cover transition-all duration-700 hover:scale-110 relative z-10"
-                                loading="lazy"
-                                onLoad={(e) => e.target.style.opacity = 1}
-                                style={{ opacity: 0 }}
+                                loading={priority ? "eager" : "lazy"}
+                                fetchPriority={priority ? "high" : "auto"}
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-20"></div>
 
                             {/* Badges */}
                             <div className="absolute top-4 left-4 flex flex-col gap-2 z-30">
                                 {vehicle.details.some(d => d.toLowerCase().includes('sanitized')) && (
-                                    <span className="bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1 w-fit">
+                                    <span className="bg-emerald-700 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1 w-fit">
                                         <ShieldCheck className="w-3 h-3" />
                                         {isTa ? 'சுத்திகரிக்கப்பட்டது' : 'Sanitized Every Trip'}
                                     </span>
@@ -55,11 +54,11 @@ const FleetCard = ({ vehicle, lang, isVisible }) => {
                     {/* Key Stats */}
                     <div className="grid grid-cols-2 gap-4 mb-6">
                         <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{isTa ? 'கட்டணம்' : 'Starting From'}</p>
+                            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1">{isTa ? 'கட்டணம்' : 'Starting From'}</p>
                             <p className="text-xl font-black text-indigo-600 leading-none">{isTa ? (vehicle.rate_ta || vehicle.rate) : vehicle.rate}</p>
                         </div>
                         <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{isTa ? 'இருக்கைகள்' : 'Capacity'}</p>
+                            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1">{isTa ? 'இருக்கைகள்' : 'Capacity'}</p>
                             <div className="flex items-center gap-1.5">
                                 <Users className="w-4 h-4 text-slate-600" />
                                 <p className="text-sm font-bold text-slate-700">{isTa ? (vehicle.caps_ta || vehicle.caps) : vehicle.caps}</p>
@@ -144,7 +143,7 @@ const FleetRoll = ({ currentLang }) => {
                         aria-label="Fleet Gallery"
                     >
                         {fleet.map((vehicle, index) => (
-                            <FleetCard key={index} vehicle={vehicle} lang={lang} isVisible={true} />
+                            <FleetCard key={index} vehicle={vehicle} lang={lang} isVisible={true} priority={index < 2} />
                         ))}
                     </div>
 

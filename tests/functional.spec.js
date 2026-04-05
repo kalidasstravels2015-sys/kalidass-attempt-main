@@ -11,36 +11,45 @@ test.describe('Functional Tests', () => {
     test('Language toggle switches to Tamil', async ({ page }) => {
         await page.goto('/');
 
-        // Click the language toggle
-        const tamilLink = page.getByLabel('Switch to Tamil');
+        // Click the language toggle (use first() as there are desktop/mobile versions)
+        const tamilLink = page.getByLabel('Switch to Tamil').first();
         await tamilLink.click();
 
         // Verify URL changes
         await expect(page).toHaveURL(/.*\/ta/);
 
-        // Verify Tamil content (rudimentary check for font or text)
-        // Note: Depends on what content changes. Checking HTML lang attribute
+        // Verify Tamil content (HTML lang attribute)
         await expect(page.locator('html')).toHaveAttribute('lang', 'ta');
     });
 
     test('Service pages load correctly', async ({ page }) => {
-        await page.goto('/services/local-trips'); // Assuming this exists or pick a robust one
-        await expect(page).toHaveTitle(/Local Trips/i);
+        await page.goto('/services/acting-driver-within-chennai'); 
+        await expect(page).toHaveTitle(/Acting Driver/i);
     });
 
     // Quotation Engine Test
     test('Quotation Engine calculates estimate', async ({ page }) => {
         await page.goto('/');
 
-        // Wait for the calculator (it might be lazy loaded or client:visible)
-        const calculator = page.locator('text=Get Instant Quote');
-        await expect(calculator).toBeVisible();
+        // Wait for the calculator
+        const calculatorHeading = page.getByRole('heading', { name: /Book Your Ride/i });
+        await expect(calculatorHeading).toBeVisible();
 
-        // Fill inputs - mocking might be needed if Google Maps is restricted in headless
-        // For this test, we check if elements exist
-        await expect(page.getByLabel('Pickup Location')).toBeVisible();
-        await expect(page.getByLabel('Drop Location')).toBeVisible();
-        await expect(page.getByLabel('Vehicle')).toBeVisible();
+        // Fill inputs
+        const pickupInput = page.getByLabel(/Pickup Location/i);
+        const dropInput = page.getByLabel(/Drop Location/i);
+        const vehicleSelect = page.getByLabel(/Vehicle/i);
+
+        await expect(pickupInput).toBeVisible();
+        await expect(dropInput).toBeVisible();
+        await expect(vehicleSelect).toBeVisible();
+        
+        // Fill some data and check if Calculate button is there
+        await pickupInput.fill('Chennai Airport');
+        await dropInput.fill('T Nagar');
+        const calculateBtn = page.getByRole('button', { name: /Calculate Cost/i }).first();
+        await calculateBtn.scrollIntoViewIfNeeded();
+        await expect(calculateBtn).toBeVisible();
     });
 
 });

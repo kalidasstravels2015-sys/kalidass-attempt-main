@@ -12,7 +12,9 @@
       "Bash(npx astro:*)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4322/ta/)",
       "Bash(grep -o \"not\\(body\\)\\\\\\\\.lang-ta[^;]*\" dist/ta/index.html)",
-      "Bash(grep -l \"lang-ta\\\\|lang-en\" dist/_astro/*.css)"
+      "Bash(grep -l \"lang-ta\\\\|lang-en\" dist/_astro/*.css)",
+      "Bash(node -e \"try { require\\('sharp'\\); console.log\\('sharp available'\\); } catch\\(e\\) { console.log\\('sharp not available:', e.message\\); }\")",
+      "Bash(python3 -c ':*)"
     ]
   }
 }

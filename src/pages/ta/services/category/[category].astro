@@ -2,6 +2,7 @@
 import Layout from '../../../../layouts/Layout.astro';
 import serviceDetails from '../../../../data/serviceDetails.json';
 import ActingDrivers from '../../../../components/ActingDrivers.jsx';
+import OptimizedImage from '../../../../components/OptimizedImage.astro';
 
 export async function getStaticPaths() {
   return [
@@ -52,33 +53,33 @@ const getServicesForCategory = (catSlug: string) => {
 const categoryServices = getServicesForCategory(category);
 
 const categoryImages: Record<string, string> = {
-  'acting-drivers': '/images/services/acting-drivers.webp',
-  'corporate': '/images/services/corporate.webp',
-  'airport-transfer': '/images/services/airport-transfer.webp',
-  'temple-tours': '/images/services/temple-tours.webp',
-  'popular-destinations': '/images/temple/Mahabalipuram-ECR-Temples.webp'
+  'acting-drivers': '/images/services/acting-drivers.jpg',
+  'corporate': '/images/services/corporate.jpg',
+  'airport-transfer': '/images/services/airport-transfer.jpg',
+  'temple-tours': '/images/services/temple-tours.jpg',
+  'popular-destinations': '/images/temple/Mahabalipuram-ECR-Temples.jpg'
 };
 
 const serviceImages: Record<string, string> = {
-  "tirupati-package": "/images/temple/Tirupati-Balaji.webp",
-  "thiruvannamalai-girivalam-trip": "/images/temple/Thiruvannamalai-Girivalam.webp",
-  "rameswaram-2-days": "/images/temple/Rameswaram.webp",
-  "navagraha-tour": "/images/temple/Navagraha.webp",
-  "kanchipuram-temple-trip": "/images/temple/Kanchipuram-Temple.webp",
-  "chidambaram-temple-trip": "/images/temple/Chidambaram-Natarajar-Temple.webp",
-  "sabarimala-trip": "/images/temple/Sabarimala-Temple.webp",
+  "tirupati-package": "/images/temple/Tirupati-Balaji.jpg",
+  "thiruvannamalai-girivalam-trip": "/images/temple/Thiruvannamalai-Girivalam.jpg",
+  "rameswaram-2-days": "/images/temple/Rameswaram.jpg",
+  "navagraha-tour": "/images/temple/Navagraha.jpg",
+  "kanchipuram-temple-trip": "/images/temple/Kanchipuram-Temple.jpg",
+  "chidambaram-temple-trip": "/images/temple/Chidambaram-Natarajar-Temple.jpg",
+  "sabarimala-trip": "/images/temple/Sabarimala-Temple.jpg",
   "pondicherry-one-day-trip": "/images/temple/pondicherry.webp",
-  "vellore-golden-temple": "/images/temple/Vellore-Golden.webp",
-  "mahabalipuram-ecr-temple-route": "/images/temple/Mahabalipuram-ECR-Temples.webp",
-  "one-day-chennai-city-tour": "/images/temple/chennai-city.webp" 
+  "vellore-golden-temple": "/images/temple/Vellore-Golden.jpg",
+  "mahabalipuram-ecr-temple-route": "/images/temple/Mahabalipuram-ECR-Temples.jpg",
+  "one-day-chennai-city-tour": "/images/temple/chennai-city.jpg" 
 };
 
 const serviceCategoryImages: Record<string, string> = {
-  "Acting Driver Services": "/images/services/acting-drivers.webp",
-  "Corporate Travel": "/images/services/corporate.webp",
-  "Airport Transfers": "/images/services/airport-transfer.webp",
-  "Temple Tours": "/images/services/temple-tours.webp",
-  "Premium Fleet Rental": "/images/services/corporate.webp"
+  "Acting Driver Services": "/images/services/acting-drivers.jpg",
+  "Corporate Travel": "/images/services/corporate.jpg",
+  "Airport Transfers": "/images/services/airport-transfer.jpg",
+  "Temple Tours": "/images/services/temple-tours.jpg",
+  "Premium Fleet Rental": "/images/services/corporate.jpg"
 };
 
 const heroImage = categoryImages[category] || '/images/logo.png';
@@ -108,7 +109,7 @@ const schema = {
       <section class="relative bg-slate-900 text-white pt-32 pb-24 px-6 overflow-hidden">
         <div class="absolute inset-0 z-0">
           <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/95 to-slate-900/40 z-10"></div>
-          <img src="/images/services/corporate.webp" alt="கார்ப்பரேட் பயணம்" class="w-full h-full object-cover opacity-30" />
+          <OptimizedImage src="/images/services/corporate.jpg" alt="கார்ப்பரேட் பயணம்" class="w-full h-full object-cover opacity-30" sizes="100vw" />
         </div>
         
         <div class="max-w-7xl mx-auto relative z-20 text-center md:text-left">
@@ -199,10 +200,11 @@ const schema = {
               class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 group flex flex-col h-full overflow-hidden"
             >
               <div class="h-48 overflow-hidden relative">
-                <img 
-                  src={serviceImages[service.slug] || serviceCategoryImages[service.category] || '/images/logo.png'} 
-                  alt={service.title_ta || service.title} 
-                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500" 
+                <OptimizedImage
+                  src={serviceImages[service.slug] || serviceCategoryImages[service.category] || '/images/logo.png'}
+                  alt={service.title_ta || service.title}
+                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80"></div>
               </div>

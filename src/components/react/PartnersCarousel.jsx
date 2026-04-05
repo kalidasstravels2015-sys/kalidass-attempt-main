@@ -86,15 +86,13 @@ const PartnersCarousel = ({ currentLang }) => {
                             className="flex-shrink-0 mx-4 md:mx-8"
                             aria-hidden={index >= partners.length ? "true" : "false"}
                         >
-                            <div className="w-44 h-24 md:w-56 md:h-32 flex items-center justify-center bg-white rounded-lg shadow-sm border border-gray-100 p-4 skeleton-shimmer">
+                            <div className="w-44 h-24 md:w-56 md:h-32 flex items-center justify-center bg-white rounded-lg shadow-sm border border-gray-100 p-4">
                                 {partner.logo ? (
                                     <img
                                         src={partner.logo}
                                         alt={index >= partners.length ? "" : (partner.alt || partner.name)}
                                         className="object-contain w-full h-full transition-all duration-500 transform hover:scale-110 relative z-10"
                                         loading="lazy"
-                                        onLoad={(e) => e.target.style.opacity = 1}
-                                        style={{ opacity: 0 }}
                                     />
                                 ) : (
                                     <span className="font-bold text-gray-400 text-lg relative z-10">

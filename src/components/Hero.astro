@@ -31,6 +31,8 @@ const heroImages = hero.images ?? [
               class="absolute inset-0 w-full h-full object-cover"
               loading={index === 0 ? "eager" : "lazy"}
               decoding={index === 0 ? "sync" : "async"}
+              fetchpriority={index === 0 ? "high" : undefined}
+              sizes="100vw"
             />
           </div>
         ))
@@ -38,7 +40,7 @@ const heroImages = hero.images ?? [
     </div>
     <div
       class="absolute inset-0"
-      style="background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.6));"
+      style="background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.7));"
     >
     </div>
   </div>

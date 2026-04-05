@@ -8,6 +8,7 @@ interface Props {
   class?: string;
   loading?: "eager" | "lazy";
   decoding?: "async" | "auto" | "sync";
+  fetchpriority?: "high" | "low" | "auto";
   sizes?: string;
 }
 
@@ -17,6 +18,7 @@ const {
   class: className,
   loading = "lazy",
   decoding = "async",
+  fetchpriority,
   sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
 } = Astro.props;
 
@@ -28,20 +30,20 @@ const images = import.meta.glob<{ default: ImageMetadata }>(
 // The src from JSON is usually like "/images/hero/abc.webp"
 // We need to map it to absolute src path if it exists in src/assets
 const isRemote = src.startsWith("http") || src.startsWith("//");
-const imagePath = `/src/assets${src}`;
+const assetsPrefix = "/src/assets";
+const imagePath = `${assetsPrefix}${src}`;
 
 let imageData: ImageMetadata | null = null;
 if (!isRemote) {
   if (images[imagePath]) {
     try {
-      const mod = await images[imagePath]();
+      const mod = (await images[imagePath]()) as { default: ImageMetadata };
       imageData = mod.default;
     } catch (e) {
       console.error(`Failed to load image: ${imagePath}`, e);
     }
   } else {
-    // Image not found in src/assets, so it must be in public/
-    // We will fall back to using the img tag with the public path.
+    // console.log(`Image not found in src/assets: ${imagePath}`);
   }
 }
 ---
@@ -54,6 +56,7 @@ if (!isRemote) {
       class={className}
       loading={loading}
       decoding={decoding}
+      fetchpriority={fetchpriority}
     />
   ) : imageData ? (
     <Image
@@ -65,7 +68,8 @@ if (!isRemote) {
       format="webp"
       loading={loading}
       decoding={decoding}
-      quality={80}
+      quality={72}
+      fetchpriority={fetchpriority}
     />
   ) : (
     <img
@@ -74,6 +78,7 @@ if (!isRemote) {
       class={className}
       loading={loading}
       decoding={decoding}
+      fetchpriority={fetchpriority}
     />
   )
 }

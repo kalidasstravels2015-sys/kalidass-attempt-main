@@ -15,8 +15,6 @@ const DriverCard = ({ driver, lang }) => {
                     className="w-full h-64 object-cover transform group-hover:scale-105 transition-all duration-500 relative z-10"
                     alt={isTa ? (driver.name_ta || driver.name) : driver.name}
                     loading="lazy"
-                    onLoad={(e) => e.target.style.opacity = 1}
-                    style={{ opacity: 0 }}
                 />
                 <div className="absolute top-2 left-2 flex flex-col gap-1.5 z-20">
                     <span className="bg-indigo-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm w-fit">
@@ -66,7 +64,7 @@ const DriversCarousel = ({ currentLang }) => {
     const isSSR = !!currentLang;
     const contextLang = useLanguage();
     const lang = isSSR ? currentLang : contextLang;
-    const [visibleCount] = useState(drivers.length);
+    const [visibleCount, setVisibleCount] = useState(6);
 
     const labels = siteContent.ui_labels;
     const heading = lang === 'ta' ? labels.our_professional_drivers_ta : labels.our_professional_drivers;
@@ -77,6 +75,16 @@ const DriversCarousel = ({ currentLang }) => {
     const loadMore = () => {
         setVisibleCount(prev => Math.min(prev + 6, drivers.length));
     };
+
+    // Load remaining items when component mounts to prevent layout shifts on Desktop,
+    // while improving initial LCP/FCP.
+    React.useEffect(() => {
+        // Delay loading the rest until after initial render
+        const timer = setTimeout(() => {
+            setVisibleCount(drivers.length);
+        }, 500);
+        return () => clearTimeout(timer);
+    }, [drivers.length]);
 
     return (
         <section className="py-20 bg-slate-50" aria-labelledby="drivers-heading">

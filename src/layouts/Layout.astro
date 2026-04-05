@@ -12,6 +12,7 @@ interface Props {
 }
 
 import siteContent from "../data/siteContent.json";
+const firstHeroImage = (siteContent.hero.images ?? [])[0];
 import LanguageToggle from "../components/react/LanguageToggle.jsx";
 
 const defaultTitle =
@@ -213,6 +214,8 @@ const websiteSchema = {
 <!doctype html>
 <html lang={lang} class="scroll-smooth">
   <head>
+    <!-- Preload removed because Astro Image optimizes and sets fetchpriority automatically -->
+
     <!-- SEO: Hreflang Tags -->
     <link rel="alternate" hreflang="en-IN" href={enHref} />
     <link rel="alternate" hreflang="ta-IN" href={taHref} />
@@ -522,7 +525,7 @@ const websiteSchema = {
     <!-- Facebook Method: Slim Progress Bar -->
     <div
       id="page-loader"
-      class="fixed top-0 left-0 w-0 h-1 bg-red-600 z-[100] transition-all duration-300 pointer-events-none"
+      class="fixed top-0 left-0 w-0 h-1 bg-red-700 z-[100] transition-all duration-300 pointer-events-none"
     >
     </div>
     <script is:inline>
@@ -556,7 +559,7 @@ const websiteSchema = {
     <!-- Skip to Content Link -->
     <a
       href="#main-content"
-      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white text-red-600 px-4 py-2 rounded-md shadow-lg z-[100] font-bold border border-red-200"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white text-red-700 px-4 py-2 rounded-md shadow-lg z-[100] font-bold border border-red-200"
     >
       Skip to content
     </a>
@@ -575,6 +578,8 @@ const websiteSchema = {
                 src="/images/logo.png"
                 alt="Kalidass Travels logo"
                 class="h-12 w-auto object-contain"
+                width="180"
+                height="48"
               />
             </a>
           </div>
@@ -624,7 +629,7 @@ const websiteSchema = {
                     services.map((service) => (
                       <a
                         href={service.link}
-                        class="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 border-b border-gray-50 last:border-0"
+                        class="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 border-b border-gray-50 last:border-0"
                         role="menuitem"
                       >
                         <span class="font-medium">
@@ -713,7 +718,7 @@ const websiteSchema = {
     <div class="flex justify-end p-4">
       <button
         id="close-menu-btn"
-        class="text-gray-500 hover:text-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 rounded p-3 min-h-[48px] min-w-[48px] flex items-center justify-center"
+        class="text-gray-600 hover:text-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 rounded p-3 min-h-[48px] min-w-[48px] flex items-center justify-center"
         aria-label="Close mobile menu"
       >
         <svg
@@ -736,7 +741,7 @@ const websiteSchema = {
     <div class="px-8 py-4 space-y-4 flex-grow">
       <a
         href={isTamil ? "/ta/" : "/"}
-        class="block text-base font-medium text-gray-800 hover:text-red-600 border-b border-gray-100 pb-2 transition-colors"
+        class="block text-base font-medium text-gray-800 hover:text-red-700 border-b border-gray-100 pb-2 transition-colors"
       >
         <span>{isTamil ? "முகப்பு" : "Home"}</span>
       </a>
@@ -748,13 +753,13 @@ const websiteSchema = {
       </a>
       <a
         href={isTamil ? "/ta/drivers/" : "/drivers/"}
-        class="block text-base font-medium text-gray-800 hover:text-red-600 border-b border-gray-100 pb-2 transition-colors"
+        class="block text-base font-medium text-gray-800 hover:text-red-700 border-b border-gray-100 pb-2 transition-colors"
       >
         <span>{isTamil ? "ஓட்டுநர்கள்" : "Drivers"}</span>
       </a>
       <a
         href={isTamil ? "/ta/calculator/" : "/calculator/"}
-        class="block text-base font-medium text-gray-800 hover:text-red-600 border-b border-gray-100 pb-2 transition-colors"
+        class="block text-base font-medium text-gray-800 hover:text-red-700 border-b border-gray-100 pb-2 transition-colors"
       >
         <span>{isTamil ? "கால்குலேட்டர்" : "Calculator"}</span>
       </a>
@@ -836,7 +841,7 @@ const websiteSchema = {
         </div>
         <h3 class="text-xl font-bold text-gray-900 mb-1">Perumal Manikumar</h3>
         <p
-          class="text-xs tracking-[0.2em] text-gray-500 uppercase font-semibold"
+          class="text-xs tracking-[0.2em] text-gray-600 uppercase font-semibold"
         >
           {isTamil ? "உரிமையாளர்" : "PROPRIETOR"}
         </p>
@@ -859,16 +864,18 @@ const websiteSchema = {
             src="/images/logo.png"
             alt="Kalidass Travels"
             class="h-12 w-auto"
+            width="180"
+            height="48"
           />
         </div>
 
         <!-- GSTIN -->
-        <p class="text-sm md:text-base mb-1 font-medium text-gray-400">
+        <p class="text-sm md:text-base mb-1 font-medium text-gray-300">
           GSTIN : 33COVPM0531D1Z4
         </p>
 
         <!-- Address -->
-        <p class="text-sm md:text-base mb-2 text-gray-400">
+        <p class="text-sm md:text-base mb-2 text-gray-300">
           {
             isTamil
               ? "எண். 4/220, E88, பொன்னியம்மன் கோவில் தெரு, அண்ணாமலை நகர், மேடவாக்கம், சென்னை - 600 100."
@@ -889,14 +896,14 @@ const websiteSchema = {
         <div class="w-full border-t border-gray-800 mb-8"></div>
 
         <!-- Copyright -->
-        <p class="text-sm text-gray-400">
+        <p class="text-sm text-gray-300">
           &copy; {new Date().getFullYear()} Kalidass Travels | {
             isTamil
               ? "அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை."
               : "All rights reserved."
           }
         </p>
-        <p class="text-sm text-gray-400 mt-1">
+        <p class="text-sm text-gray-300 mt-1">
           {isTamil ? "உருவாக்கியவர்" : "Built by"}
           <a
             href="https://wa.me/919952749408?text=Hi%20Saravn,%20I%20saw%20your%20work%20on%20Kalidass%20Travels%20website."
