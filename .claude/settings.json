@@ -8,7 +8,11 @@
       "Bash(git -C d:/websites/kalidass-attempt-main status)",
       "Bash(git -C d:/websites/kalidass-attempt-main diff --stat)",
       "Bash(git -C d:/websites/kalidass-attempt-main log --oneline -5)",
-      "Bash(git -C d:/websites/kalidass-attempt-main show 5d36b84 --stat)"
+      "Bash(git -C d:/websites/kalidass-attempt-main show 5d36b84 --stat)",
+      "Bash(npx astro:*)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4322/ta/)",
+      "Bash(grep -o \"not\\(body\\)\\\\\\\\.lang-ta[^;]*\" dist/ta/index.html)",
+      "Bash(grep -l \"lang-ta\\\\|lang-en\" dist/_astro/*.css)"
     ]
   }
 }

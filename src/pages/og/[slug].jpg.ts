@@ -12,6 +12,8 @@ export function getStaticPaths() {
   }));
 }
 
+export const prerender = true;
+
 export const GET: APIRoute = async ({ params, request }) => {
   const { slug } = params;
   const service = serviceDetails.find((s) => s.slug === slug);

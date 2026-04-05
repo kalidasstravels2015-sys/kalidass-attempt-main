@@ -1,0 +1,5 @@
+name = "kalidass-attempt-main"
+pages_build_output_dir = "dist"
+
+[vars]
+# Add any environment variables here if needed
