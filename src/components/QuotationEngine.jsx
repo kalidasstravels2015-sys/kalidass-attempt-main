@@ -3,6 +3,7 @@ import { Car, MapPin, Calendar, Calculator, Send, ArrowRight, Repeat, Users, Use
 import { trackEvent } from '../lib/analytics';
 import LocationPicker from './LocationPicker';
 import { useLanguage } from '../hooks/useLanguage';
+import { useVirtualKeyboard } from '../hooks/useVirtualKeyboard';
 import siteContent from '../data/siteContent.json';
 
 import tariffConfig from '../data/tariff_config.json';
@@ -31,6 +32,8 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
   const isTa = lang === 'ta';
   const labels = siteContent.ui_labels;
   const displayTitle = title || (isTa ? labels.book_your_ride_ta : labels.book_your_ride);
+
+  const { scrollInputAboveKeyboard } = useVirtualKeyboard();
 
   const [activeTab, setActiveTab] = useState('oneway');
   const [localPackage, setLocalPackage] = useState('8hr80km');
@@ -223,6 +226,13 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
     setPickerField(field);
     setLocationPickerOpen(true);
     trackEvent('location_map_opened', { field });
+  };
+
+  // Scroll input so the autocomplete dropdown fits above the keyboard
+  const handleLocationFocus = (e) => {
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+      scrollInputAboveKeyboard(e.currentTarget, 220);
+    }
   };
 
   // Handle Location Selection from Map Modal
@@ -632,6 +642,7 @@ _Please confirm availability._`;
                       ref={type === 'Pickup' ? pickupInputRef : dropInputRef}
                       type="text"
                       value={type === 'Pickup' ? pickup : drop}
+                      onFocus={handleLocationFocus}
                       onChange={(e) => {
                         const val = e.target.value;
                         type === 'Pickup' ? setPickup(val) : setDrop(val);
@@ -985,6 +996,7 @@ _Please confirm availability._`;
                   id={`${stableFormId}-mobile-${type}`}
                   ref={type === 'Pickup' ? pickupInputRef : dropInputRef}
                   value={type === 'Pickup' ? pickup : drop}
+                  onFocus={handleLocationFocus}
                   onChange={(e) => {
                     const val = e.target.value;
                     type === 'Pickup' ? setPickup(val) : setDrop(val);
