@@ -649,7 +649,7 @@ Please confirm availability.`;
                         setShowResult(false);
                       }}
                       placeholder={isTa ? 'நகரம் / பகுதியை உள்ளிடவும்' : `Enter ${type} City / Area`}
-                      className="bg-transparent w-full outline-none text-sm text-slate-800 font-bold pr-8 placeholder:text-slate-600"
+                      className="bg-transparent w-full outline-none text-sm text-slate-800 font-bold pr-8 placeholder:text-slate-500 placeholder:text-xs placeholder:font-normal"
                     />
                     <div className="absolute right-3 top-1/2 -translate-y-1/2">
                       {(type === 'Pickup' ? pickup : drop) && (
@@ -1003,7 +1003,7 @@ Please confirm availability.`;
                     setShowResult(false);
                   }}
                   placeholder={isTa ? 'இடத்தை உள்ளிடவும்' : `Enter ${type} Location`}
-                  className="bg-transparent w-full outline-none text-sm text-slate-800 font-bold py-1 pr-8 placeholder:text-slate-600"
+                  className="bg-transparent w-full outline-none text-sm text-slate-800 font-bold py-1 pr-8 placeholder:text-slate-500 placeholder:text-xs placeholder:font-normal"
                 />
                 <div className="absolute right-2 top-1/2 -translate-y-1/2">
                   {(type === 'Pickup' ? pickup : drop) && (

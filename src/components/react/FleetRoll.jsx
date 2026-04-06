@@ -32,10 +32,22 @@ const FleetCard = ({ vehicle, lang, isVisible, priority }) => {
                                         {isTa ? 'சுத்திகரிக்கப்பட்டது' : 'Sanitized Every Trip'}
                                     </span>
                                 )}
-                                {vehicle.details.some(d => d.toLowerCase().includes('mountain')) && (
+                                {(vehicle.details.some(d => d.toLowerCase().includes('mountain')) || vehicle.details.some(d => d.toLowerCase().includes('hill'))) && (
                                     <span className="bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1 w-fit">
                                         <Zap className="w-3 h-3" />
                                         {isTa ? 'மலைப் பயணம் சிறந்தது' : 'Hill Specialist'}
+                                    </span>
+                                )}
+                                {vehicle.details.some(d => d.toLowerCase().includes('city ride')) && (
+                                    <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1 w-fit">
+                                        <Zap className="w-3 h-3" />
+                                        {isTa ? 'விரைவான நகரப் பயணம்' : 'Quick City Ride'}
+                                    </span>
+                                )}
+                                {vehicle.details.some(d => d.toLowerCase().includes('group trip')) && (
+                                    <span className="bg-purple-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1 w-fit">
+                                        <Users className="w-3 h-3" />
+                                        {isTa ? 'குழு பயணம்' : 'Group Specialist'}
                                     </span>
                                 )}
                             </div>

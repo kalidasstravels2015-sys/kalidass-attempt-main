@@ -76,9 +76,10 @@
       "image": "/images/fleet/swift-dzire.webp",
       "caps": "4 Passenger + Driver",
       "bags": "2 Bags",
-      "rate": "₹11/km",
+      "rate": "₹14/km",
       "details": [
-        "Best for City rides and Small family",
+        "Quick City Ride",
+        "Best for Small family",
         "AC and Entertainment",
         "Daily/Outstation",
         "Sanitized Every Trip"
@@ -86,7 +87,7 @@
       "name_ta": "Swift Dzire",
       "caps_ta": "4 பயணிகள் + ஓட்டுநர்",
       "bags_ta": "2 மூட்டைகள்",
-      "rate_ta": "₹11/km",
+      "rate_ta": "₹14/km",
       "alt": "Maruti Swift Dzire 4-seater AC taxi for family trips and outstation travel from Chennai"
     },
     {
@@ -94,18 +95,18 @@
       "image": "/images/fleet/toyoto-etios.webp",
       "caps": "4 Passenger + Driver",
       "bags": "2 Bags",
-      "rate": "₹12/km",
+      "rate": "₹14/km",
       "details": [
-        "Executive Sedan for Client Visits & Site Meetings",
-        "Best for Small family and city rides",
+        "Comfort City Ride",
+        "Executive Sedan for Client Visits",
+        "Best for Small family",
         "AC and Entertainment",
-        "Corporate Travels",
         "Sanitized Every Trip"
       ],
       "name_ta": "Toyota Etios",
       "caps_ta": "4 பயணிகள் + ஓட்டுநர்",
       "bags_ta": "2 மூட்டைகள்",
-      "rate_ta": "₹12/km",
+      "rate_ta": "₹14/km",
       "alt": "Toyota Etios executive sedan taxi for corporate client visits and comfortable outstation travel"
     },
     {
@@ -113,20 +114,38 @@
       "image": "/images/fleet/suv.webp",
       "caps": "7 Passenger + Driver",
       "bags": "4 Bags",
-      "rate": "₹15/km",
+      "rate": "₹18/km",
       "details": [
-        "Executive Sedan for Client Visits & Site Meetings",
-        "Best for Large family and Outstation",
+        "For Hills & Outstation",
+        "Executive SUV for Client Visits",
+        "Best for Large family",
         "AC and Entertainment",
-        "Spacious",
-        "Sanitized Every Trip",
-        "Max weight capacity: 350kg"
+        "Sanitized Every Trip"
       ],
       "name_ta": "இன்னோவா",
       "caps_ta": "7 பயணிகள் + ஓட்டுநர்",
       "bags_ta": "4 மூட்டைகள்",
-      "rate_ta": "₹15/km",
+      "rate_ta": "₹18/km",
       "alt": "Toyota Innova 7-seater SUV taxi for large families and long-distance pilgrimages"
+    },
+    {
+      "name": "Innova Crysta",
+      "image": "/images/fleet/suv.webp",
+      "caps": "7 Passenger + Driver",
+      "bags": "4 Bags",
+      "rate": "₹22/km",
+      "details": [
+        "Premium Luxury Travel",
+        "For Hills & Outstation",
+        "Best for VIP Clients",
+        "Superior Comfort",
+        "Sanitized Every Trip"
+      ],
+      "name_ta": "இன்னோவா கிறிஸ்டா",
+      "caps_ta": "7 பயணிகள் + ஓட்டுநர்",
+      "bags_ta": "4 மூட்டைகள்",
+      "rate_ta": "₹22/km",
+      "alt": "Toyota Innova Crysta premium SUV rental for luxury outstation travel"
     },
     {
       "name": "Mahindra Bolero",
@@ -171,17 +190,18 @@
       "image": "/images/fleet/tempo.webp",
       "caps": "12 Passenger + Driver",
       "bags": "8 Bags",
-      "rate": "₹21/km",
+      "rate": "₹24/km",
       "details": [
-        "Perfect for Corporate Team Outings & Offsites",
-        "Best for Group trips and hill stations",
+        "For Group Trips & Hills",
+        "Perfect for Corporate Team Outings",
+        "Best for Large Groups",
         "Push back seats",
         "Sanitized coach"
       ],
       "name_ta": "டெம்போ டிராவலர்",
       "caps_ta": "12 பயணிகள் + ஓட்டுநர்",
       "bags_ta": "8 மூட்டைகள்",
-      "rate_ta": "₹21/km",
+      "rate_ta": "₹24/km",
       "alt": "12-seater Tempo Traveller van rental for corporate team outings and family pilgrimage groups"
     }
   ],
