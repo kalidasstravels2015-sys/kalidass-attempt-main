@@ -11,26 +11,15 @@
     ],
     "cto": "Call Now",
     "phone": "+91 90923 03060",
-    "email": "bookings@kalidasstravels.in",
-    "badge_ta": "1,000+ குடும்பங்களின் நம்பிக்கை",
-    "title_ta": "தமிழ்நாட்டை வசதியாகவும் பாதுகாப்பாகவும் சுற்றிப் பாருங்கள்",
-    "highlight_ta": "கோவில் யாத்திரை மற்றும் கார்ப்பரேட் பயணங்களுக்கான பிரீமியம் டாக்ஸி சேவை.",
-    "description_ta": "We combine professional drivers, sanitized vehicles, and transparent WhatsApp support to keep every pilgrimage or corporate journey calm and reliable.",
-    "cto_ta": "அழைக்க"
+    "email": "bookings@kalidasstravels.in"
   },
   "ui_labels": {
     "book_your_ride": "Book your Ride",
-    "book_your_ride_ta": "உங்கள் பயணத்தை முன்பதிவு செய்யுங்கள்",
     "our_premium_fleet": "Our Premium Fleet",
-    "our_premium_fleet_ta": "எங்கள் பிரீமியம் வாகனங்கள்",
     "trusted_by_industry_leaders": "Trusted by Industry Leaders",
-    "trusted_by_industry_leaders_ta": "தொழில்துறை தலைவர்களால் நம்பப்படுகிறது",
     "our_professional_drivers": "Our Professional Drivers",
-    "our_professional_drivers_ta": "எங்கள் தொழில்முறை ஓட்டுநர்கள்",
     "client_reviews": "Client Reviews",
-    "client_reviews_ta": "வாடிக்கையாளர் மதிப்புரைகள்",
-    "travel_awareness_and_safety": "Travel Awareness and Safety",
-    "travel_awareness_and_safety_ta": "பயண விழிப்புணர்வு மற்றும் பாதுகாப்பு"
+    "travel_awareness_and_safety": "Travel Awareness and Safety"
   },
   "services": [
     {
@@ -38,36 +27,28 @@
       "description": "Your car, Our Professional Pilot",
       "icon": "user-tie",
       "image": "/images/services/acting-drivers.jpg",
-      "link": "/services/category/acting-drivers",
-      "title_ta": "ஆக்டிங் டிரைவர்கள்",
-      "description_ta": "உங்கள் கார், எங்கள் தொழில்முறை பைலட்"
+      "link": "/services/category/acting-drivers"
     },
     {
       "title": "Corporate",
       "description": "The complete corporate mobility suite",
       "icon": "building",
       "image": "/images/services/corporate.jpg",
-      "link": "/services/category/corporate",
-      "title_ta": "கார்ப்பரேட்",
-      "description_ta": "முழுமையான கார்ப்பரேட் மொபிலிட்டி சூட்"
+      "link": "/services/category/corporate"
     },
     {
       "title": "Temple Tours",
       "description": "Round trips for Tirupati, Navagraha, and heritage temple circuits with local expertise.",
       "icon": "gopuram",
       "image": "/images/services/temple-tours.jpg",
-      "link": "/services/category/temple-tours",
-      "title_ta": "கோவில் சுற்றுலா",
-      "description_ta": "Round trips for திருப்பதி, நவகிரக, and heritage temple circuits with local expertise."
+      "link": "/services/category/temple-tours"
     },
     {
       "title": "Popular Destinations",
       "description": "Explore heritage sites, beaches, and city tours.",
       "icon": "map-pin",
       "image": "/images/temple/Mahabalipuram-ECR-Temples.jpg",
-      "link": "/services/category/popular-destinations",
-      "title_ta": "பிரபலமான இடங்கள்",
-      "description_ta": "Explore heritage sites, beaches, and city tours."
+      "link": "/services/category/popular-destinations"
     }
   ],
   "fleet": [
@@ -84,10 +65,6 @@
         "Daily/Outstation",
         "Sanitized Every Trip"
       ],
-      "name_ta": "Swift Dzire",
-      "caps_ta": "4 பயணிகள் + ஓட்டுநர்",
-      "bags_ta": "2 மூட்டைகள்",
-      "rate_ta": "₹14/km",
       "alt": "Maruti Swift Dzire 4-seater AC taxi for family trips and outstation travel from Chennai"
     },
     {
@@ -103,10 +80,6 @@
         "AC and Entertainment",
         "Sanitized Every Trip"
       ],
-      "name_ta": "Toyota Etios",
-      "caps_ta": "4 பயணிகள் + ஓட்டுநர்",
-      "bags_ta": "2 மூட்டைகள்",
-      "rate_ta": "₹14/km",
       "alt": "Toyota Etios executive sedan taxi for corporate client visits and comfortable outstation travel"
     },
     {
@@ -122,10 +95,6 @@
         "AC and Entertainment",
         "Sanitized Every Trip"
       ],
-      "name_ta": "இன்னோவா",
-      "caps_ta": "7 பயணிகள் + ஓட்டுநர்",
-      "bags_ta": "4 மூட்டைகள்",
-      "rate_ta": "₹18/km",
       "alt": "Toyota Innova 7-seater SUV taxi for large families and long-distance pilgrimages"
     },
     {
@@ -141,10 +110,6 @@
         "Superior Comfort",
         "Sanitized Every Trip"
       ],
-      "name_ta": "இன்னோவா கிறிஸ்டா",
-      "caps_ta": "7 பயணிகள் + ஓட்டுநர்",
-      "bags_ta": "4 மூட்டைகள்",
-      "rate_ta": "₹22/km",
       "alt": "Toyota Innova Crysta premium SUV rental for luxury outstation travel"
     },
     {
@@ -160,10 +125,6 @@
         "Sanitized Every Trip",
         "Rugged"
       ],
-      "name_ta": "Mahindra Bolero",
-      "caps_ta": "7 பயணிகள் + ஓட்டுநர்",
-      "bags_ta": "3 மூட்டைகள்",
-      "rate_ta": "₹15/km",
       "alt": "Mahindra Bolero rugged SUV rental for hill station trips and rough terrain travel"
     },
     {
@@ -179,10 +140,6 @@
         "Best for Mountain ride and long trip",
         "Sanitized Every Trip"
       ],
-      "name_ta": "Tata Sumo",
-      "caps_ta": "7 பயணிகள் + ஓட்டுநர்",
-      "bags_ta": "3 மூட்டைகள்",
-      "rate_ta": "₹16/km",
       "alt": "Tata Sumo spacious 7-seater taxi for group travel and economical outstation trips"
     },
     {
@@ -198,10 +155,6 @@
         "Push back seats",
         "Sanitized coach"
       ],
-      "name_ta": "டெம்போ டிராவலர்",
-      "caps_ta": "12 பயணிகள் + ஓட்டுநர்",
-      "bags_ta": "8 மூட்டைகள்",
-      "rate_ta": "₹24/km",
       "alt": "12-seater Tempo Traveller van rental for corporate team outings and family pilgrimage groups"
     }
   ],
@@ -212,10 +165,6 @@
       "duration": "2 Days / 1 Night",
       "description": "Sacred visit with comfortable stays, guided transport, and evening aarti arrangements.",
       "image": "https://images.unsplash.com/photo-1621831530263-54784f5d21a2?q=80&w=600",
-      "tag_ta": "PILGRIMAGE",
-      "title_ta": "Kadapa Ameen Peer Dargah",
-      "duration_ta": "2 Days / 1 Night",
-      "description_ta": "Sacred visit with comfortable stays, guided transport, and evening aarti arrangements.",
       "alt": "Kadapa Ameen Peer Dargah pilgrimage tour package from Chennai"
     },
     {
@@ -224,10 +173,6 @@
       "duration": "1 Day Trip",
       "description": "Explore the golden temple town with expert drivers who double as storytellers.",
       "image": "https://images.unsplash.com/photo-1605445210359-5f284e363654?q=80&w=600",
-      "tag_ta": "HERITAGE",
-      "title_ta": "காஞ்சிபுரம் Temple City",
-      "duration_ta": "1 Day Trip",
-      "description_ta": "Explore the golden temple town with expert drivers who double as storytellers.",
       "alt": "Kanchipuram Temple City heritage day trip by taxi"
     },
     {
@@ -237,10 +182,6 @@
       "description": "Sacred route through Rameswaram with beach time and temple darshan support.",
       "highlighted": true,
       "image": "https://images.unsplash.com/photo-1582510003544-5243789972d0?q=80&w=600",
-      "tag_ta": "SPIRITUAL",
-      "title_ta": "Ramanathaswamy Temple",
-      "duration_ta": "3 Days / 2 Nights",
-      "description_ta": "Sacred route through ராமேஸ்வரம் with beach time and temple darshan support.",
       "alt": "Rameswaram Ramanathaswamy Temple spiritual tour package 3 days"
     }
   ],
@@ -255,10 +196,6 @@
       "languages": "Tamil, English, Hindi",
       "tag": "Owner",
       "image": "/images/drivers/mani-perumal.webp",
-      "name_ta": "Perumal Manikumar",
-      "experience_ta": "12 Years Experience",
-      "languages_ta": "Tamil, English, Hindi",
-      "tag_ta": "Owner",
       "alt": "Perumal Manikumar - Owner and VVIP luxury car driver in Chennai",
       "crossing_border": true
     },
@@ -272,10 +209,6 @@
       "languages": "Tamil, English, Hindi",
       "tag": "Managing Partner",
       "image": "/images/drivers/Perumal Karthik Kumar.webp",
-      "name_ta": "Perumal Karthik Kumar",
-      "experience_ta": "10 Years Experience",
-      "languages_ta": "Tamil, English, Hindi",
-      "tag_ta": "Managing Partner",
       "alt": "Perumal Karthik Kumar - Corporate fleet manager and managing partner"
     },
     {
@@ -288,10 +221,6 @@
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
       "image": "/images/drivers/Hari.webp",
-      "name_ta": "Hariharan",
-      "experience_ta": "2 Year Experience",
-      "languages_ta": "Tamil, English, Hindi",
-      "tag_ta": "Driver",
       "alt": "Hariharan - Expert driver for city and airport taxi drops in Chennai"
     },
     {
@@ -304,10 +233,6 @@
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
       "image": "/images/drivers/Raj.webp",
-      "name_ta": "Raj",
-      "experience_ta": "5 Years Experience",
-      "languages_ta": "Tamil, English, Hindi",
-      "tag_ta": "Driver",
       "alt": "Raj - Experienced driver for local Chennai taxi routes"
     },
     {
@@ -320,10 +245,6 @@
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
       "image": "/images/drivers/munish.webp",
-      "name_ta": "Munish",
-      "experience_ta": "6+ Years Experience",
-      "languages_ta": "Tamil, English, Hindi",
-      "tag_ta": "Driver",
       "alt": "Munish - Specialist driver for safe night driving and outstation trips"
     },
     {
@@ -336,10 +257,6 @@
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
       "image": "/images/drivers/Vishnu.webp",
-      "name_ta": "Vishnu",
-      "experience_ta": "8+ Years Experience",
-      "languages_ta": "Tamil, English, Hindi",
-      "tag_ta": "Driver",
       "alt": "Vishnu - Long distance highway driving specialist driver"
     },
     {
@@ -352,10 +269,6 @@
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
       "image": "/images/drivers/thangaraj.webp",
-      "name_ta": "Thangaraj",
-      "experience_ta": "25+ Years Experience",
-      "languages_ta": "Tamil, English, Hindi",
-      "tag_ta": "Driver",
       "alt": "Thangaraj - Senior river with 25+ years experience in hill station driving"
     },
     {
@@ -368,10 +281,6 @@
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
       "image": "/images/drivers/senthamil.webp",
-      "name_ta": "Senthamil",
-      "experience_ta": "20+ Years Experience",
-      "languages_ta": "Tamil, English, Hindi",
-      "tag_ta": "Driver",
       "alt": "Senthamil - Expert driver for Navagraha temple tours from Chennai"
     },
     {
@@ -384,10 +293,6 @@
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
       "image": "/images/drivers/Prakash.webp",
-      "name_ta": "Prakash",
-      "experience_ta": "15+ Years Experience",
-      "languages_ta": "Tamil, English, Hindi",
-      "tag_ta": "Driver",
       "alt": "Prakash - Experienced driver for interstate trips to Kerala and Karnataka"
     },
     {
@@ -400,10 +305,6 @@
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
       "image": "/images/drivers/Elumalai.webp",
-      "name_ta": "Elumalai",
-      "experience_ta": "21+ Years Experience",
-      "languages_ta": "Tamil, English, Hindi",
-      "tag_ta": "Driver",
       "alt": "Elumalai - Expert heavy vehicle and bus driver for group tours"
     },
     {
@@ -416,10 +317,6 @@
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
       "image": "/images/drivers/venkatesh.webp",
-      "name_ta": "Venkateshan",
-      "experience_ta": "15+ Years Experience",
-      "languages_ta": "Tamil, English, Hindi",
-      "tag_ta": "Driver",
       "alt": "Venkateshan - Reliable driver for family pilgrimage trips"
     },
     {
@@ -432,10 +329,6 @@
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
       "image": "/images/drivers/Mani.webp",
-      "name_ta": "Mani",
-      "experience_ta": "10+ Years Experience",
-      "languages_ta": "Tamil, English, Hindi",
-      "tag_ta": "Driver",
       "alt": "Mani - Professional driver for corporate events and employee transport"
     },
     {
@@ -448,10 +341,6 @@
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
       "image": "/images/drivers/neelakandan.webp",
-      "name_ta": "Neelakandan",
-      "experience_ta": "18+ Years Experience",
-      "languages_ta": "Tamil, English, Hindi",
-      "tag_ta": "Driver",
       "alt": "Neelakandan - Sabarimala pilgrimage specialist driver",
       "crossing_border": true
     },
@@ -465,10 +354,6 @@
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
       "image": "/images/drivers/karthick.webp",
-      "name_ta": "Karthick",
-      "experience_ta": "13+ Years Experience",
-      "languages_ta": "Tamil, English, Hindi",
-      "tag_ta": "Driver",
       "alt": "Karthick - Luxury car chauffeur and valet specialist"
     },
     {
@@ -481,10 +366,6 @@
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
       "image": "/images/drivers/Natraj.webp",
-      "name_ta": "Natraj",
-      "experience_ta": "25+ Years Experience",
-      "languages_ta": "Tamil, English, Hindi",
-      "tag_ta": "Driver",
       "alt": "Natraj - Master driver for all terrains with 25+ years experience"
     },
     {
@@ -497,10 +378,6 @@
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
       "image": "/images/drivers/vijay.webp",
-      "name_ta": "Vijay",
-      "experience_ta": "7+ Years Experience",
-      "languages_ta": "Tamil, English, Hindi",
-      "tag_ta": "Driver",
       "alt": "Vijay - Friendly driver for Pondicherry weekend taxi trips"
     },
     {
@@ -513,47 +390,33 @@
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
       "image": "/images/drivers/Murugan.webp",
-      "name_ta": "Murugan",
-      "experience_ta": "20+ Years Experience",
-      "languages_ta": "Tamil, English, Hindi",
-      "tag_ta": "Driver",
       "alt": "Murugan - Expert guide and driver for Tirupati Darshan taxi packages"
     },
     {
-      "name": "Vadivel",
-      "experience": "12+ Years Experience",
-      "trips": "450+",
+      "name": "Elumalai A",
+      "experience": "5+ Years Experience",
+      "trips": "150+",
       "rating": "4.8",
-      "reviews": "290",
-      "specialty": "Customer Favorite",
-      "languages": "Tamil, English, Hindi",
+      "reviews": "90",
+      "specialty": "City & Outstation Trips",
+      "languages": "Tamil, English",
       "tag": "Driver",
-      "image": "/images/drivers/Vadivel.webp",
-      "name_ta": "Vadivel",
-      "experience_ta": "12+ Years Experience",
-      "languages_ta": "Tamil, English, Hindi",
-      "tag_ta": "Driver",
-      "alt": "Vadivel - Customer favorite driver for family and corporate trips"
+      "image": "/images/drivers/Elumalai. A.webp",
+      "alt": "Elumalai A - PVC verified driver for city and outstation trips"
     }
   ],
   "reviews": [
     {
       "name": "Rajesh K",
-      "quote": "Excellent service for our Tirupati trip. Driver Vadivel was very polite.",
-      "name_ta": "Rajesh K",
-      "quote_ta": "Excellent service for our திருப்பதி trip. Driver Vadivel was very polite."
+      "quote": "Excellent service for our Tirupati trip. Driver Vadivel was very polite."
     },
     {
       "name": "Anita Roy",
-      "quote": "Clean Innova Crysta and punctual pickup. Transparent pricing.",
-      "name_ta": "Anita Roy",
-      "quote_ta": "Clean இன்னோவா கிறிஸ்டா and punctual pickup. Transparent pricing."
+      "quote": "Clean Innova Crysta and punctual pickup. Transparent pricing."
     },
     {
       "name": "Suresh M",
-      "quote": "Very safe driving for my parents' trip to Kumbakonam.",
-      "name_ta": "Suresh M",
-      "quote_ta": "Very safe driving for my parents' trip to Kumbakonam."
+      "quote": "Very safe driving for my parents' trip to Kumbakonam."
     }
   ],
   "awareness": [
@@ -561,39 +424,27 @@
       "title": "Responsibility",
       "description": "Travellers get a safety checklist that covers vehicle health, driver etiquette, and sanitization levels.",
       "action": "Checklist",
-      "icon": "shield",
-      "title_ta": "Responsibility",
-      "description_ta": "Travellers get a safety checklist that covers vehicle health, driver etiquette, and sanitization levels.",
-      "action_ta": "Checklist"
+      "icon": "shield"
     },
     {
       "title": "Govt Links",
       "description": "Quick links to government travel guidelines, helplines, and tourist advisories in Tamil Nadu.",
       "action": "View",
       "icon": "government",
-      "link": "https://www.india.gov.in",
-      "title_ta": "Govt Links",
-      "description_ta": "Quick links to government travel guidelines, helplines, and tourist advisories in Tamil Nadu.",
-      "action_ta": "View"
+      "link": "https://www.india.gov.in"
     },
     {
       "title": "Kaaval App",
       "description": "Download the official police app for emergency assistance, women safety, and crime reporting.",
       "action": "Download",
-      "icon": "app",
-      "title_ta": "Kaaval App",
-      "description_ta": "Download the official police app for emergency assistance, women safety, and crime reporting.",
-      "action_ta": "Download"
+      "icon": "app"
     },
     {
       "title": "Helpline",
       "description": "Important emergency numbers: Police (100), Ambulance (108), Fire (101), Women Helpline (1091).",
       "action": "Call 100",
       "phone": "100",
-      "icon": "phone",
-      "title_ta": "Helpline",
-      "description_ta": "Important emergency numbers: Police (100), Ambulance (108), Fire (101), Women Helpline (1091).",
-      "action_ta": "Call 100"
+      "icon": "phone"
     }
   ]
 }

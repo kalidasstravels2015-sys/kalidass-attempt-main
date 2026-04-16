@@ -1,41 +1,29 @@
 import { useState, useEffect } from 'react';
 
-export const LANGUAGE_EVENT = 'language-change';
-
-export function useLanguage(initialLang = 'en') {
-    const [lang, setLang] = useState(initialLang);
+export const useLanguage = () => {
+    const [lang, setLang] = useState(() => {
+        if (typeof window === 'undefined') return 'en';
+        const stored = localStorage.getItem('language');
+        return stored && (stored === 'en' || stored === 'ta') ? stored : 'en';
+    });
 
     useEffect(() => {
-        // Initialize from localStorage or body class
-        const savedLang = localStorage.getItem('preferred-lang');
-        if (savedLang) {
-            setLang(savedLang);
-        } else if (document.body.classList.contains('lang-ta')) {
-            setLang('ta');
-        }
-
-        const handleLangChange = (e) => {
-            setLang(e.detail);
+        if (typeof window === 'undefined') return;
+        const handleLanguageChange = (event) => {
+            setLang(event.detail);
         };
-
-        window.addEventListener(LANGUAGE_EVENT, handleLangChange);
-        return () => window.removeEventListener(LANGUAGE_EVENT, handleLangChange);
+        window.addEventListener('languageChange', handleLanguageChange);
+        return () => window.removeEventListener('languageChange', handleLanguageChange);
     }, []);
 
     return lang;
-}
+};
 
-export function setLanguage(lang) {
-    const isTamil = lang === 'ta';
-
-    if (isTamil) {
-        document.body.classList.add('lang-ta');
-    } else {
-        document.body.classList.remove('lang-ta');
+export const setLanguage = (newLang) => {
+    if (newLang === 'en' || newLang === 'ta') {
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('language', newLang);
+            window.dispatchEvent(new CustomEvent('languageChange', { detail: newLang }));
+        }
     }
-
-    localStorage.setItem('preferred-lang', lang);
-
-    // Dispatch custom event for React components
-    window.dispatchEvent(new CustomEvent(LANGUAGE_EVENT, { detail: lang }));
-}
+};

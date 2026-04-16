@@ -27,30 +27,7 @@
           "+₹200"
         ]
       ],
-      "note": "KM Not Counted — Only time-based.",
-      "headers_ta": [
-        "கால அளவு",
-        "கட்டணம்"
-      ],
-      "rows_ta": [
-        [
-          "4 மணிநேரம்",
-          "₹600"
-        ],
-        [
-          "8 மணிநேரம் (Full Day)",
-          "₹900"
-        ],
-        [
-          "கூடுதல் மணிநேரம்",
-          "₹150/hr"
-        ],
-        [
-          "இரவு பணி (10 PM – 5 AM)",
-          "+₹200"
-        ]
-      ],
-      "note_ta": "KM Not Counted — Only time-based."
+      "note": "KM Not Counted — Only time-based."
     },
     "includes": [
       "Background-verified driver",
@@ -65,21 +42,15 @@
     "faq": [
       {
         "q": "Can I extend hours?",
-        "a": "Yes. ₹100/hr.",
-        "q_ta": "Can I extend hours?",
-        "a_ta": "Yes. ₹100/hr."
+        "a": "Yes. ₹100/hr."
       },
       {
         "q": "Will the driver help with luggage?",
-        "a": "Yes, light luggage.",
-        "q_ta": "Will the driver help with luggage?",
-        "a_ta": "Yes, light luggage."
+        "a": "Yes, light luggage."
       },
       {
         "q": "Can I book last-minute?",
-        "a": "Usually available; depends on peak time.",
-        "q_ta": "Can I book last-minute?",
-        "a_ta": "Usually available; depends on peak time."
+        "a": "Usually available; depends on peak time."
       }
     ],
     "notes": [
@@ -97,24 +68,7 @@
       ],
       "dressCode": "Our drivers arrive in professional attire, ensuring a presentable and disciplined service experience."
     },
-    "whatsappMsg": "Hi, I need an Acting Driver within Chennai.",
-    "title_ta": "Acting Driver – Within சென்னை",
-    "category_ta": "ஆக்டிங் டிரைவர் சேவைகள்",
-    "overview_ta": "Professional acting driver service for your personal car within சென்னை city limits. Ideal for office commute, shopping, hospital visits, family travel, elderly support.",
-    "includes_ta": [
-      "Background-verified driver",
-      "Manual & automatic car support",
-      "Smooth & safe driving"
-    ],
-    "excludes_ta": [
-      "Parking",
-      "Toll",
-      "Food (not needed for city trips)"
-    ],
-    "notes_ta": [
-      "சேவை starts & ends at your location.",
-      "No hidden charges."
-    ]
+    "whatsappMsg": "Hi, I need an Acting Driver within Chennai."
   },
   {
     "slug": "acting-driver-outstation-one-way",
@@ -137,24 +91,6 @@
         ],
         [
           "Night Halt (if needed)",
-          "₹500"
-        ]
-      ],
-      "headers_ta": [
-        "விவரம்",
-        "விலை"
-      ],
-      "rows_ta": [
-        [
-          "அடிப்படை (first 150 km)",
-          "₹1,800"
-        ],
-        [
-          "கூடுதல் தூரம்",
-          "₹12/km"
-        ],
-        [
-          "இரவு தங்குதல் (if needed)",
           "₹500"
         ]
       ]
@@ -181,29 +117,14 @@
     "faq": [
       {
         "q": "What if the trip cancels?",
-        "a": "Before dispatch → Free. After dispatch → ₹300",
-        "q_ta": "What if the trip cancels?",
-        "a_ta": "Before dispatch → Free. After dispatch → ₹300"
+        "a": "Before dispatch → Free. After dispatch → ₹300"
       },
       {
         "q": "Can I get a return driver separately?",
-        "a": "Yes, book separately.",
-        "q_ta": "Can I get a return driver separately?",
-        "a_ta": "Yes, book separately."
+        "a": "Yes, book separately."
       }
     ],
-    "whatsappMsg": "Hi, I need an outstation one-way driver.",
-    "title_ta": "Acting Driver – Outstation ஒரு வழி",
-    "category_ta": "ஆக்டிங் டிரைவர் சேவைகள்",
-    "overview_ta": "Driver takes your personal car from சென்னை to any destination outside சென்னை (only drop-off, no return).",
-    "includes_ta": [
-      "Professional highway driver",
-      "Safe long-distance driving"
-    ],
-    "excludes_ta": [
-      "Driver food",
-      "Return travel (if required)"
-    ]
+    "whatsappMsg": "Hi, I need an outstation one-way driver."
   },
   {
     "slug": "acting-driver-outstation-round-trip",
@@ -232,28 +153,6 @@
           "₹800",
           "₹200"
         ]
-      ],
-      "headers_ta": [
-        "வாகனம் Type",
-        "டிரைவர் பேட்டா",
-        "இரவு கட்டணம்"
-      ],
-      "rows_ta": [
-        [
-          "செடான்",
-          "₹600",
-          "₹200"
-        ],
-        [
-          "எஸ்யூவி",
-          "₹700",
-          "₹200"
-        ],
-        [
-          "கிறிஸ்டா",
-          "₹800",
-          "₹200"
-        ]
       ]
     },
     "travelGuide": {
@@ -270,21 +169,14 @@
     "faq": [
       {
         "q": "How many hours is 1 day?",
-        "a": "Up to 14 hours.",
-        "q_ta": "How many hours is 1 day?",
-        "a_ta": "Up to 14 hours."
+        "a": "Up to 14 hours."
       },
       {
         "q": "Is food mandatory for long trips?",
-        "a": "If trip exceeds 10 hrs, food allowance appreciated.",
-        "q_ta": "Is food mandatory for long trips?",
-        "a_ta": "If trip exceeds 10 hrs, food allowance appreciated."
+        "a": "If trip exceeds 10 hrs, food allowance appreciated."
       }
     ],
-    "whatsappMsg": "Hi, I need an outstation round-trip acting driver.",
-    "title_ta": "Acting Driver – Outstation இரு வழி",
-    "category_ta": "ஆக்டிங் டிரைவர் சேவைகள்",
-    "overview_ta": "Driver accompanies your car for onward & return trip. Suitable for family functions, temple tours, business travel."
+    "whatsappMsg": "Hi, I need an outstation round-trip acting driver."
   },
   {
     "slug": "night-driving-driver",
@@ -305,20 +197,6 @@
           "Extra hr",
           "₹200"
         ]
-      ],
-      "headers_ta": [
-        "கால அளவு",
-        "விலை"
-      ],
-      "rows_ta": [
-        [
-          "Up to 3 hrs",
-          "₹800"
-        ],
-        [
-          "Extra hr",
-          "₹200"
-        ]
       ]
     },
     "includes": [
@@ -328,19 +206,10 @@
     "faq": [
       {
         "q": "Is waiting charge extra?",
-        "a": "Yes, counted as extra hour.",
-        "q_ta": "Is waiting charge extra?",
-        "a_ta": "Yes, counted as extra hour."
+        "a": "Yes, counted as extra hour."
       }
     ],
-    "whatsappMsg": "Hi, I need a night driving driver.",
-    "title_ta": "Night Driving Driver",
-    "category_ta": "ஆக்டிங் டிரைவர் சேவைகள்",
-    "overview_ta": "Night driving specialist for late-night events, airport trips, emergencies.",
-    "includes_ta": [
-      "Night safety trained drivers",
-      "Doorstep pickup"
-    ]
+    "whatsappMsg": "Hi, I need a night driving driver."
   },
   {
     "slug": "driver-for-senior-citizens",
@@ -365,24 +234,6 @@
           "Extra Hour",
           "₹150"
         ]
-      ],
-      "headers_ta": [
-        "கால அளவு",
-        "விலை"
-      ],
-      "rows_ta": [
-        [
-          "4 மணிநேரம்",
-          "₹700"
-        ],
-        [
-          "8 மணிநேரம்",
-          "₹1,000"
-        ],
-        [
-          "கூடுதல் மணிநேரம்",
-          "₹150"
-        ]
       ]
     },
     "includes": [
@@ -393,20 +244,10 @@
     "faq": [
       {
         "q": "Can driver accompany inside hospital?",
-        "a": "Yes (short duration).",
-        "q_ta": "Can driver accompany inside hospital?",
-        "a_ta": "Yes (short duration)."
+        "a": "Yes (short duration)."
       }
     ],
-    "whatsappMsg": "Hi, I need a driver for senior citizen travel.",
-    "title_ta": "Driver for Senior Citizens",
-    "category_ta": "ஆக்டிங் டிரைவர் சேவைகள்",
-    "overview_ta": "Gentle, patient, verified drivers for elderly travel like temple trips, hospitals, day outings.",
-    "includes_ta": [
-      "Assistance getting in/out",
-      "Slow & steady driving",
-      "Respectful behaviour"
-    ]
+    "whatsappMsg": "Hi, I need a driver for senior citizen travel."
   },
   {
     "slug": "office-commute-driver-monthly",
@@ -427,34 +268,13 @@
           "2 Shift (pickup + drop)",
           "₹15,000/month"
         ]
-      ],
-      "headers_ta": [
-        "திட்டம்",
-        "விலை நிர்ணயம்"
-      ],
-      "rows_ta": [
-        [
-          "1 Shift (pickup or drop)",
-          "₹12,000/month"
-        ],
-        [
-          "2 Shift (pickup + drop)",
-          "₹15,000/month"
-        ]
       ]
     },
     "notes": [
       "Limited to Chennai city limits",
       "Fuel borne by customer"
     ],
-    "whatsappMsg": "Hi, I need a monthly office commute driver.",
-    "title_ta": "Office Commute Driver (Monthly)",
-    "category_ta": "ஆக்டிங் டிரைவர் சேவைகள்",
-    "overview_ta": "Daily home → office → home driver arrangement.",
-    "notes_ta": [
-      "Limited to சென்னை city limits",
-      "Fuel borne by customer"
-    ]
+    "whatsappMsg": "Hi, I need a monthly office commute driver."
   },
   {
     "slug": "monthly-car-with-driver-corporate",
@@ -488,34 +308,7 @@
           "–"
         ]
       ],
-      "note": "Hint: We show per-day & per-hour structure openly so your finance team can plan properly. No end-of-month shocks.",
-      "headers_ta": [
-        "வாகனம்",
-        "Monthly விலை",
-        "Driver மணிநேரம்",
-        "குறிப்பு"
-      ],
-      "rows_ta": [
-        [
-          "செடான்",
-          "₹42,000",
-          "10 hrs/day",
-          "Fuel extra (actuals)"
-        ],
-        [
-          "எஸ்யூவி (Ertiga/XL6)",
-          "₹52,000",
-          "10 hrs/day",
-          "–"
-        ],
-        [
-          "இன்னோவா",
-          "₹65,000",
-          "10 hrs/day",
-          "–"
-        ]
-      ],
-      "note_ta": "குறிப்பு: We show per-day & per-hour structure openly so your finance team can plan properly. No end-of-month shocks."
+      "note": "Hint: We show per-day & per-hour structure openly so your finance team can plan properly. No end-of-month shocks."
     },
     "includes": [
       "Dedicated driver daily",
@@ -546,36 +339,14 @@
     "faq": [
       {
         "q": "What if driver is sick?",
-        "a": "We send a replacement automatically.",
-        "q_ta": "What if driver is sick?",
-        "a_ta": "We send a replacement automatically."
+        "a": "We send a replacement automatically."
       },
       {
         "q": "Can I extend hours?",
-        "a": "Yes, ₹100/hr overtime.",
-        "q_ta": "Can I extend hours?",
-        "a_ta": "Yes, ₹100/hr overtime."
+        "a": "Yes, ₹100/hr overtime."
       }
     ],
-    "whatsappMsg": "Hi, I need a monthly corporate car plan.",
-    "title_ta": "Monthly Car With Driver (கார்ப்பரேட் திட்டம்)",
-    "category_ta": "கார்ப்பரேட் பயணம்",
-    "overview_ta": "Your company deserves reliable travel with no surprises. We share all charges upfront — no sudden add-ons, no confusion.\n\nWho is this for?\nCompanies needing a dedicated car + driver for:\n- Daily official visits\n- Client meetings\n- Transporting staff safely\n- Management-level mobility",
-    "includes_ta": [
-      "Dedicated driver daily",
-      "Driver replacements on leave",
-      "Basic car cleaning",
-      "Monthly report (optional)",
-      "No hidden charges",
-      "Replacement driver support",
-      "Professional behaviour & punctuality",
-      "Monthly invoice support",
-      "Real-time communication"
-    ],
-    "excludes_ta": [
-      "Fuel (actual usage)",
-      "Toll, parking (actuals)"
-    ]
+    "whatsappMsg": "Hi, I need a monthly corporate car plan."
   },
   {
     "slug": "employee-pickup-drop",
@@ -597,22 +368,7 @@
           "₹10,000 – ₹14,000"
         ]
       ],
-      "note": "Hint: We calculate tariff based on route km, traffic hours, and number of stops. Everything is communicated clearly.",
-      "headers_ta": [
-        "சேவை",
-        "விலை"
-      ],
-      "rows_ta": [
-        [
-          "Per Trip",
-          "₹350 – ₹500"
-        ],
-        [
-          "Monthly (One Person)",
-          "₹10,000 – ₹14,000"
-        ]
-      ],
-      "note_ta": "குறிப்பு: We calculate tariff based on route km, traffic hours, and number of stops. Everything is communicated clearly."
+      "note": "Hint: We calculate tariff based on route km, traffic hours, and number of stops. Everything is communicated clearly."
     },
     "includes": [
       "Safety-first policy (especially for women staff)",
@@ -634,21 +390,10 @@
     "faq": [
       {
         "q": "Is multi-stop allowed?",
-        "a": "Yes → ₹50–₹100 per extra stop.",
-        "q_ta": "Is multi-stop allowed?",
-        "a_ta": "Yes → ₹50–₹100 per extra stop."
+        "a": "Yes → ₹50–₹100 per extra stop."
       }
     ],
-    "whatsappMsg": "Hi, I am interested in Employee Pickup & Drop services.",
-    "title_ta": "Employee பிக்கப் & டிராப்",
-    "category_ta": "கார்ப்பரேட் பயணம்",
-    "overview_ta": "A safe and punctual system for daily staff movement. We are fully transparent so HR can plan without worry.",
-    "includes_ta": [
-      "Safety-first policy (especially for women staff)",
-      "GPS tracking on request",
-      "No hidden route charges",
-      "Drivers trained for corporate etiquette"
-    ]
+    "whatsappMsg": "Hi, I am interested in Employee Pickup & Drop services."
   },
   {
     "slug": "business-trip-car-rental",
@@ -682,47 +427,15 @@
           "₹24/km"
         ]
       ],
-      "note": "Note: We keep our packages simple so you don’t have to calculate anything.",
-      "headers_ta": [
-        "தொகுப்பு",
-        "செடான்",
-        "எஸ்யூவி",
-        "கிறிஸ்டா"
-      ],
-      "rows_ta": [
-        [
-          "4 hrs / 40 km",
-          "₹1,600",
-          "₹2,200",
-          "₹3,000"
-        ],
-        [
-          "8 hrs / 80 km",
-          "₹2,500",
-          "₹3,500",
-          "₹4,500"
-        ],
-        [
-          "கூடுதல் கி.மீ",
-          "₹14/km",
-          "₹18/km",
-          "₹24/km"
-        ]
-      ],
-      "note_ta": "குறிப்பு: We keep our packages simple so you don’t have to calculate anything."
+      "note": "Note: We keep our packages simple so you don’t have to calculate anything."
     },
     "faq": [
       {
         "q": "Can I extend the 4-hour package?",
-        "a": "Yes, extra hours billed as extra km + ₹100/hr.",
-        "q_ta": "Can I extend the 4-hour package?",
-        "a_ta": "Yes, extra hours billed as extra km + ₹100/hr."
+        "a": "Yes, extra hours billed as extra km + ₹100/hr."
       }
     ],
-    "whatsappMsg": "Hi, I would like to book a car for a Business Trip.",
-    "title_ta": "Business Trip Car Rental",
-    "category_ta": "கார்ப்பரேட் பயணம்",
-    "overview_ta": "Perfect for meetings, client visits, and day-long travel."
+    "whatsappMsg": "Hi, I would like to book a car for a Business Trip."
   },
   {
     "slug": "corporate-airport-transfer",
@@ -748,26 +461,7 @@
           "₹2,500"
         ]
       ],
-      "note": "Parking & toll extra (actual).",
-      "headers_ta": [
-        "வாகனம்",
-        "விலை"
-      ],
-      "rows_ta": [
-        [
-          "செடான்",
-          "₹1,200"
-        ],
-        [
-          "எஸ்யூவி",
-          "₹1,800"
-        ],
-        [
-          "கிறிஸ்டா",
-          "₹2,500"
-        ]
-      ],
-      "note_ta": "Parking & toll extra (actual)."
+      "note": "Parking & toll extra (actual)."
     },
     "includes": [
       "Fixed pricing",
@@ -787,17 +481,7 @@
       ],
       "dressCode": "Chauffeurs in formal attire with placards for easy identification."
     },
-    "whatsappMsg": "Hi, I require a Corporate Airport Transfer.",
-    "title_ta": "கார்ப்பரேட் விமான நிலைய சவாரி",
-    "category_ta": "கார்ப்பரேட் பயணம்",
-    "overview_ta": "Friendly, simple, reassuring and fully transparent.",
-    "includes_ta": [
-      "Fixed pricing",
-      "Guaranteed on-time pickup",
-      "Drivers trained for airport protocols",
-      "GST bills available (optional)",
-      "Transparent tariff (nothing hidden)"
-    ]
+    "whatsappMsg": "Hi, I require a Corporate Airport Transfer."
   },
   {
     "slug": "airport-drop-sedan",
@@ -819,22 +503,7 @@
           "₹1,500 – ₹1,800"
         ]
       ],
-      "note": "Hint: No extra km surprises. We follow zone-based pricing.",
-      "headers_ta": [
-        "வழித்தடம்",
-        "கட்டணம்"
-      ],
-      "rows_ta": [
-        [
-          "Most சென்னை Zones",
-          "₹1,200 – ₹1,400"
-        ],
-        [
-          "Long-distance zones (OMR/ECR/Outer South)",
-          "₹1,500 – ₹1,800"
-        ]
-      ],
-      "note_ta": "குறிப்பு: No extra km surprises. We follow zone-based pricing."
+      "note": "Hint: No extra km surprises. We follow zone-based pricing."
     },
     "travelGuide": {
       "history": "Start your journey with peace of mind. Our Airport Drop service guarantees punctuality so you never have to worry about missing a flight. Our sedans are clean, comfortable, and spacious enough for your luggage, providing a relaxing ride to the terminal.",
@@ -859,24 +528,10 @@
     "faq": [
       {
         "q": "When should I start from home?",
-        "a": "Domestic → 2 hours before. International → 3 hours before.",
-        "q_ta": "When should I start from home?",
-        "a_ta": "Domestic → 2 hours before. International → 3 hours before."
+        "a": "Domestic → 2 hours before. International → 3 hours before."
       }
     ],
-    "whatsappMsg": "Hi, I would like to book an Airport Drop (Sedan).",
-    "title_ta": "Airport டிராப் – செடான்",
-    "category_ta": "விமான நிலைய சவாரி",
-    "overview_ta": "Airport travel should feel peaceful, not stressful. We keep all charges upfront.",
-    "includes_ta": [
-      "Clean AC sedan",
-      "Professional trained driver",
-      "Luggage handling"
-    ],
-    "excludes_ta": [
-      "Parking (₹50–₹120 approx)",
-      "Waiting charges (₹100/15 min)"
-    ]
+    "whatsappMsg": "Hi, I would like to book an Airport Drop (Sedan)."
   },
   {
     "slug": "airport-drop-suv",
@@ -892,27 +547,12 @@
           "₹1,800 – ₹2,200 (zone based)"
         ]
       ],
-      "note": "Parking extra (actuals).",
-      "headers_ta": [
-        "கட்டணம்"
-      ],
-      "rows_ta": [
-        [
-          "₹1,800 – ₹2,200 (zone based)"
-        ]
-      ],
-      "note_ta": "Parking extra (actuals)."
+      "note": "Parking extra (actuals)."
     },
     "notes": [
       "Note: SUVs are assigned when: - more luggage - smoother ride preferred - more comfort needed"
     ],
-    "whatsappMsg": "Hi, I would like to book an Airport Drop (SUV).",
-    "title_ta": "Airport டிராப் – எஸ்யூவி",
-    "category_ta": "விமான நிலைய சவாரி",
-    "overview_ta": "Ideal for families with luggage or corporate teams.",
-    "notes_ta": [
-      "குறிப்பு: எஸ்யூவிs are assigned when: - more luggage - smoother ride preferred - more comfort needed"
-    ]
+    "whatsappMsg": "Hi, I would like to book an Airport Drop (SUV)."
   },
   {
     "slug": "airport-pickup-sedan",
@@ -928,16 +568,7 @@
           "₹1,400 – ₹1,600"
         ]
       ],
-      "note": "Parking extra (actuals).",
-      "headers_ta": [
-        "கட்டணம்"
-      ],
-      "rows_ta": [
-        [
-          "₹1,400 – ₹1,600"
-        ]
-      ],
-      "note_ta": "Parking extra (actuals)."
+      "note": "Parking extra (actuals)."
     },
     "includes": [
       "Driver arrives early",
@@ -955,15 +586,7 @@
       ],
       "dressCode": "Professional drivers with placards."
     },
-    "whatsappMsg": "Hi, I would like to book an Airport Pickup (Sedan).",
-    "title_ta": "Airport பிக்கப் – செடான்",
-    "category_ta": "விமான நிலைய சவாரி",
-    "overview_ta": "Arrive in சென்னை without the hassle of finding a cab. Our driver will wait for you at the arrival terminal with a placard, ready to assist with your luggage and drive you safely to your destination.",
-    "includes_ta": [
-      "Driver arrives early",
-      "Name-board (optional)",
-      "30 mins free waiting"
-    ]
+    "whatsappMsg": "Hi, I would like to book an Airport Pickup (Sedan)."
   },
   {
     "slug": "airport-pickup-suv",
@@ -979,16 +602,7 @@
           "₹2,000 – ₹2,400"
         ]
       ],
-      "note": "30 min free waiting",
-      "headers_ta": [
-        "கட்டணம்"
-      ],
-      "rows_ta": [
-        [
-          "₹2,000 – ₹2,400"
-        ]
-      ],
-      "note_ta": "30 min free waiting"
+      "note": "30 min free waiting"
     },
     "travelGuide": {
       "history": "Traveling with family or a team? Our SUV Airport Pickup offers the space and comfort you need. With ample luggage capacity and spacious seating, it's the perfect choice for groups of 3-6 passengers.",
@@ -1001,10 +615,7 @@
       ],
       "dressCode": "Professional drivers with placards."
     },
-    "whatsappMsg": "Hi, I would like to book an Airport Pickup (SUV).",
-    "title_ta": "Airport பிக்கப் – எஸ்யூவி",
-    "category_ta": "விமான நிலைய சவாரி",
-    "overview_ta": "Ideal for 3–5 people, luggage-friendly."
+    "whatsappMsg": "Hi, I would like to book an Airport Pickup (SUV)."
   },
   {
     "slug": "airport-transfer-tempo-traveller",
@@ -1025,32 +636,12 @@
           "17 Seater",
           "₹5,500"
         ]
-      ],
-      "headers_ta": [
-        "வாகனம்",
-        "விலை"
-      ],
-      "rows_ta": [
-        [
-          "12 Seater",
-          "₹4,500"
-        ],
-        [
-          "17 Seater",
-          "₹5,500"
-        ]
       ]
     },
     "notes": [
       "Hint: Luggage space is limited in TT. Tell us in advance if you have 8+ big suitcases so we can plan better."
     ],
-    "whatsappMsg": "Hi, I would like to book a Tempo Traveller for Airport Transfer.",
-    "title_ta": "விமான நிலைய சவாரி – டெம்போ டிராவலர்",
-    "category_ta": "விமான நிலைய சவாரி",
-    "overview_ta": "Perfect for group arrivals, wedding guests, family trips.",
-    "notes_ta": [
-      "குறிப்பு: Luggage space is limited in TT. Tell us in advance if you have 8+ big suitcases so we can plan better."
-    ]
+    "whatsappMsg": "Hi, I would like to book a Tempo Traveller for Airport Transfer."
   },
   {
     "slug": "airport-parcel-luggage-delivery",
@@ -1071,26 +662,9 @@
           "Tempo Traveller",
           "₹2,200"
         ]
-      ],
-      "headers_ta": [
-        "வாகனம்",
-        "விலை"
-      ],
-      "rows_ta": [
-        [
-          "பட தோஸ்த் i4",
-          "₹900 – ₹1,200"
-        ],
-        [
-          "டெம்போ டிராவலர்",
-          "₹2,200"
-        ]
       ]
     },
-    "whatsappMsg": "Hi, I need assistance with Airport Parcel / Luggage Delivery.",
-    "title_ta": "Airport Parcel / Luggage Delivery",
-    "category_ta": "விமான நிலைய சவாரி",
-    "overview_ta": "Useful for heavy luggage, shifting, airport parcel pickup."
+    "whatsappMsg": "Hi, I need assistance with Airport Parcel / Luggage Delivery."
   },
   {
     "slug": "tirupati-package",
@@ -1157,45 +731,7 @@
           "₹12,000"
         ]
       ],
-      "note": "Total Cost includes: Doorstep Pickup, Permit, Toll, Parking & Driver Bata. Excludes Darshan Tickets.",
-      "headers_ta": [
-        "வாகனம்",
-        "அடிப்படை கட்டணம்",
-        "டிரைவர் பேட்டா",
-        "பர்மிட் & டோல்",
-        "மொத்த செலவு"
-      ],
-      "rows_ta": [
-        [
-          "Etios/Dzire",
-          "₹4,500",
-          "₹500",
-          "₹1,000",
-          "₹6,000"
-        ],
-        [
-          "இன்னோவா",
-          "₹6,500",
-          "₹600",
-          "₹1,400",
-          "₹8,500"
-        ],
-        [
-          "கிறிஸ்டா",
-          "₹7,500",
-          "₹700",
-          "₹1,800",
-          "₹10,000"
-        ],
-        [
-          "டெம்போ டிராவலர்",
-          "₹9,000",
-          "₹800",
-          "₹2,200",
-          "₹12,000"
-        ]
-      ],
-      "note_ta": "Total Cost includes: Doorstep Pickup, Permit, Toll, Parking & Driver Bata. Excludes Darshan Tickets."
+      "note": "Total Cost includes: Doorstep Pickup, Permit, Toll, Parking & Driver Bata. Excludes Darshan Tickets."
     },
     "includes": [
       "Doorstep Pickup & Drop",
@@ -1217,19 +753,7 @@
         "Electronic items and luggage are not allowed inside the temple queue."
       ]
     },
-    "whatsappMsg": "Hi, I need details for Tirupati Package.",
-    "title_ta": "திருப்பதி Balaji Darshan தொகுப்பு",
-    "category_ta": "கோவில் சுற்றுலா",
-    "overview_ta": "Complete darshan package with accommodation assistance and guided darshan.",
-    "includes_ta": [
-      "Doorstep பிக்கப் & டிராப்",
-      "Toll & Parking",
-      "Driver Allowance"
-    ],
-    "excludes_ta": [
-      "Darshan Tickets",
-      "Food & Accommodation"
-    ]
+    "whatsappMsg": "Hi, I need details for Tirupati Package."
   },
   {
     "slug": "kanchipuram-temple-trip",
@@ -1269,40 +793,7 @@
           "₹6,500 – ₹7,000"
         ]
       ],
-      "note": "Hint: We show complete fare ranges so you know exactly what to expect. No hidden fees.",
-      "headers_ta": [
-        "வாகனம்",
-        "விலை/km",
-        "டிரைவர் பேட்டா",
-        "Est. மொத்த கட்டணம்"
-      ],
-      "rows_ta": [
-        [
-          "செடான்",
-          "₹14/km",
-          "₹500",
-          "₹3,200 – ₹3,500"
-        ],
-        [
-          "எஸ்யூவி (Ertiga/XL6)",
-          "₹17/km",
-          "₹600",
-          "₹4,500 – ₹4,800"
-        ],
-        [
-          "இன்னோவா",
-          "₹20/km",
-          "₹700",
-          "₹5,500 – ₹6,000"
-        ],
-        [
-          "கிறிஸ்டா",
-          "₹24/km",
-          "₹800",
-          "₹6,500 – ₹7,000"
-        ]
-      ],
-      "note_ta": "குறிப்பு: We show complete fare ranges so you know exactly what to expect. No hidden fees."
+      "note": "Hint: We show complete fare ranges so you know exactly what to expect. No hidden fees."
     },
     "includes": [
       "Car + professional driver",
@@ -1328,31 +819,14 @@
     "faq": [
       {
         "q": "Best start time?",
-        "a": "Early morning 6–7 AM avoids traffic & temple rush.",
-        "q_ta": "Best start time?",
-        "a_ta": "Early morning 6–7 AM avoids traffic & temple rush."
+        "a": "Early morning 6–7 AM avoids traffic & temple rush."
       },
       {
         "q": "Can we visit 3–4 temples?",
-        "a": "Yes — customise as you wish.",
-        "q_ta": "Can we visit 3–4 temples?",
-        "a_ta": "Yes — customise as you wish."
+        "a": "Yes — customise as you wish."
       }
     ],
-    "whatsappMsg": "Hi, I need the Kanchipuram temple trip package.",
-    "title_ta": "காஞ்சிபுரம் Temple Trip (Half Day from சென்னை)",
-    "category_ta": "கோவில் சுற்றுலா",
-    "overview_ta": "காஞ்சிபுரம் is close, peaceful, and perfect for quick temple visits. We keep the pricing simple & transparent so families and senior citizens can travel confidently.\n\nTrip கண்ணோட்டம்\n- சென்னை → காஞ்சிபுரம் → சென்னை\n- 150 km approx\n- Half-day or full-day options\n- Great for: temple visits, shopping, senior citizens",
-    "includes_ta": [
-      "Car + professional driver",
-      "Assistance for senior citizens",
-      "Flexible timings",
-      "Free temple parking guidance"
-    ],
-    "excludes_ta": [
-      "Parking (actuals)",
-      "Toll charges (if route via highway)"
-    ]
+    "whatsappMsg": "Hi, I need the Kanchipuram temple trip package."
   },
   {
     "slug": "thiruvannamalai-girivalam-trip",
@@ -1419,45 +893,7 @@
           "₹11,100"
         ]
       ],
-      "note": "Total Cost includes: 400km (approx round trip) + Driver Bata + Toll Estimates.",
-      "headers_ta": [
-        "வாகனம்",
-        "கி.மீ கட்டணம்",
-        "டிரைவர் பேட்டா",
-        "டோல் & பார்க்கிங்",
-        "மொத்த செலவு"
-      ],
-      "rows_ta": [
-        [
-          "செடான்",
-          "₹14",
-          "₹500",
-          "₹400",
-          "₹6,500"
-        ],
-        [
-          "எஸ்யூவி",
-          "₹17",
-          "₹600",
-          "₹500",
-          "₹7,900"
-        ],
-        [
-          "இன்னோவா",
-          "₹20",
-          "₹700",
-          "₹600",
-          "₹9,300"
-        ],
-        [
-          "கிறிஸ்டா",
-          "₹24",
-          "₹800",
-          "₹700",
-          "₹11,100"
-        ]
-      ],
-      "note_ta": "Total Cost includes: 400km (approx round trip) + Driver Bata + Toll Estimates."
+      "note": "Total Cost includes: 400km (approx round trip) + Driver Bata + Toll Estimates."
     },
     "notes": [
       "Note: Night Girivalam requires alert drivers. We assign our most experienced night-route drivers."
@@ -1476,18 +912,10 @@
     "faq": [
       {
         "q": "Is night driving safe?",
-        "a": "Yes — we send only experienced highway drivers.",
-        "q_ta": "Is night driving safe?",
-        "a_ta": "Yes — we send only experienced highway drivers."
+        "a": "Yes — we send only experienced highway drivers."
       }
     ],
-    "whatsappMsg": "Hi, I am interested in the Thiruvannamalai Girivalam Trip.",
-    "title_ta": "திருவண்ணாமலை Girivalam (1 Day / Night Trip)",
-    "category_ta": "கோவில் சுற்றுலா",
-    "overview_ta": "A peaceful spiritual trip for Girivalam or temple darshan.\n\nTrip Info\n- சென்னை → திருவண்ணாமலை → சென்னை\n- 250 km approx\n- Popular for Pournami Girivalam",
-    "notes_ta": [
-      "குறிப்பு: Night Girivalam requires alert drivers. We assign our most experienced night-route drivers."
-    ]
+    "whatsappMsg": "Hi, I am interested in the Thiruvannamalai Girivalam Trip."
   },
   {
     "slug": "chidambaram-temple-trip",
@@ -1554,45 +982,7 @@
           "₹12,500"
         ]
       ],
-      "note": "Total Cost includes: 450km (approx round trip) + Driver Bata + Toll Estimates.",
-      "headers_ta": [
-        "வாகனம்",
-        "கி.மீ கட்டணம்",
-        "டிரைவர் பேட்டா",
-        "டோல் & பார்க்கிங்",
-        "மொத்த செலவு"
-      ],
-      "rows_ta": [
-        [
-          "செடான்",
-          "₹14",
-          "₹500",
-          "₹600",
-          "₹7,400"
-        ],
-        [
-          "எஸ்யூவி",
-          "₹17",
-          "₹600",
-          "₹700",
-          "₹9,000"
-        ],
-        [
-          "இன்னோவா",
-          "₹20",
-          "₹700",
-          "₹800",
-          "₹10,500"
-        ],
-        [
-          "கிறிஸ்டா",
-          "₹24",
-          "₹800",
-          "₹900",
-          "₹12,500"
-        ]
-      ],
-      "note_ta": "Total Cost includes: 450km (approx round trip) + Driver Bata + Toll Estimates."
+      "note": "Total Cost includes: 450km (approx round trip) + Driver Bata + Toll Estimates."
     },
     "travelGuide": {
       "history": "Chidambaram Thillai Nataraja Temple represents the Sky element (Akasha Lingam). It is famous for the 'Chidambara Rahasiyam' and the cosmic dance of Lord Shiva.",
@@ -1605,10 +995,7 @@
         "Dikshitars are the hereditary priests here."
       ]
     },
-    "whatsappMsg": "Hi, I would like details about the Chidambaram Natarajar Temple Trip.",
-    "title_ta": "சிதம்பரம் Natarajar Temple Trip",
-    "category_ta": "கோவில் சுற்றுலா",
-    "overview_ta": "A spiritually rich trip with a relaxed journey."
+    "whatsappMsg": "Hi, I would like details about the Chidambaram Natarajar Temple Trip."
   },
   {
     "slug": "rameswaram-2-days",
@@ -1682,59 +1069,12 @@
           "₹32,200"
         ]
       ],
-      "note": "Total Cost includes: 1200km (approx round trip) + 2 Days Bata + Toll Estimates.",
-      "headers_ta": [
-        "வாகனம்",
-        "கி.மீ கட்டணம்",
-        "டிரைவர் பேட்டா",
-        "டோல் & பார்க்கிங்",
-        "மொத்த செலவு"
-      ],
-      "rows_ta": [
-        [
-          "செடான்",
-          "₹11",
-          "₹400/day",
-          "₹1,500",
-          "₹15,500"
-        ],
-        [
-          "எஸ்யூவி",
-          "₹13",
-          "₹500/day",
-          "₹1,800",
-          "₹18,400"
-        ],
-        [
-          "இன்னோவா",
-          "₹16",
-          "₹600/day",
-          "₹2,200",
-          "₹22,600"
-        ],
-        [
-          "கிறிஸ்டா",
-          "₹19",
-          "₹700/day",
-          "₹2,500",
-          "₹26,700"
-        ],
-        [
-          "டெம்போ டிராவலர்",
-          "₹23",
-          "₹800/day",
-          "₹3,000",
-          "₹32,200"
-        ]
-      ],
-      "note_ta": "Total Cost includes: 1200km (approx round trip) + 2 Days Bata + Toll Estimates."
+      "note": "Total Cost includes: 1200km (approx round trip) + 2 Days Bata + Toll Estimates."
     },
     "faq": [
       {
         "q": "Is Dhanushkodi included?",
-        "a": "Yes — morning visit recommended.",
-        "q_ta": "Is Dhanushkodi included?",
-        "a_ta": "Yes — morning visit recommended."
+        "a": "Yes — morning visit recommended."
       }
     ],
     "travelGuide": {
@@ -1748,10 +1088,7 @@
         "Dr. APJ Abdul Kalam Memorial is a must-visit."
       ]
     },
-    "whatsappMsg": "Hi, I would like to book the Rameswaram (2-Day Trip).",
-    "title_ta": "ராமேஸ்வரம் (2-Day Trip)",
-    "category_ta": "கோவில் சுற்றுலா",
-    "overview_ta": "Long, peaceful coastal travel. Suitable for families & senior devotees."
+    "whatsappMsg": "Hi, I would like to book the Rameswaram (2-Day Trip)."
   },
   {
     "slug": "navagraha-tour",
@@ -1818,45 +1155,7 @@
           "₹15,500"
         ]
       ],
-      "note": "Total Cost includes: 650km (approx round trip) + 2 Days Bata + Toll Estimates.",
-      "headers_ta": [
-        "வாகனம்",
-        "கி.மீ கட்டணம்",
-        "டிரைவர் பேட்டா",
-        "டோல் & பார்க்கிங்",
-        "மொத்த செலவு"
-      ],
-      "rows_ta": [
-        [
-          "செடான்",
-          "₹11",
-          "₹400/day",
-          "₹1,000",
-          "₹8,600"
-        ],
-        [
-          "எஸ்யூவி",
-          "₹13",
-          "₹500/day",
-          "₹1,200",
-          "₹10,600"
-        ],
-        [
-          "இன்னோவா",
-          "₹16",
-          "₹600/day",
-          "₹1,500",
-          "₹13,100"
-        ],
-        [
-          "கிறிஸ்டா",
-          "₹19",
-          "₹700/day",
-          "₹1,800",
-          "₹15,500"
-        ]
-      ],
-      "note_ta": "Total Cost includes: 650km (approx round trip) + 2 Days Bata + Toll Estimates."
+      "note": "Total Cost includes: 650km (approx round trip) + 2 Days Bata + Toll Estimates."
     },
     "includes": [
       "Experienced driver familiar with temple routes",
@@ -1866,15 +1165,11 @@
     "faq": [
       {
         "q": "Can we cover all 9 temples in 1 day?",
-        "a": "It is very tight. We recommend 2 days for a relaxed darshan.",
-        "q_ta": "Can we cover all 9 temples in 1 day?",
-        "a_ta": "It is very tight. We recommend 2 days for a relaxed darshan."
+        "a": "It is very tight. We recommend 2 days for a relaxed darshan."
       },
       {
         "q": "Where does the trip start?",
-        "a": "Pickup from Chennai or Kumbakonam railway station.",
-        "q_ta": "Where does the trip start?",
-        "a_ta": "பிக்கப் from சென்னை or Kumbakonam railway station."
+        "a": "Pickup from Chennai or Kumbakonam railway station."
       }
     ],
     "travelGuide": {
@@ -1888,15 +1183,7 @@
         "Hire a local guide for optimal route planning."
       ]
     },
-    "whatsappMsg": "Hi, I would like details about the Navagraha Temple Tour.",
-    "title_ta": "நவகிரக Temple Tour (1 Day or 2 Days)",
-    "category_ta": "கோவில் சுற்றுலா",
-    "overview_ta": "A complete spiritual journey covering the nine planetary temples (நவகிரகs) around Kumbakonam. This trip is designed to help you complete your pariharams and prayers with peace of mind.",
-    "includes_ta": [
-      "Experienced driver familiar with temple routes",
-      "Clean & AC vehicle",
-      "Parking & Toll assistance"
-    ]
+    "whatsappMsg": "Hi, I would like details about the Navagraha Temple Tour."
   },
   {
     "slug": "sabarimala-trip",
@@ -1971,52 +1258,7 @@
           "₹34,800"
         ]
       ],
-      "note": "Total Cost includes: 1300km (approx round trip) + 3 Days Bata + State Permit. Toll & Parking extra.",
-      "headers_ta": [
-        "வாகனம்",
-        "கி.மீ கட்டணம்",
-        "டிரைவர் பேட்டா",
-        "மாநில பர்மிட்",
-        "மொத்த செலவு"
-      ],
-      "rows_ta": [
-        [
-          "செடான் (Dzire/Etios)",
-          "₹11",
-          "₹400/day",
-          "₹400",
-          "₹15,900"
-        ],
-        [
-          "எஸ்யூவி (Ertiga/XL6)",
-          "₹13",
-          "₹500/day",
-          "₹500",
-          "₹18,900"
-        ],
-        [
-          "இன்னோவா",
-          "₹16",
-          "₹600/day",
-          "₹700",
-          "₹23,300"
-        ],
-        [
-          "இன்னோவா கிறிஸ்டா",
-          "₹19",
-          "₹700/day",
-          "₹800",
-          "₹27,600"
-        ],
-        [
-          "டெம்போ டிராவலர்",
-          "₹23",
-          "₹800/day",
-          "₹2,500",
-          "₹34,800"
-        ]
-      ],
-      "note_ta": "Total Cost includes: 1300km (approx round trip) + 3 Days Bata + State Permit. Toll & Parking extra."
+      "note": "Total Cost includes: 1300km (approx round trip) + 3 Days Bata + State Permit. Toll & Parking extra."
     },
     "includes": [
       "Clean, Sanitized Vehicle",
@@ -2039,21 +1281,7 @@
         "**Virtual Q:** Mandatory booking required for Darshan. Carry printed copy & ID."
       ]
     },
-    "whatsappMsg": "Hi, I want to book a Sabarimala trip.",
-    "title_ta": "சபரிமலை யாத்திரை 2025-26 (சென்னையிலிருந்து பம்பை)",
-    "category_ta": "கோவில் சுற்றுலா",
-    "overview_ta": "Complete pilgrimage package from Chennai to Sabarimala (Pamba). We provide experienced drivers familiar with the ghat roads and Kerala permit regulations. \n\n**Season:** Mandala Pooja & Makaravilakku (Nov 2025 - Jan 2026).\n**Route:** Chennai → Trichy → Kumily → Nilakkal/Pamba.",
-    "includes_ta": [
-      "Clean, Sanitized Vehicle",
-      "Experienced Hill Driver",
-      "24/7 Support",
-      "Audio System for Devotional Songs"
-    ],
-    "excludes_ta": [
-      "Kerala State Permit (Payable at border)",
-      "Toll & Parking",
-      "Food & Accommodation"
-    ]
+    "whatsappMsg": "Hi, I want to book a Sabarimala trip."
   },
   {
     "slug": "pondicherry-one-day-trip",
@@ -2061,12 +1289,30 @@
     "title": "Pondicherry Day Trip",
     "overview": "Escape to the French Riviera of the East. Visit the serene Auroville, the beautiful Promenade Beach, Manakula Vinayagar Temple, and the French Colony. Perfect for a one-day getaway with family or friends.",
     "routePlan": [
-      { "stop": "Chennai Start", "desc": "Early morning pickup (6:00 AM recommended)." },
-      { "stop": "Auroville", "desc": "Visit the Matrimandir viewing point and global township." },
-      { "stop": "Aurobindo Ashram", "desc": "Spiritual pause at the famous ashram." },
-      { "stop": "Manakula Vinayagar", "desc": "Blessings at the ancient Ganesha temple." },
-      { "stop": "Promenade Beach", "desc": "Relax at the Rock Beach & French Colony walk." },
-      { "stop": "Chennai Drop", "desc": "Return by night (approx 9:00 PM)." }
+      {
+        "stop": "Chennai Start",
+        "desc": "Early morning pickup (6:00 AM recommended)."
+      },
+      {
+        "stop": "Auroville",
+        "desc": "Visit the Matrimandir viewing point and global township."
+      },
+      {
+        "stop": "Aurobindo Ashram",
+        "desc": "Spiritual pause at the famous ashram."
+      },
+      {
+        "stop": "Manakula Vinayagar",
+        "desc": "Blessings at the ancient Ganesha temple."
+      },
+      {
+        "stop": "Promenade Beach",
+        "desc": "Relax at the Rock Beach & French Colony walk."
+      },
+      {
+        "stop": "Chennai Drop",
+        "desc": "Return by night (approx 9:00 PM)."
+      }
     ],
     "tariff": {
       "headers": [
@@ -2113,52 +1359,7 @@
           "₹9,500"
         ]
       ],
-      "note": "Total Cost includes: 320km (approx round trip) + Driver Bata + Tolls. Extra km charged if exceeded.",
-      "headers_ta": [
-        "வாகனம்",
-        "கி.மீ விலை",
-        "பட்டா",
-        "சுங்கம்",
-        "மொத்த செலவு"
-      ],
-      "rows_ta": [
-        [
-          "செடான்",
-          "₹11",
-          "₹500",
-          "₹400",
-          "₹4,500"
-        ],
-        [
-          "எஸ்யூவி (Ertiga)",
-          "₹14",
-          "₹600",
-          "₹400",
-          "₹5,500"
-        ],
-        [
-          "இன்னோவா",
-          "₹17",
-          "₹700",
-          "₹400",
-          "₹6,500"
-        ],
-        [
-          "கிறிஸ்டா",
-          "₹20",
-          "₹800",
-          "₹400",
-          "₹7,500"
-        ],
-        [
-          "டெம்போ டிராவலர்",
-          "₹25",
-          "₹1,000",
-          "₹500",
-          "₹9,500"
-        ]
-      ],
-      "note_ta": "மொத்த செலவில் 320 கி.மீ + டிரைவர் பேட்டா + டோல் கட்டணம் அடங்கும்."
+      "note": "Total Cost includes: 320km (approx round trip) + Driver Bata + Tolls. Extra km charged if exceeded."
     },
     "includes": [
       "Sightseeing at major spots",
@@ -2176,15 +1377,7 @@
         "Auroville Matrimandir viewing requires prior booking."
       ]
     },
-    "whatsappMsg": "Hi, I would like details about the Pondicherry Day Trip.",
-    "title_ta": "பாண்டிச்சேரி Day Trip",
-    "category_ta": "பிற சேவைகள்",
-    "overview_ta": "Escape to the French Riviera of the East. Visit the serene Auroville, the beautiful Promenade Beach, Manakula Vinayagar Temple, and the French Colony. Perfect for a one-day getaway with family or friends.",
-    "includes_ta": [
-      "Sightseeing at major spots",
-      "Flexible stops on ECR road",
-      "AC வாகனம்"
-    ]
+    "whatsappMsg": "Hi, I would like details about the Pondicherry Day Trip."
   },
   {
     "slug": "vellore-golden-temple",
@@ -2192,11 +1385,26 @@
     "title": "Vellore Golden Temple Trip",
     "overview": "Visit the magnificent Sripuram Golden Temple, covered in 1500 kg of pure gold. A spiritual marvel located in Vellore, ideal for a day trip from Chennai.",
     "routePlan": [
-      { "stop": "Chennai Start", "desc": "Pickup at 7:00 AM." },
-      { "stop": "Vellore Fort", "desc": "Visit the historic 16th-century fort." },
-      { "stop": "Jalakandeswarar", "desc": "Darshan at the fort temple." },
-      { "stop": "Golden Temple", "desc": "Sripuram Golden Temple (Evening Darshan is best)." },
-      { "stop": "Chennai Drop", "desc": "Return by 10:00 PM." }
+      {
+        "stop": "Chennai Start",
+        "desc": "Pickup at 7:00 AM."
+      },
+      {
+        "stop": "Vellore Fort",
+        "desc": "Visit the historic 16th-century fort."
+      },
+      {
+        "stop": "Jalakandeswarar",
+        "desc": "Darshan at the fort temple."
+      },
+      {
+        "stop": "Golden Temple",
+        "desc": "Sripuram Golden Temple (Evening Darshan is best)."
+      },
+      {
+        "stop": "Chennai Drop",
+        "desc": "Return by 10:00 PM."
+      }
     ],
     "tariff": {
       "headers": [
@@ -2243,52 +1451,7 @@
           "₹9,000"
         ]
       ],
-      "note": "Total Cost includes: 300km (approx round trip) + Driver Bata + Tolls.",
-      "headers_ta": [
-        "வாகனம்",
-        "கி.மீ விலை",
-        "பட்டா",
-        "சுங்கம்",
-        "மொத்த செலவு"
-      ],
-      "rows_ta": [
-        [
-          "செடான்",
-          "₹11",
-          "₹500",
-          "₹400",
-          "₹4,200"
-        ],
-        [
-          "எஸ்யூவி (Ertiga)",
-          "₹14",
-          "₹600",
-          "₹400",
-          "₹5,200"
-        ],
-        [
-          "இன்னோவா",
-          "₹17",
-          "₹700",
-          "₹400",
-          "₹6,200"
-        ],
-        [
-          "கிறிஸ்டா",
-          "₹20",
-          "₹800",
-          "₹400",
-          "₹7,200"
-        ],
-        [
-          "டெம்போ டிராவலர்",
-          "₹25",
-          "₹1,000",
-          "₹500",
-          "₹9,000"
-        ]
-      ],
-      "note_ta": "மொத்த செலவில் 300 கி.மீ + டிரைவர் பேட்டா + டோல் கட்டணம் அடங்கும்."
+      "note": "Total Cost includes: 300km (approx round trip) + Driver Bata + Tolls."
     },
     "includes": [
       "Pickup & Drop from Chennai",
@@ -2306,15 +1469,7 @@
         "Star-shaped path requires a 1.5 km walk."
       ]
     },
-    "whatsappMsg": "Hi, I am interested in the Vellore Golden Temple Trip.",
-    "title_ta": "வேலூர் Golden Temple Trip",
-    "category_ta": "கோவில் சுற்றுலா",
-    "overview_ta": "Visit the magnificent Sripuram Golden Temple, covered in 1500 kg of pure gold. A spiritual marvel located in வேலூர், ideal for a day trip from சென்னை.",
-    "includes_ta": [
-      "பிக்கப் & டிராப் from சென்னை",
-      "Driver allowance",
-      "Toll & Parking assistance"
-    ]
+    "whatsappMsg": "Hi, I am interested in the Vellore Golden Temple Trip."
   },
   {
     "slug": "mahabalipuram-ecr-temple-route",
@@ -2322,11 +1477,26 @@
     "title": "Mahabalipuram & ECR Temples",
     "overview": "Explore the UNESCO World Heritage sites of Mahabalipuram including the Shore Temple, Five Rathas, and Arjuna's Penance. Enjoy a scenic drive along the East Coast Road (ECR) with options to visit other temples en route.",
     "routePlan": [
-      { "stop": "Chennai Start", "desc": "Pickup at 8:00 AM." },
-      { "stop": "ECR Stops", "desc": "Iskcon, DakshinaChitra, or Crocodile Bank (Optional)." },
-      { "stop": "Mahabalipuram", "desc": "Shore Temple, Five Rathas, Arjuna's Penance." },
-      { "stop": "Sea Shell Museum", "desc": "Visit India's largest seashell museum." },
-      { "stop": "Chennai Drop", "desc": "Return by 7:00 PM." }
+      {
+        "stop": "Chennai Start",
+        "desc": "Pickup at 8:00 AM."
+      },
+      {
+        "stop": "ECR Stops",
+        "desc": "Iskcon, DakshinaChitra, or Crocodile Bank (Optional)."
+      },
+      {
+        "stop": "Mahabalipuram",
+        "desc": "Shore Temple, Five Rathas, Arjuna's Penance."
+      },
+      {
+        "stop": "Sea Shell Museum",
+        "desc": "Visit India's largest seashell museum."
+      },
+      {
+        "stop": "Chennai Drop",
+        "desc": "Return by 7:00 PM."
+      }
     ],
     "tariff": {
       "headers": [
@@ -2361,40 +1531,7 @@
           "₹8,000"
         ]
       ],
-      "note": "Includes: Fuel, Driver Bata, Parking. Excludes: Entry tickets, Food.",
-      "headers_ta": [
-        "வாகனம்",
-        "தொகுப்பு வகை",
-        "மொத்த செலவு"
-      ],
-      "rows_ta": [
-        [
-          "செடான்",
-          "முழு நாள் பயணம்",
-          "₹3,500"
-        ],
-        [
-          "எஸ்யூவி (Ertiga)",
-          "முழு நாள் பயணம்",
-          "₹4,500"
-        ],
-        [
-          "இன்னோவா",
-          "முழு நாள் பயணம்",
-          "₹5,500"
-        ],
-        [
-          "கிறிஸ்டா",
-          "முழு நாள் பயணம்",
-          "₹6,500"
-        ],
-        [
-          "டெம்போ டிராவலர்",
-          "முழு நாள் பயணம்",
-          "₹8,000"
-        ]
-      ],
-      "note_ta": "எரிபொருள், டிரைவர் பேட்டா, பார்க்கிங் ஆகியவை அடங்கும். நுழைவுச் சீட்டுகள், உணவு ஆகியவை இல்லை."
+      "note": "Includes: Fuel, Driver Bata, Parking. Excludes: Entry tickets, Food."
     },
     "includes": [
       "Sightseeing assistance",
@@ -2412,15 +1549,7 @@
         "Don't miss the Shore Temple at sunset."
       ]
     },
-    "whatsappMsg": "Hi, I would like to book the Mahabalipuram & ECR Temples trip.",
-    "title_ta": "மகாபலிபுரம் & ECR Temples (Half-Day / Full-Day)",
-    "category_ta": "கோவில் சுற்றுலா",
-    "overview_ta": "Explore the UNESCO World Heritage sites of மகாபலிபுரம் including the Shore Temple, Five Rathas, and Arjuna's Penance. Enjoy a scenic drive along the East Coast Road (ECR) with options to visit other temples en route.",
-    "includes_ta": [
-      "Sightseeing assistance",
-      "Flexible timings",
-      "Comfortable AC car"
-    ]
+    "whatsappMsg": "Hi, I would like to book the Mahabalipuram & ECR Temples trip."
   },
   {
     "slug": "sedan-rental-chennai",
@@ -2446,41 +1575,14 @@
           "₹14/km"
         ]
       ],
-      "note": "Outstation: ₹14/km. Driver bata ₹500/day. Min 250 km/day applies",
-      "headers_ta": [
-        "தொகுப்பு",
-        "விலை"
-      ],
-      "rows_ta": [
-        [
-          "4 hrs / 40 km",
-          "₹1,600"
-        ],
-        [
-          "8 hrs / 80 km",
-          "₹2,500"
-        ],
-        [
-          "கூடுதல் கி.மீ",
-          "₹14/km"
-        ]
-      ],
-      "note_ta": "Outstation: ₹14/km. Driver bata ₹500/day. Min 250 km/day applies"
+      "note": "Outstation: ₹14/km. Driver bata ₹500/day. Min 250 km/day applies"
     },
     "includes": [
       "Chauffeur driven",
       "Clean interiors",
       "AC comfort"
     ],
-    "whatsappMsg": "Hi, I would like to rent a Sedan in Chennai.",
-    "title_ta": "செடான் Car Rental (சென்னை)",
-    "category_ta": "பிரீமியம் வாகன வாடகை",
-    "overview_ta": "Rent a comfortable செடான் (Dzire / Etios / Aura) for your local travel needs in சென்னை. Whether it's for shopping, visiting relatives, or attending functions, our sedans offer a smooth ride.",
-    "includes_ta": [
-      "Chauffeur driven",
-      "Clean interiors",
-      "AC comfort"
-    ]
+    "whatsappMsg": "Hi, I would like to rent a Sedan in Chennai."
   },
   {
     "slug": "suv-ertiga-rental",
@@ -2506,41 +1608,14 @@
           "₹17/km"
         ]
       ],
-      "note": "Outstation: ₹17/km + driver bata ₹600/day",
-      "headers_ta": [
-        "தொகுப்பு",
-        "விலை"
-      ],
-      "rows_ta": [
-        [
-          "4 hrs",
-          "₹2,000"
-        ],
-        [
-          "8 hrs",
-          "₹3,200"
-        ],
-        [
-          "கூடுதல் கி.மீ",
-          "₹17/km"
-        ]
-      ],
-      "note_ta": "Outstation: ₹17/km + driver bata ₹600/day"
+      "note": "Outstation: ₹17/km + driver bata ₹600/day"
     },
     "includes": [
       "6/7 Seater capacity",
       "Dual AC",
       "Experienced driver"
     ],
-    "whatsappMsg": "Hi, I would like to rent an SUV / Ertiga.",
-    "title_ta": "எஸ்யூவி / Ertiga / XL6 Rental",
-    "category_ta": "பிரீமியம் வாகன வாடகை",
-    "overview_ta": "Spacious 6/7 seater எஸ்யூவிs like Ertiga or XL6, perfect for small families or groups. Enjoy extra legroom and luggage space for a comfortable journey within the city or outstation.",
-    "includes_ta": [
-      "6/7 Seater capacity",
-      "Dual AC",
-      "Experienced driver"
-    ]
+    "whatsappMsg": "Hi, I would like to rent an SUV / Ertiga."
   },
   {
     "slug": "innova-rental",
@@ -2566,41 +1641,14 @@
           "₹20/km"
         ]
       ],
-      "note": "Outstation: ₹20/km + driver bata ₹700/day",
-      "headers_ta": [
-        "மணிநேரம்",
-        "விலை"
-      ],
-      "rows_ta": [
-        [
-          "4 hrs",
-          "₹2,500"
-        ],
-        [
-          "8 hrs",
-          "₹3,800"
-        ],
-        [
-          "கூடுதல் கி.மீ",
-          "₹20/km"
-        ]
-      ],
-      "note_ta": "Outstation: ₹20/km + driver bata ₹700/day"
+      "note": "Outstation: ₹20/km + driver bata ₹700/day"
     },
     "includes": [
       "Captain seats (optional)",
       "Superior suspension",
       "Ample luggage space"
     ],
-    "whatsappMsg": "Hi, I would like to rent an Innova.",
-    "title_ta": "இன்னோவா Rental",
-    "category_ta": "பிரீமியம் வாகன வாடகை",
-    "overview_ta": "The Toyota இன்னோவா is the gold standard for comfort and reliability. Ideal for corporate travel, long-distance trips, and family vacations where comfort is a priority.",
-    "includes_ta": [
-      "Captain seats (optional)",
-      "Superior suspension",
-      "Ample luggage space"
-    ]
+    "whatsappMsg": "Hi, I would like to rent an Innova."
   },
   {
     "slug": "innova-crysta-rental",
@@ -2626,41 +1674,14 @@
           "₹24/km"
         ]
       ],
-      "note": "Outstation: ₹24/km (premium MPV). Driver bata ₹800/day",
-      "headers_ta": [
-        "மணிநேரம்",
-        "விலை"
-      ],
-      "rows_ta": [
-        [
-          "4 hrs",
-          "₹3,000"
-        ],
-        [
-          "8 hrs",
-          "₹4,500"
-        ],
-        [
-          "கூடுதல் கி.மீ",
-          "₹24/km"
-        ]
-      ],
-      "note_ta": "Outstation: ₹24/km (premium MPV). Driver bata ₹800/day"
+      "note": "Outstation: ₹24/km (premium MPV). Driver bata ₹800/day"
     },
     "includes": [
       "Premium leather interiors",
       "Ambient lighting",
       "Top-class comfort"
     ],
-    "whatsappMsg": "Hi, I would like to rent an Innova Crysta.",
-    "title_ta": "இன்னோவா கிறிஸ்டா Rental",
-    "category_ta": "பிரீமியம் வாகன வாடகை",
-    "overview_ta": "Experience premium luxury with the இன்னோவா கிறிஸ்டா. Powerful performance, sophisticated interiors, and top-notch safety features make this the best choice for VIPs and luxury seekers.",
-    "includes_ta": [
-      "Premium leather interiors",
-      "Ambient lighting",
-      "Top-class comfort"
-    ]
+    "whatsappMsg": "Hi, I would like to rent an Innova Crysta."
   },
   {
     "slug": "tempo-traveller-rental",
@@ -2686,41 +1707,14 @@
           "₹28/km"
         ]
       ],
-      "note": "Outstation: ₹28/km + driver bata ₹1,000/day. Min 300 km/day recommended for group trips.",
-      "headers_ta": [
-        "இருக்கை",
-        "விலை"
-      ],
-      "rows_ta": [
-        [
-          "12 Seater",
-          "₹5,000"
-        ],
-        [
-          "17 Seater",
-          "₹6,500"
-        ],
-        [
-          "கூடுதல் கி.மீ",
-          "₹28/km"
-        ]
-      ],
-      "note_ta": "Outstation: ₹28/km + driver bata ₹1,000/day. Min 300 km/day recommended for group trips."
+      "note": "Outstation: ₹28/km + driver bata ₹1,000/day. Min 300 km/day recommended for group trips."
     },
     "includes": [
       "Push-back seats",
       "High roof for standing height",
       "Music system"
     ],
-    "whatsappMsg": "Hi, I would like to rent a Tempo Traveller.",
-    "title_ta": "டெம்போ டிராவலர் Rental (12–17 Seater)",
-    "category_ta": "பிரீமியம் வாகன வாடகை",
-    "overview_ta": "Travelling with a large group? Our டெம்போ டிராவலர்s (12 to 17 seaters) ensure everyone travels together in comfort. Features push-back seats, individual AC vents, and entertainment systems.",
-    "includes_ta": [
-      "Push-back seats",
-      "High roof for standing height",
-      "Music system"
-    ]
+    "whatsappMsg": "Hi, I would like to rent a Tempo Traveller."
   },
   {
     "slug": "bada-dost-i4-goods-delivery",
@@ -2745,30 +1739,9 @@
           "Waiting charge",
           "₹100 / hour"
         ]
-      ],
-      "headers_ta": [
-        "சேவை",
-        "விலை"
-      ],
-      "rows_ta": [
-        [
-          "Local One-Way Trip",
-          "₹900 – ₹1,200"
-        ],
-        [
-          "Outstation",
-          "₹28/km"
-        ],
-        [
-          "Waiting charge",
-          "₹100 / hour"
-        ]
       ]
     },
-    "whatsappMsg": "Hi, I would like to book a Bada Dost i4 for Goods Delivery.",
-    "title_ta": "பட தோஸ்த் i4 – Goods Delivery",
-    "category_ta": "பிரீமியம் வாகன வாடகை",
-    "overview_ta": "Ideal for airport luggage, shifting small goods, parcel runs."
+    "whatsappMsg": "Hi, I would like to book a Bada Dost i4 for Goods Delivery."
   },
   {
     "slug": "one-day-chennai-city-tour",
@@ -2776,12 +1749,30 @@
     "title": "Chennai City Sightseeing (1 Day Trip)",
     "overview": "Explore Chennai’s iconic locations with a flexible plan. Visit ancient temples, colonial monuments, and the vibrant Marina Beach.",
     "routePlan": [
-      { "stop": "Pickup", "desc": "Start at 9:00 AM." },
-      { "stop": "Kapaleeshwarar", "desc": "Mylapore temple visit." },
-      { "stop": "Santhome Basilica", "desc": "Historic church built over St. Thomas tomb." },
-      { "stop": "Govt Museum", "desc": "Egmore Museum (closed Fridays)." },
-      { "stop": "Marina Beach", "desc": "Sunset at the world's second-longest urban beach." },
-      { "stop": "Drop", "desc": "End of tour." }
+      {
+        "stop": "Pickup",
+        "desc": "Start at 9:00 AM."
+      },
+      {
+        "stop": "Kapaleeshwarar",
+        "desc": "Mylapore temple visit."
+      },
+      {
+        "stop": "Santhome Basilica",
+        "desc": "Historic church built over St. Thomas tomb."
+      },
+      {
+        "stop": "Govt Museum",
+        "desc": "Egmore Museum (closed Fridays)."
+      },
+      {
+        "stop": "Marina Beach",
+        "desc": "Sunset at the world's second-longest urban beach."
+      },
+      {
+        "stop": "Drop",
+        "desc": "End of tour."
+      }
     ],
     "tariff": {
       "headers": [
@@ -2816,40 +1807,7 @@
           "₹7,500"
         ]
       ],
-      "note": "Extra km/hour charged as per master rates. Includes Fuel & Driver.",
-      "headers_ta": [
-        "வாகனம்",
-        "தொகுப்பு",
-        "மொத்த செலவு"
-      ],
-      "rows_ta": [
-        [
-          "செடான்",
-          "8 மணி / 80 கி.மீ",
-          "₹3,000"
-        ],
-        [
-          "எஸ்யூவி (Ertiga)",
-          "8 மணி / 80 கி.மீ",
-          "₹4,000"
-        ],
-        [
-          "இன்னோவா",
-          "8 மணி / 80 கி.மீ",
-          "₹5,000"
-        ],
-        [
-          "கிறிஸ்டா",
-          "8 மணி / 80 கி.மீ",
-          "₹6,000"
-        ],
-        [
-          "டெம்போ டிராவலர்",
-          "8 மணி / 80 கி.மீ",
-          "₹7,500"
-        ]
-      ],
-      "note_ta": "கூடுதல் கி.மீ/மணிக்கு மாஸ்டர் கட்டணத்தின்படி வசூலிக்கப்படும். எரிபொருள் மற்றும் டிரைவர் பேட்டா அடங்கும்."
+      "note": "Extra km/hour charged as per master rates. Includes Fuel & Driver."
     },
     "travelGuide": {
       "history": "Chennai (Madras) is the capital of Tamil Nadu. It is known for its rich cultural heritage, British colonial architecture, and the second-longest urban beach in the world.",
@@ -2862,10 +1820,7 @@
         "Try authentic South Indian filter coffee."
       ]
     },
-    "whatsappMsg": "Hi, I would like to book the Chennai City Sightseeing (1 Day Trip).",
-    "title_ta": "சென்னை City Sightseeing (1 Day Trip)",
-    "category_ta": "பிற சேவைகள்",
-    "overview_ta": "Explore சென்னை’s iconic locations with a flexible plan."
+    "whatsappMsg": "Hi, I would like to book the Chennai City Sightseeing (1 Day Trip)."
   },
   {
     "slug": "outstation-car-rental-per-km",
@@ -2899,45 +1854,12 @@
           "₹28/km"
         ]
       ],
-      "note": "Driver bata per day → ₹500 / ₹600 / ₹700 / ₹800 / ₹1,000 accordingly",
-      "headers_ta": [
-        "வாகனம்",
-        "விலை/km"
-      ],
-      "rows_ta": [
-        [
-          "செடான்",
-          "₹14/km"
-        ],
-        [
-          "எஸ்யூவி (Ertiga/XL6)",
-          "₹17/km"
-        ],
-        [
-          "இன்னோவா",
-          "₹20/km"
-        ],
-        [
-          "கிறிஸ்டா",
-          "₹24/km"
-        ],
-        [
-          "டெம்போ டிராவலர்",
-          "₹28/km"
-        ]
-      ],
-      "note_ta": "Driver bata per day → ₹500 / ₹600 / ₹700 / ₹800 / ₹1,000 accordingly"
+      "note": "Driver bata per day → ₹500 / ₹600 / ₹700 / ₹800 / ₹1,000 accordingly"
     },
     "notes": [
       "Why we show everything openly: To build trust. To avoid confusion. To make planning easy for families."
     ],
-    "whatsappMsg": "Hi, I have an enquiry about Outstation Car Rental.",
-    "title_ta": "Outstation Car Rental (Per Km கட்டணம்)",
-    "category_ta": "பிற சேவைகள்",
-    "overview_ta": "This is our master transparent tariff page.",
-    "notes_ta": [
-      "Why we show everything openly: To build trust. To avoid confusion. To make planning easy for families."
-    ]
+    "whatsappMsg": "Hi, I have an enquiry about Outstation Car Rental."
   },
   {
     "slug": "luggage-parcel-delivery-chennai",
@@ -2959,27 +1881,9 @@
           "₹2,200"
         ]
       ],
-      "note": "Waiting: ₹100/hr",
-      "headers_ta": [
-        "வாகனம்",
-        "விலை"
-      ],
-      "rows_ta": [
-        [
-          "பட தோஸ்த்",
-          "₹900 – ₹1,200"
-        ],
-        [
-          "TT Van",
-          "₹2,200"
-        ]
-      ],
-      "note_ta": "Waiting: ₹100/hr"
+      "note": "Waiting: ₹100/hr"
     },
-    "whatsappMsg": "Hi, I need Parcel / Luggage Delivery in Chennai.",
-    "title_ta": "Parcel / Luggage Delivery in சென்னை",
-    "category_ta": "பிற சேவைகள்",
-    "overview_ta": "Local goods movement, urgent parcels, luggage transfers."
+    "whatsappMsg": "Hi, I need Parcel / Luggage Delivery in Chennai."
   },
   {
     "slug": "driver-car-for-weddings",
@@ -3009,44 +1913,13 @@
           "₹9,000 – ₹11,000"
         ]
       ],
-      "note": "Decoration available on request (extra).",
-      "headers_ta": [
-        "வாகனம்",
-        "விலை"
-      ],
-      "rows_ta": [
-        [
-          "செடான்",
-          "₹3,500 – ₹4,000"
-        ],
-        [
-          "இன்னோவா",
-          "₹5,500 – ₹6,500"
-        ],
-        [
-          "கிறிஸ்டா",
-          "₹7,000 – ₹8,000"
-        ],
-        [
-          "TT",
-          "₹9,000 – ₹11,000"
-        ]
-      ],
-      "note_ta": "Decoration available on request (extra)."
+      "note": "Decoration available on request (extra)."
     },
     "includes": [
       "Well-dressed driver",
       "Spotless vehicle",
       "Punctual service"
     ],
-    "whatsappMsg": "Hi, I am interested in Driver + Car services for a Wedding Event.",
-    "title_ta": "Driver + Car for Wedding Events",
-    "category_ta": "பிற சேவைகள்",
-    "overview_ta": "Make your special day perfect with our premium wedding car services. We provide clean, decorated (optional) luxury cars with well-groomed chauffeurs to ensure the bride, groom, and guests arrive in style.",
-    "includes_ta": [
-      "Well-dressed driver",
-      "Spotless vehicle",
-      "Punctual service"
-    ]
+    "whatsappMsg": "Hi, I am interested in Driver + Car services for a Wedding Event."
   }
 ]

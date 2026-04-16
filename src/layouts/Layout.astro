@@ -7,28 +7,14 @@ interface Props {
   type?: string;
   url?: string;
   schema?: object;
-  lang?: string;
   keywords?: string;
 }
 
 import siteContent from "../data/siteContent.json";
-const firstHeroImage = (siteContent.hero.images ?? [])[0];
-import LanguageToggle from "../components/react/LanguageToggle.jsx";
 
-const defaultTitle =
-  Astro.props.lang === "ta"
-    ? "காளிதாஸ் டிராவல்ஸ் - சென்னை சிறந்த டாக்ஸி சேவை"
-    : "Kalidass Travels - Premium Travel Experience";
-
-const defaultDescription =
-  Astro.props.lang === "ta"
-    ? "சென்னையில் சிறந்த கோவில் சுற்றுலா மற்றும் வெளியூர் டாக்ஸி சேவை. பாதுகாப்பான பயணம், குறைந்த கட்டணம்."
-    : "Premium travel and cab services across South India. Professional drivers, comfortable vehicles, affordable rates.";
-
-const defaultKeywords =
-  Astro.props.lang === "ta"
-    ? "டாக்ஸி சேவை சென்னை, கோவில் சுற்றுலா தமிழ்நாடு, கார்ப்பரேட் பயணம் சென்னை, விமான நிலைய டாக்ஸி சென்னை, வெளியூர் டாக்ஸி, காளிதாஸ் டிராவல்ஸ்"
-    : "taxi service Chennai, temple tours Tamil Nadu, corporate travel Chennai, airport taxi Chennai, outstation cabs Chennai, Kalidass Travels";
+const defaultTitle = "Kalidass Travels - Premium Travel Experience";
+const defaultDescription = "Premium travel and cab services across South India. Professional drivers, comfortable vehicles, affordable rates.";
+const defaultKeywords = "taxi service Chennai, temple tours Tamil Nadu, corporate travel Chennai, airport taxi Chennai, outstation cabs Chennai, Kalidass Travels";
 
 const {
   title = defaultTitle,
@@ -38,49 +24,14 @@ const {
   type = "website",
   url = Astro.url.href,
   schema,
-  lang = "en",
   keywords = defaultKeywords,
 } = Astro.props;
 
-// --- Internationalization Logic ---
-const currentPath = Astro.url.pathname.replace(/\/$/, ""); // Remove trailing slash
-const isTamil = lang === "ta";
+const services = siteContent.services;
 
-const services = siteContent.services.map((s) => ({
-  ...s,
-  link: isTamil ? `/ta${s.link}` : s.link,
-}));
-
-// Calculate the alternate language URL
-// If currently English (e.g. "/services"), target is "/ta/services"
-// If currently Tamil (e.g. "/ta/services"), target is "/services"
-const targetPath = isTamil
-  ? currentPath.replace(/^\/ta/, "") || "/"
-  : `/ta${currentPath === "/" ? "" : currentPath}`;
-
-// Canonical and Hreflang URLs
-const site = "https://kalidasstravels.in";
 const canonicalURL = Astro.url.href.endsWith("/")
   ? Astro.url.href
   : `${Astro.url.href}/`;
-
-// Specifically for hreflang
-const cleanPath = Astro.url.pathname.replace(/\/$/, "");
-const enPath = isTamil
-  ? cleanPath.replace(/^\/ta/, "") || "/"
-  : cleanPath === ""
-    ? "/"
-    : cleanPath;
-const taPath = isTamil
-  ? cleanPath === ""
-    ? "/ta"
-    : cleanPath
-  : `/ta${cleanPath === "/" ? "" : cleanPath}`;
-
-// Ensure trailing slashes for hreflang
-const enHref = `${site}${enPath}${enPath.endsWith("/") ? "" : "/"}`;
-const taHref = `${site}${taPath}${taPath.endsWith("/") ? "" : "/"}`;
-// ----------------------------------
 
 const siteUrl = "https://kalidasstravels.in";
 const fullImage = ogImage
@@ -212,14 +163,8 @@ const websiteSchema = {
 ---
 
 <!doctype html>
-<html lang={lang} class="scroll-smooth">
+<html lang="en" class="scroll-smooth">
   <head>
-    <!-- Preload removed because Astro Image optimizes and sets fetchpriority automatically -->
-
-    <!-- SEO: Hreflang Tags -->
-    <link rel="alternate" hreflang="en-IN" href={enHref} />
-    <link rel="alternate" hreflang="ta-IN" href={taHref} />
-    <link rel="alternate" hreflang="x-default" href={enHref} />
 
     <!-- Google tag (gtag.js) -->
     <script
@@ -259,7 +204,6 @@ const websiteSchema = {
     <link rel="canonical" href={canonicalURL} />
     <!-- PWA manifest removed -->
 
-    <!-- Fonts: Google Sans/Nunito Sans (English), Noto Sans Tamil (Tamil Body), Mukta Malar (Tamil Headings) -->
     <!-- Resource Hints: Preconnect to external origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -274,14 +218,14 @@ const websiteSchema = {
 
     {/* Optimized Font Loading: Subsetting or specific weights */}
     <link
-      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&family=Noto+Sans+Tamil:wght@400;700&family=Mukta+Malar:wght@400;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap"
       rel="stylesheet"
       media="print"
       onload="this.media='all'"
     />
     <noscript>
       <link
-        href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&family=Noto+Sans+Tamil:wght@400;700&family=Mukta+Malar:wght@400;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap"
         rel="stylesheet"
       />
     </noscript>
@@ -324,54 +268,6 @@ const websiteSchema = {
       html {
         font-family: "Google Sans", "Nunito Sans", sans-serif;
         scroll-behavior: smooth;
-      }
-
-      /* Language-based Visibility */
-      .lang-en {
-        display: inline;
-      }
-      :not(body).lang-ta {
-        display: none;
-      }
-
-      body.lang-ta .lang-en {
-        display: none;
-      }
-      body.lang-ta .lang-ta {
-        display: inline;
-      }
-
-      /* Block-level language support if needed */
-      div.lang-en,
-      p.lang-en,
-      section.lang-en {
-        display: block !important;
-      }
-      body.lang-ta div.lang-en,
-      body.lang-ta p.lang-en,
-      body.lang-ta section.lang-en {
-        display: none !important;
-      }
-      body.lang-ta div.lang-ta,
-      body.lang-ta p.lang-ta,
-      body.lang-ta section.lang-ta {
-        display: block !important;
-      }
-
-      /* Tamil Font Overrides */
-      body.lang-ta,
-      body.lang-ta .font-sans {
-        font-family: "Noto Sans Tamil", sans-serif !important;
-      }
-
-      body.lang-ta h1,
-      body.lang-ta h2,
-      body.lang-ta h3,
-      body.lang-ta h4,
-      body.lang-ta h5,
-      body.lang-ta h6,
-      body.lang-ta .font-heading {
-        font-family: "Mukta Malar", "Noto Sans Tamil", sans-serif !important;
       }
 
       /* Skeleton Shimmer Effect */
@@ -567,7 +463,7 @@ const websiteSchema = {
         background: rgba(242, 242, 242, 0.9);
       }
     </style>
-  </head><body class={`font-sans antialiased ${isTamil ? "lang-ta" : ""}`}>
+  </head><body class="font-sans antialiased">
     <!-- Virtual Keyboard API: exposes --keyboard-height and --keyboard-visible CSS variables -->
     <script is:inline>
       (function () {
@@ -663,18 +559,9 @@ const websiteSchema = {
 
           <!-- Desktop Menu -->
           <div class="hidden md:flex items-center space-x-8">
-            <a href={isTamil ? "/ta/" : "/"} class="header-link">
-              <span>{isTamil ? "முகப்பு" : "Home"}</span>
-            </a>
-            <a href={isTamil ? "/ta/#fleet" : "/#fleet"} class="header-link">
-              <span>{isTamil ? "வாகனங்கள்" : "Fleet"}</span>
-            </a>
-            <a
-              href={isTamil ? "/ta/drivers/" : "/drivers/"}
-              class="header-link"
-            >
-              <span>{isTamil ? "ஓட்டுநர்கள்" : "Drivers"}</span>
-            </a>
+            <a href="/" class="header-link">Home</a>
+            <a href="/#fleet" class="header-link">Fleet</a>
+            <a href="/drivers/" class="header-link">Drivers</a>
 
             <!-- Services Dropdown -->
             <div class="relative group">
@@ -683,7 +570,7 @@ const websiteSchema = {
                 aria-expanded="false"
                 aria-haspopup="true"
               >
-                <span>{isTamil ? "சேவைகள்" : "Services"}</span>
+                <span>Services</span>
                 <svg
                   class="w-4 h-4 transition-transform group-hover:rotate-180"
                   fill="none"
@@ -709,9 +596,7 @@ const websiteSchema = {
                         class="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 border-b border-gray-50 last:border-0"
                         role="menuitem"
                       >
-                        <span class="font-medium">
-                          {isTamil ? service.title_ta : service.title}
-                        </span>
+                        <span class="font-medium">{service.title}</span>
                       </a>
                     ))
                   }
@@ -719,34 +604,11 @@ const websiteSchema = {
               </div>
             </div>
 
-            <a
-              href={isTamil ? "/ta/calculator/" : "/calculator/"}
-              class="header-link"
-            >
-              <span>{isTamil ? "கால்குலேட்டர்" : "Calculator"}</span>
-            </a>
-
-            {/* Language Toggle (Desktop) */}
-            <div class="ml-4">
-              <LanguageToggle
-                isMobile={false}
-                client:load
-                currentLang={lang}
-                targetUrl={targetPath}
-              />
-            </div>
+            <a href="/calculator/" class="header-link">Calculator</a>
           </div>
 
           <!-- Mobile Controls - In same row -->
           <div class="flex items-center gap-3 md:hidden">
-            <!-- Language Toggle (Mobile) -->
-            <LanguageToggle
-              isMobile={true}
-              client:load
-              currentLang={lang}
-              targetUrl={targetPath}
-            />
-
             <!-- Mobile Menu Button -->
             <button
               id="mobile-menu-btn"
@@ -816,30 +678,10 @@ const websiteSchema = {
 
     <!-- Navigation Links -->
     <div class="px-8 py-4 space-y-4 flex-grow">
-      <a
-        href={isTamil ? "/ta/" : "/"}
-        class="block text-base font-medium text-gray-800 hover:text-red-700 border-b border-gray-100 pb-2 transition-colors"
-      >
-        <span>{isTamil ? "முகப்பு" : "Home"}</span>
-      </a>
-      <a
-        href={isTamil ? "/ta/#fleet" : "/#fleet"}
-        class="block text-base font-medium text-gray-800 hover:text-red-600 border-b border-gray-100 pb-2 transition-colors"
-      >
-        <span>{isTamil ? "வாகனங்கள்" : "Fleet"}</span>
-      </a>
-      <a
-        href={isTamil ? "/ta/drivers/" : "/drivers/"}
-        class="block text-base font-medium text-gray-800 hover:text-red-700 border-b border-gray-100 pb-2 transition-colors"
-      >
-        <span>{isTamil ? "ஓட்டுநர்கள்" : "Drivers"}</span>
-      </a>
-      <a
-        href={isTamil ? "/ta/calculator/" : "/calculator/"}
-        class="block text-base font-medium text-gray-800 hover:text-red-700 border-b border-gray-100 pb-2 transition-colors"
-      >
-        <span>{isTamil ? "கால்குலேட்டர்" : "Calculator"}</span>
-      </a>
+      <a href="/" class="block text-base font-medium text-gray-800 hover:text-red-700 border-b border-gray-100 pb-2 transition-colors">Home</a>
+      <a href="/#fleet" class="block text-base font-medium text-gray-800 hover:text-red-600 border-b border-gray-100 pb-2 transition-colors">Fleet</a>
+      <a href="/drivers/" class="block text-base font-medium text-gray-800 hover:text-red-700 border-b border-gray-100 pb-2 transition-colors">Drivers</a>
+      <a href="/calculator/" class="block text-base font-medium text-gray-800 hover:text-red-700 border-b border-gray-100 pb-2 transition-colors">Calculator</a>
 
       <!-- Services Accordion -->
       <div class="border-b border-gray-100 pb-2">
@@ -849,7 +691,7 @@ const websiteSchema = {
           aria-expanded="false"
           aria-controls="services-submenu"
         >
-          <span>{isTamil ? "சேவைகள்" : "Services"}</span>
+          <span>Services</span>
           <svg
             id="services-chevron"
             class="w-4 h-4 transform transition-transform duration-200 rotate-180"
@@ -858,70 +700,24 @@ const websiteSchema = {
             viewBox="0 0 24 24"
             aria-hidden="true"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 9l-7 7-7-7"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
           </svg>
         </button>
-        <div
-          id="services-submenu"
-          class="mt-2 ml-4 space-y-2 border-l-2 border-gray-100 pl-4"
-        >
-          <a
-            href={isTamil
-              ? "/ta/services/category/acting-drivers"
-              : "/services/category/acting-drivers"}
-            class="block text-sm text-gray-600 hover:text-red-600"
-          >
-            <span>{isTamil ? "ஆக்டிங் டிரைவர்கள்" : "Acting Drivers"}</span>
-          </a>
-          <a
-            href={isTamil
-              ? "/ta/services/category/corporate"
-              : "/services/category/corporate"}
-            class="block text-sm text-gray-600 hover:text-red-600"
-          >
-            <span>{isTamil ? "கார்ப்பரேட் பயணம்" : "Corporate Travel"}</span>
-          </a>
-
-          <a
-            href={isTamil
-              ? "/ta/services/category/temple-tours"
-              : "/services/category/temple-tours"}
-            class="block text-sm text-gray-600 hover:text-red-600"
-          >
-            <span>{isTamil ? "கோவில் சுற்றுலா" : "Temple Tours"}</span>
-          </a>
-          <a
-            href={isTamil
-              ? "/ta/services/category/popular-destinations"
-              : "/services/category/popular-destinations"}
-            class="block text-sm text-gray-600 hover:text-red-600"
-          >
-            <span>{isTamil ? "பிரபலமான இடங்கள்" : "Popular Destinations"}</span>
-          </a>
+        <div id="services-submenu" class="mt-2 ml-4 space-y-2 border-l-2 border-gray-100 pl-4">
+          <a href="/services/category/acting-drivers" class="block text-sm text-gray-600 hover:text-red-600">Acting Drivers</a>
+          <a href="/services/category/corporate" class="block text-sm text-gray-600 hover:text-red-600">Corporate Travel</a>
+          <a href="/services/category/temple-tours" class="block text-sm text-gray-600 hover:text-red-600">Temple Tours</a>
+          <a href="/services/category/popular-destinations" class="block text-sm text-gray-600 hover:text-red-600">Popular Destinations</a>
         </div>
       </div>
 
       <!-- Proprietor Card -->
       <div class="pt-6 pb-4 text-center">
-        <div
-          class="relative mx-auto w-32 h-40 mb-3 rounded-2xl overflow-hidden shadow-lg border-4 border-white"
-        >
-          <img
-            src="/images/drivers/mani-perumal.webp"
-            alt="Proprietor Perumal Manikumar"
-            class="w-full h-full object-cover"
-          />
+        <div class="relative mx-auto w-32 h-40 mb-3 rounded-2xl overflow-hidden shadow-lg border-4 border-white">
+          <img src="/images/drivers/mani-perumal.webp" alt="Proprietor Perumal Manikumar" class="w-full h-full object-cover" />
         </div>
         <h3 class="text-xl font-bold text-gray-900 mb-1">Perumal Manikumar</h3>
-        <p
-          class="text-xs tracking-[0.2em] text-gray-600 uppercase font-semibold"
-        >
-          {isTamil ? "உரிமையாளர்" : "PROPRIETOR"}
-        </p>
+        <p class="text-xs tracking-[0.2em] text-gray-600 uppercase font-semibold">PROPRIETOR</p>
       </div>
     </div>
   </div>
@@ -953,11 +749,7 @@ const websiteSchema = {
 
         <!-- Address -->
         <p class="text-sm md:text-base mb-2 text-gray-300">
-          {
-            isTamil
-              ? "எண். 4/220, E88, பொன்னியம்மன் கோவில் தெரு, அண்ணாமலை நகர், மேடவாக்கம், சென்னை - 600 100."
-              : "No. 4/220, E88, Ponniamman Kovil Street, Annamalai Nagar, Medavakkam, Chennai - 600 100."
-          }
+          No. 4/220, E88, Ponniamman Kovil Street, Annamalai Nagar, Medavakkam, Chennai - 600 100.
         </p>
 
         <!-- Google Maps Link -->
@@ -966,7 +758,7 @@ const websiteSchema = {
           target="_blank"
           class="text-blue-400 hover:text-blue-300 text-sm mb-8 font-medium"
         >
-          {isTamil ? "கூகுள் மேப்பில் பார்க்க" : "View on Google Maps"}
+          View on Google Maps
         </a>
 
         <!-- Divider -->
@@ -974,14 +766,10 @@ const websiteSchema = {
 
         <!-- Copyright -->
         <p class="text-sm text-gray-300">
-          &copy; {new Date().getFullYear()} Kalidass Travels | {
-            isTamil
-              ? "அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை."
-              : "All rights reserved."
-          }
+          &copy; {new Date().getFullYear()} Kalidass Travels | All rights reserved.
         </p>
         <p class="text-sm text-gray-300 mt-1">
-          {isTamil ? "உருவாக்கியவர்" : "Built by"}
+          Built by
           <a
             href="https://wa.me/919952749408?text=Hi%20Saravn,%20I%20saw%20your%20work%20on%20Kalidass%20Travels%20website."
             target="_blank"

@@ -149,12 +149,10 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
          <Car className="w-10 h-10 text-green-600" />
          <div>
            <h3 className="font-bold text-slate-900 text-xl">
-             <span className="lang-en">Vehicle Relocation Quote</span>
-             <span className="lang-ta">வாகன இடமாற்ற மதிப்பீடு</span>
+             Vehicle Relocation Quote
            </h3>
            <p className="text-xs text-slate-500">
-             <span className="lang-en">Estimate your relocation cost</span>
-             <span className="lang-ta">உங்கள் இடமாற்ற செலவை மதிப்பிடுங்கள்</span>
+             Estimate your relocation cost
            </p>
          </div>
        </div>

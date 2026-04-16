@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "WebSearch",
+      "Bash(wc -l /d/websites/kalidass-attempt-main/src/pages/ta/*.astro /d/websites/kalidass-attempt-main/src/pages/ta/services/*.astro)",
+      "Bash(grep -l \"lang.*ta\\\\|isTamil\\\\|currentLang.*ta\" /d/websites/kalidass-attempt-main/src/components/*.astro /d/websites/kalidass-attempt-main/src/components/*.jsx /d/websites/kalidass-attempt-main/src/components/react/*.jsx)",
+      "Bash(grep -n \"isTamil\\\\|lang.*ta\\\\|_ta\" /d/websites/kalidass-attempt-main/src/components/*.astro)",
+      "Bash(node -e ' *)"
+    ]
+  }
+}

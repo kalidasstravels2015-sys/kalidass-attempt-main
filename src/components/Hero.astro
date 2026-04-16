@@ -1,8 +1,6 @@
 ---
 import OptimizedImage from "./OptimizedImage.astro";
 import siteContent from "../data/siteContent.json";
-const { lang = "en" } = Astro.props;
-const isTamil = lang === "ta";
 
 const hero = siteContent.hero;
 const heroImages = hero.images ?? [
@@ -55,36 +53,24 @@ const heroImages = hero.images ?? [
       <p
         class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-white/90"
       >
-        {
-          isTamil
-            ? "1,000+ குடும்பங்களின் நம்பிக்கை"
-            : "Trusted by 1,000+ Families"
-        }
+        Trusted by 1,000+ Families
       </p>
     </div>
 
     <h1
       class="text-4xl sm:text-6xl lg:text-7xl font-black text-white leading-[1.05] tracking-tight drop-shadow-[0_8px_8px_rgba(0,0,0,0.6)] mb-4"
     >
-      <span class="block"
-        >{isTamil ? "சிறந்த டாக்ஸி சேவை" : "Premium Taxi Service"}</span
-      >
+      <span class="block">Premium Taxi Service</span>
       <span
         class="block text-2xl sm:text-4xl lg:text-5xl text-yellow-400 mt-2 font-black italic tracking-normal"
-        >{
-          isTamil ? "சென்னை மற்றும் தென்னிந்தியா" : "Chennai & South India"
-        }</span
+        >Chennai & South India</span
       >
     </h1>
 
     <p
       class="text-base sm:text-xl text-white font-medium drop-shadow-md px-4 max-w-2xl mx-auto leading-relaxed"
     >
-      {
-        isTamil
-          ? "பாதுகாப்பான மற்றும் வசதியான வெளியூர் பயணங்கள் மற்றும் அலுவலகப் போக்குவரத்துக்கு எங்களை அணுகவும்."
-          : "Safe, reliable, and professional transportation at transparent rates. Temple tours, airport transfers & corporate travel."
-      }
+      Safe, reliable, and professional transportation at transparent rates. Temple tours, airport transfers & corporate travel.
     </p>
 
     <div class="pt-6">
@@ -92,7 +78,7 @@ const heroImages = hero.images ?? [
         href="#booking-panel"
         class="inline-flex items-center gap-3 px-10 py-5 bg-red-600 hover:bg-red-700 text-white text-lg font-black rounded-2xl transition-all transform hover:scale-105 active:scale-95 shadow-[0_20px_50px_rgba(220,38,38,0.3)] hover:shadow-[0_20px_50px_rgba(220,38,38,0.5)]"
       >
-        <span>{isTamil ? "முன்பதிவு செய்யுங்கள்" : "Book Your Ride Now"}</span>
+        <span>Book Your Ride Now</span>
         <svg
           class="w-6 h-6"
           fill="none"
@@ -151,53 +137,22 @@ const heroImages = hero.images ?? [
   }
 
   @keyframes heroCinematic {
-    0% {
-      opacity: 0;
-      transform: scale(1.08);
-    }
-    5% {
-      opacity: 1;
-      transform: scale(1.04);
-    }
-    30% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    35% {
-      opacity: 0;
-      transform: scale(1.1);
-    }
-    100% {
-      opacity: 0;
-      transform: scale(1.08);
-    }
+    0% { opacity: 0; transform: scale(1.08); }
+    5% { opacity: 1; transform: scale(1.04); }
+    30% { opacity: 1; transform: scale(1); }
+    35% { opacity: 0; transform: scale(1.1); }
+    100% { opacity: 0; transform: scale(1.08); }
   }
 
-  /* Override for the very first slide's animation to avoid initial flash of black */
   .first-slide {
     animation: firstHeroCinematic 24s ease-in-out infinite;
   }
 
   @keyframes firstHeroCinematic {
-    0% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    30% {
-      opacity: 1;
-      transform: scale(1.04);
-    }
-    35% {
-      opacity: 0;
-      transform: scale(1.1);
-    }
-    95% {
-      opacity: 0;
-      transform: scale(1.08);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
+    0% { opacity: 1; transform: scale(1); }
+    30% { opacity: 1; transform: scale(1.04); }
+    35% { opacity: 0; transform: scale(1.1); }
+    95% { opacity: 0; transform: scale(1.08); }
+    100% { opacity: 1; transform: scale(1); }
   }
 </style>

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Car, MapPin, Calendar, Calculator, Send, ArrowRight, Repeat, Users, User, AlertCircle, Navigation, ShieldCheck, Clock, X } from 'lucide-react';
 import { trackEvent } from '../lib/analytics';
 import LocationPicker from './LocationPicker';
-import { useLanguage } from '../hooks/useLanguage';
 import { useVirtualKeyboard } from '../hooks/useVirtualKeyboard';
 import siteContent from '../data/siteContent.json';
 
@@ -28,8 +27,7 @@ const ERROR_MSGS = {
 
 
 export default function QuotationEngine({ currentLang = 'en', showAirportTab = true, showBookingButton = true, title = '', variant = "default" }) {
-  const lang = useLanguage(currentLang);
-  const isTa = lang === 'ta';
+  const isTa = currentLang === 'ta';
   const labels = siteContent.ui_labels;
   const displayTitle = title || (isTa ? labels.book_your_ride_ta : labels.book_your_ride);
 
@@ -59,10 +57,15 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
   const [locationPickerOpen, setLocationPickerOpen] = useState(false);
   const [pickerField, setPickerField] = useState(null);
   const [mounted, setMounted] = useState(false);
+  const [requestedDriver, setRequestedDriver] = useState('');
   const stableFormId = "booking-form-v1"; // Using stable ID for hydration safety
 
   useEffect(() => {
     setMounted(true);
+    // Read ?driver= param set by the driver profile "Book" button
+    const params = new URLSearchParams(window.location.search);
+    const driver = params.get('driver');
+    if (driver) setRequestedDriver(decodeURIComponent(driver));
   }, []);
 
   // Analytics Hooks
@@ -515,10 +518,11 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
     }
 
     // 5. Open WhatsApp
+    const driverLine = requestedDriver ? `Requested Driver: *${requestedDriver}*\n` : '';
     const message = `New Booking Request
-    
+
 Trip Details:
-Type: ${activeTab === 'local' ? `Local Package (${localPackage})` : activeTab === 'round' ? 'Round Trip' : 'One Way'}
+${driverLine}Type: ${activeTab === 'local' ? `Local Package (${localPackage})` : activeTab === 'round' ? 'Round Trip' : 'One Way'}
 Vehicle: ${vehicle}
 Passengers: ${passengers}
 Pickup: ${sanitizeInput(pickup)}
@@ -568,6 +572,12 @@ Please confirm availability.`;
 
         <div className="p-6 pb-2 text-center">
           <h2 className="text-2xl font-bold text-slate-900">{displayTitle}</h2>
+          {requestedDriver && (
+            <div className="mt-3 inline-flex items-center gap-2 bg-green-50 border border-green-200 rounded-xl px-4 py-2">
+              <ShieldCheck className="w-4 h-4 text-green-600 shrink-0" />
+              <span className="text-sm font-bold text-green-700">Booking for: {requestedDriver}</span>
+            </div>
+          )}
         </div>
 
         <div className="px-6 mb-6">
@@ -925,8 +935,14 @@ Please confirm availability.`;
         tabIndex={-1}
       />
 
-      <h2 className="text-lg font-bold text-center text-gray-800 py-4 border-b border-gray-100">
+      <h2 className="text-lg font-bold text-center text-gray-800 pt-4 px-4 border-b border-gray-100">
         {displayTitle}
+        {requestedDriver && (
+          <div className="mt-2 mb-3 inline-flex items-center gap-2 bg-green-50 border border-green-200 rounded-xl px-3 py-1.5">
+            <ShieldCheck className="w-3.5 h-3.5 text-green-600 shrink-0" />
+            <span className="text-xs font-bold text-green-700">Booking for: {requestedDriver}</span>
+          </div>
+        )}
       </h2>
 
       {/* Tabs */}

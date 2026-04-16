@@ -12,15 +12,7 @@ export default defineConfig({
   integrations: [
     tailwind(),
     react(),
-    sitemap({
-      i18n: {
-        defaultLocale: 'en',
-        locales: {
-          en: 'en-IN',
-          ta: 'ta-IN',
-        },
-      },
-    }),
+    sitemap(),
     partytown({
       config: {
         forward: ["dataLayer.push"],

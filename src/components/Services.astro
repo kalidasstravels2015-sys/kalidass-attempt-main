@@ -1,8 +1,6 @@
 ---
 import OptimizedImage from './OptimizedImage.astro';
 import siteContent from '../data/siteContent.json';
-const { lang = 'en' } = Astro.props;
-const isTamil = lang === 'ta';
 const services = siteContent.services;
 ---
 
@@ -11,49 +9,44 @@ const services = siteContent.services;
     <!-- Section Header -->
     <div class="text-center mb-8">
       <h2 class="text-3xl md:text-5xl font-extrabold text-gray-900 inline-block relative mb-4 leading-tight">
-        {isTamil ? "எங்களின் சிறப்பான பயண சேவைகள்" : "Our Premium Travel Services"}
+        Our Premium Travel Services
         <div class="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-blue-600 rounded-full"></div>
       </h2>
       <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-4 font-medium">
-        {isTamil 
-          ? "கோவில் சுற்றுலா முதல் அலுவலகப் போக்குவரத்து வரை, சென்னை மற்றும் தமிழ்நாடு முழுவதும் பாதுகாப்பான மற்றும் நம்பகமான டாக்ஸி சேவைகளை நாங்கள் வழங்குகிறோம்."
-          : "From specialized Temple Tours to Corporate Employee Transport, we provide safe and reliable taxi services across Chennai and Tamil Nadu."}
+        From specialized Temple Tours to Corporate Employee Transport, we provide safe and reliable taxi services across Chennai and Tamil Nadu.
       </p>
     </div>
 
     <!-- Services Grid -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
-      {services.map((service) => {
-        const link = isTamil ? `/ta${service.link}/` : `${service.link}/`;
-        return (
-          <a href={link} title={`Book ${isTamil ? service.title_ta : service.title} in Chennai`} class="group relative h-64 sm:h-96 rounded-2xl overflow-hidden shadow-lg border border-gray-100 cursor-pointer block transform hover:-translate-y-1 transition duration-300">
-            <!-- Background Image -->
-            <OptimizedImage
-              src={service.image}
-              alt={`Kalidass Travels - ${isTamil ? service.title_ta : service.title}`}
-              class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              sizes="(max-width: 1024px) 50vw, 25vw"
-            />
-            
-            <!-- Gradient Overlay -->
-            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-90"></div>
+      {services.map((service) => (
+        <a href={`${service.link}/`} title={`Book ${service.title} in Chennai`} class="group relative h-64 sm:h-96 rounded-2xl overflow-hidden shadow-lg border border-gray-100 cursor-pointer block transform hover:-translate-y-1 transition duration-300">
+          <!-- Background Image -->
+          <OptimizedImage
+            src={service.image}
+            alt={`Kalidass Travels - ${service.title}`}
+            class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            sizes="(max-width: 1024px) 50vw, 25vw"
+          />
 
-            <!-- Content -->
-            <div class="absolute inset-0 flex flex-col justify-end p-4 sm:p-6">
-              <h3 class="text-xl sm:text-2xl font-bold text-white mb-2 leading-tight drop-shadow-md">
-                {isTamil ? service.title_ta : service.title}
-              </h3>
-              <p class="text-gray-200 text-xs sm:text-sm line-clamp-3 mb-4 hidden sm:block">
-                {isTamil ? service.description_ta : service.description}
-              </p>
-              <div class="flex items-center text-blue-300 font-bold text-xs uppercase tracking-wider bg-black/30 w-fit px-3 py-1 rounded-full backdrop-blur-sm group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                <span class="mr-1 sm:mr-2">{isTamil ? "முன்பதிவு செய்க" : `Book ${service.title}`}</span>
-                <i class="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
-              </div>
+          <!-- Gradient Overlay -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-90"></div>
+
+          <!-- Content -->
+          <div class="absolute inset-0 flex flex-col justify-end p-4 sm:p-6">
+            <h3 class="text-xl sm:text-2xl font-bold text-white mb-2 leading-tight drop-shadow-md">
+              {service.title}
+            </h3>
+            <p class="text-gray-200 text-xs sm:text-sm line-clamp-3 mb-4 hidden sm:block">
+              {service.description}
+            </p>
+            <div class="flex items-center text-blue-300 font-bold text-xs uppercase tracking-wider bg-black/30 w-fit px-3 py-1 rounded-full backdrop-blur-sm group-hover:bg-blue-600 group-hover:text-white transition-colors">
+              <span class="mr-1 sm:mr-2">Book {service.title}</span>
+              <i class="fas fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
             </div>
-          </a>
-        );
-      })}
+          </div>
+        </a>
+      ))}
     </div>
 
   </div>
