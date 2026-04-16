@@ -22,16 +22,16 @@ export const GET: APIRoute = async ({ params, request }) => {
 
   // Image Mapping (Copied from [slug].astro to ensure consistency)
   const tourImages: Record<string, string> = {
-    "tirupati-package": "/images/temple/Tirupati-Balaji.webp",
-    "thiruvannamalai-girivalam-trip": "/images/temple/Thiruvannamalai-Girivalam.webp",
-    "rameswaram-2-days": "/images/temple/Rameswaram.webp",
-    "navagraha-tour": "/images/temple/Navagraha.webp",
-    "kanchipuram-temple-trip": "/images/temple/Kanchipuram-Temple.webp",
-    "chidambaram-temple-trip": "/images/temple/Chidambaram-Natarajar-Temple.webp",
-    "sabarimala-trip": "/images/temple/Sabarimala-Temple.webp",
+    "tirupati-package": "/images/temple/tirupati-balaji.webp",
+    "thiruvannamalai-girivalam-trip": "/images/temple/thiruvannamalai-girivalam.webp",
+    "rameswaram-2-days": "/images/temple/rameswaram.webp",
+    "navagraha-tour": "/images/temple/navagraha.webp",
+    "kanchipuram-temple-trip": "/images/temple/kanchipuram-temple.webp",
+    "chidambaram-temple-trip": "/images/temple/chidambaram-natarajar-temple.webp",
+    "sabarimala-trip": "/images/temple/sabarimala-temple.webp",
     "pondicherry-one-day-trip": "/images/temple/pondicherry.webp",
-    "vellore-golden-temple": "/images/temple/Vellore-Golden.webp",
-    "mahabalipuram-ecr-temple-route": "/images/temple/Mahabalipuram-ECR-Temples.webp",
+    "vellore-golden-temple": "/images/temple/vellore-golden.webp",
+    "mahabalipuram-ecr-temple-route": "/images/temple/mahabalipuram-ecr-temples.webp",
     "one-day-chennai-city-tour": "/images/temple/chennai-city.webp" 
   };
 
@@ -43,7 +43,7 @@ export const GET: APIRoute = async ({ params, request }) => {
     "Premium Fleet Rental": "/images/services/corporate.webp"
   };
 
-  const heroImage = tourImages[service.slug] || categoryImages[service.category] || '/images/logo.png';
+  const heroImage = tourImages[service.slug] || categoryImages[service.category] || '/images/logo.webp';
   
   // Handle full URLs vs local paths
   let imageBuffer: Buffer | string = "";
@@ -75,7 +75,7 @@ export const GET: APIRoute = async ({ params, request }) => {
   const fontData = readFileSync(fontPath);
 
   // Load Logo
-  const logoPath = path.resolve("./public/images/logo.png");
+  const logoPath = path.resolve("./public/images/logo.webp");
   const logoBuffer = readFileSync(logoPath);
   const logoBase64 = `data:image/png;base64,${logoBuffer.toString('base64')}`;
 

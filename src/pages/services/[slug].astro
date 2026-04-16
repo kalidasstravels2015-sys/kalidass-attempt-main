@@ -36,28 +36,28 @@ const guideLabels = isTour ? {
 
 // Image Mapping (Same as Tours.astro)
 const tourImages: Record<string, string> = {
-    "tirupati-package": "/images/temple/Tirupati-Balaji.jpg",
-    "thiruvannamalai-girivalam-trip": "/images/temple/Thiruvannamalai-Girivalam.jpg",
-    "rameswaram-2-days": "/images/temple/Rameswaram.jpg",
-    "navagraha-tour": "/images/temple/Navagraha.jpg",
-  "kanchipuram-temple-trip": "/images/temple/Kanchipuram-Temple.jpg",
-  "chidambaram-temple-trip": "/images/temple/Chidambaram-Natarajar-Temple.jpg",
-  "sabarimala-trip": "/images/temple/Sabarimala-Temple.jpg",
+    "tirupati-package": "/images/temple/tirupati-balaji.webp",
+    "thiruvannamalai-girivalam-trip": "/images/temple/thiruvannamalai-girivalam.webp",
+    "rameswaram-2-days": "/images/temple/rameswaram.webp",
+    "navagraha-tour": "/images/temple/navagraha.webp",
+  "kanchipuram-temple-trip": "/images/temple/kanchipuram-temple.webp",
+  "chidambaram-temple-trip": "/images/temple/chidambaram-natarajar-temple.webp",
+  "sabarimala-trip": "/images/temple/sabarimala-temple.webp",
   "pondicherry-one-day-trip": "/images/temple/pondicherry.webp",
-  "vellore-golden-temple": "/images/temple/Vellore-Golden.jpg",
-  "mahabalipuram-ecr-temple-route": "/images/temple/Mahabalipuram-ECR-Temples.jpg",
-  "one-day-chennai-city-tour": "/images/temple/chennai-city.jpg" 
+  "vellore-golden-temple": "/images/temple/vellore-golden.webp",
+  "mahabalipuram-ecr-temple-route": "/images/temple/mahabalipuram-ecr-temples.webp",
+  "one-day-chennai-city-tour": "/images/temple/chennai-city.webp" 
 };
 
 const categoryImages: Record<string, string> = {
-  "Acting Driver Services": "/images/services/acting-drivers.jpg",
-  "Corporate Travel": "/images/services/corporate.jpg",
-  "Airport Transfers": "/images/services/airport-transfer.jpg",
-  "Temple Tours": "/images/services/temple-tours.jpg",
-  "Premium Fleet Rental": "/images/services/corporate.jpg"
+  "Acting Driver Services": "/images/services/acting-drivers.webp",
+  "Corporate Travel": "/images/services/corporate.webp",
+  "Airport Transfers": "/images/services/airport-transfer.webp",
+  "Temple Tours": "/images/services/temple-tours.webp",
+  "Premium Fleet Rental": "/images/services/corporate.webp"
 };
 
-const heroImage = tourImages[service.slug] || categoryImages[service.category] || '/images/logo.png';
+const heroImage = tourImages[service.slug] || categoryImages[service.category] || '/images/logo.webp';
 
 const schema = {
   "@context": "https://schema.org",
@@ -67,7 +67,7 @@ const schema = {
   "provider": {
     "@type": "LocalBusiness",
     "name": "Kalidass Travels",
-    "image": "https://kalidasstravels.in/images/logo.png",
+    "image": "https://kalidasstravels.in/images/logo.webp",
     "telephone": "+919092303060",
     "address": {
       "@type": "PostalAddress",

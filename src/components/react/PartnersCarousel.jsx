@@ -18,7 +18,7 @@ const partners = [
     },
     {
         name: "Savaari",
-        logo: "/images/partners/Savaari.webp",
+        logo: "/images/partners/savaari.webp",
         alt: "Savaari Car Rentals - Trusted local taxi operator partner"
     },
     {
@@ -28,7 +28,7 @@ const partners = [
     },
     {
         name: "Cognizant",
-        logo: "/images/partners/Cognizant.webp",
+        logo: "/images/partners/cognizant.webp",
         alt: "Cognizant Technology Solutions - IT employee daily commute partner"
     },
     {
@@ -38,12 +38,12 @@ const partners = [
     },
     {
         name: "Mahindra Logistics",
-        logo: "/images/partners/MAHINDRA_LOGISTICS_LOGO.jpg",
+        logo: "/images/partners/mahindra_logistics_logo.webp",
         alt: "Mahindra Logistics - Official transport partner"
     },
     {
         name: "Kaleesuwari",
-        logo: "/images/partners/kaleesuwari.png",
+        logo: "/images/partners/kaleesuwari.webp",
         alt: "Kaleesuwari Refinery Private Limited - Trusted corporate partner"
     },
 ];

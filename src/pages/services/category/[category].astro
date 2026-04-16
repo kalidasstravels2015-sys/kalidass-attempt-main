@@ -52,36 +52,36 @@ const getServicesForCategory = (catSlug: string) => {
 const categoryServices = getServicesForCategory(category);
 
 const categoryImages: Record<string, string> = {
-  'acting-drivers': '/images/services/acting-drivers.jpg',
-  'corporate': '/images/services/corporate.jpg',
-  'airport-transfer': '/images/services/airport-transfer.jpg',
-  'temple-tours': '/images/services/temple-tours.jpg',
-  'popular-destinations': '/images/temple/Mahabalipuram-ECR-Temples.jpg'
+  'acting-drivers': '/images/services/acting-drivers.webp',
+  'corporate': '/images/services/corporate.webp',
+  'airport-transfer': '/images/services/airport-transfer.webp',
+  'temple-tours': '/images/services/temple-tours.webp',
+  'popular-destinations': '/images/temple/mahabalipuram-ecr-temples.webp'
 };
 
 const serviceImages: Record<string, string> = {
-  "tirupati-package": "/images/temple/Tirupati-Balaji.jpg",
-  "thiruvannamalai-girivalam-trip": "/images/temple/Thiruvannamalai-Girivalam.jpg",
-  "rameswaram-2-days": "/images/temple/Rameswaram.jpg",
-  "navagraha-tour": "/images/temple/Navagraha.jpg",
-  "kanchipuram-temple-trip": "/images/temple/Kanchipuram-Temple.jpg",
-  "chidambaram-temple-trip": "/images/temple/Chidambaram-Natarajar-Temple.jpg",
-  "sabarimala-trip": "/images/temple/Sabarimala-Temple.jpg",
+  "tirupati-package": "/images/temple/tirupati-balaji.webp",
+  "thiruvannamalai-girivalam-trip": "/images/temple/thiruvannamalai-girivalam.webp",
+  "rameswaram-2-days": "/images/temple/rameswaram.webp",
+  "navagraha-tour": "/images/temple/navagraha.webp",
+  "kanchipuram-temple-trip": "/images/temple/kanchipuram-temple.webp",
+  "chidambaram-temple-trip": "/images/temple/chidambaram-natarajar-temple.webp",
+  "sabarimala-trip": "/images/temple/sabarimala-temple.webp",
   "pondicherry-one-day-trip": "/images/temple/pondicherry.webp",
-  "vellore-golden-temple": "/images/temple/Vellore-Golden.jpg",
-  "mahabalipuram-ecr-temple-route": "/images/temple/Mahabalipuram-ECR-Temples.jpg",
-  "one-day-chennai-city-tour": "/images/temple/chennai-city.jpg"
+  "vellore-golden-temple": "/images/temple/vellore-golden.webp",
+  "mahabalipuram-ecr-temple-route": "/images/temple/mahabalipuram-ecr-temples.webp",
+  "one-day-chennai-city-tour": "/images/temple/chennai-city.webp"
 };
 
 const serviceCategoryImages: Record<string, string> = {
-  "Acting Driver Services": "/images/services/acting-drivers.jpg",
-  "Corporate Travel": "/images/services/corporate.jpg",
-  "Airport Transfers": "/images/services/airport-transfer.jpg",
-  "Temple Tours": "/images/services/temple-tours.jpg",
-  "Premium Fleet Rental": "/images/services/corporate.jpg"
+  "Acting Driver Services": "/images/services/acting-drivers.webp",
+  "Corporate Travel": "/images/services/corporate.webp",
+  "Airport Transfers": "/images/services/airport-transfer.webp",
+  "Temple Tours": "/images/services/temple-tours.webp",
+  "Premium Fleet Rental": "/images/services/corporate.webp"
 };
 
-const heroImage = categoryImages[category] || '/images/logo.png';
+const heroImage = categoryImages[category] || '/images/logo.webp';
 
 const schema = {
   "@context": "https://schema.org",
@@ -107,7 +107,7 @@ const schema = {
       <section class="relative bg-slate-900 text-white pt-32 pb-24 px-6 overflow-hidden">
         <div class="absolute inset-0 z-0">
           <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/95 to-slate-900/40 z-10"></div>
-          <OptimizedImage src="/images/services/corporate.jpg" alt="Corporate Mobility" class="w-full h-full object-cover opacity-30" sizes="100vw" />
+          <OptimizedImage src="/images/services/corporate.webp" alt="Corporate Mobility" class="w-full h-full object-cover opacity-30" sizes="100vw" />
         </div>
         
         <div class="max-w-7xl mx-auto relative z-20 text-center md:text-left">
@@ -247,7 +247,7 @@ const schema = {
             >
               <div class="h-48 overflow-hidden relative">
                 <OptimizedImage
-                  src={serviceImages[service.slug] || serviceCategoryImages[service.category] || '/images/logo.png'}
+                  src={serviceImages[service.slug] || serviceCategoryImages[service.category] || '/images/logo.webp'}
                   alt={service.title}
                   class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

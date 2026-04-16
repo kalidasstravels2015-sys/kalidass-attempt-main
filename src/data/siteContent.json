@@ -7,7 +7,7 @@
     "images": [
       "/images/hero/airavatesvara.webp",
       "/images/hero/coimbatore.webp",
-      "/images/hero/madurai.jpg"
+      "/images/hero/madurai.webp"
     ],
     "cto": "Call Now",
     "phone": "+91 90923 03060",
@@ -26,28 +26,28 @@
       "title": "Acting Drivers",
       "description": "Your car, Our Professional Pilot",
       "icon": "user-tie",
-      "image": "/images/services/acting-drivers.jpg",
+      "image": "/images/services/acting-drivers.webp",
       "link": "/services/category/acting-drivers"
     },
     {
       "title": "Corporate",
       "description": "The complete corporate mobility suite",
       "icon": "building",
-      "image": "/images/services/corporate.jpg",
+      "image": "/images/services/corporate.webp",
       "link": "/services/category/corporate"
     },
     {
       "title": "Temple Tours",
       "description": "Round trips for Tirupati, Navagraha, and heritage temple circuits with local expertise.",
       "icon": "gopuram",
-      "image": "/images/services/temple-tours.jpg",
+      "image": "/images/services/temple-tours.webp",
       "link": "/services/category/temple-tours"
     },
     {
       "title": "Popular Destinations",
       "description": "Explore heritage sites, beaches, and city tours.",
       "icon": "map-pin",
-      "image": "/images/temple/Mahabalipuram-ECR-Temples.jpg",
+      "image": "/images/temple/mahabalipuram-ecr-temples.webp",
       "link": "/services/category/popular-destinations"
     }
   ],
@@ -129,7 +129,7 @@
     },
     {
       "name": "Tata Sumo",
-      "image": "/images/fleet/Tata-Sumo.webp",
+      "image": "/images/fleet/tata-sumo.webp",
       "caps": "7 Passenger + Driver",
       "bags": "3 Bags",
       "rate": "₹16/km",
@@ -208,7 +208,7 @@
       "specialty": "Corporate Fleet Manager",
       "languages": "Tamil, English, Hindi",
       "tag": "Managing Partner",
-      "image": "/images/drivers/Perumal Karthik Kumar.webp",
+      "image": "/images/drivers/perumal-karthik-kumar.webp",
       "alt": "Perumal Karthik Kumar - Corporate fleet manager and managing partner"
     },
     {
@@ -220,7 +220,7 @@
       "specialty": "City & Airport Drops",
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
-      "image": "/images/drivers/Hari.webp",
+      "image": "/images/drivers/hari.webp",
       "alt": "Hariharan - Expert driver for city and airport taxi drops in Chennai"
     },
     {
@@ -232,7 +232,7 @@
       "specialty": "Local Chennai Routes",
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
-      "image": "/images/drivers/Raj.webp",
+      "image": "/images/drivers/raj.webp",
       "alt": "Raj - Experienced driver for local Chennai taxi routes"
     },
     {
@@ -256,7 +256,7 @@
       "specialty": "Highway & Long Drive",
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
-      "image": "/images/drivers/Vishnu.webp",
+      "image": "/images/drivers/vishnu.webp",
       "alt": "Vishnu - Long distance highway driving specialist driver"
     },
     {
@@ -292,7 +292,7 @@
       "specialty": "Kerala/Karnataka Routes",
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
-      "image": "/images/drivers/Prakash.webp",
+      "image": "/images/drivers/prakash.webp",
       "alt": "Prakash - Experienced driver for interstate trips to Kerala and Karnataka"
     },
     {
@@ -304,7 +304,7 @@
       "specialty": "Heavy Vehicle / Bus Expert",
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
-      "image": "/images/drivers/Elumalai.webp",
+      "image": "/images/drivers/elumalai.webp",
       "alt": "Elumalai - Expert heavy vehicle and bus driver for group tours"
     },
     {
@@ -328,7 +328,7 @@
       "specialty": "Corporate Events",
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
-      "image": "/images/drivers/Mani.webp",
+      "image": "/images/drivers/mani.webp",
       "alt": "Mani - Professional driver for corporate events and employee transport"
     },
     {
@@ -365,7 +365,7 @@
       "specialty": "All Terrain Master",
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
-      "image": "/images/drivers/Natraj.webp",
+      "image": "/images/drivers/natraj.webp",
       "alt": "Natraj - Master driver for all terrains with 25+ years experience"
     },
     {
@@ -389,7 +389,7 @@
       "specialty": "Tirupati Darshan Guide",
       "languages": "Tamil, English, Hindi",
       "tag": "Driver",
-      "image": "/images/drivers/Murugan.webp",
+      "image": "/images/drivers/murugan.webp",
       "alt": "Murugan - Expert guide and driver for Tirupati Darshan taxi packages"
     },
     {
@@ -401,7 +401,7 @@
       "specialty": "City & Outstation Trips",
       "languages": "Tamil, English",
       "tag": "Driver",
-      "image": "/images/drivers/Elumalai. A.webp",
+      "image": "/images/drivers/elumalai-a.webp",
       "alt": "Elumalai A - PVC verified driver for city and outstation trips"
     }
   ],
