@@ -7,12 +7,10 @@ export default function ActingDriverTariff() {
       <div className="bg-slate-50 p-6 border-b border-slate-200">
         <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
           <Info className="w-5 h-5 text-indigo-600" />
-          <span className="lang-en">Acting Driver Tariff Card</span>
-          <span className="lang-ta">ஓட்டுநர் கட்டண விவரம்</span>
+          Acting Driver Tariff Card
         </h3>
         <p className="text-slate-500 text-sm mt-2">
-          <span className="lang-en">An 'acting driver' or 'call driver' calculator is a way to estimate the cost of hiring a driver based on service type and duration.</span>
-          <span className="lang-ta">ஆக்டிங் டிரைவர் கால்குலேட்டர் என்பது சேவை வகை மற்றும் கால அளவின் அடிப்படையில் ஓட்டுநரை பணியமர்த்துவதற்கான செலவை மதிப்பிடுவதற்கான ஒரு வழியாகும்.</span>
+          An 'acting driver' or 'call driver' calculator is a way to estimate the cost of hiring a driver based on service type and duration.
         </p>
       </div>
 

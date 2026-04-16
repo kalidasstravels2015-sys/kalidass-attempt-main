@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import trips from '../../data/trips.json';
-import { useLanguage } from '../../hooks/useLanguage';
 import { trackEvent } from '../../lib/analytics';
 
 const TariffCalculator = ({ currentLang }) => {
-    const isSSR = !!currentLang;
-    const contextLang = useLanguage();
-    const lang = isSSR ? currentLang : contextLang; // Use if needed for text labels
     const [isOpen, setIsOpen] = useState(false);
     const [activeTrip, setActiveTrip] = useState(null);
     const [costs, setCosts] = useState({ etios: 0, innova: 0, bata: 0, totalKm: 0 });
