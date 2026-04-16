@@ -1,0 +1,22 @@
+---
+import Layout from "../layouts/Layout.astro";
+import FleetRoll from "../components/react/FleetRoll.jsx";
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "Kalidass Travels Fleet",
+  description: "Our fleet of well-maintained vehicles for outstation, temple tours, and corporate travel across South India.",
+  url: "https://kalidasstravels.in/fleet",
+};
+---
+
+<Layout
+  title="Our Fleet - Kalidass Travels | Cars & Tempo Travellers in Chennai"
+  description="Explore our well-maintained fleet — Swift Dzire, Toyota Etios, Innova Crysta, and Tempo Traveller. Transparent pricing per km for all group sizes."
+  schema={schema}
+>
+  <div class="pt-20">
+    <FleetRoll client:load currentLang="en" />
+  </div>
+</Layout>
