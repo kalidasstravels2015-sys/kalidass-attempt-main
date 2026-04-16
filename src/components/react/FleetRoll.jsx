@@ -1,10 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import siteContent from '../../data/siteContent.json';
-import { useLanguage } from '../../hooks/useLanguage';
 import { ShieldCheck, Users, Briefcase, Zap, Info } from 'lucide-react';
 
-const FleetCard = ({ vehicle, lang, isVisible, priority }) => {
-    const isTa = lang === 'ta';
+const FleetCard = ({ vehicle, isVisible, priority }) => {
     const isTempo = vehicle.name.includes('Tempo');
     const isSUV = vehicle.name.toLowerCase().includes('innova') || vehicle.name.toLowerCase().includes('bolero') || vehicle.name.toLowerCase().includes('sumo');
 
@@ -17,7 +15,7 @@ const FleetCard = ({ vehicle, lang, isVisible, priority }) => {
                         <>
                             <img
                                 src={vehicle.image}
-                                alt={isTa ? (vehicle.name_ta || vehicle.name) : vehicle.name}
+                                alt={vehicle.name}
                                 className="w-full h-full object-cover transition-all duration-700 hover:scale-110 relative z-10"
                                 loading={priority ? "eager" : "lazy"}
                                 fetchPriority={priority ? "high" : "auto"}
@@ -29,32 +27,32 @@ const FleetCard = ({ vehicle, lang, isVisible, priority }) => {
                                 {vehicle.details.some(d => d.toLowerCase().includes('sanitized')) && (
                                     <span className="bg-emerald-700 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1 w-fit">
                                         <ShieldCheck className="w-3 h-3" />
-                                        {isTa ? 'சுத்திகரிக்கப்பட்டது' : 'Sanitized Every Trip'}
+                                        Sanitized Every Trip
                                     </span>
                                 )}
                                 {(vehicle.details.some(d => d.toLowerCase().includes('mountain')) || vehicle.details.some(d => d.toLowerCase().includes('hill'))) && (
                                     <span className="bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1 w-fit">
                                         <Zap className="w-3 h-3" />
-                                        {isTa ? 'மலைப் பயணம் சிறந்தது' : 'Hill Specialist'}
+                                        Hill Specialist
                                     </span>
                                 )}
                                 {vehicle.details.some(d => d.toLowerCase().includes('city ride')) && (
                                     <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1 w-fit">
                                         <Zap className="w-3 h-3" />
-                                        {isTa ? 'விரைவான நகரப் பயணம்' : 'Quick City Ride'}
+                                        Quick City Ride
                                     </span>
                                 )}
                                 {vehicle.details.some(d => d.toLowerCase().includes('group trip')) && (
                                     <span className="bg-purple-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1 w-fit">
                                         <Users className="w-3 h-3" />
-                                        {isTa ? 'குழு பயணம்' : 'Group Specialist'}
+                                        Group Specialist
                                     </span>
                                 )}
                             </div>
 
                             <div className="absolute bottom-4 left-4 z-30">
                                 <h3 className="text-2xl font-bold text-white tracking-tight">
-                                    {isTa ? (vehicle.name_ta || vehicle.name) : vehicle.name}
+                                    {vehicle.name}
                                 </h3>
                             </div>
                         </>
@@ -66,14 +64,14 @@ const FleetCard = ({ vehicle, lang, isVisible, priority }) => {
                     {/* Key Stats */}
                     <div className="grid grid-cols-2 gap-4 mb-6">
                         <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1">{isTa ? 'கட்டணம்' : 'Starting From'}</p>
-                            <p className="text-xl font-black text-indigo-600 leading-none">{isTa ? (vehicle.rate_ta || vehicle.rate) : vehicle.rate}</p>
+                            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1">Starting From</p>
+                            <p className="text-xl font-black text-indigo-600 leading-none">{vehicle.rate}</p>
                         </div>
                         <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1">{isTa ? 'இருக்கைகள்' : 'Capacity'}</p>
+                            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1">Capacity</p>
                             <div className="flex items-center gap-1.5">
                                 <Users className="w-4 h-4 text-slate-600" />
-                                <p className="text-sm font-bold text-slate-700">{isTa ? (vehicle.caps_ta || vehicle.caps) : vehicle.caps}</p>
+                                <p className="text-sm font-bold text-slate-700">{vehicle.caps}</p>
                             </div>
                         </div>
                     </div>
@@ -99,14 +97,11 @@ const FleetCard = ({ vehicle, lang, isVisible, priority }) => {
 
 const FleetRoll = ({ currentLang }) => {
     const fleet = siteContent.fleet;
-    const isSSR = !!currentLang;
-    const contextLang = useLanguage();
-    const lang = isSSR ? currentLang : contextLang;
     const [activeIndex, setActiveIndex] = useState(0);
     const containerRef = useRef(null);
 
     const labels = siteContent.ui_labels;
-    const heading = lang === 'ta' ? labels.our_premium_fleet_ta : labels.our_premium_fleet;
+    const heading = labels.our_premium_fleet;
 
     useEffect(() => {
         const handleScroll = () => {
@@ -141,7 +136,7 @@ const FleetRoll = ({ currentLang }) => {
                         <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-20 h-1.5 bg-red-600 rounded-full"></div>
                     </h2>
                     <p className="text-base text-gray-600 max-w-2xl mx-auto mt-4">
-                        {lang === 'ta' ? 'உங்கள் பயணத்திற்கு ஏற்ற வாகனத்தைத் தேர்வு செய்யவும்' : 'Choose from our well-maintained fleet of vehicles for your journey'}
+                        Choose from our well-maintained fleet of vehicles for your journey
                     </p>
                 </div>
 
@@ -155,7 +150,7 @@ const FleetRoll = ({ currentLang }) => {
                         aria-label="Fleet Gallery"
                     >
                         {fleet.map((vehicle, index) => (
-                            <FleetCard key={index} vehicle={vehicle} lang={lang} isVisible={true} priority={index < 2} />
+                            <FleetCard key={index} vehicle={vehicle} isVisible={true} priority={index < 2} />
                         ))}
                     </div>
 

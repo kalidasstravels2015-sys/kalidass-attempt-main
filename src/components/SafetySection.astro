@@ -1,35 +1,32 @@
 ---
-const { lang = 'en' } = Astro.props;
-const isTamil = lang === 'ta';
-
 const safetyItems = [
   {
-    title: isTamil ? "பயணக் கடமை" : "Travel Responsibility",
-    description: isTamil ? "பயணிகளுக்கான முக்கிய பாதுகாப்பு மற்றும் பொறுப்பான பயண வழிகாட்டுதல்கள்." : "Important safety & responsible travel guidelines for passengers.",
-    buttonText: isTamil ? "சரிபார்ப்பு பட்டியல்" : "View Checklist",
+    title: "Travel Responsibility",
+    description: "Important safety & responsible travel guidelines for passengers.",
+    buttonText: "View Checklist",
     link: "#",
     modalId: "responsibility-modal",
     icon: "shield"
   },
   {
-    title: isTamil ? "அரசு வளங்கள்" : "Official Govt. Resources",
-    description: isTamil ? "சரிபார்க்கப்பட்ட தமிழ்நாடு அரசு சுற்றுலா மற்றும் பயண இணையதளங்கள்." : "Verified Tamil Nadu Government tourism & travel portals.",
-    buttonText: isTamil ? "பார்க்க" : "View",
+    title: "Official Govt. Resources",
+    description: "Verified Tamil Nadu Government tourism & travel portals.",
+    buttonText: "View",
     link: "#",
     modalId: "resources-modal",
     icon: "building"
   },
   {
     title: "Kaaval Uthavi App",
-    description: isTamil ? "விரைவான காவல்துறை உதவி, SOS எச்சரிக்கைகள், அவசர இருப்பிடப் பகிர்வு." : "Get quick police assistance, SOS alerts, emergency location sharing.",
-    buttonText: isTamil ? "செயலியைப் பதிவிறக்கவும்" : "Download App",
+    description: "Get quick police assistance, SOS alerts, emergency location sharing.",
+    buttonText: "Download App",
     link: "https://play.google.com/store/apps/details?id=com.amtexsystems.kaavaluthavi&hl=en_IN",
     icon: "siren"
   },
   {
-    title: isTamil ? "அவசர உதவி எண்" : "Emergency Helpline",
+    title: "Emergency Helpline",
     description: "Police: 100\nAmbulance: 108\nNational Emergency: 112\nWomen Helpline: 1091\nHighway Patrol: 103",
-    buttonText: isTamil ? "அழைக்க" : "Call Now",
+    buttonText: "Call Now",
     link: "tel:100",
     icon: "phone"
   }
@@ -41,11 +38,11 @@ const safetyItems = [
     <!-- Section Header -->
     <div class="text-center mb-12">
       <h2 class="text-2xl md:text-4xl font-extrabold text-gray-900 inline-block relative mb-4">
-        {isTamil ? "பயண விழிப்புணர்வு மற்றும் பாதுகாப்பு" : "Travel Awareness & Safety"}
+        Travel Awareness & Safety
         <div class="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-20 h-1.5 bg-red-600 rounded-full"></div>
       </h2>
       <p class="text-base text-gray-600 max-w-2xl mx-auto mt-4">
-        {isTamil ? "உங்கள் பாதுகாப்பே எங்களின் முன்னுரிமை. சரிபார்க்கப்பட்ட அரசு உதவி மற்றும் அவசர தொடர்புகள்." : "Your safety is our priority. Verified resources and emergency contacts."}
+        Your safety is our priority. Verified resources and emergency contacts.
       </p>
     </div>
 
@@ -133,29 +130,29 @@ const safetyItems = [
               </div>
               <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                 <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                  {isTamil ? "பயணிகளின் பயணப் பொறுப்பு" : "Passenger Travel Responsibility"}
+                  Passenger Travel Responsibility
                 </h3>
                 <div class="mt-4">
                   <ul class="space-y-3 text-sm text-gray-600">
                     <li class="flex items-start">
                       <span class="text-green-500 mr-2">✓</span>
-                      <span><strong>{isTamil ? "வாகனத்தை மதிக்கவும்:" : "Respect the Vehicle:"}</strong> {isTamil ? "தயவுசெய்து காரை சுத்தமாக வைத்திருக்க உதவுங்கள். குப்பைகளை வீசுவதைத் தவிர்க்கவும்." : "Please help us keep the car clean. Avoid littering or leaving trash behind."}</span>
+                      <span><strong>Respect the Vehicle:</strong> Please help us keep the car clean. Avoid littering or leaving trash behind.</span>
                     </li>
                     <li class="flex items-start">
                       <span class="text-green-500 mr-2">✓</span>
-                      <span><strong>{isTamil ? "புகைபிடித்தல்/மது அருந்துதல் தடை:" : "No Smoking/Alcohol:"}</strong> {isTamil ? "வாகனத்தின் உள்ளே மது அருந்துவதும் புகைபிடிப்பதும் கண்டிப்பாக தடைசெய்யப்பட்டுள்ளது." : "Consumption of alcohol and smoking is strictly prohibited inside the vehicle."}</span>
+                      <span><strong>No Smoking/Alcohol:</strong> Consumption of alcohol and smoking is strictly prohibited inside the vehicle.</span>
                     </li>
                     <li class="flex items-start">
                       <span class="text-green-500 mr-2">✓</span>
-                      <span><strong>{isTamil ? "நேரந் தவறாமை:" : "Punctuality:"}</strong> {isTamil ? "சுமூகமான பயணத்தை உறுதிப்படுத்த திட்டமிடப்பட்ட பிக்கப் மற்றும் டிராப் நேரங்களை கடைபிடிக்கவும்." : "Please adhere to the scheduled pickup and drop-off timings to ensure a smooth journey."}</span>
+                      <span><strong>Punctuality:</strong> Please adhere to the scheduled pickup and drop-off timings to ensure a smooth journey.</span>
                     </li>
                     <li class="flex items-start">
                       <span class="text-green-500 mr-2">✓</span>
-                      <span><strong>{isTamil ? "பாதுகாப்பிற்கு முன்னுரிமை:" : "Safety First:"}</strong> {isTamil ? "வாகனம் ஓடும்போது எப்போதும் சீட் பெல்ட் அணியுங்கள். இது உங்கள் சொந்த பாதுகாப்பிற்கானது." : "Always wear seatbelts while the vehicle is in motion. It is for your own safety."}</span>
+                      <span><strong>Safety First:</strong> Always wear seatbelts while the vehicle is in motion. It is for your own safety.</span>
                     </li>
                     <li class="flex items-start">
                       <span class="text-green-500 mr-2">✓</span>
-                      <span><strong>{isTamil ? "ஓட்டுநர் தொடர்பு:" : "Driver Interaction:"}</strong> {isTamil ? "எங்கள் ஓட்டுநர்களை மரியாதையுடன் நடத்துங்கள். அவர்கள் உங்களுக்கு சேவை செய்ய பயிற்சி பெற்ற வல்லுநர்கள்." : "Treat our drivers with respect. They are trained professionals here to serve you."}</span>
+                      <span><strong>Driver Interaction:</strong> Treat our drivers with respect. They are trained professionals here to serve you.</span>
                     </li>
                   </ul>
                 </div>
@@ -164,7 +161,7 @@ const safetyItems = [
           </div>
           <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm" data-modal-close="responsibility-modal">
-              {isTamil ? "புரிந்தது" : "Understood"}
+              Understood
             </button>
           </div>
         </div>
@@ -186,39 +183,39 @@ const safetyItems = [
               </div>
               <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                 <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                  {isTamil ? "அதிகாரப்பூர்வ அரசு வளங்கள்" : "Official Government Resources"}
+                  Official Government Resources
                 </h3>
                 <div class="mt-4">
                   <div class="grid gap-3">
                     <a href="https://www.tamilnadutourism.tn.gov.in/" target="_blank" rel="noopener noreferrer" class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition">
                       <img src="https://www.tamilnadutourism.tn.gov.in/img/logo.png" alt="TN Tourism" class="w-8 h-8 object-contain mr-3" onerror="this.style.display='none'">
                       <div>
-                        <div class="font-bold text-gray-900 text-sm">{isTamil ? "தமிழ்நாடு சுற்றுலா" : "Tamil Nadu Tourism"}</div>
-                        <div class="text-xs text-gray-600">{isTamil ? "அதிகாரப்பூர்வ சுற்றுலா இணையதளம்" : "Official Tourism Website"}</div>
+                        <div class="font-bold text-gray-900 text-sm">Tamil Nadu Tourism</div>
+                        <div class="text-xs text-gray-600">Official Tourism Website</div>
                       </div>
                       <i class="fas fa-external-link-alt ml-auto text-gray-400 text-xs"></i>
                     </a>
                     <a href="https://tourism.gov.in/" target="_blank" rel="noopener noreferrer" class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition">
                       <div class="w-8 h-8 flex items-center justify-center bg-orange-100 rounded-full mr-3 text-orange-600 font-bold text-xs">IN</div>
                       <div>
-                        <div class="font-bold text-gray-900 text-sm">{isTamil ? "சுற்றுலா அமைச்சகம்" : "Ministry of Tourism"}</div>
-                        <div class="text-xs text-gray-600">{isTamil ? "இந்திய அரசு" : "Government of India"}</div>
+                        <div class="font-bold text-gray-900 text-sm">Ministry of Tourism</div>
+                        <div class="text-xs text-gray-600">Government of India</div>
                       </div>
                       <i class="fas fa-external-link-alt ml-auto text-gray-400 text-xs"></i>
                     </a>
                     <a href="https://www.ttdconline.com/" target="_blank" rel="noopener noreferrer" class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition">
                       <div class="w-8 h-8 flex items-center justify-center bg-blue-100 rounded-full mr-3 text-blue-600 font-bold text-xs">TTDC</div>
                       <div>
-                        <div class="font-bold text-gray-900 text-sm">{isTamil ? "TTDC ஆன்லைன் முன்பதிவு" : "TTDC Online Booking"}</div>
-                        <div class="text-xs text-gray-600">{isTamil ? "ஹோட்டல்கள் & சுற்றுலா" : "Hotels & Tours"}</div>
+                        <div class="font-bold text-gray-900 text-sm">TTDC Online Booking</div>
+                        <div class="text-xs text-gray-600">Hotels & Tours</div>
                       </div>
                       <i class="fas fa-external-link-alt ml-auto text-gray-400 text-xs"></i>
                     </a>
                     <a href="https://hrce.tn.gov.in/" target="_blank" rel="noopener noreferrer" class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition">
                       <div class="w-8 h-8 flex items-center justify-center bg-yellow-100 rounded-full mr-3 text-yellow-600 font-bold text-xs">HRCE</div>
                       <div>
-                        <div class="font-bold text-gray-900 text-sm">{isTamil ? "HRCE துறை" : "HRCE Department"}</div>
-                        <div class="text-xs text-gray-600">{isTamil ? "கோவில் தகவல்கள்" : "Temple Information"}</div>
+                        <div class="font-bold text-gray-900 text-sm">HRCE Department</div>
+                        <div class="text-xs text-gray-600">Temple Information</div>
                       </div>
                       <i class="fas fa-external-link-alt ml-auto text-gray-400 text-xs"></i>
                     </a>
@@ -229,7 +226,7 @@ const safetyItems = [
           </div>
           <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <button type="button" class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm" data-modal-close="resources-modal">
-              {isTamil ? "மூடுக" : "Close"}
+              Close
             </button>
           </div>
         </div>

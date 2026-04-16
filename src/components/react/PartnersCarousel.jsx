@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useLanguage } from '../../hooks/useLanguage';
 
 const partners = [
     {
@@ -50,10 +49,6 @@ const partners = [
 ];
 
 const PartnersCarousel = ({ currentLang }) => {
-    const isSSR = !!currentLang;
-    const contextLang = useLanguage();
-    const lang = isSSR ? currentLang : contextLang;
-
     // Always double the array for seamless infinite scroll on all devices
     const scrollingPartners = [...partners, ...partners];
 
@@ -61,11 +56,11 @@ const PartnersCarousel = ({ currentLang }) => {
         <section className="py-10 md:py-16 bg-gray-50 overflow-hidden border-t border-gray-200">
             <div className="max-w-7xl mx-auto px-4 mb-12 text-center">
                 <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 inline-block relative mb-4">
-                    {lang === 'ta' ? 'தொழில்துறை தலைவர்களால் நம்பப்படுகிறது' : 'Trusted By Industry Leaders'}
+                    Trusted By Industry Leaders
                     <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-20 h-1.5 bg-red-600 rounded-full"></div>
                 </h2>
                 <p className="text-base text-gray-600 max-w-2xl mx-auto mt-4">
-                    {lang === 'ta' ? 'இந்த மதிப்புமிக்க நிறுவனங்களுக்கு சேவை செய்வதில் பெருமை கொள்கிறோம்' : 'Proud to serve these esteemed organizations'}
+                    Proud to serve these esteemed organizations
                 </p>
             </div>
 

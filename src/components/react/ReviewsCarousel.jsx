@@ -1,11 +1,8 @@
 import React from 'react';
 import siteContent from '../../data/siteContent.json';
-import { useLanguage } from '../../hooks/useLanguage';
 
 const ReviewsCarousel = ({ currentLang }) => {
     const reviews = siteContent.reviews.slice(0, 5);
-    // lang prop is available if we want to use it for conditional rendering in future
-    // currentLang is passed from Astro for SSR consistency
 
     return (
         <section id="reviews" className="py-10 md:py-16 bg-gray-50">
@@ -17,8 +14,7 @@ const ReviewsCarousel = ({ currentLang }) => {
                         <div className="absolute bottom-[-8px] left-1/2 transform -translate-x-1/2 w-16 h-1 bg-red-600 rounded-full"></div>
                     </h2>
                     <p className="text-base text-gray-600 max-w-2xl mx-auto mt-2">
-                        <span className="lang-en">Hear from our happy customers about their journey with us.</span>
-                        <span className="lang-ta">எங்கள் வாடிக்கையாளர்களின் கருத்துக்களைப் பாருங்கள்.</span>
+                        Hear from our happy customers about their journey with us.
                     </p>
                 </div>
 
