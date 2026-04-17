@@ -6,7 +6,14 @@
       "Bash(wc -l /d/websites/kalidass-attempt-main/src/pages/ta/*.astro /d/websites/kalidass-attempt-main/src/pages/ta/services/*.astro)",
       "Bash(grep -l \"lang.*ta\\\\|isTamil\\\\|currentLang.*ta\" /d/websites/kalidass-attempt-main/src/components/*.astro /d/websites/kalidass-attempt-main/src/components/*.jsx /d/websites/kalidass-attempt-main/src/components/react/*.jsx)",
       "Bash(grep -n \"isTamil\\\\|lang.*ta\\\\|_ta\" /d/websites/kalidass-attempt-main/src/components/*.astro)",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(cat)",
+      "Read(//tmp/**)",
+      "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); [print\\(t.get\\('title',''\\), '|', t.get\\('image',''\\)\\) for t in data]\")",
+      "Bash(python -c \"import json; data=json.load\\(open\\('d:/websites/kalidass-attempt-main/src/data/trips.json'\\)\\); [print\\(t.get\\('title',''\\), '|', t.get\\('image',''\\)\\) for t in data]\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(f'trips count: {len\\(d\\)}'\\)\")",
+      "Bash(node -e \"const d=require\\('./src/data/trips.json'\\); console.log\\('trips count:', Array.isArray\\(d\\) ? d.length : Object.keys\\(d\\).length\\)\")",
+      "Bash(node -e \"const d=require\\('./src/data/siteContent.json'\\); console.log\\('drivers:', d.drivers?.length\\); console.log\\('services:', d.services?.length\\)\")"
     ]
   }
 }

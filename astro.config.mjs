@@ -12,7 +12,9 @@ export default defineConfig({
   integrations: [
     tailwind(),
     react(),
-    sitemap(),
+    sitemap({
+      filter: (page) => !page.includes('/driver-cards/'),
+    }),
     partytown({
       config: {
         forward: ["dataLayer.push"],
