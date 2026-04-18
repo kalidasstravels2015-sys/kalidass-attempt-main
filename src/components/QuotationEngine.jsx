@@ -95,7 +95,7 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
       const recent = attempts.filter(time => now - time < oneHour);
 
       if (recent.length >= 5) {
-        setErrors(prev => ({ ...prev, global: ERROR_MSGS.active.en + " / " + ERROR_MSGS.active.ta }));
+        setErrors(prev => ({ ...prev, global: ERROR_MSGS.active.en }));
         return false;
       }
 
@@ -116,7 +116,7 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
 
       case 'date':
         if (value && new Date(value) < new Date()) {
-          error = `${ERROR_MSGS.date.en} | ${ERROR_MSGS.date.ta}`;
+          error = ERROR_MSGS.date.en;
         }
         break;
       case 'location':
@@ -434,15 +434,9 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
       setBreakdown(breakdownObj);
     } else if (activeTab === 'local' && vehicleData) {
       // Fixed rates for local packages
-      const localRates = {
-        "Swift Dzire": { "8hr80km": 1800, "12hr120km": 2600 },
-        "Toyota Etios": { "8hr80km": 1800, "12hr120km": 2600 },
-        "Innova": { "8hr80km": 2500, "12hr120km": 3500 },
-        "Innova Crysta": { "8hr80km": 3000, "12hr120km": 4200 },
-        "Tempo Traveller": { "8hr80km": 4500, "12hr120km": 6000 }
-      };
-      
-      const pkgCost = localRates[vehicle]?.[localPackage] || 2000;
+      const pkgCost = (localPackage === '8hr80km'
+        ? vehicles[vehicle]?.local_8hr_pkg
+        : vehicles[vehicle]?.local_12hr_pkg) || 2000;
       setEstimate(pkgCost);
       setBreakdown({
         package: localPackage,
@@ -478,7 +472,7 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
     if (!isDateValid || !isPickupValid || !isDropValid) {
       setErrors(prev => ({
         ...prev,
-        global: "Please fix errors above / மேலே உள்ள பிழைகளை சரிசெய்யவும்"
+        global: "Please fix errors above"
       }));
       trackEvent('booking_validation_error', {
         trip_type: activeTab

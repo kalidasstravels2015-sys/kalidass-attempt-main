@@ -13,7 +13,10 @@
       "Bash(python -c \"import json; data=json.load\\(open\\('d:/websites/kalidass-attempt-main/src/data/trips.json'\\)\\); [print\\(t.get\\('title',''\\), '|', t.get\\('image',''\\)\\) for t in data]\")",
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(f'trips count: {len\\(d\\)}'\\)\")",
       "Bash(node -e \"const d=require\\('./src/data/trips.json'\\); console.log\\('trips count:', Array.isArray\\(d\\) ? d.length : Object.keys\\(d\\).length\\)\")",
-      "Bash(node -e \"const d=require\\('./src/data/siteContent.json'\\); console.log\\('drivers:', d.drivers?.length\\); console.log\\('services:', d.services?.length\\)\")"
+      "Bash(node -e \"const d=require\\('./src/data/siteContent.json'\\); console.log\\('drivers:', d.drivers?.length\\); console.log\\('services:', d.services?.length\\)\")",
+      "WebFetch(domain:www.innovacrystacarhire.com)",
+      "WebFetch(domain:www.chennai-travels.in)",
+      "WebFetch(domain:sarathibook.com)"
     ]
   }
 }

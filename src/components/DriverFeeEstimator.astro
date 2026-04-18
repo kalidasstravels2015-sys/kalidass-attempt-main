@@ -4,19 +4,14 @@ import tnBusFares from '../data/tnBusFares.json';
 ---
 
 <div class="w-full bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden max-w-md mx-auto font-sans">
-  
+
   <!-- Header -->
   <div class="p-6 pb-2">
     <div class="flex flex-col items-center text-center gap-2 mb-1">
       <User className="w-10 h-10 text-indigo-600" />
       <div>
-        <h2 class="text-xl font-bold text-slate-900">
-          <span>Acting Driver Cost</span>
-        </h2>
-        <p class="text-xs text-slate-500">
-          <span class="lang-en">Calculate Bata & Stay</span>
-          <span class="lang-ta">பேட்டா & தங்குமிடம் கணக்கிட</span>
-        </p>
+        <h2 class="text-xl font-bold text-slate-900">Acting Driver Cost</h2>
+        <p class="text-xs text-slate-500">Calculate Bata & Stay</p>
       </div>
     </div>
   </div>
@@ -25,34 +20,29 @@ import tnBusFares from '../data/tnBusFares.json';
   <div class="px-6 mb-6">
     <div class="bg-slate-100 p-1 rounded-xl flex">
       <button id="tab-oneway" class="flex-1 py-2 text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all">
-        <span class="lang-en">One Way Drop</span>
-        <span class="lang-ta">ஒரு வழி பயணம்</span>
+        One Way Drop
       </button>
       <button id="tab-round" class="flex-1 py-2 text-sm font-semibold rounded-lg bg-white text-indigo-600 shadow-sm transition-all">
-        <span class="lang-en">Round Trip</span>
-        <span class="lang-ta">இரு வழி பயணம்</span>
+        Round Trip
       </button>
     </div>
   </div>
 
   <div class="px-6 pb-8 space-y-5">
-    
+
     <!-- Inputs -->
     <div class="space-y-4">
-      
+
       <!-- Pickup -->
       <div>
-        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1.5">
-          <span class="lang-en">Pickup Location</span>
-          <span class="lang-ta">புறப்படும் இடம்</span>
-        </label>
+        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1.5">Pickup Location</label>
         <div class="relative group">
           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <MapPin className="w-4 h-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
           </div>
-          <input 
-            type="text" 
-            id="simple-pickup" 
+          <input
+            type="text"
+            id="simple-pickup"
             placeholder="e.g. Pallavaram"
             autocomplete="off"
             class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-slate-900 text-sm font-medium transition-all"
@@ -62,17 +52,14 @@ import tnBusFares from '../data/tnBusFares.json';
 
       <!-- Drop -->
       <div>
-        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1.5">
-          <span class="lang-en">Drop Location</span>
-          <span class="lang-ta">சேரும் இடம்</span>
-        </label>
+        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1.5">Drop Location</label>
         <div class="relative group">
           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <Navigation className="w-4 h-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
           </div>
-          <input 
-            type="text" 
-            id="simple-drop" 
+          <input
+            type="text"
+            id="simple-drop"
             placeholder="e.g. Madurai"
             autocomplete="off"
             class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-slate-900 text-sm font-medium transition-all"
@@ -82,20 +69,17 @@ import tnBusFares from '../data/tnBusFares.json';
 
       <!-- Round Trip Specific Fields -->
       <div id="round-trip-fields" class="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
-        
+
         <!-- Duration -->
         <div>
-          <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1.5">
-            <span class="lang-en">Total Duration (Days)</span>
-            <span class="lang-ta">மொத்த நாட்கள்</span>
-          </label>
+          <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1.5">Total Duration (Days)</label>
           <div class="relative group">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Calendar className="w-4 h-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
             </div>
-            <input 
-              type="number" 
-              id="duration-days" 
+            <input
+              type="number"
+              id="duration-days"
               value="2"
               min="1"
               class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-slate-900 text-sm font-medium transition-all"
@@ -110,14 +94,8 @@ import tnBusFares from '../data/tnBusFares.json';
             <Check className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 pointer-events-none" />
           </div>
           <div>
-            <span class="block text-sm font-semibold text-slate-700">
-              <span class="lang-en">I will provide Driver Stay</span>
-              <span class="lang-ta">ஓட்டுநர் தங்குமிடம் நான் தருகிறேன்</span>
-            </span>
-            <span class="block text-xs text-slate-500 mt-0.5">
-              <span class="lang-en">Select this if you give the driver a place to sleep.</span>
-              <span class="lang-ta">ஓட்டுநருக்கு தூங்கும் இடம் கொடுத்தால் இதை தேர்வு செய்யவும்.</span>
-            </span>
+            <span class="block text-sm font-semibold text-slate-700">I will provide Driver Stay</span>
+            <span class="block text-xs text-slate-500 mt-0.5">Select this if you give the driver a place to sleep.</span>
           </div>
         </label>
 
@@ -127,27 +105,20 @@ import tnBusFares from '../data/tnBusFares.json';
 
     <!-- Calculate Button -->
     <button id="calc-btn" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center shadow-lg hover:shadow-xl active:scale-[0.98]">
-      <span class="lang-en flex items-center">Calculate Cost <ArrowRight className="w-4 h-4 ml-2" /></span>
-      <span class="lang-ta flex items-center">மதிப்பீட்டை கணக்கிடு <ArrowRight className="w-4 h-4 ml-2" /></span>
+      Calculate Cost <ArrowRight className="w-4 h-4 ml-2" />
     </button>
 
     <!-- Results Section -->
     <div id="result-section" class="hidden pt-6 border-t border-slate-100">
-      
+
       <div class="flex justify-between items-end mb-6">
         <div>
-          <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">
-            <span class="lang-en">Estimated Total</span>
-            <span class="lang-ta">மொத்த மதிப்பீடு</span>
-          </p>
+          <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Estimated Total</p>
           <p class="text-4xl font-extrabold text-slate-900 tracking-tight" id="total-price">₹0</p>
         </div>
         <div class="text-right">
           <p class="text-sm font-bold text-slate-600" id="distance-display">0 km</p>
-          <p class="text-xs text-slate-400" id="duration-display">
-            <span class="lang-en">0 hrs Driving</span>
-            <span class="lang-ta">0 மணி நேரம்</span>
-          </p>
+          <p class="text-xs text-slate-400" id="duration-display">0 hrs Driving</p>
         </div>
       </div>
 
@@ -158,8 +129,7 @@ import tnBusFares from '../data/tnBusFares.json';
       <div class="mt-6 p-3 bg-yellow-50 border border-yellow-100 rounded-lg flex gap-3">
         <Info className="w-4 h-4 text-yellow-600 shrink-0 mt-0.5" />
         <p class="text-xs text-yellow-800 leading-relaxed">
-          <span class="lang-en">Rate is per calendar day. Providing accommodation saves you <span class="font-bold">₹500/night!</span></span>
-          <span class="lang-ta">கட்டணம் ஒரு நாளுக்கு. தங்குமிடம் கொடுத்தால் <span class="font-bold">₹500 மிச்சம்!</span></span>
+          Rate is per calendar day. Providing accommodation saves you <span class="font-bold">₹500/night!</span>
         </p>
       </div>
 
@@ -206,7 +176,7 @@ import tnBusFares from '../data/tnBusFares.json';
 
     // --- GOOGLE MAPS INIT (Robust) ---
     let attempts = 0;
-    const maxAttempts = 50; 
+    const maxAttempts = 50;
 
     function initializeAutocomplete() {
       const pickupInput = document.getElementById('simple-pickup');
@@ -243,12 +213,12 @@ import tnBusFares from '../data/tnBusFares.json';
 
     // --- CALCULATION LOGIC ---
     const calcBtn = document.getElementById('calc-btn');
-    
+
     if (calcBtn) {
       calcBtn.addEventListener('click', () => {
         const pickup = document.getElementById('simple-pickup').value;
         const drop = document.getElementById('simple-drop').value;
-        
+
         if(!pickup || !drop) {
           alert("Please enter both locations");
           return;
@@ -262,27 +232,27 @@ import tnBusFares from '../data/tnBusFares.json';
         // 1. TRY LOCAL LOOKUP FIRST (No API)
         const p = pickup.toLowerCase();
         const d = drop.toLowerCase();
-        
+
         // Find route in either direction
-        const route = tnBusFares.find(r => 
+        const route = tnBusFares.find(r =>
           (p.includes(r.source) && d.includes(r.destination)) ||
           (p.includes(r.destination) && d.includes(r.source))
         );
 
         if (route) {
           console.log("Using Local Route Data:", route);
-          
+
           // Simulate small delay for UX
           setTimeout(() => {
             calcBtn.innerHTML = originalBtnText;
             calcBtn.disabled = false;
-            
+
             const realDist = route.distanceKm;
             const durationText = Math.round(realDist / 50) + " hrs (Est)"; // Approx 50km/h
-            
+
             // Use stored SETC fare
-            const setcFare = route.setcFare; 
-            
+            const setcFare = route.setcFare;
+
             calculateAndShow(realDist, durationText, setcFare);
           }, 600);
           return;
@@ -315,9 +285,9 @@ import tnBusFares from '../data/tnBusFares.json';
 
             // Real Data
             const distanceInMeters = result.distance.value;
-            const realDist = Math.round(distanceInMeters / 1000); 
+            const realDist = Math.round(distanceInMeters / 1000);
             const durationText = result.duration.text;
-            
+
             // Fallback Fare Calculation (if not in JSON)
             // Approx 1.2 per km for SETC Ultra Deluxe
             const calculatedFare = Math.round(realDist * 1.2);
@@ -342,24 +312,15 @@ import tnBusFares from '../data/tnBusFares.json';
 
           breakdownHTML = `
             <div class="flex justify-between py-2 border-b border-slate-50">
-              <span class="text-slate-600">
-                <span class="lang-en">Driver Bata (1 Day)</span>
-                <span class="lang-ta">ஓட்டுநர் பேட்டா (1 நாள்)</span>
-              </span>
+              <span class="text-slate-600">Driver Bata (1 Day)</span>
               <span class="font-bold text-slate-900">₹${BATA_PER_DAY}</span>
             </div>
             <div class="flex justify-between py-2 border-b border-slate-50">
-              <span class="text-slate-600">
-                <span class="lang-en">Food Allowance</span>
-                <span class="lang-ta">உணவு படி</span>
-              </span>
+              <span class="text-slate-600">Food Allowance</span>
               <span class="font-bold text-slate-900">₹${FOOD_PER_DAY}</span>
             </div>
             <div class="flex justify-between py-2">
-              <span class="text-slate-600">
-                <span class="lang-en">Return Bus Ticket (SETC/Est)</span>
-                <span class="lang-ta">திரும்பும் பேருந்து டிக்கெட் (மதிப்பீடு)</span>
-              </span>
+              <span class="text-slate-600">Return Bus Ticket (SETC/Est)</span>
               <span class="font-bold text-slate-900">₹${busFare}</span>
             </div>
           `;
@@ -367,7 +328,7 @@ import tnBusFares from '../data/tnBusFares.json';
         } else {
           // Round Trip Logic
           let days = parseInt(durationInput.value) || 1;
-          
+
           // Auto-correct days if distance > 250km
           const totalRoundTripDist = dist * 2;
           if (totalRoundTripDist > 250 && days < 2) {
@@ -382,30 +343,21 @@ import tnBusFares from '../data/tnBusFares.json';
           const totalBata = BATA_PER_DAY * days;
           const totalFood = FOOD_PER_DAY * days;
           const totalStay = provideStay ? 0 : (STAY_PER_NIGHT * nights);
-          
+
           total = totalBata + totalFood + totalStay;
 
           breakdownHTML = `
             <div class="flex justify-between py-2 border-b border-slate-50">
-              <span class="text-slate-600">
-                <span class="lang-en">Driver Bata (${days} Days)</span>
-                <span class="lang-ta">ஓட்டுநர் பேட்டா (${days} நாட்கள்)</span>
-              </span>
+              <span class="text-slate-600">Driver Bata (${days} Days)</span>
               <span class="font-bold text-slate-900">₹${totalBata}</span>
             </div>
             <div class="flex justify-between py-2 border-b border-slate-50">
-              <span class="text-slate-600">
-                <span class="lang-en">Food Allowance (${days} Days)</span>
-                <span class="lang-ta">உணவு படி (${days} நாட்கள்)</span>
-              </span>
+              <span class="text-slate-600">Food Allowance (${days} Days)</span>
               <span class="font-bold text-slate-900">₹${totalFood}</span>
             </div>
             ${nights > 0 ? `
             <div class="flex justify-between py-2 ${provideStay ? 'text-slate-400 line-through' : ''}">
-              <span class="text-slate-600">
-                <span class="lang-en">Stay Allowance (${nights} Nights)</span>
-                <span class="lang-ta">தங்கும் படி (${nights} இரவுகள்)</span>
-              </span>
+              <span class="text-slate-600">Stay Allowance (${nights} Nights)</span>
               <span class="font-bold text-slate-900">₹${provideStay ? 0 : totalStay}</span>
             </div>
             ` : ''}
@@ -418,7 +370,7 @@ import tnBusFares from '../data/tnBusFares.json';
         document.getElementById('distance-display').innerText = `${displayDist} km`;
         document.getElementById('duration-display').innerText = duration;
         document.getElementById('breakdown-list').innerHTML = breakdownHTML;
-        
+
         resultSection.classList.remove('hidden');
       }
     }
