@@ -10,156 +10,349 @@ const breadcrumbItems = [
 
 const vehicles = Object.entries(tariffConfig.vehicles);
 
-
 const vehicleCapacity: Record<string, string> = {
-  "Swift Dzire":     "4 Pax",
-  "Toyota Etios":    "4 Pax",
-  "Innova":          "6 Pax",
-  "Innova Crysta":   "7 Pax",
+  "Swift Dzire": "4 Pax",
+  "Toyota Etios": "4 Pax",
+  "Maruti Ertiga": "6 Pax",
+  "Innova": "6 Pax",
+  "Innova Crysta": "7 Pax",
   "Tempo Traveller": "12 Pax",
+};
+
+// Schema.org structured data for machine-readable tariff pricing
+const tariffSchema = {
+  "@type": "OfferCatalog",
+  "@id": "https://kalidasstravels.in/tariff/#offercatalog",
+  name: "Chennai Taxi & Car Rental Tariff Rates",
+  description: "Official local hourly and outstation tariff card for Kalidass Travels in Chennai, covering 5hr/50km, 8hr/80km, 10hr/100km, CPWD/government tender benchmarks, and per-km outstation rates.",
+  itemListElement: vehicles.flatMap(([name, v]: [string, any]) => [
+    {
+      "@type": "Offer",
+      name: `${name} Local 5 Hrs / 50 KM Package (Chennai)`,
+      price: v.local_5hr_pkg,
+      priceCurrency: "INR",
+      description: `${name} local city package within Chennai for 5 hours and 50 kilometers. Extra km: ₹${v.extra_km_rate}/km, Extra hr: ₹${v.extra_hr_rate}/hr.`,
+      eligibleRegion: { "@type": "City", name: "Chennai" },
+    },
+    {
+      "@type": "Offer",
+      name: `${name} Local 10 Hrs / 100 KM Package (Chennai)`,
+      price: v.local_10hr_pkg,
+      priceCurrency: "INR",
+      description: `${name} standard 10 hours / 100 kilometers package within Chennai. Extra km: ₹${v.extra_km_rate}/km, Extra hr: ₹${v.extra_hr_rate}/hr. Compliant with CPWD / tender rate standards.`,
+      eligibleRegion: { "@type": "City", name: "Chennai" },
+    },
+    {
+      "@type": "Offer",
+      name: `${name} Outstation Round Trip (Per KM)`,
+      price: v.round_trip_rate,
+      priceCurrency: "INR",
+      priceSpecification: {
+        "@type": "UnitPriceSpecification",
+        price: v.round_trip_rate,
+        priceCurrency: "INR",
+        unitText: "KM",
+      },
+      description: `${name} outstation round trip from Chennai at ₹${v.round_trip_rate}/km with min ${v.min_km_per_day} km/day. Driver bata ₹${v.driver_bata}/day.`,
+    }
+  ])
 };
 ---
 
 <Layout
-  title="Taxi Tariff & Pricing | Kalidass Travels"
-  description="Transparent per-km taxi rates for outstation and local trips. Swift Dzire, Innova, Tempo Traveller — no hidden charges."
-  keywords="taxi tariff Chennai, cab rates per km, outstation taxi price, innova taxi fare, swift dzire price per km"
+  title="Taxi & Car Rental Tariff in Chennai | Local & Outstation Rates - Kalidass Travels"
+  description="Official Chennai taxi tariff card with transparent rates. Local city packages (5hr/50km, 8hr/80km, 10hr/100km) and outstation per-km rates for Dzire, Ertiga, Innova & Tempo Traveller. Zero surge pricing."
+  keywords="taxi tariff Chennai, car rental tariff Chennai, cab rates per km Chennai, 5 hr 50 km cab chennai, 10 hr 100 km cab chennai, additional km rate chennai, additional hr rate chennai, cpwd tender cab rates chennai, innova car rental tariff chennai, swift dzire price per km chennai, outstation taxi price chennai"
+  schema={tariffSchema}
 >
   <Breadcrumbs items={breadcrumbItems} />
 
-  <div class="bg-slate-50 min-h-screen pt-12 pb-16">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="py-12 md:py-20 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <!-- Header -->
-      <div class="text-center mb-10">
-        <h1 class="text-4xl font-bold text-slate-900 mb-3">Taxi Tariff</h1>
-        <p class="text-lg text-slate-600 max-w-xl mx-auto">
-          Fixed, transparent rates. No surge pricing. No hidden charges.
+      <div class="text-center mb-12">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-100 border border-blue-200 text-blue-800 text-xs font-bold tracking-widest uppercase mb-4 shadow-sm">
+          <span>Chennai Commercial &amp; Retail Tariff Card</span>
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 mb-4 font-heading tracking-tight">
+          Chennai Taxi &amp; Car Rental Tariff Card
+        </h1>
+        <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto font-normal leading-relaxed font-sans">
+          Transparent, fixed rates for local hourly packages, outstation journeys, corporate mobility, and commercial tender benchmarks with zero surge pricing.
         </p>
       </div>
 
-      <!-- Section 1: Outstation Rates -->
-      <div class="mb-10">
-        <h2 class="text-xl font-bold text-slate-800 mb-4">Outstation Rates (Per KM)</h2>
-        <div class="overflow-x-auto rounded-2xl shadow-sm border border-slate-200">
-          <table class="w-full text-sm text-left bg-white">
-            <thead class="bg-slate-900 text-white text-xs uppercase tracking-wider">
+      <!-- Quick Highlights Grid -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Local 5 Hr / 50 KM</div>
+          <div class="text-2xl font-black text-slate-900 font-heading">₹1,400 <span class="text-xs font-normal text-slate-500">starting</span></div>
+          <p class="text-xs text-slate-600 mt-1">Sedans (Dzire / Etios) ideal for quick city meetings</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Standard 10 Hr / 100 KM</div>
+          <div class="text-2xl font-black text-blue-700 font-heading">₹2,600 <span class="text-xs font-normal text-slate-500">starting</span></div>
+          <p class="text-xs text-slate-600 mt-1">Full-day city package &amp; standard tender benchmark</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Outstation Fares</div>
+          <div class="text-2xl font-black text-emerald-700 font-heading">₹14 <span class="text-xs font-normal text-slate-500">/ km (Round)</span></div>
+          <p class="text-xs text-slate-600 mt-1">Flat per-km rates with zero hidden charges</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Extra KM &amp; Extra Hr</div>
+          <div class="text-2xl font-black text-amber-700 font-heading">₹15 <span class="text-xs font-normal text-slate-500">/ km &amp;</span> ₹150 <span class="text-xs font-normal text-slate-500">/ hr</span></div>
+          <p class="text-xs text-slate-600 mt-1">Clear, pre-disclosed rates beyond standard package</p>
+        </div>
+      </div>
+
+      <!-- Section 1: Local City Packages -->
+      <div class="mb-14">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <div>
+            <h2 class="text-2xl font-bold text-slate-900 font-heading">Local City &amp; Corporate Packages (Within Chennai)</h2>
+            <p class="text-sm text-slate-600">Standard hourly packages for local business travel, sightseeing, and commercial tender schedules.</p>
+          </div>
+          <span class="inline-flex items-center text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1 rounded-full w-fit">
+            Fuel &amp; Driver Bata Included
+          </span>
+        </div>
+
+        <div class="overflow-x-auto rounded-3xl shadow-sm border border-slate-200/90 bg-white">
+          <table class="w-full text-sm text-left font-sans">
+            <thead class="bg-slate-900 text-white text-xs font-bold uppercase tracking-wider">
               <tr>
-                <th class="px-5 py-4 sticky left-0 z-10 bg-slate-900">Vehicle</th>
-                <th class="px-5 py-4">Capacity</th>
-                <th class="px-5 py-4">One Way (₹/km)</th>
-                <th class="px-5 py-4">Round Trip (₹/km)</th>
-                <th class="px-5 py-4">Min KM / Day</th>
-                <th class="px-5 py-4">Driver Bata</th>
+                <th class="px-5 py-4 sticky left-0 z-10 bg-slate-900">Vehicle Type</th>
+                <th class="px-4 py-4 text-center">Capacity</th>
+                <th class="px-4 py-4 text-center bg-blue-950/80 border-l border-r border-slate-700">5 Hrs / 50 KM</th>
+                <th class="px-4 py-4 text-center">8 Hrs / 80 KM</th>
+                <th class="px-4 py-4 text-center bg-blue-950/80 border-l border-r border-slate-700">10 Hrs / 100 KM</th>
+                <th class="px-4 py-4 text-center">12 Hrs / 120 KM</th>
+                <th class="px-4 py-4 text-center text-amber-300">Extra KM (₹/km)</th>
+                <th class="px-4 py-4 text-center text-amber-300">Extra Hr (₹/hr)</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
-              {vehicles.map(([name, v], i) => (
-                <tr class={i % 2 === 0 ? "bg-white" : "bg-slate-50"}>
-                  <td class={`px-5 py-4 font-semibold text-slate-900 sticky left-0 z-10 ${i % 2 === 0 ? "bg-white" : "bg-slate-50"}`}>{name}</td>
-                  <td class="px-5 py-4 text-slate-600">{vehicleCapacity[name]}</td>
-                  <td class="px-5 py-4 font-bold text-red-700">₹{v.one_way_rate}</td>
-                  <td class="px-5 py-4 font-bold text-indigo-700">₹{v.round_trip_rate}</td>
-                  <td class="px-5 py-4 text-slate-600">{v.min_km_per_day} km</td>
-                  <td class="px-5 py-4 text-slate-600">₹{v.driver_bata} / day</td>
+              {vehicles.map(([name, v]: [string, any], i) => (
+                <tr class={i % 2 === 0 ? "bg-white hover:bg-slate-50 transition-colors" : "bg-slate-50/60 hover:bg-slate-50 transition-colors"}>
+                  <td class={`px-5 py-4 font-bold text-slate-900 sticky left-0 z-10 font-heading ${i % 2 === 0 ? "bg-white" : "bg-slate-50/60"}`}>
+                    <div class="flex items-center gap-2">
+                      <span>{name}</span>
+                      {name === "Maruti Ertiga" && (
+                        <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200">7-Seater</span>
+                      )}
+                    </div>
+                  </td>
+                  <td class="px-4 py-4 text-center text-slate-600 font-medium whitespace-nowrap">{vehicleCapacity[name] || "4 Pax"}</td>
+                  <td class="px-4 py-4 text-center font-extrabold text-blue-900 bg-blue-50/40 border-l border-r border-slate-100">
+                    ₹{v.local_5hr_pkg ? v.local_5hr_pkg.toLocaleString("en-IN") : "-"}
+                  </td>
+                  <td class="px-4 py-4 text-center font-bold text-slate-800">
+                    ₹{v.local_8hr_pkg ? v.local_8hr_pkg.toLocaleString("en-IN") : "-"}
+                  </td>
+                  <td class="px-4 py-4 text-center font-extrabold text-blue-900 bg-blue-50/40 border-l border-r border-slate-100">
+                    ₹{v.local_10hr_pkg ? v.local_10hr_pkg.toLocaleString("en-IN") : "-"}
+                  </td>
+                  <td class="px-4 py-4 text-center font-bold text-slate-800">
+                    ₹{v.local_12hr_pkg ? v.local_12hr_pkg.toLocaleString("en-IN") : "-"}
+                  </td>
+                  <td class="px-4 py-4 text-center font-extrabold text-amber-700 bg-amber-50/30">
+                    ₹{v.extra_km_rate || 15}
+                  </td>
+                  <td class="px-4 py-4 text-center font-extrabold text-amber-700 bg-amber-50/30">
+                    ₹{v.extra_hr_rate || 150}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <p class="text-xs text-slate-500 mt-3">
-          * One Way minimum: 130 km (except Tempo Traveller: 250 km). Driver Bata includes food & stay.
+        <p class="text-xs text-slate-500 mt-3 font-sans">
+          * Local packages include vehicle, fuel, and driver bata within Chennai city limits. Tolls, parking fees, and GST at actuals. Km and time calculated from garage to garage.
         </p>
       </div>
 
-      <!-- Section 2: Local Package Rates -->
-      <div class="mb-10">
-        <h2 class="text-xl font-bold text-slate-800 mb-4">Local City Packages</h2>
-        <div class="overflow-x-auto rounded-2xl shadow-sm border border-slate-200">
-          <table class="w-full text-sm text-left bg-white">
-            <thead class="bg-slate-900 text-white text-xs uppercase tracking-wider">
+      <!-- Section 2: Outstation Rates -->
+      <div class="mb-14">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <div>
+            <h2 class="text-2xl font-bold text-slate-900 font-heading">Outstation Taxi Rates (Per KM from Chennai)</h2>
+            <p class="text-sm text-slate-600">Intercity and multi-day travel across Tamil Nadu, Pondicherry, Andhra Pradesh, and Karnataka.</p>
+          </div>
+          <span class="inline-flex items-center text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full w-fit">
+            Transparent Distance Billing
+          </span>
+        </div>
+
+        <div class="overflow-x-auto rounded-3xl shadow-sm border border-slate-200/90 bg-white">
+          <table class="w-full text-sm text-left font-sans">
+            <thead class="bg-slate-900 text-white text-xs font-bold uppercase tracking-wider">
               <tr>
                 <th class="px-5 py-4 sticky left-0 z-10 bg-slate-900">Vehicle</th>
-                <th class="px-5 py-4">Capacity</th>
-                <th class="px-5 py-4">8 Hrs / 80 KM</th>
-                <th class="px-5 py-4">12 Hrs / 120 KM</th>
+                <th class="px-5 py-4 text-center">Capacity</th>
+                <th class="px-5 py-4 text-center">One Way (₹/km)</th>
+                <th class="px-5 py-4 text-center">Round Trip (₹/km)</th>
+                <th class="px-5 py-4 text-center">Min KM / Day</th>
+                <th class="px-5 py-4 text-center">Driver Bata / Day</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
-              {vehicles.map(([name, v], i) => (
-                <tr class={i % 2 === 0 ? "bg-white" : "bg-slate-50"}>
-                  <td class={`px-5 py-4 font-semibold text-slate-900 sticky left-0 z-10 ${i % 2 === 0 ? "bg-white" : "bg-slate-50"}`}>{name}</td>
-                  <td class="px-5 py-4 text-slate-600">{vehicleCapacity[name]}</td>
-                  <td class="px-5 py-4 font-bold text-emerald-700">₹{v.local_8hr_pkg.toLocaleString("en-IN")}</td>
-                  <td class="px-5 py-4 font-bold text-emerald-700">₹{v.local_12hr_pkg.toLocaleString("en-IN")}</td>
+              {vehicles.map(([name, v]: [string, any], i) => (
+                <tr class={i % 2 === 0 ? "bg-white hover:bg-slate-50 transition-colors" : "bg-slate-50/60 hover:bg-slate-50 transition-colors"}>
+                  <td class={`px-5 py-4 font-bold text-slate-900 sticky left-0 z-10 font-heading ${i % 2 === 0 ? "bg-white" : "bg-slate-50/60"}`}>
+                    {name}
+                  </td>
+                  <td class="px-5 py-4 text-center text-slate-600 font-medium">{vehicleCapacity[name] || "4 Pax"}</td>
+                  <td class="px-5 py-4 text-center font-extrabold text-emerald-700">₹{v.one_way_rate}</td>
+                  <td class="px-5 py-4 text-center font-extrabold text-emerald-700">₹{v.round_trip_rate}</td>
+                  <td class="px-5 py-4 text-center text-slate-700 font-medium">{v.min_km_per_day} km</td>
+                  <td class="px-5 py-4 text-center text-slate-700 font-medium">₹{v.driver_bata} / day</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <p class="text-xs text-slate-500 mt-3">
-          * Extra KM and extra hours charged additionally. Fuel included. Tolls & parking extra.
+        <p class="text-xs text-slate-500 mt-3 font-sans">
+          * Outstation billing is based on a standard minimum of 250 km per calendar day (300 km for Innova Crysta). One-way drop trips have a 130 km minimum (250 km for Tempo Traveller). Driver bata covers daily driver food and accommodation allowance.
         </p>
+      </div>
+
+      <!-- Tender & Commercial Compliance Note -->
+      <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-3xl p-6 sm:p-8 mb-12 shadow-md border border-slate-700">
+        <div class="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
+          <div class="max-w-2xl">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-bold uppercase tracking-wider mb-3 border border-blue-400/30">
+              Government &amp; Corporate Tender Alignment
+            </div>
+            <h3 class="text-xl sm:text-2xl font-bold font-heading mb-2">
+              Compliant with CPWD &amp; GeM Chennai Commercial Schedules
+            </h3>
+            <p class="text-slate-300 text-sm leading-relaxed">
+              Kalidass Travels structures commercial fleet hiring packages in accordance with standard CPWD, GeM, and Chennai Public Sector hiring benchmarks — including <strong>5 Hr / 50 KM</strong> and <strong>10 Hr / 100 KM</strong> package requirements with pre-disclosed ceiling caps for extra kilometers and extra hours. All vehicles carry valid commercial taxi badges, fitness certificates, and 100% GST-compliant corporate invoices.
+            </p>
+          </div>
+          <div class="shrink-0 flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+            <a
+              href="tel:+919092303060"
+              class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-slate-950 font-bold rounded-full hover:bg-slate-100 transition-all text-sm shadow-md"
+            >
+              <span>Call Tender Desk</span>
+            </a>
+            <a
+              href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20am%20enquiring%20about%20a%20commercial%20tender%20vehicle%20rate%20quote."
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 text-white font-bold rounded-full hover:bg-emerald-500 transition-all text-sm shadow-md"
+            >
+              <span>WhatsApp Us</span>
+            </a>
+          </div>
+        </div>
       </div>
 
       <!-- Inclusions / Exclusions -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
-        <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-5">
-          <h3 class="font-bold text-emerald-800 mb-3">Inclusions</h3>
-          <ul class="space-y-2 text-sm text-emerald-800">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
+        <div class="bg-emerald-50/80 border border-emerald-200 rounded-3xl p-6 shadow-sm">
+          <h3 class="font-bold text-emerald-900 mb-3 font-heading text-lg flex items-center gap-2">
+            <svg class="w-5 h-5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            Inclusions in Standard Tariff
+          </h3>
+          <ul class="space-y-2.5 text-sm text-emerald-950 font-sans">
             <li class="flex items-center gap-2">
-              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              Fuel charges
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+              Vehicle rental with commercial permit &amp; clean air-conditioned interior
             </li>
             <li class="flex items-center gap-2">
-              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              Driver service & bata
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+              Fuel charges (Petrol/Diesel/CNG as applicable)
             </li>
             <li class="flex items-center gap-2">
-              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              GST
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+              Professional uniform chauffeur with valid commercial badge &amp; bata
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+              All basic local taxes and GST invoice documentation
             </li>
           </ul>
         </div>
-        <div class="bg-red-50 border border-red-200 rounded-2xl p-5">
-          <h3 class="font-bold text-red-800 mb-3">Exclusions</h3>
-          <ul class="space-y-2 text-sm text-red-800">
+        <div class="bg-amber-50/80 border border-amber-200 rounded-3xl p-6 shadow-sm">
+          <h3 class="font-bold text-amber-900 mb-3 font-heading text-lg flex items-center gap-2">
+            <svg class="w-5 h-5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            Exclusions (Billed on Actuals)
+          </h3>
+          <ul class="space-y-2.5 text-sm text-amber-950 font-sans">
             <li class="flex items-center gap-2">
-              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-              Toll charges (as per actual)
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+              Toll booth charges (Billed exactly as per official FASTag statement)
             </li>
             <li class="flex items-center gap-2">
-              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-              Parking fees
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+              Parking fees at airports, railway stations, malls, or destinations
             </li>
             <li class="flex items-center gap-2">
-              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-              Interstate permit (if applicable)
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+              Interstate road permit tax (if crossing Tamil Nadu state border)
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+              Usage beyond package time/distance (charged as per Extra KM / Extra Hr table)
             </li>
           </ul>
+        </div>
+      </div>
+
+      <!-- FAQ Section -->
+      <div class="mb-14">
+        <h2 class="text-2xl font-bold text-slate-900 font-heading mb-6 text-center">Frequently Asked Questions About Chennai Tariffs</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200">
+            <h3 class="font-bold text-slate-900 mb-2 font-heading text-base">How are Extra Hours and Extra Kilometers charged?</h3>
+            <p class="text-sm text-slate-600 font-sans leading-relaxed">
+              If your trip exceeds the contracted package (e.g. 5hr/50km or 10hr/100km), additional hours and kilometers are calculated according to the published extra rate table (e.g., ₹15/km and ₹150/hr for Sedans). There are no surge rates applied.
+            </p>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-slate-200">
+            <h3 class="font-bold text-slate-900 mb-2 font-heading text-base">Are these rates suitable for CPWD or Government tenders?</h3>
+            <p class="text-sm text-slate-600 font-sans leading-relaxed">
+              Yes. Our local commercial tariffs follow the 5 Hr / 50 KM and 10 Hr / 100 KM format typically required in Chennai public and commercial tender bidding schedules, with verifiable GST billing.
+            </p>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-slate-200">
+            <h3 class="font-bold text-slate-900 mb-2 font-heading text-base">What is the minimum billing distance for outstation trips?</h3>
+            <p class="text-sm text-slate-600 font-sans leading-relaxed">
+              Outstation round-trips carry a standard minimum billing of 250 kilometers per calendar day (300 km for Innova Crysta). If you travel 180 km in a day, the 250 km minimum applies; if you travel 320 km, you pay for the exact 320 km.
+            </p>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-slate-200">
+            <h3 class="font-bold text-slate-900 mb-2 font-heading text-base">Is driver bata included in local packages?</h3>
+            <p class="text-sm text-slate-600 font-sans leading-relaxed">
+              Yes, driver allowance (bata) is fully included in all local hourly packages within Chennai. For outstation journeys, driver bata is billed on a per-calendar-day basis as shown in the outstation tariff table.
+            </p>
+          </div>
         </div>
       </div>
 
       <!-- CTA -->
-      <div class="text-center">
-        <p class="text-slate-600 mb-4 text-sm">Want an exact estimate for your trip?</p>
-        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+      <div class="text-center bg-slate-950 text-white rounded-3xl p-8 sm:p-12 shadow-xl relative overflow-hidden">
+        <h2 class="text-2xl sm:text-4xl font-extrabold mb-4 font-heading">Need an Exact Fare Estimation or Tender Quote?</h2>
+        <p class="text-slate-300 text-sm sm:text-base max-w-xl mx-auto mb-8 font-sans font-normal leading-relaxed">
+          Use our live interactive distance calculator for instant point-to-point pricing, or contact our commercial desk for institutional rate cards.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-4">
           <a
             href="/calculator/"
-            class="inline-flex items-center justify-center gap-2 bg-red-700 hover:bg-red-800 text-white font-semibold px-8 py-3 rounded-xl transition-all shadow-md"
+            class="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-gradient-to-r from-red-600 via-rose-600 to-red-700 hover:from-red-700 hover:to-rose-800 text-white font-bold rounded-full shadow-lg shadow-red-950/40 hover:shadow-xl transition-all cursor-pointer text-sm"
           >
-            Use the Calculator
+            <span>Live Fare Calculator</span>
+            <svg class="w-4 h-4 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
           </a>
           <a
-            href="https://wa.me/919092303060?text=Hi%2C%20I%27d%20like%20to%20book%20a%20cab."
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-xl transition-all shadow-md"
+            href="tel:+919092303060"
+            class="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-slate-800 text-slate-200 hover:text-white hover:bg-slate-700 font-semibold rounded-full transition-all border border-slate-700 text-sm"
           >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-            </svg>
-            Book on WhatsApp
+            <span>Call +91 90923 03060</span>
           </a>
         </div>
       </div>

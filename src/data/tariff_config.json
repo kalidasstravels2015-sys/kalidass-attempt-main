@@ -7,9 +7,12 @@
       "driver_bata": 300,
       "min_drop_km": 130,
       "local_4hr_pkg": 1350,
+      "local_5hr_pkg": 1400,
       "local_8hr_pkg": 2200,
+      "local_10hr_pkg": 2600,
       "local_12hr_pkg": 3050,
-      "extra_hr_rate": 250
+      "extra_km_rate": 15,
+      "extra_hr_rate": 150
     },
     "Toyota Etios": {
       "round_trip_rate": 14,
@@ -18,9 +21,26 @@
       "driver_bata": 300,
       "min_drop_km": 130,
       "local_4hr_pkg": 1350,
+      "local_5hr_pkg": 1400,
       "local_8hr_pkg": 2200,
+      "local_10hr_pkg": 2600,
       "local_12hr_pkg": 3050,
-      "extra_hr_rate": 250
+      "extra_km_rate": 15,
+      "extra_hr_rate": 150
+    },
+    "Maruti Ertiga": {
+      "round_trip_rate": 17,
+      "one_way_rate": 19,
+      "min_km_per_day": 250,
+      "driver_bata": 400,
+      "min_drop_km": 130,
+      "local_4hr_pkg": 1700,
+      "local_5hr_pkg": 1800,
+      "local_8hr_pkg": 2800,
+      "local_10hr_pkg": 3400,
+      "local_12hr_pkg": 3900,
+      "extra_km_rate": 17,
+      "extra_hr_rate": 200
     },
     "Innova": {
       "round_trip_rate": 18,
@@ -29,9 +49,12 @@
       "driver_bata": 500,
       "min_drop_km": 130,
       "local_4hr_pkg": 1900,
+      "local_5hr_pkg": 2000,
       "local_8hr_pkg": 3200,
+      "local_10hr_pkg": 3600,
       "local_12hr_pkg": 4200,
-      "extra_hr_rate": 350
+      "extra_km_rate": 19,
+      "extra_hr_rate": 250
     },
     "Innova Crysta": {
       "round_trip_rate": 22,
@@ -40,9 +63,12 @@
       "driver_bata": 600,
       "min_drop_km": 130,
       "local_4hr_pkg": 2800,
+      "local_5hr_pkg": 3000,
       "local_8hr_pkg": 4500,
+      "local_10hr_pkg": 5200,
       "local_12hr_pkg": 6000,
-      "extra_hr_rate": 450
+      "extra_km_rate": 22,
+      "extra_hr_rate": 350
     },
     "Tempo Traveller": {
       "round_trip_rate": 24,
@@ -51,9 +77,12 @@
       "driver_bata": 800,
       "min_drop_km": 250,
       "local_4hr_pkg": 3500,
+      "local_5hr_pkg": 3800,
       "local_8hr_pkg": 5500,
+      "local_10hr_pkg": 6500,
       "local_12hr_pkg": 7000,
-      "extra_hr_rate": 600
+      "extra_km_rate": 24,
+      "extra_hr_rate": 500
     }
   }
 }
