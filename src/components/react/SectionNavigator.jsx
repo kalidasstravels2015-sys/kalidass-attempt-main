@@ -8,6 +8,7 @@ import {
   ShieldCheck, 
   HelpCircle, 
   UserCheck, 
+  Star,
   ChevronUp 
 } from 'lucide-react';
 
@@ -18,8 +19,9 @@ const SECTIONS = [
   { id: 'tours', label: 'Temple Trips', icon: Compass, num: '04' },
   { id: 'partners', label: 'Corporate Clients', icon: Building2, num: '05' },
   { id: 'drivers', label: 'Verified Drivers', icon: UserCheck, num: '06' },
-  { id: 'safety', label: 'Travel Safety', icon: ShieldCheck, num: '07' },
-  { id: 'faq', label: 'FAQ', icon: HelpCircle, num: '08' },
+  { id: 'reviews', label: 'Client Reviews', icon: Star, num: '07' },
+  { id: 'safety', label: 'Travel Safety', icon: ShieldCheck, num: '08' },
+  { id: 'faq', label: 'FAQ', icon: HelpCircle, num: '09' },
 ];
 
 export default function SectionNavigator() {

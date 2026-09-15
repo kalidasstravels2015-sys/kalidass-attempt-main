@@ -1,20 +1,24 @@
 ---
 interface Props {
   className?: string;
+  class?: string;
   size?: number | string;
   variant?: 'two-tone' | 'white' | 'brand' | 'monochrome';
 }
 
 const { 
-  className = "w-4 h-4", 
+  className, 
+  class: classProp,
   size = 20, 
   variant = "two-tone" 
 } = Astro.props;
+
+const classes = classProp || className || "w-4 h-4";
 ---
 
 {variant === 'two-tone' && (
   <svg 
-    class={`shrink-0 ${className}`} 
+    class={`shrink-0 ${classes}`} 
     viewBox="0 0 24 24" 
     width={size} 
     height={size} 
@@ -37,7 +41,7 @@ const {
 
 {variant === 'brand' && (
   <svg 
-    class={`shrink-0 ${className}`} 
+    class={`shrink-0 ${classes}`} 
     viewBox="0 0 24 24" 
     width={size} 
     height={size} 
@@ -60,7 +64,7 @@ const {
 
 {variant === 'white' && (
   <svg 
-    class={`shrink-0 ${className}`} 
+    class={`shrink-0 ${classes}`} 
     viewBox="0 0 24 24" 
     width={size} 
     height={size} 
@@ -76,7 +80,7 @@ const {
 
 {variant === 'monochrome' && (
   <svg 
-    class={`shrink-0 ${className}`} 
+    class={`shrink-0 ${classes}`} 
     viewBox="0 0 24 24" 
     width={size} 
     height={size} 

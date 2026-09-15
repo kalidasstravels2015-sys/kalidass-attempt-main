@@ -9,6 +9,11 @@ const heroImages = hero.images && hero.images.length > 0 ? hero.images : [
   "/images/hero/coimbatore.webp",
   "/images/hero/madurai.webp",
 ];
+const heroImageAlts: Record<string, string> = {
+  "/images/hero/airavatesvara.webp": "Airavatesvara Temple Darasuram - Kalidass Travels Tamil Nadu Pilgrimage Tour",
+  "/images/hero/coimbatore.webp": "Adiyogi Shiva statue Coimbatore - Kalidass Travels Outstation Cab",
+  "/images/hero/madurai.webp": "Madurai Meenakshi Amman Temple Gopuram - Kalidass Travels Chauffeur Taxi",
+};
 ---
 
 <section
@@ -29,7 +34,7 @@ const heroImages = hero.images && hero.images.length > 0 ? hero.images : [
           >
             <OptimizedImage
               src={image}
-              alt="Kalidass Travels Chennai Background"
+              alt={heroImageAlts[image] || "Kalidass Travels Chennai Cab and Outstation Taxi"}
               class="w-full h-full object-cover object-center scale-105 opacity-80"
               loading={index === 0 ? "eager" : "lazy"}
               decoding={index === 0 ? "sync" : "async"}

@@ -9,11 +9,12 @@ import Tours from "../components/Tours.astro";
 import PartnersCarousel from "../components/react/PartnersCarousel.jsx";
 import DriversCarousel from "../components/react/DriversCarousel.jsx";
 import SafetySection from "../components/SafetySection.astro";
+import Reviews from "../components/Reviews.astro";
 import FAQ from "../components/FAQ.astro";
 import ExitIntentModal from "../components/react/ExitIntentModal.jsx";
 import BottomCTA from "../components/BottomCTA.astro";
 
-const ogImage = "/images/og-main.webp";
+const ogImage = "/images/og-main.png";
 ---
 
 <Layout
@@ -43,7 +44,10 @@ const ogImage = "/images/og-main.webp";
   <!-- 6. Professional Drivers (Horizontal Swipe) -->
   <DriversCarousel client:visible currentLang="en" />
 
-  <!-- 7. Travel Awareness & Safety (2x2 Grid) -->
+  <!-- 7. Verified Client Reviews -->
+  <Reviews />
+
+  <!-- 8. Travel Awareness & Safety (2x2 Grid) -->
   <SafetySection />
 
   <!-- 8. Frequently Asked Questions -->

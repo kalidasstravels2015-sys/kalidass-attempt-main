@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
 import siteContent from '../../data/siteContent.json';
-import { Users, CheckCircle2, ArrowRight } from 'lucide-react';
 
 const FleetCard = ({ vehicle, isVisible, priority }) => {
     return (

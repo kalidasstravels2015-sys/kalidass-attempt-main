@@ -475,12 +475,10 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        console.log('📍 GPS Coordinates:', { latitude, longitude });
 
         // Check if Google Maps is loaded
         if (!window.google || !window.google.maps) {
           setGettingLocation(null);
-          console.error('❌ Google Maps not loaded');
           alert('Google Maps not loaded. Please wait a moment and try again.');
           return;
         }
@@ -489,15 +487,10 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
         const geocoder = new window.google.maps.Geocoder();
         const latlng = { lat: latitude, lng: longitude };
 
-        console.log('🔄 Trying Geocoding API...');
-
         geocoder.geocode({ location: latlng }, (results, status) => {
-          console.log('📊 Geocoding Status:', status);
-
           if (status === 'OK' && results && results.length > 0) {
             // SUCCESS - Use Geocoding result
             const address = results[0].formatted_address;
-            console.log('✅ Geocoding success:', address);
 
             if (field === 'pickup') {
               setPickup(sanitizeInput(address));
@@ -513,9 +506,6 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
 
           } else {
             // FALLBACK - Use Places Nearby Search
-            console.log('🔄 Geocoding failed, trying Places API...');
-            console.log('⚠️ Geocoding status:', status);
-
             const map = new window.google.maps.Map(document.createElement('div'));
             const service = new window.google.maps.places.PlacesService(map);
 
@@ -526,8 +516,6 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
             };
 
             service.nearbySearch(request, (places, placesStatus) => {
-              console.log('📊 Places API Status:', placesStatus);
-
               setGettingLocation(null);
 
               if (placesStatus === 'OK' && places && places.length > 0) {
@@ -537,8 +525,6 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
                 // Use vicinity if available for context
                 const vicinity = nearestPlace.vicinity || 'Chennai';
                 const placeAddress = `${placeName}, ${vicinity}`;
-
-                console.log('✅ Places API success:', placeAddress);
 
                 if (field === 'pickup') {
                   setPickup(sanitizeInput(placeAddress));
@@ -552,7 +538,6 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
 
               } else {
                 // FINAL FALLBACK - Use city name with coordinates
-                console.error('❌ Both Geocoding and Places failed');
                 const fallbackAddress = `Chennai (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`;
 
                 if (field === 'pickup') {
@@ -561,7 +546,6 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
                   setDrop(fallbackAddress);
                 }
 
-                console.log('🔄 Using coordinate fallback:', fallbackAddress);
                 alert('Could not find nearby location. Using coordinates. Please enter address manually.');
                 trackEvent('location_pin_used', { field, method: 'coordinates', success: false });
               }

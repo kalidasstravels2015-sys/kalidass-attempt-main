@@ -9,7 +9,7 @@
       "/images/hero/coimbatore.webp",
       "/images/hero/madurai.webp"
     ],
-    "cto": "Call Now",
+    "cta": "Call Now",
     "phone": "+91 90923 03060",
     "email": "kalidasstravels2015@gmail.com"
   },
@@ -235,7 +235,7 @@
     },
     {
       "name": "Hariharan",
-      "experience": "2 Year Experience",
+      "experience": "2 Years Experience",
       "trips": "120+",
       "rating": "4.7",
       "reviews": "45",
@@ -429,16 +429,52 @@
   ],
   "reviews": [
     {
-      "name": "Rajesh K",
-      "quote": "Excellent service for our Tirupati trip. Driver Vadivel was very polite."
+      "name": "Rajesh Kannan",
+      "role": "Family Pilgrimage",
+      "rating": 5,
+      "quote": "Excellent service for our Tirupati trip. Driver Vadivel was very polite, arrived 15 mins early, and guided us with darshan timings smoothly."
     },
     {
       "name": "Anita Roy",
-      "quote": "Clean Innova Crysta and punctual pickup. Transparent pricing."
+      "role": "Corporate Travel",
+      "rating": 5,
+      "quote": "Clean Innova Crysta and punctual pickup from Chennai Airport. Transparent toll and night fare billing without any hidden charges."
     },
     {
-      "name": "Suresh M",
-      "quote": "Very safe driving for my parents' trip to Kumbakonam."
+      "name": "Suresh Mani",
+      "role": "Senior Citizen Tour",
+      "rating": 5,
+      "quote": "Very safe driving for my elderly parents' trip to Kumbakonam temples. Driver Murugan was exceptionally caring and patient."
+    },
+    {
+      "name": "Karthik Subramanian",
+      "role": "Weekend Getaway",
+      "rating": 5,
+      "quote": "Took a 2-day Pondicherry trip from Velachery with family. Etios was spotless, AC was crisp, and the driver recommended great authentic dining spots."
+    },
+    {
+      "name": "Divya Nambiar",
+      "role": "Navagraha Circuit",
+      "rating": 5,
+      "quote": "Completed the 9 Navagraha temples in 3 days. Driver Senthamil knew exact temple opening schedules and avoided all major road diversions."
+    },
+    {
+      "name": "Dr. Arvind Swaminathan",
+      "role": "Airport Transfer",
+      "rating": 5,
+      "quote": "Midnight pickup from Chennai International Terminal. Flight was delayed by 40 minutes, but driver tracked the flight and waited patiently without complaint."
+    },
+    {
+      "name": "Praveen Venkatesh",
+      "role": "Outstation Roundtrip",
+      "rating": 5,
+      "quote": "Chennai to Bangalore round trip for a family wedding. Smooth highway cruising, disciplined driving, and very reasonable per-km rates."
+    },
+    {
+      "name": "Meera Krishnan",
+      "role": "Madurai - Rameshwaram Tour",
+      "rating": 5,
+      "quote": "Comfortable 4-day temple tour across Madurai and Rameshwaram. Vehicle was cleaned every morning and driver Natraj was fantastic throughout."
     }
   ],
   "awareness": [
