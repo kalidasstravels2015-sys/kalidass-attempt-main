@@ -1,5 +1,6 @@
 ---
 import trips from '../data/trips.json';
+import WhatsAppIcon from './WhatsAppIcon.astro';
 ---
 
 <div id="tariff-calculator" class="fixed inset-0 z-50 hidden">
@@ -8,41 +9,41 @@ import trips from '../data/trips.json';
   
   <!-- Modal -->
   <div class="relative flex items-center justify-center min-h-screen p-4">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div class="bg-m3-surface rounded-m3-xl shadow-m3-4 border border-m3-outline-variant max-w-2xl w-full max-h-[90vh] overflow-y-auto">
       <!-- Header -->
-      <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 rounded-t-2xl">
-        <div class="flex justify-between items-center">
-          <h3 class="text-2xl font-bold" id="modal-title">Trip Calculator</h3>
-          <button id="close-calculator" class="text-white hover:text-gray-200 transition">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
+      <div class="bg-m3-surface-container-low text-m3-on-surface p-6 rounded-t-m3-xl border-b border-m3-outline-variant flex justify-between items-center">
+        <div>
+          <h3 class="text-xl font-bold font-heading" id="modal-title">Trip Calculator</h3>
+          <p class="text-sm text-m3-on-surface-variant mt-1" id="modal-subtitle">Estimated pricing for your trip</p>
         </div>
-        <p class="text-blue-100 mt-2" id="modal-subtitle">Estimated pricing for your trip</p>
+        <button id="close-calculator" class="text-m3-on-surface-variant hover:text-m3-on-surface p-2 rounded-m3-full hover:bg-m3-surface-container transition cursor-pointer">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
       </div>
 
       <!-- Content -->
       <div class="p-6 space-y-6">
         <!-- Trip Details -->
-        <div class="bg-gray-50 rounded-xl p-5">
-          <h4 class="font-semibold text-gray-900 mb-3">Trip Details</h4>
-          <div class="grid grid-cols-2 gap-4 text-sm">
+        <div class="bg-m3-surface-container-low rounded-m3-lg border border-m3-outline-variant/60 p-5">
+          <h4 class="font-bold text-sm uppercase tracking-wider text-m3-on-surface mb-3 font-heading">Trip Details</h4>
+          <div class="grid grid-cols-2 gap-4 text-xs sm:text-sm font-sans">
             <div>
-              <span class="text-gray-600">One Way Distance</span>
-              <p class="font-semibold text-gray-900" id="detail-oneway">-</p>
+              <span class="text-m3-on-surface-variant">One Way Distance</span>
+              <p class="font-bold text-m3-on-surface" id="detail-oneway">-</p>
             </div>
             <div>
-              <span class="text-gray-600">Total Distance</span>
-              <p class="font-semibold text-gray-900" id="detail-total">-</p>
+              <span class="text-m3-on-surface-variant">Total Distance</span>
+              <p class="font-bold text-m3-on-surface" id="detail-total">-</p>
             </div>
             <div>
-              <span class="text-gray-600">Duration</span>
-              <p class="font-semibold text-gray-900" id="detail-duration">-</p>
+              <span class="text-m3-on-surface-variant">Duration</span>
+              <p class="font-bold text-m3-on-surface" id="detail-duration">-</p>
             </div>
             <div>
-              <span class="text-gray-600">Driver Bata</span>
-              <p class="font-semibold text-gray-900" id="detail-bata">-</p>
+              <span class="text-m3-on-surface-variant">Driver Bata</span>
+              <p class="font-bold text-m3-on-surface" id="detail-bata">-</p>
             </div>
           </div>
         </div>
@@ -50,53 +51,57 @@ import trips from '../data/trips.json';
         <!-- Pricing Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <!-- Etios Card -->
-          <div class="border-2 border-blue-200 rounded-xl p-5 hover:border-blue-400 transition">
-            <div class="flex items-center justify-between mb-3">
-              <h4 class="font-bold text-lg text-gray-900">Toyota Etios</h4>
-              <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
+          <div class="border border-m3-outline-variant bg-m3-surface rounded-m3-lg p-5 shadow-m3-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="font-bold text-base text-m3-on-surface font-heading">Toyota Etios</h4>
+                <svg class="w-5 h-5 text-m3-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <div class="space-y-1.5 text-xs text-m3-on-surface-variant mb-4 font-sans">
+                <p>• Comfortable Sedan</p>
+                <p>• 4 Passengers + Driver</p>
+                <p>• Rate: ₹14/km</p>
+              </div>
             </div>
-            <div class="space-y-2 text-sm text-gray-600 mb-4">
-              <p>• Comfortable Sedan</p>
-              <p>• 4 Passengers + Driver</p>
-              <p>• Rate: ₹13/km</p>
-            </div>
-            <div class="bg-blue-50 rounded-lg p-3">
-              <p class="text-gray-600 text-sm mb-1">Estimated Cost</p>
-              <p class="text-2xl font-bold text-blue-600" id="cost-etios">₹0</p>
+            <div class="bg-m3-surface-container-low rounded-m3-md p-3 border border-m3-outline-variant/60">
+              <p class="text-m3-on-surface-variant text-badge font-semibold mb-0.5">Estimated Cost</p>
+              <p class="text-2xl font-black text-m3-on-surface font-heading" id="cost-etios">₹0</p>
             </div>
           </div>
 
           <!-- Innova Card -->
-          <div class="border-2 border-green-200 rounded-xl p-5 hover:border-green-400 transition">
-            <div class="flex items-center justify-between mb-3">
-              <h4 class="font-bold text-lg text-gray-900">Toyota Innova</h4>
-              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-              </svg>
+          <div class="border border-m3-outline-variant bg-m3-surface rounded-m3-lg p-5 shadow-m3-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="font-bold text-base text-m3-on-surface font-heading">Toyota Innova</h4>
+                <svg class="w-5 h-5 text-m3-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+              <div class="space-y-1.5 text-xs text-m3-on-surface-variant mb-4 font-sans">
+                <p>• Premium SUV</p>
+                <p>• 6-7 Passengers + Driver</p>
+                <p>• Rate: ₹18/km</p>
+              </div>
             </div>
-            <div class="space-y-2 text-sm text-gray-600 mb-4">
-              <p>• Premium SUV</p>
-              <p>• 6-7 Passengers + Driver</p>
-              <p>• Rate: ₹18/km</p>
-            </div>
-            <div class="bg-green-50 rounded-lg p-3">
-              <p class="text-gray-600 text-sm mb-1">Estimated Cost</p>
-              <p class="text-2xl font-bold text-green-600" id="cost-innova">₹0</p>
+            <div class="bg-m3-surface-container-low rounded-m3-md p-3 border border-m3-outline-variant/60">
+              <p class="text-m3-on-surface-variant text-badge font-semibold mb-0.5">Estimated Cost</p>
+              <p class="text-2xl font-black text-m3-on-surface font-heading" id="cost-innova">₹0</p>
             </div>
           </div>
         </div>
 
         <!-- Important Notes -->
-        <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-          <h4 class="font-semibold text-yellow-900 mb-2 flex items-center">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-lg p-4 font-sans">
+          <h4 class="font-bold text-xs uppercase tracking-wider text-m3-on-surface mb-2 flex items-center font-heading">
+            <svg class="w-4 h-4 mr-1.5 text-m3-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
             Important Notes
           </h4>
-          <ul class="text-sm text-yellow-800 space-y-1">
+          <ul class="text-xs text-m3-on-surface-variant space-y-1">
             <li>• Prices are indicative and may vary based on season and availability</li>
             <li>• Driver allowance (Bata) is included in the estimate</li>
             <li>• Toll charges and parking fees are additional</li>
@@ -108,16 +113,14 @@ import trips from '../data/trips.json';
         <div class="flex flex-col sm:flex-row gap-3">
           <button 
             id="whatsapp-enquiry"
-            class="flex-1 bg-green-600 text-white font-semibold py-3 rounded-xl hover:bg-green-700 transition flex items-center justify-center"
+            class="flex-1 bg-[#25D366] hover:bg-[#20BD5A] active:bg-[#1EBE5D] text-white font-medium py-3.5 px-6 rounded-m3-full shadow-m3-1 hover:shadow-m3-2 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2.5 text-sm cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2"
           >
-            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-            </svg>
-            Confirm via WhatsApp
+            <WhatsAppIcon variant="two-tone" class="w-5 h-5 shrink-0" />
+            <span>Confirm via WhatsApp</span>
           </button>
           <button 
             id="close-calculator-bottom"
-            class="flex-1 bg-gray-200 text-gray-700 font-semibold py-3 rounded-xl hover:bg-gray-300 transition"
+            class="flex-1 bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface font-semibold py-3.5 rounded-m3-full transition text-sm cursor-pointer"
           >
             Close
           </button>
@@ -139,20 +142,23 @@ import trips from '../data/trips.json';
     currentTrip = trips.find(t => t.id === tripId);
     
     if (currentTrip) {
-      // Calculate costs
+      // Calculate costs with min 250 km/day
       const totalKm = currentTrip.kmOneWay * 2;
-      const durationDays = parseInt(currentTrip.duration);
-      const driverBata = 300 * durationDays;
-      const etiosCost = (totalKm * 13) + driverBata;
-      const innovaCost = (totalKm * 18) + driverBata;
+      const durationDays = parseInt(currentTrip.duration) || 1;
+      const minKm = durationDays * 250;
+      const chargeableKm = Math.max(minKm, totalKm);
+      const etiosBata = 300 * durationDays;
+      const innovaBata = 500 * durationDays;
+      const etiosCost = (chargeableKm * 14) + etiosBata;
+      const innovaCost = (chargeableKm * 18) + innovaBata;
       
       // Update UI
       document.getElementById('modal-title').textContent = currentTrip.title;
       document.getElementById('modal-subtitle').textContent = `${currentTrip.type} Package - ${currentTrip.duration}`;
       document.getElementById('detail-oneway').textContent = `${currentTrip.kmOneWay} km`;
-      document.getElementById('detail-total').textContent = `${totalKm} km`;
+      document.getElementById('detail-total').textContent = `${totalKm} km (${chargeableKm} km min billed)`;
       document.getElementById('detail-duration').textContent = currentTrip.duration;
-      document.getElementById('detail-bata').textContent = `₹${driverBata}`;
+      document.getElementById('detail-bata').textContent = `₹${etiosBata}`;
       document.getElementById('cost-etios').textContent = `₹${etiosCost.toLocaleString('en-IN')}`;
       document.getElementById('cost-innova').textContent = `₹${innovaCost.toLocaleString('en-IN')}`;
       
@@ -175,8 +181,12 @@ import trips from '../data/trips.json';
   // WhatsApp enquiry
   document.getElementById('whatsapp-enquiry')?.addEventListener('click', () => {
     if (currentTrip) {
-      const etiosCost = (currentTrip.kmOneWay * 2 * 13) + (300 * parseInt(currentTrip.duration));
-      const innovaCost = (currentTrip.kmOneWay * 2 * 18) + (300 * parseInt(currentTrip.duration));
+      const totalKm = currentTrip.kmOneWay * 2;
+      const durationDays = parseInt(currentTrip.duration) || 1;
+      const minKm = durationDays * 250;
+      const chargeableKm = Math.max(minKm, totalKm);
+      const etiosCost = (chargeableKm * 14) + (300 * durationDays);
+      const innovaCost = (chargeableKm * 18) + (500 * durationDays);
       const message = encodeURIComponent(
         `Hi! I'm interested in the ${currentTrip.title} package.\n\n` +
         `Estimated Costs:\n` +
@@ -184,7 +194,7 @@ import trips from '../data/trips.json';
         `Innova: ₹${innovaCost.toLocaleString('en-IN')}\n\n` +
         `Please confirm the final pricing and availability.`
       );
-      window.open(`https://wa.me/919952749408?text=${message}`, '_blank');
+      window.open(`https://wa.me/919092303060?text=${message}`, '_blank');
     }
   });
 

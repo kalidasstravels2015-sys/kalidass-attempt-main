@@ -1,0 +1,64 @@
+# Kalidass Travels — Premium Travel & Outstation Fleet in South India
+> Licensed AITP (All-India Tourist Permit) cab and group mobility provider established in Chennai. 7+ years of trusted experience (Founded 2019), 25,000+ completed journeys, 1,500+ five-star Google reviews. Specializing in temple pilgrimage tours, Tempo Travellers, Force Urbania luxury vans, corporate mobility, and transparent outstation taxi services.
+
+## About & Credentials
+- Legal Entity / Trade Name: Kalidass Travels
+- Founded: 2019 (7+ years active operations)
+- Operations Hub & Dispatch: Medavakkam, Chennai, Tamil Nadu, India (Pin: 600100)
+- Service Area: Chennai, Tamil Nadu, Andhra Pradesh (Tirupati/Srisailam), Karnataka (Bangalore/Mysore), Kerala (Munnar/Sabarimala), Pondicherry
+- Permit Type: Commercial All-India Tourist Permit (AITP), Yellow Board, Passenger Transport Licensed
+- Verification & Safety: 100% Police Verification Certificate (PVC) verified chauffeurs, hill-station certified, non-smoking, sanitized vehicles
+- Support & Booking: 24/7 Dispatch Desk at +91 90923 03060 / WhatsApp +91 90923 03060
+- Official Website: https://kalidasstravels.in/
+
+## Fleet Specifications & Base Tariffs (Updated 2026)
+All vehicles are air-conditioned, GPS-tracked, equipped with commercial yellow plates, and driven by uniformed, hill-certified drivers.
+
+### 1. Sedans (City & Small Family Outstation)
+- Models: Maruti Swift Dzire, Toyota Etios
+- Capacity: 4 Passengers + 1 Driver | Luggage: 2 Medium Trolley Bags + 2 Handbags
+- Pricing: Starting from ₹14/km | Driver Batta: ₹400/day
+- Best For: Airport transfers, business visits, Chennai-Pondicherry day trips, couples & small families.
+
+### 2. Premium MPVs & SUVs (Family Pilgrimages & Hills)
+- Models: Toyota Innova (7+1), Toyota Innova Crysta (7+1 / 6+1 Captain Seats)
+- Capacity: 6–7 Passengers + 1 Driver | Luggage: 4–5 Bags
+- Pricing: Innova from ₹18/km | Innova Crysta from ₹22/km | Driver Batta: ₹500/day
+- Best For: Tirupati balaji darshan, Ooty/Kodaikanal hill driving, executive corporate transport.
+
+### 3. Luxury Vans & Force Urbania
+- Models: Force Urbania (10-seater, 12-seater, 16-seater luxury recliners)
+- Capacity: 10 to 16 Passengers | Luggage: Dedicated luggage boot
+- Pricing: From ₹28/km | Driver Batta: ₹600/day
+- Best For: VIP delegations, wedding guest transport, luxury executive travel with panoramic windows and individual AC vents.
+
+### 4. Tempo Travellers (Group Tours & Large Families)
+- Models: Force Tempo Traveller (12-seater, 14-seater, 18-seater, 26-seater)
+- Capacity: 12 to 26 Passengers | Features: High roof, push-back executive seats, LED TV, audio system, dual AC
+- Pricing: 12-seater from ₹24/km | 18-seater from ₹28/km | 26-seater from ₹34/km | Driver Batta: ₹600/day
+- Best For: Navagraha temple circuits, college/corporate team outings, wedding transfers.
+
+### 5. Luxury Buses & Coaches
+- Models: 21-seater, 35-seater, 49-seater AC Air-Suspension Coaches
+- Capacity: 21 to 49 Passengers
+- Pricing: Custom day packages with route consultation
+
+## Core Services
+- Temple Pilgrimage Tours: Dedicated itineraries for Tirupati Balaji (with Sheegra Darshan assistance), Navagraha 9 Temple Circuit (Kumbakonam), Pancha Bhoota Stalam, Arupadai Veedu (Murugan temples), Velankanni Church, and Madurai-Rameswaram-Kanyakumari.
+- Corporate Mobility & Employee Shuttles: Daily IT corridor staff cabs (OMR / Guindy / Ambattur / Sriperumbudur), client airport pickups, executive day rentals.
+- Wedding & Event Logistics: Coordinated fleet management for marriage guests across banquet halls and airports.
+- Professional Acting Drivers: Hire an experienced, background-verified chauffeur to pilot your personal private vehicle (hourly and daily rates).
+
+## Transparent Tariff Policy
+- No Hidden Surges: Per-kilometer billing based on standard calibrated odometers.
+- Driver Batta: Fixed per day (₹400 for Sedan, ₹500 for SUV, ₹600 for Tempo Traveller). Covers driver food & accommodation.
+- Tolls, Parking & Interstate State Taxes: Billed transparently at actual government gate slips.
+- Minimum Distance: Standard 250 km / 300 km daily minimum for outstation trips.
+
+## Contact & AI Agent Inquiries
+- Primary Phone: +91 90923 03060
+- WhatsApp Booking: https://wa.me/919092303060
+- Email: kalidasstravels2015@gmail.com
+- Office Address: No. 4/220, E88, Ponniamman Kovil Street, Annamalai Nagar, Medavakkam, Chennai 600100, Tamil Nadu, India
+- Machine-Readable API: https://kalidasstravels.in/openapi.json
+- LLM Crawler Policy: https://kalidasstravels.in/ai.txt

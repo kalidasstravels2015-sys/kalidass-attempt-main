@@ -144,14 +144,16 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
   };
 
   return (
-    <div className="w-full bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden max-w-md mx-auto font-sans p-6 text-slate-900">
+    <div className="w-full bg-m3-surface rounded-m3-xl shadow-m3-2 border border-m3-outline-variant overflow-hidden max-w-md mx-auto font-sans p-6 text-m3-on-surface">
        <div className="flex flex-col items-center text-center gap-2 mb-6">
-         <Car className="w-10 h-10 text-green-600" />
+         <div className="w-12 h-12 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center text-m3-primary">
+           <Car className="w-6 h-6 text-m3-primary" />
+         </div>
          <div>
-           <h3 className="font-bold text-slate-900 text-xl">
+           <h3 className="font-bold text-m3-on-surface text-xl font-heading">
              Vehicle Relocation Quote
            </h3>
-           <p className="text-xs text-slate-500">
+           <p className="text-xs text-m3-on-surface-variant font-normal">
              Estimate your relocation cost
            </p>
          </div>
@@ -159,108 +161,93 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
        
        <div className="space-y-4">
          <div>
-           <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1.5">
-             <span className="lang-en">Pickup City</span>
-             <span className="lang-ta">புறப்படும் நகரம்</span>
+           <label className="block text-badge font-bold text-m3-on-surface-variant uppercase mb-1.5">
+             Pickup City
            </label>
            <div className="relative">
-             <MapPin className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
-             <input 
-               ref={pickupRef}
-               type="text" 
-               placeholder="e.g. Coimbatore"
-               className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm font-medium"
-               onChange={(e) => setPickup(e.target.value)}
-             />
-           </div>
-         </div>
+             <MapPin className="absolute left-3.5 top-3.5 w-4 h-4 text-m3-on-surface-variant" />
+              <input 
+                ref={pickupRef}
+                type="text" 
+                placeholder="e.g. Coimbatore"
+                className="w-full pl-10 pr-4 py-3 bg-m3-surface border border-m3-outline rounded-m3-md focus:border-m3-primary focus:ring-2 focus:ring-m3-primary outline-none text-sm font-medium text-m3-on-surface transition-all"
+                onChange={(e) => setPickup(e.target.value)}
+              />
+            </div>
+          </div>
 
-         <div>
-           <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1.5">
-             <span className="lang-en">Drop City</span>
-             <span className="lang-ta">சேரும் நகரம்</span>
-           </label>
-           <div className="relative">
-             <Navigation className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
-             <input 
-               ref={dropRef}
-               type="text" 
-               placeholder="e.g. Chennai"
-               className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm font-medium"
-               onChange={(e) => setDrop(e.target.value)}
-             />
-           </div>
-         </div>
+          <div>
+            <label className="block text-badge font-bold text-m3-on-surface-variant uppercase mb-1.5">
+              Drop City
+            </label>
+            <div className="relative">
+              <Navigation className="absolute left-3.5 top-3.5 w-4 h-4 text-m3-on-surface-variant" />
+              <input 
+                ref={dropRef}
+                type="text" 
+                placeholder="e.g. Chennai"
+                className="w-full pl-10 pr-4 py-3 bg-m3-surface border border-m3-outline rounded-m3-md focus:border-m3-primary focus:ring-2 focus:ring-m3-primary outline-none text-sm font-medium text-m3-on-surface transition-all"
+                onChange={(e) => setDrop(e.target.value)}
+              />
+            </div>
+          </div>
 
-         <button 
-           onClick={calculateCost}
-           disabled={loading}
-           className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 rounded-xl transition-all flex items-center justify-center shadow-lg disabled:opacity-70"
-         >
-           {loading ? (
-             <>
-               <span className="lang-en">Calculating...</span>
-               <span className="lang-ta">கணக்கிடுகிறது...</span>
-             </>
-           ) : (
-             <span className="flex items-center">
-               <span className="lang-en">Calculate Cost</span>
-               <span className="lang-ta">செலவை கணக்கிடு</span>
-               <ArrowRight className="w-4 h-4 ml-2" />
-             </span>
-           )}
-         </button>
+          <button 
+            onClick={calculateCost}
+            disabled={loading}
+            className="w-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary font-bold py-3.5 rounded-m3-full transition-all flex items-center justify-center shadow-m3-2 hover:shadow-m3-3 disabled:opacity-70 active:scale-[0.98] cursor-pointer text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary focus-visible:ring-offset-2"
+          >
+            {loading ? (
+              <span>Calculating...</span>
+            ) : (
+              <span className="flex items-center">
+                <span>Calculate Cost</span>
+                <ArrowRight className="w-4 h-4 ml-2 text-white" />
+              </span>
+            )}
+          </button>
 
-         <div className="mt-3 p-3 bg-yellow-50 border border-yellow-100 rounded-lg flex gap-2 items-start">
-           <Info className="w-4 h-4 text-yellow-600 shrink-0 mt-0.5" />
-           <p className="text-xs text-yellow-800 leading-relaxed font-medium">
-             <span className="font-bold">
-               <span className="lang-en">Note:</span>
-               <span className="lang-ta">குறிப்பு:</span>
-             </span>
-             <span className="lang-en"> Fuel & Tolls are extra. Driver travel cost is reimbursed at actuals (Bus/Train).</span>
-             <span className="lang-ta"> எரிபொருள் & சுங்கச்சாவடி கட்டணம் தனி. ஓட்டுநர் பயண செலவு (பேருந்து/ரயில்) திரும்ப வழங்கப்படும்.</span>
-           </p>
-         </div>
+          <div className="mt-3 p-3.5 bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-md flex gap-2.5 items-start">
+            <Info className="w-4 h-4 text-m3-primary shrink-0 mt-0.5" />
+            <p className="text-xs text-m3-on-surface-variant leading-relaxed font-medium font-sans">
+              <span className="font-bold">Note:</span> Fuel & Tolls are extra. Driver travel cost is reimbursed at actuals (Bus/Train).
+            </p>
+          </div>
        </div>
 
        {result && (
-         <div className="mt-6 pt-6 border-t border-slate-100 animate-in fade-in slide-in-from-top-2">
+         <div className="mt-6 pt-6 border-t border-m3-outline-variant/50 animate-in fade-in slide-in-from-top-2">
            <div className="flex justify-between items-end mb-4">
              <div>
-               <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">
-                 <span className="lang-en">Estimated Total</span>
-                 <span className="lang-ta">மொத்த மதிப்பீடு</span>
+               <p className="text-micro font-bold text-m3-on-surface-variant uppercase mb-1">
+                 Estimated Total
                </p>
-               <p className="text-3xl font-extrabold text-slate-900 tracking-tight">₹{result.total}</p>
+               <p className="text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">₹{result.total}</p>
              </div>
              <div className="text-right">
-               <p className="text-sm font-bold text-slate-600">{result.dist} km</p>
-               <p className="text-xs text-slate-400">{result.duration}</p>
+               <p className="text-sm font-bold text-m3-on-surface font-heading">{result.dist} km</p>
+               <p className="text-xs text-m3-on-surface-variant">{result.duration}</p>
              </div>
            </div>
 
-           <div className="space-y-2 text-sm bg-slate-50 p-3 rounded-lg">
+           <div className="space-y-2 text-sm bg-m3-surface-container-low p-3.5 rounded-m3-md border border-m3-outline-variant/60 font-sans">
              <div className="flex justify-between">
-               <span className="text-slate-600">
-                 <span className="lang-en">Driver Bata</span>
-                 <span className="lang-ta">ஓட்டுநர் பேட்டா</span>
+               <span className="text-m3-on-surface-variant">
+                 Driver Bata
                </span>
-               <span className="font-bold text-slate-900">₹{result.breakdown.bata}</span>
+               <span className="font-bold text-m3-on-surface">₹{result.breakdown.bata}</span>
              </div>
              <div className="flex justify-between">
-               <span className="text-slate-600">
-                 <span className="lang-en">Food Allowance</span>
-                 <span className="lang-ta">உணவு படி</span>
+               <span className="text-m3-on-surface-variant">
+                 Food Allowance
                </span>
-               <span className="font-bold text-slate-900">₹{result.breakdown.food}</span>
+               <span className="font-bold text-m3-on-surface">₹{result.breakdown.food}</span>
              </div>
              <div className="flex justify-between">
-               <span className="text-slate-600">
-                 <span className="lang-en">Return Travel (Est)</span>
-                 <span className="lang-ta">திரும்பும் பயணம் (மதிப்பீடு)</span>
+               <span className="text-m3-on-surface-variant">
+                 Return Travel (Est)
                </span>
-               <span className="font-bold text-slate-900">₹{result.breakdown.bus}</span>
+               <span className="font-bold text-m3-on-surface">₹{result.breakdown.bus}</span>
              </div>
            </div>
          </div>

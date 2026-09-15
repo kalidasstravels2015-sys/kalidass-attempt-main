@@ -1,308 +1,64 @@
 ---
+import FAQAccordion from "./FAQAccordion.astro";
+
+const faqs = [
+  {
+    q: "Do you offer one-way drop taxi services from Chennai to other cities?",
+    a: "Yes! We provide reliable one-way drop taxi services from Chennai to major destinations including Bangalore, Coimbatore, Trichy, Madurai, Salem, Pondicherry, and Vellore. You only pay for the one-way distance traveled without return charges."
+  },
+  {
+    q: "How is the outstation taxi fare calculated? Are there hidden fees?",
+    a: "Our pricing is 100% transparent with zero hidden charges. Outstation fares are calculated based on actual kilometers with a standard minimum of 250 km/day. Night driving charges and driver allowances are clearly mentioned before booking confirmation."
+  },
+  {
+    q: "Are driver batta, toll charges, and interstate permit taxes included?",
+    a: "Our package quotes include driver batta (daily allowance). Fastag highway toll fees, airport/temple parking charges, and interstate state entry permits (e.g., entering AP/Karnataka/Kerala) are paid directly as per actuals."
+  },
+  {
+    q: "What vehicles are available for temple tour packages and family trips?",
+    a: "We have a comprehensive fleet for all group sizes: Swift Dzire & Toyota Etios (up to 4 passengers), Innova & Innova Crysta (6-7 passengers), and Tempo Travellers (12 to 20 seats) equipped with carrier space and pushback seats."
+  },
+  {
+    q: "Do you provide 24/7 airport pickup and drop at Chennai Airport (MAA)?",
+    a: "Yes, we operate round-the-clock airport transfers for both Domestic and International terminals. Our driver tracks your flight status to adjust for delays, greeting you at the arrival pickup point."
+  },
+  {
+    q: "Can I hire acting drivers / temporary chauffeurs for my own car?",
+    a: "Yes, our certified Acting Driver service provides police-verified, experienced chauffeurs for manual and automatic cars within Chennai city, daily office commutes, night driving, or outstation family trips in your personal vehicle."
+  },
+  {
+    q: "Is night travel safe with Kalidass Travels drivers?",
+    a: "Passenger safety is our highest priority. All our drivers undergo police background verification, possess 5+ years of highway driving experience, and follow strict non-alcoholic and fatigue-management safety protocols."
+  },
+  {
+    q: "What is your cancellation and refund policy?",
+    a: "We offer hassle-free cancellation. For standard local and outstation taxi bookings, cancellations made up to 4 hours before scheduled pickup incur zero cancellation fees."
+  },
+  {
+    q: "Can I customize our temple tour or holiday itinerary midway?",
+    a: "Absolutely. All our pilgrimage packages (Tirupati, Navagraha, Thiruvannamalai, Rameswaram) are flexible. You can request additional temple stops or dining breaks along the route with your chauffeur."
+  },
+  {
+    q: "How far in advance should I book my trip?",
+    a: "For local city trips and airport transfers, 2 to 4 hours advance notice is sufficient. For weekend temple pilgrimages, outstation tours, and festival periods (Girivalam, Pongal, Diwali), booking 24-48 hours ahead is recommended."
+  }
+];
 ---
 
-<section class="py-12 bg-gray-50 border-t border-gray-200">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-10">
-      <h2 class="text-3xl font-extrabold text-gray-900 mb-4">
-        Common Questions About Taxi Services in Chennai
+<section id="faq" class="py-10 md:py-14 bg-m3-surface-container-low border-t border-m3-outline-variant/60">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Section Header -->
+    <div class="text-center max-w-3xl mx-auto mb-8">
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+        Frequently Asked <span class="text-m3-primary">Questions</span>
       </h2>
-      <p class="text-gray-600">
-        Find answers to frequently asked questions about our temple tours, corporate travel, and outstation cabs.
+      <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant font-normal max-w-2xl mx-auto leading-relaxed mb-6 font-sans">
+        Transparent answers about our taxi rates, booking process, driver safety, and outstation trips.
       </p>
     </div>
 
-    <div class="space-y-4">
-      <!-- FAQ Item 1 -->
-      <details class="group bg-white rounded-lg shadow-sm">
-        <summary
-          class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
-        >
-          <span class="text-gray-900 font-semibold">
-            Do you offer one-way drops from Chennai to other cities?
-          </span>
-          <span class="transition group-open:rotate-180">
-            <svg
-              fill="none"
-              height="24"
-              shape-rendering="geometricPrecision"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-              width="24"><path d="M6 9l6 6 6-6"></path></svg
-            >
-          </span>
-        </summary>
-        <div class="text-gray-600 px-6 pb-6">
-          <p>
-            Yes, we provide affordable one-way drop taxi services from Chennai to major cities like Bangalore, Coimbatore, Trichy, and Madurai. You only pay for the one-way distance traveled.
-          </p>
-        </div>
-      </details>
-
-      <!-- FAQ Item 2 -->
-      <details class="group bg-white rounded-lg shadow-sm">
-        <summary
-          class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
-        >
-          <span class="text-gray-900 font-semibold">
-            What vehicles are available for temple tour packages?
-          </span>
-          <span class="transition group-open:rotate-180">
-            <svg
-              fill="none"
-              height="24"
-              shape-rendering="geometricPrecision"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-              width="24"><path d="M6 9l6 6 6-6"></path></svg
-            >
-          </span>
-        </summary>
-        <div class="text-gray-600 px-6 pb-6">
-          <p>
-            We have a diverse fleet suitable for all group sizes, including Swift Dzire (4 pax), Toyota Etios (4 pax), Innova Crysta (6-7 pax), and Tempo Traveller (12+ pax) for larger family pilgrimages to Tirupati, Rameswaram, and Navagraha temples.
-          </p>
-        </div>
-      </details>
-
-      <!-- FAQ Item 3 -->
-      <details class="group bg-white rounded-lg shadow-sm">
-        <summary
-          class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
-        >
-          <span class="text-gray-900 font-semibold">
-            Are driver batta and toll charges included?
-          </span>
-          <span class="transition group-open:rotate-180">
-            <svg
-              fill="none"
-              height="24"
-              shape-rendering="geometricPrecision"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-              width="24"><path d="M6 9l6 6 6-6"></path></svg
-            >
-          </span>
-        </summary>
-        <div class="text-gray-600 px-6 pb-6">
-          <p>
-            Our package estimates usually include driver batta. However, toll gate charges, parking fees, and interstate permit taxes are to be paid directly by the guest as per actuals.
-          </p>
-        </div>
-      </details>
-
-      <!-- FAQ Item 4 -->
-      <details class="group bg-white rounded-lg shadow-sm">
-        <summary
-          class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
-        >
-          <span class="text-gray-900 font-semibold">
-            Do you offer airport pickup and drop services?
-          </span>
-          <span class="transition group-open:rotate-180">
-            <svg
-              fill="none"
-              height="24"
-              shape-rendering="geometricPrecision"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-              width="24"><path d="M6 9l6 6 6-6"></path></svg
-            >
-          </span>
-        </summary>
-        <div class="text-gray-600 px-6 pb-6">
-          <p>
-            Yes, we provide 24/7 reliable airport taxi services for Chennai International Airport (MAA). Pre-book your ride to ensure on-time pickup or drop-off.
-          </p>
-        </div>
-      </details>
-
-      <!-- FAQ Item 5 -->
-      <details class="group bg-white rounded-lg shadow-sm">
-        <summary
-          class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
-        >
-          <span class="text-gray-900 font-semibold">
-            Can I book a cab for local Chennai sightseeing?
-          </span>
-          <span class="transition group-open:rotate-180">
-            <svg
-              fill="none"
-              height="24"
-              shape-rendering="geometricPrecision"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-              width="24"><path d="M6 9l6 6 6-6"></path></svg
-            >
-          </span>
-        </summary>
-        <div class="text-gray-600 px-6 pb-6">
-          <p>
-            Absolutely! We offer 8hrs/80km and 12hrs/120km packages for local city tours, shopping, and beach visits within Chennai.
-          </p>
-        </div>
-      </details>
-
-      <!-- FAQ Item 6 -->
-      <details class="group bg-white rounded-lg shadow-sm">
-        <summary
-          class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
-        >
-          <span class="text-gray-900 font-semibold">
-            Is it safe for night travel?
-          </span>
-          <span class="transition group-open:rotate-180">
-            <svg
-              fill="none"
-              height="24"
-              shape-rendering="geometricPrecision"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-              width="24"><path d="M6 9l6 6 6-6"></path></svg
-            >
-          </span>
-        </summary>
-        <div class="text-gray-600 px-6 pb-6">
-          <p>
-            Yes, safety is our priority. All our drivers are background-verified and experienced in night driving. We also track our vehicles for added security.
-          </p>
-        </div>
-      </details>
-
-      <!-- FAQ Item 7 -->
-      <details class="group bg-white rounded-lg shadow-sm">
-        <summary
-          class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
-        >
-          <span class="text-gray-900 font-semibold">
-            How do I pay for the ride?
-          </span>
-          <span class="transition group-open:rotate-180">
-            <svg
-              fill="none"
-              height="24"
-              shape-rendering="geometricPrecision"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-              width="24"><path d="M6 9l6 6 6-6"></path></svg
-            >
-          </span>
-        </summary>
-        <div class="text-gray-600 px-6 pb-6">
-          <p>
-            You can pay via cash, Google Pay, PhonePe, or bank transfer directly to the driver or owner after the trip completion.
-          </p>
-        </div>
-      </details>
-
-      <!-- FAQ Item 8 -->
-      <details class="group bg-white rounded-lg shadow-sm">
-        <summary
-          class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
-        >
-          <span class="text-gray-900 font-semibold">
-            Do you offer corporate employee transportation?
-          </span>
-          <span class="transition group-open:rotate-180">
-            <svg
-              fill="none"
-              height="24"
-              shape-rendering="geometricPrecision"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-              width="24"><path d="M6 9l6 6 6-6"></path></svg
-            >
-          </span>
-        </summary>
-        <div class="text-gray-600 px-6 pb-6">
-          <p>
-            Yes, we specialize in corporate employee pickup and drops, as well as monthly cab services for companies in OMR, Guindy, and Siruseri IT parks.
-          </p>
-        </div>
-      </details>
-
-      <!-- FAQ Item 9 -->
-      <details class="group bg-white rounded-lg shadow-sm">
-        <summary
-          class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
-        >
-          <span class="text-gray-900 font-semibold">
-            Can I customize my tour package?
-          </span>
-          <span class="transition group-open:rotate-180">
-            <svg
-              fill="none"
-              height="24"
-              shape-rendering="geometricPrecision"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-              width="24"><path d="M6 9l6 6 6-6"></path></svg
-            >
-          </span>
-        </summary>
-        <div class="text-gray-600 px-6 pb-6">
-          <p>
-            Yes, all our temple tour and holiday packages are fully customizable. Tell us your preferred destinations, and we will plan the itinerary for you.
-          </p>
-        </div>
-      </details>
-
-      <!-- FAQ Item 10 -->
-      <details class="group bg-white rounded-lg shadow-sm">
-        <summary
-          class="flex justify-between items-center font-medium cursor-pointer list-none p-6"
-        >
-          <span class="text-gray-900 font-semibold">
-            How far in advance should I book?
-          </span>
-          <span class="transition group-open:rotate-180">
-            <svg
-              fill="none"
-              height="24"
-              shape-rendering="geometricPrecision"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-              width="24"><path d="M6 9l6 6 6-6"></path></svg
-            >
-          </span>
-        </summary>
-        <div class="text-gray-600 px-6 pb-6">
-          <p>
-            For local trips, 4 hours notice is sufficient. For outstation and long temple tours, we recommend booking at least 24-48 hours in advance to secure the best vehicle.
-          </p>
-        </div>
-      </details>
-    </div>
+    <!-- 2-Column Space-Efficient Accordion Grid -->
+    <FAQAccordion items={faqs} columns={2} />
   </div>
 </section>
 
@@ -311,87 +67,13 @@
   set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "Do you offer one-way drops from Chennai to other cities?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Yes, we provide affordable one-way drop taxi services from Chennai to major cities like Bangalore, Coimbatore, Trichy, and Madurai. You only pay for the one-way distance traveled.",
-        },
+    mainEntity: faqs.map(faq => ({
+      "@type": "Question",
+      name: faq.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.a,
       },
-      {
-        "@type": "Question",
-        name: "What vehicles are available for temple tour packages?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "We have a diverse fleet suitable for all group sizes, including Swift Dzire (4 pax), Toyota Etios (4 pax), Innova Crysta (6-7 pax), and Tempo Traveller (12+ pax) for larger family pilgrimages.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Are driver batta and toll charges included?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Our package estimates usually include driver batta. However, toll gate charges, parking fees, and interstate permit taxes are to be paid directly by the guest as per actuals.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Do you offer airport pickup and drop services?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Yes, we provide 24/7 reliable airport taxi services for Chennai International Airport (MAA).",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Can I book a cab for local Chennai sightseeing?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Absolutely! We offer 8hrs/80km and 12hrs/120km packages for local city tours, shopping, and beach visits within Chennai.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Is it safe for night travel?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Yes, safety is our priority. All our drivers are background-verified and experienced in night driving.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "What are the key highlights of your service?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Clean and sanitized cars, experienced and polite drivers, transparent pricing with no hidden costs, and 24/7 customer support.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "How much should I pay for driver food during outstation trips?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "The driver will take care of their own food and accommodation arrangements. You do not need to pay extra for this.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Can I customize the tour itinerary?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Yes, all our temple tour and holiday packages are fully customizable. Tell us your preferred destinations, and we will plan the itinerary for you.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "How far in advance should I book?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "For local trips, 4 hours notice is sufficient. For outstation and long temple tours, we recommend booking at least 24-48 hours in advance to secure the best vehicle.",
-        },
-      },
-    ],
+    })),
   })}
 />

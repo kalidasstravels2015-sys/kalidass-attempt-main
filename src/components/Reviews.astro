@@ -3,15 +3,20 @@ import siteContent from '../data/siteContent.json';
 const reviews = siteContent.reviews.slice(0, 5);
 ---
 
-<section id="reviews" class="py-10 md:py-16 bg-gray-50">
+<section id="reviews" class="py-10 md:py-16 bg-m3-surface-container-low">
   <div class="max-w-7xl mx-auto px-4">
     <!-- Section Header -->
     <div class="text-center mb-8">
-      <h2 class="text-2xl md:text-4xl font-extrabold text-gray-900 inline-block relative mb-3">
-        Client Reviews
-        <div class="absolute bottom-[-8px] left-1/2 transform -translate-x-1/2 w-16 h-1 bg-red-600 rounded-full"></div>
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
+        <span class="material-symbols-outlined text-[16px] text-[#4285F4]">location_on</span>
+        <span class="font-bold text-m3-on-surface">Google Verified Reviews</span>
+        <span class="text-m3-on-surface-variant">•</span>
+        <span class="text-amber-500 font-bold">4.9/5 Rating</span>
+      </div>
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+        Customer <span class="text-m3-primary">Experiences</span>
       </h2>
-      <p class="text-base text-gray-600 max-w-2xl mx-auto mt-2">
+      <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant font-normal max-w-2xl mx-auto leading-relaxed mb-6 font-sans">
         Hear from our happy customers about their journey with us.
       </p>
     </div>
@@ -19,16 +24,16 @@ const reviews = siteContent.reviews.slice(0, 5);
     <!-- Reviews Scroll -->
     <div class="flex overflow-x-auto gap-4 pb-6 scrollbar-hide snap-x">
       {reviews.map((review) => (
-        <div class="flex-none w-64 sm:w-80 bg-white p-6 rounded-xl shadow-sm border border-gray-100 snap-center flex flex-col justify-between">
+        <div class="flex-none w-64 sm:w-80 bg-m3-surface p-6 rounded-m3-xl shadow-m3-1 border border-m3-outline-variant snap-center flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-3">
               <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-sm">
+                <div class="w-8 h-8 bg-m3-surface-container-high rounded-m3-full flex items-center justify-center text-m3-primary text-xs font-bold shadow-m3-1 border border-m3-outline-variant">
                   {review.name.charAt(0)}
                 </div>
                 <div>
-                  <span class="block text-sm font-bold text-gray-900 leading-none">{review.name}</span>
-                  <div class="flex text-yellow-400 text-[10px] mt-1">
+                  <span class="block text-sm font-bold text-m3-on-surface leading-none font-heading">{review.name}</span>
+                  <div class="flex text-amber-400 text-micro mt-1">
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
@@ -37,19 +42,21 @@ const reviews = siteContent.reviews.slice(0, 5);
                   </div>
                 </div>
               </div>
-              <div class="text-blue-500 opacity-20">
+              <div class="text-m3-primary opacity-30">
                 <i class="fab fa-google text-xl"></i>
               </div>
             </div>
-            <p class="text-sm text-gray-600 italic leading-relaxed">"{review.quote}"</p>
+            <p class="text-sm text-m3-on-surface-variant italic leading-relaxed font-sans">"{review.quote}"</p>
           </div>
         </div>
       ))}
     </div>
 
     <div class="text-center mt-6">
-      <a href="https://maps.app.goo.gl/i2LdJhWMi2ZgAiCa8" target="_blank" class="inline-flex items-center text-blue-600 font-bold text-sm hover:text-blue-700 transition">
-        See More Reviews on Google <i class="fas fa-arrow-right ml-2"></i>
+      <a href="https://maps.app.goo.gl/i2LdJhWMi2ZgAiCa8" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-m3-primary font-bold text-sm hover:underline transition group">
+        <span class="material-symbols-outlined text-[16px] text-[#4285F4]">location_on</span>
+        <span>See More Reviews on Google Maps</span>
+        <span class="material-symbols-outlined text-[16px] text-emerald-500 transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
       </a>
     </div>
   </div>

@@ -1,0 +1,129 @@
+---
+import { ShieldCheck, Star, Users, CheckCircle2, ArrowRight } from "lucide-react";
+
+const reviews = [
+  {
+    name: "Dr. R. Venkataraman",
+    role: "Tirupati Balaji Darshan",
+    quote: "Very punctual and polite driver. Arranged everything smoothly for my family's temple visit with zero stress.",
+    rating: 5,
+  },
+  {
+    name: "Karthik Raja",
+    role: "OMR Corporate Commute",
+    quote: "Clean and sanitized Innova on time every day. Transparent per-km billing without hidden surprises.",
+    rating: 5,
+  },
+  {
+    name: "Meenakshi Sundaram",
+    role: "Navagraha Temple Tour",
+    quote: "Completed a 3-day Kumbakonam trip with senior citizens. Driver drove safely and knew all temple opening timings.",
+    rating: 5,
+  },
+];
+---
+
+<section id="trust-strip" class="py-10 md:py-16 bg-m3-surface-container-low border-t border-m3-outline-variant/60">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center max-w-3xl mx-auto mb-8">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold tracking-wide mb-3.5 shadow-m3-1">
+        <span class="w-2 h-2 rounded-full bg-m3-secondary"></span>
+        <span>Trusted &amp; Verified</span>
+      </div>
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+        Why 10,000+ Travelers <span class="text-m3-primary">Choose Us</span>
+      </h2>
+      <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant font-normal max-w-2xl mx-auto leading-relaxed mb-6 font-sans">
+        Reliable commercial-plate cabs, police-verified chauffeurs, and 100% transparent per-km billing.
+      </p>
+    </div>
+
+    <!-- 4 Trust Badges Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8">
+      <div class="bg-m3-surface p-3.5 sm:p-4 rounded-m3-xl border border-m3-outline-variant shadow-m3-1 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-m3-lg bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center text-gold-600 shrink-0">
+          <Star className="w-5 h-5 fill-gold-600 text-gold-600" />
+        </div>
+        <div>
+          <p class="text-base sm:text-lg font-extrabold text-m3-on-surface leading-none font-heading">4.9 / 5.0</p>
+          <p class="text-badge text-m3-on-surface-variant font-medium mt-0.5">1,200+ Google Reviews</p>
+        </div>
+      </div>
+
+      <div class="bg-m3-surface p-3.5 sm:p-4 rounded-m3-xl border border-m3-outline-variant shadow-m3-1 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-m3-lg bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center text-m3-primary shrink-0">
+          <ShieldCheck className="w-5 h-5 text-m3-primary" />
+        </div>
+        <div>
+          <p class="text-base sm:text-lg font-extrabold text-m3-on-surface leading-none font-heading">100% Verified</p>
+          <p class="text-badge text-m3-on-surface-variant font-medium mt-0.5">Police Checked Drivers</p>
+        </div>
+      </div>
+
+      <div class="bg-m3-surface p-3.5 sm:p-4 rounded-m3-xl border border-m3-outline-variant shadow-m3-1 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-m3-lg bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center text-m3-primary shrink-0">
+          <CheckCircle2 className="w-5 h-5 text-m3-primary" />
+        </div>
+        <div>
+          <p class="text-base sm:text-lg font-extrabold text-m3-on-surface leading-none font-heading">Zero Advance</p>
+          <p class="text-badge text-m3-on-surface-variant font-medium mt-0.5">Pay Post-Trip Comfort</p>
+        </div>
+      </div>
+
+      <div class="bg-m3-surface p-3.5 sm:p-4 rounded-m3-xl border border-m3-outline-variant shadow-m3-1 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-m3-lg bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center text-m3-primary shrink-0">
+          <Users className="w-5 h-5 text-m3-primary" />
+        </div>
+        <div>
+          <p class="text-base sm:text-lg font-extrabold text-m3-on-surface leading-none font-heading">24/7 Support</p>
+          <p class="text-badge text-m3-on-surface-variant font-medium mt-0.5">Live GPS &amp; Helpline</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 Compact Testimonial Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-6">
+      {reviews.map((rev) => (
+        <div class="bg-m3-surface p-4 sm:p-5 rounded-m3-xl border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-1 mb-2">
+              {[...Array(rev.rating)].map(() => (
+                <Star className="w-3.5 h-3.5 fill-gold-600 text-gold-600" />
+              ))}
+            </div>
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed italic mb-3 font-sans">"{rev.quote}"</p>
+          </div>
+          <div class="flex items-center justify-between border-t border-m3-outline-variant/60 pt-2.5">
+            <div>
+              <p class="text-xs font-bold text-m3-on-surface font-heading">{rev.name}</p>
+              <p class="text-micro text-m3-on-surface-variant font-medium">{rev.role}</p>
+            </div>
+            <span class="text-micro font-bold text-m3-on-surface bg-m3-surface-container-high px-2 py-0.5 rounded-m3-full border border-m3-outline-variant">
+              Verified Trip
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Quick Navigation Links -->
+    <div class="flex flex-wrap items-center justify-center gap-3 text-xs sm:text-sm">
+      <a
+        href="/drivers/"
+        class="inline-flex items-center gap-1.5 text-m3-primary font-bold hover:underline py-1 px-3.5 rounded-m3-full hover:bg-m3-primary-container/30 transition-colors"
+      >
+        <span>Meet Our 12+ Professional Chauffeurs</span>
+        <ArrowRight className="w-3.5 h-3.5" />
+      </a>
+      <span class="text-m3-outline hidden sm:inline">•</span>
+      <a
+        href="/#safety"
+        class="inline-flex items-center gap-1.5 text-m3-on-surface-variant font-semibold hover:text-m3-on-surface py-1 px-3.5 rounded-m3-full hover:bg-m3-surface-container transition-colors"
+      >
+        <span>View Safety &amp; Government Guidelines</span>
+        <ArrowRight className="w-3.5 h-3.5" />
+      </a>
+    </div>
+  </div>
+</section>

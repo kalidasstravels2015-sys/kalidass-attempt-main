@@ -7,27 +7,56 @@ import Breadcrumbs from "../components/SEO/Breadcrumbs.astro";
 
 const breadcrumbItems = [
   { name: "Home", item: "/" },
-  { name: "Calculator", item: "/calculator" },
+  { name: "Calculator", item: "/calculator/" },
 ];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Kalidass Travels Cost Estimator",
+  "url": "https://kalidasstravels.in/calculator/",
+  "applicationCategory": "TravelApplication",
+  "operatingSystem": "All",
+  "description": "Calculate instant transparent fares for Outstation Taxi, Chennai Acting Drivers, and Interstate Vehicle Relocation.",
+  "offers": {
+    "@type": "AggregateOffer",
+    "priceCurrency": "INR",
+    "lowPrice": "600",
+    "highPrice": "35000",
+    "offerCount": "15"
+  },
+  "featureList": [
+    "One-Way and Round-Trip Taxi Fare Estimation",
+    "Acting Driver Hourly and Daily Fee Calculator",
+    "Interstate Vehicle Relocation Cost Estimation",
+    "Zero Surge Pricing Transparent Breakdown"
+  ]
+};
 ---
 
 <Layout
-  title="Travel Cost Estimator | Kalidass Travels"
-  description="Calculate costs for Taxi, Acting Drivers, and Vehicle Relocation services."
+  title="Travel Cost Estimator | Cabs & Acting Driver Fare Calculator - Kalidass Travels"
+  description="Calculate instant, transparent travel costs for outstation cabs, hourly acting drivers, and personal car relocations in Chennai. Zero surge pricing."
+  schema={schema}
 >
   <Breadcrumbs items={breadcrumbItems} />
-  <div class="bg-slate-50 min-h-screen pt-12 pb-12">
+  <main class="bg-m3-surface-container-low text-m3-on-surface min-h-screen pt-6 pb-12 font-sans">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-slate-900 mb-4">
-          Travel Cost Estimator
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span>Instant Cost Calculations</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+          Travel Cost <span class="text-m3-primary">Estimator</span>
         </h1>
-        <p class="text-lg text-slate-600 max-w-2xl mx-auto">
-          Get instant price estimates for Taxi, Acting Drivers, and Vehicle Relocation services.
+        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto font-normal leading-relaxed mb-6 font-sans">
+          Get instant, transparent price estimates for Cabs, Acting Drivers, and Vehicle Relocation services.
         </p>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        <h2 class="sr-only">Available Travel Calculators</h2>
         {/* Oneway / Round Trip Calculator */}
         <div class="w-full flex justify-center">
           <QuotationEngine
@@ -48,7 +77,7 @@ const breadcrumbItems = [
         <div class="w-full flex justify-center lg:col-span-2">
           <VehicleRelocationCalculator client:load />
         </div>
-      </div>
+      </section>
     </div>
-  </div>
+  </main>
 </Layout>

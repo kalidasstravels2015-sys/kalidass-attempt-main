@@ -1,0 +1,43 @@
+# 301 Permanent Redirects for Pruned / Consolidated Pages (SEO & Link Equity Preservation)
+
+# Developer Sales Pitch -> Safety Section
+/smart-travel-solution/*    /#safety    301
+
+# Corporate Sub-pages -> Master Corporate Hub
+/services/business-travel/*            /services/corporate/    301
+/services/employee-transportation/*    /services/corporate/    301
+/services/events-mice/*                /services/corporate/    301
+/services/executive-fleet/*            /services/corporate/    301
+
+# Duplicate Outstation Route -> Canonical Destination Hub
+/services/outstation-cabs/*    /services/popular-destinations/    301
+
+# Fragmented Airport Transits -> Consolidated Master Airport Service
+/services/airport-drop-sedan/*                    /services/chennai-airport-taxi-transfers/    301
+/services/airport-drop-suv/*                      /services/chennai-airport-taxi-transfers/    301
+/services/airport-pickup-sedan/*                  /services/chennai-airport-taxi-transfers/    301
+/services/airport-pickup-suv/*                    /services/chennai-airport-taxi-transfers/    301
+/services/airport-transfer-tempo-traveller/*      /services/chennai-airport-taxi-transfers/    301
+/services/airport-parcel-luggage-delivery/*       /services/chennai-airport-taxi-transfers/    301
+
+# Redundant Acting Driver Fragments -> Curated Acting Driver Services
+/services/highway-copilot/*                 /services/acting-driver-outstation-round-trip/    301
+/services/driver-for-senior-citizens/*      /services/acting-driver-within-chennai/           301
+/services/night-driving-driver/*            /services/acting-driver-within-chennai/           301
+/services/office-commute-driver-monthly/*   /services/corporate/                              301
+
+# Redundant Car Rental Doorway Pages -> Dedicated Fleet & Tariff
+/services/sedan-rental-chennai/*     /fleet/     301
+/services/suv-ertiga-rental/*        /fleet/     301
+/services/innova-rental/*            /fleet/     301
+/services/innova-crysta-rental/*     /fleet/     301
+/services/tempo-traveller-rental/*   /fleet/     301
+/services/outstation-car-rental-per-km/*   /tariff/    301
+
+# Off-brand Cargo & Parcel Removal
+/services/bada-dost-i4-goods-delivery/*         /services/    301
+/services/luggage-parcel-delivery-chennai/*      /services/    301
+
+# AI & LLM Standards
+/.well-known/llms.txt    /llms.txt    200
+

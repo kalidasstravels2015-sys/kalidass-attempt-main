@@ -8,7 +8,12 @@ import compress from '@playform/compress';
 
 export default defineConfig({
   site: 'https://kalidasstravels.in',
+  trailingSlash: 'always',
   prefetch: true,
+  redirects: {
+    '/outstation': '/services/popular-destinations/',
+    '/services/outstation': '/services/popular-destinations/',
+  },
   integrations: [
     tailwind(),
     react(),

@@ -1,0 +1,89 @@
+---
+export interface Step {
+  stepNumber: string;
+  badge?: string;
+  title: string;
+  desc: string;
+  illustrationTitle?: string;
+  illustrationSub?: string;
+  theme?: 'amber' | 'blue' | 'emerald' | 'purple' | 'crimson';
+  iconType?: 'car' | 'driver' | 'relax' | 'map' | 'pickup' | 'road';
+}
+
+interface Props {
+  title?: string;
+  subtitle?: string;
+  steps: Step[];
+}
+
+const {
+  title = "How It Works",
+  subtitle = "Simple, transparent, and hassle-free in 3 easy steps",
+  steps
+} = Astro.props;
+---
+
+<!-- Ultra-Compact Horizontal 3-Step Row (No Wasted Vertical Scrolling) -->
+<div class="my-4 sm:my-6">
+  <div class="bg-m3-surface-container-low rounded-m3-xl p-3 sm:p-4 border border-m3-outline-variant shadow-xs">
+    
+    <!-- Header Bar -->
+    <div class="flex items-center justify-between gap-2 mb-2.5 pb-2 border-b border-m3-outline-variant/50">
+      <div class="flex items-center gap-2 min-w-0">
+        <span class="w-2 h-2 rounded-full bg-m3-primary shrink-0"></span>
+        <h2 class="text-xs sm:text-sm font-extrabold text-m3-on-surface font-heading tracking-tight truncate uppercase">
+          {title}
+        </h2>
+        {subtitle && (
+          <span class="hidden md:inline text-micro text-m3-on-surface-variant font-sans truncate">
+            — {subtitle}
+          </span>
+        )}
+      </div>
+      <div class="flex items-center gap-1.5 shrink-0">
+        <span class="text-micro font-bold uppercase tracking-wider text-m3-primary bg-m3-primary/10 px-2 py-0.5 rounded-m3-full border border-m3-primary/20">
+          3 Easy Steps
+        </span>
+        <span class="inline md:hidden text-micro text-m3-on-surface-variant font-medium">
+          Swipe ➔
+        </span>
+      </div>
+    </div>
+
+    <!-- 3 Steps in a Single Horizontal Row (Mobile: Snap Row, Desktop: 3-Col Grid) -->
+    <div class="flex md:grid md:grid-cols-3 gap-2 sm:gap-3 overflow-x-auto snap-x snap-mandatory pb-1 md:pb-0 scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden items-stretch">
+      {steps.map((s, idx) => (
+        <div class="min-w-[240px] sm:min-w-[270px] md:min-w-0 flex-1 shrink-0 md:shrink snap-start bg-m3-surface-container-lowest rounded-m3-lg p-2.5 sm:p-3 border border-m3-outline-variant hover:border-m3-primary/40 transition-colors flex items-start gap-2.5 relative">
+          
+          <!-- Step Number Pill -->
+          <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-m3-md bg-m3-primary/10 text-m3-primary border border-m3-primary/20 flex items-center justify-center shrink-0 font-heading font-black text-xs shadow-xs">
+            {s.stepNumber}
+          </div>
+
+          <!-- Step Content -->
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1 mb-0.5">
+              <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading truncate">
+                {s.title}
+              </h3>
+            </div>
+            <p class="text-micro text-m3-on-surface-variant leading-relaxed line-clamp-2">
+              {s.desc}
+            </p>
+          </div>
+
+          <!-- Desktop Arrow Connector (Between Step 1->2 and 2->3) -->
+          {idx < 2 && (
+            <div class="hidden md:flex absolute -right-2 top-1/2 -translate-y-1/2 z-10 w-4 h-4 rounded-full bg-m3-surface-container border border-m3-outline-variant items-center justify-center shadow-xs">
+              <svg class="w-2.5 h-2.5 text-m3-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          )}
+
+        </div>
+      ))}
+    </div>
+
+  </div>
+</div>

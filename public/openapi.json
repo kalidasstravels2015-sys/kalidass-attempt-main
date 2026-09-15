@@ -1,0 +1,68 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Kalidass Travels Fleet & Booking API",
+    "version": "1.0.0",
+    "description": "Public fleet catalog and inquiry specification for Kalidass Travels — Chennai's premium outstation cab, Tempo Traveller, and pilgrimage travel operator. AI agents and assistants may query vehicle specifications, capacities, base tariffs, and route packages.",
+    "contact": {
+      "name": "Kalidass Travels Support",
+      "phone": "+91 90923 03060",
+      "email": "kalidasstravels2015@gmail.com",
+      "url": "https://kalidasstravels.in/"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://kalidasstravels.in"
+    }
+  ],
+  "paths": {
+    "/api/fleet": {
+      "get": {
+        "operationId": "getFleetCatalog",
+        "summary": "List available vehicle categories with seat capacities, luggage specs, and starting per-km tariffs",
+        "responses": {
+          "200": {
+            "description": "Vehicle fleet catalog",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "fleet": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "model": { "type": "string" },
+                          "category": { "type": "string" },
+                          "seats": { "type": "integer" },
+                          "luggage_capacity": { "type": "string" },
+                          "rate_per_km_inr": { "type": "number" },
+                          "driver_batta_per_day_inr": { "type": "number" },
+                          "ac_type": { "type": "string" },
+                          "best_for": { "type": "string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/routes": {
+      "get": {
+        "operationId": "getPopularRoutes",
+        "summary": "List popular pilgrimage and tourist route packages from Chennai",
+        "responses": {
+          "200": {
+            "description": "Popular route packages with estimated duration and starting vehicle recommendations"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+---
+interface FAQItem {
+  q: string;
+  a: string;
+}
+
+interface Props {
+  items: FAQItem[];
+  columns?: 1 | 2;
+  name?: string;
+  className?: string;
+}
+
+const { items, columns = 1, name, className = "" } = Astro.props;
+---
+
+<div class={`font-sans ${columns === 2 ? 'grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 items-start' : 'space-y-3'} ${className}`}>
+  {items.map((item) => (
+    <details
+      class="group bg-m3-surface rounded-m3-lg border border-m3-outline-variant shadow-m3-1 hover:border-m3-outline/70 transition-all overflow-hidden"
+      name={name}
+    >
+      <summary class="flex items-center justify-between gap-3 px-3.5 py-3 sm:px-4 sm:py-3.5 cursor-pointer list-none select-none hover:bg-m3-surface-container-low transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary focus-visible:ring-inset">
+        <span class="font-heading font-semibold text-xs sm:text-sm text-m3-on-surface group-open:text-m3-primary transition-colors leading-snug">
+          {item.q}
+        </span>
+        <span class="material-symbols-outlined text-[18px] sm:text-[20px] text-m3-on-surface-variant group-open:rotate-180 group-open:text-m3-primary transition-transform duration-200 shrink-0">expand_more</span>
+      </summary>
+      <div class="px-3.5 sm:px-4 pb-3.5 pt-2.5 border-t border-m3-outline-variant/40 bg-m3-surface">
+        <p class="text-xs text-m3-on-surface-variant font-normal leading-relaxed">
+          {item.a}
+        </p>
+      </div>
+    </details>
+  ))}
+</div>

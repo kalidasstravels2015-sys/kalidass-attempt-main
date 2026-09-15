@@ -1,0 +1,396 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/SEO/Breadcrumbs.astro';
+import ServiceExplainer3Step from '../../components/ServiceExplainer3Step.astro';
+import FAQAccordion from '../../components/FAQAccordion.astro';
+import WhatsAppButton from '../../components/WhatsAppButton.astro';
+
+const title = "Corporate Cab & Employee Mobility Solutions in Chennai";
+const description = "Enterprise transportation in Chennai: 24/7 routed employee shift commute, monthly executive car retainers with dedicated chauffeurs, and corporate airport transfers with 100% GST billing.";
+
+const breadcrumbItems = [
+  { name: "Home", item: "/" },
+  { name: "Services", item: "/services/" },
+  { name: "Corporate Mobility", item: "/services/corporate/" },
+];
+
+const explainerSteps = [
+  {
+    stepNumber: "1",
+    badge: "Step 1: Plan Scope",
+    title: "Define Mobility Requirements",
+    desc: "Choose from monthly executive car retainers, daily shift routes (ETS), or on-demand airport transfers.",
+    illustrationTitle: "Define Mobility Plan",
+    illustrationSub: "Retainers • Shifts • Airport VIP",
+    theme: "purple" as const,
+    iconType: "car" as const
+  },
+  {
+    stepNumber: "2",
+    badge: "Step 2: Fleet Deployment",
+    title: "Dedicated Chauffeur & Fleet",
+    desc: "Uniformed executive pilots deployed with GPS route tracking and a strict 60-minute emergency backup SLA.",
+    illustrationTitle: "Dedicated Fleet & Chauffeur",
+    illustrationSub: "60-Min Replacement SLA",
+    theme: "blue" as const,
+    iconType: "driver" as const
+  },
+  {
+    stepNumber: "3",
+    badge: "Step 3: GST Invoicing",
+    title: "Consolidated Monthly Billing",
+    desc: "Digital trip sheets and 100% GST-compliant monthly invoices for full corporate input tax credit deduction.",
+    illustrationTitle: "100% GST Invoicing",
+    illustrationSub: "Monthly Corporate Billing",
+    theme: "emerald" as const,
+    iconType: "relax" as const
+  }
+];
+
+const retainers = [
+  {
+    plan: "Executive Sedan Retainer",
+    cars: "Swift Dzire / Toyota Etios",
+    scope: "26 Days / 10 Hours Daily",
+    rate: "₹42,000 / mo",
+    extra: "OT: ₹120/hr • Fuel actuals",
+    badge: "Managerial Mobility",
+    highlight: "Dedicated uniformed chauffeur, replacement within 60 mins anywhere in Chennai.",
+    whatsappMsg: "Hi Kalidass Travels, I want to enquire about the Executive Sedan Monthly Retainer (₹42,000/mo)."
+  },
+  {
+    plan: "Mid SUV Monthly Retainer",
+    cars: "Maruti Ertiga / XL6",
+    scope: "26 Days / 10 Hours Daily",
+    rate: "₹52,000 / mo",
+    extra: "OT: ₹140/hr • Fuel actuals",
+    badge: "Team Mobility",
+    highlight: "6-seater spacious vehicle for project teams, field audits, and client visits.",
+    whatsappMsg: "Hi Kalidass Travels, I want to enquire about the Ertiga SUV Monthly Retainer (₹52,000/mo)."
+  },
+  {
+    plan: "Toyota Innova Crysta Retainer",
+    cars: "Innova Crysta (7-Seater)",
+    scope: "26 Days / 10 Hours Daily",
+    rate: "₹65,000 / mo",
+    extra: "OT: ₹175/hr • Fuel actuals",
+    badge: "CXO & Director Fleet",
+    highlight: "VIP chauffeur with English proficiency, leather captain seats for leadership & expats.",
+    whatsappMsg: "Hi Kalidass Travels, I want to enquire about the Innova Crysta Monthly Retainer (₹65,000/mo)."
+  }
+];
+
+const spotPlans = [
+  {
+    name: "Employee Shift Commute (ETS)",
+    scope: "Per Shift Route Trip",
+    rate: "₹350 – ₹550 / trip",
+    detail: "GPS-monitored routed pickups/drops with female employee first-in/last-out algorithms.",
+    whatsappMsg: "Hi Kalidass Travels, I need a quotation for Corporate Employee Shift Commute."
+  },
+  {
+    name: "Airport VIP Transfer (Central / Guindy)",
+    scope: "One-Way Airport Drop/Pickup",
+    rate: "Sedan ₹1,200 • Innova ₹1,800",
+    detail: "Flight delay tracking, placard meet-and-greet at MAA Arrival terminal.",
+    whatsappMsg: "Hi Kalidass Travels, I need a Corporate Airport Transfer (Central/Guindy)."
+  },
+  {
+    name: "Airport VIP Transfer (OMR / Siruseri)",
+    scope: "One-Way Airport Drop/Pickup",
+    rate: "Sedan ₹1,500 • Innova ₹2,200",
+    detail: "Direct highway connectivity to OMR Tech Corridor, Siruseri SIPCOT & ECR.",
+    whatsappMsg: "Hi Kalidass Travels, I need a Corporate Airport Transfer to OMR."
+  },
+  {
+    name: "Business Day Spot Rental (8h / 80km)",
+    scope: "8 Hours / 80 KM City Package",
+    rate: "Sedan ₹2,500 • Innova ₹3,500",
+    detail: "Multi-meeting city mobility, client visits, GST invoice with zero surge pricing.",
+    whatsappMsg: "Hi Kalidass Travels, I need an 8-Hour Business Day Car Rental in Chennai."
+  }
+];
+
+const faqs = [
+  {
+    q: "How do you ensure female employee safety during night shifts?",
+    a: "We strictly follow industry-leading safety protocols: automated routing ensures female employees are never the first pickup or last drop in late-night shifts (8 PM to 6 AM). Security escort guards can be provided on request, and all cabs are GPS-monitored in real-time."
+  },
+  {
+    q: "What happens if a dedicated monthly retainer driver falls sick?",
+    a: "We guarantee a replacement driver and vehicle SLA within 60 minutes anywhere in Chennai, ensuring zero disruption to executive schedules."
+  },
+  {
+    q: "Do you provide GST-compliant invoices for corporate tax credits?",
+    a: "Yes. All B2B bookings come with itemized GST invoices mentioning your company GSTIN, allowing you to claim full input tax credit."
+  },
+  {
+    q: "Can we set up a monthly credit / bill-to-company account?",
+    a: "Yes! We offer 15-day and 30-day corporate billing credit cycles for registered enterprises following standard vendor onboarding."
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": title,
+  "description": description,
+  "url": "https://kalidasstravels.in/services/corporate/",
+  "image": "https://kalidasstravels.in/images/services/corporate.webp",
+  "provider": {
+    "@id": "https://kalidasstravels.in/#localbusiness"
+  },
+  "areaServed": [
+    { "@type": "City", "name": "Chennai" },
+    { "@type": "AdministrativeArea", "name": "Tamil Nadu" }
+  ]
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(item => ({
+    "@type": "Question",
+    "name": item.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.a
+    }
+  }))
+};
+---
+
+<Layout 
+  title={`${title} - Kalidass Travels`}
+  description={description}
+  image="/images/services/corporate.webp"
+  schema={[schema, faqSchema]}
+>
+  <Breadcrumbs items={breadcrumbItems} />
+
+  <main class="bg-m3-surface text-m3-on-surface font-sans pb-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10">
+
+      <!-- 1. HERO SECTION -->
+      <section class="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
+          <span class="w-2 h-2 rounded-full bg-logo-red animate-pulse"></span>
+          <span>Enterprise Fleet Solutions • 100% GST Compliant • 60-Min SLA</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-3 font-heading">
+          Corporate Cab &amp; <span class="text-m3-primary">Employee Mobility</span> in Chennai
+        </h1>
+        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed font-normal mb-6">
+          Dependable business transportation for IT parks, factories, and corporate offices. 24/7 employee shift commute, monthly executive car retainers, and VIP airport protocol.
+        </p>
+
+        <!-- Quick Actions -->
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <a
+            href="tel:+919092303060"
+            class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary font-bold rounded-m3-full text-xs sm:text-sm shadow-m3-2 transition-all"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+            <span>Call B2B Desk: +91 90923 03060</span>
+          </a>
+          <WhatsAppButton
+            href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20enquire%20about%20Corporate%20Mobility%20Solutions."
+            size="md"
+            variant="filled"
+            text="Request B2B Quote"
+          />
+        </div>
+      </section>
+
+      <!-- 2. ⚡ 3-STEP VISUAL WORKFLOW ILLUSTRATION -->
+      <ServiceExplainer3Step 
+        title="How Corporate Mobility Works"
+        subtitle="Transparent contracts, verified drivers, and automated GST billing in 3 simple steps"
+        steps={explainerSteps}
+      />
+
+      <!-- 3. UPFRONT B2B RATE CARDS (STRAIGHT TO THE POINT) -->
+      <section class="my-10 md:my-14 space-y-12">
+        
+        <!-- Monthly Retainer Plans -->
+        <div class="bg-m3-surface-container-lowest rounded-m3-2xl p-5 sm:p-8 border border-m3-outline-variant shadow-m3-1">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-m3-outline-variant/60 pb-4 mb-6">
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container text-xs font-bold uppercase tracking-wider mb-2 border border-m3-primary/20">
+                <span>Monthly Retainers</span>
+              </div>
+              <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading">
+                Dedicated Executive Cars <span class="text-m3-primary">&amp; Chauffeur Retainers</span>
+              </h2>
+              <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">
+                Fixed monthly contracts (26 days / 10 hours daily) for Directors, CXOs, and business teams.
+              </p>
+            </div>
+            <span class="inline-flex items-center text-xs font-semibold text-m3-on-surface bg-m3-surface-container-high border border-m3-outline-variant px-3 py-1 rounded-m3-full w-fit shrink-0">
+              60-Min Replacement SLA
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {retainers.map((plan) => (
+              <div class="bg-m3-surface rounded-m3-xl p-5 sm:p-6 border border-m3-outline-variant shadow-xs flex flex-col justify-between hover:border-m3-primary/30 transition-all">
+                <div>
+                  <div class="flex items-center justify-between gap-2 mb-2">
+                    <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant bg-m3-surface-container px-2.5 py-0.5 rounded-m3-full border border-m3-outline-variant/60">
+                      {plan.badge}
+                    </span>
+                  </div>
+
+                  <h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading mb-1">
+                    {plan.plan}
+                  </h3>
+                  <div class="text-xs text-m3-primary font-semibold mb-3">{plan.cars}</div>
+
+                  <div class="bg-m3-surface-container-low p-3.5 rounded-m3-xl border border-m3-outline-variant/60 mb-4">
+                    <span class="text-micro text-m3-on-surface-variant font-medium block">Monthly Retainer Fee</span>
+                    <div class="text-xl sm:text-2xl font-black text-m3-primary font-heading mt-0.5">{plan.rate}</div>
+                    <span class="text-micro text-m3-on-surface-variant block mt-1">{plan.extra}</span>
+                  </div>
+
+                  <p class="text-xs text-m3-on-surface-variant leading-relaxed mb-5">
+                    {plan.highlight}
+                  </p>
+                </div>
+
+                <a
+                  href={`https://wa.me/919092303060?text=${encodeURIComponent(plan.whatsappMsg)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary text-xs font-bold shadow-xs transition-all"
+                >
+                  <span>Enquire for Contract</span>
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </a>
+              </div>
+            ))}
+          </div>
+
+          <div class="mt-5 pt-3 border-t border-m3-outline-variant/60 text-micro text-m3-on-surface-variant flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <span>* Consolidated monthly 100% GST tax invoices provided for corporate tax deductibility.</span>
+            <span class="text-m3-on-surface font-semibold">15-day and 30-day billing credit cycles available</span>
+          </div>
+        </div>
+
+        <!-- Shift Commute & Spot Plans -->
+        <div class="bg-m3-surface-container-lowest rounded-m3-2xl p-5 sm:p-8 border border-m3-outline-variant shadow-m3-1">
+          <div class="border-b border-m3-outline-variant/60 pb-4 mb-6">
+            <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface text-xs font-bold uppercase tracking-wider mb-2 border border-m3-outline-variant">
+              <span>Shift Commute &amp; Spot Rentals</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading">
+              Employee Transportation (ETS) &amp; <span class="text-m3-primary">Airport VIP Services</span>
+            </h2>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {spotPlans.map((item) => (
+              <div class="bg-m3-surface p-5 rounded-m3-xl border border-m3-outline-variant shadow-xs flex flex-col justify-between hover:border-m3-primary/30 transition-all">
+                <div>
+                  <div class="flex items-center justify-between gap-2 mb-2">
+                    <h3 class="font-bold text-sm sm:text-base text-m3-on-surface font-heading">{item.name}</h3>
+                    <span class="text-xs sm:text-sm font-black text-m3-primary font-heading shrink-0">{item.rate}</span>
+                  </div>
+                  <span class="text-micro text-m3-primary font-semibold block mb-2">{item.scope}</span>
+                  <p class="text-xs text-m3-on-surface-variant leading-relaxed mb-4">{item.detail}</p>
+                </div>
+
+                <WhatsAppButton
+                  href={`https://wa.me/919092303060?text=${encodeURIComponent(item.whatsappMsg)}`}
+                  size="sm"
+                  variant="filled"
+                  text="Book on WhatsApp"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </section>
+
+      <!-- 4. ENTERPRISE COMMITMENTS (4 PILLARS) -->
+      <section class="my-10 md:my-14 bg-m3-surface-container-low rounded-m3-2xl p-6 sm:p-8 border border-m3-outline-variant">
+        <div class="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
+          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-m3-on-surface font-heading">
+            Built for Enterprise Reliability &amp; Compliance
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Women Safety Protocol</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">First-in/last-out algorithm, door-to-gate verification, live GPS.</p>
+          </div>
+
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">60-Min Replacement SLA</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Instant backup driver &amp; car dispatch to avoid downtime.</p>
+          </div>
+
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">100% GST Invoicing</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Itemized monthly B2B invoices for input tax credit claims.</p>
+          </div>
+
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Credit Billing Cycles</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">15-day and 30-day bill-to-company credit terms for corporates.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. FREQUENTLY ASKED QUESTIONS -->
+      <section class="my-10 md:my-14 max-w-3xl mx-auto">
+        <div class="text-center mb-6">
+          <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading">
+            Frequently Asked Questions
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">Information on vendor onboarding, SLAs, and credit terms</p>
+        </div>
+
+        <FAQAccordion items={faqs} columns={1} name="corporate-faq" />
+      </section>
+
+      <!-- 6. BOTTOM CONVERSION CTA BANNER -->
+      <section class="bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-2xl p-6 sm:p-10 text-center shadow-m3-3 border border-slate-800 my-8">
+        <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold font-heading text-white mb-2">
+          Looking for a Corporate Mobility Partner?
+        </h2>
+        <p class="text-slate-300 text-xs sm:text-sm max-w-lg mx-auto mb-6">
+          Connect with our enterprise mobility team for customized employee commute tenders, monthly executive retainers, or event fleet management.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <WhatsAppButton
+            href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20would%20like%20to%20discuss%20a%20Corporate%20Transportation%20proposal."
+            size="md"
+            variant="filled"
+            text="Discuss on WhatsApp"
+          />
+          <a
+            href="tel:+919092303060"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface font-bold text-xs sm:text-sm rounded-m3-full shadow-m3-1 transition-all"
+          >
+            <span>Call B2B Desk: +91 90923 03060</span>
+          </a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</Layout>

@@ -1,69 +1,326 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import serviceDetails from '../../data/serviceDetails.json';
+import Breadcrumbs from '../../components/SEO/Breadcrumbs.astro';
+import WhatsAppButton from '../../components/WhatsAppButton.astro';
+import { 
+  PlaneTakeoff,
+  UserCheck, 
+  Landmark, 
+  Compass, 
+  Building2, 
+  ArrowRight, 
+  CheckCircle2, 
+  Phone, 
+  ShieldCheck, 
+  Sparkles,
+  Car,
+  Clock
+} from 'lucide-react';
 
-// Group services by category
-const servicesByCategory = serviceDetails.reduce((acc: Record<string, typeof serviceDetails>, service) => {
-  if (!acc[service.category]) {
-    acc[service.category] = [];
+const breadcrumbItems = [
+  { name: "Home", item: "/" },
+  { name: "Services", item: "/services/" },
+];
+
+const servicesList = [
+  {
+    id: "airport-transfers",
+    number: "01",
+    title: "Chennai Airport Taxi & Transfers",
+    tagline: "5–10 min rapid terminal dispatch from MAA. Real-time flight tracking & zero delay penalty.",
+    badge: "5-Min Proximity",
+    icon: PlaneTakeoff,
+    theme: "emerald",
+    link: "/services/chennai-airport-taxi/",
+    overview: "Located adjacent to Chennai International Airport (MAA). Guaranteed on-time pickup for Domestic (T1) and International (T2/T4) terminals with arrivals Meet & Greet, name paging boards, and zero surge pricing.",
+    highlights: [
+      "5–10 min rapid dispatch from airport perimeter base",
+      "Real-time flight delay tracking with zero extra waiting fee",
+      "Meet & Greet terminal service with passenger name boards",
+      "Direct transfers to OMR, Central, ECR, Pondicherry & Tirupati"
+    ],
+    popularTrips: ["Airport ⇄ OMR IT Corridor", "Airport ⇄ Central / Egmore", "Airport ⇄ Pondicherry", "Airport ⇄ Tirupati Balaji"],
+    whatsappMsg: "Hi Kalidass Travels, I need an airport taxi transfer to/from Chennai Airport (MAA)."
+  },
+  {
+    id: "outstation-cabs",
+    number: "02",
+    title: "Outstation Cabs",
+    tagline: "Flat per-km rates & weekend getaway road trips across South India.",
+    badge: "Starts ₹14 / km",
+    icon: Compass,
+    theme: "blue",
+    link: "/services/popular-destinations/",
+    overview: "Rent a clean, dual-AC taxi for weekend road trips or one-way drops to Pondicherry, Mahabalipuram, Bangalore, or Yercaud with flat, transparent tariffs.",
+    highlights: [
+      "Flat per-km rates: Sedan (₹14/km) & Innova (₹20/km)",
+      "Chennai to Pondicherry 1-Day: ₹4,500 (ECR tolls included)",
+      "Chennai to Mahabalipuram Coastal Tour: ₹3,500 Full Day",
+      "Disciplined 80–90 km/h highway speed limits"
+    ],
+    popularTrips: ["Chennai to Pondicherry", "Chennai to Mahabalipuram", "Chennai to Bangalore", "Chennai to Yercaud"],
+    whatsappMsg: "Hi Kalidass Travels, I need an outstation cab from Chennai."
+  },
+  {
+    id: "temple-tours",
+    number: "03",
+    title: "Temple Tours",
+    tagline: "All-inclusive spiritual darshan yatras with sanitized AC cabs & all tolls included.",
+    badge: "Starts ₹3,200",
+    icon: Landmark,
+    theme: "emerald",
+    link: "/services/temple-tours/",
+    overview: "Comfortable spiritual darshan yatras from Chennai. Clean sanitized AC cab, courteous satvik driver, and all highway FASTag tolls 100% included upfront.",
+    highlights: [
+      "Chennai to Tirupati Balaji (1 Day): From ₹6,000",
+      "Chennai to Kumbakonam 9 Navagraha (2 Days): From ₹8,600",
+      "Chennai to Thiruvannamalai Girivalam: From ₹6,500",
+      "Chennai to Kanchipuram Temple Circuit: From ₹3,200"
+    ],
+    popularTrips: ["Chennai to Tirupati", "Chennai to Navagraha", "Chennai to Thiruvannamalai", "Chennai to Kanchipuram"],
+    whatsappMsg: "Hi Kalidass Travels, I want to enquire about Temple Tour packages from Chennai."
+  },
+  {
+    id: "corporate-mobility",
+    number: "04",
+    title: "Corporate Mobility",
+    tagline: "24/7 staff commute, executive retainers & corporate airport cabs.",
+    badge: "Starts ₹350 / shift",
+    icon: Building2,
+    theme: "purple",
+    link: "/services/corporate/",
+    overview: "Dedicated enterprise transport for Chennai IT corridors and factories. Strict female employee safety algorithms and 100% GST invoicing.",
+    highlights: [
+      "Employee shift cabs with automated GPS & SOS",
+      "Monthly car + chauffeur retainers from ₹42,000/mo",
+      "Flight-tracked airport pickups with nameboards",
+      "Guaranteed 60-minute replacement chauffeur SLA"
+    ],
+    popularTrips: ["Employee Shift Pickups", "Monthly Car Retainers", "Airport Transfers"],
+    whatsappMsg: "Hi Kalidass Travels, I need a corporate transport quotation for our company."
+  },
+  {
+    id: "acting-drivers",
+    number: "05",
+    title: "Acting Drivers",
+    tagline: "Police-verified chauffeurs for your personal car (Manual, Automatic, or EV).",
+    badge: "Starts ₹600",
+    icon: UserCheck,
+    theme: "amber",
+    link: "/services/acting-drivers/",
+    overview: "Hate city traffic or tiring highway driving? Book a police-verified chauffeur to drive your personal car with flexible hourly and daily outstation packages.",
+    highlights: [
+      "Doorstep arrival across Chennai in 30–60 mins",
+      "City hourly duty: 4 hrs (₹600) & 8 hrs (₹900)",
+      "Outstation round trips from ₹600/day driver bata",
+      "Zero surge pricing during rain or peak hours"
+    ],
+    popularTrips: ["City 4h/8h Duty", "Hospital & Shopping", "Outstation Highway Driver"],
+    whatsappMsg: "Hi Kalidass Travels, I need an acting driver for my car in Chennai."
   }
-  acc[service.category].push(service);
-  return acc;
-}, {});
+];
 
-const categories = Object.keys(servicesByCategory);
+
 
 const schema = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  "name": "All Services - Kalidass Travels",
-  "description": "Explore our wide range of travel solutions including Temple Tours, Corporate Travel, and Outstation Cabs.",
+  "name": "Travel Services in Chennai - Kalidass Travels",
+  "description": "Book trusted travel services in Chennai: Airport Transfers, Outstation Cabs, Temple Tours, Corporate Mobility, and Acting Drivers for your personal car.",
   "url": Astro.url.href,
   "image": "https://kalidasstravels.in/images/logo.webp"
 };
 ---
 
 <Layout 
-  title="All Services - Kalidass Travels"
-  description="Browse our complete list of travel services. From spiritual temple tours to professional corporate cab services in Chennai."
+  title="Travel Services in Chennai | Airport Transfers, Outstation Cabs, Temple Tours, Corporate Mobility & Acting Drivers - Kalidass Travels"
+  description="Book Chennai airport taxi transfers, flat-rate outstation cabs, all-inclusive temple tours, corporate mobility, and verified acting drivers. Transparent rates and 24/7 service."
   schema={schema}
 >
-  <main class="bg-gray-50 min-h-screen py-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-16">
-        <h1 class="text-4xl font-bold text-gray-900 mb-4">Our Complete Services</h1>
-        <p class="text-lg text-gray-600">Explore our wide range of travel solutions</p>
-      </div>
+  <Breadcrumbs items={breadcrumbItems} />
 
-      <div class="space-y-16">
-        {categories.map((category) => (
-          <section>
-            <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b border-gray-200 pb-2">
-              {category}
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {servicesByCategory[category].map((service) => (
-                <a 
-                  href={`/services/${service.slug}`}
-                  class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100 group"
-                >
-                  <h3 class="text-lg font-semibold text-gray-900 group-hover:text-red-700 transition-colors mb-2">
-                    {service.title}
-                  </h3>
-                  {service.overview && (
-                    <p class="text-gray-600 text-sm line-clamp-2">
-                      {service.overview}
-                    </p>
-                  )}
-                  <div class="mt-4 text-red-700 text-sm font-medium flex items-center gap-1">
-                    View Details <i class="fa-solid fa-arrow-right text-xs"></i>
+  <main class="bg-m3-surface text-m3-on-surface font-sans pb-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10">
+
+      <!-- 1. CLEAN HERO SECTION -->
+      <section class="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
+          <span class="w-2 h-2 rounded-full bg-logo-red animate-pulse"></span>
+          <span>5 Core Travel Services • Transparent Fixed Rates • Zero Surge</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-3 font-heading">
+          Our Travel Services in <span class="text-m3-primary">Chennai</span>
+        </h1>
+        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed font-normal mb-6">
+          Whether you need a rapid airport transfer, flat-rate outstation cabs, an all-inclusive temple tour, corporate mobility, or an acting driver for your own car — select your service below for instant rates.
+        </p>
+
+        <!-- Quick Jump Pills -->
+        <div class="flex flex-wrap items-center justify-center gap-2">
+          {servicesList.map((s) => (
+            <a
+              href={`#${s.id}`}
+              class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white text-m3-on-surface text-xs font-bold transition-all border border-m3-outline-variant shadow-xs"
+            >
+              <span>{s.title}</span>
+              <span class="text-micro opacity-75 font-normal">({s.badge})</span>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <!-- 2. THE 4 MAIN SERVICE PILLARS (Clean 2x2 Layout, Zero Bloat) -->
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-14">
+        {servicesList.map((srv) => {
+          const IconComp = srv.icon;
+          return (
+            <div 
+              id={srv.id}
+              class="bg-m3-surface-container-lowest rounded-m3-2xl p-6 sm:p-7 border border-m3-outline-variant shadow-m3-1 hover:shadow-m3-2 transition-all flex flex-col justify-between scroll-mt-24"
+            >
+              <div>
+                <!-- Card Header -->
+                <div class="flex items-center justify-between gap-2 mb-3">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-m3-lg bg-m3-surface-container-high text-m3-primary flex items-center justify-center border border-m3-outline-variant shrink-0">
+                      <IconComp className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block">
+                        Service {srv.number}
+                      </span>
+                      <h2 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading leading-snug">
+                        {srv.title}
+                      </h2>
+                    </div>
                   </div>
+                  <span class="px-2.5 py-1 rounded-m3-full text-micro font-bold bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant shrink-0">
+                    {srv.badge}
+                  </span>
+                </div>
+
+                <p class="text-xs sm:text-sm text-m3-on-surface-variant font-medium leading-relaxed mb-4">
+                  {srv.tagline}
+                </p>
+
+                <p class="text-xs text-m3-on-surface-variant mb-4 leading-relaxed">
+                  {srv.overview}
+                </p>
+
+                <!-- Key Bullet Highlights -->
+                <ul class="space-y-2 mb-5 bg-m3-surface-container-low p-3.5 rounded-m3-xl border border-m3-outline-variant/60">
+                  {srv.highlights.map((hl) => (
+                    <li class="flex items-start gap-2 text-xs text-m3-on-surface leading-tight">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-m3-primary shrink-0 mt-0.5" />
+                      <span>{hl}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <!-- Popular Routes Chips -->
+                <div class="mb-5">
+                  <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-1.5">
+                    Popular Options:
+                  </span>
+                  <div class="flex flex-wrap gap-1.5">
+                    {srv.popularTrips.map((trip) => (
+                      <span class="text-micro font-medium px-2 py-0.5 rounded-m3-md bg-m3-surface border border-m3-outline-variant/70 text-m3-on-surface">
+                        {trip}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="pt-4 border-t border-m3-outline-variant/60 flex items-center gap-3">
+                <a
+                  href={srv.link}
+                  class="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-4 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-m3-full text-xs font-bold shadow-xs transition-all"
+                >
+                  <span>View Rates &amp; Details</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </a>
-              ))}
+                <WhatsAppButton
+                  href={`https://wa.me/919092303060?text=${encodeURIComponent(srv.whatsappMsg)}`}
+                  size="icon"
+                  variant="filled"
+                  ariaLabel={`Book ${srv.title} on WhatsApp`}
+                />
+              </div>
             </div>
-          </section>
-        ))}
-      </div>
+          );
+        })}
+      </section>
+
+
+
+      <!-- 4. TRUST & GUARANTEES (4 Pillars) -->
+      <section class="bg-m3-surface-container-low rounded-m3-2xl p-6 sm:p-8 border border-m3-outline-variant mb-14">
+        <div class="text-center max-w-2xl mx-auto mb-6">
+          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-m3-on-surface font-heading">
+            Our Service Promises
+          </h2>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <ShieldCheck className="w-4 h-4 text-m3-primary" />
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Police Verification Certifieds</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Clean background checks with valid commercial transport badges.</p>
+          </div>
+
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <Sparkles className="w-4 h-4 text-m3-primary" />
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Zero Surge Pricing</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Fixed transparent tariffs that never surge during rains or holidays.</p>
+          </div>
+
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <Car className="w-4 h-4 text-m3-primary" />
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">All Tolls Covered</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">In tour packages, highway tolls, parking &amp; permits are included upfront.</p>
+          </div>
+
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <Clock className="w-4 h-4 text-m3-primary" />
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">24/7 Phone Helpline</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Instant telephone dispatch desk for bookings and real-time support.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. BOTTOM CONVERSION CTA BANNER -->
+      <section class="bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-2xl p-6 sm:p-10 text-center shadow-m3-2 border border-slate-800 my-8">
+        <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold font-heading text-white mb-2">
+          Need Help Selecting the Right Service?
+        </h2>
+        <p class="text-slate-300 text-xs sm:text-sm max-w-lg mx-auto mb-6">
+          Call our Chennai booking desk or chat with us on WhatsApp. We'll recommend the best option and share an exact rate in 60 seconds.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <WhatsAppButton
+            href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20need%20help%20choosing%20the%20right%20travel%20service."
+            size="md"
+            variant="filled"
+            text="Chat on WhatsApp"
+          />
+          <a
+            href="tel:+919092303060"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface font-bold text-xs sm:text-sm rounded-m3-full shadow-m3-1 transition-all"
+          >
+            <span>Call +91 90923 03060</span>
+          </a>
+        </div>
+      </section>
+
     </div>
   </main>
 </Layout>

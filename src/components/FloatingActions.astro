@@ -1,0 +1,66 @@
+---
+import WhatsAppIcon from './WhatsAppIcon.astro';
+import AndroidPhoneIcon from './AndroidPhoneIcon.astro';
+
+interface Props {
+  phone?: string;
+  displayPhone?: string;
+  whatsappMsg?: string;
+}
+
+const {
+  phone = "+919092303060",
+  displayPhone = "+91 90923 03060",
+  whatsappMsg = "Hi Kalidass Travels, I would like to enquire about booking a cab."
+} = Astro.props;
+
+const cleanPhoneForWa = phone.replace(/[^0-9]/g, '');
+const whatsappUrl = `https://wa.me/${cleanPhoneForWa}?text=${encodeURIComponent(whatsappMsg)}`;
+const callUrl = `tel:${phone}`;
+---
+
+<!-- Floating Quick Contact Actions (Android Call & Meta WhatsApp) -->
+<div 
+  id="floating-actions-container"
+  class="fixed bottom-6 right-4 sm:bottom-7 sm:right-6 z-50 flex flex-col items-center sm:items-end gap-3 pointer-events-none select-none pb-[env(safe-area-inset-bottom,0px)]"
+  role="region"
+  aria-label="Quick contact shortcuts"
+>
+  <!-- Android M3 Phone Call Button (Google Material Blue) -->
+  <a
+    href={callUrl}
+    class="pointer-events-auto group relative flex items-center justify-center w-12 h-12 sm:w-auto sm:h-12 sm:px-4 sm:gap-2.5 rounded-full bg-[#1A73E8] hover:bg-[#1557B0] active:bg-[#0D47A1] text-white shadow-m3-3 hover:shadow-m3-4 border border-blue-300/40 transform hover:scale-105 active:scale-95 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1A73E8]"
+    aria-label={`Call Kalidass Travels 24/7 Helpline at ${displayPhone}`}
+    title={`Call Helpline: ${displayPhone}`}
+  >
+    <!-- Android Dialer Handset Icon in pure white -->
+    <AndroidPhoneIcon className="w-5 h-5 sm:w-4.5 sm:h-4.5 text-white group-hover:rotate-12 transition-transform duration-300 shrink-0" />
+    
+    <!-- Extended FAB label on desktop -->
+    <span class="hidden sm:inline font-bold text-sm text-white tracking-wide font-sans leading-none">
+      Call Us
+    </span>
+  </a>
+
+  <!-- Meta WhatsApp M3 Button -->
+  <a
+    href={whatsappUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="pointer-events-auto group relative flex items-center justify-center w-12 h-12 sm:w-auto sm:h-12 sm:px-4 sm:gap-2.5 rounded-full bg-[#25D366] hover:bg-[#20BD5A] active:bg-[#1EBE5D] text-white shadow-m3-3 hover:shadow-m3-4 border border-emerald-300/40 transform hover:scale-105 active:scale-95 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#25D366]"
+    aria-label="Chat with Kalidass Travels on WhatsApp"
+    title="Chat on WhatsApp (+91 90923 03060)"
+  >
+
+    <!-- Official Meta Two-Tone WhatsApp Brand Icon -->
+    <WhatsAppIcon variant="two-tone" className="w-5 h-5 sm:w-5 sm:h-5 relative z-10 shrink-0" />
+
+    <!-- Desktop text label -->
+    <span class="hidden sm:inline font-bold text-sm text-white tracking-wide font-sans relative z-10 leading-none">
+      WhatsApp
+    </span>
+
+    <!-- Active online indicator dot on desktop -->
+    <span class="hidden sm:inline-block w-2 h-2 rounded-full bg-white/90 shadow-xs relative z-10" aria-hidden="true"></span>
+  </a>
+</div>

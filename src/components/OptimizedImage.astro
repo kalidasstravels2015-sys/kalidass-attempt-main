@@ -58,6 +58,17 @@ if (!isRemote) {
       decoding={decoding}
       fetchpriority={fetchpriority}
     />
+  ) : import.meta.env.DEV ? (
+    <img
+      src={src}
+      alt={alt}
+      class={className}
+      loading={loading}
+      decoding={decoding}
+      fetchpriority={fetchpriority}
+      width={imageData?.width}
+      height={imageData?.height}
+    />
   ) : imageData ? (
     <Image
       src={imageData}

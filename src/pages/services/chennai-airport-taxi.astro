@@ -1,0 +1,526 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/SEO/Breadcrumbs.astro';
+import FAQAccordion from '../../components/FAQAccordion.astro';
+import WhatsAppButton from '../../components/WhatsAppButton.astro';
+
+const title = "Chennai Airport Taxi & Transfers | 5-Min Pickup & Flight Tracking";
+const description = "Chennai International Airport (MAA) taxi transfers by Kalidass Travels. Located minutes from the terminal for rapid 5-10 min dispatch, zero-delay flight tracking, Meet & Greet service, and dedicated B2B aggregator fleet partnerships.";
+
+const breadcrumbItems = [
+  { name: "Home", item: "/" },
+  { name: "Services", item: "/services/" },
+  { name: "Airport Transfers", item: "/services/chennai-airport-taxi/" },
+];
+
+const zoneTariffs = [
+  {
+    zone: "OMR & IT Corridor",
+    destinations: "Perungudi, Thoraipakkam, Sholinganallur, Navalur, Siruseri SIPCOT",
+    sedan: "₹1,250",
+    innova: "₹1,850",
+    crysta: "₹2,300",
+    tempo: "₹3,400",
+    eta: "25–40 mins",
+    popular: true,
+    whatsappMsg: "Hi Kalidass Travels, I need an Airport Transfer between Chennai Airport (MAA) and OMR IT Corridor."
+  },
+  {
+    zone: "Central & Downtown",
+    destinations: "Chennai Central, Egmore, T. Nagar, Nungambakkam, Anna Nagar",
+    sedan: "₹950",
+    innova: "₹1,550",
+    crysta: "₹1,950",
+    tempo: "₹2,900",
+    eta: "30–45 mins",
+    popular: false,
+    whatsappMsg: "Hi Kalidass Travels, I need an Airport Transfer between Chennai Airport (MAA) and Central/Egmore/T Nagar."
+  },
+  {
+    zone: "South Chennai & Suburbs",
+    destinations: "Guindy, Pallavaram, Tambaram, Medavakkam, Velachery, Chromepet",
+    sedan: "₹650",
+    innova: "₹1,150",
+    crysta: "₹1,500",
+    tempo: "₹2,400",
+    eta: "10–20 mins",
+    popular: false,
+    whatsappMsg: "Hi Kalidass Travels, I need an Airport Transfer between Chennai Airport (MAA) and South Chennai / Medavakkam / Tambaram."
+  },
+  {
+    zone: "ECR Coastal & Resorts",
+    destinations: "Kovalam, Mahabalipuram, Nemmeli, InterContinental, Radisson Blu Temple Bay",
+    sedan: "₹1,650",
+    innova: "₹2,400",
+    crysta: "₹2,950",
+    tempo: "₹4,200",
+    eta: "45–60 mins",
+    popular: true,
+    whatsappMsg: "Hi Kalidass Travels, I need an Airport Transfer between Chennai Airport (MAA) and ECR / Mahabalipuram."
+  },
+  {
+    zone: "Airport ⇄ Pondicherry Direct",
+    destinations: "Auroville, White Town, Promenade Beach, JIPMER (Direct from Flight)",
+    sedan: "₹3,900",
+    innova: "₹5,600",
+    crysta: "₹6,800",
+    tempo: "₹8,900",
+    eta: "2.5–3 hrs",
+    popular: true,
+    whatsappMsg: "Hi Kalidass Travels, I need a Direct Airport Transfer from Chennai Airport (MAA) to Pondicherry."
+  },
+  {
+    zone: "Airport ⇄ Tirupati / Vellore Direct",
+    destinations: "Tirupati Balaji Temple Hills, Vellore CMC Hospital Direct Airport Yatra",
+    sedan: "₹4,200",
+    innova: "₹6,200",
+    crysta: "₹7,400",
+    tempo: "₹9,800",
+    eta: "3–3.5 hrs",
+    popular: false,
+    whatsappMsg: "Hi Kalidass Travels, I need a Direct Airport Transfer from Chennai Airport (MAA) to Tirupati / Vellore."
+  }
+];
+
+const b2bPartnershipTiers = [
+  {
+    category: "Global B2B Transfer Aggregators",
+    partners: "Welcome Pickups, Mozio, Cartrawler, Talixo, HolidayTaxis, Suntransfers, Blacklane",
+    role: "On-Ground Ground Fleet Fulfilment Partner (MAA)",
+    description: "Reliable white-label and partner-branded pickup operations with live flight status monitoring, automated digital duty slips, uniformed drivers with arrival name boards, and zero cancellation records.",
+    perks: [
+      "Strict 100% Yellow-Board Commercial Fleet",
+      "Drivers trained in airport paging & international guest etiquette",
+      "Dedicated 24/7 API / Operations Dispatch Desk",
+      "Transparent wholesale net-rates & monthly settlement cycles"
+    ]
+  },
+  {
+    category: "Global OTA Networks & Flight Engines",
+    partners: "Booking.com (Rideways), Expedia Group, Agoda, Skyscanner, Trip.com",
+    role: "Connected Ground Mobility Tier-1 Local Supplier",
+    description: "Direct airport ground fulfillment for incoming international & domestic flight bookings. When global travelers add an airport transfer to their flight, we deliver flawless 5-minute terminal pickup.",
+    perks: [
+      "Free 60-min waiting window on delayed incoming flights",
+      "Clean sanitized fleet with dedicated luggage boot space",
+      "Pre-assigned driver contact sent via SMS & WhatsApp 2 hours prior",
+      "Immediate emergency backup vehicle dispatch guarantee"
+    ]
+  },
+  {
+    category: "Corporate TMCs & Business Mobility Desks",
+    partners: "FCM Travel, Amex GBT, Thomas Cook, Corporate Travel Desks",
+    role: "VIP Executive Airport Retainers & Bill-to-Company",
+    description: "Tailored for MNC executives, foreign delegates, and offshore teams commuting between Chennai Airport and OMR, Guindy, Sriperumbudur, and Oragadam manufacturing corridors.",
+    perks: [
+      "Itemized 100% GST-compliant invoices for full input tax credits",
+      "Late-night 2:00 AM & early-morning 4:00 AM guaranteed pickups",
+      "Premium Innova Crysta & Sedan executive fleet options",
+      "15-day and 30-day bill-to-company corporate credit terms"
+    ]
+  }
+];
+
+const faqs = [
+  {
+    q: "How close is Kalidass Travels to Chennai International Airport (MAA)?",
+    a: "Our primary vehicle dispatch hub is located directly in the airport perimeter corridor (Pallavaram / Medavakkam / Guindy belt). This allows us to dispatch vehicles to Terminal 1 (Domestic) and Terminals 2 & 4 (International) within 5 to 10 minutes flat, avoiding typical city-center delays."
+  },
+  {
+    q: "What happens if my flight is delayed by several hours?",
+    a: "We track your flight number in real-time. Whether your flight touches down early or is delayed by 2 to 4 hours, your assigned chauffeur adjusts the pickup time automatically. We do NOT charge extra waiting fees for airline delays."
+  },
+  {
+    q: "How does the Arrivals Meet & Greet service work?",
+    a: "Your chauffeur waits at the designated airport arrival exit gate holding a personalized name board with your name or corporate logo. The driver assists with your luggage and escorts you directly to the car parked in the designated commercial pickup zone."
+  },
+  {
+    q: "Are parking and airport entry fees included in the fare?",
+    a: "Our flat rates are completely transparent. Standard airport parking tickets and toll booth receipts are provided digitally without hidden surge pricing or unexpected driver demands."
+  },
+  {
+    q: "How can Global Aggregators (Mozio, Cartrawler, Welcome Pickups) partner with Kalidass Travels?",
+    a: "We actively onboard as verified local ground handling suppliers for global transfer aggregators and OTAs. Contact our B2B Operations Desk directly at kalidasstravels2015@gmail.com or +91 90923 03060 for wholesale SLA contracts, API dispatch integration, and tariff agreements."
+  },
+  {
+    q: "Can I book a direct transfer from Chennai Airport to Pondicherry, Vellore, or Tirupati?",
+    a: "Yes! Many tourists and medical travelers land at MAA and travel directly outstation. We specialize in immediate non-stop outstation drops to Pondicherry, Vellore CMC Hospital, and Tirupati Balaji with comfortable long-distance highway cruisers."
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "TaxiService",
+  "name": "Chennai Airport Taxi & Transfers - Kalidass Travels",
+  "description": description,
+  "url": "https://kalidasstravels.in/services/chennai-airport-taxi/",
+  "image": "https://kalidasstravels.in/images/services/airport-transfer.webp",
+  "provider": {
+    "@id": "https://kalidasstravels.in/#localbusiness"
+  },
+  "areaServed": [
+    { "@type": "Airport", "name": "Chennai International Airport (MAA)" },
+    { "@type": "City", "name": "Chennai" },
+    { "@type": "AdministrativeArea", "name": "Tamil Nadu" }
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Airport Transfer Zones",
+    "itemListElement": zoneTariffs.map((z, idx) => ({
+      "@type": "Offer",
+      "position": idx + 1,
+      "name": z.zone,
+      "description": `Airport transfer to ${z.destinations}`,
+      "priceCurrency": "INR",
+      "price": z.sedan.replace(/[^0-9]/g, '')
+    }))
+  }
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(item => ({
+    "@type": "Question",
+    "name": item.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.a
+    }
+  }))
+};
+---
+
+<Layout 
+  title={`${title} | Kalidass Travels`}
+  description={description}
+  image="/images/services/airport-transfer.webp"
+  schema={[schema, faqSchema]}
+>
+  <Breadcrumbs items={breadcrumbItems} />
+
+  <main class="bg-m3-surface text-m3-on-surface font-sans pb-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10">
+
+      <!-- 1. HERO SECTION -->
+      <section class="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-4 tracking-wide">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Stationed 5 Mins from MAA Airport • Zero Surge • Flight-Delay Tracking</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-3.5 font-heading">
+          Chennai Airport Taxi &amp; <span class="text-m3-primary">Transfers</span>
+        </h1>
+        <p class="text-sm sm:text-base md:text-lg text-m3-on-surface-variant font-normal leading-relaxed max-w-2xl mx-auto mb-6">
+          Step off your flight and straight into a sanitized, pre-cooled cab with zero waiting. Dispatched from our base right next to Chennai International Airport with real-time flight tracking and arrivals Meet &amp; Greet.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <WhatsAppButton 
+            href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20need%20to%20book%20a%20Chennai%20Airport%20Taxi%20Transfer."
+            size="md"
+            variant="filled"
+            text="Book Airport Cab on WhatsApp"
+          />
+          <a 
+            href="#b2b-partners" 
+            class="inline-flex items-center gap-2 px-6 py-3 bg-m3-surface hover:bg-m3-surface-container-high text-m3-on-surface border border-m3-outline text-xs sm:text-sm font-bold rounded-m3-full shadow-m3-1 transition-all"
+          >
+            <span>Global Aggregator &amp; B2B Fleet Partnership</span>
+            <span class="material-symbols-outlined text-[16px] text-m3-primary">arrow_downward</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- 2. FOUR UNFAIR ADVANTAGES STRIP -->
+      <section class="mb-12">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
+          <div class="p-4 rounded-m3-xl bg-m3-surface-container-low border border-m3-outline-variant/70 shadow-m3-1">
+            <div class="w-10 h-10 rounded-m3-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center mb-3">
+              <span class="material-symbols-outlined text-2xl">near_me</span>
+            </div>
+            <h3 class="text-sm sm:text-base font-bold text-m3-on-surface mb-1 font-heading">5–10 Min Proximity</h3>
+            <p class="text-xs text-m3-on-surface-variant leading-relaxed">Located directly on the airport perimeter corridor. Cabs reach T1, T2, and T4 terminals within minutes.</p>
+          </div>
+
+          <div class="p-4 rounded-m3-xl bg-m3-surface-container-low border border-m3-outline-variant/70 shadow-m3-1">
+            <div class="w-10 h-10 rounded-m3-lg bg-blue-500/10 text-blue-600 flex items-center justify-center mb-3">
+              <span class="material-symbols-outlined text-2xl">flight_takeoff</span>
+            </div>
+            <h3 class="text-sm sm:text-base font-bold text-m3-on-surface mb-1 font-heading">Free Flight Delay Tracking</h3>
+            <p class="text-xs text-m3-on-surface-variant leading-relaxed">Provide your flight number. If your flight is delayed by 2 hours, your driver adjusts automatically with zero waiting penalty.</p>
+          </div>
+
+          <div class="p-4 rounded-m3-xl bg-m3-surface-container-low border border-m3-outline-variant/70 shadow-m3-1">
+            <div class="w-10 h-10 rounded-m3-lg bg-amber-500/10 text-amber-600 flex items-center justify-center mb-3">
+              <span class="material-symbols-outlined text-2xl">badge</span>
+            </div>
+            <h3 class="text-sm sm:text-base font-bold text-m3-on-surface mb-1 font-heading">Meet &amp; Greet with Paging</h3>
+            <p class="text-xs text-m3-on-surface-variant leading-relaxed">Your uniformed chauffeur waits at the arrival gate with your name board, helping with heavy suitcases straight to the car.</p>
+          </div>
+
+          <div class="p-4 rounded-m3-xl bg-m3-surface-container-low border border-m3-outline-variant/70 shadow-m3-1">
+            <div class="w-10 h-10 rounded-m3-lg bg-purple-500/10 text-purple-600 flex items-center justify-center mb-3">
+              <span class="material-symbols-outlined text-2xl">currency_rupee</span>
+            </div>
+            <h3 class="text-sm sm:text-base font-bold text-m3-on-surface mb-1 font-heading">Zero Surge Pricing</h3>
+            <p class="text-xs text-m3-on-surface-variant leading-relaxed">Rain, late midnight arrivals (1:30 AM), or peak business hours — your agreed flat rate remains 100% unchanged.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. ZONE-WISE FLAT TARIFF CARDS -->
+      <section class="mb-14">
+        <div class="text-center max-w-2xl mx-auto mb-8">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-2">
+            <span class="material-symbols-outlined text-sm text-m3-primary">payments</span>
+            <span>Transparent Flat Rates</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
+            Chennai Airport Fixed Zone Tariffs
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1.5">
+            Transparent zone fares from Chennai Airport (MAA). No parking fee extortion, no midnight multiplier.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+          {zoneTariffs.map((tariff) => (
+            <div class={`relative bg-m3-surface-container-lowest rounded-m3-xl border p-4 sm:p-5 flex flex-col justify-between shadow-m3-1 hover:shadow-m3-2 transition-all ${tariff.popular ? 'border-m3-primary ring-1 ring-m3-primary/30' : 'border-m3-outline-variant/70'}`}>
+              {tariff.popular && (
+                <div class="absolute -top-2.5 right-4 px-2.5 py-0.5 bg-m3-primary text-white text-[10px] font-bold uppercase tracking-wider rounded-full shadow-sm">
+                  Most Booked
+                </div>
+              )}
+
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-1.5">
+                  <h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading">{tariff.zone}</h3>
+                  <span class="inline-flex items-center gap-1 text-micro text-m3-on-surface-variant font-medium bg-m3-surface-container px-2 py-0.5 rounded-full">
+                    <span class="material-symbols-outlined text-[13px]">schedule</span>
+                    {tariff.eta}
+                  </span>
+                </div>
+                <p class="text-xs text-m3-on-surface-variant mb-4 line-clamp-2 leading-relaxed">
+                  {tariff.destinations}
+                </p>
+
+                <!-- Vehicle Price Breakdown Grid -->
+                <div class="space-y-1.5 mb-4 bg-m3-surface-container-low p-2.5 rounded-m3-lg border border-m3-outline-variant/50 text-xs">
+                  <div class="flex justify-between items-center py-0.5">
+                    <span class="text-m3-on-surface-variant font-medium">Sedan (Dzire/Etios, 4 Pax)</span>
+                    <span class="font-bold text-m3-on-surface">{tariff.sedan}</span>
+                  </div>
+                  <div class="flex justify-between items-center py-0.5 border-t border-m3-outline-variant/40">
+                    <span class="text-m3-on-surface-variant font-medium">Innova (6 Pax + Bags)</span>
+                    <span class="font-bold text-m3-on-surface">{tariff.innova}</span>
+                  </div>
+                  <div class="flex justify-between items-center py-0.5 border-t border-m3-outline-variant/40">
+                    <span class="text-m3-on-surface-variant font-medium">Innova Crysta VIP</span>
+                    <span class="font-bold text-m3-on-surface">{tariff.crysta}</span>
+                  </div>
+                  <div class="flex justify-between items-center py-0.5 border-t border-m3-outline-variant/40">
+                    <span class="text-m3-on-surface-variant font-medium">Tempo Traveller (12 Pax)</span>
+                    <span class="font-bold text-m3-on-surface">{tariff.tempo}</span>
+                  </div>
+                </div>
+              </div>
+
+              <WhatsAppButton 
+                href={`https://wa.me/919092303060?text=${encodeURIComponent(tariff.whatsappMsg)}`}
+                size="sm"
+                variant="filled"
+                text={`Book ${tariff.zone}`}
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- 4. LUGGAGE & FLEET CAPACITY GUIDE -->
+      <section class="mb-14 p-5 sm:p-7 rounded-m3-2xl bg-m3-surface-container-low border border-m3-outline-variant">
+        <div class="max-w-2xl mb-6">
+          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-m3-on-surface font-heading">
+            Choose Your Vehicle by Luggage Capacity
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">
+            Avoid cramped airport rides. Pick a vehicle suited for your international check-in bags and party size.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+          <div class="p-3.5 rounded-m3-xl bg-m3-surface border border-m3-outline-variant/60 shadow-xs">
+            <h3 class="text-sm font-bold text-m3-on-surface font-heading">Executive Sedan</h3>
+            <p class="text-[11px] text-m3-secondary font-medium mt-0.5">Swift Dzire / Toyota Etios</p>
+            <div class="mt-3 space-y-1 text-xs text-m3-on-surface-variant">
+              <div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-emerald-600">group</span> 4 Passengers</div>
+              <div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-emerald-600">luggage</span> 2 Large Suitcases + 2 Cabin</div>
+              <div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-emerald-600">ac_unit</span> Dual AC Comfort</div>
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-m3-xl bg-m3-surface border border-m3-outline-variant/60 shadow-xs">
+            <h3 class="text-sm font-bold text-m3-on-surface font-heading">Maruti Ertiga</h3>
+            <p class="text-[11px] text-m3-secondary font-medium mt-0.5">Compact Family MPV</p>
+            <div class="mt-3 space-y-1 text-xs text-m3-on-surface-variant">
+              <div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-emerald-600">group</span> 5–6 Passengers</div>
+              <div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-emerald-600">luggage</span> 3 Medium Suitcases + Handbags</div>
+              <div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-emerald-600">ac_unit</span> Roof AC Vents</div>
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-m3-xl bg-m3-surface border border-m3-outline-variant/60 shadow-xs">
+            <h3 class="text-sm font-bold text-m3-on-surface font-heading">Toyota Innova / Crysta</h3>
+            <p class="text-[11px] text-m3-secondary font-medium mt-0.5">NRI &amp; VIP Executive Standard</p>
+            <div class="mt-3 space-y-1 text-xs text-m3-on-surface-variant">
+              <div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-emerald-600">group</span> 6–7 Passengers</div>
+              <div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-emerald-600">luggage</span> 5 Large International Suitcases</div>
+              <div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-emerald-600">chair</span> Reclining Captain Seats</div>
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-m3-xl bg-m3-surface border border-m3-outline-variant/60 shadow-xs">
+            <h3 class="text-sm font-bold text-m3-on-surface font-heading">Tempo Traveller</h3>
+            <p class="text-[11px] text-m3-secondary font-medium mt-0.5">Corporate &amp; Group Transport</p>
+            <div class="mt-3 space-y-1 text-xs text-m3-on-surface-variant">
+              <div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-emerald-600">group</span> 12–14 Passengers</div>
+              <div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-emerald-600">luggage</span> 12+ Suitcases Dedicated Boot</div>
+              <div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-emerald-600">airline_seat_recline_extra</span> High-Roof Luxury Cabin</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. B2B & GLOBAL AGGREGATOR PARTNERSHIP HUB -->
+      <section id="b2b-partners" class="mb-14 scroll-mt-20">
+        <div class="rounded-m3-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 text-white p-6 sm:p-10 shadow-m3-3 border border-slate-800">
+          <div class="max-w-3xl mb-8">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-m3-full bg-white/10 border border-white/20 text-emerald-400 text-xs font-semibold shadow-xs mb-3">
+              <span class="material-symbols-outlined text-sm">handshake</span>
+              <span>Global Aggregator &amp; OTA Fulfilment Network</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight font-heading text-white">
+              Partner with Chennai's Premier On-Ground Fleet Supplier
+            </h2>
+            <p class="text-slate-300 text-xs sm:text-sm md:text-base mt-2 leading-relaxed">
+              Are you a global transfer aggregator, OTA flight booking network, or corporate travel management company (TMC)? Kalidass Travels provides verified, SLA-backed ground transfer fulfillment at Chennai International Airport (MAA).
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-8">
+            {b2bPartnershipTiers.map((tier) => (
+              <div class="bg-white/5 backdrop-blur-md rounded-m3-xl p-5 border border-white/10 flex flex-col justify-between">
+                <div>
+                  <span class="text-emerald-400 text-micro font-bold uppercase tracking-wider block mb-1">
+                    {tier.category}
+                  </span>
+                  <h3 class="text-base font-bold text-white font-heading mb-1">{tier.role}</h3>
+                  <p class="text-slate-400 text-[11px] font-medium mb-3 italic">
+                    Targeting: {tier.partners}
+                  </p>
+                  <p class="text-slate-300 text-xs leading-relaxed mb-4">
+                    {tier.description}
+                  </p>
+                  <div class="space-y-1.5 text-xs text-slate-300 border-t border-white/10 pt-3 mb-4">
+                    {tier.perks.map((perk) => (
+                      <div class="flex items-start gap-1.5">
+                        <span class="material-symbols-outlined text-[14px] text-emerald-400 shrink-0 mt-0.5">check_circle</span>
+                        <span>{perk}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <!-- B2B Compliance & SLA Assurance Strip -->
+          <div class="bg-white/5 rounded-m3-xl p-4 sm:p-5 border border-white/10 mb-8 flex flex-wrap items-center justify-between gap-4 text-xs">
+            <div class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-emerald-400 text-2xl">verified</span>
+              <div>
+                <strong class="text-white block font-heading">100% Legal &amp; Commercial Compliance</strong>
+                <span class="text-slate-400 text-[11px]">Yellow-board commercial passenger permits • Comprehensive passenger insurance</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-blue-400 text-2xl">receipt_long</span>
+              <div>
+                <strong class="text-white block font-heading">100% GST Invoicing</strong>
+                <span class="text-slate-400 text-[11px]">Digital trip sheets &amp; GSTIN input tax credit deduction</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2.5">
+              <span class="material-symbols-outlined text-amber-400 text-2xl">timer</span>
+              <div>
+                <strong class="text-white block font-heading">60-Minute Backup SLA</strong>
+                <span class="text-slate-400 text-[11px]">Immediate emergency replacement car guarantee</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- B2B Direct Partnership Action -->
+          <div class="text-center pt-2">
+            <h4 class="text-sm sm:text-base font-bold text-white mb-2 font-heading">
+              Ready to integrate or request our Wholesale B2B Rate Deck?
+            </h4>
+            <div class="flex flex-wrap items-center justify-center gap-3">
+              <WhatsAppButton 
+                href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20we%20are%20a%20B2B%20Transfer%20Aggregator%20/%20OTA%20interested%20in%20partnering%20for%20Chennai%20Airport%20transfers."
+                size="md"
+                variant="filled"
+                text="Connect with B2B Fleet Manager"
+              />
+              <a 
+                href="mailto:kalidasstravels2015@gmail.com?subject=B2B%20Airport%20Transfer%20Partnership%20Proposal"
+                class="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm rounded-m3-full border border-white/20 transition-all"
+              >
+                <span class="material-symbols-outlined text-[16px]">mail</span>
+                <span>Email RFP: kalidasstravels2015@gmail.com</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. FREQUENTLY ASKED QUESTIONS -->
+      <section class="max-w-3xl mx-auto mb-12">
+        <div class="text-center mb-6">
+          <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading">
+            Frequently Asked Questions
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">
+            Airport pickup protocols, flight delay tracking, and aggregator partnership details
+          </p>
+        </div>
+
+        <FAQAccordion items={faqs} columns={1} name="airport-faq" />
+      </section>
+
+      <!-- 7. BOTTOM CONVERSION CTA BANNER -->
+      <section class="bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-2xl p-6 sm:p-10 text-center shadow-m3-3 border border-slate-800 my-8">
+        <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold font-heading text-white mb-2">
+          Flying into or out of Chennai Airport?
+        </h2>
+        <p class="text-slate-300 text-xs sm:text-sm max-w-lg mx-auto mb-6 leading-relaxed">
+          Book your taxi in 60 seconds on WhatsApp. Send us your flight number and arrival time — your car will be waiting when you touch down.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <WhatsAppButton 
+            href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20reserve%20an%20airport%20cab%20at%20Chennai%20Airport."
+            size="md"
+            variant="filled"
+            text="Instant Airport Booking on WhatsApp"
+          />
+          <a 
+            href="tel:+919092303060"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface font-bold text-xs sm:text-sm rounded-m3-full shadow-m3-1 transition-all"
+          >
+            <span class="material-symbols-outlined text-[16px]">call</span>
+            <span>24/7 Dispatch Desk: +91 90923 03060</span>
+          </a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</Layout>

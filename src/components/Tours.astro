@@ -4,27 +4,16 @@ import serviceDetails from "../data/serviceDetails.json";
 
 // 1. Temple Trips (Strictly religious/pilgrimage)
 const templeTripsSlugs = [
-  "sabarimala-trip",
-  "thiruvannamalai-girivalam-trip",
   "tirupati-package",
+  "thiruvannamalai-girivalam-trip",
   "rameswaram-2-days",
-  "chidambaram-temple-trip",
   "navagraha-tour",
+  "chidambaram-temple-trip",
+  "sabarimala-trip",
 ];
 
 const templeTrips = serviceDetails.filter((service) =>
   templeTripsSlugs.includes(service.slug),
-);
-
-// 2. Popular Destinations (Leisure, Heritage, City)
-const destinationSlugs = [
-  "pondicherry-one-day-trip",
-  "mahabalipuram-ecr-temple-route",
-  "one-day-chennai-city-tour",
-];
-
-const popularDestinations = serviceDetails.filter((service) =>
-  destinationSlugs.includes(service.slug),
 );
 
 // Image Mapping
@@ -55,100 +44,82 @@ const tourImageAlts: Record<string, string> = {
 };
 ---
 
-<section id="tours" class="py-10 md:py-16 bg-gray-50">
-  <div class="max-w-7xl mx-auto px-4">
-    <!-- SECTION 1: POPULAR TEMPLE TRIPS -->
-    <div class="mb-12">
-      <div class="text-center mb-8">
-        <h2 class="text-2xl md:text-4xl font-extrabold text-gray-900 inline-block relative mb-3">
-          Popular Temple Trips
-          <div class="absolute bottom-[-8px] left-1/2 transform -translate-x-1/2 w-16 h-1 bg-orange-600 rounded-full"></div>
-        </h2>
-        <p class="text-base text-gray-600 max-w-2xl mx-auto mt-2">
-          Sacred pilgrimages and spiritual journeys.
-        </p>
-      </div>
-
-      <div class="flex overflow-x-auto gap-4 px-2 pb-6 scrollbar-hide snap-x">
-        {templeTrips.map((tour) => (
-          <a
-            href={`/services/${tour.slug}/`}
-            class="block flex-none w-64 sm:w-72 snap-center bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group cursor-pointer hover:shadow-md transition"
-          >
-            <div class="h-36 sm:h-40 overflow-hidden relative bg-gray-200 skeleton-shimmer">
-              <OptimizedImage
-                src={tourImages[tour.slug] || "https://images.unsplash.com/photo-1596700414605-e45f1b1c7c9a?q=80&w=600"}
-                alt={tourImageAlts[tour.slug] || tour.title}
-                class="w-full h-full object-cover group-hover:scale-105 transition duration-700 relative z-10"
-                sizes="288px"
-              />
-              <span class="absolute top-2 left-2 bg-orange-800 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
-                PILGRIMAGE
-              </span>
-            </div>
-            <div class="p-4">
-              <h3 class="font-bold text-base text-gray-900 mb-1 line-clamp-1">{tour.title}</h3>
-              <p class="text-xs text-gray-600 mb-3 line-clamp-2">{tour.overview}</p>
-              <div class="flex items-center text-orange-800 font-bold text-xs uppercase tracking-wide group-hover:text-orange-900">
-                <span>Book {tour.title}</span>
-                <i class="fas fa-arrow-right ml-1 group-hover:translate-x-1 transition" />
-              </div>
-            </div>
-          </a>
-        ))}
-      </div>
-      <div class="text-center mt-4">
-        <a href="/services/category/temple-tours/" class="inline-flex items-center text-orange-800 font-bold text-sm hover:text-orange-900 transition">
-          View All <i class="fas fa-arrow-right ml-2"></i>
-        </a>
-      </div>
+<section id="tours" class="py-10 md:py-14 bg-m3-surface-container-low border-t border-m3-outline-variant/60">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Section Header -->
+    <div class="text-center max-w-3xl mx-auto mb-8">
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+        Popular <span class="text-m3-primary">Temple Trips</span>
+      </h2>
+      <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant font-normal max-w-2xl mx-auto leading-relaxed mb-6 font-sans">
+        Sacred pilgrimage packages with experienced drivers who know temple timings, darshan routes, and peaceful stops.
+      </p>
     </div>
 
-    <!-- SECTION 2: POPULAR DESTINATIONS -->
-    <div>
-      <div class="text-center mb-8">
-        <h2 class="text-2xl md:text-4xl font-extrabold text-gray-900 inline-block relative mb-3">
-          Popular Destinations
-          <div class="absolute bottom-[-8px] left-1/2 transform -translate-x-1/2 w-16 h-1 bg-green-600 rounded-full"></div>
-        </h2>
-        <p class="text-base text-gray-600 max-w-2xl mx-auto mt-2">
-          Explore heritage sites, beaches, and city tours.
-        </p>
-      </div>
-
-      <div class="flex overflow-x-auto gap-4 px-2 pb-6 scrollbar-hide snap-x">
-        {popularDestinations.map((tour) => (
-          <a
-            href={`/services/${tour.slug}/`}
-            class="block flex-none w-64 sm:w-72 snap-center bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group cursor-pointer hover:shadow-md transition"
-          >
-            <div class="h-36 sm:h-40 overflow-hidden relative bg-gray-200 skeleton-shimmer">
+    <!-- Material 3 Tour Cards Grid -->
+    <div class="flex overflow-x-auto gap-4 sm:gap-6 px-1 pb-4 scrollbar-hide snap-x md:grid md:grid-cols-3 md:overflow-visible">
+      {templeTrips.map((tour) => (
+        <a
+          href={`/services/${tour.slug}/`}
+          class="block flex-none w-72 md:w-auto snap-center bg-m3-surface rounded-m3-xl shadow-m3-1 hover:shadow-m3-3 border border-m3-outline-variant overflow-hidden group cursor-pointer transform hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+        >
+          <div>
+            <!-- Card Media Container -->
+            <div class="h-36 sm:h-40 overflow-hidden relative bg-m3-surface-container-high skeleton-shimmer">
               <OptimizedImage
                 src={tourImages[tour.slug] || "https://images.unsplash.com/photo-1596700414605-e45f1b1c7c9a?q=80&w=600"}
                 alt={tourImageAlts[tour.slug] || tour.title}
-                class="w-full h-full object-cover group-hover:scale-105 transition duration-700 relative z-10"
-                sizes="288px"
+                class="w-full h-full object-cover group-hover:scale-105 transition duration-500 relative z-10"
+                sizes="(max-width: 768px) 320px, 33vw"
               />
-              <span class="absolute top-2 left-2 bg-green-800 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
-                DESTINATION
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent z-10"></div>
+              
+              <!-- Pilgrimage Badge -->
+              <span class="absolute top-3 left-3 bg-slate-950/85 backdrop-blur-md border border-white/20 text-white text-micro font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-m3-full shadow-sm z-20">
+                PILGRIMAGE
               </span>
+
+              {tour.duration && (
+                <span class="absolute bottom-3 left-3 bg-white/90 backdrop-blur-md text-slate-800 text-badge font-semibold px-2.5 py-0.5 rounded-m3-xs shadow-sm z-20">
+                  {tour.duration}
+                </span>
+              )}
             </div>
-            <div class="p-4">
-              <h3 class="font-bold text-base text-gray-900 mb-1 line-clamp-1">{tour.title}</h3>
-              <p class="text-xs text-gray-600 mb-3 line-clamp-2">{tour.overview}</p>
-              <div class="flex items-center text-green-800 font-bold text-xs uppercase tracking-wide group-hover:text-green-900">
-                <span>Explore {tour.title}</span>
-                <i class="fas fa-arrow-right ml-1 group-hover:translate-x-1 transition" />
-              </div>
+
+            <!-- Card Content -->
+            <div class="p-4 sm:p-5">
+              <h3 class="font-bold text-base sm:text-lg text-m3-on-surface mb-1.5 line-clamp-1 group-hover:text-m3-primary transition-colors font-heading">
+                {tour.title}
+              </h3>
+              <p class="text-xs sm:text-sm text-m3-on-surface-variant mb-4 line-clamp-2 leading-relaxed font-normal">
+                {tour.overview}
+              </p>
             </div>
-          </a>
-        ))}
-      </div>
-      <div class="text-center mt-6">
-        <a href="/services/category/popular-destinations/" class="inline-flex items-center text-green-800 font-bold text-sm hover:text-green-900 transition">
-          View All <i class="fas fa-arrow-right ml-2"></i>
+          </div>
+
+          <!-- Material Action Footer -->
+          <div class="px-4 sm:px-5 pb-4 sm:pb-5 pt-3 border-t border-m3-outline-variant/50 flex items-center justify-between">
+            <span class="text-xs font-semibold text-m3-on-surface-variant">
+              Complete Package
+            </span>
+            <span class="inline-flex items-center gap-1.5 text-m3-label-m font-bold text-m3-primary group-hover:underline transition-colors">
+              <span>View Itinerary</span>
+              <span class="material-symbols-outlined text-[16px] transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </span>
+          </div>
         </a>
-      </div>
+      ))}
+    </div>
+
+    <!-- View All CTA -->
+    <div class="text-center mt-8">
+      <a
+        href="/services/temple-tours/"
+        class="inline-flex items-center gap-2 px-6 py-2.5 rounded-m3-full bg-m3-surface border border-m3-outline text-m3-on-surface text-m3-label-l font-bold hover:bg-m3-surface-container-high shadow-m3-1 transition-all"
+      >
+        <span>View All Temple Tour Packages</span>
+        <span class="material-symbols-outlined text-[18px] text-m3-primary">arrow_forward</span>
+      </a>
     </div>
   </div>
 </section>

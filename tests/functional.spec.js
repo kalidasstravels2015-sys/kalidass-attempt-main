@@ -8,22 +8,25 @@ test.describe('Functional Tests', () => {
         await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     });
 
-    test('Language toggle switches to Tamil', async ({ page }) => {
-        await page.goto('/');
+    test('Legal and 404 pages load correctly', async ({ page }) => {
+        // Privacy Policy
+        await page.goto('/privacy/');
+        await expect(page).toHaveTitle(/Privacy Policy/i);
+        await expect(page.getByRole('heading', { level: 1, name: /Privacy Policy/i })).toBeVisible();
 
-        // Click the language toggle (use first() as there are desktop/mobile versions)
-        const tamilLink = page.getByLabel('Switch to Tamil').first();
-        await tamilLink.click();
+        // Terms and Conditions
+        await page.goto('/terms/');
+        await expect(page).toHaveTitle(/Terms and Conditions/i);
+        await expect(page.getByRole('heading', { level: 1, name: /Terms & Conditions/i })).toBeVisible();
 
-        // Verify URL changes
-        await expect(page).toHaveURL(/.*\/ta/);
-
-        // Verify Tamil content (HTML lang attribute)
-        await expect(page.locator('html')).toHaveAttribute('lang', 'ta');
+        // Custom 404
+        await page.goto('/non-existent-route-for-testing/');
+        await expect(page).toHaveTitle(/404/i);
+        await expect(page.getByText(/This Route Took a Detour/i)).toBeVisible();
     });
 
     test('Service pages load correctly', async ({ page }) => {
-        await page.goto('/services/acting-driver-within-chennai'); 
+        await page.goto('/services/acting-driver-within-chennai/'); 
         await expect(page).toHaveTitle(/Acting Driver/i);
     });
 
@@ -36,13 +39,11 @@ test.describe('Functional Tests', () => {
         await expect(calculatorHeading).toBeVisible();
 
         // Fill inputs
-        const pickupInput = page.getByLabel(/Pickup Location/i);
-        const dropInput = page.getByLabel(/Drop Location/i);
-        const vehicleSelect = page.getByLabel(/Vehicle/i);
+        const pickupInput = page.getByRole('textbox', { name: /Pickup Location/i });
+        const dropInput = page.getByRole('textbox', { name: /Drop Location/i });
 
         await expect(pickupInput).toBeVisible();
         await expect(dropInput).toBeVisible();
-        await expect(vehicleSelect).toBeVisible();
         
         // Fill some data and check if Calculate button is there
         await pickupInput.fill('Chennai Airport');

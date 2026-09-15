@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import trips from '../../data/trips.json';
 import { trackEvent } from '../../lib/analytics';
+import WhatsAppButton from './WhatsAppButton.jsx';
 
 const TariffCalculator = ({ currentLang }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -17,17 +18,21 @@ const TariffCalculator = ({ currentLang }) => {
 
             if (foundTrip) {
                 const totalKm = foundTrip.kmOneWay * 2;
-                const durationDays = parseInt(foundTrip.duration); // Assumes "2 Days" format
-                const driverBata = 300 * durationDays;
-                const etiosCost = (totalKm * 13) + driverBata;
-                const innovaCost = (totalKm * 18) + driverBata;
+                const durationDays = parseInt(foundTrip.duration) || 1;
+                const minKm = durationDays * 250;
+                const chargeableKm = Math.max(minKm, totalKm);
+                const etiosBata = 300 * durationDays;
+                const innovaBata = 500 * durationDays;
+                const etiosCost = (chargeableKm * 14) + etiosBata;
+                const innovaCost = (chargeableKm * 18) + innovaBata;
 
                 setActiveTrip(foundTrip);
                 setCosts({
                     etios: etiosCost,
                     innova: innovaCost,
-                    bata: driverBata,
+                    bata: etiosBata,
                     totalKm,
+                    chargeableKm
                 });
                 setIsOpen(true);
                 document.body.style.overflow = 'hidden';
@@ -48,7 +53,6 @@ const TariffCalculator = ({ currentLang }) => {
     // Focus Trap and Escape Key
     useEffect(() => {
         if (isOpen) {
-            // Focus the modal container or first button
             setTimeout(() => modalRef.current?.focus(), 50);
 
             const handleKeyDown = (e) => {
@@ -80,7 +84,7 @@ const TariffCalculator = ({ currentLang }) => {
             `Innova: ₹${costs.innova.toLocaleString('en-IN')}\n\n` +
             `Please confirm the final pricing and availability.`
         );
-        window.open(`https://wa.me/919952749408?text=${message}`, '_blank');
+        window.open(`https://wa.me/919092303060?text=${message}`, '_blank');
     };
 
     if (!isOpen || !activeTrip) return null;
@@ -89,7 +93,7 @@ const TariffCalculator = ({ currentLang }) => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             {/* Backdrop */}
             <div
-                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                className="absolute inset-0 bg-slate-950/70 backdrop-blur-xs"
                 onClick={closeModal}
                 aria-hidden="true"
             />
@@ -97,19 +101,19 @@ const TariffCalculator = ({ currentLang }) => {
             {/* Modal */}
             <div
                 ref={modalRef}
-                className="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-fade-in-up outline-none"
+                className="relative bg-m3-surface rounded-m3-xl shadow-m3-4 border border-m3-outline-variant max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-fade-in-up outline-none font-sans"
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="modal-title"
                 tabIndex={-1}
             >
                 {/* Header */}
-                <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 rounded-t-2xl">
+                <div className="bg-m3-surface-container-low text-m3-on-surface p-6 rounded-t-m3-xl border-b border-m3-outline-variant">
                     <div className="flex justify-between items-center">
-                        <h3 id="modal-title" className="text-2xl font-bold">Trip Calculator</h3>
+                        <h3 id="modal-title" className="text-xl font-bold font-heading">Trip Fare Estimate</h3>
                         <button
                             onClick={closeModal}
-                            className="text-white hover:text-gray-200 transition focus:outline-none focus:ring-2 focus:ring-white rounded p-1"
+                            className="text-m3-on-surface-variant hover:text-m3-on-surface transition focus:outline-none focus:ring-2 focus:ring-m3-primary rounded-m3-full p-1 cursor-pointer"
                             aria-label="Close Calculator"
                         >
                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -117,30 +121,30 @@ const TariffCalculator = ({ currentLang }) => {
                             </svg>
                         </button>
                     </div>
-                    <p className="text-blue-100 mt-2">Estimated pricing for {activeTrip.title}</p>
+                    <p className="text-m3-on-surface-variant mt-1.5 font-normal text-sm">Estimated pricing for {activeTrip.title}</p>
                 </div>
 
                 {/* Content */}
                 <div className="p-6 space-y-6">
                     {/* Trip Details */}
-                    <div className="bg-gray-50 rounded-xl p-5">
-                        <h4 className="font-semibold text-gray-900 mb-3">Trip Details</h4>
-                        <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div className="bg-m3-surface-container-low rounded-m3-lg p-5 border border-m3-outline-variant/60">
+                        <h4 className="font-bold text-m3-on-surface mb-3 font-heading text-sm uppercase tracking-wider">Trip Details</h4>
+                        <div className="grid grid-cols-2 gap-4 text-xs sm:text-sm">
                             <div>
-                                <span className="text-gray-600 block">One Way Distance</span>
-                                <p className="font-semibold text-gray-900">{activeTrip.kmOneWay} km</p>
+                                <span className="text-m3-on-surface-variant block text-xs">One Way Distance</span>
+                                <p className="font-bold text-m3-on-surface">{activeTrip.kmOneWay} km</p>
                             </div>
                             <div>
-                                <span className="text-gray-600 block">Total Distance</span>
-                                <p className="font-semibold text-gray-900">{costs.totalKm} km</p>
+                                <span className="text-m3-on-surface-variant block text-xs">Total Distance</span>
+                                <p className="font-bold text-m3-on-surface">{costs.totalKm} km</p>
                             </div>
                             <div>
-                                <span className="text-gray-600 block">Duration</span>
-                                <p className="font-semibold text-gray-900">{activeTrip.duration}</p>
+                                <span className="text-m3-on-surface-variant block text-xs">Duration</span>
+                                <p className="font-bold text-m3-on-surface">{activeTrip.duration}</p>
                             </div>
                             <div>
-                                <span className="text-gray-600 block">Driver Bata (Included)</span>
-                                <p className="font-semibold text-gray-900">₹{costs.bata}</p>
+                                <span className="text-m3-on-surface-variant block text-xs">Driver Bata (Included)</span>
+                                <p className="font-bold text-m3-on-surface">₹{costs.bata}</p>
                             </div>
                         </div>
                     </div>
@@ -148,74 +152,76 @@ const TariffCalculator = ({ currentLang }) => {
                     {/* Pricing Cards */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {/* Etios Card */}
-                        <div className="border-2 border-blue-200 rounded-xl p-5 hover:border-blue-400 transition">
-                            <div className="flex items-center justify-between mb-3">
-                                <h4 className="font-bold text-lg text-gray-900">Toyota Etios</h4>
-                                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
+                        <div className="border border-m3-outline-variant bg-m3-surface rounded-m3-lg p-5 shadow-m3-1 flex flex-col justify-between">
+                            <div>
+                                <div className="flex items-center justify-between mb-3">
+                                    <h4 className="font-bold text-base text-m3-on-surface font-heading">Toyota Etios</h4>
+                                    <svg className="w-5 h-5 text-m3-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <div className="space-y-1.5 text-xs text-m3-on-surface-variant mb-4 font-sans">
+                                    <p>• Comfortable Sedan</p>
+                                    <p>• 4 Passengers + Driver</p>
+                                    <p>• Rate: ₹14/km</p>
+                                </div>
                             </div>
-                            <div className="space-y-2 text-sm text-gray-600 mb-4">
-                                <p>• Comfortable Sedan</p>
-                                <p>• 4 Passengers + Driver</p>
-                                <p>• Rate: ₹13/km</p>
-                            </div>
-                            <div className="bg-blue-50 rounded-lg p-3">
-                                <p className="text-gray-600 text-sm mb-1">Estimated Cost</p>
-                                <p className="text-2xl font-bold text-blue-600">₹{costs.etios.toLocaleString('en-IN')}</p>
+                            <div className="bg-m3-surface-container-low rounded-m3-md p-3 border border-m3-outline-variant/60">
+                                <p className="text-m3-on-surface-variant text-badge font-semibold mb-0.5">Estimated Cost</p>
+                                <p className="text-2xl font-black text-m3-on-surface font-heading">₹{costs.etios.toLocaleString('en-IN')}</p>
                             </div>
                         </div>
 
                         {/* Innova Card */}
-                        <div className="border-2 border-green-200 rounded-xl p-5 hover:border-green-400 transition">
-                            <div className="flex items-center justify-between mb-3">
-                                <h4 className="font-bold text-lg text-gray-900">Toyota Innova</h4>
-                                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                                </svg>
+                        <div className="border border-m3-outline-variant bg-m3-surface rounded-m3-lg p-5 shadow-m3-1 flex flex-col justify-between">
+                            <div>
+                                <div className="flex items-center justify-between mb-3">
+                                    <h4 className="font-bold text-base text-m3-on-surface font-heading">Toyota Innova</h4>
+                                    <svg className="w-5 h-5 text-m3-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <div className="space-y-1.5 text-xs text-m3-on-surface-variant mb-4 font-sans">
+                                    <p>• Premium SUV</p>
+                                    <p>• 6-7 Passengers + Driver</p>
+                                    <p>• Rate: ₹18/km</p>
+                                </div>
                             </div>
-                            <div className="space-y-2 text-sm text-gray-600 mb-4">
-                                <p>• Premium SUV</p>
-                                <p>• 6-7 Passengers + Driver</p>
-                                <p>• Rate: ₹18/km</p>
-                            </div>
-                            <div className="bg-green-50 rounded-lg p-3">
-                                <p className="text-gray-600 text-sm mb-1">Estimated Cost</p>
-                                <p className="text-2xl font-bold text-green-600">₹{costs.innova.toLocaleString('en-IN')}</p>
+                            <div className="bg-m3-surface-container-low rounded-m3-md p-3 border border-m3-outline-variant/60">
+                                <p className="text-m3-on-surface-variant text-badge font-semibold mb-0.5">Estimated Cost</p>
+                                <p className="text-2xl font-black text-m3-on-surface font-heading">₹{costs.innova.toLocaleString('en-IN')}</p>
                             </div>
                         </div>
                     </div>
 
                     {/* Important Notes */}
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-                        <h4 className="font-semibold text-yellow-900 mb-2 flex items-center">
-                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <div className="bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-lg p-4 font-sans">
+                        <h4 className="font-bold text-m3-on-surface mb-2 flex items-center text-xs uppercase tracking-wider font-heading">
+                            <svg className="w-4 h-4 mr-1.5 text-m3-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             Important Notes
                         </h4>
-                        <ul className="text-sm text-yellow-800 space-y-1">
-                            <li>• Prices are indicative and may vary based on season</li>
+                        <ul className="text-xs text-m3-on-surface-variant space-y-1 font-normal">
+                            <li>• Prices are indicative and calculated based on round-trip kilometers</li>
                             <li>• Driver allowance (Bata) is included</li>
-                            <li>• Toll charges and parking fees are additional</li>
-                            <li>• Final pricing will be confirmed via WhatsApp</li>
+                            <li>• Fastag toll charges and parking fees are additional as per actuals</li>
+                            <li>• Final booking confirmation handled directly via WhatsApp</li>
                         </ul>
                     </div>
 
                     {/* Action Buttons */}
                     <div className="flex flex-col sm:flex-row gap-3">
-                        <button
+                        <WhatsAppButton
                             onClick={handleWhatsApp}
-                            className="flex-1 bg-green-600 text-white font-semibold py-3 rounded-xl hover:bg-green-700 transition flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                        >
-                            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                            </svg>
-                            Confirm via WhatsApp
-                        </button>
+                            variant="filled"
+                            size="md"
+                            className="flex-1"
+                            text="Confirm via WhatsApp"
+                        />
                         <button
                             onClick={closeModal}
-                            className="flex-1 bg-gray-200 text-gray-700 font-semibold py-3 rounded-xl hover:bg-gray-300 transition focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
+                            className="flex-1 bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface font-semibold py-3.5 rounded-m3-full transition cursor-pointer text-sm"
                         >
                             Close
                         </button>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 const partners = [
     {
@@ -53,44 +53,47 @@ const PartnersCarousel = ({ currentLang }) => {
     const scrollingPartners = [...partners, ...partners];
 
     return (
-        <section className="py-10 md:py-16 bg-gray-50 overflow-hidden border-t border-gray-200">
-            <div className="max-w-7xl mx-auto px-4 mb-12 text-center">
-                <h2 className="text-2xl md:text-4xl font-extrabold text-gray-900 inline-block relative mb-4">
-                    Trusted By Industry Leaders
-                    <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-20 h-1.5 bg-red-600 rounded-full"></div>
+        <section id="partners" className="py-10 md:py-12 bg-m3-surface overflow-hidden border-t border-m3-outline-variant/60">
+            {/* Section Header */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 text-center">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+                    Trusted by <span className="text-m3-primary">Leading Organizations</span>
                 </h2>
-                <p className="text-base text-gray-600 max-w-2xl mx-auto mt-4">
-                    Proud to serve these esteemed organizations
+                <p className="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto font-normal leading-relaxed mb-6 font-sans">
+                    Preferred transportation partner for leading enterprises, government bodies, and IT corridors.
                 </p>
             </div>
 
-            <div className="relative w-full max-w-6xl mx-auto">
+            <div className="relative w-full max-w-7xl mx-auto">
                 {/* Gradient Masks */}
-                <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none"></div>
-                <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none"></div>
+                <div className="absolute left-0 top-0 bottom-0 w-24 sm:w-36 bg-gradient-to-r from-m3-surface to-transparent z-10 pointer-events-none"></div>
+                <div className="absolute right-0 top-0 bottom-0 w-24 sm:w-36 bg-gradient-to-l from-m3-surface to-transparent z-10 pointer-events-none"></div>
 
                 {/* Auto-scrolling Track */}
                 <div
-                    className="flex w-max animate-scroll items-center gap-6 pb-8"
+                    className="flex w-max animate-scroll items-center gap-6 pb-4"
                     role="region"
                     aria-label="Partner Logos"
                 >
                     {scrollingPartners.map((partner, index) => (
                         <div
                             key={index}
-                            className="flex-shrink-0 mx-4 md:mx-8"
+                            className="flex-shrink-0 mx-2 sm:mx-4"
                             aria-hidden={index >= partners.length ? "true" : "false"}
                         >
-                            <div className="w-44 h-24 md:w-56 md:h-32 flex items-center justify-center bg-white rounded-lg shadow-sm border border-gray-100 p-4">
+                            <div className="w-40 h-20 sm:w-52 sm:h-28 flex items-center justify-center bg-m3-surface rounded-m3-xl shadow-m3-1 border border-m3-outline-variant p-4 hover:shadow-m3-2 transition-all">
                                 {partner.logo ? (
                                     <img
                                         src={partner.logo}
                                         alt={index >= partners.length ? "" : (partner.alt || partner.name)}
-                                        className="object-contain w-full h-full transition-all duration-500 transform hover:scale-110 relative z-10"
+                                        width="160"
+                                        height="80"
+                                        decoding="async"
+                                        className="object-contain w-full h-full transition-all duration-300 relative z-10"
                                         loading="lazy"
                                     />
                                 ) : (
-                                    <span className="font-bold text-gray-400 text-lg relative z-10">
+                                    <span className="font-bold text-m3-on-surface text-sm sm:text-base relative z-10">
                                         {partner.name}
                                     </span>
                                 )}
@@ -100,18 +103,20 @@ const PartnersCarousel = ({ currentLang }) => {
                 </div>
             </div>
             <style>{`
-          @keyframes scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); } 
+        @keyframes scroll {
+          0% {
+            transform: translateX(0);
           }
-          .animate-scroll {
-            animation: scroll 30s linear infinite;
+          100% {
+            transform: translateX(calc(-50%));
           }
-          @media (prefers-reduced-motion: reduce) {
-            .animate-scroll {
-              animation: scroll 60s linear infinite;
-            }
-          }
+        }
+        .animate-scroll {
+          animation: scroll 30s linear infinite;
+        }
+        .animate-scroll:hover {
+          animation-play-state: paused;
+        }
       `}</style>
         </section>
     );

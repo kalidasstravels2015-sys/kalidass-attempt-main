@@ -1,0 +1,373 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/SEO/Breadcrumbs.astro';
+import ServiceExplainer3Step from '../../components/ServiceExplainer3Step.astro';
+import FAQAccordion from '../../components/FAQAccordion.astro';
+import WhatsAppButton from '../../components/WhatsAppButton.astro';
+
+const title = "Acting Driver Services in Chennai | Personal Car Chauffeur";
+const description = "Hire professional background-verified acting drivers in Chennai for your personal car. Hourly city duty, outstation round trips, night drivers & senior citizen assistance.";
+
+const breadcrumbItems = [
+  { name: "Home", item: "/" },
+  { name: "Services", item: "/services/" },
+  { name: "Acting Drivers", item: "/services/acting-drivers/" },
+];
+
+const explainerSteps = [
+  {
+    stepNumber: "1",
+    badge: "Step 1: Your Car",
+    title: "You Provide The Car",
+    desc: "You own the vehicle — Hatchback, Sedan, SUV, EV, or Luxury. We provide the certified driver to take the wheel."
+  },
+  {
+    stepNumber: "2",
+    badge: "Step 2: Doorstep SLA",
+    title: "Verified Driver Arrives",
+    desc: "Our police-verified (PVC) chauffeur reports at your Chennai doorstep in 30–60 minutes in full uniform with photo ID."
+  },
+  {
+    stepNumber: "3",
+    badge: "Step 3: Stress-Free Ride",
+    title: "You Relax & Enjoy",
+    desc: "No traffic headaches or parking hassles. Pay straightforward, pre-agreed hourly or daily rates upon trip completion."
+  }
+];
+
+const cityTariff = [
+  {
+    name: "City Short Duty (4 Hours)",
+    hours: "4 Hours Continuous",
+    rate: "₹600",
+    extra: "₹150 / extra hour",
+    idealFor: "Doctor visits, shopping in T. Nagar, airport pickup/drop, local errands",
+    whatsappMsg: "Hi Kalidass Travels, I want to book a 4-Hour City Acting Driver (₹600) in Chennai."
+  },
+  {
+    name: "City Full Day Duty (8 Hours)",
+    hours: "8 Hours Continuous",
+    rate: "₹900",
+    extra: "₹150 / extra hour",
+    idealFor: "Family functions, multi-stop office meetings, full-day shopping",
+    whatsappMsg: "Hi Kalidass Travels, I want to book an 8-Hour Full Day City Acting Driver (₹900) in Chennai."
+  }
+];
+
+const outstationTariff = [
+  {
+    vehicle: "Hatchback & Sedan",
+    examples: "Dzire, Etios, Honda City, Verna, Baleno",
+    rate: "₹600 / day",
+    whatsappMsg: "Hi Kalidass Travels, I need an Outstation Acting Driver for my Sedan (₹600/day)."
+  },
+  {
+    vehicle: "Compact SUV / MPV",
+    examples: "Ertiga, Creta, Seltos, Carens, XL6",
+    rate: "₹700 / day",
+    whatsappMsg: "Hi Kalidass Travels, I need an Outstation Acting Driver for my SUV (₹700/day)."
+  },
+  {
+    vehicle: "Premium SUV / MUV",
+    examples: "Innova Crysta, Fortuner, Safari, XUV700",
+    rate: "₹800 / day",
+    whatsappMsg: "Hi Kalidass Travels, I need an Outstation Acting Driver for my Innova Crysta (₹800/day)."
+  },
+  {
+    vehicle: "Luxury European",
+    examples: "BMW, Mercedes-Benz, Audi, Volvo",
+    rate: "₹1,000 / day",
+    whatsappMsg: "Hi Kalidass Travels, I need an Outstation Acting Driver for my Luxury Car (₹1,000/day)."
+  }
+];
+
+const faqs = [
+  {
+    q: "Can the driver handle automatic and luxury cars?",
+    a: "Yes. All our assigned drivers are thoroughly vetted and experienced across Manual, Automatic (Torque Converter, CVT, DCT/DSG), Hybrid, and Electric Vehicles (EVs)."
+  },
+  {
+    q: "Is there any distance limit for city packages?",
+    a: "No kilometer limit applies for city hourly packages. You can make unlimited stops within the Chennai metropolitan area. You simply provide the vehicle and fuel."
+  },
+  {
+    q: "What are the meal and accommodation rules for outstation trips?",
+    a: "If the driver does not share family meals, a food allowance of ₹150 per meal applies. For overnight stays, if your hotel does not provide complimentary driver dormitory lodging, a ₹300 overnight room allowance is applicable."
+  },
+  {
+    q: "Are drivers background verified?",
+    a: "Yes, 100% of our drivers undergo Police Verification (PVC) and hold valid commercial transport badges with clean driving records."
+  },
+  {
+    q: "How fast can a driver reach my doorstep?",
+    a: "In most central and suburban Chennai areas (Anna Nagar, T. Nagar, OMR, Velachery, Guindy, Porur), drivers can report at your doorstep within 30 to 60 minutes of booking."
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": title,
+  "description": description,
+  "url": "https://kalidasstravels.in/services/acting-drivers/",
+  "image": "https://kalidasstravels.in/images/services/acting-drivers.webp",
+  "provider": {
+    "@id": "https://kalidasstravels.in/#localbusiness"
+  },
+  "areaServed": [
+    { "@type": "City", "name": "Chennai" },
+    { "@type": "AdministrativeArea", "name": "Tamil Nadu" }
+  ]
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(item => ({
+    "@type": "Question",
+    "name": item.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.a
+    }
+  }))
+};
+---
+
+<Layout 
+  title={`${title} - Kalidass Travels`}
+  description={description}
+  image="/images/services/acting-drivers.webp"
+  schema={[schema, faqSchema]}
+>
+  <Breadcrumbs items={breadcrumbItems} />
+
+  <main class="bg-m3-surface text-m3-on-surface font-sans pb-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10">
+
+      <!-- 1. PUNCHY HERO SECTION -->
+      <section class="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
+          <span class="w-2 h-2 rounded-full bg-logo-red animate-pulse"></span>
+          <span>Doorstep Chauffeurs Across Chennai • 30–60 Min Dispatch</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-3 font-heading">
+          Hire An <span class="text-m3-primary">Acting Driver</span> For Your Own Car
+        </h1>
+        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed font-normal mb-6">
+          Enjoy the comfort of your personal car without driving fatigue. Police-verified, polite chauffeurs for city shopping, doctor visits, night functions, and outstation trips.
+        </p>
+
+        <!-- Instant Action CTAs -->
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <a
+            href="tel:+919092303060"
+            class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary font-bold rounded-m3-full text-xs sm:text-sm shadow-m3-2 transition-all"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+            <span>Call Dispatch: +91 90923 03060</span>
+          </a>
+          <WhatsAppButton
+            href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20need%20an%20acting%20driver%20for%20my%20car%20in%20Chennai."
+            size="md"
+            variant="filled"
+            text="Book on WhatsApp"
+          />
+        </div>
+      </section>
+
+      <!-- 2. ⚡ 3-STEP VISUAL WORKFLOW ILLUSTRATION -->
+      <ServiceExplainer3Step 
+        title="How Acting Driver Service Works"
+        subtitle="3 simple steps to enjoy your personal car without driving stress"
+        steps={explainerSteps}
+      />
+
+      <!-- 3. UPFRONT DUAL PRICING TABLES (STRAIGHT TO THE POINT) -->
+      <section class="my-10 md:my-14">
+        
+        <div class="text-center max-w-2xl mx-auto mb-8">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container text-m3-on-surface text-xs font-bold uppercase tracking-wider mb-2 border border-m3-outline-variant">
+            <span>Transparent Pricing</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
+            Fixed Rates • <span class="text-m3-primary">Zero Surge Pricing</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1.5 font-sans">
+            Pay only for the contracted time or days. Fuel is provided by you in your personal car.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+          
+          <!-- Table 1: City Hourly Duty -->
+          <div class="bg-m3-surface-container-lowest rounded-m3-2xl p-5 sm:p-6 border border-m3-outline-variant shadow-m3-1">
+            <div class="flex items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-3 mb-4">
+              <div>
+                <h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading flex items-center gap-2">
+                  <svg class="w-5 h-5 text-m3-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <span>Within Chennai Metro</span>
+                </h3>
+                <span class="text-micro text-m3-on-surface-variant font-medium">Unlimited Kilometers • Time-Based</span>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-m3-full text-micro font-bold bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant">
+                Most Popular
+              </span>
+            </div>
+
+            <div class="space-y-3">
+              {cityTariff.map((item) => (
+                <div class="p-4 rounded-m3-xl bg-m3-surface border border-m3-outline-variant/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-m3-primary/40 transition-colors">
+                  <div>
+                    <div class="font-bold text-sm sm:text-base text-m3-on-surface font-heading">{item.name}</div>
+                    <div class="text-xs text-m3-on-surface-variant mt-0.5">{item.idealFor}</div>
+                    <div class="text-badge text-m3-primary font-semibold mt-1">Extra Hour: {item.extra}</div>
+                  </div>
+                  <div class="flex items-center justify-between sm:flex-col sm:items-end gap-2 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-m3-outline-variant/40">
+                    <span class="text-xl sm:text-2xl font-black text-m3-primary font-heading">{item.rate}</span>
+                    <WhatsAppButton
+                      href={`https://wa.me/919092303060?text=${encodeURIComponent(item.whatsappMsg)}`}
+                      size="sm"
+                      variant="filled"
+                      text="Book Driver"
+                      ariaLabel={`Book ${item.name} on WhatsApp`}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-m3-outline-variant/60 text-micro text-m3-on-surface-variant space-y-1">
+              <p>• <strong>Night Duty Allowance:</strong> +₹200 flat for duty occurring between 10:00 PM and 5:00 AM.</p>
+              <p>• <strong>Zero Distance Limits:</strong> Unlimited stops across Chennai city limits.</p>
+            </div>
+          </div>
+
+          <!-- Table 2: Outstation Daily Duty -->
+          <div class="bg-m3-surface-container-lowest rounded-m3-2xl p-5 sm:p-6 border border-m3-outline-variant shadow-m3-1">
+            <div class="flex items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-3 mb-4">
+              <div>
+                <h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading flex items-center gap-2">
+                  <svg class="w-5 h-5 text-m3-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+                  <span>Outstation Round Trip</span>
+                </h3>
+                <span class="text-micro text-m3-on-surface-variant font-medium">Daily Chauffeur Bata • Temple & Highway</span>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-m3-full text-micro font-bold bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant">
+                Up to 14 hrs/day
+              </span>
+            </div>
+
+            <div class="divide-y divide-m3-outline-variant/40">
+              {outstationTariff.map((item) => (
+                <div class="py-3 flex items-center justify-between gap-3 hover:bg-m3-surface/60 transition-colors px-1">
+                  <div class="min-w-0 flex-1">
+                    <div class="font-bold text-xs sm:text-sm text-m3-on-surface truncate">{item.vehicle}</div>
+                    <div class="text-micro text-m3-on-surface-variant truncate">{item.examples}</div>
+                  </div>
+                  <div class="flex items-center gap-3 shrink-0">
+                    <span class="text-sm sm:text-base font-black text-m3-primary font-heading">{item.rate}</span>
+                    <WhatsAppButton
+                      href={`https://wa.me/919092303060?text=${encodeURIComponent(item.whatsappMsg)}`}
+                      size="sm"
+                      variant="tonal"
+                      text="Book"
+                      ariaLabel={`Book driver for ${item.vehicle} on WhatsApp`}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-m3-outline-variant/60 text-micro text-m3-on-surface-variant space-y-1">
+              <p>• <strong>Meal Allowance:</strong> ₹150/meal (only if family meals are not shared).</p>
+              <p>• <strong>Night Stay:</strong> ₹300/night only if hotel does not provide driver dormitory.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- 4. KEY CHAUFFEUR GUARANTEES (CLEAN 4-PILLAR GRID) -->
+      <section class="my-10 md:my-14 bg-m3-surface-container-low rounded-m3-2xl p-6 sm:p-8 border border-m3-outline-variant">
+        <div class="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
+          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-m3-on-surface font-heading">
+            Why Car Owners Choose Kalidass Chauffeurs
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Police Verified (PVC)</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Complete background check and commercial badge.</p>
+          </div>
+
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">All Transmissions</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Manual, Automatic, EV, and luxury performance cars.</p>
+          </div>
+
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Disciplined Driving</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Gentle progressive braking, 80-90 km/h cruising, no rash driving.</p>
+          </div>
+
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Zero Advance Deposit</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Pay cash or UPI directly after your trip completes.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. FREQUENTLY ASKED QUESTIONS -->
+      <section class="my-10 md:my-14 max-w-3xl mx-auto">
+        <div class="text-center mb-6">
+          <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading">
+            Frequently Asked Questions
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">Everything you need to know about booking an acting driver</p>
+        </div>
+
+        <FAQAccordion items={faqs} columns={1} name="driver-faq" />
+      </section>
+
+      <!-- 6. BOTTOM CONVERSION CTA BANNER -->
+      <section class="bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-2xl p-6 sm:p-10 text-center shadow-m3-2 border border-slate-800 my-8">
+        <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold font-heading text-white mb-2">
+          Need a Driver at Your Doorstep in Chennai?
+        </h2>
+        <p class="text-slate-300 text-xs sm:text-sm max-w-lg mx-auto mb-6">
+          Share your location and reporting time. Our dispatch desk confirms your verified chauffeur in 60 seconds.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <WhatsAppButton
+            href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20need%20an%20acting%20driver%20at%20my%20doorstep%20in%20Chennai."
+            size="md"
+            variant="filled"
+            text="Book on WhatsApp"
+          />
+          <a
+            href="tel:+919092303060"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface font-bold text-xs sm:text-sm rounded-m3-full shadow-m3-1 transition-all"
+          >
+            <span>Call +91 90923 03060</span>
+          </a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</Layout>

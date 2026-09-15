@@ -1,0 +1,61 @@
+---
+const sections = [
+  { id: "booking-panel", label: "Fare Calculator", icon: "fa-solid fa-calculator", count: "01" },
+  { id: "services", label: "Core Services", icon: "fa-solid fa-layer-group", count: "02" },
+  { id: "fleet", label: "Fleet & Rates", icon: "fa-solid fa-car-side", count: "03" },
+  { id: "tours", label: "Temple Trips", icon: "fa-solid fa-place-of-worship", count: "04" },
+  { id: "partners", label: "Clients & Partners", icon: "fa-solid fa-building", count: "05" },
+  { id: "drivers", label: "Verified Drivers", icon: "fa-solid fa-id-badge", count: "06" },
+  { id: "safety", label: "Travel Safety", icon: "fa-solid fa-shield-halved", count: "07" },
+  { id: "faq", label: "FAQ", icon: "fa-solid fa-circle-question", count: "08" },
+];
+---
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 -mt-2 mb-2 relative z-20">
+  <div class="bg-m3-surface/90 backdrop-blur-md rounded-m3-xl border border-m3-outline-variant shadow-m3-1 p-3.5 sm:p-4">
+    <!-- Header with Counter Badge -->
+    <div class="flex items-center justify-between gap-2 mb-3 pb-2.5 border-b border-m3-outline-variant/60">
+      <div class="flex items-center gap-2">
+        <span class="flex h-2 w-2 relative">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
+        </span>
+        <span class="text-xs font-bold text-m3-on-surface font-heading uppercase tracking-wider">
+          Quick Page Directory
+        </span>
+        <span class="text-badge font-semibold px-2 py-0.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface-variant border border-m3-outline-variant">
+          8 Sections
+        </span>
+      </div>
+      <span class="text-badge text-m3-on-surface-variant hidden sm:inline-block font-sans">
+        Click any section to jump directly
+      </span>
+    </div>
+
+    <!-- Scrollable / Flex Pill Strip -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-hide snap-x">
+      {sections.map((sec) => (
+        <a
+          href={`#${sec.id}`}
+          class="group flex-none snap-start inline-flex items-center gap-2 px-3 py-1.5 rounded-m3-full bg-m3-surface-container-low hover:bg-m3-primary-container/40 border border-m3-outline-variant hover:border-m3-primary text-m3-on-surface hover:text-m3-primary transition-all duration-200 text-xs font-semibold shadow-m3-1"
+        >
+          <span class="text-micro font-mono font-bold text-m3-on-surface-variant group-hover:text-m3-primary transition-colors">
+            {sec.count}
+          </span>
+          <i class={`${sec.icon} text-badge text-m3-on-surface-variant group-hover:text-m3-primary transition-colors`}></i>
+          <span class="whitespace-nowrap">{sec.label}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+</style>

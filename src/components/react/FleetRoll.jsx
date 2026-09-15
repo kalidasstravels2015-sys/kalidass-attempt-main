@@ -1,114 +1,108 @@
 import React, { useRef, useState, useEffect } from 'react';
 import siteContent from '../../data/siteContent.json';
-import { ShieldCheck, Users, Briefcase, Zap, Info } from 'lucide-react';
+import { Users, CheckCircle2, ArrowRight } from 'lucide-react';
 
 const FleetCard = ({ vehicle, isVisible, priority }) => {
-    const isTempo = vehicle.name.includes('Tempo');
-    const isSUV = vehicle.name.toLowerCase().includes('innova') || vehicle.name.toLowerCase().includes('bolero') || vehicle.name.toLowerCase().includes('sumo');
-
     return (
-        <div className="flex-shrink-0 w-80 snap-center md:w-auto md:snap-align-none transition-opacity duration-500 opacity-100 h-full">
-            <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col">
-                {/* Image */}
-                <div className="relative h-56 overflow-hidden bg-slate-200 skeleton-shimmer">
-                    {isVisible && (
-                        <>
-                            <img
-                                src={vehicle.image}
-                                alt={vehicle.name}
-                                className="w-full h-full object-cover transition-all duration-700 hover:scale-110 relative z-10"
-                                loading={priority ? "eager" : "lazy"}
-                                fetchPriority={priority ? "high" : "auto"}
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-20"></div>
+        <div className="flex-shrink-0 w-72 snap-center md:w-auto md:snap-align-none transition-opacity duration-500 opacity-100 h-full">
+            <div className="bg-m3-surface rounded-m3-xl overflow-hidden shadow-m3-1 hover:shadow-m3-3 border border-m3-outline-variant transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col justify-between">
+                <div>
+                    {/* Vehicle Image Container */}
+                    <div className="relative h-36 sm:h-40 overflow-hidden bg-m3-surface-container-high skeleton-shimmer">
+                        {isVisible && (
+                            <>
+                                <img
+                                    src={vehicle.image}
+                                    alt={`${vehicle.name} taxi rental in Chennai - Kalidass Travels`}
+                                    width="384"
+                                    height="160"
+                                    decoding="async"
+                                    className="w-full h-full object-cover transition-all duration-700 hover:scale-105 relative z-10"
+                                    loading={priority ? "eager" : "lazy"}
+                                    fetchPriority={priority ? "high" : "auto"}
+                                />
+                                {/* Scrim Gradient Overlay */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/25 to-transparent z-20"></div>
 
-                            {/* Badges */}
-                            <div className="absolute top-4 left-4 flex flex-col gap-2 z-30">
+                                {/* Tonal Badges */}
                                 {vehicle.details.some(d => d.toLowerCase().includes('sanitized')) && (
-                                    <span className="bg-emerald-700 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1 w-fit">
-                                        <ShieldCheck className="w-3 h-3" />
-                                        Sanitized Every Trip
-                                    </span>
+                                    <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-30">
+                                        <span className="bg-slate-950/80 backdrop-blur-md border border-white/20 text-white/90 text-micro font-bold px-2.5 py-0.5 rounded-m3-full shadow-sm flex items-center gap-1 w-fit">
+                                            <span className="material-symbols-outlined text-[14px] text-emerald-400">verified</span>
+                                            Sanitized AC
+                                        </span>
+                                    </div>
                                 )}
-                                {(vehicle.details.some(d => d.toLowerCase().includes('mountain')) || vehicle.details.some(d => d.toLowerCase().includes('hill'))) && (
-                                    <span className="bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1 w-fit">
-                                        <Zap className="w-3 h-3" />
-                                        Hill Specialist
-                                    </span>
-                                )}
-                                {vehicle.details.some(d => d.toLowerCase().includes('city ride')) && (
-                                    <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1 w-fit">
-                                        <Zap className="w-3 h-3" />
-                                        Quick City Ride
-                                    </span>
-                                )}
-                                {vehicle.details.some(d => d.toLowerCase().includes('group trip')) && (
-                                    <span className="bg-purple-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1 w-fit">
-                                        <Users className="w-3 h-3" />
-                                        Group Specialist
-                                    </span>
-                                )}
-                            </div>
 
-                            <div className="absolute bottom-4 left-4 z-30">
-                                <h3 className="text-2xl font-bold text-white tracking-tight">
-                                    {vehicle.name}
-                                </h3>
+                                <div className="absolute bottom-3 left-3.5 z-30">
+                                    <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight font-heading">
+                                        {vehicle.name}
+                                    </h3>
+                                </div>
+                            </>
+                        )}
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-4 sm:p-5 space-y-4">
+                        {/* Key Stats */}
+                        <div className="grid grid-cols-2 gap-2">
+                            <div className="bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant text-center">
+                                <p className="text-micro font-semibold text-m3-on-surface-variant uppercase tracking-wider mb-0.5">Starting From</p>
+                                <p className="text-base sm:text-lg font-black text-m3-on-surface leading-none">{vehicle.rate}</p>
                             </div>
-                        </>
-                    )}
+                            <div className="bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant text-center">
+                                <p className="text-micro font-semibold text-m3-on-surface-variant uppercase tracking-wider mb-0.5">Capacity</p>
+                                <div className="flex items-center justify-center gap-1">
+                                    <span className="material-symbols-outlined text-[16px] text-m3-on-surface-variant">group</span>
+                                    <p className="text-xs sm:text-sm font-bold text-m3-on-surface">{vehicle.caps}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Features List */}
+                        <div className="space-y-2">
+                            {vehicle.details.filter(f => !f.toLowerCase().includes('sanitized')).map((feature, idx) => (
+                                <div key={idx} className="flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-[16px] text-emerald-600 shrink-0">check_circle</span>
+                                    <span className="text-xs text-m3-on-surface-variant font-normal leading-tight">{feature}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
 
-                {/* Content */}
-                <div className="p-6 flex-1 flex flex-col">
-                    {/* Key Stats */}
-                    <div className="grid grid-cols-2 gap-4 mb-6">
-                        <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1">Starting From</p>
-                            <p className="text-xl font-black text-indigo-600 leading-none">{vehicle.rate}</p>
-                        </div>
-                        <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                            <p className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1">Capacity</p>
-                            <div className="flex items-center gap-1.5">
-                                <Users className="w-4 h-4 text-slate-600" />
-                                <p className="text-sm font-bold text-slate-700">{vehicle.caps}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Features List */}
-                    <div className="space-y-3 flex-1">
-                        {vehicle.details.filter(f => !f.toLowerCase().includes('sanitized')).map((feature, idx) => (
-                            <div key={idx} className="flex items-start gap-3">
-                                <div className="mt-1 bg-indigo-50 p-1 rounded">
-                                    <ShieldCheck className="w-3 h-3 text-indigo-600" />
-                                </div>
-                                <span className="text-sm text-slate-600 font-medium leading-tight">{feature}</span>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Action Hint removed per user request */}
+                {/* Action Button */}
+                <div className="p-4 sm:p-5 pt-0">
+                    <a
+                        href="/tariff/"
+                        className="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-m3-full bg-m3-primary hover:bg-slate-900 text-white text-m3-label-m font-semibold shadow-m3-1 hover:shadow-m3-2 transition-all border border-white/10 group"
+                    >
+                        <span>View Rates &amp; Tariff</span>
+                        <span className="material-symbols-outlined text-[16px] text-emerald-400 transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
                 </div>
             </div>
         </div>
     );
 };
 
-const FleetRoll = ({ currentLang }) => {
-    const fleet = siteContent.fleet;
+/**
+ * @param {{ currentLang?: string, hideHeader?: boolean, limit?: number }} props
+ */
+const FleetRoll = ({ currentLang = 'en', hideHeader = false, limit }) => {
+    const rawFleet = siteContent.fleet;
+    const fleet = limit ? rawFleet.slice(0, limit) : rawFleet;
     const [activeIndex, setActiveIndex] = useState(0);
     const containerRef = useRef(null);
 
     const labels = siteContent.ui_labels;
-    const heading = labels.our_premium_fleet;
+    const heading = labels.our_premium_fleet || "Our Premium Fleet";
 
     useEffect(() => {
         const handleScroll = () => {
             if (containerRef.current) {
                 const { scrollLeft, offsetWidth } = containerRef.current;
-                // On mobile, cards are roughly 320px + 24px gap.
-                // We use offsetWidth to determine the 'page' size.
                 const index = Math.round(scrollLeft / (offsetWidth * 0.85));
                 setActiveIndex(Math.min(index, fleet.length - 1));
             }
@@ -127,24 +121,25 @@ const FleetRoll = ({ currentLang }) => {
     }, [fleet.length]);
 
     return (
-        <section id="fleet" className="py-20 bg-white" ref={containerRef} aria-labelledby="fleet-heading">
+        <section id="fleet" className={`${hideHeader ? 'py-4' : 'py-10 md:py-14 bg-m3-surface border-t border-m3-outline-variant/60'}`} ref={containerRef} aria-labelledby={hideHeader ? undefined : "fleet-heading"}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Section Header */}
-                <div className="text-center mb-16">
-                    <h2 id="fleet-heading" className="text-2xl md:text-4xl font-extrabold text-gray-900 inline-block relative mb-4">
-                        {heading}
-                        <div className="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-20 h-1.5 bg-red-600 rounded-full"></div>
-                    </h2>
-                    <p className="text-base text-gray-600 max-w-2xl mx-auto mt-4">
-                        Choose from our well-maintained fleet of vehicles for your journey
-                    </p>
-                </div>
+                {!hideHeader && (
+                    <div className="text-center max-w-3xl mx-auto mb-8">
+                        <h2 id="fleet-heading" className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+                            {heading}
+                        </h2>
+                        <p className="text-xs sm:text-sm md:text-base text-m3-on-surface-variant font-normal max-w-2xl mx-auto leading-relaxed mb-6 font-sans">
+                            Pristine, sanitized, and commercial-plated vehicles driven by background-verified chauffeurs. Fixed per-km rates.
+                        </p>
+                    </div>
+                )}
 
                 {/* Fleet Grid/Scroll Container */}
                 <div className="relative">
                     <div
                         ref={containerRef}
-                        className="flex overflow-x-auto snap-x snap-mandatory pb-8 space-x-6 px-4 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 md:space-x-0 md:overflow-visible md:pb-0 scrollbar-hide focus:outline-none rounded-xl"
+                        className="flex overflow-x-auto snap-x snap-mandatory pb-4 space-x-4 px-2 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6 md:space-x-0 md:overflow-visible md:pb-0 scrollbar-hide focus:outline-none"
                         tabIndex={0}
                         role="region"
                         aria-label="Fleet Gallery"
@@ -154,18 +149,31 @@ const FleetRoll = ({ currentLang }) => {
                         ))}
                     </div>
 
-                    {/* Scroll Indicators (Mobile Only) */}
-                    <div className="flex justify-center mt-6 space-x-2 md:hidden" aria-hidden="true">
+                    {/* Scroll Indicator Dots (Mobile Only) */}
+                    <div className="flex justify-center mt-4 space-x-2 md:hidden" aria-hidden="true">
                         {fleet.map((_, index) => (
                             <div
                                 key={index}
-                                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${activeIndex === index ? 'bg-red-600 w-6' : 'bg-slate-300'}`}
+                                className={`h-1.5 rounded-m3-full transition-all duration-300 ${activeIndex === index ? 'bg-m3-primary w-5' : 'bg-m3-surface-container-highest w-1.5'}`}
                             ></div>
                         ))}
                     </div>
+
+                    {/* View All Fleet Link Button (M3 Outlined Button) */}
+                    {limit && (
+                        <div className="text-center mt-8">
+                            <a
+                                href="/fleet/"
+                                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-m3-full bg-m3-surface border border-m3-outline text-m3-on-surface text-m3-label-l font-bold hover:bg-m3-surface-container-high shadow-m3-1 transition-all"
+                            >
+                                <span>Explore All 8+ Vehicles &amp; Full Tariff</span>
+                                <span className="material-symbols-outlined text-[18px] text-m3-primary">arrow_forward</span>
+                            </a>
+                        </div>
+                    )}
                 </div>
             </div>
-            <style jsx>{`
+            <style>{`
         .scrollbar-hide {
             -ms-overflow-style: none;
             scrollbar-width: none;

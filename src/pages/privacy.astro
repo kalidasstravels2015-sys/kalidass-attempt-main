@@ -1,0 +1,137 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Breadcrumbs from "../components/SEO/Breadcrumbs.astro";
+
+const breadcrumbItems = [
+  { name: "Home", item: "/" },
+  { name: "Privacy Policy", item: "/privacy/" },
+];
+
+const lastUpdated = "March 14, 2026";
+---
+
+<Layout
+  title="Privacy Policy - Kalidass Travels Chennai"
+  description="Read our comprehensive privacy policy covering data collection, safety practices, and your rights when booking cabs or hiring acting drivers with Kalidass Travels."
+>
+  <Breadcrumbs items={breadcrumbItems} />
+
+  <main class="bg-m3-surface-container-low min-h-screen pt-4 pb-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Header Banner -->
+      <div class="bg-m3-surface rounded-m3-2xl p-6 sm:p-10 border border-m3-outline-variant shadow-m3-1 mb-8">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-primary/10 text-m3-primary text-xs font-bold uppercase tracking-wider mb-3">
+          Transparency & Trust
+        </span>
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight mb-3 font-heading">
+          Privacy Policy
+        </h1>
+        <p class="text-sm sm:text-base text-m3-on-surface-variant leading-relaxed">
+          At Kalidass Travels, we are committed to safeguarding your privacy and ensuring your personal data is handled responsibly during travel inquiries, fare estimates, and trip bookings.
+        </p>
+        <p class="text-xs text-m3-on-surface-variant/70 mt-4 font-mono">
+          Last Updated: {lastUpdated}
+        </p>
+      </div>
+
+      <!-- Policy Content Sections -->
+      <div class="space-y-6">
+        <!-- 1. Scope -->
+        <section class="bg-m3-surface rounded-m3-xl p-6 sm:p-8 border border-m3-outline-variant shadow-m3-1">
+          <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">1</span>
+            Scope & Applicability
+          </h2>
+          <p class="text-sm text-m3-on-surface-variant leading-relaxed">
+            This Privacy Policy applies to all services provided by <strong>Kalidass Travels</strong> (No. 4/220, E88, Ponniamman Kovil Street, Annamalai Nagar, Medavakkam, Chennai - 600 100), including our website (<code>kalidasstravels.in</code>), fare calculation engine, WhatsApp booking helpline, and commercial transport operations across Tamil Nadu and South India.
+          </p>
+        </section>
+
+        <!-- 2. Data We Collect -->
+        <section class="bg-m3-surface rounded-m3-xl p-6 sm:p-8 border border-m3-outline-variant shadow-m3-1">
+          <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">2</span>
+            Information We Collect
+          </h2>
+          <div class="space-y-3 text-sm text-m3-on-surface-variant">
+            <div class="p-3.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60">
+              <strong class="text-m3-on-surface block mb-1">A. Booking & Communication Information:</strong>
+              When you submit a trip quote or contact our 24/7 desk, we collect your name, phone number, email address (optional), pickup address, and drop destination.
+            </div>
+            <div class="p-3.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60">
+              <strong class="text-m3-on-surface block mb-1">B. Acting Driver Service Data:</strong>
+              For acting driver requests, we may note vehicle transmission type (Manual/Automatic) and model to assign an experienced chauffeur.
+            </div>
+            <div class="p-3.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60">
+              <strong class="text-m3-on-surface block mb-1">C. Technical & Usage Information:</strong>
+              We automatically log anonymized browsing metrics such as device type, screen resolution, referring URLs, and pages visited using Google Analytics 4.
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. How We Use Information -->
+        <section class="bg-m3-surface rounded-m3-xl p-6 sm:p-8 border border-m3-outline-variant shadow-m3-1">
+          <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">3</span>
+            How We Use Your Data
+          </h2>
+          <ul class="list-disc list-inside space-y-2 text-sm text-m3-on-surface-variant leading-relaxed">
+            <li><strong>Trip Dispatch:</strong> Sharing necessary pickup details with your assigned verified chauffeur.</li>
+            <li><strong>WhatsApp Quotes & Confirmations:</strong> Generating instant tariff calculations and itinerary details requested by you.</li>
+            <li><strong>Customer Support:</strong> Resolving service queries, lost-and-found items, or feedback.</li>
+            <li><strong>Legal & Tax Obligations:</strong> Maintaining GST-compliant invoices and trip logs per Tamil Nadu commercial transport laws.</li>
+          </ul>
+        </section>
+
+        <!-- 4. Third-Party Services -->
+        <section class="bg-m3-surface rounded-m3-xl p-6 sm:p-8 border border-m3-outline-variant shadow-m3-1">
+          <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">4</span>
+            Third-Party Services & Cookies
+          </h2>
+          <p class="text-sm text-m3-on-surface-variant leading-relaxed mb-3">
+            We utilize reliable third-party integrations solely to enhance site utility:
+          </p>
+          <ul class="list-disc list-inside space-y-2 text-sm text-m3-on-surface-variant leading-relaxed">
+            <li><strong>Google Maps API:</strong> Used for address autocomplete and distance matrix estimations.</li>
+            <li><strong>Google Analytics 4:</strong> Deployed via Partytown for site optimization with IP anonymization enabled.</li>
+            <li><strong>WhatsApp (Meta):</strong> For instant customer messaging upon your explicit interaction with chat buttons.</li>
+          </ul>
+          <p class="text-sm text-m3-on-surface-variant leading-relaxed mt-3">
+            We do <strong>not</strong> sell, rent, or trade your personal data to marketing brokers or unrelated third parties.
+          </p>
+        </section>
+
+        <!-- 5. Data Security & Retention -->
+        <section class="bg-m3-surface rounded-m3-xl p-6 sm:p-8 border border-m3-outline-variant shadow-m3-1">
+          <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">5</span>
+            Data Security & Retention
+          </h2>
+          <p class="text-sm text-m3-on-surface-variant leading-relaxed">
+            All data exchanges through our website are secured via Transport Layer Security (TLS 1.3 / SSL). We retain booking records only as long as necessary for operational fulfillment, tax accounting, and statutory regulatory compliance.
+          </p>
+        </section>
+
+        <!-- 6. Your Rights & Grievance Contact -->
+        <section class="bg-m3-surface rounded-m3-xl p-6 sm:p-8 border border-m3-outline-variant shadow-m3-1">
+          <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">6</span>
+            Grievance Officer & Contact Information
+          </h2>
+          <p class="text-sm text-m3-on-surface-variant leading-relaxed mb-4">
+            If you have questions about this policy, want to update your details, or wish to request deletion of historical inquiry data, please contact our support team:
+          </p>
+          <div class="p-4 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 text-sm space-y-1.5 text-m3-on-surface">
+            <p><strong>Entity:</strong> Kalidass Travels</p>
+            <p><strong>Address:</strong> No. 4/220, E88, Ponniamman Kovil Street, Annamalai Nagar, Medavakkam, Chennai - 600 100</p>
+            <p><strong>Phone:</strong> <a href="tel:+919092303060" class="text-m3-primary font-semibold hover:underline">+91 90923 03060</a></p>
+            <p><strong>Email:</strong> <a href="mailto:kalidasstravels2015@gmail.com" class="text-m3-primary font-semibold hover:underline">kalidasstravels2015@gmail.com</a></p>
+            <p><strong>GSTIN:</strong> 33COVPM0531D1Z4</p>
+            <p><strong>MSME / Udyam:</strong> UDYAM-TN-08-0018345</p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</Layout>

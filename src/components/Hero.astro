@@ -1,17 +1,21 @@
 ---
 import OptimizedImage from "./OptimizedImage.astro";
 import siteContent from "../data/siteContent.json";
+import WhatsAppIcon from "./WhatsAppIcon.astro";
 
 const hero = siteContent.hero;
-const heroImages = hero.images ?? [
-  "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=1920",
+const heroImages = hero.images && hero.images.length > 0 ? hero.images : [
+  "/images/hero/airavatesvara.webp",
+  "/images/hero/coimbatore.webp",
+  "/images/hero/madurai.webp",
 ];
 ---
 
 <section
-  class="relative min-h-[100dvh] flex items-center justify-center overflow-hidden pt-20 bg-gray-900"
+  id="hero"
+  class="relative min-h-[78vh] flex items-center justify-center overflow-hidden pt-16 pb-12 bg-slate-950"
 >
-  <!-- Background Slideshow -->
+  <!-- Background Image Carousel with High-Contrast Dark Gradient Scrim -->
   <div class="absolute inset-0 z-0">
     <div
       class="hero-slides absolute inset-0 pointer-events-none"
@@ -20,13 +24,13 @@ const heroImages = hero.images ?? [
       {
         heroImages.map((image, index) => (
           <div
-            class={`hero-slide relative w-full h-full ${index === 0 ? "first-slide" : ""}`}
-            style={`animation-delay: ${index * 6}s; opacity: ${index === 0 ? "1" : "0"};`}
+            class={`hero-slide absolute inset-0 w-full h-full ${index === 0 ? "first-slide" : ""}`}
+            style={`animation-delay: ${index * 7}s;`}
           >
             <OptimizedImage
               src={image}
-              alt="Hero Background"
-              class="absolute inset-0 w-full h-full object-cover"
+              alt="Kalidass Travels Chennai Background"
+              class="w-full h-full object-cover object-center scale-105 opacity-80"
               loading={index === 0 ? "eager" : "lazy"}
               decoding={index === 0 ? "sync" : "async"}
               fetchpriority={index === 0 ? "high" : undefined}
@@ -36,83 +40,71 @@ const heroImages = hero.images ?? [
         ))
       }
     </div>
+    <!-- Deep Gradient Scrim for 100% Crisp Contrast and Legibility -->
     <div
-      class="absolute inset-0"
-      style="background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.7));"
+      class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-slate-950/40 z-10"
     >
     </div>
   </div>
 
   <div
-    class="relative z-10 max-w-4xl mx-4 sm:mx-auto text-center space-y-8 -mt-12"
+    class="relative z-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center"
   >
-    <div
-      class="inline-flex items-center justify-center gap-2 px-4 py-1.5 rounded-full bg-black/50 border border-white/20 mb-2 shadow-lg"
-    >
-      <span class="text-green-500 text-[10px]">●</span>
-      <p
-        class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-white/90"
-      >
-        Trusted by 1,000+ Families
-      </p>
-    </div>
 
+    <!-- M3 Display Headline -->
     <h1
-      class="text-4xl sm:text-6xl lg:text-7xl font-black text-white leading-[1.05] tracking-tight drop-shadow-[0_8px_8px_rgba(0,0,0,0.6)] mb-4"
+      class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-3 font-heading drop-shadow-sm"
     >
-      <span class="block">Premium Taxi Service</span>
-      <span
-        class="block text-2xl sm:text-4xl lg:text-5xl text-yellow-400 mt-2 font-black italic tracking-normal"
-        >Chennai & South India</span
-      >
+      <span class="block text-white">Premium Taxi Service</span>
+      <span class="block mt-1 text-white/95 font-extrabold tracking-tight">
+        Chennai &amp; South India
+      </span>
     </h1>
 
+    <!-- Subtitle / Body (M3 Body Large) -->
     <p
-      class="text-base sm:text-xl text-white font-medium drop-shadow-md px-4 max-w-2xl mx-auto leading-relaxed"
+      class="text-xs sm:text-sm md:text-base text-slate-300 font-normal max-w-xl mx-auto leading-relaxed mb-6 px-2 font-sans"
     >
-      Safe, reliable, and professional transportation at transparent rates. Temple tours, airport transfers & corporate travel.
+      Safe, reliable, and professional transportation at transparent rates. Temple tours, airport transfers &amp; corporate travel.
     </p>
 
-    <div class="pt-6">
+    <!-- M3 Signature Action Button (Executive Charcoal with Traffic Green GO Arrow) -->
+    <div class="mb-6">
       <a
         href="#booking-panel"
-        class="inline-flex items-center gap-3 px-10 py-5 bg-red-600 hover:bg-red-700 text-white text-lg font-black rounded-2xl transition-all transform hover:scale-105 active:scale-95 shadow-[0_20px_50px_rgba(220,38,38,0.3)] hover:shadow-[0_20px_50px_rgba(220,38,38,0.5)]"
+        class="inline-flex items-center gap-2.5 px-8 py-3.5 bg-m3-primary hover:bg-slate-900 text-m3-on-primary text-sm font-bold rounded-m3-full shadow-m3-2 hover:shadow-m3-3 transition-all transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer border border-white/20 group"
       >
-        <span>Book Your Ride Now</span>
-        <svg
-          class="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-        </svg>
+        <span class="text-m3-label-l font-bold text-white">Calculate Fare &amp; Rates</span>
+        <span class="material-symbols-outlined text-[20px] text-emerald-400 transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
       </a>
+    </div>
+
+    <!-- M3 Assist Chips -->
+    <div
+      class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3.5 max-w-2xl"
+    >
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-m3-full bg-m3-inverse-surface/85 backdrop-blur-md border border-white/10 text-m3-inverse-on-surface text-m3-label-m shadow-m3-1 hover:bg-m3-inverse-surface transition-colors">
+        <span class="material-symbols-outlined text-[18px] text-emerald-400 shrink-0">verified_user</span>
+        <span>Police Verified Drivers</span>
+      </div>
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-m3-full bg-m3-inverse-surface/85 backdrop-blur-md border border-white/10 text-m3-inverse-on-surface text-m3-label-m shadow-m3-1 hover:bg-m3-inverse-surface transition-colors">
+        <span class="material-symbols-outlined text-[18px] text-white/80 shrink-0">currency_rupee</span>
+        <span>Zero Surge Pricing</span>
+      </div>
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-m3-full bg-m3-inverse-surface/85 backdrop-blur-md border border-white/10 text-m3-inverse-on-surface text-m3-label-m shadow-m3-1 hover:bg-m3-inverse-surface transition-colors">
+        <WhatsAppIcon variant="brand" className="w-4 h-4 shrink-0" />
+        <span>24/7 WhatsApp Support</span>
+      </div>
     </div>
   </div>
 
-  <!-- Scroll Indicator -->
+  <!-- Minimalist Scroll Down Indicator -->
   <a
     href="#booking-panel"
-    class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce hover:text-yellow-300 transition-colors"
+    class="absolute bottom-3 left-1/2 -translate-x-1/2 text-white/70 hover:text-white transition-colors p-2 flex items-center justify-center"
     aria-label="Scroll to booking form"
   >
-    <svg
-      class="w-6 h-6 text-white"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-    </svg>
+    <span class="material-symbols-outlined text-[26px] animate-bounce text-white/80">keyboard_arrow_down</span>
   </a>
 </section>
 
@@ -121,38 +113,25 @@ const heroImages = hero.images ?? [
     position: absolute;
     inset: 0;
     overflow: hidden;
-    mix-blend-mode: normal;
   }
 
   .hero-slide {
     position: absolute;
     inset: 0;
-    animation: heroCinematic 24s ease-in-out infinite;
+    opacity: 0;
+    animation: heroFade 21s ease-in-out infinite;
     animation-fill-mode: both;
-    filter: saturate(1.1);
   }
 
   .first-slide {
-    opacity: 1 !important;
+    opacity: 1;
   }
 
-  @keyframes heroCinematic {
-    0% { opacity: 0; transform: scale(1.08); }
-    5% { opacity: 1; transform: scale(1.04); }
+  @keyframes heroFade {
+    0% { opacity: 0; transform: scale(1.04); }
+    8% { opacity: 1; transform: scale(1.02); }
     30% { opacity: 1; transform: scale(1); }
-    35% { opacity: 0; transform: scale(1.1); }
-    100% { opacity: 0; transform: scale(1.08); }
-  }
-
-  .first-slide {
-    animation: firstHeroCinematic 24s ease-in-out infinite;
-  }
-
-  @keyframes firstHeroCinematic {
-    0% { opacity: 1; transform: scale(1); }
-    30% { opacity: 1; transform: scale(1.04); }
-    35% { opacity: 0; transform: scale(1.1); }
-    95% { opacity: 0; transform: scale(1.08); }
-    100% { opacity: 1; transform: scale(1); }
+    38% { opacity: 0; transform: scale(1.04); }
+    100% { opacity: 0; transform: scale(1.04); }
   }
 </style>

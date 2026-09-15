@@ -11,7 +11,7 @@
     ],
     "cto": "Call Now",
     "phone": "+91 90923 03060",
-    "email": "bookings@kalidasstravels.in"
+    "email": "kalidasstravels2015@gmail.com"
   },
   "ui_labels": {
     "book_your_ride": "Book your Ride",
@@ -23,32 +23,39 @@
   },
   "services": [
     {
-      "title": "Acting Drivers",
-      "description": "Your car, Our Professional Pilot",
-      "icon": "user-tie",
-      "image": "/images/services/acting-drivers.webp",
-      "link": "/services/category/acting-drivers"
+      "title": "Airport Transfers",
+      "description": "5-10 min rapid dispatch from Chennai Airport (MAA). Real-time flight tracking, Meet & Greet, and zero delay fee.",
+      "icon": "plane-takeoff",
+      "image": "/images/services/airport-transfer.webp",
+      "link": "/services/chennai-airport-taxi/"
     },
     {
-      "title": "Corporate",
-      "description": "The complete corporate mobility suite",
-      "icon": "building",
-      "image": "/images/services/corporate.webp",
-      "link": "/services/category/corporate"
+      "title": "Outstation Cabs",
+      "description": "Flat per-km tariffs and weekend road trip packages across South India with zero surge pricing.",
+      "icon": "map-pin",
+      "image": "/images/temple/mahabalipuram-ecr-temples.webp",
+      "link": "/services/popular-destinations/"
     },
     {
       "title": "Temple Tours",
-      "description": "Round trips for Tirupati, Navagraha, and heritage temple circuits with local expertise.",
+      "description": "All-inclusive spiritual yatra packages with polite satvik drivers and highway tolls included.",
       "icon": "gopuram",
       "image": "/images/services/temple-tours.webp",
-      "link": "/services/category/temple-tours"
+      "link": "/services/temple-tours/"
     },
     {
-      "title": "Popular Destinations",
-      "description": "Explore heritage sites, beaches, and city tours.",
-      "icon": "map-pin",
-      "image": "/images/temple/mahabalipuram-ecr-temples.webp",
-      "link": "/services/category/popular-destinations"
+      "title": "Corporate Mobility",
+      "description": "24/7 routed employee commute transport, monthly executive retainers, and GST invoicing.",
+      "icon": "building",
+      "image": "/images/services/corporate.webp",
+      "link": "/services/corporate/"
+    },
+    {
+      "title": "Acting Drivers",
+      "description": "Police-verified chauffeurs for your personal car with flexible hourly & outstation duties.",
+      "icon": "user-tie",
+      "image": "/images/services/acting-drivers.webp",
+      "link": "/services/acting-drivers/"
     }
   ],
   "fleet": [
@@ -81,6 +88,21 @@
         "Sanitized Every Trip"
       ],
       "alt": "Toyota Etios executive sedan taxi for corporate client visits and comfortable outstation travel"
+    },
+    {
+      "name": "Maruti Ertiga",
+      "image": "/images/fleet/suv.webp",
+      "caps": "6 Passenger + Driver",
+      "bags": "3 Bags",
+      "rate": "₹17/km",
+      "details": [
+        "Economical 6-Seater MPV",
+        "Best for Medium Family Trips",
+        "Dual AC & Comfortable Seating",
+        "Daily City & Outstation Tours",
+        "Sanitized Every Trip"
+      ],
+      "alt": "Maruti Ertiga 6-seater MPV taxi rental in Chennai for family and outstation trips"
     },
     {
       "name": "Innova",

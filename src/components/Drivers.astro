@@ -5,19 +5,19 @@ import { Star, Clock, Languages, ShieldCheck, ArrowRight } from "lucide-react";
 const drivers = siteContent.drivers;
 ---
 
-<section class="py-20 bg-slate-50">
+<section class="py-12 md:py-20 bg-m3-surface-container-low">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-16">
       <h2
-        class="text-2xl md:text-4xl font-extrabold text-gray-900 inline-block relative mb-4"
+        class="text-2xl md:text-4xl font-extrabold text-m3-on-surface inline-block relative mb-4 font-heading"
       >
         Our Professional Drivers
         <div
-          class="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-20 h-1.5 bg-red-600 rounded-full"
+          class="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-20 h-1.5 bg-m3-primary rounded-m3-full"
         >
         </div>
       </h2>
-      <p class="text-base text-gray-600 max-w-2xl mx-auto mt-4">
+      <p class="text-base text-m3-on-surface-variant max-w-2xl mx-auto mt-4 font-sans">
         Experienced, verified, and multilingual drivers at your service.
       </p>
     </div>
@@ -25,36 +25,36 @@ const drivers = siteContent.drivers;
     <div class="flex overflow-x-auto gap-6 pb-8 snap-x scrollbar-hide">
       {
         drivers.map((driver) => (
-          <div class="flex-none w-72 snap-center bg-white rounded-2xl shadow-sm border border-slate-200 p-4 hover:shadow-md transition-all duration-300 group">
-            <div class="relative mb-4 overflow-hidden rounded-xl">
+          <div class="flex-none w-72 snap-center bg-m3-surface rounded-m3-xl shadow-m3-1 border border-m3-outline-variant p-4 hover:shadow-m3-3 transition-all duration-300 group">
+            <div class="relative mb-4 overflow-hidden rounded-m3-lg">
               <OptimizedImage
                 src={driver.image}
                 class="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500"
                 alt={driver.name}
                 sizes="288px"
               />
-              <span class="absolute bottom-2 left-2 bg-indigo-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm">
+              <span class="absolute bottom-2 left-2 bg-slate-950/80 backdrop-blur-md text-white text-micro font-bold px-2.5 py-0.5 rounded-m3-full shadow-m3-1">
                 {driver.tag}
               </span>
             </div>
-            <h3 class="font-bold text-lg text-slate-900">{driver.name}</h3>
+            <h3 class="font-bold text-lg text-m3-on-surface font-heading">{driver.name}</h3>
 
-            <div class="inline-flex items-center gap-1.5 mt-1 mb-2 px-2 py-0.5 bg-green-50 border border-green-100 rounded-md text-[10px] font-bold text-green-700">
-              <ShieldCheck className="w-3 h-3" />
-              PVC Verified
+            <div class="inline-flex items-center gap-1.5 mt-1 mb-2 px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-m3-sm text-micro font-bold text-emerald-800">
+              <ShieldCheck className="w-3 h-3 text-emerald-600" />
+              100% Police Verified
             </div>
 
-            <div class="text-sm text-slate-600 mt-1 space-y-2">
+            <div class="text-sm text-m3-on-surface-variant mt-1 space-y-2 font-sans">
               <div class="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-slate-600" />
+                <Clock className="w-4 h-4 text-m3-primary" />
                 <span>{driver.experience}</span>
               </div>
               <div class="flex items-center gap-2">
-                <Languages className="w-4 h-4 text-slate-600" />
+                <Languages className="w-4 h-4 text-m3-primary" />
                 <span>{driver.languages}</span>
               </div>
             </div>
-            <div class="flex text-yellow-400 mt-4 gap-0.5">
+            <div class="flex text-amber-400 mt-4 gap-0.5">
               <Star className="w-4 h-4 fill-current" />
               <Star className="w-4 h-4 fill-current" />
               <Star className="w-4 h-4 fill-current" />
@@ -69,11 +69,11 @@ const drivers = siteContent.drivers;
     <div class="text-center mt-8">
       <a
         href="/drivers"
-        class="inline-flex items-center gap-2 text-indigo-600 font-semibold hover:text-indigo-700 transition-colors duration-200 group"
+        class="inline-flex items-center gap-2 text-m3-primary font-bold hover:underline transition-colors duration-200 group text-sm"
       >
-        View All Drivers
+        <span>View All Drivers</span>
         <ArrowRight
-          className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-200"
+          className="w-4 h-4 text-emerald-500 transform group-hover:translate-x-1 transition-transform duration-200"
         />
       </a>
     </div>

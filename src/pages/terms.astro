@@ -1,0 +1,132 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Breadcrumbs from "../components/SEO/Breadcrumbs.astro";
+
+const breadcrumbItems = [
+  { name: "Home", item: "/" },
+  { name: "Terms and Conditions", item: "/terms/" },
+];
+
+const lastUpdated = "March 14, 2026";
+---
+
+<Layout
+  title="Terms and Conditions - Kalidass Travels Chennai"
+  description="Read our booking policies, transparent pricing guidelines, acting driver terms, toll policies, and cancellation conditions for Kalidass Travels."
+>
+  <Breadcrumbs items={breadcrumbItems} />
+
+  <main class="bg-m3-surface-container-low min-h-screen pt-4 pb-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Header Banner -->
+      <div class="bg-m3-surface rounded-m3-2xl p-6 sm:p-10 border border-m3-outline-variant shadow-m3-1 mb-8">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-secondary/10 text-m3-secondary text-xs font-bold uppercase tracking-wider mb-3">
+          Customer Service Agreement
+        </span>
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight mb-3 font-heading">
+          Terms & Conditions
+        </h1>
+        <p class="text-sm sm:text-base text-m3-on-surface-variant leading-relaxed">
+          Please review the operating terms and booking conditions governing vehicle rentals, temple tour packages, and acting driver hires arranged through Kalidass Travels.
+        </p>
+        <p class="text-xs text-m3-on-surface-variant/70 mt-4 font-mono">
+          Effective Date: {lastUpdated}
+        </p>
+      </div>
+
+      <!-- Terms Content Sections -->
+      <div class="space-y-6">
+        <!-- 1. Booking Confirmation -->
+        <section class="bg-m3-surface rounded-m3-xl p-6 sm:p-8 border border-m3-outline-variant shadow-m3-1">
+          <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">1</span>
+            Booking Confirmation & Vehicle Dispatch
+          </h2>
+          <ul class="list-disc list-inside space-y-2 text-sm text-m3-on-surface-variant leading-relaxed">
+            <li>Bookings are confirmed upon mutual agreement via our WhatsApp dispatch desk, online estimator, or phone booking (+91 90923 03060).</li>
+            <li>Vehicle and driver details (Name, contact number, registration number) are dispatched at least 1 to 2 hours prior to scheduled pickup time.</li>
+            <li>While we always provide the requested car category (e.g., Sedan, Innova Crysta, Tempo Traveller), an equivalent or higher model may be assigned without additional base charges during peak schedules.</li>
+          </ul>
+        </section>
+
+        <!-- 2. Tariff Structure & Inclusions -->
+        <section class="bg-m3-surface rounded-m3-xl p-6 sm:p-8 border border-m3-outline-variant shadow-m3-1">
+          <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">2</span>
+            Transparent Tariffs, Tolls & Permits
+          </h2>
+          <div class="space-y-3 text-sm text-m3-on-surface-variant">
+            <p class="leading-relaxed">
+              Our taxi rates are computed based on actual odometer readings starting and terminating at the designated garage / base pickup point as per standard South India commercial transport practice.
+            </p>
+            <div class="p-3.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60">
+              <strong class="text-m3-on-surface block mb-1">Standard Exclusions (Payable at Actuals):</strong>
+              Toll plaza fees, commercial airport parking, interstate border permit taxes (for Kerala, Karnataka, Andhra Pradesh, Puducherry), and destination parking tickets are not included in base km rates and are payable directly by the passenger.
+            </div>
+            <div class="p-3.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60">
+              <strong class="text-m3-on-surface block mb-1">Driver Allowance (Batta):</strong>
+              For outstation trips, a daily driver allowance (₹300 - ₹500 depending on vehicle class) applies. For local or acting driver duties extending beyond 10:00 PM or starting prior to 6:00 AM, a standard night allowance applies.
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. Acting Driver Guidelines -->
+        <section class="bg-m3-surface rounded-m3-xl p-6 sm:p-8 border border-m3-outline-variant shadow-m3-1">
+          <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">3</span>
+            Acting Driver Service Terms
+          </h2>
+          <ul class="list-disc list-inside space-y-2 text-sm text-m3-on-surface-variant leading-relaxed">
+            <li><strong>Vehicle Condition:</strong> When engaging our acting drivers for private cars, the vehicle must be in roadworthy condition with adequate fuel, working brakes, and functional lights.</li>
+            <li><strong>Mandatory Documents:</strong> The vehicle must have a valid Registration Certificate (RC), valid Comprehensive Insurance Policy, and Pollution Under Control (PUC) certificate.</li>
+            <li><strong>Safe Driving:</strong> Our drivers adhere strictly to regional traffic laws and speed restrictions. Passengers must not coerce drivers into rash or negligent maneuvers.</li>
+          </ul>
+        </section>
+
+        <!-- 4. Cancellation & Modifications -->
+        <section class="bg-m3-surface rounded-m3-xl p-6 sm:p-8 border border-m3-outline-variant shadow-m3-1">
+          <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">4</span>
+            Cancellation & Rescheduling
+          </h2>
+          <ul class="list-disc list-inside space-y-2 text-sm text-m3-on-surface-variant leading-relaxed">
+            <li><strong>Local Trips & Acting Drivers:</strong> Free cancellation up to 2 hours before the scheduled reporting time.</li>
+            <li><strong>Outstation & Temple Tour Packages:</strong> Free cancellation up to 6 hours prior to journey departure.</li>
+            <li>If a cancellation occurs after the driver/cab has already been dispatched to your pickup location, a nominal reporting fee may be billed.</li>
+          </ul>
+        </section>
+
+        <!-- 5. Passenger Safety & Vehicle Care -->
+        <section class="bg-m3-surface rounded-m3-xl p-6 sm:p-8 border border-m3-outline-variant shadow-m3-1">
+          <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">5</span>
+            Passenger Conduct & Safety
+          </h2>
+          <p class="text-sm text-m3-on-surface-variant leading-relaxed mb-3">
+            In compliance with Indian Motor Vehicle regulations and safety guidelines:
+          </p>
+          <ul class="list-disc list-inside space-y-2 text-sm text-m3-on-surface-variant leading-relaxed">
+            <li>Smoking, consumption of alcohol, or handling of prohibited substances inside commercial cabs is strictly prohibited.</li>
+            <li>Seating capacity limits designated for each vehicle model must be respected. Overcrowding is not permissible.</li>
+            <li>Passengers are requested to inspect and collect all personal belongings upon concluding the trip. While we assist actively in recovering forgotten items, Kalidass Travels is not liable for lost valuables.</li>
+          </ul>
+        </section>
+
+        <!-- 6. Jurisdiction & Contact -->
+        <section class="bg-m3-surface rounded-m3-xl p-6 sm:p-8 border border-m3-outline-variant shadow-m3-1">
+          <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">6</span>
+            Governing Law & Legal Jurisdiction
+          </h2>
+          <p class="text-sm text-m3-on-surface-variant leading-relaxed mb-4">
+            These terms are governed by the laws of India. Any disputes or claims arising out of services provided by Kalidass Travels shall be subject to the exclusive jurisdiction of the competent courts in <strong>Chennai, Tamil Nadu</strong>.
+          </p>
+          <div class="p-4 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 text-sm space-y-1.5 text-m3-on-surface">
+            <p><strong>Support Helpline:</strong> <a href="tel:+919092303060" class="text-m3-primary font-semibold hover:underline">+91 90923 03060</a> (24/7)</p>
+            <p><strong>Email:</strong> <a href="mailto:kalidasstravels2015@gmail.com" class="text-m3-primary font-semibold hover:underline">kalidasstravels2015@gmail.com</a></p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</Layout>

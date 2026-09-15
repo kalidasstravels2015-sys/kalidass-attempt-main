@@ -1,138 +1,114 @@
 import React from 'react';
-import { Clock, MapPin, Shield, Info } from 'lucide-react';
+import { Clock, MapPin, Shield, Info, Car, Moon, CheckCircle2 } from 'lucide-react';
 
 export default function ActingDriverTariff() {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden my-8">
-      <div className="bg-slate-50 p-6 border-b border-slate-200">
-        <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-          <Info className="w-5 h-5 text-indigo-600" />
-          Acting Driver Tariff Card
+    <div className="bg-m3-surface rounded-m3-lg shadow-m3-1 border border-m3-outline-variant overflow-hidden my-8 font-sans">
+      <div className="bg-m3-surface-container-low p-6 border-b border-m3-outline-variant">
+        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-m3-sm bg-m3-primary-container text-m3-on-primary-container text-xs font-bold uppercase tracking-wider mb-2">
+          <span>Official Tariff Card</span>
+        </div>
+        <h3 className="text-xl font-bold text-m3-on-surface flex items-center gap-2 font-heading">
+          <Info className="w-5 h-5 text-m3-primary" />
+          <span>Acting Driver Tariff & Standard Rates</span>
         </h3>
-        <p className="text-slate-500 text-sm mt-2">
-          An 'acting driver' or 'call driver' calculator is a way to estimate the cost of hiring a driver based on service type and duration.
+        <p className="text-m3-on-surface-variant text-xs sm:text-sm mt-1">
+          Transparent, time-based pricing for your personal car with zero peak-hour surge charges.
         </p>
       </div>
 
-      <div className="divide-y divide-slate-100">
-        {/* Local Trip */}
+      <div className="divide-y divide-m3-outline-variant/60">
+        {/* Local Trip (Within Chennai Metro) */}
         <div className="p-6">
-          <h4 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
-            <Clock className="w-4 h-4 text-indigo-500" />
-            <span className="lang-en">Local Trip (City Limits)</span>
-            <span className="lang-ta">உள்ளூர் பயணம் (நகர வரம்புகள்)</span>
-          </h4>
-          <div className="grid sm:grid-cols-2 gap-4 text-sm">
-            <div className="flex justify-between items-center border-b border-slate-50 pb-2 sm:border-0 sm:pb-0">
-              <span className="text-slate-600">
-                <span className="lang-en">Minimum (4 Hours)</span>
-                <span className="lang-ta">குறைந்தபட்சம் (4 மணிநேரம்)</span>
-              </span>
-              <span className="font-semibold text-slate-900">₹450 - ₹500</span>
+          <div className="flex items-center justify-between gap-2 mb-4">
+            <h4 className="font-bold text-m3-on-surface text-base flex items-center gap-2 font-heading">
+              <Clock className="w-4 h-4 text-m3-primary" />
+              <span>Within Chennai Metro (Time-Based, Zero KM Limit)</span>
+            </h4>
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-m3-full bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant">
+              Most Popular
+            </span>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-3 text-xs sm:text-sm">
+            <div className="flex justify-between items-center p-3 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant/50">
+              <span className="text-m3-on-surface-variant">4 Hours Short Duty (Errands / Shopping)</span>
+              <span className="font-bold text-m3-on-surface text-base">₹600</span>
             </div>
-            <div className="flex justify-between items-center border-b border-slate-50 pb-2 sm:border-0 sm:pb-0">
-              <span className="text-slate-600">
-                <span className="lang-en">Extra Hour</span>
-                <span className="lang-ta">கூடுதல் மணிநேரம்</span>
-              </span>
-              <span className="font-semibold text-slate-900">₹80 - ₹100</span>
+            <div className="flex justify-between items-center p-3 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant/50">
+              <span className="text-m3-on-surface-variant">8 Hours Full Day Duty</span>
+              <span className="font-bold text-m3-on-surface text-base">₹900</span>
             </div>
-            <div className="flex justify-between items-center border-b border-slate-50 pb-2 sm:border-0 sm:pb-0">
-              <span className="text-slate-600">
-                <span className="lang-en">Night Charge (After 10 PM)</span>
-                <span className="lang-ta">இரவு கட்டணம் (இரவு 10 மணிக்குப் பிறகு)</span>
-              </span>
-              <span className="font-semibold text-slate-900">+ ₹50 - ₹100</span>
+            <div className="flex justify-between items-center p-3 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant/50">
+              <span className="text-m3-on-surface-variant">Extra Hour Rate</span>
+              <span className="font-bold text-m3-on-surface text-base">₹150 / hr</span>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-slate-600">
-                <span className="lang-en">Multi-Location Pickup/Drop</span>
-                <span className="lang-ta">பல இடங்கள் பிக்கப்/டிராப்</span>
-              </span>
-              <span className="font-semibold text-slate-900">+ ₹50 - ₹100</span>
+            <div className="flex justify-between items-center p-3 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant/50">
+              <span className="text-m3-on-surface-variant">Night Duty Allowance (10 PM – 5 AM)</span>
+              <span className="font-bold text-m3-on-surface text-base">+₹200 flat</span>
             </div>
           </div>
         </div>
 
-        {/* Outstation Trip */}
-        <div className="p-6 bg-slate-50">
-          <h4 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-indigo-500" />
-            <span className="lang-en">Outstation Trip</span>
-            <span className="lang-ta">வெளியூர் பயணம்</span>
-          </h4>
-          <div className="grid sm:grid-cols-2 gap-4 text-sm">
-            <div className="flex justify-between items-center border-b border-slate-200 pb-2 sm:border-0 sm:pb-0">
-              <span className="text-slate-600">
-                <span className="lang-en">Per Day (12 Hours)</span>
-                <span className="lang-ta">ஒரு நாளைக்கு (12 மணிநேரம்)</span>
-              </span>
-              <span className="font-semibold text-slate-900">₹1100 - ₹1300</span>
+        {/* Outstation Trip (Daily Driver Bata) */}
+        <div className="p-6 bg-m3-surface-container-lowest">
+          <div className="flex items-center justify-between gap-2 mb-4">
+            <h4 className="font-bold text-m3-on-surface text-base flex items-center gap-2 font-heading">
+              <MapPin className="w-4 h-4 text-m3-primary" />
+              <span>Outstation Round Trip (Daily Driver Bata)</span>
+            </h4>
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-m3-full bg-m3-surface-container-high text-m3-on-surface">
+              Up to 14 hrs/day
+            </span>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-3 text-xs sm:text-sm">
+            <div className="flex justify-between items-center p-3 rounded-m3-md bg-m3-surface border border-m3-outline-variant/50">
+              <span className="text-m3-on-surface-variant">Hatchback & Sedan (Dzire, City, Verna)</span>
+              <span className="font-bold text-m3-on-surface text-base">₹600 / day</span>
             </div>
-            <div className="flex justify-between items-center border-b border-slate-200 pb-2 sm:border-0 sm:pb-0">
-              <span className="text-slate-600">
-                <span className="lang-en">Extra Hour</span>
-                <span className="lang-ta">கூடுதல் மணிநேரம்</span>
-              </span>
-              <span className="font-semibold text-slate-900">₹80 - ₹100</span>
+            <div className="flex justify-between items-center p-3 rounded-m3-md bg-m3-surface border border-m3-outline-variant/50">
+              <span className="text-m3-on-surface-variant">Compact SUV / MPV (Ertiga, Creta, Carens)</span>
+              <span className="font-bold text-m3-on-surface text-base">₹700 / day</span>
             </div>
-            <div className="flex justify-between items-center border-b border-slate-200 pb-2 sm:border-0 sm:pb-0">
-              <span className="text-slate-600">
-                <span className="lang-en">One-Way Drop (Min 150km)</span>
-                <span className="lang-ta">ஒரு வழி பயணம் (குறைந்தபட்சம் 150 கி.மீ)</span>
-              </span>
-              <span className="font-semibold text-slate-900">₹1300 - ₹1400</span>
+            <div className="flex justify-between items-center p-3 rounded-m3-md bg-m3-surface border border-m3-outline-variant/50">
+              <span className="text-m3-on-surface-variant">Premium SUV / MPV (Innova Crysta, Fortuner)</span>
+              <span className="font-bold text-m3-on-surface text-base">₹800 / day</span>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-slate-600">
-                <span className="lang-en">Other State (Min 150km)</span>
-                <span className="lang-ta">பிற மாநிலம் (குறைந்தபட்சம் 150 கி.மீ)</span>
-              </span>
-              <span className="font-semibold text-slate-900">₹1400 - ₹1500</span>
+            <div className="flex justify-between items-center p-3 rounded-m3-md bg-m3-surface border border-m3-outline-variant/50">
+              <span className="text-m3-on-surface-variant">Luxury European (BMW, Audi, Benz)</span>
+              <span className="font-bold text-m3-on-surface text-base">₹1,000 / day</span>
             </div>
-            <div className="col-span-full mt-2 p-3 bg-orange-50 text-orange-800 rounded-lg text-xs">
-              <strong>Note:</strong> 
-              <span className="lang-en"> Food & Accommodation (₹200-300/day) to be provided by customer or paid extra.</span>
-              <span className="lang-ta"> உணவு மற்றும் தங்குமிடம் (₹200-300/நாள்) வாடிக்கையாளரால் வழங்கப்பட வேண்டும் அல்லது கூடுதலாக செலுத்த வேண்டும்.</span>
+            
+            <div className="col-span-full p-3 bg-m3-surface-container-low text-m3-on-surface rounded-m3-md border border-m3-outline-variant text-xs flex items-start gap-2">
+              <Info className="w-4 h-4 text-m3-primary shrink-0 mt-0.5" />
+              <span><strong>Food & Lodging Note:</strong> Driver meal allowance is ₹150/meal (if not sharing family meals). Overnight room allowance is ₹300/night only if hotel does not provide driver dormitory.</span>
             </div>
           </div>
         </div>
 
-        {/* Other Charges */}
+        {/* Specialized Driving Duties */}
         <div className="p-6">
-          <h4 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
-            <Shield className="w-4 h-4 text-indigo-500" />
-            <span className="lang-en">Other Services</span>
-            <span className="lang-ta">பிற சேவைகள்</span>
+          <h4 className="font-bold text-m3-on-surface text-base mb-4 flex items-center gap-2 font-heading">
+            <Shield className="w-4 h-4 text-m3-primary" />
+            <span>Specialized Chauffeur Retainers & Relocation</span>
           </h4>
-          <div className="grid sm:grid-cols-2 gap-4 text-sm">
-            <div className="flex justify-between items-center border-b border-slate-50 pb-2 sm:border-0 sm:pb-0">
-              <span className="text-slate-600">
-                <span className="lang-en">Luxury Cars</span>
-                <span className="lang-ta">சொகுசு கார்கள்</span>
-              </span>
-              <span className="font-semibold text-slate-900">+ ₹50 - ₹100 /hr</span>
+          <div className="grid sm:grid-cols-2 gap-3 text-xs sm:text-sm">
+            <div className="flex justify-between items-center p-3 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant/50">
+              <span className="text-m3-on-surface-variant">Senior Citizen & Medical Standby (4h / 8h)</span>
+              <span className="font-bold text-m3-on-surface text-base">₹700 / ₹1,000</span>
             </div>
-            <div className="flex justify-between items-center border-b border-slate-50 pb-2 sm:border-0 sm:pb-0">
-              <span className="text-slate-600">
-                <span className="lang-en">Valet Parking (4 Hrs)</span>
-                <span className="lang-ta">வேலட் பார்க்கிங் (4 மணிநேரம்)</span>
-              </span>
-              <span className="font-semibold text-slate-900">₹599 (+ ₹99/hr)</span>
+            <div className="flex justify-between items-center p-3 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant/50">
+              <span className="text-m3-on-surface-variant">Night Duty Safe Return (Up to 3 hrs)</span>
+              <span className="font-bold text-m3-on-surface text-base">₹800</span>
             </div>
-             <div className="flex justify-between items-center border-b border-slate-50 pb-2 sm:border-0 sm:pb-0">
-              <span className="text-slate-600">
-                <span className="lang-en">Fixed Places (6 Hrs)</span>
-                <span className="lang-ta">நிலையான இடங்கள் (6 மணிநேரம்)</span>
-              </span>
-              <span className="font-semibold text-slate-900">₹749 - ₹750</span>
+            <div className="flex justify-between items-center p-3 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant/50">
+              <span className="text-m3-on-surface-variant">One-Way Car Relocation (Base 150 km)</span>
+              <span className="font-bold text-m3-on-surface text-base">₹1,800 + ₹10/km</span>
             </div>
-             <div className="flex justify-between items-center">
-              <span className="text-slate-600">
-                <span className="lang-en">Cancellation Fee</span>
-                <span className="lang-ta">ரத்து கட்டணம்</span>
-              </span>
-              <span className="font-semibold text-slate-900">₹100</span>
+            <div className="flex justify-between items-center p-3 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant/50">
+              <span className="text-m3-on-surface-variant">Monthly Office Commute (26 Days)</span>
+              <span className="font-bold text-m3-on-surface text-base">₹12k – ₹15k / mo</span>
             </div>
           </div>
         </div>

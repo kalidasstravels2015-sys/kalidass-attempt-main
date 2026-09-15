@@ -1,16 +1,61 @@
 User-agent: Googlebot
 Allow: /
 
+User-agent: Googlebot-Mobile
+Allow: /
+
 User-agent: Google-Extended
+Allow: /
+
+User-agent: AdsBot-Google
 Allow: /
 
 User-agent: GPTBot
 Allow: /
 
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
 User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: Meta-ExternalFetcher
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: GeminiBot
+Allow: /
+
+User-agent: Grok
 Allow: /
 
 User-agent: *
 Allow: /
 
 Sitemap: https://kalidasstravels.in/sitemap-index.xml
+LLMs-TXT: https://kalidasstravels.in/llms.txt
+LLMs-Full-TXT: https://kalidasstravels.in/llms-full.txt
+

@@ -1,280 +1,1056 @@
 [
   {
-    "slug": "acting-driver-within-chennai",
-    "category": "Acting Driver Services",
-    "title": "Acting Driver – Within Chennai",
-    "overview": "Professional acting driver service for your personal car within Chennai city limits. Ideal for office commute, shopping, hospital visits, family travel, elderly support.",
+    "slug": "tirupati-package",
+    "category": "Temple Tours",
+    "title": "Tirupati Balaji Darshan Package (1 Day & 2 Days)",
+    "duration": "1 Day (Same Day) or 2 Days / 1 Night (~150 km / 3.5 hrs)",
+    "overview": "Complete doorstep Chennai to Tirupati Balaji car package (~150 km, 3.5 to 4 hours one way). 100% all-inclusive fixed rates covering sanitized AC car, Andhra Pradesh Interstate Road Tax Permit, National Highway FASTag tolls, Alipiri ghat tolls, parking, and driver allowance. Includes Alipiri security check assistance, Kalyana Katta tonsure guidance, and visit to Sri Padmavathi Ammavari Temple (Tiruchanur). Available as a same-day 1 Day trip or a relaxed 2 Days / 1 Night itinerary.",
+    "routePlan": [
+      {
+        "stop": "Chennai Doorstep",
+        "desc": "04:00 AM early morning pickup anywhere in Chennai (home, hotel, or airport)."
+      },
+      {
+        "stop": "Nagari / Tiruttani",
+        "desc": "06:30 AM Satvik South Indian pure-veg breakfast halt."
+      },
+      {
+        "stop": "Alipiri Checkpost",
+        "desc": "07:45 AM vehicle security scan, FASTag toll clearance & ghat road ascent."
+      },
+      {
+        "stop": "Tirumala Hills",
+        "desc": "08:30 AM arrival; driver guides to Kalyana Katta tonsure, mobile cloakrooms & locker counters."
+      },
+      {
+        "stop": "Darshan & Prasadam",
+        "desc": "10:00 AM - 02:00 PM Special Entry / VIP / Sarva Darshan & Tirupati Laddu collection."
+      },
+      {
+        "stop": "Tiruchanur",
+        "desc": "03:30 PM blessings at Sri Padmavathi Ammavari Temple (essential completion of Tirupati pilgrimage)."
+      },
+      {
+        "stop": "Chennai Return",
+        "desc": "09:00 PM safe doorstep drop back home in Chennai."
+      }
+    ],
     "tariff": {
       "headers": [
-        "Duration",
-        "Charges"
+        "Vehicle Model",
+        "Seating Capacity",
+        "Round-Trip Flat Cost",
+        "Inclusions"
       ],
       "rows": [
         [
-          "4 Hours",
-          "₹600"
+          "Swift Dzire / Toyota Etios",
+          "4 Devotees + Driver",
+          "₹6,000",
+          "AC Sedan, Fuel, AP Permit, Tolls, Alipiri Toll, Driver Bata"
         ],
         [
-          "8 Hours (Full Day)",
-          "₹900"
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Devotees + Driver",
+          "₹7,500",
+          "AC 6-Seater, Fuel, AP Permit, Tolls, Alipiri Toll, Driver Bata"
         ],
         [
-          "Extra Hour",
-          "₹150/hr"
+          "Toyota Innova",
+          "7 Devotees + Driver",
+          "₹8,500",
+          "AC MUV, Fuel, AP Permit, Tolls, Alipiri Toll, Driver Bata"
         ],
         [
-          "Night Duty (10 PM – 5 AM)",
-          "+₹200"
+          "Toyota Innova Crysta (Luxury)",
+          "7 Devotees + Driver",
+          "₹10,000",
+          "Luxury MPV, Fuel, AP Permit, Tolls, Alipiri Toll, Driver Bata"
+        ],
+        [
+          "12-Seater Tempo Traveller",
+          "12 Devotees + Driver",
+          "₹12,500",
+          "Group Coach, Fuel, AP Permit, Tolls, Alipiri Toll, Driver Bata"
         ]
       ],
-      "note": "KM Not Counted — Only time-based."
+      "note": "Total Cost is 100% all-inclusive (Doorstep Pickup across Chennai, AP State Road Permit, National Highway Tolls, Alipiri Ghat Toll, Temple Parking & Driver Bata). Excludes devotee darshan entry tickets and food."
     },
     "includes": [
-      "Background-verified driver",
-      "Manual & automatic car support",
-      "Smooth & safe driving"
+      "Doorstep pickup & drop anywhere in Chennai (Home, Hotel, or Airport)",
+      "Andhra Pradesh Interstate Commercial Vehicle Border Permit & Road Tax",
+      "National Highway FASTag tolls & Alipiri ghat ascent/descent tolls",
+      "Driver Bata, fuel charges, and temple vehicle parking fees",
+      "Assistance at Alipiri security check, tonsure (Kalyana Katta), and luggage lockers",
+      "Dedicated visit to Sri Padmavathi Ammavari Temple at Tiruchanur"
     ],
     "excludes": [
-      "Parking",
-      "Toll",
-      "Food (not needed for city trips)"
+      "TTD Darshan tickets (₹300 Special Entry / VIP break pass — must be booked directly with Aadhaar)",
+      "Food, personal expenses, and extra prasadam laddus"
+    ],
+    "travelGuide": {
+      "history": "Tirumala is the sacred abode of Lord Sri Venkateswara (Balaji), located atop the seven holy peaks of the Seshachalam Hills. As per temple tradition, a pilgrimage to Tirumala is traditionally completed with the blessings of Goddess Sri Padmavathi Ammavari at Tiruchanur.",
+      "timings": "• Suprabhatam: 03:00 AM\n• VIP Break Darshan: 06:00 AM – 08:30 AM\n• Special Entry Darshan (₹300): 09:00 AM – 10:00 PM\n• Sarva Darshan (Free / SSD): 08:30 AM – 11:30 PM",
+      "dressCode": "Strict Traditional Attire Mandatory as per TTD regulations.\n• Men: White Dhoti with shirt or Kurta Pyjama or Dhoti with Angavastram (Jeans, T-shirts, shorts strictly prohibited).\n• Women: Saree, Half-saree, or Chudidhar/Salwar with Dupatta neatly pinned (Jeans, leggings, western wear strictly prohibited).\n• Children: Modest traditional clothing or clean Indian attire.",
+      "tips": [
+        "Official TTD Portal: Book ₹300 Special Entry Darshan tickets only on the official TTD portal (ttdevasthanams.ap.gov.in) or the TTDevasthanams official mobile app. Quotas open 2–3 months ahead.",
+        "Original Physical ID Mandatory: The original Aadhaar card or Passport entered during online booking must be produced at the Vaikuntam scanning queue. Digital photos or photocopies are strictly rejected.",
+        "No Online Tickets? Free SSD Tokens: Devotees without online tickets can get free Slotted Sarva Darshan (SSD) tokens using their Aadhaar at Tirupati counters (Bhudaevi Complex near Alipiri, Srinivasam Complex, or Vishnu Nivasam).",
+        "Senior Citizens & Infants: TTD offers dedicated Supadham entry for senior citizens (65+ with Aadhaar) and parents traveling with infants under 1 year during designated time windows.",
+        "Electronic Devices Prohibited: Smartphones, smartwatches, power banks, and cameras are strictly banned inside the sanctum sanctorum and must be deposited in TTD cloakrooms before entering the queue."
+      ]
+    },
+    "faq": [
+      {
+        "q": "How much does a Chennai to Tirupati car package cost?",
+        "a": "Our flat round-trip fares start from ₹6,000 for a 4-passenger AC Sedan (Swift Dzire / Etios), ₹7,500 for a 6-passenger Ertiga SUV, ₹8,500 for a 7-passenger Toyota Innova, ₹10,000 for an Innova Crysta, and ₹12,500 for a 12-seater Tempo Traveller. All fares are 100% all-inclusive covering car, fuel, AP border permit, NH tolls, Alipiri toll, and driver allowance."
+      },
+      {
+        "q": "Can we complete Tirupati Darshan from Chennai in one day?",
+        "a": "Yes! Our 1-Day Same Day package departs Chennai by 04:00 AM, reaches Tirumala by 08:30 AM, completes Special Entry Darshan by 02:00 PM, visits Tiruchanur Padmavathi Ammavari Temple by 03:30 PM, and drops you safely back at your doorstep in Chennai by 09:00 PM."
+      },
+      {
+        "q": "Can you arrange or bundle TTD ₹300 Darshan tickets?",
+        "a": "Under strict TTD regulations, all darshan tickets must be booked directly by devotees on the official TTD portal (ttdevasthanams.ap.gov.in) linked to their personal Aadhaar or Passport numbers. Travel operators cannot legally pre-purchase or resell tickets under generic names. We coordinate your doorstep vehicle pickup and timings to match your booked darshan time slot."
+      },
+      {
+        "q": "What if we don't have online TTD ₹300 tickets booked in advance?",
+        "a": "You can still visit Tirupati! Devotees without advance online tickets can obtain free Slotted Sarva Darshan (SSD) tokens at Tirupati counters (Bhudaevi Complex near Alipiri, Srinivasam, or Vishnu Nivasam) with their original Aadhaar. For SSD darshan, we recommend our 2 Days / 1 Night package so you can rest and attend darshan peacefully without exhaustion."
+      },
+      {
+        "q": "Are Andhra Pradesh border permit, FASTag tolls, and parking included in the fare?",
+        "a": "Yes, 100% included. You never have to pay any extra cash on the road for the Andhra Pradesh Interstate Tourist Tax, National Highway tolls, Alipiri ghat tolls, or temple parking. Everything is clearly transparent with zero surprise charges."
+      },
+      {
+        "q": "What is the official dress code for Tirupati Darshan in 2026?",
+        "a": "TTD enforces strict traditional dress. Men must wear a white Dhoti with shirt or Kurta Pyjama or Dhoti with Angavastram (Jeans, shorts, and western t-shirts are prohibited). Women must wear a Saree, Half-saree, or Chudidhar/Salwar with Dupatta pinned across shoulders (Jeans, leggings, sleeveless tops are prohibited)."
+      },
+      {
+        "q": "Is Sri Padmavathi Ammavari Temple (Tiruchanur) included?",
+        "a": "Yes! According to pilgrimage tradition, visiting Goddess Padmavathi at Tiruchanur completes the Tirupati pilgrimage. A dedicated stop at Tiruchanur is included in all our packages before heading back to Chennai."
+      },
+      {
+        "q": "Is this package convenient for senior citizens and young families?",
+        "a": "Extremely convenient. We provide clean, air-conditioned vehicles with easy step-stool access, doorstep pickup anywhere in Chennai, and drop devotees as close as authorized near the queue complex in Tirumala. Our polite, experienced drivers assist with luggage and navigating cloakrooms."
+      },
+      {
+        "q": "Is any advance payment required to book the vehicle?",
+        "a": "No advance payment is required for booking confirmation. You can reserve your car instantly via WhatsApp or phone call, and pay after boarding or upon trip completion."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I would like to book the Chennai to Tirupati Balaji Car Package. Please share vehicle availability."
+  },
+  {
+    "slug": "navagraha-tour",
+    "category": "Temple Tours",
+    "title": "Kumbakonam Navagraha 9 Temples Tour (2 Days / 1 Night)",
+    "duration": "2 Days / 1 Night (Approx 750 km)",
+    "overview": "Complete sacred pilgrimage covering all 9 planetary temples (Navagrahas) around Kumbakonam, Thanjavur, and Mayiladuthurai. Perfectly sequenced by route experts to ensure you never face afternoon closed gates and complete all pariharams peacefully.",
+    "routePlan": [
+      {
+        "stop": "Day 1 (05:00 AM)",
+        "desc": "Depart Chennai via Vikravandi - Thanjavur National Highway."
+      },
+      {
+        "stop": "1. Suryanar Kovil",
+        "desc": "Sun (Surya) Bhagavan Temple for health & vitality."
+      },
+      {
+        "stop": "2. Thingaloor",
+        "desc": "Moon (Chandra) Temple for mental peace & family harmony."
+      },
+      {
+        "stop": "3. Vaitheeswaran Kovil",
+        "desc": "Mars (Angaraka / Sevvai) for Sevvai Dosham & healing."
+      },
+      {
+        "stop": "4. Thiruvenkadu",
+        "desc": "Mercury (Budhan) Temple for education & intellect. Overnight at Kumbakonam."
+      },
+      {
+        "stop": "Day 2 (06:30 AM)",
+        "desc": "5. Alangudi (Guru) Jupiter Temple for career & marriage."
+      },
+      {
+        "stop": "6. Kanjanur & 7. Thirunallar",
+        "desc": "Venus (Sukran) + Saturn (Sani / Nala Theertham) at Thirunallar."
+      },
+      {
+        "stop": "8. Thirunageswaram & 9. Keezhaperumpallam",
+        "desc": "Rahu (Milk Abhishekam) & Ketu (Moksha). Return Chennai by 10:30 PM."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Capacity",
+        "2-Day Package Cost",
+        "Inclusions"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Devotees",
+          "₹8,600",
+          "Includes 750 km, 2 Days Driver Bata, Tolls & Parking"
+        ],
+        [
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Devotees",
+          "₹10,600",
+          "Includes 750 km, 2 Days Driver Bata, Tolls & Parking"
+        ],
+        [
+          "Toyota Innova (7 Seater)",
+          "7 Devotees",
+          "₹13,100",
+          "Includes 750 km, 2 Days Driver Bata, Tolls & Parking"
+        ],
+        [
+          "Toyota Innova Crysta (Luxury)",
+          "7 Devotees",
+          "₹15,500",
+          "Includes 750 km, 2 Days Driver Bata, Tolls & Parking"
+        ],
+        [
+          "12-Seater Tempo Traveller",
+          "12 Devotees",
+          "₹18,500",
+          "Includes 750 km, 2 Days Driver Bata, Tolls & Parking"
+        ]
+      ],
+      "note": "Package includes complete 2-day vehicle usage covering all 9 Navagraha temples + driver daily allowance (Bata) + highway tolls. Extra km beyond 750 km charged at standard rate."
+    },
+    "includes": [
+      "Expert driver with deep knowledge of temple opening & closing hours",
+      "Clean, sanitized, dual-AC vehicle with luggage space",
+      "Stops at authentic satvik vegetarian messes and filter coffee spots",
+      "Complete coverage of all 9 planetary temples without backtracking"
+    ],
+    "excludes": [
+      "Special puja / pariharam archana tickets",
+      "Devotee hotel accommodation & food in Kumbakonam"
+    ],
+    "travelGuide": {
+      "history": "The Navagraha temples around Kumbakonam are centuries-old Chola architectural marvels dedicated to the nine celestial bodies. Performing pariharams at these specific sthalams is believed to nullify planetary afflictions (Doshas) and bring prosperity.",
+      "timings": "Most temples open 06:00 AM – 12:30 PM & reopen 04:00 PM – 08:30 PM. (Thirunallar and Alangudi can have heavy queues on Saturdays and Thursdays).",
+      "dressCode": "Traditional attire strictly required. Men: Dhoti or Kurta Pyjama. Women: Saree or Chudidhar with Dupatta.",
+      "tips": [
+        "Attempting all 9 temples in a single day is extremely rushed; our 2-day itinerary guarantees relaxed and fulfilling darshan.",
+        "At Thirunallar, carry a spare change of clothes if you plan to take the holy dip at Nala Theertham.",
+        "At Thirunageswaram (Rahu Sthalam), Pal Abhishekam during Rahu Kalam is highly auspicious."
+      ]
+    },
+    "faq": [
+      {
+        "q": "Can we cover all 9 temples in 2 days comfortably?",
+        "a": "Yes! Our route schedule is planned astronomically so you visit 4 temples on Day 1 and the remaining 5 on Day 2 with zero rushing."
+      },
+      {
+        "q": "Can we start from Kumbakonam Railway Station instead of Chennai?",
+        "a": "Yes. If you travel by train to Kumbakonam, our vehicle can pick you up directly from Kumbakonam Railway Station for the local 9-temple tour."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I want to book the Kumbakonam Navagraha 9 Temples 2-Day Package."
+  },
+  {
+    "slug": "thiruvannamalai-girivalam-trip",
+    "category": "Temple Tours",
+    "title": "Thiruvannamalai Girivalam & Arunachaleswarar Tour",
+    "duration": "1 Day (Daytime) or Overnight Pournami Package",
+    "overview": "Spiritual journey to the holy abode of Lord Arunachaleswarar (Agni Lingam) and the sacred 14 km Girivalam path. Features flexible daytime darshan trips or overnight Pournami (Full Moon) packages with experienced night highway drivers.",
+    "routePlan": [
+      {
+        "stop": "Chennai Departure",
+        "desc": "Morning 06:00 AM (Day trip) OR Afternoon 02:00 PM (Pournami trip)."
+      },
+      {
+        "stop": "Arunachaleswarar Temple",
+        "desc": "Darshan at the majestic Agni Sthalam Shiva temple."
+      },
+      {
+        "stop": "Ramana Maharshi Ashram",
+        "desc": "Peaceful meditation at Sri Ramana & Seshadri Swamigal ashrams."
+      },
+      {
+        "stop": "14 km Girivalam Path",
+        "desc": "Circumambulation covering the 8 directional Lingams."
+      },
+      {
+        "stop": "Chennai Return",
+        "desc": "Return to Chennai in relaxed AC comfort."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Seating Capacity",
+        "Total Round-Trip Cost",
+        "Inclusions"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Devotees",
+          "₹6,500",
+          "Includes 400 km, Fuel, Tolls & Driver Bata"
+        ],
+        [
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Devotees",
+          "₹7,900",
+          "Includes 400 km, Fuel, Tolls & Driver Bata"
+        ],
+        [
+          "Toyota Innova (7 Seater)",
+          "7 Devotees",
+          "₹9,300",
+          "Includes 400 km, Fuel, Tolls & Driver Bata"
+        ],
+        [
+          "Toyota Innova Crysta",
+          "7 Devotees",
+          "₹11,100",
+          "Includes 400 km, Fuel, Tolls & Driver Bata"
+        ],
+        [
+          "12-Seater Tempo Traveller",
+          "12 Devotees",
+          "₹13,500",
+          "Includes 400 km, Fuel, Tolls & Driver Bata"
+        ]
+      ],
+      "note": "Total cost includes full round trip from Chennai, fuel, driver allowance (bata), and national highway tolls. No night surge multipliers on Pournami days."
+    },
+    "includes": [
+      "Doorstep pickup & drop in Chennai",
+      "Highway tolls and vehicle parking guidance",
+      "Experienced night-route driver for overnight Pournami trips",
+      "Vehicle standby along Girivalam access points for senior citizen rest"
+    ],
+    "excludes": [
+      "Special temple entry tickets & food"
+    ],
+    "travelGuide": {
+      "history": "Thiruvannamalai is one of the Pancha Bhoota Sthalas, representing the Fire element (Agni). Mount Annamalai itself is revered as the Shiva Lingam. Walking the 14 km path barefoot on Pournami (Full Moon) is believed to liberate souls and destroy karma.",
+      "timings": "Main Temple: 05:00 AM – 12:30 PM & 03:30 PM – 09:30 PM. Girivalam path is open 24/7 with street lighting and police patrol.",
+      "dressCode": "Modest traditional clothing. Comfortable cotton attire recommended for the 14 km walk.",
+      "tips": [
+        "For Pournami Girivalam, starting the walk between 08:00 PM and 10:00 PM provides pleasant weather and vibrant spiritual energy.",
+        "Our driver parks at an accessible meetup point so elderly members who walk partial distances can rest in the AC car."
+      ]
+    },
+    "faq": [
+      {
+        "q": "Is night driving to Thiruvannamalai safe?",
+        "a": "Yes. We assign our most experienced night-shift highway pilots who specialize in night expressway corridors and zero-fatigue driving."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I would like to book the Thiruvannamalai Girivalam Tour Package."
+  },
+  {
+    "slug": "sabarimala-trip",
+    "category": "Temple Tours",
+    "title": "Sabarimala Yatra Package (Chennai to Pamba / Nilakkal)",
+    "duration": "3 Days / 2 Nights (Approx 1,350 km)",
+    "overview": "Devotional 3D/2N Sabarimala car package from Chennai to Pamba & Nilakkal base camp. Features satvik teetotaler drivers, devotional audio systems, Kerala interstate permits, and satvik pure-vegetarian dining halts.",
+    "routePlan": [
+      {
+        "stop": "Chennai Departure",
+        "desc": "Early morning departure with Ayyappa devotional songs."
+      },
+      {
+        "stop": "Trichy / Samayapuram",
+        "desc": "Satvik breakfast & temple darshan."
+      },
+      {
+        "stop": "Kumily Checkpost",
+        "desc": "Kerala interstate border tax permit clearance."
+      },
+      {
+        "stop": "Nilakkal Base Camp",
+        "desc": "Vehicle parking, cloakroom & transfer to Pamba."
+      },
+      {
+        "stop": "Pamba Holy River",
+        "desc": "Sacred dip in Pamba & trek to Sannidhanam."
+      },
+      {
+        "stop": "Chennai Return",
+        "desc": "Safe return with satvik halts across Tamil Nadu."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Capacity",
+        "3-Day Package Cost",
+        "Inclusions"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Devotees",
+          "₹15,900",
+          "Car, Fuel, Kerala Permit, 3 Days Bata"
+        ],
+        [
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Devotees",
+          "₹18,900",
+          "Car, Fuel, Kerala Permit, 3 Days Bata"
+        ],
+        [
+          "Toyota Innova (7 Seater)",
+          "7 Devotees",
+          "₹23,300",
+          "Car, Fuel, Kerala Permit, 3 Days Bata"
+        ],
+        [
+          "Toyota Innova Crysta (Luxury)",
+          "7 Devotees",
+          "₹27,600",
+          "Car, Fuel, Kerala Permit, 3 Days Bata"
+        ],
+        [
+          "Tempo Traveller (12/17 Seater)",
+          "12-17 Devotees",
+          "₹34,800",
+          "Group Coach, Fuel, Kerala Permit, 3 Days Bata"
+        ]
+      ],
+      "note": "Package covers 1,350 km round trip, vehicle, fuel, Kerala Interstate Road Tax Permit, and 3 full days of driver allowance. Tolls and Nilakkal parking paid at actuals."
+    },
+    "includes": [
+      "Satvik, non-smoking, teetotaler hill-specialist driver",
+      "Kerala State Interstate Road Tax Permit handled by driver",
+      "Devotional audio system (Harivarasanam, Ayyappa Bhajans)",
+      "Pure vegetarian dining corridor routing"
+    ],
+    "excludes": [
+      "Kerala Police Virtual-Q pass booking",
+      "Tolls & Nilakkal parking charges",
+      "Personal devotee food and stay"
+    ],
+    "travelGuide": {
+      "history": "The sacred Sabarimala pilgrimage in the Western Ghats represents extreme devotion and discipline. Devotees observe 41 days of austere vratham before carrying the Irumudi Kettu to climb the holy 18 steps (Pathinettam Padi).",
+      "timings": "Mandala Season: Mid-November to late December. Makaravilakku: Late December to Mid-January.",
+      "dressCode": "Black, blue, or saffron traditional dhoti. Irumudi Kettu is mandatory for climbing the Pathinettam Padi.",
+      "tips": [
+        "Ensure all devotees register and carry printed copies of the Kerala Police Sabarimala Virtual-Q slot pass.",
+        "Green Sabarimala Rule: Single-use plastics are strictly prohibited beyond Nilakkal.",
+        "Keep Aadhaar and registration tokens handy at forest checkposts."
+      ]
+    },
+    "faq": [
+      {
+        "q": "Is the Kerala State Permit included in the price?",
+        "a": "Yes! The Kerala Interstate Road Tax permit is fully covered in our package price."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I would like to book a Sabarimala Yatra Package."
+  },
+  {
+    "slug": "rameswaram-2-days",
+    "category": "Temple Tours",
+    "title": "Rameswaram & Dhanushkodi 2-Day Pilgrimage Package",
+    "duration": "2 Days / 1 Night (Approx 1,200 km)",
+    "overview": "Spiritual journey to the holy island of Rameswaram (Char Dham sthalam). Includes Ramanathaswamy Temple darshan, 22 sacred well baths, Pamban bridge ocean view drive, Dhanushkodi ghost town, and Dr. APJ Abdul Kalam Memorial.",
+    "routePlan": [
+      {
+        "stop": "Day 1 (05:00 AM)",
+        "desc": "Depart Chennai via Trichy - Madurai Highway."
+      },
+      {
+        "stop": "Pamban Bridge",
+        "desc": "Scenic ocean drive across the historic Pamban sea bridge."
+      },
+      {
+        "stop": "Rameswaram Hotel",
+        "desc": "Evening hotel check-in & Agni Theertham sea bath."
+      },
+      {
+        "stop": "Day 2 (05:30 AM)",
+        "desc": "22 Holy Theerthams bath & Ramanathaswamy Temple Darshan."
+      },
+      {
+        "stop": "Dhanushkodi & Ram Setu",
+        "desc": "Visit Arichal Munai (Land's End) & Ram Setu starting point."
+      },
+      {
+        "stop": "APJ Kalam Memorial",
+        "desc": "Tribute at national memorial; depart for Chennai (arrive 11:00 PM)."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Capacity",
+        "2-Day Package Cost",
+        "Inclusions"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Devotees",
+          "₹15,500",
+          "Includes 1,200 km, Fuel, Tolls & 2 Days Bata"
+        ],
+        [
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Devotees",
+          "₹18,400",
+          "Includes 1,200 km, Fuel, Tolls & 2 Days Bata"
+        ],
+        [
+          "Toyota Innova (7 Seater)",
+          "7 Devotees",
+          "₹22,600",
+          "Includes 1,200 km, Fuel, Tolls & 2 Days Bata"
+        ],
+        [
+          "Toyota Innova Crysta (Luxury)",
+          "7 Devotees",
+          "₹26,700",
+          "Includes 1,200 km, Fuel, Tolls & 2 Days Bata"
+        ],
+        [
+          "12-Seater Tempo Traveller",
+          "12 Devotees",
+          "₹32,200",
+          "Includes 1,200 km, Fuel, Tolls & 2 Days Bata"
+        ]
+      ],
+      "note": "Complete 2-day round-trip package including vehicle, fuel, driver daily allowances, and all national highway tolls."
+    },
+    "includes": [
+      "Complete coverage of Rameswaram, Pamban, and Dhanushkodi",
+      "Assistance coordinating changing rooms for 22 Theertham baths",
+      "All highway tolls and driver daily allowances included"
+    ],
+    "excludes": [
+      "Theertham bath temple tickets & personal hotel stay"
+    ],
+    "travelGuide": {
+      "history": "Rameswaram is one of the four holy Char Dham pilgrimage destinations in India. It is where Lord Rama worshipped Lord Shiva to seek absolution after defeating Ravana. The temple features the world's longest pillared corridor.",
+      "timings": "Temple: 05:00 AM – 01:00 PM & 03:00 PM – 09:00 PM. Dhanushkodi: 06:00 AM – 05:00 PM.",
+      "dressCode": "Traditional wear. Devotees may enter with wet clothes after taking the 22 Theertham baths.",
+      "tips": [
+        "Start early with a sea bath at Agni Theertham, then proceed directly to the 22 holy wells inside the temple.",
+        "Visit Dhanushkodi (Arichal Munai) early in the morning for calm ocean breezes and clear views."
+      ]
+    },
+    "faq": [
+      {
+        "q": "Is Dhanushkodi included in the trip?",
+        "a": "Yes! Our vehicle takes you all the way to Arichal Munai (the tip where Indian Ocean meets Bay of Bengal)."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I would like to book the Rameswaram 2-Day Pilgrimage Package."
+  },
+  {
+    "slug": "kanchipuram-temple-trip",
+    "category": "Temple Tours",
+    "title": "Kanchipuram Temple & Silk City Tour (1 Day)",
+    "duration": "1 Day (Approx 150 km)",
+    "overview": "Spiritual and heritage day trip to Kanchipuram — the City of Thousand Temples. Visit Sri Kamakshi Amman Temple (Shakti Peetham), Ekambareswarar Temple (Earth Element), and Varadharaja Perumal Temple, combined with authentic silk saree shopping.",
+    "routePlan": [
+      {
+        "stop": "Chennai Departure",
+        "desc": "06:30 AM morning pickup from your home."
+      },
+      {
+        "stop": "Ekambareswarar Temple",
+        "desc": "08:30 AM darshan at Prithvi Lingam (Earth element)."
+      },
+      {
+        "stop": "Kamakshi Amman Temple",
+        "desc": "10:30 AM blessings at the renowned Shakti Peetham."
+      },
+      {
+        "stop": "Traditional Lunch",
+        "desc": "12:30 PM authentic South Indian vegetarian lunch."
+      },
+      {
+        "stop": "Varadharaja Perumal",
+        "desc": "04:00 PM darshan at 108 Divya Desam temple."
+      },
+      {
+        "stop": "Silk Saree Shopping",
+        "desc": "05:30 PM visit to handloom weaver cooperative societies."
+      },
+      {
+        "stop": "Chennai Return",
+        "desc": "08:30 PM safe drop back at home."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Capacity",
+        "Total 1-Day Cost",
+        "Inclusions"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Devotees",
+          "₹3,200 – ₹3,500",
+          "Includes 150 km, Fuel, Tolls & Driver Bata"
+        ],
+        [
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Devotees",
+          "₹4,500 – ₹4,800",
+          "Includes 150 km, Fuel, Tolls & Driver Bata"
+        ],
+        [
+          "Toyota Innova (7 Seater)",
+          "7 Devotees",
+          "₹5,500 – ₹6,000",
+          "Includes 150 km, Fuel, Tolls & Driver Bata"
+        ],
+        [
+          "Toyota Innova Crysta",
+          "7 Devotees",
+          "₹6,500 – ₹7,000",
+          "Includes 150 km, Fuel, Tolls & Driver Bata"
+        ],
+        [
+          "12-Seater Tempo Traveller",
+          "12 Devotees",
+          "₹8,000 – ₹8,500",
+          "Includes 150 km, Fuel, Tolls & Driver Bata"
+        ]
+      ],
+      "note": "Includes car, fuel, driver bata, highway tolls, and dedicated shopping halt. Zero extra parking surprises."
+    },
+    "includes": [
+      "Doorstep pickup anywhere in Chennai",
+      "Assistance for senior citizen devotees",
+      "Free waiting time at weaver cooperative societies for silk saree shopping"
+    ],
+    "excludes": [
+      "Special darshan tickets & food"
+    ],
+    "travelGuide": {
+      "history": "Kanchipuram was the historic capital of the Pallava dynasty and is one of India's seven sacred Mokshapuris. It is world-renowned both for its magnificent temple architecture and its GI-tagged pure mulberry silk sarees with gold zari.",
+      "timings": "Temples open 06:00 AM – 12:30 PM & reopen 04:00 PM – 08:30 PM.",
+      "dressCode": "Traditional wear recommended.",
+      "tips": [
+        "Early morning 06:30 AM departure ensures you complete Ekambareswarar and Kamakshi Amman before afternoon closure at 12:30 PM.",
+        "We guide you directly to authentic weaver cooperative societies to avoid middleman commissions on silk sarees."
+      ]
+    },
+    "faq": [
+      {
+        "q": "Can we visit both Shiva and Vishnu temples on the same trip?",
+        "a": "Yes! Our 1-day itinerary is designed to cover both Ekambareswarar (Shiva) and Varadharaja Perumal (Vishnu) seamlessly."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I want to book the Kanchipuram Temple Day Trip."
+  },
+  {
+    "slug": "chidambaram-temple-trip",
+    "category": "Temple Tours",
+    "title": "Chidambaram Natarajar Temple & Pichavaram Tour",
+    "duration": "1 Day (Approx 450 km)",
+    "overview": "Spiritual coastal day trip to the ancient Thillai Natarajar Temple (Akasha Lingam - Sky Element) in Chidambaram, combined with a scenic boat ride in the Pichavaram Mangrove Forests (the world's second largest mangrove wetland).",
+    "routePlan": [
+      {
+        "stop": "Chennai Departure",
+        "desc": "05:30 AM pickup via East Coast Road (ECR)."
+      },
+      {
+        "stop": "Pondicherry / Cuddalore",
+        "desc": "Breakfast stop & scenic coastal drive."
+      },
+      {
+        "stop": "Chidambaram Natarajar",
+        "desc": "Darshan of cosmic dancer Lord Nataraja & Spatika Lingam puja."
+      },
+      {
+        "stop": "Pichavaram Mangroves",
+        "desc": "Serene motorboat / rowboat ride through dense mangrove canals."
+      },
+      {
+        "stop": "Chennai Return",
+        "desc": "Return to Chennai by 09:30 PM."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Capacity",
+        "1-Day Package Cost",
+        "Inclusions"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Devotees",
+          "₹7,400",
+          "Includes 450 km, Fuel, Tolls & Driver Bata"
+        ],
+        [
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Devotees",
+          "₹9,000",
+          "Includes 450 km, Fuel, Tolls & Driver Bata"
+        ],
+        [
+          "Toyota Innova (7 Seater)",
+          "7 Devotees",
+          "₹10,500",
+          "Includes 450 km, Fuel, Tolls & Driver Bata"
+        ],
+        [
+          "Toyota Innova Crysta",
+          "7 Devotees",
+          "₹12,500",
+          "Includes 450 km, Fuel, Tolls & Driver Bata"
+        ],
+        [
+          "12-Seater Tempo Traveller",
+          "12 Devotees",
+          "₹15,000",
+          "Includes 450 km, Fuel, Tolls & Driver Bata"
+        ]
+      ],
+      "note": "Includes car, fuel, driver bata, and all highway tolls."
+    },
+    "includes": [
+      "Doorstep pickup & drop in Chennai",
+      "Highway tolls and parking fees included",
+      "Experienced driver familiar with ECR and Chidambaram routes"
+    ],
+    "excludes": [
+      "Pichavaram boating tickets & food"
+    ],
+    "travelGuide": {
+      "history": "Chidambaram Thillai Natarajar Temple represents the Sky/Ether element (Akasha Lingam) among the Pancha Bhoota Sthalas. The temple celebrates Lord Shiva's Anandatandava (cosmic dance of bliss).",
+      "timings": "Temple: 06:00 AM – 12:00 PM & 05:00 PM – 10:00 PM. Pichavaram Boating: 08:00 AM – 05:00 PM.",
+      "dressCode": "Traditional wear. Men must remove shirts before entering the inner sanctum.",
+      "tips": [
+        "Aim to witness the sacred Spatika Lingam Abhishekam at 10:00 AM.",
+        "Pichavaram is just 15 km from Chidambaram; a 1-hour boat ride through the water alleys is a must-experience."
+      ]
+    },
+    "faq": [
+      {
+        "q": "Can we combine Chidambaram with Pondicherry?",
+        "a": "Yes! Since the route passes Pondicherry, we can include a brief halt at Manakula Vinayagar Temple or French Colony on request."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I would like to book the Chidambaram & Pichavaram Day Trip."
+  },
+  {
+    "slug": "vellore-golden-temple",
+    "category": "Temple Tours",
+    "title": "Vellore Sripuram Golden Temple Day Trip",
+    "duration": "1 Day (Approx 300 km)",
+    "overview": "Spiritual day trip to the stunning Sripuram Golden Temple (Sri Lakshmi Narayani Temple), covered with 1,500 kg of pure gold foil. Includes a visit to the historic 16th-century Vellore Fort and Jalakandeswarar Temple.",
+    "routePlan": [
+      {
+        "stop": "Chennai Departure",
+        "desc": "07:00 AM pickup via Chennai - Bangalore Expressway."
+      },
+      {
+        "stop": "Vellore Fort & Jalakandeswarar",
+        "desc": "10:30 AM historic granite fort & Vijayanagara temple sculpture."
+      },
+      {
+        "stop": "Lunch Break",
+        "desc": "01:00 PM traditional vegetarian lunch."
+      },
+      {
+        "stop": "Sripuram Golden Temple",
+        "desc": "03:30 PM star-shaped spiritual walk & Golden Temple darshan."
+      },
+      {
+        "stop": "Chennai Return",
+        "desc": "09:30 PM safe doorstep drop."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Capacity",
+        "1-Day Package Cost",
+        "Inclusions"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Devotees",
+          "₹4,200",
+          "Includes 300 km, Fuel, Tolls & Driver Bata"
+        ],
+        [
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Devotees",
+          "₹5,200",
+          "Includes 300 km, Fuel, Tolls & Driver Bata"
+        ],
+        [
+          "Toyota Innova (7 Seater)",
+          "7 Devotees",
+          "₹6,200",
+          "Includes 300 km, Fuel, Tolls & Driver Bata"
+        ],
+        [
+          "Toyota Innova Crysta",
+          "7 Devotees",
+          "₹7,200",
+          "Includes 300 km, Fuel, Tolls & Driver Bata"
+        ],
+        [
+          "12-Seater Tempo Traveller",
+          "12 Devotees",
+          "₹9,000",
+          "Includes 300 km, Fuel, Tolls & Driver Bata"
+        ]
+      ],
+      "note": "Includes complete round trip, fuel, driver bata, and highway expressway tolls."
+    },
+    "includes": [
+      "Doorstep pickup & drop anywhere in Chennai",
+      "Bangalore highway FASTag tolls included",
+      "Wheelchair assistance coordination for elderly devotees"
+    ],
+    "excludes": [
+      "Special darshan tickets & food"
+    ],
+    "travelGuide": {
+      "history": "Sripuram Golden Temple is situated at the foot of lush green hills in Malaikodi, Vellore. The entire sanctum is hand-crafted with 1,500 kg of pure gold foil, surrounded by a 1.8 km star-shaped path containing spiritual inscriptions.",
+      "timings": "Darshan: 08:00 AM – 08:00 PM.",
+      "dressCode": "Strictly traditional attire. No shorts, sleeveless tops, or lungis permitted.",
+      "tips": [
+        "Cell phones and cameras are strictly banned inside the Golden Temple; deposit them at the locker counters.",
+        "Free Annadanam (holy meal) is served daily to all visiting devotees."
+      ]
+    },
+    "faq": [
+      {
+        "q": "Is wheelchair facility available at the Golden Temple for senior citizens?",
+        "a": "Yes! Sripuram provides wheelchair facilities and golf carts for elderly devotees along the star path."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I would like to book the Vellore Golden Temple Trip."
+  },
+  {
+    "slug": "acting-driver-within-chennai",
+    "category": "Acting Driver Services",
+    "title": "Acting Driver – Within Chennai (Hourly & Daily)",
+    "overview": "Professional background-verified acting driver service for your personal car within Chennai city limits. Ideal for shopping in T. Nagar, hospital visits, family functions, airport drops, and stress-free city traffic navigation.",
+    "tariff": {
+      "headers": [
+        "Package / Duration",
+        "Driver Charges",
+        "Coverage & Notes"
+      ],
+      "rows": [
+        [
+          "4 Hours Short Duty",
+          "₹600",
+          "Unlimited stops within Chennai Metro. ₹150/extra hr."
+        ],
+        [
+          "8 Hours Full Day Duty",
+          "₹900",
+          "Standard full day duty across all Chennai zones."
+        ],
+        [
+          "12 Hours Extended Day",
+          "₹1,400",
+          "Ideal for full-day weddings, multiple client visits."
+        ],
+        [
+          "Night Duty Allowance (10 PM – 5 AM)",
+          "+₹200 flat",
+          "Applicable only if duty extends past 10:00 PM."
+        ]
+      ],
+      "note": "KM is NOT counted within Chennai Metropolitan limits. Pricing is 100% time-based. Fuel, parking, and toll fees are borne by vehicle owner."
+    },
+    "includes": [
+      "100% Police Verified (PVC) professional chauffeur",
+      "Certified for Manual, Automatic (CVT/DSG/Torque Converter), & Electric Vehicles (EV)",
+      "Assistance with elderly passenger boarding & light luggage",
+      "Doorstep reporting anywhere in Chennai (15 mins early arrival)"
+    ],
+    "excludes": [
+      "Fuel & FASTag tolls (borne by vehicle owner)",
+      "Parking charges at malls / hospitals / wedding halls",
+      "Driver meals (not required for 4-hr duties; 30-min break for 8-hr full day)"
     ],
     "faq": [
       {
-        "q": "Can I extend hours?",
-        "a": "Yes. ₹100/hr."
+        "q": "Can I extend the duty if my shopping or event takes longer?",
+        "a": "Yes! You do not need to call the office. Inform your driver directly. Extra hours are billed at a flat ₹150/hr at final settlement."
       },
       {
-        "q": "Will the driver help with luggage?",
-        "a": "Yes, light luggage."
+        "q": "Are your drivers experienced with high-end automatic / luxury cars?",
+        "a": "Yes. Our roster includes chauffeurs certified to handle luxury automatic and EV vehicles including BMW, Audi, Mercedes-Benz, Volvo, Innova Crysta, and DCT/CVT models."
       },
       {
-        "q": "Can I book last-minute?",
-        "a": "Usually available; depends on peak time."
+        "q": "What is the cancellation policy?",
+        "a": "Free cancellation up to 2 hours before the scheduled reporting time. Cancellations made after driver dispatch incur a ₹200 driver conveyance fee."
       }
     ],
     "notes": [
-      "Service starts & ends at your location.",
-      "No hidden charges."
+      "Service starts & ends at your doorstep location in Chennai.",
+      "Zero hidden surge charges during peak hours or festival days."
     ],
     "travelGuide": {
-      "history": "Our Acting Driver service provides you with professional, verified drivers to drive your personal vehicle. Whether you need to commute to work, attend meetings, go shopping, or visit family, our drivers ensure you reach your destination safely and comfortably in your own car. We handle the driving so you can relax, work, or make calls.",
-      "timings": "• **Standard Hours:** 6:00 AM to 10:00 PM\n• **Night Duty:** 10:00 PM to 6:00 AM (Additional charges apply)\n• **Booking Lead Time:** Minimum 2 hours notice recommended for guaranteed availability.",
+      "history": "Navigating Chennai's high-density traffic corridors — from T. Nagar shopping streets to OMR IT corridors and hospital clusters — causes severe driving fatigue. Kalidass Travels provides vetted, disciplined chauffeurs so you can relax, take business calls, or spend time with family in the comfort of your own car.",
+      "timings": "• Standard Operating Hours: 06:00 AM to 10:00 PM\n• Night Duty Hours: 10:00 PM to 05:00 AM (Flat +₹200 night allowance)\n• Recommended Booking Lead Time: Minimum 1 to 2 hours for guaranteed prompt dispatch.",
       "tips": [
-        "Ensure your vehicle documents (RC, Insurance, Pollution) are up to date.",
-        "Keep the fuel tank sufficiently filled before the trip starts.",
-        "Inform the driver about any specific vehicle quirks or handling instructions.",
-        "For long durations, clarify meal breaks with the driver beforehand."
+        "Ensure your vehicle RC, insurance, and PUC documents are up to date in the glovebox.",
+        "Keep adequate fuel in the tank before the driver arrives.",
+        "Inform the driver of any specific vehicle quirks or dashcam preferences during pre-trip inspection."
       ],
-      "dressCode": "Our drivers arrive in professional attire, ensuring a presentable and disciplined service experience."
+      "dressCode": "Chauffeurs report in clean, professional attire with photo ID badge."
     },
-    "whatsappMsg": "Hi, I need an Acting Driver within Chennai."
-  },
-  {
-    "slug": "acting-driver-outstation-one-way",
-    "category": "Acting Driver Services",
-    "title": "Acting Driver – Outstation One Way",
-    "overview": "Driver takes your personal car from Chennai to any destination outside Chennai (only drop-off, no return).",
-    "tariff": {
-      "headers": [
-        "Component",
-        "Rate"
-      ],
-      "rows": [
-        [
-          "Base (first 150 km)",
-          "₹1,800"
-        ],
-        [
-          "Additional Distance",
-          "₹12/km"
-        ],
-        [
-          "Night Halt (if needed)",
-          "₹500"
-        ]
-      ]
-    },
-    "includes": [
-      "Professional highway driver",
-      "Safe long-distance driving"
-    ],
-    "excludes": [
-      "Driver food",
-      "Return travel (if required)"
-    ],
-    "travelGuide": {
-      "history": "Our Outstation One-Way Driver service is perfect when you need to drop your car off at another city or move your vehicle without driving it yourself. Our experienced highway drivers handle the long drive safely, allowing you to travel stress-free or send your car ahead.",
-      "timings": "• **Availability:** 24/7 Service\n• **Night Driving:** Safe night driving guaranteed with experienced drivers.\n• **Booking:** Please book at least 4-6 hours in advance for outstation trips.",
-      "tips": [
-        "Check tyre pressure and fluid levels before a long highway trip.",
-        "Ensure the spare tyre and tool kit are in good condition.",
-        "Fastag should have sufficient balance for toll plazas.",
-        "Driver's return travel is their responsibility unless specified otherwise."
-      ],
-      "dressCode": "Drivers are equipped for long-distance travel with professional conduct."
-    },
-    "faq": [
-      {
-        "q": "What if the trip cancels?",
-        "a": "Before dispatch → Free. After dispatch → ₹300"
-      },
-      {
-        "q": "Can I get a return driver separately?",
-        "a": "Yes, book separately."
-      }
-    ],
-    "whatsappMsg": "Hi, I need an outstation one-way driver."
+    "whatsappMsg": "Hi Kalidass Travels, I need a within-Chennai Acting Driver for my car."
   },
   {
     "slug": "acting-driver-outstation-round-trip",
     "category": "Acting Driver Services",
     "title": "Acting Driver – Outstation Round Trip",
-    "overview": "Driver accompanies your car for onward & return trip. Suitable for family functions, temple tours, business travel.",
+    "overview": "Experienced highway acting driver accompanies your personal car for the entire outstation trip. Ideal for family temple pilgrimages, weekend getaways, outstation weddings, and business tours across South India.",
     "tariff": {
       "headers": [
         "Vehicle Type",
-        "Driver Bata",
-        "Night Charge"
+        "Daily Driver Bata",
+        "Max Daily Duty",
+        "Night Driving (10 PM - 6 AM)"
       ],
       "rows": [
         [
-          "Sedan",
-          "₹600",
-          "₹200"
+          "Hatchback & Sedan (Dzire, Etios, City, Verna)",
+          "₹600 / day",
+          "Up to 14 Hours",
+          "+₹200 / night"
         ],
         [
-          "SUV",
-          "₹700",
-          "₹200"
+          "Compact SUV / MPV (Ertiga, Creta, Carens, Seltos)",
+          "₹700 / day",
+          "Up to 14 Hours",
+          "+₹200 / night"
         ],
         [
-          "Crysta",
-          "₹800",
-          "₹200"
+          "Premium SUV / MPV (Innova, Crysta, Fortuner, XUV700)",
+          "₹800 / day",
+          "Up to 14 Hours",
+          "+₹200 / night"
+        ],
+        [
+          "Luxury European Cars (BMW, Audi, Mercedes, Volvo)",
+          "₹1,000 / day",
+          "Up to 14 Hours",
+          "+₹250 / night"
         ]
-      ]
-    },
-    "travelGuide": {
-      "history": "Planning a weekend getaway, a family temple run, or a business tour? Our Round Trip Acting Driver service provides you with a dedicated driver for the entire duration of your trip. They stay with you, handle local navigation, and ensure your return journey is as comfortable as the onward one.",
-      "timings": "• **Duty Hours:** Up to 14 hours of driving/duty per day.\n• **Rest Period:** Drivers require an 8-hour rest break for safety on multi-day trips.\n• **Availability:** 24/7 for trip start.",
-      "tips": [
-        "Arrange for driver's accommodation if staying overnight (or pay allowance).",
-        "Plan your itinerary to allow for safe driving breaks.",
-        "Keep vehicle documents handy for interstate border checks.",
-        "Discuss the route preference with the driver before starting."
       ],
-      "dressCode": "Professional and courteous drivers suitable for family and corporate trips."
+      "note": "Daily Driver Bata covers up to 14 hours of duty per calendar day. Overtime beyond 14 hrs is ₹100/hr. Overnight stay: if hotel does not provide driver dormitory, ₹300 lodging allowance applies."
+    },
+    "includes": [
+      "Highway-specialist driver with minimum 8+ years expressway experience",
+      "Safe cruising speed discipline (80-90 km/h, no reckless overtakes)",
+      "Local temple, route, and highway navigation across Tamil Nadu, AP, Kerala, Karnataka",
+      "Assistance with luggage and hotel/temple parking"
+    ],
+    "excludes": [
+      "Fuel, FASTag highway tolls & parking fees",
+      "Driver food (₹150/meal if not sharing meals with family) & lodging (₹300/night if no driver dorm)"
+    ],
+    "travelGuide": {
+      "history": "Long highway journeys from Chennai to Kumbakonam, Madurai, Tirupati, Bangalore, or Kodaikanal require sharp alertness. Our Outstation Acting Drivers are tested on expressway discipline, night driving glare management, and ghat road hairpin turns, ensuring your family travels in total safety.",
+      "timings": "• Available 24/7 for trip departures across South India.\n• Driver Safety Protocol: Mandatory 15-minute tea break every 3.5 hours and 7 hours mandatory rest before early morning drives.",
+      "tips": [
+        "Check tyre pressures (including spare stepney) and washer fluid before departure.",
+        "Ensure FASTag has at least ₹1,000 balance to prevent toll lane delays.",
+        "Keep interstate border permit documents handy if traveling into Kerala, Karnataka, or Andhra Pradesh."
+      ],
+      "dressCode": "Neat, disciplined attire suitable for family and corporate travel."
     },
     "faq": [
       {
-        "q": "How many hours is 1 day?",
-        "a": "Up to 14 hours."
+        "q": "How is 1 outstation day calculated?",
+        "a": "A calendar day (12:00 AM to 11:59 PM) counts as 1 day, covering up to 14 hours of total duty/driving."
       },
       {
-        "q": "Is food mandatory for long trips?",
-        "a": "If trip exceeds 10 hrs, food allowance appreciated."
+        "q": "What about the driver's food and stay?",
+        "a": "You can either invite the driver to eat satvik meals at the same highway restaurants or provide ₹150/meal. For overnight stay, if your hotel has a driver dorm, no fee is charged; otherwise, a ₹300/night room allowance applies."
+      },
+      {
+        "q": "Are your drivers trained for hill stations (Ooty, Kodaikanal)?",
+        "a": "Yes! For hill station trips, we specifically assign drivers with verified ghat road experience on hairpin bends and engine braking techniques."
       }
     ],
-    "whatsappMsg": "Hi, I need an outstation round-trip acting driver."
+    "whatsappMsg": "Hi Kalidass Travels, I need an Outstation Round-Trip Acting Driver for my car."
   },
   {
-    "slug": "night-driving-driver",
+    "slug": "acting-driver-outstation-one-way",
     "category": "Acting Driver Services",
-    "title": "Night Driving Driver",
-    "overview": "Night driving specialist for late-night events, airport trips, emergencies.",
+    "title": "Outstation One-Way Car Relocation & Drop",
+    "overview": "Professional driver safely drives and relocates your personal vehicle from Chennai to any destination across South India (Bangalore, Coimbatore, Madurai, Trichy, Hyderabad). Features digital pre-trip inspection and video handover.",
     "tariff": {
       "headers": [
-        "Duration",
-        "Rate"
+        "Distance Slab",
+        "Driver Fee Rate",
+        "Notes & Inclusions"
       ],
       "rows": [
         [
-          "Up to 3 hrs",
-          "₹800"
+          "Base Distance (First 150 km)",
+          "₹1,800 flat",
+          "Includes pickup from your doorstep & vehicle inspection."
         ],
         [
-          "Extra hr",
-          "₹200"
+          "Additional Distance (Beyond 150 km)",
+          "₹10 / km",
+          "Calculated on actual odometer reading."
+        ],
+        [
+          "Driver Return Travel",
+          "Actual ticket",
+          "Govt. Superfast bus or sleeper train fare back to Chennai."
         ]
-      ]
+      ],
+      "note": "Fuel and FASTag tolls during transit are borne by vehicle owner. Example: Chennai to Trichy (330 km) = ₹1,800 + (180 km × ₹10 = ₹1,800) + Bus Return (₹450) = ₹4,050 total driver fee."
     },
     "includes": [
-      "Night safety trained drivers",
-      "Doorstep pickup"
+      "Full digital pre-trip inspection (odometer, fuel, tool kit, scratch photos)",
+      "Live WhatsApp location sharing throughout highway transit",
+      "Safe, disciplined highway driving adhering strictly to speed limits",
+      "Doorstep handover to your designated family member or recipient"
     ],
+    "excludes": [
+      "Fuel & FASTag highway toll charges",
+      "Driver return public transit fare back to Chennai"
+    ],
+    "travelGuide": {
+      "history": "Whether you are shifting to a new city, sending your car ahead for a family vacation, or delivering a newly purchased vehicle to your native town, our One-Way Car Relocation service guarantees safe, insured, and verified transit of your car.",
+      "timings": "• Available 24/7. Advance booking of 4 to 6 hours recommended for long-distance relocation.",
+      "tips": [
+        "Ensure the fuel tank has sufficient fuel or provide a fuel allowance/card.",
+        "Check that FASTag balance covers the highway route tolls.",
+        "Ensure all vehicle documents (RC, Insurance, PUC) are inside the vehicle."
+      ],
+      "dressCode": "Professional highway chauffeur with valid commercial badge and identity card."
+    },
     "faq": [
       {
-        "q": "Is waiting charge extra?",
-        "a": "Yes, counted as extra hour."
-      }
-    ],
-    "whatsappMsg": "Hi, I need a night driving driver."
-  },
-  {
-    "slug": "driver-for-senior-citizens",
-    "category": "Acting Driver Services",
-    "title": "Driver for Senior Citizens",
-    "overview": "Gentle, patient, verified drivers for elderly travel like temple trips, hospitals, day outings.",
-    "tariff": {
-      "headers": [
-        "Duration",
-        "Rate"
-      ],
-      "rows": [
-        [
-          "4 Hours",
-          "₹700"
-        ],
-        [
-          "8 Hours",
-          "₹1,000"
-        ],
-        [
-          "Extra Hour",
-          "₹150"
-        ]
-      ]
-    },
-    "includes": [
-      "Assistance getting in/out",
-      "Slow & steady driving",
-      "Respectful behaviour"
-    ],
-    "faq": [
+        "q": "How is my car's safety verified before handover?",
+        "a": "Before starting, our driver photographs the odometer reading, fuel gauge, and vehicle exterior in your presence. Upon delivery at the destination, a handover signoff is completed."
+      },
       {
-        "q": "Can driver accompany inside hospital?",
-        "a": "Yes (short duration)."
+        "q": "Can my family members travel inside the car during the relocation?",
+        "a": "Yes! Up to the car's permitted seating capacity, your family members can travel comfortably while our driver takes the wheel."
       }
     ],
-    "whatsappMsg": "Hi, I need a driver for senior citizen travel."
-  },
-  {
-    "slug": "office-commute-driver-monthly",
-    "category": "Acting Driver Services",
-    "title": "Office Commute Driver (Monthly)",
-    "overview": "Daily home → office → home driver arrangement.",
-    "tariff": {
-      "headers": [
-        "Plan",
-        "Pricing"
-      ],
-      "rows": [
-        [
-          "1 Shift (pickup or drop)",
-          "₹12,000/month"
-        ],
-        [
-          "2 Shift (pickup + drop)",
-          "₹15,000/month"
-        ]
-      ]
-    },
-    "notes": [
-      "Limited to Chennai city limits",
-      "Fuel borne by customer"
-    ],
-    "whatsappMsg": "Hi, I need a monthly office commute driver."
+    "whatsappMsg": "Hi Kalidass Travels, I need an Outstation One-Way Car Relocation driver."
   },
   {
     "slug": "monthly-car-with-driver-corporate",
@@ -396,896 +1172,8 @@
     "whatsappMsg": "Hi, I am interested in Employee Pickup & Drop services."
   },
   {
-    "slug": "business-trip-car-rental",
-    "category": "Corporate Travel",
-    "title": "Business Trip Car Rental",
-    "overview": "Perfect for meetings, client visits, and day-long travel.",
-    "tariff": {
-      "headers": [
-        "Package",
-        "Sedan",
-        "SUV",
-        "Crysta"
-      ],
-      "rows": [
-        [
-          "4 hrs / 40 km",
-          "₹1,600",
-          "₹2,200",
-          "₹3,000"
-        ],
-        [
-          "8 hrs / 80 km",
-          "₹2,500",
-          "₹3,500",
-          "₹4,500"
-        ],
-        [
-          "Extra km",
-          "₹14/km",
-          "₹18/km",
-          "₹24/km"
-        ]
-      ],
-      "note": "Note: We keep our packages simple so you don’t have to calculate anything."
-    },
-    "faq": [
-      {
-        "q": "Can I extend the 4-hour package?",
-        "a": "Yes, extra hours billed as extra km + ₹100/hr."
-      }
-    ],
-    "whatsappMsg": "Hi, I would like to book a car for a Business Trip."
-  },
-  {
-    "slug": "corporate-airport-transfer",
-    "category": "Corporate Travel",
-    "title": "Corporate Airport Transfer",
-    "overview": "Friendly, simple, reassuring and fully transparent.",
-    "tariff": {
-      "headers": [
-        "Vehicle",
-        "Price"
-      ],
-      "rows": [
-        [
-          "Sedan",
-          "₹1,200"
-        ],
-        [
-          "SUV",
-          "₹1,800"
-        ],
-        [
-          "Crysta",
-          "₹2,500"
-        ]
-      ],
-      "note": "Parking & toll extra (actual)."
-    },
-    "includes": [
-      "Fixed pricing",
-      "Guaranteed on-time pickup",
-      "Drivers trained for airport protocols",
-      "GST bills available (optional)",
-      "Transparent tariff (nothing hidden)"
-    ],
-    "travelGuide": {
-      "history": "First impressions matter. Our Corporate Airport Transfer service ensures your clients and executives are received with professionalism and comfort. We monitor flight schedules to handle delays proactively, ensuring a seamless experience from arrival to destination.",
-      "timings": "• **Availability:** 24/7 Service.\n• **Waiting Time:** Complimentary 45 mins waiting for international arrivals.\n• **Tracking:** Flight tracking included.",
-      "tips": [
-        "Provide flight number during booking for accurate tracking.",
-        "Meet the driver at the designated pickup zone (usually Pillar 10 or similar).",
-        "Keep your phone switched on after landing.",
-        "Pre-book return transfers to avoid last-minute hassle."
-      ],
-      "dressCode": "Chauffeurs in formal attire with placards for easy identification."
-    },
-    "whatsappMsg": "Hi, I require a Corporate Airport Transfer."
-  },
-  {
-    "slug": "airport-drop-sedan",
-    "category": "Airport Transfers",
-    "title": "Airport Drop – Sedan",
-    "overview": "Airport travel should feel peaceful, not stressful. We keep all charges upfront.",
-    "tariff": {
-      "headers": [
-        "Route",
-        "Fare"
-      ],
-      "rows": [
-        [
-          "Most Chennai Zones",
-          "₹1,200 – ₹1,400"
-        ],
-        [
-          "Long-distance zones (OMR/ECR/Outer South)",
-          "₹1,500 – ₹1,800"
-        ]
-      ],
-      "note": "Hint: No extra km surprises. We follow zone-based pricing."
-    },
-    "travelGuide": {
-      "history": "Start your journey with peace of mind. Our Airport Drop service guarantees punctuality so you never have to worry about missing a flight. Our sedans are clean, comfortable, and spacious enough for your luggage, providing a relaxing ride to the terminal.",
-      "timings": "• **Pickup:** We arrive 15 minutes before your scheduled time.\n• **Travel Time:** We account for traffic buffers when suggesting pickup times.\n• **Availability:** 24/7.",
-      "tips": [
-        "Book your cab at least 4 hours before your flight time.",
-        "Account for peak hour traffic in Chennai (8 AM - 11 AM & 5 PM - 9 PM).",
-        "Check for your passport and tickets before leaving home.",
-        "Inform us if you have extra large luggage."
-      ],
-      "dressCode": "Professional drivers with clean, well-maintained vehicles."
-    },
-    "includes": [
-      "Clean AC sedan",
-      "Professional trained driver",
-      "Luggage handling"
-    ],
-    "excludes": [
-      "Parking (₹50–₹120 approx)",
-      "Waiting charges (₹100/15 min)"
-    ],
-    "faq": [
-      {
-        "q": "When should I start from home?",
-        "a": "Domestic → 2 hours before. International → 3 hours before."
-      }
-    ],
-    "whatsappMsg": "Hi, I would like to book an Airport Drop (Sedan)."
-  },
-  {
-    "slug": "airport-drop-suv",
-    "category": "Airport Transfers",
-    "title": "Airport Drop – SUV",
-    "overview": "Ideal for families with luggage or corporate teams.",
-    "tariff": {
-      "headers": [
-        "Fare"
-      ],
-      "rows": [
-        [
-          "₹1,800 – ₹2,200 (zone based)"
-        ]
-      ],
-      "note": "Parking extra (actuals)."
-    },
-    "notes": [
-      "Note: SUVs are assigned when: - more luggage - smoother ride preferred - more comfort needed"
-    ],
-    "whatsappMsg": "Hi, I would like to book an Airport Drop (SUV)."
-  },
-  {
-    "slug": "airport-pickup-sedan",
-    "category": "Airport Transfers",
-    "title": "Airport Pickup – Sedan",
-    "overview": "Arrive in Chennai without the hassle of finding a cab. Our driver will wait for you at the arrival terminal with a placard, ready to assist with your luggage and drive you safely to your destination.",
-    "tariff": {
-      "headers": [
-        "Fare"
-      ],
-      "rows": [
-        [
-          "₹1,400 – ₹1,600"
-        ]
-      ],
-      "note": "Parking extra (actuals)."
-    },
-    "includes": [
-      "Driver arrives early",
-      "Name-board (optional)",
-      "30 mins free waiting"
-    ],
-    "travelGuide": {
-      "history": "Arriving in a new city or returning home should be a pleasant experience. Our Airport Pickup service ensures a warm welcome. Our driver waits for you at the arrival terminal with a placard, assists with your luggage, and drives you safely to your destination, avoiding the chaos of hailing a cab.",
-      "timings": "• **Waiting:** We track your flight and wait for you.\n• **Delay Policy:** 45 mins free waiting time from actual landing time.\n• **Availability:** 24/7.",
-      "tips": [
-        "Share your flight number for accurate tracking.",
-        "Look for the driver with your name placard near the exit.",
-        "Keep our support number handy in case you can't locate the driver.",
-        "Pre-pay or pay via UPI/Cash upon arrival."
-      ],
-      "dressCode": "Professional drivers with placards."
-    },
-    "whatsappMsg": "Hi, I would like to book an Airport Pickup (Sedan)."
-  },
-  {
-    "slug": "airport-pickup-suv",
-    "category": "Airport Transfers",
-    "title": "Airport Pickup – SUV",
-    "overview": "Ideal for 3–5 people, luggage-friendly.",
-    "tariff": {
-      "headers": [
-        "Fare"
-      ],
-      "rows": [
-        [
-          "₹2,000 – ₹2,400"
-        ]
-      ],
-      "note": "30 min free waiting"
-    },
-    "travelGuide": {
-      "history": "Traveling with family or a team? Our SUV Airport Pickup offers the space and comfort you need. With ample luggage capacity and spacious seating, it's the perfect choice for groups of 3-6 passengers.",
-      "timings": "• **Waiting:** We track your flight and wait for you.\n• **Delay Policy:** 45 mins free waiting time from actual landing time.\n• **Availability:** 24/7.",
-      "tips": [
-        "Specify luggage count to ensure the right SUV is assigned.",
-        "Share your flight number for accurate tracking.",
-        "Look for the driver with your name placard near the exit.",
-        "Pre-pay or pay via UPI/Cash upon arrival."
-      ],
-      "dressCode": "Professional drivers with placards."
-    },
-    "whatsappMsg": "Hi, I would like to book an Airport Pickup (SUV)."
-  },
-  {
-    "slug": "airport-transfer-tempo-traveller",
-    "category": "Airport Transfers",
-    "title": "Airport Transfer – Tempo Traveller",
-    "overview": "Perfect for group arrivals, wedding guests, family trips.",
-    "tariff": {
-      "headers": [
-        "Vehicle",
-        "Price"
-      ],
-      "rows": [
-        [
-          "12 Seater",
-          "₹4,500"
-        ],
-        [
-          "17 Seater",
-          "₹5,500"
-        ]
-      ]
-    },
-    "notes": [
-      "Hint: Luggage space is limited in TT. Tell us in advance if you have 8+ big suitcases so we can plan better."
-    ],
-    "whatsappMsg": "Hi, I would like to book a Tempo Traveller for Airport Transfer."
-  },
-  {
-    "slug": "airport-parcel-luggage-delivery",
-    "category": "Airport Transfers",
-    "title": "Airport Parcel / Luggage Delivery",
-    "overview": "Useful for heavy luggage, shifting, airport parcel pickup.",
-    "tariff": {
-      "headers": [
-        "Vehicle",
-        "Rate"
-      ],
-      "rows": [
-        [
-          "Bada Dost i4",
-          "₹900 – ₹1,200"
-        ],
-        [
-          "Tempo Traveller",
-          "₹2,200"
-        ]
-      ]
-    },
-    "whatsappMsg": "Hi, I need assistance with Airport Parcel / Luggage Delivery."
-  },
-  {
-    "slug": "tirupati-package",
-    "category": "Temple Tours",
-    "title": "Tirupati Balaji Darshan Package",
-    "overview": "Complete darshan package with accommodation assistance and guided darshan.",
-    "routePlan": [
-      {
-        "stop": "Chennai",
-        "desc": "Early morning pickup (4:00 AM)"
-      },
-      {
-        "stop": "Tiruttani",
-        "desc": "Breakfast Stop"
-      },
-      {
-        "stop": "Tirupati",
-        "desc": "Alipiri Checkpost & Security Check"
-      },
-      {
-        "stop": "Tirumala",
-        "desc": "Darshan & Laddu Prasadam"
-      },
-      {
-        "stop": "Chennai",
-        "desc": "Return drop by night"
-      }
-    ],
-    "tariff": {
-      "headers": [
-        "Vehicle",
-        "Base Fare",
-        "Driver Bata",
-        "Permit & Toll",
-        "Total Cost"
-      ],
-      "rows": [
-        [
-          "Etios/Dzire",
-          "₹4,500",
-          "₹500",
-          "₹1,000",
-          "₹6,000"
-        ],
-        [
-          "Innova",
-          "₹6,500",
-          "₹600",
-          "₹1,400",
-          "₹8,500"
-        ],
-        [
-          "Crysta",
-          "₹7,500",
-          "₹700",
-          "₹1,800",
-          "₹10,000"
-        ],
-        [
-          "Tempo Traveller",
-          "₹9,000",
-          "₹800",
-          "₹2,200",
-          "₹12,000"
-        ]
-      ],
-      "note": "Total Cost includes: Doorstep Pickup, Permit, Toll, Parking & Driver Bata. Excludes Darshan Tickets."
-    },
-    "includes": [
-      "Doorstep Pickup & Drop",
-      "Toll & Parking",
-      "Driver Allowance"
-    ],
-    "excludes": [
-      "Darshan Tickets",
-      "Food & Accommodation"
-    ],
-    "travelGuide": {
-      "history": "Tirumala is home to Lord Venkateswara, an incarnation of Vishnu. It is one of the richest and most visited religious centers in the world. The temple is located on the seventh peak of the Seshachalam Hills.",
-      "timings": "General Darshan: 8:30 AM – 11:00 PM\nVIP Break Darshan: 6:00 AM – 8:00 AM\nSuprabhatam: 3:00 AM",
-      "dressCode": "Strictly Traditional. Men: Dhoti/Pyjama with Upper Cloth. Women: Saree/Chudidhar with Dupatta.",
-      "tips": [
-        "Book Special Entry Darshan (₹300) online 2-3 months in advance.",
-        "Carry original ID proof (Aadhar/Voter ID) used for booking.",
-        "Tonsuring (Mottai) is best done at Kalyana Katta before bath.",
-        "Electronic items and luggage are not allowed inside the temple queue."
-      ]
-    },
-    "whatsappMsg": "Hi, I need details for Tirupati Package."
-  },
-  {
-    "slug": "kanchipuram-temple-trip",
-    "category": "Temple Tours",
-    "title": "Kanchipuram Temple Trip (Half Day from Chennai)",
-    "overview": "Kanchipuram is close, peaceful, and perfect for quick temple visits. We keep the pricing simple & transparent so families and senior citizens can travel confidently.\n\nTrip Overview\n- Chennai → Kanchipuram → Chennai\n- 150 km approx\n- Half-day or full-day options\n- Great for: temple visits, shopping, senior citizens",
-    "tariff": {
-      "headers": [
-        "Vehicle",
-        "Rate/km",
-        "Driver Bata",
-        "Est. Total Fare"
-      ],
-      "rows": [
-        [
-          "Sedan",
-          "₹14/km",
-          "₹500",
-          "₹3,200 – ₹3,500"
-        ],
-        [
-          "SUV (Ertiga/XL6)",
-          "₹17/km",
-          "₹600",
-          "₹4,500 – ₹4,800"
-        ],
-        [
-          "Innova",
-          "₹20/km",
-          "₹700",
-          "₹5,500 – ₹6,000"
-        ],
-        [
-          "Crysta",
-          "₹24/km",
-          "₹800",
-          "₹6,500 – ₹7,000"
-        ]
-      ],
-      "note": "Hint: We show complete fare ranges so you know exactly what to expect. No hidden fees."
-    },
-    "includes": [
-      "Car + professional driver",
-      "Assistance for senior citizens",
-      "Flexible timings",
-      "Free temple parking guidance"
-    ],
-    "excludes": [
-      "Parking (actuals)",
-      "Toll charges (if route via highway)"
-    ],
-    "travelGuide": {
-      "history": "Known as the 'City of Thousand Temples', Kanchipuram was the capital of the Pallava dynasty. It is one of the seven sacred cities (Mokshapuri) in India.",
-      "timings": "Most temples: 6:00 AM – 12:30 PM & 4:00 PM – 8:30 PM",
-      "dressCode": "Traditional wear recommended. Modest clothing is mandatory.",
-      "tips": [
-        "Visit Ekambareswarar Temple first (largest).",
-        "Kamakshi Amman Temple is the heart of the city.",
-        "Don't miss the famous Kanchipuram Silk Saree shopping.",
-        "Varadharaja Perumal Temple has the famous Golden & Silver Lizards."
-      ]
-    },
-    "faq": [
-      {
-        "q": "Best start time?",
-        "a": "Early morning 6–7 AM avoids traffic & temple rush."
-      },
-      {
-        "q": "Can we visit 3–4 temples?",
-        "a": "Yes — customise as you wish."
-      }
-    ],
-    "whatsappMsg": "Hi, I need the Kanchipuram temple trip package."
-  },
-  {
-    "slug": "thiruvannamalai-girivalam-trip",
-    "category": "Temple Tours",
-    "title": "Thiruvannamalai Girivalam (1 Day / Night Trip)",
-    "overview": "A peaceful spiritual trip for Girivalam or temple darshan.\n\nTrip Info\n- Chennai → Thiruvannamalai → Chennai\n- 250 km approx\n- Popular for Pournami Girivalam",
-    "routePlan": [
-      {
-        "stop": "Chennai",
-        "desc": "Pickup from Home / Airport"
-      },
-      {
-        "stop": "Melmaruvathur",
-        "desc": "Adhiparasakthi Temple Darshan (Optional)"
-      },
-      {
-        "stop": "Gingee",
-        "desc": "Scenic Fort View / Tea Break"
-      },
-      {
-        "stop": "Thiruvannamalai",
-        "desc": "Arunachaleswarar Temple & Girivalam Start"
-      },
-      {
-        "stop": "Chennai",
-        "desc": "Return Drop"
-      }
-    ],
-    "tariff": {
-      "headers": [
-        "Vehicle",
-        "Rate/km",
-        "Driver Bata",
-        "Toll & Parking",
-        "Total Cost"
-      ],
-      "rows": [
-        [
-          "Sedan",
-          "₹14",
-          "₹500",
-          "₹400",
-          "₹6,500"
-        ],
-        [
-          "SUV",
-          "₹17",
-          "₹600",
-          "₹500",
-          "₹7,900"
-        ],
-        [
-          "Innova",
-          "₹20",
-          "₹700",
-          "₹600",
-          "₹9,300"
-        ],
-        [
-          "Crysta",
-          "₹24",
-          "₹800",
-          "₹700",
-          "₹11,100"
-        ]
-      ],
-      "note": "Total Cost includes: 400km (approx round trip) + Driver Bata + Toll Estimates."
-    },
-    "notes": [
-      "Note: Night Girivalam requires alert drivers. We assign our most experienced night-route drivers."
-    ],
-    "travelGuide": {
-      "history": "Thiruvannamalai is the abode of Lord Annamalaiyar (Shiva) representing the Fire element (Agni Lingam). Girivalam (circumambulation of the hill) is believed to remove sins.",
-      "timings": "Temple: 5:00 AM – 12:30 PM & 3:30 PM – 9:30 PM\nGirivalam: Can be done 24/7, but Pournami (Full Moon) is special.",
-      "dressCode": "Traditional wear recommended.",
-      "tips": [
-        "Girivalam distance is 14km. Wear comfortable walking shoes (though many walk barefoot).",
-        "Start Girivalam early morning or late evening to avoid heat.",
-        "Visit Ramana Maharshi Ashram on the Girivalam path.",
-        "Carry water but avoid heavy food before the walk."
-      ]
-    },
-    "faq": [
-      {
-        "q": "Is night driving safe?",
-        "a": "Yes — we send only experienced highway drivers."
-      }
-    ],
-    "whatsappMsg": "Hi, I am interested in the Thiruvannamalai Girivalam Trip."
-  },
-  {
-    "slug": "chidambaram-temple-trip",
-    "category": "Temple Tours",
-    "title": "Chidambaram Natarajar Temple Trip",
-    "overview": "A spiritually rich trip with a relaxed journey.",
-    "routePlan": [
-      {
-        "stop": "Chennai",
-        "desc": "Pickup from Home / Airport"
-      },
-      {
-        "stop": "Pondicherry",
-        "desc": "Breakfast / Manakula Vinayagar Temple"
-      },
-      {
-        "stop": "Cuddalore",
-        "desc": "Scenic Coastal Drive"
-      },
-      {
-        "stop": "Chidambaram",
-        "desc": "Thillai Natarajar Temple Darshan"
-      },
-      {
-        "stop": "Pichavaram",
-        "desc": "Mangrove Forest Boat Ride (Optional)"
-      }
-    ],
-    "tariff": {
-      "headers": [
-        "Vehicle",
-        "Rate/km",
-        "Driver Bata",
-        "Toll & Parking",
-        "Total Cost"
-      ],
-      "rows": [
-        [
-          "Sedan",
-          "₹14",
-          "₹500",
-          "₹600",
-          "₹7,400"
-        ],
-        [
-          "SUV",
-          "₹17",
-          "₹600",
-          "₹700",
-          "₹9,000"
-        ],
-        [
-          "Innova",
-          "₹20",
-          "₹700",
-          "₹800",
-          "₹10,500"
-        ],
-        [
-          "Crysta",
-          "₹24",
-          "₹800",
-          "₹900",
-          "₹12,500"
-        ]
-      ],
-      "note": "Total Cost includes: 450km (approx round trip) + Driver Bata + Toll Estimates."
-    },
-    "travelGuide": {
-      "history": "Chidambaram Thillai Nataraja Temple represents the Sky element (Akasha Lingam). It is famous for the 'Chidambara Rahasiyam' and the cosmic dance of Lord Shiva.",
-      "timings": "6:00 AM – 12:00 PM & 5:00 PM – 10:00 PM",
-      "dressCode": "Men must remove shirts/vests to enter the inner sanctum.",
-      "tips": [
-        "Witness the Spatika Linga Puja at 10 AM.",
-        "Visit the Pichavaram Mangrove Forest nearby (15km).",
-        "The temple architecture represents the human body structure.",
-        "Dikshitars are the hereditary priests here."
-      ]
-    },
-    "whatsappMsg": "Hi, I would like details about the Chidambaram Natarajar Temple Trip."
-  },
-  {
-    "slug": "rameswaram-2-days",
-    "category": "Temple Tours",
-    "title": "Rameswaram (2-Day Trip)",
-    "overview": "Long, peaceful coastal travel. Suitable for families & senior devotees.",
-    "routePlan": [
-      {
-        "stop": "Chennai",
-        "desc": "Early Morning Departure"
-      },
-      {
-        "stop": "Trichy",
-        "desc": "Srirangam Temple Darshan (Optional)"
-      },
-      {
-        "stop": "Madurai",
-        "desc": "Meenakshi Amman Temple (Evening)"
-      },
-      {
-        "stop": "Rameswaram",
-        "desc": "Ramanathaswamy Temple & 22 Wells Bath"
-      },
-      {
-        "stop": "Dhanushkodi",
-        "desc": "Ghost Town & Ram Setu Point"
-      }
-    ],
-    "tariff": {
-      "headers": [
-        "Vehicle",
-        "Rate/km",
-        "Driver Bata",
-        "Toll & Parking",
-        "Total Cost"
-      ],
-      "rows": [
-        [
-          "Sedan",
-          "₹11",
-          "₹400/day",
-          "₹1,500",
-          "₹15,500"
-        ],
-        [
-          "SUV",
-          "₹13",
-          "₹500/day",
-          "₹1,800",
-          "₹18,400"
-        ],
-        [
-          "Innova",
-          "₹16",
-          "₹600/day",
-          "₹2,200",
-          "₹22,600"
-        ],
-        [
-          "Crysta",
-          "₹19",
-          "₹700/day",
-          "₹2,500",
-          "₹26,700"
-        ],
-        [
-          "Tempo Traveller",
-          "₹23",
-          "₹800/day",
-          "₹3,000",
-          "₹32,200"
-        ]
-      ],
-      "note": "Total Cost includes: 1200km (approx round trip) + 2 Days Bata + Toll Estimates."
-    },
-    "faq": [
-      {
-        "q": "Is Dhanushkodi included?",
-        "a": "Yes — morning visit recommended."
-      }
-    ],
-    "travelGuide": {
-      "history": "Rameswaram is one of the Char Dham pilgrimage sites. It is where Lord Rama built a bridge (Ram Setu) to Lanka. The Ramanathaswamy Temple is famous for its long corridors and 22 sacred wells (Theerthams).",
-      "timings": "5:00 AM – 1:00 PM & 3:00 PM – 9:00 PM",
-      "dressCode": "Traditional wear. Wet clothes are allowed after Theertham bath.",
-      "tips": [
-        "Start with Agni Theertham (Sea Bath) first.",
-        "Proceed to 22 Wells Bath inside the temple (Ticket required).",
-        "Visit Dhanushkodi (Ghost Town) early morning.",
-        "Dr. APJ Abdul Kalam Memorial is a must-visit."
-      ]
-    },
-    "whatsappMsg": "Hi, I would like to book the Rameswaram (2-Day Trip)."
-  },
-  {
-    "slug": "navagraha-tour",
-    "category": "Temple Tours",
-    "title": "Navagraha Temple Tour (1 Day or 2 Days)",
-    "overview": "A complete spiritual journey covering the nine planetary temples (Navagrahas) around Kumbakonam. This trip is designed to help you complete your pariharams and prayers with peace of mind.",
-    "routePlan": [
-      {
-        "stop": "Chennai",
-        "desc": "Departure to Kumbakonam"
-      },
-      {
-        "stop": "Kumbakonam",
-        "desc": "Base Camp for Navagraha Temples"
-      },
-      {
-        "stop": "Suryanar & Thingaloor",
-        "desc": "Sun & Moon Temples"
-      },
-      {
-        "stop": "Vaitheeswaran & Thirunallar",
-        "desc": "Mars & Saturn Temples"
-      },
-      {
-        "stop": "Alangudi & Others",
-        "desc": "Guru & Remaining Temples"
-      }
-    ],
-    "tariff": {
-      "headers": [
-        "Vehicle",
-        "Rate/km",
-        "Driver Bata",
-        "Toll & Parking",
-        "Total Cost"
-      ],
-      "rows": [
-        [
-          "Sedan",
-          "₹11",
-          "₹400/day",
-          "₹1,000",
-          "₹8,600"
-        ],
-        [
-          "SUV",
-          "₹13",
-          "₹500/day",
-          "₹1,200",
-          "₹10,600"
-        ],
-        [
-          "Innova",
-          "₹16",
-          "₹600/day",
-          "₹1,500",
-          "₹13,100"
-        ],
-        [
-          "Crysta",
-          "₹19",
-          "₹700/day",
-          "₹1,800",
-          "₹15,500"
-        ]
-      ],
-      "note": "Total Cost includes: 650km (approx round trip) + 2 Days Bata + Toll Estimates."
-    },
-    "includes": [
-      "Experienced driver familiar with temple routes",
-      "Clean & AC vehicle",
-      "Parking & Toll assistance"
-    ],
-    "faq": [
-      {
-        "q": "Can we cover all 9 temples in 1 day?",
-        "a": "It is very tight. We recommend 2 days for a relaxed darshan."
-      },
-      {
-        "q": "Where does the trip start?",
-        "a": "Pickup from Chennai or Kumbakonam railway station."
-      }
-    ],
-    "travelGuide": {
-      "history": "The Navagraha temples are a cluster of 9 temples dedicated to the nine planetary deities. They are located around Kumbakonam and Thanjavur.",
-      "timings": "Varies by temple, generally 6 AM – 12 PM & 4 PM – 8 PM.",
-      "dressCode": "Traditional wear recommended.",
-      "tips": [
-        "It is difficult to cover all 9 temples in one day. A 2-day trip is recommended.",
-        "Start early (5 AM) if attempting a 1-day trip.",
-        "Alangudi (Guru) and Thirunallar (Sani) are the most crowded.",
-        "Hire a local guide for optimal route planning."
-      ]
-    },
-    "whatsappMsg": "Hi, I would like details about the Navagraha Temple Tour."
-  },
-  {
-    "slug": "sabarimala-trip",
-    "category": "Temple Tours",
-    "title": "Sabarimala Yatra 2025-26 (Chennai to Pamba)",
-    "duration": "3 Days / 2 Nights",
-    "overview": "A sacred journey to the abode of Lord Ayyappa. We understand the sanctity of the 41-day Vratham and ensure our drivers respect the spiritual atmosphere of your trip. Our vehicles are cleaned and prepared for the pilgrimage.",
-    "routePlan": [
-      {
-        "stop": "Chennai",
-        "desc": "Start early morning with prayers"
-      },
-      {
-        "stop": "Trichy / Samayapuram",
-        "desc": "Satvik Breakfast / Darshan"
-      },
-      {
-        "stop": "Kumily",
-        "desc": "Gateway to Kerala (Forest Check Post)"
-      },
-      {
-        "stop": "Nilakkal",
-        "desc": "Base Camp (Parking & Cloak Room)"
-      },
-      {
-        "stop": "Pamba",
-        "desc": "Holy River Bath & Trek Start"
-      }
-    ],
-    "tariff": {
-      "headers": [
-        "Vehicle",
-        "Rate / km",
-        "Driver Bata",
-        "State Permit",
-        "Total Cost"
-      ],
-      "rows": [
-        [
-          "Sedan (Dzire/Etios)",
-          "₹11",
-          "₹400/day",
-          "₹400",
-          "₹15,900"
-        ],
-        [
-          "SUV (Ertiga/XL6)",
-          "₹13",
-          "₹500/day",
-          "₹500",
-          "₹18,900"
-        ],
-        [
-          "Innova",
-          "₹16",
-          "₹600/day",
-          "₹700",
-          "₹23,300"
-        ],
-        [
-          "Innova Crysta",
-          "₹19",
-          "₹700/day",
-          "₹800",
-          "₹27,600"
-        ],
-        [
-          "Tempo Traveller",
-          "₹23",
-          "₹800/day",
-          "₹2,500",
-          "₹34,800"
-        ]
-      ],
-      "note": "Total Cost includes: 1300km (approx round trip) + 3 Days Bata + State Permit. Toll & Parking extra."
-    },
-    "includes": [
-      "Clean, Sanitized Vehicle",
-      "Experienced Hill Driver",
-      "Stops at Pure Veg Restaurants",
-      "Audio System for Ayyappa Songs"
-    ],
-    "excludes": [
-      "Toll & Parking",
-      "Food & Accommodation"
-    ],
-    "travelGuide": {
-      "history": "The Sabarimala pilgrimage is a test of endurance and devotion. It is located in the Periyar Tiger Reserve, emphasizing the harmony between divinity and nature.",
-      "timings": "Mandala Pooja: Nov 16 - Dec 27, 2025\nMakaravilakku: Dec 30, 2025 - Jan 15, 2026",
-      "dressCode": "Black/Blue/Saffron clothes. Irumudi Kettu is mandatory for climbing the Pathinettam Padi (18 Steps).",
-      "tips": [
-        "**Green Sabarimala:** Strictly NO PLASTIC. Carry water in steel/copper bottles.",
-        "**Holy Pamba:** Dip for purification only. Do not use soap, oil, or discard clothes in the river.",
-        "**Forest Protection:** We travel through a Tiger Reserve. Do not feed animals or litter food waste.",
-        "**Virtual Q:** Mandatory booking required for Darshan. Carry printed copy & ID."
-      ]
-    },
-    "whatsappMsg": "Hi, I want to book a Sabarimala trip."
-  },
-  {
     "slug": "pondicherry-one-day-trip",
-    "category": "Misc Services",
+    "category": "Popular Destinations",
     "title": "Pondicherry Day Trip",
     "overview": "Escape to the French Riviera of the East. Visit the serene Auroville, the beautiful Promenade Beach, Manakula Vinayagar Temple, and the French Colony. Perfect for a one-day getaway with family or friends.",
     "routePlan": [
@@ -1380,372 +1268,8 @@
     "whatsappMsg": "Hi, I would like details about the Pondicherry Day Trip."
   },
   {
-    "slug": "vellore-golden-temple",
-    "category": "Temple Tours",
-    "title": "Vellore Golden Temple Trip",
-    "overview": "Visit the magnificent Sripuram Golden Temple, covered in 1500 kg of pure gold. A spiritual marvel located in Vellore, ideal for a day trip from Chennai.",
-    "routePlan": [
-      {
-        "stop": "Chennai Start",
-        "desc": "Pickup at 7:00 AM."
-      },
-      {
-        "stop": "Vellore Fort",
-        "desc": "Visit the historic 16th-century fort."
-      },
-      {
-        "stop": "Jalakandeswarar",
-        "desc": "Darshan at the fort temple."
-      },
-      {
-        "stop": "Golden Temple",
-        "desc": "Sripuram Golden Temple (Evening Darshan is best)."
-      },
-      {
-        "stop": "Chennai Drop",
-        "desc": "Return by 10:00 PM."
-      }
-    ],
-    "tariff": {
-      "headers": [
-        "Vehicle",
-        "Rate/km",
-        "Driver Bata",
-        "Toll/Parking",
-        "Total Cost"
-      ],
-      "rows": [
-        [
-          "Sedan",
-          "₹11",
-          "₹500",
-          "₹400",
-          "₹4,200"
-        ],
-        [
-          "SUV (Ertiga)",
-          "₹14",
-          "₹600",
-          "₹400",
-          "₹5,200"
-        ],
-        [
-          "Innova",
-          "₹17",
-          "₹700",
-          "₹400",
-          "₹6,200"
-        ],
-        [
-          "Crysta",
-          "₹20",
-          "₹800",
-          "₹400",
-          "₹7,200"
-        ],
-        [
-          "Tempo Traveller",
-          "₹25",
-          "₹1,000",
-          "₹500",
-          "₹9,000"
-        ]
-      ],
-      "note": "Total Cost includes: 300km (approx round trip) + Driver Bata + Tolls."
-    },
-    "includes": [
-      "Pickup & Drop from Chennai",
-      "Driver allowance",
-      "Toll & Parking assistance"
-    ],
-    "travelGuide": {
-      "history": "Sripuram Golden Temple is a spiritual park situated at the foot of a small range of green hills. The temple is covered with 1,500 kg of pure gold foil.",
-      "timings": "Darshan: 8:00 AM – 8:00 PM\nAbhishekam: 4:00 AM – 8:00 AM",
-      "dressCode": "Strictly Traditional. No shorts, lungis, or sleeveless tops allowed.",
-      "tips": [
-        "Mobile phones and cameras are strictly prohibited inside.",
-        "Free Annadanam (food) is served to all devotees.",
-        "Wheelchair facility is available for seniors.",
-        "Star-shaped path requires a 1.5 km walk."
-      ]
-    },
-    "whatsappMsg": "Hi, I am interested in the Vellore Golden Temple Trip."
-  },
-  {
-    "slug": "mahabalipuram-ecr-temple-route",
-    "category": "Temple Tours",
-    "title": "Mahabalipuram & ECR Temples",
-    "overview": "Explore the UNESCO World Heritage sites of Mahabalipuram including the Shore Temple, Five Rathas, and Arjuna's Penance. Enjoy a scenic drive along the East Coast Road (ECR) with options to visit other temples en route.",
-    "routePlan": [
-      {
-        "stop": "Chennai Start",
-        "desc": "Pickup at 8:00 AM."
-      },
-      {
-        "stop": "ECR Stops",
-        "desc": "Iskcon, DakshinaChitra, or Crocodile Bank (Optional)."
-      },
-      {
-        "stop": "Mahabalipuram",
-        "desc": "Shore Temple, Five Rathas, Arjuna's Penance."
-      },
-      {
-        "stop": "Sea Shell Museum",
-        "desc": "Visit India's largest seashell museum."
-      },
-      {
-        "stop": "Chennai Drop",
-        "desc": "Return by 7:00 PM."
-      }
-    ],
-    "tariff": {
-      "headers": [
-        "Vehicle",
-        "Package Type",
-        "Total Cost"
-      ],
-      "rows": [
-        [
-          "Sedan",
-          "Full Day Trip",
-          "₹3,500"
-        ],
-        [
-          "SUV (Ertiga)",
-          "Full Day Trip",
-          "₹4,500"
-        ],
-        [
-          "Innova",
-          "Full Day Trip",
-          "₹5,500"
-        ],
-        [
-          "Crysta",
-          "Full Day Trip",
-          "₹6,500"
-        ],
-        [
-          "Tempo Traveller",
-          "Full Day Trip",
-          "₹8,000"
-        ]
-      ],
-      "note": "Includes: Fuel, Driver Bata, Parking. Excludes: Entry tickets, Food."
-    },
-    "includes": [
-      "Sightseeing assistance",
-      "Flexible timings",
-      "Comfortable AC car"
-    ],
-    "travelGuide": {
-      "history": "Mahabalipuram (Mamallapuram) was a bustling seaport of the Pallava kings in the 7th century. It is known for its rock-cut temples and is a UNESCO World Heritage Site.",
-      "timings": "Monuments: 6:00 AM – 6:00 PM\nLight House: 10:00 AM – 5:00 PM",
-      "dressCode": "Comfortable cotton clothes, hat/cap, and walking shoes recommended.",
-      "tips": [
-        "Carry an umbrella and water (it gets hot).",
-        "Visit Krishna's Butter Ball for unique photos.",
-        "Sea Shell Museum is great for kids.",
-        "Don't miss the Shore Temple at sunset."
-      ]
-    },
-    "whatsappMsg": "Hi, I would like to book the Mahabalipuram & ECR Temples trip."
-  },
-  {
-    "slug": "sedan-rental-chennai",
-    "category": "Premium Fleet Rental",
-    "title": "Sedan Car Rental (Chennai)",
-    "overview": "Rent a comfortable Sedan (Dzire / Etios / Aura) for your local travel needs in Chennai. Whether it's for shopping, visiting relatives, or attending functions, our sedans offer a smooth ride.",
-    "tariff": {
-      "headers": [
-        "Package",
-        "Price"
-      ],
-      "rows": [
-        [
-          "4 hrs / 40 km",
-          "₹1,600"
-        ],
-        [
-          "8 hrs / 80 km",
-          "₹2,500"
-        ],
-        [
-          "Extra km",
-          "₹14/km"
-        ]
-      ],
-      "note": "Outstation: ₹14/km. Driver bata ₹500/day. Min 250 km/day applies"
-    },
-    "includes": [
-      "Chauffeur driven",
-      "Clean interiors",
-      "AC comfort"
-    ],
-    "whatsappMsg": "Hi, I would like to rent a Sedan in Chennai."
-  },
-  {
-    "slug": "suv-ertiga-rental",
-    "category": "Premium Fleet Rental",
-    "title": "SUV / Ertiga / XL6 Rental",
-    "overview": "Spacious 6/7 seater SUVs like Ertiga or XL6, perfect for small families or groups. Enjoy extra legroom and luggage space for a comfortable journey within the city or outstation.",
-    "tariff": {
-      "headers": [
-        "Package",
-        "Price"
-      ],
-      "rows": [
-        [
-          "4 hrs",
-          "₹2,000"
-        ],
-        [
-          "8 hrs",
-          "₹3,200"
-        ],
-        [
-          "Extra km",
-          "₹17/km"
-        ]
-      ],
-      "note": "Outstation: ₹17/km + driver bata ₹600/day"
-    },
-    "includes": [
-      "6/7 Seater capacity",
-      "Dual AC",
-      "Experienced driver"
-    ],
-    "whatsappMsg": "Hi, I would like to rent an SUV / Ertiga."
-  },
-  {
-    "slug": "innova-rental",
-    "category": "Premium Fleet Rental",
-    "title": "Innova Rental",
-    "overview": "The Toyota Innova is the gold standard for comfort and reliability. Ideal for corporate travel, long-distance trips, and family vacations where comfort is a priority.",
-    "tariff": {
-      "headers": [
-        "Hours",
-        "Price"
-      ],
-      "rows": [
-        [
-          "4 hrs",
-          "₹2,500"
-        ],
-        [
-          "8 hrs",
-          "₹3,800"
-        ],
-        [
-          "Extra km",
-          "₹20/km"
-        ]
-      ],
-      "note": "Outstation: ₹20/km + driver bata ₹700/day"
-    },
-    "includes": [
-      "Captain seats (optional)",
-      "Superior suspension",
-      "Ample luggage space"
-    ],
-    "whatsappMsg": "Hi, I would like to rent an Innova."
-  },
-  {
-    "slug": "innova-crysta-rental",
-    "category": "Premium Fleet Rental",
-    "title": "Innova Crysta Rental",
-    "overview": "Experience premium luxury with the Innova Crysta. Powerful performance, sophisticated interiors, and top-notch safety features make this the best choice for VIPs and luxury seekers.",
-    "tariff": {
-      "headers": [
-        "Hours",
-        "Price"
-      ],
-      "rows": [
-        [
-          "4 hrs",
-          "₹3,000"
-        ],
-        [
-          "8 hrs",
-          "₹4,500"
-        ],
-        [
-          "Extra km",
-          "₹24/km"
-        ]
-      ],
-      "note": "Outstation: ₹24/km (premium MPV). Driver bata ₹800/day"
-    },
-    "includes": [
-      "Premium leather interiors",
-      "Ambient lighting",
-      "Top-class comfort"
-    ],
-    "whatsappMsg": "Hi, I would like to rent an Innova Crysta."
-  },
-  {
-    "slug": "tempo-traveller-rental",
-    "category": "Premium Fleet Rental",
-    "title": "Tempo Traveller Rental (12–17 Seater)",
-    "overview": "Travelling with a large group? Our Tempo Travellers (12 to 17 seaters) ensure everyone travels together in comfort. Features push-back seats, individual AC vents, and entertainment systems.",
-    "tariff": {
-      "headers": [
-        "Seating",
-        "Price"
-      ],
-      "rows": [
-        [
-          "12 Seater",
-          "₹5,000"
-        ],
-        [
-          "17 Seater",
-          "₹6,500"
-        ],
-        [
-          "Extra km",
-          "₹28/km"
-        ]
-      ],
-      "note": "Outstation: ₹28/km + driver bata ₹1,000/day. Min 300 km/day recommended for group trips."
-    },
-    "includes": [
-      "Push-back seats",
-      "High roof for standing height",
-      "Music system"
-    ],
-    "whatsappMsg": "Hi, I would like to rent a Tempo Traveller."
-  },
-  {
-    "slug": "bada-dost-i4-goods-delivery",
-    "category": "Premium Fleet Rental",
-    "title": "Bada Dost i4 – Goods Delivery",
-    "overview": "Ideal for airport luggage, shifting small goods, parcel runs.",
-    "tariff": {
-      "headers": [
-        "Service",
-        "Rate"
-      ],
-      "rows": [
-        [
-          "Local One-Way Trip",
-          "₹900 – ₹1,200"
-        ],
-        [
-          "Outstation",
-          "₹28/km"
-        ],
-        [
-          "Waiting charge",
-          "₹100 / hour"
-        ]
-      ]
-    },
-    "whatsappMsg": "Hi, I would like to book a Bada Dost i4 for Goods Delivery."
-  },
-  {
     "slug": "one-day-chennai-city-tour",
-    "category": "Misc Services",
+    "category": "Popular Destinations",
     "title": "Chennai City Sightseeing (1 Day Trip)",
     "overview": "Explore Chennai’s iconic locations with a flexible plan. Visit ancient temples, colonial monuments, and the vibrant Marina Beach.",
     "routePlan": [
@@ -1823,71 +1347,8 @@
     "whatsappMsg": "Hi, I would like to book the Chennai City Sightseeing (1 Day Trip)."
   },
   {
-    "slug": "outstation-car-rental-per-km",
-    "category": "Misc Services",
-    "title": "Outstation Car Rental (Per Km Tariff)",
-    "overview": "This is our master transparent tariff page.",
-    "tariff": {
-      "headers": [
-        "Vehicle",
-        "Rate/km"
-      ],
-      "rows": [
-        [
-          "Sedan",
-          "₹14/km"
-        ],
-        [
-          "SUV (Ertiga/XL6)",
-          "₹17/km"
-        ],
-        [
-          "Innova",
-          "₹20/km"
-        ],
-        [
-          "Crysta",
-          "₹24/km"
-        ],
-        [
-          "Tempo Traveller",
-          "₹28/km"
-        ]
-      ],
-      "note": "Driver bata per day → ₹500 / ₹600 / ₹700 / ₹800 / ₹1,000 accordingly"
-    },
-    "notes": [
-      "Why we show everything openly: To build trust. To avoid confusion. To make planning easy for families."
-    ],
-    "whatsappMsg": "Hi, I have an enquiry about Outstation Car Rental."
-  },
-  {
-    "slug": "luggage-parcel-delivery-chennai",
-    "category": "Misc Services",
-    "title": "Parcel / Luggage Delivery in Chennai",
-    "overview": "Local goods movement, urgent parcels, luggage transfers.",
-    "tariff": {
-      "headers": [
-        "Vehicle",
-        "Rate"
-      ],
-      "rows": [
-        [
-          "Bada Dost",
-          "₹900 – ₹1,200"
-        ],
-        [
-          "TT Van",
-          "₹2,200"
-        ]
-      ],
-      "note": "Waiting: ₹100/hr"
-    },
-    "whatsappMsg": "Hi, I need Parcel / Luggage Delivery in Chennai."
-  },
-  {
     "slug": "driver-car-for-weddings",
-    "category": "Misc Services",
+    "category": "Popular Destinations",
     "title": "Driver + Car for Wedding Events",
     "overview": "Make your special day perfect with our premium wedding car services. We provide clean, decorated (optional) luxury cars with well-groomed chauffeurs to ensure the bride, groom, and guests arrive in style.",
     "tariff": {
@@ -1921,5 +1382,87 @@
       "Punctual service"
     ],
     "whatsappMsg": "Hi, I am interested in Driver + Car services for a Wedding Event."
+  },
+  {
+    "slug": "chennai-airport-taxi-transfers",
+    "category": "Corporate Travel",
+    "title": "Chennai Airport Taxi & Transfers (Pickup & Drop)",
+    "overview": "Punctual, 24/7 fixed-rate Chennai Airport taxi service for domestic and international terminals (MAA). Guaranteed on-time doorstep drop, flight tracking for pickups, free 45-minute waiting buffer, and clean AC sedans, Innova SUVs, and Tempo Travellers.",
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Seating & Luggage",
+        "Airport Drop",
+        "Airport Pickup",
+        "Inclusions"
+      ],
+      "rows": [
+        [
+          "Sedan (Swift Dzire / Etios)",
+          "4 Passengers • 2 Bags",
+          "₹1,200 – ₹1,400",
+          "₹1,400 – ₹1,600",
+          "AC Car, Fuel, Chauffeur, Flight Tracking"
+        ],
+        [
+          "Mid SUV (Ertiga / XL6)",
+          "6 Passengers • 3 Bags",
+          "₹1,600 – ₹1,800",
+          "₹1,800 – ₹2,000",
+          "AC SUV, Fuel, Chauffeur, Flight Tracking"
+        ],
+        [
+          "Luxury SUV (Innova / Crysta)",
+          "7 Passengers • 4 Bags",
+          "₹1,800 – ₹2,200",
+          "₹2,000 – ₹2,400",
+          "Luxury MPV, Fuel, Chauffeur, Flight Tracking"
+        ],
+        [
+          "Tempo Traveller (12/17 Seater)",
+          "12-17 Passengers • Group Bags",
+          "₹4,500 – ₹5,500",
+          "₹4,800 – ₹5,800",
+          "Group Coach, Fuel, Chauffeur, Assistance"
+        ]
+      ],
+      "note": "Transparent zone-based pricing across Chennai. No surge pricing during rain or peak traffic hours. Airport parking & toll at actuals."
+    },
+    "includes": [
+      "Doorstep pickup or terminal arrival meet & greet",
+      "Live flight tracking (we adjust automatically if your flight is delayed)",
+      "45 minutes complimentary waiting time from actual landing",
+      "Professional, uniformed chauffeur with luggage assistance",
+      "Sanitized AC vehicles with zero surge pricing"
+    ],
+    "excludes": [
+      "Airport parking fee (at actuals, approx ₹50–₹120)",
+      "Extended waiting beyond complimentary 45 minutes"
+    ],
+    "travelGuide": {
+      "history": "Chennai International Airport (MAA) at Meenambakkam is South India's premier gateway. Hailing cabs at the terminal during late nights or peak hours frequently leads to surge fares and vehicle cancellations. Kalidass Travels guarantees reliable, pre-booked airport transfers with transparent billing.",
+      "timings": "• Service Availability: 24/7 Round the Clock\n• Recommended Departure Time: Domestic flights → 2 to 2.5 hours before departure; International flights → 3.5 to 4 hours before departure.\n• Peak Traffic Corridors: GST Road, Kathipara, and Inner Ring Road experience heavy traffic from 8:00 AM – 11:00 AM and 5:30 PM – 9:30 PM.",
+      "tips": [
+        "Share your flight number during booking so our dispatch desk can monitor delays or early landings.",
+        "For international arrivals, our chauffeur waits at the designated arrival gate with a personalized name-board.",
+        "Specify extra luggage or child booster seat requirements in advance."
+      ],
+      "dressCode": "Chauffeurs report in formal uniform with official identity credentials."
+    },
+    "faq": [
+      {
+        "q": "What happens if my flight is delayed?",
+        "a": "We track your flight number in real-time. If your flight is delayed or rescheduled, your pickup time automatically adjusts at zero extra penalty."
+      },
+      {
+        "q": "Where will the driver meet me at Chennai Airport?",
+        "a": "For Domestic arrivals (Terminal 1/4) and International arrivals (Terminal 2), your driver will wait at the arrival exit gate with a personalized name-board or coordinate via WhatsApp."
+      },
+      {
+        "q": "Is there surge pricing during late night or early morning flights?",
+        "a": "No. All Kalidass Travels airport transfers have zero surge pricing regardless of whether your flight departs at 2:00 AM or 2:00 PM."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I would like to book a Chennai Airport Taxi transfer."
   }
 ]

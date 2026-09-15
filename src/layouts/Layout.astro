@@ -11,6 +11,8 @@ interface Props {
 }
 
 import siteContent from "../data/siteContent.json";
+import CookieConsent from "../components/CookieConsent.astro";
+import FloatingActions from "../components/FloatingActions.astro";
 
 const defaultTitle = "Kalidass Travels - Premium Travel Experience";
 const defaultDescription = "Premium travel and cab services across South India. Professional drivers, comfortable vehicles, affordable rates.";
@@ -28,12 +30,13 @@ const {
 } = Astro.props;
 
 const services = siteContent.services;
-
-const canonicalURL = Astro.url.href.endsWith("/")
-  ? Astro.url.href
-  : `${Astro.url.href}/`;
-
 const siteUrl = "https://kalidasstravels.in";
+const pathname = Astro.url.pathname.endsWith("/")
+  ? Astro.url.pathname
+  : `${Astro.url.pathname}/`;
+const isHome = pathname === "/" || pathname === "";
+const canonicalURL = new URL(pathname, siteUrl).href;
+
 const fullImage = ogImage
   ? ogImage.startsWith("http")
     ? ogImage
@@ -42,15 +45,45 @@ const fullImage = ogImage
     ? image
     : `${siteUrl}${image}`;
 
-const localBusinessSchema = {
-  "@context": "https://schema.org",
-  "@type": "TaxiService",
+const organizationSchema = {
+  "@type": "Organization",
+  "@id": "https://kalidasstravels.in/#organization",
   name: "Kalidass Travels",
-  image: ["https://kalidasstravels.in/images/logo.webp"],
-  description: description,
+  alternateName: "Kalidass Travel Agency",
+  url: "https://kalidasstravels.in/",
+  logo: {
+    "@type": "ImageObject",
+    "@id": "https://kalidasstravels.in/#logo",
+    url: "https://kalidasstravels.in/images/logo.webp",
+    caption: "Kalidass Travels Logo",
+  },
+  image: "https://kalidasstravels.in/images/logo.webp",
+  contactPoint: [
+    {
+      "@type": "ContactPoint",
+      telephone: "+919092303060",
+      contactType: "customer service",
+      areaServed: "IN",
+      availableLanguage: ["en", "ta"],
+    },
+  ],
+  sameAs: [
+    "https://maps.google.com/?q=Kalidass+Travels+Medavakkam+Chennai",
+  ],
+};
+
+const localBusinessSchema = {
+  "@type": ["TaxiService", "TravelAgency"],
+  "@id": "https://kalidasstravels.in/#localbusiness",
+  name: "Kalidass Travels",
+  image: "https://kalidasstravels.in/images/logo.webp",
+  description: description || "Premium taxi, temple tour, and corporate cab services across Chennai and South India.",
   telephone: "+919092303060",
-  email: "bookings@kalidasstravels.in",
-  url: "https://kalidasstravels.in",
+  email: "kalidasstravels2015@gmail.com",
+  url: "https://kalidasstravels.in/",
+  parentOrganization: {
+    "@id": "https://kalidasstravels.in/#organization",
+  },
   address: {
     "@type": "PostalAddress",
     streetAddress:
@@ -62,8 +95,8 @@ const localBusinessSchema = {
   },
   geo: {
     "@type": "GeoCoordinates",
-    latitude: "12.926442514836141",
-    longitude: "80.18460027205512",
+    latitude: 12.9264425,
+    longitude: 80.1846002,
   },
   areaServed: [
     {
@@ -74,22 +107,28 @@ const localBusinessSchema = {
       "@type": "AdministrativeArea",
       name: "Tamil Nadu",
     },
+    {
+      "@type": "AdministrativeArea",
+      name: "South India",
+    },
   ],
   priceRange: "₹₹",
-  openingHoursSpecification: {
-    "@type": "OpeningHoursSpecification",
-    dayOfWeek: [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday",
-    ],
-    opens: "00:00",
-    closes: "23:59",
-  },
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ],
+      opens: "00:00",
+      closes: "23:59",
+    },
+  ],
   hasOfferCatalog: {
     "@type": "OfferCatalog",
     name: "Travel Services",
@@ -98,67 +137,129 @@ const localBusinessSchema = {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Airport Drop & Pickup",
+          name: "Airport Transfers",
         },
       },
       {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Corporate Employee Transport",
+          name: "Outstation Cabs",
         },
       },
       {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Outstation Taxi",
+          name: "Temple Tours",
         },
       },
       {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Temple Tour Packages",
+          name: "Corporate Mobility",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Acting Drivers",
         },
       },
     ],
   },
 };
 
-const organizationSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
+const websiteSchema = {
+  "@type": "WebSite",
+  "@id": "https://kalidasstravels.in/#website",
   name: "Kalidass Travels",
-  alternateName: "Kalidass Travel Agency",
-  url: "https://kalidasstravels.in",
-  logo: "https://kalidasstravels.in/images/logo.webp",
-  contactPoint: [
-    {
-      "@type": "ContactPoint",
-      telephone: "+919092303060",
-      contactType: "customer service",
-      areaServed: "IN",
-      availableLanguage: ["en", "ta"],
-    },
+  alternateName: [
+    "Kalidass Travels Chennai",
+    "Kalidass",
+    "Chennai Kalidass Travels",
+    "kalidasstravels.in",
   ],
-  sameAs: [
-    "https://www.facebook.com/kalidasstravels", // Update if confirmed
-    "https://twitter.com/kalidasstravels", // Update if confirmed
-    "https://www.instagram.com/kalidasstravels", // Update if confirmed
+  url: "https://kalidasstravels.in/",
+  publisher: {
+    "@id": "https://kalidasstravels.in/#organization",
+  },
+};
+
+const siteNavigationSchema = {
+  "@type": "ItemList",
+  "@id": "https://kalidasstravels.in/#navigation",
+  name: "Site Navigation Sitelinks",
+  itemListElement: [
+    {
+      "@type": "SiteNavigationElement",
+      position: 1,
+      name: "Airport Transfers",
+      description: "Book reliable Chennai Airport (MAA) taxi transfers with 5-10 min dispatch, flight delay tracking & zero surge.",
+      url: "https://kalidasstravels.in/services/chennai-airport-taxi/",
+    },
+    {
+      "@type": "SiteNavigationElement",
+      position: 2,
+      name: "Outstation Cabs",
+      description: "Book clean AC cabs from Chennai for outstation trips, weekend getaways & per-km round trips with zero surge.",
+      url: "https://kalidasstravels.in/services/popular-destinations/",
+    },
+    {
+      "@type": "SiteNavigationElement",
+      position: 3,
+      name: "Temple Tours",
+      description: "All-inclusive South India temple tour packages from Chennai to Tirupati, Navagraha, Thiruvannamalai & Rameswaram.",
+      url: "https://kalidasstravels.in/services/temple-tours/",
+    },
+    {
+      "@type": "SiteNavigationElement",
+      position: 4,
+      name: "Corporate Mobility",
+      description: "24/7 routed employee commute transport, monthly executive car retainers, and GST compliant billing in Chennai.",
+      url: "https://kalidasstravels.in/services/corporate/",
+    },
+    {
+      "@type": "SiteNavigationElement",
+      position: 5,
+      name: "Acting Drivers",
+      description: "Hire background-verified professional acting drivers in Chennai for your personal car on hourly or daily duty.",
+      url: "https://kalidasstravels.in/services/acting-drivers/",
+    },
+    {
+      "@type": "SiteNavigationElement",
+      position: 6,
+      name: "Tariff",
+      description: "Official taxi tariff card with transparent local hourly packages and per-km outstation rates.",
+      url: "https://kalidasstravels.in/tariff/",
+    },
+    {
+      "@type": "SiteNavigationElement",
+      position: 7,
+      name: "Fare Calculator",
+      description: "Calculate instant, transparent travel costs for outstation cabs, hourly acting drivers & vehicle relocations.",
+      url: "https://kalidasstravels.in/calculator/",
+    },
   ],
 };
 
-const websiteSchema = {
+// Assemble unified @graph Knowledge Graph
+const graphItems: any[] = [organizationSchema, localBusinessSchema, websiteSchema, siteNavigationSchema];
+
+if (schema) {
+  if (Array.isArray(schema)) {
+    graphItems.push(...schema);
+  } else if (typeof schema === "object") {
+    const { "@context": _, ...cleanSchema } = schema as any;
+    graphItems.push(cleanSchema);
+  }
+}
+
+const unifiedSchemaGraph = {
   "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: "Kalidass Travels",
-  url: "https://kalidasstravels.in",
-  potentialAction: {
-    "@type": "SearchAction",
-    target: "https://kalidasstravels.in/search?q={search_term_string}",
-    "query-input": "required name=search_term_string",
-  },
+  "@graph": graphItems,
 };
 ---
 
@@ -190,8 +291,11 @@ const websiteSchema = {
       async></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#4f46e5" />
-    <link rel="icon" type="image/png" href="/images/favicon.webp" />
+    <meta name="theme-color" content="#1E252D" />
+    <link rel="icon" type="image/webp" href="/images/favicon.webp" />
+    <link rel="icon" type="image/png" href="/images/favicon.png" />
+    <link rel="apple-touch-icon" href="/images/favicon.webp" />
+    <link rel="manifest" href="/site.webmanifest" />
     <meta name="description" content={description} />
     <meta name="keywords" content={keywords} />
     <meta name="author" content="Kalidass Travels" />
@@ -202,7 +306,14 @@ const websiteSchema = {
     <meta name="googlebot" content="index, follow" />
     <meta name="bingbot" content="index, follow" />
     <link rel="canonical" href={canonicalURL} />
-    <!-- PWA manifest removed -->
+    <!-- Machine-Readable LLM Discovery Files -->
+    <link rel="alternate" type="text/markdown" href="/llms.txt" title="AI / LLM Context Summary (llms.txt)" />
+    <link rel="alternate" type="text/markdown" href="/llms-full.txt" title="AI / LLM Comprehensive Knowledge Base (llms-full.txt)" />
+    <link rel="alternate" type="text/markdown" href="/.well-known/llms.txt" title="AI / LLM Context Summary (.well-known)" />
+    <link rel="alternate" type="text/plain" href="/ai.txt" title="AI Crawler Policy" />
+    <!-- Search Engine Verification (Add real tokens when available) -->
+    <!-- <meta name="google-site-verification" content="..." /> -->
+    <!-- <meta name="msvalidate.01" content="..." /> -->
 
     <!-- Resource Hints: Preconnect to external origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -216,19 +327,13 @@ const websiteSchema = {
     <link rel="dns-prefetch" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
-    {/* Optimized Font Loading: Subsetting or specific weights */}
+    <!-- Google Fonts: Plus Jakarta Sans & Noto Sans Tamil (Royal Heritage & Executive Scale) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap"
       rel="stylesheet"
-      media="print"
-      onload="this.media='all'"
     />
-    <noscript>
-      <link
-        href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap"
-        rel="stylesheet"
-      />
-    </noscript>
 
     <title>{title}</title>
 
@@ -250,24 +355,153 @@ const websiteSchema = {
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={fullImage} />
 
-    <!-- Schema.org JSON-LD -->
+    <!-- Schema.org Unified JSON-LD Knowledge Graph -->
     <script
       type="application/ld+json"
-      set:html={JSON.stringify(schema || localBusinessSchema)}
+      set:html={JSON.stringify(unifiedSchemaGraph)}
     />
-    <script
-      type="application/ld+json"
-      set:html={JSON.stringify(organizationSchema)}
+
+    <!-- Font Awesome: Defer loading -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      media="print"
+      onload="this.media='all'"
     />
-    <script
-      type="application/ld+json"
-      set:html={JSON.stringify(websiteSchema)}
+
+    <!-- Google Material Symbols Outlined (Official M3 Iconography) -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
     />
 
     <style is:global>
+      /* Official Google Material Symbols M3 Configuration */
+      .material-symbols-outlined {
+        font-family: 'Material Symbols Outlined';
+        font-weight: normal;
+        font-style: normal;
+        font-size: 24px;
+        line-height: 1;
+        letter-spacing: normal;
+        text-transform: none;
+        display: inline-block;
+        white-space: nowrap;
+        word-wrap: normal;
+        direction: ltr;
+        font-feature-settings: 'liga';
+        -webkit-font-smoothing: antialiased;
+        vertical-align: middle;
+      }
+
+      /* 100% Google Material Design 3 (M3) Option A: Executive Midnight Charcoal & Onyx */
+      :root {
+        /* Primary Roles - Executive Midnight Charcoal (Tone 40) */
+        --md-sys-color-primary: #1E252D;
+        --md-sys-color-on-primary: #ffffff;
+        --md-sys-color-primary-container: #E2E5EA;
+        --md-sys-color-on-primary-container: #101418;
+        --md-sys-color-primary-fixed: #E2E5EA;
+        --md-sys-color-primary-fixed-dim: #C6CAD0;
+        --md-sys-color-on-primary-fixed: #101418;
+
+        /* Secondary Roles - Slate Steel Charcoal (Tone 40) */
+        --md-sys-color-secondary: #475467;
+        --md-sys-color-on-secondary: #ffffff;
+        --md-sys-color-secondary-container: #EAECF0;
+        --md-sys-color-on-secondary-container: #1D2939;
+
+        /* Tertiary Roles - Rich Warm Amber-Gold (Tone 40) for Ratings & Milestones */
+        --md-sys-color-tertiary: #6D5E0F;
+        --md-sys-color-on-tertiary: #ffffff;
+        --md-sys-color-tertiary-container: #F8E287;
+        --md-sys-color-on-tertiary-container: #221B00;
+
+        /* Brand Red Accent (Signature "K" Logo & Live Status) */
+        --md-sys-color-brand-red: #EC221F;
+
+        /* Error Roles */
+        --md-sys-color-error: #BA1A1A;
+        --md-sys-color-on-error: #ffffff;
+        --md-sys-color-error-container: #FFDAD6;
+        --md-sys-color-on-error-container: #410002;
+
+        /* Authentic Google M3 Clean Anti-Glare Surfaces */
+        --md-sys-color-surface: #F9FAFB;
+        --md-sys-color-surface-dim: #E5E7EB;
+        --md-sys-color-surface-bright: #ffffff;
+        --md-sys-color-surface-container-lowest: #ffffff;
+        --md-sys-color-surface-container-low: #F3F4F6;
+        --md-sys-color-surface-container: #ECEEF1;
+        --md-sys-color-surface-container-high: #E5E7EB;
+        --md-sys-color-surface-container-highest: #D1D5DB;
+
+        /* Text & Border Tokens - Deep Onyx Charcoal & Harmonized Outlines */
+        --md-sys-color-on-surface: #111827;
+        --md-sys-color-on-surface-variant: #4B5563;
+        --md-sys-color-outline: #9CA3AF;
+        --md-sys-color-outline-variant: #E5E7EB;
+        --md-sys-color-inverse-surface: #1F2937;
+        --md-sys-color-inverse-on-surface: #F9FAFB;
+        --md-sys-color-inverse-primary: #9CA3AF;
+        --md-sys-color-scrim: #000000;
+        --md-sys-color-shadow: #000000;
+      }
+
       html {
-        font-family: "Google Sans", "Nunito Sans", sans-serif;
+        font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
         scroll-behavior: smooth;
+        background-color: #F8F9FC;
+        color: #1A1C1E;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      body {
+        background-color: #F8F9FC;
+        color: #1A1C1E;
+        font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+      }
+
+      h1, h2, h3, h4, h5, h6 {
+        font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+        letter-spacing: -0.025em;
+        text-rendering: optimizeLegibility;
+      }
+
+      h1 {
+        line-height: 1.15;
+        font-weight: 800;
+      }
+
+      h2 {
+        line-height: 1.2;
+        font-weight: 800;
+      }
+
+      h3 {
+        line-height: 1.3;
+        font-weight: 700;
+      }
+
+      h4 {
+        line-height: 1.4;
+        font-weight: 700;
+      }
+
+      p {
+        line-height: 1.625;
+      }
+
+      /* M3 & Luxury Elevation Shadow Tokens */
+      .elevation-1 {
+        box-shadow: 0 1px 2px 0 rgba(15, 23, 42, 0.05), 0 1px 3px 1px rgba(15, 23, 42, 0.03);
+      }
+      .elevation-2 {
+        box-shadow: 0 4px 12px -1px rgba(15, 23, 42, 0.08), 0 2px 6px -2px rgba(15, 23, 42, 0.04);
+      }
+      .elevation-3 {
+        box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.1), 0 4px 12px -2px rgba(15, 23, 42, 0.05);
       }
 
       /* Skeleton Shimmer Effect */
@@ -275,7 +509,7 @@ const websiteSchema = {
         position: relative;
         overflow: hidden;
         background-color: #e2e8f0;
-        border-radius: 0.5rem;
+        border-radius: 1rem;
       }
 
       .skeleton-shimmer::after {
@@ -286,8 +520,8 @@ const websiteSchema = {
         background: linear-gradient(
           90deg,
           rgba(255, 255, 255, 0) 0,
-          rgba(255, 255, 255, 0.2) 20%,
-          rgba(255, 255, 255, 0.5) 60%,
+          rgba(255, 255, 255, 0.4) 20%,
+          rgba(255, 255, 255, 0.7) 60%,
           rgba(255, 255, 255, 0)
         );
         animation: shimmer 2s infinite;
@@ -299,168 +533,57 @@ const websiteSchema = {
         }
       }
 
-      /* Google Places Autocomplete - compact & touch-friendly */
+      /* Google Places Autocomplete - Compact & Clean for Mobile */
       .pac-container {
-        z-index: 9999 !important;
-        border-radius: 8px !important;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14) !important;
-        border: 1px solid #e2e8f0 !important;
+        z-index: 99999 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(15, 23, 42, 0.08) !important;
+        border: 1px solid #E2E8F0 !important;
+        background-color: #FFFFFF !important;
         margin-top: 4px !important;
-        font-family: inherit !important;
-        overflow: hidden !important;
+        font-family: "Plus Jakarta Sans", sans-serif !important;
+        overflow-y: auto !important;
+        max-height: 220px !important;
+        -webkit-overflow-scrolling: touch !important;
       }
       .pac-item {
-        padding: 7px 12px !important;
+        padding: 8px 10px !important;
         font-size: 12px !important;
         line-height: 1.35 !important;
         cursor: pointer !important;
-        min-height: 40px !important;
+        min-height: 36px !important;
         display: flex !important;
         align-items: center !important;
-        border-bottom: 1px solid #f1f5f9 !important;
+        border-bottom: 1px solid #F1F5F9 !important;
+        transition: background-color 0.15s ease !important;
+        white-space: normal !important;
       }
       .pac-item:last-child {
         border-bottom: none !important;
       }
       .pac-item:hover,
       .pac-item.pac-item-selected {
-        background-color: #fef2f2 !important;
+        background-color: #FEF2F2 !important;
       }
       .pac-item-query {
         font-size: 12px !important;
         font-weight: 600 !important;
-        color: #1e293b !important;
+        color: #0F172A !important;
+        padding-right: 4px !important;
       }
       .pac-matched {
         font-weight: 700 !important;
-        color: #b91c1c !important;
-      }
-      .pac-icon {
-        margin-top: 0 !important;
-        margin-right: 8px !important;
-        flex-shrink: 0 !important;
+        color: #DC2626 !important;
       }
       .pac-secondary-text {
         font-size: 11px !important;
-        color: #64748b !important;
+        color: #64748B !important;
+        display: inline !important;
       }
-    </style>
-    <!-- Font Awesome: Defer loading -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-      media="print"
-      onload="this.media='all'"
-    />
-    <style is:inline>
-      /* Color Theme Swatches in Hex */
-      .color-theme_logo-1-hex {
-        color: #f22222;
-      }
-      .color-theme_logo-2-hex {
-        color: #f24141;
-      }
-      .color-theme_logo-3-hex {
-        color: #f27777;
-      }
-      .color-theme_logo-4-hex {
-        color: #f2f2f2;
-      }
-      .color-theme_logo-5-hex {
-        color: #0d0d0d;
-      }
-
-      /* Color Theme Swatches in RGBA */
-      .color-theme_logo-1-rgba {
-        color: rgba(242, 34, 34, 1);
-      }
-      .color-theme_logo-2-rgba {
-        color: rgba(242, 65, 65, 1);
-      }
-      .color-theme_logo-3-rgba {
-        color: rgba(242, 119, 119, 1);
-      }
-      .color-theme_logo-4-rgba {
-        color: rgba(242, 242, 242, 1);
-      }
-      .color-theme_logo-5-rgba {
-        color: rgba(13, 13, 13, 1);
-      }
-
-      /* Color Theme Swatches in HSLA */
-      .color-theme_logo-1-hsla {
-        color: hsla(0, 88, 54, 1);
-      }
-      .color-theme_logo-2-hsla {
-        color: hsla(0, 87, 60, 1);
-      }
-      .color-theme_logo-3-hsla {
-        color: hsla(0, 82, 70, 1);
-      }
-      .color-theme_logo-4-hsla {
-        color: hsla(0, 0, 94, 1);
-      }
-      .color-theme_logo-5-hsla {
-        color: hsla(0, 0, 5, 1);
-      }
-
-      :root {
-        --theme-red: #f22222;
-        --theme-red-bright: #f24141;
-        --theme-rose: #f27777;
-        --theme-cream: #f2f2f2;
-        --theme-dark: #0d0d0d;
-      }
-
-      body {
-        background-color: var(--theme-cream);
-        color: var(--theme-dark);
-      }
-
-      nav {
-        background: transparent;
-        border-bottom: 1px solid rgba(13, 13, 13, 0.1);
-      }
-
-      nav a.header-link {
-        color: var(--theme-dark);
-        font-weight: 500;
-        transition: color 0.2s ease;
-      }
-
-      nav a.header-link:hover {
-        color: var(--theme-red);
-      }
-
-      .primary-cta {
-        background: linear-gradient(
-          135deg,
-          var(--theme-red),
-          var(--theme-red-bright)
-        );
-        color: #fff;
-        font-weight: 600;
-        border-radius: 999px;
-        padding: 0.75rem 1.5rem;
-        box-shadow: 0 10px 25px rgba(242, 34, 34, 0.35);
-      }
-
-      .primary-cta:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 12px 28px rgba(242, 65, 65, 0.45);
-      }
-
-      footer {
-        background: var(--theme-dark);
-        color: var(--theme-cream);
-      }
-
-      footer a:hover {
-        color: var(--theme-red);
-      }
-
-      #mobile-menu {
-        background: rgba(242, 242, 242, 0.9);
+      .pac-icon {
+        margin-right: 8px !important;
+        margin-top: 2px !important;
+        transform: scale(0.85) !important;
       }
     </style>
   </head><body class="font-sans antialiased">
@@ -495,232 +618,292 @@ const websiteSchema = {
         }
       })();
     </script>
-    <!-- Facebook Method: Slim Progress Bar -->
-    <div
-      id="page-loader"
-      class="fixed top-0 left-0 w-0 h-1 bg-red-700 z-[100] transition-all duration-300 pointer-events-none"
-    >
-    </div>
+    <!-- Reading Progress Bar placeholder (rendered inside nav below) -->
     <script is:inline>
-      // Simulation of BigPipe/Streaming progress
-      window.addEventListener("load", () => {
-        const loader = document.getElementById("page-loader");
-        if (loader) {
-          loader.style.width = "100%";
-          setTimeout(() => {
-            loader.style.opacity = "0";
-          }, 300);
+      (function () {
+        var bar = null;
+        var ticking = false;
+
+        function getBar() {
+          if (!bar) bar = document.getElementById('reading-progress-bar');
+          return bar;
         }
-      });
-      document.addEventListener("astro:before-preparation", () => {
-        const loader = document.getElementById("page-loader");
-        if (loader) {
-          loader.style.width = "30%";
-          loader.style.opacity = "1";
+
+        function updateProgress() {
+          var b = getBar();
+          if (!b) return;
+          var scrollTop = window.scrollY || document.documentElement.scrollTop;
+          var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          var progress = docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0;
+          b.style.width = (progress * 100) + '%';
+          b.style.opacity = progress > 0 ? '1' : '0';
+          ticking = false;
         }
-      });
-      document.addEventListener("astro:after-preparation", () => {
-        const loader = document.getElementById("page-loader");
-        if (loader) {
-          loader.style.width = "100%";
-          setTimeout(() => {
-            loader.style.opacity = "0";
-          }, 300);
-        }
-      });
+
+        // Scroll listener — always active
+        window.addEventListener('scroll', function () {
+          if (!ticking) {
+            requestAnimationFrame(updateProgress);
+            ticking = true;
+          }
+        }, { passive: true });
+
+        // Init once DOM is ready (works on every page, every navigation type)
+        document.addEventListener('DOMContentLoaded', function () {
+          bar = null; // force re-query after DOM is ready
+          updateProgress();
+        });
+
+        // Astro View Transitions: reset & re-init on SPA navigation
+        document.addEventListener('astro:before-preparation', function () {
+          var b = getBar();
+          if (b) { b.style.width = '0%'; b.style.opacity = '0'; }
+        });
+        document.addEventListener('astro:after-swap', function () {
+          bar = null; // re-query after DOM swap
+          var b = getBar();
+          if (b) { b.style.width = '0%'; b.style.opacity = '0'; }
+          window.scrollTo(0, 0);
+        });
+        document.addEventListener('astro:page-load', function () {
+          bar = null; // re-query after page load
+          updateProgress();
+        });
+      })();
     </script>
-    <!-- Skip to Content Link -->
+    <!-- Skip to Content Link (M3 Accessibility) -->
     <a
       href="#main-content"
-      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white text-red-700 px-4 py-2 rounded-md shadow-lg z-[100] font-bold border border-red-200"
+      tabindex="0"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-m3-surface-container-lowest text-m3-primary px-5 py-2.5 rounded-full shadow-m3-3 z-[100] font-semibold border border-m3-outline-variant text-sm"
     >
       Skip to content
     </a>
 
-    <!-- Navbar -->
+    <!-- Google Material 3 Top App Bar -->
     <nav
-      class="sticky top-0 z-40 shadow-md bg-white"
+      class="relative sticky top-0 z-40 bg-m3-surface/95 backdrop-blur-md shadow-m3-1 transition-colors"
       aria-label="Main Navigation"
     >
+      <!-- Static bottom border (always visible) -->
+      <div class="absolute bottom-0 left-0 right-0 h-px bg-m3-outline-variant/50"></div>
+      <!-- Scroll-Based Reading Progress Bar (bottom of nav, all pages) -->
+      <div
+        id="reading-progress-bar"
+        class="absolute bottom-0 left-0 h-[2px] w-0 z-50 pointer-events-none transition-opacity duration-300"
+        style="background: linear-gradient(90deg, #1E252D 0%, #475467 100%); opacity: 0;"
+        aria-hidden="true"
+      ></div>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
-          <!-- Logo -->
+        <div class="flex justify-between items-center h-16 sm:h-18">
+          <!-- Logo & Brand Entity -->
           <div class="flex-shrink-0 flex items-center gap-3">
-            <a href="/" aria-label="Kalidass Travels home">
+            <a href="/" aria-label="Kalidass Travels home" class="flex items-center gap-2">
               <img
                 src="/images/logo.webp"
                 alt="Kalidass Travels logo"
-                class="h-12 w-auto object-contain"
+                class="h-10 sm:h-12 w-auto object-contain"
                 width="180"
                 height="48"
               />
             </a>
           </div>
 
-          <!-- Desktop Menu -->
-          <div class="hidden md:flex items-center space-x-8">
-            <a href="/" class="header-link">Home</a>
+          <!-- Mobile Live Section Indicator Chip (Header Center, Home Only) -->
+          {
+            isHome && (
+              <div
+                id="mobile-section-chip"
+                class="md:hidden inline-flex items-center gap-1.5 px-2.5 py-1 rounded-m3-full bg-m3-surface-container-high/90 border border-m3-outline-variant text-m3-on-surface text-badge font-bold shadow-xs transition-opacity duration-300"
+              >
+                <span class="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse"></span>
+                <span id="mobile-section-text" class="font-mono text-m3-on-surface tracking-tight">01/08 • Booking</span>
+              </div>
+            )
+          }
 
-            <!-- Services Dropdown -->
+          <!-- M3 Desktop Navigation Pills -->
+          <div class="hidden md:flex items-center space-x-1 lg:space-x-2">
+            <a href="/" class="px-3.5 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary focus-visible:ring-offset-2">
+              Home
+            </a>
+
+            <!-- Services Dropdown (M3 Menu) -->
             <div class="relative group">
               <button
-                class="header-link flex items-center gap-1 focus:outline-none py-4"
+                class="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary focus-visible:ring-offset-2"
                 aria-expanded="false"
                 aria-haspopup="true"
               >
                 <span>Services</span>
                 <svg
-                  class="w-4 h-4 transition-transform group-hover:rotate-180"
+                  class="w-4 h-4 text-m3-on-surface-variant transition-transform group-hover:rotate-180"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                   aria-hidden="true"
-                  ><path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 9l-7 7-7-7"></path></svg
                 >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
               </button>
               <div
-                class="absolute left-0 top-full w-64 bg-white rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 transform group-hover:translate-y-0 group-focus-within:translate-y-0 translate-y-2 border border-gray-100 overflow-hidden"
+                class="absolute left-0 top-full mt-1 w-64 bg-m3-surface-container-lowest rounded-m3-xl shadow-m3-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 transform group-hover:translate-y-0 group-focus-within:translate-y-0 translate-y-2 border border-m3-outline-variant/60 p-2 z-50"
                 role="menu"
               >
-                <div class="py-2">
-                  {
-                    services.map((service) => (
-                      <a
-                        href={service.link}
-                        class="block px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 border-b border-gray-50 last:border-0"
-                        role="menuitem"
-                      >
-                        <span class="font-medium">{service.title}</span>
-                      </a>
-                    ))
-                  }
-                </div>
+                {
+                  services.map((service) => (
+                    <a
+                      href={service.link.endsWith('/') ? service.link : `${service.link}/`}
+                      class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-m3-lg text-sm font-medium text-m3-on-surface hover:text-m3-primary hover:bg-m3-primary-container/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
+                      role="menuitem"
+                    >
+                      <span>{service.title}</span>
+                    </a>
+                  ))
+                }
               </div>
             </div>
 
-            <a href="/fleet/" class="header-link">Fleet</a>
-            <a href="/drivers/" class="header-link">Drivers</a>
-            <a href="/tariff/" class="header-link">Fare</a>
-            <a href="/calculator/" class="header-link">Calculator</a>
+            <a href="/fleet/" class="px-3.5 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary focus-visible:ring-offset-2">
+              Fleet
+            </a>
+            <a href="/drivers/" class="px-3.5 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary focus-visible:ring-offset-2">
+              Drivers
+            </a>
+            <a href="/tariff/" class="px-3.5 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary focus-visible:ring-offset-2">
+              Tariff
+            </a>
+            <a href="/calculator/" class="px-3.5 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary focus-visible:ring-offset-2">
+              Fare Calculator
+            </a>
           </div>
 
-          <!-- Mobile Controls - In same row -->
-          <div class="flex items-center gap-3 md:hidden">
-            <!-- Mobile Menu Button -->
+          <!-- M3 Desktop Action Button & Mobile Hamburger -->
+          <div class="flex items-center gap-3">
+            <!-- Desktop Executive Call CTA (M3 Filled Button) -->
+            <a
+              href="tel:+919092303060"
+              class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary text-sm font-semibold rounded-m3-full shadow-m3-1 hover:shadow-m3-2 transition-all transform hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary focus-visible:ring-offset-2 border border-white/20"
+              aria-label="Call 24/7 Helpline"
+            >
+              <span class="material-symbols-outlined text-[18px] text-emerald-400">call</span>
+              <span class="text-m3-label-l font-bold tracking-wide">90923 03060</span>
+            </a>
+
+            <!-- Mobile Icon Button (M3 Standard Icon Button) -->
             <button
               id="mobile-menu-btn"
-              class="text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500 rounded p-2 min-h-[48px] min-w-[48px] flex items-center justify-center transition-colors active:bg-gray-100"
+              class="md:hidden text-m3-on-surface hover:bg-m3-surface-container p-2.5 rounded-m3-full min-h-[48px] min-w-[48px] flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
               aria-label="Open mobile menu"
               aria-expanded="false"
               aria-controls="mobile-menu-drawer"
             >
-              <svg
-                class="w-7 h-7"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h16"></path>
-              </svg>
+              <span class="material-symbols-outlined text-[24px]">menu</span>
             </button>
           </div>
         </div>
       </div>
-    </nav>
-  </body>
 
-  <!-- Mobile Menu Overlay -->
+      <!-- Hairline Reading Progress Bar -->
+      <div class="w-full h-[2.5px] bg-m3-outline-variant/30 overflow-hidden relative">
+        <div
+          id="scroll-progress-line"
+          class="h-full bg-gradient-to-r from-m3-primary via-m3-secondary to-m3-primary w-0 transition-all duration-75"
+          style="width: 0%;"
+        ></div>
+      </div>
+    </nav>
+
+  <!-- Google Material 3 Modal Navigation Drawer Scrim -->
   <div
     id="mobile-menu-overlay"
-    class="fixed inset-0 bg-black/50 z-50 hidden transition-opacity opacity-0"
+    class="fixed inset-0 bg-m3-scrim/60 backdrop-blur-sm z-50 hidden transition-opacity opacity-0"
     aria-hidden="true"
   >
   </div>
 
-  <!-- Mobile Menu Drawer -->
+  <!-- Google Material 3 Standard Navigation Drawer (rounded-l-m3-2xl / 28px) -->
   <div
     id="mobile-menu-drawer"
-    class="fixed top-0 right-0 w-[85%] max-w-sm h-full bg-white z-50 transform translate-x-full transition-transform duration-300 shadow-2xl flex flex-col overflow-y-auto"
+    class="fixed top-0 right-0 w-[85%] max-w-sm h-full bg-m3-surface-container-lowest text-m3-on-surface z-50 transform translate-x-full transition-transform duration-300 shadow-m3-4 flex flex-col overflow-y-auto rounded-l-m3-2xl"
     role="dialog"
     aria-label="Mobile Navigation"
     aria-modal="true"
   >
-    <!-- Header -->
-    <div class="flex justify-end p-4">
+    <!-- Drawer Header -->
+    <div class="flex items-center justify-between p-5 border-b border-m3-outline-variant/30">
+      <img
+        src="/images/logo.webp"
+        alt="Kalidass Travels"
+        class="h-9 w-auto object-contain"
+        width="140"
+        height="36"
+      />
       <button
         id="close-menu-btn"
-        class="text-gray-600 hover:text-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-700 rounded p-3 min-h-[48px] min-w-[48px] flex items-center justify-center"
-        aria-label="Close mobile menu"
+        class="text-m3-on-surface-variant hover:bg-m3-surface-container p-2 rounded-m3-full min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
+        aria-label="Close navigation drawer"
       >
-        <svg
-          class="w-8 h-8"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"></path>
-        </svg>
+        <span class="material-symbols-outlined text-[24px]">close</span>
       </button>
     </div>
 
-    <!-- Navigation Links -->
-    <div class="px-8 py-4 space-y-4 flex-grow">
-      <a href="/" class="block text-base font-medium text-gray-800 hover:text-red-700 border-b border-gray-100 pb-2 transition-colors">Home</a>
+    <!-- M3 Navigation List Items -->
+    <div class="p-4 space-y-1.5 flex-grow">
+      <a href="/" class="flex items-center gap-3 px-4 py-3 rounded-m3-full text-m3-on-surface font-medium text-sm hover:bg-m3-surface-container transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
+        <span class="material-symbols-outlined text-[22px] text-m3-on-surface-variant">home</span>
+        <span class="text-m3-label-l font-semibold">Home</span>
+      </a>
 
-      <!-- Services Accordion -->
-      <div class="border-b border-gray-100 pb-2">
+      <!-- Services Submenu -->
+      <div class="rounded-m3-xl overflow-hidden bg-m3-surface-container-low p-1">
         <button
           id="services-menu-toggle"
-          class="flex items-center justify-between w-full text-base font-medium text-gray-800 hover:text-red-600 transition-colors focus:outline-none focus:text-red-600"
+          class="flex items-center justify-between w-full px-3 py-2.5 rounded-m3-lg text-m3-on-surface font-medium text-sm hover:bg-m3-surface-container transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
           aria-expanded="false"
           aria-controls="services-submenu"
         >
-          <span>Services</span>
-          <svg
-            id="services-chevron"
-            class="w-4 h-4 transform transition-transform duration-200 rotate-180"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-[22px] text-m3-on-surface-variant">commute</span>
+            <span class="text-m3-label-l font-semibold">Our Services</span>
+          </div>
+          <span id="services-chevron" class="material-symbols-outlined text-[20px] text-m3-on-surface-variant transform transition-transform duration-200">expand_more</span>
         </button>
-        <div id="services-submenu" class="mt-2 ml-4 space-y-2 border-l-2 border-gray-100 pl-4">
-          <a href="/services/category/acting-drivers" class="block text-sm text-gray-600 hover:text-red-600">Acting Drivers</a>
-          <a href="/services/category/corporate" class="block text-sm text-gray-600 hover:text-red-600">Corporate Travel</a>
-          <a href="/services/category/temple-tours" class="block text-sm text-gray-600 hover:text-red-600">Temple Tours</a>
-          <a href="/services/category/popular-destinations" class="block text-sm text-gray-600 hover:text-red-600">Popular Destinations</a>
+        <div id="services-submenu" class="hidden mt-1 space-y-1 pl-8 pr-2 pb-2">
+          <a href="/services/chennai-airport-taxi/" class="block px-3 py-2 rounded-m3-sm text-xs font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">Airport Transfers (MAA)</a>
+          <a href="/services/popular-destinations/" class="block px-3 py-2 rounded-m3-sm text-xs font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">Outstation Cabs</a>
+          <a href="/services/temple-tours/" class="block px-3 py-2 rounded-m3-sm text-xs font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">Temple Tours</a>
+          <a href="/services/corporate/" class="block px-3 py-2 rounded-m3-sm text-xs font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">Corporate Mobility</a>
+          <a href="/services/acting-drivers/" class="block px-3 py-2 rounded-m3-sm text-xs font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">Acting Drivers</a>
         </div>
       </div>
 
-      <a href="/fleet/" class="block text-base font-medium text-gray-800 hover:text-red-600 border-b border-gray-100 pb-2 transition-colors">Fleet</a>
-      <a href="/drivers/" class="block text-base font-medium text-gray-800 hover:text-red-700 border-b border-gray-100 pb-2 transition-colors">Drivers</a>
-      <a href="/tariff/" class="block text-base font-medium text-gray-800 hover:text-red-700 border-b border-gray-100 pb-2 transition-colors">Fare</a>
-      <a href="/calculator/" class="block text-base font-medium text-gray-800 hover:text-red-700 border-b border-gray-100 pb-2 transition-colors">Calculator</a>
+      <a href="/fleet/" class="flex items-center gap-3 px-4 py-3 rounded-m3-full text-m3-on-surface font-medium text-sm hover:bg-m3-surface-container transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
+        <span class="material-symbols-outlined text-[22px] text-m3-on-surface-variant">directions_car</span>
+        <span class="text-m3-label-l font-semibold">Fleet</span>
+      </a>
+      <a href="/drivers/" class="flex items-center gap-3 px-4 py-3 rounded-m3-full text-m3-on-surface font-medium text-sm hover:bg-m3-surface-container transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
+        <span class="material-symbols-outlined text-[22px] text-m3-on-surface-variant">badge</span>
+        <span class="text-m3-label-l font-semibold">Drivers</span>
+      </a>
+      <a href="/tariff/" class="flex items-center gap-3 px-4 py-3 rounded-m3-full text-m3-on-surface font-medium text-sm hover:bg-m3-surface-container transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
+        <span class="material-symbols-outlined text-[22px] text-m3-on-surface-variant">payments</span>
+        <span class="text-m3-label-l font-semibold">Tariff &amp; Pricing</span>
+      </a>
+      <a href="/calculator/" class="flex items-center gap-3 px-4 py-3 rounded-m3-full text-m3-on-surface font-medium text-sm hover:bg-m3-surface-container transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
+        <span class="material-symbols-outlined text-[22px] text-m3-on-surface-variant">calculate</span>
+        <span class="text-m3-label-l font-semibold">Fare Calculator</span>
+      </a>
 
-      <!-- Proprietor Card -->
-      <div class="pt-6 pb-4 text-center">
-        <div class="relative mx-auto w-32 h-40 mb-3 rounded-2xl overflow-hidden shadow-lg border-4 border-white">
-          <img src="/images/drivers/mani-perumal.webp" alt="Proprietor Perumal Manikumar" class="w-full h-full object-cover" />
+      <!-- M3 Proprietor Card -->
+      <div class="pt-4 mt-4 border-t border-m3-outline-variant/30">
+        <div class="bg-m3-surface-container border border-m3-outline-variant/50 rounded-m3-xl p-4 text-center">
+          <div class="relative mx-auto w-24 h-28 mb-2 rounded-m3-lg overflow-hidden shadow-m3-1 border-2 border-white">
+            <img src="/images/drivers/mani-perumal.webp" alt="Proprietor Perumal Manikumar" width="96" height="112" loading="lazy" decoding="async" class="w-full h-full object-cover" />
+          </div>
+          <h3 class="text-base font-bold text-m3-on-surface">Perumal Manikumar</h3>
+          <p class="text-badge tracking-widest text-m3-on-surface-variant uppercase font-semibold">PROPRIETOR</p>
         </div>
-        <h3 class="text-xl font-bold text-gray-900 mb-1">Perumal Manikumar</h3>
-        <p class="text-xs tracking-[0.2em] text-gray-600 uppercase font-semibold">PROPRIETOR</p>
       </div>
     </div>
   </div>
@@ -730,82 +913,154 @@ const websiteSchema = {
     <slot />
   </main>
 
-  <!-- Footer -->
-  <footer class="bg-black text-white py-12">
+  <!-- Google Material 3 Footer (Dark Surface) -->
+  <footer class="bg-m3-inverse-surface text-m3-inverse-on-surface pt-10 sm:pt-16 pb-10 sm:pb-12 border-t border-m3-outline-variant/20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-col items-center text-center">
-        <!-- Logo -->
-        <div class="mb-6 bg-white p-2 rounded">
-          <img
-            src="/images/logo.webp"
-            alt="Kalidass Travels"
-            class="h-12 w-auto"
-            width="180"
-            height="48"
-          />
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 sm:gap-8 pb-8 sm:pb-12 border-b border-m3-outline-variant/20">
+        <!-- Col 1: Brand & Verified Government Credentials -->
+        <div class="lg:col-span-4 space-y-3 sm:space-y-4">
+          <div class="bg-white p-2 sm:p-2.5 rounded-m3-lg w-fit shadow-m3-1">
+            <img
+              src="/images/logo.webp"
+              alt="Kalidass Travels"
+              class="h-9 sm:h-10 w-auto"
+              width="160"
+              height="40"
+            />
+          </div>
+          <p class="text-xs text-m3-inverse-on-surface/80 leading-relaxed">
+            Chennai’s trusted travel and mobility partner since 2019. Specializing in reliable 24/7 airport transfers, outstation cabs, customized South India temple tours, corporate mobility, and professional acting drivers with 100% transparent pricing and verified chauffeurs.
+          </p>
+
+          <!-- Government Registration Credentials Strip -->
+          <div class="rounded-m3-lg bg-white/[0.05] border border-white/10 px-2.5 sm:px-3 py-2 flex flex-wrap items-center justify-between gap-1.5 sm:gap-2 text-[10px] min-[380px]:text-[11px] text-xs">
+            <a
+              href="https://services.gst.gov.in/services/searchtp?gstin=33COVPM0531D1Z4"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1 text-white/90 hover:text-white transition-colors group min-w-0"
+              title="Verify GSTIN 33COVPM0531D1Z4 on Official Govt Portal"
+            >
+              <span class="material-symbols-outlined text-[14px] text-emerald-400 group-hover:text-emerald-300 shrink-0">verified</span>
+              <span class="font-bold text-white shrink-0">GST:</span>
+              <span class="font-mono text-white/90 group-hover:underline truncate">33COVPM0531D1Z4</span>
+            </a>
+
+            <div class="h-3 w-px bg-white/20 hidden min-[360px]:block"></div>
+
+            <a
+              href="https://udyamregistration.gov.in/Udyam_Verify.aspx"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1 text-white/90 hover:text-white transition-colors group min-w-0"
+              title="Verify MSME / Udyam Reg. UDYAM-TN-08-0018345 on Official Govt Portal"
+            >
+              <span class="material-symbols-outlined text-[14px] text-amber-400 group-hover:text-amber-300 shrink-0">verified_user</span>
+              <span class="font-bold text-white shrink-0">MSME:</span>
+              <span class="font-mono text-white/90 group-hover:underline truncate">UDYAM-TN-08-0018345</span>
+            </a>
+          </div>
+
+          <!-- Registered Address & Location Link -->
+          <div class="text-xs text-m3-inverse-on-surface/80 leading-relaxed">
+            <p class="font-bold text-white mb-0.5">Registered Office:</p>
+            <p>No. 4/220, E88, Ponniamman Kovil Street, Annamalai Nagar, Medavakkam, Chennai - 600 100.</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3 text-xs pt-0.5">
+            <a
+              href="https://maps.google.com/?q=Kalidass+Travels+Medavakkam+Chennai"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 font-semibold text-white/90 hover:text-white transition-colors group"
+            >
+              <span class="material-symbols-outlined text-[15px] text-[#4285F4] group-hover:scale-110 transition-transform">location_on</span>
+              <span>View on Google Maps</span>
+            </a>
+          </div>
         </div>
 
-        <!-- GSTIN -->
-        <p class="text-sm md:text-base mb-1 font-medium text-gray-300">
-          GSTIN : 33COVPM0531D1Z4
-        </p>
+        <!-- Col 2: Quick Links -->
+        <div class="lg:col-span-2">
+          <h4 class="text-white font-bold text-xs tracking-wider uppercase mb-3 font-sans">Quick Navigation</h4>
+          <ul class="space-y-2 text-xs text-m3-inverse-on-surface/80">
+            <li><a href="/fleet/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Our Fleet &amp; Vehicles</a></li>
+            <li><a href="/drivers/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Verified Chauffeurs</a></li>
+            <li><a href="/tariff/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Transparent Tariff</a></li>
+            <li><a href="/calculator/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Online Fare Calculator</a></li>
+          </ul>
+        </div>
 
-        <!-- Address -->
-        <p class="text-sm md:text-base mb-2 text-gray-300">
-          No. 4/220, E88, Ponniamman Kovil Street, Annamalai Nagar, Medavakkam, Chennai - 600 100.
-        </p>
+        <!-- Col 3: Popular Services -->
+        <div class="lg:col-span-3">
+          <h4 class="text-white font-bold text-xs tracking-wider uppercase mb-3 font-sans">Our Services</h4>
+          <ul class="space-y-2 text-xs text-m3-inverse-on-surface/80">
+            <li><a href="/services/chennai-airport-taxi/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs font-semibold text-emerald-400">Airport Transfers (MAA)</a></li>
+            <li><a href="/services/popular-destinations/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Outstation Cabs</a></li>
+            <li><a href="/services/temple-tours/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Temple Tours</a></li>
+            <li><a href="/services/corporate/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Corporate Mobility</a></li>
+            <li><a href="/services/acting-drivers/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Acting Drivers</a></li>
+          </ul>
+        </div>
 
-        <!-- Google Maps Link -->
-        <a
-          href="https://maps.google.com/?q=Kalidass+Travels+Medavakkam+Chennai"
-          target="_blank"
-          class="text-blue-400 hover:text-blue-300 text-sm mb-8 font-medium"
-        >
-          View on Google Maps
-        </a>
+        <!-- Col 4: 24/7 Booking Contacts -->
+        <div class="lg:col-span-3">
+          <h4 class="text-white font-bold text-xs tracking-wider uppercase mb-3 font-sans">24/7 Booking Desk</h4>
+          <p class="text-xs text-m3-inverse-on-surface/80 leading-relaxed mb-3">
+            Pre-book your ride or get an instant WhatsApp quotation at any time.
+          </p>
+          <div class="space-y-2">
+            <a href="tel:+919092303060" class="flex items-center gap-2 text-xs font-semibold text-m3-primary-fixed hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">
+              <span class="material-symbols-outlined text-[16px]">call</span>
+              <span>+91 90923 03060</span>
+            </a>
+            <a href="mailto:kalidasstravels2015@gmail.com" class="flex items-center gap-2 text-xs text-m3-inverse-on-surface/80 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">
+              <span class="material-symbols-outlined text-[16px]">mail</span>
+              <span>kalidasstravels2015@gmail.com</span>
+            </a>
+          </div>
+        </div>
+      </div>
 
-        <!-- Divider -->
-        <div class="w-full border-t border-gray-800 mb-8"></div>
-
-        <!-- Copyright -->
-        <p class="text-sm text-gray-300">
-          &copy; {new Date().getFullYear()} Kalidass Travels | All rights reserved.
-        </p>
-        <p class="text-sm text-gray-300 mt-1">
-          Built by
-          <a
-            href="https://wa.me/919952749408?text=Hi%20Saravn,%20I%20saw%20your%20work%20on%20Kalidass%20Travels%20website."
-            target="_blank"
-            class="font-bold bg-gradient-to-r from-indigo-300 to-purple-300 bg-clip-text text-transparent hover:opacity-80 transition-opacity"
-            >Saravn</a
-          >
-        </p>
+      <!-- Legal & Copyright -->
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-m3-inverse-on-surface/60 gap-4">
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <p>&copy; {new Date().getFullYear()} Kalidass Travels | All rights reserved.</p>
+          <a href="/privacy/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Privacy Policy</a>
+          <span class="text-m3-outline-variant/40 hidden sm:inline">•</span>
+          <a href="/terms/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Terms &amp; Conditions</a>
+        </div>
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
+          <p>
+            Built by
+            <a
+              href="https://wa.me/919952749408?text=Hi%20Saravn,%20I%20saw%20your%20work%20on%20Kalidass%20Travels%20website."
+              target="_blank"
+              class="text-m3-primary-fixed hover:underline transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs"
+            >
+              Saravn
+            </a>
+          </p>
+          <span class="text-m3-outline-variant/40 hidden sm:inline">•</span>
+          <a href="/ai.txt" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">AI Text</a>
+          <span class="text-m3-outline-variant/40 hidden sm:inline">•</span>
+          <a href="/llms.txt" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">LLMs Text</a>
+          <span class="text-m3-outline-variant/40 hidden sm:inline">•</span>
+          <a href="/robots.txt" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Robot Text</a>
+          <span class="text-m3-outline-variant/40 hidden sm:inline">•</span>
+          <a href="/sitemap.xml" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Site Map</a>
+        </div>
       </div>
     </div>
 
-    <!-- Floating Action Buttons -->
-    <!-- Call Button -->
-    <a
-      href="tel:+919092303060"
-      class="fixed bottom-6 right-6 z-50 group"
-      aria-label="Call Kalidass Travels"
-    >
-      <div
-        class="relative bg-[#4285F4] hover:bg-[#3367D6] text-white p-3 rounded-full shadow-[0_10px_30px_rgba(66,133,244,0.5)] transition-all transform hover:scale-110 flex items-center justify-center w-14 h-14 border-2 border-white"
-      >
-        <svg
-          class="w-6 h-6"
-          fill="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path
-            d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.49-5.15-3.8-6.62-6.63l1.97-1.57c.23-.29.33-.66.24-1.01-.36-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3.28 3 3.93 3 4.74c0 9.27 7.55 16.82 16.82 16.82.81 0 1.46-.65 1.46-1.19v-3.72c0-.54-.45-.99-.99-.99z"
-          ></path>
-        </svg>
-      </div>
-    </a>
   </footer>
+
+  <!-- Floating Quick Actions (Call & WhatsApp) -->
+  <FloatingActions />
+
+  <!-- Cookie Consent Banner -->
+  <CookieConsent />
+  </body>
 
   <!-- Mobile Menu Toggle Script -->
   <script>

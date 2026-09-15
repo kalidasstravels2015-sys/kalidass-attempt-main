@@ -1,0 +1,83 @@
+---
+import Layout from "../layouts/Layout.astro";
+import WhatsAppIcon from "../components/WhatsAppIcon.astro";
+---
+
+<Layout
+  title="404 - Page Not Found | Kalidass Travels Chennai"
+  description="The page you requested could not be found. Explore our South India temple packages, outstation cabs, or hire acting drivers with Kalidass Travels."
+>
+  <main class="min-h-[75vh] flex items-center justify-center bg-m3-surface-container-low px-4 sm:px-6 lg:px-8 py-16">
+    <div class="max-w-xl w-full text-center bg-m3-surface p-8 sm:p-12 rounded-m3-2xl shadow-m3-2 border border-m3-outline-variant">
+      <!-- Icon Graphic -->
+      <div class="mx-auto w-20 h-20 rounded-m3-full bg-m3-primary/10 flex items-center justify-center text-m3-primary mb-6">
+        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+        </svg>
+      </div>
+
+      <!-- 404 Headline -->
+      <span class="inline-block px-3 py-1 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs uppercase tracking-widest mb-3">
+        Error 404
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-m3-on-surface tracking-tight mb-3 font-heading">
+        This Route Took a Detour
+      </h1>
+      <p class="text-sm sm:text-base text-m3-on-surface-variant mb-8 leading-relaxed">
+        The destination you are looking for has moved or does not exist. Let's get you back on track with our verified travel services.
+      </p>
+
+      <!-- Primary Action Buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8">
+        <a
+          href="/"
+          class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-m3-full bg-m3-primary text-m3-on-primary font-bold text-sm shadow-m3-2 hover:bg-m3-primary/90 hover:shadow-m3-3 transition-all"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+          </svg>
+          <span>Return Home</span>
+        </a>
+        <a
+          href="/tariff/"
+          class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-m3-full bg-m3-surface-container-high text-m3-on-surface hover:bg-m3-surface-container-highest font-bold text-sm border border-m3-outline-variant transition-colors"
+        >
+          <span>View Tariff</span>
+        </a>
+        <a
+          href="/fleet/"
+          class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-m3-full bg-m3-surface-container-high text-m3-on-surface hover:bg-m3-surface-container-highest font-bold text-sm border border-m3-outline-variant transition-colors"
+        >
+          <span>Browse Fleet</span>
+        </a>
+      </div>
+
+      <!-- Quick 24/7 Helpline -->
+      <div class="pt-6 border-t border-m3-outline-variant/60 text-xs text-m3-on-surface-variant flex flex-col sm:flex-row items-center justify-center gap-4">
+        <span>Need immediate cab dispatch?</span>
+        <div class="flex items-center gap-3">
+          <a
+            href="tel:+919092303060"
+            class="inline-flex items-center gap-1.5 font-bold text-m3-primary hover:underline"
+          >
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.49-5.15-3.8-6.62-6.63l1.97-1.57c.23-.29.33-.66.24-1.01-.36-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3.28 3 3.93 3 4.74c0 9.27 7.55 16.82 16.82 16.82.81 0 1.46-.65 1.46-1.19v-3.72c0-.54-.45-.99-.99-.99z"></path>
+            </svg>
+            <span>+91 90923 03060</span>
+          </a>
+          <span class="text-m3-outline-variant">•</span>
+          <a
+            href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20reached%20a%20missing%20page%20and%20need%20assistance."
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 font-bold text-whatsapp hover:text-whatsapp-hover transition-colors"
+          >
+            <WhatsAppIcon class="w-3.5 h-3.5" variant="brand" />
+            <span>WhatsApp Support</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>

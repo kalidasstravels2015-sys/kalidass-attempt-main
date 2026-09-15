@@ -2,55 +2,56 @@
 import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
 import BookingPanel from "../components/BookingPanel.astro";
+import SectionNavigator from "../components/react/SectionNavigator.jsx";
 import Services from "../components/Services.astro";
 import FleetRoll from "../components/react/FleetRoll.jsx";
 import Tours from "../components/Tours.astro";
-import FAQ from "../components/FAQ.astro";
-import SafetySection from "../components/SafetySection.astro";
-
-// React Components for Lazy Loading
 import PartnersCarousel from "../components/react/PartnersCarousel.jsx";
 import DriversCarousel from "../components/react/DriversCarousel.jsx";
-import ReviewsCarousel from "../components/react/ReviewsCarousel.jsx";
-import TariffCalculator from "../components/react/TariffCalculator.jsx";
+import SafetySection from "../components/SafetySection.astro";
+import FAQ from "../components/FAQ.astro";
+import ExitIntentModal from "../components/react/ExitIntentModal.jsx";
+import BottomCTA from "../components/BottomCTA.astro";
 
 const ogImage = "/images/og-main.webp";
-
-const schema = {
-  "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  name: "Kalidass Travels",
-  image: "https://kalidasstravels.in/images/logo.webp",
-  telephone: "+919092303060",
-  email: "bookings@kalidasstravels.in",
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Chennai",
-    addressRegion: "Tamil Nadu",
-    addressCountry: "IN",
-  },
-  url: "https://kalidasstravels.in",
-  priceRange: "₹₹",
-};
 ---
 
 <Layout
   title="Kalidass Travels - Premium Travel Experience in South India"
-  description="Trusted travel partner in Chennai for Temple Tours, Corporate Travel, and Outstation Cabs. Verified drivers, transparent pricing, and 24/7 support."
-  schema={schema}
+  description="Trusted travel partner in Chennai for Airport Transfers, Outstation Cabs, Temple Tours, Corporate Mobility, and Acting Drivers. Verified chauffeurs, transparent pricing, and 24/7 support."
   image={ogImage}
 >
+  <!-- Desktop Floating Section Progress Rail -->
+  <SectionNavigator client:idle />
+
+  <!-- 1. Hero + Instant Booking Engine -->
   <Hero />
   <BookingPanel lang="en" />
+
+  <!-- 2. Core Services -->
   <Services />
-  <FleetRoll client:visible currentLang="en" />
+
+  <!-- 3. Popular Vehicles (Top 3) -->
+  <FleetRoll client:visible currentLang="en" limit={3} />
+
+  <!-- 4. Popular Temple Trips -->
   <Tours />
 
-  <!-- Lazy Loaded Interactive Sections -->
+  <!-- 5. Trusted by Industry Leaders -->
   <PartnersCarousel client:visible currentLang="en" />
+
+  <!-- 6. Professional Drivers (Horizontal Swipe) -->
   <DriversCarousel client:visible currentLang="en" />
-  <ReviewsCarousel client:visible currentLang="en" />
-  <FAQ />
-  <TariffCalculator client:idle currentLang="en" />
+
+  <!-- 7. Travel Awareness & Safety (2x2 Grid) -->
   <SafetySection />
+
+  <!-- 8. Frequently Asked Questions -->
+  <FAQ />
+
+  <!-- 9. Final Booking & Call CTA -->
+  <BottomCTA />
+
+  <!-- Exit Intent Vehicle Recommendation Helper -->
+  <ExitIntentModal client:load />
 </Layout>

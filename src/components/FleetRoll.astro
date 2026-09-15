@@ -4,15 +4,15 @@ import siteContent from '../data/siteContent.json';
 const fleet = siteContent.fleet;
 ---
 
-<section id="fleet" class="py-10 md:py-16 bg-white">
+<section id="fleet" class="py-10 md:py-16 bg-m3-surface-container-low">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Section Header -->
     <div class="text-center mb-12">
-      <h2 class="text-2xl md:text-4xl font-extrabold text-gray-900 inline-block relative mb-4">
+      <h2 class="text-2xl md:text-4xl font-extrabold text-m3-on-surface inline-block relative mb-4 font-heading">
         Our Premium Fleet
-        <div class="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-20 h-1.5 bg-red-600 rounded-full"></div>
+        <div class="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-20 h-1.5 bg-m3-primary rounded-m3-full"></div>
       </h2>
-      <p class="text-base text-gray-600 max-w-2xl mx-auto mt-4">
+      <p class="text-base text-m3-on-surface-variant max-w-2xl mx-auto mt-4 font-sans">
         Choose from our well-maintained fleet of vehicles for your journey
       </p>
     </div>
@@ -22,43 +22,43 @@ const fleet = siteContent.fleet;
       <div class="flex overflow-x-auto snap-x snap-mandatory pb-6 space-x-4 md:space-x-6 px-4 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 md:overflow-visible md:pb-0 scrollbar-hide">
           {fleet.map((vehicle) => (
             <div class="flex-shrink-0 w-72 snap-center md:w-auto md:snap-align-none">
-              <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+              <div class="bg-m3-surface rounded-m3-xl overflow-hidden shadow-m3-1 hover:shadow-m3-3 border border-m3-outline-variant transition-all duration-300 transform hover:-translate-y-1">
                 <!-- Image -->
-                <div class="relative h-48 overflow-hidden">
+                <div class="relative h-48 overflow-hidden bg-m3-surface-container-high">
                   <OptimizedImage 
                     src={vehicle.image} 
                     alt={vehicle.name}
-                    class="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                    class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                   />
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                   <div class="absolute bottom-4 left-4">
-                    <h3 class="text-xl font-bold text-white">{vehicle.name}</h3>
+                    <h3 class="text-xl font-bold text-white font-heading">{vehicle.name}</h3>
                   </div>
                 </div>
 
                 <!-- Content -->
                 <div class="p-6">
                   <!-- Pricing -->
-                  <div class="flex items-center justify-between mb-4 pb-4 border-b border-gray-300">
+                  <div class="flex items-center justify-between mb-4 pb-4 border-b border-m3-outline-variant/60">
                     <div>
-                      <p class="text-sm text-gray-600">Rate per KM</p>
-                      <p class="text-2xl font-bold text-blue-600">{vehicle.rate}</p>
+                      <p class="text-xs text-m3-on-surface-variant uppercase tracking-wider font-bold">Rate per KM</p>
+                      <p class="text-2xl font-extrabold text-m3-primary font-heading">{vehicle.rate}</p>
                     </div>
                     <div class="text-right">
-                      <p class="text-sm text-gray-600">Capacity</p>
-                      <p class="text-lg font-semibold text-gray-900">{vehicle.caps}</p>
-                      <p class="text-xs text-gray-500">{vehicle.bags}</p>
+                      <p class="text-xs text-m3-on-surface-variant uppercase tracking-wider font-bold">Capacity</p>
+                      <p class="text-base font-bold text-m3-on-surface">{vehicle.caps}</p>
+                      <p class="text-xs text-m3-on-surface-variant">{vehicle.bags}</p>
                     </div>
                   </div>
 
                   <!-- Features -->
-                  <div class="space-y-2 text-sm text-gray-700">
+                  <div class="space-y-2 text-sm text-m3-on-surface-variant font-sans">
                     {vehicle.details.map((feature) => (
                       <div class="flex items-center gap-2">
-                        <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 text-m3-secondary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
-                        {feature}
+                        <span>{feature}</span>
                       </div>
                     ))}
                   </div>
@@ -71,7 +71,7 @@ const fleet = siteContent.fleet;
       <!-- Scroll Indicators (Mobile Only) -->
       <div class="flex justify-center mt-6 space-x-2 md:hidden">
         {fleet.map((_, index) => (
-          <div class="w-2 h-2 rounded-full bg-gray-300"></div>
+          <div class="w-2 h-2 rounded-m3-full bg-m3-outline-variant"></div>
         ))}
       </div>
     </div>

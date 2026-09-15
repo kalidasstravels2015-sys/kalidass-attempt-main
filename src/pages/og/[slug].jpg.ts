@@ -36,10 +36,14 @@ export const GET: APIRoute = async ({ params, request }) => {
   };
 
   const categoryImages: Record<string, string> = {
+    "Acting Drivers": "/images/services/acting-drivers.webp",
     "Acting Driver Services": "/images/services/acting-drivers.webp",
-    "Corporate Travel": "/images/services/corporate.webp",
-    "Airport Transfers": "/images/services/airport-transfer.webp",
+    "Outstation Cabs": "/images/temple/mahabalipuram-ecr-temples.webp",
+    "Popular Destinations": "/images/temple/mahabalipuram-ecr-temples.webp",
     "Temple Tours": "/images/services/temple-tours.webp",
+    "Corporate Mobility": "/images/services/corporate.webp",
+    "Corporate Travel": "/images/services/corporate.webp",
+    "Airport Transfers": "/images/services/corporate.webp",
     "Premium Fleet Rental": "/images/services/corporate.webp"
   };
 

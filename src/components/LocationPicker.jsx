@@ -99,44 +99,44 @@ const LocationPicker = ({ isOpen, onClose, onConfirm, type }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-            <div className="bg-white w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl flex flex-col h-[80vh] animate-in fade-in zoom-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-m3-scrim/60 backdrop-blur-sm p-4">
+            <div className="bg-m3-surface w-full max-w-lg rounded-m3-xl overflow-hidden shadow-m3-3 border border-m3-outline-variant flex flex-col h-[80vh] animate-in fade-in zoom-in duration-200">
 
                 {/* Header */}
-                <div className="px-4 py-3 border-b flex items-center justify-between bg-white z-10">
-                    <h3 className="font-bold text-lg text-slate-800">Set {type} Location</h3>
-                    <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
-                        <X className="w-5 h-5 text-slate-500" />
+                <div className="px-5 py-4 border-b border-m3-outline-variant/60 flex items-center justify-between bg-m3-surface z-10">
+                    <h3 className="font-bold text-lg text-m3-on-surface font-heading">Set {type} Location</h3>
+                    <button onClick={onClose} className="p-2 hover:bg-m3-surface-container rounded-m3-full text-m3-on-surface-variant transition-colors cursor-pointer">
+                        <X className="w-5 h-5" />
                     </button>
                 </div>
 
                 {/* Map Container */}
-                <div className="relative flex-1 bg-slate-100">
+                <div className="relative flex-1 bg-m3-surface-container">
                     <div ref={mapRef} className="w-full h-full" />
 
                     {/* Centered Pin */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10 flex flex-col items-center">
                         <div className={`transition-transform duration-200 ${isDragging ? '-translate-y-2' : ''}`}>
-                            <MapPin className="w-8 h-8 text-black fill-black drop-shadow-md" />
+                            <MapPin className="w-8 h-8 text-m3-primary fill-m3-primary drop-shadow-md" />
                         </div>
-                        <div className="w-1.5 h-1.5 bg-black/20 rounded-full blur-[1px] mt-[-2px]" />
+                        <div className="w-1.5 h-1.5 bg-black/25 rounded-full blur-[1px] mt-[-2px]" />
                     </div>
 
-                    {/* Current Location Button */}
+                    {/* Current Location Button (M3 Small FAB) */}
                     <button
                         onClick={handleCurrentLocation}
-                        className="absolute bottom-6 right-4 bg-white p-3 rounded-full shadow-lg hover:bg-slate-50 active:scale-95 transition-all"
+                        className="absolute bottom-6 right-4 bg-m3-surface p-3 rounded-m3-full shadow-m3-2 hover:bg-m3-surface-container active:scale-95 transition-all border border-m3-outline-variant/50 cursor-pointer"
                         title="Go to current location"
                     >
-                        <Navigation className="w-5 h-5 text-indigo-600 fill-indigo-100" />
+                        <Navigation className="w-5 h-5 text-m3-primary fill-m3-primary/20" />
                     </button>
                 </div>
 
                 {/* Footer */}
-                <div className="p-5 bg-white border-t space-y-4 z-10">
+                <div className="p-5 bg-m3-surface border-t border-m3-outline-variant/60 space-y-4 z-10">
                     <div>
-                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Selected Location</p>
-                        <p className="text-sm font-medium text-slate-800 line-clamp-2 min-h-[2.5em]">
+                        <p className="text-badge font-bold text-m3-on-surface-variant uppercase tracking-wider mb-1">Selected Location</p>
+                        <p className="text-sm font-medium text-m3-on-surface line-clamp-2 min-h-[2.5em]">
                             {address}
                         </p>
                     </div>
@@ -144,7 +144,7 @@ const LocationPicker = ({ isOpen, onClose, onConfirm, type }) => {
                     <button
                         onClick={() => onConfirm(address)}
                         disabled={isDragging || address === 'Locating...' || address === 'Unknown location'}
-                        className="w-full bg-black text-white py-3.5 rounded-xl font-bold text-sm tracking-wide hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98] shadow-lg shadow-indigo-500/20"
+                        className="w-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary py-3.5 rounded-m3-full font-bold text-sm tracking-wide disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98] shadow-m3-1 cursor-pointer"
                     >
                         CONFIRM LOCATION
                     </button>

@@ -1,0 +1,71 @@
+---
+// CookieConsent.astro - High Contrast WCAG AAA Compliant Notice
+---
+
+<div
+  id="cookie-consent-banner"
+  role="region"
+  aria-label="Cookie Consent Banner"
+  class="fixed bottom-4 left-4 right-4 sm:left-6 sm:right-auto sm:max-w-md z-50 transform translate-y-32 opacity-0 pointer-events-none transition-all duration-500 ease-out"
+>
+  <div class="bg-m3-surface-container-lowest text-m3-on-surface p-4 sm:p-5 rounded-m3-xl shadow-m3-4 border border-m3-outline-variant">
+    <div class="flex items-start gap-3">
+      <div class="p-2 rounded-m3-md bg-m3-primary-container text-m3-on-primary-container shrink-0 mt-0.5 border border-m3-outline-variant">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+      </div>
+      <div class="flex-1 text-xs leading-relaxed text-m3-on-surface-variant">
+        <p class="font-bold text-m3-on-surface text-sm mb-1">Your Privacy Matters</p>
+        <p>
+          We use cookies and anonymous analytics to improve your fare calculation and booking experience. Read our 
+          <a href="/privacy/" class="text-m3-primary font-bold underline hover:text-m3-on-surface">Privacy Policy</a>.
+        </p>
+      </div>
+    </div>
+
+    <div class="mt-4 flex items-center justify-end gap-2.5">
+      <button
+        type="button"
+        id="cookie-decline-btn"
+        class="px-4 py-1.5 text-xs font-bold text-m3-on-surface bg-m3-surface-container-high hover:bg-m3-surface-container-highest border border-m3-outline-variant rounded-m3-full transition-colors"
+      >
+        Decline
+      </button>
+      <button
+        type="button"
+        id="cookie-accept-btn"
+        class="px-4 py-1.5 text-xs font-bold bg-m3-primary text-m3-on-primary hover:bg-m3-primary/90 rounded-m3-full shadow-m3-1 transition-all"
+      >
+        Accept All
+      </button>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    const banner = document.getElementById("cookie-consent-banner");
+    const acceptBtn = document.getElementById("cookie-accept-btn");
+    const declineBtn = document.getElementById("cookie-decline-btn");
+
+    if (!banner || !acceptBtn || !declineBtn) return;
+
+    const consentKey = "kalidass_cookie_consent";
+    const currentConsent = localStorage.getItem(consentKey);
+
+    if (!currentConsent) {
+      setTimeout(() => {
+        banner.classList.remove("translate-y-32", "opacity-0", "pointer-events-none");
+      }, 1000);
+    }
+
+    function dismiss(value) {
+      localStorage.setItem(consentKey, value);
+      banner.classList.add("translate-y-32", "opacity-0", "pointer-events-none");
+    }
+
+    acceptBtn.addEventListener("click", () => dismiss("accepted"));
+    declineBtn.addEventListener("click", () => dismiss("declined"));
+  })();
+</script>
