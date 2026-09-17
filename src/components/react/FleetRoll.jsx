@@ -144,7 +144,7 @@ const FleetRoll = ({ currentLang = 'en', hideHeader = false, limit }) => {
                         aria-label="Fleet Gallery"
                     >
                         {fleet.map((vehicle, index) => (
-                            <FleetCard key={index} vehicle={vehicle} isVisible={true} priority={index < 2} />
+                            <FleetCard key={index} vehicle={vehicle} isVisible={true} priority={false} />
                         ))}
                     </div>
 

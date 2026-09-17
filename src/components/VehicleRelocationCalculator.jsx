@@ -8,6 +8,7 @@ import {
   Car
 } from 'lucide-react';
 import tnBusFares from '../data/tnBusFares.json';
+import { loadGoogleMaps } from '../lib/googleMapsLoader';
 
 export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
   // Calculator State
@@ -21,38 +22,42 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
 
   // Google Maps Init
   useEffect(() => {
-    let attempts = 0;
-    const maxAttempts = 50;
-    const intervalId = setInterval(() => {
-      attempts++;
-      if (window.google && window.google.maps && window.google.maps.places) {
-        clearInterval(intervalId);
-        
-        const options = {
-          componentRestrictions: { country: "in" },
-          fields: ["geometry", "name"],
-          strictBounds: false,
-        };
+    const initPlaces = () => {
+      if (!window.google || !window.google.maps || !window.google.maps.places) return;
+      
+      const options = {
+        componentRestrictions: { country: "in" },
+        fields: ["geometry", "name"],
+        strictBounds: false,
+      };
 
-        if (pickupRef.current) {
-            const autocompletePickup = new window.google.maps.places.Autocomplete(pickupRef.current, options);
-            autocompletePickup.addListener('place_changed', () => {
-                const place = autocompletePickup.getPlace();
-                if (place.name) setPickup(place.name);
-            });
-        }
-        if (dropRef.current) {
-            const autocompleteDrop = new window.google.maps.places.Autocomplete(dropRef.current, options);
-            autocompleteDrop.addListener('place_changed', () => {
-                const place = autocompleteDrop.getPlace();
-                if (place.name) setDrop(place.name);
-            });
-        }
-      } else if (attempts >= maxAttempts) {
-        clearInterval(intervalId);
+      if (pickupRef.current && !pickupRef.current.dataset.googleAttached) {
+        const autocompletePickup = new window.google.maps.places.Autocomplete(pickupRef.current, options);
+        autocompletePickup.addListener('place_changed', () => {
+          const place = autocompletePickup.getPlace();
+          if (place.name) setPickup(place.name);
+        });
+        pickupRef.current.dataset.googleAttached = "true";
       }
-    }, 100);
-    return () => clearInterval(intervalId);
+      if (dropRef.current && !dropRef.current.dataset.googleAttached) {
+        const autocompleteDrop = new window.google.maps.places.Autocomplete(dropRef.current, options);
+        autocompleteDrop.addListener('place_changed', () => {
+          const place = autocompleteDrop.getPlace();
+          if (place.name) setDrop(place.name);
+        });
+        dropRef.current.dataset.googleAttached = "true";
+      }
+    };
+
+    if (window.google && window.google.maps && window.google.maps.places) {
+      initPlaces();
+    } else {
+      window.addEventListener('google-maps-loaded', initPlaces);
+    }
+
+    return () => {
+      window.removeEventListener('google-maps-loaded', initPlaces);
+    };
   }, []);
 
   const finalizeCalculation = (dist, duration, busFare) => {
@@ -171,6 +176,7 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
                 type="text" 
                 placeholder="e.g. Coimbatore"
                 className="w-full pl-10 pr-4 py-3 bg-m3-surface border border-m3-outline rounded-m3-md focus:border-m3-primary focus:ring-2 focus:ring-m3-primary outline-none text-sm font-medium text-m3-on-surface transition-all"
+                onFocus={() => loadGoogleMaps().catch(() => {})}
                 onChange={(e) => setPickup(e.target.value)}
               />
             </div>
@@ -187,6 +193,7 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
                 type="text" 
                 placeholder="e.g. Chennai"
                 className="w-full pl-10 pr-4 py-3 bg-m3-surface border border-m3-outline rounded-m3-md focus:border-m3-primary focus:ring-2 focus:ring-m3-primary outline-none text-sm font-medium text-m3-on-surface transition-all"
+                onFocus={() => loadGoogleMaps().catch(() => {})}
                 onChange={(e) => setDrop(e.target.value)}
               />
             </div>

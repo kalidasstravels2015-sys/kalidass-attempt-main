@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { X, MapPin, Navigation } from 'lucide-react';
+import { loadGoogleMaps } from '../lib/googleMapsLoader';
 
 const LocationPicker = ({ isOpen, onClose, onConfirm, type }) => {
     const mapRef = useRef(null);
@@ -14,12 +15,20 @@ const LocationPicker = ({ isOpen, onClose, onConfirm, type }) => {
     useEffect(() => {
         if (!isOpen) return;
 
-        // Use a timeout to ensure DOM is ready
-        const timer = setTimeout(() => {
-            initMap();
-        }, 100);
+        let isCancelled = false;
+        loadGoogleMaps()
+            .catch(() => {})
+            .then(() => {
+                if (!isCancelled) {
+                    setTimeout(() => {
+                        initMap();
+                    }, 100);
+                }
+            });
 
-        return () => clearTimeout(timer);
+        return () => {
+            isCancelled = true;
+        };
     }, [isOpen]);
 
     const initMap = () => {

@@ -56,6 +56,7 @@ User-agent: *
 Allow: /
 
 Sitemap: https://kalidasstravels.in/sitemap-index.xml
-LLMs-TXT: https://kalidasstravels.in/llms.txt
-LLMs-Full-TXT: https://kalidasstravels.in/llms-full.txt
+# LLMs-TXT: https://kalidasstravels.in/llms.txt
+# LLMs-Full-TXT: https://kalidasstravels.in/llms-full.txt
+
 

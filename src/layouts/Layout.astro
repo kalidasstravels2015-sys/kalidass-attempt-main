@@ -35,6 +35,7 @@ const pathname = Astro.url.pathname.endsWith("/")
   ? Astro.url.pathname
   : `${Astro.url.pathname}/`;
 const isHome = pathname === "/" || pathname === "";
+const isTamilPage = pathname.startsWith("/ta");
 const canonicalURL = new URL(pathname, siteUrl).href;
 
 const fullImage = ogImage
@@ -267,28 +268,6 @@ const unifiedSchemaGraph = {
 <html lang="en" class="scroll-smooth">
   <head>
 
-    <!-- Google tag (gtag.js) -->
-    <script
-      async
-      type="text/partytown"
-      src="https://www.googletagmanager.com/gtag/js?id=G-61YQMR8J7H"></script>
-    <script type="text/partytown">
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-
-      gtag("config", "G-61YQMR8J7H");
-    </script>
-    <script is:inline>
-      function initGoogleMaps() {
-        window.dispatchEvent(new CustomEvent("google-maps-loaded"));
-      }
-    </script>
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPpRgTPIkv20IMdaBqqdlz0S0FEGU5400&libraries=places&callback=initGoogleMaps&loading=async"
-      async></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#1E252D" />
@@ -311,29 +290,45 @@ const unifiedSchemaGraph = {
     <link rel="alternate" type="text/markdown" href="/llms-full.txt" title="AI / LLM Comprehensive Knowledge Base (llms-full.txt)" />
     <link rel="alternate" type="text/markdown" href="/.well-known/llms.txt" title="AI / LLM Context Summary (.well-known)" />
     <link rel="alternate" type="text/plain" href="/ai.txt" title="AI Crawler Policy" />
-    <!-- Search Engine Verification (Add real tokens when available) -->
-    <!-- <meta name="google-site-verification" content="..." /> -->
-    <!-- <meta name="msvalidate.01" content="..." /> -->
 
-    <!-- Resource Hints: Preconnect to external origins -->
+    <!-- Resource Hints: Preconnect to font origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://www.googletagmanager.com" />
-    <link rel="preconnect" href="https://maps.googleapis.com" />
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
-
-    <!-- DNS Prefetch -->
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel="dns-prefetch" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
-    <!-- Google Fonts: Plus Jakarta Sans & Noto Sans Tamil (Royal Heritage & Executive Scale) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Google Fonts: Plus Jakarta Sans (and Noto Sans Tamil on Tamil pages) with non-render-blocking display=swap -->
+    {isTamilPage ? (
+      <>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet"
+          media="print"
+          onload="this.media='all'"
+        />
+        <noscript>
+          <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet"
+          />
+        </noscript>
+      </>
+    ) : (
+      <>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet"
+          media="print"
+          onload="this.media='all'"
+        />
+        <noscript>
+          <link
+            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet"
+          />
+        </noscript>
+      </>
+    )}
 
     <title>{title}</title>
 
@@ -361,24 +356,25 @@ const unifiedSchemaGraph = {
       set:html={JSON.stringify(unifiedSchemaGraph)}
     />
 
-    <!-- Font Awesome: Defer loading -->
+    <!-- Google Material Symbols Outlined (Subsetted to used icons, 6KB woff2 & non-render-blocking) -->
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=ac_unit,account_balance,airline_seat_recline_extra,arrow_downward,arrow_forward,badge,business_center,calculate,call,chair,check_circle,checklist,close,commute,currency_rupee,directions_car,emergency,expand_more,flight_takeoff,group,handshake,home,image,keyboard_arrow_down,location_on,luggage,mail,menu,military_tech,near_me,open_in_new,payments,receipt_long,route,schedule,shield,star,task_alt,timer,translate,verified,verified_user&display=swap"
       media="print"
       onload="this.media='all'"
     />
-
-    <!-- Google Material Symbols Outlined (Official M3 Iconography) -->
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=ac_unit,account_balance,airline_seat_recline_extra,arrow_downward,arrow_forward,badge,business_center,calculate,call,chair,check_circle,checklist,close,commute,currency_rupee,directions_car,emergency,expand_more,flight_takeoff,group,handshake,home,image,keyboard_arrow_down,location_on,luggage,mail,menu,military_tech,near_me,open_in_new,payments,receipt_long,route,schedule,shield,star,task_alt,timer,translate,verified,verified_user&display=swap"
+      />
+    </noscript>
 
     <style is:global>
       /* Official Google Material Symbols M3 Configuration */
       .material-symbols-outlined {
         font-family: 'Material Symbols Outlined';
+        font-display: swap;
         font-weight: normal;
         font-style: normal;
         font-size: 24px;
@@ -784,7 +780,7 @@ const unifiedSchemaGraph = {
             <a
               href="tel:+919092303060"
               class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary text-sm font-semibold rounded-m3-full shadow-m3-1 hover:shadow-m3-2 transition-all transform hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary focus-visible:ring-offset-2 border border-white/20"
-              aria-label="Call 24/7 Helpline"
+              aria-label="Call 90923 03060 - 24/7 Helpline"
             >
               <span class="material-symbols-outlined text-[18px] text-emerald-400">call</span>
               <span class="text-m3-label-l font-bold tracking-wide">90923 03060</span>
@@ -982,7 +978,7 @@ const unifiedSchemaGraph = {
 
         <!-- Col 2: Quick Links -->
         <div class="lg:col-span-2">
-          <h4 class="text-white font-bold text-xs tracking-wider uppercase mb-3 font-sans">Quick Navigation</h4>
+          <h3 class="text-white font-bold text-xs tracking-wider uppercase mb-3 font-sans">Quick Navigation</h3>
           <ul class="space-y-2 text-xs text-m3-inverse-on-surface/80">
             <li><a href="/fleet/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Our Fleet &amp; Vehicles</a></li>
             <li><a href="/drivers/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Verified Chauffeurs</a></li>
@@ -993,7 +989,7 @@ const unifiedSchemaGraph = {
 
         <!-- Col 3: Popular Services -->
         <div class="lg:col-span-3">
-          <h4 class="text-white font-bold text-xs tracking-wider uppercase mb-3 font-sans">Our Services</h4>
+          <h3 class="text-white font-bold text-xs tracking-wider uppercase mb-3 font-sans">Our Services</h3>
           <ul class="space-y-2 text-xs text-m3-inverse-on-surface/80">
             <li><a href="/services/chennai-airport-taxi/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs font-semibold text-emerald-400">Airport Transfers (MAA)</a></li>
             <li><a href="/services/popular-destinations/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Outstation Cabs</a></li>
@@ -1005,7 +1001,7 @@ const unifiedSchemaGraph = {
 
         <!-- Col 4: 24/7 Booking Contacts -->
         <div class="lg:col-span-3">
-          <h4 class="text-white font-bold text-xs tracking-wider uppercase mb-3 font-sans">24/7 Booking Desk</h4>
+          <h3 class="text-white font-bold text-xs tracking-wider uppercase mb-3 font-sans">24/7 Booking Desk</h3>
           <p class="text-xs text-m3-inverse-on-surface/80 leading-relaxed mb-3">
             Pre-book your ride or get an instant WhatsApp quotation at any time.
           </p>

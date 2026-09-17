@@ -4,6 +4,7 @@ import { trackEvent } from '../lib/analytics';
 import LocationPicker from './LocationPicker';
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
 import { useVirtualKeyboard } from '../hooks/useVirtualKeyboard';
+import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import siteContent from '../data/siteContent.json';
 
 import tariffConfig from '../data/tariff_config.json';
@@ -431,6 +432,7 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
 
   // Handle Pin Click - Opens Map Modal
   const handlePinClick = (field) => {
+    loadGoogleMaps().catch(() => {});
     setPickerField(field);
     setLocationPickerOpen(true);
     trackEvent('location_map_opened', { field });
@@ -438,6 +440,7 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
 
   // Scroll input so the autocomplete dropdown and field stay clearly visible above the keyboard
   const handleLocationFocus = (e) => {
+    loadGoogleMaps().catch(() => {});
     const inputEl = e.currentTarget;
     if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
       scrollInputAboveKeyboard(inputEl, 240);
@@ -464,13 +467,16 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
   };
 
   // Get Current Location using Geolocation API
-  const getCurrentLocation = (field) => {
+  const getCurrentLocation = async (field) => {
     if (!navigator.geolocation) {
       alert('Geolocation is not supported by your browser');
       return;
     }
 
     setGettingLocation(field);
+    try {
+      await loadGoogleMaps();
+    } catch (_) {}
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -895,11 +901,11 @@ Please confirm availability.`;
                         });
                       }}
                       placeholder={isTa ? 'நகரம் / பகுதியை உள்ளிடவும்' : `Enter ${type} City / Area`}
-                      className="bg-transparent w-full outline-none text-sm font-semibold text-m3-on-surface pr-14 placeholder:text-m3-on-surface-variant placeholder:text-xs placeholder:font-normal"
+                      className="bg-transparent w-full outline-none text-sm font-semibold text-m3-on-surface pr-16 placeholder:text-m3-on-surface-variant placeholder:text-xs placeholder:font-normal"
                     />
 
                     {/* Right side controls: Clear Button + Map Picker Trigger */}
-                    <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
+                    <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
                       {(type === 'Pickup' ? pickup : drop) && (
                         <button
                           type="button"
@@ -907,21 +913,21 @@ Please confirm availability.`;
                             type === 'Pickup' ? setPickup('') : setDrop('');
                             setShowResult(false);
                           }}
-                          className="p-1 hover:bg-m3-surface-container-high rounded-m3-full transition-colors text-m3-on-surface-variant hover:text-m3-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
+                          className="w-7 h-7 min-w-[28px] min-h-[28px] flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-full transition-colors text-m3-on-surface-variant hover:text-m3-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
                           title="Clear text"
                           aria-label="Clear text"
                         >
-                          <X className="w-3.5 h-3.5" />
+                          <X className="w-4 h-4" />
                         </button>
                       )}
                       <button
                         type="button"
                         onClick={() => handlePinClick(type.toLowerCase())}
-                        className="p-1 hover:bg-m3-surface-container-high rounded-m3-sm transition-colors text-m3-on-surface-variant hover:text-m3-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
+                        className="w-7 h-7 min-w-[28px] min-h-[28px] flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-sm transition-colors text-m3-on-surface-variant hover:text-m3-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
                         title="Pick location on map"
                         aria-label={`Pick ${type.toLowerCase()} location on map`}
                       >
-                        <MapPin className="w-3.5 h-3.5" />
+                        <MapPin className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
@@ -1272,10 +1278,10 @@ Please confirm availability.`;
                     });
                   }}
                   placeholder={isTa ? 'இடத்தை உள்ளிடவும்' : `Enter ${type} City / Area`}
-                  className="bg-transparent w-full outline-none text-sm font-semibold text-m3-on-surface pr-14 placeholder:text-m3-on-surface-variant placeholder:text-xs placeholder:font-normal"
+                  className="bg-transparent w-full outline-none text-sm font-semibold text-m3-on-surface pr-16 placeholder:text-m3-on-surface-variant placeholder:text-xs placeholder:font-normal"
                 />
 
-                <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
+                <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
                   {(type === 'Pickup' ? pickup : drop) && (
                     <button
                       type="button"
@@ -1283,20 +1289,20 @@ Please confirm availability.`;
                         type === 'Pickup' ? setPickup('') : setDrop('');
                         setShowResult(false);
                       }}
-                      className="p-1 hover:bg-m3-surface-container-high rounded-m3-full transition-colors text-m3-on-surface-variant hover:text-m3-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
+                      className="w-7 h-7 min-w-[28px] min-h-[28px] flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-full transition-colors text-m3-on-surface-variant hover:text-m3-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
                       aria-label="Clear input"
                     >
-                      <X className="w-3.5 h-3.5" />
+                      <X className="w-4 h-4" />
                     </button>
                   )}
                   <button
                     type="button"
                     onClick={() => handlePinClick(type.toLowerCase())}
-                    className="p-1 hover:bg-m3-surface-container-high rounded-m3-sm transition-colors text-m3-on-surface-variant hover:text-m3-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
+                    className="w-7 h-7 min-w-[28px] min-h-[28px] flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-sm transition-colors text-m3-on-surface-variant hover:text-m3-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
                     title="Pick on map"
                     aria-label={`Pick ${type.toLowerCase()} location on map`}
                   >
-                    <MapPin className="w-3.5 h-3.5" />
+                    <MapPin className="w-4 h-4" />
                   </button>
                 </div>
               </div>

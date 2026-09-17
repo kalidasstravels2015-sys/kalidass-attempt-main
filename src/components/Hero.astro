@@ -26,24 +26,41 @@ const heroImageAlts: Record<string, string> = {
       class="hero-slides absolute inset-0 pointer-events-none"
       aria-hidden="true"
     >
-      {
-        heroImages.map((image, index) => (
-          <div
-            class={`hero-slide absolute inset-0 w-full h-full ${index === 0 ? "first-slide" : ""}`}
-            style={`animation-delay: ${index * 7}s;`}
-          >
-            <OptimizedImage
-              src={image}
-              alt={heroImageAlts[image] || "Kalidass Travels Chennai Cab and Outstation Taxi"}
-              class="w-full h-full object-cover object-center scale-105 opacity-80"
-              loading={index === 0 ? "eager" : "lazy"}
-              decoding={index === 0 ? "sync" : "async"}
-              fetchpriority={index === 0 ? "high" : undefined}
-              sizes="100vw"
-            />
-          </div>
-        ))
-      }
+      <div
+        class="hero-slide absolute inset-0 w-full h-full first-slide"
+        style="animation-delay: 0s;"
+      >
+        <OptimizedImage
+          src={heroImages[0]}
+          alt={heroImageAlts[heroImages[0]] || "Kalidass Travels Chennai Cab and Outstation Taxi"}
+          class="w-full h-full object-cover object-center scale-105 opacity-80"
+          loading="eager"
+          decoding="sync"
+          fetchpriority="high"
+          sizes="100vw"
+        />
+      </div>
+
+      {heroImages.length > 1 && (
+        <template id="deferred-hero-slides">
+          {heroImages.slice(1).map((image, index) => (
+            <div
+              class="hero-slide absolute inset-0 w-full h-full"
+              style={`animation-delay: ${(index + 1) * 7}s;`}
+            >
+              <OptimizedImage
+                src={image}
+                alt={heroImageAlts[image] || "Kalidass Travels Chennai Cab and Outstation Taxi"}
+                class="w-full h-full object-cover object-center scale-105 opacity-80"
+                loading="lazy"
+                decoding="async"
+                fetchpriority="low"
+                sizes="100vw"
+              />
+            </div>
+          ))}
+        </template>
+      )}
     </div>
     <!-- Deep Gradient Scrim for 100% Crisp Contrast and Legibility -->
     <div
@@ -140,3 +157,32 @@ const heroImageAlts: Record<string, string> = {
     100% { opacity: 0; transform: scale(1.04); }
   }
 </style>
+
+<script is:inline>
+  // Defer secondary hero carousel slides until after initial load and idle
+  (function() {
+    const mountDeferredSlides = function() {
+      const template = document.getElementById('deferred-hero-slides');
+      const container = document.querySelector('.hero-slides');
+      if (template && container) {
+        container.appendChild(template.content);
+      }
+    };
+    if (document.readyState === 'complete') {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(mountDeferredSlides, { timeout: 2500 });
+      } else {
+        setTimeout(mountDeferredSlides, 1200);
+      }
+    } else {
+      window.addEventListener('load', function() {
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(mountDeferredSlides, { timeout: 3000 });
+        } else {
+          setTimeout(mountDeferredSlides, 1500);
+        }
+      }, { once: true });
+    }
+  })();
+</script>
+

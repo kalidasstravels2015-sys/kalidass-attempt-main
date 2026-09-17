@@ -203,6 +203,13 @@ import tnBusFares from '../data/tnBusFares.json';
       }
     }
 
+    const triggerMaps = () => {
+      import('../lib/googleMapsLoader').then(m => m.loadGoogleMaps().then(initializeAutocomplete));
+    };
+    pickupInput?.addEventListener('focus', triggerMaps, { once: true });
+    dropInput?.addEventListener('focus', triggerMaps, { once: true });
+    window.addEventListener('google-maps-loaded', initializeAutocomplete);
+
     const intervalId = setInterval(() => {
       attempts++;
       if (window.google && window.google.maps && window.google.maps.places) {
@@ -211,7 +218,7 @@ import tnBusFares from '../data/tnBusFares.json';
       } else if (attempts >= maxAttempts) {
         clearInterval(intervalId);
       }
-    }, 100);
+    }, 200);
 
     // --- CALCULATION LOGIC ---
     const calcBtn = document.getElementById('calc-btn');
