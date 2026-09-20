@@ -47,14 +47,28 @@ const breadcrumbItems = [
   { name: "Drivers", item: "/drivers" },
   { name: driver.name, item: `/drivers/${slug}` },
 ];
+const driverPersonSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": driver.name,
+  "jobTitle": "Professional Chauffeur & Acting Driver",
+  "worksFor": {
+    "@id": "https://kalidasstravels.in/#localbusiness"
+  },
+  "description": `${driver.name} is a PVC police-verified professional driver with ${driver.experience} experience specializing in ${driver.specialty}.`,
+  "image": ogImageUrl,
+  "url": profileUrl
+};
 ---
 
 <Layout
-  title={`${driver.name} – Professional Driver | Kalidass Travels`}
-  description={`${driver.name} is a PVC verified driver with ${driver.experience} and ${driver.trips} trips, specialising in ${driver.specialty}. Book now via Kalidass Travels.`}
+  title={`${driver.name} – Verified Chauffeur & Acting Driver | Kalidass Travels`}
+  description={`${driver.name} is a PVC verified driver with ${driver.experience} experience and ${driver.trips} trips, specializing in ${driver.specialty}. Book now with Kalidass Travels Chennai.`}
+  keywords={`driver ${driver.name}, acting driver chennai, hire chauffeur chennai, ${driver.specialty} driver chennai, call driver ${driver.name}`}
   image={ogImageUrl}
   ogImage={ogImageUrl}
   type="profile"
+  schema={driverPersonSchema}
 >
   <Breadcrumbs items={breadcrumbItems} />
 

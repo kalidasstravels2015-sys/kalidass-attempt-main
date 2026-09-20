@@ -5,8 +5,9 @@ import ServiceExplainer3Step from '../../components/ServiceExplainer3Step.astro'
 import FAQAccordion from '../../components/FAQAccordion.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
 
-const title = "Outstation Cabs from Chennai | Per-KM Rates & Weekend Getaway Packages - Kalidass Travels";
+const title = "Outstation Cabs from Chennai | Round Trip & One-Way Taxi (₹14/km) – Kalidass Travels";
 const description = "Book clean AC cabs from Chennai for outstation trips and weekend getaways. Flat ₹14/km rates for Sedans, Innova Crysta, and Tempo Travellers with zero surge pricing.";
+const keywords = "outstation cabs chennai, outstation taxi from chennai, outstation cab booking chennai, chennai to pondicherry cab, car rental with driver chennai, per km taxi rate chennai, round trip cab chennai";
 
 const breadcrumbItems = [
   { name: "Home", item: "/" },
@@ -190,6 +191,7 @@ const faqSchema = {
 <Layout 
   title={title}
   description={description}
+  keywords={keywords}
   image="/images/temple/mahabalipuram-ecr-temples.webp"
   schema={[schema, faqSchema]}
 >

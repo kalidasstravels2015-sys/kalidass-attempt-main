@@ -4,8 +4,9 @@ import Breadcrumbs from '../../components/SEO/Breadcrumbs.astro';
 import FAQAccordion from '../../components/FAQAccordion.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
 
-const title = "Chennai Airport Taxi & Transfers | 5-Min Pickup & Flight Tracking";
-const description = "Chennai International Airport (MAA) taxi transfers by Kalidass Travels. Located minutes from the terminal for rapid 5-10 min dispatch, zero-delay flight tracking, Meet & Greet service, and dedicated B2B aggregator fleet partnerships.";
+const title = "Chennai Airport Taxi & Cab Booking (MAA) from ₹650";
+const description = "Chennai International Airport (MAA) taxi transfers by Kalidass Travels. Rapid 5-10 min terminal dispatch, zero-delay flight tracking, Meet & Greet, flat pricing from ₹650.";
+const keywords = "chennai airport taxi, chennai airport cab booking, maa airport pickup taxi, chennai airport drop cab, prepaid taxi chennai airport, airport transfer chennai, chennai airport cab fare";
 
 const breadcrumbItems = [
   { name: "Home", item: "/" },
@@ -192,8 +193,9 @@ const faqSchema = {
 ---
 
 <Layout 
-  title={`${title} | Kalidass Travels`}
+  title={`${title} – Kalidass Travels`}
   description={description}
+  keywords={keywords}
   image="/images/services/airport-transfer.webp"
   schema={[schema, faqSchema]}
 >

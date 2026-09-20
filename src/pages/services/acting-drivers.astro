@@ -5,8 +5,9 @@ import ServiceExplainer3Step from '../../components/ServiceExplainer3Step.astro'
 import FAQAccordion from '../../components/FAQAccordion.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
 
-const title = "Acting Driver Services in Chennai | Personal Car Chauffeur";
-const description = "Hire professional background-verified acting drivers in Chennai for your personal car. Hourly city duty, outstation round trips, night drivers & senior citizen assistance.";
+const title = "Hire Acting Drivers in Chennai (from ₹600) | Hourly & Outstation Chauffeurs";
+const description = "Hire professional background-verified acting drivers in Chennai for your personal car. Hourly city duty (₹600/4hrs), outstation round trips (₹600 bata), night drivers & senior assistance.";
+const keywords = "acting driver in chennai, hire acting driver chennai, call driver chennai, personal car driver hire chennai, hourly driver chennai, outstation acting driver chennai, temporary driver chennai";
 
 const breadcrumbItems = [
   { name: "Home", item: "/" },
@@ -135,8 +136,9 @@ const faqSchema = {
 ---
 
 <Layout 
-  title={`${title} - Kalidass Travels`}
+  title={`${title} – Kalidass Travels`}
   description={description}
+  keywords={keywords}
   image="/images/services/acting-drivers.webp"
   schema={[schema, faqSchema]}
 >

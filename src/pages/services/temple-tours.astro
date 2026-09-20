@@ -5,8 +5,9 @@ import ServiceExplainer3Step from '../../components/ServiceExplainer3Step.astro'
 import FAQAccordion from '../../components/FAQAccordion.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
 
-const title = "Chennai to Temple Tour Packages | All-Inclusive Pilgrimage Cabs";
+const title = "Chennai to Temple Tour Cab Packages | Pilgrimage Taxi & Van Hire";
 const description = "Book all-inclusive temple tour packages from Chennai to Tirupati, Kumbakonam 9 Navagraha, Thiruvannamalai Girivalam, Sabarimala, Kanchipuram & Rameswaram. AC cabs, polite satvik drivers & all tolls included.";
+const keywords = "temple tour packages from chennai, chennai to tirupati cab, kumbakonam navagraha taxi, thiruvannamalai girivalam cab, rameswaram pilgrimage taxi, sabarimala taxi chennai, south india temple tour cabs";
 
 const breadcrumbItems = [
   { name: "Home", item: "/" },
@@ -222,8 +223,9 @@ const faqSchema = {
 ---
 
 <Layout 
-  title={`${title} - Kalidass Travels`}
+  title={`${title} – Kalidass Travels`}
   description={description}
+  keywords={keywords}
   image="/images/services/temple-tours.webp"
   schema={[schema, faqSchema]}
 >

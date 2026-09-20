@@ -5,8 +5,9 @@ import ServiceExplainer3Step from '../../components/ServiceExplainer3Step.astro'
 import FAQAccordion from '../../components/FAQAccordion.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
 
-const title = "Corporate Cab & Employee Mobility Solutions in Chennai";
+const title = "Corporate Cab & Employee Transport Services in Chennai";
 const description = "Enterprise transportation in Chennai: 24/7 routed employee shift commute, monthly executive car retainers with dedicated chauffeurs, and corporate airport transfers with 100% GST billing.";
+const keywords = "corporate cab service chennai, employee transport service chennai, corporate car rental with driver chennai, monthly cab retainer chennai, office cab service chennai, staff commute cab chennai";
 
 const breadcrumbItems = [
   { name: "Home", item: "/" },
@@ -161,8 +162,9 @@ const faqSchema = {
 ---
 
 <Layout 
-  title={`${title} - Kalidass Travels`}
+  title={`${title} – Kalidass Travels`}
   description={description}
+  keywords={keywords}
   image="/images/services/corporate.webp"
   schema={[schema, faqSchema]}
 >
