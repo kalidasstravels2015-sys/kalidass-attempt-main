@@ -26,7 +26,7 @@ const { driver } = Astro.props;
 const slug = toSlug(driver.name);
 
 const site = "https://kalidasstravels.in";
-const profileUrl = `${site}/drivers/${slug}`;
+const profileUrl = `${site}/drivers/${slug}/`;
 
 const waDriverShareText = encodeURIComponent(
   `Hi! 👋 I'm *${driver.name}*, a professional driver at *Kalidass Travels*.\n\n` +
@@ -44,8 +44,8 @@ const ogImageUrl = `${site}${driver.image}`;
 
 const breadcrumbItems = [
   { name: "Home", item: "/" },
-  { name: "Drivers", item: "/drivers" },
-  { name: driver.name, item: `/drivers/${slug}` },
+  { name: "Drivers", item: "/drivers/" },
+  { name: driver.name, item: `/drivers/${slug}/` },
 ];
 const driverPersonSchema = {
   "@context": "https://schema.org",

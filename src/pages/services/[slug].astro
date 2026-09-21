@@ -155,7 +155,7 @@ const startingPrice = extractStartingPrice(service);
 
 const schemaType = isActingDriver
   ? 'Service'
-  : (isTour ? ['TouristTrip', 'TaxiService'] : 'TaxiService');
+  : (isTour ? 'TouristTrip' : 'TaxiService');
 
 const schema: Record<string, any> = {
   "@type": schemaType,
