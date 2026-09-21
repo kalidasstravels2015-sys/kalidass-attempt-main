@@ -190,9 +190,20 @@ const faqs = [
   }
 ];
 
+const tourPackageSlugs: Record<string, string> = {
+  tirupati: "tirupati-package",
+  navagraha: "navagraha-tour",
+  thiruvannamalai: "thiruvannamalai-girivalam-trip",
+  kanchipuram: "kanchipuram-temple-trip",
+  rameswaram: "rameswaram-2-days",
+  sabarimala: "sabarimala-trip",
+  chidambaram: "chidambaram-temple-trip",
+  vellore: "vellore-golden-temple",
+};
+
 const schema = {
   "@context": "https://schema.org",
-  "@type": "Service",
+  "@type": ["TaxiService", "TouristTrip"],
   "name": title,
   "description": description,
   "url": "https://kalidasstravels.in/services/temple-tours/",
@@ -205,7 +216,29 @@ const schema = {
     { "@type": "AdministrativeArea", "name": "Tamil Nadu" },
     { "@type": "AdministrativeArea", "name": "Andhra Pradesh" },
     { "@type": "AdministrativeArea", "name": "Kerala" }
-  ]
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "South India Temple Tour Cab Packages",
+    "itemListElement": tourPackages.map((pkg, idx) => ({
+      "@type": "Offer",
+      "position": idx + 1,
+      "name": pkg.name,
+      "description": `${pkg.duration} - ${pkg.highlights || ''}`,
+      "priceCurrency": "INR",
+      "price": pkg.rates?.[0]?.price ? pkg.rates[0].price.replace(/[^0-9]/g, '') : "6000",
+      "availability": "https://schema.org/InStock",
+      "url": `https://kalidasstravels.in/services/${tourPackageSlugs[pkg.id] || pkg.id}/`,
+      "seller": {
+        "@id": "https://kalidasstravels.in/#localbusiness"
+      },
+      "itemOffered": {
+        "@type": "TaxiService",
+        "name": pkg.name,
+        "serviceType": "Pilgrimage Cab Package"
+      }
+    }))
+  }
 };
 
 const faqSchema = {

@@ -11,6 +11,16 @@ const normalizedItems =
     ? items
     : [{ name: "Home", item: "/" }, ...items];
 
+const formatItemUrl = (path: string) => {
+  if (!path) return "https://kalidasstravels.in/";
+  if (path.startsWith("http")) return path;
+  const clean = path.startsWith("/") ? path : `/${path}`;
+  if (clean.endsWith("/") || clean.includes("#") || clean.includes("?")) {
+    return `https://kalidasstravels.in${clean}`;
+  }
+  return `https://kalidasstravels.in${clean}/`;
+};
+
 const schema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -18,7 +28,7 @@ const schema = {
     "@type": "ListItem",
     position: index + 1,
     name: item.name,
-    item: `https://kalidasstravels.in${item.item}`,
+    item: formatItemUrl(item.item),
   })),
 };
 ---

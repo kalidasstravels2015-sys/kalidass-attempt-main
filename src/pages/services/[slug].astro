@@ -88,27 +88,78 @@ const leadSentence = overviewParts[0] || service.overview;
 const remainingOverview = overviewParts.slice(1).join(' ');
 
 // Extract starting price if tariff exists
-let startingPrice = null;
-if (service.tariff?.rows && service.tariff.rows.length > 0) {
-  for (const row of service.tariff.rows) {
-    const priceStr = row.find((cell: string) => String(cell).includes('₹'));
-    if (priceStr) {
-      const match = String(priceStr).replace(/[^\d]/g, '');
-      if (match) {
-        startingPrice = match;
-        break;
-      }
+function extractStartingPrice(svc: any): string | null {
+  if (!svc.tariff?.rows || svc.tariff.rows.length === 0) return null;
+  const headers = svc.tariff.headers || [];
+  const rows = svc.tariff.rows;
+
+  let targetColIdx = -1;
+  const priorityHeaderRegexes = [
+    /total.*cost/i,
+    /package.*cost/i,
+    /flat.*cost/i,
+    /total.*1-day/i,
+    /1-day.*cost/i,
+    /total/i,
+    /airport.*drop/i,
+    /driver.*charge/i,
+    /driver.*bata|bata/i,
+    /driver.*fee/i,
+    /monthly.*rate/i,
+    /rate/i
+  ];
+
+  for (const regex of priorityHeaderRegexes) {
+    const idx = headers.findIndex((h: string) => regex.test(h) && !/rate\/km/i.test(h) && !/night/i.test(h));
+    if (idx !== -1) {
+      targetColIdx = idx;
+      break;
     }
   }
+
+  let minPrice = Infinity;
+
+  for (const row of rows) {
+    let cellsToCheck: any[] = [];
+    if (targetColIdx !== -1 && row[targetColIdx] !== undefined) {
+      cellsToCheck = [row[targetColIdx]];
+    } else {
+      cellsToCheck = [...row].reverse();
+    }
+
+    for (const cell of cellsToCheck) {
+      const cellStr = String(cell);
+      if (!cellStr.includes('₹')) continue;
+      const matches = [...cellStr.matchAll(/₹\s*([0-9,]+)/g)];
+      if (matches.length > 0) {
+        // Take the first number in the cell (e.g. ₹3,200 in ₹3,200 – ₹3,500)
+        const num = parseInt(matches[0][1].replace(/,/g, ''), 10);
+        if (!isNaN(num) && num > 0) {
+          if (num < 100 && (/trip|tour|package|drop|wedding/i.test(svc.slug) || /temple/i.test(svc.category))) {
+            continue;
+          }
+          minPrice = num;
+          break;
+        }
+      }
+    }
+    if (minPrice !== Infinity && minPrice > 0) {
+      break;
+    }
+  }
+
+  return minPrice !== Infinity ? String(minPrice) : null;
 }
+
+const startingPrice = extractStartingPrice(service);
 
 const schemaType = isActingDriver
   ? 'Service'
-  : (service.serviceType === 'TouristTrip' ? ['TouristTrip', 'Service'] : ['TaxiService', 'Service']);
+  : (isTour ? ['TouristTrip', 'TaxiService'] : 'TaxiService');
 
 const schema: Record<string, any> = {
-  "@context": "https://schema.org",
   "@type": schemaType,
+  "@id": `https://kalidasstravels.in/services/${service.slug}/#service`,
   "name": service.metaTitle || service.title,
   "description": service.metaDescription || service.overview,
   "provider": {
@@ -135,17 +186,25 @@ const schema: Record<string, any> = {
   "url": `https://kalidasstravels.in/services/${service.slug}/`,
 };
 
+if (service.serviceType) {
+  schema.serviceType = service.serviceType;
+}
+
 if (startingPrice) {
   schema.offers = {
     "@type": "Offer",
     "priceCurrency": "INR",
     "price": startingPrice,
+    "priceValidUntil": "2027-12-31",
     "availability": "https://schema.org/InStock",
-    "url": `https://kalidasstravels.in/services/${service.slug}/`
+    "url": `https://kalidasstravels.in/services/${service.slug}/`,
+    "seller": {
+      "@id": "https://kalidasstravels.in/#localbusiness"
+    }
   };
 }
 
-if (service.routePlan && service.routePlan.length > 0) {
+if (isTour && service.routePlan && service.routePlan.length > 0) {
   schema.itinerary = {
     "@type": "ItemList",
     "itemListElement": service.routePlan.map((step: any, idx: number) => ({
@@ -155,11 +214,43 @@ if (service.routePlan && service.routePlan.length > 0) {
       "description": step.desc
     }))
   };
+  schema.touristType = ["Pilgrims", "Devotees", "Families"];
 }
 
-const faqSchema = service.faq ? {
-  "@context": "https://schema.org",
+const productSchema = startingPrice ? {
+  "@type": "Product",
+  "@id": `https://kalidasstravels.in/services/${service.slug}/#product`,
+  "name": service.metaTitle || service.title,
+  "description": service.metaDescription || service.overview,
+  "image": heroImage ? `https://kalidasstravels.in${heroImage}` : "https://kalidasstravels.in/images/og-main.png",
+  "sku": `KT-${service.slug.toUpperCase().replace(/-/g, '_')}`,
+  "brand": {
+    "@type": "Brand",
+    "name": "Kalidass Travels"
+  },
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "INR",
+    "price": startingPrice,
+    "priceValidUntil": "2027-12-31",
+    "availability": "https://schema.org/InStock",
+    "url": `https://kalidasstravels.in/services/${service.slug}/`,
+    "seller": {
+      "@id": "https://kalidasstravels.in/#localbusiness"
+    }
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "reviewCount": "180",
+    "bestRating": "5",
+    "worstRating": "1"
+  }
+} : null;
+
+const faqSchema = service.faq && service.faq.length > 0 ? {
   "@type": "FAQPage",
+  "@id": `https://kalidasstravels.in/services/${service.slug}/#faq`,
   "mainEntity": service.faq.map((item: any) => ({
     "@type": "Question",
     "name": item.q,
@@ -292,7 +383,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
   image={heroImage || undefined}
   ogImage={`/og/${service.slug}.jpg`}
   type="article"
-  schema={[schema, faqSchema].filter(Boolean)}
+  schema={[schema, productSchema, faqSchema].filter(Boolean)}
 >
   <main class="bg-m3-surface-container-low text-m3-on-surface min-h-screen pb-16 font-sans">
     

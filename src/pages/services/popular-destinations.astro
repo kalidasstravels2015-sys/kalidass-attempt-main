@@ -159,7 +159,7 @@ const faqs = [
 
 const schema = {
   "@context": "https://schema.org",
-  "@type": "Service",
+  "@type": "TaxiService",
   "name": title,
   "description": description,
   "url": "https://kalidasstravels.in/services/popular-destinations/",
@@ -171,7 +171,28 @@ const schema = {
     { "@type": "City", "name": "Chennai" },
     { "@type": "AdministrativeArea", "name": "Tamil Nadu" },
     { "@type": "AdministrativeArea", "name": "Puducherry" }
-  ]
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Outstation Cab Packages from Chennai",
+    "itemListElement": packageTariff.map((pkg, idx) => ({
+      "@type": "Offer",
+      "position": idx + 1,
+      "name": pkg.name,
+      "description": `${pkg.duration} - ${pkg.route}`,
+      "priceCurrency": "INR",
+      "price": pkg.rates?.[0]?.price ? pkg.rates[0].price.replace(/[^0-9]/g, '') : "2500",
+      "availability": "https://schema.org/InStock",
+      "seller": {
+        "@id": "https://kalidasstravels.in/#localbusiness"
+      },
+      "itemOffered": {
+        "@type": "TaxiService",
+        "name": pkg.name,
+        "serviceType": "Outstation Cab Package"
+      }
+    }))
+  }
 };
 
 const faqSchema = {

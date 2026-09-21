@@ -67,6 +67,10 @@ const faqs = [
   set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "FAQPage",
+    "@id": "https://kalidasstravels.in/#faq",
+    isPartOf: {
+      "@id": "https://kalidasstravels.in/#webpage"
+    },
     mainEntity: faqs.map(faq => ({
       "@type": "Question",
       name: faq.q,

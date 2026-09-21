@@ -5,16 +5,16 @@ import serviceDetails from "../data/serviceDetails.json";
 // 1. Temple Trips (Strictly religious/pilgrimage)
 const templeTripsSlugs = [
   "tirupati-package",
+  "navagraha-tour",
   "thiruvannamalai-girivalam-trip",
   "rameswaram-2-days",
-  "navagraha-tour",
   "chidambaram-temple-trip",
   "sabarimala-trip",
 ];
 
-const templeTrips = serviceDetails.filter((service) =>
-  templeTripsSlugs.includes(service.slug),
-);
+const templeTrips = templeTripsSlugs
+  .map((slug) => serviceDetails.find((service) => service.slug === slug))
+  .filter(Boolean);
 
 // Image Mapping
 const tourImages: Record<string, string> = {
@@ -22,13 +22,8 @@ const tourImages: Record<string, string> = {
   "thiruvannamalai-girivalam-trip": "/images/temple/thiruvannamalai-girivalam.webp",
   "rameswaram-2-days": "/images/temple/rameswaram.webp",
   "navagraha-tour": "/images/temple/navagraha.webp",
-  "kanchipuram-temple-trip": "/images/temple/kanchipuram-temple.webp",
   "chidambaram-temple-trip": "/images/temple/chidambaram-natarajar-temple.webp",
   "sabarimala-trip": "/images/temple/sabarimala-temple.webp",
-  "pondicherry-one-day-trip": "/images/temple/pondicherry.webp",
-  "vellore-golden-temple": "/images/temple/vellore-golden.webp",
-  "mahabalipuram-ecr-temple-route": "/images/temple/mahabalipuram-ecr-temples.webp",
-  "one-day-chennai-city-tour": "/images/temple/chennai-city.webp",
 };
 
 const tourImageAlts: Record<string, string> = {
@@ -38,9 +33,105 @@ const tourImageAlts: Record<string, string> = {
   "navagraha-tour": "Complete Navagraha temple tour package Kumbakonam taxi",
   "chidambaram-temple-trip": "Chidambaram Nataraja Temple spiritual visit taxi service",
   "sabarimala-trip": "Sabarimala Mandala Pooja pilgrimage taxi package from Chennai",
-  "pondicherry-one-day-trip": "Pondicherry one day sightseeing trip from Chennai by car",
-  "mahabalipuram-ecr-temple-route": "Mahabalipuram and ECR temple heritage tour taxi",
-  "one-day-chennai-city-tour": "Chennai local city sightseeing day tour cab service",
+};
+
+// Clarity & Conversion Metadata for Temple Trips
+interface TourMeta {
+  cleanTitle: string;
+  badge: string;
+  durationLabel: string;
+  startingPrice: string;
+  carType: string;
+  highlights: string[];
+  inclusionPill: string;
+  whatsappMsg: string;
+}
+
+const templePackageMeta: Record<string, TourMeta> = {
+  "tirupati-package": {
+    cleanTitle: "Chennai to Tirupati Balaji Darshan",
+    badge: "Most Popular",
+    durationLabel: "1 Day (320 km Round Trip)",
+    startingPrice: "₹6,000",
+    carType: "Sedan Flat Fare",
+    highlights: [
+      "04:00 AM Doorstep Chennai pickup & safe night return",
+      "Tirumala Balaji + Sri Padmavathi Ammavari Temple",
+      "Alipiri check guidance, FASTag tolls & AP Permit included"
+    ],
+    inclusionPill: "All Tolls, AP Permit & Driver Bata Included",
+    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Tirupati Balaji Car Package."
+  },
+  "navagraha-tour": {
+    cleanTitle: "Kumbakonam 9 Navagraha Temples",
+    badge: "All 9 Temples Covered",
+    durationLabel: "2 Days / 1 Night (750 km)",
+    startingPrice: "₹8,600",
+    carType: "Sedan Flat Fare",
+    highlights: [
+      "All 9 planetary temples sequenced without backtracking",
+      "Pariharam timings planned to avoid afternoon closures",
+      "2 Days Driver Bata, fuel & highway tolls fully included"
+    ],
+    inclusionPill: "All Tolls, Fuel & 2-Day Driver Bata Included",
+    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Kumbakonam 9 Navagraha 2-Day Tour."
+  },
+  "thiruvannamalai-girivalam-trip": {
+    cleanTitle: "Thiruvannamalai Girivalam & Temple",
+    badge: "Pournami Special",
+    durationLabel: "1 Day / Pournami Night (400 km)",
+    startingPrice: "₹6,500",
+    carType: "Sedan Flat Fare",
+    highlights: [
+      "Arunachaleswarar Agni Lingam temple darshan",
+      "14 km Girivalam car standby for elders & family",
+      "Experienced night highway driver & NH tolls included"
+    ],
+    inclusionPill: "Girivalam Car Standby & All Tolls Included",
+    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Thiruvannamalai Girivalam Tour."
+  },
+  "rameswaram-2-days": {
+    cleanTitle: "Chennai to Rameswaram & Dhanushkodi",
+    badge: "Char Dham Sthalam",
+    durationLabel: "2 Days / 1 Night (1,200 km)",
+    startingPrice: "₹15,500",
+    carType: "Sedan Flat Fare",
+    highlights: [
+      "Ramanathaswamy Temple & 22 Holy Theerthams bath",
+      "Scenic Pamban ocean bridge & Dhanushkodi Ram Setu",
+      "Dr. APJ Abdul Kalam Memorial visit included"
+    ],
+    inclusionPill: "All Highway Tolls & 2-Day Bata Included",
+    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Rameswaram 2-Day Pilgrimage Package."
+  },
+  "chidambaram-temple-trip": {
+    cleanTitle: "Chidambaram Natarajar & Pichavaram",
+    badge: "Pancha Bhoota Sthalam",
+    durationLabel: "1 Day (450 km Round Trip)",
+    startingPrice: "₹7,400",
+    carType: "Sedan Flat Fare",
+    highlights: [
+      "Thillai Natarajar Temple Spatika Lingam puja",
+      "Pichavaram Mangrove forest motorboat ride visit",
+      "Scenic East Coast Road (ECR) drive with all tolls"
+    ],
+    inclusionPill: "ECR Tolls, Parking & Driver Bata Included",
+    whatsappMsg: "Hi Kalidass Travels, I want to book the Chidambaram & Pichavaram Tour."
+  },
+  "sabarimala-trip": {
+    cleanTitle: "Chennai to Sabarimala Yatra",
+    badge: "Mandala Season",
+    durationLabel: "3 Days / 2 Nights (1,350 km)",
+    startingPrice: "₹15,900",
+    carType: "Sedan Flat Fare",
+    highlights: [
+      "Satvik teetotaler driver & devotional audio system",
+      "Direct drop to Nilakkal / Pamba base camp",
+      "Kerala State Border Permit & 3 Days driver allowance"
+    ],
+    inclusionPill: "Kerala Road Permit, Tolls & Bata Included",
+    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Sabarimala 3-Day Package."
+  }
 };
 ---
 
@@ -48,67 +139,119 @@ const tourImageAlts: Record<string, string> = {
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Section Header -->
     <div class="text-center max-w-3xl mx-auto mb-8">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
+        <span class="material-symbols-outlined text-[15px] text-m3-primary">directions_car</span>
+        <span>All-Inclusive Pilgrimage Cabs</span>
+      </div>
       <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
         Popular <span class="text-m3-primary">Temple Trips</span>
       </h2>
       <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant font-normal max-w-2xl mx-auto leading-relaxed mb-6 font-sans">
-        Sacred pilgrimage packages with experienced drivers who know temple timings, darshan routes, and peaceful stops.
+        Sanitized AC cabs with experienced, satvik drivers who know temple opening timings, darshan queues, and peaceful food stops. All tolls and permits included.
       </p>
     </div>
 
     <!-- Material 3 Tour Cards Grid -->
     <div class="flex overflow-x-auto gap-4 sm:gap-6 px-1 pb-4 scrollbar-hide snap-x md:grid md:grid-cols-3 md:overflow-visible">
-      {templeTrips.map((tour) => (
-        <a
-          href={`/services/${tour.slug}/`}
-          class="block flex-none w-72 md:w-auto snap-center bg-m3-surface rounded-m3-xl shadow-m3-1 hover:shadow-m3-3 border border-m3-outline-variant overflow-hidden group cursor-pointer transform hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
-        >
-          <div>
-            <!-- Card Media Container -->
-            <div class="h-36 sm:h-40 overflow-hidden relative bg-m3-surface-container-high skeleton-shimmer">
-              <OptimizedImage
-                src={tourImages[tour.slug] || "/images/temple/tirupati-balaji.webp"}
-                alt={tourImageAlts[tour.slug] || tour.title}
-                class="w-full h-full object-cover group-hover:scale-105 transition duration-500 relative z-10"
-                sizes="(max-width: 768px) 320px, 33vw"
-              />
-              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent z-10"></div>
-              
-              <!-- Pilgrimage Badge -->
-              <span class="absolute top-3 left-3 bg-slate-950/85 backdrop-blur-md border border-white/20 text-white text-micro font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-m3-full shadow-sm z-20">
-                PILGRIMAGE
-              </span>
+      {templeTrips.map((tour) => {
+        if (!tour) return null;
+        const meta = templePackageMeta[tour.slug] || {
+          cleanTitle: tour.title,
+          badge: "Temple Tour",
+          durationLabel: tour.duration || "1 Day",
+          startingPrice: "₹6,000",
+          carType: "Sedan",
+          highlights: [tour.overview?.slice(0, 80) + "..."],
+          inclusionPill: "All Tolls & Driver Bata Included",
+          whatsappMsg: `Hi Kalidass Travels, I want to book the ${tour.title}.`
+        };
 
-              {tour.duration && (
-                <span class="absolute bottom-3 left-3 bg-white/90 backdrop-blur-md text-slate-800 text-badge font-semibold px-2.5 py-0.5 rounded-m3-xs shadow-sm z-20">
-                  {tour.duration}
+        return (
+          <div class="flex-none w-80 sm:w-auto snap-center bg-m3-surface rounded-m3-xl shadow-m3-1 hover:shadow-m3-3 border border-m3-outline-variant overflow-hidden group transition-all duration-300 flex flex-col justify-between">
+            <div>
+              <!-- Card Media Container -->
+              <a href={`/services/${tour.slug}/`} class="block h-44 sm:h-48 overflow-hidden relative bg-m3-surface-container-high skeleton-shimmer cursor-pointer" aria-label={`View ${meta.cleanTitle} Itinerary`}>
+                <OptimizedImage
+                  src={tourImages[tour.slug] || "/images/temple/tirupati-balaji.webp"}
+                  alt={tourImageAlts[tour.slug] || meta.cleanTitle}
+                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500 relative z-10"
+                  sizes="(max-width: 768px) 320px, 33vw"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent z-10"></div>
+                
+                <!-- Differentiating USP Badge -->
+                <span class="absolute top-3 left-3 bg-slate-950/85 backdrop-blur-md border border-white/20 text-white text-[11px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-m3-full shadow-sm z-20">
+                  {meta.badge}
                 </span>
-              )}
+
+                <!-- Duration & Distance Chip -->
+                <span class="absolute bottom-3 left-3 inline-flex items-center gap-1.5 bg-white/95 backdrop-blur-md text-slate-900 text-xs font-semibold px-2.5 py-1 rounded-m3-sm shadow-sm z-20">
+                  <span class="material-symbols-outlined text-[14px] text-m3-primary" aria-hidden="true">schedule</span>
+                  <span>{meta.durationLabel}</span>
+                </span>
+              </a>
+
+              <!-- Card Content -->
+              <div class="p-4 sm:p-5">
+                <a href={`/services/${tour.slug}/`} class="block">
+                  <h3 class="font-bold text-base sm:text-lg text-m3-on-surface leading-snug group-hover:text-m3-primary transition-colors font-heading mb-3 min-h-[44px]">
+                    {meta.cleanTitle}
+                  </h3>
+                </a>
+
+                <!-- 3 Clear Value Checkpoints -->
+                <ul class="space-y-2 mb-3.5 text-xs text-m3-on-surface-variant font-sans" role="list">
+                  {meta.highlights.map((item) => (
+                    <li class="flex items-start gap-2 leading-relaxed">
+                      <span class="material-symbols-outlined text-[16px] text-emerald-600 shrink-0 mt-0.5" aria-hidden="true">check_circle</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <!-- Inclusion Guarantee Tag (Eliminates Darshan Ticket Misunderstanding) -->
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-m3-sm bg-m3-surface-container-high text-[11px] font-semibold text-m3-on-surface-variant w-full">
+                  <span class="material-symbols-outlined text-[14px] text-m3-primary shrink-0" aria-hidden="true">verified</span>
+                  <span class="truncate">{meta.inclusionPill}</span>
+                </div>
+              </div>
             </div>
 
-            <!-- Card Content -->
-            <div class="p-4 sm:p-5">
-              <h3 class="font-bold text-base sm:text-lg text-m3-on-surface mb-1.5 line-clamp-1 group-hover:text-m3-primary transition-colors font-heading">
-                {tour.title}
-              </h3>
-              <p class="text-xs sm:text-sm text-m3-on-surface-variant mb-4 line-clamp-2 leading-relaxed font-normal">
-                {tour.overview}
-              </p>
+            <!-- Material Action Footer with Transparent Onyx Rate & Dual CTAs -->
+            <div class="px-4 sm:px-5 pb-4 sm:pb-5 pt-3 border-t border-m3-outline-variant/60 flex items-center justify-between bg-m3-surface-container-lowest">
+              <div>
+                <span class="block text-[10px] uppercase tracking-wider text-m3-on-surface-variant font-medium">Starts From</span>
+                <div class="flex items-baseline gap-1">
+                  <span class="text-xl sm:text-2xl font-extrabold text-m3-on-surface tracking-tight font-heading">{meta.startingPrice}</span>
+                  <span class="text-[11px] font-medium text-m3-on-surface-variant">({meta.carType})</span>
+                </div>
+              </div>
+
+              <!-- Action Links -->
+              <div class="flex items-center gap-2">
+                <a
+                  href={`https://wa.me/919092303060?text=${encodeURIComponent(meta.whatsappMsg)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1 px-3 py-1.5 bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#128C7E] font-bold text-xs rounded-m3-full transition-colors border border-[#25D366]/30"
+                  aria-label={`Book ${meta.cleanTitle} via WhatsApp`}
+                >
+                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+                  <span>Book</span>
+                </a>
+                <a
+                  href={`/services/${tour.slug}/`}
+                  class="inline-flex items-center gap-1 px-3 py-1.5 bg-m3-primary hover:bg-crimson-800 text-m3-on-primary font-bold text-xs rounded-m3-full transition-colors shadow-m3-1"
+                  aria-label={`View itinerary for ${meta.cleanTitle}`}
+                >
+                  <span>Itinerary</span>
+                  <span class="material-symbols-outlined text-[14px]" aria-hidden="true">arrow_forward</span>
+                </a>
+              </div>
             </div>
           </div>
-
-          <!-- Material Action Footer -->
-          <div class="px-4 sm:px-5 pb-4 sm:pb-5 pt-3 border-t border-m3-outline-variant/50 flex items-center justify-between">
-            <span class="text-xs font-semibold text-m3-on-surface-variant">
-              Complete Package
-            </span>
-            <span class="inline-flex items-center gap-1.5 text-m3-label-m font-bold text-m3-primary group-hover:underline transition-colors">
-              <span>View Itinerary</span>
-              <span class="material-symbols-outlined text-[16px] transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
-            </span>
-          </div>
-        </a>
-      ))}
+        );
+      })}
     </div>
 
     <!-- View All CTA -->
@@ -118,7 +261,7 @@ const tourImageAlts: Record<string, string> = {
         class="inline-flex items-center gap-2 px-6 py-2.5 rounded-m3-full bg-m3-surface border border-m3-outline text-m3-on-surface text-m3-label-l font-bold hover:bg-m3-surface-container-high shadow-m3-1 transition-all"
       >
         <span>View All Temple Tour Packages</span>
-        <span class="material-symbols-outlined text-[18px] text-m3-primary">arrow_forward</span>
+        <span class="material-symbols-outlined text-[18px] text-m3-primary" aria-hidden="true">arrow_forward</span>
       </a>
     </div>
   </div>
@@ -133,3 +276,4 @@ const tourImageAlts: Record<string, string> = {
     display: none;
   }
 </style>
+

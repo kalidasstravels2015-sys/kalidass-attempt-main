@@ -50,8 +50,14 @@ const organizationSchema = {
   "@type": "Organization",
   "@id": "https://kalidasstravels.in/#organization",
   name: "Kalidass Travels",
-  alternateName: "Kalidass Travel Agency",
+  alternateName: [
+    "Kalidass Travel Agency",
+    "Kalidass Travels Chennai",
+    "Kalidass Tours & Travels"
+  ],
   url: "https://kalidasstravels.in/",
+  taxID: "33COVPM0531D1Z4",
+  foundingDate: "2019",
   logo: {
     "@type": "ImageObject",
     "@id": "https://kalidasstravels.in/#logo",
@@ -73,15 +79,37 @@ const organizationSchema = {
   ],
 };
 
+const localBusinessReviews = (siteContent.reviews || []).slice(0, 5).map((r: any) => ({
+  "@type": "Review",
+  "author": {
+    "@type": "Person",
+    "name": r.name,
+  },
+  "reviewRating": {
+    "@type": "Rating",
+    "ratingValue": String(r.rating || 5),
+    "bestRating": "5",
+    "worstRating": "1",
+  },
+  "reviewBody": r.quote,
+}));
+
 const localBusinessSchema = {
-  "@type": ["TaxiService", "TravelAgency"],
+  "@type": ["TravelAgency", "AutoRental", "TaxiService"],
   "@id": "https://kalidasstravels.in/#localbusiness",
   name: "Kalidass Travels",
+  alternateName: "Kalidass Travels Chennai",
   image: "https://kalidasstravels.in/images/logo.webp",
   description: description || "Premium taxi, temple tour, and corporate cab services across Chennai and South India.",
   telephone: "+919092303060",
   email: "kalidasstravels2015@gmail.com",
+  taxID: "33COVPM0531D1Z4",
+  foundingDate: "2019",
   url: "https://kalidasstravels.in/",
+  hasMap: "https://maps.google.com/?q=Kalidass+Travels+Medavakkam+Chennai",
+  priceRange: "₹₹",
+  currenciesAccepted: "INR",
+  paymentAccepted: "Cash, UPI, Credit Card, Net Banking",
   parentOrganization: {
     "@id": "https://kalidasstravels.in/#organization",
   },
@@ -110,10 +138,13 @@ const localBusinessSchema = {
     },
     {
       "@type": "AdministrativeArea",
-      name: "South India",
+      name: "Andhra Pradesh",
+    },
+    {
+      "@type": "AdministrativeArea",
+      name: "Puducherry",
     },
   ],
-  priceRange: "₹₹",
   openingHoursSpecification: [
     {
       "@type": "OpeningHoursSpecification",
@@ -130,43 +161,140 @@ const localBusinessSchema = {
       closes: "23:59",
     },
   ],
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "4.9",
+    reviewCount: "1250",
+    bestRating: "5",
+    worstRating: "1",
+  },
+  review: localBusinessReviews,
   hasOfferCatalog: {
     "@type": "OfferCatalog",
-    name: "Travel Services",
+    name: "Travel & Taxi Services",
     itemListElement: [
       {
         "@type": "Offer",
         itemOffered: {
-          "@type": "Service",
-          name: "Airport Transfers",
+          "@type": "TaxiService",
+          name: "Chennai Airport Taxi Transfers",
+          description: "Rapid 5-10 min MAA airport taxi dispatch with flight delay tracking and zero surge pricing.",
+          url: "https://kalidasstravels.in/services/chennai-airport-taxi/",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "TaxiService",
+          name: "Outstation Cabs from Chennai",
+          description: "Round trip and one-way outstation cabs from ₹14/km across Tamil Nadu, Pondicherry, and Karnataka.",
+          url: "https://kalidasstravels.in/services/popular-destinations/",
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "TaxiService",
+          name: "South India Temple Tour Cab Packages",
+          serviceType: "Temple Pilgrimage Taxi Packages",
+          description: "All-inclusive darshan packages to Tirupati, Navagraha, Thiruvannamalai, Rameswaram, and Sabarimala.",
+          url: "https://kalidasstravels.in/services/temple-tours/",
+        },
+      },
+      {
+        "@type": "Offer",
+        name: "Chennai to Tirupati Balaji Darshan Cab Package",
+        price: "6000",
+        priceCurrency: "INR",
+        url: "https://kalidasstravels.in/services/tirupati-package/",
+        description: "Doorstep 1-Day Chennai to Tirupati car package covering sanitized AC Sedan, tolls, AP border permit, and driver bata.",
+        itemOffered: {
+          "@type": "TaxiService",
+          name: "Chennai to Tirupati Balaji Darshan Cab Package",
+          serviceType: "Pilgrimage Taxi Package",
+        },
+      },
+      {
+        "@type": "Offer",
+        name: "Kumbakonam 9 Navagraha Temples Tour Cab Package",
+        price: "8600",
+        priceCurrency: "INR",
+        url: "https://kalidasstravels.in/services/navagraha-tour/",
+        description: "2 Days / 1 Night complete 9 planetary temples tour around Kumbakonam with tolls, fuel, and driver bata included.",
+        itemOffered: {
+          "@type": "TaxiService",
+          name: "Kumbakonam 9 Navagraha Temples Tour Cab Package",
+          serviceType: "Pilgrimage Taxi Package",
+        },
+      },
+      {
+        "@type": "Offer",
+        name: "Chennai to Thiruvannamalai Girivalam Cab Package",
+        price: "6500",
+        priceCurrency: "INR",
+        url: "https://kalidasstravels.in/services/thiruvannamalai-girivalam-trip/",
+        description: "Arunachaleswarar temple darshan and 14 km Pournami Girivalam car standby package with night highway expert driver.",
+        itemOffered: {
+          "@type": "TaxiService",
+          name: "Chennai to Thiruvannamalai Girivalam Cab Package",
+          serviceType: "Pilgrimage Taxi Package",
+        },
+      },
+      {
+        "@type": "Offer",
+        name: "Chennai to Rameswaram & Dhanushkodi Cab Package",
+        price: "15500",
+        priceCurrency: "INR",
+        url: "https://kalidasstravels.in/services/rameswaram-2-days/",
+        description: "2 Days / 1 Night pilgrimage covering Ramanathaswamy Temple, 22 Holy Theerthams, Pamban Bridge, and Dhanushkodi.",
+        itemOffered: {
+          "@type": "TaxiService",
+          name: "Chennai to Rameswaram & Dhanushkodi Cab Package",
+          serviceType: "Pilgrimage Taxi Package",
+        },
+      },
+      {
+        "@type": "Offer",
+        name: "Chennai to Chidambaram Natarajar & Pichavaram Cab Package",
+        price: "7400",
+        priceCurrency: "INR",
+        url: "https://kalidasstravels.in/services/chidambaram-temple-trip/",
+        description: "1 Day coastal pilgrimage to Thillai Natarajar Temple and Pichavaram Mangrove forest boating with all tolls included.",
+        itemOffered: {
+          "@type": "TaxiService",
+          name: "Chennai to Chidambaram Natarajar & Pichavaram Cab Package",
+          serviceType: "Pilgrimage Taxi Package",
+        },
+      },
+      {
+        "@type": "Offer",
+        name: "Chennai to Sabarimala Pilgrim Yatra Cab Package",
+        price: "15900",
+        priceCurrency: "INR",
+        url: "https://kalidasstravels.in/services/sabarimala-trip/",
+        description: "3 Days / 2 Nights Sabarimala Mandala pooja yatra to Pamba/Nilakkal with satvik driver and Kerala interstate road permit.",
+        itemOffered: {
+          "@type": "TaxiService",
+          name: "Chennai to Sabarimala Pilgrim Yatra Cab Package",
+          serviceType: "Pilgrimage Taxi Package",
         },
       },
       {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Outstation Cabs",
+          name: "Corporate Employee Transport (ETS)",
+          description: "24/7 routed shift commute transport and monthly executive car retainers.",
+          url: "https://kalidasstravels.in/services/corporate/",
         },
       },
       {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "Temple Tours",
-        },
-      },
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Corporate Mobility",
-        },
-      },
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Acting Drivers",
+          name: "Acting Driver Services in Chennai",
+          description: "Police background-verified hourly and outstation chauffeurs for your personal car.",
+          url: "https://kalidasstravels.in/services/acting-drivers/",
         },
       },
     ],
@@ -246,15 +374,46 @@ const siteNavigationSchema = {
   ],
 };
 
+const webPageSchema = {
+  "@type": isHome ? "WebPage" : (type === "article" ? "ItemPage" : "WebPage"),
+  "@id": `${canonicalURL}#webpage`,
+  url: canonicalURL,
+  name: title,
+  description: description,
+  isPartOf: {
+    "@id": "https://kalidasstravels.in/#website",
+  },
+  about: {
+    "@id": "https://kalidasstravels.in/#localbusiness",
+  },
+  primaryImageOfPage: {
+    "@type": "ImageObject",
+    url: fullImage,
+  },
+  inLanguage: isTamilPage ? "ta-IN" : "en-IN",
+};
+
+// Helper to strip nested @context inside @graph items to prevent JSON-LD syntax warnings
+const cleanSchemaItem = (item: any) => {
+  if (!item || typeof item !== "object") return item;
+  const { "@context": _, ...clean } = item;
+  return clean;
+};
+
 // Assemble unified @graph Knowledge Graph
-const graphItems: any[] = [organizationSchema, localBusinessSchema, websiteSchema, siteNavigationSchema];
+const graphItems: any[] = [
+  organizationSchema,
+  localBusinessSchema,
+  websiteSchema,
+  webPageSchema,
+  siteNavigationSchema,
+];
 
 if (schema) {
   if (Array.isArray(schema)) {
-    graphItems.push(...schema);
+    graphItems.push(...schema.filter(Boolean).map(cleanSchemaItem));
   } else if (typeof schema === "object") {
-    const { "@context": _, ...cleanSchema } = schema as any;
-    graphItems.push(cleanSchema);
+    graphItems.push(cleanSchemaItem(schema));
   }
 }
 
