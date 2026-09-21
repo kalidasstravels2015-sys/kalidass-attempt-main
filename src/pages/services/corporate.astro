@@ -133,8 +133,11 @@ const faqs = [
 
 const schema = {
   "@context": "https://schema.org",
-  "@type": "Service",
+  "@type": "TaxiService",
+  "@id": "https://kalidasstravels.in/services/corporate/#service",
   "name": title,
+  "serviceType": "Corporate Mobility & Employee Transport",
+  "providerMobility": "dynamic",
   "description": description,
   "url": "https://kalidasstravels.in/services/corporate/",
   "image": "https://kalidasstravels.in/images/services/corporate.webp",
@@ -144,12 +147,129 @@ const schema = {
   "areaServed": [
     { "@type": "City", "name": "Chennai" },
     { "@type": "AdministrativeArea", "name": "Tamil Nadu" }
-  ]
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Corporate Mobility & Executive Cab Solutions",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "name": "Executive Sedan Monthly Retainer (Swift Dzire / Toyota Etios)",
+        "description": "26 Days / 10 Hours Daily dedicated managerial mobility with uniformed chauffeur and 60-min replacement SLA.",
+        "price": "42000",
+        "priceCurrency": "INR",
+        "priceValidUntil": "2027-12-31",
+        "availability": "https://schema.org/InStock",
+        "seller": { "@id": "https://kalidasstravels.in/#localbusiness" },
+        "url": "https://kalidasstravels.in/services/corporate/"
+      },
+      {
+        "@type": "Offer",
+        "name": "Mid SUV Monthly Retainer (Maruti Ertiga / XL6)",
+        "description": "26 Days / 10 Hours Daily 6-seater team mobility for project visits, field audits, and client meetings.",
+        "price": "52000",
+        "priceCurrency": "INR",
+        "priceValidUntil": "2027-12-31",
+        "availability": "https://schema.org/InStock",
+        "seller": { "@id": "https://kalidasstravels.in/#localbusiness" },
+        "url": "https://kalidasstravels.in/services/corporate/"
+      },
+      {
+        "@type": "Offer",
+        "name": "Toyota Innova Crysta Monthly Retainer (7-Seater Luxury)",
+        "description": "26 Days / 10 Hours Daily CXO & Director luxury transport with VIP English-proficient chauffeur.",
+        "price": "65000",
+        "priceCurrency": "INR",
+        "priceValidUntil": "2027-12-31",
+        "availability": "https://schema.org/InStock",
+        "seller": { "@id": "https://kalidasstravels.in/#localbusiness" },
+        "url": "https://kalidasstravels.in/services/corporate/"
+      },
+      {
+        "@type": "Offer",
+        "name": "Corporate Employee Shift Commute (ETS)",
+        "description": "Per Shift Route Trip with GPS route tracking and female employee first-in/last-out automated algorithms.",
+        "price": "350",
+        "priceCurrency": "INR",
+        "priceValidUntil": "2027-12-31",
+        "availability": "https://schema.org/InStock",
+        "seller": { "@id": "https://kalidasstravels.in/#localbusiness" },
+        "url": "https://kalidasstravels.in/services/corporate/"
+      },
+      {
+        "@type": "Offer",
+        "name": "Corporate Airport VIP Transfer (Central / Guindy) - Sedan",
+        "description": "Flight delay tracking and meet-and-greet placard service at MAA Arrival terminal.",
+        "price": "1200",
+        "priceCurrency": "INR",
+        "priceValidUntil": "2027-12-31",
+        "availability": "https://schema.org/InStock",
+        "seller": { "@id": "https://kalidasstravels.in/#localbusiness" },
+        "url": "https://kalidasstravels.in/services/corporate/"
+      },
+      {
+        "@type": "Offer",
+        "name": "Corporate Airport VIP Transfer (Central / Guindy) - Innova",
+        "description": "Spacious MUV transfer with flight delay tracking and meet-and-greet placard service at MAA.",
+        "price": "1800",
+        "priceCurrency": "INR",
+        "priceValidUntil": "2027-12-31",
+        "availability": "https://schema.org/InStock",
+        "seller": { "@id": "https://kalidasstravels.in/#localbusiness" },
+        "url": "https://kalidasstravels.in/services/corporate/"
+      },
+      {
+        "@type": "Offer",
+        "name": "Corporate Airport VIP Transfer (OMR / Siruseri) - Sedan",
+        "description": "Direct highway transfer to OMR IT Corridor, Siruseri SIPCOT & ECR with flight tracking.",
+        "price": "1500",
+        "priceCurrency": "INR",
+        "priceValidUntil": "2027-12-31",
+        "availability": "https://schema.org/InStock",
+        "seller": { "@id": "https://kalidasstravels.in/#localbusiness" },
+        "url": "https://kalidasstravels.in/services/corporate/"
+      },
+      {
+        "@type": "Offer",
+        "name": "Corporate Airport VIP Transfer (OMR / Siruseri) - Innova",
+        "description": "Direct highway MUV transfer to OMR IT Corridor & Siruseri SIPCOT with flight tracking.",
+        "price": "2200",
+        "priceCurrency": "INR",
+        "priceValidUntil": "2027-12-31",
+        "availability": "https://schema.org/InStock",
+        "seller": { "@id": "https://kalidasstravels.in/#localbusiness" },
+        "url": "https://kalidasstravels.in/services/corporate/"
+      },
+      {
+        "@type": "Offer",
+        "name": "Corporate Business Day Spot Rental (8h / 80km) - Sedan",
+        "description": "Multi-meeting city mobility, client visits, and 100% GST invoice with zero surge pricing.",
+        "price": "2500",
+        "priceCurrency": "INR",
+        "priceValidUntil": "2027-12-31",
+        "availability": "https://schema.org/InStock",
+        "seller": { "@id": "https://kalidasstravels.in/#localbusiness" },
+        "url": "https://kalidasstravels.in/services/corporate/"
+      },
+      {
+        "@type": "Offer",
+        "name": "Corporate Business Day Spot Rental (8h / 80km) - Innova",
+        "description": "Multi-meeting premium MUV mobility, client delegations, and 100% GST invoice.",
+        "price": "3500",
+        "priceCurrency": "INR",
+        "priceValidUntil": "2027-12-31",
+        "availability": "https://schema.org/InStock",
+        "seller": { "@id": "https://kalidasstravels.in/#localbusiness" },
+        "url": "https://kalidasstravels.in/services/corporate/"
+      }
+    ]
+  }
 };
 
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
+  "@id": "https://kalidasstravels.in/services/corporate/#faq",
   "mainEntity": faqs.map(item => ({
     "@type": "Question",
     "name": item.q,
@@ -204,18 +324,42 @@ const faqSchema = {
         </div>
       </section>
 
+      <!-- STICKY QUICK-NAV JUMP BAR (Below Hero, matching [slug].astro) -->
+      <nav aria-label="Corporate Quick Navigation" class="sticky top-14 sm:top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-2.5 mb-8 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto flex items-center justify-between gap-2 overflow-x-auto no-scrollbar">
+          <div class="flex items-center gap-1 sm:gap-2 text-xs font-semibold whitespace-nowrap">
+            <span class="text-micro uppercase tracking-wider text-m3-on-surface-variant mr-1 font-bold hidden sm:inline">Jump To:</span>
+            <a href="#how-it-works" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">How It Works</a>
+            <a href="#retainers" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Executive Retainers</a>
+            <a href="#shift-spot" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Shift &amp; Spot Rates</a>
+            <a href="#compliance" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Enterprise SLA</a>
+            <a href="#faqs" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">B2B FAQs</a>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <WhatsAppButton
+              href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20enquire%20about%20Corporate%20Mobility%20Solutions."
+              size="sm"
+              variant="filled"
+              text="B2B Quote"
+            />
+          </div>
+        </div>
+      </nav>
+
       <!-- 2. ⚡ 3-STEP VISUAL WORKFLOW ILLUSTRATION -->
-      <ServiceExplainer3Step 
-        title="How Corporate Mobility Works"
-        subtitle="Transparent contracts, verified drivers, and automated GST billing in 3 simple steps"
-        steps={explainerSteps}
-      />
+      <div id="how-it-works" class="scroll-mt-28">
+        <ServiceExplainer3Step 
+          title="How Corporate Mobility Works"
+          subtitle="Transparent contracts, verified drivers, and automated GST billing in 3 simple steps"
+          steps={explainerSteps}
+        />
+      </div>
 
       <!-- 3. UPFRONT B2B RATE CARDS (STRAIGHT TO THE POINT) -->
       <section class="my-10 md:my-14 space-y-12">
         
         <!-- Monthly Retainer Plans -->
-        <div class="bg-m3-surface-container-lowest rounded-m3-2xl p-5 sm:p-8 border border-m3-outline-variant shadow-m3-1">
+        <div id="retainers" class="bg-m3-surface-container-lowest rounded-m3-2xl p-5 sm:p-8 border border-m3-outline-variant shadow-m3-1 scroll-mt-28">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-m3-outline-variant/60 pb-4 mb-6">
             <div>
               <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container text-xs font-bold uppercase tracking-wider mb-2 border border-m3-primary/20">
@@ -279,7 +423,7 @@ const faqSchema = {
         </div>
 
         <!-- Shift Commute & Spot Plans -->
-        <div class="bg-m3-surface-container-lowest rounded-m3-2xl p-5 sm:p-8 border border-m3-outline-variant shadow-m3-1">
+        <div id="shift-spot" class="bg-m3-surface-container-lowest rounded-m3-2xl p-5 sm:p-8 border border-m3-outline-variant shadow-m3-1 scroll-mt-28">
           <div class="border-b border-m3-outline-variant/60 pb-4 mb-6">
             <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface text-xs font-bold uppercase tracking-wider mb-2 border border-m3-outline-variant">
               <span>Shift Commute &amp; Spot Rentals</span>
@@ -315,7 +459,7 @@ const faqSchema = {
       </section>
 
       <!-- 4. ENTERPRISE COMMITMENTS (4 PILLARS) -->
-      <section class="my-10 md:my-14 bg-m3-surface-container-low rounded-m3-2xl p-6 sm:p-8 border border-m3-outline-variant">
+      <section id="compliance" class="my-10 md:my-14 bg-m3-surface-container-low rounded-m3-2xl p-6 sm:p-8 border border-m3-outline-variant scroll-mt-28">
         <div class="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
           <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-m3-on-surface font-heading">
             Built for Enterprise Reliability &amp; Compliance
@@ -358,7 +502,7 @@ const faqSchema = {
       </section>
 
       <!-- 5. FREQUENTLY ASKED QUESTIONS -->
-      <section class="my-10 md:my-14 max-w-3xl mx-auto">
+      <section id="faqs" class="my-10 md:my-14 max-w-3xl mx-auto scroll-mt-28">
         <div class="text-center mb-6">
           <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading">
             Frequently Asked Questions

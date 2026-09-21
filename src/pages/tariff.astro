@@ -77,17 +77,47 @@ const tariffSchema = {
     }
   ])
 };
+
+const serviceSchema = {
+  "@type": "TaxiService",
+  "@id": "https://kalidasstravels.in/tariff/#service",
+  name: "Kalidass Travels Taxi & Car Rental Tariff Rates",
+  description: "Official local hourly and outstation tariff card for Kalidass Travels in Chennai, covering 5hr/50km, 8hr/80km, 10hr/100km, CPWD/government tender benchmarks, and per-km outstation rates.",
+  url: "https://kalidasstravels.in/tariff/",
+  providerMobility: "dynamic",
+  serviceType: "Taxi & Car Rental Tariff",
+  provider: { "@id": "https://kalidasstravels.in/#localbusiness" },
+  areaServed: [
+    { "@type": "City", name: "Chennai" },
+    { "@type": "AdministrativeArea", name: "Tamil Nadu" },
+    { "@type": "Country", name: "India" }
+  ],
+  hasOfferCatalog: tariffSchema
+};
+
+const faqSchema = {
+  "@type": "FAQPage",
+  "@id": "https://kalidasstravels.in/tariff/#faq",
+  mainEntity: tariffFaqs.map(faq => ({
+    "@type": "Question",
+    name: faq.q,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: faq.a
+    }
+  }))
+};
 ---
 
 <Layout
   title="Chennai Taxi & Outstation Cab Tariff Card (Per-KM & Hourly Rates) – Kalidass Travels"
   description="Official Chennai taxi tariff card with transparent rates. Local city packages (5hr/50km, 8hr/80km, 10hr/100km) and outstation per-km rates for Dzire, Ertiga, Innova & Tempo Traveller. Zero surge pricing."
   keywords="taxi tariff Chennai, car rental tariff Chennai, cab rates per km Chennai, 5 hr 50 km cab chennai, 10 hr 100 km cab chennai, additional km rate chennai, additional hr rate chennai, cpwd tender cab rates chennai, innova car rental tariff chennai, swift dzire price per km chennai, outstation taxi price chennai"
-  schema={tariffSchema}
+  schema={[serviceSchema, tariffSchema, faqSchema]}
 >
   <Breadcrumbs items={breadcrumbItems} />
 
-  <div class="py-10 md:py-14 bg-m3-surface text-m3-on-surface">
+  <div class="py-8 md:py-12 bg-m3-surface text-m3-on-surface">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
       <!-- Header -->
@@ -105,7 +135,7 @@ const tariffSchema = {
       </div>
 
       <!-- Quick Summary Badges -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-10">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8">
         <div class="bg-m3-surface-container-lowest p-5 rounded-m3-lg border border-m3-outline-variant shadow-m3-1 hover:shadow-m3-2 transition-all">
           <div class="text-xs font-semibold text-m3-on-surface-variant uppercase tracking-wider mb-1">Local 5 Hr / 50 KM</div>
           <div class="text-2xl font-black text-m3-on-surface font-heading">₹1,500 <span class="text-xs font-normal text-m3-on-surface-variant">starting</span></div>
@@ -128,8 +158,30 @@ const tariffSchema = {
         </div>
       </div>
 
+      <!-- Sticky Sub-Nav Quick Jump Bar (Below Badges) -->
+      <nav aria-label="Tariff Quick Navigation" class="sticky top-14 sm:top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-2.5 mb-10 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-2 overflow-x-auto no-scrollbar">
+          <div class="flex items-center gap-1 sm:gap-2 text-xs font-semibold whitespace-nowrap">
+            <span class="text-micro uppercase tracking-wider text-m3-on-surface-variant mr-1 font-bold hidden sm:inline">Jump To:</span>
+            <a href="#local-rates" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Local Hourly</a>
+            <a href="#outstation-rates" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Outstation Per-KM</a>
+            <a href="#fare-rules" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Inclusions &amp; Terms</a>
+            <a href="#faq" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Tariff FAQs</a>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <a
+              href="/calculator/"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-m3-primary hover:bg-slate-900 text-m3-on-primary font-bold text-micro sm:text-xs rounded-m3-full transition-all shadow-xs"
+            >
+              <span class="material-symbols-outlined text-[14px]">calculate</span>
+              <span>Live Calculator</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+
       <!-- Local Packages Section -->
-      <div id="local-rates" class="mb-14 scroll-mt-24">
+      <div id="local-rates" class="mb-14 scroll-mt-28">
         <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 pb-3 border-b border-m3-outline-variant gap-2">
           <div>
             <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading">
@@ -234,7 +286,7 @@ const tariffSchema = {
       </div>
 
       <!-- Section 2: Outstation Rates -->
-      <div class="mb-14">
+      <div id="outstation-rates" class="mb-14 scroll-mt-28">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
           <div>
             <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
@@ -327,7 +379,7 @@ const tariffSchema = {
       </div>
 
       <!-- Inclusions / Exclusions -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
+      <div id="fare-rules" class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12 scroll-mt-28">
         <div class="bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-xl p-6 shadow-m3-1">
           <h3 class="font-bold text-m3-on-surface mb-3 font-heading text-lg flex items-center gap-2">
             <svg class="w-5 h-5 text-m3-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
@@ -379,7 +431,7 @@ const tariffSchema = {
       </div>
 
       <!-- FAQ Section Accordion -->
-      <section id="faq" class="mb-14">
+      <section id="faq" class="mb-14 scroll-mt-28">
         <div class="text-center max-w-3xl mx-auto mb-8">
           <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
             <span class="w-2 h-2 rounded-full bg-m3-primary"></span>

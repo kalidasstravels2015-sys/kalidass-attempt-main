@@ -125,10 +125,22 @@ const servicesList = [
 const schema = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
+  "@id": "https://kalidasstravels.in/services/#collection",
   "name": "Travel Services in Chennai - Kalidass Travels",
   "description": "Book trusted travel services in Chennai: Airport Transfers, Outstation Cabs, Temple Tours, Corporate Mobility, and Acting Drivers for your personal car.",
-  "url": Astro.url.href,
-  "image": "https://kalidasstravels.in/images/logo.webp"
+  "url": "https://kalidasstravels.in/services/",
+  "image": "https://kalidasstravels.in/images/logo.webp",
+  "mainEntity": {
+    "@type": "ItemList",
+    "name": "Kalidass Travels Core Services",
+    "itemListElement": servicesList.map((s, idx) => ({
+      "@type": "ListItem",
+      "position": idx + 1,
+      "name": s.title,
+      "url": `https://kalidasstravels.in${s.link}`,
+      "description": s.tagline
+    }))
+  }
 };
 ---
 
@@ -144,7 +156,7 @@ const schema = {
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10">
 
       <!-- 1. CLEAN HERO SECTION -->
-      <section class="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
+      <section class="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
         <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
           <span class="w-2 h-2 rounded-full bg-logo-red animate-pulse"></span>
           <span>5 Core Travel Services • Transparent Fixed Rates • Zero Surge</span>
@@ -170,6 +182,28 @@ const schema = {
         </div>
       </section>
 
+      <!-- STICKY QUICK-NAV JUMP BAR (Below Hero) -->
+      <nav aria-label="Services Quick Navigation" class="sticky top-14 sm:top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-2.5 mb-10 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto flex items-center justify-between gap-2 overflow-x-auto no-scrollbar">
+          <div class="flex items-center gap-1 sm:gap-2 text-xs font-semibold whitespace-nowrap">
+            <span class="text-micro uppercase tracking-wider text-m3-on-surface-variant mr-1 font-bold hidden sm:inline">Jump To:</span>
+            <a href="#airport-transfers" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Airport Taxi</a>
+            <a href="#outstation-cabs" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Outstation Cabs</a>
+            <a href="#temple-tours" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Temple Tours</a>
+            <a href="#corporate-mobility" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Corporate Mobility</a>
+            <a href="#acting-drivers" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Acting Drivers</a>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <WhatsAppButton
+              href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20need%20assistance%20with%20booking%20a%20travel%20service."
+              size="sm"
+              variant="filled"
+              text="WhatsApp Support"
+            />
+          </div>
+        </div>
+      </nav>
+
       <!-- 2. THE 4 MAIN SERVICE PILLARS (Clean 2x2 Layout, Zero Bloat) -->
       <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-14">
         {servicesList.map((srv) => {
@@ -177,7 +211,7 @@ const schema = {
           return (
             <div 
               id={srv.id}
-              class="bg-m3-surface-container-lowest rounded-m3-2xl p-6 sm:p-7 border border-m3-outline-variant shadow-m3-1 hover:shadow-m3-2 transition-all flex flex-col justify-between scroll-mt-24"
+              class="bg-m3-surface-container-lowest rounded-m3-2xl p-6 sm:p-7 border border-m3-outline-variant shadow-m3-1 hover:shadow-m3-2 transition-all flex flex-col justify-between scroll-mt-28"
             >
               <div>
                 <!-- Card Header -->

@@ -87,6 +87,23 @@ const overviewParts = service.overview ? service.overview.split(/(?<=[.?!])\s+/)
 const leadSentence = overviewParts[0] || service.overview;
 const remainingOverview = overviewParts.slice(1).join(' ');
 
+// Priority column regexes to locate true total package price headers
+const priorityHeaderRegexes = [
+  /total.*cost/i,
+  /round-trip.*cost|round-trip.*flat/i,
+  /package.*cost/i,
+  /flat.*cost/i,
+  /total.*1-day/i,
+  /1-day.*cost/i,
+  /total/i,
+  /airport.*drop/i,
+  /driver.*charge/i,
+  /monthly.*rate/i,
+  /driver.*fee/i,
+  /driver.*bata|daily.*driver.*bata/i,
+  /rate/i
+];
+
 // Extract starting price if tariff exists
 function extractStartingPrice(svc: any): string | null {
   if (!svc.tariff?.rows || svc.tariff.rows.length === 0) return null;
@@ -94,21 +111,6 @@ function extractStartingPrice(svc: any): string | null {
   const rows = svc.tariff.rows;
 
   let targetColIdx = -1;
-  const priorityHeaderRegexes = [
-    /total.*cost/i,
-    /package.*cost/i,
-    /flat.*cost/i,
-    /total.*1-day/i,
-    /1-day.*cost/i,
-    /total/i,
-    /airport.*drop/i,
-    /driver.*charge/i,
-    /driver.*bata|bata/i,
-    /driver.*fee/i,
-    /monthly.*rate/i,
-    /rate/i
-  ];
-
   for (const regex of priorityHeaderRegexes) {
     const idx = headers.findIndex((h: string) => regex.test(h) && !/rate\/km/i.test(h) && !/night/i.test(h));
     if (idx !== -1) {
@@ -153,46 +155,111 @@ function extractStartingPrice(svc: any): string | null {
 
 const startingPrice = extractStartingPrice(service);
 
-const schemaType = isActingDriver
-  ? 'Service'
-  : (isTour ? 'TouristTrip' : 'TaxiService');
+// Determine schemaType: If serviceType is explicitly TaxiService (or not an acting driver), support TaxiService
+const isTaxi = service.serviceType === 'TaxiService' || (!isActingDriver && !isTour);
+let schemaType: string | string[];
 
-const schema: Record<string, any> = {
-  "@type": schemaType,
-  "@id": `https://kalidasstravels.in/services/${service.slug}/#service`,
-  "name": service.metaTitle || service.title,
-  "description": service.metaDescription || service.overview,
-  "provider": {
-    "@id": "https://kalidasstravels.in/#localbusiness",
-  },
-  "areaServed": [
-    {
-      "@type": "City",
-      "name": "Chennai",
-    },
-    {
-      "@type": "AdministrativeArea",
-      "name": "Tamil Nadu",
-    },
-    {
-      "@type": "AdministrativeArea",
-      "name": "Puducherry",
-    },
-    {
-      "@type": "AdministrativeArea",
-      "name": "Andhra Pradesh",
-    }
-  ],
-  "url": `https://kalidasstravels.in/services/${service.slug}/`,
-};
-
-if (service.serviceType) {
-  schema.serviceType = service.serviceType;
+if (isActingDriver) {
+  schemaType = 'Service';
+} else if (isTour && isTaxi) {
+  // Dual-typing: captures both outstation cab search intent and pilgrimage trip rich results
+  schemaType = ['TaxiService', 'TouristTrip'];
+} else if (isTour) {
+  schemaType = 'TouristTrip';
+} else {
+  schemaType = service.serviceType || 'TaxiService';
 }
 
-if (startingPrice) {
-  schema.offers = {
+const areas: any[] = [];
+if (service.origin) {
+  areas.push({ "@type": "City", "name": service.origin });
+} else {
+  areas.push({ "@type": "City", "name": "Chennai" });
+}
+if (service.destination) {
+  areas.push({ "@type": "City", "name": service.destination });
+}
+areas.push(
+  { "@type": "AdministrativeArea", "name": "Tamil Nadu" },
+  { "@type": "AdministrativeArea", "name": "Andhra Pradesh" },
+  { "@type": "AdministrativeArea", "name": "Puducherry" }
+);
+
+// Granular multi-vehicle offers for TaxiService & packages
+let offersData: any = null;
+if (service.tariff?.rows && service.tariff.rows.length > 0) {
+  const headers = service.tariff.headers || [];
+  let targetColIdx = -1;
+  for (const regex of priorityHeaderRegexes) {
+    const idx = headers.findIndex((h: string) => regex.test(h) && !/rate\/km/i.test(h) && !/night/i.test(h));
+    if (idx !== -1) {
+      targetColIdx = idx;
+      break;
+    }
+  }
+
+  const capIdx = headers.findIndex((h: string) => /capacity|seating/i.test(h));
+  const incIdx = headers.findIndex((h: string) => /inclusion|notes|coverage/i.test(h));
+
+  const validOffers: any[] = [];
+  for (const row of service.tariff.rows) {
+    const vehicleName = row[0] || service.title;
+    const capacity = capIdx !== -1 ? row[capIdx] : (row.length > 2 ? row[1] : '');
+    const inclusions = incIdx !== -1 ? row[incIdx] : (row.length > 3 ? row[3] : '');
+
+    let rowPrice: string | null = null;
+    if (targetColIdx !== -1 && row[targetColIdx] !== undefined) {
+      const match = String(row[targetColIdx]).match(/₹\s*([0-9,]+)/);
+      if (match) {
+        rowPrice = match[1].replace(/,/g, '');
+      }
+    }
+
+    if (!rowPrice) {
+      for (let i = row.length - 1; i >= 1; i--) {
+        const cellStr = String(row[i]);
+        if (!cellStr.includes('₹')) continue;
+        const matches = [...cellStr.matchAll(/₹\s*([0-9,]+)/g)];
+        if (matches.length > 0) {
+          const num = parseInt(matches[0][1].replace(/,/g, ''), 10);
+          if (!isNaN(num) && num > 0) {
+            if (num < 100 && (/trip|tour|package|drop|wedding/i.test(service.slug) || /temple/i.test(service.category))) {
+              continue;
+            }
+            rowPrice = String(num);
+            break;
+          }
+        }
+      }
+    }
+
+    // Only emit Offer if a valid positive price was found
+    if (rowPrice && parseInt(rowPrice, 10) > 0) {
+      validOffers.push({
+        "@type": "Offer",
+        "name": `${service.title} - ${vehicleName}`,
+        "priceCurrency": "INR",
+        "price": rowPrice,
+        "priceValidUntil": "2027-12-31",
+        "availability": "https://schema.org/InStock",
+        "url": `https://kalidasstravels.in/services/${service.slug}/`,
+        "description": [capacity, inclusions].filter(Boolean).join(' | '),
+        "seller": {
+          "@id": "https://kalidasstravels.in/#localbusiness"
+        }
+      });
+    }
+  }
+
+  if (validOffers.length > 0) {
+    offersData = validOffers;
+  }
+}
+
+if (!offersData && startingPrice) {
+  offersData = {
     "@type": "Offer",
+    "name": service.title,
     "priceCurrency": "INR",
     "price": startingPrice,
     "priceValidUntil": "2027-12-31",
@@ -202,6 +269,30 @@ if (startingPrice) {
       "@id": "https://kalidasstravels.in/#localbusiness"
     }
   };
+}
+
+const schema: Record<string, any> = {
+  "@type": schemaType,
+  "@id": `https://kalidasstravels.in/services/${service.slug}/#service`,
+  "name": service.metaTitle || service.title,
+  "description": service.metaDescription || service.overview,
+  "provider": {
+    "@id": "https://kalidasstravels.in/#localbusiness",
+  },
+  "areaServed": areas,
+  "url": `https://kalidasstravels.in/services/${service.slug}/`,
+};
+
+if (isTaxi || (!isTour && !isActingDriver)) {
+  schema.providerMobility = "dynamic";
+}
+
+if (service.serviceType) {
+  schema.serviceType = service.serviceType;
+}
+
+if (offersData) {
+  schema.offers = offersData;
 }
 
 if (isTour && service.routePlan && service.routePlan.length > 0) {
@@ -216,37 +307,6 @@ if (isTour && service.routePlan && service.routePlan.length > 0) {
   };
   schema.touristType = ["Pilgrims", "Devotees", "Families"];
 }
-
-const productSchema = startingPrice ? {
-  "@type": "Product",
-  "@id": `https://kalidasstravels.in/services/${service.slug}/#product`,
-  "name": service.metaTitle || service.title,
-  "description": service.metaDescription || service.overview,
-  "image": heroImage ? `https://kalidasstravels.in${heroImage}` : "https://kalidasstravels.in/images/og-main.png",
-  "sku": `KT-${service.slug.toUpperCase().replace(/-/g, '_')}`,
-  "brand": {
-    "@type": "Brand",
-    "name": "Kalidass Travels"
-  },
-  "offers": {
-    "@type": "Offer",
-    "priceCurrency": "INR",
-    "price": startingPrice,
-    "priceValidUntil": "2027-12-31",
-    "availability": "https://schema.org/InStock",
-    "url": `https://kalidasstravels.in/services/${service.slug}/`,
-    "seller": {
-      "@id": "https://kalidasstravels.in/#localbusiness"
-    }
-  },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "reviewCount": "180",
-    "bestRating": "5",
-    "worstRating": "1"
-  }
-} : null;
 
 const faqSchema = service.faq && service.faq.length > 0 ? {
   "@type": "FAQPage",
@@ -383,7 +443,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
   image={heroImage || undefined}
   ogImage={`/og/${service.slug}.jpg`}
   type="article"
-  schema={[schema, productSchema, faqSchema].filter(Boolean)}
+  schema={[schema, faqSchema].filter(Boolean)}
 >
   <main class="bg-m3-surface-container-low text-m3-on-surface min-h-screen pb-16 font-sans">
     
@@ -509,56 +569,67 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
       </div>
     </section>
 
+    <!-- STICKY QUICK-NAV JUMP BAR -->
+    <nav class="sticky top-14 sm:top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-b border-m3-outline-variant/80 py-2.5 px-4 shadow-xs">
+      <div class="max-w-4xl mx-auto flex items-center justify-between gap-3 overflow-x-auto no-scrollbar">
+        <div class="flex items-center gap-2 text-xs font-semibold text-m3-on-surface">
+          {service.tariff && (
+            <a href="#tariff" class="px-3 py-1.5 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container hover:bg-m3-primary hover:text-m3-on-primary transition-all shrink-0">
+              Tariff & Rates
+            </a>
+          )}
+          {service.routePlan && (
+            <a href="#route" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
+              Route Schedule
+            </a>
+          )}
+          {service.travelGuide && (
+            <a href="#guide" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
+              {isTour ? "Darshan Guide" : "Guidelines"}
+            </a>
+          )}
+          {service.faq && (
+            <a href="#faq" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
+              FAQs
+            </a>
+          )}
+        </div>
+        <a
+          href={whatsappLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-m3-full bg-[#075E54] hover:bg-[#128C7E] text-white text-xs font-bold shrink-0 transition-colors shadow-xs"
+        >
+          <MessageCircle className="w-3.5 h-3.5" />
+          <span>Book On WhatsApp</span>
+        </a>
+      </div>
+    </nav>
+
     <!-- 2. MAIN CONTENT BODY CONTAINER -->
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 space-y-8">
       
-      <!-- Route Plan (For Tours & Multistop services) -->
-      {service.routePlan && (
-        <section class="bg-m3-surface rounded-m3-lg p-6 sm:p-8 border border-m3-outline-variant shadow-m3-1">
-          <div class="flex flex-wrap items-center justify-between gap-4 mb-6 border-b border-m3-outline-variant/60 pb-4">
-            <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface flex items-center gap-2 font-heading">
-              <Compass className="w-5 h-5 text-m3-primary" />
-              <span>Route Plan & Key Stops</span>
-            </h2>
-            {service.duration && (
-              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container-high text-m3-on-surface text-xs font-semibold">
-                <Clock className="w-3.5 h-3.5 text-m3-primary" />
-                <span>{service.duration}</span>
-              </span>
-            )}
-          </div>
-
-          <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-3.5">
-            {service.routePlan.map((stop: any, idx: number) => (
-              <div class="bg-m3-surface-container-low p-4 rounded-m3-md border border-m3-outline-variant/60 flex items-start gap-3">
-                <div class="w-7 h-7 rounded-m3-full bg-m3-primary text-m3-on-primary font-bold text-xs flex items-center justify-center shrink-0">
-                  {idx + 1}
-                </div>
-                <div>
-                  <h3 class="font-bold text-m3-on-surface text-sm sm:text-base font-heading">{stop.stop}</h3>
-                  <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1 leading-relaxed">{stop.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      <!-- 3. M3 TARIFF & PRICING BREAKDOWN -->
+      <!-- 1. TARIFF & PRICING BREAKDOWN (Priority Commercial Focus) -->
       {service.tariff && (
-        <section class="bg-m3-surface rounded-m3-lg border border-m3-outline-variant shadow-m3-1 overflow-hidden">
-          <div class="p-6 sm:p-8 bg-m3-surface-container-low border-b border-m3-outline-variant">
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-m3-sm bg-m3-primary-container text-m3-on-primary-container text-xs font-bold uppercase tracking-wider mb-2">
-              <span>Transparent Pricing</span>
+        <section id="tariff" class="bg-m3-surface rounded-m3-lg border border-m3-outline-variant shadow-m3-1 overflow-hidden scroll-mt-28">
+          <div class="p-5 sm:p-7 bg-m3-surface-container-low border-b border-m3-outline-variant flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-m3-sm bg-m3-primary-container text-m3-on-primary-container text-xs font-bold uppercase tracking-wider mb-1.5">
+                <span>Transparent Pricing</span>
+              </div>
+              <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading">
+                Tariff & Package Rates
+              </h2>
             </div>
-            <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading">
-              Tariff & Package Rates
-            </h2>
-            <p class="text-m3-on-surface-variant text-sm sm:text-base mt-1 leading-relaxed">
-              {isActingDriver 
-                ? "Time-based pricing with zero hidden surcharges. Overtime and night rates explicitly mentioned." 
-                : "Comprehensive tariff structure with all inclusions clearly outlined."}
-            </p>
+            <a 
+              href={whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-m3-full bg-m3-primary text-m3-on-primary text-xs font-bold shadow-xs hover:bg-m3-primary/90 transition-all"
+            >
+              <span>Reserve at Flat Fare</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </a>
           </div>
 
           {/* Mobile Pricing Cards (< md) */}
@@ -621,16 +692,15 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
         </section>
       )}
 
-      <!-- 4. INCLUSIONS & EXCLUSIONS GRID -->
+      <!-- 2. INCLUSIONS & EXCLUSIONS GRID -->
       {(service.includes || service.excludes) && (
-        <section class="grid md:grid-cols-2 gap-6">
-          
+        <section id="inclusions" class="grid md:grid-cols-2 gap-6 scroll-mt-28">
           {/* Includes */}
           {service.includes && (
             <div class="bg-m3-surface rounded-m3-xl p-6 sm:p-7 border border-m3-outline-variant shadow-m3-1">
               <h3 class="text-base sm:text-lg font-bold text-m3-on-surface mb-4 flex items-center gap-2 font-heading">
-                <CheckCircle2 className="w-5 h-5 text-m3-primary" />
-                <span>What's Included</span>
+                <CheckCircle2 className="w-5 h-5 text-m3-secondary" />
+                <span>What's 100% Included</span>
               </h3>
               <ul class="space-y-3">
                 {service.includes.map((item: string) => (
@@ -660,13 +730,44 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
               </ul>
             </div>
           )}
-
         </section>
       )}
 
-      <!-- 5. SERVICE PROTOCOL & TRAVEL GUIDE -->
+      <!-- 3. ROUTE PLAN & KEY STOPS -->
+      {service.routePlan && (
+        <section id="route" class="bg-m3-surface rounded-m3-lg p-6 sm:p-8 border border-m3-outline-variant shadow-m3-1 scroll-mt-28">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-6 border-b border-m3-outline-variant/60 pb-4">
+            <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface flex items-center gap-2 font-heading">
+              <Compass className="w-5 h-5 text-m3-primary" />
+              <span>Route Plan & Key Stops</span>
+            </h2>
+            {service.duration && (
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container-high text-m3-on-surface text-xs font-semibold">
+                <Clock className="w-3.5 h-3.5 text-m3-primary" />
+                <span>{service.duration}</span>
+              </span>
+            )}
+          </div>
+
+          <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-3.5">
+            {service.routePlan.map((stop: any, idx: number) => (
+              <div class="bg-m3-surface-container-low p-4 rounded-m3-md border border-m3-outline-variant/60 flex items-start gap-3">
+                <div class="w-7 h-7 rounded-m3-full bg-m3-primary text-m3-on-primary font-bold text-xs flex items-center justify-center shrink-0">
+                  {idx + 1}
+                </div>
+                <div>
+                  <h3 class="font-bold text-m3-on-surface text-sm sm:text-base font-heading">{stop.stop}</h3>
+                  <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1 leading-relaxed">{stop.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <!-- 4. SERVICE PROTOCOL & TRAVEL GUIDE (Streamlined with Interactive Tabs) -->
       {service.travelGuide && (
-        <section class="bg-m3-surface rounded-m3-lg p-6 sm:p-8 border border-m3-outline-variant shadow-m3-1 space-y-6">
+        <section id="guide" class="bg-m3-surface rounded-m3-lg p-6 sm:p-8 border border-m3-outline-variant shadow-m3-1 space-y-6 scroll-mt-28">
           <div class="border-b border-m3-outline-variant/60 pb-4">
             <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface flex items-center gap-2.5 font-heading">
               <FileText className="w-5 h-5 text-m3-primary shrink-0" />
@@ -674,7 +775,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
             </h2>
           </div>
 
-          <!-- Row 1: Significance & Darshan Timings -->
+          <!-- Significance & Darshan Timings -->
           <div class="grid md:grid-cols-2 gap-6">
             {/* Overview / Background */}
             {service.travelGuide.history && (
@@ -700,14 +801,14 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                   {timingItems.map((item: any) => {
                     const isLong = item.time && item.time.length > 25;
                     return (
-                      <div class={`bg-m3-surface-container-low p-3.5 rounded-m3-md border border-m3-outline-variant/60 text-xs sm:text-sm ${
+                      <div class={`bg-m3-surface-container-low p-3 rounded-m3-md border border-m3-outline-variant/60 text-xs sm:text-sm ${
                         isLong 
-                          ? 'space-y-2' 
+                          ? 'space-y-1.5' 
                           : 'flex flex-col sm:flex-row sm:items-center justify-between gap-2'
                       }`}>
                         <span class="font-semibold text-m3-on-surface leading-snug">{item.label}</span>
                         {item.time && (
-                          <span class={`inline-block px-2.5 py-1 bg-m3-primary-container text-m3-on-primary-container text-xs font-semibold leading-relaxed max-w-full break-words ${
+                          <span class={`inline-block px-2.5 py-0.5 bg-m3-primary-container text-m3-on-primary-container text-xs font-semibold leading-relaxed max-w-full break-words ${
                             isLong 
                               ? 'rounded-m3-md w-full' 
                               : 'rounded-m3-full self-start sm:self-auto shrink-0'
@@ -733,111 +834,153 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
             )}
           </div>
 
-          <!-- Row 2: Dress Code & Conduct (Context-Aware for Temple Tours vs Acting Drivers) -->
-          {parsedDressCode && (
-            <div class="bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-xl p-5 sm:p-6 space-y-4">
-              <div class="flex flex-wrap items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-3">
-                <div class="flex items-center gap-2.5">
-                  <div class="w-8 h-8 rounded-m3-full bg-m3-surface-container flex items-center justify-center text-m3-primary shrink-0 border border-m3-outline-variant">
-                    {isTour ? <Sparkles className="w-4 h-4 text-m3-primary" /> : <ShieldCheck className="w-4 h-4 text-m3-primary" />}
+          <!-- Interactive Tab Switcher for Dress Code & Practical Tips (Cuts 1,200px+ height) -->
+          {(parsedDressCode || parsedTips.length > 0) && (
+            <div class="pt-4 border-t border-m3-outline-variant/60 space-y-4">
+              <!-- Tab Controls -->
+              <div class="flex items-center gap-2 bg-m3-surface-container-low p-1.5 rounded-m3-xl border border-m3-outline-variant/60 w-fit max-w-full overflow-x-auto no-scrollbar" role="tablist">
+                {parsedDressCode && (
+                  <button
+                    type="button"
+                    role="tab"
+                    id="tab-dresscode-btn"
+                    aria-selected="true"
+                    aria-controls="panel-dresscode"
+                    data-guide-tab="dresscode"
+                    class="guide-tab-btn inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 rounded-m3-lg text-xs sm:text-sm font-bold transition-all bg-m3-primary text-m3-on-primary shadow-xs shrink-0"
+                  >
+                    {isTour ? <Sparkles className="w-3.5 h-3.5 shrink-0" /> : <ShieldCheck className="w-3.5 h-3.5 shrink-0" />}
+                    <span>{guideLabels.dressCodeLabel}</span>
+                  </button>
+                )}
+                {parsedTips.length > 0 && (
+                  <button
+                    type="button"
+                    role="tab"
+                    id="tab-tips-btn"
+                    aria-selected={!parsedDressCode ? "true" : "false"}
+                    aria-controls="panel-tips"
+                    data-guide-tab="tips"
+                    class={`guide-tab-btn inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 rounded-m3-lg text-xs sm:text-sm font-bold transition-all shrink-0 ${
+                      !parsedDressCode 
+                        ? 'bg-m3-primary text-m3-on-primary shadow-xs' 
+                        : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container'
+                    }`}
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-m3-secondary" />
+                    <span>{guideLabels.tipsTitle}</span>
+                  </button>
+                )}
+              </div>
+
+              <!-- Tab Panel 1: Dress Code -->
+              {parsedDressCode && (
+                <div
+                  id="panel-dresscode"
+                  role="tabpanel"
+                  aria-labelledby="tab-dresscode-btn"
+                  data-guide-panel="dresscode"
+                  class="bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-xl p-4 sm:p-6 space-y-4"
+                >
+                  <div class="flex flex-wrap items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-3">
+                    <div>
+                      <h3 class="font-bold text-base sm:text-lg font-heading text-m3-on-surface">
+                        {guideLabels.dressCodeLabel}
+                      </h3>
+                      <p class="text-xs font-medium text-m3-on-surface-variant">
+                        {isTour ? "Mandatory Temple Entry Attire Policy" : "Chauffeur Standards & Code of Conduct"}
+                      </p>
+                    </div>
+                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-m3-full text-xs font-bold uppercase tracking-wider bg-m3-surface-container text-m3-on-surface border border-m3-outline-variant">
+                      {isTour ? "Mandatory" : "Verified Standard"}
+                    </span>
                   </div>
-                  <div>
-                    <h3 class="font-bold text-base sm:text-lg font-heading text-m3-on-surface">
-                      {guideLabels.dressCodeLabel}
-                    </h3>
-                    <p class="text-xs font-medium text-m3-on-surface-variant">
-                      {isTour ? "Mandatory Temple Entry Attire Policy" : "Chauffeur Standards & Code of Conduct"}
+
+                  {parsedDressCode.general && parsedDressCode.items && parsedDressCode.items.length > 0 && (
+                    <p class="text-xs sm:text-sm font-medium leading-relaxed text-m3-on-surface">
+                      {parsedDressCode.general}
                     </p>
-                  </div>
-                </div>
-                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-m3-full text-xs font-bold uppercase tracking-wider bg-m3-surface-container text-m3-on-surface border border-m3-outline-variant">
-                  {isTour ? "Mandatory" : "Verified Standard"}
-                </span>
-              </div>
+                  )}
 
-              {parsedDressCode.general && parsedDressCode.items && parsedDressCode.items.length > 0 && (
-                <p class="text-xs sm:text-sm font-medium leading-relaxed text-m3-on-surface">
-                  {parsedDressCode.general}
-                </p>
-              )}
-
-              {parsedDressCode.items && parsedDressCode.items.length > 0 && (
-                <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
-                  {parsedDressCode.items.map((item: any) => (
-                    <div class="bg-m3-surface rounded-m3-lg p-4 border border-m3-outline-variant shadow-xs space-y-2.5">
-                      <h4 class="font-bold text-sm text-m3-on-surface block font-heading border-b border-m3-outline-variant/60 pb-1.5">
-                        {item.title}
-                      </h4>
-                      <div class="space-y-2 text-xs sm:text-sm">
-                        <div class="flex items-start gap-2 text-m3-on-surface">
-                          <CheckCircle2 className="w-4 h-4 text-m3-secondary shrink-0 mt-0.5" />
-                          <span class="leading-relaxed"><strong>Allowed:</strong> {item.allowed}</span>
-                        </div>
-                        {item.prohibited && (
-                          <div class="flex items-start gap-2 text-m3-on-surface-variant">
-                            <XCircle className="w-4 h-4 text-m3-primary shrink-0 mt-0.5" />
-                            <span class="leading-relaxed"><strong>Prohibited:</strong> {item.prohibited}</span>
+                  {parsedDressCode.items && parsedDressCode.items.length > 0 && (
+                    <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+                      {parsedDressCode.items.map((item: any) => (
+                        <div class="bg-m3-surface rounded-m3-lg p-4 border border-m3-outline-variant shadow-xs space-y-2">
+                          <h4 class="font-bold text-sm text-m3-on-surface block font-heading border-b border-m3-outline-variant/60 pb-1.5">
+                            {item.title}
+                          </h4>
+                          <div class="space-y-1.5 text-xs sm:text-sm">
+                            <div class="flex items-start gap-2 text-m3-on-surface">
+                              <CheckCircle2 className="w-4 h-4 text-m3-secondary shrink-0 mt-0.5" />
+                              <span class="leading-relaxed"><strong>Allowed:</strong> {item.allowed}</span>
+                            </div>
+                            {item.prohibited && (
+                              <div class="flex items-start gap-2 text-m3-on-surface-variant">
+                                <XCircle className="w-4 h-4 text-m3-primary shrink-0 mt-0.5" />
+                                <span class="leading-relaxed"><strong>Prohibited:</strong> {item.prohibited}</span>
+                              </div>
+                            )}
                           </div>
-                        )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {isTour ? (
+                    <div class="p-3.5 bg-m3-primary-container/40 border border-m3-primary/20 rounded-m3-md text-xs sm:text-sm text-m3-on-surface flex items-start gap-2.5">
+                      <AlertCircle className="w-4 h-4 text-m3-primary shrink-0 mt-0.5" />
+                      <span class="leading-relaxed">
+                        <strong class="font-bold text-m3-on-primary-container">Strict Enforcement:</strong> {service.slug === 'tirupati-package' 
+                          ? "Devotees wearing jeans, modern printed t-shirts, Bermudas, shorts, or western clothing will be strictly stopped at the Vaikuntam scanning queue and denied sanctum entry."
+                          : "Traditional attire is mandatory across major South Indian shrines. Devotees in western outfits, shorts, or modern t-shirts will be stopped at entrance gopurams and denied inner sanctum entry."}
+                      </span>
+                    </div>
+                  ) : (
+                    <div class="p-3.5 bg-m3-surface-container border border-m3-outline-variant rounded-m3-md text-xs sm:text-sm text-m3-on-surface flex items-start gap-2.5">
+                      <ShieldCheck className="w-4 h-4 text-m3-primary shrink-0 mt-0.5" />
+                      <span class="leading-relaxed">
+                        <strong class="font-bold">Professional Assurance:</strong> Every assigned driver is police background-verified (PVC), carries a photo ID badge, maintains personal car cleanliness, and strictly adheres to passenger confidentiality and speed discipline.
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <!-- Tab Panel 2: Practical Tips -->
+              {parsedTips.length > 0 && (
+                <div
+                  id="panel-tips"
+                  role="tabpanel"
+                  aria-labelledby="tab-tips-btn"
+                  data-guide-panel="tips"
+                  class={`bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-xl p-4 sm:p-6 space-y-4 ${parsedDressCode ? 'hidden' : ''}`}
+                >
+                  <h3 class="font-bold text-base sm:text-lg font-heading text-m3-on-surface">
+                    {guideLabels.tipsTitle}
+                  </h3>
+                  <div class="grid sm:grid-cols-2 gap-3">
+                    {parsedTips.map((tip: any) => (
+                      <div class="bg-m3-surface p-4 rounded-m3-md border border-m3-outline-variant/60 flex items-start gap-3 shadow-xs">
+                        <CheckCircle2 className="w-4 h-4 text-m3-secondary shrink-0 mt-0.5" />
+                        <div class="space-y-1 text-xs sm:text-sm min-w-0 flex-1">
+                          {tip.title && (
+                            <span class="font-bold text-m3-on-surface block font-heading">{tip.title}</span>
+                          )}
+                          <p class="text-m3-on-surface-variant leading-relaxed break-words">{tip.desc}</p>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {(!parsedDressCode.items || parsedDressCode.items.length === 0) && (
-                <p class="text-xs sm:text-sm leading-relaxed whitespace-pre-line text-m3-on-surface-variant">
-                  {parsedDressCode.general || service.travelGuide.dressCode}
-                </p>
-              )}
-
-              {isTour ? (
-                <div class="p-3.5 bg-m3-primary-container/40 border border-m3-primary/20 rounded-m3-md text-xs sm:text-sm text-m3-on-surface flex items-start gap-2.5">
-                  <AlertCircle className="w-4 h-4 text-m3-primary shrink-0 mt-0.5" />
-                  <span class="leading-relaxed">
-                    <strong class="font-bold text-m3-on-primary-container">Strict Enforcement:</strong> {service.slug === 'tirupati-package' 
-                      ? "Devotees wearing jeans, modern printed t-shirts, Bermudas, shorts, or western clothing will be strictly stopped at the Vaikuntam scanning queue and denied sanctum entry."
-                      : "Traditional attire is mandatory across major South Indian shrines. Devotees in western outfits, shorts, or modern t-shirts will be stopped at entrance gopurams and denied inner sanctum entry."}
-                  </span>
-                </div>
-              ) : (
-                <div class="p-3.5 bg-m3-surface-container border border-m3-outline-variant rounded-m3-md text-xs sm:text-sm text-m3-on-surface flex items-start gap-2.5">
-                  <ShieldCheck className="w-4 h-4 text-m3-primary shrink-0 mt-0.5" />
-                  <span class="leading-relaxed">
-                    <strong class="font-bold">Professional Assurance:</strong> Every assigned driver is police background-verified (PVC), carries a photo ID badge, maintains personal car cleanliness, and strictly adheres to passenger confidentiality and speed discipline.
-                  </span>
-                </div>
-              )}
-            </div>
-          )}
-
-          <!-- Row 3: Practical Tips for Devotees -->
-          {parsedTips.length > 0 && (
-            <div class="pt-4 border-t border-m3-outline-variant/60 space-y-3">
-              <h3 class="font-bold text-m3-on-surface text-base sm:text-lg font-heading">
-                {guideLabels.tipsTitle}
-              </h3>
-              <div class="grid sm:grid-cols-2 gap-3">
-                {parsedTips.map((tip: any) => (
-                  <div class="bg-m3-surface-container-low p-4 rounded-m3-md border border-m3-outline-variant/60 flex items-start gap-3">
-                    <CheckCircle2 className="w-4 h-4 text-m3-secondary shrink-0 mt-0.5" />
-                    <div class="space-y-1 text-xs sm:text-sm min-w-0 flex-1">
-                      {tip.title && (
-                        <span class="font-bold text-m3-on-surface block font-heading">{tip.title}</span>
-                      )}
-                      <p class="text-m3-on-surface-variant leading-relaxed break-words">{tip.desc}</p>
-                    </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
             </div>
           )}
         </section>
       )}
 
-      <!-- 6. FREQUENTLY ASKED QUESTIONS — Accordion -->
+      <!-- 5. FREQUENTLY ASKED QUESTIONS — Accordion -->
       {service.faq && (
-        <section id="faq" class="space-y-4">
+        <section id="faq" class="space-y-4 scroll-mt-28">
           <div class="border-b border-m3-outline-variant/60 pb-3">
             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-bold uppercase tracking-widest mb-2">
               Help &amp; Queries
@@ -853,7 +996,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
         </section>
       )}
 
-      <!-- 7. IMPORTANT NOTES -->
+      <!-- 6. IMPORTANT NOTES -->
       {service.notes && (
         <section class="p-5 sm:p-6 bg-m3-primary-container/30 border border-m3-primary/20 rounded-m3-lg">
           <h3 class="text-xs font-bold text-m3-on-primary-container uppercase tracking-wider mb-2 flex items-center gap-2 font-heading">
@@ -871,7 +1014,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
         </section>
       )}
 
-      <!-- 8. DESKTOP CONVERSION BANNER (Calibrated Charcoal Theme) -->
+      <!-- 7. DESKTOP CONVERSION BANNER (Calibrated Charcoal Theme) -->
       <section class="bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-2xl p-6 sm:p-10 text-center shadow-m3-3 border border-slate-800">
         <div class="max-w-2xl mx-auto space-y-4">
           <h2 class="text-xl sm:text-2xl font-bold font-heading text-white">
@@ -905,3 +1048,40 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
 
   </main>
 </Layout>
+
+<script>
+  function setupGuideTabs() {
+    const tabBtns = document.querySelectorAll<HTMLButtonElement>('.guide-tab-btn');
+    const tabPanels = document.querySelectorAll<HTMLElement>('[data-guide-panel]');
+
+    if (!tabBtns.length) return;
+
+    tabBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-guide-tab');
+        if (!target) return;
+
+        tabBtns.forEach((b) => {
+          b.setAttribute('aria-selected', 'false');
+          b.classList.remove('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs');
+          b.classList.add('text-m3-on-surface-variant');
+        });
+
+        btn.setAttribute('aria-selected', 'true');
+        btn.classList.add('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs');
+        btn.classList.remove('text-m3-on-surface-variant');
+
+        tabPanels.forEach((p) => {
+          if (p.getAttribute('data-guide-panel') === target) {
+            p.classList.remove('hidden');
+          } else {
+            p.classList.add('hidden');
+          }
+        });
+      });
+    });
+  }
+
+  setupGuideTabs();
+  document.addEventListener('astro:page-load', setupGuideTabs);
+</script>
