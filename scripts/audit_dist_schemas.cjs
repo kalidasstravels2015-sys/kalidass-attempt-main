@@ -126,6 +126,18 @@ htmlFiles.forEach(fileFullPath => {
           console.error(`   ❌ [${relPath}] TaxiService contains invalid itinerary property`);
           totalErrors++;
         }
+
+        // TouristTrip validation
+        if (types.includes('TouristTrip')) {
+          if (!node.name) {
+            console.error(`   ❌ [${relPath}] TouristTrip missing name`);
+            totalErrors++;
+          }
+          if (node.providerMobility) {
+            console.error(`   ❌ [${relPath}] TouristTrip contains invalid providerMobility property (belongs to Service)`);
+            totalErrors++;
+          }
+        }
       });
     }
 

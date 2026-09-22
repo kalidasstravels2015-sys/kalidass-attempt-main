@@ -34,7 +34,7 @@
       "description": "Flat per-km tariffs and weekend road trip packages across South India with zero surge pricing.",
       "icon": "map-pin",
       "image": "/images/temple/mahabalipuram-ecr-temples.webp",
-      "link": "/services/popular-destinations/"
+      "link": "/services/outstation-cabs/"
     },
     {
       "title": "Temple Tours",
@@ -42,6 +42,13 @@
       "icon": "gopuram",
       "image": "/images/services/temple-tours.webp",
       "link": "/services/temple-tours/"
+    },
+    {
+      "title": "Weekend Packages",
+      "description": "Fixed 1-day & 2-day getaway packages to Pondicherry, Mahabalipuram, and hill stations with all tolls included.",
+      "icon": "palmtree",
+      "image": "/images/temple/mahabalipuram-ecr-temples.webp",
+      "link": "/services/weekend-packages/"
     },
     {
       "title": "Corporate Mobility",

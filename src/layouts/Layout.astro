@@ -29,7 +29,6 @@ const {
   keywords = defaultKeywords,
 } = Astro.props;
 
-const services = siteContent.services;
 const siteUrl = "https://kalidasstravels.in";
 const pathname = Astro.url.pathname.endsWith("/")
   ? Astro.url.pathname
@@ -188,7 +187,7 @@ const localBusinessSchema = {
           "@type": "TaxiService",
           name: "Outstation Cabs from Chennai",
           description: "Round trip and one-way outstation cabs from ₹14/km across Tamil Nadu, Pondicherry, and Karnataka.",
-          url: "https://kalidasstravels.in/services/popular-destinations/",
+          url: "https://kalidasstravels.in/services/outstation-cabs/",
         },
       },
       {
@@ -334,7 +333,7 @@ const siteNavigationSchema = {
       position: 2,
       name: "Outstation Cabs",
       description: "Book clean AC cabs from Chennai for outstation trips, weekend getaways & per-km round trips with zero surge.",
-      url: "https://kalidasstravels.in/services/popular-destinations/",
+      url: "https://kalidasstravels.in/services/outstation-cabs/",
     },
     {
       "@type": "SiteNavigationElement",
@@ -515,22 +514,22 @@ const unifiedSchemaGraph = {
       set:html={JSON.stringify(unifiedSchemaGraph)}
     />
 
-    <!-- Google Material Symbols Outlined (Subsetted to used icons, 6KB woff2 & non-render-blocking) -->
+    <!-- Google Material Symbols Outlined (Comprehensive subset with overflow protection) -->
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=ac_unit,account_balance,airline_seat_recline_extra,arrow_downward,arrow_forward,badge,business_center,calculate,call,chair,check_circle,checklist,close,commute,currency_rupee,directions_car,emergency,expand_more,flight_takeoff,group,handshake,home,image,keyboard_arrow_down,location_on,luggage,mail,menu,military_tech,near_me,open_in_new,payments,receipt_long,route,schedule,shield,star,task_alt,timer,translate,verified,verified_user&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=ac_unit,account_balance,airline_seat_recline_extra,arrow_downward,arrow_forward,badge,beach_access,business_center,calculate,call,chair,check_circle,checklist,close,commute,currency_rupee,directions_car,emergency,expand_more,flight_takeoff,group,handshake,home,image,keyboard_arrow_down,local_taxi,location_on,luggage,mail,menu,military_tech,near_me,open_in_new,payments,person,receipt_long,route,schedule,shield,star,task_alt,temple_hindu,timer,translate,verified,verified_user&display=swap"
       media="print"
       onload="this.media='all'"
     />
     <noscript>
       <link
         rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=ac_unit,account_balance,airline_seat_recline_extra,arrow_downward,arrow_forward,badge,business_center,calculate,call,chair,check_circle,checklist,close,commute,currency_rupee,directions_car,emergency,expand_more,flight_takeoff,group,handshake,home,image,keyboard_arrow_down,location_on,luggage,mail,menu,military_tech,near_me,open_in_new,payments,receipt_long,route,schedule,shield,star,task_alt,timer,translate,verified,verified_user&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=ac_unit,account_balance,airline_seat_recline_extra,arrow_downward,arrow_forward,badge,beach_access,business_center,calculate,call,chair,check_circle,checklist,close,commute,currency_rupee,directions_car,emergency,expand_more,flight_takeoff,group,handshake,home,image,keyboard_arrow_down,local_taxi,location_on,luggage,mail,menu,military_tech,near_me,open_in_new,payments,person,receipt_long,route,schedule,shield,star,task_alt,temple_hindu,timer,translate,verified,verified_user&display=swap"
       />
     </noscript>
 
     <style is:global>
-      /* Official Google Material Symbols M3 Configuration */
+      /* Official Google Material Symbols M3 Configuration with Layout-Safe Fallback */
       .material-symbols-outlined {
         font-family: 'Material Symbols Outlined';
         font-display: swap;
@@ -540,13 +539,18 @@ const unifiedSchemaGraph = {
         line-height: 1;
         letter-spacing: normal;
         text-transform: none;
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         white-space: nowrap;
         word-wrap: normal;
         direction: ltr;
         font-feature-settings: 'liga';
         -webkit-font-smoothing: antialiased;
         vertical-align: middle;
+        max-width: 1.5em;
+        max-height: 1.5em;
+        overflow: hidden; /* Guaranteed protection: Prevents raw text from stretching UI */
       }
 
       /* 100% Google Material Design 3 (M3) Option A: Executive Midnight Charcoal & Onyx */
@@ -877,22 +881,22 @@ const unifiedSchemaGraph = {
             )
           }
 
-          <!-- M3 Desktop Navigation Pills -->
-          <div class="hidden md:flex items-center space-x-1 lg:space-x-2">
-            <a href="/" class="px-3.5 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary focus-visible:ring-offset-2">
+          <!-- M3 Desktop Navigation Pills (Option A: Cabs & Rentals + Tour Packages) -->
+          <div class="hidden md:flex items-center space-x-1 lg:space-x-1.5">
+            <a href="/" class="px-3 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
               Home
             </a>
 
-            <!-- Services Dropdown (M3 Menu) -->
+            <!-- 1. Cabs & Rentals Dropdown -->
             <div class="relative group">
               <button
-                class="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary focus-visible:ring-offset-2"
+                class="flex items-center gap-1 px-3 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
                 aria-expanded="false"
                 aria-haspopup="true"
               >
-                <span>Services</span>
+                <span>Cabs &amp; Rentals</span>
                 <svg
-                  class="w-4 h-4 text-m3-on-surface-variant transition-transform group-hover:rotate-180"
+                  class="w-3.5 h-3.5 text-m3-on-surface-variant transition-transform group-hover:rotate-180"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -902,33 +906,131 @@ const unifiedSchemaGraph = {
                 </svg>
               </button>
               <div
-                class="absolute left-0 top-full mt-1 w-64 bg-m3-surface-container-lowest rounded-m3-xl shadow-m3-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 transform group-hover:translate-y-0 group-focus-within:translate-y-0 translate-y-2 border border-m3-outline-variant/60 p-2 z-50"
+                class="absolute left-0 top-full mt-1.5 w-72 bg-m3-surface-container-lowest rounded-m3-2xl shadow-m3-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 transform group-hover:translate-y-0 translate-y-1 border border-m3-outline-variant/60 p-2.5 z-50"
                 role="menu"
               >
-                {
-                  services.map((service) => (
-                    <a
-                      href={service.link.endsWith('/') ? service.link : `${service.link}/`}
-                      class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-m3-lg text-sm font-medium text-m3-on-surface hover:text-m3-primary hover:bg-m3-primary-container/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
-                      role="menuitem"
-                    >
-                      <span>{service.title}</span>
-                    </a>
-                  ))
-                }
+                <div class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-m3-on-surface-variant">Vehicle Hiring &amp; Mobility</div>
+                <a href="/services/chennai-airport-taxi/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-m3-primary-container/40 transition-colors group/item" role="menuitem">
+                  <svg class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3.5c-.5-.5-2.5 0-4 1.5L13.5 8.5 5.3 6.7c-.8-.2-1.6.2-2 .9l-.3.5c-.4.7-.2 1.6.4 2.1l5.7 4.3-2.6 2.6-2.6-.9c-.5-.2-1.1 0-1.5.4l-.2.2c-.4.4-.4 1.1 0 1.5l2.4 2.4 2.4 2.4c.4.4 1.1.4 1.5 0l.2-.2c.4-.4.6-1 .4-1.5l-.9-2.6 2.6-2.6 4.3 5.7c.5.6 1.4.8 2.1.4l.5-.3c.7-.4 1.1-1.2.9-2z"/>
+                  </svg>
+                  <div>
+                    <div class="text-xs font-bold text-m3-on-surface group-hover/item:text-m3-primary">Airport Transfers (MAA)</div>
+                    <div class="text-[11px] text-m3-on-surface-variant">From ₹650 • 5-min dispatch</div>
+                  </div>
+                </a>
+                <a href="/services/outstation-cabs/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-m3-primary-container/40 transition-colors group/item" role="menuitem">
+                  <svg class="w-4 h-4 text-blue-600 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2 10.9 2 11.1 2 11.3V16c0 .6.4 1 1 1h2"/>
+                    <circle cx="7" cy="17" r="2"/>
+                    <circle cx="17" cy="17" r="2"/>
+                  </svg>
+                  <div>
+                    <div class="text-xs font-bold text-m3-on-surface group-hover/item:text-m3-primary">Outstation Cabs</div>
+                    <div class="text-[11px] text-m3-on-surface-variant">Per-KM rates &amp; one-way drops (₹14/km)</div>
+                  </div>
+                </a>
+                <a href="/services/corporate/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-m3-primary-container/40 transition-colors group/item" role="menuitem">
+                  <svg class="w-4 h-4 text-purple-600 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="16" height="20" x="4" y="2" rx="2"/>
+                    <path d="M9 22v-4h6v4"/>
+                    <path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01"/>
+                  </svg>
+                  <div>
+                    <div class="text-xs font-bold text-m3-on-surface group-hover/item:text-m3-primary">Corporate Mobility</div>
+                    <div class="text-[11px] text-m3-on-surface-variant">Employee shift commute &amp; GST billing</div>
+                  </div>
+                </a>
+                <a href="/services/acting-drivers/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-m3-primary-container/40 transition-colors group/item" role="menuitem">
+                  <svg class="w-4 h-4 text-amber-600 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                  <div>
+                    <div class="text-xs font-bold text-m3-on-surface group-hover/item:text-m3-primary">Acting Drivers</div>
+                    <div class="text-[11px] text-m3-on-surface-variant">Chauffeur for your personal car from ₹600</div>
+                  </div>
+                </a>
+                <div class="pt-1.5 mt-1.5 border-t border-m3-outline-variant/40">
+                  <a href="/services/" class="flex items-center justify-between px-3 py-1.5 rounded-m3-lg text-xs font-bold text-m3-primary hover:bg-m3-primary/10 transition-colors" role="menuitem">
+                    <span>All Services Overview</span>
+                    <span class="text-xs font-bold">&rarr;</span>
+                  </a>
+                </div>
               </div>
             </div>
 
-            <a href="/fleet/" class="px-3.5 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary focus-visible:ring-offset-2">
+            <!-- 2. Tour Packages Dropdown -->
+            <div class="relative group">
+              <button
+                class="flex items-center gap-1 px-3 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
+                aria-expanded="false"
+                aria-haspopup="true"
+              >
+                <span>Tour Packages</span>
+                <span class="px-1.5 py-0.2 rounded-full bg-amber-500/15 text-amber-800 text-[10px] font-bold">Popular</span>
+                <svg
+                  class="w-3.5 h-3.5 text-m3-on-surface-variant transition-transform group-hover:rotate-180"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </button>
+              <div
+                class="absolute left-0 -ml-12 xl:-ml-4 top-full mt-1.5 w-80 bg-m3-surface-container-lowest rounded-m3-2xl shadow-m3-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 transform group-hover:translate-y-0 translate-y-1 border border-m3-outline-variant/60 p-2.5 z-50"
+                role="menu"
+              >
+                <div class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-m3-on-surface-variant flex items-center justify-between">
+                  <span>Curated Tour Packages</span>
+                  <span class="text-emerald-700 font-semibold text-[10px]">Tolls Included</span>
+                </div>
+                <a href="/services/temple-tours/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-amber-500/10 transition-colors group/item" role="menuitem">
+                  <svg class="w-4 h-4 text-amber-700 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L4 7v2h16V7l-8-5zm-6 9v8h2v-8H6zm5 0v8h2v-8h-2zm5 0v8h2v-8h-2zM2 21v2h20v-2H2z"/>
+                  </svg>
+                  <div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="text-xs font-bold text-m3-on-surface group-hover/item:text-amber-800">Temple Tours &amp; Yatras</span>
+                      <span class="px-1.5 py-0.2 rounded-full bg-amber-500/15 text-amber-800 text-[9px] font-bold">Popular</span>
+                    </div>
+                    <div class="text-[11px] text-m3-on-surface-variant">Tirupati (₹6k), Navagraha (₹8.6k), Thiruvannamalai</div>
+                  </div>
+                </a>
+                <a href="/services/weekend-packages/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-emerald-500/10 transition-colors group/item" role="menuitem">
+                  <svg class="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="4"/>
+                    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+                  </svg>
+                  <div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="text-xs font-bold text-m3-on-surface group-hover/item:text-emerald-800">Weekend Getaways</span>
+                      <span class="px-1.5 py-0.2 rounded-full bg-emerald-500/15 text-emerald-800 text-[9px] font-bold">New</span>
+                    </div>
+                    <div class="text-[11px] text-m3-on-surface-variant">Pondicherry (₹4.5k), Mahabalipuram, Yelagiri</div>
+                  </div>
+                </a>
+                <div class="pt-1.5 mt-1.5 border-t border-m3-outline-variant/40 flex items-center justify-between px-2">
+                  <a href="/services/temple-tours/" class="text-xs font-bold text-amber-800 hover:underline" role="menuitem">Temple Yatras &rarr;</a>
+                  <a href="/services/weekend-packages/" class="text-xs font-bold text-emerald-700 hover:underline" role="menuitem">Weekend Trips &rarr;</a>
+                </div>
+              </div>
+            </div>
+
+            <a href="/fleet/" class="px-3 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
               Fleet
             </a>
-            <a href="/drivers/" class="px-3.5 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary focus-visible:ring-offset-2">
+            <a href="/drivers/" class="px-3 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
               Drivers
             </a>
-            <a href="/tariff/" class="px-3.5 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary focus-visible:ring-offset-2">
+            <a href="/tariff/" class="px-3 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
               Tariff
             </a>
-            <a href="/calculator/" class="px-3.5 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary focus-visible:ring-offset-2">
+            <a href="/calculator/" class="px-3 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
               Fare Calculator
             </a>
           </div>
@@ -999,54 +1101,110 @@ const unifiedSchemaGraph = {
         class="text-m3-on-surface-variant hover:bg-m3-surface-container p-2 rounded-m3-full min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
         aria-label="Close navigation drawer"
       >
-        <span class="material-symbols-outlined text-[24px]">close</span>
+        <svg class="w-6 h-6 text-m3-on-surface-variant" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
       </button>
     </div>
 
     <!-- M3 Navigation List Items -->
     <div class="p-4 space-y-1.5 flex-grow">
       <a href="/" class="flex items-center gap-3 px-4 py-3 rounded-m3-full text-m3-on-surface font-medium text-sm hover:bg-m3-surface-container transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
-        <span class="material-symbols-outlined text-[22px] text-m3-on-surface-variant">home</span>
+        <svg class="w-5 h-5 text-m3-on-surface-variant shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
         <span class="text-m3-label-l font-semibold">Home</span>
       </a>
 
-      <!-- Services Submenu -->
+      <!-- 1. Cabs & Rentals Submenu -->
       <div class="rounded-m3-xl overflow-hidden bg-m3-surface-container-low p-1">
         <button
-          id="services-menu-toggle"
+          id="cabs-menu-toggle"
           class="flex items-center justify-between w-full px-3 py-2.5 rounded-m3-lg text-m3-on-surface font-medium text-sm hover:bg-m3-surface-container transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
           aria-expanded="false"
-          aria-controls="services-submenu"
+          aria-controls="cabs-submenu"
         >
           <div class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-[22px] text-m3-on-surface-variant">commute</span>
-            <span class="text-m3-label-l font-semibold">Our Services</span>
+            <svg class="w-5 h-5 text-m3-on-surface-variant shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2 10.9 2 11.1 2 11.3V16c0 .6.4 1 1 1h2"/>
+              <circle cx="7" cy="17" r="2"/>
+              <circle cx="17" cy="17" r="2"/>
+            </svg>
+            <span class="text-m3-label-l font-semibold">Cabs &amp; Rentals</span>
           </div>
-          <span id="services-chevron" class="material-symbols-outlined text-[20px] text-m3-on-surface-variant transform transition-transform duration-200">expand_more</span>
+          <svg id="cabs-chevron" class="w-4 h-4 text-m3-on-surface-variant transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
         </button>
-        <div id="services-submenu" class="hidden mt-1 space-y-1 pl-8 pr-2 pb-2">
+        <div id="cabs-submenu" class="hidden mt-1 space-y-1 pl-8 pr-2 pb-2">
           <a href="/services/chennai-airport-taxi/" class="block px-3 py-2 rounded-m3-sm text-xs font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">Airport Transfers (MAA)</a>
-          <a href="/services/popular-destinations/" class="block px-3 py-2 rounded-m3-sm text-xs font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">Outstation Cabs</a>
-          <a href="/services/temple-tours/" class="block px-3 py-2 rounded-m3-sm text-xs font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">Temple Tours</a>
+          <a href="/services/outstation-cabs/" class="block px-3 py-2 rounded-m3-sm text-xs font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">Outstation Cabs (₹14/km)</a>
           <a href="/services/corporate/" class="block px-3 py-2 rounded-m3-sm text-xs font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">Corporate Mobility</a>
           <a href="/services/acting-drivers/" class="block px-3 py-2 rounded-m3-sm text-xs font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">Acting Drivers</a>
+          <a href="/services/" class="block px-3 py-2 rounded-m3-sm text-xs font-bold text-m3-primary hover:bg-m3-surface-container-lowest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">All Services Overview &rarr;</a>
+        </div>
+      </div>
+
+      <!-- 2. Tour Packages Submenu -->
+      <div class="rounded-m3-xl overflow-hidden bg-m3-surface-container-low p-1">
+        <button
+          id="tours-menu-toggle"
+          class="flex items-center justify-between w-full px-3 py-2.5 rounded-m3-lg text-m3-on-surface font-medium text-sm hover:bg-m3-surface-container transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
+          aria-expanded="false"
+          aria-controls="tours-submenu"
+        >
+          <div class="flex items-center gap-3">
+            <svg class="w-5 h-5 text-amber-800 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L4 7v2h16V7l-8-5zm-6 9v8h2v-8H6zm5 0v8h2v-8h-2zm5 0v8h2v-8h-2zM2 21v2h20v-2H2z"/>
+            </svg>
+            <div class="flex items-center gap-2">
+              <span class="text-m3-label-l font-semibold">Tour Packages</span>
+              <span class="px-1.5 py-0.2 rounded-full bg-amber-500/15 text-amber-800 text-[9px] font-bold">Popular</span>
+            </div>
+          </div>
+          <svg id="tours-chevron" class="w-4 h-4 text-m3-on-surface-variant transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div id="tours-submenu" class="hidden mt-1 space-y-1 pl-8 pr-2 pb-2">
+          <a href="/services/temple-tours/" class="block px-3 py-2 rounded-m3-sm text-xs font-medium text-m3-on-surface-variant hover:text-amber-800 hover:bg-m3-surface-container-lowest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">Temple Tours (Tirupati, Navagraha)</a>
+          <a href="/services/weekend-packages/" class="block px-3 py-2 rounded-m3-sm text-xs font-medium text-m3-on-surface-variant hover:text-emerald-800 hover:bg-m3-surface-container-lowest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">Weekend Getaways (Pondicherry &amp; Hills)</a>
         </div>
       </div>
 
       <a href="/fleet/" class="flex items-center gap-3 px-4 py-3 rounded-m3-full text-m3-on-surface font-medium text-sm hover:bg-m3-surface-container transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
-        <span class="material-symbols-outlined text-[22px] text-m3-on-surface-variant">directions_car</span>
+        <svg class="w-5 h-5 text-m3-on-surface-variant shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"/>
+          <circle cx="6.5" cy="16.5" r="2.5"/>
+          <circle cx="16.5" cy="16.5" r="2.5"/>
+        </svg>
         <span class="text-m3-label-l font-semibold">Fleet</span>
       </a>
       <a href="/drivers/" class="flex items-center gap-3 px-4 py-3 rounded-m3-full text-m3-on-surface font-medium text-sm hover:bg-m3-surface-container transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
-        <span class="material-symbols-outlined text-[22px] text-m3-on-surface-variant">badge</span>
+        <svg class="w-5 h-5 text-m3-on-surface-variant shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
         <span class="text-m3-label-l font-semibold">Drivers</span>
       </a>
       <a href="/tariff/" class="flex items-center gap-3 px-4 py-3 rounded-m3-full text-m3-on-surface font-medium text-sm hover:bg-m3-surface-container transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
-        <span class="material-symbols-outlined text-[22px] text-m3-on-surface-variant">payments</span>
+        <svg class="w-5 h-5 text-m3-on-surface-variant shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="20" height="14" x="2" y="5" rx="2"/>
+          <line x1="2" x2="22" y1="10" y2="10"/>
+        </svg>
         <span class="text-m3-label-l font-semibold">Tariff &amp; Pricing</span>
       </a>
       <a href="/calculator/" class="flex items-center gap-3 px-4 py-3 rounded-m3-full text-m3-on-surface font-medium text-sm hover:bg-m3-surface-container transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
-        <span class="material-symbols-outlined text-[22px] text-m3-on-surface-variant">calculate</span>
+        <svg class="w-5 h-5 text-m3-on-surface-variant shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="16" height="20" x="4" y="2" rx="2"/>
+          <line x1="8" x2="16" y1="6" y2="6"/>
+          <line x1="16" x2="16" y1="14" y2="18"/>
+          <path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"/>
+        </svg>
         <span class="text-m3-label-l font-semibold">Fare Calculator</span>
       </a>
 
@@ -1151,7 +1309,7 @@ const unifiedSchemaGraph = {
           <h3 class="text-white font-bold text-xs tracking-wider uppercase mb-3 font-sans">Our Services</h3>
           <ul class="space-y-2 text-xs text-m3-inverse-on-surface/80">
             <li><a href="/services/chennai-airport-taxi/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs font-semibold text-emerald-400">Airport Transfers (MAA)</a></li>
-            <li><a href="/services/popular-destinations/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Outstation Cabs</a></li>
+            <li><a href="/services/outstation-cabs/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Outstation Cabs</a></li>
             <li><a href="/services/temple-tours/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Temple Tours</a></li>
             <li><a href="/services/corporate/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Corporate Mobility</a></li>
             <li><a href="/services/acting-drivers/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Acting Drivers</a></li>
@@ -1293,16 +1451,28 @@ const unifiedSchemaGraph = {
       });
     });
 
-    // Services Menu Toggle
-    const servicesToggle = document.getElementById("services-menu-toggle");
-    const servicesSubmenu = document.getElementById("services-submenu");
-    const servicesChevron = document.getElementById("services-chevron");
+    // Cabs & Rentals Menu Toggle
+    const cabsToggle = document.getElementById("cabs-menu-toggle");
+    const cabsSubmenu = document.getElementById("cabs-submenu");
+    const cabsChevron = document.getElementById("cabs-chevron");
 
-    servicesToggle?.addEventListener("click", (e) => {
+    cabsToggle?.addEventListener("click", (e) => {
       e.stopPropagation();
-      const isHidden = servicesSubmenu?.classList.toggle("hidden");
-      servicesToggle.setAttribute("aria-expanded", String(!isHidden));
-      servicesChevron?.classList.toggle("rotate-180");
+      const isHidden = cabsSubmenu?.classList.toggle("hidden");
+      cabsToggle.setAttribute("aria-expanded", String(!isHidden));
+      cabsChevron?.classList.toggle("rotate-180");
+    });
+
+    // Tour Packages Menu Toggle
+    const toursToggle = document.getElementById("tours-menu-toggle");
+    const toursSubmenu = document.getElementById("tours-submenu");
+    const toursChevron = document.getElementById("tours-chevron");
+
+    toursToggle?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isHidden = toursSubmenu?.classList.toggle("hidden");
+      toursToggle.setAttribute("aria-expanded", String(!isHidden));
+      toursChevron?.classList.toggle("rotate-180");
     });
   </script>
 

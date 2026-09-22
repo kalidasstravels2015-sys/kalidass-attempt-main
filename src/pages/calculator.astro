@@ -4,24 +4,29 @@ import QuotationEngine from "../components/QuotationEngine.jsx";
 import DriverFeeEstimator from "../components/DriverFeeEstimator.astro";
 import VehicleRelocationCalculator from "../components/VehicleRelocationCalculator.jsx";
 import Breadcrumbs from "../components/SEO/Breadcrumbs.astro";
+import FAQAccordion from "../components/FAQAccordion.astro";
 
 const breadcrumbItems = [
   { name: "Home", item: "/" },
   { name: "Calculator", item: "/calculator/" },
 ];
 
-const schema = {
-  "@context": "https://schema.org",
+const webAppSchema = {
   "@type": "WebApplication",
+  "@id": "https://kalidasstravels.in/calculator/#calculator-app",
   "name": "Kalidass Travels Cost Estimator",
   "url": "https://kalidasstravels.in/calculator/",
   "applicationCategory": "TravelApplication",
   "operatingSystem": "All",
-  "description": "Calculate instant transparent fares for Outstation Taxi, Chennai Acting Drivers, and Interstate Vehicle Relocation.",
+  "browserRequirements": "Requires JavaScript. Requires HTML5.",
+  "provider": {
+    "@id": "https://kalidasstravels.in/#localbusiness"
+  },
+  "description": "Calculate instant transparent fares for Outstation Taxi, Chennai Acting Drivers, and Interstate Vehicle Relocation with zero surge pricing.",
   "offers": {
     "@type": "AggregateOffer",
     "priceCurrency": "INR",
-    "lowPrice": "600",
+    "lowPrice": "499",
     "highPrice": "35000",
     "offerCount": "15"
   },
@@ -29,8 +34,49 @@ const schema = {
     "One-Way and Round-Trip Taxi Fare Estimation",
     "Acting Driver Hourly and Daily Fee Calculator",
     "Interstate Vehicle Relocation Cost Estimation",
-    "Zero Surge Pricing Transparent Breakdown"
+    "Zero Surge Pricing Transparent Breakdown",
+    "Kilometer Rules and Bata Calculation Guidelines"
   ]
+};
+
+const calculatorFaqs = [
+  {
+    q: "How is outstation taxi fare calculated in Chennai?",
+    a: "Outstation taxi fares are calculated based on the total round-trip distance multiplied by the per-kilometer vehicle rate, subject to a standard 250 km/calendar day minimum. The base fare covers the sanitized AC vehicle, fuel, and professional chauffeur service."
+  },
+  {
+    q: "Are highway toll fees, parking, and interstate taxes included in the calculator?",
+    a: "The calculator estimates the core vehicle running cost and driver daily allowances (bata). Fastag highway tolls, parking tickets, and interstate state entry permits (e.g. entering Andhra Pradesh, Karnataka, or Puducherry) are billed transparently at actuals based on your travel route."
+  },
+  {
+    q: "What is Driver Bata and when does it apply?",
+    a: "Driver Bata is the standard food and daily subsistence allowance for outstation chauffeurs (typically ₹300 to ₹500/day depending on vehicle class: Sedan, SUV, or Tempo Traveller). For trips departing before 6:00 AM or operating past 10:00 PM, a standard night driving allowance applies."
+  },
+  {
+    q: "How are Acting Driver hourly charges calculated?",
+    a: "Acting driver fees for your personal car start at ₹499 for the first 4 hours of local city driving in Chennai. Additional driving time is charged at ₹100 per extra hour. For outstation driving duties, a transparent full-day flat rate applies plus return transit allowance."
+  },
+  {
+    q: "How does Interstate Vehicle Relocation pricing work?",
+    a: "Personal car shifting is estimated based on highway road distance, experienced intercity driver allowance, fuel replenishment, and return public transit fare (train/bus ticket for driver return to Chennai) with a complete pre-trip and post-trip digital inspection handover."
+  },
+  {
+    q: "Does Kalidass Travels charge peak surge or rainy day multipliers?",
+    a: "No. Unlike app-based taxi aggregators, Kalidass Travels guarantees 100% transparent, fixed tariff rates with zero surge pricing during peak commute hours, festivals, or sudden monsoon rain in Chennai."
+  }
+];
+
+const faqSchema = {
+  "@type": "FAQPage",
+  "@id": "https://kalidasstravels.in/calculator/#faq",
+  "mainEntity": calculatorFaqs.map((faq) => ({
+    "@type": "Question",
+    "name": faq.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.a
+    }
+  }))
 };
 ---
 
@@ -38,11 +84,12 @@ const schema = {
   title="Online Taxi Fare Calculator & Trip Cost Estimator – Kalidass Travels"
   description="Calculate instant, transparent travel costs for outstation cabs, hourly acting drivers, and personal car relocations in Chennai. Zero surge pricing."
   keywords="taxi fare calculator chennai, cab cost estimator chennai, outstation cab fare calculator, acting driver charges calculator chennai, car relocation fare chennai, kalidass travels fare calculator"
-  schema={schema}
+  schema={[webAppSchema, faqSchema]}
 >
   <Breadcrumbs items={breadcrumbItems} />
-  <main class="bg-m3-surface-container-low text-m3-on-surface min-h-screen pt-6 pb-12 font-sans">
+  <main class="bg-m3-surface-container-low text-m3-on-surface min-h-screen pt-6 pb-16 font-sans">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Header -->
       <div class="text-center mb-8">
         <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
           <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
@@ -52,11 +99,12 @@ const schema = {
           Travel Cost <span class="text-m3-primary">Estimator</span>
         </h1>
         <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto font-normal leading-relaxed mb-6 font-sans">
-          Get instant, transparent price estimates for Cabs, Acting Drivers, and Vehicle Relocation services.
+          Get instant, transparent price estimates for Cabs, Acting Drivers, and Vehicle Relocation services with zero surge pricing.
         </p>
       </div>
 
-      <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      <!-- Calculators Section -->
+      <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start mb-14" aria-label="Interactive Travel Estimators">
         <h2 class="sr-only">Available Travel Calculators</h2>
         {/* Oneway / Round Trip Calculator */}
         <div class="w-full flex justify-center">
@@ -79,6 +127,122 @@ const schema = {
           <VehicleRelocationCalculator client:load />
         </div>
       </section>
+
+      <!-- Fare Calculation Rules & Grounding Section -->
+      <section class="mb-14 scroll-mt-24" aria-labelledby="fare-rules-heading">
+        <div class="text-center max-w-3xl mx-auto mb-8">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
+            <span class="w-2 h-2 rounded-full bg-m3-primary"></span>
+            <span>Transparent Pricing Breakdown</span>
+          </div>
+          <h2 id="fare-rules-heading" class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+            How Our Travel Costs Are <span class="text-m3-primary">Calculated</span>
+          </h2>
+          <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant font-normal max-w-2xl mx-auto leading-relaxed font-sans">
+            Every estimate generated above follows official Kalidass Travels commercial rate cards with zero hidden surprises.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div class="bg-m3-surface rounded-m3-xl p-5 border border-m3-outline-variant shadow-m3-1 hover:border-m3-outline/70 transition-all">
+            <div class="w-10 h-10 rounded-m3-lg bg-emerald-50 text-emerald-600 flex items-center justify-center mb-3">
+              <span class="material-symbols-outlined text-2xl">route</span>
+            </div>
+            <h3 class="font-heading font-bold text-sm sm:text-base text-m3-on-surface mb-1.5">
+              Kilometer-Based Pricing
+            </h3>
+            <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+              Outstation cabs are billed on actual round-trip kilometers with a standard 250 km/day minimum cap. Sedans start from ₹14/km, SUVs from ₹18–₹20/km.
+            </p>
+          </div>
+
+          <div class="bg-m3-surface rounded-m3-xl p-5 border border-m3-outline-variant shadow-m3-1 hover:border-m3-outline/70 transition-all">
+            <div class="w-10 h-10 rounded-m3-lg bg-blue-50 text-blue-600 flex items-center justify-center mb-3">
+              <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <h3 class="font-heading font-bold text-sm sm:text-base text-m3-on-surface mb-1.5">
+              Standard Driver Bata
+            </h3>
+            <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+              Driver subsistence allowance (₹300–₹500/day) covers food and highway standby. Trips running between 10:00 PM and 6:00 AM incur a night bata.
+            </p>
+          </div>
+
+          <div class="bg-m3-surface rounded-m3-xl p-5 border border-m3-outline-variant shadow-m3-1 hover:border-m3-outline/70 transition-all">
+            <div class="w-10 h-10 rounded-m3-lg bg-amber-50 text-amber-600 flex items-center justify-center mb-3">
+              <span class="material-symbols-outlined text-2xl">receipt_long</span>
+            </div>
+            <h3 class="font-heading font-bold text-sm sm:text-base text-m3-on-surface mb-1.5">
+              Tolls &amp; Permits at Actuals
+            </h3>
+            <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+              Fastag toll plaza fees, temple/airport parking, and interstate border permits (AP, Pondicherry, Karnataka) are payable directly as per actual receipts.
+            </p>
+          </div>
+
+          <div class="bg-m3-surface rounded-m3-xl p-5 border border-m3-outline-variant shadow-m3-1 hover:border-m3-outline/70 transition-all">
+            <div class="w-10 h-10 rounded-m3-lg bg-purple-50 text-purple-600 flex items-center justify-center mb-3">
+              <span class="material-symbols-outlined text-2xl">verified</span>
+            </div>
+            <h3 class="font-heading font-bold text-sm sm:text-base text-m3-on-surface mb-1.5">
+              Zero Surge Multipliers
+            </h3>
+            <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+              Unlike rideshare apps, our tariffs never surge during rain, peak office hours, or festival weekends. The estimated rate remains your confirmed rate.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ Section Accordion -->
+      <section id="faq" class="mb-14 scroll-mt-28" aria-labelledby="calculator-faq-heading">
+        <div class="text-center max-w-3xl mx-auto mb-8">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
+            <span class="w-2 h-2 rounded-full bg-m3-primary"></span>
+            <span>Estimator Help &amp; Policies</span>
+          </div>
+          <h2 id="calculator-faq-heading" class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+            Frequently Asked Questions <span class="text-m3-primary">About Travel Estimates</span>
+          </h2>
+          <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant font-normal max-w-2xl mx-auto leading-relaxed font-sans">
+            Clear, transparent answers about outstation billing, driver allowances, toll policies, and vehicle relocation estimates.
+          </p>
+        </div>
+
+        <FAQAccordion items={calculatorFaqs} columns={2} className="max-w-5xl mx-auto" />
+      </section>
+
+      <!-- CTA Section -->
+      <div class="text-center bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-xl p-8 sm:p-12 shadow-m3-3 relative overflow-hidden border border-slate-800">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-tight mb-3 font-heading text-white">
+          Need a Custom Multi-City Itinerary or <span class="text-m3-tertiary-container">Special Vehicle?</span>
+        </h2>
+        <p class="text-xs sm:text-sm md:text-base text-slate-300 max-w-xl mx-auto mb-8 font-sans font-normal leading-relaxed">
+          Planning a wedding fleet, pilgrimage circuit, or corporate package? Get in touch with our team for instant customized billing.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-4">
+          <a
+            href="/tariff/"
+            class="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-m3-primary hover:bg-slate-900 text-m3-on-primary font-bold rounded-m3-full shadow-m3-2 transition-all cursor-pointer text-sm border border-white/20 group"
+          >
+            <span>View Full Tariff Card</span>
+            <svg class="w-4 h-4 text-emerald-400 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </a>
+          <a
+            href="tel:+919092303060"
+            class="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface font-bold rounded-m3-full transition-all text-sm shadow-m3-1"
+          >
+            <span class="material-symbols-outlined text-[18px] text-emerald-500">call</span>
+            <span>Call +91 90923 03060</span>
+          </a>
+        </div>
+      </div>
+
     </div>
   </main>
 </Layout>
