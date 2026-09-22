@@ -215,7 +215,7 @@ export default function CorporateMobility() {
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-m3-full bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface border border-m3-outline-variant font-semibold text-xs sm:text-sm shadow-m3-1 transition-all"
             >
               <Phone className="w-4 h-4 text-m3-primary" />
-              <span>B2B Desk: +91 90923 03060</span>
+              <span>B2B Desk: +91 63819 39769</span>
             </a>
           </div>
 
@@ -556,7 +556,7 @@ export default function CorporateMobility() {
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface px-6 py-3.5 rounded-m3-full font-semibold text-xs sm:text-sm shadow-m3-1 transition-all"
             >
               <Phone className="w-4 h-4 text-emerald-500" />
-              <span>Call B2B Desk: +91 90923 03060</span>
+              <span>Call B2B Desk: +91 63819 39769</span>
             </a>
           </div>
         </div>

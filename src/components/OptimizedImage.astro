@@ -6,6 +6,7 @@ interface Props {
   src: string;
   alt: string;
   class?: string;
+  style?: string;
   loading?: "eager" | "lazy";
   decoding?: "async" | "auto" | "sync";
   fetchpriority?: "high" | "low" | "auto";
@@ -16,6 +17,7 @@ const {
   src,
   alt,
   class: className,
+  style,
   loading = "lazy",
   decoding = "async",
   fetchpriority,
@@ -54,6 +56,7 @@ if (!isRemote) {
       src={src}
       alt={alt}
       class={className}
+      style={style}
       loading={loading}
       decoding={decoding}
       fetchpriority={fetchpriority}
@@ -63,6 +66,7 @@ if (!isRemote) {
       src={src}
       alt={alt}
       class={className}
+      style={style}
       loading={loading}
       decoding={decoding}
       fetchpriority={fetchpriority}
@@ -74,6 +78,7 @@ if (!isRemote) {
       src={imageData}
       alt={alt}
       class={className}
+      style={style}
       widths={[240, 540, 720, 1080, 1600]}
       sizes={sizes}
       format="webp"
@@ -87,6 +92,7 @@ if (!isRemote) {
       src={src}
       alt={alt}
       class={className}
+      style={style}
       loading={loading}
       decoding={decoding}
       fetchpriority={fetchpriority}

@@ -2,64 +2,64 @@
   "hero": {
     "badge": "Trusted by 1,000+ Families",
     "title": "Explore Tamil Nadu With Comfort & Safety",
-    "highlight": "Premium Taxi Service for Pilgrimages & Corporate Travel.",
-    "description": "We combine professional drivers, sanitized vehicles, and transparent WhatsApp support to keep every pilgrimage or corporate journey calm and reliable.",
+    "highlight": "Trusted Taxi & Chauffeur Services in Chennai.",
+    "description": "Clean AC vehicles, background-verified drivers, and upfront pricing with zero hidden charges. Based in Medavakkam, serving Chennai and all South India.",
     "images": [
       "/images/hero/airavatesvara.webp",
       "/images/hero/coimbatore.webp",
       "/images/hero/madurai.webp"
     ],
     "cta": "Call Now",
-    "phone": "+91 90923 03060",
+    "phone": "+91 63819 39769",
     "email": "kalidasstravels2015@gmail.com"
   },
   "ui_labels": {
     "book_your_ride": "Book your Ride",
-    "our_premium_fleet": "Our Premium Fleet",
-    "trusted_by_industry_leaders": "Trusted by Industry Leaders",
-    "our_professional_drivers": "Our Professional Drivers",
-    "client_reviews": "Client Reviews",
-    "travel_awareness_and_safety": "Travel Awareness and Safety"
+    "our_premium_fleet": "Our Vehicle Fleet",
+    "trusted_by_industry_leaders": "Trusted by Leading Organizations",
+    "our_professional_drivers": "Our Verified Drivers",
+    "client_reviews": "Customer Reviews",
+    "travel_awareness_and_safety": "Travel Awareness & Safety"
   },
   "services": [
     {
       "title": "Airport Transfers",
-      "description": "5-10 min rapid dispatch from Chennai Airport (MAA). Real-time flight tracking, Meet & Greet, and zero delay fee.",
+      "description": "Rapid 5-10 min dispatch from Chennai Airport (MAA). Real-time flight tracking, terminal meet & greet, and zero surge pricing.",
       "icon": "plane-takeoff",
       "image": "/images/services/airport-transfer.webp",
       "link": "/services/chennai-airport-taxi/"
     },
     {
       "title": "Outstation Cabs",
-      "description": "Flat per-km tariffs and weekend road trip packages across South India with zero surge pricing.",
+      "description": "Flat per-km rates from ₹14/km and fixed weekend getaway packages across South India with zero hidden charges.",
       "icon": "map-pin",
       "image": "/images/temple/mahabalipuram-ecr-temples.webp",
       "link": "/services/outstation-cabs/"
     },
     {
       "title": "Temple Tours",
-      "description": "All-inclusive spiritual yatra packages with polite satvik drivers and highway tolls included.",
+      "description": "All-inclusive darshan trips to Tirupati, Kumbakonam 9 Navagraha, and Thiruvannamalai with tolls and driver bata included.",
       "icon": "gopuram",
       "image": "/images/services/temple-tours.webp",
-      "link": "/services/temple-tours/"
+      "link": "/services/tours/temple-tours/"
     },
     {
       "title": "Weekend Packages",
-      "description": "Fixed 1-day & 2-day getaway packages to Pondicherry, Mahabalipuram, and hill stations with all tolls included.",
+      "description": "Fixed 1-day and 2-day getaway packages to Pondicherry, Mahabalipuram, and hill stations with all highway tolls included.",
       "icon": "palmtree",
       "image": "/images/temple/mahabalipuram-ecr-temples.webp",
-      "link": "/services/weekend-packages/"
+      "link": "/services/tours/weekend-packages/"
     },
     {
       "title": "Corporate Mobility",
-      "description": "24/7 routed employee commute transport, monthly executive retainers, and GST invoicing.",
+      "description": "Office staff shift commute, monthly executive cars with dedicated driver, and 100% itemized GST invoicing.",
       "icon": "building",
       "image": "/images/services/corporate.webp",
       "link": "/services/corporate/"
     },
     {
       "title": "Acting Drivers",
-      "description": "Police-verified chauffeurs for your personal car with flexible hourly & outstation duties.",
+      "description": "Police background-verified drivers for your personal car. Hourly city duty from ₹600 and outstation trips from ₹600/day.",
       "icon": "user-tie",
       "image": "/images/services/acting-drivers.webp",
       "link": "/services/acting-drivers/"

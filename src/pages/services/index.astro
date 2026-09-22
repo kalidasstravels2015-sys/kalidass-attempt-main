@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Breadcrumbs from '../../components/SEO/Breadcrumbs.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
+import OptimizedImage from '../../components/OptimizedImage.astro';
 import { 
   PlaneTakeoff,
   UserCheck, 
@@ -30,6 +31,8 @@ const servicesList = [
     tagline: "5–10 min rapid terminal dispatch from MAA. Real-time flight tracking & zero delay penalty.",
     badge: "5-Min Proximity",
     icon: PlaneTakeoff,
+    image: "/images/services/airport-transfer.webp",
+    imagePosition: "top",
     theme: "emerald",
     link: "/services/chennai-airport-taxi/",
     overview: "Located adjacent to Chennai International Airport (MAA). Guaranteed on-time pickup for Domestic (T1) and International (T2/T4) terminals with arrivals Meet & Greet, name paging boards, and zero surge pricing.",
@@ -49,6 +52,8 @@ const servicesList = [
     tagline: "Flat per-km rates & weekend getaway road trips across South India.",
     badge: "Starts ₹14 / km",
     icon: Compass,
+    image: "/images/temple/mahabalipuram-ecr-temples.webp",
+    imagePosition: "center 30%",
     theme: "blue",
     link: "/services/outstation-cabs/",
     overview: "Rent a clean, dual-AC taxi for weekend road trips or one-way drops to Pondicherry, Mahabalipuram, Bangalore, or Yercaud with flat, transparent tariffs.",
@@ -68,8 +73,10 @@ const servicesList = [
     tagline: "All-inclusive spiritual darshan yatras with sanitized AC cabs & all tolls included.",
     badge: "Starts ₹3,200",
     icon: Landmark,
+    image: "/images/services/temple-tours.webp",
+    imagePosition: "center 25%",
     theme: "emerald",
-    link: "/services/temple-tours/",
+    link: "/services/tours/temple-tours/",
     overview: "Comfortable spiritual darshan yatras from Chennai. Clean sanitized AC cab, courteous satvik driver, and all highway FASTag tolls 100% included upfront.",
     highlights: [
       "Chennai to Tirupati Balaji (1 Day): From ₹6,000",
@@ -87,14 +94,16 @@ const servicesList = [
     tagline: "24/7 staff commute, executive retainers & corporate airport cabs.",
     badge: "Starts ₹350 / shift",
     icon: Building2,
+    image: "/images/services/corporate.webp",
+    imagePosition: "top",
     theme: "purple",
     link: "/services/corporate/",
-    overview: "Dedicated enterprise transport for Chennai IT corridors and factories. Strict female employee safety algorithms and 100% GST invoicing.",
+    overview: "Dedicated enterprise transport for Chennai IT corridors and factories. Safe night shift commutes with live GPS tracking and 100% GST invoicing.",
     highlights: [
-      "Employee shift cabs with automated GPS & SOS",
+      "Employee shift cabs with live GPS tracking",
       "Monthly car + chauffeur retainers from ₹42,000/mo",
       "Flight-tracked airport pickups with nameboards",
-      "Guaranteed 60-minute replacement chauffeur SLA"
+      "Guaranteed 60-minute replacement car & driver guarantee"
     ],
     popularTrips: ["Employee Shift Pickups", "Monthly Car Retainers", "Airport Transfers"],
     whatsappMsg: "Hi Kalidass Travels, I need a corporate transport quotation for our company."
@@ -106,6 +115,8 @@ const servicesList = [
     tagline: "Police-verified chauffeurs for your personal car (Manual, Automatic, or EV).",
     badge: "Starts ₹600",
     icon: UserCheck,
+    image: "/images/services/acting-drivers.webp",
+    imagePosition: "center",
     theme: "amber",
     link: "/services/acting-drivers/",
     overview: "Hate city traffic or tiring highway driving? Book a police-verified chauffeur to drive your personal car with flexible hourly and daily outstation packages.",
@@ -120,8 +131,6 @@ const servicesList = [
   }
 ];
 
-
-
 const schema = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
@@ -129,7 +138,7 @@ const schema = {
   "name": "Travel Services in Chennai - Kalidass Travels",
   "description": "Book trusted travel services in Chennai: Airport Transfers, Outstation Cabs, Temple Tours, Corporate Mobility, and Acting Drivers for your personal car.",
   "url": "https://kalidasstravels.in/services/",
-  "image": "https://kalidasstravels.in/images/logo.webp",
+  "image": "https://kalidasstravels.in/images/services/airport-transfer.webp",
   "mainEntity": {
     "@type": "ItemList",
     "name": "Kalidass Travels Core Services",
@@ -138,7 +147,8 @@ const schema = {
       "position": idx + 1,
       "name": s.title,
       "url": `https://kalidasstravels.in${s.link}`,
-      "description": s.tagline
+      "description": s.tagline,
+      "image": `https://kalidasstravels.in${s.image}`
     }))
   }
 };
@@ -148,6 +158,8 @@ const schema = {
   title="Cab & Driver Services in Chennai | Airport Taxi, Outstation Cabs & Temple Tours – Kalidass Travels"
   description="Book Chennai airport taxi transfers, flat-rate outstation cabs, all-inclusive temple tours, corporate mobility, and verified acting drivers. Transparent fixed rates and 24/7 support."
   keywords="cab services chennai, taxi services chennai, outstation cabs chennai, airport taxi chennai, temple tour cabs chennai, acting driver in chennai, corporate cab chennai, kalidass travels"
+  image="/images/services/airport-transfer.webp"
+  ogImage="/og/services.jpg"
   schema={schema}
 >
   <Breadcrumbs items={breadcrumbItems} />
@@ -157,131 +169,120 @@ const schema = {
 
       <!-- 1. CLEAN HERO SECTION -->
       <section class="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
-          <span class="w-2 h-2 rounded-full bg-logo-red animate-pulse"></span>
-          <span>5 Core Travel Services • Transparent Fixed Rates • Zero Surge</span>
-        </div>
         <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-3 font-heading">
           Our Travel Services in <span class="text-m3-primary">Chennai</span>
         </h1>
-        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed font-normal mb-6">
+        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed font-normal">
           Whether you need a rapid airport transfer, flat-rate outstation cabs, an all-inclusive temple tour, corporate mobility, or an acting driver for your own car — select your service below for instant rates.
         </p>
-
-        <!-- Quick Jump Pills -->
-        <div class="flex flex-wrap items-center justify-center gap-2">
-          {servicesList.map((s) => (
-            <a
-              href={`#${s.id}`}
-              class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white text-m3-on-surface text-xs font-bold transition-all border border-m3-outline-variant shadow-xs"
-            >
-              <span>{s.title}</span>
-              <span class="text-micro opacity-75 font-normal">({s.badge})</span>
-            </a>
-          ))}
-        </div>
       </section>
 
       <!-- STICKY QUICK-NAV JUMP BAR (Below Hero) -->
-      <nav aria-label="Services Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-2.5 mb-10 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-6xl mx-auto flex items-center justify-between gap-2 overflow-x-auto no-scrollbar">
-          <div class="flex items-center gap-1 sm:gap-2 text-xs font-semibold whitespace-nowrap py-0.5">
-            <span class="text-micro uppercase tracking-wider text-m3-on-surface-variant mr-1 font-bold hidden sm:inline">Jump To:</span>
-            <a href="#airport-transfers" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Airport Taxi</a>
-            <a href="#outstation-cabs" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Outstation Cabs</a>
-            <a href="#temple-tours" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Temple Tours</a>
-            <a href="#corporate-mobility" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Corporate Mobility</a>
-            <a href="#acting-drivers" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Acting Drivers</a>
-          </div>
-          <div class="flex items-center gap-2 shrink-0">
-            <WhatsAppButton
-              href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20need%20assistance%20with%20booking%20a%20travel%20service."
-              size="sm"
-              variant="filled"
-              text="WhatsApp Support"
-            />
-          </div>
+      <nav aria-label="Services Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-3 mb-10 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto flex items-center gap-1 sm:gap-2 text-xs font-semibold whitespace-nowrap overflow-x-auto no-scrollbar py-0.5">
+          <span class="text-micro uppercase tracking-wider text-m3-on-surface-variant mr-1 font-bold hidden sm:inline">Jump To:</span>
+          <a href="#airport-transfers" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Airport Taxi</a>
+          <a href="#outstation-cabs" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Outstation Cabs</a>
+          <a href="#temple-tours" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Temple Tours</a>
+          <a href="#corporate-mobility" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Corporate Mobility</a>
+          <a href="#acting-drivers" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Acting Drivers</a>
         </div>
       </nav>
 
-      <!-- 2. THE 4 MAIN SERVICE PILLARS (Clean 2x2 Layout, Zero Bloat) -->
+      <!-- 2. THE 5 MAIN SERVICE PILLARS -->
       <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-14">
         {servicesList.map((srv) => {
           const IconComp = srv.icon;
           return (
             <div 
               id={srv.id}
-              class="bg-m3-surface-container-lowest rounded-m3-2xl p-6 sm:p-7 border border-m3-outline-variant shadow-m3-1 hover:shadow-m3-2 transition-all flex flex-col justify-between scroll-mt-28"
+              class="bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 hover:shadow-m3-2 transition-all flex flex-col justify-between scroll-mt-28 overflow-hidden group"
             >
               <div>
-                <!-- Card Header -->
-                <div class="flex items-center justify-between gap-2 mb-3">
-                  <div class="flex items-center gap-2.5">
-                    <div class="w-10 h-10 rounded-m3-lg bg-m3-surface-container-high text-m3-primary flex items-center justify-center border border-m3-outline-variant shrink-0">
+                <!-- Service Media Image Header -->
+                <a href={srv.link} class="relative h-56 sm:h-64 w-full block overflow-hidden bg-slate-900 cursor-pointer" aria-label={`View ${srv.title} Details`}>
+                  <OptimizedImage
+                    src={srv.image}
+                    alt={`Kalidass Travels - ${srv.title}`}
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    style={`object-position: ${srv.imagePosition || 'center'};`}
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent"></div>
+                  
+                  <!-- Overlaid Chips (Positioned at bottom so faces and heads at the top remain completely visible) -->
+                  <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+                    <span class="px-2.5 py-1 rounded-m3-full text-micro font-bold bg-slate-900/85 backdrop-blur-md text-white border border-white/20 shadow-xs uppercase tracking-wider">
+                      Service {srv.number}
+                    </span>
+                    <span class="px-2.5 py-1 rounded-m3-full text-micro font-bold bg-m3-primary text-white shadow-xs">
+                      {srv.badge}
+                    </span>
+                  </div>
+                </a>
+
+                <!-- Card Content -->
+                <div class="p-5 sm:p-6">
+                  <div class="flex items-center gap-2.5 mb-3">
+                    <div class="w-9 h-9 rounded-m3-lg bg-m3-surface-container-high text-m3-primary flex items-center justify-center border border-m3-outline-variant shrink-0">
                       <IconComp className="w-5 h-5" />
                     </div>
-                    <div>
-                      <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block">
-                        Service {srv.number}
-                      </span>
-                      <h2 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading leading-snug">
-                        {srv.title}
-                      </h2>
-                    </div>
+                    <h2 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading leading-snug">
+                      <a href={srv.link} class="hover:text-m3-primary transition-colors">{srv.title}</a>
+                    </h2>
                   </div>
-                  <span class="px-2.5 py-1 rounded-m3-full text-micro font-bold bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant shrink-0">
-                    {srv.badge}
-                  </span>
-                </div>
 
-                <p class="text-xs sm:text-sm text-m3-on-surface-variant font-medium leading-relaxed mb-4">
-                  {srv.tagline}
-                </p>
+                  <p class="text-xs sm:text-sm text-m3-on-surface-variant font-medium leading-relaxed mb-3">
+                    {srv.tagline}
+                  </p>
 
-                <p class="text-xs text-m3-on-surface-variant mb-4 leading-relaxed">
-                  {srv.overview}
-                </p>
+                  <p class="text-xs text-m3-on-surface-variant mb-4 leading-relaxed">
+                    {srv.overview}
+                  </p>
 
-                <!-- Key Bullet Highlights -->
-                <ul class="space-y-2 mb-5 bg-m3-surface-container-low p-3.5 rounded-m3-xl border border-m3-outline-variant/60">
-                  {srv.highlights.map((hl) => (
-                    <li class="flex items-start gap-2 text-xs text-m3-on-surface leading-tight">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-m3-primary shrink-0 mt-0.5" />
-                      <span>{hl}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <!-- Popular Routes Chips -->
-                <div class="mb-5">
-                  <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-1.5">
-                    Popular Options:
-                  </span>
-                  <div class="flex flex-wrap gap-1.5">
-                    {srv.popularTrips.map((trip) => (
-                      <span class="text-micro font-medium px-2 py-0.5 rounded-m3-md bg-m3-surface border border-m3-outline-variant/70 text-m3-on-surface">
-                        {trip}
-                      </span>
+                  <!-- Key Bullet Highlights -->
+                  <ul class="space-y-2 mb-5 bg-m3-surface-container-low p-3.5 rounded-m3-xl border border-m3-outline-variant/60">
+                    {srv.highlights.map((hl) => (
+                      <li class="flex items-start gap-2 text-xs text-m3-on-surface leading-tight">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-m3-primary shrink-0 mt-0.5" />
+                        <span>{hl}</span>
+                      </li>
                     ))}
+                  </ul>
+
+                  <!-- Popular Routes Chips -->
+                  <div class="mb-5">
+                    <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-1.5">
+                      Popular Options:
+                    </span>
+                    <div class="flex flex-wrap gap-1.5">
+                      {srv.popularTrips.map((trip) => (
+                        <span class="text-micro font-medium px-2 py-0.5 rounded-m3-md bg-m3-surface border border-m3-outline-variant/70 text-m3-on-surface">
+                          {trip}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
 
               <!-- Action Buttons -->
-              <div class="pt-4 border-t border-m3-outline-variant/60 flex items-center gap-3">
-                <a
-                  href={srv.link}
-                  class="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-4 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-m3-full text-xs font-bold shadow-xs transition-all"
-                >
-                  <span>View Rates &amp; Details</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </a>
-                <WhatsAppButton
-                  href={`https://wa.me/919092303060?text=${encodeURIComponent(srv.whatsappMsg)}`}
-                  size="icon"
-                  variant="filled"
-                  ariaLabel={`Book ${srv.title} on WhatsApp`}
-                />
+              <div class="p-5 sm:p-6 pt-0">
+                <div class="pt-4 border-t border-m3-outline-variant/60 flex items-center gap-3">
+                  <a
+                    href={srv.link}
+                    class="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-4 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-m3-full text-xs font-bold shadow-xs transition-all"
+                  >
+                    <span>View Rates &amp; Details</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </a>
+                  <WhatsAppButton
+                    href={`https://wa.me/919092303060?text=${encodeURIComponent(srv.whatsappMsg)}`}
+                    size="icon"
+                    variant="filled"
+                    ariaLabel={`Book ${srv.title} on WhatsApp`}
+                  />
+                </div>
               </div>
             </div>
           );
@@ -348,10 +349,10 @@ const schema = {
             text="Chat on WhatsApp"
           />
           <a
-            href="tel:+919092303060"
+            href="tel:+916381939769"
             class="inline-flex items-center gap-2 px-6 py-3 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface font-bold text-xs sm:text-sm rounded-m3-full shadow-m3-1 transition-all"
           >
-            <span>Call +91 90923 03060</span>
+            <span>Call +91 63819 39769</span>
           </a>
         </div>
       </section>

@@ -15,6 +15,8 @@ export default defineConfig({
   redirects: {
     '/outstation': '/services/popular-destinations/',
     '/services/outstation': '/services/popular-destinations/',
+    '/services/weekend-packages': '/services/tours/weekend-packages/',
+    '/services/temple-tours': '/services/tours/temple-tours/',
   },
   integrations: [
     tailwind(),

@@ -391,7 +391,8 @@ const categorySlugMap: Record<string, string> = {
   'Acting Driver Services': 'acting-drivers',
   'Corporate Mobility': 'corporate',
   'Corporate Travel': 'corporate',
-  'Temple Tours': 'temple-tours',
+  'Temple Tours': 'tours/temple-tours',
+  'Weekend Packages': 'tours/weekend-packages',
   'Airport Transfers': 'chennai-airport-taxi',
   'Outstation Cabs': 'outstation-cabs',
   'Popular Destinations': 'outstation-cabs',
@@ -618,39 +619,28 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
     </section>
 
     <!-- STICKY QUICK-NAV JUMP BAR -->
-    <nav class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-b border-m3-outline-variant/80 py-2.5 px-4 sm:px-6 lg:px-8 shadow-xs">
-      <div class="max-w-4xl mx-auto flex items-center justify-between gap-3 overflow-x-auto no-scrollbar">
-        <div class="flex items-center gap-2 text-xs font-semibold text-m3-on-surface py-0.5">
-          {service.tariff && (
-            <a href="#tariff" class="px-3.5 py-2 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container hover:bg-m3-primary hover:text-m3-on-primary transition-all shrink-0">
-              Tariff & Rates
-            </a>
-          )}
-          {service.routePlan && (
-            <a href="#route" data-nav-target="route" class="quick-nav-link px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
-              Route Schedule
-            </a>
-          )}
-          {service.travelGuide && (
-            <a href="#guide" data-nav-target="guide" class="quick-nav-link px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
-              {isTour ? "Darshan Guide" : "Guidelines"}
-            </a>
-          )}
-          {service.faq && (
-            <a href="#faq" data-nav-target="faq" class="quick-nav-link px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
-              FAQs
-            </a>
-          )}
-        </div>
-        <a
-          href={whatsappLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-m3-full bg-[#075E54] hover:bg-[#128C7E] text-white text-xs font-bold shrink-0 transition-colors shadow-xs"
-        >
-          <MessageCircle className="w-3.5 h-3.5" />
-          <span>Book On WhatsApp</span>
-        </a>
+    <nav class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 py-3 px-4 sm:px-6 lg:px-8 shadow-xs">
+      <div class="max-w-4xl mx-auto flex items-center gap-2 text-xs font-semibold text-m3-on-surface whitespace-nowrap overflow-x-auto no-scrollbar py-0.5">
+        {service.tariff && (
+          <a href="#tariff" class="px-3.5 py-2 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container hover:bg-m3-primary hover:text-m3-on-primary transition-all shrink-0">
+            Tariff & Rates
+          </a>
+        )}
+        {service.routePlan && (
+          <a href="#route" data-nav-target="route" class="quick-nav-link px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
+            Route Schedule
+          </a>
+        )}
+        {service.travelGuide && (
+          <a href="#guide" data-nav-target="guide" class="quick-nav-link px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
+            {isTour ? "Darshan Guide" : "Guidelines"}
+          </a>
+        )}
+        {service.faq && (
+          <a href="#faq" data-nav-target="faq" class="quick-nav-link px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
+            FAQs
+          </a>
+        )}
       </div>
     </nav>
 
@@ -1172,11 +1162,11 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
               text="Confirm on WhatsApp"
             />
             <a
-              href="tel:+919092303060"
+              href="tel:+916381939769"
               class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface font-bold text-xs sm:text-sm rounded-m3-full shadow-m3-1 transition-all"
             >
               <Phone className="w-4 h-4 text-m3-primary" />
-              <span>Call Dispatch: +91 90923 03060</span>
+              <span>Call Dispatch: +91 63819 39769</span>
             </a>
           </div>
         </div>

@@ -31,7 +31,7 @@
 - GPS Coordinates: Latitude 12.9171 N, Longitude 80.1923 E
 - Service Area: Chennai, Tamil Nadu, Andhra Pradesh (Tirupati, Srisailam), Karnataka (Bangalore, Mysore), Kerala (Munnar, Sabarimala), Pondicherry, all South India states
 - Canonical Website: https://kalidasstravels.in/
-- Primary Helpline (24/7): +91 90923 03060
+- Primary Helpline (24/7): +91 63819 39769
 - WhatsApp Booking: https://wa.me/919092303060
 - Email: kalidasstravels2015@gmail.com
 
@@ -113,7 +113,7 @@ All vehicles are air-conditioned, GPS-tracked, commercial yellow-plate registere
 ### Luxury Air-Suspension Coaches (21 / 35 / 49 Seater)
 - Configurations: 21-seater mini-bus, 35-seater executive coach, 49-seater multi-axle bus
 - Pricing: Custom consolidated quotes based on route, duration, and driver allocation
-- Contact for Quote: WhatsApp +91 90923 03060
+- Contact for Quote: WhatsApp +91 63819 39769
 
 ---
 
@@ -202,7 +202,9 @@ Vehicle: Tempo Traveller (12 to 17 Pax) | Capacity: 12 to 17 Pax | Round Trip: 2
 
 ## 6. Service 3 - Temple and Pilgrimage Tour Packages
 
-Page URL: https://kalidasstravels.in/services/temple-tours/
+Page URL: https://kalidasstravels.in/services/tours/temple-tours/
+Tour Packages Hub: https://kalidasstravels.in/services/tours/
+Weekend Packages: https://kalidasstravels.in/services/tours/weekend-packages/
 
 All-inclusive spiritual darshan yatras from Chennai. All highway FASTag tolls, interstate permits, and driver allowance are 100% included upfront. Satvik (non-smoking, non-drinking, vegetarian) chauffeurs only.
 
@@ -351,7 +353,9 @@ Homepage: https://kalidasstravels.in/ - Main landing page with booking panel, se
 Services Overview: https://kalidasstravels.in/services/ - All 5 service categories with highlights and quick-links
 Airport Taxi: https://kalidasstravels.in/services/chennai-airport-taxi/ - Airport zone tariffs, meet and greet, flight tracking
 Outstation Cabs: https://kalidasstravels.in/services/popular-destinations/ - Per-km rates, day packages, one-way drops
-Temple Tours: https://kalidasstravels.in/services/temple-tours/ - All pilgrimage packages with detailed pricing
+Tour Packages: https://kalidasstravels.in/services/tours/ - Curated Temple Yatras & Weekend Getaways hub
+Temple Tours: https://kalidasstravels.in/services/tours/temple-tours/ - All pilgrimage packages with detailed pricing
+Weekend Packages: https://kalidasstravels.in/services/tours/weekend-packages/ - 1-day & 2-day beach & hill station getaway packages
 Corporate Mobility: https://kalidasstravels.in/services/corporate/ - Monthly retainers, ETS shifts, GST billing
 Acting Drivers: https://kalidasstravels.in/services/acting-drivers/ - Personal car chauffeur hire rates
 Fleet: https://kalidasstravels.in/fleet/ - Full vehicle catalogue with specifications
@@ -410,7 +414,7 @@ A: Yes. Full GSTIN (33COVPM0531D1Z4) tax invoices for all trips, enabling corpor
 
 ## 13. Contact and Direct Booking
 
-- 24/7 Phone: +91 90923 03060
+- 24/7 Phone: +91 63819 39769
 - WhatsApp Instant Quote: https://wa.me/919092303060
 - Email: kalidasstravels2015@gmail.com
 - Office Address: No. 4/220, E88, Ponniamman Kovil Street, Annamalai Nagar, Medavakkam, Chennai 600100, Tamil Nadu, India

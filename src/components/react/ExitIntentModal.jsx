@@ -183,7 +183,7 @@ export default function ExitIntentModal() {
             href="tel:+919092303060"
             className="inline-flex items-center justify-center gap-1.5 py-3 px-4 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface text-xs sm:text-sm font-bold transition-colors text-center border border-m3-outline-variant"
           >
-            <span>Call +91 90923 03060</span>
+            <span>Call +91 63819 39769</span>
           </a>
         </div>
 

@@ -1,10 +1,12 @@
 # System & Technical Architecture Document
+
 ## Project: Kalidass Travels
+
 **Document Version:** 1.0.0  
 **Status:** Approved / Active Baseline  
 **Framework:** Astro 4.x + React 19 + Tailwind CSS 3.4 + Material Design 3  
 **Hosting & CDN:** Netlify / Cloudflare Edge CDN  
-**Backend:** Serverless Google Apps Script + Google Sheets DB + Google Calendar  
+**Backend:** Serverless Google Apps Script + Google Sheets DB + Google Calendar
 
 ---
 
@@ -34,7 +36,7 @@ graph TD
     end
 
     subgraph ConversionOps ["Fulfillment & Conversion"]
-        WA["WhatsApp Business Deep-Link (+91 90923 03060)"]
+        WA["WhatsApp Business Deep-Link (+91 63819 39769)"]
         TEL["Direct Telephony Call Route"]
         DISPATCH["Operations Dispatch Team"]
     end
@@ -60,15 +62,16 @@ graph TD
 ## 2. Technology Stack & Component Hierarchy
 
 ### 2.1 Core Stack
-| Layer | Technology | Selection Rationale |
-| :--- | :--- | :--- |
-| **Static Site Generator** | **Astro 4.x** (`astro/config`) | Sub-second Time-To-First-Byte (TTFB), zero-JS by default, native markdown & JSON collection support. |
-| **Interactive Islands** | **React 19** (`@astrojs/react`) | Rich state management for the multi-step quotation engine, dynamic vehicle pricing cards, and interactive modal dialogs. |
-| **Styling & Design System**| **Tailwind CSS 3.4** + Google M3 | Material Design 3 design tokens directly integrated into `tailwind.config.mjs` for strict design coherence. |
-| **Icons** | **Lucide React** & **Material Symbols Outlined** | Crisp, scalable vector icons mapped to M3 semantic roles. |
-| **Performance Optimizations**| **`@playform/compress`**, **`@astrojs/partytown`** | Automatic Gzip/Brotli HTML/CSS/JS minification; web worker isolation for analytics to prevent main-thread blocking. |
-| **Dynamic OpenGraph** | **Satori** + **Sharp** | Edge generation of high-resolution preview images for social sharing and WhatsApp card previews. |
-| **Testing & Quality** | **Playwright** (`@playwright/test`) + **Axe-core** | Automated end-to-end booking flow verification and automated accessibility compliance testing. |
+
+| Layer                         | Technology                                         | Selection Rationale                                                                                                      |
+| :---------------------------- | :------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------- |
+| **Static Site Generator**     | **Astro 4.x** (`astro/config`)                     | Sub-second Time-To-First-Byte (TTFB), zero-JS by default, native markdown & JSON collection support.                     |
+| **Interactive Islands**       | **React 19** (`@astrojs/react`)                    | Rich state management for the multi-step quotation engine, dynamic vehicle pricing cards, and interactive modal dialogs. |
+| **Styling & Design System**   | **Tailwind CSS 3.4** + Google M3                   | Material Design 3 design tokens directly integrated into `tailwind.config.mjs` for strict design coherence.              |
+| **Icons**                     | **Lucide React** & **Material Symbols Outlined**   | Crisp, scalable vector icons mapped to M3 semantic roles.                                                                |
+| **Performance Optimizations** | **`@playform/compress`**, **`@astrojs/partytown`** | Automatic Gzip/Brotli HTML/CSS/JS minification; web worker isolation for analytics to prevent main-thread blocking.      |
+| **Dynamic OpenGraph**         | **Satori** + **Sharp**                             | Edge generation of high-resolution preview images for social sharing and WhatsApp card previews.                         |
+| **Testing & Quality**         | **Playwright** (`@playwright/test`) + **Axe-core** | Automated end-to-end booking flow verification and automated accessibility compliance testing.                           |
 
 ---
 
@@ -99,18 +102,21 @@ graph TD
 ### 3.1 Fare Calculation Algorithms
 
 #### A. Outstation One-Way Drop
+
 $$\text{Chargeable KM} = \max(\text{Distance}, \text{Min Drop KM})$$
 $$\text{Base Fare} = \text{Chargeable KM} \times \text{One Way Rate}$$
 $$\text{Total Fare} = \text{Base Fare} + \text{Tolls/Interstate Permit (paid at actuals)}$$
-*(Swift Dzire / Etios: Min Drop KM = 130 km @ ₹16/km; Tempo: Min Drop KM = 250 km @ ₹26/km)*
+_(Swift Dzire / Etios: Min Drop KM = 130 km @ ₹16/km; Tempo: Min Drop KM = 250 km @ ₹26/km)_
 
 #### B. Outstation Round Trip
+
 $$\text{Total Billable KM} = \max(2 \times \text{Distance}, \text{Days} \times \text{Min KM per Day})$$
 $$\text{Base Fare} = \text{Total Billable KM} \times \text{Round Trip Rate}$$
 $$\text{Driver Allowance} = \text{Days} \times \text{Driver Bata}$$
 $$\text{Total Fare} = \text{Base Fare} + \text{Driver Allowance} + \text{Night Allowance (if between 10PM-5AM)}$$
 
 #### C. Local City Hourly Packages
+
 Standard packages: 4hr/40km, 5hr/50km, 8hr/80km, 10hr/100km, 12hr/120km.
 $$\text{Extra KM Fee} = \max(0, \text{Actual KM} - \text{Package KM}) \times \text{Extra KM Rate}$$
 $$\text{Extra Hr Fee} = \max(0, \text{Actual Hours} - \text{Package Hours}) \times \text{Extra Hr Rate}$$
@@ -124,6 +130,7 @@ $$\text{Total Local Fare} = \text{Package Rate} + \text{Extra KM Fee} + \text{Ex
 **Data Transfer Format:** `text/plain` containing stringified JSON (bypasses browser CORS preflight restrictions).
 
 ### Payload Schema:
+
 ```json
 {
   "date": "2026-09-20 19:30:00",
@@ -141,6 +148,7 @@ $$\text{Total Local Fare} = \text{Package Rate} + \text{Extra KM Fee} + \text{Ex
 ```
 
 ### Server-Side Execution (`google_apps_script.js`):
+
 1. **Google Sheets Integration:** Appends record to the active operational bookings sheet.
 2. **Google Calendar Event Creation:** Inserts a calendar event with 3-hour trip allocation block, formatted description, passenger contact, and pickup location for fleet managers.
 
@@ -149,6 +157,7 @@ $$\text{Total Local Fare} = \text{Package Rate} + \text{Extra KM Fee} + \text{Ex
 ## 5. Offline Fallback & Reliability Architecture
 
 To protect against third-party API rate-limiting, Google Cloud billing exhaustion, or unstable mobile connectivity, the client incorporates a dedicated **South India Distance Lookup Matrix**:
+
 - 40+ pre-calculated origin-destination distance nodes mapped from Chennai (`chennai-to-pondicherry: 151km`, `chennai-to-bangalore: 346km`, `chennai-to-tirupati: 135km`, etc.).
 - When Google Maps Distance Matrix fails or throws `OVER_QUERY_LIMIT`, the system smoothly switches to the static dictionary without user disruption or UI freeze.
 

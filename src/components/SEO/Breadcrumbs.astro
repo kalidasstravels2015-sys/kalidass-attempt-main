@@ -36,7 +36,7 @@ const schema = {
 <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
 <nav aria-label="Breadcrumb" class="py-2 sm:py-2.5 px-4 sm:px-6 max-w-4xl mx-auto overflow-hidden">
-  <ol class="flex items-center list-none p-0 text-xs sm:text-sm text-m3-on-surface-variant overflow-x-auto whitespace-nowrap scrollbar-hide">
+  <ol class="flex items-center list-none p-0 text-xs sm:text-sm text-m3-on-surface-variant overflow-x-auto whitespace-nowrap scrollbar-hide no-scrollbar">
     {
       normalizedItems.map((item, index) => (
         <li class="flex items-center shrink-0">
@@ -63,3 +63,15 @@ const schema = {
     }
   </ol>
 </nav>
+
+<style>
+  ol {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  ol::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+    width: 0;
+    height: 0;
+  }
+</style>

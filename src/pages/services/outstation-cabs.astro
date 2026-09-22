@@ -4,6 +4,8 @@ import Breadcrumbs from '../../components/SEO/Breadcrumbs.astro';
 import ServiceExplainer3Step from '../../components/ServiceExplainer3Step.astro';
 import FAQAccordion from '../../components/FAQAccordion.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
+import OptimizedImage from '../../components/OptimizedImage.astro';
+import { ChevronRight } from 'lucide-react';
 
 const title = "Outstation Cabs from Chennai | Round Trip & One-Way Taxi (₹14/km) – Kalidass Travels";
 const description = "Book clean AC cabs from Chennai for outstation trips and weekend getaways. Flat ₹14/km rates for Sedans, Innova Crysta, and Tempo Travellers with zero surge pricing.";
@@ -50,7 +52,11 @@ const explainerSteps = [
 
 const packageTariff = [
   {
+    id: "pondicherry-1day",
+    slug: "pondicherry-one-day-trip",
     name: "Chennai to Pondicherry (1-Day Trip)",
+    badge: "Top Weekend Trip",
+    image: "/images/temple/pondicherry.webp",
     route: "Auroville, French White Town, Promenade Beach & ECR Tolls Included",
     duration: "Same Day Return (Up to 320 KM)",
     rates: [
@@ -63,7 +69,11 @@ const packageTariff = [
     whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Pondicherry 1-Day Trip package."
   },
   {
+    id: "mahabalipuram-day",
+    slug: "mahabalipuram-ecr-temple-route",
     name: "Chennai to Mahabalipuram UNESCO & Beach Tour",
+    badge: "Heritage & Beach",
+    image: "/images/temple/mahabalipuram-ecr-temples.webp",
     route: "Shore Temple, Five Rathas, Arjuna's Penance, Seashell Museum + Tolls",
     duration: "Full Day (8 Hrs / 120 KM)",
     rates: [
@@ -76,7 +86,11 @@ const packageTariff = [
     whatsappMsg: "Hi Kalidass Travels, I want to book the Mahabalipuram Day Tour package."
   },
   {
+    id: "chennai-city-tour",
+    slug: "one-day-chennai-city-tour",
     name: "One-Day Chennai City Sightseeing",
+    badge: "City Discovery",
+    image: "/images/temple/chennai-city.webp",
     route: "Kapaleeshwarar, Santhome, Marina Beach, Egmore Museum & Fort St. George",
     duration: "8 Hours / 80 KM City Package",
     rates: [
@@ -185,7 +199,8 @@ const schema = {
       "priceCurrency": "INR",
       "price": pkg.rates?.[0]?.price ? pkg.rates[0].price.replace(/[^0-9]/g, '') : "2500",
       "availability": "https://schema.org/InStock",
-      "url": "https://kalidasstravels.in/services/outstation-cabs/",
+      "url": pkg.slug ? `https://kalidasstravels.in/services/${pkg.slug}/` : "https://kalidasstravels.in/services/outstation-cabs/",
+      "image": `https://kalidasstravels.in${pkg.image}`,
       "seller": {
         "@id": "https://kalidasstravels.in/#localbusiness"
       },
@@ -217,6 +232,7 @@ const faqSchema = {
   description={description}
   keywords={keywords}
   image="/images/temple/mahabalipuram-ecr-temples.webp"
+  ogImage="/og/outstation-cabs.jpg"
   schema={[schema, faqSchema]}
 >
   <Breadcrumbs items={breadcrumbItems} />
@@ -226,62 +242,31 @@ const faqSchema = {
 
       <!-- 1. HERO SECTION -->
       <section class="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
-          <span class="w-2 h-2 rounded-full bg-logo-red animate-pulse"></span>
-          <span>Outstation Cabs from Chennai • 24/7 Doorstep Pickup • Zero Surge</span>
-        </div>
         <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-3 font-heading">
           Chennai <span class="text-m3-primary">Outstation Taxi Rates</span> &amp; Weekend Getaways
         </h1>
-        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed font-normal mb-6">
+        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed font-normal">
           Flat per-kilometer rates and transparent fixed packages to Pondicherry, Mahabalipuram, Bangalore, and all South India destinations with clean AC cars and experienced highway chauffeurs.
         </p>
-
-        <!-- Quick Actions -->
-        <div class="flex flex-wrap items-center justify-center gap-3">
-          <a
-            href="tel:+919092303060"
-            class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary font-bold rounded-m3-full text-xs sm:text-sm shadow-m3-2 transition-all"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-            <span>Call Outstation Desk: +91 90923 03060</span>
-          </a>
-          <WhatsAppButton
-            href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20enquire%20about%20an%20outstation%20cab%20from%20Chennai."
-            size="md"
-            variant="filled"
-            text="Book on WhatsApp"
-          />
-        </div>
       </section>
 
       <!-- STICKY QUICK-NAV JUMP BAR (Below Hero) -->
-      <nav aria-label="Outstation Cabs Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-2.5 mb-10 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-6xl mx-auto flex items-center justify-between gap-3 overflow-x-auto no-scrollbar">
-          <div class="flex items-center gap-2 text-xs font-semibold text-m3-on-surface">
-            <a href="#per-km-table" class="px-3.5 py-2 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container hover:bg-m3-primary hover:text-m3-on-primary transition-all shrink-0">
-              Per-KM Rates
-            </a>
-            <a href="#fixed-packages" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
-              Fixed Packages
-            </a>
-            <a href="#how-it-works" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
-              How It Works
-            </a>
-            <a href="#safety-benchmark" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
-              Safety Benchmark
-            </a>
-            <a href="#faqs" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
-              Outstation FAQs
-            </a>
-          </div>
-          <a
-            href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20enquire%20about%20an%20outstation%20cab%20from%20Chennai."
-            target="_blank"
-            rel="noopener noreferrer"
-            class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-m3-full bg-[#075E54] hover:bg-[#128C7E] text-white text-xs font-bold shrink-0 transition-colors shadow-xs"
-          >
-            <span>Book on WhatsApp</span>
+      <nav aria-label="Outstation Cabs Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-3 mb-10 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto flex items-center gap-2 text-xs font-semibold text-m3-on-surface whitespace-nowrap overflow-x-auto no-scrollbar py-0.5">
+          <a href="#per-km-table" class="px-3.5 py-2 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container hover:bg-m3-primary hover:text-m3-on-primary transition-all shrink-0">
+            Per-KM Rates
+          </a>
+          <a href="#fixed-packages" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
+            Fixed Packages
+          </a>
+          <a href="#how-it-works" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
+            How It Works
+          </a>
+          <a href="#safety-benchmark" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
+            Highway Safety
+          </a>
+          <a href="#faqs" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
+            Outstation FAQs
           </a>
         </div>
       </nav>
@@ -421,40 +406,79 @@ const faqSchema = {
             </span>
           </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {packageTariff.map((pkg) => (
-              <div class="bg-m3-surface rounded-m3-xl p-5 border border-m3-outline-variant shadow-xs flex flex-col justify-between hover:border-m3-primary/30 transition-all">
-                <div>
-                  <div class="inline-block text-micro font-bold uppercase tracking-wider text-m3-primary bg-m3-primary-container px-2.5 py-0.5 rounded-m3-full mb-2">
-                    {pkg.duration}
-                  </div>
-                  <h3 class="text-base font-bold text-m3-on-surface font-heading mb-1.5">
-                    {pkg.name}
-                  </h3>
-                  <p class="text-xs text-m3-on-surface-variant mb-4 leading-relaxed">
-                    {pkg.route}
-                  </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {packageTariff.map((pkg) => {
+              const leafUrl = pkg.slug ? `/services/${pkg.slug}/` : undefined;
+              return (
+                <div class="bg-m3-surface rounded-m3-2xl border border-m3-outline-variant shadow-xs flex flex-col justify-between hover:shadow-m3-2 hover:border-m3-primary/30 transition-all overflow-hidden group">
+                  <div>
+                    <!-- Media Image Header with Badges & Leaf Link -->
+                    <a href={leafUrl} class="block h-48 sm:h-52 overflow-hidden relative bg-m3-surface-container-high cursor-pointer group/img" aria-label={`View ${pkg.name} Itinerary`}>
+                      <OptimizedImage
+                        src={pkg.image}
+                        alt={pkg.name}
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 relative z-10"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                      <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent z-10"></div>
 
-                  <!-- Vehicle Price Slabs -->
-                  <div class="space-y-1.5 mb-5 bg-m3-surface-container-low p-3 rounded-m3-lg border border-m3-outline-variant/50">
-                    {pkg.rates.map((r) => (
-                      <div class="flex items-center justify-between text-xs py-1 border-b border-m3-outline-variant/30 last:border-0">
-                        <span class="text-m3-on-surface-variant font-medium">{r.car}</span>
-                        <strong class="text-m3-primary font-heading font-black">{r.price}</strong>
+                      <!-- Top USP Badge -->
+                      <span class="absolute top-3 left-3 bg-slate-950/85 backdrop-blur-md border border-white/20 text-white text-[11px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-m3-full shadow-xs z-20">
+                        {pkg.badge}
+                      </span>
+
+                      <!-- Duration Chip -->
+                      <span class="absolute bottom-3 left-3 inline-flex items-center gap-1.5 bg-white/95 backdrop-blur-md text-slate-900 text-xs font-semibold px-2.5 py-1 rounded-m3-full shadow-xs z-20">
+                        <svg class="w-3.5 h-3.5 text-m3-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span>{pkg.duration}</span>
+                      </span>
+                    </a>
+
+                    <!-- Card Body -->
+                    <div class="p-5 sm:p-6">
+                      <a href={leafUrl} class="block group/title">
+                        <h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading mb-1.5 group-hover/title:text-m3-primary transition-colors">
+                          {pkg.name}
+                        </h3>
+                      </a>
+                      <p class="text-xs text-m3-on-surface-variant mb-4 leading-relaxed">
+                        {pkg.route}
+                      </p>
+
+                      <!-- Vehicle Price Slabs -->
+                      <div class="space-y-1.5 mb-5 bg-m3-surface-container-low p-3.5 rounded-m3-xl border border-m3-outline-variant/60">
+                        {pkg.rates.map((r) => (
+                          <div class="flex items-center justify-between text-xs py-1 border-b border-m3-outline-variant/30 last:border-0">
+                            <span class="text-m3-on-surface-variant font-medium">{r.car}</span>
+                            <strong class="text-m3-primary font-heading font-black text-sm">{r.price}</strong>
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    </div>
+                  </div>
+
+                  <!-- Card Action Footer -->
+                  <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-0 flex items-center gap-2">
+                    {leafUrl && (
+                      <a
+                        href={leafUrl}
+                        class="flex-1 inline-flex items-center justify-center gap-1 px-4 py-2.5 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary text-xs font-bold transition-all shadow-m3-1"
+                      >
+                        <span>View Itinerary</span>
+                        <ChevronRight className="w-4 h-4" />
+                      </a>
+                    )}
+                    <WhatsAppButton
+                      href={`https://wa.me/919092303060?text=${encodeURIComponent(pkg.whatsappMsg)}`}
+                      size="sm"
+                      variant={leafUrl ? "tonal" : "filled"}
+                      fullWidth={!leafUrl}
+                      text={leafUrl ? "Book" : "Book This Package"}
+                    />
                   </div>
                 </div>
-
-                <WhatsAppButton
-                  href={`https://wa.me/919092303060?text=${encodeURIComponent(pkg.whatsappMsg)}`}
-                  size="sm"
-                  variant="filled"
-                  fullWidth={true}
-                  text="Book This Package"
-                />
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -464,7 +488,7 @@ const faqSchema = {
       <section id="safety-benchmark" class="my-10 md:my-14 bg-m3-surface-container-low rounded-m3-2xl p-6 sm:p-8 border border-m3-outline-variant scroll-mt-28">
         <div class="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
           <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-m3-on-surface font-heading">
-            The Kalidass Outstation Safety Benchmark
+            Our Standards for Safe Highway Trips
           </h2>
         </div>
 
@@ -531,10 +555,10 @@ const faqSchema = {
             text="Get WhatsApp Quote"
           />
           <a
-            href="tel:+919092303060"
+            href="tel:+916381939769"
             class="inline-flex items-center gap-2 px-6 py-3 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface font-bold text-xs sm:text-sm rounded-m3-full shadow-m3-1 transition-all"
           >
-            <span>Call +91 90923 03060</span>
+            <span>Call +91 63819 39769</span>
           </a>
         </div>
       </section>

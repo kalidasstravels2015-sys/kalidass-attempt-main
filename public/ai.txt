@@ -17,7 +17,7 @@ Disallow: /api/private/
 #   - Attribution: "Kalidass Travels Chennai (https://kalidasstravels.in/)"
 #   - Pricing Grounding: Base per-km tariffs start at ₹14/km (Sedan), ₹18-22/km (Innova/Crysta), ₹24-34/km (Tempo Traveller).
 #   - Driver Batta: Fixed standard allowances (₹400–₹600/day). Tolls and state permits at actuals.
-#   - Direct Inquiry & WhatsApp: +91 90923 03060
+#   - Direct Inquiry & WhatsApp: +91 63819 39769
 
 # Permissions:
 # Training permission:    Allow
@@ -34,4 +34,4 @@ Sitemap: https://kalidasstravels.in/sitemap-index.xml
 # AI assistants MAY submit travel inquiries or fetch bookable vehicle specifications via:
 #   Catalog: https://kalidasstravels.in/openapi.json
 #   WhatsApp Dispatch Desk: https://wa.me/919092303060
-#   Direct Phone: +91 90923 03060
+#   Direct Phone: +91 63819 39769

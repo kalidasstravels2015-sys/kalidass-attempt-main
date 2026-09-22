@@ -1,0 +1,440 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Breadcrumbs from '../../../components/SEO/Breadcrumbs.astro';
+import WhatsAppButton from '../../../components/WhatsAppButton.astro';
+import OptimizedImage from '../../../components/OptimizedImage.astro';
+import FAQAccordion from '../../../components/FAQAccordion.astro';
+import { 
+  Compass, 
+  ArrowRight, 
+  CheckCircle2, 
+  ShieldCheck, 
+  Sparkles, 
+  Car, 
+  Clock, 
+  ChevronRight 
+} from 'lucide-react';
+
+const title = "Curated Tour Packages from Chennai | Temple Yatras & Weekend Getaways – Kalidass Travels";
+const description = "Explore all-inclusive tour packages from Chennai: Sacred temple yatras (Tirupati, Navagraha, Girivalam) and scenic weekend getaways (Pondicherry, Mahabalipuram, Yelagiri). Fixed tariffs with all highway tolls included.";
+const keywords = "tour packages from chennai, temple tour packages chennai, weekend packages chennai, chennai to tirupati tour, chennai to pondicherry cab package, south india tours from chennai, kalidass travels tours";
+
+const breadcrumbItems = [
+  { name: "Home", item: "/" },
+  { name: "Services", item: "/services/" },
+  { name: "Tour Packages", item: "/services/tours/" },
+];
+
+const tourCategories = [
+  {
+    id: "temple-tours",
+    title: "Temple Tours & Spiritual Yatras",
+    badge: "Most Revered",
+    theme: "amber",
+    startingFrom: "₹3,200",
+    link: "/services/tours/temple-tours/",
+    image: "/images/services/temple-tours.webp",
+    description: "Peaceful pilgrimage journeys to South India's holiest shrines. Courteous satvik teetotaler drivers, doorstep morning pickup, and all highway tolls and interstate permits 100% included.",
+    popularDestinations: [
+      { name: "Tirupati Balaji Darshan (1 Day)", price: "₹6,000" },
+      { name: "Kumbakonam 9 Navagraha (2 Days)", price: "₹8,600" },
+      { name: "Thiruvannamalai Girivalam (1 Day)", price: "₹6,500" },
+      { name: "Kanchipuram Divya Desams (1 Day)", price: "₹3,200" },
+      { name: "Rameswaram & Dhanushkodi (2 Days)", price: "₹15,500" },
+      { name: "Sabarimala Mandala Yatra (3 Days)", price: "₹15,900" }
+    ],
+    features: [
+      "Satvik, non-smoking teetotaler chauffeurs",
+      "All AP & interstate border permits included",
+      "Doorstep porch drop & elder darshan support",
+      "Zero upfront booking deposit required"
+    ],
+    ctaText: "View All Temple Packages"
+  },
+  {
+    id: "weekend-packages",
+    title: "Weekend Getaways & Road Trips",
+    badge: "Popular Escapes",
+    theme: "emerald",
+    startingFrom: "₹3,500",
+    link: "/services/tours/weekend-packages/",
+    image: "/images/temple/mahabalipuram-ecr-temples.webp",
+    description: "Rejuvenating 1-day and 2-day road trips from Chennai along scenic coastlines and tranquil hill stations. Clean AC cars, flexible photo stops, and flat-rate pricing with zero hidden surcharges.",
+    popularDestinations: [
+      { name: "Chennai to Pondicherry 1-Day Coastal", price: "₹4,500" },
+      { name: "Mahabalipuram UNESCO & Beach Tour", price: "₹3,500" },
+      { name: "One-Day Chennai City Sightseeing", price: "₹2,500" },
+      { name: "Yelagiri Hills 2-Day Nature Retreat", price: "₹7,500" },
+      { name: "Yercaud 'Jewel of the South' (2 Days)", price: "₹10,500" }
+    ],
+    features: [
+      "Scenic ECR beach drive with flexible cafe halts",
+      "Experienced ghat road hill station drivers",
+      "All ECR & NH highway FASTag tolls covered",
+      "Spacious Sedans, Ertiga, Crysta & Tempo Travellers"
+    ],
+    ctaText: "View All Weekend Packages"
+  }
+];
+
+const topPackages = [
+  {
+    name: "Tirupati Balaji Darshan",
+    category: "Temple Tour",
+    duration: "1 Day (320 km)",
+    price: "₹6,000",
+    car: "Sedan",
+    tag: "Top Pilgrimage",
+    link: "/services/tirupati-package/",
+    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Tirupati Balaji Car Package."
+  },
+  {
+    name: "Pondicherry 1-Day Coastal",
+    category: "Weekend Getaway",
+    duration: "Same Day (320 km)",
+    price: "₹4,500",
+    car: "Sedan",
+    tag: "Top Beach Trip",
+    link: "/services/pondicherry-one-day-trip/",
+    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Pondicherry 1-Day Weekend Package."
+  },
+  {
+    name: "Kumbakonam 9 Navagraha",
+    category: "Temple Tour",
+    duration: "2 Days / 1 Night (750 km)",
+    price: "₹8,600",
+    car: "Sedan",
+    tag: "9 Temples",
+    link: "/services/navagraha-tour/",
+    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Kumbakonam 9 Navagraha 2-Day Tour."
+  },
+  {
+    name: "Mahabalipuram UNESCO Tour",
+    category: "Weekend Getaway",
+    duration: "Full Day (120 km)",
+    price: "₹3,500",
+    car: "Sedan",
+    tag: "Heritage & Beach",
+    link: "/services/mahabalipuram-ecr-temple-route/",
+    whatsappMsg: "Hi Kalidass Travels, I want to book the Mahabalipuram 1-Day Beach & Heritage Tour."
+  }
+];
+
+const faqs = [
+  {
+    q: "What is included in Kalidass Travels tour packages?",
+    a: "Every tour package is 100% all-inclusive: doorstep pickup in Chennai, dual-AC vehicle, fuel, driver bata (allowance), all highway FASTag tolls, parking charges, and interstate road entry permits (where applicable). You never pay unexpected extra fees."
+  },
+  {
+    q: "Can we customize our tour schedule or add extra sightseeing stops?",
+    a: "Yes! All our tour cabs are exclusively private for your group or family. You have full freedom to add temple visits, highway breakfast halts, beach photo stops, or cafe visits at your own comfortable pace."
+  },
+  {
+    q: "Are the chauffeurs trained for pilgrimage and hill station driving?",
+    a: "Yes. For temple yatras, we deploy satvik, teetotaler drivers who understand temple protocols and elder care. For hill destinations like Yelagiri and Yercaud, our chauffeurs possess years of experienced ghat road driving."
+  },
+  {
+    q: "How do I confirm a tour package booking?",
+    a: "You can book in under 60 seconds by sending a WhatsApp message or calling +91 63819 39769. We share your driver and vehicle confirmation instantly with zero advance deposit required."
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "@id": "https://kalidasstravels.in/services/tours/#collection",
+  "name": title,
+  "description": description,
+  "url": "https://kalidasstravels.in/services/tours/",
+  "image": "https://kalidasstravels.in/images/services/temple-tours.webp",
+  "mainEntity": {
+    "@type": "ItemList",
+    "name": "Kalidass Travels Curated Tour Packages",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Temple Tours & Spiritual Yatras",
+        "url": "https://kalidasstravels.in/services/tours/temple-tours/",
+        "description": "All-inclusive spiritual darshan tours to Tirupati, Navagraha, Girivalam, Sabarimala, and Rameswaram."
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Weekend Getaways & Road Trips",
+        "url": "https://kalidasstravels.in/services/tours/weekend-packages/",
+        "description": "Fixed 1-day and 2-day holiday packages to Pondicherry, Mahabalipuram, Yelagiri, and Yercaud."
+      }
+    ]
+  }
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": "https://kalidasstravels.in/services/tours/#faq",
+  "mainEntity": faqs.map(item => ({
+    "@type": "Question",
+    "name": item.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.a
+    }
+  }))
+};
+---
+
+<Layout 
+  title={title}
+  description={description}
+  keywords={keywords}
+  image="/images/services/temple-tours.webp"
+  ogImage="/og/temple-tours.jpg"
+  schema={[schema, faqSchema]}
+>
+  <Breadcrumbs items={breadcrumbItems} />
+
+  <main class="bg-m3-surface text-m3-on-surface font-sans pb-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10">
+
+      <!-- 1. HERO SECTION -->
+      <section class="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-3 font-heading">
+          Curated <span class="text-m3-primary">Tour Packages</span> from Chennai
+        </h1>
+        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed font-normal">
+          Whether you seek sacred temple darshan or a refreshing weekend road trip with family, enjoy 100% transparent fixed packages with all highway tolls, fuel, and driver allowances included upfront.
+        </p>
+      </section>
+
+      <!-- 2. TWO CORE TOUR PILLARS (TEMPLE TOURS VS WEEKEND GETAWAYS) -->
+      <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+        {tourCategories.map((cat) => (
+          <div class={`bg-m3-surface-container-lowest rounded-m3-2xl border ${cat.theme === 'amber' ? 'border-amber-500/30' : 'border-emerald-500/30'} shadow-m3-1 overflow-hidden flex flex-col justify-between group hover:shadow-m3-2 transition-all`}>
+            <div>
+              <!-- Category Header Media -->
+              <a href={cat.link} class="block h-52 sm:h-60 relative overflow-hidden bg-m3-surface-container-high group/img">
+                <OptimizedImage
+                  src={cat.image}
+                  alt={cat.title}
+                  class="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-700"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent"></div>
+                
+                <!-- Badge and Price Pill -->
+                <div class="absolute top-4 left-4 flex items-center gap-2">
+                  <span class={`px-3 py-1 rounded-m3-full text-xs font-bold uppercase tracking-wider backdrop-blur-md shadow-xs ${cat.theme === 'amber' ? 'bg-amber-500 text-slate-950' : 'bg-emerald-600 text-white'}`}>
+                    {cat.badge}
+                  </span>
+                </div>
+
+                <div class="absolute bottom-4 left-4 right-4 flex items-end justify-between">
+                  <div>
+                    <span class="text-xs text-slate-300 font-medium">Starting Package</span>
+                    <div class="text-2xl sm:text-3xl font-black text-white font-heading">
+                      {cat.startingFrom}
+                      <span class="text-xs font-normal text-slate-300"> / all inc.</span>
+                    </div>
+                  </div>
+                  <span class="inline-flex items-center gap-1 text-xs font-bold text-white bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-m3-full">
+                    <span>Explore</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </span>
+                </div>
+              </a>
+
+              <!-- Category Details Body -->
+              <div class="p-6 sm:p-7">
+                <a href={cat.link} class="block group/title mb-2">
+                  <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading group-hover/title:text-m3-primary transition-colors">
+                    {cat.title}
+                  </h2>
+                </a>
+                <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed mb-6">
+                  {cat.description}
+                </p>
+
+                <!-- Popular Circuits List -->
+                <div class="mb-6">
+                  <h3 class="text-xs font-bold uppercase tracking-wider text-m3-on-surface-variant mb-3">
+                    Featured Circuits &amp; Rates:
+                  </h3>
+                  <div class="space-y-2">
+                    {cat.popularDestinations.map((dest) => (
+                      <div class="flex items-center justify-between text-xs sm:text-sm py-1.5 px-3 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/40">
+                        <span class="font-medium text-m3-on-surface">{dest.name}</span>
+                        <span class="font-bold text-m3-primary font-heading">{dest.price}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <!-- Feature Bullets -->
+                <div class="space-y-2 mb-6">
+                  {cat.features.map((feat) => (
+                    <div class="flex items-center gap-2 text-xs text-m3-on-surface-variant">
+                      <CheckCircle2 className={`w-4 h-4 shrink-0 ${cat.theme === 'amber' ? 'text-amber-600' : 'text-emerald-600'}`} />
+                      <span>{feat}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer Action Button -->
+            <div class="p-6 sm:p-7 pt-0">
+              <a
+                href={cat.link}
+                class={`w-full inline-flex items-center justify-center gap-2 py-3 px-6 rounded-m3-full font-bold text-xs sm:text-sm transition-all shadow-m3-1 ${cat.theme === 'amber' ? 'bg-amber-600 hover:bg-amber-700 text-white' : 'bg-emerald-700 hover:bg-emerald-800 text-white'}`}
+              >
+                <span>{cat.ctaText}</span>
+                <ArrowRight className="w-4 h-4" />
+              </a>
+            </div>
+          </div>
+        ))}
+      </section>
+
+      <!-- 3. TOP 4 HANDPICKED PACKAGES (QUICK RATES) -->
+      <section class="my-12">
+        <div class="text-center max-w-2xl mx-auto mb-8">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container text-m3-on-surface text-xs font-bold uppercase tracking-wider mb-2 border border-m3-outline-variant">
+            <span>Fast Booking</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
+            Most Booked <span class="text-m3-primary">Tour Packages</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">
+            Doorstep Chennai pickup • Dual AC cars • All tolls, permits &amp; driver batta included
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {topPackages.map((pkg) => (
+            <div class="bg-m3-surface-container-lowest border border-m3-outline-variant rounded-m3-2xl p-5 flex flex-col justify-between hover:shadow-m3-2 transition-all">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-m3-surface-container-high text-m3-on-surface-variant">
+                    {pkg.category}
+                  </span>
+                  <span class="text-[10px] font-bold text-emerald-700 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                    {pkg.tag}
+                  </span>
+                </div>
+                <h3 class="text-sm sm:text-base font-bold text-m3-on-surface font-heading mb-1">
+                  {pkg.name}
+                </h3>
+                <div class="text-xs text-m3-on-surface-variant mb-4">
+                  {pkg.duration} • {pkg.car}
+                </div>
+              </div>
+
+              <div>
+                <div class="flex items-baseline justify-between border-t border-m3-outline-variant/40 pt-3 mb-3">
+                  <span class="text-xs text-m3-on-surface-variant">All-Inc Fare</span>
+                  <span class="text-lg font-black text-m3-primary font-heading">{pkg.price}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <a
+                    href={pkg.link}
+                    class="flex-1 text-center py-2 px-3 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white text-m3-on-surface font-semibold text-xs transition-colors"
+                  >
+                    Itinerary
+                  </a>
+                  <WhatsAppButton
+                    href={`https://wa.me/919092303060?text=${encodeURIComponent(pkg.whatsappMsg)}`}
+                    size="sm"
+                    variant="filled"
+                    text="Book"
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- 4. TRUST PROMISE (4 PILLARS) -->
+      <section class="my-14 bg-m3-surface-container-low rounded-m3-2xl p-6 sm:p-8 border border-m3-outline-variant">
+        <div class="text-center max-w-2xl mx-auto mb-8">
+          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-m3-on-surface font-heading">
+            Why Travelers Choose Kalidass Tours
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">Zero surprises, respectful chauffeurs, and complete peace of mind</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <ShieldCheck className="w-4 h-4" />
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">All Tolls Covered</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">FASTag highway tolls, parking fees, and interstate permits are 100% pre-calculated.</p>
+          </div>
+
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <Sparkles className="w-4 h-4" />
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Sanitized Vehicles</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Deep-cleaned, dual-AC Sedans, Innova Crysta, and Tempo Travellers.</p>
+          </div>
+
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <Clock className="w-4 h-4" />
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Punctual Pickups</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Early morning doorstep reporting across Chennai with live driver tracking.</p>
+          </div>
+
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <Car className="w-4 h-4" />
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Zero Advance Deposit</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Book in 60 seconds with simple WhatsApp confirmation and pay post trip.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. TOUR FAQS -->
+      <section id="faqs" class="my-12 max-w-3xl mx-auto">
+        <div class="text-center mb-6">
+          <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading">
+            Frequently Asked Questions
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">Information on package tariffs, vehicle options, and customization</p>
+        </div>
+
+        <FAQAccordion items={faqs} columns={1} name="tour-faq" />
+      </section>
+
+      <!-- 6. BOTTOM CONVERSION CTA BANNER -->
+      <section class="bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-2xl p-6 sm:p-10 text-center shadow-m3-2 border border-slate-800 my-8">
+        <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold font-heading text-white mb-2">
+          Ready to Plan Your Spiritual or Weekend Tour?
+        </h2>
+        <p class="text-slate-300 text-xs sm:text-sm max-w-lg mx-auto mb-6">
+          Share your travel destination, group size, and preferred dates. Receive an instant all-inclusive WhatsApp quotation with zero obligation.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <WhatsAppButton
+            href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20plan%20a%20Tour%20package%20from%20Chennai."
+            size="md"
+            variant="filled"
+            text="Plan on WhatsApp"
+          />
+          <a
+            href="tel:+916381939769"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface font-bold text-xs sm:text-sm rounded-m3-full shadow-m3-1 transition-all"
+          >
+            <span>Call +91 63819 39769</span>
+          </a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</Layout>

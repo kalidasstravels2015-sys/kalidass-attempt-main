@@ -279,7 +279,7 @@ export default function TempleTours() {
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-m3-full bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface border border-m3-outline-variant font-semibold text-xs sm:text-sm shadow-m3-1 transition-all"
             >
               <Phone className="w-4 h-4 text-emerald-500" />
-              <span>Helpline: +91 90923 03060</span>
+              <span>Helpline: +91 63819 39769</span>
             </a>
           </div>
 
@@ -644,7 +644,7 @@ export default function TempleTours() {
               href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20a%20Temple%20Tour%20Package."
               size="lg"
               variant="filled"
-              text="Chat on WhatsApp (+91 90923 03060)"
+              text="Chat on WhatsApp (+91 63819 39769)"
             />
             <a
               href="tel:+919092303060"

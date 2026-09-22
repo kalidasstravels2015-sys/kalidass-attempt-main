@@ -18,31 +18,31 @@ const breadcrumbItems = [
 const explainerSteps = [
   {
     stepNumber: "1",
-    badge: "Step 1: Plan Scope",
-    title: "Define Mobility Requirements",
-    desc: "Choose from monthly executive car retainers, daily shift routes (ETS), or on-demand airport transfers.",
-    illustrationTitle: "Define Mobility Plan",
-    illustrationSub: "Retainers • Shifts • Airport VIP",
+    badge: "Step 1: Choose Service",
+    title: "Choose Your Service Type",
+    desc: "Select from monthly car retainers with driver, daily employee shift routes, or corporate airport transfers.",
+    illustrationTitle: "Select Corporate Plan",
+    illustrationSub: "Retainers • Shifts • Airport Transfers",
     theme: "purple" as const,
     iconType: "car" as const
   },
   {
     stepNumber: "2",
-    badge: "Step 2: Fleet Deployment",
-    title: "Dedicated Chauffeur & Fleet",
-    desc: "Uniformed executive pilots deployed with GPS route tracking and a strict 60-minute emergency backup SLA.",
+    badge: "Step 2: Deployment",
+    title: "Verified Chauffeur & Vehicle",
+    desc: "Background-verified drivers in uniform, active GPS tracking, and a 60-minute emergency backup replacement guarantee.",
     illustrationTitle: "Dedicated Fleet & Chauffeur",
-    illustrationSub: "60-Min Replacement SLA",
+    illustrationSub: "60-Min Replacement Guarantee",
     theme: "blue" as const,
     iconType: "driver" as const
   },
   {
     stepNumber: "3",
     badge: "Step 3: GST Invoicing",
-    title: "Consolidated Monthly Billing",
-    desc: "Digital trip sheets and 100% GST-compliant monthly invoices for full corporate input tax credit deduction.",
+    title: "Monthly Consolidated Billing",
+    desc: "Digital duty slips and 100% GST-compliant monthly tax invoices for your company's full input tax credit claim.",
     illustrationTitle: "100% GST Invoicing",
-    illustrationSub: "Monthly Corporate Billing",
+    illustrationSub: "Monthly Corporate Invoices",
     theme: "emerald" as const,
     iconType: "relax" as const
   }
@@ -55,8 +55,8 @@ const retainers = [
     scope: "26 Days / 10 Hours Daily",
     rate: "₹42,000 / mo",
     extra: "OT: ₹120/hr • Fuel actuals",
-    badge: "Managerial Mobility",
-    highlight: "Dedicated uniformed chauffeur, replacement within 60 mins anywhere in Chennai.",
+    badge: "Sedan Fleet",
+    highlight: "Dedicated chauffeur in uniform, replacement vehicle within 60 minutes anywhere in Chennai.",
     whatsappMsg: "Hi Kalidass Travels, I want to enquire about the Executive Sedan Monthly Retainer (₹42,000/mo)."
   },
   {
@@ -65,8 +65,8 @@ const retainers = [
     scope: "26 Days / 10 Hours Daily",
     rate: "₹52,000 / mo",
     extra: "OT: ₹140/hr • Fuel actuals",
-    badge: "Team Mobility",
-    highlight: "6-seater spacious vehicle for project teams, field audits, and client visits.",
+    badge: "6-Seater MPV",
+    highlight: "Spacious 6-seater vehicle for site visits, project teams, and office client commute.",
     whatsappMsg: "Hi Kalidass Travels, I want to enquire about the Ertiga SUV Monthly Retainer (₹52,000/mo)."
   },
   {
@@ -75,8 +75,8 @@ const retainers = [
     scope: "26 Days / 10 Hours Daily",
     rate: "₹65,000 / mo",
     extra: "OT: ₹175/hr • Fuel actuals",
-    badge: "CXO & Director Fleet",
-    highlight: "VIP chauffeur with English proficiency, leather captain seats for leadership & expats.",
+    badge: "Executive Luxury",
+    highlight: "Experienced senior chauffeur, comfortable captain seats, ideal for leadership and visiting clients.",
     whatsappMsg: "Hi Kalidass Travels, I want to enquire about the Innova Crysta Monthly Retainer (₹65,000/mo)."
   }
 ];
@@ -86,7 +86,7 @@ const spotPlans = [
     name: "Employee Shift Commute (ETS)",
     scope: "Per Shift Route Trip",
     rate: "₹350 – ₹550 / trip",
-    detail: "GPS-monitored routed pickups/drops with female employee first-in/last-out algorithms.",
+    detail: "GPS-tracked scheduled routes with doorstep drop and safety verification for late night shifts.",
     whatsappMsg: "Hi Kalidass Travels, I need a quotation for Corporate Employee Shift Commute."
   },
   {
@@ -115,19 +115,19 @@ const spotPlans = [
 const faqs = [
   {
     q: "How do you ensure female employee safety during night shifts?",
-    a: "We strictly follow industry-leading safety protocols: automated routing ensures female employees are never the first pickup or last drop in late-night shifts (8 PM to 6 AM). Security escort guards can be provided on request, and all cabs are GPS-monitored in real-time."
+    a: "We strictly follow safety protocols: female employees are never the first pickup or last drop during night shifts (8 PM to 6 AM). All cabs have active GPS tracking and driver contact details are shared with your admin desk in advance."
   },
   {
     q: "What happens if a dedicated monthly retainer driver falls sick?",
-    a: "We guarantee a replacement driver and vehicle SLA within 60 minutes anywhere in Chennai, ensuring zero disruption to executive schedules."
+    a: "We guarantee a replacement driver and vehicle within 60 minutes anywhere in Chennai, ensuring zero disruption to your business schedule."
   },
   {
     q: "Do you provide GST-compliant invoices for corporate tax credits?",
-    a: "Yes. All B2B bookings come with itemized GST invoices mentioning your company GSTIN, allowing you to claim full input tax credit."
+    a: "Yes. All corporate bookings come with itemized monthly GST invoices mentioning your company GSTIN, allowing you to claim full input tax credit."
   },
   {
     q: "Can we set up a monthly credit / bill-to-company account?",
-    a: "Yes! We offer 15-day and 30-day corporate billing credit cycles for registered enterprises following standard vendor onboarding."
+    a: "Yes. We offer 15-day and 30-day corporate billing credit cycles for registered enterprises following standard vendor onboarding."
   }
 ];
 
@@ -155,7 +155,7 @@ const schema = {
       {
         "@type": "Offer",
         "name": "Executive Sedan Monthly Retainer (Swift Dzire / Toyota Etios)",
-        "description": "26 Days / 10 Hours Daily dedicated managerial mobility with uniformed chauffeur and 60-min replacement SLA.",
+        "description": "26 Days / 10 Hours Daily dedicated Sedan with uniformed chauffeur, GPS tracking, and 60-minute emergency replacement guarantee.",
         "price": "42000",
         "priceCurrency": "INR",
         "priceValidUntil": "2027-12-31",
@@ -177,7 +177,7 @@ const schema = {
       {
         "@type": "Offer",
         "name": "Toyota Innova Crysta Monthly Retainer (7-Seater Luxury)",
-        "description": "26 Days / 10 Hours Daily CXO & Director luxury transport with VIP English-proficient chauffeur.",
+        "description": "26 Days / 10 Hours Daily 7-seater Innova Crysta with experienced senior driver. Comfortable captain seats for client meetings and leadership travel.",
         "price": "65000",
         "priceCurrency": "INR",
         "priceValidUntil": "2027-12-31",
@@ -188,7 +188,7 @@ const schema = {
       {
         "@type": "Offer",
         "name": "Corporate Employee Shift Commute (ETS)",
-        "description": "Per Shift Route Trip with GPS route tracking and female employee first-in/last-out automated algorithms.",
+        "description": "GPS-tracked scheduled shift routes with doorstep verification. Female employees are never the first pickup or last drop during night shifts (8 PM to 6 AM).",
         "price": "350",
         "priceCurrency": "INR",
         "priceValidUntil": "2027-12-31",
@@ -286,6 +286,7 @@ const faqSchema = {
   description={description}
   keywords={keywords}
   image="/images/services/corporate.webp"
+  ogImage="/og/corporate.jpg"
   schema={[schema, faqSchema]}
 >
   <Breadcrumbs items={breadcrumbItems} />
@@ -295,54 +296,23 @@ const faqSchema = {
 
       <!-- 1. HERO SECTION -->
       <section class="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
-          <span class="w-2 h-2 rounded-full bg-logo-red animate-pulse"></span>
-          <span>Enterprise Fleet Solutions • 100% GST Compliant • 60-Min SLA</span>
-        </div>
         <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-3 font-heading">
           Corporate Cab &amp; <span class="text-m3-primary">Employee Mobility</span> in Chennai
         </h1>
-        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed font-normal mb-6">
+        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed font-normal">
           Dependable business transportation for IT parks, factories, and corporate offices. 24/7 employee shift commute, monthly executive car retainers, and VIP airport protocol.
         </p>
-
-        <!-- Quick Actions -->
-        <div class="flex flex-wrap items-center justify-center gap-3">
-          <a
-            href="tel:+919092303060"
-            class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary font-bold rounded-m3-full text-xs sm:text-sm shadow-m3-2 transition-all"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-            <span>Call B2B Desk: +91 90923 03060</span>
-          </a>
-          <WhatsAppButton
-            href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20enquire%20about%20Corporate%20Mobility%20Solutions."
-            size="md"
-            variant="filled"
-            text="Request B2B Quote"
-          />
-        </div>
       </section>
 
       <!-- STICKY QUICK-NAV JUMP BAR (Below Hero, matching [slug].astro) -->
-      <nav aria-label="Corporate Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-2.5 mb-8 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-6xl mx-auto flex items-center justify-between gap-2 overflow-x-auto no-scrollbar">
-          <div class="flex items-center gap-1.5 sm:gap-2 text-xs font-semibold whitespace-nowrap py-0.5">
-            <span class="text-micro uppercase tracking-wider text-m3-on-surface-variant mr-1 font-bold hidden sm:inline">Jump To:</span>
-            <a href="#how-it-works" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">How It Works</a>
-            <a href="#retainers" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Executive Retainers</a>
-            <a href="#shift-spot" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Shift &amp; Spot Rates</a>
-            <a href="#compliance" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Enterprise SLA</a>
-            <a href="#faqs" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">B2B FAQs</a>
-          </div>
-          <div class="flex items-center gap-2 shrink-0">
-            <WhatsAppButton
-              href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20enquire%20about%20Corporate%20Mobility%20Solutions."
-              size="sm"
-              variant="filled"
-              text="B2B Quote"
-            />
-          </div>
+      <nav aria-label="Corporate Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-3 mb-8 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto flex items-center gap-1.5 sm:gap-2 text-xs font-semibold whitespace-nowrap overflow-x-auto no-scrollbar py-0.5">
+          <span class="text-micro uppercase tracking-wider text-m3-on-surface-variant mr-1 font-bold hidden sm:inline">Jump To:</span>
+          <a href="#how-it-works" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">How It Works</a>
+          <a href="#retainers" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Executive Retainers</a>
+          <a href="#shift-spot" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Shift &amp; Spot Rates</a>
+          <a href="#compliance" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Enterprise SLA</a>
+          <a href="#faqs" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">B2B FAQs</a>
         </div>
       </nav>
 
@@ -462,7 +432,7 @@ const faqSchema = {
       <section id="compliance" class="my-10 md:my-14 bg-m3-surface-container-low rounded-m3-2xl p-6 sm:p-8 border border-m3-outline-variant scroll-mt-28">
         <div class="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
           <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-m3-on-surface font-heading">
-            Built for Enterprise Reliability &amp; Compliance
+            Built for Reliable Corporate Transportation
           </h2>
         </div>
 
@@ -471,16 +441,16 @@ const faqSchema = {
             <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
             </div>
-            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Women Safety Protocol</h3>
-            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">First-in/last-out algorithm, door-to-gate verification, live GPS.</p>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Night Shift Safety</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Doorstep pickup &amp; drop verification with active GPS tracking.</p>
           </div>
 
           <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
             <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
-            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">60-Min Replacement SLA</h3>
-            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Instant backup driver &amp; car dispatch to avoid downtime.</p>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">60-Min Backup Guarantee</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Immediate backup driver and car dispatch to prevent business downtime.</p>
           </div>
 
           <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
@@ -488,15 +458,15 @@ const faqSchema = {
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             </div>
             <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">100% GST Invoicing</h3>
-            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Itemized monthly B2B invoices for input tax credit claims.</p>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Itemized monthly B2B tax invoices for full input tax credit deduction.</p>
           </div>
 
           <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
             <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
             </div>
-            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Credit Billing Cycles</h3>
-            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">15-day and 30-day bill-to-company credit terms for corporates.</p>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Corporate Credit Terms</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">15-day and 30-day bill-to-company credit terms for verified enterprises.</p>
           </div>
         </div>
       </section>
@@ -507,7 +477,7 @@ const faqSchema = {
           <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading">
             Frequently Asked Questions
           </h2>
-          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">Information on vendor onboarding, SLAs, and credit terms</p>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">Information on vendor onboarding, backup guarantees, and credit terms</p>
         </div>
 
         <FAQAccordion items={faqs} columns={1} name="corporate-faq" />
@@ -516,10 +486,10 @@ const faqSchema = {
       <!-- 6. BOTTOM CONVERSION CTA BANNER -->
       <section class="bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-2xl p-6 sm:p-10 text-center shadow-m3-3 border border-slate-800 my-8">
         <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold font-heading text-white mb-2">
-          Looking for a Corporate Mobility Partner?
+          Looking for a Corporate Cab Partner in Chennai?
         </h2>
         <p class="text-slate-300 text-xs sm:text-sm max-w-lg mx-auto mb-6">
-          Connect with our enterprise mobility team for customized employee commute tenders, monthly executive retainers, or event fleet management.
+          Connect with our transport desk for employee shift commute proposals, monthly executive car contracts, or corporate event fleets.
         </p>
         <div class="flex flex-wrap items-center justify-center gap-3">
           <WhatsAppButton
@@ -529,10 +499,10 @@ const faqSchema = {
             text="Discuss on WhatsApp"
           />
           <a
-            href="tel:+919092303060"
+            href="tel:+916381939769"
             class="inline-flex items-center gap-2 px-6 py-3 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface font-bold text-xs sm:text-sm rounded-m3-full shadow-m3-1 transition-all"
           >
-            <span>Call B2B Desk: +91 90923 03060</span>
+            <span>Call B2B Desk: +91 63819 39769</span>
           </a>
         </div>
       </section>

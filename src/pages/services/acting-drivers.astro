@@ -24,9 +24,9 @@ const explainerSteps = [
   },
   {
     stepNumber: "2",
-    badge: "Step 2: Doorstep SLA",
+    badge: "Step 2: On-Time Arrival",
     title: "Verified Driver Arrives",
-    desc: "Our police-verified (PVC) chauffeur reports at your Chennai doorstep in 30–60 minutes in full uniform with photo ID."
+    desc: "Our police background-verified driver reports at your Chennai doorstep in 30–60 minutes in full uniform with photo ID."
   },
   {
     stepNumber: "3",
@@ -166,6 +166,7 @@ const faqSchema = {
   description={description}
   keywords={keywords}
   image="/images/services/acting-drivers.webp"
+  ogImage="/og/acting-drivers.jpg"
   schema={[schema, faqSchema]}
 >
   <Breadcrumbs items={breadcrumbItems} />
@@ -175,53 +176,22 @@ const faqSchema = {
 
       <!-- 1. PUNCHY HERO SECTION -->
       <section class="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
-          <span class="w-2 h-2 rounded-full bg-logo-red animate-pulse"></span>
-          <span>Doorstep Chauffeurs Across Chennai • 30–60 Min Dispatch</span>
-        </div>
         <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-3 font-heading">
           Hire An <span class="text-m3-primary">Acting Driver</span> For Your Own Car
         </h1>
-        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed font-normal mb-6">
+        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed font-normal">
           Enjoy the comfort of your personal car without driving fatigue. Police-verified, polite chauffeurs for city shopping, doctor visits, night functions, and outstation trips.
         </p>
-
-        <!-- Instant Action CTAs -->
-        <div class="flex flex-wrap items-center justify-center gap-3">
-          <a
-            href="tel:+919092303060"
-            class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary font-bold rounded-m3-full text-xs sm:text-sm shadow-m3-2 transition-all"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-            <span>Call Dispatch: +91 90923 03060</span>
-          </a>
-          <WhatsAppButton
-            href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20need%20an%20acting%20driver%20for%20my%20car%20in%20Chennai."
-            size="md"
-            variant="filled"
-            text="Book on WhatsApp"
-          />
-        </div>
       </section>
 
       <!-- Sticky Sub-Nav Quick Jump Bar (Below Hero) -->
-      <nav aria-label="Acting Driver Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-2.5 mb-8 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-6xl mx-auto flex items-center justify-between gap-2 overflow-x-auto no-scrollbar">
-          <div class="flex items-center gap-1.5 sm:gap-2 text-xs font-semibold whitespace-nowrap py-0.5">
-            <span class="text-micro uppercase tracking-wider text-m3-on-surface-variant mr-1 font-bold hidden sm:inline">Jump To:</span>
-            <a href="#how-it-works" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">How It Works</a>
-            <a href="#tariffs" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Fixed Rates</a>
-            <a href="#driver-vetting" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Chauffeur Vetting</a>
-            <a href="#driver-faqs" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Driver FAQs</a>
-          </div>
-          <div class="flex items-center gap-2 shrink-0">
-            <WhatsAppButton
-              href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20need%20an%20acting%20driver%20for%20my%20car%20in%20Chennai."
-              size="sm"
-              variant="filled"
-              text="Book Driver"
-            />
-          </div>
+      <nav aria-label="Acting Driver Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-3 mb-8 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto flex items-center gap-1.5 sm:gap-2 text-xs font-semibold whitespace-nowrap overflow-x-auto no-scrollbar py-0.5">
+          <span class="text-micro uppercase tracking-wider text-m3-on-surface-variant mr-1 font-bold hidden sm:inline">Jump To:</span>
+          <a href="#how-it-works" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">How It Works</a>
+          <a href="#tariffs" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Fixed Rates</a>
+          <a href="#driver-vetting" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Chauffeur Vetting</a>
+          <a href="#driver-faqs" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Driver FAQs</a>
         </div>
       </nav>
 
@@ -344,7 +314,7 @@ const faqSchema = {
       <section id="driver-vetting" class="my-10 md:my-14 bg-m3-surface-container-low rounded-m3-2xl p-6 sm:p-8 border border-m3-outline-variant scroll-mt-28">
         <div class="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
           <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-m3-on-surface font-heading">
-            Why Car Owners Choose Kalidass Chauffeurs
+            Why Car Owners Choose Kalidass Drivers
           </h2>
         </div>
 
@@ -411,10 +381,10 @@ const faqSchema = {
             text="Book on WhatsApp"
           />
           <a
-            href="tel:+919092303060"
+            href="tel:+916381939769"
             class="inline-flex items-center gap-2 px-6 py-3 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface font-bold text-xs sm:text-sm rounded-m3-full shadow-m3-1 transition-all"
           >
-            <span>Call +91 90923 03060</span>
+            <span>Call +91 63819 39769</span>
           </a>
         </div>
       </section>

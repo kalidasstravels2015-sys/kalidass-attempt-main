@@ -1,0 +1,554 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Breadcrumbs from '../../../components/SEO/Breadcrumbs.astro';
+import ServiceExplainer3Step from '../../../components/ServiceExplainer3Step.astro';
+import FAQAccordion from '../../../components/FAQAccordion.astro';
+import WhatsAppButton from '../../../components/WhatsAppButton.astro';
+import OptimizedImage from '../../../components/OptimizedImage.astro';
+import { ChevronRight } from 'lucide-react';
+
+const title = "Chennai to Temple Tour Cab Packages | Pilgrimage Taxi & Van Hire";
+const description = "Book all-inclusive temple tour packages from Chennai to Tirupati, Kumbakonam 9 Navagraha, Thiruvannamalai Girivalam, Sabarimala, Kanchipuram & Rameswaram. AC cabs, polite satvik drivers & all tolls included.";
+const keywords = "temple tour packages from chennai, chennai to tirupati cab, kumbakonam navagraha taxi, thiruvannamalai girivalam cab, rameswaram pilgrimage taxi, sabarimala taxi chennai, south india temple tour cabs";
+
+const breadcrumbItems = [
+  { name: "Home", item: "/" },
+  { name: "Services", item: "/services/" },
+  { name: "Tour Packages", item: "/services/tours/" },
+  { name: "Temple Tours", item: "/services/tours/temple-tours/" },
+];
+
+const explainerSteps = [
+  {
+    stepNumber: "1",
+    badge: "Step 1: Choose Package",
+    title: "Pick Your Sacred Yatra",
+    desc: "Select your destination (Tirupati, Navagraha, Girivalam, etc.) and preferred vehicle (Sedan, Ertiga, Crysta, Tempo).",
+    illustrationTitle: "Select Yatra & Cab",
+    illustrationSub: "Sedan • Ertiga • Crysta • Tempo",
+    theme: "amber" as const,
+    iconType: "car" as const
+  },
+  {
+    stepNumber: "2",
+    badge: "Step 2: Doorstep Pickup",
+    title: "Satvik Chauffeur Arrives",
+    desc: "Early morning doorstep pickup in Chennai by a courteous, non-smoking, teetotaler driver who understands temple traditions.",
+    illustrationTitle: "Punctual Doorstep Pickup",
+    illustrationSub: "Polite Satvik Chauffeur",
+    theme: "blue" as const,
+    iconType: "pickup" as const
+  },
+  {
+    stepNumber: "3",
+    badge: "Step 3: Sacred Darshan",
+    title: "All-Inclusive Peaceful Darshan",
+    desc: "All highway FASTag tolls, interstate permits, and driver allowance are 100% included upfront. Zero hidden fees.",
+    illustrationTitle: "Peaceful Temple Darshan",
+    illustrationSub: "All Tolls & Permits Included",
+    theme: "emerald" as const,
+    iconType: "relax" as const
+  }
+];
+
+const tourPackages = [
+  {
+    id: "tirupati",
+    name: "Chennai to Tirupati Balaji Darshan",
+    duration: "1 Day (320 km Round Trip)",
+    badge: "Most Popular",
+    rates: [
+      { car: "Sedan", price: "₹6,000" },
+      { car: "Ertiga", price: "₹7,500" },
+      { car: "Innova", price: "₹8,500" },
+      { car: "Crysta", price: "₹10,000" },
+      { car: "Tempo", price: "₹12,500" }
+    ],
+    highlights: "Doorstep 4 AM Chennai pickup • Andhra State Permit, Tolls, Alipiri check & Driver Bata fully included.",
+    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Tirupati Balaji Car Package."
+  },
+  {
+    id: "navagraha",
+    name: "Chennai to Kumbakonam 9 Navagraha Tour",
+    duration: "2 Days / 1 Night (750 km)",
+    badge: "Complete 9 Temples",
+    rates: [
+      { car: "Sedan", price: "₹8,600" },
+      { car: "Ertiga", price: "₹10,600" },
+      { car: "Innova", price: "₹13,100" },
+      { car: "Crysta", price: "₹15,500" },
+      { car: "Tempo", price: "₹18,500" }
+    ],
+    highlights: "All 9 planetary temples sequenced without backtracking • 2 Days driver bata, fuel & highway tolls included.",
+    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Kumbakonam 9 Navagraha 2-Day Tour."
+  },
+  {
+    id: "thiruvannamalai",
+    name: "Chennai to Thiruvannamalai Girivalam Trip",
+    duration: "1 Day / Pournami Night (400 km)",
+    badge: "Pournami Special",
+    rates: [
+      { car: "Sedan", price: "₹6,500" },
+      { car: "Ertiga", price: "₹7,900" },
+      { car: "Innova", price: "₹9,300" },
+      { car: "Crysta", price: "₹11,100" },
+      { car: "Tempo", price: "₹13,500" }
+    ],
+    highlights: "Arunachaleswarar Darshan + 14 km Pournami Girivalam car standby for family & seniors.",
+    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Thiruvannamalai Girivalam Tour."
+  },
+  {
+    id: "kanchipuram",
+    name: "Chennai to Kanchipuram Temple Tour",
+    duration: "1 Day (150 km)",
+    badge: "Divya Desam",
+    rates: [
+      { car: "Sedan", price: "₹3,200" },
+      { car: "Ertiga", price: "₹4,500" },
+      { car: "Innova", price: "₹5,500" },
+      { car: "Crysta", price: "₹6,500" },
+      { car: "Tempo", price: "₹8,000" }
+    ],
+    highlights: "Kamakshi Amman, Ekambareswarar, Varadharaja Perumal & Silk Saree weaver visit included.",
+    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Kanchipuram 1-Day Temple Package."
+  },
+  {
+    id: "rameswaram",
+    name: "Chennai to Rameswaram & Dhanushkodi Yatra",
+    duration: "2 Days / 1 Night (1,200 km)",
+    badge: "Char Dham Sthalam",
+    rates: [
+      { car: "Sedan", price: "₹15,500" },
+      { car: "Ertiga", price: "₹18,400" },
+      { car: "Innova", price: "₹22,600" },
+      { car: "Crysta", price: "₹26,700" },
+      { car: "Tempo", price: "₹32,200" }
+    ],
+    highlights: "22 Theertham baths, Pamban bridge, Ram Setu / Arichal Munai & APJ Abdul Kalam Memorial.",
+    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Rameswaram 2-Day Pilgrimage Package."
+  },
+  {
+    id: "sabarimala",
+    name: "Chennai to Sabarimala Yatra Car Package",
+    duration: "3 Days / 2 Nights (1,350 km)",
+    badge: "Mandala Season",
+    rates: [
+      { car: "Sedan", price: "₹15,900" },
+      { car: "Ertiga", price: "₹18,900" },
+      { car: "Innova", price: "₹23,300" },
+      { car: "Crysta", price: "₹27,600" },
+      { car: "Tempo", price: "₹34,800" }
+    ],
+    highlights: "Satvik teetotaler driver • Kerala State Permit • 3 Days driver allowance and ghat road guidance.",
+    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Sabarimala 3-Day Package."
+  },
+  {
+    id: "vellore",
+    name: "Chennai to Vellore Golden Temple Tour",
+    duration: "1 Day (300 km)",
+    badge: "Golden Temple",
+    rates: [
+      { car: "Sedan", price: "₹4,200" },
+      { car: "Ertiga", price: "₹5,200" },
+      { car: "Innova", price: "₹6,200" },
+      { car: "Crysta", price: "₹7,200" },
+      { car: "Tempo", price: "₹9,000" }
+    ],
+    highlights: "1,500 kg Gold Sripuram Mahalakshmi Temple & Jalakandeswarar Fort Temple + Tolls included.",
+    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Vellore Golden Temple Trip."
+  },
+  {
+    id: "chidambaram",
+    name: "Chennai to Chidambaram Natarajar Temple",
+    duration: "1 Day (450 km)",
+    badge: "Pancha Bhoota",
+    rates: [
+      { car: "Sedan", price: "₹7,400" },
+      { car: "Ertiga", price: "₹9,000" },
+      { car: "Innova", price: "₹10,500" },
+      { car: "Crysta", price: "₹12,500" },
+      { car: "Tempo", price: "₹15,000" }
+    ],
+    highlights: "Akasha Lingam Spatika linga puja + Pichavaram Mangrove Forest boat ride + Tolls.",
+    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Chidambaram Natarajar Temple Tour."
+  }
+];
+
+const faqs = [
+  {
+    q: "Are highway tolls and interstate permits really 100% included?",
+    a: "Yes! In all our temple tour packages, FASTag toll charges, parking fees at temple premises, and interstate road permits (e.g. Andhra Pradesh permit for Tirupati, Kerala permit for Sabarimala) are fully covered in the published price."
+  },
+  {
+    q: "Will the driver assist senior citizens with darshan queues?",
+    a: "Yes! Our drivers drop families directly at the temple entrance porch before parking, guide you on ticket counter timings, and assist elderly passengers with wheelchair access points."
+  },
+  {
+    q: "Are the drivers satvik and polite?",
+    a: "Strictly yes. All drivers on pilgrimage duties are polite, teetotalers (strictly zero smoking and zero alcohol), and maintain pure vegetarian food discipline during the journey."
+  },
+  {
+    q: "Can the itinerary be customized for additional local temples?",
+    a: "Absolutely. If you want to visit additional nearby temples (e.g. adding Padmavathi Ammavari Temple or Srinivasa Mangapuram on a Tirupati trip), our drivers will gladly accommodate your darshan schedule."
+  }
+];
+
+const tourPackageSlugs: Record<string, string> = {
+  tirupati: "tirupati-package",
+  navagraha: "navagraha-tour",
+  thiruvannamalai: "thiruvannamalai-girivalam-trip",
+  kanchipuram: "kanchipuram-temple-trip",
+  rameswaram: "rameswaram-2-days",
+  sabarimala: "sabarimala-trip",
+  chidambaram: "chidambaram-temple-trip",
+  vellore: "vellore-golden-temple",
+};
+
+const tourPackageImages: Record<string, string> = {
+  tirupati: "/images/temple/tirupati-balaji.webp",
+  navagraha: "/images/temple/navagraha.webp",
+  thiruvannamalai: "/images/temple/thiruvannamalai-girivalam.webp",
+  kanchipuram: "/images/temple/kanchipuram-temple.webp",
+  rameswaram: "/images/temple/rameswaram.webp",
+  sabarimala: "/images/temple/sabarimala-temple.webp",
+  chidambaram: "/images/temple/chidambaram-natarajar-temple.webp",
+  vellore: "/images/temple/vellore-golden.webp",
+};
+
+const tourPackageImageAlts: Record<string, string> = {
+  tirupati: "Chennai to Tirupati Balaji temple cab package",
+  navagraha: "Kumbakonam 9 Navagraha temples tour taxi from Chennai",
+  thiruvannamalai: "Chennai to Thiruvannamalai Girivalam temple trip cab",
+  kanchipuram: "Chennai to Kanchipuram temple tour package taxi",
+  rameswaram: "Chennai to Rameswaram and Dhanushkodi 2-day yatra taxi",
+  sabarimala: "Chennai to Sabarimala pilgrimage car package",
+  chidambaram: "Chennai to Chidambaram Natarajar Temple cab package",
+  vellore: "Chennai to Vellore Sripuram Golden Temple cab trip",
+};
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "TaxiService",
+  "@id": "https://kalidasstravels.in/services/tours/temple-tours/#service",
+  "name": title,
+  "description": description,
+  "url": "https://kalidasstravels.in/services/tours/temple-tours/",
+  "image": "https://kalidasstravels.in/images/services/temple-tours.webp",
+  "providerMobility": "dynamic",
+  "serviceType": "Temple Pilgrimage Cab Packages",
+  "provider": {
+    "@id": "https://kalidasstravels.in/#localbusiness"
+  },
+  "areaServed": [
+    { "@type": "City", "name": "Chennai" },
+    { "@type": "AdministrativeArea", "name": "Tamil Nadu" },
+    { "@type": "AdministrativeArea", "name": "Andhra Pradesh" },
+    { "@type": "AdministrativeArea", "name": "Kerala" }
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "South India Temple Tour Cab Packages",
+    "itemListElement": tourPackages.map((pkg, idx) => ({
+      "@type": "Offer",
+      "position": idx + 1,
+      "name": pkg.name,
+      "description": `${pkg.duration} - ${pkg.highlights || ''}`,
+      "image": `https://kalidasstravels.in${tourPackageImages[pkg.id] || "/images/services/temple-tours.webp"}`,
+      "priceCurrency": "INR",
+      "price": pkg.rates?.[0]?.price ? pkg.rates[0].price.replace(/[^0-9]/g, '') : "6000",
+      "availability": "https://schema.org/InStock",
+      "url": `https://kalidasstravels.in/services/${tourPackageSlugs[pkg.id] || pkg.id}/`,
+      "seller": {
+        "@id": "https://kalidasstravels.in/#localbusiness"
+      },
+      "itemOffered": {
+        "@type": "TaxiService",
+        "name": pkg.name,
+        "serviceType": "Pilgrimage Cab Package"
+      }
+    }))
+  }
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": "https://kalidasstravels.in/services/tours/temple-tours/#faq",
+  "mainEntity": faqs.map(item => ({
+    "@type": "Question",
+    "name": item.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.a
+    }
+  }))
+};
+---
+
+<Layout 
+  title={`${title} – Kalidass Travels`}
+  description={description}
+  keywords={keywords}
+  image="/images/services/temple-tours.webp"
+  ogImage="/og/temple-tours.jpg"
+  schema={[schema, faqSchema]}
+>
+  <Breadcrumbs items={breadcrumbItems} />
+
+  <main class="bg-m3-surface text-m3-on-surface font-sans pb-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10">
+
+      <!-- 1. HERO SECTION -->
+      <section class="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-3 font-heading">
+          Chennai to <span class="text-m3-primary">Temple Tour Packages</span> (All-Inclusive)
+        </h1>
+        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed font-normal">
+          Hassle-free pilgrimage yatras from Chennai to South India's sacred shrines. Clean AC cabs, courteous satvik drivers, and all highway FASTag tolls paid upfront.
+        </p>
+      </section>
+
+      <!-- STICKY QUICK-NAV JUMP BAR (Below Hero) -->
+      <nav aria-label="Temple Tours Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-3 mb-10 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto flex items-center gap-2 text-xs font-semibold text-m3-on-surface whitespace-nowrap overflow-x-auto no-scrollbar py-0.5">
+          <a href="#tour-packages" class="px-3.5 py-2 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container hover:bg-m3-primary hover:text-m3-on-primary transition-all shrink-0">
+            Temple Cab Rates
+          </a>
+          <a href="#how-it-works" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
+            How It Works
+          </a>
+          <a href="#pilgrim-standards" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
+            Pilgrimage Promise
+          </a>
+          <a href="#faqs" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
+            Darshan FAQs
+          </a>
+        </div>
+      </nav>
+
+      <!-- 2. ⚡ 3-STEP VISUAL WORKFLOW ILLUSTRATION -->
+      <div id="how-it-works" class="scroll-mt-28">
+        <ServiceExplainer3Step 
+          title="How Chennai to Temple Cabs Work"
+          subtitle="Hassle-free pilgrimage yatras planned respectfully in 3 simple steps"
+          steps={explainerSteps}
+        />
+      </div>
+
+      <!-- 3. UPFRONT PACKAGES MATRIX (STRAIGHT TO THE POINT) -->
+      <section id="tour-packages" class="my-10 md:my-14 scroll-mt-28">
+        
+        <div class="text-center max-w-2xl mx-auto mb-8">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container text-m3-on-surface text-xs font-bold uppercase tracking-wider mb-2 border border-m3-outline-variant">
+            <span>All-Inclusive Darshan Packages</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
+            Chennai to Temple Cab Rates • <span class="text-m3-primary">All Tolls &amp; Permits Included</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1.5 font-sans">
+            Includes vehicle, fuel, driver allowance, FASTag tolls, and interstate state entry permits. Zero hidden charges.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {tourPackages.map((pkg) => {
+            const leafSlug = tourPackageSlugs[pkg.id] || pkg.id;
+            const leafUrl = `/services/${leafSlug}/`;
+            const pkgImage = tourPackageImages[pkg.id] || "/images/temple/tirupati-balaji.webp";
+            const pkgImageAlt = tourPackageImageAlts[pkg.id] || pkg.name;
+
+            return (
+              <div class="bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between hover:shadow-m3-2 hover:border-m3-primary/30 transition-all overflow-hidden group">
+                <div>
+                  <!-- Media Image Header with Badges & Leaf Link -->
+                  <a href={leafUrl} class="block h-48 sm:h-52 overflow-hidden relative bg-m3-surface-container-high cursor-pointer group/img" aria-label={`View ${pkg.name} Itinerary`}>
+                    <OptimizedImage
+                      src={pkgImage}
+                      alt={pkgImageAlt}
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 relative z-10"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent z-10"></div>
+
+                    <!-- Top USP Badge -->
+                    <span class="absolute top-3 left-3 bg-slate-950/85 backdrop-blur-md border border-white/20 text-white text-[11px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-m3-full shadow-xs z-20">
+                      {pkg.badge}
+                    </span>
+
+                    <!-- Duration Chip -->
+                    <span class="absolute bottom-3 left-3 inline-flex items-center gap-1.5 bg-white/95 backdrop-blur-md text-slate-900 text-xs font-semibold px-2.5 py-1 rounded-m3-full shadow-xs z-20">
+                      <svg class="w-3.5 h-3.5 text-m3-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                      <span>{pkg.duration}</span>
+                    </span>
+                  </a>
+
+                  <!-- Card Content Body -->
+                  <div class="p-5 sm:p-6">
+                    <a href={leafUrl} class="block group/title">
+                      <h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading mb-1.5 group-hover/title:text-m3-primary transition-colors">
+                        {pkg.name}
+                      </h3>
+                    </a>
+                    <p class="text-xs text-m3-on-surface-variant mb-4 leading-relaxed">
+                      {pkg.highlights}
+                    </p>
+
+                    <!-- Vehicle Price Slabs Grid -->
+                    <div class="bg-m3-surface-container-low p-3.5 rounded-m3-xl border border-m3-outline-variant/60 space-y-1.5">
+                      {pkg.rates.map((r) => (
+                        <div class="flex items-center justify-between text-xs py-1 border-b border-m3-outline-variant/40 last:border-0">
+                          <span class="text-m3-on-surface-variant font-medium">{r.car}</span>
+                          <strong class="text-m3-primary font-heading font-black text-sm">{r.price}</strong>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Footer with dual actions: Leaf Page CTA + WhatsApp CTA -->
+                <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-2 flex items-center gap-2">
+                  <a
+                    href={leafUrl}
+                    class="flex-1 inline-flex items-center justify-center gap-1 px-4 py-2.5 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary text-xs font-bold transition-all shadow-m3-1"
+                  >
+                    <span>View Itinerary</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </a>
+                  <WhatsAppButton
+                    href={`https://wa.me/919092303060?text=${encodeURIComponent(pkg.whatsappMsg)}`}
+                    size="sm"
+                    variant="tonal"
+                    text="Book"
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+      </section>
+
+      <!-- 4. TEMPLE DEVOTEE GUARANTEES (4 PILLARS) -->
+      <section id="pilgrim-standards" class="my-10 md:my-14 bg-m3-surface-container-low rounded-m3-2xl p-6 sm:p-8 border border-m3-outline-variant scroll-mt-28">
+        <div class="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
+          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-m3-on-surface font-heading">
+            The Kalidass Pilgrimage Promise
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Satvik Chauffeurs</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Teetotaler, non-smoking polite drivers who respect temple rituals.</p>
+          </div>
+
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">All Tolls Included</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">FASTag highway tolls, parking fees &amp; state permits 100% paid.</p>
+          </div>
+
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Senior Citizen Care</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Direct porch drops, smooth braking, and queue guidance for elders.</p>
+          </div>
+
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Zero Advance Deposit</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Book your pilgrimage in 60 seconds with zero upfront deposit.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. FREQUENTLY ASKED QUESTIONS -->
+      <section id="faqs" class="my-10 md:my-14 max-w-3xl mx-auto scroll-mt-28">
+        <div class="text-center mb-6">
+          <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading">
+            Frequently Asked Questions
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">Answers regarding temple packages, dress codes, and driver support</p>
+        </div>
+
+        <FAQAccordion items={faqs} columns={1} name="temple-faq" />
+      </section>
+
+      <!-- Cross Navigation to Weekend Packages & Outstation -->
+      <section class="py-8 my-6 bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant/60 p-5 sm:p-7">
+        <div class="max-w-6xl mx-auto">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <a href="/services/tours/weekend-packages/" class="p-5 rounded-m3-xl bg-emerald-500/5 border border-emerald-500/20 hover:border-emerald-500/50 transition-all group flex items-center justify-between">
+              <div>
+                <div class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase text-emerald-800 mb-1">
+                  <svg class="w-3.5 h-3.5 text-emerald-700 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="4"/>
+                    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+                  </svg>
+                  <span>Weekend Road Trips</span>
+                </div>
+                <h3 class="text-base sm:text-lg font-bold text-m3-on-surface group-hover:text-emerald-800 transition-colors font-heading">
+                  Explore Weekend Getaways
+                </h3>
+                <p class="text-xs text-m3-on-surface-variant mt-0.5">Pondicherry French Town, Mahabalipuram, Yelagiri Hills &amp; Yercaud.</p>
+              </div>
+              <span class="material-symbols-outlined text-[20px] text-emerald-700 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </a>
+
+            <a href="/services/outstation-cabs/" class="p-5 rounded-m3-xl bg-blue-500/5 border border-blue-500/20 hover:border-blue-500/50 transition-all group flex items-center justify-between">
+              <div>
+                <div class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase text-blue-800 mb-1">
+                  <svg class="w-3.5 h-3.5 text-blue-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2 10.9 2 11.1 2 11.3V16c0 .6.4 1 1 1h2"/>
+                    <circle cx="7" cy="17" r="2"/>
+                    <circle cx="17" cy="17" r="2"/>
+                  </svg>
+                  <span>Per-KM Cabs &amp; One-Way</span>
+                </div>
+                <h3 class="text-base sm:text-lg font-bold text-m3-on-surface group-hover:text-blue-800 transition-colors font-heading">
+                  Outstation Cabs from ₹14 / KM
+                </h3>
+                <p class="text-xs text-m3-on-surface-variant mt-0.5">Sedans, Ertiga &amp; Innova Crysta for flexible highway trips across South India.</p>
+              </div>
+              <span class="material-symbols-outlined text-[20px] text-blue-700 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. BOTTOM CONVERSION CTA BANNER -->
+      <section class="bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-2xl p-6 sm:p-10 text-center shadow-m3-2 border border-slate-800 my-8">
+        <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold font-heading text-white mb-2">
+          Planning a Spiritual Yatra with Family?
+        </h2>
+        <p class="text-slate-300 text-xs sm:text-sm max-w-lg mx-auto mb-6">
+          Share your temple destination and preferred dates. We'll send an all-inclusive custom darshan quote on WhatsApp in minutes.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <WhatsAppButton
+            href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20plan%20a%20Temple%20Tour%20package%20from%20Chennai."
+            size="md"
+            variant="filled"
+            text="Plan on WhatsApp"
+          />
+          <a
+            href="tel:+916381939769"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface font-bold text-xs sm:text-sm rounded-m3-full shadow-m3-1 transition-all"
+          >
+            <span>Call +91 63819 39769</span>
+          </a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</Layout>
