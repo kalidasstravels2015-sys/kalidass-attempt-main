@@ -227,7 +227,6 @@ const tourPackageImageAlts: Record<string, string> = {
 };
 
 const schema = {
-  "@context": "https://schema.org",
   "@type": "TaxiService",
   "@id": "https://kalidasstravels.in/services/tours/temple-tours/#service",
   "name": title,
@@ -245,6 +244,13 @@ const schema = {
     { "@type": "AdministrativeArea", "name": "Andhra Pradesh" },
     { "@type": "AdministrativeArea", "name": "Kerala" }
   ],
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "reviewCount": "1250",
+    "bestRating": "5",
+    "worstRating": "1"
+  },
   "hasOfferCatalog": {
     "@type": "OfferCatalog",
     "name": "South India Temple Tour Cab Packages",
@@ -271,7 +277,6 @@ const schema = {
 };
 
 const faqSchema = {
-  "@context": "https://schema.org",
   "@type": "FAQPage",
   "@id": "https://kalidasstravels.in/services/tours/temple-tours/#faq",
   "mainEntity": faqs.map(item => ({

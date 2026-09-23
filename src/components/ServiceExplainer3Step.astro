@@ -95,11 +95,22 @@ const {
     "@type": "HowTo",
     "name": title,
     "description": subtitle,
+    "image": {
+      "@type": "ImageObject",
+      "url": "https://kalidasstravels.in/images/logo.webp",
+      "width": "200",
+      "height": "200"
+    },
+    "totalTime": "PT5M",
     "step": steps.map((s, idx) => ({
       "@type": "HowToStep",
       "position": idx + 1,
       "name": s.title,
       "text": s.desc,
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://kalidasstravels.in/images/logo.webp"
+      }
     })),
   })}
 />

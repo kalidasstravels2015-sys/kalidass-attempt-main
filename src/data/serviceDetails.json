@@ -1298,31 +1298,48 @@
     "slug": "pondicherry-one-day-trip",
     "category": "Popular Destinations",
     "title": "Chennai to Pondicherry One Day Trip Cab & Taxi Package (ECR Route)",
-    "overview": "Escape to the French Riviera of the East. Visit the serene Auroville, the beautiful Promenade Beach, Manakula Vinayagar Temple, and the French Colony. Perfect for a one-day getaway with family or friends.",
+    "duration": "Same Day Return (Up to 320 KM)",
+    "overview": "Escape to the French Riviera of the East on a scenic ECR drive. Explore the serene Auroville Matrimandir, vibrant French White Town, Promenade Rock Beach, and Manakula Vinayagar Temple — all in one memorable day trip from Chennai.",
     "routePlan": [
       {
-        "stop": "Chennai Start",
-        "desc": "Early morning pickup (6:00 AM recommended)."
+        "stop": "Chennai Pickup",
+        "time": "6:00 AM",
+        "desc": "Doorstep pickup from your Chennai location. Head south on the scenic East Coast Road (ECR) with ocean views along the way."
       },
       {
-        "stop": "Auroville",
-        "desc": "Visit the Matrimandir viewing point and global township."
+        "stop": "ECR Drive & Scenic Stops",
+        "time": "6:00 – 8:30 AM",
+        "desc": "Enjoy the beautiful coastal ECR drive. Optional quick stops at Muttukadu Backwaters, Covelong Beach, or Mahabalipuram viewpoint en route."
       },
       {
-        "stop": "Aurobindo Ashram",
-        "desc": "Spiritual pause at the famous ashram."
+        "stop": "Auroville – Matrimandir",
+        "time": "9:00 AM",
+        "desc": "Visit the iconic golden Matrimandir viewing point at Auroville — the universal township built on the concept of human unity. Book a meditation pass in advance for inner chamber access."
       },
       {
-        "stop": "Manakula Vinayagar",
-        "desc": "Blessings at the ancient Ganesha temple."
+        "stop": "Sri Aurobindo Ashram",
+        "time": "10:30 AM",
+        "desc": "Pay respects at the samadhi of Sri Aurobindo and the Mother. A place of deep spiritual calm in the heart of Pondicherry's White Town."
       },
       {
-        "stop": "Promenade Beach",
-        "desc": "Relax at the Rock Beach & French Colony walk."
+        "stop": "French White Town & Lunch",
+        "time": "11:30 AM – 1:00 PM",
+        "desc": "Stroll the charming French Quarter with its colonial villas, bougainvillea-lined streets, and boutique cafes. Lunch at a French-style bakery or local restaurant (own expense)."
       },
       {
-        "stop": "Chennai Drop",
-        "desc": "Return by night (approx 9:00 PM)."
+        "stop": "Manakula Vinayagar Temple",
+        "time": "1:30 PM",
+        "desc": "Seek blessings at the ancient and vibrant Manakula Vinayagar Temple — one of Pondicherry's most beloved Ganesha shrines, famous for its elephant blessing ritual."
+      },
+      {
+        "stop": "Promenade Beach & Rock Beach",
+        "time": "2:30 – 5:00 PM",
+        "desc": "Relax along the 1.5 km beachfront promenade. Visit the Gandhi statue, War Memorial, and enjoy the sunset colours over the Bay of Bengal at Rock Beach."
+      },
+      {
+        "stop": "Return to Chennai",
+        "time": "5:30 PM",
+        "desc": "Depart Pondicherry for Chennai via ECR. Arrive back at your doorstep by approximately 8:30 – 9:00 PM."
       }
     ],
     "tariff": {
@@ -1335,63 +1352,101 @@
       ],
       "rows": [
         [
-          "Sedan",
-          "₹11",
+          "Sedan (Swift, Etios)",
+          "₹11/km",
           "₹500",
           "₹400",
           "₹4,500"
         ],
         [
           "SUV (Ertiga)",
-          "₹14",
+          "₹14/km",
           "₹600",
           "₹400",
           "₹5,500"
         ],
         [
           "Innova",
-          "₹17",
+          "₹17/km",
           "₹700",
           "₹400",
           "₹6,500"
         ],
         [
-          "Crysta",
-          "₹20",
+          "Innova Crysta",
+          "₹20/km",
           "₹800",
           "₹400",
           "₹7,500"
         ],
         [
-          "Tempo Traveller",
-          "₹25",
+          "Tempo Traveller (12 Seater)",
+          "₹25/km",
           "₹1,000",
           "₹500",
           "₹9,500"
         ]
       ],
-      "note": "Total Cost includes: 320km (approx round trip) + Driver Bata + Tolls. Extra km charged if exceeded."
+      "note": "Total Cost based on ~320 km round trip (Chennai ↔ Pondicherry via ECR). Includes driver bata & ECR FASTag tolls. Extra km charged at listed rate if exceeded."
     },
     "includes": [
-      "Sightseeing at major spots",
-      "Flexible stops on ECR road",
-      "AC Vehicle"
+      "Doorstep pickup & drop anywhere in Chennai",
+      "AC vehicle for the full day (up to 320 km)",
+      "Experienced local driver with ECR route knowledge",
+      "All ECR FASTag tolls & parking charges",
+      "Fuel charges included in package price",
+      "Driver allowance (bata) included",
+      "Flexible sightseeing schedule — no rush",
+      "24/7 WhatsApp customer support"
+    ],
+    "excludes": [
+      "Meals, snacks & personal expenses",
+      "Entry tickets to Auroville Matrimandir inner chamber",
+      "Guide fees at any attraction",
+      "Extra km beyond 320 km (charged at per-km rate)",
+      "Overnight stay if trip is extended"
     ],
     "travelGuide": {
-      "history": "Pondicherry (Puducherry) was a French colonial settlement until 1954. It is famous for its French Quarter architecture, Auroville, and spiritual heritage of Sri Aurobindo Ashram.",
-      "timings": "Auroville Visitor Centre: 9:00 AM – 5:00 PM\nManakula Vinayagar Temple: 5:45 AM – 12:30 PM & 4:00 PM – 9:30 PM",
-      "dressCode": "Casual wear is fine. Modest clothing required for temples and Ashram.",
+      "history": "Pondicherry (Puducherry) was a French colonial settlement from 1674 until 1954, making it one of India's most unique union territories. It retains a charming French Quarter with colonial villas, tree-lined boulevards, and a distinct Franco-Tamil culture. Sri Aurobindo Ashram (est. 1926) and the experimental township of Auroville (est. 1968) make Pondicherry a global spiritual destination.",
+      "timings": "Auroville Visitor Centre: 9:00 AM – 5:00 PM (closed Mon)\nMatrimandir Viewing Point: 9:00 AM – 5:30 PM\nSri Aurobindo Ashram: 8:00 AM – 12:00 PM & 2:00 PM – 6:00 PM\nManakula Vinayagar Temple: 5:45 AM – 12:30 PM & 4:00 PM – 9:30 PM\nPromenade Beach: Open 24 hours",
+      "dressCode": "Casual wear is fine for sightseeing. Modest clothing (covered shoulders & knees) is required at Sri Aurobindo Ashram and Manakula Vinayagar Temple.",
       "tips": [
-        "Rent a two-wheeler to explore White Town.",
-        "Visit Rock Beach during sunrise.",
-        "Try authentic French bakeries and cafes.",
-        "Auroville Matrimandir viewing requires prior booking."
+        "Start by 6:00 AM from Chennai to reach Auroville before crowds build up.",
+        "Book Auroville Matrimandir inner chamber meditation pass online at least 2 days in advance (free but limited slots).",
+        "Explore French White Town on foot — rent a cycle or e-scooter for a truly Pondicherry experience.",
+        "Sunrise at Rock Beach is magical — the wave-washed promenade is peaceful in early morning.",
+        "Try French-style croissants and filter coffee at Baker Street or Café des Arts in White Town.",
+        "Carry cash — some small eateries and shops in the French Quarter don't accept cards.",
+        "Avoid visiting during Tamil Nadu school holidays as Pondicherry gets very crowded.",
+        "Photography is restricted inside Sri Aurobindo Ashram — please respect the rules."
       ]
     },
-    "whatsappMsg": "Hi, I would like details about the Pondicherry Day Trip.",
-    "metaTitle": "Chennai to Pondicherry Cab & Taxi Service (Flat ₹3,800) – Kalidass Travels",
-    "metaDescription": "Book Chennai to Pondicherry round-trip cab package via scenic ECR. AC Sedan, Ertiga & Innova covering French Quarter, Promenade Beach, Auroville & Paradise Beach.",
-    "keywords": "chennai to pondicherry cab, chennai to pondicherry taxi fare, chennai to pondicherry car rental, one day pondicherry trip from chennai cab, ecr cab to pondicherry, chennai to pondy outstation cab",
+    "faq": [
+      {
+        "q": "How far is Pondicherry from Chennai?",
+        "a": "Pondicherry is approximately 155 km from Chennai via ECR (East Coast Road). The scenic coastal drive takes about 2.5 – 3 hours depending on traffic."
+      },
+      {
+        "q": "Is the ECR route included in the package?",
+        "a": "Yes. All ECR FASTag tolls are included in the package price. We use the scenic ECR route for a comfortable and enjoyable coastal drive."
+      },
+      {
+        "q": "Can I customize the sightseeing stops?",
+        "a": "Absolutely. Our driver is flexible. You can add stops like Mahabalipuram Shore Temple, Covelong Beach, or Paradise Beach. Just let us know your preferences while booking."
+      },
+      {
+        "q": "What is the pickup time recommended?",
+        "a": "We recommend 6:00 AM pickup to make the most of the day. This lets you reach Auroville by 9:00 AM when it opens, and gives you ample time at each spot before heading back comfortably by evening."
+      },
+      {
+        "q": "Are there any extra charges beyond the package price?",
+        "a": "The package covers up to 320 km round trip. If the total distance exceeds this (e.g., extra detours), additional km is charged at the per-km rate. Meals, entry tickets, and guide fees are not included."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I want to book the Chennai to Pondicherry 1-Day Trip Package. Please share availability and cab options.",
+    "metaTitle": "Chennai to Pondicherry One Day Trip Cab Package (From ₹4,500) – Kalidass Travels",
+    "metaDescription": "Book Chennai to Pondicherry 1-day cab package via scenic ECR. AC Sedan from ₹4,500 | Ertiga ₹5,500 | Innova ₹6,500. Covers Auroville, French White Town, Promenade Beach & Manakula Vinayagar Temple. All tolls & fuel included.",
+    "keywords": "chennai to pondicherry cab, chennai to pondicherry taxi package, chennai to pondicherry one day trip, ecr cab to pondicherry, pondicherry day trip from chennai, chennai pondy taxi fare, auroville day trip from chennai",
     "serviceType": "TaxiService",
     "origin": "Chennai",
     "destination": "Pondicherry (Puducherry)"
@@ -1523,6 +1578,346 @@
     "serviceType": "TaxiService",
     "origin": "Chennai",
     "destination": "Chennai Wedding Halls & Venues"
+  },
+  {
+    "slug": "mahabalipuram-ecr-temple-route",
+    "category": "Popular Destinations",
+    "title": "Chennai to Mahabalipuram UNESCO Temples & ECR Beach Tour (1 Day)",
+    "duration": "Full Day – 8 Hours / 120 KM Round Trip",
+    "overview": "Explore the magnificent 7th-century Pallava rock-cut monuments of Mahabalipuram — a UNESCO World Heritage Site — on a relaxed full-day cab tour from Chennai via the scenic East Coast Road (ECR). Your private AC car covers Shore Temple, Five Rathas, Arjuna's Penance, Krishna's Butter Ball, and Kovalam Beach with flexible lunch and photo stops.",
+    "routePlan": [
+      {
+        "stop": "Chennai Doorstep",
+        "desc": "08:00 AM pickup from your home, hotel, or Chennai Airport."
+      },
+      {
+        "stop": "ECR Scenic Drive",
+        "desc": "09:00 AM – enjoy the coastal East Coast Road with sea breeze, roadside coconut water, and optional light breakfast halt."
+      },
+      {
+        "stop": "Mahabalipuram Town",
+        "desc": "10:00 AM arrival at the UNESCO Heritage town. Start sightseeing with the iconic Shore Temple overlooking the Bay of Bengal."
+      },
+      {
+        "stop": "Five Rathas (Pancha Rathas)",
+        "desc": "10:30 AM – monolithic rock-cut temple chariots representing the five Pandavas, each carved from a single granite boulder."
+      },
+      {
+        "stop": "Arjuna's Penance & Butter Ball",
+        "desc": "11:15 AM – the world's largest open-air bas-relief (Arjuna's Penance) and the gravity-defying Krishna's Butter Ball rock."
+      },
+      {
+        "stop": "Seafood Lunch on ECR",
+        "desc": "01:00 PM – flexible lunch break at popular ECR seafood restaurants (Ideal Beach, Mamalla Heritage, or Chariot Beach Resort)."
+      },
+      {
+        "stop": "Kovalam Beach",
+        "desc": "02:30 PM – relaxing stop at Kovalam village beach, quieter than Marina, ideal for family photos."
+      },
+      {
+        "stop": "Seashell Museum (optional)",
+        "desc": "03:00 PM – world-class seashell collection museum near Mahabalipuram (₹50 entry, at your choice)."
+      },
+      {
+        "stop": "Chennai Return",
+        "desc": "04:00 PM – return drive via ECR, back to your Chennai doorstep by approx. 06:00 PM."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle",
+        "Rate/km",
+        "Driver Bata",
+        "Toll/Parking",
+        "Total Cost"
+      ],
+      "rows": [
+        ["Sedan (Dzire/Etios)", "₹11", "₹350", "₹300", "₹3,500"],
+        ["SUV (Ertiga – 6 Pax)", "₹14", "₹450", "₹300", "₹4,500"],
+        ["Innova (7 Pax)", "₹17", "₹550", "₹300", "₹5,500"],
+        ["Innova Crysta (Luxury)", "₹20", "₹650", "₹300", "₹6,500"],
+        ["Tempo Traveller (12 Pax)", "₹25", "₹900", "₹400", "₹8,000"]
+      ],
+      "note": "Total Cost covers 120 km round trip (Chennai–Mahabalipuram–Chennai) + Driver Bata + ECR Tolls. Extra km charged at the same per-km rate if route is extended."
+    },
+    "includes": [
+      "Doorstep pickup & drop anywhere in Chennai",
+      "Clean AC vehicle with fuel for entire 120 km round trip",
+      "All ECR FASTag highway tolls & parking charges",
+      "Courteous, experienced highway driver with local Mahabalipuram knowledge",
+      "Flexible photo stops, tea/coconut halts on ECR"
+    ],
+    "excludes": [
+      "Archaeological Survey of India (ASI) monument entry tickets (₹40–₹80 per person)",
+      "Lunch and personal expenses",
+      "Seashell Museum entry (optional, ₹50/person)",
+      "Extra kilometres beyond 120 km"
+    ],
+    "travelGuide": {
+      "history": "Mahabalipuram (Mamallapuram) was the principal port city of the Pallava dynasty (7th–8th century AD). Its rock-cut temples and bas-reliefs — including the Shore Temple and Descent of the Ganges — are recognised as a UNESCO World Heritage Site since 1984. The town is located 58 km south of Chennai on the Bay of Bengal coast.",
+      "timings": "Shore Temple & Monument Complex: 6:00 AM – 6:00 PM (open daily)\nFive Rathas: 6:00 AM – 6:00 PM\nSeashell Museum: 9:00 AM – 6:00 PM\nBest Visit Time: October to March (post-monsoon, pleasant coastal weather)",
+      "dressCode": "Casual wear is fine. Modest clothing preferred inside temple compounds. Remove footwear at stone monument entry points.",
+      "tips": [
+        "Arrive early (before 10:30 AM) to avoid midday heat at open-air monuments.",
+        "Buy the ASI Composite Ticket at the entrance to cover Shore Temple + Five Rathas in one ticket.",
+        "ECR has several excellent seafood restaurants — ask your driver for the freshest local favourite.",
+        "Kovalam Beach is far less crowded than Marina; great for families with children.",
+        "The sculpted Rock Beach at Mahabalipuram itself makes a peaceful pre-lunch walk."
+      ]
+    },
+    "faq": [
+      {
+        "q": "Is Mahabalipuram good for a family day trip from Chennai?",
+        "a": "Yes — it is one of the most popular family-friendly day trips. The monuments are open-air, children enjoy the large rock formations and beaches, and the ECR drive itself is very scenic."
+      },
+      {
+        "q": "What is the best time to visit Mahabalipuram from Chennai?",
+        "a": "October to March is ideal (cool coastal weather). Avoid May–June (peak summer heat at open-air sites). The monuments are gorgeous in the golden morning light."
+      },
+      {
+        "q": "Are entry tickets included in the cab package?",
+        "a": "No — ASI monument tickets (₹40–₹80 per person) are paid separately at the gate. Your driver knows the exact entry points."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I want to book the Chennai to Mahabalipuram 1-Day ECR Temple & Beach Tour.",
+    "metaTitle": "Chennai to Mahabalipuram Cab Package (1-Day) – Shore Temple & ECR Tour | Kalidass Travels",
+    "metaDescription": "Book a one-day Chennai to Mahabalipuram cab tour via ECR. Covers Shore Temple, Five Rathas, Arjuna's Penance & Kovalam Beach. AC Sedan from ₹3,500 – all tolls included.",
+    "keywords": "chennai to mahabalipuram cab, mahabalipuram day trip from chennai, mahabalipuram ecr tour taxi, shore temple cab package chennai, pallava temples cab tour chennai, mamallapuram one day trip cab",
+    "serviceType": "TaxiService",
+    "origin": "Chennai",
+    "destination": "Mahabalipuram (Mamallapuram)"
+  },
+  {
+    "slug": "yelagiri-hills-weekend",
+    "category": "Popular Destinations",
+    "title": "Chennai to Yelagiri Hills 2-Day Weekend Package – Hill Station Retreat",
+    "duration": "2 Days / 1 Night – Approx. 500 KM Round Trip",
+    "overview": "Escape to the peaceful Yelagiri Hills — a beginner-friendly hill station just 4 hours from Chennai — for a rejuvenating 2-day weekend nature retreat. Your private AC car covers the scenic 14-hairpin-bend ghat ascent, Punganur Lake boating, Jalagamparai Waterfalls, and Nature Park with overnight flexibility. Flat rate includes all highway tolls, fuel, and 2-day driver allowance.",
+    "routePlan": [
+      {
+        "stop": "Day 1 – Chennai Departure",
+        "desc": "06:00 AM doorstep pickup. Drive via NH 48 (Bengaluru Highway) through Vellore and Vaniyambadi."
+      },
+      {
+        "stop": "Vellore / Krishnagiri Breakfast Halt",
+        "desc": "08:30 AM – highway dhaba or restaurant for South Indian breakfast (idli, dosai, filter coffee)."
+      },
+      {
+        "stop": "Yelagiri Ghat Road Ascent",
+        "desc": "10:30 AM – begin the dramatic 14-hairpin-bend climb to Yelagiri Hills (970m elevation). Scenic valley views on every curve."
+      },
+      {
+        "stop": "Punganur Lake",
+        "desc": "11:30 AM – paddle boating on the serene hilltop lake surrounded by eucalyptus groves. Ideal for family photos."
+      },
+      {
+        "stop": "Yelagiri Nature Park",
+        "desc": "01:00 PM – Tamil Nadu Forest Department park with rose gardens, orchid house, and hilltop viewpoint."
+      },
+      {
+        "stop": "Swamimalai Hill Trek View",
+        "desc": "02:30 PM – optional short trek to the hilltop (30 min) for panoramic views of the Salem plains below."
+      },
+      {
+        "stop": "Overnight Stay in Yelagiri",
+        "desc": "07:00 PM – check into hotel/resort (booked separately). Driver rests overnight; vehicle on standby from next morning."
+      },
+      {
+        "stop": "Day 2 – Jalagamparai Waterfalls",
+        "desc": "08:00 AM – visit the scenic 1 km trek to Jalagamparai Falls (best during post-monsoon, Sep–Jan). Refreshing natural pool."
+      },
+      {
+        "stop": "Yelagiri Town & Local Exploration",
+        "desc": "10:00 AM – explore the fruit orchards, honey stalls, and local market. Try Yelagiri's famous plums and oranges (seasonal)."
+      },
+      {
+        "stop": "Return to Chennai",
+        "desc": "11:00 AM – begin return journey. Reach Chennai by approx. 03:00–04:00 PM."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle",
+        "Rate/km",
+        "Driver Bata (2 Days)",
+        "Toll/Parking",
+        "Total Cost"
+      ],
+      "rows": [
+        ["Sedan (Dzire/Etios)", "₹13", "₹1,000", "₹500", "₹7,500"],
+        ["SUV (Ertiga – 6 Pax)", "₹15", "₹1,200", "₹600", "₹9,200"],
+        ["Innova (7 Pax)", "₹17", "₹1,400", "₹700", "₹10,800"],
+        ["Innova Crysta (Luxury)", "₹20", "₹1,600", "₹800", "₹12,800"],
+        ["Tempo Traveller (12 Pax)", "₹24", "₹2,000", "₹1,000", "₹15,500"]
+      ],
+      "note": "Total Cost covers 500 km round trip (Chennai–Yelagiri–Chennai) + 2-Day Driver Bata + All NH 48 Highway Tolls & Ghat Parking. Extra km beyond 500 km charged at the same per-km rate."
+    },
+    "includes": [
+      "Doorstep pickup & drop anywhere in Chennai",
+      "Clean AC vehicle with fuel for entire 2-day trip",
+      "All NH 48 FASTag highway tolls & parking charges",
+      "2-Day driver allowance (bata) included",
+      "Experienced ghat-road driver for safe hairpin-bend driving",
+      "Flexible sightseeing schedule for both days"
+    ],
+    "excludes": [
+      "Hotel/resort accommodation at Yelagiri (booked separately)",
+      "Meals, entry tickets, and boating charges",
+      "Driver overnight accommodation (driver arranges own stay or sleeps in vehicle)"
+    ],
+    "travelGuide": {
+      "history": "Yelagiri Hills is a small, serene hill station in the Vellore district of Tamil Nadu at an altitude of 930 m–1,410 m. Unlike the crowded Ooty and Kodaikanal, Yelagiri offers a quiet, less-commercialised retreat with lush orchards, a tranquil lake, and the Jalagamparai Waterfalls. The area is known for its flower cultivation, bee-keeping farms, and the sacred Swamimalai temple at the hilltop.",
+      "timings": "Punganur Lake Boating: 9:00 AM – 5:30 PM (closed Mondays)\nNature Park: 8:00 AM – 6:00 PM\nJalagamparai Falls: Best September–January (post-monsoon season)\nBest Visit Time: October to February (clear skies, pleasant temperatures of 15–22°C)",
+      "dressCode": "Carry a light jacket or sweater — hill temperature can drop to 12°C at night and early morning. Trekking sandals recommended for the Jalagamparai Falls trail.",
+      "tips": [
+        "Book your Yelagiri hotel at least a week ahead for weekends — rooms fill up fast.",
+        "The 14-hairpin-bend ghat road can cause mild motion sickness — carry motion-sickness tablets.",
+        "Jalagamparai Falls is at its best September to January; it may be dry in summer.",
+        "The local fruit market sells seasonal oranges, plums, and honey — excellent souvenirs.",
+        "Sunrise from Swamimalai hilltop is spectacular — plan an early morning trek on Day 2."
+      ]
+    },
+    "faq": [
+      {
+        "q": "Is Yelagiri suitable for senior citizens and young children?",
+        "a": "Yes — the ghat road is manageable and not as steep as Ooty. Our experienced drivers navigate hairpin bends safely. Punganur Lake is accessible and Nature Park is flat-terrain friendly."
+      },
+      {
+        "q": "What is the best season to visit Yelagiri from Chennai?",
+        "a": "October to February is ideal — pleasant 15–22°C temperatures, green hills, and Jalagamparai Falls flowing at its best. Avoid May–June when hills are dry and hot."
+      },
+      {
+        "q": "Are hotel bookings included in the cab package?",
+        "a": "No — accommodation at Yelagiri is arranged and paid separately. Popular options include Hotel Vignesh Comforts, Yelagiri Nature Resort, and TTDC Hotel. We can recommend options upon request."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I want to book the Chennai to Yelagiri Hills 2-Day Weekend Package.",
+    "metaTitle": "Chennai to Yelagiri Hills 2-Day Cab Package – Weekend Hill Retreat | Kalidass Travels",
+    "metaDescription": "Book a 2-day Chennai to Yelagiri Hills cab package. Covers Punganur Lake, Jalagamparai Falls & Nature Park. AC Sedan from ₹7,500 – tolls & 2-day driver bata included.",
+    "keywords": "chennai to yelagiri cab package, yelagiri hills weekend trip from chennai, yelagiri 2 day tour, yelagiri cab hire chennai, yelagiri hills taxi package, weekend trip yelagiri from chennai",
+    "serviceType": "TaxiService",
+    "origin": "Chennai",
+    "destination": "Yelagiri Hills, Vellore District"
+  },
+  {
+    "slug": "yercaud-hills-weekend",
+    "category": "Popular Destinations",
+    "title": "Chennai to Yercaud 2-Day 'Jewel of the South' Weekend Package",
+    "duration": "2 Days / 1 Night – Approx. 750 KM Round Trip",
+    "overview": "Discover Yercaud — the 'Jewel of the South' perched at 1,515 m in the Shevaroy Hills of Salem district. This 2-day weekend cab package from Chennai takes you through lush coffee and orange plantations, a serene hilltop lake, Pagoda Point viewpoint, Killiyur Waterfalls, and the sacred Shevaroy Temple. All-inclusive flat rate covers fuel, 2-day driver bata, and all NH45 highway tolls.",
+    "routePlan": [
+      {
+        "stop": "Day 1 – Chennai Departure",
+        "desc": "05:30 AM doorstep pickup. Drive via NH 44 (Chennai–Krishnagiri–Salem Expressway) for approximately 5.5 hours."
+      },
+      {
+        "stop": "Krishnagiri / Dharmapuri Breakfast",
+        "desc": "08:00 AM – highway breakfast halt at Krishnagiri for hot idli, vadai, and freshly brewed filter coffee."
+      },
+      {
+        "stop": "Salem City",
+        "desc": "10:30 AM – brief transit through Salem. Pick up fresh Bisi Bele Bath or local snacks from the Salem market (optional 20 min stop)."
+      },
+      {
+        "stop": "Yercaud Ghat Road Ascent",
+        "desc": "11:30 AM – begin the thrilling 20-hairpin-bend climb through dense coffee and orange plantations to Yercaud (1,515 m). Every bend reveals stunning valley panoramas."
+      },
+      {
+        "stop": "Yercaud Big Lake (Shenbaganur Lake)",
+        "desc": "12:30 PM – paddle boating on the picturesque hilltop lake surrounded by coffee estates. Perfect family photo spot."
+      },
+      {
+        "stop": "Lady's Seat & Gents' Seat Viewpoints",
+        "desc": "02:00 PM – twin valley viewpoints offering a sweeping 180° panorama of the Salem plains 1,500 m below — one of Tamil Nadu's best viewpoints."
+      },
+      {
+        "stop": "Pagoda Point",
+        "desc": "03:30 PM – three-tier hilltop pagoda with breathtaking views of the Eastern Ghats ridgeline."
+      },
+      {
+        "stop": "Overnight Stay in Yercaud",
+        "desc": "06:00 PM – check into hotel/resort (booked separately). Driver rests overnight; vehicle standby from next morning."
+      },
+      {
+        "stop": "Day 2 – Shevaroy Temple",
+        "desc": "07:00 AM – early visit to the ancient Shevaroy (Lord Servarayan) hilltop temple, accessible by a short stone-step walk. Sunrise views are magnificent."
+      },
+      {
+        "stop": "Killiyur Waterfalls",
+        "desc": "09:00 AM – scenic 1.5 km forest trail walk to the 300-ft Killiyur Falls (best post-monsoon, Aug–Jan)."
+      },
+      {
+        "stop": "Coffee & Spice Estate Walk",
+        "desc": "11:00 AM – optional visit to a working coffee estate or the Shenbaganur Museum of Natural History (rare orchids \u0026 fossils)."
+      },
+      {
+        "stop": "Return to Chennai",
+        "desc": "12:00 PM – begin descent via the 20 hairpin bends. Reach Chennai by approx. 07:00–08:00 PM."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle",
+        "Rate/km",
+        "Driver Bata (2 Days)",
+        "Toll/Parking",
+        "Total Cost"
+      ],
+      "rows": [
+        ["Sedan (Dzire/Etios)", "₹12", "₹1,200", "₹700", "₹10,500"],
+        ["SUV (Ertiga – 6 Pax)", "₹14", "₹1,400", "₹800", "₹12,800"],
+        ["Innova (7 Pax)", "₹17", "₹1,600", "₹900", "₹15,200"],
+        ["Innova Crysta (Luxury)", "₹20", "₹1,800", "₹1,000", "₹17,800"],
+        ["Tempo Traveller (12 Pax)", "₹24", "₹2,400", "₹1,200", "₹21,500"]
+      ],
+      "note": "Total Cost covers 750 km round trip (Chennai–Salem–Yercaud–Chennai) + 2-Day Driver Bata + All NH 44 FASTag Tolls & Hill Parking. Extra km beyond 750 km charged at the same per-km rate."
+    },
+    "includes": [
+      "Doorstep pickup & drop anywhere in Chennai",
+      "Clean AC vehicle with fuel for entire 2-day trip",
+      "All NH 44 FASTag highway tolls & hill road parking",
+      "2-Day driver allowance (bata) fully included",
+      "Experienced ghat-road driver for Yercaud's 20 hairpin bends",
+      "Flexible sightseeing schedule at your own pace"
+    ],
+    "excludes": [
+      "Hotel/resort accommodation at Yercaud (booked separately)",
+      "Meals, lake boating charges, and monument entry fees",
+      "Killiyur Falls trek guide (optional, local guides available at the falls trailhead)"
+    ],
+    "travelGuide": {
+      "history": "Yercaud is a hill station in the Shevaroy Hills (Eastern Ghats) of Salem district, Tamil Nadu, at an elevation of 1,515 m. Historically developed by the British as a coffee-growing region in the 19th century, it is now a major orange, coffee, and spice-growing area. The Shevaroy (Servarayan) Temple at the highest peak is a sacred tribal shrine. Yercaud is nicknamed the 'Jewel of the South' due to its lush forests and misty valleys.",
+      "timings": "Yercaud Lake Boating: 8:30 AM – 5:30 PM (daily)\nShevaroy Temple: Open all days, 6:00 AM – 8:00 PM\nKilliyur Falls: Best August–January (post-monsoon)\nShenbaganur Museum: 9:00 AM – 5:00 PM (closed Sundays)\nBest Visit Time: October to March (15–25°C, clear views, falls flowing)",
+      "dressCode": "Carry warm clothing — Yercaud temperatures drop to 8–12°C at night and early morning. Sturdy walking shoes for the Killiyur Falls and Shevaroy Temple trails.",
+      "tips": [
+        "Book hotels at least 2 weeks in advance for weekends — Yercaud has limited quality rooms.",
+        "The 20-hairpin ghat road can be misty during monsoon (July–September). Our drivers are ghat-road certified.",
+        "Killiyur Falls is best visited in the morning before it gets crowded.",
+        "Buy fresh coffee powder and oranges directly from estate shops — significantly cheaper and fresher.",
+        "The Shenbaganur Museum of Natural History has one of the finest orchid collections in India — highly recommended."
+      ]
+    },
+    "faq": [
+      {
+        "q": "How long is the drive from Chennai to Yercaud?",
+        "a": "Approximately 5 to 5.5 hours (350 km one way) via the Chennai–Salem Expressway (NH 44) plus the 20-hairpin ghat road ascent from Salem base."
+      },
+      {
+        "q": "Is the Yercaud ghat road safe for night driving?",
+        "a": "We always plan the ghat ascent during daylight hours for safety. Our drivers are experienced in mountain road driving, but we recommend scheduling arrival before sunset."
+      },
+      {
+        "q": "What is the best time to visit Killiyur Falls?",
+        "a": "August to January (post-monsoon season) is ideal when the falls flow strongly. During March–June, the falls may be reduced to a trickle due to dry season."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I want to book the Chennai to Yercaud 2-Day Weekend Package.",
+    "metaTitle": "Chennai to Yercaud 2-Day Cab Package – Jewel of the South Weekend Tour | Kalidass Travels",
+    "metaDescription": "Book a 2-day Chennai to Yercaud cab package. Covers Yercaud Lake, Lady's Seat, Pagoda Point, Killiyur Falls & Shevaroy Temple. AC Sedan from ₹10,500 – tolls & 2-day driver bata included.",
+    "keywords": "chennai to yercaud cab package, yercaud weekend trip from chennai, yercaud 2 day tour taxi, yercaud hills cab hire chennai, yercaud taxi package salem, weekend getaway yercaud cab",
+    "serviceType": "TaxiService",
+    "origin": "Chennai",
+    "destination": "Yercaud, Shevaroy Hills, Salem"
   },
   {
     "slug": "chennai-airport-taxi-transfers",

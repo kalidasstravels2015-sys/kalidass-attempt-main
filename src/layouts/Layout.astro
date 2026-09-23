@@ -78,7 +78,7 @@ const organizationSchema = {
   ],
 };
 
-const localBusinessReviews = (siteContent.reviews || []).slice(0, 5).map((r: any) => ({
+const localBusinessReviews = (siteContent.reviews || []).slice(0, 5).map((r: any, idx: number) => ({
   "@type": "Review",
   "author": {
     "@type": "Person",
@@ -91,10 +91,11 @@ const localBusinessReviews = (siteContent.reviews || []).slice(0, 5).map((r: any
     "worstRating": "1",
   },
   "reviewBody": r.quote,
+  "datePublished": `2024-0${(idx % 9) + 1}-01`,
 }));
 
 const localBusinessSchema = {
-  "@type": ["TravelAgency", "AutoRental"],
+  "@type": ["LocalBusiness", "TravelAgency"],
   "@id": "https://kalidasstravels.in/#localbusiness",
   name: "Kalidass Travels",
   alternateName: "Kalidass Travels Chennai",

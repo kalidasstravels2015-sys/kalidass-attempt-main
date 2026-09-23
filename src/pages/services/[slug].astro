@@ -63,7 +63,9 @@ const tourImages: Record<string, string> = {
   "pondicherry-one-day-trip": "/images/temple/pondicherry.webp",
   "vellore-golden-temple": "/images/temple/vellore-golden.webp",
   "mahabalipuram-ecr-temple-route": "/images/temple/mahabalipuram-ecr-temples.webp",
-  "one-day-chennai-city-tour": "/images/temple/chennai-city.webp" 
+  "one-day-chennai-city-tour": "/images/temple/chennai-city.webp",
+  "yelagiri-hills-weekend": "/images/hero/coimbatore.webp",
+  "yercaud-hills-weekend": "/images/hero/airavatesvara.webp"
 };
 
 const categoryImages: Record<string, string> = {
@@ -652,22 +654,34 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
           {/* Mobile Pricing Cards (< md) */}
           <div class="block md:hidden">
             {service.tariff.rows.map((row: any[], rIdx: number) => {
-              const priceIdx = row.findIndex((cell: string) => String(cell).includes('₹'));
-              const price = priceIdx >= 0 ? row[priceIdx] : '';
-              const name = row[0];
-              const notes = row.filter((_: any, i: number) => i !== 0 && i !== priceIdx);
+              const headers = service.tariff.headers || [];
+              const vehicleName = row[0];
+              // Find the total cost column (last meaningful price column)
+              const totalColIdx = headers.length - 1;
+              const totalCost = row[totalColIdx] || '';
+              // All middle columns (skip vehicle name col 0 and total cost last col)
+              const middleCols = headers.slice(1, -1).map((header: string, i: number) => ({
+                label: header,
+                value: row[i + 1] ?? ''
+              }));
               return (
-                <div class={`flex items-start justify-between gap-4 px-5 py-4 border-b border-m3-outline-variant/40 ${rIdx % 2 === 0 ? 'bg-m3-surface' : 'bg-m3-surface-container-lowest'}`}>
-                  {/* Left: name + notes */}
-                  <div class="flex-1 min-w-0">
-                    <p class="font-bold text-sm sm:text-base text-m3-on-surface leading-snug font-heading mb-1">{name}</p>
-                    {notes.map((note: string) => (
-                      <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed">{note}</p>
-                    ))}
+                <div class={`px-5 py-4 border-b border-m3-outline-variant/40 ${rIdx % 2 === 0 ? 'bg-m3-surface' : 'bg-m3-surface-container-lowest'}`}>
+                  {/* Vehicle name + Total Cost on same row */}
+                  <div class="flex items-center justify-between gap-3 mb-2.5">
+                    <p class="font-bold text-sm sm:text-base text-m3-on-surface leading-snug font-heading">{vehicleName}</p>
+                    <div class="shrink-0 text-right">
+                      <span class="text-[10px] font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-0.5">{headers[totalColIdx]}</span>
+                      <span class="text-lg sm:text-xl font-extrabold text-m3-primary font-heading leading-none">{totalCost}</span>
+                    </div>
                   </div>
-                  {/* Right: price */}
-                  <div class="shrink-0 text-right">
-                    <span class="text-lg sm:text-xl font-extrabold text-m3-primary font-heading leading-none">{price}</span>
+                  {/* Labeled breakdown pills */}
+                  <div class="flex flex-wrap gap-x-4 gap-y-1">
+                    {middleCols.map(({ label, value }: { label: string; value: string }) => (
+                      <div class="flex items-center gap-1 text-xs text-m3-on-surface-variant">
+                        <span class="font-semibold text-m3-on-surface-variant/70">{label}:</span>
+                        <span class="font-bold text-m3-on-surface">{value}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               );

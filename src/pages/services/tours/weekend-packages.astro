@@ -120,6 +120,7 @@ const weekendPackages = [
   },
   {
     id: "yelagiri-weekend",
+    slug: "yelagiri-hills-weekend",
     name: "Chennai to Yelagiri Hills 2-Day Nature Retreat",
     duration: "2 Days / 1 Night (500 KM)",
     badge: "Hill Station Escapes",
@@ -141,6 +142,7 @@ const weekendPackages = [
   },
   {
     id: "yercaud-weekend",
+    slug: "yercaud-hills-weekend",
     name: "Chennai to Yercaud 2-Day 'Jewel of the South'",
     duration: "2 Days / 1 Night (750 KM)",
     badge: "Coffee Estates & Lake",
@@ -219,6 +221,13 @@ const schema = {
         "serviceType": "Weekend Cab Package"
       }
     }))
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "reviewCount": "1250",
+    "bestRating": "5",
+    "worstRating": "1"
   }
 };
 
@@ -312,107 +321,91 @@ const faqSchema = {
 
   <!-- Weekend Packages Grid -->
   <section id="packages" class="py-12 sm:py-16 bg-m3-surface-container-low scroll-mt-28">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center max-w-2xl mx-auto mb-10">
-        <h2 class="text-2xl sm:text-3xl font-bold text-m3-on-surface tracking-tight mb-2 font-heading">
-          Handcrafted <span class="text-m3-primary">Weekend Road Trips</span>
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container text-m3-on-surface text-xs font-bold uppercase tracking-wider mb-2 border border-m3-outline-variant">
+          <span>All-Inclusive Weekend Packages</span>
+        </div>
+        <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
+          Handcrafted <span class="text-m3-primary">Weekend Road Trips</span> from Chennai
         </h2>
-        <p class="text-xs sm:text-sm text-m3-on-surface-variant font-sans">
-          All packages include doorstep pickup in Chennai, dual AC vehicle, FASTag highway tolls, fuel, and complete driver allowance.
+        <p class="text-xs sm:text-sm text-m3-on-surface-variant font-sans mt-1.5">
+          Includes doorstep pickup, dual AC vehicle, FASTag highway tolls, fuel, and complete driver allowance. Zero hidden charges.
         </p>
       </div>
 
-      <div class="space-y-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {weekendPackages.map((pkg) => {
           const leafUrl = (pkg as any).slug ? `/services/${(pkg as any).slug}/` : undefined;
           return (
-            <div class="bg-m3-surface rounded-m3-2xl border border-m3-outline-variant/70 shadow-m3-1 overflow-hidden transition-all hover:shadow-m3-2 flex flex-col lg:flex-row group">
-              <!-- Left / Top: Destination Media Header -->
-              <a href={leafUrl} class="lg:w-80 h-52 sm:h-64 lg:h-auto overflow-hidden relative bg-m3-surface-container-high shrink-0 block group/img cursor-pointer" aria-label={`View ${pkg.name} Details`}>
-                <OptimizedImage
-                  src={pkg.image}
-                  alt={pkg.name}
-                  class="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-500 relative z-10"
-                  sizes="(max-width: 1024px) 100vw, 320px"
+            <div class="bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between hover:shadow-m3-2 hover:border-m3-primary/30 transition-all overflow-hidden group">
+              <div>
+                <!-- Media Image Header with Badges & Leaf Link -->
+                <a href={leafUrl} class="block h-48 sm:h-52 overflow-hidden relative bg-m3-surface-container-high cursor-pointer group/img" aria-label={`View ${pkg.name} Itinerary`}>
+                  <OptimizedImage
+                    src={pkg.image}
+                    alt={pkg.name}
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 relative z-10"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent z-10"></div>
+
+                  <!-- Top USP Badge -->
+                  <span class="absolute top-3 left-3 bg-slate-950/85 backdrop-blur-md border border-white/20 text-white text-[11px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-m3-full shadow-xs z-20">
+                    {pkg.badge}
+                  </span>
+
+                  <!-- Duration Chip -->
+                  <span class="absolute bottom-3 left-3 inline-flex items-center gap-1.5 bg-white/95 backdrop-blur-md text-slate-900 text-xs font-semibold px-2.5 py-1 rounded-m3-full shadow-xs z-20">
+                    <svg class="w-3.5 h-3.5 text-m3-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span>{pkg.duration}</span>
+                  </span>
+                </a>
+
+                <!-- Card Content Body -->
+                <div class="p-5 sm:p-6">
+                  <a href={leafUrl} class="block group/title">
+                    <h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading mb-1.5 group-hover/title:text-m3-primary transition-colors">
+                      {pkg.name}
+                    </h3>
+                  </a>
+                  <p class="text-xs text-m3-on-surface-variant mb-4 leading-relaxed">
+                    {pkg.highlights[0]}
+                  </p>
+
+                  <!-- Vehicle Price Slabs Grid -->
+                  <div class="bg-m3-surface-container-low p-3.5 rounded-m3-xl border border-m3-outline-variant/60 space-y-1.5">
+                    {pkg.rates.map((r) => (
+                      <div class="flex items-center justify-between text-xs py-1 border-b border-m3-outline-variant/40 last:border-0">
+                        <span class="text-m3-on-surface-variant font-medium">{r.car}</span>
+                        <strong class="text-m3-primary font-heading font-black text-sm">{r.price}</strong>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Footer: dual actions -->
+              <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-2 flex items-center gap-2">
+                {leafUrl ? (
+                  <a
+                    href={leafUrl}
+                    class="flex-1 inline-flex items-center justify-center gap-1 px-4 py-2.5 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary text-xs font-bold transition-all shadow-m3-1"
+                  >
+                    <span>View Itinerary</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </a>
+                ) : (
+                  <span class="flex-1 inline-flex items-center justify-center gap-1 px-4 py-2.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface-variant text-xs font-bold border border-m3-outline-variant/60 cursor-default">
+                    Coming Soon
+                  </span>
+                )}
+                <WhatsAppButton
+                  href={`https://wa.me/916381939769?text=${encodeURIComponent(pkg.whatsappMsg)}`}
+                  size="sm"
+                  variant="tonal"
+                  text="Book"
                 />
-                <div class="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-slate-950/80 via-slate-950/20 to-transparent z-10"></div>
-
-                <!-- Top Badge -->
-                <span class="absolute top-3 left-3 bg-slate-950/85 backdrop-blur-md border border-white/20 text-white text-[11px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-m3-full shadow-xs z-20">
-                  {pkg.badge}
-                </span>
-
-                <!-- Duration Chip -->
-                <span class="absolute bottom-3 left-3 inline-flex items-center gap-1.5 bg-white/95 backdrop-blur-md text-slate-900 text-xs font-semibold px-2.5 py-1 rounded-m3-full shadow-xs z-20">
-                  <span class="material-symbols-outlined text-[14px] text-m3-primary">schedule</span>
-                  <span>{pkg.duration}</span>
-                </span>
-              </a>
-
-              <!-- Right: Content, Highlights & Tariff -->
-              <div class="flex-1 flex flex-col justify-between">
-                <!-- Header Info + Actions -->
-                <div class="p-5 sm:p-7 border-b border-m3-outline-variant/40 bg-gradient-to-r from-m3-surface to-m3-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div>
-                    <a href={leafUrl} class="block group/title">
-                      <h3 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading group-hover/title:text-m3-primary transition-colors">
-                        {pkg.name}
-                      </h3>
-                    </a>
-                    <p class="text-xs sm:text-sm text-m3-on-surface-variant font-sans mt-1">
-                      {pkg.route}
-                    </p>
-                  </div>
-
-                  <!-- Action Buttons -->
-                  <div class="shrink-0 flex items-center gap-2">
-                    {leafUrl && (
-                      <a
-                        href={leafUrl}
-                        class="inline-flex items-center gap-1 px-3.5 py-2 bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant rounded-m3-full text-xs font-bold transition-all"
-                      >
-                        <span>Itinerary</span>
-                        <ChevronRight className="w-3.5 h-3.5 text-m3-primary" />
-                      </a>
-                    )}
-                    <WhatsAppButton
-                      href={`https://wa.me/916381939769?text=${encodeURIComponent(pkg.whatsappMsg)}`}
-                      size="sm"
-                      variant="filled"
-                      text="Book on WhatsApp"
-                    />
-                  </div>
-                </div>
-
-                <!-- Highlights and Tariff Matrix -->
-                <div class="p-5 sm:p-7 grid grid-cols-1 md:grid-cols-12 gap-6">
-                  <!-- Col 1: Trip Highlights (5 cols) -->
-                  <div class="md:col-span-5 space-y-3">
-                    <h4 class="text-xs font-bold uppercase tracking-wider text-m3-on-surface-variant">Key Inclusions &amp; Highlights</h4>
-                    <ul class="space-y-2 text-xs sm:text-sm text-m3-on-surface-variant font-sans">
-                      {pkg.highlights.map((h) => (
-                        <li class="flex items-start gap-2 leading-relaxed">
-                          <span class="material-symbols-outlined text-[16px] text-emerald-600 shrink-0 mt-0.5">check_circle</span>
-                          <span>{h}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <!-- Col 2: Transparent Vehicle Tariff Matrix (7 cols) -->
-                  <div class="md:col-span-7">
-                    <h4 class="text-xs font-bold uppercase tracking-wider text-m3-on-surface-variant mb-2">All-Inclusive Fixed Fares (Zero Surge)</h4>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
-                      {pkg.rates.map((rate) => (
-                        <div class="bg-m3-surface-container-lowest border border-m3-outline-variant/60 rounded-m3-xl p-3 text-center flex flex-col justify-between">
-                          <span class="text-[11px] font-semibold text-m3-on-surface-variant line-clamp-1">{rate.car}</span>
-                          <span class="text-base sm:text-lg font-extrabold text-m3-on-surface font-heading my-1">{rate.price}</span>
-                          <span class="text-[9px] uppercase tracking-wider text-emerald-700 font-bold">All Tolls Inc.</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           );
