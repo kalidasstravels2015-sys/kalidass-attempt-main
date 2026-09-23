@@ -170,7 +170,7 @@ export default function ExitIntentModal() {
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row gap-2.5">
           <WhatsAppButton
-            href={`https://wa.me/919092303060?text=${encodeURIComponent(
+            href={`https://wa.me/916381939769?text=${encodeURIComponent(
               currentRec.whatsappText
             )}`}
             className="flex-1"
@@ -180,7 +180,7 @@ export default function ExitIntentModal() {
             Get WhatsApp Quote
           </WhatsAppButton>
           <a
-            href="tel:+919092303060"
+            href="tel:+916381939769"
             className="inline-flex items-center justify-center gap-1.5 py-3 px-4 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface text-xs sm:text-sm font-bold transition-colors text-center border border-m3-outline-variant"
           >
             <span>Call +91 63819 39769</span>

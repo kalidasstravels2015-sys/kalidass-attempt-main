@@ -38,7 +38,7 @@ export default function TempleTours() {
       highlights: 'Doorstep 4 AM pickup • AP Permit, Tolls, Alipiri check & Bata included',
       slug: 'tirupati-package',
       badge: 'Most Popular',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Chennai%20to%20Tirupati%20Balaji%20Car%20Package.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Chennai%20to%20Tirupati%20Balaji%20Car%20Package.'
     },
     {
       id: 'navagraha',
@@ -53,7 +53,7 @@ export default function TempleTours() {
       highlights: 'All 9 planetary temples sequenced without backtracking • 2 Days Bata & Tolls',
       slug: 'navagraha-tour',
       badge: 'Complete 9 Temples',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Kumbakonam%20Navagraha%202-Day%20Tour.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Kumbakonam%20Navagraha%202-Day%20Tour.'
     },
     {
       id: 'thiruvannamalai',
@@ -68,7 +68,7 @@ export default function TempleTours() {
       highlights: 'Arunachaleswarar Darshan + 14 km Pournami Girivalam AC car standby',
       slug: 'thiruvannamalai-girivalam-trip',
       badge: 'Pournami Special',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Thiruvannamalai%20Girivalam%20Tour.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Thiruvannamalai%20Girivalam%20Tour.'
     },
     {
       id: 'sabarimala',
@@ -83,7 +83,7 @@ export default function TempleTours() {
       highlights: 'Satvik teetotaler driver • Kerala State Permit • 3 Days Bata included',
       slug: 'sabarimala-trip',
       badge: 'Mandala / Makaravilakku',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Sabarimala%20Yatra%203-Day%20Package.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Sabarimala%20Yatra%203-Day%20Package.'
     },
     {
       id: 'rameswaram',
@@ -98,7 +98,7 @@ export default function TempleTours() {
       highlights: '22 Theertham baths, Pamban bridge, Ram Setu / Arichal Munai & APJ Memorial',
       slug: 'rameswaram-2-days',
       badge: 'Char Dham Sthalam',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Rameswaram%202-Day%20Pilgrimage%20Package.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Rameswaram%202-Day%20Pilgrimage%20Package.'
     },
     {
       id: 'kanchipuram',
@@ -113,7 +113,7 @@ export default function TempleTours() {
       highlights: 'Kamakshi Amman, Ekambareswarar, Varadharaja Perumal & Silk Saree weavers',
       slug: 'kanchipuram-temple-trip',
       badge: 'Divya Desam & Heritage',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Kanchipuram%20Temple%20Day%20Trip.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Kanchipuram%20Temple%20Day%20Trip.'
     },
     {
       id: 'chidambaram',
@@ -128,7 +128,7 @@ export default function TempleTours() {
       highlights: 'Akasha Lingam Spatika puja + Mangrove Forest boat ride + Tolls',
       slug: 'chidambaram-temple-trip',
       badge: 'Pancha Bhoota Sthalam',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Chidambaram%20&%20Pichavaram%20Tour.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Chidambaram%20&%20Pichavaram%20Tour.'
     },
     {
       id: 'vellore',
@@ -143,7 +143,7 @@ export default function TempleTours() {
       highlights: '1,500 kg Gold temple, Jalakandeswarar Fort temple + Tolls included',
       slug: 'vellore-golden-temple',
       badge: 'Golden Temple',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Vellore%20Golden%20Temple%20Trip.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Vellore%20Golden%20Temple%20Trip.'
     }
   ];
 
@@ -275,7 +275,7 @@ export default function TempleTours() {
               <ChevronDown className="w-4 h-4 text-emerald-400 transform group-hover:translate-y-0.5 transition-transform" />
             </a>
             <a 
-              href="tel:+919092303060"
+              href="tel:+916381939769"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-m3-full bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface border border-m3-outline-variant font-semibold text-xs sm:text-sm shadow-m3-1 transition-all"
             >
               <Phone className="w-4 h-4 text-emerald-500" />
@@ -641,13 +641,13 @@ export default function TempleTours() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <WhatsAppButton
-              href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20a%20Temple%20Tour%20Package."
+              href="https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20a%20Temple%20Tour%20Package."
               size="lg"
               variant="filled"
               text="Chat on WhatsApp (+91 63819 39769)"
             />
             <a
-              href="tel:+919092303060"
+              href="tel:+916381939769"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface px-6 py-3.5 rounded-m3-full font-semibold text-xs sm:text-sm shadow-m3-1 transition-all"
             >
               <Phone className="w-4 h-4 text-emerald-500" />

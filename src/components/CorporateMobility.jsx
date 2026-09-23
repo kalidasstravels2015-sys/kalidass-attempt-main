@@ -35,7 +35,7 @@ export default function CorporateMobility() {
       highlight: 'Rostered pickup/drop, GPS tracking, women safety protocols',
       slug: 'employee-pickup-drop',
       badge: '24/7 IT/BPO Shift Mobility',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20need%20a%20quote%20for%20Corporate%20Employee%20Transportation.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20need%20a%20quote%20for%20Corporate%20Employee%20Transportation.'
     },
     {
       id: 'retainer-sedan',
@@ -47,7 +47,7 @@ export default function CorporateMobility() {
       highlight: 'Dedicated uniformed chauffeur, replacement within 60 mins',
       slug: 'monthly-car-with-driver-corporate',
       badge: 'Managerial Travel',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20enquire%20about%20Executive%20Sedan%20Monthly%20Retainer.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20enquire%20about%20Executive%20Sedan%20Monthly%20Retainer.'
     },
     {
       id: 'retainer-suv',
@@ -59,7 +59,7 @@ export default function CorporateMobility() {
       highlight: '6-seater spacious vehicle for project teams & client visits',
       slug: 'monthly-car-with-driver-corporate',
       badge: 'Team Mobility',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20enquire%20about%20Ertiga%20SUV%20Monthly%20Retainer.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20enquire%20about%20Ertiga%20SUV%20Monthly%20Retainer.'
     },
     {
       id: 'retainer-crysta',
@@ -71,7 +71,7 @@ export default function CorporateMobility() {
       highlight: 'Premium VIP chauffeur, leather captain seats for leadership/expats',
       slug: 'monthly-car-with-driver-corporate',
       badge: 'CXO & Director Mobility',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20enquire%20about%20Innova%20Crysta%20Monthly%20Retainer.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20enquire%20about%20Innova%20Crysta%20Monthly%20Retainer.'
     },
     {
       id: 'airport-central',
@@ -83,7 +83,7 @@ export default function CorporateMobility() {
       highlight: 'Flight delay tracking, placard meet-and-greet, zero surge',
       slug: 'corporate-airport-transfer',
       badge: 'Airport Protocol',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20need%20a%20Corporate%20Airport%20Transfer.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20need%20a%20Corporate%20Airport%20Transfer.'
     },
     {
       id: 'airport-omr',
@@ -95,7 +95,7 @@ export default function CorporateMobility() {
       highlight: 'Flight delay tracking, placard meet-and-greet, zero surge',
       slug: 'corporate-airport-transfer',
       badge: 'OMR Tech Corridor',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20need%20a%20Corporate%20Airport%20Transfer%20to%20OMR.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20need%20a%20Corporate%20Airport%20Transfer%20to%20OMR.'
     },
     {
       id: 'business-spot',
@@ -107,7 +107,7 @@ export default function CorporateMobility() {
       highlight: 'Multi-meeting city mobility, client visits, GST invoice',
       slug: 'business-trip-car-rental',
       badge: 'Spot Day Rental',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20need%20an%208-Hour%20Business%20Day%20Rental.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20need%20an%208-Hour%20Business%20Day%20Rental.'
     },
     {
       id: 'mice-events',
@@ -119,7 +119,7 @@ export default function CorporateMobility() {
       highlight: 'Trade expos at Chennai Trade Centre, AGMs, on-ground marshals',
       slug: 'driver-car-for-weddings',
       badge: 'Conferences & Offsites',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20need%20Fleet%20Management%20for%20a%20Corporate%20Event.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20need%20Fleet%20Management%20for%20a%20Corporate%20Event.'
     }
   ];
 
@@ -211,7 +211,7 @@ export default function CorporateMobility() {
               <ChevronDown className="w-4 h-4 text-white" />
             </a>
             <a 
-              href="tel:+919092303060"
+              href="tel:+916381939769"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-m3-full bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface border border-m3-outline-variant font-semibold text-xs sm:text-sm shadow-m3-1 transition-all"
             >
               <Phone className="w-4 h-4 text-m3-primary" />
@@ -546,13 +546,13 @@ export default function CorporateMobility() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <WhatsAppButton
-              href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20schedule%20a%20Corporate%20Mobility%20RFP%20meeting."
+              href="https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20schedule%20a%20Corporate%20Mobility%20RFP%20meeting."
               size="lg"
               variant="filled"
               text="Discuss Corporate Account on WhatsApp"
             />
             <a
-              href="tel:+919092303060"
+              href="tel:+916381939769"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface px-6 py-3.5 rounded-m3-full font-semibold text-xs sm:text-sm shadow-m3-1 transition-all"
             >
               <Phone className="w-4 h-4 text-emerald-500" />

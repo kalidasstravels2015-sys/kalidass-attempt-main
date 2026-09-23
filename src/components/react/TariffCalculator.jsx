@@ -84,7 +84,7 @@ const TariffCalculator = ({ currentLang }) => {
             `Innova: ₹${costs.innova.toLocaleString('en-IN')}\n\n` +
             `Please confirm the final pricing and availability.`
         );
-        window.open(`https://wa.me/919092303060?text=${message}`, '_blank');
+        window.open(`https://wa.me/916381939769?text=${message}`, '_blank');
     };
 
     if (!isOpen || !activeTrip) return null;

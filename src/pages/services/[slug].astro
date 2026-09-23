@@ -31,7 +31,7 @@ export async function getStaticPaths() {
 }
 
 const { service } = Astro.props as { service: any };
-const whatsappLink = `https://wa.me/919092303060?text=${encodeURIComponent(service.whatsappMsg || `Hi Kalidass Travels, I would like to book ${service.title}.`)}`;
+const whatsappLink = `https://wa.me/916381939769?text=${encodeURIComponent(service.whatsappMsg || `Hi Kalidass Travels, I would like to book ${service.title}.`)}`;
 
 const isActingDriver = service.category === 'Acting Driver Services' || service.slug.includes('driver');
 const isTour = ['Temple Tours', 'Popular Destinations'].includes(service.category);

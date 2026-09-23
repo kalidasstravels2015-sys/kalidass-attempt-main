@@ -765,7 +765,7 @@ Please confirm availability.`;
     });
 
     const encodedMessage = encodeURIComponent(message);
-    window.open(`https://wa.me/919092303060?text=${encodedMessage}`, '_blank');
+    window.open(`https://wa.me/916381939769?text=${encodedMessage}`, '_blank');
   };
 
   // Helper for Input Classes

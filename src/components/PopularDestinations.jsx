@@ -36,7 +36,7 @@ export default function PopularDestinations() {
       highlight: 'Auroville, French Colony, Promenade Beach & ECR Tolls included',
       slug: 'pondicherry-one-day-trip',
       badge: 'Top Weekend Trip',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Chennai%20to%20Pondicherry%20Day%20Trip.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Chennai%20to%20Pondicherry%20Day%20Trip.'
     },
     {
       id: 'mahabalipuram',
@@ -50,7 +50,7 @@ export default function PopularDestinations() {
       highlight: 'Shore Temple, Five Rathas, Butter Ball, Seashell Museum + Tolls',
       slug: 'mahabalipuram-ecr-temple-route',
       badge: 'Heritage & Beach',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Mahabalipuram%20Day%20Tour.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Mahabalipuram%20Day%20Tour.'
     },
     {
       id: 'chennai-city',
@@ -64,7 +64,7 @@ export default function PopularDestinations() {
       highlight: 'Kapaleeshwarar, Santhome, Marina Beach, Egmore Museum & Fort St. George',
       slug: 'one-day-chennai-city-tour',
       badge: 'City Tour',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Chennai%20City%20Sightseeing%20Tour.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Chennai%20City%20Sightseeing%20Tour.'
     }
   ];
 
@@ -80,7 +80,7 @@ export default function PopularDestinations() {
       driverBata: '₹400 / day',
       highlight: 'Best for small families & couples. Smooth AC comfort.',
       slug: 'outstation-car-rental-per-km',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20need%20a%20Sedan%20for%20an%20outstation%20trip.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20need%20a%20Sedan%20for%20an%20outstation%20trip.'
     },
     {
       id: 'km-ertiga',
@@ -93,7 +93,7 @@ export default function PopularDestinations() {
       driverBata: '₹500 / day',
       highlight: '6-seater spacious layout with dual AC for small groups.',
       slug: 'outstation-car-rental-per-km',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20need%20an%20Ertiga%20SUV%20for%20an%20outstation%20trip.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20need%20an%20Ertiga%20SUV%20for%20an%20outstation%20trip.'
     },
     {
       id: 'km-innova',
@@ -106,7 +106,7 @@ export default function PopularDestinations() {
       driverBata: '₹600 / day',
       highlight: 'Gold standard for long-distance family highway comfort.',
       slug: 'outstation-car-rental-per-km',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20need%20a%20Toyota%20Innova%20for%20an%20outstation%20trip.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20need%20a%20Toyota%20Innova%20for%20an%20outstation%20trip.'
     },
     {
       id: 'km-crysta',
@@ -119,7 +119,7 @@ export default function PopularDestinations() {
       driverBata: '₹700 / day',
       highlight: 'Luxury captain seats, superior suspension & VIP comfort.',
       slug: 'outstation-car-rental-per-km',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20need%20an%20Innova%20Crysta%20for%20an%20outstation%20trip.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20need%20an%20Innova%20Crysta%20for%20an%20outstation%20trip.'
     },
     {
       id: 'km-tempo',
@@ -132,7 +132,7 @@ export default function PopularDestinations() {
       driverBata: '₹800 / day',
       highlight: 'Push-back seats, high roof & audio/video system for group tours.',
       slug: 'outstation-car-rental-per-km',
-      whatsapp: 'https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20need%20a%20Tempo%20Traveller%20for%20a%20group%20trip.'
+      whatsapp: 'https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20need%20a%20Tempo%20Traveller%20for%20a%20group%20trip.'
     }
   ];
 
@@ -219,7 +219,7 @@ export default function PopularDestinations() {
               <ChevronDown className="w-4 h-4 text-white" />
             </a>
             <a 
-              href="tel:+919092303060"
+              href="tel:+916381939769"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-m3-full bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface border border-m3-outline-variant font-semibold text-xs sm:text-sm shadow-m3-1 transition-all"
             >
               <Phone className="w-4 h-4 text-m3-primary" />
@@ -698,13 +698,13 @@ export default function PopularDestinations() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <WhatsAppButton
-              href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20an%20Outstation%20Cab."
+              href="https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20an%20Outstation%20Cab."
               size="lg"
               variant="filled"
               text="Chat on WhatsApp (+91 63819 39769)"
             />
             <a
-              href="tel:+919092303060"
+              href="tel:+916381939769"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface px-6 py-3.5 rounded-m3-full font-semibold text-xs sm:text-sm shadow-m3-1 transition-all"
             >
               <Phone className="w-4 h-4 text-emerald-500" />
