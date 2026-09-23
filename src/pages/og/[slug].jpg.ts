@@ -6,28 +6,28 @@ import { readFileSync, existsSync } from "fs";
 import path from "path";
 import serviceDetails from "../../data/serviceDetails.json";
 
-// Service Category Hub pages metadata for dynamic OG card generation
+// ─── Category Hub Overrides ──────────────────────────────────────────────────
 const categoryHubs: Record<string, {
   slug: string;
   title: string;
   category: string;
-  duration: string;
+  route: string;
   startingPrice: string;
   priceSub: string;
-  benefits: string[];
+  includes: string[];
   heroImage: string;
 }> = {
   "corporate": {
     slug: "corporate",
     title: "Corporate Cab & Employee Transport Services in Chennai",
     category: "Corporate Mobility",
-    duration: "24/7 Shift SLA",
+    route: "Chennai • Pan-City",
     startingPrice: "₹42,000",
-    priceSub: "(Monthly Retainer)",
-    benefits: [
-      "Monthly Executive Car Retainers with Dedicated Chauffeur",
-      "24/7 Routed Employee Shift Commute (ETS) with GPS Tracking",
-      "100% Compliant Billing & Corporate GST Invoicing"
+    priceSub: "Monthly Retainer",
+    includes: [
+      "24/7 Routed Employee Shift Commute with GPS",
+      "Monthly Executive Car Retainer + Chauffeur",
+      "100% Compliant Corporate GST Invoicing"
     ],
     heroImage: "/images/services/corporate.webp"
   },
@@ -35,13 +35,13 @@ const categoryHubs: Record<string, {
     slug: "chennai-airport-taxi",
     title: "Chennai Airport Taxi & VIP Airport Transfers (MAA)",
     category: "Airport Transfers",
-    duration: "5–10 Min Dispatch",
+    route: "MAA → Doorstep Chennai",
     startingPrice: "₹650",
-    priceSub: "(Flat Airport Fare)",
-    benefits: [
-      "5–10 Min Rapid Dispatch from MAA Airport Perimeter",
-      "Real-Time Flight Delay Tracking (Zero Waiting Fee)",
-      "Meet & Greet Service with Passenger Name Placard"
+    priceSub: "Flat Airport Fare",
+    includes: [
+      "5–10 Min Rapid Dispatch from MAA Terminal",
+      "Real-Time Flight Delay Tracking (Zero Penalty)",
+      "Meet & Greet with Personalized Name Placard"
     ],
     heroImage: "/images/services/airport-transfer.webp"
   },
@@ -49,13 +49,13 @@ const categoryHubs: Record<string, {
     slug: "acting-drivers",
     title: "Verified Acting Drivers in Chennai for Your Personal Car",
     category: "Acting Drivers",
-    duration: "30–60 Min Doorstep",
+    route: "Chennai • Doorstep Pickup",
     startingPrice: "₹600",
-    priceSub: "(4h City Duty)",
-    benefits: [
+    priceSub: "4h City Duty",
+    includes: [
       "Manual, Automatic & Luxury EV Transmission Expertise",
       "Police-Verified & Background Screened Chauffeurs",
-      "Zero Surge Pricing During Rain or Peak Traffic Hours"
+      "Zero Surge Pricing During Rain or Peak Traffic"
     ],
     heroImage: "/images/services/acting-drivers.webp"
   },
@@ -63,13 +63,13 @@ const categoryHubs: Record<string, {
     slug: "outstation-cabs",
     title: "Outstation Cabs from Chennai – Flat Rates & Round Trips",
     category: "Outstation Cabs",
-    duration: "Round Trip & One Way",
+    route: "Chennai → Tamil Nadu & Beyond",
     startingPrice: "₹14/km",
-    priceSub: "(Transparent Billing)",
-    benefits: [
+    priceSub: "Transparent Billing",
+    includes: [
       "Doorstep Pickup Anywhere Across Chennai & Suburbs",
-      "Clean AC Sedan, Ertiga, Innova Crysta & Tempo Traveller",
-      "Experienced Highway Chauffeurs & 24/7 Breakdown Backup"
+      "AC Sedan, Ertiga, Innova Crysta & Tempo Traveller",
+      "Experienced Highway Chauffeurs & 24/7 Support"
     ],
     heroImage: "/images/temple/mahabalipuram-ecr-temples.webp"
   },
@@ -77,12 +77,12 @@ const categoryHubs: Record<string, {
     slug: "temple-tours",
     title: "Tamil Nadu & South India Temple Tour Packages from Chennai",
     category: "Temple Tours",
-    duration: "1 Day to 5 Days",
+    route: "Chennai → South India Temples",
     startingPrice: "₹3,500",
-    priceSub: "(Round-Trip Flat)",
-    benefits: [
+    priceSub: "Round-Trip Flat",
+    includes: [
       "Tirupati, Navagraha, Thiruvannamalai, Rameswaram & Madurai",
-      "All Interstate Road Permits, Tolls & Driver Bata Included",
+      "All Interstate Permits, Tolls & Driver Bata Included",
       "Doorstep Home Pickup & Temple Darshan Timings Guidance"
     ],
     heroImage: "/images/services/temple-tours.webp"
@@ -91,13 +91,13 @@ const categoryHubs: Record<string, {
     slug: "weekend-packages",
     title: "Weekend Getaway Tour Packages from Chennai",
     category: "Weekend Tours",
-    duration: "1 Day / 2 Days",
+    route: "Chennai → Weekend Escapes",
     startingPrice: "₹4,500",
-    priceSub: "(Round-Trip Flat)",
-    benefits: [
+    priceSub: "Round-Trip Flat",
+    includes: [
       "Pondicherry, Mahabalipuram, Vellore, Yelagiri & Yercaud",
-      "Private Sanitized AC Cabs with Dedicated Chauffeur",
-      "Custom Scenic Sightseeing Itinerary & Doorstep Pickup"
+      "Private Sanitized AC Cab with Dedicated Chauffeur",
+      "Custom Scenic Itinerary & Doorstep Pickup"
     ],
     heroImage: "/images/temple/pondicherry.webp"
   },
@@ -105,11 +105,11 @@ const categoryHubs: Record<string, {
     slug: "popular-destinations",
     title: "Popular Outstation Travel Destinations from Chennai",
     category: "Outstation Travel",
-    duration: "Doorstep Pickup",
+    route: "Chennai → Top Destinations",
     startingPrice: "₹14/km",
-    priceSub: "(Flat Transparent Rates)",
-    benefits: [
-      "Top Highway Routes Across Tamil Nadu, AP, Kerala & Karnataka",
+    priceSub: "Flat Transparent Rates",
+    includes: [
+      "Top Routes Across Tamil Nadu, AP, Kerala & Karnataka",
       "Sanitized AC Sedans, SUVs & Executive Innova Crysta",
       "Zero Surge Guarantee, Upfront Fares & 24/7 Support"
     ],
@@ -119,11 +119,11 @@ const categoryHubs: Record<string, {
     slug: "services",
     title: "Premium Travel & Chauffeur Services in Chennai",
     category: "Kalidass Travels",
-    duration: "24/7 Availability",
+    route: "Chennai • South India",
     startingPrice: "₹650",
-    priceSub: "(Starting Fares)",
-    benefits: [
-      "Airport Transfers, Outstation Cabs & South India Temple Tours",
+    priceSub: "Starting Fares",
+    includes: [
+      "Airport Transfers, Outstation Cabs & Temple Tours",
       "Police-Verified Professional Chauffeurs for Your Car",
       "4.9 ★ Rated • 1,500+ Happy Devotees & Travelers"
     ],
@@ -131,23 +131,115 @@ const categoryHubs: Record<string, {
   }
 };
 
+// ─── Static Paths ────────────────────────────────────────────────────────────
 export function getStaticPaths() {
   const servicePaths = serviceDetails.map((service) => ({
     params: { slug: service.slug },
   }));
-
   const hubPaths = Object.keys(categoryHubs).map((slug) => ({
     params: { slug },
   }));
-
   return [...servicePaths, ...hubPaths];
 }
 
 export const prerender = true;
 
-// Priority header regexes to extract starting price
+// ─── Image Map ───────────────────────────────────────────────────────────────
+const tourImages: Record<string, string> = {
+  "tirupati-package": "/images/temple/tirupati-balaji.webp",
+  "thiruvannamalai-girivalam-trip": "/images/temple/thiruvannamalai-girivalam.webp",
+  "rameswaram-2-days": "/images/temple/rameswaram.webp",
+  "navagraha-tour": "/images/temple/navagraha.webp",
+  "kanchipuram-temple-trip": "/images/temple/kanchipuram-temple.webp",
+  "chidambaram-temple-trip": "/images/temple/chidambaram-natarajar-temple.webp",
+  "sabarimala-trip": "/images/temple/sabarimala-temple.webp",
+  "pondicherry-one-day-trip": "/images/temple/pondicherry.webp",
+  "vellore-golden-temple": "/images/temple/vellore-golden.webp",
+  "mahabalipuram-ecr-temple-route": "/images/temple/mahabalipuram-ecr-temples.webp",
+  "one-day-chennai-city-tour": "/images/temple/chennai-city.webp",
+  "driver-car-for-weddings": "/images/services/corporate.webp",
+  "chennai-airport-taxi-transfers": "/images/services/airport-transfer.webp",
+};
+
+const categoryImages: Record<string, string> = {
+  "Acting Drivers": "/images/services/acting-drivers.webp",
+  "Acting Driver Services": "/images/services/acting-drivers.webp",
+  "Outstation Cabs": "/images/temple/mahabalipuram-ecr-temples.webp",
+  "Popular Destinations": "/images/temple/mahabalipuram-ecr-temples.webp",
+  "Temple Tours": "/images/services/temple-tours.webp",
+  "Corporate Mobility": "/images/services/corporate.webp",
+  "Corporate Travel": "/images/services/corporate.webp",
+  "Airport Transfers": "/images/services/airport-transfer.webp",
+  "Premium Fleet Rental": "/images/services/corporate.webp"
+};
+
+// ─── Category Accent Themes ───────────────────────────────────────────────────
+function getAccentTheme(category: string): { primary: string; glow: string; chipBg: string; chipBorder: string; chipText: string; priceBorder: string; priceBg: string } {
+  const cat = category.toLowerCase();
+  if (cat.includes("temple") || cat.includes("pilgrimage") || cat.includes("weekend") || cat.includes("outstation travel")) {
+    // Saffron gold — devotional
+    return {
+      primary: "#F59E0B",
+      glow: "rgba(245,158,11,0.18)",
+      chipBg: "rgba(245,158,11,0.15)",
+      chipBorder: "rgba(245,158,11,0.45)",
+      chipText: "#FDE68A",
+      priceBorder: "rgba(245,158,11,0.4)",
+      priceBg: "rgba(245,158,11,0.12)",
+    };
+  }
+  if (cat.includes("airport")) {
+    // Emerald — on-time
+    return {
+      primary: "#10B981",
+      glow: "rgba(16,185,129,0.18)",
+      chipBg: "rgba(16,185,129,0.15)",
+      chipBorder: "rgba(16,185,129,0.45)",
+      chipText: "#A7F3D0",
+      priceBorder: "rgba(16,185,129,0.4)",
+      priceBg: "rgba(16,185,129,0.12)",
+    };
+  }
+  if (cat.includes("corporate")) {
+    // Violet — executive
+    return {
+      primary: "#8B5CF6",
+      glow: "rgba(139,92,246,0.18)",
+      chipBg: "rgba(139,92,246,0.15)",
+      chipBorder: "rgba(139,92,246,0.45)",
+      chipText: "#DDD6FE",
+      priceBorder: "rgba(139,92,246,0.4)",
+      priceBg: "rgba(139,92,246,0.12)",
+    };
+  }
+  if (cat.includes("acting driver")) {
+    // Royal blue — professional
+    return {
+      primary: "#3B82F6",
+      glow: "rgba(59,130,246,0.18)",
+      chipBg: "rgba(59,130,246,0.15)",
+      chipBorder: "rgba(59,130,246,0.45)",
+      chipText: "#BFDBFE",
+      priceBorder: "rgba(59,130,246,0.4)",
+      priceBg: "rgba(59,130,246,0.12)",
+    };
+  }
+  // Kalidass red — default / outstation
+  return {
+    primary: "#EC221F",
+    glow: "rgba(236,34,31,0.18)",
+    chipBg: "rgba(236,34,31,0.14)",
+    chipBorder: "rgba(236,34,31,0.4)",
+    chipText: "#FCA5A5",
+    priceBorder: "rgba(236,34,31,0.35)",
+    priceBg: "rgba(236,34,31,0.12)",
+  };
+}
+
+// ─── Price Extraction ─────────────────────────────────────────────────────────
 const priorityHeaderRegexes = [
-  /flat/i, /fare/i, /cost/i, /package/i, /charge/i, /sedan/i, /hatchback/i, /swift/i, /etios/i, /price/i, /rate/i
+  /flat/i, /fare/i, /cost/i, /package/i, /charge/i, /sedan/i, /hatchback/i,
+  /swift/i, /etios/i, /price/i, /rate/i
 ];
 
 function extractStartingPrice(svc: any): string | null {
@@ -158,123 +250,106 @@ function extractStartingPrice(svc: any): string | null {
   let targetColIdx = -1;
   for (const regex of priorityHeaderRegexes) {
     const idx = headers.findIndex((h: string) => regex.test(h) && !/rate\/km/i.test(h) && !/night/i.test(h));
-    if (idx !== -1) {
-      targetColIdx = idx;
-      break;
-    }
+    if (idx !== -1) { targetColIdx = idx; break; }
   }
 
   let minPrice = Infinity;
   for (const row of rows) {
-    let cellsToCheck: any[] = [];
-    if (targetColIdx !== -1 && row[targetColIdx] !== undefined) {
-      cellsToCheck = [row[targetColIdx]];
-    } else {
-      cellsToCheck = [...row].reverse();
-    }
+    let cellsToCheck: any[] = targetColIdx !== -1 && row[targetColIdx] !== undefined
+      ? [row[targetColIdx]]
+      : [...row].reverse();
 
     for (const cell of cellsToCheck) {
       const cellStr = String(cell);
-      if (!cellStr.includes('₹')) continue;
+      if (!cellStr.includes("₹")) continue;
       const matches = [...cellStr.matchAll(/₹\s*([0-9,]+)/g)];
       if (matches.length > 0) {
-        const num = parseInt(matches[0][1].replace(/,/g, ''), 10);
+        const num = parseInt(matches[0][1].replace(/,/g, ""), 10);
         if (!isNaN(num) && num > 0) {
-          if (num < 100 && (/trip|tour|package|drop|wedding/i.test(svc.slug) || /temple/i.test(svc.category))) {
-            continue;
-          }
+          if (num < 100 && (/trip|tour|package|drop|wedding/i.test(svc.slug) || /temple/i.test(svc.category))) continue;
           if (num < minPrice) minPrice = num;
         }
       }
     }
   }
-
   return minPrice !== Infinity ? String(minPrice) : null;
 }
 
-// Inline SVGs for crisp pixel-perfect rendering across all environments
-const checkIcon = `
-  <svg viewBox="0 0 20 20" width="15" height="15" fill="#34D399" style="margin-right: 6px;">
-    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+// ─── Inline SVG Icons ─────────────────────────────────────────────────────────
+const checkSvg = (color: string) => `
+  <svg viewBox="0 0 20 20" width="16" height="16" fill="${color}" style="margin-right:8px;flex-shrink:0;">
+    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
   </svg>
 `;
 
-const starIcon = `
-  <svg viewBox="0 0 20 20" width="16" height="16" fill="#FBBF24" style="margin-right: 5px;">
-    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+const starSvg = `
+  <svg viewBox="0 0 20 20" width="16" height="16" fill="#FBBF24" style="margin-right:5px;">
+    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
   </svg>
 `;
 
-const clockIcon = `
-  <svg viewBox="0 0 20 20" width="14" height="14" fill="#FBBF24" style="margin-right: 6px;">
-    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+const routeSvg = (color: string) => `
+  <svg viewBox="0 0 20 20" width="14" height="14" fill="${color}" style="margin-right:7px;flex-shrink:0;">
+    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
   </svg>
 `;
 
-const phoneIcon = `
-  <svg viewBox="0 0 20 20" width="14" height="14" fill="#CBD5E1" style="margin-right: 6px;">
-    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 4V3z" />
-  </svg>
-`;
-
-export const GET: APIRoute = async ({ params, request }) => {
+// ─── API Route ────────────────────────────────────────────────────────────────
+export const GET: APIRoute = async ({ params }) => {
   const { slug } = params;
   if (!slug) return new Response("Not found", { status: 404 });
 
   const service = serviceDetails.find((s) => s.slug === slug);
   const hub = categoryHubs[slug];
 
-  if (!service && !hub) {
-    return new Response("Not found", { status: 404 });
-  }
+  if (!service && !hub) return new Response("Not found", { status: 404 });
 
-  // Image Mapping
-  const tourImages: Record<string, string> = {
-    "tirupati-package": "/images/temple/tirupati-balaji.webp",
-    "thiruvannamalai-girivalam-trip": "/images/temple/thiruvannamalai-girivalam.webp",
-    "rameswaram-2-days": "/images/temple/rameswaram.webp",
-    "navagraha-tour": "/images/temple/navagraha.webp",
-    "kanchipuram-temple-trip": "/images/temple/kanchipuram-temple.webp",
-    "chidambaram-temple-trip": "/images/temple/chidambaram-natarajar-temple.webp",
-    "sabarimala-trip": "/images/temple/sabarimala-temple.webp",
-    "pondicherry-one-day-trip": "/images/temple/pondicherry.webp",
-    "vellore-golden-temple": "/images/temple/vellore-golden.webp",
-    "mahabalipuram-ecr-temple-route": "/images/temple/mahabalipuram-ecr-temples.webp",
-    "one-day-chennai-city-tour": "/images/temple/chennai-city.webp",
-    "driver-car-for-weddings": "/images/services/corporate.webp",
-    "chennai-airport-taxi-transfers": "/images/services/airport-transfer.webp",
-  };
-
-  const categoryImages: Record<string, string> = {
-    "Acting Drivers": "/images/services/acting-drivers.webp",
-    "Acting Driver Services": "/images/services/acting-drivers.webp",
-    "Outstation Cabs": "/images/temple/mahabalipuram-ecr-temples.webp",
-    "Popular Destinations": "/images/temple/mahabalipuram-ecr-temples.webp",
-    "Temple Tours": "/images/services/temple-tours.webp",
-    "Corporate Mobility": "/images/services/corporate.webp",
-    "Corporate Travel": "/images/services/corporate.webp",
-    "Airport Transfers": "/images/services/airport-transfer.webp",
-    "Premium Fleet Rental": "/images/services/corporate.webp"
-  };
-
-  // Determine card content
+  // ── Resolve card content ──────────────────────────────────────────────────
   let title = "";
   let category = "";
-  let duration = "";
+  let route = "";
   let startingPrice = "";
   let priceSub = "";
-  let benefits: string[] = [];
+  let includes: string[] = [];
   let heroImage = "";
 
   if (service) {
     title = service.title;
     category = service.category;
-    duration = service.duration ? service.duration.split('(')[0].trim() : "Doorstep Service";
-    heroImage = tourImages[service.slug] || categoryImages[service.category] || "/images/temple/tirupati-balaji.webp";
 
+    // Route line from real data
+    if ((service as any).origin && (service as any).destination) {
+      route = `${(service as any).origin} → ${(service as any).destination}`;
+    } else if ((service as any).origin) {
+      route = `${(service as any).origin} • Doorstep Pickup`;
+    } else {
+      route = "Chennai • Doorstep Pickup";
+    }
+
+    heroImage = tourImages[service.slug] || categoryImages[service.category] || "/images/services/temple-tours.webp";
+
+    // Real includes from service data — up to 3 lines
+    const rawIncludes: string[] = (service as any).includes || [];
+    includes = rawIncludes.slice(0, 3).map((inc: string) => {
+      // Trim to max ~52 chars so it fits the card
+      return inc.length > 52 ? inc.slice(0, 50) + "…" : inc;
+    });
+
+    // Fill to 3 items if fewer
+    while (includes.length < 3) {
+      if (category.includes("Temple") || category.includes("Pilgrimage")) {
+        includes.push(["All Tolls, AP Permit & Driver Bata Included", "AC Sedan, Ertiga & Innova Crysta", "Police-Verified Executive Chauffeurs"][includes.length] || "");
+      } else if (category.includes("Acting")) {
+        includes.push(["Hourly (4h/8h) & Outstation Duties", "Manual, Automatic & EV Transmission", "Police-Verified Screened Chauffeurs"][includes.length] || "");
+      } else {
+        includes.push(["Sanitized AC Fleet with Pro Chauffeur", "Transparent Fixed Rates • Zero Surge", "24/7 Support & Breakdown Backup"][includes.length] || "");
+      }
+    }
+
+    // Price
     const extracted = extractStartingPrice(service);
     if (extracted) {
-      startingPrice = `₹${parseInt(extracted).toLocaleString('en-IN')}`;
+      startingPrice = `₹${parseInt(extracted).toLocaleString("en-IN")}`;
     } else if (service.slug.startsWith("acting-driver")) {
       startingPrice = "₹600";
     } else if (service.slug.includes("airport")) {
@@ -283,61 +358,39 @@ export const GET: APIRoute = async ({ params, request }) => {
       startingPrice = "₹14/km";
     }
 
-    if (category === "Temple Tours") {
-      priceSub = "(Round-Trip Flat)";
-      benefits = [
-        "All Tolls, AP Permit & Tax Included",
-        "AC Sedan, Ertiga & Innova Crysta",
-        "Police-Verified Executive Chauffeurs"
-      ];
-    } else if (category.includes("Acting Driver")) {
-      priceSub = "(Starting Fare)";
-      benefits = [
-        "Hourly (4h/8h) & Outstation Duties",
-        "Manual, Automatic & EV Transmission",
-        "Police-Verified Screened Chauffeurs"
-      ];
+    if (category === "Temple Tours" || category === "Popular Destinations") {
+      priceSub = "Round-Trip Flat Fare";
+    } else if (category.includes("Acting")) {
+      priceSub = "Starting Fare";
     } else if (category.includes("Corporate")) {
-      priceSub = "(Starting Fare)";
-      benefits = [
-        "24/7 Shift Commute & Monthly Retainers",
-        "100% Compliant & Corporate GST Invoicing",
-        "Uniformed Chauffeurs with 60-Min SLA"
-      ];
+      priceSub = "Starting Fare";
     } else if (category.includes("Airport")) {
-      priceSub = "(Flat Airport Fare)";
-      benefits = [
-        "5–10 Min Rapid Dispatch from MAA",
-        "Real-Time Flight Tracking (Zero Waiting Fee)",
-        "Meet & Greet Service with Name Placard"
-      ];
+      priceSub = "Flat Airport Fare";
     } else {
-      priceSub = "(Flat Transparent Rates)";
-      benefits = [
-        "Doorstep Chennai Pickup & Drop",
-        "Sanitized AC Fleet with Pro Chauffeur",
-        "Transparent Fixed Rates • Zero Surge"
-      ];
+      priceSub = "Transparent Rate";
     }
+
   } else if (hub) {
     title = hub.title;
     category = hub.category;
-    duration = hub.duration;
+    route = hub.route;
     startingPrice = hub.startingPrice;
     priceSub = hub.priceSub;
-    benefits = hub.benefits;
+    includes = hub.includes;
     heroImage = hub.heroImage;
   }
 
-  // Load and convert hero image using sharp
+  const accent = getAccentTheme(category);
+
+  // ── Load hero image (full-bleed) ──────────────────────────────────────────
   let imageBuffer = "";
   try {
     const imagePath = path.resolve(`./public${heroImage}`);
     if (existsSync(imagePath)) {
       const fileBuffer = readFileSync(imagePath);
       const jpegBuffer = await sharp(fileBuffer)
-        .resize({ width: 800, height: 700, fit: "cover" })
-        .jpeg({ quality: 88 })
+        .resize({ width: 1200, height: 630, fit: "cover", position: "center" })
+        .jpeg({ quality: 90 })
         .toBuffer();
       imageBuffer = `data:image/jpeg;base64,${jpegBuffer.toString("base64")}`;
     }
@@ -345,13 +398,13 @@ export const GET: APIRoute = async ({ params, request }) => {
     console.error(`Failed to load hero image: ${heroImage}`, e);
   }
 
-  // Load brand fonts (Plus Jakarta Sans)
+  // ── Load fonts ────────────────────────────────────────────────────────────
   const fontBoldPath = path.resolve("./public/fonts/PlusJakartaSans-Bold.ttf");
   const fontBoldData = readFileSync(fontBoldPath);
   const fontSemiBoldPath = path.resolve("./public/fonts/PlusJakartaSans-SemiBold.ttf");
   const fontSemiBoldData = readFileSync(fontSemiBoldPath);
 
-  // Load and convert logo to PNG data URI
+  // ── Load logo ─────────────────────────────────────────────────────────────
   let logoBase64 = "";
   try {
     const logoPngPath = path.resolve("./public/images/logo.png");
@@ -364,105 +417,118 @@ export const GET: APIRoute = async ({ params, request }) => {
     console.error("Failed to load logo", e);
   }
 
+  // ── Card HTML — Full-Bleed Photo Layout ───────────────────────────────────
   const htmlString = `
-    <div style="display: flex; flex-direction: row; width: 1200px; height: 630px; background-color: #0F172A; position: relative; overflow: hidden; font-family: 'Plus Jakarta Sans';">
-      <!-- Left Content Panel (710px) -->
-      <div style="display: flex; flex-direction: column; justify-content: space-between; width: 710px; height: 630px; padding: 44px 44px 38px 48px; background: linear-gradient(135deg, #111827 0%, #0F172A 65%, #0B0F17 100%);">
-        <!-- Top Details Block -->
-        <div style="display: flex; flex-direction: column;">
-          <!-- Brand & Rating Header Bar -->
-          <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; margin-bottom: 22px;">
-            <!-- Brand Logo Pill -->
-            <div style="display: flex; align-items: center; background-color: #FFFFFF; padding: 7px 18px; border-radius: 9999px;">
-              ${logoBase64 ? `<img src="${logoBase64}" style="height: 32px; object-fit: contain;" />` : `<span style="color: #000; font-size: 20px; font-weight: 800;">Kalidass Travels</span>`}
-            </div>
+    <div style="
+      display: flex;
+      width: 1200px;
+      height: 630px;
+      position: relative;
+      overflow: hidden;
+      font-family: 'Plus Jakarta Sans';
+      background-color: #0C111D;
+    ">
+      <!-- Full-bleed background photo -->
+      ${imageBuffer ? `<img src="${imageBuffer}" style="position:absolute;top:0;left:0;width:1200px;height:630px;object-fit:cover;" />` : ""}
 
-            <!-- Trust Badge -->
-            <div style="display: flex; flex-direction: row; align-items: center; background-color: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); padding: 7px 16px; border-radius: 9999px;">
-              ${starIcon}
-              <span style="color: #FBBF24; font-size: 15px; font-weight: 700; margin-right: 6px;">4.9</span>
-              <span style="color: #CBD5E1; font-size: 13px; font-weight: 600;">1,500+ Verified Trips</span>
-            </div>
+      <!-- Top fade: ensure header elements are readable -->
+      <div style="display:flex;position:absolute;top:0;left:0;width:1200px;height:280px;background:linear-gradient(to bottom, rgba(5,8,18,0.92) 0%, rgba(5,8,18,0.55) 55%, transparent 100%);"></div>
+
+      <!-- Bottom fade: main content area -->
+      <div style="display:flex;position:absolute;bottom:0;left:0;width:1200px;height:460px;background:linear-gradient(to top, rgba(5,8,18,0.98) 0%, rgba(5,8,18,0.92) 40%, rgba(5,8,18,0.65) 70%, transparent 100%);"></div>
+
+      <!-- Subtle left vignette for photo-heavy images -->
+      <div style="display:flex;position:absolute;top:0;left:0;width:200px;height:630px;background:linear-gradient(to right, rgba(5,8,18,0.5) 0%, transparent 100%);"></div>
+
+      <!-- ── CONTENT LAYER ── -->
+      <div style="display:flex;flex-direction:column;justify-content:space-between;position:absolute;top:0;left:0;width:1200px;height:630px;padding:38px 52px 36px 52px;">
+
+        <!-- TOP ROW: Logo + Trust Badge -->
+        <div style="display:flex;flex-direction:row;align-items:center;justify-content:space-between;">
+          <!-- Logo pill -->
+          <div style="display:flex;align-items:center;background-color:rgba(255,255,255,0.95);padding:8px 20px;border-radius:9999px;box-shadow:0 2px 12px rgba(0,0,0,0.4);">
+            ${logoBase64
+              ? `<img src="${logoBase64}" style="height:30px;object-fit:contain;" />`
+              : `<span style="color:#000;font-size:18px;font-weight:800;">Kalidass Travels</span>`
+            }
           </div>
 
-          <!-- Category Chip -->
-          <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 14px;">
-            <div style="display: flex; flex-direction: row; align-items: center; background-color: rgba(236,34,31,0.14); border: 1px solid rgba(236,34,31,0.4); padding: 5px 12px; border-radius: 9999px;">
-              <div style="display: flex; width: 8px; height: 8px; border-radius: 4px; background-color: #EC221F; margin-right: 8px;"></div>
-              <span style="color: #FCA5A5; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
-                ${category.toUpperCase()} • DOORSTEP CHENNAI
+          <!-- Rating badge -->
+          <div style="display:flex;flex-direction:row;align-items:center;background-color:rgba(10,14,26,0.75);border:1px solid rgba(255,255,255,0.2);padding:8px 18px;border-radius:9999px;backdrop-filter:blur(4px);">
+            ${starSvg}
+            <span style="color:#FBBF24;font-size:16px;font-weight:800;margin-right:8px;">4.9</span>
+            <span style="color:#CBD5E1;font-size:14px;font-weight:600;">1,500+ Verified Trips</span>
+          </div>
+        </div>
+
+        <!-- BOTTOM BLOCK: All main content -->
+        <div style="display:flex;flex-direction:column;">
+
+          <!-- Route line -->
+          <div style="display:flex;flex-direction:row;align-items:center;margin-bottom:12px;">
+            ${routeSvg(accent.primary)}
+            <span style="color:${accent.primary};font-size:14px;font-weight:700;letter-spacing:0.3px;">${route}</span>
+          </div>
+
+          <!-- Category chip -->
+          <div style="display:flex;flex-direction:row;align-items:center;margin-bottom:16px;">
+            <div style="display:flex;flex-direction:row;align-items:center;background-color:${accent.chipBg};border:1px solid ${accent.chipBorder};padding:5px 14px;border-radius:9999px;">
+              <div style="display:flex;width:8px;height:8px;border-radius:4px;background-color:${accent.primary};margin-right:8px;"></div>
+              <span style="color:${accent.chipText};font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;">
+                ${category.toUpperCase()}
               </span>
             </div>
           </div>
 
-          <!-- Service Title -->
-          <div style="display: flex; font-size: 40px; font-weight: 800; color: #FFFFFF; margin-bottom: 16px; line-height: 1.18; letter-spacing: -0.5px; max-width: 620px;">
+          <!-- Service title -->
+          <div style="display:flex;font-size:${title.length > 65 ? "34px" : "40px"};font-weight:800;color:#FFFFFF;line-height:1.18;letter-spacing:-0.5px;margin-bottom:22px;max-width:950px;text-shadow:0 2px 8px rgba(0,0,0,0.6);">
             ${title}
           </div>
 
-          <!-- Feature Chips Row -->
-          <div style="display: flex; flex-direction: row; flex-wrap: wrap; margin-bottom: 8px;">
-            ${benefits.map((b, idx) => `
-              <div style="display: flex; flex-direction: row; align-items: center; background-color: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); padding: 7px 12px; border-radius: 8px; margin-right: 8px; margin-bottom: 8px;">
-                ${checkIcon}
-                <span style="color: #E2E8F0; font-size: 13px; font-weight: 600;">${b}</span>
+          <!-- Includes bullets row -->
+          <div style="display:flex;flex-direction:row;flex-wrap:wrap;margin-bottom:24px;gap:10px;">
+            ${includes.map((inc) => `
+              <div style="display:flex;flex-direction:row;align-items:center;background-color:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);padding:8px 14px;border-radius:10px;backdrop-filter:blur(2px);">
+                ${checkSvg(accent.primary)}
+                <span style="color:#E2E8F0;font-size:14px;font-weight:600;">${inc}</span>
               </div>
-            `).join('')}
-          </div>
-        </div>
-
-        <!-- Bottom Pricing & Guarantee Block -->
-        <div style="display: flex; flex-direction: column;">
-          <!-- Price & Booking Row -->
-          <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 18px;">
-            <!-- Price Block -->
-            <div style="display: flex; flex-direction: column; background-color: rgba(236,34,31,0.12); border: 1.5px solid rgba(236,34,31,0.35); padding: 10px 18px; border-radius: 14px; margin-right: 14px;">
-              <span style="color: #94A3B8; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">All-Inclusive Flat Fare</span>
-              <div style="display: flex; flex-direction: row; align-items: baseline;">
-                <span style="color: #FBBF24; font-size: 32px; font-weight: 800; line-height: 1; margin-right: 6px;">${startingPrice}</span>
-                <span style="color: #E2E8F0; font-size: 13px; font-weight: 600;">${priceSub}</span>
-              </div>
-            </div>
-
-            <!-- Booking Guarantee Block -->
-            <div style="display: flex; flex-direction: column; justify-content: center; background-color: rgba(16,185,129,0.12); border: 1.5px solid rgba(16,185,129,0.3); padding: 10px 18px; border-radius: 14px;">
-              <div style="display: flex; flex-direction: row; align-items: center;">
-                <div style="display: flex; width: 8px; height: 8px; border-radius: 4px; background-color: #10B981; margin-right: 6px;"></div>
-                <span style="color: #A7F3D0; font-size: 13px; font-weight: 800;">Guaranteed On-Time</span>
-              </div>
-              <span style="color: #6EE7B7; font-size: 12px; font-weight: 600; margin-top: 3px;">Zero Surge Pricing • 24/7 Support</span>
-            </div>
+            `).join("")}
           </div>
 
-          <!-- Bottom Footer Details -->
-          <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px;">
-            <div style="display: flex; align-items: center;">
-              <span style="color: #94A3B8; font-size: 14px; font-weight: 700;">kalidasstravels.in</span>
+          <!-- Price + Domain row -->
+          <div style="display:flex;flex-direction:row;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.12);padding-top:18px;">
+
+            <!-- Price block -->
+            <div style="display:flex;flex-direction:row;align-items:center;">
+              <div style="display:flex;flex-direction:column;background-color:${accent.priceBg};border:1.5px solid ${accent.priceBorder};padding:10px 20px;border-radius:14px;margin-right:16px;">
+                <span style="color:#94A3B8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px;">All-Inclusive Fare</span>
+                <div style="display:flex;flex-direction:row;align-items:baseline;">
+                  <span style="color:${accent.primary};font-size:34px;font-weight:800;line-height:1;margin-right:8px;">${startingPrice}</span>
+                  <span style="color:#CBD5E1;font-size:13px;font-weight:600;">${priceSub}</span>
+                </div>
+              </div>
+
+              <!-- On-time guarantee chip -->
+              <div style="display:flex;flex-direction:column;justify-content:center;background-color:rgba(16,185,129,0.12);border:1.5px solid rgba(16,185,129,0.3);padding:10px 18px;border-radius:14px;">
+                <div style="display:flex;flex-direction:row;align-items:center;margin-bottom:3px;">
+                  <div style="display:flex;width:8px;height:8px;border-radius:4px;background-color:#10B981;margin-right:7px;"></div>
+                  <span style="color:#A7F3D0;font-size:13px;font-weight:800;">Guaranteed On-Time</span>
+                </div>
+                <span style="color:#6EE7B7;font-size:12px;font-weight:600;">Zero Surge • 24/7 Support</span>
+              </div>
             </div>
-            <div style="display: flex; flex-direction: row; align-items: center; background-color: rgba(255,255,255,0.08); padding: 5px 12px; border-radius: 8px;">
-              ${phoneIcon}
-              <span style="color: #F8FAFC; font-size: 14px; font-weight: 700;">+91 90923 03060</span>
+
+            <!-- Domain + phone -->
+            <div style="display:flex;flex-direction:column;align-items:flex-end;">
+              <span style="color:#F8FAFC;font-size:18px;font-weight:800;letter-spacing:-0.2px;">kalidasstravels.in</span>
+              <span style="color:#94A3B8;font-size:14px;font-weight:600;margin-top:3px;">+91 90923 03060</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Right Visual Panel (490px) -->
-      <div style="display: flex; width: 490px; height: 630px; position: relative; overflow: hidden;">
-        ${imageBuffer ? `<img src="${imageBuffer}" style="width: 100%; height: 100%; object-fit: cover;" />` : ""}
-        <!-- Smooth Dark Gradient Overlay for Seamless Transition -->
-        <div style="display: flex; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to right, #0F172A 0%, rgba(15,23,42,0.4) 30%, transparent 65%);"></div>
-        <div style="display: flex; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(15,23,42,0.6) 0%, transparent 40%);"></div>
-
-        <!-- Duration / SLA Floating Badge -->
-        <div style="display: flex; flex-direction: row; align-items: center; position: absolute; bottom: 28px; right: 24px; background-color: rgba(15,23,42,0.9); border: 1.5px solid rgba(255,255,255,0.25); padding: 8px 16px; border-radius: 9999px;">
-          ${clockIcon}
-          <span style="color: #FFFFFF; font-size: 13px; font-weight: 700;">${duration}</span>
-        </div>
-      </div>
-
-      <!-- Sleek Multi-Tone Accent Bottom Line -->
-      <div style="display: flex; position: absolute; bottom: 0; left: 0; width: 1200px; height: 5px; background: linear-gradient(90deg, #EC221F 0%, #F59E0B 40%, #10B981 80%, #1E252D 100%);"></div>
+      <!-- Category accent bottom bar -->
+      <div style="display:flex;position:absolute;bottom:0;left:0;width:1200px;height:5px;background:linear-gradient(90deg, ${accent.primary} 0%, ${accent.primary}99 50%, rgba(255,255,255,0.05) 100%);"></div>
     </div>
   `;
 
@@ -472,24 +538,12 @@ export const GET: APIRoute = async ({ params, request }) => {
     width: 1200,
     height: 630,
     fonts: [
-      {
-        name: "Plus Jakarta Sans",
-        data: fontBoldData,
-        style: "normal",
-        weight: 800,
-      },
-      {
-        name: "Plus Jakarta Sans",
-        data: fontSemiBoldData,
-        style: "normal",
-        weight: 600,
-      },
+      { name: "Plus Jakarta Sans", data: fontBoldData, style: "normal", weight: 800 },
+      { name: "Plus Jakarta Sans", data: fontSemiBoldData, style: "normal", weight: 600 },
     ],
   });
 
-  const jpeg = await sharp(Buffer.from(svg))
-    .jpeg({ quality: 90 })
-    .toBuffer();
+  const jpeg = await sharp(Buffer.from(svg)).jpeg({ quality: 92 }).toBuffer();
 
   return new Response(jpeg as any, {
     headers: {

@@ -295,18 +295,6 @@ if (isTour) {
     "url": `https://kalidasstravels.in/services/${service.slug}/`,
     "touristType": ["Pilgrims", "Devotees", "Families"]
   };
-  if (service.origin) {
-    touristTripSchema.departureStation = {
-      "@type": "Place",
-      "name": service.origin
-    };
-  }
-  if (service.destination) {
-    touristTripSchema.arrivalStation = {
-      "@type": "Place",
-      "name": service.destination
-    };
-  }
   if (service.routePlan && service.routePlan.length > 0) {
     touristTripSchema.itinerary = {
       "@type": "ItemList",
@@ -352,16 +340,7 @@ if (isTour) {
     singleSchema.serviceType = service.serviceType;
   }
   if (service.origin) {
-    singleSchema.departureStation = {
-      "@type": "Place",
-      "name": service.origin
-    };
-  }
-  if (service.destination) {
-    singleSchema.arrivalStation = {
-      "@type": "Place",
-      "name": service.destination
-    };
+    areas.unshift({ "@type": "City", "name": service.origin });
   }
   if (offersData) {
     singleSchema.offers = offersData;

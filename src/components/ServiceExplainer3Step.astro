@@ -87,3 +87,19 @@ const {
 
   </div>
 </div>
+
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": title,
+    "description": subtitle,
+    "step": steps.map((s, idx) => ({
+      "@type": "HowToStep",
+      "position": idx + 1,
+      "name": s.title,
+      "text": s.desc,
+    })),
+  })}
+/>

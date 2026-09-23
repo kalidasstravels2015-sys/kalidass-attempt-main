@@ -324,6 +324,14 @@ const websiteSchema = {
   publisher: {
     "@id": "https://kalidasstravels.in/#organization",
   },
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: "https://kalidasstravels.in/services/?q={search_term_string}",
+    },
+    "query-input": "required name=search_term_string",
+  },
 };
 
 const siteNavigationSchema = {
@@ -383,12 +391,16 @@ const siteNavigationSchema = {
   ],
 };
 
+const buildDate = new Date().toISOString().split('T')[0];
+
 const webPageSchema = {
   "@type": isHome ? "WebPage" : (type === "article" ? "ItemPage" : "WebPage"),
   "@id": `${canonicalURL}#webpage`,
   url: canonicalURL,
   name: title,
   description: description,
+  datePublished: "2019-01-01",
+  dateModified: buildDate,
   isPartOf: {
     "@id": "https://kalidasstravels.in/#website",
   },

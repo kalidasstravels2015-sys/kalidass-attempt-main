@@ -132,7 +132,6 @@ const servicesList = [
 ];
 
 const schema = {
-  "@context": "https://schema.org",
   "@type": "CollectionPage",
   "@id": "https://kalidasstravels.in/services/#collection",
   "name": "Travel Services in Chennai - Kalidass Travels",
@@ -146,11 +145,58 @@ const schema = {
       "@type": "ListItem",
       "position": idx + 1,
       "name": s.title,
-      "url": `https://kalidasstravels.in${s.link}`,
+      "item": `https://kalidasstravels.in${s.link}`,
       "description": s.tagline,
       "image": `https://kalidasstravels.in${s.image}`
     }))
   }
+};
+
+const faqSchema = {
+  "@type": "FAQPage",
+  "@id": "https://kalidasstravels.in/services/#faq",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What cab and travel services does Kalidass Travels offer in Chennai?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Kalidass Travels offers five core services: Chennai Airport Taxi Transfers (5–10 min dispatch from MAA), Outstation Cabs from ₹14/km across South India, all-inclusive Temple Tour packages (Tirupati, Navagraha, Rameswaram), Corporate Employee Transport & executive retainers, and Police-verified Acting Drivers for your personal car from ₹600."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I book a cab or acting driver with Kalidass Travels?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can book instantly via WhatsApp at +91 90923 03060 or call +91 63819 39769. For airport pickups, share your flight details 2–4 hours ahead. For outstation trips and temple tours, advance booking of 24–48 hours is recommended."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are Kalidass Travels rates fixed or do they apply surge pricing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "All Kalidass Travels rates are fixed with zero surge pricing. You pay the agreed rate regardless of time of day, weather, festival season, or demand. Outstation cabs start from ₹14/km for Sedans and ₹20/km for Innova."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you provide GST invoices for corporate travel?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Kalidass Travels (GSTIN: 33COVPM0531D1Z4) provides verifiable GST tax invoices for all trips, making it seamless for corporate reimbursements, company accounting, and TDS compliance."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are the drivers background-verified and safe?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "All Kalidass Travels chauffeurs hold Police Verification Certificates (PVC), have 5+ years of highway or city driving experience, and follow strict safety protocols including no alcohol, regular health checks, and fatigue management for long-distance routes."
+      }
+    }
+  ]
 };
 ---
 
@@ -160,7 +206,7 @@ const schema = {
   keywords="cab services chennai, taxi services chennai, outstation cabs chennai, airport taxi chennai, temple tour cabs chennai, acting driver in chennai, corporate cab chennai, kalidass travels"
   image="/images/services/airport-transfer.webp"
   ogImage="/og/services.jpg"
-  schema={schema}
+  schema={[schema, faqSchema]}
 >
   <Breadcrumbs items={breadcrumbItems} />
 

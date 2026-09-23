@@ -153,7 +153,6 @@ const schema = {
   "description": description,
   "url": "https://kalidasstravels.in/services/chennai-airport-taxi/",
   "image": "https://kalidasstravels.in/images/services/airport-transfer.webp",
-  "providerMobility": "dynamic",
   "serviceType": "Airport Taxi & Transfers",
   "provider": {
     "@id": "https://kalidasstravels.in/#localbusiness"
@@ -173,6 +172,7 @@ const schema = {
       "description": `Airport transfer to ${z.destinations}`,
       "priceCurrency": "INR",
       "price": z.sedan.replace(/[^0-9]/g, ''),
+      "priceValidUntil": "2027-12-31",
       "url": "https://kalidasstravels.in/services/chennai-airport-taxi/",
       "availability": "https://schema.org/InStock",
       "seller": {

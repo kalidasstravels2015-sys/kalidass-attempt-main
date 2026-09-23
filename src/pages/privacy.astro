@@ -8,11 +8,30 @@ const breadcrumbItems = [
 ];
 
 const lastUpdated = "March 14, 2026";
+
+const pageSchema = {
+  "@type": "WebPage",
+  "@id": "https://kalidasstravels.in/privacy/#webpage",
+  "url": "https://kalidasstravels.in/privacy/",
+  "name": "Privacy Policy - Kalidass Travels Chennai",
+  "description": "Read our comprehensive privacy policy covering data collection, safety practices, and your rights when booking cabs or hiring acting drivers with Kalidass Travels.",
+  "isPartOf": { "@id": "https://kalidasstravels.in/#website" },
+  "about": { "@id": "https://kalidasstravels.in/#localbusiness" },
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "@id": "https://kalidasstravels.in/privacy/#breadcrumb",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kalidasstravels.in/" },
+      { "@type": "ListItem", "position": 2, "name": "Privacy Policy", "item": "https://kalidasstravels.in/privacy/" }
+    ]
+  }
+};
 ---
 
 <Layout
   title="Privacy Policy - Kalidass Travels Chennai"
   description="Read our comprehensive privacy policy covering data collection, safety practices, and your rights when booking cabs or hiring acting drivers with Kalidass Travels."
+  schema={pageSchema}
 >
   <Breadcrumbs items={breadcrumbItems} />
 
