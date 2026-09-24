@@ -29,8 +29,10 @@ export default function SectionNavigator() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    let ticking = false;
+
     // Synchronize scroll progress bar and active section header indicator
-    const handleScroll = () => {
+    const updateScroll = () => {
       const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
       const progress = totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0;
       
@@ -65,10 +67,18 @@ export default function SectionNavigator() {
       if (mobileSectionText) {
         mobileSectionText.textContent = `${currentSec.num}/08 • ${currentSec.label}`;
       }
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(updateScroll);
+        ticking = true;
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
+    updateScroll();
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);

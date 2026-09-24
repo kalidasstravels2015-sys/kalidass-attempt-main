@@ -10,88 +10,86 @@ function toSlug(name) {
 // Compact Driver Card Component
 const DriverCard = ({ driver }) => {
     const slug = toSlug(driver.name);
-    const profileUrl = `https://kalidasstravels.in/drivers/${slug}/`;
     const name = driver.name;
 
     const waShareText = encodeURIComponent(
         `*${name}* - ${driver.specialty}\n` +
         `⭐ ${driver.rating} Rating | ${driver.trips} Trips\n` +
         `✅ Police Verification Certified\n\n` +
-        `Book via *Kalidass Travels*\n` +
-        `👉 ${profileUrl}`
+        `Book via *Kalidass Travels* – kalidasstravels.in`
     );
 
     return (
-        <div className="flex-none w-64 sm:w-auto snap-center bg-m3-surface rounded-m3-xl shadow-m3-1 hover:shadow-m3-3 border border-m3-outline-variant p-4 transition-all duration-300 transform hover:-translate-y-1 group flex flex-col justify-between">
-            <div>
-                {/* Compact Driver Photo */}
-                <a href={`/drivers/${slug}/`} className="block relative mb-3 overflow-hidden rounded-m3-lg bg-m3-surface-container-high skeleton-shimmer">
-                    <img
-                        src={driver.image}
-                        width="256"
-                        height="160"
-                        decoding="async"
-                        className="w-full h-36 sm:h-40 object-cover object-top transform group-hover:scale-105 transition-all duration-500 relative z-10"
-                        alt={`${name} - Verified Chauffeur at Kalidass Travels`}
-                        loading="lazy"
-                    />
-                    <div className="absolute top-2.5 left-2.5 z-20">
-                        <span className="bg-slate-950/85 backdrop-blur-md border border-white/20 text-white text-micro font-bold px-2.5 py-0.5 rounded-m3-full shadow-sm">
-                            {driver.tag}
-                        </span>
-                    </div>
-                </a>
-
-                {/* Name & Rating */}
-                <div className="flex justify-between items-center mb-1.5">
-                    <h3 className="font-bold text-base text-m3-on-surface font-heading leading-snug truncate">
-                        <a href={`/drivers/${slug}/`} className="hover:text-m3-primary transition-colors">
-                            {name}
-                        </a>
-                    </h3>
-                    <div className="flex items-center gap-1 bg-m3-surface-container-high px-2 py-0.5 rounded-m3-full border border-m3-outline-variant shrink-0">
-                        <span className="material-symbols-outlined text-[14px] text-amber-400">star</span>
-                        <span className="text-xs font-bold text-m3-on-surface">{driver.rating}</span>
-                    </div>
-                </div>
-
-                {/* Verified Badge */}
-                <div className="inline-flex items-center gap-1 mb-2.5 px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-m3-xs text-badge font-bold text-emerald-800">
-                    <span className="material-symbols-outlined text-[14px] text-emerald-600 shrink-0">verified_user</span>
-                    <span>Police Verification Certified</span>
-                </div>
-
-                {/* Driver Details */}
-                <div className="text-xs text-m3-on-surface-variant space-y-1 mb-3">
-                    <div className="flex items-center gap-1.5">
-                        <span className="material-symbols-outlined text-[16px] text-m3-on-surface-variant/70 shrink-0">schedule</span>
-                        <span className="truncate">{driver.experience}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                        <span className="material-symbols-outlined text-[16px] text-m3-on-surface-variant/70 shrink-0">translate</span>
-                        <span className="truncate">{driver.languages}</span>
-                    </div>
-                </div>
+        <div className="flex-none w-[300px] sm:w-auto snap-center bg-m3-surface rounded-m3-xl shadow-m3-1 hover:shadow-m3-2 border border-m3-outline-variant p-3 sm:p-3.5 transition-all duration-200 group flex gap-3 sm:gap-3.5 items-stretch">
+            {/* Leading Media: 1:1 Square Thumbnail */}
+            <div className="relative shrink-0 w-24 h-24 sm:w-28 sm:h-28 rounded-m3-lg overflow-hidden bg-m3-surface-container-high self-start">
+                <img
+                    src={driver.image}
+                    width="112"
+                    height="112"
+                    decoding="async"
+                    className="w-full h-full object-cover object-center"
+                    alt={`${name} - Verified Chauffeur at Kalidass Travels`}
+                    loading="lazy"
+                />
+                <span className="absolute bottom-1 left-1 bg-slate-950/85 backdrop-blur-md text-white text-[9px] font-bold px-1.5 py-0.5 rounded-m3-full leading-none shadow-sm">
+                    {driver.tag}
+                </span>
             </div>
 
-            {/* Compact Action Row */}
-            <div className="pt-2.5 border-t border-m3-outline-variant/40 flex items-center gap-2">
-                <a
-                    href={`/drivers/${slug}/`}
-                    className="flex-1 text-center text-micro sm:text-xs font-semibold text-m3-on-surface bg-m3-surface-container-high hover:bg-m3-surface-container-highest py-1.5 sm:py-2 rounded-m3-full transition-all whitespace-nowrap"
-                >
-                    View Profile
-                </a>
-                <a
-                    href={`https://wa.me/?text=${waShareText}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title="Share on WhatsApp"
-                    className="flex items-center justify-center w-8 h-8 bg-[#25D366]/10 hover:bg-[#25D366] text-[#25D366] hover:text-white rounded-m3-full transition-all duration-200 shrink-0 shadow-sm hover:shadow-m3-1 focus-visible:ring-2 focus-visible:ring-[#25D366]"
-                    aria-label={`Share ${name} on WhatsApp`}
-                >
-                    <WhatsAppIcon variant="brand" className="w-4 h-4" />
-                </a>
+            {/* Content & Details */}
+            <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+                <div>
+                    {/* Name & Rating Row */}
+                    <div className="flex items-center justify-between gap-1.5 mb-1">
+                        <h3 className="font-bold text-sm sm:text-base text-m3-on-surface truncate font-heading">
+                            {name}
+                        </h3>
+                        <div className="inline-flex items-center gap-0.5 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded-m3-full shrink-0">
+                            <span className="material-symbols-outlined text-[13px] text-amber-500">star</span>
+                            <span className="text-[11px] font-bold text-m3-on-surface leading-none">{driver.rating}</span>
+                        </div>
+                    </div>
+
+                    {/* M3 Chips */}
+                    <div className="flex flex-wrap items-center gap-1.5 mb-1.5">
+                        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-m3-xs text-[10px] font-bold text-emerald-800">
+                            <span className="material-symbols-outlined text-[12px] text-emerald-600">verified</span>
+                            PVC Verified
+                        </span>
+                        {driver.trips && (
+                            <span className="inline-flex items-center px-1.5 py-0.5 bg-m3-surface-container-high rounded-m3-xs text-[10px] font-semibold text-m3-on-surface-variant">
+                                {driver.trips} Trips
+                            </span>
+                        )}
+                    </div>
+
+                    {/* Driver Specs */}
+                    <div className="text-[11px] text-m3-on-surface-variant space-y-0.5 mb-2">
+                        <div className="flex items-center gap-1 truncate">
+                            <span className="material-symbols-outlined text-[13px] text-m3-on-surface-variant/70 shrink-0">schedule</span>
+                            <span className="truncate">{driver.experience}</span>
+                        </div>
+                        <div className="flex items-center gap-1 truncate">
+                            <span className="material-symbols-outlined text-[13px] text-m3-on-surface-variant/70 shrink-0">translate</span>
+                            <span className="truncate">{driver.languages}</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Actions Row */}
+                <div className="flex items-center justify-end pt-1 border-t border-m3-outline-variant/60">
+                    <a
+                        href={`https://wa.me/?text=${waShareText}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Share on WhatsApp"
+                        className="flex items-center justify-center w-7 h-7 bg-[#25D366]/10 hover:bg-[#25D366] text-[#25D366] hover:text-white rounded-m3-full transition-all duration-200 shrink-0 shadow-sm hover:shadow-m3-1 focus-visible:ring-2 focus-visible:ring-[#25D366]"
+                        aria-label={`Share ${name} on WhatsApp`}
+                    >
+                        <WhatsAppIcon variant="brand" className="w-3.5 h-3.5" />
+                    </a>
+                </div>
             </div>
         </div>
     );

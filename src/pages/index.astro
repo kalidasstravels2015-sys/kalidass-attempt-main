@@ -51,8 +51,8 @@ const homePageSchema = {
   image={ogImage}
   schema={homePageSchema}
 >
-  <!-- Desktop Floating Section Progress Rail -->
-  <SectionNavigator client:idle />
+  <!-- Desktop Floating Section Progress Rail (Desktop Only) -->
+  <SectionNavigator client:media="(min-width: 1024px)" />
 
   <!-- 1. Hero + Instant Booking Engine -->
   <Hero />

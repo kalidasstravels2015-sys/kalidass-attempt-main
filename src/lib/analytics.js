@@ -22,6 +22,9 @@ export const initAnalytics = () => {
         gtag('config', GA_MEASUREMENT_ID, {
             transport_type: 'beacon',
             debug_mode: import.meta.env.DEV,
+            allow_google_signals: false,
+            allow_ad_personalization_signals: false,
+            restricted_data_processing: true,
         });
 
         // Track Web Vitals
@@ -49,10 +52,26 @@ export const initAnalytics = () => {
     };
 
     const scheduleInit = () => {
+        let initialized = false;
+        const trigger = () => {
+            if (initialized) return;
+            initialized = true;
+            window.removeEventListener('scroll', trigger);
+            window.removeEventListener('pointerdown', trigger);
+            window.removeEventListener('touchstart', trigger);
+            window.removeEventListener('keydown', trigger);
+            start();
+        };
+
+        window.addEventListener('scroll', trigger, { once: true, passive: true });
+        window.addEventListener('pointerdown', trigger, { once: true, passive: true });
+        window.addEventListener('touchstart', trigger, { once: true, passive: true });
+        window.addEventListener('keydown', trigger, { once: true, passive: true });
+
         if ('requestIdleCallback' in window) {
-            window.requestIdleCallback(start, { timeout: 4500 });
+            window.requestIdleCallback(trigger, { timeout: 6500 });
         } else {
-            setTimeout(start, 2500);
+            setTimeout(trigger, 6500);
         }
     };
 
