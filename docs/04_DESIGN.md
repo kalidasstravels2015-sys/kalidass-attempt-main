@@ -30,7 +30,7 @@
 ├─────────────────────────────────────────────────────────────┤
 │ Warm Golden Amber (#6D5E0F / #F8E287) - Ratings / Yatras   │
 ├─────────────────────────────────────────────────────────────┤
-│ Brand Logo Red (#EC221F) - Strictly "K" Logo & Live Status  │
+│ Brand Logo Red (#EC221F) - Strictly "K" Logo Mark Only      │
 ├─────────────────────────────────────────────────────────────┤
 │ Rates & Prices: Deep Onyx Slate (#1A1C1E / #111827) - NEVER RED│
 └─────────────────────────────────────────────────────────────┘
@@ -47,7 +47,7 @@
 | `bg-m3-secondary`              | `#475467` | Tone 40       | Harmonized slate steel for secondary buttons and outlines.             |
 | `bg-m3-tertiary`               | `#6D5E0F` | Tone 40       | Warm Golden Amber for 5-star ratings, temple badges, and highlights.   |
 | `bg-m3-tertiary-container`     | `#F8E287` | Tone 90       | Warm champagne accent container for review cards and special notices.  |
-| `text-logo-red`                | `#EC221F` | Brand Accent  | **Restricted Token:** Logo "K" monogram and pulsing availability dots. |
+| `text-logo-red`                | `#EC221F` | Brand Accent  | **Restricted Token:** Logo "K" monogram only (never for live status pulse indicators or rates). |
 
 ### 2.2 Surface Elevation Ladder
 

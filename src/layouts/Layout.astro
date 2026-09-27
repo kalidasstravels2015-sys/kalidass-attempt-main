@@ -8,6 +8,7 @@ interface Props {
   url?: string;
   schema?: object;
   keywords?: string;
+  showFloatingActions?: boolean;
 }
 
 import siteContent from "../data/siteContent.json";
@@ -27,6 +28,7 @@ const {
   url = Astro.url.href,
   schema,
   keywords = defaultKeywords,
+  showFloatingActions = true,
 } = Astro.props;
 
 const siteUrl = "https://kalidasstravels.in";
@@ -175,39 +177,81 @@ const localBusinessSchema = {
     itemListElement: [
       {
         "@type": "Offer",
+        name: "Chennai Airport Taxi Transfers",
+        description: "Rapid 5-10 min MAA airport taxi dispatch with flight delay tracking and zero surge pricing.",
+        price: "650",
+        priceCurrency: "INR",
+        priceValidUntil: "2027-12-31",
+        availability: "https://schema.org/InStock",
+        url: "https://kalidasstravels.in/services/chennai-airport-taxi/",
+        seller: {
+          "@id": "https://kalidasstravels.in/#localbusiness",
+        },
         itemOffered: {
           "@type": "TaxiService",
           name: "Chennai Airport Taxi Transfers",
-          description: "Rapid 5-10 min MAA airport taxi dispatch with flight delay tracking and zero surge pricing.",
           url: "https://kalidasstravels.in/services/chennai-airport-taxi/",
         },
       },
       {
         "@type": "Offer",
+        name: "Outstation Cabs from Chennai",
+        description: "Round trip and one-way outstation cabs from ₹14/km across Tamil Nadu, Pondicherry, and Karnataka.",
+        price: "14",
+        priceCurrency: "INR",
+        priceSpecification: {
+          "@type": "UnitPriceSpecification",
+          price: "14",
+          priceCurrency: "INR",
+          unitText: "KM",
+        },
+        priceValidUntil: "2027-12-31",
+        availability: "https://schema.org/InStock",
+        url: "https://kalidasstravels.in/services/outstation-cabs/",
+        seller: {
+          "@id": "https://kalidasstravels.in/#localbusiness",
+        },
         itemOffered: {
           "@type": "TaxiService",
           name: "Outstation Cabs from Chennai",
-          description: "Round trip and one-way outstation cabs from ₹14/km across Tamil Nadu, Pondicherry, and Karnataka.",
           url: "https://kalidasstravels.in/services/outstation-cabs/",
         },
       },
       {
         "@type": "Offer",
+        name: "South India Temple Tour Cab Packages",
+        serviceType: "Temple Pilgrimage Taxi Packages",
+        description: "All-inclusive darshan packages to Tirupati, Navagraha, Thiruvannamalai, Rameswaram, and Sabarimala.",
+        price: "3200",
+        priceCurrency: "INR",
+        priceValidUntil: "2027-12-31",
+        availability: "https://schema.org/InStock",
+        url: "https://kalidasstravels.in/services/tours/temple-tours/",
+        seller: {
+          "@id": "https://kalidasstravels.in/#localbusiness",
+        },
         itemOffered: {
           "@type": "TaxiService",
           name: "South India Temple Tour Cab Packages",
-          serviceType: "Temple Pilgrimage Taxi Packages",
-          description: "All-inclusive darshan packages to Tirupati, Navagraha, Thiruvannamalai, Rameswaram, and Sabarimala.",
           url: "https://kalidasstravels.in/services/tours/temple-tours/",
         },
       },
       {
         "@type": "Offer",
+        name: "Weekend Getaway Cab Packages from Chennai",
+        serviceType: "Weekend Tour Cab Packages",
+        description: "All-inclusive road trips to Pondicherry, Mahabalipuram, Yelagiri, and Yercaud with all tolls included.",
+        price: "3500",
+        priceCurrency: "INR",
+        priceValidUntil: "2027-12-31",
+        availability: "https://schema.org/InStock",
+        url: "https://kalidasstravels.in/services/tours/weekend-packages/",
+        seller: {
+          "@id": "https://kalidasstravels.in/#localbusiness",
+        },
         itemOffered: {
           "@type": "TaxiService",
           name: "Weekend Getaway Cab Packages from Chennai",
-          serviceType: "Weekend Tour Cab Packages",
-          description: "All-inclusive road trips to Pondicherry, Mahabalipuram, Yelagiri, and Yercaud with all tolls included.",
           url: "https://kalidasstravels.in/services/tours/weekend-packages/",
         },
       },
@@ -216,8 +260,13 @@ const localBusinessSchema = {
         name: "Chennai to Tirupati Balaji Darshan Cab Package",
         price: "6000",
         priceCurrency: "INR",
+        priceValidUntil: "2027-12-31",
+        availability: "https://schema.org/InStock",
         url: "https://kalidasstravels.in/services/tirupati-package/",
         description: "Doorstep 1-Day Chennai to Tirupati car package covering sanitized AC Sedan, tolls, AP border permit, and driver bata.",
+        seller: {
+          "@id": "https://kalidasstravels.in/#localbusiness",
+        },
         itemOffered: {
           "@type": "TaxiService",
           name: "Chennai to Tirupati Balaji Darshan Cab Package",
@@ -229,8 +278,13 @@ const localBusinessSchema = {
         name: "Kumbakonam 9 Navagraha Temples Tour Cab Package",
         price: "8600",
         priceCurrency: "INR",
+        priceValidUntil: "2027-12-31",
+        availability: "https://schema.org/InStock",
         url: "https://kalidasstravels.in/services/navagraha-tour/",
         description: "2 Days / 1 Night complete 9 planetary temples tour around Kumbakonam with tolls, fuel, and driver bata included.",
+        seller: {
+          "@id": "https://kalidasstravels.in/#localbusiness",
+        },
         itemOffered: {
           "@type": "TaxiService",
           name: "Kumbakonam 9 Navagraha Temples Tour Cab Package",
@@ -242,8 +296,13 @@ const localBusinessSchema = {
         name: "Chennai to Thiruvannamalai Girivalam Cab Package",
         price: "6500",
         priceCurrency: "INR",
+        priceValidUntil: "2027-12-31",
+        availability: "https://schema.org/InStock",
         url: "https://kalidasstravels.in/services/thiruvannamalai-girivalam-trip/",
         description: "Arunachaleswarar temple darshan and 14 km Pournami Girivalam car standby package with night highway expert driver.",
+        seller: {
+          "@id": "https://kalidasstravels.in/#localbusiness",
+        },
         itemOffered: {
           "@type": "TaxiService",
           name: "Chennai to Thiruvannamalai Girivalam Cab Package",
@@ -255,8 +314,13 @@ const localBusinessSchema = {
         name: "Chennai to Rameswaram & Dhanushkodi Cab Package",
         price: "15500",
         priceCurrency: "INR",
+        priceValidUntil: "2027-12-31",
+        availability: "https://schema.org/InStock",
         url: "https://kalidasstravels.in/services/rameswaram-2-days/",
         description: "2 Days / 1 Night pilgrimage covering Ramanathaswamy Temple, 22 Holy Theerthams, Pamban Bridge, and Dhanushkodi.",
+        seller: {
+          "@id": "https://kalidasstravels.in/#localbusiness",
+        },
         itemOffered: {
           "@type": "TaxiService",
           name: "Chennai to Rameswaram & Dhanushkodi Cab Package",
@@ -268,8 +332,13 @@ const localBusinessSchema = {
         name: "Chennai to Chidambaram Natarajar & Pichavaram Cab Package",
         price: "7400",
         priceCurrency: "INR",
+        priceValidUntil: "2027-12-31",
+        availability: "https://schema.org/InStock",
         url: "https://kalidasstravels.in/services/chidambaram-temple-trip/",
         description: "1 Day coastal pilgrimage to Thillai Natarajar Temple and Pichavaram Mangrove forest boating with all tolls included.",
+        seller: {
+          "@id": "https://kalidasstravels.in/#localbusiness",
+        },
         itemOffered: {
           "@type": "TaxiService",
           name: "Chennai to Chidambaram Natarajar & Pichavaram Cab Package",
@@ -281,8 +350,13 @@ const localBusinessSchema = {
         name: "Chennai to Sabarimala Pilgrim Yatra Cab Package",
         price: "15900",
         priceCurrency: "INR",
+        priceValidUntil: "2027-12-31",
+        availability: "https://schema.org/InStock",
         url: "https://kalidasstravels.in/services/sabarimala-trip/",
         description: "3 Days / 2 Nights Sabarimala Mandala pooja yatra to Pamba/Nilakkal with satvik driver and Kerala interstate road permit.",
+        seller: {
+          "@id": "https://kalidasstravels.in/#localbusiness",
+        },
         itemOffered: {
           "@type": "TaxiService",
           name: "Chennai to Sabarimala Pilgrim Yatra Cab Package",
@@ -291,19 +365,37 @@ const localBusinessSchema = {
       },
       {
         "@type": "Offer",
+        name: "Corporate Employee Transport (ETS)",
+        description: "24/7 routed shift commute transport and monthly executive car retainers.",
+        price: "350",
+        priceCurrency: "INR",
+        priceValidUntil: "2027-12-31",
+        availability: "https://schema.org/InStock",
+        url: "https://kalidasstravels.in/services/corporate/",
+        seller: {
+          "@id": "https://kalidasstravels.in/#localbusiness",
+        },
         itemOffered: {
           "@type": "TaxiService",
           name: "Corporate Employee Transport (ETS)",
-          description: "24/7 routed shift commute transport and monthly executive car retainers.",
           url: "https://kalidasstravels.in/services/corporate/",
         },
       },
       {
         "@type": "Offer",
+        name: "Acting Driver Services in Chennai",
+        description: "Police background-verified hourly and outstation chauffeurs for your personal car.",
+        price: "600",
+        priceCurrency: "INR",
+        priceValidUntil: "2027-12-31",
+        availability: "https://schema.org/InStock",
+        url: "https://kalidasstravels.in/services/acting-drivers/",
+        seller: {
+          "@id": "https://kalidasstravels.in/#localbusiness",
+        },
         itemOffered: {
           "@type": "Service",
           name: "Acting Driver Services in Chennai",
-          description: "Police background-verified hourly and outstation chauffeurs for your personal car.",
           url: "https://kalidasstravels.in/services/acting-drivers/",
         },
       },
@@ -408,6 +500,11 @@ const webPageSchema = {
   about: {
     "@id": "https://kalidasstravels.in/#localbusiness",
   },
+  ...(!isHome ? {
+    breadcrumb: {
+      "@id": `${canonicalURL}#breadcrumb`,
+    },
+  } : {}),
   primaryImageOfPage: {
     "@type": "ImageObject",
     url: fullImage,
@@ -546,14 +643,14 @@ const unifiedSchemaGraph = {
     <!-- Google Material Symbols Outlined (Comprehensive subset with overflow protection) -->
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=ac_unit,account_balance,airline_seat_recline_extra,arrow_downward,arrow_forward,badge,beach_access,business_center,calculate,call,chair,check_circle,checklist,close,commute,currency_rupee,directions_car,emergency,expand_more,flight_takeoff,group,handshake,home,image,keyboard_arrow_down,local_taxi,location_on,luggage,mail,menu,military_tech,near_me,open_in_new,payments,person,receipt_long,route,schedule,shield,star,task_alt,temple_hindu,timer,translate,verified,verified_user&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=ac_unit,account_balance,airline_seat_recline_extra,alarm_on,arrow_downward,arrow_forward,arrow_upward,badge,beach_access,business,business_center,calculate,calendar_month,call,chair,chat,check_circle,checklist,close,commute,currency_rupee,directions_car,door_front,emergency,expand_more,flight_land,flight_takeoff,group,handshake,home,image,keyboard_arrow_down,local_taxi,location_on,luggage,mail,menu,military_tech,near_me,nightlight,no_transfer,open_in_new,payments,person,radar,receipt_long,route,schedule,shield,sms,star,swap_vert,task_alt,temple_hindu,timer,translate,verified,verified_user&display=swap"
       media="print"
       onload="this.media='all'"
     />
     <noscript>
       <link
         rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=ac_unit,account_balance,airline_seat_recline_extra,arrow_downward,arrow_forward,badge,beach_access,business_center,calculate,call,chair,check_circle,checklist,close,commute,currency_rupee,directions_car,emergency,expand_more,flight_takeoff,group,handshake,home,image,keyboard_arrow_down,local_taxi,location_on,luggage,mail,menu,military_tech,near_me,open_in_new,payments,person,receipt_long,route,schedule,shield,star,task_alt,temple_hindu,timer,translate,verified,verified_user&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=ac_unit,account_balance,airline_seat_recline_extra,alarm_on,arrow_downward,arrow_forward,arrow_upward,badge,beach_access,business,business_center,calculate,calendar_month,call,chair,chat,check_circle,checklist,close,commute,currency_rupee,directions_car,door_front,emergency,expand_more,flight_land,flight_takeoff,group,handshake,home,image,keyboard_arrow_down,local_taxi,location_on,luggage,mail,menu,military_tech,near_me,nightlight,no_transfer,open_in_new,payments,person,radar,receipt_long,route,schedule,shield,sms,star,swap_vert,task_alt,temple_hindu,timer,translate,verified,verified_user&display=swap"
       />
     </noscript>
 
@@ -605,7 +702,7 @@ const unifiedSchemaGraph = {
         --md-sys-color-tertiary-container: #F8E287;
         --md-sys-color-on-tertiary-container: #221B00;
 
-        /* Brand Red Accent (Signature "K" Logo & Live Status) */
+        /* Brand Red Accent (Signature "K" Logo Mark Only) */
         --md-sys-color-brand-red: #EC221F;
 
         /* Error Roles */
@@ -751,7 +848,7 @@ const unifiedSchemaGraph = {
       }
       .pac-item:hover,
       .pac-item.pac-item-selected {
-        background-color: #FEF2F2 !important;
+        background-color: #F1F5F9 !important;
       }
       .pac-item-query {
         font-size: 12px !important;
@@ -761,7 +858,7 @@ const unifiedSchemaGraph = {
       }
       .pac-matched {
         font-weight: 700 !important;
-        color: #DC2626 !important;
+        color: #0F172A !important;
       }
       .pac-secondary-text {
         font-size: 11px !important;
@@ -909,14 +1006,14 @@ const unifiedSchemaGraph = {
             </a>
           </div>
 
-          <!-- Mobile Live Section Indicator Chip (Header Center, Home Only) -->
+          <!-- Mobile Section Indicator Chip (Header Center, Home Only) -->
           {
             isHome && (
               <div
                 id="mobile-section-chip"
                 class="md:hidden inline-flex items-center gap-1.5 px-2.5 py-1 rounded-m3-full bg-m3-surface-container-high/90 border border-m3-outline-variant text-m3-on-surface text-badge font-bold shadow-xs transition-opacity duration-300"
               >
-                <span class="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-m3-primary"></span>
                 <span id="mobile-section-text" class="font-mono text-m3-on-surface tracking-tight">01/08 • Booking</span>
               </div>
             )
@@ -1421,7 +1518,7 @@ const unifiedSchemaGraph = {
   </footer>
 
   <!-- Floating Quick Actions (Call & WhatsApp) -->
-  <FloatingActions />
+  {showFloatingActions && <FloatingActions />}
 
   <!-- Cookie Consent Banner -->
   <CookieConsent />
@@ -1546,5 +1643,17 @@ const unifiedSchemaGraph = {
     import { initAnalytics } from "../lib/analytics";
 
     initAnalytics();
+  </script>
+
+  <!-- Sticky Quick-Navigation Scroll Spy -->
+  <script>
+    import { initStickyQuickNav } from "../lib/stickyQuickNav";
+
+    let cleanup = initStickyQuickNav();
+
+    document.addEventListener("astro:page-load", () => {
+      cleanup?.();
+      cleanup = initStickyQuickNav();
+    });
   </script>
 </html>

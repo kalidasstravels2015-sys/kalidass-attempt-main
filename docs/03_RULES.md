@@ -27,8 +27,8 @@
 
 ### 2.1 Color Palette Governance
 - **Rule 2.1.1 (Brand Red Boundary):**
-  - Brand Logo Red (`#EC221F` / `text-logo-red`) is **strictly reserved** for the Kalidass "K" logo mark and small live status pulse pips (e.g., green/red availability dots).
-  - **HARD PROHIBITION:** Do **NEVER** use red for price amounts, fare cards, CTA buttons, or standard headings.
+  - Brand Logo Red (`#EC221F` / `text-logo-red`) is **strictly reserved** for the Kalidass "K" logo mark only.
+  - **HARD PROHIBITION:** Do **NEVER** use red for price amounts, fare cards, CTA buttons, live status pulse indicators, or standard headings.
 - **Rule 2.1.2 (Fare & Rate Presentation):**
   - All fares, estimates, prices, and rates must be rendered in crisp **Midnight Onyx Slate** (`#1A1C1E` / `text-m3-on-surface` or `#111827`).
 - **Rule 2.1.3 (Primary Action Elements):**
@@ -90,3 +90,15 @@
 
 - **Rule 6.1.1 (Zero PII Exposure):** Passenger phone numbers and pickup addresses must never be logged to public analytics endpoints, console logs, or client-side storage.
 - **Rule 6.1.2 (DPDP Act Compliance):** User details collected via the booking panel are strictly utilized for trip fulfillment and emergency customer communication. No resale or third-party marketing sharing is permitted.
+
+---
+
+## 7. Modern Web Platform & Baseline Standards
+
+- **Rule 7.1.1 (Baseline Support Target):** This project's browser compatibility target is **Baseline 2024 with progressive enhancement fallbacks**. Widely available features are used without polyfills; newly available or limited features must implement progressive enhancement or lightweight fallbacks.
+- **Rule 7.1.2 (Modern Web Guidance Integration):** Always consult Chrome's Modern Web Guidance (`.agents/skills/modern-web-guidance`) before implementing UI overlays, forms, animations, or performance features:
+  - **Modals & Dialogs:** Use native `<dialog>` with `closedby="any"` (backed by click boundary coordinate fallbacks for non-supporting browsers) and `@starting-style` + `transition-behavior: allow-discrete` for zero-JS top-layer entry/exit animations.
+  - **Tooltips & Popovers:** Prefer native `popover` API and CSS Anchor Positioning over third-party popper libraries.
+  - **Accordions & Disclosures:** Use native `<details name="...">` for exclusive accessible accordions without custom JavaScript toggle state.
+  - **Forms & Inputs:** Use `:user-invalid` for post-interaction validation cues and `field-sizing: content` for adaptive multi-line textareas.
+  - **Core Web Vitals:** Always declare `fetchpriority="high"`, explicit dimensions/`aspect-ratio`, and `decoding="async"` on above-the-fold hero images to guarantee 0.000 CLS and rapid LCP.

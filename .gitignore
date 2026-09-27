@@ -34,3 +34,19 @@ Thumbs.db
 
 # Agent config
 .agent/
+
+# Scratch & temporary workspace files
+scratch/
+current_config.txt
+origin_show.txt
+download-font.cjs
+verify_fare.js
+
+# Test & audit artifacts
+playwright-report/
+test-results/
+lighthouse-*.json
+lighthouse-report.json
+
+# IDE & editor files
+.vs/

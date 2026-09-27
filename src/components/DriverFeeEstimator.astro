@@ -1,6 +1,16 @@
 ---
-import { MapPin, Navigation, Calendar, Bed, Info, Calculator, ArrowRight, Check, ChevronDown, User } from 'lucide-react';
+import { MapPin, Navigation, Calendar, Bed, Info, Calculator, ArrowRight, Check, ChevronDown, User, Car } from 'lucide-react';
 import tnBusFares from '../data/tnBusFares.json';
+
+interface Props {
+  title?: string;
+  subtitle?: string;
+}
+
+const {
+  title = "Acting Driver Cost",
+  subtitle = "Calculate Bata & Stay"
+} = Astro.props;
 ---
 
 <div class="w-full bg-m3-surface rounded-m3-xl shadow-m3-2 border border-m3-outline-variant overflow-hidden max-w-md mx-auto font-sans">
@@ -8,12 +18,12 @@ import tnBusFares from '../data/tnBusFares.json';
   <!-- Header -->
   <div class="p-6 pb-2">
     <div class="flex flex-col items-center text-center gap-2 mb-1">
-      <div class="w-12 h-12 rounded-m3-full bg-m3-primary-container flex items-center justify-center text-m3-primary">
+      <div class="w-12 h-12 rounded-m3-full bg-m3-primary-container flex items-center justify-center text-m3-primary shadow-xs">
         <User className="w-6 h-6 text-m3-primary" />
       </div>
       <div>
-        <h3 class="text-xl font-bold text-m3-on-surface font-heading">Acting Driver Cost</h3>
-        <p class="text-xs text-m3-on-surface-variant font-normal">Calculate Bata & Stay</p>
+        <h3 class="text-xl font-bold text-m3-on-surface font-heading">{title}</h3>
+        <p class="text-xs text-m3-on-surface-variant font-normal">{subtitle}</p>
       </div>
     </div>
   </div>
@@ -35,6 +45,28 @@ import tnBusFares from '../data/tnBusFares.json';
     <!-- Inputs -->
     <div class="space-y-4">
 
+      <!-- Vehicle Class Selector -->
+      <div>
+        <label class="block text-badge font-bold text-m3-on-surface-variant uppercase mb-1.5">Vehicle Type</label>
+        <div class="relative group">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+            <Car className="w-4 h-4 text-m3-on-surface-variant group-focus-within:text-m3-primary transition-colors" />
+          </div>
+          <select
+            id="vehicle-type"
+            class="w-full pl-10 pr-10 py-3 bg-m3-surface border border-m3-outline rounded-m3-md focus:border-m3-primary focus:ring-2 focus:ring-m3-primary outline-none text-m3-on-surface text-sm font-medium transition-all appearance-none cursor-pointer"
+          >
+            <option value="600" data-name="Hatchback & Sedan">Hatchback & Sedan (Dzire, Etios, City) — ₹600/day</option>
+            <option value="700" data-name="Compact SUV / MPV">Compact SUV / MPV (Ertiga, Creta, Carens) — ₹700/day</option>
+            <option value="800" data-name="Premium SUV / MUV">Premium SUV (Innova Crysta, Fortuner) — ₹800/day</option>
+            <option value="1000" data-name="Luxury European">Luxury European (BMW, Mercedes, Audi) — ₹1,000/day</option>
+          </select>
+          <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-m3-on-surface-variant">
+            <ChevronDown className="w-4 h-4" />
+          </div>
+        </div>
+      </div>
+
       <!-- Pickup -->
       <div>
         <label class="block text-badge font-bold text-m3-on-surface-variant uppercase mb-1.5">Pickup Location</label>
@@ -45,7 +77,7 @@ import tnBusFares from '../data/tnBusFares.json';
           <input
             type="text"
             id="simple-pickup"
-            placeholder="e.g. Pallavaram"
+            placeholder="e.g. Pallavaram, Chennai"
             autocomplete="off"
             class="w-full pl-10 pr-4 py-3 bg-m3-surface border border-m3-outline rounded-m3-md focus:border-m3-primary focus:ring-2 focus:ring-m3-primary outline-none text-m3-on-surface text-sm font-medium transition-all"
           />
@@ -97,7 +129,7 @@ import tnBusFares from '../data/tnBusFares.json';
           </div>
           <div>
             <span class="block text-sm font-semibold text-m3-on-surface">I will provide Driver Stay</span>
-            <span class="block text-xs text-m3-on-surface-variant mt-0.5">Select this if you provide the driver accommodation.</span>
+            <span class="block text-xs text-m3-on-surface-variant mt-0.5">Select if hotel provides driver dorm or accommodation.</span>
           </div>
         </label>
 
@@ -128,12 +160,26 @@ import tnBusFares from '../data/tnBusFares.json';
         <!-- Dynamic Content -->
       </div>
 
-      <div class="mt-6 p-3.5 bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-md flex gap-2.5">
+      <div class="mt-5 p-3.5 bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-md flex gap-2.5">
         <Info className="w-4 h-4 text-m3-primary shrink-0 mt-0.5" />
         <p class="text-xs text-m3-on-surface-variant leading-relaxed font-sans">
-          Rate is per calendar day. Providing accommodation saves you <span class="font-bold">₹500/night!</span>
+          Rate is per calendar day. Providing driver accommodation saves you <span class="font-bold text-m3-on-surface">₹300/night!</span>
         </p>
       </div>
+
+      <!-- Instant WhatsApp Booking Action -->
+      <a
+        id="driver-calc-whatsapp-btn"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="mt-4 w-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-bold py-3 px-4 rounded-m3-full transition-all flex items-center justify-center gap-2 shadow-m3-1 text-sm cursor-pointer"
+      >
+        <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
+          <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+        </svg>
+        <span>Book Driver with This Estimate</span>
+      </a>
 
     </div>
 
@@ -151,41 +197,44 @@ import tnBusFares from '../data/tnBusFares.json';
     const roundTripFields = document.getElementById('round-trip-fields');
     const durationInput = document.getElementById('duration-days');
     const stayCheckbox = document.getElementById('stay-provided');
+    const vehicleSelect = document.getElementById('vehicle-type');
     const resultSection = document.getElementById('result-section');
+    const pInput = document.getElementById('simple-pickup');
+    const dInput = document.getElementById('simple-drop');
+    const calcBtn = document.getElementById('calc-btn');
 
     // --- TAB LOGIC ---
     function switchTab(tab) {
       activeTab = tab;
       if (tab === 'oneway') {
-        // Style Active
-        tabOneway.className = "flex-1 py-2 text-xs sm:text-sm font-semibold rounded-m3-full bg-m3-primary text-m3-on-primary shadow-m3-1 transition-all cursor-pointer";
-        tabRound.className = "flex-1 py-2 text-xs sm:text-sm font-semibold rounded-m3-full text-m3-on-surface-variant hover:text-m3-on-surface transition-all cursor-pointer";
-        // Hide Fields
-        roundTripFields.classList.add('hidden');
+        tabOneway?.classList.remove('text-m3-on-surface-variant');
+        tabOneway?.classList.add('bg-m3-primary', 'text-m3-on-primary', 'shadow-m3-1');
+        tabRound?.classList.remove('bg-m3-primary', 'text-m3-on-primary', 'shadow-m3-1');
+        tabRound?.classList.add('text-m3-on-surface-variant');
+        roundTripFields?.classList.add('hidden');
       } else {
-        // Style Active
-        tabRound.className = "flex-1 py-2 text-xs sm:text-sm font-semibold rounded-m3-full bg-m3-primary text-m3-on-primary shadow-m3-1 transition-all cursor-pointer";
-        tabOneway.className = "flex-1 py-2 text-xs sm:text-sm font-semibold rounded-m3-full text-m3-on-surface-variant hover:text-m3-on-surface transition-all cursor-pointer";
-        // Show Fields
-        roundTripFields.classList.remove('hidden');
+        tabRound?.classList.remove('text-m3-on-surface-variant');
+        tabRound?.classList.add('bg-m3-primary', 'text-m3-on-primary', 'shadow-m3-1');
+        tabOneway?.classList.remove('bg-m3-primary', 'text-m3-on-primary', 'shadow-m3-1');
+        tabOneway?.classList.add('text-m3-on-surface-variant');
+        roundTripFields?.classList.remove('hidden');
       }
-      // Hide results on tab switch to avoid confusion
-      resultSection.classList.add('hidden');
+      resultSection?.classList.add('hidden');
     }
 
-    tabOneway.addEventListener('click', () => switchTab('oneway'));
-    tabRound.addEventListener('click', () => switchTab('round'));
+    tabOneway?.addEventListener('click', () => switchTab('oneway'));
+    tabRound?.addEventListener('click', () => switchTab('round'));
 
-    // --- GOOGLE MAPS INIT (Robust) ---
+    // --- GOOGLE MAPS INIT ---
     let attempts = 0;
     const maxAttempts = 50;
 
     function initializeAutocomplete() {
-      const pickupInput = document.getElementById('simple-pickup');
-      const dropInput = document.getElementById('simple-drop');
+      const pickup = document.getElementById('simple-pickup');
+      const drop = document.getElementById('simple-drop');
 
-      if (!pickupInput || !dropInput) return;
-      if (pickupInput.dataset.googleAttached === "true") return;
+      if (!pickup || !drop) return;
+      if (pickup.dataset.googleAttached === "true") return;
 
       try {
         const options = {
@@ -193,21 +242,20 @@ import tnBusFares from '../data/tnBusFares.json';
           fields: ["geometry", "name"],
           strictBounds: false,
         };
-        new google.maps.places.Autocomplete(pickupInput, options);
-        new google.maps.places.Autocomplete(dropInput, options);
-        pickupInput.dataset.googleAttached = "true";
-        dropInput.dataset.googleAttached = "true";
-        console.log("DriverFeeEstimator: Autocomplete initialized");
+        new google.maps.places.Autocomplete(pickup, options);
+        new google.maps.places.Autocomplete(drop, options);
+        pickup.dataset.googleAttached = "true";
+        drop.dataset.googleAttached = "true";
       } catch (e) {
-        console.error("DriverFeeEstimator: Init failed", e);
+        console.error("DriverFeeEstimator: Autocomplete failed", e);
       }
     }
 
     const triggerMaps = () => {
       import('../lib/googleMapsLoader').then(m => m.loadGoogleMaps().then(initializeAutocomplete));
     };
-    pickupInput?.addEventListener('focus', triggerMaps, { once: true });
-    dropInput?.addEventListener('focus', triggerMaps, { once: true });
+    pInput?.addEventListener('focus', triggerMaps, { once: true });
+    dInput?.addEventListener('focus', triggerMaps, { once: true });
     window.addEventListener('google-maps-loaded', initializeAutocomplete);
 
     const intervalId = setInterval(() => {
@@ -221,107 +269,107 @@ import tnBusFares from '../data/tnBusFares.json';
     }, 200);
 
     // --- CALCULATION LOGIC ---
-    const calcBtn = document.getElementById('calc-btn');
-
     if (calcBtn) {
       calcBtn.addEventListener('click', () => {
-        const pickup = document.getElementById('simple-pickup').value;
-        const drop = document.getElementById('simple-drop').value;
+        const pickup = pInput ? pInput.value.trim() : '';
+        const drop = dInput ? dInput.value.trim() : '';
 
-        if(!pickup || !drop) {
-          alert("Please enter both locations");
+        if (!pickup || !drop) {
+          alert("Please enter both pickup and drop locations.");
           return;
         }
 
-        // Change button state
         const originalBtnText = calcBtn.innerHTML;
         calcBtn.innerHTML = 'Calculating...';
         calcBtn.disabled = true;
 
-        // 1. TRY LOCAL LOOKUP FIRST (No API)
+        // 1. LOCAL LOOKUP FIRST
         const p = pickup.toLowerCase();
         const d = drop.toLowerCase();
 
-        // Find route in either direction
         const route = tnBusFares.find(r =>
           (p.includes(r.source) && d.includes(r.destination)) ||
           (p.includes(r.destination) && d.includes(r.source))
         );
 
         if (route) {
-          console.log("Using Local Route Data:", route);
-
-          // Simulate small delay for UX
           setTimeout(() => {
             calcBtn.innerHTML = originalBtnText;
             calcBtn.disabled = false;
 
             const realDist = route.distanceKm;
-            const durationText = Math.round(realDist / 50) + " hrs (Est)"; // Approx 50km/h
-
-            // Use stored SETC fare
+            const durationText = Math.round(realDist / 50) + " hrs (Est)";
             const setcFare = route.setcFare;
 
             calculateAndShow(realDist, durationText, setcFare);
-          }, 600);
+          }, 400);
           return;
         }
 
-        // 2. FALLBACK TO API (If route not found)
-        const service = new google.maps.DistanceMatrixService();
-        service.getDistanceMatrix(
-          {
-            origins: [pickup],
-            destinations: [drop],
-            travelMode: google.maps.TravelMode.DRIVING,
-            unitSystem: google.maps.UnitSystem.METRIC,
-          },
-          (response, status) => {
-            // Reset button
-            calcBtn.innerHTML = originalBtnText;
-            calcBtn.disabled = false;
+        // 2. FALLBACK TO DISTANCE MATRIX API
+        if (window.google && window.google.maps) {
+          const service = new google.maps.DistanceMatrixService();
+          service.getDistanceMatrix(
+            {
+              origins: [pickup],
+              destinations: [drop],
+              travelMode: google.maps.TravelMode.DRIVING,
+              unitSystem: google.maps.UnitSystem.METRIC,
+            },
+            (response, status) => {
+              calcBtn.innerHTML = originalBtnText;
+              calcBtn.disabled = false;
 
-            if (status !== "OK") {
-              alert("Error with distance service: " + status);
-              return;
+              if (status !== "OK") {
+                alert("Error with distance service: " + status);
+                return;
+              }
+
+              const result = response.rows[0].elements[0];
+              if (result.status !== "OK") {
+                alert("Could not calculate distance. Please check locations.");
+                return;
+              }
+
+              const distanceInMeters = result.distance.value;
+              const realDist = Math.round(distanceInMeters / 1000);
+              const durationText = result.duration.text;
+              const calculatedFare = Math.round(realDist * 1.2);
+
+              calculateAndShow(realDist, durationText, calculatedFare);
             }
-
-            const result = response.rows[0].elements[0];
-            if (result.status !== "OK") {
-              alert("Could not calculate distance. Please check locations.");
-              return;
-            }
-
-            // Real Data
-            const distanceInMeters = result.distance.value;
-            const realDist = Math.round(distanceInMeters / 1000);
-            const durationText = result.duration.text;
-
-            // Fallback Fare Calculation (if not in JSON)
-            // Approx 1.2 per km for SETC Ultra Deluxe
-            const calculatedFare = Math.round(realDist * 1.2);
-
-            calculateAndShow(realDist, durationText, calculatedFare);
-          }
-        );
+          );
+        } else {
+          calcBtn.innerHTML = originalBtnText;
+          calcBtn.disabled = false;
+          // Local fallback approximation if offline / no API
+          const approxDist = 150;
+          const approxDuration = "3.5 hrs (Est)";
+          const approxFare = 250;
+          calculateAndShow(approxDist, approxDuration, approxFare);
+        }
       });
 
       function calculateAndShow(dist, duration, busFare) {
-        // Rates
-        const BATA_PER_DAY = 1200;
-        const FOOD_PER_DAY = 300;
-        const STAY_PER_NIGHT = 500;
+        const selectedOption = vehicleSelect ? vehicleSelect.options[vehicleSelect.selectedIndex] : null;
+        const BATA_PER_DAY = parseInt(selectedOption?.value || "600", 10);
+        const vehicleName = selectedOption?.getAttribute('data-name') || "Hatchback & Sedan";
+        const FOOD_PER_DAY = 300; // 2 meals @ ₹150/meal
+        const STAY_PER_NIGHT = 300; // Dormitory/room allowance
 
         let total = 0;
         let breakdownHTML = '';
 
         if (activeTab === 'oneway') {
-          // One Way Logic
           total = BATA_PER_DAY + FOOD_PER_DAY + busFare;
 
           breakdownHTML = `
             <div class="flex justify-between py-2 border-b border-m3-outline-variant/40">
-              <span class="text-m3-on-surface-variant">Driver Bata (1 Day)</span>
+              <span class="text-m3-on-surface-variant">Vehicle Class</span>
+              <span class="font-bold text-m3-on-surface">${vehicleName}</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-m3-outline-variant/40">
+              <span class="text-m3-on-surface-variant">Driver Bata (1 Day Duty)</span>
               <span class="font-bold text-m3-on-surface">₹${BATA_PER_DAY}</span>
             </div>
             <div class="flex justify-between py-2 border-b border-m3-outline-variant/40">
@@ -329,25 +377,20 @@ import tnBusFares from '../data/tnBusFares.json';
               <span class="font-bold text-m3-on-surface">₹${FOOD_PER_DAY}</span>
             </div>
             <div class="flex justify-between py-2">
-              <span class="text-m3-on-surface-variant">Return Bus Ticket (SETC/Est)</span>
+              <span class="text-m3-on-surface-variant">Return Bus Ticket (SETC/Actuals)</span>
               <span class="font-bold text-m3-on-surface">₹${busFare}</span>
             </div>
           `;
-
         } else {
-          // Round Trip Logic
-          let days = parseInt(durationInput.value) || 1;
-
-          // Auto-correct days if distance > 250km
+          let days = parseInt(durationInput?.value || "1", 10) || 1;
           const totalRoundTripDist = dist * 2;
           if (totalRoundTripDist > 250 && days < 2) {
             days = 2;
-            durationInput.value = "2";
-            alert("For round trips over 250km, minimum 2 days are required for driver safety.");
+            if (durationInput) durationInput.value = "2";
           }
 
-          const nights = Math.max(0, days - 1); // Nights are usually Days - 1
-          const provideStay = stayCheckbox.checked;
+          const nights = Math.max(0, days - 1);
+          const provideStay = stayCheckbox?.checked || false;
 
           const totalBata = BATA_PER_DAY * days;
           const totalFood = FOOD_PER_DAY * days;
@@ -357,7 +400,11 @@ import tnBusFares from '../data/tnBusFares.json';
 
           breakdownHTML = `
             <div class="flex justify-between py-2 border-b border-m3-outline-variant/40">
-              <span class="text-m3-on-surface-variant">Driver Bata (${days} Days)</span>
+              <span class="text-m3-on-surface-variant">Vehicle Class</span>
+              <span class="font-bold text-m3-on-surface">${vehicleName}</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-m3-outline-variant/40">
+              <span class="text-m3-on-surface-variant">Driver Bata (${days} Days @ ₹${BATA_PER_DAY}/day)</span>
               <span class="font-bold text-m3-on-surface">₹${totalBata}</span>
             </div>
             <div class="flex justify-between py-2 border-b border-m3-outline-variant/40">
@@ -366,21 +413,46 @@ import tnBusFares from '../data/tnBusFares.json';
             </div>
             ${nights > 0 ? `
             <div class="flex justify-between py-2 ${provideStay ? 'text-m3-on-surface-variant line-through opacity-70' : ''}">
-              <span class="text-m3-on-surface-variant">Stay Allowance (${nights} Nights)</span>
-              <span class="font-bold text-m3-on-surface">₹${provideStay ? 0 : totalStay}</span>
+              <span class="text-m3-on-surface-variant">Night Stay (${nights} Nights)</span>
+              <span class="font-bold text-m3-on-surface">${provideStay ? 'Provided by You (₹0)' : '₹' + totalStay}</span>
             </div>
             ` : ''}
           `;
         }
 
-        // Update UI
         const displayDist = activeTab === 'round' ? dist * 2 : dist;
-        document.getElementById('total-price').innerText = `₹${total}`;
-        document.getElementById('distance-display').innerText = `${displayDist} km`;
-        document.getElementById('duration-display').innerText = duration;
-        document.getElementById('breakdown-list').innerHTML = breakdownHTML;
+        const totalPriceEl = document.getElementById('total-price');
+        const distEl = document.getElementById('distance-display');
+        const durEl = document.getElementById('duration-display');
+        const breakdownEl = document.getElementById('breakdown-list');
 
-        resultSection.classList.remove('hidden');
+        if (totalPriceEl) totalPriceEl.innerText = `₹${total.toLocaleString('en-IN')}`;
+        if (distEl) distEl.innerText = `${displayDist} km`;
+        if (durEl) durEl.innerText = duration;
+        if (breakdownEl) breakdownEl.innerHTML = breakdownHTML;
+
+        // WhatsApp booking link update
+        const pickupVal = pInput ? pInput.value.trim() : '';
+        const dropVal = dInput ? dInput.value.trim() : '';
+        const tripType = activeTab === 'round' ? 'Round Trip' : 'One Way Drop';
+        const daysLabel = activeTab === 'round' ? `${parseInt(durationInput?.value || "1", 10) || 1} Days` : '1 Day Drop';
+        const stayStatus = activeTab === 'round' ? (stayCheckbox?.checked ? 'Stay Provided by Customer' : 'Driver Stay Allowance Included') : 'Driver Returns via Bus';
+
+        const whatsappText = `Hi Kalidass Travels, I calculated an Outstation Acting Driver estimate:
+• Service: Outstation Acting Driver (${tripType})
+• Vehicle: ${vehicleName}
+• Route: ${pickupVal} to ${dropVal} (~${displayDist} km)
+• Duration: ${daysLabel}
+• Accommodation: ${stayStatus}
+• Estimated Total: ₹${total}
+Please confirm driver availability.`;
+
+        const whatsappBtn = document.getElementById('driver-calc-whatsapp-btn');
+        if (whatsappBtn) {
+          whatsappBtn.href = `https://wa.me/916381939769?text=${encodeURIComponent(whatsappText)}`;
+        }
+
+        resultSection?.classList.remove('hidden');
       }
     }
   })();

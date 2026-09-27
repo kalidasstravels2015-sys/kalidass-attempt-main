@@ -9,7 +9,6 @@ import {
   ShieldCheck, 
   Clock, 
   MapPin, 
-  Car, 
   Phone, 
   MessageCircle, 
   CheckCircle2, 
@@ -20,7 +19,9 @@ import {
   ChevronRight, 
   Compass, 
   FileText,
-  AlertCircle
+  AlertCircle,
+  Car,
+  Users
 } from 'lucide-react';
 
 export async function getStaticPaths() {
@@ -149,6 +150,32 @@ function extractStartingPrice(svc: any): string | null {
 }
 
 const startingPrice = extractStartingPrice(service);
+
+// Helper to categorize vehicles and choose appropriate vehicle badges
+const getVehicleBadge = (name: string) => {
+  const v = (name || '').toLowerCase();
+  if (v.includes('tempo') || v.includes('traveller')) return 'Group Coach';
+  if (v.includes('crysta')) return 'Executive Luxury';
+  if (v.includes('ertiga') || v.includes('xl6')) return 'Family Favorite';
+  if (v.includes('innova')) return 'Comfort MUV';
+  if (v.includes('dzire') || v.includes('etios') || v.includes('sedan')) return 'Best Value Sedan';
+  return 'Comfort Cab';
+};
+
+// Helper to match vehicle images from fleet
+const getVehicleFleetImage = (name: string) => {
+  const v = (name || '').toLowerCase();
+  if (v.includes('tempo') || v.includes('traveller') || v.includes('van') || v.includes('coach')) {
+    return '/images/fleet/tempo.webp';
+  }
+  if (v.includes('crysta') || v.includes('innova') || v.includes('ertiga') || v.includes('xl6') || v.includes('suv') || v.includes('muv') || v.includes('mpv')) {
+    return '/images/fleet/suv.webp';
+  }
+  if (v.includes('dzire') || v.includes('etios') || v.includes('sedan') || v.includes('aura') || v.includes('car')) {
+    return '/images/fleet/swift-dzire.webp';
+  }
+  return null;
+};
 
 
 
@@ -340,9 +367,6 @@ if (isTour) {
   };
   if (service.serviceType) {
     singleSchema.serviceType = service.serviceType;
-  }
-  if (service.origin) {
-    areas.unshift({ "@type": "City", "name": service.origin });
   }
   if (offersData) {
     singleSchema.offers = offersData;
@@ -600,25 +624,37 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
     </section>
 
     <!-- STICKY QUICK-NAV JUMP BAR -->
-    <nav class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 py-3 px-4 sm:px-6 lg:px-8 shadow-xs">
+    <nav data-quick-nav aria-label="Package Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 py-3 px-4 sm:px-6 lg:px-8 shadow-xs">
       <div class="max-w-4xl mx-auto flex items-center gap-2 text-xs font-semibold text-m3-on-surface whitespace-nowrap overflow-x-auto no-scrollbar py-0.5">
         {service.tariff && (
-          <a href="#tariff" class="px-3.5 py-2 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container hover:bg-m3-primary hover:text-m3-on-primary transition-all shrink-0">
+          <a
+            href="#tariff"
+            class="px-3.5 py-2 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs transition-all shrink-0"
+          >
             Tariff & Rates
           </a>
         )}
         {service.routePlan && (
-          <a href="#route" data-nav-target="route" class="quick-nav-link px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
+          <a
+            href="#route"
+            class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium"
+          >
             Route Schedule
           </a>
         )}
         {service.travelGuide && (
-          <a href="#guide" data-nav-target="guide" class="quick-nav-link px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
+          <a
+            href="#guide"
+            class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium"
+          >
             {isTour ? "Darshan Guide" : "Guidelines"}
           </a>
         )}
         {service.faq && (
-          <a href="#faq" data-nav-target="faq" class="quick-nav-link px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
+          <a
+            href="#faq"
+            class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium"
+          >
             FAQs
           </a>
         )}
@@ -630,66 +666,199 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
       
       <!-- 1. TARIFF & PRICING BREAKDOWN (Priority Commercial Focus) -->
       {service.tariff && (
-        <section id="tariff" class="bg-m3-surface rounded-m3-lg border border-m3-outline-variant shadow-m3-1 overflow-hidden scroll-mt-28">
-          <div class="p-5 sm:p-7 bg-m3-surface-container-low border-b border-m3-outline-variant flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-m3-sm bg-m3-primary-container text-m3-on-primary-container text-xs font-bold uppercase tracking-wider mb-1.5">
-                <span>Transparent Pricing</span>
+        <section id="tariff" class="bg-m3-surface rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 overflow-hidden scroll-mt-28">
+          <!-- Section Header Bar -->
+          <div class="p-5 sm:p-7 bg-m3-surface-container-low border-b border-m3-outline-variant flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="max-w-xl">
+              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container text-m3-on-surface text-xs font-bold uppercase tracking-wider mb-2 border border-m3-outline-variant">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <span>Transparent Pricing • All Tolls Included</span>
               </div>
-              <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading">
+              <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
                 Tariff & Package Rates
               </h2>
+              <p class="text-xs sm:text-sm text-m3-on-surface-variant font-sans mt-1">
+                Fixed round-trip rates with doorstep pickup, sanitized dual AC cars, FASTag tolls, and driver allowance.
+              </p>
             </div>
-            <a 
-              href={whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-m3-full bg-m3-primary text-m3-on-primary text-xs font-bold shadow-xs hover:bg-m3-primary/90 transition-all"
-            >
-              <span>Reserve at Flat Fare</span>
-              <ChevronRight className="w-3.5 h-3.5" />
-            </a>
+
+            <div class="flex items-center gap-3 shrink-0">
+              <!-- Desktop Cards vs Table Switcher -->
+              <div class="hidden md:inline-flex items-center p-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant text-xs font-semibold select-none">
+                <button
+                  type="button"
+                  id="tariff-btn-cards"
+                  class="px-3.5 py-1.5 rounded-m3-full bg-m3-primary text-m3-on-primary shadow-xs transition-all cursor-pointer"
+                  aria-pressed="true"
+                >
+                  Cards View
+                </button>
+                <button
+                  type="button"
+                  id="tariff-btn-table"
+                  class="px-3.5 py-1.5 rounded-m3-full text-m3-on-surface-variant hover:text-m3-on-surface transition-all cursor-pointer"
+                  aria-pressed="false"
+                >
+                  Table View
+                </button>
+              </div>
+
+              <a 
+                href={whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1.5 px-4 py-2 rounded-m3-full bg-m3-primary text-m3-on-primary text-xs font-bold shadow-m3-1 hover:bg-m3-primary/90 active:scale-[0.98] transition-all"
+              >
+                <span>Reserve Now</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
           </div>
 
-          {/* Mobile Pricing Cards (< md) */}
-          <div class="block md:hidden">
-            {service.tariff.rows.map((row: any[], rIdx: number) => {
-              const headers = service.tariff.headers || [];
-              const vehicleName = row[0];
-              // Find the total cost column (last meaningful price column)
-              const totalColIdx = headers.length - 1;
-              const totalCost = row[totalColIdx] || '';
-              // All middle columns (skip vehicle name col 0 and total cost last col)
-              const middleCols = headers.slice(1, -1).map((header: string, i: number) => ({
-                label: header,
-                value: row[i + 1] ?? ''
-              }));
-              return (
-                <div class={`px-5 py-4 border-b border-m3-outline-variant/40 ${rIdx % 2 === 0 ? 'bg-m3-surface' : 'bg-m3-surface-container-lowest'}`}>
-                  {/* Vehicle name + Total Cost on same row */}
-                  <div class="flex items-center justify-between gap-3 mb-2.5">
-                    <p class="font-bold text-sm sm:text-base text-m3-on-surface leading-snug font-heading">{vehicleName}</p>
-                    <div class="shrink-0 text-right">
-                      <span class="text-[10px] font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-0.5">{headers[totalColIdx]}</span>
-                      <span class="text-lg sm:text-xl font-extrabold text-m3-primary font-heading leading-none">{totalCost}</span>
+          <!-- M3 Vehicle Cards Grid (Default View, inspired by weekend-packages) -->
+          <div id="tariff-cards-view" class="p-4 sm:p-6 bg-m3-surface-container-low">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              {service.tariff.rows.map((row: any[], rIdx: number) => {
+                const headers = service.tariff.headers || [];
+                const vehicleName = row[0];
+                const badge = getVehicleBadge(vehicleName);
+                const vehicleImg = getVehicleFleetImage(vehicleName);
+
+                // Hero price: prefer "Total Cost" column, else last ₹ column
+                const totalCostIdx = headers.findIndex((h: string) => /total\s*cost|flat\s*cost|package\s*cost|charges|rate/i.test(h) && !/rate\/km/i.test(h));
+                const lastRupeeIdx = (() => {
+                  let last = -1;
+                  row.forEach((cell: string, i: number) => {
+                    if (i > 0 && typeof cell === 'string' && cell.trim().startsWith('₹')) last = i;
+                  });
+                  return last;
+                })();
+                const heroPriceIdx    = totalCostIdx !== -1 ? totalCostIdx : lastRupeeIdx;
+                const heroPrice       = heroPriceIdx !== -1 ? row[heroPriceIdx] : '';
+                const heroPriceLabel  = heroPriceIdx !== -1 ? headers[heroPriceIdx] : 'Total Cost';
+
+                // Seating capacity column
+                const seatColIdx = headers.findIndex((h: string) => /seat|pax|devotee|passenger|capacity/i.test(h));
+                const seats      = seatColIdx !== -1 ? row[seatColIdx] : '';
+
+                // Key highlights column
+                const highlightsColIdx = headers.findIndex((h: string) => /highlight|inclusion|feature|note|coverage/i.test(h));
+                const highlights       = highlightsColIdx !== -1 ? row[highlightsColIdx] : '';
+
+                // Remaining info columns (rate/km, bata, tolls, etc.)
+                const skipSet  = new Set([0, heroPriceIdx, seatColIdx, highlightsColIdx].filter(i => i >= 0));
+                const infoChips = headers
+                  .map((h: string, i: number) => ({ label: h, value: row[i] ?? '', idx: i }))
+                  .filter(({ idx, value }: { idx: number; value: any }) => !skipSet.has(idx) && idx > 0 && String(value).trim().length > 0);
+
+                const shortName = vehicleName.split('/')[0].replace(/\(.*?\)/g, '').trim();
+                const bookingText = `Hi Kalidass Travels, I want to book ${vehicleName} for ${service.title} (${heroPrice}).`;
+
+                // If odd number of rows and this is the last one, span full width on desktop for nice layout
+                const isOddLast = rIdx === service.tariff.rows.length - 1 && service.tariff.rows.length % 2 !== 0;
+
+                return (
+                  <div class={`bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between hover:shadow-m3-2 hover:border-m3-primary/40 transition-all overflow-hidden group ${isOddLast ? 'md:col-span-2' : ''}`}>
+                    <div class="p-5 sm:p-6">
+                      <!-- Top Badges Row -->
+                      <div class="flex items-center justify-between gap-2 mb-3.5">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-m3-full bg-m3-primary/10 text-m3-primary text-[11px] font-bold tracking-wider uppercase border border-m3-primary/20">
+                          <Sparkles className="w-3 h-3 text-m3-primary shrink-0" />
+                          <span>{badge}</span>
+                        </span>
+                        {seats && (
+                          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 text-xs font-semibold text-m3-on-surface-variant">
+                            <Users className="w-3.5 h-3.5 text-m3-secondary shrink-0" />
+                            <span>{seats}</span>
+                          </span>
+                        )}
+                      </div>
+
+                      <!-- Vehicle Identity & Preview Row -->
+                      <div class="flex items-center justify-between gap-3 mb-4">
+                        <div class="min-w-0 flex-1">
+                          <h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading leading-snug group-hover:text-m3-primary transition-colors">
+                            {vehicleName}
+                          </h3>
+                          <p class="text-micro text-m3-on-surface-variant mt-0.5 font-medium">
+                            Doorstep Pickup &amp; Return • Chilled Dual AC
+                          </p>
+                        </div>
+                        {vehicleImg ? (
+                          <div class="shrink-0 w-20 h-12 sm:w-24 sm:h-14 flex items-center justify-end">
+                            <img
+                              src={vehicleImg}
+                              alt={vehicleName}
+                              width="112"
+                              height="56"
+                              decoding="async"
+                              class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-xs"
+                              loading="lazy"
+                            />
+                          </div>
+                        ) : (
+                          <div class="shrink-0 w-10 h-10 rounded-m3-xl bg-m3-primary-container text-m3-on-primary-container flex items-center justify-center">
+                            <Car className="w-5 h-5" />
+                          </div>
+                        )}
+                      </div>
+
+                      <!-- M3 Tonal Surface Price Slabs (Inspiration from weekend-packages) -->
+                      <div class="bg-m3-surface-container-low p-4 rounded-m3-xl border border-m3-outline-variant/60 mb-4 space-y-2.5">
+                        <div class="flex items-baseline justify-between gap-2">
+                          <span class="text-[11px] font-semibold text-m3-on-surface-variant uppercase tracking-wider">
+                            {heroPriceLabel || "All-Inclusive Flat Fare"}
+                          </span>
+                          <strong class="text-2xl sm:text-3xl font-black text-m3-primary font-heading tracking-tight leading-none">
+                            {heroPrice}
+                          </strong>
+                        </div>
+
+                        {infoChips.length > 0 && (
+                          <div class="pt-2 border-t border-m3-outline-variant/50 space-y-1.5">
+                            {infoChips.map(({ label, value }: { label: string; value: string }) => (
+                              <div class="flex items-center justify-between text-xs py-0.5">
+                                <span class="text-m3-on-surface-variant font-medium">{label}</span>
+                                <strong class="font-bold text-m3-on-surface">{value}</strong>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        <div class="pt-1.5 border-t border-m3-outline-variant/40 flex items-center gap-1.5 text-micro font-semibold text-emerald-800">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                          <span>Fuel, FASTag Tolls, Border Permit &amp; Driver Bata Included</span>
+                        </div>
+                      </div>
+
+                      <!-- Key Highlights -->
+                      {highlights && (
+                        <div class="flex items-start gap-2 text-xs text-m3-on-surface-variant leading-relaxed mb-1">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                          <span>{highlights}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <!-- Card Action Area (Official M3 Full-Width WhatsApp Button) -->
+                    <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-1">
+                      <WhatsAppButton
+                        href={`https://wa.me/916381939769?text=${encodeURIComponent(bookingText)}`}
+                        size="md"
+                        fullWidth={true}
+                        variant="filled"
+                        text={`Book ${shortName} on WhatsApp`}
+                        ariaLabel={`Book ${vehicleName} via WhatsApp for ${heroPrice}`}
+                      />
                     </div>
                   </div>
-                  {/* Labeled breakdown pills */}
-                  <div class="flex flex-wrap gap-x-4 gap-y-1">
-                    {middleCols.map(({ label, value }: { label: string; value: string }) => (
-                      <div class="flex items-center gap-1 text-xs text-m3-on-surface-variant">
-                        <span class="font-semibold text-m3-on-surface-variant/70">{label}:</span>
-                        <span class="font-bold text-m3-on-surface">{value}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
 
-          {/* Desktop & Tablet Table Layout (>= md) */}
-          <div class="hidden md:block overflow-x-auto">
+          <!-- Secondary Desktop Table View (Toggleable) -->
+          <div id="tariff-table-view" class="hidden overflow-x-auto">
             <table class="w-full text-left text-sm font-sans border-collapse">
               <thead class="bg-m3-surface-container text-m3-on-surface-variant text-xs font-bold uppercase tracking-wider border-b border-m3-outline-variant">
                 <tr>
@@ -698,18 +867,32 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                       {header}
                     </th>
                   ))}
+                  <th class="px-5 py-4 text-right">Action</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-m3-outline-variant/60">
-                {service.tariff.rows.map((row: any[], rIdx: number) => (
-                  <tr class={`hover:bg-m3-surface-container-low transition-colors ${rIdx % 2 === 0 ? 'bg-m3-surface' : 'bg-m3-surface-container-lowest'}`}>
-                    {row.map((cell: string, cIdx: number) => (
-                      <td class={`px-5 py-4 ${cIdx === 0 ? 'font-bold text-m3-on-surface text-sm sm:text-base' : 'text-m3-on-surface-variant text-sm'} ${cIdx === row.length - 1 ? 'text-right font-black text-m3-primary font-heading text-base' : ''}`}>
-                        {cell}
+                {service.tariff.rows.map((row: any[], rIdx: number) => {
+                  const vehicleName = row[0];
+                  const lastCell = row[row.length - 1];
+                  const bookingText = `Hi Kalidass Travels, I want to book ${vehicleName} for ${service.title} (${lastCell}).`;
+                  return (
+                    <tr class={`hover:bg-m3-surface-container-low transition-colors ${rIdx % 2 === 0 ? 'bg-m3-surface' : 'bg-m3-surface-container-lowest'}`}>
+                      {row.map((cell: string, cIdx: number) => (
+                        <td class={`px-5 py-4 ${cIdx === 0 ? 'font-bold text-m3-on-surface text-sm sm:text-base' : 'text-m3-on-surface-variant text-sm'} ${cIdx === row.length - 1 ? 'text-right font-black text-m3-primary font-heading text-base' : ''}`}>
+                          {cell}
+                        </td>
+                      ))}
+                      <td class="px-5 py-4 text-right">
+                        <WhatsAppButton
+                          href={`https://wa.me/916381939769?text=${encodeURIComponent(bookingText)}`}
+                          size="sm"
+                          variant="tonal"
+                          text="Book"
+                        />
                       </td>
-                    ))}
-                  </tr>
-                ))}
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -720,6 +903,39 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
               <span class="leading-relaxed">{service.tariff.note}</span>
             </div>
           )}
+
+          <script is:inline>
+            (function() {
+              const btnCards = document.getElementById('tariff-btn-cards');
+              const btnTable = document.getElementById('tariff-btn-table');
+              const viewCards = document.getElementById('tariff-cards-view');
+              const viewTable = document.getElementById('tariff-table-view');
+
+              if (btnCards && btnTable && viewCards && viewTable) {
+                btnCards.addEventListener('click', function() {
+                  viewCards.classList.remove('hidden');
+                  viewTable.classList.add('hidden');
+                  btnCards.classList.add('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs');
+                  btnCards.classList.remove('text-m3-on-surface-variant');
+                  btnCards.setAttribute('aria-pressed', 'true');
+                  btnTable.classList.remove('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs');
+                  btnTable.classList.add('text-m3-on-surface-variant');
+                  btnTable.setAttribute('aria-pressed', 'false');
+                });
+
+                btnTable.addEventListener('click', function() {
+                  viewCards.classList.add('hidden');
+                  viewTable.classList.remove('hidden');
+                  btnTable.classList.add('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs');
+                  btnTable.classList.remove('text-m3-on-surface-variant');
+                  btnTable.setAttribute('aria-pressed', 'true');
+                  btnCards.classList.remove('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs');
+                  btnCards.classList.add('text-m3-on-surface-variant');
+                  btnCards.setAttribute('aria-pressed', 'false');
+                });
+              }
+            })();
+          </script>
 
           {/* Integrated Inclusions & Exclusions Drawer (Consolidated for zero scroll friction) */}
           {(service.includes || service.excludes) && (
@@ -764,376 +980,306 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
         </section>
       )}
 
-      <!-- 2. INTERACTIVE DETAILS HUB (Route Itinerary, Darshan Guide & FAQs) -->
-      <section id="details-hub" class="scroll-mt-28 space-y-4">
-        
-        <!-- Segmented Tab Navigation Controls -->
-        <div class="bg-m3-surface rounded-m3-xl p-1.5 border border-m3-outline-variant shadow-m3-1 flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar" role="tablist" aria-label="Package Details Tabs">
-          {service.routePlan && (
-            <button
-              type="button"
-              role="tab"
-              id="main-tab-route"
-              aria-selected="true"
-              aria-controls="panel-hub-route"
-              data-main-tab="route"
-              class="main-tab-btn flex-1 min-w-[130px] sm:min-w-0 inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-m3-lg text-xs sm:text-sm font-bold transition-all bg-m3-primary text-m3-on-primary shadow-xs shrink-0"
-            >
-              <Compass className="w-4 h-4 shrink-0" />
-              <span>Route Itinerary</span>
-            </button>
-          )}
-
-          {service.travelGuide && (
-            <button
-              type="button"
-              role="tab"
-              id="main-tab-guide"
-              aria-selected={!service.routePlan ? "true" : "false"}
-              aria-controls="panel-hub-guide"
-              data-main-tab="guide"
-              class={`main-tab-btn flex-1 min-w-[130px] sm:min-w-0 inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-m3-lg text-xs sm:text-sm font-bold transition-all shrink-0 ${
-                !service.routePlan 
-                  ? 'bg-m3-primary text-m3-on-primary shadow-xs' 
-                  : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container'
-              }`}
-            >
-              <FileText className="w-4 h-4 shrink-0" />
-              <span>{isTour ? "Darshan Guide" : "Travel Protocol"}</span>
-            </button>
-          )}
-
-          {service.faq && (
-            <button
-              type="button"
-              role="tab"
-              id="main-tab-faq"
-              aria-selected={!service.routePlan && !service.travelGuide ? "true" : "false"}
-              aria-controls="panel-hub-faq"
-              data-main-tab="faq"
-              class={`main-tab-btn flex-1 min-w-[130px] sm:min-w-0 inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-m3-lg text-xs sm:text-sm font-bold transition-all shrink-0 ${
-                !service.routePlan && !service.travelGuide
-                  ? 'bg-m3-primary text-m3-on-primary shadow-xs' 
-                  : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container'
-              }`}
-            >
-              <HelpCircle className="w-4 h-4 shrink-0" />
-              <span>FAQs ({service.faq.length})</span>
-            </button>
-          )}
-        </div>
-
-        <!-- TAB PANEL 1: Route Plan & Stepper Timeline -->
-        {service.routePlan && (
-          <div
-            id="panel-hub-route"
-            role="tabpanel"
-            aria-labelledby="main-tab-route"
-            data-main-panel="route"
-            class="bg-m3-surface rounded-m3-xl p-5 sm:p-7 border border-m3-outline-variant shadow-m3-1 space-y-5"
-          >
-            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-m3-outline-variant/60 pb-4">
-              <div>
-                <h3 class="text-lg sm:text-xl font-bold text-m3-on-surface flex items-center gap-2 font-heading">
-                  <Compass className="w-5 h-5 text-m3-primary" />
-                  <span>Trip Route Schedule &amp; Key Stops</span>
-                </h3>
-                <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-0.5">Optimized timeline designed to ensure timely darshan entry</p>
-              </div>
-              {service.duration && (
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container-high text-m3-on-surface text-xs font-semibold">
-                  <Clock className="w-3.5 h-3.5 text-m3-primary" />
-                  <span>{service.duration}</span>
-                </span>
-              )}
+      <!-- 2. ROUTE PLAN & TIMELINE -->
+      {service.routePlan && (
+        <section
+          id="route"
+          class="bg-m3-surface rounded-m3-2xl p-5 sm:p-7 border border-m3-outline-variant shadow-m3-1 space-y-5 scroll-mt-28"
+        >
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-m3-outline-variant/60 pb-4">
+            <div>
+              <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface flex items-center gap-2 font-heading">
+                <Compass className="w-5 h-5 text-m3-primary" />
+                <span>Trip Route Schedule &amp; Key Stops</span>
+              </h2>
+              <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-0.5">Optimized timeline designed to ensure timely darshan entry</p>
             </div>
-
-            <!-- Compact Connected Stepper Timeline (Cuts 60% vertical scrolling) -->
-            <div class="relative pl-7 sm:pl-9 border-l-2 border-m3-primary/30 ml-3 sm:ml-4 my-3 space-y-4 sm:space-y-5">
-              {service.routePlan.map((stop: any, idx: number) => (
-                <div class="relative group">
-                  {/* Stepper Dot */}
-                  <div class="absolute -left-[35px] sm:-left-[43px] top-0.5 w-7 h-7 sm:w-8 sm:h-8 rounded-m3-full bg-m3-primary text-m3-on-primary font-bold text-xs sm:text-sm flex items-center justify-center shadow-xs ring-4 ring-m3-surface">
-                    {idx + 1}
-                  </div>
-                  {/* Step Card */}
-                  <div class="bg-m3-surface-container-low p-3.5 sm:p-4 rounded-m3-md border border-m3-outline-variant/60 hover:border-m3-primary/40 transition-colors">
-                    <h4 class="font-bold text-m3-on-surface text-sm sm:text-base font-heading">
-                      {stop.stop}
-                    </h4>
-                    <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1 leading-relaxed">
-                      {stop.desc}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            {service.duration && (
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container-high text-m3-on-surface text-xs font-semibold">
+                <Clock className="w-3.5 h-3.5 text-m3-primary" />
+                <span>{service.duration}</span>
+              </span>
+            )}
           </div>
-        )}
 
-        <!-- TAB PANEL 2: Darshan Guide & Service Protocol -->
-        {service.travelGuide && (
-          <div
-            id="panel-hub-guide"
-            role="tabpanel"
-            aria-labelledby="main-tab-guide"
-            data-main-panel="guide"
-            class={`bg-m3-surface rounded-m3-xl p-5 sm:p-7 border border-m3-outline-variant shadow-m3-1 space-y-6 ${service.routePlan ? 'hidden' : ''}`}
-          >
-            <div class="border-b border-m3-outline-variant/60 pb-3">
-              <h3 class="text-lg sm:text-xl font-bold text-m3-on-surface flex items-center gap-2.5 font-heading">
-                <FileText className="w-5 h-5 text-m3-primary shrink-0" />
-                <span>{guideLabels.sectionTitle}</span>
-              </h3>
-              <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-0.5">Essential darshan timings, dress code regulations &amp; practical pilgrim tips</p>
-            </div>
-
-            <!-- Significance & Darshan Timings -->
-            <div class="grid md:grid-cols-2 gap-6">
-              {/* Significance / Background */}
-              {service.travelGuide.history && (
-                <div class="space-y-2">
-                  <h4 class="font-bold text-m3-on-surface text-sm sm:text-base font-heading flex items-center gap-2">
-                    <Compass className="w-4 h-4 text-m3-primary shrink-0" />
-                    <span>{guideLabels.col1Title}</span>
-                  </h4>
-                  <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed whitespace-pre-line">
-                    {service.travelGuide.history}
+          <!-- Compact Connected Stepper Timeline -->
+          <div class="relative pl-7 sm:pl-9 border-l-2 border-m3-primary/30 ml-3 sm:ml-4 my-3 space-y-4 sm:space-y-5">
+            {service.routePlan.map((stop: any, idx: number) => (
+              <div class="relative group">
+                {/* Stepper Dot */}
+                <div class="absolute -left-[35px] sm:-left-[43px] top-0.5 w-7 h-7 sm:w-8 sm:h-8 rounded-m3-full bg-m3-primary text-m3-on-primary font-bold text-xs sm:text-sm flex items-center justify-center shadow-xs ring-4 ring-m3-surface">
+                  {idx + 1}
+                </div>
+                {/* Step Card */}
+                <div class="bg-m3-surface-container-low p-3.5 sm:p-4 rounded-m3-md border border-m3-outline-variant/60 hover:border-m3-primary/40 transition-colors">
+                  <h3 class="font-bold text-m3-on-surface text-sm sm:text-base font-heading">
+                    {stop.stop}
+                  </h3>
+                  <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1 leading-relaxed">
+                    {stop.desc}
                   </p>
                 </div>
-              )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
-              {/* Darshan Timings */}
-              {timingItems.length > 0 ? (
-                <div class="space-y-2.5">
-                  <h4 class="font-bold text-m3-on-surface text-sm sm:text-base font-heading flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-m3-primary shrink-0" />
-                    <span>{guideLabels.col2Title}</span>
-                  </h4>
-                  <div class="grid gap-2">
-                    {timingItems.map((item: any) => {
-                      const isLong = item.time && item.time.length > 25;
-                      return (
-                        <div class={`bg-m3-surface-container-low p-2.5 sm:p-3 rounded-m3-md border border-m3-outline-variant/60 text-xs sm:text-sm ${
-                          isLong 
-                            ? 'space-y-1' 
-                            : 'flex flex-col sm:flex-row sm:items-center justify-between gap-1.5'
-                        }`}>
-                          <span class="font-semibold text-m3-on-surface leading-snug">{item.label}</span>
-                          {item.time && (
-                            <span class={`inline-block px-2.5 py-0.5 bg-m3-primary-container text-m3-on-primary-container text-xs font-semibold leading-relaxed max-w-full break-words ${
-                              isLong 
-                                ? 'rounded-m3-md w-full' 
-                                : 'rounded-m3-full self-start sm:self-auto shrink-0'
-                            }`}>
-                              {item.time}
-                            </span>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              ) : service.travelGuide.timings && (
-                <div class="space-y-2">
-                  <h4 class="font-bold text-m3-on-surface text-sm sm:text-base font-heading flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-m3-primary shrink-0" />
-                    <span>{guideLabels.col2Title}</span>
-                  </h4>
-                  <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed whitespace-pre-line">
-                    {service.travelGuide.timings}
-                  </p>
-                </div>
-              )}
-            </div>
+      <!-- 3. DARSHAN GUIDE & SERVICE PROTOCOL -->
+      {service.travelGuide && (
+        <section
+          id="guide"
+          class="bg-m3-surface rounded-m3-2xl p-5 sm:p-7 border border-m3-outline-variant shadow-m3-1 space-y-6 scroll-mt-28"
+        >
+          <div class="border-b border-m3-outline-variant/60 pb-3">
+            <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface flex items-center gap-2.5 font-heading">
+              <FileText className="w-5 h-5 text-m3-primary shrink-0" />
+              <span>{guideLabels.sectionTitle}</span>
+            </h2>
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-0.5">Essential darshan timings, dress code regulations &amp; practical pilgrim tips</p>
+          </div>
 
-            <!-- Sub-Tabs for Dress Code & Practical Tips -->
-            {(parsedDressCode || parsedTips.length > 0) && (
-              <div class="pt-4 border-t border-m3-outline-variant/60 space-y-4">
-                <!-- Sub Tab Controls -->
-                <div class="flex items-center gap-2 bg-m3-surface-container-low p-1.5 rounded-m3-xl border border-m3-outline-variant/60 w-fit max-w-full overflow-x-auto no-scrollbar" role="tablist">
-                  {parsedDressCode && (
-                    <button
-                      type="button"
-                      role="tab"
-                      id="tab-dresscode-btn"
-                      aria-selected="true"
-                      aria-controls="panel-dresscode"
-                      data-guide-tab="dresscode"
-                      class="guide-tab-btn inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 rounded-m3-lg text-xs sm:text-sm font-bold transition-all bg-m3-primary text-m3-on-primary shadow-xs shrink-0"
-                    >
-                      {isTour ? <Sparkles className="w-3.5 h-3.5 shrink-0" /> : <ShieldCheck className="w-3.5 h-3.5 shrink-0" />}
-                      <span>{guideLabels.dressCodeLabel}</span>
-                    </button>
-                  )}
-                  {parsedTips.length > 0 && (
-                    <button
-                      type="button"
-                      role="tab"
-                      id="tab-tips-btn"
-                      aria-selected={!parsedDressCode ? "true" : "false"}
-                      aria-controls="panel-tips"
-                      data-guide-tab="tips"
-                      class={`guide-tab-btn inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 rounded-m3-lg text-xs sm:text-sm font-bold transition-all shrink-0 ${
-                        !parsedDressCode 
-                          ? 'bg-m3-primary text-m3-on-primary shadow-xs' 
-                          : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container'
-                      }`}
-                    >
-                      <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-m3-secondary" />
-                      <span>{guideLabels.tipsTitle}</span>
-                    </button>
-                  )}
-                </div>
+          <!-- Significance & Darshan Timings -->
+          <div class="grid md:grid-cols-2 gap-6">
+            {/* Significance / Background */}
+            {service.travelGuide.history && (
+              <div class="space-y-2">
+                <h3 class="font-bold text-m3-on-surface text-sm sm:text-base font-heading flex items-center gap-2">
+                  <Compass className="w-4 h-4 text-m3-primary shrink-0" />
+                  <span>{guideLabels.col1Title}</span>
+                </h3>
+                <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed whitespace-pre-line">
+                  {service.travelGuide.history}
+                </p>
+              </div>
+            )}
 
-                <!-- Sub Panel 1: Dress Code -->
+            {/* Darshan Timings */}
+            {timingItems.length > 0 ? (
+              <div class="space-y-2.5">
+                <h3 class="font-bold text-m3-on-surface text-sm sm:text-base font-heading flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-m3-primary shrink-0" />
+                  <span>{guideLabels.col2Title}</span>
+                </h3>
+                <div class="grid gap-2">
+                  {timingItems.map((item: any) => {
+                    const isLong = item.time && item.time.length > 25;
+                    return (
+                      <div class={`bg-m3-surface-container-low p-2.5 sm:p-3 rounded-m3-md border border-m3-outline-variant/60 text-xs sm:text-sm ${
+                        isLong 
+                          ? 'space-y-1' 
+                          : 'flex flex-col sm:flex-row sm:items-center justify-between gap-1.5'
+                      }`}>
+                        <span class="font-semibold text-m3-on-surface leading-snug">{item.label}</span>
+                        {item.time && (
+                          <span class={`inline-block px-2.5 py-0.5 bg-m3-primary-container text-m3-on-primary-container text-xs font-semibold leading-relaxed max-w-full break-words ${
+                            isLong 
+                              ? 'rounded-m3-md w-full' 
+                              : 'rounded-m3-full self-start sm:self-auto shrink-0'
+                          }`}>
+                            {item.time}
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : (
+              <div class="space-y-2">
+                <h3 class="font-bold text-m3-on-surface text-sm sm:text-base font-heading flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-m3-primary shrink-0" />
+                  <span>Verified Service Standards</span>
+                </h3>
+                <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed">
+                  All trips follow certified sanitization protocols, punctuality guarantees, and upfront transparent pricing with zero surprise charges.
+                </p>
+              </div>
+            )}
+          </div>
+
+          <!-- Sub-Tabs for Dress Code & Practical Tips -->
+          {(parsedDressCode || parsedTips.length > 0) && (
+            <div class="pt-4 border-t border-m3-outline-variant/60 space-y-4">
+              <!-- Sub Tab Controls -->
+              <div class="flex items-center gap-2 bg-m3-surface-container-low p-1.5 rounded-m3-xl border border-m3-outline-variant/60 w-fit max-w-full overflow-x-auto no-scrollbar" role="tablist">
                 {parsedDressCode && (
-                  <div
-                    id="panel-dresscode"
-                    role="tabpanel"
-                    aria-labelledby="tab-dresscode-btn"
-                    data-guide-panel="dresscode"
-                    class="bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-xl p-4 sm:p-5 space-y-3.5"
+                  <button
+                    type="button"
+                    role="tab"
+                    id="tab-dresscode-btn"
+                    aria-selected="true"
+                    aria-controls="panel-dresscode"
+                    data-guide-tab="dresscode"
+                    class="guide-tab-btn inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 rounded-m3-lg text-xs sm:text-sm font-bold transition-all bg-m3-primary text-m3-on-primary shadow-xs shrink-0"
                   >
-                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-2.5">
-                      <div>
-                        <h4 class="font-bold text-sm sm:text-base font-heading text-m3-on-surface">
-                          {guideLabels.dressCodeLabel}
-                        </h4>
-                        <p class="text-xs font-medium text-m3-on-surface-variant">
-                          {isTour ? "Mandatory Temple Entry Attire Policy" : "Chauffeur Standards & Code of Conduct"}
-                        </p>
-                      </div>
-                      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-m3-full text-xs font-bold uppercase tracking-wider bg-m3-surface-container text-m3-on-surface border border-m3-outline-variant">
-                        {isTour ? "Mandatory" : "Verified Standard"}
-                      </span>
-                    </div>
-
-                    {parsedDressCode.general && parsedDressCode.items && parsedDressCode.items.length > 0 && (
-                      <p class="text-xs sm:text-sm font-medium leading-relaxed text-m3-on-surface">
-                        {parsedDressCode.general}
-                      </p>
-                    )}
-
-                    {parsedDressCode.items && parsedDressCode.items.length > 0 && (
-                      <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
-                        {parsedDressCode.items.map((item: any) => (
-                          <div class="bg-m3-surface rounded-m3-lg p-3.5 border border-m3-outline-variant shadow-xs space-y-1.5">
-                            <h5 class="font-bold text-xs sm:text-sm text-m3-on-surface block font-heading border-b border-m3-outline-variant/60 pb-1">
-                              {item.title}
-                            </h5>
-                            <div class="space-y-1 text-xs">
-                              <div class="flex items-start gap-1.5 text-m3-on-surface">
-                                <CheckCircle2 className="w-3.5 h-3.5 text-m3-secondary shrink-0 mt-0.5" />
-                                <span class="leading-relaxed"><strong>Allowed:</strong> {item.allowed}</span>
-                              </div>
-                              {item.prohibited && (
-                                <div class="flex items-start gap-1.5 text-m3-on-surface-variant">
-                                  <XCircle className="w-3.5 h-3.5 text-m3-primary shrink-0 mt-0.5" />
-                                  <span class="leading-relaxed"><strong>Prohibited:</strong> {item.prohibited}</span>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
-                    {isTour ? (
-                      <div class="p-3 bg-m3-primary-container/40 border border-m3-primary/20 rounded-m3-md text-xs sm:text-sm text-m3-on-surface flex items-start gap-2.5">
-                        <AlertCircle className="w-4 h-4 text-m3-primary shrink-0 mt-0.5" />
-                        <span class="leading-relaxed">
-                          <strong class="font-bold text-m3-on-primary-container">Strict Enforcement:</strong> {service.slug === 'tirupati-package' 
-                            ? "Devotees wearing jeans, modern printed t-shirts, Bermudas, shorts, or western clothing will be strictly stopped at the Vaikuntam scanning queue and denied sanctum entry."
-                            : "Traditional attire is mandatory across major South Indian shrines. Devotees in western outfits, shorts, or modern t-shirts will be stopped at entrance gopurams and denied inner sanctum entry."}
-                        </span>
-                      </div>
-                    ) : (
-                      <div class="p-3 bg-m3-surface-container border border-m3-outline-variant rounded-m3-md text-xs sm:text-sm text-m3-on-surface flex items-start gap-2.5">
-                        <ShieldCheck className="w-4 h-4 text-m3-primary shrink-0 mt-0.5" />
-                        <span class="leading-relaxed">
-                          <strong class="font-bold">Professional Assurance:</strong> Every assigned driver is police background-verified (PVC), carries a photo ID badge, maintains personal car cleanliness, and strictly adheres to passenger confidentiality and speed discipline.
-                        </span>
-                      </div>
-                    )}
-                  </div>
+                    {isTour ? <Sparkles className="w-3.5 h-3.5 shrink-0" /> : <ShieldCheck className="w-3.5 h-3.5 shrink-0" />}
+                    <span>{guideLabels.dressCodeLabel}</span>
+                  </button>
                 )}
-
-                <!-- Sub Panel 2: Practical Tips -->
                 {parsedTips.length > 0 && (
-                  <div
-                    id="panel-tips"
-                    role="tabpanel"
-                    aria-labelledby="tab-tips-btn"
-                    data-guide-panel="tips"
-                    class={`bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-xl p-4 sm:p-5 space-y-3.5 ${parsedDressCode ? 'hidden' : ''}`}
+                  <button
+                    type="button"
+                    role="tab"
+                    id="tab-tips-btn"
+                    aria-selected={!parsedDressCode ? "true" : "false"}
+                    aria-controls="panel-tips"
+                    data-guide-tab="tips"
+                    class={`guide-tab-btn inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 rounded-m3-lg text-xs sm:text-sm font-bold transition-all shrink-0 ${
+                      !parsedDressCode 
+                        ? 'bg-m3-primary text-m3-on-primary shadow-xs' 
+                        : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container'
+                    }`}
                   >
-                    <h4 class="font-bold text-sm sm:text-base font-heading text-m3-on-surface">
-                      {guideLabels.tipsTitle}
-                    </h4>
-                    <div class="grid sm:grid-cols-2 gap-3">
-                      {parsedTips.map((tip: any) => (
-                        <div class="bg-m3-surface p-3.5 rounded-m3-md border border-m3-outline-variant/60 flex items-start gap-2.5 shadow-xs">
-                          <CheckCircle2 className="w-4 h-4 text-m3-secondary shrink-0 mt-0.5" />
-                          <div class="space-y-1 text-xs sm:text-sm min-w-0 flex-1">
-                            {tip.title && (
-                              <span class="font-bold text-m3-on-surface block font-heading">{tip.title}</span>
+                    <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-m3-secondary" />
+                    <span>{guideLabels.tipsTitle}</span>
+                  </button>
+                )}
+              </div>
+
+              <!-- Sub Panel 1: Dress Code -->
+              {parsedDressCode && (
+                <div
+                  id="panel-dresscode"
+                  role="tabpanel"
+                  aria-labelledby="tab-dresscode-btn"
+                  data-guide-panel="dresscode"
+                  class="bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-xl p-4 sm:p-5 space-y-3.5"
+                >
+                  <div class="flex flex-wrap items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-2.5">
+                    <div>
+                      <h4 class="font-bold text-sm sm:text-base font-heading text-m3-on-surface">
+                        {guideLabels.dressCodeLabel}
+                      </h4>
+                      <p class="text-xs font-medium text-m3-on-surface-variant">
+                        {isTour ? "Mandatory Temple Entry Attire Policy" : "Chauffeur Standards & Code of Conduct"}
+                      </p>
+                    </div>
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-m3-full text-xs font-bold uppercase tracking-wider bg-m3-surface-container text-m3-on-surface border border-m3-outline-variant">
+                      {isTour ? "Mandatory" : "Verified Standard"}
+                    </span>
+                  </div>
+
+                  {parsedDressCode.general && parsedDressCode.items && parsedDressCode.items.length > 0 && (
+                    <p class="text-xs sm:text-sm font-medium leading-relaxed text-m3-on-surface">
+                      {parsedDressCode.general}
+                    </p>
+                  )}
+
+                  {parsedDressCode.items && parsedDressCode.items.length > 0 && (
+                    <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+                      {parsedDressCode.items.map((item: any) => (
+                        <div class="bg-m3-surface rounded-m3-lg p-3.5 border border-m3-outline-variant shadow-xs space-y-1.5">
+                          <h5 class="font-bold text-xs sm:text-sm text-m3-on-surface block font-heading border-b border-m3-outline-variant/60 pb-1">
+                            {item.title}
+                          </h5>
+                          <div class="space-y-1 text-xs">
+                            <div class="flex items-start gap-1.5 text-m3-on-surface">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-m3-secondary shrink-0 mt-0.5" />
+                              <span class="leading-relaxed"><strong>Allowed:</strong> {item.allowed}</span>
+                            </div>
+                            {item.prohibited && (
+                              <div class="flex items-start gap-1.5 text-m3-on-surface-variant">
+                                <XCircle className="w-3.5 h-3.5 text-m3-primary shrink-0 mt-0.5" />
+                                <span class="leading-relaxed"><strong>Prohibited:</strong> {item.prohibited}</span>
+                              </div>
                             )}
-                            <p class="text-m3-on-surface-variant leading-relaxed break-words">{tip.desc}</p>
                           </div>
                         </div>
                       ))}
                     </div>
+                  )}
+
+                  {isTour ? (
+                    <div class="p-3 bg-m3-primary-container/40 border border-m3-primary/20 rounded-m3-md text-xs sm:text-sm text-m3-on-surface flex items-start gap-2.5">
+                      <AlertCircle className="w-4 h-4 text-m3-primary shrink-0 mt-0.5" />
+                      <span class="leading-relaxed">
+                        <strong class="font-bold text-m3-on-primary-container">Strict Enforcement:</strong> {service.slug === 'tirupati-package' 
+                          ? "Devotees wearing jeans, modern printed t-shirts, Bermudas, shorts, or western clothing will be strictly stopped at the Vaikuntam scanning queue and denied sanctum entry."
+                          : "Traditional attire is mandatory across major South Indian shrines. Devotees in western outfits, shorts, or modern t-shirts will be stopped at entrance gopurams and denied inner sanctum entry."}
+                      </span>
+                    </div>
+                  ) : (
+                    <div class="p-3 bg-m3-surface-container border border-m3-outline-variant rounded-m3-md text-xs sm:text-sm text-m3-on-surface flex items-start gap-2.5">
+                      <ShieldCheck className="w-4 h-4 text-m3-primary shrink-0 mt-0.5" />
+                      <span class="leading-relaxed">
+                        <strong class="font-bold">Professional Assurance:</strong> Every assigned driver is police background-verified (PVC), carries a photo ID badge, maintains personal car cleanliness, and strictly adheres to passenger confidentiality and speed discipline.
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <!-- Sub Panel 2: Practical Tips -->
+              {parsedTips.length > 0 && (
+                <div
+                  id="panel-tips"
+                  role="tabpanel"
+                  aria-labelledby="tab-tips-btn"
+                  data-guide-panel="tips"
+                  class={`bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-xl p-4 sm:p-5 space-y-3.5 ${parsedDressCode ? 'hidden' : ''}`}
+                >
+                  <h4 class="font-bold text-sm sm:text-base font-heading text-m3-on-surface">
+                    {guideLabels.tipsTitle}
+                  </h4>
+                  <div class="grid sm:grid-cols-2 gap-3">
+                    {parsedTips.map((tip: any) => (
+                      <div class="bg-m3-surface p-3.5 rounded-m3-md border border-m3-outline-variant/60 flex items-start gap-2.5 shadow-xs">
+                        <CheckCircle2 className="w-4 h-4 text-m3-secondary shrink-0 mt-0.5" />
+                        <div class="space-y-1 text-xs sm:text-sm min-w-0 flex-1">
+                          {tip.title && (
+                            <span class="font-bold text-m3-on-surface block font-heading">{tip.title}</span>
+                          )}
+                          <p class="text-m3-on-surface-variant leading-relaxed break-words">{tip.desc}</p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                )}
-              </div>
-            )}
-          </div>
-        )}
-
-        <!-- TAB PANEL 3: FAQs & Policies -->
-        {service.faq && (
-          <div
-            id="panel-hub-faq"
-            role="tabpanel"
-            aria-labelledby="main-tab-faq"
-            data-main-panel="faq"
-            class={`bg-m3-surface rounded-m3-xl p-5 sm:p-7 border border-m3-outline-variant shadow-m3-1 space-y-5 ${service.routePlan || service.travelGuide ? 'hidden' : ''}`}
-          >
-            <div class="border-b border-m3-outline-variant/60 pb-3">
-              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-bold uppercase tracking-widest mb-2">
-                Help &amp; Queries
-              </span>
-              <h3 class="text-lg sm:text-xl font-bold text-m3-on-surface flex items-center gap-2 font-heading">
-                <HelpCircle className="w-5 h-5 text-m3-primary" />
-                <span>Frequently Asked Questions</span>
-              </h3>
-              <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">Instant answers to common booking, darshan timings &amp; permit queries</p>
+                </div>
+              )}
             </div>
+          )}
+        </section>
+      )}
 
-            <FAQAccordion items={service.faq} columns={1} name="faq-accordion" />
-
-            {/* Important Notes if present */}
-            {service.notes && (
-              <div class="p-4 sm:p-5 bg-m3-primary-container/30 border border-m3-primary/20 rounded-m3-lg mt-4">
-                <h4 class="text-xs font-bold text-m3-on-primary-container uppercase tracking-wider mb-2 flex items-center gap-2 font-heading">
-                  <Info className="w-4 h-4 text-m3-primary" />
-                  <span>Important Terms &amp; Safety Notes</span>
-                </h4>
-                <ul class="space-y-1.5">
-                  {service.notes.map((note: string) => (
-                    <li class="text-xs sm:text-sm text-m3-on-surface flex items-start gap-2">
-                      <span class="text-m3-primary font-bold">•</span>
-                      <span>{note}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+      <!-- 4. FAQS -->
+      {service.faq && (
+        <section
+          id="faq"
+          class="bg-m3-surface rounded-m3-2xl p-5 sm:p-7 border border-m3-outline-variant shadow-m3-1 space-y-5 scroll-mt-28"
+        >
+          <div class="border-b border-m3-outline-variant/60 pb-3">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-bold uppercase tracking-widest mb-2">
+              Help &amp; Queries
+            </span>
+            <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface flex items-center gap-2 font-heading">
+              <HelpCircle className="w-5 h-5 text-m3-primary" />
+              <span>Frequently Asked Questions ({service.faq.length})</span>
+            </h2>
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">Instant answers to common booking, darshan timings &amp; permit queries</p>
           </div>
-        )}
 
-      </section>
+          <FAQAccordion items={service.faq} columns={1} name="faq-accordion" />
+
+          {/* Important Notes if present */}
+          {service.notes && (
+            <div class="p-4 sm:p-5 bg-m3-primary-container/30 border border-m3-primary/20 rounded-m3-lg mt-4">
+              <h3 class="text-xs font-bold text-m3-on-primary-container uppercase tracking-wider mb-2 flex items-center gap-2 font-heading">
+                <Info className="w-4 h-4 text-m3-primary" />
+                <span>Important Terms &amp; Safety Notes</span>
+              </h3>
+              <ul class="space-y-1.5">
+                {service.notes.map((note: string) => (
+                  <li class="text-xs sm:text-sm text-m3-on-surface flex items-start gap-2">
+                    <span class="text-m3-primary font-bold">•</span>
+                    <span>{note}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </section>
+      )}
 
       <!-- 3. CONVERSION BANNER (Calibrated Charcoal Theme) -->
       <section class="bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-2xl p-6 sm:p-10 text-center shadow-m3-3 border border-slate-800">
@@ -1171,76 +1317,6 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
 </Layout>
 
 <script>
-  function setupMainTabs() {
-    const mainTabBtns = document.querySelectorAll<HTMLButtonElement>('.main-tab-btn');
-    const mainPanels = document.querySelectorAll<HTMLElement>('[data-main-panel]');
-    const quickNavLinks = document.querySelectorAll<HTMLAnchorElement>('.quick-nav-link');
-
-    if (!mainTabBtns.length) return;
-
-    function activateMainTab(tabKey: string, scrollIntoView = false) {
-      let found = false;
-      mainTabBtns.forEach((btn) => {
-        const isTarget = btn.getAttribute('data-main-tab') === tabKey;
-        if (isTarget) found = true;
-        btn.setAttribute('aria-selected', isTarget ? 'true' : 'false');
-        if (isTarget) {
-          btn.classList.add('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs');
-          btn.classList.remove('text-m3-on-surface-variant');
-        } else {
-          btn.classList.remove('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs');
-          btn.classList.add('text-m3-on-surface-variant');
-        }
-      });
-
-      if (!found) return;
-
-      mainPanels.forEach((p) => {
-        if (p.getAttribute('data-main-panel') === tabKey) {
-          p.classList.remove('hidden');
-        } else {
-          p.classList.add('hidden');
-        }
-      });
-
-      if (scrollIntoView) {
-        const hub = document.getElementById('details-hub');
-        if (hub) {
-          hub.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }
-    }
-
-    mainTabBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const target = btn.getAttribute('data-main-tab');
-        if (target) activateMainTab(target, false);
-      });
-    });
-
-    quickNavLinks.forEach((link) => {
-      link.addEventListener('click', (e) => {
-        const target = link.getAttribute('data-nav-target');
-        if (target) {
-          e.preventDefault();
-          activateMainTab(target, true);
-          history.replaceState(null, '', `#${target}`);
-        }
-      });
-    });
-
-    const hash = window.location.hash.replace('#', '').toLowerCase();
-    if (hash) {
-      if (['route', 'itinerary', 'stops'].includes(hash)) {
-        activateMainTab('route', false);
-      } else if (['guide', 'darshan', 'dresscode', 'tips'].includes(hash)) {
-        activateMainTab('guide', false);
-      } else if (['faq', 'faqs', 'queries', 'terms'].includes(hash)) {
-        activateMainTab('faq', false);
-      }
-    }
-  }
-
   function setupGuideTabs() {
     const tabBtns = document.querySelectorAll<HTMLButtonElement>('.guide-tab-btn');
     const tabPanels = document.querySelectorAll<HTMLElement>('[data-guide-panel]');
@@ -1273,11 +1349,6 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
     });
   }
 
-  function initPageInteractions() {
-    setupMainTabs();
-    setupGuideTabs();
-  }
-
-  initPageInteractions();
-  document.addEventListener('astro:page-load', initPageInteractions);
+  setupGuideTabs();
+  document.addEventListener('astro:page-load', setupGuideTabs);
 </script>

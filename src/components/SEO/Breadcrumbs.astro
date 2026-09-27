@@ -21,9 +21,15 @@ const formatItemUrl = (path: string) => {
   return `https://kalidasstravels.in${clean}/`;
 };
 
+const currentPageUrl = formatItemUrl(Astro.url.pathname);
+
 const schema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
+  "@id": `${currentPageUrl}#breadcrumb`,
+  "isPartOf": {
+    "@id": `${currentPageUrl}#webpage`
+  },
   itemListElement: normalizedItems.map((item, index) => ({
     "@type": "ListItem",
     position: index + 1,

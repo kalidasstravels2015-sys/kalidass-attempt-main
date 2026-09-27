@@ -1441,14 +1441,15 @@ Please confirm availability.`;
                 </button>
 
                 {/* Transparency Badges */}
-                <div className="grid grid-cols-2 gap-2 pt-0.5">
+                <div className="grid grid-cols-3 gap-1.5 pt-0.5">
                   {[
-                    { icon: ShieldCheck, text: isTa ? 'சரிபார்க்கப்பட்ட ஓட்டுநர்கள்' : 'Verified Drivers' },
-                    { icon: CheckCircle2, text: isTa ? 'மறைமுக கட்டணங்கள் இல்லை' : 'No Hidden Costs' },
+                    { icon: ShieldCheck, text: isTa ? 'முன்பணம் இல்லை' : 'Zero Advance' },
+                    { icon: CheckCircle2, text: isTa ? 'மறைமுக கட்டணம் இல்லை' : 'No Hidden Costs' },
+                    { icon: ShieldCheck, text: isTa ? 'சரிபார்க்கப்பட்ட ஓட்டுநர்' : 'Verified Driver' },
                   ].map((item, idx) => (
-                    <div key={idx} className="flex items-center gap-1.5 px-2 py-1 rounded-m3-md bg-m3-surface border border-m3-outline-variant/60">
+                    <div key={idx} className="flex items-center justify-center gap-1 px-1.5 py-1 rounded-m3-md bg-m3-surface border border-m3-outline-variant/60 text-center">
                       <item.icon className="w-3 h-3 text-emerald-600 shrink-0" />
-                      <span className="text-m3-label-s font-semibold text-m3-on-surface">{item.text}</span>
+                      <span className="text-[10.5px] font-semibold text-m3-on-surface truncate">{item.text}</span>
                     </div>
                   ))}
                 </div>
@@ -1469,7 +1470,7 @@ Please confirm availability.`;
                   className="w-full py-3 bg-[#25D366] hover:bg-[#20BD5A] active:bg-[#1EBE5D] text-white rounded-m3-full font-bold text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-m3-2 hover:shadow-m3-3 transition-all active:scale-[0.98] cursor-pointer border border-emerald-400/40"
                 >
                   <WhatsAppIcon className="w-5 h-5" variant="two-tone" />
-                  <span>{isTa ? 'வாட்ஸ்அப்பில் முன்பதிவு செய்ய' : 'Book on WhatsApp'}</span>
+                  <span>{isTa ? 'வாட்ஸ்அப் முன்பதிவு (முன்பணம் இல்லை)' : 'Reserve on WhatsApp (Pay ₹0 Today)'}</span>
                 </button>
               </div>
             </div>
@@ -1621,6 +1622,12 @@ function FullBreakdownModal({ isTa, vehicle, activeTab, localPackage, breakdown,
             </div>
           </div>
 
+          {/* Zero Advance Reassurance Banner */}
+          <div className="p-2 bg-emerald-500/10 rounded-m3-md border border-emerald-500/30 flex items-center justify-between text-xs">
+            <span className="font-bold text-emerald-950">{isTa ? 'முன்பணம் தேவையில்லை' : 'Zero Advance Required'}</span>
+            <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">{isTa ? 'பயண முடிவில் செலுத்துங்கள்' : 'Pay After Trip'}</span>
+          </div>
+
           {/* Inclusions & Exclusions */}
           <div className="grid grid-cols-2 gap-2 text-m3-body-s">
             <div className="bg-m3-surface-container-low rounded-m3-md p-2.5 border border-m3-outline-variant/60 space-y-1">
@@ -1668,7 +1675,7 @@ function FullBreakdownModal({ isTa, vehicle, activeTab, localPackage, breakdown,
             className="flex-[2] py-2.5 px-4 bg-[#25D366] hover:bg-[#20BD5A] active:bg-[#1EBE5D] text-white font-bold text-sm rounded-m3-full flex items-center justify-center gap-2 shadow-m3-1 hover:shadow-m3-2 active:scale-[0.98] transition-all cursor-pointer border border-emerald-400/30"
           >
             <WhatsAppIcon className="w-4 h-4" variant="two-tone" />
-            <span>{isTa ? 'வாட்ஸ்அப் முன்பதிவு' : 'Confirm on WhatsApp'}</span>
+            <span>{isTa ? 'வாட்ஸ்அப் முன்பதிவு (முன்பணம் இல்லை)' : 'Reserve (Pay ₹0 Today)'}</span>
           </button>
         </div>
       </div>

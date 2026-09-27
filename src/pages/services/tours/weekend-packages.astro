@@ -209,6 +209,7 @@ const schema = {
       "description": `${pkg.duration} - ${pkg.route}`,
       "priceCurrency": "INR",
       "price": pkg.rates[0].price.replace(/[^0-9]/g, ''),
+      "priceValidUntil": "2027-12-31",
       "availability": "https://schema.org/InStock",
       "url": (pkg as any).slug ? `https://kalidasstravels.in/services/${(pkg as any).slug}/` : "https://kalidasstravels.in/services/tours/weekend-packages/",
       "image": `https://kalidasstravels.in${pkg.image}`,
@@ -294,15 +295,15 @@ const faqSchema = {
   </header>
 
   <!-- STICKY QUICK-NAV JUMP BAR -->
-  <nav aria-label="Weekend Packages Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-3 px-4 sm:px-6 lg:px-8">
+  <nav data-quick-nav aria-label="Weekend Packages Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-3 px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl mx-auto flex items-center gap-2 text-xs font-semibold text-m3-on-surface whitespace-nowrap overflow-x-auto no-scrollbar py-0.5">
-      <a href="#packages" class="px-3.5 py-2 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container hover:bg-m3-primary hover:text-m3-on-primary transition-all shrink-0">
+      <a href="#packages" class="px-3.5 py-2 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs transition-all shrink-0">
         Weekend Packages
       </a>
-      <a href="#how-it-works" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
+      <a href="#how-it-works" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
         How It Works
       </a>
-      <a href="#faqs" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
+      <a href="#faqs" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
         Trip FAQs
       </a>
     </div>

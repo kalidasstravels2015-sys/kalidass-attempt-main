@@ -26,7 +26,18 @@ const schema = {
         "@type": "Offer",
         priceCurrency: "INR",
         price: v.round_trip_rate,
-        unitText: "KM"
+        priceSpecification: {
+          "@type": "UnitPriceSpecification",
+          price: v.round_trip_rate,
+          priceCurrency: "INR",
+          unitText: "KM"
+        },
+        priceValidUntil: "2027-12-31",
+        availability: "https://schema.org/InStock",
+        url: "https://kalidasstravels.in/fleet/",
+        seller: {
+          "@id": "https://kalidasstravels.in/#localbusiness"
+        }
       }
     }
   }))

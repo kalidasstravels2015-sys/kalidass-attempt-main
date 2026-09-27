@@ -69,24 +69,31 @@ const driversSchema = {
         <h2 class="sr-only">List of Verified Drivers</h2>
         {
           drivers.map((driver) => {
+            const slug = toSlug(driver.name);
+            const driverUrl = `/drivers/${slug}/`;
             const waShareText = encodeURIComponent(
               `*${driver.name}* - ${driver.specialty}\n` +
               `⭐ ${driver.rating} Rating | ${driver.trips} Trips\n` +
               `✅ Police Verification Certified\n\n` +
+              `View Verified ID: https://kalidasstravels.in${driverUrl}\n` +
               `Book via *Kalidass Travels* – kalidasstravels.in`
             );
 
             return (
-              <div class="bg-m3-surface rounded-m3-xl shadow-m3-1 hover:shadow-m3-2 border border-m3-outline-variant p-3 sm:p-3.5 transition-all duration-200 group flex gap-3 sm:gap-3.5 items-stretch">
+              <div class="bg-m3-surface rounded-m3-xl shadow-m3-1 hover:shadow-m3-2 border border-m3-outline-variant p-3 sm:p-3.5 transition-all duration-200 group flex gap-3 sm:gap-3.5 items-stretch relative">
 
-                <!-- Leading Media: 1:1 Square Thumbnail -->
-                <div class="relative shrink-0 w-24 h-24 sm:w-28 sm:h-28 rounded-m3-lg overflow-hidden bg-m3-surface-container-high self-start">
+                <!-- Leading Media: 1:1 Square Thumbnail (Clickable) -->
+                <a
+                  href={driverUrl}
+                  class="relative shrink-0 w-24 h-24 sm:w-28 sm:h-28 rounded-m3-lg overflow-hidden bg-m3-surface-container-high self-start block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
+                  title={`View ${driver.name} Verified Credentials`}
+                >
                   <img
                     src={driver.image}
                     width="112"
                     height="112"
                     decoding="async"
-                    class="w-full h-full object-cover object-center"
+                    class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
                     alt={`${driver.name} - Verified Chauffeur at Kalidass Travels`}
                     loading="lazy"
                   />
@@ -94,16 +101,19 @@ const driversSchema = {
                   <span class="absolute bottom-1 left-1 bg-slate-950/85 backdrop-blur-md text-white text-[9px] font-bold px-1.5 py-0.5 rounded-m3-full leading-none shadow-sm">
                     {driver.tag}
                   </span>
-                </div>
+                </a>
 
                 <!-- Content & Details -->
                 <div class="flex-1 min-w-0 flex flex-col justify-between py-0.5">
                   <div>
                     <!-- Name + rating -->
                     <div class="flex items-center justify-between gap-1.5 mb-1">
-                      <span class="font-bold text-sm sm:text-base text-m3-on-surface truncate font-heading">
+                      <a
+                        href={driverUrl}
+                        class="font-bold text-sm sm:text-base text-m3-on-surface hover:text-m3-primary transition-colors truncate font-heading focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary rounded"
+                      >
                         {driver.name}
-                      </span>
+                      </a>
                       <div class="inline-flex items-center gap-0.5 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded-m3-full shrink-0">
                         <span class="material-symbols-outlined text-[13px] text-amber-500">star</span>
                         <span class="text-[11px] font-bold text-m3-on-surface leading-none">{driver.rating || "4.8"}</span>
@@ -112,9 +122,9 @@ const driversSchema = {
 
                     <!-- M3 Assist Chips -->
                     <div class="flex flex-wrap items-center gap-1.5 mb-1.5">
-                      <span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-m3-xs text-[10px] font-bold text-emerald-800">
+                      <span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-m3-xs text-[10px] font-bold text-emerald-800 dark:text-emerald-300">
                         <span class="material-symbols-outlined text-[12px] text-emerald-600">verified</span>
-                        Verified
+                        PVC Verified
                       </span>
                       {driver.trips && (
                         <span class="inline-flex items-center px-1.5 py-0.5 bg-m3-surface-container-high rounded-m3-xs text-[10px] font-semibold text-m3-on-surface-variant">
@@ -136,8 +146,16 @@ const driversSchema = {
                     </div>
                   </div>
 
-                  <!-- WhatsApp Share -->
-                  <div class="flex items-center justify-end pt-1 border-t border-m3-outline-variant/60">
+                  <!-- Actions Row: View Verified ID Link + WhatsApp Share -->
+                  <div class="flex items-center justify-between pt-1.5 border-t border-m3-outline-variant/60 gap-2">
+                    <a
+                      href={driverUrl}
+                      class="inline-flex items-center gap-1 text-[11px] font-bold text-m3-primary hover:underline transition-all"
+                    >
+                      <span>View Verified ID</span>
+                      <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                    </a>
+
                     <a
                       href={`https://wa.me/?text=${waShareText}`}
                       target="_blank"

@@ -5,11 +5,20 @@ import ServiceExplainer3Step from '../../components/ServiceExplainer3Step.astro'
 import FAQAccordion from '../../components/FAQAccordion.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
 import OptimizedImage from '../../components/OptimizedImage.astro';
-import { ChevronRight } from 'lucide-react';
+import { 
+  Sparkles, 
+  Users, 
+  CheckCircle2, 
+  ChevronRight, 
+  Info, 
+  Car,
+  Calculator 
+} from 'lucide-react';
+import QuotationEngine from '../../components/QuotationEngine.jsx';
 
 const title = "Outstation Cabs from Chennai | Round Trip & One-Way Taxi (₹14/km) – Kalidass Travels";
-const description = "Book clean AC cabs from Chennai for outstation trips and weekend getaways. Flat ₹14/km rates for Sedans, Innova Crysta, and Tempo Travellers with zero surge pricing.";
-const keywords = "outstation cabs chennai, outstation taxi from chennai, outstation cab booking chennai, chennai to pondicherry cab, car rental with driver chennai, per km taxi rate chennai, round trip cab chennai";
+const description = "Book clean AC cabs from Chennai for round-trip and one-way outstation travel. Flat ₹14/km rates for Sedans, Ertiga, Innova Crysta, and Tempo Travellers with zero surge pricing.";
+const keywords = "outstation cabs chennai, outstation taxi from chennai, outstation cab booking chennai, per km taxi rate chennai, round trip cab chennai, one way drop taxi chennai";
 
 const breadcrumbItems = [
   { name: "Home", item: "/" },
@@ -42,7 +51,7 @@ const explainerSteps = [
     stepNumber: "3",
     badge: "Step 3: Safe Highway Tour",
     title: "Transparent & Safe Travel",
-    desc: "Disciplined 80–90 km/h cruising with flexible refreshment stops. Pay transparent per-km or flat package rates.",
+    desc: "Disciplined 80–90 km/h cruising with flexible refreshment stops. Pay transparent per-km rates with zero hidden charges.",
     illustrationTitle: "Smooth Highway Journey",
     illustrationSub: "Transparent Distance Billing",
     theme: "emerald" as const,
@@ -50,104 +59,70 @@ const explainerSteps = [
   }
 ];
 
-const packageTariff = [
-  {
-    id: "pondicherry-1day",
-    slug: "pondicherry-one-day-trip",
-    name: "Chennai to Pondicherry (1-Day Trip)",
-    badge: "Top Weekend Trip",
-    image: "/images/temple/pondicherry.webp",
-    route: "Auroville, French White Town, Promenade Beach & ECR Tolls Included",
-    duration: "Same Day Return (Up to 320 KM)",
-    rates: [
-      { car: "Sedan (Dzire/Etios)", price: "₹4,500" },
-      { car: "Ertiga (6 Pax)", price: "₹5,500" },
-      { car: "Innova (7 Pax)", price: "₹6,500" },
-      { car: "Innova Crysta", price: "₹7,500" },
-      { car: "Tempo (12 Pax)", price: "₹9,500" }
-    ],
-    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Pondicherry 1-Day Trip package."
-  },
-  {
-    id: "mahabalipuram-day",
-    slug: "mahabalipuram-ecr-temple-route",
-    name: "Chennai to Mahabalipuram UNESCO & Beach Tour",
-    badge: "Heritage & Beach",
-    image: "/images/temple/mahabalipuram-ecr-temples.webp",
-    route: "Shore Temple, Five Rathas, Arjuna's Penance, Seashell Museum + Tolls",
-    duration: "Full Day (8 Hrs / 120 KM)",
-    rates: [
-      { car: "Sedan (Dzire/Etios)", price: "₹3,500" },
-      { car: "Ertiga (6 Pax)", price: "₹4,500" },
-      { car: "Innova (7 Pax)", price: "₹5,500" },
-      { car: "Innova Crysta", price: "₹6,500" },
-      { car: "Tempo (12 Pax)", price: "₹8,000" }
-    ],
-    whatsappMsg: "Hi Kalidass Travels, I want to book the Mahabalipuram Day Tour package."
-  },
-  {
-    id: "chennai-city-tour",
-    slug: "one-day-chennai-city-tour",
-    name: "One-Day Chennai City Sightseeing",
-    badge: "City Discovery",
-    image: "/images/temple/chennai-city.webp",
-    route: "Kapaleeshwarar, Santhome, Marina Beach, Egmore Museum & Fort St. George",
-    duration: "8 Hours / 80 KM City Package",
-    rates: [
-      { car: "Sedan (Dzire/Etios)", price: "₹2,500" },
-      { car: "Ertiga (6 Pax)", price: "₹3,200" },
-      { car: "Innova (7 Pax)", price: "₹3,800" },
-      { car: "Innova Crysta", price: "₹4,500" },
-      { car: "Tempo (12 Pax)", price: "₹5,500" }
-    ],
-    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai City Sightseeing Tour package."
-  }
-];
-
 const perKmTariff = [
   {
     vehicle: "Swift Dzire / Toyota Etios",
+    shortName: "Swift Dzire",
+    badge: "Best Value Sedan",
+    image: "/images/fleet/swift-dzire.webp",
     capacity: "4 Pax + 2 Bags",
     roundTrip: "₹14 / km",
     oneWay: "₹16 / km",
     minKm: "250 km / day",
     bata: "₹400 / day",
+    highlights: "Clean AC Sedan • Ample Boot Space • Ideal for 3–4 Pax",
     whatsappMsg: "Hi Kalidass Travels, I need a Sedan (₹14/km) for an outstation trip."
   },
   {
     vehicle: "Maruti Ertiga / XL6",
+    shortName: "Maruti Ertiga",
+    badge: "Family Favorite",
+    image: "/images/fleet/suv.webp",
     capacity: "6 Pax + 3 Bags",
     roundTrip: "₹17 / km",
     oneWay: "₹19 / km",
     minKm: "250 km / day",
     bata: "₹500 / day",
+    highlights: "Comfortable 6-Seater MUV • Dual AC • Family Road Trips",
     whatsappMsg: "Hi Kalidass Travels, I need an Ertiga SUV (₹17/km) for an outstation trip."
   },
   {
     vehicle: "Toyota Innova",
+    shortName: "Toyota Innova",
+    badge: "Comfort MUV",
+    image: "/images/fleet/suv.webp",
     capacity: "7 Pax + 4 Bags",
     roundTrip: "₹20 / km",
     oneWay: "₹22 / km",
     minKm: "250 km / day",
     bata: "₹600 / day",
+    highlights: "Spacious 7-Seater • Legendary Highway Reliability & Ride Comfort",
     whatsappMsg: "Hi Kalidass Travels, I need a Toyota Innova (₹20/km) for an outstation trip."
   },
   {
     vehicle: "Toyota Innova Crysta",
+    shortName: "Innova Crysta",
+    badge: "Executive Luxury",
+    image: "/images/fleet/suv.webp",
     capacity: "7 Pax + 5 Bags",
     roundTrip: "₹22 / km",
     oneWay: "₹25 / km",
     minKm: "250 km / day",
     bata: "₹700 / day",
+    highlights: "Executive MPV • Plush Captain Seats • VIP Highway Cruising",
     whatsappMsg: "Hi Kalidass Travels, I need an Innova Crysta (₹22/km) for an outstation trip."
   },
   {
     vehicle: "Tempo Traveller (12 / 17 Seater)",
+    shortName: "Tempo Traveller",
+    badge: "Group Coach",
+    image: "/images/fleet/tempo.webp",
     capacity: "12–17 Pax + Bags",
     roundTrip: "₹26 / km",
     oneWay: "₹29 / km",
     minKm: "300 km / day",
     bata: "₹800 / day",
+    highlights: "Spacious Group Coach • Pushback Seats • High Roof & Huge Luggage Space",
     whatsappMsg: "Hi Kalidass Travels, I need a Tempo Traveller (₹26/km) for a group outstation trip."
   }
 ];
@@ -158,8 +133,8 @@ const faqs = [
     a: "Outstation round-trips follow a standard minimum of 250 km per calendar day (300 km for Tempo Traveller). Kilometers are calculated garage-to-garage from Chennai. If you travel 210 km, the minimum 250 km applies; if you travel 330 km, you pay for the exact 330 km."
   },
   {
-    q: "Are tolls and driver bata included in fixed packages vs per-km rates?",
-    a: "For fixed destination packages (like Pondicherry and Mahabalipuram), highway tolls, fuel, and driver bata are 100% all-inclusive. For open per-km outstation bookings, vehicle and fuel are included in the per-km rate, while FASTag tolls, parking fees, and interstate road taxes are billed at actuals."
+    q: "Are tolls, parking, and driver bata included in the per-km rate?",
+    a: "Our per-km rate includes the vehicle, clean AC, and fuel. Driver bata is charged per calendar day as indicated in the tariff card. FASTag highway tolls, parking fees, and interstate permit taxes (if crossing state borders into Karnataka, Andhra Pradesh, or Puducherry) are billed at actuals with zero markup."
   },
   {
     q: "Can we make spontaneous sightseeing or cafe stops on the way?",
@@ -189,24 +164,31 @@ const schema = {
   ],
   "hasOfferCatalog": {
     "@type": "OfferCatalog",
-    "name": "Outstation Cab Packages from Chennai",
-    "itemListElement": packageTariff.map((pkg, idx) => ({
+    "name": "Outstation Cab Rates from Chennai",
+    "itemListElement": perKmTariff.map((tier, idx) => ({
       "@type": "Offer",
       "position": idx + 1,
-      "name": pkg.name,
-      "description": `${pkg.duration} - ${pkg.route}`,
+      "name": `${tier.vehicle} Outstation Taxi`,
+      "description": `Outstation round trip: ${tier.roundTrip}, one way: ${tier.oneWay}. Capacity: ${tier.capacity}`,
       "priceCurrency": "INR",
-      "price": pkg.rates?.[0]?.price ? pkg.rates[0].price.replace(/[^0-9]/g, '') : "2500",
+      "price": tier.roundTrip.replace(/[^0-9]/g, ''),
+      "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": tier.roundTrip.replace(/[^0-9]/g, ''),
+        "priceCurrency": "INR",
+        "unitText": "KM"
+      },
+      "priceValidUntil": "2027-12-31",
       "availability": "https://schema.org/InStock",
-      "url": pkg.slug ? `https://kalidasstravels.in/services/${pkg.slug}/` : "https://kalidasstravels.in/services/outstation-cabs/",
-      "image": `https://kalidasstravels.in${pkg.image}`,
+      "url": "https://kalidasstravels.in/services/outstation-cabs/",
       "seller": {
         "@id": "https://kalidasstravels.in/#localbusiness"
       },
       "itemOffered": {
         "@type": "TaxiService",
-        "name": pkg.name,
-        "serviceType": "Outstation Cab Package"
+        "name": `${tier.vehicle} Outstation Cab`,
+        "serviceType": "Outstation Taxi",
+        "image": `https://kalidasstravels.in${tier.image}`
       }
     }))
   },
@@ -246,32 +228,60 @@ const faqSchema = {
   <main class="bg-m3-surface text-m3-on-surface font-sans pb-16">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10">
 
-      <!-- 1. HERO SECTION -->
-      <section class="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
-        <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-3 font-heading">
-          Chennai <span class="text-m3-primary">Outstation Taxi Rates</span> &amp; Weekend Getaways
-        </h1>
-        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed font-normal">
-          Flat per-kilometer rates and transparent fixed packages to Pondicherry, Mahabalipuram, Bangalore, and all South India destinations with clean AC cars and experienced highway chauffeurs.
-        </p>
+      <!-- 1. SIGNATURE HERO SECTION WITH HERO IMAGE -->
+      <section class="group relative min-h-[220px] sm:min-h-[280px] md:min-h-[320px] rounded-m3-2xl overflow-hidden shadow-m3-2 border border-m3-outline-variant/60 bg-slate-950 flex flex-col justify-end p-5 sm:p-8 md:p-10 mb-8 transition-all duration-300">
+        <!-- Background Hero Image -->
+        <OptimizedImage
+          src="/images/temple/mahabalipuram-ecr-temples.webp"
+          alt="Chennai Outstation Cabs & Intercity Taxi Service - Kalidass Travels"
+          class="absolute inset-0 w-full h-full object-cover object-[center_35%] transition-transform duration-700 group-hover:scale-105 opacity-85"
+          loading="eager"
+          fetchpriority="high"
+          sizes="(max-width: 768px) 100vw, 1200px"
+        />
+        <!-- High-Contrast Scrim Gradient for 100% Text Legibility while keeping image vivid -->
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/75 via-50% to-slate-950/25 sm:bg-gradient-to-r sm:from-slate-950/95 sm:via-slate-950/70 sm:to-transparent"></div>
+
+        <div class="relative z-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+          <div class="max-w-2xl">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-blue-500/20 text-blue-300 border border-blue-500/30 text-xs font-bold uppercase tracking-wider mb-2.5 backdrop-blur-md">
+              <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+              <span>Intercity Highway Cabs</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-2.5 font-heading drop-shadow-sm">
+              Chennai <span class="text-blue-400">Outstation Taxi Rates</span> &amp; Intercity Cabs
+            </h1>
+            <p class="text-xs sm:text-sm md:text-base text-slate-200 leading-relaxed font-normal max-w-xl drop-shadow-xs">
+              Flat per-kilometer rates for round trips and one-way drops to Bangalore, Pondicherry, Tirupati, Coimbatore, and all South India destinations with clean AC cars and experienced highway chauffeurs.
+            </p>
+          </div>
+          <div class="hidden sm:flex flex-col items-start sm:items-end shrink-0 gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-m3-full bg-white/10 backdrop-blur-md text-white text-xs font-semibold border border-white/20 shadow-xs">
+              ⚡ Starts ₹14 / km
+            </span>
+            <span class="text-xs text-slate-300 font-medium">
+              Zero Surge Pricing · GPS Live Tracking
+            </span>
+          </div>
+        </div>
       </section>
 
       <!-- STICKY QUICK-NAV JUMP BAR (Below Hero) -->
-      <nav aria-label="Outstation Cabs Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-3 mb-10 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+      <nav data-quick-nav aria-label="Outstation Cabs Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-3 mb-10 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
         <div class="max-w-6xl mx-auto flex items-center gap-2 text-xs font-semibold text-m3-on-surface whitespace-nowrap overflow-x-auto no-scrollbar py-0.5">
-          <a href="#per-km-table" class="px-3.5 py-2 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container hover:bg-m3-primary hover:text-m3-on-primary transition-all shrink-0">
+          <a href="#per-km-table" class="px-3.5 py-2 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs transition-all shrink-0">
             Per-KM Rates
           </a>
-          <a href="#fixed-packages" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
-            Fixed Packages
+          <a href="#fare-calculator" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+            Calculate Fare
           </a>
-          <a href="#how-it-works" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
+          <a href="#how-it-works" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
             How It Works
           </a>
-          <a href="#safety-benchmark" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
+          <a href="#safety-benchmark" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
             Highway Safety
           </a>
-          <a href="#faqs" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high transition-colors shrink-0">
+          <a href="#faqs" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
             Outstation FAQs
           </a>
         </div>
@@ -290,63 +300,212 @@ const faqSchema = {
       <section class="my-10 md:my-14 space-y-12">
         
         <!-- Table 1: Per-KM Outstation Rates -->
-        <div id="per-km-table" class="bg-m3-surface-container-lowest rounded-m3-2xl p-5 sm:p-8 border border-m3-outline-variant shadow-m3-1 scroll-mt-28">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-m3-outline-variant/60 pb-4 mb-6">
-            <div>
-              <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container text-xs font-bold uppercase tracking-wider mb-2 border border-m3-primary/20">
-                <span>Per-KM Tariff Card</span>
+        <div id="per-km-table" class="bg-m3-surface rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 overflow-hidden scroll-mt-28">
+          <!-- Section Header Bar (Reference from tirupati-package) -->
+          <div class="p-5 sm:p-7 bg-m3-surface-container-low border-b border-m3-outline-variant flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="max-w-xl">
+              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container text-m3-on-surface text-xs font-bold uppercase tracking-wider mb-2 border border-m3-outline-variant">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <span>Transparent Per-KM Tariff • Zero Surge Pricing</span>
               </div>
-              <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading">
+              <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
                 Outstation Taxi Rates <span class="text-m3-primary">(Per KM from Chennai)</span>
               </h2>
-              <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">
-                Transparent distance rates for round trips and one-way drops to any destination across South India.
+              <p class="text-xs sm:text-sm text-m3-on-surface-variant font-sans mt-1">
+                Transparent distance rates for round trips and one-way drops to any South India destination with clean AC cars and verified highway chauffeurs.
               </p>
             </div>
-            <span class="inline-flex items-center text-xs font-semibold text-m3-on-surface bg-m3-surface-container-high border border-m3-outline-variant px-3 py-1 rounded-m3-full w-fit shrink-0">
-              Min 250 km / Day
-            </span>
+
+            <div class="flex items-center gap-3 shrink-0">
+              <!-- Desktop Cards vs Table Switcher -->
+              <div class="hidden md:inline-flex items-center p-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant text-xs font-semibold select-none">
+                <button
+                  type="button"
+                  id="tariff-btn-cards"
+                  class="px-3.5 py-1.5 rounded-m3-full bg-m3-primary text-m3-on-primary shadow-xs transition-all cursor-pointer"
+                  aria-pressed="true"
+                >
+                  Cards View
+                </button>
+                <button
+                  type="button"
+                  id="tariff-btn-table"
+                  class="px-3.5 py-1.5 rounded-m3-full text-m3-on-surface-variant hover:text-m3-on-surface transition-all cursor-pointer"
+                  aria-pressed="false"
+                >
+                  Table View
+                </button>
+              </div>
+
+              <a 
+                href="https://wa.me/916381939769?text=Hi%20Kalidass%20Travels%2C%20I%20would%20like%20to%20book%20an%20outstation%20cab%20from%20Chennai."
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1.5 px-4 py-2 rounded-m3-full bg-m3-primary text-m3-on-primary text-xs font-bold shadow-m3-1 hover:bg-m3-primary/90 active:scale-[0.98] transition-all"
+              >
+                <span>Reserve Now</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
           </div>
 
-          <!-- Desktop Table (>= md) -->
-          <div class="hidden md:block overflow-x-auto">
+          <!-- M3 Vehicle Cards Grid (Default View, matching tirupati-package reference) -->
+          <div id="tariff-cards-view" class="p-4 sm:p-6 bg-m3-surface-container-low">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              {perKmTariff.map((row, rIdx) => {
+                const isOddLast = rIdx === perKmTariff.length - 1 && perKmTariff.length % 2 !== 0;
+                return (
+                  <div class={`bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between hover:shadow-m3-2 hover:border-m3-primary/40 transition-all overflow-hidden group ${isOddLast ? 'md:col-span-2' : ''}`}>
+                    <div class="p-5 sm:p-6">
+                      <!-- Top Badges Row -->
+                      <div class="flex items-center justify-between gap-2 mb-3.5">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-m3-full bg-m3-primary/10 text-m3-primary text-[11px] font-bold tracking-wider uppercase border border-m3-primary/20">
+                          <Sparkles className="w-3 h-3 text-m3-primary shrink-0" />
+                          <span>{row.badge}</span>
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 text-xs font-semibold text-m3-on-surface-variant">
+                          <Users className="w-3.5 h-3.5 text-m3-secondary shrink-0" />
+                          <span>{row.capacity}</span>
+                        </span>
+                      </div>
+
+                      <!-- Vehicle Identity & Preview Row with CAR IMAGE -->
+                      <div class="flex items-center justify-between gap-3 mb-4">
+                        <div class="min-w-0 flex-1">
+                          <h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading leading-snug group-hover:text-m3-primary transition-colors">
+                            {row.vehicle}
+                          </h3>
+                          <p class="text-micro text-m3-on-surface-variant mt-0.5 font-medium">
+                            Doorstep Pickup &amp; Return • Chilled Dual AC
+                          </p>
+                        </div>
+                        <div class="shrink-0 w-20 h-12 sm:w-24 sm:h-14 flex items-center justify-end">
+                          <img
+                            src={row.image}
+                            alt={row.vehicle}
+                            width="112"
+                            height="56"
+                            decoding="async"
+                            class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-xs"
+                            loading="lazy"
+                          />
+                        </div>
+                      </div>
+
+                      <!-- M3 Tonal Surface Price Slabs -->
+                      <div class="bg-m3-surface-container-low p-4 rounded-m3-xl border border-m3-outline-variant/60 mb-4 space-y-2.5">
+                        <div class="flex items-baseline justify-between gap-2">
+                          <span class="text-[11px] font-semibold text-m3-on-surface-variant uppercase tracking-wider">
+                            Round-Trip Rate
+                          </span>
+                          <strong class="text-2xl sm:text-3xl font-black text-m3-primary font-heading tracking-tight leading-none">
+                            {row.roundTrip}
+                          </strong>
+                        </div>
+
+                        <div class="pt-2 border-t border-m3-outline-variant/50 space-y-1.5">
+                          <div class="flex items-center justify-between text-xs py-0.5">
+                            <span class="text-m3-on-surface-variant font-medium">One-Way Drop Rate</span>
+                            <strong class="font-bold text-m3-on-surface">{row.oneWay}</strong>
+                          </div>
+                          <div class="flex items-center justify-between text-xs py-0.5">
+                            <span class="text-m3-on-surface-variant font-medium">Minimum Distance Billing</span>
+                            <strong class="font-bold text-m3-on-surface">{row.minKm}</strong>
+                          </div>
+                          <div class="flex items-center justify-between text-xs py-0.5">
+                            <span class="text-m3-on-surface-variant font-medium">Driver Bata (Allowance)</span>
+                            <strong class="font-bold text-m3-on-surface">{row.bata}</strong>
+                          </div>
+                        </div>
+
+                        <div class="pt-1.5 border-t border-m3-outline-variant/40 flex items-center gap-1.5 text-micro font-semibold text-emerald-800">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                          <span>Fuel &amp; Clean AC Included • Tolls &amp; Permits at Actuals</span>
+                        </div>
+                      </div>
+
+                      <!-- Key Highlights -->
+                      {row.highlights && (
+                        <div class="flex items-start gap-2 text-xs text-m3-on-surface-variant leading-relaxed mb-1">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                          <span>{row.highlights}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <!-- Card Action Area (WhatsApp Button) -->
+                    <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-1">
+                      <WhatsAppButton
+                        href={`https://wa.me/916381939769?text=${encodeURIComponent(row.whatsappMsg)}`}
+                        size="md"
+                        fullWidth={true}
+                        variant="filled"
+                        text={`Book ${row.shortName} on WhatsApp`}
+                        ariaLabel={`Book ${row.vehicle} via WhatsApp for ${row.roundTrip}`}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <!-- Secondary Desktop Table View (Toggleable, with Car Images) -->
+          <div id="tariff-table-view" class="hidden overflow-x-auto">
             <table class="w-full text-left text-sm font-sans border-collapse">
-              <thead class="bg-m3-surface-container-high text-m3-on-surface text-xs font-bold uppercase tracking-wider border-b border-m3-outline-variant">
+              <thead class="bg-m3-surface-container text-m3-on-surface-variant text-xs font-bold uppercase tracking-wider border-b border-m3-outline-variant">
                 <tr>
-                  <th class="px-4 py-3.5">Vehicle Type</th>
-                  <th class="px-4 py-3.5 text-center">Capacity</th>
-                  <th class="px-4 py-3.5 text-center">Round Trip (₹/km)</th>
-                  <th class="px-4 py-3.5 text-center">One Way (₹/km)</th>
-                  <th class="px-4 py-3.5 text-center">Min KM / Day</th>
-                  <th class="px-4 py-3.5 text-center">Driver Bata</th>
-                  <th class="px-4 py-3.5 text-right">Instant Booking</th>
+                  <th class="px-5 py-4">Vehicle Model</th>
+                  <th class="px-5 py-4 text-center">Capacity</th>
+                  <th class="px-5 py-4 text-center">Round Trip</th>
+                  <th class="px-5 py-4 text-center">One Way</th>
+                  <th class="px-5 py-4 text-center">Min KM / Day</th>
+                  <th class="px-5 py-4 text-center">Driver Bata</th>
+                  <th class="px-5 py-4 text-right">Instant Booking</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-m3-outline-variant/40">
-                {perKmTariff.map((row, idx) => (
-                  <tr class={idx % 2 === 0 ? "bg-m3-surface hover:bg-m3-surface-container transition-colors" : "bg-m3-surface-container-lowest hover:bg-m3-surface-container transition-colors"}>
-                    <td class="px-4 py-4 font-bold text-m3-on-surface font-heading">
-                      {row.vehicle}
+              <tbody class="divide-y divide-m3-outline-variant/60">
+                {perKmTariff.map((row, rIdx) => (
+                  <tr class={`hover:bg-m3-surface-container-low transition-colors ${rIdx % 2 === 0 ? 'bg-m3-surface' : 'bg-m3-surface-container-lowest'}`}>
+                    <td class="px-5 py-4">
+                      <div class="flex items-center gap-3">
+                        <div class="w-14 h-9 shrink-0 flex items-center justify-center bg-m3-surface-container-low rounded-m3-md p-1 border border-m3-outline-variant/40">
+                          <img
+                            src={row.image}
+                            alt={row.vehicle}
+                            width="56"
+                            height="36"
+                            decoding="async"
+                            class="max-w-full max-h-full object-contain"
+                            loading="lazy"
+                          />
+                        </div>
+                        <div>
+                          <span class="font-bold text-m3-on-surface text-sm sm:text-base font-heading block">{row.vehicle}</span>
+                          <span class="text-micro text-m3-primary font-bold uppercase tracking-wider">{row.badge}</span>
+                        </div>
+                      </div>
                     </td>
-                    <td class="px-4 py-4 text-center text-m3-on-surface-variant text-xs whitespace-nowrap">
+                    <td class="px-5 py-4 text-center text-m3-on-surface-variant text-xs whitespace-nowrap">
                       {row.capacity}
                     </td>
-                    <td class="px-4 py-4 text-center font-black text-m3-primary font-heading text-base">
+                    <td class="px-5 py-4 text-center font-black text-m3-primary font-heading text-base">
                       {row.roundTrip}
                     </td>
-                    <td class="px-4 py-4 text-center font-bold text-m3-on-surface">
+                    <td class="px-5 py-4 text-center font-bold text-m3-on-surface">
                       {row.oneWay}
                     </td>
-                    <td class="px-4 py-4 text-center text-m3-on-surface-variant text-xs">
+                    <td class="px-5 py-4 text-center text-m3-on-surface-variant text-xs">
                       {row.minKm}
                     </td>
-                    <td class="px-4 py-4 text-center text-m3-on-surface-variant text-xs">
+                    <td class="px-5 py-4 text-center text-m3-on-surface-variant text-xs">
                       {row.bata}
                     </td>
-                    <td class="px-4 py-4 text-right">
+                    <td class="px-5 py-4 text-right">
                       <WhatsAppButton
                         href={`https://wa.me/916381939769?text=${encodeURIComponent(row.whatsappMsg)}`}
                         size="sm"
+                        variant="tonal"
                         text="Book"
                         ariaLabel={`Book ${row.vehicle} on WhatsApp`}
                       />
@@ -357,134 +516,156 @@ const faqSchema = {
             </table>
           </div>
 
-          <!-- Mobile Cards (< md) -->
-          <div class="block md:hidden space-y-3">
-            {perKmTariff.map((row) => (
-              <div class="bg-m3-surface rounded-m3-xl p-4 border border-m3-outline-variant shadow-xs space-y-3">
-                <div class="flex items-center justify-between gap-2">
-                  <div>
-                    <h3 class="font-bold text-sm text-m3-on-surface font-heading">{row.vehicle}</h3>
-                    <span class="text-micro text-m3-on-surface-variant font-medium">{row.capacity}</span>
-                  </div>
-                  <span class="text-sm font-black text-m3-primary font-heading">{row.roundTrip}</span>
-                </div>
-
-                <div class="grid grid-cols-2 gap-2 text-micro bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant/50">
-                  <div><span class="text-m3-on-surface-variant">One-Way:</span> <strong class="text-m3-on-surface">{row.oneWay}</strong></div>
-                  <div><span class="text-m3-on-surface-variant">Driver Bata:</span> <strong class="text-m3-on-surface">{row.bata}</strong></div>
-                  <div><span class="text-m3-on-surface-variant">Min Billing:</span> <strong class="text-m3-on-surface">{row.minKm}</strong></div>
-                  <div><span class="text-m3-on-surface-variant">AC Comfort:</span> <strong class="text-m3-on-surface">100% On</strong></div>
-                </div>
-
-                <WhatsAppButton
-                  href={`https://wa.me/916381939769?text=${encodeURIComponent(row.whatsappMsg)}`}
-                  size="md"
-                  fullWidth={true}
-                  text={`Book ${row.vehicle.split('/')[0]}`}
-                  ariaLabel={`Book ${row.vehicle} on WhatsApp`}
-                />
+          <!-- Bottom Tariff Information Note -->
+          <div class="p-4 bg-m3-surface-container/70 border-t border-m3-outline-variant text-xs sm:text-sm text-m3-on-surface-variant flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-start gap-2.5">
+              <Info className="w-4 h-4 text-m3-primary shrink-0 mt-0.5" />
+              <div class="space-y-1 leading-relaxed">
+                <p>• <strong>Distance Rules:</strong> Standard minimum of 250 km per calendar day (300 km for Tempo Traveller). Kilometers and time calculated garage-to-garage from Chennai.</p>
+                <p>• <strong>Exclusions:</strong> FASTag highway toll fees, interstate permit taxes (if crossing state borders into AP, Karnataka, or Puducherry), and parking fees are charged at actuals with zero markup.</p>
               </div>
-            ))}
+            </div>
+            <a 
+              href="#fare-calculator" 
+              class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-m3-full bg-m3-surface border border-m3-outline-variant hover:bg-m3-surface-container text-m3-primary font-bold text-xs shrink-0 shadow-xs transition-colors"
+            >
+              <Calculator className="w-3.5 h-3.5" />
+              <span>Estimate Trip Cost &darr;</span>
+            </a>
           </div>
 
-          <div class="mt-4 pt-3 border-t border-m3-outline-variant/60 text-micro text-m3-on-surface-variant space-y-1">
-            <p>• <strong>Distance Rules:</strong> Outstation billing is based on a standard minimum of 250 km per calendar day (300 km for Tempo Traveller). Kilometer and time calculated garage to garage in Chennai.</p>
-            <p>• <strong>Exclusions:</strong> FASTag highway toll booth fees, interstate permit taxes (if crossing state border), and parking fees are charged at actuals.</p>
-          </div>
+          <!-- Interactive View Switcher Script (Cards View / Table View) -->
+          <script is:inline>
+            (function() {
+              const btnCards = document.getElementById('tariff-btn-cards');
+              const btnTable = document.getElementById('tariff-btn-table');
+              const viewCards = document.getElementById('tariff-cards-view');
+              const viewTable = document.getElementById('tariff-table-view');
+
+              if (btnCards && btnTable && viewCards && viewTable) {
+                btnCards.addEventListener('click', function() {
+                  viewCards.classList.remove('hidden');
+                  viewTable.classList.add('hidden');
+                  btnCards.classList.add('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs');
+                  btnCards.classList.remove('text-m3-on-surface-variant');
+                  btnCards.setAttribute('aria-pressed', 'true');
+                  btnTable.classList.remove('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs');
+                  btnTable.classList.add('text-m3-on-surface-variant');
+                  btnTable.setAttribute('aria-pressed', 'false');
+                });
+
+                btnTable.addEventListener('click', function() {
+                  viewCards.classList.add('hidden');
+                  viewTable.classList.remove('hidden');
+                  btnTable.classList.add('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs');
+                  btnTable.classList.remove('text-m3-on-surface-variant');
+                  btnTable.setAttribute('aria-pressed', 'true');
+                  btnCards.classList.remove('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs');
+                  btnCards.classList.add('text-m3-on-surface-variant');
+                  btnCards.setAttribute('aria-pressed', 'false');
+                });
+              }
+            })();
+          </script>
         </div>
 
-        <!-- Table 2: Fixed Destination Packages (All-Inclusive) -->
-        <div id="fixed-packages" class="bg-m3-surface-container-lowest rounded-m3-2xl p-5 sm:p-8 border border-m3-outline-variant shadow-m3-1 scroll-mt-28">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-m3-outline-variant/60 pb-4 mb-6">
-            <div>
-              <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface text-xs font-bold uppercase tracking-wider mb-2 border border-m3-outline-variant">
-                <span>All-Inclusive Fixed Trips</span>
-              </div>
-              <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading">
-                Popular Weekend Packages <span class="text-m3-primary">(Tolls &amp; Fuel Included)</span>
-              </h2>
-              <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">
-                Fixed, worry-free pricing with door-to-door cab, highway tolls, driver allowance, and sightseeing halts included.
-              </p>
-            </div>
-            <span class="inline-flex items-center text-xs font-semibold text-m3-primary bg-m3-primary-container px-3 py-1 rounded-m3-full w-fit shrink-0 border border-m3-primary/20">
-              Zero Hidden Charges
-            </span>
-          </div>
+        <!-- 4. INTERACTIVE OUTSTATION TRIP FARE ESTIMATOR (M3 SECTION) -->
+        <section id="fare-calculator" class="my-10 md:my-14 scroll-mt-28">
+          <div class="bg-m3-surface-container-low rounded-m3-2xl p-6 sm:p-8 md:p-10 border border-m3-outline-variant shadow-m3-1">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              
+              <!-- Left Explainer & Value Column -->
+              <div class="lg:col-span-6 space-y-4">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container-high text-m3-primary text-xs font-bold uppercase tracking-wider border border-m3-outline-variant">
+                  <Calculator className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                  <span>Live Route Cost Estimator</span>
+                </div>
+                
+                <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading leading-tight">
+                  Plan Your Outstation Route <br class="hidden sm:inline" />
+                  <span class="text-m3-primary">Get Instant Trip Quotation</span>
+                </h2>
+                
+                <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed">
+                  Calculate transparent point-to-point driving costs before you travel. Whether it's a quick one-way drop or an extended multi-day family tour, get exact distance mileage, vehicle fuel costs, and driver bata upfront with zero surge pricing.
+                </p>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {packageTariff.map((pkg) => {
-              const leafUrl = pkg.slug ? `/services/${pkg.slug}/` : undefined;
-              return (
-                <div class="bg-m3-surface rounded-m3-2xl border border-m3-outline-variant shadow-xs flex flex-col justify-between hover:shadow-m3-2 hover:border-m3-primary/30 transition-all overflow-hidden group">
-                  <div>
-                    <!-- Media Image Header with Badges & Leaf Link -->
-                    <a href={leafUrl} class="block h-48 sm:h-52 overflow-hidden relative bg-m3-surface-container-high cursor-pointer group/img" aria-label={`View ${pkg.name} Itinerary`}>
-                      <OptimizedImage
-                        src={pkg.image}
-                        alt={pkg.name}
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 relative z-10"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      />
-                      <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent z-10"></div>
-
-                      <!-- Top USP Badge -->
-                      <span class="absolute top-3 left-3 bg-slate-950/85 backdrop-blur-md border border-white/20 text-white text-[11px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-m3-full shadow-xs z-20">
-                        {pkg.badge}
-                      </span>
-
-                      <!-- Duration Chip -->
-                      <span class="absolute bottom-3 left-3 inline-flex items-center gap-1.5 bg-white/95 backdrop-blur-md text-slate-900 text-xs font-semibold px-2.5 py-1 rounded-m3-full shadow-xs z-20">
-                        <svg class="w-3.5 h-3.5 text-m3-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        <span>{pkg.duration}</span>
-                      </span>
-                    </a>
-
-                    <!-- Card Body -->
-                    <div class="p-5 sm:p-6">
-                      <a href={leafUrl} class="block group/title">
-                        <h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading mb-1.5 group-hover/title:text-m3-primary transition-colors">
-                          {pkg.name}
-                        </h3>
-                      </a>
-                      <p class="text-xs text-m3-on-surface-variant mb-4 leading-relaxed">
-                        {pkg.route}
-                      </p>
-
-                      <!-- Vehicle Price Slabs -->
-                      <div class="space-y-1.5 mb-5 bg-m3-surface-container-low p-3.5 rounded-m3-xl border border-m3-outline-variant/60">
-                        {pkg.rates.map((r) => (
-                          <div class="flex items-center justify-between text-xs py-1 border-b border-m3-outline-variant/30 last:border-0">
-                            <span class="text-m3-on-surface-variant font-medium">{r.car}</span>
-                            <strong class="text-m3-primary font-heading font-black text-sm">{r.price}</strong>
-                          </div>
-                        ))}
-                      </div>
+                <!-- Transparent Calculation Rules Cards -->
+                <div class="space-y-3 pt-2">
+                  <div class="flex items-start gap-3 p-3 rounded-m3-xl bg-m3-surface border border-m3-outline-variant/60 shadow-xs">
+                    <div class="w-8 h-8 rounded-m3-md bg-m3-primary-container text-m3-primary flex items-center justify-center shrink-0 font-bold text-xs font-mono">
+                      01
+                    </div>
+                    <div>
+                      <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface">Standard 250 km / Day Round-Trip Rule</h3>
+                      <p class="text-micro text-m3-on-surface-variant mt-0.5">Round trips are billed based on actual distance traveled, subject to a minimum of 250 km/day (300 km for Tempo). Garage-to-garage billing from Chennai.</p>
                     </div>
                   </div>
 
-                  <!-- Card Action Footer -->
-                  <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-0 flex items-center gap-2">
-                    {leafUrl && (
-                      <a
-                        href={leafUrl}
-                        class="flex-1 inline-flex items-center justify-center gap-1 px-4 py-2.5 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary text-xs font-bold transition-all shadow-m3-1"
-                      >
-                        <span>View Itinerary</span>
-                        <ChevronRight className="w-4 h-4" />
-                      </a>
-                    )}
-                    <WhatsAppButton
-                      href={`https://wa.me/916381939769?text=${encodeURIComponent(pkg.whatsappMsg)}`}
-                      size="sm"
-                      variant={leafUrl ? "tonal" : "filled"}
-                      fullWidth={!leafUrl}
-                      text={leafUrl ? "Book" : "Book This Package"}
-                    />
+                  <div class="flex items-start gap-3 p-3 rounded-m3-xl bg-m3-surface border border-m3-outline-variant/60 shadow-xs">
+                    <div class="w-8 h-8 rounded-m3-md bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 font-bold text-xs font-mono">
+                      02
+                    </div>
+                    <div>
+                      <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface">Fixed One-Way Drop Slabs</h3>
+                      <p class="text-micro text-m3-on-surface-variant mt-0.5">Traveling one-way to Bangalore, Pondicherry, Tirupati, or Vellore? Pay competitive per-km drop rates with zero return empty-run charges.</p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-start gap-3 p-3 rounded-m3-xl bg-m3-surface border border-m3-outline-variant/60 shadow-xs">
+                    <div class="w-8 h-8 rounded-m3-md bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 font-bold text-xs font-mono">
+                      03
+                    </div>
+                    <div>
+                      <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface">Tolls &amp; Permits at Actuals</h3>
+                      <p class="text-micro text-m3-on-surface-variant mt-0.5">Vehicle, air conditioning, and fuel are 100% included in the calculated quote. FASTag highway tolls and interstate state permits are billed transparently at actual cost.</p>
+                    </div>
                   </div>
                 </div>
-              );
-            })}
+
+                <div class="pt-2 text-xs text-m3-on-surface-variant flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+                  <span>Need a customized multi-city tour package? <a href="https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20need%20a%20customized%20multi-city%20outstation%20tour." class="text-m3-primary font-bold hover:underline">Chat with our tour planner</a></span>
+                </div>
+              </div>
+
+              <!-- Right Calculator Card -->
+              <div class="lg:col-span-6 flex justify-center w-full">
+                <QuotationEngine 
+                  client:idle 
+                  showAirportTab={false} 
+                  title="Outstation Trip Fare Estimator" 
+                  variant="card" 
+                />
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- Cross-Navigation: Looking for Fixed Tour Packages? -->
+        <div class="bg-m3-surface-container-low rounded-m3-2xl p-5 sm:p-6 border border-m3-outline-variant flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="space-y-1 text-center sm:text-left">
+            <h3 class="text-sm sm:text-base font-bold text-m3-on-surface font-heading">
+              Looking for All-Inclusive Tour Packages?
+            </h3>
+            <p class="text-xs text-m3-on-surface-variant">
+              Explore our fixed-price weekend getaways and sacred temple tours with all tolls, parking, and driver allowances included upfront.
+            </p>
+          </div>
+          <div class="flex items-center gap-2.5 shrink-0">
+            <a 
+              href="/services/tours/weekend-packages/" 
+              class="px-4 py-2 rounded-m3-full bg-m3-surface hover:bg-m3-surface-container text-m3-primary border border-m3-outline-variant text-xs font-bold transition-all shadow-xs"
+            >
+              Weekend Packages &rarr;
+            </a>
+            <a 
+              href="/services/tours/" 
+              class="px-4 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface text-xs font-semibold transition-all"
+            >
+              All Tours &rarr;
+            </a>
           </div>
         </div>
 

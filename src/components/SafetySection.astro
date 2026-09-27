@@ -138,144 +138,245 @@
 
     <!-- Modals -->
     
+    <!-- Modals (Native <dialog> with Chrome Modern Web Guidance) -->
+    
     <!-- Responsibility Modal -->
-    <div id="responsibility-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-      <div class="flex items-center justify-center min-h-screen p-4 text-center">
-        <div class="fixed inset-0 bg-m3-scrim/60 backdrop-blur-sm transition-opacity" aria-hidden="true" data-modal-close="responsibility-modal"></div>
-        <div class="inline-block bg-m3-surface rounded-m3-xl text-left overflow-hidden shadow-m3-4 transform transition-all my-8 max-w-lg w-full z-10 border border-m3-outline-variant">
-          <div class="p-6">
-            <div class="flex items-center gap-3 mb-4 pb-3 border-b border-m3-outline-variant/40">
-              <div class="w-10 h-10 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center shrink-0">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 class="text-lg font-bold text-m3-on-surface font-heading" id="modal-title">
-                Passenger Travel Checklist
-              </h3>
+    <dialog 
+      id="responsibility-modal" 
+      class="safety-dialog p-4 bg-transparent border-none m-auto max-w-lg w-full shadow-none overflow-visible"
+      aria-labelledby="modal-title"
+      {...{ closedby: "any" }}
+    >
+      <div class="bg-m3-surface rounded-m3-xl text-left overflow-hidden shadow-m3-4 border border-m3-outline-variant w-full">
+        <div class="p-6">
+          <div class="flex items-center gap-3 mb-4 pb-3 border-b border-m3-outline-variant/40">
+            <div class="w-10 h-10 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
             </div>
-            <ul class="space-y-3 text-sm text-m3-on-surface-variant">
-              <li class="flex items-start gap-2.5">
-                <span class="text-m3-primary font-bold shrink-0">✓</span>
-                <span><strong>Vehicle Cleanliness:</strong> Help us keep the cabin clean. Please avoid littering inside the car.</span>
-              </li>
-              <li class="flex items-start gap-2.5">
-                <span class="text-m3-primary font-bold shrink-0">✓</span>
-                <span><strong>No Smoking / Alcohol:</strong> Consumption is strictly prohibited inside all commercial vehicles.</span>
-              </li>
-              <li class="flex items-start gap-2.5">
-                <span class="text-m3-primary font-bold shrink-0">✓</span>
-                <span><strong>Punctuality:</strong> Adhere to scheduled pickup timings for timely arrival and smooth temple darshan.</span>
-              </li>
-              <li class="flex items-start gap-2.5">
-                <span class="text-m3-primary font-bold shrink-0">✓</span>
-                <span><strong>Safety Belts:</strong> Fasten seatbelts whenever the vehicle is in motion.</span>
-              </li>
-              <li class="flex items-start gap-2.5">
-                <span class="text-m3-primary font-bold shrink-0">✓</span>
-                <span><strong>Respectful Interaction:</strong> Our chauffeurs are police-verified professionals here to assist your travel.</span>
-              </li>
-            </ul>
+            <h3 class="text-lg font-bold text-m3-on-surface font-heading" id="modal-title">
+              Passenger Travel Checklist
+            </h3>
           </div>
-          <div class="bg-m3-surface-container-low px-6 py-4 border-t border-m3-outline-variant/40 flex justify-end">
-            <button type="button" class="px-5 py-2.5 rounded-m3-full bg-m3-primary text-m3-on-primary font-bold text-xs hover:bg-slate-900 transition-colors shadow-m3-1" data-modal-close="responsibility-modal">
-              I Understand
-            </button>
-          </div>
+          <ul class="space-y-3 text-sm text-m3-on-surface-variant">
+            <li class="flex items-start gap-2.5">
+              <span class="text-m3-primary font-bold shrink-0">✓</span>
+              <span><strong>Vehicle Cleanliness:</strong> Help us keep the cabin clean. Please avoid littering inside the car.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-m3-primary font-bold shrink-0">✓</span>
+              <span><strong>No Smoking / Alcohol:</strong> Consumption is strictly prohibited inside all commercial vehicles.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-m3-primary font-bold shrink-0">✓</span>
+              <span><strong>Punctuality:</strong> Adhere to scheduled pickup timings for timely arrival and smooth temple darshan.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-m3-primary font-bold shrink-0">✓</span>
+              <span><strong>Safety Belts:</strong> Fasten seatbelts whenever the vehicle is in motion.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-m3-primary font-bold shrink-0">✓</span>
+              <span><strong>Respectful Interaction:</strong> Our chauffeurs are police-verified professionals here to assist your travel.</span>
+            </li>
+          </ul>
+        </div>
+        <div class="bg-m3-surface-container-low px-6 py-4 border-t border-m3-outline-variant/40 flex justify-end">
+          <button type="button" class="px-5 py-2.5 rounded-m3-full bg-m3-primary text-m3-on-primary font-bold text-xs hover:bg-slate-900 transition-colors shadow-m3-1 cursor-pointer" data-modal-close="responsibility-modal">
+            I Understand
+          </button>
         </div>
       </div>
-    </div>
+    </dialog>
 
     <!-- Resources Modal -->
-    <div id="resources-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="resources-modal-title" role="dialog" aria-modal="true">
-      <div class="flex items-center justify-center min-h-screen p-4 text-center">
-        <div class="fixed inset-0 bg-m3-scrim/60 backdrop-blur-sm transition-opacity" aria-hidden="true" data-modal-close="resources-modal"></div>
-        <div class="inline-block bg-m3-surface rounded-m3-xl text-left overflow-hidden shadow-m3-4 transform transition-all my-8 max-w-lg w-full z-10 border border-m3-outline-variant">
-          <div class="p-6">
-            <div class="flex items-center gap-3 mb-4 pb-3 border-b border-m3-outline-variant/40">
-              <div class="w-10 h-10 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center shrink-0">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
-              </div>
-              <h3 class="text-lg font-bold text-m3-on-surface font-heading" id="resources-modal-title">
-                Official Government Travel Portals
-              </h3>
+    <dialog 
+      id="resources-modal" 
+      class="safety-dialog p-4 bg-transparent border-none m-auto max-w-lg w-full shadow-none overflow-visible"
+      aria-labelledby="resources-modal-title"
+      {...{ closedby: "any" }}
+    >
+      <div class="bg-m3-surface rounded-m3-xl text-left overflow-hidden shadow-m3-4 border border-m3-outline-variant w-full">
+        <div class="p-6">
+          <div class="flex items-center gap-3 mb-4 pb-3 border-b border-m3-outline-variant/40">
+            <div class="w-10 h-10 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
             </div>
-            <div class="grid gap-2.5">
-              <a href="https://www.tamilnadutourism.tn.gov.in/" target="_blank" rel="noopener noreferrer" class="flex items-center p-3 rounded-m3-lg border border-m3-outline-variant hover:bg-m3-surface-container transition-colors">
-                <div class="w-9 h-9 flex items-center justify-center bg-m3-surface-container-high text-m3-on-surface rounded-m3-sm mr-3 font-bold text-xs">TN</div>
-                <div>
-                  <div class="font-bold text-m3-on-surface text-sm">Tamil Nadu Tourism</div>
-                  <div class="text-xs text-m3-on-surface-variant">Official Government Tourism Website</div>
-                </div>
-                <svg class="w-4 h-4 ml-auto text-m3-on-surface-variant" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </a>
-              <a href="https://tourism.gov.in/" target="_blank" rel="noopener noreferrer" class="flex items-center p-3 rounded-m3-lg border border-m3-outline-variant hover:bg-m3-surface-container transition-colors">
-                <div class="w-9 h-9 flex items-center justify-center bg-m3-surface-container-high text-m3-on-surface rounded-m3-sm mr-3 font-bold text-xs">IN</div>
-                <div>
-                  <div class="font-bold text-m3-on-surface text-sm">Ministry of Tourism</div>
-                  <div class="text-xs text-m3-on-surface-variant">Government of India</div>
-                </div>
-                <svg class="w-4 h-4 ml-auto text-m3-on-surface-variant" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </a>
-              <a href="https://hrce.tn.gov.in/" target="_blank" rel="noopener noreferrer" class="flex items-center p-3 rounded-m3-lg border border-m3-outline-variant hover:bg-m3-surface-container transition-colors">
-                <div class="w-9 h-9 flex items-center justify-center bg-m3-surface-container-high text-m3-on-surface rounded-m3-sm mr-3 font-bold text-xs">HRCE</div>
-                <div>
-                  <div class="font-bold text-m3-on-surface text-sm">HR &amp; CE Department</div>
-                  <div class="text-xs text-m3-on-surface-variant">Official TN Temple Information &amp; Timings</div>
-                </div>
-                <svg class="w-4 h-4 ml-auto text-m3-on-surface-variant" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </a>
-            </div>
+            <h3 class="text-lg font-bold text-m3-on-surface font-heading" id="resources-modal-title">
+              Official Government Travel Portals
+            </h3>
           </div>
-          <div class="bg-m3-surface-container-low px-6 py-4 border-t border-m3-outline-variant/40 flex justify-end">
-            <button type="button" class="px-5 py-2.5 rounded-m3-full bg-m3-surface border border-m3-outline text-m3-on-surface font-bold text-xs hover:bg-m3-surface-container-high transition-colors shadow-m3-1" data-modal-close="resources-modal">
-              Close
-            </button>
+          <div class="grid gap-2.5">
+            <a href="https://www.tamilnadutourism.tn.gov.in/" target="_blank" rel="noopener noreferrer" class="flex items-center p-3 rounded-m3-lg border border-m3-outline-variant hover:bg-m3-surface-container transition-colors">
+              <div class="w-9 h-9 flex items-center justify-center bg-m3-surface-container-high text-m3-on-surface rounded-m3-sm mr-3 font-bold text-xs">TN</div>
+              <div>
+                <div class="font-bold text-m3-on-surface text-sm">Tamil Nadu Tourism</div>
+                <div class="text-xs text-m3-on-surface-variant">Official Government Tourism Website</div>
+              </div>
+              <svg class="w-4 h-4 ml-auto text-m3-on-surface-variant" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+            <a href="https://tourism.gov.in/" target="_blank" rel="noopener noreferrer" class="flex items-center p-3 rounded-m3-lg border border-m3-outline-variant hover:bg-m3-surface-container transition-colors">
+              <div class="w-9 h-9 flex items-center justify-center bg-m3-surface-container-high text-m3-on-surface rounded-m3-sm mr-3 font-bold text-xs">IN</div>
+              <div>
+                <div class="font-bold text-m3-on-surface text-sm">Ministry of Tourism</div>
+                <div class="text-xs text-m3-on-surface-variant">Government of India</div>
+              </div>
+              <svg class="w-4 h-4 ml-auto text-m3-on-surface-variant" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+            <a href="https://hrce.tn.gov.in/" target="_blank" rel="noopener noreferrer" class="flex items-center p-3 rounded-m3-lg border border-m3-outline-variant hover:bg-m3-surface-container transition-colors">
+              <div class="w-9 h-9 flex items-center justify-center bg-m3-surface-container-high text-m3-on-surface rounded-m3-sm mr-3 font-bold text-xs">HRCE</div>
+              <div>
+                <div class="font-bold text-m3-on-surface text-sm">HR &amp; CE Department</div>
+                <div class="text-xs text-m3-on-surface-variant">Official TN Temple Information &amp; Timings</div>
+              </div>
+              <svg class="w-4 h-4 ml-auto text-m3-on-surface-variant" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
           </div>
         </div>
+        <div class="bg-m3-surface-container-low px-6 py-4 border-t border-m3-outline-variant/40 flex justify-end">
+          <button type="button" class="px-5 py-2.5 rounded-m3-full bg-m3-surface border border-m3-outline text-m3-on-surface font-bold text-xs hover:bg-m3-surface-container-high transition-colors shadow-m3-1 cursor-pointer" data-modal-close="resources-modal">
+            Close
+          </button>
+        </div>
       </div>
-    </div>
+    </dialog>
 
   </div>
 </section>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const openButtons = document.querySelectorAll('[data-modal-target]');
-    const closeButtons = document.querySelectorAll('[data-modal-close]');
+  function setupSafetyModals() {
+    const openButtons = document.querySelectorAll<HTMLElement>('[data-modal-target]');
+    const closeButtons = document.querySelectorAll<HTMLElement>('[data-modal-close]');
 
     openButtons.forEach(button => {
-      button.addEventListener('click', () => {
+      button.onclick = () => {
         const modalId = button.getAttribute('data-modal-target');
         if (modalId) {
-          const modal = document.getElementById(modalId);
+          const modal = document.getElementById(modalId) as HTMLDialogElement | null;
           if (modal) {
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
+            if (typeof modal.showModal === 'function') {
+              if (!modal.open) modal.showModal();
+            } else {
+              modal.classList.remove('hidden');
+            }
           }
         }
-      });
+      };
     });
 
     closeButtons.forEach(button => {
-      button.addEventListener('click', () => {
+      button.onclick = () => {
         const modalId = button.getAttribute('data-modal-close');
         if (modalId) {
-          const modal = document.getElementById(modalId);
+          const modal = document.getElementById(modalId) as HTMLDialogElement | null;
           if (modal) {
-            modal.classList.add('hidden');
-            document.body.style.overflow = '';
+            if (typeof modal.close === 'function' && modal.open) {
+              modal.close();
+            } else {
+              modal.classList.add('hidden');
+            }
           }
         }
-      });
+      };
     });
-  });
+
+    // Chrome Modern Web Guidance: coordinate fallback for browsers where closedby is pending
+    document.querySelectorAll<HTMLDialogElement>('dialog.safety-dialog').forEach(dialog => {
+      if (!('closedBy' in HTMLDialogElement.prototype)) {
+        dialog.addEventListener('click', (event) => {
+          if (event.target !== dialog) return;
+          const rect = dialog.getBoundingClientRect();
+          const isInside = (
+            rect.top <= event.clientY &&
+            event.clientY <= rect.top + rect.height &&
+            rect.left <= event.clientX &&
+            event.clientX <= rect.left + rect.width
+          );
+          if (!isInside && dialog.open) {
+            dialog.close();
+          }
+        });
+      }
+    });
+  }
+
+  setupSafetyModals();
+  document.addEventListener('astro:page-load', setupSafetyModals);
 </script>
+
+<style is:global>
+  /* Chrome Modern Web Guidance: Native Dialog Top-Layer Animations (Baseline 2024) */
+  dialog.safety-dialog {
+    border: none;
+    padding: 1rem;
+    background: transparent;
+    max-width: 32rem;
+    width: 100%;
+    margin: auto;
+    overflow: visible;
+    transition: 
+      display 0.25s ease-out allow-discrete,
+      overlay 0.25s ease-out allow-discrete,
+      opacity 0.25s ease-out,
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+
+  dialog.safety-dialog[open] {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+
+    @starting-style {
+      opacity: 0;
+      transform: scale(0.96) translateY(8px);
+    }
+  }
+
+  dialog.safety-dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    transition: 
+      display 0.25s ease-out allow-discrete,
+      overlay 0.25s ease-out allow-discrete,
+      background-color 0.25s ease-out,
+      backdrop-filter 0.25s ease-out,
+      -webkit-backdrop-filter 0.25s ease-out;
+  }
+
+  dialog.safety-dialog[open]::backdrop {
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+
+    @starting-style {
+      background-color: rgba(0, 0, 0, 0);
+      backdrop-filter: blur(0px);
+      -webkit-backdrop-filter: blur(0px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    dialog.safety-dialog,
+    dialog.safety-dialog::backdrop {
+      transform: none;
+      transition-duration: 0.05s;
+    }
+    @starting-style {
+      dialog.safety-dialog[open] {
+        transform: none;
+      }
+    }
+  }
+</style>

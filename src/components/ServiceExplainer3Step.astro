@@ -21,6 +21,9 @@ const {
   subtitle = "Simple, transparent, and hassle-free in 3 easy steps",
   steps
 } = Astro.props;
+
+const pathname = Astro.url.pathname.endsWith("/") ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const pageUrl = `https://kalidasstravels.in${pathname}`;
 ---
 
 <!-- Ultra-Compact Horizontal 3-Step Row (No Wasted Vertical Scrolling) -->
@@ -93,6 +96,10 @@ const {
   set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "HowTo",
+    "@id": `${pageUrl}#howto`,
+    "isPartOf": {
+      "@id": `${pageUrl}#webpage`
+    },
     "name": title,
     "description": subtitle,
     "image": {

@@ -192,7 +192,7 @@ export default function ActingDrivers() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
-            <span className="w-2 h-2 rounded-full bg-logo-red animate-pulse"></span>
+            <span className="material-symbols-outlined text-[15px] text-m3-primary shrink-0">verified_user</span>
             <span>Acting Chauffeurs • 100% Police Verified • Hourly &amp; Outstation</span>
           </div>
 

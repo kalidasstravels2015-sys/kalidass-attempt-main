@@ -39,6 +39,24 @@ const vehicleCapacity: Record<string, string> = {
   "Tempo Traveller": "12 Pax",
 };
 
+const vehicleImages: Record<string, string> = {
+  "Swift Dzire": "/images/fleet/swift-dzire.webp",
+  "Toyota Etios": "/images/fleet/toyoto-etios.webp",
+  "Maruti Ertiga": "/images/fleet/suv.webp",
+  "Innova": "/images/fleet/suv.webp",
+  "Innova Crysta": "/images/fleet/suv.webp",
+  "Tempo Traveller": "/images/fleet/tempo.webp",
+};
+
+const vehicleBadges: Record<string, string> = {
+  "Swift Dzire": "Best Value Sedan",
+  "Toyota Etios": "Comfort Sedan",
+  "Maruti Ertiga": "Popular 7-Seater MPV",
+  "Innova": "Legendary Comfort MUV",
+  "Innova Crysta": "VIP Executive Luxury",
+  "Tempo Traveller": "Group Travel Special",
+};
+
 // Schema.org structured data for machine-readable tariff pricing
 const tariffSchema = {
   "@type": "OfferCatalog",
@@ -51,6 +69,8 @@ const tariffSchema = {
       name: `${name} Local 5 Hrs / 50 KM Package (Chennai)`,
       price: v.local_5hr_pkg,
       priceCurrency: "INR",
+      priceValidUntil: "2027-12-31",
+      availability: "https://schema.org/InStock",
       description: `${name} local city package within Chennai for 5 hours and 50 kilometers. Extra km: ₹${v.extra_km_rate}/km, Extra hr: ₹${v.extra_hr_rate}/hr.`,
       eligibleRegion: { "@type": "City", name: "Chennai" },
     },
@@ -59,6 +79,8 @@ const tariffSchema = {
       name: `${name} Local 10 Hrs / 100 KM Package (Chennai)`,
       price: v.local_10hr_pkg,
       priceCurrency: "INR",
+      priceValidUntil: "2027-12-31",
+      availability: "https://schema.org/InStock",
       description: `${name} standard 10 hours / 100 kilometers package within Chennai. Extra km: ₹${v.extra_km_rate}/km, Extra hr: ₹${v.extra_hr_rate}/hr. Compliant with CPWD / tender rate standards.`,
       eligibleRegion: { "@type": "City", name: "Chennai" },
     },
@@ -67,6 +89,8 @@ const tariffSchema = {
       name: `${name} Outstation Round Trip (Per KM)`,
       price: v.round_trip_rate,
       priceCurrency: "INR",
+      priceValidUntil: "2027-12-31",
+      availability: "https://schema.org/InStock",
       priceSpecification: {
         "@type": "UnitPriceSpecification",
         price: v.round_trip_rate,
@@ -158,14 +182,14 @@ const faqSchema = {
       </div>
 
       <!-- Sticky Sub-Nav Quick Jump Bar (Below Badges) -->
-      <nav aria-label="Tariff Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-3 mb-10 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+      <nav data-quick-nav aria-label="Tariff Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-3 mb-10 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-2 overflow-x-auto no-scrollbar">
           <div class="flex items-center gap-1.5 sm:gap-2 text-xs font-semibold whitespace-nowrap py-0.5">
             <span class="text-micro uppercase tracking-wider text-m3-on-surface-variant mr-1 font-bold hidden sm:inline">Jump To:</span>
-            <a href="#local-rates" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Local Hourly</a>
-            <a href="#outstation-rates" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Outstation Per-KM</a>
-            <a href="#fare-rules" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Inclusions &amp; Terms</a>
-            <a href="#faq" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-primary hover:text-white transition-colors text-m3-on-surface">Tariff FAQs</a>
+            <a href="#local-rates" class="px-3.5 py-2 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs transition-all shrink-0">Local Hourly</a>
+            <a href="#outstation-rates" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">Outstation Per-KM</a>
+            <a href="#fare-rules" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">Inclusions &amp; Terms</a>
+            <a href="#faq" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">Tariff FAQs</a>
           </div>
           <div class="flex items-center gap-2 shrink-0">
             <a
@@ -188,13 +212,34 @@ const faqSchema = {
             </h2>
             <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant leading-relaxed font-sans mt-1">Standard hourly packages for city sightseeing, business meetings, and local errands.</p>
           </div>
-          <span class="inline-flex items-center text-xs font-semibold text-m3-primary bg-m3-primary-container px-3 py-1 rounded-m3-full border border-m3-primary/20 w-fit">
-            Fuel &amp; Driver Bata Included
-          </span>
+          <div class="flex items-center gap-3">
+            <!-- View switcher for Local Packages -->
+            <div class="hidden md:inline-flex items-center p-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant text-xs font-semibold select-none">
+              <button
+                type="button"
+                id="local-btn-table"
+                class="px-3.5 py-1.5 rounded-m3-full bg-m3-primary text-m3-on-primary shadow-xs transition-all cursor-pointer font-bold"
+                aria-pressed="true"
+              >
+                Table View
+              </button>
+              <button
+                type="button"
+                id="local-btn-cards"
+                class="px-3.5 py-1.5 rounded-m3-full text-m3-on-surface-variant hover:text-m3-on-surface transition-all cursor-pointer font-medium"
+                aria-pressed="false"
+              >
+                Cards View
+              </button>
+            </div>
+            <span class="inline-flex items-center text-xs font-semibold text-m3-primary bg-m3-primary-container px-3 py-1 rounded-m3-full border border-m3-primary/20 w-fit shrink-0">
+              Fuel &amp; Driver Bata Included
+            </span>
+          </div>
         </div>
 
-        {/* Desktop Table (>= md) */}
-        <div class="hidden md:block overflow-x-auto rounded-m3-xl shadow-m3-1 border border-m3-outline-variant bg-m3-surface">
+        {/* Table View (Default on desktop) */}
+        <div id="local-table-view" class="hidden md:block overflow-x-auto rounded-m3-xl shadow-m3-1 border border-m3-outline-variant bg-m3-surface">
           <table class="w-full text-sm text-left font-sans">
             <thead class="bg-m3-surface-container-high text-m3-on-surface text-xs font-bold uppercase tracking-wider border-b border-m3-outline-variant">
               <tr>
@@ -204,39 +249,67 @@ const faqSchema = {
                 <th class="px-4 py-4 text-center">8 Hrs / 80 KM</th>
                 <th class="px-4 py-4 text-center">10 Hrs / 100 KM</th>
                 <th class="px-4 py-4 text-center">12 Hrs / 120 KM</th>
-                <th class="px-4 py-4 text-center">Extra KM (₹/km)</th>
-                <th class="px-4 py-4 text-center">Extra Hr (₹/hr)</th>
+                <th class="px-4 py-4 text-center">Extra KM</th>
+                <th class="px-4 py-4 text-center">Extra Hr</th>
+                <th class="px-4 py-4 text-right">Book</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-m3-outline-variant/40">
               {vehicles.map(([name, v]: [string, any], i) => (
                 <tr class={i % 2 === 0 ? "bg-m3-surface hover:bg-m3-surface-container transition-colors" : "bg-m3-surface-container-lowest hover:bg-m3-surface-container transition-colors"}>
-                  <td class={`px-5 py-4 font-bold text-m3-on-surface sticky left-0 z-10 font-heading ${i % 2 === 0 ? "bg-m3-surface" : "bg-m3-surface-container-lowest"}`}>
-                    <div class="flex items-center gap-2">
-                      <span>{name}</span>
-                      {name === "Maruti Ertiga" && (
-                        <span class="text-micro font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-m3-xs bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant">7-Seater</span>
-                      )}
+                  <td class={`px-5 py-3.5 font-bold text-m3-on-surface sticky left-0 z-10 font-heading ${i % 2 === 0 ? "bg-m3-surface" : "bg-m3-surface-container-lowest"}`}>
+                    <div class="flex items-center gap-3">
+                      <div class="w-14 h-9 shrink-0 flex items-center justify-center bg-m3-surface-container-low rounded-m3-md p-1 border border-m3-outline-variant/50">
+                        <img
+                          src={vehicleImages[name] || "/images/fleet/swift-dzire.webp"}
+                          alt={`${name} taxi rental in Chennai`}
+                          width="56"
+                          height="36"
+                          decoding="async"
+                          class="max-w-full max-h-full object-contain"
+                          loading="lazy"
+                        />
+                      </div>
+                      <div>
+                        <div class="flex items-center gap-1.5">
+                          <span class="text-sm font-bold text-m3-on-surface">{name}</span>
+                          {name === "Maruti Ertiga" && (
+                            <span class="text-micro font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-m3-xs bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant">7-Seater</span>
+                          )}
+                        </div>
+                        <span class="text-micro text-m3-primary font-semibold uppercase tracking-wider block">{vehicleBadges[name]}</span>
+                      </div>
                     </div>
                   </td>
-                  <td class="px-4 py-4 text-center text-m3-on-surface-variant font-medium whitespace-nowrap">{vehicleCapacity[name] || "4 Pax"}</td>
-                  <td class="px-4 py-4 text-center font-bold text-m3-on-surface">
+                  <td class="px-4 py-3.5 text-center text-m3-on-surface-variant font-medium whitespace-nowrap">{vehicleCapacity[name] || "4 Pax"}</td>
+                  <td class="px-4 py-3.5 text-center font-bold text-m3-on-surface">
                     ₹{v.local_5hr_pkg ? v.local_5hr_pkg.toLocaleString("en-IN") : "-"}
                   </td>
-                  <td class="px-4 py-4 text-center font-bold text-m3-on-surface">
+                  <td class="px-4 py-3.5 text-center font-bold text-m3-on-surface">
                     ₹{v.local_8hr_pkg ? v.local_8hr_pkg.toLocaleString("en-IN") : "-"}
                   </td>
-                  <td class="px-4 py-4 text-center font-bold text-m3-on-surface">
+                  <td class="px-4 py-3.5 text-center font-bold text-m3-on-surface">
                     ₹{v.local_10hr_pkg ? v.local_10hr_pkg.toLocaleString("en-IN") : "-"}
                   </td>
-                  <td class="px-4 py-4 text-center font-bold text-m3-on-surface">
+                  <td class="px-4 py-3.5 text-center font-bold text-m3-on-surface">
                     ₹{v.local_12hr_pkg ? v.local_12hr_pkg.toLocaleString("en-IN") : "-"}
                   </td>
-                  <td class="px-4 py-4 text-center font-bold text-m3-on-surface">
-                    ₹{v.extra_km_rate || 15}
+                  <td class="px-4 py-3.5 text-center font-bold text-m3-on-surface">
+                    ₹{v.extra_km_rate || 15}/km
                   </td>
-                  <td class="px-4 py-4 text-center font-bold text-m3-on-surface">
-                    ₹{v.extra_hr_rate || 150}
+                  <td class="px-4 py-3.5 text-center font-bold text-m3-on-surface">
+                    ₹{v.extra_hr_rate || 150}/hr
+                  </td>
+                  <td class="px-4 py-3.5 text-right whitespace-nowrap">
+                    <a
+                      href={`https://wa.me/916381939769?text=${encodeURIComponent(`Hi Kalidass Travels, I would like to book a ${name} for a local Chennai city package.`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex items-center gap-1 px-3 py-1.5 rounded-m3-full bg-emerald-600 hover:bg-emerald-700 text-white text-micro font-bold shadow-xs transition-all"
+                    >
+                      <span>Book</span>
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    </a>
                   </td>
                 </tr>
               ))}
@@ -244,41 +317,81 @@ const faqSchema = {
           </table>
         </div>
 
-        {/* Mobile Rate Cards (< md) */}
-        <div class="block md:hidden space-y-3">
-          {vehicles.map(([name, v]: [string, any]) => (
-            <div class="bg-m3-surface p-4 rounded-m3-lg border border-m3-outline-variant shadow-m3-1">
-              <div class="flex items-center justify-between gap-2 mb-3">
-                <div class="font-bold text-m3-on-surface text-sm font-heading">{name}</div>
-                <span class="text-badge font-semibold text-m3-on-surface-variant bg-m3-surface-container-high px-2.5 py-0.5 rounded-m3-full">
-                  {vehicleCapacity[name] || "4 Pax"}
-                </span>
+        {/* Cards View (Default on mobile, toggleable on desktop) */}
+        <div id="local-cards-view" class="block md:hidden">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {vehicles.map(([name, v]: [string, any]) => (
+              <div class="bg-m3-surface rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between hover:shadow-m3-2 transition-all">
+                <div>
+                  <!-- Header with vehicle name, badge, and prominent CAR IMAGE -->
+                  <div class="flex items-center justify-between gap-3 mb-3.5">
+                    <div class="min-w-0 flex-1">
+                      <div class="flex items-center gap-1.5 flex-wrap">
+                        <span class="font-bold text-m3-on-surface text-base font-heading">{name}</span>
+                        {name === "Maruti Ertiga" && (
+                          <span class="text-micro font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-m3-xs bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant">7-Seater</span>
+                        )}
+                      </div>
+                      <div class="flex items-center gap-2 mt-1">
+                        <span class="text-micro text-m3-primary font-bold uppercase tracking-wider">{vehicleBadges[name]}</span>
+                        <span class="text-micro text-m3-on-surface-variant font-medium bg-m3-surface-container-high px-2 py-0.5 rounded-m3-full">
+                          {vehicleCapacity[name] || "4 Pax"}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="shrink-0 w-20 h-13 sm:w-24 sm:h-15 flex items-center justify-center bg-m3-surface-container-low rounded-m3-lg p-1.5 border border-m3-outline-variant/50">
+                      <img
+                        src={vehicleImages[name] || "/images/fleet/swift-dzire.webp"}
+                        alt={`${name} taxi rental in Chennai`}
+                        width="96"
+                        height="56"
+                        decoding="async"
+                        class="max-w-full max-h-full object-contain"
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Rate Grid -->
+                  <div class="grid grid-cols-2 gap-2 text-center text-xs mb-3">
+                    <div class="bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant/50">
+                      <div class="text-micro text-m3-on-surface-variant font-semibold uppercase tracking-wider">5 Hr / 50 KM</div>
+                      <div class="text-sm font-bold text-m3-on-surface mt-0.5">₹{v.local_5hr_pkg ? v.local_5hr_pkg.toLocaleString("en-IN") : "-"}</div>
+                    </div>
+                    <div class="bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant/50">
+                      <div class="text-micro text-m3-on-surface-variant font-semibold uppercase tracking-wider">8 Hr / 80 KM</div>
+                      <div class="text-sm font-bold text-m3-on-surface mt-0.5">₹{v.local_8hr_pkg ? v.local_8hr_pkg.toLocaleString("en-IN") : "-"}</div>
+                    </div>
+                    <div class="bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant/50">
+                      <div class="text-micro text-m3-on-surface-variant font-semibold uppercase tracking-wider">10 Hr / 100 KM</div>
+                      <div class="text-sm font-bold text-m3-on-surface mt-0.5">₹{v.local_10hr_pkg ? v.local_10hr_pkg.toLocaleString("en-IN") : "-"}</div>
+                    </div>
+                    <div class="bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant/50">
+                      <div class="text-micro text-m3-on-surface-variant font-semibold uppercase tracking-wider">12 Hr / 120 KM</div>
+                      <div class="text-sm font-bold text-m3-on-surface mt-0.5">₹{v.local_12hr_pkg ? v.local_12hr_pkg.toLocaleString("en-IN") : "-"}</div>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center justify-between text-badge text-m3-on-surface-variant pt-2 border-t border-m3-outline-variant/40 px-1 mb-3">
+                    <span>Extra KM: <strong class="text-m3-on-surface">₹{v.extra_km_rate || 15}/km</strong></span>
+                    <span>Extra Hr: <strong class="text-m3-on-surface">₹{v.extra_hr_rate || 150}/hr</strong></span>
+                  </div>
+                </div>
+
+                <a
+                  href={`https://wa.me/916381939769?text=${encodeURIComponent(`Hi Kalidass Travels, I would like to book a ${name} for a local Chennai city package.`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="w-full inline-flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-m3-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-all"
+                >
+                  <span class="material-symbols-outlined text-[16px]">chat</span>
+                  <span>Book {name} Local</span>
+                </a>
               </div>
-              <div class="grid grid-cols-2 gap-2 text-center text-xs mb-3">
-                <div class="bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant/50">
-                  <div class="text-micro text-m3-on-surface-variant font-semibold uppercase tracking-wider">5 Hr / 50 KM</div>
-                  <div class="text-sm font-bold text-m3-on-surface mt-0.5">₹{v.local_5hr_pkg ? v.local_5hr_pkg.toLocaleString("en-IN") : "-"}</div>
-                </div>
-                <div class="bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant/50">
-                  <div class="text-micro text-m3-on-surface-variant font-semibold uppercase tracking-wider">8 Hr / 80 KM</div>
-                  <div class="text-sm font-bold text-m3-on-surface mt-0.5">₹{v.local_8hr_pkg ? v.local_8hr_pkg.toLocaleString("en-IN") : "-"}</div>
-                </div>
-                <div class="bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant/50">
-                  <div class="text-micro text-m3-on-surface-variant font-semibold uppercase tracking-wider">10 Hr / 100 KM</div>
-                  <div class="text-sm font-bold text-m3-on-surface mt-0.5">₹{v.local_10hr_pkg ? v.local_10hr_pkg.toLocaleString("en-IN") : "-"}</div>
-                </div>
-                <div class="bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant/50">
-                  <div class="text-micro text-m3-on-surface-variant font-semibold uppercase tracking-wider">12 Hr / 120 KM</div>
-                  <div class="text-sm font-bold text-m3-on-surface mt-0.5">₹{v.local_12hr_pkg ? v.local_12hr_pkg.toLocaleString("en-IN") : "-"}</div>
-                </div>
-              </div>
-              <div class="flex items-center justify-between text-badge text-m3-on-surface-variant pt-2 border-t border-m3-outline-variant/40 px-1">
-                <span>Extra KM: <strong class="text-m3-on-surface">₹{v.extra_km_rate || 15}/km</strong></span>
-                <span>Extra Hr: <strong class="text-m3-on-surface">₹{v.extra_hr_rate || 150}/hr</strong></span>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
+
         <p class="text-xs text-m3-on-surface-variant mt-3 font-sans">
           * Local packages include vehicle, fuel, and driver bata within Chennai city limits. Tolls, parking fees, and GST at actuals. Km and time calculated from garage to garage.
         </p>
@@ -286,20 +399,41 @@ const faqSchema = {
 
       <!-- Section 2: Outstation Rates -->
       <div id="outstation-rates" class="mb-14 scroll-mt-28">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-3 border-b border-m3-outline-variant">
           <div>
             <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
               Outstation Taxi Rates <span class="text-m3-primary">(Per KM from Chennai)</span>
             </h2>
             <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant leading-relaxed font-sans mt-1">Round-trip and one-way per-km slabs for Pondicherry, Bangalore, Tirupati, and all South India routes.</p>
           </div>
-          <span class="inline-flex items-center text-xs font-semibold text-m3-on-surface bg-m3-surface-container-high border border-m3-outline-variant px-3 py-1 rounded-m3-full w-fit">
-            Transparent Distance Billing
-          </span>
+          <div class="flex items-center gap-3">
+            <!-- View switcher for Outstation -->
+            <div class="hidden md:inline-flex items-center p-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant text-xs font-semibold select-none">
+              <button
+                type="button"
+                id="outstation-btn-table"
+                class="px-3.5 py-1.5 rounded-m3-full bg-m3-primary text-m3-on-primary shadow-xs transition-all cursor-pointer font-bold"
+                aria-pressed="true"
+              >
+                Table View
+              </button>
+              <button
+                type="button"
+                id="outstation-btn-cards"
+                class="px-3.5 py-1.5 rounded-m3-full text-m3-on-surface-variant hover:text-m3-on-surface transition-all cursor-pointer font-medium"
+                aria-pressed="false"
+              >
+                Cards View
+              </button>
+            </div>
+            <span class="inline-flex items-center text-xs font-semibold text-m3-on-surface bg-m3-surface-container-high border border-m3-outline-variant px-3 py-1 rounded-m3-full w-fit shrink-0">
+              Transparent Distance Billing
+            </span>
+          </div>
         </div>
 
         <!-- Desktop Table View -->
-        <div class="hidden md:block overflow-x-auto rounded-m3-xl shadow-m3-1 border border-m3-outline-variant bg-m3-surface">
+        <div id="outstation-table-view" class="hidden md:block overflow-x-auto rounded-m3-xl shadow-m3-1 border border-m3-outline-variant bg-m3-surface">
           <table class="w-full text-sm text-left font-sans">
             <thead class="bg-m3-surface-container-high text-m3-on-surface text-xs font-bold uppercase tracking-wider border-b border-m3-outline-variant">
               <tr>
@@ -309,56 +443,160 @@ const faqSchema = {
                 <th class="px-5 py-4 text-center">Round Trip (₹/km)</th>
                 <th class="px-5 py-4 text-center">Min KM / Day</th>
                 <th class="px-5 py-4 text-center">Driver Bata / Day</th>
+                <th class="px-5 py-4 text-right">Book</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-m3-outline-variant/40">
               {vehicles.map(([name, v]: [string, any], i) => (
                 <tr class={i % 2 === 0 ? "bg-m3-surface hover:bg-m3-surface-container transition-colors" : "bg-m3-surface-container-lowest hover:bg-m3-surface-container transition-colors"}>
-                  <td class={`px-5 py-4 font-bold text-m3-on-surface sticky left-0 z-10 font-heading ${i % 2 === 0 ? "bg-m3-surface" : "bg-m3-surface-container-lowest"}`}>
-                    {name}
+                  <td class={`px-5 py-3.5 font-bold text-m3-on-surface sticky left-0 z-10 font-heading ${i % 2 === 0 ? "bg-m3-surface" : "bg-m3-surface-container-lowest"}`}>
+                    <div class="flex items-center gap-3">
+                      <div class="w-14 h-9 shrink-0 flex items-center justify-center bg-m3-surface-container-low rounded-m3-md p-1 border border-m3-outline-variant/50">
+                        <img
+                          src={vehicleImages[name] || "/images/fleet/swift-dzire.webp"}
+                          alt={`${name} outstation taxi in Chennai`}
+                          width="56"
+                          height="36"
+                          decoding="async"
+                          class="max-w-full max-h-full object-contain"
+                          loading="lazy"
+                        />
+                      </div>
+                      <div>
+                        <span class="text-sm font-bold text-m3-on-surface block">{name}</span>
+                        <span class="text-micro text-m3-primary font-semibold uppercase tracking-wider">{vehicleBadges[name]}</span>
+                      </div>
+                    </div>
                   </td>
-                  <td class="px-5 py-4 text-center text-m3-on-surface-variant font-medium">{vehicleCapacity[name] || "4 Pax"}</td>
-                  <td class="px-5 py-4 text-center font-bold text-m3-on-surface">₹{v.one_way_rate}</td>
-                  <td class="px-5 py-4 text-center font-bold text-m3-on-surface">₹{v.round_trip_rate}</td>
-                  <td class="px-5 py-4 text-center text-m3-on-surface font-medium">{v.min_km_per_day} km</td>
-                  <td class="px-5 py-4 text-center text-m3-on-surface font-medium">₹{v.driver_bata} / day</td>
+                  <td class="px-5 py-3.5 text-center text-m3-on-surface-variant font-medium">{vehicleCapacity[name] || "4 Pax"}</td>
+                  <td class="px-5 py-3.5 text-center font-bold text-m3-on-surface">₹{v.one_way_rate}</td>
+                  <td class="px-5 py-3.5 text-center font-bold text-m3-on-surface">₹{v.round_trip_rate}</td>
+                  <td class="px-5 py-3.5 text-center text-m3-on-surface font-medium">{v.min_km_per_day} km</td>
+                  <td class="px-5 py-3.5 text-center text-m3-on-surface font-medium">₹{v.driver_bata} / day</td>
+                  <td class="px-5 py-3.5 text-right whitespace-nowrap">
+                    <a
+                      href={`https://wa.me/916381939769?text=${encodeURIComponent(`Hi Kalidass Travels, I would like to book an outstation trip in a ${name} from Chennai.`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex items-center gap-1 px-3 py-1.5 rounded-m3-full bg-emerald-600 hover:bg-emerald-700 text-white text-micro font-bold shadow-xs transition-all"
+                    >
+                      <span>Book</span>
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    </a>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
 
-        <!-- Mobile Card View -->
-        <div class="block md:hidden space-y-3 font-sans">
-          {vehicles.map(([name, v]: [string, any]) => (
-            <div class="bg-m3-surface rounded-m3-lg p-4 border border-m3-outline-variant shadow-m3-1">
-              <div class="flex items-center justify-between gap-2 mb-3">
-                <h3 class="font-bold text-m3-on-surface font-heading text-base">{name}</h3>
-                <span class="text-xs bg-m3-surface-container-high text-m3-on-surface-variant px-2.5 py-0.5 rounded-m3-full font-medium">
-                  {vehicleCapacity[name] || "4 Pax"}
-                </span>
-              </div>
-              <div class="grid grid-cols-2 gap-2 mb-2">
-                <div class="bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant/60">
-                  <div class="text-micro text-m3-on-surface-variant font-semibold uppercase tracking-wider">One Way</div>
-                  <div class="text-sm font-bold text-m3-on-surface mt-0.5">₹{v.one_way_rate} <span class="text-badge font-normal text-m3-on-surface-variant">/km</span></div>
+        <!-- Cards View (Default on mobile, toggleable on desktop) -->
+        <div id="outstation-cards-view" class="block md:hidden">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 font-sans">
+            {vehicles.map(([name, v]: [string, any]) => (
+              <div class="bg-m3-surface rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between hover:shadow-m3-2 transition-all">
+                <div>
+                  <!-- Header with vehicle name, badge, and prominent CAR IMAGE -->
+                  <div class="flex items-center justify-between gap-3 mb-3.5">
+                    <div class="min-w-0 flex-1">
+                      <h3 class="font-bold text-m3-on-surface font-heading text-base">{name}</h3>
+                      <div class="flex items-center gap-2 mt-1">
+                        <span class="text-micro text-m3-primary font-bold uppercase tracking-wider">{vehicleBadges[name]}</span>
+                        <span class="text-micro text-m3-on-surface-variant font-medium bg-m3-surface-container-high px-2 py-0.5 rounded-m3-full">
+                          {vehicleCapacity[name] || "4 Pax"}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="shrink-0 w-20 h-13 sm:w-24 sm:h-15 flex items-center justify-center bg-m3-surface-container-low rounded-m3-lg p-1.5 border border-m3-outline-variant/50">
+                      <img
+                        src={vehicleImages[name] || "/images/fleet/swift-dzire.webp"}
+                        alt={`${name} outstation cab in Chennai`}
+                        width="96"
+                        height="56"
+                        decoding="async"
+                        class="max-w-full max-h-full object-contain"
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Rate Slabs -->
+                  <div class="grid grid-cols-2 gap-2 mb-3">
+                    <div class="bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant/60">
+                      <div class="text-micro text-m3-on-surface-variant font-semibold uppercase tracking-wider">One Way</div>
+                      <div class="text-sm font-bold text-m3-on-surface mt-0.5">₹{v.one_way_rate} <span class="text-badge font-normal text-m3-on-surface-variant">/km</span></div>
+                    </div>
+                    <div class="bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant/60">
+                      <div class="text-micro text-m3-on-surface-variant font-semibold uppercase tracking-wider">Round Trip</div>
+                      <div class="text-sm font-bold text-m3-on-surface mt-0.5">₹{v.round_trip_rate} <span class="text-badge font-normal text-m3-on-surface-variant">/km</span></div>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center justify-between text-badge text-m3-on-surface-variant pt-2 border-t border-m3-outline-variant/40 px-1 mb-3">
+                    <span>Min Run: <strong class="text-m3-on-surface">{v.min_km_per_day} km/day</strong></span>
+                    <span>Driver Bata: <strong class="text-m3-on-surface">₹{v.driver_bata}/day</strong></span>
+                  </div>
                 </div>
-                <div class="bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant/60">
-                  <div class="text-micro text-m3-on-surface-variant font-semibold uppercase tracking-wider">Round Trip</div>
-                  <div class="text-sm font-bold text-m3-on-surface mt-0.5">₹{v.round_trip_rate} <span class="text-badge font-normal text-m3-on-surface-variant">/km</span></div>
-                </div>
+
+                <a
+                  href={`https://wa.me/916381939769?text=${encodeURIComponent(`Hi Kalidass Travels, I would like to book an outstation cab (${name}) from Chennai.`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="w-full inline-flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-m3-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-all"
+                >
+                  <span class="material-symbols-outlined text-[16px]">chat</span>
+                  <span>Book {name} Outstation</span>
+                </a>
               </div>
-              <div class="flex items-center justify-between text-badge text-m3-on-surface-variant pt-2 border-t border-m3-outline-variant/40 px-1">
-                <span>Min Run: <strong class="text-m3-on-surface">{v.min_km_per_day} km/day</strong></span>
-                <span>Driver Bata: <strong class="text-m3-on-surface">₹{v.driver_bata}/day</strong></span>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
+
         <p class="text-xs text-m3-on-surface-variant mt-3 font-sans">
           * Outstation billing is based on a standard minimum of 250 km per calendar day (300 km for Innova Crysta and Tempo Traveller). One-way drop trips have a 130 km minimum (250 km for Tempo Traveller). Driver bata covers daily driver food and accommodation allowance.
         </p>
       </div>
+
+      <!-- Interactive View Switcher Script (Cards View / Table View) -->
+      <script is:inline>
+        (function() {
+          function setupSwitcher(btnTableId, btnCardsId, tableId, cardsId) {
+            const btnTable = document.getElementById(btnTableId);
+            const btnCards = document.getElementById(btnCardsId);
+            const viewTable = document.getElementById(tableId);
+            const viewCards = document.getElementById(cardsId);
+
+            if (btnTable && btnCards && viewTable && viewCards) {
+              btnTable.addEventListener('click', function() {
+                viewTable.classList.remove('hidden');
+                viewCards.classList.add('md:hidden');
+                viewCards.classList.remove('md:block');
+                btnTable.classList.add('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs', 'font-bold');
+                btnTable.classList.remove('text-m3-on-surface-variant', 'font-medium');
+                btnTable.setAttribute('aria-pressed', 'true');
+                btnCards.classList.remove('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs', 'font-bold');
+                btnCards.classList.add('text-m3-on-surface-variant', 'font-medium');
+                btnCards.setAttribute('aria-pressed', 'false');
+              });
+
+              btnCards.addEventListener('click', function() {
+                viewTable.classList.add('hidden');
+                viewCards.classList.remove('md:hidden');
+                viewCards.classList.add('md:block');
+                btnCards.classList.add('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs', 'font-bold');
+                btnCards.classList.remove('text-m3-on-surface-variant', 'font-medium');
+                btnCards.setAttribute('aria-pressed', 'true');
+                btnTable.classList.remove('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs', 'font-bold');
+                btnTable.classList.add('text-m3-on-surface-variant', 'font-medium');
+                btnTable.setAttribute('aria-pressed', 'false');
+              });
+            }
+          }
+
+          setupSwitcher('local-btn-table', 'local-btn-cards', 'local-table-view', 'local-cards-view');
+          setupSwitcher('outstation-btn-table', 'outstation-btn-cards', 'outstation-table-view', 'outstation-cards-view');
+        })();
+      </script>
 
       <!-- Subtle Corporate Mobility Cross-Link -->
       <div class="bg-m3-surface-container-low border border-m3-outline-variant/60 rounded-m3-lg p-4 sm:p-5 mb-12 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">

@@ -51,7 +51,7 @@ The color system implements Google Material Design 3's **Executive Midnight Char
 - **Tertiary:** `bg-m3-tertiary` (`#6D5E0F` - Tone 40) — Warm Golden Amber for ratings, reviews, and travel badges
 - **Tertiary Container:** `bg-m3-tertiary-container` (`#F8E287` - Tone 90) — Warm champagne accent container
 - **On Tertiary Container:** `text-m3-on-tertiary-container` (`#221B00` - Tone 10)
-- **Brand Red Accent:** `text-logo-red` (`#EC221F`) — Reserved strictly for the "K" logo and live status pulse pips
+- **Brand Red Accent:** `text-logo-red` (`#EC221F`) — Reserved strictly for the "K" logo mark only (never used for live status pulse indicators, rates, or copy)
 
 ### Surface Container Elevation Ladder
 M3 surfaces use authentic anti-glare neutral container lightness layers:

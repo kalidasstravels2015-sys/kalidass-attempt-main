@@ -23,15 +23,6 @@ const FleetCard = ({ vehicle, isVisible, priority }) => {
                                 {/* Scrim Gradient Overlay */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/25 to-transparent z-20"></div>
 
-                                {/* Tonal Badges */}
-                                {vehicle.details.some(d => d.toLowerCase().includes('sanitized')) && (
-                                    <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-30">
-                                        <span className="bg-slate-950/80 backdrop-blur-md border border-white/20 text-white/90 text-micro font-bold px-2.5 py-0.5 rounded-m3-full shadow-sm flex items-center gap-1 w-fit">
-                                            <span className="material-symbols-outlined text-[14px] text-emerald-400">verified</span>
-                                            Sanitized AC
-                                        </span>
-                                    </div>
-                                )}
 
                                 <div className="absolute bottom-3 left-3.5 z-30">
                                     <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight font-heading">
