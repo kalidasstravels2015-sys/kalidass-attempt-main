@@ -128,6 +128,48 @@ const categoryHubs: Record<string, {
       "4.9 ★ Rated • 1,500+ Happy Devotees & Travelers"
     ],
     heroImage: "/images/services/airport-transfer.webp"
+  },
+  "calculator": {
+    slug: "calculator",
+    title: "Chennai Taxi Fare Calculator & Trip Cost Estimator",
+    category: "Fare Calculator",
+    route: "Instant Fare Estimate • Zero Surge",
+    startingPrice: "₹600",
+    priceSub: "Starting Estimate",
+    includes: [
+      "Real-Time Fare Estimation for City, Outstation & Airport",
+      "Driver Bata, Tolls & Permit Calculations Included",
+      "Instant 1-Click WhatsApp Booking Confirmation"
+    ],
+    heroImage: "/images/services/airport-transfer.webp"
+  },
+  "tariff": {
+    slug: "tariff",
+    title: "Chennai Taxi & Outstation Cab Tariff Card (Per-KM & Hourly)",
+    category: "Tariff & Rates",
+    route: "Chennai • Tamil Nadu & South India",
+    startingPrice: "₹14/km",
+    priceSub: "Zero Surge Rates",
+    includes: [
+      "5h/50km & 10h/100km Local Packages from ₹1,500",
+      "Transparent Per-Km Outstation Billing • Zero Hidden Costs",
+      "Sedans, Ertiga, Innova Crysta & Tempo Travellers"
+    ],
+    heroImage: "/images/services/corporate.webp"
+  },
+  "fleet": {
+    slug: "fleet",
+    title: "Premium Commercial Taxi & Cab Fleet in Chennai",
+    category: "Our Fleet",
+    route: "Chennai • Commercial AITP Fleet",
+    startingPrice: "₹14/km",
+    priceSub: "Starting Rates",
+    includes: [
+      "Swift Dzire, Etios, Ertiga, Innova Crysta & Tempo Traveller",
+      "Sanitized AC Cabs with Police-Verified Chauffeurs",
+      "24/7 Breakdown Backup & Doorstep Dispatch"
+    ],
+    heroImage: "/images/services/corporate.webp"
   }
 };
 
@@ -159,13 +201,15 @@ const tourImages: Record<string, string> = {
   "one-day-chennai-city-tour": "/images/temple/chennai-city.webp",
   "driver-car-for-weddings": "/images/services/corporate.webp",
   "chennai-airport-taxi-transfers": "/images/services/airport-transfer.webp",
+  "yelagiri-hills-weekend": "/images/hero/coimbatore.webp",
+  "yercaud-hills-weekend": "/images/hero/coimbatore.webp",
 };
 
 const categoryImages: Record<string, string> = {
   "Acting Drivers": "/images/services/acting-drivers.webp",
   "Acting Driver Services": "/images/services/acting-drivers.webp",
   "Outstation Cabs": "/images/temple/mahabalipuram-ecr-temples.webp",
-  "Popular Destinations": "/images/temple/mahabalipuram-ecr-temples.webp",
+  "Popular Destinations": "/images/hero/coimbatore.webp",
   "Temple Tours": "/images/services/temple-tours.webp",
   "Corporate Mobility": "/images/services/corporate.webp",
   "Corporate Travel": "/images/services/corporate.webp",
@@ -176,8 +220,8 @@ const categoryImages: Record<string, string> = {
 // ─── Category Accent Themes ───────────────────────────────────────────────────
 function getAccentTheme(category: string): { primary: string; glow: string; chipBg: string; chipBorder: string; chipText: string; priceBorder: string; priceBg: string } {
   const cat = category.toLowerCase();
-  if (cat.includes("temple") || cat.includes("pilgrimage") || cat.includes("weekend") || cat.includes("outstation travel")) {
-    // Saffron gold — devotional
+  if (cat.includes("temple") || cat.includes("pilgrimage") || cat.includes("weekend") || cat.includes("outstation travel") || cat.includes("popular")) {
+    // Saffron gold — devotional & leisure
     return {
       primary: "#F59E0B",
       glow: "rgba(245,158,11,0.18)",
@@ -188,8 +232,8 @@ function getAccentTheme(category: string): { primary: string; glow: string; chip
       priceBg: "rgba(245,158,11,0.12)",
     };
   }
-  if (cat.includes("airport")) {
-    // Emerald — on-time
+  if (cat.includes("airport") || cat.includes("calculator") || cat.includes("fare") || cat.includes("tariff")) {
+    // Emerald — on-time & transparent pricing
     return {
       primary: "#10B981",
       glow: "rgba(16,185,129,0.18)",
@@ -200,8 +244,8 @@ function getAccentTheme(category: string): { primary: string; glow: string; chip
       priceBg: "rgba(16,185,129,0.12)",
     };
   }
-  if (cat.includes("corporate")) {
-    // Violet — executive
+  if (cat.includes("corporate") || cat.includes("fleet")) {
+    // Violet — executive & premium fleet
     return {
       primary: "#8B5CF6",
       glow: "rgba(139,92,246,0.18)",
@@ -224,15 +268,15 @@ function getAccentTheme(category: string): { primary: string; glow: string; chip
       priceBg: "rgba(59,130,246,0.12)",
     };
   }
-  // Kalidass red — default / outstation
+  // Kalidass red — default / outstation (high-contrast coral red for dark mode)
   return {
-    primary: "#EC221F",
-    glow: "rgba(236,34,31,0.18)",
-    chipBg: "rgba(236,34,31,0.14)",
-    chipBorder: "rgba(236,34,31,0.4)",
-    chipText: "#FCA5A5",
-    priceBorder: "rgba(236,34,31,0.35)",
-    priceBg: "rgba(236,34,31,0.12)",
+    primary: "#F87171",
+    glow: "rgba(248,113,113,0.18)",
+    chipBg: "rgba(239,68,68,0.16)",
+    chipBorder: "rgba(248,113,113,0.45)",
+    chipText: "#FECACA",
+    priceBorder: "rgba(248,113,113,0.38)",
+    priceBg: "rgba(239,68,68,0.12)",
   };
 }
 

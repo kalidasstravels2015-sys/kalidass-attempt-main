@@ -13,8 +13,9 @@ export default defineConfig({
   trailingSlash: 'always',
   prefetch: true,
   redirects: {
-    '/outstation': '/services/popular-destinations/',
-    '/services/outstation': '/services/popular-destinations/',
+    '/outstation': '/services/outstation-cabs/',
+    '/services/outstation': '/services/outstation-cabs/',
+    '/services/popular-destinations': '/services/outstation-cabs/',
     '/services/weekend-packages': '/services/tours/weekend-packages/',
     '/services/temple-tours': '/services/tours/temple-tours/',
   },
@@ -22,7 +23,13 @@ export default defineConfig({
     tailwind(),
     react(),
     sitemap({
-      filter: (page) => !page.includes('/driver-cards/'),
+      filter: (page) =>
+        !page.includes('/driver-cards/') &&
+        !page.includes('/404') &&
+        !page.includes('/og/') &&
+        !page.endsWith('/services/popular-destinations/') &&
+        !page.endsWith('/services/temple-tours/') &&
+        !page.endsWith('/services/weekend-packages/'),
     }),
     {
       name: 'sitemap-sync',
@@ -39,12 +46,28 @@ export default defineConfig({
     },
     compress({
       HTML: false,
+      JavaScript: false,
     }),
   ],
   build: {
     inlineStylesheets: 'always',
   },
   vite: {
-    plugins: []
-  }
+    plugins: [
+      {
+        name: 'utf8-headers',
+        configureServer(server) {
+          server.middlewares.use((req, res, next) => {
+            const url = req.url?.split('?')[0] || '';
+            if (url.endsWith('.txt')) {
+              res.setHeader('Content-Type', 'text/markdown; charset=utf-8');
+            } else if (url.endsWith('.json')) {
+              res.setHeader('Content-Type', 'application/json; charset=utf-8');
+            }
+            next();
+          });
+        },
+      },
+    ],
+  },
 });

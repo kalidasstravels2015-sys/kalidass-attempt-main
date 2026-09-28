@@ -93,5 +93,5 @@
 | ID | Module | Issue / Technical Debt | Proposed Resolution | Priority |
 | :--- | :--- | :--- | :--- | :--- |
 | **DEBT-01** | `QuotationEngine.jsx` | File size exceeds 1,600 lines; contains form state, fare math, vehicle cards, and UI markup in a single file. | Split into modular subcomponents: `<RouteInputs>`, `<VehicleSelector>`, `<FareBreakdownModal>`, and `useFareCalculator` hook. | Medium |
-| **DEBT-02** | `update_data.py` | Standalone Python script used for batch content updates outside the standard Astro content collections. | Migrate content schema to native Astro Content Collections (`src/content/config.ts`) with Zod schema validation. | Low |
+| **DEBT-02** | `update_data.py` | Standalone Python script used for batch content updates outside the standard Astro content collections. | Removed one-off script; content maintained in canonical JSON files. | Low (Removed) |
 | **DEBT-03** | Google Maps Loader | Multiple components re-request Maps API loader independently. | Centralize via singleton `loadGoogleMaps` promise cache to avoid redundant network overhead. | High (Completed in `googleMapsLoader.ts`) |

@@ -7,7 +7,7 @@ Kalidass Travels is an executive taxi, outstation cab, temple tour, airport tran
 
 ### Key Verticals & Paths
 - **Airport Taxi (MAA):** `/services/chennai-airport-taxi/`
-- **Outstation Cabs:** `/services/popular-destinations/`
+- **Outstation Cabs:** `/services/outstation-cabs/`
 - **Temple Tours:** `/services/temple-tours/`
 - **Acting Drivers:** `/services/acting-drivers/`
 - **Corporate Mobility:** `/services/corporate/`

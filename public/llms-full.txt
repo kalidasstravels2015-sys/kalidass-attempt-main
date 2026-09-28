@@ -1,119 +1,274 @@
 # Kalidass Travels — Full Authoritative Knowledge Base & Service Specifications
 > Comprehensive machine-readable repository for AI agents, LLM search engines (ChatGPT Search, Perplexity, Google Gemini, Claude, Bing Copilot), and automated trip planning systems. Updated for 2026.
+> Canonical Source: https://kalidasstravels.in/ | Currency: Indian Rupees (INR)
 
-## 1. Company Overview & Legal Identity
+---
+
+## 1. Company Overview, Credentials & Legal Identity
+
 - Brand Name: Kalidass Travels
 - Operational Entity: Kalidass Travels Chennai
-- Establishment: Founded in 2019 (Over 7 years of commercial operations)
+- Establishment: Founded in 2019 (Over 7 years of continuous commercial operations)
 - Track Record: 25,000+ completed outstation & local journeys, 1,500+ verified 5-star Google customer reviews.
 - Registered Operations Office: No. 4/220, E88, Ponniamman Kovil Street, Annamalai Nagar, Medavakkam, Chennai 600100, Tamil Nadu, India.
-- Primary Helpline (24/7): +91 63819 39769
-- Instant WhatsApp Booking: https://wa.me/919092303060
+- GPS Coordinates: Latitude 12.9171° N, Longitude 80.1923° E
+- GSTIN (Tamil Nadu): 33COVPM0531D1Z4 (Full GST tax invoice available for ITC credit)
+- MSME Government Registration: UDYAM-TN-08-0018345
+- Primary Helpline (24/7 Dispatch): +91 63819 39769
+- Instant WhatsApp Booking: https://wa.me/916381939769
 - Official Email: kalidasstravels2015@gmail.com
 - Canonical Website: https://kalidasstravels.in/
+- Service Coverage: Chennai metropolitan area, all Tamil Nadu districts, Andhra Pradesh (Tirupati, Srisailam, Vijayawada), Karnataka (Bangalore, Mysore, Coorg), Kerala (Munnar, Sabarimala, Wayanad), and Pondicherry.
+
+---
 
 ## 2. Licensing, Chauffeur Vetting & Safety Standard
+
 - Vehicle Permits: Commercial All-India Tourist Permit (AITP), Yellow Board registration, comprehensive commercial passenger insurance.
 - Driver Verification: 100% Police Verification Certificate (PVC) checked, zero criminal record guarantee.
-- Chauffeur Qualifications: Minimum 5+ years commercial highway experience, certified for Western Ghats / Nilgiri hairpin bend driving (Ooty, Kodaikanal, Yercaud, Valparai, Kolli Hills).
+- Chauffeur Qualifications: Minimum 5+ years commercial highway experience, certified for Western Ghats / Nilgiri hairpin bend driving (Ooty, Kodaikanal, Yercaud, Valparai, Kolli Hills, Yelagiri, Munnar).
 - Chauffeur Code: Non-smoking, non-drinking, professionally uniformed, multi-lingual (Tamil, English, basic Hindi/Telugu/Kannada).
-- Fleet Maintenance: Vehicles sanitized pre-trip, continuous GPS tracking with speed govern limit compliance, spare tire and emergency toolkits verified.
+- Satvik Chauffeur Guarantee: Devotional, non-smoking, strictly vegetarian drivers assigned for all pilgrimage circuits (Tirupati, Navagraha, Thiruvannamalai, Sabarimala).
+- Vehicle Sanitization & Maintenance: Vehicles detailed and sanitized pre-trip, continuous GPS tracking with speed governor compliance (80 km/h highway ceiling), spare tire and emergency toolkits verified prior to departure.
+- Female Passenger Safety: SOS panic protocols, live GPS trip sharing, and background-vetted drivers for night shifts and corporate commute transfers.
+
+---
 
 ## 3. Detailed Fleet Specifications & 2026 Outstation Tariffs
 
-### Sedan Class (Maruti Swift Dzire, Toyota Etios)
-- Passenger Capacity: Up to 4 passengers + 1 chauffeur
-- Luggage Capacity: 2 Medium Check-in Trolleys + 2 Soft Handbags (approx. 400L boot space)
-- Standard Tariff: ₹14 / km
-- Chauffeur Batta: ₹400 / day
-- Minimum Outstation Billing: 250 km / calendar day
-- Amenities: Dual Air-Conditioning, USB mobile chargers, clean slipcovers, auxiliary audio.
-- Best Suited For: Business transits, couple weekend retreats, Chennai-Pondicherry day packages.
+All rates are in Indian Rupees (INR). Vehicles are commercial yellow-plate registered, air-conditioned, and GPS-monitored.
 
-### Premium MPV Class (Toyota Innova 7+1 / 8-seater)
-- Passenger Capacity: Up to 7 passengers + 1 chauffeur
-- Luggage Capacity: 4 Medium Suitcases with folding rear row
-- Standard Tariff: ₹18 / km
-- Chauffeur Batta: ₹500 / day
+### Sedan Class (Maruti Swift Dzire, Toyota Etios)
+- Capacity: Up to 4 passengers + 1 chauffeur | 2 Medium Check-in Trolleys + 2 Soft Handbags (approx. 400L boot)
+- Standard Round-Trip Outstation Tariff: ₹14 / km
+- Standard One-Way Drop Tariff: ₹16 / km
 - Minimum Outstation Billing: 250 km / calendar day
-- Best Suited For: Family temple pilgrimages (Tirupati, Vellore Golden Temple, Kanchipuram).
+- Chauffeur Batta: ₹400 / calendar day
+- Local 5hr/50km Package: ₹1,800 | Extra KM: ₹15/km | Extra Hr: ₹150/hr
+- Local 10hr/100km Package: ₹2,800 | Extra KM: ₹15/km | Extra Hr: ₹150/hr
+- Best Suited For: Airport transfers, couple weekend trips, Chennai-Pondicherry day trips, corporate executive transits.
+
+### Compact MPV Class (Maruti Ertiga, XL6)
+- Capacity: Up to 6 passengers + 1 chauffeur | 3 Medium Bags
+- Standard Round-Trip Outstation Tariff: ₹17 / km
+- Standard One-Way Drop Tariff: ₹19 / km
+- Minimum Outstation Billing: 250 km / calendar day
+- Chauffeur Batta: ₹500 / calendar day
+- Local 5hr/50km Package: ₹2,200 | Extra KM: ₹18/km | Extra Hr: ₹180/hr
+- Local 10hr/100km Package: ₹3,400 | Extra KM: ₹18/km | Extra Hr: ₹180/hr
+- Best Suited For: Small families, 5-6 pax temple tours, airport luggage transfers.
+
+### Premium MPV Class (Toyota Innova 7+1 / 8-Seater)
+- Capacity: Up to 7 passengers + 1 chauffeur | 4 Medium Suitcases
+- Standard Round-Trip Outstation Tariff: ₹18 / km
+- Standard One-Way Drop Tariff: ₹20 / km
+- Minimum Outstation Billing: 250 km / calendar day
+- Chauffeur Batta: ₹500 / calendar day
+- Local 5hr/50km Package: ₹2,500 | Extra KM: ₹20/km | Extra Hr: ₹200/hr
+- Local 10hr/100km Package: ₹3,900 | Extra KM: ₹20/km | Extra Hr: ₹200/hr
+- Best Suited For: Family temple pilgrimages (Tirupati, Kumbakonam), long-distance highway travel.
 
 ### Luxury MPV Class (Toyota Innova Crysta 7+1 & 6+1 Captain Seats)
-- Passenger Capacity: 6 to 7 passengers + 1 chauffeur
-- Luggage Capacity: 4–5 Full Size Trolley Bags + Handbags
-- Standard Tariff: ₹22 / km
-- Chauffeur Batta: ₹500 / day
+- Capacity: 6 to 7 passengers + 1 chauffeur | 5 Full Size Trolley Bags + Handbags
+- Standard Round-Trip Outstation Tariff: ₹22 / km
+- Standard One-Way Drop Tariff: ₹25 / km
 - Minimum Outstation Billing: 250 km / calendar day
-- Amenities: Individual reclining captain chairs, ambient cabin lighting, rear AC vents for all rows, smooth highway cruising.
-- Best Suited For: Corporate executive transfers, VIP guests, hill station travel (Munnar, Kodaikanal).
+- Chauffeur Batta: ₹700 / calendar day
+- Local 5hr/50km Package: ₹3,000 | Extra KM: ₹22/km | Extra Hr: ₹220/hr
+- Local 10hr/100km Package: ₹4,500 | Extra KM: ₹22/km | Extra Hr: ₹220/hr
+- Amenities: Individual reclining captain chairs, ambient cabin lighting, individual rear AC vents for all rows.
+- Best Suited For: VIP corporate delegations, NRI family pilgrimages, hill station road trips (Munnar, Kodaikanal, Ooty).
 
 ### Executive Luxury Van (Force Urbania — 10, 12, 16 Seater)
-- Configurations: 10-seater, 12-seater, and 16-seater luxury recliners
+- Configurations: 10-seater, 12-seater, 16-seater luxury recliners
 - Standard Tariff: Starting from ₹28 / km
-- Chauffeur Batta: ₹600 / day
+- Chauffeur Batta: ₹600 / calendar day
 - Minimum Outstation Billing: 300 km / calendar day
-- Features: Panoramic sealed windows, individual air suspension, overhead luggage racks, separate rear boot, individual reading lights and USB points at every seat.
-- Best Suited For: Corporate team summits, NRI family temple tours, destination wedding guest logistics.
+- Features: Panoramic sealed windows, individual air suspension, overhead luggage racks, separate rear luggage boot, reading lights and USB charging ports at each seat.
+- Best Suited For: Destination weddings, corporate retreats, VIP guest group logistics.
 
 ### Tempo Traveller Group Fleet (12, 14, 18, 26 Seater)
 - Configurations:
   * 12-Seater High-Roof: From ₹24 / km (Driver Batta ₹600/day)
   * 18-Seater Pushback: From ₹28 / km (Driver Batta ₹600/day)
   * 26-Seater Force Traveller: From ₹34 / km (Driver Batta ₹600/day)
-- Standard Amenities: 2x1 push-back executive seating, LED display screen, hi-fi audio system, icebox cooler, spacious center aisle.
+- Standard Amenities: 2x1 push-back executive seating, high roof headroom, LED TV screen, audio system, large rear luggage boot.
 - Minimum Outstation Billing: 300 km / calendar day.
+- Best Suited For: Navagraha temple circuits, college/corporate outings, large family yatras.
 
-### Luxury Air-Suspension Coaches (21, 35, 49 Seater)
-- Capacity: 21-seater mini-bus, 35-seater executive coach, 49-seater multi-axle bus.
-- Pricing: Custom consolidated quotes based on route, duration, and driver allocation.
+---
 
-## 4. Popular Pilgrimage & Outstation Circuits from Chennai
+## 4. Complete Catalog of All 20 Individual Services
 
-### 1. Chennai to Tirupati Balaji Pilgrimage (1 Day / 2 Days)
-- Distance: Approx. 150 km one way (300 km round trip).
-- Routes Covered: Chennai -> Tiruttani -> Renigunta -> Tirupati -> Alipiri -> Tirumala.
-- Features: Assistance with early morning Sheegra Darshan timings, Padmavathi Temple (Tiruchanur), and Sri Kalahasti Rahu-Ketu Kshetra.
+### Temple Pilgrimage Packages
 
-### 2. Kumbakonam Navagraha 9-Temple Circuit (2 Days / 3 Days)
-- Covered Temples: Suryanar Kovil (Sun), Thingalur (Moon), Vaitheeswaran Kovil (Mars), Thiruvenkadu (Mercury), Alangudi (Jupiter), Kanjanur (Venus), Thirunallar (Saturn), Thirunageswaram (Rahu), Keezhperumpallam (Ketu).
-- Route: Chennai -> Tindivanam -> Mayiladuthurai / Kumbakonam.
+1. **Chennai to Tirupati Balaji Darshan (1 Day & 2 Days)**
+   - URL: https://kalidasstravels.in/services/tirupati-package/
+   - Distance: 150 km one way (approx. 320 km round trip).
+   - Route: Chennai -> Tiruttani -> Renigunta -> Tirupati -> Alipiri -> Tirumala.
+   - Highlights: Sheegra Darshan timings coordination, Padmavathi Temple (Tiruchanur), Sri Kalahasti Temple darshan.
+   - Pricing: Sedan ₹6,000 | Ertiga ₹7,500 | Innova ₹8,500 | Innova Crysta ₹10,000 | Tempo Traveller ₹12,500 (All tolls, AP state border permit, and driver allowance included).
 
-### 3. Chennai to Pondicherry Weekend Getaway (1 Day / 2 Days)
-- Distance: Approx. 160 km via East Coast Road (ECR scenic route).
-- Stops: Mahabalipuram shore temple, Covelong beach, Auroville, Promenade beach, French Quarter.
+2. **Kumbakonam 9 Navagraha Temples Tour (2 Days / 1 Night)**
+   - URL: https://kalidasstravels.in/services/navagraha-tour/
+   - Distance: Approx. 750 km circuit.
+   - 9 Temples Covered: Suryanar Kovil (Sun), Thingalur (Moon), Vaitheeswaran Kovil (Mars), Thiruvenkadu (Mercury), Alangudi (Jupiter), Kanjanur (Venus), Thirunallar (Saturn), Thirunageswaram (Rahu), Keezhperumpallam (Ketu).
+   - Pricing: Sedan ₹8,600 | Ertiga ₹10,600 | Innova ₹13,100 | Innova Crysta ₹15,500 | Tempo ₹18,500 (All tolls and driver allowance included).
 
-### 4. Southern Temple Corridor (4 to 5 Days)
-- Route: Chennai -> Trichy (Srirangam) -> Madurai (Meenakshi Amman) -> Rameswaram (Ramanathaswamy & Dhanushkodi) -> Kanyakumari.
+3. **Chennai to Thiruvannamalai Girivalam & Arunachaleswarar (1 Day / Pournami Night)**
+   - URL: https://kalidasstravels.in/services/thiruvannamalai-girivalam-trip/
+   - Distance: 195 km one way (400 km round trip).
+   - Highlights: Arunachaleswarar Temple darshan, 14 km Pournami Girivalam night standby, Ramana Ashram, Seshadri Swamigal Ashram.
+   - Pricing: Sedan ₹6,500 | Ertiga ₹7,900 | Innova ₹9,300 | Innova Crysta ₹11,100 | Tempo ₹13,500 (Tolls, parking, and driver allowance included).
 
-### 5. Hill Station Circuits
-- Ooty & Nilgiris: 550 km from Chennai via Salem & Mettupalayam. Hill-trained chauffeurs for Kotagiri and Coonoor ghat roads.
-- Kodaikanal: 520 km from Chennai via Dindigul and Batlagundu ghat road.
-- Munnar (Kerala): 580 km from Chennai via Theni / Bodimettu ghat road.
+4. **Chennai to Sabarimala Pilgrim Yatra (3 Days / 2 Nights)**
+   - URL: https://kalidasstravels.in/services/sabarimala-trip/
+   - Distance: Approx. 1,350 km round trip.
+   - Route: Chennai -> Dindigul -> Theni -> Kumily -> Erumeli -> Pamba / Nilakkal base camp.
+   - Highlights: Satvik non-smoking driver, Kerala interstate entry permit included, standby parking at Nilakkal.
+   - Pricing: Sedan ₹15,900 | Ertiga ₹18,900 | Innova ₹23,300 | Innova Crysta ₹27,600 | Tempo ₹34,800.
 
-## 5. Chennai Acting Driver Services (Private Vehicle Chauffeur Hire)
-- Description: Kalidass Travels provides vetted, background-verified professional chauffeurs to drive the customer's private vehicle (Manual & Automatic transmissions, Hatchbacks, Sedans, SUVs, Luxury German vehicles).
-- Intra-City Chennai Rates:
-  * 4 Hours / 40 km: Starting from ₹499
-  * 8 Hours / 80 km: Starting from ₹799
-  * Extra Hours: ₹80 / hour
-  * Night Shift Charge (10 PM to 6 AM): ₹150 surcharge
-- Outstation Round-Trip Acting Driver:
-  * ₹1,000 to ₹1,200 per calendar day + Driver Food Allowance (Batta).
+5. **Chennai to Rameswaram & Dhanushkodi (2 Days / 1 Night)**
+   - URL: https://kalidasstravels.in/services/rameswaram-2-days/
+   - Distance: Approx. 1,200 km round trip.
+   - Highlights: Ramanathaswamy Temple, 22 holy kund theertham snanam, Pamban Sea Bridge view, Dhanushkodi beach and ruins, Dr. APJ Abdul Kalam Memorial.
+   - Pricing: Sedan ₹15,500 | Ertiga ₹18,400 | Innova ₹22,600 | Innova Crysta ₹26,700 | Tempo ₹32,200.
 
-## 6. Chennai Airport Taxi & Transfers (MAA)
-- Pickup & Drop: Chennai International & Domestic Airport (T1, T2, T4 terminals at Meenambakkam).
-- On-Time Guarantee: Chauffeurs arrive 15 minutes ahead of scheduled flight touchdown with customer name placards.
-- Zero Surge Rates: Fixed tariffs irrespective of rain or peak-hour congestion.
+6. **Chennai to Kanchipuram Temple Tour (1 Day)**
+   - URL: https://kalidasstravels.in/services/kanchipuram-temple-trip/
+   - Distance: 75 km one way (150-180 km round trip).
+   - Highlights: Ekambareswarar Temple, Kamakshi Amman Temple, Varadharaja Perumal Temple, Kailasanathar Temple, traditional Kanchipuram silk weavers visit.
+   - Pricing: Sedan ₹3,200 | Ertiga ₹4,500 | Innova ₹5,500 | Innova Crysta ₹6,500 | Tempo ₹8,000.
 
-## 7. Tariff Calculation, Transparency & Billing Rules
-1. Per-Kilometer Computation: Starts and ends at the designated dispatch garage (Medavakkam) or agreed pickup location in Chennai. Calibrated vehicle odometer reading verified by passenger at start and completion.
-2. Driver Allowance (Batta): Fixed daily fee per calendar day (Midnight to Midnight cycle) covering chauffeur boarding and lodging.
-3. Tolls & Parking: Toll plaza charges (FASTag automated electronic tolls) and airport/monument parking tickets are billed at actual government slips with zero markup.
-4. Interstate State Entry Permits: When crossing Tamil Nadu borders into Andhra Pradesh, Karnataka, Pondicherry, or Kerala, government border permit taxes apply at actuals.
+7. **Chennai to Chidambaram Natarajar & Pichavaram (1 Day)**
+   - URL: https://kalidasstravels.in/services/chidambaram-temple-trip/
+   - Distance: Approx. 450 km round trip.
+   - Highlights: Thillai Natarajar Temple (Akasa Lingam), Pichavaram Mangrove forest boating in world's 2nd largest mangrove swamp.
+   - Pricing: Sedan ₹7,400 | Ertiga ₹9,000 | Innova ₹10,500 | Innova Crysta ₹12,500 | Tempo ₹15,000.
 
-## 8. Direct Contact & Dispatch Hub
-- 24/7 Telephone Booking Desk: +91 63819 39769
-- Direct WhatsApp Dispatch: https://wa.me/919092303060
+8. **Chennai to Vellore Sripuram Golden Temple (1 Day)**
+   - URL: https://kalidasstravels.in/services/vellore-golden-temple/
+   - Distance: 140 km one way (300 km round trip).
+   - Highlights: Sri Lakshmi Narayani Golden Temple (Sripuram) star-shaped pathway, Vellore Jalakandeswarar Fort Temple.
+   - Pricing: Sedan ₹4,200 | Ertiga ₹5,200 | Innova ₹6,200 | Innova Crysta ₹7,200 | Tempo ₹9,000.
+
+### Popular Destinations & Weekend Getaways
+
+9. **Chennai to Pondicherry 1-Day & Weekend Tour (ECR Route)**
+   - URL: https://kalidasstravels.in/services/pondicherry-one-day-trip/
+   - Distance: 160 km one way via East Coast Road.
+   - Highlights: Mahabalipuram stop, Auroville Matrimandir, French Quarter, Promenade Beach, Paradise Beach boating.
+   - Pricing: Sedan ₹3,800 | Ertiga ₹4,800 | Innova ₹5,800 | Innova Crysta ₹7,200 | Tempo ₹9,500.
+
+10. **One Day Chennai City Sightseeing Tour**
+    - URL: https://kalidasstravels.in/services/one-day-chennai-city-tour/
+    - Distance: 8hr/80km or 10hr/100km city package.
+    - Highlights: Kapaleeshwarar Temple (Mylapore), Marina Beach, San Thome Cathedral, Fort St. George, Government Museum, Besant Nagar Beach.
+    - Pricing: Sedan ₹2,400 (8hr) / ₹2,800 (10hr) | Ertiga ₹2,800 (8hr) / ₹3,400 (10hr) | Innova ₹3,200 / ₹3,900.
+
+11. **Mahabalipuram UNESCO Temples & ECR Beach Tour (1 Day)**
+    - URL: https://kalidasstravels.in/services/mahabalipuram-ecr-temple-route/
+    - Distance: 60 km one way (140 km round trip).
+    - Highlights: Shore Temple, Pancha Rathas, Arjuna's Penance, Krishna's Butterball, Kovalam surf beach.
+    - Pricing: Sedan ₹2,800 | Ertiga ₹3,600 | Innova ₹4,400 | Innova Crysta ₹5,400.
+
+12. **Chennai to Yelagiri Hills 2-Day Weekend Package**
+    - URL: https://kalidasstravels.in/services/yelagiri-hills-weekend/
+    - Distance: 230 km one way (500 km round trip).
+    - Highlights: 14 scenic hairpin bends navigated by certified hill drivers, Punganoor artificial lake, Nature Park, Jalagamparai Waterfalls.
+    - Pricing: Sedan ₹7,800 | Ertiga ₹9,500 | Innova ₹11,500 | Innova Crysta ₹13,500.
+
+13. **Chennai to Yercaud 2-Day 'Jewel of the South' Weekend Package**
+    - URL: https://kalidasstravels.in/services/yercaud-hills-weekend/
+    - Distance: 360 km one way (750 km round trip).
+    - Highlights: 20 hairpin bends, Emerald Lake, Lady's Seat viewpoint, Killiyur Falls, Shevaroy Temple, coffee plantations.
+    - Pricing: Sedan ₹8,900 | Ertiga ₹11,000 | Innova ₹13,500 | Innova Crysta ₹15,800.
+
+14. **Wedding Car Rental with Chauffeur (Marriage & Event Logistics)**
+    - URL: https://kalidasstravels.in/services/driver-car-for-weddings/
+    - Offerings: Decorated bridal cars, Innova Crysta VIP family fleets, 12-26 seater Tempo Travellers for guest transit between banquet halls and airport.
+    - Pricing: Starting from ₹4,500 / 8-hour shift.
+
+### Acting Drivers & Chauffeur Hire
+
+15. **Acting Driver in Chennai – Hourly & Daily Car Chauffeur Service**
+    - URL: https://kalidasstravels.in/services/acting-driver-within-chennai/
+    - Description: Hire a vetted professional driver to pilot your personal car (Manual, Automatic, EV, Luxury).
+    - Rates: 4 Hours (₹600) | 8 Hours (₹900) | Extra Hours: ₹150/hr | Night Shift (10 PM to 6 AM): ₹150 surcharge.
+
+16. **Outstation Acting Driver from Chennai (Round Trip)**
+    - URL: https://kalidasstravels.in/services/acting-driver-outstation-round-trip/
+    - Description: Expert highway chauffeur for your private vehicle across Tamil Nadu, AP, Karnataka, Kerala.
+    - Rates per calendar day: Hatchback/Sedan (₹600) | Compact SUV/Ertiga (₹700) | Innova/Fortuner (₹800) | German Luxury BMW/Mercedes/Audi (₹1,000). Driver food: ₹150/meal; room: ₹300/night if not arranged.
+
+17. **Outstation One-Way Car Relocation & Drop Driver**
+    - URL: https://kalidasstravels.in/services/acting-driver-outstation-one-way/
+    - Description: Doorstep pickup to relocate or drop your personal vehicle one-way between Chennai, Bangalore, Coimbatore, Trichy, or Madurai. Driver handles highway driving and takes return public transit.
+    - Rates: Fixed distance-based relocation quote + return bus/train fare at actuals.
+
+### Corporate Mobility & Airport Transfers
+
+18. **Monthly Car Rental with Driver in Chennai (Corporate Executive Retainer)**
+    - URL: https://kalidasstravels.in/services/monthly-car-with-driver-corporate/
+    - Package: 26 working days / 10 hours daily.
+    - Pricing: Swift Dzire / Etios (₹42,000/month) | Maruti Ertiga (₹52,000/month) | Toyota Innova Crysta (₹65,000/month).
+    - Features: Dedicated uniformed chauffeur, 60-min emergency replacement SLA, full GST input tax credit invoices.
+
+19. **Corporate Employee Pickup & Drop Cab Service in Chennai (ETS)**
+    - URL: https://kalidasstravels.in/services/employee-pickup-drop/
+    - Description: Routed employee shift transportation covering OMR, Guindy, Ambattur Industrial Estate, Sriperumbudur, and Oragadam manufacturing corridors.
+    - Compliance: Automated GPS route logging, speed governor compliance, verified chauffeurs, female employee SOS protocols.
+
+20. **Chennai Airport Taxi (MAA) – 24/7 Pickup & Drop Cab Service**
+    - URL: https://kalidasstravels.in/services/chennai-airport-taxi-transfers/
+    - Master Hub: https://kalidasstravels.in/services/chennai-airport-taxi/
+    - Description: Rapid 5-10 minute dispatch from Chennai International & Domestic Airport (MAA). Real-time flight delay tracking with zero wait penalty. Name placard greeting at terminal gate. Flat transparent rates from ₹650.
+
+---
+
+## 5. Billing Rules, Transparency & Operational Policies
+
+1. **Garage-to-Garage Kilometre Computation**: Kilometres are calculated garage-to-garage originating from Medavakkam, Chennai (or agreed doorstep pickup). Passengers verify the calibrated odometer reading before start and after trip conclusion.
+2. **Minimum Daily Distance**: Standard 250 km per calendar day applies for Sedans, Ertigas, and Innovas. 300 km per calendar day applies for Innova Crysta, Tempo Travellers, and Force Urbania. If actual travel is less, the daily minimum applies.
+3. **Driver Batta (Daily Allowance)**: Driver batta covers chauffeur food and accommodation per calendar day (midnight-to-midnight cycle). Included upfront in all local hourly packages and fixed temple tour packages; billed as a distinct line item for open per-km outstation journeys.
+4. **Tolls, Parking & State Permits**: FASTag electronic highway tolls, airport/temple parking fees, and interstate government entry taxes (Andhra Pradesh, Karnataka, Kerala, Pondicherry) are billed at 100% actuals based on government receipt slips with zero company markup.
+5. **No Surge Guarantee**: Flat rates apply 24/7, 365 days a year. No rain surge, no weekend surge, no festival surge.
+6. **Cancellation Terms**: Zero cancellation penalty if cancelled 4+ hours prior to scheduled pickup time.
+7. **GST Invoices**: Formal tax invoices bearing GSTIN 33COVPM0531D1Z4 issued for all corporate bookings to enable complete input tax credit (ITC) reconciliation.
+
+---
+
+## 6. Comprehensive Frequently Asked Questions (FAQs)
+
+**Q: Do you offer one-way drop taxis from Chennai to other cities?**
+A: Yes. One-way drops are available from Chennai to Bangalore, Pondicherry, Tirupati, Vellore, Trichy, Madurai, Salem, Coimbatore, and other South Indian cities. You only pay for the one-way distance with zero return empty-run charges.
+
+**Q: How do you handle flight delays for airport pickups at Chennai Airport (MAA)?**
+A: Our operations desk monitors your flight status in real time via live radar. If your flight is delayed by 1 hour or 6 hours, your chauffeur will adjust pickup timing automatically with zero waiting penalty.
+
+**Q: Are temple tour chauffeurs accustomed to pilgrimage traditions?**
+A: Yes. For all pilgrimage packages (Tirupati, Navagraha, Thiruvannamalai, Sabarimala, Rameswaram), we assign satvik chauffeurs who are strictly non-smoking, non-drinking, and vegetarian. They know temple darshan schedules, traditional devotee dress codes, and local pradasikshanam customs.
+
+**Q: Can I hire an acting driver for my luxury automatic German vehicle?**
+A: Yes. Our acting drivers are experienced with luxury transmissions including Mercedes-Benz, BMW, Audi, Volvo, Jaguar, and high-performance EVs. They possess valid driving licenses with 5+ years of verified clean driving records.
+
+**Q: What is the cancellation policy?**
+A: Bookings can be cancelled without any cancellation charge up to 4 hours before the scheduled reporting time.
+
+**Q: Can I pay via UPI or Credit Card?**
+A: Yes. We accept all payment methods including UPI (Google Pay, PhonePe, Paytm), Net Banking, Credit/Debit cards, and cash. Formal digital invoices are generated instantly upon trip completion.
+
+---
+
+## 7. Machine-Readable Endpoints & Direct Booking
+
+- Primary Phone: +91 63819 39769
+- WhatsApp Dispatch: https://wa.me/916381939769
 - Email: kalidasstravels2015@gmail.com
-- Physical Headquarters: No. 4/220, E88, Ponniamman Kovil Street, Annamalai Nagar, Medavakkam, Chennai 600100, Tamil Nadu, India.
-- GPS Coordinates: Latitude 12.9171° N, Longitude 80.1923° E.
+- OpenAPI Specification: https://kalidasstravels.in/openapi.json
+- Fleet JSON API: https://kalidasstravels.in/api/fleet.json
+- Routes JSON API: https://kalidasstravels.in/api/routes.json
+- XML Sitemap: https://kalidasstravels.in/sitemap.xml
+- LLM Index: https://kalidasstravels.in/llms.txt
+- Full Knowledge Base: https://kalidasstravels.in/llms-full.txt
+- AI Crawler Policy: https://kalidasstravels.in/ai.txt

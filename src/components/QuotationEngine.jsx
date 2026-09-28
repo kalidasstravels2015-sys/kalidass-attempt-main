@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Car, MapPin, Calendar, Calculator, Send, ArrowRight, Repeat, Users, User, AlertCircle, Navigation, ShieldCheck, Clock, X, ChevronDown, ChevronRight, CheckCircle2 } from 'lucide-react';
+import { Car, MapPin, Calendar, Calculator, Send, ArrowRight, Repeat, Users, User, AlertCircle, Navigation, ShieldCheck, Clock, X, ChevronDown, ChevronRight, CheckCircle2, Plane } from 'lucide-react';
 import { trackEvent } from '../lib/analytics';
 import LocationPicker from './LocationPicker';
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
@@ -1029,6 +1029,33 @@ Please confirm availability.`;
               )}
             </button>
 
+            {/* Smart Airport Quick-Access Callout (Below Calculate Cost) */}
+            {showAirportTab && !showResult && (
+              <div className="pt-1">
+                <a
+                  href="/services/chennai-airport-taxi/"
+                  className="flex items-center justify-between p-2.5 px-3.5 bg-m3-surface-container-high hover:bg-m3-surface-container-highest border border-m3-outline-variant hover:border-m3-primary/40 rounded-m3-xl transition-all text-xs group cursor-pointer"
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="p-1 sm:p-1.5 bg-m3-primary/10 text-m3-primary rounded-m3-full shrink-0 group-hover:scale-110 transition-transform">
+                      <Plane className="w-3.5 h-3.5" />
+                    </span>
+                    <div className="truncate text-left">
+                      <span className="font-bold text-m3-on-surface">
+                        {isTa ? 'சென்னை ஏர்போர்ட் டாக்ஸியா?' : 'Chennai Airport Pickup / Drop?'}
+                      </span>
+                      <span className="hidden sm:inline text-m3-on-surface-variant ml-1.5 text-[11px]">
+                        {isTa ? 'நிலையான கட்டணம் ₹650 முதல் • ஜீரோ சர்ஜ்' : 'Flat rates from ₹650 • Zero surge'}
+                      </span>
+                    </div>
+                  </div>
+                  <span className="inline-flex items-center gap-0.5 text-[11px] font-bold text-m3-primary shrink-0 group-hover:translate-x-0.5 transition-transform">
+                    {isTa ? 'கட்டணங்கள்' : 'Flat Rates'} <ChevronRight className="w-3.5 h-3.5" />
+                  </span>
+                </a>
+              </div>
+            )}
+
             {/* Results Section */}
             {showResult && (
               <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-300">
@@ -1390,7 +1417,35 @@ Please confirm availability.`;
                 </>
               )}
             </button>
-          ) : (
+          ) : null}
+
+          {showAirportTab && !showResult && (
+            <div className="pt-2">
+              <a
+                href="/services/chennai-airport-taxi/"
+                className="flex items-center justify-between p-2.5 px-3.5 bg-m3-surface-container-high hover:bg-m3-surface-container-highest border border-m3-outline-variant hover:border-m3-primary/40 rounded-m3-xl transition-all text-xs group cursor-pointer"
+              >
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="p-1 sm:p-1.5 bg-m3-primary/10 text-m3-primary rounded-m3-full shrink-0 group-hover:scale-110 transition-transform">
+                    <Plane className="w-3.5 h-3.5" />
+                  </span>
+                  <div className="truncate text-left">
+                    <span className="font-bold text-m3-on-surface">
+                      {isTa ? 'சென்னை ஏர்போர்ட் டாக்ஸியா?' : 'Chennai Airport Pickup / Drop?'}
+                    </span>
+                    <span className="hidden sm:inline text-m3-on-surface-variant ml-1.5 text-[11px]">
+                      {isTa ? 'நிலையான கட்டணம் ₹650 முதல் • ஜீரோ சர்ஜ்' : 'Flat rates from ₹650 • Zero surge'}
+                    </span>
+                  </div>
+                </div>
+                <span className="inline-flex items-center gap-0.5 text-[11px] font-bold text-m3-primary shrink-0 group-hover:translate-x-0.5 transition-transform">
+                  {isTa ? 'கட்டணங்கள்' : 'Flat Rates'} <ChevronRight className="w-3.5 h-3.5" />
+                </span>
+              </a>
+            </div>
+          )}
+
+          {showResult && (
             <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
               {distance && (
                 <div className="bg-m3-surface-container-low p-3 rounded-m3-lg border border-m3-outline-variant space-y-2">

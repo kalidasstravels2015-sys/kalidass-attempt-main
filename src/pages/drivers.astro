@@ -2,7 +2,6 @@
 import Layout from "../layouts/Layout.astro";
 import siteContent from "../data/siteContent.json";
 import Breadcrumbs from "../components/SEO/Breadcrumbs.astro";
-import WhatsAppIcon from "../components/WhatsAppIcon.astro";
 
 const drivers = siteContent.drivers;
 
@@ -71,13 +70,6 @@ const driversSchema = {
           drivers.map((driver) => {
             const slug = toSlug(driver.name);
             const driverUrl = `/drivers/${slug}/`;
-            const waShareText = encodeURIComponent(
-              `*${driver.name}* - ${driver.specialty}\n` +
-              `⭐ ${driver.rating} Rating | ${driver.trips} Trips\n` +
-              `✅ Police Verification Certified\n\n` +
-              `View Verified ID: https://kalidasstravels.in${driverUrl}\n` +
-              `Book via *Kalidass Travels* – kalidasstravels.in`
-            );
 
             return (
               <div class="bg-m3-surface rounded-m3-xl shadow-m3-1 hover:shadow-m3-2 border border-m3-outline-variant p-3 sm:p-3.5 transition-all duration-200 group flex gap-3 sm:gap-3.5 items-stretch relative">
@@ -146,7 +138,7 @@ const driversSchema = {
                     </div>
                   </div>
 
-                  <!-- Actions Row: View Verified ID Link + WhatsApp Share -->
+                  <!-- Actions Row: View Verified ID Link -->
                   <div class="flex items-center justify-between pt-1.5 border-t border-m3-outline-variant/60 gap-2">
                     <a
                       href={driverUrl}
@@ -154,17 +146,6 @@ const driversSchema = {
                     >
                       <span>View Verified ID</span>
                       <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
-                    </a>
-
-                    <a
-                      href={`https://wa.me/?text=${waShareText}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title="Share on WhatsApp"
-                      class="flex items-center justify-center w-7 h-7 bg-[#25D366]/10 hover:bg-[#25D366] text-[#25D366] hover:text-white rounded-m3-full transition-all shrink-0 shadow-sm hover:shadow-m3-1 focus-visible:ring-2 focus-visible:ring-[#25D366]"
-                      aria-label={`Share ${driver.name} profile on WhatsApp`}
-                    >
-                      <WhatsAppIcon class="w-3.5 h-3.5" variant="brand" />
                     </a>
                   </div>
                 </div>

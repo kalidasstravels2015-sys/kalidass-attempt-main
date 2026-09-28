@@ -9,6 +9,8 @@ node_modules/
 # Build output
 dist/
 build/
+*.docx
+Kalidass_Travels_Org_Structure_and_Roles.*
 
 # Logs & debug output
 *.log

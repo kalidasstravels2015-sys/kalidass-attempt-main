@@ -92,7 +92,7 @@ A high-performance, mobile-first web portal powered by Astro 4 and Material Desi
 | Service Vertical       | URL Path                          | Key Value Prop                           | Functional Highlights                                                                               |
 | :--------------------- | :-------------------------------- | :--------------------------------------- | :-------------------------------------------------------------------------------------------------- |
 | **Airport Taxi**       | `/services/chennai-airport-taxi/` | 5–10 min rapid dispatch from MAA         | Live terminal pickup points, flight number logging, zero wait surcharge                             |
-| **Outstation Cabs**    | `/services/popular-destinations/` | Inter-city road trips across South India | Popular route cards (Pondicherry, Bangalore, Tirupati, Ooty), round-trip vs one-way toggles         |
+| **Outstation Cabs**    | `/services/outstation-cabs/`      | Inter-city road trips across South India | Popular route cards (Pondicherry, Bangalore, Tirupati, Ooty), round-trip vs one-way toggles         |
 | **Temple Tours**       | `/services/temple-tours/`         | All-inclusive spiritual yatras           | Pre-calculated packages: Tirupati, Navagraha 9 Temples, Kanchipuram, Arupadai Veedu, Rameswaram     |
 | **Acting Drivers**     | `/services/acting-drivers/`       | Chauffeur for your personal car          | Hourly fee estimator (₹350/2hr up to ₹800/8hr), night duty rules, outstation driver bata calculator |
 | **Corporate Mobility** | `/services/corporate/`            | B2B employee transport & retainers       | Invoicing enquiry form, SLA highlights, client logos, customized contract requests                  |

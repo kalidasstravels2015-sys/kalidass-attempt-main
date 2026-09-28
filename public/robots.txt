@@ -1,11 +1,147 @@
-# Allow all crawlers, search engines, and AI bots worldwide
+# Allow all search engines and global crawlers
 User-agent: *
 Allow: /
 
-# Sitemaps
+# ─── OpenAI (ChatGPT, SearchGPT, GPT-4, GPT-5) ───
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+# ─── Anthropic (Claude, Claude 3.5 Sonnet, Claude Opus) ───
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+# ─── Perplexity AI (Perplexity Search, Pro Search) ───
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+# ─── Google AI (Gemini, Google-Extended, Vertex AI) ───
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GoogleOther
+Allow: /
+
+User-agent: GoogleOther-Image
+Allow: /
+
+User-agent: GoogleOther-Video
+Allow: /
+
+# ─── Apple (Apple Intelligence, Siri AI Search) ───
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# ─── Microsoft & Bing (Copilot, Bing AI Search) ───
+User-agent: Bingbot
+Allow: /
+
+User-agent: BingPreview
+Allow: /
+
+User-agent: MSNBot
+Allow: /
+
+# ─── Meta (Meta AI, Llama) ───
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: Meta-ExternalFetcher
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+# ─── Amazon (Alexa, Rufus AI Shopping) ───
+User-agent: Amazonbot
+Allow: /
+
+# ─── Cohere (Command R+, Embed, RAG) ───
+User-agent: cohere-ai
+Allow: /
+
+User-agent: cohere-training-data-crawler
+Allow: /
+
+# ─── Mistral AI (Le Chat, Mistral Large) ───
+User-agent: MistralBot
+Allow: /
+
+# ─── ByteDance (Doubao, TikTok AI) ───
+User-agent: Bytespider
+Allow: /
+
+# ─── You.com (You.com AI Search) ───
+User-agent: YouBot
+Allow: /
+
+# ─── DuckDuckGo (DuckAssist AI) ───
+User-agent: DuckAssistBot
+Allow: /
+
+# ─── Common Crawl (Foundational open LLM corpus) ───
+User-agent: CCBot
+Allow: /
+
+# ─── Diffbot (Knowledge Graph & AI Dataset) ───
+User-agent: Diffbot
+Allow: /
+
+# ─── Tavily (AI Agent Research Engine) ───
+User-agent: TavilyBot
+Allow: /
+
+# ─── Additional AI & Research Crawlers ───
+User-agent: Timpibot
+Allow: /
+
+User-agent: VelenPublicWebCrawler
+Allow: /
+
+User-agent: Webzio-Extended
+Allow: /
+
+User-agent: PetalBot
+Allow: /
+
+User-agent: SemanticScholarBot
+Allow: /
+
+User-agent: DataForSeoBot
+Allow: /
+
+User-agent: ImagesiftBot
+Allow: /
+
+User-agent: Omgilibot
+Allow: /
+
+User-agent: Omgili
+Allow: /
+
+# ─── XML Sitemaps ───
 Sitemap: https://kalidasstravels.in/sitemap-index.xml
 Sitemap: https://kalidasstravels.in/sitemap.xml
 
-# LLM Directives
-# LLMs-TXT: https://kalidasstravels.in/llms.txt
-# LLMs-Full-TXT: https://kalidasstravels.in/llms-full.txt
+# ─── LLM Directives (llmstxt.org Standard) ───
+LLMs-TXT: https://kalidasstravels.in/llms.txt
+LLMs-Full-TXT: https://kalidasstravels.in/llms-full.txt
+
+

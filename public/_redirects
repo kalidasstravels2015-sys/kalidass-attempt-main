@@ -9,8 +9,13 @@
 /services/events-mice/*                /services/corporate/    301
 /services/executive-fleet/*            /services/corporate/    301
 
-# Duplicate Outstation Route -> Canonical Destination Hub
-/services/outstation-cabs/*    /services/popular-destinations/    301
+# Legacy / Alternate Outstation Routes -> Canonical Outstation Cabs Hub
+/services/popular-destinations/*    /services/outstation-cabs/    301
+/services/popular-destinations      /services/outstation-cabs/    301
+/services/outstation/*              /services/outstation-cabs/    301
+/services/outstation                /services/outstation-cabs/    301
+/outstation/*                       /services/outstation-cabs/    301
+/outstation                         /services/outstation-cabs/    301
 
 # Fragmented Airport Transits -> Consolidated Master Airport Service
 /services/airport-drop-sedan/*                    /services/chennai-airport-taxi-transfers/    301
@@ -38,6 +43,8 @@
 /services/bada-dost-i4-goods-delivery/*         /services/    301
 /services/luggage-parcel-delivery-chennai/*      /services/    301
 
-# AI & LLM Standards
-/.well-known/llms.txt    /llms.txt    200
+# AI & LLM Standards & APIs
+/.well-known/llms.txt    /llms.txt          200
+/api/fleet               /api/fleet.json    200
+/api/routes              /api/routes.json   200
 
