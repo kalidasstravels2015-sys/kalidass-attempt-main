@@ -561,41 +561,61 @@ const faqSchema = {
       <!-- Interactive View Switcher Script (Cards View / Table View) -->
       <script is:inline>
         (function() {
-          function setupSwitcher(btnTableId, btnCardsId, tableId, cardsId) {
-            const btnTable = document.getElementById(btnTableId);
-            const btnCards = document.getElementById(btnCardsId);
-            const viewTable = document.getElementById(tableId);
-            const viewCards = document.getElementById(cardsId);
+          function initSwitchers() {
+            function setupSwitcher(btnTableId, btnCardsId, tableId, cardsId) {
+              const btnTable = document.getElementById(btnTableId);
+              const btnCards = document.getElementById(btnCardsId);
+              const viewTable = document.getElementById(tableId);
+              const viewCards = document.getElementById(cardsId);
 
-            if (btnTable && btnCards && viewTable && viewCards) {
-              btnTable.addEventListener('click', function() {
-                viewTable.classList.remove('hidden');
-                viewCards.classList.add('md:hidden');
-                viewCards.classList.remove('md:block');
-                btnTable.classList.add('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs', 'font-bold');
-                btnTable.classList.remove('text-m3-on-surface-variant', 'font-medium');
-                btnTable.setAttribute('aria-pressed', 'true');
-                btnCards.classList.remove('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs', 'font-bold');
-                btnCards.classList.add('text-m3-on-surface-variant', 'font-medium');
-                btnCards.setAttribute('aria-pressed', 'false');
-              });
+              if (btnTable && btnCards && viewTable && viewCards) {
+                if (btnTable.dataset.switcherBound === 'true') return;
+                btnTable.dataset.switcherBound = 'true';
 
-              btnCards.addEventListener('click', function() {
-                viewTable.classList.add('hidden');
-                viewCards.classList.remove('md:hidden');
-                viewCards.classList.add('md:block');
-                btnCards.classList.add('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs', 'font-bold');
-                btnCards.classList.remove('text-m3-on-surface-variant', 'font-medium');
-                btnCards.setAttribute('aria-pressed', 'true');
-                btnTable.classList.remove('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs', 'font-bold');
-                btnTable.classList.add('text-m3-on-surface-variant', 'font-medium');
-                btnTable.setAttribute('aria-pressed', 'false');
-              });
+                btnTable.addEventListener('click', function() {
+                  // Show Table on desktop, hide Cards on desktop
+                  viewTable.classList.remove('md:hidden');
+                  viewTable.classList.add('hidden', 'md:block');
+                  viewCards.classList.remove('md:block');
+                  viewCards.classList.add('block', 'md:hidden');
+
+                  btnTable.classList.add('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs', 'font-bold');
+                  btnTable.classList.remove('text-m3-on-surface-variant', 'font-medium');
+                  btnTable.setAttribute('aria-pressed', 'true');
+
+                  btnCards.classList.remove('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs', 'font-bold');
+                  btnCards.classList.add('text-m3-on-surface-variant', 'font-medium');
+                  btnCards.setAttribute('aria-pressed', 'false');
+                });
+
+                btnCards.addEventListener('click', function() {
+                  // Hide Table on desktop, show Cards on desktop
+                  viewTable.classList.remove('md:block');
+                  viewTable.classList.add('hidden', 'md:hidden');
+                  viewCards.classList.remove('md:hidden');
+                  viewCards.classList.add('block', 'md:block');
+
+                  btnCards.classList.add('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs', 'font-bold');
+                  btnCards.classList.remove('text-m3-on-surface-variant', 'font-medium');
+                  btnCards.setAttribute('aria-pressed', 'true');
+
+                  btnTable.classList.remove('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs', 'font-bold');
+                  btnTable.classList.add('text-m3-on-surface-variant', 'font-medium');
+                  btnTable.setAttribute('aria-pressed', 'false');
+                });
+              }
             }
+
+            setupSwitcher('local-btn-table', 'local-btn-cards', 'local-table-view', 'local-cards-view');
+            setupSwitcher('outstation-btn-table', 'outstation-btn-cards', 'outstation-table-view', 'outstation-cards-view');
           }
 
-          setupSwitcher('local-btn-table', 'local-btn-cards', 'local-table-view', 'local-cards-view');
-          setupSwitcher('outstation-btn-table', 'outstation-btn-cards', 'outstation-table-view', 'outstation-cards-view');
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initSwitchers);
+          } else {
+            initSwitchers();
+          }
+          document.addEventListener('astro:page-load', initSwitchers);
         })();
       </script>
 
