@@ -9,6 +9,15 @@ const breadcrumbItems = [
   { name: "Fleet", item: "/fleet/" },
 ];
 
+const vehicleImages: Record<string, string> = {
+  "Swift Dzire": "/images/fleet/swift-dzire.webp",
+  "Toyota Etios": "/images/fleet/toyoto-etios.webp",
+  "Maruti Ertiga": "/images/fleet/suv.webp",
+  "Innova": "/images/fleet/suv.webp",
+  "Innova Crysta": "/images/fleet/suv.webp",
+  "Tempo Traveller": "/images/fleet/tempo.webp",
+};
+
 const schema = {
   "@type": "ItemList",
   "@id": "https://kalidasstravels.in/fleet/#itemlist",
@@ -22,6 +31,12 @@ const schema = {
       "@type": "Product",
       name: `${name} Taxi Rental`,
       description: `Commercial AC vehicle with driver. Round trip from ₹${v.round_trip_rate}/km, One way from ₹${v.one_way_rate}/km.`,
+      image: `https://kalidasstravels.in${vehicleImages[name] || "/images/fleet/swift-dzire.webp"}`,
+      sku: `FLEET-${name.toUpperCase().replace(/\s+/g, '-')}`,
+      brand: {
+        "@type": "Brand",
+        name: "Kalidass Travels"
+      },
       offers: {
         "@type": "Offer",
         priceCurrency: "INR",

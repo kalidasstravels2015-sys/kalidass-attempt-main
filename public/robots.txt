@@ -59,7 +59,10 @@ Allow: /
 User-agent: MSNBot
 Allow: /
 
-# ─── Meta (Meta AI, Llama) ───
+# ─── Meta (Meta AI Search, Llama) ───
+User-agent: Meta-WebIndexer
+Allow: /
+
 User-agent: Meta-ExternalAgent
 Allow: /
 
@@ -141,7 +144,7 @@ Sitemap: https://kalidasstravels.in/sitemap-index.xml
 Sitemap: https://kalidasstravels.in/sitemap.xml
 
 # ─── LLM Directives (llmstxt.org Standard) ───
-LLMs-TXT: https://kalidasstravels.in/llms.txt
-LLMs-Full-TXT: https://kalidasstravels.in/llms-full.txt
+# LLMs-TXT: https://kalidasstravels.in/llms.txt
+# LLMs-Full-TXT: https://kalidasstravels.in/llms-full.txt
 
 
