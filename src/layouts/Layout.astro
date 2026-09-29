@@ -13,7 +13,6 @@ interface Props {
 }
 
 import siteContent from "../data/siteContent.json";
-import CookieConsent from "../components/CookieConsent.astro";
 import FloatingActions from "../components/FloatingActions.astro";
 
 const defaultTitle = "Kalidass Travels - Premium Travel Experience";
@@ -1468,9 +1467,6 @@ const unifiedSchemaGraph = {
 
   <!-- Floating Quick Actions (Call & WhatsApp) -->
   {showFloatingActions && <FloatingActions />}
-
-  <!-- Cookie Consent Banner -->
-  <CookieConsent />
   </body>
 
   <!-- Mobile Menu Toggle Script -->
