@@ -81,7 +81,7 @@ const DriversCarousel = ({ currentLang }) => {
     };
 
     return (
-        <section id="drivers" className="py-10 md:py-14 bg-m3-surface-container-low border-t border-m3-outline-variant/60" aria-labelledby="drivers-heading">
+        <section id="drivers" className="offscreen-defer py-10 md:py-14 bg-m3-surface-container-low border-t border-m3-outline-variant/60" aria-labelledby="drivers-heading">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Section Header */}
                 <div className="text-center max-w-3xl mx-auto mb-8">

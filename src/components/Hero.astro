@@ -18,7 +18,7 @@ const heroImageAlts: Record<string, string> = {
 
 <section
   id="hero"
-  class="relative min-h-[78vh] flex items-center justify-center overflow-hidden pt-16 pb-12 bg-slate-950"
+  class="relative min-h-[92vh] sm:min-h-[82vh] flex items-center justify-center overflow-hidden pt-16 pb-12 bg-slate-950"
 >
   <!-- Background Image Carousel with High-Contrast Dark Gradient Scrim -->
   <div class="absolute inset-0 z-0">
@@ -27,17 +27,17 @@ const heroImageAlts: Record<string, string> = {
       aria-hidden="true"
     >
       <div
-        class="hero-slide absolute inset-0 w-full h-full first-slide"
-        style="animation-delay: 0s;"
+        class="first-slide absolute inset-0 w-full h-full"
       >
         <OptimizedImage
           src={heroImages[0]}
           alt={heroImageAlts[heroImages[0]] || "Kalidass Travels Chennai Cab and Outstation Taxi"}
-          class="w-full h-full object-cover object-center scale-105 opacity-80"
+          class="w-full h-full object-cover object-center opacity-80"
           loading="eager"
-          decoding="sync"
+          decoding="async"
           fetchpriority="high"
-          sizes="100vw"
+          sizes="(max-width: 640px) 75vw, (max-width: 1024px) 100vw, 1200px"
+          format="avif"
         />
       </div>
 
@@ -55,7 +55,7 @@ const heroImageAlts: Record<string, string> = {
                 loading="lazy"
                 decoding="async"
                 fetchpriority="low"
-                sizes="100vw"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1200px"
               />
             </div>
           ))}
@@ -151,6 +151,9 @@ const heroImageAlts: Record<string, string> = {
 
   .first-slide {
     opacity: 1;
+  }
+
+  .first-slide.animate-carousel {
     animation: heroFadeFirst 21s ease-in-out infinite;
   }
 
@@ -171,7 +174,7 @@ const heroImageAlts: Record<string, string> = {
 </style>
 
 <script is:inline>
-  // Defer secondary hero carousel slides until user interaction or after first slide cycle (7.5s)
+  // Defer secondary hero carousel slides until dwell time (7s) to avoid bandwidth contention during critical page load
   (function() {
     let mounted = false;
     const mountDeferredSlides = function() {
@@ -181,21 +184,18 @@ const heroImageAlts: Record<string, string> = {
       const container = document.querySelector('.hero-slides');
       if (template && container) {
         container.appendChild(template.content);
+        const first = container.querySelector('.first-slide');
+        if (first) first.classList.add('animate-carousel');
       }
-      window.removeEventListener('scroll', mountDeferredSlides);
-      window.removeEventListener('pointerdown', mountDeferredSlides);
-      window.removeEventListener('touchstart', mountDeferredSlides);
     };
 
-    window.addEventListener('scroll', mountDeferredSlides, { once: true, passive: true });
-    window.addEventListener('pointerdown', mountDeferredSlides, { once: true, passive: true });
-    window.addEventListener('touchstart', mountDeferredSlides, { once: true, passive: true });
-
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(mountDeferredSlides, { timeout: 7500 });
-    } else {
-      setTimeout(mountDeferredSlides, 7500);
-    }
+    setTimeout(function() {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(mountDeferredSlides);
+      } else {
+        mountDeferredSlides();
+      }
+    }, 7000);
   })();
 </script>
 

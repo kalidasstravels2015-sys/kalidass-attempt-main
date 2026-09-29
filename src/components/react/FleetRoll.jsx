@@ -68,7 +68,7 @@ const FleetCard = ({ vehicle, isVisible, priority }) => {
                         href="/tariff/"
                         className="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-m3-full bg-m3-primary hover:bg-slate-900 text-white text-m3-label-m font-semibold shadow-m3-1 hover:shadow-m3-2 transition-all border border-white/10 group"
                     >
-                        <span>View Rates &amp; Tariff</span>
+                        <span>View Rates & Tariff</span>
                         <span className="material-symbols-outlined text-[16px] text-emerald-400 transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
                     </a>
                 </div>
@@ -111,7 +111,7 @@ const FleetRoll = ({ currentLang = 'en', hideHeader = false, limit }) => {
     }, [fleet.length]);
 
     return (
-        <section id="fleet" className={`${hideHeader ? 'py-4' : 'py-10 md:py-14 bg-m3-surface border-t border-m3-outline-variant/60'}`} ref={containerRef} aria-labelledby={hideHeader ? undefined : "fleet-heading"}>
+        <section id="fleet" className={`${hideHeader ? 'py-4' : 'offscreen-defer py-10 md:py-14 bg-m3-surface border-t border-m3-outline-variant/60'}`} aria-labelledby={hideHeader ? undefined : "fleet-heading"}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Section Header */}
                 {!hideHeader && (
@@ -156,7 +156,7 @@ const FleetRoll = ({ currentLang = 'en', hideHeader = false, limit }) => {
                                 href="/fleet/"
                                 className="inline-flex items-center gap-2 px-6 py-2.5 rounded-m3-full bg-m3-surface border border-m3-outline text-m3-on-surface text-m3-label-l font-bold hover:bg-m3-surface-container-high shadow-m3-1 transition-all"
                             >
-                                <span>Explore All 8+ Vehicles &amp; Full Tariff</span>
+                                <span>Explore All 8+ Vehicles & Full Tariff</span>
                                 <span className="material-symbols-outlined text-[18px] text-m3-primary">arrow_forward</span>
                             </a>
                         </div>

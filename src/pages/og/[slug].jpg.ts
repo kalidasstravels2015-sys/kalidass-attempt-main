@@ -343,6 +343,18 @@ export const GET: APIRoute = async ({ params }) => {
   const { slug } = params;
   if (!slug) return new Response("Not found", { status: 404 });
 
+  // Fast path: If pre-generated in public/og, serve directly to avoid heavy re-computation during build
+  const prebuiltPath = path.resolve(`./public/og/${slug}.jpg`);
+  if (existsSync(prebuiltPath)) {
+    const fileBuffer = readFileSync(prebuiltPath);
+    return new Response(fileBuffer as any, {
+      headers: {
+        "Content-Type": "image/jpeg",
+        "Cache-Control": "public, max-age=31536000, immutable",
+      },
+    });
+  }
+
   const service = serviceDetails.find((s) => s.slug === slug);
   const hub = categoryHubs[slug];
 

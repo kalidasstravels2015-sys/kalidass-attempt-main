@@ -52,8 +52,8 @@ const personSchema = {
 ---
 
 <Layout
-  title={`${driver.name} – Verified Driver ID Card | Kalidass Travels`}
-  description={`Official verified ID card for ${driver.name}: ${driver.experience}, ${driver.specialty}. Police verification (PVC) and commercial driving license verified.`}
+  title={`${driver.name} – Verified Driver | Kalidass Travels`}
+  description={`Verified driver profile for ${driver.name}: ${driver.experience}, ${driver.specialty}. Background checked & PVC verified at Kalidass Travels.`}
   schema={personSchema}
 >
   <Breadcrumbs items={breadcrumbItems} />
@@ -108,7 +108,7 @@ const personSchema = {
             <div class="relative w-28 h-28 rounded-xl overflow-hidden border-2 border-slate-300 bg-slate-50 shrink-0 shadow-sm">
               <img
                 src={driver.image}
-                alt={driver.name}
+                alt={`${driver.name} - Verified Driver at Kalidass Travels`}
                 width="112"
                 height="112"
                 class="w-full h-full object-cover object-center"

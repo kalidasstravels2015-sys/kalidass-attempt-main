@@ -135,7 +135,7 @@ const templePackageMeta: Record<string, TourMeta> = {
 };
 ---
 
-<section id="tours" class="py-10 md:py-14 bg-m3-surface-container-low border-t border-m3-outline-variant/60">
+<section id="tours" class="offscreen-defer py-10 md:py-14 bg-m3-surface-container-low border-t border-m3-outline-variant/60">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Section Header -->
     <div class="text-center max-w-3xl mx-auto mb-8">
@@ -170,7 +170,7 @@ const templePackageMeta: Record<string, TourMeta> = {
           <div class="flex-none w-[85vw] sm:w-80 md:w-auto snap-center bg-m3-surface rounded-m3-xl shadow-m3-1 hover:shadow-m3-3 border border-m3-outline-variant overflow-hidden group transition-all duration-300 flex flex-col justify-between">
             <div>
               <!-- Card Media Container -->
-              <a href={`/services/${tour.slug}/`} class="block h-44 sm:h-48 overflow-hidden relative bg-m3-surface-container-high skeleton-shimmer cursor-pointer" aria-label={`View ${meta.cleanTitle} Itinerary`}>
+              <a href={`/services/${tour.slug}/`} tabindex="-1" aria-hidden="true" class="block h-44 sm:h-48 overflow-hidden relative bg-m3-surface-container-high skeleton-shimmer cursor-pointer">
                 <OptimizedImage
                   src={tourImages[tour.slug] || "/images/temple/tirupati-balaji.webp"}
                   alt={tourImageAlts[tour.slug] || meta.cleanTitle}

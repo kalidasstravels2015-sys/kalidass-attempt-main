@@ -45,14 +45,25 @@ export default defineConfig({
       },
     },
     compress({
-      HTML: false,
+      HTML: true,
       JavaScript: false,
     }),
   ],
   build: {
-    inlineStylesheets: 'always',
+    inlineStylesheets: 'auto',
   },
   vite: {
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('lucide-react')) {
+              return 'lucide-icons';
+            }
+          },
+        },
+      },
+    },
     plugins: [
       {
         name: 'utf8-headers',

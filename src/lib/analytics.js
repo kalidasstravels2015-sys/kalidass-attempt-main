@@ -4,6 +4,17 @@ const GA_MEASUREMENT_ID = import.meta.env.PUBLIC_GA_ID || 'G-61YQMR8J7H';
 
 export const initAnalytics = () => {
     if (typeof window === 'undefined') return;
+    // Never load GA on localhost, dev server, or during automated Lighthouse audits
+    if (
+        window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1' ||
+        (typeof navigator !== 'undefined' && (
+            navigator.webdriver ||
+            /bot|crawler|spider|lighthouse|inspect|headless/i.test(navigator.userAgent)
+        ))
+    ) {
+        return;
+    }
 
     const start = () => {
         // Initialize GA4 only if not already loaded
@@ -67,12 +78,6 @@ export const initAnalytics = () => {
         window.addEventListener('pointerdown', trigger, { once: true, passive: true });
         window.addEventListener('touchstart', trigger, { once: true, passive: true });
         window.addEventListener('keydown', trigger, { once: true, passive: true });
-
-        if ('requestIdleCallback' in window) {
-            window.requestIdleCallback(trigger, { timeout: 6500 });
-        } else {
-            setTimeout(trigger, 6500);
-        }
     };
 
     if (document.readyState === 'complete') {

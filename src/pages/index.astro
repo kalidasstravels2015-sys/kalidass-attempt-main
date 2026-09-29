@@ -13,16 +13,32 @@ import Reviews from "../components/Reviews.astro";
 import FAQ from "../components/FAQ.astro";
 import ExitIntentModal from "../components/react/ExitIntentModal.jsx";
 import BottomCTA from "../components/BottomCTA.astro";
+import { getImage } from "astro:assets";
+import airavatesvaraImg from "../assets/images/hero/airavatesvara.webp";
 
 const ogImage = "/images/og-main.png";
+
+const heroOptimized = await getImage({
+  src: airavatesvaraImg,
+  widths: [240, 360, 480, 640, 800, 1080, 1440],
+  sizes: "(max-width: 640px) 75vw, (max-width: 1024px) 100vw, 1200px",
+  format: "avif",
+  quality: 24,
+});
+
+const preloadHero = {
+  href: heroOptimized.src,
+  srcset: heroOptimized.srcSet.attribute,
+  sizes: "(max-width: 640px) 75vw, (max-width: 1024px) 100vw, 1200px",
+};
 
 // Homepage WebPage schema with BreadcrumbList
 const homePageSchema = {
   "@type": "WebPage",
   "@id": "https://kalidasstravels.in/#webpage",
   "url": "https://kalidasstravels.in/",
-  "name": "Kalidass Travels – Best Taxi, Outstation Cabs & Temple Tours in Chennai",
-  "description": "Book reliable taxi and cab services in Chennai: Airport transfers from ₹650, outstation cabs from ₹14/km, Tirupati & temple tour packages, and acting drivers from ₹600. 24/7 support.",
+  "name": "Kalidass Travels – Best Cabs & Temple Tours Chennai",
+  "description": "Book reliable taxi services in Chennai: Airport cabs from ₹650, outstation cabs from ₹14/km, temple tours & acting drivers from ₹600. 24/7 support.",
   "isPartOf": { "@id": "https://kalidasstravels.in/#website" },
   "about": { "@id": "https://kalidasstravels.in/#localbusiness" },
   "hasPart": { "@id": "https://kalidasstravels.in/#faq" },
@@ -46,11 +62,12 @@ const homePageSchema = {
 ---
 
 <Layout
-  title="Kalidass Travels – Best Taxi, Outstation Cabs & Temple Tours in Chennai"
-  description="Book reliable taxi and cab services in Chennai: Airport transfers from ₹650, outstation cabs from ₹14/km, Tirupati & temple tour packages, and acting drivers from ₹600. 24/7 support."
+  title="Kalidass Travels – Best Cabs & Temple Tours Chennai"
+  description="Book reliable taxi services in Chennai: Airport cabs from ₹650, outstation cabs from ₹14/km, temple tours & acting drivers from ₹600. 24/7 support."
   keywords="taxi service chennai, cab booking chennai, outstation cabs chennai, chennai to tirupati cab, chennai airport taxi, temple tour packages chennai, acting driver in chennai, call drivers chennai, kalidass travels medavakkam"
   image={ogImage}
   schema={homePageSchema}
+  preloadHero={preloadHero}
 >
   <!-- Desktop Floating Section Progress Rail (Desktop Only) -->
   <SectionNavigator client:media="(min-width: 1024px)" />
@@ -86,6 +103,6 @@ const homePageSchema = {
   <!-- 9. Final Booking & Call CTA -->
   <BottomCTA />
 
-  <!-- Exit Intent Vehicle Recommendation Helper -->
-  <ExitIntentModal client:idle />
+  <!-- Exit Intent Vehicle Recommendation Helper (Desktop Only) -->
+  <ExitIntentModal client:media="(min-width: 1024px)" />
 </Layout>

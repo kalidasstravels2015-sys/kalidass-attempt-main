@@ -1,6 +1,7 @@
 # Allow all search engines and global crawlers
 User-agent: *
 Allow: /
+Disallow: /cdn-cgi/
 
 # ─── OpenAI (ChatGPT, SearchGPT, GPT-4, GPT-5) ───
 User-agent: GPTBot

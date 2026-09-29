@@ -55,9 +55,21 @@
     const currentConsent = localStorage.getItem(consentKey);
 
     if (!currentConsent) {
-      setTimeout(() => {
+      const showBanner = () => {
         banner.classList.remove("translate-y-32", "opacity-0", "pointer-events-none");
-      }, 1000);
+        cleanup();
+      };
+      const timer = setTimeout(showBanner, 4000);
+      const onInteract = () => {
+        clearTimeout(timer);
+        showBanner();
+      };
+      const cleanup = () => {
+        window.removeEventListener("scroll", onInteract);
+        window.removeEventListener("pointerdown", onInteract);
+      };
+      window.addEventListener("scroll", onInteract, { once: true, passive: true });
+      window.addEventListener("pointerdown", onInteract, { once: true, passive: true });
     }
 
     function dismiss(value) {
