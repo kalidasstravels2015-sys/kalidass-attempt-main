@@ -78,9 +78,9 @@ const FleetCard = ({ vehicle, isVisible, priority }) => {
 };
 
 /**
- * @param {{ currentLang?: string, hideHeader?: boolean, limit?: number }} props
+ * @param {{ currentLang?: string, hideHeader?: boolean, limit?: number, sectionHeading?: string }} props
  */
-const FleetRoll = ({ currentLang = 'en', hideHeader = false, limit }) => {
+const FleetRoll = ({ currentLang = 'en', hideHeader = false, limit, sectionHeading }) => {
     const rawFleet = siteContent.fleet;
     const fleet = limit ? rawFleet.slice(0, limit) : rawFleet;
     const [activeIndex, setActiveIndex] = useState(0);
@@ -111,10 +111,14 @@ const FleetRoll = ({ currentLang = 'en', hideHeader = false, limit }) => {
     }, [fleet.length]);
 
     return (
-        <section id="fleet" className={`${hideHeader ? 'py-4' : 'offscreen-defer py-10 md:py-14 bg-m3-surface border-t border-m3-outline-variant/60'}`} aria-labelledby={hideHeader ? undefined : "fleet-heading"}>
+        <section id="fleet" className={`${hideHeader ? 'py-4' : 'offscreen-defer py-10 md:py-14 bg-m3-surface border-t border-m3-outline-variant/60'}`} aria-labelledby="fleet-heading">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Section Header */}
-                {!hideHeader && (
+                {hideHeader ? (
+                    <h2 id="fleet-heading" className="sr-only">
+                        {sectionHeading || "Available Cabs and Commercial Vehicles"}
+                    </h2>
+                ) : (
                     <div className="text-center max-w-3xl mx-auto mb-8">
                         <h2 id="fleet-heading" className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
                             {heading}

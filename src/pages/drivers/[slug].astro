@@ -149,6 +149,10 @@ const personSchema = {
 
           <!-- Official Verification Endorsements -->
           <div class="pt-4 space-y-3">
+            <div class="flex items-center gap-1.5 pb-0.5">
+              <span class="material-symbols-outlined text-[16px] text-emerald-600" aria-hidden="true">verified_user</span>
+              <h2 class="text-xs font-bold text-slate-700 uppercase tracking-wider font-heading">{driver.name} – Verified Credentials &amp; PVC Status</h2>
+            </div>
             
             <!-- 1. Driving License Row (Privacy Masked) -->
             <div class="bg-slate-50 rounded-xl p-3 border border-slate-200">
@@ -222,7 +226,7 @@ const personSchema = {
         <a
           href={`https://wa.me/916381939769?text=${waText}`}
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener noreferrer nofollow"
           class="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-sm shadow-sm transition-all text-center"
         >
           <WhatsAppIcon class="w-4 h-4" variant="brand" />

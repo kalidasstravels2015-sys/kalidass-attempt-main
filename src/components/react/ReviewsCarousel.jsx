@@ -85,7 +85,7 @@ const ReviewsCarousel = ({ currentLang }) => {
                     <a
                         href="https://maps.app.goo.gl/i2LdJhWMi2ZgAiCa8"
                         target="_blank"
-                        rel="noopener noreferrer"
+                        rel="noopener noreferrer nofollow"
                         className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-m3-primary hover:bg-slate-900 text-white font-bold text-sm rounded-m3-full shadow-m3-2 hover:shadow-m3-3 transition-all border border-white/20 group"
                         aria-label="See More Reviews on Google (opens in a new tab)"
                     >

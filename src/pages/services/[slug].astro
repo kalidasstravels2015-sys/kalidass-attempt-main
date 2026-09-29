@@ -69,6 +69,31 @@ const tourImages: Record<string, string> = {
   "yercaud-hills-weekend": "/images/hero/airavatesvara.webp"
 };
 
+const serviceShortNames: Record<string, string> = {
+  "tirupati-package": "Tirupati Balaji",
+  "navagraha-tour": "Kumbakonam Navagraha",
+  "thiruvannamalai-girivalam-trip": "Thiruvannamalai Girivalam",
+  "sabarimala-trip": "Sabarimala Pilgrim",
+  "rameswaram-2-days": "Rameswaram & Dhanushkodi",
+  "kanchipuram-temple-trip": "Kanchipuram Temple",
+  "chidambaram-temple-trip": "Chidambaram & Pichavaram",
+  "vellore-golden-temple": "Vellore Golden Temple",
+  "acting-driver-within-chennai": "Local Chennai Acting Driver",
+  "acting-driver-outstation-round-trip": "Outstation Round-Trip Driver",
+  "acting-driver-outstation-one-way": "Outstation One-Way Driver Drop",
+  "monthly-car-with-driver-corporate": "Monthly Corporate Car & Chauffeur",
+  "employee-pickup-drop": "Corporate Employee Transportation",
+  "pondicherry-one-day-trip": "Pondicherry Tour",
+  "one-day-chennai-city-tour": "Chennai City Sightseeing",
+  "driver-car-for-weddings": "Wedding Car & Chauffeur",
+  "mahabalipuram-ecr-temple-route": "Mahabalipuram & ECR Tour",
+  "yelagiri-hills-weekend": "Yelagiri Hills Weekend",
+  "yercaud-hills-weekend": "Yercaud Weekend Package",
+  "chennai-airport-taxi-transfers": "Chennai Airport Cab Transfer",
+};
+
+const shortName = serviceShortNames[service.slug] || service.destination || service.title;
+
 const categoryImages: Record<string, string> = {
   "Acting Drivers": "/images/services/acting-drivers.webp",
   "Acting Driver Services": "/images/services/acting-drivers.webp",
@@ -675,7 +700,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                 <span>Transparent Pricing • All Tolls Included</span>
               </div>
               <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
-                Tariff & Package Rates
+                {shortName} Tariff &amp; Package Rates
               </h2>
               <p class="text-xs sm:text-sm text-m3-on-surface-variant font-sans mt-1">
                 Fixed round-trip rates with doorstep pickup, sanitized dual AC cars, FASTag tolls, and driver allowance.
@@ -706,7 +731,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
               <a 
                 href={whatsappLink}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer nofollow"
                 class="inline-flex items-center gap-1.5 px-4 py-2 rounded-m3-full bg-m3-primary text-m3-on-primary text-xs font-bold shadow-m3-1 hover:bg-m3-primary/90 active:scale-[0.98] transition-all"
               >
                 <span>Reserve Now</span>
@@ -990,7 +1015,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
             <div>
               <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface flex items-center gap-2 font-heading">
                 <Compass className="w-5 h-5 text-m3-primary" />
-                <span>Trip Route Schedule &amp; Key Stops</span>
+                <span>{shortName} Route Schedule &amp; Key Stops</span>
               </h2>
               <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-0.5">Optimized timeline designed to ensure timely darshan entry</p>
             </div>
@@ -1034,7 +1059,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
           <div class="border-b border-m3-outline-variant/60 pb-3">
             <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface flex items-center gap-2.5 font-heading">
               <FileText className="w-5 h-5 text-m3-primary shrink-0" />
-              <span>{guideLabels.sectionTitle}</span>
+              <span>{shortName} {guideLabels.sectionTitle}</span>
             </h2>
             <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-0.5">Essential darshan timings, dress code regulations &amp; practical pilgrim tips</p>
           </div>
@@ -1254,7 +1279,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
             </span>
             <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface flex items-center gap-2 font-heading">
               <HelpCircle className="w-5 h-5 text-m3-primary" />
-              <span>Frequently Asked Questions ({service.faq.length})</span>
+              <span>{shortName} FAQs &amp; Booking Information</span>
             </h2>
             <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">Instant answers to common booking, darshan timings &amp; permit queries</p>
           </div>

@@ -568,6 +568,14 @@ const unifiedSchemaGraph = {
       type="font/woff2"
       crossorigin
     />
+    <!-- Critical Icon Font Preload for Immediate Icon Rendering Without FOUT -->
+    <link
+      rel="preload"
+      href="/fonts/material-symbols-outlined.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     {isTamilPage && (
       <link
         rel="preload"
@@ -1301,6 +1309,7 @@ const unifiedSchemaGraph = {
   <!-- Google Material 3 Footer (Dark Surface) -->
   <footer class="bg-m3-inverse-surface text-m3-inverse-on-surface pt-10 sm:pt-16 pb-10 sm:pb-12 border-t border-m3-outline-variant/20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="sr-only">Footer Navigation and Company Information</p>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 sm:gap-8 pb-8 sm:pb-12 border-b border-m3-outline-variant/20">
         <!-- Col 1: Brand & Verified Government Credentials -->
         <div class="lg:col-span-4 space-y-3 sm:space-y-4">
@@ -1322,7 +1331,7 @@ const unifiedSchemaGraph = {
             <a
               href="https://services.gst.gov.in/services/searchtp?gstin=33COVPM0531D1Z4"
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener noreferrer nofollow"
               class="inline-flex items-center gap-1 text-white/90 hover:text-white transition-colors group min-w-0"
               title="Verify GSTIN 33COVPM0531D1Z4 on Official Govt Portal"
             >
@@ -1336,7 +1345,7 @@ const unifiedSchemaGraph = {
             <a
               href="https://udyamregistration.gov.in/Udyam_Verify.aspx"
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener noreferrer nofollow"
               class="inline-flex items-center gap-1 text-white/90 hover:text-white transition-colors group min-w-0"
               title="Verify MSME / Udyam Reg. UDYAM-TN-08-0018345 on Official Govt Portal"
             >
@@ -1356,7 +1365,7 @@ const unifiedSchemaGraph = {
             <a
               href="https://maps.google.com/?q=Kalidass+Travels+Medavakkam+Chennai"
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener noreferrer nofollow"
               class="inline-flex items-center gap-1.5 font-semibold text-white/90 hover:text-white transition-colors group"
             >
               <span class="material-symbols-outlined text-[15px] text-[#4285F4] group-hover:scale-110 transition-transform">location_on</span>
@@ -1424,7 +1433,7 @@ const unifiedSchemaGraph = {
             <a
               href="https://wa.me/919952749408?text=Hi%20Saravn,%20I%20saw%20your%20work%20on%20Kalidass%20Travels%20website."
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener noreferrer nofollow"
               class="text-gray-400 hover:text-white hover:underline transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs"
             >
               Saravn

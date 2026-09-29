@@ -6,7 +6,7 @@ import WhatsAppButton from '../../components/WhatsAppButton.astro';
 import OptimizedImage from '../../components/OptimizedImage.astro';
 
 const title = "Chennai Airport Taxi (MAA) from ₹650";
-const description = "Pre-book Chennai Airport (MAA) taxi transfers. Flat zone fares from ₹650, zero surge pricing, flight tracking & 24/7 doorstep pickup with Kalidass Travels.";
+const description = "Pre-book Chennai Airport (MAA) taxi transfers. Flat zone fares from ₹650, zero surge pricing, flight tracking & 24/7 doorstep pickup.";
 const keywords = "chennai airport taxi, chennai airport cab booking, chennai airport drop cab, chennai airport pickup taxi, prepaid taxi chennai airport, airport transfer chennai, chennai airport cab fare";
 
 const breadcrumbItems = [
@@ -438,6 +438,9 @@ const faqSchema = {
   image="/images/services/airport-transfer.webp"
   ogImage="/og/chennai-airport-taxi.jpg"
   schema={[taxiServiceSchema, productSchema, faqSchema, howToSchema]}
+  preloadHero={{
+    href: "/images/services/airport-transfer.webp"
+  }}
 >
   <Breadcrumbs items={breadcrumbItems} />
 
@@ -492,7 +495,7 @@ const faqSchema = {
           <div class="flex items-center gap-2 min-w-0">
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
             <div class="min-w-0">
-              <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400 block leading-tight">Active Transfer</span>
+              <span class="text-[9px] font-bold uppercase tracking-wider text-slate-600 block leading-tight">Active Transfer</span>
               <strong id="sticky-direction-indicator" class="text-xs sm:text-sm font-extrabold text-slate-900 truncate block font-heading leading-tight">
                 Landing at Airport (Pickup)
               </strong>
@@ -587,11 +590,10 @@ const faqSchema = {
                 title="Chennai International Airport (MAA) is the fixed transfer hub. Tap Swap to change direction."
                 role="button"
                 tabindex="0"
-                aria-label="Chennai International Airport MAA (Fixed endpoint). Click to focus address input or use Swap button."
               >
                 <div class="flex items-center gap-2.5 min-w-0">
                   <div class="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center shrink-0 shadow-2xs group-hover/maa:scale-105 transition-transform" id="airport-icon-container">
-                    <span class="material-symbols-outlined text-[18px]" id="airport-icon">flight_land</span>
+                    <span class="material-symbols-outlined text-[18px]" id="airport-icon" aria-hidden="true">flight_land</span>
                   </div>
                   <div class="min-w-0">
                     <div class="flex items-center gap-1.5">
@@ -616,7 +618,7 @@ const faqSchema = {
                 type="button"
                 id="route-swap-btn"
                 class="relative z-10 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white hover:bg-slate-900 text-slate-700 hover:text-white border border-slate-300 hover:border-slate-900 shadow-xs hover:shadow-md transition-all active:scale-95 cursor-pointer group/swap select-none"
-                aria-label="Swap pickup and drop locations (switch between Drop and Pickup transfer)"
+                aria-label="Swap to Airport Drop"
                 title="Swap pickup and drop (switch direction)"
               >
                 <svg class="w-3.5 h-3.5 text-emerald-600 group-hover/swap:text-emerald-400 transition-transform duration-300" id="route-swap-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -635,7 +637,7 @@ const faqSchema = {
                   <span class="w-2 h-2 rounded-full bg-slate-900 inline-block shrink-0"></span>
                   <span>Drop-off Destination</span>
                 </span>
-                <span class="text-[10px] font-semibold text-slate-400 flex items-center gap-1">
+                <span class="text-[10px] font-semibold text-slate-600 flex items-center gap-1">
                   <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Doorstep / Hotel / Area
                 </span>
               </div>
@@ -647,6 +649,7 @@ const faqSchema = {
                 <input 
                   type="text" 
                   id="airport-search-input"
+                  aria-label="Search destination area, hotel, or address in Chennai"
                   placeholder="Where to? Search hotel, area, or address on Google Maps..."
                   class="w-full h-11 sm:h-12 pl-11 pr-24 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 font-medium transition-all shadow-2xs"
                   autocomplete="off"
@@ -717,7 +720,6 @@ const faqSchema = {
               type="button" 
               id="finder-whatsapp-btn"
               class="w-full h-11 sm:h-12 flex items-center justify-center gap-2 px-5 rounded-xl bg-slate-900 hover:bg-slate-800 active:bg-black text-white font-bold font-sans text-sm sm:text-base shadow-sm hover:shadow-md transition-all active:scale-[0.99] select-none cursor-pointer border border-white/10"
-              aria-label="Reserve Chennai Airport Taxi with ₹0 advance"
               title="Reserve Airport Taxi (From ₹650 - Pay After Trip)"
               data-action="reserve-taxi"
             >
@@ -776,7 +778,7 @@ const faqSchema = {
       <!-- AIRPORT TRANSFER COMMITMENTS & GUARANTEES CARD -->
       <section 
         id="trust-promises-section" 
-        class="rounded-2xl bg-white border border-slate-200 shadow-sm p-4 sm:p-6 mt-6 mb-6 relative overflow-hidden"
+        class="rounded-2xl bg-white border border-slate-200 shadow-sm p-4 sm:p-6 mt-6 mb-6 relative overflow-hidden offscreen-defer"
         aria-labelledby="commitments-card-heading"
       >
         <!-- Card Header -->
@@ -1053,7 +1055,7 @@ const faqSchema = {
                           data-pickup-msg={t.whatsappPickup}
                           href={`https://wa.me/916381939769?text=${encodeURIComponent(t.whatsappPickup)}`}
                           target="_blank"
-                          rel="noopener noreferrer"
+                          rel="noopener noreferrer nofollow"
                           class="booking-link inline-flex items-center gap-1 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 active:bg-black text-white text-xs font-semibold shadow-xs transition-all"
                         >
                           <span class="action-label">Book Pickup</span>
@@ -1072,7 +1074,7 @@ const faqSchema = {
       </section>
 
       <!-- 4. VEHICLE SPECIFICATIONS & LUGGAGE CAPACITIES (Unified Theme matching [slug].astro) -->
-      <section id="fleet-section" class="pt-8 sm:pt-10 mt-8 sm:mt-10 border-t border-slate-200 mb-10 sm:mb-14 scroll-mt-24">
+      <section id="fleet-section" class="pt-8 sm:pt-10 mt-8 sm:mt-10 border-t border-slate-200 mb-10 sm:mb-14 scroll-mt-24 offscreen-defer">
         <div class="mb-6 sm:mb-8 pb-3 border-b border-slate-200 flex items-center justify-between gap-3 flex-wrap">
           <div class="flex items-center gap-3 min-w-0">
             <span class="w-10 h-10 rounded-xl bg-slate-100 text-slate-900 flex items-center justify-center shrink-0 border border-slate-200 shadow-2xs">
@@ -1183,9 +1185,9 @@ const faqSchema = {
                     <a
                       href={`https://wa.me/916381939769?text=${encodeURIComponent(vehicle.bookingText)}`}
                       target="_blank"
-                      rel="noopener noreferrer"
+                      rel="noopener noreferrer nofollow"
                       class="w-full inline-flex items-center justify-center gap-1.5 py-1.5 text-xs font-semibold text-emerald-700 hover:text-emerald-800 hover:underline transition-colors"
-                      aria-label={`Chat on WhatsApp about ${vehicle.name}`}
+                      aria-label={`Or reserve via WhatsApp - ${vehicle.name}`}
                     >
                       <span>Or reserve via WhatsApp</span>
                       <span class="material-symbols-outlined text-[14px]">chat</span>
@@ -1197,21 +1199,23 @@ const faqSchema = {
           </div>
 
           <!-- Scroll Indicator Dots (Mobile Only, Matching Homepage) -->
-          <div id="spec-fleet-dots" class="flex justify-center items-center mt-3.5 space-x-2 md:hidden" aria-hidden="true">
+          <div id="spec-fleet-dots" class="flex justify-center items-center mt-3.5 space-x-1 md:hidden">
             {airportFleet.map((_, index) => (
               <button
                 type="button"
-                class={`h-1.5 rounded-full transition-all duration-300 spec-dot ${index === 0 ? 'bg-slate-900 w-5' : 'bg-slate-300 w-1.5'}`}
+                class="min-w-[32px] min-h-[32px] flex items-center justify-center p-1.5 cursor-pointer spec-dot"
                 data-index={index}
                 aria-label={`Go to slide ${index + 1}`}
-              ></button>
+              >
+                <span class={`h-1.5 rounded-full transition-all duration-300 spec-dot-bar ${index === 0 ? 'bg-slate-900 w-5' : 'bg-slate-300 w-1.5'}`}></span>
+              </button>
             ))}
           </div>
         </div>
       </section>
 
       <!-- 6. FREQUENTLY ASKED QUESTIONS -->
-      <section id="airport-faq" class="max-w-3xl mx-auto mb-12 sm:mb-16 scroll-mt-28">
+      <section id="airport-faq" class="max-w-3xl mx-auto mb-12 sm:mb-16 scroll-mt-28 offscreen-defer">
         <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading mb-6 text-center tracking-tight">
           Airport Transfer FAQs (Pickups &amp; Drops)
         </h2>
@@ -1219,7 +1223,7 @@ const faqSchema = {
       </section>
 
       <!-- 7. BOTTOM CONVERSION STRIP -->
-      <section class="rounded-2xl bg-slate-950 text-white p-7 sm:p-10 text-center shadow-md mb-10 border border-slate-800">
+      <section class="rounded-2xl bg-slate-950 text-white p-7 sm:p-10 text-center shadow-md mb-10 border border-slate-800 offscreen-defer">
         <h2 class="text-2xl sm:text-3xl font-extrabold font-heading text-white mb-2.5 tracking-tight">
           Flying into or out of Chennai International Airport (MAA)?
         </h2>
@@ -2290,8 +2294,8 @@ const faqSchema = {
               routeSwapLabel.textContent = "Swap to Airport Pickup";
             }
             if (routeSwapBtn) {
-              routeSwapBtn.setAttribute('title', "Switch to Airport Pickup (Landing at MAA)");
-              routeSwapBtn.setAttribute('aria-label', "Switch to Airport Pickup (Landing at MAA)");
+              routeSwapBtn.setAttribute('title', "Swap to Airport Pickup (Landing at MAA)");
+              routeSwapBtn.setAttribute('aria-label', "Swap to Airport Pickup");
             }
             if (routeSwapIcon) {
               routeSwapIcon.classList.add('rotate-180');
@@ -2327,8 +2331,8 @@ const faqSchema = {
               routeSwapLabel.textContent = "Swap to Airport Drop";
             }
             if (routeSwapBtn) {
-              routeSwapBtn.setAttribute('title', "Switch to Airport Drop (Going to MAA)");
-              routeSwapBtn.setAttribute('aria-label', "Switch to Airport Drop (Going to MAA)");
+              routeSwapBtn.setAttribute('title', "Swap to Airport Drop (Going to MAA)");
+              routeSwapBtn.setAttribute('aria-label', "Swap to Airport Drop");
             }
             if (routeSwapIcon) {
               routeSwapIcon.classList.remove('rotate-180');
@@ -2716,10 +2720,13 @@ const faqSchema = {
           const cardWidth = specScroller.offsetWidth * 0.75;
           const activeIdx = Math.min(Math.round(scrollLeft / cardWidth), specDots.length - 1);
           specDots.forEach((dot, idx) => {
-            if (idx === activeIdx) {
-              dot.className = 'h-1.5 rounded-full transition-all duration-300 spec-dot bg-slate-900 w-5';
-            } else {
-              dot.className = 'h-1.5 rounded-full transition-all duration-300 spec-dot bg-slate-300 w-1.5';
+            const bar = dot.querySelector<HTMLSpanElement>('.spec-dot-bar');
+            if (bar) {
+              if (idx === activeIdx) {
+                bar.className = 'h-1.5 rounded-full transition-all duration-300 spec-dot-bar bg-slate-900 w-5';
+              } else {
+                bar.className = 'h-1.5 rounded-full transition-all duration-300 spec-dot-bar bg-slate-300 w-1.5';
+              }
             }
           });
         };

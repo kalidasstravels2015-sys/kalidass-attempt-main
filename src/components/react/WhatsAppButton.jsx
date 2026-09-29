@@ -29,17 +29,17 @@ export default function WhatsAppButton({
   }[size] || "w-4 h-4 sm:w-5 sm:h-5";
 
   const variantClasses = {
-    filled: "bg-[#25D366] hover:bg-[#20BD5A] active:bg-[#1EBE5D] text-white shadow-m3-1 hover:shadow-m3-2 border border-emerald-400/30",
-    elevated: "bg-[#25D366] hover:bg-[#20BD5A] active:bg-[#1EBE5D] text-white shadow-m3-2 hover:shadow-m3-3 border border-emerald-400/40",
+    filled: "bg-[#075E54] hover:bg-[#054c44] active:bg-[#043d36] text-white shadow-m3-1 hover:shadow-m3-2 border border-emerald-700/30",
+    elevated: "bg-[#075E54] hover:bg-[#054c44] active:bg-[#043d36] text-white shadow-m3-2 hover:shadow-m3-3 border border-emerald-700/40",
     tonal: "bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-200/80 shadow-xs",
-    outlined: "bg-transparent hover:bg-emerald-50/70 text-[#1EBE5D] border border-[#25D366] shadow-xs"
-  }[variant] || "bg-[#25D366] hover:bg-[#20BD5A] text-white shadow-m3-1 hover:shadow-m3-2";
+    outlined: "bg-transparent hover:bg-emerald-50/70 text-[#075E54] border border-[#128C7E] shadow-xs"
+  }[variant] || "bg-[#075E54] hover:bg-[#054c44] text-white shadow-m3-1 hover:shadow-m3-2";
 
   const iconVariant = (variant === 'tonal' || variant === 'outlined') ? 'brand' : 'two-tone';
   const label = children || text;
   const computedAria = ariaLabel || (typeof label === 'string' ? label : "Chat on WhatsApp");
 
-  const commonClass = `inline-flex items-center justify-center font-bold font-sans rounded-m3-full transition-all duration-200 cursor-pointer select-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#25D366] ${fullWidth ? 'w-full' : ''} ${sizeClasses} ${variantClasses} ${className}`;
+  const commonClass = `inline-flex items-center justify-center font-bold font-sans rounded-m3-full transition-all duration-200 cursor-pointer select-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#128C7E] ${fullWidth ? 'w-full' : ''} ${sizeClasses} ${variantClasses} ${className}`;
 
   if (href) {
     return (
@@ -47,7 +47,7 @@ export default function WhatsAppButton({
         href={href}
         id={id}
         target="_blank"
-        rel="noopener noreferrer"
+        rel="noopener noreferrer nofollow"
         aria-label={computedAria}
         className={commonClass}
         onClick={onClick}
