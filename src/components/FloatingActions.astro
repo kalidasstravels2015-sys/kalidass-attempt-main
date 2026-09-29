@@ -19,44 +19,44 @@ const whatsappUrl = `https://wa.me/${cleanPhoneForWa}?text=${encodeURIComponent(
 const callUrl = `tel:${phone}`;
 ---
 
-<!-- Floating Quick Contact Actions (Android Call & Meta WhatsApp) -->
+<!-- Floating Quick Contact Actions (Desktop Only: hidden on mobile to prevent content overlap) -->
 <div 
   id="floating-actions-container"
-  class="fixed bottom-6 right-4 sm:bottom-7 sm:right-6 z-50 flex flex-col items-center sm:items-end gap-3 pointer-events-none select-none pb-[env(safe-area-inset-bottom,0px)]"
+  class="fixed bottom-6 right-4 sm:bottom-7 sm:right-6 z-50 hidden md:flex flex-col items-end gap-3 pointer-events-none select-none pb-[env(safe-area-inset-bottom,0px)]"
   role="region"
   aria-label="Quick contact shortcuts"
 >
-  <!-- Android M3 Phone Call Button (Google Material Blue) -->
+  <!-- Android M3 Phone Call Button (Soft Surface with Blue Accent) -->
   <a
     href={callUrl}
-    class="pointer-events-auto group relative flex items-center justify-center w-12 h-12 sm:w-auto sm:h-12 sm:px-4 sm:gap-2.5 rounded-full bg-[#1A73E8] hover:bg-[#1557B0] active:bg-[#0D47A1] text-white shadow-m3-3 hover:shadow-m3-4 border border-blue-300/40 transform hover:scale-105 active:scale-95 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1A73E8]"
+    class="pointer-events-auto group relative flex items-center justify-center w-12 h-12 sm:w-auto sm:h-12 sm:px-4 sm:gap-2.5 rounded-full bg-white/95 backdrop-blur-md hover:bg-blue-50 active:bg-blue-100 text-slate-800 hover:text-[#1A73E8] shadow-m3-2 hover:shadow-m3-3 border border-blue-200/90 transform hover:scale-105 active:scale-95 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1A73E8]"
     aria-label="Call Us - 24/7 Helpline (+91 63819 39769)"
     title={`Call Helpline: ${displayPhone}`}
   >
-    <!-- Android Dialer Handset Icon in pure white -->
-    <AndroidPhoneIcon className="w-5 h-5 sm:w-4.5 sm:h-4.5 text-white group-hover:rotate-12 transition-transform duration-300 shrink-0" />
+    <!-- Android Dialer Handset Icon in Google Blue -->
+    <AndroidPhoneIcon className="w-5 h-5 sm:w-4.5 sm:h-4.5 text-[#1A73E8] group-hover:rotate-12 transition-transform duration-300 shrink-0" />
     
     <!-- Extended FAB label on desktop -->
-    <span class="hidden sm:inline font-bold text-sm text-white tracking-wide font-sans leading-none">
+    <span class="hidden sm:inline font-bold text-sm text-slate-800 group-hover:text-[#1A73E8] tracking-wide font-sans leading-none">
       Call Us
     </span>
   </a>
 
-  <!-- Meta WhatsApp M3 Button (Official High-Contrast Dark Green for WCAG AAA Compliance) -->
+  <!-- Meta WhatsApp M3 Button (Soft Mint Tonal with Brand Icon) -->
   <a
     href={whatsappUrl}
     target="_blank"
     rel="noopener noreferrer nofollow"
-    class="pointer-events-auto group relative flex items-center justify-center w-12 h-12 sm:w-auto sm:h-12 sm:px-4 sm:gap-2.5 rounded-full bg-[#075E54] hover:bg-[#128C7E] active:bg-[#054c44] text-white shadow-m3-3 hover:shadow-m3-4 border border-emerald-300/40 transform hover:scale-105 active:scale-95 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#075E54]"
+    class="pointer-events-auto group relative flex items-center justify-center w-12 h-12 sm:w-auto sm:h-12 sm:px-4 sm:gap-2.5 rounded-full bg-emerald-50/95 backdrop-blur-md hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 shadow-m3-2 hover:shadow-m3-3 border border-emerald-300/90 transform hover:scale-105 active:scale-95 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#128C7E]"
     aria-label="WhatsApp - Chat with Kalidass Travels"
     title="Chat on WhatsApp (+91 63819 39769)"
   >
 
-    <!-- Official Meta Two-Tone WhatsApp Brand Icon -->
-    <WhatsAppIcon variant="two-tone" className="w-5 h-5 sm:w-5 sm:h-5 relative z-10 shrink-0" />
+    <!-- Official Meta Brand WhatsApp Icon -->
+    <WhatsAppIcon variant="brand" className="w-5 h-5 sm:w-5 sm:h-5 relative z-10 shrink-0" />
 
     <!-- Desktop text label -->
-    <span class="hidden sm:inline font-bold text-sm text-white tracking-wide font-sans relative z-10 leading-none">
+    <span class="hidden sm:inline font-bold text-sm text-emerald-950 tracking-wide font-sans relative z-10 leading-none">
       WhatsApp
     </span>
   </a>

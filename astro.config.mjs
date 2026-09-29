@@ -45,7 +45,12 @@ export default defineConfig({
       },
     },
     compress({
-      HTML: true,
+      HTML: {
+        'html-minifier-terser': {
+          removeAttributeQuotes: false,
+          sortAttributes: false,
+        },
+      },
       JavaScript: false,
     }),
   ],

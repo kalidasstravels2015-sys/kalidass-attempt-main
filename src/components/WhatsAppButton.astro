@@ -18,7 +18,7 @@ const {
   size = "md",
   fullWidth = false,
   className = "",
-  variant = "filled",
+  variant = "tonal",
   ariaLabel,
   id
 } = Astro.props;
@@ -38,19 +38,16 @@ const iconSize = {
   icon: "w-5 h-5"
 }[size];
 
-// M3 Surface & State Layer specifications
+// M3 Surface & State Layer specifications - Tonal mint theme (WCAG AAA compliant)
 const variantClasses = {
-  // Official Meta WhatsApp Brand Dark Teal Green with M3 Level 1 Elevation (WCAG AA Compliant 7.1:1 contrast)
-  filled: "bg-[#075E54] hover:bg-[#054c44] active:bg-[#043d36] text-white shadow-m3-1 hover:shadow-m3-2 border border-emerald-700/30",
-  // High-emphasis M3 Level 2 elevation
-  elevated: "bg-[#075E54] hover:bg-[#054c44] active:bg-[#043d36] text-white shadow-m3-2 hover:shadow-m3-3 border border-emerald-700/40",
-  // M3 Tonal for secondary placements
-  tonal: "bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-200/80 shadow-xs",
-  // M3 Outlined
-  outlined: "bg-transparent hover:bg-emerald-50/70 text-[#075E54] border border-[#128C7E] shadow-xs"
-}[variant];
+  // Uniform M3 Tonal mint styling (content is hero, doesn't overpower the cards)
+  filled: "bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 shadow-xs",
+  elevated: "bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/90 shadow-m3-1 hover:shadow-m3-2",
+  tonal: "bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 shadow-xs",
+  outlined: "bg-transparent hover:bg-emerald-50/70 text-emerald-950 border border-emerald-400 shadow-xs"
+}[variant] || "bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 shadow-xs";
 
-const iconVariant = (variant === 'tonal' || variant === 'outlined') ? 'brand' : 'two-tone';
+const iconVariant = 'brand';
 ---
 
 <a

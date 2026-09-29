@@ -747,7 +747,7 @@ Vehicle: ${vehicle}
 Passengers: ${passengers}
 Pickup: ${sanitizeInput(pickup)}
 Drop: ${sanitizeInput(drop)}
-Date: ${date ? new Date(date).toLocaleString() : 'Not Specified'}
+Pickup Date & Time: ${date ? new Date(date).toLocaleString() : 'Not Specified'}
 Distance: ${distance ? distance.toFixed(1) : 'N/A'} km ${activeTab === 'round' ? `(Round Trip: ${(distance * 2).toFixed(1)} km)` : ''}
 Duration: ${duration || 'N/A'}
 ${activeTab === 'round' ? `Days: ${days}` : ''}
@@ -1137,7 +1137,7 @@ Please confirm availability.`;
 
                     {/* Date/Time */}
                     <div className="relative group pt-1">
-                      <label htmlFor={`${stableFormId}-date-result`} className="block text-xs font-bold text-m3-on-surface-variant uppercase mb-1.5">{isTa ? 'பயண தேதி' : 'Travel Date'}</label>
+                      <label htmlFor={`${stableFormId}-date-result`} className="block text-xs font-bold text-m3-on-surface-variant uppercase mb-1.5">Pickup Date & Time</label>
                       <div className="flex items-center bg-m3-surface border border-m3-outline-variant rounded-m3-md px-3.5 py-2.5 focus-within:ring-2 focus-within:ring-m3-primary/20 focus-within:border-m3-primary">
                         <Calendar className="text-m3-on-surface-variant mr-2.5 w-4 h-4" aria-hidden="true" />
                         <input
@@ -1511,7 +1511,7 @@ Please confirm availability.`;
 
                 {/* Mobile Date Picker inside Result */}
                 <div className="pt-0.5">
-                  <label htmlFor={`${stableFormId}-mobile-date-result`} className="text-m3-label-s font-semibold text-m3-on-surface-variant uppercase mb-1 block">{isTa ? 'பயண தேதி' : 'Travel Date'}</label>
+                  <label htmlFor={`${stableFormId}-mobile-date-result`} className="text-m3-label-s font-semibold text-m3-on-surface-variant uppercase mb-1 block">Pickup Date & Time</label>
                   <input
                     id={`${stableFormId}-mobile-date-result`}
                     type="datetime-local"

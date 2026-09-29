@@ -9,7 +9,7 @@ export default function WhatsAppButton({
   size = "md",
   fullWidth = false,
   className = "",
-  variant = "filled",
+  variant = "tonal",
   ariaLabel,
   id,
   type = "button"
@@ -29,13 +29,13 @@ export default function WhatsAppButton({
   }[size] || "w-4 h-4 sm:w-5 sm:h-5";
 
   const variantClasses = {
-    filled: "bg-[#075E54] hover:bg-[#054c44] active:bg-[#043d36] text-white shadow-m3-1 hover:shadow-m3-2 border border-emerald-700/30",
-    elevated: "bg-[#075E54] hover:bg-[#054c44] active:bg-[#043d36] text-white shadow-m3-2 hover:shadow-m3-3 border border-emerald-700/40",
-    tonal: "bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-200/80 shadow-xs",
-    outlined: "bg-transparent hover:bg-emerald-50/70 text-[#075E54] border border-[#128C7E] shadow-xs"
-  }[variant] || "bg-[#075E54] hover:bg-[#054c44] text-white shadow-m3-1 hover:shadow-m3-2";
+    filled: "bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 shadow-xs",
+    elevated: "bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/90 shadow-m3-1 hover:shadow-m3-2",
+    tonal: "bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 shadow-xs",
+    outlined: "bg-transparent hover:bg-emerald-50 text-emerald-950 border border-emerald-400 shadow-xs"
+  }[variant] || "bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 shadow-xs";
 
-  const iconVariant = (variant === 'tonal' || variant === 'outlined') ? 'brand' : 'two-tone';
+  const iconVariant = 'brand';
   const label = children || text;
   const computedAria = ariaLabel || (typeof label === 'string' ? label : "Chat on WhatsApp");
 

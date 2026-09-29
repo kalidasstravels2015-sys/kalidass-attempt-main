@@ -3,6 +3,8 @@ import Layout from "../layouts/Layout.astro";
 import Breadcrumbs from "../components/SEO/Breadcrumbs.astro";
 import FAQAccordion from "../components/FAQAccordion.astro";
 import tariffConfig from "../data/tariff_config.json";
+import WhatsAppIcon from "../components/WhatsAppIcon.astro";
+import AndroidPhoneIcon from "../components/AndroidPhoneIcon.astro";
 
 const tariffFaqs = [
   {
@@ -281,10 +283,11 @@ const faqSchema = {
                       href={`https://wa.me/916381939769?text=${encodeURIComponent(`Hi Kalidass Travels, I would like to book a ${name} for a local Chennai city package.`)}`}
                       target="_blank"
                       rel="noopener noreferrer nofollow"
-                      class="inline-flex items-center gap-1 px-3 py-1.5 rounded-m3-full bg-emerald-600 hover:bg-emerald-700 text-white text-micro font-bold shadow-xs transition-all"
+                      aria-label={`Book ${name} local package on WhatsApp`}
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-300/80 text-micro font-bold shadow-xs transition-all"
                     >
+                      <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0" />
                       <span>Book</span>
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                     </a>
                   </td>
                 </tr>
@@ -332,19 +335,19 @@ const faqSchema = {
                   <div class="grid grid-cols-2 gap-2 text-center text-xs mb-3">
                     <div class="bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant/50">
                       <div class="text-micro text-m3-on-surface-variant font-semibold uppercase tracking-wider">5 Hr / 50 KM</div>
-                      <div class="text-sm font-bold text-m3-on-surface mt-0.5">₹{v.local_5hr_pkg ? v.local_5hr_pkg.toLocaleString("en-IN") : "-"}</div>
+                      <div class="text-sm sm:text-base font-extrabold text-m3-on-surface mt-0.5">₹{v.local_5hr_pkg ? v.local_5hr_pkg.toLocaleString("en-IN") : "-"}</div>
                     </div>
                     <div class="bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant/50">
                       <div class="text-micro text-m3-on-surface-variant font-semibold uppercase tracking-wider">8 Hr / 80 KM</div>
-                      <div class="text-sm font-bold text-m3-on-surface mt-0.5">₹{v.local_8hr_pkg ? v.local_8hr_pkg.toLocaleString("en-IN") : "-"}</div>
+                      <div class="text-sm sm:text-base font-extrabold text-m3-on-surface mt-0.5">₹{v.local_8hr_pkg ? v.local_8hr_pkg.toLocaleString("en-IN") : "-"}</div>
                     </div>
                     <div class="bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant/50">
                       <div class="text-micro text-m3-on-surface-variant font-semibold uppercase tracking-wider">10 Hr / 100 KM</div>
-                      <div class="text-sm font-bold text-m3-on-surface mt-0.5">₹{v.local_10hr_pkg ? v.local_10hr_pkg.toLocaleString("en-IN") : "-"}</div>
+                      <div class="text-sm sm:text-base font-extrabold text-m3-on-surface mt-0.5">₹{v.local_10hr_pkg ? v.local_10hr_pkg.toLocaleString("en-IN") : "-"}</div>
                     </div>
                     <div class="bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant/50">
                       <div class="text-micro text-m3-on-surface-variant font-semibold uppercase tracking-wider">12 Hr / 120 KM</div>
-                      <div class="text-sm font-bold text-m3-on-surface mt-0.5">₹{v.local_12hr_pkg ? v.local_12hr_pkg.toLocaleString("en-IN") : "-"}</div>
+                      <div class="text-sm sm:text-base font-extrabold text-m3-on-surface mt-0.5">₹{v.local_12hr_pkg ? v.local_12hr_pkg.toLocaleString("en-IN") : "-"}</div>
                     </div>
                   </div>
 
@@ -354,15 +357,27 @@ const faqSchema = {
                   </div>
                 </div>
 
-                <a
-                  href={`https://wa.me/916381939769?text=${encodeURIComponent(`Hi Kalidass Travels, I would like to book a ${name} for a local Chennai city package.`)}`}
-                  target="_blank"
-                  rel="noopener noreferrer nofollow"
-                  class="w-full inline-flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-m3-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-all"
-                >
-                  <span class="material-symbols-outlined text-[16px]">chat</span>
-                  <span>Book {name} Local</span>
-                </a>
+                <!-- Dual Action Buttons (Tonal Call & WhatsApp) -->
+                <div class="grid grid-cols-2 gap-2 mt-auto pt-1">
+                  <a
+                    href="tel:+916381939769"
+                    aria-label={`Call to book ${name} local package`}
+                    class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-surface-container hover:bg-blue-50 active:bg-blue-100 text-m3-on-surface hover:text-[#1A73E8] border border-m3-outline-variant hover:border-blue-300 text-xs font-bold transition-all select-none"
+                  >
+                    <AndroidPhoneIcon className="w-3.5 h-3.5 text-[#1A73E8] shrink-0" />
+                    <span>Call Now</span>
+                  </a>
+                  <a
+                    href={`https://wa.me/916381939769?text=${encodeURIComponent(`Hi Kalidass Travels, I would like to book a ${name} for a local Chennai city package.`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer nofollow"
+                    aria-label={`Book ${name} local package on WhatsApp`}
+                    class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 text-xs font-bold transition-all select-none"
+                  >
+                    <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0" />
+                    <span>WhatsApp</span>
+                  </a>
+                </div>
               </div>
             ))}
           </div>
@@ -454,10 +469,11 @@ const faqSchema = {
                       href={`https://wa.me/916381939769?text=${encodeURIComponent(`Hi Kalidass Travels, I would like to book an outstation trip in a ${name} from Chennai.`)}`}
                       target="_blank"
                       rel="noopener noreferrer nofollow"
-                      class="inline-flex items-center gap-1 px-3 py-1.5 rounded-m3-full bg-emerald-600 hover:bg-emerald-700 text-white text-micro font-bold shadow-xs transition-all"
+                      aria-label={`Book ${name} outstation cab on WhatsApp`}
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-300/80 text-micro font-bold shadow-xs transition-all"
                     >
+                      <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0" />
                       <span>Book</span>
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                     </a>
                   </td>
                 </tr>
@@ -500,11 +516,11 @@ const faqSchema = {
                   <div class="grid grid-cols-2 gap-2 mb-3">
                     <div class="bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant/60">
                       <div class="text-micro text-m3-on-surface-variant font-semibold uppercase tracking-wider">One Way</div>
-                      <div class="text-sm font-bold text-m3-on-surface mt-0.5">₹{v.one_way_rate} <span class="text-badge font-normal text-m3-on-surface-variant">/km</span></div>
+                      <div class="text-sm sm:text-base font-extrabold text-m3-on-surface mt-0.5">₹{v.one_way_rate} <span class="text-badge font-normal text-m3-on-surface-variant">/km</span></div>
                     </div>
                     <div class="bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant/60">
                       <div class="text-micro text-m3-on-surface-variant font-semibold uppercase tracking-wider">Round Trip</div>
-                      <div class="text-sm font-bold text-m3-on-surface mt-0.5">₹{v.round_trip_rate} <span class="text-badge font-normal text-m3-on-surface-variant">/km</span></div>
+                      <div class="text-sm sm:text-base font-extrabold text-m3-on-surface mt-0.5">₹{v.round_trip_rate} <span class="text-badge font-normal text-m3-on-surface-variant">/km</span></div>
                     </div>
                   </div>
 
@@ -514,15 +530,27 @@ const faqSchema = {
                   </div>
                 </div>
 
-                <a
-                  href={`https://wa.me/916381939769?text=${encodeURIComponent(`Hi Kalidass Travels, I would like to book an outstation cab (${name}) from Chennai.`)}`}
-                  target="_blank"
-                  rel="noopener noreferrer nofollow"
-                  class="w-full inline-flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-m3-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-all"
-                >
-                  <span class="material-symbols-outlined text-[16px]">chat</span>
-                  <span>Book {name} Outstation</span>
-                </a>
+                <!-- Dual Action Buttons (Tonal Call & WhatsApp) -->
+                <div class="grid grid-cols-2 gap-2 mt-auto pt-1">
+                  <a
+                    href="tel:+916381939769"
+                    aria-label={`Call to book ${name} outstation cab`}
+                    class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-surface-container hover:bg-blue-50 active:bg-blue-100 text-m3-on-surface hover:text-[#1A73E8] border border-m3-outline-variant hover:border-blue-300 text-xs font-bold transition-all select-none"
+                  >
+                    <AndroidPhoneIcon className="w-3.5 h-3.5 text-[#1A73E8] shrink-0" />
+                    <span>Call Now</span>
+                  </a>
+                  <a
+                    href={`https://wa.me/916381939769?text=${encodeURIComponent(`Hi Kalidass Travels, I would like to book an outstation cab (${name}) from Chennai.`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer nofollow"
+                    aria-label={`Book ${name} outstation cab on WhatsApp`}
+                    class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 text-xs font-bold transition-all select-none"
+                  >
+                    <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0" />
+                    <span>WhatsApp</span>
+                  </a>
+                </div>
               </div>
             ))}
           </div>
