@@ -751,6 +751,11 @@ const unifiedSchemaGraph = {
         -moz-osx-font-smoothing: grayscale;
       }
 
+      /* Global scroll margin fallback for targeted anchors to clear the sticky top header */
+      :target {
+        scroll-margin-top: 5.5rem;
+      }
+
       body {
         background-color: #F8F9FC;
         color: #1A1C1E;
@@ -1083,10 +1088,6 @@ const unifiedSchemaGraph = {
                     <div class="text-[11px] text-m3-on-surface-variant">Pondicherry (₹4.5k), Mahabalipuram, Yelagiri</div>
                   </div>
                 </a>
-                <div class="pt-1.5 mt-1.5 border-t border-m3-outline-variant/40 flex items-center justify-between px-2">
-                  <a href="/services/tours/temple-tours/" class="text-xs font-bold text-amber-800 hover:underline" role="menuitem">Temple Yatras &rarr;</a>
-                  <a href="/services/tours/weekend-packages/" class="text-xs font-bold text-emerald-700 hover:underline" role="menuitem">Weekend Trips &rarr;</a>
-                </div>
                 <div class="pt-1.5 mt-1.5 border-t border-m3-outline-variant/40">
                   <a href="/services/tours/" class="flex items-center justify-between px-3 py-1.5 rounded-m3-lg text-xs font-bold text-m3-primary hover:bg-m3-primary/10 transition-colors" role="menuitem">
                     <span>All Tour Packages Overview</span>

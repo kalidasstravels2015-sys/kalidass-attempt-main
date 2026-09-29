@@ -116,8 +116,9 @@ export function initStickyQuickNav(): () => void {
         return sortedItems[sortedItems.length - 1];
       }
 
-      // Sticky header offset: ~64px header + ~48px quick-nav bar + ~28px margin = ~140px
-      const SCROLL_OFFSET = 140;
+      // Sticky header offset: ~64px header + ~58px quick-nav bar + ~45px breathing margin = ~175px
+      const navRect = nav.getBoundingClientRect();
+      const SCROLL_OFFSET = Math.max(175, Math.round((navRect.bottom > 0 ? navRect.bottom : 126) + 45));
 
       let activeItem: QuickNavItem | null = null;
 

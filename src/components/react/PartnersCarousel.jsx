@@ -53,7 +53,7 @@ const PartnersCarousel = ({ currentLang }) => {
     const scrollingPartners = [...partners, ...partners];
 
     return (
-        <section id="partners" className="offscreen-defer py-10 md:py-12 bg-m3-surface overflow-hidden border-t border-m3-outline-variant/60">
+        <section id="partners" className="offscreen-defer py-10 md:py-12 bg-m3-surface overflow-hidden border-t border-m3-outline-variant/60 scroll-mt-24 sm:scroll-mt-28">
             {/* Section Header */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 text-center">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">

@@ -246,7 +246,7 @@ export default function ActingDrivers() {
       </section>
 
       {/* 2. MASTER INTERACTIVE SERVICE & TARIFF SELECTOR */}
-      <section id="driver-plans" className="py-6 md:py-10 max-w-5xl mx-auto px-4 sm:px-6">
+      <section id="driver-plans" className="py-6 md:py-10 max-w-5xl mx-auto px-4 sm:px-6 scroll-mt-24 sm:scroll-mt-28">
         
         <div className="text-center mb-5">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container text-xs font-semibold tracking-wide mb-2.5 border border-m3-primary/20">

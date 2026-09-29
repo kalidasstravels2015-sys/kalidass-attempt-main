@@ -111,7 +111,7 @@ const FleetRoll = ({ currentLang = 'en', hideHeader = false, limit, sectionHeadi
     }, [fleet.length]);
 
     return (
-        <section id="fleet" className={`${hideHeader ? 'py-4' : 'offscreen-defer py-10 md:py-14 bg-m3-surface border-t border-m3-outline-variant/60'}`} aria-labelledby="fleet-heading">
+        <section id="fleet" className={`${hideHeader ? 'py-4' : 'offscreen-defer py-10 md:py-14 bg-m3-surface border-t border-m3-outline-variant/60'} scroll-mt-24 sm:scroll-mt-28`} aria-labelledby="fleet-heading">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Section Header */}
                 {hideHeader ? (

@@ -223,7 +223,7 @@ export default function CorporateMobility() {
       </section>
 
       {/* 2. ⚡ MASTER "ALL CORPORATE RATES AT A GLANCE" COMPARISON MATRIX */}
-      <section id="corporate-matrix" className="py-8 md:py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="corporate-matrix" className="py-8 md:py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24 sm:scroll-mt-28">
         <div className="bg-m3-surface rounded-m3-2xl shadow-m3-1 border border-m3-outline-variant overflow-hidden">
           
           <div className="p-5 md:p-6 bg-m3-surface-container text-m3-on-surface flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-m3-outline-variant/60">
