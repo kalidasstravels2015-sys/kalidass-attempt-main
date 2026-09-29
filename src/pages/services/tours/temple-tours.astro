@@ -4,6 +4,8 @@ import Breadcrumbs from '../../../components/SEO/Breadcrumbs.astro';
 import ServiceExplainer3Step from '../../../components/ServiceExplainer3Step.astro';
 import FAQAccordion from '../../../components/FAQAccordion.astro';
 import WhatsAppButton from '../../../components/WhatsAppButton.astro';
+import WhatsAppIcon from '../../../components/WhatsAppIcon.astro';
+import AndroidPhoneIcon from '../../../components/AndroidPhoneIcon.astro';
 import OptimizedImage from '../../../components/OptimizedImage.astro';
 import { ChevronRight } from 'lucide-react';
 
@@ -411,21 +413,35 @@ const faqSchema = {
                   </div>
                 </div>
 
-                <!-- Footer with dual actions: Leaf Page CTA + WhatsApp CTA -->
-                <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-2 flex items-center gap-2">
+                <!-- Card Actions: View Itinerary + Dual Action (Call Now & WhatsApp) -->
+                <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-2 space-y-2 mt-auto">
                   <a
                     href={leafUrl}
-                    class="flex-1 inline-flex items-center justify-center gap-1 px-4 py-2.5 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary text-xs font-bold transition-all shadow-m3-1"
+                    class="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary text-xs font-bold transition-all shadow-m3-1"
                   >
                     <span>View Itinerary</span>
                     <ChevronRight className="w-4 h-4" />
                   </a>
-                  <WhatsAppButton
-                    href={`https://wa.me/916381939769?text=${encodeURIComponent(pkg.whatsappMsg)}`}
-                    size="sm"
-                    variant="tonal"
-                    text="Book"
-                  />
+                  <div class="grid grid-cols-2 gap-2">
+                    <a
+                      href="tel:+916381939769"
+                      aria-label={`Call to book ${pkg.name}`}
+                      class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-surface-container hover:bg-blue-50 active:bg-blue-100 text-m3-on-surface hover:text-[#1A73E8] border border-m3-outline-variant hover:border-blue-300 text-xs font-bold transition-all select-none"
+                    >
+                      <AndroidPhoneIcon className="w-3.5 h-3.5 text-[#1A73E8] shrink-0" />
+                      <span>Call Now</span>
+                    </a>
+                    <a
+                      href={`https://wa.me/916381939769?text=${encodeURIComponent(pkg.whatsappMsg)}`}
+                      target="_blank"
+                      rel="noopener noreferrer nofollow"
+                      aria-label={`Book ${pkg.name} on WhatsApp`}
+                      class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 text-xs font-bold transition-all select-none"
+                    >
+                      <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0" />
+                      <span>WhatsApp</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             );
