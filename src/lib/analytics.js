@@ -33,9 +33,8 @@ export const initAnalytics = () => {
         gtag('config', GA_MEASUREMENT_ID, {
             transport_type: 'beacon',
             debug_mode: import.meta.env.DEV,
-            allow_google_signals: false,
-            allow_ad_personalization_signals: false,
-            restricted_data_processing: true,
+            allow_google_signals: true,
+            allow_ad_personalization_signals: true,
         });
 
         // Track Web Vitals
