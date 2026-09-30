@@ -912,6 +912,41 @@ const unifiedSchemaGraph = {
       gtag('js', new Date());
 
       gtag('config', 'G-61YQMR8J7H');
+      gtag('config', 'AW-18463679349');
+
+      // Google tag (gtag.js) event - delayed navigation helper for Google Ads conversions
+      function gtagSendEvent(url) {
+        var callback = function () {
+          if (typeof url === 'string') {
+            window.location = url;
+          }
+        };
+        if (typeof window.gtag === 'function') {
+          gtag('event', 'ads_conversion_Request_quote_1', {
+            'event_callback': callback,
+            'event_timeout': 2000,
+          });
+        } else {
+          callback();
+        }
+        return false;
+      }
+      window.gtagSendEvent = gtagSendEvent;
+
+      // Automatically report conversion on Call Now & WhatsApp interactions
+      document.addEventListener('click', function (e) {
+        var link = e.target && e.target.closest ? e.target.closest('a') : null;
+        if (!link) return;
+        var href = link.getAttribute('href') || '';
+        if (href.startsWith('tel:') || href.includes('wa.me') || href.includes('whatsapp.com')) {
+          if (typeof window.gtag === 'function') {
+            gtag('event', 'ads_conversion_Request_quote_1', {
+              event_category: 'Lead',
+              event_label: href.startsWith('tel:') ? 'Phone Call' : 'WhatsApp Lead'
+            });
+          }
+        }
+      }, { passive: true });
     </script>
   </head>
   <body class="font-sans antialiased">

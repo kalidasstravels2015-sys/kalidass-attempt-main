@@ -36,6 +36,8 @@ export const initAnalytics = () => {
             allow_google_signals: true,
             allow_ad_personalization_signals: true,
         });
+        gtag('config', 'AW-18463679349');
+
 
         // Track Web Vitals
         function sendToAnalytics(metric) {
@@ -86,9 +88,22 @@ export const initAnalytics = () => {
     }
 };
 
+export const reportAdsConversion = (params = {}) => {
+    if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', 'ads_conversion_Request_quote_1', params);
+    }
+};
+
 export const trackEvent = (eventName, params = {}) => {
     if (typeof window !== 'undefined' && window.gtag) {
         window.gtag('event', eventName, params);
+        // Automatically forward quote & booking lead events to Google Ads conversion
+        if (eventName.includes('conversion') || eventName.includes('quote') || eventName.includes('whatsapp')) {
+            window.gtag('event', 'ads_conversion_Request_quote_1', {
+                ...params,
+                event_category: 'Lead'
+            });
+        }
     } else {
         console.log('[Analytics] Event:', eventName, params);
     }
