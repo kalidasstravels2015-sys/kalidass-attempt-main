@@ -4,6 +4,8 @@ import Breadcrumbs from '../../components/SEO/Breadcrumbs.astro';
 import ServiceExplainer3Step from '../../components/ServiceExplainer3Step.astro';
 import FAQAccordion from '../../components/FAQAccordion.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
+import WhatsAppIcon from '../../components/WhatsAppIcon.astro';
+import AndroidPhoneIcon from '../../components/AndroidPhoneIcon.astro';
 import OptimizedImage from '../../components/OptimizedImage.astro';
 import { 
   Sparkles, 
@@ -486,16 +488,28 @@ const faqSchema = {
                   </p>
                 </div>
 
-                <!-- Card Action Area (WhatsApp Button) -->
+                <!-- Card Action Area (Dual Action Buttons) -->
                 <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-1">
-                  <WhatsAppButton
-                    href={`https://wa.me/916381939769?text=${encodeURIComponent(plan.whatsappMsg)}`}
-                    size="md"
-                    fullWidth={true}
-                    variant="filled"
-                    text={`Enquire for ${plan.shortName}`}
-                    ariaLabel={`Enquire about ${plan.plan} on WhatsApp`}
-                  />
+                  <div class="grid grid-cols-2 gap-2">
+                    <a
+                      href="tel:+916381939769"
+                      aria-label={`Call for ${plan.shortName}`}
+                      class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-surface-container hover:bg-blue-50 active:bg-blue-100 text-m3-on-surface hover:text-[#1A73E8] border border-m3-outline-variant hover:border-blue-300 text-xs font-bold transition-all select-none"
+                    >
+                      <AndroidPhoneIcon className="w-3.5 h-3.5 text-[#1A73E8] shrink-0" />
+                      <span>Call Now</span>
+                    </a>
+                    <a
+                      href={`https://wa.me/916381939769?text=${encodeURIComponent(plan.whatsappMsg)}`}
+                      target="_blank"
+                      rel="noopener noreferrer nofollow"
+                      aria-label={`Enquire about ${plan.plan} on WhatsApp`}
+                      class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 text-xs font-bold transition-all select-none"
+                    >
+                      <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0" />
+                      <span>WhatsApp</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             ))}
@@ -567,14 +581,28 @@ const faqSchema = {
                   <p class="text-xs text-m3-on-surface-variant leading-relaxed mb-4">{item.detail}</p>
                 </div>
 
-                <WhatsAppButton
-                  href={`https://wa.me/916381939769?text=${encodeURIComponent(item.whatsappMsg)}`}
-                  size="md"
-                  fullWidth={true}
-                  variant="filled"
-                  text="Book on WhatsApp"
-                  ariaLabel={`Book ${item.name} on WhatsApp`}
-                />
+                <div class="pt-1">
+                  <div class="grid grid-cols-2 gap-2">
+                    <a
+                      href="tel:+916381939769"
+                      aria-label={`Call for ${item.name}`}
+                      class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-surface-container hover:bg-blue-50 active:bg-blue-100 text-m3-on-surface hover:text-[#1A73E8] border border-m3-outline-variant hover:border-blue-300 text-xs font-bold transition-all select-none"
+                    >
+                      <AndroidPhoneIcon className="w-3.5 h-3.5 text-[#1A73E8] shrink-0" />
+                      <span>Call Now</span>
+                    </a>
+                    <a
+                      href={`https://wa.me/916381939769?text=${encodeURIComponent(item.whatsappMsg)}`}
+                      target="_blank"
+                      rel="noopener noreferrer nofollow"
+                      aria-label={`Book ${item.name} on WhatsApp`}
+                      class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 text-xs font-bold transition-all select-none"
+                    >
+                      <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0" />
+                      <span>WhatsApp</span>
+                    </a>
+                  </div>
+                </div>
               </div>
             ))}
           </div>

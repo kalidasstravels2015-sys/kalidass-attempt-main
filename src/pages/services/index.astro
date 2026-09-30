@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Breadcrumbs from '../../components/SEO/Breadcrumbs.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
+import AndroidPhoneIcon from '../../components/AndroidPhoneIcon.astro';
 import OptimizedImage from '../../components/OptimizedImage.astro';
 import { 
   PlaneTakeoff,
@@ -314,13 +315,21 @@ const faqSchema = {
 
               <!-- Action Buttons -->
               <div class="p-5 sm:p-6 pt-0">
-                <div class="pt-4 border-t border-m3-outline-variant/60 flex items-center gap-3">
+                <div class="pt-4 border-t border-m3-outline-variant/60 flex items-center gap-2">
                   <a
                     href={srv.link}
                     class="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-4 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-m3-full text-xs font-bold shadow-xs transition-all"
                   >
                     <span>View Rates &amp; Details</span>
                     <ArrowRight className="w-3.5 h-3.5" />
+                  </a>
+                  <a
+                    href="tel:+916381939769"
+                    aria-label={`Call to book ${srv.title}`}
+                    class="w-10 h-10 rounded-m3-full bg-blue-50 hover:bg-blue-100 active:bg-blue-200 text-[#1A73E8] flex items-center justify-center border border-blue-200 shadow-xs transition-all shrink-0"
+                    title="Call Now"
+                  >
+                    <AndroidPhoneIcon className="w-4 h-4 text-[#1A73E8]" />
                   </a>
                   <WhatsAppButton
                     href={`https://wa.me/916381939769?text=${encodeURIComponent(srv.whatsappMsg)}`}
