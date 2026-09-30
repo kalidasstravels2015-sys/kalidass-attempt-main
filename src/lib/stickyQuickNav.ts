@@ -39,7 +39,7 @@ function setLinkState(link: HTMLAnchorElement, isActive: boolean) {
   if (isActive) {
     link.classList.add(...ACTIVE_CLASSES);
     link.setAttribute('data-active', 'true');
-    link.setAttribute('aria-current', 'location');
+    link.setAttribute('aria-current', 'true');
   } else {
     link.classList.add(...INACTIVE_CLASSES);
     link.removeAttribute('data-active');
@@ -58,11 +58,13 @@ function scrollActivePillIntoView(link: HTMLElement) {
   const currentScroll = container.scrollLeft;
   const linkCenterRelative = (linkRect.left - containerRect.left) + (linkRect.width / 2);
   const targetScroll = currentScroll + linkCenterRelative - (containerRect.width / 2);
+  const maxScroll = container.scrollWidth - container.clientWidth;
+  const clampedTarget = Math.max(0, Math.min(maxScroll, Math.round(targetScroll)));
 
   // Smooth scroll container horizontally if difference is noticeable
-  if (Math.abs(targetScroll - currentScroll) > 8) {
+  if (Math.abs(clampedTarget - currentScroll) > 4) {
     container.scrollTo({
-      left: Math.max(0, targetScroll),
+      left: clampedTarget,
       behavior: 'smooth'
     });
   }
@@ -116,9 +118,10 @@ export function initStickyQuickNav(): () => void {
         return sortedItems[sortedItems.length - 1];
       }
 
-      // Sticky header offset: ~64px header + ~58px quick-nav bar + ~45px breathing margin = ~175px
-      const navRect = nav.getBoundingClientRect();
-      const SCROLL_OFFSET = Math.max(175, Math.round((navRect.bottom > 0 ? navRect.bottom : 126) + 45));
+      // Sticky header (64px) + sticky nav (~52px) + breathing margin (~45px) = ~165-175px
+      // When nav is not yet sticky (e.g. within Hero), clamp reference offset to sticky line
+      const stickyBottom = 64 + (nav.offsetHeight || 50);
+      const SCROLL_OFFSET = stickyBottom + 45;
 
       let activeItem: QuickNavItem | null = null;
 
@@ -132,8 +135,8 @@ export function initStickyQuickNav(): () => void {
         }
       }
 
-      // If before first section, activate the first pill in navigation bar
-      return activeItem || items[0];
+      // If before first section, activate the first section in document order
+      return activeItem || sortedItems[0];
     }
 
     function updateActive(forceScrollPill = false) {
@@ -143,14 +146,10 @@ export function initStickyQuickNav(): () => void {
       if (!active) return;
 
       if (active.link !== currentActiveLink) {
-        // Deactivate previous
-        if (currentActiveLink) {
-          setLinkState(currentActiveLink, false);
-        }
-
-        // Activate new
+        items.forEach((item) => {
+          setLinkState(item.link, item.link === active.link);
+        });
         currentActiveLink = active.link;
-        setLinkState(currentActiveLink, true);
         scrollActivePillIntoView(currentActiveLink);
       } else if (forceScrollPill && currentActiveLink) {
         scrollActivePillIntoView(currentActiveLink);
@@ -164,22 +163,31 @@ export function initStickyQuickNav(): () => void {
         isClickScrolling = true;
         if (clickScrollTimer) clearTimeout(clickScrollTimer);
 
-        if (currentActiveLink && currentActiveLink !== item.link) {
-          setLinkState(currentActiveLink, false);
-        }
+        items.forEach((it) => {
+          setLinkState(it.link, it.link === item.link);
+        });
         currentActiveLink = item.link;
-        setLinkState(currentActiveLink, true);
         scrollActivePillIntoView(currentActiveLink);
 
         // Native smooth scroll to section with scroll-mt offset
         item.target.scrollIntoView({ behavior: 'smooth' });
         history.replaceState(null, '', `#${item.id}`);
 
-        // Re-enable scroll listener once scroll settles
-        clickScrollTimer = setTimeout(() => {
+        // Re-enable scroll listener when smooth scrolling settles
+        let finished = false;
+        const done = () => {
+          if (finished) return;
+          finished = true;
           isClickScrolling = false;
+          if (clickScrollTimer) clearTimeout(clickScrollTimer);
+          window.removeEventListener('scrollend', done);
           updateActive();
-        }, 800);
+        };
+
+        if ('onscrollend' in window) {
+          window.addEventListener('scrollend', done, { once: true });
+        }
+        clickScrollTimer = setTimeout(done, 1500);
       };
 
       item.link.addEventListener('click', handleClick);
@@ -207,8 +215,13 @@ export function initStickyQuickNav(): () => void {
       if (clickScrollTimer) clearTimeout(clickScrollTimer);
     });
 
-    // Initial activation
-    updateActive(true);
+    // Initial activation: clean sweep all links so only the true active item is highlighted
+    const initialActive = getActiveItem();
+    items.forEach((item) => {
+      setLinkState(item.link, item.link === initialActive.link);
+    });
+    currentActiveLink = initialActive.link;
+    scrollActivePillIntoView(currentActiveLink);
   });
 
   return () => {

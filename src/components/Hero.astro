@@ -18,7 +18,7 @@ const heroImageAlts: Record<string, string> = {
 
 <section
   id="hero"
-  class="relative min-h-[92vh] sm:min-h-[82vh] flex items-center justify-center overflow-hidden pt-16 pb-12 bg-slate-950"
+  class="hero-container relative flex items-center justify-center overflow-hidden pt-6 pb-16 sm:pt-14 sm:pb-12 bg-slate-950"
 >
   <!-- Background Image Carousel with High-Contrast Dark Gradient Scrim -->
   <div class="absolute inset-0 z-0">
@@ -75,66 +75,85 @@ const heroImageAlts: Record<string, string> = {
 
     <!-- M3 Display Headline -->
     <h1
-      class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-3 font-heading drop-shadow-sm"
+      class="text-2xl min-[380px]:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-2 sm:mb-3 font-heading drop-shadow-sm"
     >
       <span class="block text-white">Reliable Taxi Service</span>
-      <span class="block mt-1 text-white/95 font-extrabold tracking-tight">
+      <span class="block mt-0.5 sm:mt-1 text-white/95 font-extrabold tracking-tight">
         Chennai &amp; South India
       </span>
     </h1>
 
     <!-- Subtitle / Body (M3 Body Large) -->
     <p
-      class="text-xs sm:text-sm md:text-base text-slate-300 font-normal max-w-xl mx-auto leading-relaxed mb-6 px-2 font-sans"
+      class="text-xs sm:text-sm md:text-base text-slate-300 font-normal max-w-xl mx-auto leading-relaxed mb-4 sm:mb-6 px-2 font-sans"
     >
       Reserve early with <strong class="text-white font-semibold">₹0 advance</strong> — pay only after your service. Clean AC cabs, verified local chauffeurs, airport transfers from ₹650 &amp; outstation trips from ₹14/km.
     </p>
 
     <!-- M3 Signature Action Button (Executive Charcoal with Traffic Green GO Arrow) -->
-    <div class="mb-6">
+    <div class="mb-4 sm:mb-6">
       <a
         href="#booking-panel"
-        class="inline-flex items-center gap-2.5 px-8 py-3.5 bg-m3-primary hover:bg-slate-900 text-m3-on-primary text-sm font-bold rounded-m3-full shadow-m3-2 hover:shadow-m3-3 transition-all transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer border border-white/20 group"
+        class="inline-flex items-center gap-2 sm:gap-2.5 px-6 sm:px-8 py-3 sm:py-3.5 bg-m3-primary hover:bg-slate-900 text-m3-on-primary text-xs sm:text-sm font-bold rounded-m3-full shadow-m3-2 hover:shadow-m3-3 transition-all transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer border border-white/20 group"
       >
-        <span class="text-m3-label-l font-bold text-white">Calculate Fare &amp; Rates</span>
-        <span class="material-symbols-outlined text-[20px] text-emerald-400 transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+        <span class="text-xs sm:text-m3-label-l font-bold text-white">Calculate Fare &amp; Rates</span>
+        <span class="material-symbols-outlined text-[18px] sm:text-[20px] text-emerald-400 transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
       </a>
     </div>
 
     <!-- M3 Assist Chips -->
     <div
-      class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3.5 max-w-2xl"
+      class="flex flex-wrap items-center justify-center gap-2 sm:gap-3.5 max-w-2xl px-1"
     >
-      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-m3-full bg-m3-inverse-surface/85 backdrop-blur-md border border-white/10 text-m3-inverse-on-surface text-m3-label-m shadow-m3-1 hover:bg-m3-inverse-surface transition-colors">
-        <span class="material-symbols-outlined text-[18px] text-amber-300 shrink-0">shield</span>
+      <div class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-m3-full bg-m3-inverse-surface/85 backdrop-blur-md border border-white/10 text-m3-inverse-on-surface text-xs sm:text-m3-label-m shadow-m3-1 hover:bg-m3-inverse-surface transition-colors">
+        <span class="material-symbols-outlined text-[16px] sm:text-[18px] text-amber-300 shrink-0">shield</span>
         <span>Zero Advance · Pay After Trip</span>
       </div>
-      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-m3-full bg-m3-inverse-surface/85 backdrop-blur-md border border-white/10 text-m3-inverse-on-surface text-m3-label-m shadow-m3-1 hover:bg-m3-inverse-surface transition-colors">
-        <span class="material-symbols-outlined text-[18px] text-emerald-400 shrink-0">verified_user</span>
+      <div class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-m3-full bg-m3-inverse-surface/85 backdrop-blur-md border border-white/10 text-m3-inverse-on-surface text-xs sm:text-m3-label-m shadow-m3-1 hover:bg-m3-inverse-surface transition-colors">
+        <span class="material-symbols-outlined text-[16px] sm:text-[18px] text-emerald-400 shrink-0">verified_user</span>
         <span>Police Verified Drivers</span>
       </div>
-      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-m3-full bg-m3-inverse-surface/85 backdrop-blur-md border border-white/10 text-m3-inverse-on-surface text-m3-label-m shadow-m3-1 hover:bg-m3-inverse-surface transition-colors">
-        <span class="material-symbols-outlined text-[18px] text-white/80 shrink-0">currency_rupee</span>
+      <div class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-m3-full bg-m3-inverse-surface/85 backdrop-blur-md border border-white/10 text-m3-inverse-on-surface text-xs sm:text-m3-label-m shadow-m3-1 hover:bg-m3-inverse-surface transition-colors">
+        <span class="material-symbols-outlined text-[16px] sm:text-[18px] text-white/80 shrink-0">currency_rupee</span>
         <span>Zero Surge Pricing</span>
       </div>
-      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-m3-full bg-m3-inverse-surface/85 backdrop-blur-md border border-white/10 text-m3-inverse-on-surface text-m3-label-m shadow-m3-1 hover:bg-m3-inverse-surface transition-colors">
-        <WhatsAppIcon variant="brand" className="w-4 h-4 shrink-0" />
+      <a
+        href="https://wa.me/916381939769?text=Hi%20Kalidass%20Travels%2C%20I%20would%20like%20to%20enquire%20about%20a%20cab%20booking."
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        aria-label="24/7 Global WhatsApp booking"
+        class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-m3-full bg-m3-inverse-surface/85 backdrop-blur-md border border-white/10 text-m3-inverse-on-surface text-xs sm:text-m3-label-m shadow-m3-1 hover:bg-m3-inverse-surface hover:border-emerald-500/40 hover:text-emerald-300 transition-all cursor-pointer"
+      >
+        <WhatsAppIcon variant="brand" className="w-[18px] h-[18px] sm:w-[20px] sm:h-[20px] shrink-0" />
         <span>24/7 Global WhatsApp</span>
-      </div>
+      </a>
     </div>
   </div>
 
-  <!-- Minimalist Scroll Down Indicator -->
+  <!-- Down Arrow Jump Indicator (Clean Unboxed Chevron - M3 Palette Accent) -->
   <a
     href="#booking-panel"
-    class="absolute bottom-3 left-1/2 -translate-x-1/2 text-white/70 hover:text-white transition-colors p-2 flex items-center justify-center"
-    aria-label="Scroll to booking form"
+    class="hero-down-arrow absolute left-1/2 -translate-x-1/2 z-30 p-2 flex items-center justify-center text-amber-400 hover:text-amber-300 active:text-amber-500 transition-transform hover:scale-125 active:scale-95 cursor-pointer"
+    style="bottom: max(1rem, env(safe-area-inset-bottom, 1rem));"
+    aria-label="Scroll to booking section"
   >
-    <span class="material-symbols-outlined text-[26px] animate-bounce text-white/80">keyboard_arrow_down</span>
+    <span class="material-symbols-outlined text-[32px] sm:text-[38px] animate-bounce drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)] leading-none select-none">keyboard_arrow_down</span>
   </a>
 </section>
 
 <style is:inline>
+  .hero-container {
+    min-height: calc(100vh - 4.5rem);
+    min-height: calc(100svh - 4.5rem);
+    min-height: calc(100dvh - 4.5rem);
+  }
+
+  @media (min-width: 640px) {
+    .hero-container {
+      min-height: 82vh;
+      min-height: calc(82dvh - 4rem);
+    }
+  }
   .hero-slides {
     position: absolute;
     inset: 0;

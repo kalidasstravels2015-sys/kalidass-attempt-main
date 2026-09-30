@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Car, MapPin, Calendar, Calculator, Send, ArrowRight, Repeat, Users, User, AlertCircle, Navigation, ShieldCheck, Clock, X, ChevronDown, ChevronRight, CheckCircle2, Plane } from 'lucide-react';
+import { Car, LocateFixed, Calendar, Calculator, Send, ArrowRight, Repeat, Users, User, AlertCircle, Navigation, ShieldCheck, Clock, X, ChevronDown, ChevronRight, CheckCircle2, Plane, ArrowUpDown } from 'lucide-react';
 import { trackEvent } from '../lib/analytics';
 import LocationPicker from './LocationPicker';
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
@@ -13,6 +13,77 @@ import tripsData from '../data/trips.json';
 
 const vehicles = tariffConfig.vehicles;
 const vehicleOptions = Object.keys(vehicles);
+
+// Multi-cab comparison options inspired by Savaari/Uber for 1-tap route comparisons
+const COMPARISON_VEHICLES = [
+  {
+    key: 'Swift Dzire',
+    name: 'Sedan',
+    models: 'Dzire / Etios',
+    pax: '4 Pax',
+    bags: '2 Bags',
+    tag: 'Best Value'
+  },
+  {
+    key: 'Maruti Ertiga',
+    name: 'Family SUV',
+    models: 'Ertiga AC',
+    pax: '6 Pax',
+    bags: '3 Bags',
+    tag: 'Most Popular'
+  },
+  {
+    key: 'Innova Crysta',
+    name: 'Executive MPV',
+    models: 'Innova Crysta',
+    pax: '7 Pax',
+    bags: '4 Bags',
+    tag: 'Premium'
+  },
+  {
+    key: 'Tempo Traveller',
+    name: 'Minibus',
+    models: 'Tempo 12-Seater',
+    pax: '12 Pax',
+    bags: '8 Bags',
+    tag: 'Group'
+  }
+];
+
+// Tab configuration with Savaari-style explanatory subtext to eliminate customer doubt
+const TAB_CONFIG = {
+  oneway: {
+    titleEn: 'One Way',
+    titleTa: 'ஒரு வழி',
+    subEn: 'Drop-off Only',
+    subTa: 'டிராப் மட்டும்',
+  },
+  round: {
+    titleEn: 'Round Trip',
+    titleTa: 'இரு வழி',
+    subEn: 'Return With Same Cab',
+    subTa: 'அதே வண்டியில் திரும்புதல்',
+  },
+  local: {
+    titleEn: 'Local Package',
+    titleTa: 'லோக்கல் பேக்கேஜ்',
+    subEn: 'Hourly Rental',
+    subTa: 'மணிநேர வாடகை',
+  }
+};
+
+// Default departure time (tomorrow 6:00 AM)
+const getDefaultDepartureTime = () => {
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  d.setHours(6, 0, 0, 0);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const hours = String(d.getHours()).padStart(2, '0');
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
 
 // South India distance lookup table for fast reliable fallback
 const COMMON_DISTANCES_FROM_CHENNAI = {
@@ -157,7 +228,7 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
   const [showFullBreakdown, setShowFullBreakdown] = useState(false);
 
   // Customer Details & Validation
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(() => getDefaultDepartureTime());
   const [showResult, setShowResult] = useState(false);
   const [errors, setErrors] = useState({});
   const [botField, setBotField] = useState(''); // Honeypot
@@ -167,6 +238,53 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
   const [mounted, setMounted] = useState(false);
   const [requestedDriver, setRequestedDriver] = useState('');
   const stableFormId = "booking-form-v1"; // Using stable ID for hydration safety
+
+  // Savaari-style 1-tap location swap
+  const handleSwapLocations = () => {
+    const currentPickup = pickup;
+    const currentDrop = drop;
+    setPickup(currentDrop);
+    setDrop(currentPickup);
+    pickupValueRef.current = currentDrop;
+    dropValueRef.current = currentPickup;
+    setShowResult(false);
+    if (currentPickup && currentDrop) {
+      calculateDistance(currentDrop, currentPickup);
+    }
+    trackEvent('locations_swapped', { pickup: currentDrop, drop: currentPickup });
+  };
+
+  // Calculate fare across multiple vehicles for instant side-by-side comparison
+  const getEstimatedFareFor = (vehKey) => {
+    const vData = vehicles[vehKey];
+    if (!vData) return 0;
+    if (activeTab === 'local') {
+      const pkgCost = (
+        localPackage === '5hr50km' ? vData.local_5hr_pkg
+        : localPackage === '8hr80km' ? vData.local_8hr_pkg
+        : vData.local_12hr_pkg
+      ) || 2000;
+      return pkgCost;
+    }
+    if (!distance) return 0;
+    const rate = activeTab === 'round' ? vData.round_trip_rate : vData.one_way_rate;
+    const bata = vData.driver_bata;
+    if (activeTab === 'round') {
+      const minKm = (days || 1) * vData.min_km_per_day;
+      const actualRoundTripKm = distance * 2;
+      const chargeableKm = Math.max(minKm, actualRoundTripKm);
+      return Math.round((chargeableKm * rate + (days || 1) * bata) / 10) * 10;
+    } else {
+      const isOutstationDrop = distance >= 50;
+      if (isOutstationDrop) {
+        const minDropKm = vData.min_drop_km || 130;
+        const chargeableKm = Math.max(minDropKm, distance);
+        return Math.round((chargeableKm * rate + bata) / 10) * 10;
+      } else {
+        return Math.round((distance * rate) / 10) * 10;
+      }
+    }
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -847,35 +965,16 @@ Please confirm availability.`;
               {['Pickup', 'Drop'].map((type) => (
                 (type === 'Pickup' || activeTab !== 'local') && (
                 <div key={type} className="relative group">
-                  <div className="flex items-center justify-between mb-1">
+                  <div className="mb-1">
                     <label
                       htmlFor={`${stableFormId}-${type.toLowerCase()}`}
                       className="block text-badge font-bold text-m3-on-surface-variant uppercase tracking-wide"
                     >
                       {type === 'Pickup' ? (isTa ? 'பிக்கப் இடம்' : 'Pickup Location') : (isTa ? 'டிராப் இடம்' : 'Drop Location')}
                     </label>
-                    {type === 'Pickup' && (
-                      <button
-                        type="button"
-                        onClick={() => getCurrentLocation('pickup')}
-                        disabled={gettingLocation === 'pickup'}
-                        className="inline-flex items-center gap-1 text-badge font-bold text-m3-primary hover:text-m3-on-surface transition-colors cursor-pointer py-0.5 px-1 rounded-m3-xs hover:bg-m3-primary-container/30"
-                        title="Detect current location"
-                      >
-                        <Navigation className={`w-3 h-3 ${gettingLocation === 'pickup' ? 'animate-spin' : ''}`} />
-                        <span>{gettingLocation === 'pickup' ? (isTa ? 'கண்டறிகிறது...' : 'Locating...') : (isTa ? 'என் இருப்பிடம்' : 'Use Current Location')}</span>
-                      </button>
-                    )}
                   </div>
 
                   <div className="relative flex items-center bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant rounded-m3-md px-3 py-2 sm:py-2.5 min-h-[44px] sm:min-h-[48px] focus-within:ring-2 focus-within:ring-m3-primary focus-within:border-m3-primary transition-all">
-                    {/* Visual Route Indicator: Traffic Green dot for Pickup (Start/Go), Brand Red square for Drop (Destination/Stop) */}
-                    {type === 'Pickup' ? (
-                      <span className="w-2.5 h-2.5 rounded-m3-full bg-emerald-500 ring-4 ring-emerald-500/20 shrink-0 mr-2.5" title="Pickup Origin (Start)" />
-                    ) : (
-                      <span className="w-2.5 h-2.5 rounded-m3-xs bg-logo-red ring-4 ring-logo-red/20 shrink-0 mr-2.5" title="Drop Destination (Stop)" />
-                    )}
-
                     <input
                       id={`${stableFormId}-${type.toLowerCase()}`}
                       ref={type === 'Pickup' ? pickupInputRef : dropInputRef}
@@ -904,7 +1003,7 @@ Please confirm availability.`;
                       className="bg-transparent w-full outline-none text-sm font-semibold text-m3-on-surface pr-16 placeholder:text-m3-on-surface-variant placeholder:text-xs placeholder:font-normal"
                     />
 
-                    {/* Right side controls: Clear Button + Map Picker Trigger */}
+                    {/* Right side controls: Clear Button + Current Location (GPS) */}
                     <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
                       {(type === 'Pickup' ? pickup : drop) && (
                         <button
@@ -922,12 +1021,13 @@ Please confirm availability.`;
                       )}
                       <button
                         type="button"
-                        onClick={() => handlePinClick(type.toLowerCase())}
+                        onClick={() => getCurrentLocation(type.toLowerCase())}
+                        disabled={gettingLocation === type.toLowerCase()}
                         className="w-7 h-7 min-w-[28px] min-h-[28px] flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-sm transition-colors text-m3-on-surface-variant hover:text-m3-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
-                        title="Pick location on map"
-                        aria-label={`Pick ${type.toLowerCase()} location on map`}
+                        title={isTa ? 'தற்போதைய இருப்பிடத்தைப் பயன்படுத்தவும்' : 'Use current location'}
+                        aria-label={isTa ? 'தற்போதைய இருப்பிடத்தைப் பயன்படுத்தவும்' : `Use current location for ${type.toLowerCase()}`}
                       >
-                        <MapPin className="w-4 h-4" />
+                        <LocateFixed className={`w-4 h-4 ${gettingLocation === type.toLowerCase() ? 'animate-spin text-m3-primary' : ''}`} />
                       </button>
                     </div>
                   </div>
@@ -1014,7 +1114,7 @@ Please confirm availability.`;
               type="button"
               disabled={loading}
               onClick={handleCalculateCost}
-              className="w-full bg-m3-primary hover:bg-slate-900 text-m3-on-primary font-bold py-3 rounded-m3-full transition-all flex items-center justify-center gap-2 shadow-m3-1 hover:shadow-m3-2 text-sm sm:text-base min-h-[46px] sm:min-h-[50px] cursor-pointer active:scale-[0.98] disabled:opacity-75 border border-white/10 group"
+              className="w-full max-w-[260px] sm:max-w-[280px] mx-auto bg-m3-primary hover:bg-slate-900 text-m3-on-primary font-bold py-3 rounded-m3-full transition-all flex items-center justify-center gap-2 shadow-m3-1 hover:shadow-m3-2 text-sm sm:text-base min-h-[46px] sm:min-h-[50px] cursor-pointer active:scale-[0.98] disabled:opacity-75 border border-white/10 group"
             >
               {loading ? (
                 <>
@@ -1255,32 +1355,13 @@ Please confirm availability.`;
           {['Pickup', 'Drop'].map((type) => (
             (type === 'Pickup' || activeTab !== 'local') && (
             <div key={type} className="col-span-2 relative group">
-              <div className="flex items-center justify-between mb-1">
+              <div className="mb-1">
                 <label htmlFor={`${stableFormId}-mobile-${type}`} className="text-xs font-bold text-m3-on-surface-variant uppercase tracking-wide block">
                   {isTa ? (type === 'Pickup' ? 'பிக்கப் இடம்' : 'டிராப் இடம்') : `${type} Location`}
                 </label>
-                {type === 'Pickup' && (
-                  <button
-                    type="button"
-                    onClick={() => getCurrentLocation('pickup')}
-                    disabled={gettingLocation === 'pickup'}
-                    className="inline-flex items-center gap-1 text-badge font-bold text-m3-primary hover:text-m3-on-surface transition-colors cursor-pointer py-0.5 px-1 rounded-m3-xs hover:bg-m3-primary-container/30"
-                    title="Use GPS location"
-                  >
-                    <Navigation className={`w-3 h-3 ${gettingLocation === 'pickup' ? 'animate-spin' : ''}`} />
-                    <span>{gettingLocation === 'pickup' ? (isTa ? 'கண்டறிகிறது...' : 'Locating...') : (isTa ? 'இருப்பிடம்' : 'GPS Location')}</span>
-                  </button>
-                )}
               </div>
 
               <div className="relative flex items-center bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant rounded-m3-md px-3 py-2 min-h-[44px] focus-within:ring-2 focus-within:ring-m3-primary focus-within:border-m3-primary transition">
-                {/* Visual Route Indicator */}
-                {type === 'Pickup' ? (
-                  <span className="w-2.5 h-2.5 rounded-m3-full bg-emerald-500 ring-4 ring-emerald-500/20 shrink-0 mr-2" title="Pickup Origin (Start)" />
-                ) : (
-                  <span className="w-2.5 h-2.5 rounded-m3-xs bg-logo-red ring-4 ring-logo-red/20 shrink-0 mr-2" title="Drop Destination (Stop)" />
-                )}
-
                 <input
                   id={`${stableFormId}-mobile-${type}`}
                   ref={type === 'Pickup' ? pickupInputRef : dropInputRef}
@@ -1324,12 +1405,13 @@ Please confirm availability.`;
                   )}
                   <button
                     type="button"
-                    onClick={() => handlePinClick(type.toLowerCase())}
+                    onClick={() => getCurrentLocation(type.toLowerCase())}
+                    disabled={gettingLocation === type.toLowerCase()}
                     className="w-7 h-7 min-w-[28px] min-h-[28px] flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-sm transition-colors text-m3-on-surface-variant hover:text-m3-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
-                    title="Pick on map"
-                    aria-label={`Pick ${type.toLowerCase()} location on map`}
+                    title={isTa ? 'தற்போதைய இருப்பிடம்' : 'Use Current Location'}
+                    aria-label={isTa ? 'தற்போதைய இருப்பிடம்' : `Use current location for ${type.toLowerCase()}`}
                   >
-                    <MapPin className="w-4 h-4" />
+                    <LocateFixed className={`w-4 h-4 ${gettingLocation === type.toLowerCase() ? 'animate-spin text-m3-primary' : ''}`} />
                   </button>
                 </div>
               </div>
@@ -1402,7 +1484,7 @@ Please confirm availability.`;
               type="button"
               disabled={loading}
               onClick={handleCalculateCost}
-              className="w-full bg-m3-primary hover:bg-slate-900 text-m3-on-primary font-bold py-3.5 rounded-m3-full transition-all flex items-center justify-center gap-2 shadow-m3-1 active:scale-[0.98] min-h-[52px] cursor-pointer disabled:opacity-75 border border-white/10 group"
+              className="w-full max-w-[260px] mx-auto bg-m3-primary hover:bg-slate-900 text-m3-on-primary font-bold py-3.5 rounded-m3-full transition-all flex items-center justify-center gap-2 shadow-m3-1 active:scale-[0.98] min-h-[52px] cursor-pointer disabled:opacity-75 border border-white/10 group"
             >
               {loading ? (
                 <>

@@ -4,6 +4,7 @@ import Breadcrumbs from '../../components/SEO/Breadcrumbs.astro';
 import FAQAccordion from '../../components/FAQAccordion.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
 import OptimizedImage from '../../components/OptimizedImage.astro';
+import AirportBookingEngine from '../../components/AirportBookingEngine.jsx';
 
 const title = "Chennai Airport Taxi (MAA) from ₹650";
 const description = "Pre-book Chennai Airport (MAA) taxi transfers. Flat zone fares from ₹650, zero surge pricing, flight tracking & 24/7 doorstep pickup.";
@@ -438,24 +439,63 @@ const faqSchema = {
   image="/images/services/airport-transfer.webp"
   ogImage="/og/chennai-airport-taxi.jpg"
   schema={[taxiServiceSchema, productSchema, faqSchema, howToSchema]}
-  preloadHero={{
-    href: "/images/services/airport-transfer.webp"
-  }}
 >
   <Breadcrumbs items={breadcrumbItems} />
 
   <div class="bg-slate-50 text-slate-900 font-sans pb-16">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
+    <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 pt-2 sm:pt-4">
 
-      <!-- 1. SIGNATURE HERO SECTION -->
-      <section class="group relative min-h-[220px] sm:min-h-[260px] md:min-h-[280px] rounded-2xl overflow-hidden shadow-md border border-slate-800 bg-slate-950 flex flex-col justify-end p-5 sm:p-7 md:p-8 mb-6 sm:mb-8 transition-all duration-300">
+      <!-- TOP PAGE HEADING & TRUST BADGES -->
+      <div class="max-w-2xl mx-auto mb-2 text-center sm:text-left flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2">
+        <div>
+          <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-bold mb-0.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>24/7 MAA Airport Transfers</span>
+          </div>
+          <h1 class="text-lg sm:text-2xl md:text-3xl font-extrabold text-slate-900 font-heading tracking-tight leading-tight">
+            Chennai Airport Taxi &amp; Cab Booking
+          </h1>
+        </div>
+        <div class="hidden sm:flex items-center gap-2">
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-slate-200 shadow-2xs text-xs font-semibold text-slate-700">
+            <span class="material-symbols-outlined text-amber-500 text-[15px]">star</span>
+            <span>4.9/5 Rating (5,000+ Trips)</span>
+          </span>
+        </div>
+      </div>
+
+      <div id="booking-section" class="scroll-mt-28"></div>
+
+      <!-- Complete New Airport Transfer Booking Panel (Home-Screen Inspired) -->
+      <section class="relative z-20 py-1 sm:py-2 px-1 sm:px-3 max-w-2xl mx-auto mb-3">
+        <AirportBookingEngine client:load />
+
+        <!-- Trust Reassurance Footer Strip -->
+        <div class="mt-2 flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-[11px] text-slate-500 font-medium">
+          <div class="flex items-center gap-1">
+            <span class="material-symbols-outlined text-[14px] text-emerald-600 shrink-0">verified</span>
+            <span class="font-bold text-slate-800">Zero Advance Required — Pay After Trip</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <span class="material-symbols-outlined text-[14px] text-emerald-600 shrink-0">check_circle</span>
+            <span>Instant WhatsApp confirmation</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <span class="material-symbols-outlined text-[14px] text-emerald-600 shrink-0">check_circle</span>
+            <span>Zero hidden charges</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1. SIGNATURE HERO BANNER -->
+      <section class="group relative min-h-[200px] sm:min-h-[240px] md:min-h-[260px] rounded-2xl overflow-hidden shadow-md border border-slate-800 bg-slate-950 flex flex-col justify-end p-5 sm:p-7 md:p-8 mt-4 mb-8 transition-all duration-300">
         <!-- Background Image with Scrim -->
         <OptimizedImage
           src="/images/services/airport-transfer.webp"
           alt="Kalidass Travels - Chennai Airport Taxi & Transfers (Pickup & Drop)"
           class="absolute inset-0 w-full h-full object-cover object-[62%_top] sm:object-[center_28%] transition-transform duration-700 group-hover:scale-105 opacity-80"
-          loading="eager"
-          fetchpriority="high"
+          loading="lazy"
+          fetchpriority="auto"
           sizes="(max-width: 768px) 100vw, 1024px"
         />
         <!-- High-Contrast Scrim Gradient for 100% Text Legibility while keeping image vivid -->
@@ -463,13 +503,13 @@ const faqSchema = {
 
         <div class="relative z-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div class="max-w-2xl">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold mb-2.5 backdrop-blur-xs">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold mb-2 backdrop-blur-xs">
               <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span>24/7 MAA Airport Transfers</span>
+              <span>24/7 Verified Chauffeur Service</span>
             </div>
-            <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight font-heading drop-shadow-sm">
-              Chennai Airport Taxi &amp; Cab Booking
-            </h1>
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-tight font-heading drop-shadow-sm">
+              Official MAA Airport Meet &amp; Greet
+            </h2>
             <p class="text-xs sm:text-sm md:text-base text-slate-200 mt-2 font-normal leading-relaxed max-w-2xl drop-shadow-xs">
               Planning your trip early? Reserve for ₹0 advance today with no credit card required. Pay only after your ride completes safely. Free live flight radar tracking &amp; name-board greeting for all travelers.
             </p>
@@ -483,297 +523,8 @@ const faqSchema = {
         </div>
       </section>
 
-      <!-- 2. STICKY DIRECTION BAR (Docks beneath top navbar on scroll) -->
-      <div 
-        id="sticky-direction-bar" 
-        class="sticky top-16 z-30 bg-slate-50/90 backdrop-blur-md py-2 transition-all mb-3 sm:mb-4"
-        role="region"
-        aria-label="Airport Transfer Direction Switcher"
-      >
-        <div class="max-w-2xl mx-auto flex items-center justify-between gap-2.5 bg-white/95 rounded-full border border-slate-200/90 shadow-2xs px-3 sm:px-4 py-1.5">
-          <!-- Active Mode Indicator with Live Dot -->
-          <div class="flex items-center gap-2 min-w-0">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
-            <div class="min-w-0">
-              <span class="text-[9px] font-bold uppercase tracking-wider text-slate-600 block leading-tight">Active Transfer</span>
-              <strong id="sticky-direction-indicator" class="text-xs sm:text-sm font-extrabold text-slate-900 truncate block font-heading leading-tight">
-                Landing at Airport (Pickup)
-              </strong>
-            </div>
-          </div>
-
-          <!-- Tactile Segmented Pill Switcher -->
-          <div class="inline-flex p-0.5 rounded-full bg-slate-100 border border-slate-200/80 shadow-inner shrink-0" role="tablist" aria-label="Airport Transfer Direction">
-            <button 
-              type="button" 
-              id="tab-btn-drop"
-              role="tab"
-              aria-selected="false"
-              class="flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all cursor-pointer active:scale-95"
-            >
-              <span class="material-symbols-outlined text-[16px] text-slate-500">flight_takeoff</span>
-              <span class="sm:hidden">Drop</span>
-              <span class="hidden sm:inline">To Airport (Drop)</span>
-            </button>
-            <button 
-              type="button" 
-              id="tab-btn-pickup"
-              role="tab"
-              aria-selected="true"
-              class="flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-bold transition-all shadow-sm bg-slate-900 text-white cursor-pointer active:scale-95"
-            >
-              <span class="material-symbols-outlined text-[16px] text-white">flight_land</span>
-              <span class="sm:hidden">Pickup</span>
-              <span class="hidden sm:inline">From Airport (Pickup)</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3. FIXED ZONE TARIFFS & ONLINE BOOKING -->
+      <!-- 4. FIXED ZONE TARIFFS & COMMITMENTS -->
       <section id="zone-tariffs" class="mb-8 sm:mb-12 scroll-mt-28">
-        <!-- Bookmark Anchor for schema & direct links -->
-        <div id="booking-section" class="scroll-mt-28"></div>
-
-        <!-- HOMEPAGE-STYLE COMPACT BOOKING FORM CONTAINER (max-w-2xl mx-auto) -->
-        <div class="max-w-2xl mx-auto mb-10">
-
-          <!-- AIRPORT FARE FINDER (Elevated Compact Card) -->
-          <div id="airport-fare-finder" class="p-5 sm:p-7 rounded-3xl bg-white border border-slate-200/90 shadow-lg hover:shadow-xl transition-all font-sans">
-            
-            <!-- Card Header: Clean, Centered, Homepage Style -->
-            <div class="text-center pb-4 mb-4 border-b border-slate-100">
-              <div class="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/90 px-3 py-0.5 rounded-full mb-2">
-                <span class="material-symbols-outlined text-[14px] text-emerald-600">verified</span>
-                <span>Fixed Zone Rates · Zero Surge</span>
-              </div>
-              <h2 id="tariff-heading" class="text-xl sm:text-2xl font-extrabold text-slate-900 font-heading tracking-tight leading-tight">
-                Book Chennai Airport Taxi (From ₹650)
-              </h2>
-              <p id="tariff-subheading" class="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-lg mx-auto leading-relaxed">
-                Chauffeur meets at arrival gate with personalized name board. Completely free waiting time on flight delays.
-              </p>
-              <div class="mt-2.5 flex items-center justify-center">
-                <button 
-                  id="toggle-all-zones-btn" 
-                  type="button" 
-                  class="text-slate-600 hover:text-emerald-700 font-semibold inline-flex items-center gap-1.5 text-xs cursor-pointer transition-colors"
-                  title="View fixed rates for all 5 Chennai zones & outstation routes"
-                  aria-haspopup="dialog"
-                  aria-expanded="false"
-                  aria-controls="all-zones-modal"
-                >
-                  <span class="material-symbols-outlined text-[15px] text-emerald-600">receipt_long</span>
-                  <span class="underline underline-offset-4">All 5 zones &amp; flat rates overview</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Dual Route Fields with Airport Anchor & Swap Button -->
-            <div id="route-inputs-container" class="space-y-2 mb-3 relative">
-
-            <!-- 1. Airport Field (Default: Pickup / Top for 'pickup' mode) -->
-            <div id="airport-maa-field-wrapper" class="relative">
-              <div class="flex items-center justify-between mb-1 px-1">
-                <span id="airport-field-eyebrow" class="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                  <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block shrink-0"></span>
-                  <span>Pickup Location</span>
-                </span>
-                <span id="airport-field-badge" class="text-[10px] font-extrabold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md uppercase tracking-wider">
-                  MAA Airport
-                </span>
-              </div>
-              
-              <div 
-                id="airport-field-card"
-                class="w-full min-h-[48px] sm:min-h-[52px] px-3.5 py-2 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/90 text-slate-900 transition-colors flex items-center justify-between gap-3 shadow-2xs select-none cursor-pointer group/maa"
-                title="Chennai International Airport (MAA) is the fixed transfer hub. Tap Swap to change direction."
-                role="button"
-                tabindex="0"
-              >
-                <div class="flex items-center gap-2.5 min-w-0">
-                  <div class="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center shrink-0 shadow-2xs group-hover/maa:scale-105 transition-transform" id="airport-icon-container">
-                    <span class="material-symbols-outlined text-[18px]" id="airport-icon" aria-hidden="true">flight_land</span>
-                  </div>
-                  <div class="min-w-0">
-                    <div class="flex items-center gap-1.5">
-                      <strong class="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
-                        Chennai International Airport (MAA)
-                      </strong>
-                    </div>
-                    <p id="airport-field-subtext" class="text-[11px] text-slate-500 truncate leading-tight mt-0.5">
-                      Arrival Exit Gates · Chauffeur meets with Name Placard
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- 2. Tactile Route Swap Button Row -->
-            <div id="route-swap-row" class="relative flex items-center justify-center my-1">
-              <div class="absolute inset-0 flex items-center" aria-hidden="true">
-                <div class="w-full border-t border-slate-200"></div>
-              </div>
-              <button
-                type="button"
-                id="route-swap-btn"
-                class="relative z-10 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white hover:bg-slate-900 text-slate-700 hover:text-white border border-slate-300 hover:border-slate-900 shadow-xs hover:shadow-md transition-all active:scale-95 cursor-pointer group/swap select-none"
-                aria-label="Swap to Airport Drop"
-                title="Swap pickup and drop (switch direction)"
-              >
-                <svg class="w-3.5 h-3.5 text-emerald-600 group-hover/swap:text-emerald-400 transition-transform duration-300" id="route-swap-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M7 16V4m0 0L3 8m4-4l4 4m6 4v12m0 0l4-4m-4 4l-4-4"/>
-                </svg>
-                <span class="text-xs font-bold leading-none tracking-tight" id="route-swap-label">
-                  Swap to Airport Drop
-                </span>
-              </button>
-            </div>
-
-            <!-- 3. User Address Search Input (Default: Drop / Bottom for 'pickup' mode) -->
-            <div id="user-location-field-wrapper" class="relative">
-              <div class="flex items-center justify-between mb-1 px-1">
-                <span id="user-field-eyebrow" class="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                  <span class="w-2 h-2 rounded-full bg-slate-900 inline-block shrink-0"></span>
-                  <span>Drop-off Destination</span>
-                </span>
-                <span class="text-[10px] font-semibold text-slate-600 flex items-center gap-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Doorstep / Hotel / Area
-                </span>
-              </div>
-
-              <div class="relative flex items-center">
-                <svg class="w-5 h-5 text-emerald-600 absolute left-3.5 pointer-events-none shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                </svg>
-                <input 
-                  type="text" 
-                  id="airport-search-input"
-                  aria-label="Search destination area, hotel, or address in Chennai"
-                  placeholder="Where to? Search hotel, area, or address on Google Maps..."
-                  class="w-full h-11 sm:h-12 pl-11 pr-24 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 font-medium transition-all shadow-2xs"
-                  autocomplete="off"
-                />
-                <div class="absolute right-3 flex items-center gap-1 px-2 py-1 rounded-lg bg-white text-xs text-slate-600 font-medium pointer-events-none border border-slate-200 shadow-2xs">
-                  <svg class="w-3 h-3 shrink-0" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
-                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.24v3.15C3.26 21.36 7.33 24 12 24z"/>
-                    <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.24C.45 8.16 0 9.99 0 12s.45 3.84 1.24 5.42l4.04-3.15z"/>
-                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.24 6.58l4.04 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
-                  </svg>
-                  <span>Maps</span>
-                </div>
-                <button 
-                  id="airport-search-clear-btn" 
-                  type="button" 
-                  class="hidden absolute right-20 text-slate-400 hover:text-slate-700 p-1.5 cursor-pointer"
-                  aria-label="Clear search"
-                >
-                  <span class="material-symbols-outlined text-[18px]">close</span>
-                </button>
-              </div>
-
-              <!-- Input Hint: Prompt shown if user clicks Book Taxi without selecting destination -->
-              <div id="finder-input-hint" class="hidden mt-2 p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-semibold flex items-center gap-2 transition-all">
-                <span class="material-symbols-outlined text-[16px] text-emerald-700 shrink-0">arrow_upward</span>
-                <span id="finder-hint-text">Please enter your drop location</span>
-              </div>
-
-              <!-- Autocomplete Suggestion Dropdown -->
-              <div id="airport-search-dropdown" class="hidden absolute left-0 right-0 top-full mt-1.5 bg-white rounded-xl border border-slate-200 shadow-lg z-50 max-h-56 overflow-y-auto divide-y divide-slate-100">
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Compact Live Result Box (Hidden by default · Appears on suggestion tap or search) -->
-          <div id="finder-result-box" class="hidden mb-3 p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-200/80 shadow-2xs">
-            <div class="flex items-center justify-between gap-3 mb-2.5 pb-2 border-b border-slate-200">
-              <div class="min-w-0">
-                <strong id="result-title" class="text-sm sm:text-base font-bold text-slate-900 truncate block font-heading">
-                  City Center Hotels (US Consulate / T. Nagar)
-                </strong>
-                <span id="result-landmarks" class="text-xs text-slate-600 leading-snug block mt-0.5">
-                  US Consulate, T. Nagar, Anna Nagar, Apollo Greams Rd
-                </span>
-              </div>
-              <span id="result-eta-distance" class="text-xs font-bold text-slate-800 bg-white border border-slate-200 px-3 py-1 rounded-full shrink-0 whitespace-nowrap shadow-2xs">
-                30–45 mins · 22 km
-              </span>
-            </div>
-
-            <!-- 4 Vehicles in 1 Compact Single-Row Grid -->
-            <div class="grid grid-cols-4 gap-2 mb-2.5" id="finder-vehicle-grid">
-            </div>
-
-            <!-- Reassurance Strip -->
-            <div class="flex items-center justify-between text-xs text-slate-600 pt-2 border-t border-slate-200">
-              <span class="leading-none">✓ ₹0 Advance · Chauffeur with Placard · Chilled AC</span>
-              <span class="font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full shrink-0 ml-1">Pay After Ride</span>
-            </div>
-          </div>
-
-          <!-- Dual Booking Actions (ALWAYS VISIBLE so user immediately knows they can book) -->
-          <div class="space-y-2 pt-3 border-t border-slate-200" id="booking-actions-container">
-            <!-- Primary Action: Streamlined, Ergonomic Button -->
-            <button 
-              type="button" 
-              id="finder-whatsapp-btn"
-              class="w-full h-11 sm:h-12 flex items-center justify-center gap-2 px-5 rounded-xl bg-slate-900 hover:bg-slate-800 active:bg-black text-white font-bold font-sans text-sm sm:text-base shadow-sm hover:shadow-md transition-all active:scale-[0.99] select-none cursor-pointer border border-white/10"
-              title="Reserve Airport Taxi (From ₹650 - Pay After Trip)"
-              data-action="reserve-taxi"
-            >
-              <span id="finder-btn-label" class="font-bold tracking-wide">Reserve Pickup · From ₹650</span>
-            </button>
-
-            <!-- Secondary Action: Call Desk -->
-            <a
-              id="finder-call-btn"
-              href="tel:+916381939769"
-              class="w-full h-10 sm:h-10.5 min-w-0 flex items-center justify-center gap-2 px-4 rounded-xl bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-800 font-semibold font-sans text-xs sm:text-sm border border-slate-200 shadow-2xs hover:border-slate-300 transition-all active:scale-[0.99] select-none cursor-pointer"
-              title="Call 24/7 Operations Desk (+91 63819 39769)"
-            >
-              <span class="material-symbols-outlined text-[18px] text-slate-500 shrink-0">call</span>
-              <span class="truncate">Call 24/7 Desk (+91 63819 39769)</span>
-            </a>
-
-            <!-- EEAT Trust & Reassurance Strip -->
-            <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-slate-600 pt-1 select-none text-center">
-              <span class="inline-flex items-center gap-1 font-semibold text-emerald-800">
-                <span class="material-symbols-outlined text-[15px] text-emerald-600 shrink-0">verified</span>
-                ₹0 Advance
-              </span>
-              <span class="text-slate-300">·</span>
-              <span class="text-slate-600 font-medium">Pay Chauffeur After Arrival</span>
-              <span class="text-slate-300">·</span>
-              <span class="text-slate-600 font-medium">Flight Radar Tracked</span>
-              <span class="text-slate-300">·</span>
-              <span class="text-slate-600 font-medium">GST Tax Invoice</span>
-            </div>
-          </div>
-        </div>
-
-          <!-- Fine Print / Transparency Note -->
-          <p class="text-xs text-slate-500 text-center mt-2.5 leading-relaxed px-1">
-            * Toll booth tickets and official airport parking receipts are billed at exact actuals. Zero waiting charges for airline delays.
-          </p>
-
-          <!-- Homepage-Style Trust Reassurance Footer Strip -->
-          <div class="mt-3.5 flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs text-slate-600 font-medium">
-            <div class="flex items-center gap-1.5">
-              <span class="material-symbols-outlined text-[16px] text-emerald-600 shrink-0">verified</span>
-              <span class="font-bold text-slate-900">Zero Advance Required — Pay After Trip</span>
-            </div>
-            <div class="flex items-center gap-1.5">
-              <span class="material-symbols-outlined text-[16px] text-emerald-600 shrink-0">check_circle</span>
-              <span>Instant WhatsApp confirmation</span>
-            </div>
-            <div class="flex items-center gap-1.5">
-              <span class="material-symbols-outlined text-[16px] text-emerald-600 shrink-0">check_circle</span>
-              <span>Zero hidden charges</span>
-            </div>
-          </div>
-        </div>
 
       <!-- AIRPORT TRANSFER COMMITMENTS & GUARANTEES CARD -->
       <section 
@@ -1807,13 +1558,18 @@ const faqSchema = {
 
       // 2. Airport Fare Finder Elements & Route Selector
       const routeInputsContainer = document.getElementById('route-inputs-container');
+      const routeInputsWrapper = document.getElementById('route-inputs-wrapper');
+      const stickyDirectionBar = document.getElementById('sticky-direction-bar');
+      const dockedMiniHeader = document.getElementById('docked-mini-header');
+      const dockedModeTitle = document.getElementById('docked-mode-title');
+      const dockedTabBtnDrop = document.getElementById('docked-tab-btn-drop');
+      const dockedTabBtnPickup = document.getElementById('docked-tab-btn-pickup');
+      const dockedActionRow = document.getElementById('docked-action-row');
+      const dockedFareSummary = document.getElementById('docked-fare-summary');
+      const dockedBookBtn = document.getElementById('docked-book-btn');
+      const dockedBtnLabel = document.getElementById('docked-btn-label');
       const airportMaaFieldWrapper = document.getElementById('airport-maa-field-wrapper');
       const userLocationFieldWrapper = document.getElementById('user-location-field-wrapper');
-      const airportFieldCard = document.getElementById('airport-field-card');
-      const routeSwapRow = document.getElementById('route-swap-row');
-      const routeSwapBtn = document.getElementById('route-swap-btn');
-      const routeSwapIcon = document.getElementById('route-swap-icon');
-      const routeSwapLabel = document.getElementById('route-swap-label');
       const airportFieldEyebrow = document.getElementById('airport-field-eyebrow');
       const airportFieldBadge = document.getElementById('airport-field-badge');
       const airportFieldSubtext = document.getElementById('airport-field-subtext');
@@ -1942,34 +1698,23 @@ const faqSchema = {
         renderChips();
         updateSuggestionsVisibility();
 
-        if (!selectedDest) {
+        const hint = document.getElementById('finder-input-hint');
+        if (selectedDest) {
+          if (hint) hint.classList.add('hidden');
+          if (resultBox) resultBox.classList.remove('hidden');
+          if (resultTitle) resultTitle.textContent = selectedDest.name;
+          if (resultLandmarks) resultLandmarks.textContent = selectedDest.landmarks;
+          if (resultEtaDistance) resultEtaDistance.textContent = `${selectedDest.eta} · ${selectedDest.distance}`;
+        } else {
           if (resultBox) resultBox.classList.add('hidden');
-          const isDrop = currentMode === 'drop';
-          if (btnLabel) {
-            btnLabel.textContent = isDrop ? 'Reserve Drop · From ₹650' : 'Reserve Pickup · From ₹650';
-          }
-          if (whatsappBtn) {
-            whatsappBtn.setAttribute('title', isDrop ? 'Reserve Airport Drop (From ₹650 - Pay After Trip)' : 'Reserve Airport Pickup (From ₹650 - Pay After Trip)');
-            whatsappBtn.onclick = () => promptForDestination();
-          }
-          return;
         }
 
-        const hint = document.getElementById('finder-input-hint');
-        if (hint) hint.classList.add('hidden');
-
-        if (resultBox) resultBox.classList.remove('hidden');
-
-        if (resultTitle) resultTitle.textContent = selectedDest.name;
-        if (resultLandmarks) resultLandmarks.textContent = selectedDest.landmarks;
-        if (resultEtaDistance) resultEtaDistance.textContent = `${selectedDest.eta} · ${selectedDest.distance}`;
-
-        // Vehicles breakdown
+        // Vehicles breakdown (Uber Style: ALWAYS VISIBLE & SELECTABLE)
         const vehicles = [
-          { type: 'sedan' as const, name: 'Sedan', model: 'Dzire / Etios', pax: '4 Pax · 2 Bags', price: selectedDest.sedan },
-          { type: 'innova' as const, name: 'SUV', model: 'Innova / Ertiga', pax: '6 Pax · 3 Bags', price: selectedDest.innova },
-          { type: 'crysta' as const, name: 'VIP Crysta', model: 'Innova Crysta', pax: '7 Pax · 5 Bags', price: selectedDest.crysta },
-          { type: 'tempo' as const, name: 'Tempo', model: '12-Seater Coach', pax: '12 Pax · 12 Bags', price: selectedDest.tempo },
+          { type: 'sedan' as const, name: 'Sedan', model: 'Dzire / Etios', pax: '4 Pax · 2 Bags', price: selectedDest ? selectedDest.sedan : '₹650' },
+          { type: 'innova' as const, name: 'SUV', model: 'Ertiga / XL6', pax: '6 Pax · 3 Bags', price: selectedDest ? selectedDest.innova : '₹1,150' },
+          { type: 'crysta' as const, name: 'Innova', model: 'Innova Crysta VIP', pax: '7 Pax · 5 Bags', price: selectedDest ? selectedDest.crysta : '₹1,500' },
+          { type: 'tempo' as const, name: 'Tempo', model: '12-Seater Coach', pax: '12 Pax · Coach', price: selectedDest ? selectedDest.tempo : '₹2,400' },
         ];
 
         if (vehicleGrid) {
@@ -1978,15 +1723,15 @@ const faqSchema = {
             const isChosen = selectedVehicle === v.type;
             const card = document.createElement('button');
             card.type = 'button';
-            card.className = `p-2.5 rounded-xl border text-center transition-all cursor-pointer flex flex-col justify-between ${
+            card.className = `p-2 sm:p-2.5 rounded-xl border text-center transition-all cursor-pointer flex flex-col justify-between select-none ${
               isChosen
-                ? 'border-slate-900 bg-slate-100 font-bold ring-2 ring-slate-900 shadow-xs'
-                : 'border-slate-200 bg-white hover:border-slate-400'
+                ? 'border-slate-900 bg-slate-900 text-white font-bold ring-2 ring-slate-900 shadow-sm'
+                : 'border-slate-200 bg-white hover:border-slate-400 text-slate-800'
             }`;
             card.innerHTML = `
-              <span class="text-[10px] uppercase font-bold text-slate-500 block truncate leading-none mb-0.5" title="${v.model}">${v.name}</span>
-              <strong class="text-xs sm:text-sm font-extrabold text-slate-900 block leading-tight">${v.price}</strong>
-              <span class="text-[10px] text-slate-500 block truncate mt-0.5">${v.pax}</span>
+              <span class="text-[10px] uppercase font-bold ${isChosen ? 'text-emerald-400' : 'text-slate-500'} block truncate leading-none mb-1" title="${v.model}">${v.name}</span>
+              <strong class="text-xs sm:text-sm font-extrabold ${isChosen ? 'text-white' : 'text-slate-900'} block leading-tight">${v.price}</strong>
+              <span class="text-[9px] sm:text-[10px] ${isChosen ? 'text-slate-300' : 'text-slate-500'} block truncate mt-1">${v.pax}</span>
             `;
             card.onclick = () => {
               selectedVehicle = v.type;
@@ -1996,21 +1741,41 @@ const faqSchema = {
           });
         }
 
-        // WhatsApp booking link update
+        // WhatsApp booking link & button label update
         const chosenVehicle = vehicles.find((v) => v.type === selectedVehicle) || vehicles[0];
         const isDrop = currentMode === 'drop';
 
         if (btnLabel) {
           btnLabel.textContent = isDrop
-            ? `Reserve Drop (${chosenVehicle.price})`
-            : `Reserve Pickup (${chosenVehicle.price})`;
+            ? `Reserve ${chosenVehicle.name} · ${chosenVehicle.price}`
+            : `Reserve ${chosenVehicle.name} · ${chosenVehicle.price}`;
+        }
+
+        if (dockedFareSummary) {
+          dockedFareSummary.textContent = `${chosenVehicle.name} · ${chosenVehicle.price}`;
+        }
+        if (dockedBtnLabel) {
+          dockedBtnLabel.textContent = selectedDest ? `Book ${chosenVehicle.name}` : 'Book Ride';
         }
 
         if (whatsappBtn) {
           whatsappBtn.setAttribute('title', isDrop
             ? `Reserve Airport Drop with ${chosenVehicle.name} (${chosenVehicle.price} - Pay After Trip)`
             : `Reserve Airport Pickup with ${chosenVehicle.name} (${chosenVehicle.price} - Pay After Trip)`);
-          whatsappBtn.onclick = () => openBookingModal();
+          
+          if (selectedDest) {
+            whatsappBtn.onclick = () => openBookingModal();
+          } else {
+            whatsappBtn.onclick = () => promptForDestination();
+          }
+        }
+
+        if (dockedBookBtn) {
+          if (selectedDest) {
+            dockedBookBtn.onclick = () => openBookingModal();
+          } else {
+            dockedBookBtn.onclick = () => promptForDestination();
+          }
         }
       }
 
@@ -2223,6 +1988,18 @@ const faqSchema = {
         if (indicator) {
           indicator.textContent = isDrop ? 'Going to Airport (Drop)' : 'Landing at Airport (Pickup)';
         }
+        if (dockedModeTitle) {
+          dockedModeTitle.textContent = isDrop ? 'Going to Airport (Drop)' : 'Landing at Airport (Pickup)';
+        }
+        if (dockedTabBtnDrop && dockedTabBtnPickup) {
+          if (isDrop) {
+            dockedTabBtnDrop.className = "px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-900 text-white transition-all cursor-pointer";
+            dockedTabBtnPickup.className = "px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-slate-600 hover:text-slate-900 transition-all cursor-pointer";
+          } else {
+            dockedTabBtnPickup.className = "px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-900 text-white transition-all cursor-pointer";
+            dockedTabBtnDrop.className = "px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-slate-600 hover:text-slate-900 transition-all cursor-pointer";
+          }
+        }
 
         if (btnDrop && btnPickup) {
           if (isDrop) {
@@ -2261,84 +2038,6 @@ const faqSchema = {
           commitmentsSubtitle.textContent = isDrop ? 'Drop Protocol' : 'Pickup Protocol';
         }
 
-        // 6c. Update Route Fields Layout, Labels & Swap Button
-        if (routeInputsContainer && userLocationFieldWrapper && airportMaaFieldWrapper && routeSwapRow) {
-          if (isDrop) {
-            // Drop Mode: Doorstep (Pickup) -> Airport MAA (Drop)
-            routeInputsContainer.appendChild(userLocationFieldWrapper);
-            routeInputsContainer.appendChild(routeSwapRow);
-            routeInputsContainer.appendChild(airportMaaFieldWrapper);
-
-            if (userFieldEyebrow) {
-              userFieldEyebrow.innerHTML = `
-                <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block shrink-0"></span>
-                <span>Pickup Location</span>
-              `;
-            }
-            if (airportFieldEyebrow) {
-              airportFieldEyebrow.innerHTML = `
-                <span class="w-2 h-2 rounded-full bg-slate-900 inline-block shrink-0"></span>
-                <span>Drop-off Destination</span>
-              `;
-            }
-            if (airportFieldBadge) {
-              airportFieldBadge.textContent = "MAA Airport";
-            }
-            if (airportFieldSubtext) {
-              airportFieldSubtext.textContent = "Direct Ramp Drop · Departure Gates T1, T2 & T4";
-            }
-            if (airportIcon) {
-              airportIcon.textContent = "flight_takeoff";
-            }
-            if (routeSwapLabel) {
-              routeSwapLabel.textContent = "Swap to Airport Pickup";
-            }
-            if (routeSwapBtn) {
-              routeSwapBtn.setAttribute('title', "Swap to Airport Pickup (Landing at MAA)");
-              routeSwapBtn.setAttribute('aria-label', "Swap to Airport Pickup");
-            }
-            if (routeSwapIcon) {
-              routeSwapIcon.classList.add('rotate-180');
-            }
-          } else {
-            // Pickup Mode: Airport MAA (Pickup) -> Doorstep (Drop)
-            routeInputsContainer.appendChild(airportMaaFieldWrapper);
-            routeInputsContainer.appendChild(routeSwapRow);
-            routeInputsContainer.appendChild(userLocationFieldWrapper);
-
-            if (airportFieldEyebrow) {
-              airportFieldEyebrow.innerHTML = `
-                <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block shrink-0"></span>
-                <span>Pickup Location</span>
-              `;
-            }
-            if (airportFieldBadge) {
-              airportFieldBadge.textContent = "MAA Airport";
-            }
-            if (airportFieldSubtext) {
-              airportFieldSubtext.textContent = "Arrival Exit Gates · Chauffeur meets with Name Placard";
-            }
-            if (airportIcon) {
-              airportIcon.textContent = "flight_land";
-            }
-            if (userFieldEyebrow) {
-              userFieldEyebrow.innerHTML = `
-                <span class="w-2 h-2 rounded-full bg-slate-900 inline-block shrink-0"></span>
-                <span>Drop-off Destination</span>
-              `;
-            }
-            if (routeSwapLabel) {
-              routeSwapLabel.textContent = "Swap to Airport Drop";
-            }
-            if (routeSwapBtn) {
-              routeSwapBtn.setAttribute('title', "Swap to Airport Drop (Going to MAA)");
-              routeSwapBtn.setAttribute('aria-label', "Swap to Airport Drop");
-            }
-            if (routeSwapIcon) {
-              routeSwapIcon.classList.remove('rotate-180');
-            }
-          }
-        }
 
         // 6d. Update Search Input Placeholder & Labels
         if (searchInput) {
@@ -2350,10 +2049,10 @@ const faqSchema = {
         // 6e. Update Tariff Headings
         if (tariffHeading && tariffSubheading) {
           if (isDrop) {
-            tariffHeading.textContent = "Book Airport Drop — Doorstep to Chennai Airport (From ₹650)";
+            tariffHeading.textContent = "Book Airport Drop (From ₹650)";
             tariffSubheading.textContent = "Punctual doorstep pickup across Chennai direct to Departure Gates T1, T2 & T4. Fuel, chauffeur & AC included.";
           } else {
-            tariffHeading.textContent = "Book Airport Pickup — Chennai Airport to Doorstep (From ₹650)";
+            tariffHeading.textContent = "Book Airport Pickup (From ₹650)";
             tariffSubheading.textContent = "Chauffeur meets at arrival gate with personalized name board. Completely free waiting time on flight delays.";
           }
         }
@@ -2403,12 +2102,11 @@ const faqSchema = {
         btnPickup.onclick = () => setDirection('pickup');
       }
 
-      if (routeSwapBtn) {
-        routeSwapBtn.onclick = () => {
-          const nextMode = currentMode === 'drop' ? 'pickup' : 'drop';
-          setDirection(nextMode);
-        };
+      if (dockedTabBtnDrop && dockedTabBtnPickup) {
+        dockedTabBtnDrop.onclick = () => setDirection('drop');
+        dockedTabBtnPickup.onclick = () => setDirection('pickup');
       }
+
 
       if (airportFieldCard && searchInput) {
         airportFieldCard.onclick = () => {
@@ -2744,6 +2442,68 @@ const faqSchema = {
         });
       }
 
+      // 8. Sticky On Scroll-Up Behavior for Route Inputs (Pickup & Drop)
+      let lastScrollY = window.scrollY;
+      let isDocked = false;
+      let ticking = false;
+
+      function updateStickyInputs() {
+        if (!routeInputsContainer || !routeInputsWrapper) return;
+
+        const currentScrollY = window.scrollY;
+        const delta = currentScrollY - lastScrollY;
+        const wrapperRect = routeInputsWrapper.getBoundingClientRect();
+        const wrapperTopInDoc = currentScrollY + wrapperRect.top;
+
+        // Is user scrolled below the booking card inputs?
+        const isPastOriginal = currentScrollY > (wrapperTopInDoc - 70);
+
+        if (!isPastOriginal) {
+          if (isDocked) {
+            isDocked = false;
+            routeInputsContainer.classList.remove('route-inputs-docked', 'route-inputs-docked-hidden');
+            routeInputsContainer.style.top = '';
+            routeInputsWrapper.style.minHeight = '';
+            if (stickyDirectionBar) {
+              stickyDirectionBar.classList.remove('opacity-0', 'pointer-events-none');
+            }
+          }
+        } else {
+          if (delta < -6) {
+            // Scrolling UP: make sticky!
+            if (!isDocked) {
+              isDocked = true;
+              routeInputsWrapper.style.minHeight = `${routeInputsContainer.offsetHeight}px`;
+              routeInputsContainer.classList.add('route-inputs-docked');
+              if (stickyDirectionBar) {
+                stickyDirectionBar.classList.add('opacity-0', 'pointer-events-none');
+              }
+            }
+            routeInputsContainer.classList.remove('route-inputs-docked-hidden');
+            routeInputsContainer.style.top = '4.25rem';
+          } else if (delta > 6 && isDocked) {
+            // Scrolling DOWN: hide sticky inputs so content below is unobstructed
+            routeInputsContainer.classList.add('route-inputs-docked-hidden');
+          }
+        }
+
+        lastScrollY = currentScrollY;
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(updateStickyInputs);
+          ticking = true;
+        }
+      }, { passive: true });
+
+      window.addEventListener('resize', () => {
+        if (isDocked && routeInputsContainer) {
+          routeInputsContainer.style.top = '4.25rem';
+        }
+      }, { passive: true });
+
       // Initial render of Airport Fare Finder (clean state, no auto-select, shows visible booking CTA)
       renderFinderState();
       setDirection(currentMode);
@@ -2825,6 +2585,80 @@ const faqSchema = {
           transform: none;
         }
       }
+    }
+
+    /* Sticky On Scroll-Up: Compact Unified Booking Bar (Pickup & Drop) */
+    .route-inputs-docked {
+      position: fixed !important;
+      left: 50% !important;
+      transform: translate(-50%, 0) !important;
+      width: calc(100% - 1.25rem) !important;
+      max-width: 42rem !important; /* matches max-w-2xl */
+      z-index: 35 !important;
+      background: rgba(255, 255, 255, 0.98) !important;
+      backdrop-filter: blur(14px) !important;
+      -webkit-backdrop-filter: blur(14px) !important;
+      padding: 0.5rem 0.75rem !important;
+      border-radius: 1rem !important;
+      box-shadow: 0 10px 25px -4px rgba(15, 23, 42, 0.15), 0 4px 10px -2px rgba(15, 23, 42, 0.08) !important;
+      border: 1px solid rgba(203, 213, 225, 0.9) !important;
+      margin-bottom: 0 !important;
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, top 0.15s ease !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+    }
+
+    .route-inputs-docked #docked-mini-header {
+      display: flex !important;
+    }
+
+    .route-inputs-docked #docked-action-row {
+      display: flex !important;
+    }
+
+    .route-inputs-docked #airport-field-eyebrow,
+    .route-inputs-docked #user-field-eyebrow {
+      display: none !important;
+    }
+
+    .route-inputs-docked #airport-field-card {
+      min-height: 34px !important;
+      padding: 0.25rem 0.65rem !important;
+      border-radius: 0.65rem !important;
+    }
+
+    .route-inputs-docked #airport-icon-container {
+      width: 1.35rem !important;
+      height: 1.35rem !important;
+      border-radius: 0.35rem !important;
+    }
+
+    .route-inputs-docked #airport-icon {
+      font-size: 14px !important;
+    }
+
+    .route-inputs-docked #airport-field-subtext {
+      display: none !important;
+    }
+
+    .route-inputs-docked #airport-search-input {
+      height: 36px !important;
+      font-size: 13px !important;
+      padding-left: 2.25rem !important;
+      padding-right: 4.5rem !important;
+      border-radius: 0.65rem !important;
+    }
+
+    .route-inputs-docked #user-location-field-wrapper svg.absolute {
+      width: 16px !important;
+      height: 16px !important;
+      left: 0.65rem !important;
+    }
+
+    .route-inputs-docked-hidden {
+      transform: translate(-50%, -130%) !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
     }
   </style>
 </Layout>
