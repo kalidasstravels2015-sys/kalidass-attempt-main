@@ -642,9 +642,31 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
             <span class="block text-badge font-bold uppercase tracking-wider text-m3-on-surface-variant">Instant Booking</span>
             <p class="font-semibold text-m3-on-surface flex items-center gap-1.5 truncate">
               <MessageCircle className="w-3.5 h-3.5 text-m3-secondary shrink-0" />
-              <span class="truncate">Instant WhatsApp</span>
+              <span class="truncate">Call &amp; WhatsApp</span>
             </p>
           </div>
+        </div>
+
+        <!-- Hero Quick Action CTAs (Call Now & WhatsApp) -->
+        <div class="mt-5 flex flex-wrap items-center gap-3">
+          <a
+            href="tel:+916381939769"
+            aria-label={`Call to book ${service.title}`}
+            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-m3-full bg-m3-surface-container hover:bg-blue-50 active:bg-blue-100 text-m3-on-surface hover:text-[#1A73E8] border border-m3-outline-variant hover:border-blue-300 text-xs sm:text-sm font-bold shadow-xs transition-all select-none"
+          >
+            <AndroidPhoneIcon className="w-4 h-4 text-[#1A73E8] shrink-0" />
+            <span>Call Now: +91 63819 39769</span>
+          </a>
+          <a
+            href={whatsappLink}
+            target="_blank"
+            rel="noopener noreferrer nofollow"
+            aria-label={`Book ${service.title} on WhatsApp`}
+            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-m3-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs sm:text-sm font-bold shadow-m3-1 transition-all select-none"
+          >
+            <WhatsAppIcon variant="brand" className="w-4 h-4 shrink-0 text-white" />
+            <span>WhatsApp Booking</span>
+          </a>
         </div>
 
       </div>
@@ -730,15 +752,26 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                 </button>
               </div>
 
-              <a 
-                href={whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-                class="inline-flex items-center gap-1.5 px-4 py-2 rounded-m3-full bg-m3-primary text-m3-on-primary text-xs font-bold shadow-m3-1 hover:bg-m3-primary/90 active:scale-[0.98] transition-all"
-              >
-                <span>Reserve Now</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </a>
+              <div class="flex items-center gap-2">
+                <a
+                  href="tel:+916381939769"
+                  aria-label={`Call to book ${service.title}`}
+                  class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-m3-full bg-m3-surface-container hover:bg-blue-50 active:bg-blue-100 text-m3-on-surface hover:text-[#1A73E8] border border-m3-outline-variant hover:border-blue-300 text-xs font-bold transition-all shadow-xs"
+                >
+                  <AndroidPhoneIcon className="w-3.5 h-3.5 text-[#1A73E8] shrink-0" />
+                  <span>Call Now</span>
+                </a>
+                <a 
+                  href={whatsappLink}
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                  aria-label={`Book ${service.title} on WhatsApp`}
+                  class="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-m3-full bg-m3-primary text-m3-on-primary text-xs font-bold shadow-m3-1 hover:bg-m3-primary/90 active:scale-[0.98] transition-all"
+                >
+                  <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0" />
+                  <span>WhatsApp</span>
+                </a>
+              </div>
             </div>
           </div>
 
