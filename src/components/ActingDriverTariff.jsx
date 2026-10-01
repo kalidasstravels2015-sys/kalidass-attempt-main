@@ -33,19 +33,19 @@ export default function ActingDriverTariff() {
           <div className="grid sm:grid-cols-2 gap-3 text-xs sm:text-sm">
             <div className="flex justify-between items-center p-3 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant/50">
               <span className="text-m3-on-surface-variant">4 Hours Short Duty (Errands / Shopping)</span>
-              <span className="font-bold text-m3-on-surface text-base">₹600</span>
+              <span className="font-bold text-m3-on-surface text-base">₹500</span>
             </div>
             <div className="flex justify-between items-center p-3 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant/50">
               <span className="text-m3-on-surface-variant">8 Hours Full Day Duty</span>
-              <span className="font-bold text-m3-on-surface text-base">₹900</span>
+              <span className="font-bold text-m3-on-surface text-base">₹800</span>
             </div>
             <div className="flex justify-between items-center p-3 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant/50">
               <span className="text-m3-on-surface-variant">Extra Hour Rate</span>
-              <span className="font-bold text-m3-on-surface text-base">₹150 / hr</span>
+              <span className="font-bold text-m3-on-surface text-base">₹100 / hr</span>
             </div>
             <div className="flex justify-between items-center p-3 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant/50">
               <span className="text-m3-on-surface-variant">Night Duty Allowance (10 PM – 5 AM)</span>
-              <span className="font-bold text-m3-on-surface text-base">+₹200 flat</span>
+              <span className="font-bold text-m3-on-surface text-base">+₹100 flat</span>
             </div>
           </div>
         </div>
@@ -65,19 +65,19 @@ export default function ActingDriverTariff() {
           <div className="grid sm:grid-cols-2 gap-3 text-xs sm:text-sm">
             <div className="flex justify-between items-center p-3 rounded-m3-md bg-m3-surface border border-m3-outline-variant/50">
               <span className="text-m3-on-surface-variant">Hatchback & Sedan (Dzire, City, Verna)</span>
-              <span className="font-bold text-m3-on-surface text-base">₹600 / day</span>
+              <span className="font-bold text-m3-on-surface text-base">₹1,100 / day</span>
             </div>
             <div className="flex justify-between items-center p-3 rounded-m3-md bg-m3-surface border border-m3-outline-variant/50">
               <span className="text-m3-on-surface-variant">Compact SUV / MPV (Ertiga, Creta, Carens)</span>
-              <span className="font-bold text-m3-on-surface text-base">₹700 / day</span>
+              <span className="font-bold text-m3-on-surface text-base">₹1,200 / day</span>
             </div>
             <div className="flex justify-between items-center p-3 rounded-m3-md bg-m3-surface border border-m3-outline-variant/50">
               <span className="text-m3-on-surface-variant">Premium SUV / MPV (Innova Crysta, Fortuner)</span>
-              <span className="font-bold text-m3-on-surface text-base">₹800 / day</span>
+              <span className="font-bold text-m3-on-surface text-base">₹1,300 / day</span>
             </div>
             <div className="flex justify-between items-center p-3 rounded-m3-md bg-m3-surface border border-m3-outline-variant/50">
               <span className="text-m3-on-surface-variant">Luxury European (BMW, Audi, Benz)</span>
-              <span className="font-bold text-m3-on-surface text-base">₹1,000 / day</span>
+              <span className="font-bold text-m3-on-surface text-base">₹1,500 / day</span>
             </div>
             
             <div className="col-span-full p-3 bg-m3-surface-container-low text-m3-on-surface rounded-m3-md border border-m3-outline-variant text-xs flex items-start gap-2">

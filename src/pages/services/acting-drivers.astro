@@ -6,11 +6,11 @@ import FAQAccordion from '../../components/FAQAccordion.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
 import WhatsAppIcon from '../../components/WhatsAppIcon.astro';
 import AndroidPhoneIcon from '../../components/AndroidPhoneIcon.astro';
-import DriverFeeEstimator from '../../components/DriverFeeEstimator.astro';
+import DriverFeeEstimator from '../../components/DriverFeeEstimator.jsx';
 import OptimizedImage from '../../components/OptimizedImage.astro';
 
 const title = "Hire Acting Drivers in Chennai";
-const description = "Hire verified acting drivers in Chennai for your car. City duty (₹600/4hrs) & outstation round trips (₹600 bata). 30-min doorstep arrival across Chennai.";
+const description = "Hire verified acting drivers in Chennai for your car. City duty (₹500/4hrs) & outstation round trips (₹1,100/day bata). 30-min doorstep arrival across Chennai.";
 const keywords = "acting driver in chennai, hire acting driver chennai, call driver chennai, personal car driver hire chennai, hourly driver chennai, outstation acting driver chennai, temporary driver chennai";
 
 const breadcrumbItems = [
@@ -44,18 +44,18 @@ const cityTariff = [
   {
     name: "City Short Duty (4 Hours)",
     hours: "4 Hours Continuous",
-    rate: "₹600",
-    extra: "₹150 / extra hour",
+    rate: "₹500",
+    extra: "₹100 / extra hour",
     idealFor: "Doctor visits, shopping in T. Nagar, airport pickup/drop, local errands",
-    whatsappMsg: "Hi Kalidass Travels, I want to book a 4-Hour City Acting Driver (₹600) in Chennai."
+    whatsappMsg: "Hi Kalidass Travels, I want to book a 4-Hour City Acting Driver (₹500) in Chennai."
   },
   {
     name: "City Full Day Duty (8 Hours)",
     hours: "8 Hours Continuous",
-    rate: "₹900",
-    extra: "₹150 / extra hour",
+    rate: "₹800",
+    extra: "₹100 / extra hour",
     idealFor: "Family functions, multi-stop office meetings, full-day shopping",
-    whatsappMsg: "Hi Kalidass Travels, I want to book an 8-Hour Full Day City Acting Driver (₹900) in Chennai."
+    whatsappMsg: "Hi Kalidass Travels, I want to book an 8-Hour Full Day City Acting Driver (₹800) in Chennai."
   }
 ];
 
@@ -63,26 +63,26 @@ const outstationTariff = [
   {
     vehicle: "Hatchback & Sedan",
     examples: "Dzire, Etios, Honda City, Verna, Baleno",
-    rate: "₹600 / day",
-    whatsappMsg: "Hi Kalidass Travels, I need an Outstation Acting Driver for my Sedan (₹600/day)."
+    rate: "₹1,100 / day",
+    whatsappMsg: "Hi Kalidass Travels, I need an Outstation Acting Driver for my Sedan (₹1,100/day)."
   },
   {
     vehicle: "Compact SUV / MPV",
     examples: "Ertiga, Creta, Seltos, Carens, XL6",
-    rate: "₹700 / day",
-    whatsappMsg: "Hi Kalidass Travels, I need an Outstation Acting Driver for my SUV (₹700/day)."
+    rate: "₹1,200 / day",
+    whatsappMsg: "Hi Kalidass Travels, I need an Outstation Acting Driver for my SUV (₹1,200/day)."
   },
   {
     vehicle: "Premium SUV / MUV",
     examples: "Innova Crysta, Fortuner, Safari, XUV700",
-    rate: "₹800 / day",
-    whatsappMsg: "Hi Kalidass Travels, I need an Outstation Acting Driver for my Innova Crysta (₹800/day)."
+    rate: "₹1,300 / day",
+    whatsappMsg: "Hi Kalidass Travels, I need an Outstation Acting Driver for my Innova Crysta (₹1,300/day)."
   },
   {
     vehicle: "Luxury European",
     examples: "BMW, Mercedes-Benz, Audi, Volvo",
-    rate: "₹1,000 / day",
-    whatsappMsg: "Hi Kalidass Travels, I need an Outstation Acting Driver for my Luxury Car (₹1,000/day)."
+    rate: "₹1,500 / day",
+    whatsappMsg: "Hi Kalidass Travels, I need an Outstation Acting Driver for my Luxury Car (₹1,500/day)."
   }
 ];
 
@@ -224,7 +224,7 @@ const faqSchema = {
               ⚡ 30–60 Min Doorstep Arrival
             </span>
             <span class="text-xs text-slate-300 font-medium">
-              City Duty from ₹600 · Outstation from ₹600/day
+              City Duty from ₹500 · Outstation from ₹1,100/day
             </span>
           </div>
         </div>
@@ -236,7 +236,7 @@ const faqSchema = {
           <span class="text-micro uppercase tracking-wider text-m3-on-surface-variant mr-1 font-bold hidden sm:inline">Jump To:</span>
           <a href="#how-it-works" class="px-3.5 py-2 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs transition-all shrink-0">How It Works</a>
           <a href="#tariffs" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">Fixed Rates</a>
-          <a href="#trip-estimator" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">Trip Estimator</a>
+          <a href="#trip-estimator" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">Cost Calculator</a>
           <a href="#driver-vetting" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">Chauffeur Vetting</a>
           <a href="#driver-faqs" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">Driver FAQs</a>
         </div>
@@ -310,7 +310,7 @@ const faqSchema = {
                         class="inline-flex items-center gap-1 px-3 py-1.5 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 text-micro font-bold shadow-xs transition-all"
                       >
                         <WhatsAppIcon variant="brand" className="w-3 h-3 shrink-0" />
-                        <span>WhatsApp</span>
+                        <span>Enquire</span>
                       </a>
                     </div>
                   </div>
@@ -319,7 +319,7 @@ const faqSchema = {
             </div>
 
             <div class="mt-4 pt-3 border-t border-m3-outline-variant/60 text-micro text-m3-on-surface-variant space-y-1">
-              <p>• <strong>Night Duty Allowance:</strong> +₹200 flat for duty occurring between 10:00 PM and 5:00 AM.</p>
+              <p>• <strong>Night Duty Allowance:</strong> +₹100 flat for duty occurring between 10:00 PM and 5:00 AM.</p>
               <p>• <strong>Zero Distance Limits:</strong> Unlimited stops across Chennai city limits.</p>
             </div>
           </div>
@@ -365,7 +365,7 @@ const faqSchema = {
                         class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-300/80 text-micro font-bold shadow-xs transition-all"
                       >
                         <WhatsAppIcon variant="brand" className="w-3 h-3 shrink-0" />
-                        <span>WhatsApp</span>
+                        <span>Enquire</span>
                       </a>
                     </div>
                   </div>
@@ -389,65 +389,59 @@ const faqSchema = {
 
       </section>
 
-      <!-- 3B. OUTSTATION TRIP COST ESTIMATOR (Option A) -->
+      <!-- 3B. OUTSTATION TRIP COST ESTIMATOR -->
       <section id="trip-estimator" class="my-10 md:my-14 scroll-mt-40">
-        <div class="bg-gradient-to-b from-m3-surface-container-low to-m3-surface rounded-m3-2xl p-6 sm:p-8 lg:p-10 border border-m3-outline-variant shadow-m3-1">
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            
-            <!-- Left Explainer Column -->
-            <div class="lg:col-span-6 space-y-4">
-              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container-high text-m3-primary text-xs font-bold uppercase tracking-wider border border-m3-outline-variant">
-                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H6v-2h6v2zm4-4H6v-2h10v2zm0-4H6V7h10v2z"/></svg>
-                <span>Interactive Cost Calculator</span>
+        <div class="rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 overflow-hidden">
+
+          <!-- Top header strip -->
+          <div class="bg-m3-surface-container-low px-6 sm:px-8 lg:px-10 pt-6 sm:pt-8 pb-4 border-b border-m3-outline-variant/60">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container-high text-m3-primary text-xs font-bold uppercase tracking-wider border border-m3-outline-variant mb-3">
+              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H6v-2h6v2zm4-4H6v-2h10v2zm0-4H6V7h10v2z"/></svg>
+              <span>Acting Driver Cost Calculator</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading leading-tight">
+              Acting Driver Cost Calculator <span class="text-m3-primary">for Chennai & Outstation Trips</span>
+            </h2>
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed mt-1.5">
+              Know your full acting driver cost before booking — bata, food allowance, night stay, and SETC return bus ticket calculated transparently with zero hidden charges.
+            </p>
+          </div>
+
+          <!-- Two-column body: explainer left, form right -->
+          <div class="grid grid-cols-1 lg:grid-cols-12">
+
+            <!-- Left: cost explainer items -->
+            <div class="lg:col-span-5 bg-m3-surface-container-lowest px-6 sm:px-8 py-6 space-y-3 lg:border-r border-m3-outline-variant/60">
+              <div class="flex items-start gap-3 py-3 border-b border-m3-outline-variant/40">
+                <div class="w-8 h-8 rounded-m3-md bg-m3-primary-container text-m3-primary flex items-center justify-center shrink-0 font-bold text-xs font-mono">01</div>
+                <div>
+                  <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface">Vehicle-Specific Daily Bata</h3>
+                  <p class="text-micro text-m3-on-surface-variant mt-0.5">₹1,100 (Sedan), ₹1,200 (SUV), ₹1,300 (Innova Crysta), ₹1,500 (Luxury) per day.</p>
+                </div>
               </div>
-              
-              <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading leading-tight">
-                Planning an Outstation Trip? <span class="text-m3-primary">Calculate Total Cost</span>
-              </h2>
-              
-              <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed">
-                Estimate the complete driver expense before you travel. Whether it's a 2-day family temple trip or a one-way car relocation, calculate driver bata, food allowance, night stay, or return bus ticket with zero hidden fees.
-              </p>
-
-              <!-- Transparent Cost Breakdown Cards -->
-              <div class="space-y-3 pt-2">
-                <div class="flex items-start gap-3 p-3 rounded-m3-xl bg-m3-surface border border-m3-outline-variant/60 shadow-xs">
-                  <div class="w-8 h-8 rounded-m3-md bg-m3-primary-container text-m3-primary flex items-center justify-center shrink-0 font-bold text-xs font-mono">
-                    01
-                  </div>
-                  <div>
-                    <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface">Vehicle-Specific Daily Bata</h3>
-                    <p class="text-micro text-m3-on-surface-variant mt-0.5">Fixed at ₹600 (Sedan), ₹700 (SUV), ₹800 (Innova Crysta), ₹1,000 (Luxury) per calendar day.</p>
-                  </div>
+              <div class="flex items-start gap-3 py-3 border-b border-m3-outline-variant/40">
+                <div class="w-8 h-8 rounded-m3-md bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 font-bold text-xs font-mono">02</div>
+                <div>
+                  <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface">Accommodation Savings</h3>
+                  <p class="text-micro text-m3-on-surface-variant mt-0.5">Hotel provides driver dorm? Check the box to save ₹300/night instantly.</p>
                 </div>
-
-                <div class="flex items-start gap-3 p-3 rounded-m3-xl bg-m3-surface border border-m3-outline-variant/60 shadow-xs">
-                  <div class="w-8 h-8 rounded-m3-md bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 font-bold text-xs font-mono">
-                    02
-                  </div>
-                  <div>
-                    <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface">Accommodation Savings</h3>
-                    <p class="text-micro text-m3-on-surface-variant mt-0.5">If your hotel provides driver dormitory lodging, check the box to save ₹300/night instantly.</p>
-                  </div>
-                </div>
-
-                <div class="flex items-start gap-3 p-3 rounded-m3-xl bg-m3-surface border border-m3-outline-variant/60 shadow-xs">
-                  <div class="w-8 h-8 rounded-m3-md bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 font-bold text-xs font-mono">
-                    03
-                  </div>
-                  <div>
-                    <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface">One-Way Drop Policy</h3>
-                    <p class="text-micro text-m3-on-surface-variant mt-0.5">For one-way intercity drops, the driver's standard return bus ticket (SETC / actuals) is calculated transparently.</p>
-                  </div>
+              </div>
+              <div class="flex items-start gap-3 py-3">
+                <div class="w-8 h-8 rounded-m3-md bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 font-bold text-xs font-mono">03</div>
+                <div>
+                  <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface">One-Way Drop Policy</h3>
+                  <p class="text-micro text-m3-on-surface-variant mt-0.5">Driver's SETC return bus ticket is calculated transparently — no surprises.</p>
                 </div>
               </div>
             </div>
 
-            <!-- Right Calculator Card -->
-            <div class="lg:col-span-6 flex justify-center">
+            <!-- Right: calculator form (no outer card — section is the card) -->
+            <div class="lg:col-span-7 bg-m3-surface">
               <DriverFeeEstimator 
-                title="Outstation Driver Estimator"
-                subtitle="Calculate exact Bata, Stay & Transit"
+                client:visible
+                title="Acting Driver Cost Calculator"
+                subtitle="Bata · Food · Stay · Return Bus Ticket"
+                embedded={true}
               />
             </div>
 

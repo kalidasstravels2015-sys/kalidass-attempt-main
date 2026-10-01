@@ -1,760 +1,777 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Plane, Car, Users, Calculator, LocateFixed, X, ChevronDown, CheckCircle2, ShieldCheck, Navigation, Calendar, Phone } from 'lucide-react';
+import {
+  Plane, Car, Users, User, Calculator, LocateFixed, X,
+  ChevronDown, CheckCircle2, ShieldCheck, Navigation,
+  Calendar, Phone, ArrowRight, Clock, AlertCircle, MessageSquare
+} from 'lucide-react';
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 
-// Fixed Zone Tariff Table for Chennai Airport (MAA)
+// ── Zone data ─────────────────────────────────────────────────────────────
 const AIRPORT_ZONES = [
   {
-    name: "South Chennai & Airport Vicinity",
-    keywords: ["guindy", "tambaram", "pallavaram", "velachery", "chromepet", "medavakkam", "porur", "alandur", "st. thomas mount", "meenambakkam", "nanmangalam", "perungalathur", "keelkattalai", "madipakkam"],
-    distanceKm: 12,
-    duration: "15–25 mins",
-    rates: {
-      "Swift Dzire": 650,
-      "Maruti Ertiga": 1150,
-      "Innova Crysta": 1500,
-      "Tempo Traveller": 2400
-    }
+    name: 'South Chennai & Airport Vicinity',
+    keywords: ['guindy','tambaram','pallavaram','velachery','chromepet','medavakkam',
+      'porur','alandur','st. thomas mount','meenambakkam','nanmangalam','perungalathur',
+      'keelkattalai','madipakkam'],
+    distanceKm: 12, duration: '15–25 mins',
+    rates: { 'Swift Dzire': 650, 'Maruti Ertiga': 1150, 'Innova Crysta': 1500, 'Tempo Traveller': 2400 }
   },
   {
-    name: "Central Chennai & Downtown",
-    keywords: ["t. nagar", "t nagar", "us consulate", "anna nagar", "nungambakkam", "egmore", "central", "mylapore", "alwarpet", "kodambakkam", "vadapalani", "chetpet", "kilpauk", "royapettah", "triplicane", "mount road", "teynampet", "gopalapuram", "thousand lights"],
-    distanceKm: 22,
-    duration: "30–45 mins",
-    rates: {
-      "Swift Dzire": 950,
-      "Maruti Ertiga": 1550,
-      "Innova Crysta": 1950,
-      "Tempo Traveller": 2900
-    }
+    name: 'Central Chennai & Downtown',
+    keywords: ['t. nagar','t nagar','us consulate','anna nagar','nungambakkam','egmore',
+      'central','mylapore','alwarpet','kodambakkam','vadapalani','chetpet','kilpauk',
+      'royapettah','triplicane','mount road','teynampet','gopalapuram','thousand lights'],
+    distanceKm: 22, duration: '30–45 mins',
+    rates: { 'Swift Dzire': 950, 'Maruti Ertiga': 1550, 'Innova Crysta': 1950, 'Tempo Traveller': 2900 }
   },
   {
-    name: "OMR & IT Corridor (SIPCOT)",
-    keywords: ["omr", "perungudi", "thoraipakkam", "sholinganallur", "navalur", "siruseri", "sipcot", "elcot", "kelambakkam", "padur", "karapakkam", "semmancheri"],
-    distanceKm: 18,
-    duration: "25–40 mins",
-    rates: {
-      "Swift Dzire": 1250,
-      "Maruti Ertiga": 1850,
-      "Innova Crysta": 2300,
-      "Tempo Traveller": 3400
-    }
+    name: 'OMR & IT Corridor (SIPCOT)',
+    keywords: ['omr','perungudi','thoraipakkam','sholinganallur','navalur','siruseri',
+      'sipcot','elcot','kelambakkam','padur','karapakkam','semmancheri'],
+    distanceKm: 18, duration: '25–40 mins',
+    rates: { 'Swift Dzire': 1250, 'Maruti Ertiga': 1850, 'Innova Crysta': 2300, 'Tempo Traveller': 3400 }
   },
   {
-    name: "North Chennai & Port Industrial",
-    keywords: ["parrys", "broadway", "madhavaram", "ambattur", "ennore", "tondiarpet", "tiruvottiyur", "avadi", "red hills", "manali", "kolathur", "perambur", "villivakkam"],
-    distanceKm: 30,
-    duration: "45–60 mins",
-    rates: {
-      "Swift Dzire": 1350,
-      "Maruti Ertiga": 1950,
-      "Innova Crysta": 2450,
-      "Tempo Traveller": 3600
-    }
+    name: 'North Chennai & Port Industrial',
+    keywords: ['parrys','broadway','madhavaram','ambattur','ennore','tondiarpet',
+      'tiruvottiyur','avadi','red hills','manali','kolathur','perambur','villivakkam'],
+    distanceKm: 30, duration: '45–60 mins',
+    rates: { 'Swift Dzire': 1350, 'Maruti Ertiga': 1950, 'Innova Crysta': 2450, 'Tempo Traveller': 3600 }
   },
   {
-    name: "ECR Coastal & Beach Resorts",
-    keywords: ["ecr", "mahabalipuram", "mamallapuram", "kovalam", "nemmeli", "muttukadu", "intercontinental", "radisson", "taj fisherman", "sheraton"],
-    distanceKm: 45,
-    duration: "45–60 mins",
-    rates: {
-      "Swift Dzire": 1650,
-      "Maruti Ertiga": 2400,
-      "Innova Crysta": 2950,
-      "Tempo Traveller": 4200
-    }
+    name: 'ECR Coastal & Beach Resorts',
+    keywords: ['ecr','mahabalipuram','mamallapuram','kovalam','nemmeli','muttukadu',
+      'intercontinental','radisson','taj fisherman','sheraton'],
+    distanceKm: 45, duration: '45–60 mins',
+    rates: { 'Swift Dzire': 1650, 'Maruti Ertiga': 2400, 'Innova Crysta': 2950, 'Tempo Traveller': 4200 }
   },
   {
-    name: "Pondicherry & Auroville Direct",
-    keywords: ["pondicherry", "pondy", "auroville", "puducherry", "white town", "promenade"],
-    distanceKm: 145,
-    duration: "2.5–3 hrs",
-    rates: {
-      "Swift Dzire": 3900,
-      "Maruti Ertiga": 5600,
-      "Innova Crysta": 6800,
-      "Tempo Traveller": 8900
-    }
+    name: 'Pondicherry & Auroville Direct',
+    keywords: ['pondicherry','pondy','auroville','puducherry','white town','promenade'],
+    distanceKm: 145, duration: '2.5–3 hrs',
+    rates: { 'Swift Dzire': 3900, 'Maruti Ertiga': 5600, 'Innova Crysta': 6800, 'Tempo Traveller': 8900 }
   },
   {
-    name: "Vellore CMC & Tirupati Direct",
-    keywords: ["vellore", "cmc", "tirupati", "vit", "chittoor", "ranipet"],
-    distanceKm: 135,
-    duration: "3–3.5 hrs",
-    rates: {
-      "Swift Dzire": 4200,
-      "Maruti Ertiga": 6200,
-      "Innova Crysta": 7400,
-      "Tempo Traveller": 9800
-    }
-  }
+    name: 'Vellore CMC & Tirupati Direct',
+    keywords: ['vellore','cmc','tirupati','vit','chittoor','ranipet'],
+    distanceKm: 135, duration: '3–3.5 hrs',
+    rates: { 'Swift Dzire': 4200, 'Maruti Ertiga': 6200, 'Innova Crysta': 7400, 'Tempo Traveller': 9800 }
+  },
 ];
 
 const VEHICLE_SPECS = {
-  "Swift Dzire": { name: "Swift Dzire / Etios", tag: "Sedan", caps: "4 Pax + 2 Bags", baseRate: 650 },
-  "Maruti Ertiga": { name: "Maruti Ertiga / XL6", tag: "SUV", caps: "6 Pax + 3 Bags", baseRate: 1150 },
-  "Innova Crysta": { name: "Innova Crysta (VIP)", tag: "Executive MPV", caps: "7 Pax + 5 Bags", baseRate: 1500 },
-  "Tempo Traveller": { name: "Tempo Traveller (12S)", tag: "Group Minibus", caps: "12 Pax + Coach Bags", baseRate: 2400 }
+  'Swift Dzire':     { tag: 'Sedan',        caps: '4 Pax + 2 Bags', pax: '4' },
+  'Maruti Ertiga':   { tag: 'SUV',          caps: '6 Pax + 3 Bags', pax: '6' },
+  'Innova Crysta':   { tag: 'Executive MPV',caps: '7 Pax + 5 Bags', pax: '7' },
+  'Tempo Traveller': { tag: 'Group Minibus',caps: '12 Pax + Bags',   pax: '12' },
 };
 
-const AIRPORT_HUB_NAME = "Chennai International Airport (MAA)";
+const AIRPORT_HUB = 'Chennai International Airport (MAA)';
+
+// ── Multi-currency support for international travelers ────────────────────
+const CURRENCY_RATES = {
+  INR: { symbol: '₹', rate: 1, label: 'INR (₹)' },
+  USD: { symbol: '$', rate: 86.5, label: 'USD ($)' },
+  CAD: { symbol: 'C$', rate: 62.5, label: 'CAD (C$)' },
+  EUR: { symbol: '€', rate: 93.5, label: 'EUR (€)' },
+  RUB: { symbol: '₽', rate: 0.92, label: 'RUB (₽)' },
+  GBP: { symbol: '£', rate: 111.0, label: 'GBP (£)' },
+};
+
+const convertRate = (inr, curr) => {
+  if (!inr) return '₹0';
+  if (curr === 'INR' || !CURRENCY_RATES[curr]) return `₹${Number(inr).toLocaleString('en-IN')}`;
+  const { symbol, rate } = CURRENCY_RATES[curr];
+  const converted = Math.round(inr / rate);
+  if (curr === 'RUB') {
+    return `${converted.toLocaleString('en-US')} ₽`;
+  }
+  return `${symbol}${converted.toLocaleString('en-US')}`;
+};
 
 const getDefaultDateTime = () => {
   const d = new Date();
-  d.setHours(d.getHours() + 2);
-  d.setMinutes(0, 0, 0);
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  const hours = String(d.getHours()).padStart(2, '0');
-  const minutes = String(d.getMinutes()).padStart(2, '0');
-  return `${year}-${month}-${day}T${hours}:${minutes}`;
+  d.setHours(d.getHours() + 2, 0, 0, 0);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}T${String(d.getHours()).padStart(2,'0')}:00`;
 };
 
-export default function AirportBookingEngine() {
-  const [direction, setDirection] = useState('drop'); // 'drop' (To MAA) | 'pickup' (From MAA)
-  const [pickup, setPickup] = useState('');
-  const [drop, setDrop] = useState(AIRPORT_HUB_NAME);
-  const [passengers, setPassengers] = useState('4');
-  const [vehicle, setVehicle] = useState('Swift Dzire');
-  const [dateTime, setDateTime] = useState(getDefaultDateTime);
-  const [flightNo, setFlightNo] = useState('');
-  
+export default function AirportBookingEngine({ showHeader = true }) {
+  const [direction,   setDirection]   = useState('drop'); // 'drop' | 'pickup'
+  const [pickup,      setPickup]      = useState('');
+  const [drop,        setDrop]        = useState(AIRPORT_HUB);
+  const [vehicle,     setVehicle]     = useState('Swift Dzire');
+  const [passengers,  setPassengers]  = useState('4');
+  const [dateTime,    setDateTime]    = useState(getDefaultDateTime);
+  const [flightNo,    setFlightNo]    = useState('');
+  const [name,        setName]        = useState('');
+  const [phone,       setPhone]       = useState('');
+  const [countryCode, setCountryCode] = useState('+91');
+
   const [matchedZone, setMatchedZone] = useState(null);
-  const [estimate, setEstimate] = useState(0);
-  const [distanceKm, setDistanceKm] = useState(0);
-  const [duration, setDuration] = useState('');
-  const [showResult, setShowResult] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [gettingLocation, setGettingLocation] = useState(false);
+  const [estimate,    setEstimate]    = useState(0);
+  const [distanceKm,  setDistanceKm]  = useState(0);
+  const [duration,    setDuration]    = useState('');
+  const [showResult,  setShowResult]  = useState(false);
+  const [error,       setError]       = useState('');
+  const [loading,       setLoading]       = useState(false);
+  const [gettingLoc,    setGettingLoc]    = useState(false);
+  const [showStickyBar, setShowStickyBar] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [currency, setCurrency] = useState('INR');
 
-  const destinationInputRef = useRef(null);
-  const resultRef = useRef(null);
+  const destInputRef = useRef(null);
+  const cardRef      = useRef(null);
 
-  // Sync Locations when Direction Toggle changes
-  const handleDirectionChange = (newDir) => {
-    if (newDir === direction) return;
-    setDirection(newDir);
+  // ── Sticky bar ─────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!cardRef.current) return;
+    const obs = new IntersectionObserver(
+      ([e]) => setShowStickyBar(!e.isIntersecting),
+      { threshold: 0, rootMargin: '-64px 0px 0px 0px' }
+    );
+    obs.observe(cardRef.current);
+    return () => obs.disconnect();
+  }, []);
+
+  // ── Direction swap ──────────────────────────────────────────────────────
+  const handleDirectionChange = (dir) => {
+    if (dir === direction) return;
+    setDirection(dir);
     setShowResult(false);
-    setErrorMsg('');
-
-    if (newDir === 'pickup') {
-      const userLoc = pickup === AIRPORT_HUB_NAME ? '' : pickup;
-      setPickup(AIRPORT_HUB_NAME);
-      setDrop(userLoc);
+    setError('');
+    if (dir === 'pickup') {
+      const loc = pickup === AIRPORT_HUB ? '' : pickup;
+      setPickup(AIRPORT_HUB);
+      setDrop(loc);
     } else {
-      const userLoc = drop === AIRPORT_HUB_NAME ? '' : drop;
-      setPickup(userLoc);
-      setDrop(AIRPORT_HUB_NAME);
+      const loc = drop === AIRPORT_HUB ? '' : drop;
+      setPickup(loc);
+      setDrop(AIRPORT_HUB);
     }
   };
 
-  // Google Maps Places Autocomplete attachment on the destination input
+  // ── Google Maps autocomplete ────────────────────────────────────────────
   useEffect(() => {
-    let autocomplete = null;
     let isMounted = true;
-
-    loadGoogleMaps()
-      .then(() => {
-        if (!isMounted || !destinationInputRef.current || !window.google?.maps?.places) return;
-
-        autocomplete = new window.google.maps.places.Autocomplete(destinationInputRef.current, {
+    const timer = setTimeout(() => {
+      loadGoogleMaps().then(() => {
+        if (!isMounted || !destInputRef.current || !window.google?.maps?.places) return;
+        const ac = new window.google.maps.places.Autocomplete(destInputRef.current, {
           componentRestrictions: { country: 'in' },
-          fields: ['name', 'formatted_address', 'geometry']
+          fields: ['name', 'formatted_address', 'geometry'],
         });
-
-        autocomplete.addListener('place_changed', () => {
-          const place = autocomplete.getPlace();
+        ac.addListener('place_changed', () => {
+          const place = ac.getPlace();
           const addr = place.formatted_address || place.name;
           if (!addr) return;
-
-          if (direction === 'pickup') {
-            setDrop(addr);
-          } else {
-            setPickup(addr);
-          }
+          direction === 'pickup' ? setDrop(addr) : setPickup(addr);
           setShowResult(false);
-          setErrorMsg('');
-
-          // Calculate road km from Airport (12.9941, 80.1709)
+          setError('');
           if (place.geometry?.location) {
             const lat = place.geometry.location.lat();
             const lng = place.geometry.location.lng();
-            const rad = (x) => (x * Math.PI) / 180;
+            const rad = x => (x * Math.PI) / 180;
             const R = 6371;
             const dLat = rad(lat - 12.9941);
-            const dLong = rad(lng - 80.1709);
-            const a =
-              Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-              Math.cos(rad(12.9941)) * Math.cos(rad(lat)) * Math.sin(dLong / 2) * Math.sin(dLong / 2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            const straightKm = R * c;
-            const roadKm = Math.round(straightKm * 1.35); // 1.35 road winding factor
-
-            // Find matching zone or bracket
-            let zone = null;
-            if (roadKm <= 15) zone = AIRPORT_ZONES[0];
-            else if (roadKm <= 28) zone = AIRPORT_ZONES[1];
-            else if (roadKm <= 40) zone = AIRPORT_ZONES[2];
-            else if (roadKm <= 60) zone = AIRPORT_ZONES[4];
-            else if (roadKm <= 150) zone = AIRPORT_ZONES[5];
-            else zone = AIRPORT_ZONES[1];
-
+            const dLng = rad(lng - 80.1709);
+            const a = Math.sin(dLat/2)**2 + Math.cos(rad(12.9941))*Math.cos(rad(lat))*Math.sin(dLng/2)**2;
+            const roadKm = Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)) * 1.35);
+            const zone =
+              roadKm <= 15 ? AIRPORT_ZONES[0] :
+              roadKm <= 28 ? AIRPORT_ZONES[1] :
+              roadKm <= 40 ? AIRPORT_ZONES[2] :
+              roadKm <= 55 ? AIRPORT_ZONES[3] :
+              roadKm <= 80 ? AIRPORT_ZONES[4] :
+              roadKm <= 150? AIRPORT_ZONES[5] : AIRPORT_ZONES[6];
             setMatchedZone(zone);
             setDistanceKm(roadKm);
-            setDuration(`${Math.max(15, Math.round(roadKm * 1.8))} mins`);
+            setDuration(`~${Math.max(15, Math.round(roadKm * 1.8))} mins`);
           }
         });
-      })
-      .catch(() => {});
-
-    return () => {
-      isMounted = false;
-    };
+      }).catch(() => {});
+    }, 50);
+    return () => { isMounted = false; clearTimeout(timer); };
   }, [direction]);
 
-  // Handle GPS location for user doorstep
-  const handleGetCurrentLocation = () => {
-    if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser");
-      return;
-    }
-    setGettingLocation(true);
+  // ── GPS ─────────────────────────────────────────────────────────────────
+  const handleGPS = () => {
+    if (!navigator.geolocation) return;
+    setGettingLoc(true);
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setGettingLocation(false);
-        const { latitude, longitude } = pos.coords;
+      ({ coords: { latitude: lat, longitude: lng } }) => {
+        setGettingLoc(false);
         if (window.google?.maps?.Geocoder) {
-          const geocoder = new window.google.maps.Geocoder();
-          geocoder.geocode({ location: { lat: latitude, lng: longitude } }, (results, status) => {
-            if (status === 'OK' && results[0]) {
-              const formatted = results[0].formatted_address;
-              if (direction === 'pickup') setDrop(formatted);
-              else setPickup(formatted);
-              setShowResult(false);
+          new window.google.maps.Geocoder().geocode(
+            { location: { lat, lng } },
+            (res, status) => {
+              if (status === 'OK' && res[0]) {
+                direction === 'pickup' ? setDrop(res[0].formatted_address) : setPickup(res[0].formatted_address);
+                setShowResult(false);
+              }
             }
-          });
+          );
         } else {
-          const fallback = `Current Location (${latitude.toFixed(3)}, ${longitude.toFixed(3)})`;
-          if (direction === 'pickup') setDrop(fallback);
-          else setPickup(fallback);
+          const fb = `Current Location (${lat.toFixed(3)}, ${lng.toFixed(3)})`;
+          direction === 'pickup' ? setDrop(fb) : setPickup(fb);
           setShowResult(false);
         }
       },
-      () => {
-        setGettingLocation(false);
-        alert("Unable to retrieve location. Please type your area or address.");
-      }
+      () => { setGettingLoc(false); alert('Unable to retrieve location. Please type your area.'); }
     );
   };
 
-  // Calculate Cost
-  const handleCalculateCost = () => {
-    const userLocation = direction === 'pickup' ? drop.trim() : pickup.trim();
+  // ── Modal scroll-lock + ESC ──────────────────────────────────────────────
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') setShowBookingModal(false); };
+    if (showBookingModal) {
+      document.addEventListener('keydown', onKey);
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [showBookingModal]);
 
-    if (!userLocation || userLocation === AIRPORT_HUB_NAME) {
-      setErrorMsg(direction === 'pickup' 
-        ? "Please enter your drop location / hotel in Chennai" 
-        : "Please enter your pickup doorstep / area in Chennai");
-      if (destinationInputRef.current) {
-        destinationInputRef.current.focus();
-        destinationInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
+  const handleCalculate = () => {
+    const userLoc = (direction === 'pickup' ? drop : pickup).trim();
+    if (!userLoc || userLoc === AIRPORT_HUB) {
+      setError(direction === 'pickup'
+        ? 'Please enter your drop location / hotel in Chennai'
+        : 'Please enter your pickup doorstep / area in Chennai');
+      destInputRef.current?.focus();
       return;
     }
-
-    setErrorMsg('');
+    setError('');
     setLoading(true);
-
     setTimeout(() => {
-      const q = userLocation.toLowerCase();
-      // Match against zone keywords
-      let foundZone = AIRPORT_ZONES.find((z) => z.keywords.some((kw) => q.includes(kw)));
-      if (!foundZone) {
-        // Fallback default to Central Chennai zone
-        foundZone = AIRPORT_ZONES[1];
-      }
-
-      setMatchedZone(foundZone);
-      const fare = foundZone.rates[vehicle] || VEHICLE_SPECS[vehicle].baseRate;
-      setEstimate(fare);
-      setDistanceKm(foundZone.distanceKm);
-      setDuration(foundZone.duration);
+      const q = userLoc.toLowerCase();
+      const zone = AIRPORT_ZONES.find(z => z.keywords.some(kw => q.includes(kw))) || AIRPORT_ZONES[1];
+      setMatchedZone(zone);
+      setEstimate(zone.rates[vehicle] || 650);
+      setDistanceKm(zone.distanceKm);
+      setDuration(zone.duration);
       setLoading(false);
-      setShowResult(true);
-
-      setTimeout(() => {
-        if (resultRef.current) {
-          resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-      }, 100);
+      setShowBookingModal(true); // open modal with result + booking form
     }, 280);
   };
 
-  // WhatsApp Booking
-  const handleWhatsAppBooking = () => {
-    const userLoc = direction === 'pickup' ? drop : pickup;
+  // ── WhatsApp ────────────────────────────────────────────────────────────
+  const handleWhatsApp = () => {
+    if (!name.trim()) { alert('Please enter your name so we can confirm the booking.'); return; }
+    if (!phone.trim()) { alert('Please enter your mobile number so our driver can reach you.'); return; }
     const isPickup = direction === 'pickup';
-    const chosenSpec = VEHICLE_SPECS[vehicle];
-
-    const message = [
-      `*Chennai Airport Cab Reservation Request*`,
+    const currNote = currency !== 'INR' ? ` (approx. ${convertRate(estimate, currency)})` : '';
+    const fullPhone = `${countryCode} ${phone.trim()}`;
+    const msg = [
+      `*Chennai Airport Cab Reservation — Kalidass Travels*`,
+      `• *Passenger:* ${name.trim()} | ${fullPhone}`,
       `• *Type:* ${isPickup ? 'Airport PICKUP (Meet & Greet at MAA)' : 'Airport DROP (To Departure Terminal)'}`,
       `• *Route:* ${pickup} ➔ ${drop}`,
-      `• *Vehicle:* ${vehicle} (${chosenSpec.caps})`,
-      `• *Fare:* ₹${estimate.toLocaleString('en-IN')} (Fixed Zone Rate, Zero Advance)`,
-      `• *Pickup Date & Time:* ${dateTime.replace('T', ' ')}`,
-      flightNo ? `• *Flight No / Airline:* ${flightNo}` : null,
-      `• *Notes:* Chauffeur meets with Name Placard • Delay waiting free of charge`,
+      `• *Vehicle:* ${vehicle} (${VEHICLE_SPECS[vehicle].caps})`,
+      `• *Fare:* ₹${estimate.toLocaleString('en-IN')}${currNote} — All-Inclusive Package`,
+      `• *Includes:* Fuel, Tolls, Airport Parking & GST Invoice`,
+      `• *Date & Time:* ${dateTime.replace('T', ' ')}`,
+      flightNo ? `• *Flight No:* ${flightNo}` : null,
+      `• *Payment:* Pay After Trip — Zero Advance`,
       ``,
-      `Please confirm my airport taxi booking. Thank you!`
+      `Please confirm my airport taxi booking. Thank you!`,
     ].filter(Boolean).join('\n');
-
-    window.open(`https://wa.me/916381939769?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(`https://wa.me/916381939769?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
-  return (
-    <div className="w-full max-w-2xl mx-auto bg-m3-surface rounded-xl shadow-m3-1 border border-m3-outline-variant overflow-hidden font-sans">
-      
-      {/* Airport Drop / Pickup Segmented Pill Toggle (Exact Style from Home Screen, Compact) */}
-      <div className="px-3 pt-2.5 mb-1.5">
-        <div 
-          role="tablist" 
-          aria-label="Airport Transfer Direction" 
-          className="bg-m3-surface-container-high p-0.5 rounded-full flex gap-1 border border-m3-outline-variant select-none"
-        >
-          <button
-            type="button"
-            role="tab"
-            aria-selected={direction === 'drop'}
-            onClick={() => handleDirectionChange('drop')}
-            className={`flex-1 py-1.5 px-3 text-xs font-bold rounded-full transition-all flex items-center justify-center min-h-[32px] cursor-pointer active:scale-[0.98] ${
-              direction === 'drop' 
-                ? 'bg-m3-primary text-m3-on-primary shadow-sm' 
-                : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container-highest'
-            }`}
-          >
-            <span>Airport Drop</span>
-          </button>
+  // ── Native SMS / iMessage fallback (USA, Canada, Russia, etc. without WhatsApp) ──
+  const handleSMS = () => {
+    if (!name.trim()) { alert('Please enter your name so we can confirm the booking.'); return; }
+    if (!phone.trim()) { alert('Please enter your mobile number so our driver can reach you.'); return; }
+    const isPickup = direction === 'pickup';
+    const currNote = currency !== 'INR' ? ` (approx. ${convertRate(estimate, currency)})` : '';
+    const fullPhone = `${countryCode} ${phone.trim()}`;
+    const msg = [
+      `Chennai Airport Taxi Booking — Kalidass Travels`,
+      `Passenger: ${name.trim()} (${fullPhone})`,
+      `Transfer: ${isPickup ? 'Airport Pickup (MAA Arrival)' : 'Airport Drop (MAA Departure)'}`,
+      `Route: ${pickup} to ${drop}`,
+      `Vehicle: ${vehicle} (${VEHICLE_SPECS[vehicle].caps})`,
+      `Fare: Rs. ${estimate.toLocaleString('en-IN')}${currNote} (All-Inclusive)`,
+      `Pickup Date/Time: ${dateTime.replace('T', ' ')}`,
+      flightNo ? `Flight No: ${flightNo}` : null,
+      `Payment: Pay after trip (Zero advance)`,
+    ].filter(Boolean).join('\n');
 
-          <button
-            type="button"
-            role="tab"
-            aria-selected={direction === 'pickup'}
-            onClick={() => handleDirectionChange('pickup')}
-            className={`flex-1 py-1.5 px-3 text-xs sm:text-sm font-bold rounded-full transition-all flex items-center justify-center min-h-[34px] sm:min-h-[38px] cursor-pointer active:scale-[0.98] ${
-              direction === 'pickup' 
-                ? 'bg-m3-primary text-m3-on-primary shadow-sm' 
-                : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container-highest'
-            }`}
-          >
-            <span>Airport Pickup</span>
-          </button>
+    const isIOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const sep = isIOS ? '&' : '?';
+    window.location.href = `sms:+916381939769${sep}body=${encodeURIComponent(msg)}`;
+  };
+
+  const handleStickyWhatsApp = () => {
+    const fare = showResult && estimate ? ` • ₹${estimate.toLocaleString('en-IN')}` : '';
+    const msg = `*Airport Cab Enquiry — Kalidass Travels*\n• Trip: ${direction === 'pickup' ? 'Airport PICKUP' : 'Airport DROP'}\n• Route: ${pickup} ➔ ${drop}\n• Vehicle: ${vehicle}${fare}\nPlease confirm availability.`;
+    window.open(`https://wa.me/916381939769?text=${encodeURIComponent(msg)}`, '_blank');
+  };
+
+  const fmtRs = n => `₹${Number(n).toLocaleString('en-IN')}`;
+
+  // ── Shared class tokens (unified with QuotationEngine) ──────────────────
+  const inputWrap  = 'relative flex items-center bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant rounded-m3-md px-3 py-2 sm:py-2.5 min-h-[44px] sm:min-h-[48px] focus-within:ring-2 focus-within:ring-m3-primary focus-within:border-m3-primary transition-all';
+  const inputField = 'bg-transparent w-full outline-none text-sm font-semibold text-m3-on-surface pr-16 placeholder:text-m3-on-surface-variant placeholder:text-xs placeholder:font-normal';
+  const labelCls   = 'block text-badge font-bold text-m3-on-surface-variant uppercase tracking-wide mb-1';
+  const stickyFrom = direction === 'pickup' ? 'MAA Airport' : (pickup?.split(',')[0] || 'Pickup');
+  const stickyTo   = direction === 'pickup' ? (drop?.split(',')[0] || 'Drop') : 'MAA Airport';
+
+  return (
+    <>
+      {/* ── Sticky summary bar ─────────────────────────────────────────── */}
+      <div
+        role="banner"
+        aria-label="Booking summary"
+        className={`fixed top-0 left-0 right-0 z-[100] transition-transform duration-300 ease-in-out ${showStickyBar ? 'translate-y-0' : '-translate-y-full'}`}
+      >
+        <div className="bg-m3-surface/95 backdrop-blur-md border-b border-m3-outline-variant shadow-m3-1">
+          <div className="max-w-3xl mx-auto px-3 py-2 flex items-center gap-2">
+            <span className={`shrink-0 text-[10px] font-extrabold px-2.5 py-1 rounded-m3-full border ${direction === 'pickup' ? 'bg-sky-100 text-sky-800 border-sky-200' : 'bg-m3-primary-container text-m3-primary border-m3-primary/20'}`}>
+              ✈ {direction === 'pickup' ? 'PICKUP' : 'DROP'}
+            </span>
+            <div className="flex items-center gap-1.5 min-w-0 flex-1">
+              <span className="text-xs font-bold text-m3-on-surface truncate">{stickyFrom}</span>
+              <ArrowRight className="w-3 h-3 text-m3-on-surface-variant shrink-0" />
+              <span className="text-xs font-bold text-m3-on-surface truncate">{stickyTo}</span>
+            </div>
+            <div className="hidden sm:flex items-center gap-2 shrink-0">
+              <span className="text-xs text-m3-on-surface-variant font-semibold">{vehicle}</span>
+              {showResult && estimate > 0 && (
+                <span className="text-xs font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-m3-full">
+                  {fmtRs(estimate)}
+                </span>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={handleStickyWhatsApp}
+              className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-[#25D366] hover:bg-[#20BD5A] text-white font-bold text-xs transition-all cursor-pointer"
+            >
+              <WhatsAppIcon className="w-3.5 h-3.5" variant="white" />
+              <span className="hidden xs:inline">Book</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => cardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+              className="shrink-0 text-[10px] font-semibold text-m3-on-surface-variant hover:text-m3-on-surface underline underline-offset-2 cursor-pointer"
+            >
+              Edit
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Main Form Fields */}
-      <div className="px-3 pb-3 space-y-1.5">
-        
-        {/* Error Notification */}
-        {errorMsg && (
-          <div className="p-2 bg-m3-error-container/40 text-m3-error text-xs font-bold rounded-md flex items-center gap-1.5 border border-m3-error/20 animate-in fade-in duration-200">
-            <span className="w-1.5 h-1.5 rounded-full bg-m3-error shrink-0"></span>
-            <span>{errorMsg}</span>
+      {/* ── Main booking card (unified design) ────────────────────────── */}
+      <div
+        ref={cardRef}
+        className="w-full max-w-2xl mx-auto bg-m3-surface rounded-m3-xl shadow-m3-2 border border-m3-outline-variant overflow-hidden font-sans"
+      >
+        {/* Header */}
+        {showHeader && (
+          <div className="p-4 pb-1 text-center">
+            <div className="w-10 h-10 rounded-m3-full bg-m3-primary-container flex items-center justify-center mx-auto mb-2">
+              <Plane className="w-5 h-5 text-m3-primary" />
+            </div>
+            <h3 className="text-lg sm:text-xl font-bold text-m3-on-surface font-heading">Chennai Airport Taxi</h3>
+            <p className="text-xs text-m3-on-surface-variant mt-0.5">Flat Zone Fares • Tolls & Parking Included • Pay After Trip</p>
           </div>
         )}
 
-        {/* Route Fields Container */}
-        <div className="space-y-1.5 relative">
-          
-          {/* 1. PICKUP LOCATION */}
-          <div className="relative">
+        {/* Tab Pills — identical to QuotationEngine */}
+        <div className="px-3 sm:px-6 my-4">
+          <div role="tablist" aria-label="Transfer Direction" className="bg-m3-surface-container-high p-1 rounded-m3-full flex gap-1 border border-m3-outline-variant">
+            {[
+              { key: 'drop',   label: '✈ Airport Drop' },
+              { key: 'pickup', label: '✈ Airport Pickup' },
+            ].map(tab => (
+              <button
+                key={tab.key}
+                role="tab"
+                aria-selected={direction === tab.key}
+                onClick={() => handleDirectionChange(tab.key)}
+                className={`flex-1 py-2 px-3 text-xs font-bold rounded-m3-full transition-all min-h-[38px] sm:min-h-[42px] cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary ${
+                  direction === tab.key
+                    ? 'bg-m3-primary text-m3-on-primary shadow-m3-1'
+                    : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container-highest'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
 
-            <div className="relative flex items-center bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant rounded-lg px-2.5 min-h-[38px] focus-within:ring-2 focus-within:ring-m3-primary focus-within:border-m3-primary transition-all">
-              <span className="text-[9px] font-extrabold text-m3-on-surface-variant uppercase tracking-wider shrink-0 mr-2 border-r border-m3-outline-variant pr-2">FROM</span>
+        <div className="px-3 sm:px-6 pb-5 space-y-3">
+
+          {/* Error */}
+          {error && (
+            <div className="p-2.5 bg-m3-error-container/40 text-m3-error text-xs font-bold rounded-m3-md flex items-center gap-2 border border-m3-error/20">
+              <AlertCircle className="w-4 h-4 shrink-0" /> {error}
+            </div>
+          )}
+
+          {/* FROM field */}
+          <div>
+            <label className={labelCls}>
+              {direction === 'pickup' ? 'From (Airport)' : 'From (Your Doorstep)'}
+            </label>
+            <div className={inputWrap}>
               <input
-                ref={direction === 'drop' ? destinationInputRef : null}
+                ref={direction === 'drop' ? destInputRef : null}
                 type="text"
                 value={pickup}
                 readOnly={direction === 'pickup'}
-                onChange={(e) => {
-                  if (direction === 'drop') {
-                    setPickup(e.target.value);
-                    setShowResult(false);
-                    setErrorMsg('');
-                  }
-                }}
-                placeholder={direction === 'pickup' ? AIRPORT_HUB_NAME : "Enter Pickup City / Doorstep / Area"}
-                className={`bg-transparent w-full outline-none text-xs font-semibold text-m3-on-surface pr-12 placeholder:text-m3-on-surface-variant placeholder:font-normal ${
-                  direction === 'pickup' ? 'cursor-default select-none' : 'cursor-text'
-                }`}
+                onChange={e => { if (direction === 'drop') { setPickup(e.target.value); setShowResult(false); setError(''); } }}
+                placeholder={direction === 'pickup' ? AIRPORT_HUB : 'Enter your area / doorstep address'}
+                className={`${inputField} ${direction === 'pickup' ? 'cursor-default text-m3-primary font-bold' : ''}`}
               />
-
-              {/* Right Side Icons */}
-              <div className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
+              <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
                 {direction === 'drop' && pickup && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setPickup('');
-                      setShowResult(false);
-                    }}
-                    className="w-6 h-6 min-w-[24px] min-h-[24px] flex items-center justify-center hover:bg-m3-surface-container-high rounded-full transition-colors text-m3-on-surface-variant hover:text-m3-on-surface cursor-pointer"
-                    title="Clear text"
-                  >
-                    <X className="w-3.5 h-3.5" />
+                  <button type="button" onClick={() => { setPickup(''); setShowResult(false); }}
+                    className="w-7 h-7 flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-full text-m3-on-surface-variant">
+                    <X className="w-4 h-4" />
                   </button>
                 )}
-
                 {direction === 'drop' && (
-                  <button
-                    type="button"
-                    onClick={handleGetCurrentLocation}
-                    disabled={gettingLocation}
-                    className="w-6 h-6 min-w-[24px] min-h-[24px] flex items-center justify-center hover:bg-m3-surface-container-high rounded transition-colors text-m3-on-surface-variant hover:text-m3-primary cursor-pointer"
-                    title="Use Current GPS Location"
-                  >
-                    <LocateFixed className={`w-3.5 h-3.5 ${gettingLocation ? 'animate-spin text-m3-primary' : ''}`} />
+                  <button type="button" onClick={handleGPS} disabled={gettingLoc}
+                    className="w-7 h-7 flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-sm text-m3-on-surface-variant hover:text-m3-primary transition-colors"
+                    title="Use current location">
+                    <LocateFixed className={`w-4 h-4 ${gettingLoc ? 'animate-spin text-m3-primary' : ''}`} />
                   </button>
                 )}
-
                 {direction === 'pickup' && (
-                  <span className="p-0.5 bg-emerald-50 text-emerald-700 rounded-full">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span className="w-7 h-7 flex items-center justify-center">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                   </span>
                 )}
               </div>
             </div>
           </div>
 
-          {/* 2. DROP LOCATION */}
-          <div className="relative">
-
-            <div className="relative flex items-center bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant rounded-lg px-2.5 min-h-[38px] focus-within:ring-2 focus-within:ring-m3-primary focus-within:border-m3-primary transition-all">
-              <span className="text-[9px] font-extrabold text-m3-on-surface-variant uppercase tracking-wider shrink-0 mr-2 border-r border-m3-outline-variant pr-2">TO</span>
+          {/* TO field */}
+          <div>
+            <label className={labelCls}>
+              {direction === 'pickup' ? 'To (Your Destination)' : 'To (Airport)'}
+            </label>
+            <div className={inputWrap}>
               <input
-                ref={direction === 'pickup' ? destinationInputRef : null}
+                ref={direction === 'pickup' ? destInputRef : null}
                 type="text"
                 value={drop}
                 readOnly={direction === 'drop'}
-                onChange={(e) => {
-                  if (direction === 'pickup') {
-                    setDrop(e.target.value);
-                    setShowResult(false);
-                    setErrorMsg('');
-                  }
-                }}
-                placeholder={direction === 'drop' ? AIRPORT_HUB_NAME : "Enter Drop City / Hotel / Area / Address"}
-                className={`bg-transparent w-full outline-none text-xs font-semibold text-m3-on-surface pr-12 placeholder:text-m3-on-surface-variant placeholder:font-normal ${
-                  direction === 'drop' ? 'cursor-default select-none' : 'cursor-text'
-                }`}
+                onChange={e => { if (direction === 'pickup') { setDrop(e.target.value); setShowResult(false); setError(''); } }}
+                placeholder={direction === 'drop' ? AIRPORT_HUB : 'Enter hotel / area / address'}
+                className={`${inputField} ${direction === 'drop' ? 'cursor-default text-m3-primary font-bold' : ''}`}
               />
-
-              {/* Right Side Icons */}
-              <div className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
+              <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
                 {direction === 'pickup' && drop && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setDrop('');
-                      setShowResult(false);
-                    }}
-                    className="w-6 h-6 min-w-[24px] min-h-[24px] flex items-center justify-center hover:bg-m3-surface-container-high rounded-full transition-colors text-m3-on-surface-variant hover:text-m3-on-surface cursor-pointer"
-                    title="Clear text"
-                  >
-                    <X className="w-3.5 h-3.5" />
+                  <button type="button" onClick={() => { setDrop(''); setShowResult(false); }}
+                    className="w-7 h-7 flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-full text-m3-on-surface-variant">
+                    <X className="w-4 h-4" />
                   </button>
                 )}
-
                 {direction === 'pickup' && (
-                  <button
-                    type="button"
-                    onClick={handleGetCurrentLocation}
-                    disabled={gettingLocation}
-                    className="w-6 h-6 min-w-[24px] min-h-[24px] flex items-center justify-center hover:bg-m3-surface-container-high rounded transition-colors text-m3-on-surface-variant hover:text-m3-primary cursor-pointer"
-                    title="Use Current GPS Location"
-                  >
-                    <LocateFixed className={`w-3.5 h-3.5 ${gettingLocation ? 'animate-spin text-m3-primary' : ''}`} />
+                  <button type="button" onClick={handleGPS} disabled={gettingLoc}
+                    className="w-7 h-7 flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-sm text-m3-on-surface-variant hover:text-m3-primary transition-colors"
+                    title="Use current location">
+                    <LocateFixed className={`w-4 h-4 ${gettingLoc ? 'animate-spin text-m3-primary' : ''}`} />
                   </button>
                 )}
-
                 {direction === 'drop' && (
-                  <span className="p-0.5 bg-emerald-50 text-emerald-700 rounded-full">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span className="w-7 h-7 flex items-center justify-center">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                   </span>
                 )}
               </div>
             </div>
           </div>
 
-          {/* 3. PASSENGERS & VEHICLE — no labels */}
-          <div className="grid grid-cols-2 gap-1.5">
-            
-            {/* Passengers Dropdown */}
-            <div className="relative">
-              <div className="relative flex items-center bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant rounded-lg px-2 min-h-[36px] focus-within:ring-2 focus-within:ring-m3-primary/20 focus-within:border-m3-primary transition-all cursor-pointer">
-                <Users className="w-3.5 h-3.5 text-m3-on-surface-variant mr-1 shrink-0 pointer-events-none" />
+          {/* Passengers + Vehicle row — single col on mobile */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+            <div>
+              <label htmlFor="airport-passengers" className={labelCls}>Passengers</label>
+              <div className={`${inputWrap} cursor-pointer`}>
+                <Users className="w-4 h-4 text-m3-on-surface-variant mr-2 shrink-0" />
                 <select
-                  id="airport-passengers-select"
+                  id="airport-passengers"
                   value={passengers}
-                  onChange={(e) => {
+                  onChange={e => {
                     const p = e.target.value;
                     setPassengers(p);
-                    if (p === '4') setVehicle('Swift Dzire');
-                    else if (p === '6') setVehicle('Maruti Ertiga');
-                    else if (p === '7') setVehicle('Innova Crysta');
-                    else if (p === '12') setVehicle('Tempo Traveller');
+                    setVehicle(p === '4' ? 'Swift Dzire' : p === '6' ? 'Maruti Ertiga' : p === '7' ? 'Innova Crysta' : 'Tempo Traveller');
                     setShowResult(false);
                   }}
-                  className="bg-transparent w-full outline-none text-xs text-m3-on-surface font-semibold appearance-none cursor-pointer pr-5"
+                  className="bg-transparent w-full outline-none text-sm font-semibold text-m3-on-surface appearance-none cursor-pointer pr-8"
                 >
-                  <option value="4">4 Pax + Driver</option>
-                  <option value="6">6 Pax + Driver</option>
-                  <option value="7">7 Pax + Driver</option>
-                  <option value="12">12 Pax + Driver</option>
+                  <option value="4">4 Passengers</option>
+                  <option value="6">6 Passengers</option>
+                  <option value="7">7 Passengers</option>
+                  <option value="12">12 Passengers</option>
                 </select>
-                <ChevronDown className="w-3 h-3 text-m3-on-surface-variant pointer-events-none absolute right-2 top-1/2 -translate-y-1/2" />
+                <ChevronDown className="w-4 h-4 text-m3-on-surface-variant pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" />
               </div>
             </div>
-
-            {/* Vehicle Dropdown */}
-            <div className="relative">
-              <div className="relative flex items-center bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant rounded-lg px-2 min-h-[36px] focus-within:ring-2 focus-within:ring-m3-primary/20 focus-within:border-m3-primary transition-all cursor-pointer">
-                <Car className="w-3.5 h-3.5 text-m3-on-surface-variant mr-1 shrink-0 pointer-events-none" />
+            <div>
+              <label htmlFor="airport-vehicle" className={labelCls}>Vehicle</label>
+              <div className={`${inputWrap} cursor-pointer`}>
+                <Car className="w-4 h-4 text-m3-on-surface-variant mr-2 shrink-0" />
                 <select
-                  id="airport-vehicle-select"
+                  id="airport-vehicle"
                   value={vehicle}
-                  onChange={(e) => {
+                  onChange={e => {
                     const v = e.target.value;
                     setVehicle(v);
-                    if (v === 'Swift Dzire') setPassengers('4');
-                    else if (v === 'Maruti Ertiga') setPassengers('6');
-                    else if (v === 'Innova Crysta') setPassengers('7');
-                    else if (v === 'Tempo Traveller') setPassengers('12');
+                    setPassengers(VEHICLE_SPECS[v].pax);
                     setShowResult(false);
                   }}
-                  className="bg-transparent w-full outline-none text-xs text-m3-on-surface font-semibold appearance-none cursor-pointer pr-5"
+                  className="bg-transparent w-full outline-none text-sm font-semibold text-m3-on-surface appearance-none cursor-pointer pr-8"
                 >
-                  <option value="Swift Dzire">Swift Dzire</option>
-                  <option value="Maruti Ertiga">Maruti Ertiga</option>
-                  <option value="Innova Crysta">Innova Crysta</option>
-                  <option value="Tempo Traveller">Tempo Traveller</option>
+                  <option value="Swift Dzire">Sedan — Swift Dzire</option>
+                  <option value="Maruti Ertiga">SUV — Ertiga / XL6</option>
+                  <option value="Innova Crysta">MPV — Innova Crysta</option>
+                  <option value="Tempo Traveller">Minibus — Tempo 12S</option>
                 </select>
-                <ChevronDown className="w-3 h-3 text-m3-on-surface-variant pointer-events-none absolute right-2 top-1/2 -translate-y-1/2" />
+                <ChevronDown className="w-4 h-4 text-m3-on-surface-variant pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" />
               </div>
             </div>
-
           </div>
+
+          {/* Calculate button — exact QuotationEngine style */}
+          <button
+            type="button"
+            disabled={loading}
+            onClick={handleCalculate}
+            className="w-full max-w-[260px] sm:max-w-[280px] mx-auto bg-m3-primary hover:bg-slate-900 text-m3-on-primary font-bold py-3 rounded-m3-full transition-all flex items-center justify-center gap-2 shadow-m3-1 hover:shadow-m3-2 text-sm sm:text-base min-h-[46px] sm:min-h-[50px] cursor-pointer active:scale-[0.98] disabled:opacity-75 border border-white/10"
+          >
+            {loading ? (
+              <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /><span>Calculating...</span></>
+            ) : (
+              <><Calculator className="w-4 h-4" /><span>Get Flat Fare</span></>
+            )}
+          </button>
 
         </div>
+      </div>
 
-        {/* 4. CALCULATE COST BUTTON */}
-        <button
-          type="button"
-          disabled={loading}
-          onClick={handleCalculateCost}
-          className="w-full max-w-[200px] mx-auto bg-m3-primary hover:bg-slate-900 text-m3-on-primary font-bold py-2 rounded-full transition-all flex items-center justify-center gap-1.5 shadow-sm hover:shadow-md text-xs min-h-[38px] cursor-pointer active:scale-[0.98] disabled:opacity-75 border border-white/10"
-        >
-          {loading ? (
-            <>
-              <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              <span>Calculating...</span>
-            </>
-          ) : (
-            <>
-              <Calculator className="w-3.5 h-3.5" />
-              <span>Calculate Cost</span>
-            </>
-          )}
-        </button>
+      {/* ── Result + Booking Modal ────────────────────────────────────── */}
+      {showBookingModal && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowBookingModal(false)}
+            aria-hidden="true"
+          />
 
-        {/* 5. RESULT & BOOKING QUOTE CARD */}
-        {showResult && (
-          <div ref={resultRef} className="space-y-2 pt-1 animate-in fade-in slide-in-from-top-2 duration-300">
-            
-            {/* Fare Summary Card */}
-            <div className="bg-m3-surface-container-low rounded-xl p-3 sm:p-3.5 border border-m3-outline-variant shadow-sm space-y-2.5">
-              
-              {/* Header: Price + Route Badge */}
-              <div className="flex justify-between items-start gap-2">
-                <div>
-                  <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[9px] font-bold uppercase tracking-wide mb-1">
-                    <ShieldCheck className="w-3 h-3 text-emerald-600" />
-                    <span>Fixed Airport Flat Rate</span>
-                  </div>
-                  <p className="text-2xl sm:text-3xl font-black text-m3-on-surface tracking-tight font-heading">
-                    ₹ {estimate.toLocaleString('en-IN')}
-                  </p>
-                  <p className="text-[10px] text-m3-on-surface-variant font-medium mt-0.5">Zero Surge • Pay After Trip</p>
-                </div>
-                <div className="text-right shrink-0">
-                  <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-m3-surface rounded-md border border-m3-outline-variant text-[11px] font-bold text-m3-on-surface shadow-2xs">
-                    <span>{distanceKm} km</span>
-                    <span className="text-slate-300">·</span>
-                    <span className="text-slate-600">{duration}</span>
-                  </div>
-                  <div className="mt-0.5 text-[10px] text-m3-on-surface-variant font-semibold">{vehicle}</div>
-                  <div className="text-[9px] text-m3-on-surface-variant">{VEHICLE_SPECS[vehicle].caps}</div>
-                </div>
+          {/* Bottom-sheet on mobile, centered dialog on desktop */}
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Airport fare and booking"
+            className="fixed z-[201] inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4 pointer-events-none"
+          >
+            <div className="pointer-events-auto w-full sm:max-w-md bg-m3-surface rounded-t-m3-2xl sm:rounded-m3-2xl shadow-m3-3 overflow-hidden flex flex-col max-h-[92dvh] sm:max-h-[90vh] animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-300">
+
+              {/* Drag handle (mobile only) */}
+              <div className="flex justify-center pt-2.5 sm:hidden shrink-0">
+                <div className="w-10 h-1 rounded-full bg-m3-outline-variant" />
               </div>
 
-              {/* Matched Zone */}
-              {matchedZone && (
-                <div className="py-1.5 px-2.5 rounded-md bg-m3-surface border border-m3-outline-variant/80 text-[11px] flex items-center justify-between gap-2">
-                  <div className="min-w-0">
-                    <strong className="block text-slate-900 font-bold truncate">{matchedZone.name}</strong>
-                    <span className="block text-[10px] text-slate-500 truncate">{direction === 'pickup' ? drop : pickup}</span>
-                  </div>
-                  <span className="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full border border-emerald-200 shrink-0">
-                    Direct Transfer
-                  </span>
-                </div>
-              )}
-
-              {/* ─── RESTAURANT BILL STYLE FARE BREAKDOWN ─── */}
-              <div className="rounded-lg border border-m3-outline-variant overflow-hidden">
-                {/* Bill Header */}
-                <div className="bg-m3-surface-container-high px-3 py-1.5 border-b border-m3-outline-variant flex items-center justify-between">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-m3-on-surface-variant">Itemized Fare</span>
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-m3-on-surface-variant">Amount</span>
-                </div>
-
-                {/* Line items */}
-                <div className="divide-y divide-m3-outline-variant/50 bg-m3-surface">
-                  {/* Base Fare / Zone Fare */}
-                  <div className="flex items-center justify-between px-3 py-2">
-                    <div className="min-w-0">
-                      <p className="text-xs font-semibold text-m3-on-surface">Zone Flat Fare</p>
-                      <p className="text-[10px] text-m3-on-surface-variant">
-                        {matchedZone?.name} • {distanceKm} km
-                      </p>
-                    </div>
-                    <span className="text-xs font-bold text-m3-on-surface shrink-0">₹{estimate.toLocaleString('en-IN')}</span>
-                  </div>
-
-                  {/* Vehicle & Capacity */}
-                  <div className="flex items-center justify-between px-3 py-2 bg-m3-surface-container-low/40">
-                    <div className="min-w-0">
-                      <p className="text-xs font-semibold text-m3-on-surface">Vehicle Charge</p>
-                      <p className="text-[10px] text-m3-on-surface-variant">{vehicle} • {VEHICLE_SPECS[vehicle].caps}</p>
-                    </div>
-                    <span className="text-[10px] font-bold text-emerald-600 shrink-0">INC</span>
-                  </div>
-
-                  {/* Fuel */}
-                  <div className="flex items-center justify-between px-3 py-2">
-                    <div className="min-w-0">
-                      <p className="text-xs font-semibold text-m3-on-surface">Fuel Charges</p>
-                      <p className="text-[10px] text-m3-on-surface-variant">Full route coverage</p>
-                    </div>
-                    <span className="text-[10px] font-bold text-emerald-600 shrink-0">INC</span>
-                  </div>
-
-                  {/* Driver Allowance */}
-                  <div className="flex items-center justify-between px-3 py-2 bg-m3-surface-container-low/40">
-                    <div className="min-w-0">
-                      <p className="text-xs font-semibold text-m3-on-surface">Driver Allowance (Bata)</p>
-                      <p className="text-[10px] text-m3-on-surface-variant">Food & stay for driver</p>
-                    </div>
-                    <span className="text-[10px] font-bold text-emerald-600 shrink-0">INC</span>
-                  </div>
-
-                  {/* GST */}
-                  <div className="flex items-center justify-between px-3 py-2">
-                    <div className="min-w-0">
-                      <p className="text-xs font-semibold text-m3-on-surface">GST & All Taxes</p>
-                      <p className="text-[10px] text-m3-on-surface-variant">GST Invoice available</p>
-                    </div>
-                    <span className="text-[10px] font-bold text-emerald-600 shrink-0">INC</span>
-                  </div>
-
-                  {/* Tolls note */}
-                  <div className="flex items-center justify-between px-3 py-2 bg-m3-surface-container-low/40">
-                    <div className="min-w-0">
-                      <p className="text-xs font-semibold text-m3-on-surface">Tolls & Parking</p>
-                      <p className="text-[10px] text-m3-on-surface-variant">Billed at exact actuals</p>
-                    </div>
-                    <span className="text-[10px] font-semibold text-slate-500 shrink-0">Extra</span>
-                  </div>
-                </div>
-
-                {/* Total Row */}
-                <div className="flex items-center justify-between px-3 py-2.5 bg-m3-surface-container-highest border-t border-m3-outline-variant">
-                  <div>
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-m3-on-surface-variant block">TOTAL PAYABLE</span>
-                    <span className="text-[10px] text-emerald-700 font-semibold">Pay After Trip • Zero Advance</span>
-                  </div>
-                  <span className="text-base font-black text-m3-on-surface font-heading">₹{estimate.toLocaleString('en-IN')}</span>
-                </div>
-              </div>
-
-              {/* Date/Time & Flight No — larger, more prominent */}
-              <div className="grid grid-cols-2 gap-2 pt-0.5">
-                <div className="relative">
-                  <label htmlFor="airport-booking-datetime" className="block text-[10px] font-bold text-m3-on-surface-variant uppercase tracking-wide mb-1">
-                    Date &amp; Time
-                  </label>
-                  <div className="flex items-center bg-m3-surface border border-m3-outline-variant rounded-md px-2.5 py-2 min-h-[40px] focus-within:ring-2 focus-within:ring-m3-primary/30 focus-within:border-m3-primary transition-all">
-                    <Calendar className="text-m3-primary mr-1.5 w-4 h-4 shrink-0" />
-                    <input
-                      id="airport-booking-datetime"
-                      type="datetime-local"
-                      value={dateTime}
-                      onChange={(e) => setDateTime(e.target.value)}
-                      className="bg-transparent w-full outline-none text-[11px] text-m3-on-surface font-semibold cursor-pointer"
-                    />
-                  </div>
-                </div>
-
-                <div className="relative">
-                  <label htmlFor="airport-booking-flight" className="block text-[10px] font-bold text-m3-on-surface-variant uppercase tracking-wide mb-1">
-                    Flight No <span className="font-normal normal-case">(Optional)</span>
-                  </label>
-                  <div className="flex items-center bg-m3-surface border border-m3-outline-variant rounded-md px-2.5 py-2 min-h-[40px] focus-within:ring-2 focus-within:ring-m3-primary/30 focus-within:border-m3-primary transition-all">
-                    <Plane className="text-m3-primary mr-1.5 w-4 h-4 shrink-0" />
-                    <input
-                      id="airport-booking-flight"
-                      type="text"
-                      placeholder="e.g. 6E 204 / AI 542"
-                      value={flightNo}
-                      onChange={(e) => setFlightNo(e.target.value.toUpperCase())}
-                      className="bg-transparent w-full outline-none text-[11px] text-m3-on-surface font-semibold uppercase placeholder:normal-case placeholder:font-normal placeholder:text-m3-on-surface-variant"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* CTA Buttons — temple-tours tonal style */}
-              <div className="space-y-1.5 pt-0.5">
-                {/* Primary WhatsApp — tonal emerald (temple-tours style) */}
+              {/* Modal header */}
+              <div className="flex items-center justify-between px-4 py-2.5 border-b border-m3-outline-variant/60 shrink-0">
+                <span className="text-sm font-bold text-m3-on-surface">Trip Summary & Booking</span>
                 <button
                   type="button"
-                  onClick={handleWhatsAppBooking}
-                  className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 shadow-sm font-bold text-xs sm:text-sm transition-all active:scale-[0.98] cursor-pointer select-none"
+                  onClick={() => setShowBookingModal(false)}
+                  className="w-7 h-7 flex items-center justify-center rounded-m3-full hover:bg-m3-surface-container-high transition-colors text-m3-on-surface-variant hover:text-m3-on-surface cursor-pointer"
+                  aria-label="Close"
                 >
-                  <WhatsAppIcon className="w-4 h-4 shrink-0" variant="brand" />
-                  <span>Reserve via WhatsApp (Pay After Trip)</span>
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Body: clean, fits without scrolling */}
+              <div className="px-4 py-3 space-y-3">
+
+                {/* Unified Fare & Trip Card — stable layout with no jitter when currency changes */}
+                <div className="bg-m3-surface-container-low p-3 rounded-m3-lg border border-m3-outline-variant space-y-1.5">
+                  {/* Row 1: Destination + Distance/Time */}
+                  <div className="flex items-center justify-between gap-2 text-xs">
+                    <span className="font-bold text-m3-on-surface truncate">
+                      {matchedZone?.name || (direction === 'pickup' ? drop : pickup)}
+                    </span>
+                    <span className="text-[11px] text-m3-on-surface-variant shrink-0 font-medium whitespace-nowrap">
+                      {distanceKm} km · {duration}
+                    </span>
+                  </div>
+
+                  {/* Row 2: Vehicle spec on left, Stable Price & Currency on right */}
+                  <div className="flex items-center justify-between gap-2 pt-0.5">
+                    <span className="text-xs text-m3-on-surface-variant font-medium">
+                      {vehicle} ({VEHICLE_SPECS[vehicle].caps.split('+')[0].trim()})
+                    </span>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <span className="text-2xl font-black text-m3-on-surface tracking-tight font-heading tabular-nums">
+                        {convertRate(estimate, currency)}
+                      </span>
+                      <select
+                        value={currency}
+                        onChange={e => setCurrency(e.target.value)}
+                        aria-label="Select currency"
+                        className="text-[10px] font-bold bg-m3-surface border border-m3-outline-variant rounded px-1.5 py-0.5 text-m3-primary cursor-pointer hover:bg-m3-surface-container outline-none"
+                      >
+                        <option value="INR">₹ INR</option>
+                        <option value="USD">$ USD</option>
+                        <option value="CAD">C$ CAD</option>
+                        <option value="EUR">€ EUR</option>
+                        <option value="RUB">₽ RUB</option>
+                        <option value="GBP">£ GBP</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Row 3: Inclusions */}
+                  <div className="flex items-center justify-between text-[11px] text-emerald-800 bg-emerald-50/90 border border-emerald-200/80 px-2.5 py-1 rounded-m3-md font-medium">
+                    <span>Includes tolls, parking, fuel & GST</span>
+                    <span className="font-semibold text-emerald-700">Pay after trip</span>
+                  </div>
+                </div>
+
+                {/* Booking Inputs — each in a separate row */}
+                <div className="space-y-2">
+                  {/* 1. Date & Time */}
+                  <div>
+                    <label htmlFor="modal-datetime" className={labelCls}>Pickup Date & Time</label>
+                    <div className={inputWrap}>
+                      <input
+                        id="modal-datetime"
+                        type="datetime-local"
+                        value={dateTime}
+                        onChange={e => setDateTime(e.target.value)}
+                        className="bg-transparent w-full outline-none text-sm text-m3-on-surface font-semibold cursor-pointer min-w-0"
+                      />
+                    </div>
+                  </div>
+
+                  {/* 2. Name in separate row */}
+                  <div>
+                    <label htmlFor="modal-name" className={labelCls}>Your Name</label>
+                    <div className={inputWrap}>
+                      <input
+                        id="modal-name"
+                        type="text"
+                        placeholder="Full name"
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                        className="bg-transparent w-full outline-none text-sm font-semibold text-m3-on-surface placeholder:text-m3-on-surface-variant/40 placeholder:text-xs placeholder:font-normal"
+                      />
+                    </div>
+                  </div>
+
+                  {/* 3. Mobile Number with Country Code Dropdown */}
+                  <div>
+                    <label htmlFor="modal-phone" className={labelCls}>Mobile / WhatsApp</label>
+                    <div className={`${inputWrap} !p-0 overflow-hidden`}>
+                      <select
+                        value={countryCode}
+                        onChange={e => setCountryCode(e.target.value)}
+                        aria-label="Country Code"
+                        className="h-[44px] bg-m3-surface-container-high/70 hover:bg-m3-surface-container-high border-r border-m3-outline-variant px-2.5 text-xs font-bold text-m3-on-surface outline-none cursor-pointer shrink-0"
+                      >
+                        <option value="+91">🇮🇳 +91</option>
+                        <option value="+1">🇺🇸 +1</option>
+                        <option value="+1">🇨🇦 +1</option>
+                        <option value="+7">🇷🇺 +7</option>
+                        <option value="+44">🇬🇧 +44</option>
+                        <option value="+971">🇦🇪 +971</option>
+                        <option value="+65">🇸🇬 +65</option>
+                        <option value="+60">🇲🇾 +60</option>
+                        <option value="+61">🇦🇺 +61</option>
+                        <option value="+49">🇩🇪 +49</option>
+                        <option value="+33">🇫🇷 +33</option>
+                        <option value="+94">🇱🇰 +94</option>
+                      </select>
+                      <input
+                        id="modal-phone"
+                        type="tel"
+                        placeholder="Mobile number"
+                        value={phone}
+                        onChange={e => setPhone(e.target.value)}
+                        className="bg-transparent flex-1 px-3 outline-none text-sm font-semibold text-m3-on-surface placeholder:text-m3-on-surface-variant/40 placeholder:text-xs placeholder:font-normal"
+                      />
+                    </div>
+                  </div>
+
+                  {/* 4. Flight No in separate row */}
+                  <div>
+                    <label htmlFor="modal-flight" className={labelCls}>
+                      Flight No <span className="font-normal normal-case text-m3-on-surface-variant/70">(optional)</span>
+                    </label>
+                    <div className={inputWrap}>
+                      <input
+                        id="modal-flight"
+                        type="text"
+                        placeholder="e.g. 6E 204"
+                        value={flightNo}
+                        onChange={e => setFlightNo(e.target.value.toUpperCase())}
+                        className="bg-transparent w-full outline-none text-sm font-semibold text-m3-on-surface uppercase placeholder:normal-case placeholder:text-m3-on-surface-variant/40 placeholder:text-xs placeholder:font-normal"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Footer CTAs — unified with WhatsAppButton.astro design system */}
+              <div className="px-4 pb-4 pt-3 border-t border-m3-outline-variant/60 shrink-0 space-y-2">
+
+                {/* Primary: WhatsApp Enquiry — tonal style from WhatsAppButton.astro */}
+                <button
+                  type="button"
+                  onClick={handleWhatsApp}
+                  className="w-full py-2.5 bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 rounded-m3-full font-bold flex items-center justify-center gap-2 shadow-xs transition-all active:scale-[0.98] cursor-pointer text-sm select-none"
+                >
+                  <WhatsAppIcon className="w-4 h-4 sm:w-[18px] sm:h-[18px]" variant="brand" />
+                  <span>Send Booking Enquiry</span>
                 </button>
 
-                {/* Secondary Call */}
-                <a
-                  href="tel:+916381939769"
-                  className="w-full inline-flex items-center justify-center gap-2 py-2 px-4 rounded-full bg-m3-surface-container hover:bg-blue-50 active:bg-blue-100 text-m3-on-surface hover:text-[#1A73E8] border border-m3-outline-variant hover:border-blue-300 font-bold text-xs transition-all select-none"
-                >
-                  <Phone className="w-3.5 h-3.5 text-[#1A73E8] shrink-0" />
-                  <span>Call 24/7 Operations Desk (+91 63819 39769)</span>
-                </a>
+                {/* UX hint — sets expectation before tapping */}
+                <p className="text-center text-[11px] text-m3-on-surface-variant leading-snug">
+                  Opens WhatsApp with your trip details already filled in
+                </p>
+
+                {/* Secondary: Call + SMS / iMessage fallback */}
+                <div className="grid grid-cols-2 gap-2">
+                  <a
+                    href="tel:+916381939769"
+                    className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-m3-full bg-m3-surface-container hover:bg-blue-50 active:bg-blue-100 text-m3-on-surface hover:text-[#1A73E8] border border-m3-outline-variant hover:border-blue-300 text-xs font-bold transition-all select-none"
+                  >
+                    <Phone className="w-3.5 h-3.5 text-[#1A73E8] shrink-0" />
+                    <span>Call 24/7 Desk</span>
+                  </a>
+                  <button
+                    type="button"
+                    onClick={handleSMS}
+                    title="No WhatsApp? Send booking via native SMS or iMessage"
+                    className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high border border-m3-outline-variant text-xs font-bold text-m3-on-surface transition-all active:scale-[0.98] cursor-pointer select-none"
+                  >
+                    <MessageSquare className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+                    <span>No WhatsApp? SMS</span>
+                  </button>
+                </div>
               </div>
 
             </div>
-
           </div>
-        )}
+        </>
+      )}
 
-      </div>
-
-    </div>
+    </>
   );
 }

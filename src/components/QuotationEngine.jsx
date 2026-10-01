@@ -309,11 +309,21 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
     }
   }, [estimate]);
 
+  // Auto-scroll to result panel when estimate appears
+  useEffect(() => {
+    if (showResult && resultRef.current) {
+      setTimeout(() => {
+        resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 100);
+    }
+  }, [showResult]);
+
   const pickupInputRef = useRef(null);
   const dropInputRef = useRef(null);
   const pickupValueRef = useRef('');
   const dropValueRef = useRef('');
   const autocompleteInitializedRef = useRef(false);
+  const resultRef = useRef(null);
 
   // Synchronize location refs
   useEffect(() => {
@@ -1158,7 +1168,7 @@ Please confirm availability.`;
 
             {/* Results Section */}
             {showResult && (
-              <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-300">
+              <div ref={resultRef} className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-300">
                 {(distance || activeTab === 'local') && (
                   <div className="bg-m3-surface-container-low p-3.5 rounded-m3-lg border border-m3-outline-variant space-y-2">
                     <div className="flex justify-between text-xs text-m3-on-surface-variant">
@@ -1528,7 +1538,7 @@ Please confirm availability.`;
           )}
 
           {showResult && (
-            <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+            <div ref={resultRef} className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
               {distance && (
                 <div className="bg-m3-surface-container-low p-3 rounded-m3-lg border border-m3-outline-variant space-y-2">
                   <div className="flex justify-between text-micro text-m3-on-surface-variant">
