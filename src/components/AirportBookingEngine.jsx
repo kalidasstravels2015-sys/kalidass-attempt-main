@@ -67,6 +67,14 @@ const VEHICLE_SPECS = {
   'Tempo Traveller': { tag: 'Group Minibus',caps: '12 Pax + Bags',   pax: '12' },
 };
 
+// Max passengers each vehicle can carry (excluding driver)
+const VEHICLE_CAPACITY = {
+  'Swift Dzire':     4,
+  'Maruti Ertiga':   6,
+  'Innova Crysta':   7,
+  'Tempo Traveller': 12,
+};
+
 const AIRPORT_HUB = 'Chennai International Airport (MAA)';
 
 // ── Multi-currency support for international travelers ────────────────────
@@ -504,7 +512,13 @@ export default function AirportBookingEngine({ showHeader = true }) {
                   onChange={e => {
                     const p = e.target.value;
                     setPassengers(p);
-                    setVehicle(p === '4' ? 'Swift Dzire' : p === '6' ? 'Maruti Ertiga' : p === '7' ? 'Innova Crysta' : 'Tempo Traveller');
+                    // Auto-upgrade: pick smallest vehicle that fits
+                    const paxNum = parseInt(p);
+                    const currentCap = VEHICLE_CAPACITY[vehicle] ?? 4;
+                    if (currentCap < paxNum) {
+                      const nextVehicle = Object.keys(VEHICLE_CAPACITY).find(v => VEHICLE_CAPACITY[v] >= paxNum);
+                      if (nextVehicle) setVehicle(nextVehicle);
+                    }
                     setShowResult(false);
                   }}
                   className="bg-transparent w-full outline-none text-sm font-semibold text-m3-on-surface appearance-none cursor-pointer pr-8"
@@ -532,15 +546,36 @@ export default function AirportBookingEngine({ showHeader = true }) {
                   }}
                   className="bg-transparent w-full outline-none text-sm font-semibold text-m3-on-surface appearance-none cursor-pointer pr-8"
                 >
-                  <option value="Swift Dzire">Sedan — Swift Dzire</option>
-                  <option value="Maruti Ertiga">SUV — Ertiga / XL6</option>
-                  <option value="Innova Crysta">MPV — Innova Crysta</option>
-                  <option value="Tempo Traveller">Minibus — Tempo 12S</option>
+                  {Object.keys(VEHICLE_SPECS).map(v => {
+                    const cap = VEHICLE_CAPACITY[v] ?? 4;
+                    const paxNum = parseInt(passengers);
+                    const disabled = cap < paxNum;
+                    const spec = VEHICLE_SPECS[v];
+                    const label = `${spec.tag} — ${v.replace('Swift ', '').replace('Maruti ', '')}${disabled ? ` (max ${cap} pax)` : ''}`;
+                    return (
+                      <option key={v} value={v} disabled={disabled}>{label}</option>
+                    );
+                  })}
                 </select>
                 <ChevronDown className="w-4 h-4 text-m3-on-surface-variant pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" />
               </div>
             </div>
           </div>
+
+          {/* Passenger-Vehicle capacity warning */}
+          {(() => {
+            const cap = VEHICLE_CAPACITY[vehicle] ?? 4;
+            const paxNum = parseInt(passengers);
+            if (cap < paxNum) {
+              return (
+                <div className="flex items-start gap-2 px-3 py-2 rounded-m3-md bg-amber-50 border border-amber-300 text-amber-800 text-xs font-semibold">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5 text-amber-600" />
+                  <span>{vehicle} seats max {cap} passengers. Please select a larger vehicle for {paxNum} pax.</span>
+                </div>
+              );
+            }
+            return null;
+          })()}
 
           {/* Calculate button — exact QuotationEngine style */}
           <button

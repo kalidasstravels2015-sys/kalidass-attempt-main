@@ -14,6 +14,17 @@ import tripsData from '../data/trips.json';
 const vehicles = tariffConfig.vehicles;
 const vehicleOptions = Object.keys(vehicles);
 
+// ─── Passenger ↔ Vehicle capacity rules ───────────────────────────────────
+// max passengers (excluding driver) each vehicle can carry
+const VEHICLE_CAPACITY = {
+  'Swift Dzire':     4,
+  'Toyota Etios':    4,
+  'Maruti Ertiga':   6,
+  'Innova':          6,
+  'Innova Crysta':   7,
+  'Tempo Traveller': 12,
+};
+
 // Multi-cab comparison options inspired by Savaari/Uber for 1-tap route comparisons
 const COMPARISON_VEHICLES = [
   {
@@ -21,6 +32,7 @@ const COMPARISON_VEHICLES = [
     name: 'Sedan',
     models: 'Dzire / Etios',
     pax: '4 Pax',
+    maxPax: 4,
     bags: '2 Bags',
     tag: 'Best Value'
   },
@@ -29,6 +41,7 @@ const COMPARISON_VEHICLES = [
     name: 'Family SUV',
     models: 'Ertiga AC',
     pax: '6 Pax',
+    maxPax: 6,
     bags: '3 Bags',
     tag: 'Most Popular'
   },
@@ -37,6 +50,7 @@ const COMPARISON_VEHICLES = [
     name: 'Executive MPV',
     models: 'Innova Crysta',
     pax: '7 Pax',
+    maxPax: 7,
     bags: '4 Bags',
     tag: 'Premium'
   },
@@ -45,6 +59,7 @@ const COMPARISON_VEHICLES = [
     name: 'Minibus',
     models: 'Tempo 12-Seater',
     pax: '12 Pax',
+    maxPax: 12,
     bags: '8 Bags',
     tag: 'Group'
   }
@@ -388,14 +403,15 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
     return !error;
   };
 
-  // Handle passengers change
+  // Handle passengers change — auto-upgrade vehicle if current one is too small
   useEffect(() => {
     const pax = parseInt(passengers);
-    // Auto-set vehicle ONLY IF it hasn't been manually changed or if it's too small for pax
-    if (pax <= 4) setVehicle('Swift Dzire');
-    else if (pax <= 6) setVehicle('Innova');
-    else if (pax <= 7) setVehicle('Innova Crysta');
-    else setVehicle('Tempo Traveller');
+    const currentCapacity = VEHICLE_CAPACITY[vehicle] ?? 4;
+    if (currentCapacity < pax) {
+      // Pick the smallest vehicle that fits the group
+      const nextVehicle = vehicleOptions.find(v => (VEHICLE_CAPACITY[v] ?? 0) >= pax);
+      if (nextVehicle) setVehicle(nextVehicle);
+    }
     setShowResult(false);
   }, [passengers]);
 
@@ -1082,7 +1098,16 @@ Please confirm availability.`;
                       onChange={(e) => { setVehicle(e.target.value); setShowResult(false); }}
                       className="bg-transparent w-full outline-none text-xs sm:text-sm text-m3-on-surface font-semibold appearance-none cursor-pointer pr-5 py-0.5 truncate"
                     >
-                      {vehicleOptions.map(v => <option key={v} value={v}>{v}</option>)}
+                      {vehicleOptions.map(v => {
+                        const cap = VEHICLE_CAPACITY[v] ?? 4;
+                        const pax = parseInt(passengers);
+                        const disabled = cap < pax;
+                        return (
+                          <option key={v} value={v} disabled={disabled}>
+                            {v}{disabled ? ` (max ${cap} pax)` : ''}
+                          </option>
+                        );
+                      })}
                     </select>
                     <ChevronDown className="w-3.5 h-3.5 text-m3-on-surface-variant pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2" />
                   </div>
@@ -1119,6 +1144,21 @@ Please confirm availability.`;
                 )}
               </div>
             </div>
+
+            {/* Passenger-Vehicle capacity warning (desktop) */}
+            {(() => {
+              const cap = VEHICLE_CAPACITY[vehicle] ?? 4;
+              const pax = parseInt(passengers);
+              if (cap < pax) {
+                return (
+                  <div className="flex items-start gap-2 px-3 py-2 rounded-m3-md bg-amber-50 border border-amber-300 text-amber-800 text-xs font-semibold">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5 text-amber-600" />
+                    <span>{vehicle} seats max {cap} passengers. Please select a larger vehicle for {pax} pax.</span>
+                  </div>
+                );
+              }
+              return null;
+            })()}
 
             <button
               type="button"
@@ -1462,7 +1502,16 @@ Please confirm availability.`;
                 onChange={(e) => { setVehicle(e.target.value); setShowResult(false); }}
                 className="w-full bg-transparent text-xs sm:text-sm text-m3-on-surface font-semibold outline-none appearance-none cursor-pointer pr-5 truncate"
               >
-                {vehicleOptions.map(v => <option key={v} value={v}>{v}</option>)}
+                {vehicleOptions.map(v => {
+                  const cap = VEHICLE_CAPACITY[v] ?? 4;
+                  const pax = parseInt(passengers);
+                  const disabled = cap < pax;
+                  return (
+                    <option key={v} value={v} disabled={disabled}>
+                      {v}{disabled ? ` (max ${cap} pax)` : ''}
+                    </option>
+                  );
+                })}
               </select>
               <ChevronDown className="w-3.5 h-3.5 text-m3-on-surface-variant pointer-events-none absolute right-2 top-1/2 -translate-y-1/2" />
             </div>
@@ -1487,6 +1536,21 @@ Please confirm availability.`;
             </div>
           )}
         </div>
+
+        {/* Passenger-Vehicle capacity warning (mobile) */}
+        {(() => {
+          const cap = VEHICLE_CAPACITY[vehicle] ?? 4;
+          const pax = parseInt(passengers);
+          if (cap < pax) {
+            return (
+              <div className="mt-2 flex items-start gap-2 px-3 py-2 rounded-m3-md bg-amber-50 border border-amber-300 text-amber-800 text-xs font-semibold">
+                <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5 text-amber-600" />
+                <span>{vehicle} seats max {cap} passengers. Please choose a larger vehicle for {pax} pax.</span>
+              </div>
+            );
+          }
+          return null;
+        })()}
 
         <div className="pt-3">
           {!showResult ? (
