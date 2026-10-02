@@ -27,7 +27,7 @@ To scale from a local travel agency to an executive regional mobility brand, des
   - Executive linen headrest covers with the Kalidass "K" monogram.
   - Laminated seatback card featuring:
     - Onboard amenities (Wi-Fi password, AC controls courtesy note).
-    - 24/7 SOS / Support Hotline (`+91 63819 39769`).
+    - 24/7 SOS / Support Hotline (`+91 89395 39211`).
     - **NFC / QR Code for Google Review Tap:** Enables riders to tap their phone and leave a 5-star Google review inside the cab.
 - **Driver Dashboard UPI Card:**
   - Fixed acrylic stand with Kalidass Travels UPI QR code for direct contactless payment, eliminating awkward cash change disputes.

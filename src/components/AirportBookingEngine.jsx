@@ -288,7 +288,7 @@ export default function AirportBookingEngine({ showHeader = true }) {
       ``,
       `Please confirm my airport taxi booking. Thank you!`,
     ].filter(Boolean).join('\n');
-    window.open(`https://wa.me/916381939769?text=${encodeURIComponent(msg)}`, '_blank');
+    window.open(`https://wa.me/918939539211?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
   // ── Native SMS / iMessage fallback (USA, Canada, Russia, etc. without WhatsApp) ──
@@ -312,13 +312,13 @@ export default function AirportBookingEngine({ showHeader = true }) {
 
     const isIOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
     const sep = isIOS ? '&' : '?';
-    window.location.href = `sms:+916381939769${sep}body=${encodeURIComponent(msg)}`;
+    window.location.href = `sms:+918939539211${sep}body=${encodeURIComponent(msg)}`;
   };
 
   const handleStickyWhatsApp = () => {
     const fare = showResult && estimate ? ` • ₹${estimate.toLocaleString('en-IN')}` : '';
     const msg = `*Airport Cab Enquiry — Kalidass Travels*\n• Trip: ${direction === 'pickup' ? 'Airport PICKUP' : 'Airport DROP'}\n• Route: ${pickup} ➔ ${drop}\n• Vehicle: ${vehicle}${fare}\nPlease confirm availability.`;
-    window.open(`https://wa.me/916381939769?text=${encodeURIComponent(msg)}`, '_blank');
+    window.open(`https://wa.me/918939539211?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
   const fmtRs = n => `₹${Number(n).toLocaleString('en-IN')}`;
@@ -784,7 +784,7 @@ export default function AirportBookingEngine({ showHeader = true }) {
                 {/* Secondary: Call + SMS / iMessage fallback */}
                 <div className="grid grid-cols-2 gap-2">
                   <a
-                    href="tel:+916381939769"
+                    href="tel:+918939539211"
                     className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-m3-full bg-m3-surface-container hover:bg-blue-50 active:bg-blue-100 text-m3-on-surface hover:text-[#1A73E8] border border-m3-outline-variant hover:border-blue-300 text-xs font-bold transition-all select-none"
                   >
                     <Phone className="w-3.5 h-3.5 text-[#1A73E8] shrink-0" />

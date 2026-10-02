@@ -112,7 +112,7 @@ The typography is built on the official **15-Role Google Material Design 3 Types
 
 - **Positioning:** Fixed to the bottom viewport on mobile (`bottom-4 right-4`).
 - **Primary Elements:**
-  1. **Direct Call Button:** Phone dialer trigger with instantaneous connection to `+91 63819 39769`.
+  1. **Direct Call Button:** Phone dialer trigger with instantaneous connection to `+91 89395 39211`.
   2. **WhatsApp Action Button:** High-visibility green circular FAB triggering a direct pre-composed WhatsApp chat.
 - **Scroll-Aware Behavior:** Floating bar collapses slightly when scrolling down to maximize reading space, expanding smoothly on scroll-up.
 

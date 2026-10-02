@@ -804,7 +804,7 @@ const faqSchema = {
                           id={`desktop-book-${t.id}`}
                           data-drop-msg={t.whatsappDrop}
                           data-pickup-msg={t.whatsappPickup}
-                          href={`https://wa.me/916381939769?text=${encodeURIComponent(t.whatsappPickup)}`}
+                          href={`https://wa.me/918939539211?text=${encodeURIComponent(t.whatsappPickup)}`}
                           target="_blank"
                           rel="noopener noreferrer nofollow"
                           class="booking-link inline-flex items-center gap-1 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 active:bg-black text-white text-xs font-semibold shadow-xs transition-all"
@@ -934,7 +934,7 @@ const faqSchema = {
                     </button>
                     
                     <a
-                      href={`https://wa.me/916381939769?text=${encodeURIComponent(vehicle.bookingText)}`}
+                      href={`https://wa.me/918939539211?text=${encodeURIComponent(vehicle.bookingText)}`}
                       target="_blank"
                       rel="noopener noreferrer nofollow"
                       class="w-full inline-flex items-center justify-center gap-1.5 py-1.5 text-xs font-semibold text-emerald-700 hover:text-emerald-800 hover:underline transition-colors"
@@ -983,17 +983,17 @@ const faqSchema = {
         </p>
         <div class="flex flex-wrap items-center justify-center gap-3">
           <WhatsAppButton 
-            href="https://wa.me/916381939769?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20reserve%20an%20airport%20transfer%20(Drop/Pickup)%20at%20Chennai%20Airport."
+            href="https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20reserve%20an%20airport%20transfer%20(Drop/Pickup)%20at%20Chennai%20Airport."
             size="md"
             variant="filled"
             text="Instant WhatsApp Booking"
           />
           <a 
-            href="tel:+916381939769"
+            href="tel:+918939539211"
             class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 text-white text-xs sm:text-sm font-semibold backdrop-blur-xs transition-all shadow-sm"
           >
             <span class="material-symbols-outlined text-[18px] text-emerald-400">call</span>
-            <span>Call 24/7 Desk (+91 63819 39769)</span>
+            <span>Call 24/7 Desk (+91 89395 39211)</span>
           </a>
         </div>
       </section>
@@ -1348,7 +1348,7 @@ const faqSchema = {
 
           <!-- Trust Reassurance -->
           <p id="modal-trust-reassurance" class="text-[10px] text-slate-500 text-center leading-tight">
-            ✓ Zero Advance Required · Pay Driver Post-Trip · 24/7 Desk +91 63819 39769
+            ✓ Zero Advance Required · Pay Driver Post-Trip · 24/7 Desk +91 89395 39211
           </p>
         </form>
 
@@ -1956,7 +1956,7 @@ const faqSchema = {
               const customMsg = isDrop
                 ? `Hi Kalidass Travels, I need an Airport DROP to Chennai Airport (MAA) from ${customDest}. Please share the flat quote for Sedan and Innova.`
                 : `Hi Kalidass Travels, I need an Airport PICKUP at Chennai Airport (MAA) to ${customDest}. Please share the flat quote for Sedan and Innova.`;
-              window.open(`https://wa.me/916381939769?text=${encodeURIComponent(customMsg)}`, '_blank');
+              window.open(`https://wa.me/918939539211?text=${encodeURIComponent(customMsg)}`, '_blank');
             };
             dropdown.appendChild(customItem);
           }
@@ -2062,7 +2062,7 @@ const faqSchema = {
         desktopLinks.forEach((link) => {
           const msg = isDrop ? link.getAttribute('data-drop-msg') : link.getAttribute('data-pickup-msg');
           if (msg) {
-            link.href = `https://wa.me/916381939769?text=${encodeURIComponent(msg)}`;
+            link.href = `https://wa.me/918939539211?text=${encodeURIComponent(msg)}`;
           }
           const label = link.querySelector('.action-label');
           if (label) {
@@ -2074,7 +2074,7 @@ const faqSchema = {
         mobileCards.forEach((card) => {
           const msg = isDrop ? card.getAttribute('data-drop-msg') : card.getAttribute('data-pickup-msg');
           if (msg) {
-            card.href = `https://wa.me/916381939769?text=${encodeURIComponent(msg)}`;
+            card.href = `https://wa.me/918939539211?text=${encodeURIComponent(msg)}`;
           }
           const label = card.querySelector('.mobile-action-label');
           if (label) {
@@ -2305,11 +2305,11 @@ const faqSchema = {
           }
 
           if (channel === 'whatsapp') {
-            const waUrl = `https://wa.me/916381939769?text=${encodeURIComponent(bookingMessage)}`;
+            const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent(bookingMessage)}`;
             window.open(waUrl, '_blank');
           } else if (channel === 'sms') {
             const smsDivider = isIOS ? '&' : '?';
-            const smsUrl = `sms:+916381939769${smsDivider}body=${encodeURIComponent(bookingMessage)}`;
+            const smsUrl = `sms:+918939539211${smsDivider}body=${encodeURIComponent(bookingMessage)}`;
             window.location.href = smsUrl;
           } else if (channel === 'email') {
             const emailSubject = `Airport Transfer Booking: ${directionText} - ${transferDate} - ${name}`;

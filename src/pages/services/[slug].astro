@@ -33,7 +33,7 @@ export async function getStaticPaths() {
 }
 
 const { service } = Astro.props as { service: any };
-const whatsappLink = `https://wa.me/916381939769?text=${encodeURIComponent(service.whatsappMsg || `Hi Kalidass Travels, I would like to book ${service.title}.`)}`;
+const whatsappLink = `https://wa.me/918939539211?text=${encodeURIComponent(service.whatsappMsg || `Hi Kalidass Travels, I would like to book ${service.title}.`)}`;
 
 const isActingDriver = service.category === 'Acting Driver Services' || service.slug.includes('driver');
 const isTour = ['Temple Tours', 'Popular Destinations'].includes(service.category);
@@ -862,7 +862,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                     <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-1">
                       <div class="grid grid-cols-2 gap-2">
                         <a
-                          href="tel:+916381939769"
+                          href="tel:+918939539211"
                           aria-label={`Call to book ${shortName} for ${service.title}`}
                           class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-surface-container hover:bg-blue-50 active:bg-blue-100 text-m3-on-surface hover:text-[#1A73E8] border border-m3-outline-variant hover:border-blue-300 text-xs font-bold transition-all select-none"
                         >
@@ -870,7 +870,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                           <span>Call Now</span>
                         </a>
                         <a
-                          href={`https://wa.me/916381939769?text=${encodeURIComponent(bookingText)}`}
+                          href={`https://wa.me/918939539211?text=${encodeURIComponent(bookingText)}`}
                           target="_blank"
                           rel="noopener noreferrer nofollow"
                           aria-label={`Book ${vehicleName} on WhatsApp for ${heroPrice}`}
@@ -915,7 +915,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                       <td class="px-5 py-4 text-right whitespace-nowrap">
                         <div class="inline-flex items-center gap-1.5 justify-end">
                           <a
-                            href="tel:+916381939769"
+                            href="tel:+918939539211"
                             aria-label={`Call to book ${vehicleName} for ${service.title}`}
                             class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-blue-50 active:bg-blue-100 text-m3-on-surface hover:text-[#1A73E8] border border-m3-outline-variant hover:border-blue-300 text-micro font-bold shadow-xs transition-all select-none"
                           >
@@ -923,7 +923,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                             <span>Call</span>
                           </a>
                           <a
-                            href={`https://wa.me/916381939769?text=${encodeURIComponent(bookingText)}`}
+                            href={`https://wa.me/918939539211?text=${encodeURIComponent(bookingText)}`}
                             target="_blank"
                             rel="noopener noreferrer nofollow"
                             aria-label={`Book ${vehicleName} on WhatsApp`}
@@ -1345,11 +1345,11 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
               text="Confirm on WhatsApp"
             />
             <a
-              href="tel:+916381939769"
+              href="tel:+918939539211"
               class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface font-bold text-xs sm:text-sm rounded-m3-full shadow-m3-1 transition-all"
             >
               <Phone className="w-4 h-4 text-m3-primary" />
-              <span>Call Dispatch: +91 63819 39769</span>
+              <span>Call Dispatch: +91 89395 39211</span>
             </a>
           </div>
         </div>

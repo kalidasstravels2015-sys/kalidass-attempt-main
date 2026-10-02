@@ -13,7 +13,7 @@
 - **Company Name:** Kalidass Travels
 - **Establishment:** 2015
 - **Headquarters / Operations Hub:** Medavakkam, Chennai - 600100, Tamil Nadu, India
-- **Primary Support Line:** `+91 63819 39769`
+- **Primary Support Line:** `+91 89395 39211`
 - **Official Email:** `kalidasstravels2015@gmail.com`
 - **Production Domain:** `https://kalidasstravels.in/`
 - **Fleet Lineup:**
@@ -43,7 +43,7 @@
 ### ADR-003: WhatsApp Click-to-Chat Deep Linking as Primary Funnel
 
 - **Context:** Western-style travel portals require credit card payment gateways before booking confirmation. In South India, customers strongly prefer human validation, driver details confirmation, and customized itinerary adjustments before payment.
-- **Decision:** Funnel quotation results directly into a pre-composed WhatsApp message to `+91 63819 39769`.
+- **Decision:** Funnel quotation results directly into a pre-composed WhatsApp message to `+91 89395 39211`.
 - **Rationale:** Increases conversion rates by over 400% compared to mandatory upfront payment walls. Builds immediate trust with customers.
 
 ### ADR-004: Offline South India Distance Lookup Table Fallback

@@ -7,8 +7,8 @@ Kalidass Travels is an AITP-licensed (All-India Tourist Permit) cab operator and
 - Registered Office: No. 4/220, E88, Ponniamman Kovil Street, Annamalai Nagar, Medavakkam, Chennai - 600100, Tamil Nadu, India
 - Coordinates: 12.9171° N, 80.1923° E
 - GSTIN: 33COVPM0531D1Z4 | MSME: UDYAM-TN-08-0018345
-- Primary 24/7 Helpline: +91 63819 39769
-- WhatsApp Desk: https://wa.me/916381939769
+- Primary 24/7 Helpline: +91 89395 39211
+- WhatsApp Desk: https://wa.me/918939539211
 - Official Email: kalidasstravels2015@gmail.com
 - Full Knowledge Base: https://kalidasstravels.in/llms-full.txt
 - Machine-Readable API: https://kalidasstravels.in/openapi.json

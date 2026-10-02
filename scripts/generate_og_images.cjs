@@ -482,7 +482,7 @@ async function main() {
 
               <div style="display:flex;flex-direction:column;align-items:flex-end;">
                 <span style="color:#F8FAFC;font-size:18px;font-weight:800;letter-spacing:-0.2px;">kalidasstravels.in</span>
-                <span style="color:#94A3B8;font-size:14px;font-weight:600;margin-top:3px;">+91 63819 39769</span>
+                <span style="color:#94A3B8;font-size:14px;font-weight:600;margin-top:3px;">+91 89395 39211</span>
               </div>
             </div>
           </div>

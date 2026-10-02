@@ -8,6 +8,6 @@
 - **Styling:** Tailwind CSS 3.4 with Google Material Design 3 (M3) semantic tokens.
 - **Fare Estimation:** `QuotationEngine.jsx` using Google Maps & Places Autocomplete + offline South India distance fallback table.
 - **Serverless Backend:** Google Apps Script (`google_apps_script.js`) webhook receiving JSON and appending records to Google Sheets and Google Calendar.
-- **Conversion Funnel:** Pre-composed WhatsApp Click-to-Chat deep links directly to `+91 63819 39769`.
+- **Conversion Funnel:** Pre-composed WhatsApp Click-to-Chat deep links directly to `+91 89395 39211`.
 
 See [docs/02_ARCHITECTURE.md](./docs/02_ARCHITECTURE.md) for full system specifications.

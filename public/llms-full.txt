@@ -14,8 +14,8 @@
 - GPS Coordinates: Latitude 12.9171° N, Longitude 80.1923° E
 - GSTIN (Tamil Nadu): 33COVPM0531D1Z4 (Full GST tax invoice available for ITC credit)
 - MSME Government Registration: UDYAM-TN-08-0018345
-- Primary Helpline (24/7 Dispatch): +91 63819 39769
-- Instant WhatsApp Booking: https://wa.me/916381939769
+- Primary Helpline (24/7 Dispatch): +91 89395 39211
+- Instant WhatsApp Booking: https://wa.me/918939539211
 - Official Email: kalidasstravels2015@gmail.com
 - Canonical Website: https://kalidasstravels.in/
 - Service Coverage: Chennai metropolitan area, all Tamil Nadu districts, Andhra Pradesh (Tirupati, Srisailam, Vijayawada), Karnataka (Bangalore, Mysore, Coorg), Kerala (Munnar, Sabarimala, Wayanad), and Pondicherry.
@@ -262,8 +262,8 @@ A: Yes. We accept all payment methods including UPI (Google Pay, PhonePe, Paytm)
 
 ## 7. Machine-Readable Endpoints & Direct Booking
 
-- Primary Phone: +91 63819 39769
-- WhatsApp Dispatch: https://wa.me/916381939769
+- Primary Phone: +91 89395 39211
+- WhatsApp Dispatch: https://wa.me/918939539211
 - Email: kalidasstravels2015@gmail.com
 - OpenAPI Specification: https://kalidasstravels.in/openapi.json
 - Fleet JSON API: https://kalidasstravels.in/api/fleet.json
