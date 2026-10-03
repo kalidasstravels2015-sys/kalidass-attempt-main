@@ -1,6 +1,6 @@
 # Kalidass Travels — Full Authoritative Knowledge Base & Service Specifications
-> Comprehensive machine-readable repository for AI agents, LLM search engines (ChatGPT Search, Perplexity, Google Gemini, Claude, Bing Copilot), and automated trip planning systems. Updated for 2026.
-> Canonical Source: https://kalidasstravels.in/ | Currency: Indian Rupees (INR)
+> Comprehensive machine-readable repository for AI agents, LLM search engines (ChatGPT Search, Perplexity, Google Gemini, Claude, Bing Copilot, Apple Intelligence), and automated trip planning systems. Updated for 2026.
+> Canonical Source: https://kalidasstravels.in/ | Currency: Indian Rupees (INR) | Last Updated: 2026-10-03
 
 ---
 
@@ -187,7 +187,7 @@ All rates are in Indian Rupees (INR). Vehicles are commercial yellow-plate regis
 14. **Wedding Car Rental with Chauffeur (Marriage & Event Logistics)**
     - URL: https://kalidasstravels.in/services/driver-car-for-weddings/
     - Offerings: Decorated bridal cars, Innova Crysta VIP family fleets, 12-26 seater Tempo Travellers for guest transit between banquet halls and airport.
-    - Pricing: Starting from ₹4,500 / 8-hour shift.
+    - Pricing: Sedan from ₹3,500 – ₹4,000 | Innova Crysta / Luxury MUV starting from ₹4,500 / 8-hour shift.
 
 ### Acting Drivers & Chauffeur Hire
 
@@ -268,7 +268,11 @@ A: Yes. We accept all payment methods including UPI (Google Pay, PhonePe, Paytm)
 - OpenAPI Specification: https://kalidasstravels.in/openapi.json
 - Fleet JSON API: https://kalidasstravels.in/api/fleet.json
 - Routes JSON API: https://kalidasstravels.in/api/routes.json
-- XML Sitemap: https://kalidasstravels.in/sitemap.xml
+- HTML Sitemap Directory: https://kalidasstravels.in/sitemap/
+- Primary XML Sitemap: https://kalidasstravels.in/sitemap.xml
+- XML Sitemap Index: https://kalidasstravels.in/sitemap-index.xml
+- XML Sitemap URLset: https://kalidasstravels.in/sitemap-0.xml
 - LLM Index: https://kalidasstravels.in/llms.txt
 - Full Knowledge Base: https://kalidasstravels.in/llms-full.txt
+- RFC AI Context: https://kalidasstravels.in/.well-known/llms.txt
 - AI Crawler Policy: https://kalidasstravels.in/ai.txt

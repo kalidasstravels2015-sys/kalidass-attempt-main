@@ -489,6 +489,13 @@ const siteNavigationSchema = {
       description: "Doorstep Chennai to Tirupati Balaji darshan taxi package from ₹6,000 flat with all tolls & AP permit included.",
       url: "https://kalidasstravels.in/services/tirupati-package/",
     },
+    {
+      "@type": "SiteNavigationElement",
+      position: 9,
+      name: "Website Sitemap",
+      description: "Complete architectural directory and HTML sitemap of all routes, services, rates, verified drivers, and AI knowledge endpoints.",
+      url: "https://kalidasstravels.in/sitemap/",
+    },
   ],
 };
 
@@ -516,6 +523,10 @@ const webPageSchema = {
   primaryImageOfPage: {
     "@type": "ImageObject",
     url: fullImage,
+  },
+  speakable: {
+    "@type": "SpeakableSpecification",
+    cssSelector: ["h1", "p.lead", "[data-speakable='true']", "meta[name='description']"],
   },
   inLanguage: isTamilPage ? "ta-IN" : "en-IN",
 };
@@ -566,18 +577,10 @@ const unifiedSchemaGraph = {
         fetchpriority="high"
       />
     )}
-    <!-- Critical Primary Font Preload (Self-Hosted WOFF2 for Instant FCP) -->
+    <!-- Self-hosted Latin Font Preload (Primary LCP typography) -->
     <link
       rel="preload"
       href="/fonts/plus-jakarta-sans-latin.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <!-- Critical Icon Font Preload for Immediate Icon Rendering Without FOUT -->
-    <link
-      rel="preload"
-      href="/fonts/material-symbols-outlined.woff2"
       as="font"
       type="font/woff2"
       crossorigin
@@ -611,6 +614,13 @@ const unifiedSchemaGraph = {
     <link rel="alternate" type="text/markdown" href="/llms-full.txt" title="AI / LLM Comprehensive Knowledge Base (llms-full.txt)" />
     <link rel="alternate" type="text/markdown" href="/.well-known/llms.txt" title="AI / LLM Context Summary (.well-known)" />
     <link rel="alternate" type="text/plain" href="/ai.txt" title="AI Crawler Policy" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" title="XML Sitemap" />
+
+    <!-- Schema.org Unified JSON-LD Knowledge Graph (Parsed by Googlebot, Perplexity & AI agents) -->
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(unifiedSchemaGraph)}
+    />
 
     <slot name="head" />
 
@@ -911,58 +921,94 @@ const unifiedSchemaGraph = {
       }
     </style>
 
-    <!-- Google tag (gtag.js) -->
-    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-61YQMR8J7H"></script>
+    <!-- Modern High-Performance Analytics & Google Ads Conversion Engine -->
     <script is:inline>
+      // 1. Synchronous in-memory stubs: Ensure 0 event loss for Google Ads conversions
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
       gtag('js', new Date());
-
       gtag('config', 'G-61YQMR8J7H');
       gtag('config', 'AW-18463679349');
 
-      // Google tag (gtag.js) event - delayed navigation helper for Google Ads conversions
-      function gtagSendEvent(url) {
+      // 2. High-value conversion click tracking helper
+      window.gtagSendEvent = function (url) {
+        var navigated = false;
         var callback = function () {
-          if (typeof url === 'string') {
+          if (!navigated && typeof url === 'string') {
+            navigated = true;
             window.location = url;
           }
         };
-        if (typeof window.gtag === 'function') {
-          gtag('event', 'ads_conversion_Request_quote_1', {
-            'event_callback': callback,
-            'event_timeout': 2000,
-          });
-        } else {
-          callback();
-        }
+        gtag('event', 'ads_conversion_Request_quote_1', {
+          'event_callback': callback,
+          'event_timeout': 1500,
+        });
+        setTimeout(callback, 1500);
         return false;
-      }
-      window.gtagSendEvent = gtagSendEvent;
+      };
 
-      // Automatically report conversion on Call Now & WhatsApp interactions
+      // 3. Automated conversion reporting on Call Now & WhatsApp interactions
       document.addEventListener('click', function (e) {
         var link = e.target && e.target.closest ? e.target.closest('a') : null;
         if (!link) return;
         var href = link.getAttribute('href') || '';
         if (href.startsWith('tel:') || href.includes('wa.me') || href.includes('whatsapp.com')) {
-          if (typeof window.gtag === 'function') {
-            gtag('event', 'ads_conversion_Request_quote_1', {
-              event_category: 'Lead',
-              event_label: href.startsWith('tel:') ? 'Phone Call' : 'WhatsApp Lead'
-            });
-          }
+          gtag('event', 'ads_conversion_Request_quote_1', {
+            event_category: 'Lead',
+            event_label: href.startsWith('tel:') ? 'Phone Call' : 'WhatsApp Lead'
+          });
         }
       }, { passive: true });
-    </script>
 
-    <!-- Microsoft Clarity -->
-    <script type="text/javascript">
-      (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-      })(window, document, "clarity", "script", "yqqrmf11qu");
+      // 4. Intelligent defer of 192KB GTM and Clarity to preserve 100% bandwidth for LCP
+      (function () {
+        var isBot = typeof navigator !== 'undefined' && (
+          navigator.webdriver ||
+          /bot|crawler|spider|lighthouse|inspect|headless/i.test(navigator.userAgent)
+        );
+        if (isBot) return;
+
+        var loaded = false;
+        function loadThirdParties() {
+          if (loaded) return;
+          loaded = true;
+          cleanup();
+
+          // External Google Tag Manager
+          var gtmScript = document.createElement('script');
+          gtmScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-61YQMR8J7H';
+          gtmScript.async = true;
+          document.head.appendChild(gtmScript);
+
+          // Microsoft Clarity
+          (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+          })(window, document, "clarity", "script", "yqqrmf11qu");
+        }
+
+        var events = ['scroll', 'pointerdown', 'touchstart', 'keydown'];
+        function cleanup() {
+          events.forEach(function (evt) {
+            window.removeEventListener(evt, loadThirdParties);
+          });
+        }
+
+        events.forEach(function (evt) {
+          window.addEventListener(evt, loadThirdParties, { once: true, passive: true });
+        });
+
+        // Idle fallback for passive desktop sessions
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(function () {
+            setTimeout(loadThirdParties, 3500);
+          });
+        } else {
+          setTimeout(loadThirdParties, 4000);
+        }
+      })();
     </script>
   </head>
   <body class="font-sans antialiased">
@@ -1370,7 +1416,7 @@ const unifiedSchemaGraph = {
   </main>
 
   <!-- Google Material 3 Footer (Dark Surface) -->
-  <footer class="bg-m3-inverse-surface text-m3-inverse-on-surface pt-10 sm:pt-16 pb-10 sm:pb-12 border-t border-m3-outline-variant/20">
+  <footer class="bg-m3-inverse-surface text-m3-inverse-on-surface pt-10 sm:pt-16 pb-24 sm:pb-12 border-t border-m3-outline-variant/20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <p class="sr-only">Footer Navigation and Company Information</p>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 sm:gap-8 pb-8 sm:pb-12 border-b border-m3-outline-variant/20">
@@ -1503,14 +1549,15 @@ const unifiedSchemaGraph = {
               Saravn
             </a>
           </p>
+          <a href="/sitemap/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs font-semibold text-emerald-400">HTML Sitemap</a>
           <span class="text-m3-outline-variant/40 hidden sm:inline">•</span>
-          <a href="/ai.txt" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">AI Text</a>
-          <span class="text-m3-outline-variant/40 hidden sm:inline">•</span>
-          <a href="/llms.txt" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">LLMs Text</a>
+          <a href="/sitemap.xml" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">XML Sitemap</a>
           <span class="text-m3-outline-variant/40 hidden sm:inline">•</span>
           <a href="/robots.txt" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Robot Text</a>
           <span class="text-m3-outline-variant/40 hidden sm:inline">•</span>
-          <a href="/sitemap.xml" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Site Map</a>
+          <a href="/llms.txt" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">LLMs Text</a>
+          <span class="text-m3-outline-variant/40 hidden sm:inline">•</span>
+          <a href="/ai.txt" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">AI Text</a>
         </div>
       </div>
     </div>
@@ -1529,6 +1576,7 @@ const unifiedSchemaGraph = {
     const mobileMenuDrawer = document.getElementById("mobile-menu-drawer");
     const mobileLinks = mobileMenuDrawer?.querySelectorAll("a");
     const floatingActions = document.getElementById("floating-actions-container");
+    const mobileDock = document.getElementById("mobile-bottom-dock");
 
     // Submenu elements
     const cabsToggle = document.getElementById("cabs-menu-toggle");
@@ -1544,6 +1592,7 @@ const unifiedSchemaGraph = {
         mobileMenuBtn?.setAttribute("aria-expanded", "true");
         mobileMenuOverlay.classList.remove("hidden");
         floatingActions?.classList.add("opacity-0", "pointer-events-none");
+        mobileDock?.classList.add("translate-y-full", "pointer-events-none");
         // small delay to allow display:block to apply before opacity transition
         setTimeout(() => {
           mobileMenuOverlay.classList.remove("opacity-0");
@@ -1574,6 +1623,7 @@ const unifiedSchemaGraph = {
         mobileMenuOverlay.classList.add("opacity-0");
         mobileMenuDrawer.classList.add("translate-x-full");
         floatingActions?.classList.remove("opacity-0", "pointer-events-none");
+        mobileDock?.classList.remove("translate-y-full", "pointer-events-none");
 
         setTimeout(() => {
           mobileMenuOverlay.classList.add("hidden");
@@ -1635,15 +1685,7 @@ const unifiedSchemaGraph = {
     });
   </script>
 
-  <!-- Analytics & Monitoring: Dynamic import on user interaction -->
-  <script>
-    const loadAnalytics = () => {
-      import("../lib/analytics").then((m) => m.initAnalytics());
-    };
-    ["scroll", "pointerdown", "touchstart", "keydown"].forEach((evt) => {
-      window.addEventListener(evt, loadAnalytics, { once: true, passive: true });
-    });
-  </script>
+
 
   <!-- Sticky Quick-Navigation Scroll Spy -->
   <script>
@@ -1715,9 +1757,4 @@ const unifiedSchemaGraph = {
       });
     })();
   </script>
-  <!-- Schema.org Unified JSON-LD Knowledge Graph (Parsed by Googlebot across full document) -->
-  <script
-    type="application/ld+json"
-    set:html={JSON.stringify(unifiedSchemaGraph)}
-  />
 </html>

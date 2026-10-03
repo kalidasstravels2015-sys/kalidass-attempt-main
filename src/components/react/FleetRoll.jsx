@@ -17,8 +17,7 @@ const FleetCard = ({ vehicle, isVisible, priority }) => {
                                     height="160"
                                     decoding="async"
                                     className="w-full h-full object-cover transition-all duration-700 hover:scale-105 relative z-10"
-                                    loading={priority ? "eager" : "lazy"}
-                                    fetchPriority={priority ? "high" : "auto"}
+                                    loading="lazy"
                                 />
                                 {/* Scrim Gradient Overlay */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/25 to-transparent z-20"></div>

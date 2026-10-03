@@ -426,7 +426,7 @@ const faqSchema = {
     "name": item.q,
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": item.a
+      "text": item.a.replace(/<[^>]*>/g, '')
     }
   }))
 };

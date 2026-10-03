@@ -30,6 +30,48 @@ export default defineConfig({
         !page.endsWith('/services/popular-destinations/') &&
         !page.endsWith('/services/temple-tours/') &&
         !page.endsWith('/services/weekend-packages/'),
+      serialize(item) {
+        const url = item.url;
+        item.lastmod = new Date();
+        if (url === 'https://kalidasstravels.in/') {
+          item.changefreq = 'daily';
+          item.priority = 1.0;
+        } else if (
+          url.includes('/services/chennai-airport-taxi/') ||
+          url.includes('/services/outstation-cabs/') ||
+          url.includes('/services/tirupati-package/') ||
+          url.includes('/tariff/')
+        ) {
+          item.changefreq = 'daily';
+          item.priority = 0.9;
+        } else if (
+          url.includes('/services/tours/') ||
+          url.includes('/services/navagraha-tour/') ||
+          url.includes('/services/thiruvannamalai-girivalam-trip/') ||
+          url.includes('/services/sabarimala-trip/') ||
+          url.includes('/services/rameswaram-2-days/') ||
+          url.includes('/services/acting-drivers/') ||
+          url.includes('/services/corporate/')
+        ) {
+          item.changefreq = 'weekly';
+          item.priority = 0.85;
+        } else if (
+          url.includes('/services/') ||
+          url.includes('/fleet/') ||
+          url.includes('/calculator/') ||
+          url.includes('/sitemap/')
+        ) {
+          item.changefreq = 'weekly';
+          item.priority = 0.8;
+        } else if (url.includes('/drivers/')) {
+          item.changefreq = 'monthly';
+          item.priority = 0.7;
+        } else {
+          item.changefreq = 'monthly';
+          item.priority = 0.5;
+        }
+        return item;
+      },
     }),
     {
       name: 'sitemap-sync',
@@ -45,10 +87,13 @@ export default defineConfig({
       },
     },
     compress({
+      CSS: true,
       HTML: {
         'html-minifier-terser': {
           removeAttributeQuotes: false,
           sortAttributes: false,
+          minifyCSS: true,
+          minifyJS: true,
         },
       },
       JavaScript: false,

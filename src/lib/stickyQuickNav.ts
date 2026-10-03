@@ -51,23 +51,25 @@ function scrollActivePillIntoView(link: HTMLElement) {
   const container = link.closest<HTMLElement>('.overflow-x-auto, [data-quick-nav-container]');
   if (!container) return;
 
-  const containerRect = container.getBoundingClientRect();
-  const linkRect = link.getBoundingClientRect();
+  requestAnimationFrame(() => {
+    const containerRect = container.getBoundingClientRect();
+    const linkRect = link.getBoundingClientRect();
 
-  // Calculate target scroll position to center the active pill
-  const currentScroll = container.scrollLeft;
-  const linkCenterRelative = (linkRect.left - containerRect.left) + (linkRect.width / 2);
-  const targetScroll = currentScroll + linkCenterRelative - (containerRect.width / 2);
-  const maxScroll = container.scrollWidth - container.clientWidth;
-  const clampedTarget = Math.max(0, Math.min(maxScroll, Math.round(targetScroll)));
+    // Calculate target scroll position to center the active pill
+    const currentScroll = container.scrollLeft;
+    const linkCenterRelative = (linkRect.left - containerRect.left) + (linkRect.width / 2);
+    const targetScroll = currentScroll + linkCenterRelative - (containerRect.width / 2);
+    const maxScroll = container.scrollWidth - container.clientWidth;
+    const clampedTarget = Math.max(0, Math.min(maxScroll, Math.round(targetScroll)));
 
-  // Smooth scroll container horizontally if difference is noticeable
-  if (Math.abs(clampedTarget - currentScroll) > 4) {
-    container.scrollTo({
-      left: clampedTarget,
-      behavior: 'smooth'
-    });
-  }
+    // Smooth scroll container horizontally if difference is noticeable
+    if (Math.abs(clampedTarget - currentScroll) > 4) {
+      container.scrollTo({
+        left: clampedTarget,
+        behavior: 'smooth'
+      });
+    }
+  });
 }
 
 export function initStickyQuickNav(): () => void {
@@ -118,10 +120,9 @@ export function initStickyQuickNav(): () => void {
         return sortedItems[sortedItems.length - 1];
       }
 
-      // Sticky header (64px) + sticky nav (~52px) + breathing margin (~45px) = ~165-175px
-      // When nav is not yet sticky (e.g. within Hero), clamp reference offset to sticky line
-      const stickyBottom = 64 + (nav.offsetHeight || 50);
-      const SCROLL_OFFSET = stickyBottom + 45;
+      // Sticky header (64px) + sticky nav (~52px) + breathing margin (~45px) = ~161px
+      // Using fixed offset avoids reading nav.offsetHeight which triggers forced reflow
+      const SCROLL_OFFSET = 64 + 52 + 45;
 
       let activeItem: QuickNavItem | null = null;
 
@@ -215,13 +216,23 @@ export function initStickyQuickNav(): () => void {
       if (clickScrollTimer) clearTimeout(clickScrollTimer);
     });
 
-    // Initial activation: clean sweep all links so only the true active item is highlighted
-    const initialActive = getActiveItem();
-    items.forEach((item) => {
-      setLinkState(item.link, item.link === initialActive.link);
-    });
-    currentActiveLink = initialActive.link;
-    scrollActivePillIntoView(currentActiveLink);
+    // Initial activation: default to first item at scroll 0 without triggering forced reflow
+    if (window.scrollY === 0) {
+      const initialActive = sortedItems[0];
+      items.forEach((item) => {
+        setLinkState(item.link, item.link === initialActive.link);
+      });
+      currentActiveLink = initialActive.link;
+    } else {
+      requestAnimationFrame(() => {
+        const initialActive = getActiveItem();
+        items.forEach((item) => {
+          setLinkState(item.link, item.link === initialActive.link);
+        });
+        currentActiveLink = initialActive.link;
+        scrollActivePillIntoView(currentActiveLink);
+      });
+    }
   });
 
   return () => {

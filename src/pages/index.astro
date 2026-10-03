@@ -21,7 +21,7 @@ const ogImage = "/images/og-main.png";
 const heroOptimized = await getImage({
   src: airavatesvaraImg,
   widths: [240, 360, 480, 640, 800, 1080, 1440],
-  sizes: "(max-width: 640px) 75vw, (max-width: 1024px) 100vw, 1200px",
+  sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1200px",
   format: "avif",
   quality: 24,
 });
@@ -29,7 +29,7 @@ const heroOptimized = await getImage({
 const preloadHero = {
   href: heroOptimized.src,
   srcset: heroOptimized.srcSet.attribute,
-  sizes: "(max-width: 640px) 75vw, (max-width: 1024px) 100vw, 1200px",
+  sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1200px",
 };
 
 // Homepage WebPage schema with BreadcrumbList

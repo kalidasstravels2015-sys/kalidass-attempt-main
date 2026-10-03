@@ -1,0 +1,556 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Breadcrumbs from "../components/SEO/Breadcrumbs.astro";
+import serviceDetails from "../data/serviceDetails.json";
+import siteContent from "../data/siteContent.json";
+import { getAllDrivers } from "../data/driversData";
+
+const breadcrumbItems = [
+  { name: "Home", item: "/" },
+  { name: "HTML Sitemap", item: "/sitemap/" },
+];
+
+const title = "Website Sitemap & Complete Service Directory | Kalidass Travels Chennai";
+const description = "Comprehensive directory and HTML sitemap of Kalidass Travels Chennai. Explore all outstation routes, airport taxi transfers, temple tour packages, acting drivers, vehicle fleets, and verified chauffeurs.";
+const canonicalURL = "https://kalidasstravels.in/sitemap/";
+
+// Core Portals & Tools
+const corePortals = [
+  {
+    title: "Home",
+    url: "/",
+    desc: "Primary portal for outstation cabs, airport transfers, temple tours, and verified acting drivers in Chennai.",
+    tag: "Main Portal",
+    badge: "24/7 Dispatch"
+  },
+  {
+    title: "Official Tariff Card",
+    url: "/tariff/",
+    desc: "Transparent local hourly packages (5h/50km, 10h/100km) and per-km outstation tariffs for Sedans, SUVs, and Tempo Travellers.",
+    tag: "Pricing Guide",
+    badge: "Zero Surge"
+  },
+  {
+    title: "Instant Fare Calculator",
+    url: "/calculator/",
+    desc: "Interactive fare estimation tool for outstation round-trips, one-way drops, local car rentals, and acting driver duties.",
+    tag: "Interactive Tool",
+    badge: "Instant Estimate"
+  },
+  {
+    title: "Vehicle Fleet Catalog",
+    url: "/fleet/",
+    desc: "Detailed vehicle models, seating capacities, luggage specs, and AC configurations (Dzire, Etios, Ertiga, Innova Crysta, Force Urbania).",
+    tag: "Vehicle Catalog",
+    badge: "Clean AC Fleet"
+  },
+  {
+    title: "Verified Drivers Directory",
+    url: "/drivers/",
+    desc: "Directory of 100% police-verified chauffeurs with hill-station certifications, languages spoken, and customer ratings.",
+    tag: "Chauffeur Team",
+    badge: "100% Police Verified"
+  },
+  {
+    title: "All Mobility Services",
+    url: "/services/",
+    desc: "Complete catalog of corporate mobility, airport taxi, darshan pilgrimages, outstation tours, and personal chauffeur hire.",
+    tag: "Services Directory",
+    badge: "All Offerings"
+  },
+];
+
+// Core Service Hubs
+const coreHubs = [
+  {
+    title: "Chennai Airport Taxi (MAA Transfers)",
+    url: "/services/chennai-airport-taxi/",
+    desc: "24/7 doorstep drop and terminal pickup with 5-10 min rapid dispatch, live flight delay tracking, and zero waiting fee.",
+    tag: "Airport Taxi",
+    badge: "From ₹650"
+  },
+  {
+    title: "Outstation Cabs from Chennai",
+    url: "/services/outstation-cabs/",
+    desc: "Round-trip and one-way outstation cabs across Tamil Nadu, Pondicherry, Karnataka, and Andhra Pradesh from ₹14/km.",
+    tag: "Highway Cab",
+    badge: "From ₹14/km"
+  },
+  {
+    title: "Tour Packages Hub",
+    url: "/services/tours/",
+    desc: "Curated South India road trips covering sacred temple circuits, UNESCO heritage monuments, and Western Ghats hill escapes.",
+    tag: "Tour Hub",
+    badge: "Curated Itineraries"
+  },
+  {
+    title: "South India Temple Tours",
+    url: "/services/tours/temple-tours/",
+    desc: "All-inclusive darshan yatra packages with satvik non-smoking chauffeurs, FASTag tolls, and interstate permits included.",
+    tag: "Pilgrimage Hub",
+    badge: "All-Inclusive"
+  },
+  {
+    title: "Weekend Getaway Packages",
+    url: "/services/tours/weekend-packages/",
+    desc: "1-day and 2-day scenic escapes from Chennai to Pondicherry, Mahabalipuram, Yelagiri, and Yercaud with tolls included.",
+    tag: "Weekend Hub",
+    badge: "Flat Package Rates"
+  },
+  {
+    title: "Corporate Mobility & ETS",
+    url: "/services/corporate/",
+    desc: "24/7 routed employee commute transport, monthly executive car retainers, and GST-compliant invoicing for IT/manufacturing firms.",
+    tag: "Corporate",
+    badge: "100% GST Tax Credit"
+  },
+  {
+    title: "Acting Drivers in Chennai",
+    url: "/services/acting-drivers/",
+    desc: "Hire background-verified professional chauffeurs for your personal manual, automatic, EV, or luxury car (hourly or outstation).",
+    tag: "Acting Drivers",
+    badge: "From ₹600"
+  },
+];
+
+// Categorized Services from serviceDetails.json
+const templeServices = serviceDetails.filter(s => s.category === "Temple Tours");
+const weekendServices = serviceDetails.filter(s => s.category === "Popular Destinations");
+const corporateAndDriverServices = serviceDetails.filter(s => s.category === "Acting Driver Services" || s.category === "Corporate Services");
+
+function getServiceStartingPrice(s: any): string {
+  const headers = s.tariff?.headers || [];
+  const row = s.tariff?.rows?.[0] || [];
+  const totalCostIdx = headers.findIndex((h: string) => /total cost|package cost|flat cost/i.test(h));
+  if (totalCostIdx !== -1 && row[totalCostIdx] && typeof row[totalCostIdx] === 'string' && row[totalCostIdx].includes('₹')) {
+    return row[totalCostIdx];
+  }
+  const rateIdx = headers.findIndex((h: string) => /cost|rate|charges/i.test(h));
+  if (rateIdx !== -1 && row[rateIdx] && typeof row[rateIdx] === 'string' && row[rateIdx].includes('₹')) {
+    return row[rateIdx];
+  }
+  const match = row.find((c: any) => typeof c === 'string' && /₹\s*[\d,]+/i.test(c));
+  if (match) return match;
+  return "Flat Tariff";
+}
+
+// Verified Chauffeurs
+const driversList = getAllDrivers();
+
+// Machine-Readable AI & Developer Resources
+const machineEndpoints = [
+  {
+    title: "LLM Summary Context (llms.txt)",
+    url: "/llms.txt",
+    desc: "Authoritative machine-readable directory for LLMs (ChatGPT, Perplexity, Gemini, Claude) following the llmstxt.org standard.",
+    badge: "llmstxt.org"
+  },
+  {
+    title: "Comprehensive LLM Knowledge Base (llms-full.txt)",
+    url: "/llms-full.txt",
+    desc: "Complete uncompressed context repository with fleet specs, all 20 service itineraries, tariffs, policies, and FAQs for AI agents.",
+    badge: "Full RAG Context"
+  },
+  {
+    title: "RFC AI Directory (.well-known/llms.txt)",
+    url: "/.well-known/llms.txt",
+    desc: "Standard .well-known location serving machine-readable service directory and grounding context for autonomous search engines.",
+    badge: ".well-known"
+  },
+  {
+    title: "AI Crawler Policy (ai.txt)",
+    url: "/ai.txt",
+    desc: "Spawning.ai AI/LLM crawler and retrieval augmentation permissions declaration welcoming foundational AI models.",
+    badge: "AI Policy"
+  },
+  {
+    title: "Search Engine Robots Policy (robots.txt)",
+    url: "/robots.txt",
+    desc: "Crawler directives explicitly granting full access to search engines, LLM spiders, and referencing XML sitemaps.",
+    badge: "Crawler Config"
+  },
+  {
+    title: "Primary XML Sitemap (sitemap.xml)",
+    url: "/sitemap.xml",
+    desc: "Standard XML sitemap index containing canonical URLs, lastmod dates, change frequencies, and crawl priorities.",
+    badge: "Search Index"
+  },
+  {
+    title: "XML Sitemap Index (sitemap-index.xml)",
+    url: "/sitemap-index.xml",
+    desc: "Multi-sitemap root index referencing all subordinate URL sets generated by Astro.",
+    badge: "Sitemap Index"
+  },
+  {
+    title: "XML URL Set (sitemap-0.xml)",
+    url: "/sitemap-0.xml",
+    desc: "Direct URL set listing all indexed website paths for rapid crawler consumption.",
+    badge: "XML URLset"
+  },
+  {
+    title: "Fleet Specifications API (api/fleet.json)",
+    url: "/api/fleet.json",
+    desc: "Machine-readable REST JSON endpoint returning vehicle models, luggage limits, seat capacities, and per-km tariffs.",
+    badge: "REST JSON API"
+  },
+  {
+    title: "Popular Routes API (api/routes.json)",
+    url: "/api/routes.json",
+    desc: "Machine-readable REST JSON endpoint listing all 20 routes with starting package prices and direct WhatsApp booking URLs.",
+    badge: "REST JSON API"
+  },
+  {
+    title: "OpenAPI 3.1 Specification (openapi.json)",
+    url: "/openapi.json",
+    desc: "OpenAPI 3.1 machine specification allowing AI assistants and GPT plugins to discover callable travel booking actions.",
+    badge: "OpenAPI 3.1"
+  },
+  {
+    title: "Privacy Policy",
+    url: "/privacy/",
+    desc: "Data protection commitment, GPS telemetry confidentiality, and passenger privacy practices under Indian IT Law.",
+    badge: "Compliance"
+  },
+  {
+    title: "Terms & Conditions",
+    url: "/terms/",
+    desc: "Standard operating agreement, garage-to-garage km computation, permit guidelines, and cancellation terms.",
+    badge: "Terms of Service"
+  },
+];
+
+// Schema for Sitemap Page
+const sitemapSchema = {
+  "@type": "ItemPage",
+  "@id": `${canonicalURL}#webpage`,
+  "name": title,
+  "description": description,
+  "url": canonicalURL,
+  "isPartOf": {
+    "@id": "https://kalidasstravels.in/#website"
+  },
+  "about": {
+    "@id": "https://kalidasstravels.in/#localbusiness"
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "name": "Kalidass Travels Complete Directory",
+    "description": "Index of all web pages, services, tour packages, fleet categories, and machine-readable resources.",
+    "numberOfItems": corePortals.length + coreHubs.length + serviceDetails.length + driversList.length + machineEndpoints.length
+  }
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  schema={sitemapSchema}
+>
+  <Breadcrumbs items={breadcrumbItems} />
+
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-b from-slate-900 to-slate-800 text-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8 border-b border-slate-700">
+    <div class="max-w-6xl mx-auto">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-4 tracking-wide uppercase">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span>Directory &amp; Information Architecture</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-4">
+        Website Sitemap &amp; Service Directory
+      </h1>
+      <p class="text-base sm:text-lg text-slate-300 max-w-3xl leading-relaxed mb-8">
+        Direct architectural directory of all pages, outstation routes, airport transfer hubs, temple pilgrimage circuits, acting driver services, verified chauffeurs, and machine-readable AI context files for Kalidass Travels Chennai.
+      </p>
+
+      <!-- Quick Metrics Bar -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-4xl pt-2">
+        <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-3.5 text-center">
+          <div class="text-2xl font-bold text-white">20</div>
+          <div class="text-xs text-slate-400 mt-0.5">Tour &amp; Transit Routes</div>
+        </div>
+        <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-3.5 text-center">
+          <div class="text-2xl font-bold text-white">18</div>
+          <div class="text-xs text-slate-400 mt-0.5">Verified Chauffeurs</div>
+        </div>
+        <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-3.5 text-center">
+          <div class="text-2xl font-bold text-white">7+</div>
+          <div class="text-xs text-slate-400 mt-0.5">Service Hubs</div>
+        </div>
+        <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-3.5 text-center">
+          <div class="text-2xl font-bold text-emerald-400">100%</div>
+          <div class="text-xs text-slate-400 mt-0.5">Machine-Readable AI</div>
+        </div>
+      </div>
+
+      <!-- Quick Jump Anchors -->
+      <div class="mt-8 flex flex-wrap gap-2 text-xs">
+        <a href="#core-portals" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition-colors">Portals &amp; Tools</a>
+        <a href="#service-hubs" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition-colors">Service Hubs</a>
+        <a href="#temple-tours" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition-colors">Temple Pilgrimages</a>
+        <a href="#weekend-packages" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition-colors">Weekend Getaways</a>
+        <a href="#driver-corporate" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition-colors">Acting Drivers &amp; Corporate</a>
+        <a href="#chauffeur-directory" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition-colors">Chauffeurs</a>
+        <a href="#ai-endpoints" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition-colors">AI &amp; Developer APIs</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content Container -->
+  <main class="bg-slate-50 text-slate-900 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto space-y-16">
+
+      <!-- Section 1: Core Portals & Booking Tools -->
+      <section id="core-portals" class="scroll-mt-24">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg">1</div>
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Core Portals &amp; Booking Tools</h2>
+            <p class="text-xs sm:text-sm text-slate-600">Essential navigation portals, fare calculation engines, and fleet specifications.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {corePortals.map((item) => (
+            <a
+              href={item.url}
+              class="group block p-5 bg-white border border-slate-200 hover:border-slate-400 rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
+            >
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200">{item.tag}</span>
+                <span class="text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">{item.badge}</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 group-hover:text-slate-700 flex items-center gap-1.5">
+                <span>{item.title}</span>
+                <span class="text-slate-400 group-hover:translate-x-0.5 transition-transform text-xs">→</span>
+              </h3>
+              <p class="text-xs text-slate-600 mt-2 leading-relaxed">{item.desc}</p>
+              <div class="mt-3 text-[11px] font-mono text-slate-400 break-all">{item.url}</div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <!-- Section 2: Core Service Hubs -->
+      <section id="service-hubs" class="scroll-mt-24">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg">2</div>
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Master Service Category Hubs</h2>
+            <p class="text-xs sm:text-sm text-slate-600">Comprehensive landing hubs for airport transits, outstation trips, pilgrimages, and chauffeur hire.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {coreHubs.map((item) => (
+            <a
+              href={item.url}
+              class="group block p-5 bg-white border border-slate-200 hover:border-slate-400 rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
+            >
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200">{item.tag}</span>
+                <span class="text-xs font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded-md">{item.badge}</span>
+              </div>
+              <h3 class="text-base font-bold text-slate-900 group-hover:text-slate-700 flex items-center gap-1.5">
+                <span>{item.title}</span>
+                <span class="text-slate-400 group-hover:translate-x-0.5 transition-transform text-xs">→</span>
+              </h3>
+              <p class="text-xs text-slate-600 mt-2 leading-relaxed">{item.desc}</p>
+              <div class="mt-3 text-[11px] font-mono text-slate-400 break-all">{item.url}</div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <!-- Section 3: South India Temple Pilgrimages -->
+      <section id="temple-tours" class="scroll-mt-24">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg">3</div>
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900">South India Temple Pilgrimages (All-Inclusive)</h2>
+            <p class="text-xs sm:text-sm text-slate-600">Sacred darshan yatras from Chennai with satvik non-smoking drivers, tolls, and interstate permits included.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {templeServices.map((service) => {
+            const startPrice = getServiceStartingPrice(service);
+            return (
+              <a
+                href={`/services/${service.slug}/`}
+                class="group block p-5 bg-white border border-slate-200 hover:border-slate-400 rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
+              >
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <span class="text-xs font-medium text-slate-500">{service.duration}</span>
+                  <span class="text-xs font-bold text-slate-900 bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-md">From {startPrice}</span>
+                </div>
+                <h3 class="text-base font-bold text-slate-900 group-hover:text-slate-700 flex items-center gap-1.5">
+                  <span>{service.title}</span>
+                  <span class="text-slate-400 group-hover:translate-x-0.5 transition-transform text-xs">→</span>
+                </h3>
+                <p class="text-xs text-slate-600 mt-2 leading-relaxed line-clamp-2">{service.overview}</p>
+                <div class="mt-3 text-[11px] font-mono text-slate-400">https://kalidasstravels.in/services/{service.slug}/</div>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+
+      <!-- Section 4: Popular Destinations & Weekend Road Trips -->
+      <section id="weekend-packages" class="scroll-mt-24">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg">4</div>
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Popular Destinations &amp; Weekend Getaways</h2>
+            <p class="text-xs sm:text-sm text-slate-600">Coastal highways, hill stations, city heritage, and celebration car packages.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {weekendServices.map((service) => {
+            const startPrice = getServiceStartingPrice(service);
+            return (
+              <a
+                href={`/services/${service.slug}/`}
+                class="group block p-5 bg-white border border-slate-200 hover:border-slate-400 rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
+              >
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <span class="text-xs font-medium text-slate-500">{service.duration}</span>
+                  <span class="text-xs font-bold text-slate-900 bg-sky-50 text-sky-800 border border-sky-200 px-2 py-0.5 rounded-md">From {startPrice}</span>
+                </div>
+                <h3 class="text-base font-bold text-slate-900 group-hover:text-slate-700 flex items-center gap-1.5">
+                  <span>{service.title}</span>
+                  <span class="text-slate-400 group-hover:translate-x-0.5 transition-transform text-xs">→</span>
+                </h3>
+                <p class="text-xs text-slate-600 mt-2 leading-relaxed line-clamp-2">{service.overview}</p>
+                <div class="mt-3 text-[11px] font-mono text-slate-400">https://kalidasstravels.in/services/{service.slug}/</div>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+
+      <!-- Section 5: Acting Drivers & Corporate Mobility -->
+      <section id="driver-corporate" class="scroll-mt-24">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg">5</div>
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Acting Drivers &amp; Corporate Mobility</h2>
+            <p class="text-xs sm:text-sm text-slate-600">Professional chauffeurs for your personal car, corporate shift shuttles, and monthly retainers.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {corporateAndDriverServices.map((service) => {
+            const startPrice = getServiceStartingPrice(service);
+            return (
+              <a
+                href={`/services/${service.slug}/`}
+                class="group block p-5 bg-white border border-slate-200 hover:border-slate-400 rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
+              >
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <span class="text-xs font-medium text-slate-500">{service.duration || "Custom Schedule"}</span>
+                  <span class="text-xs font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded-md">{startPrice}</span>
+                </div>
+                <h3 class="text-base font-bold text-slate-900 group-hover:text-slate-700 flex items-center gap-1.5">
+                  <span>{service.title}</span>
+                  <span class="text-slate-400 group-hover:translate-x-0.5 transition-transform text-xs">→</span>
+                </h3>
+                <p class="text-xs text-slate-600 mt-2 leading-relaxed line-clamp-2">{service.overview}</p>
+                <div class="mt-3 text-[11px] font-mono text-slate-400">https://kalidasstravels.in/services/{service.slug}/</div>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+
+      <!-- Section 6: Verified Chauffeur Profiles -->
+      <section id="chauffeur-directory" class="scroll-mt-24">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg">6</div>
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Verified Chauffeur Profiles (18 Chauffeurs)</h2>
+            <p class="text-xs sm:text-sm text-slate-600">Individual profile pages for each police-verified commercial chauffeur on our staff.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+          {driversList.map((driver) => (
+            <a
+              href={`/drivers/${driver.slug}/`}
+              class="group block p-3.5 bg-white border border-slate-200 hover:border-slate-400 rounded-xl shadow-xs hover:shadow-md transition-all text-center"
+            >
+              <div class="w-12 h-12 mx-auto rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-700 mb-2 border border-slate-200 text-sm">
+                {driver.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2)}
+              </div>
+              <h3 class="text-xs font-bold text-slate-900 group-hover:text-slate-700 truncate">{driver.name}</h3>
+              <div class="text-[11px] text-slate-500 mt-0.5">{driver.experience}</div>
+              <div class="mt-1.5 inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+                <span>★</span>
+                <span>{driver.rating}</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <!-- Section 7: Machine-Readable AI & Developer Endpoints -->
+      <section id="ai-endpoints" class="scroll-mt-24">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-xl bg-emerald-700 text-white flex items-center justify-center font-bold text-lg">7</div>
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Machine-Readable AI Context, APIs &amp; Compliance</h2>
+            <p class="text-xs sm:text-sm text-slate-600">Standards-compliant discovery endpoints for LLM engines, autonomous agents, and search engine crawlers.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {machineEndpoints.map((item) => (
+            <a
+              href={item.url}
+              class="group block p-5 bg-white border border-slate-200 hover:border-emerald-600 rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
+            >
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="text-xs font-mono px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200">{item.badge}</span>
+                <span class="text-xs text-slate-400 group-hover:text-emerald-600 transition-colors">Open Resource ↗</span>
+              </div>
+              <h3 class="text-sm font-bold text-slate-900 group-hover:text-emerald-700 flex items-center gap-1">
+                <span>{item.title}</span>
+              </h3>
+              <p class="text-xs text-slate-600 mt-2 leading-relaxed">{item.desc}</p>
+              <div class="mt-3 text-[11px] font-mono text-slate-400 break-all">{item.url}</div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <!-- Section 8: Direct Contact & Emergency Desk -->
+      <section class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xs">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div>
+            <h2 class="text-xl font-bold text-slate-900">Need Immediate Travel Assistance?</h2>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl leading-relaxed">
+              Our 24/7 central dispatch desk in Medavakkam, Chennai operates non-stop. Call or message us directly on WhatsApp for instant cab dispatch, flight arrivals, or temple tour planning.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 shrink-0">
+            <a
+              href="https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20am%20viewing%20your%20website%20sitemap%20and%20need%20a%20cab."
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors shadow-xs"
+            >
+              <span>WhatsApp Booking</span>
+            </a>
+            <a
+              href="tel:+918939539211"
+              class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-colors shadow-xs"
+            >
+              <span>Call +91 89395 39211</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</Layout>

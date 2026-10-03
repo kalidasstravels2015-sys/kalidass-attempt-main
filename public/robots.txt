@@ -140,12 +140,18 @@ Allow: /
 User-agent: Omgili
 Allow: /
 
-# ─── XML Sitemaps ───
-Sitemap: https://kalidasstravels.in/sitemap-index.xml
+# ─── XML & HTML Sitemaps ───
 Sitemap: https://kalidasstravels.in/sitemap.xml
+Sitemap: https://kalidasstravels.in/sitemap-index.xml
+Sitemap: https://kalidasstravels.in/sitemap-0.xml
 
-# ─── LLM Directives (llmstxt.org Standard) ───
+# ─── LLM Context & Agentic Directives (llmstxt.org Standard) ───
+# HTML-Sitemap: https://kalidasstravels.in/sitemap/
 # LLMs-TXT: https://kalidasstravels.in/llms.txt
 # LLMs-Full-TXT: https://kalidasstravels.in/llms-full.txt
+# LLMs-WellKnown: https://kalidasstravels.in/.well-known/llms.txt
+# AI-TXT: https://kalidasstravels.in/ai.txt
+# OpenAPI-Spec: https://kalidasstravels.in/openapi.json
+
 
 

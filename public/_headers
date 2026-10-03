@@ -16,6 +16,12 @@
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
 
+/site.webmanifest
+  Cache-Control: public, max-age=604800
+
+/favicon.*
+  Cache-Control: public, max-age=31536000, immutable
+
 /llms.txt
   Content-Type: text/markdown; charset=utf-8
   Access-Control-Allow-Origin: *

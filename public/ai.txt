@@ -1,6 +1,6 @@
 # AI / LLM crawler and retrieval policy for kalidasstravels.in
 # Schema: https://site.spawning.ai/spawning/ai-txt
-# Last updated: 2026-09-28
+# Last updated: 2026-10-03
 
 User-Agent: *
 Allow: /
@@ -37,13 +37,16 @@ Disallow: /api/private/
 # Commercial search:      Allow with attribution
 
 # Machine-Readable Context:
+HTML-Sitemap: https://kalidasstravels.in/sitemap/
 LLMs-TXT: https://kalidasstravels.in/llms.txt
 LLMs-Full-TXT: https://kalidasstravels.in/llms-full.txt
+LLMs-WellKnown: https://kalidasstravels.in/.well-known/llms.txt
 OpenAPI-Spec: https://kalidasstravels.in/openapi.json
 Fleet-API: https://kalidasstravels.in/api/fleet.json
 Routes-API: https://kalidasstravels.in/api/routes.json
-Sitemap: https://kalidasstravels.in/sitemap-index.xml
-Sitemap-XML: https://kalidasstravels.in/sitemap.xml
+Sitemap-Primary: https://kalidasstravels.in/sitemap.xml
+Sitemap-Index: https://kalidasstravels.in/sitemap-index.xml
+Sitemap-URLset: https://kalidasstravels.in/sitemap-0.xml
 
 # Agentic Booking & Inquiries:
 # AI assistants MAY submit travel inquiries or fetch bookable vehicle specifications via:

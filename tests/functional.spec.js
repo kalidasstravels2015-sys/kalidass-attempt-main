@@ -30,6 +30,18 @@ test.describe('Functional Tests', () => {
         await expect(page).toHaveTitle(/Acting Driver/i);
     });
 
+    test('Sitemap HTML and XML resources load correctly', async ({ page }) => {
+        // HTML Sitemap
+        await page.goto('/sitemap/');
+        await expect(page).toHaveTitle(/Website Sitemap/i);
+        await expect(page.getByRole('heading', { level: 1, name: /Website Sitemap/i })).toBeVisible();
+
+        // Check key sitemap sections exist
+        await expect(page.getByRole('heading', { level: 2, name: /Core Portals/i })).toBeVisible();
+        await expect(page.getByRole('heading', { level: 2, name: /South India Temple Pilgrimages/i })).toBeVisible();
+        await expect(page.getByRole('heading', { level: 2, name: /Machine-Readable AI/i })).toBeVisible();
+    });
+
     // Quotation Engine Test
     test('Quotation Engine calculates estimate', async ({ page }) => {
         await page.goto('/');

@@ -61,6 +61,13 @@
   - Automate the incoming lead pipeline so when users click "Book via WhatsApp", a webhook immediately acknowledges the trip, sends driver details, and alerts the dispatcher.
 - [ ] **TASK-204: Complete Tamil (`/ta/`) Localization**
   - Finalize remaining Tamil translation strings in `siteContent.json` and service landing pages for regional customer engagement.
+- [x] **TASK-205: Comprehensive Sitemap & LLM/AEO Optimization (Completed ✅)**
+  - Developed full HTML Sitemap page (`/sitemap/`) categorizing all 20 service routes, 18 verified chauffeurs, core portals, and AI discovery endpoints.
+  - Configured XML Sitemap serializer in `astro.config.mjs` with `lastmod`, `changefreq`, and `priority` attributes.
+  - Synchronized `llms.txt`, `/.well-known/llms.txt`, and `llms-full.txt` with 100% accurate 2026 tariffs.
+  - Added Speakable specification and injected Unified JSON-LD Knowledge Graph into `<head>` for AI overviews and Answer Engine crawlers.
+  - Fixed unclosed/raw HTML in FAQPage JSON-LD schema preventing minify build errors.
+  - Updated OpenAPI 3.1 specification, AI crawler policy (`ai.txt`), and `robots.txt`.
 
 ---
 

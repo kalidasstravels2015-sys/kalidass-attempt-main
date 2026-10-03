@@ -5,8 +5,8 @@
             "startServerCommand": "npm run build && npm run preview",
             "url": [
                 "http://localhost:4321/",
-                "http://localhost:4321/ta",
-                "http://localhost:4321/services/category/popular-destinations"
+                "http://localhost:4321/services/chennai-airport-taxi/",
+                "http://localhost:4321/services/outstation-cabs/"
             ],
             "settings": {
                 "preset": "desktop"

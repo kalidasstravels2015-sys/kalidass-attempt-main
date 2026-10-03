@@ -19,6 +19,36 @@ const whatsappUrl = `https://wa.me/${cleanPhoneForWa}?text=${encodeURIComponent(
 const callUrl = `tel:${phone}`;
 ---
 
+<!-- Mobile Sticky Bottom Dock (Mobile Only: 50/50 Split for Immediate Thumb Access) -->
+<nav
+  id="mobile-bottom-dock"
+  class="fixed bottom-0 inset-x-0 z-50 flex md:hidden items-center justify-between gap-2.5 px-3 py-2 pb-[calc(0.625rem+env(safe-area-inset-bottom,0px))] bg-white/95 backdrop-blur-md border-t border-slate-200/90 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] select-none transition-transform duration-200"
+  role="region"
+  aria-label="Mobile quick contact shortcuts"
+>
+  <!-- Call Dispatch (Left 50%) -->
+  <a
+    href={callUrl}
+    class="flex-1 flex items-center justify-center gap-2 h-11 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 active:from-blue-700 active:to-blue-800 text-white font-bold text-sm shadow-sm transition-transform active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+    aria-label={`Call Helpline (${displayPhone})`}
+  >
+    <AndroidPhoneIcon className="w-4.5 h-4.5 text-white shrink-0" />
+    <span class="tracking-wide">Call Now</span>
+  </a>
+
+  <!-- WhatsApp Chat (Right 50%) -->
+  <a
+    href={whatsappUrl}
+    target="_blank"
+    rel="noopener noreferrer nofollow"
+    class="flex-1 flex items-center justify-center gap-2 h-11 px-3 rounded-xl bg-gradient-to-r from-[#25D366] to-[#1ebd59] active:from-[#1ebd59] active:to-[#179c49] text-white font-bold text-sm shadow-sm transition-transform active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366]"
+    aria-label="Chat on WhatsApp"
+  >
+    <WhatsAppIcon variant="white" className="w-5 h-5 text-white shrink-0" />
+    <span class="tracking-wide">WhatsApp</span>
+  </a>
+</nav>
+
 <!-- Floating Quick Contact Actions (Desktop Only: hidden on mobile to prevent content overlap) -->
 <div 
   id="floating-actions-container"

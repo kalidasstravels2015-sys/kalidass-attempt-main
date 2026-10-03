@@ -295,7 +295,7 @@ const checkSvg = (color) => `
 `;
 
 const starSvg = `
-  <svg viewBox="0 0 20 20" width="16" height="16" fill="#FBBF24" style="margin-right:5px;">
+  <svg viewBox="0 0 20 20" width="26" height="26" fill="#FBBF24" style="margin-right:8px;flex-shrink:0;">
     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
   </svg>
 `;
@@ -406,6 +406,39 @@ async function main() {
     const accent = getAccentTheme(category);
     const imageBuffer = await getHero(heroImage);
 
+    let priceFeature = "AC Cab • Tolls & Permits Incl.";
+    let trustTitle = "Guaranteed On-Time";
+    let trustSub = "Zero Surge • Professional Driver";
+    let brandTag = "PREMIUM CHAUFFEUR FLEET";
+    let brandSub = "Tamil Nadu & South India";
+
+    const catLower = category.toLowerCase();
+    if (catLower.includes("acting")) {
+      priceFeature = "Your Car • Manual / Auto / EV";
+      trustTitle = "Police-Verified";
+      trustSub = "Background-Checked Drivers";
+      brandTag = "ACTING CHAUFFEUR SERVICE";
+      brandSub = "City Duty & Outstation";
+    } else if (catLower.includes("airport")) {
+      priceFeature = "Terminal Pickup • Zero Waiting Fee";
+      trustTitle = "Flight Delay Tracking";
+      trustSub = "Zero Penalty Guarantee";
+      brandTag = "VIP AIRPORT TRANSFERS";
+      brandSub = "Chennai International (MAA)";
+    } else if (catLower.includes("corporate")) {
+      priceFeature = "GST Invoicing • Monthly Retainer";
+      trustTitle = "24/7 Dedicated Ops";
+      trustSub = "Compliant Executive Fleet";
+      brandTag = "CORPORATE MOBILITY";
+      brandSub = "Employee Transport & Cabs";
+    } else if (catLower.includes("calculator") || catLower.includes("tariff")) {
+      priceFeature = "Transparent Billing • Zero Surge";
+      trustTitle = "Instant Fare Quote";
+      trustSub = "Zero Hidden Charges";
+      brandTag = "KALIDASS TRANSPARENT TARIFF";
+      brandSub = "Per-KM & Flat Package Rates";
+    }
+
     const htmlString = `
       <div style="
         display: flex;
@@ -417,78 +450,24 @@ async function main() {
         background-color: #0C111D;
       ">
         ${imageBuffer ? `<img src="${imageBuffer}" style="position:absolute;top:0;left:0;width:1200px;height:630px;object-fit:cover;" />` : ""}
-        <div style="display:flex;position:absolute;top:0;left:0;width:1200px;height:280px;background:linear-gradient(to bottom, rgba(5,8,18,0.92) 0%, rgba(5,8,18,0.55) 55%, transparent 100%);"></div>
-        <div style="display:flex;position:absolute;bottom:0;left:0;width:1200px;height:460px;background:linear-gradient(to top, rgba(5,8,18,0.98) 0%, rgba(5,8,18,0.92) 40%, rgba(5,8,18,0.65) 70%, transparent 100%);"></div>
-        <div style="display:flex;position:absolute;top:0;left:0;width:200px;height:630px;background:linear-gradient(to right, rgba(5,8,18,0.5) 0%, transparent 100%);"></div>
+        
+        <!-- Soft Top Vignette for Top Bar Readability -->
+        <div style="display:flex;position:absolute;top:0;left:0;width:1200px;height:180px;background:linear-gradient(to bottom, rgba(5,8,18,0.72) 0%, rgba(5,8,18,0.2) 65%, transparent 100%);"></div>
 
-        <div style="display:flex;flex-direction:column;justify-content:space-between;position:absolute;top:0;left:0;width:1200px;height:630px;padding:38px 52px 36px 52px;">
-          <div style="display:flex;flex-direction:row;align-items:center;justify-content:space-between;">
-            <div style="display:flex;align-items:center;background-color:rgba(255,255,255,0.95);padding:8px 20px;border-radius:9999px;box-shadow:0 2px 12px rgba(0,0,0,0.4);">
-              ${logoBase64 ? `<img src="${logoBase64}" style="height:30px;object-fit:contain;" />` : `<span style="color:#000;font-size:18px;font-weight:800;">Kalidass Travels</span>`}
-            </div>
-            <div style="display:flex;flex-direction:row;align-items:center;background-color:rgba(10,14,26,0.75);border:1px solid rgba(255,255,255,0.2);padding:8px 18px;border-radius:9999px;">
-              ${starSvg}
-              <span style="color:#FBBF24;font-size:16px;font-weight:800;margin-right:8px;">4.9</span>
-              <span style="color:#CBD5E1;font-size:14px;font-weight:600;">1,500+ Verified Trips</span>
-            </div>
+        <!-- Top Bar: Prominent Logo & Verified Rating -->
+        <div style="display:flex;flex-direction:row;position:absolute;top:0;left:0;width:1200px;padding:42px 48px;justify-content:space-between;align-items:center;">
+          <!-- Large Kalidass Travels Logo Pill -->
+          <div style="display:flex;align-items:center;background-color:rgba(255,255,255,0.96);padding:14px 28px;border-radius:9999px;box-shadow:0 8px 24px rgba(0,0,0,0.38);border:1px solid rgba(255,255,255,0.6);">
+            ${logoBase64 ? `<img src="${logoBase64}" style="height:52px;object-fit:contain;" />` : `<span style="color:#0B132B;font-size:26px;font-weight:800;">Kalidass Travels</span>`}
           </div>
 
-          <div style="display:flex;flex-direction:column;">
-            <div style="display:flex;flex-direction:row;align-items:center;margin-bottom:12px;">
-              ${routeSvg(accent.primary)}
-              <span style="color:${accent.primary};font-size:14px;font-weight:700;letter-spacing:0.3px;">${route}</span>
-            </div>
-
-            <div style="display:flex;flex-direction:row;align-items:center;margin-bottom:16px;">
-              <div style="display:flex;flex-direction:row;align-items:center;background-color:${accent.chipBg};border:1px solid ${accent.chipBorder};padding:5px 14px;border-radius:9999px;">
-                <div style="display:flex;width:8px;height:8px;border-radius:4px;background-color:${accent.primary};margin-right:8px;"></div>
-                <span style="color:${accent.chipText};font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;">
-                  ${category.toUpperCase()}
-                </span>
-              </div>
-            </div>
-
-            <div style="display:flex;font-size:${title.length > 65 ? "34px" : "40px"};font-weight:800;color:#FFFFFF;line-height:1.18;letter-spacing:-0.5px;margin-bottom:22px;max-width:950px;text-shadow:0 2px 8px rgba(0,0,0,0.6);">
-              ${title}
-            </div>
-
-            <div style="display:flex;flex-direction:row;flex-wrap:wrap;margin-bottom:24px;gap:10px;">
-              ${includes.map((inc) => `
-                <div style="display:flex;flex-direction:row;align-items:center;background-color:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);padding:8px 14px;border-radius:10px;">
-                  ${checkSvg(accent.primary)}
-                  <span style="color:#E2E8F0;font-size:14px;font-weight:600;">${inc}</span>
-                </div>
-              `).join("")}
-            </div>
-
-            <div style="display:flex;flex-direction:row;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.12);padding-top:18px;">
-              <div style="display:flex;flex-direction:row;align-items:center;">
-                <div style="display:flex;flex-direction:column;background-color:${accent.priceBg};border:1.5px solid ${accent.priceBorder};padding:10px 20px;border-radius:14px;margin-right:16px;">
-                  <span style="color:#94A3B8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px;">All-Inclusive Fare</span>
-                  <div style="display:flex;flex-direction:row;align-items:baseline;">
-                    <span style="color:${accent.primary};font-size:34px;font-weight:800;line-height:1;margin-right:8px;">${startingPrice}</span>
-                    <span style="color:#CBD5E1;font-size:13px;font-weight:600;">${priceSub}</span>
-                  </div>
-                </div>
-
-                <div style="display:flex;flex-direction:column;justify-content:center;background-color:rgba(16,185,129,0.12);border:1.5px solid rgba(16,185,129,0.3);padding:10px 18px;border-radius:14px;">
-                  <div style="display:flex;flex-direction:row;align-items:center;margin-bottom:3px;">
-                    <div style="display:flex;width:8px;height:8px;border-radius:4px;background-color:#10B981;margin-right:7px;"></div>
-                    <span style="color:#A7F3D0;font-size:13px;font-weight:800;">Guaranteed On-Time</span>
-                  </div>
-                  <span style="color:#6EE7B7;font-size:12px;font-weight:600;">Zero Surge • 24/7 Support</span>
-                </div>
-              </div>
-
-              <div style="display:flex;flex-direction:column;align-items:flex-end;">
-                <span style="color:#F8FAFC;font-size:18px;font-weight:800;letter-spacing:-0.2px;">kalidasstravels.in</span>
-                <span style="color:#94A3B8;font-size:14px;font-weight:600;margin-top:3px;">+91 89395 39211</span>
-              </div>
-            </div>
+          <!-- Large Rating Badge -->
+          <div style="display:flex;flex-direction:row;align-items:center;background-color:rgba(10,14,26,0.86);border:1.5px solid rgba(255,255,255,0.25);padding:14px 26px;border-radius:9999px;box-shadow:0 8px 24px rgba(0,0,0,0.4);">
+            ${starSvg}
+            <span style="color:#FBBF24;font-size:24px;font-weight:800;margin-right:10px;">4.9</span>
+            <span style="color:#FFFFFF;font-size:18px;font-weight:700;letter-spacing:0.2px;">1,500+ Verified Trips</span>
           </div>
         </div>
-
-        <div style="display:flex;position:absolute;bottom:0;left:0;width:1200px;height:5px;background:linear-gradient(90deg, ${accent.primary} 0%, ${accent.primary}99 50%, rgba(255,255,255,0.05) 100%);"></div>
       </div>
     `;
 

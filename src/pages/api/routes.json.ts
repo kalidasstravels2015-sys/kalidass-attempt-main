@@ -3,6 +3,26 @@ import serviceDetails from '../../data/serviceDetails.json';
 
 export const prerender = true;
 
+function extractStartingPrice(service: any): string {
+  const headers = service.tariff?.headers || [];
+  const row = service.tariff?.rows?.[0] || [];
+  
+  const totalCostIdx = headers.findIndex((h: string) => /total cost|package cost|flat cost/i.test(h));
+  if (totalCostIdx !== -1 && row[totalCostIdx] && typeof row[totalCostIdx] === 'string' && row[totalCostIdx].includes('₹')) {
+    return row[totalCostIdx];
+  }
+  
+  const rateIdx = headers.findIndex((h: string) => /cost|rate|charges/i.test(h));
+  if (rateIdx !== -1 && row[rateIdx] && typeof row[rateIdx] === 'string' && row[rateIdx].includes('₹')) {
+    return row[rateIdx];
+  }
+  
+  const match = row.find((c: any) => typeof c === 'string' && /₹\s*[\d,]+/i.test(c));
+  if (match) return match;
+  
+  return '₹14/km';
+}
+
 export const GET: APIRoute = async () => {
   const routes = serviceDetails.map((s) => ({
     slug: s.slug,
@@ -11,7 +31,7 @@ export const GET: APIRoute = async () => {
     origin: (s as any).origin || "Chennai",
     destination: (s as any).destination || "",
     overview: s.overview,
-    starting_price_inr: (s as any).tariff?.rows?.[0]?.[1] || "₹14/km",
+    starting_price_inr: extractStartingPrice(s),
     canonical_url: `https://kalidasstravels.in/services/${s.slug}/`,
     booking_whatsapp: `https://wa.me/918939539211?text=${encodeURIComponent(s.whatsappMsg || `Hi Kalidass Travels, I would like to book ${s.title}.`)}`
   }));
