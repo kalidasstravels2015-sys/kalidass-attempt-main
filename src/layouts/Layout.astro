@@ -8,12 +8,10 @@ interface Props {
   url?: string;
   schema?: object;
   keywords?: string;
-  showFloatingActions?: boolean;
   preloadHero?: { href: string; srcset?: string; sizes?: string };
 }
 
 import siteContent from "../data/siteContent.json";
-import FloatingActions from "../components/FloatingActions.astro";
 
 const defaultTitle = "Kalidass Travels - Premium Travel Experience";
 const defaultDescription = "Premium travel and cab services across South India. Professional drivers, comfortable vehicles, affordable rates.";
@@ -28,7 +26,6 @@ const {
   url = Astro.url.href,
   schema,
   keywords = defaultKeywords,
-  showFloatingActions = true,
   preloadHero,
 } = Astro.props;
 
@@ -1563,9 +1560,6 @@ const unifiedSchemaGraph = {
     </div>
 
   </footer>
-
-  <!-- Floating Quick Actions (Call & WhatsApp) -->
-  {showFloatingActions && <FloatingActions />}
   </body>
 
   <!-- Mobile Menu Toggle Script -->
@@ -1575,8 +1569,6 @@ const unifiedSchemaGraph = {
     const mobileMenuOverlay = document.getElementById("mobile-menu-overlay");
     const mobileMenuDrawer = document.getElementById("mobile-menu-drawer");
     const mobileLinks = mobileMenuDrawer?.querySelectorAll("a");
-    const floatingActions = document.getElementById("floating-actions-container");
-    const mobileDock = document.getElementById("mobile-bottom-dock");
 
     // Submenu elements
     const cabsToggle = document.getElementById("cabs-menu-toggle");
@@ -1591,8 +1583,6 @@ const unifiedSchemaGraph = {
       if (mobileMenuOverlay && mobileMenuDrawer) {
         mobileMenuBtn?.setAttribute("aria-expanded", "true");
         mobileMenuOverlay.classList.remove("hidden");
-        floatingActions?.classList.add("opacity-0", "pointer-events-none");
-        mobileDock?.classList.add("translate-y-full", "pointer-events-none");
         // small delay to allow display:block to apply before opacity transition
         setTimeout(() => {
           mobileMenuOverlay.classList.remove("opacity-0");
@@ -1622,8 +1612,6 @@ const unifiedSchemaGraph = {
         mobileMenuBtn?.setAttribute("aria-expanded", "false");
         mobileMenuOverlay.classList.add("opacity-0");
         mobileMenuDrawer.classList.add("translate-x-full");
-        floatingActions?.classList.remove("opacity-0", "pointer-events-none");
-        mobileDock?.classList.remove("translate-y-full", "pointer-events-none");
 
         setTimeout(() => {
           mobileMenuOverlay.classList.add("hidden");
