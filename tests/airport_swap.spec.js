@@ -8,65 +8,72 @@ test.describe('Airport Taxi Route Swap Tests', () => {
     const finder = page.locator('#airport-fare-finder');
     await expect(finder).toBeVisible();
 
-    // 1. Initial State: Pickup Mode
-    const indicator = page.locator('#sticky-direction-indicator');
-    await expect(indicator).toContainText('Landing at Airport (Pickup)');
+    const tabDrop = page.locator('[data-testid="tab-drop"]');
+    const tabPickup = page.locator('[data-testid="tab-pickup"]');
+    await expect(tabDrop).toBeVisible();
+    await expect(tabPickup).toBeVisible();
 
-    const airportCard = page.locator('#airport-field-card');
-    await expect(airportCard).toBeVisible();
-    await expect(airportCard).toContainText('Chennai International Airport (MAA)');
-    await expect(airportCard).toContainText('Arrival Exit Gates');
+    const fromInput = page.locator('#airport-from-input');
+    const toInput = page.locator('#airport-to-input');
 
-    const searchInput = page.locator('#airport-search-input');
-    await expect(searchInput).toBeVisible();
-    await expect(searchInput).toHaveAttribute('placeholder', /Where to\?/);
+    // 1. Initial State: Default is Airport Drop Mode
+    await expect(tabDrop).toHaveAttribute('aria-selected', 'true');
+    await expect(tabPickup).toHaveAttribute('aria-selected', 'false');
 
-    const swapBtn = page.locator('#route-swap-btn');
-    await expect(swapBtn).toBeVisible();
-    await expect(swapBtn).toContainText('Swap to Airport Drop');
+    // In Drop mode: From is user doorstep (editable), To is constant MAA (read-only)
+    await expect(fromInput).not.toHaveAttribute('readonly', '');
+    await expect(fromInput).toHaveAttribute('placeholder', /Enter your area \/ doorstep address/);
+    await expect(toInput).toHaveAttribute('readonly', '');
+    await expect(toInput).toHaveValue(/Chennai International Airport \(MAA\)/);
 
-    // 2. Click Swap Button -> Switches to Drop Mode
-    await swapBtn.click();
+    // 2. Click Tab -> Switches to Airport Pickup Mode
+    await tabPickup.click();
 
-    await expect(indicator).toContainText('Going to Airport (Drop)');
-    await expect(swapBtn).toContainText('Swap to Airport Pickup');
-    await expect(airportCard).toContainText('Direct Ramp Drop');
-    await expect(searchInput).toHaveAttribute('placeholder', /Where from\?/);
+    await expect(tabPickup).toHaveAttribute('aria-selected', 'true');
+    await expect(tabDrop).toHaveAttribute('aria-selected', 'false');
 
-    // Check heading
-    const tariffHeading = page.locator('#tariff-heading');
-    await expect(tariffHeading).toContainText('Book Airport Drop');
+    // In Pickup mode: From is constant MAA (read-only), To is user destination (editable)
+    await expect(fromInput).toHaveAttribute('readonly', '');
+    await expect(fromInput).toHaveValue(/Chennai International Airport \(MAA\)/);
+    await expect(toInput).not.toHaveAttribute('readonly', '');
+    await expect(toInput).toHaveAttribute('placeholder', /Enter hotel \/ area \/ address/);
 
-    // 3. Click Swap Button again -> Switches back to Pickup Mode
-    await swapBtn.click();
+    // 3. Click Tab again -> Switches back to Airport Drop Mode
+    await tabDrop.click();
 
-    await expect(indicator).toContainText('Landing at Airport (Pickup)');
-    await expect(swapBtn).toContainText('Swap to Airport Drop');
-    await expect(airportCard).toContainText('Arrival Exit Gates');
-    await expect(searchInput).toHaveAttribute('placeholder', /Where to\?/);
-    await expect(tariffHeading).toContainText('Book Airport Pickup');
+    await expect(tabDrop).toHaveAttribute('aria-selected', 'true');
+    await expect(tabPickup).toHaveAttribute('aria-selected', 'false');
+    await expect(fromInput).not.toHaveAttribute('readonly', '');
+    await expect(toInput).toHaveAttribute('readonly', '');
+    await expect(toInput).toHaveValue(/Chennai International Airport \(MAA\)/);
 
-    // 4. Test Autocomplete Search
-    await searchInput.fill('T. Nagar');
-    const dropdown = page.locator('#airport-search-dropdown');
-    await expect(dropdown).toBeVisible();
+    // 4. Test Flat Fare Calculation for Destination
+    await fromInput.fill('T. Nagar');
+    const calcBtn = page.locator('#get-flat-fare-btn');
+    await expect(calcBtn).toBeVisible();
+    await calcBtn.click();
 
-    // Select suggestion
-    await dropdown.locator('button').first().click();
-    await expect(dropdown).toBeHidden();
+    // Booking modal appears with calculated zone and price
+    const modal = page.locator('#airport-booking-modal');
+    await expect(modal).toBeVisible();
+    await expect(modal).toContainText(/Central Chennai|T\. Nagar/i);
+    await expect(modal).toContainText(/₹950|₹/);
 
-    // Result card appears with prices
-    const resultBox = page.locator('#finder-result-box');
-    await expect(resultBox).toBeVisible();
-    await expect(resultBox).toContainText('City Center Hotels');
+    // Close modal
+    const closeBtn = modal.locator('button[aria-label="Close"]');
+    await closeBtn.click();
+    await expect(modal).toBeHidden();
 
-    // Button label updated with price
-    const btnLabel = page.locator('#finder-btn-label');
-    await expect(btnLabel).toContainText('Reserve Pickup');
+    // 5. Test Pickup Calculation
+    await tabPickup.click();
+    await toInput.fill('T. Nagar');
+    await page.keyboard.press('Escape');
+    await calcBtn.click();
 
-    // 5. Swap while destination is selected
-    await swapBtn.click();
-    await expect(btnLabel).toContainText('Reserve Drop');
-    await expect(tariffHeading).toContainText('Book Airport Drop');
+    await expect(modal).toBeVisible();
+    await expect(modal).toContainText(/Central Chennai|T\. Nagar/i);
+    await expect(modal).toContainText(/₹950|₹/);
   });
 });
+
+

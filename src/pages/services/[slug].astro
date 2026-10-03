@@ -22,7 +22,9 @@ import {
   FileText,
   AlertCircle,
   Car,
-  Users
+  Users,
+  Luggage,
+  Lightbulb
 } from 'lucide-react';
 
 export async function getStaticPaths() {
@@ -40,7 +42,7 @@ const isTour = ['Temple Tours', 'Popular Destinations'].includes(service.categor
 
 const guideLabels = isTour ? {
   sectionTitle: "Travel Guide & Pilgrimage Information",
-  col1Title: "Route & Distance Summary",
+  col1Title: "Temple Significance & Sacred Traditions",
   col2Title: "Darshan Timings & Guidelines",
   dressCodeLabel: "Devotee Traditional Dress Code",
   exclusionsLabel: "Package Exclusions (Not Included)",
@@ -203,22 +205,815 @@ const getVehicleFleetImage = (name: string) => {
   return null;
 };
 
+// Helper to get vehicle luggage capacity
+const getVehicleBaggage = (name: string) => {
+  const v = (name || '').toLowerCase();
+  if (v.includes('tempo') || v.includes('traveller') || v.includes('van') || v.includes('coach')) {
+    return '8–10 Bags';
+  }
+  if (v.includes('crysta') || v.includes('innova')) {
+    return '4 Bags';
+  }
+  if (v.includes('ertiga') || v.includes('xl6')) {
+    return '3 Bags';
+  }
+  if (v.includes('dzire') || v.includes('etios') || v.includes('sedan') || v.includes('aura') || v.includes('car')) {
+    return '2 Bags';
+  }
+  return '2–3 Bags';
+};
 
+// Multi-day & stay duration package rates for all pilgrimage packages
+const getPackageStayRates = (slug: string, vehicleName: string, basePriceNum: number) => {
+  const v = (vehicleName || '').toLowerCase();
+  
+  if (slug === 'tirupati-package') {
+    if (v.includes('tempo') || v.includes('traveller')) {
+      return { 1: 12500, 2: 16500, 3: 20500 };
+    }
+    if (v.includes('crysta')) {
+      return { 1: 10000, 2: 13000, 3: 16000 };
+    }
+    if (v.includes('innova')) {
+      return { 1: 8500, 2: 11000, 3: 13500 };
+    }
+    if (v.includes('ertiga') || v.includes('xl6')) {
+      return { 1: 7500, 2: 9700, 3: 11900 };
+    }
+    return { 1: basePriceNum || 6000, 2: 7800, 3: 9600 };
+  }
+
+  if (slug === 'thiruvannamalai-girivalam-trip') {
+    if (v.includes('tempo') || v.includes('traveller')) {
+      return { 1: 13500, 2: 16500, 3: 18500 };
+    }
+    if (v.includes('crysta')) {
+      return { 1: 11100, 2: 13200, 3: 14800 };
+    }
+    if (v.includes('innova')) {
+      return { 1: 9300, 2: 11200, 3: 12500 };
+    }
+    if (v.includes('ertiga') || v.includes('xl6')) {
+      return { 1: 7900, 2: 9500, 3: 10500 };
+    }
+    return { 1: basePriceNum || 6500, 2: 7800, 3: 8500 };
+  }
+
+  if (slug === 'kanchipuram-temple-trip') {
+    if (v.includes('tempo') || v.includes('traveller')) {
+      return { 1: 8500, 2: 11500, 3: 14500 };
+    }
+    if (v.includes('crysta')) {
+      return { 1: 6800, 2: 8800, 3: 10800 };
+    }
+    if (v.includes('innova')) {
+      return { 1: 5500, 2: 7200, 3: 8900 };
+    }
+    if (v.includes('ertiga') || v.includes('xl6')) {
+      return { 1: 4500, 2: 6000, 3: 7500 };
+    }
+    return { 1: basePriceNum || 3500, 2: 4800, 3: 6100 };
+  }
+
+  if (slug === 'navagraha-tour') {
+    if (v.includes('tempo') || v.includes('traveller')) {
+      return { 1: 18500, 2: 22800, 3: 27100 };
+    }
+    if (v.includes('crysta')) {
+      return { 1: 15500, 2: 18800, 3: 22100 };
+    }
+    if (v.includes('innova')) {
+      return { 1: 13100, 2: 15900, 3: 18700 };
+    }
+    if (v.includes('ertiga') || v.includes('xl6')) {
+      return { 1: 10600, 2: 12800, 3: 15000 };
+    }
+    return { 1: basePriceNum || 8600, 2: 10500, 3: 12400 };
+  }
+
+  if (slug === 'sabarimala-trip') {
+    if (v.includes('17-seater') || v.includes('17 seater')) {
+      return { 1: 32000, 2: 38000, 3: 44000 };
+    }
+    if (v.includes('tempo') || v.includes('traveller')) {
+      return { 1: 26500, 2: 31500, 3: 36500 };
+    }
+    if (v.includes('crysta')) {
+      return { 1: 22000, 2: 26000, 3: 30000 };
+    }
+    if (v.includes('innova')) {
+      return { 1: 18500, 2: 22000, 3: 25500 };
+    }
+    if (v.includes('ertiga') || v.includes('xl6')) {
+      return { 1: 15900, 2: 18900, 3: 21900 };
+    }
+    return { 1: basePriceNum || 15900, 2: 18900, 3: 21900 };
+  }
+
+  if (slug === 'rameswaram-2-days') {
+    if (v.includes('tempo') || v.includes('traveller')) {
+      return { 1: 31000, 2: 35800, 3: 40600 };
+    }
+    if (v.includes('crysta')) {
+      return { 1: 26000, 2: 29800, 3: 33600 };
+    }
+    if (v.includes('innova')) {
+      return { 1: 22000, 2: 25200, 3: 28400 };
+    }
+    if (v.includes('ertiga') || v.includes('xl6')) {
+      return { 1: 18500, 2: 21200, 3: 23900 };
+    }
+    return { 1: basePriceNum || 15500, 2: 17800, 3: 20100 };
+  }
+
+  if (slug === 'chidambaram-temple-trip') {
+    if (v.includes('tempo') || v.includes('traveller')) {
+      return { 1: 16500, 2: 20500, 3: 24500 };
+    }
+    if (v.includes('crysta')) {
+      return { 1: 13500, 2: 16600, 3: 19700 };
+    }
+    if (v.includes('innova')) {
+      return { 1: 11000, 2: 13600, 3: 16200 };
+    }
+    if (v.includes('ertiga') || v.includes('xl6')) {
+      return { 1: 9200, 2: 11400, 3: 13600 };
+    }
+    return { 1: basePriceNum || 7400, 2: 9200, 3: 11000 };
+  }
+
+  if (slug === 'vellore-golden-temple') {
+    if (v.includes('tempo') || v.includes('traveller')) {
+      return { 1: 10500, 2: 13800, 3: 17100 };
+    }
+    if (v.includes('crysta')) {
+      return { 1: 8800, 2: 11400, 3: 14000 };
+    }
+    if (v.includes('innova')) {
+      return { 1: 7200, 2: 9400, 3: 11600 };
+    }
+    if (v.includes('ertiga') || v.includes('xl6')) {
+      return { 1: 6000, 2: 7800, 3: 9600 };
+    }
+    return { 1: basePriceNum || 4800, 2: 6300, 3: 7800 };
+  }
+
+  if (slug === 'pondicherry-one-day-trip') {
+    if (v.includes('tempo') || v.includes('traveller')) {
+      return { 1: 9500, 2: 12500, 3: 15500 };
+    }
+    if (v.includes('crysta')) {
+      return { 1: 7500, 2: 9800, 3: 12100 };
+    }
+    if (v.includes('innova')) {
+      return { 1: 6500, 2: 8400, 3: 10300 };
+    }
+    if (v.includes('ertiga') || v.includes('xl6')) {
+      return { 1: 5500, 2: 7200, 3: 8900 };
+    }
+    return { 1: basePriceNum || 4500, 2: 6000, 3: 7500 };
+  }
+
+  if (slug === 'mahabalipuram-ecr-temple-route') {
+    if (v.includes('tempo') || v.includes('traveller')) {
+      return { 1: 8000, 2: 9800 };
+    }
+    if (v.includes('crysta')) {
+      return { 1: 6500, 2: 7900 };
+    }
+    if (v.includes('innova')) {
+      return { 1: 5500, 2: 6700 };
+    }
+    if (v.includes('ertiga') || v.includes('xl6')) {
+      return { 1: 4500, 2: 5500 };
+    }
+    return { 1: basePriceNum || 3500, 2: 4300 };
+  }
+
+  if (slug === 'one-day-chennai-city-tour') {
+    if (v.includes('tempo') || v.includes('traveller')) {
+      return { 1: 7500, 2: 8800, 3: 10100 };
+    }
+    if (v.includes('crysta')) {
+      return { 1: 6000, 2: 7100, 3: 8200 };
+    }
+    if (v.includes('innova')) {
+      return { 1: 5000, 2: 5900, 3: 6800 };
+    }
+    if (v.includes('ertiga') || v.includes('xl6')) {
+      return { 1: 4000, 2: 4800, 3: 5600 };
+    }
+    return { 1: basePriceNum || 3000, 2: 3600, 3: 4200 };
+  }
+
+  if (slug === 'yelagiri-hills-weekend') {
+    if (v.includes('tempo') || v.includes('traveller')) {
+      return { 1: 15500, 2: 18800, 3: 22100 };
+    }
+    if (v.includes('crysta')) {
+      return { 1: 12800, 2: 15600, 3: 18400 };
+    }
+    if (v.includes('innova')) {
+      return { 1: 10800, 2: 13200, 3: 15600 };
+    }
+    if (v.includes('ertiga') || v.includes('xl6')) {
+      return { 1: 9200, 2: 11300, 3: 13400 };
+    }
+    return { 1: basePriceNum || 7500, 2: 9200, 3: 10900 };
+  }
+
+  if (slug === 'yercaud-hills-weekend') {
+    if (v.includes('tempo') || v.includes('traveller')) {
+      return { 1: 21500, 2: 25500, 3: 29500 };
+    }
+    if (v.includes('crysta')) {
+      return { 1: 17800, 2: 21300, 3: 24800 };
+    }
+    if (v.includes('innova')) {
+      return { 1: 15200, 2: 18300, 3: 21400 };
+    }
+    if (v.includes('ertiga') || v.includes('xl6')) {
+      return { 1: 12800, 2: 15500, 3: 18200 };
+    }
+    return { 1: basePriceNum || 10500, 2: 12800, 3: 15100 };
+  }
+
+  return null;
+};
+
+// Formalized Pilgrim Route Registry (Centralized standard for all 8 South India Temple Yatras)
+const PILGRIM_ROUTES: Record<string, {
+  summaryTitle: string;
+  summaryDesc: string;
+  distance: string;
+  distanceSub: string;
+  travelTime: string;
+  travelTimeSub: string;
+  startingFare: string;
+  startingFareSub: string;
+  tollsLabel: string;
+  tollsValue: string;
+  tollsSub: string;
+  calloutTitle: string;
+  calloutDesc: string;
+  stayLabelSub: string;
+  getDropdownOptions: (rates: { [key: number]: number }) => Array<{
+    value: string;
+    label: string;
+    price: string;
+    duration: string;
+    inclusions: string;
+    selected?: boolean;
+  }>;
+  baseInclusionsText: string;
+  comparisonTitle: string;
+  comparisonDesc: string;
+  comparisonRows: Array<{
+    feature: string;
+    kalidass: string;
+    aggregators: string;
+  }>;
+  ctaHeading: string;
+}> = {
+  'tirupati-package': {
+    summaryTitle: 'Chennai to Tirupati Cab: Key Trip Facts & Fares',
+    summaryDesc: 'Looking for a reliable cab from Chennai to Tirupati? Kalidass Travels operates dedicated doorstep round-trip pilgrimage taxis with verified chauffeurs, zero surge pricing, and 100% all-inclusive fares.',
+    distance: '~135 to 155 km',
+    distanceSub: 'Alipiri / Tirumala Top',
+    travelTime: '3.5 – 4 Hours',
+    travelTimeSub: 'Via NH 716 / Tiruttani',
+    startingFare: '₹6,000 Flat',
+    startingFareSub: 'AC Sedan Round-Trip',
+    tollsLabel: 'Tolls & AP Permit',
+    tollsValue: '100% Included',
+    tollsSub: 'Zero Road Surcharges',
+    calloutTitle: 'Doorstep Pickup Anywhere in Chennai • ₹0 Advance Required',
+    calloutDesc: 'Includes Sri Padmavathi Ammavari Temple (Tiruchanur) stop, luggage guidance, and complete ghat road clearance.',
+    stayLabelSub: 'Stay & Food Included',
+    getDropdownOptions: (r) => [
+      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "1 Day (Same Day Return)", inclusions: "Fuel, FASTag Tolls, AP Border Permit & Driver Bata Included", label: "1 Day (Same Day Return)", selected: true },
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, FASTag Tolls, AP Border Permit, Driver Stay & Food Included", label: "2 Days / 1 Night (Driver Stay & Food Included)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, FASTag Tolls, AP Border Permit, 2 Nights Driver Stay & Food Included", label: "3 Days / 2 Nights (Driver Stay & Food Included)" }
+    ],
+    baseInclusionsText: 'Fuel, FASTag Tolls, AP Border Permit & Driver Bata Included',
+    comparisonTitle: 'Why Devotees Choose Kalidass Travels vs Online Cab Aggregators',
+    comparisonDesc: 'Popular online aggregators advertise low initial base rates, but devotees often face substantial surprise expenses at interstate toll plazas and checkposts. Here is how we compare:',
+    comparisonRows: [
+      { feature: 'Round-Trip Pricing', kalidass: '₹6,000 Flat All-Inclusive (Sedan)', aggregators: 'Base fare only; return tolls & return driver charges billed extra' },
+      { feature: 'AP Interstate Border Tax', kalidass: '100% Included (Zero Border Delay)', aggregators: 'Passenger must pay ₹500 – ₹700 cash at the checkpost' },
+      { feature: 'NH Highway Tolls', kalidass: 'All FASTag Tolls Paid by Us', aggregators: 'Passenger pays ₹350+ out of pocket at toll plazas' },
+      { feature: 'Tirumala Ghat Road Ascent', kalidass: 'Guaranteed hill climb to temple queue', aggregators: 'High cancellation rate; many city drivers refuse steep ghat roads' },
+      { feature: 'Advance Payment', kalidass: '₹0 Advance (Pay after trip completion)', aggregators: '100% upfront card/wallet prepayment with strict cancellation fees' },
+      { feature: 'Pilgrimage Assistance', kalidass: 'Driver guides to queue, lockers & Tiruchanur', aggregators: 'Curbside drop only; no knowledge of TTD guidelines' }
+    ],
+    ctaHeading: 'Ready to Book Your Chennai to Tirupati Cab (1 or 2 Days)?'
+  },
+  'thiruvannamalai-girivalam-trip': {
+    summaryTitle: 'Chennai to Thiruvannamalai Girivalam Cab: Key Trip Facts & Fares',
+    summaryDesc: 'Planning your sacred Arunachaleswarar darshan and 14 km Pournami Girivalam? Kalidass Travels provides dedicated doorstep round-trip cabs with verified chauffeurs, car standby along the Girivalam path for seniors, zero night surge fees, and 100% all-inclusive pricing.',
+    distance: '~195 km (~400 km RT)',
+    distanceSub: 'Via Tindivanam / Gingee',
+    travelTime: '4 – 4.5 Hours',
+    travelTimeSub: 'Via GST Road & NH 77',
+    startingFare: '₹6,500 Flat',
+    startingFareSub: 'AC Sedan Round-Trip',
+    tollsLabel: 'Highway Tolls & Bata',
+    tollsValue: '100% Included',
+    tollsSub: 'Zero Night Surges on Pournami',
+    calloutTitle: 'Dedicated Car Standby along Girivalam for Seniors • ₹0 Advance Required',
+    calloutDesc: 'Includes Sri Arunachaleswarar Temple, 14 km Girivalam path standby, Sri Ramana Maharshi Ashram, and complete toll coverage.',
+    stayLabelSub: 'Girivalam Standby & Tolls Included',
+    getDropdownOptions: (r) => [
+      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "1 Day (Daytime Return)", inclusions: "Fuel, Highway Tolls, Temple Visit & Driver Bata Included", label: "1 Day (Daytime Return • 6 AM to 10 PM)", selected: true },
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "Overnight Pournami Package (Girivalam Standby)", inclusions: "Fuel, Tolls, All-Night Girivalam Standby & 2 Days Driver Bata Included", label: "Overnight Pournami Package (All-Night Standby)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, Tolls, 2 Days Sightseeing, Driver Night Stay & Food Included", label: "2 Days / 1 Night (Driver Stay & Food Included)" }
+    ],
+    baseInclusionsText: 'Fuel, Highway Tolls, Girivalam Standby & Driver Bata Included',
+    comparisonTitle: 'Why Pilgrims Choose Kalidass Travels vs Online Cab Aggregators',
+    comparisonDesc: 'Online app aggregators show low initial base fares, but pilgrims often face midnight surge charges, driver cancellations, and refusal to wait during the 14 km Girivalam. Here is how we compare:',
+    comparisonRows: [
+      { feature: 'Round-Trip Pricing', kalidass: '₹6,500 Flat All-Inclusive (Sedan)', aggregators: 'Base fare only; return tolls & return driver charges billed extra' },
+      { feature: 'Pournami Night Surcharges', kalidass: '₹0 Surge (Same rate on Full Moon)', aggregators: '1.5x to 2.5x dynamic midnight surge multipliers' },
+      { feature: 'NH Highway Tolls', kalidass: 'All FASTag Tolls Paid by Us', aggregators: 'Passenger pays ₹380+ out of pocket at toll plazas' },
+      { feature: '14 km Girivalam Standby', kalidass: 'Dedicated car & driver standby at road junctions', aggregators: 'Curbside drop at town outskirts; drivers leave immediately' },
+      { feature: 'Advance Payment', kalidass: '₹0 Advance (Pay after trip completion)', aggregators: '100% upfront card/wallet prepayment with strict cancellation fees' },
+      { feature: 'Temple & Ashram Guidance', kalidass: 'Driver guides to parking, lockers & Ramana Ashram', aggregators: 'Curbside drop only; unfamiliar with parking diversions' }
+    ],
+    ctaHeading: 'Ready to Book Your Chennai to Thiruvannamalai Cab (1 Day or Pournami Package)?'
+  },
+  'kanchipuram-temple-trip': {
+    summaryTitle: 'Chennai to Kanchipuram Cab: Key Trip Facts & Fares',
+    summaryDesc: 'Planning your Kanchipuram temple darshan, Divya Desam tour, or authentic bridal silk saree shopping? Kalidass Travels provides dedicated doorstep round-trip cabs with verified chauffeurs, zero shopping waiting charges, zero driver commission traps, and 100% all-inclusive pricing.',
+    distance: '~75 km (~160 km RT)',
+    distanceSub: 'Via Bangalore Highway NH 48',
+    travelTime: '1.5 – 2 Hours',
+    travelTimeSub: 'Via Sriperumbudur',
+    startingFare: '₹3,500 Flat',
+    startingFareSub: 'AC Sedan Round-Trip',
+    tollsLabel: 'Highway Tolls & Bata',
+    tollsValue: '100% Included',
+    tollsSub: 'Zero Shopping Waiting Fees',
+    calloutTitle: 'Zero Driver Commission • Direct Drop at Certified Weaver Societies • ₹0 Advance Required',
+    calloutDesc: 'Includes Kamakshi Amman, Ekambareswarar, Varadharaja Perumal, free waiting time at certified silk weaver societies, and all NH 48 tolls.',
+    stayLabelSub: 'Tolls & Shopping Waiting Included',
+    getDropdownOptions: (r) => [
+      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "1 Day (Same Day Return)", inclusions: "Fuel, Highway Tolls, Weaver Waiting Time & Driver Bata Included", label: "1 Day (Same Day Return • 06:30 AM to 08:30 PM)", selected: true },
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, Highway Tolls, 2 Days Sightseeing, Driver Night Stay & Food Included", label: "2 Days / 1 Night (Driver Stay & Food Included)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Extended Stay", inclusions: "Fuel, Highway Tolls, Divya Desam Tour, 2 Nights Driver Stay & Food Included", label: "3 Days / 2 Nights Extended (Weddings & Multi-Day Tour)" }
+    ],
+    baseInclusionsText: 'Fuel, Highway Tolls, Weaver Waiting Time & Driver Bata Included',
+    comparisonTitle: 'Why Travelers Choose Kalidass Travels for Kanchipuram',
+    comparisonDesc: 'Online cab aggregators often trap passengers with hourly waiting penalties during afternoon temple closures, and local drivers push private commission shops. Here is how Kalidass Travels compares:',
+    comparisonRows: [
+      { feature: 'Round-Trip Pricing', kalidass: '₹3,500 Flat All-Inclusive (Sedan)', aggregators: 'Base fare only; return tolls & return driver charges billed extra' },
+      { feature: 'Afternoon & Shopping Waiting Fees', kalidass: '100% Free Waiting (Temples & Weavers)', aggregators: '₹150 – ₹200/hr waiting fee during 12:30–4 PM temple closure' },
+      { feature: 'NH Highway Tolls', kalidass: 'All FASTag Tolls Paid by Us', aggregators: 'Passenger pays ₹180+ out of pocket at Nemili/Sriperumbudur tolls' },
+      { feature: 'Silk Saree Shopping Integrity', kalidass: 'Direct drop at certified weavers (Co-optex / Weavers Society) • Zero commission', aggregators: 'Drivers redirect tourists to private commission shops charging 30-40% markups' },
+      { feature: 'Advance Payment', kalidass: '₹0 Advance (Pay after trip completion)', aggregators: '100% upfront card/wallet prepayment with strict cancellation fees' },
+      { feature: 'Temple Route & Parking Guidance', kalidass: 'Chauffeur navigates narrow streets near Kamakshi Amman & Varadharaja', aggregators: 'Curbside highway drop; avoids narrow temple streets' }
+    ],
+    ctaHeading: 'Ready to Book Your Chennai to Kanchipuram Cab (1, 2 or 3 Days)?'
+  },
+  'navagraha-tour': {
+    summaryTitle: 'Chennai to Kumbakonam 9 Navagraha Cab: Key Trip Facts & Fares',
+    summaryDesc: 'Planning your sacred 9 Navagraha temples parikrama around Kumbakonam? Kalidass Travels provides dedicated doorstep round-trip cabs with verified chauffeurs, optimized circuit routing without backtracking, zero waiting penalties during temple closures, and 100% all-inclusive pricing.',
+    distance: '~300 km (~750 km RT)',
+    distanceSub: 'Via Vikravandi NH 36',
+    travelTime: '6 – 7 Hours',
+    travelTimeSub: 'To Kumbakonam Circuit',
+    startingFare: '₹8,600 Flat',
+    startingFareSub: 'AC Sedan 2-Day Round-Trip',
+    tollsLabel: 'Highway Tolls & Bata',
+    tollsValue: '100% Included',
+    tollsSub: 'All 9 Temples & 750 KM Covered',
+    calloutTitle: 'Optimized Circuit Sequencing (Zero Backtracking) • Experienced Navagraha Chauffeur • ₹0 Advance Required',
+    calloutDesc: 'Includes all 9 Navagraha shrines (Suryanar to Thirunallar), Thanjavur / Kumbakonam hotel coordination, and complete highway toll coverage.',
+    stayLabelSub: '750 KM, Tolls & Driver Stay Included',
+    getDropdownOptions: (r) => [
+      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night (Standard 9 Temples Circuit)", inclusions: "Fuel, Highway Tolls, 9 Temples Coverage & 2 Days Driver Bata Included", label: "2 Days / 1 Night (Standard 9 Temples • 750 km Circuit)", selected: true },
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, Highway Tolls, 9 Temples + Thanjavur, 2 Nights Driver Stay & Food Included", label: "3 Days / 2 Nights (Relaxed Senior Citizen Darshan + Thanjavur)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Extended Stay", inclusions: "Fuel, Tolls, Complete Chola Temple Circuit, 3 Nights Driver Stay & Food Included", label: "4 Days / 3 Nights (Complete Chola Circuit & Trichy Rockfort)" }
+    ],
+    baseInclusionsText: 'Fuel, Highway Tolls, 9 Temples Coverage & 2 Days Driver Bata Included',
+    comparisonTitle: 'Why Pilgrims Choose Kalidass Travels for Kumbakonam Navagraha',
+    comparisonDesc: 'App aggregators bill per-km with inadequate 250 km/day allowances and drivers who do not know temple closure hours. Here is how Kalidass Travels compares:',
+    comparisonRows: [
+      { feature: 'Round-Trip Pricing', kalidass: '₹8,600 Flat 2-Day All-Inclusive (Sedan)', aggregators: 'Base fare only; 750 km circuit triggers ₹3,000+ extra km penalties' },
+      { feature: 'KM Coverage & Circuit', kalidass: '750 km Full Navagraha Circuit 100% Included', aggregators: 'Strict 500 km cap (250 km/day); ₹14–₹18 per extra km added' },
+      { feature: 'Afternoon Temple Closures', kalidass: 'Zero Waiting Charges (Plan syncs with 12:30–4 PM closures)', aggregators: '₹150–₹200/hr waiting fee while temples are closed' },
+      { feature: 'Navagraha Route Knowledge', kalidass: 'Optimized parikrama sequence without backtracking', aggregators: 'City drivers get lost between rural temple villages' },
+      { feature: 'Advance Payment', kalidass: '₹0 Advance (Pay after trip completion)', aggregators: '100% upfront card/wallet prepayment with cancellation fees' },
+      { feature: 'NH Highway Tolls', kalidass: 'All FASTag Tolls Paid by Us', aggregators: 'Passenger pays ₹450+ out of pocket at toll plazas' }
+    ],
+    ctaHeading: 'Ready to Book Your Chennai to Kumbakonam 9 Navagraha Cab (2, 3 or 4 Days)?'
+  },
+  'sabarimala-trip': {
+    summaryTitle: 'Chennai to Sabarimala Pilgrim Cab: Key Trip Facts & Fares',
+    summaryDesc: 'Embarking on the sacred Lord Ayyappa Swami Mandala or Makaravilakku yatra? Kalidass Travels provides dedicated doorstep round-trip cabs, Innova Crystas, and Tempo Travellers with satvik teetotaler chauffeurs, pre-cleared Kerala interstate permits, and 100% all-inclusive pricing.',
+    distance: '~650 km (~1,350 km RT)',
+    distanceSub: 'Via Theni & Kumily Ghats',
+    travelTime: '12 – 14 Hours',
+    travelTimeSub: 'To Nilakkal Base Camp',
+    startingFare: '₹15,900 Flat',
+    startingFareSub: 'AC Ertiga SUV 3-Day Yatra',
+    tollsLabel: 'Kerala Permit & Bata',
+    tollsValue: '100% Included',
+    tollsSub: 'Commercial Permit Pre-Cleared',
+    calloutTitle: 'Satvik Teetotaler Chauffeurs • Irumudi Safe Storage • Nilakkal Parking Guidance • ₹0 Advance',
+    calloutDesc: 'Includes pre-arranged Kerala Interstate Commercial Permit, pure vegetarian dining stops, and experienced Western Ghats driving.',
+    stayLabelSub: 'Kerala Permit, Tolls & Driver Stay Included',
+    getDropdownOptions: (r) => [
+      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights (Direct Nilakkal Return)", inclusions: "Fuel, Kerala Permit, Highway Tolls & 3 Days Driver Bata Included", label: "3 Days / 2 Nights (Direct Nilakkal Base Camp Return • 1,350 km)", selected: true },
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Stay", inclusions: "Fuel, Kerala Permit, Extended Kerala Temple Sightseeing & 4 Days Bata Included", label: "4 Days / 3 Nights (Darshan + Erumely & Chottanikkara / Guruvayur)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "5 Days / 4 Nights Extended Stay", inclusions: "Fuel, Kerala Permit, Complete Kerala Yatra, 5 Days Driver Stay & Food Included", label: "5 Days / 4 Nights (Complete Kerala Pilgrim Circuit)" }
+    ],
+    baseInclusionsText: 'Fuel, Kerala Interstate Permit, Highway Tolls & 3 Days Driver Bata Included',
+    comparisonTitle: 'Why Ayyappa Devotees Choose Kalidass Travels for Sabarimala',
+    comparisonDesc: 'Aggregators do not arrange Kerala permits and city drivers refuse long night ghat journeys to Nilakkal. Here is how Kalidass Travels compares:',
+    comparisonRows: [
+      { feature: 'Round-Trip Pricing', kalidass: '₹15,900 Flat All-Inclusive 3-Day (Ertiga SUV)', aggregators: 'Base rate only; return permit & driver night charges billed extra' },
+      { feature: 'Kerala Interstate Permit', kalidass: '100% Arranged & Paid by Us (Zero Checkpost Delay)', aggregators: 'Passenger must pay ₹1,500+ cash and wait in checkpost queues' },
+      { feature: 'Chauffeur Discipline', kalidass: 'Satvik, non-smoking, teetotaler pilgrimage chauffeurs', aggregators: 'Random aggregator drivers with no observance of Vratham' },
+      { feature: 'Western Ghats Experience', kalidass: 'Specialist drivers for Kumily-Nilakkal hairpin curves', aggregators: 'High cancellation rate; city drivers refuse midnight ghat roads' },
+      { feature: 'Advance Payment', kalidass: '₹0 Advance (Pay after trip completion)', aggregators: '100% upfront card/wallet prepayment with strict cancellation fees' },
+      { feature: 'Irumudi & Luggage Space', kalidass: 'Clean, dedicated trunk storage for Irumudi Kettu', aggregators: 'Cramped boot space with dirty CNG cylinder encroachment' }
+    ],
+    ctaHeading: 'Ready to Book Your Chennai to Sabarimala Yatra Cab (3, 4 or 5 Days)?'
+  },
+  'rameswaram-2-days': {
+    summaryTitle: 'Chennai to Rameswaram & Dhanushkodi Cab: Key Trip Facts & Fares',
+    summaryDesc: 'Planning your sacred Char Dham pilgrimage to Ramanathaswamy Temple and Dhanushkodi? Kalidass Travels provides dedicated doorstep round-trip cabs with verified chauffeurs, assistance for 22 holy theertham baths, scenic Pamban sea bridge transit, and 100% all-inclusive pricing.',
+    distance: '~560 km (~1,200 km RT)',
+    distanceSub: 'Via Madurai & Pamban NH 87',
+    travelTime: '9.5 – 10.5 Hours',
+    travelTimeSub: 'Via NH 38 & NH 87',
+    startingFare: '₹15,500 Flat',
+    startingFareSub: 'AC Sedan 2-Day Round-Trip',
+    tollsLabel: 'Highway Tolls & Bata',
+    tollsValue: '100% Included',
+    tollsSub: '1,200 KM & All NH Tolls Covered',
+    calloutTitle: '22 Theertham snanam guidance • Dhanushkodi beach drop • Kalam Memorial • ₹0 Advance',
+    calloutDesc: 'Covers Ramanathaswamy Temple, Agni Theertham, 22 sacred wells, Arichal Munai (Land\'s End), and Pamban Bridge view.',
+    stayLabelSub: '1,200 KM, Tolls & Driver Stay Included',
+    getDropdownOptions: (r) => [
+      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night (Rameswaram & Dhanushkodi Return)", inclusions: "Fuel, All Highway Tolls, 22 Theerthams, Dhanushkodi & 2 Days Driver Bata Included", label: "2 Days / 1 Night (Rameswaram & Dhanushkodi Return • 1,200 km)", selected: true },
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, Tolls, Rameswaram + Madurai Darshan, 2 Nights Driver Stay & Food Included", label: "3 Days / 2 Nights (Rameswaram + Madurai Meenakshi Amman)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Extended Stay", inclusions: "Fuel, Tolls, Complete Southern Pilgrimage Circuit, 3 Nights Driver Stay & Food Included", label: "4 Days / 3 Nights (Southern Pilgrimage: Rameswaram + Madurai + Kanyakumari)" }
+    ],
+    baseInclusionsText: 'Fuel, Highway Tolls, Dhanushkodi Drop & 2 Days Driver Bata Included',
+    comparisonTitle: 'Why Pilgrims Choose Kalidass Travels for Rameswaram & Dhanushkodi',
+    comparisonDesc: 'Aggregators advertise misleading low base rates but bill return tolls and driver charges extra. Here is how Kalidass Travels compares:',
+    comparisonRows: [
+      { feature: 'Round-Trip Pricing', kalidass: '₹15,500 Flat 2-Day All-Inclusive (Sedan)', aggregators: 'Base fare only; return tolls & driver night charges billed extra' },
+      { feature: '1,200 KM Highway Tolls', kalidass: 'All NH FASTag Tolls Paid by Us', aggregators: 'Passenger pays ₹750+ out of pocket at multiple toll plazas' },
+      { feature: 'Dhanushkodi Land\'s End', kalidass: 'Direct drive up to Arichal Munai beach endpoint', aggregators: 'Drivers stop at town outskirts or demand ₹800+ extra cash' },
+      { feature: '22 Theerthams Coordination', kalidass: 'Chauffeur coordinates dress changing rooms & guides to wells', aggregators: 'Curbside highway drop; zero knowledge of temple rituals' },
+      { feature: 'Early Morning Darshan', kalidass: '4:30 AM pickup for Spatika Linga Puja without surcharge', aggregators: 'High night cancellation rates; drivers refuse 4 AM pickups' },
+      { feature: 'Advance Payment', kalidass: '₹0 Advance (Pay after trip completion)', aggregators: '100% upfront card/wallet prepayment with cancellation penalties' }
+    ],
+    ctaHeading: 'Ready to Book Your Chennai to Rameswaram Cab (2, 3 or 4 Days)?'
+  },
+  'chidambaram-temple-trip': {
+    summaryTitle: 'Chennai to Chidambaram Natarajar Cab: Key Trip Facts & Fares',
+    summaryDesc: 'Visiting the sacred Akasha Lingam at Thillai Natarajar Temple and the world-famous Pichavaram Mangrove Wetlands? Kalidass Travels provides dedicated doorstep round-trip cabs with verified chauffeurs, free waiting during boat rides, and 100% all-inclusive pricing.',
+    distance: '~225 km (~450 km RT)',
+    distanceSub: 'Via ECR & NH 32',
+    travelTime: '4.5 – 5 Hours',
+    travelTimeSub: 'Via East Coast Road',
+    startingFare: '₹7,400 Flat',
+    startingFareSub: 'AC Sedan Round-Trip',
+    tollsLabel: 'ECR Tolls & Bata',
+    tollsValue: '100% Included',
+    tollsSub: 'Zero Boating Waiting Fees',
+    calloutTitle: 'Akasha Lingam Spatika Puja coordination • Free Pichavaram mangrove waiting • ₹0 Advance',
+    calloutDesc: 'Includes morning Natarajar temple darshan, scenic ECR transit, and dedicated waiting during the 2-hour Pichavaram boat ride.',
+    stayLabelSub: 'ECR Tolls & Free Boating Waiting Included',
+    getDropdownOptions: (r) => [
+      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "1 Day (Same Day Return)", inclusions: "Fuel, ECR Highway Tolls, Pichavaram Boating Waiting & Driver Bata Included", label: "1 Day (Same Day Return • 05:30 AM to 10:30 PM)", selected: true },
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, ECR Tolls, Vaitheeswaran Kovil, Driver Night Stay & Food Included", label: "2 Days / 1 Night Stay (Chidambaram + Vaitheeswaran Kovil + Pichavaram)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Extended Stay", inclusions: "Fuel, Tolls, Chidambaram + Kumbakonam Circuit, 2 Nights Driver Stay & Food Included", label: "3 Days / 2 Nights Extended (Chidambaram + Kumbakonam Temples Circuit)" }
+    ],
+    baseInclusionsText: 'Fuel, ECR Highway Tolls, Pichavaram Waiting & Driver Bata Included',
+    comparisonTitle: 'Why Travelers Choose Kalidass Travels for Chidambaram & Pichavaram',
+    comparisonDesc: 'App aggregators penalize passengers with hourly waiting fees while you enjoy the Pichavaram boat ride. Here is how Kalidass Travels compares:',
+    comparisonRows: [
+      { feature: 'Round-Trip Pricing', kalidass: '₹7,400 Flat All-Inclusive (Sedan)', aggregators: 'Base fare only; ECR tolls & return charges billed extra' },
+      { feature: 'Pichavaram Boating Waiting', kalidass: '100% Free Waiting during 2-hour mangrove rowboat ride', aggregators: '₹150–₹200/hr waiting charges while boating' },
+      { feature: 'ECR Highway Tolls', kalidass: 'All FASTag Tolls Paid by Us', aggregators: 'Passenger pays ₹280+ out of pocket at ECR plazas' },
+      { feature: 'Spatika Linga Puja Timing', kalidass: 'Chauffeur times arrival for 10 AM Spatika Linga Abhishekam', aggregators: 'Drivers unfamiliar with darshan hours; miss sanctum rituals' },
+      { feature: 'Advance Payment', kalidass: '₹0 Advance (Pay after trip completion)', aggregators: '100% upfront card/wallet prepayment with cancellation fees' },
+      { feature: 'Route Guidance', kalidass: 'Chauffeur coordinates parking near Natarajar East Gate', aggregators: 'Curbside drop only; leaves passengers to find parking' }
+    ],
+    ctaHeading: 'Ready to Book Your Chennai to Chidambaram Cab (1, 2 or 3 Days)?'
+  },
+  'vellore-golden-temple': {
+    summaryTitle: 'Chennai to Vellore Golden Temple Cab: Key Trip Facts & Fares',
+    summaryDesc: 'Planning your visit to the sacred Sripuram Sri Lakshmi Narayani Golden Temple and historic Vellore Fort? Kalidass Travels provides dedicated doorstep round-trip cabs with verified chauffeurs, zero waiting charges during the 1.8 km Star Path walk, and 100% all-inclusive pricing.',
+    distance: '~140 km (~300 km RT)',
+    distanceSub: 'Via Bengaluru Highway NH 48',
+    travelTime: '2.5 – 3 Hours',
+    travelTimeSub: 'Via Sriperumbudur',
+    startingFare: '₹4,800 Flat',
+    startingFareSub: 'AC Sedan Round-Trip',
+    tollsLabel: 'Highway Tolls & Bata',
+    tollsValue: '100% Included',
+    tollsSub: 'Zero Star Path Waiting Fees',
+    calloutTitle: 'Free Star Path waiting • Jalakandeswarar Fort Temple included • ₹0 Advance Required',
+    calloutDesc: 'Includes Sripuram Golden Temple, Vellore Fort, Jalakandeswarar Temple, and all Chennai-Bangalore expressway tolls.',
+    stayLabelSub: 'NH Tolls & Star Path Waiting Included',
+    getDropdownOptions: (r) => [
+      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "1 Day (Same Day Return)", inclusions: "Fuel, Bangalore Highway Tolls, Star Path Waiting & Driver Bata Included", label: "1 Day (Same Day Return • 06:00 AM to 08:30 PM)", selected: true },
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, Highway Tolls, Yelagiri Hills Sightseeing, Driver Night Stay & Food Included", label: "2 Days / 1 Night Stay (Golden Temple + Jalakandeswarar Fort + Yelagiri Hills)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Extended Stay", inclusions: "Fuel, Tolls, Multi-Day Pilgrim Circuit, 2 Nights Driver Stay & Food Included", label: "3 Days / 2 Nights Extended (Vellore + Tirupati or Kanchipuram Circuit)" }
+    ],
+    baseInclusionsText: 'Fuel, Bangalore Highway Tolls, Star Path Waiting & Driver Bata Included',
+    comparisonTitle: 'Why Devotees Choose Kalidass Travels for Vellore Golden Temple',
+    comparisonDesc: 'The Sripuram Star Path queue takes 2 to 3 hours; app aggregators charge heavy waiting fees or cancel. Here is how Kalidass Travels compares:',
+    comparisonRows: [
+      { feature: 'Round-Trip Pricing', kalidass: '₹4,800 Flat All-Inclusive (Sedan)', aggregators: 'Base fare only; return expressway tolls billed extra' },
+      { feature: 'Star Path Waiting Time', kalidass: '100% Free Waiting during 2–3 hour Star Path parikrama', aggregators: '₹150–₹200/hr waiting fee while walking Star Path' },
+      { feature: 'Bengaluru Highway Tolls', kalidass: 'All FASTag Tolls Paid by Us', aggregators: 'Passenger pays ₹220+ out of pocket at Sriperumbudur/Chennasamudram' },
+      { feature: 'Vellore Fort Jalakandeswarar', kalidass: 'Dedicated stop at 16th-century Vellore Fort included', aggregators: 'Curbside drop at Golden Temple only; fort visit refused' },
+      { feature: 'Advance Payment', kalidass: '₹0 Advance (Pay after trip completion)', aggregators: '100% upfront card/wallet prepayment with cancellation penalties' },
+      { feature: 'Elder Assistance', kalidass: 'Driver assists with wheelchair/electric cart counter at entrance', aggregators: 'Highway drop; leaves elderly pilgrims to navigate alone' }
+    ],
+    ctaHeading: 'Ready to Book Your Chennai to Vellore Golden Temple Cab (1, 2 or 3 Days)?'
+  },
+  'pondicherry-one-day-trip': {
+    summaryTitle: 'Chennai to Pondicherry Cab: Key Trip Facts & Fares',
+    summaryDesc: 'Planning a trip to Pondicherry via the scenic East Coast Road (ECR)? Kalidass Travels provides dedicated round-trip cabs with experienced highway chauffeurs, zero per-minute waiting fees at Promenade Beach or Auroville, and 100% all-inclusive pricing.',
+    distance: '~160 km (~320 km RT)',
+    distanceSub: 'Via Scenic ECR Highway',
+    travelTime: '3.5 – 4 Hours',
+    travelTimeSub: 'Via ECR / Mahabalipuram',
+    startingFare: '₹4,500 Flat',
+    startingFareSub: 'AC Sedan Same Day Return',
+    tollsLabel: 'ECR Tolls & Bata',
+    tollsValue: '100% Included',
+    tollsSub: 'Zero Road Surcharges',
+    calloutTitle: 'Doorstep Pickup Anywhere in Chennai • ₹0 Advance Required',
+    calloutDesc: 'Includes Promenade Beach, French Quarter, Sri Aurobindo Ashram, and Auroville Matrimandir sightseeing halts.',
+    stayLabelSub: 'ECR Tolls & Sightseeing Included',
+    getDropdownOptions: (r) => [
+      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "1 Day (Same Day Return)", inclusions: "Fuel, ECR FASTag Tolls & Driver Bata Included", label: "1 Day (Same Day Return • Up to 320 km)", selected: true },
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, ECR Tolls, 2 Days Sightseeing, Driver Stay & Food Included", label: "2 Days / 1 Night (Driver Stay & Food Included)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, ECR Tolls, 3 Days Sightseeing, 2 Nights Driver Stay & Food Included", label: "3 Days / 2 Nights (Driver Stay & Food Included)" }
+    ],
+    baseInclusionsText: 'Fuel, ECR FASTag Tolls & Driver Bata Included',
+    comparisonTitle: 'Why Travelers Choose Kalidass Travels for Pondicherry vs App Cabs',
+    comparisonDesc: 'App cabs charge steep waiting charges while you stroll through White Town or relax on the beach. Here is how Kalidass Travels compares:',
+    comparisonRows: [
+      { feature: 'Round-Trip Pricing', kalidass: '₹4,500 Flat All-Inclusive (Sedan)', aggregators: 'Base fare only; return tolls & waiting meters billed extra' },
+      { feature: 'Sightseeing Waiting Time', kalidass: '100% Free Waiting at Promenade & French Quarter', aggregators: '₹150–₹200/hr waiting fee runs continuously' },
+      { feature: 'ECR Highway Tolls', kalidass: 'All FASTag Tolls Paid by Us', aggregators: 'Passenger pays out of pocket at Akkarai & toll plazas' },
+      { feature: 'Auroville & Paradise Beach', kalidass: 'Direct drops at Auroville & Chunnambar boat house', aggregators: 'Frequent refusal to drive beyond Pondicherry bus stand' },
+      { feature: 'Advance Payment', kalidass: '₹0 Advance (Pay after trip completion)', aggregators: '100% upfront card/wallet prepayment with strict cancellation fees' },
+      { feature: 'Luggage & Comfort', kalidass: 'Dedicated private boot space with sanitized AC cabin', aggregators: 'CNG cylinder often fills trunk; cramped seating' }
+    ],
+    ctaHeading: 'Ready to Book Your Chennai to Pondicherry Cab (1, 2 or 3 Days)?'
+  },
+  'mahabalipuram-ecr-temple-route': {
+    summaryTitle: 'Chennai to Mahabalipuram Cab: Key Trip Facts & Fares',
+    summaryDesc: 'Visiting UNESCO World Heritage monuments in Mahabalipuram? Kalidass Travels offers private day tours covering Shore Temple, Pancha Rathas, Butter Ball, and Kovalam beaches with transparent flat rates and zero advance.',
+    distance: '~60 km (~120 km RT)',
+    distanceSub: 'Via Scenic ECR Coast',
+    travelTime: '1.5 – 2 Hours',
+    travelTimeSub: 'Smooth Coastal Drive',
+    startingFare: '₹3,500 Flat',
+    startingFareSub: 'AC Sedan Day Tour (8h / 120km)',
+    tollsLabel: 'ECR Tolls & Parking',
+    tollsValue: '100% Included',
+    tollsSub: 'Zero Waiting Surcharges',
+    calloutTitle: 'Doorstep Pickup Anywhere in Chennai • ₹0 Advance Required',
+    calloutDesc: 'Includes Shore Temple, Pancha Rathas, Arjuna\'s Penance, Krishna\'s Butter Ball, and beachside café halts.',
+    stayLabelSub: 'ECR Tolls & Sightseeing Included',
+    getDropdownOptions: (r) => [
+      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "8 Hours / 120 km (Standard Day Tour)", inclusions: "Fuel, ECR Tolls, Sightseeing & Driver Bata Included", label: "8 Hours / 120 km (Standard Day Tour)", selected: true },
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "12 Hours / 160 km (Extended Sunset Tour)", inclusions: "Fuel, ECR Tolls, Sunset Beach Sightseeing & Driver Bata Included", label: "12 Hours / 160 km (Extended Sunset Tour)" }
+    ],
+    baseInclusionsText: 'Fuel, ECR Tolls, Sightseeing & Driver Bata Included',
+    comparisonTitle: 'Why Visitors Choose Kalidass Travels for Mahabalipuram Day Tours',
+    comparisonDesc: 'Exploring Mahabalipuram takes 4 to 6 hours; app aggregators penalize you with waiting meters. Here is how Kalidass Travels compares:',
+    comparisonRows: [
+      { feature: 'Day Tour Pricing', kalidass: '₹3,500 Flat (8 Hrs / 120 km)', aggregators: 'Base fare only; waiting meter ticks ₹2–₹3/min at monuments' },
+      { feature: 'Monument Waiting Time', kalidass: '100% Free Waiting while you tour Shore Temple & Rathas', aggregators: 'Drivers pressure passengers to rush or cancel return trip' },
+      { feature: 'ECR Highway Tolls', kalidass: 'All FASTag Tolls Paid by Us', aggregators: 'Passenger pays out of pocket at Akkarai toll plaza' },
+      { feature: 'Flexible Sightseeing Route', kalidass: 'Custom stops at Crocodile Bank, Kovalam & DakshinaChitra', aggregators: 'Strict point-to-point drop; deviation charges apply' },
+      { feature: 'Advance Payment', kalidass: '₹0 Advance (Pay after trip completion)', aggregators: '100% upfront card/wallet prepayment with cancellation fees' },
+      { feature: 'Chauffeur Guidance', kalidass: 'Driver knows authorized parking lots nearest to entry gates', aggregators: 'Curbside drop on highway; long walk to monuments' }
+    ],
+    ctaHeading: 'Ready to Book Your Chennai to Mahabalipuram Day Tour Cab?'
+  },
+  'one-day-chennai-city-tour': {
+    summaryTitle: 'One Day Chennai City Sightseeing Cab: Key Facts & Fares',
+    summaryDesc: 'Experience the heritage, temples, and coastal charm of Chennai in total comfort. Kalidass Travels provides private full-day chauffeur-driven cars with zero advance payment and verified local drivers.',
+    distance: '80 – 120 km',
+    distanceSub: 'Citywide Heritage Circuit',
+    travelTime: '8 to 12 Hours',
+    travelTimeSub: 'Full Day Sightseeing',
+    startingFare: '₹3,000 Flat',
+    startingFareSub: 'AC Sedan 8 Hrs / 80 Km',
+    tollsLabel: 'Fuel & Driver Bata',
+    tollsValue: '100% Included',
+    tollsSub: 'Zero Waiting Surcharges',
+    calloutTitle: 'Doorstep Pickup Anywhere in Chennai • ₹0 Advance Required',
+    calloutDesc: 'Covers Kapaleeshwarar Temple, San Thome Basilica, Marina Beach, Fort St. George, and shopping districts.',
+    stayLabelSub: 'Fuel, Driver & Parking Included',
+    getDropdownOptions: (r) => [
+      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "8 Hours / 80 km (Standard Tour)", inclusions: "Fuel, City Transit & Driver Bata Included", label: "8 Hours / 80 km (Standard City Tour)", selected: true },
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "10 Hours / 100 km (Extended Heritage)", inclusions: "Fuel, City Transit & Driver Bata Included", label: "10 Hours / 100 km (Extended Heritage & Shopping)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "12 Hours / 120 km (Full Day Sightseeing)", inclusions: "Fuel, City Transit & Driver Bata Included", label: "12 Hours / 120 km (Full Day & Marina Sunset)" }
+    ],
+    baseInclusionsText: 'Fuel, City Transit & Driver Bata Included',
+    comparisonTitle: 'Why Families Choose Kalidass Travels for Chennai Sightseeing',
+    comparisonDesc: 'Booking multiple app cabs across temples and crowded markets leads to surge pricing and frustration. Here is how we compare:',
+    comparisonRows: [
+      { feature: 'Vehicle Availability', kalidass: 'Dedicated car & chauffeur with you throughout the day', aggregators: 'Must re-book new cab at every tourist spot; 15-30 min wait' },
+      { feature: 'Luggage & Belongings', kalidass: 'Keep shopping bags and luggage safely locked in the car', aggregators: 'Must carry all bags with you into temples and markets' },
+      { feature: 'Transparent Billing', kalidass: 'Flat package rates with zero surge pricing', aggregators: 'Surge multiplier (1.5x–2.0x) during peak traffic hours' },
+      { feature: 'Advance Payment', kalidass: '₹0 Advance (Pay after trip completion)', aggregators: 'Prepayment or automated wallet deductions with penalty' },
+      { feature: 'Local Temple Etiquette', kalidass: 'Driver guides you on temple timings and shoe stands', aggregators: 'Random city drivers unfamiliar with darshan queues' },
+      { feature: 'AC Comfort in Traffic', kalidass: 'Continuous chilled dual AC in high-traffic corridors', aggregators: 'Drivers frequently turn off AC in slow-moving traffic' }
+    ],
+    ctaHeading: 'Ready to Book Your Chennai City Sightseeing Cab (8, 10 or 12 Hours)?'
+  },
+  'yelagiri-hills-weekend': {
+    summaryTitle: 'Chennai to Yelagiri Hills Cab: Key Trip Facts & Fares',
+    summaryDesc: 'Planning a serene hill retreat to Yelagiri Hills? Kalidass Travels provides dedicated round-trip outstation cabs with skilled ghat road drivers, verified hill clearance, and 100% all-inclusive pricing.',
+    distance: '~230 km (~500 km RT)',
+    distanceSub: 'Via NH 48 (Bengaluru Highway)',
+    travelTime: '4.5 – 5 Hours',
+    travelTimeSub: 'Scenic Highway & Hill Climb',
+    startingFare: '₹7,500 Flat',
+    startingFareSub: 'AC Sedan 2 Days / 1 Night',
+    tollsLabel: 'NH Tolls & Bata',
+    tollsValue: '100% Included',
+    tollsSub: 'Driver Stay & Food Included',
+    calloutTitle: 'Doorstep Pickup Anywhere in Chennai • ₹0 Advance Required',
+    calloutDesc: 'Includes Punganoor Lake, Jalagamparai Falls, Swamimalai Trek point, and 14 hairpin bend ascent.',
+    stayLabelSub: 'Driver Stay & Tolls Included',
+    getDropdownOptions: (r) => [
+      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, NH 48 Tolls, Ghat Road Clearance, Driver Stay & Food Included", label: "2 Days / 1 Night (Driver Stay & Food Included)", selected: true },
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, Tolls, Sightseeing, 2 Nights Driver Stay & Food Included", label: "3 Days / 2 Nights (Driver Stay & Food Included)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Stay", inclusions: "Fuel, Tolls, Sightseeing, 3 Nights Driver Stay & Food Included", label: "4 Days / 3 Nights (Driver Stay & Food Included)" }
+    ],
+    baseInclusionsText: 'Fuel, NH 48 Tolls, Ghat Road Clearance, Driver Stay & Food Included',
+    comparisonTitle: 'Why Travelers Choose Kalidass Travels for Yelagiri Hills vs App Cabs',
+    comparisonDesc: 'Climbing 14 hairpin bends requires experienced mountain drivers; online app drivers frequently cancel. Here is how we compare:',
+    comparisonRows: [
+      { feature: 'Round-Trip Pricing', kalidass: '₹7,500 Flat All-Inclusive (2 Days Sedan)', aggregators: 'Base fare only; return tolls & return driver night charges billed extra' },
+      { feature: '14 Hairpin Bend Ascent', kalidass: 'Guaranteed hill climb with skilled highway chauffeurs', aggregators: 'High cancellation; city drivers refuse steep hill hairpin turns' },
+      { feature: 'NH 48 Highway Tolls', kalidass: 'All FASTag Tolls Paid by Us', aggregators: 'Passenger pays ₹400+ out of pocket at Sriperumbudur/Walajapet' },
+      { feature: 'Driver Stay & Meals', kalidass: '100% Included in the package fare', aggregators: 'Passenger must pay ₹500–₹800/night cash directly to driver' },
+      { feature: 'Advance Payment', kalidass: '₹0 Advance (Pay after trip completion)', aggregators: '100% upfront card/wallet prepayment with cancellation fees' },
+      { feature: 'Local Sightseeing', kalidass: 'Full standby for Punganoor Lake, Nature Park & Falls', aggregators: 'Hotel drop only; demands extra cash for local viewpoints' }
+    ],
+    ctaHeading: 'Ready to Book Your Chennai to Yelagiri Hills Cab (2, 3 or 4 Days)?'
+  },
+  'yercaud-hills-weekend': {
+    summaryTitle: 'Chennai to Yercaud Weekend Cab: Key Trip Facts & Fares',
+    summaryDesc: 'Escape to the "Jewel of the South" atop the Shevaroy Hills. Kalidass Travels offers private round-trip cabs from Chennai to Yercaud with verified mountain chauffeurs, Salem ghat road expertise, and transparent flat fares.',
+    distance: '~365 km (~750 km RT)',
+    distanceSub: 'Via NH 44 (Salem Highway)',
+    travelTime: '6.5 – 7 Hours',
+    travelTimeSub: 'Expressway & 20 Hairpin Bends',
+    startingFare: '₹10,500 Flat',
+    startingFareSub: 'AC Sedan 2 Days / 1 Night',
+    tollsLabel: 'NH Tolls & Bata',
+    tollsValue: '100% Included',
+    tollsSub: 'Driver Stay & Food Included',
+    calloutTitle: 'Doorstep Pickup Anywhere in Chennai • ₹0 Advance Required',
+    calloutDesc: 'Includes Yercaud Lake, Pagoda Point, Shevaroy Temple, Lady\'s Seat, and Salem ghat ascent.',
+    stayLabelSub: 'Driver Stay & Tolls Included',
+    getDropdownOptions: (r) => [
+      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, NH FASTag Tolls, Ghat Road Clearance, Driver Stay & Food Included", label: "2 Days / 1 Night (Driver Stay & Food Included)", selected: true },
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, Tolls, Sightseeing, 2 Nights Driver Stay & Food Included", label: "3 Days / 2 Nights (Driver Stay & Food Included)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Stay", inclusions: "Fuel, Tolls, Sightseeing, 3 Nights Driver Stay & Food Included", label: "4 Days / 3 Nights (Driver Stay & Food Included)" }
+    ],
+    baseInclusionsText: 'Fuel, NH FASTag Tolls, Ghat Road Clearance, Driver Stay & Food Included',
+    comparisonTitle: 'Why Travelers Choose Kalidass Travels for Yercaud Weekend Cabs',
+    comparisonDesc: 'Navigating 20 hairpin bends from Salem to Yercaud requires skilled drivers. Here is how Kalidass Travels compares to online aggregators:',
+    comparisonRows: [
+      { feature: 'Round-Trip Pricing', kalidass: '₹10,500 Flat All-Inclusive (2 Days Sedan)', aggregators: 'Base fare only; return expressway tolls billed extra' },
+      { feature: '20 Hairpin Bend Ascent', kalidass: 'Guaranteed hill ascent with certified mountain drivers', aggregators: 'Frequent refusal by plains drivers to climb Salem ghats' },
+      { feature: 'Highway FASTag Tolls', kalidass: 'All Tolls on NH 48 & NH 44 Paid by Us', aggregators: 'Passenger pays ₹600+ out of pocket at multiple toll plazas' },
+      { feature: 'Driver Stay & Food', kalidass: '100% Included in the flat package rate', aggregators: 'Devotee/tourist forced to pay ₹600–₹800/night out of pocket' },
+      { feature: 'Advance Payment', kalidass: '₹0 Advance (Pay after trip completion)', aggregators: '100% upfront card/wallet prepayment with cancellation penalties' },
+      { feature: 'Sightseeing Standby', kalidass: 'Free car standby for Emerald Lake, Pagoda Point & viewpoints', aggregators: 'Curbside resort drop only; refuses local viewpoint runs' }
+    ],
+    ctaHeading: 'Ready to Book Your Chennai to Yercaud Weekend Cab (2, 3 or 4 Days)?'
+  }
+};
+
+const pilgrimConfig = PILGRIM_ROUTES[service.slug];
 
 const areas: any[] = [];
-if (service.origin) {
-  areas.push({ "@type": "City", "name": service.origin });
+if (service.slug === 'tirupati-package') {
+  areas.push(
+    { "@type": "City", "name": "Chennai" },
+    { "@type": "City", "name": "Tirupati" },
+    { "@type": "Place", "name": "Tirumala Hills" },
+    { "@type": "AdministrativeArea", "name": "Tamil Nadu" },
+    { "@type": "AdministrativeArea", "name": "Andhra Pradesh" }
+  );
+} else if (service.slug === 'sabarimala-trip') {
+  areas.push(
+    { "@type": "City", "name": "Chennai" },
+    { "@type": "City", "name": "Pathanamthitta" },
+    { "@type": "Place", "name": "Nilakkal Base Camp" },
+    { "@type": "Place", "name": "Pamba" },
+    { "@type": "AdministrativeArea", "name": "Tamil Nadu" },
+    { "@type": "AdministrativeArea", "name": "Kerala" }
+  );
+} else if (service.slug === 'rameswaram-2-days') {
+  areas.push(
+    { "@type": "City", "name": "Chennai" },
+    { "@type": "City", "name": "Rameswaram" },
+    { "@type": "Place", "name": "Dhanushkodi" },
+    { "@type": "Place", "name": "Pamban Island" },
+    { "@type": "AdministrativeArea", "name": "Tamil Nadu" }
+  );
+} else if (service.slug === 'navagraha-tour') {
+  areas.push(
+    { "@type": "City", "name": "Chennai" },
+    { "@type": "City", "name": "Kumbakonam" },
+    { "@type": "City", "name": "Thanjavur" },
+    { "@type": "AdministrativeArea", "name": "Tamil Nadu" }
+  );
+} else if (service.slug === 'chidambaram-temple-trip') {
+  areas.push(
+    { "@type": "City", "name": "Chennai" },
+    { "@type": "City", "name": "Chidambaram" },
+    { "@type": "Place", "name": "Pichavaram" },
+    { "@type": "AdministrativeArea", "name": "Tamil Nadu" }
+  );
+} else if (service.slug === 'vellore-golden-temple') {
+  areas.push(
+    { "@type": "City", "name": "Chennai" },
+    { "@type": "City", "name": "Vellore" },
+    { "@type": "Place", "name": "Sripuram" },
+    { "@type": "AdministrativeArea", "name": "Tamil Nadu" }
+  );
+} else if (service.slug === 'thiruvannamalai-girivalam-trip') {
+  areas.push(
+    { "@type": "City", "name": "Chennai" },
+    { "@type": "City", "name": "Thiruvannamalai" },
+    { "@type": "Place", "name": "Arunachala Hill" },
+    { "@type": "AdministrativeArea", "name": "Tamil Nadu" }
+  );
+} else if (service.slug === 'kanchipuram-temple-trip') {
+  areas.push(
+    { "@type": "City", "name": "Chennai" },
+    { "@type": "City", "name": "Kanchipuram" },
+    { "@type": "AdministrativeArea", "name": "Tamil Nadu" }
+  );
+} else if (service.slug === 'pondicherry-one-day-trip') {
+  areas.push(
+    { "@type": "City", "name": "Chennai" },
+    { "@type": "City", "name": "Pondicherry" },
+    { "@type": "Place", "name": "Auroville" },
+    { "@type": "AdministrativeArea", "name": "Tamil Nadu" },
+    { "@type": "AdministrativeArea", "name": "Puducherry" }
+  );
+} else if (service.slug === 'mahabalipuram-ecr-temple-route') {
+  areas.push(
+    { "@type": "City", "name": "Chennai" },
+    { "@type": "City", "name": "Mahabalipuram" },
+    { "@type": "AdministrativeArea", "name": "Tamil Nadu" }
+  );
+} else if (service.slug === 'one-day-chennai-city-tour') {
+  areas.push(
+    { "@type": "City", "name": "Chennai" },
+    { "@type": "AdministrativeArea", "name": "Tamil Nadu" }
+  );
+} else if (service.slug === 'yelagiri-hills-weekend') {
+  areas.push(
+    { "@type": "City", "name": "Chennai" },
+    { "@type": "City", "name": "Yelagiri Hills" },
+    { "@type": "AdministrativeArea", "name": "Tamil Nadu" }
+  );
+} else if (service.slug === 'yercaud-hills-weekend') {
+  areas.push(
+    { "@type": "City", "name": "Chennai" },
+    { "@type": "City", "name": "Yercaud" },
+    { "@type": "City", "name": "Salem" },
+    { "@type": "AdministrativeArea", "name": "Tamil Nadu" }
+  );
 } else {
-  areas.push({ "@type": "City", "name": "Chennai" });
+  if (service.origin) {
+    areas.push({ "@type": "City", "name": service.origin });
+  } else {
+    areas.push({ "@type": "City", "name": "Chennai" });
+  }
+  if (service.destination) {
+    areas.push({ "@type": "City", "name": service.destination });
+  }
+  areas.push(
+    { "@type": "AdministrativeArea", "name": "Tamil Nadu" },
+    { "@type": "AdministrativeArea", "name": "Andhra Pradesh" },
+    { "@type": "AdministrativeArea", "name": "Puducherry" }
+  );
 }
-if (service.destination) {
-  areas.push({ "@type": "City", "name": service.destination });
-}
-areas.push(
-  { "@type": "AdministrativeArea", "name": "Tamil Nadu" },
-  { "@type": "AdministrativeArea", "name": "Andhra Pradesh" },
-  { "@type": "AdministrativeArea", "name": "Puducherry" }
-);
 
 // Granular multi-vehicle offers for TaxiService & packages
 let offersData: any = null;
@@ -324,6 +1119,8 @@ if (isTour) {
     "serviceType": service.serviceType || "Pilgrimage Outstation Cab Package",
     "areaServed": areas,
     "url": `https://kalidasstravels.in/services/${service.slug}/`,
+    "priceRange": service.slug === 'tirupati-package' ? "₹6,000 - ₹12,500" : "₹₹",
+    "termsOfService": "https://kalidasstravels.in/terms/",
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "4.9",
@@ -439,19 +1236,24 @@ const breadcrumbItems = [
   { name: service.title, item: `/services/${service.slug}/` },
 ];
 
-// Parsed Darshan Timings
+// Parsed Darshan Timings (handles multi-line and pipe-separated slots like "Morning: ... | Evening: ...")
 const timingItems = service.travelGuide?.timings 
-  ? service.travelGuide.timings.split('\n').map((line: string) => {
-      const trimmed = line.replace(/^[•\-\*]\s*/, '').trim();
-      const colonIdx = trimmed.indexOf(':');
-      if (colonIdx > -1) {
-        return {
-          label: trimmed.substring(0, colonIdx).replace(/\*\*/g, '').trim(),
-          time: trimmed.substring(colonIdx + 1).replace(/\*\*/g, '').trim()
-        };
-      }
-      return { label: trimmed.replace(/\*\*/g, ''), time: '' };
-    }).filter((t: any) => t.label)
+  ? service.travelGuide.timings
+      .split(/[\n|]+/)
+      .map((entry: string) => {
+        const trimmed = entry.replace(/^[•\-\*]\s*/, '').trim();
+        if (!trimmed) return null;
+        const colonIdx = trimmed.indexOf(':');
+        if (colonIdx > -1) {
+          let label = trimmed.substring(0, colonIdx).replace(/\*\*/g, '').trim();
+          const time = trimmed.substring(colonIdx + 1).replace(/\*\*/g, '').trim();
+          if (label.toLowerCase() === 'morning') label = 'Morning Darshan';
+          if (label.toLowerCase() === 'evening') label = 'Evening Darshan';
+          return { label, time };
+        }
+        return { label: trimmed.replace(/\*\*/g, ''), time: '' };
+      })
+      .filter(Boolean)
   : [];
 
 // Parsed Dress Code
@@ -479,7 +1281,7 @@ const parseDressCode = (rawText: string) => {
     if (lower.startsWith('women:')) {
       const content = cleanLine.substring(6).trim();
       let allowed = content;
-      let prohibited = "Jeans, leggings, western wear strictly prohibited";
+      let prohibited = '';
       const pIdx = content.indexOf('(');
       if (pIdx > -1) {
         allowed = content.substring(0, pIdx).trim();
@@ -488,12 +1290,12 @@ const parseDressCode = (rawText: string) => {
       items.push({
         title: "Women's Attire",
         allowed,
-        prohibited
+        prohibited: prohibited || undefined
       });
     } else if (lower.startsWith('men:')) {
       const content = cleanLine.substring(4).trim();
       let allowed = content;
-      let prohibited = "Jeans, T-shirts, shorts strictly prohibited";
+      let prohibited = '';
       const pIdx = content.indexOf('(');
       if (pIdx > -1) {
         allowed = content.substring(0, pIdx).trim();
@@ -502,7 +1304,7 @@ const parseDressCode = (rawText: string) => {
       items.push({
         title: "Men's Attire",
         allowed,
-        prohibited
+        prohibited: prohibited || undefined
       });
     } else if (lower.startsWith('children:')) {
       const content = cleanLine.substring(9).trim().replace(/\.$/, '');
@@ -520,16 +1322,36 @@ const parseDressCode = (rawText: string) => {
 
 const parsedDressCode = service.travelGuide?.dressCode ? parseDressCode(service.travelGuide.dressCode) : null;
 
+// Parsed History / Key Highlights for Card 1 (Title + Subtitle, No Paragraphs)
+const parsedHistory = service.travelGuide?.history
+  ? service.travelGuide.history
+      .split('\n')
+      .map((line: string) => line.trim())
+      .filter(Boolean)
+      .map((line: string) => {
+        const clean = line.replace(/^[•\-\*]\s*/, '').trim();
+        const colonIdx = clean.indexOf(':');
+        if (colonIdx > -1 && colonIdx < 40) {
+          return {
+            title: clean.substring(0, colonIdx).trim(),
+            desc: clean.substring(colonIdx + 1).trim()
+          };
+        }
+        return { title: clean, desc: '' };
+      })
+  : [];
+
 // Parsed Practical Tips
 const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
-  const colonIdx = tip.indexOf(':');
-  if (colonIdx > -1 && colonIdx < 35) {
+  const clean = tip.replace(/^[•\-\*]\s*/, '').trim();
+  const colonIdx = clean.indexOf(':');
+  if (colonIdx > -1 && colonIdx < 40) {
     return {
-      title: tip.substring(0, colonIdx).trim(),
-      desc: tip.substring(colonIdx + 1).trim()
+      title: clean.substring(0, colonIdx).trim(),
+      desc: clean.substring(colonIdx + 1).trim()
     };
   }
-  return { title: '', desc: tip };
+  return { title: '', desc: clean };
 }) || [];
 ---
 
@@ -611,40 +1433,42 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
           </div>
         )}
 
-        {/* M3 Quick Summary Grid (Calibrated Neutral Palette) */}
-        <div class="bg-m3-surface-container-low rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 text-xs sm:text-sm">
-          <div class="space-y-1 min-w-0">
-            <span class="block text-badge font-bold uppercase tracking-wider text-m3-on-surface-variant">{isTour ? "Pickup Location" : "Coverage Area"}</span>
-            <p class="font-semibold text-m3-on-surface flex items-center gap-1.5 truncate">
-              <MapPin className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-              <span class="truncate">{isTour ? "Doorstep Chennai" : "Chennai & Suburbs"}</span>
-            </p>
-          </div>
+        {/* M3 Quick Summary Grid (Operational services like Acting Drivers & Corporate only; hidden on Tour Packages to eliminate duplicate facts) */}
+        {!isTour && (
+          <div class="bg-m3-surface-container-low rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 text-xs sm:text-sm">
+            <div class="space-y-1 min-w-0">
+              <span class="block text-badge font-bold uppercase tracking-wider text-m3-on-surface-variant">Coverage Area</span>
+              <p class="font-semibold text-m3-on-surface flex items-center gap-1.5 truncate">
+                <MapPin className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                <span class="truncate">Chennai &amp; Suburbs</span>
+              </p>
+            </div>
 
-          <div class="space-y-1 min-w-0">
-            <span class="block text-badge font-bold uppercase tracking-wider text-m3-on-surface-variant">{isTour ? "Trip Duration" : "Dispatch SLA"}</span>
-            <p class="font-semibold text-m3-on-surface flex items-center gap-1.5 truncate">
-              <Clock className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-              <span class="truncate">{isTour ? (service.duration ? service.duration.split('(')[0].trim() : "1 Day / 2 Days") : "15–30 Mins Doorstep"}</span>
-            </p>
-          </div>
+            <div class="space-y-1 min-w-0">
+              <span class="block text-badge font-bold uppercase tracking-wider text-m3-on-surface-variant">Dispatch SLA</span>
+              <p class="font-semibold text-m3-on-surface flex items-center gap-1.5 truncate">
+                <Clock className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                <span class="truncate">15–30 Mins Doorstep</span>
+              </p>
+            </div>
 
-          <div class="space-y-1 min-w-0">
-            <span class="block text-badge font-bold uppercase tracking-wider text-m3-on-surface-variant">{isTour ? "Tolls & Permits" : "Transmissions"}</span>
-            <p class="font-semibold text-m3-on-surface flex items-center gap-1.5 truncate">
-              <Car className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-              <span class="truncate">{isTour ? "100% Included" : "Manual, Auto & EV"}</span>
-            </p>
-          </div>
+            <div class="space-y-1 min-w-0">
+              <span class="block text-badge font-bold uppercase tracking-wider text-m3-on-surface-variant">Transmissions</span>
+              <p class="font-semibold text-m3-on-surface flex items-center gap-1.5 truncate">
+                <Car className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                <span class="truncate">Manual, Auto &amp; EV</span>
+              </p>
+            </div>
 
-          <div class="space-y-1 min-w-0">
-            <span class="block text-badge font-bold uppercase tracking-wider text-m3-on-surface-variant">Instant Booking</span>
-            <p class="font-semibold text-m3-on-surface flex items-center gap-1.5 truncate">
-              <MessageCircle className="w-3.5 h-3.5 text-m3-secondary shrink-0" />
-              <span class="truncate">Call &amp; WhatsApp</span>
-            </p>
+            <div class="space-y-1 min-w-0">
+              <span class="block text-badge font-bold uppercase tracking-wider text-m3-on-surface-variant">Instant Booking</span>
+              <p class="font-semibold text-m3-on-surface flex items-center gap-1.5 truncate">
+                <MessageCircle className="w-3.5 h-3.5 text-m3-secondary shrink-0" />
+                <span class="truncate">Call &amp; WhatsApp</span>
+              </p>
+            </div>
           </div>
-        </div>
+        )}
 
 
       </div>
@@ -661,6 +1485,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
             Tariff & Rates
           </a>
         )}
+
         {service.routePlan && (
           <a
             href="#route"
@@ -691,6 +1516,86 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
     <!-- 2. MAIN CONTENT BODY CONTAINER -->
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 space-y-6 sm:space-y-8">
       
+      {/* GEO & AI OVERVIEW FACT SUMMARY (Specially calibrated for Google AI / Search snippet synthesis) */}
+      {pilgrimConfig && (
+        <section aria-label={`${service.title} Key Trip & Fare Facts`} class="bg-gradient-to-br from-white via-m3-surface to-amber-50/30 rounded-m3-2xl border border-amber-200/80 p-5 sm:p-7 shadow-m3-1">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-amber-100 text-amber-900 text-xs font-bold uppercase tracking-wider border border-amber-300">
+              <Sparkles className="w-3.5 h-3.5 text-amber-700" />
+              <span>Route &amp; Fare Summary</span>
+            </span>
+            <span class="text-xs text-m3-on-surface-variant font-medium hidden sm:inline">Official 2024–2026 Pilgrimage Rate Card</span>
+          </div>
+
+          <h2 class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading tracking-tight mb-2">
+            {pilgrimConfig.summaryTitle}
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed mb-5">
+            {pilgrimConfig.summaryDesc}
+          </p>
+
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-5">
+            <div class="p-3.5 rounded-m3-xl bg-white border border-m3-outline-variant/60 shadow-xs">
+              <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-1">Total Distance</span>
+              <p class="text-base sm:text-lg font-black text-m3-on-surface font-heading">
+                {pilgrimConfig.distance}
+              </p>
+              <p class="text-micro text-m3-on-surface-variant mt-0.5">
+                {pilgrimConfig.distanceSub}
+              </p>
+            </div>
+
+            <div class="p-3.5 rounded-m3-xl bg-white border border-m3-outline-variant/60 shadow-xs">
+              <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-1">Travel Time</span>
+              <p class="text-base sm:text-lg font-black text-m3-on-surface font-heading">
+                {pilgrimConfig.travelTime}
+              </p>
+              <p class="text-micro text-m3-on-surface-variant mt-0.5">
+                {pilgrimConfig.travelTimeSub}
+              </p>
+            </div>
+
+            <div class="p-3.5 rounded-m3-xl bg-white border border-m3-outline-variant/60 shadow-xs">
+              <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-1">Starting Fare</span>
+              <p class="text-base sm:text-lg font-black text-m3-primary font-heading">
+                {pilgrimConfig.startingFare}
+              </p>
+              <p class="text-micro text-emerald-700 font-semibold mt-0.5">
+                {pilgrimConfig.startingFareSub}
+              </p>
+            </div>
+
+            <div class="p-3.5 rounded-m3-xl bg-white border border-m3-outline-variant/60 shadow-xs">
+              <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-1">
+                {pilgrimConfig.tollsLabel}
+              </span>
+              <p class="text-base sm:text-lg font-black text-emerald-700 font-heading">{pilgrimConfig.tollsValue}</p>
+              <p class="text-micro text-m3-on-surface-variant mt-0.5">
+                {pilgrimConfig.tollsSub}
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-amber-50/80 rounded-m3-xl p-3.5 sm:p-4 border border-amber-200/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs sm:text-sm">
+            <div class="space-y-0.5">
+              <p class="font-bold text-amber-950 flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>{pilgrimConfig.calloutTitle}</span>
+              </p>
+              <p class="text-amber-900/80 text-micro sm:text-xs">
+                {pilgrimConfig.calloutDesc}
+              </p>
+            </div>
+            <a
+              href="#tariff"
+              class="shrink-0 px-4 py-1.5 rounded-m3-full bg-m3-primary text-white text-xs font-bold hover:bg-m3-primary/90 transition-colors shadow-xs"
+            >
+              View All Vehicle Rates ↓
+            </a>
+          </div>
+        </section>
+      )}
+
       <!-- 1. TARIFF & PRICING BREAKDOWN (Priority Commercial Focus) -->
       {service.tariff && (
         <section id="tariff" class="bg-m3-surface rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 overflow-hidden scroll-mt-40">
@@ -771,12 +1676,18 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
 
                 const shortName = vehicleName.split('/')[0].replace(/\(.*?\)/g, '').trim();
                 const bookingText = `Hi Kalidass Travels, I want to book ${vehicleName} for ${service.title} (${heroPrice}).`;
+                const heroPriceNum = parseInt(String(heroPrice).replace(/[^0-9]/g, ''), 10) || 0;
+                const stayRates = getPackageStayRates(service.slug, vehicleName, heroPriceNum);
 
                 // If odd number of rows and this is the last one, span full width on desktop for nice layout
                 const isOddLast = rIdx === service.tariff.rows.length - 1 && service.tariff.rows.length % 2 !== 0;
 
                 return (
-                  <div class={`bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between hover:shadow-m3-2 hover:border-m3-primary/40 transition-all overflow-hidden group ${isOddLast ? 'md:col-span-2' : ''}`}>
+                  <div 
+                    class={`tariff-card bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between hover:shadow-m3-2 hover:border-m3-primary/40 transition-all overflow-hidden group ${isOddLast ? 'md:col-span-2' : ''}`}
+                    data-vehicle-name={vehicleName}
+                    data-service-title={service.title}
+                  >
                     <div class="p-5 sm:p-6">
                       <!-- Top Badges Row -->
                       <div class="flex items-center justify-between gap-2 mb-3.5">
@@ -784,12 +1695,6 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                           <Sparkles className="w-3 h-3 text-m3-primary shrink-0" />
                           <span>{badge}</span>
                         </span>
-                        {seats && (
-                          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 text-xs font-semibold text-m3-on-surface-variant">
-                            <Users className="w-3.5 h-3.5 text-m3-secondary shrink-0" />
-                            <span>{seats}</span>
-                          </span>
-                        )}
                       </div>
 
                       <!-- Vehicle Identity & Preview Row -->
@@ -798,9 +1703,16 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                           <h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading leading-snug group-hover:text-m3-primary transition-colors">
                             {vehicleName}
                           </h3>
-                          <p class="text-micro text-m3-on-surface-variant mt-0.5 font-medium">
-                            Doorstep Pickup &amp; Return • Chilled Dual AC
-                          </p>
+                          <div class="flex items-center gap-2 text-xs sm:text-sm font-semibold text-m3-on-surface mt-1.5">
+                            <span class="inline-flex items-center gap-1.5 font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-m3-md border border-emerald-200">
+                              <Users className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                              <span>{seats || '4 Passengers'}</span>
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 font-medium text-m3-on-surface bg-m3-surface-container px-2.5 py-0.5 rounded-m3-md border border-m3-outline-variant/60">
+                              <Luggage className="w-3.5 h-3.5 text-m3-secondary shrink-0" />
+                              <span>{getVehicleBaggage(vehicleName)}</span>
+                            </span>
+                          </div>
                         </div>
                         {vehicleImg ? (
                           <div class="shrink-0 w-20 h-12 sm:w-24 sm:h-14 flex items-center justify-end">
@@ -823,11 +1735,69 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
 
                       <!-- M3 Tonal Surface Price Slabs (Inspiration from weekend-packages) -->
                       <div class="bg-m3-surface-container-low p-4 rounded-m3-xl border border-m3-outline-variant/60 mb-4 space-y-2.5">
+                        {stayRates && (
+                          <div class="pb-2.5 mb-2.5 border-b border-m3-outline-variant/50">
+                            <label class="block text-[11px] font-bold uppercase tracking-wider text-m3-on-surface-variant mb-1.5 flex items-center justify-between">
+                              <span>Trip Duration / Stays</span>
+                              <span class="text-[10px] text-emerald-700 font-semibold normal-case">
+                                {pilgrimConfig ? pilgrimConfig.stayLabelSub : 'Stay & Food Included'}
+                              </span>
+                            </label>
+                            <select 
+                              class="tirupati-stay-select w-full bg-m3-surface border border-m3-outline-variant hover:border-m3-primary rounded-m3-lg py-1.5 px-2.5 text-xs sm:text-sm font-bold text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary outline-none transition-all cursor-pointer shadow-2xs"
+                              aria-label={`Select trip duration for ${vehicleName}`}
+                              data-vehicle-name={vehicleName}
+                            >
+                              {pilgrimConfig ? (
+                                pilgrimConfig.getDropdownOptions(stayRates).map((opt) => (
+                                  <option 
+                                    value={opt.value} 
+                                    data-price={opt.price} 
+                                    data-duration={opt.duration} 
+                                    data-inclusions={opt.inclusions}
+                                    selected={opt.selected}
+                                  >
+                                    {opt.label}
+                                  </option>
+                                ))
+                              ) : (
+                                <>
+                                  <option 
+                                    value="1" 
+                                    data-price={`₹${stayRates[1].toLocaleString('en-IN')}`} 
+                                    data-duration="1 Day (Same Day Return)" 
+                                    data-inclusions="Fuel, Highway Tolls & Driver Bata Included"
+                                    selected
+                                  >
+                                    1 Day (Same Day Return)
+                                  </option>
+                                  <option 
+                                    value="2" 
+                                    data-price={`₹${stayRates[2].toLocaleString('en-IN')}`} 
+                                    data-duration="2 Days / 1 Night Stay" 
+                                    data-inclusions="Fuel, Highway Tolls, Driver Stay & Food Included"
+                                  >
+                                    2 Days / 1 Night (Driver Stay & Food Included)
+                                  </option>
+                                  <option 
+                                    value="3" 
+                                    data-price={`₹${stayRates[3].toLocaleString('en-IN')}`} 
+                                    data-duration="3 Days / 2 Nights Stay" 
+                                    data-inclusions="Fuel, Highway Tolls, 2 Nights Driver Stay & Food Included"
+                                  >
+                                    3 Days / 2 Nights (Driver Stay & Food Included)
+                                  </option>
+                                </>
+                              )}
+                            </select>
+                          </div>
+                        )}
+
                         <div class="flex items-baseline justify-between gap-2">
                           <span class="text-[11px] font-semibold text-m3-on-surface-variant uppercase tracking-wider">
                             {heroPriceLabel || "All-Inclusive Flat Fare"}
                           </span>
-                          <strong class="text-2xl sm:text-3xl font-black text-m3-primary font-heading tracking-tight leading-none">
+                          <strong class="tariff-hero-price text-2xl sm:text-3xl font-black text-m3-primary font-heading tracking-tight leading-none">
                             {heroPrice}
                           </strong>
                         </div>
@@ -843,19 +1813,36 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                           </div>
                         )}
 
-                        <div class="pt-1.5 border-t border-m3-outline-variant/40 flex items-center gap-1.5 text-micro font-semibold text-emerald-800">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                          <span>Fuel, FASTag Tolls, Border Permit &amp; Driver Bata Included</span>
-                        </div>
+                        {(() => {
+                          const inclusionsText = (() => {
+                            if (pilgrimConfig) return pilgrimConfig.baseInclusionsText;
+                            if (isActingDriver) return 'Verified Commercial Chauffeur • On-Time Pickup Guarantee';
+                            if (isTour) return 'Doorstep Pickup, Fuel, Highway Tolls & Driver Bata Included';
+                            if (service.slug.includes('airport')) return 'Airport Parking, Tolls, Fuel & Chauffeur Included';
+                            return 'Doorstep Pickup, Fuel & Chauffeur Included';
+                          })();
+                          return (
+                            <div class="pt-1.5 border-t border-m3-outline-variant/40 flex items-center gap-1.5 text-micro font-semibold text-emerald-800">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                              <span class="tariff-inclusions-text">{inclusionsText}</span>
+                            </div>
+                          );
+                        })()}
                       </div>
 
-                      <!-- Key Highlights -->
-                      {highlights && (
-                        <div class="flex items-start gap-2 text-xs text-m3-on-surface-variant leading-relaxed mb-1">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                          <span>{highlights}</span>
-                        </div>
-                      )}
+                      <!-- Key Highlights (Unique Differentiator / Best-For) -->
+                      {(() => {
+                        const cleanHighlights = (highlights || '')
+                          .replace(/•\s*(Fuel|FASTag|Tolls|AP Permit|Border Permit|Driver Bata|Bata).*Included/gi, '')
+                          .replace(/(Clean AC Sedan|Comfortable AC 6-Seater|Spacious AC MUV|Executive MPV|Family Group Coach|Family Coach)\s*•?\s*/gi, '')
+                          .trim();
+                        return cleanHighlights ? (
+                          <div class="flex items-start gap-2 text-xs text-m3-on-surface-variant leading-relaxed mb-1">
+                            <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
+                            <span class="font-medium text-m3-on-surface">{cleanHighlights}</span>
+                          </div>
+                        ) : null;
+                      })()}
                     </div>
 
                     <!-- Card Action Area (Dual Action Buttons) -->
@@ -874,7 +1861,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                           target="_blank"
                           rel="noopener noreferrer nofollow"
                           aria-label={`Book ${vehicleName} on WhatsApp for ${heroPrice}`}
-                          class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 text-xs font-bold transition-all select-none"
+                          class="tariff-whatsapp-btn inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 text-xs font-bold transition-all select-none"
                         >
                           <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0" />
                           <span>Enquire</span>
@@ -950,33 +1937,79 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
 
           <script is:inline>
             (function() {
-              const btnCards = document.getElementById('tariff-btn-cards');
-              const btnTable = document.getElementById('tariff-btn-table');
-              const viewCards = document.getElementById('tariff-cards-view');
-              const viewTable = document.getElementById('tariff-table-view');
+              function initTariffInteractions() {
+                const btnCards = document.getElementById('tariff-btn-cards');
+                const btnTable = document.getElementById('tariff-btn-table');
+                const viewCards = document.getElementById('tariff-cards-view');
+                const viewTable = document.getElementById('tariff-table-view');
 
-              if (btnCards && btnTable && viewCards && viewTable) {
-                btnCards.addEventListener('click', function() {
-                  viewCards.classList.remove('hidden');
-                  viewTable.classList.add('hidden');
-                  btnCards.classList.add('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs');
-                  btnCards.classList.remove('text-m3-on-surface-variant');
-                  btnCards.setAttribute('aria-pressed', 'true');
-                  btnTable.classList.remove('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs');
-                  btnTable.classList.add('text-m3-on-surface-variant');
-                  btnTable.setAttribute('aria-pressed', 'false');
-                });
+                if (btnCards && btnTable && viewCards && viewTable) {
+                  btnCards.addEventListener('click', function() {
+                    viewCards.classList.remove('hidden');
+                    viewTable.classList.add('hidden');
+                    btnCards.classList.add('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs');
+                    btnCards.classList.remove('text-m3-on-surface-variant');
+                    btnCards.setAttribute('aria-pressed', 'true');
+                    btnTable.classList.remove('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs');
+                    btnTable.classList.add('text-m3-on-surface-variant');
+                    btnTable.setAttribute('aria-pressed', 'false');
+                  });
 
-                btnTable.addEventListener('click', function() {
-                  viewCards.classList.add('hidden');
-                  viewTable.classList.remove('hidden');
-                  btnTable.classList.add('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs');
-                  btnTable.classList.remove('text-m3-on-surface-variant');
-                  btnTable.setAttribute('aria-pressed', 'true');
-                  btnCards.classList.remove('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs');
-                  btnCards.classList.add('text-m3-on-surface-variant');
-                  btnCards.setAttribute('aria-pressed', 'false');
+                  btnTable.addEventListener('click', function() {
+                    viewCards.classList.add('hidden');
+                    viewTable.classList.remove('hidden');
+                    btnTable.classList.add('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs');
+                    btnTable.classList.remove('text-m3-on-surface-variant');
+                    btnTable.setAttribute('aria-pressed', 'true');
+                    btnCards.classList.remove('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs');
+                    btnCards.classList.add('text-m3-on-surface-variant');
+                    btnCards.setAttribute('aria-pressed', 'false');
+                  });
+                }
+
+                // Dynamic stay duration & pricing update for Tirupati tariff cards
+                document.querySelectorAll('.tirupati-stay-select').forEach(function(select) {
+                  select.addEventListener('change', function(e) {
+                    const target = e.target;
+                    const selectedOpt = target.options[target.selectedIndex];
+                    if (!selectedOpt) return;
+
+                    const card = target.closest('.tariff-card');
+                    if (!card) return;
+
+                    const price = selectedOpt.getAttribute('data-price');
+                    const duration = selectedOpt.getAttribute('data-duration');
+                    const inclusions = selectedOpt.getAttribute('data-inclusions');
+                    const vehicleName = card.getAttribute('data-vehicle-name') || '';
+                    const serviceTitle = card.getAttribute('data-service-title') || 'Chennai to Tirupati Cab';
+
+                    // Update hero price
+                    const priceEl = card.querySelector('.tariff-hero-price');
+                    if (priceEl && price) {
+                      priceEl.textContent = price;
+                    }
+
+                    // Update inclusions text
+                    const inclusionsEl = card.querySelector('.tariff-inclusions-text');
+                    if (inclusionsEl && inclusions) {
+                      inclusionsEl.textContent = inclusions;
+                    }
+
+                    // Update WhatsApp enquiry button
+                    const waBtn = card.querySelector('.tariff-whatsapp-btn');
+                    if (waBtn) {
+                      const newMsg = `Hi Kalidass Travels, I want to book ${vehicleName} for ${serviceTitle} (${duration}) (${price}).`;
+                      waBtn.setAttribute('href', `https://wa.me/918939539211?text=${encodeURIComponent(newMsg)}`);
+                      waBtn.setAttribute('aria-label', `Book ${vehicleName} on WhatsApp for ${price}`);
+                    }
+                  });
                 });
+              }
+
+              if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initTariffInteractions);
+              } else {
+                initTariffInteractions();
               }
             })();
           </script>
@@ -1024,42 +2057,82 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
         </section>
       )}
 
-      <!-- 2. ROUTE PLAN & TIMELINE -->
+      {/* WHY KALIDASS TRAVELS VS ONLINE AGGREGATORS (High-Authority GEO Comparison) */}
+      {pilgrimConfig && (
+        <section aria-label="Why Choose Kalidass Travels Over Online Aggregators" class="bg-m3-surface rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 p-5 sm:p-7">
+          <div class="max-w-2xl mb-5">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-emerald-50 text-emerald-900 text-xs font-bold uppercase tracking-wider mb-2 border border-emerald-200">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <span>Transparent Comparison</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading tracking-tight">
+              {pilgrimConfig.comparisonTitle}
+            </h2>
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant font-sans mt-1">
+              {pilgrimConfig.comparisonDesc}
+            </p>
+          </div>
+
+          <div class="overflow-x-auto rounded-m3-xl border border-m3-outline-variant">
+            <table class="w-full text-left text-xs sm:text-sm font-sans border-collapse">
+              <thead class="bg-m3-surface-container text-m3-on-surface-variant font-bold uppercase tracking-wider text-micro sm:text-xs">
+                <tr>
+                  <th class="p-3 sm:p-4">Feature / Service</th>
+                  <th class="p-3 sm:p-4 bg-emerald-50/70 text-emerald-900 font-extrabold">Kalidass Travels</th>
+                  <th class="p-3 sm:p-4 text-m3-on-surface-variant">Online Cab Aggregators (MakeMyTrip / Savaari / Uber)</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-m3-outline-variant text-m3-on-surface">
+                {pilgrimConfig.comparisonRows.map((row) => (
+                  <tr class="hover:bg-m3-surface-container-low transition-colors">
+                    <td class="p-3 sm:p-4 font-semibold">{row.feature}</td>
+                    <td class="p-3 sm:p-4 bg-emerald-50/40 font-bold text-emerald-950">{row.kalidass}</td>
+                    <td class="p-3 sm:p-4 text-m3-on-surface-variant">{row.aggregators}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
+
+      <!-- 2. ROUTE PLAN & TIMELINE (Sleek Unboxed Transit Stepper) -->
       {service.routePlan && (
         <section
           id="route"
-          class="bg-m3-surface rounded-m3-2xl p-5 sm:p-7 border border-m3-outline-variant shadow-m3-1 space-y-5 scroll-mt-40"
+          class="bg-m3-surface rounded-m3-2xl p-4 sm:p-6 border border-m3-outline-variant shadow-m3-1 space-y-4 scroll-mt-40"
         >
-          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-m3-outline-variant/60 pb-4">
+          <!-- Section Header -->
+          <div class="flex flex-wrap items-center justify-between gap-2.5 border-b border-m3-outline-variant/60 pb-3">
             <div>
-              <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface flex items-center gap-2 font-heading">
-                <Compass className="w-5 h-5 text-m3-primary" />
+              <h2 class="text-base sm:text-xl font-bold text-m3-on-surface flex items-center gap-2 font-heading">
+                <Compass className="w-4 h-4 sm:w-5 sm:h-5 text-m3-primary shrink-0" />
                 <span>{shortName} Route Schedule &amp; Key Stops</span>
               </h2>
-              <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-0.5">Optimized timeline designed to ensure timely darshan entry</p>
+              <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-0.5">Optimized timeline designed to ensure timely darshan entry</p>
             </div>
             {service.duration && (
-              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container-high text-m3-on-surface text-xs font-semibold">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-m3-full bg-m3-surface-container-high text-m3-on-surface text-micro sm:text-xs font-semibold">
                 <Clock className="w-3.5 h-3.5 text-m3-primary" />
                 <span>{service.duration}</span>
               </span>
             )}
           </div>
 
-          <!-- Compact Connected Stepper Timeline -->
-          <div class="relative pl-7 sm:pl-9 border-l-2 border-m3-primary/30 ml-3 sm:ml-4 my-3 space-y-4 sm:space-y-5">
+          <!-- Sleek Unboxed Transit Stepper (Google Maps Transit Style) -->
+          <div class="relative pl-6 sm:pl-7 border-l-2 border-m3-primary/30 ml-2.5 sm:ml-3 space-y-3 sm:space-y-3.5 my-1">
             {service.routePlan.map((stop: any, idx: number) => (
               <div class="relative group">
-                {/* Stepper Dot */}
-                <div class="absolute -left-[35px] sm:-left-[43px] top-0.5 w-7 h-7 sm:w-8 sm:h-8 rounded-m3-full bg-m3-primary text-m3-on-primary font-bold text-xs sm:text-sm flex items-center justify-center shadow-xs ring-4 ring-m3-surface">
+                {/* Node Number Dot */}
+                <div class="absolute -left-[31px] sm:-left-[35px] top-0.5 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-m3-primary text-m3-on-primary font-bold text-[10px] sm:text-xs flex items-center justify-center shadow-2xs ring-4 ring-m3-surface">
                   {idx + 1}
                 </div>
-                {/* Step Card */}
-                <div class="bg-m3-surface-container-low p-3.5 sm:p-4 rounded-m3-md border border-m3-outline-variant/60 hover:border-m3-primary/40 transition-colors">
-                  <h3 class="font-bold text-m3-on-surface text-sm sm:text-base font-heading">
+                {/* Stop Content */}
+                <div class="min-w-0">
+                  <h3 class="font-bold text-m3-on-surface text-xs sm:text-sm font-heading leading-snug">
                     {stop.stop}
                   </h3>
-                  <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1 leading-relaxed">
+                  <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-0.5 leading-relaxed">
                     {stop.desc}
                   </p>
                 </div>
@@ -1075,214 +2148,224 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
           id="guide"
           class="bg-m3-surface rounded-m3-2xl p-5 sm:p-7 border border-m3-outline-variant shadow-m3-1 space-y-6 scroll-mt-40"
         >
+          <!-- Section Header -->
           <div class="border-b border-m3-outline-variant/60 pb-3">
             <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface flex items-center gap-2.5 font-heading">
               <FileText className="w-5 h-5 text-m3-primary shrink-0" />
               <span>{shortName} {guideLabels.sectionTitle}</span>
             </h2>
-            <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-0.5">Essential darshan timings, dress code regulations &amp; practical pilgrim tips</p>
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-0.5">
+              {isTour 
+                ? "Essential darshan timings, dress code regulations & practical pilgrim tips" 
+                : "Operational timings, chauffeur standards & verified booking guidelines"}
+            </p>
           </div>
 
-          <!-- Significance & Darshan Timings -->
-          <div class="grid md:grid-cols-2 gap-6">
-            {/* Significance / Background */}
-            {service.travelGuide.history && (
-              <div class="space-y-2">
-                <h3 class="font-bold text-m3-on-surface text-sm sm:text-base font-heading flex items-center gap-2">
-                  <Compass className="w-4 h-4 text-m3-primary shrink-0" />
-                  <span>{guideLabels.col1Title}</span>
-                </h3>
-                <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed whitespace-pre-line">
-                  {service.travelGuide.history}
-                </p>
-              </div>
-            )}
-
-            {/* Darshan Timings */}
-            {timingItems.length > 0 ? (
-              <div class="space-y-2.5">
-                <h3 class="font-bold text-m3-on-surface text-sm sm:text-base font-heading flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-m3-primary shrink-0" />
-                  <span>{guideLabels.col2Title}</span>
-                </h3>
-                <div class="grid gap-2">
-                  {timingItems.map((item: any) => {
-                    const isLong = item.time && item.time.length > 25;
-                    return (
-                      <div class={`bg-m3-surface-container-low p-2.5 sm:p-3 rounded-m3-md border border-m3-outline-variant/60 text-xs sm:text-sm ${
-                        isLong 
-                          ? 'space-y-1' 
-                          : 'flex flex-col sm:flex-row sm:items-center justify-between gap-1.5'
-                      }`}>
-                        <span class="font-semibold text-m3-on-surface leading-snug">{item.label}</span>
-                        {item.time && (
-                          <span class={`inline-block px-2.5 py-0.5 bg-m3-primary-container text-m3-on-primary-container text-xs font-semibold leading-relaxed max-w-full break-words ${
-                            isLong 
-                              ? 'rounded-m3-md w-full' 
-                              : 'rounded-m3-full self-start sm:self-auto shrink-0'
-                          }`}>
-                            {item.time}
-                          </span>
-                        )}
-                      </div>
-                    );
-                  })}
+          <!-- 4-Card Pilgrimage / Service Briefing Grid (2x2 on desktop, single column on mobile) -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            
+            {/* CARD 1: Temple Significance & Sacred Traditions / Service Scope */}
+            <div class="bg-m3-surface-container-low rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-2.5 mb-3.5">
+                  <h3 class="font-bold text-m3-on-surface text-sm sm:text-base font-heading flex items-center gap-2">
+                    {isTour ? <Sparkles className="w-4 h-4 text-amber-600 shrink-0" /> : <Compass className="w-4 h-4 text-m3-primary shrink-0" />}
+                    <span>{guideLabels.col1Title}</span>
+                  </h3>
+                  <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant bg-m3-surface-container px-2 py-0.5 rounded-m3-sm border border-m3-outline-variant/50">
+                    {isTour ? "Sthala Puranam" : "Coverage"}
+                  </span>
                 </div>
-              </div>
-            ) : (
-              <div class="space-y-2">
-                <h3 class="font-bold text-m3-on-surface text-sm sm:text-base font-heading flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-m3-primary shrink-0" />
-                  <span>Verified Service Standards</span>
-                </h3>
-                <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed">
-                  All trips follow certified sanitization protocols, punctuality guarantees, and upfront transparent pricing with zero surprise charges.
-                </p>
-              </div>
-            )}
-          </div>
 
-          <!-- Sub-Tabs for Dress Code & Practical Tips -->
-          {(parsedDressCode || parsedTips.length > 0) && (
-            <div class="pt-4 border-t border-m3-outline-variant/60 space-y-4">
-              <!-- Sub Tab Controls -->
-              <div class="flex items-center gap-2 bg-m3-surface-container-low p-1.5 rounded-m3-xl border border-m3-outline-variant/60 w-fit max-w-full overflow-x-auto no-scrollbar" role="tablist">
-                {parsedDressCode && (
-                  <button
-                    type="button"
-                    role="tab"
-                    id="tab-dresscode-btn"
-                    aria-selected="true"
-                    aria-controls="panel-dresscode"
-                    data-guide-tab="dresscode"
-                    class="guide-tab-btn inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 rounded-m3-lg text-xs sm:text-sm font-bold transition-all bg-m3-primary text-m3-on-primary shadow-xs shrink-0"
-                  >
-                    {isTour ? <Sparkles className="w-3.5 h-3.5 shrink-0" /> : <ShieldCheck className="w-3.5 h-3.5 shrink-0" />}
-                    <span>{guideLabels.dressCodeLabel}</span>
-                  </button>
-                )}
-                {parsedTips.length > 0 && (
-                  <button
-                    type="button"
-                    role="tab"
-                    id="tab-tips-btn"
-                    aria-selected={!parsedDressCode ? "true" : "false"}
-                    aria-controls="panel-tips"
-                    data-guide-tab="tips"
-                    class={`guide-tab-btn inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 rounded-m3-lg text-xs sm:text-sm font-bold transition-all shrink-0 ${
-                      !parsedDressCode 
-                        ? 'bg-m3-primary text-m3-on-primary shadow-xs' 
-                        : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container'
-                    }`}
-                  >
-                    <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-m3-secondary" />
-                    <span>{guideLabels.tipsTitle}</span>
-                  </button>
-                )}
-              </div>
-
-              <!-- Sub Panel 1: Dress Code -->
-              {parsedDressCode && (
-                <div
-                  id="panel-dresscode"
-                  role="tabpanel"
-                  aria-labelledby="tab-dresscode-btn"
-                  data-guide-panel="dresscode"
-                  class="bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-xl p-4 sm:p-5 space-y-3.5"
-                >
-                  <div class="flex flex-wrap items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-2.5">
-                    <div>
-                      <h4 class="font-bold text-sm sm:text-base font-heading text-m3-on-surface">
-                        {guideLabels.dressCodeLabel}
-                      </h4>
-                      <p class="text-xs font-medium text-m3-on-surface-variant">
-                        {isTour ? "Mandatory Temple Entry Attire Policy" : "Chauffeur Standards & Code of Conduct"}
-                      </p>
-                    </div>
-                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-m3-full text-xs font-bold uppercase tracking-wider bg-m3-surface-container text-m3-on-surface border border-m3-outline-variant">
-                      {isTour ? "Mandatory" : "Verified Standard"}
-                    </span>
-                  </div>
-
-                  {parsedDressCode.general && parsedDressCode.items && parsedDressCode.items.length > 0 && (
-                    <p class="text-xs sm:text-sm font-medium leading-relaxed text-m3-on-surface">
-                      {parsedDressCode.general}
-                    </p>
-                  )}
-
-                  {parsedDressCode.items && parsedDressCode.items.length > 0 && (
-                    <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
-                      {parsedDressCode.items.map((item: any) => (
-                        <div class="bg-m3-surface rounded-m3-lg p-3.5 border border-m3-outline-variant shadow-xs space-y-1.5">
-                          <h5 class="font-bold text-xs sm:text-sm text-m3-on-surface block font-heading border-b border-m3-outline-variant/60 pb-1">
+                {parsedHistory.length > 0 && (
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+                    {parsedHistory.map((item: any) => (
+                      <div class="bg-m3-surface rounded-m3-lg p-2.5 sm:p-3 border border-m3-outline-variant/60 shadow-2xs flex items-start gap-2.5 min-w-0">
+                        <div class={`w-2 h-2 rounded-full shrink-0 mt-1.5 ring-2 ${
+                          isTour 
+                            ? 'bg-amber-600 ring-amber-100' 
+                            : 'bg-m3-primary ring-m3-primary/20'
+                        }`}></div>
+                        <div class="min-w-0 flex-1">
+                          <span class="block font-bold text-xs text-m3-on-surface font-heading leading-tight truncate">
                             {item.title}
-                          </h5>
-                          <div class="space-y-1 text-xs">
-                            <div class="flex items-start gap-1.5 text-m3-on-surface">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-m3-secondary shrink-0 mt-0.5" />
-                              <span class="leading-relaxed"><strong>Allowed:</strong> {item.allowed}</span>
-                            </div>
-                            {item.prohibited && (
-                              <div class="flex items-start gap-1.5 text-m3-on-surface-variant">
-                                <XCircle className="w-3.5 h-3.5 text-m3-primary shrink-0 mt-0.5" />
-                                <span class="leading-relaxed"><strong>Prohibited:</strong> {item.prohibited}</span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {isTour ? (
-                    <div class="p-3 bg-m3-primary-container/40 border border-m3-primary/20 rounded-m3-md text-xs sm:text-sm text-m3-on-surface flex items-start gap-2.5">
-                      <AlertCircle className="w-4 h-4 text-m3-primary shrink-0 mt-0.5" />
-                      <span class="leading-relaxed">
-                        <strong class="font-bold text-m3-on-primary-container">Strict Enforcement:</strong> {service.slug === 'tirupati-package' 
-                          ? "Devotees wearing jeans, modern printed t-shirts, Bermudas, shorts, or western clothing will be strictly stopped at the Vaikuntam scanning queue and denied sanctum entry."
-                          : "Traditional attire is mandatory across major South Indian shrines. Devotees in western outfits, shorts, or modern t-shirts will be stopped at entrance gopurams and denied inner sanctum entry."}
-                      </span>
-                    </div>
-                  ) : (
-                    <div class="p-3 bg-m3-surface-container border border-m3-outline-variant rounded-m3-md text-xs sm:text-sm text-m3-on-surface flex items-start gap-2.5">
-                      <ShieldCheck className="w-4 h-4 text-m3-primary shrink-0 mt-0.5" />
-                      <span class="leading-relaxed">
-                        <strong class="font-bold">Professional Assurance:</strong> Every assigned driver is police background-verified (PVC), carries a photo ID badge, maintains personal car cleanliness, and strictly adheres to passenger confidentiality and speed discipline.
-                      </span>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              <!-- Sub Panel 2: Practical Tips -->
-              {parsedTips.length > 0 && (
-                <div
-                  id="panel-tips"
-                  role="tabpanel"
-                  aria-labelledby="tab-tips-btn"
-                  data-guide-panel="tips"
-                  class={`bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-xl p-4 sm:p-5 space-y-3.5 ${parsedDressCode ? 'hidden' : ''}`}
-                >
-                  <h4 class="font-bold text-sm sm:text-base font-heading text-m3-on-surface">
-                    {guideLabels.tipsTitle}
-                  </h4>
-                  <div class="grid sm:grid-cols-2 gap-3">
-                    {parsedTips.map((tip: any) => (
-                      <div class="bg-m3-surface p-3.5 rounded-m3-md border border-m3-outline-variant/60 flex items-start gap-2.5 shadow-xs">
-                        <CheckCircle2 className="w-4 h-4 text-m3-secondary shrink-0 mt-0.5" />
-                        <div class="space-y-1 text-xs sm:text-sm min-w-0 flex-1">
-                          {tip.title && (
-                            <span class="font-bold text-m3-on-surface block font-heading">{tip.title}</span>
+                          </span>
+                          {item.desc && (
+                            <span class="block text-micro text-m3-on-surface-variant font-medium leading-snug mt-0.5">
+                              {item.desc}
+                            </span>
                           )}
-                          <p class="text-m3-on-surface-variant leading-relaxed break-words">{tip.desc}</p>
                         </div>
                       </div>
                     ))}
                   </div>
+                )}
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 flex items-center gap-1.5 text-micro font-semibold text-emerald-800">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <span>{isTour ? "Sacred yatra circuit coordinated with verified sanctum pooja timings" : "Doorstep pickup & return across all Chennai neighborhoods"}</span>
+              </div>
+            </div>
+
+            {/* CARD 2: Temple & Darshan Timings */}
+            <div class="bg-m3-surface-container-low rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-2.5 mb-3.5">
+                  <h3 class="font-bold text-m3-on-surface text-sm sm:text-base font-heading flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-m3-primary shrink-0" />
+                    <span>{guideLabels.col2Title}</span>
+                  </h3>
+                  <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant bg-m3-surface-container px-2 py-0.5 rounded-m3-sm border border-m3-outline-variant/50">
+                    {isTour ? "Darshan Slots" : "Operational SLA"}
+                  </span>
+                </div>
+
+                {timingItems.length > 0 ? (
+                  <div class="space-y-2">
+                    {timingItems.map((item: any) => {
+                      const isLong = item.time && item.time.length > 28;
+                      return (
+                        <div class={`bg-m3-surface p-2.5 rounded-m3-lg border border-m3-outline-variant/60 text-xs sm:text-sm ${
+                          isLong 
+                            ? 'space-y-1' 
+                            : 'flex flex-col sm:flex-row sm:items-center justify-between gap-1.5'
+                        }`}>
+                          <span class="font-semibold text-m3-on-surface leading-snug">{item.label}</span>
+                          {item.time && (
+                            <span class={`inline-block px-2.5 py-0.5 bg-m3-primary-container text-m3-on-primary-container text-xs font-bold leading-relaxed max-w-full break-words ${
+                              isLong 
+                                ? 'rounded-m3-md w-full' 
+                                : 'rounded-m3-full self-start sm:self-auto shrink-0'
+                            }`}>
+                              {item.time}
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div class="space-y-2 text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed">
+                    <p>24/7 round-the-clock booking and dispatch support across Chennai.</p>
+                  </div>
+                )}
+              </div>
+
+              {isTour && (
+                <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 flex items-start gap-1.5 text-micro text-m3-on-surface-variant">
+                  <Info className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
+                  <span>Afternoon Break: Most shrines close 12:30 PM – 04:00 PM for pooja &amp; reopen in the evening.</span>
                 </div>
               )}
             </div>
-          )}
+
+            {/* CARD 3: Devotee Traditional Dress Code / Chauffeur Standards */}
+            <div class="bg-m3-surface-container-low rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-2.5 mb-3.5">
+                  <h3 class="font-bold text-m3-on-surface text-sm sm:text-base font-heading flex items-center gap-2">
+                    {isTour ? <Sparkles className="w-4 h-4 text-amber-600 shrink-0" /> : <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />}
+                    <span>{guideLabels.dressCodeLabel}</span>
+                  </h3>
+                  <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant bg-m3-surface-container px-2 py-0.5 rounded-m3-sm border border-m3-outline-variant/50">
+                    {isTour ? "Mandatory Policy" : "Chauffeur Standard"}
+                  </span>
+                </div>
+
+                {parsedDressCode?.general && (
+                  <p class="text-xs sm:text-sm font-medium leading-relaxed text-m3-on-surface mb-3">
+                    {parsedDressCode.general}
+                  </p>
+                )}
+
+                {parsedDressCode?.items && parsedDressCode.items.length > 0 ? (
+                  <div class="grid sm:grid-cols-2 gap-2.5 mb-3">
+                    {parsedDressCode.items.map((item: any) => (
+                      <div class="bg-m3-surface rounded-m3-lg p-3 border border-m3-outline-variant shadow-2xs space-y-1">
+                        <h4 class="font-bold text-xs text-m3-on-surface font-heading border-b border-m3-outline-variant/50 pb-1">
+                          {item.title}
+                        </h4>
+                        <div class="text-xs space-y-1 pt-0.5">
+                          <div class="flex items-start gap-1.5 text-m3-on-surface">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                            <span class="leading-snug"><strong class="font-semibold text-emerald-900">Allowed:</strong> {item.allowed}</span>
+                          </div>
+                          {item.prohibited && (
+                            <div class="flex items-start gap-1.5 text-m3-on-surface-variant">
+                              <XCircle className="w-3.5 h-3.5 text-rose-600 shrink-0 mt-0.5" />
+                              <span class="leading-snug"><strong class="font-semibold text-rose-800">Prohibited:</strong> {item.prohibited}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p class="text-xs text-m3-on-surface-variant leading-relaxed mb-3">
+                    All passengers and drivers are expected to maintain professional and respectful attire.
+                  </p>
+                )}
+              </div>
+
+              {isTour ? (
+                <div class="mt-2 p-2.5 bg-amber-500/10 border border-amber-400/30 rounded-m3-md text-micro sm:text-xs text-amber-950 flex items-start gap-2">
+                  <AlertCircle className="w-3.5 h-3.5 text-amber-700 shrink-0 mt-0.5" />
+                  <span class="leading-snug">
+                    <strong class="font-bold">Strict Rule:</strong> Western wear, jeans, shorts, and Bermudas are prohibited inside sanctums by temple authorities.
+                  </span>
+                </div>
+              ) : (
+                <div class="mt-2 p-2.5 bg-emerald-50 border border-emerald-200 rounded-m3-md text-micro sm:text-xs text-emerald-950 flex items-start gap-2">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0 mt-0.5" />
+                  <span class="leading-snug">
+                    <strong class="font-bold">Verified Drivers:</strong> Uniformed, police-verified, non-smoking chauffeurs with 7+ years of driving experience.
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* CARD 4: Practical Tips for Pilgrims & Travelers */}
+            <div class="bg-m3-surface-container-low rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-2.5 mb-3.5">
+                  <h3 class="font-bold text-m3-on-surface text-sm sm:text-base font-heading flex items-center gap-2">
+                    <Lightbulb className="w-4 h-4 text-amber-600 shrink-0" />
+                    <span>{guideLabels.tipsTitle}</span>
+                  </h3>
+                  <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant bg-m3-surface-container px-2 py-0.5 rounded-m3-sm border border-m3-outline-variant/50">
+                    {isTour ? "Pilgrim Tips" : "Checklist"}
+                  </span>
+                </div>
+
+                {parsedTips.length > 0 ? (
+                  <div class="space-y-2.5">
+                    {parsedTips.map((tip: any) => (
+                      <div class="bg-m3-surface p-2.5 sm:p-3 rounded-m3-lg border border-m3-outline-variant/60 flex items-start gap-2.5 shadow-2xs">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                        <div class="space-y-0.5 text-xs sm:text-sm min-w-0 flex-1">
+                          {tip.title && (
+                            <span class="font-bold text-m3-on-surface block text-xs">{tip.title}</span>
+                          )}
+                          <p class="text-m3-on-surface-variant leading-relaxed text-xs break-words">{tip.desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div class="space-y-2 text-xs text-m3-on-surface-variant">
+                    <p>Book at least 24 hours in advance to guarantee vehicle preference and early morning departure slots.</p>
+                  </div>
+                )}
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 flex items-center justify-between text-micro text-m3-on-surface-variant">
+                <span class="font-semibold text-emerald-800">Assistance during darshan &amp; temple queues</span>
+                <span class="font-bold text-m3-primary">24/7 Helpline</span>
+              </div>
+            </div>
+
+          </div>
         </section>
       )}
 
@@ -1329,7 +2412,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
       <section class="bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-2xl p-6 sm:p-10 text-center shadow-m3-3 border border-slate-800">
         <div class="max-w-2xl mx-auto space-y-4">
           <h2 class="text-xl sm:text-2xl font-bold font-heading text-white">
-            Ready to Book {service.title}?
+            {pilgrimConfig ? pilgrimConfig.ctaHeading : `Ready to Book Your ${shortName} Trip?`}
           </h2>
           <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
             {isTour 
@@ -1359,40 +2442,3 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
 
   </main>
 </Layout>
-
-<script>
-  function setupGuideTabs() {
-    const tabBtns = document.querySelectorAll<HTMLButtonElement>('.guide-tab-btn');
-    const tabPanels = document.querySelectorAll<HTMLElement>('[data-guide-panel]');
-
-    if (!tabBtns.length) return;
-
-    tabBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const target = btn.getAttribute('data-guide-tab');
-        if (!target) return;
-
-        tabBtns.forEach((b) => {
-          b.setAttribute('aria-selected', 'false');
-          b.classList.remove('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs');
-          b.classList.add('text-m3-on-surface-variant');
-        });
-
-        btn.setAttribute('aria-selected', 'true');
-        btn.classList.add('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs');
-        btn.classList.remove('text-m3-on-surface-variant');
-
-        tabPanels.forEach((p) => {
-          if (p.getAttribute('data-guide-panel') === target) {
-            p.classList.remove('hidden');
-          } else {
-            p.classList.add('hidden');
-          }
-        });
-      });
-    });
-  }
-
-  setupGuideTabs();
-  document.addEventListener('astro:page-load', setupGuideTabs);
-</script>

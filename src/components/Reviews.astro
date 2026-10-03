@@ -22,7 +22,7 @@ const reviews = siteContent.reviews;
     </div>
 
     <!-- Reviews Scroll -->
-    <div class="flex overflow-x-auto gap-4 pb-6 scrollbar-hide snap-x">
+    <div tabindex="0" role="region" aria-label="Customer Reviews" class="flex overflow-x-auto gap-4 pb-6 scrollbar-hide snap-x focus:outline-none focus:ring-1 focus:ring-m3-primary/30">
       {reviews.map((review) => (
         <div class="flex-none w-64 sm:w-80 bg-m3-surface p-6 rounded-m3-xl shadow-m3-1 border border-m3-outline-variant snap-center flex flex-col justify-between">
           <div>

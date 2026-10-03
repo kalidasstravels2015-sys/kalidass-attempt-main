@@ -49,8 +49,8 @@ test.describe('Functional Tests', () => {
         await pickupInput.fill('Chennai Airport');
         await dropInput.fill('T Nagar');
         const calculateBtn = page.getByRole('button', { name: /Calculate Cost/i }).first();
-        await calculateBtn.scrollIntoViewIfNeeded();
         await expect(calculateBtn).toBeVisible();
     });
+
 
 });

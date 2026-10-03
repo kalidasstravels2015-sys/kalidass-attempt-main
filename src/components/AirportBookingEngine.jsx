@@ -378,6 +378,8 @@ export default function AirportBookingEngine({ showHeader = true }) {
       {/* ── Main booking card (unified design) ────────────────────────── */}
       <div
         ref={cardRef}
+        id="airport-fare-finder"
+        data-testid="airport-fare-finder"
         className="w-full max-w-2xl mx-auto bg-m3-surface rounded-m3-xl shadow-m3-2 border border-m3-outline-variant overflow-hidden font-sans"
       >
         {/* Header */}
@@ -395,12 +397,13 @@ export default function AirportBookingEngine({ showHeader = true }) {
         <div className="px-3 sm:px-6 my-4">
           <div role="tablist" aria-label="Transfer Direction" className="bg-m3-surface-container-high p-1 rounded-m3-full flex gap-1 border border-m3-outline-variant">
             {[
-              { key: 'drop',   label: '✈ Airport Drop' },
-              { key: 'pickup', label: '✈ Airport Pickup' },
+              { key: 'drop',   label: '✈ Airport Drop',   testId: 'tab-drop' },
+              { key: 'pickup', label: '✈ Airport Pickup', testId: 'tab-pickup' },
             ].map(tab => (
               <button
                 key={tab.key}
                 role="tab"
+                data-testid={tab.testId}
                 aria-selected={direction === tab.key}
                 onClick={() => handleDirectionChange(tab.key)}
                 className={`flex-1 py-2 px-3 text-xs font-bold rounded-m3-full transition-all min-h-[38px] sm:min-h-[42px] cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary ${
@@ -431,6 +434,8 @@ export default function AirportBookingEngine({ showHeader = true }) {
             </label>
             <div className={inputWrap}>
               <input
+                id="airport-from-input"
+                data-testid="airport-from-input"
                 ref={direction === 'drop' ? destInputRef : null}
                 type="text"
                 value={pickup}
@@ -469,6 +474,8 @@ export default function AirportBookingEngine({ showHeader = true }) {
             </label>
             <div className={inputWrap}>
               <input
+                id="airport-to-input"
+                data-testid="airport-to-input"
                 ref={direction === 'pickup' ? destInputRef : null}
                 type="text"
                 value={drop}
@@ -580,6 +587,8 @@ export default function AirportBookingEngine({ showHeader = true }) {
           {/* Calculate button — exact QuotationEngine style */}
           <button
             type="button"
+            id="get-flat-fare-btn"
+            data-testid="get-flat-fare-btn"
             disabled={loading}
             onClick={handleCalculate}
             className="w-full max-w-[260px] sm:max-w-[280px] mx-auto bg-m3-primary hover:bg-slate-900 text-m3-on-primary font-bold py-3 rounded-m3-full transition-all flex items-center justify-center gap-2 shadow-m3-1 hover:shadow-m3-2 text-sm sm:text-base min-h-[46px] sm:min-h-[50px] cursor-pointer active:scale-[0.98] disabled:opacity-75 border border-white/10"
@@ -606,6 +615,8 @@ export default function AirportBookingEngine({ showHeader = true }) {
 
           {/* Bottom-sheet on mobile, centered dialog on desktop */}
           <div
+            id="airport-booking-modal"
+            data-testid="airport-booking-modal"
             role="dialog"
             aria-modal="true"
             aria-label="Airport fare and booking"

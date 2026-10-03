@@ -304,9 +304,16 @@ const faqSchema = {
                     </span>
                     <div class="flex flex-wrap gap-1.5">
                       {srv.popularTrips.map((trip) => (
-                        <span class="text-micro font-medium px-2 py-0.5 rounded-m3-md bg-m3-surface border border-m3-outline-variant/70 text-m3-on-surface">
-                          {trip}
-                        </span>
+                        trip.includes("Tirupati") ? (
+                          <a href="/services/tirupati-package/" class="text-micro font-semibold px-2 py-0.5 rounded-m3-md bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 transition-colors inline-flex items-center gap-1">
+                            <span>{trip}</span>
+                            <span class="text-[10px]">&rarr;</span>
+                          </a>
+                        ) : (
+                          <span class="text-micro font-medium px-2 py-0.5 rounded-m3-md bg-m3-surface border border-m3-outline-variant/70 text-m3-on-surface">
+                            {trip}
+                          </span>
+                        )
                       ))}
                     </div>
                   </div>

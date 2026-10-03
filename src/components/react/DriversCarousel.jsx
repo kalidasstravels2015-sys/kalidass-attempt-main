@@ -94,7 +94,7 @@ const DriversCarousel = ({ currentLang }) => {
                 </div>
 
                 {/* Compact Grid */}
-                <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 sm:gap-6 pb-4 scrollbar-hide sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:overflow-visible">
+                <div tabIndex={0} role="region" aria-label="Verified Drivers" className="flex overflow-x-auto snap-x snap-mandatory gap-4 sm:gap-6 pb-4 scrollbar-hide sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:overflow-visible focus:outline-none focus:ring-1 focus:ring-m3-primary/30">
                     {visibleDrivers.map((driver, index) => (
                         <DriverCard key={index} driver={driver} />
                     ))}

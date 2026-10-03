@@ -53,19 +53,28 @@ const explainerSteps = [
   }
 ];
 
+const fleetTierSpecs = [
+  { type: "Sedan", names: "Swift Dzire / Etios", passengers: "4 Passengers", baggage: "2 Bags" },
+  { type: "Family SUV", names: "Maruti Ertiga / XL6", passengers: "6 Passengers", baggage: "3 Bags" },
+  { type: "Comfort MUV", names: "Toyota Innova", passengers: "7 Passengers", baggage: "4 Bags" },
+  { type: "Luxury MPV", names: "Innova Crysta", passengers: "7 Passengers", baggage: "4 Bags" },
+  { type: "Group Coach", names: "12S Tempo Traveller", passengers: "12 Passengers", baggage: "8+ Bags" },
+];
+
+function createPackageRates(prices: [string, string, string, string, string]) {
+  return fleetTierSpecs.map((spec, i) => ({
+    ...spec,
+    price: prices[i],
+  }));
+}
+
 const tourPackages = [
   {
     id: "tirupati",
     name: "Chennai to Tirupati Balaji Darshan",
     duration: "1 Day (320 km Round Trip)",
     badge: "Most Popular",
-    rates: [
-      { car: "Sedan", price: "₹6,000" },
-      { car: "Ertiga", price: "₹7,500" },
-      { car: "Innova", price: "₹8,500" },
-      { car: "Crysta", price: "₹10,000" },
-      { car: "Tempo", price: "₹12,500" }
-    ],
+    rates: createPackageRates(["₹6,000", "₹7,500", "₹8,500", "₹10,000", "₹12,500"]),
     highlights: "Doorstep 4 AM Chennai pickup • Andhra State Permit, Tolls, Alipiri check & Driver Bata fully included.",
     whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Tirupati Balaji Car Package."
   },
@@ -74,13 +83,7 @@ const tourPackages = [
     name: "Chennai to Kumbakonam 9 Navagraha Tour",
     duration: "2 Days / 1 Night (750 km)",
     badge: "Complete 9 Temples",
-    rates: [
-      { car: "Sedan", price: "₹8,600" },
-      { car: "Ertiga", price: "₹10,600" },
-      { car: "Innova", price: "₹13,100" },
-      { car: "Crysta", price: "₹15,500" },
-      { car: "Tempo", price: "₹18,500" }
-    ],
+    rates: createPackageRates(["₹8,600", "₹10,600", "₹13,100", "₹15,500", "₹18,500"]),
     highlights: "All 9 planetary temples sequenced without backtracking • 2 Days driver bata, fuel & highway tolls included.",
     whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Kumbakonam 9 Navagraha 2-Day Tour."
   },
@@ -89,13 +92,7 @@ const tourPackages = [
     name: "Chennai to Thiruvannamalai Girivalam Trip",
     duration: "1 Day / Pournami Night (400 km)",
     badge: "Pournami Special",
-    rates: [
-      { car: "Sedan", price: "₹6,500" },
-      { car: "Ertiga", price: "₹7,900" },
-      { car: "Innova", price: "₹9,300" },
-      { car: "Crysta", price: "₹11,100" },
-      { car: "Tempo", price: "₹13,500" }
-    ],
+    rates: createPackageRates(["₹6,500", "₹7,900", "₹9,300", "₹11,100", "₹13,500"]),
     highlights: "Arunachaleswarar Darshan + 14 km Pournami Girivalam car standby for family & seniors.",
     whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Thiruvannamalai Girivalam Tour."
   },
@@ -104,13 +101,7 @@ const tourPackages = [
     name: "Chennai to Kanchipuram Temple Tour",
     duration: "1 Day (150 km)",
     badge: "Divya Desam",
-    rates: [
-      { car: "Sedan", price: "₹3,200" },
-      { car: "Ertiga", price: "₹4,500" },
-      { car: "Innova", price: "₹5,500" },
-      { car: "Crysta", price: "₹6,500" },
-      { car: "Tempo", price: "₹8,000" }
-    ],
+    rates: createPackageRates(["₹3,500", "₹4,500", "₹5,500", "₹6,800", "₹8,500"]),
     highlights: "Kamakshi Amman, Ekambareswarar, Varadharaja Perumal & Silk Saree weaver visit included.",
     whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Kanchipuram 1-Day Temple Package."
   },
@@ -119,13 +110,7 @@ const tourPackages = [
     name: "Chennai to Rameswaram & Dhanushkodi Yatra",
     duration: "2 Days / 1 Night (1,200 km)",
     badge: "Char Dham Sthalam",
-    rates: [
-      { car: "Sedan", price: "₹15,500" },
-      { car: "Ertiga", price: "₹18,400" },
-      { car: "Innova", price: "₹22,600" },
-      { car: "Crysta", price: "₹26,700" },
-      { car: "Tempo", price: "₹32,200" }
-    ],
+    rates: createPackageRates(["₹15,500", "₹18,500", "₹22,000", "₹26,000", "₹31,000"]),
     highlights: "22 Theertham baths, Pamban bridge, Ram Setu / Arichal Munai & APJ Abdul Kalam Memorial.",
     whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Rameswaram 2-Day Pilgrimage Package."
   },
@@ -134,13 +119,7 @@ const tourPackages = [
     name: "Chennai to Sabarimala Yatra Car Package",
     duration: "3 Days / 2 Nights (1,350 km)",
     badge: "Mandala Season",
-    rates: [
-      { car: "Sedan", price: "₹15,900" },
-      { car: "Ertiga", price: "₹18,900" },
-      { car: "Innova", price: "₹23,300" },
-      { car: "Crysta", price: "₹27,600" },
-      { car: "Tempo", price: "₹34,800" }
-    ],
+    rates: createPackageRates(["₹15,900", "₹18,500", "₹22,000", "₹26,500", "₹32,000"]),
     highlights: "Satvik teetotaler driver • Kerala State Permit • 3 Days driver allowance and ghat road guidance.",
     whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Sabarimala 3-Day Package."
   },
@@ -149,13 +128,7 @@ const tourPackages = [
     name: "Chennai to Vellore Golden Temple Tour",
     duration: "1 Day (300 km)",
     badge: "Golden Temple",
-    rates: [
-      { car: "Sedan", price: "₹4,200" },
-      { car: "Ertiga", price: "₹5,200" },
-      { car: "Innova", price: "₹6,200" },
-      { car: "Crysta", price: "₹7,200" },
-      { car: "Tempo", price: "₹9,000" }
-    ],
+    rates: createPackageRates(["₹4,800", "₹6,000", "₹7,200", "₹8,800", "₹10,500"]),
     highlights: "1,500 kg Gold Sripuram Mahalakshmi Temple & Jalakandeswarar Fort Temple + Tolls included.",
     whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Vellore Golden Temple Trip."
   },
@@ -164,15 +137,62 @@ const tourPackages = [
     name: "Chennai to Chidambaram Natarajar Temple",
     duration: "1 Day (450 km)",
     badge: "Pancha Bhoota",
-    rates: [
-      { car: "Sedan", price: "₹7,400" },
-      { car: "Ertiga", price: "₹9,000" },
-      { car: "Innova", price: "₹10,500" },
-      { car: "Crysta", price: "₹12,500" },
-      { car: "Tempo", price: "₹15,000" }
-    ],
+    rates: createPackageRates(["₹7,400", "₹9,200", "₹11,000", "₹13,500", "₹16,500"]),
     highlights: "Akasha Lingam Spatika linga puja + Pichavaram Mangrove Forest boat ride + Tolls.",
     whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Chidambaram Natarajar Temple Tour."
+  }
+];
+
+const templeFleetGuide = [
+  {
+    type: "AC Sedan",
+    names: "Swift Dzire / Toyota Etios",
+    passengers: "4 Passengers",
+    baggage: "2 Medium Bags + Handbags",
+    image: "/images/fleet/swift-dzire.webp",
+    badge: "Best Value",
+    bestFor: "Couple darshans, small families (parents + 2 kids), and 1-day yatras (Tirupati, Kanchi, Vellore).",
+    features: ["Chilled Dual AC", "Low step-in height for elders", "Dedicated boot for luggage"]
+  },
+  {
+    type: "Family SUV",
+    names: "Maruti Ertiga / XL6",
+    passengers: "6 Passengers",
+    baggage: "3 Bags (with 3rd row adjusted)",
+    image: "/images/fleet/suv.webp",
+    badge: "Family Favorite",
+    bestFor: "Families with 3–4 adults and 2 children, budget-friendly 1-day or weekend temple trips.",
+    features: ["Roof-mounted rear AC blowers", "Flexible 60:40 folding seats", "Smooth highway mileage"]
+  },
+  {
+    type: "Comfort MUV",
+    names: "Toyota Innova",
+    passengers: "7 Passengers",
+    baggage: "4 Large Suitcases",
+    image: "/images/fleet/suv.webp",
+    badge: "Pilgrim Choice",
+    bestFor: "Joint families and multi-day long pilgrimages (Kumbakonam Navagraha, Rameswaram, Sabarimala).",
+    features: ["Legendary highway suspension", "Generous legroom for grandparents", "High ground clearance"]
+  },
+  {
+    type: "Luxury MPV",
+    names: "Toyota Innova Crysta",
+    passengers: "7 Passengers",
+    baggage: "4 Large Suitcases",
+    image: "/images/fleet/suv.webp",
+    badge: "Executive Comfort",
+    bestFor: "VIP darshan trips and families seeking maximum noise-insulation, captain seats & extra legroom.",
+    features: ["Ergonomic plush captain seats", "Whisper-quiet acoustic cabin", "Multi-zone automatic climate control"]
+  },
+  {
+    type: "Group Coach",
+    names: "12-Seater Tempo Traveller",
+    passengers: "12 Passengers",
+    baggage: "8–10 Large Bags (Dedicated rear boot)",
+    image: "/images/fleet/tempo.webp",
+    badge: "Group Yatra",
+    bestFor: "Extended joint families, Bhajan mandalis, Sabarimala Ayyappa groups & community yatras.",
+    features: ["Full standing aisle height", "2x1 pushback bucket seats", "Individual AC vents & audio system"]
   }
 ];
 
@@ -180,6 +200,14 @@ const faqs = [
   {
     q: "Are highway tolls and interstate permits really 100% included?",
     a: "Yes! In all our temple tour packages, FASTag toll charges, parking fees at temple premises, and interstate road permits (e.g. Andhra Pradesh permit for Tirupati, Kerala permit for Sabarimala) are fully covered in the published price."
+  },
+  {
+    q: "What vehicle models and seating capacities are available for temple tours?",
+    a: "We offer 5 standardized AC vehicle classes: AC Sedan (Swift Dzire / Toyota Etios for 4 devotees, 2 bags), Family SUV (Maruti Ertiga / XL6 for 6 devotees, 3 bags), Comfort MUV (Toyota Innova for 7 devotees, 4 bags), Luxury MPV (Toyota Innova Crysta for 7 devotees, 4 bags), and Group Coach (12-Seater Tempo Traveller for 12 devotees, 8+ bags). All vehicles are clean, sanitized, and dual AC."
+  },
+  {
+    q: "Which vehicle is recommended for senior citizens on long pilgrimage routes like Navagraha or Rameswaram?",
+    a: "For long multi-day yatras, we highly recommend the Toyota Innova or Innova Crysta. Their wide doors allow effortless entry and exit, ergonomic captain seats provide superior lumbar support for elderly devotees, and their renowned highway suspension absorbs road bumps smoothly."
   },
   {
     q: "Will the driver assist senior citizens with darshan queues?",
@@ -256,26 +284,27 @@ const schema = {
   "hasOfferCatalog": {
     "@type": "OfferCatalog",
     "name": "South India Temple Tour Cab Packages",
-    "itemListElement": tourPackages.map((pkg, idx) => ({
-      "@type": "Offer",
-      "position": idx + 1,
-      "name": pkg.name,
-      "description": `${pkg.duration} - ${pkg.highlights || ''}`,
-      "image": `https://kalidasstravels.in${tourPackageImages[pkg.id] || "/images/services/temple-tours.webp"}`,
-      "priceCurrency": "INR",
-      "price": pkg.rates?.[0]?.price ? pkg.rates[0].price.replace(/[^0-9]/g, '') : "6000",
-      "priceValidUntil": "2027-12-31",
-      "availability": "https://schema.org/InStock",
-      "url": `https://kalidasstravels.in/services/${tourPackageSlugs[pkg.id] || pkg.id}/`,
-      "seller": {
-        "@id": "https://kalidasstravels.in/#localbusiness"
-      },
-      "itemOffered": {
-        "@type": "TaxiService",
-        "name": pkg.name,
-        "serviceType": "Pilgrimage Cab Package"
-      }
-    }))
+    "itemListElement": tourPackages.flatMap((pkg) =>
+      pkg.rates.map((r, rIdx) => ({
+        "@type": "Offer",
+        "name": `${pkg.name} - ${r.type} (${r.names})`,
+        "description": `${pkg.name} by ${r.type} (${r.names}) for ${r.passengers} with ${r.baggage}. All tolls, AP/interstate permits & driver bata included.`,
+        "image": `https://kalidasstravels.in${tourPackageImages[pkg.id] || "/images/services/temple-tours.webp"}`,
+        "priceCurrency": "INR",
+        "price": r.price.replace(/[^0-9]/g, ''),
+        "priceValidUntil": "2027-12-31",
+        "availability": "https://schema.org/InStock",
+        "url": `https://kalidasstravels.in/services/${tourPackageSlugs[pkg.id] || pkg.id}/`,
+        "seller": {
+          "@id": "https://kalidasstravels.in/#localbusiness"
+        },
+        "itemOffered": {
+          "@type": "TaxiService",
+          "name": `${pkg.name} - ${r.type} (${r.names})`,
+          "serviceType": "Pilgrimage Cab Package"
+        }
+      }))
+    )
   }
 };
 
@@ -324,6 +353,9 @@ const faqSchema = {
           </a>
           <a href="#tour-packages" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
             Temple Cab Rates
+          </a>
+          <a href="#temple-fleet" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+            Fleet &amp; Capacity
           </a>
           <a href="#pilgrim-standards" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
             Pilgrimage Promise
@@ -401,12 +433,25 @@ const faqSchema = {
                       {pkg.highlights}
                     </p>
 
-                    <!-- Vehicle Price Slabs Grid -->
-                    <div class="bg-m3-surface-container-low p-3.5 rounded-m3-xl border border-m3-outline-variant/60 space-y-1.5">
+                    <!-- Vehicle Price Slabs Grid (SEO / AEO Enhanced: Type (Model) - Passengers - Baggage) -->
+                    <div class="bg-m3-surface-container-low p-3 sm:p-3.5 rounded-m3-xl border border-m3-outline-variant/60 space-y-2">
+                      <div class="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-m3-on-surface-variant border-b border-m3-outline-variant/60 pb-1.5">
+                        <span>Vehicle (Model) • Capacity</span>
+                        <span class="text-right">Flat Fare</span>
+                      </div>
                       {pkg.rates.map((r) => (
-                        <div class="flex items-center justify-between text-xs py-1 border-b border-m3-outline-variant/40 last:border-0">
-                          <span class="text-m3-on-surface-variant font-medium">{r.car}</span>
-                          <strong class="text-m3-primary font-heading font-black text-sm">{r.price}</strong>
+                        <div class="flex items-center justify-between text-xs py-1.5 border-b border-m3-outline-variant/40 last:border-0 gap-2">
+                          <div class="min-w-0 pr-1">
+                            <span class="font-bold text-m3-on-surface block text-xs truncate">
+                              {r.type} <span class="text-m3-on-surface-variant font-medium text-[11px]">({r.names})</span>
+                            </span>
+                            <span class="text-[10px] text-m3-on-surface-variant font-medium flex items-center gap-1.5 mt-0.5">
+                              <span class="text-emerald-700 font-semibold">{r.passengers}</span>
+                              <span>•</span>
+                              <span>{r.baggage}</span>
+                            </span>
+                          </div>
+                          <strong class="text-m3-primary font-heading font-black text-sm shrink-0 whitespace-nowrap">{r.price}</strong>
                         </div>
                       ))}
                     </div>
@@ -448,6 +493,89 @@ const faqSchema = {
           })}
         </div>
 
+      </section>
+
+      <!-- 4. TEMPLE TOUR FLEET & SEATING CAPACITY GUIDE (AEO / GEO Knowledge Anchor) -->
+      <section id="temple-fleet" class="my-10 md:my-14 bg-m3-surface-container-low rounded-m3-2xl p-6 sm:p-8 border border-m3-outline-variant scroll-mt-40">
+        <div class="text-center max-w-2xl mx-auto mb-8">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container text-m3-on-surface text-xs font-bold uppercase tracking-wider mb-2 border border-m3-outline-variant">
+            <span>Verified Pilgrimage Fleet</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
+            Temple Tour Fleet &amp; Seating Capacity Guide
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1.5 font-sans leading-relaxed">
+            All temple tour cabs feature dual air conditioning, experienced satvik chauffeurs, and 100% upfront toll coverage. Select the right vehicle based on your devotee count and senior citizen travel comfort.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {templeFleetGuide.map((fleet) => (
+            <div class="bg-m3-surface rounded-m3-xl p-5 border border-m3-outline-variant/70 shadow-xs flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-3">
+                  <span class="px-2.5 py-0.5 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container text-[11px] font-bold uppercase tracking-wider">
+                    {fleet.type}
+                  </span>
+                  <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant bg-m3-surface-container px-2 py-0.5 rounded-m3-sm border border-m3-outline-variant/50">
+                    {fleet.badge}
+                  </span>
+                </div>
+
+                <div class="h-32 rounded-m3-lg overflow-hidden bg-m3-surface-container-high mb-3.5 flex items-center justify-center p-2 border border-m3-outline-variant/40">
+                  <img
+                    src={fleet.image}
+                    alt={`${fleet.names} for temple tours`}
+                    class="h-full w-auto object-contain"
+                    loading="lazy"
+                    width="220"
+                    height="120"
+                  />
+                </div>
+
+                <h3 class="text-base font-bold text-m3-on-surface font-heading mb-1">
+                  {fleet.names}
+                </h3>
+
+                <!-- Specs Pill Strip (Vehicle Type - Passenger Count - Baggage Count) -->
+                <div class="flex flex-wrap items-center gap-1.5 mb-3 text-xs">
+                  <span class="inline-flex items-center gap-1 font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-m3-full text-[11px]">
+                    <span>👥</span>
+                    <span>{fleet.passengers}</span>
+                  </span>
+                  <span class="inline-flex items-center gap-1 font-medium text-m3-on-surface-variant bg-m3-surface-container px-2 py-0.5 rounded-m3-full border border-m3-outline-variant/50 text-[11px]">
+                    <span>🧳</span>
+                    <span>{fleet.baggage}</span>
+                  </span>
+                </div>
+
+                <p class="text-xs text-m3-on-surface-variant leading-relaxed mb-3">
+                  <strong class="text-m3-on-surface font-semibold">Best Suited For:</strong> {fleet.bestFor}
+                </p>
+
+                <ul class="space-y-1 mb-2 text-micro text-m3-on-surface-variant">
+                  {fleet.features.map((feat) => (
+                    <li class="flex items-center gap-1.5">
+                      <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
+                      <span>{feat}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div class="pt-3 border-t border-m3-outline-variant/50 mt-3 flex items-center justify-between text-xs">
+                <span class="text-micro font-bold text-m3-on-surface-variant uppercase tracking-wider">Zero Hidden Tolls</span>
+                <a
+                  href="#tour-packages"
+                  class="font-bold text-m3-primary hover:underline text-xs inline-flex items-center gap-1"
+                >
+                  <span>View Rates</span>
+                  <span>&darr;</span>
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
 
       <!-- 4. TEMPLE DEVOTEE GUARANTEES (4 PILLARS) -->

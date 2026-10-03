@@ -102,3 +102,24 @@
   - **Accordions & Disclosures:** Use native `<details name="...">` for exclusive accessible accordions without custom JavaScript toggle state.
   - **Forms & Inputs:** Use `:user-invalid` for post-interaction validation cues and `field-sizing: content` for adaptive multi-line textareas.
   - **Core Web Vitals:** Always declare `fetchpriority="high"`, explicit dimensions/`aspect-ratio`, and `decoding="async"` on above-the-fold hero images to guarantee 0.000 CLS and rapid LCP.
+
+---
+
+## 8. Service & Tour Page UX Standards
+
+### 8.1 Tariff Cards & Specs Hierarchy
+- **Rule 8.1.1 (Core Specs Below Vehicle Name):** Below the vehicle name, display **only** the passenger count and baggage count in prominent, increased font size (`text-xs sm:text-sm font-semibold`) using `Users` and `Luggage` icons (e.g., `[ 👥 4 Passengers ] [ 🧳 2 Bags ]`). Do not clutter this space with generic feature lists ("Chilled AC", "Dedicated Trunk").
+- **Rule 8.1.2 (No Duplicate Pills):** Do not repeat seating capacity in the card's top badge row if it is already displayed prominently below the vehicle name.
+- **Rule 8.1.3 (In-Card Multi-Day / Stay Dropdowns):** When a service supports multiple durations (e.g. 1 Day Return vs 2 Days Overnight), embed the duration selector directly inside the vehicle tariff card (`.tirupati-stay-select`). Selecting an option must immediately update the card's price, driver stay & food inclusions, and WhatsApp enquiry URL with zero latency. Never create detached, standalone calculator forms when tariff cards already exist.
+- **Rule 8.1.4 (Single Authoritative Summary / Zero Duplicate Fact Strips):** Never stack generic hero summary strips (`Pickup Location`, `Trip Duration`, `Tolls & Permits`) on pages with dedicated `Route & Fare Summary` cards. Key logistical facts (Distance, Travel Time, Starting Fare, Tolls & Permits) must appear in exactly one authoritative location on the page. The 4-item hero summary grid is restricted to operational services (`!isTour`) like Acting Drivers and Corporate Mobility where dispatch SLAs and transmission types are needed.
+
+### 8.2 Terminology & Copy Invariants
+- **Rule 8.2.1 (Seating Terminology):** Always use universal seating capacity terminology (`"4 Passengers"`, `"6 Passengers"`, etc.). Never use `"Devotees"` or `"Pilgrims"` for vehicle capacity.
+- **Rule 8.2.2 (Alternative Duration Phrasing):** Always use natural disjunctive phrasing (`"1 or 2 Days"`, not `"1 & 2 Days"`) in titles, meta tags, and CTAs when presenting trip duration alternatives.
+
+### 8.3 Content Scannability & Tour Guides
+- **Rule 8.3.1 (Static Multi-Card Grid over Hidden Tabs):** Travel guides, route timelines, and pilgrimage tips must be rendered as a static, responsive 4-card grid. Never hide crucial guidelines behind interactive tabs.
+- **Rule 8.3.2 (Zero Paragraphs / Bite-Sized Micro-Cards):** Never use dense narrative prose or multi-line paragraphs in travel guides, route summaries, or feature cards. Mobile users scan and do not read paragraphs. All guide points, traditions, and service features must be structured as bite-sized micro-cards or chips with a bold title (2–3 words) and a concise descriptor (3–5 words).
+- **Rule 8.3.3 (Unboxed Transit Stepper):** Never render duplicate horizontal waypoint pill chains above vertical timelines ("overkill"). Use a single, unboxed vertical transit stepper (Google Maps Transit style) with continuous lines and mini circular node numbers to conserve vertical screen space.
+
+
