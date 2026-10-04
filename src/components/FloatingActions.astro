@@ -1,3 +1,87 @@
 ---
-// Floating bottom actions (Call & WhatsApp) have been disabled per user request across all pages
+import WhatsAppIcon from './WhatsAppIcon.astro';
+import AndroidPhoneIcon from './AndroidPhoneIcon.astro';
+import { WHATSAPP_CONFIG, buildWhatsAppUrl } from '../utils/whatsapp';
+
+interface Props {
+  phone?: string;
+  displayPhone?: string;
+  whatsappMsg?: string;
+}
+
+const {
+  phone = `+${WHATSAPP_CONFIG.phone}`,
+  displayPhone = WHATSAPP_CONFIG.formattedPhone,
+  whatsappMsg = WHATSAPP_CONFIG.defaultGreeting
+} = Astro.props;
+
+const whatsappUrl = buildWhatsAppUrl(whatsappMsg, phone);
+const callUrl = `tel:${phone}`;
 ---
+
+<!-- Mobile Sticky Bottom Dock (Mobile Only: 50/50 Split with Temple Tours M3 Palette) -->
+<nav
+  id="mobile-bottom-dock"
+  class="fixed bottom-0 inset-x-0 z-50 flex md:hidden items-center justify-between gap-2.5 px-3 py-2 pb-[calc(0.625rem+env(safe-area-inset-bottom,0px))] bg-white/95 backdrop-blur-md border-t border-m3-outline-variant shadow-[0_-4px_20px_rgba(15,23,42,0.06)] select-none transition-transform duration-200"
+  role="region"
+  aria-label="Mobile quick contact shortcuts"
+>
+  <!-- Call Dispatch (Left 50%) - M3 Surface Container with Blue Accent -->
+  <a
+    href={callUrl}
+    class="flex-1 flex items-center justify-center gap-2 h-11 px-3 rounded-m3-full bg-m3-surface-container hover:bg-blue-50 active:bg-blue-100 text-m3-on-surface hover:text-[#1A73E8] border border-m3-outline-variant active:border-blue-300 font-bold text-xs sm:text-sm font-sans shadow-xs transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1A73E8]"
+    aria-label={`Call Helpline (${displayPhone})`}
+  >
+    <AndroidPhoneIcon className="w-4 h-4 text-[#1A73E8] shrink-0" />
+    <span class="tracking-wide">Call Now</span>
+  </a>
+
+  <!-- WhatsApp Enquiry (Right 50%) - M3 Tonal Mint Surface with Meta Brand Icon -->
+  <a
+    id="mobile-dock-whatsapp-btn"
+    href={whatsappUrl}
+    target="_blank"
+    rel="noopener noreferrer nofollow"
+    class="flex-1 flex items-center justify-center gap-2 h-11 px-3 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 active:border-emerald-400 font-bold text-xs sm:text-sm font-sans shadow-xs transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#128C7E]"
+    aria-label="WhatsApp Enquiry - Chat with Kalidass Travels"
+  >
+    <WhatsAppIcon variant="brand" className="w-4 h-4 shrink-0" />
+    <span class="tracking-wide truncate">WhatsApp Enquiry</span>
+  </a>
+</nav>
+
+<!-- Floating Quick Contact Actions (Desktop Only: Elevated M3 Extended FABs) -->
+<div 
+  id="floating-actions-container"
+  class="fixed bottom-6 right-5 sm:bottom-7 sm:right-6 z-50 hidden md:flex flex-col items-end gap-2.5 pointer-events-none select-none pb-[env(safe-area-inset-bottom,0px)]"
+  role="region"
+  aria-label="Quick contact shortcuts"
+>
+  <!-- Android M3 Phone Call Button (Soft Surface with Blue Accent) -->
+  <a
+    href={callUrl}
+    class="pointer-events-auto group relative flex items-center justify-center h-12 px-4 gap-2.5 rounded-m3-full bg-white/95 backdrop-blur-md hover:bg-blue-50 active:bg-blue-100 text-m3-on-surface hover:text-[#1A73E8] shadow-m3-2 hover:shadow-m3-3 border border-m3-outline-variant hover:border-blue-300 transform hover:scale-105 active:scale-95 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#1A73E8]"
+    aria-label={`Call Helpline (${displayPhone})`}
+    title={`Call Helpline: ${displayPhone}`}
+  >
+    <AndroidPhoneIcon className="w-4.5 h-4.5 text-[#1A73E8] group-hover:rotate-12 transition-transform duration-300 shrink-0" />
+    <span class="font-bold text-xs sm:text-sm text-m3-on-surface group-hover:text-[#1A73E8] tracking-wide font-sans leading-none">
+      Call Now
+    </span>
+  </a>
+
+  <!-- Meta WhatsApp M3 Button (Soft Mint Tonal with Brand Icon) -->
+  <a
+    href={whatsappUrl}
+    target="_blank"
+    rel="noopener noreferrer nofollow"
+    class="pointer-events-auto group relative flex items-center justify-center h-12 px-4 gap-2.5 rounded-m3-full bg-emerald-50/95 backdrop-blur-md hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 shadow-m3-2 hover:shadow-m3-3 border border-emerald-300/80 hover:border-emerald-400 transform hover:scale-105 active:scale-95 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#128C7E]"
+    aria-label="WhatsApp Enquiry - Chat with Kalidass Travels"
+    title={`Chat on WhatsApp (${displayPhone})`}
+  >
+    <WhatsAppIcon variant="brand" className="w-5 h-5 relative z-10 shrink-0" />
+    <span class="font-bold text-xs sm:text-sm text-emerald-950 tracking-wide font-sans relative z-10 leading-none">
+      WhatsApp Enquiry
+    </span>
+  </a>
+</div>

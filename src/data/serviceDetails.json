@@ -1037,23 +1037,23 @@
       "rows": [
         [
           "4 Hours Short Duty",
-          "₹600",
-          "Unlimited stops within Chennai Metro. ₹150/extra hr."
+          "₹500",
+          "Unlimited stops within Chennai Metro. ₹100/extra hr."
         ],
         [
           "8 Hours Full Day Duty",
-          "₹900",
-          "Standard full day duty across all Chennai zones."
+          "₹800",
+          "Standard full day duty across all Chennai zones. ₹100/extra hr."
         ],
         [
           "12 Hours Extended Day",
-          "₹1,400",
+          "₹1,200",
           "Ideal for full-day weddings, multiple client visits."
         ],
         [
           "Night Duty Allowance (10 PM – 5 AM)",
-          "+₹200 flat",
-          "Applicable only if duty extends past 10:00 PM."
+          "+₹100 flat",
+          "Applicable only if duty extends into late night hours."
         ]
       ],
       "note": "KM is NOT counted within Chennai Metropolitan limits. Pricing is 100% time-based. Fuel, parking, and toll fees are borne by vehicle owner."
@@ -1072,7 +1072,7 @@
     "faq": [
       {
         "q": "Can I extend the duty if my shopping or event takes longer?",
-        "a": "Yes! You do not need to call the office. Inform your driver directly. Extra hours are billed at a flat ₹150/hr at final settlement."
+        "a": "Yes! You do not need to call the office. Inform your driver directly. Extra hours are billed at a flat ₹100/hr at final settlement."
       },
       {
         "q": "Are your drivers experienced with high-end automatic / luxury cars?",
@@ -1089,7 +1089,7 @@
     ],
     "travelGuide": {
       "history": "• Citywide Coverage: All North, South, Central & OMR\n• Peak Traffic Relief: Relax while our driver steers\n• Transmission Ready: Manual, Automatic, EV & Luxury\n• Flexible Hours: 4-hr, 8-hr, or Full Day packages",
-      "timings": "• Standard Operating Hours: 06:00 AM to 10:00 PM\n• Night Duty Hours: 10:00 PM to 05:00 AM (Flat +₹200 night allowance)\n• Recommended Booking Lead Time: Minimum 1 to 2 hours for guaranteed prompt dispatch.",
+      "timings": "• Standard Operating Hours: 06:00 AM to 10:00 PM\n• Night Duty Hours: 10:00 PM to 05:00 AM (Flat +₹100 night allowance)\n• Recommended Booking Lead Time: Minimum 1 to 2 hours for guaranteed prompt dispatch.",
       "tips": [
         "Ensure your vehicle RC, insurance, and PUC documents are up to date in the glovebox.",
         "Keep adequate fuel in the tank before the driver arrives.",
@@ -1099,7 +1099,7 @@
     },
     "whatsappMsg": "Hi Kalidass Travels, I need a within-Chennai Acting Driver for my car.",
     "metaTitle": "Hire Acting Driver in Chennai | Kalidass Travels",
-    "metaDescription": "Hire verified acting drivers in Chennai for your car (Manual, Auto, EV). 4 hrs @ ₹600, 8 hrs @ ₹900. Punctual 30-min doorstep arrival.",
+    "metaDescription": "Hire verified acting drivers in Chennai for your car (Manual, Auto, EV). 4 hrs @ ₹500, 8 hrs @ ₹800. Punctual 30-min doorstep arrival.",
     "keywords": "acting driver in chennai, hire acting driver chennai, call driver chennai, personal car driver hire chennai, hourly driver chennai, acting driver medavakkam velachery tambaram, daily driver chennai",
     "serviceType": "ChauffeurService",
     "origin": "Chennai",
@@ -1120,25 +1120,25 @@
       "rows": [
         [
           "Hatchback & Sedan (Dzire, Etios, City, Verna)",
-          "₹600 / day",
+          "₹1,100 / day",
           "Up to 14 Hours",
           "+₹200 / night"
         ],
         [
           "Compact SUV / MPV (Ertiga, Creta, Carens, Seltos)",
-          "₹700 / day",
+          "₹1,200 / day",
           "Up to 14 Hours",
           "+₹200 / night"
         ],
         [
           "Premium SUV / MPV (Innova, Crysta, Fortuner, XUV700)",
-          "₹800 / day",
+          "₹1,300 / day",
           "Up to 14 Hours",
           "+₹200 / night"
         ],
         [
           "Luxury European Cars (BMW, Audi, Mercedes, Volvo)",
-          "₹1,000 / day",
+          "₹1,500 / day",
           "Up to 14 Hours",
           "+₹250 / night"
         ]
@@ -1181,7 +1181,7 @@
     ],
     "whatsappMsg": "Hi Kalidass Travels, I need an Outstation Round-Trip Acting Driver for my car.",
     "metaTitle": "Outstation Acting Driver Chennai | Kalidass Travels",
-    "metaDescription": "Hire experienced highway acting drivers in Chennai for personal car outstation trips. Safe night driving, ₹600/day bata & zero surge pricing.",
+    "metaDescription": "Hire experienced highway acting drivers in Chennai for personal car outstation trips. Safe night driving, ₹1,100/day bata & zero surge pricing.",
     "keywords": "outstation acting driver chennai, outstation call driver chennai, driver for personal car outstation chennai, highway driver hire chennai, acting driver for outstation trip, temporary driver for highway trip",
     "serviceType": "ChauffeurService",
     "origin": "Chennai",
@@ -1194,28 +1194,33 @@
     "overview": "Professional driver safely drives and relocates your personal vehicle from Chennai to any destination across South India (Bangalore, Coimbatore, Madurai, Trichy, Hyderabad). Features digital pre-trip inspection and video handover.",
     "tariff": {
       "headers": [
-        "Distance Slab",
+        "Fare Component",
         "Driver Fee Rate",
-        "Notes & Inclusions"
+        "Notes & Real-World Examples"
       ],
       "rows": [
         [
-          "Base Distance (First 150 km)",
-          "₹1,800 flat",
-          "Includes pickup from your doorstep & vehicle inspection."
+          "Standard Day Bata (≤ 400 km)",
+          "₹1,100 – ₹1,300 flat",
+          "1-Day outstation bata (Sedan ₹1,100, SUV ₹1,200, Innova ₹1,300)."
         ],
         [
-          "Additional Distance (Beyond 150 km)",
-          "₹10 / km",
-          "Calculated on actual odometer reading."
+          "Long-Distance Bata (> 400 km)",
+          "1.5 Days Bata (₹1,650 – ₹1,950)",
+          "Applied for Madurai, Coimbatore, Tirunelveli to cover return transit day."
         ],
         [
-          "Driver Return Travel",
-          "Actual ticket",
-          "Govt. Superfast bus or sleeper train fare back to Chennai."
+          "Driver Return Transit Ticket",
+          "Actual SETC Bus / Sleeper Fare",
+          "Pondicherry: ~₹200 | Bangalore: ~₹450 | Trichy: ~₹410 | Madurai: ~₹550 | Coimbatore: ~₹620."
+        ],
+        [
+          "Transit Food Allowance",
+          "₹300 flat",
+          "Covers driver meals during the journey & return public transit."
         ]
       ],
-      "note": "Fuel and FASTag tolls during transit are borne by vehicle owner. Example: Chennai to Trichy (330 km) = ₹1,800 + (180 km × ₹10 = ₹1,800) + Bus Return (₹450) = ₹4,050 total driver fee."
+      "note": "Transparent Billing Formula: Total = Driver Day Bata + Return SETC Bus Ticket + ₹300 Food Allowance. (Example: Chennai to Bangalore = ₹1,100 + ₹450 + ₹300 = ₹1,850 total driver fee. Fuel and FASTag tolls are borne by car owner)."
     },
     "includes": [
       "Full digital pre-trip inspection (odometer, fuel, tool kit, scratch photos)",
@@ -1224,8 +1229,8 @@
       "Doorstep handover to your designated family member or recipient"
     ],
     "excludes": [
-      "Fuel & FASTag highway toll charges",
-      "Driver return public transit fare back to Chennai"
+      "Fuel & FASTag highway toll charges (borne by car owner)",
+      "Driver return public transit fare back to Chennai (transparently itemized)"
     ],
     "travelGuide": {
       "history": "• Car Relocation: Door-to-door vehicle delivery\n• Shift Support: Safe car transit during relocation\n• Verified Chauffeurs: Strict GPS tracking & checks\n• Direct Delivery: No towing, driven with care",
@@ -1239,6 +1244,10 @@
     },
     "faq": [
       {
+        "q": "How is the One-Way Drop acting driver price calculated?",
+        "a": "Pricing follows the Tamil Nadu driver community standard: 1-Day Driver Bata (₹1,100 for Sedan, ₹1,200 for SUV) + Return SETC Bus Ticket back to Chennai + ₹300 Food Allowance. For destinations over 400 km (like Madurai or Coimbatore), 1.5 Days Bata applies to cover the driver's return travel day."
+      },
+      {
         "q": "How is my car's safety verified before handover?",
         "a": "Before starting, our driver photographs the odometer reading, fuel gauge, and vehicle exterior in your presence. Upon delivery at the destination, a handover signoff is completed."
       },
@@ -1249,10 +1258,6 @@
       {
         "q": "How does return transit work for one-way car relocation drivers?",
         "a": "The acting driver safely delivers your car to your destination address, completes the vehicle handover checklist, and returns independently to Chennai via public bus or train (actual return bus/train fare covered by customer)."
-      },
-      {
-        "q": "Can the one-way acting driver transport our luggage and family members as well?",
-        "a": "Yes. You and your family can ride comfortably in your own vehicle while our experienced driver navigates the highway journey, or the driver can relocate the vehicle solo."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I need an Outstation One-Way Car Relocation driver.",

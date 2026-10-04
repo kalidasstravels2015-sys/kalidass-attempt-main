@@ -5,6 +5,7 @@ import FAQAccordion from "../components/FAQAccordion.astro";
 import tariffConfig from "../data/tariff_config.json";
 import WhatsAppIcon from "../components/WhatsAppIcon.astro";
 import AndroidPhoneIcon from "../components/AndroidPhoneIcon.astro";
+import { buildWhatsAppUrl } from "../utils/whatsapp";
 
 const tariffFaqs = [
   {
@@ -289,7 +290,7 @@ const faqSchema = {
                         <span>Call</span>
                       </a>
                       <a
-                        href={`https://wa.me/918939539211?text=${encodeURIComponent(`Hi Kalidass Travels, I would like to book a ${name} for a local Chennai city package.`)}`}
+                        href={buildWhatsAppUrl(`Hi Kalidass Travels, I would like to book a ${name} for a local Chennai city package.`)}
                         target="_blank"
                         rel="noopener noreferrer nofollow"
                         aria-label={`Book ${name} local package on WhatsApp`}
@@ -378,7 +379,7 @@ const faqSchema = {
                     <span>Call Now</span>
                   </a>
                   <a
-                    href={`https://wa.me/918939539211?text=${encodeURIComponent(`Hi Kalidass Travels, I would like to book a ${name} for a local Chennai city package.`)}`}
+                    href={buildWhatsAppUrl(`Hi Kalidass Travels, I would like to book a ${name} for a local Chennai city package.`)}
                     target="_blank"
                     rel="noopener noreferrer nofollow"
                     aria-label={`Book ${name} local package on WhatsApp`}
@@ -485,7 +486,7 @@ const faqSchema = {
                         <span>Call</span>
                       </a>
                       <a
-                        href={`https://wa.me/918939539211?text=${encodeURIComponent(`Hi Kalidass Travels, I would like to book an outstation trip in a ${name} from Chennai.`)}`}
+                        href={buildWhatsAppUrl(`Hi Kalidass Travels, I would like to book an outstation trip in a ${name} from Chennai.`)}
                         target="_blank"
                         rel="noopener noreferrer nofollow"
                         aria-label={`Book ${name} outstation cab on WhatsApp`}
@@ -561,7 +562,7 @@ const faqSchema = {
                     <span>Call Now</span>
                   </a>
                   <a
-                    href={`https://wa.me/918939539211?text=${encodeURIComponent(`Hi Kalidass Travels, I would like to book an outstation cab (${name}) from Chennai.`)}`}
+                    href={buildWhatsAppUrl(`Hi Kalidass Travels, I would like to book an outstation cab (${name}) from Chennai.`)}
                     target="_blank"
                     rel="noopener noreferrer nofollow"
                     aria-label={`Book ${name} outstation cab on WhatsApp`}

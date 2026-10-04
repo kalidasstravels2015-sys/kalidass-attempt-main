@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-
+// Trigger Vite dependency re-optimization
 export default defineConfig({
   site: 'https://kalidasstravels.in',
   trailingSlash: 'always',
@@ -51,7 +51,8 @@ export default defineConfig({
           url.includes('/services/sabarimala-trip/') ||
           url.includes('/services/rameswaram-2-days/') ||
           url.includes('/services/acting-drivers/') ||
-          url.includes('/services/corporate/')
+          url.includes('/services/corporate/') ||
+          url.includes('/careers/')
         ) {
           item.changefreq = 'weekly';
           item.priority = 0.85;
@@ -88,14 +89,7 @@ export default defineConfig({
     },
     compress({
       CSS: true,
-      HTML: {
-        'html-minifier-terser': {
-          removeAttributeQuotes: false,
-          sortAttributes: false,
-          minifyCSS: true,
-          minifyJS: true,
-        },
-      },
+      HTML: false,
       JavaScript: false,
     }),
   ],

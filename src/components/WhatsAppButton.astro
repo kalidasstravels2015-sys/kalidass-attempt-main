@@ -1,8 +1,9 @@
 ---
 import WhatsAppIcon from './WhatsAppIcon.astro';
+import { buildWhatsAppUrl } from '../utils/whatsapp';
 
 interface Props {
-  href: string;
+  href?: string;
   text?: string;
   size?: 'sm' | 'md' | 'lg' | 'icon';
   fullWidth?: boolean;
@@ -13,8 +14,8 @@ interface Props {
 }
 
 const {
-  href,
   text = "Book on WhatsApp",
+  href = buildWhatsAppUrl(typeof text === 'string' ? text : undefined),
   size = "md",
   fullWidth = false,
   className = "",

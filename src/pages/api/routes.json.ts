@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import serviceDetails from '../../data/serviceDetails.json';
+import { buildWhatsAppUrl } from '../../utils/whatsapp';
 
 export const prerender = true;
 
@@ -33,7 +34,7 @@ export const GET: APIRoute = async () => {
     overview: s.overview,
     starting_price_inr: extractStartingPrice(s),
     canonical_url: `https://kalidasstravels.in/services/${s.slug}/`,
-    booking_whatsapp: `https://wa.me/918939539211?text=${encodeURIComponent(s.whatsappMsg || `Hi Kalidass Travels, I would like to book ${s.title}.`)}`
+    booking_whatsapp: buildWhatsAppUrl(s.whatsappMsg || `Hi Kalidass Travels, I would like to book ${s.title}.`)
   }));
 
   return new Response(JSON.stringify({ routes, currency: "INR", site: "https://kalidasstravels.in" }, null, 2), {

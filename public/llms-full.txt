@@ -1,6 +1,6 @@
 # Kalidass Travels — Full Authoritative Knowledge Base & Service Specifications
 > Comprehensive machine-readable repository for AI agents, LLM search engines (ChatGPT Search, Perplexity, Google Gemini, Claude, Bing Copilot, Apple Intelligence), and automated trip planning systems. Updated for 2026.
-> Canonical Source: https://kalidasstravels.in/ | Currency: Indian Rupees (INR) | Last Updated: 2026-10-03
+> Canonical Source: https://kalidasstravels.in/ | Currency: Indian Rupees (INR) | Last Updated: 2026-10-04
 
 ---
 
@@ -194,17 +194,17 @@ All rates are in Indian Rupees (INR). Vehicles are commercial yellow-plate regis
 15. **Acting Driver in Chennai – Hourly & Daily Car Chauffeur Service**
     - URL: https://kalidasstravels.in/services/acting-driver-within-chennai/
     - Description: Hire a vetted professional driver to pilot your personal car (Manual, Automatic, EV, Luxury).
-    - Rates: 4 Hours (₹600) | 8 Hours (₹900) | Extra Hours: ₹150/hr | Night Shift (10 PM to 6 AM): ₹150 surcharge.
+    - Rates: 4 Hours (₹500) | 8 Hours (₹800) | Extra Hours: ₹100/hr | Night Shift (10 PM to 5 AM): +₹100 flat.
 
 16. **Outstation Acting Driver from Chennai (Round Trip)**
     - URL: https://kalidasstravels.in/services/acting-driver-outstation-round-trip/
     - Description: Expert highway chauffeur for your private vehicle across Tamil Nadu, AP, Karnataka, Kerala.
-    - Rates per calendar day: Hatchback/Sedan (₹600) | Compact SUV/Ertiga (₹700) | Innova/Fortuner (₹800) | German Luxury BMW/Mercedes/Audi (₹1,000). Driver food: ₹150/meal; room: ₹300/night if not arranged.
+    - Rates per calendar day: Hatchback/Sedan (₹1,100) | Compact SUV/Ertiga (₹1,200) | Innova/Fortuner (₹1,300) | German Luxury BMW/Mercedes/Audi (₹1,500). Driver food: ₹150/meal (₹300/day); room: ₹300/night if not arranged.
 
 17. **Outstation One-Way Car Relocation & Drop Driver**
     - URL: https://kalidasstravels.in/services/acting-driver-outstation-one-way/
     - Description: Doorstep pickup to relocate or drop your personal vehicle one-way between Chennai, Bangalore, Coimbatore, Trichy, or Madurai. Driver handles highway driving and takes return public transit.
-    - Rates: Fixed distance-based relocation quote + return bus/train fare at actuals.
+    - Rates: 1-Day Driver Bata (₹1,100–₹1,300) + Return SETC Bus Ticket + ₹300 Food (1.5 Days Bata for >400 km destinations). Starting from ₹1,600 (Pondicherry), ₹1,850 (Bangalore), ₹2,500 (Madurai).
 
 ### Corporate Mobility & Airport Transfers
 
@@ -260,7 +260,29 @@ A: Yes. We accept all payment methods including UPI (Google Pay, PhonePe, Paytm)
 
 ---
 
-## 7. Machine-Readable Endpoints & Direct Booking
+## 7. Careers & Hiring
+
+- Careers Portal: https://kalidasstravels.in/careers/
+- Work Location: Medavakkam Operations Hub, Chennai 600100 (field roles across South India).
+- How to Apply: Submit the online application on the careers portal or call/WhatsApp the HR desk at +91 89395 39211. Driver roles do not require a resume.
+
+### Driver Positions
+1. Outstation & Temple Tour Chauffeur — ₹25,000 – ₹38,000 / month + daily bata
+2. Chennai Airport (MAA) 24/7 Transfer Chauffeur — ₹22,000 – ₹32,000 / month
+3. Executive Acting Driver / Private Car Chauffeur — ₹900 – ₹1,600 / day (₹24,000 – ₹36,000 / month)
+4. Heavy Passenger Vehicle (HPV) Chauffeur — Tempo Traveller & Mini Bus — ₹28,000 – ₹42,000 / month
+
+### Operations & Office Positions
+5. Fleet Operations & Maintenance Supervisor — ₹24,000 – ₹35,000 / month
+6. 24/7 Operations & Dispatch Coordinator — ₹20,000 – ₹30,000 / month
+7. Customer Booking & Helpdesk Executive — ₹22,000 – ₹32,000 / month
+8. South India Tour Itinerary Planner & Travel Consultant — ₹25,000 – ₹40,000 / month
+9. Corporate Mobility & B2B Sales Executive — ₹28,000 – ₹45,000 / month
+10. Billing, Accounts & Driver Settlement Executive — ₹22,000 – ₹32,000 / month
+
+---
+
+## 8. Machine-Readable Endpoints & Direct Booking
 
 - Primary Phone: +91 89395 39211
 - WhatsApp Dispatch: https://wa.me/918939539211
@@ -276,3 +298,4 @@ A: Yes. We accept all payment methods including UPI (Google Pay, PhonePe, Paytm)
 - Full Knowledge Base: https://kalidasstravels.in/llms-full.txt
 - RFC AI Context: https://kalidasstravels.in/.well-known/llms.txt
 - AI Crawler Policy: https://kalidasstravels.in/ai.txt
+- Careers Portal: https://kalidasstravels.in/careers/

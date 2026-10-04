@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import Breadcrumbs from '../../components/SEO/Breadcrumbs.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
 import AndroidPhoneIcon from '../../components/AndroidPhoneIcon.astro';
+import { buildWhatsAppUrl } from '../../utils/whatsapp';
 import OptimizedImage from '../../components/OptimizedImage.astro';
 import { 
   PlaneTakeoff,
@@ -114,7 +115,7 @@ const servicesList = [
     number: "05",
     title: "Acting Drivers",
     tagline: "Police-verified chauffeurs for your personal car (Manual, Automatic, or EV).",
-    badge: "Starts ₹600",
+    badge: "Starts ₹500",
     icon: UserCheck,
     image: "/images/services/acting-drivers.webp",
     imagePosition: "center",
@@ -123,8 +124,8 @@ const servicesList = [
     overview: "Hate city traffic or tiring highway driving? Book a police-verified chauffeur to drive your personal car with flexible hourly and daily outstation packages.",
     highlights: [
       "Doorstep arrival across Chennai in 30–60 mins",
-      "City hourly duty: 4 hrs (₹600) & 8 hrs (₹900)",
-      "Outstation round trips from ₹600/day driver bata",
+      "City hourly duty: 4 hrs (₹500) & 8 hrs (₹800)",
+      "Outstation round trips from ₹1,100/day driver bata",
       "Zero surge pricing during rain or peak hours"
     ],
     popularTrips: ["City 4h/8h Duty", "Hospital & Shopping", "Outstation Highway Driver"],
@@ -339,7 +340,7 @@ const faqSchema = {
                     <AndroidPhoneIcon className="w-4 h-4 text-[#1A73E8]" />
                   </a>
                   <WhatsAppButton
-                    href={`https://wa.me/918939539211?text=${encodeURIComponent(srv.whatsappMsg)}`}
+                    href={buildWhatsAppUrl(srv.whatsappMsg)}
                     size="icon"
                     variant="filled"
                     ariaLabel={`Book ${srv.title} on WhatsApp`}
@@ -405,7 +406,7 @@ const faqSchema = {
         </p>
         <div class="flex flex-wrap items-center justify-center gap-3">
           <WhatsAppButton
-            href="https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20need%20help%20choosing%20the%20right%20travel%20service."
+            href={buildWhatsAppUrl("Hi Kalidass Travels, I need help choosing the right travel service.")}
             size="md"
             variant="filled"
             text="Chat on WhatsApp"

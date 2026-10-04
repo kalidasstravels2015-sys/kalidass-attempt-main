@@ -6,6 +6,7 @@ import FAQAccordion from '../../components/FAQAccordion.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
 import WhatsAppIcon from '../../components/WhatsAppIcon.astro';
 import AndroidPhoneIcon from '../../components/AndroidPhoneIcon.astro';
+import { buildWhatsAppUrl } from '../../utils/whatsapp';
 import OptimizedImage from '../../components/OptimizedImage.astro';
 import { 
   Sparkles, 
@@ -500,7 +501,7 @@ const faqSchema = {
                       <span>Call Now</span>
                     </a>
                     <a
-                      href={`https://wa.me/918939539211?text=${encodeURIComponent(plan.whatsappMsg)}`}
+                      href={buildWhatsAppUrl(plan.whatsappMsg)}
                       target="_blank"
                       rel="noopener noreferrer nofollow"
                       aria-label={`Enquire about ${plan.plan} on WhatsApp`}
@@ -592,7 +593,7 @@ const faqSchema = {
                       <span>Call Now</span>
                     </a>
                     <a
-                      href={`https://wa.me/918939539211?text=${encodeURIComponent(item.whatsappMsg)}`}
+                      href={buildWhatsAppUrl(item.whatsappMsg)}
                       target="_blank"
                       rel="noopener noreferrer nofollow"
                       aria-label={`Book ${item.name} on WhatsApp`}
@@ -675,7 +676,7 @@ const faqSchema = {
         </p>
         <div class="flex flex-wrap items-center justify-center gap-3">
           <WhatsAppButton
-            href="https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20would%20like%20to%20discuss%20a%20Corporate%20Transportation%20proposal."
+            href={buildWhatsAppUrl("Hi Kalidass Travels, I would like to discuss a Corporate Transportation proposal.")}
             size="md"
             variant="filled"
             text="Discuss on WhatsApp"

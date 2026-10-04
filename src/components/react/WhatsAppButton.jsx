@@ -1,5 +1,6 @@
 import React from 'react';
 import WhatsAppIcon from './WhatsAppIcon.jsx';
+import { buildWhatsAppUrl } from '../../utils/whatsapp';
 
 export default function WhatsAppButton({
   href,
@@ -41,10 +42,12 @@ export default function WhatsAppButton({
 
   const commonClass = `inline-flex items-center justify-center font-bold font-sans rounded-m3-full transition-all duration-200 cursor-pointer select-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#128C7E] ${fullWidth ? 'w-full' : ''} ${sizeClasses} ${variantClasses} ${className}`;
 
-  if (href) {
+  const targetHref = href || (!onClick ? buildWhatsAppUrl(typeof label === 'string' ? label : undefined) : undefined);
+
+  if (targetHref) {
     return (
       <a
-        href={href}
+        href={targetHref}
         id={id}
         target="_blank"
         rel="noopener noreferrer nofollow"

@@ -1,6 +1,6 @@
 # AI / LLM crawler and retrieval policy for kalidasstravels.in
 # Schema: https://site.spawning.ai/spawning/ai-txt
-# Last updated: 2026-10-03
+# Last updated: 2026-10-04
 
 User-Agent: *
 Allow: /
@@ -44,6 +44,7 @@ LLMs-WellKnown: https://kalidasstravels.in/.well-known/llms.txt
 OpenAPI-Spec: https://kalidasstravels.in/openapi.json
 Fleet-API: https://kalidasstravels.in/api/fleet.json
 Routes-API: https://kalidasstravels.in/api/routes.json
+Careers: https://kalidasstravels.in/careers/
 Sitemap-Primary: https://kalidasstravels.in/sitemap.xml
 Sitemap-Index: https://kalidasstravels.in/sitemap-index.xml
 Sitemap-URLset: https://kalidasstravels.in/sitemap-0.xml

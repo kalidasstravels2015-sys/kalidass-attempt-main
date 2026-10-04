@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import QuotationEngine from "../components/QuotationEngine.jsx";
-import DriverFeeEstimator from "../components/DriverFeeEstimator.astro";
+import DriverFeeEstimator from "../components/DriverFeeEstimator.jsx";
 import VehicleRelocationCalculator from "../components/VehicleRelocationCalculator.jsx";
 import Breadcrumbs from "../components/SEO/Breadcrumbs.astro";
 import FAQAccordion from "../components/FAQAccordion.astro";
@@ -27,7 +27,7 @@ const webAppSchema = {
     "@type": "AggregateOffer",
     "priceCurrency": "INR",
     "priceValidUntil": "2027-12-31",
-    "lowPrice": "600",
+    "lowPrice": "500",
     "highPrice": "35000",
     "offerCount": "15",
     "url": "https://kalidasstravels.in/calculator/",
@@ -57,7 +57,7 @@ const calculatorFaqs = [
   },
   {
     q: "How are Acting Driver hourly charges calculated?",
-    a: "Acting driver fees for your personal car are ₹600 for the first 4 hours (City Short Duty) or ₹900 for 8 hours (City Full Day) within Chennai. Additional driving time is charged at ₹150 per extra hour. For outstation driving duties, a transparent daily driver bata applies (₹600 to ₹800/day depending on vehicle class)."
+    a: "Acting driver fees for your personal car are ₹500 for 4 hours (City Short Duty) or ₹800 for 8 hours (City Full Day) within Chennai (additional hours at ₹100/hr). For outstation driving duties, driver daily bata is transparently tiered by car type (Hatchback/Sedan ₹1,100/day, Compact SUV ₹1,200/day, Premium SUV ₹1,300/day, Luxury ₹1,500/day) plus ₹300/day food and ₹300/night stay if not arranged with family."
   },
   {
     q: "How does Interstate Vehicle Relocation pricing work?",
@@ -123,7 +123,11 @@ const faqSchema = {
 
         {/* Acting Driver Cost Calculator */}
         <div class="w-full flex justify-center">
-          <DriverFeeEstimator />
+          <DriverFeeEstimator
+            client:load
+            title="Acting Driver Estimator"
+            subtitle="Calculate Outstation Bata, Stay & Transit"
+          />
         </div>
 
         {/* Vehicle Relocation Cost */}

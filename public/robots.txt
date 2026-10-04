@@ -1,3 +1,5 @@
+# robots.txt for https://kalidasstravels.in — Last updated: 2026-10-04
+
 # Allow all search engines and global crawlers
 User-agent: *
 Allow: /
@@ -23,6 +25,12 @@ Allow: /
 User-agent: Claude-Web
 Allow: /
 
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
 # ─── Perplexity AI (Perplexity Search, Pro Search) ───
 User-agent: PerplexityBot
 Allow: /
@@ -41,6 +49,9 @@ User-agent: GoogleOther-Image
 Allow: /
 
 User-agent: GoogleOther-Video
+Allow: /
+
+User-agent: Google-CloudVertexBot
 Allow: /
 
 # ─── Apple (Apple Intelligence, Siri AI Search) ───
@@ -86,6 +97,9 @@ Allow: /
 
 # ─── Mistral AI (Le Chat, Mistral Large) ───
 User-agent: MistralBot
+Allow: /
+
+User-agent: MistralAI-User
 Allow: /
 
 # ─── ByteDance (Doubao, TikTok AI) ───

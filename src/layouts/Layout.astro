@@ -8,10 +8,12 @@ interface Props {
   url?: string;
   schema?: object;
   keywords?: string;
+  showFloatingActions?: boolean;
   preloadHero?: { href: string; srcset?: string; sizes?: string };
 }
 
 import siteContent from "../data/siteContent.json";
+import FloatingActions from "../components/FloatingActions.astro";
 
 const defaultTitle = "Kalidass Travels - Premium Travel Experience";
 const defaultDescription = "Premium travel and cab services across South India. Professional drivers, comfortable vehicles, affordable rates.";
@@ -26,6 +28,7 @@ const {
   url = Astro.url.href,
   schema,
   keywords = defaultKeywords,
+  showFloatingActions = true,
   preloadHero,
 } = Astro.props;
 
@@ -548,7 +551,11 @@ if (schema) {
   if (Array.isArray(schema)) {
     graphItems.push(...schema.filter(Boolean).map(cleanSchemaItem));
   } else if (typeof schema === "object") {
-    graphItems.push(cleanSchemaItem(schema));
+    if (Array.isArray((schema as any)["@graph"])) {
+      graphItems.push(...(schema as any)["@graph"].filter(Boolean).map(cleanSchemaItem));
+    } else {
+      graphItems.push(cleanSchemaItem(schema));
+    }
   }
 }
 
@@ -1365,45 +1372,27 @@ const unifiedSchemaGraph = {
           </div>
         </div>
 
-        <!-- 3. Quick Navigation Grid (Compact 2x2 layout) -->
-        <div class="grid grid-cols-2 gap-2 pt-1">
-          <a href="/fleet/" class="flex items-center gap-2 px-3 py-3 min-h-[44px] rounded-m3-lg bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant/30 text-m3-on-surface text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
-            <svg class="w-4 h-4 text-m3-on-surface-variant shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"/>
-              <circle cx="6.5" cy="16.5" r="2.5"/>
-              <circle cx="16.5" cy="16.5" r="2.5"/>
-            </svg>
-            <span class="truncate">Fleet</span>
-          </a>
-          <a href="/drivers/" class="flex items-center gap-2 px-3 py-3 min-h-[44px] rounded-m3-lg bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant/30 text-m3-on-surface text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
-            <svg class="w-4 h-4 text-m3-on-surface-variant shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-              <circle cx="9" cy="7" r="4"/>
-              <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-            </svg>
-            <span class="truncate">Drivers</span>
-          </a>
-          <a href="/tariff/" class="flex items-center gap-2 px-3 py-3 min-h-[44px] rounded-m3-lg bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant/30 text-m3-on-surface text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
+        <!-- 3. Quick Links (one per row) -->
+        <div class="flex flex-col gap-1.5 pt-1">
+          <a href="/tariff/" class="flex items-center gap-2.5 px-3 py-3 min-h-[44px] w-full rounded-m3-lg bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant/30 text-m3-on-surface text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
             <svg class="w-4 h-4 text-m3-on-surface-variant shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect width="20" height="14" x="2" y="5" rx="2"/>
               <line x1="2" x2="22" y1="10" y2="10"/>
             </svg>
-            <span class="truncate">Tariff &amp; Pricing</span>
+            <span class="leading-tight">Tariff &amp; Pricing</span>
           </a>
-          <a href="/calculator/" class="flex items-center gap-2 px-3 py-3 min-h-[44px] rounded-m3-lg bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant/30 text-m3-on-surface text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
+          <a href="/calculator/" class="flex items-center gap-2.5 px-3 py-3 min-h-[44px] w-full rounded-m3-lg bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant/30 text-m3-on-surface text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
             <svg class="w-4 h-4 text-m3-on-surface-variant shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect width="16" height="20" x="4" y="2" rx="2"/>
               <line x1="8" x2="16" y1="6" y2="6"/>
               <line x1="16" x2="16" y1="14" y2="18"/>
               <path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"/>
             </svg>
-            <span class="truncate">Calculator</span>
+            <span class="leading-tight">Fare Calculator</span>
           </a>
         </div>
+
       </div>
-
-
     </div>
   </div>
 
@@ -1488,6 +1477,12 @@ const unifiedSchemaGraph = {
             <li><a href="/drivers/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Verified Chauffeurs</a></li>
             <li><a href="/tariff/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Transparent Tariff</a></li>
             <li><a href="/calculator/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Online Fare Calculator</a></li>
+            <li>
+              <a href="/careers/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs inline-flex items-center gap-1.5">
+                <span>Join Our Team (Careers)</span>
+                <span class="px-1.5 py-0.2 rounded-m3-xs bg-white/10 text-white/80 text-[10px] font-medium border border-white/20">Hiring</span>
+              </a>
+            </li>
           </ul>
         </div>
 
@@ -1496,7 +1491,7 @@ const unifiedSchemaGraph = {
           <h3 class="text-white font-bold text-xs tracking-wider uppercase mb-3 font-sans">Our Services</h3>
           <ul class="space-y-2 text-xs text-m3-inverse-on-surface/80">
             <li><a href="/services/chennai-airport-taxi/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs font-semibold text-emerald-400">Airport Transfers (MAA)</a></li>
-            <li><a href="/services/tirupati-package/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs font-semibold text-amber-300">Chennai to Tirupati Cab</a></li>
+            <li><a href="/services/tirupati-package/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Chennai to Tirupati Cab</a></li>
             <li><a href="/services/outstation-cabs/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Outstation Cabs</a></li>
             <li><a href="/services/tours/temple-tours/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Temple Tours</a></li>
             <li><a href="/services/tours/weekend-packages/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Weekend Packages</a></li>
@@ -1546,7 +1541,7 @@ const unifiedSchemaGraph = {
               Saravn
             </a>
           </p>
-          <a href="/sitemap/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs font-semibold text-emerald-400">HTML Sitemap</a>
+          <a href="/sitemap/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">HTML Sitemap</a>
           <span class="text-m3-outline-variant/40 hidden sm:inline">•</span>
           <a href="/sitemap.xml" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">XML Sitemap</a>
           <span class="text-m3-outline-variant/40 hidden sm:inline">•</span>
@@ -1560,6 +1555,9 @@ const unifiedSchemaGraph = {
     </div>
 
   </footer>
+
+  <!-- Floating Quick Actions (Call & WhatsApp) -->
+  {showFloatingActions && <FloatingActions />}
   </body>
 
   <!-- Mobile Menu Toggle Script -->
@@ -1569,6 +1567,8 @@ const unifiedSchemaGraph = {
     const mobileMenuOverlay = document.getElementById("mobile-menu-overlay");
     const mobileMenuDrawer = document.getElementById("mobile-menu-drawer");
     const mobileLinks = mobileMenuDrawer?.querySelectorAll("a");
+    const floatingActions = document.getElementById("floating-actions-container");
+    const mobileDock = document.getElementById("mobile-bottom-dock");
 
     // Submenu elements
     const cabsToggle = document.getElementById("cabs-menu-toggle");
@@ -1583,6 +1583,8 @@ const unifiedSchemaGraph = {
       if (mobileMenuOverlay && mobileMenuDrawer) {
         mobileMenuBtn?.setAttribute("aria-expanded", "true");
         mobileMenuOverlay.classList.remove("hidden");
+        floatingActions?.classList.add("opacity-0", "pointer-events-none");
+        mobileDock?.classList.add("translate-y-full", "pointer-events-none");
         // small delay to allow display:block to apply before opacity transition
         setTimeout(() => {
           mobileMenuOverlay.classList.remove("opacity-0");
@@ -1612,6 +1614,8 @@ const unifiedSchemaGraph = {
         mobileMenuBtn?.setAttribute("aria-expanded", "false");
         mobileMenuOverlay.classList.add("opacity-0");
         mobileMenuDrawer.classList.add("translate-x-full");
+        floatingActions?.classList.remove("opacity-0", "pointer-events-none");
+        mobileDock?.classList.remove("translate-y-full", "pointer-events-none");
 
         setTimeout(() => {
           mobileMenuOverlay.classList.add("hidden");

@@ -102,7 +102,7 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
         const durationText = Math.round(realDist / 50) + " hrs (Est)";
         const busFare = route.setcFare;
         finalizeCalculation(realDist, durationText, busFare);
-      }, 600);
+      }, 200);
       return;
     }
 
@@ -172,6 +172,7 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
            <div className="relative">
              <MapPin className="absolute left-3.5 top-3.5 w-4 h-4 text-m3-on-surface-variant" />
               <input 
+                id="vr-pickup-input"
                 ref={pickupRef}
                 type="text" 
                 placeholder="e.g. Coimbatore"
@@ -189,6 +190,7 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
             <div className="relative">
               <Navigation className="absolute left-3.5 top-3.5 w-4 h-4 text-m3-on-surface-variant" />
               <input 
+                id="vr-drop-input"
                 ref={dropRef}
                 type="text" 
                 placeholder="e.g. Chennai"
@@ -200,6 +202,7 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
           </div>
 
           <button 
+            id="vr-calc-btn"
             onClick={calculateCost}
             disabled={loading}
             className="w-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary font-bold py-3.5 rounded-m3-full transition-all flex items-center justify-center shadow-m3-2 hover:shadow-m3-3 disabled:opacity-70 active:scale-[0.98] cursor-pointer text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary focus-visible:ring-offset-2"

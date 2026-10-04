@@ -2,8 +2,7 @@
 import Layout from '../../../layouts/Layout.astro';
 import Breadcrumbs from '../../../components/SEO/Breadcrumbs.astro';
 import WhatsAppButton from '../../../components/WhatsAppButton.astro';
-import WhatsAppIcon from '../../../components/WhatsAppIcon.astro';
-import AndroidPhoneIcon from '../../../components/AndroidPhoneIcon.astro';
+import { buildWhatsAppUrl } from '../../../utils/whatsapp';
 import OptimizedImage from '../../../components/OptimizedImage.astro';
 import FAQAccordion from '../../../components/FAQAccordion.astro';
 import { 
@@ -76,49 +75,6 @@ const tourCategories = [
       "Spacious Sedans, Ertiga, Crysta & Tempo Travellers"
     ],
     ctaText: "View All Weekend Packages"
-  }
-];
-
-const topPackages = [
-  {
-    name: "Tirupati Balaji Darshan",
-    category: "Temple Tour",
-    duration: "1 Day (320 km)",
-    price: "₹6,000",
-    car: "Sedan (Dzire / Etios) - 4 Passengers",
-    tag: "Top Pilgrimage",
-    link: "/services/tirupati-package/",
-    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Tirupati Balaji Car Package."
-  },
-  {
-    name: "Pondicherry 1-Day Coastal",
-    category: "Weekend Getaway",
-    duration: "Same Day (320 km)",
-    price: "₹4,500",
-    car: "Sedan (Dzire / Etios) - 4 Passengers",
-    tag: "Top Beach Trip",
-    link: "/services/pondicherry-one-day-trip/",
-    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Pondicherry 1-Day Weekend Package."
-  },
-  {
-    name: "Kumbakonam 9 Navagraha",
-    category: "Temple Tour",
-    duration: "2 Days / 1 Night (750 km)",
-    price: "₹8,600",
-    car: "Sedan (Dzire / Etios) - 4 Passengers",
-    tag: "9 Temples",
-    link: "/services/navagraha-tour/",
-    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Kumbakonam 9 Navagraha 2-Day Tour."
-  },
-  {
-    name: "Mahabalipuram UNESCO Tour",
-    category: "Weekend Getaway",
-    duration: "Full Day (120 km)",
-    price: "₹3,500",
-    car: "Sedan (Dzire / Etios) - 4 Passengers",
-    tag: "Heritage & Beach",
-    link: "/services/mahabalipuram-ecr-temple-route/",
-    whatsappMsg: "Hi Kalidass Travels, I want to book the Mahabalipuram 1-Day Beach & Heritage Tour."
   }
 ];
 
@@ -298,81 +254,7 @@ const faqSchema = {
         ))}
       </section>
 
-      <!-- 3. TOP 4 HANDPICKED PACKAGES (QUICK RATES) -->
-      <section class="my-12">
-        <div class="text-center max-w-2xl mx-auto mb-8">
-          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container text-m3-on-surface text-xs font-bold uppercase tracking-wider mb-2 border border-m3-outline-variant">
-            <span>Fast Booking</span>
-          </div>
-          <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
-            Most Booked <span class="text-m3-primary">Tour Packages</span>
-          </h2>
-          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">
-            Doorstep Chennai pickup • Dual AC cars • All tolls, permits &amp; driver batta included
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {topPackages.map((pkg) => (
-            <div class="bg-m3-surface-container-lowest border border-m3-outline-variant rounded-m3-2xl p-5 flex flex-col justify-between hover:shadow-m3-2 transition-all">
-              <div>
-                <div class="flex items-center justify-between mb-2">
-                  <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-m3-surface-container-high text-m3-on-surface-variant">
-                    {pkg.category}
-                  </span>
-                  <span class="text-[10px] font-bold text-emerald-700 bg-emerald-500/10 px-2 py-0.5 rounded-full">
-                    {pkg.tag}
-                  </span>
-                </div>
-                <h3 class="text-sm sm:text-base font-bold text-m3-on-surface font-heading mb-1">
-                  {pkg.name}
-                </h3>
-                <div class="text-xs text-m3-on-surface-variant mb-4">
-                  {pkg.duration} • {pkg.car}
-                </div>
-              </div>
-
-              <div>
-                <div class="flex items-baseline justify-between border-t border-m3-outline-variant/40 pt-3 mb-3">
-                  <span class="text-xs text-m3-on-surface-variant">All-Inc Fare</span>
-                  <span class="text-lg font-black text-m3-primary font-heading">{pkg.price}</span>
-                </div>
-                <div class="space-y-2">
-                  <a
-                    href={pkg.link}
-                    class="w-full inline-flex items-center justify-center gap-1 py-2 px-3 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary font-bold text-xs transition-colors shadow-m3-1"
-                  >
-                    <span>View Itinerary</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </a>
-                  <div class="grid grid-cols-2 gap-2">
-                    <a
-                      href="tel:+918939539211"
-                      aria-label={`Call to book ${pkg.name}`}
-                      class="inline-flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-m3-full bg-m3-surface-container hover:bg-blue-50 active:bg-blue-100 text-m3-on-surface hover:text-[#1A73E8] border border-m3-outline-variant hover:border-blue-300 text-micro font-bold transition-all select-none"
-                    >
-                      <AndroidPhoneIcon className="w-3.5 h-3.5 text-[#1A73E8] shrink-0" />
-                      <span>Call Now</span>
-                    </a>
-                    <a
-                      href={`https://wa.me/918939539211?text=${encodeURIComponent(pkg.whatsappMsg)}`}
-                      target="_blank"
-                      rel="noopener noreferrer nofollow"
-                      aria-label={`Book ${pkg.name} on WhatsApp`}
-                      class="inline-flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 text-micro font-bold transition-all select-none"
-                    >
-                      <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0" />
-                      <span>Enquire</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <!-- 4. TRUST PROMISE (4 PILLARS) -->
+      <!-- 3. TRUST PROMISE (4 PILLARS) -->
       <section class="my-14 bg-m3-surface-container-low rounded-m3-2xl p-6 sm:p-8 border border-m3-outline-variant">
         <div class="text-center max-w-2xl mx-auto mb-8">
           <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-m3-on-surface font-heading">
@@ -416,7 +298,7 @@ const faqSchema = {
         </div>
       </section>
 
-      <!-- 5. TOUR FAQS -->
+      <!-- 4. TOUR FAQS -->
       <section id="faqs" class="my-12 max-w-3xl mx-auto">
         <div class="text-center mb-6">
           <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading">
@@ -428,7 +310,7 @@ const faqSchema = {
         <FAQAccordion items={faqs} columns={1} name="tour-faq" />
       </section>
 
-      <!-- 6. BOTTOM CONVERSION CTA BANNER -->
+      <!-- 5. BOTTOM CONVERSION CTA BANNER -->
       <section class="bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-2xl p-6 sm:p-10 text-center shadow-m3-2 border border-slate-800 my-8">
         <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold font-heading text-white mb-2">
           Ready to Plan Your Spiritual or Weekend Tour?
@@ -438,7 +320,7 @@ const faqSchema = {
         </p>
         <div class="flex flex-wrap items-center justify-center gap-3">
           <WhatsAppButton
-            href="https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20plan%20a%20Tour%20package%20from%20Chennai."
+            href={buildWhatsAppUrl("Hi Kalidass Travels, I want to plan a Tour package from Chennai.")}
             size="md"
             variant="filled"
             text="Plan on WhatsApp"

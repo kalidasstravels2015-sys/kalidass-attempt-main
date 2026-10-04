@@ -1,0 +1,297 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Breadcrumbs from "../components/SEO/Breadcrumbs.astro";
+import CareersPortal from "../components/react/CareersPortal.jsx";
+import { JOB_POSITIONS, COMPANY_HIGHLIGHTS, CAREER_FAQS } from "../data/careersData";
+
+const breadcrumbItems = [
+  { name: "Home", item: "/" },
+  { name: "Careers & Hiring", item: "/careers/" },
+];
+
+const site = "https://kalidasstravels.in";
+
+// Salary map for Google Jobs Rich Result
+const SALARY_MAP: Record<string, { min: number; max: number; unitText: string }> = {
+  "outstation-chauffeur": { min: 25000, max: 38000, unitText: "MONTH" },
+  "airport-taxi-chauffeur": { min: 22000, max: 32000, unitText: "MONTH" },
+  "acting-call-driver": { min: 24000, max: 36000, unitText: "MONTH" },
+  "heavy-passenger-chauffeur": { min: 28000, max: 42000, unitText: "MONTH" },
+  "fleet-maintenance-supervisor": { min: 24000, max: 35000, unitText: "MONTH" },
+  "dispatch-trip-coordinator": { min: 20000, max: 30000, unitText: "MONTH" },
+  "customer-booking-executive": { min: 22000, max: 32000, unitText: "MONTH" },
+  "tour-itinerary-planner": { min: 25000, max: 40000, unitText: "MONTH" },
+  "corporate-mobility-sales": { min: 28000, max: 45000, unitText: "MONTH" },
+  "accounts-billing-executive": { min: 22000, max: 32000, unitText: "MONTH" },
+};
+
+// Helper to build clean HTML description without nested template strings
+const formatJobDescription = (job: any) => {
+  const resp = (job.responsibilities || []).map((r: string) => `<li>${r}</li>`).join("");
+  const reqs = (job.requirements || []).map((req: string) => `<li>${req}</li>`).join("");
+  const perks = (job.perks || []).map((p: string) => `<li>${p}</li>`).join("");
+  return `<h3>Position Overview</h3><p>${job.shortDescription}</p><h3>Responsibilities</h3><ul>${resp}</ul><h3>Requirements</h3><ul>${reqs}</ul><h3>Compensation & Benefits</h3><p><strong>${job.salaryRange}</strong> · ${job.bataOrPerks}</p><ul>${perks}</ul><p><strong>How to Apply:</strong> Submit your resume online on this portal or contact our Medavakkam HR desk (+91 89395 39211).</p>`;
+};
+
+// 100% Google for Jobs compliant JobPosting schema for each role
+const jobPostingSchemas = JOB_POSITIONS.map((job) => {
+  const sal = SALARY_MAP[job.id] || { min: 20000, max: 35000, unitText: "MONTH" };
+  return {
+    "@type": "JobPosting",
+    "@id": `${site}/careers/#job-${job.id}`,
+    "title": job.title,
+    "description": formatJobDescription(job),
+    "identifier": {
+      "@type": "PropertyValue",
+      "name": "Kalidass Travels",
+      "value": job.id,
+    },
+    "datePosted": "2026-01-15T00:00:00+05:30",
+    "validThrough": "2027-12-31T23:59:59+05:30",
+    "employmentType": job.employmentType === "Full-Time" ? "FULL_TIME" : (job.employmentType === "Part-Time" ? "PART_TIME" : "OTHER"),
+    "directApply": true,
+    "hiringOrganization": {
+      "@type": "Organization",
+      "@id": "https://kalidasstravels.in/#organization",
+      "name": "Kalidass Travels",
+      "sameAs": "https://kalidasstravels.in",
+      "logo": "https://kalidasstravels.in/images/logo.webp",
+    },
+    "jobLocation": {
+      "@type": "Place",
+      "name": "Kalidass Travels Medavakkam Hub",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "No. 4/220, E88, Ponniamman Kovil Street, Annamalai Nagar",
+        "addressLocality": "Medavakkam, Chennai",
+        "addressRegion": "Tamil Nadu",
+        "postalCode": "600100",
+        "addressCountry": "IN",
+      },
+    },
+    "applicantLocationRequirements": {
+      "@type": "Country",
+      "name": "IN",
+    },
+    "baseSalary": {
+      "@type": "MonetaryAmount",
+      "currency": "INR",
+      "value": {
+        "@type": "QuantitativeValue",
+        "minValue": sal.min,
+        "maxValue": sal.max,
+        "unitText": sal.unitText,
+      },
+    },
+  };
+});
+
+// AEO FAQ Structured Data
+const faqSchema = {
+  "@type": "FAQPage",
+  "@id": `${site}/careers/#faq`,
+  "mainEntity": CAREER_FAQS.map((faq) => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.answer,
+    },
+  })),
+};
+
+// Flat array passed to Layout to ensure clean inclusion in root @graph
+const pageSchemas = [...jobPostingSchemas, faqSchema];
+---
+
+<Layout
+  title="Careers & Driver Hiring in Chennai | Join Kalidass Travels"
+  description="Join Kalidass Travels Chennai. Hiring Outstation Chauffeurs, Airport Cab Drivers, Acting Drivers, Tour Planners & Dispatch staff. Apply online today."
+  keywords="driver jobs chennai, acting driver job chennai, airport taxi driver vacancy, tour cab driver vacancy chennai, tempo traveller driver job, travel agency jobs medavakkam chennai"
+  schema={pageSchemas}
+>
+  <Breadcrumbs items={breadcrumbItems} />
+
+  <main class="bg-m3-surface-container-low text-m3-on-surface min-h-screen font-sans">
+    <!-- 1. Cut-and-Dried Hero Section -->
+    <section class="bg-m3-surface border-b border-m3-outline-variant/30 pt-7 sm:pt-10 pb-8 sm:pb-10">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center space-y-3">
+          <!-- Active Hiring Badge -->
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-800 text-xs font-bold shadow-xs">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>We're Actively Hiring · Immediate Onboarding Available</span>
+          </div>
+
+          <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight">
+            Careers at <span class="text-m3-primary">Kalidass Travels</span>
+          </h1>
+
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant max-w-xl mx-auto leading-relaxed">
+            Hiring Chauffeurs, Acting Drivers, Fleet Supervisors, Tour Planners, and Dispatch Staff for our Medavakkam operations. Apply for open positions below.
+          </p>
+
+          <!-- 3 High-Signal Trust Chips (Using inline SVGs for 100% font-independent reliability) -->
+          <div class="flex flex-wrap items-center justify-center gap-2 pt-1 text-xs font-medium text-m3-on-surface">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-m3-md bg-m3-surface-container border border-m3-outline-variant/60">
+              <svg class="w-4 h-4 text-m3-primary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2.1 11 2 11.5 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/>
+              </svg>
+              <span>50+ Fleet Cabs</span>
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-m3-md bg-m3-surface-container border border-m3-outline-variant/60">
+              <svg class="w-4 h-4 text-emerald-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>
+              </svg>
+              <span>Daily Bata &amp; Prompt 1st Pay</span>
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-m3-md bg-m3-surface-container border border-m3-outline-variant/60">
+              <svg class="w-4 h-4 text-blue-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/>
+              </svg>
+              <span>Medavakkam Hub</span>
+            </span>
+          </div>
+
+          <!-- Quick Actions Bar -->
+          <div class="flex flex-wrap items-center justify-center gap-2.5 pt-2">
+            <button
+              type="button"
+              id="heroApplyOnlineBtn"
+              onclick="window.dispatchEvent(new CustomEvent('open-apply-modal'))"
+              class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-m3-full bg-m3-primary text-white hover:bg-m3-primary/90 text-xs font-bold shadow-xs transition-all cursor-pointer"
+            >
+              <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>
+              </svg>
+              <span>Apply Online</span>
+            </button>
+
+            <a
+              href="tel:+918939539211"
+              class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-m3-full bg-m3-surface hover:bg-m3-surface-container border border-m3-outline-variant text-m3-on-surface text-xs font-bold shadow-xs transition-all"
+            >
+              <svg class="w-4 h-4 text-emerald-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+              <span>HR Desk: 89395 39211</span>
+            </a>
+
+            <a
+              href="https://wa.me/918939539211?text=Hi%20Kalidass%20Travels%20HR,%20I%20am%20sharing%20my%20resume%20for%20a%20job%20opening."
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+              class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-m3-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-all"
+            >
+              <svg class="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+              </svg>
+              <span>WhatsApp HR</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. High-Signal Company Facts -->
+    <section class="py-6 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        {
+          COMPANY_HIGHLIGHTS.map((item, idx) => (
+            <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant/60 shadow-xs flex items-start gap-3">
+              <div class="w-8 h-8 rounded-m3-md bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0">
+                {idx === 0 && (
+                  <svg class="w-4 h-4 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>
+                  </svg>
+                )}
+                {idx === 1 && (
+                  <svg class="w-4 h-4 text-m3-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2.1 11 2 11.5 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/>
+                  </svg>
+                )}
+                {idx === 2 && (
+                  <svg class="w-4 h-4 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/>
+                  </svg>
+                )}
+              </div>
+              <div>
+                <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">
+                  {item.title}
+                </h3>
+                <p class="text-micro sm:text-xs text-m3-on-surface-variant leading-relaxed mt-0.5">
+                  {item.description}
+                </p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- 3. Interactive Careers Portal & Unified Resume Engine -->
+    <section id="openings" class="py-4 sm:py-6 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <CareersPortal client:load />
+    </section>
+
+
+    <!-- 4. Concise FAQs (4 Essential Questions) -->
+    <section class="py-8 sm:py-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center space-y-1 mb-6">
+        <span class="text-xs font-bold uppercase tracking-wider text-m3-primary">Hiring FAQ</span>
+        <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface font-heading tracking-tight">
+          Applicant Frequently Asked Questions
+        </h2>
+      </div>
+
+      <div class="space-y-2.5">
+        {
+          CAREER_FAQS.map((faq) => (
+            <details class="group bg-m3-surface rounded-m3-xl border border-m3-outline-variant/50 p-3.5 sm:p-4 shadow-xs">
+              <summary class="flex items-center justify-between font-bold text-xs sm:text-sm text-m3-on-surface cursor-pointer select-none list-none gap-3">
+                <span>{faq.question}</span>
+                <svg class="w-4 h-4 text-m3-on-surface-variant group-open:rotate-180 transition-transform duration-200 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m6 9 6 6 6-6"/>
+                </svg>
+              </summary>
+              <p class="text-xs text-m3-on-surface-variant leading-relaxed mt-2.5 pt-2.5 border-t border-m3-outline-variant/30">
+                {faq.answer}
+              </p>
+            </details>
+          ))
+        }
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style is:global>
+  dialog::backdrop {
+    background-color: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(4px);
+    animation: dialog-backdrop-fade 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  dialog[open] {
+    animation: dialog-modal-pop 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes dialog-backdrop-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes dialog-modal-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.95) translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+</style>
+

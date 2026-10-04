@@ -7,6 +7,7 @@ import Breadcrumbs from '../../components/SEO/Breadcrumbs.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
 import WhatsAppIcon from '../../components/WhatsAppIcon.astro';
 import AndroidPhoneIcon from '../../components/AndroidPhoneIcon.astro';
+import { buildWhatsAppUrl } from '../../utils/whatsapp';
 import { 
   ShieldCheck, 
   Clock, 
@@ -35,7 +36,7 @@ export async function getStaticPaths() {
 }
 
 const { service } = Astro.props as { service: any };
-const whatsappLink = `https://wa.me/918939539211?text=${encodeURIComponent(service.whatsappMsg || `Hi Kalidass Travels, I would like to book ${service.title}.`)}`;
+const whatsappLink = buildWhatsAppUrl(service.whatsappMsg || `Hi Kalidass Travels, I would like to book ${service.title}.`);
 
 const isActingDriver = service.category === 'Acting Driver Services' || service.slug.includes('driver');
 const isTour = ['Temple Tours', 'Popular Destinations'].includes(service.category);
@@ -1857,7 +1858,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                           <span>Call Now</span>
                         </a>
                         <a
-                          href={`https://wa.me/918939539211?text=${encodeURIComponent(bookingText)}`}
+                          href={buildWhatsAppUrl(bookingText)}
                           target="_blank"
                           rel="noopener noreferrer nofollow"
                           aria-label={`Book ${vehicleName} on WhatsApp for ${heroPrice}`}
@@ -1910,7 +1911,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                             <span>Call</span>
                           </a>
                           <a
-                            href={`https://wa.me/918939539211?text=${encodeURIComponent(bookingText)}`}
+                            href={buildWhatsAppUrl(bookingText)}
                             target="_blank"
                             rel="noopener noreferrer nofollow"
                             aria-label={`Book ${vehicleName} on WhatsApp`}
