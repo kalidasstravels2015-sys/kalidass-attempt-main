@@ -1,255 +1,971 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import QuotationEngine from "../components/QuotationEngine.jsx";
+import LocalRentalBookingEngine from "../components/LocalRentalBookingEngine.jsx";
+import AirportBookingEngine from "../components/AirportBookingEngine.jsx";
 import DriverFeeEstimator from "../components/DriverFeeEstimator.jsx";
 import VehicleRelocationCalculator from "../components/VehicleRelocationCalculator.jsx";
 import Breadcrumbs from "../components/SEO/Breadcrumbs.astro";
 import FAQAccordion from "../components/FAQAccordion.astro";
+import WhatsAppButton from "../components/WhatsAppButton.astro";
+import tariffConfig from "../data/tariff_config.json";
 
 const breadcrumbItems = [
   { name: "Home", item: "/" },
-  { name: "Calculator", item: "/calculator/" },
+  { name: "Fare Calculator", item: "/calculator/" },
+];
+
+const benchmarkFleet = [
+  {
+    name: "Swift Dzire / Toyota Etios",
+    subtitle: "Comfort AC Sedan · 350L Boot",
+    capacity: "4 Pax + Driver",
+    airportFlat: "₹650 flat",
+    key: "Swift Dzire" as keyof typeof tariffConfig.vehicles,
+  },
+  {
+    name: "Maruti Ertiga / XL6",
+    subtitle: "Spacious 6-Seater MPV",
+    capacity: "6 Pax + Driver",
+    airportFlat: "₹1,150 flat",
+    key: "Maruti Ertiga" as keyof typeof tariffConfig.vehicles,
+  },
+  {
+    name: "Toyota Innova Crysta",
+    subtitle: "VIP Executive Captain Seats",
+    capacity: "7 Pax + Driver",
+    airportFlat: "₹1,500 flat",
+    key: "Innova Crysta" as keyof typeof tariffConfig.vehicles,
+  },
+  {
+    name: "Tempo Traveller (12–14 Seater)",
+    subtitle: "Family & Group Pilgrim Van",
+    capacity: "12–14 Pax",
+    airportFlat: "₹2,400 flat",
+    key: "Tempo Traveller" as keyof typeof tariffConfig.vehicles,
+  },
 ];
 
 const webAppSchema = {
   "@type": "WebApplication",
   "@id": "https://kalidasstravels.in/calculator/#calculator-app",
-  "name": "Kalidass Travels Cost Estimator",
+  "name": "Kalidass Travels Fare Calculator & Trip Cost Estimator",
   "url": "https://kalidasstravels.in/calculator/",
   "applicationCategory": "TravelApplication",
-  "operatingSystem": "All",
+  "operatingSystem": "All (Web, Android, iOS, Windows, macOS)",
   "browserRequirements": "Requires JavaScript. Requires HTML5.",
+  "softwareVersion": "2.5",
   "provider": {
     "@id": "https://kalidasstravels.in/#localbusiness"
   },
-  "description": "Calculate instant transparent fares for Outstation Taxi, Chennai Acting Drivers, and Interstate Vehicle Relocation with zero surge pricing.",
+  "description": "Instant transparent fare estimators for Outstation Cabs, Chennai Local Hourly Packages, Chennai Airport Taxi, Acting Drivers, and Vehicle Relocation with zero surge pricing.",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "reviewCount": "1250",
+    "bestRating": "5",
+    "worstRating": "1"
+  },
   "offers": {
     "@type": "AggregateOffer",
     "priceCurrency": "INR",
     "priceValidUntil": "2027-12-31",
-    "lowPrice": "500",
+    "lowPrice": "499",
     "highPrice": "35000",
-    "offerCount": "15",
+    "offerCount": "24",
     "url": "https://kalidasstravels.in/calculator/",
     "availability": "https://schema.org/InStock"
   },
   "featureList": [
-    "One-Way and Round-Trip Taxi Fare Estimation",
-    "Acting Driver Hourly and Daily Fee Calculator",
-    "Interstate Vehicle Relocation Cost Estimation",
-    "Zero Surge Pricing Transparent Breakdown",
-    "Kilometer Rules and Bata Calculation Guidelines"
+    "Chennai Airport Fixed Zone Flat Tariff Estimator with Flight Delay Tracking",
+    "Chennai Local Hourly Rental Packages (4h, 5h, 8h, 10h, 12h) Calculator",
+    "Outstation One-Way and Round-Trip Taxi Fare Estimation with Toll Guidelines",
+    "Acting Driver Hourly and Daily Duty Fee Calculator",
+    "Interstate Vehicle Relocation & Road Transit Cost Estimation",
+    "Zero Surge Pricing Transparent Fare Breakdown & FASTag Toll Transparency"
   ]
 };
 
-const calculatorFaqs = [
+const howToSchema = {
+  "@type": "HowTo",
+  "@id": "https://kalidasstravels.in/calculator/#howto",
+  "name": "How to Calculate Taxi & Outstation Trip Fares in Chennai",
+  "description": "Calculate exact travel costs for outstation cabs, Chennai Airport flat rates, local city rentals, and acting drivers without surge pricing.",
+  "totalTime": "PT1M",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Select Your Travel Engine",
+      "text": "Choose from Airport Taxi (flat zone fare), Local Rental (hourly packages), Outstation Cabs (per-km billing), Acting Drivers, or Vehicle Relocation.",
+      "url": "https://kalidasstravels.in/calculator/#airport-taxi-estimator"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Input Origin & Destination or Package Hours",
+      "text": "Type your pickup and drop location for point-to-point calculation, or select standard rental durations like 5h/50km or 10h/100km.",
+      "url": "https://kalidasstravels.in/calculator/#local-rental-estimator"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Select Vehicle Class",
+      "text": "Pick from Sedan (Dzire/Etios), 6-Seater SUV (Ertiga), Luxury MUV (Innova Crysta), or 12-Seater Tempo Traveller based on your group size.",
+      "url": "https://kalidasstravels.in/calculator/#outstation-estimator"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Review Transparent Estimate & Book",
+      "text": "Review transparent rates including base kilometers, driver bata, and toll guidelines with zero surge pricing, then confirm via WhatsApp or phone.",
+      "url": "https://kalidasstravels.in/calculator/#acting-driver-estimator"
+    }
+  ]
+};
+
+const faqItems = [
   {
-    q: "How is outstation taxi fare calculated in Chennai?",
-    a: "Outstation taxi fares are calculated based on the total round-trip distance multiplied by the per-kilometer vehicle rate, subject to a standard 250 km/calendar day minimum. The base fare covers the sanitized AC vehicle, fuel, and professional chauffeur service."
+    q: "How is outstation cab fare calculated from Chennai?",
+    a: "Outstation cab fare is calculated as: [Total Billable Kilometers × Vehicle Per-KM Rate] + [Calendar Days × Driver Bata] + [Highway Tolls & State Permits at actuals]. For round trips, a standard minimum distance of 250 km per calendar day applies (300 km for Innova Crysta & Tempo Traveller). If you travel 180 km in 1 day, the 250 km minimum applies; if you travel 340 km, you pay for the exact 340 km."
   },
   {
-    q: "Are highway toll fees, parking, and interstate taxes included in the calculator?",
-    a: "The calculator estimates the core vehicle running cost and driver daily allowances (bata). Fastag highway tolls, parking tickets, and interstate state entry permits (e.g. entering Andhra Pradesh, Karnataka, or Puducherry) are billed transparently at actuals based on your travel route."
+    q: "Does Kalidass Travels charge surge pricing during peak hours or heavy rain?",
+    a: "No. Kalidass Travels guarantees 100% Zero Surge Pricing. Unlike app-based taxi aggregators that apply 1.5x–3.0x multiplier rates during rain, late night hours, airport rush, or festivals, our published tariffs remain fixed and transparent 365 days a year."
   },
   {
-    q: "What is Driver Bata and when does it apply?",
-    a: "Driver Bata is the standard food and daily subsistence allowance for outstation chauffeurs (typically ₹300 to ₹600/day depending on vehicle class: Sedan, SUV, or Tempo Traveller). For trips departing before 6:00 AM or operating past 10:00 PM, a standard night driving allowance applies."
+    q: "How does Chennai Airport flat rate taxi pricing work?",
+    a: "Chennai Airport (MAA) taxi fares are based on fixed zone slabs starting from ₹650 for South Chennai (Guindy, Tambaram, Medavakkam), ₹950 for Central Chennai (T. Nagar, Anna Nagar), ₹1,250 for OMR IT Corridor, and ₹1,650 for ECR/Mahabalipuram. Our flat rate includes 60 minutes free waiting time and automated flight delay tracking with zero extra waiting fee."
   },
   {
-    q: "How are Acting Driver hourly charges calculated?",
-    a: "Acting driver fees for your personal car are ₹500 for 4 hours (City Short Duty) or ₹800 for 8 hours (City Full Day) within Chennai (additional hours at ₹100/hr). For outstation driving duties, driver daily bata is transparently tiered by car type (Hatchback/Sedan ₹1,100/day, Compact SUV ₹1,200/day, Premium SUV ₹1,300/day, Luxury ₹1,500/day) plus ₹300/day food and ₹300/night stay if not arranged with family."
+    q: "What is included in the Chennai Local Hourly Rental Packages?",
+    a: "Local hourly packages (such as 5 Hrs / 50 KM from ₹1,500 or 10 Hrs / 100 KM from ₹2,600 for Sedans) include the sanitized air-conditioned vehicle, fuel costs, and chauffeur bata. Any additional usage beyond the package is billed transparently at published extra km (₹15–₹24/km) and extra hour (₹150–₹500/hr) rates."
   },
   {
-    q: "How does Interstate Vehicle Relocation pricing work?",
-    a: "Personal car shifting is estimated based on highway road distance, experienced intercity driver allowance, fuel replenishment, and return public transit fare (train/bus ticket for driver return to Chennai) with a complete pre-trip and post-trip digital inspection handover."
+    q: "Are highway tolls, parking charges, and interstate permits included?",
+    a: "Tolls, destination parking fees, and interstate border entry permits (such as crossing into Pondicherry, Andhra Pradesh, Karnataka, or Kerala) are paid at actuals. Tolls are processed transparently via vehicle FASTag with digital pass-through statements to ensure you pay exact government rates."
   },
   {
-    q: "Does Kalidass Travels charge peak surge or rainy day multipliers?",
-    a: "No. Unlike app-based taxi aggregators, Kalidass Travels guarantees 100% transparent, fixed tariff rates with zero surge pricing during peak commute hours, festivals, or sudden monsoon rain in Chennai."
+    q: "How are acting driver fees calculated for personal cars?",
+    a: "For city duty within Chennai, acting driver fees start at ₹499 for the first 4 hours, plus ₹99 per additional hour. A night allowance of ₹200 applies between 10:00 PM and 06:00 AM. For outstation trips in your car, outstation driver duty is billed at ₹1,100/day bata + ₹300 food allowance + return public transit ticket for one-way drops."
+  },
+  {
+    q: "Can I get a GST-compliant tax invoice for corporate travel claims?",
+    a: "Yes. All trips booked through Kalidass Travels come with verifiable GST tax invoices detailing base rental, fuel, driver allowance, and GST registration number (GSTIN: 33COVPM0531D1Z4), making it 100% eligible for company reimbursement and corporate input tax credit."
+  },
+  {
+    q: "What happens if my incoming flight to Chennai Airport is delayed?",
+    a: "We actively track your flight status using the flight number provided during booking. Your pickup chauffeur adjusts arrival timing to match your actual landing time, with up to 60 minutes of complimentary waiting after wheels touch down at no additional charge."
   }
 ];
 
 const faqSchema = {
   "@type": "FAQPage",
   "@id": "https://kalidasstravels.in/calculator/#faq",
-  "mainEntity": calculatorFaqs.map((faq) => ({
+  "mainEntity": faqItems.map((item) => ({
     "@type": "Question",
-    "name": faq.q,
+    "name": item.q,
     "acceptedAnswer": {
       "@type": "Answer",
-      "text": faq.a
+      "text": item.a
     }
   }))
 };
+
+const serviceSchemas = [
+  {
+    "@type": "Service",
+    "@id": "https://kalidasstravels.in/calculator/#service-airport",
+    "name": "Chennai Airport Flat Tariff Taxi Transfers",
+    "serviceType": "Airport Taxi Transfer",
+    "provider": { "@id": "https://kalidasstravels.in/#localbusiness" },
+    "description": "Pre-booked flat zone fares between Chennai International Airport (MAA) and all Chennai neighborhoods starting from ₹650 with flight delay tracking.",
+    "offers": {
+      "@type": "Offer",
+      "price": "650",
+      "priceCurrency": "INR"
+    }
+  },
+  {
+    "@type": "Service",
+    "@id": "https://kalidasstravels.in/calculator/#service-local",
+    "name": "Chennai Local Hourly Car Rental Packages",
+    "serviceType": "Hourly Car Rental",
+    "provider": { "@id": "https://kalidasstravels.in/#localbusiness" },
+    "description": "Flexible city hourly car packages (5h/50km, 8h/80km, 10h/100km, 12h/120km) with fuel and chauffeur included starting from ₹1,500.",
+    "offers": {
+      "@type": "Offer",
+      "price": "1500",
+      "priceCurrency": "INR"
+    }
+  },
+  {
+    "@type": "Service",
+    "@id": "https://kalidasstravels.in/calculator/#service-outstation",
+    "name": "Outstation Cab Fare Calculation & Booking",
+    "serviceType": "Outstation Taxi Service",
+    "provider": { "@id": "https://kalidasstravels.in/#localbusiness" },
+    "description": "Point-to-point and round-trip outstation cab cost estimation starting from ₹14/km across Tamil Nadu, Pondicherry, Andhra Pradesh, and Karnataka.",
+    "offers": {
+      "@type": "Offer",
+      "price": "14",
+      "priceCurrency": "INR",
+      "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "price": "14",
+        "priceCurrency": "INR",
+        "unitText": "KM"
+      }
+    }
+  },
+  {
+    "@type": "Service",
+    "@id": "https://kalidasstravels.in/calculator/#service-driver",
+    "name": "Acting Driver Services in Chennai",
+    "serviceType": "Chauffeur Service",
+    "provider": { "@id": "https://kalidasstravels.in/#localbusiness" },
+    "description": "Background-verified professional acting drivers for personal cars on hourly city duty or outstation daily bata starting from ₹499.",
+    "offers": {
+      "@type": "Offer",
+      "price": "499",
+      "priceCurrency": "INR"
+    }
+  },
+  {
+    "@type": "Service",
+    "@id": "https://kalidasstravels.in/calculator/#service-relocation",
+    "name": "Intercity Vehicle Relocation Service",
+    "serviceType": "Vehicle Relocation",
+    "provider": { "@id": "https://kalidasstravels.in/#localbusiness" },
+    "description": "Professional door-to-door car and SUV driveaway relocation across South India with live GPS tracking and trip insurance.",
+    "offers": {
+      "@type": "Offer",
+      "price": "3500",
+      "priceCurrency": "INR"
+    }
+  }
+];
 ---
 
 <Layout
-  title="Online Taxi Fare Calculator Chennai | Kalidass Travels"
-  description="Calculate instant, transparent travel costs for outstation cabs, hourly acting drivers, and personal car relocations in Chennai. Zero surge pricing."
+  title="Chennai Taxi Fare Calculator & Outstation Cab Estimator | Kalidass Travels"
+  description="Instant travel cost & taxi fare calculator in Chennai. Transparent rates for outstation cabs (₹14/km), Chennai airport flat fares (₹650), local hourly packages & acting drivers with 100% zero surge pricing."
   ogImage="/og/calculator.jpg"
-  keywords="taxi fare calculator chennai, cab cost estimator chennai, outstation cab fare calculator, acting driver charges calculator chennai, car relocation fare chennai, kalidass travels fare calculator"
-  schema={[webAppSchema, faqSchema]}
+  keywords="taxi fare calculator chennai, outstation cab fare calculator chennai, travel cost calculator, trip amount calculator, km calculator car rent chennai, local taxi package calculator, chennai airport taxi calculator, acting driver charges calculator, vehicle relocation cost calculator, kalidass travels fare calculator"
+  schema={[webAppSchema, howToSchema, faqSchema, ...serviceSchemas]}
 >
   <Breadcrumbs items={breadcrumbItems} />
-  <main class="bg-m3-surface-container-low text-m3-on-surface min-h-screen pt-6 pb-16 font-sans">
+  
+  <main class="bg-m3-surface-container-low text-m3-on-surface min-h-screen pt-4 pb-16 font-sans">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- Header -->
-      <div class="text-center mb-8">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
-          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-          <span>Instant Cost Calculations</span>
+      
+      <!-- Top Header & AEO Snapshot -->
+      <header class="text-center mb-6">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-2.5 tracking-wide">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Instant Travel Cost Estimators · Zero Surge Guarantee</span>
         </div>
-        <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
-          Travel Cost <span class="text-m3-primary">Estimator</span>
+        
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2 font-heading">
+          Chennai Taxi Fare &amp; Outstation Cab <span class="text-m3-primary">Cost Calculator</span>
         </h1>
-        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto font-normal leading-relaxed mb-6 font-sans">
-          Get instant, transparent price estimates for Cabs, Acting Drivers, and Vehicle Relocation services with zero surge pricing.
+        
+        <p class="text-xs sm:text-sm text-m3-on-surface-variant max-w-2xl mx-auto font-normal leading-relaxed mb-4 font-sans">
+          Instant, transparent fare estimates for Chennai airport drops, local city hourly packages, outstation highway trips, acting drivers, and vehicle relocation.
         </p>
-      </div>
 
-      <!-- Calculators Section -->
-      <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start mb-14" aria-label="Interactive Travel Estimators">
-        <h2 class="sr-only">Available Travel Calculators</h2>
-        {/* Oneway / Round Trip Calculator */}
-        <div class="w-full flex justify-center">
+      </header>
+
+      <!-- Sticky Quick-Jump Pill Bar (2 Rows) -->
+      <nav 
+        data-quick-nav 
+        aria-label="Calculator Quick Navigation" 
+        class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-2 sm:py-2.5 mb-8 -mx-4 sm:-mx-6 lg:-mx-8 px-2 sm:px-6 lg:px-8 transition-all"
+      >
+        <div class="max-w-7xl mx-auto flex flex-col items-center justify-center gap-1.5 sm:gap-2">
+          <!-- Row 1: Airport, Local Package, Outstation -->
+          <div class="flex items-center justify-center gap-1.5 sm:gap-2 w-full overflow-x-auto no-scrollbar scroll-px-2 py-0.5" data-quick-nav-container>
+            <a 
+              href="#airport-taxi-estimator" 
+              class="px-3 sm:px-3.5 py-1.5 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs flex items-center gap-1.5 transition-all shrink-0 text-xs border border-m3-outline-variant/30"
+              data-active="true"
+              aria-current="true"
+            >
+              <span>✈️ Airport Taxi</span>
+            </a>
+            <a 
+              href="#local-rental-estimator" 
+              class="px-3 sm:px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high font-medium shadow-xs flex items-center gap-1.5 transition-all shrink-0 text-xs border border-m3-outline-variant/30"
+            >
+              <span>⏱️ Local Package</span>
+            </a>
+            <a 
+              href="#outstation-estimator" 
+              class="px-3 sm:px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high font-medium shadow-xs flex items-center gap-1.5 transition-all shrink-0 text-xs border border-m3-outline-variant/30"
+            >
+              <span>🚗 Outstation Cabs</span>
+            </a>
+          </div>
+          
+          <!-- Row 2: Acting Driver, Car Relocation -->
+          <div class="flex items-center justify-center gap-1.5 sm:gap-2 w-full overflow-x-auto no-scrollbar scroll-px-2 py-0.5" data-quick-nav-container>
+            <a 
+              href="#acting-driver-estimator" 
+              class="px-3 sm:px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high font-medium shadow-xs flex items-center gap-1.5 transition-all shrink-0 text-xs border border-m3-outline-variant/30"
+            >
+              <span>🧑‍✈️ Acting Drivers</span>
+            </a>
+            <a 
+              href="#vehicle-relocation-estimator" 
+              class="px-3 sm:px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high font-medium shadow-xs flex items-center gap-1.5 transition-all shrink-0 text-xs border border-m3-outline-variant/30"
+            >
+              <span>🚛 Car Relocation</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Pure Engines Dashboard (Direct Side-by-Side 2-Column Grid) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start mb-16">
+        
+        {/* 1. Chennai Airport Taxi Engine */}
+        <section id="airport-taxi-estimator" class="w-full flex justify-center scroll-mt-40" aria-label="Chennai Airport Taxi Estimator">
+          <AirportBookingEngine client:load showHeader={true} enableStickyBar={false} />
+        </section>
+
+        {/* 2. Local City Rental Engine */}
+        <section id="local-rental-estimator" class="w-full flex justify-center scroll-mt-40" aria-label="Local City Rental Estimator">
+          <LocalRentalBookingEngine
+            client:load
+            showHeader={true}
+            title="Chennai Local City Rental"
+          />
+        </section>
+
+        {/* 3. Outstation Cab Engine */}
+        <section id="outstation-estimator" class="w-full flex justify-center scroll-mt-40" aria-label="Outstation Cab Estimator">
           <QuotationEngine
             client:load
-            showAirportTab={false}
-            showBookingButton={false}
-            title="Taxi Fare Estimator"
+            initialTab="oneway"
+            allowedTabs={['oneway', 'round']}
+            title="Outstation Cab Estimator"
+            subtitle="One-Way Drop & Round-Trip • Transparent Per-KM Rates"
+            headerIcon="car"
             variant="card"
+            showAirportTab={false}
           />
-        </div>
+        </section>
 
-        {/* Acting Driver Cost Calculator */}
-        <div class="w-full flex justify-center">
+        {/* 4. Acting Driver Engine */}
+        <section id="acting-driver-estimator" class="w-full flex justify-center scroll-mt-40" aria-label="Acting Driver Estimator">
           <DriverFeeEstimator
             client:load
             title="Acting Driver Estimator"
-            subtitle="Calculate Outstation Bata, Stay & Transit"
+            subtitle="Hourly City Duty & Outstation Daily Bata"
           />
-        </div>
+        </section>
 
-        {/* Vehicle Relocation Cost */}
-        <div class="w-full flex justify-center lg:col-span-2">
-          <VehicleRelocationCalculator client:load />
+        {/* 5. Intercity Vehicle Relocation Engine */}
+        <section id="vehicle-relocation-estimator" class="w-full flex justify-center lg:col-span-2 scroll-mt-40 pt-2" aria-label="Vehicle Relocation Estimator">
+          <div class="w-full max-w-4xl mx-auto">
+            <VehicleRelocationCalculator client:load />
+          </div>
+        </section>
+
+      </div>
+
+      <!-- AEO Direct Answer Box (Google AI Overviews & Answer Engine Optimization) -->
+      <section 
+        class="max-w-4xl mx-auto text-left bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 sm:p-6 shadow-m3-1 mb-16 scroll-mt-36"
+        aria-label="Overview & Direct Fare Formula"
+        data-speakable="true"
+      >
+        <div class="flex items-start gap-3.5">
+          <div class="w-9 h-9 rounded-m3-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
+            <span class="material-symbols-outlined text-[20px]">verified</span>
+          </div>
+          <div class="flex-1">
+            <h2 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+              <span>Quick Answer: How are Taxi &amp; Outstation Fares Calculated in Chennai?</span>
+            </h2>
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant font-normal leading-relaxed">
+              In Chennai, commercial taxi fares consist of three transparent components: 
+              <strong class="text-m3-on-surface font-semibold">1) Base Billable Distance</strong> (from ₹14/km for Sedans with standard 250 km/day calendar rule for outstation), 
+              <strong class="text-m3-on-surface font-semibold">2) Daily Chauffeur Bata</strong> (₹300–₹800/day depending on vehicle class for outstation, or fully included in local packages), and 
+              <strong class="text-m3-on-surface font-semibold">3) Highway Tolls &amp; State Taxes</strong> passed through at actuals via FASTag. Kalidass Travels guarantees <strong class="text-emerald-700 font-semibold">100% Zero Surge Pricing</strong> 365 days a year with official GST invoices.
+            </p>
+            <div class="mt-3 pt-3 border-t border-m3-outline-variant/50 flex flex-wrap items-center justify-between gap-2 text-micro sm:text-xs">
+              <span class="inline-flex items-center gap-1 font-mono bg-m3-surface-container-high px-2.5 py-1 rounded text-m3-on-surface font-semibold">
+                <span>Formula: Total = (KM × Rate) + (Days × Bata) + Tolls</span>
+              </span>
+              <span class="text-m3-on-surface-variant flex items-center gap-1">
+                <span class="material-symbols-outlined text-[15px] text-emerald-600">check_circle</span>
+                <span>Verified 2026 Rates · GSTIN: 33COVPM0531D1Z4</span>
+              </span>
+            </div>
+          </div>
         </div>
       </section>
 
-      <!-- Fare Calculation Rules & Grounding Section -->
-      <section class="mb-14 scroll-mt-28" aria-labelledby="fare-rules-heading">
+      <!-- SECTION 1: Machine-Readable Quick Fare Reference Matrix (AEO & SERP Table) -->
+      <section class="mb-16 scroll-mt-36" aria-labelledby="fare-matrix-heading">
         <div class="text-center max-w-3xl mx-auto mb-8">
-          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-2.5 tracking-wide">
             <span class="w-2 h-2 rounded-full bg-m3-primary"></span>
-            <span>Transparent Pricing Breakdown</span>
+            <span>2026 Official Commercial Tariff Benchmarks</span>
           </div>
-          <h2 id="fare-rules-heading" class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
-            How Our Travel Costs Are <span class="text-m3-primary">Calculated</span>
+          <h2 id="fare-matrix-heading" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2 font-heading">
+            Chennai Taxi &amp; Cab <span class="text-m3-primary">Fare Benchmark Matrix</span>
           </h2>
-          <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant font-normal max-w-2xl mx-auto leading-relaxed font-sans">
-            Every estimate generated above follows official Kalidass Travels commercial rate cards with zero hidden surprises.
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant font-normal leading-relaxed max-w-2xl mx-auto font-sans">
+            Reference table of official commercial vehicle rates across airport flat transfers, Chennai hourly city packages, and outstation per-kilometer tariffs.
           </p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          <div class="bg-m3-surface rounded-m3-xl p-5 border border-m3-outline-variant shadow-m3-1 hover:border-m3-outline/70 transition-all">
-            <div class="w-10 h-10 rounded-m3-lg bg-emerald-50 text-emerald-600 flex items-center justify-center mb-3">
-              <span class="material-symbols-outlined text-2xl">route</span>
-            </div>
-            <h3 class="font-heading font-bold text-sm sm:text-base text-m3-on-surface mb-1.5">
-              Kilometer-Based Pricing
-            </h3>
-            <p class="text-xs text-m3-on-surface-variant leading-relaxed">
-              Outstation cabs are billed on actual round-trip kilometers with a standard 250 km/day minimum cap. Sedans start from ₹14/km, SUVs from ₹18–₹20/km.
-            </p>
-          </div>
-
-          <div class="bg-m3-surface rounded-m3-xl p-5 border border-m3-outline-variant shadow-m3-1 hover:border-m3-outline/70 transition-all">
-            <div class="w-10 h-10 rounded-m3-lg bg-blue-50 text-blue-600 flex items-center justify-center mb-3">
-              <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                <circle cx="9" cy="7" r="4"/>
-                <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-              </svg>
-            </div>
-            <h3 class="font-heading font-bold text-sm sm:text-base text-m3-on-surface mb-1.5">
-              Standard Driver Bata
-            </h3>
-            <p class="text-xs text-m3-on-surface-variant leading-relaxed">
-              Driver subsistence allowance (₹300–₹500/day) covers food and highway standby. Trips running between 10:00 PM and 6:00 AM incur a night bata.
-            </p>
-          </div>
-
-          <div class="bg-m3-surface rounded-m3-xl p-5 border border-m3-outline-variant shadow-m3-1 hover:border-m3-outline/70 transition-all">
-            <div class="w-10 h-10 rounded-m3-lg bg-amber-50 text-amber-600 flex items-center justify-center mb-3">
-              <span class="material-symbols-outlined text-2xl">receipt_long</span>
-            </div>
-            <h3 class="font-heading font-bold text-sm sm:text-base text-m3-on-surface mb-1.5">
-              Tolls &amp; Permits at Actuals
-            </h3>
-            <p class="text-xs text-m3-on-surface-variant leading-relaxed">
-              Fastag toll plaza fees, temple/airport parking, and interstate border permits (AP, Pondicherry, Karnataka) are payable directly as per actual receipts.
-            </p>
-          </div>
-
-          <div class="bg-m3-surface rounded-m3-xl p-5 border border-m3-outline-variant shadow-m3-1 hover:border-m3-outline/70 transition-all">
-            <div class="w-10 h-10 rounded-m3-lg bg-purple-50 text-purple-600 flex items-center justify-center mb-3">
-              <span class="material-symbols-outlined text-2xl">verified</span>
-            </div>
-            <h3 class="font-heading font-bold text-sm sm:text-base text-m3-on-surface mb-1.5">
-              Zero Surge Multipliers
-            </h3>
-            <p class="text-xs text-m3-on-surface-variant leading-relaxed">
-              Unlike rideshare apps, our tariffs never surge during rain, peak office hours, or festival weekends. The estimated rate remains your confirmed rate.
-            </p>
-          </div>
+        <div class="overflow-x-auto rounded-m3-xl shadow-m3-1 border border-m3-outline-variant bg-m3-surface">
+          <table class="w-full text-left font-sans text-xs sm:text-sm">
+            <caption class="sr-only">Official Chennai Taxi Fare Benchmark Rates for 2026</caption>
+            <thead class="bg-m3-surface-container-high text-m3-on-surface text-micro sm:text-xs font-bold uppercase tracking-wider border-b border-m3-outline-variant">
+              <tr>
+                <th scope="col" class="px-4 py-3.5">Vehicle Category</th>
+                <th scope="col" class="px-3 py-3.5 text-center">Capacity</th>
+                <th scope="col" class="px-3 py-3.5 text-center">Airport (MAA) From</th>
+                <th scope="col" class="px-3 py-3.5 text-center">Local (5h / 50km)</th>
+                <th scope="col" class="px-3 py-3.5 text-center">Local (10h / 100km)</th>
+                <th scope="col" class="px-3 py-3.5 text-center">Outstation Per KM</th>
+                <th scope="col" class="px-3 py-3.5 text-center">Driver Bata / Day</th>
+                <th scope="col" class="px-3 py-3.5 text-right">Surge Fee</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-m3-outline-variant/40">
+              {benchmarkFleet.map((row, idx) => {
+                const v = tariffConfig.vehicles[row.key];
+                return (
+                  <tr class={idx % 2 === 1 ? "bg-m3-surface-container-lowest hover:bg-m3-surface-container-low transition-colors" : "hover:bg-m3-surface-container-low transition-colors"}>
+                    <th scope="row" class="px-4 py-3 font-bold text-m3-on-surface flex flex-col">
+                      <span>{row.name}</span>
+                      <span class="text-[10px] text-m3-on-surface-variant font-normal">{row.subtitle}</span>
+                    </th>
+                    <td class="px-3 py-3 text-center text-m3-on-surface-variant">{row.capacity}</td>
+                    <td class="px-3 py-3 text-center font-semibold text-emerald-700">{row.airportFlat}</td>
+                    <td class="px-3 py-3 text-center font-semibold">₹{v.local_5hr_pkg.toLocaleString("en-IN")}</td>
+                    <td class="px-3 py-3 text-center font-semibold">₹{v.local_10hr_pkg.toLocaleString("en-IN")}</td>
+                    <td class="px-3 py-3 text-center font-semibold text-m3-primary">₹{v.round_trip_rate} / km</td>
+                    <td class="px-3 py-3 text-center text-m3-on-surface-variant">₹{v.driver_bata} / day</td>
+                    <td class="px-3 py-3 text-right font-bold text-emerald-600">₹0 (Zero)</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <div class="mt-3 flex flex-wrap items-center justify-between text-micro text-m3-on-surface-variant px-1 gap-2">
+          <span>* Minimum billing for outstation round trips is 250 km/day (300 km/day for Crysta &amp; Tempo).</span>
+          <a href="/tariff/" class="text-m3-primary font-bold hover:underline inline-flex items-center gap-1">
+            <span>View Complete Tariff Card &amp; Extra KM Rates</span>
+            <span class="material-symbols-outlined text-[13px]">arrow_forward</span>
+          </a>
         </div>
       </section>
 
-      <!-- FAQ Section Accordion -->
-      <section id="faq" class="mb-14 scroll-mt-28" aria-labelledby="calculator-faq-heading">
+      <!-- SECTION 2: Step-by-Step "How to Use the Fare Calculator" (HowTo Schema & Featured Snippet) -->
+      <section class="mb-16 scroll-mt-36" aria-labelledby="howto-heading">
         <div class="text-center max-w-3xl mx-auto mb-8">
-          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
-            <span class="w-2 h-2 rounded-full bg-m3-primary"></span>
-            <span>Estimator Help &amp; Policies</span>
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-2.5 tracking-wide">
+            <span class="material-symbols-outlined text-[15px] text-m3-primary">route</span>
+            <span>4 Simple Steps to Calculate &amp; Book</span>
           </div>
-          <h2 id="calculator-faq-heading" class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
-            Frequently Asked Questions <span class="text-m3-primary">About Travel Estimates</span>
+          <h2 id="howto-heading" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2 font-heading">
+            How to Calculate Your Trip Cost <span class="text-m3-primary">in 60 Seconds</span>
           </h2>
-          <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant font-normal max-w-2xl mx-auto leading-relaxed font-sans">
-            Clear, transparent answers about outstation billing, driver allowances, toll policies, and vehicle relocation estimates.
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant font-normal leading-relaxed max-w-2xl mx-auto font-sans">
+            Our interactive calculation engines provide real-time estimates calibrated against highway distances and commercial tariff guidelines.
           </p>
         </div>
 
-        <FAQAccordion items={calculatorFaqs} columns={2} className="max-w-5xl mx-auto" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 shadow-m3-1 relative overflow-hidden flex flex-col justify-between">
+            <div>
+              <div class="w-8 h-8 rounded-m3-full bg-m3-primary text-white font-bold text-xs flex items-center justify-center mb-3.5 shadow-xs">
+                1
+              </div>
+              <h3 class="text-sm font-bold text-m3-on-surface font-heading mb-1.5">Select Travel Mode</h3>
+              <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+                Choose between Airport Taxi (flat rate), Local Rental (hours/km), Outstation Cabs (per-km), Acting Drivers, or Car Relocation.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-m3-primary font-semibold flex items-center gap-1">
+              <span>Step 1: Engine Jump</span>
+              <span class="material-symbols-outlined text-[12px]">keyboard_arrow_right</span>
+            </div>
+          </div>
+
+          <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 shadow-m3-1 relative overflow-hidden flex flex-col justify-between">
+            <div>
+              <div class="w-8 h-8 rounded-m3-full bg-m3-primary text-white font-bold text-xs flex items-center justify-center mb-3.5 shadow-xs">
+                2
+              </div>
+              <h3 class="text-sm font-bold text-m3-on-surface font-heading mb-1.5">Input Addresses / Hours</h3>
+              <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+                Enter your pickup and drop locations in Tamil Nadu / South India, or pick package durations (5h, 8h, 10h, 12h) for city errands.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-m3-primary font-semibold flex items-center gap-1">
+              <span>Step 2: Highway KM Query</span>
+              <span class="material-symbols-outlined text-[12px]">keyboard_arrow_right</span>
+            </div>
+          </div>
+
+          <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 shadow-m3-1 relative overflow-hidden flex flex-col justify-between">
+            <div>
+              <div class="w-8 h-8 rounded-m3-full bg-m3-primary text-white font-bold text-xs flex items-center justify-center mb-3.5 shadow-xs">
+                3
+              </div>
+              <h3 class="text-sm font-bold text-m3-on-surface font-heading mb-1.5">Pick Vehicle Class</h3>
+              <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+                Choose Sedan (Dzire/Etios), 6-Seater SUV (Ertiga), Luxury MUV (Innova Crysta), or 12-Seater Tempo Traveller based on luggage &amp; passenger count.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-m3-primary font-semibold flex items-center gap-1">
+              <span>Step 3: Fleet Matching</span>
+              <span class="material-symbols-outlined text-[12px]">keyboard_arrow_right</span>
+            </div>
+          </div>
+
+          <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 shadow-m3-1 relative overflow-hidden flex flex-col justify-between">
+            <div>
+              <div class="w-8 h-8 rounded-m3-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center mb-3.5 shadow-xs">
+                4
+              </div>
+              <h3 class="text-sm font-bold text-m3-on-surface font-heading mb-1.5">Instant Transparent Quote</h3>
+              <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+                Inspect your zero-surge itemized quote including base kilometers, driver allowances, and toll guidelines. Confirm instantly via WhatsApp or phone.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-emerald-700 font-semibold flex items-center gap-1">
+              <span>Step 4: Dispatch Confirmation</span>
+              <span class="material-symbols-outlined text-[12px]">check_circle</span>
+            </div>
+          </div>
+        </div>
       </section>
 
-      <!-- CTA Section -->
-      <div class="text-center bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-xl p-8 sm:p-12 shadow-m3-3 relative overflow-hidden border border-slate-800">
+      <!-- SECTION 3: Detailed Fare Calculation Formulas & Billing Rules -->
+      <section class="mb-16 scroll-mt-36" aria-labelledby="formula-heading">
+        <div class="text-center max-w-3xl mx-auto mb-8">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-2.5 tracking-wide">
+            <span class="material-symbols-outlined text-[15px] text-m3-primary">calculate</span>
+            <span>Billing Methodologies &amp; Policies</span>
+          </div>
+          <h2 id="formula-heading" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2 font-heading">
+            Transparent Fare Calculation Formulas <span class="text-m3-primary">&amp; Rules</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant font-normal leading-relaxed max-w-2xl mx-auto font-sans">
+            How our algorithms evaluate trip amounts across airport transfers, city rentals, outstation highway trips, acting drivers, and vehicle relocation.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <!-- Card 1: Chennai Airport Flat Rates -->
+          <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 sm:p-6 shadow-m3-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="material-symbols-outlined text-m3-primary text-xl">flight_land</span>
+                <h3 class="font-bold text-m3-on-surface font-heading text-base">Chennai Airport Flat Tariff Formula</h3>
+              </div>
+              <div class="bg-m3-surface-container-low p-3 rounded-m3-lg font-mono text-xs text-m3-on-surface mb-3 border border-m3-outline-variant/60 leading-relaxed">
+                Total = Fixed Zone Slab Rate<br/>
+                <span class="text-micro text-m3-on-surface-variant">(Sedan from ₹650 / ₹950 / ₹1,250 / ₹1,650; SUV &amp; Crysta scaled)</span>
+              </div>
+              <ul class="space-y-2 text-xs text-m3-on-surface-variant font-sans">
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary mt-1.5 shrink-0"></span>
+                  <span><strong>Neighborhood Zone Slabs:</strong> South Chennai / Guindy from ₹650 (Sedan) / ₹1,150 (SUV); Central Chennai from ₹950 / ₹1,550; OMR IT Parks from ₹1,250 / ₹1,850; ECR Coastal from ₹1,650 / ₹2,400.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary mt-1.5 shrink-0"></span>
+                  <span><strong>All-Inclusive Flat Tariff:</strong> Covers commercial AC vehicle, fuel, driver allowance, airport entry toll, and MAA terminal parking.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary mt-1.5 shrink-0"></span>
+                  <span><strong>Complimentary Flight Delay Buffer:</strong> We monitor live ATC flight status; chauffeur waits up to 60 mins post touchdown with zero waiting fees.</span>
+                </li>
+              </ul>
+            </div>
+            <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-emerald-700 font-semibold flex items-center justify-between">
+              <span>MAA Terminal Parking Included</span>
+              <span class="material-symbols-outlined text-[14px]">check_circle</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Local Hourly Packages -->
+          <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 sm:p-6 shadow-m3-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="material-symbols-outlined text-m3-primary text-xl">schedule</span>
+                <h3 class="font-bold text-m3-on-surface font-heading text-base">Local Hourly Rental Package Formula</h3>
+              </div>
+              <div class="bg-m3-surface-container-low p-3 rounded-m3-lg font-mono text-xs text-m3-on-surface mb-3 border border-m3-outline-variant/60 leading-relaxed">
+                Total = Base Package + (Extra KM × Extra KM Rate) + (Extra Hours × Extra Hour Rate)<br/>
+                <span class="text-micro text-m3-on-surface-variant">(Sedan benchmark: Base + Extra KM × ₹15 + Extra Hr × ₹150)</span>
+              </div>
+              <ul class="space-y-2 text-xs text-m3-on-surface-variant font-sans">
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary mt-1.5 shrink-0"></span>
+                  <span><strong>Fuel &amp; Driver Bata Included:</strong> Base packages (5h/50km, 8h/80km, 12h/120km, or CPWD 10h/100km) cover all city fuel and chauffeur allowance.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary mt-1.5 shrink-0"></span>
+                  <span><strong>Published Extra Rates by Fleet:</strong> Extra KM: Sedan ₹15, Ertiga ₹17, Crysta ₹22, Tempo ₹24. Extra Hours: Sedan ₹150, Ertiga ₹200, Crysta ₹350, Tempo ₹500.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary mt-1.5 shrink-0"></span>
+                  <span><strong>Zero Peak Hour Surge:</strong> Whether during morning IT rush hour or rain, published extra rates remain strictly constant with zero multiplier.</span>
+                </li>
+              </ul>
+            </div>
+            <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-emerald-700 font-semibold flex items-center justify-between">
+              <span>Fuel &amp; City Bata Included</span>
+              <span class="material-symbols-outlined text-[14px]">check_circle</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Outstation Cabs -->
+          <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 sm:p-6 shadow-m3-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="material-symbols-outlined text-m3-primary text-xl">directions_car</span>
+                <h3 class="font-bold text-m3-on-surface font-heading text-base">Outstation Cabs Calculation Formula</h3>
+              </div>
+              <div class="bg-m3-surface-container-low p-3 rounded-m3-lg font-mono text-xs text-m3-on-surface mb-3 border border-m3-outline-variant/60 leading-relaxed">
+                Round Trip = (Billable KM × Rate/KM) + (Days × Driver Bata) + Tolls<br/>
+                <span class="text-micro text-m3-on-surface-variant">One-Way = (Billable KM [min 130 km] × Drop Rate) + Driver Bata + Tolls</span>
+              </div>
+              <ul class="space-y-2 text-xs text-m3-on-surface-variant font-sans">
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary mt-1.5 shrink-0"></span>
+                  <span><strong>Calendar Day Minimum:</strong> 250 km/day minimum for Dzire, Ertiga &amp; Innova (300 km/day for Crysta &amp; Tempo). If actual distance is higher, exact distance is billed.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary mt-1.5 shrink-0"></span>
+                  <span><strong>Driver Bata / Day:</strong> Sedan ₹300/day, Ertiga ₹400/day, Innova ₹500/day, Crysta ₹600/day, Tempo ₹800/day for chauffeur meals and highway accommodation.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary mt-1.5 shrink-0"></span>
+                  <span><strong>Per-KM Rates:</strong> Round trips from ₹14/km (Dzire), ₹17/km (Ertiga), ₹22/km (Crysta). One-way drops from ₹16/km (Dzire), ₹19/km (Ertiga), ₹25/km (Crysta).</span>
+                </li>
+              </ul>
+            </div>
+            <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-emerald-700 font-semibold flex items-center justify-between">
+              <span>Standard 250/300 KM Min Day Rule</span>
+              <span class="material-symbols-outlined text-[14px]">check_circle</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Acting Driver Services -->
+          <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 sm:p-6 shadow-m3-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="material-symbols-outlined text-m3-primary text-xl">badge</span>
+                <h3 class="font-bold text-m3-on-surface font-heading text-base">Acting Driver Charges Formula</h3>
+              </div>
+              <div class="bg-m3-surface-container-low p-3 rounded-m3-lg font-mono text-xs text-m3-on-surface mb-3 border border-m3-outline-variant/60 leading-relaxed">
+                City Duty = Base (₹499 for 4h / ₹800 for 8h) + (Extra Hrs × ₹99) + Night Bata (₹200)<br/>
+                <span class="text-micro text-m3-on-surface-variant">Outstation = (Days × Driver Bata [₹1,100–₹1,500]) + (Days × Food [₹300]) + Bus Fare</span>
+              </div>
+              <ul class="space-y-2 text-xs text-m3-on-surface-variant font-sans">
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary mt-1.5 shrink-0"></span>
+                  <span><strong>Personal Car Chauffeur:</strong> Experienced drivers for manual, automatic, and EV cars across shopping, events, hospital visits, or weddings.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary mt-1.5 shrink-0"></span>
+                  <span><strong>Outstation Driver Duty by Vehicle:</strong> Daily driver allowance: Hatchback/Sedan ₹1,100, SUV ₹1,200, Crysta ₹1,300, Luxury ₹1,500 + ₹300/day food. For one-way drops, return bus fare is reimbursed at actuals.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary mt-1.5 shrink-0"></span>
+                  <span><strong>100% Police Verified (PVC):</strong> Every acting driver undergoes identity, address, and criminal background checks with valid commercial license badges.</span>
+                </li>
+              </ul>
+            </div>
+            <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-emerald-700 font-semibold flex items-center justify-between">
+              <span>Police-Verified Drivers</span>
+              <span class="material-symbols-outlined text-[14px]">check_circle</span>
+            </div>
+          </div>
+
+          <!-- Card 5: Intercity Vehicle Relocation (Previously Missing!) -->
+          <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 sm:p-6 shadow-m3-1 flex flex-col justify-between md:col-span-2 lg:col-span-1">
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="material-symbols-outlined text-m3-primary text-xl">local_shipping</span>
+                <h3 class="font-bold text-m3-on-surface font-heading text-base">Vehicle Relocation Charges Formula</h3>
+              </div>
+              <div class="bg-m3-surface-container-low p-3 rounded-m3-lg font-mono text-xs text-m3-on-surface mb-3 border border-m3-outline-variant/60 leading-relaxed">
+                Total = Driver Transit Bata (₹1,000/day) + Food Allowance (₹300/day) + Return Bus Ticket (SETC actuals)
+              </div>
+              <ul class="space-y-2 text-xs text-m3-on-surface-variant font-sans">
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary mt-1.5 shrink-0"></span>
+                  <span><strong>Door-to-Door Driveaway Transit:</strong> Verified commercial driver relocates your personal car, SUV, or luxury vehicle safely between Chennai and any South Indian city.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary mt-1.5 shrink-0"></span>
+                  <span><strong>Owner Fuel &amp; FASTag Pass-Through:</strong> Car owner covers fuel and highway toll FASTag directly; zero carrier commission or vehicle trailer markups.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary mt-1.5 shrink-0"></span>
+                  <span><strong>Live GPS &amp; Digital Checklist:</strong> Complete pre-dispatch inspection (odometer, fuel, condition) and real-time live trip updates until delivery.</span>
+                </li>
+              </ul>
+            </div>
+            <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-emerald-700 font-semibold flex items-center justify-between">
+              <span>Driveaway Transit with Live GPS</span>
+              <span class="material-symbols-outlined text-[14px]">check_circle</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inclusions vs Exclusions Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 shadow-m3-1">
+            <h4 class="font-bold text-m3-on-surface mb-2.5 font-heading text-sm flex items-center gap-2">
+              <span class="material-symbols-outlined text-emerald-600 text-lg">check_circle</span>
+              <span>Included in Kalidass Travels Estimates</span>
+            </h4>
+            <ul class="space-y-2 text-xs text-m3-on-surface-variant">
+              <li class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                <span>Sanitized commercial yellow-board vehicle with AC &amp; clean upholstery</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                <span>Complete trip fuel costs (Diesel/Petrol/CNG) for contracted kilometers</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                <span>Professional uniformed chauffeur with valid commercial passenger badge</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                <span>Chennai Airport terminal parking &amp; entry toll for all Airport flat transfers</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                <span>Verifiable GST tax invoice with full tax credit breakdown for corporate claims</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 shadow-m3-1">
+            <h4 class="font-bold text-m3-on-surface mb-2.5 font-heading text-sm flex items-center gap-2">
+              <span class="material-symbols-outlined text-amber-600 text-lg">info</span>
+              <span>Billed on Actuals (Variable Government Levies)</span>
+            </h4>
+            <ul class="space-y-2 text-xs text-m3-on-surface-variant">
+              <li class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+                <span>National &amp; State Highway toll plazas for outstation trips (Exact FASTag pass-through)</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+                <span>Railway station, commercial mall, or private venue parking receipts where paid directly (MAA airport parking is already included in flat transfers)</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+                <span>Interstate border entry permits when crossing into Andhra Pradesh, Karnataka, Pondicherry, etc.</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+                <span>Additional usage beyond contracted hours/km as per standard extra rate table</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: Zero Surge Guarantee vs App Cabs (Trust & Conversion) -->
+      <section class="mb-16 scroll-mt-36" aria-labelledby="zero-surge-heading">
+        <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-6 sm:p-8 shadow-m3-1">
+          <div class="text-center max-w-3xl mx-auto mb-8">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 text-xs font-semibold shadow-m3-1 mb-2.5 tracking-wide">
+              <span class="material-symbols-outlined text-[15px] text-emerald-600">shield</span>
+              <span>Our Fair Pricing Pledge</span>
+            </div>
+            <h2 id="zero-surge-heading" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2 font-heading">
+              Why Choose Kalidass Travels Over <span class="text-m3-primary">App Aggregators?</span>
+            </h2>
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant font-normal leading-relaxed max-w-2xl mx-auto font-sans">
+              Unlike Ola or Uber, we operate our own dedicated fleet with dedicated driver partnerships, eliminating surge multipliers and last-second trip cancellations.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-m3-lg p-5">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="material-symbols-outlined text-emerald-600 text-xl">verified</span>
+                <h3 class="font-bold text-emerald-900 font-heading text-sm sm:text-base">Kalidass Travels Guarantee</h3>
+              </div>
+              <ul class="space-y-2.5 text-xs text-m3-on-surface">
+                <li class="flex items-start gap-2">
+                  <span class="material-symbols-outlined text-[16px] text-emerald-600 shrink-0">check</span>
+                  <span><strong>100% Zero Surge:</strong> Fixed per-km and flat airport rates 24/7/365, even during heavy rains and festival rushes.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="material-symbols-outlined text-[16px] text-emerald-600 shrink-0">check</span>
+                  <span><strong>Zero Driver Cancellation:</strong> Confirmed booking guarantees your assigned vehicle with chauffeur details dispatched in advance.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="material-symbols-outlined text-[16px] text-emerald-600 shrink-0">check</span>
+                  <span><strong>Complimentary Flight Delay Buffer:</strong> 60 minutes free waiting time for airport pickups with automated flight tracking.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="material-symbols-outlined text-[16px] text-emerald-600 shrink-0">check</span>
+                  <span><strong>GST Corporate Compliance:</strong> Proper tax invoices detailing GST registration, distance, and driver bata for company claims.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="bg-red-500/5 border border-red-500/20 rounded-m3-lg p-5">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="material-symbols-outlined text-red-600 text-xl">highlight_off</span>
+                <h3 class="font-bold text-red-900 font-heading text-sm sm:text-base">App Cabs (Ola / Uber) Pitfalls</h3>
+              </div>
+              <ul class="space-y-2.5 text-xs text-m3-on-surface">
+                <li class="flex items-start gap-2">
+                  <span class="material-symbols-outlined text-[16px] text-red-600 shrink-0">close</span>
+                  <span><strong>Aggressive Surge Multipliers:</strong> Fares jump 1.5x–3.0x during peak hours, sudden rain, or airport landing rushes.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="material-symbols-outlined text-[16px] text-red-600 shrink-0">close</span>
+                  <span><strong>Frequent Driver Cancellations:</strong> Drivers cancel if destination is not profitable or ask for offline cash payments.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="material-symbols-outlined text-[16px] text-red-600 shrink-0">close</span>
+                  <span><strong>Heavy Airport Waiting Penalties:</strong> Per-minute waiting fees begin after just 3–5 minutes while baggage is in transit.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="material-symbols-outlined text-[16px] text-red-600 shrink-0">close</span>
+                  <span><strong>Opaque Platform Convenience Fees:</strong> Hidden access fees and platform deductions make corporate expense reimbursement difficult.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5: E-E-A-T Editorial & Fleet Verification Authority Panel -->
+      <section class="mb-16 scroll-mt-36" aria-labelledby="eeat-heading">
+        <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-6 sm:p-8 shadow-m3-1">
+          <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div class="max-w-3xl">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-micro font-semibold shadow-m3-1 mb-2.5 tracking-wide">
+                <span class="material-symbols-outlined text-[14px] text-m3-primary">policy</span>
+                <span>E-E-A-T Editorial Verification &amp; Quality Guarantee</span>
+              </div>
+              
+              <h2 id="eeat-heading" class="text-lg sm:text-xl font-extrabold text-m3-on-surface font-heading mb-2">
+                Tariff &amp; Calculation Methodology <span class="text-m3-primary">Verified by Operations Leadership</span>
+              </h2>
+              
+              <p class="text-xs sm:text-sm text-m3-on-surface-variant font-normal leading-relaxed mb-4 font-sans">
+                All pricing logic, highway distance benchmarks, and hourly package tiers published on this calculator are reviewed and maintained by the senior operations team at <strong>Kalidass Travels</strong>. With over <strong>15+ years of commercial fleet expertise</strong>, <strong>25,000+ completed passenger journeys</strong>, and <strong>1,250+ verified 5-star Google reviews</strong>, we ensure compliance with Tamil Nadu Transport Department commercial motor vehicle guidelines and standard CPWD corporate transport benchmarks.
+              </p>
+
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs border-t border-m3-outline-variant/50 pt-4">
+                <div>
+                  <div class="text-micro text-m3-on-surface-variant uppercase tracking-wider font-semibold">Reviewed By</div>
+                  <div class="font-bold text-m3-on-surface mt-0.5">Mr. Kalidass</div>
+                  <div class="text-[11px] text-m3-on-surface-variant">Fleet Operations Director</div>
+                </div>
+                <div>
+                  <div class="text-micro text-m3-on-surface-variant uppercase tracking-wider font-semibold">Registered Entity</div>
+                  <div class="font-bold text-m3-on-surface mt-0.5">Kalidass Travels</div>
+                  <div class="text-[11px] text-m3-on-surface-variant">GST: 33COVPM0531D1Z4</div>
+                </div>
+                <div>
+                  <div class="text-micro text-m3-on-surface-variant uppercase tracking-wider font-semibold">Dispatch Hub</div>
+                  <div class="font-bold text-m3-on-surface mt-0.5">Medavakkam, Chennai</div>
+                  <div class="text-[11px] text-m3-on-surface-variant">Tamil Nadu 600100</div>
+                </div>
+                <div>
+                  <div class="text-micro text-m3-on-surface-variant uppercase tracking-wider font-semibold">Customer Score</div>
+                  <div class="font-bold text-m3-on-surface mt-0.5 flex items-center gap-1">
+                    <span class="text-gold-600">★</span>
+                    <span>4.9 / 5.0</span>
+                  </div>
+                  <div class="text-[11px] text-m3-on-surface-variant">1,250+ Google Reviews</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action buttons in E-E-A-T panel -->
+            <div class="flex flex-col sm:flex-row lg:flex-col gap-2.5 shrink-0 lg:min-w-[200px]">
+              <WhatsAppButton
+                href="https://wa.me/918939539211?text=Hi%20Kalidass%20Travels%2C%20I%20have%20a%20query%20about%20your%20fare%20calculator%20rates."
+                size="md"
+                fullWidth={true}
+                text="WhatsApp Quote"
+                ariaLabel="Ask Kalidass Travels on WhatsApp about fare rates"
+              />
+              <a
+                href="tel:+918939539211"
+                class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-surface-container border border-m3-outline-variant text-m3-on-surface font-bold text-xs shadow-m3-1 transition-all"
+                aria-label="Call Kalidass Travels operations desk"
+              >
+                <span class="material-symbols-outlined text-[16px] text-m3-primary">call</span>
+                <span>Call +91 89395 39211</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 6: Frequently Asked Questions (FAQPage Rich Snippet) -->
+      <section id="faq" class="mb-16 scroll-mt-36" aria-labelledby="faq-heading">
+        <div class="text-center max-w-3xl mx-auto mb-8">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-2.5 tracking-wide">
+            <span class="w-2 h-2 rounded-full bg-m3-primary"></span>
+            <span>Frequently Asked Questions</span>
+          </div>
+          <h2 id="faq-heading" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2 font-heading">
+            Chennai Taxi &amp; Cab Fare <span class="text-m3-primary">Calculator FAQs</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant font-normal leading-relaxed max-w-2xl mx-auto font-sans">
+            Clear, transparent answers about outstation billing, local hourly rental rates, airport flat fares, and driver allowances.
+          </p>
+        </div>
+
+        <FAQAccordion items={faqItems} columns={1} className="max-w-4xl mx-auto" />
+      </section>
+
+      <!-- SECTION 7: Bottom CTA Strip -->
+      <section class="text-center bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-xl p-8 sm:p-12 shadow-m3-3 relative overflow-hidden border border-slate-800" aria-label="Book Your Journey">
         <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-tight mb-3 font-heading text-white">
-          Need a Custom Multi-City Itinerary or <span class="text-m3-tertiary-container">Special Vehicle?</span>
+          Need a Custom Quote or <span class="text-emerald-400">Immediate Dispatch?</span>
         </h2>
         <p class="text-xs sm:text-sm md:text-base text-slate-300 max-w-xl mx-auto mb-8 font-sans font-normal leading-relaxed">
-          Planning a wedding fleet, pilgrimage circuit, or corporate package? Get in touch with our team for instant customized billing.
+          Our 24/7 Medavakkam operations desk is ready to help you plan your temple pilgrimage, airport drop, outstation family road trip, or corporate event with zero surge rates.
         </p>
         <div class="flex flex-wrap items-center justify-center gap-4">
           <a
-            href="/tariff/"
-            class="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-m3-primary hover:bg-slate-900 text-m3-on-primary font-bold rounded-m3-full shadow-m3-2 transition-all cursor-pointer text-sm border border-white/20 group"
+            href="https://wa.me/918939539211?text=Hi%20Kalidass%20Travels%2C%20I%20used%20your%20online%20calculator%20and%20would%20like%20to%20confirm%20a%20booking."
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-m3-full shadow-m3-2 transition-all cursor-pointer text-sm border border-emerald-500/30"
           >
-            <span>View Full Tariff Card</span>
-            <svg class="w-4 h-4 text-emerald-400 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            <span>Book via WhatsApp</span>
+            <span class="material-symbols-outlined text-[16px]">chat</span>
           </a>
           <a
             href="tel:+918939539211"
-            class="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface font-bold rounded-m3-full transition-all text-sm shadow-m3-1"
+            class="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white/10 hover:bg-white/20 text-white font-bold rounded-m3-full transition-all text-sm border border-white/20 shadow-m3-1"
           >
-            <span class="material-symbols-outlined text-[18px] text-emerald-500">call</span>
+            <span class="material-symbols-outlined text-[18px] text-emerald-400">call</span>
             <span>Call +91 89395 39211</span>
           </a>
         </div>
-      </div>
+      </section>
 
     </div>
   </main>

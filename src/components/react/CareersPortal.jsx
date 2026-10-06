@@ -8,6 +8,7 @@ import {
   UploadCloud,
   AlertCircle,
   ArrowRight,
+  Phone,
   X,
 } from 'lucide-react';
 import { JOB_CATEGORIES, JOB_POSITIONS } from '../../data/careersData';
@@ -141,21 +142,29 @@ export default function CareersPortal() {
     }
   };
 
-  const generateWhatsAppUrl = () => {
+  const generateWhatsAppUrl = (customRefId = null) => {
     const name = formData.fullName.trim() || '[Applicant Name]';
     const phone = formData.phone.trim() || '[Phone Number]';
     const area = formData.livingArea.trim() || '[Area]';
     const roleTitle = selectedJob.title;
+    const refId = customRefId || submittedData?.referenceId || `KT-APP-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const fileName = formData.resumeFile ? formData.resumeFile.name : (submittedData?.fileName || 'Attached in chat');
 
     let text = `*Job Application — Kalidass Travels*\n\n`;
+    text += `*Application ID:* ${refId}\n`;
     text += `*Position:* ${roleTitle}\n`;
     text += `*Applicant Name:* ${name}\n`;
-    text += `*Mobile Number:* ${phone}\n`;
-    text += `*Living Area:* ${area}\n`;
+    text += `*Mobile / WhatsApp:* ${phone}\n`;
+    text += `*Residential Area:* ${area}\n`;
     text += `*Total Experience:* ${formData.experience}\n`;
-    if (formData.email.trim()) text += `*Email:* ${formData.email.trim()}\n`;
-    if (formData.notes.trim()) text += `*Notes:* ${formData.notes.trim()}\n`;
-    text += `\n_I am attaching my Resume / Bio-data file below._`;
+    if (formData.email && formData.email.trim()) {
+      text += `*Email:* ${formData.email.trim()}\n`;
+    }
+    if (formData.notes && formData.notes.trim()) {
+      text += `*Notes:* ${formData.notes.trim()}\n`;
+    }
+    text += `*Resume Document:* ${fileName}\n\n`;
+    text += `_Hi Kalidass Travels HR, I am applying for this role. I am attaching my Resume / Bio-data file in this chat._`;
 
     return `https://wa.me/918939539211?text=${encodeURIComponent(text)}`;
   };
@@ -188,18 +197,44 @@ export default function CareersPortal() {
 
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      const refId = `KT-APP-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
-      setSubmittedData({
-        referenceId: refId,
-        jobTitle: selectedJob.title,
-        applicantName: formData.fullName,
-        phone: formData.phone,
-        fileName: formData.resumeFile.name,
-        timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
-      });
-      setIsSubmitting(false);
-    }, 600);
+    const refId = `KT-APP-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const waUrl = generateWhatsAppUrl(refId);
+
+    // 1. Backup Lead Logging to Google Sheet (non-blocking)
+    try {
+      fetch('https://script.google.com/macros/s/AKfycbwoEpKqa3Qg-DIvMe06pGUgGLlC_0vJQev61nzIh9ssh1-uHZ5VtYkGzpMVwhEyi7tvEQ/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({
+          date: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+          tripType: `Careers Application: ${selectedJob.title}`,
+          name: formData.fullName.trim(),
+          phone: formData.phone.trim(),
+          pickup: formData.livingArea.trim(),
+          drop: `Exp: ${formData.experience} | File: ${formData.resumeFile ? formData.resumeFile.name : 'In WhatsApp'}`,
+          notes: formData.notes || '',
+          email: formData.email || '',
+          referenceId: refId
+        })
+      }).catch(() => {});
+    } catch (_) {}
+
+    // 2. Open WhatsApp immediately on user submission
+    window.open(waUrl, '_blank', 'noopener,noreferrer');
+
+    // 3. Set submitted state to show full guidance screen
+    setSubmittedData({
+      referenceId: refId,
+      jobTitle: selectedJob.title,
+      applicantName: formData.fullName,
+      phone: formData.phone,
+      fileName: formData.resumeFile.name,
+      whatsAppUrl: waUrl,
+      timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+    });
+
+    setIsSubmitting(false);
   };
 
   const handleResetForm = () => {
@@ -421,15 +456,27 @@ export default function CareersPortal() {
                 </div>
 
                 <div className="max-w-md mx-auto space-y-1.5">
-                  <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-m3-xs bg-emerald-100 text-emerald-800">
-                    Application Received
+                  <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-m3-xs bg-emerald-100 text-emerald-800">
+                    Application Received · Opened in WhatsApp
                   </span>
                   <h3 className="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading">
                     Thank You, {submittedData.applicantName}!
                   </h3>
                   <p className="text-xs sm:text-sm text-m3-on-surface-variant">
-                    Your resume for <span className="font-bold text-m3-on-surface">{submittedData.jobTitle}</span> has been logged with our Medavakkam HR desk. Shortlisted candidates will be contacted for scheduled interviews.
+                    Your application for <span className="font-bold text-m3-on-surface">{submittedData.jobTitle}</span> was pre-filled and launched in WhatsApp to our HR team.
                   </p>
+                </div>
+
+                {/* Next Steps Guidance */}
+                <div className="bg-emerald-50 border border-emerald-200 rounded-m3-xl p-3.5 max-w-md mx-auto text-left space-y-2 text-xs text-emerald-950">
+                  <div className="font-bold flex items-center gap-1.5 text-emerald-900">
+                    <Check className="w-4 h-4 text-emerald-700 shrink-0" />
+                    <span>2 Quick Steps to Complete:</span>
+                  </div>
+                  <ol className="list-decimal list-inside space-y-1 text-emerald-800 text-[11px] sm:text-xs">
+                    <li>Click <strong>Send</strong> in the WhatsApp chat with HR (+91 89395 39211).</li>
+                    <li>Attach your resume file or photo (<span className="font-semibold">{submittedData.fileName}</span>) directly into the chat.</li>
+                  </ol>
                 </div>
 
                 {/* Reference Badge */}
@@ -449,17 +496,25 @@ export default function CareersPortal() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+                <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2">
                   <a
-                    href={generateWhatsAppUrl()}
+                    href={submittedData.whatsAppUrl || generateWhatsAppUrl()}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-5 py-2.5 rounded-m3-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs min-h-[42px] transition-colors"
                   >
-                    <svg className="w-4 h-4 fill-white" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 fill-white shrink-0" viewBox="0 0 24 24">
                       <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
                     </svg>
-                    <span>Send Resume on WhatsApp</span>
+                    <span>Open WhatsApp Chat Again</span>
+                  </a>
+
+                  <a
+                    href="tel:+918939539211"
+                    className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-m3-full bg-m3-surface hover:bg-m3-surface-container border border-m3-outline-variant text-m3-on-surface font-semibold text-xs min-h-[42px] transition-colors"
+                  >
+                    <Phone className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Call HR (+91 89395 39211)</span>
                   </a>
 
                   <button
@@ -663,31 +718,31 @@ export default function CareersPortal() {
                 {/* Submit Bar */}
                 <div className="pt-3 border-t border-m3-outline-variant/40 flex flex-col sm:flex-row items-center justify-between gap-3">
                   <div className="text-micro text-m3-on-surface-variant text-center sm:text-left">
-                    <span>By submitting, your resume is sent directly to Kalidass Travels HR.</span>
+                    <span>Direct submission to Kalidass Travels HR desk (+91 89395 39211).</span>
                   </div>
 
                   <div className="flex items-center gap-2.5 w-full sm:w-auto">
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 text-white font-bold text-xs sm:text-sm shadow-xs min-h-[44px] transition-all cursor-pointer disabled:opacity-50"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-m3-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-xs min-h-[44px] transition-all cursor-pointer disabled:opacity-50"
                     >
-                      <Send className="w-4 h-4 shrink-0" />
-                      <span>{isSubmitting ? 'Submitting...' : 'Apply Now'}</span>
+                      <svg className="w-4 h-4 fill-white shrink-0" viewBox="0 0 24 24">
+                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+                      </svg>
+                      <span>{isSubmitting ? 'Opening WhatsApp...' : 'Apply & Send via WhatsApp'}</span>
                     </button>
                   </div>
                 </div>
 
-                {/* WhatsApp Direct Option */}
+                {/* Direct HR Contact Option */}
                 <div className="pt-2 text-center text-xs text-m3-on-surface-variant flex items-center justify-center gap-2 flex-wrap">
-                  <span>Prefer WhatsApp?</span>
+                  <span>Questions or prefer calling?</span>
                   <a
-                    href={generateWhatsAppUrl()}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href="tel:+918939539211"
                     className="font-bold text-emerald-700 hover:text-emerald-800 hover:underline inline-flex items-center gap-1"
                   >
-                    <span>Send Resume Directly via WhatsApp to HR (+91 89395 39211)</span>
+                    <span>Call Medavakkam HR Hub (+91 89395 39211)</span>
                     <ArrowRight className="w-3.5 h-3.5 shrink-0" />
                   </a>
                 </div>

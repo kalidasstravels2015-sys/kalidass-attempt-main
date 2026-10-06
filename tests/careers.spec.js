@@ -16,7 +16,7 @@ test.describe('Careers & Driver Hiring Tests', () => {
         // 3 Cut-and-Dried Company Highlights
         await expect(page.getByText(/Prompt Bata & Salary Settlements/i)).toBeVisible();
         await expect(page.getByText(/Dealer-Serviced 50\+ Vehicle Fleet/i)).toBeVisible();
-        await expect(page.getByText(/Medavakkam Hub & Walk-In Facility/i)).toBeVisible();
+        await expect(page.getByText(/Central Medavakkam Operations Hub/i)).toBeVisible();
     });
 
     test('Footer displays Careers link in Quick Navigation', async ({ page }) => {
@@ -36,27 +36,27 @@ test.describe('Careers & Driver Hiring Tests', () => {
         await page.goto('/careers/');
 
         // Verify open positions header
-        await expect(page.getByText(/Current Open Positions \(11\)/i)).toBeVisible();
+        await expect(page.getByText(/Current Open Positions \(10\)/i)).toBeVisible();
 
         // Verify "Resume Required" indicator is visible
         await expect(page.getByText(/Resume Required/i).first()).toBeVisible();
 
-        // Select Outstation Chauffeur and verify it selects in form
-        const chauffeurApplyBtn = page.getByRole('button', { name: /Submit Resume/i }).first();
+        // Select Outstation Chauffeur and verify it selects in form modal
+        const chauffeurApplyBtn = page.getByRole('button', { name: /^Apply$/i }).first();
         await chauffeurApplyBtn.click();
 
-        // Verify application form header reflects selected position
-        await expect(page.locator('#application-form')).toBeVisible();
+        // Verify application modal dialog reflects selected position
+        const dialog = page.locator('dialog');
+        await expect(dialog).toBeVisible();
         await expect(page.getByText(/Applying for: Outstation & Temple Tour Chauffeur/i)).toBeVisible();
         await expect(page.getByText(/Attach Resume \/ Bio-data/i)).toBeVisible();
 
         // Try submitting without resume -> validation error
-        await page.locator('#fullName').scrollIntoViewIfNeeded();
-        await page.locator('#fullName').fill('R. Saravanan');
-        await page.locator('#phone').fill('9840123456');
-        await page.locator('#livingArea').fill('Medavakkam');
+        await page.locator('#modalFullName').fill('R. Saravanan');
+        await page.locator('#modalPhone').fill('9840123456');
+        await page.locator('#modalLivingArea').fill('Medavakkam');
 
-        await page.getByRole('button', { name: /Submit Application & Resume/i }).click();
+        await page.getByRole('button', { name: /Apply & Send via WhatsApp/i }).click();
 
         // Should display resume required validation error
         await expect(page.getByRole('alert')).toBeVisible();
@@ -73,12 +73,12 @@ test.describe('Careers & Driver Hiring Tests', () => {
         });
 
         // Submit form with resume
-        await page.getByRole('button', { name: /Submit Application & Resume/i }).click();
+        await page.getByRole('button', { name: /Apply & Send via WhatsApp/i }).click();
 
         // Verify success card
         await expect(page.getByText(/Application Received/i)).toBeVisible();
         await expect(page.getByText(/Thank You, R. Saravanan!/i)).toBeVisible();
         await expect(page.getByText(/Application ID:/i)).toBeVisible();
-        await expect(page.getByText(/saravanan_resume.pdf/i)).toBeVisible();
+        await expect(page.getByText(/saravanan_resume.pdf/i).first()).toBeVisible();
     });
 });

@@ -122,4 +122,16 @@
 - **Rule 8.3.2 (Zero Paragraphs / Bite-Sized Micro-Cards):** Never use dense narrative prose or multi-line paragraphs in travel guides, route summaries, or feature cards. Mobile users scan and do not read paragraphs. All guide points, traditions, and service features must be structured as bite-sized micro-cards or chips with a bold title (2–3 words) and a concise descriptor (3–5 words).
 - **Rule 8.3.3 (Unboxed Transit Stepper):** Never render duplicate horizontal waypoint pill chains above vertical timelines ("overkill"). Use a single, unboxed vertical transit stepper (Google Maps Transit style) with continuous lines and mini circular node numbers to conserve vertical screen space.
 
+### 8.4 Popups & Floating Contact Action
+- **Rule 8.4.1 (Popup Hides Floating Call Button):** The floating Call shortcut (`FloatingActions.astro`: `#floating-actions-container` round M3 FAB) must be hidden whenever any popup, modal, or bottom sheet is open — popups already contain their own enquiry CTA.
+- **Rule 8.4.2 (Mechanism):** Native `<dialog>` via `showModal()` is hidden automatically (`html:has(dialog:modal)` in `Layout.astro`). Custom overlays must add `data-hide-contact-dock` to their root element. Never match on `[aria-modal]` (the nav drawer keeps it permanently).
+- **Rule 8.4.3 (No Trapped Overlays):** Never render a `fixed` popup inside a parent that creates a stacking context (`relative z-*`, `transform`, `filter`). Use native `<dialog>` or a React portal to `document.body`. Regression test: `tests/contact_dock_overlay.spec.js`.
+
+### 8.5 WhatsApp CTA Standardization
+- **Rule 8.5.1 (Standardized Component):** All WhatsApp buttons across `.astro` and `.jsx` components must use the shared `<WhatsAppButton>` component (`src/components/WhatsAppButton.astro` or `src/components/react/WhatsAppButton.jsx`).
+- **Rule 8.5.2 (Tonal Mint Theme):** In-card WhatsApp CTAs must use M3 Tonal Mint styling (`variant="filled"` or `variant="tonal"`, `bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-300/80`). Raw bright `#25D366` green background blocks on in-card buttons are strictly prohibited.
+- **Rule 8.5.3 (Single Source URL Builder):** WhatsApp URLs must always be generated via `buildWhatsAppUrl(message)` from `src/utils/whatsapp.ts`. Never hardcode `https://wa.me/918939539211` directly in templates.
+
+
+
 

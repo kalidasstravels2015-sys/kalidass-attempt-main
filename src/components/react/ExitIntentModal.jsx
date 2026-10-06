@@ -86,6 +86,7 @@ export default function ExitIntentModal() {
 
   return (
     <div
+      data-hide-contact-dock
       role="dialog"
       aria-modal="true"
       aria-labelledby="exit-modal-title"

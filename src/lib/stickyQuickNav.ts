@@ -108,6 +108,7 @@ export function initStickyQuickNav(): () => void {
     let currentActiveLink: HTMLAnchorElement | null = null;
     let isClickScrolling = false;
     let clickScrollTimer: ReturnType<typeof setTimeout> | null = null;
+    let navHeight = nav.offsetHeight || 52;
 
     function getActiveItem(): QuickNavItem {
       const scrollY = window.scrollY;
@@ -120,9 +121,9 @@ export function initStickyQuickNav(): () => void {
         return sortedItems[sortedItems.length - 1];
       }
 
-      // Sticky header (64px) + sticky nav (~52px) + breathing margin (~45px) = ~161px
-      // Using fixed offset avoids reading nav.offsetHeight which triggers forced reflow
-      const SCROLL_OFFSET = 64 + 52 + 45;
+      // Sticky header (64px) + sticky nav height + breathing margin (~35px)
+      const currentNavHeight = nav.offsetHeight || navHeight || 52;
+      const SCROLL_OFFSET = 64 + currentNavHeight + 35;
 
       let activeItem: QuickNavItem | null = null;
 
@@ -207,12 +208,17 @@ export function initStickyQuickNav(): () => void {
       }
     };
 
+    const onResize = () => {
+      navHeight = nav.offsetHeight || 52;
+      onScroll();
+    };
+
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
+    window.addEventListener('resize', onResize, { passive: true });
 
     cleanups.push(() => {
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      window.removeEventListener('resize', onResize);
       if (clickScrollTimer) clearTimeout(clickScrollTimer);
     });
 

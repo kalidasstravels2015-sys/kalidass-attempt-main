@@ -589,6 +589,14 @@ const unifiedSchemaGraph = {
       type="font/woff2"
       crossorigin
     />
+    <!-- Self-hosted Material Symbols Font Preload (Instant Icon Render) -->
+    <link
+      rel="preload"
+      href="/fonts/material-symbols-outlined.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     {isTamilPage && (
       <link
         rel="preload"
@@ -598,6 +606,13 @@ const unifiedSchemaGraph = {
         crossorigin
       />
     )}
+    <!-- Google Fonts Material Symbols CDN (Full library & variable font fallback) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
     <meta name="theme-color" content="#1E252D" />
     <link rel="icon" type="image/webp" href="/images/favicon.webp" />
     <link rel="icon" type="image/png" href="/images/favicon.png" />
@@ -671,7 +686,7 @@ const unifiedSchemaGraph = {
       @font-face {
         font-family: 'Material Symbols Outlined';
         font-style: normal;
-        font-weight: 400;
+        font-weight: 100 700;
         font-display: swap;
         src: url('/fonts/material-symbols-outlined.woff2') format('woff2');
       }
@@ -701,12 +716,11 @@ const unifiedSchemaGraph = {
         white-space: nowrap;
         word-wrap: normal;
         direction: ltr;
+        -webkit-font-feature-settings: 'liga';
         font-feature-settings: 'liga';
         -webkit-font-smoothing: antialiased;
         vertical-align: middle;
-        max-width: 1.5em;
-        max-height: 1.5em;
-        overflow: hidden; /* Guaranteed protection: Prevents raw text from stretching UI */
+        user-select: none;
       }
 
       /* 100% Google Material Design 3 (M3) Option A: Executive Midnight Charcoal & Onyx */
@@ -922,6 +936,18 @@ const unifiedSchemaGraph = {
       .offscreen-defer {
         content-visibility: auto;
         contain-intrinsic-size: auto none auto 550px;
+      }
+
+      /* ── Popup ⇄ Floating Contact Action rule (docs/03_RULES.md §8.4) ──────────
+         Any open popup already has its own enquiry CTA, so hide the global
+         round Call FAB.
+         • Native <dialog> via showModal() → matched by dialog:modal automatically
+         • Custom overlays → add data-hide-contact-dock to the overlay root
+         NOTE: never match [aria-modal] — the nav drawer keeps it permanently. */
+      html:has(dialog:modal, [data-hide-contact-dock]) #floating-actions-container {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
       }
     </style>
 
@@ -1568,7 +1594,6 @@ const unifiedSchemaGraph = {
     const mobileMenuDrawer = document.getElementById("mobile-menu-drawer");
     const mobileLinks = mobileMenuDrawer?.querySelectorAll("a");
     const floatingActions = document.getElementById("floating-actions-container");
-    const mobileDock = document.getElementById("mobile-bottom-dock");
 
     // Submenu elements
     const cabsToggle = document.getElementById("cabs-menu-toggle");
@@ -1584,7 +1609,6 @@ const unifiedSchemaGraph = {
         mobileMenuBtn?.setAttribute("aria-expanded", "true");
         mobileMenuOverlay.classList.remove("hidden");
         floatingActions?.classList.add("opacity-0", "pointer-events-none");
-        mobileDock?.classList.add("translate-y-full", "pointer-events-none");
         // small delay to allow display:block to apply before opacity transition
         setTimeout(() => {
           mobileMenuOverlay.classList.remove("opacity-0");
@@ -1615,7 +1639,6 @@ const unifiedSchemaGraph = {
         mobileMenuOverlay.classList.add("opacity-0");
         mobileMenuDrawer.classList.add("translate-x-full");
         floatingActions?.classList.remove("opacity-0", "pointer-events-none");
-        mobileDock?.classList.remove("translate-y-full", "pointer-events-none");
 
         setTimeout(() => {
           mobileMenuOverlay.classList.add("hidden");
@@ -1683,12 +1706,19 @@ const unifiedSchemaGraph = {
   <script>
     import { initStickyQuickNav } from "../lib/stickyQuickNav";
 
-    let cleanup = initStickyQuickNav();
-
-    document.addEventListener("astro:page-load", () => {
+    let cleanup: (() => void) | null = null;
+    function init() {
       cleanup?.();
-      cleanup = initStickyQuickNav();
-    });
+      cleanup = initStickyQuickNav(); // reloaded
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init, { once: true });
+    } else {
+      init();
+    }
+
+    document.addEventListener("astro:page-load", init);
   </script>
 
   <!-- Virtual Keyboard API: exposes --keyboard-height and --keyboard-visible CSS variables -->

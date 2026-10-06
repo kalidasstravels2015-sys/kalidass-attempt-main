@@ -97,6 +97,9 @@ export default defineConfig({
     inlineStylesheets: 'always',
   },
   vite: {
+    optimizeDeps: {
+      include: ['react', 'react-dom', 'lucide-react', '@astrojs/react/client.js']
+    },
     build: {
       rollupOptions: {
         output: {

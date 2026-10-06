@@ -3,6 +3,8 @@ import { Car, LocateFixed, Calendar, Calculator, Send, ArrowRight, Repeat, Users
 import { trackEvent } from '../lib/analytics';
 import LocationPicker from './LocationPicker';
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
+import WhatsAppButton from './react/WhatsAppButton.jsx';
+import { buildWhatsAppUrl } from '../utils/whatsapp';
 import { useVirtualKeyboard } from '../hooks/useVirtualKeyboard';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import siteContent from '../data/siteContent.json';
@@ -100,6 +102,32 @@ const getDefaultDepartureTime = () => {
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 };
 
+// Default return time (tomorrow 9:00 PM for standard same-day return = 1 day)
+const getDefaultReturnTime = () => {
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  d.setHours(21, 0, 0, 0);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const hours = String(d.getHours()).padStart(2, '0');
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+
+// Calculate calendar billing days from pickup and return strings (Tamil Nadu commercial taxi standard)
+const calculateCalendarDays = (pickupStr, returnStr) => {
+  if (!pickupStr || !returnStr) return 1;
+  const p = new Date(pickupStr);
+  const r = new Date(returnStr);
+  if (isNaN(p.getTime()) || isNaN(r.getTime())) return 1;
+  if (r < p) return 1;
+  const pCal = new Date(p.getFullYear(), p.getMonth(), p.getDate());
+  const rCal = new Date(r.getFullYear(), r.getMonth(), r.getDate());
+  const diffDays = Math.round((rCal - pCal) / (1000 * 60 * 60 * 24));
+  return Math.max(1, diffDays + 1);
+};
+
 // South India distance lookup table for fast reliable fallback
 const COMMON_DISTANCES_FROM_CHENNAI = {
   'chennai': 0,
@@ -155,6 +183,15 @@ const COMMON_DISTANCES_FROM_CHENNAI = {
   'hyderabad': 630
 };
 
+// Comprehensive Chennai localities & transit hubs for resilient local fallback
+const CHENNAI_FORMS = [
+  'chennai', 'airport', 'tambaram', 'guindy', 'koyambedu', 'egmore', 'central',
+  'pallavaram', 'velachery', 'porur', 'annanagar', 'anna nagar', 't nagar', 't. nagar',
+  'sholinganallur', 'omr', 'ecr', 'perungudi', 'thiruvanmiyur', 'adyar', 'mylapore',
+  'chromepet', 'medavakkam', 'madipakkam', 'alandur', 'vadapalani', 'ambattur', 'avadi',
+  'poonamallee', 'kolathur', 'redhills', 'kilpauk', 'nungambakkam', 'triplicane', 'royapettah'
+];
+
 const findKnownDistance = (origin, destination) => {
   const o = (origin || '').toLowerCase().trim();
   const d = (destination || '').toLowerCase().trim();
@@ -186,8 +223,8 @@ const findKnownDistance = (origin, destination) => {
   }
 
   // 3. Check COMMON_DISTANCES_FROM_CHENNAI
-  const isOChennai = o.includes('chennai') || o.includes('airport') || o.includes('central') || o.includes('tambaram') || o.includes('guindy') || o.includes('koyambedu') || o.includes('egmore');
-  const isDChennai = d.includes('chennai') || d.includes('airport') || d.includes('central') || d.includes('tambaram') || d.includes('guindy') || d.includes('koyambedu') || d.includes('egmore');
+  const isOChennai = CHENNAI_FORMS.some(k => o.includes(k));
+  const isDChennai = CHENNAI_FORMS.some(k => d.includes(k));
 
   if (isOChennai || isDChennai) {
     const other = isOChennai ? d : o;
@@ -220,22 +257,36 @@ const ERROR_MSGS = {
 
 
 
-export default function QuotationEngine({ currentLang = 'en', showAirportTab = true, showBookingButton = true, title = '', variant = "default" }) {
+export default function QuotationEngine({ 
+  currentLang = 'en', 
+  showAirportTab = true, 
+  showBookingButton = true, 
+  title = '', 
+  subtitle = '',
+  headerIcon = null,
+  variant = "default",
+  initialTab = 'oneway',
+  allowedTabs = null
+}) {
   const isTa = currentLang === 'ta';
   const labels = siteContent.ui_labels;
   const displayTitle = title || (isTa ? labels.book_your_ride_ta : labels.book_your_ride);
 
   const { scrollInputAboveKeyboard } = useVirtualKeyboard();
 
-  const [activeTab, setActiveTab] = useState('oneway');
+  const [activeTab, setActiveTab] = useState(initialTab || 'oneway');
   const [localPackage, setLocalPackage] = useState('8hr80km');
   const [vehicle, setVehicle] = useState('Swift Dzire');
   const [passengers, setPassengers] = useState('4');
   const [pickup, setPickup] = useState('');
-  const [drop, setDrop] = useState('');
+  const [drop, setDrop] = useState(() => (initialTab === 'local' ? 'Local Sightseeing (Chennai City)' : ''));
   const [distance, setDistance] = useState(null);
   const [duration, setDuration] = useState(null);
   const [estimate, setEstimate] = useState(0);
+
+  const visibleTabs = allowedTabs && allowedTabs.length > 0
+    ? allowedTabs
+    : ['oneway', 'round', 'local'].filter(tab => tab !== 'local' || showAirportTab);
   const [loading, setLoading] = useState(false);
   const [days, setDays] = useState(1);
   const [showBreakdown, setShowBreakdown] = useState(false);
@@ -244,6 +295,7 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
 
   // Customer Details & Validation
   const [date, setDate] = useState(() => getDefaultDepartureTime());
+  const [returnDate, setReturnDate] = useState(() => getDefaultReturnTime());
   const [showResult, setShowResult] = useState(false);
   const [errors, setErrors] = useState({});
   const [botField, setBotField] = useState(''); // Honeypot
@@ -253,6 +305,48 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
   const [mounted, setMounted] = useState(false);
   const [requestedDriver, setRequestedDriver] = useState('');
   const stableFormId = "booking-form-v1"; // Using stable ID for hydration safety
+
+  // Auto-sync days count from Pickup & Return dates for round trips
+  useEffect(() => {
+    if (activeTab === 'round') {
+      const computed = calculateCalendarDays(date, returnDate);
+      setDays(computed);
+    } else {
+      setDays(1);
+    }
+  }, [activeTab, date, returnDate]);
+
+  const handlePickupDateChange = (val) => {
+    setDate(val);
+    // If round trip and returnDate is earlier than new pickup date, advance returnDate
+    if (activeTab === 'round' && returnDate && new Date(returnDate) < new Date(val)) {
+      const p = new Date(val);
+      p.setHours(21, 0, 0, 0);
+      const year = p.getFullYear();
+      const month = String(p.getMonth() + 1).padStart(2, '0');
+      const day = String(p.getDate()).padStart(2, '0');
+      setReturnDate(`${year}-${month}-${day}T21:00`);
+    }
+  };
+
+  const handleReturnDateChange = (val) => {
+    setReturnDate(val);
+  };
+
+  // Dedicated helper to ensure the entire result card and Book button are visible in viewport
+  const scrollToResult = () => {
+    setTimeout(() => {
+      if (!resultRef.current || typeof window === 'undefined') return;
+      const rect = resultRef.current.getBoundingClientRect();
+      const targetY = window.pageYOffset + rect.bottom - window.innerHeight + 36;
+      if (rect.bottom > window.innerHeight - 20 || rect.top < 20) {
+        window.scrollTo({
+          top: Math.max(0, targetY),
+          behavior: 'smooth'
+        });
+      }
+    }, 120);
+  };
 
   // Savaari-style 1-tap location swap
   const handleSwapLocations = () => {
@@ -303,6 +397,8 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
 
   useEffect(() => {
     setMounted(true);
+    // Eagerly load Google Maps Places for autocomplete and distance calculations
+    loadGoogleMaps().catch(() => {});
     // Read ?driver= param set by the driver profile "Book" button
     const params = new URLSearchParams(window.location.search);
     const driver = params.get('driver');
@@ -327,15 +423,9 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
   // Auto-scroll to result panel when estimate appears
   useEffect(() => {
     if (showResult && resultRef.current) {
-      setTimeout(() => {
-        if (resultRef.current && typeof window !== 'undefined') {
-          const yOffset = -70;
-          const y = resultRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
-          window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
-        }
-      }, 100);
+      scrollToResult();
     }
-  }, [showResult]);
+  }, [showResult, estimate]);
 
   const pickupInputRef = useRef(null);
   const dropInputRef = useRef(null);
@@ -561,6 +651,7 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
     if (activeTab === 'local') {
       setShowResult(true);
       setShowBreakdown(true);
+      scrollToResult();
       return;
     }
 
@@ -570,12 +661,17 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
     if (!o || !d) {
       setErrors(prev => ({
         ...prev,
-        global: isTa ? 'பிக்கப் மற்றும் டிராப் இடங்களை உள்ளிடவும்' : 'Please enter both Pickup and Drop locations'
+        global: isTa ? 'பிக்கப் மற்றும் டிராப் இடங்களை உள்ளிடவும்' : 'Please enter both Pickup and Drop locations',
+        pickup: !o ? (isTa ? 'பிக்கப் இடத்தை உள்ளிடவும்' : 'Please enter pickup location') : undefined,
+        drop: !d ? (isTa ? 'டிராப் இடத்தை உள்ளிடவும்' : 'Please enter drop location') : undefined,
       }));
       return;
     }
 
+    // Eagerly trigger Google Maps if needed
+    loadGoogleMaps().catch(() => {});
     calculateDistance(o, d);
+    scrollToResult();
   };
 
   // Handle Pin Click - Opens Map Modal
@@ -840,10 +936,11 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
 
     // 2. Validate All Fields
     const isDateValid = date ? activeValidate('date', date) : true;
+    const isReturnDateValid = (activeTab === 'round' && returnDate) ? activeValidate('date', returnDate) : true;
     const isPickupValid = pickup.length > 0;
     const isDropValid = drop.length > 0;
 
-    if (!isDateValid || !isPickupValid || !isDropValid) {
+    if (!isDateValid || !isReturnDateValid || !isPickupValid || !isDropValid) {
       setErrors(prev => ({
         ...prev,
         global: "Please fix errors above"
@@ -871,7 +968,9 @@ export default function QuotationEngine({ currentLang = 'en', showAirportTab = t
       passengers,
       distance: distance ? distance.toFixed(1) : '',
       estimate,
-      travelDate: date
+      travelDate: date,
+      returnDate: activeTab === 'round' ? returnDate : '',
+      days: activeTab === 'round' ? days : 1
     };
 
     try {
@@ -895,10 +994,10 @@ Vehicle: ${vehicle}
 Passengers: ${passengers}
 Pickup: ${sanitizeInput(pickup)}
 Drop: ${sanitizeInput(drop)}
-Pickup Date & Time: ${date ? new Date(date).toLocaleString() : 'Not Specified'}
+Pickup Date & Time: ${date ? new Date(date).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : 'Not Specified'}
+${activeTab === 'round' ? `Return Date & Time: ${returnDate ? new Date(returnDate).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : 'Not Specified'}\nTrip Duration: ${days} ${days > 1 ? 'Days' : 'Day'}` : ''}
 Distance: ${distance ? distance.toFixed(1) : 'N/A'} km ${activeTab === 'round' ? `(Round Trip: ${(distance * 2).toFixed(1)} km)` : ''}
 Duration: ${duration || 'N/A'}
-${activeTab === 'round' ? `Days: ${days}` : ''}
 Est. Cost: Rs. ${estimate}
 
 Inclusions: Fuel, Driver Bata (Incl. Food/Stay), GST
@@ -912,8 +1011,7 @@ Please confirm availability.`;
       vehicle
     });
 
-    const encodedMessage = encodeURIComponent(message);
-    window.open(`https://wa.me/918939539211?text=${encodedMessage}`, '_blank');
+    window.open(buildWhatsAppUrl(message), '_blank');
   };
 
   // Helper for Input Classes
@@ -939,7 +1037,23 @@ Please confirm availability.`;
         />
 
         <div className="p-4 pb-1 text-center">
+          {headerIcon && (
+            <div className="w-10 h-10 rounded-m3-full bg-m3-primary-container flex items-center justify-center mx-auto mb-2">
+              {headerIcon === 'car' ? (
+                <Car className="w-5 h-5 text-m3-primary" />
+              ) : headerIcon === 'clock' ? (
+                <Clock className="w-5 h-5 text-m3-primary" />
+              ) : (
+                headerIcon
+              )}
+            </div>
+          )}
           <h3 className="text-lg sm:text-xl font-bold text-m3-on-surface font-heading">{displayTitle}</h3>
+          {subtitle && (
+            <p className="text-xs text-m3-on-surface-variant mt-0.5 font-normal">
+              {subtitle}
+            </p>
+          )}
           {requestedDriver && (
             <div className="mt-2 inline-flex items-center gap-1.5 bg-m3-surface-container-high border border-m3-outline-variant rounded-m3-full px-3 py-1">
               <ShieldCheck className="w-3.5 h-3.5 text-m3-primary shrink-0" />
@@ -948,10 +1062,10 @@ Please confirm availability.`;
           )}
         </div>
 
-        <div className="px-3 sm:px-6 mb-3">
-          <div role="tablist" aria-label={isTa ? 'பயண வகை' : 'Trip Type'} className="bg-m3-surface-container-high p-1 rounded-m3-full flex gap-1 overflow-x-auto whitespace-nowrap hide-scrollbar border border-m3-outline-variant">
-            {['oneway', 'round', 'local'].map(tab => (
-              (tab !== 'local' || showAirportTab) && (
+        {visibleTabs.length > 1 && (
+          <div className="px-3 sm:px-6 mb-3">
+            <div role="tablist" aria-label={isTa ? 'பயண வகை' : 'Trip Type'} className="bg-m3-surface-container-high p-1 rounded-m3-full flex gap-1 overflow-x-auto whitespace-nowrap hide-scrollbar border border-m3-outline-variant">
+              {visibleTabs.map(tab => (
                 <button
                   key={tab}
                   role="tab"
@@ -962,10 +1076,10 @@ Please confirm availability.`;
                 >
                   <span className="capitalize">{tab === 'local' ? (isTa ? 'லோக்கல் பேக்கேஜ்' : 'Local Package') : tab === 'oneway' ? (isTa ? 'ஒரு வழி' : 'One Way') : (isTa ? 'இரு வழி' : 'Round Trip')}</span>
                 </button>
-              )
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="px-3 sm:px-6 pb-5 space-y-3">
           {errors.global && (
@@ -1004,7 +1118,11 @@ Please confirm availability.`;
                     </label>
                   </div>
 
-                  <div className="relative flex items-center bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant rounded-m3-md px-3 py-2 sm:py-2.5 min-h-[44px] sm:min-h-[48px] focus-within:ring-2 focus-within:ring-m3-primary focus-within:border-m3-primary transition-all">
+                  <div className={`relative flex items-center bg-m3-surface-container-low hover:bg-m3-surface-container border rounded-m3-md px-3 py-2 sm:py-2.5 min-h-[44px] sm:min-h-[48px] transition-all ${
+                    errors[type.toLowerCase()]
+                      ? 'border-m3-error ring-1 ring-m3-error bg-m3-error-container/20'
+                      : 'border-m3-outline-variant focus-within:ring-2 focus-within:ring-m3-primary focus-within:border-m3-primary'
+                  }`}>
                     <input
                       id={`${stableFormId}-${type.toLowerCase()}`}
                       ref={type === 'Pickup' ? pickupInputRef : dropInputRef}
@@ -1026,9 +1144,11 @@ Please confirm availability.`;
                           const next = { ...prev };
                           delete next.global;
                           delete next.location;
+                          delete next[type.toLowerCase()];
                           return next;
                         });
                       }}
+                      id={activeTab === 'local' ? (type === 'Pickup' ? 'local-pickup-input' : 'local-drop-input') : (type === 'Pickup' ? 'pickup-input' : 'drop-input')}
                       placeholder={isTa ? 'நகரம் / பகுதியை உள்ளிடவும்' : `Enter ${type} City / Area`}
                       className="bg-transparent w-full outline-none text-sm font-semibold text-m3-on-surface pr-16 placeholder:text-m3-on-surface-variant placeholder:text-xs placeholder:font-normal"
                     />
@@ -1061,6 +1181,12 @@ Please confirm availability.`;
                       </button>
                     </div>
                   </div>
+                  {errors[type.toLowerCase()] && (
+                    <p className="mt-1 text-xs text-m3-error font-medium flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                      <span>{errors[type.toLowerCase()]}</span>
+                    </p>
+                  )}
                 </div>
                 )
               ))}
@@ -1117,35 +1243,6 @@ Please confirm availability.`;
                   </div>
                 </div>
 
-                {/* Days Input if Round Trip */}
-                {activeTab === 'round' && (
-                  <div className="relative group col-span-2">
-                    <label htmlFor={`${stableFormId}-days`} className="block text-badge font-bold text-m3-on-surface-variant uppercase tracking-wide mb-1">
-                      {isTa ? 'பயண நாட்கள்' : 'Number of Days'}
-                    </label>
-                    <div className="relative flex items-center bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant rounded-m3-md px-3 py-2 min-h-[44px] sm:min-h-[48px] focus-within:ring-2 focus-within:ring-m3-primary/20 focus-within:border-m3-primary transition-all">
-                      <Calendar className="text-m3-primary mr-2.5 w-4 h-4 shrink-0" aria-hidden="true" />
-                      <input
-                        id={`${stableFormId}-days`}
-                        type="text"
-                        inputMode="numeric"
-                        value={days || ''}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          if (val === '' || /^\d+$/.test(val)) {
-                            setDays(val === '' ? '' : parseInt(val));
-                          }
-                          setShowResult(false);
-                        }}
-                        onBlur={() => {
-                          if (!days) setDays(1);
-                        }}
-                        placeholder="1"
-                        className="bg-transparent w-full outline-none text-sm text-m3-on-surface font-semibold"
-                      />
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
 
@@ -1167,6 +1264,15 @@ Please confirm availability.`;
             <button
               type="button"
               disabled={loading}
+              onPointerDown={() => {
+                if (typeof document !== 'undefined') {
+                  if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                    document.activeElement.blur();
+                  }
+                  const pacs = document.querySelectorAll('.pac-container');
+                  pacs.forEach(p => { p.style.display = 'none'; });
+                }
+              }}
               onClick={handleCalculateCost}
               className="w-full max-w-[260px] sm:max-w-[280px] mx-auto bg-m3-primary hover:bg-slate-900 text-m3-on-primary font-bold py-3 rounded-m3-full transition-all flex items-center justify-center gap-2 shadow-m3-1 hover:shadow-m3-2 text-sm sm:text-base min-h-[46px] sm:min-h-[50px] cursor-pointer active:scale-[0.98] disabled:opacity-75 border border-white/10 group"
             >
@@ -1210,103 +1316,139 @@ Please confirm availability.`;
               </div>
             )}
 
-            {/* Results Section — Compact Space-Saving Single Card */}
+            {/* Results Section — Simple, Cut and Dried */}
             {showResult && estimate > 0 && (
-              <div ref={resultRef} className="bg-m3-surface-container-low rounded-m3-xl p-3.5 sm:p-4 border border-m3-outline-variant shadow-m3-1 space-y-2.5 animate-in fade-in slide-in-from-top-2 duration-300">
-                {/* Header: Transparent Badge + Route/Distance Meta */}
-                <div className="flex items-center justify-between gap-2 border-b border-m3-outline-variant/30 pb-2">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-[10px] font-bold uppercase tracking-wide">
-                    <ShieldCheck className="w-3.5 h-3.5 text-m3-primary" />
-                    <span>{isTa ? 'வெளிப்படையான மதிப்பீடு' : 'Transparent Estimate'}</span>
-                  </div>
-                  <div className="text-right text-[11px] font-medium text-m3-on-surface-variant flex items-center gap-1.5 flex-wrap justify-end">
+              <div ref={resultRef} className="bg-m3-surface-container-low rounded-m3-xl p-3.5 sm:p-4 border border-m3-outline-variant shadow-m3-1 space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                {/* 1. Trip Route Meta & Vehicle */}
+                <div className="flex items-center justify-between gap-2 border-b border-m3-outline-variant/40 pb-2">
+                  <div className="text-xs sm:text-sm font-semibold text-m3-on-surface flex items-center gap-1.5 flex-wrap">
+                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                      Transparent Estimate
+                    </span>
                     {activeTab === 'local' ? (
-                      <span className="font-bold text-m3-on-surface">{localPackage === '8hr80km' ? '8h / 80km' : '12h / 120km'}</span>
+                      <span>{localPackage === '5hr50km' ? '5h / 50 km' : localPackage === '8hr80km' ? '8h / 80 km' : '12h / 120 km'}</span>
                     ) : distance ? (
-                      <span className="font-bold text-m3-on-surface">{activeTab === 'round' ? (distance * 2).toFixed(1) : distance.toFixed(1)} km</span>
+                      <span>{activeTab === 'round' ? (distance * 2).toFixed(1) : distance.toFixed(1)} km</span>
                     ) : null}
-                    {duration && <span className="opacity-40">•</span>}
-                    {duration && <span>{duration}</span>}
-                    <span className="opacity-40">•</span>
-                    <span className="font-semibold text-m3-on-surface">{vehicle}</span>
+                    {duration && <span className="text-m3-outline-variant">•</span>}
+                    {duration && <span className="text-m3-on-surface-variant font-normal">{duration}</span>}
                   </div>
+                  <span className="text-xs font-bold text-m3-primary bg-m3-surface-container px-2.5 py-0.5 rounded-m3-full border border-m3-outline-variant/80">
+                    {vehicle}
+                  </span>
                 </div>
 
-                {/* Price Hero Row: Total Amount + Rate Tag */}
-                <div className="flex justify-between items-center gap-3">
+                {/* 2. Total Fare & Rate summary + Breakdown Link */}
+                <div className="flex items-start justify-between gap-2">
                   <div>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-2xl sm:text-3xl font-black text-m3-on-surface tracking-tight font-heading">
-                        ₹ {estimate.toLocaleString('en-IN')}
-                      </span>
-                      <span className="text-micro text-m3-on-surface-variant font-medium">
-                        ({isTa ? 'மறைமுக கட்டணங்கள் இல்லை' : 'Zero Hidden Surcharges'})
-                      </span>
+                    <div className="text-2xl sm:text-3xl font-black text-m3-on-surface tracking-tight font-heading leading-none">
+                      ₹ {estimate.toLocaleString('en-IN')}
                     </div>
-                    <p className="text-[10px] text-m3-on-surface-variant font-medium mt-0.5">
-                      {isTa ? 'டிரைவர் பேட்டா & ஜிஎஸ்டி சேர்க்கப்பட்டுள்ளது' : 'Incl. Driver Bata & Fuel • Tolls & parking extra'}
+                    <p className="text-[11px] sm:text-xs text-m3-on-surface-variant font-medium mt-1 leading-relaxed">
+                      <span className="text-m3-on-surface font-semibold">
+                        ₹{activeTab === 'round' ? vehicles[vehicle].round_trip_rate : vehicles[vehicle].one_way_rate}/km
+                      </span>
+                      {' · '}
+                      <span>{isTa ? 'டிரைவர் பேட்டா & எரிபொருள் சேர்க்கப்பட்டுள்ளது' : 'Incl. Driver Bata & Fuel'}</span>
+                      {' · '}
+                      <span className="opacity-80">{isTa ? 'டோல் தனி' : 'Tolls extra'}</span>
                     </p>
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowFullBreakdown(true)}
+                    className="inline-flex items-center gap-0.5 text-[11px] sm:text-xs font-bold text-m3-primary hover:text-m3-primary/80 transition-colors cursor-pointer shrink-0 mt-0.5 bg-m3-surface px-2 py-1 rounded-m3-md border border-m3-outline-variant"
+                  >
+                    <span>{isTa ? 'கட்டண விவரம்' : 'Fare Breakdown'}</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
 
-                  <div className="text-right shrink-0">
-                    <div className="inline-flex items-center gap-1 px-2.5 py-1 bg-m3-surface rounded-m3-md border border-m3-outline-variant text-xs font-bold text-m3-on-surface shadow-m3-1">
-                      <span className="text-m3-on-surface-variant font-normal text-[11px]">{isTa ? 'கட்டணம்' : 'Rate'}:</span>
-                      <span className="text-m3-on-surface font-black">₹{activeTab === 'round' ? vehicles[vehicle].round_trip_rate : vehicles[vehicle].one_way_rate}/km</span>
+                {/* Short local distance guidance */}
+                {distance && distance < 45 && activeTab !== 'local' && (
+                  <div className="p-2.5 rounded-m3-lg bg-amber-500/10 border border-amber-500/30 text-xs flex items-center justify-between gap-2">
+                    <span className="text-amber-800 dark:text-amber-300 font-medium text-[11px] leading-snug">
+                      Travelling within Chennai ({distance.toFixed(1)} km)? Local Hourly Packages (from ₹1,350) or Airport flat tariffs offer better fixed pricing.
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => window.dispatchEvent(new CustomEvent('switch-calculator-tab', { detail: 'local' }))}
+                      className="shrink-0 px-2.5 py-1 rounded-m3-md bg-amber-600 hover:bg-amber-700 text-white font-bold text-micro transition-all cursor-pointer"
+                    >
+                      Local Packages
+                    </button>
+                  </div>
+                )}
+
+                {/* 3. Date & Time Selection */}
+                {activeTab === 'round' ? (
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between text-[11px] font-bold text-m3-on-surface-variant uppercase tracking-wider">
+                      <span>{isTa ? 'பயண தேதிகள்' : 'Trip Schedule'}</span>
+                      <span className="text-m3-primary normal-case font-semibold bg-m3-primary/10 px-2 py-0.5 rounded-m3-full text-[10px] sm:text-[11px]">
+                        {days} {days > 1 ? (isTa ? 'நாட்கள்' : 'Days') : (isTa ? 'நாள்' : 'Day')} ({days * (vehicles[vehicle]?.min_km_per_day || 250)} km min)
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <div>
+                        <label htmlFor={`${stableFormId}-pickup-date`} className="block text-[10px] font-bold text-m3-on-surface-variant uppercase tracking-wider mb-0.5">
+                          {isTa ? 'புறப்படும் தேதி & நேரம்' : 'Pickup Date & Time'}
+                        </label>
+                        <div className="flex items-center bg-m3-surface border border-m3-outline-variant rounded-m3-md px-2.5 py-1.5 focus-within:ring-2 focus-within:ring-m3-primary/20 focus-within:border-m3-primary transition-all">
+                          <Calendar className="text-m3-primary mr-1.5 w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                          <input
+                            id={`${stableFormId}-pickup-date`}
+                            type="datetime-local"
+                            value={date}
+                            onChange={(e) => handlePickupDateChange(e.target.value)}
+                            className="bg-transparent w-full outline-none text-xs text-m3-on-surface font-semibold cursor-pointer"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label htmlFor={`${stableFormId}-return-date`} className="block text-[10px] font-bold text-m3-on-surface-variant uppercase tracking-wider mb-0.5">
+                          {isTa ? 'திரும்பும் தேதி & நேரம்' : 'Return Date & Time'}
+                        </label>
+                        <div className="flex items-center bg-m3-surface border border-m3-outline-variant rounded-m3-md px-2.5 py-1.5 focus-within:ring-2 focus-within:ring-m3-primary/20 focus-within:border-m3-primary transition-all">
+                          <Calendar className="text-m3-primary mr-1.5 w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                          <input
+                            id={`${stableFormId}-return-date`}
+                            type="datetime-local"
+                            value={returnDate}
+                            min={date}
+                            onChange={(e) => handleReturnDateChange(e.target.value)}
+                            className="bg-transparent w-full outline-none text-xs text-m3-on-surface font-semibold cursor-pointer"
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="space-y-1">
+                    <label htmlFor={`${stableFormId}-date-result`} className="block text-[11px] font-bold text-m3-on-surface-variant uppercase tracking-wider">
+                      {isTa ? 'பயண தேதி & நேரம்' : 'Pickup Date & Time'}
+                    </label>
+                    <div className="flex items-center bg-m3-surface border border-m3-outline-variant rounded-m3-md px-2.5 py-1.5 focus-within:ring-2 focus-within:ring-m3-primary/20 focus-within:border-m3-primary transition-all">
+                      <Calendar className="text-m3-primary mr-2 w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                      <input
+                        id={`${stableFormId}-date-result`}
+                        type="datetime-local"
+                        value={date}
+                        onChange={(e) => handlePickupDateChange(e.target.value)}
+                        className="bg-transparent w-full outline-none text-xs sm:text-sm text-m3-on-surface font-semibold cursor-pointer"
+                      />
+                    </div>
+                  </div>
+                )}
 
-                {/* Prominent Transparent Breakdown Button */}
-                <button
-                  type="button"
-                  onClick={() => setShowFullBreakdown(true)}
-                  className="w-full py-1.5 px-3.5 bg-m3-surface hover:bg-m3-surface-container-high text-m3-on-surface font-bold text-xs rounded-m3-md border border-m3-outline-variant/60 shadow-m3-1 flex items-center justify-between transition-all cursor-pointer group"
-                >
-                  <span className="inline-flex items-center gap-2 text-m3-on-surface font-bold">
-                    <Calculator className="w-3.5 h-3.5 text-m3-primary" />
-                    <span>{isTa ? 'கட்டண கணக்கீடு விவரம் (Detailed Breakdown)' : 'View Transparent Fare Breakdown'}</span>
-                  </span>
-                  <span className="inline-flex items-center gap-1 text-micro text-m3-on-surface-variant group-hover:text-m3-on-surface font-semibold">
-                    <span>{isTa ? 'விவரம் பார்க்க' : 'See Itemized Math'}</span>
-                    <ChevronRight className="w-3.5 h-3.5 text-m3-on-surface-variant transition-transform group-hover:translate-x-0.5" />
-                  </span>
-                </button>
-
-                {/* Transparency Badges Strip */}
-                <div className="flex items-center justify-between text-[10px] font-semibold text-m3-on-surface-variant px-0.5">
-                  <span className="inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-400 whitespace-nowrap">
-                    <ShieldCheck className="w-3 h-3 shrink-0" /> {isTa ? 'சரிபார்க்கப்பட்ட ஓட்டுநர்' : 'Verified Drivers'}
-                  </span>
-                  <span className="inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-400 whitespace-nowrap">
-                    <CheckCircle2 className="w-3 h-3 shrink-0" /> {isTa ? 'மறைமுக கட்டணம் இல்லை' : 'No Hidden Costs'}
-                  </span>
-                  <span className="hidden xs:inline-flex sm:inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-400 whitespace-nowrap">
-                    <Navigation className="w-3 h-3 shrink-0" /> {isTa ? 'நேரத்திற்கு பிக்கப்' : 'On-Time Pickup'}
-                  </span>
-                  <span className="inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-400 whitespace-nowrap">
-                    <Clock className="w-3 h-3 shrink-0" /> {isTa ? '24/7 ஆதரவு' : '24/7 Support'}
-                  </span>
-                </div>
-
-                {/* Date/Time */}
-                <div className="flex items-center bg-m3-surface border border-m3-outline-variant/80 rounded-m3-md px-3 py-1.5 focus-within:ring-2 focus-within:ring-m3-primary/20 focus-within:border-m3-primary">
-                  <Calendar className="text-m3-on-surface-variant mr-2.5 w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-                  <input
-                    id={`${stableFormId}-date-result`}
-                    type="datetime-local"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    className="bg-transparent w-full outline-none text-xs text-m3-on-surface font-medium cursor-pointer"
-                  />
-                </div>
-
-                <button
+                {/* 4. Booking Action */}
+                <WhatsAppButton
                   onClick={handleWhatsApp}
-                  className="w-full py-2.5 px-4 bg-[#25D366] hover:bg-[#20BD5A] active:bg-[#1EBE5D] text-white rounded-m3-full font-bold flex items-center justify-center gap-2 shadow-m3-1 hover:shadow-m3-2 transition-all active:scale-[0.98] cursor-pointer text-xs sm:text-sm min-h-[42px] border border-emerald-400/40"
-                >
-                  <WhatsAppIcon className="w-4 h-4" variant="two-tone" />
-                  <span>{isTa ? 'வாட்ஸ்அப்பில் முன்பதிவு செய்ய' : 'Book on WhatsApp'}</span>
-                </button>
+                  fullWidth
+                  variant="filled"
+                  size="md"
+                  text={isTa ? 'வாட்ஸ்அப்பில் முன்பதிவு செய்ய' : 'Book on WhatsApp'}
+                />
               </div>
             )}
           </div>
@@ -1358,9 +1500,9 @@ Please confirm availability.`;
       </h3>
 
       {/* Tabs */}
-      <div className="flex border-b border-m3-outline-variant">
-        {['oneway', 'round', 'local'].map(tab => (
-          (tab !== 'local' || showAirportTab) && (
+      {visibleTabs.length > 1 && (
+        <div className="flex border-b border-m3-outline-variant">
+          {visibleTabs.map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -1371,9 +1513,9 @@ Please confirm availability.`;
               {tab === 'local' ? <Clock className="w-3.5 h-3.5" /> : tab === 'round' ? <Repeat className="w-3.5 h-3.5" /> : <ArrowRight className="w-3.5 h-3.5 text-yellow-400" />}
               <span>{tab === 'local' ? (isTa ? 'லோக்கல்' : 'Local') : tab === 'round' ? (isTa ? 'இரு வழி' : 'Round Trip') : (isTa ? 'ஒரு வழி' : 'One Way')}</span>
             </button>
-          )
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       <div className="p-4 space-y-3">
         {activeTab === 'local' && (
@@ -1515,24 +1657,6 @@ Please confirm availability.`;
             </div>
           </div>
 
-          {activeTab === 'round' && (
-            <div className="col-span-2">
-              <label htmlFor={`${stableFormId}-mobile-days`} className="text-badge font-bold text-m3-on-surface-variant uppercase mb-1 block">
-                {isTa ? 'நாட்கள்' : 'Days'}
-              </label>
-              <div className="relative flex items-center bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant rounded-m3-md px-3 py-2 min-h-[44px] focus-within:ring-2 focus-within:ring-m3-primary focus-within:border-m3-primary transition">
-                <Calendar className="text-m3-primary mr-2 w-4 h-4 shrink-0" />
-                <input
-                  id={`${stableFormId}-mobile-days`}
-                  type="number"
-                  min="1"
-                  value={days}
-                  onChange={(e) => { setDays(e.target.value); setShowResult(false); }}
-                  className="w-full bg-transparent text-sm text-m3-on-surface font-semibold outline-none"
-                />
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Passenger-Vehicle capacity warning (mobile) */}
@@ -1599,97 +1723,137 @@ Please confirm availability.`;
             </div>
           )}
 
+          {/* Mobile Results Section — Simple, Cut and Dried */}
           {showResult && estimate > 0 && (
-            <div ref={resultRef} className="bg-m3-surface-container-low rounded-m3-xl p-3 sm:p-3.5 border border-m3-outline-variant shadow-m3-1 space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
-              {/* Header: Transparent Badge + Route/Distance Meta */}
-              <div className="flex items-center justify-between gap-2 border-b border-m3-outline-variant/30 pb-1.5">
-                <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-[10px] font-bold uppercase tracking-wide">
-                  <ShieldCheck className="w-3 h-3 text-m3-primary" />
-                  <span>{isTa ? 'வெளிப்படையான மதிப்பீடு' : 'Transparent Estimate'}</span>
-                </div>
-                <div className="text-right text-[11px] font-medium text-m3-on-surface-variant flex items-center gap-1.5 flex-wrap justify-end">
+            <div ref={resultRef} className="bg-m3-surface-container-low rounded-m3-xl p-3.5 sm:p-4 border border-m3-outline-variant shadow-m3-1 space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
+              {/* 1. Trip Route Meta & Vehicle */}
+              <div className="flex items-center justify-between gap-2 border-b border-m3-outline-variant/40 pb-2">
+                <div className="text-xs font-semibold text-m3-on-surface flex items-center gap-1.5 flex-wrap">
+                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                    Transparent Estimate
+                  </span>
                   {distance && (
-                    <span className="font-bold text-m3-on-surface">{activeTab === 'round' ? (distance * 2).toFixed(1) : distance.toFixed(1)} km</span>
+                    <span>{activeTab === 'round' ? (distance * 2).toFixed(1) : distance.toFixed(1)} km</span>
                   )}
-                  {duration && <span className="opacity-40">•</span>}
-                  {duration && <span>{duration}</span>}
-                  <span className="opacity-40">•</span>
-                  <span className="font-semibold text-m3-on-surface">{vehicle}</span>
+                  {duration && <span className="text-m3-outline-variant">•</span>}
+                  {duration && <span className="text-m3-on-surface-variant font-normal">{duration}</span>}
                 </div>
+                <span className="text-xs font-bold text-m3-primary bg-m3-surface-container px-2 py-0.5 rounded-m3-full border border-m3-outline-variant/80">
+                  {vehicle}
+                </span>
               </div>
 
-              {/* Price Hero Row: Total Amount + Rate Tag */}
-              <div className="flex justify-between items-center gap-2">
+              {/* 2. Total Fare & Rate summary + Breakdown Link */}
+              <div className="flex items-start justify-between gap-2">
                 <div>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-2xl sm:text-3xl font-black text-m3-on-surface tracking-tight font-heading">
-                      ₹ {estimate.toLocaleString('en-IN')}
-                    </span>
-                    <span className="text-micro text-m3-on-surface-variant font-medium">
-                      ({isTa ? 'மறைமுக கட்டணங்கள் இல்லை' : 'Zero Hidden Surcharges'})
-                    </span>
+                  <div className="text-2xl sm:text-3xl font-black text-m3-on-surface tracking-tight font-heading leading-none">
+                    ₹ {estimate.toLocaleString('en-IN')}
                   </div>
-                  <p className="text-[10px] text-m3-on-surface-variant font-medium mt-0.5">
-                    {isTa ? 'டிரைவர் பேட்டா & குறைந்தபட்ச கிமீ சேர்க்கப்பட்டுள்ளது' : 'Incl. Driver Bata & Fuel • Tolls extra'}
+                  <p className="text-[11px] sm:text-xs text-m3-on-surface-variant font-medium mt-1 leading-relaxed">
+                    <span className="text-m3-on-surface font-semibold">
+                      ₹{activeTab === 'round' ? vehicles[vehicle].round_trip_rate : vehicles[vehicle].one_way_rate}/km
+                    </span>
+                    {' · '}
+                    <span>{isTa ? 'டிரைவர் பேட்டா & எரிபொருள் சேர்க்கப்பட்டுள்ளது' : 'Incl. Driver Bata & Fuel'}</span>
+                    {' · '}
+                    <span className="opacity-80">{isTa ? 'டோல் தனி' : 'Tolls extra'}</span>
                   </p>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => setShowFullBreakdown(true)}
+                  className="inline-flex items-center gap-0.5 text-[11px] sm:text-xs font-bold text-m3-primary hover:text-m3-primary/80 transition-colors cursor-pointer shrink-0 mt-0.5 bg-m3-surface px-2 py-1 rounded-m3-md border border-m3-outline-variant"
+                >
+                  <span>{isTa ? 'கட்டண விவரம்' : 'Fare Breakdown'}</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
 
-                <div className="text-right shrink-0">
-                  <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-m3-surface rounded-m3-md border border-m3-outline-variant text-micro font-bold text-m3-on-surface shadow-m3-1">
-                    <span className="text-m3-on-surface-variant font-normal">{isTa ? 'கட்டணம்' : 'Rate'}:</span>
-                    <span className="text-m3-on-surface font-black">₹{activeTab === 'round' ? vehicles[vehicle].round_trip_rate : vehicles[vehicle].one_way_rate}/km</span>
+              {/* Short local distance guidance */}
+              {distance && distance < 45 && activeTab !== 'local' && (
+                <div className="p-2.5 rounded-m3-lg bg-amber-500/10 border border-amber-500/30 text-xs flex items-center justify-between gap-2">
+                  <span className="text-amber-800 dark:text-amber-300 font-medium text-[11px] leading-snug">
+                    Travelling within Chennai ({distance.toFixed(1)} km)? Local Hourly Packages (from ₹1,350) or Airport flat tariffs offer better fixed pricing.
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => window.dispatchEvent(new CustomEvent('switch-calculator-tab', { detail: 'local' }))}
+                    className="shrink-0 px-2.5 py-1 rounded-m3-md bg-amber-600 hover:bg-amber-700 text-white font-bold text-micro transition-all cursor-pointer"
+                  >
+                    Local Packages
+                  </button>
+                </div>
+              )}
+
+              {/* 3. Date & Time Selection */}
+              {activeTab === 'round' ? (
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between text-[11px] font-bold text-m3-on-surface-variant uppercase tracking-wider">
+                    <span>{isTa ? 'பயண தேதிகள்' : 'Trip Schedule'}</span>
+                    <span className="text-m3-primary normal-case font-semibold bg-m3-primary/10 px-2 py-0.5 rounded-m3-full text-[10px] sm:text-[11px]">
+                      {days} {days > 1 ? (isTa ? 'நாட்கள்' : 'Days') : (isTa ? 'நாள்' : 'Day')} ({days * (vehicles[vehicle]?.min_km_per_day || 250)} km min)
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                      <label htmlFor={`${stableFormId}-mobile-pickup-date`} className="block text-[10px] font-bold text-m3-on-surface-variant uppercase tracking-wider mb-0.5">
+                        {isTa ? 'புறப்படும் தேதி & நேரம்' : 'Pickup Date & Time'}
+                      </label>
+                      <div className="flex items-center bg-m3-surface border border-m3-outline-variant rounded-m3-md px-2.5 py-1.5 focus-within:ring-2 focus-within:ring-m3-primary/20 focus-within:border-m3-primary transition-all">
+                        <Calendar className="text-m3-primary mr-1.5 w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                        <input
+                          id={`${stableFormId}-mobile-pickup-date`}
+                          type="datetime-local"
+                          value={date}
+                          onChange={(e) => handlePickupDateChange(e.target.value)}
+                          className="bg-transparent w-full outline-none text-xs text-m3-on-surface font-semibold cursor-pointer"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label htmlFor={`${stableFormId}-mobile-return-date`} className="block text-[10px] font-bold text-m3-on-surface-variant uppercase tracking-wider mb-0.5">
+                        {isTa ? 'திரும்பும் தேதி & நேரம்' : 'Return Date & Time'}
+                      </label>
+                      <div className="flex items-center bg-m3-surface border border-m3-outline-variant rounded-m3-md px-2.5 py-1.5 focus-within:ring-2 focus-within:ring-m3-primary/20 focus-within:border-m3-primary transition-all">
+                        <Calendar className="text-m3-primary mr-1.5 w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                        <input
+                          id={`${stableFormId}-mobile-return-date`}
+                          type="datetime-local"
+                          value={returnDate}
+                          min={date}
+                          onChange={(e) => handleReturnDateChange(e.target.value)}
+                          className="bg-transparent w-full outline-none text-xs text-m3-on-surface font-semibold cursor-pointer"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className="space-y-1">
+                  <label htmlFor={`${stableFormId}-mobile-date-result`} className="block text-[11px] font-bold text-m3-on-surface-variant uppercase tracking-wider">
+                    {isTa ? 'பயண தேதி & நேரம்' : 'Pickup Date & Time'}
+                  </label>
+                  <div className="flex items-center bg-m3-surface border border-m3-outline-variant rounded-m3-md px-2.5 py-1.5 focus-within:ring-2 focus-within:ring-m3-primary/20 focus-within:border-m3-primary transition-all">
+                    <Calendar className="text-m3-primary mr-2 w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+                    <input
+                      id={`${stableFormId}-mobile-date-result`}
+                      type="datetime-local"
+                      value={date}
+                      onChange={(e) => handlePickupDateChange(e.target.value)}
+                      className="bg-transparent w-full outline-none text-xs text-m3-on-surface font-semibold cursor-pointer"
+                    />
+                  </div>
+                </div>
+              )}
 
-              {/* Compact Breakdown Button */}
-              <button
-                type="button"
-                onClick={() => setShowFullBreakdown(true)}
-                className="w-full py-1.5 px-3 bg-m3-surface hover:bg-m3-surface-container-high text-m3-on-surface font-semibold text-xs rounded-m3-md border border-m3-outline-variant/60 flex items-center justify-between transition-all cursor-pointer group"
-              >
-                <span className="inline-flex items-center gap-1.5 font-bold">
-                  <Calculator className="w-3.5 h-3.5 text-m3-primary" />
-                  <span>{isTa ? 'கட்டண கணக்கீடு விவரம்' : 'View Fare Breakdown'}</span>
-                </span>
-                <span className="inline-flex items-center gap-0.5 text-micro text-m3-on-surface-variant group-hover:text-m3-on-surface font-semibold">
-                  <span>{isTa ? 'விவரம்' : 'Math'}</span>
-                  <ChevronRight className="w-3.5 h-3.5 text-m3-on-surface-variant transition-transform group-hover:translate-x-0.5" />
-                </span>
-              </button>
-
-              {/* Sleek Trust Strip */}
-              <div className="flex items-center justify-between gap-1 text-[10px] font-semibold text-m3-on-surface-variant px-0.5 pt-0.5">
-                <span className="inline-flex items-center gap-0.5 text-emerald-700 dark:text-emerald-400">
-                  <ShieldCheck className="w-3 h-3 shrink-0" /> {isTa ? 'முன்பணம் இல்லை' : 'Zero Advance'}
-                </span>
-                <span className="inline-flex items-center gap-0.5 text-emerald-700 dark:text-emerald-400">
-                  <CheckCircle2 className="w-3 h-3 shrink-0" /> {isTa ? 'மறைமுக கட்டணம் இல்லை' : 'No Hidden Costs'}
-                </span>
-                <span className="inline-flex items-center gap-0.5 text-emerald-700 dark:text-emerald-400">
-                  <ShieldCheck className="w-3 h-3 shrink-0" /> {isTa ? 'சரிபார்க்கப்பட்ட ஓட்டுநர்' : 'Verified Driver'}
-                </span>
-              </div>
-
-              {/* Mobile Date Picker inside Result */}
-              <div className="flex items-center bg-m3-surface border border-m3-outline-variant/80 rounded-m3-md px-2.5 py-1.5 focus-within:ring-2 focus-within:ring-m3-primary/20 focus-within:border-m3-primary">
-                <Calendar className="text-m3-on-surface-variant mr-2 w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-                <input
-                  id={`${stableFormId}-mobile-date-result`}
-                  type="datetime-local"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  className="bg-transparent w-full outline-none text-xs text-m3-on-surface font-medium cursor-pointer"
-                />
-              </div>
-
-              <button
+              {/* 4. Booking Action */}
+              <WhatsAppButton
                 onClick={handleWhatsApp}
-                className="w-full py-2.5 px-4 bg-[#25D366] hover:bg-[#20BD5A] active:bg-[#1EBE5D] text-white rounded-m3-full font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-m3-1 hover:shadow-m3-2 transition-all active:scale-[0.98] cursor-pointer min-h-[42px] border border-emerald-400/40"
-              >
-                <WhatsAppIcon className="w-4 h-4" variant="two-tone" />
-                <span>{isTa ? 'வாட்ஸ்அப் முன்பதிவு' : 'Reserve on WhatsApp'}</span>
-              </button>
+                fullWidth
+                variant="filled"
+                size="md"
+                text={isTa ? 'வாட்ஸ்அப் முன்பதிவு' : 'Reserve on WhatsApp'}
+              />
             </div>
           )}
         </div>
@@ -1721,7 +1885,7 @@ Please confirm availability.`;
 // Sub-component for clarity and reuse
 function FullBreakdownModal({ isTa, vehicle, activeTab, localPackage, breakdown, estimate, setShowFullBreakdown, handleWhatsApp }) {
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-m3-scrim/60 backdrop-blur-sm p-3 sm:p-4">
+    <div data-hide-contact-dock role="dialog" aria-modal="true" className="fixed inset-0 z-[100] flex items-center justify-center bg-m3-scrim/60 backdrop-blur-sm p-3 sm:p-4">
       <div className="bg-m3-surface w-full max-w-md rounded-m3-2xl overflow-hidden shadow-m3-3 border border-m3-outline-variant flex flex-col max-h-[85vh] animate-in fade-in zoom-in duration-200">
         {/* Header */}
         <div className="px-4 py-3 sm:px-5 sm:py-3.5 border-b border-m3-outline-variant/60 flex items-center justify-between bg-m3-surface-container-low">
@@ -1744,7 +1908,7 @@ function FullBreakdownModal({ isTa, vehicle, activeTab, localPackage, breakdown,
           <div className="bg-m3-surface-container-low rounded-m3-lg px-3.5 py-2.5 border border-m3-outline-variant/70 flex justify-between items-center">
             <div>
               <span className="text-m3-label-s font-semibold text-m3-on-surface-variant uppercase">{isTa ? 'பயண தூரம்' : 'Distance'}</span>
-              <p className="text-m3-title-m font-bold text-m3-on-surface font-heading">{activeTab === 'local' ? (localPackage === '8hr80km' ? '80 KM' : '120 KM') : `${breakdown.actual_km.toFixed(1)} KM`}</p>
+              <p className="text-m3-title-m font-bold text-m3-on-surface font-heading">{activeTab === 'local' ? (localPackage === '5hr50km' ? '50 KM' : localPackage === '8hr80km' ? '80 KM' : '120 KM') : `${breakdown.actual_km.toFixed(1)} KM`}</p>
             </div>
             <div className="text-right">
               <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-m3-label-s font-bold uppercase">
@@ -1884,16 +2048,16 @@ function FullBreakdownModal({ isTa, vehicle, activeTab, localPackage, breakdown,
           >
             {isTa ? 'மூடு' : 'Close'}
           </button>
-          <button 
+          <WhatsAppButton 
             onClick={() => {
               setShowFullBreakdown(false);
               handleWhatsApp();
             }}
-            className="flex-[2] py-2.5 px-4 bg-[#25D366] hover:bg-[#20BD5A] active:bg-[#1EBE5D] text-white font-bold text-sm rounded-m3-full flex items-center justify-center gap-2 shadow-m3-1 hover:shadow-m3-2 active:scale-[0.98] transition-all cursor-pointer border border-emerald-400/30"
-          >
-            <WhatsAppIcon className="w-4 h-4" variant="two-tone" />
-            <span>{isTa ? 'வாட்ஸ்அப் முன்பதிவு (முன்பணம் இல்லை)' : 'Reserve (Pay ₹0 Today)'}</span>
-          </button>
+            variant="filled"
+            size="md"
+            className="flex-[2]"
+            text={isTa ? 'வாட்ஸ்அப் முன்பதிவு (முன்பணம் இல்லை)' : 'Reserve (Pay ₹0 Today)'}
+          />
         </div>
       </div>
     </div>

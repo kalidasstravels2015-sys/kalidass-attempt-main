@@ -108,7 +108,7 @@ const LocationPicker = ({ isOpen, onClose, onConfirm, type }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-m3-scrim/60 backdrop-blur-sm p-4">
+        <div data-hide-contact-dock role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center bg-m3-scrim/60 backdrop-blur-sm p-4">
             <div className="bg-m3-surface w-full max-w-lg rounded-m3-xl overflow-hidden shadow-m3-3 border border-m3-outline-variant flex flex-col h-[80vh] animate-in fade-in zoom-in duration-200">
 
                 {/* Header */}

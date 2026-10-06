@@ -5,6 +5,8 @@ import {
   ShieldCheck, CheckCircle2, Clock, AlertCircle
 } from 'lucide-react';
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
+import WhatsAppButton from './react/WhatsAppButton.jsx';
+import { buildWhatsAppUrl } from '../utils/whatsapp';
 import tnBusFares from '../data/tnBusFares.json';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 
@@ -94,6 +96,7 @@ export default function DriverFeeEstimator({
   const [showResult,    setShowResult]    = useState(false);
   const [result,        setResult]        = useState(null);
   const [error,         setError]         = useState('');
+  const [fieldErrors,   setFieldErrors]   = useState({});
 
   const pickupRef       = useRef(null);
   const dropRef         = useRef(null);
@@ -104,6 +107,8 @@ export default function DriverFeeEstimator({
 
   // ── Google Maps Autocomplete ───────────────────────────────────────────
   useEffect(() => {
+    // Eagerly trigger Google Maps loading
+    loadGoogleMaps().catch(() => {});
     const init = () => {
       if (autocompleteRef.current) return;
       if (!window.google?.maps?.places) return;
@@ -114,6 +119,7 @@ export default function DriverFeeEstimator({
           const p = ac.getPlace();
           setPickup(p.formatted_address || p.name || '');
           setShowResult(false);
+          setFieldErrors(prev => ({ ...prev, pickup: undefined }));
         });
       }
       if (dropRef.current) {
@@ -122,6 +128,7 @@ export default function DriverFeeEstimator({
           const p = ac.getPlace();
           setDrop(p.formatted_address || p.name || '');
           setShowResult(false);
+          setFieldErrors(prev => ({ ...prev, drop: undefined }));
         });
       }
       autocompleteRef.current = true;
@@ -136,8 +143,20 @@ export default function DriverFeeEstimator({
   // ── Calculation Logic ─────────────────────────────────────────────────
   const handleCalculate = () => {
     setError('');
-    if (!pickup.trim()) { setError('Please enter your pickup location (e.g. Pallavaram, Chennai).'); return; }
-    if (activeTab === 'oneway' && !drop.trim()) { setError('Please enter the drop location for a One Way trip.'); return; }
+    const newFieldErrors = {};
+    if (!pickup.trim()) {
+      newFieldErrors.pickup = 'Please enter your pickup location.';
+    }
+    if (activeTab === 'oneway' && !drop.trim()) {
+      newFieldErrors.drop = 'Please enter the drop location for One Way trip.';
+    }
+    if (Object.keys(newFieldErrors).length > 0) {
+      setFieldErrors(newFieldErrors);
+      setError('Please fill in required location fields.');
+      return;
+    }
+    setFieldErrors({});
+    loadGoogleMaps().catch(() => {});
     setLoading(true);
 
     const doCalc = (distKm, setcFare) => {
@@ -212,15 +231,15 @@ export default function DriverFeeEstimator({
     const route = drop.trim() ? `${pickup} → ${drop}` : pickup;
     const distStr = distKm ? ` (~${type === 'round' ? distKm * 2 : distKm} km)` : '';
     const longDistNote = isLongDistance ? ' (Includes 1.5x Bata for >400 km return transit)' : '';
-    return encodeURIComponent(
+    const msg = 
       `Hi Kalidass Travels, I need an Outstation Acting Driver:\n` +
       `• Trip: ${type === 'round' ? 'Round Trip' : 'One Way Drop'}${longDistNote}\n` +
       `• Vehicle: ${vehicle.label}\n` +
       `• Route: ${route}${distStr}\n` +
       `• Duration: ${days} Day${days > 1 ? 's' : ''}\n` +
       `• Est. Total: ₹${total.toLocaleString('en-IN')}\n` +
-      `Please confirm driver availability.`
-    );
+      `Please confirm driver availability.`;
+    return buildWhatsAppUrl(msg);
   };
 
   const fmtRs = n => `₹${Number(n).toLocaleString('en-IN')}`;
@@ -305,14 +324,18 @@ export default function DriverFeeEstimator({
         {/* ── Pickup Location (both tabs) ── */}
         <div>
           <label className={labelCls}>Pickup Location</label>
-          <div className={inputWrap}>
+          <div className={`${inputWrap} ${fieldErrors.pickup ? 'border-m3-error ring-1 ring-m3-error bg-m3-error-container/20' : ''}`}>
             <MapPin className="w-4 h-4 text-m3-on-surface-variant mr-2 shrink-0" />
             <input
               id="acting-driver-pickup-input"
               ref={pickupRef}
               type="text"
               value={pickup}
-              onChange={e => { setPickup(e.target.value); setShowResult(false); }}
+              onChange={e => {
+                setPickup(e.target.value);
+                setShowResult(false);
+                setFieldErrors(prev => ({ ...prev, pickup: undefined }));
+              }}
               onFocus={() => loadGoogleMaps().catch(() => {})}
               placeholder="e.g. Pallavaram, Chennai"
               autoComplete="off"
@@ -325,6 +348,12 @@ export default function DriverFeeEstimator({
               </button>
             )}
           </div>
+          {fieldErrors.pickup && (
+            <p className="mt-1 text-xs text-m3-error font-medium flex items-center gap-1">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+              <span>{fieldErrors.pickup}</span>
+            </p>
+          )}
         </div>
 
         {/* ── Drop / Destination Location ── */}
@@ -336,14 +365,18 @@ export default function DriverFeeEstimator({
               'Drop Location'
             )}
           </label>
-          <div className={inputWrap}>
+          <div className={`${inputWrap} ${fieldErrors.drop ? 'border-m3-error ring-1 ring-m3-error bg-m3-error-container/20' : ''}`}>
             <Navigation className="w-4 h-4 text-m3-on-surface-variant mr-2 shrink-0" />
             <input
               id="acting-driver-drop-input"
               ref={dropRef}
               type="text"
               value={drop}
-              onChange={e => { setDrop(e.target.value); setShowResult(false); }}
+              onChange={e => {
+                setDrop(e.target.value);
+                setShowResult(false);
+                setFieldErrors(prev => ({ ...prev, drop: undefined }));
+              }}
               onFocus={() => loadGoogleMaps().catch(() => {})}
               placeholder={activeTab === 'round' ? 'e.g. Tirupati, Madurai, Ooty' : 'e.g. Tirupati, Madurai'}
               autoComplete="off"
@@ -356,6 +389,12 @@ export default function DriverFeeEstimator({
               </button>
             )}
           </div>
+          {fieldErrors.drop && (
+            <p className="mt-1 text-xs text-m3-error font-medium flex items-center gap-1">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+              <span>{fieldErrors.drop}</span>
+            </p>
+          )}
           {activeTab === 'round' && (
             <p className="text-micro text-m3-on-surface-variant mt-1">
               ℹ️ Round trip returns to pickup — cost is time-based (days × bata) with zero return km fee.
@@ -431,6 +470,11 @@ export default function DriverFeeEstimator({
           id="acting-driver-calc-btn"
           type="button"
           disabled={loading}
+          onPointerDown={() => {
+            if (typeof document !== 'undefined' && document.activeElement && typeof document.activeElement.blur === 'function') {
+              document.activeElement.blur();
+            }
+          }}
           onClick={handleCalculate}
           className="w-full max-w-[260px] sm:max-w-[280px] mx-auto bg-m3-primary hover:bg-slate-900 text-m3-on-primary font-bold py-3 rounded-m3-full transition-all flex items-center justify-center gap-2 shadow-m3-1 hover:shadow-m3-2 text-sm sm:text-base min-h-[46px] sm:min-h-[50px] cursor-pointer active:scale-[0.98] disabled:opacity-75 border border-white/10"
         >
@@ -539,32 +583,14 @@ export default function DriverFeeEstimator({
               )}
             </div>
 
-            {/* Sleek Trust Strip */}
-            <div className="flex items-center justify-between text-[10px] font-semibold text-emerald-700 dark:text-emerald-400 px-0.5">
-              <span className="inline-flex items-center gap-1 whitespace-nowrap">
-                <ShieldCheck className="w-3 h-3 shrink-0" /> Police Verified
-              </span>
-              <span className="inline-flex items-center gap-1 whitespace-nowrap">
-                <CheckCircle2 className="w-3 h-3 shrink-0" /> Zero Hidden Costs
-              </span>
-              <span className="hidden xs:inline-flex sm:inline-flex items-center gap-1 whitespace-nowrap">
-                <Clock className="w-3 h-3 shrink-0" /> 30–60m Arrival
-              </span>
-              <span className="inline-flex items-center gap-1 whitespace-nowrap">
-                <Info className="w-3 h-3 shrink-0" /> Pay After Trip
-              </span>
-            </div>
-
             {/* WhatsApp CTA */}
-            <a
-              href={`https://wa.me/918939539211?text=${result.whatsapp}`}
-              target="_blank"
-              rel="noopener noreferrer nofollow"
-              className="w-full py-2.5 px-4 bg-[#25D366] hover:bg-[#20BD5A] active:bg-[#1EBE5D] text-white rounded-m3-full font-bold flex items-center justify-center gap-2 shadow-m3-1 hover:shadow-m3-2 transition-all active:scale-[0.98] cursor-pointer text-xs sm:text-sm min-h-[42px] border border-emerald-400/40"
-            >
-              <WhatsAppIcon className="w-4 h-4" variant="two-tone" />
-              <span>Book Driver on WhatsApp</span>
-            </a>
+            <WhatsAppButton
+              href={result.whatsapp}
+              fullWidth
+              variant="filled"
+              size="md"
+              text="Book Driver on WhatsApp"
+            />
           </div>
         )}
       </div>

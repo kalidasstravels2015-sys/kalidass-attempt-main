@@ -907,10 +907,6 @@ const faqSchema = {
           if (waBtn) {
             waBtn.href = `https://wa.me/918939539211?text=${encodeURIComponent(msg)}`;
           }
-          const dockWaBtn = document.getElementById('mobile-dock-whatsapp-btn');
-          if (dockWaBtn && waBtn) {
-            dockWaBtn.href = waBtn.href;
-          }
           if (hint) {
             hint.classList.add('hidden');
           }
@@ -980,10 +976,6 @@ const faqSchema = {
           const msg = opt.getAttribute('data-msg') || 'Hi Kalidass Travels, I need a One-Way Acting Driver from Chennai.';
           if (waBtn) {
             waBtn.href = `https://wa.me/918939539211?text=${encodeURIComponent(msg)}`;
-          }
-          const dockWaBtn = document.getElementById('mobile-dock-whatsapp-btn');
-          if (dockWaBtn && waBtn) {
-            dockWaBtn.href = waBtn.href;
           }
           if (hint) {
             hint.classList.add('hidden');
@@ -1083,10 +1075,6 @@ const faqSchema = {
 
         if (waBtn) {
           waBtn.href = `https://wa.me/918939539211?text=${encodeURIComponent(msg)}`;
-        }
-        const dockWaBtn = document.getElementById('mobile-dock-whatsapp-btn');
-        if (dockWaBtn && waBtn) {
-          dockWaBtn.href = waBtn.href;
         }
       }
 

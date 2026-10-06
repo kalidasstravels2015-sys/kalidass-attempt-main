@@ -108,13 +108,12 @@ The typography is built on the official **15-Role Google Material Design 3 Types
 
 ## 5. Mobile-First Interaction Architecture
 
-### 5.1 Floating Quick Actions Bar (`FloatingActions.astro`)
+### 5.1 Floating Quick Call FAB (`FloatingActions.astro`)
 
-- **Positioning:** Fixed to the bottom viewport on mobile (`bottom-4 right-4`).
-- **Primary Elements:**
-  1. **Direct Call Button:** Phone dialer trigger with instantaneous connection to `+91 89395 39211`.
-  2. **WhatsApp Action Button:** High-visibility green circular FAB triggering a direct pre-composed WhatsApp chat.
-- **Scroll-Aware Behavior:** Floating bar collapses slightly when scrolling down to maximize reading space, expanding smoothly on scroll-up.
+- **Positioning:** Fixed to the bottom-right viewport (`bottom-5 right-5 sm:bottom-6 sm:right-6`).
+- **Primary Element:**
+  - **Round M3 Call FAB:** 56×56px circular action button (`rounded-full`) in Google Material Blue (`#1A73E8`) with white Android phone icon, Level 3 elevation (`shadow-m3-3`), and 12-degree tilt micro-animation on hover. Instantaneous dialer trigger to `+91 89395 39211`.
+- **Popup-Aware Behavior:** Automatically hides when any popup, modal, or bottom sheet opens (Rule 8.4) to eliminate overlapping and allow unimpeded focus on enquiry flows.
 
 ### 5.2 Virtual Keyboard Safeguards
 

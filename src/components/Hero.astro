@@ -73,13 +73,21 @@ const heroImageAlts: Record<string, string> = {
     class="relative z-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center"
   >
 
+    <!-- E-E-A-T Social Proof Eyebrow Badge -->
+    <div class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1 rounded-m3-full bg-slate-900/80 backdrop-blur-md border border-amber-400/25 text-slate-200 text-[11px] sm:text-xs font-medium mb-2.5 sm:mb-3.5 shadow-sm">
+      <span class="text-amber-400 text-xs sm:text-sm">★</span>
+      <span class="font-semibold text-white">4.9 Rated</span>
+      <span class="text-slate-500">•</span>
+      <span>1,000+ Happy Families</span>
+    </div>
+
     <!-- M3 Display Headline -->
     <h1
       class="text-2xl min-[380px]:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-2 sm:mb-3 font-heading drop-shadow-sm"
     >
-      <span class="block text-white">Reliable Taxi Service</span>
+      <span class="block text-white">Chennai Taxi Service</span>
       <span class="block mt-0.5 sm:mt-1 text-white/95 font-extrabold tracking-tight">
-        Chennai &amp; South India
+        Across South India
       </span>
     </h1>
 
@@ -87,7 +95,7 @@ const heroImageAlts: Record<string, string> = {
     <p
       class="text-xs sm:text-sm md:text-base text-slate-300 font-normal max-w-xl mx-auto leading-relaxed mb-4 sm:mb-6 px-2 font-sans"
     >
-      Reserve early with <strong class="text-white font-semibold">₹0 advance</strong> — pay only after your service. Clean AC cabs, verified local chauffeurs, airport transfers from ₹650 &amp; outstation trips from ₹14/km.
+      Doorstep pickups, clean AC cabs, and transparent rates for airport, outstation &amp; temple trips.
     </p>
 
     <!-- M3 Signature Action Button (Executive Charcoal with Traffic Green GO Arrow) -->
@@ -133,11 +141,10 @@ const heroImageAlts: Record<string, string> = {
   <!-- Down Arrow Jump Indicator (Clean Unboxed Chevron - M3 Palette Accent) -->
   <a
     href="#booking-panel"
-    class="hero-down-arrow absolute left-1/2 -translate-x-1/2 z-30 p-2 flex items-center justify-center text-amber-400 hover:text-amber-300 active:text-amber-500 transition-transform hover:scale-125 active:scale-95 cursor-pointer"
-    style="bottom: max(1rem, env(safe-area-inset-bottom, 1rem));"
+    class="hero-down-arrow absolute left-1/2 -translate-x-1/2 z-40 p-2 flex items-center justify-center text-amber-400 hover:text-amber-300 active:text-amber-500 transition-transform hover:scale-125 active:scale-95 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full"
     aria-label="Scroll to booking section"
   >
-    <span class="material-symbols-outlined text-[32px] sm:text-[38px] animate-bounce drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)] leading-none select-none">keyboard_arrow_down</span>
+    <span class="material-symbols-outlined text-[34px] sm:text-[40px] animate-bounce drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)] leading-none select-none">keyboard_arrow_down</span>
   </a>
 </section>
 
@@ -146,6 +153,16 @@ const heroImageAlts: Record<string, string> = {
     min-height: calc(100vh - 4.5rem);
     min-height: calc(100svh - 4.5rem);
     min-height: calc(100dvh - 4.5rem);
+  }
+
+  .hero-down-arrow {
+    bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  @media (min-width: 768px) {
+    .hero-down-arrow {
+      bottom: max(1.25rem, env(safe-area-inset-bottom, 1.25rem));
+    }
   }
 
   @media (min-width: 640px) {

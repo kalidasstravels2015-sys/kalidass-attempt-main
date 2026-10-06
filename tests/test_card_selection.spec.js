@@ -117,11 +117,6 @@ test.describe('Mandatory Tariff Card Option Selection Validation', () => {
     expect(decodeURIComponent(href)).toContain('₹1,500/day');
     console.log('✔ Card 3: Checked food, WhatsApp href updated with Food arranged by passenger (₹1,500/day).');
 
-    // Verify mobile dock is in sync
-    const dockWaBtn = page.locator('#mobile-dock-whatsapp-btn');
-    const dockHref = await dockWaBtn.getAttribute('href');
-    expect(dockHref).toBe(href);
-    console.log('✔ Mobile bottom dock WhatsApp button is in sync with Card 3 preferences.');
 
     // Capture visual screenshot
     await page.setViewportSize({ width: 375, height: 812 });

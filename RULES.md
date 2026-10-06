@@ -17,5 +17,7 @@
    - Capacity label must strictly be `"Passengers"` (never `"Devotees"`).
    - Duration alternatives must use `"1 or 2 Days"` (never `"1 & 2 Days"`).
    - Travel guides and route schedules must use static 4-card grids (never hidden tabs).
+7. **Popups Hide the Floating Contact Button:** Any open popup/modal/bottom-sheet must hide the global round Call FAB. Use native `<dialog>.showModal()` (auto) or add `data-hide-contact-dock` to custom overlay roots. See [docs/03_RULES.md §8.4](./docs/03_RULES.md).
+8. **Standardized WhatsApp Buttons:** Never use raw `#25D366` green background blocks or hardcoded `wa.me` strings on in-card CTAs. Always use `<WhatsAppButton>` (`variant="filled"` or `"tonal"`) and `buildWhatsAppUrl()` from `src/utils/whatsapp.ts`. See [docs/03_RULES.md §8.5](./docs/03_RULES.md).
 
 See [docs/03_RULES.md](./docs/03_RULES.md) for full quality standards.
