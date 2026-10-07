@@ -36,7 +36,15 @@ export async function getStaticPaths() {
 }
 
 const { service } = Astro.props as { service: any };
-const whatsappLink = buildWhatsAppUrl(service.whatsappMsg || `Hi Kalidass Travels, I would like to book ${service.title}.`);
+const defaultMsg = `*Kalidass Travels - Booking Enquiry*
+• Service: ${service.title}
+• Travel Date: 
+• Pickup Time: 
+• Pickup Location in Chennai: 
+• Vehicle Preference: 
+
+Please share availability and final quote.`;
+const whatsappLink = buildWhatsAppUrl(service.whatsappMsg || defaultMsg);
 
 const isActingDriver = service.category === 'Acting Driver Services' || service.slug.includes('driver');
 const isTour = ['Temple Tours', 'Popular Destinations'].includes(service.category);
@@ -1708,7 +1716,15 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                   .filter(({ idx, value }: { idx: number; value: any }) => !skipSet.has(idx) && idx > 0 && String(value).trim().length > 0);
 
                 const shortName = vehicleName.split('/')[0].replace(/\(.*?\)/g, '').trim();
-                const bookingText = `Hi Kalidass Travels, I want to book ${vehicleName} for ${service.title} (${heroPrice}).`;
+                const bookingText = `*Kalidass Travels - Booking Enquiry*
+• Service: ${service.title}
+• Vehicle: ${vehicleName} (${heroPrice})
+• Travel Date: 
+• Pickup Time: 
+• Pickup Location in Chennai: 
+• Number of Passengers: 
+
+Please share availability and confirmed quote.`;
                 const heroPriceNum = parseInt(String(heroPrice).replace(/[^0-9]/g, ''), 10) || 0;
                 const stayRates = getPackageStayRates(service.slug, vehicleName, heroPriceNum);
 
@@ -1924,7 +1940,15 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                 {service.tariff.rows.map((row: any[], rIdx: number) => {
                   const vehicleName = row[0];
                   const lastCell = row[row.length - 1];
-                  const bookingText = `Hi Kalidass Travels, I want to book ${vehicleName} for ${service.title} (${lastCell}).`;
+                  const bookingText = `*Kalidass Travels - Booking Enquiry*
+• Service: ${service.title}
+• Vehicle: ${vehicleName} (${lastCell})
+• Travel Date: 
+• Pickup Time: 
+• Pickup Location in Chennai: 
+• Number of Passengers: 
+
+Please share availability and confirmed quote.`;
                   return (
                     <tr class={`hover:bg-m3-surface-container-low transition-colors ${rIdx % 2 === 0 ? 'bg-m3-surface' : 'bg-m3-surface-container-lowest'}`}>
                       {row.map((cell: string, cIdx: number) => (
@@ -2031,7 +2055,14 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                     // Update WhatsApp enquiry button
                     const waBtn = card.querySelector('.tariff-whatsapp-btn');
                     if (waBtn) {
-                      const newMsg = `Hi Kalidass Travels, I want to book ${vehicleName} for ${serviceTitle} (${duration}) (${price}).`;
+                      const newMsg = `*Kalidass Travels - Booking Enquiry*
+• Service: ${serviceTitle}
+• Vehicle: ${vehicleName} (${duration}) (${price})
+• Travel Date: 
+• Pickup Time: 
+• Pickup Location in Chennai: 
+
+Please share availability and confirmed quote.`;
                       waBtn.setAttribute('href', `https://wa.me/918939539211?text=${encodeURIComponent(newMsg)}`);
                       waBtn.setAttribute('aria-label', `Book ${vehicleName} on WhatsApp for ${price}`);
                     }

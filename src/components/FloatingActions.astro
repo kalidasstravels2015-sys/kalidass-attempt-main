@@ -16,21 +16,39 @@ const {
 const callUrl = `tel:${phone}`;
 ---
 
-<!-- Floating Quick Call Action (Google M3 Small FAB - Mobile & Desktop) -->
+<!-- Floating Quick Call Action (Google M3 56dp Standard FAB - Mobile & Desktop) -->
 <div 
   id="floating-actions-container"
-  class="fixed bottom-4 right-4 sm:bottom-5 sm:right-5 z-50 flex items-center justify-center pointer-events-none select-none pb-[env(safe-area-inset-bottom,0px)] transition-all duration-300"
+  class="fixed bottom-4 right-5 sm:bottom-5 sm:right-6 z-50 flex flex-col items-center pointer-events-none select-none pb-[env(safe-area-inset-bottom,0px)] pr-[env(safe-area-inset-right,0px)] transition-all duration-300"
   role="region"
   aria-label="Quick contact shortcut"
 >
   <a
     href={callUrl}
     id="floating-call-btn"
-    class="pointer-events-auto group relative flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#1A73E8] hover:bg-[#1557B0] active:bg-[#0D47A1] text-white shadow-m3-2 hover:shadow-m3-3 active:scale-95 transition-all duration-200 border border-white/15 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#1A73E8]/40 after:absolute after:-inset-1.5 after:content-['']"
+    class="pointer-events-auto group relative flex items-center justify-center w-14 h-14 rounded-full bg-[#1A73E8] hover:bg-[#1557B0] active:bg-[#0D47A1] text-white shadow-m3-3 hover:shadow-m3-4 active:shadow-m3-1 hover:-translate-y-0.5 active:scale-95 transition-all duration-200 border border-white/20 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-[#1A73E8]/50 focus-visible:ring-offset-2 after:absolute after:-inset-2.5 after:content-['']"
     aria-label={`Call Helpline (${displayPhone})`}
     title={`Call Helpline: ${displayPhone}`}
   >
-    <AndroidPhoneIcon className="w-5 h-5 sm:w-5.5 sm:h-5.5 text-white group-hover:rotate-12 transition-transform duration-300 shrink-0" />
+    <AndroidPhoneIcon className="w-6 h-6 text-white group-hover:rotate-12 transition-transform duration-300 shrink-0" />
+    
+    <!-- M3 Tooltip on Desktop Hover -->
+    <span 
+      class="hidden md:group-hover:inline-flex md:group-focus-visible:inline-flex absolute right-full mr-3 top-1/2 -translate-y-1/2 whitespace-nowrap px-3 py-1.5 rounded-m3-md bg-m3-inverse-surface text-m3-inverse-on-surface text-xs font-semibold shadow-m3-2 pointer-events-none transition-opacity duration-150"
+      role="tooltip"
+    >
+      Call {displayPhone}
+    </span>
+  </a>
+
+  <!-- 24*7 Label Below Button -->
+  <a
+    href={callUrl}
+    class="pointer-events-auto mt-1 inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-slate-950/85 backdrop-blur-md text-white text-[10px] font-black tracking-wider uppercase shadow-m3-1 border border-white/20 hover:bg-slate-900 active:scale-95 transition-all"
+    aria-label="24*7 Support Helpline"
+    title="24*7 Helpline"
+  >
+    24*7
   </a>
 </div>
 

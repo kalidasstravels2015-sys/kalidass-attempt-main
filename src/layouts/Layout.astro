@@ -720,6 +720,9 @@ const unifiedSchemaGraph = {
         font-feature-settings: 'liga';
         -webkit-font-smoothing: antialiased;
         vertical-align: middle;
+        max-width: 1.5em;
+        max-height: 1.5em;
+        overflow: hidden; /* Guaranteed protection: Prevents unrendered ligatures from stretching UI */
         user-select: none;
       }
 

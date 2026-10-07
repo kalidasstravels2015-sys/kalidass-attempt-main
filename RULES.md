@@ -19,5 +19,17 @@
    - Travel guides and route schedules must use static 4-card grids (never hidden tabs).
 7. **Popups Hide the Floating Contact Button:** Any open popup/modal/bottom-sheet must hide the global round Call FAB. Use native `<dialog>.showModal()` (auto) or add `data-hide-contact-dock` to custom overlay roots. See [docs/03_RULES.md §8.4](./docs/03_RULES.md).
 8. **Standardized WhatsApp Buttons:** Never use raw `#25D366` green background blocks or hardcoded `wa.me` strings on in-card CTAs. Always use `<WhatsAppButton>` (`variant="filled"` or `"tonal"`) and `buildWhatsAppUrl()` from `src/utils/whatsapp.ts`. See [docs/03_RULES.md §8.5](./docs/03_RULES.md).
+9. **Functional Desk Architecture & Zero Personal Names (RACI Governance):**
+   - **Zero Personal Names Invariant:** NEVER hardcode or display personal names (e.g. "Karthik", "Suresh", "One Person") in internal operations UI, buttons, documentation, schemas, or customer-facing messages.
+   - **Mandatory Functional Desks:** All operational workflows and UI controls must strictly reference formal institutional desks:
+     1. `Dispatch Controller` (Front-Office Lead Intake & Guest Coordination)
+     2. `Ticketing Desk` / `Pilgrimage Quota Desk` (Back-Office Procurement, SLA: 120-minute turnaround)
+     3. `Fleet Supervisor` (Vehicle Assignment & Capacity Guardrails)
+     4. `Designated Chauffeur` / `Fleet Partner` (Ground Transit & Terminal Cash Collection)
+     5. `Billing & Settlement Desk` (Financial Reconciliation & Agency Margin Audit)
+   - **UI & Button Standards:**
+     - Button must read: `[📋 Ticketing Desk]` (never `[📋 Karthik]`).
+     - Customer message: `"Our Pilgrimage Ticketing Desk is processing your slot"` (never `"Karthik is processing"`).
+     - Dossier header: `PILGRIM KYC DOSSIER — TICKETING DESK` (with explicit 120-min SLA).
 
 See [docs/03_RULES.md](./docs/03_RULES.md) for full quality standards.

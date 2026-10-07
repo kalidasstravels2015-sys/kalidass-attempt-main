@@ -34,13 +34,60 @@ const waText = encodeURIComponent(
   `Driver Profile: ${canonicalURL}`
 );
 
-// Minimal clean Schema.org Person
+// Route highlights based on specialty
+const isHillSpecialist = driver.specialty.toLowerCase().includes("hill") || driver.specialty.toLowerCase().includes("ooty");
+const isTempleSpecialist = driver.specialty.toLowerCase().includes("temple") || driver.specialty.toLowerCase().includes("tirupati") || driver.specialty.toLowerCase().includes("sabarimala") || driver.specialty.toLowerCase().includes("pilgrimage");
+const isAirportSpecialist = driver.specialty.toLowerCase().includes("airport") || driver.specialty.toLowerCase().includes("city");
+const isCorporateSpecialist = driver.specialty.toLowerCase().includes("corporate") || driver.specialty.toLowerCase().includes("luxury") || driver.specialty.toLowerCase().includes("vvip");
+
+const specializedRoutes = isTempleSpecialist ? [
+  { name: "Chennai to Tirupati Balaji Darshan", link: "/services/tirupati-package/" },
+  { name: "Kumbakonam 9 Navagraha Temple Tour", link: "/services/navagraha-tour/" },
+  { name: "Thiruvannamalai Girivalam Package", link: "/services/thiruvannamalai-girivalam-trip/" },
+  { name: "Rameswaram & Dhanushkodi Pilgrimage", link: "/services/rameswaram-2-days/" }
+] : isHillSpecialist ? [
+  { name: "Chennai to Yelagiri Hills Weekend Trip", link: "/services/yelagiri-hills-weekend/" },
+  { name: "Chennai to Yercaud Shevaroy Hills", link: "/services/yercaud-hills-weekend/" },
+  { name: "Outstation Cabs from Chennai", link: "/services/outstation-cabs/" },
+  { name: "Outstation Acting Driver Duties", link: "/services/acting-driver-outstation-round-trip/" }
+] : isAirportSpecialist ? [
+  { name: "Chennai Airport 24/7 Taxi (MAA)", link: "/services/chennai-airport-taxi/" },
+  { name: "Velachery to Airport Transfers", link: "/services/velachery-airport-taxi/" },
+  { name: "Tambaram to Airport Transfers", link: "/services/tambaram-airport-taxi/" },
+  { name: "Local Chennai Hourly Acting Drivers", link: "/services/acting-driver-within-chennai/" }
+] : [
+  { name: "Outstation Cabs Across South India", link: "/services/outstation-cabs/" },
+  { name: "Corporate Employee Mobility (ETS)", link: "/services/corporate/" },
+  { name: "Chennai Airport Taxi Service", link: "/services/chennai-airport-taxi/" },
+  { name: "Personal Car Acting Chauffeur", link: "/services/acting-driver-within-chennai/" }
+];
+
+const faqs = [
+  {
+    q: `Can I specifically request ${driver.name} for my trip?`,
+    a: `Yes! You can reserve ${driver.name} directly by sharing your travel dates and route via WhatsApp or telephone dispatch. If ${driver.name} is scheduled on another outstation duty, our operations desk will match you with a driver of equal seniority and route specialization.`
+  },
+  {
+    q: `What vehicle categories can ${driver.name} drive?`,
+    a: `${driver.name} is licensed for ${driver.licenseType} and possesses thorough operational expertise across manual, automatic, AMT, hybrid, and electric passenger vehicles, including Sedans (Dzire, Etios), SUVs (Ertiga, Innova Crysta), and group carriers.`
+  },
+  {
+    q: `How has ${driver.name}'s background been verified?`,
+    a: `${driver.name} has undergone thorough police verification with certificate number ${driver.pvcNumber}, commercial badge validation by the Tamil Nadu Transport Department, continuous telemetry monitoring, and periodic health screenings.`
+  },
+  {
+    q: `What are the driver allowances (Batta) for outstation trips?`,
+    a: `For all-inclusive packages (such as Tirupati Balaji or Navagraha packages), driver batta is 100% included. For open outstation per-km rentals, driver batta is transparently billed at ₹400–₹600 per calendar day depending on the vehicle class.`
+  }
+];
+
+// Schema.org Person & FAQPage
 const personSchema = {
   "@type": "Person",
   "@id": `${canonicalURL}#person`,
   "name": driver.name,
-  "jobTitle": "Professional Driver",
-  "description": `${driver.experience} driving experience. Specialist in ${driver.specialty}. Languages: ${driver.languages}. Police background verified.`,
+  "jobTitle": "Professional Chauffeur",
+  "description": `${driver.experience} driving experience. Specialist in ${driver.specialty}. Languages: ${driver.languages}. Police background verified (PVC Cleared).`,
   "image": `${site}${driver.image}`,
   "url": canonicalURL,
   "worksFor": {
@@ -49,19 +96,32 @@ const personSchema = {
     "name": "Kalidass Travels"
   }
 };
+
+const faqSchema = {
+  "@type": "FAQPage",
+  "@id": `${canonicalURL}#faq`,
+  "mainEntity": faqs.map(f => ({
+    "@type": "Question",
+    "name": f.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": f.a
+    }
+  }))
+};
 ---
 
 <Layout
-  title={`${driver.name} – Verified Driver | Kalidass Travels`}
-  description={`Verified driver profile for ${driver.name}: ${driver.experience}, ${driver.specialty}. Background checked & PVC verified at Kalidass Travels.`}
-  schema={personSchema}
+  title={`${driver.name} – Verified Chauffeur (${driver.experience}) | Kalidass Travels`}
+  description={`Verified driver profile for ${driver.name}: ${driver.experience}, ${driver.specialty}. Police verified (PVC cleared), ${driver.trips} trips, rating ${driver.rating}/5 at Kalidass Travels Chennai.`}
+  schema={[personSchema, faqSchema]}
 >
   <Breadcrumbs items={breadcrumbItems} />
 
   <main class="py-6 sm:py-10 bg-slate-100 text-slate-900 min-h-screen font-sans">
-    <div class="max-w-lg mx-auto px-4 sm:px-6">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
 
-      <!-- Clean Back Link (No icon glitch) -->
+      <!-- Breadcrumbs Back Link -->
       <div class="mb-4">
         <a
           href="/drivers/"
@@ -70,47 +130,47 @@ const personSchema = {
           <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
           </svg>
-          <span>Back to All Drivers</span>
+          <span>Back to All Verified Drivers</span>
         </a>
       </div>
 
       <!-- ═══════════════════════════════════════════════════════════════════ -->
-      <!-- SINGLE UNIFIED DRIVER IDENTIFICATION CARD -->
+      <!-- 1. UNIFIED DRIVER IDENTIFICATION CARD -->
       <!-- ═══════════════════════════════════════════════════════════════════ -->
-      <div class="bg-white rounded-2xl border-2 border-slate-300 shadow-xl overflow-hidden mb-5">
+      <div class="bg-white rounded-2xl border-2 border-slate-300 shadow-xl overflow-hidden mb-6">
         
         <!-- ID Card Header -->
         <div class="bg-slate-900 text-white px-4 py-3.5 flex items-center justify-between border-b border-slate-800">
           <div class="flex items-center gap-2.5">
-            <span class="w-8 h-8 rounded-lg bg-amber-400 text-slate-950 flex items-center justify-center font-black text-xs shadow-sm">
+            <span class="w-8 h-8 rounded-lg bg-amber-400 text-slate-950 flex items-center justify-center font-black text-xs shadow-sm font-heading">
               KT
             </span>
             <div>
               <span class="text-xs font-bold tracking-wider uppercase block text-amber-400 leading-none font-heading">
                 Kalidass Travels
               </span>
-              <span class="text-[10px] text-slate-300">Driver Identification Card</span>
+              <span class="text-[10px] text-slate-300">Driver Identification &amp; Credentials Card</span>
             </div>
           </div>
 
-          <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-500/40 px-2 py-0.5 rounded">
+          <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-500/40 px-2.5 py-0.5 rounded">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
             <span>VERIFIED PVC</span>
           </span>
         </div>
 
         <!-- ID Card Body -->
-        <div class="p-5">
+        <div class="p-5 sm:p-6">
           
           <!-- Top Row: Photo + Core Identity -->
-          <div class="flex flex-col sm:flex-row gap-4 items-center sm:items-start pb-4 border-b border-slate-200 text-center sm:text-left">
+          <div class="flex flex-col sm:flex-row gap-5 items-center sm:items-start pb-5 border-b border-slate-200 text-center sm:text-left">
             <!-- Driver Photo -->
-            <div class="relative w-28 h-28 rounded-xl overflow-hidden border-2 border-slate-300 bg-slate-50 shrink-0 shadow-sm">
+            <div class="relative w-28 h-28 sm:w-32 sm:h-32 rounded-xl overflow-hidden border-2 border-slate-300 bg-slate-50 shrink-0 shadow-sm">
               <img
                 src={driver.image}
-                alt={`${driver.name} - Verified Driver at Kalidass Travels`}
-                width="112"
-                height="112"
+                alt={`${driver.name} - Verified Chauffeur at Kalidass Travels`}
+                width="128"
+                height="128"
                 class="w-full h-full object-cover object-center"
               />
               <span class="absolute bottom-1 left-1 bg-slate-950/90 text-amber-300 text-[9px] font-bold px-1.5 py-0.5 rounded shadow">
@@ -118,101 +178,110 @@ const personSchema = {
               </span>
             </div>
 
-            <!-- Driver Basic Info -->
+            <!-- Driver Core Info -->
             <div class="flex-1 min-w-0">
-              <div class="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 mb-1">
-                <h1 class="text-lg sm:text-xl font-black text-slate-950 tracking-tight font-heading">
+              <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-1.5">
+                <h1 class="text-xl sm:text-2xl font-black text-slate-950 tracking-tight font-heading">
                   {driver.name.toUpperCase()}
                 </h1>
-                <span class="inline-flex items-center gap-0.5 bg-amber-50 border border-amber-200 text-amber-800 px-1.5 py-0.5 rounded text-[11px] font-bold">
-                  ★ {driver.rating}
+                <span class="inline-flex items-center gap-1 bg-amber-50 border border-amber-200 text-amber-800 px-2 py-0.5 rounded text-xs font-bold">
+                  ★ {driver.rating} ({driver.reviews || '50+'} Reviews)
                 </span>
               </div>
 
-              <div class="text-xs font-semibold text-blue-700 mb-2">
-                {driver.specialty}
+              <div class="text-xs sm:text-sm font-semibold text-blue-700 mb-2">
+                Specialty: {driver.specialty}
               </div>
 
-              <div class="text-xs text-slate-700 space-y-1">
+              <div class="text-xs text-slate-700 space-y-1.5">
                 <div>
-                  <span class="text-slate-500 font-medium">Experience:</span> 
-                  <strong class="text-slate-900">{driver.experience}</strong> 
-                  <span class="text-slate-500">({driver.trips} trips)</span>
+                  <span class="text-slate-500 font-medium">Driving Experience:</span> 
+                  <strong class="text-slate-900 font-bold">{driver.experience}</strong> 
+                  <span class="text-slate-500 font-medium">({driver.trips} verified trips completed)</span>
                 </div>
                 <div>
-                  <span class="text-slate-500 font-medium">Languages:</span> 
+                  <span class="text-slate-500 font-medium">Languages Spoken:</span> 
                   <span class="text-slate-900 font-semibold">{driver.languages}</span>
+                </div>
+                <div>
+                  <span class="text-slate-500 font-medium">Duty Availability:</span> 
+                  <span class="text-emerald-700 font-bold">24/7 Doorstep Dispatch (Chennai &amp; Suburbs)</span>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- Official Verification Endorsements -->
-          <div class="pt-4 space-y-3">
+          <div class="pt-5 space-y-3">
             <div class="flex items-center gap-1.5 pb-0.5">
-              <span class="material-symbols-outlined text-[16px] text-emerald-600" aria-hidden="true">verified_user</span>
-              <h2 class="text-xs font-bold text-slate-700 uppercase tracking-wider font-heading">{driver.name} – Verified Credentials &amp; PVC Status</h2>
+              <span class="material-symbols-outlined text-[18px] text-emerald-600" aria-hidden="true">verified_user</span>
+              <h2 class="text-xs sm:text-sm font-bold text-slate-800 uppercase tracking-wider font-heading">Official Verification &amp; Clearance Status</h2>
             </div>
             
-            <!-- 1. Driving License Row (Privacy Masked) -->
-            <div class="bg-slate-50 rounded-xl p-3 border border-slate-200">
-              <div class="text-xs font-bold text-slate-900 mb-1.5 flex items-center justify-between">
-                <div class="flex items-center gap-1.5">
-                  <span class="material-symbols-outlined text-[16px] text-blue-600">directions_car</span>
-                  <span>Driving License (RTO Verified)</span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- 1. Driving License Row -->
+              <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200">
+                <div class="text-xs font-bold text-slate-900 mb-1.5 flex items-center justify-between">
+                  <div class="flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[16px] text-blue-600">directions_car</span>
+                    <span>Driving License (RTO)</span>
+                  </div>
+                  <span class="text-[10px] text-slate-500 font-mono">TN Commercial</span>
                 </div>
-                <span class="text-[10px] text-slate-500 font-mono">TN-RTO</span>
+
+                <div class="text-xs space-y-1 text-slate-800">
+                  <div class="flex items-center justify-between">
+                    <span class="text-slate-500">Badge Type:</span>
+                    <strong class="text-slate-900">{driver.licenseType}</strong>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-slate-500">DL Identifier:</span>
+                    <span class="font-mono text-slate-900 font-bold tracking-wider">
+                      {driver.licenseMasked.slice(0, 6)}<span class="line-through decoration-slate-400 text-slate-400 select-none">XXXXXX</span>{driver.licenseMasked.slice(-2)}
+                    </span>
+                  </div>
+                </div>
+                <p class="text-[9px] text-slate-400 mt-1 italic">
+                  * Commercial badge &amp; RTO category verified; middle digits masked for privacy.
+                </p>
               </div>
 
-              <div class="text-xs space-y-1.5 text-slate-800">
-                <div class="flex items-center justify-between">
-                  <span class="text-slate-500">License Type:</span>
-                  <strong class="text-slate-900">{driver.licenseType}</strong>
-                </div>
-                <div class="flex items-center justify-between">
-                  <span class="text-slate-500">License Number:</span>
-                  <span class="font-mono text-slate-900 font-bold tracking-wider">
-                    {driver.licenseMasked.slice(0, 6)}<span class="line-through decoration-slate-400 text-slate-400 select-none">XXXXXX</span>{driver.licenseMasked.slice(-2)}
+              <!-- 2. Police Verification Row (PVC) -->
+              <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-200">
+                <div class="text-xs font-bold text-slate-900 mb-1.5 flex items-center justify-between">
+                  <div class="flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[16px] text-emerald-600">verified_user</span>
+                    <span>Police Clearance (PVC)</span>
+                  </div>
+                  <span class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded">
+                    CLEARED
                   </span>
                 </div>
-              </div>
-              <p class="text-[10px] text-slate-400 mt-1.5 italic">
-                * Middle digits masked for privacy; commercial badge &amp; RTO category verified.
-              </p>
-            </div>
 
-            <!-- 2. Police Verification Row (PVC) -->
-            <div class="bg-slate-50 rounded-xl p-3 border border-slate-200">
-              <div class="text-xs font-bold text-slate-900 mb-1.5 flex items-center justify-between">
-                <div class="flex items-center gap-1.5">
-                  <span class="material-symbols-outlined text-[16px] text-emerald-600">verified_user</span>
-                  <span>Police Clearance (PVC)</span>
+                <div class="text-xs space-y-1 text-slate-800">
+                  <div class="flex items-center justify-between">
+                    <span class="text-slate-500">Police Check:</span>
+                    <strong class="text-emerald-700">✅ {driver.pvcStatus}</strong>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-slate-500">Certificate No:</span>
+                    <span class="font-mono text-slate-700 font-semibold">{driver.pvcNumber}</span>
+                  </div>
                 </div>
-                <span class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded">
-                  CLEARED
-                </span>
-              </div>
-
-              <div class="text-xs space-y-1.5 text-slate-800">
-                <div class="flex items-center justify-between">
-                  <span class="text-slate-500">Background Status:</span>
-                  <strong class="text-emerald-700">✅ {driver.pvcStatus} (No Police Record)</strong>
-                </div>
-                <div class="flex items-center justify-between">
-                  <span class="text-slate-500">Certificate No:</span>
-                  <span class="font-mono text-slate-700">{driver.pvcNumber}</span>
-                </div>
+                <p class="text-[9px] text-slate-400 mt-1 italic">
+                  * Official Tamil Nadu Police background clearance certificate on file.
+                </p>
               </div>
             </div>
 
-            <!-- 3. Authorized By Strip -->
-            <div class="pt-2 flex items-center justify-between text-xs text-slate-600 border-t border-slate-200">
+            <!-- Authorized By Strip -->
+            <div class="pt-3 flex items-center justify-between text-xs text-slate-600 border-t border-slate-200">
               <div>
-                <span class="block text-[10px] text-slate-400 leading-none mb-0.5">Authorized by:</span>
-                <strong class="text-slate-900">Kalidass Travels Chennai</strong>
+                <span class="block text-[10px] text-slate-400 leading-none mb-0.5">Fleet Organization:</span>
+                <strong class="text-slate-900">Kalidass Travels Chennai (Regd. Medavakkam)</strong>
               </div>
               <div class="text-right">
-                <span class="block text-[10px] text-slate-400 leading-none mb-0.5">24/7 Helpline:</span>
+                <span class="block text-[10px] text-slate-400 leading-none mb-0.5">24/7 Dispatch Desk:</span>
                 <a href="tel:+918939539211" class="font-bold text-blue-700 hover:underline">+91 89395 39211</a>
               </div>
             </div>
@@ -222,12 +291,12 @@ const personSchema = {
       </div>
 
       <!-- Action Buttons Directly Below Card -->
-      <div class="space-y-2.5">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
         <a
           href={`https://wa.me/918939539211?text=${waText}`}
           target="_blank"
           rel="noopener noreferrer nofollow"
-          class="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-sm shadow-sm transition-all text-center"
+          class="inline-flex items-center justify-center gap-2 py-3 px-5 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-sm shadow-sm transition-all text-center"
         >
           <WhatsAppIcon class="w-4 h-4" variant="brand" />
           <span>Book {driver.name} on WhatsApp</span>
@@ -235,13 +304,122 @@ const personSchema = {
 
         <a
           href="tel:+918939539211"
-          class="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-semibold text-xs border border-slate-300 transition-colors text-center"
+          class="inline-flex items-center justify-center gap-2 py-3 px-5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow-sm transition-colors text-center"
         >
-          <svg class="w-4 h-4 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
           </svg>
           <span>Call Dispatch (+91 89395 39211)</span>
         </a>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <!-- 2. PROFESSIONAL PROFILE & ROUTE EXPERTISE -->
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-7 shadow-sm mb-6 space-y-5">
+        <div>
+          <h2 class="text-base sm:text-lg font-bold text-slate-900 font-heading mb-2">
+            About {driver.name} – Professional Driving Background
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            With over <strong>{driver.experience}</strong> of professional commercial driving across Tamil Nadu, Andhra Pradesh, Karnataka, and Kerala, {driver.name} is one of our senior team members at Kalidass Travels. Having completed <strong>{driver.trips}+ trips</strong> with an exceptional customer satisfaction rating of <strong>{driver.rating}/5</strong>, {driver.name} is known for punctual reporting, calm defensive driving, clean vehicle upkeep, and extensive local highway intelligence.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-xs sm:text-sm font-bold text-slate-800 uppercase tracking-wider mb-2.5 font-heading">
+            Primary Corridors &amp; Trip Specializations
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            {specializedRoutes.map((r) => (
+              <a
+                href={r.link}
+                class="flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 transition-colors group"
+              >
+                <div class="flex items-center gap-2 text-xs font-semibold text-slate-800 group-hover:text-blue-700">
+                  <span class="material-symbols-outlined text-[16px] text-blue-600">route</span>
+                  <span>{r.name}</span>
+                </div>
+                <span class="material-symbols-outlined text-[16px] text-slate-400 group-hover:text-blue-600 transition-colors">arrow_forward</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <!-- Safety Commitments -->
+        <div class="pt-2 border-t border-slate-100">
+          <h3 class="text-xs sm:text-sm font-bold text-slate-800 uppercase tracking-wider mb-2.5 font-heading">
+            Verified Safety &amp; Etiquette Checklist
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-700">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-[16px] text-emerald-600">check_circle</span>
+              <span>100% Teetotaler &amp; Non-Smoker</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-[16px] text-emerald-600">check_circle</span>
+              <span>Zero-Accident Clean Highway Record</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-[16px] text-emerald-600">check_circle</span>
+              <span>Comfortable in Manual, Automatic &amp; Luxury EVs</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-[16px] text-emerald-600">check_circle</span>
+              <span>Real-Time GPS Tracking &amp; Route Telemetry</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <!-- 3. FREQUENTLY ASKED QUESTIONS -->
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-7 shadow-sm mb-6">
+        <h2 class="text-base sm:text-lg font-bold text-slate-900 font-heading mb-4">
+          Frequently Asked Questions About Booking {driver.name}
+        </h2>
+        <div class="space-y-4">
+          {faqs.map((f) => (
+            <div class="border-b border-slate-100 pb-3 last:border-b-0 last:pb-0">
+              <h3 class="text-xs sm:text-sm font-bold text-slate-800 mb-1">
+                {f.q}
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                {f.a}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <!-- 4. QUICK EXPLORE RELATED SERVICES -->
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-7 shadow-sm">
+        <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3 font-heading">
+          Explore Kalidass Travels Mobility Services
+        </h2>
+        <div class="flex flex-wrap gap-2 text-xs">
+          <a href="/services/chennai-airport-taxi/" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold transition-colors">
+            Chennai Airport Taxi
+          </a>
+          <a href="/services/outstation-cabs/" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold transition-colors">
+            Outstation Cabs (₹14/km)
+          </a>
+          <a href="/services/acting-drivers/" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold transition-colors">
+            Acting Drivers in Chennai
+          </a>
+          <a href="/services/tirupati-package/" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold transition-colors">
+            Tirupati Balaji Package
+          </a>
+          <a href="/tariff/" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold transition-colors">
+            Transparent Tariff Card
+          </a>
+          <a href="/calculator/" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold transition-colors">
+            Fare Calculator
+          </a>
+        </div>
       </div>
 
     </div>

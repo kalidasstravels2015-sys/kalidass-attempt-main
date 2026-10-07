@@ -18,6 +18,14 @@ export default defineConfig({
     '/services/popular-destinations': '/services/outstation-cabs/',
     '/services/weekend-packages': '/services/tours/weekend-packages/',
     '/services/temple-tours': '/services/tours/temple-tours/',
+    '/services/chennai-airport-taxi-transfers': '/services/chennai-airport-taxi/',
+    '/services/airport-transfer': '/services/chennai-airport-taxi/',
+    '/services/chennai-to-tirupati-one-day-package': '/services/tirupati-package/',
+    '/services/chennai-to-pondicherry-taxi': '/services/pondicherry-one-day-trip/',
+    '/services/chennai-to-mahabalipuram-taxi': '/services/mahabalipuram-ecr-temple-route/',
+    '/smart-travel-solution': '/',
+    '/driver-cards': '/drivers/',
+    '/ta': '/',
   },
   integrations: [
     tailwind(),
@@ -29,7 +37,11 @@ export default defineConfig({
         !page.includes('/og/') &&
         !page.endsWith('/services/popular-destinations/') &&
         !page.endsWith('/services/temple-tours/') &&
-        !page.endsWith('/services/weekend-packages/'),
+        !page.endsWith('/services/weekend-packages/') &&
+        !page.endsWith('/services/chennai-airport-taxi-transfers/') &&
+        !page.endsWith('/services/chennai-to-tirupati-one-day-package/') &&
+        !page.endsWith('/services/chennai-to-pondicherry-taxi/') &&
+        !page.endsWith('/services/chennai-to-mahabalipuram-taxi/'),
       serialize(item) {
         const url = item.url;
         item.lastmod = new Date();

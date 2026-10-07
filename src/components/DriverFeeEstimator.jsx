@@ -87,6 +87,10 @@ export default function DriverFeeEstimator({
 }) {
   const [activeTab,     setActiveTab]     = useState('oneway');
   const [vehicleKey,    setVehicleKey]    = useState('hatchback');
+  const [gear,          setGear]          = useState('manual');
+  const [carModel,      setCarModel]      = useState('');
+  const [travelDate,    setTravelDate]    = useState('');
+  const [reportingTime, setReportingTime] = useState('');
   const [pickup,        setPickup]        = useState('');
   const [drop,          setDrop]          = useState('');
   const [days,          setDays]          = useState(2);
@@ -231,14 +235,22 @@ export default function DriverFeeEstimator({
     const route = drop.trim() ? `${pickup} → ${drop}` : pickup;
     const distStr = distKm ? ` (~${type === 'round' ? distKm * 2 : distKm} km)` : '';
     const longDistNote = isLongDistance ? ' (Includes 1.5x Bata for >400 km return transit)' : '';
+    const gearLabel = gear === 'automatic' ? 'Automatic (AT / DCT / EV)' : 'Manual (MT)';
+    const carLabel = carModel.trim() ? `${carModel.trim()} (${vehicle.label})` : vehicle.label;
+    const schedStr = travelDate ? `${travelDate}${reportingTime ? ` @ ${reportingTime}` : ''}` : (reportingTime ? `@ ${reportingTime}` : '');
+
     const msg = 
-      `Hi Kalidass Travels, I need an Outstation Acting Driver:\n` +
+      `Hi Kalidass Travels, I need an Outstation Acting Driver:\n\n` +
+      `📋 BOOKING DETAILS:\n` +
       `• Trip: ${type === 'round' ? 'Round Trip' : 'One Way Drop'}${longDistNote}\n` +
-      `• Vehicle: ${vehicle.label}\n` +
       `• Route: ${route}${distStr}\n` +
       `• Duration: ${days} Day${days > 1 ? 's' : ''}\n` +
-      `• Est. Total: ₹${total.toLocaleString('en-IN')}\n` +
-      `Please confirm driver availability.`;
+      `• Est. Total: ₹${total.toLocaleString('en-IN')}\n\n` +
+      `🚗 VEHICLE DETAILS:\n` +
+      `• Car Model: ${carLabel}\n` +
+      `• Transmission / Gear: ${gearLabel}\n` +
+      (schedStr ? `\n📅 SCHEDULE:\n• Travel Date & Time: ${schedStr}\n` : '') +
+      `\nPlease assign a verified chauffeur and confirm driver availability.`;
     return buildWhatsAppUrl(msg);
   };
 
@@ -321,6 +333,51 @@ export default function DriverFeeEstimator({
           <p className="text-micro text-m3-on-surface-variant mt-1">{vehicle.models}</p>
         </div>
 
+        {/* ── Car Model & Transmission (Gear) Intake ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label className={labelCls}>Car Model / Name</label>
+            <div className={inputWrap}>
+              <Car className="w-4 h-4 text-m3-on-surface-variant mr-2 shrink-0" />
+              <input
+                type="text"
+                value={carModel}
+                onChange={e => { setCarModel(e.target.value); setShowResult(false); }}
+                placeholder="e.g. Swift, Creta, Innova, City..."
+                className={inputField}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className={labelCls}>Transmission (Gear)</label>
+            <div className="grid grid-cols-2 gap-1.5 p-0.5 bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-md min-h-[44px] sm:min-h-[48px] items-center">
+              <button
+                type="button"
+                onClick={() => { setGear('manual'); setShowResult(false); }}
+                className={`py-2 px-2 text-xs font-bold rounded transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                  gear === 'manual'
+                    ? 'bg-m3-primary text-m3-on-primary shadow-xs'
+                    : 'text-m3-on-surface hover:bg-m3-surface-container'
+                }`}
+              >
+                <span>⚙️ Manual</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => { setGear('automatic'); setShowResult(false); }}
+                className={`py-2 px-2 text-xs font-bold rounded transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                  gear === 'automatic'
+                    ? 'bg-m3-primary text-m3-on-primary shadow-xs'
+                    : 'text-m3-on-surface hover:bg-m3-surface-container'
+                }`}
+              >
+                <span>🕹️ Automatic</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
         {/* ── Pickup Location (both tabs) ── */}
         <div>
           <label className={labelCls}>Pickup Location</label>
@@ -400,6 +457,35 @@ export default function DriverFeeEstimator({
               ℹ️ Round trip returns to pickup — cost is time-based (days × bata) with zero return km fee.
             </p>
           )}
+        </div>
+
+        {/* ── Travel Date & Pickup Time ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label className={labelCls}>Travel Date</label>
+            <div className={inputWrap}>
+              <Calendar className="w-4 h-4 text-m3-on-surface-variant mr-2 shrink-0" />
+              <input
+                type="date"
+                value={travelDate}
+                onChange={e => { setTravelDate(e.target.value); setShowResult(false); }}
+                className={`${inputField} cursor-pointer`}
+              />
+            </div>
+          </div>
+          <div>
+            <label className={labelCls}>Reporting Time</label>
+            <div className={inputWrap}>
+              <Clock className="w-4 h-4 text-m3-on-surface-variant mr-2 shrink-0" />
+              <input
+                type="text"
+                value={reportingTime}
+                onChange={e => { setReportingTime(e.target.value); setShowResult(false); }}
+                placeholder="e.g. 06:00 AM"
+                className={inputField}
+              />
+            </div>
+          </div>
         </div>
 
         {/* ── Round Trip Extra Fields ── */}

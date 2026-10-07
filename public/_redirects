@@ -1,50 +1,113 @@
-# 301 Permanent Redirects for Pruned / Consolidated Pages (SEO & Link Equity Preservation)
+# ==============================================================================
+# Kalidass Travels - Cloudflare Pages Permanent 301 Redirects & Route Mapping
+# Canonicalization, Legacy Pruned URLs, 404 Fixes & Link Equity Preservation
+# ==============================================================================
 
-# Developer Sales Pitch -> Safety Section
-/smart-travel-solution/*    /#safety    301
+# ─── Legacy Deleted Pages (Fixes GSC "Not found (404)") ───────────────────────
+# Legacy Tamil localized pages -> Canonical English routes
+/ta/*                                         /                                 301
+/ta                                           /                                 301
 
-# Corporate Sub-pages -> Master Corporate Hub
-/services/business-travel/*            /services/corporate/    301
-/services/employee-transportation/*    /services/corporate/    301
-/services/events-mice/*                /services/corporate/    301
-/services/executive-fleet/*            /services/corporate/    301
+# Legacy driver card stubs -> Verified drivers directory
+/driver-cards/*                               /drivers/                         301
+/driver-cards                                 /drivers/                         301
 
-# Legacy / Alternate Outstation Routes -> Canonical Outstation Cabs Hub
-/services/popular-destinations/*    /services/outstation-cabs/    301
-/services/popular-destinations      /services/outstation-cabs/    301
-/services/outstation/*              /services/outstation-cabs/    301
-/services/outstation                /services/outstation-cabs/    301
-/outstation/*                       /services/outstation-cabs/    301
-/outstation                         /services/outstation-cabs/    301
+# Legacy service taxonomy / categories -> Services directory
+/services/category/*                          /services/                        301
+/services/category                            /services/                        301
 
-# Fragmented Airport Transits -> Consolidated Master Airport Service
-/services/airport-drop-sedan/*                    /services/chennai-airport-taxi-transfers/    301
-/services/airport-drop-suv/*                      /services/chennai-airport-taxi-transfers/    301
-/services/airport-pickup-sedan/*                  /services/chennai-airport-taxi-transfers/    301
-/services/airport-pickup-suv/*                    /services/chennai-airport-taxi-transfers/    301
-/services/airport-transfer-tempo-traveller/*      /services/chennai-airport-taxi-transfers/    301
-/services/airport-parcel-luggage-delivery/*       /services/chennai-airport-taxi-transfers/    301
+# Legacy vehicle relocation -> Acting driver one-way drop
+/services/acting-drivers/vehicle-relocation/*  /services/acting-driver-outstation-one-way/ 301
+/services/acting-drivers/vehicle-relocation    /services/acting-driver-outstation-one-way/ 301
+/services/acting-drivers/highway-copilot/*     /services/acting-driver-outstation-round-trip/ 301
+/services/acting-drivers/highway-copilot       /services/acting-driver-outstation-round-trip/ 301
 
-# Redundant Acting Driver Fragments -> Curated Acting Driver Services
-/services/highway-copilot/*                 /services/acting-driver-outstation-round-trip/    301
-/services/driver-for-senior-citizens/*      /services/acting-driver-within-chennai/           301
-/services/night-driving-driver/*            /services/acting-driver-within-chennai/           301
-/services/office-commute-driver-monthly/*   /services/corporate/                              301
+# Legacy corporate & business routes -> Master corporate mobility
+/services/business-travel/*                   /services/corporate/              301
+/services/business-travel                     /services/corporate/              301
+/services/business-trip-car-rental/*          /services/corporate/              301
+/services/business-trip-car-rental            /services/corporate/              301
+/services/corporate-airport-transfer/*        /services/corporate/              301
+/services/corporate-airport-transfer          /services/corporate/              301
+/services/employee-transportation/*           /services/corporate/              301
+/services/employee-transportation             /services/corporate/              301
+/services/events-mice/*                       /services/corporate/              301
+/services/events-mice                         /services/corporate/              301
+/services/executive-fleet/*                   /services/corporate/              301
+/services/executive-fleet                     /services/corporate/              301
+/services/office-commute-driver-monthly/*     /services/corporate/              301
+/services/office-commute-driver-monthly       /services/corporate/              301
 
-# Redundant Car Rental Doorway Pages -> Dedicated Fleet & Tariff
-/services/sedan-rental-chennai/*     /fleet/     301
-/services/suv-ertiga-rental/*        /fleet/     301
-/services/innova-rental/*            /fleet/     301
-/services/innova-crysta-rental/*     /fleet/     301
-/services/tempo-traveller-rental/*   /fleet/     301
-/services/outstation-car-rental-per-km/*   /tariff/    301
+# ─── Airport Transfers Consolidation -> Master Airport Taxi ───────────────────
+/services/airport-transfer/*                  /services/chennai-airport-taxi/   301
+/services/airport-transfer                    /services/chennai-airport-taxi/   301
+/services/airport-drop-sedan/*                /services/chennai-airport-taxi/   301
+/services/airport-drop-sedan                  /services/chennai-airport-taxi/   301
+/services/airport-drop-suv/*                  /services/chennai-airport-taxi/   301
+/services/airport-drop-suv                    /services/chennai-airport-taxi/   301
+/services/airport-pickup-sedan/*              /services/chennai-airport-taxi/   301
+/services/airport-pickup-sedan                /services/chennai-airport-taxi/   301
+/services/airport-pickup-suv/*                /services/chennai-airport-taxi/   301
+/services/airport-pickup-suv                  /services/chennai-airport-taxi/   301
+/services/airport-transfer-tempo-traveller/*  /services/chennai-airport-taxi/   301
+/services/airport-transfer-tempo-traveller    /services/chennai-airport-taxi/   301
+/services/airport-parcel-luggage-delivery/*   /services/chennai-airport-taxi/   301
+/services/airport-parcel-luggage-delivery     /services/chennai-airport-taxi/   301
+/services/chennai-airport-taxi-transfers/*    /services/chennai-airport-taxi/   301
+/services/chennai-airport-taxi-transfers      /services/chennai-airport-taxi/   301
 
-# Off-brand Cargo & Parcel Removal
-/services/bada-dost-i4-goods-delivery/*         /services/    301
-/services/luggage-parcel-delivery-chennai/*      /services/    301
+# ─── Duplicate & Competing Route Consolidation ────────────────────────────────
+/services/chennai-to-tirupati-one-day-package/* /services/tirupati-package/     301
+/services/chennai-to-tirupati-one-day-package   /services/tirupati-package/     301
+/services/chennai-to-pondicherry-taxi/*         /services/pondicherry-one-day-trip/ 301
+/services/chennai-to-pondicherry-taxi           /services/pondicherry-one-day-trip/ 301
+/services/chennai-to-mahabalipuram-taxi/*       /services/mahabalipuram-ecr-temple-route/ 301
+/services/chennai-to-mahabalipuram-taxi         /services/mahabalipuram-ecr-temple-route/ 301
 
-# AI & LLM Standards & APIs
-/.well-known/llms.txt    /llms.txt          200
-/api/fleet               /api/fleet.json    200
-/api/routes              /api/routes.json   200
+# ─── Legacy Outstation & Tour Routes -> Canonical Hubs ───────────────────────
+/services/popular-destinations/*              /services/outstation-cabs/        301
+/services/popular-destinations                /services/outstation-cabs/        301
+/services/outstation/*                        /services/outstation-cabs/        301
+/services/outstation                          /services/outstation-cabs/        301
+/outstation/*                                 /services/outstation-cabs/        301
+/outstation                                   /services/outstation-cabs/        301
 
+/services/temple-tours/*                      /services/tours/temple-tours/     301
+/services/temple-tours                        /services/tours/temple-tours/     301
+/services/weekend-packages/*                  /services/tours/weekend-packages/ 301
+/services/weekend-packages                    /services/tours/weekend-packages/ 301
+
+# ─── Redundant Acting Driver Fragments ───────────────────────────────────────
+/services/driver-for-senior-citizens/*        /services/acting-driver-within-chennai/ 301
+/services/driver-for-senior-citizens          /services/acting-driver-within-chennai/ 301
+/services/night-driving-driver/*              /services/acting-driver-within-chennai/ 301
+/services/night-driving-driver                /services/acting-driver-within-chennai/ 301
+
+# ─── Redundant Car Rental Doorway Pages -> Dedicated Fleet & Tariff ──────────
+/services/sedan-rental-chennai/*              /fleet/                           301
+/services/sedan-rental-chennai                /fleet/                           301
+/services/suv-ertiga-rental/*                 /fleet/                           301
+/services/suv-ertiga-rental                   /fleet/                           301
+/services/innova-rental/*                     /fleet/                           301
+/services/innova-rental                       /fleet/                           301
+/services/innova-crysta-rental/*              /fleet/                           301
+/services/innova-crysta-rental                /fleet/                           301
+/services/tempo-traveller-rental/*            /fleet/                           301
+/services/tempo-traveller-rental              /fleet/                           301
+/services/outstation-car-rental-per-km/*      /tariff/                          301
+/services/outstation-car-rental-per-km        /tariff/                          301
+
+# ─── Off-brand Cargo & Parcel Removal ────────────────────────────────────────
+/services/bada-dost-i4-goods-delivery/*       /services/                        301
+/services/bada-dost-i4-goods-delivery         /services/                        301
+/services/luggage-parcel-delivery-chennai/*   /services/                        301
+/services/luggage-parcel-delivery-chennai     /services/                        301
+
+# ─── Developer Sales Pitch -> Safety Section / Home ──────────────────────────
+/smart-travel-solution/*                      /                                 301
+/smart-travel-solution                        /                                 301
+
+# ─── AI & LLM Standards & APIs (200 Internal Rewrites) ───────────────────────
+/.well-known/llms.txt                         /llms.txt                         200
+/api/fleet                                    /api/fleet.json                   200
+/api/routes                                   /api/routes.json                  200

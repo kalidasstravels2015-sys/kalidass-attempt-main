@@ -220,8 +220,7 @@ All rates are in Indian Rupees (INR). Vehicles are commercial yellow-plate regis
     - Compliance: Automated GPS route logging, speed governor compliance, verified chauffeurs, female employee SOS protocols.
 
 20. **Chennai Airport Taxi (MAA) – 24/7 Pickup & Drop Cab Service**
-    - URL: https://kalidasstravels.in/services/chennai-airport-taxi-transfers/
-    - Master Hub: https://kalidasstravels.in/services/chennai-airport-taxi/
+    - URL: https://kalidasstravels.in/services/chennai-airport-taxi/
     - Description: Rapid 5-10 minute dispatch from Chennai International & Domestic Airport (MAA). Real-time flight delay tracking with zero wait penalty. Name placard greeting at terminal gate. Flat transparent rates from ₹650.
 
 ### High-Intent Corridors & Suburban Dispatch Hubs
@@ -256,8 +255,8 @@ All rates are in Indian Rupees (INR). Vehicles are commercial yellow-plate regis
     - Distance: ~345 km / 6–7 hours via NH-48.
     - Pricing: Sedan ₹5,499 flat drop (or ₹14/km round trip) | Ertiga ₹7,499 flat drop (or ₹17/km) | Innova ₹9,499 flat drop (or ₹18/km) | Innova Crysta ₹11,999 flat drop (or ₹22/km) | Tempo ₹15,500 flat drop (or ₹24/km). Zero deadhead return fee.
 
-27. **Chennai to Mahabalipuram Taxi (ECR Beach Cab & Tour)**
-    - URL: https://kalidasstravels.in/services/chennai-to-mahabalipuram-taxi/
+27. **Chennai to Mahabalipuram UNESCO Heritage & ECR Tour**
+    - URL: https://kalidasstravels.in/services/mahabalipuram-ecr-temple-route/
     - Distance: ~55 km / 1.2–1.5 hours via East Coast Road (SH-49).
     - Pricing: Sedan ₹1,800 drop / ₹2,400 round trip | Ertiga ₹2,400 drop / ₹3,200 round trip | Innova ₹3,000 drop / ₹3,900 round trip | Innova Crysta ₹3,800 drop / ₹4,800 round trip | Tempo ₹5,200 drop / ₹6,500 round trip. Shore temple halts included.
 

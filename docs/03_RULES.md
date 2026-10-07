@@ -123,7 +123,7 @@
 - **Rule 8.3.3 (Unboxed Transit Stepper):** Never render duplicate horizontal waypoint pill chains above vertical timelines ("overkill"). Use a single, unboxed vertical transit stepper (Google Maps Transit style) with continuous lines and mini circular node numbers to conserve vertical screen space.
 
 ### 8.4 Popups & Floating Contact Action
-- **Rule 8.4.1 (Popup Hides Floating Call Button):** The floating Call shortcut (`FloatingActions.astro`: `#floating-actions-container` round M3 FAB) must be hidden whenever any popup, modal, or bottom sheet is open — popups already contain their own enquiry CTA.
+- **Rule 8.4.1 (Popup Hides Floating Call Button):** The floating Call shortcut (`FloatingActions.astro`: `#floating-actions-container` circular 56dp FAB) must be hidden whenever any popup, modal, or bottom sheet is open — popups already contain their own enquiry CTA.
 - **Rule 8.4.2 (Mechanism):** Native `<dialog>` via `showModal()` is hidden automatically (`html:has(dialog:modal)` in `Layout.astro`). Custom overlays must add `data-hide-contact-dock` to their root element. Never match on `[aria-modal]` (the nav drawer keeps it permanently).
 - **Rule 8.4.3 (No Trapped Overlays):** Never render a `fixed` popup inside a parent that creates a stacking context (`relative z-*`, `transform`, `filter`). Use native `<dialog>` or a React portal to `document.body`. Regression test: `tests/contact_dock_overlay.spec.js`.
 
@@ -132,6 +132,15 @@
 - **Rule 8.5.2 (Tonal Mint Theme):** In-card WhatsApp CTAs must use M3 Tonal Mint styling (`variant="filled"` or `variant="tonal"`, `bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-300/80`). Raw bright `#25D366` green background blocks on in-card buttons are strictly prohibited.
 - **Rule 8.5.3 (Single Source URL Builder):** WhatsApp URLs must always be generated via `buildWhatsAppUrl(message)` from `src/utils/whatsapp.ts`. Never hardcode `https://wa.me/918939539211` directly in templates.
 
-
-
-
+### 8.6 Functional Desk Architecture & Zero Personal Names (RACI Governance)
+- **Rule 8.6.1 (Zero Personal Names Invariant):** NEVER hardcode or display personal names (e.g. "Karthik", "Suresh", "One Person") in internal operations UI, buttons, documentation, schemas, or customer-facing messages.
+- **Rule 8.6.2 (Institutional Functional Desks):** Operations must be compartmentalized into institutional desks with clear RACI accountability:
+  1. **Dispatch Controller** (Accountable for booking intake, capacity validation, initial KYC collection).
+  2. **Pilgrimage Ticketing Desk** (Responsible for quota procurement, slot lock-in, SLA: 120-minute turnaround).
+  3. **Fleet Operations Supervisor** (Responsible for chauffeur vetting, duty slip issuance, vehicle dispatch).
+  4. **Designated Chauffeur** (Responsible for transit punctuality, on-road safety, cash collection).
+  5. **Settlement & Audit Desk** (Accountable for trip closeout, toll reconciliation, margin verification).
+- **Rule 8.6.3 (Action Buttons & Copy):** 
+  - UI action buttons must display `[📋 Ticketing Desk]` (never personal names).
+  - Customer messages must refer to `"Our Pilgrimage Ticketing Desk"` under statutory guidelines.
+  - Procurement dossiers must state the formal desk title and enforce the 120-minute SLA requirement.

@@ -9,6 +9,7 @@ import Breadcrumbs from "../components/SEO/Breadcrumbs.astro";
 import FAQAccordion from "../components/FAQAccordion.astro";
 import WhatsAppButton from "../components/WhatsAppButton.astro";
 import tariffConfig from "../data/tariff_config.json";
+import { Truck } from "lucide-react";
 
 const breadcrumbItems = [
   { name: "Home", item: "/" },
@@ -570,8 +571,8 @@ const serviceSchemas = [
           <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 sm:p-6 shadow-m3-1 flex flex-col justify-between">
             <div>
               <div class="flex items-center gap-2 mb-3">
-                <span class="material-symbols-outlined text-m3-primary text-xl">flight_land</span>
-                <h3 class="font-bold text-m3-on-surface font-heading text-base">Chennai Airport Flat Tariff Formula</h3>
+                <span class="material-symbols-outlined text-m3-primary text-xl shrink-0" aria-hidden="true">flight_land</span>
+                <h3 class="font-bold text-m3-on-surface font-heading text-base min-w-0">Chennai Airport Flat Tariff Formula</h3>
               </div>
               <div class="bg-m3-surface-container-low p-3 rounded-m3-lg font-mono text-xs text-m3-on-surface mb-3 border border-m3-outline-variant/60 leading-relaxed">
                 Total = Fixed Zone Slab Rate<br/>
@@ -602,8 +603,8 @@ const serviceSchemas = [
           <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 sm:p-6 shadow-m3-1 flex flex-col justify-between">
             <div>
               <div class="flex items-center gap-2 mb-3">
-                <span class="material-symbols-outlined text-m3-primary text-xl">schedule</span>
-                <h3 class="font-bold text-m3-on-surface font-heading text-base">Local Hourly Rental Package Formula</h3>
+                <span class="material-symbols-outlined text-m3-primary text-xl shrink-0" aria-hidden="true">schedule</span>
+                <h3 class="font-bold text-m3-on-surface font-heading text-base min-w-0">Local Hourly Rental Package Formula</h3>
               </div>
               <div class="bg-m3-surface-container-low p-3 rounded-m3-lg font-mono text-xs text-m3-on-surface mb-3 border border-m3-outline-variant/60 leading-relaxed">
                 Total = Base Package + (Extra KM × Extra KM Rate) + (Extra Hours × Extra Hour Rate)<br/>
@@ -634,8 +635,8 @@ const serviceSchemas = [
           <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 sm:p-6 shadow-m3-1 flex flex-col justify-between">
             <div>
               <div class="flex items-center gap-2 mb-3">
-                <span class="material-symbols-outlined text-m3-primary text-xl">directions_car</span>
-                <h3 class="font-bold text-m3-on-surface font-heading text-base">Outstation Cabs Calculation Formula</h3>
+                <span class="material-symbols-outlined text-m3-primary text-xl shrink-0" aria-hidden="true">directions_car</span>
+                <h3 class="font-bold text-m3-on-surface font-heading text-base min-w-0">Outstation Cabs Calculation Formula</h3>
               </div>
               <div class="bg-m3-surface-container-low p-3 rounded-m3-lg font-mono text-xs text-m3-on-surface mb-3 border border-m3-outline-variant/60 leading-relaxed">
                 Round Trip = (Billable KM × Rate/KM) + (Days × Driver Bata) + Tolls<br/>
@@ -666,8 +667,8 @@ const serviceSchemas = [
           <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 sm:p-6 shadow-m3-1 flex flex-col justify-between">
             <div>
               <div class="flex items-center gap-2 mb-3">
-                <span class="material-symbols-outlined text-m3-primary text-xl">badge</span>
-                <h3 class="font-bold text-m3-on-surface font-heading text-base">Acting Driver Charges Formula</h3>
+                <span class="material-symbols-outlined text-m3-primary text-xl shrink-0" aria-hidden="true">badge</span>
+                <h3 class="font-bold text-m3-on-surface font-heading text-base min-w-0">Acting Driver Charges Formula</h3>
               </div>
               <div class="bg-m3-surface-container-low p-3 rounded-m3-lg font-mono text-xs text-m3-on-surface mb-3 border border-m3-outline-variant/60 leading-relaxed">
                 City Duty = Base (₹499 for 4h / ₹800 for 8h) + (Extra Hrs × ₹99) + Night Bata (₹200)<br/>
@@ -698,8 +699,8 @@ const serviceSchemas = [
           <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 sm:p-6 shadow-m3-1 flex flex-col justify-between md:col-span-2 lg:col-span-1">
             <div>
               <div class="flex items-center gap-2 mb-3">
-                <span class="material-symbols-outlined text-m3-primary text-xl">local_shipping</span>
-                <h3 class="font-bold text-m3-on-surface font-heading text-base">Vehicle Relocation Charges Formula</h3>
+                <Truck className="w-5 h-5 text-m3-primary shrink-0" aria-hidden="true" />
+                <h3 class="font-bold text-m3-on-surface font-heading text-base min-w-0">Vehicle Relocation Charges Formula</h3>
               </div>
               <div class="bg-m3-surface-container-low p-3 rounded-m3-lg font-mono text-xs text-m3-on-surface mb-3 border border-m3-outline-variant/60 leading-relaxed">
                 Total = Driver Transit Bata (₹1,000/day) + Food Allowance (₹300/day) + Return Bus Ticket (SETC actuals)

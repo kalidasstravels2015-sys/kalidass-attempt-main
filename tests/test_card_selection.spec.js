@@ -135,4 +135,70 @@ test.describe('Mandatory Tariff Card Option Selection Validation', () => {
     console.log('✔ Screenshots captured: card1_selection_hint.png and card1_4hours_selected.png');
   });
 
+  test('Chauffeur Allocation Intake Modal opens on WhatsApp Enquiry with car, gear, and schedule fields', async ({ page }) => {
+    await page.goto('/services/acting-drivers/', { waitUntil: 'networkidle' });
+
+    const dialog = page.locator('#chauffeur-intake-dialog');
+    const isInitiallyOpen = await dialog.evaluate(el => el.open);
+    expect(isInitiallyOpen).toBe(false);
+
+    // Select Pondicherry on Card 2
+    const onewayOptions = page.locator('[data-oneway-option]');
+    await onewayOptions.nth(0).click();
+
+    // Click WhatsApp Enquiry button
+    const waBtn = page.locator('#oneway-card-whatsapp-btn');
+    await waBtn.click();
+
+    // Modal should be open
+    await expect(page.locator('#chauffeur-intake-dialog[open]')).toBeVisible();
+    await expect(page.locator('#intake-package-title')).toContainText('Outstation One-Way Drop');
+    await expect(page.locator('#intake-package-subtitle')).toContainText('Chennai → Pondicherry');
+    await expect(page.locator('#intake-package-fare')).toContainText('1,600');
+
+    // Test car chip
+    const cretaChip = page.locator('.car-chip[data-chip="Creta / Seltos"]');
+    await cretaChip.click();
+    await expect(page.locator('#intake-car-model')).toHaveValue('Creta / Seltos');
+
+    // Test transmission toggle
+    const autoGearBtn = page.locator('.gear-select-btn[data-gear="Automatic (AT / DCT)"]');
+    await autoGearBtn.click();
+    await expect(autoGearBtn).toHaveAttribute('aria-checked', 'true');
+
+    // Test date & time fields exist
+    await expect(page.locator('#intake-travel-date')).toBeVisible();
+    await expect(page.locator('#intake-pickup-time')).toBeVisible();
+    await expect(page.locator('#intake-pickup-address')).toBeVisible();
+
+    await page.locator('#intake-pickup-address').fill('Anna Nagar West, Chennai');
+
+    // Capture modal screenshot
+    await page.screenshot({ path: 'C:/Users/spoll/.gemini/antigravity-ide/brain/008b5331-53e4-49ab-929a-bc1e7e79fa1d/chauffeur_intake_modal.png' });
+
+    // Test submit button exists and is visible
+    const submitBtn = page.locator('#intake-submit-btn');
+    await expect(submitBtn).toBeVisible();
+
+    // Test close button
+    const closeBtn = page.locator('#intake-close-btn');
+    await closeBtn.click();
+    const isClosedAfter = await dialog.evaluate(el => el.open);
+    expect(isClosedAfter).toBe(false);
+
+    // Capture desktop full view of cards
+    await page.evaluate(() => {
+      const el = document.getElementById('tariffs');
+      if (el) {
+        const y = el.getBoundingClientRect().top + window.pageYOffset - 75;
+        window.scrollTo({ top: y, behavior: 'instant' });
+      }
+    });
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: 'C:/Users/spoll/.gemini/antigravity-ide/brain/008b5331-53e4-49ab-929a-bc1e7e79fa1d/desktop_cards_full_view.png' });
+
+    console.log('✔ Chauffeur Allocation Intake Modal & Desktop cards validated and screenshots saved.');
+  });
+
 });
+

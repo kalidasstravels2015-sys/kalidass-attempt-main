@@ -1,0 +1,4 @@
+Booking ID,Guest Name & Phone,Travel Date & Pickup Time,Pickup Address,Vehicle Category,Pilgrim Party Size,KYC Status,Darshan Ticket Status,Assigned Chauffeur & Plate,Chauffeur Manifest,Terminal Fare (Guest),Chauffeur Payout,Company Margin,Financial Closure
+#KT-TPT-101,Ramesh Kumar (+91 98401 23456),14-Oct-2026 @ 04:30 AM,"#12, 4th Main Road, Anna Nagar East",Sedan,4 Pax (2 Adults 2 Minors),Verified,Confirmed (11:30 AM),Murugan (+91 97890 12345) - TN09 BX 1234,Dispatched,6000,4800,=K2-L2,Settled (UPI)
+#KT-TPT-102,Priya Sundar (+91 97890 54321),15-Oct-2026 @ 05:00 AM,"Flat 3B, Green Acres, Medavakkam",Sedan,2 Pax (Couples),Pending,In-Process,Unassigned,Pending,6000,4800,=K3-L3,Unreconciled
+#KT-TPT-103,Vigneshwaran (+91 91234 56789),16-Oct-2026 @ 04:00 AM,"Plot 45, Velachery Main Road",Ertiga,6 Pax (Family),Pending,Unassigned,Unassigned,Pending,8500,7200,=K4-L4,Unreconciled
