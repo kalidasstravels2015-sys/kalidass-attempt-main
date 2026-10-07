@@ -1341,7 +1341,7 @@ Please confirm availability.`;
                 {/* 2. Total Fare & Rate summary + Breakdown Link */}
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <div className="text-2xl sm:text-3xl font-black text-m3-on-surface tracking-tight font-heading leading-none">
+                    <div className="text-lg sm:text-xl font-bold text-m3-on-surface tracking-tight font-heading leading-none">
                       ₹ {estimate.toLocaleString('en-IN')}
                     </div>
                     <p className="text-[11px] sm:text-xs text-m3-on-surface-variant font-medium mt-1 leading-relaxed">
@@ -1746,7 +1746,7 @@ Please confirm availability.`;
               {/* 2. Total Fare & Rate summary + Breakdown Link */}
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <div className="text-2xl sm:text-3xl font-black text-m3-on-surface tracking-tight font-heading leading-none">
+                  <div className="text-lg sm:text-xl font-bold text-m3-on-surface tracking-tight font-heading leading-none">
                     ₹ {estimate.toLocaleString('en-IN')}
                   </div>
                   <p className="text-[11px] sm:text-xs text-m3-on-surface-variant font-medium mt-1 leading-relaxed">
@@ -1998,7 +1998,7 @@ function FullBreakdownModal({ isTa, vehicle, activeTab, localPackage, breakdown,
                   <span className="text-m3-label-s uppercase font-semibold text-m3-on-surface-variant block">{isTa ? 'மொத்த தொகை' : 'Estimated Total'}</span>
                   <span className="text-[10px] text-m3-secondary font-medium">{isTa ? 'எரிபொருள் & டிரைவர் உட்பட' : 'Fuel, GST & Bata Included'}</span>
                 </div>
-                <span className="text-m3-title-l font-black text-m3-on-surface font-heading">₹{estimate.toLocaleString('en-IN')}</span>
+                <span className="text-base sm:text-lg font-bold text-m3-on-surface font-heading">₹{estimate.toLocaleString('en-IN')}</span>
               </div>
             </div>
           </div>

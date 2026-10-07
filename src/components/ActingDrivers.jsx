@@ -297,7 +297,7 @@ export default function ActingDrivers() {
                       </span>
                     </div>
                     <div className="text-right shrink-0">
-                      <div className="text-lg sm:text-xl font-black text-m3-primary font-heading">
+                      <div className="text-base sm:text-lg font-bold text-m3-primary font-heading">
                         {pkg.rate}
                       </div>
                       <div className="text-xs font-semibold text-m3-on-surface mt-0.5">

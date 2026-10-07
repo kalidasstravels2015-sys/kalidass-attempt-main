@@ -8,12 +8,12 @@ function extractStartingPrice(service: any): string {
   const headers = service.tariff?.headers || [];
   const row = service.tariff?.rows?.[0] || [];
   
-  const totalCostIdx = headers.findIndex((h: string) => /total cost|package cost|flat cost/i.test(h));
+  const totalCostIdx = headers.findIndex((h: string) => /total cost|package cost|flat cost|fare/i.test(h));
   if (totalCostIdx !== -1 && row[totalCostIdx] && typeof row[totalCostIdx] === 'string' && row[totalCostIdx].includes('₹')) {
     return row[totalCostIdx];
   }
   
-  const rateIdx = headers.findIndex((h: string) => /cost|rate|charges/i.test(h));
+  const rateIdx = headers.findIndex((h: string) => /cost|rate|charges|fare/i.test(h));
   if (rateIdx !== -1 && row[rateIdx] && typeof row[rateIdx] === 'string' && row[rateIdx].includes('₹')) {
     return row[rateIdx];
   }

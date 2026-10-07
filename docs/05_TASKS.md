@@ -47,14 +47,15 @@
 ---
 
 ### Phase 2: Local SEO & Lead Conversion Automation (Active Sprint 🚀)
-- [ ] **TASK-201: Programmatic Local Hub Pages**
-  - Generate hyper-targeted landing pages for high-intent Chennai corridors:
-    - `/services/chennai-to-pondicherry-taxi/`
-    - `/services/chennai-to-tirupati-one-day-package/`
-    - `/services/medavakkam-taxi-service/`
-    - `/services/velachery-airport-taxi/`
-    - `/services/omr-corporate-cabs/`
-  - *Target:* Rank in Google Local Pack Top 3 for Chennai suburban hubs.
+- [x] **TASK-201: Programmatic Local Hub Pages (Completed ✅)**
+  - Generated hyper-targeted landing pages for high-intent Chennai corridors and suburban hubs:
+    - `/services/chennai-to-pondicherry-taxi/` (ECR/NH-32 one-way drop from ₹3,500, RT from ₹4,500)
+    - `/services/chennai-to-tirupati-one-day-package/` (Same-day Balaji darshan cab from ₹6,000 flat all-inclusive)
+    - `/services/medavakkam-taxi-service/` (24/7 Medavakkam HQ cabs, ₹650 airport drops, ₹14/km outstation)
+    - `/services/velachery-airport-taxi/` (Fixed ₹650 airport cabs, 10–15 min pickup, zero surge)
+    - `/services/omr-corporate-cabs/` (OMR IT corridor employee transport, monthly retainers, 100% GST invoices)
+  - 100% Schema validation (`TaxiService`, `TouristTrip`, `FAQPage`, `BreadcrumbList`, `Offer` with `validFrom`), 0 build warnings.
+  - Added to HTML sitemap (`/sitemap/`), XML sitemap (`/sitemap-0.xml`), REST API (`/api/routes.json`), and `llms.txt`.
 - [ ] **TASK-202: Dynamic Google Business Profile Review Widget**
   - Implement a cached server-side fetch of verified Google reviews (4.9★ rating) with automated schema markup.
 - [ ] **TASK-203: WhatsApp Business Cloud API Direct Auto-Responder**

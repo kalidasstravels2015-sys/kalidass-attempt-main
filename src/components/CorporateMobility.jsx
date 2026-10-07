@@ -291,7 +291,7 @@ export default function CorporateMobility() {
                       <div className="text-xs text-m3-on-surface-variant">{row.extraRate}</div>
                     </td>
                     <td className="px-5 py-4">
-                      <span className="text-lg font-black text-m3-primary font-heading">{row.rate}</span>
+                      <span className="text-base font-bold text-m3-primary font-heading">{row.rate}</span>
                     </td>
                     <td className="px-5 py-4 hidden md:table-cell text-m3-on-surface-variant text-xs leading-relaxed max-w-xs">
                       {row.highlight}
@@ -327,7 +327,7 @@ export default function CorporateMobility() {
 
                 <div className="bg-m3-surface-container-low p-3 rounded-m3-xl border border-m3-outline-variant/60 my-3">
                   <div className="text-badge text-m3-on-surface-variant font-medium">Contract Tariff</div>
-                  <div className="text-base font-black text-m3-primary font-heading mt-0.5">{row.rate}</div>
+                  <div className="text-sm sm:text-base font-bold text-m3-primary font-heading mt-0.5">{row.rate}</div>
                   {row.extraRate && (
                     <div className="text-badge text-m3-on-surface-variant mt-0.5">{row.extraRate}</div>
                   )}

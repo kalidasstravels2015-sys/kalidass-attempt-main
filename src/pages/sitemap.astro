@@ -123,16 +123,17 @@ const coreHubs = [
 // Categorized Services from serviceDetails.json
 const templeServices = serviceDetails.filter(s => s.category === "Temple Tours");
 const weekendServices = serviceDetails.filter(s => s.category === "Popular Destinations");
-const corporateAndDriverServices = serviceDetails.filter(s => s.category === "Acting Driver Services" || s.category === "Corporate Services");
+const corridorHubServices = serviceDetails.filter(s => s.category === "Outstation Cabs" || s.category === "Airport Transfers");
+const corporateAndDriverServices = serviceDetails.filter(s => s.category.includes("Acting Driver") || s.category.includes("Corporate"));
 
 function getServiceStartingPrice(s: any): string {
   const headers = s.tariff?.headers || [];
   const row = s.tariff?.rows?.[0] || [];
-  const totalCostIdx = headers.findIndex((h: string) => /total cost|package cost|flat cost/i.test(h));
+  const totalCostIdx = headers.findIndex((h: string) => /total cost|package cost|flat cost|fare/i.test(h));
   if (totalCostIdx !== -1 && row[totalCostIdx] && typeof row[totalCostIdx] === 'string' && row[totalCostIdx].includes('₹')) {
     return row[totalCostIdx];
   }
-  const rateIdx = headers.findIndex((h: string) => /cost|rate|charges/i.test(h));
+  const rateIdx = headers.findIndex((h: string) => /cost|rate|charges|fare/i.test(h));
   if (rateIdx !== -1 && row[rateIdx] && typeof row[rateIdx] === 'string' && row[rateIdx].includes('₹')) {
     return row[rateIdx];
   }
@@ -155,7 +156,7 @@ const machineEndpoints = [
   {
     title: "Comprehensive LLM Knowledge Base (llms-full.txt)",
     url: "/llms-full.txt",
-    desc: "Complete uncompressed context repository with fleet specs, all 20 service itineraries, tariffs, policies, and FAQs for AI agents.",
+    desc: "Complete uncompressed context repository with fleet specs, all service itineraries, tariffs, policies, and FAQs for AI agents.",
     badge: "Full RAG Context"
   },
   {
@@ -203,7 +204,7 @@ const machineEndpoints = [
   {
     title: "Popular Routes API (api/routes.json)",
     url: "/api/routes.json",
-    desc: "Machine-readable REST JSON endpoint listing all 20 routes with starting package prices and direct WhatsApp booking URLs.",
+    desc: "Machine-readable REST JSON endpoint listing all verified travel corridors and routes with starting package prices and direct WhatsApp booking URLs.",
     badge: "REST JSON API"
   },
   {
@@ -272,7 +273,7 @@ const sitemapSchema = {
       <!-- Quick Metrics Bar -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-4xl pt-2">
         <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-3.5 text-center">
-          <div class="text-2xl font-bold text-white">20</div>
+          <div class="text-2xl font-bold text-white">{serviceDetails.length}</div>
           <div class="text-xs text-slate-400 mt-0.5">Tour &amp; Transit Routes</div>
         </div>
         <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-3.5 text-center">
@@ -295,6 +296,7 @@ const sitemapSchema = {
         <a href="#service-hubs" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition-colors">Service Hubs</a>
         <a href="#temple-tours" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition-colors">Temple Pilgrimages</a>
         <a href="#weekend-packages" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition-colors">Weekend Getaways</a>
+        <a href="#corridor-hubs" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition-colors">Corridors &amp; Local Hubs</a>
         <a href="#driver-corporate" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition-colors">Acting Drivers &amp; Corporate</a>
         <a href="#chauffeur-directory" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition-colors">Chauffeurs</a>
         <a href="#ai-endpoints" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition-colors">AI &amp; Developer APIs</a>
@@ -436,10 +438,44 @@ const sitemapSchema = {
         </div>
       </section>
 
-      <!-- Section 5: Acting Drivers & Corporate Mobility -->
-      <section id="driver-corporate" class="scroll-mt-24">
+      <!-- Section 5: High-Intent Travel Corridors & Local Suburban Hubs -->
+      <section id="corridor-hubs" class="scroll-mt-24">
         <div class="flex items-center gap-3 mb-6">
           <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg">5</div>
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900">High-Intent Corridors &amp; Suburban Hubs</h2>
+            <p class="text-xs sm:text-sm text-slate-600">Dedicated landing hubs for key highway routes, airport corridors, and neighborhood dispatch bases.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {corridorHubServices.map((service) => {
+            const startPrice = getServiceStartingPrice(service);
+            return (
+              <a
+                href={`/services/${service.slug}/`}
+                class="group block p-5 bg-white border border-slate-200 hover:border-slate-400 rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
+              >
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <span class="text-xs font-medium text-slate-500">{service.duration}</span>
+                  <span class="text-xs font-bold text-slate-900 bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-md">From {startPrice}</span>
+                </div>
+                <h3 class="text-base font-bold text-slate-900 group-hover:text-slate-700 flex items-center gap-1.5">
+                  <span>{service.title}</span>
+                  <span class="text-slate-400 group-hover:translate-x-0.5 transition-transform text-xs">→</span>
+                </h3>
+                <p class="text-xs text-slate-600 mt-2 leading-relaxed line-clamp-2">{service.overview}</p>
+                <div class="mt-3 text-[11px] font-mono text-slate-400">https://kalidasstravels.in/services/{service.slug}/</div>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+
+      <!-- Section 6: Acting Drivers & Corporate Mobility -->
+      <section id="driver-corporate" class="scroll-mt-24">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg">6</div>
           <div>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Acting Drivers &amp; Corporate Mobility</h2>
             <p class="text-xs sm:text-sm text-slate-600">Professional chauffeurs for your personal car, corporate shift shuttles, and monthly retainers.</p>
@@ -470,10 +506,10 @@ const sitemapSchema = {
         </div>
       </section>
 
-      <!-- Section 6: Verified Chauffeur Profiles -->
+      <!-- Section 7: Verified Chauffeur Profiles -->
       <section id="chauffeur-directory" class="scroll-mt-24">
         <div class="flex items-center gap-3 mb-6">
-          <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg">6</div>
+          <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg">7</div>
           <div>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Verified Chauffeur Profiles (18 Chauffeurs)</h2>
             <p class="text-xs sm:text-sm text-slate-600">Individual profile pages for each police-verified commercial chauffeur on our staff.</p>
@@ -500,10 +536,10 @@ const sitemapSchema = {
         </div>
       </section>
 
-      <!-- Section 7: Machine-Readable AI & Developer Endpoints -->
+      <!-- Section 8: Machine-Readable AI & Developer Endpoints -->
       <section id="ai-endpoints" class="scroll-mt-24">
         <div class="flex items-center gap-3 mb-6">
-          <div class="w-10 h-10 rounded-xl bg-emerald-700 text-white flex items-center justify-center font-bold text-lg">7</div>
+          <div class="w-10 h-10 rounded-xl bg-emerald-700 text-white flex items-center justify-center font-bold text-lg">8</div>
           <div>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Machine-Readable AI Context, APIs &amp; Compliance</h2>
             <p class="text-xs sm:text-sm text-slate-600">Standards-compliant discovery endpoints for LLM engines, autonomous agents, and search engine crawlers.</p>

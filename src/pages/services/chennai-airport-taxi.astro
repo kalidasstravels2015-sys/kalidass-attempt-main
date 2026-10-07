@@ -333,6 +333,7 @@ const productSchema = {
     "highPrice": "4200",
     "offerCount": zoneTariffs.length.toString(),
     "priceValidUntil": "2027-12-31",
+    "validFrom": "2025-01-01",
     "url": "https://kalidasstravels.in/services/chennai-airport-taxi/#zone-tariffs",
     "availability": "https://schema.org/InStock",
     "seller": {
@@ -345,6 +346,7 @@ const productSchema = {
       "priceCurrency": "INR",
       "price": z.sedan.replace(/[^0-9]/g, ''),
       "priceValidUntil": "2027-12-31",
+      "validFrom": "2025-01-01",
       "url": "https://kalidasstravels.in/services/chennai-airport-taxi/#zone-tariffs",
       "availability": "https://schema.org/InStock",
       "seller": {
@@ -1055,7 +1057,7 @@ const tripListSchema = {
                       <div class="grid grid-cols-2 gap-2">
                         <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200/80 text-center">
                           <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-0.5">Starting From</p>
-                          <p class="text-base sm:text-lg font-black text-slate-900 leading-none font-heading">{vehicle.price}</p>
+                          <p class="text-sm sm:text-base font-bold text-slate-900 leading-none font-heading">{vehicle.price}</p>
                         </div>
                         <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200/80 text-center">
                           <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-0.5">Capacity</p>

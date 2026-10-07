@@ -168,7 +168,7 @@ const TariffCalculator = ({ currentLang }) => {
                             </div>
                             <div className="bg-m3-surface-container-low rounded-m3-md p-3 border border-m3-outline-variant/60">
                                 <p className="text-m3-on-surface-variant text-badge font-semibold mb-0.5">Estimated Cost</p>
-                                <p className="text-2xl font-black text-m3-on-surface font-heading">₹{costs.etios.toLocaleString('en-IN')}</p>
+                                <p className="text-lg sm:text-xl font-bold text-m3-on-surface font-heading">₹{costs.etios.toLocaleString('en-IN')}</p>
                             </div>
                         </div>
 
@@ -189,7 +189,7 @@ const TariffCalculator = ({ currentLang }) => {
                             </div>
                             <div className="bg-m3-surface-container-low rounded-m3-md p-3 border border-m3-outline-variant/60">
                                 <p className="text-m3-on-surface-variant text-badge font-semibold mb-0.5">Estimated Cost</p>
-                                <p className="text-2xl font-black text-m3-on-surface font-heading">₹{costs.innova.toLocaleString('en-IN')}</p>
+                                <p className="text-lg sm:text-xl font-bold text-m3-on-surface font-heading">₹{costs.innova.toLocaleString('en-IN')}</p>
                             </div>
                         </div>
                     </div>

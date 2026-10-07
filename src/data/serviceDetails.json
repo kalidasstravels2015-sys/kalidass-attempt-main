@@ -4,7 +4,7 @@
     "category": "Temple Tours",
     "title": "Chennai to Tirupati Cab & Balaji Darshan Taxi Package (1 or 2 Days)",
     "duration": "1 Day (Same Day) or 2 Days / 1 Night (~150 km / 3.5 hrs)",
-    "overview": "Doorstep Chennai to Tirupati round-trip car rental with driver. Fixed rates from ₹6,000 cover car, fuel, NH tolls, AP interstate permit, parking, and driver allowance with zero hidden costs. Unlike online cab aggregators with unexpected border tax and toll surcharges, our flat package rates are 100% all-inclusive with ₹0 advance payment required.",
+    "overview": "Doorstep Chennai to Tirupati round-trip car rental with driver. Flat rates from ₹6,000 include vehicle, fuel, NH tolls, AP interstate permit, parking, and driver allowance with ₹0 advance payment.",
     "routePlan": [
       {
         "stop": "Chennai Doorstep",
@@ -1272,7 +1272,7 @@
     "slug": "monthly-car-with-driver-corporate",
     "category": "Corporate Travel",
     "title": "Monthly Car Rental with Driver in Chennai (Corporate Executive Retainer)",
-    "overview": "Your company deserves reliable travel with no surprises. We share all charges upfront — no sudden add-ons, no confusion.\n\nWho is this for?\nCompanies needing a dedicated car + driver for:\n- Daily official visits\n- Client meetings\n- Transporting staff safely\n- Management-level mobility",
+    "overview": "Monthly corporate car rental with dedicated chauffeur in Chennai. Packages cover 26 days and 2,500 km. 100% GST compliant invoicing with zero surge pricing and replacement vehicle SLA.",
     "tariff": {
       "headers": [
         "Vehicle",
@@ -1358,7 +1358,7 @@
     "slug": "employee-pickup-drop",
     "category": "Corporate Travel",
     "title": "Corporate Employee Pickup & Drop Cab Service in Chennai (ETS)",
-    "overview": "A safe and punctual system for daily staff movement. We are fully transparent so HR can plan without worry.",
+    "overview": "Scheduled daily employee transportation (ETS) for Chennai companies. Fixed route pickups and drops for IT corridors and corporate offices with GPS tracking and verified drivers.",
     "tariff": {
       "headers": [
         "Service",
@@ -1428,7 +1428,7 @@
     "category": "Popular Destinations",
     "title": "Chennai to Pondicherry One Day Trip Cab & Taxi Package (ECR Route)",
     "duration": "Same Day Return (Up to 320 KM)",
-    "overview": "Escape to the French Riviera of the East on a scenic ECR drive. Explore the serene Auroville Matrimandir, vibrant French White Town, Promenade Rock Beach, and Manakula Vinayagar Temple — all in one memorable day trip from Chennai.",
+    "overview": "Same-day Chennai to Pondicherry round-trip cab via ECR. Covers Auroville, French White Town, Promenade Beach, and Manakula Vinayagar Temple. Fixed flat fare includes car, fuel, tolls, and driver bata.",
     "routePlan": [
       {
         "stop": "Chennai Pickup",
@@ -1584,7 +1584,7 @@
     "slug": "one-day-chennai-city-tour",
     "category": "Popular Destinations",
     "title": "One Day Chennai City Sightseeing Tour Cab & Taxi",
-    "overview": "Explore Chennai’s iconic locations with a flexible plan. Visit ancient temples, colonial monuments, and the vibrant Marina Beach.",
+    "overview": "Full-day Chennai city sightseeing tour by private cab. Covers Kapaleeshwarar Temple, San Thome Basilica, Fort St. George, Government Museum, and Marina Beach. Fuel and driver bata included.",
     "routePlan": [
       {
         "stop": "Pickup",
@@ -1691,7 +1691,7 @@
     "slug": "driver-car-for-weddings",
     "category": "Popular Destinations",
     "title": "Wedding Car Rental with Chauffeur in Chennai (Marriage & Events)",
-    "overview": "Make your special day perfect with our premium wedding car services. We provide clean, decorated (optional) luxury cars with well-groomed chauffeurs to ensure the bride, groom, and guests arrive in style.",
+    "overview": "Wedding car rentals with verified chauffeurs in Chennai. Premium Sedans and Innova Crysta for bride, groom, family, and guest transit. Flexible hourly and daily packages with uniform chauffeurs.",
     "tariff": {
       "headers": [
         "Vehicle",
@@ -1757,7 +1757,7 @@
     "category": "Popular Destinations",
     "title": "Chennai to Mahabalipuram UNESCO Temples & ECR Beach Tour (1 Day)",
     "duration": "Full Day – 8 Hours / 120 KM Round Trip",
-    "overview": "Explore the magnificent 7th-century Pallava rock-cut monuments of Mahabalipuram — a UNESCO World Heritage Site — on a relaxed full-day cab tour from Chennai via the scenic East Coast Road (ECR). Your private AC car covers Shore Temple, Five Rathas, Arjuna's Penance, Krishna's Butter Ball, and Kovalam Beach with flexible lunch and photo stops.",
+    "overview": "Full-day Chennai to Mahabalipuram round-trip cab via ECR. Covers Shore Temple, Five Rathas, Arjuna's Penance, Krishna's Butter Ball, and Kovalam Beach. Fixed rates include vehicle, fuel, tolls, and driver bata.",
     "routePlan": [
       {
         "stop": "Chennai Doorstep",
@@ -1895,7 +1895,7 @@
     "category": "Popular Destinations",
     "title": "Chennai to Yelagiri Hills 2-Day Weekend Package – Hill Station Retreat",
     "duration": "2 Days / 1 Night – Approx. 500 KM Round Trip",
-    "overview": "Escape to the peaceful Yelagiri Hills — a beginner-friendly hill station just 4 hours from Chennai — for a rejuvenating 2-day weekend nature retreat. Your private AC car covers the scenic 14-hairpin-bend ghat ascent, Punganur Lake boating, Jalagamparai Waterfalls, and Nature Park with overnight flexibility. Flat rate includes all highway tolls, fuel, and 2-day driver allowance.",
+    "overview": "2-Day Chennai to Yelagiri Hills round-trip cab package. Covers 14 hairpin bends, Punganur Lake boating, and Jalagamparai Waterfalls. Flat fare includes vehicle, fuel, highway tolls, and 2-day driver allowance.",
     "routePlan": [
       {
         "stop": "Day 1 – Chennai Departure",
@@ -2037,7 +2037,7 @@
     "category": "Popular Destinations",
     "title": "Chennai to Yercaud 2-Day 'Jewel of the South' Weekend Package",
     "duration": "2 Days / 1 Night – Approx. 750 KM Round Trip",
-    "overview": "Discover Yercaud — the 'Jewel of the South' perched at 1,515 m in the Shevaroy Hills of Salem district. This 2-day weekend cab package from Chennai takes you through lush coffee and orange plantations, a serene hilltop lake, Pagoda Point viewpoint, Killiyur Waterfalls, and the sacred Shevaroy Temple. All-inclusive flat rate covers fuel, 2-day driver bata, and all NH45 highway tolls.",
+    "overview": "2-Day Chennai to Yercaud round-trip cab package. Covers Shevaroy Temple, Yercaud Lake, Pagoda Point, and Killiyur Falls. Flat rate includes vehicle, fuel, highway tolls, and 2-day driver allowance.",
     "routePlan": [
       {
         "stop": "Day 1 – Chennai Departure",
@@ -2268,5 +2268,1612 @@
     "serviceType": "TaxiService",
     "origin": "Chennai Airport (MAA)",
     "destination": "Doorstep Chennai"
+  },
+  {
+    "slug": "chennai-to-pondicherry-taxi",
+    "category": "Outstation Cabs",
+    "title": "Chennai to Pondicherry Taxi & Cab Booking (One-Way & Round Trip)",
+    "duration": "~155 km / 3.5 hrs via East Coast Road (ECR)",
+    "overview": "Doorstep Chennai to Pondicherry taxi via ECR (155 km) or NH-32 (165 km). One-way drops from ₹3,500; round-trip packages from ₹4,500. Fuel and driver bata included; zero surge pricing.",
+    "routePlan": [
+      {
+        "stop": "Chennai Doorstep",
+        "desc": "Pickup from your home, hotel, or Chennai Airport (MAA)."
+      },
+      {
+        "stop": "Akkarai / Sholinganallur",
+        "desc": "Join scenic East Coast Road (SH-49) coastal highway."
+      },
+      {
+        "stop": "Mahabalipuram Bypass",
+        "desc": "Optional 30-min halt for Shore Temple view or beachside coffee."
+      },
+      {
+        "stop": "Marakkanam Salt Pans",
+        "desc": "Scenic highway stretch alongside coastal lagoons and backwaters."
+      },
+      {
+        "stop": "Auroville Junction",
+        "desc": "Drop at Auroville Visitor Centre or Matrimandir viewpoint."
+      },
+      {
+        "stop": "White Town / Promenade Beach",
+        "desc": "Drop at your heritage hotel, French Quarter, or rock beach."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Seating Capacity",
+        "Package Flat Cost",
+        "Key Highlights"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Passengers",
+          "₹3,500 One-Way / ₹4,500 RT",
+          "AC Sedan • 2 Bags • Ideal for couples & solo travelers"
+        ],
+        [
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Passengers",
+          "₹4,500 One-Way / ₹5,800 RT",
+          "3-Row AC SUV • 3 Bags • Ample legroom for families"
+        ],
+        [
+          "Toyota Innova",
+          "7 Passengers",
+          "₹5,500 One-Way / ₹7,000 RT",
+          "Highway King • 4 Bags • Exceptional ride comfort"
+        ],
+        [
+          "Toyota Innova Crysta (Luxury)",
+          "7 Passengers",
+          "₹7,000 One-Way / ₹9,000 RT",
+          "Executive Luxury • Plush captain seats • Smooth cruise"
+        ],
+        [
+          "12-Seater Tempo Traveller",
+          "12 Passengers",
+          "₹9,500 One-Way / ₹12,500 RT",
+          "Group Van • 8–10 Bags • Pushback seats & high roof"
+        ]
+      ],
+      "note": "Package flat fares include sanitized AC vehicle, fuel, and driver bata. Highway Fastag tolls and Pondicherry UT entry permit billed at actuals."
+    },
+    "includes": [
+      "Doorstep pickup anywhere in Chennai and drop at any Pondicherry location",
+      "Experienced highway chauffeur with clean police verification",
+      "Clean commercial yellow-plate AC vehicle with sanitization before departure",
+      "Fuel charges and driver allowance (bata)",
+      "Flexible photo stops along scenic ECR coastal viewpoints"
+    ],
+    "excludes": [
+      "Highway Fastag tolls (~₹120 on ECR, billed at actuals)",
+      "Pondicherry UT State Border Entry Permit (~₹100 for cars at actual RTO receipt)",
+      "Parking charges at sightseeing locations"
+    ],
+    "travelGuide": {
+      "history": "• ECR Scenic Highway: 155 km coastal drive overlooking the Bay of Bengal\n• French Heritage: White Town colonial villas & yellow bougainvillea lanes\n• Spiritual Haven: Sri Aurobindo Ashram & Auroville Matrimandir\n• Coastal Delights: Promenade Rock Beach, Eden Blue Flag Beach & Serenity Beach",
+      "timings": "• Best Departure: 05:30 AM – 06:30 AM to beat Chennai city traffic\n• Ideal Travel Time: 3.5 hours via ECR (SH-49)\n• Return Departure: 05:00 PM – 06:00 PM for comfortable night arrival\n• 24/7 Dispatch: Night departures available with advance notice",
+      "dressCode": "Comfortable casual resort wear or light cottons recommended. Modest clothing requested when entering Sri Aurobindo Ashram and temple premises.",
+      "tips": [
+        "Choose ECR Route: The East Coast Road offers stunning sea views, roadside tender coconut stalls, and heritage cafes in Mahabalipuram.",
+        "Optional Mahabalipuram Halt: Inform our driver if you wish to halt for 45 minutes to view the Shore Temple and Arjuna's Penance.",
+        "Direct Airport Pickup: Arriving at Chennai Airport (MAA)? We provide doorstep pickup directly from Terminal T1/T2/T4 straight to Pondicherry.",
+        "Pondicherry Permit Included in All-Inclusive Quotes: Interstate entry tax for Pondicherry UT is handled transparently by our driver.",
+        "Zero Cancellation Penalty: Plans changed? Cancel or reschedule free of charge up to 3 hours prior to pickup."
+      ]
+    },
+    "faq": [
+      {
+        "q": "How much is the taxi fare from Chennai to Pondicherry?",
+        "a": "One-way drop taxi fares start from ₹3,500 for an AC Sedan (Swift Dzire / Etios), ₹4,500 for an Ertiga SUV, ₹5,500 for an Innova, and ₹9,500 for a 12-seater Tempo Traveller. Same-day round trips start at ₹4,500 for Sedans."
+      },
+      {
+        "q": "What is the distance and travel time from Chennai to Pondicherry by cab?",
+        "a": "The road distance is approximately 155 km via East Coast Road (SH-49) and takes about 3.5 hours. If traveling via NH-32 (GST Road via Tindivanam), the distance is 165 km taking around 3.5 to 4 hours."
+      },
+      {
+        "q": "Which route is better: ECR or OMR / GST Road?",
+        "a": "The East Coast Road (ECR) is the preferred scenic tourist route with ocean views, wide 4-lane stretches, beach resorts, and stops at Mahabalipuram. The GST Road (NH-32) is preferred during peak holiday traffic or if departing from South-West Chennai (Tambaram, Chromepet)."
+      },
+      {
+        "q": "Can we take a detour to Mahabalipuram on the way to Pondicherry?",
+        "a": "Yes! Our drivers gladly accommodate a 1-to-2 hour sightseeing halt at Mahabalipuram (Shore Temple, Pancha Rathas, Butter Ball) along ECR for a nominal waiting charge."
+      },
+      {
+        "q": "Can I book a one-way drop taxi from Chennai Airport to Pondicherry?",
+        "a": "Yes. We offer 24/7 direct airport pickups from Chennai International Airport (MAA) Terminals 1, 2, and 4 straight to any hotel or residence in Pondicherry with zero flight delay fees."
+      },
+      {
+        "q": "Are tolls and Pondicherry border tax included in the quote?",
+        "a": "We provide both transparent split quotes (base fare + tolls/permit at actuals) and 100% all-inclusive package quotes. For one-way drops, Fastag toll is approx. ₹120 and Pondicherry UT entry tax is approx. ₹100 for cars."
+      },
+      {
+        "q": "Do you provide multi-day outstation cabs for Pondicherry?",
+        "a": "Yes. You can book a 2-day or 3-day round trip cab with the vehicle and driver on dedicated standby for your local sightseeing in White Town, Auroville, Paradise Beach, and Chidambaram."
+      },
+      {
+        "q": "Is advance payment required to book a Chennai to Pondicherry cab?",
+        "a": "No advance deposit is required. You can book instantly via WhatsApp or phone call and pay the driver upon arrival in Pondicherry via cash or UPI (GPay/PhonePe)."
+      },
+      {
+        "q": "Are your cabs commercially yellow-plated and verified?",
+        "a": "Yes, 100% of our fleet consists of commercial yellow-plate vehicles with valid All-India Tourist Permits (AITP) driven by background-verified chauffeurs."
+      },
+      {
+        "q": "Can we get an early morning 05:00 AM pickup in Chennai?",
+        "a": "Yes, our dispatch runs 24/7. Early morning departures are recommended to exit Chennai before morning peak traffic and reach Pondicherry in time for French bakery breakfast."
+      },
+      {
+        "q": "What vehicle is recommended for a family of 5 with luggage?",
+        "a": "We recommend the Maruti Ertiga or Toyota Innova, which comfortably seat 6 passengers with dedicated boot space for 3 to 4 large suitcases."
+      },
+      {
+        "q": "How do I book a Chennai to Pondicherry cab?",
+        "a": "Simply tap our WhatsApp button or call +91 89395 39211 with your pickup address, date, and preferred time. Your cab confirmation is shared within 5 minutes."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I would like to book a taxi from Chennai to Pondicherry. Please share available vehicles and quote.",
+    "metaTitle": "Chennai to Pondicherry Taxi | One-Way & Round Trip Cab",
+    "metaDescription": "Book Chennai to Pondicherry taxi from ₹3,500 one-way and ₹4,500 round trip. Clean AC Dzire, Ertiga, Innova & Tempo. Doorstep pickup anywhere in Chennai. ₹0 advance.",
+    "keywords": "chennai to pondicherry taxi, chennai to pondicherry cab booking, chennai to pondicherry one way taxi, chennai to pondy cab fare, ecr taxi chennai to pondicherry, chennai airport to pondicherry taxi, pondicherry drop taxi from chennai, outstation cab chennai to pondicherry",
+    "serviceType": "TaxiService",
+    "origin": "Chennai",
+    "destination": "Pondicherry"
+  },
+  {
+    "slug": "chennai-to-tirupati-one-day-package",
+    "category": "Temple Tours",
+    "title": "Chennai to Tirupati One Day Car Package (Balaji Darshan Taxi)",
+    "duration": "Same Day Return (~150 km / 3.5 hrs each way)",
+    "overview": "Doorstep Chennai to Tirupati same-day car package (~150 km). Covers Tirumala Balaji Darshan and Tiruchanur Temple. Flat fare from ₹6,000 includes AC car, fuel, NH FASTag tolls, AP border permit, and driver bata.",
+    "routePlan": [
+      {
+        "stop": "Chennai Doorstep",
+        "desc": "04:00 AM pickup at your home, hotel, or Chennai Airport."
+      },
+      {
+        "stop": "Nagari / Tiruttani",
+        "desc": "06:15 AM authentic South Indian vegetarian breakfast halt."
+      },
+      {
+        "stop": "Alipiri Checkpost",
+        "desc": "07:30 AM vehicle security scan & ghat road ascent to Tirumala."
+      },
+      {
+        "stop": "Tirumala Hilltop",
+        "desc": "08:15 AM drop near TTD cloakrooms, locker centers, and Special Entry queue."
+      },
+      {
+        "stop": "Balaji Darshan",
+        "desc": "Dedicated darshan time, laddu prasadam collection, and Tonsure/Kalyanakatta if needed."
+      },
+      {
+        "stop": "Tiruchanur",
+        "desc": "03:30 PM Sri Padmavathi Ammavari Temple visit (completing pilgrimage)."
+      },
+      {
+        "stop": "Chennai Return",
+        "desc": "08:30 PM – 09:30 PM doorstep drop back at your location in Chennai."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Seating Capacity",
+        "Round-Trip Flat Cost",
+        "Key Highlights"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Passengers",
+          "₹6,000",
+          "All-Inclusive 1-Day • Tolls + AP Permit Included • 4 Passengers"
+        ],
+        [
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Passengers",
+          "₹7,500",
+          "6 Passengers • 3-Row AC SUV • Perfect for family pilgrimage"
+        ],
+        [
+          "Toyota Innova",
+          "7 Passengers",
+          "₹8,500",
+          "7 Passengers • Ample space • Smooth hill ascent"
+        ],
+        [
+          "Toyota Innova Crysta (Luxury)",
+          "7 Passengers",
+          "₹10,000",
+          "7 Passengers • Luxury Chauffeur • Reclining captain seats for elders"
+        ],
+        [
+          "12-Seater Tempo Traveller",
+          "12 Passengers",
+          "₹12,500",
+          "12 Passengers • Group Yatra • Pushback seats, high roof & mic"
+        ]
+      ],
+      "note": "Flat round-trip fares include car, fuel, NH tolls, AP permit, parking, and driver bata. Darshan tickets and meals are extra."
+    },
+    "includes": [
+      "Doorstep pickup and drop anywhere in Chennai (Residence, Hotel, or MAA Airport)",
+      "All NH highway tolls & FASTag charges",
+      "Andhra Pradesh interstate commercial border entry permit",
+      "Tirumala hill toll & Alipiri security parking fee",
+      "Dedicated stop at Sri Padmavathi Ammavari Temple (Tiruchanur)",
+      "Experienced driver familiar with TTD queue complex, tonsure points, and locker facilities"
+    ],
+    "excludes": [
+      "TTD Darshan tickets (devotees must book directly via official TTD portal with Aadhaar)",
+      "Meals and personal offerings"
+    ],
+    "travelGuide": {
+      "history": "• Kali Yuga Vaikuntham: Sacred 7 hills abode of Lord Sri Venkateswara\n• Swayambhu Murti: Ananda Nilayam Golden Dome sanctum\n• Tiruchanur Mandir: Goddess Padmavathi blessing to complete the yatra\n• Tirupati Laddu: World-famous GI-tagged pure ghee sacred prasadam",
+      "timings": "• Departure: 04:00 AM recommended to cross Tiruttani before morning rush\n• Ghat Road Opening: 03:00 AM to 12:00 Midnight\n• Special Entry Darshan (₹300): Slots active from 09:00 AM onwards\n• Return Journey: Depart Tirumala by 04:30 PM to reach Chennai by 09:00 PM",
+      "dressCode": "Strict TTD Traditional Dress Code:\n• Men: White Dhoti with shirt or Kurta Pyjama (No jeans, t-shirts, or shorts).\n• Women: Saree, Half-saree, or Chudidhar with Dupatta.\n• Children: Traditional Indian clothing.",
+      "tips": [
+        "Original ID Proof Essential: Carry the original Aadhaar card or Passport used when booking your ₹300 TTD Special Entry ticket.",
+        "Mobile Phones Prohibited: Phones and electronics are strictly banned inside the main temple. Leave them securely in our cab or TTD locker.",
+        "Footwear Management: Keep footwear inside the vehicle before approaching the queue complex.",
+        "Senior Citizen Priority: If traveling with elders (65+), our driver guides them to the dedicated Supadham access point.",
+        "Laddu Carry Bags: Carry small cloth bags to safely hold your sacred Tirupati laddu prasadam."
+      ]
+    },
+    "faq": [
+      {
+        "q": "What is included in the Chennai to Tirupati one day car package?",
+        "a": "Our flat rate includes doorstep pickup and drop in Chennai, air-conditioned vehicle, fuel, driver bata, NH highway tolls, Andhra Pradesh interstate commercial permit, and Tirumala hill parking. Everything is covered with zero surprise road costs."
+      },
+      {
+        "q": "Can Tirupati darshan really be completed in one day from Chennai?",
+        "a": "Yes, thousands of devotees do this every week with us. With our 04:00 AM departure, you reach Tirumala by 08:15 AM, join your 09:00 AM or 10:00 AM ₹300 Special Entry slot, finish darshan and laddu collection by 02:00 PM, visit Tiruchanur temple, and return to Chennai by 09:00 PM."
+      },
+      {
+        "q": "Can the car drive all the way up to Tirumala hilltop?",
+        "a": "Yes. Our commercial vehicles have valid permits to drive up the second ghat road directly to Tirumala hilltop. The driver drops you near the TTD queue entrance and cloakrooms."
+      },
+      {
+        "q": "Do you provide or bundle TTD ₹300 darshan tickets?",
+        "a": "No. TTD mandates that devotees book tickets directly under their own Aadhaar/Passport on ttdevasthanams.ap.gov.in. Reselling darshan tickets is illegal. We time your cab departure to match your booked darshan slot."
+      },
+      {
+        "q": "Is Sri Padmavathi Ammavari Temple (Tiruchanur) covered?",
+        "a": "Yes. Visiting Tiruchanur after Tirumala Balaji darshan is considered an essential part of the pilgrimage and is fully included in our route."
+      },
+      {
+        "q": "What happens if our darshan takes longer than expected?",
+        "a": "Our chauffeur stays in Tirumala on dedicated standby. There is no rush; your driver waits patiently until your darshan and prasadam collection are complete."
+      },
+      {
+        "q": "What is the dress code for Tirupati Darshan?",
+        "a": "Men must wear dhoti with shirt or kurta pyjama. Women must wear saree, half-saree, or chudidhar with dupatta. Modern western wear, jeans, and t-shirts are strictly banned."
+      },
+      {
+        "q": "Is ₹0 advance booking available for the Tirupati trip?",
+        "a": "Yes. You can book with zero advance payment. You pay the driver upon trip completion in Chennai via cash or UPI."
+      },
+      {
+        "q": "Which vehicle is best for senior citizens traveling to Tirupati?",
+        "a": "We recommend the Toyota Innova Crysta for senior citizens. Its plush captain seats, superior suspension, and silent cabin provide maximum comfort on the highway and ghat curves."
+      },
+      {
+        "q": "Can we get picked up from Chennai Airport for Tirupati?",
+        "a": "Yes. We can pick you up directly from Chennai Airport (MAA) terminal exit gates and proceed straight to Tirupati on the bypass highway."
+      },
+      {
+        "q": "Are food and breakfast stops arranged?",
+        "a": "Yes. Our drivers stop at reputed pure vegetarian restaurants on the highway (such as in Tiruttani or Nagari) with clean restrooms."
+      },
+      {
+        "q": "How can I book the one-day package?",
+        "a": "Simply message us on WhatsApp or call +91 89395 39211 with your preferred date, passenger count, and Chennai pickup location. We confirm instantly."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I would like to book the Chennai to Tirupati One Day Car Package. Please confirm availability.",
+    "metaTitle": "Chennai to Tirupati One Day Car Package | Balaji Taxi",
+    "metaDescription": "Book Chennai to Tirupati one day car package from ₹6,000 all-inclusive. Tolls, AP permit & driver bata included. Same day return cab with doorstep pickup. ₹0 advance.",
+    "keywords": "chennai to tirupati one day package, chennai to tirupati car package, chennai to tirupati taxi, tirupati balaji darshan car rental chennai, one day tirupati trip cab, chennai to tirumala taxi package, tirupati car rental with driver chennai, all inclusive tirupati cab",
+    "serviceType": "TaxiService",
+    "origin": "Chennai",
+    "destination": "Tirupati & Tirumala"
+  },
+  {
+    "slug": "medavakkam-taxi-service",
+    "category": "Outstation Cabs",
+    "title": "Taxi Service in Medavakkam Chennai (24/7 Cabs & Outstation)",
+    "duration": "Instant 5–10 Min Dispatch (Medavakkam Hub & Surrounds)",
+    "overview": "24/7 taxi service from Medavakkam hub. Doorstep pickup across Medavakkam, Nanmangalam, Kovilambakkam, Perumbakkam, and Sithalapakkam. Airport drops from ₹650, outstation cabs from ₹14/km, and acting drivers with zero surge pricing.",
+    "routePlan": [
+      {
+        "stop": "Medavakkam Koot Road",
+        "desc": "Central operations base ensuring 5–10 min cab dispatch."
+      },
+      {
+        "stop": "Perumbakkam / Global Hospitals",
+        "desc": "Direct cab coverage for IT hubs and healthcare emergencies."
+      },
+      {
+        "stop": "Pallikaranai / 200 Feet Radial Road",
+        "desc": "Quick transit linking to Velachery, OMR, and GST Road."
+      },
+      {
+        "stop": "Kovilambakkam / Nanmangalam",
+        "desc": "Fast doorstep pickup for residential townships."
+      },
+      {
+        "stop": "Chennai Airport (MAA)",
+        "desc": "Direct 25-minute connection via Radial Road and GST Road."
+      },
+      {
+        "stop": "Outstation Highway Access",
+        "desc": "Fast bypass to Grand Southern Trunk (NH-45) and ECR."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Seating Capacity",
+        "Outstation / Airport Rate",
+        "Key Highlights"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Passengers",
+          "₹14/km RT • ₹650 Airport",
+          "Local Medavakkam Sedan • Chilled AC • 2 Bags"
+        ],
+        [
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Passengers",
+          "₹17/km RT • ₹950 Airport",
+          "6-Seater Family MUV • 3 Bags • Rear AC vents"
+        ],
+        [
+          "Toyota Innova",
+          "7 Passengers",
+          "₹18/km RT • ₹1,200 Airport",
+          "Premium 7-Seater • High comfort for highway tours"
+        ],
+        [
+          "Toyota Innova Crysta (Luxury)",
+          "7 Passengers",
+          "₹22/km RT • ₹1,600 Airport",
+          "Executive Luxury Chauffeur • Captain seats"
+        ],
+        [
+          "12-Seater Tempo Traveller",
+          "12 Passengers",
+          "₹24/km RT • ₹2,500 Airport",
+          "Spacious Group Coach • 10 Bags • Pushback seats"
+        ]
+      ],
+      "note": "Round-trip outstation minimum 250 km/day. Airport drops are fixed flat fares with zero peak-hour surge."
+    },
+    "includes": [
+      "5–10 minute rapid dispatch from Medavakkam operations hub",
+      "100% police-verified chauffeurs residing locally in South Chennai",
+      "Commercial yellow-plate clean AC vehicles with zero surge pricing",
+      "24/7 customer phone support (+91 89395 39211) & live WhatsApp dispatch",
+      "Free cancellation up to 1 hour before pickup"
+    ],
+    "excludes": [
+      "Highway Fastag tolls and destination parking fees (billed at actuals)",
+      "Night driving allowance (₹150 between 10:00 PM and 05:00 AM on outstation trips)"
+    ],
+    "travelGuide": {
+      "history": "• Kalidass Travels HQ: Established in Medavakkam in 2019 serving 25,000+ happy riders\n• South Chennai Hub: Connecting Medavakkam, OMR, Velachery, and Tambaram\n• Radial Road Connectivity: Seamless 20-min airport access via 200 Feet Radial Road\n• Trusted Neighborhood Cab: 1,500+ verified 5-star Google ratings from Medavakkam residents",
+      "timings": "• Operational Hours: 24 Hours / 7 Days a week\n• Average Dispatch Time: 5 to 10 minutes in Medavakkam & Perumbakkam\n• Airport Transit Time: 20 to 25 minutes to Chennai Airport (MAA)\n• Advance Booking: Instant WhatsApp booking or pre-scheduled departures",
+      "dressCode": "Uniformed, courteous, and background-verified chauffeurs with ID badges.",
+      "tips": [
+        "Book from Local HQ: Because our fleet is stationed right in Medavakkam, you get the fastest dispatch times and lowest dead-mileage rates.",
+        "Early Morning Airport Rides: Schedule your 03:00 AM or 04:00 AM airport taxi the evening before for 100% guaranteed on-time doorstep arrival.",
+        "Outstation Trips to Pondicherry / Tirupati: Starting from Medavakkam gives direct access to ECR via Sholinganallur or NH via Tambaram bypass.",
+        "Acting Drivers for Your Car: Need a professional driver to drive your personal automatic or manual car? Book an acting driver from ₹500.",
+        "Cashless & Transparent: Pay via UPI (GPay, PhonePe, Paytm), cash, or card directly to the driver upon trip completion."
+      ]
+    },
+    "faq": [
+      {
+        "q": "Where is Kalidass Travels located in Medavakkam?",
+        "a": "Our registered office and operations hub is at No. 4/220, E88, Ponniamman Kovil Street, Annamalai Nagar, Medavakkam, Chennai 600100. We are stationed right at the Medavakkam junction."
+      },
+      {
+        "q": "How quickly can a cab arrive in Medavakkam or Perumbakkam?",
+        "a": "Because our drivers and fleet are stationed locally in Medavakkam, our average doorstep arrival time is just 5 to 10 minutes."
+      },
+      {
+        "q": "What is the airport taxi fare from Medavakkam to Chennai Airport (MAA)?",
+        "a": "We offer a flat fixed fare of ₹650 for an AC Sedan (Dzire / Etios) and ₹950 for an Ertiga SUV with zero surge pricing, even during midnight or early morning departures."
+      },
+      {
+        "q": "Do you serve neighboring areas like Nanmangalam, Kovilambakkam, and Sithalapakkam?",
+        "a": "Yes! We provide full 24/7 doorstep pickup across Medavakkam, Perumbakkam, Kovilambakkam, Nanmangalam, Sithalapakkam, Pallikaranai, and Sholinganallur link road."
+      },
+      {
+        "q": "Can I book outstation cabs from Medavakkam?",
+        "a": "Yes, we specialize in round-trip and one-way outstation cabs from Medavakkam to Pondicherry, Tirupati, Bangalore, Kumbakonam, Vellore, and all South India destinations starting from ₹14/km."
+      },
+      {
+        "q": "Can I hire an acting driver for my own car in Medavakkam?",
+        "a": "Yes. If you need a police-verified professional driver to drive your manual, automatic, or luxury car within Chennai or outstation, you can hire an acting driver starting from ₹500."
+      },
+      {
+        "q": "Do your cabs charge surge pricing during peak hours or heavy rains?",
+        "a": "Never. Unlike app aggregators whose fares double during rush hour or rain, Kalidass Travels maintains 100% fixed, transparent rates with zero surge pricing."
+      },
+      {
+        "q": "Are your drivers police-verified and local to South Chennai?",
+        "a": "Yes, all our chauffeurs are 100% police-verified (PVC verified), non-smoking, courteous, and familiar with all South Chennai localities and shortcuts."
+      },
+      {
+        "q": "Can I pre-book a cab for early morning 03:00 AM?",
+        "a": "Yes. Pre-book via WhatsApp or phone call anytime, and your cab will be at your doorstep 10 minutes before the scheduled time with zero delay."
+      },
+      {
+        "q": "How do I make the payment for my trip?",
+        "a": "You can pay via UPI (Google Pay, PhonePe, Paytm, BHIM), Cash, or Net Banking directly after the completion of your journey."
+      },
+      {
+        "q": "Do you provide AC Tempo Travellers for group travel from Medavakkam?",
+        "a": "Yes, we provide 12-seater, 14-seater, and 17-seater AC Tempo Travellers with pushback seats and high roof for family functions, temple trips, and group outings."
+      },
+      {
+        "q": "How do I book a cab in Medavakkam right now?",
+        "a": "Call us directly at +91 89395 39211 or tap the WhatsApp button. Our Medavakkam dispatch desk is online 24/7."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels Medavakkam, I need a cab. Please share vehicle availability and rate.",
+    "metaTitle": "Taxi Service in Medavakkam Chennai | 24/7 Cabs & Outstation",
+    "metaDescription": "Top-rated taxi service in Medavakkam Chennai. Fast 5-10 min dispatch for airport drops (₹650), outstation cabs (₹14/km) & local rentals. Zero surge. Call +91 89395 39211.",
+    "keywords": "taxi service in medavakkam, cabs in medavakkam chennai, medavakkam taxi booking, medavakkam airport taxi, outstation cabs medavakkam, call taxi medavakkam, perumbakkam taxi service, nanmangalam cabs, kalidass travels medavakkam",
+    "serviceType": "TaxiService",
+    "origin": "Medavakkam, Chennai",
+    "destination": "South India & Outstation"
+  },
+  {
+    "slug": "velachery-airport-taxi",
+    "category": "Airport Transfers",
+    "title": "Velachery to Chennai Airport Taxi Transfers (Fixed Fare Cabs)",
+    "duration": "~10–12 km / 20–25 mins via Inner Ring Road",
+    "overview": "24/7 airport transfers between Velachery and Chennai Airport (MAA). Doorstep pickup across Vijayanagar, Baby Nagar, and 100 Feet Road. Fixed rate from ₹650 for AC Sedan with zero peak surge pricing.",
+    "routePlan": [
+      {
+        "stop": "Velachery Doorstep",
+        "desc": "Rapid 10–15 min pickup at your home, apartment, or hotel in Velachery."
+      },
+      {
+        "stop": "Vijayanagar Bus Terminus / Inner Ring Road",
+        "desc": "Seamless departure bypassing bottleneck streets."
+      },
+      {
+        "stop": "Guindy / Kathipara Flyover",
+        "desc": "Elevated transit connecting to Grand Southern Trunk (GST Road)."
+      },
+      {
+        "stop": "Meenambakkam Airport Flyover",
+        "desc": "Direct ramp access to Chennai International Airport."
+      },
+      {
+        "stop": "Terminal Drop (T1 / T2 / T4)",
+        "desc": "Doorstep baggage assistance at departure gates."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Seating Capacity",
+        "Fixed Airport Fare",
+        "Key Highlights"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Passengers",
+          "₹650",
+          "AC Sedan • 2 Bags • 4 Passengers • Fuel & Driver Included"
+        ],
+        [
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Passengers",
+          "₹950",
+          "Spacious 6-Seater SUV • 3 Bags • Perfect for family airport luggage"
+        ],
+        [
+          "Toyota Innova",
+          "7 Passengers",
+          "₹1,200",
+          "7 Passengers • 4 Large Bags • Ample boot space & comfort"
+        ],
+        [
+          "Toyota Innova Crysta (Luxury)",
+          "7 Passengers",
+          "₹1,600",
+          "Executive Chauffeur • Premium luxury cabin for business travelers"
+        ],
+        [
+          "12-Seater Tempo Traveller",
+          "12 Passengers",
+          "₹2,500",
+          "Group Airport Transfer • 10 Bags • High roof & group seating"
+        ]
+      ],
+      "note": "Fixed flat airport fares include car, fuel, and chauffeur. Zero peak-hour or rain surge pricing."
+    },
+    "includes": [
+      "Doorstep pickup anywhere in Velachery & immediate suburbs",
+      "Direct drop at Domestic (T1/T4) or International (T2) departure gates",
+      "Commercial yellow-plate AC vehicle with sanitized interior",
+      "Courteous chauffeur with luggage loading and unloading assistance",
+      "Live flight monitoring for scheduled pickups"
+    ],
+    "excludes": [
+      "Airport terminal parking fee (only if driver waits inside terminal parking for arrivals, at actuals)",
+      "Additional multi-point pickups (+₹100 per additional stop)"
+    ],
+    "travelGuide": {
+      "history": "• Velachery to MAA Corridor: 10–12 km South Chennai arterial link\n• Rapid Transit Route: Via Inner Ring Road and Kathipara Grade Separator\n• Dedicated Airport Fleets: Clean sedans & SUVs pre-staged in South Chennai\n• 24/7 Flight Support: Early morning 3:00 AM and late night arrivals covered",
+      "timings": "• Peak Hours Transit: 30–35 minutes during 08:30 AM–11:00 AM & 06:00 PM–08:30 PM\n• Off-Peak Transit: 18–22 minutes during early morning and late night hours\n• Recommended Departure: 2.5 hours prior for Domestic, 3.5 hours for International flights\n• 24/7 Availability: Continuous chauffeur dispatch around the clock",
+      "dressCode": "Clean, polite, verified chauffeur in professional attire with company ID.",
+      "tips": [
+        "Fixed Fare Advantage: Unlike app aggregators that charge ₹900–₹1,200 during morning or rainy surge hours, our fare remains fixed at ₹650.",
+        "Baggage Room: Traveling with more than 2 large international check-in suitcases? Book an Ertiga or Innova for ample boot space.",
+        "Terminal Arrival Pickups: Landing at MAA? Provide your flight number; our driver will track your landing and greet you at the arrival pickup zone.",
+        "Zero Cancellation Fee: Flight delayed or rescheduled? Simply inform us via WhatsApp with zero cancellation penalties.",
+        "Advance Midnight Booking: Flying out at 04:00 AM? Book before 10:00 PM for guaranteed driver allocation and driver details SMS."
+      ]
+    },
+    "faq": [
+      {
+        "q": "What is the cab fare from Velachery to Chennai Airport?",
+        "a": "Our flat fare is ₹650 for an AC Sedan (Swift Dzire / Etios), ₹950 for a Maruti Ertiga SUV, ₹1,200 for a Toyota Innova, and ₹2,500 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing."
+      },
+      {
+        "q": "How long does it take to travel from Velachery to Chennai Airport by taxi?",
+        "a": "The distance is about 10 to 12 km. During early morning and late night off-peak hours, it takes only 18 to 22 minutes. During peak hours, expect about 30 to 35 minutes via the Inner Ring Road and Kathipara Flyover."
+      },
+      {
+        "q": "Do you provide airport pickups from Chennai Airport to Velachery?",
+        "a": "Yes! We track your flight arrival in real-time. Your chauffeur will be waiting at Terminal 1, Terminal 2, or Terminal 4 to assist with your luggage and drive you safely to your Velachery address."
+      },
+      {
+        "q": "What if my flight is delayed?",
+        "a": "We track all flights online. If your arrival is delayed or rescheduled, your pickup automatically adjusts at no extra fee or cancellation penalty."
+      },
+      {
+        "q": "Which areas in Velachery do you cover?",
+        "a": "We cover all of Velachery including Vijayanagar, Baby Nagar, TNHB Colony, Dhandeeswaram Nagar, Bhuvaneshwari Nagar, Gandhi Salai, 100 Feet Road, and Phoenix MarketCity vicinity."
+      },
+      {
+        "q": "Is there surge pricing during early morning hours like 03:00 AM?",
+        "a": "No, absolutely not. Kalidass Travels has a strict zero surge pricing policy 24 hours a day, 365 days a year."
+      },
+      {
+        "q": "How do I book an airport taxi from Velachery?",
+        "a": "You can book instantly via WhatsApp or call us at +91 89395 39211. Provide your pickup location, flight time, and passenger count for instant confirmation."
+      },
+      {
+        "q": "Can I fit 3 large suitcases in a Sedan?",
+        "a": "Sedans accommodate 2 large check-in bags comfortably. For 3 or more large international bags, we recommend booking a Maruti Ertiga or Toyota Innova."
+      },
+      {
+        "q": "Do your drivers help with heavy luggage?",
+        "a": "Yes, our courteous chauffeurs assist you with loading and unloading your bags at both your doorstep and the airport departure terminal."
+      },
+      {
+        "q": "Can I pay using Google Pay or PhonePe?",
+        "a": "Yes, all drivers accept UPI payments (GPay, PhonePe, Paytm), cash, and net banking."
+      },
+      {
+        "q": "Is advance payment required?",
+        "a": "No advance payment is needed. You can pay after reaching the airport terminal safely."
+      },
+      {
+        "q": "Can I book a return airport drop from Velachery?",
+        "a": "Yes, you can schedule round-trip airport transfers at the same time to ensure hassle-free travel for both your departure and return flights."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I need an airport taxi from Velachery to Chennai Airport. Please confirm cab availability.",
+    "metaTitle": "Velachery to Chennai Airport Taxi | Fixed Fare Cabs from ₹650",
+    "metaDescription": "Book 24/7 airport taxi from Velachery to Chennai Airport (MAA). Fixed flat rate from ₹650 with zero surge. Clean AC Sedans & Ertiga. 15 min doorstep pickup.",
+    "keywords": "velachery to chennai airport taxi, airport cab from velachery, velachery airport drop cab, velachery to maa airport cab fare, chennai airport taxi velachery, flat rate airport cab velachery, 24/7 airport taxi velachery chennai",
+    "serviceType": "TaxiService",
+    "origin": "Velachery, Chennai",
+    "destination": "Chennai Airport (MAA)"
+  },
+  {
+    "slug": "omr-corporate-cabs",
+    "category": "Corporate Mobility",
+    "title": "OMR Corporate Cabs & Employee Transport Services Chennai",
+    "duration": "Custom Daily Shifts & Monthly Dedicated Retainers",
+    "overview": "Corporate cabs and employee transportation (ETS) across the OMR IT corridor (Tidel Park to Siruseri SIPCOT). Monthly retainers from ₹45,000, 100% GST input tax credit compliance, GPS fleet tracking, and verified chauffeurs.",
+    "routePlan": [
+      {
+        "stop": "Tidel Park & Madhya Kailash",
+        "desc": "Northern gateway of OMR IT Expressway."
+      },
+      {
+        "stop": "Perungudi & Kandanchavadi",
+        "desc": "Major IT SEZ cluster and tech corporate offices."
+      },
+      {
+        "stop": "Thoraipakkam Junction",
+        "desc": "200 Feet Radial Road cross-connection to GST Road."
+      },
+      {
+        "stop": "Sholinganallur Junction",
+        "desc": "Core OMR intersection linking to ECR and Medavakkam."
+      },
+      {
+        "stop": "Navalur & ELCOT SEZ",
+        "desc": "Corporate campuses and tech enterprise centers."
+      },
+      {
+        "stop": "Siruseri SIPCOT IT Park",
+        "desc": "Southern terminal tech zone with multi-facility shuttle loops."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Service Category",
+        "Vehicle Type",
+        "Indicative Rate",
+        "Corporate Highlights"
+      ],
+      "rows": [
+        [
+          "Monthly Executive Retainer",
+          "Swift Dzire / Toyota Etios",
+          "From ₹45,000 / Month",
+          "Dedicated Executive Sedan • 2500 km / 26 Days • Chauffeur Included"
+        ],
+        [
+          "Team Commute Shuttle",
+          "Maruti Ertiga / XL6 (MUV)",
+          "From ₹55,000 / Month",
+          "6 Seats • Mid-Level Managers & Shift Teams • Chilled AC"
+        ],
+        [
+          "C-Suite Luxury Chauffeur",
+          "Toyota Innova Crysta",
+          "From ₹75,000 / Month",
+          "Executive Luxury • Leather Captain Seats • VIP Highway Retainer"
+        ],
+        [
+          "Routed Employee Shuttle (ETS)",
+          "12–17 Seater Tempo Traveller",
+          "From ₹70,000 / Month",
+          "Fixed Shift Routes • GPS Tracking • High Roof & Pushback Seats"
+        ],
+        [
+          "Ad-Hoc Corporate Delegations",
+          "AC Sedan / MUV",
+          "From ₹2,200 / 8h 80km",
+          "Client Visits, Airport Delegations & Day Retainers • 100% GST ITC"
+        ]
+      ],
+      "note": "Custom corporate contracts structured according to monthly mileage, shift counts, and vehicle preferences. 100% GST input tax credit invoices issued."
+    },
+    "includes": [
+      "100% Police-Verified (PVC) professional chauffeurs in corporate uniform",
+      "100% GST-Compliant monthly consolidated invoices (Input Tax Credit eligible)",
+      "Dedicated operations account manager & 24/7 dispatch supervisor",
+      "Live GPS tracking, SOS safety provisions & panic buttons",
+      "Backup replacement vehicle SLA within 30 minutes in case of breakdown"
+    ],
+    "excludes": [
+      "Highway Fastag tolls and commercial parking passes (billed at actuals)",
+      "Interstate entry tax if traveling outside Tamil Nadu"
+    ],
+    "travelGuide": {
+      "history": "• Rajiv Gandhi Salai (OMR): Tamil Nadu's premier IT & Technology corridor\n• 100+ Enterprise Clients: Serviced by Kalidass Travels corporate fleet since 2019\n• Safe Commute Guarantee: Strict night shift escort protocols for female employees\n• Fleet Versatility: From executive luxury sedans to 26-seater AC corporate coaches",
+      "timings": "• Shift Operations: 24/7 coverage covering General, Morning, Evening, and Night shifts\n• On-Time SLA: 99.4% on-time arrival rate across OMR IT SEZs\n• Monthly Retainers: 10-hour or 12-hour daily chauffeur availability\n• Ad-Hoc Bookings: 1-hour advance dispatch for VIP client airport visits",
+      "dressCode": "Strict corporate chauffeur attire: Formal uniform, polished shoes, clean grooming, and English/Tamil fluency.",
+      "tips": [
+        "Input Tax Credit (ITC): All corporate billing is issued under GSTIN 33COVPM0531D1Z4, allowing your company to claim 100% GST input tax credit.",
+        "Dedicated Account Manager: Corporate accounts receive a single point of contact for roster changes, routing optimization, and monthly invoices.",
+        "Female Passenger Night Escort: Automated drop-confirmation protocol and front-seat driver restrictions for late-night female employee drops.",
+        "Custom Roster Routing: We analyze employee pin codes to create cost-efficient multi-point pickup clusters reducing company transport bills.",
+        "Trial Week Available: Test our corporate cab service with zero long-term commitment for 1 week before signing a monthly service agreement."
+      ]
+    },
+    "faq": [
+      {
+        "q": "What corporate mobility services do you offer on OMR Chennai?",
+        "a": "We provide end-to-end employee transportation (ETS routed shuttles), monthly executive car retainers with dedicated chauffeurs, ad-hoc client airport delegations, and corporate event transit across the entire OMR IT corridor."
+      },
+      {
+        "q": "Which IT parks and SEZs on OMR do you cover?",
+        "a": "We service all major IT parks along OMR including Tidel Park, Ascendas International Tech Park, RMZ Millenia, ASV Suntech Park, Brigade Vantage, Elcot SEZ (Sholinganallur), Pacifica Tech Park (Navalur), and Siruseri SIPCOT IT Park."
+      },
+      {
+        "q": "Do you provide GST-compliant invoices for corporate tax deductions?",
+        "a": "Yes, 100%. All billing is issued under our registered GSTIN (33COVPM0531D1Z4) with formal trip sheets, log summaries, and SAC code 9966 for seamless Input Tax Credit (ITC) claiming."
+      },
+      {
+        "q": "What safety measures are in place for female employees on night shifts?",
+        "a": "We adhere to strict NASSCOM and government safety protocols: 100% police-verified chauffeurs, live GPS vehicle tracking, route geofencing, panic buttons, and safe drop-confirmation where the driver waits until the employee safely enters her premises."
+      },
+      {
+        "q": "Can we hire a monthly car with a dedicated driver for our CEO or executives?",
+        "a": "Yes. We offer executive retainers with premium Sedans (Etios, Dzire, Ciaz) and Luxury SUVs (Innova Crysta) dedicated exclusively to your leadership team on 10-hour or 12-hour daily shifts."
+      },
+      {
+        "q": "What is the SLA if a vehicle breaks down on route?",
+        "a": "We maintain backup staged vehicles along the OMR corridor and guarantee a replacement vehicle within 30 minutes to ensure zero disruption to employee shifts."
+      },
+      {
+        "q": "What vehicle types are available for employee commute?",
+        "a": "Our fleet includes 4-seater Sedans, 6-seater Ertiga MUVs, 7-seater Innovas, and 12-to-26 seater Tempo Travellers and mini-buses."
+      },
+      {
+        "q": "How does corporate billing and payment work?",
+        "a": "We offer flexible billing: 15-day or 30-day corporate credit terms upon contract signing, supported by consolidated digital trip sheets and monthly GST invoices."
+      },
+      {
+        "q": "Can we run a trial service before signing an annual contract?",
+        "a": "Yes. We offer a 1-week or 2-week pilot trial so your facilities and transport team can experience our on-time SLAs, vehicle cleanliness, and driver professionalism."
+      },
+      {
+        "q": "Do you provide acting drivers for company-owned cars?",
+        "a": "Yes, you can hire verified acting drivers on daily or monthly retainers to drive corporate fleet vehicles or executive personal cars."
+      },
+      {
+        "q": "Are your drivers trained in English and corporate etiquette?",
+        "a": "Yes, our executive chauffeurs are trained in professional corporate conduct, route navigation via Google Maps, punctual reporting, and courteous communication."
+      },
+      {
+        "q": "How do we get a corporate transportation proposal for our company?",
+        "a": "Contact our corporate desk directly at +91 89395 39211 or email kalidasstravels2015@gmail.com with your employee shift headcount and route pin codes. We provide customized route-optimized quotes within 24 hours."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels Corporate Desk, We would like to inquire about corporate cab services and employee transport on OMR. Please contact us.",
+    "metaTitle": "OMR Corporate Cabs Chennai | Employee Transport & Monthly Cars",
+    "metaDescription": "Corporate cab services & employee transport across OMR Chennai (Tidel, Sholinganallur, Siruseri). Monthly executive car rentals, GPS fleet, 100% GST invoices.",
+    "keywords": "omr corporate cabs, corporate cab service omr chennai, employee transport services omr, monthly car rental with driver omr, corporate taxi sholinganallur, siruseri sipcot corporate cabs, executive car hire omr chennai, b2b employee commute chennai",
+    "serviceType": "TaxiService",
+    "origin": "OMR, Chennai",
+    "destination": "Chennai & Outstation"
+  },
+  {
+    "slug": "tambaram-airport-taxi",
+    "category": "Airport Transfers",
+    "title": "Tambaram to Chennai Airport Taxi & Cab Booking",
+    "duration": "~11 km / 15–20 mins via GST Road (NH-32)",
+    "overview": "24/7 airport transfers between Tambaram and Chennai Airport (MAA). Doorstep pickup across Tambaram East, West, Sanatorium, and GST Road. Fixed flat rate from ₹650 for AC Sedan with zero peak surge pricing.",
+    "routePlan": [
+      {
+        "stop": "Tambaram Doorstep",
+        "desc": "Pickup from Tambaram East, West, MEPZ, or Tambaram Sanatorium."
+      },
+      {
+        "stop": "Chromepet / MIT Flyover",
+        "desc": "Direct transit along Grand Southern Trunk Road (GST Road / NH-32)."
+      },
+      {
+        "stop": "Pallavaram Junction",
+        "desc": "Dedicated airport bypass corridor avoiding local market traffic."
+      },
+      {
+        "stop": "Chennai Airport (MAA)",
+        "desc": "Drop at Domestic T1/T4 or International T2 departure ramps."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Seating Capacity",
+        "Airport Flat Fare",
+        "Key Highlights"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Passengers",
+          "₹650",
+          "AC Sedan • 2 Bags • Ideal for solo travelers & couples"
+        ],
+        [
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Passengers",
+          "₹1,150",
+          "6-Seater SUV • 3 Bags • Perfect for families with check-in bags"
+        ],
+        [
+          "Toyota Innova",
+          "7 Passengers",
+          "₹1,400",
+          "7-Seater Comfort MPV • 4 Bags • Ample boot room & legroom"
+        ],
+        [
+          "Toyota Innova Crysta (Luxury)",
+          "7 Passengers",
+          "₹1,600",
+          "Executive Luxury • 5 Bags • Reclining captain seats"
+        ],
+        [
+          "12-Seater Tempo Traveller",
+          "12 Passengers",
+          "₹2,400",
+          "Group Airport Transfer • 8–10 Bags • High roof & group seating"
+        ]
+      ],
+      "note": "Fixed flat airport fares include vehicle, fuel, and chauffeur allowance. Zero peak-hour or rain surge pricing."
+    },
+    "includes": [
+      "Doorstep pickup anywhere in Tambaram & Sanatorium",
+      "Direct drop at Domestic (T1/T4) or International (T2) departure gates",
+      "Commercial yellow-plate AC vehicle with sanitized interior",
+      "Courteous chauffeur with luggage loading and unloading assistance",
+      "Live flight monitoring for scheduled arrival pickups"
+    ],
+    "excludes": [
+      "Airport terminal parking fee (only if driver waits inside terminal parking for arrivals, at actuals)",
+      "Additional multi-point pickups (+₹100 per additional stop)"
+    ],
+    "travelGuide": {
+      "history": "• Tambaram to MAA Corridor: 11 km arterial link along GST Road\n• Fast Transit: 15–20 minutes via NH-32 flyovers\n• 24/7 Dispatch: Early morning 3:00 AM departures and late-night flight drops\n• Commercial Yellow-Plate Fleet: 100% verified drivers",
+      "timings": "• Off-Peak Hours: 15–20 minutes transit\n• Peak Traffic: 25–30 minutes during morning and evening rush\n• Recommended Departure: 2 hours prior for Domestic, 3 hours for International\n• 24/7 Dispatch: Round-the-clock service with on-time guarantee",
+      "dressCode": "Clean, polite, verified chauffeur in professional attire with company ID.",
+      "tips": [
+        "Fixed Rate Guarantee: Flat ₹650 fare remains identical day and night with zero surge pricing.",
+        "Early Morning Flights: Book the evening prior for guaranteed 03:00 AM or 04:00 AM doorstep pickup.",
+        "Terminal Pickups: Arriving at MAA? Provide your flight number; our driver greets you at the terminal arrival exit.",
+        "Luggage Selection: Traveling with 3 or more international suitcases? Book an Ertiga or Innova.",
+        "Zero Cancellation Fee: Cancel or reschedule free of charge with WhatsApp notification."
+      ]
+    },
+    "faq": [
+      {
+        "q": "What is the taxi fare from Tambaram to Chennai Airport?",
+        "a": "Our flat fare is ₹650 for an AC Sedan (Swift Dzire / Etios), ₹1,150 for a Maruti Ertiga SUV, ₹1,400 for a Toyota Innova, and ₹2,400 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing."
+      },
+      {
+        "q": "How long does it take from Tambaram to Chennai Airport by cab?",
+        "a": "The distance is about 11 km along GST Road (NH-32). Off-peak travel takes 15 to 20 minutes; peak hour transit takes 25 to 30 minutes."
+      },
+      {
+        "q": "Do you provide late night or early morning 03:00 AM pickups in Tambaram?",
+        "a": "Yes, our dispatch operates 24/7 with zero night surcharge or surge pricing."
+      },
+      {
+        "q": "Which areas in Tambaram do you cover?",
+        "a": "We provide doorstep pickups across Tambaram East, Tambaram West, Tambaram Sanatorium, Kadaperi, Mudichur Road, and MEPZ vicinity."
+      },
+      {
+        "q": "Can I book a return taxi from Chennai Airport back to Tambaram?",
+        "a": "Yes. Share your arrival flight number, and our chauffeur will track your landing and receive you at the arrival exit."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I need an airport taxi from Tambaram to Chennai Airport. Please confirm cab availability.",
+    "metaTitle": "Tambaram to Chennai Airport Taxi | Fixed Fare Cabs from ₹650",
+    "metaDescription": "Book 24/7 airport taxi from Tambaram to Chennai Airport (MAA). Fixed flat rate from ₹650 with zero surge. Clean AC Sedans & Ertiga. 10-15 min doorstep pickup.",
+    "keywords": "tambaram to chennai airport taxi, airport cab from tambaram, tambaram airport drop cab, tambaram to maa airport taxi fare, chennai airport taxi tambaram, flat rate airport cab tambaram",
+    "serviceType": "TaxiService",
+    "origin": "Tambaram, Chennai",
+    "destination": "Chennai Airport (MAA)"
+  },
+  {
+    "slug": "t-nagar-airport-taxi",
+    "category": "Airport Transfers",
+    "title": "T. Nagar to Chennai Airport Taxi & Cab Booking",
+    "duration": "~15 km / 25–35 mins via Mount Road & Kathipara",
+    "overview": "24/7 airport transfers between T. Nagar and Chennai Airport (MAA). Doorstep pickup across Usman Road, Pondy Bazaar, Panagal Park, and GN Chetty Road. Fixed flat rate from ₹950 for AC Sedan with zero surge pricing.",
+    "routePlan": [
+      {
+        "stop": "T. Nagar Doorstep",
+        "desc": "Pickup from Pondy Bazaar, Usman Road, Panagal Park, or GN Chetty Road."
+      },
+      {
+        "stop": "Anna Salai / Nandanam",
+        "desc": "Express artery transit bypassing commercial shopping traffic."
+      },
+      {
+        "stop": "Kathipara Grade Separator",
+        "desc": "Direct elevated flyover connection to GST Road."
+      },
+      {
+        "stop": "Chennai Airport (MAA)",
+        "desc": "Drop at Domestic T1/T4 or International T2 departure ramps."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Seating Capacity",
+        "Airport Flat Fare",
+        "Key Highlights"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Passengers",
+          "₹950",
+          "AC Sedan • 2 Bags • Best value for solo & business flyers"
+        ],
+        [
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Passengers",
+          "₹1,550",
+          "6-Seater SUV • 3 Bags • Ideal for families with shopping & check-in luggage"
+        ],
+        [
+          "Toyota Innova",
+          "7 Passengers",
+          "₹1,800",
+          "7-Seater Premium MPV • 4 Bags • Exceptional highway comfort"
+        ],
+        [
+          "Toyota Innova Crysta (Luxury)",
+          "7 Passengers",
+          "₹2,100",
+          "Executive Luxury • 5 Bags • Plush captain seats & quiet cabin"
+        ],
+        [
+          "12-Seater Tempo Traveller",
+          "12 Passengers",
+          "₹2,900",
+          "Group Airport Transfer • 8–10 Bags • High roof & group seating"
+        ]
+      ],
+      "note": "Fixed flat airport fares include vehicle, fuel, and chauffeur allowance. Zero peak-hour or rain surge pricing."
+    },
+    "includes": [
+      "Doorstep pickup anywhere in T. Nagar, Pondy Bazaar & Nandanam",
+      "Direct drop at Domestic (T1/T4) or International (T2) departure gates",
+      "Commercial yellow-plate AC vehicle with sanitized interior",
+      "Courteous chauffeur with luggage loading and unloading assistance",
+      "Live flight monitoring for scheduled arrival pickups"
+    ],
+    "excludes": [
+      "Airport terminal parking fee (only if driver waits inside terminal parking for arrivals, at actuals)",
+      "Additional multi-point pickups (+₹100 per additional stop)"
+    ],
+    "travelGuide": {
+      "history": "• T. Nagar to MAA Corridor: 15 km transit linking Chennai's retail hub to the airport\n• Route: Via Anna Salai, Guindy, and Kathipara Grade Separator\n• 24/7 Availability: Guaranteed doorstep cabs around the clock\n• Transparent Fares: Flat pricing with zero hidden surcharges",
+      "timings": "• Off-Peak Hours: 25–30 minutes\n• Peak Traffic: 35–45 minutes during evening retail rush\n• Recommended Departure: 2.5 hours prior for Domestic, 3.5 hours for International\n• 24/7 Dispatch: Continuous chauffeur availability",
+      "dressCode": "Clean, polite, verified chauffeur in professional attire with company ID.",
+      "tips": [
+        "Zero Surge Pricing: Unlike app cabs that surge up to ₹1,500 during rain or evening traffic, our rate is fixed at ₹950.",
+        "Shopping Baggage: Carrying extra shopping bags from Ranganathan Street? Book an Ertiga SUV for dedicated trunk space.",
+        "Early Morning Pickups: Need a 04:00 AM pickup? Book by 10:00 PM for guaranteed driver SMS allocation.",
+        "Terminal Pickups: Arriving at MAA? Provide your flight number; our driver greets you at the terminal arrival exit.",
+        "Zero Cancellation Fee: Cancel or reschedule anytime with WhatsApp notification."
+      ]
+    },
+    "faq": [
+      {
+        "q": "What is the taxi fare from T. Nagar to Chennai Airport?",
+        "a": "Our flat fare is ₹950 for an AC Sedan (Swift Dzire / Etios), ₹1,550 for a Maruti Ertiga SUV, ₹1,800 for a Toyota Innova, and ₹2,900 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing."
+      },
+      {
+        "q": "How long does it take from T. Nagar to Chennai Airport by cab?",
+        "a": "The distance is about 15 km. Off-peak transit takes 25 to 30 minutes; peak hour transit takes 35 to 45 minutes via Mount Road and Kathipara Flyover."
+      },
+      {
+        "q": "Do you pick up from hotels and residences in T. Nagar?",
+        "a": "Yes, we provide doorstep pickups from any residential street, hotel (Residency, Grand Chennai, Benzz Park), or shopping location in T. Nagar."
+      },
+      {
+        "q": "Can I pay using UPI (Google Pay, PhonePe)?",
+        "a": "Yes, all chauffeurs accept UPI, Google Pay, PhonePe, and cash upon reaching the airport."
+      },
+      {
+        "q": "How do I book a cab from T. Nagar to Chennai Airport?",
+        "a": "You can book in 30 seconds via WhatsApp or call +91 89395 39211 with your pickup address and flight time for instant confirmation."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I need an airport taxi from T. Nagar to Chennai Airport. Please confirm cab availability.",
+    "metaTitle": "T. Nagar to Chennai Airport Taxi | Fixed Fare Cabs from ₹950",
+    "metaDescription": "Book 24/7 airport taxi from T. Nagar to Chennai Airport (MAA). Fixed flat rate from ₹950 with zero surge. Clean AC Sedans & Ertiga. Doorstep pickup across Pondy Bazaar.",
+    "keywords": "t nagar to chennai airport taxi, airport cab from t nagar, t nagar airport drop cab, t nagar to maa airport taxi fare, chennai airport taxi t nagar, flat rate airport cab t nagar",
+    "serviceType": "TaxiService",
+    "origin": "T. Nagar, Chennai",
+    "destination": "Chennai Airport (MAA)"
+  },
+  {
+    "slug": "anna-nagar-airport-taxi",
+    "category": "Airport Transfers",
+    "title": "Anna Nagar to Chennai Airport Taxi & Cab Booking",
+    "duration": "~20 km / 35–45 mins via 100 Feet Road & Koyambedu",
+    "overview": "24/7 airport transfers between Anna Nagar and Chennai Airport (MAA). Doorstep pickup across Roundtana, Shanthi Colony, 2nd Avenue, and Thirumangalam. Fixed flat rate from ₹1,150 for AC Sedan with zero surge pricing.",
+    "routePlan": [
+      {
+        "stop": "Anna Nagar Doorstep",
+        "desc": "Pickup from Shanthi Colony, Roundtana, 2nd Avenue, or Thirumangalam."
+      },
+      {
+        "stop": "Koyambedu Grade Separator",
+        "desc": "Transit onto 100 Feet Inner Ring Road (Jawaharlal Nehru Road)."
+      },
+      {
+        "stop": "Kathipara Flyover",
+        "desc": "Elevated intersection leading directly to GST Road."
+      },
+      {
+        "stop": "Chennai Airport (MAA)",
+        "desc": "Drop at Domestic T1/T4 or International T2 departure ramps."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Seating Capacity",
+        "Airport Flat Fare",
+        "Key Highlights"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Passengers",
+          "₹1,150",
+          "AC Sedan • 2 Bags • Best value for solo & family departures"
+        ],
+        [
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Passengers",
+          "₹1,750",
+          "6-Seater SUV • 3 Bags • Spacious seating & large boot"
+        ],
+        [
+          "Toyota Innova",
+          "7 Passengers",
+          "₹2,000",
+          "7-Seater Premium MPV • 4 Bags • Supreme highway comfort"
+        ],
+        [
+          "Toyota Innova Crysta (Luxury)",
+          "7 Passengers",
+          "₹2,300",
+          "Executive Luxury • 5 Bags • Reclining leather captain seats"
+        ],
+        [
+          "12-Seater Tempo Traveller",
+          "12 Passengers",
+          "₹3,200",
+          "Group Airport Transfer • 8–10 Bags • Pushback seats & high roof"
+        ]
+      ],
+      "note": "Fixed flat airport fares include vehicle, fuel, and chauffeur allowance. Zero peak-hour or rain surge pricing."
+    },
+    "includes": [
+      "Doorstep pickup anywhere in Anna Nagar (East, West, Shanthi Colony, Thirumangalam)",
+      "Direct drop at Domestic (T1/T4) or International (T2) departure gates",
+      "Commercial yellow-plate AC vehicle with sanitized interior",
+      "Courteous chauffeur with luggage loading and unloading assistance",
+      "Live flight monitoring for scheduled arrival pickups"
+    ],
+    "excludes": [
+      "Airport terminal parking fee (only if driver waits inside terminal parking for arrivals, at actuals)",
+      "Additional multi-point pickups (+₹100 per additional stop)"
+    ],
+    "travelGuide": {
+      "history": "• Anna Nagar to MAA Corridor: 20 km North-West to South Chennai transit\n• Route: Via 100 Feet Road, Vadapalani, Ashok Nagar, and Kathipara Flyover\n• 24/7 Availability: Guaranteed doorstep cabs around the clock\n• Transparent Fares: Flat pricing with zero hidden surcharges",
+      "timings": "• Off-Peak Hours: 30–35 minutes\n• Peak Traffic: 45–55 minutes during morning and evening rush\n• Recommended Departure: 2.5 hours prior for Domestic, 3.5 hours for International\n• 24/7 Dispatch: Continuous chauffeur availability",
+      "dressCode": "Clean, polite, verified chauffeur in professional attire with company ID.",
+      "tips": [
+        "Zero Surge Pricing: App aggregators often surge to ₹1,800+ from Anna Nagar during peak hours; our rate is fixed at ₹1,150.",
+        "Peak Hour Buffer: If traveling during 08:30 AM–10:30 AM or 05:30 PM–08:00 PM, allow 50 minutes for transit via 100 Feet Road.",
+        "Early Morning Pickups: Need a 03:30 AM pickup? Book the night before for confirmed driver assignment.",
+        "Terminal Pickups: Arriving at MAA? Provide your flight number; our driver greets you at the terminal arrival exit.",
+        "Zero Cancellation Fee: Cancel or reschedule anytime with WhatsApp notification."
+      ]
+    },
+    "faq": [
+      {
+        "q": "What is the taxi fare from Anna Nagar to Chennai Airport?",
+        "a": "Our flat fare is ₹1,150 for an AC Sedan (Swift Dzire / Etios), ₹1,750 for a Maruti Ertiga SUV, ₹2,000 for a Toyota Innova, and ₹3,200 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing."
+      },
+      {
+        "q": "How long does it take from Anna Nagar to Chennai Airport by cab?",
+        "a": "The distance is about 20 km. Off-peak travel takes 30 to 35 minutes; peak hour transit takes 45 to 55 minutes via 100 Feet Road and Koyambedu."
+      },
+      {
+        "q": "Which areas in Anna Nagar do you cover?",
+        "a": "We cover all of Anna Nagar including Anna Nagar East, West, West Extension, Shanthi Colony, Roundtana, Thirumangalam, Mogappair, and Shenoy Nagar."
+      },
+      {
+        "q": "Can I fit 3 large suitcases in a Sedan?",
+        "a": "Sedans accommodate 2 large check-in bags comfortably. For 3 or more large international bags, we recommend booking a Maruti Ertiga or Toyota Innova."
+      },
+      {
+        "q": "How do I book an airport taxi from Anna Nagar?",
+        "a": "You can book instantly via WhatsApp or call +91 89395 39211 with your address and departure time for immediate confirmation."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I need an airport taxi from Anna Nagar to Chennai Airport. Please confirm cab availability.",
+    "metaTitle": "Anna Nagar to Chennai Airport Taxi | Fixed Fare Cabs from ₹1,150",
+    "metaDescription": "Book 24/7 airport taxi from Anna Nagar to Chennai Airport (MAA). Fixed rate from ₹1,150 with zero surge. Clean AC Sedans & Ertiga. Doorstep pickup across Shanthi Colony.",
+    "keywords": "anna nagar to chennai airport taxi, airport cab from anna nagar, anna nagar airport drop cab, anna nagar to maa airport taxi fare, chennai airport taxi anna nagar, flat rate airport cab anna nagar",
+    "serviceType": "TaxiService",
+    "origin": "Anna Nagar, Chennai",
+    "destination": "Chennai Airport (MAA)"
+  },
+  {
+    "slug": "sholinganallur-airport-taxi",
+    "category": "Airport Transfers",
+    "title": "Sholinganallur to Chennai Airport Taxi & Cab Booking",
+    "duration": "~18 km / 25–35 mins via 200 Feet Radial Road",
+    "overview": "24/7 airport taxi service between Sholinganallur (OMR) and Chennai Airport (MAA). Doorstep pickup across ELCOT SEZ, Classic Farms, and Junction. Fixed flat rate from ₹1,250 for AC Sedan with zero surge pricing.",
+    "routePlan": [
+      {
+        "stop": "Sholinganallur Doorstep",
+        "desc": "Pickup from ELCOT SEZ, OMR Junction, Classic Farms, or residential towers."
+      },
+      {
+        "stop": "Medavakkam Junction",
+        "desc": "Bypass cross-connector leading toward Nanmangalam and Pallikaranai."
+      },
+      {
+        "stop": "200 Feet Radial Road",
+        "desc": "High-speed 6-lane bypass leading directly to GST Road."
+      },
+      {
+        "stop": "Chennai Airport (MAA)",
+        "desc": "Drop at Domestic T1/T4 or International T2 departure ramps."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Seating Capacity",
+        "Airport Flat Fare",
+        "Key Highlights"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Passengers",
+          "₹1,250",
+          "AC Sedan • 2 Bags • Ideal for IT professionals & business flyers"
+        ],
+        [
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Passengers",
+          "₹1,850",
+          "6-Seater SUV • 3 Bags • Great for family airport transit"
+        ],
+        [
+          "Toyota Innova",
+          "7 Passengers",
+          "₹2,100",
+          "7-Seater Premium MPV • 4 Bags • Ample luggage room"
+        ],
+        [
+          "Toyota Innova Crysta (Luxury)",
+          "7 Passengers",
+          "₹2,400",
+          "Executive Luxury • 5 Bags • Reclining captain seats for VIP travelers"
+        ],
+        [
+          "12-Seater Tempo Traveller",
+          "12 Passengers",
+          "₹3,400",
+          "Group Airport Transfer • 8–10 Bags • High roof & group seating"
+        ]
+      ],
+      "note": "Fixed flat airport fares include vehicle, fuel, and chauffeur allowance. Zero peak-hour or rain surge pricing."
+    },
+    "includes": [
+      "Doorstep pickup anywhere in Sholinganallur, ELCOT SEZ & OMR",
+      "Direct drop at Domestic (T1/T4) or International (T2) departure gates",
+      "Commercial yellow-plate AC vehicle with sanitized interior",
+      "Courteous chauffeur with luggage loading and unloading assistance",
+      "Live flight monitoring for scheduled arrival pickups"
+    ],
+    "excludes": [
+      "Airport terminal parking fee (only if driver waits inside terminal parking for arrivals, at actuals)",
+      "Additional multi-point pickups (+₹100 per additional stop)"
+    ],
+    "travelGuide": {
+      "history": "• Sholinganallur to MAA Corridor: 18 km transit connecting OMR IT Hub to Chennai Airport\n• Route: Via Medavakkam and 200 Feet Radial Road bypass\n• 24/7 Availability: Guaranteed doorstep cabs around the clock\n• Transparent Fares: Flat pricing with zero hidden surcharges",
+      "timings": "• Off-Peak Hours: 25–30 minutes\n• Peak Traffic: 35–45 minutes during OMR evening shift rush\n• Recommended Departure: 2.5 hours prior for Domestic, 3.5 hours for International\n• 24/7 Dispatch: Continuous chauffeur availability",
+      "dressCode": "Clean, polite, verified chauffeur in professional attire with company ID.",
+      "tips": [
+        "Zero Surge Pricing: App aggregators frequently surge to ₹1,900+ on OMR during rain and shift hours; our rate is fixed at ₹1,250.",
+        "Fastest Route: Our chauffeurs use the 200 Feet Radial Road bypass to avoid city congestion.",
+        "Early Morning Flights: Need a 03:00 AM pickup? Book by 10:00 PM for guaranteed driver SMS allocation.",
+        "Terminal Pickups: Arriving at MAA? Provide your flight number; our driver greets you at the terminal arrival exit.",
+        "Zero Cancellation Fee: Cancel or reschedule anytime with WhatsApp notification."
+      ]
+    },
+    "faq": [
+      {
+        "q": "What is the taxi fare from Sholinganallur to Chennai Airport?",
+        "a": "Our flat fare is ₹1,250 for an AC Sedan (Swift Dzire / Etios), ₹1,850 for a Maruti Ertiga SUV, ₹2,100 for a Toyota Innova, and ₹3,400 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing."
+      },
+      {
+        "q": "How long does it take from Sholinganallur to Chennai Airport by taxi?",
+        "a": "The distance is about 18 km via the 200 Feet Radial Road. Off-peak travel takes 25 to 30 minutes; peak hour transit takes 35 to 45 minutes."
+      },
+      {
+        "q": "Do you provide corporate GST invoices for business airport trips?",
+        "a": "Yes, 100%. All billing includes GSTIN (33COVPM0531D1Z4) for seamless corporate input tax credit (ITC) reimbursement."
+      },
+      {
+        "q": "Which areas in Sholinganallur do you cover?",
+        "a": "We cover all of Sholinganallur including ELCOT SEZ, Wipro Junction, Classic Farms, Semmancheri, and Dollar City."
+      },
+      {
+        "q": "How do I book a cab from Sholinganallur to Chennai Airport?",
+        "a": "You can book in 30 seconds via WhatsApp or call +91 89395 39211 with your pickup address and flight time for instant confirmation."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I need an airport taxi from Sholinganallur to Chennai Airport. Please confirm cab availability.",
+    "metaTitle": "Sholinganallur to Chennai Airport Taxi | OMR Cabs from ₹1,250",
+    "metaDescription": "Book 24/7 airport taxi from Sholinganallur OMR to Chennai Airport (MAA). Fixed flat rate from ₹1,250 with zero surge. Via 200 Ft Radial Road in 30 mins.",
+    "keywords": "sholinganallur to chennai airport taxi, airport cab from sholinganallur, omr airport taxi, sholinganallur airport drop cab, sholinganallur to maa airport taxi fare, flat rate airport cab omr",
+    "serviceType": "TaxiService",
+    "origin": "Sholinganallur, Chennai",
+    "destination": "Chennai Airport (MAA)"
+  },
+  {
+    "slug": "porur-airport-taxi",
+    "category": "Airport Transfers",
+    "title": "Porur to Chennai Airport Taxi & Cab Booking",
+    "duration": "~14 km / 20–30 mins via Butt Road & Kathipara",
+    "overview": "24/7 airport transfers between Porur and Chennai Airport (MAA). Doorstep pickup across Porur Junction, Mount Poonamallee Road, and DLF IT Park. Fixed flat rate from ₹750 for AC Sedan with zero surge pricing.",
+    "routePlan": [
+      {
+        "stop": "Porur Doorstep",
+        "desc": "Pickup from Porur Junction, DLF IT Park, Ramapuram, or Mugalivakkam."
+      },
+      {
+        "stop": "Mount Poonamallee Road",
+        "desc": "Express artery transit toward St. Thomas Mount and Butt Road."
+      },
+      {
+        "stop": "Kathipara Grade Separator",
+        "desc": "Direct elevated flyover connection to GST Road."
+      },
+      {
+        "stop": "Chennai Airport (MAA)",
+        "desc": "Drop at Domestic T1/T4 or International T2 departure ramps."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Seating Capacity",
+        "Airport Flat Fare",
+        "Key Highlights"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Passengers",
+          "₹750",
+          "AC Sedan • 2 Bags • Ideal for IT professionals & solo flyers"
+        ],
+        [
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Passengers",
+          "₹1,250",
+          "6-Seater SUV • 3 Bags • Great for family airport transit"
+        ],
+        [
+          "Toyota Innova",
+          "7 Passengers",
+          "₹1,500",
+          "7-Seater Premium MPV • 4 Bags • Ample luggage room"
+        ],
+        [
+          "Toyota Innova Crysta (Luxury)",
+          "7 Passengers",
+          "₹1,800",
+          "Executive Luxury • 5 Bags • Reclining captain seats for VIP travelers"
+        ],
+        [
+          "12-Seater Tempo Traveller",
+          "12 Passengers",
+          "₹2,600",
+          "Group Airport Transfer • 8–10 Bags • High roof & group seating"
+        ]
+      ],
+      "note": "Fixed flat airport fares include vehicle, fuel, and chauffeur allowance. Zero peak-hour or rain surge pricing."
+    },
+    "includes": [
+      "Doorstep pickup anywhere in Porur, Ramapuram, DLF & Mugalivakkam",
+      "Direct drop at Domestic (T1/T4) or International (T2) departure gates",
+      "Commercial yellow-plate AC vehicle with sanitized interior",
+      "Courteous chauffeur with luggage loading and unloading assistance",
+      "Live flight monitoring for scheduled arrival pickups"
+    ],
+    "excludes": [
+      "Airport terminal parking fee (only if driver waits inside terminal parking for arrivals, at actuals)",
+      "Additional multi-point pickups (+₹100 per additional stop)"
+    ],
+    "travelGuide": {
+      "history": "• Porur to MAA Corridor: 14 km transit connecting West Chennai to Chennai Airport\n• Route: Via Mount Poonamallee Road, Ramapuram, and Kathipara Grade Separator\n• 24/7 Availability: Guaranteed doorstep cabs around the clock\n• Transparent Fares: Flat pricing with zero hidden surcharges",
+      "timings": "• Off-Peak Hours: 20–25 minutes\n• Peak Traffic: 30–40 minutes during morning and evening rush\n• Recommended Departure: 2 hours prior for Domestic, 3 hours for International\n• 24/7 Dispatch: Continuous chauffeur availability",
+      "dressCode": "Clean, polite, verified chauffeur in professional attire with company ID.",
+      "tips": [
+        "Zero Surge Pricing: App aggregators frequently surge to ₹1,200+ from Porur during rain; our rate is fixed at ₹750.",
+        "DLF IT Park Pickups: Our drivers provide doorstep pickups at DLF IT Park gates and all nearby tech offices.",
+        "Early Morning Flights: Need a 03:00 AM pickup? Book by 10:00 PM for guaranteed driver SMS allocation.",
+        "Terminal Pickups: Arriving at MAA? Provide your flight number; our driver greets you at the terminal arrival exit.",
+        "Zero Cancellation Fee: Cancel or reschedule anytime with WhatsApp notification."
+      ]
+    },
+    "faq": [
+      {
+        "q": "What is the taxi fare from Porur to Chennai Airport?",
+        "a": "Our flat fare is ₹750 for an AC Sedan (Swift Dzire / Etios), ₹1,250 for a Maruti Ertiga SUV, ₹1,500 for a Toyota Innova, and ₹2,600 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing."
+      },
+      {
+        "q": "How long does it take from Porur to Chennai Airport by taxi?",
+        "a": "The distance is about 14 km via Mount Poonamallee Road. Off-peak travel takes 20 to 25 minutes; peak hour transit takes 30 to 40 minutes."
+      },
+      {
+        "q": "Do you cover DLF IT Park and Ramapuram?",
+        "a": "Yes, we provide 24/7 doorstep pickup across DLF IT Park, Ramapuram, Mugalivakkam, Manapakkam, and Porur Junction."
+      },
+      {
+        "q": "Can I pay using UPI (Google Pay, PhonePe)?",
+        "a": "Yes, all chauffeurs accept UPI, Google Pay, PhonePe, and cash upon reaching the airport."
+      },
+      {
+        "q": "How do I book a cab from Porur to Chennai Airport?",
+        "a": "You can book in 30 seconds via WhatsApp or call +91 89395 39211 with your pickup address and flight time for instant confirmation."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I need an airport taxi from Porur to Chennai Airport. Please confirm cab availability.",
+    "metaTitle": "Porur to Chennai Airport Taxi | Fixed Fare Cabs from ₹750",
+    "metaDescription": "Book 24/7 airport taxi from Porur to Chennai Airport (MAA). Fixed flat rate from ₹750 with zero surge. Clean AC Sedans & Ertiga. DLF & Ramapuram doorstep pickup.",
+    "keywords": "porur to chennai airport taxi, airport cab from porur, dlf airport taxi, porur airport drop cab, porur to maa airport taxi fare, flat rate airport cab porur",
+    "serviceType": "TaxiService",
+    "origin": "Porur, Chennai",
+    "destination": "Chennai Airport (MAA)"
+  },
+  {
+    "slug": "chennai-to-bangalore-taxi",
+    "category": "Outstation Cabs",
+    "title": "Chennai to Bangalore Taxi & Cab Booking (One-Way & Round Trip)",
+    "duration": "~350 km / 5.5–6.5 hrs via NH-48 (Hosur Expressway)",
+    "overview": "Doorstep Chennai to Bangalore taxi via NH-48 or Chittoor Expressway (350 km). One-way drops from ₹5,500; round-trip packages from ₹9,500. Fuel and driver allowance included with transparent Karnataka permit guidance.",
+    "routePlan": [
+      {
+        "stop": "Chennai Doorstep",
+        "desc": "Pickup from your home, office, or Chennai Airport (MAA)."
+      },
+      {
+        "stop": "Sriperumbudur / Kanchipuram Bypass",
+        "desc": "Join 6-lane NH-48 Bengaluru-Chennai Expressway corridor."
+      },
+      {
+        "stop": "Vellore / Ambur Bypass",
+        "desc": "Comfort highway halt for refreshments and hygienic restrooms."
+      },
+      {
+        "stop": "Krishnagiri / Hosur",
+        "desc": "Karnataka border crossing with pre-verified interstate permit handling."
+      },
+      {
+        "stop": "Electronic City / Silk Board",
+        "desc": "Drop at South Bangalore IT corridor or Whitefield."
+      },
+      {
+        "stop": "Bangalore Destination",
+        "desc": "Drop at any hotel, residence, or Kempegowda Airport (BLR)."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Seating Capacity",
+        "Package Flat Cost",
+        "Key Highlights"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Passengers",
+          "₹5,500 One-Way / ₹9,500 RT",
+          "AC Sedan • 2 Bags • Ideal for solo & corporate travelers"
+        ],
+        [
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Passengers",
+          "₹7,200 One-Way / ₹12,000 RT",
+          "3-Row AC SUV • 3 Bags • Great family legroom & rear AC"
+        ],
+        [
+          "Toyota Innova",
+          "7 Passengers",
+          "₹8,500 One-Way / ₹14,000 RT",
+          "Highway King • 4 Bags • Exceptional expressway ride quality"
+        ],
+        [
+          "Toyota Innova Crysta (Luxury)",
+          "7 Passengers",
+          "₹11,000 One-Way / ₹17,500 RT",
+          "Executive Luxury • Plush captain seats • VIP expressway cruise"
+        ],
+        [
+          "12-Seater Tempo Traveller",
+          "12 Passengers",
+          "₹14,500 One-Way / ₹22,000 RT",
+          "Group Coach • 8–10 Bags • Pushback reclining seats & high roof"
+        ]
+      ],
+      "note": "Package flat fares include sanitized AC vehicle, fuel, and driver bata. Highway FASTag tolls and Karnataka commercial permit billed at actuals."
+    },
+    "includes": [
+      "Doorstep pickup anywhere in Chennai and drop at any Bangalore location",
+      "Experienced NH-48 expressway chauffeur with clean police verification",
+      "Clean commercial yellow-plate AC vehicle with sanitization before departure",
+      "Fuel charges and driver allowance (bata)",
+      "Flexible highway tea/coffee halts at reputed food plazas"
+    ],
+    "excludes": [
+      "Highway FASTag tolls (~₹480 on NH-48, billed at actuals)",
+      "Karnataka State Border Commercial Entry Tax (at actual RTO receipt)",
+      "Parking charges at sightseeing or hotel locations"
+    ],
+    "travelGuide": {
+      "history": "• Chennai to Bangalore Expressway: 350 km prime South India interstate corridor\n• Route: Via NH-48 (Kanchipuram, Vellore, Krishnagiri, Hosur)\n• Modern Fleet: Commercial yellow-plate sedans, SUVs, and luxury Tempo Travellers\n• 24/7 Dispatch: Day and night departures available with advance notice",
+      "timings": "• Best Departure: 05:00 AM – 06:00 AM to beat city exits in Chennai and Bangalore\n• Ideal Travel Time: 5.5 to 6.5 hours via NH-48\n• Highway Food Halts: Murugan Idli Shop (Kanchipuram), Star Biryani (Ambur)\n• 24/7 Availability: Round-the-clock booking and dispatch",
+      "dressCode": "Clean, polite, verified chauffeur in professional attire with company ID.",
+      "tips": [
+        "Choose Early Morning Departure: Starting before 06:00 AM saves up to 1.5 hours of traffic at Sriperumbudur and Electronic City.",
+        "Transparent Border Permit: Karnataka interstate commercial entry tax is handled transparently by our driver with genuine RTO receipts.",
+        "Kempegowda Airport (BLR) Direct: Traveling straight to Bangalore Airport? Inform during booking for the fastest bypass route via Hoskote.",
+        "Zero Cancellation Penalty: Plans changed? Reschedule or cancel free of charge up to 3 hours prior to pickup.",
+        "UPI & Corporate Billing: All drivers accept GPay/PhonePe; corporate GST invoices issued for business travel."
+      ]
+    },
+    "faq": [
+      {
+        "q": "How much is the taxi fare from Chennai to Bangalore?",
+        "a": "One-way drop taxi fares start from ₹5,500 for an AC Sedan (Swift Dzire / Etios), ₹7,200 for an Ertiga SUV, ₹8,500 for an Innova, and ₹14,500 for a 12-seater Tempo Traveller. Same-day or multi-day round trips start at ₹9,500 for Sedans."
+      },
+      {
+        "q": "What is the distance and travel time from Chennai to Bangalore by road?",
+        "a": "The road distance is approximately 350 km via NH-48 and takes about 5.5 to 6.5 hours depending on departure time and city traffic at Hosur."
+      },
+      {
+        "q": "Are tolls and Karnataka border entry tax included in the fare?",
+        "a": "Our base package includes vehicle, fuel, and driver bata. Highway FASTag tolls (~₹480) and Karnataka commercial border entry permit (~₹500 for cars) are billed at actual government receipts for 100% transparency."
+      },
+      {
+        "q": "Can I book a one-way cab from Chennai Airport directly to Bangalore?",
+        "a": "Yes! We pick up directly from Chennai Airport (MAA) terminal exit gates and proceed straight onto the Bangalore highway via the bypass."
+      },
+      {
+        "q": "Is advance payment required to book a Chennai to Bangalore cab?",
+        "a": "No advance deposit is required. You can book via WhatsApp or call and pay the driver upon reaching Bangalore via cash or UPI."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I would like to book a taxi from Chennai to Bangalore. Please confirm availability.",
+    "metaTitle": "Chennai to Bangalore Taxi | One-Way & Round Trip Cabs from ₹5,500",
+    "metaDescription": "Book Chennai to Bangalore taxi from ₹5,500 one-way drop and ₹9,500 round trip. Clean AC Sedans & Innova Crysta. Fastag tolls & doorstep pickup. ₹0 advance.",
+    "keywords": "chennai to bangalore taxi, chennai to bangalore cab fare, one way cab chennai to bangalore, chennai to bangalore outstation taxi, chennai to bangalore innova crysta, bangalore drop taxi chennai",
+    "serviceType": "TaxiService",
+    "origin": "Chennai",
+    "destination": "Bangalore"
+  },
+  {
+    "slug": "chennai-to-mahabalipuram-taxi",
+    "category": "Outstation Cabs",
+    "title": "Chennai to Mahabalipuram Taxi & Cab Booking (One-Way & Round Trip)",
+    "duration": "~55 km / 1.5 hrs via East Coast Road (SH-49)",
+    "overview": "Doorstep Chennai to Mahabalipuram taxi via scenic ECR (55 km). One-way drops from ₹1,800; same-day round trips from ₹2,400. Fuel, driver allowance, and flexible beachside photo halts included.",
+    "routePlan": [
+      {
+        "stop": "Chennai Doorstep",
+        "desc": "Pickup from your home, hotel, or Chennai Airport (MAA)."
+      },
+      {
+        "stop": "Akkarai / ECR Toll Plaza",
+        "desc": "Join 4-lane East Coast Road coastal highway."
+      },
+      {
+        "stop": "Muttukadu / Kovalam Beach",
+        "desc": "Optional halt for backwater boating or fresh coconut water."
+      },
+      {
+        "stop": "Mahabalipuram UNESCO Sites",
+        "desc": "Drop at Shore Temple, Five Rathas, Arjuna's Penance, or beach resort."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Seating Capacity",
+        "Package Flat Cost",
+        "Key Highlights"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Passengers",
+          "₹1,800 One-Way / ₹2,400 RT",
+          "AC Sedan • 2 Bags • Ideal for couples & solo heritage travelers"
+        ],
+        [
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Passengers",
+          "₹2,400 One-Way / ₹3,200 RT",
+          "3-Row AC SUV • 3 Bags • Great family comfort along coastal ECR"
+        ],
+        [
+          "Toyota Innova",
+          "7 Passengers",
+          "₹3,000 One-Way / ₹4,000 RT",
+          "7-Seater Comfort MPV • 4 Bags • Smooth highway cruise"
+        ],
+        [
+          "Toyota Innova Crysta (Luxury)",
+          "7 Passengers",
+          "₹3,800 One-Way / ₹5,000 RT",
+          "Executive Luxury • 5 Bags • Plush captain seats for resort guests"
+        ],
+        [
+          "12-Seater Tempo Traveller",
+          "12 Passengers",
+          "₹5,200 One-Way / ₹6,800 RT",
+          "Group Van • 8–10 Bags • Pushback seats & high roof for tour groups"
+        ]
+      ],
+      "note": "Package flat fares include sanitized AC vehicle, fuel, and driver bata. ECR Fastag toll (~₹65) billed at actuals."
+    },
+    "includes": [
+      "Doorstep pickup anywhere in Chennai and drop at any Mahabalipuram resort or monument",
+      "Experienced coastal highway chauffeur with clean police verification",
+      "Clean commercial yellow-plate AC vehicle with sanitization before departure",
+      "Fuel charges and driver allowance (bata)",
+      "Flexible photo halts along scenic ECR coastal stretch"
+    ],
+    "excludes": [
+      "ECR Highway Fastag toll (~₹65 at Akkarai, billed at actuals)",
+      "Monument entry tickets and parking fees"
+    ],
+    "travelGuide": {
+      "history": "• Mahabalipuram (Mamallapuram): 7th-century Pallava UNESCO World Heritage Site\n• Coastal Highway: 55 km scenic drive along the Bay of Bengal\n• Iconic Monuments: Shore Temple, Pancha Rathas, Arjuna's Penance, Krishna's Butter Ball\n• Luxury Resorts: Radisson Blu Temple Bay, InterContinental, Taj Fisherman's Cove",
+      "timings": "• Best Departure: 07:00 AM – 08:30 AM to explore monuments before afternoon sun\n• Travel Time: 1.2 to 1.5 hours via ECR (SH-49)\n• Return Departure: 05:30 PM – 06:30 PM after beach sunset\n• 24/7 Availability: Round-the-clock booking and dispatch",
+      "dressCode": "Comfortable cotton casuals or resort wear. Walking shoes recommended for exploring monuments.",
+      "tips": [
+        "Scenic Stops: Ask your chauffeur to stop at Muttukadu boat house or Kovalam surf beach on the way.",
+        "Resort Drops: We provide direct doorstep drops to all ECR beach resorts with zero luggage surcharges.",
+        "Airport to Mahabalipuram: Arriving at Chennai Airport (MAA)? We provide direct pickups to Mahabalipuram in 1.2 hours.",
+        "Zero Advance Booking: Book via WhatsApp with zero deposit; pay after reaching your resort or home.",
+        "Zero Cancellation Fee: Cancel or reschedule anytime with WhatsApp notification."
+      ]
+    },
+    "faq": [
+      {
+        "q": "How much is the taxi fare from Chennai to Mahabalipuram?",
+        "a": "One-way drop taxi fares start from ₹1,800 for an AC Sedan (Swift Dzire / Etios), ₹2,400 for an Ertiga SUV, ₹3,000 for an Innova, and ₹5,200 for a 12-seater Tempo Traveller. Same-day round trips start at ₹2,400 for Sedans."
+      },
+      {
+        "q": "What is the travel distance and time from Chennai to Mahabalipuram?",
+        "a": "The road distance is approximately 55 km along the East Coast Road (SH-49) and takes about 1.2 to 1.5 hours."
+      },
+      {
+        "q": "Can the driver wait while we visit the monuments and return to Chennai?",
+        "a": "Yes! Our same-day round trip package includes waiting time while you explore the Shore Temple, Five Rathas, and enjoy lunch at local heritage cafes."
+      },
+      {
+        "q": "Can I get picked up directly from Chennai Airport (MAA) to Mahabalipuram?",
+        "a": "Yes, we provide 24/7 direct airport terminal pickups straight to your Mahabalipuram resort via the 200 Feet Radial Road and ECR bypass."
+      },
+      {
+        "q": "How do I book a cab from Chennai to Mahabalipuram?",
+        "a": "Simply send a message on WhatsApp or call +91 89395 39211 with your pickup location and date. Confirmation takes under 5 minutes."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I would like to book a cab from Chennai to Mahabalipuram. Please confirm availability.",
+    "metaTitle": "Chennai to Mahabalipuram Taxi | ECR Cab from ₹1,800",
+    "metaDescription": "Book Chennai to Mahabalipuram cab from ₹1,800 one-way drop and ₹2,400 round trip. Scenic ECR route, Shore Temple halt, clean AC Sedans & Innova.",
+    "keywords": "chennai to mahabalipuram taxi, chennai to mahabalipuram cab fare, mahabalipuram cab service, ecr cab chennai to mamallapuram, chennai airport to mahabalipuram taxi, one way cab to mahabalipuram",
+    "serviceType": "TaxiService",
+    "origin": "Chennai",
+    "destination": "Mahabalipuram"
   }
 ]

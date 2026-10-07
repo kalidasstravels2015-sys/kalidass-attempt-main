@@ -224,6 +224,43 @@ All rates are in Indian Rupees (INR). Vehicles are commercial yellow-plate regis
     - Master Hub: https://kalidasstravels.in/services/chennai-airport-taxi/
     - Description: Rapid 5-10 minute dispatch from Chennai International & Domestic Airport (MAA). Real-time flight delay tracking with zero wait penalty. Name placard greeting at terminal gate. Flat transparent rates from ₹650.
 
+### High-Intent Corridors & Suburban Dispatch Hubs
+
+21. **Tambaram to Chennai Airport Taxi & Cab Booking**
+    - URL: https://kalidasstravels.in/services/tambaram-airport-taxi/
+    - Distance: ~11 km / 15–20 mins via GST Road (NH-32).
+    - Pricing: Sedan ₹650 | Ertiga ₹1,150 | Innova ₹1,400 | Innova Crysta ₹1,600 | Tempo ₹2,400. Zero surge pricing.
+
+22. **T. Nagar to Chennai Airport Taxi & Cab Booking**
+    - URL: https://kalidasstravels.in/services/t-nagar-airport-taxi/
+    - Distance: ~15 km / 25–35 mins via Mount Road & Kathipara.
+    - Pricing: Sedan ₹950 | Ertiga ₹1,550 | Innova ₹1,800 | Innova Crysta ₹2,100 | Tempo ₹2,900. Zero surge pricing.
+
+23. **Anna Nagar to Chennai Airport Taxi & Cab Booking**
+    - URL: https://kalidasstravels.in/services/anna-nagar-airport-taxi/
+    - Distance: ~18 km / 35–45 mins via Inner Ring Road / Koyambedu bypass.
+    - Pricing: Sedan ₹1,100 | Ertiga ₹1,750 | Innova ₹2,000 | Innova Crysta ₹2,350 | Tempo ₹3,200. Zero surge pricing.
+
+24. **Sholinganallur to Chennai Airport Taxi & Cab Booking**
+    - URL: https://kalidasstravels.in/services/sholinganallur-airport-taxi/
+    - Distance: ~19 km / 30–40 mins via 200 Feet Radial Road.
+    - Pricing: Sedan ₹850 | Ertiga ₹1,350 | Innova ₹1,650 | Innova Crysta ₹1,950 | Tempo ₹2,700. Zero surge pricing.
+
+25. **Porur to Chennai Airport Taxi & Cab Booking**
+    - URL: https://kalidasstravels.in/services/porur-airport-taxi/
+    - Distance: ~12 km / 20–30 mins via Chennai Bypass & Kundrathur Main Rd.
+    - Pricing: Sedan ₹800 | Ertiga ₹1,300 | Innova ₹1,600 | Innova Crysta ₹1,900 | Tempo ₹2,600. Zero surge pricing.
+
+26. **Chennai to Bangalore Taxi (One-Way Drop & Round Trip)**
+    - URL: https://kalidasstravels.in/services/chennai-to-bangalore-taxi/
+    - Distance: ~345 km / 6–7 hours via NH-48.
+    - Pricing: Sedan ₹5,499 flat drop (or ₹14/km round trip) | Ertiga ₹7,499 flat drop (or ₹17/km) | Innova ₹9,499 flat drop (or ₹18/km) | Innova Crysta ₹11,999 flat drop (or ₹22/km) | Tempo ₹15,500 flat drop (or ₹24/km). Zero deadhead return fee.
+
+27. **Chennai to Mahabalipuram Taxi (ECR Beach Cab & Tour)**
+    - URL: https://kalidasstravels.in/services/chennai-to-mahabalipuram-taxi/
+    - Distance: ~55 km / 1.2–1.5 hours via East Coast Road (SH-49).
+    - Pricing: Sedan ₹1,800 drop / ₹2,400 round trip | Ertiga ₹2,400 drop / ₹3,200 round trip | Innova ₹3,000 drop / ₹3,900 round trip | Innova Crysta ₹3,800 drop / ₹4,800 round trip | Tempo ₹5,200 drop / ₹6,500 round trip. Shore temple halts included.
+
 ---
 
 ## 5. Billing Rules, Transparency & Operational Policies

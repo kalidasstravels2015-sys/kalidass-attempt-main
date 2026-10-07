@@ -38,7 +38,7 @@ const FleetCard = ({ vehicle, isVisible, priority }) => {
                         <div className="grid grid-cols-2 gap-2">
                             <div className="bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant text-center">
                                 <p className="text-micro font-semibold text-m3-on-surface-variant uppercase tracking-wider mb-0.5">Starting From</p>
-                                <p className="text-base sm:text-lg font-black text-m3-on-surface leading-none">{vehicle.rate}</p>
+                                <p className="text-sm sm:text-base font-bold text-m3-on-surface leading-none">{vehicle.rate}</p>
                             </div>
                             <div className="bg-m3-surface-container-low p-2.5 rounded-m3-md border border-m3-outline-variant text-center">
                                 <p className="text-micro font-semibold text-m3-on-surface-variant uppercase tracking-wider mb-0.5">Capacity</p>

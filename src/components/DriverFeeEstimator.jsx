@@ -517,7 +517,7 @@ export default function DriverFeeEstimator({
             <div className="flex justify-between items-center gap-3">
               <div>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-2xl sm:text-3xl font-black text-m3-on-surface tracking-tight font-heading">
+                  <span className="text-lg sm:text-xl font-bold text-m3-on-surface tracking-tight font-heading">
                     {fmtRs(result.total)}
                   </span>
                   <span className="text-micro text-m3-on-surface-variant font-medium">
@@ -532,7 +532,7 @@ export default function DriverFeeEstimator({
               <div className="text-right shrink-0">
                 <div className="inline-flex items-center gap-1 px-2.5 py-1 bg-m3-surface rounded-m3-md border border-m3-outline-variant text-xs font-bold shadow-m3-1">
                   <span className="text-m3-on-surface-variant font-normal text-[11px]">Bata:</span>
-                  <span className="font-black text-m3-on-surface">{fmtRs(vehicle.bata)}/day</span>
+                  <span className="font-bold text-m3-on-surface">{fmtRs(vehicle.bata)}/day</span>
                 </div>
               </div>
             </div>

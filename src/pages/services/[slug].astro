@@ -70,7 +70,19 @@ const tourImages: Record<string, string> = {
   "mahabalipuram-ecr-temple-route": "/images/temple/mahabalipuram-ecr-temples.webp",
   "one-day-chennai-city-tour": "/images/temple/chennai-city.webp",
   "yelagiri-hills-weekend": "/images/hero/coimbatore.webp",
-  "yercaud-hills-weekend": "/images/hero/airavatesvara.webp"
+  "yercaud-hills-weekend": "/images/hero/airavatesvara.webp",
+  "chennai-to-pondicherry-taxi": "/images/temple/pondicherry.webp",
+  "chennai-to-tirupati-one-day-package": "/images/temple/tirupati-balaji.webp",
+  "medavakkam-taxi-service": "/images/services/airport-transfer.webp",
+  "velachery-airport-taxi": "/images/services/airport-transfer.webp",
+  "omr-corporate-cabs": "/images/services/corporate.webp",
+  "tambaram-airport-taxi": "/images/services/airport-transfer.webp",
+  "t-nagar-airport-taxi": "/images/services/airport-transfer.webp",
+  "anna-nagar-airport-taxi": "/images/services/airport-transfer.webp",
+  "sholinganallur-airport-taxi": "/images/services/airport-transfer.webp",
+  "porur-airport-taxi": "/images/services/airport-transfer.webp",
+  "chennai-to-bangalore-taxi": "/images/hero/coimbatore.webp",
+  "chennai-to-mahabalipuram-taxi": "/images/temple/mahabalipuram-ecr-temples.webp"
 };
 
 const serviceShortNames: Record<string, string> = {
@@ -94,6 +106,18 @@ const serviceShortNames: Record<string, string> = {
   "yelagiri-hills-weekend": "Yelagiri Hills Weekend",
   "yercaud-hills-weekend": "Yercaud Weekend Package",
   "chennai-airport-taxi-transfers": "Chennai Airport Cab Transfer",
+  "chennai-to-pondicherry-taxi": "Chennai to Pondicherry Taxi",
+  "chennai-to-tirupati-one-day-package": "Tirupati 1-Day Package",
+  "medavakkam-taxi-service": "Medavakkam Taxi Service",
+  "velachery-airport-taxi": "Velachery Airport Taxi",
+  "omr-corporate-cabs": "OMR Corporate Cabs",
+  "tambaram-airport-taxi": "Tambaram Airport Taxi",
+  "t-nagar-airport-taxi": "T. Nagar Airport Taxi",
+  "anna-nagar-airport-taxi": "Anna Nagar Airport Taxi",
+  "sholinganallur-airport-taxi": "Sholinganallur Airport Taxi",
+  "porur-airport-taxi": "Porur Airport Taxi",
+  "chennai-to-bangalore-taxi": "Chennai to Bangalore Taxi",
+  "chennai-to-mahabalipuram-taxi": "Chennai to Mahabalipuram Taxi"
 };
 
 const shortName = serviceShortNames[service.slug] || service.destination || service.title;
@@ -117,11 +141,13 @@ const priorityHeaderRegexes = [
   /total.*cost/i,
   /round-trip.*cost|round-trip.*flat/i,
   /package.*cost/i,
-  /flat.*cost/i,
+  /flat.*cost|flat.*fare/i,
+  /airport.*drop|airport.*fare/i,
+  /one-way.*drop.*fare|one-way.*drop/i,
   /total.*1-day/i,
   /1-day.*cost/i,
   /total/i,
-  /airport.*drop/i,
+  /fare/i,
   /driver.*charge/i,
   /monthly.*rate/i,
   /driver.*fee/i,
@@ -1072,6 +1098,7 @@ if (service.tariff?.rows && service.tariff.rows.length > 0) {
         "priceCurrency": "INR",
         "price": rowPrice,
         "priceValidUntil": "2027-12-31",
+        "validFrom": "2025-01-01",
         "availability": "https://schema.org/InStock",
         "url": `https://kalidasstravels.in/services/${service.slug}/`,
         "description": [capacity, inclusions].filter(Boolean).join(' | '),
@@ -1094,6 +1121,7 @@ if (!offersData && startingPrice) {
     "priceCurrency": "INR",
     "price": startingPrice,
     "priceValidUntil": "2027-12-31",
+    "validFrom": "2025-01-01",
     "availability": "https://schema.org/InStock",
     "url": `https://kalidasstravels.in/services/${service.slug}/`,
     "seller": {
@@ -1189,9 +1217,13 @@ if (isTour) {
       "worstRating": "1"
     }
   };
-  if (service.serviceType) {
-    singleSchema.serviceType = service.serviceType;
+  if (!isActingDriver) {
+    singleSchema.priceRange = "₹₹";
+    singleSchema.termsOfService = "https://kalidasstravels.in/terms/";
   }
+    if (service.serviceType) {
+      singleSchema.serviceType = service.serviceType;
+    }
   if (offersData) {
     singleSchema.offers = offersData;
   }
@@ -1434,8 +1466,8 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
           </div>
         )}
 
-        {/* M3 Quick Summary Grid (Operational services like Acting Drivers & Corporate only; hidden on Tour Packages to eliminate duplicate facts) */}
-        {!isTour && (
+        {/* M3 Quick Summary Grid (Acting Driver services only) */}
+        {isActingDriver && (
           <div class="bg-m3-surface-container-low rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 text-xs sm:text-sm">
             <div class="space-y-1 min-w-0">
               <span class="block text-badge font-bold uppercase tracking-wider text-m3-on-surface-variant">Coverage Area</span>
@@ -1538,7 +1570,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
           <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-5">
             <div class="p-3.5 rounded-m3-xl bg-white border border-m3-outline-variant/60 shadow-xs">
               <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-1">Total Distance</span>
-              <p class="text-base sm:text-lg font-black text-m3-on-surface font-heading">
+              <p class="text-sm sm:text-base font-bold text-m3-on-surface font-heading">
                 {pilgrimConfig.distance}
               </p>
               <p class="text-micro text-m3-on-surface-variant mt-0.5">
@@ -1548,7 +1580,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
 
             <div class="p-3.5 rounded-m3-xl bg-white border border-m3-outline-variant/60 shadow-xs">
               <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-1">Travel Time</span>
-              <p class="text-base sm:text-lg font-black text-m3-on-surface font-heading">
+              <p class="text-sm sm:text-base font-bold text-m3-on-surface font-heading">
                 {pilgrimConfig.travelTime}
               </p>
               <p class="text-micro text-m3-on-surface-variant mt-0.5">
@@ -1558,7 +1590,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
 
             <div class="p-3.5 rounded-m3-xl bg-white border border-m3-outline-variant/60 shadow-xs">
               <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-1">Starting Fare</span>
-              <p class="text-base sm:text-lg font-black text-m3-primary font-heading">
+              <p class="text-sm sm:text-base font-bold text-m3-primary font-heading">
                 {pilgrimConfig.startingFare}
               </p>
               <p class="text-micro text-emerald-700 font-semibold mt-0.5">
@@ -1570,7 +1602,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
               <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-1">
                 {pilgrimConfig.tollsLabel}
               </span>
-              <p class="text-base sm:text-lg font-black text-emerald-700 font-heading">{pilgrimConfig.tollsValue}</p>
+              <p class="text-sm sm:text-base font-bold text-emerald-700 font-heading">{pilgrimConfig.tollsValue}</p>
               <p class="text-micro text-m3-on-surface-variant mt-0.5">
                 {pilgrimConfig.tollsSub}
               </p>
@@ -1798,7 +1830,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                           <span class="text-[11px] font-semibold text-m3-on-surface-variant uppercase tracking-wider">
                             {heroPriceLabel || "All-Inclusive Flat Fare"}
                           </span>
-                          <strong class="tariff-hero-price text-2xl sm:text-3xl font-black text-m3-primary font-heading tracking-tight leading-none">
+                          <strong class="tariff-hero-price text-lg sm:text-xl font-bold text-m3-primary font-heading tracking-tight leading-none">
                             {heroPrice}
                           </strong>
                         </div>
@@ -1896,7 +1928,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                   return (
                     <tr class={`hover:bg-m3-surface-container-low transition-colors ${rIdx % 2 === 0 ? 'bg-m3-surface' : 'bg-m3-surface-container-lowest'}`}>
                       {row.map((cell: string, cIdx: number) => (
-                        <td class={`px-5 py-4 ${cIdx === 0 ? 'font-bold text-m3-on-surface text-sm sm:text-base' : 'text-m3-on-surface-variant text-sm'} ${cIdx === row.length - 1 ? 'text-right font-black text-m3-primary font-heading text-base' : ''}`}>
+                        <td class={`px-5 py-4 ${cIdx === 0 ? 'font-bold text-m3-on-surface text-sm sm:text-base' : 'text-m3-on-surface-variant text-sm'} ${cIdx === row.length - 1 ? 'text-right font-bold text-m3-primary font-heading text-sm sm:text-base' : ''}`}>
                           {cell}
                         </td>
                       ))}

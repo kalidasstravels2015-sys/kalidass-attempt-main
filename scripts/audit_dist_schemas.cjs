@@ -90,14 +90,15 @@ htmlFiles.forEach(fileFullPath => {
           }
         }
 
-        // Product validation
-        if (types.includes('Product')) {
-          if (!node.name) { console.error(`   ❌ [${relPath}] Product missing name`); totalErrors++; }
-          if (!node.offers) { console.error(`   ❌ [${relPath}] Product missing offers`); totalErrors++; }
-          if (node.offers) {
-            const price = parseInt(node.offers.price, 10);
+        // Product validation helper
+        function validateProduct(prodNode) {
+          if (!prodNode.name) { console.error(`   ❌ [${relPath}] Product missing name`); totalErrors++; }
+          if (!prodNode.offers) { console.error(`   ❌ [${relPath}] Product missing offers`); totalErrors++; }
+          if (prodNode.offers) {
+            const rawPrice = prodNode.offers.price ?? prodNode.offers.lowPrice;
+            const price = parseInt(rawPrice, 10);
             if (!price || isNaN(price)) {
-              console.error(`   ❌ [${relPath}] Product offer price invalid: ${node.offers.price}`);
+              console.error(`   ❌ [${relPath}] Product offer price invalid: ${rawPrice}`);
               totalErrors++;
             }
             // Check for corrupted prices (e.g. 32003500)
@@ -110,15 +111,38 @@ htmlFiles.forEach(fileFullPath => {
               console.error(`   ❌ [${relPath}] Product price too low (per-km rate?): ₹${price}`);
               totalErrors++;
             }
+            // Check Merchant Listings validFrom requirement if priceValidUntil is present
+            const offersList = Array.isArray(prodNode.offers)
+              ? prodNode.offers
+              : [prodNode.offers, ...(prodNode.offers.offers || [])];
+            for (const off of offersList) {
+              if (off.priceValidUntil && !off.validFrom) {
+                console.warn(`   ⚠️ [${relPath}] Product offer "${off.name || prodNode.name}" has priceValidUntil (${off.priceValidUntil}) but missing validFrom (Merchant Listings warning)`);
+                totalWarnings++;
+              }
+            }
           }
-          if (!node.brand || !node.brand.name) {
+          if (!prodNode.brand || !prodNode.brand.name) {
             console.warn(`   ⚠️ [${relPath}] Product brand missing or missing name`);
             totalWarnings++;
           }
-          if (!node.sku) {
+          if (!prodNode.sku) {
             console.warn(`   ⚠️ [${relPath}] Product missing sku`);
             totalWarnings++;
           }
+        }
+
+        if (types.includes('Product')) {
+          validateProduct(node);
+        }
+
+        // Also validate Products inside ItemList (e.g. /fleet/)
+        if (types.includes('ItemList') && Array.isArray(node.itemListElement)) {
+          node.itemListElement.forEach(el => {
+            if (el.item && (el.item['@type'] === 'Product' || (Array.isArray(el.item['@type']) && el.item['@type'].includes('Product')))) {
+              validateProduct(el.item);
+            }
+          });
         }
 
         // TaxiService vs TouristTrip validation

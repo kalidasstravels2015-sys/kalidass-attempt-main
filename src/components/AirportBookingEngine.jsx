@@ -744,7 +744,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                       {vehicle} ({VEHICLE_SPECS[vehicle].caps.split('+')[0].trim()})
                     </span>
                     <div className="flex items-center gap-1.5 shrink-0">
-                      <span className="text-2xl font-black text-m3-on-surface tracking-tight font-heading tabular-nums">
+                      <span className="text-lg sm:text-xl font-bold text-m3-on-surface tracking-tight font-heading tabular-nums">
                         {convertRate(estimate, currency)}
                       </span>
                       <select
