@@ -11,7 +11,6 @@ import DriversCarousel from "../components/react/DriversCarousel.jsx";
 import SafetySection from "../components/SafetySection.astro";
 import Reviews from "../components/Reviews.astro";
 import FAQ from "../components/FAQ.astro";
-import ExitIntentModal from "../components/react/ExitIntentModal.jsx";
 import BottomCTA from "../components/BottomCTA.astro";
 import { getImage } from "astro:assets";
 import airavatesvaraImg from "../assets/images/hero/airavatesvara.webp";
@@ -102,7 +101,4 @@ const homePageSchema = {
 
   <!-- 9. Final Booking & Call CTA -->
   <BottomCTA />
-
-  <!-- Exit Intent Vehicle Recommendation & Quick Quote Helper -->
-  <ExitIntentModal client:idle />
 </Layout>
