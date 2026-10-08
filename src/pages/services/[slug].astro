@@ -1963,7 +1963,6 @@ Please share availability and confirmed quote.`;
                             ? pilgrimConfig.getDropdownOptions(stayRates, vehicleName)
                             : getFallbackStayOptions(stayRates, vehicleName);
                           const stayOptions = rawStayOptions.map(opt => resolveStayOptionDetails(opt, vehicleName));
-                          const initialOpt = stayOptions.find(o => o.selected) || stayOptions[0];
 
                           return (
                             <div class="pb-2.5 mb-2.5 border-b border-m3-outline-variant/50">
@@ -1984,65 +1983,12 @@ Please share availability and confirmed quote.`;
                                     data-price={opt.price} 
                                     data-duration={opt.duration} 
                                     data-inclusions={opt.inclusions}
-                                    data-km={opt.km}
-                                    data-bata={opt.bata}
-                                    data-tolls={opt.tolls}
-                                    data-stay={opt.stay}
-                                    data-sightseeing={opt.sightseeing}
                                     selected={opt.selected}
                                   >
                                     {opt.label}
                                   </option>
                                 ))}
                               </select>
-
-                              <!-- 100% Transparent Cost Breakdown Box (Reactive inside vehicle card) -->
-                              {initialOpt && (
-                                <div class="tariff-breakdown-box bg-white/95 dark:bg-slate-900/80 rounded-m3-lg p-3 border border-emerald-500/25 mt-2.5 space-y-1.5 shadow-2xs">
-                                  <div class="flex items-center justify-between text-[11px] font-bold text-m3-on-surface uppercase tracking-wider pb-1.5 border-b border-m3-outline-variant/40">
-                                    <span class="flex items-center gap-1.5 text-emerald-800 dark:text-emerald-300">
-                                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                                      <span>Transparent Cost Breakdown</span>
-                                    </span>
-                                    <span class="tariff-breakdown-duration text-[10px] text-m3-primary font-bold">
-                                      {initialOpt.duration}
-                                    </span>
-                                  </div>
-
-                                  <div class="space-y-1 text-micro text-m3-on-surface-variant font-sans">
-                                    <div class="flex items-center justify-between py-0.5">
-                                      <span class="font-medium text-m3-on-surface-variant">Base Run:</span>
-                                      <strong class="tariff-breakdown-km font-semibold text-m3-on-surface text-right">{initialOpt.km}</strong>
-                                    </div>
-                                    <div class="flex items-center justify-between py-0.5">
-                                      <span class="font-medium text-m3-on-surface-variant">Driver Bata:</span>
-                                      <strong class="tariff-breakdown-bata font-semibold text-m3-on-surface text-right">{initialOpt.bata}</strong>
-                                    </div>
-                                    <div class="flex items-center justify-between py-0.5">
-                                      <span class="font-medium text-m3-on-surface-variant">Permit &amp; Tolls:</span>
-                                      <strong class="tariff-breakdown-tolls font-semibold text-emerald-700 dark:text-emerald-400 text-right">{initialOpt.tolls}</strong>
-                                    </div>
-                                    <div class="flex items-center justify-between py-0.5">
-                                      <span class="font-medium text-m3-on-surface-variant">Driver Stay:</span>
-                                      <strong class="tariff-breakdown-stay font-semibold text-m3-on-surface text-right">{initialOpt.stay}</strong>
-                                    </div>
-                                    {initialOpt.sightseeing && (
-                                      <div class="flex items-center justify-between py-0.5">
-                                        <span class="font-medium text-m3-on-surface-variant">Sightseeing:</span>
-                                        <strong class="tariff-breakdown-sightseeing font-semibold text-m3-on-surface text-right">{initialOpt.sightseeing}</strong>
-                                      </div>
-                                    )}
-                                  </div>
-
-                                  <div class="pt-1.5 mt-1 border-t border-emerald-500/15 flex items-center justify-between text-[10px] text-emerald-900 dark:text-emerald-300 font-semibold">
-                                    <span class="flex items-center gap-1">
-                                      <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
-                                      <span>100% Fixed Fare Guarantee</span>
-                                    </span>
-                                    <span class="text-m3-on-surface-variant font-normal">₹0 Advance Required</span>
-                                  </div>
-                                </div>
-                              )}
                             </div>
                           );
                         })()}
@@ -2251,46 +2197,19 @@ Please share availability and confirmed quote.`;
                       priceEl.textContent = price;
                     }
 
-                    // 2. Update transparent breakdown line items
-                    const km = selectedOpt.getAttribute('data-km');
-                    const bata = selectedOpt.getAttribute('data-bata');
-                    const tolls = selectedOpt.getAttribute('data-tolls');
-                    const stay = selectedOpt.getAttribute('data-stay');
-                    const sightseeing = selectedOpt.getAttribute('data-sightseeing');
-
-                    const durEl = card.querySelector('.tariff-breakdown-duration');
-                    if (durEl && duration) durEl.textContent = duration;
-
-                    const kmEl = card.querySelector('.tariff-breakdown-km');
-                    if (kmEl && km) kmEl.textContent = km;
-
-                    const bataEl = card.querySelector('.tariff-breakdown-bata');
-                    if (bataEl && bata) bataEl.textContent = bata;
-
-                    const tollsEl = card.querySelector('.tariff-breakdown-tolls');
-                    if (tollsEl && tolls) tollsEl.textContent = tolls;
-
-                    const stayEl = card.querySelector('.tariff-breakdown-stay');
-                    if (stayEl && stay) stayEl.textContent = stay;
-
-                    const sightseeingEl = card.querySelector('.tariff-breakdown-sightseeing');
-                    if (sightseeingEl && sightseeing) sightseeingEl.textContent = sightseeing;
-
-                    // 3. Update inclusions text
+                    // 2. Update inclusions text
                     const inclusionsEl = card.querySelector('.tariff-inclusions-text');
                     if (inclusionsEl && inclusions) {
                       inclusionsEl.textContent = inclusions;
                     }
 
-                    // 4. Update WhatsApp enquiry button with full transparent breakdown
+                    // 3. Update WhatsApp enquiry button
                     const waBtn = card.querySelector('.tariff-whatsapp-btn');
                     if (waBtn) {
-                      const breakdownSummary = [km, bata, tolls, stay].filter(Boolean).join(' • ');
                       const newMsg = `*Kalidass Travels - Booking Enquiry*
 • Service: ${serviceTitle}
 • Vehicle: ${vehicleName} (${duration})
 • All-Inclusive Fare: ${price}
-• Transparent Cost Breakdown: ${breakdownSummary}
 • Travel Date: 
 • Pickup Time: 
 • Pickup Location in Chennai: 
