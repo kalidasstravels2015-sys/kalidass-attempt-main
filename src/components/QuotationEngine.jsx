@@ -241,6 +241,57 @@ const findKnownDistance = (origin, destination) => {
   return null;
 };
 
+// Intelligent estimation of road tolls, interstate border permits, and driver night stay
+const estimateRoadExtras = (pickup, drop, distanceKm, days, isRoundTrip) => {
+  const p = (pickup || '').toLowerCase();
+  const d = (drop || '').toLowerCase();
+  const text = `${p} ${d}`;
+  const totalKm = isRoundTrip ? (distanceKm || 0) * 2 : (distanceKm || 0);
+  const nights = isRoundTrip ? Math.max(0, (days || 1) - 1) : 0;
+  
+  let stateName = 'Tamil Nadu';
+  let statePermitEst = 0;
+  let tollsEst = 0;
+
+  // Detect interstate routes
+  if (text.includes('tirupati') || text.includes('tirumala') || text.includes('andhra') || text.includes('kalahasti') || text.includes('nellore') || text.includes('vijayawada') || text.includes('chittoor') || text.includes('renigunta')) {
+    stateName = 'Andhra Pradesh';
+    statePermitEst = 500;
+    tollsEst = isRoundTrip ? 400 : 220;
+  } else if (text.includes('bangalore') || text.includes('bengaluru') || text.includes('karnataka') || text.includes('mysore') || text.includes('mysuru') || text.includes('hosur')) {
+    stateName = 'Karnataka';
+    statePermitEst = 700;
+    tollsEst = isRoundTrip ? 450 : 250;
+  } else if (text.includes('pondicherry') || text.includes('puducherry') || text.includes('auroville')) {
+    stateName = 'Puducherry (UT)';
+    statePermitEst = 0; // No border tax for Puducherry commercial cabs from TN
+    tollsEst = isRoundTrip ? 250 : 130;
+  } else if (text.includes('kerala') || text.includes('munnar') || text.includes('cochin') || text.includes('kochi') || text.includes('sabarimala') || text.includes('wayanad')) {
+    stateName = 'Kerala';
+    statePermitEst = 800;
+    tollsEst = isRoundTrip ? 650 : 350;
+  } else {
+    // Within Tamil Nadu (Madurai, Trichy, Coimbatore, Salem, Ooty, Kodaikanal, etc.)
+    stateName = 'Tamil Nadu';
+    statePermitEst = 0;
+    tollsEst = Math.round((totalKm * 0.85) / 10) * 10;
+    if (tollsEst < 80 && totalKm >= 50) tollsEst = 80;
+  }
+
+  // Driver Night Stay Allowance (~₹450/night for driver room/dinner, waived if guest provides room)
+  const driverNightStayEst = nights * 450;
+  const roadExtrasEst = tollsEst + statePermitEst + driverNightStayEst;
+
+  return {
+    stateName,
+    statePermitEst,
+    tollsEst,
+    nights,
+    driverNightStayEst,
+    roadExtrasEst
+  };
+};
+
 const sanitizeInput = (input) => {
   if (typeof input !== 'string') return input;
   // Remove potential XSS characters while keeping normal address characters
@@ -845,18 +896,31 @@ export default function QuotationEngine({
         const minKm = (days || 1) * vehicleData.min_km_per_day;
         const actualRoundTripKm = distance * 2;
         const chargeableKm = Math.max(minKm, actualRoundTripKm);
+        const freeBufferKm = Math.max(0, chargeableKm - actualRoundTripKm);
         const bataTotal = (days || 1) * bata;
         const kmCost = chargeableKm * rate;
         totalCost = kmCost + bataTotal;
+
+        const extras = estimateRoadExtras(pickup, drop, distance, days, true);
 
         breakdownObj = {
           base_km: minKm,
           actual_km: actualRoundTripKm,
           chargeable_km: chargeableKm,
+          free_buffer_km: freeBufferKm,
           rate_per_km: rate,
           km_cost: kmCost,
           driver_bata: bataTotal,
-          days: days || 1
+          daily_bata: bata,
+          days: days || 1,
+          nights: extras.nights,
+          state_name: extras.stateName,
+          state_permit_est: extras.statePermitEst,
+          tolls_est: extras.tollsEst,
+          driver_night_stay_est: extras.driverNightStayEst,
+          road_extras_est: extras.roadExtrasEst,
+          all_inclusive_est: Math.round((totalCost + extras.roadExtrasEst) / 10) * 10,
+          is_city: false
         };
       } else {
         // One Way / Drop Trip / Airport
@@ -870,14 +934,25 @@ export default function QuotationEngine({
           chargeableKm = Math.max(minDropKm, distance);
           kmCost = chargeableKm * rate;
           totalCost = kmCost + bata;
+          const extras = estimateRoadExtras(pickup, drop, distance, 1, false);
+
           breakdownObj = {
             base_km: minDropKm,
             actual_km: distance,
             chargeable_km: chargeableKm,
+            free_buffer_km: Math.max(0, chargeableKm - distance),
             rate_per_km: rate,
             km_cost: kmCost,
             driver_bata: bata,
+            daily_bata: bata,
             days: 1,
+            nights: 0,
+            state_name: extras.stateName,
+            state_permit_est: extras.statePermitEst,
+            tolls_est: extras.tollsEst,
+            driver_night_stay_est: 0,
+            road_extras_est: extras.roadExtrasEst,
+            all_inclusive_est: Math.round((totalCost + extras.roadExtrasEst) / 10) * 10,
             is_city: false
           };
         } else {
@@ -889,10 +964,19 @@ export default function QuotationEngine({
             base_km: 0,
             actual_km: distance,
             chargeable_km: chargeableKm,
+            free_buffer_km: 0,
             rate_per_km: rate,
             km_cost: kmCost,
             driver_bata: 0,
+            daily_bata: 0,
             days: 1,
+            nights: 0,
+            state_name: 'Tamil Nadu',
+            state_permit_est: 0,
+            tolls_est: 0,
+            driver_night_stay_est: 0,
+            road_extras_est: 0,
+            all_inclusive_est: Math.round(totalCost / 10) * 10,
             is_city: true
           };
         }
@@ -918,7 +1002,7 @@ export default function QuotationEngine({
       setEstimate(0);
       setBreakdown(null);
     }
-  }, [distance, vehicle, activeTab, days, localPackage]);
+  }, [distance, vehicle, activeTab, days, localPackage, pickup, drop]);
 
   useEffect(() => {
     if (activeTab === 'local') {
@@ -986,6 +1070,16 @@ export default function QuotationEngine({
 
     // 5. Open WhatsApp
     const driverLine = requestedDriver ? `Requested Driver: *${requestedDriver}*\n` : '';
+    const breakdownDetails = (breakdown && !breakdown.is_city && activeTab !== 'local') ? `
+100% Price Breakdown:
+• Base Meter Fare: Rs. ${estimate.toLocaleString('en-IN')} (${breakdown.chargeable_km} km @ Rs. ${breakdown.rate_per_km}/km + Driver Day Bata Rs. ${breakdown.driver_bata})
+${breakdown.free_buffer_km > 0 ? `• Local Sightseeing Buffer: +${breakdown.free_buffer_km.toFixed(0)} km (Included at Rs. 0)\n` : ''}• Est. FASTag Tolls: ~Rs. ${breakdown.tolls_est.toLocaleString('en-IN')}
+${breakdown.state_permit_est > 0 ? `• Est. ${breakdown.state_name} Permit: ~Rs. ${breakdown.state_permit_est.toLocaleString('en-IN')}\n` : ''}${breakdown.nights > 0 ? `• Driver Night Stay (${breakdown.nights} Nights): ~Rs. ${breakdown.driver_night_stay_est.toLocaleString('en-IN')}\n` : ''}• All-Inclusive Package Est: ~Rs. ${breakdown.all_inclusive_est.toLocaleString('en-IN')} (100% Cashless on road)
+
+Terms: Rs. 0 Advance Required. Pay after trip completion.` : `
+Est. Cost: Rs. ${estimate.toLocaleString('en-IN')}
+Inclusions: Fuel, Driver Bata, GST`;
+
     const message = `New Booking Request
 
 Trip Details:
@@ -998,12 +1092,9 @@ Pickup Date & Time: ${date ? new Date(date).toLocaleString('en-IN', { dateStyle:
 ${activeTab === 'round' ? `Return Date & Time: ${returnDate ? new Date(returnDate).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : 'Not Specified'}\nTrip Duration: ${days} ${days > 1 ? 'Days' : 'Day'}` : ''}
 Distance: ${distance ? distance.toFixed(1) : 'N/A'} km ${activeTab === 'round' ? `(Round Trip: ${(distance * 2).toFixed(1)} km)` : ''}
 Duration: ${duration || 'N/A'}
-Est. Cost: Rs. ${estimate}
+${breakdownDetails}
 
-Inclusions: Fuel, Driver Bata (Incl. Food/Stay), GST
-Exclusions: Tolls, Parking, State Permit (if any)
-
-Please confirm availability.`;
+Please confirm availability and share quote.`;
 
     trackEvent('booking_conversion_whatsapp', {
       estimate,
@@ -1341,25 +1432,45 @@ Please confirm availability.`;
                 {/* 2. Total Fare & Rate summary + Breakdown Link */}
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <div className="text-lg sm:text-xl font-bold text-m3-on-surface tracking-tight font-heading leading-none">
-                      ₹ {estimate.toLocaleString('en-IN')}
+                    <div className="flex items-baseline gap-2 flex-wrap">
+                      <div className="text-lg sm:text-xl font-bold text-m3-on-surface tracking-tight font-heading leading-none">
+                        ₹ {estimate.toLocaleString('en-IN')}
+                      </div>
+                      {activeTab !== 'local' && (
+                        <span className="text-[10px] font-bold text-m3-on-surface-variant bg-m3-surface-container-high px-1.5 py-0.5 rounded-m3-sm uppercase tracking-wide">
+                          {isTa ? 'அடிப்படை கட்டணம்' : 'Base Meter Fare'}
+                        </span>
+                      )}
                     </div>
                     <p className="text-[11px] sm:text-xs text-m3-on-surface-variant font-medium mt-1 leading-relaxed">
                       <span className="text-m3-on-surface font-semibold">
                         ₹{activeTab === 'round' ? vehicles[vehicle].round_trip_rate : vehicles[vehicle].one_way_rate}/km
                       </span>
                       {' · '}
-                      <span>{isTa ? 'டிரைவர் பேட்டா & எரிபொருள் சேர்க்கப்பட்டுள்ளது' : 'Incl. Driver Bata & Fuel'}</span>
-                      {' · '}
-                      <span className="opacity-80">{isTa ? 'டோல் தனி' : 'Tolls extra'}</span>
+                      <span>{isTa ? 'எரிபொருள் & தினசரி பேட்டா உட்பட' : 'Fuel & Driver Day Bata Incl.'}</span>
+                      {breakdown?.free_buffer_km > 0 && (
+                        <>
+                          {' · '}
+                          <span className="text-emerald-700 dark:text-emerald-400 font-semibold">
+                            +{breakdown.free_buffer_km.toFixed(0)} km free buffer
+                          </span>
+                        </>
+                      )}
                     </p>
+                    {breakdown?.road_extras_est > 0 && (
+                      <div className="mt-1 flex items-center gap-1.5 text-[11px] text-m3-on-surface-variant font-medium flex-wrap">
+                        <span>{isTa ? 'சுமார் டோல் & சாலை செலவுகள்:' : 'Est. Road Extras:'} <strong className="text-m3-on-surface">~₹{breakdown.road_extras_est.toLocaleString('en-IN')}</strong></span>
+                        <span>•</span>
+                        <span>{isTa ? 'அனைத்தும் உட்பட:' : 'All-Inclusive:'} <strong className="text-m3-primary">~₹{breakdown.all_inclusive_est.toLocaleString('en-IN')}</strong></span>
+                      </div>
+                    )}
                   </div>
                   <button
                     type="button"
                     onClick={() => setShowFullBreakdown(true)}
-                    className="inline-flex items-center gap-0.5 text-[11px] sm:text-xs font-bold text-m3-primary hover:text-m3-primary/80 transition-colors cursor-pointer shrink-0 mt-0.5 bg-m3-surface px-2 py-1 rounded-m3-md border border-m3-outline-variant"
+                    className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-bold text-m3-primary hover:text-m3-primary/80 transition-colors cursor-pointer shrink-0 mt-0.5 bg-m3-surface px-2.5 py-1.5 rounded-m3-md border border-m3-outline-variant shadow-2xs hover:bg-m3-surface-container"
                   >
-                    <span>{isTa ? 'கட்டண விவரம்' : 'Fare Breakdown'}</span>
+                    <span>{isTa ? '100% கட்டண விவரம்' : '100% Fare Breakdown'}</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -1746,25 +1857,45 @@ Please confirm availability.`;
               {/* 2. Total Fare & Rate summary + Breakdown Link */}
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <div className="text-lg sm:text-xl font-bold text-m3-on-surface tracking-tight font-heading leading-none">
-                    ₹ {estimate.toLocaleString('en-IN')}
+                  <div className="flex items-baseline gap-2 flex-wrap">
+                    <div className="text-lg sm:text-xl font-bold text-m3-on-surface tracking-tight font-heading leading-none">
+                      ₹ {estimate.toLocaleString('en-IN')}
+                    </div>
+                    {activeTab !== 'local' && (
+                      <span className="text-[10px] font-bold text-m3-on-surface-variant bg-m3-surface-container-high px-1.5 py-0.5 rounded-m3-sm uppercase tracking-wide">
+                        {isTa ? 'அடிப்படை கட்டணம்' : 'Base Meter Fare'}
+                      </span>
+                    )}
                   </div>
                   <p className="text-[11px] sm:text-xs text-m3-on-surface-variant font-medium mt-1 leading-relaxed">
                     <span className="text-m3-on-surface font-semibold">
                       ₹{activeTab === 'round' ? vehicles[vehicle].round_trip_rate : vehicles[vehicle].one_way_rate}/km
                     </span>
                     {' · '}
-                    <span>{isTa ? 'டிரைவர் பேட்டா & எரிபொருள் சேர்க்கப்பட்டுள்ளது' : 'Incl. Driver Bata & Fuel'}</span>
-                    {' · '}
-                    <span className="opacity-80">{isTa ? 'டோல் தனி' : 'Tolls extra'}</span>
+                    <span>{isTa ? 'எரிபொருள் & தினசரி பேட்டா உட்பட' : 'Fuel & Driver Day Bata Incl.'}</span>
+                    {breakdown?.free_buffer_km > 0 && (
+                      <>
+                        {' · '}
+                        <span className="text-emerald-700 dark:text-emerald-400 font-semibold">
+                          +{breakdown.free_buffer_km.toFixed(0)} km free buffer
+                        </span>
+                      </>
+                    )}
                   </p>
+                  {breakdown?.road_extras_est > 0 && (
+                    <div className="mt-1 flex items-center gap-1.5 text-[11px] text-m3-on-surface-variant font-medium flex-wrap">
+                      <span>{isTa ? 'சுமார் டோல் & சாலை செலவுகள்:' : 'Est. Road Extras:'} <strong className="text-m3-on-surface">~₹{breakdown.road_extras_est.toLocaleString('en-IN')}</strong></span>
+                      <span>•</span>
+                      <span>{isTa ? 'அனைத்தும் உட்பட:' : 'All-Inclusive:'} <strong className="text-m3-primary">~₹{breakdown.all_inclusive_est.toLocaleString('en-IN')}</strong></span>
+                    </div>
+                  )}
                 </div>
                 <button
                   type="button"
                   onClick={() => setShowFullBreakdown(true)}
-                  className="inline-flex items-center gap-0.5 text-[11px] sm:text-xs font-bold text-m3-primary hover:text-m3-primary/80 transition-colors cursor-pointer shrink-0 mt-0.5 bg-m3-surface px-2 py-1 rounded-m3-md border border-m3-outline-variant"
+                  className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-bold text-m3-primary hover:text-m3-primary/80 transition-colors cursor-pointer shrink-0 mt-0.5 bg-m3-surface px-2.5 py-1.5 rounded-m3-md border border-m3-outline-variant shadow-2xs hover:bg-m3-surface-container"
                 >
-                  <span>{isTa ? 'கட்டண விவரம்' : 'Fare Breakdown'}</span>
+                  <span>{isTa ? '100% கட்டண விவரம்' : '100% Fare Breakdown'}</span>
                   <ChevronRight className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -1884,14 +2015,24 @@ Please confirm availability.`;
 
 // Sub-component for clarity and reuse
 function FullBreakdownModal({ isTa, vehicle, activeTab, localPackage, breakdown, estimate, setShowFullBreakdown, handleWhatsApp }) {
+  const isOutstation = activeTab !== 'local' && !breakdown?.is_city;
+
   return (
     <div data-hide-contact-dock role="dialog" aria-modal="true" className="fixed inset-0 z-[100] flex items-center justify-center bg-m3-scrim/60 backdrop-blur-sm p-3 sm:p-4">
-      <div className="bg-m3-surface w-full max-w-md rounded-m3-2xl overflow-hidden shadow-m3-3 border border-m3-outline-variant flex flex-col max-h-[85vh] animate-in fade-in zoom-in duration-200">
+      <div className="bg-m3-surface w-full max-w-lg rounded-m3-2xl overflow-hidden shadow-m3-3 border border-m3-outline-variant flex flex-col max-h-[90vh] animate-in fade-in zoom-in duration-200">
         {/* Header */}
         <div className="px-4 py-3 sm:px-5 sm:py-3.5 border-b border-m3-outline-variant/60 flex items-center justify-between bg-m3-surface-container-low">
           <div>
-            <h3 className="font-bold text-m3-title-m text-m3-on-surface">{isTa ? 'கட்டண விவரம்' : 'Fare Breakdown'}</h3>
-            <p className="text-m3-body-s text-m3-on-surface-variant font-medium mt-0.5">{vehicle} • {activeTab === 'local' ? (isTa ? 'லோக்கல் பேக்கேஜ்' : 'Local Package') : activeTab === 'round' ? (isTa ? 'இரு வழி' : 'Round Trip') : (isTa ? 'ஒரு வழி' : 'One Way')}</p>
+            <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold uppercase tracking-wider mb-1">
+              <ShieldCheck className="w-3 h-3 text-emerald-600" />
+              <span>{isTa ? '100% வெளிப்படையான கட்டணம்' : '100% Transparent Price Breakdown'}</span>
+            </div>
+            <h3 className="font-bold text-m3-title-m text-m3-on-surface">
+              {isTa ? 'முழுமையான கட்டண விவரம்' : 'Complete Fare Breakdown'}
+            </h3>
+            <p className="text-m3-body-s text-m3-on-surface-variant font-medium mt-0.5">
+              {vehicle} • {activeTab === 'local' ? (isTa ? 'லோக்கல் பேக்கேஜ்' : 'Local Package') : activeTab === 'round' ? (isTa ? `${breakdown.days || 1} நாட்கள் இரு வழி பயணம்` : `${breakdown.days || 1} Days Round Trip`) : (isTa ? 'ஒரு வழி டிராப்' : 'One Way Drop')}
+            </p>
           </div>
           <button 
             onClick={() => setShowFullBreakdown(false)} 
@@ -1903,140 +2044,238 @@ function FullBreakdownModal({ isTa, vehicle, activeTab, localPackage, breakdown,
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-3.5 sm:p-4 space-y-3">
-          {/* Trip Summary */}
-          <div className="bg-m3-surface-container-low rounded-m3-lg px-3.5 py-2.5 border border-m3-outline-variant/70 flex justify-between items-center">
-            <div>
-              <span className="text-m3-label-s font-semibold text-m3-on-surface-variant uppercase">{isTa ? 'பயண தூரம்' : 'Distance'}</span>
-              <p className="text-m3-title-m font-bold text-m3-on-surface font-heading">{activeTab === 'local' ? (localPackage === '5hr50km' ? '50 KM' : localPackage === '8hr80km' ? '80 KM' : '120 KM') : `${breakdown.actual_km.toFixed(1)} KM`}</p>
-            </div>
-            <div className="text-right">
-              <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-m3-label-s font-bold uppercase">
-                <ShieldCheck className="w-3 h-3 text-m3-primary" />
-                <span>{isTa ? 'மதிப்பீடு' : 'Total Fare'}</span>
+        <div className="flex-1 overflow-y-auto p-3.5 sm:p-4 space-y-3.5 text-m3-body-m">
+          {/* Trip Distance & Commercial Coverage Intelligence */}
+          {isOutstation && (
+            <div className="bg-m3-surface-container-low rounded-m3-xl p-3 border border-m3-outline-variant/70 space-y-2">
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div className="bg-m3-surface rounded-m3-lg p-2.5 border border-m3-outline-variant/50">
+                  <span className="text-[10px] uppercase font-bold text-m3-on-surface-variant block">
+                    {isTa ? 'நேரடி பயண தூரம்' : 'Direct Driving Distance'}
+                  </span>
+                  <p className="text-base font-bold text-m3-on-surface font-heading mt-0.5">
+                    {breakdown.actual_km.toFixed(1)} KM
+                  </p>
+                  <span className="text-[10px] text-m3-on-surface-variant">
+                    {activeTab === 'round' ? `${(breakdown.actual_km / 2).toFixed(1)} km each way` : 'One-way drop run'}
+                  </span>
+                </div>
+                <div className="bg-m3-surface rounded-m3-lg p-2.5 border border-m3-outline-variant/50">
+                  <span className="text-[10px] uppercase font-bold text-m3-on-surface-variant block">
+                    {isTa ? 'குறைந்தபட்ச கட்டண தூரம்' : 'Contracted Coverage'}
+                  </span>
+                  <p className="text-base font-bold text-m3-primary font-heading mt-0.5">
+                    {breakdown.chargeable_km} KM
+                  </p>
+                  <span className="text-[10px] text-m3-on-surface-variant">
+                    {activeTab === 'round' ? `${breakdown.days} Days × ${vehicles[vehicle]?.min_km_per_day || 250} km/day` : `${breakdown.base_km} km min outstation`}
+                  </span>
+                </div>
               </div>
-              <p className="text-m3-title-l font-bold text-m3-on-surface font-heading">₹{estimate.toLocaleString('en-IN')}</p>
-            </div>
-          </div>
 
-          {/* Breakdown List */}
+              {breakdown.free_buffer_km > 0 && (
+                <div className="p-2.5 rounded-m3-lg bg-emerald-500/10 border border-emerald-500/30 text-xs flex items-start gap-2">
+                  <span className="text-base leading-none">🎉</span>
+                  <div className="text-[11px] text-emerald-950 dark:text-emerald-200 leading-snug">
+                    <strong className="font-bold">+{breakdown.free_buffer_km.toFixed(0)} KM Extra Sightseeing Buffer Included!</strong>
+                    <p className="text-emerald-800 dark:text-emerald-300 mt-0.5">
+                      You have {breakdown.free_buffer_km.toFixed(0)} pre-contracted km already included for local temple visits, hilltop climbs, and sightseeing at ₹0 extra km charges.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Section 1: Contracted Base Vehicle Fare */}
           <div className="space-y-1.5">
-            <h4 className="text-m3-label-s font-bold text-m3-on-surface-variant uppercase tracking-wide px-0.5">{isTa ? 'கட்டண விவரங்கள்' : 'Itemized Cost'}</h4>
-            <div className="bg-m3-surface rounded-m3-lg border border-m3-outline-variant/60 overflow-hidden text-m3-body-m">
+            <div className="flex items-center justify-between px-0.5">
+              <h4 className="text-[11px] font-bold text-m3-on-surface-variant uppercase tracking-wider">
+                {isTa ? 'பகுதி 1: வாகன அடிப்படை கட்டணம் (டாக்ஸிக்கு செலுத்த வேண்டியது)' : 'Part 1: Contracted Base Fare (Payable to Cab)'}
+              </h4>
+            </div>
+
+            <div className="bg-m3-surface rounded-m3-lg border border-m3-outline-variant/70 overflow-hidden text-xs">
               <div className="divide-y divide-m3-outline-variant/50">
                 {activeTab === 'local' ? (
                   <>
-                    <div className="py-2 px-3 flex justify-between items-center">
+                    <div className="py-2.5 px-3 flex justify-between items-center">
                       <div>
-                        <p className="font-medium text-m3-on-surface text-m3-body-m">{isTa ? 'பேக்கேஜ் வகை' : 'Package fare'}</p>
-                        <p className="text-m3-body-s text-m3-on-surface-variant">{localPackage === '5hr50km' ? '5H / 50 KM' : localPackage === '8hr80km' ? '8H / 80 KM' : '12H / 120 KM'}</p>
+                        <p className="font-semibold text-m3-on-surface">{isTa ? 'பேக்கேஜ் கட்டணம்' : 'Local Package Fare'}</p>
+                        <p className="text-[11px] text-m3-on-surface-variant">{localPackage === '5hr50km' ? '5H / 50 KM' : localPackage === '8hr80km' ? '8H / 80 KM' : '12H / 120 KM'}</p>
                       </div>
-                      <span className="font-bold text-m3-on-surface text-m3-title-s">₹{breakdown.package_cost.toLocaleString('en-IN')}</span>
+                      <span className="font-bold text-m3-on-surface text-sm">₹{breakdown.package_cost.toLocaleString('en-IN')}</span>
                     </div>
                     <div className="py-2 px-3 flex justify-between items-center bg-m3-surface-container-low">
                       <div>
-                        <p className="font-medium text-m3-on-surface text-m3-body-m">{isTa ? 'ஓட்டுநர் பேட்டா' : 'Driver Bata'}</p>
-                        <p className="text-m3-body-s text-m3-secondary">{isTa ? 'கட்டணத்தில் அடங்கும்' : 'Included in fare'}</p>
+                        <p className="font-semibold text-m3-on-surface">{isTa ? 'ஓட்டுநர் பேட்டா' : 'Driver Bata'}</p>
+                        <p className="text-[11px] text-emerald-700 font-medium">{isTa ? 'கட்டணத்தில் அடங்கும்' : 'Included in hourly package'}</p>
                       </div>
-                      <span className="font-bold text-emerald-600 text-m3-label-m">{isTa ? 'இலவசம்' : 'INC'}</span>
+                      <span className="font-bold text-emerald-700 text-xs">INCLUDED</span>
                     </div>
                   </>
-                  ) : breakdown?.is_city ? (
-                    // City / Airport transfer — actual km only, no outstation minimum
-                    <>
-                      <div className="py-2 px-3 flex justify-between items-center">
-                        <div>
-                          <p className="font-medium text-m3-on-surface text-m3-body-m">{isTa ? 'எடைத் தூரம்' : 'City Transfer Distance'}</p>
-                          <p className="text-m3-body-s text-m3-on-surface-variant">{isTa ? 'நகர/விமான நிலைய கைமாற்றம் — குறைந்தபட்ச கிமீ இல்லை' : 'City/Airport hop — no outstation minimum'}</p>
-                        </div>
-                        <span className="font-semibold text-m3-on-surface text-m3-title-s">{breakdown.actual_km.toFixed(1)} KM</span>
+                ) : breakdown?.is_city ? (
+                  <>
+                    <div className="py-2.5 px-3 flex justify-between items-center">
+                      <div>
+                        <p className="font-semibold text-m3-on-surface">{isTa ? 'நகர கைமாற்ற தூரம்' : 'City / Airport Transfer Distance'}</p>
+                        <p className="text-[11px] text-m3-on-surface-variant">Direct distance • No outstation minimum</p>
                       </div>
-                      <div className="py-2 px-3 flex justify-between items-center">
-                        <div>
-                          <p className="font-medium text-m3-on-surface text-m3-body-m">{isTa ? 'கிமீ கட்டணம்' : 'KM Charges'}</p>
-                          <p className="text-m3-body-s text-m3-on-surface-variant">{breakdown.chargeable_km.toFixed(1)} KM x ₹{breakdown.rate_per_km}/KM</p>
-                        </div>
-                        <span className="font-bold text-m3-on-surface text-m3-title-s">₹{breakdown.km_cost.toLocaleString('en-IN')}</span>
+                      <span className="font-bold text-m3-on-surface text-sm">{breakdown.actual_km.toFixed(1)} KM</span>
+                    </div>
+                    <div className="py-2.5 px-3 flex justify-between items-center">
+                      <div>
+                        <p className="font-semibold text-m3-on-surface">{isTa ? 'கிமீ கட்டணம்' : 'Distance Charges'}</p>
+                        <p className="text-[11px] text-m3-on-surface-variant">{breakdown.chargeable_km.toFixed(1)} KM × ₹{breakdown.rate_per_km}/KM</p>
                       </div>
-                      <div className="py-2 px-3 flex justify-between items-center bg-m3-surface-container-low">
-                        <div>
-                          <p className="font-medium text-m3-on-surface text-m3-body-m">{isTa ? 'ஓட்டுநர் பேட்டா' : 'Driver Bata'}</p>
-                          <p className="text-m3-body-s text-emerald-600">{isTa ? 'நகர கைமாற்றத்திற்கு இல்லை' : 'Not charged for city transfers'}</p>
-                        </div>
-                        <span className="font-bold text-emerald-600 text-m3-label-m">{isTa ? 'இலவசம்' : 'NIL'}</span>
+                      <span className="font-bold text-m3-on-surface text-sm">₹{breakdown.km_cost.toLocaleString('en-IN')}</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="py-2.5 px-3 flex justify-between items-center">
+                      <div>
+                        <p className="font-semibold text-m3-on-surface">{isTa ? 'வாகன தூரக் கட்டணம்' : 'Distance Running Charge'}</p>
+                        <p className="text-[11px] text-m3-on-surface-variant">
+                          {breakdown.chargeable_km} KM × ₹{breakdown.rate_per_km}/KM (Includes AC Car & Fuel)
+                        </p>
                       </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="py-2 px-3 flex justify-between items-center">
-                        <div>
-                          <p className="font-medium text-m3-on-surface text-m3-body-m">{isTa ? 'குறைந்தபட்ச கிமீ' : 'Minimum Chargeable'}</p>
-                          <p className="text-m3-body-s text-m3-on-surface-variant">{activeTab === 'round' ? `${breakdown.days} Days x ${vehicles[vehicle].min_km_per_day} KM` : `${vehicles[vehicle].min_drop_km || 130} KM Minimum`}</p>
-                        </div>
-                        <span className="font-semibold text-m3-on-surface text-m3-title-s">{breakdown.base_km} KM</span>
+                      <span className="font-bold text-m3-on-surface text-sm">₹{breakdown.km_cost.toLocaleString('en-IN')}</span>
+                    </div>
+                    <div className="py-2.5 px-3 flex justify-between items-center">
+                      <div>
+                        <p className="font-semibold text-m3-on-surface">{isTa ? 'ஓட்டுநர் தினசரி பேட்டா' : 'Driver Daily Batta'}</p>
+                        <p className="text-[11px] text-m3-on-surface-variant">
+                          {breakdown.days} Calendar Days × ₹{vehicles[vehicle]?.driver_bata || 300}/day (Food & daily duty)
+                        </p>
                       </div>
-                      <div className="py-2 px-3 flex justify-between items-center">
-                        <div>
-                          <p className="font-medium text-m3-on-surface text-m3-body-m">{isTa ? 'கிமீ கட்டணம்' : 'KM Charges'}</p>
-                          <p className="text-m3-body-s text-m3-on-surface-variant">{breakdown.chargeable_km} KM x ₹{breakdown.rate_per_km}/KM</p>
-                        </div>
-                        <span className="font-bold text-m3-on-surface text-m3-title-s">₹{breakdown.km_cost.toLocaleString('en-IN')}</span>
-                      </div>
-                      <div className="py-2 px-3 flex justify-between items-center">
-                        <div>
-                          <p className="font-medium text-m3-on-surface text-m3-body-m">{isTa ? 'ஓட்டுநர் பேட்டா' : 'Driver Bata'}</p>
-                          <p className="text-m3-body-s text-m3-on-surface-variant">{isTa ? 'உணவு மற்றும் தங்குமிடம் உட்பட' : 'Food & stay included'}</p>
-                        </div>
-                        <span className="font-bold text-m3-on-surface text-m3-title-s">₹{breakdown.driver_bata.toLocaleString('en-IN')}</span>
-                      </div>
-                    </>
-                  )}
-
+                      <span className="font-bold text-m3-on-surface text-sm">₹{breakdown.driver_bata.toLocaleString('en-IN')}</span>
+                    </div>
+                  </>
+                )}
               </div>
-              <div className="py-2.5 px-3.5 bg-m3-surface-container-highest text-m3-on-surface border-t border-m3-outline-variant flex justify-between items-center">
+
+              {/* Subtotal Part 1 */}
+              <div className="py-2.5 px-3 bg-m3-surface-container-high border-t border-m3-outline-variant flex justify-between items-center font-semibold">
                 <div>
-                  <span className="text-m3-label-s uppercase font-semibold text-m3-on-surface-variant block">{isTa ? 'மொத்த தொகை' : 'Estimated Total'}</span>
-                  <span className="text-[10px] text-m3-secondary font-medium">{isTa ? 'எரிபொருள் & டிரைவர் உட்பட' : 'Fuel, GST & Bata Included'}</span>
+                  <span className="text-xs uppercase text-m3-on-surface-variant block font-bold">
+                    {isTa ? 'அடிப்படை கட்டண மொத்தம்' : 'Part 1 Base Total'}
+                  </span>
+                  <span className="text-[10px] text-m3-secondary font-medium">Fuel, Car & Driver Day Bata Included</span>
                 </div>
-                <span className="text-base sm:text-lg font-bold text-m3-on-surface font-heading">₹{estimate.toLocaleString('en-IN')}</span>
+                <span className="text-base font-bold text-m3-on-surface font-heading">₹{estimate.toLocaleString('en-IN')}</span>
               </div>
             </div>
           </div>
+
+          {/* Section 2: Estimated On-Road Actuals */}
+          {isOutstation && (
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between px-0.5">
+                <h4 className="text-[11px] font-bold text-m3-on-surface-variant uppercase tracking-wider">
+                  {isTa ? 'பகுதி 2: சாலை செலவுகள் (நேரடியாக செலுத்த வேண்டியவை)' : 'Part 2: Estimated On-Road Actuals (Paid during Journey)'}
+                </h4>
+              </div>
+
+              <div className="bg-m3-surface rounded-m3-lg border border-m3-outline-variant/70 overflow-hidden text-xs">
+                <div className="divide-y divide-m3-outline-variant/50">
+                  <div className="py-2.5 px-3 flex justify-between items-center">
+                    <div>
+                      <p className="font-semibold text-m3-on-surface">{isTa ? 'தேசிய நெடுஞ்சாலை டோல் கட்டணம்' : 'FASTag Highway Tolls (Est)'}</p>
+                      <p className="text-[11px] text-m3-on-surface-variant">Round-trip NH toll plazas as per FASTag scan</p>
+                    </div>
+                    <span className="font-bold text-m3-on-surface text-sm">~₹{breakdown.tolls_est.toLocaleString('en-IN')}</span>
+                  </div>
+
+                  <div className="py-2.5 px-3 flex justify-between items-center">
+                    <div>
+                      <p className="font-semibold text-m3-on-surface">{isTa ? 'மாநில எல்லை வரி / அனுமதி' : 'Interstate State Border Tax (Est)'}</p>
+                      <p className="text-[11px] text-m3-on-surface-variant">
+                        {breakdown.state_permit_est > 0 ? `${breakdown.state_name} Commercial Entry Permit (Checkpost receipt)` : 'Within Tamil Nadu • Zero border tax'}
+                      </p>
+                    </div>
+                    <span className="font-bold text-m3-on-surface text-sm">
+                      {breakdown.state_permit_est > 0 ? `~₹${breakdown.state_permit_est.toLocaleString('en-IN')}` : '₹0'}
+                    </span>
+                  </div>
+
+                  {breakdown.nights > 0 && (
+                    <div className="py-2.5 px-3 flex justify-between items-center">
+                      <div>
+                        <p className="font-semibold text-m3-on-surface">{isTa ? 'ஓட்டுநர் இரவு தங்குமிடம்' : 'Driver Night Stay Allowance'}</p>
+                        <p className="text-[11px] text-m3-on-surface-variant">
+                          {breakdown.nights} Nights in outstation (Waived if lodging is provided by guest)
+                        </p>
+                      </div>
+                      <span className="font-bold text-m3-on-surface text-sm">~₹{breakdown.driver_night_stay_est.toLocaleString('en-IN')}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Subtotal Part 2 */}
+                <div className="py-2 px-3 bg-m3-surface-container-low border-t border-m3-outline-variant flex justify-between items-center text-xs">
+                  <span className="font-semibold text-m3-on-surface-variant">
+                    {isTa ? 'சுமார் சாலை செலவுகள் மொத்தம்:' : 'Total Estimated Road Extras:'}
+                  </span>
+                  <span className="font-bold text-m3-on-surface text-sm">~₹{breakdown.road_extras_est.toLocaleString('en-IN')}</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Section 3: Two Clear Billing Options */}
+          {isOutstation ? (
+            <div className="space-y-1.5 pt-1">
+              <h4 className="text-[11px] font-bold text-m3-on-surface-variant uppercase tracking-wider px-0.5">
+                {isTa ? 'உங்கள் விருப்பத்தை தேர்ந்தெடுக்கவும்' : 'Choose Your Preferred Billing Option'}
+              </h4>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                {/* Option A */}
+                <div className="p-3 rounded-m3-xl bg-m3-surface-container-low border border-m3-outline-variant hover:border-m3-primary/50 transition-colors">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-bold text-m3-on-surface text-xs uppercase">Option A: Base Fare</span>
+                    <span className="font-extrabold text-sm text-m3-on-surface font-heading">₹{estimate.toLocaleString('en-IN')}</span>
+                  </div>
+                  <p className="text-[11px] text-m3-on-surface-variant leading-snug">
+                    Pay ₹{estimate.toLocaleString('en-IN')} to taxi. Tolls, state permits & driver night room paid directly by you at actuals during the journey.
+                  </p>
+                </div>
+
+                {/* Option B */}
+                <div className="p-3 rounded-m3-xl bg-primary-50/50 dark:bg-primary-950/20 border-2 border-m3-primary/60 shadow-xs relative">
+                  <span className="absolute -top-2 right-2 px-1.5 py-0.2 rounded-full bg-m3-primary text-white text-[9px] font-bold uppercase tracking-wider">
+                    Most Popular
+                  </span>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-bold text-m3-primary text-xs uppercase">Option B: All-Inclusive</span>
+                    <span className="font-extrabold text-sm text-m3-primary font-heading">~₹{breakdown.all_inclusive_est.toLocaleString('en-IN')}</span>
+                  </div>
+                  <p className="text-[11px] text-m3-on-surface-variant leading-snug">
+                    100% Cashless journey. Chauffeur pays all highway FASTag tolls, AP/interstate permits, and handles stay. Zero road surprise expenses!
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="p-2.5 rounded-m3-xl bg-m3-surface-container-high border border-m3-outline-variant flex justify-between items-center text-xs">
+              <div>
+                <span className="font-bold text-m3-on-surface block uppercase">Total Estimated Fare</span>
+                <span className="text-[11px] text-m3-on-surface-variant">Includes fuel & driver duty</span>
+              </div>
+              <span className="text-lg font-bold text-m3-on-surface font-heading">₹{estimate.toLocaleString('en-IN')}</span>
+            </div>
+          )}
 
           {/* Zero Advance Reassurance Banner */}
-          <div className="p-2 bg-emerald-500/10 rounded-m3-md border border-emerald-500/30 flex items-center justify-between text-xs">
-            <span className="font-bold text-emerald-950">{isTa ? 'முன்பணம் தேவையில்லை' : 'Zero Advance Required'}</span>
-            <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">{isTa ? 'பயண முடிவில் செலுத்துங்கள்' : 'Pay After Trip'}</span>
-          </div>
-
-          {/* Inclusions & Exclusions */}
-          <div className="grid grid-cols-2 gap-2 text-m3-body-s">
-            <div className="bg-m3-surface-container-low rounded-m3-md p-2.5 border border-m3-outline-variant/60 space-y-1">
-              <span className="text-m3-label-s font-bold text-m3-on-surface uppercase block">{isTa ? 'உள்ளடக்கியவை' : 'Inclusions'}</span>
-              {[isTa ? 'எரிபொருள்' : 'Fuel Charges', isTa ? 'டிரைவர் பேட்டா' : 'Driver Service', isTa ? 'ஜிஎஸ்டி' : 'All Taxes (GST)'].map((item, i) => (
-                <div key={i} className="flex items-center gap-1.5 text-m3-label-s text-m3-on-surface">
-                  <ShieldCheck className="w-3 h-3 text-emerald-600 shrink-0" />
-                  <span>{item}</span>
-                </div>
-              ))}
+          <div className="p-2.5 bg-emerald-500/10 rounded-m3-lg border border-emerald-500/30 flex items-center justify-between text-xs">
+            <div className="flex items-center gap-1.5 font-bold text-emerald-950 dark:text-emerald-200">
+              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>{isTa ? 'முன்பணம் தேவையில்லை • ₹0 Advance' : '₹0 Advance Required • Pay After Trip'}</span>
             </div>
-            <div className="bg-m3-surface-container-low rounded-m3-md p-2.5 border border-m3-outline-variant/60 space-y-1">
-              <span className="text-m3-label-s font-semibold text-m3-on-surface-variant uppercase block">{isTa ? 'தவிர்க்கப்பட்டவை' : 'Exclusions'}</span>
-              {[isTa ? 'டோல் பிளாசா' : 'Tolls (at actuals)', isTa ? 'பார்க்கிங்' : 'Parking (at actuals)', isTa ? 'மாநில வரி' : 'State Tax (if any)'].map((item, i) => (
-                <div key={i} className="flex items-center gap-1.5 text-m3-label-s text-m3-on-surface-variant">
-                  <span className="w-1 h-1 bg-m3-on-surface-variant/70 rounded-m3-full shrink-0" />
-                  <span>{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Note */}
-          <div className="p-2 bg-m3-surface-container-low rounded-m3-md border border-m3-outline-variant flex items-start gap-1.5 text-m3-on-surface">
-            <AlertCircle className="w-3.5 h-3.5 text-m3-primary shrink-0 mt-0.5" />
-            <p className="text-[11px] leading-tight font-medium">
-              {isTa ? 'கட்டணம் தோராயமானது. டோல் & பார்க்கிங் ரசீதுப்படி செலுத்த வேண்டும்.' : 'Estimated fare. Tolls and parking are as per actual toll booth receipts.'}
-            </p>
+            <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">
+              Zero Surge
+            </span>
           </div>
         </div>
 
@@ -2044,7 +2283,7 @@ function FullBreakdownModal({ isTa, vehicle, activeTab, localPackage, breakdown,
         <div className="px-4 py-2.5 sm:px-5 sm:py-3 border-t border-m3-outline-variant/60 bg-m3-surface-container-low flex gap-2 items-center">
           <button 
             onClick={() => setShowFullBreakdown(false)} 
-            className="flex-1 py-2 px-3 bg-m3-surface border border-m3-outline-variant text-m3-on-surface-variant font-semibold text-m3-label-l rounded-m3-full hover:bg-m3-surface-container transition-colors cursor-pointer"
+            className="flex-1 py-2 px-3 bg-m3-surface border border-m3-outline-variant text-m3-on-surface font-semibold text-xs sm:text-sm rounded-m3-full hover:bg-m3-surface-container transition-colors cursor-pointer"
           >
             {isTa ? 'மூடு' : 'Close'}
           </button>
@@ -2056,7 +2295,7 @@ function FullBreakdownModal({ isTa, vehicle, activeTab, localPackage, breakdown,
             variant="filled"
             size="md"
             className="flex-[2]"
-            text={isTa ? 'வாட்ஸ்அப் முன்பதிவு (முன்பணம் இல்லை)' : 'Reserve (Pay ₹0 Today)'}
+            text={isTa ? 'வாட்ஸ்அப் முன்பதிவு' : 'Reserve on WhatsApp'}
           />
         </div>
       </div>

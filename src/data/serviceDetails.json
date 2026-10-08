@@ -2,9 +2,9 @@
   {
     "slug": "tirupati-package",
     "category": "Temple Tours",
-    "title": "Chennai to Tirupati Cab & Balaji Darshan Taxi Package (1 or 2 Days)",
-    "duration": "1 Day (Same Day) or 2 Days / 1 Night (~150 km / 3.5 hrs)",
-    "overview": "Doorstep Chennai to Tirupati round-trip car rental with driver. Flat rates from ₹6,000 include vehicle, fuel, NH tolls, AP interstate permit, parking, and driver allowance with ₹0 advance payment.",
+    "title": "Chennai to Tirupati Cab & Balaji Darshan Taxi Package (1, 2 or 3 Days)",
+    "duration": "1 Day (Same Day), 2 Days (1 Night) or 3 Days (~150 km / 3.5 hrs)",
+    "overview": "Doorstep Chennai to Tirupati round-trip car rental with driver. Transparent all-inclusive fares: ₹6,000 (1 Day), ₹9,500 (2 Days), ₹13,200 (3 Days) for AC Sedan. Includes vehicle hire, minimum km coverage, NH tolls, AP interstate permit, parking, and driver allowance with ₹0 advance payment.",
     "routePlan": [
       {
         "stop": "Chennai Doorstep",
@@ -47,31 +47,31 @@
           "Swift Dzire / Toyota Etios",
           "4 Passengers",
           "₹6,000",
-          "Ideal for 2–4 passengers • Compact agility on Tirumala ghat roads"
+          "Ideal for 2–4 passengers • 1 Day: ₹6,000 | 2 Days: ₹9,500 | 3 Days: ₹13,200 (All-Inclusive)"
         ],
         [
           "Maruti Ertiga / XL6 (SUV)",
           "6 Passengers",
           "₹7,500",
-          "Spacious 3-row seating • Rear AC blower • Extra boot room"
+          "Spacious 3-row seating • 1 Day: ₹7,500 | 2 Days: ₹11,500 | 3 Days: ₹15,800 (All-Inclusive)"
         ],
         [
           "Toyota Innova",
           "7 Passengers",
           "₹8,500",
-          "Superior highway suspension • High ground clearance for hills"
+          "Superior highway suspension • 1 Day: ₹8,500 | 2 Days: ₹12,500 | 3 Days: ₹17,500 (All-Inclusive)"
         ],
         [
           "Toyota Innova Crysta (Luxury)",
           "7 Passengers",
           "₹10,000",
-          "Plush captain seats • Quiet cabin • Recommended for senior citizens"
+          "Plush captain seats • 1 Day: ₹10,000 | 2 Days: ₹16,000 | 3 Days: ₹22,500 (All-Inclusive)"
         ],
         [
           "12-Seater Tempo Traveller",
           "12 Passengers",
           "₹12,500",
-          "Pushback reclining seats • High roof • Ideal for joint families & groups"
+          "Pushback reclining seats • 1 Day: ₹12,500 | 2 Days: ₹19,500 | 3 Days: ₹27,000 (All-Inclusive)"
         ]
       ],
       "note": "Flat round-trip fares include car, fuel, tolls, AP permit, parking, and driver allowance. Darshan tickets and meals are extra."
@@ -99,6 +99,10 @@
       ]
     },
     "faq": [
+      {
+        "q": "What is the fare breakdown for Chennai to Tirupati 1 Day, 2 Days, and 3 Days car packages?",
+        "a": "Kalidass Travels follows 100% transparent outstation billing with all tolls, AP permit, and driver stay pre-included: Swift Dzire / Etios: 1 Day ₹6,000 | 2 Days ₹9,500 | 3 Days ₹13,200. Maruti Ertiga / XL6: 1 Day ₹7,500 | 2 Days ₹11,500 | 3 Days ₹15,800. Toyota Innova: 1 Day ₹8,500 | 2 Days ₹12,500 | 3 Days ₹17,500. Innova Crysta: 1 Day ₹10,000 | 2 Days ₹16,000 | 3 Days ₹22,500. 12-Seater Tempo Traveller: 1 Day ₹12,500 | 2 Days ₹19,500 | 3 Days ₹27,000. All multi-day rates strictly include 250 km/day (or 300 km/day) minimum coverage, calendar-day driver bata, AP state permit, round-trip highway FASTag tolls, and driver night stay & food allowance with ₹0 advance required."
+      },
       {
         "q": "How much does a cab from Chennai to Tirupati cost?",
         "a": "Round-trip all-inclusive cab packages start at ₹6,000 for 4-passenger AC Sedans (Swift Dzire / Toyota Etios), ₹7,500 for 6-seater SUVs (Maruti Ertiga / XL6), ₹8,500 for 7-seater MUVs (Toyota Innova), ₹10,000 for Innova Crysta, and ₹12,500 for a 12-seater Tempo Traveller. All rates include fuel, highway tolls, AP border permit, parking, and driver allowance with zero hidden charges."
@@ -145,8 +149,8 @@
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I would like to book the Chennai to Tirupati Balaji Car Package. Please share vehicle availability.",
-    "metaTitle": "Chennai to Tirupati Cab & Darshan Package | Kalidass Travels",
-    "metaDescription": "Book Chennai to Tirupati cab from ₹6,000 flat fare. Clean AC Sedan, Ertiga & Innova with driver. Highway tolls, AP border permit & parking 100% included. ₹0 advance.",
+    "metaTitle": "Chennai to Tirupati Cab & Darshan Package (1, 2 or 3 Days) | Kalidass Travels",
+    "metaDescription": "Book Chennai to Tirupati cab from ₹6,000 flat (1 Day), ₹9,500 (2 Days) & ₹13,200 (3 Days). 100% transparent pricing with tolls, AP permit & driver stay included. ₹0 advance.",
     "keywords": "chennai to tirupati cab, chennai to tirupati taxi, chennai to tirupati cab fare, chennai to tirupati car rental, chennai to tirumala cab, tirupati balaji darshan taxi chennai, outstation cab chennai to tirupati, one day tirupati trip cab, round trip cab chennai to tirupati, tirupati taxi package with toll permit",
     "serviceType": "TaxiService",
     "origin": "Chennai",

@@ -9,7 +9,26 @@ import Breadcrumbs from "../components/SEO/Breadcrumbs.astro";
 import FAQAccordion from "../components/FAQAccordion.astro";
 import WhatsAppButton from "../components/WhatsAppButton.astro";
 import tariffConfig from "../data/tariff_config.json";
-import { Truck } from "lucide-react";
+import {
+  Plane,
+  Clock,
+  Car,
+  UserCheck,
+  Truck,
+  ArrowRight,
+  Route,
+  ChevronRight,
+  CheckCircle2,
+  Calculator,
+  Info,
+  ShieldCheck,
+  Check,
+  AlertCircle,
+  X,
+  Phone,
+  Star,
+} from "lucide-react";
+import WhatsAppIcon from "../components/react/WhatsAppIcon.jsx";
 
 const breadcrumbItems = [
   { name: "Home", item: "/" },
@@ -292,19 +311,22 @@ const serviceSchemas = [
               data-active="true"
               aria-current="true"
             >
-              <span>✈️ Airport Taxi</span>
+              <Plane className="w-3.5 h-3.5 shrink-0" />
+              <span>Airport Taxi</span>
             </a>
             <a 
               href="#local-rental-estimator" 
               class="px-3 sm:px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high font-medium shadow-xs flex items-center gap-1.5 transition-all shrink-0 text-xs border border-m3-outline-variant/30"
             >
-              <span>⏱️ Local Package</span>
+              <Clock className="w-3.5 h-3.5 shrink-0" />
+              <span>Local Package</span>
             </a>
             <a 
               href="#outstation-estimator" 
               class="px-3 sm:px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high font-medium shadow-xs flex items-center gap-1.5 transition-all shrink-0 text-xs border border-m3-outline-variant/30"
             >
-              <span>🚗 Outstation Cabs</span>
+              <Car className="w-3.5 h-3.5 shrink-0" />
+              <span>Outstation Cabs</span>
             </a>
           </div>
           
@@ -314,13 +336,15 @@ const serviceSchemas = [
               href="#acting-driver-estimator" 
               class="px-3 sm:px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high font-medium shadow-xs flex items-center gap-1.5 transition-all shrink-0 text-xs border border-m3-outline-variant/30"
             >
-              <span>🧑‍✈️ Acting Drivers</span>
+              <UserCheck className="w-3.5 h-3.5 shrink-0" />
+              <span>Acting Drivers</span>
             </a>
             <a 
               href="#vehicle-relocation-estimator" 
               class="px-3 sm:px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high font-medium shadow-xs flex items-center gap-1.5 transition-all shrink-0 text-xs border border-m3-outline-variant/30"
             >
-              <span>🚛 Car Relocation</span>
+              <Truck className="w-3.5 h-3.5 shrink-0" />
+              <span>Car Relocation</span>
             </a>
           </div>
         </div>
@@ -383,7 +407,7 @@ const serviceSchemas = [
       >
         <div class="flex items-start gap-3.5">
           <div class="w-9 h-9 rounded-m3-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
-            <span class="material-symbols-outlined text-[20px]">verified</span>
+            <CheckCircle2 className="w-5 h-5 text-emerald-600" />
           </div>
           <div class="flex-1">
             <h2 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
@@ -400,7 +424,7 @@ const serviceSchemas = [
                 <span>Formula: Total = (KM × Rate) + (Days × Bata) + Tolls</span>
               </span>
               <span class="text-m3-on-surface-variant flex items-center gap-1">
-                <span class="material-symbols-outlined text-[15px] text-emerald-600">check_circle</span>
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                 <span>Verified 2026 Rates · GSTIN: 33COVPM0531D1Z4</span>
               </span>
             </div>
@@ -464,7 +488,7 @@ const serviceSchemas = [
           <span>* Minimum billing for outstation round trips is 250 km/day (300 km/day for Crysta &amp; Tempo).</span>
           <a href="/tariff/" class="text-m3-primary font-bold hover:underline inline-flex items-center gap-1">
             <span>View Complete Tariff Card &amp; Extra KM Rates</span>
-            <span class="material-symbols-outlined text-[13px]">arrow_forward</span>
+            <ArrowRight className="w-3.5 h-3.5 shrink-0" />
           </a>
         </div>
       </section>
@@ -473,7 +497,7 @@ const serviceSchemas = [
       <section class="mb-16 scroll-mt-36" aria-labelledby="howto-heading">
         <div class="text-center max-w-3xl mx-auto mb-8">
           <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-2.5 tracking-wide">
-            <span class="material-symbols-outlined text-[15px] text-m3-primary">route</span>
+            <Route className="w-4 h-4 text-m3-primary shrink-0" />
             <span>4 Simple Steps to Calculate &amp; Book</span>
           </div>
           <h2 id="howto-heading" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2 font-heading">
@@ -497,7 +521,7 @@ const serviceSchemas = [
             </div>
             <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-m3-primary font-semibold flex items-center gap-1">
               <span>Step 1: Engine Jump</span>
-              <span class="material-symbols-outlined text-[12px]">keyboard_arrow_right</span>
+              <ChevronRight className="w-3.5 h-3.5 shrink-0" />
             </div>
           </div>
 
@@ -513,7 +537,7 @@ const serviceSchemas = [
             </div>
             <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-m3-primary font-semibold flex items-center gap-1">
               <span>Step 2: Highway KM Query</span>
-              <span class="material-symbols-outlined text-[12px]">keyboard_arrow_right</span>
+              <ChevronRight className="w-3.5 h-3.5 shrink-0" />
             </div>
           </div>
 
@@ -529,7 +553,7 @@ const serviceSchemas = [
             </div>
             <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-m3-primary font-semibold flex items-center gap-1">
               <span>Step 3: Fleet Matching</span>
-              <span class="material-symbols-outlined text-[12px]">keyboard_arrow_right</span>
+              <ChevronRight className="w-3.5 h-3.5 shrink-0" />
             </div>
           </div>
 
@@ -545,7 +569,7 @@ const serviceSchemas = [
             </div>
             <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-emerald-700 font-semibold flex items-center gap-1">
               <span>Step 4: Dispatch Confirmation</span>
-              <span class="material-symbols-outlined text-[12px]">check_circle</span>
+              <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
             </div>
           </div>
         </div>
@@ -555,7 +579,7 @@ const serviceSchemas = [
       <section class="mb-16 scroll-mt-36" aria-labelledby="formula-heading">
         <div class="text-center max-w-3xl mx-auto mb-8">
           <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-2.5 tracking-wide">
-            <span class="material-symbols-outlined text-[15px] text-m3-primary">calculate</span>
+            <Calculator className="w-4 h-4 text-m3-primary shrink-0" />
             <span>Billing Methodologies &amp; Policies</span>
           </div>
           <h2 id="formula-heading" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2 font-heading">
@@ -571,7 +595,7 @@ const serviceSchemas = [
           <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 sm:p-6 shadow-m3-1 flex flex-col justify-between">
             <div>
               <div class="flex items-center gap-2 mb-3">
-                <span class="material-symbols-outlined text-m3-primary text-xl shrink-0" aria-hidden="true">flight_land</span>
+                <Plane className="w-5 h-5 text-m3-primary shrink-0" aria-hidden="true" />
                 <h3 class="font-bold text-m3-on-surface font-heading text-base min-w-0">Chennai Airport Flat Tariff Formula</h3>
               </div>
               <div class="bg-m3-surface-container-low p-3 rounded-m3-lg font-mono text-xs text-m3-on-surface mb-3 border border-m3-outline-variant/60 leading-relaxed">
@@ -595,7 +619,7 @@ const serviceSchemas = [
             </div>
             <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-emerald-700 font-semibold flex items-center justify-between">
               <span>MAA Terminal Parking Included</span>
-              <span class="material-symbols-outlined text-[14px]">check_circle</span>
+              <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
             </div>
           </div>
 
@@ -603,7 +627,7 @@ const serviceSchemas = [
           <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 sm:p-6 shadow-m3-1 flex flex-col justify-between">
             <div>
               <div class="flex items-center gap-2 mb-3">
-                <span class="material-symbols-outlined text-m3-primary text-xl shrink-0" aria-hidden="true">schedule</span>
+                <Clock className="w-5 h-5 text-m3-primary shrink-0" aria-hidden="true" />
                 <h3 class="font-bold text-m3-on-surface font-heading text-base min-w-0">Local Hourly Rental Package Formula</h3>
               </div>
               <div class="bg-m3-surface-container-low p-3 rounded-m3-lg font-mono text-xs text-m3-on-surface mb-3 border border-m3-outline-variant/60 leading-relaxed">
@@ -627,7 +651,7 @@ const serviceSchemas = [
             </div>
             <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-emerald-700 font-semibold flex items-center justify-between">
               <span>Fuel &amp; City Bata Included</span>
-              <span class="material-symbols-outlined text-[14px]">check_circle</span>
+              <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
             </div>
           </div>
 
@@ -635,7 +659,7 @@ const serviceSchemas = [
           <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 sm:p-6 shadow-m3-1 flex flex-col justify-between">
             <div>
               <div class="flex items-center gap-2 mb-3">
-                <span class="material-symbols-outlined text-m3-primary text-xl shrink-0" aria-hidden="true">directions_car</span>
+                <Car className="w-5 h-5 text-m3-primary shrink-0" aria-hidden="true" />
                 <h3 class="font-bold text-m3-on-surface font-heading text-base min-w-0">Outstation Cabs Calculation Formula</h3>
               </div>
               <div class="bg-m3-surface-container-low p-3 rounded-m3-lg font-mono text-xs text-m3-on-surface mb-3 border border-m3-outline-variant/60 leading-relaxed">
@@ -659,7 +683,7 @@ const serviceSchemas = [
             </div>
             <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-emerald-700 font-semibold flex items-center justify-between">
               <span>Standard 250/300 KM Min Day Rule</span>
-              <span class="material-symbols-outlined text-[14px]">check_circle</span>
+              <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
             </div>
           </div>
 
@@ -667,7 +691,7 @@ const serviceSchemas = [
           <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 sm:p-6 shadow-m3-1 flex flex-col justify-between">
             <div>
               <div class="flex items-center gap-2 mb-3">
-                <span class="material-symbols-outlined text-m3-primary text-xl shrink-0" aria-hidden="true">badge</span>
+                <UserCheck className="w-5 h-5 text-m3-primary shrink-0" aria-hidden="true" />
                 <h3 class="font-bold text-m3-on-surface font-heading text-base min-w-0">Acting Driver Charges Formula</h3>
               </div>
               <div class="bg-m3-surface-container-low p-3 rounded-m3-lg font-mono text-xs text-m3-on-surface mb-3 border border-m3-outline-variant/60 leading-relaxed">
@@ -691,7 +715,7 @@ const serviceSchemas = [
             </div>
             <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-emerald-700 font-semibold flex items-center justify-between">
               <span>Police-Verified Drivers</span>
-              <span class="material-symbols-outlined text-[14px]">check_circle</span>
+              <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
             </div>
           </div>
 
@@ -722,7 +746,7 @@ const serviceSchemas = [
             </div>
             <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-emerald-700 font-semibold flex items-center justify-between">
               <span>Driveaway Transit with Live GPS</span>
-              <span class="material-symbols-outlined text-[14px]">check_circle</span>
+              <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
             </div>
           </div>
         </div>
@@ -731,7 +755,7 @@ const serviceSchemas = [
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 shadow-m3-1">
             <h4 class="font-bold text-m3-on-surface mb-2.5 font-heading text-sm flex items-center gap-2">
-              <span class="material-symbols-outlined text-emerald-600 text-lg">check_circle</span>
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>Included in Kalidass Travels Estimates</span>
             </h4>
             <ul class="space-y-2 text-xs text-m3-on-surface-variant">
@@ -760,7 +784,7 @@ const serviceSchemas = [
 
           <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 shadow-m3-1">
             <h4 class="font-bold text-m3-on-surface mb-2.5 font-heading text-sm flex items-center gap-2">
-              <span class="material-symbols-outlined text-amber-600 text-lg">info</span>
+              <Info className="w-4 h-4 text-amber-600 shrink-0" />
               <span>Billed on Actuals (Variable Government Levies)</span>
             </h4>
             <ul class="space-y-2 text-xs text-m3-on-surface-variant">
@@ -790,7 +814,7 @@ const serviceSchemas = [
         <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-6 sm:p-8 shadow-m3-1">
           <div class="text-center max-w-3xl mx-auto mb-8">
             <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 text-xs font-semibold shadow-m3-1 mb-2.5 tracking-wide">
-              <span class="material-symbols-outlined text-[15px] text-emerald-600">shield</span>
+              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>Our Fair Pricing Pledge</span>
             </div>
             <h2 id="zero-surge-heading" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2 font-heading">
@@ -804,24 +828,24 @@ const serviceSchemas = [
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-m3-lg p-5">
               <div class="flex items-center gap-2 mb-3">
-                <span class="material-symbols-outlined text-emerald-600 text-xl">verified</span>
+                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
                 <h3 class="font-bold text-emerald-900 font-heading text-sm sm:text-base">Kalidass Travels Guarantee</h3>
               </div>
               <ul class="space-y-2.5 text-xs text-m3-on-surface">
                 <li class="flex items-start gap-2">
-                  <span class="material-symbols-outlined text-[16px] text-emerald-600 shrink-0">check</span>
+                  <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                   <span><strong>100% Zero Surge:</strong> Fixed per-km and flat airport rates 24/7/365, even during heavy rains and festival rushes.</span>
                 </li>
                 <li class="flex items-start gap-2">
-                  <span class="material-symbols-outlined text-[16px] text-emerald-600 shrink-0">check</span>
+                  <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                   <span><strong>Zero Driver Cancellation:</strong> Confirmed booking guarantees your assigned vehicle with chauffeur details dispatched in advance.</span>
                 </li>
                 <li class="flex items-start gap-2">
-                  <span class="material-symbols-outlined text-[16px] text-emerald-600 shrink-0">check</span>
+                  <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                   <span><strong>Complimentary Flight Delay Buffer:</strong> 60 minutes free waiting time for airport pickups with automated flight tracking.</span>
                 </li>
                 <li class="flex items-start gap-2">
-                  <span class="material-symbols-outlined text-[16px] text-emerald-600 shrink-0">check</span>
+                  <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                   <span><strong>GST Corporate Compliance:</strong> Proper tax invoices detailing GST registration, distance, and driver bata for company claims.</span>
                 </li>
               </ul>
@@ -829,24 +853,24 @@ const serviceSchemas = [
 
             <div class="bg-red-500/5 border border-red-500/20 rounded-m3-lg p-5">
               <div class="flex items-center gap-2 mb-3">
-                <span class="material-symbols-outlined text-red-600 text-xl">highlight_off</span>
+                <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
                 <h3 class="font-bold text-red-900 font-heading text-sm sm:text-base">App Cabs (Ola / Uber) Pitfalls</h3>
               </div>
               <ul class="space-y-2.5 text-xs text-m3-on-surface">
                 <li class="flex items-start gap-2">
-                  <span class="material-symbols-outlined text-[16px] text-red-600 shrink-0">close</span>
+                  <X className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
                   <span><strong>Aggressive Surge Multipliers:</strong> Fares jump 1.5x–3.0x during peak hours, sudden rain, or airport landing rushes.</span>
                 </li>
                 <li class="flex items-start gap-2">
-                  <span class="material-symbols-outlined text-[16px] text-red-600 shrink-0">close</span>
+                  <X className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
                   <span><strong>Frequent Driver Cancellations:</strong> Drivers cancel if destination is not profitable or ask for offline cash payments.</span>
                 </li>
                 <li class="flex items-start gap-2">
-                  <span class="material-symbols-outlined text-[16px] text-red-600 shrink-0">close</span>
+                  <X className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
                   <span><strong>Heavy Airport Waiting Penalties:</strong> Per-minute waiting fees begin after just 3–5 minutes while baggage is in transit.</span>
                 </li>
                 <li class="flex items-start gap-2">
-                  <span class="material-symbols-outlined text-[16px] text-red-600 shrink-0">close</span>
+                  <X className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
                   <span><strong>Opaque Platform Convenience Fees:</strong> Hidden access fees and platform deductions make corporate expense reimbursement difficult.</span>
                 </li>
               </ul>
@@ -861,7 +885,7 @@ const serviceSchemas = [
           <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div class="max-w-3xl">
               <div class="inline-flex items-center gap-2 px-3 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-micro font-semibold shadow-m3-1 mb-2.5 tracking-wide">
-                <span class="material-symbols-outlined text-[14px] text-m3-primary">policy</span>
+                <ShieldCheck className="w-3.5 h-3.5 text-m3-primary shrink-0" />
                 <span>E-E-A-T Editorial Verification &amp; Quality Guarantee</span>
               </div>
               
@@ -892,7 +916,7 @@ const serviceSchemas = [
                 <div>
                   <div class="text-micro text-m3-on-surface-variant uppercase tracking-wider font-semibold">Customer Score</div>
                   <div class="font-bold text-m3-on-surface mt-0.5 flex items-center gap-1">
-                    <span class="text-gold-600">★</span>
+                    <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500 shrink-0" />
                     <span>4.9 / 5.0</span>
                   </div>
                   <div class="text-[11px] text-m3-on-surface-variant">1,250+ Google Reviews</div>
@@ -914,7 +938,7 @@ const serviceSchemas = [
                 class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-surface-container border border-m3-outline-variant text-m3-on-surface font-bold text-xs shadow-m3-1 transition-all"
                 aria-label="Call Kalidass Travels operations desk"
               >
-                <span class="material-symbols-outlined text-[16px] text-m3-primary">call</span>
+                <Phone className="w-4 h-4 text-m3-primary shrink-0" />
                 <span>Call +91 89395 39211</span>
               </a>
             </div>
@@ -956,13 +980,13 @@ const serviceSchemas = [
             class="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-m3-full shadow-m3-2 transition-all cursor-pointer text-sm border border-emerald-500/30"
           >
             <span>Book via WhatsApp</span>
-            <span class="material-symbols-outlined text-[16px]">chat</span>
+            <WhatsAppIcon className="w-4 h-4 text-white shrink-0" variant="brand" />
           </a>
           <a
             href="tel:+918939539211"
             class="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white/10 hover:bg-white/20 text-white font-bold rounded-m3-full transition-all text-sm border border-white/20 shadow-m3-1"
           >
-            <span class="material-symbols-outlined text-[18px] text-emerald-400">call</span>
+            <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>Call +91 89395 39211</span>
           </a>
         </div>

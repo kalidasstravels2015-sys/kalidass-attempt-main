@@ -259,23 +259,23 @@ const getVehicleBaggage = (name: string) => {
 };
 
 // Multi-day & stay duration package rates for all pilgrimage packages
-const getPackageStayRates = (slug: string, vehicleName: string, basePriceNum: number) => {
+const getPackageStayRates = (slug: string, vehicleName: string, basePriceNum: number): Record<number, number> | null => {
   const v = (vehicleName || '').toLowerCase();
   
   if (slug === 'tirupati-package') {
     if (v.includes('tempo') || v.includes('traveller')) {
-      return { 1: 12500, 2: 16500, 3: 20500 };
+      return { 1: 12500, 2: 19500, 3: 27000 };
     }
     if (v.includes('crysta')) {
-      return { 1: 10000, 2: 13000, 3: 16000 };
+      return { 1: 10000, 2: 16000, 3: 22500 };
     }
     if (v.includes('innova')) {
-      return { 1: 8500, 2: 11000, 3: 13500 };
+      return { 1: 8500, 2: 12500, 3: 17500 };
     }
     if (v.includes('ertiga') || v.includes('xl6')) {
-      return { 1: 7500, 2: 9700, 3: 11900 };
+      return { 1: 7500, 2: 11500, 3: 15800 };
     }
-    return { 1: basePriceNum || 6000, 2: 7800, 3: 9600 };
+    return { 1: basePriceNum || 6000, 2: 9500, 3: 13200 };
   }
 
   if (slug === 'thiruvannamalai-girivalam-trip') {
@@ -411,18 +411,18 @@ const getPackageStayRates = (slug: string, vehicleName: string, basePriceNum: nu
 
   if (slug === 'mahabalipuram-ecr-temple-route') {
     if (v.includes('tempo') || v.includes('traveller')) {
-      return { 1: 8000, 2: 9800 };
+      return { 1: 8000, 2: 9800, 3: 0 };
     }
     if (v.includes('crysta')) {
-      return { 1: 6500, 2: 7900 };
+      return { 1: 6500, 2: 7900, 3: 0 };
     }
     if (v.includes('innova')) {
-      return { 1: 5500, 2: 6700 };
+      return { 1: 5500, 2: 6700, 3: 0 };
     }
     if (v.includes('ertiga') || v.includes('xl6')) {
-      return { 1: 4500, 2: 5500 };
+      return { 1: 4500, 2: 5500, 3: 0 };
     }
-    return { 1: basePriceNum || 3500, 2: 4300 };
+    return { 1: basePriceNum || 3500, 2: 4300, 3: 0 };
   }
 
   if (slug === 'one-day-chennai-city-tour') {
@@ -476,6 +476,95 @@ const getPackageStayRates = (slug: string, vehicleName: string, basePriceNum: nu
   return null;
 };
 
+interface StayDropdownOption {
+  value: string;
+  label: string;
+  price: string;
+  duration: string;
+  km?: string;
+  bata?: string;
+  tolls?: string;
+  stay?: string;
+  sightseeing?: string;
+  inclusions: string;
+  selected?: boolean;
+}
+
+const getVehiclePricingSpecs = (vehicleName: string) => {
+  const v = (vehicleName || '').toLowerCase();
+  const isTempo = v.includes('tempo') || v.includes('traveller');
+  const isCrysta = v.includes('crysta');
+  const isInnova = v.includes('innova');
+  const isErtiga = v.includes('ertiga') || v.includes('xl6');
+
+  const minKmDay = (isCrysta || isTempo) ? 300 : 250;
+  const rateKm = isTempo ? 24 : isCrysta ? 22 : isInnova ? 18 : isErtiga ? 17 : 14;
+  const dailyBata = isTempo ? 800 : isCrysta ? 600 : isInnova ? 500 : isErtiga ? 400 : 300;
+  const stayLodging = isTempo ? 1500 : isCrysta ? 1200 : isInnova ? 1100 : isErtiga ? 1000 : 800;
+
+  return { minKmDay, rateKm, dailyBata, stayLodging };
+};
+
+const getFallbackStayOptions = (r: Record<number, number>, vehicleName: string): StayDropdownOption[] => {
+  const { minKmDay, rateKm, dailyBata, stayLodging } = getVehiclePricingSpecs(vehicleName);
+
+  return [
+    {
+      value: "1",
+      price: `₹${(r[1] || 0).toLocaleString('en-IN')}`,
+      duration: "1 Day (Same Day Return)",
+      label: "1 Day (Same Day Return)",
+      km: `~${minKmDay} km Minimum Run Included`,
+      bata: `1 Day Driver Bata: ₹${dailyBata}`,
+      tolls: "FASTag Highway Tolls Included",
+      stay: "₹0 (Same-Day Return • Chauffeur Returns Home)",
+      sightseeing: "Primary Temple / Circuit Visit",
+      inclusions: "Fuel, Highway Tolls & Driver Bata Included",
+      selected: true
+    },
+    {
+      value: "2",
+      price: `₹${(r[2] || 0).toLocaleString('en-IN')}`,
+      duration: "2 Days / 1 Night Stay",
+      label: "2 Days / 1 Night (Driver Stay & Food Included)",
+      km: `${2 * minKmDay} km Min Coverage (${minKmDay} km/day @ ₹${rateKm}/km = ₹${(2 * minKmDay * rateKm).toLocaleString('en-IN')})`,
+      bata: `2 Calendar Days Bata: ₹${(2 * dailyBata).toLocaleString('en-IN')}`,
+      tolls: "All Highway Tolls & Permits Included",
+      stay: `1 Night Driver Lodging & Food Allowance Included (₹${stayLodging.toLocaleString('en-IN')})`,
+      sightseeing: "2 Days Local Sightseeing & Temple Route",
+      inclusions: "Fuel, Highway Tolls, Driver Stay & Food Included"
+    },
+    {
+      value: "3",
+      price: `₹${(r[3] || 0).toLocaleString('en-IN')}`,
+      duration: "3 Days / 2 Nights Stay",
+      label: "3 Days / 2 Nights (Driver Stay & Food Included)",
+      km: `${3 * minKmDay} km Min Coverage (${minKmDay} km/day @ ₹${rateKm}/km = ₹${(3 * minKmDay * rateKm).toLocaleString('en-IN')})`,
+      bata: `3 Calendar Days Bata: ₹${(3 * dailyBata).toLocaleString('en-IN')}`,
+      tolls: "All Highway Tolls & Permits Included",
+      stay: `2 Nights Driver Lodging & Food Allowance Included (₹${(2 * stayLodging).toLocaleString('en-IN')})`,
+      sightseeing: "3 Days Extended Sightseeing Circuit",
+      inclusions: "Fuel, Highway Tolls, 2 Nights Driver Stay & Food Included"
+    }
+  ];
+};
+
+const resolveStayOptionDetails = (opt: StayDropdownOption, vehicleName: string): StayDropdownOption => {
+  if (opt.km && opt.bata && opt.tolls && opt.stay) return opt;
+  const { minKmDay, rateKm, dailyBata, stayLodging } = getVehiclePricingSpecs(vehicleName);
+  const dayNum = parseInt(opt.value, 10) || 1;
+  const isOneDay = dayNum === 1;
+
+  return {
+    ...opt,
+    km: opt.km || (isOneDay ? `~${minKmDay} km Minimum Run Included` : `${dayNum * minKmDay} km Min Run (${minKmDay} km/day @ ₹${rateKm}/km)`),
+    bata: opt.bata || `${dayNum} Day${dayNum > 1 ? 's' : ''} Driver Bata: ₹${(dayNum * dailyBata).toLocaleString('en-IN')}`,
+    tolls: opt.tolls || "All FASTag Highway Tolls Included",
+    stay: opt.stay || (isOneDay ? "₹0 (Same-Day Return)" : `${dayNum - 1} Night${dayNum > 2 ? 's' : ''} Driver Stay & Food Included (₹${((dayNum - 1) * stayLodging).toLocaleString('en-IN')})`),
+    sightseeing: opt.sightseeing || "Local Temples & Sightseeing Route"
+  };
+};
+
 // Formalized Pilgrim Route Registry (Centralized standard for all 8 South India Temple Yatras)
 const PILGRIM_ROUTES: Record<string, {
   summaryTitle: string;
@@ -492,14 +581,7 @@ const PILGRIM_ROUTES: Record<string, {
   calloutTitle: string;
   calloutDesc: string;
   stayLabelSub: string;
-  getDropdownOptions: (rates: { [key: number]: number }) => Array<{
-    value: string;
-    label: string;
-    price: string;
-    duration: string;
-    inclusions: string;
-    selected?: boolean;
-  }>;
+  getDropdownOptions: (rates: Record<number, number>, vehicleName?: string) => StayDropdownOption[];
   baseInclusionsText: string;
   comparisonTitle: string;
   comparisonDesc: string;
@@ -525,11 +607,48 @@ const PILGRIM_ROUTES: Record<string, {
     calloutTitle: 'Doorstep Pickup Anywhere in Chennai • ₹0 Advance Required',
     calloutDesc: 'Includes Sri Padmavathi Ammavari Temple (Tiruchanur) stop, luggage guidance, and complete ghat road clearance.',
     stayLabelSub: 'Stay & Food Included',
-    getDropdownOptions: (r) => [
-      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "1 Day (Same Day Return)", inclusions: "Fuel, FASTag Tolls, AP Border Permit & Driver Bata Included", label: "1 Day (Same Day Return)", selected: true },
-      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, FASTag Tolls, AP Border Permit, Driver Stay & Food Included", label: "2 Days / 1 Night (Driver Stay & Food Included)" },
-      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, FASTag Tolls, AP Border Permit, 2 Nights Driver Stay & Food Included", label: "3 Days / 2 Nights (Driver Stay & Food Included)" }
-    ],
+    getDropdownOptions: (r, vehicleName) => {
+      const { minKmDay, rateKm, dailyBata, stayLodging } = getVehiclePricingSpecs(vehicleName || '');
+      return [
+        { 
+          value: "1", 
+          price: `₹${(r[1] || 6000).toLocaleString('en-IN')}`, 
+          duration: "1 Day (Same Day Return)", 
+          label: "1 Day (Same Day Return • ~320 km)", 
+          km: "~300–320 km Round-Trip Run Included",
+          bata: `1 Day Chauffeur Bata: ₹${dailyBata}`,
+          tolls: "AP State Entry Permit & FASTag Tolls: 100% Pre-Paid",
+          stay: "₹0 (Same-Day Return • Chauffeur Returns Home)",
+          sightseeing: "Tirumala Hilltop + Sri Padmavathi Ammavari Temple (Tiruchanur)",
+          inclusions: "Fuel, FASTag Tolls, AP Border Permit & Driver Bata Included", 
+          selected: true 
+        },
+        { 
+          value: "2", 
+          price: `₹${(r[2] || 9500).toLocaleString('en-IN')}`, 
+          duration: "2 Days / 1 Night Stay", 
+          label: "2 Days / 1 Night (Driver Stay & Food Included)", 
+          km: `${2 * minKmDay} km Min Run (${minKmDay} km/day @ ₹${rateKm}/km = ₹${(2 * minKmDay * rateKm).toLocaleString('en-IN')})`,
+          bata: `2 Calendar Days Bata: ₹${(2 * dailyBata).toLocaleString('en-IN')}`,
+          tolls: "AP State Permit & Round-Trip Highway Tolls Included",
+          stay: `1 Night Driver Lodging & Food Allowance Included (₹${stayLodging.toLocaleString('en-IN')})`,
+          sightseeing: "Tirumala + Tiruchanur + Srinivasa Mangapuram + Kanipakam",
+          inclusions: "Fuel, FASTag Tolls, AP Border Permit, Driver Stay & Food Included" 
+        },
+        { 
+          value: "3", 
+          price: `₹${(r[3] || 13200).toLocaleString('en-IN')}`, 
+          duration: "3 Days / 2 Nights Stay", 
+          label: "3 Days / 2 Nights (Driver Stay & Food Included)", 
+          km: `${3 * minKmDay} km Min Run (${minKmDay} km/day @ ₹${rateKm}/km = ₹${(3 * minKmDay * rateKm).toLocaleString('en-IN')})`,
+          bata: `3 Calendar Days Bata: ₹${(3 * dailyBata).toLocaleString('en-IN')}`,
+          tolls: "AP State Permit & Highway FASTag Tolls Included",
+          stay: `2 Nights Driver Lodging & Food Allowance Included (₹${(2 * stayLodging).toLocaleString('en-IN')})`,
+          sightseeing: "Tirumala + Srikalahasti + Kanipakam + Local Temples",
+          inclusions: "Fuel, FASTag Tolls, AP Border Permit, 2 Nights Driver Stay & Food Included" 
+        }
+      ];
+    },
     baseInclusionsText: 'Fuel, FASTag Tolls, AP Border Permit & Driver Bata Included',
     comparisonTitle: 'Why Devotees Choose Kalidass Travels vs Online Cab Aggregators',
     comparisonDesc: 'Popular online aggregators advertise low initial base rates, but devotees often face substantial surprise expenses at interstate toll plazas and checkposts. Here is how we compare:',
@@ -541,7 +660,7 @@ const PILGRIM_ROUTES: Record<string, {
       { feature: 'Advance Payment', kalidass: '₹0 Advance (Pay after trip completion)', aggregators: '100% upfront card/wallet prepayment with strict cancellation fees' },
       { feature: 'Pilgrimage Assistance', kalidass: 'Driver guides to queue, lockers & Tiruchanur', aggregators: 'Curbside drop only; no knowledge of TTD guidelines' }
     ],
-    ctaHeading: 'Ready to Book Your Chennai to Tirupati Cab (1 or 2 Days)?'
+    ctaHeading: 'Ready to Book Your Chennai to Tirupati Cab (1, 2 or 3 Days)?'
   },
   'thiruvannamalai-girivalam-trip': {
     summaryTitle: 'Chennai to Thiruvannamalai Girivalam Cab: Key Trip Facts & Fares',
@@ -1098,13 +1217,48 @@ if (service.tariff?.rows && service.tariff.rows.length > 0) {
       }
     }
 
-    // Only emit Offer if a valid positive price was found
-    if (rowPrice && parseInt(rowPrice, 10) > 0) {
+    const rowPriceNum = rowPrice ? parseInt(rowPrice, 10) : 0;
+    const stayRates = getPackageStayRates(service.slug, vehicleName, rowPriceNum);
+
+    if (stayRates) {
+      const rawStayOptions = pilgrimConfig 
+        ? pilgrimConfig.getDropdownOptions(stayRates, vehicleName)
+        : getFallbackStayOptions(stayRates, vehicleName);
+
+      const resolvedOptions = rawStayOptions.map(opt => resolveStayOptionDetails(opt, vehicleName));
+
+      for (const opt of resolvedOptions) {
+        const optPriceNum = parseInt(opt.price.replace(/[^0-9]/g, ''), 10);
+        if (optPriceNum > 0) {
+          validOffers.push({
+            "@type": "Offer",
+            "name": `${service.title} - ${vehicleName} (${opt.duration})`,
+            "priceCurrency": "INR",
+            "price": String(optPriceNum),
+            "priceValidUntil": "2027-12-31",
+            "validFrom": "2025-01-01",
+            "availability": "https://schema.org/InStock",
+            "url": `https://kalidasstravels.in/services/${service.slug}/`,
+            "description": `${vehicleName} (${opt.duration}): ${opt.km}, ${opt.bata}, ${opt.tolls}, ${opt.stay}. ${inclusions || ''}`.trim(),
+            "seller": {
+              "@id": "https://kalidasstravels.in/#localbusiness"
+            },
+            "priceSpecification": {
+              "@type": "UnitPriceSpecification",
+              "price": String(optPriceNum),
+              "priceCurrency": "INR",
+              "unitText": "TRIP",
+              "valueAddedTaxIncluded": true
+            }
+          });
+        }
+      }
+    } else if (rowPriceNum > 0) {
       validOffers.push({
         "@type": "Offer",
         "name": `${service.title} - ${vehicleName}`,
         "priceCurrency": "INR",
-        "price": rowPrice,
+        "price": String(rowPriceNum),
         "priceValidUntil": "2027-12-31",
         "validFrom": "2025-01-01",
         "availability": "https://schema.org/InStock",
@@ -1112,13 +1266,29 @@ if (service.tariff?.rows && service.tariff.rows.length > 0) {
         "description": [capacity, inclusions].filter(Boolean).join(' | '),
         "seller": {
           "@id": "https://kalidasstravels.in/#localbusiness"
+        },
+        "priceSpecification": {
+          "@type": "UnitPriceSpecification",
+          "price": String(rowPriceNum),
+          "priceCurrency": "INR",
+          "unitText": "TRIP",
+          "valueAddedTaxIncluded": true
         }
       });
     }
   }
 
   if (validOffers.length > 0) {
-    offersData = validOffers;
+    const minOfferPrice = Math.min(...validOffers.map(o => parseInt(o.price, 10)));
+    const maxOfferPrice = Math.max(...validOffers.map(o => parseInt(o.price, 10)));
+    offersData = {
+      "@type": "AggregateOffer",
+      "lowPrice": String(minOfferPrice),
+      "highPrice": String(maxOfferPrice),
+      "priceCurrency": "INR",
+      "offerCount": validOffers.length,
+      "offers": validOffers
+    };
   }
 }
 
@@ -1138,6 +1308,10 @@ if (!offersData && startingPrice) {
   };
 }
 
+const dynamicPriceRange = offersData
+  ? `₹${Number(offersData.lowPrice || startingPrice || 6000).toLocaleString('en-IN')} - ₹${Number(offersData.highPrice || startingPrice || 27000).toLocaleString('en-IN')}`
+  : (service.slug === 'tirupati-package' ? "₹6,000 - ₹27,000" : "₹₹");
+
 // Construct Schema.org structured data
 const pageSchemas: any[] = [];
 
@@ -1156,7 +1330,7 @@ if (isTour) {
     "serviceType": service.serviceType || "Pilgrimage Outstation Cab Package",
     "areaServed": areas,
     "url": `https://kalidasstravels.in/services/${service.slug}/`,
-    "priceRange": service.slug === 'tirupati-package' ? "₹6,000 - ₹12,500" : "₹₹",
+    "priceRange": dynamicPriceRange,
     "termsOfService": "https://kalidasstravels.in/terms/",
     "aggregateRating": {
       "@type": "AggregateRating",
@@ -1784,63 +1958,94 @@ Please share availability and confirmed quote.`;
 
                       <!-- M3 Tonal Surface Price Slabs (Inspiration from weekend-packages) -->
                       <div class="bg-m3-surface-container-low p-4 rounded-m3-xl border border-m3-outline-variant/60 mb-4 space-y-2.5">
-                        {stayRates && (
-                          <div class="pb-2.5 mb-2.5 border-b border-m3-outline-variant/50">
-                            <label class="block text-[11px] font-bold uppercase tracking-wider text-m3-on-surface-variant mb-1.5 flex items-center justify-between">
-                              <span>Trip Duration / Stays</span>
-                              <span class="text-[10px] text-emerald-700 font-semibold normal-case">
-                                {pilgrimConfig ? pilgrimConfig.stayLabelSub : 'Stay & Food Included'}
-                              </span>
-                            </label>
-                            <select 
-                              class="tirupati-stay-select w-full bg-m3-surface border border-m3-outline-variant hover:border-m3-primary rounded-m3-lg py-1.5 px-2.5 text-xs sm:text-sm font-bold text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary outline-none transition-all cursor-pointer shadow-2xs"
-                              aria-label={`Select trip duration for ${vehicleName}`}
-                              data-vehicle-name={vehicleName}
-                            >
-                              {pilgrimConfig ? (
-                                pilgrimConfig.getDropdownOptions(stayRates).map((opt) => (
+                        {stayRates && (() => {
+                          const rawStayOptions = pilgrimConfig 
+                            ? pilgrimConfig.getDropdownOptions(stayRates, vehicleName)
+                            : getFallbackStayOptions(stayRates, vehicleName);
+                          const stayOptions = rawStayOptions.map(opt => resolveStayOptionDetails(opt, vehicleName));
+                          const initialOpt = stayOptions.find(o => o.selected) || stayOptions[0];
+
+                          return (
+                            <div class="pb-2.5 mb-2.5 border-b border-m3-outline-variant/50">
+                              <label class="block text-[11px] font-bold uppercase tracking-wider text-m3-on-surface-variant mb-1.5 flex items-center justify-between">
+                                <span>Trip Duration / Stays</span>
+                                <span class="text-[10px] text-emerald-700 font-semibold normal-case">
+                                  {pilgrimConfig ? pilgrimConfig.stayLabelSub : 'Stay & Food Included'}
+                                </span>
+                              </label>
+                              <select 
+                                class="tirupati-stay-select w-full bg-m3-surface border border-m3-outline-variant hover:border-m3-primary rounded-m3-lg py-1.5 px-2.5 text-xs sm:text-sm font-bold text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary outline-none transition-all cursor-pointer shadow-2xs"
+                                aria-label={`Select trip duration for ${vehicleName}`}
+                                data-vehicle-name={vehicleName}
+                              >
+                                {stayOptions.map((opt) => (
                                   <option 
                                     value={opt.value} 
                                     data-price={opt.price} 
                                     data-duration={opt.duration} 
                                     data-inclusions={opt.inclusions}
+                                    data-km={opt.km}
+                                    data-bata={opt.bata}
+                                    data-tolls={opt.tolls}
+                                    data-stay={opt.stay}
+                                    data-sightseeing={opt.sightseeing}
                                     selected={opt.selected}
                                   >
                                     {opt.label}
                                   </option>
-                                ))
-                              ) : (
-                                <>
-                                  <option 
-                                    value="1" 
-                                    data-price={`₹${stayRates[1].toLocaleString('en-IN')}`} 
-                                    data-duration="1 Day (Same Day Return)" 
-                                    data-inclusions="Fuel, Highway Tolls & Driver Bata Included"
-                                    selected
-                                  >
-                                    1 Day (Same Day Return)
-                                  </option>
-                                  <option 
-                                    value="2" 
-                                    data-price={`₹${stayRates[2].toLocaleString('en-IN')}`} 
-                                    data-duration="2 Days / 1 Night Stay" 
-                                    data-inclusions="Fuel, Highway Tolls, Driver Stay & Food Included"
-                                  >
-                                    2 Days / 1 Night (Driver Stay & Food Included)
-                                  </option>
-                                  <option 
-                                    value="3" 
-                                    data-price={`₹${stayRates[3].toLocaleString('en-IN')}`} 
-                                    data-duration="3 Days / 2 Nights Stay" 
-                                    data-inclusions="Fuel, Highway Tolls, 2 Nights Driver Stay & Food Included"
-                                  >
-                                    3 Days / 2 Nights (Driver Stay & Food Included)
-                                  </option>
-                                </>
+                                ))}
+                              </select>
+
+                              <!-- 100% Transparent Cost Breakdown Box (Reactive inside vehicle card) -->
+                              {initialOpt && (
+                                <div class="tariff-breakdown-box bg-white/95 dark:bg-slate-900/80 rounded-m3-lg p-3 border border-emerald-500/25 mt-2.5 space-y-1.5 shadow-2xs">
+                                  <div class="flex items-center justify-between text-[11px] font-bold text-m3-on-surface uppercase tracking-wider pb-1.5 border-b border-m3-outline-variant/40">
+                                    <span class="flex items-center gap-1.5 text-emerald-800 dark:text-emerald-300">
+                                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                                      <span>Transparent Cost Breakdown</span>
+                                    </span>
+                                    <span class="tariff-breakdown-duration text-[10px] text-m3-primary font-bold">
+                                      {initialOpt.duration}
+                                    </span>
+                                  </div>
+
+                                  <div class="space-y-1 text-micro text-m3-on-surface-variant font-sans">
+                                    <div class="flex items-center justify-between py-0.5">
+                                      <span class="font-medium text-m3-on-surface-variant">Base Run:</span>
+                                      <strong class="tariff-breakdown-km font-semibold text-m3-on-surface text-right">{initialOpt.km}</strong>
+                                    </div>
+                                    <div class="flex items-center justify-between py-0.5">
+                                      <span class="font-medium text-m3-on-surface-variant">Driver Bata:</span>
+                                      <strong class="tariff-breakdown-bata font-semibold text-m3-on-surface text-right">{initialOpt.bata}</strong>
+                                    </div>
+                                    <div class="flex items-center justify-between py-0.5">
+                                      <span class="font-medium text-m3-on-surface-variant">Permit &amp; Tolls:</span>
+                                      <strong class="tariff-breakdown-tolls font-semibold text-emerald-700 dark:text-emerald-400 text-right">{initialOpt.tolls}</strong>
+                                    </div>
+                                    <div class="flex items-center justify-between py-0.5">
+                                      <span class="font-medium text-m3-on-surface-variant">Driver Stay:</span>
+                                      <strong class="tariff-breakdown-stay font-semibold text-m3-on-surface text-right">{initialOpt.stay}</strong>
+                                    </div>
+                                    {initialOpt.sightseeing && (
+                                      <div class="flex items-center justify-between py-0.5">
+                                        <span class="font-medium text-m3-on-surface-variant">Sightseeing:</span>
+                                        <strong class="tariff-breakdown-sightseeing font-semibold text-m3-on-surface text-right">{initialOpt.sightseeing}</strong>
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  <div class="pt-1.5 mt-1 border-t border-emerald-500/15 flex items-center justify-between text-[10px] text-emerald-900 dark:text-emerald-300 font-semibold">
+                                    <span class="flex items-center gap-1">
+                                      <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
+                                      <span>100% Fixed Fare Guarantee</span>
+                                    </span>
+                                    <span class="text-m3-on-surface-variant font-normal">₹0 Advance Required</span>
+                                  </div>
+                                </div>
                               )}
-                            </select>
-                          </div>
-                        )}
+                            </div>
+                          );
+                        })()}
 
                         <div class="flex items-baseline justify-between gap-2">
                           <span class="text-[11px] font-semibold text-m3-on-surface-variant uppercase tracking-wider">
@@ -2040,24 +2245,52 @@ Please share availability and confirmed quote.`;
                     const vehicleName = card.getAttribute('data-vehicle-name') || '';
                     const serviceTitle = card.getAttribute('data-service-title') || 'Chennai to Tirupati Cab';
 
-                    // Update hero price
+                    // 1. Update hero price
                     const priceEl = card.querySelector('.tariff-hero-price');
                     if (priceEl && price) {
                       priceEl.textContent = price;
                     }
 
-                    // Update inclusions text
+                    // 2. Update transparent breakdown line items
+                    const km = selectedOpt.getAttribute('data-km');
+                    const bata = selectedOpt.getAttribute('data-bata');
+                    const tolls = selectedOpt.getAttribute('data-tolls');
+                    const stay = selectedOpt.getAttribute('data-stay');
+                    const sightseeing = selectedOpt.getAttribute('data-sightseeing');
+
+                    const durEl = card.querySelector('.tariff-breakdown-duration');
+                    if (durEl && duration) durEl.textContent = duration;
+
+                    const kmEl = card.querySelector('.tariff-breakdown-km');
+                    if (kmEl && km) kmEl.textContent = km;
+
+                    const bataEl = card.querySelector('.tariff-breakdown-bata');
+                    if (bataEl && bata) bataEl.textContent = bata;
+
+                    const tollsEl = card.querySelector('.tariff-breakdown-tolls');
+                    if (tollsEl && tolls) tollsEl.textContent = tolls;
+
+                    const stayEl = card.querySelector('.tariff-breakdown-stay');
+                    if (stayEl && stay) stayEl.textContent = stay;
+
+                    const sightseeingEl = card.querySelector('.tariff-breakdown-sightseeing');
+                    if (sightseeingEl && sightseeing) sightseeingEl.textContent = sightseeing;
+
+                    // 3. Update inclusions text
                     const inclusionsEl = card.querySelector('.tariff-inclusions-text');
                     if (inclusionsEl && inclusions) {
                       inclusionsEl.textContent = inclusions;
                     }
 
-                    // Update WhatsApp enquiry button
+                    // 4. Update WhatsApp enquiry button with full transparent breakdown
                     const waBtn = card.querySelector('.tariff-whatsapp-btn');
                     if (waBtn) {
+                      const breakdownSummary = [km, bata, tolls, stay].filter(Boolean).join(' • ');
                       const newMsg = `*Kalidass Travels - Booking Enquiry*
 • Service: ${serviceTitle}
-• Vehicle: ${vehicleName} (${duration}) (${price})
+• Vehicle: ${vehicleName} (${duration})
+• All-Inclusive Fare: ${price}
+• Transparent Cost Breakdown: ${breakdownSummary}
 • Travel Date: 
 • Pickup Time: 
 • Pickup Location in Chennai: 

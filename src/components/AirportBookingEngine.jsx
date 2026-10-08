@@ -473,8 +473,8 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
         <div className="px-3 sm:px-6 my-4">
           <div role="tablist" aria-label="Transfer Direction" className="bg-m3-surface-container-high p-1 rounded-m3-full flex gap-1 border border-m3-outline-variant">
             {[
-              { key: 'drop',   label: '✈ Airport Drop',   testId: 'tab-drop' },
-              { key: 'pickup', label: '✈ Airport Pickup', testId: 'tab-pickup' },
+              { key: 'drop',   label: 'Airport Drop',   testId: 'tab-drop' },
+              { key: 'pickup', label: 'Airport Pickup', testId: 'tab-pickup' },
             ].map(tab => (
               <button
                 key={tab.key}
@@ -482,13 +482,14 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                 data-testid={tab.testId}
                 aria-selected={direction === tab.key}
                 onClick={() => handleDirectionChange(tab.key)}
-                className={`flex-1 py-2 px-3 text-xs font-bold rounded-m3-full transition-all min-h-[38px] sm:min-h-[42px] cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary ${
+                className={`flex-1 py-2 px-3 text-xs font-bold rounded-m3-full transition-all min-h-[38px] sm:min-h-[42px] cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary inline-flex items-center justify-center gap-1.5 ${
                   direction === tab.key
                     ? 'bg-m3-primary text-m3-on-primary shadow-m3-1'
                     : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container-highest'
                 }`}
               >
-                {tab.label}
+                <Plane className="w-3.5 h-3.5 shrink-0" />
+                <span>{tab.label}</span>
               </button>
             ))}
           </div>
