@@ -86,6 +86,45 @@ test.describe('Admin Operations Command Tower Suite', () => {
     await expect(page.locator('text=Chennai to Pondicherry Drop Taxi').first()).toBeVisible();
   });
 
+  test('should support selecting packages from dropdown with auto fare calibration', async ({ page }) => {
+    await page.goto('/admin/');
+
+    // Click "+ LOG CALL" in header
+    await page.click('button:has-text("LOG CALL")');
+    await expect(page.locator('text=10-Sec Quick Call Logger')).toBeVisible();
+
+    // Verify all requested packages exist in the dropdown
+    const pkgSelect = page.locator('select:has-text("Chennai to Tirupati")');
+    await expect(pkgSelect).toBeVisible();
+    await expect(pkgSelect.locator('option[value="chennai-tirupati"]')).toHaveText(/Chennai to Tirupati/i);
+    await expect(pkgSelect.locator('option[value="chennai-thiruvannamalai"]')).toHaveText(/Chennai to Thiruvannamalai/i);
+    await expect(pkgSelect.locator('option[value="chennai-pondicherry"]')).toHaveText(/Chennai to Pondicherry/i);
+    await expect(pkgSelect.locator('option[value="chennai-kanchipuram"]')).toHaveText(/Chennai to Kanchipuram/i);
+    await expect(pkgSelect.locator('option[value="chennai-rameshwaram"]')).toHaveText(/Chennai to Rameshwaram/i);
+
+    // Select Thiruvannamalai package and check route & fare
+    await pkgSelect.selectOption('chennai-thiruvannamalai');
+    await expect(page.locator('input[placeholder*="Chennai ➔ Tirupati"]')).toHaveValue('Chennai ➔ Thiruvannamalai Girivalam');
+    await expect(page.locator('input[type="number"]')).toHaveValue('6500');
+
+    // Switch vehicle to Ertiga and verify dynamic rate calibration
+    await page.locator('select:has-text("Sedan (Dzire / Etios)")').selectOption('Ertiga (6 Pax)');
+    await expect(page.locator('input[type="number"]')).toHaveValue('7900');
+
+    // Switch package to Rameshwaram
+    await pkgSelect.selectOption('chennai-rameshwaram');
+    await expect(page.locator('input[placeholder*="Chennai ➔ Tirupati"]')).toHaveValue('Chennai ➔ Rameshwaram 2-Days Tour');
+    await expect(page.locator('input[type="number"]')).toHaveValue('18500');
+
+    // Log the call
+    await page.fill('input[type="tel"]', '9840777111');
+    await page.fill('input[placeholder*="Mr. Senthil"]', 'Pilgrim Caller');
+    await page.click('button:has-text("Log to Leads Funnel")');
+
+    await expect(page.locator('text=10-Sec Quick Call Logger')).not.toBeVisible();
+    await expect(page.locator('text=9840777111').first()).toBeVisible({ timeout: 5000 });
+  });
+
   test('should capture website click-to-call beacon without staff manual entry', async ({ page }) => {
     // Navigate to tariff page
     await page.goto('/tariff/');

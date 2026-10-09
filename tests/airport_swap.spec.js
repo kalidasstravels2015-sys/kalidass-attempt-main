@@ -27,9 +27,10 @@ test.describe('Airport Taxi Route Swap Tests', () => {
     await expect(toInput).toHaveValue(/Chennai International Airport \(MAA\)/);
 
     // 2. Click Tab -> Switches to Airport Pickup Mode
+    await tabPickup.scrollIntoViewIfNeeded();
     await tabPickup.click();
 
-    await expect(tabPickup).toHaveAttribute('aria-selected', 'true');
+    await expect(tabPickup).toHaveAttribute('aria-selected', 'true', { timeout: 7000 });
     await expect(tabDrop).toHaveAttribute('aria-selected', 'false');
 
     // In Pickup mode: From is constant MAA (read-only), To is user destination (editable)

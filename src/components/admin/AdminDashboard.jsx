@@ -9,6 +9,235 @@ const DEFAULT_CHAUFFEURS = [
   { name: 'Karthik Kumar', phone: '+91 98401 99887', plate: 'TN07 DJ 4321', category: 'Tempo Traveller', status: 'Available', fcExpiry: '2027-02-14', permitExpiry: '2027-03-20', rating: '4.9' },
 ];
 
+// Curated Tour Packages Master with Standard Vehicle Tariffs
+const TOUR_PACKAGES = [
+  {
+    id: 'chennai-tirupati',
+    name: 'Chennai to Tirupati (Balaji Darshan Round Trip)',
+    shortName: 'Chennai ➔ Tirupati Round Trip',
+    category: '⭐ Top Popular Packages',
+    rates: {
+      'Sedan (Dzire / Etios)': '6000',
+      'Sedan': '6000',
+      'Ertiga (6 Pax)': '7500',
+      'Ertiga': '7500',
+      'Innova Crysta': '10000',
+      'Tempo Traveller': '12500',
+      'Tempo': '12500'
+    }
+  },
+  {
+    id: 'chennai-thiruvannamalai',
+    name: 'Chennai to Thiruvannamalai (Girivalam Yatra)',
+    shortName: 'Chennai ➔ Thiruvannamalai Girivalam',
+    category: '⭐ Top Popular Packages',
+    rates: {
+      'Sedan (Dzire / Etios)': '6500',
+      'Sedan': '6500',
+      'Ertiga (6 Pax)': '7900',
+      'Ertiga': '7900',
+      'Innova Crysta': '11100',
+      'Tempo Traveller': '13500',
+      'Tempo': '13500'
+    }
+  },
+  {
+    id: 'chennai-pondicherry',
+    name: 'Chennai to Pondicherry (Auroville / Beach Tour)',
+    shortName: 'Chennai ➔ Pondicherry Round Trip',
+    category: '⭐ Top Popular Packages',
+    rates: {
+      'Sedan (Dzire / Etios)': '4500',
+      'Sedan': '4500',
+      'Ertiga (6 Pax)': '5500',
+      'Ertiga': '5500',
+      'Innova Crysta': '7500',
+      'Tempo Traveller': '9500',
+      'Tempo': '9500'
+    }
+  },
+  {
+    id: 'chennai-kanchipuram',
+    name: 'Chennai to Kanchipuram (Temples & Silk City)',
+    shortName: 'Chennai ➔ Kanchipuram Temple Trip',
+    category: '⭐ Top Popular Packages',
+    rates: {
+      'Sedan (Dzire / Etios)': '3500',
+      'Sedan': '3500',
+      'Ertiga (6 Pax)': '4500',
+      'Ertiga': '4500',
+      'Innova Crysta': '6800',
+      'Tempo Traveller': '8500',
+      'Tempo': '8500'
+    }
+  },
+  {
+    id: 'chennai-rameshwaram',
+    name: 'Chennai to Rameshwaram (2-Days Pilgrimage)',
+    shortName: 'Chennai ➔ Rameshwaram 2-Days Tour',
+    category: '⭐ Top Popular Packages',
+    rates: {
+      'Sedan (Dzire / Etios)': '15500',
+      'Sedan': '15500',
+      'Ertiga (6 Pax)': '18500',
+      'Ertiga': '18500',
+      'Innova Crysta': '26000',
+      'Tempo Traveller': '31000',
+      'Tempo': '31000'
+    }
+  },
+  {
+    id: 'chennai-navagraha',
+    name: 'Chennai to Kumbakonam / Navagraha (9 Temples)',
+    shortName: 'Chennai ➔ Kumbakonam Navagraha Yatra',
+    category: '🛕 Temple Pilgrimage Yatras',
+    rates: {
+      'Sedan (Dzire / Etios)': '14500',
+      'Sedan': '14500',
+      'Ertiga (6 Pax)': '17500',
+      'Ertiga': '17500',
+      'Innova Crysta': '25000',
+      'Tempo Traveller': '30000',
+      'Tempo': '30000'
+    }
+  },
+  {
+    id: 'chennai-mahabalipuram',
+    name: 'Chennai to Mahabalipuram (ECR Heritage & Beach)',
+    shortName: 'Chennai ➔ Mahabalipuram ECR Tour',
+    category: '🏖️ Coastal & Heritage Tours',
+    rates: {
+      'Sedan (Dzire / Etios)': '3500',
+      'Sedan': '3500',
+      'Ertiga (6 Pax)': '4500',
+      'Ertiga': '4500',
+      'Innova Crysta': '6500',
+      'Tempo Traveller': '8000',
+      'Tempo': '8000'
+    }
+  },
+  {
+    id: 'chennai-chidambaram',
+    name: 'Chennai to Chidambaram (Natarajar Temple)',
+    shortName: 'Chennai ➔ Chidambaram Natarajar Trip',
+    category: '🛕 Temple Pilgrimage Yatras',
+    rates: {
+      'Sedan (Dzire / Etios)': '6200',
+      'Sedan': '6200',
+      'Ertiga (6 Pax)': '7500',
+      'Ertiga': '7500',
+      'Innova Crysta': '10500',
+      'Tempo Traveller': '13000',
+      'Tempo': '13000'
+    }
+  },
+  {
+    id: 'chennai-vellore',
+    name: 'Chennai to Vellore (Golden Temple / CMC)',
+    shortName: 'Chennai ➔ Vellore Golden Temple',
+    category: '🛕 Temple Pilgrimage Yatras',
+    rates: {
+      'Sedan (Dzire / Etios)': '4200',
+      'Sedan': '4200',
+      'Ertiga (6 Pax)': '5200',
+      'Ertiga': '5200',
+      'Innova Crysta': '7500',
+      'Tempo Traveller': '9200',
+      'Tempo': '9200'
+    }
+  },
+  {
+    id: 'chennai-sabarimala',
+    name: 'Chennai to Sabarimala (Kerala Pilgrimage)',
+    shortName: 'Chennai ➔ Sabarimala Yatra',
+    category: '🛕 Temple Pilgrimage Yatras',
+    rates: {
+      'Sedan (Dzire / Etios)': '18000',
+      'Sedan': '18000',
+      'Ertiga (6 Pax)': '22500',
+      'Ertiga': '22500',
+      'Innova Crysta': '31000',
+      'Tempo Traveller': '38000',
+      'Tempo': '38000'
+    }
+  },
+  {
+    id: 'chennai-yelagiri',
+    name: 'Chennai to Yelagiri Hills (Weekend Getaway)',
+    shortName: 'Chennai ➔ Yelagiri Hills Tour',
+    category: '⛰️ Hill Stations & Outstation',
+    rates: {
+      'Sedan (Dzire / Etios)': '5800',
+      'Sedan': '5800',
+      'Ertiga (6 Pax)': '7200',
+      'Ertiga': '7200',
+      'Innova Crysta': '9800',
+      'Tempo Traveller': '12500',
+      'Tempo': '12500'
+    }
+  },
+  {
+    id: 'chennai-yercaud',
+    name: 'Chennai to Yercaud Hills (Weekend Getaway)',
+    shortName: 'Chennai ➔ Yercaud Hills Tour',
+    category: '⛰️ Hill Stations & Outstation',
+    rates: {
+      'Sedan (Dzire / Etios)': '8500',
+      'Sedan': '8500',
+      'Ertiga (6 Pax)': '10800',
+      'Ertiga': '10800',
+      'Innova Crysta': '14500',
+      'Tempo Traveller': '18500',
+      'Tempo': '18500'
+    }
+  },
+  {
+    id: 'chennai-bangalore',
+    name: 'Chennai to Bangalore (Outstation Round/Drop)',
+    shortName: 'Chennai ➔ Bangalore Outstation',
+    category: '⛰️ Hill Stations & Outstation',
+    rates: {
+      'Sedan (Dzire / Etios)': '5500',
+      'Sedan': '5500',
+      'Ertiga (6 Pax)': '7200',
+      'Ertiga': '7200',
+      'Innova Crysta': '10800',
+      'Tempo Traveller': '14000',
+      'Tempo': '14000'
+    }
+  },
+  {
+    id: 'chennai-city-tour',
+    name: 'Chennai City Local Sightseeing (8h / 80km)',
+    shortName: 'Chennai City Local Tour (8h/80km)',
+    category: '🏙️ Local & Airport Transfers',
+    rates: {
+      'Sedan (Dzire / Etios)': '2500',
+      'Sedan': '2500',
+      'Ertiga (6 Pax)': '3200',
+      'Ertiga': '3200',
+      'Innova Crysta': '4500',
+      'Tempo Traveller': '5500',
+      'Tempo': '5500'
+    }
+  },
+  {
+    id: 'chennai-airport',
+    name: 'Chennai Airport Transfer (Doorstep MAA Pickup/Drop)',
+    shortName: 'Chennai Airport Transfer (MAA)',
+    category: '🏙️ Local & Airport Transfers',
+    rates: {
+      'Sedan (Dzire / Etios)': '999',
+      'Sedan': '999',
+      'Ertiga (6 Pax)': '1499',
+      'Ertiga': '1499',
+      'Innova Crysta': '1999',
+      'Tempo Traveller': '2800',
+      'Tempo': '2800'
+    }
+  }
+];
+
 export default function AdminDashboard() {
   // Navigation Desks
   const [activeTab, setActiveTab] = useState('dispatch'); // 'dispatch', 'leads', 'dutyslip', 'khata', 'fleet', 'pilgrimage'
@@ -32,12 +261,13 @@ export default function AdminDashboard() {
   const [isQuickCallModalOpen, setIsQuickCallModalOpen] = useState(false);
 
   // Quick Inbound Phone Call Form State
+  const [selectedCallPackage, setSelectedCallPackage] = useState('chennai-tirupati');
   const [callForm, setCallForm] = useState({
     callerPhone: '',
     guestName: '',
     route: 'Chennai ➔ Tirupati Round Trip',
     vehicle: 'Sedan (Dzire / Etios)',
-    quotedFare: '5500',
+    quotedFare: '6000',
     status: 'Call Received - Quoted',
     notes: 'Inbound office phone enquiry'
   });
@@ -291,16 +521,62 @@ export default function AdminDashboard() {
           guestName: '',
           route: 'Chennai ➔ Tirupati Round Trip',
           vehicle: 'Sedan (Dzire / Etios)',
-          quotedFare: '5500',
+          quotedFare: '6000',
           status: 'Call Received - Quoted',
           notes: 'Inbound office phone enquiry'
         });
+        setSelectedCallPackage('chennai-tirupati');
         await fetchData();
         setActiveTab('leads');
       }
     } catch (err) {
       console.error('Failed to log inbound call:', err);
     }
+  };
+
+  // Group tour packages by category for dropdown optgroups
+  const packageCategories = useMemo(() => {
+    const groups = {};
+    TOUR_PACKAGES.forEach(pkg => {
+      if (!groups[pkg.category]) groups[pkg.category] = [];
+      groups[pkg.category].push(pkg);
+    });
+    return groups;
+  }, []);
+
+  // Quick Call Logger: Select tour package handler
+  const handleCallPackageChange = (pkgId) => {
+    setSelectedCallPackage(pkgId);
+    if (pkgId === 'custom') {
+      return;
+    }
+    const pkg = TOUR_PACKAGES.find(p => p.id === pkgId);
+    if (pkg) {
+      const fare = pkg.rates[callForm.vehicle] || pkg.rates['Sedan (Dzire / Etios)'] || '6000';
+      setCallForm(prev => ({
+        ...prev,
+        route: pkg.shortName,
+        quotedFare: fare
+      }));
+    }
+  };
+
+  // Quick Call Logger: Select vehicle handler (re-calibrates fare for active package)
+  const handleCallVehicleChange = (newVehicle) => {
+    setCallForm(prev => {
+      let fare = prev.quotedFare;
+      if (selectedCallPackage && selectedCallPackage !== 'custom') {
+        const pkg = TOUR_PACKAGES.find(p => p.id === selectedCallPackage);
+        if (pkg && pkg.rates[newVehicle]) {
+          fare = pkg.rates[newVehicle];
+        }
+      }
+      return {
+        ...prev,
+        vehicle: newVehicle,
+        quotedFare: fare
+      };
+    });
   };
 
   // Open Duty Slip for Booking
@@ -1554,6 +1830,40 @@ export default function AdminDashboard() {
               </div>
 
               <div>
+                <div className="flex items-center justify-between">
+                  <label className="font-semibold text-slate-600">Tour Package Preset (Optional):</label>
+                  <span className="text-[10px] text-emerald-600 font-medium">Auto-fills fare & address</span>
+                </div>
+                <select
+                  defaultValue=""
+                  onChange={(e) => {
+                    const pkgId = e.target.value;
+                    if (pkgId && pkgId !== 'custom') {
+                      const pkg = TOUR_PACKAGES.find(p => p.id === pkgId);
+                      if (pkg) {
+                        const fare = pkg.rates[newBooking.vehicleCategory] || pkg.rates['Sedan'] || '6000';
+                        setNewBooking(prev => ({
+                          ...prev,
+                          fare: fare,
+                          pickupAddress: prev.pickupAddress ? prev.pickupAddress : `${pkg.shortName} (Doorstep Pickup)`
+                        }));
+                      }
+                    }
+                  }}
+                  className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 text-xs font-semibold focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                >
+                  <option value="">-- Quick Select Package (e.g. Tirupati, Pondicherry) --</option>
+                  {Object.entries(packageCategories).map(([cat, pkgs]) => (
+                    <optgroup key={cat} label={cat}>
+                      {pkgs.map(p => (
+                        <option key={p.id} value={p.id}>{p.name}</option>
+                      ))}
+                    </optgroup>
+                  ))}
+                </select>
+              </div>
+
+              <div>
                 <label className="font-semibold text-slate-600">Pickup Address:</label>
                 <input
                   type="text"
@@ -1858,16 +2168,55 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              <div>
-                <label className="font-semibold text-slate-700">Requested Route / Travel Detail</label>
-                <input
-                  type="text"
-                  required
-                  value={callForm.route}
-                  onChange={(e) => setCallForm(prev => ({ ...prev, route: e.target.value }))}
-                  placeholder="e.g. Chennai ➔ Tirupati One Day Round Trip"
-                  className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 font-medium focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
-                />
+              <div className="space-y-2">
+                <div>
+                  <div className="flex items-center justify-between">
+                    <label className="font-semibold text-slate-700 flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-[16px] text-amber-600">travel_explore</span>
+                      <span>Select Tour Package / Route *</span>
+                    </label>
+                    <span className="text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-full font-semibold">
+                      Auto-fills fare & route
+                    </span>
+                  </div>
+                  <select
+                    value={selectedCallPackage}
+                    onChange={(e) => handleCallPackageChange(e.target.value)}
+                    className="w-full mt-1 bg-amber-50/50 border border-amber-300/80 rounded-xl p-2.5 text-slate-900 font-bold text-xs focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none cursor-pointer"
+                  >
+                    {Object.entries(packageCategories).map(([cat, pkgs]) => (
+                      <optgroup key={cat} label={cat}>
+                        {pkgs.map(p => (
+                          <option key={p.id} value={p.id}>{p.name}</option>
+                        ))}
+                      </optgroup>
+                    ))}
+                    <option value="custom">✏️ Custom Route / Other Destination (Type below)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-semibold text-slate-500">
+                    Requested Route / Travel Detail (Editable Note) *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={callForm.route}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setCallForm(prev => ({ ...prev, route: val }));
+                      const matched = TOUR_PACKAGES.find(p => p.shortName.toLowerCase() === val.toLowerCase() || p.name.toLowerCase() === val.toLowerCase());
+                      if (matched) {
+                        setSelectedCallPackage(matched.id);
+                      } else {
+                        setSelectedCallPackage('custom');
+                      }
+                    }}
+                    placeholder="e.g. Chennai ➔ Tirupati One Day Round Trip"
+                    className="w-full mt-0.5 bg-white border border-slate-300 rounded-xl p-2 text-slate-900 font-medium focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                  />
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -1875,7 +2224,7 @@ export default function AdminDashboard() {
                   <label className="font-semibold text-slate-700">Vehicle Type</label>
                   <select
                     value={callForm.vehicle}
-                    onChange={(e) => setCallForm(prev => ({ ...prev, vehicle: e.target.value }))}
+                    onChange={(e) => handleCallVehicleChange(e.target.value)}
                     className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2 text-slate-900 focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
                   >
                     <option value="Sedan (Dzire / Etios)">Sedan (Dzire / Etios)</option>
