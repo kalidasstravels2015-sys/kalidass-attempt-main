@@ -14,6 +14,7 @@ interface Props {
 
 import siteContent from "../data/siteContent.json";
 import FloatingActions from "../components/FloatingActions.astro";
+import BookingEnquiryModal from "../components/BookingEnquiryModal.astro";
 
 const defaultTitle = "Kalidass Travels - Premium Travel Experience";
 const defaultDescription = "Premium travel and cab services across South India. Professional drivers, comfortable vehicles, affordable rates.";
@@ -678,7 +679,7 @@ const unifiedSchemaGraph = {
         font-family: 'Plus Jakarta Sans';
         font-style: normal;
         font-weight: 400 800;
-        font-display: optional;
+        font-display: swap;
         src: url('/fonts/plus-jakarta-sans-latin.woff2') format('woff2');
         unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
       }
@@ -952,6 +953,28 @@ const unifiedSchemaGraph = {
         visibility: hidden;
         pointer-events: none;
       }
+
+      /* Quick-Navigation Sticky Pill Bar - Guaranteed High-Contrast Active & Inactive States */
+      nav[data-quick-nav] a[data-active="true"],
+      nav[data-quick-nav] a[data-active="true"]:hover,
+      nav[data-quick-nav] a[data-active="true"]:focus,
+      nav[data-quick-nav] a[data-active="true"]:active {
+        background-color: #1E252D !important;
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+      }
+
+      nav[data-quick-nav] a:not([data-active="true"]) {
+        background-color: #ECEEF1;
+        color: #111827;
+      }
+
+      nav[data-quick-nav] a:not([data-active="true"]):hover,
+      nav[data-quick-nav] a:not([data-active="true"]):focus {
+        background-color: #E5E7EB;
+        color: #111827;
+      }
     </style>
 
     <!-- Modern High-Performance Analytics & Google Ads Conversion Engine -->
@@ -981,16 +1004,71 @@ const unifiedSchemaGraph = {
         return false;
       };
 
-      // 3. Automated conversion reporting on Call Now & WhatsApp interactions
+      // 3. Automated conversion reporting & anti-leakage lead logging on Call Now & WhatsApp interactions
+      var lastLeadClickTime = 0;
+      var lastLeadHref = '';
       document.addEventListener('click', function (e) {
         var link = e.target && e.target.closest ? e.target.closest('a') : null;
         if (!link) return;
         var href = link.getAttribute('href') || '';
         if (href.startsWith('tel:') || href.includes('wa.me') || href.includes('whatsapp.com')) {
-          gtag('event', 'ads_conversion_Request_quote_1', {
-            event_category: 'Lead',
-            event_label: href.startsWith('tel:') ? 'Phone Call' : 'WhatsApp Lead'
-          });
+          var isCall = href.startsWith('tel:');
+          var leadType = isCall ? 'call' : 'whatsapp';
+          var label = isCall ? 'Phone Call' : 'WhatsApp Lead';
+
+          // 3a. Report to Google Ads Conversion
+          if (typeof gtag === 'function') {
+            gtag('event', 'ads_conversion_Request_quote_1', {
+              event_category: 'Lead',
+              event_label: label
+            });
+          }
+
+          // 3b. Anti-Leakage Automated Lead Capture to Admin Control Tower
+          // Debounce 4s to prevent double-clicks from logging duplicate rows
+          var now = Date.now();
+          if (now - lastLeadClickTime < 4000 && lastLeadHref === href) {
+            return;
+          }
+          lastLeadClickTime = now;
+          lastLeadHref = href;
+
+          try {
+            var rawTitle = document.title || '';
+            var cleanTitle = rawTitle.split(/[-|—]/)[0].trim() || 'Website Visitor';
+            var buttonText = (link.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 60);
+
+            var leadPayload = {
+              leadType: leadType,
+              status: isCall ? 'Call Clicked' : 'WhatsApp Clicked',
+              calculatorEngine: isCall ? 'Direct Phone Dial' : 'Direct WhatsApp Click',
+              tripType: 'Direct Inbound',
+              sourcePage: window.location.pathname || '/',
+              pickup: cleanTitle,
+              drop: isCall ? '+91 89395 39211' : 'WhatsApp Chat',
+              vehicle: 'General Inquiry',
+              estimatedFare: 0,
+              distanceKm: 'N/A',
+              metadata: 'Button: ' + (buttonText || (isCall ? 'Call Now' : 'WhatsApp'))
+            };
+
+            var payloadStr = JSON.stringify(leadPayload);
+            var endpoint = window.location.origin + '/api/record-calculation';
+            
+            if (navigator.sendBeacon) {
+              var blob = new Blob([payloadStr], { type: 'application/json' });
+              navigator.sendBeacon(endpoint, blob);
+            } else if (typeof fetch === 'function') {
+              fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: payloadStr,
+                keepalive: true
+              }).catch(function () {});
+            }
+          } catch (err) {
+            // Fail silent to preserve uninterrupted visitor interaction
+          }
         }
       }, { passive: true });
 
@@ -1088,10 +1166,10 @@ const unifiedSchemaGraph = {
             isHome && (
               <div
                 id="mobile-section-chip"
-                class="md:hidden inline-flex items-center gap-1.5 px-2.5 py-1 rounded-m3-full bg-m3-surface-container-high/90 border border-m3-outline-variant text-m3-on-surface text-badge font-bold shadow-xs transition-opacity duration-300"
+                class="md:hidden inline-flex items-center gap-1.5 px-2.5 py-1 rounded-m3-full bg-m3-surface-container-high/90 border border-m3-outline-variant text-m3-on-surface text-m3-label-s font-semibold shadow-xs transition-opacity duration-300"
               >
                 <span class="w-1.5 h-1.5 rounded-full bg-m3-primary"></span>
-                <span id="mobile-section-text" class="font-mono text-m3-on-surface tracking-tight">01/08 • Booking</span>
+                <span id="mobile-section-text" class="font-sans font-semibold text-m3-on-surface tracking-normal">01/08 • Booking</span>
               </div>
             )
           }
@@ -1584,6 +1662,9 @@ const unifiedSchemaGraph = {
     </div>
 
   </footer>
+
+  <!-- Universal Booking & Enquiry Modal -->
+  <BookingEnquiryModal />
 
   <!-- Floating Quick Actions (Call & WhatsApp) -->
   {showFloatingActions && <FloatingActions />}

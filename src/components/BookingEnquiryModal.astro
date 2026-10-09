@@ -1,0 +1,1110 @@
+---
+/**
+ * BookingEnquiryModal.astro
+ * Standardized Context-Aware Booking Sheet for Kalidass Travels.
+ *
+ * Captures 100% complete booking entry for every inquiry:
+ * - Locks in selected Vehicle, Service/Route, Duration & Price from card.
+ * - Enforces mandatory Passenger Name, 10-Digit Mobile Number, Pickup Date/Time, and Doorstep Address.
+ * - Context-aware fields: Flight Number & Direction toggle for Airport transfers.
+ * - 1-tap Passenger count selector (1-4 Pax, 5-7 Pax, 8-12 Pax).
+ * - Instant GPS geolocation & Google Places autocomplete.
+ * - Background sync to Kalidass_Operations_Control_2026.csv & Google Sheets.
+ * - Generates 100% complete, crystal-clear WhatsApp dispatch ticket.
+ */
+import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
+---
+
+<dialog
+  id="bookingEnquiryModal"
+  aria-labelledby="quickSheetTitle"
+  aria-modal="true"
+  class="fixed inset-x-0 bottom-0 sm:inset-0 sm:m-auto z-50 w-full sm:max-w-md max-h-[92vh] sm:max-h-[90vh] p-0 rounded-t-2xl sm:rounded-m3-2xl bg-m3-surface text-m3-on-surface border border-m3-outline-variant shadow-2xl backdrop:bg-slate-950/70 backdrop:backdrop-blur-sm outline-none overflow-hidden open:animate-slideUp"
+>
+  <div class="flex flex-col max-h-[92vh] sm:max-h-[90vh]">
+    <!-- Header with drag handle on mobile -->
+    <header class="px-5 pt-3.5 pb-3 bg-m3-surface-container-low border-b border-m3-outline-variant/40 relative shrink-0">
+      <div class="w-10 h-1 rounded-full bg-m3-outline-variant/80 mx-auto mb-2.5 sm:hidden"></div>
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <h2 id="quickSheetTitle" class="text-sm sm:text-base font-extrabold text-m3-on-surface font-heading leading-tight">
+            Instant Cab Booking Request
+          </h2>
+          <span id="sheetBookingIdBadge" class="text-[10px] font-bold text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded-full inline-block mt-0.5">
+            Ref: #KT-MAA-101
+          </span>
+        </div>
+        <button
+          type="button"
+          id="closeQuickSheetBtn"
+          aria-label="Close booking sheet"
+          class="shrink-0 p-1.5 rounded-m3-full text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container transition-all cursor-pointer"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Body: Scrollable if screen is very short -->
+    <div class="p-4 sm:p-5 space-y-3 text-xs sm:text-sm overflow-y-auto">
+      <!-- 1. LOCKED CONTEXT CARD (Clean, Full visibility, No hidden text) -->
+      <div class="p-3 sm:p-3.5 rounded-m3-xl bg-emerald-50/70 border border-emerald-200/80">
+        <div class="flex items-start justify-between gap-3">
+          <div class="space-y-0.5 min-w-0">
+            <span class="text-[9px] font-bold uppercase tracking-wider text-emerald-800 block">
+              Selected Service &amp; Route
+            </span>
+            <div id="sheetPackageTitle" class="text-xs sm:text-sm font-extrabold text-emerald-950 truncate block">
+              Chennai Airport Taxi
+            </div>
+            <div id="sheetVehicleName" class="font-bold text-xs sm:text-sm text-m3-on-surface font-heading leading-snug">
+              Swift Dzire / Toyota Etios (Sedan)
+            </div>
+            <div id="sheetDurationText" class="text-[11px] font-semibold text-emerald-700">
+              Direct Doorstep Transfer
+            </div>
+          </div>
+          <div class="text-right shrink-0">
+            <span class="text-[9px] font-bold uppercase tracking-wider text-m3-on-surface-variant block">
+              Flat Tariff
+            </span>
+            <strong id="sheetHeroPrice" class="text-base sm:text-lg font-extrabold text-emerald-800 font-heading leading-tight block">
+              ₹650
+            </strong>
+            <span class="text-[9px] text-emerald-700 font-medium">All-Inclusive</span>
+          </div>
+        </div>
+
+        <!-- Dynamic Vehicle Selector (Appears for multi-vehicle rates) -->
+        <div id="sheetVehicleSelectorContainer" class="hidden mt-2.5 pt-2 border-t border-emerald-200/60">
+          <span class="text-[9px] font-bold uppercase tracking-wider text-emerald-800 block mb-1.5">
+            Select Vehicle Option:
+          </span>
+          <div id="sheetVehiclePills" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+            <!-- Dynamically populated buttons -->
+          </div>
+        </div>
+
+        <div class="mt-2 pt-2 border-t border-emerald-200/60">
+          <p id="sheetInclusionsText" class="text-[10px] sm:text-[11px] text-m3-on-surface-variant font-medium leading-relaxed">
+            Fuel, Highway FASTag Tolls, Airport Ramp Drop &amp; Chauffeur Bata Included
+          </p>
+        </div>
+      </div>
+
+      <!-- 2. STREAMLINED FORM (Full Details in ~10 seconds) -->
+      <form id="quickSheetForm" class="space-y-2.5" novalidate>
+        
+        <!-- Field 1: Travel Date & Pickup Time -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label for="sheetPickupDate" class="block text-xs font-bold text-m3-on-surface">
+              1. Travel Date &amp; Pickup Time *
+            </label>
+            <span id="sheetReturnDatePreview" class="text-[10px] text-emerald-700 font-semibold">
+              Return: Same Day
+            </span>
+          </div>
+          <div class="grid grid-cols-5 gap-2">
+            <div class="col-span-3">
+              <input
+                type="date"
+                id="sheetPickupDate"
+                name="pickupDate"
+                required
+                class="w-full bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-lg py-2 px-3 text-xs sm:text-sm font-semibold text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary outline-none transition-all shadow-2xs"
+              />
+            </div>
+            <div class="col-span-2">
+              <input
+                type="time"
+                id="sheetPickupTime"
+                name="pickupTime"
+                required
+                value="06:00"
+                class="w-full bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-lg py-2 px-2.5 text-xs sm:text-sm font-semibold text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary outline-none transition-all shadow-2xs"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Airport Row (Shown only for Airport transfers) -->
+        <div id="sheetAirportDetailsRow" class="hidden grid grid-cols-2 gap-2 pt-0.5">
+          <div>
+            <label class="block text-[11px] font-bold text-m3-on-surface mb-1">
+              Airport Direction *
+            </label>
+            <div class="flex rounded-m3-lg p-0.5 bg-m3-surface-container border border-m3-outline-variant/60 text-[11px] font-bold">
+              <button
+                type="button"
+                id="sheetDirPickupBtn"
+                class="flex-1 py-1 rounded-m3-md text-center transition-all bg-emerald-700 text-white shadow-2xs cursor-pointer select-none"
+              >
+                Pickup (MAA)
+              </button>
+              <button
+                type="button"
+                id="sheetDirDropBtn"
+                class="flex-1 py-1 rounded-m3-md text-center transition-all text-m3-on-surface-variant hover:text-m3-on-surface cursor-pointer select-none"
+              >
+                Drop (To MAA)
+              </button>
+            </div>
+          </div>
+          <div>
+            <label for="sheetFlightNo" class="block text-[11px] font-bold text-m3-on-surface mb-1">
+              Flight No (Optional)
+            </label>
+            <input
+              type="text"
+              id="sheetFlightNo"
+              name="flightNo"
+              placeholder="e.g. 6E 243 / AI 542"
+              autocomplete="off"
+              class="w-full bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-lg py-1.5 px-2.5 text-xs font-semibold text-m3-on-surface placeholder:text-m3-on-surface-variant/60 outline-none uppercase"
+            />
+          </div>
+        </div>
+
+        <!-- Field 2: Pickup / Doorstep Address with GPS -->
+        <div>
+          <label id="sheetPickupAreaLabel" for="sheetPickupArea" class="block text-xs font-bold text-m3-on-surface mb-1">
+            2. Doorstep Pickup Address in Chennai *
+          </label>
+          <div class="relative flex items-center bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant focus-within:border-m3-primary focus-within:ring-1 focus-within:ring-m3-primary rounded-m3-lg transition-all shadow-2xs">
+            <input
+              type="text"
+              id="sheetPickupArea"
+              name="pickupArea"
+              required
+              autocomplete="off"
+              placeholder="e.g. Anna Nagar, Medavakkam or use GPS"
+              class="w-full bg-transparent py-2 pl-3 pr-16 text-xs sm:text-sm font-semibold text-m3-on-surface placeholder:text-m3-on-surface-variant/60 outline-none"
+            />
+            <!-- Right side controls: Clear Button + Current Location (GPS) -->
+            <div class="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
+              <button
+                type="button"
+                id="sheetClearAreaBtn"
+                class="hidden w-7 h-7 flex items-center justify-center rounded-full hover:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-on-surface transition-colors cursor-pointer"
+                title="Clear text"
+                aria-label="Clear pickup area"
+              >
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+              <button
+                type="button"
+                id="sheetLocateBtn"
+                class="w-7 h-7 flex items-center justify-center rounded-m3-sm hover:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-primary transition-colors cursor-pointer"
+                title="Use current location"
+                aria-label="Use current location for pickup"
+              >
+                <svg id="sheetLocateIcon" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="2" y1="12" x2="5" y2="12"></line>
+                  <line x1="19" y1="12" x2="22" y2="12"></line>
+                  <line x1="12" y1="2" x2="12" y2="5"></line>
+                  <line x1="12" y1="19" x2="12" y2="22"></line>
+                  <circle cx="12" cy="12" r="7"></circle>
+                  <circle cx="12" cy="12" r="2"></circle>
+                </svg>
+                <svg id="sheetLocateSpinner" class="hidden w-4 h-4 animate-spin text-m3-primary" viewBox="0 0 24 24" fill="none">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Passenger Count Chips (1-tap selection) -->
+        <div class="flex items-center justify-between pt-0.5">
+          <span class="text-[11px] font-bold text-m3-on-surface">
+            Passenger Count:
+          </span>
+          <div id="sheetPassengerChips" class="flex items-center gap-1.5 text-micro font-bold">
+            <button
+              type="button"
+              data-pax="1-4 Pax"
+              class="sheet-pax-btn px-2.5 py-1 rounded-full border transition-all cursor-pointer bg-emerald-700 text-white border-emerald-700 shadow-2xs"
+            >
+              1–4 Pax
+            </button>
+            <button
+              type="button"
+              data-pax="5-7 Pax"
+              class="sheet-pax-btn px-2.5 py-1 rounded-full border transition-all cursor-pointer bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface border-m3-outline-variant/60"
+            >
+              5–7 Pax
+            </button>
+            <button
+              type="button"
+              data-pax="8-12 Pax"
+              class="sheet-pax-btn px-2.5 py-1 rounded-full border transition-all cursor-pointer bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface border-m3-outline-variant/60"
+            >
+              8–12 Pax
+            </button>
+          </div>
+        </div>
+
+        <!-- Field 3: Guest Name & Mobile Number (MANDATORY) -->
+        <div>
+          <label class="block text-xs font-bold text-m3-on-surface mb-1">
+            3. Passenger Name &amp; Contact Number *
+          </label>
+          <div class="grid grid-cols-2 gap-2">
+            <input
+              type="text"
+              id="sheetGuestName"
+              name="guestName"
+              required
+              placeholder="Your Full Name *"
+              autocomplete="name"
+              class="w-full bg-m3-surface-container-low border border-m3-outline-variant focus:border-m3-primary focus:ring-1 focus:ring-m3-primary rounded-m3-lg py-2 px-3 text-xs sm:text-sm font-semibold text-m3-on-surface placeholder:text-m3-on-surface-variant/60 outline-none transition-all shadow-2xs"
+            />
+            <div class="relative flex items-center">
+              <span class="absolute left-2.5 text-xs font-bold text-m3-on-surface-variant select-none pointer-events-none">+91</span>
+              <input
+                type="tel"
+                id="sheetGuestPhone"
+                name="guestPhone"
+                required
+                maxlength="10"
+                pattern="[0-9]{10}"
+                placeholder="Mobile No *"
+                autocomplete="tel-national"
+                class="w-full bg-m3-surface-container-low border border-m3-outline-variant focus:border-m3-primary focus:ring-1 focus:ring-m3-primary rounded-m3-lg py-2 pl-9 pr-2.5 text-xs sm:text-sm font-semibold text-m3-on-surface placeholder:text-m3-on-surface-variant/60 outline-none transition-all shadow-2xs"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Error Alert -->
+        <div id="sheetErrorAlert" class="hidden p-2 rounded-m3-md bg-rose-50 border border-rose-200 text-rose-800 text-[11px] font-semibold flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-rose-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <circle cx="12" cy="12" r="10" stroke-width="2" />
+            <line x1="12" y1="8" x2="12" y2="12" stroke-width="2" />
+            <line x1="12" y1="16" x2="12.01" y2="16" stroke-width="2" />
+          </svg>
+          <span id="sheetErrorMsg">Please enter your pickup location in Chennai.</span>
+        </div>
+
+        <!-- Primary CTA: 1-Tap WhatsApp (Material Mint Palette & Auto-Width) -->
+        <div class="flex justify-center pt-1">
+          <button
+            type="button"
+            id="sheetSubmitBtn"
+            class="inline-flex items-center justify-center gap-2 py-2.5 px-6 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 font-extrabold text-xs sm:text-sm shadow-xs transition-all cursor-pointer select-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#128C7E]"
+          >
+            <WhatsAppIcon variant="brand" className="w-4 h-4 shrink-0" />
+            <span>Confirm &amp; Send on WhatsApp</span>
+          </button>
+        </div>
+
+        <p class="text-center text-[11px] text-m3-on-surface-variant font-medium">
+          ₹0 Advance Required • Pay Driver After Trip
+        </p>
+      </form>
+    </div>
+  </div>
+</dialog>
+
+<script is:inline>
+  (function () {
+    var quickBookingContext = {
+      packageTitle: 'Chennai Airport Taxi',
+      vehicleName: 'Swift Dzire / Toyota Etios (Sedan)',
+      price: '₹650',
+      duration: 'Direct Doorstep Transfer',
+      days: 1,
+      inclusions: 'Fuel, Tolls, Airport Ramp Drop & Driver Bata Included',
+      slug: 'chennai-airport-taxi',
+      isAirport: false,
+      direction: 'pickup',
+      passengers: '1-4 Pax',
+      bookingId: '#KT-MAA-' + Math.floor(100 + Math.random() * 900)
+    };
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      try {
+        var d = new Date(dateStr + 'T00:00:00');
+        var day = d.getDate();
+        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        return (day < 10 ? '0' + day : day) + '-' + months[d.getMonth()] + '-' + d.getFullYear();
+      } catch (e) {
+        return dateStr;
+      }
+    }
+
+    function formatTime12h(timeStr) {
+      if (!timeStr) return '06:00 AM';
+      try {
+        var parts = timeStr.split(':');
+        var h = parseInt(parts[0], 10);
+        var m = parts[1] || '00';
+        var ampm = h >= 12 ? 'PM' : 'AM';
+        h = h % 12;
+        h = h ? h : 12;
+        var hStr = h < 10 ? '0' + h : '' + h;
+        return hStr + ':' + m + ' ' + ampm;
+      } catch (e) {
+        return timeStr;
+      }
+    }
+
+    function computeReturnDate(pickupDateStr, days) {
+      if (!pickupDateStr) return '';
+      try {
+        var d = new Date(pickupDateStr + 'T00:00:00');
+        d.setDate(d.getDate() + (Math.max(1, days) - 1));
+        var y = d.getFullYear();
+        var m = String(d.getMonth() + 1).padStart(2, '0');
+        var day = String(d.getDate()).padStart(2, '0');
+        return y + '-' + m + '-' + day;
+      } catch (e) {
+        return pickupDateStr;
+      }
+    }
+
+    function initQuickSheet() {
+      var modal = document.getElementById('bookingEnquiryModal');
+      if (!modal) return;
+
+      var closeBtn = document.getElementById('closeQuickSheetBtn');
+      var dateInput = document.getElementById('sheetPickupDate');
+      var timeInput = document.getElementById('sheetPickupTime');
+      var areaInput = document.getElementById('sheetPickupArea');
+      var nameInput = document.getElementById('sheetGuestName');
+      var phoneInput = document.getElementById('sheetGuestPhone');
+      var flightInput = document.getElementById('sheetFlightNo');
+      var submitBtn = document.getElementById('sheetSubmitBtn');
+      var returnPreview = document.getElementById('sheetReturnDatePreview');
+      var errorAlert = document.getElementById('sheetErrorAlert');
+      var errorMsg = document.getElementById('sheetErrorMsg');
+
+      var dirPickupBtn = document.getElementById('sheetDirPickupBtn');
+      var dirDropBtn = document.getElementById('sheetDirDropBtn');
+      var areaLabel = document.getElementById('sheetPickupAreaLabel');
+
+      // Initialize default date = tomorrow
+      var tmr = new Date();
+      tmr.setDate(tmr.getDate() + 1);
+      var tmrStr = tmr.toISOString().split('T')[0];
+      var todayStr = new Date().toISOString().split('T')[0];
+
+      if (dateInput) {
+        dateInput.min = todayStr;
+        if (!dateInput.value) dateInput.value = tmrStr;
+      }
+
+      // Pre-fill profile if saved
+      try {
+        var saved = localStorage.getItem('kalidass_guest_profile');
+        if (saved) {
+          var p = JSON.parse(saved);
+          if (p.name && nameInput && !nameInput.value) nameInput.value = p.name;
+          if (p.phone && phoneInput && !phoneInput.value) phoneInput.value = p.phone;
+          if (p.address && areaInput && !areaInput.value) areaInput.value = p.address;
+          if (p.time && timeInput && !timeInput.value) timeInput.value = p.time;
+        }
+      } catch (e) {}
+
+      // Click outside dialog to dismiss
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) modal.close();
+      });
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function () {
+          modal.close();
+        });
+      }
+
+      // Airport direction toggles
+      function updateAirportDirectionUI(dir) {
+        quickBookingContext.direction = dir;
+        if (!dirPickupBtn || !dirDropBtn) return;
+        if (dir === 'pickup') {
+          dirPickupBtn.className = 'flex-1 py-1 rounded-m3-md text-center transition-all bg-emerald-700 text-white shadow-2xs cursor-pointer select-none';
+          dirDropBtn.className = 'flex-1 py-1 rounded-m3-md text-center transition-all text-m3-on-surface-variant hover:text-m3-on-surface cursor-pointer select-none';
+          if (areaLabel) areaLabel.textContent = '2. Drop Address in Chennai (Pickup at MAA Airport) *';
+          if (areaInput) areaInput.placeholder = 'e.g. Medavakkam, Guindy, Anna Nagar or use GPS';
+        } else {
+          dirDropBtn.className = 'flex-1 py-1 rounded-m3-md text-center transition-all bg-emerald-700 text-white shadow-2xs cursor-pointer select-none';
+          dirPickupBtn.className = 'flex-1 py-1 rounded-m3-md text-center transition-all text-m3-on-surface-variant hover:text-m3-on-surface cursor-pointer select-none';
+          if (areaLabel) areaLabel.textContent = '2. Pickup Address in Chennai (Drop to MAA Airport) *';
+          if (areaInput) areaInput.placeholder = 'e.g. Your doorstep address in Chennai';
+        }
+      }
+
+      if (dirPickupBtn) {
+        dirPickupBtn.addEventListener('click', function () { updateAirportDirectionUI('pickup'); });
+      }
+      if (dirDropBtn) {
+        dirDropBtn.addEventListener('click', function () { updateAirportDirectionUI('drop'); });
+      }
+
+      // Passenger Chips
+      var paxBtns = document.querySelectorAll('.sheet-pax-btn');
+      paxBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var pax = btn.getAttribute('data-pax') || '1-4 Pax';
+          quickBookingContext.passengers = pax;
+          paxBtns.forEach(function (b) {
+            b.className = 'sheet-pax-btn px-2.5 py-1 rounded-full border transition-all cursor-pointer bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface border-m3-outline-variant/60';
+          });
+          btn.className = 'sheet-pax-btn px-2.5 py-1 rounded-full border transition-all cursor-pointer bg-emerald-700 text-white border-emerald-700 shadow-2xs';
+        });
+      });
+
+      // Update return date preview when date changes
+      function updateReturnPreview() {
+        if (!dateInput || !returnPreview) return;
+        var days = quickBookingContext.days || 1;
+        if (days === 1) {
+          returnPreview.textContent = 'Return: Same Day';
+        } else {
+          var retDate = computeReturnDate(dateInput.value, days);
+          returnPreview.textContent = 'Return: ' + formatDate(retDate);
+        }
+      }
+
+      if (dateInput) {
+        dateInput.addEventListener('change', updateReturnPreview);
+      }
+
+      // Quotation Engine Pickup Input Controls: Clear + GPS Current Location
+      var clearBtn = document.getElementById('sheetClearAreaBtn');
+      var locateBtn = document.getElementById('sheetLocateBtn');
+      var locateIcon = document.getElementById('sheetLocateIcon');
+      var locateSpinner = document.getElementById('sheetLocateSpinner');
+
+      function updateClearBtnVisibility() {
+        if (!clearBtn || !areaInput) return;
+        if (areaInput.value.trim().length > 0) {
+          clearBtn.classList.remove('hidden');
+        } else {
+          clearBtn.classList.add('hidden');
+        }
+      }
+
+      function setLocatingState(isLocating) {
+        if (!locateBtn) return;
+        locateBtn.disabled = isLocating;
+        if (isLocating) {
+          locateIcon?.classList.add('hidden');
+          locateSpinner?.classList.remove('hidden');
+        } else {
+          locateSpinner?.classList.add('hidden');
+          locateIcon?.classList.remove('hidden');
+        }
+      }
+
+      if (areaInput) {
+        areaInput.addEventListener('input', function () {
+          updateClearBtnVisibility();
+          errorAlert?.classList.add('hidden');
+        });
+      }
+
+      if (clearBtn && areaInput) {
+        clearBtn.addEventListener('click', function () {
+          areaInput.value = '';
+          updateClearBtnVisibility();
+          areaInput.focus();
+        });
+      }
+
+      // Geolocation integration
+      function getCurrentLocationForSheet() {
+        if (!navigator.geolocation) {
+          alert('Geolocation is not supported by your browser.');
+          return;
+        }
+
+        setLocatingState(true);
+
+        if (window.loadGoogleMaps) {
+          window.loadGoogleMaps().catch(function () {});
+        }
+
+        navigator.geolocation.getCurrentPosition(
+          function (position) {
+            var lat = position.coords.latitude;
+            var lng = position.coords.longitude;
+
+            if (window.google && window.google.maps && window.google.maps.Geocoder) {
+              var geocoder = new window.google.maps.Geocoder();
+              geocoder.geocode({ location: { lat: lat, lng: lng } }, function (results, status) {
+                setLocatingState(false);
+                if (status === 'OK' && results && results.length > 0) {
+                  var address = results[0].formatted_address;
+                  if (areaInput) {
+                    areaInput.value = address;
+                    updateClearBtnVisibility();
+                    errorAlert?.classList.add('hidden');
+                  }
+                } else {
+                  fallbackNominatim(lat, lng);
+                }
+              });
+            } else {
+              fallbackNominatim(lat, lng);
+            }
+          },
+          function (error) {
+            setLocatingState(false);
+            var errText = 'Unable to get location.';
+            if (error.code === 1) errText = 'Location permission denied. Please enter address manually.';
+            else if (error.code === 3) errText = 'Location request timed out. Please try again.';
+            alert(errText);
+          },
+          { enableHighAccuracy: true, timeout: 10000 }
+        );
+      }
+
+      function fallbackNominatim(lat, lng) {
+        fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng)
+          .then(function (res) { return res.json(); })
+          .then(function (data) {
+            setLocatingState(false);
+            var addr = data.display_name || ('Chennai (' + lat.toFixed(4) + ', ' + lng.toFixed(4) + ')');
+            if (areaInput) {
+              areaInput.value = addr;
+              updateClearBtnVisibility();
+              errorAlert?.classList.add('hidden');
+            }
+          })
+          .catch(function () {
+            setLocatingState(false);
+            if (areaInput) {
+              areaInput.value = 'Chennai (' + lat.toFixed(4) + ', ' + lng.toFixed(4) + ')';
+              updateClearBtnVisibility();
+              errorAlert?.classList.add('hidden');
+            }
+          });
+      }
+
+      if (locateBtn) {
+        locateBtn.addEventListener('click', getCurrentLocationForSheet);
+      }
+
+      // Google Places Autocomplete on Pickup Input
+      var autocompleteInitialized = false;
+      function initSheetAutocomplete() {
+        if (autocompleteInitialized || !areaInput) return;
+        if (!window.google || !window.google.maps || !window.google.maps.places) return;
+
+        try {
+          var options = {
+            componentRestrictions: { country: 'in' },
+            bounds: new window.google.maps.LatLngBounds(
+              new window.google.maps.LatLng(12.7, 79.8), // Chennai SW
+              new window.google.maps.LatLng(13.4, 80.4)  // Chennai NE
+            ),
+            fields: ['formatted_address', 'name', 'geometry'],
+            strictBounds: false
+          };
+          var autocomplete = new window.google.maps.places.Autocomplete(areaInput, options);
+          autocomplete.addListener('place_changed', function () {
+            var place = autocomplete.getPlace();
+            if (place && (place.formatted_address || place.name)) {
+              areaInput.value = place.formatted_address || place.name;
+              updateClearBtnVisibility();
+              errorAlert?.classList.add('hidden');
+            }
+          });
+          autocompleteInitialized = true;
+        } catch (e) {}
+      }
+
+      if (areaInput) {
+        areaInput.addEventListener('focus', function () {
+          if (window.loadGoogleMaps) {
+            window.loadGoogleMaps().then(initSheetAutocomplete).catch(function () {});
+          } else {
+            initSheetAutocomplete();
+          }
+        });
+      }
+      window.addEventListener('google-maps-loaded', initSheetAutocomplete);
+
+      function showError(msg) {
+        if (!errorAlert || !errorMsg) return;
+        errorMsg.textContent = msg;
+        errorAlert.classList.remove('hidden');
+      }
+
+      // Submit handler: Full detail guaranteed
+      function handleQuickSubmit() {
+        errorAlert?.classList.add('hidden');
+
+        var area = (areaInput?.value || '').trim();
+        var date = dateInput?.value || tmrStr;
+        var time = (timeInput?.value || '06:00').trim();
+        var name = (nameInput?.value || '').trim();
+        var rawPhone = (phoneInput?.value || '').replace(/[^0-9]/g, '');
+        var flightNo = (flightInput?.value || '').trim();
+
+        // 1. Validate Pickup Area
+        if (!area || area.length < 3) {
+          showError('Please enter your pickup / doorstep location in Chennai.');
+          areaInput?.focus();
+          return;
+        }
+
+        // 2. Validate Guest Name
+        if (!name || name.length < 2) {
+          showError('Please enter your name for passenger manifest.');
+          nameInput?.focus();
+          return;
+        }
+
+        // 3. Validate Mobile Number (Strict 10 Digits)
+        if (!rawPhone || rawPhone.length !== 10) {
+          showError('Please enter a valid 10-digit mobile number for driver assignment.');
+          phoneInput?.focus();
+          return;
+        }
+
+        // Save profile to localStorage
+        try {
+          localStorage.setItem('kalidass_guest_profile', JSON.stringify({
+            name: name,
+            phone: rawPhone,
+            address: area,
+            time: time
+          }));
+        } catch (e) {}
+
+        var formattedPickupDate = formatDate(date);
+        var formattedPickupTime = formatTime12h(time);
+        var returnDateVal = computeReturnDate(date, quickBookingContext.days);
+        var formattedReturnDate = formatDate(returnDateVal);
+
+        var isAirport = quickBookingContext.isAirport;
+        var dir = quickBookingContext.direction || 'pickup';
+        var isDrop = dir === 'drop';
+
+        // Construct Route line based on service
+        var routeDetails = '';
+        if (isAirport) {
+          if (isDrop) {
+            routeDetails = `• *Trip Type:* Airport DROP (To MAA Departure Terminal)\n• *Pickup Address in Chennai:* ${area}\n• *Destination:* Chennai International Airport (MAA)`;
+          } else {
+            routeDetails = `• *Trip Type:* Airport PICKUP (Meet & Greet at MAA)\n• *Pickup Terminal:* Chennai International Airport (MAA)\n• *Drop Address in Chennai:* ${area}`;
+          }
+          if (flightNo) {
+            routeDetails += `\n• *Flight Number:* ${flightNo}`;
+          }
+        } else {
+          routeDetails = `• *Pickup Location:* ${area}\n• *Destination / Package:* ${quickBookingContext.packageTitle}`;
+        }
+
+        // Auto-compile 100% complete WhatsApp booking entry
+        var message = 
+`*Kalidass Travels — Confirmed Booking Request* 🚕
+━━━━━━━━━━━━━━━━━━━━
+📌 *Booking ID:* ${quickBookingContext.bookingId}
+👤 *Passenger:* ${name} (+91 ${rawPhone})
+
+📋 *PACKAGE & VEHICLE*
+• *Service:* ${quickBookingContext.packageTitle}
+• *Vehicle:* ${quickBookingContext.vehicleName}
+• *Party Size:* ${quickBookingContext.passengers || '4 Pax'}
+• *Trip Duration:* ${quickBookingContext.duration}
+• *Total Fare:* ${quickBookingContext.price} (Flat All-Inclusive)
+
+📅 *SCHEDULE & ROUTE*
+• *Pickup Date:* ${formattedPickupDate}
+• *Pickup Time:* ${formattedPickupTime}${quickBookingContext.days > 1 ? '\n• *Return Date:* ' + formattedReturnDate : ''}
+${routeDetails}
+
+━━━━━━━━━━━━━━━━━━━━
+✅ *Inclusions:* ${quickBookingContext.inclusions || 'Fuel, Highway Tolls, Parking, Driver Allowance & GST Invoice'}
+💰 *Payment Policy:* ₹0 Advance. Pay driver after trip completion.
+
+Please confirm driver assignment and cab availability.`;
+
+        // Background POST to Operations Control CSV
+        try {
+          fetch('/api/record-booking', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              bookingId: quickBookingContext.bookingId,
+              name: name,
+              phone: rawPhone,
+              pickupAddress: area + (flightNo ? ' [Flight: ' + flightNo + ']' : ''),
+              vehicle: quickBookingContext.vehicleName,
+              passengers: quickBookingContext.passengers || '4 Pax',
+              package: quickBookingContext.packageTitle,
+              days: quickBookingContext.days,
+              pickupDate: formattedPickupDate,
+              pickupTime: formattedPickupTime,
+              returnDate: formattedReturnDate,
+              fare: quickBookingContext.price
+            })
+          }).catch(function () {});
+        } catch (err) {}
+
+        // Google Sheet Webhook backup
+        try {
+          fetch('https://script.google.com/macros/s/AKfycbwoEpKqa3Qg-DIvMe06pGUgGLlC_0vJQev61nzIh9ssh1-uHZ5VtYkGzpMVwhEyi7tvEQ/exec', {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({
+              date: new Date().toLocaleString(),
+              tripType: quickBookingContext.packageTitle,
+              name: name,
+              phone: '+91 ' + rawPhone,
+              pickup: area,
+              vehicle: quickBookingContext.vehicleName,
+              estimate: quickBookingContext.price,
+              travelDate: formattedPickupDate + ' @ ' + formattedPickupTime,
+              returnDate: formattedReturnDate,
+              days: quickBookingContext.days,
+              bookingId: quickBookingContext.bookingId
+            })
+          }).catch(function () {});
+        } catch (err) {}
+
+        // Open WhatsApp Web/App
+        var waUrl = 'https://wa.me/918939539211?text=' + encodeURIComponent(message);
+        window.open(waUrl, '_blank');
+
+        modal.close();
+      }
+
+      if (submitBtn) {
+        submitBtn.addEventListener('click', handleQuickSubmit);
+      }
+    }
+
+    // Global opener function: Locks vehicle, duration, and price from the card!
+    window.openBookingEnquiryModal = function (opts) {
+      var modal = document.getElementById('bookingEnquiryModal');
+      if (!modal) return;
+
+      var options = opts || {};
+      var slug = options.slug || window.location.pathname.replace(/\/services\/|\/$/g, '') || 'chennai-cab';
+      
+      var isAirport = options.isAirport || (slug.indexOf('airport') !== -1) || ((options.packageTitle || '').toLowerCase().indexOf('airport') !== -1);
+      quickBookingContext.isAirport = isAirport;
+
+      var prefix = '#KT-CAB-';
+      if (isAirport) prefix = '#KT-MAA-';
+      else if (slug.indexOf('outstation') !== -1) prefix = '#KT-OUT-';
+      else if (slug.indexOf('pondicherry') !== -1) prefix = '#KT-PDY-';
+      else if (slug.indexOf('tirupati') !== -1) prefix = '#KT-TPT-';
+      else if (slug.indexOf('temple') !== -1) prefix = '#KT-TMP-';
+      else if (slug.indexOf('acting') !== -1) prefix = '#KT-ACT-';
+
+      quickBookingContext.bookingId = prefix + Math.floor(100 + Math.random() * 900);
+      quickBookingContext.slug = slug;
+      if (options.packageTitle) quickBookingContext.packageTitle = options.packageTitle;
+      if (options.vehicleName) quickBookingContext.vehicleName = options.vehicleName;
+      if (options.price) quickBookingContext.price = options.price;
+      if (options.duration) quickBookingContext.duration = options.duration;
+      if (options.inclusions) quickBookingContext.inclusions = options.inclusions;
+      if (options.direction) quickBookingContext.direction = options.direction;
+
+      // Extract days number (e.g. "3 Days" -> 3)
+      var dMatch = (quickBookingContext.duration || '').match(/(\d+)\s*day/i);
+      quickBookingContext.days = dMatch ? parseInt(dMatch[1], 10) : 1;
+
+      // Update Booking Ref Badge
+      var idBadge = document.getElementById('sheetBookingIdBadge');
+      if (idBadge) idBadge.textContent = 'Ref: ' + quickBookingContext.bookingId;
+
+      // Update Locked Summary UI
+      var vehicleNameEl = document.getElementById('sheetVehicleName');
+      var durationEl = document.getElementById('sheetDurationText');
+      var heroPriceEl = document.getElementById('sheetHeroPrice');
+      var incEl = document.getElementById('sheetInclusionsText');
+      var pkgTitleEl = document.getElementById('sheetPackageTitle');
+      var vehicleSelectorContainer = document.getElementById('sheetVehicleSelectorContainer');
+      var vehiclePillsContainer = document.getElementById('sheetVehiclePills');
+
+      if (pkgTitleEl) {
+        pkgTitleEl.textContent = quickBookingContext.packageTitle;
+      }
+
+      // Show/hide airport details row
+      var airportRow = document.getElementById('sheetAirportDetailsRow');
+      var areaLabel = document.getElementById('sheetPickupAreaLabel');
+      if (airportRow) {
+        if (isAirport) {
+          airportRow.classList.remove('hidden');
+          var dir = quickBookingContext.direction || 'pickup';
+          var dirPickupBtn = document.getElementById('sheetDirPickupBtn');
+          var dirDropBtn = document.getElementById('sheetDirDropBtn');
+          if (dirPickupBtn && dirDropBtn) {
+            if (dir === 'pickup') {
+              dirPickupBtn.className = 'flex-1 py-1 rounded-m3-md text-center transition-all bg-emerald-700 text-white shadow-2xs cursor-pointer select-none';
+              dirDropBtn.className = 'flex-1 py-1 rounded-m3-md text-center transition-all text-m3-on-surface-variant hover:text-m3-on-surface cursor-pointer select-none';
+              if (areaLabel) areaLabel.textContent = '2. Drop Address in Chennai (Pickup at MAA Airport) *';
+            } else {
+              dirDropBtn.className = 'flex-1 py-1 rounded-m3-md text-center transition-all bg-emerald-700 text-white shadow-2xs cursor-pointer select-none';
+              dirPickupBtn.className = 'flex-1 py-1 rounded-m3-md text-center transition-all text-m3-on-surface-variant hover:text-m3-on-surface cursor-pointer select-none';
+              if (areaLabel) areaLabel.textContent = '2. Pickup Address in Chennai (Drop to MAA Airport) *';
+            }
+          }
+        } else {
+          airportRow.classList.add('hidden');
+          if (areaLabel) areaLabel.textContent = '2. Pickup Location in Chennai *';
+        }
+      }
+
+      // Rates Pills
+      if (options.rates && Array.isArray(options.rates) && options.rates.length > 1) {
+        quickBookingContext.rates = options.rates;
+
+        if (vehicleSelectorContainer && vehiclePillsContainer) {
+          vehiclePillsContainer.innerHTML = '';
+          options.rates.forEach(function (r, idx) {
+            var pillBtn = document.createElement('button');
+            pillBtn.type = 'button';
+            var fullName = r.type + ' (' + r.names + ')';
+            var isSelected = (idx === 0) || (quickBookingContext.vehicleName === fullName) || (quickBookingContext.vehicleName === r.names);
+
+            if (isSelected) {
+              quickBookingContext.vehicleName = fullName;
+              quickBookingContext.price = r.price;
+            }
+
+            pillBtn.className = isSelected
+              ? 'px-2.5 py-1 rounded-full text-[11px] font-bold border transition-all shrink-0 cursor-pointer bg-emerald-700 text-white border-emerald-700 shadow-2xs'
+              : 'px-2.5 py-1 rounded-full text-[11px] font-medium border transition-all shrink-0 cursor-pointer bg-white/80 hover:bg-white text-emerald-950 border-emerald-200/80';
+
+            pillBtn.textContent = r.type + ' • ' + r.price;
+
+            pillBtn.addEventListener('click', function () {
+              quickBookingContext.vehicleName = fullName;
+              quickBookingContext.price = r.price;
+
+              if (vehicleNameEl) vehicleNameEl.textContent = fullName;
+              if (heroPriceEl) heroPriceEl.textContent = r.price;
+
+              // Auto-adjust passenger chips to vehicle size
+              var vLower = fullName.toLowerCase();
+              var targetPax = '1-4 Pax';
+              if (vLower.indexOf('tempo') !== -1) targetPax = '8-12 Pax';
+              else if (vLower.indexOf('innova') !== -1 || vLower.indexOf('ertiga') !== -1 || vLower.indexOf('crysta') !== -1) targetPax = '5-7 Pax';
+              
+              quickBookingContext.passengers = targetPax;
+              var allPaxBtns = document.querySelectorAll('.sheet-pax-btn');
+              allPaxBtns.forEach(function (pb) {
+                if (pb.getAttribute('data-pax') === targetPax) {
+                  pb.className = 'sheet-pax-btn px-2.5 py-1 rounded-full border transition-all cursor-pointer bg-emerald-700 text-white border-emerald-700 shadow-2xs';
+                } else {
+                  pb.className = 'sheet-pax-btn px-2.5 py-1 rounded-full border transition-all cursor-pointer bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface border-m3-outline-variant/60';
+                }
+              });
+
+              // Toggle pill styling
+              var allPills = vehiclePillsContainer.querySelectorAll('button');
+              allPills.forEach(function (p) {
+                p.className = 'px-2.5 py-1 rounded-full text-[11px] font-medium border transition-all shrink-0 cursor-pointer bg-white/80 hover:bg-white text-emerald-950 border-emerald-200/80';
+              });
+              pillBtn.className = 'px-2.5 py-1 rounded-full text-[11px] font-bold border transition-all shrink-0 cursor-pointer bg-emerald-700 text-white border-emerald-700 shadow-2xs';
+            });
+
+            vehiclePillsContainer.appendChild(pillBtn);
+          });
+
+          vehicleSelectorContainer.classList.remove('hidden');
+        }
+      } else {
+        quickBookingContext.rates = null;
+        if (vehicleSelectorContainer) vehicleSelectorContainer.classList.add('hidden');
+      }
+
+      if (vehicleNameEl) vehicleNameEl.textContent = quickBookingContext.vehicleName;
+      if (durationEl) durationEl.textContent = quickBookingContext.duration;
+      if (heroPriceEl) heroPriceEl.textContent = quickBookingContext.price;
+      if (incEl && quickBookingContext.inclusions) incEl.textContent = quickBookingContext.inclusions;
+
+      var dateInput = document.getElementById('sheetPickupDate');
+      var returnPreview = document.getElementById('sheetReturnDatePreview');
+      if (dateInput && returnPreview) {
+        if (quickBookingContext.days === 1) {
+          returnPreview.textContent = 'Return: Same Day';
+        } else {
+          var retDate = computeReturnDate(dateInput.value, quickBookingContext.days);
+          returnPreview.textContent = 'Return: ' + formatDate(retDate);
+        }
+      }
+
+      var clearBtn = document.getElementById('sheetClearAreaBtn');
+      var areaInput = document.getElementById('sheetPickupArea');
+      if (clearBtn && areaInput) {
+        if (areaInput.value.trim().length > 0) clearBtn.classList.remove('hidden');
+        else clearBtn.classList.add('hidden');
+      }
+
+      modal.showModal();
+    };
+
+    // Global listener on any "Book" or WhatsApp booking buttons
+    document.addEventListener('click', function (e) {
+      var target = e.target;
+      if (!target) return;
+
+      var btn = target.closest('.tariff-whatsapp-btn, .enquire-btn, [data-open-enquiry="true"], .booking-link');
+      if (!btn) {
+        var link = target.closest('a, button');
+        if (link) {
+          var href = link.getAttribute('href') || '';
+          var isWa = href.indexOf('wa.me') !== -1 || href.indexOf('whatsapp.com') !== -1;
+          var text = (link.textContent || '').trim().toLowerCase();
+          
+          var isBookingAction = /book|enquire|reserve|get flat fare|instant action|hire driver|get quote/i.test(text) ||
+                                (link.id && link.id.indexOf('-book-') !== -1);
+          var isExempt = /terms|privacy|career|developer|saravn|feedback/i.test(href) || /career|developer|resume/i.test(text);
+
+          if ((isWa || link.classList.contains('booking-link')) && isBookingAction && !isExempt) {
+            btn = link;
+          }
+        }
+      }
+
+      if (!btn) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      var card = btn.closest('.tariff-card, .vehicle-card, tr, details, article, section') || document;
+
+      var ratesStr = btn.getAttribute('data-rates') || (card !== document ? card.getAttribute('data-rates') : null);
+      var rates = null;
+      if (ratesStr) {
+        try {
+          rates = JSON.parse(ratesStr);
+        } catch (e) {}
+      }
+
+      var isAirportPage = window.location.pathname.indexOf('airport') !== -1;
+      var cardZone = (card !== document ? card.getAttribute('data-zone') : null) ||
+                     (card !== document ? card.querySelector('summary .font-semibold, td:first-child .font-bold')?.textContent?.trim() : null);
+
+      var serviceTitle = 
+        btn.getAttribute('data-service-title') ||
+        (card !== document ? card.getAttribute('data-service-title') : null) ||
+        (card !== document ? card.getAttribute('data-package-name') : null) ||
+        (cardZone ? ('Chennai Airport Taxi — ' + cardZone) : null) ||
+        (card !== document ? card.querySelector('h2, h3, .vehicle-title')?.textContent?.trim() : null) ||
+        document.querySelector('h1')?.textContent?.trim() ||
+        'Chennai Cab & Taxi Service';
+
+      var vehicleName = 
+        btn.getAttribute('data-vehicle-name') ||
+        (card !== document ? card.getAttribute('data-vehicle-name') : null) ||
+        (rates && rates.length > 0 ? (rates[0].type + ' (' + rates[0].names + ')') : null) ||
+        (card !== document ? card.querySelector('.vehicle-title, td:first-child')?.textContent?.trim() : null) ||
+        'Swift Dzire / Toyota Etios (Sedan)';
+
+      var price = 
+        btn.getAttribute('data-price') ||
+        (rates && rates.length > 0 ? rates[0].price : null) ||
+        (card !== document ? card.querySelector('.tariff-hero-price, td:nth-child(3)')?.textContent?.trim() : null) ||
+        (card !== document ? card.getAttribute('data-price') : null) ||
+        '₹650';
+
+      var duration = 
+        btn.getAttribute('data-duration') ||
+        (card !== document ? card.getAttribute('data-duration') : null) ||
+        (card !== document ? card.querySelector('.tirupati-stay-select')?.value : null) ||
+        (isAirportPage ? 'Direct Doorstep Transfer' : '1 Day (Same Day Return)');
+
+      var inclusions = 
+        btn.getAttribute('data-inclusions') ||
+        (card !== document ? card.getAttribute('data-inclusions') : null) ||
+        (card !== document ? card.querySelector('.tariff-inclusions-text')?.textContent?.trim() : null) ||
+        (isAirportPage ? 'Fuel, FASTag Tolls, Airport Ramp Drop & Chauffeur Bata Included' : 'Fuel, Highway Tolls & Driver Bata Included');
+
+      var slug = 
+        btn.getAttribute('data-slug') ||
+        (card !== document ? card.getAttribute('data-slug') : null) ||
+        window.location.pathname.replace(/\/services\/|\/$/g, '') ||
+        'chennai-airport-taxi';
+
+      // Detect Airport Direction (Drop vs Pickup)
+      var direction = btn.getAttribute('data-direction') || null;
+      if (!direction) {
+        var btnText = (btn.textContent || '').toLowerCase();
+        if (btnText.indexOf('drop') !== -1) direction = 'drop';
+        else if (btnText.indexOf('pickup') !== -1) direction = 'pickup';
+      }
+
+      window.openBookingEnquiryModal({
+        packageTitle: serviceTitle,
+        vehicleName: vehicleName,
+        price: price,
+        duration: duration,
+        inclusions: inclusions,
+        rates: rates,
+        slug: slug,
+        direction: direction,
+        isAirport: isAirportPage || slug.indexOf('airport') !== -1 || serviceTitle.toLowerCase().indexOf('airport') !== -1
+      });
+    }, true);
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initQuickSheet);
+    } else {
+      initQuickSheet();
+    }
+  })();
+</script>
+
+<style>
+  @keyframes slideUpSheet {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes modalFadeCenter {
+    from {
+      opacity: 0;
+      transform: scale(0.96) translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  @media (max-width: 639px) {
+    #bookingEnquiryModal[open] {
+      animation: slideUpSheet 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  }
+
+  @media (min-width: 640px) {
+    #bookingEnquiryModal[open] {
+      animation: modalFadeCenter 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  }
+
+  #bookingEnquiryModal::backdrop {
+    animation: fadeInBackdrop 0.18s ease forwards;
+  }
+
+  @keyframes fadeInBackdrop {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+</style>

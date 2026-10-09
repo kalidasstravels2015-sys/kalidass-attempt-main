@@ -14,7 +14,7 @@ const reviews = siteContent.reviews;
         <span class="text-amber-700 font-bold">4.9/5 Rating</span>
       </div>
       <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
-        Customer <span class="text-m3-primary">Experiences</span>
+        Customer Experiences
       </h2>
       <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant font-normal max-w-2xl mx-auto leading-relaxed mb-6 font-sans">
         Hear from our happy customers about their journey with us.
@@ -24,7 +24,7 @@ const reviews = siteContent.reviews;
     <!-- Reviews Scroll -->
     <div tabindex="0" role="region" aria-label="Customer Reviews" class="flex overflow-x-auto gap-4 pb-6 scrollbar-hide snap-x focus:outline-none focus:ring-1 focus:ring-m3-primary/30">
       {reviews.map((review) => (
-        <div class="flex-none w-64 sm:w-80 bg-m3-surface p-6 rounded-m3-xl shadow-m3-1 border border-m3-outline-variant snap-center flex flex-col justify-between">
+        <div class="flex-none w-64 sm:w-80 bg-m3-surface p-5 sm:p-6 rounded-m3-xl shadow-m3-1 border border-m3-outline-variant snap-center flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-3">
               <div class="flex items-center gap-3">
@@ -54,17 +54,17 @@ const reviews = siteContent.reviews;
                 </svg>
               </div>
             </div>
-            <p class="text-sm text-m3-on-surface-variant italic leading-relaxed font-sans">"{review.quote}"</p>
+            <p class="text-xs sm:text-sm text-m3-on-surface font-normal leading-relaxed">"{review.quote}"</p>
           </div>
         </div>
       ))}
     </div>
 
     <div class="text-center mt-6">
-      <a href="https://maps.app.goo.gl/i2LdJhWMi2ZgAiCa8" target="_blank" rel="noopener noreferrer nofollow" class="inline-flex items-center gap-2 text-m3-primary font-bold text-sm hover:underline transition group">
-        <span class="material-symbols-outlined text-[16px] text-[#4285F4]">location_on</span>
+      <a href="https://maps.app.goo.gl/i2LdJhWMi2ZgAiCa8" target="_blank" rel="noopener noreferrer nofollow" class="inline-flex items-center gap-2 text-m3-primary hover:text-slate-900 font-bold text-xs sm:text-sm hover:underline transition group">
+        <span class="material-symbols-outlined text-[18px] text-[#4285F4]">location_on</span>
         <span>See More Reviews on Google Maps</span>
-        <span class="material-symbols-outlined text-[16px] text-emerald-500 transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+        <span class="material-symbols-outlined text-[18px] text-m3-primary transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
       </a>
     </div>
   </div>

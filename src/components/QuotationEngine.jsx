@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Car, LocateFixed, Calendar, Calculator, Send, ArrowRight, Repeat, Users, User, AlertCircle, Navigation, ShieldCheck, Clock, X, ChevronDown, ChevronRight, CheckCircle2, Plane, ArrowUpDown } from 'lucide-react';
-import { trackEvent } from '../lib/analytics';
+import { trackEvent, trackCalculatorQuote, markQuoteConverted } from '../lib/analytics';
 import LocationPicker from './LocationPicker';
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
 import WhatsAppButton from './react/WhatsAppButton.jsx';
@@ -466,10 +466,25 @@ export default function QuotationEngine({
   }, [activeTab]);
 
   useEffect(() => {
-    if (estimate > 0) {
+    if (estimate > 0 && showResult) {
       trackEvent('estimate_calculated', { vehicle, trip_type: activeTab, estimate, distance });
+      trackCalculatorQuote({
+        calculatorId: activeTab === 'local' ? 'local_rental' : 'outstation_cab',
+        calculatorEngine: activeTab === 'local' ? 'Local Rental Package' : 'Outstation Cab Estimator',
+        tripType: activeTab === 'local' ? `Local Package (${localPackage})` : activeTab === 'round' ? 'Round Trip' : 'One Way',
+        pickup: pickup || 'Chennai',
+        drop: drop || (activeTab === 'local' ? 'Chennai Local Tour' : 'N/A'),
+        vehicle,
+        distanceKm: distance ? Number(distance.toFixed(1)) : (activeTab === 'local' ? localPackage : ''),
+        estimatedFare: estimate,
+        meta: {
+          days: activeTab === 'round' ? days : 1,
+          travelDate: date || '',
+          localPackage: activeTab === 'local' ? localPackage : undefined,
+        }
+      });
     }
-  }, [estimate]);
+  }, [estimate, showResult, vehicle, activeTab]);
 
   // Auto-scroll to result panel when estimate appears
   useEffect(() => {
@@ -1039,6 +1054,7 @@ export default function QuotationEngine({
     if (!checkRateLimit()) return;
 
     trackEvent('booking_submit_attempt', { trip_type: activeTab, vehicle, estimate });
+    markQuoteConverted(null, { vehicle, tripType: activeTab, estimate });
 
     // 4. Send Data to Sheet
     const bookingData = {
@@ -1553,13 +1569,14 @@ Please confirm availability and share quote.`;
                 )}
 
                 {/* 4. Booking Action */}
-                <WhatsAppButton
-                  onClick={handleWhatsApp}
-                  fullWidth
-                  variant="filled"
-                  size="md"
-                  text={isTa ? 'வாட்ஸ்அப்பில் முன்பதிவு செய்ய' : 'Book on WhatsApp'}
-                />
+                <div className="flex justify-center pt-1">
+                  <WhatsAppButton
+                    onClick={handleWhatsApp}
+                    variant="filled"
+                    size="md"
+                    text={isTa ? 'வாட்ஸ்அப்பில் முன்பதிவு செய்ய' : 'Book on WhatsApp'}
+                  />
+                </div>
               </div>
             )}
           </div>
@@ -1978,13 +1995,14 @@ Please confirm availability and share quote.`;
               )}
 
               {/* 4. Booking Action */}
-              <WhatsAppButton
-                onClick={handleWhatsApp}
-                fullWidth
-                variant="filled"
-                size="md"
-                text={isTa ? 'வாட்ஸ்அப் முன்பதிவு' : 'Reserve on WhatsApp'}
-              />
+              <div className="flex justify-center pt-1">
+                <WhatsAppButton
+                  onClick={handleWhatsApp}
+                  variant="filled"
+                  size="md"
+                  text={isTa ? 'வாட்ஸ்அப் முன்பதிவு' : 'Reserve on WhatsApp'}
+                />
+              </div>
             </div>
           )}
         </div>

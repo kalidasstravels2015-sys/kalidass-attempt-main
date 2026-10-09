@@ -165,3 +165,22 @@ Key icons in standard usage:
   </a>
 </aside>
 ```
+
+---
+
+## 6. Typography Hygiene & Touch Target Standards
+
+1. **Strict No Faux-Italics Rule:**  
+   Because only normal-weight Latin `plus-jakarta-sans-latin.woff2` is loaded, never use `font-style: italic` or `<i>` on body sans-serif text. The browser synthetically distorts geometric sans-serif curves into sheared oblique angles. Testimonials must use clean, normal-weight typography (`text-xs sm:text-sm text-m3-on-surface font-normal leading-relaxed`).
+
+2. **No Monospace Contamination:**  
+   Do not use `font-mono` on customer-facing navigation chips, headers, or buttons. All consumer UI elements strictly use `font-sans` (`Plus Jakarta Sans`).
+
+3. **Button Label & Touch Target Standards (WCAG 2.1 AA/AAA):**  
+   - All interactive action buttons must have a **minimum height of 38px on mobile** and **44–48px on desktop**.
+   - Button font size must never drop below **12px (`text-xs` / `text-m3-label-m`)**. Never use `text-micro` (10px) on interactive buttons.
+   - Paragraph and descriptive card text must never use `text-badge` (11px bold); use `text-xs sm:text-sm text-m3-on-surface-variant font-normal leading-relaxed`.
+
+4. **Section Heading Uniformity:**  
+   Headlines must maintain uniform, high-contrast `#111827` (`text-m3-on-surface`). Never use pseudo-accent spans like `<span class="text-m3-primary">` on charcoal headers, which creates barely perceptible color jitter.
+

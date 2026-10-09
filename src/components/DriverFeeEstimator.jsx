@@ -9,6 +9,7 @@ import WhatsAppButton from './react/WhatsAppButton.jsx';
 import { buildWhatsAppUrl } from '../utils/whatsapp';
 import tnBusFares from '../data/tnBusFares.json';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
+import { trackCalculatorQuote, markQuoteConverted } from '../lib/analytics';
 
 // ── Shared distance lookup (same as QuotationEngine) ──────────────────────
 const COMMON_DISTANCES = {
@@ -195,6 +196,28 @@ export default function DriverFeeEstimator({
           whatsapp: buildWhatsApp('oneway', total, 1, distKm, isLongDistance),
         });
       }
+
+      const calculatedFare = activeTab === 'round'
+        ? (vehicle.bata * d) + (foodProvided ? 0 : FOOD_PER_DAY * d) + (stayProvided ? 0 : STAY_PER_NIGHT * nights)
+        : Math.round(vehicle.bata * (distKm && distKm > 400 ? 1.5 : 1)) + FOOD_PER_DAY + (setcFare || (distKm ? Math.round(distKm * 1.2) : 250));
+
+      trackCalculatorQuote({
+        calculatorId: 'acting_driver',
+        calculatorEngine: 'Acting Driver Cost Calculator',
+        tripType: activeTab === 'round' ? `Round Trip (${d} Days)` : 'One Way Drop',
+        pickup: pickup || 'Chennai',
+        drop: drop || 'N/A',
+        vehicle: carModel.trim() ? `${carModel.trim()} (${vehicle.label})` : vehicle.label,
+        distanceKm: distKm ? (activeTab === 'round' ? distKm * 2 : distKm) : '',
+        estimatedFare: calculatedFare,
+        meta: {
+          gear,
+          days: d,
+          nights,
+          stayProvided,
+          foodProvided
+        }
+      });
 
       setShowResult(true);
       setLoading(false);
@@ -670,13 +693,22 @@ export default function DriverFeeEstimator({
             </div>
 
             {/* WhatsApp CTA */}
-            <WhatsAppButton
-              href={result.whatsapp}
-              fullWidth
-              variant="filled"
-              size="md"
-              text="Book Driver on WhatsApp"
-            />
+            <div className="flex justify-center pt-2">
+              <WhatsAppButton
+                href={result.whatsapp}
+                onClick={() => {
+                  markQuoteConverted(null, {
+                    calculatorId: 'acting_driver',
+                    tripType: result.type,
+                    vehicle: vehicle.label,
+                    estimate: result.total
+                  });
+                }}
+                variant="filled"
+                size="md"
+                text="Book Driver on WhatsApp"
+              />
+            </div>
           </div>
         )}
       </div>

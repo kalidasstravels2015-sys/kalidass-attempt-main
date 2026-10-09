@@ -40,7 +40,7 @@ export default function WhatsAppButton({
   const label = children || text;
   const computedAria = ariaLabel || (typeof label === 'string' ? label : "Chat on WhatsApp");
 
-  const commonClass = `inline-flex items-center justify-center font-bold font-sans rounded-m3-full transition-all duration-200 cursor-pointer select-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#128C7E] ${fullWidth ? 'w-full' : ''} ${sizeClasses} ${variantClasses} ${className}`;
+  const commonClass = `inline-flex items-center justify-center font-bold font-sans rounded-m3-full transition-all duration-200 cursor-pointer select-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#128C7E] ${sizeClasses} ${variantClasses} ${className}`;
 
   const targetHref = href || (!onClick ? buildWhatsAppUrl(typeof label === 'string' ? label : undefined) : undefined);
 

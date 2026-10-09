@@ -526,25 +526,25 @@ const getFallbackStayOptions = (r: Record<number, number>, vehicleName: string):
       value: "2",
       price: `₹${(r[2] || 0).toLocaleString('en-IN')}`,
       duration: "2 Days / 1 Night Stay",
-      label: "2 Days / 1 Night (Driver Stay & Food Included)",
+      label: "2 Days / 1 Night (Driver Night Bata Included)",
       km: `${2 * minKmDay} km Min Coverage (${minKmDay} km/day @ ₹${rateKm}/km = ₹${(2 * minKmDay * rateKm).toLocaleString('en-IN')})`,
       bata: `2 Calendar Days Bata: ₹${(2 * dailyBata).toLocaleString('en-IN')}`,
       tolls: "All Highway Tolls & Permits Included",
-      stay: `1 Night Driver Lodging & Food Allowance Included (₹${stayLodging.toLocaleString('en-IN')})`,
+      stay: `1 Night Driver Lodging Allowance Included (₹${stayLodging.toLocaleString('en-IN')})`,
       sightseeing: "2 Days Local Sightseeing & Temple Route",
-      inclusions: "Fuel, Highway Tolls, Driver Stay & Food Included"
+      inclusions: "Fuel, Highway Tolls & Driver Night Bata Included"
     },
     {
       value: "3",
       price: `₹${(r[3] || 0).toLocaleString('en-IN')}`,
       duration: "3 Days / 2 Nights Stay",
-      label: "3 Days / 2 Nights (Driver Stay & Food Included)",
+      label: "3 Days / 2 Nights (2 Nights Driver Bata Included)",
       km: `${3 * minKmDay} km Min Coverage (${minKmDay} km/day @ ₹${rateKm}/km = ₹${(3 * minKmDay * rateKm).toLocaleString('en-IN')})`,
       bata: `3 Calendar Days Bata: ₹${(3 * dailyBata).toLocaleString('en-IN')}`,
       tolls: "All Highway Tolls & Permits Included",
-      stay: `2 Nights Driver Lodging & Food Allowance Included (₹${(2 * stayLodging).toLocaleString('en-IN')})`,
+      stay: `2 Nights Driver Lodging Allowance Included (₹${(2 * stayLodging).toLocaleString('en-IN')})`,
       sightseeing: "3 Days Extended Sightseeing Circuit",
-      inclusions: "Fuel, Highway Tolls, 2 Nights Driver Stay & Food Included"
+      inclusions: "Fuel, Highway Tolls & 2 Nights Driver Bata Included"
     }
   ];
 };
@@ -560,7 +560,7 @@ const resolveStayOptionDetails = (opt: StayDropdownOption, vehicleName: string):
     km: opt.km || (isOneDay ? `~${minKmDay} km Minimum Run Included` : `${dayNum * minKmDay} km Min Run (${minKmDay} km/day @ ₹${rateKm}/km)`),
     bata: opt.bata || `${dayNum} Day${dayNum > 1 ? 's' : ''} Driver Bata: ₹${(dayNum * dailyBata).toLocaleString('en-IN')}`,
     tolls: opt.tolls || "All FASTag Highway Tolls Included",
-    stay: opt.stay || (isOneDay ? "₹0 (Same-Day Return)" : `${dayNum - 1} Night${dayNum > 2 ? 's' : ''} Driver Stay & Food Included (₹${((dayNum - 1) * stayLodging).toLocaleString('en-IN')})`),
+    stay: opt.stay || (isOneDay ? "₹0 (Same-Day Return)" : `${dayNum - 1} Night${dayNum > 2 ? 's' : ''} Driver Night Bata Included (₹${((dayNum - 1) * stayLodging).toLocaleString('en-IN')})`),
     sightseeing: opt.sightseeing || "Local Temples & Sightseeing Route"
   };
 };
@@ -606,7 +606,7 @@ const PILGRIM_ROUTES: Record<string, {
     tollsSub: 'Zero Road Surcharges',
     calloutTitle: 'Doorstep Pickup Anywhere in Chennai • ₹0 Advance Required',
     calloutDesc: 'Includes Sri Padmavathi Ammavari Temple (Tiruchanur) stop, luggage guidance, and complete ghat road clearance.',
-    stayLabelSub: 'Stay & Food Included',
+    stayLabelSub: 'Tolls & Driver Bata Included',
     getDropdownOptions: (r, vehicleName) => {
       const { minKmDay, rateKm, dailyBata, stayLodging } = getVehiclePricingSpecs(vehicleName || '');
       return [
@@ -627,25 +627,25 @@ const PILGRIM_ROUTES: Record<string, {
           value: "2", 
           price: `₹${(r[2] || 9500).toLocaleString('en-IN')}`, 
           duration: "2 Days / 1 Night Stay", 
-          label: "2 Days / 1 Night (Driver Stay & Food Included)", 
+          label: "2 Days / 1 Night (Driver Night Bata Included)", 
           km: `${2 * minKmDay} km Min Run (${minKmDay} km/day @ ₹${rateKm}/km = ₹${(2 * minKmDay * rateKm).toLocaleString('en-IN')})`,
           bata: `2 Calendar Days Bata: ₹${(2 * dailyBata).toLocaleString('en-IN')}`,
           tolls: "AP State Permit & Round-Trip Highway Tolls Included",
-          stay: `1 Night Driver Lodging & Food Allowance Included (₹${stayLodging.toLocaleString('en-IN')})`,
+          stay: `1 Night Driver Lodging Allowance Included (₹${stayLodging.toLocaleString('en-IN')})`,
           sightseeing: "Tirumala + Tiruchanur + Srinivasa Mangapuram + Kanipakam",
-          inclusions: "Fuel, FASTag Tolls, AP Border Permit, Driver Stay & Food Included" 
+          inclusions: "Fuel, FASTag Tolls, AP Border Permit & Driver Night Bata Included" 
         },
         { 
           value: "3", 
           price: `₹${(r[3] || 13200).toLocaleString('en-IN')}`, 
           duration: "3 Days / 2 Nights Stay", 
-          label: "3 Days / 2 Nights (Driver Stay & Food Included)", 
+          label: "3 Days / 2 Nights (2 Nights Driver Bata Included)", 
           km: `${3 * minKmDay} km Min Run (${minKmDay} km/day @ ₹${rateKm}/km = ₹${(3 * minKmDay * rateKm).toLocaleString('en-IN')})`,
           bata: `3 Calendar Days Bata: ₹${(3 * dailyBata).toLocaleString('en-IN')}`,
           tolls: "AP State Permit & Highway FASTag Tolls Included",
-          stay: `2 Nights Driver Lodging & Food Allowance Included (₹${(2 * stayLodging).toLocaleString('en-IN')})`,
+          stay: `2 Nights Driver Lodging Allowance Included (₹${(2 * stayLodging).toLocaleString('en-IN')})`,
           sightseeing: "Tirumala + Srikalahasti + Kanipakam + Local Temples",
-          inclusions: "Fuel, FASTag Tolls, AP Border Permit, 2 Nights Driver Stay & Food Included" 
+          inclusions: "Fuel, FASTag Tolls, AP Border Permit & 2 Nights Driver Bata Included" 
         }
       ];
     },
@@ -680,7 +680,7 @@ const PILGRIM_ROUTES: Record<string, {
     getDropdownOptions: (r) => [
       { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "1 Day (Daytime Return)", inclusions: "Fuel, Highway Tolls, Temple Visit & Driver Bata Included", label: "1 Day (Daytime Return • 6 AM to 10 PM)", selected: true },
       { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "Overnight Pournami Package (Girivalam Standby)", inclusions: "Fuel, Tolls, All-Night Girivalam Standby & 2 Days Driver Bata Included", label: "Overnight Pournami Package (All-Night Standby)" },
-      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, Tolls, 2 Days Sightseeing, Driver Night Stay & Food Included", label: "2 Days / 1 Night (Driver Stay & Food Included)" }
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, Tolls, 2 Days Sightseeing & Driver Night Bata Included", label: "2 Days / 1 Night (Driver Night Bata Included)" }
     ],
     baseInclusionsText: 'Fuel, Highway Tolls, Girivalam Standby & Driver Bata Included',
     comparisonTitle: 'Why Pilgrims Choose Kalidass Travels vs Online Cab Aggregators',
@@ -712,8 +712,8 @@ const PILGRIM_ROUTES: Record<string, {
     stayLabelSub: 'Tolls & Shopping Waiting Included',
     getDropdownOptions: (r) => [
       { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "1 Day (Same Day Return)", inclusions: "Fuel, Highway Tolls, Weaver Waiting Time & Driver Bata Included", label: "1 Day (Same Day Return • 06:30 AM to 08:30 PM)", selected: true },
-      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, Highway Tolls, 2 Days Sightseeing, Driver Night Stay & Food Included", label: "2 Days / 1 Night (Driver Stay & Food Included)" },
-      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Extended Stay", inclusions: "Fuel, Highway Tolls, Divya Desam Tour, 2 Nights Driver Stay & Food Included", label: "3 Days / 2 Nights Extended (Weddings & Multi-Day Tour)" }
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, Highway Tolls, 2 Days Sightseeing & Driver Night Bata Included", label: "2 Days / 1 Night (Driver Night Bata Included)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Extended Stay", inclusions: "Fuel, Highway Tolls, Divya Desam Tour & 2 Nights Driver Bata Included", label: "3 Days / 2 Nights Extended (Weddings & Multi-Day Tour)" }
     ],
     baseInclusionsText: 'Fuel, Highway Tolls, Weaver Waiting Time & Driver Bata Included',
     comparisonTitle: 'Why Travelers Choose Kalidass Travels for Kanchipuram',
@@ -742,11 +742,11 @@ const PILGRIM_ROUTES: Record<string, {
     tollsSub: 'All 9 Temples & 750 KM Covered',
     calloutTitle: 'Optimized Circuit Sequencing (Zero Backtracking) • Experienced Navagraha Chauffeur • ₹0 Advance Required',
     calloutDesc: 'Includes all 9 Navagraha shrines (Suryanar to Thirunallar), Thanjavur / Kumbakonam hotel coordination, and complete highway toll coverage.',
-    stayLabelSub: '750 KM, Tolls & Driver Stay Included',
+    stayLabelSub: '750 KM, Tolls & Driver Bata Included',
     getDropdownOptions: (r) => [
       { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night (Standard 9 Temples Circuit)", inclusions: "Fuel, Highway Tolls, 9 Temples Coverage & 2 Days Driver Bata Included", label: "2 Days / 1 Night (Standard 9 Temples • 750 km Circuit)", selected: true },
-      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, Highway Tolls, 9 Temples + Thanjavur, 2 Nights Driver Stay & Food Included", label: "3 Days / 2 Nights (Relaxed Senior Citizen Darshan + Thanjavur)" },
-      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Extended Stay", inclusions: "Fuel, Tolls, Complete Chola Temple Circuit, 3 Nights Driver Stay & Food Included", label: "4 Days / 3 Nights (Complete Chola Circuit & Trichy Rockfort)" }
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, Highway Tolls, 9 Temples + Thanjavur & 2 Nights Driver Bata Included", label: "3 Days / 2 Nights (Relaxed Senior Citizen Darshan + Thanjavur)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Extended Stay", inclusions: "Fuel, Tolls, Complete Chola Temple Circuit & 3 Nights Driver Bata Included", label: "4 Days / 3 Nights (Complete Chola Circuit & Trichy Rockfort)" }
     ],
     baseInclusionsText: 'Fuel, Highway Tolls, 9 Temples Coverage & 2 Days Driver Bata Included',
     comparisonTitle: 'Why Pilgrims Choose Kalidass Travels for Kumbakonam Navagraha',
@@ -775,11 +775,11 @@ const PILGRIM_ROUTES: Record<string, {
     tollsSub: 'Commercial Permit Pre-Cleared',
     calloutTitle: 'Satvik Teetotaler Chauffeurs • Irumudi Safe Storage • Nilakkal Parking Guidance • ₹0 Advance',
     calloutDesc: 'Includes pre-arranged Kerala Interstate Commercial Permit, pure vegetarian dining stops, and experienced Western Ghats driving.',
-    stayLabelSub: 'Kerala Permit, Tolls & Driver Stay Included',
+    stayLabelSub: 'Kerala Permit, Tolls & Driver Bata Included',
     getDropdownOptions: (r) => [
       { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights (Direct Nilakkal Return)", inclusions: "Fuel, Kerala Permit, Highway Tolls & 3 Days Driver Bata Included", label: "3 Days / 2 Nights (Direct Nilakkal Base Camp Return • 1,350 km)", selected: true },
       { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Stay", inclusions: "Fuel, Kerala Permit, Extended Kerala Temple Sightseeing & 4 Days Bata Included", label: "4 Days / 3 Nights (Darshan + Erumely & Chottanikkara / Guruvayur)" },
-      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "5 Days / 4 Nights Extended Stay", inclusions: "Fuel, Kerala Permit, Complete Kerala Yatra, 5 Days Driver Stay & Food Included", label: "5 Days / 4 Nights (Complete Kerala Pilgrim Circuit)" }
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "5 Days / 4 Nights Extended Stay", inclusions: "Fuel, Kerala Permit, Complete Kerala Yatra & 4 Nights Driver Bata Included", label: "5 Days / 4 Nights (Complete Kerala Pilgrim Circuit)" }
     ],
     baseInclusionsText: 'Fuel, Kerala Interstate Permit, Highway Tolls & 3 Days Driver Bata Included',
     comparisonTitle: 'Why Ayyappa Devotees Choose Kalidass Travels for Sabarimala',
@@ -808,11 +808,11 @@ const PILGRIM_ROUTES: Record<string, {
     tollsSub: '1,200 KM & All NH Tolls Covered',
     calloutTitle: '22 Theertham snanam guidance • Dhanushkodi beach drop • Kalam Memorial • ₹0 Advance',
     calloutDesc: 'Covers Ramanathaswamy Temple, Agni Theertham, 22 sacred wells, Arichal Munai (Land\'s End), and Pamban Bridge view.',
-    stayLabelSub: '1,200 KM, Tolls & Driver Stay Included',
+    stayLabelSub: '1,200 KM, Tolls & Driver Bata Included',
     getDropdownOptions: (r) => [
       { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night (Rameswaram & Dhanushkodi Return)", inclusions: "Fuel, All Highway Tolls, 22 Theerthams, Dhanushkodi & 2 Days Driver Bata Included", label: "2 Days / 1 Night (Rameswaram & Dhanushkodi Return • 1,200 km)", selected: true },
-      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, Tolls, Rameswaram + Madurai Darshan, 2 Nights Driver Stay & Food Included", label: "3 Days / 2 Nights (Rameswaram + Madurai Meenakshi Amman)" },
-      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Extended Stay", inclusions: "Fuel, Tolls, Complete Southern Pilgrimage Circuit, 3 Nights Driver Stay & Food Included", label: "4 Days / 3 Nights (Southern Pilgrimage: Rameswaram + Madurai + Kanyakumari)" }
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, Tolls, Rameswaram + Madurai Darshan & 2 Nights Driver Bata Included", label: "3 Days / 2 Nights (Rameswaram + Madurai Meenakshi Amman)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Extended Stay", inclusions: "Fuel, Tolls, Complete Southern Pilgrimage Circuit & 3 Nights Driver Bata Included", label: "4 Days / 3 Nights (Southern Pilgrimage: Rameswaram + Madurai + Kanyakumari)" }
     ],
     baseInclusionsText: 'Fuel, Highway Tolls, Dhanushkodi Drop & 2 Days Driver Bata Included',
     comparisonTitle: 'Why Pilgrims Choose Kalidass Travels for Rameswaram & Dhanushkodi',
@@ -844,8 +844,8 @@ const PILGRIM_ROUTES: Record<string, {
     stayLabelSub: 'ECR Tolls & Free Boating Waiting Included',
     getDropdownOptions: (r) => [
       { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "1 Day (Same Day Return)", inclusions: "Fuel, ECR Highway Tolls, Pichavaram Boating Waiting & Driver Bata Included", label: "1 Day (Same Day Return • 05:30 AM to 10:30 PM)", selected: true },
-      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, ECR Tolls, Vaitheeswaran Kovil, Driver Night Stay & Food Included", label: "2 Days / 1 Night Stay (Chidambaram + Vaitheeswaran Kovil + Pichavaram)" },
-      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Extended Stay", inclusions: "Fuel, Tolls, Chidambaram + Kumbakonam Circuit, 2 Nights Driver Stay & Food Included", label: "3 Days / 2 Nights Extended (Chidambaram + Kumbakonam Temples Circuit)" }
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, ECR Tolls, Vaitheeswaran Kovil & Driver Night Bata Included", label: "2 Days / 1 Night Stay (Chidambaram + Vaitheeswaran Kovil + Pichavaram)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Extended Stay", inclusions: "Fuel, Tolls, Chidambaram + Kumbakonam Circuit & 2 Nights Driver Bata Included", label: "3 Days / 2 Nights Extended (Chidambaram + Kumbakonam Temples Circuit)" }
     ],
     baseInclusionsText: 'Fuel, ECR Highway Tolls, Pichavaram Waiting & Driver Bata Included',
     comparisonTitle: 'Why Travelers Choose Kalidass Travels for Chidambaram & Pichavaram',
@@ -877,8 +877,8 @@ const PILGRIM_ROUTES: Record<string, {
     stayLabelSub: 'NH Tolls & Star Path Waiting Included',
     getDropdownOptions: (r) => [
       { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "1 Day (Same Day Return)", inclusions: "Fuel, Bangalore Highway Tolls, Star Path Waiting & Driver Bata Included", label: "1 Day (Same Day Return • 06:00 AM to 08:30 PM)", selected: true },
-      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, Highway Tolls, Yelagiri Hills Sightseeing, Driver Night Stay & Food Included", label: "2 Days / 1 Night Stay (Golden Temple + Jalakandeswarar Fort + Yelagiri Hills)" },
-      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Extended Stay", inclusions: "Fuel, Tolls, Multi-Day Pilgrim Circuit, 2 Nights Driver Stay & Food Included", label: "3 Days / 2 Nights Extended (Vellore + Tirupati or Kanchipuram Circuit)" }
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, Highway Tolls, Yelagiri Hills Sightseeing & Driver Night Bata Included", label: "2 Days / 1 Night Stay (Golden Temple + Jalakandeswarar Fort + Yelagiri Hills)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Extended Stay", inclusions: "Fuel, Tolls, Multi-Day Pilgrim Circuit & 2 Nights Driver Bata Included", label: "3 Days / 2 Nights Extended (Vellore + Tirupati or Kanchipuram Circuit)" }
     ],
     baseInclusionsText: 'Fuel, Bangalore Highway Tolls, Star Path Waiting & Driver Bata Included',
     comparisonTitle: 'Why Devotees Choose Kalidass Travels for Vellore Golden Temple',
@@ -910,8 +910,8 @@ const PILGRIM_ROUTES: Record<string, {
     stayLabelSub: 'ECR Tolls & Sightseeing Included',
     getDropdownOptions: (r) => [
       { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "1 Day (Same Day Return)", inclusions: "Fuel, ECR FASTag Tolls & Driver Bata Included", label: "1 Day (Same Day Return • Up to 320 km)", selected: true },
-      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, ECR Tolls, 2 Days Sightseeing, Driver Stay & Food Included", label: "2 Days / 1 Night (Driver Stay & Food Included)" },
-      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, ECR Tolls, 3 Days Sightseeing, 2 Nights Driver Stay & Food Included", label: "3 Days / 2 Nights (Driver Stay & Food Included)" }
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, ECR Tolls, 2 Days Sightseeing & Driver Night Bata Included", label: "2 Days / 1 Night (Driver Night Bata Included)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, ECR Tolls, 3 Days Sightseeing & 2 Nights Driver Bata Included", label: "3 Days / 2 Nights (2 Nights Driver Bata Included)" }
     ],
     baseInclusionsText: 'Fuel, ECR FASTag Tolls & Driver Bata Included',
     comparisonTitle: 'Why Travelers Choose Kalidass Travels for Pondicherry vs App Cabs',
@@ -1002,23 +1002,23 @@ const PILGRIM_ROUTES: Record<string, {
     startingFareSub: 'AC Sedan 2 Days / 1 Night',
     tollsLabel: 'NH Tolls & Bata',
     tollsValue: '100% Included',
-    tollsSub: 'Driver Stay & Food Included',
+    tollsSub: 'Driver Night Bata Included',
     calloutTitle: 'Doorstep Pickup Anywhere in Chennai • ₹0 Advance Required',
     calloutDesc: 'Includes Punganoor Lake, Jalagamparai Falls, Swamimalai Trek point, and 14 hairpin bend ascent.',
-    stayLabelSub: 'Driver Stay & Tolls Included',
+    stayLabelSub: 'Driver Night Bata & Tolls Included',
     getDropdownOptions: (r) => [
-      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, NH 48 Tolls, Ghat Road Clearance, Driver Stay & Food Included", label: "2 Days / 1 Night (Driver Stay & Food Included)", selected: true },
-      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, Tolls, Sightseeing, 2 Nights Driver Stay & Food Included", label: "3 Days / 2 Nights (Driver Stay & Food Included)" },
-      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Stay", inclusions: "Fuel, Tolls, Sightseeing, 3 Nights Driver Stay & Food Included", label: "4 Days / 3 Nights (Driver Stay & Food Included)" }
+      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, NH 48 Tolls, Ghat Road Clearance & Driver Night Bata Included", label: "2 Days / 1 Night (Driver Night Bata Included)", selected: true },
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, Tolls, Sightseeing & 2 Nights Driver Bata Included", label: "3 Days / 2 Nights (2 Nights Driver Bata Included)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Stay", inclusions: "Fuel, Tolls, Sightseeing & 3 Nights Driver Bata Included", label: "4 Days / 3 Nights (3 Nights Driver Bata Included)" }
     ],
-    baseInclusionsText: 'Fuel, NH 48 Tolls, Ghat Road Clearance, Driver Stay & Food Included',
+    baseInclusionsText: 'Fuel, NH 48 Tolls, Ghat Road Clearance & Driver Night Bata Included',
     comparisonTitle: 'Why Travelers Choose Kalidass Travels for Yelagiri Hills vs App Cabs',
     comparisonDesc: 'Climbing 14 hairpin bends requires experienced mountain drivers; online app drivers frequently cancel. Here is how we compare:',
     comparisonRows: [
       { feature: 'Round-Trip Pricing', kalidass: '₹7,500 Flat All-Inclusive (2 Days Sedan)', aggregators: 'Base fare only; return tolls & return driver night charges billed extra' },
       { feature: '14 Hairpin Bend Ascent', kalidass: 'Guaranteed hill climb with skilled highway chauffeurs', aggregators: 'High cancellation; city drivers refuse steep hill hairpin turns' },
       { feature: 'NH 48 Highway Tolls', kalidass: 'All FASTag Tolls Paid by Us', aggregators: 'Passenger pays ₹400+ out of pocket at Sriperumbudur/Walajapet' },
-      { feature: 'Driver Stay & Meals', kalidass: '100% Included in the package fare', aggregators: 'Passenger must pay ₹500–₹800/night cash directly to driver' },
+      { feature: 'Driver Night Bata / Allowance', kalidass: '100% Included in the package fare', aggregators: 'Passenger must pay ₹500–₹800/night cash directly to driver' },
       { feature: 'Advance Payment', kalidass: '₹0 Advance (Pay after trip completion)', aggregators: '100% upfront card/wallet prepayment with cancellation fees' },
       { feature: 'Local Sightseeing', kalidass: 'Full standby for Punganoor Lake, Nature Park & Falls', aggregators: 'Hotel drop only; demands extra cash for local viewpoints' }
     ],
@@ -1035,23 +1035,23 @@ const PILGRIM_ROUTES: Record<string, {
     startingFareSub: 'AC Sedan 2 Days / 1 Night',
     tollsLabel: 'NH Tolls & Bata',
     tollsValue: '100% Included',
-    tollsSub: 'Driver Stay & Food Included',
+    tollsSub: 'Driver Night Bata Included',
     calloutTitle: 'Doorstep Pickup Anywhere in Chennai • ₹0 Advance Required',
     calloutDesc: 'Includes Yercaud Lake, Pagoda Point, Shevaroy Temple, Lady\'s Seat, and Salem ghat ascent.',
-    stayLabelSub: 'Driver Stay & Tolls Included',
+    stayLabelSub: 'Driver Night Bata & Tolls Included',
     getDropdownOptions: (r) => [
-      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, NH FASTag Tolls, Ghat Road Clearance, Driver Stay & Food Included", label: "2 Days / 1 Night (Driver Stay & Food Included)", selected: true },
-      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, Tolls, Sightseeing, 2 Nights Driver Stay & Food Included", label: "3 Days / 2 Nights (Driver Stay & Food Included)" },
-      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Stay", inclusions: "Fuel, Tolls, Sightseeing, 3 Nights Driver Stay & Food Included", label: "4 Days / 3 Nights (Driver Stay & Food Included)" }
+      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, NH FASTag Tolls, Ghat Road Clearance & Driver Night Bata Included", label: "2 Days / 1 Night (Driver Night Bata Included)", selected: true },
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, Tolls, Sightseeing & 2 Nights Driver Bata Included", label: "3 Days / 2 Nights (2 Nights Driver Bata Included)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Stay", inclusions: "Fuel, Tolls, Sightseeing & 3 Nights Driver Bata Included", label: "4 Days / 3 Nights (3 Nights Driver Bata Included)" }
     ],
-    baseInclusionsText: 'Fuel, NH FASTag Tolls, Ghat Road Clearance, Driver Stay & Food Included',
+    baseInclusionsText: 'Fuel, NH FASTag Tolls, Ghat Road Clearance & Driver Night Bata Included',
     comparisonTitle: 'Why Travelers Choose Kalidass Travels for Yercaud Weekend Cabs',
     comparisonDesc: 'Navigating 20 hairpin bends from Salem to Yercaud requires skilled drivers. Here is how Kalidass Travels compares to online aggregators:',
     comparisonRows: [
       { feature: 'Round-Trip Pricing', kalidass: '₹10,500 Flat All-Inclusive (2 Days Sedan)', aggregators: 'Base fare only; return expressway tolls billed extra' },
       { feature: '20 Hairpin Bend Ascent', kalidass: 'Guaranteed hill ascent with certified mountain drivers', aggregators: 'Frequent refusal by plains drivers to climb Salem ghats' },
       { feature: 'Highway FASTag Tolls', kalidass: 'All Tolls on NH 48 & NH 44 Paid by Us', aggregators: 'Passenger pays ₹600+ out of pocket at multiple toll plazas' },
-      { feature: 'Driver Stay & Food', kalidass: '100% Included in the flat package rate', aggregators: 'Devotee/tourist forced to pay ₹600–₹800/night out of pocket' },
+      { feature: 'Driver Night Bata / Allowance', kalidass: '100% Included in the flat package rate (Driver expenses)', aggregators: 'Devotee/tourist forced to pay ₹600–₹800/night out of pocket' },
       { feature: 'Advance Payment', kalidass: '₹0 Advance (Pay after trip completion)', aggregators: '100% upfront card/wallet prepayment with cancellation penalties' },
       { feature: 'Sightseeing Standby', kalidass: 'Free car standby for Emerald Lake, Pagoda Point & viewpoints', aggregators: 'Curbside resort drop only; refuses local viewpoint runs' }
     ],
@@ -1695,7 +1695,9 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
         {service.tariff && (
           <a
             href="#tariff"
-            class="px-3.5 py-2 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs transition-all shrink-0"
+            data-active="true"
+            aria-current="true"
+            class="px-3.5 py-2 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs transition-all shrink-0 hover:bg-m3-primary hover:text-white"
           >
             Tariff & Rates
           </a>
@@ -1966,11 +1968,8 @@ Please share availability and confirmed quote.`;
 
                           return (
                             <div class="pb-2.5 mb-2.5 border-b border-m3-outline-variant/50">
-                              <label class="block text-[11px] font-bold uppercase tracking-wider text-m3-on-surface-variant mb-1.5 flex items-center justify-between">
-                                <span>Trip Duration / Stays</span>
-                                <span class="text-[10px] text-emerald-700 font-semibold normal-case">
-                                  {pilgrimConfig ? pilgrimConfig.stayLabelSub : 'Stay & Food Included'}
-                                </span>
+                              <label class="block text-[11px] font-bold uppercase tracking-wider text-m3-on-surface-variant mb-1.5">
+                                <span>Trip Duration</span>
                               </label>
                               <select 
                                 class="tirupati-stay-select w-full bg-m3-surface border border-m3-outline-variant hover:border-m3-primary rounded-m3-lg py-1.5 px-2.5 text-xs sm:text-sm font-bold text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary outline-none transition-all cursor-pointer shadow-2xs"
@@ -2035,6 +2034,9 @@ Please share availability and confirmed quote.`;
                         const cleanHighlights = (highlights || '')
                           .replace(/•\s*(Fuel|FASTag|Tolls|AP Permit|Border Permit|Driver Bata|Bata).*Included/gi, '')
                           .replace(/(Clean AC Sedan|Comfortable AC 6-Seater|Spacious AC MUV|Executive MPV|Family Group Coach|Family Coach)\s*•?\s*/gi, '')
+                          .replace(/•?\s*\d+\s*Days?:\s*₹[0-9,]+.*$/gi, '')
+                          .replace(/\|\s*\d+\s*Days?:\s*₹[0-9,]+.*$/gi, '')
+                          .replace(/\(All-Inclusive\)/gi, '')
                           .trim();
                         return cleanHighlights ? (
                           <div class="flex items-start gap-2 text-xs text-m3-on-surface-variant leading-relaxed mb-1">
@@ -2060,8 +2062,14 @@ Please share availability and confirmed quote.`;
                           href={buildWhatsAppUrl(bookingText)}
                           target="_blank"
                           rel="noopener noreferrer nofollow"
+                          data-open-enquiry="true"
+                          data-service-title={service.title}
+                          data-vehicle-name={vehicleName}
+                          data-price={heroPrice}
+                          data-slug={service.slug}
+                          data-duration={pilgrimConfig ? "1 Day (Same Day Return)" : ""}
                           aria-label={`Book ${vehicleName} on WhatsApp for ${heroPrice}`}
-                          class="tariff-whatsapp-btn inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 text-xs font-bold transition-all select-none"
+                          class="tariff-whatsapp-btn inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 text-xs font-bold transition-all select-none cursor-pointer"
                         >
                           <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0" />
                           <span>Enquire</span>
@@ -2121,8 +2129,13 @@ Please share availability and confirmed quote.`;
                             href={buildWhatsAppUrl(bookingText)}
                             target="_blank"
                             rel="noopener noreferrer nofollow"
+                            data-open-enquiry="true"
+                            data-service-title={service.title}
+                            data-vehicle-name={vehicleName}
+                            data-price={lastCell}
+                            data-slug={service.slug}
                             aria-label={`Book ${vehicleName} on WhatsApp`}
-                            class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-300/80 text-micro font-bold shadow-xs transition-all"
+                            class="tariff-whatsapp-btn inline-flex items-center gap-1 px-2.5 py-1.5 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-300/80 text-micro font-bold shadow-xs transition-all cursor-pointer"
                           >
                             <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0" />
                             <span>Enquire</span>
@@ -2206,6 +2219,8 @@ Please share availability and confirmed quote.`;
                     // 3. Update WhatsApp enquiry button
                     const waBtn = card.querySelector('.tariff-whatsapp-btn');
                     if (waBtn) {
+                      waBtn.setAttribute('data-price', price);
+                      waBtn.setAttribute('data-duration', duration);
                       const newMsg = `*Kalidass Travels - Booking Enquiry*
 • Service: ${serviceTitle}
 • Vehicle: ${vehicleName} (${duration})

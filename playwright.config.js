@@ -8,7 +8,7 @@ export default defineConfig({
     workers: process.env.CI ? 1 : undefined,
     reporter: 'html',
     use: {
-        baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:4322',
+        baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:4321',
         trace: 'on-first-retry',
     },
     projects: [
@@ -30,8 +30,8 @@ export default defineConfig({
         },
     ],
     webServer: {
-        command: 'npx astro preview --port 4322',
-        url: 'http://localhost:4322',
+        command: 'npx astro dev --port 4321',
+        url: 'http://localhost:4321',
         reuseExistingServer: true,
         timeout: 120 * 1000,
     },

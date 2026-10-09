@@ -413,7 +413,7 @@ const faqSchema = {
       <!-- STICKY QUICK-NAV JUMP BAR (Below Hero) -->
       <nav data-quick-nav aria-label="Temple Tours Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-3 mb-10 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
         <div class="max-w-6xl mx-auto flex items-center gap-2 text-xs font-semibold text-m3-on-surface whitespace-nowrap overflow-x-auto no-scrollbar py-0.5 pe-6 scroll-px-4">
-          <a href="#how-it-works" class="px-3.5 py-2 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs transition-all shrink-0">
+          <a href="#how-it-works" data-active="true" aria-current="true" class="px-3.5 py-2 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs transition-all shrink-0 hover:bg-m3-primary hover:text-white">
             How It Works
           </a>
           <a href="#tour-packages" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
@@ -463,7 +463,7 @@ const faqSchema = {
             const pkgImageAlt = tourPackageImageAlts[pkg.id] || pkg.name;
 
             return (
-              <div class="bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between hover:shadow-m3-2 hover:border-m3-primary/30 transition-all overflow-hidden group">
+              <div class="tariff-card bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between hover:shadow-m3-2 hover:border-m3-primary/30 transition-all overflow-hidden group">
                 <div>
                   <!-- Media Image Header with Badges & Leaf Link -->
                   <a href={leafUrl} class="block h-48 sm:h-52 overflow-hidden relative bg-m3-surface-container-high cursor-pointer group/img" aria-label={`View ${pkg.name} Itinerary`}>
@@ -545,8 +545,16 @@ const faqSchema = {
                       href={`https://wa.me/918939539211?text=${encodeURIComponent(pkg.whatsappMsg)}`}
                       target="_blank"
                       rel="noopener noreferrer nofollow"
+                      data-open-enquiry="true"
+                      data-service-title={pkg.name}
+                      data-slug={pkg.id}
+                      data-duration={pkg.duration}
+                      data-price={pkg.rates?.[0]?.price || '₹6,000'}
+                      data-vehicle-name={pkg.rates?.[0]?.names || 'Swift Dzire / Etios'}
+                      data-inclusions={pkg.highlights}
+                      data-rates={JSON.stringify(pkg.rates)}
                       aria-label={`Book ${pkg.name} on WhatsApp`}
-                      class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 text-xs font-bold transition-all select-none"
+                      class="tariff-whatsapp-btn inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 text-xs font-bold transition-all select-none cursor-pointer"
                     >
                       <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0" />
                       <span>Enquire</span>

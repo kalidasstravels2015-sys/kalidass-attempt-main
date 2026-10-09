@@ -108,3 +108,101 @@ export const trackEvent = (eventName, params = {}) => {
         console.log('[Analytics] Event:', eventName, params);
     }
 };
+
+// ── Universal Calculator Demand & Count Intelligence ──────────────────────────
+let lastQuoteSignature = '';
+let lastQuoteTime = 0;
+let lastActiveQuoteId = '';
+
+export const trackCalculatorQuote = (payload = {}) => {
+    if (typeof window === 'undefined') return;
+
+    const sourcePage = payload.sourcePage || window.location.pathname || '/';
+    const calculatorId = payload.calculatorId || 'general_calculator';
+    const calculatorEngine = payload.calculatorEngine || 'Fare Estimator';
+    const tripType = payload.tripType || 'Standard';
+    const pickup = payload.pickup ? String(payload.pickup).trim() : 'Chennai';
+    const drop = payload.drop ? String(payload.drop).trim() : 'N/A';
+    const vehicle = payload.vehicle ? String(payload.vehicle).trim() : 'Standard';
+    const distanceKm = payload.distanceKm || payload.distance || '';
+    const estimatedFare = Number(payload.estimatedFare || payload.estimate || 0);
+    const status = payload.status || 'Browsed';
+    const meta = payload.meta || {};
+
+    // Deduplication / Debounce: Ignore duplicate calls within 2.5 seconds with exact same payload
+    const signature = `${calculatorId}:${pickup}:${drop}:${vehicle}:${estimatedFare}:${tripType}`;
+    const now = Date.now();
+    if (signature === lastQuoteSignature && (now - lastQuoteTime) < 2500) {
+        return lastActiveQuoteId;
+    }
+    lastQuoteSignature = signature;
+    lastQuoteTime = now;
+
+    const quoteId = `#CALC-${Math.floor(100000 + Math.random() * 900000)}`;
+    lastActiveQuoteId = quoteId;
+
+    const recordData = {
+        quoteId,
+        timestamp: new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }),
+        sourcePage,
+        calculatorId,
+        calculatorEngine,
+        tripType,
+        pickup,
+        drop,
+        vehicle,
+        distanceKm,
+        estimatedFare,
+        status,
+        meta
+    };
+
+    // 1. Send to Local & Google Sheets Backend Logger
+    try {
+        fetch('/api/record-calculation', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(recordData),
+        }).catch(() => {});
+    } catch (_) {}
+
+    // 2. Dispatch to GA4
+    trackEvent('calc_quote_generated', {
+        quote_id: quoteId,
+        calculator_id: calculatorId,
+        calculator_name: calculatorEngine,
+        page_location: sourcePage,
+        trip_type: tripType,
+        vehicle_type: vehicle,
+        distance_km: distanceKm,
+        estimate_inr: estimatedFare,
+        status: status,
+    });
+
+    return quoteId;
+};
+
+export const markQuoteConverted = (quoteId, extra = {}) => {
+    if (typeof window === 'undefined') return;
+    const targetQuoteId = quoteId || lastActiveQuoteId;
+    
+    // Update local and sheet record
+    try {
+        fetch('/api/record-calculation', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                quoteId: targetQuoteId,
+                status: 'WhatsApp Clicked',
+                ...extra
+            }),
+        }).catch(() => {});
+    } catch (_) {}
+
+    trackEvent('calc_quote_whatsapp_converted', {
+        quote_id: targetQuoteId,
+        status: 'WhatsApp Clicked',
+        ...extra
+    });
+};
+

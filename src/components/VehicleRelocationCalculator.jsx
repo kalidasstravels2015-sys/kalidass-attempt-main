@@ -10,6 +10,9 @@ import {
 } from 'lucide-react';
 import tnBusFares from '../data/tnBusFares.json';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
+import { trackCalculatorQuote, markQuoteConverted } from '../lib/analytics';
+import WhatsAppButton from './react/WhatsAppButton.jsx';
+import { buildWhatsAppUrl } from '../utils/whatsapp';
 
 const COMMON_DISTANCES = {
   'chennai': 0, 'pondicherry': 151, 'puducherry': 151, 'bangalore': 346,
@@ -154,6 +157,23 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
       }
     });
     setLoading(false);
+
+    trackCalculatorQuote({
+      calculatorId: 'vehicle_relocation',
+      calculatorEngine: 'Intercity Vehicle Relocation Estimator',
+      tripType: 'Vehicle Relocation',
+      pickup: pickup || 'Chennai',
+      drop: drop || 'N/A',
+      vehicle: 'Relocation Chauffeur',
+      distanceKm: dist,
+      estimatedFare: total,
+      meta: {
+        duration,
+        driverBata: BATA_PER_DAY,
+        foodAllowance: FOOD_PER_DAY,
+        returnBusFare: busFare
+      }
+    });
   };
 
   const calculateCost = () => {
@@ -370,6 +390,27 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
               </span>
               <span className="font-bold text-m3-on-surface">₹{result.breakdown.bus}</span>
             </div>
+          </div>
+
+          {/* WhatsApp CTA */}
+          <div className="mt-4 flex justify-center">
+            <WhatsAppButton
+              href={buildWhatsAppUrl(
+                `Hi Kalidass Travels, I need Vehicle Relocation:\n\n• Pickup: ${pickup}\n• Drop: ${drop}\n• Distance: ~${result.dist} km\n• Est. Total: ₹${result.total.toLocaleString('en-IN')}\n\nPlease confirm chauffeur availability.`
+              )}
+              onClick={() => {
+                markQuoteConverted(null, {
+                  calculatorId: 'vehicle_relocation',
+                  tripType: 'Vehicle Relocation',
+                  pickup,
+                  drop,
+                  estimate: result.total
+                });
+              }}
+              variant="filled"
+              size="md"
+              text="Book Relocation on WhatsApp"
+            />
           </div>
         </div>
       )}

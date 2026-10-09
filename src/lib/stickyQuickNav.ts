@@ -28,11 +28,29 @@ const ALL_STATE_CLASSES = [
   'font-medium',
   'shadow-xs',
   'shadow-m3-1',
-  'scale-[1.02]'
+  'scale-[1.02]',
+  'hover:bg-m3-surface-container-high',
+  'hover:bg-m3-primary',
+  'hover:text-white',
+  'hover:text-m3-on-surface'
 ];
 
-const ACTIVE_CLASSES = ['bg-m3-primary', 'text-white', 'font-bold', 'shadow-xs'];
-const INACTIVE_CLASSES = ['bg-m3-surface-container', 'text-m3-on-surface', 'font-medium'];
+const ACTIVE_CLASSES = [
+  'bg-m3-primary',
+  'text-white',
+  'font-bold',
+  'shadow-xs',
+  'hover:bg-m3-primary',
+  'hover:text-white'
+];
+
+const INACTIVE_CLASSES = [
+  'bg-m3-surface-container',
+  'text-m3-on-surface',
+  'font-medium',
+  'hover:bg-m3-surface-container-high',
+  'hover:text-m3-on-surface'
+];
 
 function setLinkState(link: HTMLAnchorElement, isActive: boolean) {
   link.classList.remove(...ALL_STATE_CLASSES);
@@ -121,9 +139,9 @@ export function initStickyQuickNav(): () => void {
         return sortedItems[sortedItems.length - 1];
       }
 
-      // Sticky header (64px) + sticky nav height + breathing margin (~35px)
+      // Sticky header (64px) + sticky nav height + breathing margin (~45px)
       const currentNavHeight = nav.offsetHeight || navHeight || 52;
-      const SCROLL_OFFSET = 64 + currentNavHeight + 35;
+      const SCROLL_OFFSET = 64 + currentNavHeight + 45;
 
       let activeItem: QuickNavItem | null = null;
 

@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
+import { trackCalculatorQuote, markQuoteConverted } from '../lib/analytics';
 
 // ── Zone data ─────────────────────────────────────────────────────────────
 const AIRPORT_ZONES = [
@@ -284,18 +285,44 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
       if (!zone || !zone.keywords?.some(kw => q.includes(kw))) {
         zone = AIRPORT_ZONES.find(z => z.keywords.some(kw => q.includes(kw))) || AIRPORT_ZONES[1];
       }
+      const finalRate = zone.rates[vehicle] || 650;
       setMatchedZone(zone);
-      setEstimate(zone.rates[vehicle] || 650);
+      setEstimate(finalRate);
       setDistanceKm(zone.distanceKm);
       setDuration(zone.duration);
       setLoading(false);
       setModalErrors({});
       setShowBookingModal(true); // open modal with result + booking form
+
+      trackCalculatorQuote({
+        calculatorId: 'airport_taxi',
+        calculatorEngine: 'Chennai Airport Taxi Estimator',
+        tripType: direction === 'pickup' ? 'Airport Pickup (To City)' : 'Airport Drop (To Airport)',
+        pickup: direction === 'pickup' ? AIRPORT_HUB : userLoc,
+        drop: direction === 'pickup' ? userLoc : AIRPORT_HUB,
+        vehicle,
+        distanceKm: zone.distanceKm,
+        estimatedFare: finalRate,
+        meta: {
+          direction,
+          zone: zone.name,
+          flightNo: flightNo || undefined,
+          duration: zone.duration
+        }
+      });
     }, 280);
   };
 
   // ── Lead Logging to Google Sheets ────────────────────────────────────────
   const logBookingLead = (isPickup, fullPhone) => {
+    markQuoteConverted(null, {
+      calculatorId: 'airport_taxi',
+      name: name.trim(),
+      phone: fullPhone,
+      vehicle,
+      estimate
+    });
+
     try {
       fetch('https://script.google.com/macros/s/AKfycbwoEpKqa3Qg-DIvMe06pGUgGLlC_0vJQev61nzIh9ssh1-uHZ5VtYkGzpMVwhEyi7tvEQ/exec', {
         method: 'POST',
@@ -434,9 +461,9 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
               <button
                 type="button"
                 onClick={handleStickyWhatsApp}
-                className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-[#25D366] hover:bg-[#20BD5A] text-white font-bold text-xs transition-all cursor-pointer"
+                className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 font-bold text-xs shadow-xs transition-all cursor-pointer"
               >
-                <WhatsAppIcon className="w-3.5 h-3.5" variant="white" />
+                <WhatsAppIcon className="w-3.5 h-3.5" variant="brand" />
                 <span className="hidden xs:inline">Book</span>
               </button>
               <button

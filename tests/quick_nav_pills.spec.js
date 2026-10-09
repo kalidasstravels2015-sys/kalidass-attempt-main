@@ -78,4 +78,35 @@ test.describe('Quick-Navigation Horizontal Pills Validation', () => {
       expect(activeState?.isFullyVisible).toBe(true);
     }
   });
+
+  test('Active pill retains high-contrast executive styling (charcoal bg + white text) when shifting and hovering', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/services/tirupati-package/');
+
+    const nav = page.locator('nav[data-quick-nav]');
+    const links = nav.locator('a[href^="#"]');
+    const count = await links.count();
+
+    for (let i = 0; i < count; i++) {
+      const link = links.nth(i);
+      await link.click();
+      await page.waitForTimeout(400);
+
+      // Verify active pill styles both during focus/hover and normal
+      const styles = await link.evaluate((el) => {
+        const cs = window.getComputedStyle(el);
+        return {
+          bg: cs.backgroundColor,
+          color: cs.color,
+          fontWeight: parseInt(cs.fontWeight, 10),
+          dataActive: el.getAttribute('data-active')
+        };
+      });
+
+      expect(styles.dataActive).toBe('true');
+      expect(styles.bg).toBe('rgb(30, 37, 45)'); // Executive Midnight Charcoal
+      expect(styles.color).toBe('rgb(255, 255, 255)'); // Pure White
+      expect(styles.fontWeight).toBeGreaterThanOrEqual(700); // Bold text
+    }
+  });
 });

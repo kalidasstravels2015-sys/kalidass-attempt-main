@@ -8,6 +8,8 @@ let loadPromise: Promise<void> | null = null;
 export function loadGoogleMaps(apiKey = 'AIzaSyBPpRgTPIkv20IMdaBqqdlz0S0FEGU5400'): Promise<void> {
   if (typeof window === 'undefined') return Promise.resolve();
 
+  (window as any).loadGoogleMaps = loadGoogleMaps;
+
   // If already available, resolve immediately
   if ((window as any).google && (window as any).google.maps && (window as any).google.maps.places) {
     return Promise.resolve();
