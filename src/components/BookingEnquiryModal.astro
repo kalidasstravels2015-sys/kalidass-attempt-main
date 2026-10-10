@@ -952,30 +952,27 @@ Please confirm driver assignment and cab availability.`;
       modal.showModal();
     };
 
-    // Global listener on any "Book" or WhatsApp booking buttons
+    // Global listener on explicitly marked tariff inquiry buttons
     document.addEventListener('click', function (e) {
       var target = e.target;
       if (!target) return;
 
-      var btn = target.closest('.tariff-whatsapp-btn, .enquire-btn, [data-open-enquiry="true"], .booking-link');
-      if (!btn) {
-        var link = target.closest('a, button');
-        if (link) {
-          var href = link.getAttribute('href') || '';
-          var isWa = href.indexOf('wa.me') !== -1 || href.indexOf('whatsapp.com') !== -1;
-          var text = (link.textContent || '').trim().toLowerCase();
-          
-          var isBookingAction = /book|enquire|reserve|get flat fare|instant action|hire driver|get quote/i.test(text) ||
-                                (link.id && link.id.indexOf('-book-') !== -1);
-          var isExempt = /terms|privacy|career|developer|saravn|feedback/i.test(href) || /career|developer|resume/i.test(text);
-
-          if ((isWa || link.classList.contains('booking-link')) && isBookingAction && !isExempt) {
-            btn = link;
-          }
-        }
+      // STRICT EXCLUSION: Never intercept clicks originating inside:
+      // - Dialogs/modals (such as the Tirupati GST Proforma Tax Invoice estimate modal)
+      // - Dedicated interactive booking engines (#booking, TirupatiBookingEngine, QuotationEngine)
+      // - Direct WhatsApp buttons ([data-direct-whatsapp], .direct-wa-btn)
+      // - Any element already inside an enquiry modal
+      if (target.closest('[role="dialog"], dialog, [data-hide-contact-dock], #booking, .booking-engine, [data-direct-whatsapp="true"], .direct-wa-btn, #bookingEnquiryModal')) {
+        return;
       }
 
+      var btn = target.closest('.tariff-whatsapp-btn, .enquire-btn, [data-open-enquiry="true"]');
       if (!btn) return;
+
+      // Do not intercept if marked as direct WhatsApp or skip enquiry
+      if (btn.getAttribute('data-direct-whatsapp') === 'true' || btn.getAttribute('data-skip-enquiry') === 'true') {
+        return;
+      }
 
       e.preventDefault();
       e.stopPropagation();
@@ -1054,7 +1051,7 @@ Please confirm driver assignment and cab availability.`;
         direction: direction,
         isAirport: isAirportPage || slug.indexOf('airport') !== -1 || serviceTitle.toLowerCase().indexOf('airport') !== -1
       });
-    }, true);
+    }, false);
 
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', initQuickSheet);

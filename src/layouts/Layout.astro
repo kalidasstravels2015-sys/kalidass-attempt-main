@@ -975,6 +975,78 @@ const unifiedSchemaGraph = {
         background-color: #E5E7EB;
         color: #111827;
       }
+
+      /* =========================================================================
+         OFFICIAL PRINT / PDF LETTERHEAD RULES
+         Guarantees zero webpage components, navbars, docks, floating buttons,
+         or multi-page repeats when printing invoices.
+         ========================================================================= */
+      @media print {
+        @page {
+          size: A4 portrait;
+          margin: 8mm 10mm;
+        }
+
+        /* When printing an invoice modal */
+        body.modal-invoice-open {
+          background: #ffffff !important;
+          color: #0f172a !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          width: 100% !important;
+          min-height: auto !important;
+        }
+
+        /* Hide EVERY element in body except the invoice portal */
+        body.modal-invoice-open > *:not(#gst-invoice-portal-root):not([data-printable-invoice-portal]) {
+          display: none !important;
+        }
+
+        /* Hide all common webpage components unconditionally when printing an invoice */
+        body.modal-invoice-open header,
+        body.modal-invoice-open footer,
+        body.modal-invoice-open nav,
+        body.modal-invoice-open #contact-dock,
+        body.modal-invoice-open #floating-actions-container,
+        body.modal-invoice-open [data-hide-contact-dock]:not(#gst-invoice-portal-root),
+        body.modal-invoice-open .site-header,
+        body.modal-invoice-open .site-footer,
+        body.modal-invoice-open .pac-container,
+        .no-print {
+          display: none !important;
+        }
+
+        /* Reset the modal portal container so it flows as a clean A4 sheet */
+        #gst-invoice-portal-root {
+          position: static !important;
+          display: block !important;
+          width: 100% !important;
+          background: transparent !important;
+          backdrop-filter: none !important;
+          box-shadow: none !important;
+          border: none !important;
+          overflow: visible !important;
+          padding: 0 !important;
+          margin: 0 !important;
+          z-index: 999999 !important;
+        }
+        #gst-invoice-portal-root > div {
+          position: static !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          max-height: none !important;
+          border-radius: 0 !important;
+          box-shadow: none !important;
+          border: none !important;
+          overflow: visible !important;
+          background: #ffffff !important;
+        }
+        #gst-invoice-portal-root .overflow-y-auto {
+          overflow: visible !important;
+          max-height: none !important;
+          height: auto !important;
+        }
+      }
     </style>
 
     <!-- Modern High-Performance Analytics & Google Ads Conversion Engine -->

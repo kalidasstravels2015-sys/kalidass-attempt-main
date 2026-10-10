@@ -9,13 +9,12 @@ const DEFAULT_CHAUFFEURS = [
   { name: 'Karthik Kumar', phone: '+91 98401 99887', plate: 'TN07 DJ 4321', category: 'Tempo Traveller', status: 'Available', fcExpiry: '2027-02-14', permitExpiry: '2027-03-20', rating: '4.9' },
 ];
 
-// Curated Tour Packages Master with Standard Vehicle Tariffs
+// Curated Tour Packages Master (Chennai to Tirupati, Chennai to Madurai, Chennai to Pondicherry)
 const TOUR_PACKAGES = [
   {
     id: 'chennai-tirupati',
-    name: 'Chennai to Tirupati (Balaji Darshan Round Trip)',
+    name: 'Chennai to Tirupati',
     shortName: 'Chennai ➔ Tirupati Round Trip',
-    category: '⭐ Top Popular Packages',
     rates: {
       'Sedan (Dzire / Etios)': '6000',
       'Sedan': '6000',
@@ -27,25 +26,23 @@ const TOUR_PACKAGES = [
     }
   },
   {
-    id: 'chennai-thiruvannamalai',
-    name: 'Chennai to Thiruvannamalai (Girivalam Yatra)',
-    shortName: 'Chennai ➔ Thiruvannamalai Girivalam',
-    category: '⭐ Top Popular Packages',
+    id: 'chennai-madurai',
+    name: 'Chennai to Madurai',
+    shortName: 'Chennai ➔ Madurai Round Trip',
     rates: {
-      'Sedan (Dzire / Etios)': '6500',
-      'Sedan': '6500',
-      'Ertiga (6 Pax)': '7900',
-      'Ertiga': '7900',
-      'Innova Crysta': '11100',
-      'Tempo Traveller': '13500',
-      'Tempo': '13500'
+      'Sedan (Dzire / Etios)': '13500',
+      'Sedan': '13500',
+      'Ertiga (6 Pax)': '16500',
+      'Ertiga': '16500',
+      'Innova Crysta': '21500',
+      'Tempo Traveller': '26000',
+      'Tempo': '26000'
     }
   },
   {
     id: 'chennai-pondicherry',
-    name: 'Chennai to Pondicherry (Auroville / Beach Tour)',
+    name: 'Chennai to Pondicherry',
     shortName: 'Chennai ➔ Pondicherry Round Trip',
-    category: '⭐ Top Popular Packages',
     rates: {
       'Sedan (Dzire / Etios)': '4500',
       'Sedan': '4500',
@@ -55,186 +52,121 @@ const TOUR_PACKAGES = [
       'Tempo Traveller': '9500',
       'Tempo': '9500'
     }
+  }
+];
+
+// LocalStorage Persistence Keys
+const STORAGE_KEYS = {
+  BOOKINGS: 'kt_admin_bookings_v1',
+  LEADS: 'kt_admin_leads_v1',
+  DUTY_SLIPS: 'kt_admin_duty_slips_v1',
+  SETTLEMENTS: 'kt_admin_settlements_v1'
+};
+
+const safeGetStorage = (key, fallback) => {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const data = window.localStorage.getItem(key);
+      if (data) {
+        const parsed = JSON.parse(data);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    }
+  } catch (err) {
+    console.warn('LocalStorage read error:', err);
+  }
+  return fallback;
+};
+
+const safeSetStorage = (key, data) => {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.setItem(key, JSON.stringify(data));
+    }
+  } catch (err) {
+    console.warn('LocalStorage write error:', err);
+  }
+};
+
+const DEFAULT_SEED_BOOKINGS = [
+  {
+    bookingId: '#KT-TPT-101',
+    guestNamePhone: 'Senthil Nathan (+91 98401 22334)',
+    travelDateTime: 'Tomorrow @ 04:30 AM',
+    pickupAddress: 'T. Nagar, Chennai',
+    vehicleCategory: 'Innova Crysta',
+    partySize: '6 Pax',
+    kycStatus: 'Verified',
+    darshanStatus: 'Assigned',
+    assignedChauffeur: 'Perumal Manikumar - TN09 CZ 9999',
+    manifestStatus: 'Dispatched',
+    terminalFare: 10000,
+    chauffeurPayout: 8000,
+    companyMargin: 2000,
+    financialClosure: 'Unreconciled'
   },
   {
-    id: 'chennai-kanchipuram',
-    name: 'Chennai to Kanchipuram (Temples & Silk City)',
-    shortName: 'Chennai ➔ Kanchipuram Temple Trip',
-    category: '⭐ Top Popular Packages',
-    rates: {
-      'Sedan (Dzire / Etios)': '3500',
-      'Sedan': '3500',
-      'Ertiga (6 Pax)': '4500',
-      'Ertiga': '4500',
-      'Innova Crysta': '6800',
-      'Tempo Traveller': '8500',
-      'Tempo': '8500'
-    }
+    bookingId: '#KT-TPT-102',
+    guestNamePhone: 'Ravi Shankar (+91 97890 55443)',
+    travelDateTime: '12-Oct-2026 @ 05:00 AM',
+    pickupAddress: 'Anna Nagar West, Chennai',
+    vehicleCategory: 'Sedan (Dzire / Etios)',
+    partySize: '4 Pax',
+    kycStatus: 'Pending',
+    darshanStatus: 'Unassigned',
+    assignedChauffeur: 'Unassigned',
+    manifestStatus: 'Pending',
+    terminalFare: 6000,
+    chauffeurPayout: 4800,
+    companyMargin: 1200,
+    financialClosure: 'Unreconciled'
   },
   {
-    id: 'chennai-rameshwaram',
-    name: 'Chennai to Rameshwaram (2-Days Pilgrimage)',
-    shortName: 'Chennai ➔ Rameshwaram 2-Days Tour',
-    category: '⭐ Top Popular Packages',
-    rates: {
-      'Sedan (Dzire / Etios)': '15500',
-      'Sedan': '15500',
-      'Ertiga (6 Pax)': '18500',
-      'Ertiga': '18500',
-      'Innova Crysta': '26000',
-      'Tempo Traveller': '31000',
-      'Tempo': '31000'
-    }
+    bookingId: '#KT-PND-103',
+    guestNamePhone: 'Anand Krishnan (+91 98410 77665)',
+    travelDateTime: 'Today @ 06:00 AM',
+    pickupAddress: 'Adyar, Chennai',
+    vehicleCategory: 'Ertiga (6 Pax)',
+    partySize: '5 Pax',
+    kycStatus: 'Verified',
+    darshanStatus: 'N/A',
+    assignedChauffeur: 'Selvam - TN11 CY 5678',
+    manifestStatus: 'In Transit',
+    terminalFare: 5500,
+    chauffeurPayout: 4400,
+    companyMargin: 1100,
+    financialClosure: 'Unreconciled'
+  }
+];
+
+const DEFAULT_SEED_LEADS = [
+  {
+    quoteId: '#WA-98803',
+    timestamp: '09-Oct-2026, 11:29 am',
+    sourcePage: 'WhatsApp (+91 98803 09619)',
+    calculatorEngine: 'WhatsApp Direct Chat',
+    tripType: 'One Day Round Trip (19-Oct)',
+    pickup: 'Chennai (Oct 19th - 4 Pax)',
+    drop: 'Tirupati Balaji Darshan (4 Pax)',
+    vehicle: 'Sedan (Dzire / Etios)',
+    distanceKm: '300',
+    estimatedFare: 6000,
+    status: 'Active Enquiry',
+    metadata: 'WhatsApp Lead: +91 98803 09619 | 4 Pax | Travel Date: Oct 19th | Inquiry: Balaji Darshan'
   },
   {
-    id: 'chennai-navagraha',
-    name: 'Chennai to Kumbakonam / Navagraha (9 Temples)',
-    shortName: 'Chennai ➔ Kumbakonam Navagraha Yatra',
-    category: '🛕 Temple Pilgrimage Yatras',
-    rates: {
-      'Sedan (Dzire / Etios)': '14500',
-      'Sedan': '14500',
-      'Ertiga (6 Pax)': '17500',
-      'Ertiga': '17500',
-      'Innova Crysta': '25000',
-      'Tempo Traveller': '30000',
-      'Tempo': '30000'
-    }
-  },
-  {
-    id: 'chennai-mahabalipuram',
-    name: 'Chennai to Mahabalipuram (ECR Heritage & Beach)',
-    shortName: 'Chennai ➔ Mahabalipuram ECR Tour',
-    category: '🏖️ Coastal & Heritage Tours',
-    rates: {
-      'Sedan (Dzire / Etios)': '3500',
-      'Sedan': '3500',
-      'Ertiga (6 Pax)': '4500',
-      'Ertiga': '4500',
-      'Innova Crysta': '6500',
-      'Tempo Traveller': '8000',
-      'Tempo': '8000'
-    }
-  },
-  {
-    id: 'chennai-chidambaram',
-    name: 'Chennai to Chidambaram (Natarajar Temple)',
-    shortName: 'Chennai ➔ Chidambaram Natarajar Trip',
-    category: '🛕 Temple Pilgrimage Yatras',
-    rates: {
-      'Sedan (Dzire / Etios)': '6200',
-      'Sedan': '6200',
-      'Ertiga (6 Pax)': '7500',
-      'Ertiga': '7500',
-      'Innova Crysta': '10500',
-      'Tempo Traveller': '13000',
-      'Tempo': '13000'
-    }
-  },
-  {
-    id: 'chennai-vellore',
-    name: 'Chennai to Vellore (Golden Temple / CMC)',
-    shortName: 'Chennai ➔ Vellore Golden Temple',
-    category: '🛕 Temple Pilgrimage Yatras',
-    rates: {
-      'Sedan (Dzire / Etios)': '4200',
-      'Sedan': '4200',
-      'Ertiga (6 Pax)': '5200',
-      'Ertiga': '5200',
-      'Innova Crysta': '7500',
-      'Tempo Traveller': '9200',
-      'Tempo': '9200'
-    }
-  },
-  {
-    id: 'chennai-sabarimala',
-    name: 'Chennai to Sabarimala (Kerala Pilgrimage)',
-    shortName: 'Chennai ➔ Sabarimala Yatra',
-    category: '🛕 Temple Pilgrimage Yatras',
-    rates: {
-      'Sedan (Dzire / Etios)': '18000',
-      'Sedan': '18000',
-      'Ertiga (6 Pax)': '22500',
-      'Ertiga': '22500',
-      'Innova Crysta': '31000',
-      'Tempo Traveller': '38000',
-      'Tempo': '38000'
-    }
-  },
-  {
-    id: 'chennai-yelagiri',
-    name: 'Chennai to Yelagiri Hills (Weekend Getaway)',
-    shortName: 'Chennai ➔ Yelagiri Hills Tour',
-    category: '⛰️ Hill Stations & Outstation',
-    rates: {
-      'Sedan (Dzire / Etios)': '5800',
-      'Sedan': '5800',
-      'Ertiga (6 Pax)': '7200',
-      'Ertiga': '7200',
-      'Innova Crysta': '9800',
-      'Tempo Traveller': '12500',
-      'Tempo': '12500'
-    }
-  },
-  {
-    id: 'chennai-yercaud',
-    name: 'Chennai to Yercaud Hills (Weekend Getaway)',
-    shortName: 'Chennai ➔ Yercaud Hills Tour',
-    category: '⛰️ Hill Stations & Outstation',
-    rates: {
-      'Sedan (Dzire / Etios)': '8500',
-      'Sedan': '8500',
-      'Ertiga (6 Pax)': '10800',
-      'Ertiga': '10800',
-      'Innova Crysta': '14500',
-      'Tempo Traveller': '18500',
-      'Tempo': '18500'
-    }
-  },
-  {
-    id: 'chennai-bangalore',
-    name: 'Chennai to Bangalore (Outstation Round/Drop)',
-    shortName: 'Chennai ➔ Bangalore Outstation',
-    category: '⛰️ Hill Stations & Outstation',
-    rates: {
-      'Sedan (Dzire / Etios)': '5500',
-      'Sedan': '5500',
-      'Ertiga (6 Pax)': '7200',
-      'Ertiga': '7200',
-      'Innova Crysta': '10800',
-      'Tempo Traveller': '14000',
-      'Tempo': '14000'
-    }
-  },
-  {
-    id: 'chennai-city-tour',
-    name: 'Chennai City Local Sightseeing (8h / 80km)',
-    shortName: 'Chennai City Local Tour (8h/80km)',
-    category: '🏙️ Local & Airport Transfers',
-    rates: {
-      'Sedan (Dzire / Etios)': '2500',
-      'Sedan': '2500',
-      'Ertiga (6 Pax)': '3200',
-      'Ertiga': '3200',
-      'Innova Crysta': '4500',
-      'Tempo Traveller': '5500',
-      'Tempo': '5500'
-    }
-  },
-  {
-    id: 'chennai-airport',
-    name: 'Chennai Airport Transfer (Doorstep MAA Pickup/Drop)',
-    shortName: 'Chennai Airport Transfer (MAA)',
-    category: '🏙️ Local & Airport Transfers',
-    rates: {
-      'Sedan (Dzire / Etios)': '999',
-      'Sedan': '999',
-      'Ertiga (6 Pax)': '1499',
-      'Ertiga': '1499',
-      'Innova Crysta': '1999',
-      'Tempo Traveller': '2800',
-      'Tempo': '2800'
-    }
+    quoteId: '#WA-73038',
+    timestamp: '09-Oct-2026, 10:49 am',
+    sourcePage: 'WhatsApp (+91 73038 09755)',
+    calculatorEngine: 'WhatsApp Direct Chat',
+    tripType: 'One Day Round Trip',
+    pickup: 'Chennai',
+    drop: 'Tirumala 1-Day Trip',
+    vehicle: 'Sedan (Dzire / Etios)',
+    distanceKm: '320',
+    estimatedFare: 6000,
+    status: 'Rates Quoted',
+    metadata: 'WhatsApp Lead: +91 73038 09755 | Inquiry: Chennai to Tirumala 1-Day Trip Sedan Rs.6000'
   }
 ];
 
@@ -245,31 +177,41 @@ export default function AdminDashboard() {
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
 
-  // Data States
-  const [bookings, setBookings] = useState([]);
-  const [leads, setLeads] = useState([]);
-  const [dutySlips, setDutySlips] = useState([]);
-  const [settlements, setSettlements] = useState([]);
+  // Data States (initialized immediately with localStorage or rich seed defaults)
+  const [bookings, setBookings] = useState(() => safeGetStorage(STORAGE_KEYS.BOOKINGS, DEFAULT_SEED_BOOKINGS));
+  const [leads, setLeads] = useState(() => safeGetStorage(STORAGE_KEYS.LEADS, DEFAULT_SEED_LEADS));
+  const [dutySlips, setDutySlips] = useState(() => safeGetStorage(STORAGE_KEYS.DUTY_SLIPS, []));
+  const [settlements, setSettlements] = useState(() => safeGetStorage(STORAGE_KEYS.SETTLEMENTS, []));
   const [chauffeurs, setChauffeurs] = useState(DEFAULT_CHAUFFEURS);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [lastSyncTime, setLastSyncTime] = useState(new Date().toLocaleTimeString());
+  const [toast, setToast] = useState(null);
+
+  // Toast feedback helper
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => {
+      setToast(prev => (prev?.message === message ? null : prev));
+    }, 4000);
+  };
 
   // Modal States
   const [isNewBookingModalOpen, setIsNewBookingModalOpen] = useState(false);
   const [isDutySlipModalOpen, setIsDutySlipModalOpen] = useState(false);
   const [isQuickCallModalOpen, setIsQuickCallModalOpen] = useState(false);
 
-  // Quick Inbound Phone Call Form State
+  // Quick Inbound Phone / WhatsApp Lead Form State
   const [selectedCallPackage, setSelectedCallPackage] = useState('chennai-tirupati');
   const [callForm, setCallForm] = useState({
+    channel: 'whatsapp',
     callerPhone: '',
     guestName: '',
     route: 'Chennai ➔ Tirupati Round Trip',
     vehicle: 'Sedan (Dzire / Etios)',
     quotedFare: '6000',
-    status: 'Call Received - Quoted',
-    notes: 'Inbound office phone enquiry'
+    status: 'Active Enquiry',
+    notes: 'Inbound WhatsApp lead'
   });
 
   // New Booking Form State
@@ -281,7 +223,7 @@ export default function AdminDashboard() {
     pickupAddress: '',
     vehicleCategory: 'Sedan',
     partySize: '4 Pax',
-    fare: '650',
+    fare: '',
     kycStatus: 'Pending',
     darshanStatus: 'Unassigned',
     assignedChauffeur: 'Unassigned'
@@ -295,65 +237,85 @@ export default function AdminDashboard() {
     chauffeurName: '',
     chauffeurPhone: '',
     vehiclePlate: '',
-    startKm: 10000,
-    endKm: 10320,
+    startKm: '',
+    endKm: '',
     packageAllowedKm: 300,
     extraKmRate: 14,
-    basePackageFare: 5500,
-    tollsFastag: 350,
-    parking: 100,
-    statePermit: 450,
-    driverBata: 500,
-    advancePaid: 500,
+    basePackageFare: '',
+    tollsFastag: '',
+    parking: '',
+    statePermit: '',
+    driverBata: '',
+    advancePaid: '',
     paymentMode: 'Cash/UPI',
     notes: ''
   });
 
   // Driver Khata Form State
   const [khataForm, setKhataForm] = useState({
-    chauffeurName: 'Murugan',
-    bookingId: '#KT-TPT-101',
-    guestCashCollected: 6000,
-    driverAgreedPayout: 4800,
-    tollsPaidByDriver: 350,
+    chauffeurName: '',
+    bookingId: '',
+    guestCashCollected: '',
+    driverAgreedPayout: '',
+    tollsPaidByDriver: '',
     paymentMode: 'UPI',
     upiRef: '',
     notes: ''
   });
 
-  // Initial Fetch
+  // Background Telemetry Sync (Silent & non-blocking)
   const fetchData = async () => {
-    setLoading(true);
     try {
-      const bRes = await fetch('/api/admin/bookings');
-      if (bRes.ok) {
-        const bData = await bRes.json();
-        if (bData.bookings) setBookings(bData.bookings);
+      const [bRes, lRes, dRes, sRes] = await Promise.allSettled([
+        fetch('/api/admin/bookings'),
+        fetch('/api/admin/leads'),
+        fetch('/api/admin/duty-slips'),
+        fetch('/api/admin/settlements')
+      ]);
+
+      if (bRes.status === 'fulfilled' && bRes.value.ok) {
+        try {
+          const bData = await bRes.value.json();
+          if (bData.bookings && bData.bookings.length > 0) {
+            setBookings(bData.bookings);
+            safeSetStorage(STORAGE_KEYS.BOOKINGS, bData.bookings);
+          }
+        } catch (_) {}
       }
 
-      const lRes = await fetch('/api/admin/leads');
-      if (lRes.ok) {
-        const lData = await lRes.json();
-        if (lData.leads) setLeads(lData.leads);
+      if (lRes.status === 'fulfilled' && lRes.value.ok) {
+        try {
+          const lData = await lRes.value.json();
+          if (lData.leads && lData.leads.length > 0) {
+            setLeads(lData.leads);
+            safeSetStorage(STORAGE_KEYS.LEADS, lData.leads);
+          }
+        } catch (_) {}
       }
 
-      const dRes = await fetch('/api/admin/duty-slips');
-      if (dRes.ok) {
-        const dData = await dRes.json();
-        if (dData.dutySlips) setDutySlips(dData.dutySlips);
+      if (dRes.status === 'fulfilled' && dRes.value.ok) {
+        try {
+          const dData = await dRes.value.json();
+          if (dData.dutySlips && dData.dutySlips.length > 0) {
+            setDutySlips(dData.dutySlips);
+            safeSetStorage(STORAGE_KEYS.DUTY_SLIPS, dData.dutySlips);
+          }
+        } catch (_) {}
       }
 
-      const sRes = await fetch('/api/admin/settlements');
-      if (sRes.ok) {
-        const sData = await sRes.json();
-        if (sData.settlements) setSettlements(sData.settlements);
+      if (sRes.status === 'fulfilled' && sRes.value.ok) {
+        try {
+          const sData = await sRes.value.json();
+          if (sData.settlements && sData.settlements.length > 0) {
+            setSettlements(sData.settlements);
+            safeSetStorage(STORAGE_KEYS.SETTLEMENTS, sData.settlements);
+          }
+        } catch (_) {}
       }
 
       setLastSyncTime(new Date().toLocaleTimeString());
     } catch (err) {
-      console.error('Failed to sync admin telemetry:', err);
-    } finally {
-      setLoading(false);
+      console.warn('Telemetry sync error (cached data active):', err);
     }
   };
 
@@ -384,67 +346,100 @@ export default function AdminDashboard() {
     }
   };
 
-  // Update Booking Status
-  const updateBookingStatus = async (bookingId, patch) => {
+  // Update Booking Status (Optimistic + Persisted)
+  const updateBookingStatus = (bookingId, patch) => {
+    setBookings(prev => {
+      const nextBookings = prev.map(b => b.bookingId === bookingId ? { ...b, ...patch } : b);
+      safeSetStorage(STORAGE_KEYS.BOOKINGS, nextBookings);
+      return nextBookings;
+    });
+
     try {
-      const res = await fetch('/api/admin/bookings', {
+      fetch('/api/admin/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'update', bookingId, ...patch })
-      });
-      if (res.ok) {
-        setBookings(prev => prev.map(b => b.bookingId === bookingId ? { ...b, ...patch } : b));
-      }
-    } catch (err) {
-      console.error('Error updating booking:', err);
-    }
+      }).catch(() => {});
+    } catch (_) {}
   };
 
-  // Convert Lead to Booking
+  // Convert Lead to Booking (Optimistic + Persisted)
   const convertLeadToBooking = (lead) => {
     const bookingId = `#KT-LEAD-${Date.now().toString().slice(-4)}`;
-    const guestPhone = '9840100000';
-    const guestName = 'Website Visitor';
-    const travelDate = 'Tomorrow';
-    const pickupTime = '05:00 AM';
+    
+    // Dynamically extract phone number from lead
+    const combined = `${lead.pickup} ${lead.metadata || ''} ${lead.sourcePage || ''}`;
+    const phoneMatch = combined.match(/(?:\+?91[\s-]?)?([6-9]\d{4}[\s-]?\d{5}|[6-9]\d{9})/);
+    const guestPhone = phoneMatch ? phoneMatch[1].replace(/[\s-]/g, '') : '9840100000';
+
+    let guestName = 'WhatsApp Guest';
+    if (lead.metadata && lead.metadata.toLowerCase().includes('business')) {
+      guestName = 'WhatsApp Guest (Business)';
+    }
+
+    // Dynamic travel date extraction or current date fallback
+    const dateMatch = combined.match(/(\d{1,2}(?:st|nd|rd|th)?[\s-]*(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*[\s-]*\d{0,4})/i);
+    const todayFormatted = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    const travelDate = dateMatch ? dateMatch[1] : todayFormatted;
+    const pickupTime = '04:30 AM';
+
+    const partySize = (lead.metadata?.includes('4 ppl') || lead.pickup?.includes('4 Pax')) ? '4 Pax' : '4 Pax';
+    const vehicleCat = lead.vehicle?.toLowerCase().includes('ertiga') ? 'Ertiga' : 'Sedan';
+    const fare = Number(lead.estimatedFare) || 6000;
+    const payout = Math.round(fare * 0.8);
+    const margin = fare - payout;
 
     const newRow = {
       bookingId,
       guestNamePhone: `${guestName} (+91 ${guestPhone})`,
       travelDateTime: `${travelDate} @ ${pickupTime}`,
-      pickupAddress: lead.pickup || 'Chennai',
-      vehicleCategory: lead.vehicle || 'Sedan',
-      partySize: '4 Pax',
+      pickupAddress: lead.pickup || 'Chennai (Doorstep Pickup)',
+      vehicleCategory: vehicleCat,
+      partySize: partySize,
       kycStatus: 'Pending',
-      darshanStatus: lead.tripType?.toLowerCase().includes('temple') || lead.drop?.toLowerCase().includes('tirupati') ? 'In-Process' : 'Unassigned',
+      darshanStatus: (lead.drop?.toLowerCase().includes('tirupati') || lead.drop?.toLowerCase().includes('tirumala')) ? 'In-Process' : 'Unassigned',
       assignedChauffeur: 'Unassigned',
       manifestStatus: 'Pending',
-      terminalFare: Number(lead.estimatedFare) || 2500,
-      chauffeurPayout: Math.round((Number(lead.estimatedFare) || 2500) * 0.8),
-      companyMargin: Math.round((Number(lead.estimatedFare) || 2500) * 0.2),
+      terminalFare: fare,
+      chauffeurPayout: payout,
+      companyMargin: margin,
       financialClosure: 'Unreconciled'
     };
 
-    fetch('/api/admin/bookings', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newRow)
-    }).then(res => {
-      if (res.ok) {
-        setBookings(prev => [newRow, ...prev]);
-        fetch('/api/admin/leads', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ quoteId: lead.quoteId, status: 'Converted' })
-        });
-        setLeads(prev => prev.map(l => l.quoteId === lead.quoteId ? { ...l, status: 'Converted' } : l));
-        setActiveTab('dispatch');
-      }
+    setBookings(prev => {
+      const nextBookings = [newRow, ...prev];
+      safeSetStorage(STORAGE_KEYS.BOOKINGS, nextBookings);
+      return nextBookings;
     });
+
+    setLeads(prev => {
+      const nextLeads = prev.map(l => l.quoteId === lead.quoteId ? { ...l, status: 'Converted' } : l);
+      safeSetStorage(STORAGE_KEYS.LEADS, nextLeads);
+      return nextLeads;
+    });
+
+    setActiveTab('dispatch');
+    showToast(`✓ Converted lead ${lead.quoteId} to Trip ${bookingId}`, 'success');
+
+    try {
+      fetch('/api/admin/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newRow)
+      }).catch(() => {});
+    } catch (_) {}
+
+    try {
+      fetch('/api/admin/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quoteId: lead.quoteId, status: 'Converted' })
+      }).catch(() => {});
+    } catch (_) {}
   };
 
-  // Create New Booking Submit
-  const handleNewBookingSubmit = async (e) => {
+  // Create New Booking Submit (Optimistic + Persisted)
+  const handleNewBookingSubmit = (e) => {
     e.preventDefault();
     const bookingId = `#KT-MANUAL-${Date.now().toString().slice(-4)}`;
     const fare = Number(newBooking.fare) || 650;
@@ -468,81 +463,119 @@ export default function AdminDashboard() {
       financialClosure: 'Unreconciled'
     };
 
-    const res = await fetch('/api/admin/bookings', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+    setBookings(prev => {
+      const nextBookings = [payload, ...prev];
+      safeSetStorage(STORAGE_KEYS.BOOKINGS, nextBookings);
+      return nextBookings;
     });
 
-    if (res.ok) {
-      setBookings(prev => [payload, ...prev]);
-      setIsNewBookingModalOpen(false);
-      setNewBooking({
-        guestName: '',
-        guestPhone: '',
-        travelDate: '',
-        pickupTime: '04:30 AM',
-        pickupAddress: '',
-        vehicleCategory: 'Sedan',
-        partySize: '4 Pax',
-        fare: '650',
-        kycStatus: 'Pending',
-        darshanStatus: 'Unassigned',
-        assignedChauffeur: 'Unassigned'
-      });
-    }
+    setIsNewBookingModalOpen(false);
+    setNewBooking({
+      guestName: '',
+      guestPhone: '',
+      travelDate: '',
+      pickupTime: '04:30 AM',
+      pickupAddress: '',
+      vehicleCategory: 'Sedan',
+      partySize: '4 Pax',
+      fare: '',
+      kycStatus: 'Pending',
+      darshanStatus: 'Unassigned',
+      assignedChauffeur: 'Unassigned'
+    });
+    showToast(`✓ Booking ${bookingId} created for ${newBooking.guestName}`, 'success');
+
+    try {
+      fetch('/api/admin/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(() => {});
+    } catch (_) {}
   };
 
-  // Quick Log Phone Call Submit
-  const handleQuickCallSubmit = async (e) => {
+  // Quick Log Lead (Phone / WhatsApp) Submit (Guaranteed Instant Response & Persistence)
+  const handleQuickCallSubmit = (e) => {
     e.preventDefault();
+    if (!callForm.callerPhone) return;
+
+    const isWA = callForm.channel === 'whatsapp';
+    const quoteId = `#LEAD-${Date.now().toString().slice(-4)}`;
+    const timestamp = new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+    const pickup = callForm.guestName
+      ? `${callForm.guestName} (+91 ${callForm.callerPhone})`
+      : `+91 ${callForm.callerPhone}`;
+    const quotedFareNum = parseInt(String(callForm.quotedFare || '0').replace(/[^0-9]/g, ''), 10) || 0;
+
+    const newLead = {
+      quoteId,
+      timestamp,
+      sourcePage: isWA ? `WhatsApp (+91 ${callForm.callerPhone})` : '/admin (Phone Desk)',
+      calculatorEngine: isWA ? 'WhatsApp Direct Chat' : 'Office Phone Desk Log',
+      tripType: isWA ? 'Inbound WhatsApp Lead' : 'Inbound Phone Enquiry',
+      pickup,
+      drop: callForm.route || 'Chennai ➔ Tirupati Round Trip',
+      vehicle: callForm.vehicle || 'Innova Crysta (7 Pax)',
+      distanceKm: 'N/A',
+      estimatedFare: quotedFareNum,
+      status: callForm.status || (isWA ? 'Active Enquiry' : 'Call Received - Quoted'),
+      metadata: `${isWA ? 'WhatsApp Lead' : 'Direct Caller'}: +91 ${callForm.callerPhone} | Notes: ${callForm.notes || 'None'}`
+    };
+
+    // 1. Optimistic Local State & LocalStorage Update (Guaranteed immediate UI action)
+    setLeads(prev => {
+      const nextLeads = [newLead, ...prev.filter(l => l.quoteId !== quoteId)];
+      safeSetStorage(STORAGE_KEYS.LEADS, nextLeads);
+      return nextLeads;
+    });
+
+    // 2. Immediately close modal, switch tab to leads funnel, reset form
+    setIsQuickCallModalOpen(false);
+    const guestOrPhone = callForm.guestName || callForm.callerPhone;
+    const destRoute = newLead.drop;
+    setCallForm({
+      channel: 'whatsapp',
+      callerPhone: '',
+      guestName: '',
+      route: 'Chennai ➔ Tirupati Round Trip',
+      vehicle: 'Sedan (Dzire / Etios)',
+      quotedFare: '6000',
+      status: 'Active Enquiry',
+      notes: 'Inbound WhatsApp lead'
+    });
+    setSelectedCallPackage('chennai-tirupati');
+    setActiveTab('leads');
+    showToast(`✓ Lead logged: ${guestOrPhone} (${destRoute})`, 'success');
+
+    // 3. Asynchronously sync to backend endpoints and Google Sheet webhook (non-blocking)
     try {
-      const res = await fetch('/api/record-calculation', {
+      fetch('/api/record-calculation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          leadType: 'call',
-          status: callForm.status,
-          calculatorEngine: 'Office Phone Desk Log',
-          tripType: 'Inbound Phone Enquiry',
-          sourcePage: '/admin (Phone Desk)',
-          pickup: callForm.guestName ? `${callForm.guestName} (+91 ${callForm.callerPhone})` : `Caller +91 ${callForm.callerPhone}`,
-          drop: callForm.route,
-          vehicle: callForm.vehicle,
-          estimatedFare: callForm.quotedFare,
-          metadata: `Direct Caller: +91 ${callForm.callerPhone} | Notes: ${callForm.notes}`
+          quoteId,
+          leadType: isWA ? 'whatsapp' : 'call',
+          status: newLead.status,
+          calculatorEngine: newLead.calculatorEngine,
+          tripType: newLead.tripType,
+          sourcePage: newLead.sourcePage,
+          pickup: newLead.pickup,
+          drop: newLead.drop,
+          vehicle: newLead.vehicle,
+          estimatedFare: newLead.estimatedFare,
+          metadata: newLead.metadata
         })
-      });
+      }).catch(() => {});
+    } catch (_) {}
 
-      if (res.ok) {
-        setIsQuickCallModalOpen(false);
-        setCallForm({
-          callerPhone: '',
-          guestName: '',
-          route: 'Chennai ➔ Tirupati Round Trip',
-          vehicle: 'Sedan (Dzire / Etios)',
-          quotedFare: '6000',
-          status: 'Call Received - Quoted',
-          notes: 'Inbound office phone enquiry'
-        });
-        setSelectedCallPackage('chennai-tirupati');
-        await fetchData();
-        setActiveTab('leads');
-      }
-    } catch (err) {
-      console.error('Failed to log inbound call:', err);
-    }
+    try {
+      fetch('/api/admin/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newLead)
+      }).catch(() => {});
+    } catch (_) {}
   };
-
-  // Group tour packages by category for dropdown optgroups
-  const packageCategories = useMemo(() => {
-    const groups = {};
-    TOUR_PACKAGES.forEach(pkg => {
-      if (!groups[pkg.category]) groups[pkg.category] = [];
-      groups[pkg.category].push(pkg);
-    });
-    return groups;
-  }, []);
 
   // Quick Call Logger: Select tour package handler
   const handleCallPackageChange = (pkgId) => {
@@ -581,70 +614,125 @@ export default function AdminDashboard() {
 
   // Open Duty Slip for Booking
   const openDutySlipForBooking = (b) => {
-    const fare = Number(b.terminalFare) || 5000;
+    const fare = Number(b.terminalFare) || '';
     setSlipForm({
       bookingId: b.bookingId,
       guestName: b.guestNamePhone.split('(')[0].trim(),
       guestPhone: b.guestNamePhone.match(/\+91\s*([0-9\s]+)/)?.[1]?.replace(/\s/g, '') || '',
-      chauffeurName: b.assignedChauffeur !== 'Unassigned' ? b.assignedChauffeur.split('(')[0].trim() : 'Murugan',
-      chauffeurPhone: b.assignedChauffeur.match(/\+91\s*([0-9\s]+)/)?.[1]?.replace(/\s/g, '') || '+91 97890 12345',
-      vehiclePlate: b.assignedChauffeur.split('-')[1]?.trim() || 'TN09 BX 1234',
-      startKm: 14200,
-      endKm: 14550,
+      chauffeurName: b.assignedChauffeur !== 'Unassigned' ? b.assignedChauffeur.split('(')[0].trim() : '',
+      chauffeurPhone: b.assignedChauffeur.match(/\+91\s*([0-9\s]+)/)?.[1]?.replace(/\s/g, '') || '',
+      vehiclePlate: b.assignedChauffeur.split('-')[1]?.trim() || '',
+      startKm: '',
+      endKm: '',
       packageAllowedKm: 300,
       extraKmRate: 14,
       basePackageFare: fare,
-      tollsFastag: 350,
-      parking: 100,
-      statePermit: 450,
-      driverBata: 500,
-      advancePaid: 500,
+      tollsFastag: '',
+      parking: '',
+      statePermit: '',
+      driverBata: '',
+      advancePaid: '',
       paymentMode: 'Cash/UPI',
       notes: ''
     });
     setIsDutySlipModalOpen(true);
   };
 
-  // Submit Duty Slip
-  const handleDutySlipSubmit = async (e) => {
+  // Submit Duty Slip (Optimistic + Persisted)
+  const handleDutySlipSubmit = (e) => {
     e.preventDefault();
-    const res = await fetch('/api/admin/duty-slips', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(slipForm)
+    const dutySlipId = `#DS-${Date.now().toString().slice(-4)}`;
+    const newSlip = {
+      dutySlipId,
+      ...slipForm,
+      createdAt: new Date().toLocaleString()
+    };
+
+    setDutySlips(prev => {
+      const nextSlips = [newSlip, ...prev];
+      safeSetStorage(STORAGE_KEYS.DUTY_SLIPS, nextSlips);
+      return nextSlips;
     });
 
-    if (res.ok) {
-      const data = await res.json();
-      setDutySlips(prev => [data.dutySlip, ...prev]);
-      updateBookingStatus(slipForm.bookingId, {
-        manifestStatus: 'Duty Slip Closed',
-        financialClosure: 'Pending Settlement'
-      });
-      setIsDutySlipModalOpen(false);
-      setActiveTab('dutyslip');
-    }
+    updateBookingStatus(slipForm.bookingId, {
+      manifestStatus: 'Duty Slip Closed',
+      financialClosure: 'Pending Settlement'
+    });
+
+    setIsDutySlipModalOpen(false);
+    setSlipForm({
+      bookingId: '',
+      guestName: '',
+      guestPhone: '',
+      chauffeurName: '',
+      chauffeurPhone: '',
+      vehiclePlate: '',
+      startKm: '',
+      endKm: '',
+      packageAllowedKm: 300,
+      extraKmRate: 14,
+      basePackageFare: '',
+      tollsFastag: '',
+      parking: '',
+      statePermit: '',
+      driverBata: '',
+      advancePaid: '',
+      paymentMode: 'Cash/UPI',
+      notes: ''
+    });
+    setActiveTab('dutyslip');
+    showToast(`✓ Duty Slip created for Booking ${slipForm.bookingId}`, 'success');
+
+    try {
+      fetch('/api/admin/duty-slips', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(slipForm)
+      }).catch(() => {});
+    } catch (_) {}
   };
 
-  // Submit Khata Settlement
-  const handleKhataSubmit = async (e) => {
+  // Submit Khata Settlement (Optimistic + Persisted)
+  const handleKhataSubmit = (e) => {
     e.preventDefault();
-    const res = await fetch('/api/admin/settlements', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(khataForm)
+    const settlementId = `#SETTLE-${Date.now().toString().slice(-4)}`;
+    const newSettlement = {
+      settlementId,
+      ...khataForm,
+      settledAt: new Date().toLocaleString()
+    };
+
+    setSettlements(prev => {
+      const nextSettlements = [newSettlement, ...prev];
+      safeSetStorage(STORAGE_KEYS.SETTLEMENTS, nextSettlements);
+      return nextSettlements;
     });
 
-    if (res.ok) {
-      const data = await res.json();
-      setSettlements(prev => [data.settlement, ...prev]);
-      if (khataForm.bookingId) {
-        updateBookingStatus(khataForm.bookingId, {
-          financialClosure: 'Settled (UPI)'
-        });
-      }
-      alert('Driver settlement recorded successfully!');
+    if (khataForm.bookingId) {
+      updateBookingStatus(khataForm.bookingId, {
+        financialClosure: 'Settled (UPI)'
+      });
     }
+
+    setKhataForm({
+      chauffeurName: '',
+      bookingId: '',
+      guestCashCollected: '',
+      driverAgreedPayout: '',
+      tollsPaidByDriver: '',
+      paymentMode: 'UPI',
+      upiRef: '',
+      notes: ''
+    });
+    showToast(`✓ Driver settlement recorded for ${khataForm.chauffeurName}`, 'success');
+
+    try {
+      fetch('/api/admin/settlements', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(khataForm)
+      }).catch(() => {});
+    } catch (_) {}
   };
 
   // 1-Click WhatsApp Links
@@ -677,24 +765,29 @@ export default function AdminDashboard() {
   };
 
   const getLeadQuoteWhatsapp = (lead) => {
-    const text = `*KALIDASS TRAVELS — EXCLUSIVE QUOTATION*\n` +
-      `Hello! Thank you for inquiring about your travel with Kalidass Travels Chennai.\n\n` +
-      `Route: ${lead.pickup} -> ${lead.drop}\n` +
-      `Vehicle: ${lead.vehicle || 'AC Sedan'}\n` +
-      `Distance: Approx ${lead.distanceKm} km\n` +
-      `*All-Inclusive Estimated Fare: Rs.${lead.estimatedFare}*\n` +
-      `(Includes Driver Bata & Clean AC Vehicle)\n\n` +
-      `Would you like to confirm with our Rs.500 token deposit? Reply 'YES' to confirm!`;
-    return `https://wa.me/?text=${encodeURIComponent(text)}`;
+    const combined = `${lead.pickup} ${lead.metadata || ''} ${lead.sourcePage || ''}`;
+    const phoneMatch = combined.match(/(?:\+?91[\s-]?)?([6-9]\d{4}[\s-]?\d{5}|[6-9]\d{9})/);
+    const targetPhone = phoneMatch ? `91${phoneMatch[1].replace(/[\s-]/g, '')}` : '';
+
+    const text = `*KALIDASS TRAVELS — TOUR PACKAGE QUOTATION*\n` +
+      `Vanakkam! Thank you for inquiring with Kalidass Travels Chennai.\n\n` +
+      `📍 *Route:* ${lead.pickup} ➔ ${lead.drop}\n` +
+      `🚗 *Vehicle:* ${lead.vehicle || 'AC Sedan (Dzire / Etios)'}\n` +
+      `💰 *Package Fare:* ₹${lead.estimatedFare} (All-Inclusive)\n` +
+      `✅ *Includes:* Clean AC Vehicle, Dedicated Chauffeur, Driver Bata & Hill Tolls.\n\n` +
+      `Would you like to confirm this trip? Reply *YES* to proceed!`;
+    return targetPhone ? `https://wa.me/${targetPhone}?text=${encodeURIComponent(text)}` : `https://wa.me/?text=${encodeURIComponent(text)}`;
   };
 
   // Computations
   const computedSlip = useMemo(() => {
-    const totalKm = Math.max(0, Number(slipForm.endKm) - Number(slipForm.startKm));
-    const extraKm = Math.max(0, totalKm - Number(slipForm.packageAllowedKm));
-    const extraKmCost = extraKm * Number(slipForm.extraKmRate);
-    const gross = Number(slipForm.basePackageFare) + extraKmCost + Number(slipForm.tollsFastag) + Number(slipForm.parking) + Number(slipForm.statePermit) + Number(slipForm.driverBata);
-    const balance = Math.max(0, gross - Number(slipForm.advancePaid));
+    const start = Number(slipForm.startKm) || 0;
+    const end = Number(slipForm.endKm) || 0;
+    const totalKm = end > start ? end - start : 0;
+    const extraKm = Math.max(0, totalKm - (Number(slipForm.packageAllowedKm) || 0));
+    const extraKmCost = extraKm * (Number(slipForm.extraKmRate) || 0);
+    const gross = (Number(slipForm.basePackageFare) || 0) + extraKmCost + (Number(slipForm.tollsFastag) || 0) + (Number(slipForm.parking) || 0) + (Number(slipForm.statePermit) || 0) + (Number(slipForm.driverBata) || 0);
+    const balance = Math.max(0, gross - (Number(slipForm.advancePaid) || 0));
     return { totalKm, extraKm, extraKmCost, gross, balance };
   }, [slipForm]);
 
@@ -717,6 +810,20 @@ export default function AdminDashboard() {
       b.vehicleCategory.toLowerCase().includes(q)
     );
   }, [bookings, searchQuery]);
+
+  // Filtered Leads
+  const filteredLeads = useMemo(() => {
+    if (!searchQuery) return leads;
+    const q = searchQuery.toLowerCase();
+    return leads.filter(l =>
+      l.quoteId.toLowerCase().includes(q) ||
+      l.pickup.toLowerCase().includes(q) ||
+      l.drop.toLowerCase().includes(q) ||
+      l.vehicle.toLowerCase().includes(q) ||
+      l.status.toLowerCase().includes(q) ||
+      (l.metadata && l.metadata.toLowerCase().includes(q))
+    );
+  }, [leads, searchQuery]);
 
   // Grouped Kanban Columns
   const kanban = useMemo(() => {
@@ -763,8 +870,21 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] text-[#111827] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#F9FAFB] text-[#111827] flex flex-col font-sans relative">
       
+      {/* Toast Feedback Notification */}
+      {toast && (
+        <div className="fixed top-5 right-5 z-50 flex items-center gap-2.5 px-4 py-3 rounded-2xl shadow-xl backdrop-blur-md transition-all duration-300 animate-in fade-in slide-in-from-top-4 border text-xs font-bold bg-[#1E252D] text-white border-slate-700/80">
+          <span className={`material-symbols-outlined text-[18px] ${toast.type === 'error' ? 'text-rose-400' : 'text-emerald-400'}`}>
+            {toast.type === 'error' ? 'error' : 'check_circle'}
+          </span>
+          <span>{toast.message}</span>
+          <button onClick={() => setToast(null)} className="ml-2 text-slate-400 hover:text-white">
+            <span className="material-symbols-outlined text-[16px]">close</span>
+          </button>
+        </div>
+      )}
+
       {/* ============================================================== */}
       {/* 1. M3 TOP APP BAR & TELEMETRY STRIP                            */}
       {/* ============================================================== */}
@@ -797,13 +917,13 @@ export default function AdminDashboard() {
               <span className="text-emerald-700">₹{kpis.totalMargin.toLocaleString()}</span>
             </div>
 
-            {/* Quick Log Call M3 Button */}
+            {/* Quick Log Lead M3 Button */}
             <button
               onClick={() => setIsQuickCallModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-[#1E252D] text-xs sm:text-sm font-bold border border-slate-200/90 shadow-xs transition-all active:scale-95"
+              className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-950 text-xs sm:text-sm font-bold border border-emerald-300 shadow-xs transition-all active:scale-95"
             >
-              <span className="material-symbols-outlined text-[18px] text-amber-600">phone_in_talk</span>
-              <span>+ LOG CALL</span>
+              <span className="material-symbols-outlined text-[18px] text-emerald-600">chat</span>
+              <span>+ LOG LEAD</span>
             </button>
 
             {/* New Booking M3 Button */}
@@ -1119,7 +1239,10 @@ export default function AdminDashboard() {
                 </div>
 
                 <div className="space-y-3 min-h-[420px]">
-                  {kanban.assigned.map(b => (
+                  {kanban.assigned.length === 0 ? (
+                    <div className="p-8 text-center text-slate-400 text-xs font-medium">No trips allocated yet</div>
+                  ) : (
+                    kanban.assigned.map(b => (
                     <div key={b.bookingId} className="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all space-y-3">
                       <div className="flex items-center justify-between">
                         <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-800 font-mono-code text-[11px] font-bold">
@@ -1169,7 +1292,8 @@ export default function AdminDashboard() {
                         MARK TRIP STARTED
                       </button>
                     </div>
-                  ))}
+                  ))
+                  )}
                 </div>
               </div>
 
@@ -1186,7 +1310,10 @@ export default function AdminDashboard() {
                 </div>
 
                 <div className="space-y-3 min-h-[420px]">
-                  {kanban.inTransit.map(b => (
+                  {kanban.inTransit.length === 0 ? (
+                    <div className="p-8 text-center text-slate-400 text-xs font-medium">No cabs on highway</div>
+                  ) : (
+                    kanban.inTransit.map(b => (
                     <div key={b.bookingId} className="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all space-y-3">
                       <div className="flex items-center justify-between">
                         <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-800 font-mono-code text-[11px] font-bold">
@@ -1207,7 +1334,8 @@ export default function AdminDashboard() {
                         GENERATE DUTY SLIP
                       </button>
                     </div>
-                  ))}
+                  ))
+                  )}
                 </div>
               </div>
 
@@ -1224,7 +1352,10 @@ export default function AdminDashboard() {
                 </div>
 
                 <div className="space-y-3 min-h-[420px]">
-                  {kanban.slipPending.map(b => (
+                  {kanban.slipPending.length === 0 ? (
+                    <div className="p-8 text-center text-slate-400 text-xs font-medium">No pending duty slips</div>
+                  ) : (
+                    kanban.slipPending.map(b => (
                     <div key={b.bookingId} className="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all space-y-3">
                       <div className="flex items-center justify-between">
                         <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-800 font-mono-code text-[11px] font-bold">
@@ -1243,11 +1374,11 @@ export default function AdminDashboard() {
                       <button
                         onClick={() => {
                           setKhataForm({
-                            chauffeurName: b.assignedChauffeur.split('(')[0].trim(),
+                            chauffeurName: b.assignedChauffeur !== 'Unassigned' ? b.assignedChauffeur.split('(')[0].trim() : '',
                             bookingId: b.bookingId,
-                            guestCashCollected: Number(b.terminalFare) || 5000,
-                            driverAgreedPayout: Number(b.chauffeurPayout) || 4000,
-                            tollsPaidByDriver: 350,
+                            guestCashCollected: Number(b.terminalFare) || '',
+                            driverAgreedPayout: Number(b.chauffeurPayout) || '',
+                            tollsPaidByDriver: '',
                             paymentMode: 'UPI',
                             upiRef: '',
                             notes: ''
@@ -1260,7 +1391,8 @@ export default function AdminDashboard() {
                         RECONCILE IN KHATA
                       </button>
                     </div>
-                  ))}
+                  ))
+                  )}
                 </div>
               </div>
 
@@ -1277,7 +1409,10 @@ export default function AdminDashboard() {
                 </div>
 
                 <div className="space-y-3 min-h-[420px]">
-                  {kanban.settled.map(b => (
+                  {kanban.settled.length === 0 ? (
+                    <div className="p-8 text-center text-slate-400 text-xs font-medium">No settled trips yet</div>
+                  ) : (
+                    kanban.settled.map(b => (
                     <div key={b.bookingId} className="bg-white/95 rounded-xl p-3.5 border border-slate-200/80 shadow-xs space-y-2 opacity-85 hover:opacity-100 transition-opacity">
                       <div className="flex items-center justify-between">
                         <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono-code text-[11px] font-bold">
@@ -1293,7 +1428,8 @@ export default function AdminDashboard() {
                         <strong className="text-slate-900 font-bold">₹{b.companyMargin}</strong>
                       </div>
                     </div>
-                  ))}
+                  ))
+                  )}
                 </div>
               </div>
 
@@ -1316,8 +1452,8 @@ export default function AdminDashboard() {
                   onClick={() => setIsQuickCallModalOpen(true)}
                   className="px-4 py-2 bg-[#1E252D] hover:bg-[#111827] text-white rounded-full text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
                 >
-                  <span className="material-symbols-outlined text-[16px]">add_call</span>
-                  + LOG INCOMING CALL
+                  <span className="material-symbols-outlined text-[16px]">chat</span>
+                  + LOG INCOMING LEAD
                 </button>
                 <span className="text-xs font-semibold px-3 py-1 bg-white border border-slate-200 rounded-full shadow-xs">
                   Total Leads: <strong className="text-[#1E252D]">{leads.length}</strong>
@@ -1341,14 +1477,44 @@ export default function AdminDashboard() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 text-slate-700">
-                    {leads.map(lead => (
+                    {filteredLeads.length === 0 ? (
+                      <tr>
+                        <td colSpan={8} className="py-8 text-center text-slate-400 font-medium">
+                          No leads matching "{searchQuery}"
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredLeads.map(lead => (
                       <tr key={lead.quoteId} className="hover:bg-slate-50/80 transition-colors">
-                        <td className="py-3 px-4 font-mono-code font-bold text-[#1E252D]">{lead.quoteId}</td>
+                        <td className="py-3 px-4 font-mono-code font-bold text-[#1E252D]">
+                          {lead.quoteId.startsWith('#WA-') || lead.calculatorEngine?.includes('WhatsApp') || lead.sourcePage?.includes('WhatsApp') ? (
+                            <span className="inline-flex items-center gap-1 text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 text-xs font-bold">
+                              <span className="material-symbols-outlined text-[14px] text-emerald-600">chat</span>
+                              {lead.quoteId}
+                            </span>
+                          ) : lead.quoteId.startsWith('#CALL-') ? (
+                            <span className="inline-flex items-center gap-1 text-amber-800 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200 text-xs font-bold">
+                              <span className="material-symbols-outlined text-[14px] text-amber-600">call</span>
+                              {lead.quoteId}
+                            </span>
+                          ) : (
+                            <span>{lead.quoteId}</span>
+                          )}
+                        </td>
                         <td className="py-3 px-4 text-slate-500">{lead.timestamp}</td>
                         <td className="py-3 px-4">
-                          <span className="font-bold text-slate-900">{lead.pickup}</span>
-                          <span className="text-slate-400 mx-2">➔</span>
-                          <span className="font-bold text-amber-700">{lead.drop}</span>
+                          <div className="flex flex-col">
+                            <div>
+                              <span className="font-bold text-slate-900">{lead.pickup}</span>
+                              <span className="text-slate-400 mx-2">➔</span>
+                              <span className="font-bold text-amber-700">{lead.drop}</span>
+                            </div>
+                            {lead.metadata && lead.metadata !== 'None' && (
+                              <span className="text-[11px] text-slate-500 font-normal truncate max-w-sm mt-0.5" title={lead.metadata}>
+                                {lead.metadata}
+                              </span>
+                            )}
+                          </div>
                         </td>
                         <td className="py-3 px-4">
                           <span className="px-2.5 py-0.5 rounded-full bg-slate-100 border border-slate-200 font-medium text-slate-800">
@@ -1362,7 +1528,7 @@ export default function AdminDashboard() {
                             lead.status === 'Converted' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' :
                             lead.status?.includes('Quoted') ? 'bg-sky-50 text-sky-800 border border-sky-200' :
                             lead.status?.includes('Call') ? 'bg-amber-50 text-amber-800 border border-amber-200' :
-                            lead.status?.includes('WhatsApp') ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' :
+                            lead.status?.includes('WhatsApp') || lead.calculatorEngine?.includes('WhatsApp') || lead.sourcePage?.includes('WhatsApp') || lead.status === 'Active Enquiry' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' :
                             'bg-slate-100 text-slate-700 border border-slate-200'
                           }`}>
                             {lead.status}
@@ -1389,7 +1555,7 @@ export default function AdminDashboard() {
                           )}
                         </td>
                       </tr>
-                    ))}
+                    )))}
                   </tbody>
                 </table>
               </div>
@@ -1518,6 +1684,7 @@ export default function AdminDashboard() {
                     onChange={(e) => setKhataForm(prev => ({ ...prev, chauffeurName: e.target.value }))}
                     className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 font-medium focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
                   >
+                    <option value="">-- Select Chauffeur --</option>
                     {chauffeurs.map(c => (
                       <option key={c.name} value={c.name}>{c.name} ({c.plate})</option>
                     ))}
@@ -1531,7 +1698,7 @@ export default function AdminDashboard() {
                     value={khataForm.bookingId}
                     onChange={(e) => setKhataForm(prev => ({ ...prev, bookingId: e.target.value }))}
                     className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 font-mono-code focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
-                    placeholder="#KT-101"
+                    placeholder="e.g. #KT-101"
                   />
                 </div>
 
@@ -1540,7 +1707,8 @@ export default function AdminDashboard() {
                   <input
                     type="number"
                     value={khataForm.guestCashCollected}
-                    onChange={(e) => setKhataForm(prev => ({ ...prev, guestCashCollected: Number(e.target.value) }))}
+                    onChange={(e) => setKhataForm(prev => ({ ...prev, guestCashCollected: e.target.value === '' ? '' : Number(e.target.value) }))}
+                    placeholder="0"
                     className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 font-extrabold text-base focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
                   />
                 </div>
@@ -1551,7 +1719,8 @@ export default function AdminDashboard() {
                     <input
                       type="number"
                       value={khataForm.driverAgreedPayout}
-                      onChange={(e) => setKhataForm(prev => ({ ...prev, driverAgreedPayout: Number(e.target.value) }))}
+                      onChange={(e) => setKhataForm(prev => ({ ...prev, driverAgreedPayout: e.target.value === '' ? '' : Number(e.target.value) }))}
+                      placeholder="0"
                       className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
                     />
                   </div>
@@ -1560,7 +1729,8 @@ export default function AdminDashboard() {
                     <input
                       type="number"
                       value={khataForm.tollsPaidByDriver}
-                      onChange={(e) => setKhataForm(prev => ({ ...prev, tollsPaidByDriver: Number(e.target.value) }))}
+                      onChange={(e) => setKhataForm(prev => ({ ...prev, tollsPaidByDriver: e.target.value === '' ? '' : Number(e.target.value) }))}
+                      placeholder="0"
                       className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
                     />
                   </div>
@@ -1568,13 +1738,17 @@ export default function AdminDashboard() {
 
                 {/* Net Closing Position Box */}
                 <div className={`p-4 rounded-2xl border ${
-                  computedKhataNet >= 0
-                    ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
-                    : 'bg-rose-50 border-rose-200 text-rose-900'
+                  !khataForm.guestCashCollected && !khataForm.driverAgreedPayout && !khataForm.tollsPaidByDriver
+                    ? 'bg-slate-50 border-slate-200 text-slate-700'
+                    : computedKhataNet >= 0
+                      ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
+                      : 'bg-rose-50 border-rose-200 text-rose-900'
                 }`}>
                   <div className="text-[11px] font-bold uppercase tracking-wider">NET CLOSING POSITION:</div>
                   <div className="text-xl font-extrabold mt-1">
-                    {computedKhataNet >= 0 ? (
+                    {!khataForm.guestCashCollected && !khataForm.driverAgreedPayout && !khataForm.tollsPaidByDriver ? (
+                      <span>Ready for Reconciliation: ₹0</span>
+                    ) : computedKhataNet >= 0 ? (
                       <span>Driver Owes Agency: ₹{computedKhataNet}</span>
                     ) : (
                       <span>Agency Pays Driver: ₹{Math.abs(computedKhataNet)}</span>
@@ -1852,13 +2026,9 @@ export default function AdminDashboard() {
                   }}
                   className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 text-xs font-semibold focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
                 >
-                  <option value="">-- Quick Select Package (e.g. Tirupati, Pondicherry) --</option>
-                  {Object.entries(packageCategories).map(([cat, pkgs]) => (
-                    <optgroup key={cat} label={cat}>
-                      {pkgs.map(p => (
-                        <option key={p.id} value={p.id}>{p.name}</option>
-                      ))}
-                    </optgroup>
+                  <option value="">-- Quick Select Package (Tirupati, Madurai, Pondicherry) --</option>
+                  {TOUR_PACKAGES.map(p => (
+                    <option key={p.id} value={p.id}>{p.name}</option>
                   ))}
                 </select>
               </div>
@@ -2027,7 +2197,8 @@ export default function AdminDashboard() {
                     type="number"
                     required
                     value={slipForm.startKm}
-                    onChange={(e) => setSlipForm(prev => ({ ...prev, startKm: Number(e.target.value) }))}
+                    onChange={(e) => setSlipForm(prev => ({ ...prev, startKm: e.target.value === '' ? '' : Number(e.target.value) }))}
+                    placeholder="e.g. 10000"
                     className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2 text-slate-900 font-mono-code"
                   />
                 </div>
@@ -2037,7 +2208,8 @@ export default function AdminDashboard() {
                     type="number"
                     required
                     value={slipForm.endKm}
-                    onChange={(e) => setSlipForm(prev => ({ ...prev, endKm: Number(e.target.value) }))}
+                    onChange={(e) => setSlipForm(prev => ({ ...prev, endKm: e.target.value === '' ? '' : Number(e.target.value) }))}
+                    placeholder="e.g. 10320"
                     className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2 text-slate-900 font-mono-code"
                   />
                 </div>
@@ -2046,19 +2218,31 @@ export default function AdminDashboard() {
                   <input
                     type="number"
                     value={slipForm.packageAllowedKm}
-                    onChange={(e) => setSlipForm(prev => ({ ...prev, packageAllowedKm: Number(e.target.value) }))}
+                    onChange={(e) => setSlipForm(prev => ({ ...prev, packageAllowedKm: e.target.value === '' ? '' : Number(e.target.value) }))}
+                    placeholder="300"
                     className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2 text-slate-900 font-mono-code"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-2.5">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <div>
+                  <label className="font-semibold text-slate-600">Base Fare (₹):</label>
+                  <input
+                    type="number"
+                    value={slipForm.basePackageFare}
+                    onChange={(e) => setSlipForm(prev => ({ ...prev, basePackageFare: e.target.value === '' ? '' : Number(e.target.value) }))}
+                    placeholder="e.g. 6000"
+                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2 text-slate-900"
+                  />
+                </div>
                 <div>
                   <label className="font-semibold text-slate-600">FASTag Tolls (₹):</label>
                   <input
                     type="number"
                     value={slipForm.tollsFastag}
-                    onChange={(e) => setSlipForm(prev => ({ ...prev, tollsFastag: Number(e.target.value) }))}
+                    onChange={(e) => setSlipForm(prev => ({ ...prev, tollsFastag: e.target.value === '' ? '' : Number(e.target.value) }))}
+                    placeholder="0"
                     className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2 text-slate-900"
                   />
                 </div>
@@ -2067,7 +2251,8 @@ export default function AdminDashboard() {
                   <input
                     type="number"
                     value={slipForm.statePermit}
-                    onChange={(e) => setSlipForm(prev => ({ ...prev, statePermit: Number(e.target.value) }))}
+                    onChange={(e) => setSlipForm(prev => ({ ...prev, statePermit: e.target.value === '' ? '' : Number(e.target.value) }))}
+                    placeholder="0"
                     className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2 text-slate-900"
                   />
                 </div>
@@ -2076,7 +2261,8 @@ export default function AdminDashboard() {
                   <input
                     type="number"
                     value={slipForm.advancePaid}
-                    onChange={(e) => setSlipForm(prev => ({ ...prev, advancePaid: Number(e.target.value) }))}
+                    onChange={(e) => setSlipForm(prev => ({ ...prev, advancePaid: e.target.value === '' ? '' : Number(e.target.value) }))}
+                    placeholder="0"
                     className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2 text-emerald-700 font-bold"
                   />
                 </div>
@@ -2119,19 +2305,25 @@ export default function AdminDashboard() {
       )}
 
       {/* ============================================================== */}
-      {/* MODAL: 10-SECOND QUICK INCOMING CALL LOGGER (M3 DIALOG)         */}
+      {/* MODAL: 10-SECOND QUICK INCOMING LEAD LOGGER (M3 DIALOG)        */}
       {/* ============================================================== */}
       {isQuickCallModalOpen && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white border border-slate-200 rounded-3xl max-w-lg w-full p-6 space-y-4 text-xs shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-amber-50 text-amber-700 flex items-center justify-center border border-amber-200/60">
-                  <span className="material-symbols-outlined text-[18px]">phone_in_talk</span>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center border ${
+                  callForm.channel === 'whatsapp'
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200/60'
+                    : 'bg-amber-50 text-amber-700 border-amber-200/60'
+                }`}>
+                  <span className="material-symbols-outlined text-[18px]">
+                    {callForm.channel === 'whatsapp' ? 'chat' : 'phone_in_talk'}
+                  </span>
                 </div>
                 <div>
-                  <h3 className="text-base font-extrabold text-[#111827] tracking-tight">10-Sec Quick Call Logger</h3>
-                  <p className="text-[11px] text-slate-400">Capture received phone calls instantly to prevent lead leakage</p>
+                  <h3 className="text-base font-extrabold text-[#111827] tracking-tight">10-Sec Quick Lead Logger</h3>
+                  <p className="text-[11px] text-slate-400">Capture WhatsApp enquiries & phone calls instantly</p>
                 </div>
               </div>
               <button onClick={() => setIsQuickCallModalOpen(false)} className="text-slate-400 hover:text-slate-700 p-1">
@@ -2140,9 +2332,39 @@ export default function AdminDashboard() {
             </div>
 
             <form onSubmit={handleQuickCallSubmit} className="space-y-3.5">
+              {/* Channel Selector Toggle */}
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setCallForm(prev => ({ ...prev, channel: 'whatsapp', status: 'Active Enquiry', notes: 'Inbound WhatsApp lead' }))}
+                  className={`py-2 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+                    callForm.channel === 'whatsapp'
+                      ? 'bg-emerald-50 border-emerald-400 text-emerald-800 shadow-xs ring-1 ring-emerald-400'
+                      : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-[16px] text-emerald-600">chat</span>
+                  <span>WhatsApp Lead</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCallForm(prev => ({ ...prev, channel: 'call', status: 'Call Received - Quoted', notes: 'Inbound phone call enquiry' }))}
+                  className={`py-2 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+                    callForm.channel === 'call'
+                      ? 'bg-amber-50 border-amber-400 text-amber-800 shadow-xs ring-1 ring-amber-400'
+                      : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-[16px] text-amber-600">phone_in_talk</span>
+                  <span>Inbound Phone Call</span>
+                </button>
+              </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-700">Caller Mobile Phone *</label>
+                  <label className="font-semibold text-slate-700">
+                    {callForm.channel === 'whatsapp' ? 'WhatsApp Mobile Phone *' : 'Caller Mobile Phone *'}
+                  </label>
                   <div className="relative mt-1">
                     <span className="absolute left-3 top-2.5 text-slate-400 font-bold">+91</span>
                     <input
@@ -2150,7 +2372,7 @@ export default function AdminDashboard() {
                       required
                       value={callForm.callerPhone}
                       onChange={(e) => setCallForm(prev => ({ ...prev, callerPhone: e.target.value.replace(/[^0-9]/g, '') }))}
-                      placeholder="98401 23456"
+                      placeholder="98803 09619"
                       className="w-full pl-12 pr-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-900 font-bold text-sm focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
                       autoFocus
                     />
@@ -2184,12 +2406,8 @@ export default function AdminDashboard() {
                     onChange={(e) => handleCallPackageChange(e.target.value)}
                     className="w-full mt-1 bg-amber-50/50 border border-amber-300/80 rounded-xl p-2.5 text-slate-900 font-bold text-xs focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none cursor-pointer"
                   >
-                    {Object.entries(packageCategories).map(([cat, pkgs]) => (
-                      <optgroup key={cat} label={cat}>
-                        {pkgs.map(p => (
-                          <option key={p.id} value={p.id}>{p.name}</option>
-                        ))}
-                      </optgroup>
+                    {TOUR_PACKAGES.map(p => (
+                      <option key={p.id} value={p.id}>{p.name}</option>
                     ))}
                     <option value="custom">✏️ Custom Route / Other Destination (Type below)</option>
                   </select>

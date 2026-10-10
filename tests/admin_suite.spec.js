@@ -5,7 +5,7 @@ test.describe('Admin Operations Command Tower Suite', () => {
     await page.goto('/admin/');
 
     // Expect header telemetry
-    await expect(page.locator('text=KALIDASS COMMAND TOWER')).toBeVisible();
+    await expect(page.locator('text=KALIDASS COMMAND TOWER').first()).toBeVisible();
     await expect(page.locator('text=1. DISPATCH KANBAN')).toBeVisible();
     await expect(page.locator('text=2. LEADS FUNNEL')).toBeVisible();
     await expect(page.locator('text=3. DIGITAL DUTY SLIPS')).toBeVisible();
@@ -68,9 +68,9 @@ test.describe('Admin Operations Command Tower Suite', () => {
   test('should open 10-Second Quick Call Logger and log inbound phone inquiry', async ({ page }) => {
     await page.goto('/admin/');
 
-    // Click "+ LOG CALL" in header
-    await page.click('button:has-text("LOG CALL")');
-    await expect(page.locator('text=10-Sec Quick Call Logger')).toBeVisible();
+    // Click "+ LOG LEAD" in header
+    await page.click('button:has-text("LOG LEAD"), button:has-text("LOG CALL")');
+    await expect(page.locator('text=/10-Sec Quick (Lead|Call) Logger/')).toBeVisible();
 
     // Fill caller phone & route
     await page.fill('input[type="tel"]', '9840999888');
@@ -79,7 +79,7 @@ test.describe('Admin Operations Command Tower Suite', () => {
 
     // Submit
     await page.click('button:has-text("Log to Leads Funnel")');
-    await expect(page.locator('text=10-Sec Quick Call Logger')).not.toBeVisible();
+    await expect(page.locator('text=/10-Sec Quick (Lead|Call) Logger/')).not.toBeVisible();
 
     // Verify lead is in the table
     await expect(page.locator('text=9840999888').first()).toBeVisible({ timeout: 5000 });
@@ -89,39 +89,37 @@ test.describe('Admin Operations Command Tower Suite', () => {
   test('should support selecting packages from dropdown with auto fare calibration', async ({ page }) => {
     await page.goto('/admin/');
 
-    // Click "+ LOG CALL" in header
-    await page.click('button:has-text("LOG CALL")');
-    await expect(page.locator('text=10-Sec Quick Call Logger')).toBeVisible();
+    // Click "+ LOG LEAD" in header
+    await page.click('button:has-text("LOG LEAD"), button:has-text("LOG CALL")');
+    await expect(page.locator('text=/10-Sec Quick (Lead|Call) Logger/')).toBeVisible();
 
-    // Verify all requested packages exist in the dropdown
+    // Verify only the 3 requested packages exist in the dropdown
     const pkgSelect = page.locator('select:has-text("Chennai to Tirupati")');
     await expect(pkgSelect).toBeVisible();
     await expect(pkgSelect.locator('option[value="chennai-tirupati"]')).toHaveText(/Chennai to Tirupati/i);
-    await expect(pkgSelect.locator('option[value="chennai-thiruvannamalai"]')).toHaveText(/Chennai to Thiruvannamalai/i);
+    await expect(pkgSelect.locator('option[value="chennai-madurai"]')).toHaveText(/Chennai to Madurai/i);
     await expect(pkgSelect.locator('option[value="chennai-pondicherry"]')).toHaveText(/Chennai to Pondicherry/i);
-    await expect(pkgSelect.locator('option[value="chennai-kanchipuram"]')).toHaveText(/Chennai to Kanchipuram/i);
-    await expect(pkgSelect.locator('option[value="chennai-rameshwaram"]')).toHaveText(/Chennai to Rameshwaram/i);
 
-    // Select Thiruvannamalai package and check route & fare
-    await pkgSelect.selectOption('chennai-thiruvannamalai');
-    await expect(page.locator('input[placeholder*="Chennai ➔ Tirupati"]')).toHaveValue('Chennai ➔ Thiruvannamalai Girivalam');
-    await expect(page.locator('input[type="number"]')).toHaveValue('6500');
+    // Select Madurai package and check route & fare
+    await pkgSelect.selectOption('chennai-madurai');
+    await expect(page.locator('input[placeholder*="Chennai ➔ Tirupati"]')).toHaveValue('Chennai ➔ Madurai Round Trip');
+    await expect(page.locator('input[type="number"]')).toHaveValue('13500');
 
     // Switch vehicle to Ertiga and verify dynamic rate calibration
     await page.locator('select:has-text("Sedan (Dzire / Etios)")').selectOption('Ertiga (6 Pax)');
-    await expect(page.locator('input[type="number"]')).toHaveValue('7900');
+    await expect(page.locator('input[type="number"]')).toHaveValue('16500');
 
-    // Switch package to Rameshwaram
-    await pkgSelect.selectOption('chennai-rameshwaram');
-    await expect(page.locator('input[placeholder*="Chennai ➔ Tirupati"]')).toHaveValue('Chennai ➔ Rameshwaram 2-Days Tour');
-    await expect(page.locator('input[type="number"]')).toHaveValue('18500');
+    // Switch package to Pondicherry
+    await pkgSelect.selectOption('chennai-pondicherry');
+    await expect(page.locator('input[placeholder*="Chennai ➔ Tirupati"]')).toHaveValue('Chennai ➔ Pondicherry Round Trip');
+    await expect(page.locator('input[type="number"]')).toHaveValue('5500');
 
     // Log the call
     await page.fill('input[type="tel"]', '9840777111');
     await page.fill('input[placeholder*="Mr. Senthil"]', 'Pilgrim Caller');
     await page.click('button:has-text("Log to Leads Funnel")');
 
-    await expect(page.locator('text=10-Sec Quick Call Logger')).not.toBeVisible();
+    await expect(page.locator('text=/10-Sec Quick (Lead|Call) Logger/')).not.toBeVisible();
     await expect(page.locator('text=9840777111').first()).toBeVisible({ timeout: 5000 });
   });
 
@@ -146,7 +144,7 @@ test.describe('Admin Operations Command Tower Suite', () => {
 
     // Open admin desk to verify automated lead capture
     await page.goto('/admin/');
-    await expect(page.locator('text=KALIDASS COMMAND TOWER')).toBeVisible();
+    await expect(page.locator('text=KALIDASS COMMAND TOWER').first()).toBeVisible();
     await page.click('button:has-text("2. LEADS FUNNEL")');
     await expect(page.locator('text=Website Calculator Leads Funnel')).toBeVisible();
     await expect(page.locator('text=Call Clicked').first()).toBeVisible({ timeout: 5000 });
@@ -155,7 +153,43 @@ test.describe('Admin Operations Command Tower Suite', () => {
   test('should redirect legacy /ops to /admin/', async ({ page }) => {
     await page.goto('/ops/');
     await expect(page).toHaveURL(/\/admin\/?/);
-    await expect(page.locator('text=KALIDASS COMMAND TOWER')).toBeVisible();
+    await expect(page.locator('text=KALIDASS COMMAND TOWER').first()).toBeVisible();
+  });
+
+  test('should successfully log lead even when server returns 405 Method Not Allowed (offline/static resilience)', async ({ page }) => {
+    // Intercept /api/record-calculation to simulate Cloudflare static 405 Method Not Allowed
+    await page.route('**/api/record-calculation', route => {
+      route.fulfill({
+        status: 405,
+        contentType: 'text/html',
+        body: '<html><body>405 Method Not Allowed</body></html>'
+      });
+    });
+
+    await page.goto('/admin/');
+
+    // Click "+ LOG LEAD" or "+ LOG CALL"
+    await page.click('button:has-text("LOG LEAD"), button:has-text("LOG CALL")');
+    await expect(page.locator('text=/10-Sec Quick (Lead|Call) Logger/')).toBeVisible();
+
+    // Fill customer details matching user scenario
+    await page.fill('input[type="tel"]', '8668070094');
+    await page.fill('input[placeholder*="Mr. Senthil"]', 'Parthiban');
+    await page.fill('input[placeholder*="Chennai ➔ Tirupati"]', 'Chennai to Tirupati Round Trip');
+
+    // Click "Log to Leads Funnel"
+    await page.click('button:has-text("Log to Leads Funnel")');
+
+    // Modal MUST immediately close despite 405 error
+    await expect(page.locator('text=/10-Sec Quick (Lead|Call) Logger/')).not.toBeVisible();
+
+    // Lead must immediately show up in Leads Funnel table
+    await expect(page.locator('text=8668070094').first()).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('text=Parthiban').first()).toBeVisible();
+
+    // Toast feedback should appear
+    await expect(page.locator('text=/Lead logged/i')).toBeVisible();
   });
 });
+
 

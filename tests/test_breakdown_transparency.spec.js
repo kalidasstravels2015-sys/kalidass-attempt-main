@@ -13,10 +13,12 @@ test('Verify 100% Fare Breakdown transparency on /calculator/', async ({ page })
   const dropInput = outstation.locator('input[placeholder*="drop" i], input[placeholder*="Drop" i]').first();
 
   await pickupInput.fill('Sholinganallur, Chennai, Tamil Nadu, India');
-  await dropInput.fill('Tirumala, Tirupati, Tirupati Urban, Andhra Pradesh 517504, India');
+  await page.keyboard.press('Escape');
+  await dropInput.fill('Bengaluru, Karnataka, India');
+  await page.keyboard.press('Escape');
 
   const calcBtn = outstation.locator('button:has-text("Calculate Cost"), button:has-text("செலவைக் கணக்கிடுங்கள்")').first();
-  await calcBtn.click();
+  await calcBtn.click({ force: true });
   await page.waitForTimeout(800);
 
   // Set 3 days schedule: Friday Oct 9 to Sunday Oct 11

@@ -54,6 +54,7 @@ export default function WhatsAppButton({
         aria-label={computedAria}
         className={commonClass}
         onClick={onClick}
+        data-direct-whatsapp="true"
       >
         <WhatsAppIcon variant={iconVariant} className={iconSize} />
         {size !== 'icon' && <span className="tracking-wide leading-none">{label}</span>}
@@ -68,6 +69,7 @@ export default function WhatsAppButton({
       onClick={onClick}
       aria-label={computedAria}
       className={commonClass}
+      data-direct-whatsapp="true"
     >
       <WhatsAppIcon variant={iconVariant} className={iconSize} />
       {size !== 'icon' && <span className="tracking-wide leading-none">{label}</span>}

@@ -90,7 +90,7 @@ test.describe('Quick-Navigation Horizontal Pills Validation', () => {
     for (let i = 0; i < count; i++) {
       const link = links.nth(i);
       await link.click();
-      await page.waitForTimeout(400);
+      await page.waitForTimeout(600);
 
       // Verify active pill styles both during focus/hover and normal
       const styles = await link.evaluate((el) => {

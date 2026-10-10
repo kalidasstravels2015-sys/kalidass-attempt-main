@@ -7,6 +7,15 @@ import Breadcrumbs from '../../components/SEO/Breadcrumbs.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
 import WhatsAppIcon from '../../components/WhatsAppIcon.astro';
 import AndroidPhoneIcon from '../../components/AndroidPhoneIcon.astro';
+import TirupatiBookingEngine from '../../components/TirupatiBookingEngine.jsx';
+import ThiruvannamalaiBookingEngine from '../../components/ThiruvannamalaiBookingEngine.jsx';
+import KanchipuramBookingEngine from '../../components/KanchipuramBookingEngine.jsx';
+import NavagrahaBookingEngine from '../../components/NavagrahaBookingEngine.jsx';
+import RameswaramBookingEngine from '../../components/RameswaramBookingEngine.jsx';
+import SabarimalaBookingEngine from '../../components/SabarimalaBookingEngine.jsx';
+import ChidambaramBookingEngine from '../../components/ChidambaramBookingEngine.jsx';
+import VelloreBookingEngine from '../../components/VelloreBookingEngine.jsx';
+import PondicherryBookingEngine from '../../components/PondicherryBookingEngine.jsx';
 import { buildWhatsAppUrl } from '../../utils/whatsapp';
 import { 
   ShieldCheck, 
@@ -25,7 +34,8 @@ import {
   Car,
   Users,
   Luggage,
-  Lightbulb
+  Lightbulb,
+  ChevronDown
 } from 'lucide-react';
 
 export async function getStaticPaths() {
@@ -48,6 +58,16 @@ const whatsappLink = buildWhatsAppUrl(service.whatsappMsg || defaultMsg);
 
 const isActingDriver = service.category === 'Acting Driver Services' || service.slug.includes('driver');
 const isTour = ['Temple Tours', 'Popular Destinations'].includes(service.category);
+const isTirupati = service.slug === 'tirupati-package';
+const isThiruvannamalai = service.slug === 'thiruvannamalai-girivalam-trip';
+const isKanchipuram = service.slug === 'kanchipuram-temple-trip';
+const isNavagraha = service.slug === 'navagraha-tour';
+const isRameswaram = service.slug === 'rameswaram-2-days';
+const isSabarimala = service.slug === 'sabarimala-trip';
+const isChidambaram = service.slug === 'chidambaram-temple-trip';
+const isVellore = service.slug === 'vellore-golden-temple';
+const isPondicherry = service.slug === 'pondicherry-one-day-trip';
+const hasDedicatedEngine = isTirupati || isThiruvannamalai || isKanchipuram || isNavagraha || isRameswaram || isSabarimala || isChidambaram || isVellore || isPondicherry;
 
 const guideLabels = isTour ? {
   sectionTitle: "Travel Guide & Pilgrimage Information",
@@ -593,8 +613,8 @@ const PILGRIM_ROUTES: Record<string, {
   ctaHeading: string;
 }> = {
   'tirupati-package': {
-    summaryTitle: 'Chennai to Tirupati Cab: Key Trip Facts & Fares',
-    summaryDesc: 'Looking for a reliable cab from Chennai to Tirupati? Kalidass Travels operates dedicated doorstep round-trip pilgrimage taxis with verified chauffeurs, zero surge pricing, and 100% all-inclusive fares.',
+    summaryTitle: 'Chennai to Tirupati: Route & Fare Summary',
+    summaryDesc: 'Doorstep round-trip cabs with verified drivers. Fares include tolls, AP permit, and driver bata.',
     distance: '~135 to 155 km',
     distanceSub: 'Alipiri / Tirumala Top',
     travelTime: '3.5 – 4 Hours',
@@ -1309,8 +1329,8 @@ if (!offersData && startingPrice) {
 }
 
 const dynamicPriceRange = offersData
-  ? `₹${Number(offersData.lowPrice || startingPrice || 6000).toLocaleString('en-IN')} - ₹${Number(offersData.highPrice || startingPrice || 27000).toLocaleString('en-IN')}`
-  : (service.slug === 'tirupati-package' ? "₹6,000 - ₹27,000" : "₹₹");
+  ? `₹${Number(offersData.lowPrice || startingPrice || 3500).toLocaleString('en-IN')} - ₹${Number(offersData.highPrice || startingPrice || 40000).toLocaleString('en-IN')}`
+  : (isTirupati ? "₹6,000 - ₹27,000" : (isThiruvannamalai ? "₹6,500 - ₹18,500" : (isKanchipuram ? "₹3,500 - ₹18,000" : (isNavagraha ? "₹8,600 - ₹30,000" : (isRameswaram ? "₹15,500 - ₹38,000" : (isSabarimala ? "₹15,900 - ₹32,000" : (isChidambaram ? "₹7,400 - ₹26,500" : (isVellore ? "₹4,800 - ₹22,500" : (isPondicherry ? "₹4,500 - ₹19,000" : "₹₹")))))))));
 
 // Construct Schema.org structured data
 const pageSchemas: any[] = [];
@@ -1377,6 +1397,31 @@ if (isTour) {
     touristTripSchema.offers = offersData;
   }
   pageSchemas.push(touristTripSchema);
+
+  // 3. Product node: enables Google Rich Snippet Search Review Stars & Price Badge
+  const productSchema: Record<string, any> = {
+    "@type": "Product",
+    "@id": `https://kalidasstravels.in/services/${service.slug}/#product`,
+    "name": service.metaTitle || `${service.title} – Private Chauffeur Package`,
+    "description": service.metaDescription || service.overview,
+    "image": heroImage ? `https://kalidasstravels.in${heroImage}` : "https://kalidasstravels.in/images/logo.webp",
+    "sku": `KT-${service.slug.toUpperCase()}`,
+    "brand": {
+      "@type": "Brand",
+      "name": "Kalidass Travels"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "reviewCount": "1250",
+      "bestRating": "5",
+      "worstRating": "1"
+    }
+  };
+  if (offersData) {
+    productSchema.offers = offersData;
+  }
+  pageSchemas.push(productSchema);
 } else {
   // Non-tour services: Acting Drivers or regular Taxi Transfers
   const singleSchema: Record<string, any> = {
@@ -1585,235 +1630,545 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
     <Breadcrumbs items={breadcrumbItems} />
 
     <!-- 1. M3 HERO SECTION (Calibrated Warm Light Theme matching /services/) -->
-    <section class="bg-m3-surface border-b border-m3-outline-variant pt-3 sm:pt-6 pb-8 md:pb-10 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-4xl mx-auto">
-        
-        {/* Category & Status Chips */}
-        <div class="flex flex-wrap items-center gap-2 mb-3">
-          <a 
-            href={`/services/${categorySlug}/`}
-            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container text-xs font-bold uppercase tracking-wider border border-m3-primary/20 hover:bg-m3-primary/15 transition-colors"
-          >
-            <span>{service.category}</span>
-          </a>
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant text-m3-on-surface text-xs font-medium">
-            <ShieldCheck className="w-3.5 h-3.5 text-m3-primary" />
-            <span>Verified &amp; Guaranteed SLA</span>
-          </span>
-        </div>
-
-        <h1 class="text-xl sm:text-3xl lg:text-4xl font-extrabold text-m3-on-surface tracking-tight mb-4 leading-tight font-heading">
-          {service.title}
-        </h1>
-
-        <!-- Service Visual Hero Banner / Placeholder -->
-        <div class="relative w-full h-44 sm:h-64 md:h-72 rounded-m3-xl overflow-hidden shadow-m3-1 border border-m3-outline-variant/60 mb-5 bg-slate-900">
-          {heroImage ? (
-            <OptimizedImage
-              src={heroImage}
-              alt={`Kalidass Travels - ${service.title}`}
-              class="w-full h-full object-cover"
-              sizes="(max-width: 640px) 100vw, 896px"
-            />
-          ) : (
-            <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 text-slate-300 p-6 text-center">
-              <div class="w-12 h-12 rounded-m3-full bg-white/10 flex items-center justify-center mb-2 text-white/80">
-                <span class="material-symbols-outlined text-[28px]">image</span>
+    <section class="bg-m3-surface border-b border-m3-outline-variant pt-3 sm:pt-6 pb-6 sm:pb-8 px-3 sm:px-6 lg:px-8">
+      {hasDedicatedEngine ? (
+        <div class="max-w-6xl mx-auto">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+            
+            <!-- Left Column: Package Overview & Trust Inclusions -->
+            <div class="lg:col-span-5 flex flex-col justify-start">
+              {/* Category & Status Chips */}
+              <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-3">
+                <a 
+                  href={`/services/${categorySlug}/`}
+                  class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container text-[11px] sm:text-xs font-bold uppercase tracking-wider border border-m3-primary/20 hover:bg-m3-primary/15 transition-colors"
+                >
+                  <span>{service.category}</span>
+                </a>
+                <span class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant text-m3-on-surface text-[11px] sm:text-xs font-medium">
+                  <ShieldCheck className="w-3.5 h-3.5 text-m3-primary" />
+                  <span>Verified SLA</span>
+                </span>
               </div>
-              <p class="text-xs sm:text-sm font-semibold text-white/90">{service.title}</p>
-              <span class="text-micro text-slate-400 mt-0.5 uppercase tracking-wider">Service Visual (Placeholder)</span>
+
+              <h1 class="text-lg min-[380px]:text-xl sm:text-2xl lg:text-3xl font-extrabold text-m3-on-surface tracking-tight mb-1.5 sm:mb-3 leading-tight font-heading">
+                {service.title}
+              </h1>
+
+              {/* Crisp, Direct Overview (Desktop sm+) */}
+              <p class="hidden sm:block text-xs sm:text-sm text-m3-on-surface leading-relaxed mb-3 sm:mb-4">
+                {isTirupati
+                  ? "Doorstep Chennai to Tirupati round-trip private cab rental with driver. Fixed all-inclusive fares with ₹0 advance payment — pay only after trip completion."
+                  : isThiruvannamalai
+                  ? "Doorstep Chennai to Thiruvannamalai round-trip private cab rental with verified chauffeur. 14 km Pournami Girivalam car standby, fixed fares & ₹0 advance."
+                  : isKanchipuram
+                  ? "Doorstep Chennai to Kanchipuram round-trip private cab rental with verified chauffeur. Kamakshi Amman & Varadharaja darshan, certified silk weaver shopping & ₹0 advance."
+                  : isNavagraha
+                  ? "Doorstep Chennai to Kumbakonam 9 Navagraha temples round-trip cab rental with verified chauffeur. Optimized parikrama route, 750 km coverage & ₹0 advance."
+                  : isRameswaram
+                  ? "Doorstep Chennai to Rameswaram & Dhanushkodi round-trip cab rental with verified chauffeur. 22 holy theertham baths, Pamban bridge transit, 1,200 km coverage & ₹0 advance."
+                  : isSabarimala
+                  ? "Doorstep Chennai to Sabarimala round-trip cab rental with satvik teetotaler chauffeur. Pre-cleared Kerala interstate permit, Nilakkal parking guidance & ₹0 advance."
+                  : isChidambaram
+                  ? "Doorstep Chennai to Chidambaram Natarajar Temple & Pichavaram round-trip cab rental with verified chauffeur. ECR scenic drive, mangrove boating stop, 450 km coverage & ₹0 advance."
+                  : isVellore
+                  ? "Doorstep Chennai to Vellore Sripuram Golden Temple round-trip cab rental with verified chauffeur. Fast Bangalore expressway drive, Fort & Jalakandeswarar stop, 300 km coverage & ₹0 advance."
+                  : "Doorstep Chennai to Pondicherry round-trip private cab rental via scenic ECR. Covers Auroville, French White Town, Promenade Beach & ₹0 advance."}
+              </p>
+
+              <!-- Prominent Temple Visual Card (Visible on Mobile & Desktop) -->
+              <div class="relative w-full h-44 sm:h-50 lg:h-52 rounded-m3-xl overflow-hidden shadow-m3-1 border border-m3-outline-variant/60 mb-3 sm:mb-4 bg-slate-900">
+                {heroImage && (
+                  <OptimizedImage
+                    src={heroImage}
+                    alt={isTirupati 
+                      ? "Sri Venkateswara Swamy Temple Tirumala - Chennai to Tirupati Darshan Cab Package" 
+                      : isThiruvannamalai
+                      ? "Arunachaleswarar Temple & Girivalam - Chennai to Thiruvannamalai Cab Package"
+                      : isKanchipuram
+                      ? "Kamakshi Amman & Ekambareswarar Temple - Chennai to Kanchipuram Cab Package"
+                      : isNavagraha
+                      ? "Kumbakonam 9 Navagraha Temples Parikrama - Chennai to Navagraha Tour Cab Package"
+                      : isRameswaram
+                      ? "Ramanathaswamy Temple & Pamban Bridge - Chennai to Rameswaram Cab Package"
+                      : isSabarimala
+                      ? "Lord Ayyappa Swami Temple - Chennai to Sabarimala Pilgrim Cab Package"
+                      : isChidambaram
+                      ? "Thillai Natarajar Temple & Pichavaram Mangrove Wetlands - Chennai to Chidambaram Cab Package"
+                      : isVellore
+                      ? "Sripuram Sri Lakshmi Narayani Golden Temple - Chennai to Vellore Cab Package"
+                      : "French White Town & Promenade Beach - Chennai to Pondicherry Cab Package"}
+                    class="w-full h-full object-cover"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 480px"
+                    loading="eager"
+                    fetchpriority="high"
+                  />
+                )}
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/25 to-transparent pointer-events-none"></div>
+                <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between pointer-events-none text-white text-xs font-semibold">
+                  <span class="px-2.5 py-1 rounded-m3-full bg-slate-900/85 backdrop-blur-sm border border-white/20 flex items-center gap-1.5 shadow-xs truncate max-w-[65%]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0"></span>
+                    <span class="truncate">
+                      {isTirupati 
+                        ? "Sri Venkateswara Temple, Tirumala" 
+                        : isThiruvannamalai 
+                        ? "Arunachaleswarar & Girivalam" 
+                        : isKanchipuram
+                        ? "Kamakshi Amman & Silk Weavers"
+                        : isNavagraha
+                        ? "9 Navagraha Temples Circuit"
+                        : isRameswaram
+                        ? "Ramanathaswamy & Dhanushkodi"
+                        : isSabarimala
+                        ? "Nilakkal & Pamba Base Camp"
+                        : isChidambaram
+                        ? "Natarajar Temple & Pichavaram"
+                        : isVellore
+                        ? "Sripuram Golden Temple & Fort"
+                        : "French Quarter & Promenade Beach"}
+                    </span>
+                  </span>
+                  <span class="px-2.5 py-1 rounded-m3-full bg-m3-primary text-m3-on-primary text-[11px] font-bold shadow-xs shrink-0">
+                   {isTirupati ? "From ₹6,000 Flat" : isThiruvannamalai ? "From ₹6,500 Flat" : isKanchipuram ? "From ₹3,500 Flat" : isNavagraha ? "From ₹8,600 Flat" : isRameswaram ? "From ₹15,500 Flat" : isSabarimala ? "From ₹15,900 Flat" : isChidambaram ? "From ₹7,400 Flat" : isVellore ? "From ₹4,800 Flat" : "From ₹14/km"}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Mobile Trust Strip (Replaces redundant CTA, provides instant trust and separates headings) -->
+              <div data-mobile-trust-strip class="flex items-center justify-between gap-1 mb-3.5 sm:hidden text-[11px] text-m3-on-surface-variant font-medium bg-m3-surface-container-low px-3 py-2 rounded-m3-lg border border-m3-outline-variant/60 shadow-2xs">
+                <span class="flex items-center gap-1"><span class="text-emerald-600 font-bold">✓</span> ₹0 Advance</span>
+                <span class="flex items-center gap-1"><span class="text-emerald-600 font-bold">✓</span> {isTirupati ? "Tolls & AP Permit Inc." : isThiruvannamalai ? "GST & NH Tolls Inc." : isKanchipuram ? "NH 48 Tolls Inc." : isNavagraha ? "NH 36 Tolls Inc." : isRameswaram ? "NH 87 Tolls Inc." : isSabarimala ? "Kerala Permit Inc." : isChidambaram ? "NH 32 Tolls Inc." : isVellore ? "NH 48 Tolls Inc." : "Tolls at Actuals"}</span>
+                <span class="flex items-center gap-1"><span class="text-emerald-600 font-bold">✓</span> {isTirupati ? "Hill Ghat Road" : isThiruvannamalai ? "Girivalam Standby" : isKanchipuram ? "Weaver Waiting" : isNavagraha ? "750 km Covered" : isRameswaram ? "1,200 km Covered" : isSabarimala ? "Satvik Chauffeur" : isChidambaram ? "450 km Covered" : isVellore ? "300 km Covered" : "Driver Bata Sep."}</span>
+              </div>
+
+              <!-- Inclusions Matrix (Desktop sm+ only) -->
+              <div class="hidden sm:grid grid-cols-2 gap-2 mb-3 sm:mb-4 text-[11px] sm:text-xs">
+                <div class="p-2 sm:p-2.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center gap-1.5">
+                  <span class="text-emerald-700 font-bold">✓</span>
+                  <span class="font-semibold text-m3-on-surface">{isTirupati ? "From ₹6,000 Flat" : isThiruvannamalai ? "From ₹6,500 Flat" : isKanchipuram ? "From ₹3,500 Flat" : isNavagraha ? "From ₹8,600 Flat" : isRameswaram ? "From ₹15,500 Flat" : isSabarimala ? "From ₹15,900 Flat" : isChidambaram ? "From ₹7,400 Flat" : isVellore ? "From ₹4,800 Flat" : "From ₹4,500 Flat"}</span>
+                </div>
+                <div class="p-2 sm:p-2.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center gap-1.5">
+                  <span class="text-emerald-700 font-bold">✓</span>
+                  <span class="font-semibold text-m3-on-surface">{isTirupati ? "Tolls & AP Permit Inc." : isThiruvannamalai ? "GST & NH Tolls Inc." : isKanchipuram ? "NH 48 Tolls Inc." : isNavagraha ? "NH 36 Tolls Inc." : isRameswaram ? "NH 87 Tolls Inc." : isSabarimala ? "Kerala Permit Inc." : isChidambaram ? "NH 32 Tolls Inc." : isVellore ? "NH 48 Tolls Inc." : "Tolls at Actuals"}</span>
+                </div>
+                <div class="p-2 sm:p-2.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center gap-1.5">
+                  <span class="text-emerald-700 font-bold">✓</span>
+                  <span class="font-semibold text-m3-on-surface">{isTirupati ? "Tirumala Ghat Hill Inc." : isThiruvannamalai ? "14 km Girivalam Standby" : isKanchipuram ? "Free Weaver Waiting" : isNavagraha ? "Complete 750 km Circuit" : isRameswaram ? "1,200 km & Dhanushkodi" : isSabarimala ? "Nilakkal Ghat Route" : isChidambaram ? "450 km & Pichavaram" : isVellore ? "300 km & Vellore Fort" : "Driver Bata Separate"}</span>
+                </div>
+                <div class="p-2 sm:p-2.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center gap-1.5">
+                  <span class="text-emerald-700 font-bold">✓</span>
+                  <span class="font-semibold text-m3-on-surface">Doorstep Pickup</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Right Column: Instant Round-Trip Pilgrimage Booking Engine in Initial View -->
+            <div class="lg:col-span-7 w-full">
+              <section id="booking" aria-label={`Book ${service.title}`} class="scroll-mt-24">
+                {isTirupati ? (
+                  <TirupatiBookingEngine
+                    client:load
+                    serviceTitle={service.title}
+                  />
+                ) : isThiruvannamalai ? (
+                  <ThiruvannamalaiBookingEngine
+                    client:load
+                    serviceTitle={service.title}
+                  />
+                ) : isKanchipuram ? (
+                  <KanchipuramBookingEngine
+                    client:load
+                    serviceTitle={service.title}
+                  />
+                ) : isNavagraha ? (
+                  <NavagrahaBookingEngine
+                    client:load
+                    serviceTitle={service.title}
+                  />
+                ) : isRameswaram ? (
+                  <RameswaramBookingEngine
+                    client:load
+                    serviceTitle={service.title}
+                  />
+                ) : isSabarimala ? (
+                  <SabarimalaBookingEngine
+                    client:load
+                    serviceTitle={service.title}
+                  />
+                ) : isChidambaram ? (
+                  <ChidambaramBookingEngine
+                    client:load
+                    serviceTitle={service.title}
+                  />
+                ) : isVellore ? (
+                  <VelloreBookingEngine
+                    client:load
+                    serviceTitle={service.title}
+                  />
+                ) : (
+                  <PondicherryBookingEngine
+                    client:load
+                    serviceTitle={service.title}
+                  />
+                )}
+              </section>
+            </div>
+
+          </div>
+        </div>
+      ) : (
+        <div class="max-w-4xl mx-auto">
+          
+          {/* Category & Status Chips */}
+          <div class="flex flex-wrap items-center gap-2 mb-3">
+            <a 
+              href={`/services/${categorySlug}/`}
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container text-xs font-bold uppercase tracking-wider border border-m3-primary/20 hover:bg-m3-primary/15 transition-colors"
+            >
+              <span>{service.category}</span>
+            </a>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant text-m3-on-surface text-xs font-medium">
+              <ShieldCheck className="w-3.5 h-3.5 text-m3-primary" />
+              <span>Verified &amp; Guaranteed SLA</span>
+            </span>
+          </div>
+
+          <h1 class="text-xl sm:text-3xl lg:text-4xl font-extrabold text-m3-on-surface tracking-tight mb-4 leading-tight font-heading">
+            {service.title}
+          </h1>
+
+          <!-- Service Visual Hero Banner / Placeholder -->
+          <div class="relative w-full h-44 sm:h-64 md:h-72 rounded-m3-xl overflow-hidden shadow-m3-1 border border-m3-outline-variant/60 mb-5 bg-slate-900">
+            {heroImage ? (
+              <OptimizedImage
+                src={heroImage}
+                alt={`Kalidass Travels - ${service.title}`}
+                class="w-full h-full object-cover"
+                sizes="(max-width: 640px) 100vw, 896px"
+              />
+            ) : (
+              <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 text-slate-300 p-6 text-center">
+                <div class="w-12 h-12 rounded-m3-full bg-white/10 flex items-center justify-center mb-2 text-white/80">
+                  <span class="material-symbols-outlined text-[28px]">image</span>
+                </div>
+                <p class="text-xs sm:text-sm font-semibold text-white/90">{service.title}</p>
+                <span class="text-micro text-slate-400 mt-0.5 uppercase tracking-wider">Service Visual (Placeholder)</span>
+              </div>
+            )}
+
+            <!-- Subtle Bottom Gradient Scrim & Badges -->
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent pointer-events-none"></div>
+            <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none gap-2">
+              <span class="px-2.5 py-0.5 rounded-m3-full bg-slate-900/80 backdrop-blur-md text-white text-micro font-semibold border border-white/20 shadow-sm truncate max-w-[50%]">
+                {service.category}
+              </span>
+              {service.duration && (
+                <span class="px-2.5 py-0.5 rounded-m3-full bg-m3-primary/90 backdrop-blur-md text-white text-micro font-bold shadow-sm truncate max-w-[50%]">
+                  {service.duration.split('(')[0].trim()}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Crisp, Direct Overview */}
+          {service.overview && (
+            <div class="mb-5">
+              <p class="text-sm sm:text-base text-m3-on-surface leading-relaxed font-medium">
+                {service.overview}
+              </p>
             </div>
           )}
 
-          <!-- Subtle Bottom Gradient Scrim & Badges -->
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent pointer-events-none"></div>
-          <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none gap-2">
-            <span class="px-2.5 py-0.5 rounded-m3-full bg-slate-900/80 backdrop-blur-md text-white text-micro font-semibold border border-white/20 shadow-sm truncate max-w-[50%]">
-              {service.category}
-            </span>
-            {service.duration && (
-              <span class="px-2.5 py-0.5 rounded-m3-full bg-m3-primary/90 backdrop-blur-md text-white text-micro font-bold shadow-sm truncate max-w-[50%]">
-                {service.duration.split('(')[0].trim()}
-              </span>
-            )}
-          </div>
+          {/* M3 Quick Summary Grid (Acting Driver services only) */}
+          {isActingDriver && (
+            <div class="bg-m3-surface-container-low rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 text-xs sm:text-sm">
+              <div class="space-y-1 min-w-0">
+                <span class="block text-badge font-bold uppercase tracking-wider text-m3-on-surface-variant">Coverage Area</span>
+                <p class="font-semibold text-m3-on-surface flex items-center gap-1.5 truncate">
+                  <MapPin className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                  <span class="truncate">Chennai &amp; Suburbs</span>
+                </p>
+              </div>
+
+              <div class="space-y-1 min-w-0">
+                <span class="block text-badge font-bold uppercase tracking-wider text-m3-on-surface-variant">Dispatch SLA</span>
+                <p class="font-semibold text-m3-on-surface flex items-center gap-1.5 truncate">
+                  <Clock className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                  <span class="truncate">15–30 Mins Doorstep</span>
+                </p>
+              </div>
+
+              <div class="space-y-1 min-w-0">
+                <span class="block text-badge font-bold uppercase tracking-wider text-m3-on-surface-variant">Transmissions</span>
+                <p class="font-semibold text-m3-on-surface flex items-center gap-1.5 truncate">
+                  <Car className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                  <span class="truncate">Manual, Auto &amp; EV</span>
+                </p>
+              </div>
+
+              <div class="space-y-1 min-w-0">
+                <span class="block text-badge font-bold uppercase tracking-wider text-m3-on-surface-variant">Instant Booking</span>
+                <p class="font-semibold text-m3-on-surface flex items-center gap-1.5 truncate">
+                  <MessageCircle className="w-3.5 h-3.5 text-m3-secondary shrink-0" />
+                  <span class="truncate">Call &amp; WhatsApp</span>
+                </p>
+              </div>
+            </div>
+          )}
+
         </div>
-
-        {/* Crisp, Direct Overview */}
-        {service.overview && (
-          <div class="mb-5">
-            <p class="text-sm sm:text-base text-m3-on-surface leading-relaxed font-medium">
-              {service.overview}
-            </p>
-          </div>
-        )}
-
-        {/* M3 Quick Summary Grid (Acting Driver services only) */}
-        {isActingDriver && (
-          <div class="bg-m3-surface-container-low rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 text-xs sm:text-sm">
-            <div class="space-y-1 min-w-0">
-              <span class="block text-badge font-bold uppercase tracking-wider text-m3-on-surface-variant">Coverage Area</span>
-              <p class="font-semibold text-m3-on-surface flex items-center gap-1.5 truncate">
-                <MapPin className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-                <span class="truncate">Chennai &amp; Suburbs</span>
-              </p>
-            </div>
-
-            <div class="space-y-1 min-w-0">
-              <span class="block text-badge font-bold uppercase tracking-wider text-m3-on-surface-variant">Dispatch SLA</span>
-              <p class="font-semibold text-m3-on-surface flex items-center gap-1.5 truncate">
-                <Clock className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-                <span class="truncate">15–30 Mins Doorstep</span>
-              </p>
-            </div>
-
-            <div class="space-y-1 min-w-0">
-              <span class="block text-badge font-bold uppercase tracking-wider text-m3-on-surface-variant">Transmissions</span>
-              <p class="font-semibold text-m3-on-surface flex items-center gap-1.5 truncate">
-                <Car className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-                <span class="truncate">Manual, Auto &amp; EV</span>
-              </p>
-            </div>
-
-            <div class="space-y-1 min-w-0">
-              <span class="block text-badge font-bold uppercase tracking-wider text-m3-on-surface-variant">Instant Booking</span>
-              <p class="font-semibold text-m3-on-surface flex items-center gap-1.5 truncate">
-                <MessageCircle className="w-3.5 h-3.5 text-m3-secondary shrink-0" />
-                <span class="truncate">Call &amp; WhatsApp</span>
-              </p>
-            </div>
-          </div>
-        )}
-
-
-      </div>
+      )}
     </section>
 
     <!-- STICKY QUICK-NAV JUMP BAR -->
-    <nav data-quick-nav aria-label="Package Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 py-3 px-4 sm:px-6 lg:px-8 shadow-xs">
-      <div class="max-w-4xl mx-auto flex items-center gap-2 text-xs font-semibold text-m3-on-surface whitespace-nowrap overflow-x-auto no-scrollbar py-0.5 pe-6 scroll-px-4">
-        {service.tariff && (
-          <a
-            href="#tariff"
-            data-active="true"
-            aria-current="true"
-            class="px-3.5 py-2 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs transition-all shrink-0 hover:bg-m3-primary hover:text-white"
-          >
-            Tariff & Rates
-          </a>
-        )}
+    <nav data-quick-nav aria-label="Package Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 py-2 px-3 sm:px-6 lg:px-8 shadow-xs">
+      <div class="max-w-4xl mx-auto flex items-center gap-1.5 sm:gap-2 text-xs font-semibold text-m3-on-surface whitespace-nowrap overflow-x-auto no-scrollbar py-0.5 pe-4 scroll-px-3">
+        {hasDedicatedEngine ? (
+          <>
+            <a
+              href="#booking"
+              data-active="true"
+              aria-current="true"
+              class="px-3 py-1.5 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs transition-all shrink-0 hover:bg-m3-primary hover:text-white flex items-center gap-1.5"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Fares &amp; Book</span>
+            </a>
+            <a
+              href="#route"
+              class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium flex items-center gap-1.5"
+            >
+              <Compass className="w-3.5 h-3.5" />
+              <span>Route Itinerary</span>
+            </a>
+            <a
+              href="#guide"
+              class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium flex items-center gap-1.5"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>Darshan Guide</span>
+            </a>
+            <a
+              href="#faq"
+              class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium flex items-center gap-1.5"
+            >
+              <HelpCircle className="w-3.5 h-3.5" />
+              <span>FAQs &amp; Compare</span>
+            </a>
+          </>
+        ) : (
+          <>
+            {pilgrimConfig && (
+              <a
+                href="#facts"
+                class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium"
+              >
+                Route &amp; Fares
+              </a>
+            )}
 
-        {service.routePlan && (
-          <a
-            href="#route"
-            class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium"
-          >
-            Route Schedule
-          </a>
-        )}
-        {service.travelGuide && (
-          <a
-            href="#guide"
-            class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium"
-          >
-            {isTour ? "Darshan Guide" : "Guidelines"}
-          </a>
-        )}
-        {service.faq && (
-          <a
-            href="#faq"
-            class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium"
-          >
-            FAQs
-          </a>
+            {service.tariff && (
+              <a
+                href="#tariff"
+                data-active="true"
+                aria-current="true"
+                class="px-3 py-1.5 rounded-m3-full transition-all shrink-0 font-medium bg-m3-primary text-white font-bold shadow-xs hover:bg-m3-primary hover:text-white"
+              >
+                Tariff &amp; Rates
+              </a>
+            )}
+
+            {service.routePlan && (
+              <a
+                href="#route"
+                class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium"
+              >
+                Route Schedule
+              </a>
+            )}
+            {service.travelGuide && (
+              <a
+                href="#guide"
+                class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium"
+              >
+                {isTour ? "Darshan Guide" : "Guidelines"}
+              </a>
+            )}
+            {service.faq && (
+              <a
+                href="#faq"
+                class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium"
+              >
+                FAQs
+              </a>
+            )}
+          </>
         )}
       </div>
     </nav>
 
     <!-- 2. MAIN CONTENT BODY CONTAINER -->
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 space-y-6 sm:space-y-8">
+    <div class="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 pt-4 sm:pt-8 space-y-4 sm:space-y-8">
       
+
       {/* GEO & AI OVERVIEW FACT SUMMARY (Specially calibrated for Google AI / Search snippet synthesis) */}
       {pilgrimConfig && (
-        <section aria-label={`${service.title} Key Trip & Fare Facts`} class="bg-gradient-to-br from-white via-m3-surface to-amber-50/30 rounded-m3-2xl border border-amber-200/80 p-5 sm:p-7 shadow-m3-1">
-          <div class="flex items-center gap-2 mb-3">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-amber-100 text-amber-900 text-xs font-bold uppercase tracking-wider border border-amber-300">
-              <Sparkles className="w-3.5 h-3.5 text-amber-700" />
-              <span>Route &amp; Fare Summary</span>
-            </span>
-            <span class="text-xs text-m3-on-surface-variant font-medium hidden sm:inline">Official 2024–2026 Pilgrimage Rate Card</span>
-          </div>
+        <section id="facts" aria-label={`${service.title} Key Trip & Fare Facts`} class="scroll-mt-32 bg-gradient-to-br from-white via-m3-surface to-amber-50/30 rounded-m3-2xl border border-amber-200/80 p-4 sm:p-6 shadow-m3-1">
+          {hasDedicatedEngine ? (
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2.5 pb-2 border-b border-amber-200/60">
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-m3-full bg-amber-100 text-amber-900 text-[11px] font-bold uppercase tracking-wider border border-amber-300">
+                  <CheckCircle2 className="w-3 h-3 text-emerald-700" />
+                  <span>Trip Essentials &amp; Inclusions</span>
+                </div>
+                <span class="text-micro font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-m3-full border border-emerald-200">
+                  Verified Fixed Tariff • Zero Surge
+                </span>
+              </div>
 
-          <h2 class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading tracking-tight mb-2">
-            {pilgrimConfig.summaryTitle}
-          </h2>
-          <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed mb-5">
-            {pilgrimConfig.summaryDesc}
-          </p>
+              <!-- DIRECT ANSWER & GOOGLE FEATURED SNIPPET BLOCK (Cut & Dried, Zero Fluff) -->
+              <div class="mb-3 p-3 sm:p-3.5 rounded-m3-xl bg-white border border-amber-300 shadow-2xs">
+                <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface mb-1 font-heading">
+                  What is the {service.title} Fare &amp; Inclusions?
+                </h3>
+                <p data-speakable="true" class="text-xs sm:text-sm text-m3-on-surface leading-normal">
+                  {isTirupati ? (
+                    <>Round-trip flat rates: <strong>₹6,000 (Sedan)</strong> • <strong>₹7,500 (Ertiga)</strong> • <strong>₹8,500 (Innova)</strong>. Covers up to <strong>300 km / 14 hours</strong> with doorstep pickup, highway FASTag tolls, Andhra Pradesh entry permit, Tirumala hill ascent, and driver bata included. <strong>₹0 advance payment required</strong>.</>
+                  ) : isThiruvannamalai ? (
+                    <>Round-trip flat rates: <strong>₹6,500 (Sedan)</strong> • <strong>₹7,900 (Ertiga)</strong> • <strong>₹9,300 (Innova)</strong>. Covers <strong>~400 km round-trip</strong> with doorstep pickup, GST Road &amp; NH 77 tolls, Arunachaleswarar temple stop, 14 km Girivalam car standby, and driver bata included. <strong>₹0 advance payment required</strong>.</>
+                  ) : isKanchipuram ? (
+                    <>Round-trip flat rates: <strong>₹3,500 (Sedan)</strong> • <strong>₹4,500 (Ertiga)</strong> • <strong>₹5,500 (Innova)</strong>. Covers <strong>~160 km round-trip</strong> with doorstep pickup, NH 48 highway tolls, Kamakshi Amman &amp; Varadharaja darshan, free silk weaver shopping waiting time, and driver bata included. <strong>₹0 advance payment required</strong>.</>
+                  ) : isNavagraha ? (
+                    <>2-Day round-trip flat rates: <strong>₹8,600 (Sedan)</strong> • <strong>₹10,600 (Ertiga)</strong> • <strong>₹13,100 (Innova)</strong>. Covers <strong>~750 km complete 9 Navagraha circuit</strong> with doorstep pickup, NH 36 highway tolls, all 9 temple village drops, and 2 days driver bata included. <strong>₹0 advance payment required</strong>.</>
+                  ) : isRameswaram ? (
+                    <>2-Day round-trip flat rates: <strong>₹15,500 (Sedan)</strong> • <strong>₹18,500 (Ertiga)</strong> • <strong>₹22,000 (Innova)</strong>. Covers <strong>~1,200 km round-trip</strong> with doorstep pickup, NH 87 highway tolls, Ramanathaswamy Temple, 22 theerthams assistance, Dhanushkodi Arichal Munai, and 2 days driver bata included. <strong>₹0 advance payment required</strong>.</>
+                  ) : isSabarimala ? (
+                    <>3-Day round-trip flat rates: <strong>₹15,900 (Ertiga SUV)</strong> • <strong>₹18,500 (Innova)</strong> • <strong>₹22,000 (Crysta)</strong>. Covers <strong>~1,350 km round-trip</strong> with doorstep pickup, Kerala interstate commercial permit, Kumily ghats transit, Nilakkal base camp drop, and 3 days satvik driver allowance included. <strong>₹0 advance payment required</strong>.</>
+                  ) : isChidambaram ? (
+                    <>Round-trip flat rates: <strong>₹7,400 (Sedan)</strong> • <strong>₹9,200 (Ertiga SUV)</strong> • <strong>₹11,000 (Innova)</strong>. Covers <strong>~450 km round-trip</strong> with doorstep pickup, ECR &amp; NH 32 highway tolls, Natarajar temple darshan, free Pichavaram mangrove boating waiting time, and driver bata included. <strong>₹0 advance payment required</strong>.</>
+                  ) : isVellore ? (
+                    <>Round-trip flat rates: <strong>₹4,800 (Sedan)</strong> • <strong>₹6,000 (Ertiga SUV)</strong> • <strong>₹7,200 (Innova)</strong>. Covers <strong>~300 km round-trip</strong> with doorstep pickup, Bangalore expressway tolls, Sripuram Golden Temple, free Star Path parikrama waiting, and driver bata included. <strong>₹0 advance payment required</strong>.</>
+                  ) : (
+                    <>Round-trip flat rates: <strong>₹4,500 (Sedan)</strong> • <strong>₹5,500 (Ertiga)</strong> • <strong>₹6,500 (Innova)</strong>. Covers up to <strong>320 km round-trip via scenic ECR</strong> with doorstep pickup, all ECR FASTag tolls, Auroville &amp; French White Town sightseeing halts, Promenade Beach waiting, and driver bata included. <strong>₹0 advance payment required</strong>.</>
+                  )}
+                </p>
+              </div>
 
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-5">
-            <div class="p-3.5 rounded-m3-xl bg-white border border-m3-outline-variant/60 shadow-xs">
-              <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-1">Total Distance</span>
-              <p class="text-sm sm:text-base font-bold text-m3-on-surface font-heading">
-                {pilgrimConfig.distance}
-              </p>
-              <p class="text-micro text-m3-on-surface-variant mt-0.5">
-                {pilgrimConfig.distanceSub}
-              </p>
+              <!-- 3-Point Quick Metric Bar (Zero Price Redundancy) -->
+              <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                <div class="p-2 sm:p-2.5 rounded-m3-lg bg-white border border-m3-outline-variant/60 shadow-2xs">
+                  <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-0.5">Total Distance</span>
+                  <p class="font-bold text-slate-900 text-xs sm:text-sm font-heading">{pilgrimConfig.distance}</p>
+                </div>
+                <div class="p-2 sm:p-2.5 rounded-m3-lg bg-white border border-m3-outline-variant/60 shadow-2xs">
+                  <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-0.5">Travel Time</span>
+                  <p class="font-bold text-slate-900 text-xs sm:text-sm font-heading">{pilgrimConfig.travelTime}</p>
+                </div>
+                <div class="p-2 sm:p-2.5 rounded-m3-lg bg-white border border-m3-outline-variant/60 shadow-2xs">
+                  <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-0.5">{isTirupati ? "Tolls & AP Permit" : isThiruvannamalai ? "Tolls & Standby" : isKanchipuram ? "Tolls & Waiting" : isNavagraha ? "Tolls & Bata" : isRameswaram ? "Tolls & 1,200 km" : isSabarimala ? "Permit & Bata" : isChidambaram ? "Tolls & Pichavaram" : isVellore ? "Tolls & 300 km" : "ECR Tolls & Bata"}</span>
+                  <p class="font-bold text-emerald-700 text-xs sm:text-sm font-heading">{pilgrimConfig.tollsValue}</p>
+                </div>
+              </div>
             </div>
+          ) : (
+            <div>
+              <!-- Direct Header & Immediate Contact Bar -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-amber-200/60">
+                <div>
+                  <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-m3-full bg-amber-100 text-amber-900 text-[11px] font-bold uppercase tracking-wider mb-1.5 border border-amber-300">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-700" />
+                    <span>Verified Trip Rate Card</span>
+                  </div>
+                  <h2 class="text-lg sm:text-xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight">
+                    {pilgrimConfig.summaryTitle}
+                  </h2>
+                  <p class="text-xs text-m3-on-surface-variant mt-0.5">
+                    {pilgrimConfig.summaryDesc}
+                  </p>
+                </div>
+                <a
+                  href="tel:+918939539211"
+                  aria-label="Call Kalidass Travels for immediate booking"
+                  class="shrink-0 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-m3-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition-colors select-none"
+                >
+                  <AndroidPhoneIcon className="w-3.5 h-3.5 shrink-0" />
+                  <span>Call: 089395 39211</span>
+                </a>
+              </div>
 
-            <div class="p-3.5 rounded-m3-xl bg-white border border-m3-outline-variant/60 shadow-xs">
-              <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-1">Travel Time</span>
-              <p class="text-sm sm:text-base font-bold text-m3-on-surface font-heading">
-                {pilgrimConfig.travelTime}
-              </p>
-              <p class="text-micro text-m3-on-surface-variant mt-0.5">
-                {pilgrimConfig.travelTimeSub}
-              </p>
-            </div>
+              <!-- DIRECT ANSWER & GOOGLE FEATURED SNIPPET BLOCK (Cut & Dried, Zero Fluff) -->
+              <div class="mb-4 p-3.5 sm:p-4 rounded-m3-xl bg-white border border-amber-300 shadow-2xs">
+                <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface mb-1 font-heading">
+                  What is the {service.title} Fare &amp; Inclusions?
+                </h3>
+                <p data-speakable="true" class="text-xs sm:text-sm text-m3-on-surface leading-normal">
+                  Round-trip flat rates: <strong>₹6,000 (Sedan)</strong> • <strong>₹7,500 (Ertiga)</strong> • <strong>₹8,500 (Innova)</strong>. Covers up to <strong>300 km / 14 hours</strong> with doorstep pickup, highway FASTag tolls, Andhra Pradesh entry permit, Tirumala hill ascent, and driver bata included. <strong>₹0 advance payment required</strong>.
+                </p>
+              </div>
 
-            <div class="p-3.5 rounded-m3-xl bg-white border border-m3-outline-variant/60 shadow-xs">
-              <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-1">Starting Fare</span>
-              <p class="text-sm sm:text-base font-bold text-m3-primary font-heading">
-                {pilgrimConfig.startingFare}
-              </p>
-              <p class="text-micro text-emerald-700 font-semibold mt-0.5">
-                {pilgrimConfig.startingFareSub}
-              </p>
-            </div>
+              <!-- 4-Point Quick Metric Grid -->
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3.5 mb-4">
+                <div class="p-3 rounded-m3-xl bg-white border border-m3-outline-variant/60 shadow-2xs">
+                  <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-0.5">Total Distance</span>
+                  <p class="text-sm sm:text-base font-bold text-m3-on-surface font-heading leading-tight">
+                    {pilgrimConfig.distance}
+                  </p>
+                  <p class="text-micro text-m3-on-surface-variant mt-0.5">
+                    {pilgrimConfig.distanceSub}
+                  </p>
+                </div>
 
-            <div class="p-3.5 rounded-m3-xl bg-white border border-m3-outline-variant/60 shadow-xs">
-              <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-1">
-                {pilgrimConfig.tollsLabel}
-              </span>
-              <p class="text-sm sm:text-base font-bold text-emerald-700 font-heading">{pilgrimConfig.tollsValue}</p>
-              <p class="text-micro text-m3-on-surface-variant mt-0.5">
-                {pilgrimConfig.tollsSub}
-              </p>
-            </div>
-          </div>
+                <div class="p-3 rounded-m3-xl bg-white border border-m3-outline-variant/60 shadow-2xs">
+                  <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-0.5">Travel Time</span>
+                  <p class="text-sm sm:text-base font-bold text-m3-on-surface font-heading leading-tight">
+                    {pilgrimConfig.travelTime}
+                  </p>
+                  <p class="text-micro text-m3-on-surface-variant mt-0.5">
+                    {pilgrimConfig.travelTimeSub}
+                  </p>
+                </div>
 
-          <div class="bg-amber-50/80 rounded-m3-xl p-3.5 sm:p-4 border border-amber-200/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs sm:text-sm">
-            <div class="space-y-0.5">
-              <p class="font-bold text-amber-950 flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>{pilgrimConfig.calloutTitle}</span>
-              </p>
-              <p class="text-amber-900/80 text-micro sm:text-xs">
-                {pilgrimConfig.calloutDesc}
-              </p>
+                <div class="p-3 rounded-m3-xl bg-white border border-m3-outline-variant/60 shadow-2xs">
+                  <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-0.5">Starting Fare</span>
+                  <p class="text-sm sm:text-base font-bold text-m3-primary font-heading leading-tight">
+                    {pilgrimConfig.startingFare}
+                  </p>
+                  <p class="text-micro text-emerald-700 font-semibold mt-0.5">
+                    {pilgrimConfig.startingFareSub}
+                  </p>
+                </div>
+
+                <div class="p-3 rounded-m3-xl bg-white border border-m3-outline-variant/60 shadow-2xs">
+                  <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-0.5">
+                    {pilgrimConfig.tollsLabel}
+                  </span>
+                  <p class="text-sm sm:text-base font-bold text-emerald-700 font-heading leading-tight">{pilgrimConfig.tollsValue}</p>
+                  <p class="text-micro text-m3-on-surface-variant mt-0.5">
+                    {pilgrimConfig.tollsSub}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Bottom Assurance Strip -->
+              <div class="bg-amber-50/80 rounded-m3-xl p-3 border border-amber-200/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-xs">
+                <p class="font-bold text-amber-950 flex items-center gap-1.5 leading-snug">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Doorstep Chennai pickup • Sri Padmavathi Temple stop • Pay after trip completion</span>
+                </p>
+                <a
+                  href="#tariff"
+                  class="shrink-0 px-3.5 py-1 rounded-m3-full bg-m3-primary text-white text-xs font-bold hover:bg-slate-900 transition-colors shadow-2xs"
+                >
+                  View Fleet Rates ↓
+                </a>
+              </div>
             </div>
-            <a
-              href="#tariff"
-              class="shrink-0 px-4 py-1.5 rounded-m3-full bg-m3-primary text-white text-xs font-bold hover:bg-m3-primary/90 transition-colors shadow-xs"
-            >
-              View All Vehicle Rates ↓
-            </a>
-          </div>
+          )}
         </section>
       )}
 
-      <!-- 1. TARIFF & PRICING BREAKDOWN (Priority Commercial Focus) -->
+      <!-- 1. TARIFF & PRICING BREAKDOWN (Fleet Carousel for dedicated engine packages; cards/table for standard packages) -->
       {service.tariff && (
         <section id="tariff" class="bg-m3-surface rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 overflow-hidden scroll-mt-40">
           <!-- Section Header Bar -->
@@ -1821,26 +2176,28 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
             <div class="max-w-xl">
               <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container text-m3-on-surface text-xs font-bold uppercase tracking-wider mb-2 border border-m3-outline-variant">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>Transparent Pricing • All Tolls Included</span>
+                <span>{hasDedicatedEngine ? "Sanitized Fleet • Verified Pilgrimage Chauffeurs" : "Transparent Pricing • All Tolls Included"}</span>
               </div>
               <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
-                {shortName} Tariff &amp; Package Rates
+                {hasDedicatedEngine ? "Available Cars & Pilgrimage Fleet" : `${shortName} Tariff & Package Rates`}
               </h2>
               <p class="text-xs sm:text-sm text-m3-on-surface-variant font-sans mt-1">
-                Fixed round-trip rates with doorstep pickup, sanitized dual AC cars, FASTag tolls, and driver allowance.
+                {hasDedicatedEngine 
+                  ? "Swipe through our verified fleet below. Calculate dynamic date/time package fares in the booking engine above."
+                  : "Fixed round-trip rates with doorstep pickup, sanitized dual AC cars, FASTag tolls, and driver allowance."}
               </p>
             </div>
 
             <div class="flex items-center gap-3 shrink-0">
-              <!-- Desktop Cards vs Table Switcher -->
-              <div class="hidden md:inline-flex items-center p-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant text-xs font-semibold select-none">
+              <!-- Switcher: Carousel / Cards View vs Table View -->
+              <div class="inline-flex items-center p-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant text-xs font-semibold select-none">
                 <button
                   type="button"
                   id="tariff-btn-cards"
                   class="px-3.5 py-1.5 rounded-m3-full bg-m3-primary text-m3-on-primary shadow-xs transition-all cursor-pointer"
                   aria-pressed="true"
                 >
-                  Cards View
+                  {hasDedicatedEngine ? "Fleet Carousel" : "Cards View"}
                 </button>
                 <button
                   type="button"
@@ -1848,51 +2205,203 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                   class="px-3.5 py-1.5 rounded-m3-full text-m3-on-surface-variant hover:text-m3-on-surface transition-all cursor-pointer"
                   aria-pressed="false"
                 >
-                  Table View
+                  Rate Table
                 </button>
               </div>
-
             </div>
           </div>
 
-          <!-- M3 Vehicle Cards Grid (Default View, inspired by weekend-packages) -->
-          <div id="tariff-cards-view" class="p-4 sm:p-6 bg-m3-surface-container-low">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              {service.tariff.rows.map((row: any[], rIdx: number) => {
-                const headers = service.tariff.headers || [];
-                const vehicleName = row[0];
-                const badge = getVehicleBadge(vehicleName);
-                const vehicleImg = getVehicleFleetImage(vehicleName);
+          <!-- 1. VEHICLE CAROUSEL VIEW (For Dedicated Engines: Horizontal Carousel saving vertical space on mobile) -->
+          {hasDedicatedEngine ? (
+            <div id="tariff-cards-view" class="p-4 sm:p-6 bg-m3-surface-container-low">
+              <div class="flex items-center justify-between mb-3 px-1">
+                <div class="min-w-0">
+                  <span class="text-xs font-bold text-m3-on-surface uppercase tracking-wider flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                    <span>Swipe Available Fleet</span>
+                  </span>
+                  <p class="text-micro text-m3-on-surface-variant">
+                    {service.tariff.rows.length} verified AC vehicles ready for {isTirupati ? "Tirupati Balaji Darshan" : isThiruvannamalai ? "Thiruvannamalai Girivalam" : isKanchipuram ? "Kanchipuram Temple & Silk Tour" : isNavagraha ? "Kumbakonam 9 Navagraha Circuit" : isRameswaram ? "Rameswaram & Dhanushkodi Yatra" : isSabarimala ? "Sabarimala Ayyappa Yatra" : isChidambaram ? "Chidambaram Natarajar & Pichavaram Tour" : isVellore ? "Vellore Sripuram Golden Temple Tour" : "Pondicherry French Town & Beach Getaway"}
+                  </p>
+                </div>
 
-                // Hero price: prefer "Total Cost" column, else last ₹ column
-                const totalCostIdx = headers.findIndex((h: string) => /total\s*cost|flat\s*cost|package\s*cost|charges|rate/i.test(h) && !/rate\/km/i.test(h));
-                const lastRupeeIdx = (() => {
-                  let last = -1;
-                  row.forEach((cell: string, i: number) => {
-                    if (i > 0 && typeof cell === 'string' && cell.trim().startsWith('₹')) last = i;
-                  });
-                  return last;
-                })();
-                const heroPriceIdx    = totalCostIdx !== -1 ? totalCostIdx : lastRupeeIdx;
-                const heroPrice       = heroPriceIdx !== -1 ? row[heroPriceIdx] : '';
-                const heroPriceLabel  = heroPriceIdx !== -1 ? headers[heroPriceIdx] : 'Total Cost';
+                <!-- Desktop Prev/Next Slide Arrows -->
+                <div class="hidden sm:flex items-center gap-1.5 shrink-0">
+                  <button
+                    type="button"
+                    id="fleet-carousel-prev"
+                    aria-label="Previous Vehicle"
+                    title="Previous Vehicle"
+                    class="w-8 h-8 rounded-full bg-white border border-m3-outline-variant hover:bg-m3-surface-container text-m3-on-surface flex items-center justify-center shadow-2xs transition-colors cursor-pointer"
+                  >
+                    <ChevronDown className="w-4 h-4 rotate-90" />
+                  </button>
+                  <button
+                    type="button"
+                    id="fleet-carousel-next"
+                    aria-label="Next Vehicle"
+                    title="Next Vehicle"
+                    class="w-8 h-8 rounded-full bg-white border border-m3-outline-variant hover:bg-m3-surface-container text-m3-on-surface flex items-center justify-center shadow-2xs transition-colors cursor-pointer"
+                  >
+                    <ChevronDown className="w-4 h-4 -rotate-90" />
+                  </button>
+                </div>
+              </div>
 
-                // Seating capacity column
-                const seatColIdx = headers.findIndex((h: string) => /seat|pax|devotee|passenger|capacity/i.test(h));
-                const seats      = seatColIdx !== -1 ? row[seatColIdx] : '';
+              <!-- Horizontal Snap Scroll Carousel Track -->
+              <div
+                id="fleet-carousel-track"
+                class="flex gap-3.5 sm:gap-4 overflow-x-auto snap-x snap-mandatory py-1 pb-3 no-scrollbar scroll-smooth focus:outline-none"
+                tabindex="0"
+                role="region"
+                aria-label="Available Vehicles Carousel"
+              >
+                {service.tariff.rows.map((row: any[]) => {
+                  const vehicleName = row[0];
+                  const badge = getVehicleBadge(vehicleName);
+                  const vehicleImg = getVehicleFleetImage(vehicleName);
+                  const seats = row[1] || '4 Passengers';
+                  const baggage = getVehicleBaggage(vehicleName);
+                  const vLower = vehicleName.toLowerCase();
+                  
+                  const engineVehId = vLower.includes('tempo') || vLower.includes('traveller')
+                    ? 'tempo'
+                    : vLower.includes('crysta')
+                    ? 'crysta'
+                    : vLower.includes('innova')
+                    ? 'innova'
+                    : vLower.includes('ertiga') || vLower.includes('xl6')
+                    ? 'ertiga'
+                    : 'sedan';
+                  
+                  const paxCount = vLower.includes('tempo') || vLower.includes('traveller')
+                    ? 12
+                    : vLower.includes('crysta') || vLower.includes('innova')
+                    ? 7
+                    : vLower.includes('ertiga') || vLower.includes('xl6')
+                    ? 6
+                    : 4;
 
-                // Key highlights column
-                const highlightsColIdx = headers.findIndex((h: string) => /highlight|inclusion|feature|note|coverage/i.test(h));
-                const highlights       = highlightsColIdx !== -1 ? row[highlightsColIdx] : '';
+                  return (
+                    <div
+                      class="shrink-0 w-[260px] sm:w-[280px] snap-start bg-white rounded-m3-2xl border border-m3-outline-variant/80 shadow-xs hover:shadow-m3-2 hover:border-m3-primary/40 transition-all flex flex-col justify-between overflow-hidden group select-none"
+                    >
+                      <div>
+                        <!-- Vehicle Photo Showcase -->
+                        <div class="relative h-32 sm:h-36 bg-gradient-to-b from-slate-100 to-slate-200/80 flex items-center justify-center p-3 overflow-hidden">
+                          <span class="absolute top-2.5 left-2.5 z-10 inline-flex items-center gap-1 px-2 py-0.5 rounded-m3-full bg-white/95 backdrop-blur-xs text-[10px] font-extrabold uppercase tracking-wider text-m3-primary shadow-2xs border border-m3-primary/20">
+                            <Sparkles className="w-2.5 h-2.5 text-m3-primary shrink-0" />
+                            <span>{badge}</span>
+                          </span>
 
-                // Remaining info columns (rate/km, bata, tolls, etc.)
-                const skipSet  = new Set([0, heroPriceIdx, seatColIdx, highlightsColIdx].filter(i => i >= 0));
-                const infoChips = headers
-                  .map((h: string, i: number) => ({ label: h, value: row[i] ?? '', idx: i }))
-                  .filter(({ idx, value }: { idx: number; value: any }) => !skipSet.has(idx) && idx > 0 && String(value).trim().length > 0);
+                          {vehicleImg ? (
+                            <img
+                              src={vehicleImg}
+                              alt={`${vehicleName} taxi rental`}
+                              width="180"
+                              height="90"
+                              loading="lazy"
+                              decoding="async"
+                              class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-sm"
+                            />
+                          ) : (
+                            <Car className="w-10 h-10 text-m3-primary/40" />
+                          )}
+                        </div>
 
-                const shortName = vehicleName.split('/')[0].replace(/\(.*?\)/g, '').trim();
-                const bookingText = `*Kalidass Travels - Booking Enquiry*
+                        <!-- Card Content -->
+                        <div class="p-3.5 sm:p-4 space-y-2.5">
+                          <div>
+                            <h3 class="text-sm sm:text-base font-bold text-m3-on-surface font-heading leading-tight truncate" title={vehicleName}>
+                              {vehicleName}
+                            </h3>
+                            <p class="text-[11px] text-m3-on-surface-variant mt-0.5 truncate">
+                              {isTirupati ? "Sanitized Dual AC • Ghat Road Certified" : isThiruvannamalai ? "Sanitized Dual AC • Verified Highway Chauffeur" : isKanchipuram ? "Sanitized Dual AC • Silk Weaver Route Expert" : isNavagraha ? "Sanitized Dual AC • Navagraha Route Expert" : isRameswaram ? "Sanitized Dual AC • Coastal Highway Expert" : isSabarimala ? "Sanitized Dual AC • Western Ghats & Vratham Chauffeur" : isChidambaram ? "Sanitized Dual AC • ECR / NH 32 Highway Expert" : isVellore ? "Sanitized Dual AC • Bangalore Expressway Expert" : "Sanitized Dual AC • ECR Coastal Route Expert"}
+                            </p>
+                          </div>
+
+                          <!-- Key Specs Badges -->
+                          <div class="flex items-center gap-1.5 flex-wrap text-micro font-bold">
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-m3-md bg-emerald-50 text-emerald-800 border border-emerald-200">
+                              <Users className="w-3 h-3 text-emerald-700 shrink-0" />
+                              <span>{seats}</span>
+                            </span>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-m3-md bg-m3-surface-container text-m3-on-surface border border-m3-outline-variant/60">
+                              <Luggage className="w-3 h-3 text-m3-secondary shrink-0" />
+                              <span>{baggage}</span>
+                            </span>
+                          </div>
+
+                          <!-- Highlights -->
+                          <div class="p-2 rounded-m3-lg bg-amber-50/70 border border-amber-200/60 text-[11px] text-amber-950 flex items-start gap-1.5 leading-snug">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-amber-700 shrink-0 mt-0.5" />
+                            <span>{isTirupati ? "Tirumala Hill Ascent & Padmavathi Temple Included" : isThiruvannamalai ? "Arunachaleswarar Darshan & 14 km Girivalam Standby Included" : isKanchipuram ? "Kamakshi Amman & Silk Weaver Waiting Included" : isNavagraha ? "All 9 Navagraha Temples & 750 km Circuit Included" : isRameswaram ? "22 Theerthams & Dhanushkodi Beach Drop Included" : isSabarimala ? "Kerala Interstate Permit & Nilakkal Drop Included" : isChidambaram ? "Natarajar Temple & Pichavaram Boating Waiting Included" : isVellore ? "Sripuram Golden Temple & Vellore Fort Waiting Included" : "Auroville, French White Town & Promenade Beach Included"}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Action Button: Connects to Booking Engine -->
+                      <div class="p-3.5 sm:p-4 pt-0">
+                        <button
+                          type="button"
+                          data-select-vehicle={engineVehId}
+                          data-select-pax={paxCount}
+                          class="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-primary hover:bg-slate-900 active:bg-black text-white text-xs font-bold shadow-xs transition-all cursor-pointer"
+                        >
+                          <Sparkles className="w-3 h-3" />
+                          <span>Select in Booking Engine ↑</span>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <!-- Mobile Carousel Dots Indicator -->
+              <div class="flex sm:hidden justify-center items-center gap-1.5 mt-2" aria-hidden="true" id="fleet-carousel-dots">
+                {service.tariff.rows.map((_: any, idx: number) => (
+                  <span
+                    class={`h-1.5 rounded-full transition-all duration-300 ${idx === 0 ? 'bg-m3-primary w-4' : 'bg-m3-surface-container-highest w-1.5'}`}
+                    data-dot-idx={idx}
+                  />
+                ))}
+              </div>
+            </div>
+          ) : (
+            /* Non-Tirupati standard cards view with pricing dropdowns */
+            <div id="tariff-cards-view" class="p-4 sm:p-6 bg-m3-surface-container-low">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                {service.tariff.rows.map((row: any[], rIdx: number) => {
+                  const headers = service.tariff.headers || [];
+                  const vehicleName = row[0];
+                  const badge = getVehicleBadge(vehicleName);
+                  const vehicleImg = getVehicleFleetImage(vehicleName);
+
+                  const totalCostIdx = headers.findIndex((h: string) => /total\s*cost|flat\s*cost|package\s*cost|charges|rate/i.test(h) && !/rate\/km/i.test(h));
+                  const lastRupeeIdx = (() => {
+                    let last = -1;
+                    row.forEach((cell: string, i: number) => {
+                      if (i > 0 && typeof cell === 'string' && cell.trim().startsWith('₹')) last = i;
+                    });
+                    return last;
+                  })();
+                  const heroPriceIdx    = totalCostIdx !== -1 ? totalCostIdx : lastRupeeIdx;
+                  const heroPrice       = heroPriceIdx !== -1 ? row[heroPriceIdx] : '';
+                  const heroPriceLabel  = heroPriceIdx !== -1 ? headers[heroPriceIdx] : 'Total Cost';
+
+                  const seatColIdx = headers.findIndex((h: string) => /seat|pax|devotee|passenger|capacity/i.test(h));
+                  const seats      = seatColIdx !== -1 ? row[seatColIdx] : '';
+
+                  const highlightsColIdx = headers.findIndex((h: string) => /highlight|inclusion|feature|note|coverage/i.test(h));
+                  const highlights       = highlightsColIdx !== -1 ? row[highlightsColIdx] : '';
+
+                  const skipSet  = new Set([0, heroPriceIdx, seatColIdx, highlightsColIdx].filter(i => i >= 0));
+                  const infoChips = headers
+                    .map((h: string, i: number) => ({ label: h, value: row[i] ?? '', idx: i }))
+                    .filter(({ idx, value }: { idx: number; value: any }) => !skipSet.has(idx) && idx > 0 && String(value).trim().length > 0);
+
+                  const shortName = vehicleName.split('/')[0].replace(/\(.*?\)/g, '').trim();
+                  const bookingText = `*Kalidass Travels - Booking Enquiry*
 • Service: ${service.title}
 • Vehicle: ${vehicleName} (${heroPrice})
 • Travel Date: 
@@ -1901,186 +2410,149 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
 • Number of Passengers: 
 
 Please share availability and confirmed quote.`;
-                const heroPriceNum = parseInt(String(heroPrice).replace(/[^0-9]/g, ''), 10) || 0;
-                const stayRates = getPackageStayRates(service.slug, vehicleName, heroPriceNum);
+                  const heroPriceNum = parseInt(String(heroPrice).replace(/[^0-9]/g, ''), 10) || 0;
+                  const stayRates = getPackageStayRates(service.slug, vehicleName, heroPriceNum);
 
-                // If odd number of rows and this is the last one, span full width on desktop for nice layout
-                const isOddLast = rIdx === service.tariff.rows.length - 1 && service.tariff.rows.length % 2 !== 0;
+                  const isOddLast = rIdx === service.tariff.rows.length - 1 && service.tariff.rows.length % 2 !== 0;
 
-                return (
-                  <div 
-                    class={`tariff-card bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between hover:shadow-m3-2 hover:border-m3-primary/40 transition-all overflow-hidden group ${isOddLast ? 'md:col-span-2' : ''}`}
-                    data-vehicle-name={vehicleName}
-                    data-service-title={service.title}
-                  >
-                    <div class="p-5 sm:p-6">
-                      <!-- Top Badges Row -->
-                      <div class="flex items-center justify-between gap-2 mb-3.5">
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-m3-full bg-m3-primary/10 text-m3-primary text-[11px] font-bold tracking-wider uppercase border border-m3-primary/20">
-                          <Sparkles className="w-3 h-3 text-m3-primary shrink-0" />
-                          <span>{badge}</span>
-                        </span>
-                      </div>
-
-                      <!-- Vehicle Identity & Preview Row -->
-                      <div class="flex items-center justify-between gap-3 mb-4">
-                        <div class="min-w-0 flex-1">
-                          <h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading leading-snug group-hover:text-m3-primary transition-colors">
-                            {vehicleName}
-                          </h3>
-                          <div class="flex items-center gap-2 text-xs sm:text-sm font-semibold text-m3-on-surface mt-1.5">
-                            <span class="inline-flex items-center gap-1.5 font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-m3-md border border-emerald-200">
-                              <Users className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-                              <span>{seats || '4 Passengers'}</span>
-                            </span>
-                            <span class="inline-flex items-center gap-1.5 font-medium text-m3-on-surface bg-m3-surface-container px-2.5 py-0.5 rounded-m3-md border border-m3-outline-variant/60">
-                              <Luggage className="w-3.5 h-3.5 text-m3-secondary shrink-0" />
-                              <span>{getVehicleBaggage(vehicleName)}</span>
-                            </span>
-                          </div>
-                        </div>
-                        {vehicleImg ? (
-                          <div class="shrink-0 w-20 h-12 sm:w-24 sm:h-14 flex items-center justify-end">
-                            <img
-                              src={vehicleImg}
-                              alt={`${vehicleName} cab rental - Kalidass Travels`}
-                              width="112"
-                              height="56"
-                              decoding="async"
-                              class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-xs"
-                              loading="lazy"
-                            />
-                          </div>
-                        ) : (
-                          <div class="shrink-0 w-10 h-10 rounded-m3-xl bg-m3-primary-container text-m3-on-primary-container flex items-center justify-center">
-                            <Car className="w-5 h-5" />
-                          </div>
-                        )}
-                      </div>
-
-                      <!-- M3 Tonal Surface Price Slabs (Inspiration from weekend-packages) -->
-                      <div class="bg-m3-surface-container-low p-4 rounded-m3-xl border border-m3-outline-variant/60 mb-4 space-y-2.5">
-                        {stayRates && (() => {
-                          const rawStayOptions = pilgrimConfig 
-                            ? pilgrimConfig.getDropdownOptions(stayRates, vehicleName)
-                            : getFallbackStayOptions(stayRates, vehicleName);
-                          const stayOptions = rawStayOptions.map(opt => resolveStayOptionDetails(opt, vehicleName));
-
-                          return (
-                            <div class="pb-2.5 mb-2.5 border-b border-m3-outline-variant/50">
-                              <label class="block text-[11px] font-bold uppercase tracking-wider text-m3-on-surface-variant mb-1.5">
-                                <span>Trip Duration</span>
-                              </label>
-                              <select 
-                                class="tirupati-stay-select w-full bg-m3-surface border border-m3-outline-variant hover:border-m3-primary rounded-m3-lg py-1.5 px-2.5 text-xs sm:text-sm font-bold text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary outline-none transition-all cursor-pointer shadow-2xs"
-                                aria-label={`Select trip duration for ${vehicleName}`}
-                                data-vehicle-name={vehicleName}
-                              >
-                                {stayOptions.map((opt) => (
-                                  <option 
-                                    value={opt.value} 
-                                    data-price={opt.price} 
-                                    data-duration={opt.duration} 
-                                    data-inclusions={opt.inclusions}
-                                    selected={opt.selected}
-                                  >
-                                    {opt.label}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-                          );
-                        })()}
-
-                        <div class="flex items-baseline justify-between gap-2">
-                          <span class="text-[11px] font-semibold text-m3-on-surface-variant uppercase tracking-wider">
-                            {heroPriceLabel || "All-Inclusive Flat Fare"}
+                  return (
+                    <div 
+                      class={`tariff-card bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between hover:shadow-m3-2 hover:border-m3-primary/40 transition-all overflow-hidden group ${isOddLast ? 'md:col-span-2' : ''}`}
+                      data-vehicle-name={vehicleName}
+                      data-service-title={service.title}
+                    >
+                      <div class="p-5 sm:p-6">
+                        <div class="flex items-center justify-between gap-2 mb-3.5">
+                          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-m3-full bg-m3-primary/10 text-m3-primary text-[11px] font-bold tracking-wider uppercase border border-m3-primary/20">
+                            <Sparkles className="w-3 h-3 text-m3-primary shrink-0" />
+                            <span>{badge}</span>
                           </span>
-                          <strong class="tariff-hero-price text-lg sm:text-xl font-bold text-m3-primary font-heading tracking-tight leading-none">
-                            {heroPrice}
-                          </strong>
                         </div>
 
-                        {infoChips.length > 0 && (
-                          <div class="pt-2 border-t border-m3-outline-variant/50 space-y-1.5">
-                            {infoChips.map(({ label, value }: { label: string; value: string }) => (
-                              <div class="flex items-center justify-between text-xs py-0.5">
-                                <span class="text-m3-on-surface-variant font-medium">{label}</span>
-                                <strong class="font-bold text-m3-on-surface">{value}</strong>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-
-                        {(() => {
-                          const inclusionsText = (() => {
-                            if (pilgrimConfig) return pilgrimConfig.baseInclusionsText;
-                            if (isActingDriver) return 'Verified Commercial Chauffeur • On-Time Pickup Guarantee';
-                            if (isTour) return 'Doorstep Pickup, Fuel, Highway Tolls & Driver Bata Included';
-                            if (service.slug.includes('airport')) return 'Airport Parking, Tolls, Fuel & Chauffeur Included';
-                            return 'Doorstep Pickup, Fuel & Chauffeur Included';
-                          })();
-                          return (
-                            <div class="pt-1.5 border-t border-m3-outline-variant/40 flex items-center gap-1.5 text-micro font-semibold text-emerald-800">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                              <span class="tariff-inclusions-text">{inclusionsText}</span>
+                        <div class="flex items-center justify-between gap-3 mb-4">
+                          <div class="min-w-0 flex-1">
+                            <h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading leading-snug group-hover:text-m3-primary transition-colors">
+                              {vehicleName}
+                            </h3>
+                            <div class="flex items-center gap-2 text-xs sm:text-sm font-semibold text-m3-on-surface mt-1.5">
+                              <span class="inline-flex items-center gap-1.5 font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-m3-md border border-emerald-200">
+                                <Users className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                                <span>{seats || '4 Passengers'}</span>
+                              </span>
+                              <span class="inline-flex items-center gap-1.5 font-medium text-m3-on-surface bg-m3-surface-container px-2.5 py-0.5 rounded-m3-md border border-m3-outline-variant/60">
+                                <Luggage className="w-3.5 h-3.5 text-m3-secondary shrink-0" />
+                                <span>{getVehicleBaggage(vehicleName)}</span>
+                              </span>
                             </div>
-                          );
-                        })()}
-                      </div>
-
-                      <!-- Key Highlights (Unique Differentiator / Best-For) -->
-                      {(() => {
-                        const cleanHighlights = (highlights || '')
-                          .replace(/•\s*(Fuel|FASTag|Tolls|AP Permit|Border Permit|Driver Bata|Bata).*Included/gi, '')
-                          .replace(/(Clean AC Sedan|Comfortable AC 6-Seater|Spacious AC MUV|Executive MPV|Family Group Coach|Family Coach)\s*•?\s*/gi, '')
-                          .replace(/•?\s*\d+\s*Days?:\s*₹[0-9,]+.*$/gi, '')
-                          .replace(/\|\s*\d+\s*Days?:\s*₹[0-9,]+.*$/gi, '')
-                          .replace(/\(All-Inclusive\)/gi, '')
-                          .trim();
-                        return cleanHighlights ? (
-                          <div class="flex items-start gap-2 text-xs text-m3-on-surface-variant leading-relaxed mb-1">
-                            <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
-                            <span class="font-medium text-m3-on-surface">{cleanHighlights}</span>
                           </div>
-                        ) : null;
-                      })()}
-                    </div>
+                          {vehicleImg ? (
+                            <div class="shrink-0 w-20 h-12 sm:w-24 sm:h-14 flex items-center justify-end">
+                              <img
+                                src={vehicleImg}
+                                alt={`${vehicleName} cab rental - Kalidass Travels`}
+                                width="112"
+                                height="56"
+                                decoding="async"
+                                class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-xs"
+                                loading="lazy"
+                              />
+                            </div>
+                          ) : (
+                            <div class="shrink-0 w-10 h-10 rounded-m3-xl bg-m3-primary-container text-m3-on-primary-container flex items-center justify-center">
+                              <Car className="w-5 h-5" />
+                            </div>
+                          )}
+                        </div>
 
-                    <!-- Card Action Area (Dual Action Buttons) -->
-                    <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-1">
-                      <div class="grid grid-cols-2 gap-2">
-                        <a
-                          href="tel:+918939539211"
-                          aria-label={`Call to book ${shortName} for ${service.title}`}
-                          class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-surface-container hover:bg-blue-50 active:bg-blue-100 text-m3-on-surface hover:text-[#1A73E8] border border-m3-outline-variant hover:border-blue-300 text-xs font-bold transition-all select-none"
-                        >
-                          <AndroidPhoneIcon className="w-3.5 h-3.5 text-[#1A73E8] shrink-0" />
-                          <span>Call Now</span>
-                        </a>
-                        <a
-                          href={buildWhatsAppUrl(bookingText)}
-                          target="_blank"
-                          rel="noopener noreferrer nofollow"
-                          data-open-enquiry="true"
-                          data-service-title={service.title}
-                          data-vehicle-name={vehicleName}
-                          data-price={heroPrice}
-                          data-slug={service.slug}
-                          data-duration={pilgrimConfig ? "1 Day (Same Day Return)" : ""}
-                          aria-label={`Book ${vehicleName} on WhatsApp for ${heroPrice}`}
-                          class="tariff-whatsapp-btn inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 text-xs font-bold transition-all select-none cursor-pointer"
-                        >
-                          <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0" />
-                          <span>Enquire</span>
-                        </a>
+                        <div class="bg-m3-surface-container-low p-4 rounded-m3-xl border border-m3-outline-variant/60 mb-4 space-y-2.5">
+                          {stayRates && (() => {
+                            const rawStayOptions = pilgrimConfig 
+                              ? pilgrimConfig.getDropdownOptions(stayRates, vehicleName)
+                              : getFallbackStayOptions(stayRates, vehicleName);
+                            const stayOptions = rawStayOptions.map(opt => resolveStayOptionDetails(opt, vehicleName));
+
+                            return (
+                              <div class="pb-2.5 mb-2.5 border-b border-m3-outline-variant/50">
+                                <label class="block text-[11px] font-bold uppercase tracking-wider text-m3-on-surface-variant mb-1.5">
+                                  <span>Trip Duration</span>
+                                </label>
+                                <select 
+                                  class="tirupati-stay-select w-full bg-m3-surface border border-m3-outline-variant hover:border-m3-primary rounded-m3-lg py-1.5 px-2.5 text-xs sm:text-sm font-bold text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary outline-none transition-all cursor-pointer shadow-2xs"
+                                  aria-label={`Select trip duration for ${vehicleName}`}
+                                  data-vehicle-name={vehicleName}
+                                >
+                                  {stayOptions.map((opt) => (
+                                    <option 
+                                      value={opt.value} 
+                                      data-price={opt.price} 
+                                      data-duration={opt.duration} 
+                                      data-inclusions={opt.inclusions}
+                                      selected={opt.selected}
+                                    >
+                                      {opt.label}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            );
+                          })()}
+
+                          <div class="flex items-baseline justify-between gap-2">
+                            <span class="text-[11px] font-semibold text-m3-on-surface-variant uppercase tracking-wider">
+                              {heroPriceLabel || "All-Inclusive Flat Fare"}
+                            </span>
+                            <strong class="tariff-hero-price text-lg sm:text-xl font-bold text-m3-primary font-heading tracking-tight leading-none">
+                              {heroPrice}
+                            </strong>
+                          </div>
+
+                          {infoChips.length > 0 && (
+                            <div class="pt-2 border-t border-m3-outline-variant/50 space-y-1.5">
+                              {infoChips.map(({ label, value }: { label: string; value: string }) => (
+                                <div class="flex items-center justify-between text-xs py-0.5">
+                                  <span class="text-m3-on-surface-variant font-medium">{label}</span>
+                                  <strong class="font-bold text-m3-on-surface">{value}</strong>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-1">
+                        <div class="grid grid-cols-2 gap-2">
+                          <a
+                            href="tel:+918939539211"
+                            aria-label={`Call to book ${shortName} for ${service.title}`}
+                            class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-surface-container hover:bg-blue-50 active:bg-blue-100 text-m3-on-surface hover:text-[#1A73E8] border border-m3-outline-variant hover:border-blue-300 text-xs font-bold transition-all select-none"
+                          >
+                            <AndroidPhoneIcon className="w-3.5 h-3.5 text-[#1A73E8] shrink-0" />
+                            <span>Call Now</span>
+                          </a>
+                          <a
+                            href={buildWhatsAppUrl(bookingText)}
+                            target="_blank"
+                            rel="noopener noreferrer nofollow"
+                            data-open-enquiry="true"
+                            data-service-title={service.title}
+                            data-vehicle-name={vehicleName}
+                            data-price={heroPrice}
+                            data-slug={service.slug}
+                            data-duration={pilgrimConfig ? "1 Day (Same Day Return)" : ""}
+                            aria-label={`Book ${vehicleName} on WhatsApp for ${heroPrice}`}
+                            class="tariff-whatsapp-btn inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 text-xs font-bold transition-all select-none cursor-pointer"
+                          >
+                            <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0" />
+                            <span>Enquire</span>
+                          </a>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          )}
 
           <!-- Secondary Desktop Table View (Toggleable) -->
           <div id="tariff-table-view" class="hidden overflow-x-auto">
@@ -2188,7 +2660,83 @@ Please share availability and confirmed quote.`;
                   });
                 }
 
-                // Dynamic stay duration & pricing update for Tirupati tariff cards
+                // Horizontal Carousel Prev/Next & Dots Syncing
+                const carouselTrack = document.getElementById('fleet-carousel-track');
+                const btnPrev = document.getElementById('fleet-carousel-prev');
+                const btnNext = document.getElementById('fleet-carousel-next');
+                const dotsContainer = document.getElementById('fleet-carousel-dots');
+
+                if (carouselTrack) {
+                  if (btnPrev) {
+                    btnPrev.addEventListener('click', function() {
+                      carouselTrack.scrollBy({ left: -280, behavior: 'smooth' });
+                    });
+                  }
+                  if (btnNext) {
+                    btnNext.addEventListener('click', function() {
+                      carouselTrack.scrollBy({ left: 280, behavior: 'smooth' });
+                    });
+                  }
+
+                  if (dotsContainer) {
+                    const dots = dotsContainer.querySelectorAll('[data-dot-idx]');
+                    carouselTrack.addEventListener('scroll', function() {
+                      const scrollLeft = carouselTrack.scrollLeft;
+                      const cardWidth = 270;
+                      const activeIndex = Math.min(Math.round(scrollLeft / cardWidth), dots.length - 1);
+                      dots.forEach(function(dot, idx) {
+                        if (idx === activeIndex) {
+                          dot.classList.add('bg-m3-primary', 'w-4');
+                          dot.classList.remove('bg-m3-surface-container-highest', 'w-1.5');
+                        } else {
+                          dot.classList.remove('bg-m3-primary', 'w-4');
+                          dot.classList.add('bg-m3-surface-container-highest', 'w-1.5');
+                        }
+                      });
+                    }, { passive: true });
+                  }
+                }
+
+                // Connect "Select in Booking Engine" buttons to Booking Engine
+                document.querySelectorAll('[data-select-vehicle]').forEach(function(btn) {
+                  btn.addEventListener('click', function() {
+                    const vehId = btn.getAttribute('data-select-vehicle');
+                    const pax = btn.getAttribute('data-select-pax');
+                    window.dispatchEvent(new CustomEvent('select-tirupati-vehicle', {
+                      detail: { vehicleId: vehId, passengers: pax }
+                    }));
+                    window.dispatchEvent(new CustomEvent('select-thiruvannamalai-vehicle', {
+                      detail: { vehicleId: vehId, passengers: pax }
+                    }));
+                    window.dispatchEvent(new CustomEvent('select-kanchipuram-vehicle', {
+                      detail: { vehicleId: vehId, passengers: pax }
+                    }));
+                    window.dispatchEvent(new CustomEvent('select-navagraha-vehicle', {
+                      detail: { vehicleId: vehId, passengers: pax }
+                    }));
+                    window.dispatchEvent(new CustomEvent('select-rameswaram-vehicle', {
+                      detail: { vehicleId: vehId, passengers: pax }
+                    }));
+                    window.dispatchEvent(new CustomEvent('select-sabarimala-vehicle', {
+                      detail: { vehicleId: vehId, passengers: pax }
+                    }));
+                    window.dispatchEvent(new CustomEvent('select-chidambaram-vehicle', {
+                      detail: { vehicleId: vehId, passengers: pax }
+                    }));
+                    window.dispatchEvent(new CustomEvent('select-vellore-vehicle', {
+                      detail: { vehicleId: vehId, passengers: pax }
+                    }));
+                    window.dispatchEvent(new CustomEvent('select-pondicherry-vehicle', {
+                      detail: { vehicleId: vehId, passengers: pax }
+                    }));
+                    const bookingEl = document.getElementById('booking');
+                    if (bookingEl) {
+                      bookingEl.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  });
+                });
+
+                // Dynamic stay duration & pricing update for non-Tirupati tariff cards
                 document.querySelectorAll('.tirupati-stay-select').forEach(function(select) {
                   select.addEventListener('change', function(e) {
                     const target = e.target;
@@ -2204,32 +2752,17 @@ Please share availability and confirmed quote.`;
                     const vehicleName = card.getAttribute('data-vehicle-name') || '';
                     const serviceTitle = card.getAttribute('data-service-title') || 'Chennai to Tirupati Cab';
 
-                    // 1. Update hero price
                     const priceEl = card.querySelector('.tariff-hero-price');
-                    if (priceEl && price) {
-                      priceEl.textContent = price;
-                    }
+                    if (priceEl && price) priceEl.textContent = price;
 
-                    // 2. Update inclusions text
                     const inclusionsEl = card.querySelector('.tariff-inclusions-text');
-                    if (inclusionsEl && inclusions) {
-                      inclusionsEl.textContent = inclusions;
-                    }
+                    if (inclusionsEl && inclusions) inclusionsEl.textContent = inclusions;
 
-                    // 3. Update WhatsApp enquiry button
                     const waBtn = card.querySelector('.tariff-whatsapp-btn');
                     if (waBtn) {
                       waBtn.setAttribute('data-price', price);
                       waBtn.setAttribute('data-duration', duration);
-                      const newMsg = `*Kalidass Travels - Booking Enquiry*
-• Service: ${serviceTitle}
-• Vehicle: ${vehicleName} (${duration})
-• All-Inclusive Fare: ${price}
-• Travel Date: 
-• Pickup Time: 
-• Pickup Location in Chennai: 
-
-Please share availability and confirmed quote.`;
+                      const newMsg = `*Kalidass Travels - Booking Enquiry*\n• Service: ${serviceTitle}\n• Vehicle: ${vehicleName} (${duration})\n• All-Inclusive Fare: ${price}\n• Travel Date: \n• Pickup Time: \n• Pickup Location in Chennai: \n\nPlease share availability and confirmed quote.`;
                       waBtn.setAttribute('href', `https://wa.me/918939539211?text=${encodeURIComponent(newMsg)}`);
                       waBtn.setAttribute('aria-label', `Book ${vehicleName} on WhatsApp for ${price}`);
                     }
@@ -2245,8 +2778,8 @@ Please share availability and confirmed quote.`;
             })();
           </script>
 
-          {/* Integrated Inclusions & Exclusions Drawer (Consolidated for zero scroll friction) */}
-          {(service.includes || service.excludes) && (
+          {/* Integrated Inclusions & Exclusions Drawer (Consolidated for zero scroll friction; omitted for dedicated engine packages where Hero Engine & Facts cover all inclusions) */}
+          {!hasDedicatedEngine && (service.includes || service.excludes) && (
             <div class="border-t border-m3-outline-variant bg-m3-surface-container-lowest p-5 sm:p-6">
               <div class="grid md:grid-cols-2 gap-5 sm:gap-6">
                 {service.includes && (
@@ -2288,9 +2821,9 @@ Please share availability and confirmed quote.`;
         </section>
       )}
 
-      {/* WHY KALIDASS TRAVELS VS ONLINE AGGREGATORS (High-Authority GEO Comparison) */}
-      {pilgrimConfig && (
-        <section aria-label="Why Choose Kalidass Travels Over Online Aggregators" class="bg-m3-surface rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 p-5 sm:p-7">
+      {/* WHY KALIDASS TRAVELS VS ONLINE AGGREGATORS (Non-Dedicated Engine Placement) */}
+      {!hasDedicatedEngine && pilgrimConfig && (
+        <section id="compare" aria-label="Why Choose Kalidass Travels Over Online Aggregators" class="bg-m3-surface rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 p-5 sm:p-7 scroll-mt-40">
           <div class="max-w-2xl mb-5">
             <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-emerald-50 text-emerald-900 text-xs font-bold uppercase tracking-wider mb-2 border border-emerald-200">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
@@ -2308,17 +2841,20 @@ Please share availability and confirmed quote.`;
             <table class="w-full text-left text-xs sm:text-sm font-sans border-collapse">
               <thead class="bg-m3-surface-container text-m3-on-surface-variant font-bold uppercase tracking-wider text-micro sm:text-xs">
                 <tr>
-                  <th class="p-3 sm:p-4">Feature / Service</th>
-                  <th class="p-3 sm:p-4 bg-emerald-50/70 text-emerald-900 font-extrabold">Kalidass Travels</th>
-                  <th class="p-3 sm:p-4 text-m3-on-surface-variant">Online Cab Aggregators (MakeMyTrip / Savaari / Uber)</th>
+                  <th class="p-2.5 sm:p-4">Feature</th>
+                  <th class="p-2.5 sm:p-4 bg-emerald-50/70 text-emerald-900 font-extrabold whitespace-nowrap">Kalidass Travels</th>
+                  <th class="p-2.5 sm:p-4 text-m3-on-surface-variant">
+                    <span class="sm:hidden">Online App Cabs</span>
+                    <span class="hidden sm:inline">Online Cab Aggregators (MakeMyTrip / Savaari / Uber)</span>
+                  </th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-m3-outline-variant text-m3-on-surface">
                 {pilgrimConfig.comparisonRows.map((row) => (
                   <tr class="hover:bg-m3-surface-container-low transition-colors">
-                    <td class="p-3 sm:p-4 font-semibold">{row.feature}</td>
-                    <td class="p-3 sm:p-4 bg-emerald-50/40 font-bold text-emerald-950">{row.kalidass}</td>
-                    <td class="p-3 sm:p-4 text-m3-on-surface-variant">{row.aggregators}</td>
+                    <td class="p-2.5 sm:p-4 font-semibold align-top">{row.feature}</td>
+                    <td class="p-2.5 sm:p-4 bg-emerald-50/40 font-bold text-emerald-950 align-top">{row.kalidass}</td>
+                    <td class="p-2.5 sm:p-4 text-m3-on-surface-variant align-top">{row.aggregators}</td>
                   </tr>
                 ))}
               </tbody>
@@ -2331,44 +2867,53 @@ Please share availability and confirmed quote.`;
       {service.routePlan && (
         <section
           id="route"
-          class="bg-m3-surface rounded-m3-2xl p-4 sm:p-6 border border-m3-outline-variant shadow-m3-1 space-y-4 scroll-mt-40"
+          class="bg-m3-surface rounded-m3-xl sm:rounded-m3-2xl p-3 sm:p-5 lg:p-6 border border-m3-outline-variant shadow-m3-1 space-y-3 sm:space-y-4 scroll-mt-40"
         >
           <!-- Section Header -->
-          <div class="flex flex-wrap items-center justify-between gap-2.5 border-b border-m3-outline-variant/60 pb-3">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-2 sm:pb-3">
             <div>
-              <h2 class="text-base sm:text-xl font-bold text-m3-on-surface flex items-center gap-2 font-heading">
+              <h2 class="text-base sm:text-lg font-bold text-m3-on-surface flex items-center gap-2 font-heading">
                 <Compass className="w-4 h-4 sm:w-5 sm:h-5 text-m3-primary shrink-0" />
                 <span>{shortName} Route Schedule &amp; Key Stops</span>
               </h2>
               <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-0.5">Optimized timeline designed to ensure timely darshan entry</p>
             </div>
             {service.duration && (
-              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-m3-full bg-m3-surface-container-high text-m3-on-surface text-micro sm:text-xs font-semibold">
-                <Clock className="w-3.5 h-3.5 text-m3-primary" />
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 sm:px-3 sm:py-1 rounded-m3-full bg-m3-surface-container-high text-m3-on-surface text-micro sm:text-xs font-semibold">
+                <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-m3-primary" />
                 <span>{service.duration}</span>
               </span>
             )}
           </div>
 
           <!-- Sleek Unboxed Transit Stepper (Google Maps Transit Style) -->
-          <div class="relative pl-6 sm:pl-7 border-l-2 border-m3-primary/30 ml-2.5 sm:ml-3 space-y-3 sm:space-y-3.5 my-1">
-            {service.routePlan.map((stop: any, idx: number) => (
-              <div class="relative group">
-                {/* Node Number Dot */}
-                <div class="absolute -left-[31px] sm:-left-[35px] top-0.5 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-m3-primary text-m3-on-primary font-bold text-[10px] sm:text-xs flex items-center justify-center shadow-2xs ring-4 ring-m3-surface">
-                  {idx + 1}
+          <div class="my-2 space-y-0">
+            {service.routePlan.map((stop: any, idx: number) => {
+              const isLast = idx === service.routePlan.length - 1;
+              return (
+                <div class="flex items-stretch gap-3 sm:gap-3.5 relative group">
+                  {/* Stepper Node & Connecting Line Column */}
+                  <div class="flex flex-col items-center shrink-0">
+                    <div class="w-6 h-6 rounded-full bg-m3-primary text-m3-on-primary font-bold text-[11px] sm:text-xs flex items-center justify-center shrink-0 shadow-xs ring-4 ring-m3-surface z-10 leading-none">
+                      {idx + 1}
+                    </div>
+                    {!isLast && (
+                      <div class="w-0.5 bg-m3-primary/30 flex-1 min-h-[22px] my-0.5"></div>
+                    )}
+                  </div>
+
+                  {/* Stop Content */}
+                  <div class={`min-w-0 flex-1 ${isLast ? 'pb-1' : 'pb-3.5 sm:pb-4'}`}>
+                    <h3 class="font-bold text-m3-on-surface text-xs sm:text-sm font-heading leading-snug pt-0.5">
+                      {stop.stop}
+                    </h3>
+                    <p class="text-[11px] sm:text-xs text-m3-on-surface-variant mt-0.5 leading-relaxed">
+                      {stop.desc}
+                    </p>
+                  </div>
                 </div>
-                {/* Stop Content */}
-                <div class="min-w-0">
-                  <h3 class="font-bold text-m3-on-surface text-xs sm:text-sm font-heading leading-snug">
-                    {stop.stop}
-                  </h3>
-                  <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-0.5 leading-relaxed">
-                    {stop.desc}
-                  </p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
       )}
@@ -2377,52 +2922,75 @@ Please share availability and confirmed quote.`;
       {service.travelGuide && (
         <section
           id="guide"
-          class="bg-m3-surface rounded-m3-2xl p-5 sm:p-7 border border-m3-outline-variant shadow-m3-1 space-y-6 scroll-mt-40"
+          data-active-tab="practical"
+          class="bg-m3-surface rounded-m3-xl sm:rounded-m3-2xl p-3 sm:p-5 lg:p-6 border border-m3-outline-variant shadow-m3-1 space-y-3 sm:space-y-4 scroll-mt-40"
         >
           <!-- Section Header -->
-          <div class="border-b border-m3-outline-variant/60 pb-3">
-            <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface flex items-center gap-2.5 font-heading">
-              <FileText className="w-5 h-5 text-m3-primary shrink-0" />
+          <div class="border-b border-m3-outline-variant/60 pb-2 sm:pb-3">
+            <h2 class="text-base sm:text-lg font-bold text-m3-on-surface flex items-center gap-2 font-heading">
+              <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-m3-primary shrink-0" />
               <span>{shortName} {guideLabels.sectionTitle}</span>
             </h2>
-            <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-0.5">
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-0.5">
               {isTour 
                 ? "Essential darshan timings, dress code regulations & practical pilgrim tips" 
                 : "Operational timings, chauffeur standards & verified booking guidelines"}
             </p>
           </div>
 
+          <!-- Mobile Tab Switcher (Saves ~650px of vertical scrolling on mobile) -->
+          <div class="flex md:hidden items-center p-0.5 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant mb-1 select-none" role="tablist">
+            <button
+              type="button"
+              id="guide-tab-btn-practical"
+              role="tab"
+              aria-selected="true"
+              class="guide-tab-btn flex-1 py-1 px-2.5 rounded-m3-full text-xs font-bold transition-all bg-m3-primary text-white shadow-xs"
+            >
+              ⏰ Timings &amp; Dress Code
+            </button>
+            <button
+              type="button"
+              id="guide-tab-btn-significance"
+              role="tab"
+              aria-selected="false"
+              class="guide-tab-btn flex-1 py-1 px-2.5 rounded-m3-full text-xs font-medium text-m3-on-surface-variant transition-all hover:text-m3-on-surface"
+            >
+              {isTour && !isPondicherry ? "🛕 Sthala Puranam & Tips" : "🏖️ Places & Tips"}
+            </button>
+          </div>
+
           <!-- 4-Card Pilgrimage / Service Briefing Grid (2x2 on desktop, single column on mobile) -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 sm:gap-4 lg:gap-6">
             
             {/* CARD 1: Temple Significance & Sacred Traditions / Service Scope */}
-            <div class="bg-m3-surface-container-low rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant flex flex-col justify-between">
+            <div data-guide-group="significance" class="bg-m3-surface-container-low rounded-m3-lg sm:rounded-m3-xl p-2.5 sm:p-4 border border-m3-outline-variant flex flex-col justify-between">
               <div>
-                <div class="flex items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-2.5 mb-3.5">
-                  <h3 class="font-bold text-m3-on-surface text-sm sm:text-base font-heading flex items-center gap-2">
-                    {isTour ? <Sparkles className="w-4 h-4 text-amber-600 shrink-0" /> : <Compass className="w-4 h-4 text-m3-primary shrink-0" />}
+                <div class="flex items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-1.5 mb-2 sm:pb-2 sm:mb-2.5">
+                  <h3 class="font-bold text-m3-on-surface text-xs sm:text-sm font-heading flex items-center gap-1.5">
+                    {isTour ? <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" /> : <Compass className="w-3.5 h-3.5 text-m3-primary shrink-0" />}
                     <span>{guideLabels.col1Title}</span>
                   </h3>
-                  <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant bg-m3-surface-container px-2 py-0.5 rounded-m3-sm border border-m3-outline-variant/50">
+                  <span class="text-[10px] sm:text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant bg-m3-surface-container px-1.5 py-0.5 rounded-m3-sm border border-m3-outline-variant/50">
                     {isTour ? "Sthala Puranam" : "Coverage"}
                   </span>
                 </div>
 
                 {parsedHistory.length > 0 && (
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2">
                     {parsedHistory.map((item: any) => (
-                      <div class="bg-m3-surface rounded-m3-lg p-2.5 sm:p-3 border border-m3-outline-variant/60 shadow-2xs flex items-start gap-2.5 min-w-0">
-                        <div class={`w-2 h-2 rounded-full shrink-0 mt-1.5 ring-2 ${
+                      <div class="bg-m3-surface rounded-m3-md p-2 sm:p-2.5 border border-m3-outline-variant/60 shadow-2xs flex items-start gap-2 min-w-0">
+                        <div class={`w-1.5 h-1.5 rounded-full shrink-0 mt-1.5 ring-2 ${
                           isTour 
                             ? 'bg-amber-600 ring-amber-100' 
                             : 'bg-m3-primary ring-m3-primary/20'
                         }`}></div>
                         <div class="min-w-0 flex-1">
-                          <span class="block font-bold text-xs text-m3-on-surface font-heading leading-tight truncate">
+                          <span class="block font-bold text-[11px] sm:text-xs text-m3-on-surface font-heading leading-tight truncate">
                             {item.title}
                           </span>
                           {item.desc && (
-                            <span class="block text-micro text-m3-on-surface-variant font-medium leading-snug mt-0.5">
+                            <span class="block text-[10px] sm:text-micro text-m3-on-surface-variant font-medium leading-tight mt-0.5">
                               {item.desc}
                             </span>
                           )}
@@ -2433,41 +3001,41 @@ Please share availability and confirmed quote.`;
                 )}
               </div>
 
-              <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 flex items-center gap-1.5 text-micro font-semibold text-emerald-800">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>{isTour ? "Sacred yatra circuit coordinated with verified sanctum pooja timings" : "Doorstep pickup & return across all Chennai neighborhoods"}</span>
+              <div class="mt-2.5 pt-2 border-t border-m3-outline-variant/40 flex items-center gap-1.5 text-[11px] font-semibold text-emerald-800">
+                <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
+                <span>{isTour ? (isPondicherry ? "Coastal tour circuit with flexible halts at Auroville, White Town & beaches" : "Sacred yatra circuit coordinated with verified sanctum pooja timings") : "Doorstep pickup & return across all Chennai neighborhoods"}</span>
               </div>
             </div>
 
             {/* CARD 2: Temple & Darshan Timings */}
-            <div class="bg-m3-surface-container-low rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant flex flex-col justify-between">
+            <div data-guide-group="practical" class="bg-m3-surface-container-low rounded-m3-lg sm:rounded-m3-xl p-2.5 sm:p-4 border border-m3-outline-variant flex flex-col justify-between">
               <div>
-                <div class="flex items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-2.5 mb-3.5">
-                  <h3 class="font-bold text-m3-on-surface text-sm sm:text-base font-heading flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-m3-primary shrink-0" />
+                <div class="flex items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-1.5 mb-2 sm:pb-2 sm:mb-2.5">
+                  <h3 class="font-bold text-m3-on-surface text-xs sm:text-sm font-heading flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-m3-primary shrink-0" />
                     <span>{guideLabels.col2Title}</span>
                   </h3>
-                  <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant bg-m3-surface-container px-2 py-0.5 rounded-m3-sm border border-m3-outline-variant/50">
+                  <span class="text-[10px] sm:text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant bg-m3-surface-container px-1.5 py-0.5 rounded-m3-sm border border-m3-outline-variant/50">
                     {isTour ? "Darshan Slots" : "Operational SLA"}
                   </span>
                 </div>
 
                 {timingItems.length > 0 ? (
-                  <div class="space-y-2">
+                  <div class="space-y-1.5">
                     {timingItems.map((item: any) => {
                       const isLong = item.time && item.time.length > 28;
                       return (
-                        <div class={`bg-m3-surface p-2.5 rounded-m3-lg border border-m3-outline-variant/60 text-xs sm:text-sm ${
+                        <div class={`bg-m3-surface py-1.5 px-2.5 sm:py-2 sm:px-3 rounded-m3-md border border-m3-outline-variant/60 text-xs ${
                           isLong 
-                            ? 'space-y-1' 
-                            : 'flex flex-col sm:flex-row sm:items-center justify-between gap-1.5'
+                            ? 'flex flex-col gap-1' 
+                            : 'flex items-center justify-between gap-2'
                         }`}>
-                          <span class="font-semibold text-m3-on-surface leading-snug">{item.label}</span>
+                          <span class="font-semibold text-m3-on-surface leading-tight shrink">{item.label}</span>
                           {item.time && (
-                            <span class={`inline-block px-2.5 py-0.5 bg-m3-primary-container text-m3-on-primary-container text-xs font-bold leading-relaxed max-w-full break-words ${
+                            <span class={`inline-flex items-center justify-center px-2 py-0.5 bg-m3-primary-container text-m3-on-primary-container text-[11px] font-bold leading-normal shrink-0 ${
                               isLong 
-                                ? 'rounded-m3-md w-full' 
-                                : 'rounded-m3-full self-start sm:self-auto shrink-0'
+                                ? 'rounded-m3-sm w-full' 
+                                : 'rounded-m3-full whitespace-nowrap'
                             }`}>
                               {item.time}
                             </span>
@@ -2477,14 +3045,14 @@ Please share availability and confirmed quote.`;
                     })}
                   </div>
                 ) : (
-                  <div class="space-y-2 text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed">
+                  <div class="space-y-1.5 text-xs text-m3-on-surface-variant leading-relaxed">
                     <p>24/7 round-the-clock booking and dispatch support across Chennai.</p>
                   </div>
                 )}
               </div>
 
               {isTour && (
-                <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 flex items-start gap-1.5 text-micro text-m3-on-surface-variant">
+                <div class="mt-2.5 pt-2 border-t border-m3-outline-variant/40 flex items-start gap-1.5 text-[11px] text-m3-on-surface-variant leading-tight">
                   <Info className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
                   <span>Afternoon Break: Most shrines close 12:30 PM – 04:00 PM for pooja &amp; reopen in the evening.</span>
                 </div>
@@ -2492,39 +3060,39 @@ Please share availability and confirmed quote.`;
             </div>
 
             {/* CARD 3: Devotee Traditional Dress Code / Chauffeur Standards */}
-            <div class="bg-m3-surface-container-low rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant flex flex-col justify-between">
+            <div data-guide-group="practical" class="bg-m3-surface-container-low rounded-m3-lg sm:rounded-m3-xl p-2.5 sm:p-4 border border-m3-outline-variant flex flex-col justify-between">
               <div>
-                <div class="flex items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-2.5 mb-3.5">
-                  <h3 class="font-bold text-m3-on-surface text-sm sm:text-base font-heading flex items-center gap-2">
-                    {isTour ? <Sparkles className="w-4 h-4 text-amber-600 shrink-0" /> : <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />}
+                <div class="flex items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-1.5 mb-2 sm:pb-2 sm:mb-2.5">
+                  <h3 class="font-bold text-m3-on-surface text-xs sm:text-sm font-heading flex items-center gap-1.5">
+                    {isTour ? <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" /> : <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />}
                     <span>{guideLabels.dressCodeLabel}</span>
                   </h3>
-                  <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant bg-m3-surface-container px-2 py-0.5 rounded-m3-sm border border-m3-outline-variant/50">
+                  <span class="text-[10px] sm:text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant bg-m3-surface-container px-1.5 py-0.5 rounded-m3-sm border border-m3-outline-variant/50">
                     {isTour ? "Mandatory Policy" : "Chauffeur Standard"}
                   </span>
                 </div>
 
                 {parsedDressCode?.general && (
-                  <p class="text-xs sm:text-sm font-medium leading-relaxed text-m3-on-surface mb-3">
+                  <p class="text-[11px] sm:text-xs font-medium leading-snug text-m3-on-surface mb-2">
                     {parsedDressCode.general}
                   </p>
                 )}
 
                 {parsedDressCode?.items && parsedDressCode.items.length > 0 ? (
-                  <div class="grid sm:grid-cols-2 gap-2.5 mb-3">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2">
                     {parsedDressCode.items.map((item: any) => (
-                      <div class="bg-m3-surface rounded-m3-lg p-3 border border-m3-outline-variant shadow-2xs space-y-1">
-                        <h4 class="font-bold text-xs text-m3-on-surface font-heading border-b border-m3-outline-variant/50 pb-1">
+                      <div class="bg-m3-surface rounded-m3-md p-2 sm:p-2.5 border border-m3-outline-variant/60 shadow-2xs space-y-1">
+                        <h4 class="font-bold text-[11px] sm:text-xs text-m3-on-surface font-heading border-b border-m3-outline-variant/50 pb-0.5">
                           {item.title}
                         </h4>
-                        <div class="text-xs space-y-1 pt-0.5">
+                        <div class="text-[11px] sm:text-xs space-y-0.5 pt-0.5">
                           <div class="flex items-start gap-1.5 text-m3-on-surface">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                            <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0 mt-0.5" />
                             <span class="leading-snug"><strong class="font-semibold text-emerald-900">Allowed:</strong> {item.allowed}</span>
                           </div>
                           {item.prohibited && (
                             <div class="flex items-start gap-1.5 text-m3-on-surface-variant">
-                              <XCircle className="w-3.5 h-3.5 text-rose-600 shrink-0 mt-0.5" />
+                              <XCircle className="w-3 h-3 text-rose-600 shrink-0 mt-0.5" />
                               <span class="leading-snug"><strong class="font-semibold text-rose-800">Prohibited:</strong> {item.prohibited}</span>
                             </div>
                           )}
@@ -2533,21 +3101,21 @@ Please share availability and confirmed quote.`;
                     ))}
                   </div>
                 ) : (
-                  <p class="text-xs text-m3-on-surface-variant leading-relaxed mb-3">
+                  <p class="text-xs text-m3-on-surface-variant leading-relaxed mb-2">
                     All passengers and drivers are expected to maintain professional and respectful attire.
                   </p>
                 )}
               </div>
 
               {isTour ? (
-                <div class="mt-2 p-2.5 bg-amber-500/10 border border-amber-400/30 rounded-m3-md text-micro sm:text-xs text-amber-950 flex items-start gap-2">
+                <div class="mt-2 p-2 bg-amber-500/10 border border-amber-400/30 rounded-m3-md text-[11px] text-amber-950 flex items-start gap-1.5">
                   <AlertCircle className="w-3.5 h-3.5 text-amber-700 shrink-0 mt-0.5" />
                   <span class="leading-snug">
-                    <strong class="font-bold">Strict Rule:</strong> Western wear, jeans, shorts, and Bermudas are prohibited inside sanctums by temple authorities.
+                    <strong class="font-bold">Strict Rule:</strong> Western wear, jeans, shorts, and Bermudas are prohibited inside sanctums.
                   </span>
                 </div>
               ) : (
-                <div class="mt-2 p-2.5 bg-emerald-50 border border-emerald-200 rounded-m3-md text-micro sm:text-xs text-emerald-950 flex items-start gap-2">
+                <div class="mt-2 p-2 bg-emerald-50 border border-emerald-200 rounded-m3-md text-[11px] text-emerald-950 flex items-start gap-1.5">
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0 mt-0.5" />
                   <span class="leading-snug">
                     <strong class="font-bold">Verified Drivers:</strong> Uniformed, police-verified, non-smoking chauffeurs with 7+ years of driving experience.
@@ -2557,45 +3125,123 @@ Please share availability and confirmed quote.`;
             </div>
 
             {/* CARD 4: Practical Tips for Pilgrims & Travelers */}
-            <div class="bg-m3-surface-container-low rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant flex flex-col justify-between">
+            <div data-guide-group="significance" class="bg-m3-surface-container-low rounded-m3-lg sm:rounded-m3-xl p-2.5 sm:p-4 border border-m3-outline-variant flex flex-col justify-between">
               <div>
-                <div class="flex items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-2.5 mb-3.5">
-                  <h3 class="font-bold text-m3-on-surface text-sm sm:text-base font-heading flex items-center gap-2">
-                    <Lightbulb className="w-4 h-4 text-amber-600 shrink-0" />
+                <div class="flex items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-1.5 mb-2 sm:pb-2 sm:mb-2.5">
+                  <h3 class="font-bold text-m3-on-surface text-xs sm:text-sm font-heading flex items-center gap-1.5">
+                    <Lightbulb className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                     <span>{guideLabels.tipsTitle}</span>
                   </h3>
-                  <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant bg-m3-surface-container px-2 py-0.5 rounded-m3-sm border border-m3-outline-variant/50">
+                  <span class="text-[10px] sm:text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant bg-m3-surface-container px-1.5 py-0.5 rounded-m3-sm border border-m3-outline-variant/50">
                     {isTour ? "Pilgrim Tips" : "Checklist"}
                   </span>
                 </div>
 
                 {parsedTips.length > 0 ? (
-                  <div class="space-y-2.5">
+                  <div class="space-y-1.5 sm:space-y-2">
                     {parsedTips.map((tip: any) => (
-                      <div class="bg-m3-surface p-2.5 sm:p-3 rounded-m3-lg border border-m3-outline-variant/60 flex items-start gap-2.5 shadow-2xs">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                        <div class="space-y-0.5 text-xs sm:text-sm min-w-0 flex-1">
+                      <div class="bg-m3-surface p-2 sm:p-2.5 rounded-m3-md border border-m3-outline-variant/60 flex items-start gap-2 shadow-2xs">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0 mt-0.5" />
+                        <div class="space-y-0.5 text-[11px] sm:text-xs min-w-0 flex-1">
                           {tip.title && (
-                            <span class="font-bold text-m3-on-surface block text-xs">{tip.title}</span>
+                            <span class="font-bold text-m3-on-surface block text-xs leading-tight">{tip.title}</span>
                           )}
-                          <p class="text-m3-on-surface-variant leading-relaxed text-xs break-words">{tip.desc}</p>
+                          <p class="text-m3-on-surface-variant leading-snug break-words">{tip.desc}</p>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div class="space-y-2 text-xs text-m3-on-surface-variant">
+                  <div class="space-y-1.5 text-xs text-m3-on-surface-variant">
                     <p>Book at least 24 hours in advance to guarantee vehicle preference and early morning departure slots.</p>
                   </div>
                 )}
               </div>
 
-              <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 flex items-center justify-between text-micro text-m3-on-surface-variant">
+              <div class="mt-2.5 pt-2 border-t border-m3-outline-variant/40 flex items-center justify-between text-[11px] text-m3-on-surface-variant">
                 <span class="font-semibold text-emerald-800">Assistance during darshan &amp; temple queues</span>
                 <span class="font-bold text-m3-primary">24/7 Helpline</span>
               </div>
             </div>
 
+          </div>
+        </section>
+
+        <style>
+          @media (max-width: 767px) {
+            #guide[data-active-tab="practical"] [data-guide-group="significance"] {
+              display: none !important;
+            }
+            #guide[data-active-tab="significance"] [data-guide-group="practical"] {
+              display: none !important;
+            }
+          }
+        </style>
+
+        <script is:inline>
+          document.addEventListener('DOMContentLoaded', () => {
+            const guide = document.getElementById('guide');
+            const btnPrac = document.getElementById('guide-tab-btn-practical');
+            const btnSig = document.getElementById('guide-tab-btn-significance');
+            if (!guide || !btnPrac || !btnSig) return;
+
+            btnPrac.addEventListener('click', () => {
+              guide.setAttribute('data-active-tab', 'practical');
+              btnPrac.className = 'guide-tab-btn flex-1 py-1 px-2.5 rounded-m3-full text-xs font-bold transition-all bg-m3-primary text-white shadow-xs';
+              btnPrac.setAttribute('aria-selected', 'true');
+              btnSig.className = 'guide-tab-btn flex-1 py-1 px-2.5 rounded-m3-full text-xs font-medium text-m3-on-surface-variant transition-all hover:text-m3-on-surface';
+              btnSig.setAttribute('aria-selected', 'false');
+            });
+
+            btnSig.addEventListener('click', () => {
+              guide.setAttribute('data-active-tab', 'significance');
+              btnSig.className = 'guide-tab-btn flex-1 py-1 px-2.5 rounded-m3-full text-xs font-bold transition-all bg-m3-primary text-white shadow-xs';
+              btnSig.setAttribute('aria-selected', 'true');
+              btnPrac.className = 'guide-tab-btn flex-1 py-1 px-2.5 rounded-m3-full text-xs font-medium text-m3-on-surface-variant transition-all hover:text-m3-on-surface';
+              btnPrac.setAttribute('aria-selected', 'false');
+            });
+          });
+        </script>
+      )}
+
+      {/* WHY KALIDASS TRAVELS VS ONLINE AGGREGATORS (Dedicated Engine Placement before FAQs) */}
+      {hasDedicatedEngine && pilgrimConfig && (
+        <section id="compare" aria-label="Why Choose Kalidass Travels Over Online Aggregators" class="bg-m3-surface rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 p-5 sm:p-7 scroll-mt-40">
+          <div class="max-w-2xl mb-4 sm:mb-5">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-emerald-50 text-emerald-900 text-xs font-bold uppercase tracking-wider mb-2 border border-emerald-200">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <span>Transparent Comparison</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading tracking-tight">
+              {pilgrimConfig.comparisonTitle}
+            </h2>
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant font-sans mt-1">
+              {pilgrimConfig.comparisonDesc}
+            </p>
+          </div>
+
+          <div class="overflow-x-auto rounded-m3-xl border border-m3-outline-variant">
+            <table class="w-full text-left text-xs sm:text-sm font-sans border-collapse">
+              <thead class="bg-m3-surface-container text-m3-on-surface-variant font-bold uppercase tracking-wider text-micro sm:text-xs">
+                <tr>
+                  <th class="p-2.5 sm:p-4">Feature</th>
+                  <th class="p-2.5 sm:p-4 bg-emerald-50/70 text-emerald-900 font-extrabold whitespace-nowrap">Kalidass Travels</th>
+                  <th class="p-2.5 sm:p-4 text-m3-on-surface-variant">
+                    <span class="sm:hidden">Online App Cabs</span>
+                    <span class="hidden sm:inline">Online Cab Aggregators (MakeMyTrip / Savaari / Uber)</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-m3-outline-variant text-m3-on-surface">
+                {pilgrimConfig.comparisonRows.map((row) => (
+                  <tr class="hover:bg-m3-surface-container-low transition-colors">
+                    <td class="p-2.5 sm:p-4 font-semibold align-top">{row.feature}</td>
+                    <td class="p-2.5 sm:p-4 bg-emerald-50/40 font-bold text-emerald-950 align-top">{row.kalidass}</td>
+                    <td class="p-2.5 sm:p-4 text-m3-on-surface-variant align-top">{row.aggregators}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </section>
       )}
@@ -2639,35 +3285,6 @@ Please share availability and confirmed quote.`;
         </section>
       )}
 
-      <!-- 3. CONVERSION BANNER (Calibrated Charcoal Theme) -->
-      <section class="bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-2xl p-6 sm:p-10 text-center shadow-m3-3 border border-slate-800">
-        <div class="max-w-2xl mx-auto space-y-4">
-          <h2 class="text-xl sm:text-2xl font-bold font-heading text-white">
-            {pilgrimConfig ? pilgrimConfig.ctaHeading : `Ready to Book Your ${shortName} Trip?`}
-          </h2>
-          <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
-            {isTour 
-              ? "Reserve your sanitized AC car with an experienced pilgrimage chauffeur. Zero advance deposit required — pay upon boarding or trip completion." 
-              : "Share your car details and pickup address. Our dispatch team confirms your chauffeur in 60 seconds with zero advance deposit."}
-          </p>
-          <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-            <WhatsAppButton
-              href={whatsappLink}
-              size="md"
-              variant="filled"
-              className="w-full sm:w-auto"
-              text="Confirm on WhatsApp"
-            />
-            <a
-              href="tel:+918939539211"
-              class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface font-bold text-xs sm:text-sm rounded-m3-full shadow-m3-1 transition-all"
-            >
-              <Phone className="w-4 h-4 text-m3-primary" />
-              <span>Call Dispatch: +91 89395 39211</span>
-            </a>
-          </div>
-        </div>
-      </section>
 
     </div>
 

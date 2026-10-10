@@ -139,9 +139,9 @@ export function initStickyQuickNav(): () => void {
         return sortedItems[sortedItems.length - 1];
       }
 
-      // Sticky header (64px) + sticky nav height + breathing margin (~45px)
+      // Sticky header (64px) + sticky nav height + breathing margin (~65px for scroll-mt-40 offsets)
       const currentNavHeight = nav.offsetHeight || navHeight || 52;
-      const SCROLL_OFFSET = 64 + currentNavHeight + 45;
+      const SCROLL_OFFSET = 64 + currentNavHeight + 65;
 
       let activeItem: QuickNavItem | null = null;
 
