@@ -300,117 +300,117 @@ const getPackageStayRates = (slug: string, vehicleName: string, basePriceNum: nu
 
   if (slug === 'thiruvannamalai-girivalam-trip') {
     if (v.includes('tempo') || v.includes('traveller')) {
-      return { 1: 13500, 2: 16500, 3: 18500 };
+      return { 1: 13500, 2: 16500, 3: 23500 };
     }
     if (v.includes('crysta')) {
-      return { 1: 11100, 2: 13200, 3: 14800 };
+      return { 1: 11100, 2: 14000, 3: 20000 };
     }
     if (v.includes('innova')) {
-      return { 1: 9300, 2: 11200, 3: 12500 };
+      return { 1: 9300, 2: 11500, 3: 16500 };
     }
     if (v.includes('ertiga') || v.includes('xl6')) {
-      return { 1: 7900, 2: 9500, 3: 10500 };
+      return { 1: 7900, 2: 10000, 3: 14500 };
     }
-    return { 1: basePriceNum || 6500, 2: 7800, 3: 8500 };
+    return { 1: basePriceNum || 6500, 2: 8300, 3: 12200 };
   }
 
   if (slug === 'kanchipuram-temple-trip') {
     if (v.includes('tempo') || v.includes('traveller')) {
-      return { 1: 8500, 2: 11500, 3: 14500 };
+      return { 1: 8500, 2: 16000, 3: 22500 };
     }
     if (v.includes('crysta')) {
-      return { 1: 6800, 2: 8800, 3: 10800 };
+      return { 1: 6800, 2: 13500, 3: 19000 };
     }
     if (v.includes('innova')) {
-      return { 1: 5500, 2: 7200, 3: 8900 };
+      return { 1: 5500, 2: 11000, 3: 15500 };
     }
     if (v.includes('ertiga') || v.includes('xl6')) {
-      return { 1: 4500, 2: 6000, 3: 7500 };
+      return { 1: 4500, 2: 9800, 3: 14000 };
     }
-    return { 1: basePriceNum || 3500, 2: 4800, 3: 6100 };
+    return { 1: basePriceNum || 3500, 2: 8000, 3: 11500 };
   }
 
   if (slug === 'navagraha-tour') {
     if (v.includes('tempo') || v.includes('traveller')) {
-      return { 1: 18500, 2: 22800, 3: 27100 };
+      return { 1: 24500, 2: 24500, 3: 29000 };
     }
     if (v.includes('crysta')) {
-      return { 1: 15500, 2: 18800, 3: 22100 };
+      return { 1: 19800, 2: 19800, 3: 23500 };
     }
     if (v.includes('innova')) {
-      return { 1: 13100, 2: 15900, 3: 18700 };
+      return { 1: 16500, 2: 16500, 3: 19800 };
     }
     if (v.includes('ertiga') || v.includes('xl6')) {
-      return { 1: 10600, 2: 12800, 3: 15000 };
+      return { 1: 14800, 2: 14800, 3: 17500 };
     }
-    return { 1: basePriceNum || 8600, 2: 10500, 3: 12400 };
+    return { 1: basePriceNum || 12000, 2: 12000, 3: 14500 };
   }
 
   if (slug === 'sabarimala-trip') {
     if (v.includes('17-seater') || v.includes('17 seater')) {
-      return { 1: 32000, 2: 38000, 3: 44000 };
+      return { 1: 50000, 2: 50000, 3: 50000, 4: 55000, 5: 62000 };
     }
     if (v.includes('tempo') || v.includes('traveller')) {
-      return { 1: 26500, 2: 31500, 3: 36500 };
+      return { 1: 42000, 2: 42000, 3: 42000, 4: 46500, 5: 52000 };
     }
     if (v.includes('crysta')) {
-      return { 1: 22000, 2: 26000, 3: 30000 };
+      return { 1: 34500, 2: 34500, 3: 34500, 4: 38500, 5: 43000 };
     }
     if (v.includes('innova')) {
-      return { 1: 18500, 2: 22000, 3: 25500 };
+      return { 1: 29500, 2: 29500, 3: 29500, 4: 33000, 5: 37000 };
     }
     if (v.includes('ertiga') || v.includes('xl6')) {
-      return { 1: 15900, 2: 18900, 3: 21900 };
+      return { 1: 26500, 2: 26500, 3: 26500, 4: 29500, 5: 33000 };
     }
-    return { 1: basePriceNum || 15900, 2: 18900, 3: 21900 };
+    return { 1: basePriceNum || 26500, 2: 26500, 3: 26500, 4: 29500, 5: 33000 };
   }
 
   if (slug === 'rameswaram-2-days') {
     if (v.includes('tempo') || v.includes('traveller')) {
-      return { 1: 31000, 2: 35800, 3: 40600 };
+      return { 1: 35000, 2: 35000, 3: 39500 };
     }
     if (v.includes('crysta')) {
-      return { 1: 26000, 2: 29800, 3: 33600 };
+      return { 1: 30000, 2: 30000, 3: 33500 };
     }
     if (v.includes('innova')) {
-      return { 1: 22000, 2: 25200, 3: 28400 };
+      return { 1: 25000, 2: 25000, 3: 28000 };
     }
     if (v.includes('ertiga') || v.includes('xl6')) {
-      return { 1: 18500, 2: 21200, 3: 23900 };
+      return { 1: 22500, 2: 22500, 3: 25500 };
     }
-    return { 1: basePriceNum || 15500, 2: 17800, 3: 20100 };
+    return { 1: basePriceNum || 18500, 2: 18500, 3: 21000 };
   }
 
   if (slug === 'chidambaram-temple-trip') {
     if (v.includes('tempo') || v.includes('traveller')) {
-      return { 1: 16500, 2: 20500, 3: 24500 };
+      return { 1: 16500, 2: 17500, 3: 24000 };
     }
     if (v.includes('crysta')) {
-      return { 1: 13500, 2: 16600, 3: 19700 };
+      return { 1: 13500, 2: 14800, 3: 20000 };
     }
     if (v.includes('innova')) {
-      return { 1: 11000, 2: 13600, 3: 16200 };
+      return { 1: 11000, 2: 12200, 3: 16500 };
     }
     if (v.includes('ertiga') || v.includes('xl6')) {
-      return { 1: 9200, 2: 11400, 3: 13600 };
+      return { 1: 9200, 2: 10800, 3: 14800 };
     }
-    return { 1: basePriceNum || 7400, 2: 9200, 3: 11000 };
+    return { 1: basePriceNum || 7400, 2: 8800, 3: 12000 };
   }
 
   if (slug === 'vellore-golden-temple') {
     if (v.includes('tempo') || v.includes('traveller')) {
-      return { 1: 10500, 2: 13800, 3: 17100 };
+      return { 1: 10500, 2: 16000, 3: 22500 };
     }
     if (v.includes('crysta')) {
-      return { 1: 8800, 2: 11400, 3: 14000 };
+      return { 1: 8800, 2: 13500, 3: 19000 };
     }
     if (v.includes('innova')) {
-      return { 1: 7200, 2: 9400, 3: 11600 };
+      return { 1: 7200, 2: 11000, 3: 15500 };
     }
     if (v.includes('ertiga') || v.includes('xl6')) {
-      return { 1: 6000, 2: 7800, 3: 9600 };
+      return { 1: 6000, 2: 9800, 3: 14000 };
     }
-    return { 1: basePriceNum || 4800, 2: 6300, 3: 7800 };
+    return { 1: basePriceNum || 4800, 2: 8000, 3: 11500 };
   }
 
   if (slug === 'pondicherry-one-day-trip') {
@@ -755,7 +755,7 @@ const PILGRIM_ROUTES: Record<string, {
     distanceSub: 'Via Vikravandi NH 36',
     travelTime: '6 – 7 Hours',
     travelTimeSub: 'To Kumbakonam Circuit',
-    startingFare: '₹8,600 Flat',
+    startingFare: '₹12,000 Flat',
     startingFareSub: 'AC Sedan 2-Day Round-Trip',
     tollsLabel: 'Highway Tolls & Bata',
     tollsValue: '100% Included',
@@ -772,7 +772,7 @@ const PILGRIM_ROUTES: Record<string, {
     comparisonTitle: 'Why Pilgrims Choose Kalidass Travels for Kumbakonam Navagraha',
     comparisonDesc: 'App aggregators bill per-km with inadequate 250 km/day allowances and drivers who do not know temple closure hours. Here is how Kalidass Travels compares:',
     comparisonRows: [
-      { feature: 'Round-Trip Pricing', kalidass: '₹8,600 Flat 2-Day All-Inclusive (Sedan)', aggregators: 'Base fare only; 750 km circuit triggers ₹3,000+ extra km penalties' },
+      { feature: 'Round-Trip Pricing', kalidass: '₹12,000 Flat 2-Day All-Inclusive (Sedan)', aggregators: 'Base fare only; 750 km circuit triggers ₹3,000+ extra km penalties' },
       { feature: 'KM Coverage & Circuit', kalidass: '750 km Full Navagraha Circuit 100% Included', aggregators: 'Strict 500 km cap (250 km/day); ₹14–₹18 per extra km added' },
       { feature: 'Afternoon Temple Closures', kalidass: 'Zero Waiting Charges (Plan syncs with 12:30–4 PM closures)', aggregators: '₹150–₹200/hr waiting fee while temples are closed' },
       { feature: 'Navagraha Route Knowledge', kalidass: 'Optimized parikrama sequence without backtracking', aggregators: 'City drivers get lost between rural temple villages' },
@@ -788,7 +788,7 @@ const PILGRIM_ROUTES: Record<string, {
     distanceSub: 'Via Theni & Kumily Ghats',
     travelTime: '12 – 14 Hours',
     travelTimeSub: 'To Nilakkal Base Camp',
-    startingFare: '₹15,900 Flat',
+    startingFare: '₹26,500 Flat',
     startingFareSub: 'AC Ertiga SUV 3-Day Yatra',
     tollsLabel: 'Kerala Permit & Bata',
     tollsValue: '100% Included',
@@ -805,7 +805,7 @@ const PILGRIM_ROUTES: Record<string, {
     comparisonTitle: 'Why Ayyappa Devotees Choose Kalidass Travels for Sabarimala',
     comparisonDesc: 'Aggregators do not arrange Kerala permits and city drivers refuse long night ghat journeys to Nilakkal. Here is how Kalidass Travels compares:',
     comparisonRows: [
-      { feature: 'Round-Trip Pricing', kalidass: '₹15,900 Flat All-Inclusive 3-Day (Ertiga SUV)', aggregators: 'Base rate only; return permit & driver night charges billed extra' },
+      { feature: 'Round-Trip Pricing', kalidass: '₹26,500 Flat All-Inclusive 3-Day (Ertiga SUV)', aggregators: 'Base rate only; return permit & driver night charges billed extra' },
       { feature: 'Kerala Interstate Permit', kalidass: '100% Arranged & Paid by Us (Zero Checkpost Delay)', aggregators: 'Passenger must pay ₹1,500+ cash and wait in checkpost queues' },
       { feature: 'Chauffeur Discipline', kalidass: 'Satvik, non-smoking, teetotaler pilgrimage chauffeurs', aggregators: 'Random aggregator drivers with no observance of Vratham' },
       { feature: 'Western Ghats Experience', kalidass: 'Specialist drivers for Kumily-Nilakkal hairpin curves', aggregators: 'High cancellation rate; city drivers refuse midnight ghat roads' },
@@ -821,7 +821,7 @@ const PILGRIM_ROUTES: Record<string, {
     distanceSub: 'Via Madurai & Pamban NH 87',
     travelTime: '9.5 – 10.5 Hours',
     travelTimeSub: 'Via NH 38 & NH 87',
-    startingFare: '₹15,500 Flat',
+    startingFare: '₹18,500 Flat',
     startingFareSub: 'AC Sedan 2-Day Round-Trip',
     tollsLabel: 'Highway Tolls & Bata',
     tollsValue: '100% Included',
@@ -838,7 +838,7 @@ const PILGRIM_ROUTES: Record<string, {
     comparisonTitle: 'Why Pilgrims Choose Kalidass Travels for Rameswaram & Dhanushkodi',
     comparisonDesc: 'Aggregators advertise misleading low base rates but bill return tolls and driver charges extra. Here is how Kalidass Travels compares:',
     comparisonRows: [
-      { feature: 'Round-Trip Pricing', kalidass: '₹15,500 Flat 2-Day All-Inclusive (Sedan)', aggregators: 'Base fare only; return tolls & driver night charges billed extra' },
+      { feature: 'Round-Trip Pricing', kalidass: '₹18,500 Flat 2-Day All-Inclusive (Sedan)', aggregators: 'Base fare only; return tolls & driver night charges billed extra' },
       { feature: '1,200 KM Highway Tolls', kalidass: 'All NH FASTag Tolls Paid by Us', aggregators: 'Passenger pays ₹750+ out of pocket at multiple toll plazas' },
       { feature: 'Dhanushkodi Land\'s End', kalidass: 'Direct drive up to Arichal Munai beach endpoint', aggregators: 'Drivers stop at town outskirts or demand ₹800+ extra cash' },
       { feature: '22 Theerthams Coordination', kalidass: 'Chauffeur coordinates dress changing rooms & guides to wells', aggregators: 'Curbside highway drop; zero knowledge of temple rituals' },
@@ -1330,7 +1330,7 @@ if (!offersData && startingPrice) {
 
 const dynamicPriceRange = offersData
   ? `₹${Number(offersData.lowPrice || startingPrice || 3500).toLocaleString('en-IN')} - ₹${Number(offersData.highPrice || startingPrice || 40000).toLocaleString('en-IN')}`
-  : (isTirupati ? "₹6,000 - ₹27,000" : (isThiruvannamalai ? "₹6,500 - ₹18,500" : (isKanchipuram ? "₹3,500 - ₹18,000" : (isNavagraha ? "₹8,600 - ₹30,000" : (isRameswaram ? "₹15,500 - ₹38,000" : (isSabarimala ? "₹15,900 - ₹32,000" : (isChidambaram ? "₹7,400 - ₹26,500" : (isVellore ? "₹4,800 - ₹22,500" : (isPondicherry ? "₹4,500 - ₹19,000" : "₹₹")))))))));
+  : (isTirupati ? "₹6,000 - ₹27,000" : (isThiruvannamalai ? "₹6,500 - ₹18,500" : (isKanchipuram ? "₹3,500 - ₹18,000" : (isNavagraha ? "₹12,000 - ₹36,000" : (isRameswaram ? "₹18,500 - ₹48,000" : (isSabarimala ? "₹26,500 - ₹62,000" : (isChidambaram ? "₹7,400 - ₹26,500" : (isVellore ? "₹4,800 - ₹22,500" : (isPondicherry ? "₹4,500 - ₹19,000" : "₹₹")))))))));
 
 // Construct Schema.org structured data
 const pageSchemas: any[] = [];
@@ -1729,7 +1729,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                     </span>
                   </span>
                   <span class="px-2.5 py-1 rounded-m3-full bg-m3-primary text-m3-on-primary text-[11px] font-bold shadow-xs shrink-0">
-                   {isTirupati ? "From ₹6,000 Flat" : isThiruvannamalai ? "From ₹6,500 Flat" : isKanchipuram ? "From ₹3,500 Flat" : isNavagraha ? "From ₹8,600 Flat" : isRameswaram ? "From ₹15,500 Flat" : isSabarimala ? "From ₹15,900 Flat" : isChidambaram ? "From ₹7,400 Flat" : isVellore ? "From ₹4,800 Flat" : "From ₹14/km"}
+                   {isTirupati ? "From ₹6,000 Flat" : isThiruvannamalai ? "From ₹6,500 Flat" : isKanchipuram ? "From ₹3,500 Flat" : isNavagraha ? "From ₹12,000 Flat" : isRameswaram ? "From ₹18,500 Flat" : isSabarimala ? "From ₹26,500 Flat" : isChidambaram ? "From ₹7,400 Flat" : isVellore ? "From ₹4,800 Flat" : "From ₹14/km"}
                   </span>
                 </div>
               </div>
@@ -1745,7 +1745,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
               <div class="hidden sm:grid grid-cols-2 gap-2 mb-3 sm:mb-4 text-[11px] sm:text-xs">
                 <div class="p-2 sm:p-2.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center gap-1.5">
                   <span class="text-emerald-700 font-bold">✓</span>
-                  <span class="font-semibold text-m3-on-surface">{isTirupati ? "From ₹6,000 Flat" : isThiruvannamalai ? "From ₹6,500 Flat" : isKanchipuram ? "From ₹3,500 Flat" : isNavagraha ? "From ₹8,600 Flat" : isRameswaram ? "From ₹15,500 Flat" : isSabarimala ? "From ₹15,900 Flat" : isChidambaram ? "From ₹7,400 Flat" : isVellore ? "From ₹4,800 Flat" : "From ₹4,500 Flat"}</span>
+                  <span class="font-semibold text-m3-on-surface">{isTirupati ? "From ₹6,000 Flat" : isThiruvannamalai ? "From ₹6,500 Flat" : isKanchipuram ? "From ₹3,500 Flat" : isNavagraha ? "From ₹12,000 Flat" : isRameswaram ? "From ₹18,500 Flat" : isSabarimala ? "From ₹26,500 Flat" : isChidambaram ? "From ₹7,400 Flat" : isVellore ? "From ₹4,800 Flat" : "From ₹4,500 Flat"}</span>
                 </div>
                 <div class="p-2 sm:p-2.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center gap-1.5">
                   <span class="text-emerald-700 font-bold">✓</span>
@@ -2040,11 +2040,11 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                   ) : isKanchipuram ? (
                     <>Round-trip flat rates: <strong>₹3,500 (Sedan)</strong> • <strong>₹4,500 (Ertiga)</strong> • <strong>₹5,500 (Innova)</strong>. Covers <strong>~160 km round-trip</strong> with doorstep pickup, NH 48 highway tolls, Kamakshi Amman &amp; Varadharaja darshan, free silk weaver shopping waiting time, and driver bata included. <strong>₹0 advance payment required</strong>.</>
                   ) : isNavagraha ? (
-                    <>2-Day round-trip flat rates: <strong>₹8,600 (Sedan)</strong> • <strong>₹10,600 (Ertiga)</strong> • <strong>₹13,100 (Innova)</strong>. Covers <strong>~750 km complete 9 Navagraha circuit</strong> with doorstep pickup, NH 36 highway tolls, all 9 temple village drops, and 2 days driver bata included. <strong>₹0 advance payment required</strong>.</>
+                    <>2-Day round-trip flat rates: <strong>₹12,000 (Sedan)</strong> • <strong>₹14,800 (Ertiga)</strong> • <strong>₹16,500 (Innova)</strong>. Covers <strong>~750 km complete 9 Navagraha circuit</strong> with doorstep pickup, NH 36 highway tolls, all 9 temple village drops, and 2 days driver bata included. <strong>₹0 advance payment required</strong>.</>
                   ) : isRameswaram ? (
-                    <>2-Day round-trip flat rates: <strong>₹15,500 (Sedan)</strong> • <strong>₹18,500 (Ertiga)</strong> • <strong>₹22,000 (Innova)</strong>. Covers <strong>~1,200 km round-trip</strong> with doorstep pickup, NH 87 highway tolls, Ramanathaswamy Temple, 22 theerthams assistance, Dhanushkodi Arichal Munai, and 2 days driver bata included. <strong>₹0 advance payment required</strong>.</>
+                    <>2-Day round-trip flat rates: <strong>₹18,500 (Sedan)</strong> • <strong>₹22,500 (Ertiga)</strong> • <strong>₹25,000 (Innova)</strong>. Covers <strong>~1,200 km round-trip</strong> with doorstep pickup, NH 87 highway tolls, Ramanathaswamy Temple, 22 theerthams assistance, Dhanushkodi Arichal Munai, and 2 days driver bata included. <strong>₹0 advance payment required</strong>.</>
                   ) : isSabarimala ? (
-                    <>3-Day round-trip flat rates: <strong>₹15,900 (Ertiga SUV)</strong> • <strong>₹18,500 (Innova)</strong> • <strong>₹22,000 (Crysta)</strong>. Covers <strong>~1,350 km round-trip</strong> with doorstep pickup, Kerala interstate commercial permit, Kumily ghats transit, Nilakkal base camp drop, and 3 days satvik driver allowance included. <strong>₹0 advance payment required</strong>.</>
+                    <>3-Day round-trip flat rates: <strong>₹26,500 (Ertiga SUV)</strong> • <strong>₹29,500 (Innova)</strong> • <strong>₹34,500 (Crysta)</strong>. Covers <strong>~1,350 km round-trip</strong> with doorstep pickup, Kerala interstate commercial permit, Kumily ghats transit, Nilakkal base camp drop, and 3 days satvik driver allowance included. <strong>₹0 advance payment required</strong>.</>
                   ) : isChidambaram ? (
                     <>Round-trip flat rates: <strong>₹7,400 (Sedan)</strong> • <strong>₹9,200 (Ertiga SUV)</strong> • <strong>₹11,000 (Innova)</strong>. Covers <strong>~450 km round-trip</strong> with doorstep pickup, ECR &amp; NH 32 highway tolls, Natarajar temple darshan, free Pichavaram mangrove boating waiting time, and driver bata included. <strong>₹0 advance payment required</strong>.</>
                   ) : isVellore ? (

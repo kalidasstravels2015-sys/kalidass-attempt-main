@@ -751,45 +751,64 @@ export default function ThiruvannamalaiBookingEngine({
 
   // WhatsApp Message Manifest
   const whatsAppMessage = needGst ? `*Kalidass Travels - Thiruvannamalai Girivalam Cab Booking (Official Proforma Trip Estimate)*
-• Service: ${serviceTitle}
 • Estimate Ref: ${invoiceRefNo}
-• Supplier GSTIN: 33COVPM0531D1Z4 (SAC: 9966 Rent-a-Cab)
-• Supplier State: 33 - Tamil Nadu
-• Place of Supply: ${placeOfSupply}
-${companyName.trim() ? `• Recipient / Firm: ${companyName.trim()}\n` : ''}${cleanedGst ? `• Recipient GSTIN: ${cleanedGst} (${recipientStateName})\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}• Trip Type: Round Trip${durationLabel ? ` (${durationLabel}, ${durationHours} hrs)` : ''}
-• Pickup: ${formatDT(pickupDateTime)}
-• Return: ${formatDT(returnDateTime)}${isNightBatta ? ' (Late Night Return after 11 PM)' : ''}
+• Service: ${serviceTitle}
+
+*LOCATION DETAILS*
 • Pickup Location: ${pickup.trim() || 'Chennai (Doorstep Pickup Included)'}
 • Destination: ${fixedDrop}
-• Darshan Ticket: Not included (Cab service only)
-• Passengers: ${passengers} Devotee${parseInt(passengers, 10) > 1 ? 's' : ''}
+
+*PICKUP & SCHEDULE*
+• Pickup Date & Time: ${formatDT(pickupDateTime)}
+• Return Date & Time: ${formatDT(returnDateTime)}${isNightBatta ? ' (Late Night Return after 11 PM)' : ''}
+• Trip Type: Round Trip${durationLabel ? ` (${durationLabel}, ${durationHours} hrs)` : ''}
+
+*TRAVEL & VEHICLE*
 • Selected Vehicle: ${activeVehicle ? `${activeVehicle.name} (${activeVehicle.shortName})` : 'Not selected'}
+• Passengers: ${passengers} Devotee${parseInt(passengers, 10) > 1 ? 's' : ''}
+• Inclusions: 100% Fuel + Girivalam Circuit + NH Tolls + Driver Bata Included
+• Driver Lodging: Chauffeur rests in vehicle / pilgrim dormitories (No hotel room required from guest)
+• Notes: Darshan Ticket not included (Cab service only)
+
+*AMOUNT & FARE BREAKDOWN*
 • Taxable Package Value: ₹${taxableAmount.toLocaleString('en-IN')}
 ${isIntraState 
   ? `• CGST (2.5%): ₹${cgst.toLocaleString('en-IN')}\n• SGST (2.5%): ₹${sgst.toLocaleString('en-IN')}` 
   : `• IGST (5.0% - Inter-State): ₹${igst.toLocaleString('en-IN')}`}
 • Total GST Tax (5%): ₹${totalGst.toLocaleString('en-IN')}
 • Total Estimate Payable: ₹${finalNetPayable?.toLocaleString('en-IN')}${grandTotalInWords ? ` (${grandTotalInWords})` : ''}
-• Advance Required: ₹0 (Pay chauffeur after trip completion)
+• Payment Terms: ₹0 Advance Required (Pay chauffeur after trip completion)
+
+*BILLING & GST DETAILS*
+${companyName.trim() ? `• Recipient / Firm: ${companyName.trim()}\n` : ''}${cleanedGst ? `• Recipient GSTIN: ${cleanedGst} (${recipientStateName})\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}• Supplier GSTIN: 33COVPM0531D1Z4 (SAC: 9966 Rent-a-Cab)
+• Supplier State: 33 - Tamil Nadu
+• Place of Supply: ${placeOfSupply}
 • ITC Status: 100% Eligible for Corporate ITC Claim (Sec 16/17(5) CGST Act)
 
 Please confirm cab allocation and issue formal GST trip estimate.`
 : `*Kalidass Travels - Thiruvannamalai Girivalam Cab Booking*
-• Service: ${serviceTitle}
 • Estimate Ref: ${invoiceRefNo}
-${companyName.trim() ? `• Devotee / Passenger: ${companyName.trim()}\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}• Billing Mode: Standard Cash (All-Inclusive Retail Tariff)
-• Trip Type: Round Trip${durationLabel ? ` (${durationLabel}, ${durationHours} hrs)` : ''}
-• Pickup (Date & Time): ${formatDT(pickupDateTime)}
-• Return (Date & Time): ${formatDT(returnDateTime)}${isNightBatta ? ' (Late Night Return after 11 PM)' : ''}
+• Service: ${serviceTitle}
+${companyName.trim() ? `• Devotee / Passenger: ${companyName.trim()}\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}
+*LOCATION DETAILS*
 • Pickup Location: ${pickup.trim() || 'Chennai (Doorstep - Exact address to be confirmed)'}
 • Destination: ${fixedDrop}
-• Darshan Ticket: Not included (Cab service only)
-• Driver Accommodation: Chauffeur rests in vehicle / pilgrim dormitories (No hotel room required from guest)
-• Passengers: ${passengers} Devotee${parseInt(passengers, 10) > 1 ? 's' : ''}
+
+*PICKUP & SCHEDULE*
+• Pickup Date & Time: ${formatDT(pickupDateTime)}
+• Return Date & Time: ${formatDT(returnDateTime)}${isNightBatta ? ' (Late Night Return after 11 PM)' : ''}
+• Trip Type: Round Trip${durationLabel ? ` (${durationLabel}, ${durationHours} hrs)` : ''}
+
+*TRAVEL & VEHICLE*
 • Selected Vehicle: ${activeVehicle ? `${activeVehicle.name} (${activeVehicle.shortName})` : 'Not selected'}
+• Passengers: ${passengers} Devotee${parseInt(passengers, 10) > 1 ? 's' : ''}
+• Inclusions: 100% Fuel + Girivalam Circuit + NH Tolls + Driver Bata Included
+• Driver Lodging: Chauffeur rests in vehicle / pilgrim dormitories (No hotel room required from guest)
+• Notes: Darshan Ticket not included (Cab service only)
+
+*AMOUNT & PAYMENT*
 • Total All-Inclusive Fare: ${formattedFare || 'TBD'}${pricingNote}
-• Advance Required: ₹0 (Zero Advance - Pay After Trip)
-• Official Trip Estimate PDF: Generated & Attached
+• Payment Terms: ₹0 Advance Required • Pay Chauffeur After Trip Completion
 
 Please confirm chauffeur allocation for my Thiruvannamalai Girivalam yatra.`;
 

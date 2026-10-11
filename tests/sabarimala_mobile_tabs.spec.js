@@ -123,7 +123,7 @@ test.describe('Sabarimala Mobile & Desktop Itinerary, Guide and Navigation', () 
     const speakable = page.locator('[data-speakable="true"]');
     await expect(speakable).toBeAttached();
     const text = await speakable.textContent();
-    expect(text).toContain('₹15,900 (Ertiga SUV)');
+    expect(text).toContain('₹26,500 (Ertiga SUV)');
     expect(text).toContain('~1,350 km round-trip');
   });
 });

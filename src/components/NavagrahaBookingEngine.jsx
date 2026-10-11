@@ -102,9 +102,9 @@ const VEHICLES = [
     capacity: 4,
     luggage: '2 Bags',
     tag: 'Best Value',
-    rates: { 1: 5500, 2: 8600, 3: 11600 },
-    vehicleHire: { 1: 4300, 2: 7000, 3: 9200 },
-    driverBata: { 1: 1200, 2: 1600, 3: 2400 },
+    rates: { 1: 12000, 2: 12000, 3: 14500 },
+    vehicleHire: { 1: 10200, 2: 10200, 3: 11800 },
+    driverBata: { 1: 1800, 2: 1800, 3: 2700 },
     extraHourRate: 150
   },
   {
@@ -114,9 +114,9 @@ const VEHICLES = [
     capacity: 6,
     luggage: '3 Bags',
     tag: 'Family Favorite',
-    rates: { 1: 6900, 2: 10600, 3: 14200 },
-    vehicleHire: { 1: 5400, 2: 8600, 3: 11200 },
-    driverBata: { 1: 1500, 2: 2000, 3: 3000 },
+    rates: { 1: 14800, 2: 14800, 3: 17500 },
+    vehicleHire: { 1: 12600, 2: 12600, 3: 14200 },
+    driverBata: { 1: 2200, 2: 2200, 3: 3300 },
     extraHourRate: 200
   },
   {
@@ -126,9 +126,9 @@ const VEHICLES = [
     capacity: 7,
     luggage: '4 Bags',
     tag: 'Elders Choice',
-    rates: { 1: 8400, 2: 13100, 3: 17500 },
-    vehicleHire: { 1: 6600, 2: 10700, 3: 13900 },
-    driverBata: { 1: 1800, 2: 2400, 3: 3600 },
+    rates: { 1: 16500, 2: 16500, 3: 19800 },
+    vehicleHire: { 1: 14100, 2: 14100, 3: 16200 },
+    driverBata: { 1: 2400, 2: 2400, 3: 3600 },
     extraHourRate: 200
   },
   {
@@ -138,9 +138,9 @@ const VEHICLES = [
     capacity: 7,
     luggage: '4 Bags',
     tag: 'VIP Luxury',
-    rates: { 1: 10000, 2: 15500, 3: 20800 },
-    vehicleHire: { 1: 7900, 2: 12700, 3: 16600 },
-    driverBata: { 1: 2100, 2: 2800, 3: 4200 },
+    rates: { 1: 19800, 2: 19800, 3: 23500 },
+    vehicleHire: { 1: 17000, 2: 17000, 3: 19300 },
+    driverBata: { 1: 2800, 2: 2800, 3: 4200 },
     extraHourRate: 250
   },
   {
@@ -150,9 +150,9 @@ const VEHICLES = [
     capacity: 12,
     luggage: '8 Bags',
     tag: 'Group Darshan',
-    rates: { 1: 12500, 2: 18500, 3: 24800 },
-    vehicleHire: { 1: 9900, 2: 15100, 3: 19700 },
-    driverBata: { 1: 2600, 2: 3400, 3: 5100 },
+    rates: { 1: 24500, 2: 24500, 3: 29000 },
+    vehicleHire: { 1: 20900, 2: 20900, 3: 23600 },
+    driverBata: { 1: 3600, 2: 3600, 3: 5400 },
     extraHourRate: 300
   },
   {
@@ -162,9 +162,9 @@ const VEHICLES = [
     capacity: 17,
     luggage: '12 Bags',
     tag: 'Large Group',
-    rates: { 1: 15000, 2: 22500, 3: 30000 },
-    vehicleHire: { 1: 12000, 2: 18500, 3: 24000 },
-    driverBata: { 1: 3000, 2: 4000, 3: 6000 },
+    rates: { 1: 30000, 2: 30000, 3: 36000 },
+    vehicleHire: { 1: 25600, 2: 25600, 3: 29400 },
+    driverBata: { 1: 4400, 2: 4400, 3: 6600 },
     extraHourRate: 400
   }
 ];
@@ -376,51 +376,14 @@ export default function NavagrahaBookingEngine({
     const isSameDate = start.toDateString() === end.toDateString();
     const isOvernight = !isSameDate;
 
-    // Tier 1: <= 24 hrs
-    if (diffHours <= 24) {
-      const subText = isSameDate ? 'Same Day' : '1 Night Stay';
-      const label = '1 Day Package';
-      return {
-        hasDates: true,
-        days: 1,
-        hours: roundedHours,
-        label,
-        subText,
-        isProRata: false,
-        extraHours: 0,
-        baseDays: 1,
-        cappedDays: 1,
-        isOvernight,
-        isSameDate
-      };
-    }
-
-    // Tier 2: 25 to 47 hrs (1 Day + 1 hr to 1 Day + 23 hrs)
-    if (diffHours < 48) {
-      const extraHours = Math.min(23, Math.max(1, Math.round(diffHours - 24)));
-      return {
-        hasDates: true,
-        days: 1,
-        hours: roundedHours,
-        label: `1 Day + ${extraHours} hr${extraHours > 1 ? 's' : ''}`,
-        subText: isOvernight ? '1 Night Stay' : 'Extra Hours',
-        isProRata: true,
-        extraHours,
-        baseDays: 1,
-        cappedDays: 2,
-        isOvernight: true,
-        isSameDate: false
-      };
-    }
-
-    // Tier 2 Exact: 48 hrs (2 Days Package)
+    // Tier 1 & 2: <= 48.5 hrs (Kumbakonam 9 Navagraha requires min 2 Days / 1 Night)
     if (diffHours <= 48.5) {
       return {
         hasDates: true,
         days: 2,
         hours: roundedHours,
         label: '2 Days Package',
-        subText: '1 Night Stay',
+        subText: diffHours <= 24 ? 'Min 2 Days required for 9 Temples' : '1 Night Stay',
         isProRata: false,
         extraHours: 0,
         baseDays: 2,
@@ -665,9 +628,9 @@ export default function NavagrahaBookingEngine({
 
     // 4+ Days Package
     const extraDays = numDays - 3;
-    const extraPerDay = veh.rates[2] - veh.rates[1];
-    const extraVehPerDay = veh.vehicleHire[2] - veh.vehicleHire[1];
-    const extraBataPerDay = veh.driverBata[2] - veh.driverBata[1];
+    const extraPerDay = veh.rates[3] - veh.rates[2];
+    const extraVehPerDay = veh.vehicleHire[3] - veh.vehicleHire[2];
+    const extraBataPerDay = veh.driverBata[3] - veh.driverBata[2];
 
     const packageRate = veh.rates[3] + (extraDays * extraPerDay);
     const vehicleHireFare = veh.vehicleHire[3] + (extraDays * extraVehPerDay);
@@ -751,41 +714,62 @@ export default function NavagrahaBookingEngine({
 
   // WhatsApp Message Manifest
   const whatsAppMessage = needGst ? `*Kalidass Travels - Kumbakonam 9 Navagraha Tour Cab Booking (Official Proforma Trip Estimate)*
-• Service: ${serviceTitle}
 • Estimate Ref: ${invoiceRefNo}
-• Supplier GSTIN: 33COVPM0531D1Z4 (SAC: 9966 Rent-a-Cab)
-• Supplier State: 33 - Tamil Nadu
-• Place of Supply: ${placeOfSupply}
-${companyName.trim() ? `• Recipient / Firm: ${companyName.trim()}\n` : ''}${cleanedGst ? `• Recipient GSTIN: ${cleanedGst} (${recipientStateName})\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}• Trip Type: Round Trip${durationLabel ? ` (${durationLabel}, ${durationHours} hrs)` : ''}
-• Pickup: ${formatDT(pickupDateTime)}
-• Return: ${formatDT(returnDateTime)}${isNightBatta ? ' (Late Night Return after 11 PM)' : ''}
+• Service: ${serviceTitle}
+
+*LOCATION DETAILS*
 • Pickup Location: ${pickup.trim() || 'Chennai (Doorstep Pickup Included)'}
 • Destination: ${fixedDrop}
-• Darshan Ticket: Not included (Cab service only)
-• Passengers: ${passengers} Devotee${parseInt(passengers, 10) > 1 ? 's' : ''}
+
+*PICKUP & SCHEDULE*
+• Pickup Date & Time: ${formatDT(pickupDateTime)}
+• Return Date & Time: ${formatDT(returnDateTime)}${isNightBatta ? ' (Late Night Return after 11 PM)' : ''}
+• Trip Type: Round Trip${durationLabel ? ` (${durationLabel}, ${durationHours} hrs)` : ''}
+
+*TRAVEL & VEHICLE*
 • Selected Vehicle: ${activeVehicle ? `${activeVehicle.name} (${activeVehicle.shortName})` : 'Not selected'}
+• Passengers: ${passengers} Devotee${parseInt(passengers, 10) > 1 ? 's' : ''}
+• Inclusions: 100% Fuel + 750 km Navagraha Circuit + NH Tolls + Driver Bata Included
+• Driver Lodging: Chauffeur rests in vehicle / pilgrim dormitories (No hotel room required from guest)
+• Notes: Temple pooja & darshan tickets not included (Cab service only)
+
+*AMOUNT & FARE BREAKDOWN*
 • Taxable Package Value: ₹${taxableAmount.toLocaleString('en-IN')}
 ${isIntraState 
   ? `• CGST (2.5%): ₹${cgst.toLocaleString('en-IN')}\n• SGST (2.5%): ₹${sgst.toLocaleString('en-IN')}` 
   : `• IGST (5.0% - Inter-State): ₹${igst.toLocaleString('en-IN')}`}
 • Total GST Tax (5%): ₹${totalGst.toLocaleString('en-IN')}
 • Total Estimate Payable: ₹${finalNetPayable?.toLocaleString('en-IN')}${grandTotalInWords ? ` (${grandTotalInWords})` : ''}
-• Advance Required: ₹0 (Pay chauffeur after trip completion)
+• Payment Terms: ₹0 Advance Required (Pay chauffeur after trip completion)
+
+*BILLING & GST DETAILS*
+${companyName.trim() ? `• Recipient / Firm: ${companyName.trim()}\n` : ''}${cleanedGst ? `• Recipient GSTIN: ${cleanedGst} (${recipientStateName})\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}• Supplier GSTIN: 33COVPM0531D1Z4 (SAC: 9966 Rent-a-Cab)
+• Supplier State: 33 - Tamil Nadu
+• Place of Supply: ${placeOfSupply}
 • ITC Status: 100% Eligible for Corporate ITC Claim (Sec 16/17(5) CGST Act)
 
 Please confirm cab allocation and issue formal GST trip estimate.`
 : `*Kalidass Travels - Kumbakonam 9 Navagraha Tour Cab Booking*
-• Service: ${serviceTitle}
 • Estimate Ref: ${invoiceRefNo}
-${companyName.trim() ? `• Devotee / Passenger: ${companyName.trim()}\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}• Trip Type: Round Trip${durationLabel ? ` (${durationLabel}, ${durationHours} hrs)` : ''}
-• Pickup (Date & Time): ${formatDT(pickupDateTime)}
-• Return (Date & Time): ${formatDT(returnDateTime)}${isNightBatta ? ' (Late Night Return after 11 PM)' : ''}
+• Service: ${serviceTitle}
+${companyName.trim() ? `• Devotee / Passenger: ${companyName.trim()}\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}
+*LOCATION DETAILS*
 • Pickup Location: ${pickup.trim() || 'Chennai (Doorstep Pickup Included)'}
 • Destination: ${fixedDrop}
+
+*PICKUP & SCHEDULE*
+• Pickup Date & Time: ${formatDT(pickupDateTime)}
+• Return Date & Time: ${formatDT(returnDateTime)}${isNightBatta ? ' (Late Night Return after 11 PM)' : ''}
+• Trip Type: Round Trip${durationLabel ? ` (${durationLabel}, ${durationHours} hrs)` : ''}
+
+*TRAVEL & VEHICLE*
+• Selected Vehicle: ${activeVehicle ? `${activeVehicle.name} (${activeVehicle.shortName})` : 'Not selected'}
+• Passengers: ${passengers} Devotee${parseInt(passengers, 10) > 1 ? 's' : ''}
 • Inclusions: 100% Fuel + 750 km Navagraha Circuit + NH Tolls + Driver Bata Included
 • Driver Lodging: Chauffeur rests in vehicle / pilgrim dormitories (No hotel room required from guest)
-• Passengers: ${passengers} Devotee${parseInt(passengers, 10) > 1 ? 's' : ''}
-• Selected Vehicle: ${activeVehicle ? `${activeVehicle.name} (${activeVehicle.shortName})` : 'Not selected'}
+• Notes: Temple pooja & darshan tickets not included (Cab service only)
+
+*AMOUNT & PAYMENT*
 • Total All-Inclusive Fare: ${formattedFare || 'TBD'}${pricingNote}
 • Payment Terms: ₹0 Advance Required • Pay Chauffeur After Trip Completion
 

@@ -102,9 +102,9 @@ const VEHICLES = [
     capacity: 4,
     luggage: '2 Bags',
     tag: 'Best Value',
-    rates: { 1: 9800, 2: 15500, 3: 21000 },
-    vehicleHire: { 1: 7800, 2: 12500, 3: 16800 },
-    driverBata: { 1: 2000, 2: 3000, 3: 4200 },
+    rates: { 1: 18500, 2: 18500, 3: 21000 },
+    vehicleHire: { 1: 15500, 2: 15500, 3: 16800 },
+    driverBata: { 1: 3000, 2: 3000, 3: 4200 },
     extraHourRate: 150
   },
   {
@@ -114,9 +114,9 @@ const VEHICLES = [
     capacity: 6,
     luggage: '3 Bags',
     tag: 'Family Favorite',
-    rates: { 1: 12000, 2: 18500, 3: 25000 },
-    vehicleHire: { 1: 9600, 2: 14900, 3: 20000 },
-    driverBata: { 1: 2400, 2: 3600, 3: 5000 },
+    rates: { 1: 22500, 2: 22500, 3: 25500 },
+    vehicleHire: { 1: 18900, 2: 18900, 3: 20500 },
+    driverBata: { 1: 3600, 2: 3600, 3: 5000 },
     extraHourRate: 200
   },
   {
@@ -126,9 +126,9 @@ const VEHICLES = [
     capacity: 7,
     luggage: '4 Bags',
     tag: 'Elders Choice',
-    rates: { 1: 14500, 2: 22000, 3: 29800 },
-    vehicleHire: { 1: 11700, 2: 17800, 3: 24000 },
-    driverBata: { 1: 2800, 2: 4200, 3: 5800 },
+    rates: { 1: 25000, 2: 25000, 3: 28000 },
+    vehicleHire: { 1: 20800, 2: 20800, 3: 22200 },
+    driverBata: { 1: 4200, 2: 4200, 3: 5800 },
     extraHourRate: 200
   },
   {
@@ -138,9 +138,9 @@ const VEHICLES = [
     capacity: 7,
     luggage: '4 Bags',
     tag: 'VIP Luxury',
-    rates: { 1: 17000, 2: 26000, 3: 35000 },
-    vehicleHire: { 1: 13800, 2: 21200, 3: 28400 },
-    driverBata: { 1: 3200, 2: 4800, 3: 6600 },
+    rates: { 1: 30000, 2: 30000, 3: 33500 },
+    vehicleHire: { 1: 25200, 2: 25200, 3: 26900 },
+    driverBata: { 1: 4800, 2: 4800, 3: 6600 },
     extraHourRate: 250
   },
   {
@@ -150,9 +150,9 @@ const VEHICLES = [
     capacity: 12,
     luggage: '8 Bags',
     tag: 'Group Darshan',
-    rates: { 1: 20500, 2: 31000, 3: 42000 },
-    vehicleHire: { 1: 16500, 2: 25000, 3: 33800 },
-    driverBata: { 1: 4000, 2: 6000, 3: 8200 },
+    rates: { 1: 35000, 2: 35000, 3: 39500 },
+    vehicleHire: { 1: 29000, 2: 29000, 3: 31300 },
+    driverBata: { 1: 6000, 2: 6000, 3: 8200 },
     extraHourRate: 300
   },
   {
@@ -162,9 +162,9 @@ const VEHICLES = [
     capacity: 17,
     luggage: '12 Bags',
     tag: 'Large Group',
-    rates: { 1: 25000, 2: 38000, 3: 51000 },
-    vehicleHire: { 1: 20200, 2: 30800, 3: 41200 },
-    driverBata: { 1: 4800, 2: 7200, 3: 9800 },
+    rates: { 1: 42000, 2: 42000, 3: 48000 },
+    vehicleHire: { 1: 34800, 2: 34800, 3: 38200 },
+    driverBata: { 1: 7200, 2: 7200, 3: 9800 },
     extraHourRate: 400
   }
 ];
@@ -376,51 +376,14 @@ export default function RameswaramBookingEngine({
     const isSameDate = start.toDateString() === end.toDateString();
     const isOvernight = !isSameDate;
 
-    // Tier 1: <= 24 hrs
-    if (diffHours <= 24) {
-      const subText = isSameDate ? 'Same Day' : '1 Night Stay';
-      const label = '1 Day Package';
-      return {
-        hasDates: true,
-        days: 1,
-        hours: roundedHours,
-        label,
-        subText,
-        isProRata: false,
-        extraHours: 0,
-        baseDays: 1,
-        cappedDays: 1,
-        isOvernight,
-        isSameDate
-      };
-    }
-
-    // Tier 2: 25 to 47 hrs (1 Day + 1 hr to 1 Day + 23 hrs)
-    if (diffHours < 48) {
-      const extraHours = Math.min(23, Math.max(1, Math.round(diffHours - 24)));
-      return {
-        hasDates: true,
-        days: 1,
-        hours: roundedHours,
-        label: `1 Day + ${extraHours} hr${extraHours > 1 ? 's' : ''}`,
-        subText: isOvernight ? '1 Night Stay' : 'Extra Hours',
-        isProRata: true,
-        extraHours,
-        baseDays: 1,
-        cappedDays: 2,
-        isOvernight: true,
-        isSameDate: false
-      };
-    }
-
-    // Tier 2 Exact: 48 hrs (2 Days Package)
+    // Tier 1 & 2: <= 48.5 hrs (Rameswaram & Dhanushkodi is a 1,200 km circuit requiring min 2 Days / 1 Night)
     if (diffHours <= 48.5) {
       return {
         hasDates: true,
         days: 2,
         hours: roundedHours,
         label: '2 Days Package',
-        subText: '1 Night Stay',
+        subText: diffHours <= 24 ? 'Min 2 Days required for 1,200 km' : '1 Night Stay',
         isProRata: false,
         extraHours: 0,
         baseDays: 2,
@@ -665,9 +628,9 @@ export default function RameswaramBookingEngine({
 
     // 4+ Days Package
     const extraDays = numDays - 3;
-    const extraPerDay = veh.rates[2] - veh.rates[1];
-    const extraVehPerDay = veh.vehicleHire[2] - veh.vehicleHire[1];
-    const extraBataPerDay = veh.driverBata[2] - veh.driverBata[1];
+    const extraPerDay = veh.rates[3] - veh.rates[2];
+    const extraVehPerDay = veh.vehicleHire[3] - veh.vehicleHire[2];
+    const extraBataPerDay = veh.driverBata[3] - veh.driverBata[2];
 
     const packageRate = veh.rates[3] + (extraDays * extraPerDay);
     const vehicleHireFare = veh.vehicleHire[3] + (extraDays * extraVehPerDay);
@@ -751,41 +714,62 @@ export default function RameswaramBookingEngine({
 
   // WhatsApp Message Manifest
   const whatsAppMessage = needGst ? `*Kalidass Travels - Rameswaram & Dhanushkodi Cab Booking (Official Proforma Trip Estimate)*
-• Service: ${serviceTitle}
 • Estimate Ref: ${invoiceRefNo}
-• Supplier GSTIN: 33COVPM0531D1Z4 (SAC: 9966 Rent-a-Cab)
-• Supplier State: 33 - Tamil Nadu
-• Place of Supply: ${placeOfSupply}
-${companyName.trim() ? `• Recipient / Firm: ${companyName.trim()}\n` : ''}${cleanedGst ? `• Recipient GSTIN: ${cleanedGst} (${recipientStateName})\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}• Trip Type: Round Trip${durationLabel ? ` (${durationLabel}, ${durationHours} hrs)` : ''}
-• Pickup: ${formatDT(pickupDateTime)}
-• Return: ${formatDT(returnDateTime)}${isNightBatta ? ' (Late Night Return after 11 PM)' : ''}
+• Service: ${serviceTitle}
+
+*LOCATION DETAILS*
 • Pickup Location: ${pickup.trim() || 'Chennai (Doorstep Pickup Included)'}
 • Destination: ${fixedDrop}
-• Darshan Ticket: Not included (Cab service only)
-• Passengers: ${passengers} Devotee${parseInt(passengers, 10) > 1 ? 's' : ''}
+
+*PICKUP & SCHEDULE*
+• Pickup Date & Time: ${formatDT(pickupDateTime)}
+• Return Date & Time: ${formatDT(returnDateTime)}${isNightBatta ? ' (Late Night Return after 11 PM)' : ''}
+• Trip Type: Round Trip${durationLabel ? ` (${durationLabel}, ${durationHours} hrs)` : ''}
+
+*TRAVEL & VEHICLE*
 • Selected Vehicle: ${activeVehicle ? `${activeVehicle.name} (${activeVehicle.shortName})` : 'Not selected'}
+• Passengers: ${passengers} Devotee${parseInt(passengers, 10) > 1 ? 's' : ''}
+• Inclusions: 100% Fuel + 1,200 km Coverage + NH Tolls + 22 Theerthams & Dhanushkodi + Driver Bata Included
+• Driver Lodging: Chauffeur rests in vehicle / pilgrim dormitories (No hotel room required from guest)
+• Notes: Temple pooja & darshan tickets not included (Cab service only)
+
+*AMOUNT & FARE BREAKDOWN*
 • Taxable Package Value: ₹${taxableAmount.toLocaleString('en-IN')}
 ${isIntraState 
   ? `• CGST (2.5%): ₹${cgst.toLocaleString('en-IN')}\n• SGST (2.5%): ₹${sgst.toLocaleString('en-IN')}` 
   : `• IGST (5.0% - Inter-State): ₹${igst.toLocaleString('en-IN')}`}
 • Total GST Tax (5%): ₹${totalGst.toLocaleString('en-IN')}
 • Total Estimate Payable: ₹${finalNetPayable?.toLocaleString('en-IN')}${grandTotalInWords ? ` (${grandTotalInWords})` : ''}
-• Advance Required: ₹0 (Pay chauffeur after trip completion)
+• Payment Terms: ₹0 Advance Required (Pay chauffeur after trip completion)
+
+*BILLING & GST DETAILS*
+${companyName.trim() ? `• Recipient / Firm: ${companyName.trim()}\n` : ''}${cleanedGst ? `• Recipient GSTIN: ${cleanedGst} (${recipientStateName})\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}• Supplier GSTIN: 33COVPM0531D1Z4 (SAC: 9966 Rent-a-Cab)
+• Supplier State: 33 - Tamil Nadu
+• Place of Supply: ${placeOfSupply}
 • ITC Status: 100% Eligible for Corporate ITC Claim (Sec 16/17(5) CGST Act)
 
 Please confirm cab allocation and issue formal GST trip estimate.`
 : `*Kalidass Travels - Rameswaram & Dhanushkodi Cab Booking*
-• Service: ${serviceTitle}
 • Estimate Ref: ${invoiceRefNo}
-${companyName.trim() ? `• Devotee / Passenger: ${companyName.trim()}\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}• Trip Type: Round Trip${durationLabel ? ` (${durationLabel}, ${durationHours} hrs)` : ''}
-• Pickup (Date & Time): ${formatDT(pickupDateTime)}
-• Return (Date & Time): ${formatDT(returnDateTime)}${isNightBatta ? ' (Late Night Return after 11 PM)' : ''}
+• Service: ${serviceTitle}
+${companyName.trim() ? `• Devotee / Passenger: ${companyName.trim()}\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}
+*LOCATION DETAILS*
 • Pickup Location: ${pickup.trim() || 'Chennai (Doorstep Pickup Included)'}
 • Destination: ${fixedDrop}
+
+*PICKUP & SCHEDULE*
+• Pickup Date & Time: ${formatDT(pickupDateTime)}
+• Return Date & Time: ${formatDT(returnDateTime)}${isNightBatta ? ' (Late Night Return after 11 PM)' : ''}
+• Trip Type: Round Trip${durationLabel ? ` (${durationLabel}, ${durationHours} hrs)` : ''}
+
+*TRAVEL & VEHICLE*
+• Selected Vehicle: ${activeVehicle ? `${activeVehicle.name} (${activeVehicle.shortName})` : 'Not selected'}
+• Passengers: ${passengers} Devotee${parseInt(passengers, 10) > 1 ? 's' : ''}
 • Inclusions: 100% Fuel + 1,200 km Coverage + NH Tolls + 22 Theerthams & Dhanushkodi + Driver Bata Included
 • Driver Lodging: Chauffeur rests in vehicle / pilgrim dormitories (No hotel room required from guest)
-• Passengers: ${passengers} Devotee${parseInt(passengers, 10) > 1 ? 's' : ''}
-• Selected Vehicle: ${activeVehicle ? `${activeVehicle.name} (${activeVehicle.shortName})` : 'Not selected'}
+• Notes: Temple pooja & darshan tickets not included (Cab service only)
+
+*AMOUNT & PAYMENT*
 • Total All-Inclusive Fare: ${formattedFare || 'TBD'}${pricingNote}
 • Payment Terms: ₹0 Advance Required • Pay Chauffeur After Trip Completion
 

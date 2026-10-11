@@ -760,22 +760,26 @@ export default function PondicherryBookingEngine({
 
   // WhatsApp Message — transparent outstation billing model
   const whatsAppMessage = needGst ? `*Kalidass Travels - Chennai to Pondicherry Outstation Cab (Proforma Estimate)*
-• Service: ${serviceTitle}
 • Estimate Ref: ${invoiceRefNo}
-• Supplier GSTIN: 33COVPM0531D1Z4 (SAC: 9966 Rent-a-Cab)
-• Supplier State: 33 - Tamil Nadu
-• Place of Supply: ${placeOfSupply}
-${companyName.trim() ? `• Recipient / Firm: ${companyName.trim()}\n` : ''}${cleanedGst ? `• Recipient GSTIN: ${cleanedGst} (${recipientStateName})\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}• Trip Type: Outstation Round Trip${durationLabel ? ` (${durationLabel}, ${durationHours} hrs)` : ''}
-• Pickup: ${formatDT(pickupDateTime)}
-• Return: ${formatDT(returnDateTime)}${isNightBatta ? ' (Late Night Return after 11 PM)' : ''}
+• Service: ${serviceTitle}
+
+*LOCATION DETAILS*
 • Pickup Location: ${pickup.trim() || 'Chennai (Doorstep Pickup)'}
 • Destination: ${drop.trim() || fixedDrop}
 • Route: Scenic East Coast Road (ECR) via Mahabalipuram
 • Sightseeing Stops: Auroville, French White Town, Sri Aurobindo Ashram & Promenade Beach
-• Passengers: ${passengers} Passenger${parseInt(passengers, 10) > 1 ? 's' : ''}
-• Selected Vehicle: ${activeVehicle ? `${activeVehicle.name} (${activeVehicle.shortName}, ${activeVehicle.perKmRate}/km)` : 'Not selected'}
 
-*QUOTED FARE BREAKDOWN (Vehicle Hire + Driver Bata):*
+*PICKUP & SCHEDULE*
+• Pickup Date & Time: ${formatDT(pickupDateTime)}
+• Return Date & Time: ${formatDT(returnDateTime)}${isNightBatta ? ' (Late Night Return after 11 PM)' : ''}
+• Trip Type: Outstation Round Trip${durationLabel ? ` (${durationLabel}, ${durationHours} hrs)` : ''}
+
+*TRAVEL & VEHICLE*
+• Selected Vehicle: ${activeVehicle ? `${activeVehicle.name} (${activeVehicle.shortName}, ₹${activeVehicle.perKmRate}/km)` : 'Not selected'}
+• Passengers: ${passengers} Passenger${parseInt(passengers, 10) > 1 ? 's' : ''}
+• Driver Lodging: Chauffeur rests in vehicle / dormitory (No hotel room required from guest)
+
+*AMOUNT & FARE BREAKDOWN*
 • AC Vehicle Hire & Fuel: ₹${fareBreakdown?.vehicleHireFare?.toLocaleString('en-IN') || '—'}
 • Chauffeur Duty Allowance (Driver Bata): ₹${((fareBreakdown?.driverBata || 0) + nightBattaAmount).toLocaleString('en-IN')}
 • Taxable Supply Subtotal: ₹${taxableAmount.toLocaleString('en-IN')}
@@ -785,42 +789,49 @@ ${isIntraState
 • Total GST (5%): ₹${totalGst.toLocaleString('en-IN')}
 • Total Quoted (Vehicle + Bata + GST): ₹${finalNetPayable?.toLocaleString('en-IN')}${grandTotalInWords ? ` (${grandTotalInWords})` : ''}
 
-*AT-ACTUALS CHARGES (Billed Separately at Government/Plaza Rates):*
-• ECR FASTag Tolls (Uthandi + Kovalam plazas, round-trip): ~₹200–₹340 actuals
-• Puducherry UT Commercial Vehicle Entry Permit (Parivahan): ~₹500 actuals
-• Parking (Auroville Visitors Centre: ₹100/car; White Town: varies): at actuals
-• Any extra km beyond scheduled route: ₹${activeVehicle?.perKmRate || '—'}/km actuals
+*AT-ACTUALS CHARGES (Billed Separately at Plaza/Govt Rates)*
+• ECR FASTag Tolls (round-trip, Uthandi & Kovalam): ~₹200–₹340 actuals
+• Puducherry UT Commercial Vehicle Entry Permit: ~₹500 actuals
+• Parking (Auroville / White Town): at actuals
+• Payment Terms: ₹0 Advance Required — Pay chauffeur on trip completion
 
-• Advance Required: ₹0 — Pay chauffeur on trip completion
+*BILLING & GST DETAILS*
+${companyName.trim() ? `• Recipient / Firm: ${companyName.trim()}\n` : ''}${cleanedGst ? `• Recipient GSTIN: ${cleanedGst} (${recipientStateName})\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}• Supplier GSTIN: 33COVPM0531D1Z4 (SAC: 9966 Rent-a-Cab)
+• Supplier State: 33 - Tamil Nadu
+• Place of Supply: ${placeOfSupply}
 • ITC Status: 100% Eligible for Corporate ITC Claim (Sec 16/17(5) CGST Act)
 
 Please confirm cab allocation and issue formal GST trip estimate.`
 : `*Kalidass Travels - Chennai to Pondicherry Outstation Cab Booking*
-• Service: ${serviceTitle}
 • Estimate Ref: ${invoiceRefNo}
-${companyName.trim() ? `• Passenger Name: ${companyName.trim()}\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}• Trip Type: Outstation Round Trip${durationLabel ? ` (${durationLabel}, ${durationHours} hrs)` : ''}
-• Pickup: ${formatDT(pickupDateTime)}
-• Return: ${formatDT(returnDateTime)}${isNightBatta ? ' (Late Night Return after 11 PM)' : ''}
+• Service: ${serviceTitle}
+${companyName.trim() ? `• Passenger Name: ${companyName.trim()}\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}
+*LOCATION DETAILS*
 • Pickup Location: ${pickup.trim() || 'Chennai (Doorstep Pickup)'}
 • Destination: ${drop.trim() || fixedDrop}
 • Route: East Coast Road (ECR) via Mahabalipuram
 • Sightseeing: Auroville, French White Town & Promenade Beach
-• Passengers: ${passengers} Passenger${parseInt(passengers, 10) > 1 ? 's' : ''}
-• Selected Vehicle: ${activeVehicle ? `${activeVehicle.name} (${activeVehicle.shortName})` : 'Not selected'}
 
-*QUOTED (Vehicle Hire + Driver Bata):*
-• Vehicle Hire & Fuel: ₹${fareBreakdown?.vehicleHireFare?.toLocaleString('en-IN') || '—'} (${activeVehicle?.perKmRate}/km × min 300 km/day)
+*PICKUP & SCHEDULE*
+• Pickup Date & Time: ${formatDT(pickupDateTime)}
+• Return Date & Time: ${formatDT(returnDateTime)}${isNightBatta ? ' (Late Night Return after 11 PM)' : ''}
+• Trip Type: Outstation Round Trip${durationLabel ? ` (${durationLabel}, ${durationHours} hrs)` : ''}
+
+*TRAVEL & VEHICLE*
+• Selected Vehicle: ${activeVehicle ? `${activeVehicle.name} (${activeVehicle.shortName})` : 'Not selected'}
+• Passengers: ${passengers} Passenger${parseInt(passengers, 10) > 1 ? 's' : ''}
+• Driver Lodging: Chauffeur rests in vehicle / dormitory (No hotel room required from guest)
+
+*AMOUNT & PAYMENT*
+• Vehicle Hire & Fuel: ₹${fareBreakdown?.vehicleHireFare?.toLocaleString('en-IN') || '—'} (₹${activeVehicle?.perKmRate}/km × min 300 km/day)
 • Driver Bata (Allowance): ₹${((fareBreakdown?.driverBata || 0) + nightBattaAmount).toLocaleString('en-IN')}/day
 • Total Quoted Fare: ${formattedFare || 'TBD'}${pricingNote}
 
-*EXTRA AT ACTUALS (Government/Plaza Rates — Not Pre-Included):*
+*AT-ACTUALS CHARGES (Plaza/Govt Rates)*
 • ECR FASTag Tolls (round-trip, Uthandi & Kovalam): ~₹200–₹340
 • Puducherry UT Entry Permit (commercial vehicle): ~₹500
-• Parking (Auroville ₹100/car, White Town varies by spot/time)
-• Waiting beyond schedule or extra km: billed at actuals
-
-• Payment: ₹0 Advance — Pay chauffeur after trip completion
-• Driver stays in vehicle/dormitory (no hotel room from guest for 1-day trip)
+• Parking (Auroville / White Town): at actuals
+• Payment Terms: ₹0 Advance — Pay chauffeur after trip completion
 
 Please confirm chauffeur & availability for my Pondicherry trip.`;
 

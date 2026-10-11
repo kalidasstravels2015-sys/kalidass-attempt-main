@@ -123,7 +123,7 @@ test.describe('Navagraha Mobile & Desktop Itinerary, Guide and Navigation', () =
     const speakable = page.locator('[data-speakable="true"]');
     await expect(speakable).toBeAttached();
     const text = await speakable.textContent();
-    expect(text).toContain('₹8,600 (Sedan)');
+    expect(text).toContain('₹12,000 (Sedan)');
     expect(text).toContain('~750 km complete 9 Navagraha circuit');
   });
 });

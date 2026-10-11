@@ -67,14 +67,8 @@ const COMPARISON_VEHICLES = [
   }
 ];
 
-// Tab configuration with Savaari-style explanatory subtext to eliminate customer doubt
+// Tab configuration: Round Trip and Local Package (One-way not provided as per business focus)
 const TAB_CONFIG = {
-  oneway: {
-    titleEn: 'One Way',
-    titleTa: 'ஒரு வழி',
-    subEn: 'Drop-off Only',
-    subTa: 'டிராப் மட்டும்',
-  },
   round: {
     titleEn: 'Round Trip',
     titleTa: 'இரு வழி',
@@ -316,7 +310,7 @@ export default function QuotationEngine({
   subtitle = '',
   headerIcon = null,
   variant = "default",
-  initialTab = 'oneway',
+  initialTab = 'round',
   allowedTabs = null,
   initialPickup = '',
   initialDrop = '',
@@ -328,7 +322,7 @@ export default function QuotationEngine({
 
   const { scrollInputAboveKeyboard } = useVirtualKeyboard();
 
-  const [activeTab, setActiveTab] = useState(initialTab || 'oneway');
+  const [activeTab, setActiveTab] = useState(initialTab === 'oneway' ? 'round' : (initialTab || 'round'));
   const [localPackage, setLocalPackage] = useState('8hr80km');
   const [vehicle, setVehicle] = useState('Swift Dzire');
   const [passengers, setPassengers] = useState('4');
@@ -1229,35 +1223,39 @@ export default function QuotationEngine({
     }
 
     // 5. Open WhatsApp
-    const driverLine = requestedDriver ? `Requested Driver: *${requestedDriver}*\n` : '';
+    const driverLine = requestedDriver ? `• Requested Driver: *${requestedDriver}*\n` : '';
     const breakdownDetails = breakdown?.is_tirupati_pkg ? `
-100% Price Breakdown (Tirupati Package):
-• Total All-Inclusive Package Fare: Rs. ${estimate.toLocaleString('en-IN')}
+*AMOUNT & FARE BREAKDOWN*
+• Total All-Inclusive Package Fare: ₹${estimate.toLocaleString('en-IN')}
 • Trip Duration: ${days} ${days > 1 ? 'Days' : 'Day'}
-• Inclusions: 100% Fuel + FASTag Tolls + AP Interstate Border Permit + Tirumala Hill Climb + Driver Bata Included.
-• Advance: Rs. 0 Advance Required • Pay After Darshan / Return.`
+• Inclusions: 100% Fuel + FASTag Tolls + AP Interstate Border Permit + Tirumala Hill Climb + Driver Bata Included
+• Payment Terms: ₹0 Advance Required • Pay After Darshan / Return.`
     : (breakdown && !breakdown.is_city && activeTab !== 'local') ? `
-100% Price Breakdown:
-• Base Meter Fare: Rs. ${estimate.toLocaleString('en-IN')} (${breakdown.chargeable_km} km @ Rs. ${breakdown.rate_per_km}/km + Driver Day Bata Rs. ${breakdown.driver_bata})
-${breakdown.free_buffer_km > 0 ? `• Local Sightseeing Buffer: +${breakdown.free_buffer_km.toFixed(0)} km (Included at Rs. 0)\n` : ''}• Est. FASTag Tolls: ~Rs. ${breakdown.tolls_est.toLocaleString('en-IN')}
-${breakdown.state_permit_est > 0 ? `• Est. ${breakdown.state_name} Permit: ~Rs. ${breakdown.state_permit_est.toLocaleString('en-IN')}\n` : ''}${breakdown.nights > 0 ? `• Driver Night Stay (${breakdown.nights} Nights): ~Rs. ${breakdown.driver_night_stay_est.toLocaleString('en-IN')}\n` : ''}• All-Inclusive Package Est: ~Rs. ${breakdown.all_inclusive_est.toLocaleString('en-IN')} (100% Cashless on road)
+*AMOUNT & FARE BREAKDOWN*
+• Base Fare: ₹${estimate.toLocaleString('en-IN')} (${breakdown.chargeable_km} km @ ₹${breakdown.rate_per_km}/km + Driver Day Bata ₹${breakdown.driver_bata})
+${breakdown.free_buffer_km > 0 ? `• Local Sightseeing Buffer: +${breakdown.free_buffer_km.toFixed(0)} km (Included at ₹0)\n` : ''}• Est. FASTag Tolls: ~₹${breakdown.tolls_est.toLocaleString('en-IN')}
+${breakdown.state_permit_est > 0 ? `• Est. ${breakdown.state_name} Permit: ~₹${breakdown.state_permit_est.toLocaleString('en-IN')}\n` : ''}${breakdown.nights > 0 ? `• Driver Night Stay (${breakdown.nights} Nights): ~₹${breakdown.driver_night_stay_est.toLocaleString('en-IN')}\n` : ''}• All-Inclusive Package Est: ~₹${breakdown.all_inclusive_est.toLocaleString('en-IN')} (100% Cashless on road)
+• Payment Terms: ₹0 Advance Required • Pay after trip completion.` : `
+*AMOUNT & FARE ESTIMATE*
+• Est. Cost: ₹${estimate.toLocaleString('en-IN')}
+• Inclusions: Fuel, Driver Bata, GST
+• Payment Terms: ₹0 Advance Required • Pay after trip completion.`;
 
-Terms: Rs. 0 Advance Required. Pay after trip completion.` : `
-Est. Cost: Rs. ${estimate.toLocaleString('en-IN')}
-Inclusions: Fuel, Driver Bata, GST`;
+    const message = `*Kalidass Travels - Booking Request*
+${driverLine}
+*LOCATION DETAILS*
+• Pickup: ${sanitizeInput(pickup)}
+• Drop: ${sanitizeInput(drop)}
+• Distance: ${distance ? distance.toFixed(1) : 'N/A'} km ${activeTab === 'round' ? `(Round Trip: ${(distance * 2).toFixed(1)} km)` : ''}
 
-    const message = `New Booking Request
+*PICKUP & SCHEDULE*
+• Trip Type: ${activeTab === 'local' ? `Local Package (${localPackage})` : 'Round Trip'}
+• Pickup Date & Time: ${date ? new Date(date).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : 'Not Specified'}
+${activeTab === 'round' ? `• Return Date & Time: ${returnDate ? new Date(returnDate).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : 'Not Specified'}\n• Trip Duration: ${days} ${days > 1 ? 'Days' : 'Day'}\n` : ''}• Estimated Duration: ${duration || 'N/A'}
 
-Trip Details:
-${driverLine}Type: ${activeTab === 'local' ? `Local Package (${localPackage})` : activeTab === 'round' ? 'Round Trip' : 'One Way'}
-Vehicle: ${vehicle}
-Passengers: ${passengers}
-Pickup: ${sanitizeInput(pickup)}
-Drop: ${sanitizeInput(drop)}
-Pickup Date & Time: ${date ? new Date(date).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : 'Not Specified'}
-${activeTab === 'round' ? `Return Date & Time: ${returnDate ? new Date(returnDate).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : 'Not Specified'}\nTrip Duration: ${days} ${days > 1 ? 'Days' : 'Day'}` : ''}
-Distance: ${distance ? distance.toFixed(1) : 'N/A'} km ${activeTab === 'round' ? `(Round Trip: ${(distance * 2).toFixed(1)} km)` : ''}
-Duration: ${duration || 'N/A'}
+*TRAVEL & VEHICLE*
+• Selected Vehicle: ${vehicle}
+• Passengers: ${passengers}
 ${breakdownDetails}
 
 Please confirm availability and share quote.`;

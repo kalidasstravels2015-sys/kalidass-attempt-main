@@ -102,9 +102,9 @@ const VEHICLES = [
     capacity: 6,
     luggage: '3 Bags',
     tag: 'Best Value SUV',
-    rates: { 1: 11000, 2: 14000, 3: 15900 },
-    vehicleHire: { 1: 8600, 2: 11200, 3: 12300 },
-    driverBata: { 1: 2400, 2: 2800, 3: 3600 },
+    rates: { 1: 26500, 2: 26500, 3: 26500, 4: 29500, 5: 33000 },
+    vehicleHire: { 1: 22000, 2: 22000, 3: 22000, 4: 23500, 5: 25500 },
+    driverBata: { 1: 4500, 2: 4500, 3: 4500, 4: 6000, 5: 7500 },
     extraHourRate: 200
   },
   {
@@ -114,9 +114,9 @@ const VEHICLES = [
     capacity: 7,
     luggage: '4 Bags',
     tag: 'Ghats Specialist',
-    rates: { 1: 13000, 2: 16000, 3: 18500 },
-    vehicleHire: { 1: 10200, 2: 12800, 3: 14300 },
-    driverBata: { 1: 2800, 2: 3200, 3: 4200 },
+    rates: { 1: 29500, 2: 29500, 3: 29500, 4: 33000, 5: 37000 },
+    vehicleHire: { 1: 24700, 2: 24700, 3: 24700, 4: 26600, 5: 29000 },
+    driverBata: { 1: 4800, 2: 4800, 3: 4800, 4: 6400, 5: 8000 },
     extraHourRate: 200
   },
   {
@@ -126,9 +126,9 @@ const VEHICLES = [
     capacity: 7,
     luggage: '4 Bags',
     tag: 'VIP Luxury',
-    rates: { 1: 15500, 2: 19000, 3: 22000 },
-    vehicleHire: { 1: 12300, 2: 15400, 3: 17200 },
-    driverBata: { 1: 3200, 2: 3600, 3: 4800 },
+    rates: { 1: 34500, 2: 34500, 3: 34500, 4: 38500, 5: 43000 },
+    vehicleHire: { 1: 29100, 2: 29100, 3: 29100, 4: 31300, 5: 34000 },
+    driverBata: { 1: 5400, 2: 5400, 3: 5400, 4: 7200, 5: 9000 },
     extraHourRate: 250
   },
   {
@@ -138,9 +138,9 @@ const VEHICLES = [
     capacity: 12,
     luggage: '8 Bags',
     tag: 'Irumudi Seva Group',
-    rates: { 1: 19000, 2: 23000, 3: 26500 },
-    vehicleHire: { 1: 15000, 2: 18200, 3: 20500 },
-    driverBata: { 1: 4000, 2: 4800, 3: 6000 },
+    rates: { 1: 42000, 2: 42000, 3: 42000, 4: 46500, 5: 52000 },
+    vehicleHire: { 1: 35700, 2: 35700, 3: 35700, 4: 38100, 5: 41500 },
+    driverBata: { 1: 6300, 2: 6300, 3: 6300, 4: 8400, 5: 10500 },
     extraHourRate: 300
   },
   {
@@ -150,9 +150,9 @@ const VEHICLES = [
     capacity: 17,
     luggage: '12 Bags',
     tag: 'Mandali Seva Group',
-    rates: { 1: 23000, 2: 27500, 3: 32000 },
-    vehicleHire: { 1: 18200, 2: 21900, 3: 24800 },
-    driverBata: { 1: 4800, 2: 5600, 3: 7200 },
+    rates: { 1: 50000, 2: 50000, 3: 50000, 4: 55000, 5: 62000 },
+    vehicleHire: { 1: 42500, 2: 42500, 3: 42500, 4: 45000, 5: 49500 },
+    driverBata: { 1: 7500, 2: 7500, 3: 7500, 4: 10000, 5: 12500 },
     extraHourRate: 400
   }
 ];
@@ -364,86 +364,14 @@ export default function SabarimalaBookingEngine({
     const isSameDate = start.toDateString() === end.toDateString();
     const isOvernight = !isSameDate;
 
-    // Tier 1: <= 24 hrs
-    if (diffHours <= 24) {
-      const subText = isSameDate ? 'Same Day' : '1 Night Stay';
-      const label = '1 Day Package';
-      return {
-        hasDates: true,
-        days: 1,
-        hours: roundedHours,
-        label,
-        subText,
-        isProRata: false,
-        extraHours: 0,
-        baseDays: 1,
-        cappedDays: 1,
-        isOvernight,
-        isSameDate
-      };
-    }
-
-    // Tier 2: 25 to 47 hrs (1 Day + 1 hr to 1 Day + 23 hrs)
-    if (diffHours < 48) {
-      const extraHours = Math.min(23, Math.max(1, Math.round(diffHours - 24)));
-      return {
-        hasDates: true,
-        days: 1,
-        hours: roundedHours,
-        label: `1 Day + ${extraHours} hr${extraHours > 1 ? 's' : ''}`,
-        subText: isOvernight ? '1 Night Stay' : 'Extra Hours',
-        isProRata: true,
-        extraHours,
-        baseDays: 1,
-        cappedDays: 2,
-        isOvernight: true,
-        isSameDate: false
-      };
-    }
-
-    // Tier 2 Exact: 48 hrs (2 Days Package)
-    if (diffHours <= 48.5) {
-      return {
-        hasDates: true,
-        days: 2,
-        hours: roundedHours,
-        label: '2 Days Package',
-        subText: '1 Night Stay',
-        isProRata: false,
-        extraHours: 0,
-        baseDays: 2,
-        cappedDays: 2,
-        isOvernight: true,
-        isSameDate: false
-      };
-    }
-
-    // Tier 3: 49 to 71 hrs (2 Days + 1 hr to 2 Days + 23 hrs)
-    if (diffHours < 72) {
-      const extraHours = Math.min(23, Math.max(1, Math.round(diffHours - 48)));
-      return {
-        hasDates: true,
-        days: 2,
-        hours: roundedHours,
-        label: `2 Days + ${extraHours} hr${extraHours > 1 ? 's' : ''}`,
-        subText: '2 Nights Stay',
-        isProRata: true,
-        extraHours,
-        baseDays: 2,
-        cappedDays: 3,
-        isOvernight: true,
-        isSameDate: false
-      };
-    }
-
-    // Tier 3 Exact: 72 hrs (3 Days Package)
+    // Sabarimala Yatra is an interstate 1,400 km circuit via Pamba ghats requiring minimum 3 Days / 2 Nights
     if (diffHours <= 72.5) {
       return {
         hasDates: true,
         days: 3,
         hours: roundedHours,
         label: '3 Days Package',
-        subText: '2 Nights Stay',
+        subText: diffHours <= 48 ? 'Min 3 Days required for Sabarimala' : '2 Nights Stay',
         isProRata: false,
         extraHours: 0,
         baseDays: 3,
@@ -453,7 +381,77 @@ export default function SabarimalaBookingEngine({
       };
     }
 
-    // Tier 4: > 72.5 hrs (Multi-Day Package)
+    // 73 to 95 hrs (3 Days + extra hours)
+    if (diffHours < 96) {
+      const extraHours = Math.min(23, Math.max(1, Math.round(diffHours - 72)));
+      return {
+        hasDates: true,
+        days: 3,
+        hours: roundedHours,
+        label: `3 Days + ${extraHours} hr${extraHours > 1 ? 's' : ''}`,
+        subText: '3 Nights Stay',
+        isProRata: true,
+        extraHours,
+        baseDays: 3,
+        cappedDays: 4,
+        isOvernight: true,
+        isSameDate: false
+      };
+    }
+
+    // 96 hrs (4 Days Package)
+    if (diffHours <= 96.5) {
+      return {
+        hasDates: true,
+        days: 4,
+        hours: roundedHours,
+        label: '4 Days Package',
+        subText: '3 Nights Stay (Temple Circuit)',
+        isProRata: false,
+        extraHours: 0,
+        baseDays: 4,
+        cappedDays: 4,
+        isOvernight: true,
+        isSameDate: false
+      };
+    }
+
+    // 97 to 119 hrs (4 Days + extra hours)
+    if (diffHours < 120) {
+      const extraHours = Math.min(23, Math.max(1, Math.round(diffHours - 96)));
+      return {
+        hasDates: true,
+        days: 4,
+        hours: roundedHours,
+        label: `4 Days + ${extraHours} hr${extraHours > 1 ? 's' : ''}`,
+        subText: '4 Nights Stay',
+        isProRata: true,
+        extraHours,
+        baseDays: 4,
+        cappedDays: 5,
+        isOvernight: true,
+        isSameDate: false
+      };
+    }
+
+    // 120 hrs (5 Days Package)
+    if (diffHours <= 120.5) {
+      return {
+        hasDates: true,
+        days: 5,
+        hours: roundedHours,
+        label: '5 Days Package',
+        subText: '4 Nights Stay (Extended Yatra)',
+        isProRata: false,
+        extraHours: 0,
+        baseDays: 5,
+        cappedDays: 5,
+        isOvernight: true,
+        isSameDate: false
+      };
+    }
+
+    // > 120.5 hrs (Multi-Day Package)
     const totalDays = Math.ceil(diffHours / 24);
     return {
       hasDates: true,
@@ -628,15 +626,38 @@ export default function SabarimalaBookingEngine({
       };
     }
 
-    // Standard 1, 2, or 3-Day Package
+    // Sabarimala 3-Day Package (Minimum duration)
     if (numDays <= 3) {
+      const packageRate = veh.rates[3];
+      const vehicleHireFare = veh.vehicleHire[3];
+      const driverBata = veh.driverBata[3];
+
+      return {
+        totalFare: packageRate,
+        packageType: 'multi_day',
+        vehicleHireFare,
+        driverBata,
+        baseFare: packageRate,
+        packageDays: 3,
+        extraHoursFare: 0,
+        extraHours: 0,
+        isProRata: false,
+        isCapped: false,
+        maxCapFare: packageRate,
+        savings: 0,
+        pricingModel: '3-Day Approved Package Tariff'
+      };
+    }
+
+    // 4 or 5 Days Package
+    if (numDays <= 5) {
       const packageRate = veh.rates[numDays];
       const vehicleHireFare = veh.vehicleHire[numDays];
       const driverBata = veh.driverBata[numDays];
 
       return {
         totalFare: packageRate,
-        packageType: numDays === 1 ? 'standard_1day' : 'multi_day',
+        packageType: 'multi_day',
         vehicleHireFare,
         driverBata,
         baseFare: packageRate,
@@ -651,15 +672,15 @@ export default function SabarimalaBookingEngine({
       };
     }
 
-    // 4+ Days Package
-    const extraDays = numDays - 3;
-    const extraPerDay = veh.rates[2] - veh.rates[1];
-    const extraVehPerDay = veh.vehicleHire[2] - veh.vehicleHire[1];
-    const extraBataPerDay = veh.driverBata[2] - veh.driverBata[1];
+    // 6+ Days Package
+    const extraDays = numDays - 5;
+    const extraPerDay = veh.rates[5] - veh.rates[4];
+    const extraVehPerDay = veh.vehicleHire[5] - veh.vehicleHire[4];
+    const extraBataPerDay = veh.driverBata[5] - veh.driverBata[4];
 
-    const packageRate = veh.rates[3] + (extraDays * extraPerDay);
-    const vehicleHireFare = veh.vehicleHire[3] + (extraDays * extraVehPerDay);
-    const driverBata = veh.driverBata[3] + (extraDays * extraBataPerDay);
+    const packageRate = veh.rates[5] + (extraDays * extraPerDay);
+    const vehicleHireFare = veh.vehicleHire[5] + (extraDays * extraVehPerDay);
+    const driverBata = veh.driverBata[5] + (extraDays * extraBataPerDay);
 
     return {
       totalFare: packageRate,
@@ -739,41 +760,62 @@ export default function SabarimalaBookingEngine({
 
   // WhatsApp Message Manifest
   const whatsAppMessage = needGst ? `*Kalidass Travels - Sabarimala Yatra Cab Booking (Official Proforma Trip Estimate)*
-• Service: ${serviceTitle}
 • Estimate Ref: ${invoiceRefNo}
-• Supplier GSTIN: 33COVPM0531D1Z4 (SAC: 9966 Rent-a-Cab)
-• Supplier State: 33 - Tamil Nadu
-• Place of Supply: ${placeOfSupply}
-${companyName.trim() ? `• Recipient / Firm: ${companyName.trim()}\n` : ''}${cleanedGst ? `• Recipient GSTIN: ${cleanedGst} (${recipientStateName})\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}• Trip Type: Round Trip${durationLabel ? ` (${durationLabel}, ${durationHours} hrs)` : ''}
-• Pickup: ${formatDT(pickupDateTime)}
-• Return: ${formatDT(returnDateTime)}${isNightBatta ? ' (Late Night Return after 11 PM)' : ''}
+• Service: ${serviceTitle}
+
+*LOCATION DETAILS*
 • Pickup Location: ${pickup.trim() || 'Chennai (Doorstep Pickup Included)'}
 • Destination: ${fixedDrop}
-• Darshan Ticket: Not included (Cab service only)
-• Passengers: ${passengers} Devotee${parseInt(passengers, 10) > 1 ? 's' : ''}
+
+*PICKUP & SCHEDULE*
+• Pickup Date & Time: ${formatDT(pickupDateTime)}
+• Return Date & Time: ${formatDT(returnDateTime)}${isNightBatta ? ' (Late Night Return after 11 PM)' : ''}
+• Trip Type: Round Trip${durationLabel ? ` (${durationLabel}, ${durationHours} hrs)` : ''}
+
+*TRAVEL & VEHICLE*
 • Selected Vehicle: ${activeVehicle ? `${activeVehicle.name} (${activeVehicle.shortName})` : 'Not selected'}
+• Passengers: ${passengers} Devotee${parseInt(passengers, 10) > 1 ? 's' : ''}
+• Inclusions: 100% Fuel + 1,350 km Coverage + Kerala Interstate Permit + NH Tolls + Driver Bata Included
+• Driver Lodging: Chauffeur rests in vehicle / pilgrim dormitories (No hotel room required from guest)
+• Notes: Nilakkal/Pamba parking included; Darshan virtual queue pass by devotee
+
+*AMOUNT & FARE BREAKDOWN*
 • Taxable Package Value: ₹${taxableAmount.toLocaleString('en-IN')}
 ${isIntraState 
   ? `• CGST (2.5%): ₹${cgst.toLocaleString('en-IN')}\n• SGST (2.5%): ₹${sgst.toLocaleString('en-IN')}` 
   : `• IGST (5.0% - Inter-State): ₹${igst.toLocaleString('en-IN')}`}
 • Total GST Tax (5%): ₹${totalGst.toLocaleString('en-IN')}
 • Total Estimate Payable: ₹${finalNetPayable?.toLocaleString('en-IN')}${grandTotalInWords ? ` (${grandTotalInWords})` : ''}
-• Advance Required: ₹0 (Pay chauffeur after trip completion)
+• Payment Terms: ₹0 Advance Required (Pay chauffeur after trip completion)
+
+*BILLING & GST DETAILS*
+${companyName.trim() ? `• Recipient / Firm: ${companyName.trim()}\n` : ''}${cleanedGst ? `• Recipient GSTIN: ${cleanedGst} (${recipientStateName})\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}• Supplier GSTIN: 33COVPM0531D1Z4 (SAC: 9966 Rent-a-Cab)
+• Supplier State: 33 - Tamil Nadu
+• Place of Supply: ${placeOfSupply}
 • ITC Status: 100% Eligible for Corporate ITC Claim (Sec 16/17(5) CGST Act)
 
 Please confirm cab allocation and issue formal GST trip estimate.`
 : `*Kalidass Travels - Sabarimala Yatra Cab Booking*
-• Service: ${serviceTitle}
 • Estimate Ref: ${invoiceRefNo}
-${companyName.trim() ? `• Devotee / Passenger: ${companyName.trim()}\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}• Trip Type: Round Trip${durationLabel ? ` (${durationLabel}, ${durationHours} hrs)` : ''}
-• Pickup (Date & Time): ${formatDT(pickupDateTime)}
-• Return (Date & Time): ${formatDT(returnDateTime)}${isNightBatta ? ' (Late Night Return after 11 PM)' : ''}
+• Service: ${serviceTitle}
+${companyName.trim() ? `• Devotee / Passenger: ${companyName.trim()}\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}
+*LOCATION DETAILS*
 • Pickup Location: ${pickup.trim() || 'Chennai (Doorstep Pickup Included)'}
 • Destination: ${fixedDrop}
+
+*PICKUP & SCHEDULE*
+• Pickup Date & Time: ${formatDT(pickupDateTime)}
+• Return Date & Time: ${formatDT(returnDateTime)}${isNightBatta ? ' (Late Night Return after 11 PM)' : ''}
+• Trip Type: Round Trip${durationLabel ? ` (${durationLabel}, ${durationHours} hrs)` : ''}
+
+*TRAVEL & VEHICLE*
+• Selected Vehicle: ${activeVehicle ? `${activeVehicle.name} (${activeVehicle.shortName})` : 'Not selected'}
+• Passengers: ${passengers} Devotee${parseInt(passengers, 10) > 1 ? 's' : ''}
 • Inclusions: 100% Fuel + 1,350 km Coverage + Kerala Interstate Permit + NH Tolls + Driver Bata Included
 • Driver Lodging: Chauffeur rests in vehicle / pilgrim dormitories (No hotel room required from guest)
-• Passengers: ${passengers} Devotee${parseInt(passengers, 10) > 1 ? 's' : ''}
-• Selected Vehicle: ${activeVehicle ? `${activeVehicle.name} (${activeVehicle.shortName})` : 'Not selected'}
+• Notes: Nilakkal/Pamba parking included; Darshan virtual queue pass by devotee
+
+*AMOUNT & PAYMENT*
 • Total All-Inclusive Fare: ${formattedFare || 'TBD'}${pricingNote}
 • Payment Terms: ₹0 Advance Required • Pay Chauffeur After Trip Completion
 

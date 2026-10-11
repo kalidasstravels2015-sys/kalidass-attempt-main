@@ -123,7 +123,7 @@ test.describe('Rameswaram Mobile & Desktop Itinerary, Guide and Navigation', () 
     const speakable = page.locator('[data-speakable="true"]');
     await expect(speakable).toBeAttached();
     const text = await speakable.textContent();
-    expect(text).toContain('₹15,500 (Sedan)');
+    expect(text).toContain('₹18,500 (Sedan)');
     expect(text).toContain('~1,200 km round-trip');
   });
 });
