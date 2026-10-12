@@ -74,8 +74,11 @@
 
 /services/temple-tours/*                      /services/tours/temple-tours/     301
 /services/temple-tours                        /services/tours/temple-tours/     301
-/services/weekend-packages/*                  /services/tours/weekend-packages/ 301
-/services/weekend-packages                    /services/tours/weekend-packages/ 301
+/services/tours/weekend-packages/*            /services/outstation-cabs/        301
+/services/tours/weekend-packages              /services/outstation-cabs/        301
+/services/weekend-packages/*                  /services/outstation-cabs/        301
+/services/weekend-packages                    /services/outstation-cabs/        301
+/services/tours                               /services/tours/temple-tours/     301
 
 # ─── Redundant Acting Driver Fragments ───────────────────────────────────────
 /services/driver-for-senior-citizens/*        /services/acting-driver-within-chennai/ 301

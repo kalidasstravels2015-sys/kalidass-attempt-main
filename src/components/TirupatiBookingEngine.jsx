@@ -729,6 +729,10 @@ export default function TirupatiBookingEngine({
   const formattedFinalFare = finalNetPayable != null ? `₹ ${finalNetPayable.toLocaleString('en-IN')}` : null;
   const grandTotalInWords = finalNetPayable ? numberToWordsINR(finalNetPayable) : '';
 
+  const advanceDeposit = 500;
+  const balancePayable = finalNetPayable != null ? Math.max(0, finalNetPayable - advanceDeposit) : null;
+  const formattedBalancePayable = balancePayable != null ? `₹ ${balancePayable.toLocaleString('en-IN')}` : null;
+
   const gstEstimatedTotal = currentFare != null ? currentFare + Math.round(currentFare * 0.05) : null;
   const formattedGstEstimatedTotal = gstEstimatedTotal != null ? `₹ ${gstEstimatedTotal.toLocaleString('en-IN')}` : null;
   const activePayableFare = needGst ? formattedFinalFare : formattedFare;
@@ -777,7 +781,9 @@ ${isIntraState
   : `• IGST (5.0% - Inter-State): ₹${igst.toLocaleString('en-IN')}`}
 • Total GST Tax (5%): ₹${totalGst.toLocaleString('en-IN')}
 • Total Estimate Payable: ₹${finalNetPayable?.toLocaleString('en-IN')}${grandTotalInWords ? ` (${grandTotalInWords})` : ''}
-• Payment Terms: ₹0 Advance Required (Pay chauffeur after trip completion)
+• Advance to Confirm Booking: ₹500 Token Deposit
+• Balance on Completion: ${formattedBalancePayable || 'Remaining Balance'} (Payable to Chauffeur)
+• Payment Terms: ₹500 Advance to Confirm Booking (Remaining balance payable after trip completion)
 
 *BILLING & GST DETAILS*
 ${companyName.trim() ? `• Recipient / Firm: ${companyName.trim()}\n` : ''}${cleanedGst ? `• Recipient GSTIN: ${cleanedGst} (${recipientStateName})\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}• Supplier GSTIN: 33COVPM0531D1Z4 (SAC: 9966 Rent-a-Cab)
@@ -808,7 +814,9 @@ ${companyName.trim() ? `• Devotee / Passenger: ${companyName.trim()}\n` : ''}$
 
 *AMOUNT & PAYMENT*
 • Total All-Inclusive Fare: ${formattedFare || 'TBD'}${pricingNote}
-• Payment Terms: ₹0 Advance Required • Pay Chauffeur After Trip Completion
+• Advance to Confirm Booking: ₹500 Token Deposit
+• Balance on Completion: ${formattedBalancePayable || 'Remaining Balance'} (Payable to Chauffeur)
+• Payment Terms: ₹500 Advance to Confirm Booking • Balance Payable to Chauffeur After Trip Completion
 
 Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
 
@@ -908,6 +916,8 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
       igst,
       totalGst,
       finalNetPayable: finalNetPayable || taxableAmount,
+      advanceDeposit,
+      balancePayable: balancePayable || (finalNetPayable || taxableAmount) - advanceDeposit,
       grandTotalInWords
     });
   };
@@ -940,6 +950,8 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
       igst,
       totalGst,
       finalNetPayable: finalNetPayable || taxableAmount,
+      advanceDeposit,
+      balancePayable: balancePayable || (finalNetPayable || taxableAmount) - advanceDeposit,
       grandTotalInWords
     });
   };
@@ -1040,6 +1052,8 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
           igst,
           totalGst,
           finalNetPayable: finalNetPayable || taxableAmount,
+          advanceDeposit,
+          balancePayable: balancePayable || (finalNetPayable || taxableAmount) - advanceDeposit,
           grandTotalInWords
         });
         setDownloadToast(true);
@@ -1079,26 +1093,26 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
         className="w-full max-w-2xl mx-auto bg-m3-surface rounded-m3-2xl shadow-m3-2 border border-m3-outline-variant overflow-hidden font-sans"
       >
         {/* Title Header */}
-        <div className="py-2.5 px-4 sm:px-5 text-center border-b border-m3-outline-variant/60 bg-m3-surface">
+        <div className="py-3 px-4 sm:px-5 text-center border-b border-m3-outline-variant/60 bg-m3-surface">
           <h2 className="text-lg sm:text-xl font-bold text-m3-on-surface font-heading">
             Book Chennai to Tirupati
           </h2>
-          <p className="text-[11px] sm:text-xs text-m3-on-surface-variant mt-0.5">
-            Round trip private AC cab package • Fixed tariff with ₹0 advance
+          <p className="text-xs text-m3-on-surface-variant mt-0.5">
+            Round trip private AC cab package • Fixed tariff with ₹500 advance to confirm booking
           </p>
         </div>
 
         {/* Form Body */}
-        <div className="p-3.5 sm:p-5 space-y-2.5">
+        <div className="p-4 sm:p-5 space-y-3 sm:space-y-3.5">
           
           {/* 1. Pickup Input Field */}
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <label htmlFor={pickupId} className="text-xs font-bold text-m3-on-surface flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-m3-on-surface-variant shrink-0" />
+              <label htmlFor={pickupId} className="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center gap-1.5">
+                <MapPin className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
                 <span>Pickup Location in Chennai</span>
               </label>
-              <span className="text-[10px] text-m3-on-surface-variant">Doorstep Pickup Included</span>
+              <span className="text-[11px] text-m3-on-surface-variant font-medium">Doorstep Pickup Included</span>
             </div>
             <div className="relative">
               <input
@@ -1115,18 +1129,18 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
                   loadGoogleMaps().catch(() => {});
                 }}
                 placeholder="Enter pickup address in Chennai"
-                className="w-full bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-lg px-3 py-2 text-xs sm:text-sm text-m3-on-surface placeholder-m3-on-surface-variant/60 focus:outline-none focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20 transition-all pr-16 shadow-2xs"
+                className="w-full min-h-[48px] bg-white border border-m3-outline-variant hover:border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20 rounded-m3-lg px-3.5 py-3 text-sm sm:text-sm text-m3-on-surface placeholder-m3-on-surface-variant/60 outline-none transition-all pr-20 shadow-2xs"
               />
-              <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+              <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center">
                 {pickup && (
                   <button
                     type="button"
                     onClick={() => setPickup('')}
                     aria-label="Clear pickup location"
                     title="Clear pickup location"
-                    className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-m3-surface-container text-m3-on-surface-variant hover:text-m3-on-surface transition-colors cursor-pointer"
+                    className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-m3-surface-container active:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-on-surface transition-colors cursor-pointer"
                   >
-                    <X className="w-3.5 h-3.5" />
+                    <X className="w-4 h-4" />
                   </button>
                 )}
                 <button
@@ -1135,33 +1149,33 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
                   disabled={gettingLocation}
                   aria-label="Use current location"
                   title="Use current location"
-                  className="w-7 h-7 flex items-center justify-center rounded-m3-sm hover:bg-m3-surface-container text-m3-on-surface-variant hover:text-m3-primary transition-colors cursor-pointer disabled:opacity-50"
+                  className="w-10 h-10 flex items-center justify-center rounded-m3-md hover:bg-m3-surface-container active:scale-95 active:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-primary transition-all cursor-pointer disabled:opacity-50"
                 >
-                  <LocateFixed className={`w-4 h-4 ${gettingLocation ? 'animate-spin text-m3-primary' : ''}`} />
+                  <LocateFixed className={`w-5 h-5 ${gettingLocation ? 'animate-spin text-m3-primary' : ''}`} />
                 </button>
               </div>
             </div>
           </div>
 
           {/* 2. Fixed Drop Notice (Subtle, Clean & Neutral) */}
-          <div className="py-1.5 px-2.5 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center justify-between text-[11px] text-m3-on-surface">
+          <div className="min-h-[42px] py-2 px-3 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center justify-between gap-2 text-xs text-m3-on-surface">
             <div className="flex items-center gap-1.5 min-w-0">
-              <Navigation className="w-3 h-3 text-m3-on-surface-variant shrink-0" />
-              <span className="truncate">
-                <strong className="text-m3-on-surface">Fixed Destination:</strong> Tirupati Balaji Temple &amp; Tirumala Hills
+              <Navigation className="w-3.5 h-3.5 text-m3-on-surface-variant shrink-0" />
+              <span className="text-[11px] sm:text-xs truncate">
+                <strong className="text-m3-on-surface font-semibold">Fixed Destination:</strong> Tirupati Balaji Temple &amp; Tirumala Hills
               </span>
             </div>
-            <span className="text-[9.5px] font-semibold text-m3-on-surface-variant bg-m3-surface-container px-1.5 py-0.5 rounded-m3-sm shrink-0 border border-m3-outline-variant/50">
+            <span className="text-[10px] font-bold text-m3-on-surface-variant bg-m3-surface-container px-2 py-0.5 rounded-m3-sm shrink-0 border border-m3-outline-variant/50 whitespace-nowrap">
               Ghat Road Paid
             </span>
           </div>
 
           {/* 3. Pickup DateTime & Return DateTime */}
           <div className="space-y-1.5">
-            <div className="grid grid-cols-2 gap-2 sm:gap-3">
+            <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
               <div className="space-y-1">
-                <label htmlFor={pickupDateTimeId} className="text-[11px] sm:text-xs font-bold text-m3-on-surface flex items-center gap-1">
-                  <Calendar className="w-3 h-3 text-m3-on-surface-variant shrink-0" />
+                <label htmlFor={pickupDateTimeId} className="text-xs sm:text-xs font-bold text-m3-on-surface flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5 text-m3-on-surface-variant shrink-0" />
                   <span className="truncate">Pickup Date &amp; Time</span>
                 </label>
                 <input
@@ -1170,13 +1184,13 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
                   value={pickupDateTime}
                   min={getMinDateTime()}
                   onChange={handlePickupDateTimeChange}
-                  className="w-full bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-lg px-2.5 py-1.5 sm:py-2 text-xs sm:text-sm text-m3-on-surface focus:outline-none focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20 transition-all shadow-2xs"
+                  className="w-full min-h-[48px] bg-white border border-m3-outline-variant hover:border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20 rounded-m3-lg px-2 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm text-m3-on-surface font-semibold outline-none transition-all shadow-2xs cursor-pointer"
                 />
               </div>
 
               <div className="space-y-1">
-                <label htmlFor={returnDateTimeId} className="text-[11px] sm:text-xs font-bold text-m3-on-surface flex items-center gap-1">
-                  <Calendar className="w-3 h-3 text-m3-on-surface-variant shrink-0" />
+                <label htmlFor={returnDateTimeId} className="text-xs sm:text-xs font-bold text-m3-on-surface flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5 text-m3-on-surface-variant shrink-0" />
                   <span className="truncate">Return Date &amp; Time</span>
                 </label>
                 <input
@@ -1188,22 +1202,22 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
                     setReturnDateTime(e.target.value);
                     if (validationError) setValidationError('');
                   }}
-                  className="w-full bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-lg px-2.5 py-1.5 sm:py-2 text-xs sm:text-sm text-m3-on-surface focus:outline-none focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20 transition-all shadow-2xs"
+                  className="w-full min-h-[48px] bg-white border border-m3-outline-variant hover:border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20 rounded-m3-lg px-2 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm text-m3-on-surface font-semibold outline-none transition-all shadow-2xs cursor-pointer"
                 />
               </div>
             </div>
 
             {/* Clean Result Banner directly attached after dates with Why? detail toggle */}
             {durationInfo.hasDates ? (
-              <div className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50/90 border border-emerald-200/90 rounded-m3-md text-xs animate-in fade-in duration-150">
-                <span className="font-bold text-emerald-950 whitespace-nowrap text-[11px]">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50/90 border border-emerald-200/90 rounded-m3-md text-xs animate-in fade-in duration-150">
+                <span className="font-bold text-emerald-950 whitespace-nowrap text-xs">
                   {durationLabel}
                 </span>
-                <span className="text-[10px] text-emerald-800/80 font-medium whitespace-nowrap">
+                <span className="text-[11px] text-emerald-800/80 font-medium whitespace-nowrap">
                   ({durationHours} hrs)
                 </span>
                 {durationSubText && (
-                  <span className="text-[10px] font-semibold text-emerald-800 bg-white/90 px-1.5 py-0.5 rounded-full border border-emerald-200/80 shrink-0 whitespace-nowrap">
+                  <span className="text-[10px] font-semibold text-emerald-800 bg-white/90 px-2 py-0.5 rounded-full border border-emerald-200/80 shrink-0 whitespace-nowrap">
                     {durationSubText}
                   </span>
                 )}
@@ -1212,29 +1226,29 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
 
             {/* Late night driving allowance alert (only after 11 PM grace window) */}
             {isNightBatta && (
-              <p className="text-[11px] text-amber-900 bg-amber-50 border border-amber-200 rounded-m3-md px-2.5 py-1.5 leading-snug flex items-center gap-1.5 font-medium">
+              <p className="text-xs text-amber-900 bg-amber-50 border border-amber-200 rounded-m3-md px-3 py-2 leading-snug flex items-center gap-1.5 font-medium">
                 <span>⚠ Return after 11 PM: Standard ₹400 driver night allowance applies (1-hr traffic grace until 11 PM included)</span>
               </p>
             )}
           </div>
 
           {/* 4. Passenger selection & Vehicle selection in SAME ROW with auto-filtering */}
-          <div className="grid grid-cols-2 gap-2 sm:gap-3 pt-0.5">
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-3 pt-0.5">
             {/* Passenger selection */}
             <div className="space-y-1">
-              <label htmlFor={passengersId} className="text-[11px] sm:text-xs font-bold text-m3-on-surface flex items-center justify-between">
-                <span className="flex items-center gap-1">
+              <label htmlFor={passengersId} className="text-xs sm:text-xs font-bold text-m3-on-surface flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
                   <Users className="w-3.5 h-3.5 text-m3-on-surface-variant shrink-0" />
                   <span>Passengers</span>
                 </span>
-                <span className="text-[9.5px] text-m3-on-surface-variant hidden sm:inline">Auto-filters</span>
+                <span className="text-[10px] text-m3-on-surface-variant hidden sm:inline">Auto-filters</span>
               </label>
-              <div className="relative flex items-center bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-lg transition-colors focus-within:border-m3-primary focus-within:ring-2 focus-within:ring-m3-primary/20 shadow-2xs">
+              <div className="relative flex items-center min-h-[48px] bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-lg transition-colors focus-within:border-m3-primary focus-within:ring-2 focus-within:ring-m3-primary/20 shadow-2xs">
                 <select
                   id={passengersId}
                   value={passengers}
                   onChange={(e) => handlePassengerChange(e.target.value)}
-                  className="w-full bg-transparent appearance-none outline-none cursor-pointer px-2.5 py-1.5 sm:py-2 pr-7 text-xs sm:text-sm font-semibold text-m3-on-surface"
+                  className="w-full min-h-[48px] bg-transparent appearance-none outline-none cursor-pointer px-2.5 sm:px-3 py-2.5 sm:py-3 pr-7 sm:pr-8 text-xs sm:text-sm font-semibold text-m3-on-surface truncate"
                 >
                   <option value="" disabled>Select passengers...</option>
                   {PASSENGER_OPTIONS.map(opt => (
@@ -1243,22 +1257,22 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
                     </option>
                   ))}
                 </select>
-                <ChevronDown className="w-3.5 h-3.5 text-m3-on-surface-variant pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 shrink-0" />
+                <ChevronDown className="w-4 h-4 text-m3-on-surface-variant pointer-events-none absolute right-2 sm:right-2.5 top-1/2 -translate-y-1/2 shrink-0" />
               </div>
             </div>
 
             {/* Vehicle selection */}
             <div className="space-y-1">
-              <label htmlFor={vehicleId} className="text-[11px] sm:text-xs font-bold text-m3-on-surface flex items-center justify-between">
-                <span className="flex items-center gap-1">
+              <label htmlFor={vehicleId} className="text-xs sm:text-xs font-bold text-m3-on-surface flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
                   <Car className="w-3.5 h-3.5 text-m3-on-surface-variant shrink-0" />
                   <span>Vehicle Model</span>
                 </span>
-                <span className="text-[9.5px] text-m3-on-surface-variant font-medium hidden sm:inline">
+                <span className="text-[10px] text-m3-on-surface-variant font-medium hidden sm:inline">
                   {availableVehicles.length} eligible
                 </span>
               </label>
-              <div className={`relative flex items-center border rounded-m3-lg transition-colors shadow-2xs ${!passengers ? 'bg-m3-surface-container-low border-m3-outline-variant/60 opacity-60 cursor-not-allowed' : 'bg-white border-m3-outline-variant hover:border-m3-outline focus-within:border-m3-primary focus-within:ring-2 focus-within:ring-m3-primary/20'}`}>
+              <div className={`relative flex items-center min-h-[48px] border rounded-m3-lg transition-colors shadow-2xs ${!passengers ? 'bg-m3-surface-container-low border-m3-outline-variant/60 opacity-60 cursor-not-allowed' : 'bg-white border-m3-outline-variant hover:border-m3-outline focus-within:border-m3-primary focus-within:ring-2 focus-within:ring-m3-primary/20'}`}>
                 <select
                   id={vehicleId}
                   value={vehicleIdState}
@@ -1267,16 +1281,16 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
                     if (validationError) setValidationError('');
                   }}
                   disabled={!passengers}
-                  className="w-full bg-transparent appearance-none outline-none cursor-pointer px-2.5 py-1.5 sm:py-2 pr-7 text-xs sm:text-sm font-semibold text-m3-on-surface disabled:cursor-not-allowed truncate"
+                  className="w-full min-h-[48px] bg-transparent appearance-none outline-none cursor-pointer px-2.5 sm:px-3 py-2.5 sm:py-3 pr-7 sm:pr-8 text-xs sm:text-sm font-semibold text-m3-on-surface disabled:cursor-not-allowed truncate"
                 >
-                  <option value="" disabled>{passengers ? 'Choose vehicle...' : 'Select passengers first'}</option>
+                  <option value="" disabled>{passengers ? 'Choose vehicle...' : 'Select pax first'}</option>
                   {availableVehicles.map(veh => (
                     <option key={veh.id} value={veh.id}>
                       {veh.name} ({veh.capacity} Pax)
                     </option>
                   ))}
                 </select>
-                <ChevronDown className="w-3.5 h-3.5 text-m3-on-surface-variant pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 shrink-0" />
+                <ChevronDown className="w-4 h-4 text-m3-on-surface-variant pointer-events-none absolute right-2 sm:right-2.5 top-1/2 -translate-y-1/2 shrink-0" />
               </div>
             </div>
           </div>
@@ -1287,16 +1301,16 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
           {validationError && (
             <p 
               role="alert"
-              className="text-xs text-rose-600 font-medium text-center flex items-center justify-center gap-1.5 animate-in fade-in duration-150 py-0.5"
+              className="text-xs sm:text-sm text-rose-600 font-medium text-center flex items-center justify-center gap-1.5 animate-in fade-in duration-150 py-0.5"
             >
-              <Info className="w-3.5 h-3.5 text-rose-600 shrink-0" />
+              <Info className="w-4 h-4 text-rose-600 shrink-0" />
               <span>{validationError}</span>
             </p>
           )}
 
           {/* UNIFIED FARE SUMMARY & BOOKING ACTION — Option A Progressive Disclosure */}
           {formattedFare ? (
-            <div className="pt-2.5 border-t border-m3-outline-variant/60 space-y-2.5 animate-in fade-in duration-200">
+            <div className="pt-3 border-t border-m3-outline-variant/60 space-y-3 animate-in fade-in duration-200">
               
               {/* 1. Hero Price & Guarantee */}
               <div className="pt-0.5">
@@ -1312,7 +1326,7 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
 
               {/* 2. Package Status & Inclusions */}
               <div>
-                <p className="text-xs text-m3-on-surface-variant font-medium leading-relaxed">
+                <p className="text-xs sm:text-sm text-m3-on-surface-variant font-medium leading-relaxed">
                   {needGst 
                     ? 'Covers FASTag Tolls + AP Permit + Ghat Climb + Driver Bata + 5% GST' 
                     : 'Covers FASTag Tolls + AP Permit + Ghat Climb + Driver Bata'}
@@ -1324,19 +1338,19 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
                 <button
                   type="button"
                   onClick={() => setShowBreakdown(!showBreakdown)}
-                  className="w-full px-3 py-2 flex items-center justify-between text-xs font-bold text-m3-on-surface hover:bg-m3-surface-container-low transition-colors cursor-pointer"
+                  className="w-full px-3.5 py-3 min-h-[48px] flex items-center justify-between text-xs sm:text-sm font-bold text-m3-on-surface hover:bg-m3-surface-container-low transition-colors cursor-pointer"
                 >
-                  <div className="flex items-center gap-1.5">
-                    <Receipt className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                  <div className="flex items-center gap-2">
+                    <Receipt className="w-4 h-4 text-emerald-700 shrink-0" />
                     <span>
                       {showBreakdown 
                         ? (needGst ? 'Hide GST Itemized Fare Breakdown' : 'Hide Itemized Fare Breakdown')
                         : (needGst ? 'View GST Itemized Fare Breakdown' : 'View Itemized Fare Breakdown')}
                     </span>
                   </div>
-                  <div className="flex items-center gap-1 text-[11px] text-m3-on-surface-variant font-semibold">
+                  <div className="flex items-center gap-1.5 text-xs text-m3-on-surface-variant font-semibold">
                     <span>{showBreakdown ? 'Collapse' : 'Expand'}</span>
-                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${showBreakdown ? 'rotate-180' : ''}`} />
+                    <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showBreakdown ? 'rotate-180' : ''}`} />
                   </div>
                 </button>
 
@@ -1410,9 +1424,15 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
                         <span className="text-sm font-extrabold text-emerald-900">{activePayableFare}</span>
                       </div>
                       <div className="flex justify-between items-center pt-1 text-[11px] text-emerald-800">
-                        <span>Advance Token Payment:</span>
-                        <span className="font-bold">₹0 (Zero Advance Required)</span>
+                        <span>Advance Booking Token:</span>
+                        <span className="font-bold">₹500 to Confirm Booking</span>
                       </div>
+                      {formattedBalancePayable && (
+                        <div className="flex justify-between items-center pt-0.5 text-[11px] text-slate-600">
+                          <span>Balance on Completion:</span>
+                          <span className="font-semibold text-slate-800">{formattedBalancePayable}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
@@ -1420,13 +1440,13 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
 
               {/* 4. Optional Passenger / Devotee Name (Compact & Non-blocking) */}
               {!needGst && (
-                <div className="space-y-1">
-                  <label className="text-[11px] font-semibold text-m3-on-surface-variant flex items-center justify-between">
-                    <span className="flex items-center gap-1">
-                      <User className="w-3 h-3 text-slate-400 shrink-0" />
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-m3-on-surface-variant flex items-center justify-between">
+                    <span className="flex items-center gap-1.5">
+                      <User className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                       <span>Passenger / Devotee Name</span>
                     </span>
-                    <span className="text-[10px] text-m3-on-surface-variant/70">Optional</span>
+                    <span className="text-[11px] text-m3-on-surface-variant/70">Optional</span>
                   </label>
                   <input
                     ref={companyNameInputRef}
@@ -1437,26 +1457,26 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
                       if (validationError) setValidationError('');
                     }}
                     placeholder="e.g. Saravanan K (or confirm on WhatsApp)"
-                    className="w-full bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-md px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-m3-on-surface placeholder-m3-on-surface-variant/60 focus:outline-none focus:border-m3-primary focus:ring-1 focus:ring-m3-primary shadow-2xs"
+                    className="w-full min-h-[48px] bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-lg px-3.5 py-3 text-base sm:text-sm text-m3-on-surface placeholder-m3-on-surface-variant/60 focus:outline-none focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20 shadow-2xs"
                   />
                 </div>
               )}
 
               {/* 5. Primary 1-Tap Booking CTAs (Instant Conversion) */}
-              <div className="pt-1 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2">
+              <div className="pt-1 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5">
                 <WhatsAppButton 
                   href={whatsAppUrl}
                   onClick={handleDirectWhatsAppClick}
                   variant="filled"
                   size="md"
-                  className="flex-1 px-5 py-3 text-xs sm:text-sm font-bold shadow-xs justify-center"
+                  className="flex-1 px-5 py-3.5 min-h-[48px] text-sm font-bold shadow-xs justify-center active:scale-[0.99]"
                   text="Book on WhatsApp"
                 />
 
                 <a
                   href="tel:+918939539211"
                   onClick={handleCall}
-                  className="inline-flex items-center justify-center gap-1.5 px-4 py-3 bg-white hover:bg-m3-surface-container text-m3-on-surface font-bold text-xs sm:text-sm rounded-m3-full border border-m3-outline-variant shadow-xs transition-colors shrink-0 cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3.5 min-h-[48px] bg-white hover:bg-m3-surface-container active:scale-[0.99] text-m3-on-surface font-bold text-sm rounded-m3-full border border-m3-outline-variant shadow-xs transition-colors shrink-0 cursor-pointer"
                   aria-label="Call +91 89395 39211"
                 >
                   <Phone className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
@@ -1465,9 +1485,9 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
               </div>
 
               {/* 6. Progressive Disclosure: Corporate GST & Official Estimate (Discreet Opt-In) */}
-              <div className="pt-2 border-t border-m3-outline-variant/40 space-y-2">
-                <div className="flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
-                  <label className="flex items-center gap-2 cursor-pointer select-none text-xs font-semibold text-m3-on-surface hover:text-emerald-800 transition-colors min-w-0">
+              <div className="pt-2 border-t border-m3-outline-variant/40 space-y-2.5">
+                <div className="flex items-center justify-between gap-2.5 flex-wrap sm:flex-nowrap">
+                  <label className="flex-1 min-h-[44px] px-3 py-2 rounded-m3-lg border border-m3-outline-variant/50 hover:bg-m3-surface-container-low active:bg-m3-surface-container flex items-center gap-2.5 cursor-pointer select-none text-xs sm:text-xs font-semibold text-m3-on-surface hover:text-emerald-800 transition-colors">
                     <input
                       type="checkbox"
                       checked={needGst}
@@ -1477,7 +1497,7 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
                         if (checked) setShowBreakdown(true);
                         if (validationError) setValidationError('');
                       }}
-                      className="w-4 h-4 rounded text-emerald-700 border-m3-outline-variant focus:ring-emerald-500 cursor-pointer accent-emerald-700 shrink-0"
+                      className="w-5 h-5 rounded text-emerald-700 border-m3-outline-variant focus:ring-emerald-500 cursor-pointer accent-emerald-700 shrink-0"
                     />
                     <span className="truncate">Need GST Tax Invoice for Corporate (+5% ITC)</span>
                   </label>
@@ -1486,28 +1506,28 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
                     type="button"
                     onClick={handleDirectPrintLetterhead}
                     title="Print or Save Official Trip Estimate Letterhead PDF"
-                    className="text-[11px] font-semibold text-m3-on-surface-variant hover:text-m3-primary transition-colors cursor-pointer inline-flex items-center gap-1 shrink-0 whitespace-nowrap px-1.5 py-0.5 rounded hover:bg-m3-surface-container-low"
+                    className="min-h-[44px] px-3.5 py-2 rounded-m3-lg bg-m3-surface-container-low hover:bg-m3-surface-container active:scale-95 text-xs font-bold text-m3-on-surface border border-m3-outline-variant/60 inline-flex items-center gap-1.5 shrink-0 transition-all cursor-pointer whitespace-nowrap"
                   >
-                    <Printer className="w-3.5 h-3.5 text-m3-on-surface-variant shrink-0" />
+                    <Printer className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
                     <span>Save PDF</span>
                   </button>
                 </div>
 
                 {needGst && (
-                  <div className="p-2.5 sm:p-3 bg-m3-surface-container-low rounded-m3-xl border border-emerald-200 space-y-2 animate-in fade-in slide-in-from-top-1 duration-150">
-                    <div className="flex items-center justify-between text-[11px] font-bold text-emerald-950">
-                      <span className="flex items-center gap-1">
-                        <Building2 className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                  <div className="p-3 sm:p-3.5 bg-m3-surface-container-low rounded-m3-xl border border-emerald-200 space-y-2.5 animate-in fade-in slide-in-from-top-1 duration-150">
+                    <div className="flex items-center justify-between text-xs font-bold text-emerald-950">
+                      <span className="flex items-center gap-1.5">
+                        <Building2 className="w-4 h-4 text-emerald-700 shrink-0" />
                         <span>Corporate Billing &amp; ITC Recipient Details</span>
                       </span>
-                      <span className="text-[10px] text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+                      <span className="text-[10px] text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                         100% Tax Deductible
                       </span>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                       <div className="space-y-1">
-                        <label className="text-[11px] font-bold text-m3-on-surface flex items-center gap-1">
+                        <label className="text-xs font-bold text-m3-on-surface flex items-center gap-1">
                           <span>Company Name <span className="text-red-500">*</span></span>
                         </label>
                         <input
@@ -1519,12 +1539,12 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
                             if (validationError) setValidationError('');
                           }}
                           placeholder="e.g. Infosys BPM Ltd"
-                          className="w-full bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-md px-2.5 py-1.5 sm:py-2 text-xs sm:text-sm text-m3-on-surface placeholder-m3-on-surface-variant/60 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 shadow-2xs"
+                          className="w-full min-h-[44px] bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-lg px-3 py-2.5 text-base sm:text-sm text-m3-on-surface placeholder-m3-on-surface-variant/60 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 shadow-2xs"
                         />
                       </div>
 
                       <div className="space-y-1">
-                        <label className="text-[11px] font-bold text-m3-on-surface flex items-center gap-1">
+                        <label className="text-xs font-bold text-m3-on-surface flex items-center gap-1">
                           <span>Client GSTIN <span className="text-[10px] text-m3-on-surface-variant font-normal">(Optional)</span></span>
                         </label>
                         <input
@@ -1537,12 +1557,12 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
                             if (validationError) setValidationError('');
                           }}
                           placeholder="e.g. 33AAAAA0000A1Z5"
-                          className="w-full bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-md px-2.5 py-1.5 sm:py-2 text-xs sm:text-sm text-m3-on-surface placeholder-m3-on-surface-variant/60 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 shadow-2xs font-mono uppercase"
+                          className="w-full min-h-[44px] bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-lg px-3 py-2.5 text-base sm:text-sm text-m3-on-surface placeholder-m3-on-surface-variant/60 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 shadow-2xs font-mono uppercase"
                         />
                       </div>
 
                       <div className="space-y-1">
-                        <label className="text-[11px] font-bold text-m3-on-surface flex items-center gap-1">
+                        <label className="text-xs font-bold text-m3-on-surface flex items-center gap-1">
                           <span>Contact Mobile <span className="text-red-500">*</span></span>
                         </label>
                         <input
@@ -1555,15 +1575,15 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
                             if (validationError) setValidationError('');
                           }}
                           placeholder="e.g. 98400 12345"
-                          className="w-full bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-md px-2.5 py-1.5 sm:py-2 text-xs sm:text-sm text-m3-on-surface placeholder-m3-on-surface-variant/60 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 shadow-2xs font-mono"
+                          className="w-full min-h-[44px] bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-lg px-3 py-2.5 text-base sm:text-sm text-m3-on-surface placeholder-m3-on-surface-variant/60 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 shadow-2xs font-mono"
                         />
                       </div>
                     </div>
 
                     {/* Dynamic State Detection Tag */}
-                    <div className="bg-white px-2.5 py-1.5 rounded-m3-md border border-emerald-200 flex items-center justify-between text-[11px] text-emerald-950">
+                    <div className="bg-white px-3 py-2 rounded-m3-lg border border-emerald-200 flex items-center justify-between text-xs text-emerald-950 min-h-[40px]">
                       <div className="flex items-center gap-1.5 truncate">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                         <span className="truncate">
                           {rawStateCode ? (
                             isIntraState ? (
@@ -1576,7 +1596,7 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
                           )}
                         </span>
                       </div>
-                      <span className="text-[10px] font-bold bg-emerald-50 text-emerald-800 px-1.5 py-0.5 rounded border border-emerald-200 shrink-0">
+                      <span className="text-[10px] font-bold bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded border border-emerald-200 shrink-0">
                         ✓ ITC Claimable
                       </span>
                     </div>
@@ -1599,19 +1619,19 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
                     className="p-1 hover:bg-emerald-800 rounded transition text-emerald-200 cursor-pointer"
                     aria-label="Dismiss notification"
                   >
-                    <X className="w-3.5 h-3.5" />
+                    <X className="w-4 h-4" />
                   </button>
                 </div>
               )}
             </div>
           ) : (
             /* Initial State (Before Dates & Vehicle are selected) */
-            <div className="pt-3 border-t border-m3-outline-variant/60 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div className="pt-3 border-t border-m3-outline-variant/60 flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3">
               <button
                 type="button"
                 onClick={handleViewEstimateClick}
                 aria-label="View Trip Estimate"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 font-bold text-xs sm:text-sm rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary shadow-m3-1 hover:shadow-m3-2 transition-all cursor-pointer group"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 min-h-[48px] font-bold text-sm sm:text-base rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 active:scale-[0.99] text-m3-on-primary shadow-m3-1 hover:shadow-m3-2 transition-all cursor-pointer group"
               >
                 <Calculator className="w-4 h-4 shrink-0 text-m3-on-primary" />
                 <span>View Trip Estimate</span>
@@ -1621,18 +1641,13 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
               <a
                 href="tel:+918939539211"
                 onClick={handleCall}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface font-bold text-xs sm:text-sm rounded-m3-full border border-m3-outline-variant shadow-xs transition-all"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 min-h-[48px] bg-m3-surface hover:bg-m3-surface-container active:scale-[0.99] text-m3-on-surface font-bold text-sm sm:text-base rounded-m3-full border border-m3-outline-variant shadow-xs transition-all"
               >
                 <Phone className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
                 <span>Call: +91 89395 39211</span>
               </a>
             </div>
           )}
-
-          {/* Subtle disclaimer below CTA buttons */}
-          <p className="text-center text-xs text-m3-on-surface-variant font-medium pt-2 pb-1">
-            Cab service only, Darshan Ticket Not Included.
-          </p>
 
         </div>
       </section>
@@ -2041,8 +2056,14 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
                 )}
                 <div className="flex justify-between items-center text-xs text-slate-600">
                   <span>ADVANCE DEPOSIT REQUIRED:</span>
-                  <span className="font-bold text-emerald-800 text-sm">₹0 (ZERO)</span>
+                  <span className="font-bold text-emerald-800 text-sm">₹500 (Booking Confirmation)</span>
                 </div>
+                {formattedBalancePayable && (
+                  <div className="flex justify-between items-center text-xs text-slate-600">
+                    <span>BALANCE ON COMPLETION:</span>
+                    <span className="font-bold text-slate-800 text-sm">{formattedBalancePayable}</span>
+                  </div>
+                )}
 
                 <div className="border-t-2 border-slate-300 pt-2.5 mt-1 flex justify-between items-baseline">
                   <div>
@@ -2050,7 +2071,7 @@ Please confirm chauffeur allocation for my Tirupati Darshan yatra.`;
                       NET ESTIMATE PAYABLE:
                     </span>
                     <span className="text-[10px] text-slate-500">
-                      * Pay driver after successful completion of round-trip
+                      * ₹500 token to confirm • Balance paid to driver after trip
                     </span>
                   </div>
                   <span className="font-black text-xl sm:text-2xl text-emerald-800 font-heading tracking-tight">

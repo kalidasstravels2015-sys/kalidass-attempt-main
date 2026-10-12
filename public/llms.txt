@@ -21,9 +21,7 @@ Kalidass Travels is an AITP-licensed (All-India Tourist Permit) cab operator and
 
 - [Outstation Cabs](https://kalidasstravels.in/services/outstation-cabs/): Clean AC cabs from Chennai for round-trip and one-way outstation travel across Tamil Nadu, Pondicherry, Andhra Pradesh, and Karnataka from ₹14/km. Zero surge pricing.
 - [Chennai Airport Taxi Transfers](https://kalidasstravels.in/services/chennai-airport-taxi/): 24/7 MAA airport pickups and drops with 5-10 min rapid dispatch, real-time flight delay tracking, and name placard greeting.
-- [Tour Packages Hub](https://kalidasstravels.in/services/tours/): Curated spiritual darshan yatras, heritage coastal trips, and Western Ghats hill station road trips.
 - [Temple Tour Packages](https://kalidasstravels.in/services/tours/temple-tours/): All-inclusive pilgrimage packages with satvik non-smoking drivers, pre-cleared permits, and all FASTag tolls included.
-- [Weekend Packages](https://kalidasstravels.in/services/tours/weekend-packages/): 1-day and 2-day escapes from Chennai to Pondicherry, Mahabalipuram, Yelagiri, and Yercaud.
 - [Corporate Mobility](https://kalidasstravels.in/services/corporate/): 24/7 routed employee commute transport (ETS), monthly executive car retainers with dedicated chauffeurs, and 100% GST tax credit invoices.
 - [Acting Drivers](https://kalidasstravels.in/services/acting-drivers/): Hire background-verified professional chauffeurs for your personal manual, automatic, EV, or luxury car (hourly from ₹500 or outstation daily duty).
 - [Fleet Specifications](https://kalidasstravels.in/fleet/): Complete vehicle catalog covering Sedans (Dzire/Etios), Ertiga, Innova, Innova Crysta, Force Urbania, and 12-26 Seater Tempo Travellers.
@@ -48,13 +46,14 @@ Kalidass Travels is an AITP-licensed (All-India Tourist Permit) cab operator and
 
 ---
 
-## Popular Destinations & Weekend Getaways
+## Popular Outstation Routes & Destinations
 
-- [Chennai to Pondicherry 1-Day & Weekend](https://kalidasstravels.in/services/pondicherry-one-day-trip/): Scenic East Coast Road (ECR) trip covering Mahabalipuram, Auroville, Promenade Beach, and French Quarter (From ₹4,500 flat).
+- [Chennai to Pondicherry Outstation Cab](https://kalidasstravels.in/services/pondicherry-one-day-trip/): Scenic East Coast Road (ECR) trip covering Mahabalipuram, Auroville, Promenade Beach, and French Quarter (From ₹14/km).
 - [One Day Chennai City Sightseeing](https://kalidasstravels.in/services/one-day-chennai-city-tour/): Full day 10hr/100km city tour covering Kapaleeshwarar Temple, Marina Beach, Fort St. George, and San Thome Basilica (From ₹3,000 flat).
-- [Mahabalipuram UNESCO Heritage & ECR](https://kalidasstravels.in/services/mahabalipuram-ecr-temple-route/): 1-Day coastal heritage tour visiting Shore Temple, Pancha Rathas, Arjuna's Penance, and Kovalam beach (From ₹3,500 flat).
-- [Chennai to Yelagiri Hills Weekend Package](https://kalidasstravels.in/services/yelagiri-hills-weekend/): 2 Days / 1 Night peaceful hill escape with 14 hairpin bend hill-certified driver, Punganoor Lake, and Jalagamparai Falls (From ₹7,500 flat).
-- [Chennai to Yercaud Hills Weekend Package](https://kalidasstravels.in/services/yercaud-hills-weekend/): 2 Days / 1 Night Shevaroy Hills getaway covering 20 hairpin bends, Emerald Lake, Pagoda Point, and coffee plantations (From ₹10,500 flat).
+- [Mahabalipuram Coastal Heritage & ECR](https://kalidasstravels.in/services/mahabalipuram-ecr-temple-route/): 1-Day coastal outstation cab visiting Shore Temple, Pancha Rathas, Arjuna's Penance, and Kovalam beach (From ₹14/km).
+- [Chennai to Bangalore Taxi](https://kalidasstravels.in/services/chennai-to-bangalore-taxi/): 340 km interstate highway taxi via NH 48 for one-way drops & round-trip business travel (From ₹14/km).
+- [Chennai to Yelagiri Hills Outstation Cab](https://kalidasstravels.in/services/yelagiri-hills-weekend/): 2-Day peaceful hill escape with 14 hairpin bend hill-certified driver, Punganoor Lake, and Jalagamparai Falls (From ₹14/km).
+- [Chennai to Yercaud Hills Outstation Cab](https://kalidasstravels.in/services/yercaud-hills-weekend/): 2-Day Shevaroy Hills getaway covering 20 hairpin bends, Emerald Lake, Pagoda Point, and coffee plantations (From ₹14/km).
 - [Wedding Car Rental with Chauffeur](https://kalidasstravels.in/services/driver-car-for-weddings/): Decorated executive Innova Crystas, luxury sedans, and group Tempo Travellers for marriage events and guest airport shuttles (From ₹3,500 flat).
 
 ---

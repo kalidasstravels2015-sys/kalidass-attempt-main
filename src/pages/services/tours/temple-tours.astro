@@ -222,7 +222,7 @@ const templeFleetGuide = [
     names: "Maruti Ertiga / XL6",
     passengers: "6 Passengers",
     baggage: "3 Bags (with 3rd row adjusted)",
-    image: "/images/fleet/suv.webp",
+    image: "/images/fleet/maruti-ertiga.webp",
     badge: "Family Favorite",
     bestFor: "Families with 3–4 adults and 2 children, budget-friendly 1-day or weekend temple trips.",
     features: ["Roof-mounted rear AC blowers", "Flexible 60:40 folding seats", "Smooth highway mileage"]
@@ -283,6 +283,10 @@ const faqs = [
   {
     q: "Can the itinerary be customized for additional local temples?",
     a: "Absolutely. If you want to visit additional nearby temples (e.g. adding Padmavathi Ammavari Temple or Srinivasa Mangapuram on a Tirupati trip), our drivers will gladly accommodate your darshan schedule."
+  },
+  {
+    q: "Do I need to pay an advance deposit to confirm a temple tour package?",
+    a: "Yes, we collect a nominal advance booking deposit of ₹500 to reserve your vehicle and schedule your dedicated pilgrimage chauffeur. This ₹500 is 100% adjusted against your final bill, with the remaining balance settled after trip completion. We offer free cancellation and full deposit refund up to 6 hours before departure."
   }
 ];
 
@@ -658,8 +662,8 @@ const faqSchema = {
             <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
             </div>
-            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Zero Advance Deposit</h3>
-            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Book your pilgrimage in 60 seconds with zero upfront deposit.</p>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Nominal ₹500 Advance</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Lock your vehicle with a nominal ₹500 advance. Remaining balance payable after trip.</p>
           </div>
         </div>
       </section>
@@ -680,19 +684,18 @@ const faqSchema = {
       <section class="py-8 my-6 bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant/60 p-5 sm:p-7">
         <div class="max-w-6xl mx-auto">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <a href="/services/tours/weekend-packages/" class="p-5 rounded-m3-xl bg-emerald-500/5 border border-emerald-500/20 hover:border-emerald-500/50 transition-all group flex items-center justify-between">
+            <a href="/services/chennai-airport-taxi/" class="p-5 rounded-m3-xl bg-emerald-500/5 border border-emerald-500/20 hover:border-emerald-500/50 transition-all group flex items-center justify-between">
               <div>
                 <div class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase text-emerald-800 mb-1">
                   <svg class="w-3.5 h-3.5 text-emerald-700 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="4"/>
-                    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+                    <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3.5c-.5-.5-2.5 0-4 1.5L13.5 8.5 5.3 6.7c-.8-.2-1.6.2-2 .9l-.3.5c-.4.7-.2 1.6.4 2.1l5.7 4.3-2.6 2.6-2.6-.9c-.5-.2-1.1 0-1.5.4l-.2.2c-.4.4-.4 1.1 0 1.5l2.4 2.4 2.4 2.4c.4.4 1.1.4 1.5 0l.2-.2c.4-.4.6-1 .4-1.5l-.9-2.6 2.6-2.6 4.3 5.7c.5.6 1.4.8 2.1.4l.5-.3c.7-.4 1.1-1.2.9-2z"/>
                   </svg>
-                  <span>Weekend Road Trips</span>
+                  <span>Airport Transfers (MAA)</span>
                 </div>
                 <h3 class="text-base sm:text-lg font-bold text-m3-on-surface group-hover:text-emerald-800 transition-colors font-heading">
-                  Explore Weekend Getaways
+                  Chennai Airport Taxi Transfers
                 </h3>
-                <p class="text-xs text-m3-on-surface-variant mt-0.5">Pondicherry French Town, Mahabalipuram, Yelagiri Hills &amp; Yercaud.</p>
+                <p class="text-xs text-m3-on-surface-variant mt-0.5">Direct airport pickup for outstation devotees &amp; NRI pilgrims heading to temple yatras.</p>
               </div>
               <span class="material-symbols-outlined text-[20px] text-emerald-700 group-hover:translate-x-1 transition-transform">arrow_forward</span>
             </a>

@@ -198,12 +198,12 @@ export default function PopularDestinations() {
           
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
             <span className="w-2 h-2 rounded-full bg-m3-primary"></span>
-            <span>Outstation Cabs • Weekend Getaways • Transparent Per-KM Tariffs</span>
+            <span>Outstation Cabs • Transparent Per-KM Tariffs</span>
           </div>
 
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight mb-3 leading-tight font-heading">
             Outstation Cabs &amp; <br className="hidden sm:inline" />
-            <span className="text-m3-primary">Popular Weekend Getaways</span>
+            <span className="text-m3-primary">Popular Highway Destinations</span>
           </h1>
           
           <p className="text-xs sm:text-sm md:text-base text-m3-on-surface-variant mb-6 max-w-2xl mx-auto leading-relaxed font-normal font-sans">

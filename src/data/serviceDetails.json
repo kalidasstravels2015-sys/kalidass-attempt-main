@@ -1113,7 +1113,7 @@
     "slug": "acting-driver-outstation-round-trip",
     "category": "Acting Driver Services",
     "title": "Outstation Acting Driver from Chennai – Round Trip Chauffeur",
-    "overview": "Experienced highway acting driver accompanies your personal car for the entire outstation trip. Ideal for family temple pilgrimages, weekend getaways, outstation weddings, and business tours across South India.",
+    "overview": "Experienced highway acting driver accompanies your personal car for the entire outstation trip. Ideal for family temple pilgrimages, family road trips, outstation weddings, and business tours across South India.",
     "tariff": {
       "headers": [
         "Vehicle Type",
@@ -1429,8 +1429,8 @@
   },
   {
     "slug": "pondicherry-one-day-trip",
-    "category": "Popular Destinations",
-    "title": "Chennai to Pondicherry One Day Trip Cab & Taxi Package (ECR Route)",
+    "category": "Outstation Cabs",
+    "title": "Chennai to Pondicherry Outstation Cab & Taxi Service (ECR Route)",
     "duration": "Same Day Return (Up to 320 KM)",
     "overview": "Same-day Chennai to Pondicherry round-trip cab via ECR. Covers Auroville, French White Town, Promenade Beach, and Manakula Vinayagar Temple. Fixed flat fare includes car, fuel, tolls, and driver bata.",
     "routePlan": [
@@ -1758,8 +1758,8 @@
   },
   {
     "slug": "mahabalipuram-ecr-temple-route",
-    "category": "Popular Destinations",
-    "title": "Chennai to Mahabalipuram UNESCO Temples & ECR Beach Tour (1 Day)",
+    "category": "Outstation Cabs",
+    "title": "Chennai to Mahabalipuram Outstation Cab & ECR Taxi (1 Day)",
     "duration": "Full Day – 8 Hours / 120 KM Round Trip",
     "overview": "Full-day Chennai to Mahabalipuram round-trip cab via ECR. Covers Shore Temple, Five Rathas, Arjuna's Penance, Krishna's Butter Ball, and Kovalam Beach. Fixed rates include vehicle, fuel, tolls, and driver bata.",
     "routePlan": [
@@ -1890,8 +1890,8 @@
   },
   {
     "slug": "yelagiri-hills-weekend",
-    "category": "Popular Destinations",
-    "title": "Chennai to Yelagiri Hills 2-Day Weekend Package – Hill Station Retreat",
+    "category": "Outstation Cabs",
+    "title": "Chennai to Yelagiri Hills Outstation Cab – 2-Day Hill Station Trip",
     "duration": "2 Days / 1 Night – Approx. 500 KM Round Trip",
     "overview": "2-Day Chennai to Yelagiri Hills round-trip cab package. Covers 14 hairpin bends, Punganur Lake boating, and Jalagamparai Waterfalls. Flat fare includes vehicle, fuel, highway tolls, and 2-day driver allowance.",
     "routePlan": [
@@ -2022,18 +2022,18 @@
         "a": "No — accommodation at Yelagiri is arranged and paid separately. Popular options include Hotel Vignesh Comforts, Yelagiri Nature Resort, and TTDC Hotel. We can recommend options upon request."
       }
     ],
-    "whatsappMsg": "Hi Kalidass Travels, I want to book the Chennai to Yelagiri Hills 2-Day Weekend Package.",
-    "metaTitle": "Chennai to Yelagiri Hills 2-Day Cab | Kalidass",
-    "metaDescription": "Book a 2-day Chennai to Yelagiri Hills cab package. Covers Punganur Lake, Jalagamparai Falls & Nature Park. AC Sedan from ₹7,500 with tolls.",
-    "keywords": "chennai to yelagiri cab package, yelagiri hills weekend trip from chennai, yelagiri 2 day tour, yelagiri cab hire chennai, yelagiri hills taxi package, weekend trip yelagiri from chennai",
+    "whatsappMsg": "Hi Kalidass Travels, I want to book an outstation cab from Chennai to Yelagiri Hills. Please share fare quotation and vehicle options.",
+    "metaTitle": "Chennai to Yelagiri Hills Outstation Cab & Taxi | Kalidass Travels",
+    "metaDescription": "Book clean AC outstation cabs from Chennai to Yelagiri Hills. Flat per-km rates from ₹14/km. Experienced ghat road drivers for 14 hairpin bends with zero surge.",
+    "keywords": "chennai to yelagiri cab, chennai to yelagiri taxi, outstation cab chennai to yelagiri hills, yelagiri cab hire chennai, yelagiri hills taxi",
     "serviceType": "TaxiService",
     "origin": "Chennai",
     "destination": "Yelagiri Hills, Vellore District"
   },
   {
     "slug": "yercaud-hills-weekend",
-    "category": "Popular Destinations",
-    "title": "Chennai to Yercaud 2-Day 'Jewel of the South' Weekend Package",
+    "category": "Outstation Cabs",
+    "title": "Chennai to Yercaud Outstation Cab – 2-Day Hill Station Trip",
     "duration": "2 Days / 1 Night – Approx. 750 KM Round Trip",
     "overview": "2-Day Chennai to Yercaud round-trip cab package. Covers Shevaroy Temple, Yercaud Lake, Pagoda Point, and Killiyur Falls. Flat rate includes vehicle, fuel, highway tolls, and 2-day driver allowance.",
     "routePlan": [
@@ -2172,10 +2172,10 @@
         "a": "August to January (post-monsoon season) is ideal when the falls flow strongly. During March–June, the falls may be reduced to a trickle due to dry season."
       }
     ],
-    "whatsappMsg": "Hi Kalidass Travels, I want to book the Chennai to Yercaud 2-Day Weekend Package.",
-    "metaTitle": "Chennai to Yercaud 2-Day Cab Package | Kalidass",
-    "metaDescription": "2-day Chennai to Yercaud cab package. Covers Yercaud Lake, Lady's Seat, Killiyur Falls & Shevaroy Temple. AC Sedan from ₹10,500 with tolls.",
-    "keywords": "chennai to yercaud cab package, yercaud weekend trip from chennai, yercaud 2 day tour taxi, yercaud hills cab hire chennai, yercaud taxi package salem, weekend getaway yercaud cab",
+    "whatsappMsg": "Hi Kalidass Travels, I want to book an outstation cab from Chennai to Yercaud. Please share fare quotation and vehicle options.",
+    "metaTitle": "Chennai to Yercaud Outstation Cab & Taxi Hire | Kalidass Travels",
+    "metaDescription": "Book AC outstation cabs from Chennai to Yercaud. Flat per-km rates from ₹14/km for Sedans, Ertiga, Innova & Crysta. Experienced hill chauffeurs with zero surge.",
+    "keywords": "chennai to yercaud cab, chennai to yercaud taxi, outstation cab chennai to yercaud, yercaud hills cab hire chennai, yercaud taxi salem",
     "serviceType": "TaxiService",
     "origin": "Chennai",
     "destination": "Yercaud, Shevaroy Hills, Salem"

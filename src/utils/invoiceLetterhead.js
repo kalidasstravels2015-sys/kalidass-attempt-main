@@ -45,6 +45,8 @@ export function generateInvoiceLetterheadHtml(data = {}) {
     igst = 0,
     totalGst = 300,
     finalNetPayable = 6300,
+    advanceDeposit = 500,
+    balancePayable,
     grandTotalInWords = '',
     tourRoute = 'Chennai ⇄ Tirupati Pilgrimage',
     serviceDescription = 'Round-Trip Pilgrimage (Doorstep Chennai Pickup ⇄ Drop)'
@@ -627,12 +629,12 @@ export function generateInvoiceLetterheadHtml(data = {}) {
         </div>
         ` : ''}
         <div class="sum-row advance-row">
-          <span>Advance Deposit Required:</span>
-          <strong style="color: #059669;">₹0 (ZERO ADVANCE)</strong>
+          <span>Advance Deposit to Confirm:</span>
+          <strong style="color: #059669;">₹${Number(advanceDeposit).toLocaleString('en-IN')} (Booking Token)</strong>
         </div>
         <div class="sum-row grand-total">
-          <span>NET ESTIMATE PAYABLE:</span>
-          <span>₹${Number(finalNetPayable || taxableAmount || 0).toLocaleString('en-IN')}</span>
+          <span>BALANCE ON COMPLETION:</span>
+          <span>₹${Number(balancePayable != null ? balancePayable : Math.max(0, (finalNetPayable || taxableAmount || 0) - advanceDeposit)).toLocaleString('en-IN')}</span>
         </div>
       </div>
     </div>
@@ -643,8 +645,8 @@ export function generateInvoiceLetterheadHtml(data = {}) {
         <h4>Terms &amp; Booking Conditions:</h4>
         1. This document is an official trip fare estimate &amp; GST proforma quotation issued for journey planning.<br>
         2. 100% Eligible for Input Tax Credit (ITC) for business travel under Section 16 &amp; 17(5) of the CGST Act upon final billing.<br>
-        3. Tirumala Special Entry Darshan (₹300) tickets to be booked directly by devotees via official TTD portal.<br>
-        4. Settlement to chauffeur or via company UPI upon successful trip completion.
+        3. Advance deposit of ₹500 secures and guarantees vehicle &amp; chauffeur allocation (protecting against last-minute cancellation).<br>
+        4. Balance payment settled directly to chauffeur or via company UPI upon successful trip completion.
       </div>
       <div class="sig-box">
         <div class="comp">For KALIDASS TRAVELS</div>

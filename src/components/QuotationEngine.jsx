@@ -302,6 +302,21 @@ const ERROR_MSGS = {
 
 
 
+/**
+ * @param {Object} props
+ * @param {string} [props.currentLang]
+ * @param {boolean} [props.showAirportTab]
+ * @param {boolean} [props.showBookingButton]
+ * @param {string} [props.title]
+ * @param {string} [props.subtitle]
+ * @param {any} [props.headerIcon]
+ * @param {string} [props.variant]
+ * @param {string} [props.initialTab]
+ * @param {any} [props.allowedTabs]
+ * @param {string} [props.initialPickup]
+ * @param {string} [props.initialDrop]
+ * @param {boolean} [props.autoCalculate]
+ */
 export default function QuotationEngine({ 
   currentLang = 'en', 
   showAirportTab = true, 
@@ -1225,17 +1240,20 @@ export default function QuotationEngine({
     // 5. Open WhatsApp
     const driverLine = requestedDriver ? `• Requested Driver: *${requestedDriver}*\n` : '';
     const breakdownDetails = breakdown?.is_tirupati_pkg ? `
-*AMOUNT & FARE BREAKDOWN*
 • Total All-Inclusive Package Fare: ₹${estimate.toLocaleString('en-IN')}
 • Trip Duration: ${days} ${days > 1 ? 'Days' : 'Day'}
 • Inclusions: 100% Fuel + FASTag Tolls + AP Interstate Border Permit + Tirumala Hill Climb + Driver Bata Included
-• Payment Terms: ₹0 Advance Required • Pay After Darshan / Return.`
+• Advance to Confirm Booking: ₹500 Token Deposit
+• Balance on Completion: ₹${Math.max(0, estimate - 500).toLocaleString('en-IN')} (Payable to Chauffeur)
+• Payment Terms: ₹500 Advance to Confirm Booking • Balance Payable After Darshan / Return.`
     : (breakdown && !breakdown.is_city && activeTab !== 'local') ? `
 *AMOUNT & FARE BREAKDOWN*
 • Base Fare: ₹${estimate.toLocaleString('en-IN')} (${breakdown.chargeable_km} km @ ₹${breakdown.rate_per_km}/km + Driver Day Bata ₹${breakdown.driver_bata})
 ${breakdown.free_buffer_km > 0 ? `• Local Sightseeing Buffer: +${breakdown.free_buffer_km.toFixed(0)} km (Included at ₹0)\n` : ''}• Est. FASTag Tolls: ~₹${breakdown.tolls_est.toLocaleString('en-IN')}
 ${breakdown.state_permit_est > 0 ? `• Est. ${breakdown.state_name} Permit: ~₹${breakdown.state_permit_est.toLocaleString('en-IN')}\n` : ''}${breakdown.nights > 0 ? `• Driver Night Stay (${breakdown.nights} Nights): ~₹${breakdown.driver_night_stay_est.toLocaleString('en-IN')}\n` : ''}• All-Inclusive Package Est: ~₹${breakdown.all_inclusive_est.toLocaleString('en-IN')} (100% Cashless on road)
-• Payment Terms: ₹0 Advance Required • Pay after trip completion.` : `
+• Advance to Confirm Booking: ₹500 Token Deposit
+• Balance on Completion: ₹${Math.max(0, estimate - 500).toLocaleString('en-IN')} (Payable to Chauffeur)
+• Payment Terms: ₹500 Advance to Confirm Booking • Balance Payable After Trip Completion.` : `
 *AMOUNT & FARE ESTIMATE*
 • Est. Cost: ₹${estimate.toLocaleString('en-IN')}
 • Inclusions: Fuel, Driver Bata, GST
@@ -2304,8 +2322,8 @@ function FullBreakdownModal({ isTa, vehicle, activeTab, localPackage, breakdown,
                 </div>
 
                 <div className="pt-1.5 border-t border-dashed border-zinc-200 dark:border-zinc-700 flex justify-between items-center text-[11px]">
-                  <span className="text-zinc-500 font-sans">{isTa ? 'முன்பணம் தேவையில்லை' : 'Advance Due (Pay After Trip)'}</span>
-                  <span className="font-bold text-emerald-700 dark:text-emerald-400 font-mono">₹0 (ZERO)</span>
+                  <span className="text-zinc-500 font-sans">{isTa ? (isOutstation || isTirupati ? 'முன்பதிவு முன்பணம்' : 'முன்பணம் தேவையில்லை') : (isOutstation || isTirupati ? 'Advance to Confirm Booking' : 'Advance Due (Pay After Trip)')}</span>
+                  <span className="font-bold text-emerald-700 dark:text-emerald-400 font-mono">{(isOutstation || isTirupati) ? '₹500 (TOKEN)' : '₹0 (ZERO)'}</span>
                 </div>
               </div>
             </div>
@@ -2533,11 +2551,11 @@ function FullBreakdownModal({ isTa, vehicle, activeTab, localPackage, breakdown,
             </div>
           )}
 
-          {/* Zero Advance Reassurance Banner */}
+          {/* Advance Reassurance Banner */}
           <div className="p-2.5 bg-emerald-500/10 rounded-m3-lg border border-emerald-500/30 flex items-center justify-between text-xs">
             <div className="flex items-center gap-1.5 font-bold text-emerald-950 dark:text-emerald-200">
               <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>{isTa ? 'முன்பணம் தேவையில்லை • ₹0 Advance' : '₹0 Advance Required • Pay After Trip'}</span>
+              <span>{(isOutstation || isTirupati) ? (isTa ? '₹500 முன்பணம் • மீதம் பயண முடிவில்' : '₹500 Advance to Confirm • Balance After Trip') : (isTa ? 'முன்பணம் தேவையில்லை • ₹0 Advance' : '₹0 Advance Required • Pay After Trip')}</span>
             </div>
             <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">
               Zero Surge

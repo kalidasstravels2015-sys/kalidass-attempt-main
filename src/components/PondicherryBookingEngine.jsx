@@ -738,6 +738,10 @@ export default function PondicherryBookingEngine({
   const formattedFinalFare = finalNetPayable != null ? `₹ ${finalNetPayable.toLocaleString('en-IN')}` : null;
   const grandTotalInWords = finalNetPayable ? numberToWordsINR(finalNetPayable) : '';
 
+  const advanceDeposit = 500;
+  const balancePayable = finalNetPayable != null ? Math.max(0, finalNetPayable - advanceDeposit) : null;
+  const formattedBalancePayable = balancePayable != null ? `₹ ${balancePayable.toLocaleString('en-IN')}` : null;
+
   const gstEstimatedTotal = currentFare != null ? currentFare + Math.round(currentFare * 0.05) : null;
   const formattedGstEstimatedTotal = gstEstimatedTotal != null ? `₹ ${gstEstimatedTotal.toLocaleString('en-IN')}` : null;
   const activePayableFare = needGst ? formattedFinalFare : formattedFare;
@@ -788,12 +792,14 @@ ${isIntraState
   : `• IGST (5.0% - Inter-State): ₹${igst.toLocaleString('en-IN')}`}
 • Total GST (5%): ₹${totalGst.toLocaleString('en-IN')}
 • Total Quoted (Vehicle + Bata + GST): ₹${finalNetPayable?.toLocaleString('en-IN')}${grandTotalInWords ? ` (${grandTotalInWords})` : ''}
+• Advance to Confirm Booking: ₹500 Token Deposit
+• Balance on Completion: ${formattedBalancePayable || 'Remaining Balance'} (Payable to Chauffeur)
 
 *AT-ACTUALS CHARGES (Billed Separately at Plaza/Govt Rates)*
 • ECR FASTag Tolls (round-trip, Uthandi & Kovalam): ~₹200–₹340 actuals
 • Puducherry UT Commercial Vehicle Entry Permit: ~₹500 actuals
 • Parking (Auroville / White Town): at actuals
-• Payment Terms: ₹0 Advance Required — Pay chauffeur on trip completion
+• Payment Terms: ₹500 Advance to Confirm Booking • Balance Payable to Chauffeur on Trip Completion
 
 *BILLING & GST DETAILS*
 ${companyName.trim() ? `• Recipient / Firm: ${companyName.trim()}\n` : ''}${cleanedGst ? `• Recipient GSTIN: ${cleanedGst} (${recipientStateName})\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}• Supplier GSTIN: 33COVPM0531D1Z4 (SAC: 9966 Rent-a-Cab)
@@ -826,12 +832,14 @@ ${companyName.trim() ? `• Passenger Name: ${companyName.trim()}\n` : ''}${cust
 • Vehicle Hire & Fuel: ₹${fareBreakdown?.vehicleHireFare?.toLocaleString('en-IN') || '—'} (₹${activeVehicle?.perKmRate}/km × min 300 km/day)
 • Driver Bata (Allowance): ₹${((fareBreakdown?.driverBata || 0) + nightBattaAmount).toLocaleString('en-IN')}/day
 • Total Quoted Fare: ${formattedFare || 'TBD'}${pricingNote}
+• Advance to Confirm Booking: ₹500 Token Deposit
+• Balance on Completion: ${formattedBalancePayable || 'Remaining Balance'} (Payable to Chauffeur)
 
 *AT-ACTUALS CHARGES (Plaza/Govt Rates)*
 • ECR FASTag Tolls (round-trip, Uthandi & Kovalam): ~₹200–₹340
 • Puducherry UT Entry Permit (commercial vehicle): ~₹500
 • Parking (Auroville / White Town): at actuals
-• Payment Terms: ₹0 Advance — Pay chauffeur after trip completion
+• Payment Terms: ₹500 Advance to Confirm Booking • Balance Payable to Chauffeur After Trip Completion
 
 Please confirm chauffeur & availability for my Pondicherry trip.`;
 
@@ -931,6 +939,8 @@ Please confirm chauffeur & availability for my Pondicherry trip.`;
       igst,
       totalGst,
       finalNetPayable: finalNetPayable || taxableAmount,
+      advanceDeposit,
+      balancePayable: balancePayable || (finalNetPayable || taxableAmount) - advanceDeposit,
       grandTotalInWords,
       tourRoute: 'Chennai ⇄ Pondicherry Coastal Tour (via ECR)',
       serviceDescription: 'Doorstep Pickup Chennai ➔ East Coast Road ➔ Auroville ➔ French White Town ➔ Promenade Beach ➔ Return'
@@ -1090,7 +1100,7 @@ Please confirm chauffeur & availability for my Pondicherry trip.`;
             <span>Book Chennai to Pondicherry</span>
           </h2>
           <p className="text-micro text-m3-on-surface-variant mt-0.5">
-            ECR Scenic Highway • Auroville • French White Town • ₹0 Advance
+            ECR Scenic Highway • Auroville • French White Town • ₹500 Advance to Confirm
           </p>
         </div>
         <div className="shrink-0 text-right">
@@ -1416,7 +1426,7 @@ Please confirm chauffeur & availability for my Pondicherry trip.`;
                   {activePayableFare}
                 </span>
                 <span className="text-[11px] font-bold text-emerald-700">
-                  ₹0 Advance Required
+                  ₹500 Advance to Confirm
                 </span>
               </div>
             </div>
@@ -1427,7 +1437,7 @@ Please confirm chauffeur & availability for my Pondicherry trip.`;
                 <span className="flex items-center gap-1"><span className="text-emerald-600 font-bold">✓</span> Vehicle Hire & Fuel</span>
                 <span className="flex items-center gap-1"><span className="text-emerald-600 font-bold">✓</span> Driver Bata Included</span>
                 <span className="flex items-center gap-1"><span className="text-emerald-600 font-bold">✓</span> Doorstep Chennai Pickup</span>
-                <span className="flex items-center gap-1"><span className="text-emerald-600 font-bold">✓</span> ₹0 Advance Policy</span>
+                <span className="flex items-center gap-1"><span className="text-emerald-600 font-bold">✓</span> ₹500 Booking Token</span>
               </div>
               <div className="pt-1.5 border-t border-m3-outline-variant/40 text-[11px] text-amber-800 bg-amber-50/60 rounded-m3-md px-2 py-1.5 flex items-start gap-1.5">
                 <Info className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
@@ -1642,8 +1652,8 @@ Please confirm chauffeur & availability for my Pondicherry trip.`;
 
             {/* Payment Terms Notice */}
             <div className="p-2.5 rounded-m3-lg bg-emerald-50 text-emerald-900 border border-emerald-200 text-[11px] space-y-0.5">
-              <strong className="block font-bold">Zero Advance Payment Policy:</strong>
-              <p>No card or bank advance needed. Pay 100% of the fare directly to the chauffeur after reaching destination / completing your trip.</p>
+              <strong className="block font-bold">Nominal ₹500 Advance Policy:</strong>
+              <p>A nominal token of ₹500 confirms your booking & locks in your dedicated vehicle and chauffeur. The remaining balance is paid directly to the chauffeur upon trip completion.</p>
             </div>
 
             {/* Modal Actions */}

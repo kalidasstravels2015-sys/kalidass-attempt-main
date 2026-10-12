@@ -16,7 +16,9 @@ export default defineConfig({
     '/outstation': '/services/outstation-cabs/',
     '/services/outstation': '/services/outstation-cabs/',
     '/services/popular-destinations': '/services/outstation-cabs/',
-    '/services/weekend-packages': '/services/tours/weekend-packages/',
+    '/services/weekend-packages': '/services/outstation-cabs/',
+    '/services/tours/weekend-packages': '/services/outstation-cabs/',
+    '/services/tours': '/services/tours/temple-tours/',
     '/services/temple-tours': '/services/tours/temple-tours/',
     '/services/chennai-airport-taxi-transfers': '/services/chennai-airport-taxi/',
     '/services/airport-transfer': '/services/chennai-airport-taxi/',
@@ -40,6 +42,8 @@ export default defineConfig({
         !page.endsWith('/services/popular-destinations/') &&
         !page.endsWith('/services/temple-tours/') &&
         !page.endsWith('/services/weekend-packages/') &&
+        !page.endsWith('/services/tours/weekend-packages/') &&
+        !page.endsWith('/services/tours/') &&
         !page.endsWith('/services/chennai-airport-taxi-transfers/') &&
         !page.endsWith('/services/chennai-to-tirupati-one-day-package/') &&
         !page.endsWith('/services/chennai-to-pondicherry-taxi/') &&

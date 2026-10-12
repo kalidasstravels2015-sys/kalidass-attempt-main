@@ -86,7 +86,7 @@ Please share total fare quotation and availability.`
     vehicle: "Maruti Ertiga / XL6",
     shortName: "Maruti Ertiga",
     badge: "Family Favorite",
-    image: "/images/fleet/suv.webp",
+    image: "/images/fleet/maruti-ertiga.webp",
     capacity: "6 Pax + 3 Bags",
     roundTrip: "₹17 / km",
     oneWay: "₹19 / km",
@@ -188,6 +188,10 @@ const faqs = [
   {
     q: "Do you provide one-way drop outstation taxi service?",
     a: "Yes! We provide one-way drop taxis from Chennai to Bangalore, Pondicherry, Tirupati, Vellore, Trichy, and Madurai with fixed drop pricing."
+  },
+  {
+    q: "Is an advance deposit required to confirm an outstation cab?",
+    a: "Yes, we collect a nominal advance deposit of ₹500 upon booking confirmation to lock in your designated vehicle and chauffeur. This ₹500 is 100% adjusted against your final invoice, and the remaining balance is paid after trip completion. Cancellations made at least 6 hours before pickup receive a full refund."
   }
 ];
 
@@ -715,14 +719,111 @@ const faqSchema = {
           </div>
         </section>
 
-        <!-- Cross-Navigation: Looking for Fixed Tour Packages? -->
+        <!-- Popular Outstation Destinations & Routes Grid -->
+        <div class="my-8 bg-m3-surface-container-low rounded-m3-2xl p-5 sm:p-8 border border-m3-outline-variant shadow-m3-1">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-6">
+            <div>
+              <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-m3-full bg-blue-500/10 text-blue-700 text-xs font-bold uppercase tracking-wider border border-blue-500/20 mb-1.5">
+                Popular Outstation Routes
+              </div>
+              <h3 class="text-lg sm:text-xl md:text-2xl font-extrabold text-m3-on-surface font-heading">
+                Top Road Trip &amp; Drop Destinations from Chennai
+              </h3>
+            </div>
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant max-w-md">
+              Flat per-km rates with zero surge pricing. Enjoy punctual doorstep pickup across Chennai.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Pondicherry -->
+            <a href="/services/pondicherry-one-day-trip/" class="p-4 rounded-m3-xl bg-m3-surface hover:bg-m3-surface-container border border-m3-outline-variant/60 shadow-xs hover:shadow-m3-1 transition-all group block">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-m3-primary uppercase tracking-wide">ECR Coastal Drive</span>
+                <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">From ₹14/km</span>
+              </div>
+              <h4 class="text-sm font-bold text-m3-on-surface group-hover:text-m3-primary transition-colors">Chennai to Pondicherry Taxi</h4>
+              <p class="text-micro text-m3-on-surface-variant mt-1">160 km • 3.5 hrs via ECR • Auroville, French Colony &amp; Promenade Beach</p>
+              <div class="mt-3 flex items-center text-xs font-bold text-m3-primary group-hover:translate-x-1 transition-transform">
+                <span>View Route Details &rarr;</span>
+              </div>
+            </a>
+
+            <!-- Mahabalipuram -->
+            <a href="/services/mahabalipuram-ecr-temple-route/" class="p-4 rounded-m3-xl bg-m3-surface hover:bg-m3-surface-container border border-m3-outline-variant/60 shadow-xs hover:shadow-m3-1 transition-all group block">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-m3-primary uppercase tracking-wide">Heritage Day Trip</span>
+                <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">From ₹14/km</span>
+              </div>
+              <h4 class="text-sm font-bold text-m3-on-surface group-hover:text-m3-primary transition-colors">Chennai to Mahabalipuram Cab</h4>
+              <p class="text-micro text-m3-on-surface-variant mt-1">55 km • 1.5 hrs via ECR • Shore Temple, Five Rathas &amp; Kovalam Beach</p>
+              <div class="mt-3 flex items-center text-xs font-bold text-m3-primary group-hover:translate-x-1 transition-transform">
+                <span>View Route Details &rarr;</span>
+              </div>
+            </a>
+
+            <!-- Bangalore -->
+            <a href="/services/chennai-to-bangalore-taxi/" class="p-4 rounded-m3-xl bg-m3-surface hover:bg-m3-surface-container border border-m3-outline-variant/60 shadow-xs hover:shadow-m3-1 transition-all group block">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-m3-primary uppercase tracking-wide">Interstate Highway</span>
+                <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">From ₹14/km</span>
+              </div>
+              <h4 class="text-sm font-bold text-m3-on-surface group-hover:text-m3-primary transition-colors">Chennai to Bangalore Taxi</h4>
+              <p class="text-micro text-m3-on-surface-variant mt-1">340 km • 6.5 hrs via NH 48 • One-way drops &amp; round-trip business cabs</p>
+              <div class="mt-3 flex items-center text-xs font-bold text-m3-primary group-hover:translate-x-1 transition-transform">
+                <span>View Route Details &rarr;</span>
+              </div>
+            </a>
+
+            <!-- Yelagiri Hills -->
+            <a href="/services/yelagiri-hills-weekend/" class="p-4 rounded-m3-xl bg-m3-surface hover:bg-m3-surface-container border border-m3-outline-variant/60 shadow-xs hover:shadow-m3-1 transition-all group block">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-m3-primary uppercase tracking-wide">Hill Station Retreat</span>
+                <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">From ₹14/km</span>
+              </div>
+              <h4 class="text-sm font-bold text-m3-on-surface group-hover:text-m3-primary transition-colors">Chennai to Yelagiri Hills Cab</h4>
+              <p class="text-micro text-m3-on-surface-variant mt-1">230 km • 4.5 hrs • 14 hairpin bends, Punganur Lake &amp; Jalagamparai</p>
+              <div class="mt-3 flex items-center text-xs font-bold text-m3-primary group-hover:translate-x-1 transition-transform">
+                <span>View Route Details &rarr;</span>
+              </div>
+            </a>
+
+            <!-- Yercaud -->
+            <a href="/services/yercaud-hills-weekend/" class="p-4 rounded-m3-xl bg-m3-surface hover:bg-m3-surface-container border border-m3-outline-variant/60 shadow-xs hover:shadow-m3-1 transition-all group block">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-m3-primary uppercase tracking-wide">Jewel of the South</span>
+                <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">From ₹14/km</span>
+              </div>
+              <h4 class="text-sm font-bold text-m3-on-surface group-hover:text-m3-primary transition-colors">Chennai to Yercaud Cab</h4>
+              <p class="text-micro text-m3-on-surface-variant mt-1">360 km • 6.5 hrs via NH 44 • Shevaroy Temple, Killiyur Falls &amp; Lake</p>
+              <div class="mt-3 flex items-center text-xs font-bold text-m3-primary group-hover:translate-x-1 transition-transform">
+                <span>View Route Details &rarr;</span>
+              </div>
+            </a>
+
+            <!-- Vellore Golden Temple -->
+            <a href="/services/vellore-golden-temple/" class="p-4 rounded-m3-xl bg-m3-surface hover:bg-m3-surface-container border border-m3-outline-variant/60 shadow-xs hover:shadow-m3-1 transition-all group block">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-m3-primary uppercase tracking-wide">NH 48 Day Trip</span>
+                <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">From ₹14/km</span>
+              </div>
+              <h4 class="text-sm font-bold text-m3-on-surface group-hover:text-m3-primary transition-colors">Chennai to Vellore Cab</h4>
+              <p class="text-micro text-m3-on-surface-variant mt-1">140 km • 3 hrs • Sripuram Mahalakshmi Golden Temple &amp; Vellore Fort</p>
+              <div class="mt-3 flex items-center text-xs font-bold text-m3-primary group-hover:translate-x-1 transition-transform">
+                <span>View Route Details &rarr;</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Cross-Navigation: Looking for Fixed Temple Tour Packages? -->
         <div class="bg-m3-surface-container-low rounded-m3-2xl p-5 sm:p-6 border border-m3-outline-variant flex flex-col sm:flex-row items-center justify-between gap-4">
           <div class="space-y-1 text-center sm:text-left">
             <h3 class="text-sm sm:text-base font-bold text-m3-on-surface font-heading">
-              Looking for All-Inclusive Tour Packages?
+              Looking for All-Inclusive Temple Tours?
             </h3>
             <p class="text-xs text-m3-on-surface-variant">
-              Explore our fixed-price Tirupati Balaji darshan packages and weekend getaways with all tolls, AP permits, and driver allowances included upfront.
+              Explore our fixed-price South India darshan packages to Tirupati, Kumbakonam Navagraha, and Thiruvannamalai with all highway tolls, interstate permits, and driver allowances included upfront.
             </p>
           </div>
           <div class="flex flex-wrap items-center gap-2 shrink-0">
@@ -733,22 +834,22 @@ const faqSchema = {
               Tirupati Package (₹6,000) &rarr;
             </a>
             <a 
-              href="/services/pondicherry-one-day-trip/" 
-              class="px-3.5 py-1.5 rounded-m3-full bg-blue-50 hover:bg-blue-100 text-blue-950 border border-blue-200 text-xs font-bold transition-all shadow-xs"
+              href="/services/navagraha-tour/" 
+              class="px-3.5 py-1.5 rounded-m3-full bg-amber-50 hover:bg-amber-100 text-amber-950 border border-amber-200 text-xs font-bold transition-all shadow-xs"
             >
-              Pondicherry Trip (₹4,500) &rarr;
+              Navagraha Tour (₹12,000) &rarr;
             </a>
             <a 
-              href="/services/tours/weekend-packages/" 
-              class="px-3.5 py-1.5 rounded-m3-full bg-m3-surface hover:bg-m3-surface-container text-m3-primary border border-m3-outline-variant text-xs font-bold transition-all shadow-xs"
+              href="/services/thiruvannamalai-girivalam-trip/" 
+              class="px-3.5 py-1.5 rounded-m3-full bg-amber-50 hover:bg-amber-100 text-amber-950 border border-amber-200 text-xs font-bold transition-all shadow-xs"
             >
-              Weekend Packages &rarr;
+              Thiruvannamalai (₹6,500) &rarr;
             </a>
             <a 
-              href="/services/tours/" 
+              href="/services/tours/temple-tours/" 
               class="px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface text-xs font-semibold transition-all"
             >
-              All Tours &rarr;
+              All Temple Tours &rarr;
             </a>
           </div>
         </div>
@@ -792,8 +893,8 @@ const faqSchema = {
             <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
-            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Zero Advance Deposit</h3>
-            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Book in 60 seconds with zero deposit. Pay upon boarding.</p>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Nominal ₹500 Advance</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Confirm your outstation cab with a nominal ₹500 advance. Pay balance after trip.</p>
           </div>
         </div>
       </section>

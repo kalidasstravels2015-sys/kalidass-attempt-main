@@ -3,11 +3,11 @@ import { test, expect } from '@playwright/test';
 const pagesToTest = [
   { url: '/services/outstation-cabs/', name: 'Outstation Cabs' },
   { url: '/services/tours/temple-tours/', name: 'Temple Tours' },
-  { url: '/services/tours/weekend-packages/', name: 'Weekend Packages' },
   { url: '/services/corporate/', name: 'Corporate' },
   { url: '/services/', name: 'Services Index' },
   { url: '/tariff/', name: 'Tariff' },
   { url: '/services/tirupati-package/', name: 'Tirupati Package (Leaf)' },
+  { url: '/services/pondicherry-one-day-trip/', name: 'Pondicherry Cab (Leaf)' },
 ];
 
 test.describe('Quick-Navigation Horizontal Pills Validation', () => {

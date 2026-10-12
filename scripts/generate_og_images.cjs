@@ -77,20 +77,6 @@ const categoryHubs = {
     ],
     heroImage: "/images/services/temple-tours.webp"
   },
-  "weekend-packages": {
-    slug: "weekend-packages",
-    title: "Weekend Getaway Tour Packages from Chennai",
-    category: "Weekend Tours",
-    route: "Chennai → Weekend Escapes",
-    startingPrice: "₹4,500",
-    priceSub: "Round-Trip Flat",
-    includes: [
-      "Pondicherry, Mahabalipuram, Vellore, Yelagiri & Yercaud",
-      "Private Sanitized AC Cab with Dedicated Chauffeur",
-      "Custom Scenic Itinerary & Doorstep Pickup"
-    ],
-    heroImage: "/images/temple/pondicherry.webp"
-  },
   "popular-destinations": {
     slug: "popular-destinations",
     title: "Popular Outstation Travel Destinations from Chennai",

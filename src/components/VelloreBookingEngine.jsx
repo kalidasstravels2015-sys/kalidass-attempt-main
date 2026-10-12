@@ -729,6 +729,10 @@ export default function VelloreBookingEngine({
   const formattedFinalFare = finalNetPayable != null ? `₹ ${finalNetPayable.toLocaleString('en-IN')}` : null;
   const grandTotalInWords = finalNetPayable ? numberToWordsINR(finalNetPayable) : '';
 
+  const advanceDeposit = 500;
+  const balancePayable = finalNetPayable != null ? Math.max(0, finalNetPayable - advanceDeposit) : null;
+  const formattedBalancePayable = balancePayable != null ? `₹ ${balancePayable.toLocaleString('en-IN')}` : null;
+
   const gstEstimatedTotal = currentFare != null ? currentFare + Math.round(currentFare * 0.05) : null;
   const formattedGstEstimatedTotal = gstEstimatedTotal != null ? `₹ ${gstEstimatedTotal.toLocaleString('en-IN')}` : null;
   const activePayableFare = needGst ? formattedFinalFare : formattedFare;
@@ -777,7 +781,9 @@ ${isIntraState
   : `• IGST (5.0% - Inter-State): ₹${igst.toLocaleString('en-IN')}`}
 • Total GST Tax (5%): ₹${totalGst.toLocaleString('en-IN')}
 • Total Estimate Payable: ₹${finalNetPayable?.toLocaleString('en-IN')}${grandTotalInWords ? ` (${grandTotalInWords})` : ''}
-• Payment Terms: ₹0 Advance Required (Pay chauffeur after trip completion)
+• Advance to Confirm Booking: ₹500 Token Deposit
+• Balance on Completion: ${formattedBalancePayable || 'Remaining Balance'} (Payable to Chauffeur)
+• Payment Terms: ₹500 Advance to Confirm Booking (Remaining balance payable after trip completion)
 
 *BILLING & GST DETAILS*
 ${companyName.trim() ? `• Recipient / Firm: ${companyName.trim()}\n` : ''}${cleanedGst ? `• Recipient GSTIN: ${cleanedGst} (${recipientStateName})\n` : ''}${customerPhone.trim() ? `• Contact Mobile: ${customerPhone.trim()}\n` : ''}• Supplier GSTIN: 33COVPM0531D1Z4 (SAC: 9966 Rent-a-Cab)
@@ -808,7 +814,9 @@ ${companyName.trim() ? `• Devotee / Passenger: ${companyName.trim()}\n` : ''}$
 
 *AMOUNT & PAYMENT*
 • Total All-Inclusive Fare: ${formattedFare || 'TBD'}${pricingNote}
-• Payment Terms: ₹0 Advance Required • Pay Chauffeur After Trip Completion
+• Advance to Confirm Booking: ₹500 Token Deposit
+• Balance on Completion: ${formattedBalancePayable || 'Remaining Balance'} (Payable to Chauffeur)
+• Payment Terms: ₹500 Advance to Confirm Booking • Balance Payable to Chauffeur After Trip Completion
 
 Please confirm chauffeur allocation for my Vellore Sripuram Golden Temple darshan trip.`;
 
@@ -908,6 +916,8 @@ Please confirm chauffeur allocation for my Vellore Sripuram Golden Temple darsha
       igst,
       totalGst,
       finalNetPayable: finalNetPayable || taxableAmount,
+      advanceDeposit,
+      balancePayable: balancePayable || (finalNetPayable || taxableAmount) - advanceDeposit,
       grandTotalInWords
     });
   };
@@ -940,6 +950,8 @@ Please confirm chauffeur allocation for my Vellore Sripuram Golden Temple darsha
       igst,
       totalGst,
       finalNetPayable: finalNetPayable || taxableAmount,
+      advanceDeposit,
+      balancePayable: balancePayable || (finalNetPayable || taxableAmount) - advanceDeposit,
       grandTotalInWords
     });
   };
@@ -1084,7 +1096,7 @@ Please confirm chauffeur allocation for my Vellore Sripuram Golden Temple darsha
             Book Chennai to Vellore
           </h2>
           <p className="text-[11px] sm:text-xs text-m3-on-surface-variant mt-0.5">
-            Round trip private AC cab package • Fixed tariff with ₹0 advance
+            Round trip private AC cab package • Fixed tariff with ₹500 advance to confirm booking
           </p>
         </div>
 
@@ -1410,9 +1422,15 @@ Please confirm chauffeur allocation for my Vellore Sripuram Golden Temple darsha
                         <span className="text-sm font-extrabold text-emerald-900">{activePayableFare}</span>
                       </div>
                       <div className="flex justify-between items-center pt-1 text-[11px] text-emerald-800">
-                        <span>Advance Token Payment:</span>
-                        <span className="font-bold">₹0 (Zero Advance Required)</span>
+                        <span>Advance Booking Token:</span>
+                        <span className="font-bold">₹500 to Confirm Booking</span>
                       </div>
+                      {formattedBalancePayable && (
+                        <div className="flex justify-between items-center pt-0.5 text-[11px] text-slate-600">
+                          <span>Balance on Completion:</span>
+                          <span className="font-semibold text-slate-800">{formattedBalancePayable}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
@@ -1628,11 +1646,6 @@ Please confirm chauffeur allocation for my Vellore Sripuram Golden Temple darsha
               </a>
             </div>
           )}
-
-          {/* Subtle disclaimer below CTA buttons */}
-          <p className="text-center text-xs text-m3-on-surface-variant font-medium pt-2 pb-1">
-            Cab service only, Darshan Ticket Not Included.
-          </p>
 
         </div>
       </section>
@@ -2041,8 +2054,14 @@ Please confirm chauffeur allocation for my Vellore Sripuram Golden Temple darsha
                 )}
                 <div className="flex justify-between items-center text-xs text-slate-600">
                   <span>ADVANCE DEPOSIT REQUIRED:</span>
-                  <span className="font-bold text-emerald-800 text-sm">₹0 (ZERO)</span>
+                  <span className="font-bold text-emerald-800 text-sm">₹500 (Booking Confirmation)</span>
                 </div>
+                {formattedBalancePayable && (
+                  <div className="flex justify-between items-center text-xs text-slate-600">
+                    <span>BALANCE ON COMPLETION:</span>
+                    <span className="font-bold text-slate-800 text-sm">{formattedBalancePayable}</span>
+                  </div>
+                )}
 
                 <div className="border-t-2 border-slate-300 pt-2.5 mt-1 flex justify-between items-baseline">
                   <div>
@@ -2050,7 +2069,7 @@ Please confirm chauffeur allocation for my Vellore Sripuram Golden Temple darsha
                       NET ESTIMATE PAYABLE:
                     </span>
                     <span className="text-[10px] text-slate-500">
-                      * Pay driver after successful completion of round-trip
+                      * ₹500 token to confirm • Balance paid to driver after trip
                     </span>
                   </div>
                   <span className="font-black text-xl sm:text-2xl text-emerald-800 font-heading tracking-tight">

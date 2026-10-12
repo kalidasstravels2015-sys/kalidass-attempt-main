@@ -98,13 +98,6 @@ const coreHubs = [
     badge: "All-Inclusive"
   },
   {
-    title: "Weekend Getaway Packages",
-    url: "/services/tours/weekend-packages/",
-    desc: "1-day and 2-day scenic escapes from Chennai to Pondicherry, Mahabalipuram, Yelagiri, and Yercaud with tolls included.",
-    tag: "Weekend Hub",
-    badge: "Flat Package Rates"
-  },
-  {
     title: "Corporate Mobility & ETS",
     url: "/services/corporate/",
     desc: "24/7 routed employee commute transport, monthly executive car retainers, and GST-compliant invoicing for IT/manufacturing firms.",
@@ -122,8 +115,8 @@ const coreHubs = [
 
 // Categorized Services from serviceDetails.json
 const templeServices = serviceDetails.filter(s => s.category === "Temple Tours");
-const weekendServices = serviceDetails.filter(s => s.category === "Popular Destinations");
-const corridorHubServices = serviceDetails.filter(s => s.category === "Outstation Cabs" || s.category === "Airport Transfers");
+const outstationServices = serviceDetails.filter(s => s.category === "Outstation Cabs" || s.category === "Popular Destinations");
+const corridorHubServices = serviceDetails.filter(s => s.category === "Airport Transfers");
 const corporateAndDriverServices = serviceDetails.filter(s => s.category.includes("Acting Driver") || s.category.includes("Corporate"));
 
 function getServiceStartingPrice(s: any): string {
@@ -295,7 +288,7 @@ const sitemapSchema = {
         <a href="#core-portals" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition-colors">Portals &amp; Tools</a>
         <a href="#service-hubs" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition-colors">Service Hubs</a>
         <a href="#temple-tours" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition-colors">Temple Pilgrimages</a>
-        <a href="#weekend-packages" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition-colors">Weekend Getaways</a>
+        <a href="#outstation-routes" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition-colors">Outstation Cab Routes</a>
         <a href="#corridor-hubs" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition-colors">Corridors &amp; Local Hubs</a>
         <a href="#driver-corporate" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition-colors">Acting Drivers &amp; Corporate</a>
         <a href="#chauffeur-directory" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 transition-colors">Chauffeurs</a>
@@ -404,18 +397,18 @@ const sitemapSchema = {
         </div>
       </section>
 
-      <!-- Section 4: Popular Destinations & Weekend Road Trips -->
-      <section id="weekend-packages" class="scroll-mt-24">
+      <!-- Section 4: Outstation Cab Routes & Long-Distance Travel -->
+      <section id="outstation-routes" class="scroll-mt-24">
         <div class="flex items-center gap-3 mb-6">
           <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg">4</div>
           <div>
-            <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Popular Destinations &amp; Weekend Getaways</h2>
-            <p class="text-xs sm:text-sm text-slate-600">Coastal highways, hill stations, city heritage, and celebration car packages.</p>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Outstation Cab Routes &amp; Long-Distance Travel</h2>
+            <p class="text-xs sm:text-sm text-slate-600">Per-km transparent tariffs for travel from Chennai to Pondicherry, Mahabalipuram, Bangalore, Yelagiri Hills, and Yercaud.</p>
           </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {weekendServices.map((service) => {
+          {outstationServices.map((service) => {
             const startPrice = getServiceStartingPrice(service);
             return (
               <a
