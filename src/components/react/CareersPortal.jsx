@@ -541,9 +541,9 @@ export default function CareersPortal() {
                 {validationError && (
                   <div
                     role="alert"
-                    className="p-3 rounded-m3-lg bg-red-500/10 border border-red-500/30 text-red-800 text-xs font-semibold flex items-center gap-2"
+                    className="p-3 rounded-m3-lg bg-m3-error-container/40 border border-m3-error/30 text-m3-on-error-container text-xs font-semibold flex items-center gap-2"
                   >
-                    <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+                    <AlertCircle className="w-4 h-4 text-m3-error shrink-0" />
                     <span>{validationError}</span>
                   </div>
                 )}
@@ -551,7 +551,7 @@ export default function CareersPortal() {
                 {/* Position Selector Dropdown */}
                 <div>
                   <label htmlFor="modalPositionSelect" className="block text-xs font-bold text-m3-on-surface mb-1">
-                    Applying Position <span className="text-red-500">*</span>
+                    Applying Position <span className="text-m3-error">*</span>
                   </label>
                   <select
                     id="modalPositionSelect"
@@ -572,7 +572,7 @@ export default function CareersPortal() {
                   {/* Full Name */}
                   <div>
                     <label htmlFor="modalFullName" className="block text-xs font-bold text-m3-on-surface mb-1">
-                      Full Name <span className="text-red-500">*</span>
+                      Full Name <span className="text-m3-error">*</span>
                     </label>
                     <input
                       id="modalFullName"
@@ -590,7 +590,7 @@ export default function CareersPortal() {
                   {/* Mobile / WhatsApp Number */}
                   <div>
                     <label htmlFor="modalPhone" className="block text-xs font-bold text-m3-on-surface mb-1">
-                      Mobile / WhatsApp Number <span className="text-red-500">*</span>
+                      Mobile / WhatsApp Number <span className="text-m3-error">*</span>
                     </label>
                     <input
                       id="modalPhone"
@@ -608,7 +608,7 @@ export default function CareersPortal() {
                   {/* Residential Area */}
                   <div>
                     <label htmlFor="modalLivingArea" className="block text-xs font-bold text-m3-on-surface mb-1">
-                      Residential Area in Chennai <span className="text-red-500">*</span>
+                      Residential Area in Chennai <span className="text-m3-error">*</span>
                     </label>
                     <input
                       id="modalLivingArea"
@@ -627,7 +627,7 @@ export default function CareersPortal() {
                   {/* Total Relevant Experience */}
                   <div>
                     <label htmlFor="modalExperience" className="block text-xs font-bold text-m3-on-surface mb-1">
-                      Total Relevant Experience <span className="text-red-500">*</span>
+                      Total Relevant Experience <span className="text-m3-error">*</span>
                     </label>
                     <select
                       id="modalExperience"
@@ -665,7 +665,7 @@ export default function CareersPortal() {
                 {/* Resume Upload Section */}
                 <div className="pt-2 border-t border-m3-outline-variant/40">
                   <label className="block text-xs font-bold text-m3-on-surface mb-1">
-                    Attach Resume / Bio-data <span className="text-red-500">* Required</span>
+                    Attach Resume / Bio-data <span className="text-m3-error">* Required</span>
                   </label>
                   <div
                     onClick={() => fileInputRef.current && fileInputRef.current.click()}

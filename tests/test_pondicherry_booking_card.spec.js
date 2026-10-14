@@ -35,7 +35,7 @@ test('Verify Pondicherry Booking Engine has editable drop location and no trip e
   await vehSelect.selectOption('dzire');
 
   // 5. Verify Fare Summary is rendered
-  await expect(bookingCard.getByText('All-Inclusive Package Fare')).toBeVisible();
+  await expect(bookingCard.getByText(/Quoted Fare|All-Inclusive Package Fare/)).toBeVisible();
 
   // 6. Verify "Trip Estimate / Invoice" button is REMOVED
   await expect(bookingCard.getByText('Trip Estimate / Invoice')).toHaveCount(0);

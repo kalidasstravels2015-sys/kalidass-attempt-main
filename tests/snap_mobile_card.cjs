@@ -18,8 +18,10 @@ const { chromium } = require('playwright');
   const engine = page.locator('section[aria-label="Tirupati Pilgrimage Booking Engine"]');
   await engine.waitFor({ state: 'visible', timeout: 10000 });
 
-  // 1. Initial State Screenshot
-  await engine.screenshot({ path: 'tests/tirupati_thumb_friendly_initial.png' });
+  // 1. Initial State Screenshot (Booking Engine Top Header)
+  await engine.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: 'tests/tirupati_thumb_friendly_initial.png' });
 
   // 2. Filled State Screenshot
   const pickup = engine.locator('input[placeholder*="Pickup address in Chennai"], input[placeholder*="pickup address in Chennai"]');
@@ -35,7 +37,7 @@ const { chromium } = require('playwright');
   await selects.nth(1).selectOption('dzire');
   await page.waitForTimeout(400);
 
-  await engine.screenshot({ path: 'tests/tirupati_thumb_friendly_calculated.png' });
+  await page.screenshot({ path: 'tests/tirupati_thumb_friendly_calculated.png' });
 
   await browser.close();
   console.log('Screenshots captured successfully!');

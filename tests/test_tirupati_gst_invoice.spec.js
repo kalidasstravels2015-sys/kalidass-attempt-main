@@ -37,7 +37,7 @@ test('Verify GST Tax Invoice mode with dynamic recipient state detection on card
 
   // Verify in-place card update
   await expect(bookingSection.locator('.text-3xl, .text-4xl').first()).toHaveText('₹ 6,300');
-  await expect(bookingSection.getByText('Covers FASTag Tolls + AP Permit + Ghat Climb + Driver Bata + 5% GST')).toBeVisible();
+  await expect(bookingSection.getByText('Covers FASTag Tolls + AP Permit + Hill Climb + Driver Bata + Parking + 5% GST')).toBeVisible();
 
   // GST breakdown is automatically revealed upon checking
   await expect(bookingSection.getByText('Total GST Tax Added (5%):')).toBeVisible();
@@ -161,7 +161,7 @@ test('Capture mobile card screenshots for Standard Cash and GST Tax Invoice mode
 
   // Card now shows GST Mode (₹ 6,300) in place
   await expect(bookingSection.locator('.text-3xl, .text-4xl').first()).toHaveText('₹ 6,300');
-  await expect(bookingSection.getByText('Covers FASTag Tolls + AP Permit + Ghat Climb + Driver Bata + 5% GST')).toBeVisible();
+  await expect(bookingSection.getByText('Covers FASTag Tolls + AP Permit + Hill Climb + Driver Bata + Parking + 5% GST')).toBeVisible();
 
   // Verify removed items are NOT present in GST mode
   await expect(bookingSection.getByText('View Full Government Format Proforma Letterhead')).toHaveCount(0);

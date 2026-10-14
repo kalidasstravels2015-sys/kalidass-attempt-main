@@ -57,6 +57,10 @@
 /services/chennai-airport-taxi-transfers      /services/chennai-airport-taxi/   301
 
 # ─── Duplicate & Competing Route Consolidation ────────────────────────────────
+/tirupati/car-package/*                         /services/tirupati-package/#booking 301
+/tirupati/car-package                           /services/tirupati-package/#booking 301
+/tirupati/*                                     /services/tirupati-package/#booking 301
+/tirupati                                       /services/tirupati-package/#booking 301
 /services/chennai-to-tirupati-one-day-package/* /services/tirupati-package/     301
 /services/chennai-to-tirupati-one-day-package   /services/tirupati-package/     301
 /services/chennai-to-pondicherry-taxi/*         /services/pondicherry-one-day-trip/ 301

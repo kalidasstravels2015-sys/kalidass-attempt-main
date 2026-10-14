@@ -1,11 +1,12 @@
 # Kalidass Travels — Google Material Design 3 (M3) System Reference
 
-> **Last Updated:** September 14, 2026  
+> **Last Updated:** October 13, 2026  
 > **Framework:** Astro + Tailwind CSS + React  
 > **Official Baseline:** [Google Material Design 3 Guidelines](https://m3.material.io/get-started)  
+> **Full Print & Poster System:** See [docs/08_BRAND_COLOR_SYSTEM.md](./docs/08_BRAND_COLOR_SYSTEM.md) & [Brand PDF Specification](./brand/Kalidass_Travels_Brand_Style_Guide.pdf)  
 > **Theme Direction:** Option A — Executive Midnight Charcoal & Onyx  
-> **Primary Seed:** Executive Midnight Charcoal (`#1E252D`)  
-> **Brand Identity Accent:** Signature Logo "K" Red (`#EC221F`)  
+> **Primary Seed:** Executive Midnight Charcoal (`#1E252D` | PMS 433 C | CMYK 74,63,53,57)  
+> **Brand Identity Accent:** Signature Logo "K" Red (`#EC221F` | PMS 1795 C | Rule 2 Protected)  
 > **Typography & Rates:** Crisp Midnight Slate Charcoal (`#111827` — never red)  
 > **Icons:** Google Material Symbols Outlined  
 

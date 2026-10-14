@@ -16,6 +16,7 @@ import SabarimalaBookingEngine from '../../components/SabarimalaBookingEngine.js
 import ChidambaramBookingEngine from '../../components/ChidambaramBookingEngine.jsx';
 import VelloreBookingEngine from '../../components/VelloreBookingEngine.jsx';
 import PondicherryBookingEngine from '../../components/PondicherryBookingEngine.jsx';
+import VehicleCard from '../../components/VehicleCard.astro';
 import { buildWhatsAppUrl } from '../../utils/whatsapp';
 import { 
   ShieldCheck, 
@@ -48,15 +49,6 @@ export async function getStaticPaths() {
 }
 
 const { service } = Astro.props as { service: any };
-const defaultMsg = `*Kalidass Travels - Booking Enquiry*
-• Service: ${service.title}
-• Travel Date: 
-• Pickup Time: 
-• Pickup Location in Chennai: 
-• Vehicle Preference: 
-
-Please share availability and final quote.`;
-const whatsappLink = buildWhatsAppUrl(service.whatsappMsg || defaultMsg);
 
 const isActingDriver = service.category === 'Acting Driver Services' || service.slug.includes('driver');
 const isTour = ['Temple Tours', 'Popular Destinations'].includes(service.category);
@@ -1734,7 +1726,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                     </span>
                   </span>
                   <span class="px-2.5 py-1 rounded-m3-full bg-m3-primary text-m3-on-primary text-[11px] font-bold shadow-xs shrink-0">
-                   {isTirupati ? "From ₹6,000 Flat" : isThiruvannamalai ? "From ₹6,500 Flat" : isKanchipuram ? "From ₹3,500 Flat" : isNavagraha ? "From ₹12,000 Flat" : isRameswaram ? "From ₹18,500 Flat" : isSabarimala ? "From ₹26,500 Flat" : isChidambaram ? "From ₹7,400 Flat" : isVellore ? "From ₹4,800 Flat" : "From ₹14/km"}
+                   {isTirupati ? "From ₹6,000 (1 Day)" : isThiruvannamalai ? "From ₹6,500 (1 Day)" : isKanchipuram ? "From ₹3,500 (1 Day)" : isNavagraha ? "From ₹12,000 (2 Days)" : isRameswaram ? "From ₹18,500 (2 Days)" : isSabarimala ? "From ₹26,500 (3 Days)" : isChidambaram ? "From ₹7,400 (1 Day)" : isVellore ? "From ₹4,800 (1 Day)" : "From ₹14/km"}
                   </span>
                 </div>
               </div>
@@ -1742,7 +1734,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
               <!-- Mobile Trust Strip (Replaces redundant CTA, provides instant trust and separates headings) -->
               <div data-mobile-trust-strip class="flex items-center justify-between gap-1 mb-3.5 sm:hidden text-[11px] text-m3-on-surface-variant font-medium bg-m3-surface-container-low px-3 py-2 rounded-m3-lg border border-m3-outline-variant/60 shadow-2xs">
                 <span class="flex items-center gap-1"><span class="text-emerald-600 font-bold">✓</span> ₹500 Advance</span>
-                <span class="flex items-center gap-1"><span class="text-emerald-600 font-bold">✓</span> {isTirupati ? "Tolls & AP Permit Inc." : isThiruvannamalai ? "GST & NH Tolls Inc." : isKanchipuram ? "NH 48 Tolls Inc." : isNavagraha ? "NH 36 Tolls Inc." : isRameswaram ? "NH 87 Tolls Inc." : isSabarimala ? "Kerala Permit Inc." : isChidambaram ? "NH 32 Tolls Inc." : isVellore ? "NH 48 Tolls Inc." : "Tolls at Actuals"}</span>
+                <span class="flex items-center gap-1"><span class="text-emerald-600 font-bold">✓</span> {isTirupati ? "Tolls & AP Permit Inc." : isThiruvannamalai ? "GST & NH Tolls Inc." : isKanchipuram ? "NH 48 Tolls Inc." : isNavagraha ? "Tolls at Actuals" : isRameswaram ? "Tolls at Actuals" : isSabarimala ? "Permits & Tolls Actuals" : isChidambaram ? "NH 32 Tolls Inc." : isVellore ? "NH 48 Tolls Inc." : "Tolls at Actuals"}</span>
                 <span class="flex items-center gap-1"><span class="text-emerald-600 font-bold">✓</span> {isTirupati ? "Hill Ghat Road" : isThiruvannamalai ? "Girivalam Standby" : isKanchipuram ? "Weaver Waiting" : isNavagraha ? "750 km Covered" : isRameswaram ? "1,200 km Covered" : isSabarimala ? "Satvik Chauffeur" : isChidambaram ? "450 km Covered" : isVellore ? "300 km Covered" : "Driver Bata Sep."}</span>
               </div>
 
@@ -1750,11 +1742,11 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
               <div class="hidden sm:grid grid-cols-2 gap-2 mb-3 sm:mb-4 text-[11px] sm:text-xs">
                 <div class="p-2 sm:p-2.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center gap-1.5">
                   <span class="text-emerald-700 font-bold">✓</span>
-                  <span class="font-semibold text-m3-on-surface">{isTirupati ? "From ₹6,000 Flat" : isThiruvannamalai ? "From ₹6,500 Flat" : isKanchipuram ? "From ₹3,500 Flat" : isNavagraha ? "From ₹12,000 Flat" : isRameswaram ? "From ₹18,500 Flat" : isSabarimala ? "From ₹26,500 Flat" : isChidambaram ? "From ₹7,400 Flat" : isVellore ? "From ₹4,800 Flat" : "From ₹4,500 Flat"}</span>
+                  <span class="font-semibold text-m3-on-surface">{isTirupati ? "From ₹6,000 (1 Day)" : isThiruvannamalai ? "From ₹6,500 (1 Day)" : isKanchipuram ? "From ₹3,500 (1 Day)" : isNavagraha ? "From ₹12,000 (2 Days)" : isRameswaram ? "From ₹18,500 (2 Days)" : isSabarimala ? "From ₹26,500 (3 Days)" : isChidambaram ? "From ₹7,400 (1 Day)" : isVellore ? "From ₹4,800 (1 Day)" : "From ₹4,500 (1 Day)"}</span>
                 </div>
                 <div class="p-2 sm:p-2.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center gap-1.5">
                   <span class="text-emerald-700 font-bold">✓</span>
-                  <span class="font-semibold text-m3-on-surface">{isTirupati ? "Tolls & AP Permit Inc." : isThiruvannamalai ? "GST & NH Tolls Inc." : isKanchipuram ? "NH 48 Tolls Inc." : isNavagraha ? "NH 36 Tolls Inc." : isRameswaram ? "NH 87 Tolls Inc." : isSabarimala ? "Kerala Permit Inc." : isChidambaram ? "NH 32 Tolls Inc." : isVellore ? "NH 48 Tolls Inc." : "Tolls at Actuals"}</span>
+                  <span class="font-semibold text-m3-on-surface">{isTirupati ? "Tolls & AP Permit Inc." : isThiruvannamalai ? "GST & NH Tolls Inc." : isKanchipuram ? "NH 48 Tolls Inc." : isNavagraha ? "Tolls & Bata at Actuals" : isRameswaram ? "Tolls & Bata at Actuals" : isSabarimala ? "Permits & Tolls Actuals" : isChidambaram ? "NH 32 Tolls Inc." : isVellore ? "NH 48 Tolls Inc." : "Tolls at Actuals"}</span>
                 </div>
                 <div class="p-2 sm:p-2.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center gap-1.5">
                   <span class="text-emerald-700 font-bold">✓</span>
@@ -1818,16 +1810,6 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                   />
                 )}
               </section>
-
-              {/* Compact Fare Inclusions & Devotee Scope Assurance Strip */}
-              {service.tariff?.note && (
-                <div class="mt-2.5 px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200/90 text-xs text-slate-600 flex items-start gap-2 shadow-2xs">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <p class="leading-relaxed">
-                    <strong class="text-slate-800 font-semibold">Fare Inclusions:</strong> {service.tariff.note}
-                  </p>
-                </div>
-              )}
             </div>
 
           </div>
@@ -2029,7 +2011,9 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
               </h2>
               <p class="text-xs sm:text-sm text-m3-on-surface-variant font-sans mt-1">
                 {hasDedicatedEngine 
-                  ? "Swipe through our verified fleet below. Calculate dynamic date/time package fares in booking above."
+                  ? (isNavagraha || isRameswaram || isSabarimala
+                      ? "Swipe through our verified fleet below. 1-day packages include tolls & driver bata; multi-day circuits cover vehicle hire & fuel with tolls and driver bata at actuals."
+                      : "Swipe through our verified fleet below. 1-day package rates include tolls & driver bata; calculate custom return dates in booking above.")
                   : "Fixed round-trip rates with doorstep pickup, sanitized dual AC cars, FASTag tolls, and driver allowance."}
               </p>
             </div>
@@ -2107,85 +2091,27 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                     ? 6
                     : 4;
 
+                  const isMultiDay = isNavagraha || isRameswaram || isSabarimala;
+                  const cardPriceLabel = "Starting From";
+                  const cardPriceSubtext = isMultiDay
+                    ? (isNavagraha ? "2-Day Circuit (Tolls & Bata Extra)" : isRameswaram ? "2-Day Circuit (Tolls & Bata Extra)" : "3-Day Base Fare (Tolls & Bata Extra)")
+                    : "1-Day (Tolls & Bata Inc.)";
+
                   return (
-                    <div
-                      class="shrink-0 w-[240px] sm:w-[260px] snap-start bg-white rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md hover:border-slate-300 transition-all flex flex-col justify-between overflow-hidden group select-none"
-                    >
-                      <div>
-                        <!-- Vehicle Photo Showcase -->
-                        <div class="relative h-28 sm:h-32 bg-slate-50 flex items-center justify-center p-3 border-b border-slate-100">
-                          {badge && (
-                            <span class="absolute top-2.5 left-2.5 z-10 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/95 text-slate-700 border border-slate-200 shadow-2xs">
-                              {badge}
-                            </span>
-                          )}
-
-                          {vehicleImg ? (
-                            <img
-                              src={vehicleImg}
-                              alt={`${vehicleName} taxi rental`}
-                              width="160"
-                              height="80"
-                              loading="lazy"
-                              decoding="async"
-                              class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-xs"
-                            />
-                          ) : (
-                            <Car className="w-10 h-10 text-slate-400" />
-                          )}
-                        </div>
-
-                        <!-- Card Content -->
-                        <div class="p-3.5 sm:p-4">
-                          <h3 class="text-sm sm:text-base font-bold text-slate-900 font-heading leading-tight truncate" title={vehicleName}>
-                            {vehicleName}
-                          </h3>
-
-                          <!-- Clean Seats & Luggage Spec -->
-                          <div class="flex items-center gap-2 text-xs text-slate-500 mt-1.5 font-medium">
-                            <span class="inline-flex items-center gap-1">
-                              <Users className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                              <span>{seats}</span>
-                            </span>
-                            <span class="text-slate-300">•</span>
-                            <span class="inline-flex items-center gap-1">
-                              <Luggage className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                              <span>{baggage}</span>
-                            </span>
-                            <span class="text-slate-300">•</span>
-                            <span>AC</span>
-                          </div>
-
-                          <!-- Transparent Fare Display -->
-                          {flatPrice && (
-                            <div class="mt-3 pt-3 border-t border-slate-100 flex items-baseline justify-between">
-                              <div>
-                                <span class="block text-[10px] uppercase font-bold tracking-wider text-slate-400">
-                                  Round-Trip Flat
-                                </span>
-                                <span class="text-[11px] text-emerald-700 font-medium">Tolls &amp; Bata Inc.</span>
-                              </div>
-                              <span class="text-base sm:text-lg font-extrabold text-slate-900 font-heading">
-                                {flatPrice}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      <!-- Clean Action Button -->
-                      <div class="p-3.5 sm:p-4 pt-0">
-                        <button
-                          type="button"
-                          data-select-vehicle={engineVehId}
-                          data-select-pax={paxCount}
-                          class="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-full bg-slate-900 hover:bg-m3-primary active:bg-black text-white text-xs font-bold transition-all cursor-pointer shadow-2xs"
-                        >
-                          <span>Select Car</span>
-                          <ChevronRight className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </div>
+                    <VehicleCard
+                      className="shrink-0 w-[240px] sm:w-[260px] snap-start"
+                      name={vehicleName}
+                      image={vehicleImg}
+                      badge={badge}
+                      seats={seats}
+                      baggage={baggage}
+                      priceLabel={cardPriceLabel}
+                      priceSubtext={cardPriceSubtext}
+                      price={flatPrice}
+                      actionText="Select Car"
+                      selectVehicleId={engineVehId}
+                      selectPax={paxCount}
+                    />
                   );
                 })}
               </div>
@@ -2267,12 +2193,12 @@ Please share availability and confirmed quote.`;
                             <h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading leading-snug group-hover:text-m3-primary transition-colors">
                               {vehicleName}
                             </h3>
-                            <div class="flex items-center gap-2 text-xs sm:text-sm font-semibold text-m3-on-surface mt-1.5">
-                              <span class="inline-flex items-center gap-1.5 font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-m3-md border border-emerald-200">
+                            <div class="flex items-center gap-2 text-xs sm:text-sm font-semibold text-m3-on-surface mt-1.5 whitespace-nowrap">
+                              <span class="inline-flex items-center gap-1.5 font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-m3-md border border-emerald-200 shrink-0">
                                 <Users className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
                                 <span>{seats || '4 Passengers'}</span>
                               </span>
-                              <span class="inline-flex items-center gap-1.5 font-medium text-m3-on-surface bg-m3-surface-container px-2.5 py-0.5 rounded-m3-md border border-m3-outline-variant/60">
+                              <span class="inline-flex items-center gap-1.5 font-medium text-m3-on-surface bg-m3-surface-container px-2.5 py-0.5 rounded-m3-md border border-m3-outline-variant/60 shrink-0">
                                 <Luggage className="w-3.5 h-3.5 text-m3-secondary shrink-0" />
                                 <span>{getVehicleBaggage(vehicleName)}</span>
                               </span>
@@ -3061,15 +2987,6 @@ Please share availability and confirmed quote.`;
               <ArrowUp className="w-4 h-4 group-hover:-translate-y-0.5 transition-transform shrink-0" />
             </a>
 
-            <a
-              href={whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-bold text-xs sm:text-sm border border-emerald-400/40 shadow-sm transition-all cursor-pointer"
-            >
-              <WhatsAppIcon variant="brand" className="w-4 h-4 text-white shrink-0" />
-              <span>WhatsApp Booking Desk</span>
-            </a>
 
             <a
               href="tel:+918939539211"

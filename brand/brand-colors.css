@@ -1,0 +1,29 @@
+/**
+ * Kalidass Travels — Industrial Standard Brand Color CSS Variables
+ * Google Material Design 3 (M3) Executive Midnight Charcoal & Onyx
+ */
+
+:root {
+  /* Core Palettes */
+  --kt-primary: #1E252D;              /* Executive Midnight Charcoal (Tone 40) */
+  --kt-on-primary: #FFFFFF;           /* Pure Crisp White */
+  --kt-rates-onyx: #111827;           /* Deep Midnight Onyx (Fares & Rates - Mandatory) */
+  --kt-logo-red: #EC221F;             /* Signature 'K' Logo Red (Rule 2 Protected) */
+  
+  /* Conversion & Accents */
+  --kt-whatsapp: #25D366;             /* Verified WhatsApp Green */
+  --kt-amber: #D97706;                /* 5-Star Ratings & Temple Tours */
+  --kt-champagne: #FEF3C7;            /* Warm Champagne Container */
+  
+  /* Neutral Canvas & Surfaces */
+  --kt-surface-canvas: #F9FAFB;       /* Anti-Glare Canvas (Tone 98) */
+  --kt-surface-card: #FFFFFF;         /* Pure Card White */
+  --kt-surface-container-low: #F3F4F6;/* Soft Slate Container (Tone 96) */
+  --kt-surface-container: #ECEEF1;    /* Form Input Container (Tone 94) */
+  --kt-outline: #E5E7EB;              /* Subtle Divider Border (Tone 80) */
+  --kt-text-muted: #4B5563;           /* Secondary Muted Body (Tone 30) */
+
+  /* Print Formulas */
+  --kt-rich-black-cmyk: "C: 60%, M: 40%, Y: 40%, K: 100%";
+  --kt-text-black-cmyk: "C: 0%, M: 0%, Y: 0%, K: 100%";
+}

@@ -53,18 +53,19 @@ export default {
           950: '#000000',
           DEFAULT: '#111827',
         },
+        // Saffron / temple-gold tertiary tonal palette (M3 HCT tones)
         gold: {
-          50: '#FFF9E6',
-          100: '#FEF3C7',
-          200: '#F8E287', // Tone 90 (Tertiary Container)
-          300: '#F3D24F',
-          400: '#E5BA1A',
-          500: '#CA9F0A',
-          600: '#6D5E0F', // Tone 40 (M3 Tertiary Accent)
-          700: '#534706',
-          800: '#3A3102',
-          900: '#221B00',
-          DEFAULT: '#6D5E0F',
+          50: '#FFF8F4',
+          100: '#FFEEE1',
+          200: '#FFDCBE', // Tone 90 (Tertiary Container)
+          300: '#FFB870', // Tone 80 (Tertiary Fixed Dim - stars/icons only)
+          400: '#E09530', // Tone 70
+          500: '#B06A00', // Tone 50
+          600: '#8B5000', // Tone 40 (M3 Tertiary)
+          700: '#6A3C00', // Tone 30
+          800: '#4A2800', // Tone 20
+          900: '#2C1600', // Tone 10
+          DEFAULT: '#8B5000',
         },
         // Official Google Material Design 3 (M3) Semantic Design Tokens
         m3: {
@@ -81,11 +82,17 @@ export default {
           'on-secondary': '#FFFFFF',
           'secondary-container': '#EAECF0', // Tone 90
           'on-secondary-container': '#1D2939', // Tone 10
-          // Tertiary (Warm Golden Amber Accent for Ratings & Milestones)
-          tertiary: '#6D5E0F', // Tone 40
+          // Tertiary (Saffron / Temple Gold - pilgrimage warmth, ratings & milestones)
+          tertiary: '#8B5000', // Tone 40 (6.6:1 on white)
           'on-tertiary': '#FFFFFF',
-          'tertiary-container': '#F8E287', // Tone 90
-          'on-tertiary-container': '#221B00', // Tone 10
+          'tertiary-container': '#FFDCBE', // Tone 90
+          'on-tertiary-container': '#2C1600', // Tone 10
+          'tertiary-fixed-dim': '#FFB870', // Tone 80 (star icons only, never text)
+          // M3 Custom Colour: Success (inclusions, advance badges, confirmations)
+          success: '#006D3B', // Tone 40 (6.4:1 on white)
+          'on-success': '#FFFFFF',
+          'success-container': '#B7F1C4', // Tone 90
+          'on-success-container': '#00210E', // Tone 10
           // Error
           error: '#BA1A1A',
           'on-error': '#FFFFFF',
@@ -98,12 +105,12 @@ export default {
           'surface-container-lowest': '#FFFFFF', // Tone 100 (Elevated cards & sheets)
           'surface-container-low': '#F3F4F6', // Tone 96 (Subtle section alternating)
           'surface-container': '#ECEEF1', // Tone 94 (Input fields & search canvas)
-          'surface-container-high': '#E5E7EB', // Tone 92 (Active navigation indicators & chips)
-          'surface-container-highest': '#D1D5DB', // Tone 90 (Dividers & inactive outlines)
-          'on-surface': '#111827', // Tone 10 (Deep Charcoal for rates, fares, and headings)
+          'surface-container-high': '#E8EAED', // Tone 92 (Active navigation indicators & chips)
+          'surface-container-highest': '#E2E4E9', // Tone 90 (Highest container)
+          'on-surface': '#111827', // Tone 8 (Deep Onyx for rates, fares, and headings)
           'on-surface-variant': '#4B5563', // Tone 30 (Secondary body text & icons)
-          'outline': '#9CA3AF', // Tone 50 (Borders & field outlines)
-          'outline-variant': '#E5E7EB', // Tone 80 (Subtle dividers & card strokes)
+          'outline': '#6B7280', // Tone 50 (Form field borders - 4.8:1, WCAG 1.4.11)
+          'outline-variant': '#C9CDD3', // Tone 80 (Decorative dividers & card strokes only)
           'inverse-surface': '#1F2937', // Tone 20 (Dark tooltips & inverse snackbars)
           'inverse-on-surface': '#F9FAFB', // Tone 95
           'inverse-primary': '#9CA3AF', // Tone 80

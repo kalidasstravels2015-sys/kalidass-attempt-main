@@ -5,6 +5,7 @@ import FAQAccordion from '../../components/FAQAccordion.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
 import OptimizedImage from '../../components/OptimizedImage.astro';
 import AirportBookingEngine from '../../components/AirportBookingEngine.jsx';
+import VehicleCard from '../../components/VehicleCard.astro';
 
 const title = "Chennai Airport Taxi (MAA) from ₹650";
 const description = "Pre-book Chennai Airport (MAA) taxi transfers. Flat zone fares from ₹650, zero surge pricing, flight tracking & 24/7 doorstep pickup.";
@@ -559,23 +560,23 @@ const tripListSchema = {
 >
   <Breadcrumbs items={breadcrumbItems} />
 
-  <div class="bg-slate-50 text-slate-900 font-sans pb-16">
+  <div class="bg-m3-surface text-m3-on-surface font-sans pb-16">
     <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 pt-2 sm:pt-4">
 
       <!-- TOP PAGE HEADING & TRUST BADGES -->
       <div class="max-w-2xl mx-auto mb-2 text-center sm:text-left flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2">
         <div>
-          <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-bold mb-0.5">
+          <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-m3-surface-container-low border border-m3-outline-variant text-m3-on-surface text-[10px] font-bold mb-0.5">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
             <span>24/7 MAA Airport Transfers</span>
           </div>
-          <h1 class="text-lg sm:text-2xl md:text-3xl font-extrabold text-slate-900 font-heading tracking-tight leading-tight">
+          <h1 class="text-lg sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight">
             Chennai Airport Taxi &amp; Cab Booking
           </h1>
         </div>
         <div class="hidden sm:flex items-center gap-2">
-          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-slate-200 shadow-2xs text-xs font-semibold text-slate-700">
-            <span class="material-symbols-outlined text-amber-500 text-[15px]">star</span>
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-m3-surface-container-lowest border border-m3-outline-variant shadow-2xs text-xs font-semibold text-m3-on-surface">
+            <span class="material-symbols-outlined text-m3-tertiary text-[15px]">star</span>
             <span>4.9/5 Rating (5,000+ Trips)</span>
           </span>
         </div>
@@ -588,24 +589,24 @@ const tripListSchema = {
         <AirportBookingEngine client:load showHeader={false} />
 
         <!-- Trust Reassurance Footer Strip -->
-        <div class="mt-2 flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-[11px] text-slate-500 font-medium">
+        <div class="mt-2 flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-[11px] text-m3-on-surface-variant font-medium">
           <div class="flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px] text-emerald-600 shrink-0">verified</span>
-            <span class="font-bold text-slate-800">Zero Advance Required — Pay After Trip</span>
+            <span class="material-symbols-outlined text-[14px] text-m3-primary shrink-0">verified</span>
+            <span class="font-bold text-m3-on-surface">Zero Advance Required — Pay After Trip</span>
           </div>
           <div class="flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px] text-emerald-600 shrink-0">check_circle</span>
+            <span class="material-symbols-outlined text-[14px] text-m3-primary shrink-0">check_circle</span>
             <span>Instant WhatsApp confirmation</span>
           </div>
           <div class="flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px] text-emerald-600 shrink-0">check_circle</span>
+            <span class="material-symbols-outlined text-[14px] text-m3-primary shrink-0">check_circle</span>
             <span>Zero hidden charges</span>
           </div>
         </div>
       </section>
 
       <!-- 1. SIGNATURE HERO BANNER -->
-      <section class="group relative min-h-[200px] sm:min-h-[240px] md:min-h-[260px] rounded-2xl overflow-hidden shadow-md border border-slate-800 bg-slate-950 flex flex-col justify-end p-5 sm:p-7 md:p-8 mt-4 mb-8 transition-all duration-300">
+      <section class="group relative min-h-[200px] sm:min-h-[240px] md:min-h-[260px] rounded-2xl overflow-hidden shadow-md border border-m3-outline-variant/60 bg-m3-inverse-surface flex flex-col justify-end p-5 sm:p-7 md:p-8 mt-4 mb-8 transition-all duration-300">
         <!-- Background Image with Scrim -->
         <OptimizedImage
           src="/images/services/airport-transfer.webp"
@@ -616,7 +617,7 @@ const tripListSchema = {
           sizes="(max-width: 768px) 100vw, 1024px"
         />
         <!-- High-Contrast Scrim Gradient for 100% Text Legibility while keeping image vivid -->
-        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/75 to-slate-950/40 sm:bg-gradient-to-r sm:from-slate-950/95 sm:via-slate-950/70 sm:to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-m3-inverse-surface via-m3-inverse-surface/75 to-m3-inverse-surface/40 sm:bg-gradient-to-r sm:from-m3-inverse-surface/95 sm:via-m3-inverse-surface/70 sm:to-transparent"></div>
 
         <div class="relative z-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div class="max-w-2xl">
@@ -627,7 +628,7 @@ const tripListSchema = {
             <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-tight font-heading drop-shadow-sm">
               Official MAA Airport Meet &amp; Greet
             </h2>
-            <p class="text-xs sm:text-sm md:text-base text-slate-200 mt-2 font-normal leading-relaxed max-w-2xl drop-shadow-xs pr-8 sm:pr-0">
+            <p class="text-xs sm:text-sm md:text-base text-m3-inverse-on-surface mt-2 font-normal leading-relaxed max-w-2xl drop-shadow-xs pr-8 sm:pr-0">
               Planning your trip early? Reserve for ₹0 advance today with no credit card required. Pay only after your ride completes safely. Free live flight radar tracking &amp; name-board greeting for all travelers.
             </p>
           </div>
@@ -646,24 +647,24 @@ const tripListSchema = {
       <!-- AIRPORT TRANSFER COMMITMENTS & GUARANTEES CARD -->
       <section 
         id="trust-promises-section" 
-        class="rounded-2xl bg-white border border-slate-200 shadow-sm p-4 sm:p-6 mt-6 mb-6 relative overflow-hidden offscreen-defer"
+        class="rounded-2xl bg-m3-surface-container-lowest border border-m3-outline-variant shadow-sm p-4 sm:p-6 mt-6 mb-6 relative overflow-hidden offscreen-defer"
         aria-labelledby="commitments-card-heading"
       >
         <!-- Card Header -->
-        <div class="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2.5 sm:gap-3 pb-3 mb-4 border-b border-slate-200">
+        <div class="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2.5 sm:gap-3 pb-3 mb-4 border-b border-m3-outline-variant">
           <div class="flex items-center gap-2">
-            <span class="w-7 h-7 rounded-lg bg-slate-900 text-white flex items-center justify-center shrink-0 shadow-xs">
+            <span class="w-7 h-7 rounded-lg bg-m3-primary text-white flex items-center justify-center shrink-0 shadow-xs">
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                 <path d="m9 12 2 2 4-4"/>
               </svg>
             </span>
-            <h3 id="commitments-card-heading" class="text-base sm:text-lg font-extrabold text-slate-900 font-heading">
+            <h3 id="commitments-card-heading" class="text-base sm:text-lg font-extrabold text-m3-on-surface font-heading">
               Our 5 Airport Guarantees
             </h3>
           </div>
 
-          <span id="commitments-mode-subtitle" class="text-xs font-bold text-slate-900 bg-slate-100 border border-slate-200 px-3 py-1 rounded-full shrink-0">
+          <span id="commitments-mode-subtitle" class="text-xs font-bold text-m3-on-surface bg-m3-surface-container border border-m3-outline-variant px-3 py-1 rounded-full shrink-0">
             Pickup Protocol
           </span>
         </div>
@@ -675,75 +676,75 @@ const tripListSchema = {
           role="list"
         >
           <!-- Commitment 01: Zero Advance -->
-          <div role="listitem" class="p-3.5 sm:p-4 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 shadow-2xs flex items-start gap-3 transition-colors">
-            <span class="w-6 h-6 rounded-lg bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+          <div role="listitem" class="p-3.5 sm:p-4 rounded-xl bg-m3-surface hover:bg-m3-surface-container border border-m3-outline-variant/80 shadow-2xs flex items-start gap-3 transition-colors">
+            <span class="w-6 h-6 rounded-lg bg-m3-primary text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
               01
             </span>
             <div class="min-w-0">
-              <h4 class="text-xs sm:text-sm font-bold text-slate-900 font-heading leading-tight">
+              <h4 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading leading-tight">
                 Pay ₹0 Today — Settle After Safe Arrival
               </h4>
-              <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+              <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">
                 Zero advance payment. Pay via UPI, Cash, or Card only after arriving safely at your destination.
               </p>
             </div>
           </div>
 
           <!-- Commitment 02: Flight Delayed Waiting -->
-          <div role="listitem" class="p-3.5 sm:p-4 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 shadow-2xs flex items-start gap-3 transition-colors">
+          <div role="listitem" class="p-3.5 sm:p-4 rounded-xl bg-m3-surface hover:bg-m3-surface-container border border-m3-outline-variant/80 shadow-2xs flex items-start gap-3 transition-colors">
             <span class="w-6 h-6 rounded-lg bg-slate-700 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
               02
             </span>
             <div class="min-w-0">
-              <h4 class="text-xs sm:text-sm font-bold text-slate-900 font-heading leading-tight">
+              <h4 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading leading-tight">
                 Flight Delayed? We Wait Free of Charge
               </h4>
-              <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+              <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">
                 Live radar tracking. Even if your flight is delayed 2 hours at midnight, your cab waits at zero extra cost.
               </p>
             </div>
           </div>
 
           <!-- Commitment 03: Gate-Side Name Board -->
-          <div role="listitem" class="p-3.5 sm:p-4 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 shadow-2xs flex items-start gap-3 transition-colors">
+          <div role="listitem" class="p-3.5 sm:p-4 rounded-xl bg-m3-surface hover:bg-m3-surface-container border border-m3-outline-variant/80 shadow-2xs flex items-start gap-3 transition-colors">
             <span class="w-6 h-6 rounded-lg bg-slate-700 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
               03
             </span>
             <div class="min-w-0">
-              <h4 class="text-xs sm:text-sm font-bold text-slate-900 font-heading leading-tight">
+              <h4 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading leading-tight">
                 Chauffeur at Exit with Name Board
               </h4>
-              <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+              <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">
                 Chauffeur stands right outside arrival gate holding your name board—no searching or confusion.
               </p>
             </div>
           </div>
 
           <!-- Commitment 04: Pre-Stationed Terminal Cab -->
-          <div role="listitem" class="p-3.5 sm:p-4 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 shadow-2xs flex items-start gap-3 transition-colors">
+          <div role="listitem" class="p-3.5 sm:p-4 rounded-xl bg-m3-surface hover:bg-m3-surface-container border border-m3-outline-variant/80 shadow-2xs flex items-start gap-3 transition-colors">
             <span class="w-6 h-6 rounded-lg bg-slate-700 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
               04
             </span>
             <div class="min-w-0">
-              <h4 class="text-xs sm:text-sm font-bold text-slate-900 font-heading leading-tight">
+              <h4 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading leading-tight">
                 Chilled AC Cab Pre-Parked at Airport
               </h4>
-              <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+              <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">
                 Vehicle cooled and parked inside airport before touchdown. Board in under 3 minutes with zero queue.
               </p>
             </div>
           </div>
 
           <!-- Commitment 05: Transparent Fixed Fare -->
-          <div role="listitem" class="col-span-1 md:col-span-2 p-3.5 sm:p-4 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 shadow-2xs flex items-start gap-3 transition-colors">
+          <div role="listitem" class="col-span-1 md:col-span-2 p-3.5 sm:p-4 rounded-xl bg-m3-surface hover:bg-m3-surface-container border border-m3-outline-variant/80 shadow-2xs flex items-start gap-3 transition-colors">
             <span class="w-6 h-6 rounded-lg bg-slate-700 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
               05
             </span>
             <div class="min-w-0">
-              <h4 class="text-xs sm:text-sm font-bold text-slate-900 font-heading leading-tight">
+              <h4 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading leading-tight">
                 100% Fixed Fare — Tolls &amp; Parking Included
               </h4>
-              <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+              <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">
                 Flat transparent fare with toll, parking, fuel, and AC included. Never any surge or hidden fees.
               </p>
             </div>
@@ -757,75 +758,75 @@ const tripListSchema = {
           role="list"
         >
           <!-- Drop Commitment 01: Zero Advance -->
-          <div role="listitem" class="p-3.5 sm:p-4 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 shadow-2xs flex items-start gap-3 transition-colors">
-            <span class="w-6 h-6 rounded-lg bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+          <div role="listitem" class="p-3.5 sm:p-4 rounded-xl bg-m3-surface hover:bg-m3-surface-container border border-m3-outline-variant/80 shadow-2xs flex items-start gap-3 transition-colors">
+            <span class="w-6 h-6 rounded-lg bg-m3-primary text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
               01
             </span>
             <div class="min-w-0">
-              <h4 class="text-xs sm:text-sm font-bold text-slate-900 font-heading leading-tight">
+              <h4 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading leading-tight">
                 Zero Advance — Pay at Airport Terminal
               </h4>
-              <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+              <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">
                 Confirm your ride today with ₹0 advance. Settle the flat fare after reaching the departure gate safely.
               </p>
             </div>
           </div>
 
           <!-- Drop Commitment 02: Punctuality -->
-          <div role="listitem" class="p-3.5 sm:p-4 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 shadow-2xs flex items-start gap-3 transition-colors">
+          <div role="listitem" class="p-3.5 sm:p-4 rounded-xl bg-m3-surface hover:bg-m3-surface-container border border-m3-outline-variant/80 shadow-2xs flex items-start gap-3 transition-colors">
             <span class="w-6 h-6 rounded-lg bg-slate-700 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
               02
             </span>
             <div class="min-w-0">
-              <h4 class="text-xs sm:text-sm font-bold text-slate-900 font-heading leading-tight">
+              <h4 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading leading-tight">
                 Doorstep Pickup — 15 to 30 Mins Early
               </h4>
-              <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+              <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">
                 Never stress about missing a flight. Your chauffeur arrives 15–30 minutes early at your doorstep.
               </p>
             </div>
           </div>
 
           <!-- Drop Commitment 03: Driver Info by 9 PM -->
-          <div role="listitem" class="p-3.5 sm:p-4 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 shadow-2xs flex items-start gap-3 transition-colors">
+          <div role="listitem" class="p-3.5 sm:p-4 rounded-xl bg-m3-surface hover:bg-m3-surface-container border border-m3-outline-variant/80 shadow-2xs flex items-start gap-3 transition-colors">
             <span class="w-6 h-6 rounded-lg bg-slate-700 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
               03
             </span>
             <div class="min-w-0">
-              <h4 class="text-xs sm:text-sm font-bold text-slate-900 font-heading leading-tight">
+              <h4 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading leading-tight">
                 Driver &amp; Cab Info Sent by 9 PM Prior Night
               </h4>
-              <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+              <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">
                 Chauffeur details and vehicle number delivered to your WhatsApp by 9 PM the evening before.
               </p>
             </div>
           </div>
 
           <!-- Drop Commitment 04: Direct Ramp Drop -->
-          <div role="listitem" class="p-3.5 sm:p-4 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 shadow-2xs flex items-start gap-3 transition-colors">
+          <div role="listitem" class="p-3.5 sm:p-4 rounded-xl bg-m3-surface hover:bg-m3-surface-container border border-m3-outline-variant/80 shadow-2xs flex items-start gap-3 transition-colors">
             <span class="w-6 h-6 rounded-lg bg-slate-700 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
               04
             </span>
             <div class="min-w-0">
-              <h4 class="text-xs sm:text-sm font-bold text-slate-900 font-heading leading-tight">
+              <h4 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading leading-tight">
                 Direct Ramp Drop at Departure Gate
               </h4>
-              <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+              <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">
                 Ramp drop right outside your airline gate (T1 Domestic, T2/T4 International) with luggage assistance.
               </p>
             </div>
           </div>
 
           <!-- Drop Commitment 05: Guaranteed Flat Tariff -->
-          <div role="listitem" class="col-span-1 md:col-span-2 p-3.5 sm:p-4 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 shadow-2xs flex items-start gap-3 transition-colors">
+          <div role="listitem" class="col-span-1 md:col-span-2 p-3.5 sm:p-4 rounded-xl bg-m3-surface hover:bg-m3-surface-container border border-m3-outline-variant/80 shadow-2xs flex items-start gap-3 transition-colors">
             <span class="w-6 h-6 rounded-lg bg-slate-700 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
               05
             </span>
             <div class="min-w-0">
-              <h4 class="text-xs sm:text-sm font-bold text-slate-900 font-heading leading-tight">
+              <h4 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading leading-tight">
                 Guaranteed Flat Tariff — Tolls &amp; GST Included
               </h4>
-              <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+              <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">
                 Flat pricing across Chennai with tolls, GST, and AC included. Never midnight surge or baggage fees.
               </p>
             </div>
@@ -834,16 +835,16 @@ const tripListSchema = {
       </section>
 
         <!-- Corporate GST Invoicing Card -->
-        <div class="mt-4 p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm">
+        <div class="mt-4 p-4 sm:p-5 rounded-2xl bg-m3-surface-container-lowest border border-m3-outline-variant shadow-sm">
           <div class="flex items-start gap-3.5">
-            <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-900 flex items-center justify-center shrink-0 border border-slate-200">
-              <span class="material-symbols-outlined text-[20px] text-slate-900">business</span>
+            <span class="w-8 h-8 rounded-xl bg-m3-surface-container text-m3-on-surface flex items-center justify-center shrink-0 border border-m3-outline-variant">
+              <span class="material-symbols-outlined text-[20px] text-m3-on-surface">business</span>
             </span>
             <div>
-              <h3 class="text-sm sm:text-base font-bold text-slate-900 font-heading leading-tight mb-1">
+              <h3 class="text-sm sm:text-base font-bold text-m3-on-surface font-heading leading-tight mb-1">
                 Corporate GST Invoicing &amp; Executive Desks
               </h3>
-              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed">
                 Itemized GST tax invoices (GSTIN: 33COVPM0531D1Z4) for corporate expense claims, monthly billing accounts, and executive delegate name-board pickups.
               </p>
             </div>
@@ -854,25 +855,25 @@ const tripListSchema = {
         <div id="all-zones-container" class="mt-6 mb-8">
 
           <!-- Section Header (shared) -->
-          <div class="flex items-center gap-3 pb-3 mb-4 border-b border-slate-200">
-            <span class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-800 flex items-center justify-center shrink-0 border border-emerald-200">
+          <div class="flex items-center gap-3 pb-3 mb-4 border-b border-m3-outline-variant">
+            <span class="w-8 h-8 rounded-full bg-m3-surface-container-low text-m3-on-surface flex items-center justify-center shrink-0 border border-m3-outline-variant">
               <span class="material-symbols-outlined text-[18px]">receipt_long</span>
             </span>
             <div class="min-w-0">
-              <span class="text-base sm:text-lg font-extrabold text-slate-900 font-heading block">
+              <span class="text-base sm:text-lg font-extrabold text-m3-on-surface font-heading block">
                 All 6 Standard Transfer Zones &amp; Rates Overview
               </span>
-              <span class="text-xs sm:text-sm text-slate-600 block mt-0.5">
+              <span class="text-xs sm:text-sm text-m3-on-surface-variant block mt-0.5">
                 Fixed transparent pricing across Chennai &amp; Outstation
               </span>
             </div>
           </div>
 
           <!-- MOBILE: Compact M3-style dense list accordion (shown only on < sm) -->
-          <div class="sm:hidden rounded-xl border border-slate-200 bg-white overflow-hidden divide-y divide-slate-100 shadow-xs">
+          <div class="sm:hidden rounded-xl border border-m3-outline-variant bg-white overflow-hidden divide-y divide-slate-100 shadow-xs">
             {zoneTariffs.map((t) => (
               <details
-                class={`group ${t.popular ? 'bg-emerald-50/40' : 'bg-white'}`}
+                class={`group ${t.popular ? 'bg-m3-surface-container-low' : 'bg-white'}`}
                 data-zone={t.zone}
                 data-service-title={`Chennai Airport Taxi — ${t.zone}`}
                 data-slug="chennai-airport-taxi"
@@ -887,39 +888,39 @@ const tripListSchema = {
                   <div class="min-w-0 flex items-center gap-2 overflow-hidden">
                     <div class="min-w-0">
                       <div class="flex items-center gap-1.5">
-                        <span class="font-semibold text-slate-900 text-[13px] leading-snug truncate">{t.zone}</span>
+                        <span class="font-semibold text-m3-on-surface text-[13px] leading-snug truncate">{t.zone}</span>
                         {t.popular && (
-                          <span class="shrink-0 px-1.5 py-px rounded-full bg-emerald-100 text-emerald-800 text-[9px] font-bold uppercase tracking-wider border border-emerald-200">★</span>
+                          <span class="shrink-0 px-1.5 py-px rounded-full bg-emerald-100 text-m3-on-surface text-[9px] font-bold uppercase tracking-wider border border-m3-outline-variant">★</span>
                         )}
                       </div>
-                      <span class="text-[10px] text-slate-400 leading-none mt-0.5 block">
+                      <span class="text-[10px] text-m3-on-surface-variant leading-none mt-0.5 block">
                         {t.eta} · {t.distance}
                       </span>
                     </div>
                   </div>
                   <div class="flex items-center gap-1 shrink-0">
-                    <span class="font-bold text-emerald-700 text-[12px]">{t.sedan}</span>
-                    <span class="material-symbols-outlined text-[16px] text-slate-400 transition-transform duration-150 group-open:rotate-180">expand_more</span>
+                    <span class="font-bold text-m3-primary text-[12px]">{t.sedan}</span>
+                    <span class="material-symbols-outlined text-[16px] text-m3-on-surface-variant transition-transform duration-150 group-open:rotate-180">expand_more</span>
                   </div>
                 </summary>
-                <div class="px-3 pt-1.5 pb-2.5 border-t border-slate-100 bg-slate-50/60">
+                <div class="px-3 pt-1.5 pb-2.5 border-t border-m3-outline-variant/60 bg-m3-surface/60">
                   <!-- Horizontal price chips -->
                   <div class="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide mb-2">
-                    <div class="flex-shrink-0 text-center bg-white border border-slate-200 rounded-lg px-2.5 py-1">
-                      <span class="text-[9px] text-slate-400 block leading-none">Sedan</span>
-                      <span class="text-[11px] font-bold text-slate-900">{t.sedan}</span>
+                    <div class="flex-shrink-0 text-center bg-m3-surface-container-lowest border border-m3-outline-variant rounded-lg px-2.5 py-1">
+                      <span class="text-[9px] text-m3-on-surface-variant block leading-none">Sedan</span>
+                      <span class="text-[11px] font-bold text-m3-on-surface">{t.sedan}</span>
                     </div>
-                    <div class="flex-shrink-0 text-center bg-white border border-slate-200 rounded-lg px-2.5 py-1">
-                      <span class="text-[9px] text-slate-400 block leading-none">Innova</span>
-                      <span class="text-[11px] font-bold text-slate-900">{t.innova}</span>
+                    <div class="flex-shrink-0 text-center bg-m3-surface-container-lowest border border-m3-outline-variant rounded-lg px-2.5 py-1">
+                      <span class="text-[9px] text-m3-on-surface-variant block leading-none">Innova</span>
+                      <span class="text-[11px] font-bold text-m3-on-surface">{t.innova}</span>
                     </div>
-                    <div class="flex-shrink-0 text-center bg-white border border-slate-200 rounded-lg px-2.5 py-1">
-                      <span class="text-[9px] text-slate-400 block leading-none">Crysta</span>
-                      <span class="text-[11px] font-bold text-slate-900">{t.crysta}</span>
+                    <div class="flex-shrink-0 text-center bg-m3-surface-container-lowest border border-m3-outline-variant rounded-lg px-2.5 py-1">
+                      <span class="text-[9px] text-m3-on-surface-variant block leading-none">Crysta</span>
+                      <span class="text-[11px] font-bold text-m3-on-surface">{t.crysta}</span>
                     </div>
-                    <div class="flex-shrink-0 text-center bg-white border border-slate-200 rounded-lg px-2.5 py-1">
-                      <span class="text-[9px] text-slate-400 block leading-none">Tempo</span>
-                      <span class="text-[11px] font-bold text-slate-900">{t.tempo}</span>
+                    <div class="flex-shrink-0 text-center bg-m3-surface-container-lowest border border-m3-outline-variant rounded-lg px-2.5 py-1">
+                      <span class="text-[9px] text-m3-on-surface-variant block leading-none">Tempo</span>
+                      <span class="text-[11px] font-bold text-m3-on-surface">{t.tempo}</span>
                     </div>
                   </div>
                   <div class="flex justify-start mt-1">
@@ -950,18 +951,18 @@ const tripListSchema = {
           </div>
 
           <!-- DESKTOP/TABLET: Full table (hidden on mobile, shown sm+) -->
-          <div class="hidden sm:block rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-sm">
+          <div class="hidden sm:block rounded-2xl border border-m3-outline-variant bg-white overflow-hidden shadow-sm">
             <div class="p-4 sm:p-6 pt-3 sm:pt-4">
               <!-- "Scroll rates" hint for tablet -->
               <div class="flex justify-end mb-3 lg:hidden">
-                <span class="text-[11px] font-semibold text-slate-500 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full flex items-center gap-1">
-                  <span class="material-symbols-outlined text-[14px] text-slate-400">swipe</span>
+                <span class="text-[11px] font-semibold text-m3-on-surface-variant bg-m3-surface-container border border-m3-outline-variant px-2.5 py-1 rounded-full flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[14px] text-m3-on-surface-variant">swipe</span>
                   <span>Scroll rates</span>
                 </span>
               </div>
-              <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-2xs">
+              <div class="overflow-x-auto rounded-xl border border-m3-outline-variant bg-white shadow-2xs">
                 <table class="w-full text-left text-xs font-sans border-collapse">
-                  <thead class="bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-200">
+                  <thead class="bg-m3-surface-container text-m3-on-surface text-xs font-bold uppercase tracking-wider border-b border-m3-outline-variant">
                     <tr>
                       <th class="px-4 py-3" id="table-col-location">Destination &amp; Key Landmarks</th>
                       <th class="px-3 py-3 text-center">Drive &amp; Distance</th>
@@ -975,7 +976,7 @@ const tripListSchema = {
                   <tbody class="divide-y divide-slate-200">
                     {zoneTariffs.map((t) => (
                       <tr
-                        class={`hover:bg-slate-50 transition-colors ${t.popular ? 'bg-emerald-50/30' : ''}`}
+                        class={`hover:bg-m3-surface transition-colors ${t.popular ? 'bg-m3-surface-container-low' : ''}`}
                         data-zone={t.zone}
                         data-service-title={`Chennai Airport Taxi — ${t.zone}`}
                         data-slug="chennai-airport-taxi"
@@ -988,25 +989,25 @@ const tripListSchema = {
                       >
                         <td class="px-4 py-3.5">
                           <div class="flex items-center gap-2">
-                            <span class="font-bold text-slate-900 font-heading text-sm">{t.zone}</span>
+                            <span class="font-bold text-m3-on-surface font-heading text-sm">{t.zone}</span>
                             {t.popular && (
-                              <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200 text-[10px] font-bold uppercase tracking-wider">
+                              <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-m3-on-surface border border-m3-outline-variant text-[10px] font-bold uppercase tracking-wider">
                                 Popular
                               </span>
                             )}
                           </div>
-                          <p class="text-xs text-slate-600 leading-relaxed mt-1">{t.destinations}</p>
+                          <p class="text-xs text-m3-on-surface-variant leading-relaxed mt-1">{t.destinations}</p>
                         </td>
-                        <td class="px-3 py-3.5 text-center text-xs font-medium text-slate-600 whitespace-nowrap">
-                          <span class="inline-flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded-full">
-                            <span class="material-symbols-outlined text-[14px] text-slate-500">schedule</span>
+                        <td class="px-3 py-3.5 text-center text-xs font-medium text-m3-on-surface-variant whitespace-nowrap">
+                          <span class="inline-flex items-center gap-1 bg-m3-surface-container px-2 py-0.5 rounded-full">
+                            <span class="material-symbols-outlined text-[14px] text-m3-on-surface-variant">schedule</span>
                             <span>{t.eta} · {t.distance}</span>
                           </span>
                         </td>
-                        <td class="px-3 py-3.5 text-center font-extrabold text-slate-900 text-sm">{t.sedan}</td>
-                        <td class="px-3 py-3.5 text-center font-extrabold text-slate-900 text-sm">{t.innova}</td>
-                        <td class="px-3 py-3.5 text-center font-extrabold text-slate-900 text-sm">{t.crysta}</td>
-                        <td class="px-3 py-3.5 text-center font-extrabold text-slate-900 text-sm">{t.tempo}</td>
+                        <td class="px-3 py-3.5 text-center font-extrabold text-m3-on-surface text-sm">{t.sedan}</td>
+                        <td class="px-3 py-3.5 text-center font-extrabold text-m3-on-surface text-sm">{t.innova}</td>
+                        <td class="px-3 py-3.5 text-center font-extrabold text-m3-on-surface text-sm">{t.crysta}</td>
+                        <td class="px-3 py-3.5 text-center font-extrabold text-m3-on-surface text-sm">{t.tempo}</td>
                         <td class="px-4 py-3.5 text-right">
                           <a
                             id={`desktop-book-${t.id}`}
@@ -1027,7 +1028,7 @@ const tripListSchema = {
                             href={`https://wa.me/918939539211?text=${encodeURIComponent(t.whatsappPickup)}`}
                             target="_blank"
                             rel="noopener noreferrer nofollow"
-                            class="booking-link inline-flex items-center gap-1 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 active:bg-black text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
+                            class="booking-link inline-flex items-center gap-1 px-4 py-2 rounded-xl bg-m3-primary hover:bg-slate-800 active:bg-black text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
                           >
                             <span class="action-label">Book Pickup</span>
                             <span class="material-symbols-outlined text-[15px]">arrow_forward</span>
@@ -1067,22 +1068,22 @@ const tripListSchema = {
       </section>
 
       <!-- 4. VEHICLE SPECIFICATIONS & LUGGAGE CAPACITIES (Unified Theme matching [slug].astro) -->
-      <section id="fleet-section" class="pt-8 sm:pt-10 mt-8 sm:mt-10 border-t border-slate-200 mb-10 sm:mb-14 scroll-mt-28 offscreen-defer">
-        <div class="mb-6 sm:mb-8 pb-3 border-b border-slate-200 flex items-center justify-between gap-3 flex-wrap">
+      <section id="fleet-section" class="pt-8 sm:pt-10 mt-8 sm:mt-10 border-t border-m3-outline-variant mb-10 sm:mb-14 scroll-mt-28 offscreen-defer">
+        <div class="mb-6 sm:mb-8 pb-3 border-b border-m3-outline-variant flex items-center justify-between gap-3 flex-wrap">
           <div class="flex items-center gap-3 min-w-0">
-            <span class="w-10 h-10 rounded-xl bg-slate-100 text-slate-900 flex items-center justify-center shrink-0 border border-slate-200 shadow-2xs">
-              <span class="material-symbols-outlined text-[24px] text-slate-900">directions_car</span>
+            <span class="w-10 h-10 rounded-xl bg-m3-surface-container text-m3-on-surface flex items-center justify-center shrink-0 border border-m3-outline-variant shadow-2xs">
+              <span class="material-symbols-outlined text-[24px] text-m3-on-surface">directions_car</span>
             </span>
             <div class="min-w-0">
-              <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 font-heading leading-tight">
+              <h2 class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading leading-tight">
                 Vehicle Specifications &amp; Luggage Capacities
               </h2>
-              <p class="text-xs sm:text-sm text-slate-600 mt-0.5">
+              <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-0.5">
                 Punctual airport pickup, live flight tracking, and dedicated luggage boot space.
               </p>
             </div>
           </div>
-          <span class="text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200 shrink-0 hidden sm:inline-block">
+          <span class="text-xs font-bold text-m3-on-surface bg-m3-surface-container px-3 py-1.5 rounded-full border border-m3-outline-variant shrink-0 hidden sm:inline-block">
             All-Inclusive Fares • No Hidden Charges
           </span>
         </div>
@@ -1097,103 +1098,30 @@ const tripListSchema = {
             role="region"
             aria-label="Airport Fleet Gallery"
           >
-            {airportFleet.map((vehicle) => (
-              <div class="flex-shrink-0 w-72 sm:w-80 snap-center md:w-auto md:snap-align-none transition-all duration-300 h-full spec-fleet-card">
-                <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md border border-slate-200 transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col justify-between group">
-                  <div>
-                    <!-- Vehicle Image Container: Clean showcase, fully visible, zero badges blocking the car -->
-                    <div class="relative h-44 sm:h-48 bg-gradient-to-b from-slate-50 to-slate-100/70 flex items-center justify-center p-3 border-b border-slate-100 overflow-hidden">
-                      <img
-                        src={vehicle.image}
-                        alt={`${vehicle.name} airport taxi in Chennai - Kalidass Travels`}
-                        width="384"
-                        height="160"
-                        decoding="async"
-                        class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
-                        loading="lazy"
-                      />
-                    </div>
-
-                    <!-- Content (Vehicle Title, Stats, and Passenger Expectations) -->
-                    <div class="p-4 sm:p-5 space-y-3.5">
-                      <!-- Vehicle Title & Category -->
-                      <div class="flex items-start justify-between gap-2">
-                        <div class="min-w-0">
-                          <h3 class="text-base sm:text-lg font-extrabold text-slate-900 font-heading leading-tight">
-                            {vehicle.name}
-                          </h3>
-                          <p class="text-xs text-slate-500 font-medium mt-0.5 leading-normal">
-                            {vehicle.subtitle}
-                          </p>
-                        </div>
-                        <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 shrink-0">
-                          {vehicle.shortName}
-                        </span>
-                      </div>
-
-                      <!-- Key Stats (2 Columns: Starting Price & Capacity) -->
-                      <div class="grid grid-cols-2 gap-2">
-                        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200/80 text-center">
-                          <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-0.5">Starting From</p>
-                          <p class="text-sm sm:text-base font-bold text-slate-900 leading-none font-heading">{vehicle.price}</p>
-                        </div>
-                        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200/80 text-center">
-                          <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-0.5">Capacity</p>
-                          <div class="flex items-center justify-center gap-1">
-                            <span class="material-symbols-outlined text-[16px] text-slate-500">group</span>
-                            <p class="text-xs font-bold text-slate-900">{vehicle.capsShort}</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <!-- Luggage & Key Passenger Expectations -->
-                      <div class="space-y-1.5 text-xs text-slate-600">
-                        <div class="flex items-center gap-2">
-                          <span class="material-symbols-outlined text-[16px] text-emerald-600 shrink-0">luggage</span>
-                          <span class="text-xs text-slate-900 font-semibold leading-tight">{vehicle.luggage}</span>
-                        </div>
-                        {vehicle.details.map((detail) => (
-                          <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[16px] text-emerald-600 shrink-0">check_circle</span>
-                            <span class="text-xs text-slate-600 font-normal leading-tight">{detail}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Action Buttons -->
-                  <div class="p-4 sm:p-5 pt-0 space-y-2">
-                    <button
-                      type="button"
-                      class="spec-book-vehicle-btn w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 active:bg-black text-white text-sm font-bold shadow-xs hover:shadow-sm transition-all border border-white/10 group/btn cursor-pointer active:scale-[0.98] min-h-[44px]"
-                      data-vehicle-type={vehicle.type}
-                      data-vehicle-name={vehicle.name}
-                      data-vehicle-price={vehicle.price}
-                    >
-                      <span>Book {vehicle.shortName} ({vehicle.price})</span>
-                      <span class="material-symbols-outlined text-[18px] text-emerald-400 transform group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
-                    </button>
-                    
-                    <a
-                      href={`https://wa.me/918939539211?text=${encodeURIComponent(vehicle.bookingText)}`}
-                      data-open-enquiry="true"
-                      data-service-title="Chennai Airport Taxi"
-                      data-vehicle-name={vehicle.name}
-                      data-price={vehicle.price}
-                      data-slug="chennai-airport-taxi"
-                      target="_blank"
-                      rel="noopener noreferrer nofollow"
-                      class="w-full inline-flex items-center justify-center gap-1.5 py-1.5 text-xs font-semibold text-emerald-700 hover:text-emerald-800 hover:underline transition-colors cursor-pointer"
-                      aria-label={`Or reserve via WhatsApp - ${vehicle.name}`}
-                    >
-                      <span>Or reserve via WhatsApp</span>
-                      <span class="material-symbols-outlined text-[14px]">chat</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            ))}
+            {airportFleet.map((vehicle) => {
+              const seats = vehicle.capsShort.includes('Pax') ? vehicle.capsShort.replace('Pax', 'Passengers') : vehicle.capsShort;
+              const luggageShort = vehicle.type === 'tempo' ? '8–10 Bags' : vehicle.type === 'crysta' ? '5 Bags' : vehicle.type === 'innova' ? '4 Bags' : '2 Bags';
+              return (
+                <VehicleCard
+                  className="shrink-0 w-72 sm:w-80 md:w-auto snap-center md:snap-align-none"
+                  name={vehicle.name}
+                  image={vehicle.image}
+                  badge={vehicle.badge}
+                  seats={seats}
+                  baggage={luggageShort}
+                  priceLabel="Airport Flat"
+                  priceSubtext="Ramp Drop & Tolls Inc."
+                  price={vehicle.price}
+                  actionText={`Book ${vehicle.shortName}`}
+                  actionClass="spec-book-vehicle-btn"
+                  dataAttributes={{
+                    'data-vehicle-type': vehicle.type,
+                    'data-vehicle-name': vehicle.name,
+                    'data-vehicle-price': vehicle.price,
+                  }}
+                />
+              );
+            })}
           </div>
 
           <!-- Scroll Indicator Dots (Mobile Only, Matching Homepage) -->
@@ -1205,7 +1133,7 @@ const tripListSchema = {
                 data-index={index}
                 aria-label={`Go to slide ${index + 1}`}
               >
-                <span class={`h-1.5 rounded-full transition-all duration-300 spec-dot-bar ${index === 0 ? 'bg-slate-900 w-5' : 'bg-slate-300 w-1.5'}`}></span>
+                <span class={`h-1.5 rounded-full transition-all duration-300 spec-dot-bar ${index === 0 ? 'bg-m3-primary w-5' : 'bg-slate-300 w-1.5'}`}></span>
               </button>
             ))}
           </div>
@@ -1213,22 +1141,22 @@ const tripListSchema = {
       </section>
 
       <!-- 5. POPULAR CHENNAI NEIGHBORHOODS & SUBURBAN AIRPORT CORRIDORS -->
-      <section id="suburban-corridors" class="pt-8 sm:pt-10 mt-8 sm:mt-10 border-t border-slate-200 mb-10 sm:mb-14 scroll-mt-28 offscreen-defer">
-        <div class="mb-6 sm:mb-8 pb-3 border-b border-slate-200 flex items-center justify-between gap-3 flex-wrap">
+      <section id="suburban-corridors" class="pt-8 sm:pt-10 mt-8 sm:mt-10 border-t border-m3-outline-variant mb-10 sm:mb-14 scroll-mt-28 offscreen-defer">
+        <div class="mb-6 sm:mb-8 pb-3 border-b border-m3-outline-variant flex items-center justify-between gap-3 flex-wrap">
           <div class="flex items-center gap-3 min-w-0">
-            <span class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center shrink-0 border border-emerald-200 shadow-2xs">
-              <span class="material-symbols-outlined text-[24px] text-emerald-700">near_me</span>
+            <span class="w-10 h-10 rounded-xl bg-m3-surface-container-low text-m3-on-surface flex items-center justify-center shrink-0 border border-m3-outline-variant shadow-2xs">
+              <span class="material-symbols-outlined text-[24px] text-m3-primary">near_me</span>
             </span>
             <div class="min-w-0">
-              <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 font-heading leading-tight">
+              <h2 class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading leading-tight">
                 Popular Chennai Neighborhoods to Airport (MAA)
               </h2>
-              <p class="text-xs sm:text-sm text-slate-600 mt-0.5">
+              <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-0.5">
                 Fixed flat-fare airport taxi booking with guaranteed 5–10 min doorstep dispatch across key Chennai residential &amp; IT hubs.
               </p>
             </div>
           </div>
-          <span class="text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200 shrink-0 hidden sm:inline-block">
+          <span class="text-xs font-bold text-m3-on-surface bg-m3-surface-container-low px-3 py-1.5 rounded-full border border-m3-outline-variant shrink-0 hidden sm:inline-block">
             Zero Surge Guarantee • 24/7 Pickup
           </span>
         </div>
@@ -1236,19 +1164,19 @@ const tripListSchema = {
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
           <a
             href="/services/tambaram-airport-taxi/"
-            class="group p-4 rounded-2xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all flex flex-col justify-between"
+            class="group p-4 rounded-2xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
               <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">GST Road Corridor</span>
-                <span class="text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">From ₹650</span>
+                <span class="text-xs font-bold text-m3-on-surface-variant uppercase tracking-wider">GST Road Corridor</span>
+                <span class="text-xs font-extrabold text-m3-primary bg-m3-surface-container-low px-2 py-0.5 rounded-md border border-m3-outline-variant">From ₹650</span>
               </div>
-              <h3 class="text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors font-heading">
+              <h3 class="text-base font-bold text-m3-on-surface group-hover:text-m3-primary transition-colors font-heading">
                 Tambaram to Chennai Airport
               </h3>
-              <p class="text-xs text-slate-500 mt-1">11 km • 15–20 mins • Direct GST Road expressway route.</p>
+              <p class="text-xs text-m3-on-surface-variant mt-1">11 km • 15–20 mins • Direct GST Road expressway route.</p>
             </div>
-            <div class="mt-3.5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-blue-700 group-hover:text-blue-800">
+            <div class="mt-3.5 pt-3 border-t border-m3-outline-variant/60 flex items-center justify-between text-xs font-semibold text-m3-primary group-hover:text-m3-primary">
               <span>View Tambaram Tariffs</span>
               <span class="material-symbols-outlined text-[16px] transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
             </div>
@@ -1256,19 +1184,19 @@ const tripListSchema = {
 
           <a
             href="/services/velachery-airport-taxi/"
-            class="group p-4 rounded-2xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all flex flex-col justify-between"
+            class="group p-4 rounded-2xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
               <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">South Chennai Hub</span>
-                <span class="text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">From ₹650</span>
+                <span class="text-xs font-bold text-m3-on-surface-variant uppercase tracking-wider">South Chennai Hub</span>
+                <span class="text-xs font-extrabold text-m3-primary bg-m3-surface-container-low px-2 py-0.5 rounded-md border border-m3-outline-variant">From ₹650</span>
               </div>
-              <h3 class="text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors font-heading">
+              <h3 class="text-base font-bold text-m3-on-surface group-hover:text-m3-primary transition-colors font-heading">
                 Velachery to Chennai Airport
               </h3>
-              <p class="text-xs text-slate-500 mt-1">10 km • 15–20 mins • Via Inner Ring Road &amp; GST flyover.</p>
+              <p class="text-xs text-m3-on-surface-variant mt-1">10 km • 15–20 mins • Via Inner Ring Road &amp; GST flyover.</p>
             </div>
-            <div class="mt-3.5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-blue-700 group-hover:text-blue-800">
+            <div class="mt-3.5 pt-3 border-t border-m3-outline-variant/60 flex items-center justify-between text-xs font-semibold text-m3-primary group-hover:text-m3-primary">
               <span>View Velachery Tariffs</span>
               <span class="material-symbols-outlined text-[16px] transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
             </div>
@@ -1276,19 +1204,19 @@ const tripListSchema = {
 
           <a
             href="/services/porur-airport-taxi/"
-            class="group p-4 rounded-2xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all flex flex-col justify-between"
+            class="group p-4 rounded-2xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
               <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">West Chennai Corridor</span>
-                <span class="text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">From ₹800</span>
+                <span class="text-xs font-bold text-m3-on-surface-variant uppercase tracking-wider">West Chennai Corridor</span>
+                <span class="text-xs font-extrabold text-m3-primary bg-m3-surface-container-low px-2 py-0.5 rounded-md border border-m3-outline-variant">From ₹800</span>
               </div>
-              <h3 class="text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors font-heading">
+              <h3 class="text-base font-bold text-m3-on-surface group-hover:text-m3-primary transition-colors font-heading">
                 Porur to Chennai Airport
               </h3>
-              <p class="text-xs text-slate-500 mt-1">12 km • 20–25 mins • Via Chennai Bypass &amp; Kundrathur Rd.</p>
+              <p class="text-xs text-m3-on-surface-variant mt-1">12 km • 20–25 mins • Via Chennai Bypass &amp; Kundrathur Rd.</p>
             </div>
-            <div class="mt-3.5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-blue-700 group-hover:text-blue-800">
+            <div class="mt-3.5 pt-3 border-t border-m3-outline-variant/60 flex items-center justify-between text-xs font-semibold text-m3-primary group-hover:text-m3-primary">
               <span>View Porur Tariffs</span>
               <span class="material-symbols-outlined text-[16px] transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
             </div>
@@ -1296,19 +1224,19 @@ const tripListSchema = {
 
           <a
             href="/services/sholinganallur-airport-taxi/"
-            class="group p-4 rounded-2xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all flex flex-col justify-between"
+            class="group p-4 rounded-2xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
               <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">OMR IT Corridor</span>
-                <span class="text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">From ₹850</span>
+                <span class="text-xs font-bold text-m3-on-surface-variant uppercase tracking-wider">OMR IT Corridor</span>
+                <span class="text-xs font-extrabold text-m3-primary bg-m3-surface-container-low px-2 py-0.5 rounded-md border border-m3-outline-variant">From ₹850</span>
               </div>
-              <h3 class="text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors font-heading">
+              <h3 class="text-base font-bold text-m3-on-surface group-hover:text-m3-primary transition-colors font-heading">
                 Sholinganallur to Chennai Airport
               </h3>
-              <p class="text-xs text-slate-500 mt-1">14 km • 25–35 mins • Via 200 Feet Radial Road expressway.</p>
+              <p class="text-xs text-m3-on-surface-variant mt-1">14 km • 25–35 mins • Via 200 Feet Radial Road expressway.</p>
             </div>
-            <div class="mt-3.5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-blue-700 group-hover:text-blue-800">
+            <div class="mt-3.5 pt-3 border-t border-m3-outline-variant/60 flex items-center justify-between text-xs font-semibold text-m3-primary group-hover:text-m3-primary">
               <span>View Sholinganallur Tariffs</span>
               <span class="material-symbols-outlined text-[16px] transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
             </div>
@@ -1316,19 +1244,19 @@ const tripListSchema = {
 
           <a
             href="/services/t-nagar-airport-taxi/"
-            class="group p-4 rounded-2xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all flex flex-col justify-between"
+            class="group p-4 rounded-2xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
               <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Central Commercial Hub</span>
-                <span class="text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">From ₹950</span>
+                <span class="text-xs font-bold text-m3-on-surface-variant uppercase tracking-wider">Central Commercial Hub</span>
+                <span class="text-xs font-extrabold text-m3-primary bg-m3-surface-container-low px-2 py-0.5 rounded-md border border-m3-outline-variant">From ₹950</span>
               </div>
-              <h3 class="text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors font-heading">
+              <h3 class="text-base font-bold text-m3-on-surface group-hover:text-m3-primary transition-colors font-heading">
                 T. Nagar to Chennai Airport
               </h3>
-              <p class="text-xs text-slate-500 mt-1">15 km • 25–35 mins • Via Anna Salai &amp; Kathipara junction.</p>
+              <p class="text-xs text-m3-on-surface-variant mt-1">15 km • 25–35 mins • Via Anna Salai &amp; Kathipara junction.</p>
             </div>
-            <div class="mt-3.5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-blue-700 group-hover:text-blue-800">
+            <div class="mt-3.5 pt-3 border-t border-m3-outline-variant/60 flex items-center justify-between text-xs font-semibold text-m3-primary group-hover:text-m3-primary">
               <span>View T. Nagar Tariffs</span>
               <span class="material-symbols-outlined text-[16px] transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
             </div>
@@ -1336,19 +1264,19 @@ const tripListSchema = {
 
           <a
             href="/services/anna-nagar-airport-taxi/"
-            class="group p-4 rounded-2xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all flex flex-col justify-between"
+            class="group p-4 rounded-2xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
               <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">North-West Residential</span>
-                <span class="text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">From ₹1,100</span>
+                <span class="text-xs font-bold text-m3-on-surface-variant uppercase tracking-wider">North-West Residential</span>
+                <span class="text-xs font-extrabold text-m3-primary bg-m3-surface-container-low px-2 py-0.5 rounded-md border border-m3-outline-variant">From ₹1,100</span>
               </div>
-              <h3 class="text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors font-heading">
+              <h3 class="text-base font-bold text-m3-on-surface group-hover:text-m3-primary transition-colors font-heading">
                 Anna Nagar to Chennai Airport
               </h3>
-              <p class="text-xs text-slate-500 mt-1">18 km • 35–45 mins • Via Koyambedu &amp; 100 Feet Road.</p>
+              <p class="text-xs text-m3-on-surface-variant mt-1">18 km • 35–45 mins • Via Koyambedu &amp; 100 Feet Road.</p>
             </div>
-            <div class="mt-3.5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-blue-700 group-hover:text-blue-800">
+            <div class="mt-3.5 pt-3 border-t border-m3-outline-variant/60 flex items-center justify-between text-xs font-semibold text-m3-primary group-hover:text-m3-primary">
               <span>View Anna Nagar Tariffs</span>
               <span class="material-symbols-outlined text-[16px] transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
             </div>
@@ -1358,18 +1286,18 @@ const tripListSchema = {
 
       <!-- 6. FREQUENTLY ASKED QUESTIONS -->
       <section id="airport-faq" class="max-w-3xl mx-auto mb-12 sm:mb-16 scroll-mt-28 offscreen-defer">
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading mb-6 text-center tracking-tight">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-m3-on-surface font-heading mb-6 text-center tracking-tight">
           Airport Transfer FAQs (Pickups &amp; Drops)
         </h2>
         <FAQAccordion items={faqs} columns={1} name="airport-faq" />
       </section>
 
       <!-- 7. BOTTOM CONVERSION STRIP -->
-      <section class="rounded-2xl bg-slate-950 text-white p-7 sm:p-10 text-center shadow-md mb-10 border border-slate-800 offscreen-defer">
+      <section class="rounded-2xl bg-m3-inverse-surface text-white p-7 sm:p-10 text-center shadow-md mb-10 border border-m3-outline-variant/60 offscreen-defer">
         <h2 class="text-2xl sm:text-3xl font-extrabold font-heading text-white mb-2.5 tracking-tight">
           Flying into or out of Chennai International Airport (MAA)?
         </h2>
-        <p class="text-slate-300 text-sm sm:text-base max-w-lg mx-auto mb-6 leading-relaxed">
+        <p class="text-m3-inverse-on-surface text-sm sm:text-base max-w-lg mx-auto mb-6 leading-relaxed">
           Schedule your doorstep airport drop or reserve an arrival terminal pickup in seconds on WhatsApp.
         </p>
         <div class="flex flex-wrap items-center justify-center gap-3">
@@ -1485,7 +1413,7 @@ const tripListSchema = {
             const bar = dot.querySelector<HTMLSpanElement>('.spec-dot-bar');
             if (bar) {
               if (idx === activeIdx) {
-                bar.className = 'h-1.5 rounded-full transition-all duration-300 spec-dot-bar bg-slate-900 w-5';
+                bar.className = 'h-1.5 rounded-full transition-all duration-300 spec-dot-bar bg-m3-primary w-5';
               } else {
                 bar.className = 'h-1.5 rounded-full transition-all duration-300 spec-dot-bar bg-slate-300 w-1.5';
               }

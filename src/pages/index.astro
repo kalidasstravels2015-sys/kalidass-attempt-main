@@ -4,7 +4,7 @@ import Hero from "../components/Hero.astro";
 import BookingPanel from "../components/BookingPanel.astro";
 import SectionNavigator from "../components/react/SectionNavigator.jsx";
 import Services from "../components/Services.astro";
-import FleetRoll from "../components/react/FleetRoll.jsx";
+import FleetCarousel from "../components/FleetCarousel.astro";
 import Tours from "../components/Tours.astro";
 import PartnersCarousel from "../components/react/PartnersCarousel.jsx";
 import DriversCarousel from "../components/react/DriversCarousel.jsx";
@@ -79,7 +79,7 @@ const homePageSchema = {
   <Services />
 
   <!-- 3. Popular Vehicles (Top 3) -->
-  <FleetRoll client:visible currentLang="en" limit={3} />
+  <FleetCarousel limit={3} />
 
   <!-- 4. Popular Temple Trips -->
   <Tours />

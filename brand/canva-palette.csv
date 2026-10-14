@@ -1,0 +1,13 @@
+Palette Name,Color Name,HEX,RGB,CMYK,Pantone,Usage Role
+Kalidass Executive Core,Executive Midnight Charcoal,#1E252D,"rgb(30, 37, 45)","C: 74% M: 63% Y: 53% K: 57%",PMS 433 C,Primary Brand Anchor & Headers
+Kalidass Executive Core,Deep Midnight Onyx Slate,#111827,"rgb(17, 24, 39)","C: 78% M: 69% Y: 61% K: 73%",PMS Black 6 C,Rates & Fares (Mandatory - Never Red)
+Kalidass Executive Core,Pure Print White,#FFFFFF,"rgb(255, 255, 255)","C: 0% M: 0% Y: 0% K: 0%",Opaque White,Base Poster Canvas & Cards
+Kalidass Executive Core,Anti-Glare Canvas Base,#F9FAFB,"rgb(249, 250, 251)","C: 1% M: 1% Y: 1% K: 0%",PMS Cool Gray 1 C,Digital & Print Surface
+Kalidass Action & Identity,Signature Logo K Red,#EC221F,"rgb(236, 34, 31)","C: 0% M: 98% Y: 97% K: 0%",PMS 1795 C,Brand Identity Logo Monogram Only
+Kalidass Action & Identity,Verified WhatsApp Green,#25D366,"rgb(37, 211, 102)","C: 70% M: 0% Y: 85% K: 0%",PMS 7738 C,Direct Booking CTA & QR Code Frame
+Kalidass Action & Identity,Warm Golden Amber,#D97706,"rgb(217, 119, 6)","C: 0% M: 55% Y: 100% K: 15%",PMS 138 C,5-Star Ratings & Temple Tour Accents
+Kalidass Action & Identity,Warm Champagne Container,#FEF3C7,"rgb(254, 243, 199)","C: 2% M: 4% Y: 28% K: 0%",PMS 7401 C,Review Cards & Temple Highlights
+Kalidass Print Neutrals,Soft Slate Container Low,#F3F4F6,"rgb(243, 244, 246)","C: 4% M: 3% Y: 3% K: 0%",PMS Cool Gray 2 C,Table Rows & Feature Grid Boxes
+Kalidass Print Neutrals,Surface Container Mid,#ECEEF1,"rgb(236, 238, 241)","C: 6% M: 4% Y: 4% K: 0%",PMS Cool Gray 2 C,Form Fields & Inputs
+Kalidass Print Neutrals,Subtle Outline Stroke,#E5E7EB,"rgb(229, 231, 235)","C: 10% M: 7% Y: 8% K: 0%",PMS Cool Gray 3 C,Dividers & Card Outlines
+Kalidass Print Neutrals,Muted Slate Secondary,#4B5563,"rgb(75, 85, 99)","C: 60% M: 48% Y: 43% K: 15%",PMS 431 C,Subtitles & Luggage Footnotes

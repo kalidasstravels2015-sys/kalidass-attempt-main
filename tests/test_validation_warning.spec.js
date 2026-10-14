@@ -7,7 +7,7 @@ test('Verify warning is shown as compact text and pickup is validated', async ({
   const bookingSection = page.locator('#booking');
   await bookingSection.scrollIntoViewIfNeeded();
 
-  const estimateBtn = bookingSection.locator('button:has-text("View Trip Estimate")');
+  const estimateBtn = bookingSection.locator('a:has-text("Book on WhatsApp"), button:has-text("Book on WhatsApp")').first();
 
   // 1. Click without entering pickup: should warn about pickup in Chennai
   await estimateBtn.click();

@@ -1,0 +1,185 @@
+---
+import siteContent from '../data/siteContent.json';
+import VehicleCard from './VehicleCard.astro';
+import { ChevronDown } from 'lucide-react';
+
+interface Props {
+  currentLang?: string;
+  hideHeader?: boolean;
+  limit?: number;
+  sectionHeading?: string;
+}
+
+const {
+  currentLang = 'en',
+  hideHeader = false,
+  limit,
+  sectionHeading,
+} = Astro.props;
+
+const rawFleet = siteContent.fleet || [];
+const fleet = limit ? rawFleet.slice(0, limit) : rawFleet;
+
+const labels = siteContent.ui_labels || {};
+const heading = labels.our_premium_fleet || "Our Vehicle Fleet";
+
+const getBadge = (name: string) => {
+  const v = (name || '').toLowerCase();
+  if (v.includes('tempo') || v.includes('traveller')) return 'Group Coach';
+  if (v.includes('crysta')) return 'Luxury MPV';
+  if (v.includes('innova')) return 'Comfort MUV';
+  if (v.includes('ertiga') || v.includes('xl6')) return 'Family Favorite';
+  if (v.includes('etios')) return 'Comfort Sedan';
+  if (v.includes('dzire')) return 'Best Value Sedan';
+  if (v.includes('bolero')) return 'Rugged Hill SUV';
+  if (v.includes('sumo')) return 'Spacious MUV';
+  return 'Verified Fleet';
+};
+
+const formatSeats = (caps: string) => {
+  if (!caps) return '4 Passengers';
+  const match = caps.match(/\d+/);
+  return match ? `${match[0]} Passengers` : '4 Passengers';
+};
+---
+
+<section id="fleet" class={`${hideHeader ? 'py-4' : 'offscreen-defer py-10 md:py-14 bg-m3-surface border-t border-m3-outline-variant/60'} scroll-mt-24 sm:scroll-mt-28`} aria-labelledby="fleet-heading">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    {/* Section Header */}
+    {hideHeader ? (
+      <h2 id="fleet-heading" class="sr-only">
+        {sectionHeading || "Available Cabs and Commercial Vehicles"}
+      </h2>
+    ) : (
+      <div class="text-center max-w-3xl mx-auto mb-8">
+        <h2 id="fleet-heading" class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+          {heading}
+        </h2>
+        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant font-normal max-w-2xl mx-auto leading-relaxed mb-6 font-sans">
+          Pristine, sanitized, and commercial-plated vehicles driven by background-verified chauffeurs. Fixed per-km rates.
+        </p>
+      </div>
+    )}
+
+    {/* Fleet Grid / Carousel Container */}
+    <div class="relative">
+      {/* Desktop Prev/Next Slide Arrows (When carousel view is active on mobile or multi-card) */}
+      <div class="hidden sm:flex items-center justify-end gap-1.5 mb-3 px-1">
+        <button
+          type="button"
+          id="fleet-home-carousel-prev"
+          aria-label="Previous Vehicle"
+          title="Previous Vehicle"
+          class="w-8 h-8 rounded-full bg-white border border-m3-outline-variant hover:bg-m3-surface-container text-m3-on-surface flex items-center justify-center shadow-2xs transition-colors cursor-pointer"
+        >
+          <ChevronDown className="w-4 h-4 rotate-90" />
+        </button>
+        <button
+          type="button"
+          id="fleet-home-carousel-next"
+          aria-label="Next Vehicle"
+          title="Next Vehicle"
+          class="w-8 h-8 rounded-full bg-white border border-m3-outline-variant hover:bg-m3-surface-container text-m3-on-surface flex items-center justify-center shadow-2xs transition-colors cursor-pointer"
+        >
+          <ChevronDown className="w-4 h-4 -rotate-90" />
+        </button>
+      </div>
+
+      <!-- Horizontal Snap Scroll Carousel on Mobile, Grid on Tablet/Desktop -->
+      <div
+        id="fleet-home-carousel-track"
+        class="flex gap-3.5 sm:gap-4 overflow-x-auto snap-x snap-mandatory py-1 pb-3 no-scrollbar scroll-smooth md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6 md:overflow-visible md:pb-0 focus:outline-none"
+        tabindex="0"
+        role="region"
+        aria-label="Fleet Gallery"
+      >
+        {fleet.map((vehicle: any) => (
+          <VehicleCard
+            className="shrink-0 w-[240px] sm:w-[260px] md:w-auto snap-start"
+            name={vehicle.name}
+            image={vehicle.image}
+            badge={getBadge(vehicle.name)}
+            seats={formatSeats(vehicle.caps)}
+            baggage={vehicle.bags || '2 Bags'}
+            priceLabel="Starting From"
+            priceSubtext="Fixed Per-KM Rates"
+            price={vehicle.rate}
+            actionText="View Rates & Tariff"
+            actionHref="/tariff/"
+          />
+        ))}
+      </div>
+
+      <!-- Mobile Scroll Indicator Dots -->
+      <div class="flex md:hidden justify-center items-center gap-1.5 mt-3" aria-hidden="true" id="fleet-home-carousel-dots">
+        {fleet.map((_: any, idx: number) => (
+          <span
+            class={`h-1.5 rounded-full transition-all duration-300 ${idx === 0 ? 'bg-m3-primary w-4' : 'bg-m3-surface-container-highest w-1.5'}`}
+            data-dot-idx={idx}
+          />
+        ))}
+      </div>
+
+      {/* View All Fleet Link Button (M3 Outlined Button) */}
+      {limit && (
+        <div class="text-center mt-8">
+          <a
+            href="/fleet/"
+            class="inline-flex items-center gap-2 px-6 py-2.5 rounded-m3-full bg-m3-surface border border-m3-outline text-m3-on-surface text-m3-label-l font-bold hover:bg-m3-surface-container-high shadow-m3-1 transition-all"
+          >
+            <span>Explore All 8+ Vehicles & Full Tariff</span>
+            <span class="material-symbols-outlined text-[18px] text-m3-primary">arrow_forward</span>
+          </a>
+        </div>
+      )}
+    </div>
+  </div>
+</section>
+
+<script>
+  (function initFleetHomeCarousel() {
+    const track = document.getElementById('fleet-home-carousel-track');
+    const prevBtn = document.getElementById('fleet-home-carousel-prev');
+    const nextBtn = document.getElementById('fleet-home-carousel-next');
+    const dotsContainer = document.getElementById('fleet-home-carousel-dots');
+
+    if (!track) return;
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        track.scrollBy({ left: -270, behavior: 'smooth' });
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        track.scrollBy({ left: 270, behavior: 'smooth' });
+      });
+    }
+
+    if (dotsContainer) {
+      const dots = dotsContainer.querySelectorAll<HTMLSpanElement>('[data-dot-idx]');
+      if (dots.length > 0) {
+        let scrollTicking = false;
+        track.addEventListener('scroll', () => {
+          if (!scrollTicking) {
+            window.requestAnimationFrame(() => {
+              const scrollLeft = track.scrollLeft;
+              const cardWidth = 250;
+              const activeIndex = Math.min(dots.length - 1, Math.max(0, Math.round(scrollLeft / cardWidth)));
+              dots.forEach((dot, idx) => {
+                if (idx === activeIndex) {
+                  dot.className = 'h-1.5 rounded-full transition-all duration-300 bg-m3-primary w-4';
+                } else {
+                  dot.className = 'h-1.5 rounded-full transition-all duration-300 bg-m3-surface-container-highest w-1.5';
+                }
+              });
+              scrollTicking = false;
+            });
+            scrollTicking = true;
+          }
+        }, { passive: true });
+      }
+    }
+  })();
+</script>

@@ -25,7 +25,7 @@ test('Verify Option A Progressive Disclosure: Calm Fare Card, 1-Tap Booking, and
 
   // 3. Verify Calm Fare Card: ₹ 6,000 All-Inclusive Fixed Fare
   await expect(bookingSection.locator('.text-3xl, .text-4xl').first()).toHaveText('₹ 6,000');
-  await expect(bookingSection.getByText('Covers FASTag Tolls + AP Permit + Ghat Climb + Driver Bata')).toBeVisible();
+  await expect(bookingSection.getByText('Covers FASTag Tolls + AP Permit + Hill Climb + Driver Bata + Parking')).toBeVisible();
 
   // 4. Verify Collapsible Fare Breakdown
   const breakdownToggle = bookingSection.locator('button:has-text("View Itemized Fare Breakdown")');
@@ -46,7 +46,7 @@ test('Verify Option A Progressive Disclosure: Calm Fare Card, 1-Tap Booking, and
 
   const waBtn = bookingSection.locator('a[data-direct-whatsapp="true"]').first();
   await expect(waBtn).toBeVisible();
-  await expect(bookingSection.locator('a:has-text("Call Dispatch")')).toBeVisible();
+  await expect(bookingSection.locator('a:has-text("Call: +91 89395 39211")')).toBeVisible();
 
   // Verify WhatsApp manifest
   const waHref = await waBtn.getAttribute('href');

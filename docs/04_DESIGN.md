@@ -2,9 +2,10 @@
 
 ## Project: Kalidass Travels
 
-**Document Version:** 1.0.0  
+**Document Version:** 2.0.0  
 **Design Standard:** Google Material Design 3 (M3)  
 **Theme:** Executive Midnight Charcoal & Onyx with Warm Amber & Slate Harmony  
+**Brand Color Palette & Print System:** [docs/08_BRAND_COLOR_SYSTEM.md](./08_BRAND_COLOR_SYSTEM.md) & [Brand PDF Specification](./brand/Kalidass_Travels_Brand_Style_Guide.pdf)  
 **Target Viewports:** Mobile-First (360px–428px), Tablet (768px–1024px), Desktop (1280px–1920px)
 
 ---
@@ -112,7 +113,7 @@ The typography is built on the official **15-Role Google Material Design 3 Types
 
 - **Positioning:** Fixed to the bottom-right viewport (`bottom-5 right-5 sm:bottom-6 sm:right-6`).
 - **Primary Element:**
-  - **Round M3 Call FAB:** 56×56px circular action button (`rounded-full`) in Google Material Blue (`#1A73E8`) with white Android phone icon, Level 3 elevation (`shadow-m3-3`), and 12-degree tilt micro-animation on hover. Instantaneous dialer trigger to `+91 89395 39211`.
+  - **Round M3 Call FAB:** 56×56px circular action button (`rounded-full`) in Executive Midnight Charcoal (`#1E252D` / `bg-m3-primary text-m3-on-primary`) with white Android phone icon, Level 3 elevation (`shadow-m3-3`), and 12-degree tilt micro-animation on hover. Instantaneous dialer trigger to `+91 89395 39211`.
 - **Popup-Aware Behavior:** Automatically hides when any popup, modal, or bottom sheet opens (Rule 8.4) to eliminate overlapping and allow unimpeded focus on enquiry flows.
 
 ### 5.2 Virtual Keyboard Safeguards

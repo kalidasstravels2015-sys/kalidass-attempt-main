@@ -49,6 +49,13 @@ const fullImage = ogImage
     ? image
     : `${siteUrl}${image}`;
 
+const gaId = import.meta.env.PUBLIC_GA_ID || 'G-61YQMR8J7H';
+const googleAdsId = import.meta.env.PUBLIC_GOOGLE_ADS_ID || 'AW-18463679349';
+const adsLabelCall = import.meta.env.PUBLIC_ADS_CONVERSION_LABEL_CALL || '';
+const adsLabelWhatsApp = import.meta.env.PUBLIC_ADS_CONVERSION_LABEL_WHATSAPP || '';
+const adsLabelQuote = import.meta.env.PUBLIC_ADS_CONVERSION_LABEL_QUOTE || '';
+const adsLabelBooking = import.meta.env.PUBLIC_ADS_CONVERSION_LABEL_BOOKING || '';
+
 const organizationSchema = {
   "@type": "Organization",
   "@id": "https://kalidasstravels.in/#organization",
@@ -765,8 +772,8 @@ const unifiedSchemaGraph = {
       html {
         font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
         scroll-behavior: smooth;
-        background-color: #F8F9FC;
-        color: #1A1C1E;
+        background-color: #F9FAFB;
+        color: #111827;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
@@ -777,8 +784,8 @@ const unifiedSchemaGraph = {
       }
 
       body {
-        background-color: #F8F9FC;
-        color: #1A1C1E;
+        background-color: #F9FAFB;
+        color: #111827;
         font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
       }
 
@@ -862,7 +869,7 @@ const unifiedSchemaGraph = {
         margin-top: 4px !important;
         font-family: "Plus Jakarta Sans", sans-serif !important;
         overflow-y: auto !important;
-        max-height: 220px !important;
+        max-height: 145px !important;
         -webkit-overflow-scrolling: touch !important;
       }
       .pac-item {
@@ -1031,17 +1038,65 @@ const unifiedSchemaGraph = {
     </style>
 
     <!-- Modern High-Performance Analytics & Google Ads Conversion Engine -->
-    <script is:inline>
+    <script is:inline define:vars={{ gaId, googleAdsId, adsLabelCall, adsLabelWhatsApp, adsLabelQuote, adsLabelBooking }}>
       // 1. Synchronous in-memory stubs: Ensure 0 event loss for Google Ads conversions
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       window.gtag = gtag;
       gtag('js', new Date());
-      gtag('config', 'G-61YQMR8J7H');
-      gtag('config', 'AW-18463679349');
+      gtag('config', gaId, {
+        allow_google_signals: true,
+        allow_ad_personalization_signals: true
+      });
+      gtag('config', googleAdsId);
 
-      // 2. High-value conversion click tracking helper
-      window.gtagSendEvent = function (url) {
+      // Google Ads configuration & conversion labels
+      window.GOOGLE_ADS_ID = googleAdsId;
+      window.GOOGLE_ADS_LABELS = {
+        call: adsLabelCall || '',
+        whatsapp: adsLabelWhatsApp || '',
+        quote: adsLabelQuote || '',
+        booking: adsLabelBooking || '',
+        qualified_booking: adsLabelBooking || adsLabelWhatsApp || ''
+      };
+
+      // 2. High-value conversion reporting engine
+      window.reportGoogleAdsConversion = function (type, params) {
+        params = params || {};
+        var adsId = window.GOOGLE_ADS_ID || 'AW-18463679349';
+        var labels = window.GOOGLE_ADS_LABELS || {};
+        var label = labels[type] || (type === 'qualified_booking' ? (labels.booking || labels.whatsapp || '') : '');
+        var numericValue = Number(params.value || params.fare || 1.0);
+
+        // Standard Google Ads conversion event with send_to (official format)
+        if (label && typeof gtag === 'function') {
+          gtag('event', 'conversion', {
+            'send_to': adsId + '/' + label,
+            'value': numericValue,
+            'currency': 'INR',
+            'transaction_id': params.quoteId || params.transaction_id || undefined
+          });
+        }
+
+        // Backward-compatible custom event for existing GA4 imports / custom triggers
+        if (typeof gtag === 'function') {
+          gtag('event', 'ads_conversion_Request_quote_1', {
+            'event_category': type === 'qualified_booking' ? 'Qualified Lead' : 'Lead',
+            'event_label': params.event_label || (type === 'call' ? 'Phone Call' : type === 'whatsapp' ? 'WhatsApp Lead' : 'Quote Request'),
+            'lead_type': type,
+            'value': numericValue,
+            'currency': 'INR',
+            'is_qualified': type === 'qualified_booking'
+          });
+
+          // Granular GA4 custom event
+          gtag('event', 'lead_' + type, params);
+        }
+      };
+
+      // 3. Navigation-safe conversion click tracking helper
+      window.gtagSendEvent = function (url, type) {
+        type = type || 'quote';
         var navigated = false;
         var callback = function () {
           if (!navigated && typeof url === 'string') {
@@ -1049,35 +1104,56 @@ const unifiedSchemaGraph = {
             window.location = url;
           }
         };
-        gtag('event', 'ads_conversion_Request_quote_1', {
-          'event_callback': callback,
-          'event_timeout': 1500,
-        });
+        if (typeof window.reportGoogleAdsConversion === 'function') {
+          window.reportGoogleAdsConversion(type, {
+            'event_callback': callback,
+            'event_timeout': 1500
+          });
+        } else if (typeof gtag === 'function') {
+          gtag('event', 'ads_conversion_Request_quote_1', {
+            'event_callback': callback,
+            'event_timeout': 1500
+          });
+        }
         setTimeout(callback, 1500);
         return false;
       };
 
-      // 3. Automated conversion reporting & anti-leakage lead logging on Call Now & WhatsApp interactions
+      // 4. Automated conversion reporting & anti-leakage lead logging on Call Now & WhatsApp interactions
       var lastLeadClickTime = 0;
       var lastLeadHref = '';
       document.addEventListener('click', function (e) {
+        // 4a. If validation prevented default action, NEVER report a conversion
+        if (e.defaultPrevented) return;
+
         var link = e.target && e.target.closest ? e.target.closest('a') : null;
         if (!link) return;
+
+        // 4b. If the click is inside a dedicated booking engine, let the engine handle its own verified conversion with the calculated fare
+        if (link.closest('#booking') || link.closest('[data-booking-engine]')) {
+          return;
+        }
+
         var href = link.getAttribute('href') || '';
         if (href.startsWith('tel:') || href.includes('wa.me') || href.includes('whatsapp.com')) {
           var isCall = href.startsWith('tel:');
           var leadType = isCall ? 'call' : 'whatsapp';
           var label = isCall ? 'Phone Call' : 'WhatsApp Lead';
 
-          // 3a. Report to Google Ads Conversion
-          if (typeof gtag === 'function') {
+          // 4c. Report to Google Ads Conversion
+          if (typeof window.reportGoogleAdsConversion === 'function') {
+            window.reportGoogleAdsConversion(leadType, {
+              event_label: label,
+              source_page: window.location.pathname || '/'
+            });
+          } else if (typeof gtag === 'function') {
             gtag('event', 'ads_conversion_Request_quote_1', {
               event_category: 'Lead',
               event_label: label
             });
           }
 
-          // 3b. Anti-Leakage Automated Lead Capture to Admin Control Tower
+          // 4b. Anti-Leakage Automated Lead Capture to Admin Control Tower
           // Debounce 4s to prevent double-clicks from logging duplicate rows
           var now = Date.now();
           if (now - lastLeadClickTime < 4000 && lastLeadHref === href) {
@@ -1125,13 +1201,16 @@ const unifiedSchemaGraph = {
         }
       }, { passive: true });
 
-      // 4. Intelligent defer of 192KB GTM and Clarity to preserve 100% bandwidth for LCP
+      // 5. Intelligent defer of 192KB GTM and Clarity with instant load on Google Ads / Tag Assistant traffic
       (function () {
-        var isBot = typeof navigator !== 'undefined' && (
+        var search = (window.location && window.location.search) || '';
+        var isGoogleAuditOrAd = search.includes('gclid') || search.includes('gtm_debug') || search.includes('_gl') || (document.referrer && document.referrer.includes('tagassistant.google.com'));
+        var isAutomatedBot = typeof navigator !== 'undefined' && (
           navigator.webdriver ||
           /bot|crawler|spider|lighthouse|inspect|headless/i.test(navigator.userAgent)
         );
-        if (isBot) return;
+        // Skip heavy 3rd parties for audit bots UNLESS it is Google Tag Assistant / Google Ad verification
+        if (isAutomatedBot && !isGoogleAuditOrAd) return;
 
         var loaded = false;
         function loadThirdParties() {
@@ -1141,7 +1220,7 @@ const unifiedSchemaGraph = {
 
           // External Google Tag Manager
           var gtmScript = document.createElement('script');
-          gtmScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-61YQMR8J7H';
+          gtmScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + (window.GOOGLE_ADS_ID || gaId);
           gtmScript.async = true;
           document.head.appendChild(gtmScript);
 
@@ -1151,6 +1230,12 @@ const unifiedSchemaGraph = {
             t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
             y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
           })(window, document, "clarity", "script", "yqqrmf11qu");
+        }
+
+        // Fast-path: Load immediately if arriving with Google Click ID or Tag Assistant
+        if (isGoogleAuditOrAd) {
+          loadThirdParties();
+          return;
         }
 
         var events = ['scroll', 'pointerdown', 'touchstart', 'keydown'];
@@ -1257,7 +1342,7 @@ const unifiedSchemaGraph = {
               >
                 <div class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-m3-on-surface-variant">Vehicle Hiring &amp; Mobility</div>
                 <a href="/services/chennai-airport-taxi/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-m3-primary-container/40 transition-colors group/item" role="menuitem">
-                  <svg class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg class="w-4 h-4 text-m3-primary shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3.5c-.5-.5-2.5 0-4 1.5L13.5 8.5 5.3 6.7c-.8-.2-1.6.2-2 .9l-.3.5c-.4.7-.2 1.6.4 2.1l5.7 4.3-2.6 2.6-2.6-.9c-.5-.2-1.1 0-1.5.4l-.2.2c-.4.4-.4 1.1 0 1.5l2.4 2.4 2.4 2.4c.4.4 1.1.4 1.5 0l.2-.2c.4-.4.6-1 .4-1.5l-.9-2.6 2.6-2.6 4.3 5.7c.5.6 1.4.8 2.1.4l.5-.3c.7-.4 1.1-1.2.9-2z"/>
                   </svg>
                   <div>
@@ -1266,7 +1351,7 @@ const unifiedSchemaGraph = {
                   </div>
                 </a>
                 <a href="/services/outstation-cabs/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-m3-primary-container/40 transition-colors group/item" role="menuitem">
-                  <svg class="w-4 h-4 text-blue-600 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg class="w-4 h-4 text-m3-primary shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2 10.9 2 11.1 2 11.3V16c0 .6.4 1 1 1h2"/>
                     <circle cx="7" cy="17" r="2"/>
                     <circle cx="17" cy="17" r="2"/>
@@ -1277,7 +1362,7 @@ const unifiedSchemaGraph = {
                   </div>
                 </a>
                 <a href="/services/corporate/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-m3-primary-container/40 transition-colors group/item" role="menuitem">
-                  <svg class="w-4 h-4 text-purple-600 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg class="w-4 h-4 text-m3-primary shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect width="16" height="20" x="4" y="2" rx="2"/>
                     <path d="M9 22v-4h6v4"/>
                     <path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01"/>
@@ -1288,7 +1373,7 @@ const unifiedSchemaGraph = {
                   </div>
                 </a>
                 <a href="/services/acting-drivers/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-m3-primary-container/40 transition-colors group/item" role="menuitem">
-                  <svg class="w-4 h-4 text-amber-600 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg class="w-4 h-4 text-m3-primary shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
                     <circle cx="9" cy="7" r="4"/>
                     <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
@@ -1316,7 +1401,7 @@ const unifiedSchemaGraph = {
                 aria-haspopup="true"
               >
                 <span>Temple Tours</span>
-                <span class="px-1.5 py-0.2 rounded-full bg-amber-500/15 text-amber-800 text-[10px] font-bold">Popular</span>
+                <span class="px-1.5 py-0.2 rounded-full bg-m3-tertiary-container text-m3-on-tertiary-container text-[10px] font-bold">Popular</span>
                 <svg
                   class="w-3.5 h-3.5 text-m3-on-surface-variant transition-transform group-hover:rotate-180"
                   fill="none"
@@ -1333,108 +1418,108 @@ const unifiedSchemaGraph = {
               >
                 <div class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-m3-on-surface-variant flex items-center justify-between border-b border-m3-outline-variant/40 mb-1">
                   <span>South India Temple Yatras</span>
-                  <span class="text-emerald-700 font-semibold text-[10px]">Tolls &amp; Permits Included</span>
+                  <span class="text-m3-primary font-semibold text-[10px]">Tolls &amp; Permits Included</span>
                 </div>
                 <div class="grid grid-cols-2 gap-1">
-                  <a href="/services/tirupati-package/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-amber-500/10 transition-colors group/item" role="menuitem">
-                    <svg class="w-4 h-4 text-amber-700 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor">
+                  <a href="/services/tirupati-package/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-m3-primary-container/40 transition-colors group/item" role="menuitem">
+                    <svg class="w-4 h-4 text-m3-tertiary shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2L4 7v2h16V7l-8-5zm-6 9v8h2v-8H6zm5 0v8h2v-8h-2zm5 0v8h2v-8h-2zM2 21v2h20v-2H2z"/>
                     </svg>
                     <div>
                       <div class="flex items-center gap-1.5">
-                        <span class="text-xs font-bold text-m3-on-surface group-hover/item:text-amber-800">Tirupati Balaji Darshan</span>
-                        <span class="px-1.5 py-0.2 rounded-full bg-amber-500/15 text-amber-800 text-[9px] font-bold">₹6,000</span>
+                        <span class="text-xs font-bold text-m3-on-surface group-hover/item:text-m3-primary">Tirupati Balaji Darshan</span>
+                        <span class="px-1.5 py-0.2 rounded-full bg-m3-tertiary-container text-m3-on-tertiary-container text-[9px] font-bold">₹6,000</span>
                       </div>
                       <div class="text-[11px] text-m3-on-surface-variant">Same-day return • AP permit &amp; tolls included</div>
                     </div>
                   </a>
-                  <a href="/services/navagraha-tour/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-amber-500/10 transition-colors group/item" role="menuitem">
-                    <svg class="w-4 h-4 text-amber-700 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor">
+                  <a href="/services/navagraha-tour/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-m3-primary-container/40 transition-colors group/item" role="menuitem">
+                    <svg class="w-4 h-4 text-m3-tertiary shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2L4 7v2h16V7l-8-5zm-6 9v8h2v-8H6zm5 0v8h2v-8h-2zm5 0v8h2v-8h-2zM2 21v2h20v-2H2z"/>
                     </svg>
                     <div>
                       <div class="flex items-center gap-1.5">
-                        <span class="text-xs font-bold text-m3-on-surface group-hover/item:text-amber-800">Kumbakonam 9 Navagraha</span>
-                        <span class="px-1.5 py-0.2 rounded-full bg-amber-500/15 text-amber-800 text-[9px] font-bold">₹12,000</span>
+                        <span class="text-xs font-bold text-m3-on-surface group-hover/item:text-m3-primary">Kumbakonam 9 Navagraha</span>
+                        <span class="px-1.5 py-0.2 rounded-full bg-m3-tertiary-container text-m3-on-tertiary-container text-[9px] font-bold">₹12,000</span>
                       </div>
                       <div class="text-[11px] text-m3-on-surface-variant">2 Days / 1 Night • All 9 planetary temples</div>
                     </div>
                   </a>
-                  <a href="/services/thiruvannamalai-girivalam-trip/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-amber-500/10 transition-colors group/item" role="menuitem">
-                    <svg class="w-4 h-4 text-amber-700 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor">
+                  <a href="/services/thiruvannamalai-girivalam-trip/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-m3-primary-container/40 transition-colors group/item" role="menuitem">
+                    <svg class="w-4 h-4 text-m3-tertiary shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2L4 7v2h16V7l-8-5zm-6 9v8h2v-8H6zm5 0v8h2v-8h-2zm5 0v8h2v-8h-2zM2 21v2h20v-2H2z"/>
                     </svg>
                     <div>
                       <div class="flex items-center gap-1.5">
-                        <span class="text-xs font-bold text-m3-on-surface group-hover/item:text-amber-800">Thiruvannamalai Girivalam</span>
-                        <span class="px-1.5 py-0.2 rounded-full bg-amber-500/15 text-amber-800 text-[9px] font-bold">₹6,500</span>
+                        <span class="text-xs font-bold text-m3-on-surface group-hover/item:text-m3-primary">Thiruvannamalai Girivalam</span>
+                        <span class="px-1.5 py-0.2 rounded-full bg-m3-tertiary-container text-m3-on-tertiary-container text-[9px] font-bold">₹6,500</span>
                       </div>
                       <div class="text-[11px] text-m3-on-surface-variant">Pournami special • Arunachaleswarar darshan</div>
                     </div>
                   </a>
-                  <a href="/services/kanchipuram-temple-trip/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-amber-500/10 transition-colors group/item" role="menuitem">
-                    <svg class="w-4 h-4 text-amber-700 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor">
+                  <a href="/services/kanchipuram-temple-trip/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-m3-primary-container/40 transition-colors group/item" role="menuitem">
+                    <svg class="w-4 h-4 text-m3-tertiary shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2L4 7v2h16V7l-8-5zm-6 9v8h2v-8H6zm5 0v8h2v-8h-2zm5 0v8h2v-8h-2zM2 21v2h20v-2H2z"/>
                     </svg>
                     <div>
                       <div class="flex items-center gap-1.5">
-                        <span class="text-xs font-bold text-m3-on-surface group-hover/item:text-amber-800">Kanchipuram Temple Tour</span>
-                        <span class="px-1.5 py-0.2 rounded-full bg-amber-500/15 text-amber-800 text-[9px] font-bold">₹3,500</span>
+                        <span class="text-xs font-bold text-m3-on-surface group-hover/item:text-m3-primary">Kanchipuram Temple Tour</span>
+                        <span class="px-1.5 py-0.2 rounded-full bg-m3-tertiary-container text-m3-on-tertiary-container text-[9px] font-bold">₹3,500</span>
                       </div>
                       <div class="text-[11px] text-m3-on-surface-variant">Same-day • Kamakshi Amman &amp; Silk weavers</div>
                     </div>
                   </a>
-                  <a href="/services/vellore-golden-temple/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-amber-500/10 transition-colors group/item" role="menuitem">
-                    <svg class="w-4 h-4 text-amber-700 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor">
+                  <a href="/services/vellore-golden-temple/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-m3-primary-container/40 transition-colors group/item" role="menuitem">
+                    <svg class="w-4 h-4 text-m3-tertiary shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2L4 7v2h16V7l-8-5zm-6 9v8h2v-8H6zm5 0v8h2v-8h-2zm5 0v8h2v-8h-2zM2 21v2h20v-2H2z"/>
                     </svg>
                     <div>
                       <div class="flex items-center gap-1.5">
-                        <span class="text-xs font-bold text-m3-on-surface group-hover/item:text-amber-800">Vellore Golden Temple</span>
-                        <span class="px-1.5 py-0.2 rounded-full bg-amber-500/15 text-amber-800 text-[9px] font-bold">₹4,800</span>
+                        <span class="text-xs font-bold text-m3-on-surface group-hover/item:text-m3-primary">Vellore Golden Temple</span>
+                        <span class="px-1.5 py-0.2 rounded-full bg-m3-tertiary-container text-m3-on-tertiary-container text-[9px] font-bold">₹4,800</span>
                       </div>
                       <div class="text-[11px] text-m3-on-surface-variant">Same-day • Sripuram Mahalakshmi Golden Temple</div>
                     </div>
                   </a>
-                  <a href="/services/chidambaram-temple-trip/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-amber-500/10 transition-colors group/item" role="menuitem">
-                    <svg class="w-4 h-4 text-amber-700 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor">
+                  <a href="/services/chidambaram-temple-trip/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-m3-primary-container/40 transition-colors group/item" role="menuitem">
+                    <svg class="w-4 h-4 text-m3-tertiary shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2L4 7v2h16V7l-8-5zm-6 9v8h2v-8H6zm5 0v8h2v-8h-2zm5 0v8h2v-8h-2zM2 21v2h20v-2H2z"/>
                     </svg>
                     <div>
                       <div class="flex items-center gap-1.5">
-                        <span class="text-xs font-bold text-m3-on-surface group-hover/item:text-amber-800">Chidambaram Natarajar</span>
-                        <span class="px-1.5 py-0.2 rounded-full bg-amber-500/15 text-amber-800 text-[9px] font-bold">₹7,400</span>
+                        <span class="text-xs font-bold text-m3-on-surface group-hover/item:text-m3-primary">Chidambaram Natarajar</span>
+                        <span class="px-1.5 py-0.2 rounded-full bg-m3-tertiary-container text-m3-on-tertiary-container text-[9px] font-bold">₹7,400</span>
                       </div>
                       <div class="text-[11px] text-m3-on-surface-variant">Same-day • Natarajar Temple &amp; Pichavaram boat</div>
                     </div>
                   </a>
-                  <a href="/services/rameswaram-2-days/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-amber-500/10 transition-colors group/item" role="menuitem">
-                    <svg class="w-4 h-4 text-amber-700 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor">
+                  <a href="/services/rameswaram-2-days/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-m3-primary-container/40 transition-colors group/item" role="menuitem">
+                    <svg class="w-4 h-4 text-m3-tertiary shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2L4 7v2h16V7l-8-5zm-6 9v8h2v-8H6zm5 0v8h2v-8h-2zm5 0v8h2v-8h-2zM2 21v2h20v-2H2z"/>
                     </svg>
                     <div>
                       <div class="flex items-center gap-1.5">
-                        <span class="text-xs font-bold text-m3-on-surface group-hover/item:text-amber-800">Rameswaram &amp; Dhanushkodi</span>
-                        <span class="px-1.5 py-0.2 rounded-full bg-amber-500/15 text-amber-800 text-[9px] font-bold">2 Days</span>
+                        <span class="text-xs font-bold text-m3-on-surface group-hover/item:text-m3-primary">Rameswaram &amp; Dhanushkodi</span>
+                        <span class="px-1.5 py-0.2 rounded-full bg-m3-tertiary-container text-m3-on-tertiary-container text-[9px] font-bold">2 Days</span>
                       </div>
                       <div class="text-[11px] text-m3-on-surface-variant">Ramanathaswamy Temple • 22 Theertham holy bath</div>
                     </div>
                   </a>
-                  <a href="/services/sabarimala-trip/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-amber-500/10 transition-colors group/item" role="menuitem">
-                    <svg class="w-4 h-4 text-amber-700 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor">
+                  <a href="/services/sabarimala-trip/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-m3-primary-container/40 transition-colors group/item" role="menuitem">
+                    <svg class="w-4 h-4 text-m3-tertiary shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2L4 7v2h16V7l-8-5zm-6 9v8h2v-8H6zm5 0v8h2v-8h-2zm5 0v8h2v-8h-2zM2 21v2h20v-2H2z"/>
                     </svg>
                     <div>
                       <div class="flex items-center gap-1.5">
-                        <span class="text-xs font-bold text-m3-on-surface group-hover/item:text-amber-800">Sabarimala Yatra</span>
-                        <span class="px-1.5 py-0.2 rounded-full bg-amber-500/15 text-amber-800 text-[9px] font-bold">3 Days</span>
+                        <span class="text-xs font-bold text-m3-on-surface group-hover/item:text-m3-primary">Sabarimala Yatra</span>
+                        <span class="px-1.5 py-0.2 rounded-full bg-m3-tertiary-container text-m3-on-tertiary-container text-[9px] font-bold">3 Days</span>
                       </div>
                       <div class="text-[11px] text-m3-on-surface-variant">Mandala Season • Kerala permit &amp; Nilakkal drop</div>
                     </div>
                   </a>
                 </div>
                 <div class="pt-1.5 mt-1 border-t border-m3-outline-variant/40">
-                  <a href="/services/tours/temple-tours/" class="flex items-center justify-between px-3 py-1.5 rounded-m3-lg text-xs font-bold text-amber-800 hover:bg-amber-500/10 transition-colors" role="menuitem">
+                  <a href="/services/tours/temple-tours/" class="flex items-center justify-between px-3 py-1.5 rounded-m3-lg text-xs font-bold text-m3-primary hover:bg-m3-primary/10 transition-colors" role="menuitem">
                     <span>All Temple Tour Packages Overview</span>
                     <span class="text-xs font-bold">&rarr;</span>
                   </a>

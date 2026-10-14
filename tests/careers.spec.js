@@ -46,7 +46,7 @@ test.describe('Careers & Driver Hiring Tests', () => {
         await chauffeurApplyBtn.click();
 
         // Verify application modal dialog reflects selected position
-        const dialog = page.locator('dialog');
+        const dialog = page.locator('dialog[aria-labelledby="apply-modal-title"]');
         await expect(dialog).toBeVisible();
         await expect(page.getByText(/Applying for: Outstation & Temple Tour Chauffeur/i)).toBeVisible();
         await expect(page.getByText(/Attach Resume \/ Bio-data/i)).toBeVisible();

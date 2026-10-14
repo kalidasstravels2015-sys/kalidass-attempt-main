@@ -30,7 +30,7 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
           <h2 id="quickSheetTitle" class="text-sm sm:text-base font-extrabold text-m3-on-surface font-heading leading-tight">
             Instant Cab Booking Request
           </h2>
-          <span id="sheetBookingIdBadge" class="text-[10px] font-bold text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded-full inline-block mt-0.5">
+          <span id="sheetBookingIdBadge" class="text-[10px] font-bold text-m3-on-primary-container bg-m3-primary-container px-2 py-0.5 rounded-full inline-block mt-0.5">
             Ref: #KT-MAA-101
           </span>
         </div>
@@ -50,19 +50,19 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
     <!-- Main Body: Scrollable if screen is very short -->
     <div class="p-4 sm:p-5 space-y-3 text-xs sm:text-sm overflow-y-auto">
       <!-- 1. LOCKED CONTEXT CARD (Clean, Full visibility, No hidden text) -->
-      <div class="p-3 sm:p-3.5 rounded-m3-xl bg-emerald-50/70 border border-emerald-200/80">
+      <div class="p-3 sm:p-3.5 rounded-m3-xl bg-m3-surface-container border border-m3-outline-variant/60">
         <div class="flex items-start justify-between gap-3">
           <div class="space-y-0.5 min-w-0">
-            <span class="text-[9px] font-bold uppercase tracking-wider text-emerald-800 block">
+            <span class="text-[9px] font-bold uppercase tracking-wider text-m3-on-surface-variant block">
               Selected Service &amp; Route
             </span>
-            <div id="sheetPackageTitle" class="text-xs sm:text-sm font-extrabold text-emerald-950 truncate block">
+            <div id="sheetPackageTitle" class="text-xs sm:text-sm font-extrabold text-m3-on-surface truncate block">
               Chennai Airport Taxi
             </div>
             <div id="sheetVehicleName" class="font-bold text-xs sm:text-sm text-m3-on-surface font-heading leading-snug">
               Swift Dzire / Toyota Etios (Sedan)
             </div>
-            <div id="sheetDurationText" class="text-[11px] font-semibold text-emerald-700">
+            <div id="sheetDurationText" class="text-[11px] font-semibold text-m3-on-surface-variant">
               Direct Doorstep Transfer
             </div>
           </div>
@@ -70,16 +70,16 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
             <span class="text-[9px] font-bold uppercase tracking-wider text-m3-on-surface-variant block">
               Flat Tariff
             </span>
-            <strong id="sheetHeroPrice" class="text-base sm:text-lg font-extrabold text-emerald-800 font-heading leading-tight block">
+            <strong id="sheetHeroPrice" class="text-base sm:text-lg font-extrabold text-m3-on-surface font-heading leading-tight block">
               ₹650
             </strong>
-            <span class="text-[9px] text-emerald-700 font-medium">All-Inclusive</span>
+            <span class="text-[9px] text-m3-on-surface-variant font-medium">All-Inclusive</span>
           </div>
         </div>
 
         <!-- Dynamic Vehicle Selector (Appears for multi-vehicle rates) -->
-        <div id="sheetVehicleSelectorContainer" class="hidden mt-2.5 pt-2 border-t border-emerald-200/60">
-          <span class="text-[9px] font-bold uppercase tracking-wider text-emerald-800 block mb-1.5">
+        <div id="sheetVehicleSelectorContainer" class="hidden mt-2.5 pt-2 border-t border-m3-outline-variant/40">
+          <span class="text-[9px] font-bold uppercase tracking-wider text-m3-on-surface-variant block mb-1.5">
             Select Vehicle Option:
           </span>
           <div id="sheetVehiclePills" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
@@ -87,7 +87,7 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
           </div>
         </div>
 
-        <div class="mt-2 pt-2 border-t border-emerald-200/60">
+        <div class="mt-2 pt-2 border-t border-m3-outline-variant/40">
           <p id="sheetInclusionsText" class="text-[10px] sm:text-[11px] text-m3-on-surface-variant font-medium leading-relaxed">
             Fuel, Highway FASTag Tolls, Airport Ramp Drop &amp; Chauffeur Bata Included
           </p>
@@ -103,7 +103,7 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
             <label for="sheetPickupDate" class="block text-xs font-bold text-m3-on-surface">
               1. Travel Date &amp; Pickup Time *
             </label>
-            <span id="sheetReturnDatePreview" class="text-[10px] text-emerald-700 font-semibold">
+            <span id="sheetReturnDatePreview" class="text-[10px] text-m3-on-surface-variant font-semibold">
               Return: Same Day
             </span>
           </div>
@@ -140,7 +140,7 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
               <button
                 type="button"
                 id="sheetDirPickupBtn"
-                class="flex-1 py-1 rounded-m3-md text-center transition-all bg-emerald-700 text-white shadow-2xs cursor-pointer select-none"
+                class="flex-1 py-1 rounded-m3-md text-center transition-all bg-m3-primary text-m3-on-primary shadow-m3-1 cursor-pointer select-none"
               >
                 Pickup (MAA)
               </button>
@@ -230,7 +230,7 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
             <button
               type="button"
               data-pax="1-4 Pax"
-              class="sheet-pax-btn px-2.5 py-1 rounded-full border transition-all cursor-pointer bg-emerald-700 text-white border-emerald-700 shadow-2xs"
+              class="sheet-pax-btn px-2.5 py-1 rounded-full border transition-all cursor-pointer bg-m3-primary text-m3-on-primary border-m3-primary shadow-m3-1"
             >
               1–4 Pax
             </button>
@@ -284,8 +284,8 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
         </div>
 
         <!-- Dynamic Error Alert -->
-        <div id="sheetErrorAlert" class="hidden p-2 rounded-m3-md bg-rose-50 border border-rose-200 text-rose-800 text-[11px] font-semibold flex items-center gap-1.5">
-          <svg class="w-3.5 h-3.5 text-rose-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div id="sheetErrorAlert" class="hidden p-2 rounded-m3-md bg-m3-error-container/40 border border-m3-error/30 text-m3-on-error-container text-[11px] font-semibold flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-m3-error shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <circle cx="12" cy="12" r="10" stroke-width="2" />
             <line x1="12" y1="8" x2="12" y2="12" stroke-width="2" />
             <line x1="12" y1="16" x2="12.01" y2="16" stroke-width="2" />
@@ -293,14 +293,14 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
           <span id="sheetErrorMsg">Please enter your pickup location in Chennai.</span>
         </div>
 
-        <!-- Primary CTA: 1-Tap WhatsApp (Material Mint Palette & Auto-Width) -->
+        <!-- Primary CTA: 1-Tap WhatsApp (M3 Primary Palette) -->
         <div class="flex justify-center pt-1">
           <button
             type="button"
             id="sheetSubmitBtn"
-            class="inline-flex items-center justify-center gap-2 py-2.5 px-6 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 font-extrabold text-xs sm:text-sm shadow-xs transition-all cursor-pointer select-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#128C7E]"
+            class="inline-flex items-center justify-center gap-2 py-2.5 px-6 rounded-m3-full bg-m3-primary hover:bg-crimson-700 active:bg-crimson-800 text-m3-on-primary font-bold text-xs sm:text-sm shadow-m3-1 hover:shadow-m3-2 transition-all cursor-pointer select-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-m3-primary"
           >
-            <WhatsAppIcon variant="brand" className="w-4 h-4 shrink-0" />
+            <WhatsAppIcon variant="white" className="w-4 h-4 shrink-0" />
             <span>Confirm &amp; Send on WhatsApp</span>
           </button>
         </div>
@@ -430,12 +430,12 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
         quickBookingContext.direction = dir;
         if (!dirPickupBtn || !dirDropBtn) return;
         if (dir === 'pickup') {
-          dirPickupBtn.className = 'flex-1 py-1 rounded-m3-md text-center transition-all bg-emerald-700 text-white shadow-2xs cursor-pointer select-none';
+          dirPickupBtn.className = 'flex-1 py-1 rounded-m3-md text-center transition-all bg-m3-primary text-m3-on-primary shadow-m3-1 cursor-pointer select-none';
           dirDropBtn.className = 'flex-1 py-1 rounded-m3-md text-center transition-all text-m3-on-surface-variant hover:text-m3-on-surface cursor-pointer select-none';
           if (areaLabel) areaLabel.textContent = '2. Drop Address in Chennai (Pickup at MAA Airport) *';
           if (areaInput) areaInput.placeholder = 'e.g. Medavakkam, Guindy, Anna Nagar or use GPS';
         } else {
-          dirDropBtn.className = 'flex-1 py-1 rounded-m3-md text-center transition-all bg-emerald-700 text-white shadow-2xs cursor-pointer select-none';
+          dirDropBtn.className = 'flex-1 py-1 rounded-m3-md text-center transition-all bg-m3-primary text-m3-on-primary shadow-m3-1 cursor-pointer select-none';
           dirPickupBtn.className = 'flex-1 py-1 rounded-m3-md text-center transition-all text-m3-on-surface-variant hover:text-m3-on-surface cursor-pointer select-none';
           if (areaLabel) areaLabel.textContent = '2. Pickup Address in Chennai (Drop to MAA Airport) *';
           if (areaInput) areaInput.placeholder = 'e.g. Your doorstep address in Chennai';
@@ -458,7 +458,7 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
           paxBtns.forEach(function (b) {
             b.className = 'sheet-pax-btn px-2.5 py-1 rounded-full border transition-all cursor-pointer bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface border-m3-outline-variant/60';
           });
-          btn.className = 'sheet-pax-btn px-2.5 py-1 rounded-full border transition-all cursor-pointer bg-emerald-700 text-white border-emerald-700 shadow-2xs';
+          btn.className = 'sheet-pax-btn px-2.5 py-1 rounded-full border transition-all cursor-pointer bg-m3-primary text-m3-on-primary border-m3-primary shadow-m3-1';
         });
       });
 
@@ -847,11 +847,11 @@ Please confirm driver assignment and cab availability.`;
           var dirDropBtn = document.getElementById('sheetDirDropBtn');
           if (dirPickupBtn && dirDropBtn) {
             if (dir === 'pickup') {
-              dirPickupBtn.className = 'flex-1 py-1 rounded-m3-md text-center transition-all bg-emerald-700 text-white shadow-2xs cursor-pointer select-none';
+              dirPickupBtn.className = 'flex-1 py-1 rounded-m3-md text-center transition-all bg-m3-primary text-m3-on-primary shadow-m3-1 cursor-pointer select-none';
               dirDropBtn.className = 'flex-1 py-1 rounded-m3-md text-center transition-all text-m3-on-surface-variant hover:text-m3-on-surface cursor-pointer select-none';
               if (areaLabel) areaLabel.textContent = '2. Drop Address in Chennai (Pickup at MAA Airport) *';
             } else {
-              dirDropBtn.className = 'flex-1 py-1 rounded-m3-md text-center transition-all bg-emerald-700 text-white shadow-2xs cursor-pointer select-none';
+              dirDropBtn.className = 'flex-1 py-1 rounded-m3-md text-center transition-all bg-m3-primary text-m3-on-primary shadow-m3-1 cursor-pointer select-none';
               dirPickupBtn.className = 'flex-1 py-1 rounded-m3-md text-center transition-all text-m3-on-surface-variant hover:text-m3-on-surface cursor-pointer select-none';
               if (areaLabel) areaLabel.textContent = '2. Pickup Address in Chennai (Drop to MAA Airport) *';
             }
@@ -880,8 +880,8 @@ Please confirm driver assignment and cab availability.`;
             }
 
             pillBtn.className = isSelected
-              ? 'px-2.5 py-1 rounded-full text-[11px] font-bold border transition-all shrink-0 cursor-pointer bg-emerald-700 text-white border-emerald-700 shadow-2xs'
-              : 'px-2.5 py-1 rounded-full text-[11px] font-medium border transition-all shrink-0 cursor-pointer bg-white/80 hover:bg-white text-emerald-950 border-emerald-200/80';
+              ? 'px-2.5 py-1 rounded-full text-[11px] font-bold border transition-all shrink-0 cursor-pointer bg-m3-primary text-m3-on-primary border-m3-primary shadow-m3-1'
+              : 'px-2.5 py-1 rounded-full text-[11px] font-medium border transition-all shrink-0 cursor-pointer bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface border-m3-outline-variant/60';
 
             pillBtn.textContent = r.type + ' • ' + r.price;
 
@@ -902,7 +902,7 @@ Please confirm driver assignment and cab availability.`;
               var allPaxBtns = document.querySelectorAll('.sheet-pax-btn');
               allPaxBtns.forEach(function (pb) {
                 if (pb.getAttribute('data-pax') === targetPax) {
-                  pb.className = 'sheet-pax-btn px-2.5 py-1 rounded-full border transition-all cursor-pointer bg-emerald-700 text-white border-emerald-700 shadow-2xs';
+                  pb.className = 'sheet-pax-btn px-2.5 py-1 rounded-full border transition-all cursor-pointer bg-m3-primary text-m3-on-primary border-m3-primary shadow-m3-1';
                 } else {
                   pb.className = 'sheet-pax-btn px-2.5 py-1 rounded-full border transition-all cursor-pointer bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface border-m3-outline-variant/60';
                 }
@@ -911,9 +911,9 @@ Please confirm driver assignment and cab availability.`;
               // Toggle pill styling
               var allPills = vehiclePillsContainer.querySelectorAll('button');
               allPills.forEach(function (p) {
-                p.className = 'px-2.5 py-1 rounded-full text-[11px] font-medium border transition-all shrink-0 cursor-pointer bg-white/80 hover:bg-white text-emerald-950 border-emerald-200/80';
+                p.className = 'px-2.5 py-1 rounded-full text-[11px] font-medium border transition-all shrink-0 cursor-pointer bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface border-m3-outline-variant/60';
               });
-              pillBtn.className = 'px-2.5 py-1 rounded-full text-[11px] font-bold border transition-all shrink-0 cursor-pointer bg-emerald-700 text-white border-emerald-700 shadow-2xs';
+              pillBtn.className = 'px-2.5 py-1 rounded-full text-[11px] font-bold border transition-all shrink-0 cursor-pointer bg-m3-primary text-m3-on-primary border-m3-primary shadow-m3-1';
             });
 
             vehiclePillsContainer.appendChild(pillBtn);

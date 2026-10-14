@@ -40,6 +40,7 @@ export function generateInvoiceLetterheadHtml(data = {}) {
     vehicleHireFare = 5500,
     driverBata = 500,
     isNightBatta = false,
+    isActualsMode = false,
     cgst = 150,
     sgst = 150,
     igst = 0,
@@ -549,12 +550,12 @@ export function generateInvoiceLetterheadHtml(data = {}) {
         <tr>
           <td class="text-center font-bold" style="color: #64748b;">${isNightBatta ? '4' : '3'}</td>
           <td>
-            <strong>Statutory NH FASTag Highway Tolls &amp; AP Interstate Border Tax Permit</strong><br>
-            <span style="font-size: 8px; color: #64748b;">National Highway toll plazas &amp; Andhra Pradesh passenger road levy (Pure Agent)</span>
+            <strong>Statutory NH FASTag Tolls, AP Border Permit, Hill Climb &amp; Parking</strong><br>
+            <span style="font-size: 8px; color: #64748b;">${isActualsMode ? 'Highway tolls, AP border permit & parking paid directly at toll gates (~₹1,100 total)' : 'Round-trip National Highway tolls, AP border permit, hill climb & TTD parking (Pure Agent)'}</span>
           </td>
           <td class="text-center font-mono font-bold">9966</td>
           <td class="text-center">Round Trip</td>
-          <td class="text-right font-bold" style="color: #059669;">INCLUDED</td>
+          <td class="text-right font-bold" style="${isActualsMode ? 'color: #334155;' : 'color: #059669;'}">${isActualsMode ? 'DIRECT (~₹1,100)' : 'INCLUDED'}</td>
         </tr>
       </tbody>
     </table>

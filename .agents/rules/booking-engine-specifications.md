@@ -4,7 +4,26 @@ All booking engines, quotation calculators, and trip booking components across t
 
 ## 1. Trip Duration & Date Handling
 - **Auto-Calculate Duration**: Never use separate manual duration buttons (e.g. 1 Day / 2 Days / 3 Days) if dates are selected. Always calculate trip duration (`days`) automatically from `pickupDate` and `dropDate` (Return Date).
-- **Date Constraints**: Always enforce `min={pickupDate}` on the drop/return date picker. When `pickupDate` is changed to a date past `dropDate`, automatically synchronize `dropDate` to match.
+- **Disabled Drop Timing Prior to Pickup Selection**: The return/drop datetime picker MUST be disabled (`disabled={!pickupDateTime}`) until the user enters a valid pickup date and time.
+- **Enforce Minimum Realistic Duration on Drop Timing**: Never allow `min={pickupDateTime}` which permits selecting an impossible return time just 1 minute or 1 hour later. The drop/return datetime input's `min` attribute MUST enforce the route's minimum realistic round-trip duration:
+  `min={getMinReturnDateTime(pickupDateTime, MIN_REALISTIC_HOURS)}`
+  This physically disables impossible drop times in the browser's date/time picker.
+- **Smart Return Schedule Defaulting**: When a pickup datetime is selected or changed, automatically initialize or advance `returnDateTime` to the route's recommended realistic duration (`pickup + RECOMMENDED_ROUTE_HOURS`), providing an instant, realistic itinerary schedule.
+- **Realistic Duration & Route Distance Advisory**:
+  - Every tour engine must explicitly declare and display its round-trip distance (e.g. `~320 km Round Trip`) in the destination notice.
+  - If a user configures a duration below the realistic route threshold, render an informative advisory banner explaining the physical highway driving time plus temple darshan / sightseeing halt time.
+- **Master Route Distance & Realistic Duration Standards**:
+  | Tour Route | Engine File | Round-Trip km | Minimum Duration | Recommended Window |
+  | :--- | :--- | :--- | :--- | :--- |
+  | **Tirupati Balaji** | `TirupatiBookingEngine.jsx` | ~320 km | **12 Hours** | 14–16 Hours (Same Day) |
+  | **Thiruvannamalai** | `ThiruvannamalaiBookingEngine.jsx` | ~390 km | **14 Hours** | 14–16 Hours (Girivalam + Temple) |
+  | **Kanchipuram** | `KanchipuramBookingEngine.jsx` | ~150 km | **8 Hours** | 8–10 Hours (Temples + Weavers) |
+  | **Vellore Golden Temple**| `VelloreBookingEngine.jsx` | ~280 km | **10 Hours** | 10–12 Hours (Sripuram + Fort) |
+  | **Pondicherry ECR** | `PondicherryBookingEngine.jsx` | ~310 km | **11 Hours** | 12–14 Hours (Beach & French Town) |
+  | **Chidambaram & Pichavaram**| `ChidambaramBookingEngine.jsx` | ~450 km | **14 Hours** | 14–16 Hours (Temple + Boating) |
+  | **Kumbakonam Navagraha** | `NavagrahaBookingEngine.jsx` | ~680 km | **36 Hours (Min 2 Days)** | 2–3 Days (9 Temples Circuit) |
+  | **Rameswaram & Dhanushkodi**| `RameswaramBookingEngine.jsx` | ~1,150 km | **48 Hours (Min 2 Days)**| 3 Days / 2 Nights |
+  | **Sabarimala Pilgrimage** | `SabarimalaBookingEngine.jsx` | ~1,350 km | **48 Hours (Min 3 Days)**| 3–4 Days / 2–3 Nights |
 - **Same-Day Return**: If `dropDate === pickupDate`, duration is 1 Day (Same Day Return). If `dropDate === pickupDate + 1`, duration is 2 Days (1 Night Stay), etc.
 
 ## 2. Layout & Pairing Invariants
@@ -83,6 +102,11 @@ All fare summary cards and checkout actions must prioritize a calm, frictionless
   - Passenger/Devotee Name must always be optional and non-blocking.
   - Clicking `Book on WhatsApp` in retail cash mode must immediately open WhatsApp pre-filled with the trip manifest without auto-downloading PDF files to mobile devices or displaying "attach PDF" instructions.
   - Standalone document generation is reserved exclusively for corporate/GST workflows or manual `Save PDF` button clicks.
+- **Initial State Primary CTA Invariant ("Book on WhatsApp"):**
+  - In the initial unconfigured state (before dates, passenger count, or vehicle models are selected), the primary action button must always be **`Book on WhatsApp`** using the standardized `WhatsAppButton` component (`variant="filled"` or `variant="tonal"`).
+  - **Never** use calculator-themed or generic estimation labels such as `View Trip Estimate`, `Calculate Fare`, or `Get Quote` for the primary CTA.
+  - When clicked prior to completing required route inputs (pickup address, dates, vehicle model), the action must guide the user with clear inline validation feedback (focusing the first incomplete input) rather than navigating to an incomplete WhatsApp template.
+  - This ensures a uniform, high-converting WhatsApp booking affordance across all viewports and booking states.
 
 ## 8. Rate Summary Copy Discipline & Invariants
 - **Single "All-Inclusive" Invariant**:

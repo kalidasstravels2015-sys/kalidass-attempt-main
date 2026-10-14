@@ -817,7 +817,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                   {/* 2. Name in separate row */}
                   <div>
                     <label htmlFor="modal-name" className={labelCls}>Your Name</label>
-                    <div className={`${inputWrap} ${modalErrors.name ? '!border-red-500 !ring-1 !ring-red-500' : ''}`}>
+                    <div className={`${inputWrap} ${modalErrors.name ? '!border-m3-error !ring-1 !ring-m3-error' : ''}`}>
                       <input
                         id="modal-name"
                         ref={nameInputRef}
@@ -829,7 +829,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                       />
                     </div>
                     {modalErrors.name && (
-                      <p className="text-[11px] text-red-600 font-semibold mt-1 flex items-center gap-1">
+                      <p className="text-[11px] text-m3-error font-semibold mt-1 flex items-center gap-1">
                         <AlertCircle className="w-3 h-3 shrink-0" />
                         <span>{modalErrors.name}</span>
                       </p>
@@ -839,7 +839,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                   {/* 3. Mobile Number with Country Code Dropdown */}
                   <div>
                     <label htmlFor="modal-phone" className={labelCls}>Mobile / WhatsApp</label>
-                    <div className={`${inputWrap} !p-0 overflow-hidden ${modalErrors.phone ? '!border-red-500 !ring-1 !ring-red-500' : ''}`}>
+                    <div className={`${inputWrap} !p-0 overflow-hidden ${modalErrors.phone ? '!border-m3-error !ring-1 !ring-m3-error' : ''}`}>
                       <select
                         value={countryCode}
                         onChange={e => setCountryCode(e.target.value)}
@@ -870,7 +870,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                       />
                     </div>
                     {modalErrors.phone && (
-                      <p className="text-[11px] text-red-600 font-semibold mt-1 flex items-center gap-1">
+                      <p className="text-[11px] text-m3-error font-semibold mt-1 flex items-center gap-1">
                         <AlertCircle className="w-3 h-3 shrink-0" />
                         <span>{modalErrors.phone}</span>
                       </p>
@@ -897,8 +897,8 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
 
                 {/* Inline Error summary */}
                 {(modalErrors.name || modalErrors.phone) && (
-                  <div className="p-2.5 bg-red-50 text-red-700 text-xs font-semibold rounded-m3-md flex items-center gap-2 border border-red-200">
-                    <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
+                  <div className="p-2.5 bg-m3-error-container/40 text-m3-on-error-container text-xs font-semibold rounded-m3-md flex items-center gap-2 border border-m3-error/30">
+                    <AlertCircle className="w-4 h-4 shrink-0 text-m3-error" />
                     <span>{modalErrors.name || modalErrors.phone}</span>
                   </div>
                 )}

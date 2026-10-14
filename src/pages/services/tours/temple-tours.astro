@@ -6,6 +6,7 @@ import FAQAccordion from '../../../components/FAQAccordion.astro';
 import WhatsAppButton from '../../../components/WhatsAppButton.astro';
 import { buildWhatsAppUrl } from '../../../utils/whatsapp';
 import OptimizedImage from '../../../components/OptimizedImage.astro';
+import VehicleCard from '../../../components/VehicleCard.astro';
 import { ChevronRight } from 'lucide-react';
 
 const title = "Temple Tour Cab Packages from Chennai";
@@ -91,7 +92,7 @@ Please share availability and confirmed all-inclusive quote.`
     duration: "2 Days / 1 Night (750 km)",
     badge: "Complete 9 Temples",
     rates: createPackageRates(["₹12,000", "₹14,800", "₹16,500", "₹19,800", "₹24,500"]),
-    highlights: "All 9 planetary temples sequenced without backtracking • 2 Days driver bata, fuel & highway tolls included.",
+    highlights: "All 9 planetary temples sequenced without backtracking • 2 Days vehicle hire & fuel (Highway tolls & driver bata at actuals).",
     whatsappMsg: `*Kalidass Travels - Temple Tour Enquiry*
 • Tour: Chennai to Kumbakonam 9 Navagraha Tour (2 Days)
 • Travel Date: 
@@ -142,7 +143,7 @@ Please share availability and confirmed all-inclusive quote.`
     duration: "2 Days / 1 Night (1,200 km)",
     badge: "Char Dham Sthalam",
     rates: createPackageRates(["₹18,500", "₹22,500", "₹25,000", "₹30,000", "₹35,000"]),
-    highlights: "22 Theertham baths, Pamban bridge, Ram Setu / Arichal Munai & APJ Abdul Kalam Memorial.",
+    highlights: "22 Theertham baths, Pamban bridge, Ram Setu / Arichal Munai & APJ Abdul Kalam Memorial • 2 Days vehicle & fuel (Tolls & bata at actuals).",
     whatsappMsg: `*Kalidass Travels - Pilgrimage Yatra Enquiry*
 • Tour: Chennai to Rameswaram & Dhanushkodi (2 Days)
 • Travel Date: 
@@ -159,7 +160,7 @@ Please share availability and confirmed all-inclusive quote.`
     duration: "3 Days / 2 Nights (1,350 km)",
     badge: "Mandala Season",
     rates: createPackageRates(["₹22,500", "₹26,500", "₹29,500", "₹34,500", "₹42,000"]),
-    highlights: "Satvik teetotaler driver • Kerala State Permit • 3 Days driver allowance, tolls and ghat road guidance.",
+    highlights: "Satvik teetotaler driver • Direct Nilakkal / Pamba drop • 3 Days vehicle & fuel (Kerala permit, tolls & bata at actuals).",
     whatsappMsg: `*Kalidass Travels - Sabarimala Yatra Enquiry*
 • Tour: Chennai to Sabarimala Yatra Car Package (3 Days)
 • Travel Date: 
@@ -447,13 +448,13 @@ const faqSchema = {
         
         <div class="text-center max-w-2xl mx-auto mb-8">
           <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container text-m3-on-surface text-xs font-bold uppercase tracking-wider mb-2 border border-m3-outline-variant">
-            <span>All-Inclusive Darshan Packages</span>
+            <span>Verified Pilgrimage Packages</span>
           </div>
           <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
-            Chennai to Temple Cab Rates • <span class="text-m3-primary">All Tolls &amp; Permits Included</span>
+            Chennai to Temple Cab Rates • <span class="text-m3-primary">Transparent Pricing</span>
           </h2>
           <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1.5 font-sans">
-            Includes vehicle, fuel, driver allowance, FASTag tolls, and interstate state entry permits. Zero hidden charges.
+            1-day packages include vehicle hire, fuel, FASTag tolls, and driver bata upfront. For multi-day packages (>1 day), vehicle hire and fuel are covered with tolls and daily driver bata payable at actuals.
           </p>
         </div>
 
@@ -552,76 +553,34 @@ const faqSchema = {
             Temple Tour Fleet &amp; Seating Capacity Guide
           </h2>
           <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1.5 font-sans leading-relaxed">
-            All temple tour cabs feature dual air conditioning, experienced satvik chauffeurs, and 100% upfront toll coverage. Select the right vehicle based on your devotee count and senior citizen travel comfort.
+            All temple tour cabs feature dual air conditioning, experienced satvik chauffeurs, and sanitized interiors. 1-day packages include all highway tolls and driver bata; multi-day journeys cover vehicle hire &amp; fuel with tolls and driver bata at actuals.
           </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {templeFleetGuide.map((fleet) => (
-            <div class="bg-m3-surface rounded-m3-xl p-5 border border-m3-outline-variant/70 shadow-xs flex flex-col justify-between">
-              <div>
-                <div class="flex items-center justify-between gap-2 mb-3">
-                  <span class="px-2.5 py-0.5 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container text-[11px] font-bold uppercase tracking-wider">
-                    {fleet.type}
-                  </span>
-                  <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant bg-m3-surface-container px-2 py-0.5 rounded-m3-sm border border-m3-outline-variant/50">
-                    {fleet.badge}
-                  </span>
-                </div>
-
-                <div class="h-32 rounded-m3-lg overflow-hidden bg-m3-surface-container-high mb-3.5 flex items-center justify-center p-2 border border-m3-outline-variant/40">
-                  <img
-                    src={fleet.image}
-                    alt={`${fleet.names} for temple tours`}
-                    class="h-full w-auto object-contain"
-                    loading="lazy"
-                    width="220"
-                    height="120"
-                  />
-                </div>
-
-                <h3 class="text-base font-bold text-m3-on-surface font-heading mb-1">
-                  {fleet.names}
-                </h3>
-
-                <!-- Specs Pill Strip (Vehicle Type - Passenger Count - Baggage Count) -->
-                <div class="flex flex-wrap items-center gap-1.5 mb-3 text-xs">
-                  <span class="inline-flex items-center gap-1 font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-m3-full text-[11px]">
-                    <span>👥</span>
-                    <span>{fleet.passengers}</span>
-                  </span>
-                  <span class="inline-flex items-center gap-1 font-medium text-m3-on-surface-variant bg-m3-surface-container px-2 py-0.5 rounded-m3-full border border-m3-outline-variant/50 text-[11px]">
-                    <span>🧳</span>
-                    <span>{fleet.baggage}</span>
-                  </span>
-                </div>
-
-                <p class="text-xs text-m3-on-surface-variant leading-relaxed mb-3">
-                  <strong class="text-m3-on-surface font-semibold">Best Suited For:</strong> {fleet.bestFor}
-                </p>
-
-                <ul class="space-y-1 mb-2 text-micro text-m3-on-surface-variant">
-                  {fleet.features.map((feat) => (
-                    <li class="flex items-center gap-1.5">
-                      <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
-                      <span>{feat}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div class="pt-3 border-t border-m3-outline-variant/50 mt-3 flex items-center justify-between text-xs">
-                <span class="text-micro font-bold text-m3-on-surface-variant uppercase tracking-wider">Zero Hidden Tolls</span>
-                <a
-                  href="#tour-packages"
-                  class="font-bold text-m3-primary hover:underline text-xs inline-flex items-center gap-1"
-                >
-                  <span>View Rates</span>
-                  <span>&darr;</span>
-                </a>
-              </div>
-            </div>
-          ))}
+          {templeFleetGuide.map((fleet) => {
+            const baggageClean = fleet.baggage.split('(')[0].replace('+ Handbags', '').replace('Large Suitcases', 'Bags').replace('Medium Bags', 'Bags').trim();
+            const startingRate = fleet.names.includes('Dzire') || fleet.names.includes('Etios') ? '₹3,500'
+              : fleet.names.includes('Ertiga') || fleet.names.includes('XL6') ? '₹4,500'
+              : fleet.names.includes('Crysta') ? '₹6,800'
+              : fleet.names.includes('Innova') ? '₹5,500'
+              : '₹8,500';
+            return (
+              <VehicleCard
+                className="w-full"
+                name={fleet.names}
+                image={fleet.image}
+                badge={fleet.badge}
+                seats={fleet.passengers}
+                baggage={baggageClean}
+                priceLabel="Starting From"
+                priceSubtext="1-Day (Tolls & Bata Inc.)"
+                price={startingRate}
+                actionText="View Rates"
+                actionHref="#tour-packages"
+              />
+            );
+          })}
         </div>
       </section>
 

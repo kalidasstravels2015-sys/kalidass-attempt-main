@@ -1,0 +1,190 @@
+{
+  "brand": {
+    "name": "Kalidass Travels",
+    "tagline": "Executive Chauffeur & Outstation Mobility Across South India",
+    "version": "2.0.0",
+    "updated": "2026-10-13",
+    "designStandard": "Google Material Design 3 (M3) Executive Midnight Charcoal & Onyx",
+    "rule2Notice": "Signature Logo Red is strictly reserved for the 'K' monogram mark. NEVER use red for tariffs, rates, prices, or live status indicators."
+  },
+  "palette": {
+    "primary": {
+      "name": "Executive Midnight Charcoal",
+      "token": "m3-primary",
+      "tone": "Tone 40",
+      "hex": "#1E252D",
+      "rgb": "rgb(30, 37, 45)",
+      "hsl": "hsl(212, 20%, 15%)",
+      "cmyk": { "c": 74, "m": 63, "y": 53, "k": 57 },
+      "pantone": "PMS 433 C",
+      "usage": "Primary brand anchor, desktop headers, primary CTA buttons, premium poster borders, high-contrast dark backgrounds.",
+      "wcagOnWhite": "12.5:1 (AAA)"
+    },
+    "onPrimary": {
+      "name": "Pure Crisp White",
+      "token": "m3-on-primary",
+      "tone": "Tone 100",
+      "hex": "#FFFFFF",
+      "rgb": "rgb(255, 255, 255)",
+      "hsl": "hsl(0, 0%, 100%)",
+      "cmyk": { "c": 0, "m": 0, "y": 0, "k": 0 },
+      "pantone": "Opaque White",
+      "usage": "High-contrast text on Midnight Charcoal surfaces, default poster base for daylight promotional flyers."
+    },
+    "brandRed": {
+      "name": "Signature Logo 'K' Red",
+      "token": "logo-red",
+      "tone": "Brand Identity Monogram",
+      "hex": "#EC221F",
+      "rgb": "rgb(236, 34, 31)",
+      "hsl": "hsl(1, 84%, 52%)",
+      "cmyk": { "c": 0, "m": 98, "y": 97, "k": 0 },
+      "pantone": "PMS 1795 C",
+      "usage": "STRICTLY RESTRICTED to the 'K' logo emblem mark. NEVER use for fares, pricing, buttons, or promotional starbursts.",
+      "wcagOnWhite": "4.6:1 (AA Large)"
+    },
+    "ratesOnyx": {
+      "name": "Deep Midnight Onyx Slate",
+      "token": "m3-on-surface",
+      "tone": "Tone 10",
+      "hex": "#111827",
+      "rgb": "rgb(17, 24, 39)",
+      "hsl": "hsl(221, 39%, 11%)",
+      "cmyk": { "c": 78, "m": 69, "y": 61, "k": 73 },
+      "pantone": "PMS Black 6 C",
+      "usage": "MANDATORY for all rates, fares, per-km numbers, headlines, and primary typography. Generates maximum consumer trust.",
+      "wcagOnWhite": "16.98:1 (AAA)"
+    },
+    "tertiaryAmber": {
+      "name": "Warm Golden Amber",
+      "token": "m3-tertiary",
+      "tone": "Tone 40",
+      "hex": "#D97706",
+      "rgb": "rgb(217, 119, 6)",
+      "hsl": "hsl(32, 95%, 44%)",
+      "cmyk": { "c": 0, "m": 55, "y": 100, "k": 15 },
+      "pantone": "PMS 138 C",
+      "usage": "5-star Google review rating stars, temple tour headers (Tirupati, Chidambaram), VIP pilgrimage accent ribbons.",
+      "wcagOnWhite": "3.8:1 (Use with dark text or as icon)"
+    },
+    "tertiaryContainer": {
+      "name": "Warm Champagne Container",
+      "token": "m3-tertiary-container",
+      "tone": "Tone 90",
+      "hex": "#FEF3C7",
+      "rgb": "rgb(254, 243, 199)",
+      "hsl": "hsl(48, 96%, 89%)",
+      "cmyk": { "c": 2, "m": 4, "y": 28, "k": 0 },
+      "pantone": "PMS 7401 C",
+      "usage": "Background container for rating badges, temple pilgrimage highlights, customer testimonials."
+    },
+    "conversionGreen": {
+      "name": "Verified WhatsApp Green",
+      "token": "whatsapp",
+      "tone": "Action CTA",
+      "hex": "#25D366",
+      "rgb": "rgb(37, 211, 102)",
+      "hsl": "hsl(142, 70%, 49%)",
+      "cmyk": { "c": 70, "m": 0, "y": 85, "k": 0 },
+      "pantone": "PMS 7738 C",
+      "usage": "Direct booking CTAs, WhatsApp QR code badge, 'Instant Dispatch' contact highlight.",
+      "wcagOnWhite": "1.98:1 (Use with dark text or as filled button with dark/white icon)"
+    },
+    "surfaceCanvas": {
+      "name": "Anti-Glare Canvas Base",
+      "token": "m3-surface",
+      "tone": "Tone 98",
+      "hex": "#F9FAFB",
+      "rgb": "rgb(249, 250, 251)",
+      "hsl": "hsl(210, 20%, 98%)",
+      "cmyk": { "c": 1, "m": 1, "y": 1, "k": 0 },
+      "pantone": "PMS Cool Gray 1 C",
+      "usage": "Web canvas backdrop, printed coupon cards, calm anti-glare flyer sectioning."
+    },
+    "surfaceContainerLow": {
+      "name": "Soft Slate Container Low",
+      "token": "m3-surface-container-low",
+      "tone": "Tone 96",
+      "hex": "#F3F4F6",
+      "rgb": "rgb(243, 244, 246)",
+      "hsl": "hsl(220, 14%, 96%)",
+      "cmyk": { "c": 4, "m": 3, "y": 3, "k": 0 },
+      "pantone": "PMS Cool Gray 2 C",
+      "usage": "Alternating poster sections, vehicle capacity feature boxes, itemized receipt breakdown background."
+    },
+    "outlineVariant": {
+      "name": "Subtle Slate Divider Stroke",
+      "token": "m3-outline-variant",
+      "tone": "Tone 80",
+      "hex": "#E5E7EB",
+      "rgb": "rgb(229, 231, 235)",
+      "hsl": "hsl(220, 13%, 91%)",
+      "cmyk": { "c": 10, "m": 7, "y": 8, "k": 0 },
+      "pantone": "PMS Cool Gray 3 C",
+      "usage": "Card borders, divider lines, coupon cut lines, table separators."
+    },
+    "textMuted": {
+      "name": "Muted Slate Secondary Text",
+      "token": "m3-on-surface-variant",
+      "tone": "Tone 30",
+      "hex": "#4B5563",
+      "rgb": "rgb(75, 85, 99)",
+      "hsl": "hsl(217, 14%, 34%)",
+      "cmyk": { "c": 60, "m": 48, "y": 43, "k": 15 },
+      "pantone": "PMS 431 C",
+      "usage": "Secondary subtitles, baggage/pax specs, disclaimer fine print, route km distances.",
+      "wcagOnWhite": "7.2:1 (AAA)"
+    }
+  },
+  "posterFormulas": [
+    {
+      "id": "airport-taxi-flyer",
+      "title": "Chennai Airport Taxi & City Flyer",
+      "mode": "Light Canvas (Daylight / Distribution)",
+      "rule60": "Pure White #FFFFFF canvas with subtle #F3F4F6 card containers",
+      "rule30": "Midnight Onyx #111827 headlines, vehicle outline, and clear flat tariffs (e.g., ₹600 Flat Sedan)",
+      "rule10": "WhatsApp Green #25D366 booking QR + Red #EC221F 'K' logo monogram",
+      "targetMedia": "A4 / A5 Handheld Flyer, Counter Standee, Newspaper Insert"
+    },
+    {
+      "id": "pilgrimage-tour-poster",
+      "title": "Tirupati / Pilgrimage Tour Poster",
+      "mode": "Heritage Champagne & Onyx",
+      "rule60": "Clean #F9FAFB background with #FEF3C7 warm champagne package header",
+      "rule30": "Midnight Charcoal #1E252D route steps, vehicle options, and inclusive pricing",
+      "rule10": "Golden Amber #D97706 temple star badge + Red #EC221F 'K' logo mark",
+      "targetMedia": "Travel Agency Standee, Hotel Lobby Banner, WhatsApp Status Card"
+    },
+    {
+      "id": "luxury-fleet-billboard",
+      "title": "Corporate & Luxury Chauffeur Billboard",
+      "mode": "Midnight Executive Dark",
+      "rule60": "Rich Black Midnight Charcoal (#111827 / #1E252D with C:60 M:40 Y:40 K:100)",
+      "rule30": "Crisp White #FFFFFF headline typography and metallic car cutouts (Innova Crysta, Urbania)",
+      "rule10": "Golden Amber #D97706 '5-Star Rated Chauffeurs' badge + WhatsApp Green helpline",
+      "targetMedia": "10x20 ft Roadside Hoarding, 3x6 ft Roll-up Standee, Instagram Ad (1:1)"
+    },
+    {
+      "id": "airport-meet-greet-placard",
+      "title": "Airport Arrivals Paging Placard",
+      "mode": "Maximum Visibility Paging",
+      "rule60": "Opaque Pure White #FFFFFF heavy 350 GSM card stock",
+      "rule30": "Massive 72pt Bold Midnight Onyx #111827 Guest Name",
+      "rule10": "Top-right 30mm 'K' Logo Red #EC221F + Bottom Kalidass Travels hotline in #1E252D",
+      "targetMedia": "MAA Airport Terminal Meet & Greet Chauffeur Signboard (A3 Laminated)"
+    }
+  ],
+  "printStandards": {
+    "colorSpace": "CMYK (ISO Coated v2 / SWOP)",
+    "digitalSpace": "sRGB / Display P3",
+    "resolutionDPI": {
+      "flyersAndCards": 300,
+      "standeesAndRollups": 200,
+      "largeBillboards": 120
+    },
+    "bleed": "3 mm (0.125 inches) on all four edges",
+    "safeMargin": "5 mm (0.2 inches) inside the cut line",
+    "richBlackFormula": "C: 60%, M: 40%, Y: 40%, K: 100% (Use for solid dark backgrounds)",
+    "textBlackFormula": "C: 0%, M: 0%, Y: 0%, K: 100% (Use for body text under 24pt)"
+  }
+}

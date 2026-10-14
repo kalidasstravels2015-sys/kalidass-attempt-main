@@ -30,13 +30,13 @@ export default function WhatsAppButton({
   }[size] || "w-4 h-4 sm:w-5 sm:h-5";
 
   const variantClasses = {
-    filled: "bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 shadow-xs",
-    elevated: "bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/90 shadow-m3-1 hover:shadow-m3-2",
-    tonal: "bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 shadow-xs",
-    outlined: "bg-transparent hover:bg-emerald-50 text-emerald-950 border border-emerald-400 shadow-xs"
-  }[variant] || "bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 shadow-xs";
+    filled: "bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white font-bold shadow-m3-1 hover:shadow-m3-2",
+    elevated: "bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white font-bold shadow-m3-1 hover:shadow-m3-2",
+    tonal: "bg-m3-success-container hover:brightness-95 active:brightness-90 text-m3-on-success-container font-bold shadow-xs",
+    outlined: "bg-transparent hover:bg-m3-success-container/50 text-m3-success border border-m3-success shadow-xs"
+  }[variant] || "bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white font-bold shadow-m3-1";
 
-  const iconVariant = 'brand';
+  const iconVariant = (variant === 'filled' || variant === 'elevated') ? 'white' : 'brand';
   const label = children || text;
   const computedAria = ariaLabel || (typeof label === 'string' ? label : "Chat on WhatsApp");
 
@@ -57,7 +57,7 @@ export default function WhatsAppButton({
         data-direct-whatsapp="true"
       >
         <WhatsAppIcon variant={iconVariant} className={iconSize} />
-        {size !== 'icon' && <span className="tracking-wide leading-none">{label}</span>}
+        {size !== 'icon' && <span className="tracking-wide leading-none whitespace-nowrap">{label}</span>}
       </a>
     );
   }
@@ -72,7 +72,7 @@ export default function WhatsAppButton({
       data-direct-whatsapp="true"
     >
       <WhatsAppIcon variant={iconVariant} className={iconSize} />
-      {size !== 'icon' && <span className="tracking-wide leading-none">{label}</span>}
+      {size !== 'icon' && <span className="tracking-wide leading-none whitespace-nowrap">{label}</span>}
     </button>
   );
 }

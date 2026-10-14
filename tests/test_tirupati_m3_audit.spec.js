@@ -10,9 +10,8 @@ test.describe('Tirupati Booking Engine Unified M3 Action Card & Flow Verificatio
     await bookingSection.scrollIntoViewIfNeeded();
 
     // 1. Initial State: Button is active, not hidden or disabled
-    const initialBtn = bookingSection.locator('button:has-text("View Trip Estimate")');
+    const initialBtn = bookingSection.locator('a:has-text("Book on WhatsApp"), button:has-text("Book on WhatsApp")').first();
     await expect(initialBtn).toBeVisible();
-    await expect(initialBtn).toBeEnabled();
     await page.waitForTimeout(300);
 
     // 2. Click when empty shows friendly text validation message
@@ -39,7 +38,7 @@ test.describe('Tirupati Booking Engine Unified M3 Action Card & Flow Verificatio
     await vehSelect.selectOption('dzire');
 
     // 4. Verify Unified M3 Action Card is rendered (Single cohesive container)
-    const fareCard = bookingSection.locator('text=/All-Inclusive (Cash )?Package Fare/');
+    const fareCard = bookingSection.locator('text=/All-Inclusive (Cash )?Package Fare|Multi-Day Tariff/');
     await expect(fareCard).toBeVisible();
     await expect(bookingSection.getByText('₹ 9,350').first()).toBeVisible();
 
@@ -47,17 +46,16 @@ test.describe('Tirupati Booking Engine Unified M3 Action Card & Flow Verificatio
     const directWaBtn = bookingSection.locator('a:has-text("Book on WhatsApp")').first();
     await expect(directWaBtn).toBeVisible();
 
-    // 6. Verify GST Tax Invoice button opens transparent proforma modal
-    const gstBtn = bookingSection.locator('button:has-text("GST Tax Invoice")');
-    await expect(gstBtn).toBeVisible();
+    // 6. Verify GST Tax Invoice progressive disclosure checkbox
+    const gstCheckbox = bookingSection.locator('input[type="checkbox"]');
+    await expect(gstCheckbox).toBeVisible();
 
     // Capture screenshot of clean card layout
-    await page.locator('section[aria-label="Tirupati Pilgrimage Booking Engine"]').screenshot({ path: 'tests/tirupati_m3_clean_card.png' });
+    await bookingSection.screenshot({ path: 'tests/tirupati_m3_clean_card.png' });
 
-    // 7. Click "GST Tax Invoice" -> switches card in place, expand breakdown, then open proforma modal
-    await gstBtn.click();
-    await bookingSection.locator('button:has-text("Itemized Fare Breakdown")').click();
-    const viewProformaBtn = bookingSection.locator('button:has-text("View Full Government Format Proforma Letterhead")');
+    // 7. Click GST Checkbox -> switches card in place, then open proforma modal
+    await gstCheckbox.check();
+    const viewProformaBtn = bookingSection.locator('button:has-text("View Proforma Bill")');
     await viewProformaBtn.click();
     const modal = page.locator('div[role="dialog"][data-hide-contact-dock]');
     await expect(modal).toBeVisible();
