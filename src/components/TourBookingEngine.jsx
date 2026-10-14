@@ -424,12 +424,65 @@ export default function TourBookingEngine({
   const returnHour = returnDateTime ? new Date(returnDateTime).getHours() : null;
   const isNightBatta = days === 1 && durationInfo.isSameDate && returnHour !== null && (returnHour >= 23 || returnHour < 4);
 
+  const formatTime12 = (dtStr) => {
+    if (!dtStr) return '';
+    try {
+      const dt = new Date(dtStr);
+      if (isNaN(dt.getTime())) return '';
+      return dt.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+    } catch {
+      return '';
+    }
+  };
+
+  const isAM = (dtStr) => {
+    if (!dtStr) return true;
+    try {
+      const dt = new Date(dtStr);
+      if (isNaN(dt.getTime())) return true;
+      return dt.getHours() < 12;
+    } catch {
+      return true;
+    }
+  };
+
+  const setDateTimePeriod = (currentDtStr, targetPeriod) => {
+    if (!currentDtStr || !currentDtStr.includes('T')) return currentDtStr;
+    try {
+      const [datePart, timePart] = currentDtStr.split('T');
+      let [hours, minutes] = timePart.split(':').map(Number);
+      if (isNaN(hours)) return currentDtStr;
+      if (isNaN(minutes)) minutes = 0;
+      const isCurrentlyPm = hours >= 12;
+      if (targetPeriod === 'PM' && !isCurrentlyPm) {
+        hours = (hours + 12) % 24;
+      } else if (targetPeriod === 'AM' && isCurrentlyPm) {
+        hours = (hours - 12 + 24) % 24;
+      }
+      return `${datePart}T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    } catch {
+      return currentDtStr;
+    }
+  };
+
   const formatDT = (dt) => {
     if (!dt) return '';
-    return new Date(dt).toLocaleString('en-IN', {
-      day: '2-digit', month: 'short', year: 'numeric',
-      hour: '2-digit', minute: '2-digit', hour12: true
-    });
+    try {
+      const dateObj = new Date(dt);
+      if (isNaN(dateObj.getTime())) return '';
+      const dateStr = dateObj.toLocaleDateString('en-IN', {
+        day: '2-digit', month: 'short', year: 'numeric'
+      });
+      const time12 = dateObj.toLocaleTimeString('en-IN', {
+        hour: '2-digit', minute: '2-digit', hour12: true
+      });
+      const time24 = dateObj.toLocaleTimeString('en-IN', {
+        hour: '2-digit', minute: '2-digit', hour12: false
+      });
+      return `${dateStr}, ${time12} (${time24} hrs)`;
+    } catch {
+      return '';
+    }
   };
 
   const handlePickupDateTimeChange = (e) => {
@@ -1134,14 +1187,17 @@ Please confirm booking!`;
             </div>
           )}
 
-          {/* 3. Dual Date Pickers */}
-          <div className="space-y-1.5">
+          {/* 3. Dual Date Pickers with AM/PM support */}
+          <div className="space-y-2">
             <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+              {/* Pickup Date & Time */}
               <div className="space-y-1">
-                <label htmlFor={pickupDateTimeId} className="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-m3-on-surface-variant shrink-0" />
-                  <span className="truncate">Pickup Date &amp; Time</span>
-                </label>
+                <div className="flex items-center justify-between">
+                  <label htmlFor={pickupDateTimeId} className="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center gap-1.5 truncate">
+                    <Calendar className="w-3.5 h-3.5 text-m3-on-surface-variant shrink-0" />
+                    <span className="truncate">Pickup Date &amp; Time</span>
+                  </label>
+                </div>
                 <input
                   id={pickupDateTimeId}
                   type="datetime-local"
@@ -1151,13 +1207,41 @@ Please confirm booking!`;
                   onFocus={handleInputFocus}
                   className={`w-full min-h-[48px] bg-white border border-m3-outline-variant hover:border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20 rounded-m3-lg px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm ${pickupDateTime ? 'text-m3-on-surface font-semibold' : 'text-m3-on-surface-variant/60 font-normal'} outline-none transition-all shadow-2xs cursor-pointer scroll-mt-28 scroll-mb-64`}
                 />
+                {pickupDateTime && (
+                  <div className="flex items-center justify-between gap-1 text-[11px] px-0.5 pt-0.5">
+                    <span className="font-semibold text-slate-700 truncate" title="12-hour format">
+                      {formatTime12(pickupDateTime)}
+                    </span>
+                    <div className="inline-flex rounded border border-m3-outline-variant/80 overflow-hidden shrink-0 shadow-2xs bg-slate-100">
+                      <button
+                        type="button"
+                        onClick={() => handlePickupDateTimeChange({ target: { value: setDateTimePeriod(pickupDateTime, 'AM') } })}
+                        className={`px-2 py-0.5 font-bold text-[10px] transition-colors cursor-pointer ${isAM(pickupDateTime) ? 'bg-m3-primary text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200'}`}
+                        aria-label="Set pickup time to AM"
+                      >
+                        AM
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handlePickupDateTimeChange({ target: { value: setDateTimePeriod(pickupDateTime, 'PM') } })}
+                        className={`px-2 py-0.5 font-bold text-[10px] transition-colors cursor-pointer ${!isAM(pickupDateTime) ? 'bg-m3-primary text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200'}`}
+                        aria-label="Set pickup time to PM"
+                      >
+                        PM
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
+              {/* Return Date & Time */}
               <div className="space-y-1">
-                <label htmlFor={returnDateTimeId} className="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-m3-on-surface-variant shrink-0" />
-                  <span className="truncate">Return Date &amp; Time</span>
-                </label>
+                <div className="flex items-center justify-between">
+                  <label htmlFor={returnDateTimeId} className="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center gap-1.5 truncate">
+                    <Calendar className="w-3.5 h-3.5 text-m3-on-surface-variant shrink-0" />
+                    <span className="truncate">Return Date &amp; Time</span>
+                  </label>
+                </div>
                 <input
                   id={returnDateTimeId}
                   type="datetime-local"
@@ -1177,8 +1261,60 @@ Please confirm booking!`;
                         : 'bg-white border-m3-outline-variant hover:border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20 text-m3-on-surface font-semibold cursor-pointer'
                   }`}
                 />
+                {returnDateTime && (
+                  <div className="flex items-center justify-between gap-1 text-[11px] px-0.5 pt-0.5">
+                    <span className="font-semibold text-slate-700 truncate" title="12-hour format">
+                      {formatTime12(returnDateTime)}
+                    </span>
+                    <div className="inline-flex rounded border border-m3-outline-variant/80 overflow-hidden shrink-0 shadow-2xs bg-slate-100">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = setDateTimePeriod(returnDateTime, 'AM');
+                          setReturnDateTime(updated);
+                          if (validationError) setValidationError('');
+                        }}
+                        className={`px-2 py-0.5 font-bold text-[10px] transition-colors cursor-pointer ${isAM(returnDateTime) ? 'bg-m3-primary text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200'}`}
+                        aria-label="Set return time to AM"
+                      >
+                        AM
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = setDateTimePeriod(returnDateTime, 'PM');
+                          setReturnDateTime(updated);
+                          if (validationError) setValidationError('');
+                        }}
+                        className={`px-2 py-0.5 font-bold text-[10px] transition-colors cursor-pointer ${!isAM(returnDateTime) ? 'bg-m3-primary text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200'}`}
+                        aria-label="Set return time to PM"
+                      >
+                        PM
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
+
+            {/* Smart Helper: When return time is early AM (00:00 to 04:59) on next day */}
+            {returnDateTime && isAM(returnDateTime) && returnHour !== null && returnHour >= 0 && returnHour <= 4 && (
+              <div className="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-m3-md bg-amber-50 border border-amber-200 text-[11px] text-amber-900 animate-in fade-in">
+                <span>
+                  Return is set to <strong>{formatTime12(returnDateTime)}</strong> (Early Morning / Night). Did you mean afternoon?
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const pmVal = setDateTimePeriod(returnDateTime, 'PM');
+                    setReturnDateTime(pmVal);
+                  }}
+                  className="px-2 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded text-[10px] font-bold shrink-0 transition-colors cursor-pointer shadow-2xs"
+                >
+                  Switch to PM
+                </button>
+              </div>
+            )}
 
             {/* Clean Result Banner directly attached after dates */}
             {durationInfo.hasDates ? (

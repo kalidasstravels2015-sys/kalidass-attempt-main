@@ -424,6 +424,47 @@ export default function QuotationEngine({
     setReturnDate(val);
   };
 
+  const formatTime12 = (dtStr) => {
+    if (!dtStr) return '';
+    try {
+      const dt = new Date(dtStr);
+      if (isNaN(dt.getTime())) return '';
+      return dt.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+    } catch {
+      return '';
+    }
+  };
+
+  const isAM = (dtStr) => {
+    if (!dtStr) return true;
+    try {
+      const dt = new Date(dtStr);
+      if (isNaN(dt.getTime())) return true;
+      return dt.getHours() < 12;
+    } catch {
+      return true;
+    }
+  };
+
+  const setDateTimePeriod = (currentDtStr, targetPeriod) => {
+    if (!currentDtStr || !currentDtStr.includes('T')) return currentDtStr;
+    try {
+      const [datePart, timePart] = currentDtStr.split('T');
+      let [hours, minutes] = timePart.split(':').map(Number);
+      if (isNaN(hours)) return currentDtStr;
+      if (isNaN(minutes)) minutes = 0;
+      const isCurrentlyPm = hours >= 12;
+      if (targetPeriod === 'PM' && !isCurrentlyPm) {
+        hours = (hours + 12) % 24;
+      } else if (targetPeriod === 'AM' && isCurrentlyPm) {
+        hours = (hours - 12 + 24) % 24;
+      }
+      return `${datePart}T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    } catch {
+      return currentDtStr;
+    }
+  };
+
   // Dedicated helper to ensure the entire result card and Book button are visible in viewport
   const scrollToResult = () => {
     setTimeout(() => {
@@ -1484,6 +1525,31 @@ Please confirm availability and share quote.`;
                         className="bg-transparent w-full outline-none text-xs sm:text-sm text-m3-on-surface font-semibold cursor-pointer py-0.5"
                       />
                     </div>
+                    {date && (
+                      <div className="flex items-center justify-between gap-1 text-[11px] px-0.5 pt-1">
+                        <span className="font-semibold text-slate-700 truncate" title="12-hour format">
+                          {formatTime12(date)}
+                        </span>
+                        <div className="inline-flex rounded border border-m3-outline-variant/80 overflow-hidden shrink-0 shadow-2xs bg-slate-100">
+                          <button
+                            type="button"
+                            onClick={() => handlePickupDateChange(setDateTimePeriod(date, 'AM'))}
+                            className={`px-2 py-0.5 font-bold text-[10px] transition-colors cursor-pointer ${isAM(date) ? 'bg-m3-primary text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200'}`}
+                            aria-label="Set pickup time to AM"
+                          >
+                            AM
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handlePickupDateChange(setDateTimePeriod(date, 'PM'))}
+                            className={`px-2 py-0.5 font-bold text-[10px] transition-colors cursor-pointer ${!isAM(date) ? 'bg-m3-primary text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200'}`}
+                            aria-label="Set pickup time to PM"
+                          >
+                            PM
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <div>
@@ -1509,6 +1575,31 @@ Please confirm availability and share quote.`;
                         className="bg-transparent w-full outline-none text-xs sm:text-sm text-m3-on-surface font-semibold cursor-pointer py-0.5"
                       />
                     </div>
+                    {returnDate && (
+                      <div className="flex items-center justify-between gap-1 text-[11px] px-0.5 pt-1">
+                        <span className="font-semibold text-slate-700 truncate" title="12-hour format">
+                          {formatTime12(returnDate)}
+                        </span>
+                        <div className="inline-flex rounded border border-m3-outline-variant/80 overflow-hidden shrink-0 shadow-2xs bg-slate-100">
+                          <button
+                            type="button"
+                            onClick={() => handleReturnDateChange(setDateTimePeriod(returnDate, 'AM'))}
+                            className={`px-2 py-0.5 font-bold text-[10px] transition-colors cursor-pointer ${isAM(returnDate) ? 'bg-m3-primary text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200'}`}
+                            aria-label="Set return time to AM"
+                          >
+                            AM
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleReturnDateChange(setDateTimePeriod(returnDate, 'PM'))}
+                            className={`px-2 py-0.5 font-bold text-[10px] transition-colors cursor-pointer ${!isAM(returnDate) ? 'bg-m3-primary text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200'}`}
+                            aria-label="Set return time to PM"
+                          >
+                            PM
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
