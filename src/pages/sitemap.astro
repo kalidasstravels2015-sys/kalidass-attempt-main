@@ -252,8 +252,8 @@ const sitemapSchema = {
   <!-- Hero Section -->
   <section class="bg-gradient-to-b from-m3-inverse-surface to-m3-primary text-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8 border-b border-m3-outline-variant/60">
     <div class="max-w-6xl mx-auto">
-      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-4 tracking-wide uppercase">
-        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-m3-success/15 border border-m3-success/30 text-m3-success text-xs font-semibold mb-4 tracking-wide uppercase">
+        <span class="inline-block w-2 h-2 rounded-full bg-m3-success"></span>
         <span>Directory &amp; Information Architecture</span>
       </div>
       <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-4">
@@ -278,7 +278,7 @@ const sitemapSchema = {
           <div class="text-xs text-m3-on-surface-variant mt-0.5">Service Hubs</div>
         </div>
         <div class="bg-m3-primary border border-m3-outline-variant/60 rounded-xl p-3.5 text-center">
-          <div class="text-2xl font-bold text-emerald-400">100%</div>
+          <div class="text-2xl font-bold text-m3-success">100%</div>
           <div class="text-xs text-m3-on-surface-variant mt-0.5">Machine-Readable AI</div>
         </div>
       </div>
@@ -417,7 +417,7 @@ const sitemapSchema = {
               >
                 <div class="flex items-center justify-between gap-2 mb-2">
                   <span class="text-xs font-medium text-m3-on-surface-variant">{service.duration}</span>
-                  <span class="text-xs font-bold text-m3-on-surface bg-sky-50 text-sky-800 border border-sky-200 px-2 py-0.5 rounded-md">From {startPrice}</span>
+                  <span class="text-xs font-bold text-m3-on-surface bg-m3-primary-container/30 text-m3-primary border border-m3-primary/20 px-2 py-0.5 rounded-md">From {startPrice}</span>
                 </div>
                 <h3 class="text-base font-bold text-m3-on-surface group-hover:text-m3-on-surface flex items-center gap-1.5">
                   <span>{service.title}</span>
@@ -532,7 +532,7 @@ const sitemapSchema = {
       <!-- Section 8: Machine-Readable AI & Developer Endpoints -->
       <section id="ai-endpoints" class="scroll-mt-24">
         <div class="flex items-center gap-3 mb-6">
-          <div class="w-10 h-10 rounded-xl bg-emerald-700 text-white flex items-center justify-center font-bold text-lg">8</div>
+          <div class="w-10 h-10 rounded-xl bg-m3-primary text-white flex items-center justify-center font-bold text-lg">8</div>
           <div>
             <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface">Machine-Readable AI Context, APIs &amp; Compliance</h2>
             <p class="text-xs sm:text-sm text-m3-on-surface-variant">Standards-compliant discovery endpoints for LLM engines, autonomous agents, and search engine crawlers.</p>
@@ -543,11 +543,11 @@ const sitemapSchema = {
           {machineEndpoints.map((item) => (
             <a
               href={item.url}
-              class="group block p-5 bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-emerald-600 rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
+              class="group block p-5 bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
             >
               <div class="flex items-center justify-between gap-2 mb-2">
                 <span class="text-xs font-mono px-2 py-0.5 rounded-md bg-m3-surface-container-low text-m3-primary border border-m3-outline-variant">{item.badge}</span>
-                <span class="text-xs text-m3-on-surface-variant group-hover:text-emerald-600 transition-colors">Open Resource ↗</span>
+                <span class="text-xs text-m3-on-surface-variant group-hover:text-m3-primary transition-colors">Open Resource ↗</span>
               </div>
               <h3 class="text-sm font-bold text-m3-on-surface group-hover:text-m3-primary flex items-center gap-1">
                 <span>{item.title}</span>
@@ -573,7 +573,7 @@ const sitemapSchema = {
               href="https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20am%20viewing%20your%20website%20sitemap%20and%20need%20a%20cab."
               target="_blank"
               rel="noopener noreferrer nofollow"
-              class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors shadow-xs"
+              class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-white text-xs font-bold transition-colors shadow-xs"
             >
               <span>WhatsApp Booking</span>
             </a>

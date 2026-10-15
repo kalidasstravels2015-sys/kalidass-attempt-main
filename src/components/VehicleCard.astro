@@ -42,13 +42,13 @@ const {
 
 <div
   id={id}
-  class={`bg-white rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md hover:border-slate-300 transition-all flex flex-col justify-between overflow-hidden group select-none ${className}`}
+  class={`bg-m3-surface rounded-m3-2xl border border-m3-outline-variant/80 shadow-m3-1 hover:shadow-m3-2 hover:border-m3-outline transition-all flex flex-col justify-between overflow-hidden group select-none ${className}`}
 >
   <div>
     <!-- 1. Vehicle Photo Showcase Container -->
-    <div class="relative h-28 sm:h-32 bg-slate-50 flex items-center justify-center p-3 border-b border-slate-100">
+    <div class="relative h-28 sm:h-32 bg-m3-surface-container-low flex items-center justify-center p-3 border-b border-m3-outline-variant/40">
       {badge && (
-        <span class="absolute top-2.5 left-2.5 z-10 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/95 text-slate-700 border border-slate-200 shadow-2xs">
+        <span class="absolute top-2.5 left-2.5 z-10 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-m3-full bg-m3-surface-container-high/95 text-m3-on-surface border border-m3-outline-variant shadow-m3-0">
           {badge}
         </span>
       )}
@@ -64,39 +64,39 @@ const {
           class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-xs"
         />
       ) : (
-        <Car className="w-10 h-10 text-slate-400" />
+        <Car className="w-10 h-10 text-m3-on-surface-variant" />
       )}
     </div>
 
     <!-- 2. Card Content -->
     <div class="p-3.5 sm:p-4">
-      <h3 class="text-sm sm:text-base font-bold text-slate-900 font-heading leading-tight truncate" title={name}>
+      <h3 class="text-sm sm:text-base font-bold text-m3-on-surface font-heading leading-tight truncate" title={name}>
         {name}
       </h3>
 
       <!-- 3. Clean Seats & Luggage Spec (Strict Single Line) -->
-      <div class="flex items-center gap-2 text-xs text-slate-500 mt-1.5 font-medium whitespace-nowrap">
+      <div class="flex items-center gap-2 text-xs text-m3-on-surface-variant mt-1.5 font-medium whitespace-nowrap">
         <span class="inline-flex items-center gap-1 shrink-0">
-          <Users className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+          <Users className="w-3.5 h-3.5 text-m3-on-surface-variant shrink-0" />
           <span>{seats}</span>
         </span>
-        <span class="text-slate-300 shrink-0">•</span>
+        <span class="text-m3-outline-variant shrink-0">•</span>
         <span class="inline-flex items-center gap-1 shrink-0">
-          <Luggage className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+          <Luggage className="w-3.5 h-3.5 text-m3-on-surface-variant shrink-0" />
           <span>{baggage}</span>
         </span>
       </div>
 
       <!-- 4. Transparent Fare Display -->
       {price && (
-        <div class="mt-3 pt-3 border-t border-slate-100 flex items-baseline justify-between">
+        <div class="mt-3 pt-3 border-t border-m3-outline-variant/50 flex items-baseline justify-between">
           <div>
-            <span class="block text-[10px] uppercase font-bold tracking-wider text-slate-400">
+            <span class="block text-[10px] uppercase font-bold tracking-wider text-m3-on-surface-variant">
               {priceLabel}
             </span>
-            <span class={`text-[11px] font-medium ${priceSubtext.toLowerCase().includes('extra') || priceSubtext.toLowerCase().includes('actual') ? 'text-amber-800' : 'text-emerald-700'}`}>{priceSubtext}</span>
+            <span class={`text-[11px] font-medium ${priceSubtext.toLowerCase().includes('extra') || priceSubtext.toLowerCase().includes('actual') ? 'text-m3-tertiary' : 'text-m3-success'}`}>{priceSubtext}</span>
           </div>
-          <span class="text-base sm:text-lg font-extrabold text-slate-900 font-heading">
+          <span class="text-base sm:text-lg font-extrabold text-m3-on-surface font-heading">
             {price}
           </span>
         </div>
@@ -109,7 +109,7 @@ const {
     {actionHref ? (
       <a
         href={actionHref}
-        class={`w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-full bg-slate-900 hover:bg-m3-primary active:bg-black text-white text-xs font-bold transition-all cursor-pointer shadow-2xs group/btn ${actionClass}`}
+        class={`w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary text-xs font-bold transition-all cursor-pointer shadow-m3-1 hover:shadow-m3-2 group/btn ${actionClass}`}
         {...dataAttributes}
       >
         <span>{actionText}</span>
@@ -120,7 +120,7 @@ const {
         type="button"
         data-select-vehicle={selectVehicleId}
         data-select-pax={selectPax}
-        class={`w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-full bg-slate-900 hover:bg-m3-primary active:bg-black text-white text-xs font-bold transition-all cursor-pointer shadow-2xs group/btn ${actionClass}`}
+        class={`w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary text-xs font-bold transition-all cursor-pointer shadow-m3-1 hover:shadow-m3-2 group/btn ${actionClass}`}
         {...dataAttributes}
       >
         <span>{actionText}</span>

@@ -56,25 +56,25 @@
       "wcagOnWhite": "16.98:1 (AAA)"
     },
     "tertiaryAmber": {
-      "name": "Warm Golden Amber",
+      "name": "Warm Saffron Golden Amber",
       "token": "m3-tertiary",
       "tone": "Tone 40",
-      "hex": "#D97706",
-      "rgb": "rgb(217, 119, 6)",
-      "hsl": "hsl(32, 95%, 44%)",
-      "cmyk": { "c": 0, "m": 55, "y": 100, "k": 15 },
+      "hex": "#8B5000",
+      "rgb": "rgb(139, 80, 0)",
+      "hsl": "hsl(35, 100%, 27%)",
+      "cmyk": { "c": 0, "m": 42, "y": 100, "k": 45 },
       "pantone": "PMS 138 C",
       "usage": "5-star Google review rating stars, temple tour headers (Tirupati, Chidambaram), VIP pilgrimage accent ribbons.",
-      "wcagOnWhite": "3.8:1 (Use with dark text or as icon)"
+      "wcagOnWhite": "6.6:1 (AA)"
     },
     "tertiaryContainer": {
       "name": "Warm Champagne Container",
       "token": "m3-tertiary-container",
       "tone": "Tone 90",
-      "hex": "#FEF3C7",
-      "rgb": "rgb(254, 243, 199)",
-      "hsl": "hsl(48, 96%, 89%)",
-      "cmyk": { "c": 2, "m": 4, "y": 28, "k": 0 },
+      "hex": "#FFDCBE",
+      "rgb": "rgb(255, 220, 190)",
+      "hsl": "hsl(28, 100%, 87%)",
+      "cmyk": { "c": 0, "m": 14, "y": 25, "k": 0 },
       "pantone": "PMS 7401 C",
       "usage": "Background container for rating badges, temple pilgrimage highlights, customer testimonials."
     },
@@ -112,14 +112,25 @@
       "pantone": "PMS Cool Gray 2 C",
       "usage": "Alternating poster sections, vehicle capacity feature boxes, itemized receipt breakdown background."
     },
+    "outline": {
+      "name": "Accessible Stroke Outline",
+      "token": "m3-outline",
+      "tone": "Tone 50",
+      "hex": "#6B7280",
+      "rgb": "rgb(107, 114, 128)",
+      "hsl": "hsl(220, 9%, 46%)",
+      "cmyk": { "c": 16, "m": 11, "y": 0, "k": 50 },
+      "pantone": "PMS Cool Gray 8 C",
+      "usage": "Form inputs, accessible component boundaries (4.8:1 WCAG Non-Text Contrast)."
+    },
     "outlineVariant": {
       "name": "Subtle Slate Divider Stroke",
       "token": "m3-outline-variant",
       "tone": "Tone 80",
-      "hex": "#E5E7EB",
-      "rgb": "rgb(229, 231, 235)",
-      "hsl": "hsl(220, 13%, 91%)",
-      "cmyk": { "c": 10, "m": 7, "y": 8, "k": 0 },
+      "hex": "#C9CDD3",
+      "rgb": "rgb(201, 205, 211)",
+      "hsl": "hsl(216, 10%, 81%)",
+      "cmyk": { "c": 5, "m": 3, "y": 0, "k": 17 },
       "pantone": "PMS Cool Gray 3 C",
       "usage": "Card borders, divider lines, coupon cut lines, table separators."
     },

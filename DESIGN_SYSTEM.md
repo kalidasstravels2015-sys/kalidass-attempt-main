@@ -38,35 +38,76 @@ The typography system follows the official **15-role Google Material Design 3 Ty
 
 ## 2. Dynamic Color & Surface Hierarchy (100% Google M3 Specification)
 
-The color system implements Google Material Design 3's **Executive Midnight Charcoal & Onyx** with brand logo accent harmony:
+The color system implements Google Material Design 3's **Executive Midnight Charcoal & Onyx** with brand logo accent harmony and full dual-scheme (Light + Dark) support:
 
-### Primary & Accent Tonal Palette
+### Primary & Accent Tonal Palette (Light Scheme)
 - **Primary:** `bg-m3-primary` (`#1E252D` - Tone 40) — Executive Midnight Onyx (12.5:1 WCAG AAA contrast on white)
 - **On Primary:** `text-m3-on-primary` (`#FFFFFF` - Tone 100)
 - **Primary Container:** `bg-m3-primary-container` (`#E2E5EA` - Tone 90) — Soft Executive Light Slate container
 - **On Primary Container:** `text-m3-on-primary-container` (`#101418` - Tone 10)
-- **Primary Fixed:** `bg-m3-primary-fixed` (`#E2E5EA`)
-- **On Primary Fixed:** `text-m3-on-primary-fixed` (`#101418`)
+- **Primary Fixed:** `bg-m3-primary-fixed` (`#E2E5EA` - Tone 90)
+- **Primary Fixed Dim:** `bg-m3-primary-fixed-dim` (`#C6CAD0` - Tone 80)
+- **On Primary Fixed:** `text-m3-on-primary-fixed` (`#101418` - Tone 10)
+- **On Primary Fixed Variant:** `text-m3-on-primary-fixed-variant` (`#374151` - Tone 30)
 - **Secondary:** `bg-m3-secondary` (`#475467` - Tone 40) — Harmonized Slate Steel Charcoal
+- **On Secondary:** `text-m3-on-secondary` (`#FFFFFF` - Tone 100)
 - **Secondary Container:** `bg-m3-secondary-container` (`#EAECF0` - Tone 90)
-- **Tertiary:** `bg-m3-tertiary` (`#6D5E0F` - Tone 40) — Warm Golden Amber for ratings, reviews, and travel badges
-- **Tertiary Container:** `bg-m3-tertiary-container` (`#F8E287` - Tone 90) — Warm champagne accent container
-- **On Tertiary Container:** `text-m3-on-tertiary-container` (`#221B00` - Tone 10)
+- **On Secondary Container:** `text-m3-on-secondary-container` (`#1D2939` - Tone 10)
+- **Secondary Fixed:** `bg-m3-secondary-fixed` (`#EAECF0` - Tone 90)
+- **Secondary Fixed Dim:** `bg-m3-secondary-fixed-dim` (`#BAC7DE` - Tone 80)
+- **On Secondary Fixed:** `text-m3-on-secondary-fixed` (`#1D2939` - Tone 10)
+- **On Secondary Fixed Variant:** `text-m3-on-secondary-fixed-variant` (`#3B485A` - Tone 30)
+- **Tertiary:** `bg-m3-tertiary` (`#8B5000` - Tone 40) — Saffron & Temple Golden Amber for ratings, reviews, and travel badges
+- **On Tertiary:** `text-m3-on-tertiary` (`#FFFFFF` - Tone 100)
+- **Tertiary Container:** `bg-m3-tertiary-container` (`#FFDCBE` - Tone 90) — Warm champagne accent container
+- **On Tertiary Container:** `text-m3-on-tertiary-container` (`#2C1600` - Tone 10)
+- **Tertiary Fixed:** `bg-m3-tertiary-fixed` (`#FFDCBE` - Tone 90)
+- **Tertiary Fixed Dim:** `bg-m3-tertiary-fixed-dim` (`#FFB870` - Tone 80)
+- **On Tertiary Fixed:** `text-m3-on-tertiary-fixed` (`#2C1600` - Tone 10)
+- **On Tertiary Fixed Variant:** `text-m3-on-tertiary-fixed-variant` (`#6A3C00` - Tone 30)
+- **Success:** `bg-m3-success` (`#006D3B` - Tone 40) — M3 Custom Harmonized Green for confirmations & inclusions
+- **On Success:** `text-m3-on-success` (`#FFFFFF` - Tone 100)
+- **Success Container:** `bg-m3-success-container` (`#B7F1C4` - Tone 90)
+- **On Success Container:** `text-m3-on-success-container` (`#00210E` - Tone 10)
+- **Error:** `bg-m3-error` (`#BA1A1A` - Tone 40)
+- **On Error:** `text-m3-on-error` (`#FFFFFF` - Tone 100)
+- **Error Container:** `bg-m3-error-container` (`#FFDAD6` - Tone 90)
+- **On Error Container:** `text-m3-on-error-container` (`#410002` - Tone 10)
 - **Brand Red Accent:** `text-logo-red` (`#EC221F`) — Reserved strictly for the "K" logo mark only (never used for live status pulse indicators, rates, or copy)
 
-### Surface Container Elevation Ladder
+### Surface Container Elevation Ladder (Light Scheme)
 M3 surfaces use authentic anti-glare neutral container lightness layers:
 - **Canvas Base:** `bg-m3-surface` (`#F9FAFB` - Tone 98) — Clean, modern canvas
+- **Surface Dim:** `bg-m3-surface-dim` (`#E5E7EB` - Tone 87)
+- **Surface Bright:** `bg-m3-surface-bright` (`#FFFFFF` - Tone 100)
 - **Surface Low (Alternating Sections):** `bg-m3-surface-container-low` (`#F3F4F6` - Tone 96)
 - **Surface (Elevated Cards/Sheets):** `bg-m3-surface-container-lowest` (`#FFFFFF` - Tone 100)
-- **Surface Container:** `bg-m3-surface-container` (`#ECEEF2` - Tone 94) — Input fields, search bars
-- **Surface Container High:** `bg-m3-surface-container-high` (`#E6E8ED` - Tone 92) — Active nav pills, chips
-- **Surface Container Highest:** `bg-m3-surface-container-highest` (`#E0E2E7` - Tone 90) — Subtle dividers & unselected borders
-- **On Surface (Rates & Headlines):** `text-m3-on-surface` (`#1A1C1E` - Tone 10) — Deep Onyx Charcoal for maximum clarity (never red!)
-- **On Surface Variant:** `text-m3-on-surface-variant` (`#42474E` - Tone 30) — Secondary copy & icons
-- **Outline:** `border-m3-outline` (`#72777F` - Tone 50)
-- **Outline Variant:** `border-m3-outline-variant` (`#C2C7CF` - Tone 80)
-- **Inverse Surface:** `bg-m3-inverse-surface` (`#2F3033` - Tone 20) — Top app bar scrolled state & dark overlays
+- **Surface Container:** `bg-m3-surface-container` (`#ECEEF1` - Tone 94) — Input fields, search bars
+- **Surface Container High:** `bg-m3-surface-container-high` (`#E8EAED` - Tone 92) — Active nav pills, chips
+- **Surface Container Highest:** `bg-m3-surface-container-highest` (`#E2E4E9` - Tone 90) — Subtle dividers & unselected borders
+- **On Surface (Rates & Headlines):** `text-m3-on-surface` (`#111827` - Tone 10) — Deep Midnight Onyx for maximum clarity (never red!)
+- **On Surface Variant:** `text-m3-on-surface-variant` (`#4B5563` - Tone 30) — Secondary copy & icons
+- **Outline:** `border-m3-outline` (`#6B7280` - Tone 50) — Accessible form strokes (4.8:1 WCAG Non-Text)
+- **Outline Variant:** `border-m3-outline-variant` (`#C9CDD3` - Tone 80) — Subtle structural divider strokes
+- **Inverse Surface:** `bg-m3-inverse-surface` (`#1F2937` - Tone 20) — Top app bar scrolled state & dark overlays
+- **Inverse On Surface:** `text-m3-inverse-on-surface` (`#F9FAFB` - Tone 95)
+- **Inverse Primary:** `text-m3-inverse-primary` (`#9CA3AF` - Tone 80)
+- **Surface Tint:** `bg-m3-surface-tint` (`#1E252D` - Tone 40) — Dynamic elevation surface tint layer
+
+### Official Google M3 Dark Scheme Specification
+Automatically active under `@media (prefers-color-scheme: dark)` and `html[data-theme="dark"]`:
+- **Primary (Tone 80):** `#C0C7D2` | **On Primary (Tone 20):** `#151C24`
+- **Primary Container (Tone 30):** `#2A3139` | **On Primary Container (Tone 90):** `#DCE3EE`
+- **Secondary (Tone 80):** `#BAC7DE` | **On Secondary (Tone 20):** `#243143`
+- **Secondary Container (Tone 30):** `#3B485A` | **On Secondary Container (Tone 90):** `#D6E3FB`
+- **Tertiary (Tone 80):** `#FFB871` | **On Tertiary (Tone 20):** `#4A2800`
+- **Tertiary Container (Tone 30):** `#6A3C00` | **On Tertiary Container (Tone 90):** `#FFDCBE`
+- **Success (Tone 80):** `#80D99C` | **On Success (Tone 20):** `#00391C`
+- **Success Container (Tone 30):** `#00522B` | **On Success Container (Tone 90):** `#B7F1C4`
+- **Error (Tone 80):** `#FFB4AB` | **On Error (Tone 20):** `#690004`
+- **Error Container (Tone 30):** `#930009` | **On Error Container (Tone 90):** `#FFDAD6`
+- **Dark Surface Hierarchy:** Surface Tone 6 (`#0B0F13`), Container Low Tone 10 (`#111827`), Container Tone 12 (`#151C24`), Container High Tone 17 (`#1E252D`), Container Highest Tone 22 (`#252D37`)
+- **Dark Text & Outlines:** On Surface Tone 90 (`#E2E4E9`), On Surface Variant Tone 80 (`#C9CDD3`), Outline Tone 60 (`#8A919B`), Outline Variant Tone 30 (`#404750`)
 
 ---
 

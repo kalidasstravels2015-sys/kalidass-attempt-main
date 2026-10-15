@@ -1674,7 +1674,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
               </p>
 
               <!-- Prominent Temple Visual Card (Visible on Mobile & Desktop) -->
-              <div class="relative w-full h-44 sm:h-50 lg:h-52 rounded-m3-xl overflow-hidden shadow-m3-1 border border-m3-outline-variant/60 mb-3 sm:mb-4 bg-slate-900">
+              <div class="relative w-full h-44 sm:h-50 lg:h-52 rounded-m3-xl overflow-hidden shadow-m3-1 border border-m3-outline-variant/60 mb-3 sm:mb-4 bg-m3-inverse-surface">
                 {heroImage && (
                   <OptimizedImage
                     src={heroImage}
@@ -1701,10 +1701,10 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                     fetchpriority="high"
                   />
                 )}
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/25 to-transparent pointer-events-none"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-m3-inverse-surface/85 via-m3-inverse-surface/25 to-transparent pointer-events-none"></div>
                 <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between pointer-events-none text-white text-xs font-semibold">
-                  <span class="px-2.5 py-1 rounded-m3-full bg-slate-900/85 backdrop-blur-sm border border-white/20 flex items-center gap-1.5 shadow-xs truncate max-w-[65%]">
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0"></span>
+                  <span class="px-2.5 py-1 rounded-m3-full bg-m3-inverse-surface/85 backdrop-blur-sm border border-white/20 flex items-center gap-1.5 shadow-xs truncate max-w-[65%]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-m3-tertiary-fixed shrink-0"></span>
                     <span class="truncate">
                       {isTirupati 
                         ? "Sri Venkateswara Temple, Tirumala" 
@@ -1733,27 +1733,27 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
 
               <!-- Mobile Trust Strip (Replaces redundant CTA, provides instant trust and separates headings) -->
               <div data-mobile-trust-strip class="flex items-center justify-between gap-1 mb-3.5 sm:hidden text-[11px] text-m3-on-surface-variant font-medium bg-m3-surface-container-low px-3 py-2 rounded-m3-lg border border-m3-outline-variant/60 shadow-2xs">
-                <span class="flex items-center gap-1"><span class="text-emerald-600 font-bold">✓</span> ₹500 Advance</span>
-                <span class="flex items-center gap-1"><span class="text-emerald-600 font-bold">✓</span> {isTirupati ? "Tolls & AP Permit Inc." : isThiruvannamalai ? "GST & NH Tolls Inc." : isKanchipuram ? "NH 48 Tolls Inc." : isNavagraha ? "Tolls at Actuals" : isRameswaram ? "Tolls at Actuals" : isSabarimala ? "Permits & Tolls Actuals" : isChidambaram ? "NH 32 Tolls Inc." : isVellore ? "NH 48 Tolls Inc." : "Tolls at Actuals"}</span>
-                <span class="flex items-center gap-1"><span class="text-emerald-600 font-bold">✓</span> {isTirupati ? "Hill Ghat Road" : isThiruvannamalai ? "Girivalam Standby" : isKanchipuram ? "Weaver Waiting" : isNavagraha ? "750 km Covered" : isRameswaram ? "1,200 km Covered" : isSabarimala ? "Satvik Chauffeur" : isChidambaram ? "450 km Covered" : isVellore ? "300 km Covered" : "Driver Bata Sep."}</span>
+                <span class="flex items-center gap-1"><span class="text-m3-success font-bold">✓</span> ₹500 Advance</span>
+                <span class="flex items-center gap-1"><span class="text-m3-success font-bold">✓</span> {isTirupati ? "Tolls & AP Permit Inc." : isThiruvannamalai ? "GST & NH Tolls Inc." : isKanchipuram ? "NH 48 Tolls Inc." : isNavagraha ? "Tolls at Actuals" : isRameswaram ? "Tolls at Actuals" : isSabarimala ? "Permits & Tolls Actuals" : isChidambaram ? "NH 32 Tolls Inc." : isVellore ? "NH 48 Tolls Inc." : "Tolls at Actuals"}</span>
+                <span class="flex items-center gap-1"><span class="text-m3-success font-bold">✓</span> {isTirupati ? "Hill Ghat Road" : isThiruvannamalai ? "Girivalam Standby" : isKanchipuram ? "Weaver Waiting" : isNavagraha ? "750 km Covered" : isRameswaram ? "1,200 km Covered" : isSabarimala ? "Satvik Chauffeur" : isChidambaram ? "450 km Covered" : isVellore ? "300 km Covered" : "Driver Bata Sep."}</span>
               </div>
 
               <!-- Inclusions Matrix (Desktop sm+ only) -->
               <div class="hidden sm:grid grid-cols-2 gap-2 mb-3 sm:mb-4 text-[11px] sm:text-xs">
                 <div class="p-2 sm:p-2.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center gap-1.5">
-                  <span class="text-emerald-700 font-bold">✓</span>
+                  <span class="text-m3-success font-bold">✓</span>
                   <span class="font-semibold text-m3-on-surface">{isTirupati ? "From ₹6,000 (1 Day)" : isThiruvannamalai ? "From ₹6,500 (1 Day)" : isKanchipuram ? "From ₹3,500 (1 Day)" : isNavagraha ? "From ₹12,000 (2 Days)" : isRameswaram ? "From ₹18,500 (2 Days)" : isSabarimala ? "From ₹26,500 (3 Days)" : isChidambaram ? "From ₹7,400 (1 Day)" : isVellore ? "From ₹4,800 (1 Day)" : "From ₹4,500 (1 Day)"}</span>
                 </div>
                 <div class="p-2 sm:p-2.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center gap-1.5">
-                  <span class="text-emerald-700 font-bold">✓</span>
+                  <span class="text-m3-success font-bold">✓</span>
                   <span class="font-semibold text-m3-on-surface">{isTirupati ? "Tolls & AP Permit Inc." : isThiruvannamalai ? "GST & NH Tolls Inc." : isKanchipuram ? "NH 48 Tolls Inc." : isNavagraha ? "Tolls & Bata at Actuals" : isRameswaram ? "Tolls & Bata at Actuals" : isSabarimala ? "Permits & Tolls Actuals" : isChidambaram ? "NH 32 Tolls Inc." : isVellore ? "NH 48 Tolls Inc." : "Tolls at Actuals"}</span>
                 </div>
                 <div class="p-2 sm:p-2.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center gap-1.5">
-                  <span class="text-emerald-700 font-bold">✓</span>
+                  <span class="text-m3-success font-bold">✓</span>
                   <span class="font-semibold text-m3-on-surface">{isTirupati ? "Tirumala Ghat Hill Inc." : isThiruvannamalai ? "14 km Girivalam Standby" : isKanchipuram ? "Free Weaver Waiting" : isNavagraha ? "Complete 750 km Circuit" : isRameswaram ? "1,200 km & Dhanushkodi" : isSabarimala ? "Nilakkal Ghat Route" : isChidambaram ? "450 km & Pichavaram" : isVellore ? "300 km & Vellore Fort" : "Driver Bata Separate"}</span>
                 </div>
                 <div class="p-2 sm:p-2.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center gap-1.5">
-                  <span class="text-emerald-700 font-bold">✓</span>
+                  <span class="text-m3-success font-bold">✓</span>
                   <span class="font-semibold text-m3-on-surface">Doorstep Pickup</span>
                 </div>
               </div>
@@ -1836,7 +1836,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
           </h1>
 
           <!-- Service Visual Hero Banner / Placeholder -->
-          <div class="relative w-full h-44 sm:h-64 md:h-72 rounded-m3-xl overflow-hidden shadow-m3-1 border border-m3-outline-variant/60 mb-5 bg-slate-900">
+          <div class="relative w-full h-44 sm:h-64 md:h-72 rounded-m3-xl overflow-hidden shadow-m3-1 border border-m3-outline-variant/60 mb-5 bg-m3-inverse-surface">
             {heroImage ? (
               <OptimizedImage
                 src={heroImage}
@@ -1845,19 +1845,19 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                 sizes="(max-width: 640px) 100vw, 896px"
               />
             ) : (
-              <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 text-slate-300 p-6 text-center">
+              <div class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-m3-inverse-surface via-m3-surface-dim to-m3-inverse-surface text-m3-inverse-on-surface p-6 text-center">
                 <div class="w-12 h-12 rounded-m3-full bg-white/10 flex items-center justify-center mb-2 text-white/80">
                   <span class="material-symbols-outlined text-[28px]">image</span>
                 </div>
                 <p class="text-xs sm:text-sm font-semibold text-white/90">{service.title}</p>
-                <span class="text-micro text-slate-400 mt-0.5 uppercase tracking-wider">Service Visual (Placeholder)</span>
+                <span class="text-micro text-m3-on-surface-variant mt-0.5 uppercase tracking-wider">Service Visual (Placeholder)</span>
               </div>
             )}
 
             <!-- Subtle Bottom Gradient Scrim & Badges -->
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent pointer-events-none"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-m3-inverse-surface/75 via-transparent to-transparent pointer-events-none"></div>
             <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none gap-2">
-              <span class="px-2.5 py-0.5 rounded-m3-full bg-slate-900/80 backdrop-blur-md text-white text-micro font-semibold border border-white/20 shadow-sm truncate max-w-[50%]">
+              <span class="px-2.5 py-0.5 rounded-m3-full bg-m3-inverse-surface/80 backdrop-blur-md text-white text-micro font-semibold border border-white/20 shadow-sm truncate max-w-[50%]">
                 {service.category}
               </span>
               {service.duration && (
@@ -2194,8 +2194,8 @@ Please share availability and confirmed quote.`;
                               {vehicleName}
                             </h3>
                             <div class="flex items-center gap-2 text-xs sm:text-sm font-semibold text-m3-on-surface mt-1.5 whitespace-nowrap">
-                              <span class="inline-flex items-center gap-1.5 font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-m3-md border border-emerald-200 shrink-0">
-                                <Users className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                              <span class="inline-flex items-center gap-1.5 font-bold text-m3-on-success-container bg-m3-success-container/30 px-2.5 py-0.5 rounded-m3-md border border-m3-success/20 shrink-0">
+                                <Users className="w-3.5 h-3.5 text-m3-success shrink-0" />
                                 <span>{seats || '4 Passengers'}</span>
                               </span>
                               <span class="inline-flex items-center gap-1.5 font-medium text-m3-on-surface bg-m3-surface-container px-2.5 py-0.5 rounded-m3-md border border-m3-outline-variant/60 shrink-0">
@@ -2283,9 +2283,9 @@ Please share availability and confirmed quote.`;
                           <a
                             href="tel:+918939539211"
                             aria-label={`Call to book ${shortName} for ${service.title}`}
-                            class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-surface-container hover:bg-blue-50 active:bg-blue-100 text-m3-on-surface hover:text-[#1A73E8] border border-m3-outline-variant hover:border-blue-300 text-xs font-bold transition-all select-none"
+                            class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-surface-container hover:bg-m3-primary-container/30 active:bg-m3-primary-container/50 text-m3-on-surface hover:text-m3-primary border border-m3-outline-variant hover:border-m3-primary/40 text-xs font-bold transition-all select-none"
                           >
-                            <AndroidPhoneIcon className="w-3.5 h-3.5 text-[#1A73E8] shrink-0" />
+                            <AndroidPhoneIcon className="w-3.5 h-3.5 text-m3-primary shrink-0" />
                             <span>Call Now</span>
                           </a>
                           <a
@@ -2299,7 +2299,7 @@ Please share availability and confirmed quote.`;
                             data-slug={service.slug}
                             data-duration={pilgrimConfig ? "1 Day (Same Day Return)" : ""}
                             aria-label={`Book ${vehicleName} on WhatsApp for ${heroPrice}`}
-                            class="tariff-whatsapp-btn inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 text-xs font-bold transition-all select-none cursor-pointer"
+                            class="tariff-whatsapp-btn inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-success-container/20 hover:bg-m3-success-container/35 active:bg-m3-success-container/50 text-m3-on-surface border border-m3-success/30 text-xs font-bold transition-all select-none cursor-pointer"
                           >
                             <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0" />
                             <span>Enquire</span>
@@ -2489,8 +2489,8 @@ Please share availability and confirmed quote.`;
       {!hasDedicatedEngine && pilgrimConfig && (
         <section id="compare" aria-label="Why Choose Kalidass Travels Over Online Aggregators" class="bg-m3-surface rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 p-5 sm:p-7 scroll-mt-40">
           <div class="max-w-2xl mb-5">
-            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-emerald-50 text-emerald-900 text-xs font-bold uppercase tracking-wider mb-2 border border-emerald-200">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-success-container/30 text-m3-on-success-container text-xs font-bold uppercase tracking-wider mb-2 border border-m3-success/20">
+              <ShieldCheck className="w-3.5 h-3.5 text-m3-success shrink-0" />
               <span>Transparent Comparison</span>
             </div>
             <h2 class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading tracking-tight">
@@ -2506,7 +2506,7 @@ Please share availability and confirmed quote.`;
               <thead class="bg-m3-surface-container text-m3-on-surface-variant font-bold uppercase tracking-wider text-micro sm:text-xs">
                 <tr>
                   <th class="p-2.5 sm:p-4">Feature</th>
-                  <th class="p-2.5 sm:p-4 bg-emerald-50/70 text-emerald-900 font-extrabold whitespace-nowrap">Kalidass Travels</th>
+                  <th class="p-2.5 sm:p-4 bg-m3-success-container/25 text-m3-on-surface font-extrabold whitespace-nowrap">Kalidass Travels</th>
                   <th class="p-2.5 sm:p-4 text-m3-on-surface-variant">
                     <span class="sm:hidden">Online App Cabs</span>
                     <span class="hidden sm:inline">Online Cab Aggregators (MakeMyTrip / Savaari / Uber)</span>
@@ -2517,7 +2517,7 @@ Please share availability and confirmed quote.`;
                 {pilgrimConfig.comparisonRows.map((row) => (
                   <tr class="hover:bg-m3-surface-container-low transition-colors">
                     <td class="p-2.5 sm:p-4 font-semibold align-top">{row.feature}</td>
-                    <td class="p-2.5 sm:p-4 bg-emerald-50/40 font-bold text-emerald-950 align-top">{row.kalidass}</td>
+                    <td class="p-2.5 sm:p-4 bg-m3-success-container/15 font-bold text-m3-on-surface align-top">{row.kalidass}</td>
                     <td class="p-2.5 sm:p-4 text-m3-on-surface-variant align-top">{row.aggregators}</td>
                   </tr>
                 ))}
@@ -2632,7 +2632,7 @@ Please share availability and confirmed quote.`;
               <div>
                 <div class="flex items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-1.5 mb-2 sm:pb-2 sm:mb-2.5">
                   <h3 class="font-bold text-m3-on-surface text-xs sm:text-sm font-heading flex items-center gap-1.5">
-                    {isTour ? <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" /> : <Compass className="w-3.5 h-3.5 text-m3-primary shrink-0" />}
+                    {isTour ? <Sparkles className="w-3.5 h-3.5 text-m3-tertiary shrink-0" /> : <Compass className="w-3.5 h-3.5 text-m3-primary shrink-0" />}
                     <span>{guideLabels.col1Title}</span>
                   </h3>
                   <span class="text-[10px] sm:text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant bg-m3-surface-container px-1.5 py-0.5 rounded-m3-sm border border-m3-outline-variant/50">
@@ -2646,7 +2646,7 @@ Please share availability and confirmed quote.`;
                       <div class="bg-m3-surface rounded-m3-md p-2 sm:p-2.5 border border-m3-outline-variant/60 shadow-2xs flex items-start gap-2 min-w-0">
                         <div class={`w-1.5 h-1.5 rounded-full shrink-0 mt-1.5 ring-2 ${
                           isTour 
-                            ? 'bg-amber-600 ring-amber-100' 
+                            ? 'bg-m3-tertiary ring-m3-tertiary-container' 
                             : 'bg-m3-primary ring-m3-primary/20'
                         }`}></div>
                         <div class="min-w-0 flex-1">
@@ -2665,8 +2665,8 @@ Please share availability and confirmed quote.`;
                 )}
               </div>
 
-              <div class="mt-2.5 pt-2 border-t border-m3-outline-variant/40 flex items-center gap-1.5 text-[11px] font-semibold text-emerald-800">
-                <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
+              <div class="mt-2.5 pt-2 border-t border-m3-outline-variant/40 flex items-center gap-1.5 text-[11px] font-semibold text-m3-success">
+                <CheckCircle2 className="w-3 h-3 text-m3-success shrink-0" />
                 <span>{isTour ? (isPondicherry ? "Coastal tour circuit with flexible halts at Auroville, White Town & beaches" : "Sacred yatra circuit coordinated with verified sanctum pooja timings") : "Doorstep pickup & return across all Chennai neighborhoods"}</span>
               </div>
             </div>
@@ -2717,7 +2717,7 @@ Please share availability and confirmed quote.`;
 
               {isTour && (
                 <div class="mt-2.5 pt-2 border-t border-m3-outline-variant/40 flex items-start gap-1.5 text-[11px] text-m3-on-surface-variant leading-tight">
-                  <Info className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
+                  <Info className="w-3.5 h-3.5 text-m3-tertiary shrink-0 mt-0.5" />
                   <span>Afternoon Break: Most shrines close 12:30 PM – 04:00 PM for pooja &amp; reopen in the evening.</span>
                 </div>
               )}
@@ -2728,7 +2728,7 @@ Please share availability and confirmed quote.`;
               <div>
                 <div class="flex items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-1.5 mb-2 sm:pb-2 sm:mb-2.5">
                   <h3 class="font-bold text-m3-on-surface text-xs sm:text-sm font-heading flex items-center gap-1.5">
-                    {isTour ? <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" /> : <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />}
+                    {isTour ? <Sparkles className="w-3.5 h-3.5 text-m3-tertiary shrink-0" /> : <ShieldCheck className="w-3.5 h-3.5 text-m3-success shrink-0" />}
                     <span>{guideLabels.dressCodeLabel}</span>
                   </h3>
                   <span class="text-[10px] sm:text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant bg-m3-surface-container px-1.5 py-0.5 rounded-m3-sm border border-m3-outline-variant/50">
@@ -2751,13 +2751,13 @@ Please share availability and confirmed quote.`;
                         </h4>
                         <div class="text-[11px] sm:text-xs space-y-0.5 pt-0.5">
                           <div class="flex items-start gap-1.5 text-m3-on-surface">
-                            <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0 mt-0.5" />
-                            <span class="leading-snug"><strong class="font-semibold text-emerald-900">Allowed:</strong> {item.allowed}</span>
+                            <CheckCircle2 className="w-3 h-3 text-m3-success shrink-0 mt-0.5" />
+                            <span class="leading-snug"><strong class="font-semibold text-m3-on-success-container">Allowed:</strong> {item.allowed}</span>
                           </div>
                           {item.prohibited && (
                             <div class="flex items-start gap-1.5 text-m3-on-surface-variant">
-                              <XCircle className="w-3 h-3 text-rose-600 shrink-0 mt-0.5" />
-                              <span class="leading-snug"><strong class="font-semibold text-rose-800">Prohibited:</strong> {item.prohibited}</span>
+                              <XCircle className="w-3 h-3 text-m3-error shrink-0 mt-0.5" />
+                              <span class="leading-snug"><strong class="font-semibold text-m3-on-error-container">Prohibited:</strong> {item.prohibited}</span>
                             </div>
                           )}
                         </div>
@@ -2772,15 +2772,15 @@ Please share availability and confirmed quote.`;
               </div>
 
               {isTour ? (
-                <div class="mt-2 p-2 bg-amber-500/10 border border-amber-400/30 rounded-m3-md text-[11px] text-amber-950 flex items-start gap-1.5">
-                  <AlertCircle className="w-3.5 h-3.5 text-amber-700 shrink-0 mt-0.5" />
+                <div class="mt-2 p-2 bg-m3-tertiary-container/30 border border-m3-tertiary/30 rounded-m3-md text-[11px] text-m3-on-surface flex items-start gap-1.5">
+                  <AlertCircle className="w-3.5 h-3.5 text-m3-tertiary shrink-0 mt-0.5" />
                   <span class="leading-snug">
                     <strong class="font-bold">Strict Rule:</strong> Western wear, jeans, shorts, and Bermudas are prohibited inside sanctums.
                   </span>
                 </div>
               ) : (
-                <div class="mt-2 p-2 bg-emerald-50 border border-emerald-200 rounded-m3-md text-[11px] text-emerald-950 flex items-start gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0 mt-0.5" />
+                <div class="mt-2 p-2 bg-m3-success-container/30 border border-m3-success/20 rounded-m3-md text-[11px] text-m3-on-surface flex items-start gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-m3-success shrink-0 mt-0.5" />
                   <span class="leading-snug">
                     <strong class="font-bold">Verified Drivers:</strong> Uniformed, police-verified, non-smoking chauffeurs with 7+ years of driving experience.
                   </span>
@@ -2793,7 +2793,7 @@ Please share availability and confirmed quote.`;
               <div>
                 <div class="flex items-center justify-between gap-2 border-b border-m3-outline-variant/60 pb-1.5 mb-2 sm:pb-2 sm:mb-2.5">
                   <h3 class="font-bold text-m3-on-surface text-xs sm:text-sm font-heading flex items-center gap-1.5">
-                    <Lightbulb className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                    <Lightbulb className="w-3.5 h-3.5 text-m3-tertiary shrink-0" />
                     <span>{guideLabels.tipsTitle}</span>
                   </h3>
                   <span class="text-[10px] sm:text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant bg-m3-surface-container px-1.5 py-0.5 rounded-m3-sm border border-m3-outline-variant/50">
@@ -2805,7 +2805,7 @@ Please share availability and confirmed quote.`;
                   <div class="space-y-1.5 sm:space-y-2">
                     {parsedTips.map((tip: any) => (
                       <div class="bg-m3-surface p-2 sm:p-2.5 rounded-m3-md border border-m3-outline-variant/60 flex items-start gap-2 shadow-2xs">
-                        <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0 mt-0.5" />
+                        <CheckCircle2 className="w-3 h-3 text-m3-success shrink-0 mt-0.5" />
                         <div class="space-y-0.5 text-[11px] sm:text-xs min-w-0 flex-1">
                           {tip.title && (
                             <span class="font-bold text-m3-on-surface block text-xs leading-tight">{tip.title}</span>
@@ -2823,7 +2823,7 @@ Please share availability and confirmed quote.`;
               </div>
 
               <div class="mt-2.5 pt-2 border-t border-m3-outline-variant/40 flex items-center justify-between text-[11px] text-m3-on-surface-variant">
-                <span class="font-semibold text-emerald-800">Assistance during darshan &amp; temple queues</span>
+                <span class="font-semibold text-m3-success">Assistance during darshan &amp; temple queues</span>
                 <span class="font-bold text-m3-primary">24/7 Helpline</span>
               </div>
             </div>
@@ -2872,8 +2872,8 @@ Please share availability and confirmed quote.`;
       {hasDedicatedEngine && pilgrimConfig && (
         <section id="compare" aria-label="Why Choose Kalidass Travels Over Online Aggregators" class="bg-m3-surface rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 p-5 sm:p-7 scroll-mt-40">
           <div class="max-w-2xl mb-4 sm:mb-5">
-            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-emerald-50 text-emerald-900 text-xs font-bold uppercase tracking-wider mb-2 border border-emerald-200">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-success-container/30 text-m3-on-success-container text-xs font-bold uppercase tracking-wider mb-2 border border-m3-success/20">
+              <ShieldCheck className="w-3.5 h-3.5 text-m3-success shrink-0" />
               <span>Transparent Comparison</span>
             </div>
             <h2 class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading tracking-tight">
@@ -2889,7 +2889,7 @@ Please share availability and confirmed quote.`;
               <thead class="bg-m3-surface-container text-m3-on-surface-variant font-bold uppercase tracking-wider text-micro sm:text-xs">
                 <tr>
                   <th class="p-2.5 sm:p-4">Feature</th>
-                  <th class="p-2.5 sm:p-4 bg-emerald-50/70 text-emerald-900 font-extrabold whitespace-nowrap">Kalidass Travels</th>
+                  <th class="p-2.5 sm:p-4 bg-m3-success-container/25 text-m3-on-surface font-extrabold whitespace-nowrap">Kalidass Travels</th>
                   <th class="p-2.5 sm:p-4 text-m3-on-surface-variant">
                     <span class="sm:hidden">Online App Cabs</span>
                     <span class="hidden sm:inline">Online Cab Aggregators (MakeMyTrip / Savaari / Uber)</span>
@@ -2900,7 +2900,7 @@ Please share availability and confirmed quote.`;
                 {pilgrimConfig.comparisonRows.map((row) => (
                   <tr class="hover:bg-m3-surface-container-low transition-colors">
                     <td class="p-2.5 sm:p-4 font-semibold align-top">{row.feature}</td>
-                    <td class="p-2.5 sm:p-4 bg-emerald-50/40 font-bold text-emerald-950 align-top">{row.kalidass}</td>
+                    <td class="p-2.5 sm:p-4 bg-m3-success-container/15 font-bold text-m3-on-surface align-top">{row.kalidass}</td>
                     <td class="p-2.5 sm:p-4 text-m3-on-surface-variant align-top">{row.aggregators}</td>
                   </tr>
                 ))}
@@ -2952,16 +2952,16 @@ Please share availability and confirmed quote.`;
       <!-- 5. BOTTOM CTA TO BOOKING ENGINE -->
       <section
         id="bottom-booking-cta"
-        class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 text-white rounded-m3-2xl p-6 sm:p-8 md:p-10 border border-slate-700/80 shadow-m3-2 relative overflow-hidden"
+        class="bg-gradient-to-br from-m3-inverse-surface via-m3-surface-dim to-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-2xl p-6 sm:p-8 md:p-10 border border-m3-outline-variant/30 shadow-m3-2 relative overflow-hidden"
         aria-label="Booking Engine Call to Action"
       >
         <!-- Subtle Ambient Glow -->
-        <div class="absolute -right-12 -top-12 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -left-12 -bottom-12 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -right-12 -top-12 w-48 h-48 bg-m3-tertiary/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-12 -bottom-12 w-48 h-48 bg-m3-primary/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <div class="relative z-10 max-w-2xl mx-auto text-center space-y-4">
-          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs font-bold text-amber-300 uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs font-bold text-m3-tertiary-fixed uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5 text-m3-tertiary-fixed shrink-0" />
             <span>{hasDedicatedEngine ? "Interactive Fare Calculator" : "Fixed Tariff Rates • ₹500 Token Advance"}</span>
           </div>
 
@@ -2971,7 +2971,7 @@ Please share availability and confirmed quote.`;
               : `Ready to Reserve Your Cab for ${shortName}?`}
           </h2>
 
-          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-xl mx-auto font-sans">
+          <p class="text-xs sm:text-sm text-m3-inverse-on-surface/85 leading-relaxed max-w-xl mx-auto font-sans">
             {hasDedicatedEngine
               ? "Head back up to booking to select your travel dates, choose your preferred AC vehicle, and calculate dynamic package fares."
               : "Review our transparent fixed package fares above or chat with our 24/7 Chennai travel desk on WhatsApp to confirm your vehicle."}
@@ -2981,7 +2981,7 @@ Please share availability and confirmed quote.`;
             <a
               href={hasDedicatedEngine ? "#booking" : "#tariff"}
               id="back-to-booking-btn"
-              class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white hover:bg-slate-100 active:bg-slate-200 text-slate-950 font-bold text-xs sm:text-sm shadow-md transition-all cursor-pointer group"
+              class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary font-bold text-xs sm:text-sm shadow-md transition-all cursor-pointer group"
             >
               <span>{hasDedicatedEngine ? "Back to Booking" : "View Tariff & Book Now"}</span>
               <ArrowUp className="w-4 h-4 group-hover:-translate-y-0.5 transition-transform shrink-0" />
@@ -2992,21 +2992,21 @@ Please share availability and confirmed quote.`;
               href="tel:+918939539211"
               class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-white/10 hover:bg-white/15 active:bg-white/20 text-white font-bold text-xs sm:text-sm border border-white/20 transition-all cursor-pointer"
             >
-              <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
+              <Phone className="w-4 h-4 text-m3-success shrink-0" />
               <span>Call Us</span>
             </a>
           </div>
 
           <!-- Feature Trust Badges -->
-          <div class="pt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-[11px] sm:text-xs text-slate-400">
+          <div class="pt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-[11px] sm:text-xs text-m3-inverse-on-surface/70">
             <span class="flex items-center gap-1">
-              <span class="text-emerald-400 font-bold">✓</span> Doorstep Chennai Pickup
+              <span class="text-m3-success font-bold">✓</span> Doorstep Chennai Pickup
             </span>
             <span class="flex items-center gap-1">
-              <span class="text-emerald-400 font-bold">✓</span> Tolls &amp; Permits Included
+              <span class="text-m3-success font-bold">✓</span> Tolls &amp; Permits Included
             </span>
             <span class="flex items-center gap-1">
-              <span class="text-emerald-400 font-bold">✓</span> Police-Verified Chauffeurs
+              <span class="text-m3-success font-bold">✓</span> Police-Verified Chauffeurs
             </span>
           </div>
         </div>

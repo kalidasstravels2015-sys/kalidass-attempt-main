@@ -42,8 +42,8 @@ const reviews = [
     <!-- 4 Trust Badges Grid -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8">
       <div class="bg-m3-surface p-3.5 sm:p-4 rounded-m3-xl border border-m3-outline-variant shadow-m3-1 flex items-center gap-3">
-        <div class="w-10 h-10 rounded-m3-lg bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center text-gold-600 shrink-0">
-          <Star className="w-5 h-5 fill-gold-600 text-gold-600" />
+        <div class="w-10 h-10 rounded-m3-lg bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center text-m3-tertiary shrink-0">
+          <Star className="w-5 h-5 fill-m3-tertiary text-m3-tertiary" />
         </div>
         <div>
           <p class="text-base sm:text-lg font-extrabold text-m3-on-surface leading-none font-heading">4.9 / 5.0</p>
@@ -89,7 +89,7 @@ const reviews = [
           <div>
             <div class="flex items-center gap-1 mb-2">
               {[...Array(rev.rating)].map(() => (
-                <Star className="w-3.5 h-3.5 fill-gold-600 text-gold-600" />
+                <Star className="w-3.5 h-3.5 fill-m3-tertiary text-m3-tertiary" />
               ))}
             </div>
             <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed italic mb-3 font-sans">"{rev.quote}"</p>

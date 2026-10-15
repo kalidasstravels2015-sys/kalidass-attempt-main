@@ -28,23 +28,47 @@ interface DutySlipInput {
   notes?: string;
 }
 
-export const GET: APIRoute = async () => {
+export const GET: APIRoute = async ({ request, url }) => {
   try {
+    const targetUrl = url || new URL(request.url);
+    const queryRef = (targetUrl.searchParams.get('bookingId') || targetUrl.searchParams.get('ref') || '').trim().toLowerCase();
+
     const slipsPath = path.resolve(process.cwd(), 'Kalidass_Duty_Slips_2026.json');
     if (!fs.existsSync(slipsPath)) {
       return new Response(JSON.stringify({ success: true, count: 0, dutySlips: [] }), {
         status: 200,
-        headers: { 'Content-Type': 'application/json; charset=utf-8' }
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Access-Control-Allow-Origin': '*'
+        }
       });
     }
 
     const content = fs.readFileSync(slipsPath, 'utf8');
     const dutySlips = JSON.parse(content || '[]');
 
+    if (queryRef) {
+      const matched = dutySlips.find((s: any) =>
+        (s.bookingId && s.bookingId.toLowerCase().includes(queryRef)) ||
+        (s.slipId && s.slipId.toLowerCase().includes(queryRef))
+      );
+      if (matched) {
+        return new Response(JSON.stringify({ success: true, dutySlip: matched }), {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            'Access-Control-Allow-Origin': '*',
+            'Cache-Control': 'no-store, max-age=0'
+          }
+        });
+      }
+    }
+
     return new Response(JSON.stringify({ success: true, count: dutySlips.length, dutySlips }), {
       status: 200,
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
+        'Access-Control-Allow-Origin': '*',
         'Cache-Control': 'no-store, max-age=0'
       }
     });

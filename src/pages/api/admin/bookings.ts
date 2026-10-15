@@ -24,13 +24,19 @@ function escapeCsvCell(cell: any): string {
   return str;
 }
 
-export const GET: APIRoute = async () => {
+export const GET: APIRoute = async ({ request, url }) => {
   try {
+    const targetUrl = url || new URL(request.url);
+    const queryRef = (targetUrl.searchParams.get('bookingId') || targetUrl.searchParams.get('ref') || '').trim().toLowerCase();
+
     const csvPath = path.resolve(process.cwd(), 'Kalidass_Operations_Control_2026.csv');
     if (!fs.existsSync(csvPath)) {
       return new Response(JSON.stringify({ success: true, count: 0, bookings: [] }), {
         status: 200,
-        headers: { 'Content-Type': 'application/json; charset=utf-8' }
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Access-Control-Allow-Origin': '*'
+        }
       });
     }
 
@@ -39,16 +45,35 @@ export const GET: APIRoute = async () => {
     if (lines.length <= 1) {
       return new Response(JSON.stringify({ success: true, count: 0, bookings: [] }), {
         status: 200,
-        headers: { 'Content-Type': 'application/json; charset=utf-8' }
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Access-Control-Allow-Origin': '*'
+        }
       });
+    }
+
+    // Load duty slips if available to enrich booking
+    let dutySlipsMap = new Map();
+    const slipsPath = path.resolve(process.cwd(), 'Kalidass_Duty_Slips_2026.json');
+    if (fs.existsSync(slipsPath)) {
+      try {
+        const parsed = JSON.parse(fs.readFileSync(slipsPath, 'utf8') || '[]');
+        if (Array.isArray(parsed)) {
+          parsed.forEach((s: any) => {
+            if (s.bookingId) dutySlipsMap.set(s.bookingId.toLowerCase(), s);
+          });
+        }
+      } catch (_) {}
     }
 
     const bookings = [];
     for (let i = 1; i < lines.length; i++) {
       const row = parseCsvLine(lines[i]);
       if (row.length > 0 && row[0]) {
+        const bId = row[0] || '';
+        const slip = dutySlipsMap.get(bId.toLowerCase()) || null;
         bookings.push({
-          bookingId: row[0] || '',
+          bookingId: bId,
           guestNamePhone: row[1] || '',
           travelDateTime: row[2] || '',
           pickupAddress: row[3] || '',
@@ -61,7 +86,25 @@ export const GET: APIRoute = async () => {
           terminalFare: parseInt(row[10] || '0', 10) || 0,
           chauffeurPayout: parseInt(row[11] || '0', 10) || 0,
           companyMargin: parseInt(row[12] || '0', 10) || ((parseInt(row[10] || '0', 10) || 0) - (parseInt(row[11] || '0', 10) || 0)),
-          financialClosure: row[13] || 'Unreconciled'
+          financialClosure: row[13] || 'Unreconciled',
+          dutySlip: slip
+        });
+      }
+    }
+
+    if (queryRef) {
+      const matched = bookings.find(b =>
+        b.bookingId.toLowerCase().includes(queryRef) ||
+        queryRef.includes(b.bookingId.toLowerCase().replace(/[^a-z0-9]/g, ''))
+      );
+      if (matched) {
+        return new Response(JSON.stringify({ success: true, booking: matched }), {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            'Access-Control-Allow-Origin': '*',
+            'Cache-Control': 'no-store, max-age=0'
+          }
         });
       }
     }
@@ -70,6 +113,7 @@ export const GET: APIRoute = async () => {
       status: 200,
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
+        'Access-Control-Allow-Origin': '*',
         'Cache-Control': 'no-store, max-age=0'
       }
     });

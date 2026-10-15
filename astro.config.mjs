@@ -39,6 +39,7 @@ export default defineConfig({
         !page.includes('/og/') &&
         !page.includes('/admin') &&
         !page.includes('/ops') &&
+        !page.includes('/trip') &&
         !page.endsWith('/services/popular-destinations/') &&
         !page.endsWith('/services/temple-tours/') &&
         !page.endsWith('/services/weekend-packages/') &&
@@ -116,7 +117,7 @@ export default defineConfig({
   },
   vite: {
     optimizeDeps: {
-      include: ['react', 'react-dom', 'lucide-react', '@astrojs/react/client.js']
+      include: ['react', 'react-dom', 'lucide-react']
     },
     build: {
       rollupOptions: {

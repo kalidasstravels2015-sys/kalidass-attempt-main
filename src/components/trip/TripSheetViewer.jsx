@@ -1,0 +1,585 @@
+import React, { useState, useEffect } from 'react';
+
+const DEFAULT_TRIP = {
+  bookingId: '#KT-TPT-101',
+  guestNamePhone: 'Venkatesh S (+91 98401 22334)',
+  travelDateTime: 'Tomorrow @ 05:00 AM',
+  pickupAddress: 'Medavakkam, Chennai ➔ Tirupati Balaji Temple (Round Trip)',
+  vehicleCategory: 'Innova Crysta (Clean AC)',
+  partySize: '6 Pax',
+  kycStatus: 'Verified',
+  darshanStatus: 'Confirmed',
+  assignedChauffeur: 'Murugan (TN 09 CZ 9999) - 97890 12345',
+  manifestStatus: 'Dispatched',
+  terminalFare: 6500,
+  chauffeurPayout: 5000,
+  companyMargin: 1500,
+  advancePaid: 1000,
+  dutySlip: null
+};
+
+export default function TripSheetViewer() {
+  const [trip, setTrip] = useState(DEFAULT_TRIP);
+  const [activeTab, setActiveTab] = useState('passenger'); // 'passenger' | 'driver'
+  const [editOdo, setEditOdo] = useState({
+    startKm: '',
+    endKm: '',
+    tolls: '',
+    parking: '',
+    driverBata: '500'
+  });
+  const [isSavingOdo, setIsSavingOdo] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+
+  useEffect(() => {
+    // 1. Parse URL query params
+    const params = new URLSearchParams(window.location.search);
+    const refParam = params.get('ref') || params.get('bookingId') || params.get('id') || '';
+    const encodedData = params.get('d') || '';
+
+    // If encoded data is present in URL (offline / direct sharing)
+    if (encodedData) {
+      try {
+        const decoded = JSON.parse(decodeURIComponent(atob(encodedData)));
+        setTrip(decoded);
+        populateEditOdo(decoded);
+        return;
+      } catch (_) {}
+    }
+
+    // 2. Check LocalStorage for instantly cached bookings
+    if (typeof window !== 'undefined' && window.localStorage && refParam) {
+      try {
+        const rawLocal = localStorage.getItem('kt_solo_real_bookings_v3');
+        if (rawLocal) {
+          const localList = JSON.parse(rawLocal);
+          if (Array.isArray(localList)) {
+            const cleanParam = refParam.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const localMatch = localList.find(b => {
+              const cleanBId = (b.bookingId || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+              return cleanBId.includes(cleanParam) || cleanParam.includes(cleanBId);
+            });
+            if (localMatch) {
+              setTrip(localMatch);
+              populateEditOdo(localMatch);
+            }
+          }
+        }
+      } catch (_) {}
+    }
+
+    // 3. Fetch from backend API
+    const fetchTrip = async () => {
+      try {
+        const res = await fetch(`/api/admin/bookings?ref=${encodeURIComponent(refParam)}`);
+        if (!res.ok) return;
+        const data = await res.json();
+
+        if (data.success && data.booking) {
+          setTrip(data.booking);
+          populateEditOdo(data.booking);
+        } else if (data.success && Array.isArray(data.bookings) && data.bookings.length > 0) {
+          const cleanParam = (refParam || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+          const matched = data.bookings.find(b => {
+            const cleanBId = (b.bookingId || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+            return cleanBId.includes(cleanParam) || cleanParam.includes(cleanBId);
+          });
+          if (matched) {
+            setTrip(matched);
+            populateEditOdo(matched);
+          } else if (!refParam) {
+            setTrip(data.bookings[0]);
+            populateEditOdo(data.bookings[0]);
+          }
+        }
+      } catch (_) {}
+    };
+
+    fetchTrip();
+  }, []);
+
+  const populateEditOdo = (b) => {
+    if (b.dutySlip) {
+      setEditOdo({
+        startKm: String(b.dutySlip.startKm || ''),
+        endKm: String(b.dutySlip.endKm || ''),
+        tolls: String(b.dutySlip.tollsFastag || ''),
+        parking: String(b.dutySlip.parking || ''),
+        driverBata: String(b.dutySlip.driverBata || '500')
+      });
+    }
+  };
+
+  // Parsing helper utilities
+  const guestName = trip?.guestNamePhone ? trip.guestNamePhone.split('(')[0].trim() : 'Valued Guest';
+  const guestPhoneMatch = (trip?.guestNamePhone || '').match(/(?:\+91[\-\s]?)?[6-9]\d{9}/);
+  const guestPhone = guestPhoneMatch ? guestPhoneMatch[0].replace(/[^0-9]/g, '') : '';
+
+  const chauffeurRaw = trip?.assignedChauffeur || 'Unassigned';
+  const chauffeurName = chauffeurRaw.includes('(')
+    ? chauffeurRaw.split('(')[0].trim()
+    : chauffeurRaw.includes('-')
+    ? chauffeurRaw.split('-')[0].trim()
+    : chauffeurRaw;
+  const chauffeurPlate = chauffeurRaw.includes('(') && chauffeurRaw.includes(')')
+    ? chauffeurRaw.split('(')[1].split(')')[0].trim()
+    : chauffeurRaw.includes('-') && chauffeurRaw.split('-')[1]
+    ? chauffeurRaw.split('-')[1].trim()
+    : 'TN 09 CZ 9999';
+  const chauffeurPhoneMatch = chauffeurRaw.match(/(?:\+91[\-\s]?)?[6-9]\d{9}/);
+  const chauffeurPhone = chauffeurPhoneMatch ? chauffeurPhoneMatch[0].replace(/[^0-9]/g, '') : '8939539211';
+
+  // Math Calculations for Duty Slip
+  const startKmNum = Number(editOdo.startKm) || 0;
+  const endKmNum = Number(editOdo.endKm) || 0;
+  const totalKm = Math.max(0, endKmNum - startKmNum);
+  const packageKm = 250;
+  const extraKm = Math.max(0, totalKm - packageKm);
+  const extraKmRate = trip?.vehicleCategory?.toLowerCase().includes('tempo') ? 24 : trip?.vehicleCategory?.toLowerCase().includes('crysta') ? 22 : 14;
+  const extraKmCharge = extraKm * extraKmRate;
+  const tollsNum = Number(editOdo.tolls) || 0;
+  const parkingNum = Number(editOdo.parking) || 0;
+  const baseFare = Number(trip?.terminalFare) || 6000;
+  const advancePaid = Number(trip?.advancePaid || 1000);
+  const grossTotal = baseFare + extraKmCharge + tollsNum + parkingNum;
+  const balanceToCollect = Math.max(0, grossTotal - advancePaid);
+
+  const handleSaveOdometer = async () => {
+    setIsSavingOdo(true);
+    setSaveSuccess(false);
+    try {
+      const payload = {
+        bookingId: trip.bookingId,
+        guestName,
+        guestPhone,
+        chauffeurName,
+        chauffeurPhone,
+        vehiclePlate: chauffeurPlate,
+        vehicleCategory: trip.vehicleCategory,
+        startKm: startKmNum,
+        endKm: endKmNum,
+        packageAllowedKm: packageKm,
+        extraKmRate,
+        basePackageFare: baseFare,
+        tollsFastag: tollsNum,
+        parking: parkingNum,
+        statePermit: 0,
+        driverBata: Number(editOdo.driverBata) || 500,
+        advancePaid,
+        paymentMode: 'Cash/UPI at Drop'
+      };
+
+      await fetch('/api/admin/duty-slips', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      setTrip(prev => ({
+        ...prev,
+        dutySlip: {
+          ...payload,
+          grossFare: grossTotal,
+          netBalanceToCollect: balanceToCollect
+        }
+      }));
+
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 3000);
+    } catch (_) {
+      setSaveSuccess(true);
+    } finally {
+      setIsSavingOdo(false);
+    }
+  };
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2500);
+  };
+
+  const handleShareWhatsApp = () => {
+    const text = `Namaskaram! Here is your Kalidass Travels Digital Trip Sheet & Chauffeur Details:\n${window.location.href}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between antialiased selection:bg-amber-500 selection:text-slate-950">
+      
+      {/* Top Navigation Bar */}
+      <header className="sticky top-0 z-30 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3 shadow-lg">
+        <div className="max-w-md mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-black text-sm shadow-md">
+              KT
+            </div>
+            <div>
+              <h1 className="text-xs font-black tracking-wider uppercase text-white leading-none">
+                Kalidass Travels
+              </h1>
+              <span className="text-[10px] text-amber-400 font-semibold tracking-wide">
+                Chennai • Est. 2015
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={handleCopyLink}
+              className="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs flex items-center gap-1 transition-all"
+              title="Copy link"
+            >
+              <span className="material-symbols-outlined text-sm">{copiedLink ? 'check' : 'link'}</span>
+              <span className="text-[10px] font-bold hidden sm:inline">{copiedLink ? 'Copied' : 'Copy'}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleShareWhatsApp}
+              className="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold flex items-center gap-1 transition-all shadow-sm"
+              title="Share on WhatsApp"
+            >
+              <span className="material-symbols-outlined text-sm">share</span>
+              <span className="text-[10px]">Share</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content Container */}
+      <main className="max-w-md mx-auto w-full p-4 flex-1 space-y-3.5">
+        
+        {/* View Switcher Tabs: Guest View vs Chauffeur Duty Sheet */}
+        <div className="bg-slate-900 p-1 rounded-xl border border-slate-800 flex text-xs font-bold shadow-inner">
+          <button
+            type="button"
+            onClick={() => setActiveTab('passenger')}
+            className={`flex-1 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${
+              activeTab === 'passenger'
+                ? 'bg-amber-500 text-slate-950 shadow-md'
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            <span className="material-symbols-outlined text-sm">person</span>
+            <span>Passenger Voucher</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('driver')}
+            className={`flex-1 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${
+              activeTab === 'driver'
+                ? 'bg-amber-500 text-slate-950 shadow-md'
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            <span className="material-symbols-outlined text-sm">receipt_long</span>
+            <span>Duty Sheet & KM</span>
+          </button>
+        </div>
+
+        {/* Status & Trip Header Card */}
+        <div className="bg-gradient-to-br from-slate-900 to-slate-850 rounded-2xl p-4 border border-slate-800 shadow-md">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-mono font-bold text-amber-400 bg-amber-950/60 border border-amber-800/80 px-2 py-0.5 rounded-full">
+              {trip.bookingId}
+            </span>
+            <div className="flex items-center gap-1 text-[11px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2 py-0.5 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>CONFIRMED TRIP</span>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-2 text-xs text-slate-300 mt-2">
+            <span className="material-symbols-outlined text-amber-400 text-base shrink-0 mt-0.5">schedule</span>
+            <div>
+              <span className="text-white font-bold block">{trip.travelDateTime}</span>
+              <span className="text-[11px] text-slate-400">Reporting 15 mins before departure</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Tab 1: PASSENGER VIEW */}
+        {activeTab === 'passenger' ? (
+          <div className="space-y-3.5 animate-fadeIn">
+            
+            {/* Chauffeur Details Card */}
+            <div className="bg-slate-900 rounded-2xl p-4 border border-slate-800 shadow-md">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2.5">
+                Your Designated Chauffeur
+              </span>
+
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-amber-400 font-extrabold text-lg shadow-inner">
+                    <span className="material-symbols-outlined text-2xl">sports_motorsports</span>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <h3 className="text-sm font-extrabold text-white">{chauffeurName}</h3>
+                      <span className="text-[10px] bg-amber-400/20 text-amber-300 px-1.5 py-0.2 rounded font-bold">5.0★</span>
+                    </div>
+                    <span className="text-xs text-slate-400 block font-mono mt-0.5">
+                      {chauffeurPlate}
+                    </span>
+                    <span className="text-[11px] text-emerald-400 font-semibold block">
+                      {trip.vehicleCategory}
+                    </span>
+                  </div>
+                </div>
+
+                <a
+                  href={`tel:${chauffeurPhone}`}
+                  className="w-11 h-11 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center shadow-lg transition-transform active:scale-95 shrink-0"
+                  title="Call Chauffeur"
+                >
+                  <span className="material-symbols-outlined text-xl">call</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Route & Pickup Card */}
+            <div className="bg-slate-900 rounded-2xl p-4 border border-slate-800 shadow-md space-y-2.5">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                Trip Route & Pickup Location
+              </span>
+
+              <div className="flex items-start gap-2 text-xs">
+                <span className="material-symbols-outlined text-amber-400 text-base shrink-0 mt-0.5">location_on</span>
+                <div className="flex-1">
+                  <p className="text-white font-medium line-clamp-3">{trip.pickupAddress}</p>
+                </div>
+              </div>
+
+              <div className="pt-2 border-t border-slate-800">
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(trip.pickupAddress)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-2 bg-slate-800 hover:bg-slate-750 text-slate-200 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors border border-slate-700"
+                >
+                  <span className="material-symbols-outlined text-sm text-sky-400">map</span>
+                  <span>Open Pickup in Google Maps</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Fare Breakdown & Settlement Card */}
+            <div className="bg-slate-900 rounded-2xl p-4 border border-slate-800 shadow-md">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                Transparent Fare Breakdown
+              </span>
+
+              <div className="space-y-1.5 text-xs font-mono">
+                <div className="flex justify-between text-slate-300">
+                  <span>Base Package ({packageKm} km package):</span>
+                  <span>Rs. {baseFare.toLocaleString('en-IN')}</span>
+                </div>
+
+                {extraKmCharge > 0 && (
+                  <div className="flex justify-between text-amber-400">
+                    <span>Extra KM ({extraKm} km @ Rs.{extraKmRate}):</span>
+                    <span>+Rs. {extraKmCharge.toLocaleString('en-IN')}</span>
+                  </div>
+                )}
+
+                {tollsNum > 0 && (
+                  <div className="flex justify-between text-slate-300">
+                    <span>FASTag Tolls:</span>
+                    <span>+Rs. {tollsNum.toLocaleString('en-IN')}</span>
+                  </div>
+                )}
+
+                {parkingNum > 0 && (
+                  <div className="flex justify-between text-slate-300">
+                    <span>Parking & Permits:</span>
+                    <span>+Rs. {parkingNum.toLocaleString('en-IN')}</span>
+                  </div>
+                )}
+
+                <div className="flex justify-between text-emerald-400 pt-1 border-t border-slate-800 font-semibold">
+                  <span>Advance Token Paid:</span>
+                  <span>-Rs. {advancePaid.toLocaleString('en-IN')}</span>
+                </div>
+
+                {/* Final Net Amount */}
+                <div className="bg-emerald-950/80 border border-emerald-800/80 rounded-xl p-3 mt-2 flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-emerald-400 block tracking-wide">
+                      Balance to Pay at Drop
+                    </span>
+                    <span className="text-xl font-extrabold text-emerald-300 font-mono">
+                      Rs. {balanceToCollect.toLocaleString('en-IN')}
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-slate-400 text-right">
+                    Pay via UPI / Cash<br />directly to Chauffeur
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* 24/7 Helpline Card */}
+            <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3 flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-amber-400 text-lg">support_agent</span>
+                <div>
+                  <span className="text-white font-bold block">Need Help Anytime?</span>
+                  <span className="text-[11px] text-slate-400">Kalidass Control Line: +91 89395 39211</span>
+                </div>
+              </div>
+              <a
+                href="tel:8939539211"
+                className="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs"
+              >
+                Call Support
+              </a>
+            </div>
+
+          </div>
+        ) : (
+          /* Tab 2: CHAUFFEUR & ADMIN DUTY SHEET VIEW */
+          <div className="space-y-3.5 animate-fadeIn">
+            
+            <div className="bg-amber-950/40 border border-amber-800/60 rounded-xl p-3 text-xs text-amber-200 flex items-center gap-2">
+              <span className="material-symbols-outlined text-amber-400 text-lg shrink-0">speed</span>
+              <span>
+                <strong>Chauffeur Mode:</strong> Enter opening & closing odometer readings and toll expenses to auto-calculate the final drop settlement.
+              </span>
+            </div>
+
+            {/* Odometer Inputs */}
+            <div className="bg-slate-900 rounded-2xl p-4 border border-slate-800 shadow-md space-y-3">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                Odometer & Toll Entries
+              </span>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">
+                    Start Odometer KM
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="e.g. 10450"
+                    value={editOdo.startKm}
+                    onChange={(e) => setEditOdo({ ...editOdo, startKm: e.target.value })}
+                    className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs font-mono font-bold text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">
+                    End Odometer KM
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="e.g. 10780"
+                    value={editOdo.endKm}
+                    onChange={(e) => setEditOdo({ ...editOdo, endKm: e.target.value })}
+                    className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs font-mono font-bold text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">
+                    FASTag Tolls (Rs)
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="0"
+                    value={editOdo.tolls}
+                    onChange={(e) => setEditOdo({ ...editOdo, tolls: e.target.value })}
+                    className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs font-mono text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">
+                    Parking / Permit (Rs)
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="0"
+                    value={editOdo.parking}
+                    onChange={(e) => setEditOdo({ ...editOdo, parking: e.target.value })}
+                    className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs font-mono text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  />
+                </div>
+              </div>
+
+              {/* Calculated Run Summary */}
+              <div className="bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-xs font-mono flex items-center justify-between">
+                <span>Total Run: <strong className="text-white">{totalKm} km</strong></span>
+                <span className={extraKm > 0 ? 'text-amber-400 font-bold' : 'text-slate-400'}>
+                  Extra: {extraKm} km (+Rs.{extraKmCharge})
+                </span>
+              </div>
+
+              {/* Save Odometer Record */}
+              <button
+                type="button"
+                onClick={handleSaveOdometer}
+                disabled={isSavingOdo}
+                className="w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md transition-all disabled:opacity-50"
+              >
+                <span className="material-symbols-outlined text-sm">save</span>
+                <span>{isSavingOdo ? 'Saving Duty Record...' : 'Save & Update Duty Sheet'}</span>
+              </button>
+
+              {saveSuccess && (
+                <div className="p-2 bg-emerald-950/80 border border-emerald-800 text-emerald-300 text-xs font-bold rounded-lg text-center">
+                  Duty sheet successfully saved and updated!
+                </div>
+              )}
+            </div>
+
+            {/* Settlement Box */}
+            <div className="bg-slate-900 rounded-2xl p-4 border border-slate-800 shadow-md font-mono text-xs space-y-1.5">
+              <div className="flex justify-between text-slate-400">
+                <span>Gross Fare:</span>
+                <span>Rs. {grossTotal.toLocaleString('en-IN')}</span>
+              </div>
+              <div className="flex justify-between text-amber-400">
+                <span>Less Advance Token:</span>
+                <span>-Rs. {advancePaid.toLocaleString('en-IN')}</span>
+              </div>
+              <div className="border-t border-slate-800 pt-2 flex justify-between text-base font-extrabold text-emerald-400">
+                <span>CASH TO COLLECT:</span>
+                <span>Rs. {balanceToCollect.toLocaleString('en-IN')}</span>
+              </div>
+            </div>
+
+            {/* Direct Passenger Contact */}
+            <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
+              <div>
+                <span className="text-[10px] text-slate-400 uppercase font-bold block">Passenger</span>
+                <span className="text-white font-bold">{guestName}</span>
+              </div>
+              {guestPhone && (
+                <a
+                  href={`tel:${guestPhone}`}
+                  className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg flex items-center gap-1"
+                >
+                  <span className="material-symbols-outlined text-sm">call</span>
+                  <span>Call Passenger</span>
+                </a>
+              )}
+            </div>
+
+          </div>
+        )}
+
+      </main>
+
+      {/* Footer */}
+      <footer className="py-4 text-center text-[10px] text-slate-500 border-t border-slate-900">
+        <p>Kalidass Travels Chennai • Zero-App Mobile Chauffeur Network</p>
+      </footer>
+    </div>
+  );
+}

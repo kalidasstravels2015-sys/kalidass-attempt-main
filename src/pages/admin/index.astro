@@ -1,16 +1,16 @@
 ---
 // Security & Operations: Internal Admin Command Tower (Strictly No-Index)
 // 100% Google Material Design 3 (M3) Specification
-import AdminDashboard from '../../components/admin/AdminDashboard.jsx';
+import SoloAdminDashboard from '../../components/admin/SoloAdminDashboard.jsx';
 
-const title = "Operations Command Tower — Kalidass Travels | Admin Console (M3)";
+const title = "Solo Pilot Command Tower — Kalidass Travels | Admin Console";
 ---
 
 <!doctype html>
-<html lang="en" class="h-full bg-[#F9FAFB] text-[#111827] antialiased">
+<html lang="en" class="h-full bg-slate-100 text-slate-800 antialiased">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="robots" content="noindex, nofollow, noarchive" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -43,24 +43,31 @@ const title = "Operations Command Tower — Kalidass Travels | Admin Console (M3
         -webkit-font-feature-settings: 'liga';
         -webkit-font-smoothing: antialiased;
       }
-      /* Custom clean M3 scrollbar */
+      /* Custom clean scrollbar */
       ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
+        width: 6px;
+        height: 6px;
       }
       ::-webkit-scrollbar-track {
-        background: #F3F4F6;
+        background: #F1F5F9;
       }
       ::-webkit-scrollbar-thumb {
-        background: #D1D5DB;
+        background: #CBD5E1;
         border-radius: 9999px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #9CA3AF;
+        background: #94A3B8;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(4px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fadeIn {
+        animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       }
     </style>
   </head>
-  <body class="min-h-full bg-[#F9FAFB] text-[#111827] flex flex-col">
-    <AdminDashboard client:load />
+  <body class="min-h-full bg-slate-100 text-slate-800 flex flex-col">
+    <SoloAdminDashboard client:load />
   </body>
 </html>

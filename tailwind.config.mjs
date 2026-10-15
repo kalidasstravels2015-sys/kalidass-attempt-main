@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
+  darkMode: ['selector', '[data-theme="dark"]'],
   theme: {
     extend: {
       colors: {
@@ -68,53 +69,71 @@ export default {
           DEFAULT: '#8B5000',
         },
         // Official Google Material Design 3 (M3) Semantic Design Tokens
+        // Fully synchronized with CSS variables for Light & Dark Theme dynamic switching
         m3: {
-          // Primary (Executive Midnight Charcoal - Luxury Chauffeur & Modern CTAs)
-          primary: '#1E252D', // Tone 40 (Guaranteed WCAG AAA 12.5:1 Contrast on White)
-          'on-primary': '#FFFFFF',
-          'primary-container': '#E2E5EA', // Tone 90 (Soft Executive Light Slate container)
-          'on-primary-container': '#101418', // Tone 10 (Deep Charcoal on container)
-          'primary-fixed': '#E2E5EA',
-          'primary-fixed-dim': '#C6CAD0',
-          'on-primary-fixed': '#101418',
-          // Secondary (Harmonized Slate Steel Charcoal)
-          secondary: '#475467', // Tone 40
-          'on-secondary': '#FFFFFF',
-          'secondary-container': '#EAECF0', // Tone 90
-          'on-secondary-container': '#1D2939', // Tone 10
-          // Tertiary (Saffron / Temple Gold - pilgrimage warmth, ratings & milestones)
-          tertiary: '#8B5000', // Tone 40 (6.6:1 on white)
-          'on-tertiary': '#FFFFFF',
-          'tertiary-container': '#FFDCBE', // Tone 90
-          'on-tertiary-container': '#2C1600', // Tone 10
-          'tertiary-fixed-dim': '#FFB870', // Tone 80 (star icons only, never text)
-          // M3 Custom Colour: Success (inclusions, advance badges, confirmations)
-          success: '#006D3B', // Tone 40 (6.4:1 on white)
-          'on-success': '#FFFFFF',
-          'success-container': '#B7F1C4', // Tone 90
-          'on-success-container': '#00210E', // Tone 10
+          // Primary (Executive Midnight Charcoal - Tone 40)
+          primary: 'rgb(var(--md-sys-color-primary-rgb) / <alpha-value>)',
+          'on-primary': 'rgb(var(--md-sys-color-on-primary-rgb) / <alpha-value>)',
+          'primary-container': 'rgb(var(--md-sys-color-primary-container-rgb) / <alpha-value>)',
+          'on-primary-container': 'rgb(var(--md-sys-color-on-primary-container-rgb) / <alpha-value>)',
+          'primary-fixed': 'rgb(var(--md-sys-color-primary-fixed-rgb) / <alpha-value>)',
+          'primary-fixed-dim': 'rgb(var(--md-sys-color-primary-fixed-dim-rgb) / <alpha-value>)',
+          'on-primary-fixed': 'rgb(var(--md-sys-color-on-primary-fixed-rgb) / <alpha-value>)',
+          'on-primary-fixed-variant': 'rgb(var(--md-sys-color-on-primary-fixed-variant-rgb) / <alpha-value>)',
+
+          // Secondary (Harmonized Slate Steel Charcoal - Tone 40)
+          secondary: 'rgb(var(--md-sys-color-secondary-rgb) / <alpha-value>)',
+          'on-secondary': 'rgb(var(--md-sys-color-on-secondary-rgb) / <alpha-value>)',
+          'secondary-container': 'rgb(var(--md-sys-color-secondary-container-rgb) / <alpha-value>)',
+          'on-secondary-container': 'rgb(var(--md-sys-color-on-secondary-container-rgb) / <alpha-value>)',
+          'secondary-fixed': 'rgb(var(--md-sys-color-secondary-fixed-rgb) / <alpha-value>)',
+          'secondary-fixed-dim': 'rgb(var(--md-sys-color-secondary-fixed-dim-rgb) / <alpha-value>)',
+          'on-secondary-fixed': 'rgb(var(--md-sys-color-on-secondary-fixed-rgb) / <alpha-value>)',
+          'on-secondary-fixed-variant': 'rgb(var(--md-sys-color-on-secondary-fixed-variant-rgb) / <alpha-value>)',
+
+          // Tertiary (Saffron / Temple Golden Amber - Tone 40)
+          tertiary: 'rgb(var(--md-sys-color-tertiary-rgb) / <alpha-value>)',
+          'on-tertiary': 'rgb(var(--md-sys-color-on-tertiary-rgb) / <alpha-value>)',
+          'tertiary-container': 'rgb(var(--md-sys-color-tertiary-container-rgb) / <alpha-value>)',
+          'on-tertiary-container': 'rgb(var(--md-sys-color-on-tertiary-container-rgb) / <alpha-value>)',
+          'tertiary-fixed': 'rgb(var(--md-sys-color-tertiary-fixed-rgb) / <alpha-value>)',
+          'tertiary-fixed-dim': 'rgb(var(--md-sys-color-tertiary-fixed-dim-rgb) / <alpha-value>)',
+          'on-tertiary-fixed': 'rgb(var(--md-sys-color-on-tertiary-fixed-rgb) / <alpha-value>)',
+          'on-tertiary-fixed-variant': 'rgb(var(--md-sys-color-on-tertiary-fixed-variant-rgb) / <alpha-value>)',
+
+          // Success (M3 Custom Harmonized Semantic Color)
+          success: 'rgb(var(--md-sys-color-success-rgb) / <alpha-value>)',
+          'on-success': 'rgb(var(--md-sys-color-on-success-rgb) / <alpha-value>)',
+          'success-container': 'rgb(var(--md-sys-color-success-container-rgb) / <alpha-value>)',
+          'on-success-container': 'rgb(var(--md-sys-color-on-success-container-rgb) / <alpha-value>)',
+
           // Error
-          error: '#BA1A1A',
-          'on-error': '#FFFFFF',
-          'error-container': '#FFDAD6',
-          'on-error-container': '#410002',
-          // M3 Authentic Tonal Surface Hierarchy (Clean, Calm, Anti-Glare)
-          surface: '#F9FAFB', // Tone 98 (Soft clean canvas)
-          'surface-dim': '#E5E7EB', // Tone 87
-          'surface-bright': '#FFFFFF', // Tone 100
-          'surface-container-lowest': '#FFFFFF', // Tone 100 (Elevated cards & sheets)
-          'surface-container-low': '#F3F4F6', // Tone 96 (Subtle section alternating)
-          'surface-container': '#ECEEF1', // Tone 94 (Input fields & search canvas)
-          'surface-container-high': '#E8EAED', // Tone 92 (Active navigation indicators & chips)
-          'surface-container-highest': '#E2E4E9', // Tone 90 (Highest container)
-          'on-surface': '#111827', // Tone 8 (Deep Onyx for rates, fares, and headings)
-          'on-surface-variant': '#4B5563', // Tone 30 (Secondary body text & icons)
-          'outline': '#6B7280', // Tone 50 (Form field borders - 4.8:1, WCAG 1.4.11)
-          'outline-variant': '#C9CDD3', // Tone 80 (Decorative dividers & card strokes only)
-          'inverse-surface': '#1F2937', // Tone 20 (Dark tooltips & inverse snackbars)
-          'inverse-on-surface': '#F9FAFB', // Tone 95
-          'inverse-primary': '#9CA3AF', // Tone 80
-          scrim: '#000000',
+          error: 'rgb(var(--md-sys-color-error-rgb) / <alpha-value>)',
+          'on-error': 'rgb(var(--md-sys-color-on-error-rgb) / <alpha-value>)',
+          'error-container': 'rgb(var(--md-sys-color-error-container-rgb) / <alpha-value>)',
+          'on-error-container': 'rgb(var(--md-sys-color-on-error-container-rgb) / <alpha-value>)',
+
+          // Authentic Google M3 Clean Anti-Glare Surface Hierarchy
+          surface: 'rgb(var(--md-sys-color-surface-rgb) / <alpha-value>)',
+          'surface-dim': 'rgb(var(--md-sys-color-surface-dim-rgb) / <alpha-value>)',
+          'surface-bright': 'rgb(var(--md-sys-color-surface-bright-rgb) / <alpha-value>)',
+          'surface-container-lowest': 'rgb(var(--md-sys-color-surface-container-lowest-rgb) / <alpha-value>)',
+          'surface-container-low': 'rgb(var(--md-sys-color-surface-container-low-rgb) / <alpha-value>)',
+          'surface-container': 'rgb(var(--md-sys-color-surface-container-rgb) / <alpha-value>)',
+          'surface-container-high': 'rgb(var(--md-sys-color-surface-container-high-rgb) / <alpha-value>)',
+          'surface-container-highest': 'rgb(var(--md-sys-color-surface-container-highest-rgb) / <alpha-value>)',
+
+          // Text, Outlines, Inverse & Tint
+          'on-surface': 'rgb(var(--md-sys-color-on-surface-rgb) / <alpha-value>)',
+          'on-surface-variant': 'rgb(var(--md-sys-color-on-surface-variant-rgb) / <alpha-value>)',
+          outline: 'rgb(var(--md-sys-color-outline-rgb) / <alpha-value>)',
+          'outline-variant': 'rgb(var(--md-sys-color-outline-variant-rgb) / <alpha-value>)',
+          'inverse-surface': 'rgb(var(--md-sys-color-inverse-surface-rgb) / <alpha-value>)',
+          'inverse-on-surface': 'rgb(var(--md-sys-color-inverse-on-surface-rgb) / <alpha-value>)',
+          'inverse-primary': 'rgb(var(--md-sys-color-inverse-primary-rgb) / <alpha-value>)',
+          'surface-tint': 'rgb(var(--md-sys-color-surface-tint-rgb) / <alpha-value>)',
+          scrim: 'rgb(var(--md-sys-color-scrim-rgb) / <alpha-value>)',
+          shadow: 'rgb(var(--md-sys-color-shadow-rgb) / <alpha-value>)',
         },
         brand: {
           50: '#F8F9FA',

@@ -1207,31 +1207,6 @@ Please confirm booking!`;
                   onFocus={handleInputFocus}
                   className={`w-full min-h-[48px] bg-white border border-m3-outline-variant hover:border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20 rounded-m3-lg px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm ${pickupDateTime ? 'text-m3-on-surface font-semibold' : 'text-m3-on-surface-variant/60 font-normal'} outline-none transition-all shadow-2xs cursor-pointer scroll-mt-28 scroll-mb-64`}
                 />
-                {pickupDateTime && (
-                  <div className="flex items-center justify-between gap-1 text-[11px] px-0.5 pt-0.5">
-                    <span className="font-semibold text-slate-700 truncate" title="12-hour format">
-                      {formatTime12(pickupDateTime)}
-                    </span>
-                    <div className="inline-flex rounded border border-m3-outline-variant/80 overflow-hidden shrink-0 shadow-2xs bg-slate-100">
-                      <button
-                        type="button"
-                        onClick={() => handlePickupDateTimeChange({ target: { value: setDateTimePeriod(pickupDateTime, 'AM') } })}
-                        className={`px-2 py-0.5 font-bold text-[10px] transition-colors cursor-pointer ${isAM(pickupDateTime) ? 'bg-m3-primary text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200'}`}
-                        aria-label="Set pickup time to AM"
-                      >
-                        AM
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handlePickupDateTimeChange({ target: { value: setDateTimePeriod(pickupDateTime, 'PM') } })}
-                        className={`px-2 py-0.5 font-bold text-[10px] transition-colors cursor-pointer ${!isAM(pickupDateTime) ? 'bg-m3-primary text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200'}`}
-                        aria-label="Set pickup time to PM"
-                      >
-                        PM
-                      </button>
-                    </div>
-                  </div>
-                )}
               </div>
 
               {/* Return Date & Time */}
@@ -1261,39 +1236,6 @@ Please confirm booking!`;
                         : 'bg-white border-m3-outline-variant hover:border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20 text-m3-on-surface font-semibold cursor-pointer'
                   }`}
                 />
-                {returnDateTime && (
-                  <div className="flex items-center justify-between gap-1 text-[11px] px-0.5 pt-0.5">
-                    <span className="font-semibold text-slate-700 truncate" title="12-hour format">
-                      {formatTime12(returnDateTime)}
-                    </span>
-                    <div className="inline-flex rounded border border-m3-outline-variant/80 overflow-hidden shrink-0 shadow-2xs bg-slate-100">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const updated = setDateTimePeriod(returnDateTime, 'AM');
-                          setReturnDateTime(updated);
-                          if (validationError) setValidationError('');
-                        }}
-                        className={`px-2 py-0.5 font-bold text-[10px] transition-colors cursor-pointer ${isAM(returnDateTime) ? 'bg-m3-primary text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200'}`}
-                        aria-label="Set return time to AM"
-                      >
-                        AM
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const updated = setDateTimePeriod(returnDateTime, 'PM');
-                          setReturnDateTime(updated);
-                          if (validationError) setValidationError('');
-                        }}
-                        className={`px-2 py-0.5 font-bold text-[10px] transition-colors cursor-pointer ${!isAM(returnDateTime) ? 'bg-m3-primary text-white shadow-xs' : 'text-slate-600 hover:bg-slate-200'}`}
-                        aria-label="Set return time to PM"
-                      >
-                        PM
-                      </button>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
 

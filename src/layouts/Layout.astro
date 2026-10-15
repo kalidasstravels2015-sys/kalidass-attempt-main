@@ -715,65 +715,301 @@ const unifiedSchemaGraph = {
         user-select: none;
       }
 
-      /* 100% Google Material Design 3 (M3) Option A: Executive Midnight Charcoal & Onyx */
+      /* 100% Google Material Design 3 (M3) Master Palette: Executive Midnight Charcoal & Onyx */
       :root {
+        color-scheme: light dark;
+
         /* Primary Roles - Executive Midnight Charcoal (Tone 40) */
+        --md-sys-color-primary-rgb: 30 37 45;
         --md-sys-color-primary: #1E252D;
-        --md-sys-color-on-primary: #ffffff;
+        --md-sys-color-on-primary-rgb: 255 255 255;
+        --md-sys-color-on-primary: #FFFFFF;
+        --md-sys-color-primary-container-rgb: 226 229 234;
         --md-sys-color-primary-container: #E2E5EA;
+        --md-sys-color-on-primary-container-rgb: 16 20 24;
         --md-sys-color-on-primary-container: #101418;
+        --md-sys-color-primary-fixed-rgb: 226 229 234;
         --md-sys-color-primary-fixed: #E2E5EA;
+        --md-sys-color-primary-fixed-dim-rgb: 198 202 208;
         --md-sys-color-primary-fixed-dim: #C6CAD0;
+        --md-sys-color-on-primary-fixed-rgb: 16 20 24;
         --md-sys-color-on-primary-fixed: #101418;
+        --md-sys-color-on-primary-fixed-variant-rgb: 55 65 81;
+        --md-sys-color-on-primary-fixed-variant: #374151;
 
-        /* Secondary Roles - Slate Steel Charcoal (Tone 40) */
+        /* Secondary Roles - Harmonized Slate Steel Charcoal (Tone 40) */
+        --md-sys-color-secondary-rgb: 71 84 103;
         --md-sys-color-secondary: #475467;
-        --md-sys-color-on-secondary: #ffffff;
+        --md-sys-color-on-secondary-rgb: 255 255 255;
+        --md-sys-color-on-secondary: #FFFFFF;
+        --md-sys-color-secondary-container-rgb: 234 236 240;
         --md-sys-color-secondary-container: #EAECF0;
+        --md-sys-color-on-secondary-container-rgb: 29 41 57;
         --md-sys-color-on-secondary-container: #1D2939;
+        --md-sys-color-secondary-fixed-rgb: 234 236 240;
+        --md-sys-color-secondary-fixed: #EAECF0;
+        --md-sys-color-secondary-fixed-dim-rgb: 186 199 222;
+        --md-sys-color-secondary-fixed-dim: #BAC7DE;
+        --md-sys-color-on-secondary-fixed-rgb: 29 41 57;
+        --md-sys-color-on-secondary-fixed: #1D2939;
+        --md-sys-color-on-secondary-fixed-variant-rgb: 59 72 90;
+        --md-sys-color-on-secondary-fixed-variant: #3B485A;
 
-        /* Tertiary Roles - Rich Warm Amber-Gold (Tone 40) for Ratings & Milestones */
-        --md-sys-color-tertiary: #6D5E0F;
-        --md-sys-color-on-tertiary: #ffffff;
-        --md-sys-color-tertiary-container: #F8E287;
-        --md-sys-color-on-tertiary-container: #221B00;
+        /* Tertiary Roles - Saffron / Temple Golden Amber (Tone 40) */
+        --md-sys-color-tertiary-rgb: 139 80 0;
+        --md-sys-color-tertiary: #8B5000;
+        --md-sys-color-on-tertiary-rgb: 255 255 255;
+        --md-sys-color-on-tertiary: #FFFFFF;
+        --md-sys-color-tertiary-container-rgb: 255 220 190;
+        --md-sys-color-tertiary-container: #FFDCBE;
+        --md-sys-color-on-tertiary-container-rgb: 44 22 0;
+        --md-sys-color-on-tertiary-container: #2C1600;
+        --md-sys-color-tertiary-fixed-rgb: 255 220 190;
+        --md-sys-color-tertiary-fixed: #FFDCBE;
+        --md-sys-color-tertiary-fixed-dim-rgb: 255 184 112;
+        --md-sys-color-tertiary-fixed-dim: #FFB870;
+        --md-sys-color-on-tertiary-fixed-rgb: 44 22 0;
+        --md-sys-color-on-tertiary-fixed: #2C1600;
+        --md-sys-color-on-tertiary-fixed-variant-rgb: 106 60 0;
+        --md-sys-color-on-tertiary-fixed-variant: #6A3C00;
 
-        /* Brand Red Accent (Signature "K" Logo Mark Only) */
-        --md-sys-color-brand-red: #EC221F;
+        /* Success Roles (M3 Custom Harmonized Semantic Color) */
+        --md-sys-color-success-rgb: 0 109 59;
+        --md-sys-color-success: #006D3B;
+        --md-sys-color-on-success-rgb: 255 255 255;
+        --md-sys-color-on-success: #FFFFFF;
+        --md-sys-color-success-container-rgb: 183 241 196;
+        --md-sys-color-success-container: #B7F1C4;
+        --md-sys-color-on-success-container-rgb: 0 33 14;
+        --md-sys-color-on-success-container: #00210E;
 
         /* Error Roles */
+        --md-sys-color-error-rgb: 186 26 26;
         --md-sys-color-error: #BA1A1A;
-        --md-sys-color-on-error: #ffffff;
+        --md-sys-color-on-error-rgb: 255 255 255;
+        --md-sys-color-on-error: #FFFFFF;
+        --md-sys-color-error-container-rgb: 255 218 214;
         --md-sys-color-error-container: #FFDAD6;
+        --md-sys-color-on-error-container-rgb: 65 0 2;
         --md-sys-color-on-error-container: #410002;
 
-        /* Authentic Google M3 Clean Anti-Glare Surfaces */
+        /* Authentic Google M3 Clean Anti-Glare Surface Hierarchy */
+        --md-sys-color-surface-rgb: 249 250 251;
         --md-sys-color-surface: #F9FAFB;
+        --md-sys-color-surface-dim-rgb: 229 231 235;
         --md-sys-color-surface-dim: #E5E7EB;
-        --md-sys-color-surface-bright: #ffffff;
-        --md-sys-color-surface-container-lowest: #ffffff;
+        --md-sys-color-surface-bright-rgb: 255 255 255;
+        --md-sys-color-surface-bright: #FFFFFF;
+        --md-sys-color-surface-container-lowest-rgb: 255 255 255;
+        --md-sys-color-surface-container-lowest: #FFFFFF;
+        --md-sys-color-surface-container-low-rgb: 243 244 246;
         --md-sys-color-surface-container-low: #F3F4F6;
+        --md-sys-color-surface-container-rgb: 236 238 241;
         --md-sys-color-surface-container: #ECEEF1;
-        --md-sys-color-surface-container-high: #E5E7EB;
-        --md-sys-color-surface-container-highest: #D1D5DB;
+        --md-sys-color-surface-container-high-rgb: 232 234 237;
+        --md-sys-color-surface-container-high: #E8EAED;
+        --md-sys-color-surface-container-highest-rgb: 226 228 233;
+        --md-sys-color-surface-container-highest: #E2E4E9;
 
-        /* Text & Border Tokens - Deep Onyx Charcoal & Harmonized Outlines */
+        /* Text, Outlines, Inverse & Tint */
+        --md-sys-color-on-surface-rgb: 17 24 39;
         --md-sys-color-on-surface: #111827;
+        --md-sys-color-on-surface-variant-rgb: 75 85 99;
         --md-sys-color-on-surface-variant: #4B5563;
-        --md-sys-color-outline: #9CA3AF;
-        --md-sys-color-outline-variant: #E5E7EB;
+        --md-sys-color-outline-rgb: 107 114 128;
+        --md-sys-color-outline: #6B7280;
+        --md-sys-color-outline-variant-rgb: 201 205 211;
+        --md-sys-color-outline-variant: #C9CDD3;
+        --md-sys-color-inverse-surface-rgb: 31 41 55;
         --md-sys-color-inverse-surface: #1F2937;
+        --md-sys-color-inverse-on-surface-rgb: 249 250 251;
         --md-sys-color-inverse-on-surface: #F9FAFB;
+        --md-sys-color-inverse-primary-rgb: 156 163 175;
         --md-sys-color-inverse-primary: #9CA3AF;
+        --md-sys-color-surface-tint-rgb: 30 37 45;
+        --md-sys-color-surface-tint: #1E252D;
+        --md-sys-color-scrim-rgb: 0 0 0;
         --md-sys-color-scrim: #000000;
+        --md-sys-color-shadow-rgb: 0 0 0;
         --md-sys-color-shadow: #000000;
+
+        /* Brand Accent (Signature "K" Logo Mark Only - Rule 2 Protected) */
+        --md-sys-color-brand-red-rgb: 236 34 31;
+        --md-sys-color-brand-red: #EC221F;
+      }
+
+      /* Official Google Material Design 3 (M3) Dark Scheme Specification */
+      @media (prefers-color-scheme: dark) {
+        :root {
+          /* Primary Roles - Dark Mode */
+          --md-sys-color-primary-rgb: 192 199 210;
+          --md-sys-color-primary: #C0C7D2;
+          --md-sys-color-on-primary-rgb: 21 28 36;
+          --md-sys-color-on-primary: #151C24;
+          --md-sys-color-primary-container-rgb: 42 49 57;
+          --md-sys-color-primary-container: #2A3139;
+          --md-sys-color-on-primary-container-rgb: 220 227 238;
+          --md-sys-color-on-primary-container: #DCE3EE;
+
+          /* Secondary Roles - Dark Mode */
+          --md-sys-color-secondary-rgb: 186 199 222;
+          --md-sys-color-secondary: #BAC7DE;
+          --md-sys-color-on-secondary-rgb: 36 49 67;
+          --md-sys-color-on-secondary: #243143;
+          --md-sys-color-secondary-container-rgb: 59 72 90;
+          --md-sys-color-secondary-container: #3B485A;
+          --md-sys-color-on-secondary-container-rgb: 214 227 251;
+          --md-sys-color-on-secondary-container: #D6E3FB;
+
+          /* Tertiary Roles - Dark Mode */
+          --md-sys-color-tertiary-rgb: 255 184 113;
+          --md-sys-color-tertiary: #FFB871;
+          --md-sys-color-on-tertiary-rgb: 74 40 0;
+          --md-sys-color-on-tertiary: #4A2800;
+          --md-sys-color-tertiary-container-rgb: 106 60 0;
+          --md-sys-color-tertiary-container: #6A3C00;
+          --md-sys-color-on-tertiary-container-rgb: 255 220 190;
+          --md-sys-color-on-tertiary-container: #FFDCBE;
+
+          /* Success Roles - Dark Mode */
+          --md-sys-color-success-rgb: 128 217 156;
+          --md-sys-color-success: #80D99C;
+          --md-sys-color-on-success-rgb: 0 57 28;
+          --md-sys-color-on-success: #00391C;
+          --md-sys-color-success-container-rgb: 0 82 43;
+          --md-sys-color-success-container: #00522B;
+          --md-sys-color-on-success-container-rgb: 183 241 196;
+          --md-sys-color-on-success-container: #B7F1C4;
+
+          /* Error Roles - Dark Mode */
+          --md-sys-color-error-rgb: 255 180 171;
+          --md-sys-color-error: #FFB4AB;
+          --md-sys-color-on-error-rgb: 105 0 4;
+          --md-sys-color-on-error: #690004;
+          --md-sys-color-error-container-rgb: 147 0 9;
+          --md-sys-color-error-container: #930009;
+          --md-sys-color-on-error-container-rgb: 255 218 214;
+          --md-sys-color-on-error-container: #FFDAD6;
+
+          /* Surface Elevation Hierarchy - Dark Mode */
+          --md-sys-color-surface-rgb: 11 15 19;
+          --md-sys-color-surface: #0B0F13;
+          --md-sys-color-surface-dim-rgb: 11 15 19;
+          --md-sys-color-surface-dim: #0B0F13;
+          --md-sys-color-surface-bright-rgb: 42 49 57;
+          --md-sys-color-surface-bright: #2A3139;
+          --md-sys-color-surface-container-lowest-rgb: 5 7 9;
+          --md-sys-color-surface-container-lowest: #050709;
+          --md-sys-color-surface-container-low-rgb: 17 24 39;
+          --md-sys-color-surface-container-low: #111827;
+          --md-sys-color-surface-container-rgb: 21 28 36;
+          --md-sys-color-surface-container: #151C24;
+          --md-sys-color-surface-container-high-rgb: 30 37 45;
+          --md-sys-color-surface-container-high: #1E252D;
+          --md-sys-color-surface-container-highest-rgb: 37 45 55;
+          --md-sys-color-surface-container-highest: #252D37;
+
+          /* Text, Outlines, Inverse & Tint - Dark Mode */
+          --md-sys-color-on-surface-rgb: 226 228 233;
+          --md-sys-color-on-surface: #E2E4E9;
+          --md-sys-color-on-surface-variant-rgb: 201 205 211;
+          --md-sys-color-on-surface-variant: #C9CDD3;
+          --md-sys-color-outline-rgb: 138 145 155;
+          --md-sys-color-outline: #8A919B;
+          --md-sys-color-outline-variant-rgb: 64 71 80;
+          --md-sys-color-outline-variant: #404750;
+          --md-sys-color-inverse-surface-rgb: 226 228 233;
+          --md-sys-color-inverse-surface: #E2E4E9;
+          --md-sys-color-inverse-on-surface-rgb: 17 24 39;
+          --md-sys-color-inverse-on-surface: #111827;
+          --md-sys-color-inverse-primary-rgb: 30 37 45;
+          --md-sys-color-inverse-primary: #1E252D;
+          --md-sys-color-surface-tint-rgb: 192 199 210;
+          --md-sys-color-surface-tint: #C0C7D2;
+        }
+      }
+
+      /* Explicit selector overrides for class/attribute dark mode */
+      html[data-theme="dark"], html.dark {
+        --md-sys-color-primary-rgb: 192 199 210;
+        --md-sys-color-primary: #C0C7D2;
+        --md-sys-color-on-primary-rgb: 21 28 36;
+        --md-sys-color-on-primary: #151C24;
+        --md-sys-color-primary-container-rgb: 42 49 57;
+        --md-sys-color-primary-container: #2A3139;
+        --md-sys-color-on-primary-container-rgb: 220 227 238;
+        --md-sys-color-on-primary-container: #DCE3EE;
+        --md-sys-color-secondary-rgb: 186 199 222;
+        --md-sys-color-secondary: #BAC7DE;
+        --md-sys-color-on-secondary-rgb: 36 49 67;
+        --md-sys-color-on-secondary: #243143;
+        --md-sys-color-secondary-container-rgb: 59 72 90;
+        --md-sys-color-secondary-container: #3B485A;
+        --md-sys-color-on-secondary-container-rgb: 214 227 251;
+        --md-sys-color-on-secondary-container: #D6E3FB;
+        --md-sys-color-tertiary-rgb: 255 184 113;
+        --md-sys-color-tertiary: #FFB871;
+        --md-sys-color-on-tertiary-rgb: 74 40 0;
+        --md-sys-color-on-tertiary: #4A2800;
+        --md-sys-color-tertiary-container-rgb: 106 60 0;
+        --md-sys-color-tertiary-container: #6A3C00;
+        --md-sys-color-on-tertiary-container-rgb: 255 220 190;
+        --md-sys-color-on-tertiary-container: #FFDCBE;
+        --md-sys-color-success-rgb: 128 217 156;
+        --md-sys-color-success: #80D99C;
+        --md-sys-color-on-success-rgb: 0 57 28;
+        --md-sys-color-on-success: #00391C;
+        --md-sys-color-success-container-rgb: 0 82 43;
+        --md-sys-color-success-container: #00522B;
+        --md-sys-color-on-success-container-rgb: 183 241 196;
+        --md-sys-color-on-success-container: #B7F1C4;
+        --md-sys-color-error-rgb: 255 180 171;
+        --md-sys-color-error: #FFB4AB;
+        --md-sys-color-on-error-rgb: 105 0 4;
+        --md-sys-color-on-error: #690004;
+        --md-sys-color-error-container-rgb: 147 0 9;
+        --md-sys-color-error-container: #930009;
+        --md-sys-color-on-error-container-rgb: 255 218 214;
+        --md-sys-color-on-error-container: #FFDAD6;
+        --md-sys-color-surface-rgb: 11 15 19;
+        --md-sys-color-surface: #0B0F13;
+        --md-sys-color-surface-dim-rgb: 11 15 19;
+        --md-sys-color-surface-dim: #0B0F13;
+        --md-sys-color-surface-bright-rgb: 42 49 57;
+        --md-sys-color-surface-bright: #2A3139;
+        --md-sys-color-surface-container-lowest-rgb: 5 7 9;
+        --md-sys-color-surface-container-lowest: #050709;
+        --md-sys-color-surface-container-low-rgb: 17 24 39;
+        --md-sys-color-surface-container-low: #111827;
+        --md-sys-color-surface-container-rgb: 21 28 36;
+        --md-sys-color-surface-container: #151C24;
+        --md-sys-color-surface-container-high-rgb: 30 37 45;
+        --md-sys-color-surface-container-high: #1E252D;
+        --md-sys-color-surface-container-highest-rgb: 37 45 55;
+        --md-sys-color-surface-container-highest: #252D37;
+        --md-sys-color-on-surface-rgb: 226 228 233;
+        --md-sys-color-on-surface: #E2E4E9;
+        --md-sys-color-on-surface-variant-rgb: 201 205 211;
+        --md-sys-color-on-surface-variant: #C9CDD3;
+        --md-sys-color-outline-rgb: 138 145 155;
+        --md-sys-color-outline: #8A919B;
+        --md-sys-color-outline-variant-rgb: 64 71 80;
+        --md-sys-color-outline-variant: #404750;
+        --md-sys-color-inverse-surface-rgb: 226 228 233;
+        --md-sys-color-inverse-surface: #E2E4E9;
+        --md-sys-color-inverse-on-surface-rgb: 17 24 39;
+        --md-sys-color-inverse-on-surface: #111827;
+        --md-sys-color-inverse-primary-rgb: 30 37 45;
+        --md-sys-color-inverse-primary: #1E252D;
+        --md-sys-color-surface-tint-rgb: 192 199 210;
+        --md-sys-color-surface-tint: #C0C7D2;
       }
 
       html {
         font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
         scroll-behavior: smooth;
-        background-color: #F9FAFB;
-        color: #111827;
+        background-color: var(--md-sys-color-surface, #F9FAFB);
+        color: var(--md-sys-color-on-surface, #111827);
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
@@ -784,8 +1020,8 @@ const unifiedSchemaGraph = {
       }
 
       body {
-        background-color: #F9FAFB;
-        color: #111827;
+        background-color: var(--md-sys-color-surface, #F9FAFB);
+        color: var(--md-sys-color-on-surface, #111827);
         font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
       }
 
@@ -1204,10 +1440,12 @@ const unifiedSchemaGraph = {
       // 5. Intelligent defer of 192KB GTM and Clarity with instant load on Google Ads / Tag Assistant traffic
       (function () {
         var search = (window.location && window.location.search) || '';
-        var isGoogleAuditOrAd = search.includes('gclid') || search.includes('gtm_debug') || search.includes('_gl') || (document.referrer && document.referrer.includes('tagassistant.google.com'));
+        var userAgent = (typeof navigator !== 'undefined' && navigator.userAgent) || '';
+        var isGoogleInspection = /Google-InspectionTool|AdsBot-Google|Mediapartners-Google/i.test(userAgent);
+        var isGoogleAuditOrAd = search.includes('gclid') || search.includes('gtm_debug') || search.includes('_gl') || (document.referrer && document.referrer.includes('tagassistant.google.com')) || isGoogleInspection;
         var isAutomatedBot = typeof navigator !== 'undefined' && (
           navigator.webdriver ||
-          /bot|crawler|spider|lighthouse|inspect|headless/i.test(navigator.userAgent)
+          /bot|crawler|spider|lighthouse|inspect|headless/i.test(userAgent)
         );
         // Skip heavy 3rd parties for audit bots UNLESS it is Google Tag Assistant / Google Ad verification
         if (isAutomatedBot && !isGoogleAuditOrAd) return;
@@ -1671,12 +1909,12 @@ const unifiedSchemaGraph = {
             aria-controls="tours-submenu"
           >
             <div class="flex items-center gap-2">
-              <svg class="w-4 h-4 text-amber-800 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+              <svg class="w-4 h-4 text-m3-tertiary shrink-0" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 2L4 7v2h16V7l-8-5zm-6 9v8h2v-8H6zm5 0v8h2v-8h-2zm5 0v8h2v-8h-2zM2 21v2h20v-2H2z"/>
               </svg>
               <div class="flex items-center gap-1.5">
                 <span class="text-xs font-bold tracking-tight text-m3-on-surface">Temple Tours</span>
-                <span class="px-1.5 py-0.2 rounded-full bg-amber-500/15 text-amber-800 text-[9px] font-bold">Popular</span>
+                <span class="px-1.5 py-0.2 rounded-full bg-m3-tertiary/15 text-m3-tertiary text-[9px] font-bold">Popular</span>
               </div>
             </div>
             <svg id="tours-chevron" class="w-3.5 h-3.5 text-m3-on-surface-variant transform rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1684,14 +1922,14 @@ const unifiedSchemaGraph = {
             </svg>
           </button>
           <div id="tours-submenu" class="mt-0.5 space-y-0.5 pl-5 pr-1 pb-1">
-            <a href="/services/tirupati-package/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-amber-800 hover:bg-m3-surface-container-lowest transition-colors">Tirupati Balaji Darshan (₹6,000)</a>
-            <a href="/services/navagraha-tour/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-amber-800 hover:bg-m3-surface-container-lowest transition-colors">Kumbakonam 9 Navagraha (2 Days)</a>
-            <a href="/services/thiruvannamalai-girivalam-trip/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-amber-800 hover:bg-m3-surface-container-lowest transition-colors">Thiruvannamalai Girivalam (₹6,500)</a>
-            <a href="/services/kanchipuram-temple-trip/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-amber-800 hover:bg-m3-surface-container-lowest transition-colors">Kanchipuram Temple Tour (₹3,500)</a>
-            <a href="/services/vellore-golden-temple/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-amber-800 hover:bg-m3-surface-container-lowest transition-colors">Vellore Golden Temple (₹4,800)</a>
-            <a href="/services/chidambaram-temple-trip/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-amber-800 hover:bg-m3-surface-container-lowest transition-colors">Chidambaram Natarajar (₹7,400)</a>
-            <a href="/services/rameswaram-2-days/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-amber-800 hover:bg-m3-surface-container-lowest transition-colors">Rameswaram &amp; Dhanushkodi (2 Days)</a>
-            <a href="/services/sabarimala-trip/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-amber-800 hover:bg-m3-surface-container-lowest transition-colors">Sabarimala Yatra (3 Days)</a>
+            <a href="/services/tirupati-package/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors">Tirupati Balaji Darshan (₹6,000)</a>
+            <a href="/services/navagraha-tour/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors">Kumbakonam 9 Navagraha (2 Days)</a>
+            <a href="/services/thiruvannamalai-girivalam-trip/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors">Thiruvannamalai Girivalam (₹6,500)</a>
+            <a href="/services/kanchipuram-temple-trip/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors">Kanchipuram Temple Tour (₹3,500)</a>
+            <a href="/services/vellore-golden-temple/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors">Vellore Golden Temple (₹4,800)</a>
+            <a href="/services/chidambaram-temple-trip/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors">Chidambaram Natarajar (₹7,400)</a>
+            <a href="/services/rameswaram-2-days/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors">Rameswaram &amp; Dhanushkodi (2 Days)</a>
+            <a href="/services/sabarimala-trip/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors">Sabarimala Yatra (3 Days)</a>
           </div>
         </div>
 

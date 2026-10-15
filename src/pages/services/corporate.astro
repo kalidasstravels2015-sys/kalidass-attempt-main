@@ -350,7 +350,7 @@ const faqSchema = {
         </p>
 
         <!-- Service Visual Hero Banner (Matching [slug].astro) -->
-        <div class="relative w-full h-48 sm:h-64 md:h-80 rounded-m3-xl overflow-hidden shadow-m3-1 border border-m3-outline-variant/60 bg-slate-900 text-left">
+        <div class="relative w-full h-48 sm:h-64 md:h-80 rounded-m3-xl overflow-hidden shadow-m3-1 border border-m3-outline-variant/60 bg-m3-inverse-surface text-left">
           <OptimizedImage
             src="/images/services/corporate.webp"
             alt="Kalidass Travels - Corporate Cab & Employee Transport Services in Chennai"
@@ -361,9 +361,9 @@ const faqSchema = {
           />
 
           <!-- Subtle Bottom Gradient Scrim & Badges -->
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-m3-inverse-surface/80 via-transparent to-transparent pointer-events-none"></div>
           <div class="absolute bottom-3.5 left-3.5 right-3.5 flex items-center justify-between pointer-events-none gap-2">
-            <span class="px-2.5 py-1 rounded-m3-full bg-slate-900/80 backdrop-blur-md text-white text-micro font-semibold border border-white/20 shadow-sm truncate max-w-[50%]">
+            <span class="px-2.5 py-1 rounded-m3-full bg-m3-inverse-surface/80 backdrop-blur-md text-white text-micro font-semibold border border-white/20 shadow-sm truncate max-w-[50%]">
               Corporate Mobility &amp; Retainers
             </span>
             <span class="px-2.5 py-1 rounded-m3-full bg-m3-primary/95 backdrop-blur-md text-white text-micro font-bold shadow-sm truncate max-w-[50%]">
@@ -477,8 +477,8 @@ const faqSchema = {
                       </div>
                     </div>
 
-                    <div class="pt-1.5 border-t border-m3-outline-variant/40 flex items-center gap-1.5 text-micro font-semibold text-emerald-800">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <div class="pt-1.5 border-t border-m3-outline-variant/40 flex items-center gap-1.5 text-micro font-semibold text-m3-success">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-m3-success shrink-0" />
                       <span>60-Min Replacement SLA • 100% GST Invoice</span>
                     </div>
                   </div>
@@ -495,9 +495,9 @@ const faqSchema = {
                     <a
                       href="tel:+918939539211"
                       aria-label={`Call for ${plan.shortName}`}
-                      class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-surface-container hover:bg-blue-50 active:bg-blue-100 text-m3-on-surface hover:text-[#1A73E8] border border-m3-outline-variant hover:border-blue-300 text-xs font-bold transition-all select-none"
+                      class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-surface-container hover:bg-m3-primary-container/30 active:bg-m3-primary-container/50 text-m3-on-surface hover:text-m3-primary border border-m3-outline-variant hover:border-m3-primary/40 text-xs font-bold transition-all select-none"
                     >
-                      <AndroidPhoneIcon className="w-3.5 h-3.5 text-[#1A73E8] shrink-0" />
+                      <AndroidPhoneIcon className="w-3.5 h-3.5 text-m3-primary shrink-0" />
                       <span>Call Now</span>
                     </a>
                     <a
@@ -505,7 +505,7 @@ const faqSchema = {
                       target="_blank"
                       rel="noopener noreferrer nofollow"
                       aria-label={`Enquire about ${plan.plan} on WhatsApp`}
-                      class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 text-xs font-bold transition-all select-none"
+                      class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-success-container/20 hover:bg-m3-success-container/35 active:bg-m3-success-container/50 text-m3-on-surface border border-m3-success/30 text-xs font-bold transition-all select-none"
                     >
                       <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0" />
                       <span>Enquire</span>
@@ -587,9 +587,9 @@ const faqSchema = {
                     <a
                       href="tel:+918939539211"
                       aria-label={`Call for ${item.name}`}
-                      class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-surface-container hover:bg-blue-50 active:bg-blue-100 text-m3-on-surface hover:text-[#1A73E8] border border-m3-outline-variant hover:border-blue-300 text-xs font-bold transition-all select-none"
+                      class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-surface-container hover:bg-m3-primary-container/30 active:bg-m3-primary-container/50 text-m3-on-surface hover:text-m3-primary border border-m3-outline-variant hover:border-m3-primary/40 text-xs font-bold transition-all select-none"
                     >
-                      <AndroidPhoneIcon className="w-3.5 h-3.5 text-[#1A73E8] shrink-0" />
+                      <AndroidPhoneIcon className="w-3.5 h-3.5 text-m3-primary shrink-0" />
                       <span>Call Now</span>
                     </a>
                     <a
@@ -597,7 +597,7 @@ const faqSchema = {
                       target="_blank"
                       rel="noopener noreferrer nofollow"
                       aria-label={`Book ${item.name} on WhatsApp`}
-                      class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 text-xs font-bold transition-all select-none"
+                      class="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-success-container/20 hover:bg-m3-success-container/35 active:bg-m3-success-container/50 text-m3-on-surface border border-m3-success/30 text-xs font-bold transition-all select-none"
                     >
                       <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0" />
                       <span>Enquire</span>
@@ -667,11 +667,11 @@ const faqSchema = {
       </section>
 
       <!-- 6. BOTTOM CONVERSION CTA BANNER -->
-      <section class="bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-2xl p-6 sm:p-10 text-center shadow-m3-3 border border-slate-800 my-8">
+      <section class="bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-2xl p-6 sm:p-10 text-center shadow-m3-3 border border-m3-outline-variant/30 my-8">
         <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold font-heading text-white mb-2">
           Looking for a Corporate Cab Partner in Chennai?
         </h2>
-        <p class="text-slate-300 text-xs sm:text-sm max-w-lg mx-auto mb-6">
+        <p class="text-m3-inverse-on-surface/85 text-xs sm:text-sm max-w-lg mx-auto mb-6">
           Connect with our transport desk for employee shift commute proposals, monthly executive car contracts, or corporate event fleets.
         </p>
         <div class="flex flex-wrap items-center justify-center gap-3">

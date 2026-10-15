@@ -311,16 +311,16 @@ export default function CareersPortal() {
                     <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-m3-xs bg-m3-surface-container-high text-m3-primary">
                       {job.categoryLabel}
                     </span>
-                    <span className="text-[10px] font-medium px-2 py-0.5 rounded-m3-xs bg-slate-100 text-slate-700">
+                    <span className="text-[10px] font-medium px-2 py-0.5 rounded-m3-xs bg-m3-surface-container text-m3-on-surface-variant">
                       {job.employmentType}
                     </span>
                     {job.featuredBadge && (
-                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-m3-xs bg-amber-500/15 text-amber-900 border border-amber-500/30">
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-m3-xs bg-m3-tertiary-container/30 text-m3-on-surface border border-m3-tertiary/30">
                         {job.featuredBadge}
                       </span>
                     )}
                   </div>
-                  <span className="text-[10px] font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-m3-xs border border-blue-200 shrink-0">
+                  <span className="text-[10px] font-semibold text-m3-primary bg-m3-primary-container/30 px-2 py-0.5 rounded-m3-xs border border-m3-primary/20 shrink-0">
                     Resume Required
                   </span>
                 </div>
@@ -341,7 +341,7 @@ export default function CareersPortal() {
                     <span className="font-extrabold text-m3-on-surface text-sm sm:text-base font-sans">
                       {job.salaryRange}
                     </span>
-                    <div className="text-[11px] text-emerald-700 font-semibold">{job.bataOrPerks}</div>
+                    <div className="text-[11px] text-m3-success font-semibold">{job.bataOrPerks}</div>
                   </div>
                   <div className="text-right text-[11px] text-m3-on-surface-variant shrink-0">
                     <div>{job.experienceRequired}</div>
@@ -400,7 +400,7 @@ export default function CareersPortal() {
             href="https://wa.me/918939539211?text=Hi%20Kalidass%20Travels%20HR,%20I%20am%20sharing%20my%20resume%20for%20a%20job%20opening."
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-m3-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-colors"
+            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary text-xs font-bold shadow-xs transition-colors"
           >
             <svg className="w-3.5 h-3.5 fill-white" viewBox="0 0 24 24">
               <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
@@ -415,24 +415,24 @@ export default function CareersPortal() {
         ref={dialogRef}
         closedby="any"
         aria-labelledby="apply-modal-title"
-        className="m-auto p-0 bg-transparent border-0 max-w-2xl w-[calc(100%-2rem)] max-h-[92vh] rounded-m3-2xl shadow-2xl focus:outline-none backdrop:bg-slate-950/75 backdrop:backdrop-blur-xs overflow-hidden"
+        className="m-auto p-0 bg-transparent border-0 max-w-2xl w-[calc(100%-2rem)] max-h-[92vh] rounded-m3-2xl shadow-2xl focus:outline-none backdrop:bg-m3-scrim/60 backdrop:backdrop-blur-xs overflow-hidden"
       >
         <div className="bg-m3-surface text-m3-on-surface flex flex-col max-h-[92vh] rounded-m3-2xl border border-m3-outline-variant shadow-2xl overflow-hidden">
           {/* Modal Header */}
-          <div className="bg-slate-900 text-white p-4 sm:p-5 flex items-start justify-between gap-3 border-b border-slate-800 shrink-0">
+          <div className="bg-m3-inverse-surface text-m3-inverse-on-surface p-4 sm:p-5 flex items-start justify-between gap-3 border-b border-m3-outline-variant/30 shrink-0">
             <div>
-              <div className="inline-flex items-center gap-1.5 text-[11px] text-amber-400 font-bold uppercase tracking-wider mb-1">
+              <div className="inline-flex items-center gap-1.5 text-[11px] text-m3-tertiary-fixed font-bold uppercase tracking-wider mb-1">
                 <Send className="w-3.5 h-3.5 shrink-0" />
                 <span>Job Application &amp; Resume Submission</span>
               </div>
               <h2
                 id="apply-modal-title"
-                className="text-base sm:text-lg font-extrabold font-heading tracking-tight leading-snug"
+                className="text-base sm:text-lg font-extrabold font-heading tracking-tight leading-snug text-white"
               >
                 Applying for: {selectedJob.title}
               </h2>
-              <p className="text-xs text-slate-300 mt-0.5">
-                {selectedJob.department} · {selectedJob.location} · <span className="text-emerald-400 font-semibold">{selectedJob.salaryRange}</span>
+              <p className="text-xs text-m3-inverse-on-surface/85 mt-0.5">
+                {selectedJob.department} · {selectedJob.location} · <span className="text-m3-success font-semibold">{selectedJob.salaryRange}</span>
               </p>
             </div>
 
@@ -440,7 +440,7 @@ export default function CareersPortal() {
               type="button"
               onClick={handleCloseModal}
               aria-label="Close application dialog"
-              className="p-1.5 rounded-full text-slate-400 hover:text-white hover:bg-slate-800 transition-colors shrink-0 cursor-pointer"
+              className="p-1.5 rounded-full text-m3-inverse-on-surface/70 hover:text-white hover:bg-white/10 transition-colors shrink-0 cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -451,12 +451,12 @@ export default function CareersPortal() {
             {submittedData ? (
               /* Success / Confirmation State */
               <div className="py-4 text-center space-y-4">
-                <div className="w-14 h-14 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto shadow-xs">
-                  <CheckCircle2 className="w-8 h-8 text-emerald-600 shrink-0" />
+                <div className="w-14 h-14 bg-m3-success-container text-m3-on-success-container rounded-full flex items-center justify-center mx-auto shadow-xs">
+                  <CheckCircle2 className="w-8 h-8 text-m3-success shrink-0" />
                 </div>
 
                 <div className="max-w-md mx-auto space-y-1.5">
-                  <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-m3-xs bg-emerald-100 text-emerald-800">
+                  <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-m3-xs bg-m3-success-container text-m3-on-success-container">
                     Application Received · Opened in WhatsApp
                   </span>
                   <h3 className="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading">
@@ -468,9 +468,9 @@ export default function CareersPortal() {
                 </div>
 
                 {/* Next Steps Guidance */}
-                <div className="bg-emerald-50 border border-emerald-200 rounded-m3-xl p-3.5 max-w-md mx-auto text-left space-y-2 text-xs text-emerald-950">
-                  <div className="font-bold flex items-center gap-1.5 text-emerald-900">
-                    <Check className="w-4 h-4 text-emerald-700 shrink-0" />
+                <div className="bg-m3-success-container/30 border border-m3-success/20 rounded-m3-xl p-3.5 max-w-md mx-auto text-left space-y-2 text-xs text-m3-on-surface">
+                  <div className="font-bold flex items-center gap-1.5 text-m3-on-surface">
+                    <Check className="w-4 h-4 text-m3-success shrink-0" />
                     <span>2 Quick Steps to Complete:</span>
                   </div>
                   <ol className="list-decimal list-inside space-y-1 text-emerald-800 text-[11px] sm:text-xs">
@@ -501,7 +501,7 @@ export default function CareersPortal() {
                     href={submittedData.whatsAppUrl || generateWhatsAppUrl()}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-m3-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs min-h-[42px] transition-colors"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary font-bold text-xs shadow-xs min-h-[42px] transition-colors"
                   >
                     <svg className="w-4 h-4 fill-white shrink-0" viewBox="0 0 24 24">
                       <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
@@ -513,7 +513,7 @@ export default function CareersPortal() {
                     href="tel:+918939539211"
                     className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-m3-full bg-m3-surface hover:bg-m3-surface-container border border-m3-outline-variant text-m3-on-surface font-semibold text-xs min-h-[42px] transition-colors"
                   >
-                    <Phone className="w-3.5 h-3.5 text-emerald-600" />
+                    <Phone className="w-3.5 h-3.5 text-m3-success" />
                     <span>Call HR (+91 89395 39211)</span>
                   </a>
 
@@ -528,7 +528,7 @@ export default function CareersPortal() {
                   <button
                     type="button"
                     onClick={handleCloseModal}
-                    className="inline-flex items-center gap-1 px-4 py-2.5 rounded-m3-full bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold text-xs min-h-[42px] transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1 px-4 py-2.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface font-semibold text-xs min-h-[42px] transition-colors cursor-pointer"
                   >
                     <span>Close</span>
                   </button>
@@ -671,15 +671,15 @@ export default function CareersPortal() {
                     onClick={() => fileInputRef.current && fileInputRef.current.click()}
                     className={`cursor-pointer border-2 border-dashed rounded-m3-xl p-4 text-center transition-colors ${
                       formData.resumeFile
-                        ? 'border-emerald-500 bg-emerald-50/40 text-emerald-950'
+                        ? 'border-m3-success bg-m3-success-container/20 text-m3-on-surface'
                         : 'border-m3-outline-variant/80 hover:border-m3-primary bg-m3-surface-container-low'
                     }`}
                   >
                     <UploadCloud className="w-7 h-7 text-m3-primary mb-1 mx-auto" />
                     <div className="text-xs sm:text-sm font-bold text-m3-on-surface">
                       {formData.resumeFile ? (
-                        <span className="text-emerald-700 flex items-center justify-center gap-1.5 font-bold">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                        <span className="text-m3-success flex items-center justify-center gap-1.5 font-bold">
+                          <CheckCircle2 className="w-4 h-4 text-m3-success shrink-0" />
                           {formData.resumeFile.name} ({(formData.resumeFile.size / 1024).toFixed(0)} KB)
                         </span>
                       ) : (
@@ -725,7 +725,7 @@ export default function CareersPortal() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-m3-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-xs min-h-[44px] transition-all cursor-pointer disabled:opacity-50"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary font-bold text-xs sm:text-sm shadow-xs min-h-[44px] transition-all cursor-pointer disabled:opacity-50"
                     >
                       <svg className="w-4 h-4 fill-white shrink-0" viewBox="0 0 24 24">
                         <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
@@ -740,7 +740,7 @@ export default function CareersPortal() {
                   <span>Questions or prefer calling?</span>
                   <a
                     href="tel:+918939539211"
-                    className="font-bold text-emerald-700 hover:text-emerald-800 hover:underline inline-flex items-center gap-1"
+                    className="font-bold text-m3-success hover:underline inline-flex items-center gap-1"
                   >
                     <span>Call Medavakkam HR Hub (+91 89395 39211)</span>
                     <ArrowRight className="w-3.5 h-3.5 shrink-0" />
