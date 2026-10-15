@@ -101,11 +101,11 @@ export default function DeskInquiries({
       {/* Inquiries Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-sm font-extrabold text-slate-900 tracking-tight flex items-center gap-1.5">
-            <span className="material-symbols-outlined text-amber-500 text-base">forum</span>
+          <h2 className="text-sm font-extrabold text-m3-on-surface tracking-tight flex items-center gap-1.5">
+            <span className="material-symbols-outlined text-m3-tertiary text-base">forum</span>
             <span>Inquiries & Price Shoppers ({leads.length})</span>
           </h2>
-          <span className="text-[11px] text-slate-500">
+          <span className="text-[11px] text-m3-outline">
             People who asked for rates. Quote them and request a ₹500 token advance to lock the booking.
           </span>
         </div>
@@ -113,10 +113,10 @@ export default function DeskInquiries({
 
       {/* Inquiries Stream */}
       {leads.length === 0 ? (
-        <div className="bg-white rounded-2xl p-8 text-center border border-slate-200 shadow-sm">
-          <span className="material-symbols-outlined text-4xl text-slate-300 mb-2">mark_chat_read</span>
-          <p className="text-xs font-bold text-slate-600">No pending inquiries right now.</p>
-          <span className="text-[11px] text-slate-400 block mt-1">
+        <div className="bg-white rounded-2xl p-8 text-center border border-m3-outline-variant shadow-sm">
+          <span className="material-symbols-outlined text-4xl text-m3-inverse-on-surface/80 mb-2">mark_chat_read</span>
+          <p className="text-xs font-bold text-m3-on-surface-variant">No pending inquiries right now.</p>
+          <span className="text-[11px] text-m3-outline-variant block mt-1">
             New customer queries from WhatsApp or the website calculator will appear here.
           </span>
         </div>
@@ -125,35 +125,35 @@ export default function DeskInquiries({
           {leads.map((l, idx) => (
             <div
               key={l.quoteId || idx}
-              className="bg-white rounded-xl border border-slate-200 p-3.5 shadow-sm hover:border-slate-300 transition-all"
+              className="bg-white rounded-xl border border-m3-outline-variant p-3.5 shadow-sm hover:border-m3-outline-variant transition-all"
             >
               <div className="flex items-start justify-between gap-2 mb-2">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-slate-900">{l.pickup} ➔ {l.drop}</span>
-                    <span className="text-[10px] bg-amber-50 text-amber-800 border border-amber-200 font-bold px-1.5 py-0.2 rounded">
+                    <span className="text-xs font-bold text-m3-on-surface">{l.pickup} ➔ {l.drop}</span>
+                    <span className="text-[10px] bg-m3-tertiary-container/30 text-m3-on-tertiary-container border border-m3-tertiary/30 font-bold px-1.5 py-0.2 rounded">
                       {l.status || 'Active Inquiry'}
                     </span>
                   </div>
-                  <span className="text-[11px] text-slate-500 block mt-0.5 font-mono">
+                  <span className="text-[11px] text-m3-outline block mt-0.5 font-mono">
                     {l.vehicle} • {l.tripType} • {l.timestamp}
                   </span>
                 </div>
 
                 <div className="text-right">
-                  <span className="text-sm font-extrabold text-slate-900 font-mono block">
+                  <span className="text-sm font-extrabold text-m3-on-surface font-mono block">
                     Rs. {Number(l.estimatedFare || 0).toLocaleString('en-IN')}
                   </span>
-                  <span className="text-[10px] text-slate-400">Quoted Rate</span>
+                  <span className="text-[10px] text-m3-outline-variant">Quoted Rate</span>
                 </div>
               </div>
 
               {/* Action Ribbon */}
-              <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
+              <div className="flex items-center gap-2 pt-2 border-t border-m3-outline-variant/40">
                 <button
                   type="button"
                   onClick={() => handleSendWhatsAppQuote(l)}
-                  className="flex-1 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg text-xs font-bold flex items-center justify-center gap-1 transition-colors"
+                  className="flex-1 px-3 py-1.5 bg-m3-success-container/40 hover:bg-m3-success-container/70 text-m3-on-success-container border border-m3-success/30 rounded-lg text-xs font-bold flex items-center justify-center gap-1 transition-colors"
                 >
                   <span className="material-symbols-outlined text-sm">send</span>
                   <span>1-Tap WA Quote</span>
@@ -162,7 +162,7 @@ export default function DeskInquiries({
                 <button
                   type="button"
                   onClick={() => handleOpenAdvanceModal(l)}
-                  className="flex-1 px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-lg text-xs font-bold flex items-center justify-center gap-1 shadow-sm transition-all"
+                  className="flex-1 px-3 py-1.5 bg-m3-tertiary-container/300 hover:bg-m3-tertiary text-m3-on-surface rounded-lg text-xs font-bold flex items-center justify-center gap-1 shadow-sm transition-all"
                 >
                   <span className="material-symbols-outlined text-sm">lock</span>
                   <span>Advance Received (Lock)</span>
@@ -176,26 +176,26 @@ export default function DeskInquiries({
       {/* Lock with Advance Modal */}
       {advanceModalLead && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/60 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-slate-200">
-            <div className="bg-slate-900 text-white p-4 flex items-center justify-between">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-m3-outline-variant">
+            <div className="bg-m3-inverse-surface text-white p-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-amber-400">verified</span>
+                <span className="material-symbols-outlined text-m3-tertiary">verified</span>
                 <div>
                   <h3 className="text-sm font-bold">Lock Confirmed Booking</h3>
-                  <span className="text-[11px] text-slate-300">Convert Inquiry to Live Dispatch</span>
+                  <span className="text-[11px] text-m3-inverse-on-surface/80">Convert Inquiry to Live Dispatch</span>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setAdvanceModalLead(null)}
-                className="text-slate-400 hover:text-white"
+                className="text-m3-outline-variant hover:text-white"
               >
                 <span className="material-symbols-outlined text-lg">close</span>
               </button>
             </div>
 
             <form onSubmit={handleConfirmAdvanceSubmit} className="p-4 space-y-3 text-xs">
-              <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900">
+              <div className="p-2.5 rounded-xl bg-m3-tertiary-container/30 border border-m3-tertiary/30 text-m3-on-tertiary-container">
                 <span className="font-bold block">Token Advance Received:</span>
                 <span className="text-[11px]">
                   Confirming this locks the trip on your dispatch schedule. You can broadcast to your driver group 24h before travel.
@@ -204,60 +204,60 @@ export default function DeskInquiries({
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-600 mb-1">Advance Token (Rs)</label>
+                  <label className="block text-[11px] font-semibold text-m3-on-surface-variant mb-1">Advance Token (Rs)</label>
                   <input
                     type="number"
                     required
                     value={advanceForm.advanceAmount}
                     onChange={(e) => setAdvanceForm({ ...advanceForm, advanceAmount: e.target.value })}
-                    className="w-full font-mono font-bold text-amber-700 rounded-lg border border-slate-300 p-2 focus:ring-2 focus:ring-amber-500"
+                    className="w-full font-mono font-bold text-m3-tertiary rounded-lg border border-m3-outline-variant p-2 focus:ring-2 focus:ring-m3-tertiary"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-600 mb-1">Total Agreed Fare (Rs)</label>
+                  <label className="block text-[11px] font-semibold text-m3-on-surface-variant mb-1">Total Agreed Fare (Rs)</label>
                   <input
                     type="number"
                     required
                     value={advanceForm.fare}
                     onChange={(e) => setAdvanceForm({ ...advanceForm, fare: e.target.value })}
-                    className="w-full font-mono font-bold text-slate-900 rounded-lg border border-slate-300 p-2 focus:ring-2 focus:ring-amber-500"
+                    className="w-full font-mono font-bold text-m3-on-surface rounded-lg border border-m3-outline-variant p-2 focus:ring-2 focus:ring-m3-tertiary"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-600 mb-1">Travel Date</label>
+                  <label className="block text-[11px] font-semibold text-m3-on-surface-variant mb-1">Travel Date</label>
                   <input
                     type="text"
                     required
                     placeholder="e.g. 25-Oct-2026 / Tomorrow"
                     value={advanceForm.travelDate}
                     onChange={(e) => setAdvanceForm({ ...advanceForm, travelDate: e.target.value })}
-                    className="w-full rounded-lg border border-slate-300 p-2 focus:ring-2 focus:ring-amber-500"
+                    className="w-full rounded-lg border border-m3-outline-variant p-2 focus:ring-2 focus:ring-m3-tertiary"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-600 mb-1">Pickup Time</label>
+                  <label className="block text-[11px] font-semibold text-m3-on-surface-variant mb-1">Pickup Time</label>
                   <input
                     type="text"
                     required
                     placeholder="05:00 AM"
                     value={advanceForm.pickupTime}
                     onChange={(e) => setAdvanceForm({ ...advanceForm, pickupTime: e.target.value })}
-                    className="w-full rounded-lg border border-slate-300 p-2 focus:ring-2 focus:ring-amber-500"
+                    className="w-full rounded-lg border border-m3-outline-variant p-2 focus:ring-2 focus:ring-m3-tertiary"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-600 mb-1">Exact Pickup Address & Route</label>
+                <label className="block text-[11px] font-semibold text-m3-on-surface-variant mb-1">Exact Pickup Address & Route</label>
                 <input
                   type="text"
                   required
                   value={advanceForm.pickupAddress}
                   onChange={(e) => setAdvanceForm({ ...advanceForm, pickupAddress: e.target.value })}
-                  className="w-full rounded-lg border border-slate-300 p-2 focus:ring-2 focus:ring-amber-500"
+                  className="w-full rounded-lg border border-m3-outline-variant p-2 focus:ring-2 focus:ring-m3-tertiary"
                 />
               </div>
 
@@ -265,13 +265,13 @@ export default function DeskInquiries({
                 <button
                   type="button"
                   onClick={() => setAdvanceModalLead(null)}
-                  className="flex-1 py-2 text-slate-500 hover:text-slate-800 font-bold"
+                  className="flex-1 py-2 text-m3-outline hover:text-m3-on-surface font-bold"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold flex items-center justify-center gap-1 shadow-sm transition-all"
+                  className="flex-1 py-2.5 bg-m3-success hover:bg-m3-success text-white rounded-xl font-bold flex items-center justify-center gap-1 shadow-sm transition-all"
                 >
                   <span className="material-symbols-outlined text-sm">lock</span>
                   <span>Confirm Booking</span>

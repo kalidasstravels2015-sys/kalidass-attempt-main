@@ -53,9 +53,9 @@ export default function DeskKhataSettlement({
   return (
     <div className="space-y-4">
       {/* Daily Profit Summary Ribbon */}
-      <div className="bg-gradient-to-r from-emerald-800 to-teal-900 rounded-2xl p-4 text-white shadow-sm flex items-center justify-between">
+      <div className="bg-gradient-to-r from-m3-success to-m3-success rounded-2xl p-4 text-white shadow-sm flex items-center justify-between">
         <div>
-          <span className="text-[10px] uppercase font-bold tracking-wider text-teal-200 block">
+          <span className="text-[10px] uppercase font-bold tracking-wider text-m3-on-success/90 block">
             Today's Net Profit (In Your Pocket)
           </span>
           <span className="text-2xl font-black font-mono">
@@ -63,24 +63,24 @@ export default function DeskKhataSettlement({
           </span>
         </div>
         <div className="text-right">
-          <span className="text-xs font-bold text-teal-100 block">{completedTrips.length} Completed Trips</span>
-          <span className="text-[10px] text-teal-300 font-mono">Zero Bad Debts</span>
+          <span className="text-xs font-bold text-m3-on-success block">{completedTrips.length} Completed Trips</span>
+          <span className="text-[10px] text-m3-on-success/80 font-mono">Zero Bad Debts</span>
         </div>
       </div>
 
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-extrabold text-slate-900 flex items-center gap-1.5">
-          <span className="material-symbols-outlined text-emerald-600 text-base">account_balance_wallet</span>
+        <h2 className="text-sm font-extrabold text-m3-on-surface flex items-center gap-1.5">
+          <span className="material-symbols-outlined text-m3-success text-base">account_balance_wallet</span>
           <span>Daily Driver Khata & Cash Reconciliation</span>
         </h2>
-        <span className="text-[11px] text-slate-500">Track Cash-in-Hand vs UPI</span>
+        <span className="text-[11px] text-m3-outline">Track Cash-in-Hand vs UPI</span>
       </div>
 
       {completedTrips.length === 0 ? (
-        <div className="bg-white rounded-2xl p-8 text-center border border-slate-200 shadow-sm">
-          <span className="material-symbols-outlined text-4xl text-slate-300 mb-2">payments</span>
-          <p className="text-xs font-bold text-slate-600">No completed trips to settle today yet.</p>
-          <span className="text-[11px] text-slate-400 block mt-1">
+        <div className="bg-white rounded-2xl p-8 text-center border border-m3-outline-variant shadow-sm">
+          <span className="material-symbols-outlined text-4xl text-m3-inverse-on-surface/80 mb-2">payments</span>
+          <p className="text-xs font-bold text-m3-on-surface-variant">No completed trips to settle today yet.</p>
+          <span className="text-[11px] text-m3-outline-variant block mt-1">
             When a driver completes a trip and closes the duty slip, it will appear here for cash settlement.
           </span>
         </div>
@@ -107,23 +107,23 @@ export default function DeskKhataSettlement({
             return (
               <div
                 key={b.bookingId}
-                className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm hover:border-slate-300 transition-all"
+                className="bg-white rounded-2xl border border-m3-outline-variant p-4 shadow-sm hover:border-m3-outline-variant transition-all"
               >
                 {/* Header */}
-                <div className="flex items-start justify-between gap-2 mb-2 pb-2 border-b border-slate-100">
+                <div className="flex items-start justify-between gap-2 mb-2 pb-2 border-b border-m3-outline-variant/40">
                   <div>
-                    <span className="font-mono font-bold text-xs text-slate-900">{b.bookingId}</span>
-                    <span className="text-xs font-semibold text-slate-700 block mt-0.5">{b.pickupAddress}</span>
-                    <span className="text-[11px] text-slate-500 block">
+                    <span className="font-mono font-bold text-xs text-m3-on-surface">{b.bookingId}</span>
+                    <span className="text-xs font-semibold text-m3-on-surface-variant block mt-0.5">{b.pickupAddress}</span>
+                    <span className="text-[11px] text-m3-outline block">
                       Driver: <strong>{b.assignedChauffeur}</strong>
                     </span>
                   </div>
 
                   <div className="text-right">
-                    <span className="text-sm font-extrabold text-slate-900 font-mono block">
+                    <span className="text-sm font-extrabold text-m3-on-surface font-mono block">
                       Rs. {totalFare.toLocaleString('en-IN')}
                     </span>
-                    <span className="text-[10px] text-emerald-600 font-bold block">
+                    <span className="text-[10px] text-m3-success font-bold block">
                       Your Margin: Rs.{companyMargin}
                     </span>
                   </div>
@@ -131,7 +131,7 @@ export default function DeskKhataSettlement({
 
                 {/* Question: Who collected balance? */}
                 <div className="mb-3">
-                  <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wide mb-1.5">
+                  <label className="block text-[11px] font-bold text-m3-on-surface-variant uppercase tracking-wide mb-1.5">
                     How was the remaining balance paid by the guest?
                   </label>
                   <div className="grid grid-cols-2 gap-2 text-xs">
@@ -140,12 +140,12 @@ export default function DeskKhataSettlement({
                       onClick={() => setMode(b.bookingId, 'cash_driver')}
                       className={`p-2.5 rounded-xl border text-left font-bold transition-all ${
                         mode === 'cash_driver'
-                          ? 'bg-amber-50 border-amber-400 text-amber-900 ring-2 ring-amber-200/50'
-                          : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                          ? 'bg-m3-tertiary-container/30 border-m3-tertiary/50 text-m3-on-tertiary-container ring-2 ring-m3-tertiary/40'
+                          : 'bg-m3-surface-container-low border-m3-outline-variant text-m3-on-surface-variant hover:bg-m3-surface-container'
                       }`}
                     >
                       <span className="block text-xs">💵 Cash to Driver</span>
-                      <span className="text-[10px] font-normal text-slate-500">Guest handed cash to chauffeur</span>
+                      <span className="text-[10px] font-normal text-m3-outline">Guest handed cash to chauffeur</span>
                     </button>
 
                     <button
@@ -153,19 +153,19 @@ export default function DeskKhataSettlement({
                       onClick={() => setMode(b.bookingId, 'upi_office')}
                       className={`p-2.5 rounded-xl border text-left font-bold transition-all ${
                         mode === 'upi_office'
-                          ? 'bg-sky-50 border-sky-400 text-sky-900 ring-2 ring-sky-200/50'
-                          : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                          ? 'bg-m3-secondary-container/40 border-m3-secondary/40 text-m3-on-secondary-container ring-2 ring-m3-secondary/30'
+                          : 'bg-m3-surface-container-low border-m3-outline-variant text-m3-on-surface-variant hover:bg-m3-surface-container'
                       }`}
                     >
                       <span className="block text-xs">📱 UPI to Office</span>
-                      <span className="text-[10px] font-normal text-slate-500">Guest GPayed Kalidass Travels</span>
+                      <span className="text-[10px] font-normal text-m3-outline">Guest GPayed Kalidass Travels</span>
                     </button>
                   </div>
                 </div>
 
                 {/* Outcome Calculation */}
                 {mode === 'cash_driver' ? (
-                  <div className="p-3 rounded-xl bg-amber-50/70 border border-amber-200 text-xs mb-3">
+                  <div className="p-3 rounded-xl bg-m3-tertiary-container/30/70 border border-m3-tertiary/30 text-xs mb-3">
                     <div className="flex items-center justify-between font-mono mb-1">
                       <span>Cash with Driver:</span>
                       <strong>Rs. {driverCashCollected}</strong>
@@ -174,24 +174,24 @@ export default function DeskKhataSettlement({
                       <span>Driver's Net Share:</span>
                       <strong>-Rs. {driverPayout}</strong>
                     </div>
-                    <div className="border-t border-amber-200 pt-1.5 flex items-center justify-between text-amber-900 font-bold">
+                    <div className="border-t border-m3-tertiary/30 pt-1.5 flex items-center justify-between text-m3-on-tertiary-container font-bold">
                       <span>
                         {driverOwesOffice >= 0 ? 'Driver Owes Office:' : 'Office Owes Driver:'}
                       </span>
-                      <span className="text-sm font-mono font-extrabold text-amber-800">
+                      <span className="text-sm font-mono font-extrabold text-m3-on-tertiary-container">
                         Rs. {Math.abs(driverOwesOffice)}
                       </span>
                     </div>
                   </div>
                 ) : (
-                  <div className="p-3 rounded-xl bg-sky-50/70 border border-sky-200 text-xs mb-3">
+                  <div className="p-3 rounded-xl bg-m3-secondary-container/40/70 border border-m3-secondary/30 text-xs mb-3">
                     <div className="flex items-center justify-between font-mono mb-1">
                       <span>Office Holds Full Fare:</span>
                       <strong>Rs. {totalFare}</strong>
                     </div>
-                    <div className="border-t border-sky-200 pt-1.5 flex items-center justify-between text-sky-900 font-bold">
+                    <div className="border-t border-m3-secondary/30 pt-1.5 flex items-center justify-between text-m3-on-secondary-container font-bold">
                       <span>Office Must Transfer to Driver:</span>
-                      <span className="text-sm font-mono font-extrabold text-sky-800">
+                      <span className="text-sm font-mono font-extrabold text-m3-on-secondary-container">
                         Rs. {officeOwesDriver}
                       </span>
                     </div>
@@ -204,7 +204,7 @@ export default function DeskKhataSettlement({
                     <button
                       type="button"
                       onClick={() => handleDriverPaymentReminder(b, driverOwesOffice)}
-                      className="flex-1 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-xl text-xs font-bold flex items-center justify-center gap-1"
+                      className="flex-1 py-2 bg-m3-success-container/40 hover:bg-m3-success-container/70 text-m3-on-success-container border border-m3-success/30 rounded-xl text-xs font-bold flex items-center justify-center gap-1"
                     >
                       <span className="material-symbols-outlined text-sm">send</span>
                       <span>1-Tap WhatsApp Reminder</span>
@@ -214,7 +214,7 @@ export default function DeskKhataSettlement({
                   <button
                     type="button"
                     onClick={() => handleMarkSettled(b)}
-                    className="flex-1 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1 shadow-sm transition-all"
+                    className="flex-1 py-2 bg-m3-inverse-surface hover:bg-m3-surface-container-high text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1 shadow-sm transition-all"
                   >
                     <span className="material-symbols-outlined text-sm">check_circle</span>
                     <span>Mark Reconciled & Closed</span>

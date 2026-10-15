@@ -7,7 +7,7 @@ const title = "Solo Pilot Command Tower — Kalidass Travels | Admin Console";
 ---
 
 <!doctype html>
-<html lang="en" class="h-full bg-slate-100 text-slate-800 antialiased">
+<html lang="en" class="h-full bg-m3-surface text-m3-on-surface antialiased">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
@@ -49,14 +49,14 @@ const title = "Solo Pilot Command Tower — Kalidass Travels | Admin Console";
         height: 6px;
       }
       ::-webkit-scrollbar-track {
-        background: #F1F5F9;
+        background: var(--md-sys-color-surface-container, #F1F5F9);
       }
       ::-webkit-scrollbar-thumb {
-        background: #CBD5E1;
+        background: var(--md-sys-color-outline-variant, #CBD5E1);
         border-radius: 9999px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #94A3B8;
+        background: var(--md-sys-color-outline, #94A3B8);
       }
       @keyframes fadeIn {
         from { opacity: 0; transform: translateY(4px); }
@@ -67,7 +67,7 @@ const title = "Solo Pilot Command Tower — Kalidass Travels | Admin Console";
       }
     </style>
   </head>
-  <body class="min-h-full bg-slate-100 text-slate-800 flex flex-col">
+  <body class="min-h-full bg-m3-surface text-m3-on-surface flex flex-col">
     <SoloAdminDashboard client:load />
   </body>
 </html>

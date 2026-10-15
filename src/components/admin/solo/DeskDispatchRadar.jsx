@@ -129,14 +129,14 @@ export default function DeskDispatchRadar({
   return (
     <div className="space-y-4">
       {/* Sub-Filter Timeline Navigation Pills */}
-      <div className="bg-white rounded-2xl p-2 border border-slate-200 shadow-sm flex items-center justify-between gap-1 overflow-x-auto">
+      <div className="bg-white rounded-2xl p-2 border border-m3-outline-variant shadow-sm flex items-center justify-between gap-1 overflow-x-auto">
         <button
           type="button"
           onClick={() => setSubFilter('tomorrow')}
           className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center justify-center gap-1.5 ${
             subFilter === 'tomorrow'
-              ? 'bg-amber-500 text-slate-950 shadow-sm'
-              : 'text-slate-600 hover:bg-slate-100'
+              ? 'bg-m3-tertiary-container/300 text-m3-on-surface shadow-sm'
+              : 'text-m3-on-surface-variant hover:bg-m3-surface-container'
           }`}
         >
           <span className="material-symbols-outlined text-sm">wb_twilight</span>
@@ -148,8 +148,8 @@ export default function DeskDispatchRadar({
           onClick={() => setSubFilter('today')}
           className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center justify-center gap-1.5 ${
             subFilter === 'today'
-              ? 'bg-slate-900 text-white shadow-sm'
-              : 'text-slate-600 hover:bg-slate-100'
+              ? 'bg-m3-inverse-surface text-white shadow-sm'
+              : 'text-m3-on-surface-variant hover:bg-m3-surface-container'
           }`}
         >
           <span className="material-symbols-outlined text-sm">navigation</span>
@@ -161,8 +161,8 @@ export default function DeskDispatchRadar({
           onClick={() => setSubFilter('upcoming')}
           className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center justify-center gap-1.5 ${
             subFilter === 'upcoming'
-              ? 'bg-slate-900 text-white shadow-sm'
-              : 'text-slate-600 hover:bg-slate-100'
+              ? 'bg-m3-inverse-surface text-white shadow-sm'
+              : 'text-m3-on-surface-variant hover:bg-m3-surface-container'
           }`}
         >
           <span className="material-symbols-outlined text-sm">calendar_month</span>
@@ -174,8 +174,8 @@ export default function DeskDispatchRadar({
           onClick={() => setSubFilter('all')}
           className={`py-2 px-3 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
             subFilter === 'all'
-              ? 'bg-slate-900 text-white shadow-sm'
-              : 'text-slate-600 hover:bg-slate-100'
+              ? 'bg-m3-inverse-surface text-white shadow-sm'
+              : 'text-m3-on-surface-variant hover:bg-m3-surface-container'
           }`}
         >
           All
@@ -184,20 +184,20 @@ export default function DeskDispatchRadar({
 
       {/* Helper Banner for Selected Tab */}
       {subFilter === 'tomorrow' && (
-        <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center justify-between">
+        <div className="p-3 rounded-xl bg-m3-tertiary-container/30 border border-m3-tertiary/30 text-m3-on-tertiary-container text-xs flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-amber-600 text-base">campaign</span>
+            <span className="material-symbols-outlined text-m3-tertiary text-base">campaign</span>
             <span>
               <strong>Evening Sourcing Window:</strong> Assign your own car or broadcast to your driver WhatsApp group before 8:00 PM.
             </span>
           </div>
-          <span className="text-[10px] font-bold bg-amber-200/80 px-2 py-0.5 rounded uppercase">Tonight</span>
+          <span className="text-[10px] font-bold bg-m3-tertiary-container/80 px-2 py-0.5 rounded uppercase">Tonight</span>
         </div>
       )}
 
       {subFilter === 'upcoming' && (
-        <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 text-xs flex items-center gap-2">
-          <span className="material-symbols-outlined text-slate-500 text-base">lock_clock</span>
+        <div className="p-3 rounded-xl bg-m3-surface-container-low border border-m3-outline-variant text-m3-on-surface-variant text-xs flex items-center gap-2">
+          <span className="material-symbols-outlined text-m3-outline text-base">lock_clock</span>
           <span>
             <strong>Advance Bookings:</strong> These trips are 100% locked with token advance. Driver sourcing opens the evening before departure.
           </span>
@@ -206,9 +206,9 @@ export default function DeskDispatchRadar({
 
       {/* Cards Stream */}
       {activeList.length === 0 ? (
-        <div className="bg-white rounded-2xl p-8 text-center border border-slate-200 shadow-sm">
-          <span className="material-symbols-outlined text-4xl text-slate-300 mb-2">event_available</span>
-          <p className="text-xs font-bold text-slate-600">No trips scheduled in this category.</p>
+        <div className="bg-white rounded-2xl p-8 text-center border border-m3-outline-variant shadow-sm">
+          <span className="material-symbols-outlined text-4xl text-m3-inverse-on-surface/80 mb-2">event_available</span>
+          <p className="text-xs font-bold text-m3-on-surface-variant">No trips scheduled in this category.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -221,15 +221,15 @@ export default function DeskDispatchRadar({
                 key={b.bookingId}
                 className={`bg-white rounded-2xl border transition-all overflow-hidden ${
                   conflict.hasConflict
-                    ? 'border-rose-400 ring-2 ring-rose-200/50'
+                    ? 'border-m3-error/40 ring-2 ring-m3-error/30'
                     : isUnassigned && subFilter === 'tomorrow'
-                    ? 'border-amber-300 shadow-md'
-                    : 'border-slate-200 shadow-sm'
+                    ? 'border-m3-tertiary/40 shadow-md'
+                    : 'border-m3-outline-variant shadow-sm'
                 }`}
               >
                 {/* Conflict Banner */}
                 {conflict.hasConflict && (
-                  <div className="bg-rose-500 text-white px-3 py-1.5 text-xs font-bold flex items-center gap-1.5">
+                  <div className="bg-m3-error-container/300 text-white px-3 py-1.5 text-xs font-bold flex items-center gap-1.5">
                     <span className="material-symbols-outlined text-sm">warning</span>
                     <span>{conflict.message}</span>
                   </div>
@@ -240,39 +240,39 @@ export default function DeskDispatchRadar({
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-mono font-bold text-sm text-slate-900">{b.bookingId}</span>
-                        <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                        <span className="font-mono font-bold text-sm text-m3-on-surface">{b.bookingId}</span>
+                        <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-m3-success-container/70 text-m3-on-success-container border border-m3-success/40">
                           Advance Locked
                         </span>
                       </div>
-                      <div className="flex items-center gap-1 text-xs font-semibold text-amber-600 mt-0.5">
+                      <div className="flex items-center gap-1 text-xs font-semibold text-m3-tertiary mt-0.5">
                         <span className="material-symbols-outlined text-sm">schedule</span>
                         <span>{b.travelDateTime}</span>
                       </div>
                     </div>
 
                     <div className="text-right">
-                      <span className="text-base font-extrabold text-slate-900 font-mono block">
+                      <span className="text-base font-extrabold text-m3-on-surface font-mono block">
                         Rs. {Number(b.terminalFare || 0).toLocaleString('en-IN')}
                       </span>
-                      <span className="text-[11px] text-emerald-600 font-semibold font-mono">
+                      <span className="text-[11px] text-m3-success font-semibold font-mono">
                         Profit: Rs.{b.companyMargin || (b.terminalFare - b.chauffeurPayout)}
                       </span>
                     </div>
                   </div>
 
                   {/* Route & Passenger */}
-                  <div className="bg-slate-50 rounded-xl p-2.5 mb-3 border border-slate-100">
-                    <div className="flex items-start gap-1.5 text-xs text-slate-800 font-medium mb-1.5">
-                      <span className="material-symbols-outlined text-sm text-amber-500 shrink-0 mt-0.5">near_me</span>
+                  <div className="bg-m3-surface-container-low rounded-xl p-2.5 mb-3 border border-m3-outline-variant/40">
+                    <div className="flex items-start gap-1.5 text-xs text-m3-on-surface font-medium mb-1.5">
+                      <span className="material-symbols-outlined text-sm text-m3-tertiary shrink-0 mt-0.5">near_me</span>
                       <span className="line-clamp-2">{b.pickupAddress}</span>
                     </div>
-                    <div className="flex flex-wrap items-center justify-between text-xs text-slate-600 gap-2 border-t border-slate-200/60 pt-1.5">
+                    <div className="flex flex-wrap items-center justify-between text-xs text-m3-on-surface-variant gap-2 border-t border-m3-outline-variant/60 pt-1.5">
                       <div className="flex items-center gap-1">
-                        <span className="material-symbols-outlined text-sm text-slate-400">person</span>
-                        <span className="font-semibold text-slate-700">{b.guestNamePhone}</span>
+                        <span className="material-symbols-outlined text-sm text-m3-outline-variant">person</span>
+                        <span className="font-semibold text-m3-on-surface-variant">{b.guestNamePhone}</span>
                       </div>
-                      <div className="text-[11px] text-slate-500">
+                      <div className="text-[11px] text-m3-outline">
                         {b.vehicleCategory} ({b.partySize})
                       </div>
                     </div>
@@ -281,13 +281,13 @@ export default function DeskDispatchRadar({
                   {/* Chauffeur Assignment Block */}
                   <div className="mb-3">
                     {isUnassigned ? (
-                      <div className="p-3 rounded-xl bg-amber-50/80 border border-amber-200 space-y-2">
+                      <div className="p-3 rounded-xl bg-m3-tertiary-container/30/80 border border-m3-tertiary/30 space-y-2">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-amber-900 flex items-center gap-1">
-                            <span className="material-symbols-outlined text-sm text-amber-600">no_accounts</span>
+                          <span className="text-xs font-bold text-m3-on-tertiary-container flex items-center gap-1">
+                            <span className="material-symbols-outlined text-sm text-m3-tertiary">no_accounts</span>
                             <span>Chauffeur Not Assigned Yet</span>
                           </span>
-                          <span className="text-[11px] text-slate-500 font-mono">
+                          <span className="text-[11px] text-m3-outline font-mono">
                             Driver Share: Rs.{b.chauffeurPayout || Math.round(b.terminalFare * 0.8)}
                           </span>
                         </div>
@@ -296,7 +296,7 @@ export default function DeskDispatchRadar({
                           <button
                             type="button"
                             onClick={() => handleOpenBroadcastDrawer(b)}
-                            className="flex-1 py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition-all"
+                            className="flex-1 py-2 px-3 bg-m3-success hover:bg-m3-success text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition-all"
                           >
                             <span className="material-symbols-outlined text-sm">groups</span>
                             <span>Broadcast to Driver Group</span>
@@ -305,7 +305,7 @@ export default function DeskDispatchRadar({
                           <button
                             type="button"
                             onClick={() => setAttachingBookingId(attachingBookingId === b.bookingId ? null : b.bookingId)}
-                            className="py-2 px-3 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 rounded-lg text-xs font-bold flex items-center gap-1 transition-all"
+                            className="py-2 px-3 bg-white hover:bg-m3-surface-container-low text-m3-on-surface-variant border border-m3-outline-variant rounded-lg text-xs font-bold flex items-center gap-1 transition-all"
                           >
                             <span className="material-symbols-outlined text-sm">person_add</span>
                             <span>Attach Driver</span>
@@ -314,34 +314,34 @@ export default function DeskDispatchRadar({
 
                         {/* Inline Driver Attachment Form */}
                         {attachingBookingId === b.bookingId && (
-                          <div className="pt-2 border-t border-amber-200 space-y-2 animate-fadeIn">
+                          <div className="pt-2 border-t border-m3-tertiary/30 space-y-2 animate-fadeIn">
                             <div className="grid grid-cols-3 gap-2">
                               <input
                                 type="text"
                                 placeholder="Driver Name"
                                 value={driverInput.name}
                                 onChange={(e) => setDriverInput({ ...driverInput, name: e.target.value })}
-                                className="text-xs p-2 rounded-lg border border-slate-300 bg-white"
+                                className="text-xs p-2 rounded-lg border border-m3-outline-variant bg-white"
                               />
                               <input
                                 type="text"
                                 placeholder="Phone (10 digits)"
                                 value={driverInput.phone}
                                 onChange={(e) => setDriverInput({ ...driverInput, phone: e.target.value })}
-                                className="text-xs p-2 rounded-lg border border-slate-300 bg-white"
+                                className="text-xs p-2 rounded-lg border border-m3-outline-variant bg-white"
                               />
                               <input
                                 type="text"
                                 placeholder="Plate (TN09 CZ 9999)"
                                 value={driverInput.plate}
                                 onChange={(e) => setDriverInput({ ...driverInput, plate: e.target.value })}
-                                className="text-xs p-2 rounded-lg border border-slate-300 bg-white"
+                                className="text-xs p-2 rounded-lg border border-m3-outline-variant bg-white"
                               />
                             </div>
                             <button
                               type="button"
                               onClick={() => handleSaveAttachedDriver(b.bookingId)}
-                              className="w-full py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg"
+                              className="w-full py-1.5 bg-m3-inverse-surface hover:bg-m3-surface-container-high text-white text-xs font-bold rounded-lg"
                             >
                               Confirm & Lock Driver
                             </button>
@@ -349,17 +349,17 @@ export default function DeskDispatchRadar({
                         )}
                       </div>
                     ) : (
-                      <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div className="p-3 rounded-xl bg-m3-surface-container-low border border-m3-outline-variant flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div>
-                          <span className="text-[10px] uppercase font-bold text-slate-400 block">Assigned Chauffeur</span>
-                          <span className="font-bold text-xs text-slate-900">{b.assignedChauffeur}</span>
+                          <span className="text-[10px] uppercase font-bold text-m3-outline-variant block">Assigned Chauffeur</span>
+                          <span className="font-bold text-xs text-m3-on-surface">{b.assignedChauffeur}</span>
                         </div>
 
                         <div className="flex items-center gap-1.5">
                           <button
                             type="button"
                             onClick={() => handleSendChauffeurToGuest(b)}
-                            className="px-3 py-1.5 bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 rounded-lg text-xs font-bold flex items-center gap-1"
+                            className="px-3 py-1.5 bg-m3-secondary-container/40 hover:bg-m3-secondary-container/70 text-m3-on-secondary-container border border-m3-secondary/30 rounded-lg text-xs font-bold flex items-center gap-1"
                           >
                             <span className="material-symbols-outlined text-sm">send</span>
                             <span>Send to Guest</span>
@@ -368,7 +368,7 @@ export default function DeskDispatchRadar({
                           <button
                             type="button"
                             onClick={() => onAssignChauffeur(b.bookingId, 'Unassigned')}
-                            className="px-2 py-1.5 text-slate-400 hover:text-rose-600 text-xs"
+                            className="px-2 py-1.5 text-m3-outline-variant hover:text-m3-error text-xs"
                             title="Re-open assignment"
                           >
                             Change
@@ -379,11 +379,11 @@ export default function DeskDispatchRadar({
                   </div>
 
                   {/* Action Ribbon */}
-                  <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100">
+                  <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-m3-outline-variant/40">
                     <button
                       type="button"
                       onClick={() => onOpenDutySlip(b)}
-                      className="flex-1 py-2 px-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all"
+                      className="flex-1 py-2 px-3 bg-m3-tertiary-container/300 hover:bg-m3-tertiary text-m3-on-surface font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all"
                     >
                       <span className="material-symbols-outlined text-sm">receipt_long</span>
                       <span>Generate / Edit Duty Slip</span>
@@ -393,7 +393,7 @@ export default function DeskDispatchRadar({
                       <button
                         type="button"
                         onClick={() => handleSendTripLinkToBoth(b)}
-                        className="py-2 px-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1 transition-all"
+                        className="py-2 px-3 bg-m3-inverse-surface hover:bg-m3-surface-container-high text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1 transition-all"
                         title="Send Mobile Web Trip Sheet link to Driver and Guest"
                       >
                         <span className="material-symbols-outlined text-sm">link</span>
@@ -411,20 +411,20 @@ export default function DeskDispatchRadar({
       {/* Broadcast to Driver Group Modal with Margin Chips */}
       {broadcastBooking && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/70 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-slate-200 overflow-hidden text-slate-800">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full border border-m3-outline-variant overflow-hidden text-m3-on-surface">
             {/* Modal Header */}
-            <div className="bg-slate-900 text-white p-3.5 flex items-center justify-between">
+            <div className="bg-m3-inverse-surface text-white p-3.5 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-emerald-400 text-lg">campaign</span>
+                <span className="material-symbols-outlined text-m3-success text-lg">campaign</span>
                 <div>
                   <h3 className="text-xs font-bold uppercase tracking-wide">Driver Group Duty Broadcast</h3>
-                  <span className="text-[10px] text-slate-300 font-mono">{broadcastBooking.bookingId}</span>
+                  <span className="text-[10px] text-m3-inverse-on-surface/80 font-mono">{broadcastBooking.bookingId}</span>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setBroadcastBooking(null)}
-                className="text-slate-400 hover:text-white p-1 rounded"
+                className="text-m3-outline-variant hover:text-white p-1 rounded"
               >
                 <span className="material-symbols-outlined text-lg">close</span>
               </button>
@@ -432,20 +432,20 @@ export default function DeskDispatchRadar({
 
             <div className="p-4 space-y-3.5 text-xs">
               {/* Fare & Office Margin Selector */}
-              <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2">
+              <div className="bg-m3-surface-container-low p-3 rounded-xl border border-m3-outline-variant space-y-2">
                 <div className="flex justify-between items-center text-xs">
-                  <span className="text-slate-500 font-semibold">Total Fare from Guest:</span>
-                  <span className="font-mono font-extrabold text-slate-900 text-sm">
+                  <span className="text-m3-outline font-semibold">Total Fare from Guest:</span>
+                  <span className="font-mono font-extrabold text-m3-on-surface text-sm">
                     Rs. {Number(broadcastBooking.terminalFare || 6000).toLocaleString('en-IN')}
                   </span>
                 </div>
 
-                <div className="border-t border-slate-200/80 pt-2">
+                <div className="border-t border-m3-outline-variant/80 pt-2">
                   <div className="flex justify-between items-center mb-1.5">
-                    <span className="text-[11px] font-bold text-slate-700 uppercase">
+                    <span className="text-[11px] font-bold text-m3-on-surface-variant uppercase">
                       Select Office Margin (Your Cut):
                     </span>
-                    <span className="font-mono font-bold text-emerald-700 text-xs">
+                    <span className="font-mono font-bold text-m3-success text-xs">
                       Rs. {officeMargin}
                     </span>
                   </div>
@@ -459,8 +459,8 @@ export default function DeskDispatchRadar({
                         onClick={() => setOfficeMargin(m)}
                         className={`py-1 px-1.5 rounded-lg text-xs font-bold border transition-all ${
                           officeMargin === m
-                            ? 'bg-emerald-600 text-white border-emerald-700 shadow-sm'
-                            : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
+                            ? 'bg-m3-success text-white border-m3-success shadow-sm'
+                            : 'bg-white text-m3-on-surface-variant border-m3-outline-variant hover:bg-m3-surface-container'
                         }`}
                       >
                         Rs.{m}
@@ -469,27 +469,27 @@ export default function DeskDispatchRadar({
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] text-slate-500 font-semibold">Custom Margin:</span>
+                    <span className="text-[10px] text-m3-outline font-semibold">Custom Margin:</span>
                     <input
                       type="number"
                       value={officeMargin}
                       onChange={(e) => setOfficeMargin(Number(e.target.value) || 0)}
-                      className="flex-1 p-1.5 text-xs font-mono font-bold rounded-lg border border-slate-300 bg-white"
+                      className="flex-1 p-1.5 text-xs font-mono font-bold rounded-lg border border-m3-outline-variant bg-white"
                     />
                   </div>
                 </div>
 
                 {/* Net Driver Share Display */}
-                <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-2.5 flex items-center justify-between">
+                <div className="bg-m3-success-container/40 border border-m3-success/30 rounded-lg p-2.5 flex items-center justify-between">
                   <div>
-                    <span className="text-[10px] font-bold text-emerald-900 uppercase block">
+                    <span className="text-[10px] font-bold text-m3-on-success-container uppercase block">
                       Driver Guaranteed Payout:
                     </span>
-                    <span className="text-base font-black text-emerald-700 font-mono">
+                    <span className="text-base font-black text-m3-success font-mono">
                       Rs. {Math.max(0, (Number(broadcastBooking.terminalFare) || 6000) - officeMargin).toLocaleString('en-IN')} Net
                     </span>
                   </div>
-                  <span className="text-[10px] text-emerald-800 text-right">
+                  <span className="text-[10px] text-m3-on-success-container text-right">
                     Tolls & Parking<br />paid by guest
                   </span>
                 </div>
@@ -497,10 +497,10 @@ export default function DeskDispatchRadar({
 
               {/* Message Preview Box */}
               <div>
-                <span className="text-[10px] font-bold text-slate-500 uppercase block mb-1">
+                <span className="text-[10px] font-bold text-m3-outline uppercase block mb-1">
                   WhatsApp Broadcast Preview:
                 </span>
-                <div className="bg-slate-900 text-slate-200 p-2.5 rounded-xl font-mono text-[11px] leading-relaxed whitespace-pre-line border border-slate-800 max-h-36 overflow-y-auto">
+                <div className="bg-m3-inverse-surface text-m3-inverse-on-surface/90 p-2.5 rounded-xl font-mono text-[11px] leading-relaxed whitespace-pre-line border border-m3-outline-variant/40 max-h-36 overflow-y-auto">
                   {`🚕 *DUTY BROADCAST — KALIDASS TRAVELS*\nTrip Ref: *${broadcastBooking.bookingId}*\n\n🗓 *Travel:* ${broadcastBooking.travelDateTime}\n📍 *Route:* ${broadcastBooking.pickupAddress}\n🚗 *Required:* ${broadcastBooking.vehicleCategory} (${broadcastBooking.partySize})\n💰 *Driver Payout:* *Rs. ${Math.max(0, (Number(broadcastBooking.terminalFare) || 6000) - officeMargin).toLocaleString('en-IN')} Net*\n_(Tolls & Parking paid by guest at actuals)_\n\n📱 *First driver to reply with Car Plate & Phone gets this duty!*`}
                 </div>
               </div>
@@ -510,14 +510,14 @@ export default function DeskDispatchRadar({
                 <button
                   type="button"
                   onClick={() => setBroadcastBooking(null)}
-                  className="flex-1 py-2.5 rounded-xl border border-slate-300 font-bold text-slate-600 hover:bg-slate-100 transition-colors"
+                  className="flex-1 py-2.5 rounded-xl border border-m3-outline-variant font-bold text-m3-on-surface-variant hover:bg-m3-surface-container transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
                   onClick={handleExecuteBroadcast}
-                  className="flex-[2] py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold flex items-center justify-center gap-1.5 shadow-md transition-all"
+                  className="flex-[2] py-2.5 rounded-xl bg-m3-success hover:bg-m3-success text-white font-bold flex items-center justify-center gap-1.5 shadow-md transition-all"
                 >
                   <span className="material-symbols-outlined text-sm">send</span>
                   <span>Post to Driver Group</span>

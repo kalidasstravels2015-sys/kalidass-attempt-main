@@ -152,7 +152,7 @@ export default function SectionNavigator() {
               {/* Left Floating Tooltip */}
               <div className="absolute right-7 pointer-events-none opacity-0 group-hover/dot:opacity-100 -translate-x-2 group-hover/dot:translate-x-0 transition-all duration-200 flex items-center gap-2 px-3 py-1.5 rounded-m3-md bg-m3-inverse-surface/95 backdrop-blur-md text-m3-inverse-on-surface text-xs font-semibold whitespace-nowrap shadow-m3-3 border border-white/10">
                 <span className="font-mono text-micro text-white font-bold">{sec.num}</span>
-                <Icon className="w-3.5 h-3.5 text-slate-300" />
+                <Icon className="w-3.5 h-3.5 text-m3-inverse-on-surface/80" />
                 <span>{sec.label}</span>
               </div>
             </div>

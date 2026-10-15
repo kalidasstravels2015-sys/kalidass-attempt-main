@@ -19,7 +19,8 @@ import {
   ChevronDown,
   ChevronRight,
   LocateFixed,
-  Info
+  Info,
+  Calculator
 } from 'lucide-react';
 import WhatsAppButton from './react/WhatsAppButton.jsx';
 import { buildWhatsAppUrl } from '../utils/whatsapp';
@@ -245,9 +246,26 @@ export default function TourBookingEngine({
     );
   };
 
+  // Default departure & return generators for instant live quote
+  const getDefaultPickupTime = () => {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    d.setHours(6, 0, 0, 0);
+    const local = new Date(d.getTime() - (d.getTimezoneOffset() * 60000));
+    return local.toISOString().slice(0, 16);
+  };
+
+  const getDefaultReturnTime = () => {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    d.setHours(21, 0, 0, 0);
+    const local = new Date(d.getTime() - (d.getTimezoneOffset() * 60000));
+    return local.toISOString().slice(0, 16);
+  };
+
   // Date and Time calculation invariants
-  const [pickupDateTime, setPickupDateTime] = useState('');
-  const [returnDateTime, setReturnDateTime] = useState('');
+  const [pickupDateTime, setPickupDateTime] = useState(getDefaultPickupTime);
+  const [returnDateTime, setReturnDateTime] = useState(getDefaultReturnTime);
 
   const getMinDateTime = () => {
     const now = new Date();
@@ -499,9 +517,9 @@ export default function TourBookingEngine({
     }
   };
 
-  // Passenger & Vehicle Selection — empty by default per user choice (Option A3)
-  const [passengers, setPassengers] = useState('');
-  const [vehicleIdState, setVehicleIdState] = useState('');
+  // Passenger & Vehicle Selection — sensible defaults for instant zero-friction quote
+  const [passengers, setPassengers] = useState('4');
+  const [vehicleIdState, setVehicleIdState] = useState(config.vehicles?.[0]?.id || 'dzire');
   const [showPopup, setShowPopup] = useState(false);
   const [showBreakdown, setShowBreakdown] = useState(false);
   const [downloadToast, setDownloadToast] = useState(false);
@@ -547,7 +565,7 @@ export default function TourBookingEngine({
   const availableVehicles = passengers 
     ? config.vehicles.filter(v => v.capacity >= parseInt(passengers, 10)) 
     : config.vehicles;
-  const activeVehicle = availableVehicles.find(v => v.id === vehicleIdState) || null;
+  const activeVehicle = availableVehicles.find(v => v.id === vehicleIdState) || availableVehicles[0] || null;
 
   const handlePassengerChange = (newPaxCount) => {
     setPassengers(newPaxCount);
@@ -1082,8 +1100,8 @@ Please confirm booking!`;
               {config.subtitle}
             </p>
           </div>
-          <span className="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-m3-sm border border-emerald-200 shrink-0">
-            ₹500 Advance
+          <span className="text-[11px] font-bold text-m3-on-success-container bg-m3-success-container/50 px-2.5 py-1 rounded-m3-sm border border-m3-success/30 shrink-0">
+            ✓ Live Rate • ₹0 to Check
           </span>
         </div>
 
@@ -1117,8 +1135,8 @@ Please confirm booking!`;
                   loadGoogleMaps().catch(() => {});
                   handleInputFocus(e);
                 }}
-                placeholder="Enter pickup address in Chennai"
-                className={`w-full min-h-[48px] bg-white border border-m3-outline-variant hover:border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20 rounded-m3-lg px-3.5 py-3 text-sm sm:text-sm ${pickup ? 'text-m3-on-surface font-semibold' : 'text-m3-on-surface font-normal'} placeholder:text-sm placeholder:text-m3-on-surface-variant/60 placeholder:font-normal outline-none transition-all pr-20 shadow-2xs scroll-mt-28 scroll-mb-64`}
+                placeholder="e.g. T. Nagar, Central Station, Airport, Velachery"
+                className={`w-full min-h-[48px] bg-white border border-m3-outline-variant hover:border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20 rounded-m3-lg px-3.5 py-3 text-sm sm:text-sm ${pickup ? 'text-m3-on-surface font-semibold' : 'text-m3-on-surface font-normal'} placeholder:text-sm placeholder:text-m3-on-surface-variant/75 placeholder:font-normal outline-none transition-all pr-20 shadow-2xs scroll-mt-28 scroll-mb-64`}
               />
               <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
                 {pickup && (
@@ -1154,7 +1172,7 @@ Please confirm booking!`;
                   <Navigation className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
                   <span>Destination / Drop in {config.destination.name.split('&')[0].trim()}</span>
                 </label>
-                <span className="text-[11px] font-semibold text-slate-600 bg-white px-2 py-0.5 rounded border border-m3-outline-variant/50">
+                <span className="text-[11px] font-semibold text-m3-on-surface-variant bg-white px-2 py-0.5 rounded border border-m3-outline-variant/50">
                   ~{config.destination.roundTripKm} km {config.destination?.isCircuit ? 'Circuit' : 'Round Trip'}
                 </span>
               </div>
@@ -1176,11 +1194,11 @@ Please confirm booking!`;
               <div className="flex items-center gap-1.5 min-w-0">
                 <Navigation className="w-3.5 h-3.5 text-m3-primary shrink-0" />
                 <span className="text-xs truncate">
-                  <strong className="text-slate-900 font-bold">Fixed Destination:</strong> <span className="font-semibold text-slate-700">{config.destination?.name}</span>
+                  <strong className="text-m3-on-surface font-bold">Fixed Destination:</strong> <span className="font-semibold text-m3-on-surface-variant">{config.destination?.name}</span>
                 </span>
               </div>
               <div className="flex items-center shrink-0 ml-auto">
-                <span className="text-[11px] font-semibold text-slate-700 bg-white px-2 py-0.5 rounded border border-m3-outline-variant/50 whitespace-nowrap">
+                <span className="text-[11px] font-semibold text-m3-on-surface-variant bg-white px-2 py-0.5 rounded border border-m3-outline-variant/50 whitespace-nowrap">
                   ~{config.destination?.roundTripKm} km {config.destination?.isCircuit ? 'Circuit' : 'Round Trip'}
                 </span>
               </div>
@@ -1241,7 +1259,7 @@ Please confirm booking!`;
 
             {/* Smart Helper: When return time is early AM (00:00 to 04:59) on next day */}
             {returnDateTime && isAM(returnDateTime) && returnHour !== null && returnHour >= 0 && returnHour <= 4 && (
-              <div className="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-m3-md bg-amber-50 border border-amber-200 text-[11px] text-amber-900 animate-in fade-in">
+              <div className="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-m3-md bg-m3-tertiary-container/40 border border-m3-tertiary/30 text-[11px] text-m3-on-tertiary-container animate-in fade-in">
                 <span>
                   Return is set to <strong>{formatTime12(returnDateTime)}</strong> (Early Morning / Night). Did you mean afternoon?
                 </span>
@@ -1251,7 +1269,7 @@ Please confirm booking!`;
                     const pmVal = setDateTimePeriod(returnDateTime, 'PM');
                     setReturnDateTime(pmVal);
                   }}
-                  className="px-2 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded text-[10px] font-bold shrink-0 transition-colors cursor-pointer shadow-2xs"
+                  className="px-2 py-1 bg-m3-tertiary hover:bg-m3-tertiary/90 text-m3-on-tertiary rounded text-[10px] font-bold shrink-0 transition-colors cursor-pointer shadow-2xs"
                 >
                   Switch to PM
                 </button>
@@ -1260,21 +1278,21 @@ Please confirm booking!`;
 
             {/* Clean Result Banner directly attached after dates */}
             {durationInfo.hasDates ? (
-              <div className="flex items-center justify-between gap-2 px-3 py-1.5 bg-emerald-50/90 border border-emerald-200/90 rounded-m3-md text-xs sm:text-sm animate-in fade-in duration-150">
+              <div className="flex items-center justify-between gap-2 px-3 py-1.5 bg-m3-success-container/50 border border-m3-success/30 rounded-m3-md text-xs sm:text-sm animate-in fade-in duration-150">
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-emerald-950 whitespace-nowrap text-xs sm:text-sm">
+                  <span className="font-bold text-m3-on-success-container whitespace-nowrap text-xs sm:text-sm">
                     {durationLabel}
                   </span>
-                  <span className="text-xs text-emerald-800 font-medium whitespace-nowrap">
+                  <span className="text-xs text-m3-success font-medium whitespace-nowrap">
                     ({durationHours} hrs)
                   </span>
                   {durationSubText && (
-                    <span className="text-xs font-semibold text-emerald-800 bg-white/90 px-2 py-0.5 rounded-full border border-emerald-200/80 shrink-0 whitespace-nowrap">
+                    <span className="text-xs font-semibold text-m3-on-success-container bg-white/90 px-2 py-0.5 rounded-full border border-m3-success/30 shrink-0 whitespace-nowrap">
                       {durationSubText}
                     </span>
                   )}
                 </div>
-                <span className="text-xs text-emerald-800/80 font-medium whitespace-nowrap shrink-0">
+                <span className="text-xs text-m3-on-success-container/80 font-medium whitespace-nowrap shrink-0">
                   ~{config.destination?.roundTripKm} km circuit
                 </span>
               </div>
@@ -1282,8 +1300,8 @@ Please confirm booking!`;
 
             {/* Realistic Duration Advisory banner if duration is tight */}
             {durationInfo.isTooShort && (
-              <p className="text-xs sm:text-sm text-amber-900 bg-amber-50 border border-amber-200 rounded-m3-md px-3 py-2 leading-snug flex items-start gap-1.5 font-medium animate-in fade-in duration-150">
-                <Info className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+              <p className="text-xs sm:text-sm text-m3-on-tertiary-container bg-m3-tertiary-container/30 border border-m3-tertiary/30 rounded-m3-md px-3 py-2 leading-snug flex items-start gap-1.5 font-medium animate-in fade-in duration-150">
+                <Info className="w-4 h-4 text-m3-tertiary shrink-0 mt-0.5" />
                 <span>
                   <strong>Realistic Travel Advisory:</strong> {config.advisoryText}
                 </span>
@@ -1292,7 +1310,7 @@ Please confirm booking!`;
 
             {/* Late night driving allowance alert */}
             {isNightBatta && (
-              <p className="text-xs sm:text-sm text-amber-900 bg-amber-50 border border-amber-200 rounded-m3-md px-3 py-2 leading-snug flex items-center gap-1.5 font-medium">
+              <p className="text-xs sm:text-sm text-m3-on-tertiary-container bg-m3-tertiary-container/30 border border-m3-tertiary/30 rounded-m3-md px-3 py-2 leading-snug flex items-center gap-1.5 font-medium">
                 <span>⚠ Return after 11 PM: Standard ₹400 driver night allowance applies (1-hr traffic grace until 11 PM included)</span>
               </p>
             )}
@@ -1318,7 +1336,7 @@ Please confirm booking!`;
                 >
                   <option value="" disabled>Select passengers...</option>
                   {PASSENGER_OPTIONS.map(opt => (
-                    <option key={opt.value} value={opt.value} className="text-slate-900 font-semibold">
+                    <option key={opt.value} value={opt.value} className="text-m3-on-surface font-semibold">
                       {opt.label}
                     </option>
                   ))}
@@ -1351,7 +1369,7 @@ Please confirm booking!`;
                 >
                   <option value="" disabled>{passengers ? 'Choose vehicle...' : 'Select pax first'}</option>
                   {availableVehicles.map(veh => (
-                    <option key={veh.id} value={veh.id} className="text-slate-900 font-semibold">
+                    <option key={veh.id} value={veh.id} className="text-m3-on-surface font-semibold">
                       {veh.name} ({veh.capacity} Pax)
                     </option>
                   ))}
@@ -1365,9 +1383,9 @@ Please confirm booking!`;
           {validationError && (
             <p 
               role="alert"
-              className="text-xs sm:text-sm text-rose-600 font-medium text-center flex items-center justify-center gap-1.5 animate-in fade-in duration-150 py-1"
+              className="text-xs sm:text-sm text-m3-error font-medium text-center flex items-center justify-center gap-1.5 animate-in fade-in duration-150 py-1"
             >
-              <Info className="w-4 h-4 text-rose-600 shrink-0" />
+              <Info className="w-4 h-4 text-m3-error shrink-0" />
               <span>{validationError}</span>
             </p>
           )}
@@ -1384,8 +1402,8 @@ Please confirm booking!`;
                   </div>
                   <span className={`text-[11px] sm:text-xs font-bold px-2 py-0.5 rounded-m3-sm border whitespace-nowrap shrink-0 ${
                     isAfter24Hours 
-                      ? 'text-emerald-900 bg-emerald-50 border-emerald-200' 
-                      : 'text-emerald-800 bg-emerald-50 border-emerald-200'
+                      ? 'text-m3-on-success-container bg-m3-success-container/50 border-m3-success/30' 
+                      : 'text-m3-on-success-container bg-m3-success-container/50 border-m3-success/30'
                   }`}>
                     {isAfter24Hours 
                       ? (needGst ? '✓ Multi-Day Tariff (+5% GST)' : '✓ Multi-Day Tariff')
@@ -1408,7 +1426,7 @@ Please confirm booking!`;
                   className="w-full px-3.5 py-3 min-h-[48px] flex items-center justify-between text-xs sm:text-sm font-bold text-m3-on-surface hover:bg-m3-surface-container-low transition-colors cursor-pointer"
                 >
                   <div className="flex items-center gap-2">
-                    <Receipt className="w-4 h-4 text-emerald-700 shrink-0" />
+                    <Receipt className="w-4 h-4 text-m3-success shrink-0" />
                     <span>
                       {showBreakdown 
                         ? (needGst ? 'Hide GST Itemized Fare Breakdown' : 'Hide Itemized Fare Breakdown')
@@ -1465,7 +1483,7 @@ Please confirm booking!`;
                   size="md"
                   data-direct-whatsapp="true"
                   className="flex-1 px-5 py-3.5 min-h-[48px] text-sm font-bold shadow-m3-1 justify-center active:scale-[0.99]"
-                  text="Book on WhatsApp"
+                  text={`Book on WhatsApp (${activePayableFare})`}
                 />
 
                 <a
@@ -1482,7 +1500,7 @@ Please confirm booking!`;
               {/* 5. Progressive Disclosure: Corporate GST & Official Estimate */}
               <div className="pt-2 border-t border-m3-outline-variant/40 space-y-2.5">
                 <div className="flex items-center justify-between gap-2.5 flex-wrap sm:flex-nowrap">
-                  <label className="flex-1 min-h-[48px] px-3.5 py-2.5 rounded-m3-lg border border-m3-outline-variant/50 hover:bg-m3-surface-container-low active:bg-m3-surface-container flex items-center gap-2.5 cursor-pointer select-none text-xs sm:text-sm font-semibold text-m3-on-surface hover:text-emerald-800 transition-colors">
+                  <label className="flex-1 min-h-[48px] px-3.5 py-2.5 rounded-m3-lg border border-m3-outline-variant/50 hover:bg-m3-surface-container-low active:bg-m3-surface-container flex items-center gap-2.5 cursor-pointer select-none text-xs sm:text-sm font-semibold text-m3-on-surface hover:text-m3-success transition-colors">
                     <input
                       type="checkbox"
                       checked={needGst}
@@ -1496,7 +1514,7 @@ Please confirm booking!`;
                           setModalHighlightedField('');
                         }
                       }}
-                      className="w-4 h-4 rounded border-m3-outline text-emerald-600 focus:ring-emerald-500 cursor-pointer shrink-0"
+                      className="w-4 h-4 rounded border-m3-outline text-m3-success focus:ring-m3-success cursor-pointer shrink-0"
                     />
                     <span className="leading-snug">
                       Need GST Tax Invoice for Corporate (+5% ITC)
@@ -1519,31 +1537,31 @@ Please confirm booking!`;
 
                 {/* Expanded Corporate GST Input Box */}
                 {needGst && (
-                  <div className="p-3 bg-emerald-50/50 border border-emerald-200/80 rounded-m3-lg space-y-2.5 animate-in fade-in duration-150">
+                  <div className="p-3 bg-m3-success-container/30 border border-m3-success/30 rounded-m3-lg space-y-2.5 animate-in fade-in duration-150">
                     <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-950">
-                        <Building2 className="w-4 h-4 text-emerald-700" />
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-m3-on-success-container">
+                        <Building2 className="w-4 h-4 text-m3-success" />
                         <span>Corporate GST Details</span>
                       </div>
-                      <span className="text-xs text-emerald-800 font-semibold bg-white px-2 py-0.5 rounded border border-emerald-200">
+                      <span className="text-xs text-m3-on-success-container font-semibold bg-white px-2 py-0.5 rounded border border-m3-success/30">
                         SAC: 9966 • {placeOfSupply}
                       </span>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-0.5">Devotee / Company Name *</label>
+                        <label className="block text-xs font-bold text-m3-on-surface-variant mb-0.5">Devotee / Company Name *</label>
                         <input
                           ref={companyNameInputRef}
                           type="text"
                           value={companyName}
                           onChange={(e) => setCompanyName(e.target.value)}
                           placeholder="e.g. Infosys BPM Ltd / Devotee"
-                          className="w-full h-10 bg-white border border-m3-outline-variant rounded-m3-md px-2.5 py-1.5 text-xs font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-m3-primary"
+                          className="w-full h-10 bg-white border border-m3-outline-variant rounded-m3-md px-2.5 py-1.5 text-xs font-semibold text-m3-on-surface placeholder:text-m3-on-surface-variant/50 focus:outline-none focus:border-m3-primary"
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-0.5">GSTIN (15 Digits) Optional</label>
+                        <label className="block text-xs font-bold text-m3-on-surface-variant mb-0.5">GSTIN (15 Digits) Optional</label>
                         <input
                           ref={customerGstInputRef}
                           type="text"
@@ -1551,11 +1569,11 @@ Please confirm booking!`;
                           value={customerGst}
                           onChange={(e) => setCustomerGst(e.target.value.toUpperCase())}
                           placeholder="33AAAAA0000A1Z5"
-                          className="w-full h-10 bg-white border border-m3-outline-variant rounded-m3-md px-2.5 py-1.5 text-xs font-mono font-semibold uppercase text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-m3-primary"
+                          className="w-full h-10 bg-white border border-m3-outline-variant rounded-m3-md px-2.5 py-1.5 text-xs font-mono font-semibold uppercase text-m3-on-surface placeholder:text-m3-on-surface-variant/50 focus:outline-none focus:border-m3-primary"
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-0.5">Contact Phone *</label>
+                        <label className="block text-xs font-bold text-m3-on-surface-variant mb-0.5">Contact Phone *</label>
                         <input
                           ref={customerPhoneInputRef}
                           type="tel"
@@ -1563,15 +1581,15 @@ Please confirm booking!`;
                           value={customerPhone}
                           onChange={(e) => setCustomerPhone(e.target.value)}
                           placeholder="e.g. 98400 12345"
-                          className="w-full h-10 bg-white border border-m3-outline-variant rounded-m3-md px-2.5 py-1.5 text-xs font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-m3-primary"
+                          className="w-full h-10 bg-white border border-m3-outline-variant rounded-m3-md px-2.5 py-1.5 text-xs font-semibold text-m3-on-surface placeholder:text-m3-on-surface-variant/50 focus:outline-none focus:border-m3-primary"
                         />
                       </div>
                     </div>
 
                     {/* Dynamic Recipient Detection & ITC Status */}
                     <div className="flex items-center justify-between text-xs pt-1">
-                      <div className="flex items-center gap-1.5 text-slate-700 min-w-0">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                      <div className="flex items-center gap-1.5 text-m3-on-surface-variant min-w-0">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-m3-success shrink-0" />
                         <span className="truncate">
                           {rawStateCode ? (
                             isIntraState ? (
@@ -1584,7 +1602,7 @@ Please confirm booking!`;
                           )}
                         </span>
                       </div>
-                      <span className="text-xs font-bold bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded border border-emerald-200 shrink-0">
+                      <span className="text-xs font-bold bg-m3-success-container/50 text-m3-on-success-container px-2 py-0.5 rounded border border-m3-success/30 shrink-0">
                         ✓ ITC Claimable
                       </span>
                     </div>
@@ -1593,27 +1611,43 @@ Please confirm booking!`;
               </div>
             </div>
           ) : (
-            /* Initial Blank State Primary CTAs (Default M3 Hierarchy) */
-            <div className="pt-1 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5">
-              <WhatsAppButton 
-                href={whatsAppUrl}
-                onClick={handleDirectWhatsAppClick}
-                variant="filled"
-                size="md"
-                data-direct-whatsapp="true"
-                className="flex-1 px-5 py-3.5 min-h-[48px] text-sm font-bold shadow-m3-1 justify-center active:scale-[0.99]"
-                text="Book on WhatsApp"
-              />
-
-              <a
-                href="tel:+918939539211"
-                onClick={handleCall}
-                className="inline-flex items-center justify-center gap-2 px-5 py-3.5 min-h-[48px] bg-white hover:bg-m3-surface-container active:scale-[0.99] text-m3-on-surface font-semibold text-sm rounded-m3-full border border-m3-outline-variant shadow-2xs transition-colors shrink-0 cursor-pointer"
-                aria-label="Call +91 89395 39211"
+            /* Initial / Recalculate State Primary CTAs (High Conversion Hierarchy) */
+            <div className="pt-2 space-y-2.5">
+              <button
+                type="button"
+                onClick={() => {
+                  validateCardInputs();
+                }}
+                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 min-h-[50px] bg-m3-primary hover:bg-m3-primary/90 active:scale-[0.99] text-white font-bold text-sm sm:text-base rounded-m3-full shadow-m3-2 hover:shadow-m3-3 transition-all cursor-pointer"
               >
-                <Phone className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
-                <span>{isPondicherry ? 'Call Dispatch' : 'Call: +91 89395 39211'}</span>
-              </a>
+                <Calculator className="w-5 h-5 text-white" />
+                <span>⚡ View Instant Fare & Available Cabs</span>
+              </button>
+              <p className="text-[11.5px] text-m3-on-surface-variant/80 text-center font-medium">
+                ✓ No signup required • Instant calculation • Direct operator rates
+              </p>
+
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 pt-0.5">
+                <WhatsAppButton 
+                  href={whatsAppUrl}
+                  onClick={handleDirectWhatsAppClick}
+                  variant="tonal"
+                  size="md"
+                  data-direct-whatsapp="true"
+                  className="flex-1 px-4 py-3 min-h-[44px] text-xs sm:text-sm font-bold justify-center"
+                  text="Book on WhatsApp"
+                />
+
+                <a
+                  href="tel:+918939539211"
+                  onClick={handleCall}
+                  className="inline-flex items-center justify-center gap-2 px-4 py-3 min-h-[44px] bg-white hover:bg-m3-surface-container active:scale-[0.99] text-m3-on-surface font-semibold text-xs sm:text-sm rounded-m3-full border border-m3-outline-variant shadow-2xs transition-colors shrink-0 cursor-pointer"
+                  aria-label="Call +91 89395 39211"
+                >
+                  <Phone className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
+                  <span>{isPondicherry ? 'Call Dispatch' : 'Call: +91 89395 39211'}</span>
+                </a>
+              </div>
             </div>
           )}
         </div>
@@ -1623,7 +1657,7 @@ Please confirm booking!`;
       {showBreakdown && typeof document !== 'undefined' && createPortal(
         <div 
           id="fare-breakdown-portal-root"
-          className="fixed inset-0 z-50 flex flex-col justify-end bg-slate-950/60 backdrop-blur-xs sm:hidden animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 flex flex-col justify-end bg-m3-inverse-surface/60 backdrop-blur-xs sm:hidden animate-in fade-in duration-200"
           onClick={() => setShowBreakdown(false)}
         >
           <div 
@@ -1632,18 +1666,18 @@ Please confirm booking!`;
           >
             {/* Grab Handle */}
             <div className="flex justify-center pt-2.5 pb-1 shrink-0">
-              <div className="w-10 h-1 rounded-full bg-slate-300" />
+              <div className="w-10 h-1 rounded-full bg-m3-outline-variant" />
             </div>
 
             {/* Header */}
-            <div className="px-4 py-2.5 border-b border-slate-200 flex items-center justify-between gap-2 shrink-0 bg-slate-50/80">
+            <div className="px-4 py-2.5 border-b border-m3-outline-variant flex items-center justify-between gap-2 shrink-0 bg-m3-surface-container-low/80">
               <div className="flex items-center gap-2">
-                <Receipt className="w-4 h-4 text-emerald-700 shrink-0" />
+                <Receipt className="w-4 h-4 text-m3-success shrink-0" />
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900 leading-tight">
+                  <h3 className="text-sm font-bold text-m3-on-surface leading-tight">
                     {needGst ? 'GST Itemized Fare Breakdown' : 'Itemized Fare Breakdown'}
                   </h3>
-                  <p className="text-[10.5px] text-slate-500 font-medium">
+                  <p className="text-[10.5px] text-m3-on-surface-variant font-medium">
                     {activeVehicle?.name || 'Selected Cab'} • {durationLabel || '1 Day Package'}
                   </p>
                 </div>
@@ -1651,7 +1685,7 @@ Please confirm booking!`;
               <button
                 type="button"
                 onClick={() => setShowBreakdown(false)}
-                className="w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition cursor-pointer"
+                className="w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface-variant transition cursor-pointer"
                 aria-label="Close fare breakdown"
               >
                 <X className="w-4 h-4" />
@@ -1664,7 +1698,7 @@ Please confirm booking!`;
             </div>
 
             {/* Sticky Bottom Conversion Footer */}
-            <div className="p-3 border-t border-slate-200 bg-slate-50 flex items-center shrink-0">
+            <div className="p-3 border-t border-m3-outline-variant bg-m3-surface-container-low flex items-center shrink-0">
               <WhatsAppButton 
                 href={whatsAppUrl}
                 onClick={(e) => {
@@ -1690,23 +1724,23 @@ Please confirm booking!`;
           aria-modal="true"
           aria-label="Tax Invoice Proforma Preview"
           data-hide-contact-dock
-          className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-150 overflow-y-auto"
+          className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-m3-inverse-surface/70 backdrop-blur-xs animate-in fade-in duration-150 overflow-y-auto"
           onClick={() => setShowPopup(false)}
         >
           <div 
             ref={modalScrollRef}
-            className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden my-auto max-h-[92vh] flex flex-col animate-in zoom-in-95 duration-150"
+            className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-m3-outline-variant overflow-hidden my-auto max-h-[92vh] flex flex-col animate-in zoom-in-95 duration-150"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="px-4 sm:px-6 py-3.5 bg-slate-900 text-white flex items-center justify-between shrink-0">
+            <div className="px-4 sm:px-6 py-3.5 bg-m3-inverse-surface text-m3-inverse-on-surface flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2">
-                <FileText className="w-5 h-5 text-emerald-400" />
+                <FileText className="w-5 h-5 text-m3-success" />
                 <div>
                   <h3 className="text-sm sm:text-base font-bold font-heading">
                     {needGst ? 'PROFORMA TAX INVOICE & ESTIMATE' : 'TRIP FARE ESTIMATE & LETTERHEAD'}
                   </h3>
-                  <p className="text-[10.5px] text-slate-300">
+                  <p className="text-[10.5px] text-m3-inverse-on-surface/80">
                     Ref: {invoiceRefNo} • Kalidass Travels Official Quote
                   </p>
                 </div>
@@ -1714,7 +1748,7 @@ Please confirm booking!`;
               <button
                 type="button"
                 onClick={() => setShowPopup(false)}
-                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 text-slate-300 hover:text-white transition cursor-pointer"
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 text-m3-inverse-on-surface/80 hover:text-m3-inverse-on-surface transition cursor-pointer"
                 aria-label="Close invoice preview"
               >
                 <X className="w-5 h-5" />
@@ -1722,77 +1756,77 @@ Please confirm booking!`;
             </div>
 
             {/* Modal Body */}
-            <div className="p-4 sm:p-6 overflow-y-auto space-y-4 text-xs text-slate-700">
+            <div className="p-4 sm:p-6 overflow-y-auto space-y-4 text-xs text-m3-on-surface-variant">
               {/* Devotee / Recipient Info Fields */}
-              <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-2">
-                <span className="font-bold text-slate-900 block text-xs">Customer / Devotee Details</span>
+              <div className="p-3 bg-m3-surface-container-low border border-m3-outline-variant rounded-lg space-y-2">
+                <span className="font-bold text-m3-on-surface block text-xs">Customer / Devotee Details</span>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                   <div>
-                    <label className="block text-[10px] font-semibold text-slate-600 mb-0.5">Name *</label>
+                    <label className="block text-[10px] font-semibold text-m3-on-surface-variant mb-0.5">Name *</label>
                     <input
                       type="text"
                       value={companyName}
                       onChange={(e) => setCompanyName(e.target.value)}
                       placeholder="Devotee / Passenger Name"
-                      className="w-full h-8 px-2 border rounded text-xs bg-white text-slate-900"
+                      className="w-full h-8 px-2 border border-m3-outline-variant rounded text-xs bg-white text-m3-on-surface"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-semibold text-slate-600 mb-0.5">Contact Phone *</label>
+                    <label className="block text-[10px] font-semibold text-m3-on-surface-variant mb-0.5">Contact Phone *</label>
                     <input
                       type="tel"
                       value={customerPhone}
                       onChange={(e) => setCustomerPhone(e.target.value)}
                       placeholder="Phone number"
-                      className="w-full h-8 px-2 border rounded text-xs bg-white text-slate-900"
+                      className="w-full h-8 px-2 border border-m3-outline-variant rounded text-xs bg-white text-m3-on-surface"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] font-semibold text-slate-600 mb-0.5">GSTIN (Optional)</label>
+                    <label className="block text-[10px] font-semibold text-m3-on-surface-variant mb-0.5">GSTIN (Optional)</label>
                     <input
                       type="text"
                       value={customerGst}
                       onChange={(e) => setCustomerGst(e.target.value.toUpperCase())}
                       placeholder="15-digit GSTIN"
-                      className="w-full h-8 px-2 border rounded text-xs bg-white text-slate-900 uppercase font-mono"
+                      className="w-full h-8 px-2 border border-m3-outline-variant rounded text-xs bg-white text-m3-on-surface uppercase font-mono"
                     />
                   </div>
                 </div>
                 {modalValidationError && (
-                  <p className="text-[11px] text-rose-600 font-medium">{modalValidationError}</p>
+                  <p className="text-[11px] text-m3-error font-medium">{modalValidationError}</p>
                 )}
               </div>
 
               {/* Trip Key Details Strip */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
-                <div className="bg-slate-50 p-2 rounded border border-slate-200">
-                  <span className="text-slate-400 block text-[9.5px] uppercase font-bold">Vehicle</span>
-                  <strong className="text-slate-900 truncate block">{activeVehicle?.name || 'Selected Cab'}</strong>
+                <div className="bg-m3-surface-container-low p-2 rounded border border-m3-outline-variant">
+                  <span className="text-m3-on-surface-variant/70 block text-[9.5px] uppercase font-bold">Vehicle</span>
+                  <strong className="text-m3-on-surface truncate block">{activeVehicle?.name || 'Selected Cab'}</strong>
                 </div>
-                <div className="bg-slate-50 p-2 rounded border border-slate-200">
-                  <span className="text-slate-400 block text-[9.5px] uppercase font-bold">Pickup</span>
-                  <strong className="text-slate-900 truncate block">{pickup.trim() || 'Chennai'}</strong>
+                <div className="bg-m3-surface-container-low p-2 rounded border border-m3-outline-variant">
+                  <span className="text-m3-on-surface-variant/70 block text-[9.5px] uppercase font-bold">Pickup</span>
+                  <strong className="text-m3-on-surface truncate block">{pickup.trim() || 'Chennai'}</strong>
                 </div>
-                <div className="bg-slate-50 p-2 rounded border border-slate-200">
-                  <span className="text-slate-400 block text-[9.5px] uppercase font-bold">Duration</span>
-                  <strong className="text-slate-900 truncate block">{durationLabel || '1 Day'}</strong>
+                <div className="bg-m3-surface-container-low p-2 rounded border border-m3-outline-variant">
+                  <span className="text-m3-on-surface-variant/70 block text-[9.5px] uppercase font-bold">Duration</span>
+                  <strong className="text-m3-on-surface truncate block">{durationLabel || '1 Day'}</strong>
                 </div>
-                <div className="bg-slate-50 p-2 rounded border border-slate-200">
-                  <span className="text-slate-400 block text-[9.5px] uppercase font-bold">Passengers</span>
-                  <strong className="text-slate-900 truncate block">{passengers} Pax</strong>
+                <div className="bg-m3-surface-container-low p-2 rounded border border-m3-outline-variant">
+                  <span className="text-m3-on-surface-variant/70 block text-[9.5px] uppercase font-bold">Passengers</span>
+                  <strong className="text-m3-on-surface truncate block">{passengers} Pax</strong>
                 </div>
               </div>
 
               {/* Trip Manifest Summary */}
-              <div className="border border-slate-200 rounded-lg overflow-hidden">
+              <div className="border border-m3-outline-variant rounded-lg overflow-hidden">
                 <table className="w-full text-left text-[11px] sm:text-xs">
-                  <thead className="bg-slate-100 text-slate-800 font-bold border-b border-slate-200">
+                  <thead className="bg-m3-surface-container text-m3-on-surface font-bold border-b border-m3-outline-variant">
                     <tr>
                       <th className="p-2">Description</th>
                       <th className="p-2 text-right">Amount (₹)</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-m3-outline-variant/40">
                     <tr>
                       <td className="p-2">Dedicated Vehicle Hire ({activeVehicle?.name}):</td>
                       <td className="p-2 text-right font-semibold">₹{Number(fareBreakdown?.vehicleHireFare || taxableAmount).toLocaleString('en-IN')}</td>
@@ -1801,9 +1835,9 @@ Please confirm booking!`;
                       <td className="p-2">Chauffeur Duty &amp; Halting Batta:</td>
                       <td className="p-2 text-right font-semibold">₹{Number(fareBreakdown?.driverBata || 0).toLocaleString('en-IN')}</td>
                     </tr>
-                    <tr className="bg-slate-50/50">
+                    <tr className="bg-m3-surface-container-low/50">
                       <td className="p-2 font-semibold">Total Taxable Value:</td>
-                      <td className="p-2 text-right font-bold text-slate-900">₹{Number(taxableAmount).toLocaleString('en-IN')}</td>
+                      <td className="p-2 text-right font-bold text-m3-on-surface">₹{Number(taxableAmount).toLocaleString('en-IN')}</td>
                     </tr>
                     {needGst && (
                       <tr>
@@ -1811,9 +1845,9 @@ Please confirm booking!`;
                         <td className="p-2 text-right font-semibold">+₹{Number(totalGst).toLocaleString('en-IN')}</td>
                       </tr>
                     )}
-                    <tr className="bg-slate-50 font-bold text-slate-900">
+                    <tr className="bg-m3-surface-container-low font-bold text-m3-on-surface">
                       <td className="p-2">Total Estimated Net:</td>
-                      <td className="p-2 text-right text-emerald-800 text-sm">{activePayableFare}</td>
+                      <td className="p-2 text-right text-m3-success text-sm">{activePayableFare}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -1821,11 +1855,11 @@ Please confirm booking!`;
             </div>
 
             {/* Modal Actions */}
-            <div className="p-3 sm:p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-2 shrink-0">
+            <div className="p-3 sm:p-4 bg-m3-surface-container-low border-t border-m3-outline-variant flex items-center justify-between gap-2 shrink-0">
               <button
                 type="button"
                 onClick={handleDirectPrintLetterhead}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 text-xs font-bold transition cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white border border-m3-outline-variant hover:bg-m3-surface-container text-m3-on-surface text-xs font-bold transition cursor-pointer"
               >
                 <Printer className="w-4 h-4" />
                 <span>Print Bill</span>

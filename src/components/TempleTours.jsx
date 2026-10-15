@@ -253,7 +253,7 @@ export default function TempleTours() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
-            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span className="w-2 h-2 rounded-full bg-m3-success"></span>
             <span>Sacred Pilgrimages • Satvik Etiquette • Senior-Friendly Comfort</span>
           </div>
 
@@ -269,16 +269,16 @@ export default function TempleTours() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <a 
               href="#tour-matrix"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-m3-full bg-m3-primary hover:bg-slate-900 text-m3-on-primary font-bold text-xs sm:text-sm shadow-m3-2 transition-all transform hover:-translate-y-0.5 border border-white/20 group"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-m3-full bg-m3-primary hover:bg-m3-inverse-surface text-m3-on-primary font-bold text-xs sm:text-sm shadow-m3-2 transition-all transform hover:-translate-y-0.5 border border-white/20 group"
             >
               <span>Explore Tour Circuits &amp; Rates</span>
-              <ChevronDown className="w-4 h-4 text-emerald-400 transform group-hover:translate-y-0.5 transition-transform" />
+              <ChevronDown className="w-4 h-4 text-m3-success transform group-hover:translate-y-0.5 transition-transform" />
             </a>
             <a 
               href="tel:+918939539211"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-m3-full bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface border border-m3-outline-variant font-semibold text-xs sm:text-sm shadow-m3-1 transition-all"
             >
-              <Phone className="w-4 h-4 text-emerald-500" />
+              <Phone className="w-4 h-4 text-m3-success" />
               <span>Helpline: +91 89395 39211</span>
             </a>
           </div>
@@ -636,7 +636,7 @@ export default function TempleTours() {
           <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight leading-tight mb-2.5 font-heading text-white">
             Ready to Plan Your <span className="text-white">Sacred Pilgrimage?</span>
           </h2>
-          <p className="text-slate-300 text-xs sm:text-sm md:text-base mb-6 max-w-xl mx-auto font-normal leading-relaxed font-sans">
+          <p className="text-m3-inverse-on-surface/80 text-xs sm:text-sm md:text-base mb-6 max-w-xl mx-auto font-normal leading-relaxed font-sans">
             Book your vehicle in 60 seconds on WhatsApp. Share your preferred temple circuit, dates, and family passenger count for instant confirmation.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -650,7 +650,7 @@ export default function TempleTours() {
               href="tel:+918939539211"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface px-6 py-3.5 rounded-m3-full font-semibold text-xs sm:text-sm shadow-m3-1 transition-all"
             >
-              <Phone className="w-4 h-4 text-emerald-500" />
+              <Phone className="w-4 h-4 text-m3-success" />
               <span>Call Pilgrimage Desk</span>
             </a>
           </div>

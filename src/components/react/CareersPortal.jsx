@@ -473,7 +473,7 @@ export default function CareersPortal() {
                     <Check className="w-4 h-4 text-m3-success shrink-0" />
                     <span>2 Quick Steps to Complete:</span>
                   </div>
-                  <ol className="list-decimal list-inside space-y-1 text-emerald-800 text-[11px] sm:text-xs">
+                  <ol className="list-decimal list-inside space-y-1 text-m3-on-success-container text-[11px] sm:text-xs">
                     <li>Click <strong>Send</strong> in the WhatsApp chat with HR (+91 89395 39211).</li>
                     <li>Attach your resume file or photo (<span className="font-semibold">{submittedData.fileName}</span>) directly into the chat.</li>
                   </ol>
@@ -491,7 +491,7 @@ export default function CareersPortal() {
                   </div>
                   <div className="flex justify-between items-center text-m3-on-surface-variant">
                     <span>Resume File:</span>
-                    <span className="font-medium text-slate-700 truncate max-w-[200px]">{submittedData.fileName}</span>
+                    <span className="font-medium text-m3-on-surface-variant truncate max-w-[200px]">{submittedData.fileName}</span>
                   </div>
                 </div>
 

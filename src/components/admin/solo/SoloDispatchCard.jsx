@@ -109,26 +109,26 @@ export default function SoloDispatchCard({
   // Badge styles
   const getStatusColor = (status) => {
     switch (status) {
-      case 'In Transit': return 'bg-sky-100 text-sky-800 border-sky-300';
-      case 'Dispatched': return 'bg-amber-100 text-amber-800 border-amber-300';
-      case 'Completed': return 'bg-emerald-100 text-emerald-800 border-emerald-300';
-      case 'Cancelled': return 'bg-rose-100 text-rose-800 border-rose-300';
-      default: return 'bg-slate-100 text-slate-800 border-slate-300';
+      case 'In Transit': return 'bg-m3-secondary-container/70 text-m3-on-secondary-container border-m3-secondary/30';
+      case 'Dispatched': return 'bg-m3-tertiary-container/60 text-m3-on-tertiary-container border-m3-tertiary/40';
+      case 'Completed': return 'bg-m3-success-container/70 text-m3-on-success-container border-m3-success/40';
+      case 'Cancelled': return 'bg-m3-error-container/60 text-m3-on-error-container border-m3-error/40';
+      default: return 'bg-m3-surface-container text-m3-on-surface border-m3-outline-variant';
     }
   };
 
   return (
     <div className={`bg-white rounded-2xl border transition-all duration-200 overflow-hidden ${
-      conflict.hasConflict ? 'border-rose-400 ring-2 ring-rose-200/50' : 'border-slate-200 hover:border-slate-300 shadow-sm'
+      conflict.hasConflict ? 'border-m3-error/40 ring-2 ring-m3-error/30' : 'border-m3-outline-variant hover:border-m3-outline-variant shadow-sm'
     }`}>
       {/* Conflict Warning Bar */}
       {conflict.hasConflict && (
-        <div className="bg-rose-500 text-white px-3.5 py-1.5 text-xs font-bold flex items-center justify-between">
+        <div className="bg-m3-error-container/300 text-white px-3.5 py-1.5 text-xs font-bold flex items-center justify-between">
           <div className="flex items-center gap-1.5">
             <span className="material-symbols-outlined text-sm">warning</span>
             <span>{conflict.message}</span>
           </div>
-          <span className="text-[10px] bg-rose-700/60 uppercase px-1.5 py-0.5 rounded">Action Needed</span>
+          <span className="text-[10px] bg-m3-error/60 uppercase px-1.5 py-0.5 rounded">Action Needed</span>
         </div>
       )}
 
@@ -137,48 +137,48 @@ export default function SoloDispatchCard({
         <div className="flex items-start justify-between gap-2 mb-2">
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="font-mono font-bold text-sm text-slate-900">{booking.bookingId}</span>
+              <span className="font-mono font-bold text-sm text-m3-on-surface">{booking.bookingId}</span>
               <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${getStatusColor(booking.manifestStatus)}`}>
                 {booking.manifestStatus}
               </span>
               <button
                 type="button"
                 onClick={handleCopyTripUrl}
-                className="p-1 hover:bg-slate-100 text-slate-400 hover:text-slate-800 rounded transition-colors"
+                className="p-1 hover:bg-m3-surface-container text-m3-outline-variant hover:text-m3-on-surface rounded transition-colors"
                 title="Copy Mobile Web Trip Sheet link"
               >
                 <span className="material-symbols-outlined text-sm">link</span>
               </button>
             </div>
-            <div className="flex items-center gap-1.5 text-xs text-amber-600 font-semibold mt-0.5">
+            <div className="flex items-center gap-1.5 text-xs text-m3-tertiary font-semibold mt-0.5">
               <span className="material-symbols-outlined text-sm">schedule</span>
               <span>{booking.travelDateTime}</span>
             </div>
           </div>
 
           <div className="text-right">
-            <span className="text-base font-extrabold text-slate-900 font-mono block">
+            <span className="text-base font-extrabold text-m3-on-surface font-mono block">
               Rs. {Number(booking.terminalFare || 0).toLocaleString('en-IN')}
             </span>
-            <span className="text-[11px] text-emerald-600 font-semibold font-mono">
+            <span className="text-[11px] text-m3-success font-semibold font-mono">
               Margin: Rs.{booking.companyMargin || (booking.terminalFare - booking.chauffeurPayout)}
             </span>
           </div>
         </div>
 
         {/* Route & Passenger */}
-        <div className="bg-slate-50 rounded-xl p-2.5 mb-3 border border-slate-100">
-          <div className="flex items-start gap-1.5 text-xs text-slate-800 font-medium mb-1.5">
-            <span className="material-symbols-outlined text-sm text-amber-500 shrink-0 mt-0.5">near_me</span>
+        <div className="bg-m3-surface-container-low rounded-xl p-2.5 mb-3 border border-m3-outline-variant/40">
+          <div className="flex items-start gap-1.5 text-xs text-m3-on-surface font-medium mb-1.5">
+            <span className="material-symbols-outlined text-sm text-m3-tertiary shrink-0 mt-0.5">near_me</span>
             <span className="line-clamp-2">{booking.pickupAddress}</span>
           </div>
-          <div className="flex flex-wrap items-center justify-between text-xs text-slate-600 gap-2 border-t border-slate-200/60 pt-1.5">
+          <div className="flex flex-wrap items-center justify-between text-xs text-m3-on-surface-variant gap-2 border-t border-m3-outline-variant/60 pt-1.5">
             <div className="flex items-center gap-1">
-              <span className="material-symbols-outlined text-sm text-slate-400">person</span>
-              <span className="font-semibold text-slate-700">{booking.guestNamePhone}</span>
+              <span className="material-symbols-outlined text-sm text-m3-outline-variant">person</span>
+              <span className="font-semibold text-m3-on-surface-variant">{booking.guestNamePhone}</span>
             </div>
-            <div className="flex items-center gap-1 text-[11px] font-medium text-slate-500">
-              <span className="material-symbols-outlined text-sm text-slate-400">directions_car</span>
+            <div className="flex items-center gap-1 text-[11px] font-medium text-m3-outline">
+              <span className="material-symbols-outlined text-sm text-m3-outline-variant">directions_car</span>
               <span>{booking.vehicleCategory} ({booking.partySize})</span>
             </div>
           </div>
@@ -187,16 +187,16 @@ export default function SoloDispatchCard({
         {/* Chauffeur Selector */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
           <div className="flex-1">
-            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">
+            <label className="block text-[10px] font-bold text-m3-outline uppercase tracking-wide mb-1">
               Assigned Chauffeur
             </label>
             <select
               value={booking.assignedChauffeur || 'Unassigned'}
               onChange={(e) => onAssignChauffeur(booking.bookingId, e.target.value)}
-              className={`w-full text-xs font-semibold rounded-lg border p-2 focus:outline-none focus:ring-2 focus:ring-amber-500 ${
+              className={`w-full text-xs font-semibold rounded-lg border p-2 focus:outline-none focus:ring-2 focus:ring-m3-tertiary ${
                 booking.assignedChauffeur === 'Unassigned'
-                  ? 'border-amber-300 bg-amber-50/50 text-amber-900'
-                  : 'border-slate-300 bg-white text-slate-800'
+                  ? 'border-m3-tertiary/40 bg-m3-tertiary-container/30/50 text-m3-on-tertiary-container'
+                  : 'border-m3-outline-variant bg-white text-m3-on-surface'
               }`}
             >
               <option value="Unassigned">⚠️ Unassigned (Select Chauffeur)</option>
@@ -209,13 +209,13 @@ export default function SoloDispatchCard({
           </div>
 
           <div className="sm:w-36">
-            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">
+            <label className="block text-[10px] font-bold text-m3-outline uppercase tracking-wide mb-1">
               Trip Status
             </label>
             <select
               value={booking.manifestStatus}
               onChange={(e) => onStatusChange(booking.bookingId, e.target.value)}
-              className="w-full text-xs font-semibold rounded-lg border border-slate-300 bg-white p-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              className="w-full text-xs font-semibold rounded-lg border border-m3-outline-variant bg-white p-2 text-m3-on-surface focus:outline-none focus:ring-2 focus:ring-m3-tertiary"
             >
               <option value="Pending">Pending</option>
               <option value="Dispatched">Dispatched</option>
@@ -231,7 +231,7 @@ export default function SoloDispatchCard({
           <button
             type="button"
             onClick={handleWhatsAppDriver}
-            className="px-2.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg text-xs font-bold flex items-center justify-center gap-1 transition-colors"
+            className="px-2.5 py-2 bg-m3-success-container/40 hover:bg-m3-success-container/70 text-m3-on-success-container border border-m3-success/30 rounded-lg text-xs font-bold flex items-center justify-center gap-1 transition-colors"
             title="Dispatch manifest to driver WhatsApp"
           >
             <span className="material-symbols-outlined text-sm">send_to_mobile</span>
@@ -241,7 +241,7 @@ export default function SoloDispatchCard({
           <button
             type="button"
             onClick={handleWhatsAppGuest}
-            className="px-2.5 py-2 bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 rounded-lg text-xs font-bold flex items-center justify-center gap-1 transition-colors"
+            className="px-2.5 py-2 bg-m3-secondary-container/40 hover:bg-m3-secondary-container/70 text-m3-on-secondary-container border border-m3-secondary/30 rounded-lg text-xs font-bold flex items-center justify-center gap-1 transition-colors"
             title="Send chauffeur details to guest WhatsApp"
           >
             <span className="material-symbols-outlined text-sm">chat</span>
@@ -251,7 +251,7 @@ export default function SoloDispatchCard({
           <button
             type="button"
             onClick={() => onOpenDutySlip(booking)}
-            className="px-2.5 py-2 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 rounded-lg text-xs font-bold flex items-center justify-center gap-1 transition-colors"
+            className="px-2.5 py-2 bg-m3-tertiary-container/30 hover:bg-m3-tertiary-container/60 text-m3-on-tertiary-container border border-m3-tertiary/30 rounded-lg text-xs font-bold flex items-center justify-center gap-1 transition-colors"
             title="Record KM & close duty slip"
           >
             <span className="material-symbols-outlined text-sm">receipt_long</span>

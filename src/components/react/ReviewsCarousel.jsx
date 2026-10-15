@@ -30,10 +30,10 @@ const ReviewsCarousel = ({ currentLang }) => {
                 {/* Section Header */}
                 <div className="text-center max-w-3xl mx-auto mb-8">
                     <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
-                        <span className="material-symbols-outlined text-[16px] text-[#4285F4]">location_on</span>
+                        <span className="material-symbols-outlined text-[16px] text-m3-primary">location_on</span>
                         <span className="font-bold text-m3-on-surface">Google Verified Reviews</span>
                         <span className="text-m3-on-surface-variant">•</span>
-                        <span className="text-amber-500 font-bold flex items-center gap-0.5">4.9/5 <Star className="w-3 h-3 fill-amber-400 text-amber-400 inline" /></span>
+                        <span className="text-m3-tertiary font-bold flex items-center gap-0.5">4.9/5 <Star className="w-3 h-3 fill-m3-tertiary text-m3-tertiary inline" /></span>
                     </div>
                     <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
                         Customer <span className="text-m3-primary">Experiences</span>
@@ -66,9 +66,9 @@ const ReviewsCarousel = ({ currentLang }) => {
                                             <span className="text-xs text-m3-on-surface-variant font-normal">{review.role || "Verified Traveler"}</span>
                                         </div>
                                     </div>
-                                    <div className="flex text-amber-400 text-xs space-x-0.5" aria-label="Rated 5 out of 5 stars" role="img">
+                                    <div className="flex text-m3-tertiary text-xs space-x-0.5" aria-label="Rated 5 out of 5 stars" role="img">
                                         {[...Array(review.rating || 5)].map((_, i) => (
-                                            <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                                            <Star key={i} className="w-4 h-4 fill-m3-tertiary text-m3-tertiary" />
                                         ))}
                                     </div>
                                 </div>
@@ -86,12 +86,12 @@ const ReviewsCarousel = ({ currentLang }) => {
                         href="https://maps.app.goo.gl/i2LdJhWMi2ZgAiCa8"
                         target="_blank"
                         rel="noopener noreferrer nofollow"
-                        className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-m3-primary hover:bg-slate-900 text-white font-bold text-sm rounded-m3-full shadow-m3-2 hover:shadow-m3-3 transition-all border border-white/20 group"
+                        className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-m3-primary hover:bg-m3-inverse-surface text-white font-bold text-sm rounded-m3-full shadow-m3-2 hover:shadow-m3-3 transition-all border border-white/20 group"
                         aria-label="See More Reviews on Google (opens in a new tab)"
                     >
-                        <span className="material-symbols-outlined text-[18px] text-[#4285F4]">location_on</span>
+                        <span className="material-symbols-outlined text-[18px] text-m3-primary">location_on</span>
                         <span>Read 1,500+ Verified Reviews on Google Maps</span>
-                        <ExternalLink className="w-4 h-4 text-emerald-400 transform group-hover:translate-x-0.5 transition-transform" />
+                        <ExternalLink className="w-4 h-4 text-m3-success transform group-hover:translate-x-0.5 transition-transform" />
                     </a>
                 </div>
             </div>

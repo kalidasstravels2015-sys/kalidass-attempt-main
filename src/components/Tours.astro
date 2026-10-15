@@ -179,15 +179,15 @@ const templePackageMeta: Record<string, TourMeta> = {
                   class="w-full h-full object-cover group-hover:scale-105 transition duration-500 relative z-10"
                   sizes="(max-width: 768px) 320px, 33vw"
                 />
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent z-10"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-m3-inverse-surface/75 via-transparent to-transparent z-10"></div>
                 
                 <!-- Differentiating USP Badge -->
-                <span class="absolute top-3 left-3 bg-slate-950/85 backdrop-blur-md border border-white/20 text-white text-[11px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-m3-full shadow-sm z-20">
+                <span class="absolute top-3 left-3 bg-m3-inverse-surface/85 backdrop-blur-md border border-white/20 text-white text-[11px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-m3-full shadow-sm z-20">
                   {meta.badge}
                 </span>
 
                 <!-- Duration & Distance Chip -->
-                <span class="absolute bottom-3 left-3 inline-flex items-center gap-1.5 bg-white/95 backdrop-blur-md text-slate-900 text-xs font-semibold px-2.5 py-1 rounded-m3-sm shadow-sm z-20">
+                <span class="absolute bottom-3 left-3 inline-flex items-center gap-1.5 bg-white/95 backdrop-blur-md text-m3-on-surface text-xs font-semibold px-2.5 py-1 rounded-m3-sm shadow-sm z-20">
                   <span class="material-symbols-outlined text-[14px] text-m3-primary" aria-hidden="true">schedule</span>
                   <span>{meta.durationLabel}</span>
                 </span>
@@ -205,7 +205,7 @@ const templePackageMeta: Record<string, TourMeta> = {
                 <ul class="space-y-2 text-xs text-m3-on-surface-variant font-sans" role="list">
                   {meta.highlights.map((item) => (
                     <li class="flex items-start gap-2 leading-relaxed">
-                      <span class="material-symbols-outlined text-[16px] text-emerald-600 shrink-0 mt-0.5" aria-hidden="true">check_circle</span>
+                      <span class="material-symbols-outlined text-[16px] text-m3-success shrink-0 mt-0.5" aria-hidden="true">check_circle</span>
                       <span>{item}</span>
                     </li>
                   ))}
@@ -228,16 +228,16 @@ const templePackageMeta: Record<string, TourMeta> = {
                 <a
                   href="tel:+918939539211"
                   aria-label={`Call to book ${meta.cleanTitle}`}
-                  class="w-9 h-9 rounded-m3-full bg-blue-50 hover:bg-blue-100 active:bg-blue-200 text-[#1A73E8] flex items-center justify-center border border-blue-200 shadow-xs transition-all shrink-0"
+                  class="w-9 h-9 rounded-m3-full bg-m3-primary-container/40 hover:bg-m3-primary-container active:bg-m3-primary-container text-m3-primary flex items-center justify-center border border-m3-primary/20 shadow-xs transition-all shrink-0"
                   title="Call Dispatch"
                 >
-                  <AndroidPhoneIcon className="w-4 h-4 text-[#1A73E8]" />
+                  <AndroidPhoneIcon className="w-4 h-4 text-m3-primary" />
                 </a>
                 <a
                   href={`https://wa.me/918939539211?text=${encodeURIComponent(meta.whatsappMsg)}`}
                   target="_blank"
                   rel="noopener noreferrer nofollow"
-                  class="w-9 h-9 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-900 flex items-center justify-center border border-emerald-300/80 shadow-xs transition-colors shrink-0"
+                  class="w-9 h-9 rounded-m3-full bg-m3-success-container/40 hover:bg-m3-success-container active:bg-m3-success-container text-m3-on-success-container flex items-center justify-center border border-m3-success/30 shadow-xs transition-colors shrink-0"
                   aria-label={`Book ${meta.cleanTitle} via WhatsApp`}
                   title="Quick WhatsApp Inquiry"
                 >

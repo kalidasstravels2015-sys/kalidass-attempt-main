@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// Trigger Vite dependency re-optimization
+// Trigger Vite dependency re-optimization (v2)
 export default defineConfig({
   site: 'https://kalidasstravels.in',
   trailingSlash: 'always',

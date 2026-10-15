@@ -27,12 +27,12 @@ const FleetCard = ({ vehicle, isVisible, priority }) => {
     const baggage = vehicle.bags || '2 Bags';
 
     return (
-        <div className="shrink-0 w-[240px] sm:w-[260px] md:w-auto snap-start bg-white rounded-2xl border border-slate-200/90 shadow-2xs hover:shadow-md hover:border-slate-300 transition-all flex flex-col justify-between overflow-hidden group select-none">
+        <div className="shrink-0 w-[240px] sm:w-[260px] md:w-auto snap-start bg-white rounded-2xl border border-m3-outline-variant/90 shadow-2xs hover:shadow-md hover:border-m3-outline-variant transition-all flex flex-col justify-between overflow-hidden group select-none">
             <div>
                 {/* Vehicle Photo Showcase Container */}
-                <div className="relative h-28 sm:h-32 bg-slate-50 flex items-center justify-center p-3 border-b border-slate-100">
+                <div className="relative h-28 sm:h-32 bg-m3-surface-container-low flex items-center justify-center p-3 border-b border-m3-outline-variant/40">
                     {badge && (
-                        <span className="absolute top-2.5 left-2.5 z-10 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/95 text-slate-700 border border-slate-200 shadow-2xs">
+                        <span className="absolute top-2.5 left-2.5 z-10 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/95 text-m3-on-surface-variant border border-m3-outline-variant shadow-2xs">
                             {badge}
                         </span>
                     )}
@@ -49,33 +49,33 @@ const FleetCard = ({ vehicle, isVisible, priority }) => {
 
                 {/* Card Content */}
                 <div className="p-3.5 sm:p-4">
-                    <h3 className="text-sm sm:text-base font-bold text-slate-900 font-heading leading-tight truncate" title={vehicle.name}>
+                    <h3 className="text-sm sm:text-base font-bold text-m3-on-surface font-heading leading-tight truncate" title={vehicle.name}>
                         {vehicle.name}
                     </h3>
 
                     {/* Single-Line Specs */}
-                    <div className="flex items-center gap-2 text-xs text-slate-500 mt-1.5 font-medium whitespace-nowrap">
+                    <div className="flex items-center gap-2 text-xs text-m3-outline mt-1.5 font-medium whitespace-nowrap">
                         <span className="inline-flex items-center gap-1 shrink-0">
-                            <Users className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                            <Users className="w-3.5 h-3.5 text-m3-outline shrink-0" />
                             <span>{seats}</span>
                         </span>
-                        <span className="text-slate-300 shrink-0">•</span>
+                        <span className="text-m3-inverse-on-surface/80 shrink-0">•</span>
                         <span className="inline-flex items-center gap-1 shrink-0">
-                            <Luggage className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                            <Luggage className="w-3.5 h-3.5 text-m3-outline shrink-0" />
                             <span>{baggage}</span>
                         </span>
                     </div>
 
                     {/* Rate Display */}
                     {vehicle.rate && (
-                        <div className="mt-3 pt-3 border-t border-slate-100 flex items-baseline justify-between">
+                        <div className="mt-3 pt-3 border-t border-m3-outline-variant/40 flex items-baseline justify-between">
                             <div>
-                                <span className="block text-[10px] uppercase font-bold tracking-wider text-slate-400">
+                                <span className="block text-[10px] uppercase font-bold tracking-wider text-m3-outline">
                                     Starting From
                                 </span>
-                                <span className="text-[11px] text-emerald-700 font-medium">Fixed Per-KM Rates</span>
+                                <span className="text-[11px] text-m3-success font-medium">Fixed Per-KM Rates</span>
                             </div>
-                            <span className="text-base sm:text-lg font-extrabold text-slate-900 font-heading">
+                            <span className="text-base sm:text-lg font-extrabold text-m3-on-surface font-heading">
                                 {vehicle.rate}
                             </span>
                         </div>
@@ -87,7 +87,7 @@ const FleetCard = ({ vehicle, isVisible, priority }) => {
             <div className="p-3.5 sm:p-4 pt-0">
                 <a
                     href="/tariff/"
-                    className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-full bg-slate-900 hover:bg-m3-primary active:bg-black text-white text-xs font-bold transition-all cursor-pointer shadow-2xs group/btn"
+                    className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-full bg-m3-inverse-surface hover:bg-m3-primary active:bg-black text-white text-xs font-bold transition-all cursor-pointer shadow-2xs group/btn"
                 >
                     <span>View Rates & Tariff</span>
                     <ChevronRight className="w-3.5 h-3.5 transform group-hover/btn:translate-x-0.5 transition-transform" />

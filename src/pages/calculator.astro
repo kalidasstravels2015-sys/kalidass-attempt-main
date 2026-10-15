@@ -282,7 +282,7 @@ const serviceSchemas = [
       <!-- Top Header & AEO Snapshot -->
       <header class="text-center mb-6">
         <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-2.5 tracking-wide">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="w-2 h-2 rounded-full bg-m3-success-container/400 animate-pulse"></span>
           <span>Instant Travel Cost Estimators · Zero Surge Guarantee</span>
         </div>
         
@@ -406,8 +406,8 @@ const serviceSchemas = [
         data-speakable="true"
       >
         <div class="flex items-start gap-3.5">
-          <div class="w-9 h-9 rounded-m3-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
-            <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+          <div class="w-9 h-9 rounded-m3-full bg-m3-success-container/400/10 border border-m3-success/30 text-m3-success flex items-center justify-center shrink-0 mt-0.5">
+            <CheckCircle2 className="w-5 h-5 text-m3-success" />
           </div>
           <div class="flex-1">
             <h2 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
@@ -417,14 +417,14 @@ const serviceSchemas = [
               In Chennai, commercial taxi fares consist of three transparent components: 
               <strong class="text-m3-on-surface font-semibold">1) Base Billable Distance</strong> (from ₹14/km for Sedans with standard 250 km/day calendar rule for outstation), 
               <strong class="text-m3-on-surface font-semibold">2) Daily Chauffeur Bata</strong> (₹300–₹800/day depending on vehicle class for outstation, or fully included in local packages), and 
-              <strong class="text-m3-on-surface font-semibold">3) Highway Tolls &amp; State Taxes</strong> passed through at actuals via FASTag. Kalidass Travels guarantees <strong class="text-emerald-700 font-semibold">100% Zero Surge Pricing</strong> 365 days a year with official GST invoices.
+              <strong class="text-m3-on-surface font-semibold">3) Highway Tolls &amp; State Taxes</strong> passed through at actuals via FASTag. Kalidass Travels guarantees <strong class="text-m3-success font-semibold">100% Zero Surge Pricing</strong> 365 days a year with official GST invoices.
             </p>
             <div class="mt-3 pt-3 border-t border-m3-outline-variant/50 flex flex-wrap items-center justify-between gap-2 text-micro sm:text-xs">
               <span class="inline-flex items-center gap-1 font-mono bg-m3-surface-container-high px-2.5 py-1 rounded text-m3-on-surface font-semibold">
                 <span>Formula: Total = (KM × Rate) + (Days × Bata) + Tolls</span>
               </span>
               <span class="text-m3-on-surface-variant flex items-center gap-1">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-m3-success shrink-0" />
                 <span>Verified 2026 Rates · GSTIN: 33COVPM0531D1Z4</span>
               </span>
             </div>
@@ -472,12 +472,12 @@ const serviceSchemas = [
                       <span class="text-[10px] text-m3-on-surface-variant font-normal">{row.subtitle}</span>
                     </th>
                     <td class="px-3 py-3 text-center text-m3-on-surface-variant">{row.capacity}</td>
-                    <td class="px-3 py-3 text-center font-semibold text-emerald-700">{row.airportFlat}</td>
+                    <td class="px-3 py-3 text-center font-semibold text-m3-success">{row.airportFlat}</td>
                     <td class="px-3 py-3 text-center font-semibold">₹{v.local_5hr_pkg.toLocaleString("en-IN")}</td>
                     <td class="px-3 py-3 text-center font-semibold">₹{v.local_10hr_pkg.toLocaleString("en-IN")}</td>
                     <td class="px-3 py-3 text-center font-semibold text-m3-primary">₹{v.round_trip_rate} / km</td>
                     <td class="px-3 py-3 text-center text-m3-on-surface-variant">₹{v.driver_bata} / day</td>
-                    <td class="px-3 py-3 text-right font-bold text-emerald-600">₹0 (Zero)</td>
+                    <td class="px-3 py-3 text-right font-bold text-m3-success">₹0 (Zero)</td>
                   </tr>
                 );
               })}
@@ -559,7 +559,7 @@ const serviceSchemas = [
 
           <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 shadow-m3-1 relative overflow-hidden flex flex-col justify-between">
             <div>
-              <div class="w-8 h-8 rounded-m3-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center mb-3.5 shadow-xs">
+              <div class="w-8 h-8 rounded-m3-full bg-m3-success text-white font-bold text-xs flex items-center justify-center mb-3.5 shadow-xs">
                 4
               </div>
               <h3 class="text-sm font-bold text-m3-on-surface font-heading mb-1.5">Instant Transparent Quote</h3>
@@ -567,7 +567,7 @@ const serviceSchemas = [
                 Inspect your zero-surge itemized quote including base kilometers, driver allowances, and toll guidelines. Confirm instantly via WhatsApp or phone.
               </p>
             </div>
-            <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-emerald-700 font-semibold flex items-center gap-1">
+            <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-m3-success font-semibold flex items-center gap-1">
               <span>Step 4: Dispatch Confirmation</span>
               <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
             </div>
@@ -617,7 +617,7 @@ const serviceSchemas = [
                 </li>
               </ul>
             </div>
-            <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-emerald-700 font-semibold flex items-center justify-between">
+            <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-m3-success font-semibold flex items-center justify-between">
               <span>MAA Terminal Parking Included</span>
               <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
             </div>
@@ -649,7 +649,7 @@ const serviceSchemas = [
                 </li>
               </ul>
             </div>
-            <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-emerald-700 font-semibold flex items-center justify-between">
+            <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-m3-success font-semibold flex items-center justify-between">
               <span>Fuel &amp; City Bata Included</span>
               <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
             </div>
@@ -681,7 +681,7 @@ const serviceSchemas = [
                 </li>
               </ul>
             </div>
-            <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-emerald-700 font-semibold flex items-center justify-between">
+            <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-m3-success font-semibold flex items-center justify-between">
               <span>Standard 250/300 KM Min Day Rule</span>
               <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
             </div>
@@ -713,7 +713,7 @@ const serviceSchemas = [
                 </li>
               </ul>
             </div>
-            <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-emerald-700 font-semibold flex items-center justify-between">
+            <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-m3-success font-semibold flex items-center justify-between">
               <span>Police-Verified Drivers</span>
               <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
             </div>
@@ -744,7 +744,7 @@ const serviceSchemas = [
                 </li>
               </ul>
             </div>
-            <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-emerald-700 font-semibold flex items-center justify-between">
+            <div class="mt-4 pt-3 border-t border-m3-outline-variant/40 text-micro text-m3-success font-semibold flex items-center justify-between">
               <span>Driveaway Transit with Live GPS</span>
               <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
             </div>
@@ -755,28 +755,28 @@ const serviceSchemas = [
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 shadow-m3-1">
             <h4 class="font-bold text-m3-on-surface mb-2.5 font-heading text-sm flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-m3-success shrink-0" />
               <span>Included in Kalidass Travels Estimates</span>
             </h4>
             <ul class="space-y-2 text-xs text-m3-on-surface-variant">
               <li class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-m3-success"></span>
                 <span>Sanitized commercial yellow-board vehicle with AC &amp; clean upholstery</span>
               </li>
               <li class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-m3-success"></span>
                 <span>Complete trip fuel costs (Diesel/Petrol/CNG) for contracted kilometers</span>
               </li>
               <li class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-m3-success"></span>
                 <span>Professional uniformed chauffeur with valid commercial passenger badge</span>
               </li>
               <li class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-m3-success"></span>
                 <span>Chennai Airport terminal parking &amp; entry toll for all Airport flat transfers</span>
               </li>
               <li class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-m3-success"></span>
                 <span>Verifiable GST tax invoice with full tax credit breakdown for corporate claims</span>
               </li>
             </ul>
@@ -784,24 +784,24 @@ const serviceSchemas = [
 
           <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 shadow-m3-1">
             <h4 class="font-bold text-m3-on-surface mb-2.5 font-heading text-sm flex items-center gap-2">
-              <Info className="w-4 h-4 text-amber-600 shrink-0" />
+              <Info className="w-4 h-4 text-m3-tertiary shrink-0" />
               <span>Billed on Actuals (Variable Government Levies)</span>
             </h4>
             <ul class="space-y-2 text-xs text-m3-on-surface-variant">
               <li class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-m3-tertiary"></span>
                 <span>National &amp; State Highway toll plazas for outstation trips (Exact FASTag pass-through)</span>
               </li>
               <li class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-m3-tertiary"></span>
                 <span>Railway station, commercial mall, or private venue parking receipts where paid directly (MAA airport parking is already included in flat transfers)</span>
               </li>
               <li class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-m3-tertiary"></span>
                 <span>Interstate border entry permits when crossing into Andhra Pradesh, Karnataka, Pondicherry, etc.</span>
               </li>
               <li class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-m3-tertiary"></span>
                 <span>Additional usage beyond contracted hours/km as per standard extra rate table</span>
               </li>
             </ul>
@@ -813,8 +813,8 @@ const serviceSchemas = [
       <section class="mb-16 scroll-mt-36" aria-labelledby="zero-surge-heading">
         <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-6 sm:p-8 shadow-m3-1">
           <div class="text-center max-w-3xl mx-auto mb-8">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 text-xs font-semibold shadow-m3-1 mb-2.5 tracking-wide">
-              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-success-container/400/10 border border-m3-success/30 text-m3-success text-xs font-semibold shadow-m3-1 mb-2.5 tracking-wide">
+              <ShieldCheck className="w-4 h-4 text-m3-success shrink-0" />
               <span>Our Fair Pricing Pledge</span>
             </div>
             <h2 id="zero-surge-heading" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2 font-heading">
@@ -826,26 +826,26 @@ const serviceSchemas = [
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-            <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-m3-lg p-5">
+            <div class="bg-m3-success-container/400/5 border border-m3-success/30 rounded-m3-lg p-5">
               <div class="flex items-center gap-2 mb-3">
-                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-                <h3 class="font-bold text-emerald-900 font-heading text-sm sm:text-base">Kalidass Travels Guarantee</h3>
+                <CheckCircle2 className="w-5 h-5 text-m3-success shrink-0" />
+                <h3 class="font-bold text-m3-on-success-container font-heading text-sm sm:text-base">Kalidass Travels Guarantee</h3>
               </div>
               <ul class="space-y-2.5 text-xs text-m3-on-surface">
                 <li class="flex items-start gap-2">
-                  <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <Check className="w-4 h-4 text-m3-success shrink-0 mt-0.5" />
                   <span><strong>100% Zero Surge:</strong> Fixed per-km and flat airport rates 24/7/365, even during heavy rains and festival rushes.</span>
                 </li>
                 <li class="flex items-start gap-2">
-                  <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <Check className="w-4 h-4 text-m3-success shrink-0 mt-0.5" />
                   <span><strong>Zero Driver Cancellation:</strong> Confirmed booking guarantees your assigned vehicle with chauffeur details dispatched in advance.</span>
                 </li>
                 <li class="flex items-start gap-2">
-                  <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <Check className="w-4 h-4 text-m3-success shrink-0 mt-0.5" />
                   <span><strong>Complimentary Flight Delay Buffer:</strong> 60 minutes free waiting time for airport pickups with automated flight tracking.</span>
                 </li>
                 <li class="flex items-start gap-2">
-                  <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <Check className="w-4 h-4 text-m3-success shrink-0 mt-0.5" />
                   <span><strong>GST Corporate Compliance:</strong> Proper tax invoices detailing GST registration, distance, and driver bata for company claims.</span>
                 </li>
               </ul>
@@ -916,7 +916,7 @@ const serviceSchemas = [
                 <div>
                   <div class="text-micro text-m3-on-surface-variant uppercase tracking-wider font-semibold">Customer Score</div>
                   <div class="font-bold text-m3-on-surface mt-0.5 flex items-center gap-1">
-                    <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500 shrink-0" />
+                    <Star className="w-3.5 h-3.5 text-m3-tertiary fill-m3-tertiary shrink-0" />
                     <span>4.9 / 5.0</span>
                   </div>
                   <div class="text-[11px] text-m3-on-surface-variant">1,250+ Google Reviews</div>
@@ -964,11 +964,11 @@ const serviceSchemas = [
       </section>
 
       <!-- SECTION 7: Bottom CTA Strip -->
-      <section class="text-center bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-xl p-8 sm:p-12 shadow-m3-3 relative overflow-hidden border border-slate-800" aria-label="Book Your Journey">
+      <section class="text-center bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-xl p-8 sm:p-12 shadow-m3-3 relative overflow-hidden border border-m3-outline-variant/40" aria-label="Book Your Journey">
         <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-tight mb-3 font-heading text-white">
-          Need a Custom Quote or <span class="text-emerald-400">Immediate Dispatch?</span>
+          Need a Custom Quote or <span class="text-m3-success">Immediate Dispatch?</span>
         </h2>
-        <p class="text-xs sm:text-sm md:text-base text-slate-300 max-w-xl mx-auto mb-8 font-sans font-normal leading-relaxed">
+        <p class="text-xs sm:text-sm md:text-base text-m3-inverse-on-surface/80 max-w-xl mx-auto mb-8 font-sans font-normal leading-relaxed">
           Our 24/7 Medavakkam operations desk is ready to help you plan your temple pilgrimage, airport drop, outstation family road trip, or corporate event with zero surge rates.
         </p>
         <div class="flex flex-wrap items-center justify-center gap-4">
@@ -976,7 +976,7 @@ const serviceSchemas = [
             href="https://wa.me/918939539211?text=Hi%20Kalidass%20Travels%2C%20I%20used%20your%20online%20calculator%20and%20would%20like%20to%20confirm%20a%20booking."
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-m3-full shadow-m3-2 transition-all cursor-pointer text-sm border border-emerald-500/30"
+            class="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-m3-success hover:bg-m3-success text-white font-bold rounded-m3-full shadow-m3-2 transition-all cursor-pointer text-sm border border-m3-success/30"
           >
             <span>Book via WhatsApp</span>
             <WhatsAppIcon className="w-4 h-4 text-white shrink-0" variant="brand" />
@@ -985,7 +985,7 @@ const serviceSchemas = [
             href="tel:+918939539211"
             class="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white/10 hover:bg-white/20 text-white font-bold rounded-m3-full transition-all text-sm border border-white/20 shadow-m3-1"
           >
-            <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
+            <Phone className="w-4 h-4 text-m3-success shrink-0" />
             <span>Call +91 89395 39211</span>
           </a>
         </div>

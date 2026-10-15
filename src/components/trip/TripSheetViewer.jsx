@@ -206,20 +206,20 @@ export default function TripSheetViewer() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between antialiased selection:bg-amber-500 selection:text-slate-950">
+    <div className="min-h-screen bg-m3-inverse-surface text-m3-inverse-on-surface flex flex-col justify-between antialiased selection:bg-m3-tertiary-container/300 selection:text-m3-on-surface">
       
       {/* Top Navigation Bar */}
-      <header className="sticky top-0 z-30 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3 shadow-lg">
+      <header className="sticky top-0 z-30 bg-m3-inverse-surface/90 backdrop-blur-md border-b border-m3-outline-variant/40 px-4 py-3 shadow-lg">
         <div className="max-w-md mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 font-black text-sm shadow-md">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-m3-tertiary to-m3-tertiary flex items-center justify-center text-m3-on-surface font-black text-sm shadow-md">
               KT
             </div>
             <div>
               <h1 className="text-xs font-black tracking-wider uppercase text-white leading-none">
                 Kalidass Travels
               </h1>
-              <span className="text-[10px] text-amber-400 font-semibold tracking-wide">
+              <span className="text-[10px] text-m3-tertiary font-semibold tracking-wide">
                 Chennai • Est. 2015
               </span>
             </div>
@@ -229,7 +229,7 @@ export default function TripSheetViewer() {
             <button
               type="button"
               onClick={handleCopyLink}
-              className="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs flex items-center gap-1 transition-all"
+              className="p-1.5 bg-m3-inverse-surface hover:bg-m3-inverse-surface text-m3-inverse-on-surface/80 rounded-lg text-xs flex items-center gap-1 transition-all"
               title="Copy link"
             >
               <span className="material-symbols-outlined text-sm">{copiedLink ? 'check' : 'link'}</span>
@@ -239,7 +239,7 @@ export default function TripSheetViewer() {
             <button
               type="button"
               onClick={handleShareWhatsApp}
-              className="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold flex items-center gap-1 transition-all shadow-sm"
+              className="px-2.5 py-1.5 bg-m3-success hover:bg-m3-success-container/400 text-white rounded-lg text-xs font-bold flex items-center gap-1 transition-all shadow-sm"
               title="Share on WhatsApp"
             >
               <span className="material-symbols-outlined text-sm">share</span>
@@ -253,14 +253,14 @@ export default function TripSheetViewer() {
       <main className="max-w-md mx-auto w-full p-4 flex-1 space-y-3.5">
         
         {/* View Switcher Tabs: Guest View vs Chauffeur Duty Sheet */}
-        <div className="bg-slate-900 p-1 rounded-xl border border-slate-800 flex text-xs font-bold shadow-inner">
+        <div className="bg-m3-inverse-surface p-1 rounded-xl border border-m3-outline-variant/40 flex text-xs font-bold shadow-inner">
           <button
             type="button"
             onClick={() => setActiveTab('passenger')}
             className={`flex-1 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${
               activeTab === 'passenger'
-                ? 'bg-amber-500 text-slate-950 shadow-md'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-m3-tertiary-container/300 text-m3-on-surface shadow-md'
+                : 'text-m3-outline-variant hover:text-white'
             }`}
           >
             <span className="material-symbols-outlined text-sm">person</span>
@@ -271,8 +271,8 @@ export default function TripSheetViewer() {
             onClick={() => setActiveTab('driver')}
             className={`flex-1 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${
               activeTab === 'driver'
-                ? 'bg-amber-500 text-slate-950 shadow-md'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-m3-tertiary-container/300 text-m3-on-surface shadow-md'
+                : 'text-m3-outline-variant hover:text-white'
             }`}
           >
             <span className="material-symbols-outlined text-sm">receipt_long</span>
@@ -281,22 +281,22 @@ export default function TripSheetViewer() {
         </div>
 
         {/* Status & Trip Header Card */}
-        <div className="bg-gradient-to-br from-slate-900 to-slate-850 rounded-2xl p-4 border border-slate-800 shadow-md">
+        <div className="bg-gradient-to-br from-m3-inverse-surface to-m3-inverse-surface rounded-2xl p-4 border border-m3-outline-variant/40 shadow-md">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-mono font-bold text-amber-400 bg-amber-950/60 border border-amber-800/80 px-2 py-0.5 rounded-full">
+            <span className="text-[11px] font-mono font-bold text-m3-tertiary bg-m3-tertiary-container/30 border border-m3-tertiary/40 px-2 py-0.5 rounded-full">
               {trip.bookingId}
             </span>
-            <div className="flex items-center gap-1 text-[11px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2 py-0.5 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <div className="flex items-center gap-1 text-[11px] font-bold text-m3-success bg-m3-success-container/30 border border-m3-success/40 px-2 py-0.5 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-m3-success animate-pulse"></span>
               <span>CONFIRMED TRIP</span>
             </div>
           </div>
 
-          <div className="flex items-start gap-2 text-xs text-slate-300 mt-2">
-            <span className="material-symbols-outlined text-amber-400 text-base shrink-0 mt-0.5">schedule</span>
+          <div className="flex items-start gap-2 text-xs text-m3-inverse-on-surface/80 mt-2">
+            <span className="material-symbols-outlined text-m3-tertiary text-base shrink-0 mt-0.5">schedule</span>
             <div>
               <span className="text-white font-bold block">{trip.travelDateTime}</span>
-              <span className="text-[11px] text-slate-400">Reporting 15 mins before departure</span>
+              <span className="text-[11px] text-m3-outline-variant">Reporting 15 mins before departure</span>
             </div>
           </div>
         </div>
@@ -306,25 +306,25 @@ export default function TripSheetViewer() {
           <div className="space-y-3.5 animate-fadeIn">
             
             {/* Chauffeur Details Card */}
-            <div className="bg-slate-900 rounded-2xl p-4 border border-slate-800 shadow-md">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2.5">
+            <div className="bg-m3-inverse-surface rounded-2xl p-4 border border-m3-outline-variant/40 shadow-md">
+              <span className="text-[10px] font-bold text-m3-outline-variant uppercase tracking-wider block mb-2.5">
                 Your Designated Chauffeur
               </span>
 
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-amber-400 font-extrabold text-lg shadow-inner">
+                  <div className="w-12 h-12 rounded-xl bg-m3-inverse-surface border border-m3-outline-variant/40 flex items-center justify-center text-m3-tertiary font-extrabold text-lg shadow-inner">
                     <span className="material-symbols-outlined text-2xl">sports_motorsports</span>
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
                       <h3 className="text-sm font-extrabold text-white">{chauffeurName}</h3>
-                      <span className="text-[10px] bg-amber-400/20 text-amber-300 px-1.5 py-0.2 rounded font-bold">5.0★</span>
+                      <span className="text-[10px] bg-m3-tertiary-container/30 text-m3-tertiary px-1.5 py-0.2 rounded font-bold">5.0★</span>
                     </div>
-                    <span className="text-xs text-slate-400 block font-mono mt-0.5">
+                    <span className="text-xs text-m3-outline-variant block font-mono mt-0.5">
                       {chauffeurPlate}
                     </span>
-                    <span className="text-[11px] text-emerald-400 font-semibold block">
+                    <span className="text-[11px] text-m3-success font-semibold block">
                       {trip.vehicleCategory}
                     </span>
                   </div>
@@ -332,7 +332,7 @@ export default function TripSheetViewer() {
 
                 <a
                   href={`tel:${chauffeurPhone}`}
-                  className="w-11 h-11 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center shadow-lg transition-transform active:scale-95 shrink-0"
+                  className="w-11 h-11 rounded-xl bg-m3-success hover:bg-m3-success-container/400 text-white flex items-center justify-center shadow-lg transition-transform active:scale-95 shrink-0"
                   title="Call Chauffeur"
                 >
                   <span className="material-symbols-outlined text-xl">call</span>
@@ -341,80 +341,80 @@ export default function TripSheetViewer() {
             </div>
 
             {/* Route & Pickup Card */}
-            <div className="bg-slate-900 rounded-2xl p-4 border border-slate-800 shadow-md space-y-2.5">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+            <div className="bg-m3-inverse-surface rounded-2xl p-4 border border-m3-outline-variant/40 shadow-md space-y-2.5">
+              <span className="text-[10px] font-bold text-m3-outline-variant uppercase tracking-wider block">
                 Trip Route & Pickup Location
               </span>
 
               <div className="flex items-start gap-2 text-xs">
-                <span className="material-symbols-outlined text-amber-400 text-base shrink-0 mt-0.5">location_on</span>
+                <span className="material-symbols-outlined text-m3-tertiary text-base shrink-0 mt-0.5">location_on</span>
                 <div className="flex-1">
                   <p className="text-white font-medium line-clamp-3">{trip.pickupAddress}</p>
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-slate-800">
+              <div className="pt-2 border-t border-m3-outline-variant/40">
                 <a
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(trip.pickupAddress)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-2 bg-slate-800 hover:bg-slate-750 text-slate-200 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors border border-slate-700"
+                  className="w-full py-2 bg-m3-inverse-surface hover:bg-m3-inverse-surface text-m3-inverse-on-surface/90 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors border border-m3-outline-variant/40"
                 >
-                  <span className="material-symbols-outlined text-sm text-sky-400">map</span>
+                  <span className="material-symbols-outlined text-sm text-m3-primary">map</span>
                   <span>Open Pickup in Google Maps</span>
                 </a>
               </div>
             </div>
 
             {/* Fare Breakdown & Settlement Card */}
-            <div className="bg-slate-900 rounded-2xl p-4 border border-slate-800 shadow-md">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+            <div className="bg-m3-inverse-surface rounded-2xl p-4 border border-m3-outline-variant/40 shadow-md">
+              <span className="text-[10px] font-bold text-m3-outline-variant uppercase tracking-wider block mb-2">
                 Transparent Fare Breakdown
               </span>
 
               <div className="space-y-1.5 text-xs font-mono">
-                <div className="flex justify-between text-slate-300">
+                <div className="flex justify-between text-m3-inverse-on-surface/80">
                   <span>Base Package ({packageKm} km package):</span>
                   <span>Rs. {baseFare.toLocaleString('en-IN')}</span>
                 </div>
 
                 {extraKmCharge > 0 && (
-                  <div className="flex justify-between text-amber-400">
+                  <div className="flex justify-between text-m3-tertiary">
                     <span>Extra KM ({extraKm} km @ Rs.{extraKmRate}):</span>
                     <span>+Rs. {extraKmCharge.toLocaleString('en-IN')}</span>
                   </div>
                 )}
 
                 {tollsNum > 0 && (
-                  <div className="flex justify-between text-slate-300">
+                  <div className="flex justify-between text-m3-inverse-on-surface/80">
                     <span>FASTag Tolls:</span>
                     <span>+Rs. {tollsNum.toLocaleString('en-IN')}</span>
                   </div>
                 )}
 
                 {parkingNum > 0 && (
-                  <div className="flex justify-between text-slate-300">
+                  <div className="flex justify-between text-m3-inverse-on-surface/80">
                     <span>Parking & Permits:</span>
                     <span>+Rs. {parkingNum.toLocaleString('en-IN')}</span>
                   </div>
                 )}
 
-                <div className="flex justify-between text-emerald-400 pt-1 border-t border-slate-800 font-semibold">
+                <div className="flex justify-between text-m3-success pt-1 border-t border-m3-outline-variant/40 font-semibold">
                   <span>Advance Token Paid:</span>
                   <span>-Rs. {advancePaid.toLocaleString('en-IN')}</span>
                 </div>
 
                 {/* Final Net Amount */}
-                <div className="bg-emerald-950/80 border border-emerald-800/80 rounded-xl p-3 mt-2 flex items-center justify-between">
+                <div className="bg-m3-success-container/30 border border-m3-success/40 rounded-xl p-3 mt-2 flex items-center justify-between">
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-emerald-400 block tracking-wide">
+                    <span className="text-[10px] uppercase font-bold text-m3-success block tracking-wide">
                       Balance to Pay at Drop
                     </span>
-                    <span className="text-xl font-extrabold text-emerald-300 font-mono">
+                    <span className="text-xl font-extrabold text-m3-success font-mono">
                       Rs. {balanceToCollect.toLocaleString('en-IN')}
                     </span>
                   </div>
-                  <span className="text-[10px] text-slate-400 text-right">
+                  <span className="text-[10px] text-m3-outline-variant text-right">
                     Pay via UPI / Cash<br />directly to Chauffeur
                   </span>
                 </div>
@@ -422,17 +422,17 @@ export default function TripSheetViewer() {
             </div>
 
             {/* 24/7 Helpline Card */}
-            <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3 flex items-center justify-between text-xs">
+            <div className="bg-m3-inverse-surface/60 border border-m3-outline-variant/40 rounded-xl p-3 flex items-center justify-between text-xs">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-amber-400 text-lg">support_agent</span>
+                <span className="material-symbols-outlined text-m3-tertiary text-lg">support_agent</span>
                 <div>
                   <span className="text-white font-bold block">Need Help Anytime?</span>
-                  <span className="text-[11px] text-slate-400">Kalidass Control Line: +91 89395 39211</span>
+                  <span className="text-[11px] text-m3-outline-variant">Kalidass Control Line: +91 89395 39211</span>
                 </div>
               </div>
               <a
                 href="tel:8939539211"
-                className="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg text-xs"
+                className="px-3 py-1.5 bg-m3-tertiary-container/300 hover:bg-m3-tertiary text-m3-on-surface font-bold rounded-lg text-xs"
               >
                 Call Support
               </a>
@@ -443,22 +443,22 @@ export default function TripSheetViewer() {
           /* Tab 2: CHAUFFEUR & ADMIN DUTY SHEET VIEW */
           <div className="space-y-3.5 animate-fadeIn">
             
-            <div className="bg-amber-950/40 border border-amber-800/60 rounded-xl p-3 text-xs text-amber-200 flex items-center gap-2">
-              <span className="material-symbols-outlined text-amber-400 text-lg shrink-0">speed</span>
+            <div className="bg-m3-tertiary-container/30 border border-m3-tertiary/30 rounded-xl p-3 text-xs text-m3-tertiary-container flex items-center gap-2">
+              <span className="material-symbols-outlined text-m3-tertiary text-lg shrink-0">speed</span>
               <span>
                 <strong>Chauffeur Mode:</strong> Enter opening & closing odometer readings and toll expenses to auto-calculate the final drop settlement.
               </span>
             </div>
 
             {/* Odometer Inputs */}
-            <div className="bg-slate-900 rounded-2xl p-4 border border-slate-800 shadow-md space-y-3">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+            <div className="bg-m3-inverse-surface rounded-2xl p-4 border border-m3-outline-variant/40 shadow-md space-y-3">
+              <span className="text-[10px] font-bold text-m3-outline-variant uppercase tracking-wider block">
                 Odometer & Toll Entries
               </span>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">
+                  <label className="block text-[10px] font-bold text-m3-outline-variant uppercase mb-1">
                     Start Odometer KM
                   </label>
                   <input
@@ -466,12 +466,12 @@ export default function TripSheetViewer() {
                     placeholder="e.g. 10450"
                     value={editOdo.startKm}
                     onChange={(e) => setEditOdo({ ...editOdo, startKm: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs font-mono font-bold text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    className="w-full bg-m3-inverse-surface border border-m3-outline-variant/40 rounded-xl p-2.5 text-xs font-mono font-bold text-white focus:outline-none focus:ring-2 focus:ring-m3-tertiary"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">
+                  <label className="block text-[10px] font-bold text-m3-outline-variant uppercase mb-1">
                     End Odometer KM
                   </label>
                   <input
@@ -479,14 +479,14 @@ export default function TripSheetViewer() {
                     placeholder="e.g. 10780"
                     value={editOdo.endKm}
                     onChange={(e) => setEditOdo({ ...editOdo, endKm: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs font-mono font-bold text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    className="w-full bg-m3-inverse-surface border border-m3-outline-variant/40 rounded-xl p-2.5 text-xs font-mono font-bold text-white focus:outline-none focus:ring-2 focus:ring-m3-tertiary"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">
+                  <label className="block text-[10px] font-bold text-m3-outline-variant uppercase mb-1">
                     FASTag Tolls (Rs)
                   </label>
                   <input
@@ -494,12 +494,12 @@ export default function TripSheetViewer() {
                     placeholder="0"
                     value={editOdo.tolls}
                     onChange={(e) => setEditOdo({ ...editOdo, tolls: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs font-mono text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    className="w-full bg-m3-inverse-surface border border-m3-outline-variant/40 rounded-xl p-2.5 text-xs font-mono text-white focus:outline-none focus:ring-2 focus:ring-m3-tertiary"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">
+                  <label className="block text-[10px] font-bold text-m3-outline-variant uppercase mb-1">
                     Parking / Permit (Rs)
                   </label>
                   <input
@@ -507,15 +507,15 @@ export default function TripSheetViewer() {
                     placeholder="0"
                     value={editOdo.parking}
                     onChange={(e) => setEditOdo({ ...editOdo, parking: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs font-mono text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    className="w-full bg-m3-inverse-surface border border-m3-outline-variant/40 rounded-xl p-2.5 text-xs font-mono text-white focus:outline-none focus:ring-2 focus:ring-m3-tertiary"
                   />
                 </div>
               </div>
 
               {/* Calculated Run Summary */}
-              <div className="bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-xs font-mono flex items-center justify-between">
+              <div className="bg-m3-inverse-surface p-2.5 rounded-xl border border-m3-outline-variant/40 text-xs font-mono flex items-center justify-between">
                 <span>Total Run: <strong className="text-white">{totalKm} km</strong></span>
-                <span className={extraKm > 0 ? 'text-amber-400 font-bold' : 'text-slate-400'}>
+                <span className={extraKm > 0 ? 'text-m3-tertiary font-bold' : 'text-m3-outline-variant'}>
                   Extra: {extraKm} km (+Rs.{extraKmCharge})
                 </span>
               </div>
@@ -525,45 +525,45 @@ export default function TripSheetViewer() {
                 type="button"
                 onClick={handleSaveOdometer}
                 disabled={isSavingOdo}
-                className="w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md transition-all disabled:opacity-50"
+                className="w-full py-2.5 bg-m3-tertiary-container/300 hover:bg-m3-tertiary text-m3-on-surface font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md transition-all disabled:opacity-50"
               >
                 <span className="material-symbols-outlined text-sm">save</span>
                 <span>{isSavingOdo ? 'Saving Duty Record...' : 'Save & Update Duty Sheet'}</span>
               </button>
 
               {saveSuccess && (
-                <div className="p-2 bg-emerald-950/80 border border-emerald-800 text-emerald-300 text-xs font-bold rounded-lg text-center">
+                <div className="p-2 bg-m3-success-container/30 border border-m3-success/40 text-m3-success text-xs font-bold rounded-lg text-center">
                   Duty sheet successfully saved and updated!
                 </div>
               )}
             </div>
 
             {/* Settlement Box */}
-            <div className="bg-slate-900 rounded-2xl p-4 border border-slate-800 shadow-md font-mono text-xs space-y-1.5">
-              <div className="flex justify-between text-slate-400">
+            <div className="bg-m3-inverse-surface rounded-2xl p-4 border border-m3-outline-variant/40 shadow-md font-mono text-xs space-y-1.5">
+              <div className="flex justify-between text-m3-outline-variant">
                 <span>Gross Fare:</span>
                 <span>Rs. {grossTotal.toLocaleString('en-IN')}</span>
               </div>
-              <div className="flex justify-between text-amber-400">
+              <div className="flex justify-between text-m3-tertiary">
                 <span>Less Advance Token:</span>
                 <span>-Rs. {advancePaid.toLocaleString('en-IN')}</span>
               </div>
-              <div className="border-t border-slate-800 pt-2 flex justify-between text-base font-extrabold text-emerald-400">
+              <div className="border-t border-m3-outline-variant/40 pt-2 flex justify-between text-base font-extrabold text-m3-success">
                 <span>CASH TO COLLECT:</span>
                 <span>Rs. {balanceToCollect.toLocaleString('en-IN')}</span>
               </div>
             </div>
 
             {/* Direct Passenger Contact */}
-            <div className="p-3 bg-slate-900 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
+            <div className="p-3 bg-m3-inverse-surface rounded-xl border border-m3-outline-variant/40 flex items-center justify-between text-xs">
               <div>
-                <span className="text-[10px] text-slate-400 uppercase font-bold block">Passenger</span>
+                <span className="text-[10px] text-m3-outline-variant uppercase font-bold block">Passenger</span>
                 <span className="text-white font-bold">{guestName}</span>
               </div>
               {guestPhone && (
                 <a
                   href={`tel:${guestPhone}`}
-                  className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg flex items-center gap-1"
+                  className="px-3 py-1.5 bg-m3-success hover:bg-m3-success-container/400 text-white font-bold rounded-lg flex items-center gap-1"
                 >
                   <span className="material-symbols-outlined text-sm">call</span>
                   <span>Call Passenger</span>
@@ -577,7 +577,7 @@ export default function TripSheetViewer() {
       </main>
 
       {/* Footer */}
-      <footer className="py-4 text-center text-[10px] text-slate-500 border-t border-slate-900">
+      <footer className="py-4 text-center text-[10px] text-m3-outline border-t border-m3-outline-variant/40">
         <p>Kalidass Travels Chennai • Zero-App Mobile Chauffeur Network</p>
       </footer>
     </div>

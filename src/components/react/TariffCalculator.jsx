@@ -93,7 +93,7 @@ const TariffCalculator = ({ currentLang }) => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             {/* Backdrop */}
             <div
-                className="absolute inset-0 bg-slate-950/70 backdrop-blur-xs"
+                className="absolute inset-0 bg-m3-inverse-surface/70 backdrop-blur-xs"
                 onClick={closeModal}
                 aria-hidden="true"
             />

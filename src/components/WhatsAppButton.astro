@@ -41,16 +41,15 @@ const iconSize = {
   icon: "w-5 h-5"
 }[size];
 
-// M3 Surface & State Layer specifications - Tonal mint theme (WCAG AAA compliant)
+// M3 Surface & State Layer specifications - Authentic WhatsApp brand colors
 const variantClasses = {
-  // Uniform M3 Tonal mint styling (content is hero, doesn't overpower the cards)
-  filled: "bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 shadow-xs",
-  elevated: "bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/90 shadow-m3-1 hover:shadow-m3-2",
-  tonal: "bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 shadow-xs",
-  outlined: "bg-transparent hover:bg-emerald-50/70 text-emerald-950 border border-emerald-400 shadow-xs"
-}[variant] || "bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 shadow-xs";
+  filled: "bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white font-bold border border-[#25D366] shadow-sm hover:shadow-md",
+  elevated: "bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white font-bold border border-[#25D366] shadow-m3-1 hover:shadow-m3-2",
+  tonal: "bg-[#25D366]/15 hover:bg-[#25D366]/25 active:bg-[#25D366]/30 text-[#075E54] font-bold border border-[#25D366]/30 shadow-xs",
+  outlined: "bg-white hover:bg-[#25D366]/10 text-[#075E54] border border-[#25D366]/50 shadow-xs"
+}[variant] || "bg-[#25D366]/15 hover:bg-[#25D366]/25 active:bg-[#25D366]/30 text-[#075E54] font-bold border border-[#25D366]/30 shadow-xs";
 
-const iconVariant = 'brand';
+const iconVariant = (variant === 'filled' || variant === 'elevated') ? 'white' : 'brand';
 ---
 
 <a
@@ -58,7 +57,7 @@ const iconVariant = 'brand';
   id={id}
   target="_blank"
   rel="noopener noreferrer nofollow"
-  class={`inline-flex items-center justify-center font-bold font-sans rounded-m3-full transition-all duration-200 cursor-pointer select-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#128C7E] ${sizeClasses} ${variantClasses} ${className}`}
+  class={`inline-flex items-center justify-center font-bold font-sans rounded-m3-full transition-all duration-200 cursor-pointer select-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-m3-success ${sizeClasses} ${variantClasses} ${className}`}
   {...rest}
 >
   <WhatsAppIcon variant={iconVariant} className={iconSize} />

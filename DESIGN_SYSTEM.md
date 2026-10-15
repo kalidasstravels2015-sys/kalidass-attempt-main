@@ -167,7 +167,7 @@ Key icons in standard usage:
 
 ### 2. M3 Filled Action Button
 ```html
-<a href="#booking-panel" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-m3-primary hover:bg-crimson-800 text-m3-on-primary font-bold text-m3-label-l rounded-m3-full shadow-m3-1 hover:shadow-m3-2 transition-all">
+<a href="#booking-panel" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary font-bold text-m3-label-l rounded-m3-full shadow-m3-1 hover:shadow-m3-2 transition-all">
   <span>Book Your Ride</span>
   <span class="material-symbols-outlined text-base">arrow_forward</span>
 </a>
@@ -191,7 +191,7 @@ Key icons in standard usage:
 
 ### 5. Extended Floating Action Button (FAB)
 ```html
-<a href="tel:+919244222333" class="fixed bottom-6 right-6 z-40 inline-flex items-center gap-2.5 px-5 py-3.5 bg-m3-primary hover:bg-crimson-800 text-m3-on-primary font-bold text-m3-label-l rounded-m3-full shadow-m3-3 hover:shadow-m3-4 transition-all">
+<a href="tel:+919244222333" class="fixed bottom-6 right-6 z-40 inline-flex items-center gap-2.5 px-5 py-3.5 bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary font-bold text-m3-label-l rounded-m3-full shadow-m3-3 hover:shadow-m3-4 transition-all">
   <span class="material-symbols-outlined text-xl">call</span>
   <span>24/7 Helpline</span>
 </a>

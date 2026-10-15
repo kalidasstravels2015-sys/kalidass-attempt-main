@@ -257,11 +257,11 @@ export default function SoloAdminDashboard() {
   }, [bookings]);
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-800 pb-20 font-sans">
+    <div className="min-h-screen bg-m3-surface-container text-m3-on-surface pb-20 font-sans">
       {/* Toast Notification */}
       {toast && (
         <div className={`fixed top-4 right-4 z-50 px-4 py-2.5 rounded-xl shadow-lg text-xs font-bold flex items-center gap-2 animate-fadeIn ${
-          toast.type === 'error' ? 'bg-rose-600 text-white' : 'bg-slate-900 text-emerald-400 border border-slate-700'
+          toast.type === 'error' ? 'bg-m3-error text-white' : 'bg-m3-inverse-surface text-m3-success border border-m3-outline-variant/40'
         }`}>
           <span className="material-symbols-outlined text-sm">
             {toast.type === 'error' ? 'error' : 'check_circle'}
@@ -271,27 +271,27 @@ export default function SoloAdminDashboard() {
       )}
 
       {/* Top Header */}
-      <header className="sticky top-0 z-30 bg-slate-900 text-white px-4 py-3 shadow-md border-b border-slate-800">
+      <header className="sticky top-0 z-30 bg-m3-inverse-surface text-white px-4 py-3 shadow-md border-b border-m3-outline-variant/40">
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 font-black text-sm flex items-center justify-center shadow-inner">
+            <span className="w-8 h-8 rounded-lg bg-m3-tertiary-container/300 text-m3-on-surface font-black text-sm flex items-center justify-center shadow-inner">
               K
             </span>
             <div>
               <h1 className="text-sm font-extrabold tracking-tight flex items-center gap-1.5">
                 <span>Kalidass Travels</span>
-                <span className="text-[10px] font-bold bg-amber-500/20 text-amber-400 px-1.5 py-0.2 rounded border border-amber-500/30">
+                <span className="text-[10px] font-bold bg-m3-tertiary-container/300/20 text-m3-tertiary px-1.5 py-0.2 rounded border border-m3-tertiary/30">
                   Solo Cockpit
                 </span>
               </h1>
-              <span className="text-[10px] text-slate-400 font-mono">Sync: {lastSync}</span>
+              <span className="text-[10px] text-m3-outline-variant font-mono">Sync: {lastSync}</span>
             </div>
           </div>
 
           <button
             type="button"
             onClick={refreshData}
-            className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
+            className="p-2 rounded-lg bg-m3-surface-container-high hover:bg-m3-surface-container-high text-m3-inverse-on-surface/80 hover:text-white transition-colors"
             title="Refresh Data"
           >
             <span className="material-symbols-outlined text-base">refresh</span>
@@ -300,15 +300,15 @@ export default function SoloAdminDashboard() {
       </header>
 
       {/* Main 3-Desk Navigation Bar */}
-      <div className="bg-white border-b border-slate-200 sticky top-14 z-20 shadow-sm">
+      <div className="bg-white border-b border-m3-outline-variant sticky top-14 z-20 shadow-sm">
         <div className="max-w-4xl mx-auto px-3 py-2 flex items-center gap-1.5 overflow-x-auto">
           <button
             type="button"
             onClick={() => setActiveDesk('inquiries')}
             className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center justify-center gap-1.5 ${
               activeDesk === 'inquiries'
-                ? 'bg-amber-500 text-slate-950 shadow-sm'
-                : 'text-slate-600 hover:bg-slate-100'
+                ? 'bg-m3-tertiary-container/300 text-m3-on-surface shadow-sm'
+                : 'text-m3-on-surface-variant hover:bg-m3-surface-container'
             }`}
           >
             <span className="material-symbols-outlined text-sm">forum</span>
@@ -320,8 +320,8 @@ export default function SoloAdminDashboard() {
             onClick={() => setActiveDesk('dispatch')}
             className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center justify-center gap-1.5 ${
               activeDesk === 'dispatch'
-                ? 'bg-slate-900 text-white shadow-sm'
-                : 'text-slate-600 hover:bg-slate-100'
+                ? 'bg-m3-inverse-surface text-white shadow-sm'
+                : 'text-m3-on-surface-variant hover:bg-m3-surface-container'
             }`}
           >
             <span className="material-symbols-outlined text-sm">directions_car</span>
@@ -333,8 +333,8 @@ export default function SoloAdminDashboard() {
             onClick={() => setActiveDesk('khata')}
             className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center justify-center gap-1.5 ${
               activeDesk === 'khata'
-                ? 'bg-emerald-700 text-white shadow-sm'
-                : 'text-slate-600 hover:bg-slate-100'
+                ? 'bg-m3-success text-white shadow-sm'
+                : 'text-m3-on-surface-variant hover:bg-m3-surface-container'
             }`}
           >
             <span className="material-symbols-outlined text-sm">account_balance_wallet</span>

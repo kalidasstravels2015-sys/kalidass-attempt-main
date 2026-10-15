@@ -693,7 +693,7 @@ export default function PopularDestinations() {
           <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight leading-tight mb-2.5 font-heading text-white">
             Planning a <span className="text-white">Weekend Road Trip?</span>
           </h2>
-          <p className="text-slate-300 text-xs sm:text-sm md:text-base mb-6 max-w-xl mx-auto font-normal leading-relaxed font-sans">
+          <p className="text-m3-inverse-on-surface/80 text-xs sm:text-sm md:text-base mb-6 max-w-xl mx-auto font-normal leading-relaxed font-sans">
             Book your car in 60 seconds on WhatsApp. Share your destination and travel dates to receive an instant all-inclusive quote.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -707,7 +707,7 @@ export default function PopularDestinations() {
               href="tel:+918939539211"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface px-6 py-3.5 rounded-m3-full font-semibold text-xs sm:text-sm shadow-m3-1 transition-all"
             >
-              <Phone className="w-4 h-4 text-emerald-500" />
+              <Phone className="w-4 h-4 text-m3-success" />
               <span>Call Outstation Desk</span>
             </a>
           </div>

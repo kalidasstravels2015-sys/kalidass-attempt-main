@@ -585,7 +585,7 @@ export default function DriverFeeEstimator({
             }
           }}
           onClick={handleCalculate}
-          className="w-full max-w-[260px] sm:max-w-[280px] mx-auto bg-m3-primary hover:bg-slate-900 text-m3-on-primary font-bold py-3 rounded-m3-full transition-all flex items-center justify-center gap-2 shadow-m3-1 hover:shadow-m3-2 text-sm sm:text-base min-h-[46px] sm:min-h-[50px] cursor-pointer active:scale-[0.98] disabled:opacity-75 border border-white/10"
+          className="w-full max-w-[260px] sm:max-w-[280px] mx-auto bg-m3-primary hover:bg-m3-inverse-surface text-m3-on-primary font-bold py-3 rounded-m3-full transition-all flex items-center justify-center gap-2 shadow-m3-1 hover:shadow-m3-2 text-sm sm:text-base min-h-[46px] sm:min-h-[50px] cursor-pointer active:scale-[0.98] disabled:opacity-75 border border-white/10"
         >
           {loading ? (
             <>
@@ -656,12 +656,12 @@ export default function DriverFeeEstimator({
                     </span>
                     <span className="font-bold text-m3-on-surface">{fmtRs(result.totalBata)}</span>
                   </div>
-                  <div className={`flex justify-between items-center pt-1 ${result.foodProvided ? 'text-emerald-700 dark:text-emerald-400 font-medium' : ''}`}>
+                  <div className={`flex justify-between items-center pt-1 ${result.foodProvided ? 'text-m3-success dark:text-m3-success font-medium' : ''}`}>
                     <span className="text-m3-on-surface-variant">Food Allowance ({result.days} day{result.days > 1 ? 's' : ''})</span>
                     <span className="font-bold">{result.foodProvided ? 'Provided with Family (₹0)' : fmtRs(result.totalFood)}</span>
                   </div>
                   {result.nights > 0 && (
-                    <div className={`flex justify-between items-center pt-1 ${result.stayProvided ? 'text-emerald-700 dark:text-emerald-400 font-medium' : ''}`}>
+                    <div className={`flex justify-between items-center pt-1 ${result.stayProvided ? 'text-m3-success dark:text-m3-success font-medium' : ''}`}>
                       <span className="text-m3-on-surface-variant">Night Stay ({result.nights} night{result.nights > 1 ? 's' : ''})</span>
                       <span className="font-bold">{result.stayProvided ? 'Hotel Dormitory (₹0)' : fmtRs(result.totalStay)}</span>
                     </div>
@@ -673,7 +673,7 @@ export default function DriverFeeEstimator({
                     <span className="text-m3-on-surface-variant flex items-center gap-1.5 flex-wrap">
                       <span>Driver Bata ({result.isLongDistance ? '1.5 Days' : '1 Day'})</span>
                       {result.isLongDistance && (
-                        <span className="text-[9px] font-bold bg-amber-500/10 text-amber-700 dark:text-amber-300 px-1.5 py-0.5 rounded-m3-full border border-amber-500/20">
+                        <span className="text-[9px] font-bold bg-m3-tertiary-container/30 text-m3-tertiary dark:text-m3-tertiary px-1.5 py-0.5 rounded-m3-full border border-m3-tertiary/30">
                           &gt;400 km Return Day
                         </span>
                       )}

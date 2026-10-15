@@ -442,7 +442,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
         >
           <div className="bg-m3-surface/95 backdrop-blur-md border-b border-m3-outline-variant shadow-m3-1">
             <div className="max-w-3xl mx-auto px-3 py-2 flex items-center gap-2">
-              <span className={`shrink-0 text-[10px] font-extrabold px-2.5 py-1 rounded-m3-full border ${direction === 'pickup' ? 'bg-sky-100 text-sky-800 border-sky-200' : 'bg-m3-primary-container text-m3-primary border-m3-primary/20'}`}>
+              <span className={`shrink-0 text-[10px] font-extrabold px-2.5 py-1 rounded-m3-full border ${direction === 'pickup' ? 'bg-m3-secondary-container text-m3-on-secondary-container border-m3-secondary/20' : 'bg-m3-primary-container text-m3-primary border-m3-primary/20'}`}>
                 ✈ {direction === 'pickup' ? 'PICKUP' : 'DROP'}
               </span>
               <div className="flex items-center gap-1.5 min-w-0 flex-1">
@@ -453,7 +453,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
               <div className="hidden sm:flex items-center gap-2 shrink-0">
                 <span className="text-xs text-m3-on-surface-variant font-semibold">{vehicle}</span>
                 {showResult && estimate > 0 && (
-                  <span className="text-xs font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-m3-full">
+                  <span className="text-xs font-extrabold text-m3-on-success-container bg-m3-success-container/50 border border-m3-success/30 px-2 py-0.5 rounded-m3-full">
                     {fmtRs(estimate)}
                   </span>
                 )}
@@ -461,7 +461,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
               <button
                 type="button"
                 onClick={handleStickyWhatsApp}
-                className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 font-bold text-xs shadow-xs transition-all cursor-pointer"
+                className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-success-container/60 hover:bg-m3-success-container/80 active:bg-m3-success-container text-m3-on-success-container border border-m3-success/30 font-bold text-xs shadow-xs transition-all cursor-pointer"
               >
                 <WhatsAppIcon className="w-3.5 h-3.5" variant="brand" />
                 <span className="hidden xs:inline">Book</span>
@@ -565,7 +565,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                 )}
                 {direction === 'pickup' && (
                   <span className="w-7 h-7 flex items-center justify-center">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    <CheckCircle2 className="w-4 h-4 text-m3-success" />
                   </span>
                 )}
               </div>
@@ -606,7 +606,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                 )}
                 {direction === 'drop' && (
                   <span className="w-7 h-7 flex items-center justify-center">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    <CheckCircle2 className="w-4 h-4 text-m3-success" />
                   </span>
                 )}
               </div>
@@ -681,8 +681,8 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
             const paxNum = parseInt(passengers);
             if (cap < paxNum) {
               return (
-                <div className="flex items-start gap-2 px-3 py-2 rounded-m3-md bg-amber-50 border border-amber-300 text-amber-800 text-xs font-semibold">
-                  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5 text-amber-600" />
+                <div className="flex items-start gap-2 px-3 py-2 rounded-m3-md bg-m3-tertiary-container/40 border border-m3-tertiary/30 text-m3-on-tertiary-container text-xs font-semibold">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5 text-m3-tertiary" />
                   <span>{vehicle} seats max {cap} passengers. Please select a larger vehicle for {paxNum} pax.</span>
                 </div>
               );
@@ -696,7 +696,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
             id="get-flat-fare-btn"
             data-testid="get-flat-fare-btn"
             disabled={loading}
-            className="w-full max-w-[260px] sm:max-w-[280px] mx-auto bg-m3-primary hover:bg-slate-900 text-m3-on-primary font-bold py-3 rounded-m3-full transition-all flex items-center justify-center gap-2 shadow-m3-1 hover:shadow-m3-2 text-sm sm:text-base min-h-[46px] sm:min-h-[50px] cursor-pointer active:scale-[0.98] disabled:opacity-75 border border-white/10"
+            className="w-full max-w-[260px] sm:max-w-[280px] mx-auto bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary font-bold py-3 rounded-m3-full transition-all flex items-center justify-center gap-2 shadow-m3-1 hover:shadow-m3-2 text-sm sm:text-base min-h-[46px] sm:min-h-[50px] cursor-pointer active:scale-[0.98] disabled:opacity-75 border border-white/10"
           >
             {loading ? (
               <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /><span>Calculating...</span></>
@@ -792,9 +792,9 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                   </div>
 
                   {/* Row 3: Inclusions */}
-                  <div className="flex items-center justify-between text-[11px] text-emerald-800 bg-emerald-50/90 border border-emerald-200/80 px-2.5 py-1 rounded-m3-md font-medium">
+                  <div className="flex items-center justify-between text-[11px] text-m3-on-success-container bg-m3-success-container/50 border border-m3-success/30 px-2.5 py-1 rounded-m3-md font-medium">
                     <span>Includes tolls, parking, fuel & GST</span>
-                    <span className="font-semibold text-emerald-700">Pay after trip</span>
+                    <span className="font-semibold text-m3-success">Pay after trip</span>
                   </div>
                 </div>
 
@@ -909,7 +909,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                   {/* Primary: WhatsApp Enquiry */}
                   <button
                     type="submit"
-                    className="w-full py-2.5 bg-emerald-50 hover:bg-emerald-100 active:bg-emerald-200 text-emerald-950 border border-emerald-300/80 rounded-m3-full font-bold flex items-center justify-center gap-2 shadow-xs transition-all active:scale-[0.98] cursor-pointer text-sm select-none"
+                    className="w-full py-2.5 bg-m3-success-container/60 hover:bg-m3-success-container/80 active:bg-m3-success-container text-m3-on-success-container border border-m3-success/30 rounded-m3-full font-bold flex items-center justify-center gap-2 shadow-xs transition-all active:scale-[0.98] cursor-pointer text-sm select-none"
                   >
                     <WhatsAppIcon className="w-4 h-4 sm:w-[18px] sm:h-[18px]" variant="brand" />
                     <span>Send Booking Enquiry</span>
@@ -924,9 +924,9 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                   <div className="grid grid-cols-2 gap-2">
                     <a
                       href="tel:+918939539211"
-                      className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-m3-full bg-m3-surface-container hover:bg-blue-50 active:bg-blue-100 text-m3-on-surface hover:text-[#1A73E8] border border-m3-outline-variant hover:border-blue-300 text-xs font-bold transition-all select-none"
+                      className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-m3-full bg-m3-surface-container hover:bg-m3-primary/10 active:bg-m3-primary/20 text-m3-on-surface hover:text-m3-primary border border-m3-outline-variant hover:border-m3-primary/40 text-xs font-bold transition-all select-none"
                     >
-                      <Phone className="w-3.5 h-3.5 text-[#1A73E8] shrink-0" />
+                      <Phone className="w-3.5 h-3.5 text-m3-primary shrink-0" />
                       <span>Call 24/7 Desk</span>
                     </a>
                     <button
@@ -935,7 +935,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                       title="No WhatsApp? Send booking via native SMS or iMessage"
                       className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high border border-m3-outline-variant text-xs font-bold text-m3-on-surface transition-all active:scale-[0.98] cursor-pointer select-none"
                     >
-                      <MessageSquare className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+                      <MessageSquare className="w-3.5 h-3.5 text-m3-primary shrink-0" />
                       <span>No WhatsApp? SMS</span>
                     </button>
                   </div>

@@ -30,17 +30,17 @@ export default function WhatsAppButton({
   }[size] || "w-4 h-4 sm:w-5 sm:h-5";
 
   const variantClasses = {
-    filled: "bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white font-bold shadow-m3-1 hover:shadow-m3-2",
-    elevated: "bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white font-bold shadow-m3-1 hover:shadow-m3-2",
-    tonal: "bg-m3-success-container hover:brightness-95 active:brightness-90 text-m3-on-success-container font-bold shadow-xs",
-    outlined: "bg-transparent hover:bg-m3-success-container/50 text-m3-success border border-m3-success shadow-xs"
-  }[variant] || "bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white font-bold shadow-m3-1";
+    filled: "bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white font-bold shadow-m3-1 hover:shadow-m3-2",
+    elevated: "bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white font-bold shadow-m3-1 hover:shadow-m3-2",
+    tonal: "bg-[#25D366]/15 hover:bg-[#25D366]/25 active:bg-[#25D366]/30 text-[#075E54] font-bold border border-[#25D366]/30 shadow-xs",
+    outlined: "bg-white hover:bg-[#25D366]/10 text-[#075E54] border border-[#25D366]/50 shadow-xs"
+  }[variant] || "bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white font-bold shadow-m3-1";
 
   const iconVariant = (variant === 'filled' || variant === 'elevated') ? 'white' : 'brand';
   const label = children || text;
   const computedAria = ariaLabel || (typeof label === 'string' ? label : "Chat on WhatsApp");
 
-  const commonClass = `inline-flex items-center justify-center font-bold font-sans rounded-m3-full transition-all duration-200 cursor-pointer select-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#128C7E] ${sizeClasses} ${variantClasses} ${className}`;
+  const commonClass = `inline-flex items-center justify-center font-bold font-sans rounded-m3-full transition-all duration-200 cursor-pointer select-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#25D366] ${sizeClasses} ${variantClasses} ${className}`;
 
   const targetHref = href || (!onClick ? buildWhatsAppUrl(typeof label === 'string' ? label : undefined) : undefined);
 

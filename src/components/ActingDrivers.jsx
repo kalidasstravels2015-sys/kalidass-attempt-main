@@ -470,7 +470,7 @@ export default function ActingDrivers() {
           <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight leading-tight mb-2.5 font-heading text-white">
             Need an Acting Driver <span className="text-white">Today?</span>
           </h2>
-          <p className="text-slate-300 text-xs sm:text-sm md:text-base mb-6 max-w-lg mx-auto font-normal leading-relaxed font-sans">
+          <p className="text-m3-inverse-on-surface/80 text-xs sm:text-sm md:text-base mb-6 max-w-lg mx-auto font-normal leading-relaxed font-sans">
             Book in 60 seconds on WhatsApp. Share your car model and pickup location to receive your verified chauffeur profile promptly.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">

@@ -839,13 +839,13 @@ export default function AdminDashboard() {
   // M3 Lock Screen
   if (!isUnlocked) {
     return (
-      <div className="min-h-screen bg-[#F9FAFB] flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white border border-slate-200/90 rounded-3xl p-8 shadow-xl text-center">
-          <div className="w-14 h-14 bg-amber-50 text-amber-700 rounded-full flex items-center justify-center mx-auto mb-4 border border-amber-200/60 shadow-xs">
+      <div className="min-h-screen bg-m3-surface flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white border border-m3-outline-variant/90 rounded-3xl p-8 shadow-xl text-center">
+          <div className="w-14 h-14 bg-m3-tertiary-container/30 text-m3-tertiary rounded-full flex items-center justify-center mx-auto mb-4 border border-m3-tertiary/30/60 shadow-xs">
             <span className="material-symbols-outlined text-2xl">lock</span>
           </div>
-          <h2 className="text-xl font-extrabold text-[#111827] tracking-tight">KALIDASS COMMAND TOWER</h2>
-          <p className="text-sm text-slate-500 mt-1 mb-6">Enter security PIN to access the operations console</p>
+          <h2 className="text-xl font-extrabold text-m3-on-surface tracking-tight">KALIDASS COMMAND TOWER</h2>
+          <p className="text-sm text-m3-outline mt-1 mb-6">Enter security PIN to access the operations console</p>
           <form onSubmit={handlePinSubmit} className="space-y-4">
             <input
               type="password"
@@ -853,13 +853,13 @@ export default function AdminDashboard() {
               value={pinInput}
               onChange={(e) => setPinInput(e.target.value)}
               placeholder="PIN (Default: 2026)"
-              className="w-full text-center tracking-[0.5em] text-2xl py-3 bg-[#F9FAFB] border border-slate-300 rounded-2xl text-slate-900 font-mono-code focus:border-[#1E252D] focus:ring-2 focus:ring-[#1E252D]/10 focus:outline-none transition-all"
+              className="w-full text-center tracking-[0.5em] text-2xl py-3 bg-m3-surface border border-m3-outline-variant rounded-2xl text-m3-on-surface font-mono-code focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/10 focus:outline-none transition-all"
               autoFocus
             />
-            {pinError && <p className="text-xs text-rose-600 font-semibold">Invalid PIN. Try 2026 or 8939.</p>}
+            {pinError && <p className="text-xs text-m3-error font-semibold">Invalid PIN. Try 2026 or 8939.</p>}
             <button
               type="submit"
-              className="w-full py-3.5 bg-[#1E252D] hover:bg-[#111827] text-white font-bold text-sm uppercase rounded-full shadow-sm hover:shadow-md transition-all active:scale-95"
+              className="w-full py-3.5 bg-m3-primary hover:bg-m3-inverse-surface text-white font-bold text-sm uppercase rounded-full shadow-sm hover:shadow-md transition-all active:scale-95"
             >
               Unlock Console
             </button>
@@ -870,16 +870,16 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] text-[#111827] flex flex-col font-sans relative">
+    <div className="min-h-screen bg-m3-surface text-m3-on-surface flex flex-col font-sans relative">
       
       {/* Toast Feedback Notification */}
       {toast && (
-        <div className="fixed top-5 right-5 z-50 flex items-center gap-2.5 px-4 py-3 rounded-2xl shadow-xl backdrop-blur-md transition-all duration-300 animate-in fade-in slide-in-from-top-4 border text-xs font-bold bg-[#1E252D] text-white border-slate-700/80">
-          <span className={`material-symbols-outlined text-[18px] ${toast.type === 'error' ? 'text-rose-400' : 'text-emerald-400'}`}>
+        <div className="fixed top-5 right-5 z-50 flex items-center gap-2.5 px-4 py-3 rounded-2xl shadow-xl backdrop-blur-md transition-all duration-300 animate-in fade-in slide-in-from-top-4 border text-xs font-bold bg-m3-primary text-white border-m3-outline-variant/40/80">
+          <span className={`material-symbols-outlined text-[18px] ${toast.type === 'error' ? 'text-m3-error' : 'text-m3-success'}`}>
             {toast.type === 'error' ? 'error' : 'check_circle'}
           </span>
           <span>{toast.message}</span>
-          <button onClick={() => setToast(null)} className="ml-2 text-slate-400 hover:text-white">
+          <button onClick={() => setToast(null)} className="ml-2 text-m3-outline-variant hover:text-white">
             <span className="material-symbols-outlined text-[16px]">close</span>
           </button>
         </div>
@@ -888,17 +888,17 @@ export default function AdminDashboard() {
       {/* ============================================================== */}
       {/* 1. M3 TOP APP BAR & TELEMETRY STRIP                            */}
       {/* ============================================================== */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-6 py-3 shadow-xs">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-m3-outline-variant/80 px-4 sm:px-6 py-3 shadow-xs">
         <div className="max-w-[1720px] mx-auto flex flex-wrap items-center justify-between gap-3">
           
           {/* Brand & Flight Deck Title */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.7)]"></span>
-              <span className="text-base font-extrabold tracking-tight text-[#1E252D] uppercase">KALIDASS COMMAND TOWER</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-m3-success-container/400 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.7)]"></span>
+              <span className="text-base font-extrabold tracking-tight text-m3-primary uppercase">KALIDASS COMMAND TOWER</span>
             </div>
-            <span className="text-slate-300 hidden sm:inline">|</span>
-            <span className="text-xs font-semibold text-slate-500 hidden sm:inline uppercase tracking-wider">
+            <span className="text-m3-inverse-on-surface/80 hidden sm:inline">|</span>
+            <span className="text-xs font-semibold text-m3-outline hidden sm:inline uppercase tracking-wider">
               DISPATCH • FLEET • CASHBOOK
             </span>
           </div>
@@ -906,30 +906,30 @@ export default function AdminDashboard() {
           {/* Actions & Live Telemetry */}
           <div className="flex items-center gap-3">
             {/* Live Connected Chip */}
-            <div className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200/80 text-xs font-semibold">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            <div className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-full bg-m3-success-container/40 text-m3-on-success-container border border-m3-success/30/80 text-xs font-semibold">
+              <span className="w-1.5 h-1.5 rounded-full bg-m3-success-container/400"></span>
               <span>LIVE SYNC: {lastSyncTime}</span>
             </div>
 
             {/* Total Margin Pill */}
-            <div className="hidden lg:flex items-center gap-1 px-3.5 py-1 rounded-full bg-slate-100 text-slate-800 border border-slate-200/80 text-xs font-bold">
-              <span className="text-slate-500 font-normal">EST. MARGIN:</span>
-              <span className="text-emerald-700">₹{kpis.totalMargin.toLocaleString()}</span>
+            <div className="hidden lg:flex items-center gap-1 px-3.5 py-1 rounded-full bg-m3-surface-container text-m3-on-surface border border-m3-outline-variant/80 text-xs font-bold">
+              <span className="text-m3-outline font-normal">EST. MARGIN:</span>
+              <span className="text-m3-success">₹{kpis.totalMargin.toLocaleString()}</span>
             </div>
 
             {/* Quick Log Lead M3 Button */}
             <button
               onClick={() => setIsQuickCallModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-950 text-xs sm:text-sm font-bold border border-emerald-300 shadow-xs transition-all active:scale-95"
+              className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-full bg-m3-success-container/40 hover:bg-m3-success-container/70 text-m3-on-success-container text-xs sm:text-sm font-bold border border-m3-success/40 shadow-xs transition-all active:scale-95"
             >
-              <span className="material-symbols-outlined text-[18px] text-emerald-600">chat</span>
+              <span className="material-symbols-outlined text-[18px] text-m3-success">chat</span>
               <span>+ LOG LEAD</span>
             </button>
 
             {/* New Booking M3 Button */}
             <button
               onClick={() => setIsNewBookingModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-2 rounded-full bg-[#1E252D] hover:bg-[#111827] text-white text-xs sm:text-sm font-bold shadow-sm hover:shadow transition-all active:scale-95"
+              className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-2 rounded-full bg-m3-primary hover:bg-m3-inverse-surface text-white text-xs sm:text-sm font-bold shadow-sm hover:shadow transition-all active:scale-95"
             >
               <span className="material-symbols-outlined text-[18px]">add</span>
               <span>NEW BOOKING</span>
@@ -939,7 +939,7 @@ export default function AdminDashboard() {
             <button
               onClick={fetchData}
               title="Force Telemetry Sync"
-              className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 transition-colors"
+              className="p-2 rounded-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface-variant border border-m3-outline-variant/80 transition-colors"
             >
               <span className={`material-symbols-outlined text-[18px] ${loading ? 'animate-spin' : ''}`}>sync</span>
             </button>
@@ -948,7 +948,7 @@ export default function AdminDashboard() {
             <button
               onClick={() => setIsUnlocked(false)}
               title="Lock Console"
-              className="p-2 rounded-full bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-600 border border-slate-200/80 transition-colors"
+              className="p-2 rounded-full bg-m3-surface-container hover:bg-m3-error-container/30 hover:text-m3-error text-m3-on-surface-variant border border-m3-outline-variant/80 transition-colors"
             >
               <span className="material-symbols-outlined text-[18px]">lock</span>
             </button>
@@ -964,66 +964,66 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
           
           {/* Tile 1: Active Trips */}
-          <div className="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-xs hover:border-slate-300 transition-all">
+          <div className="bg-white rounded-2xl border border-m3-outline-variant/80 p-4 shadow-xs hover:border-m3-outline-variant transition-all">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">ACTIVE TRIPS</span>
-              <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center">
+              <span className="text-xs font-semibold text-m3-outline uppercase tracking-wider">ACTIVE TRIPS</span>
+              <div className="w-8 h-8 rounded-xl bg-m3-surface-container text-m3-on-surface-variant flex items-center justify-center">
                 <span className="material-symbols-outlined text-[18px]">directions_car</span>
               </div>
             </div>
-            <p className="mt-2 text-3xl font-extrabold text-[#111827] tracking-tight">{kpis.totalBookings}</p>
-            <p className="mt-1 text-[11px] font-medium text-slate-400 uppercase tracking-tight">ALL VERTICAL MANIFESTS</p>
+            <p className="mt-2 text-3xl font-extrabold text-m3-on-surface tracking-tight">{kpis.totalBookings}</p>
+            <p className="mt-1 text-[11px] font-medium text-m3-outline-variant uppercase tracking-tight">ALL VERTICAL MANIFESTS</p>
           </div>
 
           {/* Tile 2: Action Needed (Subtle dot indicator only, calm neutral container) */}
-          <div className="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-xs hover:border-slate-300 transition-all">
+          <div className="bg-white rounded-2xl border border-m3-outline-variant/80 p-4 shadow-xs hover:border-m3-outline-variant transition-all">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
-                {kpis.actionRequired > 0 && <span className="w-2 h-2 rounded-full bg-rose-500"></span>}
-                <span className="text-xs font-semibold text-slate-600 uppercase tracking-wider">ACTION NEEDED</span>
+                {kpis.actionRequired > 0 && <span className="w-2 h-2 rounded-full bg-m3-error-container/300"></span>}
+                <span className="text-xs font-semibold text-m3-on-surface-variant uppercase tracking-wider">ACTION NEEDED</span>
               </div>
-              <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-xl bg-m3-surface-container text-m3-on-surface-variant flex items-center justify-center">
                 <span className="material-symbols-outlined text-[18px]">priority_high</span>
               </div>
             </div>
-            <p className="mt-2 text-3xl font-extrabold text-[#111827] tracking-tight">{kpis.actionRequired}</p>
-            <p className="mt-1 text-[11px] font-medium text-slate-400 uppercase tracking-tight">UNASSIGNED / PENDING KYC</p>
+            <p className="mt-2 text-3xl font-extrabold text-m3-on-surface tracking-tight">{kpis.actionRequired}</p>
+            <p className="mt-1 text-[11px] font-medium text-m3-outline-variant uppercase tracking-tight">UNASSIGNED / PENDING KYC</p>
           </div>
 
           {/* Tile 3: Hot Leads */}
-          <div className="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-xs hover:border-slate-300 transition-all">
+          <div className="bg-white rounded-2xl border border-m3-outline-variant/80 p-4 shadow-xs hover:border-m3-outline-variant transition-all">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">HOT LEADS</span>
-              <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center">
+              <span className="text-xs font-semibold text-m3-outline uppercase tracking-wider">HOT LEADS</span>
+              <div className="w-8 h-8 rounded-xl bg-m3-surface-container text-m3-on-surface-variant flex items-center justify-center">
                 <span className="material-symbols-outlined text-[18px]">calculate</span>
               </div>
             </div>
-            <p className="mt-2 text-3xl font-extrabold text-[#111827] tracking-tight">{kpis.hotLeads}</p>
-            <p className="mt-1 text-[11px] font-medium text-slate-400 uppercase tracking-tight">CALCULATOR ENQUIRIES</p>
+            <p className="mt-2 text-3xl font-extrabold text-m3-on-surface tracking-tight">{kpis.hotLeads}</p>
+            <p className="mt-1 text-[11px] font-medium text-m3-outline-variant uppercase tracking-tight">CALCULATOR ENQUIRIES</p>
           </div>
 
           {/* Tile 4: In Transit */}
-          <div className="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-xs hover:border-slate-300 transition-all">
+          <div className="bg-white rounded-2xl border border-m3-outline-variant/80 p-4 shadow-xs hover:border-m3-outline-variant transition-all">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">IN TRANSIT</span>
-              <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center">
+              <span className="text-xs font-semibold text-m3-outline uppercase tracking-wider">IN TRANSIT</span>
+              <div className="w-8 h-8 rounded-xl bg-m3-surface-container text-m3-on-surface-variant flex items-center justify-center">
                 <span className="material-symbols-outlined text-[18px]">route</span>
               </div>
             </div>
-            <p className="mt-2 text-3xl font-extrabold text-[#111827] tracking-tight">{kpis.inTransit}</p>
-            <p className="mt-1 text-[11px] font-medium text-slate-400 uppercase tracking-tight">ON HIGHWAY EN ROUTE</p>
+            <p className="mt-2 text-3xl font-extrabold text-m3-on-surface tracking-tight">{kpis.inTransit}</p>
+            <p className="mt-1 text-[11px] font-medium text-m3-outline-variant uppercase tracking-tight">ON HIGHWAY EN ROUTE</p>
           </div>
 
           {/* Tile 5: Net Agency Margin */}
-          <div className="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-xs hover:border-slate-300 transition-all col-span-2 sm:col-span-1">
+          <div className="bg-white rounded-2xl border border-m3-outline-variant/80 p-4 shadow-xs hover:border-m3-outline-variant transition-all col-span-2 sm:col-span-1">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">AGENCY MARGIN</span>
-              <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center">
+              <span className="text-xs font-semibold text-m3-outline uppercase tracking-wider">AGENCY MARGIN</span>
+              <div className="w-8 h-8 rounded-xl bg-m3-surface-container text-m3-on-surface-variant flex items-center justify-center">
                 <span className="material-symbols-outlined text-[18px]">payments</span>
               </div>
             </div>
-            <p className="mt-2 text-3xl font-extrabold text-[#111827] tracking-tight">₹{kpis.totalMargin.toLocaleString()}</p>
-            <p className="mt-1 text-[11px] font-medium text-slate-400 uppercase tracking-tight">ESTIMATED NET CONTRACT</p>
+            <p className="mt-2 text-3xl font-extrabold text-m3-on-surface tracking-tight">₹{kpis.totalMargin.toLocaleString()}</p>
+            <p className="mt-1 text-[11px] font-medium text-m3-outline-variant uppercase tracking-tight">ESTIMATED NET CONTRACT</p>
           </div>
 
         </div>
@@ -1041,14 +1041,14 @@ export default function AdminDashboard() {
               onClick={() => setActiveTab('dispatch')}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 ${
                 activeTab === 'dispatch'
-                  ? 'bg-[#1E252D] text-white shadow-sm'
-                  : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80'
+                  ? 'bg-m3-primary text-white shadow-sm'
+                  : 'bg-white hover:bg-m3-surface-container text-m3-on-surface-variant border border-m3-outline-variant/80'
               }`}
             >
               <span className="material-symbols-outlined text-[16px]">view_kanban</span>
               <span>1. DISPATCH KANBAN</span>
               <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                activeTab === 'dispatch' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700'
+                activeTab === 'dispatch' ? 'bg-white/20 text-white' : 'bg-m3-surface-container text-m3-on-surface-variant'
               }`}>
                 {bookings.length}
               </span>
@@ -1058,14 +1058,14 @@ export default function AdminDashboard() {
               onClick={() => setActiveTab('leads')}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 ${
                 activeTab === 'leads'
-                  ? 'bg-[#1E252D] text-white shadow-sm'
-                  : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80'
+                  ? 'bg-m3-primary text-white shadow-sm'
+                  : 'bg-white hover:bg-m3-surface-container text-m3-on-surface-variant border border-m3-outline-variant/80'
               }`}
             >
               <span className="material-symbols-outlined text-[16px]">calculate</span>
               <span>2. LEADS FUNNEL</span>
               <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                activeTab === 'leads' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700'
+                activeTab === 'leads' ? 'bg-white/20 text-white' : 'bg-m3-surface-container text-m3-on-surface-variant'
               }`}>
                 {kpis.hotLeads}
               </span>
@@ -1075,14 +1075,14 @@ export default function AdminDashboard() {
               onClick={() => setActiveTab('dutyslip')}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 ${
                 activeTab === 'dutyslip'
-                  ? 'bg-[#1E252D] text-white shadow-sm'
-                  : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80'
+                  ? 'bg-m3-primary text-white shadow-sm'
+                  : 'bg-white hover:bg-m3-surface-container text-m3-on-surface-variant border border-m3-outline-variant/80'
               }`}
             >
               <span className="material-symbols-outlined text-[16px]">receipt_long</span>
               <span>3. DIGITAL DUTY SLIPS</span>
               <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                activeTab === 'dutyslip' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700'
+                activeTab === 'dutyslip' ? 'bg-white/20 text-white' : 'bg-m3-surface-container text-m3-on-surface-variant'
               }`}>
                 {dutySlips.length}
               </span>
@@ -1092,8 +1092,8 @@ export default function AdminDashboard() {
               onClick={() => setActiveTab('khata')}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 ${
                 activeTab === 'khata'
-                  ? 'bg-[#1E252D] text-white shadow-sm'
-                  : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80'
+                  ? 'bg-m3-primary text-white shadow-sm'
+                  : 'bg-white hover:bg-m3-surface-container text-m3-on-surface-variant border border-m3-outline-variant/80'
               }`}
             >
               <span className="material-symbols-outlined text-[16px]">account_balance_wallet</span>
@@ -1104,8 +1104,8 @@ export default function AdminDashboard() {
               onClick={() => setActiveTab('fleet')}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 ${
                 activeTab === 'fleet'
-                  ? 'bg-[#1E252D] text-white shadow-sm'
-                  : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80'
+                  ? 'bg-m3-primary text-white shadow-sm'
+                  : 'bg-white hover:bg-m3-surface-container text-m3-on-surface-variant border border-m3-outline-variant/80'
               }`}
             >
               <span className="material-symbols-outlined text-[16px]">badge</span>
@@ -1116,8 +1116,8 @@ export default function AdminDashboard() {
               onClick={() => setActiveTab('pilgrimage')}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 ${
                 activeTab === 'pilgrimage'
-                  ? 'bg-[#1E252D] text-white shadow-sm'
-                  : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200/80'
+                  ? 'bg-m3-primary text-white shadow-sm'
+                  : 'bg-white hover:bg-m3-surface-container text-m3-on-surface-variant border border-m3-outline-variant/80'
               }`}
             >
               <span className="material-symbols-outlined text-[16px]">temple_hindu</span>
@@ -1127,7 +1127,7 @@ export default function AdminDashboard() {
 
           {/* Search Pill */}
           <div className="relative w-full sm:w-80">
-            <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">
+            <span className="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-m3-outline-variant text-[18px]">
               search
             </span>
             <input
@@ -1135,7 +1135,7 @@ export default function AdminDashboard() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Filter by ref, guest, driver..."
-              className="w-full bg-white border border-slate-300 rounded-full pl-10 pr-4 py-2 text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1E252D]/15 focus:border-[#1E252D] shadow-xs transition-all"
+              className="w-full bg-white border border-m3-outline-variant rounded-full pl-10 pr-4 py-2 text-xs font-medium text-m3-on-surface placeholder:text-m3-outline-variant focus:outline-none focus:ring-2 focus:ring-m3-primary/15 focus:border-m3-primary shadow-xs transition-all"
             />
           </div>
 
@@ -1154,53 +1154,53 @@ export default function AdminDashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-base font-extrabold text-[#111827] tracking-tight">Live Dispatch Flight Board</h2>
-                <p className="text-xs text-slate-500">Track trips through their operational state machine</p>
+                <h2 className="text-base font-extrabold text-m3-on-surface tracking-tight">Live Dispatch Flight Board</h2>
+                <p className="text-xs text-m3-outline">Track trips through their operational state machine</p>
               </div>
-              <span className="text-xs font-semibold text-slate-400">Auto-updating telemetry</span>
+              <span className="text-xs font-semibold text-m3-outline-variant">Auto-updating telemetry</span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-start">
               
               {/* Column 1: Unassigned / New Inquiries */}
-              <div className="bg-[#F3F4F6] border border-slate-200/80 rounded-2xl p-3.5 space-y-3">
-                <div className="flex items-center justify-between pb-2 border-b border-slate-200/80">
-                  <div className="flex items-center gap-2 text-xs font-bold text-slate-800">
-                    <span className="w-2 h-2 rounded-full bg-slate-400"></span>
+              <div className="bg-m3-surface-container-low border border-m3-outline-variant/80 rounded-2xl p-3.5 space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b border-m3-outline-variant/80">
+                  <div className="flex items-center gap-2 text-xs font-bold text-m3-on-surface">
+                    <span className="w-2 h-2 rounded-full bg-m3-outline-variant"></span>
                     <span>1. NEW / UNASSIGNED</span>
                   </div>
-                  <span className="px-2.5 py-0.5 rounded-full bg-white text-slate-700 text-xs font-bold shadow-2xs border border-slate-200/80">
+                  <span className="px-2.5 py-0.5 rounded-full bg-white text-m3-on-surface-variant text-xs font-bold shadow-2xs border border-m3-outline-variant/80">
                     {kanban.unassigned.length}
                   </span>
                 </div>
 
                 <div className="space-y-3 min-h-[420px]">
                   {kanban.unassigned.length === 0 ? (
-                    <div className="p-8 text-center text-slate-400 text-xs font-medium">No pending unassigned trips</div>
+                    <div className="p-8 text-center text-m3-outline-variant text-xs font-medium">No pending unassigned trips</div>
                   ) : (
                     kanban.unassigned.map(b => (
-                      <div key={b.bookingId} className="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all space-y-2.5">
+                      <div key={b.bookingId} className="bg-white rounded-xl p-4 border border-m3-outline-variant/80 shadow-xs hover:border-m3-outline-variant transition-all space-y-2.5">
                         <div className="flex items-center justify-between">
-                          <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-800 font-mono-code text-[11px] font-bold">
+                          <span className="px-2 py-0.5 rounded-md bg-m3-surface-container text-m3-on-surface font-mono-code text-[11px] font-bold">
                             {b.bookingId}
                           </span>
-                          <span className="text-slate-400 text-[11px] font-medium">{b.travelDateTime}</span>
+                          <span className="text-m3-outline-variant text-[11px] font-medium">{b.travelDateTime}</span>
                         </div>
                         <div>
-                          <p className="text-sm font-bold text-slate-900 leading-tight">{b.guestNamePhone}</p>
-                          <p className="text-xs text-slate-500 truncate mt-1 flex items-center gap-1" title={b.pickupAddress}>
-                            <span className="material-symbols-outlined text-[14px] text-slate-400">location_on</span>
+                          <p className="text-sm font-bold text-m3-on-surface leading-tight">{b.guestNamePhone}</p>
+                          <p className="text-xs text-m3-outline truncate mt-1 flex items-center gap-1" title={b.pickupAddress}>
+                            <span className="material-symbols-outlined text-[14px] text-m3-outline-variant">location_on</span>
                             {b.pickupAddress}
                           </p>
                         </div>
-                        <div className="flex items-center justify-between text-xs bg-slate-50 p-2 rounded-lg border border-slate-100">
-                          <span className="font-medium text-slate-600">{b.vehicleCategory} ({b.partySize})</span>
-                          <span className="font-bold text-slate-900">₹{b.terminalFare}</span>
+                        <div className="flex items-center justify-between text-xs bg-m3-surface-container-low p-2 rounded-lg border border-m3-outline-variant/40">
+                          <span className="font-medium text-m3-on-surface-variant">{b.vehicleCategory} ({b.partySize})</span>
+                          <span className="font-bold text-m3-on-surface">₹{b.terminalFare}</span>
                         </div>
 
                         {/* Assign Driver Dropdown */}
                         <div className="space-y-1 pt-1">
-                          <label className="text-[11px] font-semibold text-slate-500">Quick Assign Chauffeur:</label>
+                          <label className="text-[11px] font-semibold text-m3-outline">Quick Assign Chauffeur:</label>
                           <select
                             defaultValue=""
                             onChange={(e) => {
@@ -1212,7 +1212,7 @@ export default function AdminDashboard() {
                                 });
                               }
                             }}
-                            className="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs text-slate-800 font-medium focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                            className="w-full bg-white border border-m3-outline-variant rounded-lg px-2.5 py-1.5 text-xs text-m3-on-surface font-medium focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                           >
                             <option value="">Select Chauffeur...</option>
                             {chauffeurs.map(c => (
@@ -1227,35 +1227,35 @@ export default function AdminDashboard() {
               </div>
 
               {/* Column 2: Driver Allocated / Dispatched */}
-              <div className="bg-[#F3F4F6] border border-slate-200/80 rounded-2xl p-3.5 space-y-3">
-                <div className="flex items-center justify-between pb-2 border-b border-slate-200/80">
-                  <div className="flex items-center gap-2 text-xs font-bold text-slate-800">
-                    <span className="w-2 h-2 rounded-full bg-slate-400"></span>
+              <div className="bg-m3-surface-container-low border border-m3-outline-variant/80 rounded-2xl p-3.5 space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b border-m3-outline-variant/80">
+                  <div className="flex items-center gap-2 text-xs font-bold text-m3-on-surface">
+                    <span className="w-2 h-2 rounded-full bg-m3-outline-variant"></span>
                     <span>2. DRIVER ALLOCATED</span>
                   </div>
-                  <span className="px-2.5 py-0.5 rounded-full bg-white text-slate-700 text-xs font-bold shadow-2xs border border-slate-200/80">
+                  <span className="px-2.5 py-0.5 rounded-full bg-white text-m3-on-surface-variant text-xs font-bold shadow-2xs border border-m3-outline-variant/80">
                     {kanban.assigned.length}
                   </span>
                 </div>
 
                 <div className="space-y-3 min-h-[420px]">
                   {kanban.assigned.length === 0 ? (
-                    <div className="p-8 text-center text-slate-400 text-xs font-medium">No trips allocated yet</div>
+                    <div className="p-8 text-center text-m3-outline-variant text-xs font-medium">No trips allocated yet</div>
                   ) : (
                     kanban.assigned.map(b => (
-                    <div key={b.bookingId} className="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all space-y-3">
+                    <div key={b.bookingId} className="bg-white rounded-xl p-4 border border-m3-outline-variant/80 shadow-xs hover:border-m3-outline-variant transition-all space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-800 font-mono-code text-[11px] font-bold">
+                        <span className="px-2 py-0.5 rounded-md bg-m3-surface-container text-m3-on-surface font-mono-code text-[11px] font-bold">
                           {b.bookingId}
                         </span>
-                        <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-[10px] font-bold">
+                        <span className="px-2 py-0.5 rounded-full bg-m3-surface-container text-m3-on-surface-variant border border-m3-outline-variant text-[10px] font-bold">
                           ALLOCATED
                         </span>
                       </div>
                       <div>
-                        <p className="text-sm font-bold text-slate-900 leading-tight">{b.guestNamePhone}</p>
-                        <p className="text-xs text-slate-600 mt-1 font-medium flex items-center gap-1">
-                          <span className="material-symbols-outlined text-[15px] text-slate-500">directions_car</span>
+                        <p className="text-sm font-bold text-m3-on-surface leading-tight">{b.guestNamePhone}</p>
+                        <p className="text-xs text-m3-on-surface-variant mt-1 font-medium flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[15px] text-m3-outline">directions_car</span>
                           {b.assignedChauffeur}
                         </p>
                       </div>
@@ -1266,7 +1266,7 @@ export default function AdminDashboard() {
                           href={getDriverManifestWhatsapp(b)}
                           target="_blank"
                           rel="noreferrer"
-                          className="flex items-center justify-center gap-1 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200/80 text-xs font-bold transition-colors"
+                          className="flex items-center justify-center gap-1 py-1.5 rounded-full bg-m3-success-container/40 hover:bg-m3-success-container/70 text-m3-on-success-container border border-m3-success/30/80 text-xs font-bold transition-colors"
                           title="Send manifest to driver via WhatsApp"
                         >
                           <span className="material-symbols-outlined text-[14px]">send</span>
@@ -1276,7 +1276,7 @@ export default function AdminDashboard() {
                           href={getGuestConfirmationWhatsapp(b)}
                           target="_blank"
                           rel="noreferrer"
-                          className="flex items-center justify-center gap-1 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200/80 text-xs font-bold transition-colors"
+                          className="flex items-center justify-center gap-1 py-1.5 rounded-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant/80 text-xs font-bold transition-colors"
                           title="Send cab & driver details to customer via WhatsApp"
                         >
                           <span className="material-symbols-outlined text-[14px]">chat</span>
@@ -1286,7 +1286,7 @@ export default function AdminDashboard() {
 
                       <button
                         onClick={() => updateBookingStatus(b.bookingId, { manifestStatus: 'In Transit' })}
-                        className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-full border border-slate-200/80 transition-colors flex items-center justify-center gap-1.5"
+                        className="w-full py-2 bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface font-bold text-xs rounded-full border border-m3-outline-variant/80 transition-colors flex items-center justify-center gap-1.5"
                       >
                         <span className="material-symbols-outlined text-[15px]">play_arrow</span>
                         MARK TRIP STARTED
@@ -1298,37 +1298,37 @@ export default function AdminDashboard() {
               </div>
 
               {/* Column 3: In Transit / On Road */}
-              <div className="bg-[#F3F4F6] border border-slate-200/80 rounded-2xl p-3.5 space-y-3">
-                <div className="flex items-center justify-between pb-2 border-b border-slate-200/80">
-                  <div className="flex items-center gap-2 text-xs font-bold text-slate-800">
-                    <span className="w-2 h-2 rounded-full bg-slate-400"></span>
+              <div className="bg-m3-surface-container-low border border-m3-outline-variant/80 rounded-2xl p-3.5 space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b border-m3-outline-variant/80">
+                  <div className="flex items-center gap-2 text-xs font-bold text-m3-on-surface">
+                    <span className="w-2 h-2 rounded-full bg-m3-outline-variant"></span>
                     <span>3. ON HIGHWAY / ROLLING</span>
                   </div>
-                  <span className="px-2.5 py-0.5 rounded-full bg-white text-slate-700 text-xs font-bold shadow-2xs border border-slate-200/80">
+                  <span className="px-2.5 py-0.5 rounded-full bg-white text-m3-on-surface-variant text-xs font-bold shadow-2xs border border-m3-outline-variant/80">
                     {kanban.inTransit.length}
                   </span>
                 </div>
 
                 <div className="space-y-3 min-h-[420px]">
                   {kanban.inTransit.length === 0 ? (
-                    <div className="p-8 text-center text-slate-400 text-xs font-medium">No cabs on highway</div>
+                    <div className="p-8 text-center text-m3-outline-variant text-xs font-medium">No cabs on highway</div>
                   ) : (
                     kanban.inTransit.map(b => (
-                    <div key={b.bookingId} className="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all space-y-3">
+                    <div key={b.bookingId} className="bg-white rounded-xl p-4 border border-m3-outline-variant/80 shadow-xs hover:border-m3-outline-variant transition-all space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-800 font-mono-code text-[11px] font-bold">
+                        <span className="px-2 py-0.5 rounded-md bg-m3-surface-container text-m3-on-surface font-mono-code text-[11px] font-bold">
                           {b.bookingId}
                         </span>
-                        <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold border border-slate-200">
+                        <span className="px-2 py-0.5 rounded-full bg-m3-surface-container text-m3-on-surface-variant text-[10px] font-bold border border-m3-outline-variant">
                           ON ROAD
                         </span>
                       </div>
-                      <p className="text-sm font-bold text-slate-900">{b.guestNamePhone}</p>
-                      <p className="text-xs text-slate-600 font-medium">{b.assignedChauffeur}</p>
+                      <p className="text-sm font-bold text-m3-on-surface">{b.guestNamePhone}</p>
+                      <p className="text-xs text-m3-on-surface-variant font-medium">{b.assignedChauffeur}</p>
                       
                       <button
                         onClick={() => openDutySlipForBooking(b)}
-                        className="w-full mt-2 py-2 rounded-full bg-[#1E252D] hover:bg-[#111827] text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-xs"
+                        className="w-full mt-2 py-2 rounded-full bg-m3-primary hover:bg-m3-inverse-surface text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-xs"
                       >
                         <span className="material-symbols-outlined text-[15px]">receipt_long</span>
                         GENERATE DUTY SLIP
@@ -1340,33 +1340,33 @@ export default function AdminDashboard() {
               </div>
 
               {/* Column 4: Duty Slip Pending Settlement */}
-              <div className="bg-[#F3F4F6] border border-slate-200/80 rounded-2xl p-3.5 space-y-3">
-                <div className="flex items-center justify-between pb-2 border-b border-slate-200/80">
-                  <div className="flex items-center gap-2 text-xs font-bold text-slate-800">
-                    <span className="w-2 h-2 rounded-full bg-slate-400"></span>
+              <div className="bg-m3-surface-container-low border border-m3-outline-variant/80 rounded-2xl p-3.5 space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b border-m3-outline-variant/80">
+                  <div className="flex items-center gap-2 text-xs font-bold text-m3-on-surface">
+                    <span className="w-2 h-2 rounded-full bg-m3-outline-variant"></span>
                     <span>4. DUTY SLIP PENDING</span>
                   </div>
-                  <span className="px-2.5 py-0.5 rounded-full bg-white text-slate-700 text-xs font-bold shadow-2xs border border-slate-200/80">
+                  <span className="px-2.5 py-0.5 rounded-full bg-white text-m3-on-surface-variant text-xs font-bold shadow-2xs border border-m3-outline-variant/80">
                     {kanban.slipPending.length}
                   </span>
                 </div>
 
                 <div className="space-y-3 min-h-[420px]">
                   {kanban.slipPending.length === 0 ? (
-                    <div className="p-8 text-center text-slate-400 text-xs font-medium">No pending duty slips</div>
+                    <div className="p-8 text-center text-m3-outline-variant text-xs font-medium">No pending duty slips</div>
                   ) : (
                     kanban.slipPending.map(b => (
-                    <div key={b.bookingId} className="bg-white rounded-xl p-4 border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all space-y-3">
+                    <div key={b.bookingId} className="bg-white rounded-xl p-4 border border-m3-outline-variant/80 shadow-xs hover:border-m3-outline-variant transition-all space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-800 font-mono-code text-[11px] font-bold">
+                        <span className="px-2 py-0.5 rounded-md bg-m3-surface-container text-m3-on-surface font-mono-code text-[11px] font-bold">
                           {b.bookingId}
                         </span>
-                        <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold border border-slate-200">
+                        <span className="px-2 py-0.5 rounded-full bg-m3-surface-container text-m3-on-surface-variant text-[10px] font-bold border border-m3-outline-variant">
                           SLIP RECORDED
                         </span>
                       </div>
-                      <p className="text-sm font-bold text-slate-900">{b.guestNamePhone}</p>
-                      <div className="text-xs text-slate-600 bg-slate-50 p-2 rounded-lg border border-slate-100 flex justify-between">
+                      <p className="text-sm font-bold text-m3-on-surface">{b.guestNamePhone}</p>
+                      <div className="text-xs text-m3-on-surface-variant bg-m3-surface-container-low p-2 rounded-lg border border-m3-outline-variant/40 flex justify-between">
                         <span>Fare: ₹{b.terminalFare}</span>
                         <span>Payout: ₹{b.chauffeurPayout}</span>
                       </div>
@@ -1385,7 +1385,7 @@ export default function AdminDashboard() {
                           });
                           setActiveTab('khata');
                         }}
-                        className="w-full py-2 bg-[#1E252D] hover:bg-[#111827] text-white font-bold text-xs rounded-full shadow-xs transition-colors flex items-center justify-center gap-1.5"
+                        className="w-full py-2 bg-m3-primary hover:bg-m3-inverse-surface text-white font-bold text-xs rounded-full shadow-xs transition-colors flex items-center justify-center gap-1.5"
                       >
                         <span className="material-symbols-outlined text-[15px]">payments</span>
                         RECONCILE IN KHATA
@@ -1397,35 +1397,35 @@ export default function AdminDashboard() {
               </div>
 
               {/* Column 5: Settled & Closed */}
-              <div className="bg-[#F3F4F6] border border-slate-200/80 rounded-2xl p-3.5 space-y-3">
-                <div className="flex items-center justify-between pb-2 border-b border-slate-200/80">
-                  <div className="flex items-center gap-2 text-xs font-bold text-slate-800">
-                    <span className="w-2 h-2 rounded-full bg-slate-400"></span>
+              <div className="bg-m3-surface-container-low border border-m3-outline-variant/80 rounded-2xl p-3.5 space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b border-m3-outline-variant/80">
+                  <div className="flex items-center gap-2 text-xs font-bold text-m3-on-surface">
+                    <span className="w-2 h-2 rounded-full bg-m3-outline-variant"></span>
                     <span>5. SETTLED & CLOSED</span>
                   </div>
-                  <span className="px-2.5 py-0.5 rounded-full bg-white text-slate-700 text-xs font-bold shadow-2xs border border-slate-200/80">
+                  <span className="px-2.5 py-0.5 rounded-full bg-white text-m3-on-surface-variant text-xs font-bold shadow-2xs border border-m3-outline-variant/80">
                     {kanban.settled.length}
                   </span>
                 </div>
 
                 <div className="space-y-3 min-h-[420px]">
                   {kanban.settled.length === 0 ? (
-                    <div className="p-8 text-center text-slate-400 text-xs font-medium">No settled trips yet</div>
+                    <div className="p-8 text-center text-m3-outline-variant text-xs font-medium">No settled trips yet</div>
                   ) : (
                     kanban.settled.map(b => (
-                    <div key={b.bookingId} className="bg-white/95 rounded-xl p-3.5 border border-slate-200/80 shadow-xs space-y-2 opacity-85 hover:opacity-100 transition-opacity">
+                    <div key={b.bookingId} className="bg-white/95 rounded-xl p-3.5 border border-m3-outline-variant/80 shadow-xs space-y-2 opacity-85 hover:opacity-100 transition-opacity">
                       <div className="flex items-center justify-between">
-                        <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-mono-code text-[11px] font-bold">
+                        <span className="px-2 py-0.5 rounded-md bg-m3-surface-container text-m3-on-surface-variant font-mono-code text-[11px] font-bold">
                           {b.bookingId}
                         </span>
-                        <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold border border-slate-200">
+                        <span className="px-2 py-0.5 rounded-full bg-m3-surface-container text-m3-on-surface-variant text-[10px] font-bold border border-m3-outline-variant">
                           SETTLED
                         </span>
                       </div>
-                      <p className="text-xs font-bold text-slate-800">{b.guestNamePhone.split('(')[0]}</p>
-                      <div className="flex items-center justify-between text-xs text-slate-600 pt-1 border-t border-slate-100">
+                      <p className="text-xs font-bold text-m3-on-surface">{b.guestNamePhone.split('(')[0]}</p>
+                      <div className="flex items-center justify-between text-xs text-m3-on-surface-variant pt-1 border-t border-m3-outline-variant/40">
                         <span>Agency Margin:</span>
-                        <strong className="text-slate-900 font-bold">₹{b.companyMargin}</strong>
+                        <strong className="text-m3-on-surface font-bold">₹{b.companyMargin}</strong>
                       </div>
                     </div>
                   ))
@@ -1444,27 +1444,27 @@ export default function AdminDashboard() {
           <div className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h2 className="text-base font-extrabold text-[#111827] tracking-tight">Website Calculator Leads Funnel</h2>
-                <p className="text-xs text-slate-500">Visitors who calculated fares on your website. Call or WhatsApp within 3 mins to close.</p>
+                <h2 className="text-base font-extrabold text-m3-on-surface tracking-tight">Website Calculator Leads Funnel</h2>
+                <p className="text-xs text-m3-outline">Visitors who calculated fares on your website. Call or WhatsApp within 3 mins to close.</p>
               </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setIsQuickCallModalOpen(true)}
-                  className="px-4 py-2 bg-[#1E252D] hover:bg-[#111827] text-white rounded-full text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
+                  className="px-4 py-2 bg-m3-primary hover:bg-m3-inverse-surface text-white rounded-full text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
                 >
                   <span className="material-symbols-outlined text-[16px]">chat</span>
                   + LOG INCOMING LEAD
                 </button>
-                <span className="text-xs font-semibold px-3 py-1 bg-white border border-slate-200 rounded-full shadow-xs">
-                  Total Leads: <strong className="text-[#1E252D]">{leads.length}</strong>
+                <span className="text-xs font-semibold px-3 py-1 bg-white border border-m3-outline-variant rounded-full shadow-xs">
+                  Total Leads: <strong className="text-m3-primary">{leads.length}</strong>
                 </span>
               </div>
             </div>
 
-            <div className="bg-white border border-slate-200/90 rounded-2xl shadow-sm overflow-hidden">
+            <div className="bg-white border border-m3-outline-variant/90 rounded-2xl shadow-sm overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs whitespace-nowrap">
-                  <thead className="bg-[#F8F9FA] text-slate-600 font-bold uppercase text-[11px] border-b border-slate-200">
+                  <thead className="bg-m3-surface text-m3-on-surface-variant font-bold uppercase text-[11px] border-b border-m3-outline-variant">
                     <tr>
                       <th className="py-3 px-4">Quote Ref</th>
                       <th className="py-3 px-4">Timestamp</th>
@@ -1476,60 +1476,60 @@ export default function AdminDashboard() {
                       <th className="py-3 px-4 text-right">Owner Action</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 text-slate-700">
+                  <tbody className="divide-y divide-m3-outline-variant/40 text-m3-on-surface-variant">
                     {filteredLeads.length === 0 ? (
                       <tr>
-                        <td colSpan={8} className="py-8 text-center text-slate-400 font-medium">
+                        <td colSpan={8} className="py-8 text-center text-m3-outline-variant font-medium">
                           No leads matching "{searchQuery}"
                         </td>
                       </tr>
                     ) : (
                       filteredLeads.map(lead => (
-                      <tr key={lead.quoteId} className="hover:bg-slate-50/80 transition-colors">
-                        <td className="py-3 px-4 font-mono-code font-bold text-[#1E252D]">
+                      <tr key={lead.quoteId} className="hover:bg-m3-surface-container-low/80 transition-colors">
+                        <td className="py-3 px-4 font-mono-code font-bold text-m3-primary">
                           {lead.quoteId.startsWith('#WA-') || lead.calculatorEngine?.includes('WhatsApp') || lead.sourcePage?.includes('WhatsApp') ? (
-                            <span className="inline-flex items-center gap-1 text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 text-xs font-bold">
-                              <span className="material-symbols-outlined text-[14px] text-emerald-600">chat</span>
+                            <span className="inline-flex items-center gap-1 text-m3-on-success-container bg-m3-success-container/40 px-2 py-0.5 rounded-md border border-m3-success/30 text-xs font-bold">
+                              <span className="material-symbols-outlined text-[14px] text-m3-success">chat</span>
                               {lead.quoteId}
                             </span>
                           ) : lead.quoteId.startsWith('#CALL-') ? (
-                            <span className="inline-flex items-center gap-1 text-amber-800 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200 text-xs font-bold">
-                              <span className="material-symbols-outlined text-[14px] text-amber-600">call</span>
+                            <span className="inline-flex items-center gap-1 text-m3-on-tertiary-container bg-m3-tertiary-container/30 px-2 py-0.5 rounded-md border border-m3-tertiary/30 text-xs font-bold">
+                              <span className="material-symbols-outlined text-[14px] text-m3-tertiary">call</span>
                               {lead.quoteId}
                             </span>
                           ) : (
                             <span>{lead.quoteId}</span>
                           )}
                         </td>
-                        <td className="py-3 px-4 text-slate-500">{lead.timestamp}</td>
+                        <td className="py-3 px-4 text-m3-outline">{lead.timestamp}</td>
                         <td className="py-3 px-4">
                           <div className="flex flex-col">
                             <div>
-                              <span className="font-bold text-slate-900">{lead.pickup}</span>
-                              <span className="text-slate-400 mx-2">➔</span>
-                              <span className="font-bold text-amber-700">{lead.drop}</span>
+                              <span className="font-bold text-m3-on-surface">{lead.pickup}</span>
+                              <span className="text-m3-outline-variant mx-2">➔</span>
+                              <span className="font-bold text-m3-tertiary">{lead.drop}</span>
                             </div>
                             {lead.metadata && lead.metadata !== 'None' && (
-                              <span className="text-[11px] text-slate-500 font-normal truncate max-w-sm mt-0.5" title={lead.metadata}>
+                              <span className="text-[11px] text-m3-outline font-normal truncate max-w-sm mt-0.5" title={lead.metadata}>
                                 {lead.metadata}
                               </span>
                             )}
                           </div>
                         </td>
                         <td className="py-3 px-4">
-                          <span className="px-2.5 py-0.5 rounded-full bg-slate-100 border border-slate-200 font-medium text-slate-800">
+                          <span className="px-2.5 py-0.5 rounded-full bg-m3-surface-container border border-m3-outline-variant font-medium text-m3-on-surface">
                             {lead.vehicle || 'Sedan'}
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-slate-500">{lead.distanceKm} km</td>
-                        <td className="py-3 px-4 text-base font-extrabold text-[#111827]">₹{lead.estimatedFare}</td>
+                        <td className="py-3 px-4 text-m3-outline">{lead.distanceKm} km</td>
+                        <td className="py-3 px-4 text-base font-extrabold text-m3-on-surface">₹{lead.estimatedFare}</td>
                         <td className="py-3 px-4">
                           <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                            lead.status === 'Converted' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' :
-                            lead.status?.includes('Quoted') ? 'bg-sky-50 text-sky-800 border border-sky-200' :
-                            lead.status?.includes('Call') ? 'bg-amber-50 text-amber-800 border border-amber-200' :
-                            lead.status?.includes('WhatsApp') || lead.calculatorEngine?.includes('WhatsApp') || lead.sourcePage?.includes('WhatsApp') || lead.status === 'Active Enquiry' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' :
-                            'bg-slate-100 text-slate-700 border border-slate-200'
+                            lead.status === 'Converted' ? 'bg-m3-success-container/40 text-m3-on-success-container border border-m3-success/30' :
+                            lead.status?.includes('Quoted') ? 'bg-m3-secondary-container/40 text-m3-on-secondary-container border border-m3-secondary/30' :
+                            lead.status?.includes('Call') ? 'bg-m3-tertiary-container/30 text-m3-on-tertiary-container border border-m3-tertiary/30' :
+                            lead.status?.includes('WhatsApp') || lead.calculatorEngine?.includes('WhatsApp') || lead.sourcePage?.includes('WhatsApp') || lead.status === 'Active Enquiry' ? 'bg-m3-success-container/40 text-m3-on-success-container border border-m3-success/30' :
+                            'bg-m3-surface-container text-m3-on-surface-variant border border-m3-outline-variant'
                           }`}>
                             {lead.status}
                           </span>
@@ -1539,7 +1539,7 @@ export default function AdminDashboard() {
                             href={getLeadQuoteWhatsapp(lead)}
                             target="_blank"
                             rel="noreferrer"
-                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#25D366] hover:bg-[#20BD5A] text-white font-bold text-xs shadow-xs transition-colors"
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-m3-success hover:bg-m3-success text-white font-bold text-xs shadow-xs transition-colors"
                           >
                             <span className="material-symbols-outlined text-[14px]">send</span>
                             WHATSAPP QUOTE
@@ -1547,7 +1547,7 @@ export default function AdminDashboard() {
                           {lead.status !== 'Converted' && (
                             <button
                               onClick={() => convertLeadToBooking(lead)}
-                              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#1E252D] hover:bg-[#111827] text-white font-bold text-xs shadow-xs transition-colors"
+                              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-m3-primary hover:bg-m3-inverse-surface text-white font-bold text-xs shadow-xs transition-colors"
                             >
                               <span className="material-symbols-outlined text-[14px]">add_task</span>
                               CONVERT TO BOOKING
@@ -1570,12 +1570,12 @@ export default function AdminDashboard() {
           <div className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h2 className="text-base font-extrabold text-[#111827] tracking-tight">Digital Duty Slip (Trip Sheet) Studio</h2>
-                <p className="text-xs text-slate-500">Standardized transport duty slips capturing start/end KM, tolls, and guest invoicing.</p>
+                <h2 className="text-base font-extrabold text-m3-on-surface tracking-tight">Digital Duty Slip (Trip Sheet) Studio</h2>
+                <p className="text-xs text-m3-outline">Standardized transport duty slips capturing start/end KM, tolls, and guest invoicing.</p>
               </div>
               <button
                 onClick={() => setIsDutySlipModalOpen(true)}
-                className="px-5 py-2.5 bg-[#1E252D] hover:bg-[#111827] text-white rounded-full text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all"
+                className="px-5 py-2.5 bg-m3-primary hover:bg-m3-inverse-surface text-white rounded-full text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all"
               >
                 <span className="material-symbols-outlined text-[16px]">add</span>
                 CREATE STANDALONE DUTY SLIP
@@ -1584,55 +1584,55 @@ export default function AdminDashboard() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {dutySlips.length === 0 ? (
-                <div className="col-span-full p-12 text-center text-slate-400 text-xs bg-white border border-slate-200 rounded-2xl shadow-xs">
+                <div className="col-span-full p-12 text-center text-m3-outline-variant text-xs bg-white border border-m3-outline-variant rounded-2xl shadow-xs">
                   No duty slips generated yet. Click "GENERATE DUTY SLIP" on any active trip in the Dispatch Kanban.
                 </div>
               ) : (
                 dutySlips.map(slip => (
-                  <div key={slip.slipId} className="bg-white border border-slate-200/90 rounded-2xl p-5 space-y-3 text-xs shadow-xs hover:shadow-md transition-shadow">
-                    <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+                  <div key={slip.slipId} className="bg-white border border-m3-outline-variant/90 rounded-2xl p-5 space-y-3 text-xs shadow-xs hover:shadow-md transition-shadow">
+                    <div className="flex items-center justify-between pb-2 border-b border-m3-outline-variant/40">
                       <div>
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">DUTY SLIP REF</span>
-                        <h3 className="text-slate-900 font-mono-code font-bold text-sm">{slip.slipId}</h3>
+                        <span className="text-[10px] font-bold text-m3-outline-variant uppercase tracking-wide">DUTY SLIP REF</span>
+                        <h3 className="text-m3-on-surface font-mono-code font-bold text-sm">{slip.slipId}</h3>
                       </div>
-                      <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-bold border border-emerald-200">
+                      <span className="px-2.5 py-0.5 rounded-full bg-m3-success-container/40 text-m3-on-success-container text-[10px] font-bold border border-m3-success/30">
                         FINALIZED
                       </span>
                     </div>
 
                     <div className="space-y-1">
-                      <p className="text-slate-900 font-bold text-sm">{slip.guestName}</p>
-                      <p className="text-slate-500 text-xs">
-                        Chauffeur: <strong className="text-slate-800">{slip.chauffeurName}</strong> ({slip.vehiclePlate})
+                      <p className="text-m3-on-surface font-bold text-sm">{slip.guestName}</p>
+                      <p className="text-m3-outline text-xs">
+                        Chauffeur: <strong className="text-m3-on-surface">{slip.chauffeurName}</strong> ({slip.vehiclePlate})
                       </p>
                     </div>
 
-                    <div className="bg-[#F9FAFB] rounded-xl p-3 space-y-1.5 text-xs text-slate-700 border border-slate-100">
+                    <div className="bg-m3-surface rounded-xl p-3 space-y-1.5 text-xs text-m3-on-surface-variant border border-m3-outline-variant/40">
                       <div className="flex justify-between">
-                        <span className="text-slate-500">Start KM ➔ End KM:</span>
-                        <strong className="text-slate-900 font-mono-code">{slip.startKm} ➔ {slip.endKm}</strong>
+                        <span className="text-m3-outline">Start KM ➔ End KM:</span>
+                        <strong className="text-m3-on-surface font-mono-code">{slip.startKm} ➔ {slip.endKm}</strong>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-500">Total Travelled:</span>
+                        <span className="text-m3-outline">Total Travelled:</span>
                         <strong>{slip.totalKm} km ({slip.extraKm} km Extra)</strong>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-500">Base Package Fare:</span>
+                        <span className="text-m3-outline">Base Package Fare:</span>
                         <span>₹{slip.basePackageFare}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-500">Tolls & State Permit:</span>
+                        <span className="text-m3-outline">Tolls & State Permit:</span>
                         <span>₹{slip.tollsFastag + slip.statePermit}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-500">Driver Daily Bata:</span>
+                        <span className="text-m3-outline">Driver Daily Bata:</span>
                         <span>₹{slip.driverBata}</span>
                       </div>
-                      <div className="flex justify-between border-t border-slate-200 pt-1.5 font-bold">
+                      <div className="flex justify-between border-t border-m3-outline-variant pt-1.5 font-bold">
                         <span>Gross Bill:</span>
                         <span>₹{slip.grossFare}</span>
                       </div>
-                      <div className="flex justify-between font-extrabold text-emerald-700 text-sm">
+                      <div className="flex justify-between font-extrabold text-m3-success text-sm">
                         <span>Balance Collected:</span>
                         <span>₹{slip.netBalanceToCollect}</span>
                       </div>
@@ -1643,14 +1643,14 @@ export default function AdminDashboard() {
                         href={`https://wa.me/?text=${encodeURIComponent(slip.whatsappSummary || '')}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="flex-1 py-2 bg-[#25D366] hover:bg-[#20BD5A] text-white font-bold rounded-full text-center flex items-center justify-center gap-1 shadow-xs transition-colors"
+                        className="flex-1 py-2 bg-m3-success hover:bg-m3-success text-white font-bold rounded-full text-center flex items-center justify-center gap-1 shadow-xs transition-colors"
                       >
                         <span className="material-symbols-outlined text-[15px]">share</span>
                         WHATSAPP RECEIPT
                       </a>
                       <button
                         onClick={() => window.print()}
-                        className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded-full transition-colors"
+                        className="px-3.5 py-2 bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface-variant border border-m3-outline-variant rounded-full transition-colors"
                         title="Print Trip Sheet"
                       >
                         <span className="material-symbols-outlined text-[16px]">print</span>
@@ -1670,19 +1670,19 @@ export default function AdminDashboard() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
             {/* Settlement Calculator Form */}
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-6 space-y-4 shadow-sm text-xs">
-              <div className="border-b border-slate-100 pb-3">
-                <h2 className="text-base font-extrabold text-[#111827] tracking-tight">Driver Khata Reconciler</h2>
-                <p className="text-xs text-slate-500">Calculate net cash driver owes office or vice versa</p>
+            <div className="bg-white border border-m3-outline-variant/90 rounded-2xl p-6 space-y-4 shadow-sm text-xs">
+              <div className="border-b border-m3-outline-variant/40 pb-3">
+                <h2 className="text-base font-extrabold text-m3-on-surface tracking-tight">Driver Khata Reconciler</h2>
+                <p className="text-xs text-m3-outline">Calculate net cash driver owes office or vice versa</p>
               </div>
 
               <form onSubmit={handleKhataSubmit} className="space-y-3.5">
                 <div>
-                  <label className="font-semibold text-slate-600">Chauffeur:</label>
+                  <label className="font-semibold text-m3-on-surface-variant">Chauffeur:</label>
                   <select
                     value={khataForm.chauffeurName}
                     onChange={(e) => setKhataForm(prev => ({ ...prev, chauffeurName: e.target.value }))}
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 font-medium focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-on-surface font-medium focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                   >
                     <option value="">-- Select Chauffeur --</option>
                     {chauffeurs.map(c => (
@@ -1692,46 +1692,46 @@ export default function AdminDashboard() {
                 </div>
 
                 <div>
-                  <label className="font-semibold text-slate-600">Booking / Trip Reference:</label>
+                  <label className="font-semibold text-m3-on-surface-variant">Booking / Trip Reference:</label>
                   <input
                     type="text"
                     value={khataForm.bookingId}
                     onChange={(e) => setKhataForm(prev => ({ ...prev, bookingId: e.target.value }))}
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 font-mono-code focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-on-surface font-mono-code focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                     placeholder="e.g. #KT-101"
                   />
                 </div>
 
                 <div>
-                  <label className="font-semibold text-slate-600">Total Cash/UPI Collected from Guest (₹):</label>
+                  <label className="font-semibold text-m3-on-surface-variant">Total Cash/UPI Collected from Guest (₹):</label>
                   <input
                     type="number"
                     value={khataForm.guestCashCollected}
                     onChange={(e) => setKhataForm(prev => ({ ...prev, guestCashCollected: e.target.value === '' ? '' : Number(e.target.value) }))}
                     placeholder="0"
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 font-extrabold text-base focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-on-surface font-extrabold text-base focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="font-semibold text-slate-600">Driver Payout (₹):</label>
+                    <label className="font-semibold text-m3-on-surface-variant">Driver Payout (₹):</label>
                     <input
                       type="number"
                       value={khataForm.driverAgreedPayout}
                       onChange={(e) => setKhataForm(prev => ({ ...prev, driverAgreedPayout: e.target.value === '' ? '' : Number(e.target.value) }))}
                       placeholder="0"
-                      className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                      className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                     />
                   </div>
                   <div>
-                    <label className="font-semibold text-slate-600">Tolls Paid (₹):</label>
+                    <label className="font-semibold text-m3-on-surface-variant">Tolls Paid (₹):</label>
                     <input
                       type="number"
                       value={khataForm.tollsPaidByDriver}
                       onChange={(e) => setKhataForm(prev => ({ ...prev, tollsPaidByDriver: e.target.value === '' ? '' : Number(e.target.value) }))}
                       placeholder="0"
-                      className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                      className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                     />
                   </div>
                 </div>
@@ -1739,10 +1739,10 @@ export default function AdminDashboard() {
                 {/* Net Closing Position Box */}
                 <div className={`p-4 rounded-2xl border ${
                   !khataForm.guestCashCollected && !khataForm.driverAgreedPayout && !khataForm.tollsPaidByDriver
-                    ? 'bg-slate-50 border-slate-200 text-slate-700'
+                    ? 'bg-m3-surface-container-low border-m3-outline-variant text-m3-on-surface-variant'
                     : computedKhataNet >= 0
-                      ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
-                      : 'bg-rose-50 border-rose-200 text-rose-900'
+                      ? 'bg-m3-success-container/40 border-m3-success/30 text-m3-on-success-container'
+                      : 'bg-m3-error-container/30 border-m3-error/30 text-m3-on-error-container'
                 }`}>
                   <div className="text-[11px] font-bold uppercase tracking-wider">NET CLOSING POSITION:</div>
                   <div className="text-xl font-extrabold mt-1">
@@ -1757,19 +1757,19 @@ export default function AdminDashboard() {
                 </div>
 
                 <div>
-                  <label className="font-semibold text-slate-600">UPI Ref / Notes:</label>
+                  <label className="font-semibold text-m3-on-surface-variant">UPI Ref / Notes:</label>
                   <input
                     type="text"
                     value={khataForm.upiRef}
                     onChange={(e) => setKhataForm(prev => ({ ...prev, upiRef: e.target.value }))}
                     placeholder="e.g. GPay UPI/624910248"
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-3 bg-[#1E252D] hover:bg-[#111827] text-white font-bold rounded-full uppercase shadow-sm transition-all"
+                  className="w-full py-3 bg-m3-primary hover:bg-m3-inverse-surface text-white font-bold rounded-full uppercase shadow-sm transition-all"
                 >
                   Record Settlement & Close
                 </button>
@@ -1777,15 +1777,15 @@ export default function AdminDashboard() {
             </div>
 
             {/* Historical Settlements Table */}
-            <div className="lg:col-span-2 bg-white border border-slate-200/90 rounded-2xl p-6 space-y-4 shadow-sm text-xs">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h2 className="text-base font-extrabold text-[#111827] tracking-tight">Settlement History Ledger</h2>
-                <span className="text-slate-400 text-xs font-medium">Recent Khata Closures</span>
+            <div className="lg:col-span-2 bg-white border border-m3-outline-variant/90 rounded-2xl p-6 space-y-4 shadow-sm text-xs">
+              <div className="flex items-center justify-between border-b border-m3-outline-variant/40 pb-3">
+                <h2 className="text-base font-extrabold text-m3-on-surface tracking-tight">Settlement History Ledger</h2>
+                <span className="text-m3-outline-variant text-xs font-medium">Recent Khata Closures</span>
               </div>
 
               <div className="overflow-x-auto">
                 <table className="w-full text-left whitespace-nowrap">
-                  <thead className="bg-[#F8F9FA] text-slate-600 uppercase text-[11px] font-bold border-b border-slate-200">
+                  <thead className="bg-m3-surface text-m3-on-surface-variant uppercase text-[11px] font-bold border-b border-m3-outline-variant">
                     <tr>
                       <th className="p-3">Date/Time</th>
                       <th className="p-3">Chauffeur</th>
@@ -1796,17 +1796,17 @@ export default function AdminDashboard() {
                       <th className="p-3">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 text-slate-700">
+                  <tbody className="divide-y divide-m3-outline-variant/40 text-m3-on-surface-variant">
                     {settlements.map(s => (
-                      <tr key={s.settlementId} className="hover:bg-slate-50/70">
-                        <td className="p-3 text-slate-500">{new Date(s.timestamp).toLocaleString()}</td>
-                        <td className="p-3 font-bold text-slate-900">{s.chauffeurName}</td>
-                        <td className="p-3 font-mono-code font-semibold text-[#1E252D]">{s.bookingId}</td>
-                        <td className="p-3 font-extrabold text-slate-900">₹{s.guestCashCollected}</td>
+                      <tr key={s.settlementId} className="hover:bg-m3-surface-container-low/70">
+                        <td className="p-3 text-m3-outline">{new Date(s.timestamp).toLocaleString()}</td>
+                        <td className="p-3 font-bold text-m3-on-surface">{s.chauffeurName}</td>
+                        <td className="p-3 font-mono-code font-semibold text-m3-primary">{s.bookingId}</td>
+                        <td className="p-3 font-extrabold text-m3-on-surface">₹{s.guestCashCollected}</td>
                         <td className="p-3">₹{s.driverAgreedPayout}</td>
-                        <td className="p-3 font-bold text-emerald-700">₹{s.netOfficeReceivable}</td>
+                        <td className="p-3 font-bold text-m3-success">₹{s.netOfficeReceivable}</td>
                         <td className="p-3">
-                          <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-bold border border-emerald-200">
+                          <span className="px-2.5 py-0.5 rounded-full bg-m3-success-container/40 text-m3-on-success-container text-[10px] font-bold border border-m3-success/30">
                             {s.settlementStatus}
                           </span>
                         </td>
@@ -1827,18 +1827,18 @@ export default function AdminDashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-base font-extrabold text-[#111827] tracking-tight">Fleet & Chauffeur Roster</h2>
-                <p className="text-xs text-slate-500">Track driver availability, vehicle category, and commercial compliance expirations.</p>
+                <h2 className="text-base font-extrabold text-m3-on-surface tracking-tight">Fleet & Chauffeur Roster</h2>
+                <p className="text-xs text-m3-outline">Track driver availability, vehicle category, and commercial compliance expirations.</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {chauffeurs.map(ch => (
-                <div key={ch.name} className="bg-white border border-slate-200/90 rounded-2xl p-5 space-y-3 text-xs shadow-xs hover:shadow-md transition-shadow">
+                <div key={ch.name} className="bg-white border border-m3-outline-variant/90 rounded-2xl p-5 space-y-3 text-xs shadow-xs hover:shadow-md transition-shadow">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h3 className="text-sm font-bold text-slate-900">{ch.name}</h3>
-                      <p className="text-slate-500 text-xs">{ch.phone}</p>
+                      <h3 className="text-sm font-bold text-m3-on-surface">{ch.name}</h3>
+                      <p className="text-m3-outline text-xs">{ch.phone}</p>
                     </div>
                     <select
                       value={ch.status}
@@ -1847,9 +1847,9 @@ export default function AdminDashboard() {
                         setChauffeurs(prev => prev.map(c => c.name === ch.name ? { ...c, status: next } : c));
                       }}
                       className={`text-xs font-bold rounded-full px-3 py-1 border transition-colors ${
-                        ch.status === 'Available' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' :
-                        ch.status === 'On Trip' ? 'bg-amber-50 text-amber-800 border-amber-200' :
-                        'bg-slate-100 text-slate-600 border-slate-200'
+                        ch.status === 'Available' ? 'bg-m3-success-container/40 text-m3-on-success-container border-m3-success/30' :
+                        ch.status === 'On Trip' ? 'bg-m3-tertiary-container/30 text-m3-on-tertiary-container border-m3-tertiary/30' :
+                        'bg-m3-surface-container text-m3-on-surface-variant border-m3-outline-variant'
                       }`}
                     >
                       <option value="Available">Available</option>
@@ -1858,30 +1858,30 @@ export default function AdminDashboard() {
                     </select>
                   </div>
 
-                  <div className="bg-[#F9FAFB] rounded-xl p-3 space-y-1.5 text-xs border border-slate-100">
+                  <div className="bg-m3-surface rounded-xl p-3 space-y-1.5 text-xs border border-m3-outline-variant/40">
                     <div className="flex justify-between">
-                      <span className="text-slate-500">Assigned Vehicle:</span>
-                      <strong className="text-slate-900 font-mono-code">{ch.plate}</strong>
+                      <span className="text-m3-outline">Assigned Vehicle:</span>
+                      <strong className="text-m3-on-surface font-mono-code">{ch.plate}</strong>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-500">Category:</span>
-                      <strong className="text-slate-800">{ch.category}</strong>
+                      <span className="text-m3-outline">Category:</span>
+                      <strong className="text-m3-on-surface">{ch.category}</strong>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-500">Driver Rating:</span>
-                      <span className="text-amber-700 font-bold">★ {ch.rating}</span>
+                      <span className="text-m3-outline">Driver Rating:</span>
+                      <span className="text-m3-tertiary font-bold">★ {ch.rating}</span>
                     </div>
                   </div>
 
                   {/* Compliance Expirations */}
-                  <div className="space-y-1 pt-1 border-t border-slate-100 text-[11px]">
+                  <div className="space-y-1 pt-1 border-t border-m3-outline-variant/40 text-[11px]">
                     <div className="flex justify-between">
-                      <span className="text-slate-500">Fitness Cert (FC):</span>
-                      <span className="text-emerald-700 font-bold">{ch.fcExpiry}</span>
+                      <span className="text-m3-outline">Fitness Cert (FC):</span>
+                      <span className="text-m3-success font-bold">{ch.fcExpiry}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-500">All-India Permit:</span>
-                      <span className="text-emerald-700 font-bold">{ch.permitExpiry}</span>
+                      <span className="text-m3-outline">All-India Permit:</span>
+                      <span className="text-m3-success font-bold">{ch.permitExpiry}</span>
                     </div>
                   </div>
                 </div>
@@ -1897,15 +1897,15 @@ export default function AdminDashboard() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-base font-extrabold text-[#111827] tracking-tight">Tirupati & Pilgrimage Logistics Console</h2>
-                <p className="text-xs text-slate-500">Manage TTD ₹300 SED Darshan slots, Aadhaar KYC verification, and morning departure schedules.</p>
+                <h2 className="text-base font-extrabold text-m3-on-surface tracking-tight">Tirupati & Pilgrimage Logistics Console</h2>
+                <p className="text-xs text-m3-outline">Manage TTD ₹300 SED Darshan slots, Aadhaar KYC verification, and morning departure schedules.</p>
               </div>
             </div>
 
-            <div className="bg-white border border-slate-200/90 rounded-2xl shadow-sm overflow-hidden text-xs">
+            <div className="bg-white border border-m3-outline-variant/90 rounded-2xl shadow-sm overflow-hidden text-xs">
               <div className="overflow-x-auto">
                 <table className="w-full text-left whitespace-nowrap">
-                  <thead className="bg-[#F8F9FA] text-slate-600 uppercase text-[11px] font-bold border-b border-slate-200">
+                  <thead className="bg-m3-surface text-m3-on-surface-variant uppercase text-[11px] font-bold border-b border-m3-outline-variant">
                     <tr>
                       <th className="p-3.5">Booking ID</th>
                       <th className="p-3.5">Guest & Family</th>
@@ -1917,29 +1917,29 @@ export default function AdminDashboard() {
                       <th className="p-3.5 text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 text-slate-700">
+                  <tbody className="divide-y divide-m3-outline-variant/40 text-m3-on-surface-variant">
                     {bookings.filter(b => b.darshanStatus !== 'Unassigned' || b.pickupAddress.toLowerCase().includes('tirupati') || b.bookingId.includes('TPT')).map(b => (
-                      <tr key={b.bookingId} className="hover:bg-slate-50/70">
-                        <td className="p-3.5 font-mono-code font-bold text-[#1E252D]">{b.bookingId}</td>
-                        <td className="p-3.5 font-bold text-slate-900">{b.guestNamePhone}</td>
-                        <td className="p-3.5 text-slate-500">{b.travelDateTime}</td>
+                      <tr key={b.bookingId} className="hover:bg-m3-surface-container-low/70">
+                        <td className="p-3.5 font-mono-code font-bold text-m3-primary">{b.bookingId}</td>
+                        <td className="p-3.5 font-bold text-m3-on-surface">{b.guestNamePhone}</td>
+                        <td className="p-3.5 text-m3-outline">{b.travelDateTime}</td>
                         <td className="p-3.5">{b.partySize}</td>
                         <td className="p-3.5">
                           <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                            b.darshanStatus.includes('Confirmed') ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' :
-                            'bg-amber-50 text-amber-800 border border-amber-200'
+                            b.darshanStatus.includes('Confirmed') ? 'bg-m3-success-container/40 text-m3-on-success-container border border-m3-success/30' :
+                            'bg-m3-tertiary-container/30 text-m3-on-tertiary-container border border-m3-tertiary/30'
                           }`}>
                             {b.darshanStatus}
                           </span>
                         </td>
                         <td className="p-3.5">
                           <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                            b.kycStatus === 'Verified' ? 'bg-emerald-50 text-emerald-800' : 'bg-rose-50 text-rose-800'
+                            b.kycStatus === 'Verified' ? 'bg-m3-success-container/40 text-m3-on-success-container' : 'bg-m3-error-container/30 text-m3-on-error-container'
                           }`}>
                             {b.kycStatus}
                           </span>
                         </td>
-                        <td className="p-3.5 font-semibold text-slate-800">{b.assignedChauffeur}</td>
+                        <td className="p-3.5 font-semibold text-m3-on-surface">{b.assignedChauffeur}</td>
                         <td className="p-3.5 text-right">
                           <button
                             onClick={() => {
@@ -1948,7 +1948,7 @@ export default function AdminDashboard() {
                                 darshanStatus: b.darshanStatus.includes('Confirmed') ? 'In-Process' : 'Confirmed (11:30 AM)'
                               });
                             }}
-                            className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full text-xs font-bold transition-colors"
+                            className="px-3 py-1.5 bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface-variant rounded-full text-xs font-bold transition-colors"
                           >
                             TOGGLE STATUS
                           </button>
@@ -1968,11 +1968,11 @@ export default function AdminDashboard() {
       {/* MODAL: QUICK NEW BOOKING (M3 DIALOG)                            */}
       {/* ============================================================== */}
       {isNewBookingModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 rounded-3xl max-w-lg w-full p-6 space-y-4 text-xs shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base font-extrabold text-[#111827] tracking-tight">Manual Booking Entry</h3>
-              <button onClick={() => setIsNewBookingModalOpen(false)} className="text-slate-400 hover:text-slate-700 p-1">
+        <div className="fixed inset-0 z-50 bg-m3-inverse-surface/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-m3-outline-variant rounded-3xl max-w-lg w-full p-6 space-y-4 text-xs shadow-2xl">
+            <div className="flex items-center justify-between border-b border-m3-outline-variant/40 pb-3">
+              <h3 className="text-base font-extrabold text-m3-on-surface tracking-tight">Manual Booking Entry</h3>
+              <button onClick={() => setIsNewBookingModalOpen(false)} className="text-m3-outline-variant hover:text-m3-on-surface-variant p-1">
                 <span className="material-symbols-outlined text-[20px]">close</span>
               </button>
             </div>
@@ -1980,33 +1980,33 @@ export default function AdminDashboard() {
             <form onSubmit={handleNewBookingSubmit} className="space-y-3.5">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-600">Guest Name:</label>
+                  <label className="font-semibold text-m3-on-surface-variant">Guest Name:</label>
                   <input
                     type="text"
                     required
                     value={newBooking.guestName}
                     onChange={(e) => setNewBooking(prev => ({ ...prev, guestName: e.target.value }))}
                     placeholder="Ramesh Kumar"
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-600">Guest Phone:</label>
+                  <label className="font-semibold text-m3-on-surface-variant">Guest Phone:</label>
                   <input
                     type="text"
                     required
                     value={newBooking.guestPhone}
                     onChange={(e) => setNewBooking(prev => ({ ...prev, guestPhone: e.target.value }))}
                     placeholder="98401 23456"
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                   />
                 </div>
               </div>
 
               <div>
                 <div className="flex items-center justify-between">
-                  <label className="font-semibold text-slate-600">Tour Package Preset (Optional):</label>
-                  <span className="text-[10px] text-emerald-600 font-medium">Auto-fills fare & address</span>
+                  <label className="font-semibold text-m3-on-surface-variant">Tour Package Preset (Optional):</label>
+                  <span className="text-[10px] text-m3-success font-medium">Auto-fills fare & address</span>
                 </div>
                 <select
                   defaultValue=""
@@ -2024,7 +2024,7 @@ export default function AdminDashboard() {
                       }
                     }
                   }}
-                  className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 text-xs font-semibold focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                  className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-on-surface text-xs font-semibold focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                 >
                   <option value="">-- Quick Select Package (Tirupati, Madurai, Pondicherry) --</option>
                   {TOUR_PACKAGES.map(p => (
@@ -2034,49 +2034,49 @@ export default function AdminDashboard() {
               </div>
 
               <div>
-                <label className="font-semibold text-slate-600">Pickup Address:</label>
+                <label className="font-semibold text-m3-on-surface-variant">Pickup Address:</label>
                 <input
                   type="text"
                   required
                   value={newBooking.pickupAddress}
                   onChange={(e) => setNewBooking(prev => ({ ...prev, pickupAddress: e.target.value }))}
                   placeholder="#12, 4th Main Road, Anna Nagar East"
-                  className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                  className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-600">Pickup Date:</label>
+                  <label className="font-semibold text-m3-on-surface-variant">Pickup Date:</label>
                   <input
                     type="text"
                     required
                     value={newBooking.travelDate}
                     onChange={(e) => setNewBooking(prev => ({ ...prev, travelDate: e.target.value }))}
                     placeholder="15-Oct-2026"
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-600">Pickup Time:</label>
+                  <label className="font-semibold text-m3-on-surface-variant">Pickup Time:</label>
                   <input
                     type="text"
                     required
                     value={newBooking.pickupTime}
                     onChange={(e) => setNewBooking(prev => ({ ...prev, pickupTime: e.target.value }))}
                     placeholder="04:30 AM"
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-600">Vehicle Category:</label>
+                  <label className="font-semibold text-m3-on-surface-variant">Vehicle Category:</label>
                   <select
                     value={newBooking.vehicleCategory}
                     onChange={(e) => setNewBooking(prev => ({ ...prev, vehicleCategory: e.target.value }))}
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                   >
                     <option value="Sedan">Sedan (Dzire / Etios)</option>
                     <option value="Ertiga">Ertiga (6 Pax)</option>
@@ -2085,23 +2085,23 @@ export default function AdminDashboard() {
                   </select>
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-600">Terminal Fare (₹):</label>
+                  <label className="font-semibold text-m3-on-surface-variant">Terminal Fare (₹):</label>
                   <input
                     type="number"
                     required
                     value={newBooking.fare}
                     onChange={(e) => setNewBooking(prev => ({ ...prev, fare: e.target.value }))}
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 font-extrabold focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-on-surface font-extrabold focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="font-semibold text-slate-600">Assign Chauffeur (Optional):</label>
+                <label className="font-semibold text-m3-on-surface-variant">Assign Chauffeur (Optional):</label>
                 <select
                   value={newBooking.assignedChauffeur}
                   onChange={(e) => setNewBooking(prev => ({ ...prev, assignedChauffeur: e.target.value }))}
-                  className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900 focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                  className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                 >
                   <option value="Unassigned">Leave Unassigned</option>
                   {chauffeurs.map(c => (
@@ -2114,13 +2114,13 @@ export default function AdminDashboard() {
                 <button
                   type="button"
                   onClick={() => setIsNewBookingModalOpen(false)}
-                  className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-full"
+                  className="px-5 py-2.5 bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface-variant font-semibold rounded-full"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 bg-[#1E252D] hover:bg-[#111827] text-white font-bold rounded-full shadow-sm"
+                  className="px-6 py-2.5 bg-m3-primary hover:bg-m3-inverse-surface text-white font-bold rounded-full shadow-sm"
                 >
                   Save & Dispatch
                 </button>
@@ -2134,11 +2134,11 @@ export default function AdminDashboard() {
       {/* MODAL: DIGITAL DUTY SLIP CREATOR (M3 DIALOG)                    */}
       {/* ============================================================== */}
       {isDutySlipModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 rounded-3xl max-w-xl w-full p-6 space-y-4 text-xs shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base font-extrabold text-[#111827] tracking-tight">Generate Digital Trip Duty Slip</h3>
-              <button onClick={() => setIsDutySlipModalOpen(false)} className="text-slate-400 hover:text-slate-700 p-1">
+        <div className="fixed inset-0 z-50 bg-m3-inverse-surface/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-m3-outline-variant rounded-3xl max-w-xl w-full p-6 space-y-4 text-xs shadow-2xl">
+            <div className="flex items-center justify-between border-b border-m3-outline-variant/40 pb-3">
+              <h3 className="text-base font-extrabold text-m3-on-surface tracking-tight">Generate Digital Trip Duty Slip</h3>
+              <button onClick={() => setIsDutySlipModalOpen(false)} className="text-m3-outline-variant hover:text-m3-on-surface-variant p-1">
                 <span className="material-symbols-outlined text-[20px]">close</span>
               </button>
             </div>
@@ -2146,139 +2146,139 @@ export default function AdminDashboard() {
             <form onSubmit={handleDutySlipSubmit} className="space-y-3.5">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-600">Trip Reference:</label>
+                  <label className="font-semibold text-m3-on-surface-variant">Trip Reference:</label>
                   <input
                     type="text"
                     required
                     value={slipForm.bookingId}
                     onChange={(e) => setSlipForm(prev => ({ ...prev, bookingId: e.target.value }))}
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-[#1E252D] font-mono-code font-bold"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-primary font-mono-code font-bold"
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-600">Guest Name:</label>
+                  <label className="font-semibold text-m3-on-surface-variant">Guest Name:</label>
                   <input
                     type="text"
                     required
                     value={slipForm.guestName}
                     onChange={(e) => setSlipForm(prev => ({ ...prev, guestName: e.target.value }))}
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-on-surface"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-600">Chauffeur:</label>
+                  <label className="font-semibold text-m3-on-surface-variant">Chauffeur:</label>
                   <input
                     type="text"
                     required
                     value={slipForm.chauffeurName}
                     onChange={(e) => setSlipForm(prev => ({ ...prev, chauffeurName: e.target.value }))}
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-on-surface"
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-600">Vehicle Plate:</label>
+                  <label className="font-semibold text-m3-on-surface-variant">Vehicle Plate:</label>
                   <input
                     type="text"
                     required
                     value={slipForm.vehiclePlate}
                     onChange={(e) => setSlipForm(prev => ({ ...prev, vehiclePlate: e.target.value }))}
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2.5 text-slate-900"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-on-surface"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-2.5 bg-[#F9FAFB] p-3 rounded-2xl border border-slate-100">
+              <div className="grid grid-cols-3 gap-2.5 bg-m3-surface p-3 rounded-2xl border border-m3-outline-variant/40">
                 <div>
-                  <label className="font-semibold text-slate-600">Start Odometer:</label>
+                  <label className="font-semibold text-m3-on-surface-variant">Start Odometer:</label>
                   <input
                     type="number"
                     required
                     value={slipForm.startKm}
                     onChange={(e) => setSlipForm(prev => ({ ...prev, startKm: e.target.value === '' ? '' : Number(e.target.value) }))}
                     placeholder="e.g. 10000"
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2 text-slate-900 font-mono-code"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2 text-m3-on-surface font-mono-code"
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-600">End Odometer:</label>
+                  <label className="font-semibold text-m3-on-surface-variant">End Odometer:</label>
                   <input
                     type="number"
                     required
                     value={slipForm.endKm}
                     onChange={(e) => setSlipForm(prev => ({ ...prev, endKm: e.target.value === '' ? '' : Number(e.target.value) }))}
                     placeholder="e.g. 10320"
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2 text-slate-900 font-mono-code"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2 text-m3-on-surface font-mono-code"
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-600">Package Allowance:</label>
+                  <label className="font-semibold text-m3-on-surface-variant">Package Allowance:</label>
                   <input
                     type="number"
                     value={slipForm.packageAllowedKm}
                     onChange={(e) => setSlipForm(prev => ({ ...prev, packageAllowedKm: e.target.value === '' ? '' : Number(e.target.value) }))}
                     placeholder="300"
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2 text-slate-900 font-mono-code"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2 text-m3-on-surface font-mono-code"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                 <div>
-                  <label className="font-semibold text-slate-600">Base Fare (₹):</label>
+                  <label className="font-semibold text-m3-on-surface-variant">Base Fare (₹):</label>
                   <input
                     type="number"
                     value={slipForm.basePackageFare}
                     onChange={(e) => setSlipForm(prev => ({ ...prev, basePackageFare: e.target.value === '' ? '' : Number(e.target.value) }))}
                     placeholder="e.g. 6000"
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2 text-slate-900"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2 text-m3-on-surface"
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-600">FASTag Tolls (₹):</label>
+                  <label className="font-semibold text-m3-on-surface-variant">FASTag Tolls (₹):</label>
                   <input
                     type="number"
                     value={slipForm.tollsFastag}
                     onChange={(e) => setSlipForm(prev => ({ ...prev, tollsFastag: e.target.value === '' ? '' : Number(e.target.value) }))}
                     placeholder="0"
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2 text-slate-900"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2 text-m3-on-surface"
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-600">State Permit (₹):</label>
+                  <label className="font-semibold text-m3-on-surface-variant">State Permit (₹):</label>
                   <input
                     type="number"
                     value={slipForm.statePermit}
                     onChange={(e) => setSlipForm(prev => ({ ...prev, statePermit: e.target.value === '' ? '' : Number(e.target.value) }))}
                     placeholder="0"
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2 text-slate-900"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2 text-m3-on-surface"
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-600">Advance Paid (₹):</label>
+                  <label className="font-semibold text-m3-on-surface-variant">Advance Paid (₹):</label>
                   <input
                     type="number"
                     value={slipForm.advancePaid}
                     onChange={(e) => setSlipForm(prev => ({ ...prev, advancePaid: e.target.value === '' ? '' : Number(e.target.value) }))}
                     placeholder="0"
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2 text-emerald-700 font-bold"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2 text-m3-success font-bold"
                   />
                 </div>
               </div>
 
               {/* Real-time Duty Slip Calculation Summary */}
-              <div className="bg-emerald-50 border border-emerald-200/90 rounded-2xl p-4 space-y-1.5 text-xs text-emerald-950">
+              <div className="bg-m3-success-container/40 border border-m3-success/30/90 rounded-2xl p-4 space-y-1.5 text-xs text-m3-on-success-container">
                 <div className="flex justify-between">
-                  <span className="text-emerald-800">Total Distance:</span>
+                  <span className="text-m3-on-success-container">Total Distance:</span>
                   <strong>{computedSlip.totalKm} km ({computedSlip.extraKm} km extra @ ₹{slipForm.extraKmRate})</strong>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-emerald-800">Gross Trip Bill:</span>
-                  <strong className="text-emerald-950">₹{computedSlip.gross}</strong>
+                  <span className="text-m3-on-success-container">Gross Trip Bill:</span>
+                  <strong className="text-m3-on-success-container">₹{computedSlip.gross}</strong>
                 </div>
-                <div className="flex justify-between border-t border-emerald-200 pt-2 text-sm font-extrabold text-emerald-900">
+                <div className="flex justify-between border-t border-m3-success/30 pt-2 text-sm font-extrabold text-m3-on-success-container">
                   <span>BALANCE TO COLLECT:</span>
                   <span>₹{computedSlip.balance}</span>
                 </div>
@@ -2288,13 +2288,13 @@ export default function AdminDashboard() {
                 <button
                   type="button"
                   onClick={() => setIsDutySlipModalOpen(false)}
-                  className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-full"
+                  className="px-5 py-2.5 bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface-variant font-semibold rounded-full"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 bg-[#1E252D] hover:bg-[#111827] text-white font-bold rounded-full shadow-sm"
+                  className="px-6 py-2.5 bg-m3-primary hover:bg-m3-inverse-surface text-white font-bold rounded-full shadow-sm"
                 >
                   Finalize Slip & Update Status
                 </button>
@@ -2308,25 +2308,25 @@ export default function AdminDashboard() {
       {/* MODAL: 10-SECOND QUICK INCOMING LEAD LOGGER (M3 DIALOG)        */}
       {/* ============================================================== */}
       {isQuickCallModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 rounded-3xl max-w-lg w-full p-6 space-y-4 text-xs shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="fixed inset-0 z-50 bg-m3-inverse-surface/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-m3-outline-variant rounded-3xl max-w-lg w-full p-6 space-y-4 text-xs shadow-2xl">
+            <div className="flex items-center justify-between border-b border-m3-outline-variant/40 pb-3">
               <div className="flex items-center gap-2">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center border ${
                   callForm.channel === 'whatsapp'
-                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200/60'
-                    : 'bg-amber-50 text-amber-700 border-amber-200/60'
+                    ? 'bg-m3-success-container/40 text-m3-success border-m3-success/30/60'
+                    : 'bg-m3-tertiary-container/30 text-m3-tertiary border-m3-tertiary/30/60'
                 }`}>
                   <span className="material-symbols-outlined text-[18px]">
                     {callForm.channel === 'whatsapp' ? 'chat' : 'phone_in_talk'}
                   </span>
                 </div>
                 <div>
-                  <h3 className="text-base font-extrabold text-[#111827] tracking-tight">10-Sec Quick Lead Logger</h3>
-                  <p className="text-[11px] text-slate-400">Capture WhatsApp enquiries & phone calls instantly</p>
+                  <h3 className="text-base font-extrabold text-m3-on-surface tracking-tight">10-Sec Quick Lead Logger</h3>
+                  <p className="text-[11px] text-m3-outline-variant">Capture WhatsApp enquiries & phone calls instantly</p>
                 </div>
               </div>
-              <button onClick={() => setIsQuickCallModalOpen(false)} className="text-slate-400 hover:text-slate-700 p-1">
+              <button onClick={() => setIsQuickCallModalOpen(false)} className="text-m3-outline-variant hover:text-m3-on-surface-variant p-1">
                 <span className="material-symbols-outlined text-[20px]">close</span>
               </button>
             </div>
@@ -2339,11 +2339,11 @@ export default function AdminDashboard() {
                   onClick={() => setCallForm(prev => ({ ...prev, channel: 'whatsapp', status: 'Active Enquiry', notes: 'Inbound WhatsApp lead' }))}
                   className={`py-2 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
                     callForm.channel === 'whatsapp'
-                      ? 'bg-emerald-50 border-emerald-400 text-emerald-800 shadow-xs ring-1 ring-emerald-400'
-                      : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                      ? 'bg-m3-success-container/40 border-m3-success/50 text-m3-on-success-container shadow-xs ring-1 ring-m3-success'
+                      : 'bg-white border-m3-outline-variant text-m3-on-surface-variant hover:bg-m3-surface-container-low'
                   }`}
                 >
-                  <span className="material-symbols-outlined text-[16px] text-emerald-600">chat</span>
+                  <span className="material-symbols-outlined text-[16px] text-m3-success">chat</span>
                   <span>WhatsApp Lead</span>
                 </button>
                 <button
@@ -2351,41 +2351,41 @@ export default function AdminDashboard() {
                   onClick={() => setCallForm(prev => ({ ...prev, channel: 'call', status: 'Call Received - Quoted', notes: 'Inbound phone call enquiry' }))}
                   className={`py-2 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
                     callForm.channel === 'call'
-                      ? 'bg-amber-50 border-amber-400 text-amber-800 shadow-xs ring-1 ring-amber-400'
-                      : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                      ? 'bg-m3-tertiary-container/30 border-m3-tertiary/50 text-m3-on-tertiary-container shadow-xs ring-1 ring-m3-tertiary'
+                      : 'bg-white border-m3-outline-variant text-m3-on-surface-variant hover:bg-m3-surface-container-low'
                   }`}
                 >
-                  <span className="material-symbols-outlined text-[16px] text-amber-600">phone_in_talk</span>
+                  <span className="material-symbols-outlined text-[16px] text-m3-tertiary">phone_in_talk</span>
                   <span>Inbound Phone Call</span>
                 </button>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-700">
+                  <label className="font-semibold text-m3-on-surface-variant">
                     {callForm.channel === 'whatsapp' ? 'WhatsApp Mobile Phone *' : 'Caller Mobile Phone *'}
                   </label>
                   <div className="relative mt-1">
-                    <span className="absolute left-3 top-2.5 text-slate-400 font-bold">+91</span>
+                    <span className="absolute left-3 top-2.5 text-m3-outline-variant font-bold">+91</span>
                     <input
                       type="tel"
                       required
                       value={callForm.callerPhone}
                       onChange={(e) => setCallForm(prev => ({ ...prev, callerPhone: e.target.value.replace(/[^0-9]/g, '') }))}
                       placeholder="98803 09619"
-                      className="w-full pl-12 pr-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-900 font-bold text-sm focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                      className="w-full pl-12 pr-3 py-2 bg-white border border-m3-outline-variant rounded-xl text-m3-on-surface font-bold text-sm focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                       autoFocus
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-700">Customer / Company Name</label>
+                  <label className="font-semibold text-m3-on-surface-variant">Customer / Company Name</label>
                   <input
                     type="text"
                     value={callForm.guestName}
                     onChange={(e) => setCallForm(prev => ({ ...prev, guestName: e.target.value }))}
                     placeholder="e.g. Mr. Senthil"
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2 text-slate-900 focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2 text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                   />
                 </div>
               </div>
@@ -2393,18 +2393,18 @@ export default function AdminDashboard() {
               <div className="space-y-2">
                 <div>
                   <div className="flex items-center justify-between">
-                    <label className="font-semibold text-slate-700 flex items-center gap-1.5">
-                      <span className="material-symbols-outlined text-[16px] text-amber-600">travel_explore</span>
+                    <label className="font-semibold text-m3-on-surface-variant flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-[16px] text-m3-tertiary">travel_explore</span>
                       <span>Select Tour Package / Route *</span>
                     </label>
-                    <span className="text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-full font-semibold">
+                    <span className="text-[10px] text-m3-success bg-m3-success-container/40 border border-m3-success/30/80 px-2 py-0.5 rounded-full font-semibold">
                       Auto-fills fare & route
                     </span>
                   </div>
                   <select
                     value={selectedCallPackage}
                     onChange={(e) => handleCallPackageChange(e.target.value)}
-                    className="w-full mt-1 bg-amber-50/50 border border-amber-300/80 rounded-xl p-2.5 text-slate-900 font-bold text-xs focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none cursor-pointer"
+                    className="w-full mt-1 bg-m3-tertiary-container/30/50 border border-m3-tertiary/40/80 rounded-xl p-2.5 text-m3-on-surface font-bold text-xs focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none cursor-pointer"
                   >
                     {TOUR_PACKAGES.map(p => (
                       <option key={p.id} value={p.id}>{p.name}</option>
@@ -2414,7 +2414,7 @@ export default function AdminDashboard() {
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-500">
+                  <label className="text-[11px] font-semibold text-m3-outline">
                     Requested Route / Travel Detail (Editable Note) *
                   </label>
                   <input
@@ -2432,18 +2432,18 @@ export default function AdminDashboard() {
                       }
                     }}
                     placeholder="e.g. Chennai ➔ Tirupati One Day Round Trip"
-                    className="w-full mt-0.5 bg-white border border-slate-300 rounded-xl p-2 text-slate-900 font-medium focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                    className="w-full mt-0.5 bg-white border border-m3-outline-variant rounded-xl p-2 text-m3-on-surface font-medium focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-700">Vehicle Type</label>
+                  <label className="font-semibold text-m3-on-surface-variant">Vehicle Type</label>
                   <select
                     value={callForm.vehicle}
                     onChange={(e) => handleCallVehicleChange(e.target.value)}
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2 text-slate-900 focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2 text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                   >
                     <option value="Sedan (Dzire / Etios)">Sedan (Dzire / Etios)</option>
                     <option value="Ertiga (6 Pax)">Ertiga (6 Pax)</option>
@@ -2452,23 +2452,23 @@ export default function AdminDashboard() {
                   </select>
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-700">Quoted Fare (₹)</label>
+                  <label className="font-semibold text-m3-on-surface-variant">Quoted Fare (₹)</label>
                   <input
                     type="number"
                     value={callForm.quotedFare}
                     onChange={(e) => setCallForm(prev => ({ ...prev, quotedFare: e.target.value }))}
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2 text-slate-900 font-bold focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2 text-m3-on-surface font-bold focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-700">Call Status</label>
+                  <label className="font-semibold text-m3-on-surface-variant">Call Status</label>
                   <select
                     value={callForm.status}
                     onChange={(e) => setCallForm(prev => ({ ...prev, status: e.target.value }))}
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2 text-slate-900 focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2 text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                   >
                     <option value="Call Received - Quoted">Call Received - Quoted</option>
                     <option value="Needs Follow-up">Needs Follow-up (High Interest)</option>
@@ -2477,13 +2477,13 @@ export default function AdminDashboard() {
                   </select>
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-700">Attendant Notes</label>
+                  <label className="font-semibold text-m3-on-surface-variant">Attendant Notes</label>
                   <input
                     type="text"
                     value={callForm.notes}
                     onChange={(e) => setCallForm(prev => ({ ...prev, notes: e.target.value }))}
                     placeholder="e.g. Needs early 4:30 AM pickup"
-                    className="w-full mt-1 bg-white border border-slate-300 rounded-xl p-2 text-slate-900 focus:border-[#1E252D] focus:ring-1 focus:ring-[#1E252D] focus:outline-none"
+                    className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2 text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                   />
                 </div>
               </div>
@@ -2492,13 +2492,13 @@ export default function AdminDashboard() {
                 <button
                   type="button"
                   onClick={() => setIsQuickCallModalOpen(false)}
-                  className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-full"
+                  className="px-5 py-2.5 bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface-variant font-semibold rounded-full"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 bg-[#1E252D] hover:bg-[#111827] text-white font-bold rounded-full shadow-sm flex items-center gap-1.5"
+                  className="px-6 py-2.5 bg-m3-primary hover:bg-m3-inverse-surface text-white font-bold rounded-full shadow-sm flex items-center gap-1.5"
                 >
                   <span className="material-symbols-outlined text-[16px]">save</span>
                   <span>Log to Leads Funnel</span>

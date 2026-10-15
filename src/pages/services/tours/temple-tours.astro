@@ -476,15 +476,15 @@ const faqSchema = {
                       class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 relative z-10"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent z-10"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-m3-inverse-surface/80 via-transparent to-transparent z-10"></div>
 
                     <!-- Top USP Badge -->
-                    <span class="absolute top-3 left-3 bg-slate-950/85 backdrop-blur-md border border-white/20 text-white text-[11px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-m3-full shadow-xs z-20">
+                    <span class="absolute top-3 left-3 bg-m3-inverse-surface/85 backdrop-blur-md border border-white/20 text-white text-[11px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-m3-full shadow-xs z-20">
                       {pkg.badge}
                     </span>
 
                     <!-- Duration Chip -->
-                    <span class="absolute bottom-3 left-3 inline-flex items-center gap-1.5 bg-white/95 backdrop-blur-md text-slate-900 text-xs font-semibold px-2.5 py-1 rounded-m3-full shadow-xs z-20">
+                    <span class="absolute bottom-3 left-3 inline-flex items-center gap-1.5 bg-white/95 backdrop-blur-md text-m3-on-surface text-xs font-semibold px-2.5 py-1 rounded-m3-full shadow-xs z-20">
                       <svg class="w-3.5 h-3.5 text-m3-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                       <span>{pkg.duration}</span>
                     </span>
@@ -514,7 +514,7 @@ const faqSchema = {
                               {r.type} <span class="text-m3-on-surface-variant font-medium text-[11px]">({r.names})</span>
                             </span>
                             <span class="text-[10px] text-m3-on-surface-variant font-medium flex items-center gap-1.5 mt-0.5">
-                              <span class="text-emerald-700 font-semibold">{r.passengers}</span>
+                              <span class="text-m3-success font-semibold">{r.passengers}</span>
                               <span>•</span>
                               <span>{r.baggage}</span>
                             </span>
@@ -643,20 +643,20 @@ const faqSchema = {
       <section class="py-8 my-6 bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant/60 p-5 sm:p-7">
         <div class="max-w-6xl mx-auto">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <a href="/services/chennai-airport-taxi/" class="p-5 rounded-m3-xl bg-emerald-500/5 border border-emerald-500/20 hover:border-emerald-500/50 transition-all group flex items-center justify-between">
+            <a href="/services/chennai-airport-taxi/" class="p-5 rounded-m3-xl bg-m3-success-container/400/5 border border-m3-success/30 hover:border-m3-success/50 transition-all group flex items-center justify-between">
               <div>
-                <div class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase text-emerald-800 mb-1">
-                  <svg class="w-3.5 h-3.5 text-emerald-700 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <div class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase text-m3-on-success-container mb-1">
+                  <svg class="w-3.5 h-3.5 text-m3-success shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3.5c-.5-.5-2.5 0-4 1.5L13.5 8.5 5.3 6.7c-.8-.2-1.6.2-2 .9l-.3.5c-.4.7-.2 1.6.4 2.1l5.7 4.3-2.6 2.6-2.6-.9c-.5-.2-1.1 0-1.5.4l-.2.2c-.4.4-.4 1.1 0 1.5l2.4 2.4 2.4 2.4c.4.4 1.1.4 1.5 0l.2-.2c.4-.4.6-1 .4-1.5l-.9-2.6 2.6-2.6 4.3 5.7c.5.6 1.4.8 2.1.4l.5-.3c.7-.4 1.1-1.2.9-2z"/>
                   </svg>
                   <span>Airport Transfers (MAA)</span>
                 </div>
-                <h3 class="text-base sm:text-lg font-bold text-m3-on-surface group-hover:text-emerald-800 transition-colors font-heading">
+                <h3 class="text-base sm:text-lg font-bold text-m3-on-surface group-hover:text-m3-on-success-container transition-colors font-heading">
                   Chennai Airport Taxi Transfers
                 </h3>
                 <p class="text-xs text-m3-on-surface-variant mt-0.5">Direct airport pickup for outstation devotees &amp; NRI pilgrims heading to temple yatras.</p>
               </div>
-              <span class="material-symbols-outlined text-[20px] text-emerald-700 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+              <span class="material-symbols-outlined text-[20px] text-m3-success group-hover:translate-x-1 transition-transform">arrow_forward</span>
             </a>
 
             <a href="/services/outstation-cabs/" class="p-5 rounded-m3-xl bg-m3-surface-container border border-m3-outline-variant hover:border-m3-primary/50 transition-all group flex items-center justify-between">
