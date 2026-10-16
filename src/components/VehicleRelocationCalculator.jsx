@@ -336,7 +336,7 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
           }}
           onClick={calculateCost}
           disabled={loading}
-          className="w-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary font-bold py-3.5 rounded-m3-full transition-all flex items-center justify-center shadow-m3-2 hover:shadow-m3-3 disabled:opacity-70 active:scale-[0.98] cursor-pointer text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary focus-visible:ring-offset-2"
+          className="w-full !bg-[#0B57D0] hover:!bg-[#0842A0] active:!bg-[#0842A0] active:scale-[0.98] !text-white font-bold py-3.5 rounded-m3-full transition-all flex items-center justify-center shadow-m3-2 hover:shadow-m3-3 disabled:opacity-70 cursor-pointer text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B57D0]"
         >
           {loading ? (
             <span>Calculating...</span>

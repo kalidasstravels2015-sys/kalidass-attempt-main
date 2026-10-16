@@ -621,8 +621,8 @@ const tripListSchema = {
 
         <div class="relative z-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div class="max-w-2xl">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-m3-success-container/400/20 border border-m3-success/30 text-m3-success text-xs font-bold mb-2 backdrop-blur-xs">
-              <span class="w-2 h-2 rounded-full bg-m3-success animate-pulse"></span>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white text-xs font-bold mb-2 backdrop-blur-md">
+              <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
               <span>24/7 Verified Chauffeur Service</span>
             </div>
             <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-tight font-heading drop-shadow-sm">
@@ -1028,7 +1028,7 @@ const tripListSchema = {
                             href={`https://wa.me/918939539211?text=${encodeURIComponent(t.whatsappPickup)}`}
                             target="_blank"
                             rel="noopener noreferrer nofollow"
-                            class="booking-link inline-flex items-center gap-1 px-4 py-2 rounded-xl bg-m3-primary hover:bg-m3-inverse-surface active:bg-black text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
+                            class="booking-link inline-flex items-center gap-1 px-4 py-2 rounded-xl bg-m3-primary hover:bg-m3-primary/90 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
                           >
                             <span class="action-label">Book Pickup</span>
                             <span class="material-symbols-outlined text-[15px]">arrow_forward</span>
@@ -1293,11 +1293,11 @@ const tripListSchema = {
       </section>
 
       <!-- 7. BOTTOM CONVERSION STRIP -->
-      <section class="rounded-2xl bg-m3-inverse-surface text-white p-7 sm:p-10 text-center shadow-md mb-10 border border-m3-outline-variant/60 offscreen-defer">
+      <section class="rounded-2xl bg-gradient-to-br from-[#0B57D0] via-[#0842A0] to-[#041E49] text-white p-7 sm:p-10 text-center shadow-md mb-10 border border-[#0B57D0]/20 offscreen-defer">
         <h2 class="text-2xl sm:text-3xl font-extrabold font-heading text-white mb-2.5 tracking-tight">
           Flying into or out of Chennai International Airport (MAA)?
         </h2>
-        <p class="text-m3-inverse-on-surface text-sm sm:text-base max-w-lg mx-auto mb-6 leading-relaxed">
+        <p class="text-white/90 text-sm sm:text-base max-w-lg mx-auto mb-6 leading-relaxed">
           Schedule your doorstep airport drop or reserve an arrival terminal pickup in seconds on WhatsApp.
         </p>
         <div class="flex flex-wrap items-center justify-center gap-3">
@@ -1309,9 +1309,9 @@ const tripListSchema = {
           />
           <a 
             href="tel:+918939539211"
-            class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 text-white text-xs sm:text-sm font-semibold backdrop-blur-xs transition-all shadow-sm"
+            class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-white/15 hover:bg-white/25 active:bg-white/30 text-white text-xs sm:text-sm font-semibold backdrop-blur-xs transition-all border border-white/30 shadow-sm"
           >
-            <span class="material-symbols-outlined text-[18px] text-m3-success">call</span>
+            <span class="material-symbols-outlined text-[18px] text-white">call</span>
             <span>Call 24/7 Desk (+91 89395 39211)</span>
           </a>
         </div>

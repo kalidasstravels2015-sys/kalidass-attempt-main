@@ -1,5 +1,5 @@
 ---
-import AndroidPhoneIcon from './AndroidPhoneIcon.astro';
+import AiFareAssistantModal from './AiFareAssistantModal.astro';
 import { WHATSAPP_CONFIG } from '../utils/whatsapp';
 
 interface Props {
@@ -12,43 +12,58 @@ const {
   phone = `+${WHATSAPP_CONFIG.phone}`,
   displayPhone = WHATSAPP_CONFIG.formattedPhone,
 } = Astro.props;
-
-const callUrl = `tel:${phone}`;
 ---
 
-<!-- Floating Quick Call Action (Google M3 56dp Standard FAB - Mobile & Desktop) -->
+<!-- Single Floating Gemini AI Button with "Ask me" Shadow Label -->
 <div 
   id="floating-actions-container"
-  class="fixed bottom-4 right-5 sm:bottom-5 sm:right-6 z-50 flex flex-col items-center pointer-events-none select-none pb-[env(safe-area-inset-bottom,0px)] pr-[env(safe-area-inset-right,0px)] transition-all duration-300"
+  class="fixed bottom-4 right-4 sm:bottom-5 sm:right-6 z-50 flex flex-col items-center pointer-events-none select-none pb-[env(safe-area-inset-bottom,0px)] pr-[env(safe-area-inset-right,0px)] transition-all duration-300"
   role="region"
-  aria-label="Quick contact shortcut"
+  aria-label="AI Fare Concierge"
 >
-  <a
-    href={callUrl}
-    id="floating-call-btn"
-    class="pointer-events-auto group relative flex items-center justify-center w-14 h-14 rounded-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary shadow-m3-3 hover:shadow-m3-4 active:shadow-m3-1 hover:-translate-y-0.5 active:scale-95 transition-all duration-200 border border-white/10 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-m3-primary/50 focus-visible:ring-offset-2 after:absolute after:-inset-2.5 after:content-['']"
-    aria-label={`Call Helpline (${displayPhone})`}
-    title={`Call Helpline: ${displayPhone}`}
+  <!-- Tactile 56dp FAB with Soft Inner Light & Organic Depth -->
+  <button
+    type="button"
+    id="floating-ai-btn"
+    class="pointer-events-auto group relative flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-tr from-[#0B57D0] via-[#1A73E8] to-[#4F46E5] hover:from-[#0842A0] hover:via-[#1557B0] hover:to-[#4338CA] active:scale-90 text-white shadow-[0_10px_25px_-3px_rgba(11,87,208,0.5),0_4px_10px_-2px_rgba(0,0,0,0.2),inset_0_1.5px_2px_rgba(255,255,255,0.45)] hover:shadow-[0_14px_30px_-3px_rgba(11,87,208,0.65),0_6px_14px_-2px_rgba(0,0,0,0.25),inset_0_2px_3px_rgba(255,255,255,0.55)] border border-white/30 transition-all duration-300 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-blue-400 cursor-pointer"
+    aria-label="Ask me"
+    title="Ask me"
+    onclick="window.openAiFareModal && window.openAiFareModal()"
   >
-    <AndroidPhoneIcon className="w-6 h-6 text-white group-hover:rotate-12 transition-transform duration-300 shrink-0" />
-    
-    <!-- M3 Tooltip on Desktop Hover -->
+    <!-- Soft Living Halo -->
+    <span class="absolute -inset-1 rounded-full bg-blue-400/25 blur-sm animate-pulse pointer-events-none"></span>
+
+    <!-- Canonical Google Gemini Star Vector (Simple Icons / Google Brand Standards) -->
+    <svg 
+      class="w-7 h-7 text-white transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] relative z-10" 
+      viewBox="0 0 24 24" 
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-label="Google Gemini"
+    >
+      <path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81" />
+    </svg>
+
+    <!-- Desktop Tooltip on Hover -->
     <span 
-      class="hidden md:group-hover:inline-flex md:group-focus-visible:inline-flex absolute right-full mr-3 top-1/2 -translate-y-1/2 whitespace-nowrap px-3 py-1.5 rounded-m3-md bg-m3-inverse-surface text-m3-inverse-on-surface text-xs font-semibold shadow-m3-2 pointer-events-none transition-opacity duration-150"
+      class="hidden md:group-hover:inline-flex md:group-focus-visible:inline-flex absolute right-full mr-3 top-1/2 -translate-y-1/2 whitespace-nowrap px-3 py-1.5 rounded-m3-md bg-[#111827] text-white text-xs font-semibold shadow-m3-2 pointer-events-none transition-opacity duration-150 z-20"
       role="tooltip"
     >
-      Call {displayPhone}
+      Ask me
     </span>
-  </a>
+  </button>
 
-  <!-- 24*7 Label Below Button -->
-  <a
-    href={callUrl}
-    class="pointer-events-auto mt-1 inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-m3-inverse-surface/90 backdrop-blur-md text-m3-inverse-on-surface text-[10px] font-black tracking-wider uppercase shadow-m3-1 border border-white/10 hover:bg-m3-inverse-surface active:scale-95 transition-all"
-    aria-label="24*7 Support Helpline"
-    title="24*7 Helpline"
+  <!-- "Ask me" Text Label with Drop Shadow -->
+  <button
+    type="button"
+    class="pointer-events-auto mt-1 inline-flex items-center justify-center px-2.5 py-0.5 rounded-full bg-[#111827]/95 dark:bg-[#1E252D]/95 backdrop-blur-md text-white text-[11px] font-bold tracking-wide shadow-[0_4px_12px_rgba(0,0,0,0.35),0_1px_3px_rgba(0,0,0,0.2)] drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)] border border-white/15 hover:bg-[#0B57D0] active:scale-95 transition-all cursor-pointer"
+    aria-label="Ask me"
+    onclick="window.openAiFareModal && window.openAiFareModal()"
   >
-    24*7
-  </a>
+    Ask me
+  </button>
 </div>
 
+<!-- AI Fare Concierge Modal Window (Features Prominent Call Helpline Button) -->
+<AiFareAssistantModal phone={phone} displayPhone={displayPhone} />

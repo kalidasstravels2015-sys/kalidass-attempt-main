@@ -61,12 +61,6 @@ export default function SectionNavigator() {
       }
 
       setActiveSection(currentSec.id);
-
-      // Update mobile header section chip if present
-      const mobileSectionText = document.getElementById('mobile-section-text');
-      if (mobileSectionText) {
-        mobileSectionText.textContent = `${currentSec.num}/08 • ${currentSec.label}`;
-      }
       ticking = false;
     };
 

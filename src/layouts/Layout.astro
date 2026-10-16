@@ -41,6 +41,29 @@ const isHome = pathname === "/" || pathname === "";
 const isTamilPage = pathname.startsWith("/ta");
 const canonicalURL = new URL(pathname, siteUrl).href;
 
+const isFleet = pathname.startsWith("/fleet");
+const isDrivers = pathname.startsWith("/drivers");
+const isTariff = pathname.startsWith("/tariff");
+const isCalculator = pathname.startsWith("/calculator");
+const isTempleTours =
+  pathname.startsWith("/services/tours/") ||
+  pathname.includes("tirupati") ||
+  pathname.includes("navagraha") ||
+  pathname.includes("girivalam") ||
+  pathname.includes("kanchipuram") ||
+  pathname.includes("vellore") ||
+  pathname.includes("chidambaram") ||
+  pathname.includes("rameswaram") ||
+  pathname.includes("sabarimala") ||
+  pathname.includes("temple");
+const isCabsAndRentals =
+  !isTempleTours &&
+  (pathname.startsWith("/services") ||
+    pathname.includes("airport") ||
+    pathname.includes("outstation") ||
+    pathname.includes("corporate") ||
+    pathname.includes("acting-driver"));
+
 const fullImage = ogImage
   ? ogImage.startsWith("http")
     ? ogImage
@@ -602,7 +625,7 @@ const unifiedSchemaGraph = {
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
     />
-    <meta name="theme-color" content="#1E252D" />
+    <meta name="theme-color" content="#0B57D0" />
     <link rel="icon" type="image/webp" href="/images/favicon.webp" />
     <link rel="icon" type="image/png" href="/images/favicon.png" />
     <link rel="apple-touch-icon" href="/images/favicon.webp" />
@@ -715,29 +738,29 @@ const unifiedSchemaGraph = {
         user-select: none;
       }
 
-      /* 100% Google Material Design 3 (M3) Master Palette: Executive Midnight Charcoal & Onyx */
+      /* 100% Google Material Design 3 (M3) Option 1: Google Sapphire Blue & Clean Pearl */
       :root {
-        color-scheme: light dark;
+        color-scheme: light;
 
-        /* Primary Roles - Executive Midnight Charcoal (Tone 40) */
-        --md-sys-color-primary-rgb: 30 37 45;
-        --md-sys-color-primary: #1E252D;
+        /* Primary Roles - Google Sapphire Blue (#0B57D0 / Tone 40) */
+        --md-sys-color-primary-rgb: 11 87 208;
+        --md-sys-color-primary: #0B57D0;
         --md-sys-color-on-primary-rgb: 255 255 255;
         --md-sys-color-on-primary: #FFFFFF;
-        --md-sys-color-primary-container-rgb: 226 229 234;
-        --md-sys-color-primary-container: #E2E5EA;
-        --md-sys-color-on-primary-container-rgb: 16 20 24;
-        --md-sys-color-on-primary-container: #101418;
-        --md-sys-color-primary-fixed-rgb: 226 229 234;
-        --md-sys-color-primary-fixed: #E2E5EA;
-        --md-sys-color-primary-fixed-dim-rgb: 198 202 208;
-        --md-sys-color-primary-fixed-dim: #C6CAD0;
-        --md-sys-color-on-primary-fixed-rgb: 16 20 24;
-        --md-sys-color-on-primary-fixed: #101418;
-        --md-sys-color-on-primary-fixed-variant-rgb: 55 65 81;
-        --md-sys-color-on-primary-fixed-variant: #374151;
+        --md-sys-color-primary-container-rgb: 211 227 253;
+        --md-sys-color-primary-container: #D3E3FD;
+        --md-sys-color-on-primary-container-rgb: 4 30 73;
+        --md-sys-color-on-primary-container: #041E49;
+        --md-sys-color-primary-fixed-rgb: 211 227 253;
+        --md-sys-color-primary-fixed: #D3E3FD;
+        --md-sys-color-primary-fixed-dim-rgb: 168 199 250;
+        --md-sys-color-primary-fixed-dim: #A8C7FA;
+        --md-sys-color-on-primary-fixed-rgb: 4 30 73;
+        --md-sys-color-on-primary-fixed: #041E49;
+        --md-sys-color-on-primary-fixed-variant-rgb: 8 66 160;
+        --md-sys-color-on-primary-fixed-variant: #0842A0;
 
-        /* Secondary Roles - Harmonized Slate Steel Charcoal (Tone 40) */
+        /* Secondary Roles - Harmonized Slate Steel (Tone 40) */
         --md-sys-color-secondary-rgb: 71 84 103;
         --md-sys-color-secondary: #475467;
         --md-sys-color-on-secondary-rgb: 255 255 255;
@@ -755,23 +778,23 @@ const unifiedSchemaGraph = {
         --md-sys-color-on-secondary-fixed-variant-rgb: 59 72 90;
         --md-sys-color-on-secondary-fixed-variant: #3B485A;
 
-        /* Tertiary Roles - Saffron / Temple Golden Amber (Tone 40) */
-        --md-sys-color-tertiary-rgb: 139 80 0;
-        --md-sys-color-tertiary: #8B5000;
+        /* Tertiary Roles - Harmonized Subtle Slate (Eliminating conflicting gold/amber) */
+        --md-sys-color-tertiary-rgb: 71 84 103;
+        --md-sys-color-tertiary: #475467;
         --md-sys-color-on-tertiary-rgb: 255 255 255;
         --md-sys-color-on-tertiary: #FFFFFF;
-        --md-sys-color-tertiary-container-rgb: 255 220 190;
-        --md-sys-color-tertiary-container: #FFDCBE;
-        --md-sys-color-on-tertiary-container-rgb: 44 22 0;
-        --md-sys-color-on-tertiary-container: #2C1600;
-        --md-sys-color-tertiary-fixed-rgb: 255 220 190;
-        --md-sys-color-tertiary-fixed: #FFDCBE;
-        --md-sys-color-tertiary-fixed-dim-rgb: 255 184 112;
-        --md-sys-color-tertiary-fixed-dim: #FFB870;
-        --md-sys-color-on-tertiary-fixed-rgb: 44 22 0;
-        --md-sys-color-on-tertiary-fixed: #2C1600;
-        --md-sys-color-on-tertiary-fixed-variant-rgb: 106 60 0;
-        --md-sys-color-on-tertiary-fixed-variant: #6A3C00;
+        --md-sys-color-tertiary-container-rgb: 243 244 246;
+        --md-sys-color-tertiary-container: #F3F4F6;
+        --md-sys-color-on-tertiary-container-rgb: 31 41 55;
+        --md-sys-color-on-tertiary-container: #1F2937;
+        --md-sys-color-tertiary-fixed-rgb: 243 244 246;
+        --md-sys-color-tertiary-fixed: #F3F4F6;
+        --md-sys-color-tertiary-fixed-dim-rgb: 229 231 235;
+        --md-sys-color-tertiary-fixed-dim: #E5E7EB;
+        --md-sys-color-on-tertiary-fixed-rgb: 31 41 55;
+        --md-sys-color-on-tertiary-fixed: #1F2937;
+        --md-sys-color-on-tertiary-fixed-variant-rgb: 75 85 99;
+        --md-sys-color-on-tertiary-fixed-variant: #4B5563;
 
         /* Success Roles (M3 Custom Harmonized Semantic Color) */
         --md-sys-color-success-rgb: 0 109 59;
@@ -826,8 +849,8 @@ const unifiedSchemaGraph = {
         --md-sys-color-inverse-on-surface: #F9FAFB;
         --md-sys-color-inverse-primary-rgb: 156 163 175;
         --md-sys-color-inverse-primary: #9CA3AF;
-        --md-sys-color-surface-tint-rgb: 30 37 45;
-        --md-sys-color-surface-tint: #1E252D;
+        --md-sys-color-surface-tint-rgb: 11 87 208;
+        --md-sys-color-surface-tint: #0B57D0;
         --md-sys-color-scrim-rgb: 0 0 0;
         --md-sys-color-scrim: #000000;
         --md-sys-color-shadow-rgb: 0 0 0;
@@ -836,173 +859,6 @@ const unifiedSchemaGraph = {
         /* Brand Accent (Signature "K" Logo Mark Only - Rule 2 Protected) */
         --md-sys-color-brand-red-rgb: 236 34 31;
         --md-sys-color-brand-red: #EC221F;
-      }
-
-      /* Official Google Material Design 3 (M3) Dark Scheme Specification */
-      @media (prefers-color-scheme: dark) {
-        :root {
-          /* Primary Roles - Dark Mode */
-          --md-sys-color-primary-rgb: 192 199 210;
-          --md-sys-color-primary: #C0C7D2;
-          --md-sys-color-on-primary-rgb: 21 28 36;
-          --md-sys-color-on-primary: #151C24;
-          --md-sys-color-primary-container-rgb: 42 49 57;
-          --md-sys-color-primary-container: #2A3139;
-          --md-sys-color-on-primary-container-rgb: 220 227 238;
-          --md-sys-color-on-primary-container: #DCE3EE;
-
-          /* Secondary Roles - Dark Mode */
-          --md-sys-color-secondary-rgb: 186 199 222;
-          --md-sys-color-secondary: #BAC7DE;
-          --md-sys-color-on-secondary-rgb: 36 49 67;
-          --md-sys-color-on-secondary: #243143;
-          --md-sys-color-secondary-container-rgb: 59 72 90;
-          --md-sys-color-secondary-container: #3B485A;
-          --md-sys-color-on-secondary-container-rgb: 214 227 251;
-          --md-sys-color-on-secondary-container: #D6E3FB;
-
-          /* Tertiary Roles - Dark Mode */
-          --md-sys-color-tertiary-rgb: 255 184 113;
-          --md-sys-color-tertiary: #FFB871;
-          --md-sys-color-on-tertiary-rgb: 74 40 0;
-          --md-sys-color-on-tertiary: #4A2800;
-          --md-sys-color-tertiary-container-rgb: 106 60 0;
-          --md-sys-color-tertiary-container: #6A3C00;
-          --md-sys-color-on-tertiary-container-rgb: 255 220 190;
-          --md-sys-color-on-tertiary-container: #FFDCBE;
-
-          /* Success Roles - Dark Mode */
-          --md-sys-color-success-rgb: 128 217 156;
-          --md-sys-color-success: #80D99C;
-          --md-sys-color-on-success-rgb: 0 57 28;
-          --md-sys-color-on-success: #00391C;
-          --md-sys-color-success-container-rgb: 0 82 43;
-          --md-sys-color-success-container: #00522B;
-          --md-sys-color-on-success-container-rgb: 183 241 196;
-          --md-sys-color-on-success-container: #B7F1C4;
-
-          /* Error Roles - Dark Mode */
-          --md-sys-color-error-rgb: 255 180 171;
-          --md-sys-color-error: #FFB4AB;
-          --md-sys-color-on-error-rgb: 105 0 4;
-          --md-sys-color-on-error: #690004;
-          --md-sys-color-error-container-rgb: 147 0 9;
-          --md-sys-color-error-container: #930009;
-          --md-sys-color-on-error-container-rgb: 255 218 214;
-          --md-sys-color-on-error-container: #FFDAD6;
-
-          /* Surface Elevation Hierarchy - Dark Mode */
-          --md-sys-color-surface-rgb: 11 15 19;
-          --md-sys-color-surface: #0B0F13;
-          --md-sys-color-surface-dim-rgb: 11 15 19;
-          --md-sys-color-surface-dim: #0B0F13;
-          --md-sys-color-surface-bright-rgb: 42 49 57;
-          --md-sys-color-surface-bright: #2A3139;
-          --md-sys-color-surface-container-lowest-rgb: 5 7 9;
-          --md-sys-color-surface-container-lowest: #050709;
-          --md-sys-color-surface-container-low-rgb: 17 24 39;
-          --md-sys-color-surface-container-low: #111827;
-          --md-sys-color-surface-container-rgb: 21 28 36;
-          --md-sys-color-surface-container: #151C24;
-          --md-sys-color-surface-container-high-rgb: 30 37 45;
-          --md-sys-color-surface-container-high: #1E252D;
-          --md-sys-color-surface-container-highest-rgb: 37 45 55;
-          --md-sys-color-surface-container-highest: #252D37;
-
-          /* Text, Outlines, Inverse & Tint - Dark Mode */
-          --md-sys-color-on-surface-rgb: 226 228 233;
-          --md-sys-color-on-surface: #E2E4E9;
-          --md-sys-color-on-surface-variant-rgb: 201 205 211;
-          --md-sys-color-on-surface-variant: #C9CDD3;
-          --md-sys-color-outline-rgb: 138 145 155;
-          --md-sys-color-outline: #8A919B;
-          --md-sys-color-outline-variant-rgb: 64 71 80;
-          --md-sys-color-outline-variant: #404750;
-          --md-sys-color-inverse-surface-rgb: 226 228 233;
-          --md-sys-color-inverse-surface: #E2E4E9;
-          --md-sys-color-inverse-on-surface-rgb: 17 24 39;
-          --md-sys-color-inverse-on-surface: #111827;
-          --md-sys-color-inverse-primary-rgb: 30 37 45;
-          --md-sys-color-inverse-primary: #1E252D;
-          --md-sys-color-surface-tint-rgb: 192 199 210;
-          --md-sys-color-surface-tint: #C0C7D2;
-        }
-      }
-
-      /* Explicit selector overrides for class/attribute dark mode */
-      html[data-theme="dark"], html.dark {
-        --md-sys-color-primary-rgb: 192 199 210;
-        --md-sys-color-primary: #C0C7D2;
-        --md-sys-color-on-primary-rgb: 21 28 36;
-        --md-sys-color-on-primary: #151C24;
-        --md-sys-color-primary-container-rgb: 42 49 57;
-        --md-sys-color-primary-container: #2A3139;
-        --md-sys-color-on-primary-container-rgb: 220 227 238;
-        --md-sys-color-on-primary-container: #DCE3EE;
-        --md-sys-color-secondary-rgb: 186 199 222;
-        --md-sys-color-secondary: #BAC7DE;
-        --md-sys-color-on-secondary-rgb: 36 49 67;
-        --md-sys-color-on-secondary: #243143;
-        --md-sys-color-secondary-container-rgb: 59 72 90;
-        --md-sys-color-secondary-container: #3B485A;
-        --md-sys-color-on-secondary-container-rgb: 214 227 251;
-        --md-sys-color-on-secondary-container: #D6E3FB;
-        --md-sys-color-tertiary-rgb: 255 184 113;
-        --md-sys-color-tertiary: #FFB871;
-        --md-sys-color-on-tertiary-rgb: 74 40 0;
-        --md-sys-color-on-tertiary: #4A2800;
-        --md-sys-color-tertiary-container-rgb: 106 60 0;
-        --md-sys-color-tertiary-container: #6A3C00;
-        --md-sys-color-on-tertiary-container-rgb: 255 220 190;
-        --md-sys-color-on-tertiary-container: #FFDCBE;
-        --md-sys-color-success-rgb: 128 217 156;
-        --md-sys-color-success: #80D99C;
-        --md-sys-color-on-success-rgb: 0 57 28;
-        --md-sys-color-on-success: #00391C;
-        --md-sys-color-success-container-rgb: 0 82 43;
-        --md-sys-color-success-container: #00522B;
-        --md-sys-color-on-success-container-rgb: 183 241 196;
-        --md-sys-color-on-success-container: #B7F1C4;
-        --md-sys-color-error-rgb: 255 180 171;
-        --md-sys-color-error: #FFB4AB;
-        --md-sys-color-on-error-rgb: 105 0 4;
-        --md-sys-color-on-error: #690004;
-        --md-sys-color-error-container-rgb: 147 0 9;
-        --md-sys-color-error-container: #930009;
-        --md-sys-color-on-error-container-rgb: 255 218 214;
-        --md-sys-color-on-error-container: #FFDAD6;
-        --md-sys-color-surface-rgb: 11 15 19;
-        --md-sys-color-surface: #0B0F13;
-        --md-sys-color-surface-dim-rgb: 11 15 19;
-        --md-sys-color-surface-dim: #0B0F13;
-        --md-sys-color-surface-bright-rgb: 42 49 57;
-        --md-sys-color-surface-bright: #2A3139;
-        --md-sys-color-surface-container-lowest-rgb: 5 7 9;
-        --md-sys-color-surface-container-lowest: #050709;
-        --md-sys-color-surface-container-low-rgb: 17 24 39;
-        --md-sys-color-surface-container-low: #111827;
-        --md-sys-color-surface-container-rgb: 21 28 36;
-        --md-sys-color-surface-container: #151C24;
-        --md-sys-color-surface-container-high-rgb: 30 37 45;
-        --md-sys-color-surface-container-high: #1E252D;
-        --md-sys-color-surface-container-highest-rgb: 37 45 55;
-        --md-sys-color-surface-container-highest: #252D37;
-        --md-sys-color-on-surface-rgb: 226 228 233;
-        --md-sys-color-on-surface: #E2E4E9;
-        --md-sys-color-on-surface-variant-rgb: 201 205 211;
-        --md-sys-color-on-surface-variant: #C9CDD3;
-        --md-sys-color-outline-rgb: 138 145 155;
-        --md-sys-color-outline: #8A919B;
-        --md-sys-color-outline-variant-rgb: 64 71 80;
-        --md-sys-color-outline-variant: #404750;
-        --md-sys-color-inverse-surface-rgb: 226 228 233;
-        --md-sys-color-inverse-surface: #E2E4E9;
-        --md-sys-color-inverse-on-surface-rgb: 17 24 39;
-        --md-sys-color-inverse-on-surface: #111827;
-        --md-sys-color-inverse-primary-rgb: 30 37 45;
-        --md-sys-color-inverse-primary: #1E252D;
-        --md-sys-color-surface-tint-rgb: 192 199 210;
-        --md-sys-color-surface-tint: #C0C7D2;
       }
 
       html {
@@ -1183,7 +1039,7 @@ const unifiedSchemaGraph = {
       nav[data-quick-nav] a[data-active="true"]:hover,
       nav[data-quick-nav] a[data-active="true"]:focus,
       nav[data-quick-nav] a[data-active="true"]:active {
-        background-color: #1E252D !important;
+        background-color: #0B57D0 !important;
         color: #FFFFFF !important;
         font-weight: 700 !important;
         box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
@@ -1519,7 +1375,7 @@ const unifiedSchemaGraph = {
       <div
         id="reading-progress-bar"
         class="absolute bottom-0 left-0 h-[2px] w-0 z-50 pointer-events-none transition-opacity duration-300"
-        style="background: linear-gradient(90deg, #1E252D 0%, #475467 100%); opacity: 0;"
+        style="background: #0B57D0; opacity: 0;"
         aria-hidden="true"
       ></div>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1537,29 +1393,28 @@ const unifiedSchemaGraph = {
             </a>
           </div>
 
-          <!-- Mobile Section Indicator Chip (Header Center, Home Only) -->
-          {
-            isHome && (
-              <div
-                id="mobile-section-chip"
-                class="md:hidden inline-flex items-center gap-1.5 px-2.5 py-1 rounded-m3-full bg-m3-surface-container-high/90 border border-m3-outline-variant text-m3-on-surface text-m3-label-s font-semibold shadow-xs transition-opacity duration-300"
-              >
-                <span class="w-1.5 h-1.5 rounded-full bg-m3-primary"></span>
-                <span id="mobile-section-text" class="font-sans font-semibold text-m3-on-surface tracking-normal">01/08 • Booking</span>
-              </div>
-            )
-          }
-
           <!-- M3 Desktop Navigation Pills (Option A: Cabs & Rentals + Tour Packages) -->
           <div class="hidden md:flex items-center space-x-1 lg:space-x-1.5">
-            <a href="/" class="px-3 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
+            <a
+              href="/"
+              class={`px-3 py-2 rounded-full text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary ${
+                isHome
+                  ? "bg-m3-primary/10 text-m3-primary font-bold shadow-xs"
+                  : "text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold"
+              }`}
+              aria-current={isHome ? "page" : undefined}
+            >
               Home
             </a>
 
             <!-- 1. Cabs & Rentals Dropdown -->
             <div class="relative group">
               <button
-                class="flex items-center gap-1 px-3 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
+                class={`flex items-center gap-1 px-3 py-2 rounded-full text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary ${
+                  isCabsAndRentals
+                    ? "bg-m3-primary/10 text-m3-primary font-bold shadow-xs"
+                    : "text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold"
+                }`}
                 aria-expanded="false"
                 aria-haspopup="true"
               >
@@ -1634,7 +1489,11 @@ const unifiedSchemaGraph = {
             <!-- 2. Temple Tours Dropdown -->
             <div class="relative group">
               <button
-                class="flex items-center gap-1 px-3 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
+                class={`flex items-center gap-1 px-3 py-2 rounded-full text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary ${
+                  isTempleTours
+                    ? "bg-m3-primary/10 text-m3-primary font-bold shadow-xs"
+                    : "text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold"
+                }`}
                 aria-expanded="false"
                 aria-haspopup="true"
               >
@@ -1765,16 +1624,48 @@ const unifiedSchemaGraph = {
               </div>
             </div>
 
-            <a href="/fleet/" class="px-3 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
+            <a
+              href="/fleet/"
+              class={`px-3 py-2 rounded-full text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary ${
+                isFleet
+                  ? "bg-m3-primary/10 text-m3-primary font-bold shadow-xs"
+                  : "text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold"
+              }`}
+              aria-current={isFleet ? "page" : undefined}
+            >
               Fleet
             </a>
-            <a href="/drivers/" class="px-3 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
+            <a
+              href="/drivers/"
+              class={`px-3 py-2 rounded-full text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary ${
+                isDrivers
+                  ? "bg-m3-primary/10 text-m3-primary font-bold shadow-xs"
+                  : "text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold"
+              }`}
+              aria-current={isDrivers ? "page" : undefined}
+            >
               Drivers
             </a>
-            <a href="/tariff/" class="px-3 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
+            <a
+              href="/tariff/"
+              class={`px-3 py-2 rounded-full text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary ${
+                isTariff
+                  ? "bg-m3-primary/10 text-m3-primary font-bold shadow-xs"
+                  : "text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold"
+              }`}
+              aria-current={isTariff ? "page" : undefined}
+            >
               Tariff
             </a>
-            <a href="/calculator/" class="px-3 py-2 rounded-full text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
+            <a
+              href="/calculator/"
+              class={`px-3 py-2 rounded-full text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary ${
+                isCalculator
+                  ? "bg-m3-primary/10 text-m3-primary font-bold shadow-xs"
+                  : "text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold"
+              }`}
+              aria-current={isCalculator ? "page" : undefined}
+            >
               Fare Calculator
             </a>
           </div>
@@ -1935,14 +1826,39 @@ const unifiedSchemaGraph = {
 
         <!-- 3. Quick Links (one per row) -->
         <div class="flex flex-col gap-1.5 pt-1">
-          <a href="/tariff/" class="flex items-center gap-2.5 px-3 py-3 min-h-[44px] w-full rounded-m3-lg bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant/30 text-m3-on-surface text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
+          <a href="/fleet/" class={`flex items-center gap-2.5 px-3 py-3 min-h-[44px] w-full rounded-m3-lg border border-m3-outline-variant/30 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary ${
+            isFleet ? "bg-m3-primary/10 text-m3-primary font-bold" : "bg-m3-surface-container-low hover:bg-m3-surface-container text-m3-on-surface"
+          }`} aria-current={isFleet ? "page" : undefined}>
+            <svg class="w-4 h-4 text-m3-on-surface-variant shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2 10.9 2 11.1 2 11.3V16c0 .6.4 1 1 1h2"/>
+              <circle cx="7" cy="17" r="2"/>
+              <circle cx="17" cy="17" r="2"/>
+            </svg>
+            <span class="leading-tight">Our Fleet</span>
+          </a>
+          <a href="/drivers/" class={`flex items-center gap-2.5 px-3 py-3 min-h-[44px] w-full rounded-m3-lg border border-m3-outline-variant/30 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary ${
+            isDrivers ? "bg-m3-primary/10 text-m3-primary font-bold" : "bg-m3-surface-container-low hover:bg-m3-surface-container text-m3-on-surface"
+          }`} aria-current={isDrivers ? "page" : undefined}>
+            <svg class="w-4 h-4 text-m3-on-surface-variant shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            <span class="leading-tight">Verified Drivers</span>
+          </a>
+          <a href="/tariff/" class={`flex items-center gap-2.5 px-3 py-3 min-h-[44px] w-full rounded-m3-lg border border-m3-outline-variant/30 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary ${
+            isTariff ? "bg-m3-primary/10 text-m3-primary font-bold" : "bg-m3-surface-container-low hover:bg-m3-surface-container text-m3-on-surface"
+          }`} aria-current={isTariff ? "page" : undefined}>
             <svg class="w-4 h-4 text-m3-on-surface-variant shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect width="20" height="14" x="2" y="5" rx="2"/>
               <line x1="2" x2="22" y1="10" y2="10"/>
             </svg>
             <span class="leading-tight">Tariff &amp; Pricing</span>
           </a>
-          <a href="/calculator/" class="flex items-center gap-2.5 px-3 py-3 min-h-[44px] w-full rounded-m3-lg bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant/30 text-m3-on-surface text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary">
+          <a href="/calculator/" class={`flex items-center gap-2.5 px-3 py-3 min-h-[44px] w-full rounded-m3-lg border border-m3-outline-variant/30 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary ${
+            isCalculator ? "bg-m3-primary/10 text-m3-primary font-bold" : "bg-m3-surface-container-low hover:bg-m3-surface-container text-m3-on-surface"
+          }`} aria-current={isCalculator ? "page" : undefined}>
             <svg class="w-4 h-4 text-m3-on-surface-variant shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect width="16" height="20" x="4" y="2" rx="2"/>
               <line x1="8" x2="16" y1="6" y2="6"/>

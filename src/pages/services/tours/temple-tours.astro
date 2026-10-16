@@ -9,9 +9,9 @@ import OptimizedImage from '../../../components/OptimizedImage.astro';
 import VehicleCard from '../../../components/VehicleCard.astro';
 import { ChevronRight } from 'lucide-react';
 
-const title = "Temple Tour Cab Packages from Chennai";
+const title = "Temple Tour Packages from Chennai (From ₹3,500)";
 const description = "Temple tour packages from Chennai: Tirupati, Navagraha, Thiruvannamalai, Sabarimala & Rameswaram. AC cabs, courteous drivers & tolls included.";
-const keywords = "temple tour packages from chennai, chennai to tirupati cab, kumbakonam navagraha taxi, thiruvannamalai girivalam cab, rameswaram pilgrimage taxi, sabarimala taxi chennai, south india temple tour cabs";
+const keywords = "temple tour packages from chennai, south india temple tour packages from chennai, chennai to tirupati cab package, kumbakonam navagraha taxi, thiruvannamalai girivalam cab, rameswaram pilgrimage taxi, sabarimala taxi chennai, kanchipuram temple taxi, vellore golden temple cab, chidambaram temple taxi";
 
 const breadcrumbItems = [
   { name: "Home", item: "/" },
@@ -331,6 +331,8 @@ const schema = {
   "description": description,
   "url": "https://kalidasstravels.in/services/tours/temple-tours/",
   "image": "https://kalidasstravels.in/images/services/temple-tours.webp",
+  "telephone": "+918939539211",
+  "priceRange": "₹3,500 - ₹42,000",
   "providerMobility": "dynamic",
   "serviceType": "Temple Pilgrimage Cab Packages",
   "provider": {
@@ -339,7 +341,9 @@ const schema = {
   "areaServed": [
     { "@type": "City", "name": "Chennai" },
     { "@type": "AdministrativeArea", "name": "Tamil Nadu" },
+    { "@type": "AdministrativeArea", "name": "Puducherry" },
     { "@type": "AdministrativeArea", "name": "Andhra Pradesh" },
+    { "@type": "AdministrativeArea", "name": "Karnataka" },
     { "@type": "AdministrativeArea", "name": "Kerala" }
   ],
   "aggregateRating": {
@@ -360,6 +364,11 @@ const schema = {
         "image": `https://kalidasstravels.in${tourPackageImages[pkg.id] || "/images/services/temple-tours.webp"}`,
         "priceCurrency": "INR",
         "price": r.price.replace(/[^0-9]/g, ''),
+        "priceSpecification": {
+          "@type": "UnitPriceSpecification",
+          "price": r.price.replace(/[^0-9]/g, ''),
+          "priceCurrency": "INR"
+        },
         "priceValidUntil": "2027-12-31",
         "availability": "https://schema.org/InStock",
         "url": `https://kalidasstravels.in/services/${tourPackageSlugs[pkg.id] || pkg.id}/`,
@@ -379,6 +388,8 @@ const schema = {
 const faqSchema = {
   "@type": "FAQPage",
   "@id": "https://kalidasstravels.in/services/tours/temple-tours/#faq",
+  "name": "Temple Pilgrimage Tour FAQs",
+  "description": "Frequently asked questions regarding temple tour cab packages, tolls, satvik drivers, and elder care from Chennai.",
   "mainEntity": faqs.map(item => ({
     "@type": "Question",
     "name": item.q,
@@ -391,7 +402,7 @@ const faqSchema = {
 ---
 
 <Layout 
-  title={`${title} – Kalidass Travels`}
+  title={`${title} | Kalidass Travels`}
   description={description}
   keywords={keywords}
   image="/images/services/temple-tours.webp"
@@ -405,10 +416,10 @@ const faqSchema = {
 
       <!-- 1. HERO SECTION -->
       <section class="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
-        <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-3 font-heading">
+        <h1 data-speakable="true" class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-3 font-heading">
           Chennai to <span class="text-m3-primary">Temple Tour Packages</span> (All-Inclusive)
         </h1>
-        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed font-normal">
+        <p data-speakable="true" class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed font-normal">
           Hassle-free pilgrimage yatras from Chennai to South India's sacred shrines. Clean AC cabs, courteous satvik drivers, and all highway FASTag tolls paid upfront.
         </p>
       </section>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Car, LocateFixed, Calendar, Calculator, Send, ArrowRight, Repeat, Users, User, AlertCircle, Navigation, ShieldCheck, Clock, X, ChevronDown, ChevronRight, CheckCircle2, Plane, ArrowUpDown, MapPin, Phone, Receipt } from 'lucide-react';
+import { Car, LocateFixed, Calendar, Calculator, Send, ArrowRight, Repeat, Users, User, AlertCircle, Navigation, ShieldCheck, Clock, X, ChevronDown, ChevronRight, CheckCircle2, Plane, ArrowUpDown, MapPin, Phone, Receipt, Edit2 } from 'lucide-react';
 import { trackEvent, trackCalculatorQuote, markQuoteConverted } from '../lib/analytics';
 import LocationPicker from './LocationPicker';
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
@@ -40,7 +40,7 @@ const COMPARISON_VEHICLES = [
   },
   {
     key: 'Maruti Ertiga',
-    name: 'Family SUV',
+    name: 'Ertiga',
     models: 'Ertiga AC',
     pax: '6 Pax',
     maxPax: 6,
@@ -49,7 +49,7 @@ const COMPARISON_VEHICLES = [
   },
   {
     key: 'Innova Crysta',
-    name: 'Executive MPV',
+    name: 'Innova',
     models: 'Innova Crysta',
     pax: '7 Pax',
     maxPax: 7,
@@ -58,13 +58,30 @@ const COMPARISON_VEHICLES = [
   },
   {
     key: 'Tempo Traveller',
-    name: 'Minibus',
+    name: 'Tempo',
     models: 'Tempo 12-Seater',
     pax: '12 Pax',
     maxPax: 12,
     bags: '8 Bags',
     tag: 'Group'
   }
+];
+
+// Individual Passenger Options (1 Passenger, 2 Passengers, etc.)
+const PASSENGER_OPTIONS = [
+  { value: '1', label: '1 Passenger' },
+  { value: '2', label: '2 Passengers' },
+  { value: '3', label: '3 Passengers' },
+  { value: '4', label: '4 Passengers (Sedan)' },
+  { value: '5', label: '5 Passengers' },
+  { value: '6', label: '6 Passengers (Ertiga)' },
+  { value: '7', label: '7 Passengers (Innova)' },
+  { value: '8', label: '8 Passengers' },
+  { value: '9', label: '9 Passengers' },
+  { value: '10', label: '10 Passengers' },
+  { value: '11', label: '11 Passengers' },
+  { value: '12', label: '12 Passengers (Tempo)' },
+  { value: '13', label: '13+ Passengers' }
 ];
 
 // Tab configuration: Round Trip, One Way, and Local Package
@@ -127,6 +144,116 @@ const calculateCalendarDays = (pickupStr, returnStr) => {
   const diffDays = Math.round((rCal - pCal) / (1000 * 60 * 60 * 24));
   return Math.max(1, diffDays + 1);
 };
+
+// Parse driving duration in hours from duration string or distance km
+const parseDrivingHours = (durationStr, distanceKm) => {
+  if (durationStr && typeof durationStr === 'string') {
+    const hourMatch = durationStr.match(/(\d+(\.\d+)?)\s*(?:hour|hr|h)/i);
+    const minMatch = durationStr.match(/(\d+)\s*(?:minute|min|m)/i);
+    if (hourMatch) {
+      const hrs = parseFloat(hourMatch[1]);
+      const mins = minMatch ? parseInt(minMatch[1], 10) / 60 : 0;
+      return hrs + mins;
+    }
+  }
+  if (distanceKm && distanceKm > 0) {
+    // Average South India highway speed ~52 km/h accounting for tolls & city transit
+    return Math.max(1, Math.round((distanceKm / 52) * 10) / 10);
+  }
+  return 1;
+};
+
+// Calculate minimum realistic duration, days, and safety feasibility for outstation trips
+const getTripDrivingRequirements = (oneWayKm, isRoundTrip, durationStr) => {
+  if (!oneWayKm || oneWayKm <= 0) {
+    return {
+      oneWayHours: 1,
+      totalDrivingHours: 1,
+      minRealisticHours: 4,
+      minDays: 1,
+      isSameDayFeasible: true,
+      recommendedDays: 1,
+      drivingText: ''
+    };
+  }
+
+  const oneWayHours = parseDrivingHours(durationStr, oneWayKm);
+  const totalDrivingHours = isRoundTrip ? Math.round(oneWayHours * 2 * 10) / 10 : oneWayHours;
+  const totalKm = isRoundTrip ? oneWayKm * 2 : oneWayKm;
+
+  if (!isRoundTrip) {
+    return {
+      oneWayHours,
+      totalDrivingHours: oneWayHours,
+      minRealisticHours: Math.ceil(oneWayHours),
+      minDays: 1,
+      isSameDayFeasible: true,
+      recommendedDays: 1,
+      drivingText: `~${Math.round(oneWayHours)} hrs drive`
+    };
+  }
+
+  // Round Trip Commercial Driving Rules:
+  // Same-day return is feasible ONLY IF round trip <= 380 km AND driving <= 9.5 hrs.
+  // Beyond that, highway fatigue and commercial safety require 2+ calendar days.
+  const isSameDayFeasible = totalDrivingHours <= 9.5 && totalKm <= 380;
+
+  // Minimum calendar days:
+  let minDays = 1;
+  if (totalKm > 1000 || totalDrivingHours > 20) {
+    minDays = 3; // e.g. Kanyakumari (1,416 km), Munnar (1,160 km), Ooty (1,110 km)
+  } else if (!isSameDayFeasible || totalKm > 360 || totalDrivingHours > 9.5) {
+    minDays = 2; // e.g. Madurai (924 km), Trichy (664 km), Coimbatore (1,010 km), Bangalore (692 km)
+  } else {
+    minDays = 1; // e.g. Pondicherry (302 km), Tirupati (270 km), Vellore (274 km), Kanchipuram (150 km)
+  }
+
+  // Realistic hours window: driving time + essential halts/visit buffer (min 3-10 hrs)
+  const minRealisticHours = isSameDayFeasible 
+    ? Math.max(8, Math.ceil(totalDrivingHours + 3))
+    : Math.max(24, Math.ceil(totalDrivingHours + 10));
+
+  const recommendedDays = Math.max(minDays, Math.ceil(totalKm / 300));
+  const drivingText = `~${Math.round(totalDrivingHours)} hrs driving (~${Math.round(oneWayHours)} hrs/way)`;
+
+  return {
+    oneWayHours,
+    totalDrivingHours,
+    minRealisticHours,
+    minDays,
+    isSameDayFeasible,
+    recommendedDays,
+    drivingText
+  };
+};
+
+const getMinReturnDateTime = (pickupVal, minHours) => {
+  if (!pickupVal) return '';
+  const d = new Date(pickupVal);
+  if (isNaN(d.getTime())) return '';
+  d.setHours(d.getHours() + Math.ceil(minHours || 4));
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const hours = String(d.getHours()).padStart(2, '0');
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+
+const getEstimatedArrival = (pickupVal, drivingHours) => {
+  if (!pickupVal) return '';
+  const d = new Date(pickupVal);
+  if (isNaN(d.getTime())) return '';
+  d.setMinutes(d.getMinutes() + Math.round(drivingHours * 60));
+  return d.toLocaleString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  });
+};
+
 
 // South India distance lookup table for fast reliable fallback
 const COMMON_DISTANCES_FROM_CHENNAI = {
@@ -402,32 +529,68 @@ export default function QuotationEngine({
   const [mounted, setMounted] = useState(false);
   const [requestedDriver, setRequestedDriver] = useState('');
   const stableFormId = "booking-form-v1"; // Using stable ID for hydration safety
+  const hasCalculatedResult = Boolean(showResult && estimate > 0 && pickup && (drop || activeTab === 'local'));
 
-  // Auto-sync days count from Pickup & Return dates for round trips
+  const effDist = distance || (isTirupatiTrip ? 135 : 0);
+  const tripReq = getTripDrivingRequirements(effDist, activeTab === 'round', duration);
+
+  // Compute Schedule Advisory for driver safety
+  let scheduleAdvisory = null;
+  if (activeTab === 'round' && distance && date && returnDate) {
+    const diffHours = (new Date(returnDate) - new Date(date)) / (1000 * 60 * 60);
+    const roundKm = (distance * 2).toFixed(0);
+    if (diffHours < tripReq.totalDrivingHours) {
+      scheduleAdvisory = isTa
+        ? `சுற்றுப்பயணம் ~${roundKm} கிமீ (~${Math.round(tripReq.totalDrivingHours)} மணிநேர நெடுஞ்சாலைப் பயணம்). நீங்கள் தேர்ந்தெடுத்த பயண நேரம் (${Math.max(1, Math.round(diffHours))} மணி) போதுமானதாக இல்லை. குறைந்தபட்சம் ${tripReq.minDays} நாட்கள் தேவை.`
+        : `Round trip covers ~${roundKm} km (~${Math.round(tripReq.totalDrivingHours)} hrs highway driving). Selected schedule window (${Math.max(1, Math.round(diffHours))} hrs) is less than round-trip driving time. Minimum ${tripReq.minDays} calendar days required for highway safety.`;
+    } else if (!tripReq.isSameDayFeasible && days === 1) {
+      scheduleAdvisory = isTa
+        ? `சுற்றுப்பயணம் ~${roundKm} கிமீ. ஓட்டுநர் பாதுகாப்பு விதிகளின்படி ஒரே நாளில் திரும்ப முடியாது. குறைந்தபட்சம் ${tripReq.minDays} நாட்கள் தேவை.`
+        : `Round trip covers ~${roundKm} km (~${Math.round(tripReq.totalDrivingHours)} hrs driving). Same-day return is not feasible for highway safety. Minimum ${tripReq.minDays} calendar days applies.`;
+    }
+  }
+
+  // Auto-sync days count from Pickup & Return dates for round trips with minDays enforcement
   useEffect(() => {
     if (activeTab === 'round') {
       const computed = calculateCalendarDays(date, returnDate);
-      setDays(computed);
+      setDays(Math.max(tripReq.minDays, computed));
     } else {
       setDays(1);
     }
-  }, [activeTab, date, returnDate]);
+  }, [activeTab, date, returnDate, distance, duration, tripReq.minDays]);
 
   const handlePickupDateChange = (val) => {
     setDate(val);
-    // If round trip and returnDate is earlier than new pickup date, advance returnDate
-    if (activeTab === 'round' && returnDate && new Date(returnDate) < new Date(val)) {
+    if (!val) return;
+    if (activeTab === 'round') {
+      const minDaysToAdd = Math.max(1, tripReq.minDays) - 1;
       const p = new Date(val);
-      p.setHours(21, 0, 0, 0);
-      const year = p.getFullYear();
-      const month = String(p.getMonth() + 1).padStart(2, '0');
-      const day = String(p.getDate()).padStart(2, '0');
-      setReturnDate(`${year}-${month}-${day}T21:00`);
+      const targetReturn = new Date(p);
+      targetReturn.setDate(targetReturn.getDate() + minDaysToAdd);
+      targetReturn.setHours(21, 0, 0, 0);
+
+      if (!returnDate || new Date(returnDate) < targetReturn) {
+        const year = targetReturn.getFullYear();
+        const month = String(targetReturn.getMonth() + 1).padStart(2, '0');
+        const day = String(targetReturn.getDate()).padStart(2, '0');
+        setReturnDate(`${year}-${month}-${day}T21:00`);
+      }
     }
   };
 
   const handleReturnDateChange = (val) => {
     setReturnDate(val);
+  };
+
+  const handlePassengerChange = (newVal) => {
+    setPassengers(newVal);
+    const pCount = parseInt(newVal, 10);
+    const currentCapacity = VEHICLE_CAPACITY[vehicle] ?? 4;
+    if (currentCapacity < pCount) {
+      const nextVeh = vehicleOptions.find(v => (VEHICLE_CAPACITY[v] ?? 0) >= pCount);
+      if (nextVeh) setVehicle(nextVeh);
+    }
   };
 
 
@@ -711,20 +874,39 @@ export default function QuotationEngine({
     };
   }, []);
 
-  const resolveFallbackDistance = (o, d) => {
-    const fallback = findKnownDistance(o, d);
-    if (fallback) {
-      setDistance(fallback.distance);
-      setDuration(fallback.duration);
-    } else {
-      // Conservative estimate for outstation trip when distance API is unreachable
-      const fallbackKm = activeTab === 'round' ? 250 : 130;
-      setDistance(fallbackKm);
-      setDuration(activeTab === 'round' ? 'Full Day' : '3-4 hrs (Est)');
+  const applyResolvedDistance = (distKm, durStr) => {
+    setDistance(distKm);
+    setDuration(durStr);
+
+    if (activeTab === 'round' && distKm) {
+      const req = getTripDrivingRequirements(distKm, true, durStr);
+      if (req.minDays > 1) {
+        const curDays = calculateCalendarDays(date, returnDate);
+        if (curDays < req.minDays) {
+          const p = new Date(date || getDefaultDepartureTime());
+          p.setDate(p.getDate() + (req.minDays - 1));
+          p.setHours(21, 0, 0, 0);
+          const year = p.getFullYear();
+          const month = String(p.getMonth() + 1).padStart(2, '0');
+          const day = String(p.getDate()).padStart(2, '0');
+          setReturnDate(`${year}-${month}-${day}T21:00`);
+          setDays(req.minDays);
+        }
+      }
     }
     setLoading(false);
     setShowResult(true);
-    setShowBreakdown(true);
+  };
+
+  const resolveFallbackDistance = (o, d) => {
+    const fallback = findKnownDistance(o, d);
+    if (fallback) {
+      applyResolvedDistance(fallback.distance, fallback.duration);
+    } else {
+      // Conservative estimate for outstation trip when distance API is unreachable
+      const fallbackKm = activeTab === 'round' ? 250 : 130;
+      applyResolvedDistance(fallbackKm, activeTab === 'round' ? 'Full Day' : '3-4 hrs (Est)');
+    }
   };
 
   const calculateDistance = (origin, destination) => {
@@ -753,20 +935,12 @@ export default function QuotationEngine({
     const isTirup = destL.includes('tirupati') || destL.includes('tirumala') || origL.includes('tirupati') || origL.includes('tirumala');
 
     if (known) {
-      setDistance(known.distance);
-      setDuration(known.duration);
-      setLoading(false);
-      setShowResult(true);
-      setShowBreakdown(true);
+      applyResolvedDistance(known.distance, known.duration);
       return;
     }
 
     if (isTirup) {
-      setDistance(135);
-      setDuration('3.5 - 4 hrs (Est)');
-      setLoading(false);
-      setShowResult(true);
-      setShowBreakdown(true);
+      applyResolvedDistance(135, '3.5 - 4 hrs (Est)');
       return;
     }
 
@@ -797,11 +971,7 @@ export default function QuotationEngine({
               const element = response.rows[0].elements[0];
               const distValue = Math.round((element.distance.value / 1000) * 10) / 10;
               const durText = element.duration.text;
-              setDistance(distValue);
-              setDuration(durText);
-              setLoading(false);
-              setShowResult(true);
-              setShowBreakdown(true);
+              applyResolvedDistance(distValue, durText);
               return;
             }
             resolveFallbackDistance(o, d);
@@ -828,7 +998,6 @@ export default function QuotationEngine({
   const handleCalculateCost = () => {
     if (activeTab === 'local') {
       setShowResult(true);
-      setShowBreakdown(true);
       scrollToResult();
       return;
     }
@@ -1342,11 +1511,11 @@ ${driverLine}
 *LOCATION & PACKAGE*
 • Pickup: ${sanitizeInput(pickup)}
 • Drop: ${activeTab === 'local' ? 'Local Sightseeing (Chennai City Limits)' : sanitizeInput(drop)}
-${activeTab !== 'local' ? `• Distance: ${currentDist ? currentDist.toFixed(1) : 'N/A'} km ${activeTab === 'round' ? `(Round Trip: ${(currentDist * 2).toFixed(1)} km)` : '(One-Way Drop)'}\n` : ''}
+${activeTab !== 'local' ? `• Distance: ${currentDist ? (activeTab === 'round' ? (currentDist * 2).toFixed(0) : currentDist.toFixed(0)) : 'N/A'} km ${activeTab === 'round' ? `(Round Trip • ${tripReq.drivingText})` : `(One-Way Drop • ${tripReq.drivingText})`}\n` : ''}
 *PICKUP & SCHEDULE*
 • Trip Type: ${tripTypeTitle}
 • Pickup Date & Time: ${date ? new Date(date).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : 'Not Specified'}
-${activeTab === 'round' ? `• Return Date & Time: ${returnDate ? new Date(returnDate).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : 'Not Specified'}\n• Trip Duration: ${days} ${days > 1 ? 'Days' : 'Day'}\n` : ''}• Estimated Duration: ${activeTab === 'local' ? (localPackage === '5hr50km' ? '5 Hours' : localPackage === '8hr80km' ? '8 Hours' : '12 Hours') : (duration || 'N/A')}
+${activeTab === 'round' ? `• Return Date & Time: ${returnDate ? new Date(returnDate).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : 'Not Specified'}\n• Trip Duration: ${days} ${days > 1 ? 'Days' : 'Day'}\n` : ''}• Estimated Driving Time: ${activeTab === 'local' ? (localPackage === '5hr50km' ? '5 Hours' : localPackage === '8hr80km' ? '8 Hours' : '12 Hours') : (tripReq.drivingText || duration || 'N/A')}
 
 *TRAVEL & VEHICLE*
 • Selected Vehicle: ${vehicle}
@@ -1389,7 +1558,7 @@ Please confirm availability and share quote.`;
       />
 
       {/* Title Header — Material 3 Standard Elevation */}
-      <div className="py-3 px-4 sm:px-5 border-b border-m3-outline-variant/60 flex items-center justify-between bg-m3-surface">
+      <div className="py-3 px-4 sm:px-5 border-b border-m3-outline-variant/60 flex items-center bg-m3-surface">
         <div className="flex items-center gap-2.5 min-w-0">
           {headerIcon && (
             <div className="w-9 h-9 rounded-m3-full bg-m3-primary-container flex items-center justify-center shrink-0">
@@ -1413,9 +1582,6 @@ Please confirm availability and share quote.`;
             </p>
           </div>
         </div>
-        <span className="text-[11px] font-bold text-m3-on-success-container bg-m3-success-container/50 px-2.5 py-1 rounded-m3-sm border border-m3-success/30 shrink-0 ml-2">
-          {isTa ? '✓ நேரடி கட்டணம் • ₹0' : '✓ Live Rate • ₹0 to Check'}
-        </span>
       </div>
 
       {requestedDriver && (
@@ -1430,7 +1596,7 @@ Please confirm availability and share quote.`;
       {/* Tabs (Trip Type) */}
       {visibleTabs.length > 1 && (
         <div className="px-4 sm:px-5 pt-3.5 pb-1">
-          <div role="tablist" aria-label={isTa ? 'பயண வகை' : 'Trip Type'} className="bg-m3-surface-container-high p-1 rounded-m3-full flex gap-1 overflow-x-auto whitespace-nowrap hide-scrollbar border border-m3-outline-variant">
+          <div role="tablist" aria-label={isTa ? 'பயண வகை' : 'Trip Type'} className="bg-m3-surface-container-low p-1 rounded-m3-full flex gap-1 overflow-x-auto whitespace-nowrap hide-scrollbar border border-m3-outline-variant/60">
             {visibleTabs.map(tab => (
               <button
                 key={tab}
@@ -1439,15 +1605,15 @@ Please confirm availability and share quote.`;
                 onClick={() => { 
                   setActiveTab(tab); 
                   if (tab === 'local') {
-                    setShowResult(true);
+                    if (pickup) setShowResult(true);
                   } else if (pickup && drop && (distance || isTirupatiTrip)) {
                     setShowResult(true);
                   } else {
                     setShowResult(false);
                   }
                 }}
-                className={`flex-1 py-2 px-2.5 sm:px-4 text-xs font-bold rounded-m3-full transition-all flex items-center justify-center gap-1 min-h-[38px] sm:min-h-[42px] cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary ${
-                  activeTab === tab ? 'bg-m3-primary text-m3-on-primary shadow-m3-1' : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container-highest'
+                className={`flex-1 py-2 px-2.5 sm:px-4 text-xs font-bold rounded-m3-full transition-all flex items-center justify-center gap-1 min-h-[38px] sm:min-h-[42px] cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B57D0] ${
+                  activeTab === tab ? 'bg-white text-m3-on-surface shadow-xs border border-m3-outline-variant/70' : 'text-m3-on-surface-variant hover:text-m3-on-surface'
                 }`}
               >
                 <span className="capitalize">{tab === 'local' ? (isTa ? 'லோக்கல் பேக்கேஜ்' : 'Local Package') : tab === 'oneway' ? (isTa ? 'ஒரு வழி' : 'One Way') : (isTa ? 'இரு வழி' : 'Round Trip')}</span>
@@ -1467,531 +1633,565 @@ Please confirm availability and share quote.`;
         )}
 
         {/* Local Package Selection */}
-        {activeTab === 'local' && (
-          <div className="flex justify-center pb-0.5">
-            <div className="bg-m3-surface-container-high p-1 rounded-m3-lg flex text-xs font-bold w-full border border-m3-outline-variant">
-              {['5hr50km', '8hr80km', '12hr120km'].map(pkg => (
-                <button
-                  key={pkg}
-                  type="button"
-                  onClick={() => setLocalPackage(pkg)}
-                  className={`flex-1 px-2 py-2 rounded-m3-md transition-all min-h-[36px] font-bold ${localPackage === pkg ? 'bg-white text-m3-primary shadow-m3-1 border border-m3-outline-variant/60' : 'text-m3-on-surface-variant hover:text-m3-on-surface'}`}
-                >
-                  {pkg === '5hr50km' ? (isTa ? '5 மணி / 50 கிமீ' : '5Hrs / 50Kms') : pkg === '8hr80km' ? (isTa ? '8 மணி / 80 கிமீ' : '8Hrs / 80Kms') : (isTa ? '12 மணி / 120 கிமீ' : '12Hrs / 120Kms')}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* 1. Pickup Location Input Field (M3 Outlined Text Field) */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between">
-            <label htmlFor={activeTab === 'local' ? 'local-pickup-input' : 'pickup-input'} className="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center gap-1.5">
-              <MapPin className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
-              <span>{isTa ? 'சென்னையில் பிக்கப் இடம்' : 'Pickup Location in Chennai'}</span>
-            </label>
-            <span className="text-[11px] text-m3-on-surface-variant font-medium hidden sm:inline">
-              {isTa ? 'வீட்டு வாசலில் பிக்கப் சேர்க்கப்பட்டுள்ளது' : 'Doorstep Pickup Included'}
-            </span>
-          </div>
-          <div className="relative flex items-center">
-            <input
-              id={activeTab === 'local' ? 'local-pickup-input' : 'pickup-input'}
-              ref={pickupInputRef}
-              type="text"
-              autoComplete="street-address"
-              autoCorrect="off"
-              inputMode="text"
-              enterKeyHint="next"
-              aria-label={isTa ? 'சென்னையில் பிக்கப் இடம்' : 'Pickup Location in Chennai'}
-              value={pickup}
-              onChange={(e) => {
-                const val = e.target.value;
-                setPickup(val);
-                pickupValueRef.current = val;
-                setDistance(null);
-                setShowResult(false);
-                setErrors(prev => {
-                  const next = { ...prev };
-                  delete next.global;
-                  delete next.location;
-                  delete next.pickup;
-                  return next;
-                });
-              }}
-              onFocus={handleLocationFocus}
-              placeholder={isTa ? 'எ.கா: தி.நகர், ஏர்போர்ட், சென்ட்ரல்' : 'e.g. T. Nagar, Central, Airport, OMR'}
-              className={`w-full min-h-[48px] bg-white border rounded-m3-lg px-3.5 py-3 text-sm ${
-                errors.pickup 
-                  ? 'border-m3-error ring-1 ring-m3-error bg-m3-error-container/10' 
-                  : 'border-m3-outline-variant hover:border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20'
-              } ${pickup ? 'text-m3-on-surface font-semibold' : 'text-m3-on-surface font-normal'} placeholder:text-sm placeholder:text-m3-on-surface-variant/75 placeholder:font-normal outline-none transition-all pr-20 shadow-2xs`}
-            />
-            <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
-              {pickup && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setPickup('');
-                    pickupValueRef.current = '';
-                    setDistance(null);
-                    setShowResult(false);
-                  }}
-                  aria-label="Clear pickup location"
-                  title="Clear pickup location"
-                  className="w-9 h-9 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-full hover:bg-m3-surface-container active:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-on-surface transition-colors cursor-pointer"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
-              <button
-                type="button"
-                onClick={() => getCurrentLocation('pickup')}
-                disabled={gettingLocation === 'pickup'}
-                aria-label="Use current location"
-                title="Use current location"
-                className="w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-m3-md hover:bg-m3-surface-container active:scale-95 active:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-primary transition-all cursor-pointer disabled:opacity-50"
-              >
-                <LocateFixed className={`w-4 h-4 ${gettingLocation === 'pickup' ? 'animate-spin text-m3-primary' : ''}`} />
-              </button>
-            </div>
-          </div>
-          {errors.pickup && (
-            <p className="text-xs text-m3-error font-medium flex items-center gap-1 mt-1">
-              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-              <span>{errors.pickup}</span>
-            </p>
-          )}
-        </div>
-
-        {/* 2. Drop Location Field (for Round Trip & One Way) */}
-        <div className={activeTab === 'local' ? 'hidden' : 'space-y-1.5'}>
-          <div className="flex items-center justify-between">
-            <label htmlFor="drop-input" className="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center gap-1.5">
-              <Navigation className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
-              <span>{isTa ? 'டிராப் இடம் / சேருமிடம்' : 'Drop Location / City'}</span>
-            </label>
-            {distance ? (
-              <span className="text-[11px] font-semibold text-m3-on-surface-variant bg-white px-2 py-0.5 rounded border border-m3-outline-variant/50">
-                ~{activeTab === 'round' ? (distance * 2).toFixed(0) : distance.toFixed(0)} km {activeTab === 'round' ? 'Round Trip' : 'One Way'}
-              </span>
-            ) : (
-              <span className="text-[11px] text-m3-on-surface-variant font-medium hidden sm:inline">
-                {isTa ? 'தென்னிந்தியா முழுவதும் சேவை' : 'Anywhere in South India'}
-              </span>
+            {activeTab === 'local' && (
+              <div className="flex justify-center pb-0.5">
+                <div className="bg-m3-surface-container-high p-1 rounded-m3-lg flex text-xs font-bold w-full border border-m3-outline-variant">
+                  {['5hr50km', '8hr80km', '12hr120km'].map(pkg => (
+                    <button
+                      key={pkg}
+                      type="button"
+                      onClick={() => setLocalPackage(pkg)}
+                      className={`flex-1 px-2 py-2 rounded-m3-md transition-all min-h-[36px] font-bold ${localPackage === pkg ? 'bg-white text-m3-primary shadow-m3-1 border border-m3-outline-variant/60' : 'text-m3-on-surface-variant hover:text-m3-on-surface'}`}
+                    >
+                      {pkg === '5hr50km' ? (isTa ? '5 மணி / 50 கிமீ' : '5Hrs / 50Kms') : pkg === '8hr80km' ? (isTa ? '8 மணி / 80 கிமீ' : '8Hrs / 80Kms') : (isTa ? '12 மணி / 120 கிமீ' : '12Hrs / 120Kms')}
+                    </button>
+                  ))}
+                </div>
+              </div>
             )}
-          </div>
-          <div className="relative flex items-center">
-            <input
-              id="drop-input"
-              ref={dropInputRef}
-              type="text"
-              autoComplete="street-address"
-              autoCorrect="off"
-              inputMode="text"
-              enterKeyHint="next"
-              aria-label={isTa ? 'டிராப் இடம் / சேருமிடம்' : 'Drop Location / City'}
-              value={drop}
-              onChange={(e) => {
-                const val = e.target.value;
-                setDrop(val);
-                dropValueRef.current = val;
-                setDistance(null);
-                setShowResult(false);
-                setErrors(prev => {
-                  const next = { ...prev };
-                  delete next.global;
-                  delete next.location;
-                  delete next.drop;
-                  return next;
-                });
-              }}
-              onFocus={handleLocationFocus}
-              placeholder={isTa ? 'எ.கா: பாண்டிச்சேரி, பெங்களூரு, திருப்பதி' : 'e.g. Pondicherry, Bangalore, Tirupati, Vellore'}
-              className={`w-full min-h-[48px] bg-white border rounded-m3-lg px-3.5 py-3 text-sm ${
-                errors.drop 
-                  ? 'border-m3-error ring-1 ring-m3-error bg-m3-error-container/10' 
-                  : 'border-m3-outline-variant hover:border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20'
-              } ${drop ? 'text-m3-on-surface font-semibold' : 'text-m3-on-surface font-normal'} placeholder:text-sm placeholder:text-m3-on-surface-variant/75 placeholder:font-normal outline-none transition-all pr-20 shadow-2xs`}
-            />
-            <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
-              {drop && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setDrop('');
-                    dropValueRef.current = '';
+
+            {/* 1. Pickup Location Input Field */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label htmlFor={activeTab === 'local' ? 'local-pickup-input' : 'pickup-input'} className="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center gap-1.5">
+                  <MapPin className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
+                  <span>{isTa ? 'சென்னையில் பிக்கப் இடம்' : 'Pickup Location in Chennai'}</span>
+                </label>
+                <span className="text-[11px] text-m3-on-surface-variant font-medium hidden sm:inline">
+                  {isTa ? 'வீட்டு வாசலில் பிக்கப் சேர்க்கப்பட்டுள்ளது' : 'Doorstep Pickup Included'}
+                </span>
+              </div>
+              <div className="relative flex items-center">
+                <input
+                  id={activeTab === 'local' ? 'local-pickup-input' : 'pickup-input'}
+                  ref={pickupInputRef}
+                  type="text"
+                  autoComplete="street-address"
+                  autoCorrect="off"
+                  inputMode="text"
+                  enterKeyHint="next"
+                  aria-label={isTa ? 'சென்னையில் பிக்கப் இடம்' : 'Pickup Location in Chennai'}
+                  value={pickup}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setPickup(val);
+                    pickupValueRef.current = val;
                     setDistance(null);
                     setShowResult(false);
+                    setErrors(prev => {
+                      const next = { ...prev };
+                      delete next.global;
+                      delete next.location;
+                      delete next.pickup;
+                      return next;
+                    });
                   }}
-                  aria-label="Clear drop location"
-                  title="Clear drop location"
-                  className="w-9 h-9 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-full hover:bg-m3-surface-container active:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-on-surface transition-colors cursor-pointer"
-                >
-                  <X className="w-4 h-4" />
-                </button>
+                  onFocus={handleLocationFocus}
+                  placeholder={isTa ? 'எ.கா: தி.நகர், ஏர்போர்ட், சென்ட்ரல்' : 'e.g. T. Nagar, Central, Airport, OMR'}
+                  className={`w-full min-h-[48px] bg-white border rounded-m3-lg px-3.5 py-3 text-sm ${
+                    errors.pickup 
+                      ? 'border-m3-error ring-1 ring-m3-error bg-m3-error-container/10' 
+                      : 'border-m3-outline-variant hover:border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20'
+                  } ${pickup ? 'text-m3-on-surface font-semibold' : 'text-m3-on-surface font-normal'} placeholder:text-sm placeholder:text-m3-on-surface-variant/75 placeholder:font-normal outline-none transition-all pr-20 shadow-2xs`}
+                />
+                <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                  {pickup && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPickup('');
+                        pickupValueRef.current = '';
+                        setDistance(null);
+                        setShowResult(false);
+                      }}
+                      aria-label="Clear pickup location"
+                      title="Clear pickup location"
+                      className="w-9 h-9 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-full hover:bg-m3-surface-container active:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-on-surface transition-colors cursor-pointer"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => getCurrentLocation('pickup')}
+                    disabled={gettingLocation === 'pickup'}
+                    aria-label="Use current location"
+                    title="Use current location"
+                    className="w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-m3-md hover:bg-m3-surface-container active:scale-95 active:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-primary transition-all cursor-pointer disabled:opacity-50"
+                  >
+                    <LocateFixed className={`w-4 h-4 ${gettingLocation === 'pickup' ? 'animate-spin text-m3-primary' : ''}`} />
+                  </button>
+                </div>
+              </div>
+              {errors.pickup && (
+                <p className="text-xs text-m3-error font-medium flex items-center gap-1 mt-1">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                  <span>{errors.pickup}</span>
+                </p>
               )}
-              <button
-                type="button"
-                onClick={() => getCurrentLocation('drop')}
-                disabled={gettingLocation === 'drop'}
-                aria-label="Use current location"
-                title="Use current location"
-                className="w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-m3-md hover:bg-m3-surface-container active:scale-95 active:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-primary transition-all cursor-pointer disabled:opacity-50"
-              >
-                <LocateFixed className={`w-4 h-4 ${gettingLocation === 'drop' ? 'animate-spin text-m3-primary' : ''}`} />
-              </button>
-            </div>
-          </div>
-          {errors.drop && (
-            <p className="text-xs text-m3-error font-medium flex items-center gap-1 mt-1">
-              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-              <span>{errors.drop}</span>
-            </p>
-          )}
-        </div>
-
-        {/* Local Package Coverage Banner (shown only when activeTab === 'local') */}
-        {activeTab === 'local' && (
-          <div className="min-h-[44px] py-2.5 px-3.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center justify-between gap-2 text-xs text-m3-on-surface">
-            <div className="flex items-center gap-2 min-w-0">
-              <Navigation className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-              <span className="truncate">
-                <strong className="text-m3-on-surface font-bold">{isTa ? 'பேக்கேஜ் எல்லை:' : 'Coverage:'}</strong>{' '}
-                <span className="font-semibold text-m3-on-surface-variant">Chennai City Limits ({localPackage === '5hr50km' ? '5 Hrs / 50 Km' : localPackage === '8hr80km' ? '8 Hrs / 80 Km' : '12 Hrs / 120 Km'})</span>
-              </span>
-            </div>
-            <span className="text-[11px] font-semibold text-m3-on-success-container bg-m3-success-container/50 px-2 py-0.5 rounded border border-m3-success/30 shrink-0">
-              City Sightseeing
-            </span>
-          </div>
-        )}
-
-        {/* 3. Dual Date Pickers */}
-        <div className="space-y-2">
-          <div className={`grid ${activeTab === 'round' ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'} gap-2.5 sm:gap-3`}>
-            {/* Pickup Date & Time */}
-            <div className="space-y-1">
-              <label htmlFor={`${stableFormId}-pickup-date-main`} className="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center gap-1.5 truncate">
-                <Calendar className="w-3.5 h-3.5 text-m3-on-surface-variant shrink-0" />
-                <span className="truncate">{isTa ? 'புறப்படும் தேதி & நேரம்' : 'Pickup Date & Time'}</span>
-              </label>
-              <input
-                id={`${stableFormId}-pickup-date-main`}
-                type="datetime-local"
-                value={date}
-                onChange={(e) => handlePickupDateChange(e.target.value)}
-                className="w-full min-h-[48px] bg-white border border-m3-outline-variant hover:border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20 rounded-m3-lg px-2.5 sm:px-3.5 py-2.5 text-xs sm:text-sm font-semibold text-m3-on-surface outline-none transition-all shadow-2xs cursor-pointer"
-              />
             </div>
 
-            {/* Return Date & Time (for Round Trip) */}
-            {activeTab === 'round' && (
-              <div className="space-y-1">
-                <div className="flex items-center justify-between">
-                  <label htmlFor={`${stableFormId}-return-date-main`} className="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center gap-1.5 truncate">
-                    <Calendar className="w-3.5 h-3.5 text-m3-on-surface-variant shrink-0" />
-                    <span className="truncate">{isTa ? 'திரும்பும் தேதி & நேரம்' : 'Return Date & Time'}</span>
-                  </label>
-                  <span className="text-[11px] font-bold text-m3-primary bg-m3-primary/10 px-1.5 py-0.5 rounded-m3-sm">
-                    {days} {days > 1 ? (isTa ? 'நாட்கள்' : 'Days') : (isTa ? 'நாள்' : 'Day')}
+            {/* 2. Drop Location Field */}
+            <div className={activeTab === 'local' ? 'hidden' : 'space-y-1.5'}>
+              <div className="flex items-center justify-between">
+                <label htmlFor="drop-input" className="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center gap-1.5">
+                  <Navigation className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
+                  <span>{isTa ? 'டிராப் இடம் / சேருமிடம்' : 'Drop Location / City'}</span>
+                </label>
+                {distance ? (
+                  <span className="text-[11px] font-semibold text-m3-on-surface-variant bg-white px-2 py-0.5 rounded border border-m3-outline-variant/50">
+                    ~{activeTab === 'round' ? (distance * 2).toFixed(0) : distance.toFixed(0)} km {activeTab === 'round' ? 'Round Trip' : 'One Way'} • {tripReq.drivingText}
+                  </span>
+                ) : (
+                  <span className="text-[11px] text-m3-on-surface-variant font-medium hidden sm:inline">
+                    {isTa ? 'தென்னிந்தியா முழுவதும் சேவை' : 'Anywhere in South India'}
+                  </span>
+                )}
+              </div>
+              <div className="relative flex items-center">
+                <input
+                  id="drop-input"
+                  ref={dropInputRef}
+                  type="text"
+                  autoComplete="street-address"
+                  autoCorrect="off"
+                  inputMode="text"
+                  enterKeyHint="next"
+                  aria-label={isTa ? 'டிராப் இடம் / சேருமிடம்' : 'Drop Location / City'}
+                  value={drop}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setDrop(val);
+                    dropValueRef.current = val;
+                    setDistance(null);
+                    setShowResult(false);
+                    setErrors(prev => {
+                      const next = { ...prev };
+                      delete next.global;
+                      delete next.location;
+                      delete next.drop;
+                      return next;
+                    });
+                  }}
+                  onFocus={handleLocationFocus}
+                  placeholder={isTa ? 'எ.கா: பாண்டிச்சேரி, பெங்களூரு, திருப்பதி' : 'e.g. Pondicherry, Bangalore, Tirupati, Vellore'}
+                  className={`w-full min-h-[48px] bg-white border rounded-m3-lg px-3.5 py-3 text-sm ${
+                    errors.drop 
+                      ? 'border-m3-error ring-1 ring-m3-error bg-m3-error-container/10' 
+                      : 'border-m3-outline-variant hover:border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20'
+                  } ${drop ? 'text-m3-on-surface font-semibold' : 'text-m3-on-surface font-normal'} placeholder:text-sm placeholder:text-m3-on-surface-variant/75 placeholder:font-normal outline-none transition-all pr-20 shadow-2xs`}
+                />
+                <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                  {drop && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setDrop('');
+                        dropValueRef.current = '';
+                        setDistance(null);
+                        setShowResult(false);
+                      }}
+                      aria-label="Clear drop location"
+                      title="Clear drop location"
+                      className="w-9 h-9 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-full hover:bg-m3-surface-container active:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-on-surface transition-colors cursor-pointer"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => getCurrentLocation('drop')}
+                    disabled={gettingLocation === 'drop'}
+                    aria-label="Use current location"
+                    title="Use current location"
+                    className="w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-m3-md hover:bg-m3-surface-container active:scale-95 active:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-primary transition-all cursor-pointer disabled:opacity-50"
+                  >
+                    <LocateFixed className={`w-4 h-4 ${gettingLocation === 'drop' ? 'animate-spin text-m3-primary' : ''}`} />
+                  </button>
+                </div>
+              </div>
+              {errors.drop && (
+                <p className="text-xs text-m3-error font-medium flex items-center gap-1 mt-1">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                  <span>{errors.drop}</span>
+                </p>
+              )}
+            </div>
+
+            {/* Local Package Coverage Banner */}
+            {activeTab === 'local' && (
+              <div className="min-h-[44px] py-2.5 px-3.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center justify-between gap-2 text-xs text-m3-on-surface">
+                <div className="flex items-center gap-2 min-w-0">
+                  <Navigation className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                  <span className="truncate">
+                    <strong className="text-m3-on-surface font-bold">{isTa ? 'பேக்கேஜ் எல்லை:' : 'Coverage:'}</strong>{' '}
+                    <span className="font-semibold text-m3-on-surface-variant">Chennai City Limits ({localPackage === '5hr50km' ? '5 Hrs / 50 Km' : localPackage === '8hr80km' ? '8 Hrs / 80 Km' : '12 Hrs / 120 Km'})</span>
                   </span>
                 </div>
-                <input
-                  id={`${stableFormId}-return-date-main`}
-                  type="datetime-local"
-                  value={returnDate}
-                  min={date}
-                  onChange={(e) => handleReturnDateChange(e.target.value)}
-                  className="w-full min-h-[48px] bg-white border border-m3-outline-variant hover:border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20 rounded-m3-lg px-2.5 sm:px-3.5 py-2.5 text-xs sm:text-sm font-semibold text-m3-on-surface outline-none transition-all shadow-2xs cursor-pointer"
-                />
+                <span className="text-[11px] font-semibold text-m3-on-surface-variant bg-m3-surface-container-high px-2 py-0.5 rounded border border-m3-outline-variant/60 shrink-0">
+                  City Sightseeing
+                </span>
               </div>
             )}
-          </div>
-        </div>
 
-        {/* 4. Passengers & Vehicle Selection */}
-        <div className="grid grid-cols-2 gap-2.5 sm:gap-3 pt-0.5">
-          {/* Passenger selection */}
-          <div className="space-y-1">
-            <label htmlFor={`${stableFormId}-passengers`} className="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center justify-between">
-              <span className="flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-m3-on-surface-variant shrink-0" />
-                <span>{isTa ? 'பயணிகள்' : 'Passengers'}</span>
-              </span>
-              <span className="text-[11px] text-m3-on-surface-variant font-normal hidden sm:inline">Auto-filters</span>
-            </label>
-            <div className="relative flex items-center min-h-[48px] bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-lg transition-colors focus-within:border-m3-primary focus-within:ring-2 focus-within:ring-m3-primary/20 shadow-2xs">
-              <select
-                id={`${stableFormId}-passengers`}
-                value={passengers}
-                onChange={(e) => { setPassengers(e.target.value); }}
-                className="w-full min-h-[48px] bg-transparent appearance-none outline-none cursor-pointer px-2.5 sm:px-3.5 py-2.5 sm:py-3 pr-7 sm:pr-8 text-xs sm:text-sm truncate text-m3-on-surface font-semibold"
-              >
-                {['4', '6', '7', '12'].map(n => (
-                  <option key={n} value={n} className="text-m3-on-surface font-semibold">
-                    {n} {isTa ? 'பயணிகள்' : 'Pax'} + {isTa ? 'டிரைவர்' : 'Driver'}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="w-4 h-4 text-m3-on-surface-variant pointer-events-none absolute right-2 sm:right-2.5 top-1/2 -translate-y-1/2 shrink-0" />
-            </div>
-          </div>
-
-          {/* Vehicle selection */}
-          <div className="space-y-1">
-            <label htmlFor={`${stableFormId}-vehicle`} className="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center justify-between">
-              <span className="flex items-center gap-1.5">
-                <Car className="w-3.5 h-3.5 text-m3-on-surface-variant shrink-0" />
-                <span>{isTa ? 'வாகன மாதிரி' : 'Vehicle Model'}</span>
-              </span>
-              <span className="text-[11px] text-m3-on-surface-variant font-medium hidden sm:inline">
-                {vehicleOptions.filter(v => (VEHICLE_CAPACITY[v] ?? 4) >= parseInt(passengers)).length} eligible
-              </span>
-            </label>
-            <div className="relative flex items-center min-h-[48px] bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-lg transition-colors focus-within:border-m3-primary focus-within:ring-2 focus-within:ring-m3-primary/20 shadow-2xs">
-              <select
-                id={`${stableFormId}-vehicle`}
-                value={vehicle}
-                onChange={(e) => { setVehicle(e.target.value); }}
-                className="w-full min-h-[48px] bg-transparent appearance-none outline-none cursor-pointer px-2.5 sm:px-3.5 py-2.5 sm:py-3 pr-7 sm:pr-8 text-xs sm:text-sm truncate text-m3-on-surface font-semibold"
-              >
-                {vehicleOptions.map(v => {
-                  const cap = VEHICLE_CAPACITY[v] ?? 4;
-                  const pax = parseInt(passengers);
-                  const disabled = cap < pax;
-                  return (
-                    <option key={v} value={v} disabled={disabled} className="text-m3-on-surface font-semibold">
-                      {v} ({cap} Pax)
-                    </option>
-                  );
-                })}
-              </select>
-              <ChevronDown className="w-4 h-4 text-m3-on-surface-variant pointer-events-none absolute right-2 sm:right-2.5 top-1/2 -translate-y-1/2 shrink-0" />
-            </div>
-          </div>
-        </div>
-
-        {/* Passenger-Vehicle capacity warning */}
-        {(() => {
-          const cap = VEHICLE_CAPACITY[vehicle] ?? 4;
-          const pax = parseInt(passengers);
-          if (cap < pax) {
-            return (
-              <div className="flex items-start gap-2 px-3 py-2 rounded-m3-md bg-m3-tertiary-container/40 border border-m3-tertiary/30 text-m3-on-tertiary-container text-xs font-semibold">
-                <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5 text-m3-tertiary" />
-                <span>{vehicle} seats max {cap} passengers. Please select a larger vehicle for {pax} pax.</span>
-              </div>
-            );
-          }
-          return null;
-        })()}
-
-        {/* 5. Dynamic Fare Result & Actions Area */}
-        {showResult && estimate > 0 ? (
-          <div ref={resultRef} className="pt-3 border-t border-m3-outline-variant/60 space-y-3 animate-in fade-in duration-200">
-            {/* Hero Price & Inclusions */}
-            <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <div className="text-3xl sm:text-4xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-none">
-                  ₹ {estimate.toLocaleString('en-IN')}
+            {/* 3. Dual Date Pickers (Twin Interactive Tile Cards) */}
+            <div className="space-y-2">
+              <div className={`grid ${activeTab === 'round' ? 'grid-cols-2' : 'grid-cols-1'} gap-2 sm:gap-3`}>
+                {/* Pickup Date Tile */}
+                <div className="group relative rounded-xl border border-m3-outline-variant bg-slate-50/70 hover:bg-slate-50 hover:border-m3-outline focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/20 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
+                  <div className="flex items-center justify-between gap-1 mb-1">
+                    <label 
+                      htmlFor={`${stableFormId}-pickup-date-main`} 
+                      className="text-[11px] sm:text-xs font-bold text-m3-on-surface-variant flex items-center gap-1.5 cursor-pointer truncate"
+                    >
+                      <Calendar className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
+                      <span className="truncate">{isTa ? 'புறப்படும் தேதி & நேரம்' : 'Pickup Date & Time'}</span>
+                    </label>
+                  </div>
+                  <input
+                    id={`${stableFormId}-pickup-date-main`}
+                    type="datetime-local"
+                    value={date}
+                    onChange={(e) => handlePickupDateChange(e.target.value)}
+                    className="w-full bg-transparent text-xs sm:text-sm font-semibold text-m3-on-surface outline-none cursor-pointer p-0"
+                  />
+                  {activeTab === 'oneway' && distance && date && (
+                    <div className="mt-1 pt-1 border-t border-m3-outline-variant/40 flex items-center justify-between text-[10px] text-m3-on-surface-variant font-medium">
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-3 h-3 text-[#1a73e8]" />
+                        <span>{isTa ? 'சேருமிடம் நேரம்:' : 'Est. Arrival:'}</span>
+                      </span>
+                      <span className="font-bold text-m3-on-surface">
+                        {getEstimatedArrival(date, tripReq.oneWayHours)}
+                      </span>
+                    </div>
+                  )}
                 </div>
-                <span className="text-[10px] font-bold text-m3-on-success-container bg-m3-success-container/70 px-2 py-0.5 rounded-full uppercase tracking-wider">
-                  Transparent Estimate
-                </span>
-                <span className="text-[11px] sm:text-xs font-bold px-2.5 py-0.5 rounded-m3-sm border whitespace-nowrap shrink-0 text-m3-on-success-container bg-m3-success-container/50 border-m3-success/30">
-                  {breakdown?.is_tirupati_pkg ? '✓ All-Inclusive Flat Package' : (activeTab === 'local' ? '✓ Fuel & Driver Bata Included' : '✓ Base Meter Fare (Fuel & Driver Incl.)')}
-                </span>
+
+                {/* Return Date Tile (for Round Trip) */}
+                {activeTab === 'round' && (
+                  <div className="group relative rounded-xl border border-m3-outline-variant bg-slate-50/70 hover:bg-slate-50 hover:border-m3-outline focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/20 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
+                    <div className="flex items-center justify-between gap-1 mb-1">
+                      <label 
+                        htmlFor={`${stableFormId}-return-date-main`} 
+                        className="text-[11px] sm:text-xs font-bold text-m3-on-surface-variant flex items-center gap-1.5 cursor-pointer truncate"
+                      >
+                        <Calendar className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
+                        <span className="truncate">{isTa ? 'திரும்பும் தேதி' : 'Return Date'}</span>
+                      </label>
+                      <span className="text-[10px] sm:text-[11px] font-bold text-[#1a73e8] bg-[#1a73e8]/10 px-1.5 py-0.5 rounded-full shrink-0">
+                        {days} {days > 1 ? (isTa ? 'நாட்கள்' : 'Days') : (isTa ? 'நாள்' : 'Day')}
+                      </span>
+                    </div>
+                    <input
+                      id={`${stableFormId}-return-date-main`}
+                      type="datetime-local"
+                      value={returnDate}
+                      min={date ? getMinReturnDateTime(date, tripReq.minRealisticHours) : date}
+                      onChange={(e) => handleReturnDateChange(e.target.value)}
+                      className="w-full bg-transparent text-xs sm:text-sm font-semibold text-m3-on-surface outline-none cursor-pointer p-0"
+                    />
+                  </div>
+                )}
               </div>
-              <p className="mt-1 text-xs sm:text-sm text-m3-on-surface-variant font-medium leading-relaxed">
-                {breakdown?.is_tirupati_pkg 
-                  ? (isTa ? '100% எரிபொருள் + டோல்கள் + ஆந்திரா அனுமதி வரி + திருமலை மலைப்பாதை + டிரைவர் பேட்டா உட்பட' : '100% Fuel + Tolls + AP Permit + Hill Climb + Driver Bata Included')
-                  : activeTab === 'local' 
-                    ? (isTa ? `${localPackage === '5hr50km' ? '5 மணி / 50 கிமீ' : localPackage === '8hr80km' ? '8 மணி / 80 கிமீ' : '12 மணி / 120 கிமீ'} பேக்கேஜ் • கூடுதல் கிமீ/மணி குறைந்த கட்டணம்` : `Covers ${localPackage === '5hr50km' ? '5 Hours / 50 Km' : localPackage === '8hr80km' ? '8 Hours / 80 Km' : '12 Hours / 120 Km'} + Chauffeur Duty`)
-                    : `₹${activeTab === 'round' ? vehicles[vehicle]?.round_trip_rate : vehicles[vehicle]?.one_way_rate}/km · Fuel & Driver Day Bata Included${breakdown?.free_buffer_km > 0 ? ` · +${breakdown.free_buffer_km.toFixed(0)} km free buffer` : ''}`}
-              </p>
-              {!breakdown?.is_tirupati_pkg && breakdown?.road_extras_est > 0 && (
-                <div className="mt-1 flex items-center gap-1.5 text-xs text-m3-on-surface-variant font-medium flex-wrap">
-                  <span>{isTa ? 'சுமார் டோல் & சாலை செலவுகள்:' : 'Est. Road Extras:'} <strong className="text-m3-on-surface">~₹{breakdown.road_extras_est.toLocaleString('en-IN')}</strong></span>
-                  <span>•</span>
-                  <span>{isTa ? 'அனைத்தும் உட்பட:' : 'All-Inclusive Est:'} <strong className="text-m3-success">~₹{breakdown.all_inclusive_est.toLocaleString('en-IN')}</strong></span>
+
+              {scheduleAdvisory && (
+                <div className="p-2 sm:p-2.5 rounded-m3-lg bg-amber-50 border border-amber-300/80 text-[11px] sm:text-xs text-amber-900 flex items-start gap-2 animate-in fade-in">
+                  <AlertCircle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+                  <div className="leading-snug">
+                    <strong className="font-bold">{isTa ? 'பயண நேர ஆலோசனை:' : 'Schedule Advisory:'}</strong> {scheduleAdvisory}
+                  </div>
                 </div>
               )}
             </div>
 
-            {/* Collapsible Itemized Fare Breakdown */}
-            <div className="border border-m3-outline-variant/80 rounded-m3-xl overflow-hidden bg-white shadow-2xs">
-              <button
-                type="button"
-                onClick={() => setShowBreakdown(!showBreakdown)}
-                aria-expanded={showBreakdown}
-                className="w-full px-3.5 py-3 min-h-[48px] flex items-center justify-between text-xs sm:text-sm font-bold text-m3-on-surface hover:bg-m3-surface-container-low transition-colors cursor-pointer"
-              >
-                <div className="flex items-center gap-2">
-                  <Receipt className="w-4 h-4 text-m3-success shrink-0" />
-                  <span>{showBreakdown ? (isTa ? 'கட்டண விவரங்களை மறை' : 'Hide Itemized Fare Breakdown') : (isTa ? '100% கட்டண விவரத்தைப் பார்க்க' : 'View Itemized Fare Breakdown')}</span>
+            {/* 4. Passengers & Vehicle Selection Tiles */}
+            <div className="grid grid-cols-2 gap-2 sm:gap-3">
+              {/* Passenger Tile */}
+              <div className="group relative rounded-xl border border-m3-outline-variant bg-slate-50/70 hover:bg-slate-50 hover:border-m3-outline focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/20 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
+                <div className="flex items-center justify-between gap-1 mb-1">
+                  <label 
+                    htmlFor={`${stableFormId}-passengers`} 
+                    className="text-[11px] sm:text-xs font-bold text-m3-on-surface-variant flex items-center gap-1.5 cursor-pointer truncate"
+                  >
+                    <Users className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
+                    <span className="truncate">{isTa ? 'பயணிகள்' : 'Passengers'}</span>
+                  </label>
                 </div>
-                <div className="flex items-center gap-1.5 text-xs text-m3-on-surface-variant font-semibold">
-                  <span className="hidden sm:inline">{showBreakdown ? 'Collapse' : 'Expand'}</span>
-                  <span className="sm:hidden">{showBreakdown ? 'Hide' : 'Details'}</span>
-                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showBreakdown ? 'rotate-180' : ''}`} />
+                <div className="relative">
+                  <select
+                    id={`${stableFormId}-passengers`}
+                    value={passengers}
+                    onChange={(e) => handlePassengerChange(e.target.value)}
+                    className="w-full bg-transparent appearance-none outline-none cursor-pointer pr-5 text-xs sm:text-sm font-semibold text-m3-on-surface truncate p-0"
+                  >
+                    {PASSENGER_OPTIONS.map(opt => (
+                      <option key={opt.value} value={opt.value} className="text-m3-on-surface font-semibold">
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="w-3.5 h-3.5 text-m3-on-surface-variant pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 shrink-0" />
                 </div>
-              </button>
+              </div>
 
-              {showBreakdown && (
-                <div className="p-3.5 border-t border-m3-outline-variant/60 bg-m3-surface-container-lowest text-xs animate-in fade-in duration-150 space-y-2">
-                  <div className="space-y-1.5 divide-y divide-m3-outline-variant/40 text-[11.5px] sm:text-xs">
-                    <div className="flex justify-between items-center py-1">
-                      <span className="text-m3-on-surface-variant">Dedicated AC Vehicle ({vehicle}):</span>
+              {/* Vehicle Model Tile */}
+              <div className="group relative rounded-xl border border-m3-outline-variant bg-slate-50/70 hover:bg-slate-50 hover:border-m3-outline focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/20 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
+                <div className="flex items-center justify-between gap-1 mb-1">
+                  <label 
+                    htmlFor={`${stableFormId}-vehicle`} 
+                    className="text-[11px] sm:text-xs font-bold text-m3-on-surface-variant flex items-center gap-1.5 cursor-pointer truncate"
+                  >
+                    <Car className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
+                    <span className="truncate">{isTa ? 'வாகனம்' : 'Vehicle Model'}</span>
+                  </label>
+                </div>
+                <div className="relative">
+                  <select
+                    id={`${stableFormId}-vehicle`}
+                    value={vehicle}
+                    onChange={(e) => { setVehicle(e.target.value); }}
+                    className="w-full bg-transparent appearance-none outline-none cursor-pointer pr-5 text-xs sm:text-sm font-semibold text-m3-on-surface truncate p-0"
+                  >
+                    {vehicleOptions.map(v => {
+                      const cap = VEHICLE_CAPACITY[v] ?? 4;
+                      const pax = parseInt(passengers);
+                      const disabled = cap < pax;
+                      return (
+                        <option key={v} value={v} disabled={disabled} className="text-m3-on-surface font-semibold">
+                          {v} ({cap} Pax)
+                        </option>
+                      );
+                    })}
+                  </select>
+                  <ChevronDown className="w-3.5 h-3.5 text-m3-on-surface-variant pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 shrink-0" />
+                </div>
+              </div>
+            </div>
+
+            {/* PRIMARY CTA BUTTON (Compact & Centered Google Blue Button) */}
+            <div className="pt-2.5 space-y-1.5 flex flex-col items-center justify-center">
+              <button
+                id="btn-calculate-fare"
+                type="button"
+                disabled={loading}
+                onClick={handleCalculateCost}
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 min-h-[40px] bg-[#1a73e8] hover:bg-[#1557b0] active:scale-[0.98] text-white font-bold text-xs sm:text-sm rounded-full shadow-sm hover:shadow-md transition-all cursor-pointer"
+              >
+                {loading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>{isTa ? 'கணக்கிடுகிறது...' : 'Calculating Fare...'}</span>
+                  </>
+                ) : (
+                  <>
+                    <Calculator className="w-4 h-4 text-white shrink-0" />
+                    <span>{isTa ? 'கட்டணம் பார்க்கவும் →' : 'View Instant Fare →'}</span>
+                  </>
+                )}
+              </button>
+              <p className="text-[11px] text-m3-on-surface-variant/80 text-center font-medium max-w-sm">
+                ✓ {isTa ? 'கட்டணம் கணக்கிட தொலைபேசி எண் தேவையில்லை • வெளிப்படையான கட்டணங்கள்' : 'Instant calculation • No phone number required • Zero surge'}
+              </p>
+            </div>
+
+            {/* Dynamic Fare Result & Actions Area — Rate Summary with Complete Itemized Breakdown */}
+            {showResult && estimate > 0 && (
+              <div ref={resultRef} className="pt-3 border-t border-m3-outline-variant/60 space-y-3 animate-in fade-in duration-200">
+                
+                {/* Rate Summary Card with Itemized Breakdown */}
+                <div className="bg-slate-50 border border-m3-outline-variant/80 rounded-xl p-3.5 space-y-2.5 shadow-2xs">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-base font-extrabold text-m3-on-surface">
+                          {vehicle}
+                        </span>
+                        <span className="text-[10px] font-bold bg-[#1a73e8]/10 text-[#1a73e8] px-2 py-0.5 rounded-full">
+                          {passengers} Pax
+                        </span>
+                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                          Transparent Estimate
+                        </span>
+                      </div>
+                      <p className="text-xs text-m3-on-surface-variant font-medium mt-1 leading-snug">
+                        {breakdown?.is_tirupati_pkg 
+                          ? (isTa ? '100% எரிபொருள் + டோல்கள் + ஆந்திரா அனுமதி வரி + திருமலை மலைப்பாதை + டிரைவர் பேட்டா உட்பட' : '100% Fuel + Tolls + AP Permit + Hill Climb + Driver Bata Included')
+                          : activeTab === 'local' 
+                            ? (isTa ? 'எரிபொருள் மற்றும் டிரைவர் பேட்டா உட்பட' : 'Fuel & Chauffeur Duty Included')
+                            : `₹${activeTab === 'round' ? vehicles[vehicle]?.round_trip_rate : vehicles[vehicle]?.one_way_rate}/km · Fuel & Chauffeur Duty Included${breakdown?.free_buffer_km > 0 ? ` · +${breakdown.free_buffer_km.toFixed(0)} km free buffer` : ''}`}
+                      </p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <div className="text-2xl sm:text-3xl font-extrabold text-m3-on-surface font-heading leading-tight">
+                        ₹{estimate.toLocaleString('en-IN')}
+                      </div>
+                      <div className="text-[11px] text-m3-on-surface-variant font-semibold mt-0.5">
+                        {activeTab === 'round' 
+                          ? `~${(distance * 2).toFixed(0)} km Round Trip · ~${Math.round(tripReq.totalDrivingHours)} hrs driving` 
+                          : activeTab === 'oneway' 
+                            ? `~${distance?.toFixed(0)} km Drop · ~${Math.round(tripReq.oneWayHours)} hrs driving` 
+                            : 'City Rental'}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Itemized Fare Breakdown */}
+                  <div className="pt-2 border-t border-m3-outline-variant/60 text-xs space-y-1.5">
+                    <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                      <span>Dedicated AC Cab ({vehicle}):</span>
                       <span className="font-bold text-m3-on-surface">₹{(breakdown?.km_cost || estimate).toLocaleString('en-IN')}</span>
                     </div>
                     {breakdown?.driver_bata > 0 && (
-                      <div className="flex justify-between items-center py-1">
-                        <span className="text-m3-on-surface-variant">Chauffeur Duty &amp; Bata ({days} {days > 1 ? 'Days' : 'Day'}):</span>
+                      <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                        <span>Chauffeur Duty &amp; Bata ({days} {days > 1 ? 'Days' : 'Day'}):</span>
                         <span className="font-bold text-m3-on-surface">₹{breakdown.driver_bata.toLocaleString('en-IN')}</span>
                       </div>
                     )}
                     {breakdown?.free_buffer_km > 0 && (
-                      <div className="flex justify-between items-center py-1">
-                        <span className="text-m3-on-surface-variant">Sightseeing Buffer (+{breakdown.free_buffer_km.toFixed(0)} km):</span>
-                        <span className="font-bold text-m3-success">INCLUDED (₹0)</span>
+                      <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                        <span>Sightseeing Buffer (+{breakdown.free_buffer_km.toFixed(0)} km):</span>
+                        <span className="font-bold text-emerald-700">INCLUDED (₹0)</span>
                       </div>
                     )}
                     {breakdown?.is_tirupati_pkg && (
-                      <div className="flex justify-between items-center py-1">
-                        <span className="text-m3-on-surface-variant">Tolls, AP State Tax &amp; Tirumala Ghat:</span>
-                        <span className="font-bold text-m3-success">INCLUDED (₹0)</span>
+                      <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                        <span>Tolls, AP State Tax &amp; Tirumala Ghat:</span>
+                        <span className="font-bold text-emerald-700">INCLUDED (₹0)</span>
                       </div>
                     )}
-                    <div className="flex justify-between items-center pt-2 font-bold text-xs sm:text-sm text-m3-on-surface">
-                      <span>Net Estimated Total:</span>
-                      <span className="text-sm sm:text-base font-extrabold text-m3-on-surface">₹{estimate.toLocaleString('en-IN')}</span>
+                    <div className="flex justify-between items-center pt-1.5 border-t border-m3-outline-variant/40 font-bold text-xs sm:text-sm text-m3-on-surface">
+                      <span>Net Base Fare:</span>
+                      <span>₹{estimate.toLocaleString('en-IN')}</span>
                     </div>
-                    <div className="flex justify-between items-center pt-1 text-[11px] sm:text-xs text-m3-on-surface-variant font-medium">
-                      <span>Advance Booking Token:</span>
-                      <span className="font-bold text-m3-on-surface">₹500 to Confirm Booking</span>
+
+                    {/* Extras at Actuals (Road Expenses) */}
+                    {!breakdown?.is_tirupati_pkg && activeTab !== 'local' && (
+                      <div className="pt-2 border-t border-dashed border-m3-outline-variant/80 space-y-1.5">
+                        <div className="flex justify-between items-center text-xs font-bold text-amber-900 bg-amber-50/90 px-2 py-1 rounded border border-amber-200/80">
+                          <span className="flex items-center gap-1.5">
+                            <Receipt className="w-3.5 h-3.5 text-amber-700 shrink-0" />
+                            <span>Extras at Actuals (Paid on Route):</span>
+                          </span>
+                          <span className="text-[10px] uppercase tracking-wider font-extrabold text-amber-800 bg-amber-200/80 px-1.5 py-0.5 rounded">
+                            At Actuals
+                          </span>
+                        </div>
+                        <div className="space-y-1 text-xs px-0.5 text-m3-on-surface-variant">
+                          <div className="flex justify-between items-center py-0.5">
+                            <span>• NH Highway FASTag Tolls:</span>
+                            <span className="font-semibold text-m3-on-surface">
+                              {breakdown?.tolls_est > 0 ? `At Actuals (~₹${breakdown.tolls_est.toLocaleString('en-IN')} est.)` : 'At Actuals (As per FASTag scan)'}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center py-0.5">
+                            <span>• Interstate Border Permit:</span>
+                            <span className="font-semibold text-m3-on-surface">
+                              {breakdown?.state_permit_est > 0 
+                                ? `${breakdown.state_name || 'Interstate'} Checkpost (~₹${breakdown.state_permit_est.toLocaleString('en-IN')})` 
+                                : 'Within Tamil Nadu: ₹0 (No Permit)'}
+                            </span>
+                          </div>
+                          {breakdown?.nights > 0 && (
+                            <div className="flex justify-between items-center py-0.5">
+                              <span>• Driver Night Stay ({breakdown.nights} Night{breakdown.nights > 1 ? 's' : ''}):</span>
+                              <span className="font-semibold text-m3-on-surface">~₹{breakdown.driver_night_stay_est} (Waived if lodging provided)</span>
+                            </div>
+                          )}
+                          <div className="flex justify-between items-center py-0.5">
+                            <span>• Parking &amp; Airport Entry:</span>
+                            <span className="font-semibold text-m3-on-surface">At Actuals (As per ticket)</span>
+                          </div>
+                        </div>
+
+                        {breakdown?.all_inclusive_est > 0 && (
+                          <div className="mt-1.5 p-2 bg-emerald-50 rounded-lg border border-emerald-200/70 flex items-center justify-between text-xs">
+                            <div>
+                              <span className="font-bold text-emerald-950 block">Option B: 100% Cashless All-Inclusive</span>
+                              <span className="text-[10.5px] text-emerald-800">Covers Cab, Driver Bata, FASTag Tolls &amp; State Permit</span>
+                            </div>
+                            <span className="text-sm font-extrabold text-emerald-900 font-heading shrink-0 ml-2">
+                              ~₹{breakdown.all_inclusive_est.toLocaleString('en-IN')}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    <div className="flex justify-between items-center pt-2 border-t border-m3-outline-variant/40 text-[11px] text-m3-on-surface-variant font-medium">
+                      <span>Advance to Confirm &amp; Lock Cab:</span>
+                      <span className="font-bold text-emerald-700">₹500 to Confirm Booking</span>
                     </div>
-                    <div className="flex justify-between items-center pt-0.5 text-[11px] sm:text-xs text-m3-on-surface-variant">
+                    <div className="flex justify-between items-center pt-0.5 text-[11px] text-m3-on-surface-variant">
                       <span>Balance on Completion:</span>
-                      <span className="font-semibold text-m3-on-surface">₹{Math.max(0, estimate - 500).toLocaleString('en-IN')}</span>
+                      <span className="font-semibold text-m3-on-surface">
+                        ₹{Math.max(0, estimate - 500).toLocaleString('en-IN')} Base Fare {!breakdown?.is_tirupati_pkg && activeTab !== 'local' ? '+ Extras at Actuals' : ''} (Payable to Chauffeur)
+                      </span>
+                    </div>
+
+                    <div className="pt-2 text-right">
+                      <button
+                        type="button"
+                        onClick={() => setShowFullBreakdown(true)}
+                        className="inline-flex items-center gap-1 text-xs font-bold text-[#1a73e8] hover:text-[#1557b0] hover:underline cursor-pointer"
+                      >
+                        <Receipt className="w-3.5 h-3.5" />
+                        <span>{isTa ? '100% முழு விவர பாப்-அப்' : 'View Complete Itemized Breakdown Modal'}</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </button>
                     </div>
                   </div>
+                </div>
 
-                  <div className="pt-2 text-right">
-                    <button
-                      type="button"
-                      onClick={() => setShowFullBreakdown(true)}
-                      className="inline-flex items-center gap-1 text-xs font-bold text-m3-primary hover:underline cursor-pointer"
+                {/* Direct Booking Actions */}
+                <div className="pt-1 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2">
+                  <WhatsAppButton 
+                    onClick={handleWhatsApp}
+                    variant="filled"
+                    size="md"
+                    data-direct-whatsapp="true"
+                    className="flex-1 px-5 py-3.5 min-h-[46px] text-sm font-bold shadow-m3-1 justify-center active:scale-[0.99]"
+                    text={isTa ? `வாட்ஸ்அப்பில் முன்பதிவு செய்ய (₹${estimate.toLocaleString('en-IN')})` : `Book ${vehicle} on WhatsApp (₹${estimate.toLocaleString('en-IN')})`}
+                  />
+
+                  <a
+                    href="tel:+918939539211"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-3.5 min-h-[46px] bg-white hover:bg-slate-50 active:scale-[0.99] text-m3-on-surface font-semibold text-sm rounded-full border border-m3-outline-variant shadow-2xs transition-colors shrink-0 cursor-pointer"
+                    aria-label="Call +91 89395 39211"
+                  >
+                    <Phone className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
+                    <span>Call Desk</span>
+                  </a>
+                </div>
+
+                {/* Smart Airport Quick-Access Callout */}
+                {showAirportTab && (
+                  <div className="pt-1">
+                    <a
+                      href="/services/chennai-airport-taxi/"
+                      className="flex items-center justify-between p-2.5 px-3.5 bg-m3-surface-container-high hover:bg-m3-surface-container-highest border border-m3-outline-variant hover:border-m3-primary/40 rounded-m3-xl transition-all text-xs group cursor-pointer"
                     >
-                      <span>{isTa ? '100% முழு விவர பாப்-அப்' : '100% Fare Breakdown'}</span>
-                      <ChevronRight className="w-3.5 h-3.5" />
-                    </button>
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="p-1 sm:p-1.5 bg-m3-primary/10 text-m3-primary rounded-m3-full shrink-0 group-hover:scale-110 transition-transform">
+                          <Plane className="w-3.5 h-3.5" />
+                        </span>
+                        <div className="truncate text-left">
+                          <span className="font-bold text-m3-on-surface">
+                            {isTa ? 'சென்னை ஏர்போர்ட் டாக்ஸியா?' : 'Chennai Airport Pickup / Drop?'}
+                          </span>
+                          <span className="hidden sm:inline text-m3-on-surface-variant ml-1.5 text-[11px]">
+                            {isTa ? 'நிலையான கட்டணம் ₹650 முதல் • ஜீரோ சர்ஜ்' : 'Flat rates from ₹650 • Zero surge'}
+                          </span>
+                        </div>
+                      </div>
+                      <span className="inline-flex items-center gap-0.5 text-[11px] font-bold text-m3-primary shrink-0 group-hover:translate-x-0.5 transition-transform">
+                        {isTa ? 'கட்டணங்கள்' : 'Flat Rates'} <ChevronRight className="w-3.5 h-3.5" />
+                      </span>
+                    </a>
                   </div>
-                </div>
-              )}
-            </div>
-
-            {/* Primary Action Buttons (Full-Width WhatsApp + Secondary Call) */}
-            <div className="pt-1 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5">
-              <WhatsAppButton 
-                onClick={handleWhatsApp}
-                variant="filled"
-                size="md"
-                data-direct-whatsapp="true"
-                className="flex-1 px-5 py-3.5 min-h-[48px] text-sm font-bold shadow-m3-1 justify-center active:scale-[0.99]"
-                text={isTa ? `வாட்ஸ்அப்பில் முன்பதிவு செய்ய (₹${estimate.toLocaleString('en-IN')})` : `Book on WhatsApp (₹${estimate.toLocaleString('en-IN')})`}
-              />
-
-              <a
-                href="tel:+918939539211"
-                className="inline-flex items-center justify-center gap-2 px-5 py-3.5 min-h-[48px] bg-white hover:bg-m3-surface-container active:scale-[0.99] text-m3-on-surface font-semibold text-sm rounded-m3-full border border-m3-outline-variant shadow-2xs transition-colors shrink-0 cursor-pointer"
-                aria-label="Call +91 89395 39211"
-              >
-                <Phone className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
-                <span>Call: +91 89395 39211</span>
-              </a>
-            </div>
-          </div>
-        ) : (
-          /* Initial State: Primary Calculate Cost + Direct Action Buttons */
-          <div className="pt-2 space-y-2.5">
-            <button
-              type="button"
-              disabled={loading}
-              onClick={handleCalculateCost}
-              className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 min-h-[50px] bg-m3-primary hover:bg-m3-primary/90 active:scale-[0.99] text-white font-bold text-sm sm:text-base rounded-m3-full shadow-m3-2 hover:shadow-m3-3 transition-all cursor-pointer"
-            >
-              {loading ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>{isTa ? 'கணக்கிடுகிறது...' : 'Calculating Fare...'}</span>
-                </>
-              ) : (
-                <>
-                  <Calculator className="w-5 h-5 text-white" />
-                  <span>{isTa ? '⚡ உடனடி கட்டணத்தை பார்க்கவும் (இலவசம்)' : '⚡ View Instant Fare & Available Cabs'}</span>
-                </>
-              )}
-            </button>
-            <p className="text-[11.5px] text-m3-on-surface-variant/80 text-center font-medium">
-              ✓ {isTa ? 'கட்டணம் கணக்கிட தொலைபேசி எண் தேவையில்லை • வெளிப்படையான கட்டணங்கள்' : 'No phone number required to check • Instant calculation • Direct operator rates'}
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 pt-0.5">
-              <WhatsAppButton 
-                onClick={() => {
-                  if (activeTab !== 'local' && (!pickup || !drop)) {
-                    handleCalculateCost();
-                  } else {
-                    handleWhatsApp();
-                  }
-                }}
-                variant="tonal"
-                size="md"
-                data-direct-whatsapp="true"
-                className="flex-1 px-4 py-3 min-h-[44px] text-xs sm:text-sm font-bold justify-center"
-                text={isTa ? 'வாட்ஸ்அப்பில் முன்பதிவு செய்ய' : 'Book on WhatsApp'}
-              />
-
-              <a
-                href="tel:+918939539211"
-                className="inline-flex items-center justify-center gap-2 px-4 py-3 min-h-[44px] bg-white hover:bg-m3-surface-container active:scale-[0.99] text-m3-on-surface font-semibold text-xs sm:text-sm rounded-m3-full border border-m3-outline-variant shadow-2xs transition-colors shrink-0 cursor-pointer"
-                aria-label="Call +91 89395 39211"
-              >
-                <Phone className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
-                <span>Call: +91 89395 39211</span>
-              </a>
-            </div>
-          </div>
-        )}
-
-        {/* Smart Airport Quick-Access Callout */}
-        {showAirportTab && !showResult && (
-          <div className="pt-1">
-            <a
-              href="/services/chennai-airport-taxi/"
-              className="flex items-center justify-between p-2.5 px-3.5 bg-m3-surface-container-high hover:bg-m3-surface-container-highest border border-m3-outline-variant hover:border-m3-primary/40 rounded-m3-xl transition-all text-xs group cursor-pointer"
-            >
-              <div className="flex items-center gap-2 min-w-0">
-                <span className="p-1 sm:p-1.5 bg-m3-primary/10 text-m3-primary rounded-m3-full shrink-0 group-hover:scale-110 transition-transform">
-                  <Plane className="w-3.5 h-3.5" />
-                </span>
-                <div className="truncate text-left">
-                  <span className="font-bold text-m3-on-surface">
-                    {isTa ? 'சென்னை ஏர்போர்ட் டாக்ஸியா?' : 'Chennai Airport Pickup / Drop?'}
-                  </span>
-                  <span className="hidden sm:inline text-m3-on-surface-variant ml-1.5 text-[11px]">
-                    {isTa ? 'நிலையான கட்டணம் ₹650 முதல் • ஜீரோ சர்ஜ்' : 'Flat rates from ₹650 • Zero surge'}
-                  </span>
-                </div>
+                )}
               </div>
-              <span className="inline-flex items-center gap-0.5 text-[11px] font-bold text-m3-primary shrink-0 group-hover:translate-x-0.5 transition-transform">
-                {isTa ? 'கட்டணங்கள்' : 'Flat Rates'} <ChevronRight className="w-3.5 h-3.5" />
-              </span>
-            </a>
-          </div>
-        )}
+            )}
       </div>
 
       {mounted && (

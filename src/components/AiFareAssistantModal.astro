@@ -1,0 +1,445 @@
+---
+import AndroidPhoneIcon from './AndroidPhoneIcon.astro';
+import { WHATSAPP_CONFIG } from '../utils/whatsapp';
+
+interface Props {
+  phone?: string;
+  displayPhone?: string;
+}
+
+const {
+  phone = `+${WHATSAPP_CONFIG.phone}`,
+  displayPhone = WHATSAPP_CONFIG.formattedPhone,
+} = Astro.props;
+
+const callUrl = `tel:${phone}`;
+---
+
+<!-- Material Design 3 AI Fare Concierge Modal (Clean, Minimal, Non-Clumpy) -->
+<div
+  id="ai-fare-modal"
+  class="fixed inset-0 z-[100] hidden flex-col justify-end sm:justify-center items-center bg-black/50 backdrop-blur-xs transition-opacity duration-200 p-0 sm:p-4 opacity-0 pointer-events-none"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="ai-modal-title"
+  aria-hidden="true"
+>
+  <!-- M3 Dialog / Bottom-Sheet Container -->
+  <div
+    id="ai-modal-box"
+    class="relative w-full sm:max-w-lg md:max-w-xl h-[85vh] sm:h-[580px] max-h-[90vh] flex flex-col bg-m3-surface-bright dark:bg-[#1E1F20] text-m3-on-surface rounded-t-3xl sm:rounded-3xl shadow-m3-4 overflow-hidden border border-m3-outline-variant/50 transform translate-y-8 sm:translate-y-2 sm:scale-95 transition-all duration-200"
+  >
+    <!-- M3 Top App Bar: Minimal, One Single Call Number at Top -->
+    <header class="flex items-center justify-between px-4 py-3 bg-m3-surface dark:bg-[#1A1B1E] border-b border-m3-outline-variant/40 shrink-0 select-none">
+      <!-- Title & Gemini Symbol -->
+      <div class="flex items-center gap-2">
+        <span class="w-8 h-8 rounded-full bg-gradient-to-tr from-[#1E40AF] to-[#7C3AED] text-white flex items-center justify-center shadow-xs">
+          <svg class="w-4 h-4 text-white fill-current" viewBox="0 0 24 24" role="img" aria-label="Google Gemini">
+            <path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81" />
+          </svg>
+        </span>
+        <h2 id="ai-modal-title" class="font-semibold text-sm sm:text-base text-m3-on-surface tracking-tight">
+          Fare Concierge
+        </h2>
+      </div>
+
+      <!-- Action items: ONLY ONE Phone Call Button + Clean Close Icon -->
+      <div class="flex items-center gap-2">
+        <a
+          href={callUrl}
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#006D3B] hover:bg-[#00532B] active:scale-95 text-xs font-semibold text-white transition-all shadow-xs"
+          title={`Call Helpline ${displayPhone}`}
+          aria-label={`Call Helpline ${displayPhone}`}
+        >
+          <AndroidPhoneIcon className="w-3.5 h-3.5 shrink-0 text-white" />
+          <span class="tracking-tight">{displayPhone}</span>
+        </a>
+        <button
+          type="button"
+          id="close-ai-modal-btn"
+          class="w-9 h-9 rounded-full flex items-center justify-center text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container active:scale-90 transition-all focus:outline-none"
+          aria-label="Close dialog"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- M3 Chat Thread: Clean, Breathable, Spaced -->
+    <main
+      id="ai-chat-thread"
+      class="flex-1 overflow-y-auto p-4 space-y-3 bg-m3-surface dark:bg-[#121316] text-sm scroll-smooth"
+    >
+      <!-- Clean Welcome Message (Direct & Minimal) -->
+      <div class="flex items-start gap-2.5 max-w-[88%]">
+        <div class="w-7 h-7 rounded-full bg-m3-primary text-m3-on-primary flex items-center justify-center text-xs shrink-0 mt-0.5 font-bold shadow-xs">
+          KT
+        </div>
+        <div class="bg-m3-surface-container-low dark:bg-m3-surface-container p-3.5 rounded-2xl rounded-tl-xs border border-m3-outline-variant/40 shadow-xs text-m3-on-surface leading-relaxed text-sm">
+          <p class="font-medium text-m3-on-surface">Vanakkam! Which trip fare can I check for you?</p>
+          <p class="text-xs text-m3-on-surface-variant mt-1">Tap a route below or type your destination.</p>
+        </div>
+      </div>
+    </main>
+
+    <!-- M3 Assist Chips (Clean, Compact, Horizontal Scroll) -->
+    <div
+      id="ai-quick-chips"
+      class="px-4 py-2 bg-m3-surface-container-low dark:bg-[#1A1B1E] border-t border-m3-outline-variant/40 flex items-center gap-1.5 overflow-x-auto no-scrollbar whitespace-nowrap text-xs"
+    >
+      <button
+        type="button"
+        data-quick-prompt="How much for Chennai to Tirupati 1-day package in Sedan and Ertiga?"
+        class="quick-chip px-3 py-1.5 rounded-full bg-m3-surface-container-high dark:bg-[#2A2B30] hover:bg-m3-primary/10 text-m3-on-surface border border-m3-outline-variant/60 transition-all shrink-0 active:scale-95 font-medium cursor-pointer"
+      >
+        🕉️ Tirupati Balaji
+      </button>
+      <button
+        type="button"
+        data-quick-prompt="What are Chennai local 8 hour packages for Sedan and Ertiga?"
+        class="quick-chip px-3 py-1.5 rounded-full bg-m3-surface-container-high dark:bg-[#2A2B30] hover:bg-m3-primary/10 text-m3-on-surface border border-m3-outline-variant/60 transition-all shrink-0 active:scale-95 font-medium cursor-pointer"
+      >
+        ⏱️ Local 8hr Rental
+      </button>
+      <button
+        type="button"
+        data-quick-prompt="What is the outstation per km rate for Ertiga and Innova?"
+        class="quick-chip px-3 py-1.5 rounded-full bg-m3-surface-container-high dark:bg-[#2A2B30] hover:bg-m3-primary/10 text-m3-on-surface border border-m3-outline-variant/60 transition-all shrink-0 active:scale-95 font-medium cursor-pointer"
+      >
+        🛣️ Outstation Rates
+      </button>
+      <button
+        type="button"
+        data-quick-prompt="How much for Chennai to Pondicherry same day return?"
+        class="quick-chip px-3 py-1.5 rounded-full bg-m3-surface-container-high dark:bg-[#2A2B30] hover:bg-m3-primary/10 text-m3-on-surface border border-m3-outline-variant/60 transition-all shrink-0 active:scale-95 font-medium cursor-pointer"
+      >
+        🏖️ Pondicherry
+      </button>
+    </div>
+
+    <!-- M3 Search / Text Input Bar (Zero Clutter, Zero Number Repetition) -->
+    <footer class="p-3 bg-m3-surface dark:bg-[#1E1F20] border-t border-m3-outline-variant/40">
+      <form id="ai-chat-form" class="flex items-center gap-2">
+        <input
+          type="text"
+          id="ai-user-input"
+          placeholder="Ask trip fare (e.g. Tirupati, Pondicherry)..."
+          class="flex-1 px-4 py-2.5 rounded-full bg-m3-surface-container dark:bg-[#28292D] text-m3-on-surface placeholder:text-m3-on-surface-variant/60 text-sm border border-transparent focus:border-m3-primary focus:bg-m3-surface-bright focus:outline-none transition-all"
+          autocomplete="off"
+          required
+        />
+        <button
+          type="submit"
+          id="ai-send-btn"
+          class="w-10 h-10 rounded-full bg-m3-primary hover:bg-m3-primary/90 active:scale-95 text-m3-on-primary flex items-center justify-center shrink-0 transition-all shadow-xs focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+          aria-label="Send message"
+        >
+          <svg class="w-4 h-4 translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </button>
+      </form>
+      <!-- Official Google Gemini AI Attribution (Brand Guidelines Compliant) -->
+      <div class="mt-2 text-center text-[10px] text-m3-on-surface-variant/70 font-medium tracking-wide flex items-center justify-center gap-1.5 select-none">
+        <svg class="w-2.5 h-2.5 text-[#1A73E8] fill-current" viewBox="0 0 24 24">
+          <path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81" />
+        </svg>
+        <span>Powered by Google Gemini</span>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    const modal = document.getElementById('ai-fare-modal');
+    const modalBox = document.getElementById('ai-modal-box');
+    const closeBtn = document.getElementById('close-ai-modal-btn');
+    const chatForm = document.getElementById('ai-chat-form');
+    const userInput = document.getElementById('ai-user-input');
+    const chatThread = document.getElementById('ai-chat-thread');
+    const sendBtn = document.getElementById('ai-send-btn');
+    const quickChips = document.querySelectorAll('.quick-chip');
+
+    let chatHistory = [];
+    let isRequestInProgress = false;
+
+    function openAiModal() {
+      if (!modal) return;
+      modal.classList.remove('hidden', 'pointer-events-none', 'opacity-0');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+
+      setTimeout(() => {
+        modalBox?.classList.remove('translate-y-8', 'sm:translate-y-2', 'sm:scale-95');
+        userInput?.focus();
+      }, 10);
+    }
+
+    function closeAiModal() {
+      if (!modal) return;
+      modalBox?.classList.add('translate-y-8', 'sm:translate-y-2', 'sm:scale-95');
+      modal.classList.add('opacity-0');
+
+      setTimeout(() => {
+        modal.classList.add('hidden', 'pointer-events-none');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }, 200);
+    }
+
+    window.openAiFareModal = openAiModal;
+
+    closeBtn?.addEventListener('click', closeAiModal);
+    modal?.addEventListener('click', (e) => {
+      if (e.target === modal) closeAiModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !modal?.classList.contains('hidden')) {
+        closeAiModal();
+      }
+    });
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function formatMarkdown(text) {
+      if (!text) return '';
+      let escaped = escapeHtml(text);
+      // bold **text**
+      escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      // bullet lists
+      escaped = escaped.replace(/(?:^|\n)[•*-]\s*(.+)/g, '<div class="flex items-start gap-1.5 my-1"><span class="text-m3-primary font-bold shrink-0">•</span><span>$1</span></div>');
+      // line breaks
+      escaped = escaped.replace(/\n\n/g, '<div class="my-2"></div>');
+      escaped = escaped.replace(/\n/g, '<br/>');
+      return escaped;
+    }
+
+    function appendMessage(role, content) {
+      if (!chatThread) return;
+
+      const isUser = role === 'user';
+      const msgDiv = document.createElement('div');
+      msgDiv.className = isUser
+        ? 'flex items-start justify-end gap-2 max-w-[85%] ml-auto'
+        : 'flex items-start gap-2.5 max-w-[90%] sm:max-w-[85%]';
+
+      const avatar = isUser
+        ? ''
+        : `<div class="w-7 h-7 rounded-full bg-m3-primary text-m3-on-primary flex items-center justify-center text-xs shrink-0 mt-0.5 font-bold shadow-xs">KT</div>`;
+
+      let actionHtml = '';
+      if (!isUser) {
+        const waText = encodeURIComponent(
+          `Hi Kalidass Travels, I got this fare quote from your website:\n\n${content.substring(0, 250)}...\n\nPlease confirm availability!`
+        );
+        actionHtml = `
+          <div class="pt-2 border-t border-m3-outline-variant/30 mt-2">
+            <a
+              href="https://wa.me/918939539211?text=${waText}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white text-xs font-semibold shadow-xs transition-all active:scale-95"
+            >
+              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.586 1.761.882 2.796.883h.005c3.179 0 5.767-2.587 5.767-5.766.001-3.187-2.575-5.77-5.772-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.353.101.173.449.741.964 1.201.663.591 1.221.774 1.394.86.173.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.203c.044.072.044.419-.1.824z"/>
+              </svg>
+              <span>Confirm on WhatsApp</span>
+            </a>
+          </div>
+        `;
+      }
+
+      const bubbleClasses = isUser
+        ? 'bg-m3-primary text-m3-on-primary p-3 rounded-2xl rounded-tr-xs shadow-xs text-sm'
+        : 'bg-m3-surface-container-low dark:bg-m3-surface-container p-3.5 rounded-2xl rounded-tl-xs border border-m3-outline-variant/40 shadow-xs text-m3-on-surface space-y-1.5 leading-relaxed text-sm';
+
+      msgDiv.innerHTML = `
+        ${avatar}
+        <div class="${bubbleClasses}">
+          <div>${isUser ? escapeHtml(content) : formatMarkdown(content)}</div>
+          ${actionHtml}
+        </div>
+      `;
+
+      chatThread.appendChild(msgDiv);
+      chatThread.scrollTop = chatThread.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+      const typingDiv = document.createElement('div');
+      typingDiv.id = 'ai-typing-indicator';
+      typingDiv.className = 'flex items-start gap-2.5 max-w-[85%]';
+      typingDiv.innerHTML = `
+        <div class="w-7 h-7 rounded-full bg-m3-primary text-m3-on-primary flex items-center justify-center text-xs shrink-0 mt-0.5 font-bold shadow-xs">KT</div>
+        <div class="bg-m3-surface-container-low dark:bg-m3-surface-container p-3 rounded-2xl rounded-tl-xs border border-m3-outline-variant/40 shadow-xs flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-m3-primary animate-bounce"></span>
+          <span class="w-2 h-2 rounded-full bg-m3-primary animate-bounce [animation-delay:0.2s]"></span>
+          <span class="w-2 h-2 rounded-full bg-m3-primary animate-bounce [animation-delay:0.4s]"></span>
+          <span class="text-xs text-m3-on-surface-variant ml-1.5">Checking tariff...</span>
+        </div>
+      `;
+      chatThread?.appendChild(typingDiv);
+      chatThread.scrollTop = chatThread.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+      const typingDiv = document.getElementById('ai-typing-indicator');
+      typingDiv?.remove();
+    }
+
+    function getLocalTariffReply(userText) {
+      const q = (userText || '').toLowerCase();
+
+      // Check multi-day tour signals (dates like 31.10, 01.11, stay, multi-stop routes)
+      const dateMatches = (userText || '').match(/\b\d{1,2}[./-]\d{1,2}\b/g) || [];
+      const hasMultipleDates = dateMatches.length >= 2;
+      const hasStay = q.includes('stay') || q.includes('night') || q.includes('hotel');
+      const hasMultiCity = (q.includes('vellore') && q.includes('tirupati')) ||
+                           (q.includes('mahabalipuram') && q.includes('tirupati')) ||
+                           (q.includes('kanchipuram') && q.includes('tirupati'));
+      const hasDays = q.includes('5 day') || q.includes('4 day') || q.includes('3 day') || q.includes('days');
+
+      if (hasMultipleDates || (hasStay && q.includes('tirupati')) || hasMultiCity || (hasDays && hasMultiCity)) {
+        let days = Math.max(dateMatches.length, 3);
+        if (q.includes('31.10') && q.includes('04.11')) days = 5;
+        else if (q.includes('5 day')) days = 5;
+        else if (q.includes('4 day')) days = 4;
+        else if (q.includes('3 day')) days = 3;
+
+        const minKm = days * 250;
+        const tempoKm = days * 300;
+
+        const sedanTotal = (minKm * 14) + (days * 400);
+        const ertigaTotal = (minKm * 17) + (days * 500);
+        const innovaTotal = (minKm * 20) + (days * 600);
+        const crystaTotal = (minKm * 22) + (days * 700);
+        const tempoTotal = (tempoKm * 26) + (days * 800);
+
+        return `Here is the customized quote for your **${days}-Day Tour** (Airport Pickup ➔ Mahabalipuram ➔ Kanchipuram ➔ Vellore ➔ Tirupati / Tirumala ➔ Airport Drop):\n\n` +
+          `• **AC Sedan (Dzire / Etios - 4 Pax):** ~₹${sedanTotal.toLocaleString('en-IN')} (₹14/km + ₹${days * 400} Bata)\n` +
+          `• **Maruti Ertiga / XL6 (6 Pax):** ~₹${ertigaTotal.toLocaleString('en-IN')} (₹17/km + ₹${days * 500} Bata)\n` +
+          `• **Toyota Innova (7 Pax):** ~₹${innovaTotal.toLocaleString('en-IN')} (₹20/km + ₹${days * 600} Bata)\n` +
+          `• **Toyota Innova Crysta (7 Pax):** ~₹${crystaTotal.toLocaleString('en-IN')} (₹22/km + ₹${days * 700} Bata)\n` +
+          `• **Tempo Traveller (12 Pax):** ~₹${tempoTotal.toLocaleString('en-IN')} (₹26/km + ₹${days * 800} Bata)\n\n` +
+          `📋 **Details:**\n` +
+          `• Dedicated AC cab & experienced chauffeur at your disposal for all ${days} days (based on ${minKm} km min quota).\n` +
+          `• NH FASTag Tolls, Parking & AP Border Permit payable at actuals.\n` +
+          `🛡️ **Policy:** ₹500 advance to confirm & lock cab (avoids last-minute cancellation). Balance post-trip!`;
+      }
+
+      if (q.includes('tirupati') || q.includes('tirumala') || q.includes('balaji')) {
+        return `Here are our official **Chennai ⇄ Tirupati 1-Day Package** rates (same-day return ~320 km):\n\n` +
+          `• **AC Sedan (Dzire / Etios - 4 Pax):** ₹6,000\n` +
+          `• **Maruti Ertiga / XL6 (6 Pax):** ₹7,500\n` +
+          `• **Toyota Innova (7 Pax):** ₹8,500\n` +
+          `• **Toyota Innova Crysta:** ₹10,000\n` +
+          `• **Tempo Traveller (12 Pax):** ₹12,500\n\n` +
+          `✅ **All-Inclusive:** Fuel, NH Tolls, AP State Border Permit, Tirumala Ghat Road ascent & Driver Bata.\n` +
+          `🛡️ **Policy:** ₹500 advance to confirm & lock cab (avoids last-minute cancellation). Balance post-trip.`;
+      }
+
+      if (q.includes('local') || q.includes('hourly') || q.includes('city') || q.includes('4hr') || q.includes('8hr')) {
+        return `Here are our **Chennai City Local Rental Packages**:\n\n` +
+          `• **AC Sedan (Dzire / Etios):**\n` +
+          `  - 4 hrs / 40 km: ₹1,350\n` +
+          `  - 8 hrs / 80 km: ₹2,200 (Popular)\n` +
+          `  - Extra km: ₹15 | Extra hr: ₹150\n\n` +
+          `• **Maruti Ertiga (6 Seater):**\n` +
+          `  - 4 hrs / 40 km: ₹1,700\n` +
+          `  - 8 hrs / 80 km: ₹2,800\n` +
+          `  - Extra km: ₹17 | Extra hr: ₹200\n\n` +
+          `• **Toyota Innova (7 Seater):**\n` +
+          `  - 8 hrs / 80 km: ₹3,200\n\n` +
+          `🛡️ **Policy:** ₹500 advance to confirm & lock cab (avoids last-minute cancellation). Balance post-trip.`;
+      }
+
+      if (q.includes('pondy') || q.includes('pondicherry')) {
+        return `For **Chennai ⇄ Pondicherry (Same Day Return)**:\n\n` +
+          `• **AC Sedan (4 Pax):** ~₹4,500 - ₹5,000 (~320 km round trip at ₹14/km + driver bata ₹400)\n` +
+          `• **Maruti Ertiga (6 Pax):** ~₹5,800 - ₹6,200 (At ₹17/km + driver bata ₹500)\n` +
+          `• **Toyota Innova (7 Pax):** ~₹7,000 (At ₹20/km + driver bata ₹600)\n\n` +
+          `*Highway tolls payable at actual FASTag plazas. ₹500 advance to confirm booking.*`;
+      }
+
+      if (q.includes('outstation') || q.includes('drop') || q.includes('per km') || q.includes('rate') || q.includes('tariff')) {
+        return `Here are our **Outstation & Intercity Tariff Rates**:\n\n` +
+          `• **Swift Dzire / Etios:** ₹14 / km (Min 250 km/day, Driver Bata ₹400/day)\n` +
+          `• **Maruti Ertiga (6 Seater):** ₹17 / km (Min 250 km/day, Driver Bata ₹500/day)\n` +
+          `• **Toyota Innova (7 Seater):** ₹20 / km (Min 250 km/day, Driver Bata ₹600/day)\n` +
+          `• **Toyota Innova Crysta:** ₹22 / km (Min 250 km/day, Driver Bata ₹700/day)\n` +
+          `• **Tempo Traveller (12 Seater):** ₹26 / km (Min 300 km/day, Driver Bata ₹800/day)\n\n` +
+          `🛡️ **Guarantee:** ₹500 advance to confirm & lock cab (avoids last-minute cancellation). Balance post-trip.`;
+      }
+
+      return `I can instantly quote fares for you:\n\n` +
+        `• 🕉️ **Tirupati Balaji 1-Day:** Sedan ₹6,000 | Ertiga ₹7,500\n` +
+        `• ⏱️ **Local Chennai 8hr:** Sedan ₹2,200 | Ertiga ₹2,800\n` +
+        `• 🛣️ **Outstation:** ₹14/km Sedan | ₹17/km Ertiga | ₹20/km Innova\n` +
+        `• 🏖️ **Pondicherry:** Sedan ₹4,500 | Ertiga ₹5,800\n\n` +
+        `Tell me your travel destination or vehicle preference to get started!`;
+    }
+
+    async function handleUserSubmit(text) {
+      if (!text || isRequestInProgress) return;
+      isRequestInProgress = true;
+      if (sendBtn) sendBtn.disabled = true;
+
+      appendMessage('user', text);
+      chatHistory.push({ role: 'user', content: text });
+      if (userInput) userInput.value = '';
+
+      showTypingIndicator();
+
+      let reply = '';
+      try {
+        const response = await fetch('/api/ai-chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: chatHistory }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data && data.reply) {
+            reply = data.reply;
+          }
+        }
+      } catch (_) {}
+
+      // If backend API is not reachable (e.g. static dev server), use instant client-side tariff engine
+      if (!reply) {
+        await new Promise((r) => setTimeout(r, 200));
+        reply = getLocalTariffReply(text);
+      }
+
+      removeTypingIndicator();
+      appendMessage('assistant', reply);
+      chatHistory.push({ role: 'assistant', content: reply });
+
+      isRequestInProgress = false;
+      if (sendBtn) sendBtn.disabled = false;
+      userInput?.focus();
+    }
+
+    chatForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = userInput?.value?.trim();
+      if (text) handleUserSubmit(text);
+    });
+
+    quickChips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const prompt = chip.getAttribute('data-quick-prompt');
+        if (prompt) handleUserSubmit(prompt);
+      });
+    });
+  })();
+</script>

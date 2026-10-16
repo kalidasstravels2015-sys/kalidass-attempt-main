@@ -696,12 +696,12 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
             id="get-flat-fare-btn"
             data-testid="get-flat-fare-btn"
             disabled={loading}
-            className="w-full max-w-[260px] sm:max-w-[280px] mx-auto bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary font-bold py-3 rounded-m3-full transition-all flex items-center justify-center gap-2 shadow-m3-1 hover:shadow-m3-2 text-sm sm:text-base min-h-[46px] sm:min-h-[50px] cursor-pointer active:scale-[0.98] disabled:opacity-75 border border-white/10"
+            className="w-full max-w-[260px] sm:max-w-[280px] mx-auto !bg-[#0B57D0] hover:!bg-[#0842A0] active:!bg-[#0842A0] active:scale-[0.98] !text-white font-bold py-3.5 rounded-m3-full transition-all flex items-center justify-center gap-2 shadow-m3-2 hover:shadow-m3-3 text-sm sm:text-base min-h-[46px] sm:min-h-[50px] cursor-pointer disabled:opacity-75"
           >
             {loading ? (
               <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /><span>Calculating...</span></>
             ) : (
-              <><Calculator className="w-4 h-4" /><span>Get Flat Fare</span></>
+              <><Calculator className="w-4 h-4 text-white" /><span>Get Flat Fare</span></>
             )}
           </button>
 

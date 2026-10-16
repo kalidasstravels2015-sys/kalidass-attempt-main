@@ -269,7 +269,7 @@ export default function TempleTours() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <a 
               href="#tour-matrix"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-m3-full bg-m3-primary hover:bg-m3-inverse-surface text-m3-on-primary font-bold text-xs sm:text-sm shadow-m3-2 transition-all transform hover:-translate-y-0.5 border border-white/20 group"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary font-bold text-xs sm:text-sm shadow-m3-2 transition-all transform hover:-translate-y-0.5 border border-white/20 group"
             >
               <span>Explore Tour Circuits &amp; Rates</span>
               <ChevronDown className="w-4 h-4 text-m3-success transform group-hover:translate-y-0.5 transition-transform" />
@@ -650,7 +650,7 @@ export default function TempleTours() {
               href="tel:+918939539211"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface px-6 py-3.5 rounded-m3-full font-semibold text-xs sm:text-sm shadow-m3-1 transition-all"
             >
-              <Phone className="w-4 h-4 text-m3-success" />
+              <Phone className="w-4 h-4 text-m3-primary" />
               <span>Call Pilgrimage Desk</span>
             </a>
           </div>

@@ -16,6 +16,7 @@ import SabarimalaBookingEngine from '../../components/SabarimalaBookingEngine.js
 import ChidambaramBookingEngine from '../../components/ChidambaramBookingEngine.jsx';
 import VelloreBookingEngine from '../../components/VelloreBookingEngine.jsx';
 import PondicherryBookingEngine from '../../components/PondicherryBookingEngine.jsx';
+import TourBookingEngine from '../../components/TourBookingEngine.jsx';
 import VehicleCard from '../../components/VehicleCard.astro';
 import { buildWhatsAppUrl } from '../../utils/whatsapp';
 import { 
@@ -1457,6 +1458,8 @@ if (isTour) {
 const faqSchema = service.faq && service.faq.length > 0 ? {
   "@type": "FAQPage",
   "@id": `https://kalidasstravels.in/services/${service.slug}/#faq`,
+  "name": `${service.shortTitle || shortName || service.title} FAQs`,
+  "description": `Frequently asked questions regarding ${service.title} cab bookings, rates, driver allowances, and travel guidelines from Chennai.`,
   "mainEntity": service.faq.map((item: any) => ({
     "@type": "Question",
     "name": item.q,
@@ -1648,12 +1651,12 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                 </span>
               </div>
 
-              <h1 class="text-lg min-[380px]:text-xl sm:text-2xl lg:text-3xl font-extrabold text-m3-on-surface tracking-tight mb-1.5 sm:mb-3 leading-tight font-heading">
+              <h1 data-speakable="true" class="text-lg min-[380px]:text-xl sm:text-2xl lg:text-3xl font-extrabold text-m3-on-surface tracking-tight mb-1.5 sm:mb-3 leading-tight font-heading">
                 {service.title}
               </h1>
 
               {/* Crisp, Direct Overview (Desktop sm+) */}
-              <p class="hidden sm:block text-xs sm:text-sm text-m3-on-surface leading-relaxed mb-3 sm:mb-4">
+              <p data-speakable="true" class="hidden sm:block text-xs sm:text-sm text-m3-on-surface leading-relaxed mb-3 sm:mb-4">
                 {isTirupati
                   ? "Doorstep Chennai to Tirupati round-trip private cab rental with driver. Fixed all-inclusive fares with ₹500 advance to confirm — balance after trip completion."
                   : isThiruvannamalai
@@ -1673,8 +1676,8 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                   : "Doorstep Chennai to Pondicherry round-trip private cab rental via scenic ECR. Covers Auroville, French White Town, Promenade Beach & ₹500 advance."}
               </p>
 
-              <!-- Prominent Temple Visual Card (Visible on Mobile & Desktop) -->
-              <div class="relative w-full h-44 sm:h-50 lg:h-52 rounded-m3-xl overflow-hidden shadow-m3-1 border border-m3-outline-variant/60 mb-3 sm:mb-4 bg-m3-inverse-surface">
+              {/* Prominent Temple Visual Card (Desktop lg+ only in left column) */}
+              <div class="hidden lg:block relative w-full h-44 sm:h-50 lg:h-52 rounded-m3-xl overflow-hidden shadow-m3-1 border border-m3-outline-variant/60 mb-3 sm:mb-4 bg-m3-inverse-surface">
                 {heroImage && (
                   <OptimizedImage
                     src={heroImage}
@@ -1731,15 +1734,8 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                 </div>
               </div>
 
-              <!-- Mobile Trust Strip (Replaces redundant CTA, provides instant trust and separates headings) -->
-              <div data-mobile-trust-strip class="flex items-center justify-between gap-1 mb-3.5 sm:hidden text-[11px] text-m3-on-surface-variant font-medium bg-m3-surface-container-low px-3 py-2 rounded-m3-lg border border-m3-outline-variant/60 shadow-2xs">
-                <span class="flex items-center gap-1"><span class="text-m3-success font-bold">✓</span> ₹500 Advance</span>
-                <span class="flex items-center gap-1"><span class="text-m3-success font-bold">✓</span> {isTirupati ? "Tolls & AP Permit Inc." : isThiruvannamalai ? "GST & NH Tolls Inc." : isKanchipuram ? "NH 48 Tolls Inc." : isNavagraha ? "Tolls at Actuals" : isRameswaram ? "Tolls at Actuals" : isSabarimala ? "Permits & Tolls Actuals" : isChidambaram ? "NH 32 Tolls Inc." : isVellore ? "NH 48 Tolls Inc." : "Tolls at Actuals"}</span>
-                <span class="flex items-center gap-1"><span class="text-m3-success font-bold">✓</span> {isTirupati ? "Hill Ghat Road" : isThiruvannamalai ? "Girivalam Standby" : isKanchipuram ? "Weaver Waiting" : isNavagraha ? "750 km Covered" : isRameswaram ? "1,200 km Covered" : isSabarimala ? "Satvik Chauffeur" : isChidambaram ? "450 km Covered" : isVellore ? "300 km Covered" : "Driver Bata Sep."}</span>
-              </div>
-
-              <!-- Inclusions Matrix (Desktop sm+ only) -->
-              <div class="hidden sm:grid grid-cols-2 gap-2 mb-3 sm:mb-4 text-[11px] sm:text-xs">
+              <!-- Inclusions Matrix (Desktop lg+ only) -->
+              <div class="hidden lg:grid grid-cols-2 gap-2 mb-3 sm:mb-4 text-[11px] sm:text-xs">
                 <div class="p-2 sm:p-2.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center gap-1.5">
                   <span class="text-m3-success font-bold">✓</span>
                   <span class="font-semibold text-m3-on-surface">{isTirupati ? "From ₹6,000 (1 Day)" : isThiruvannamalai ? "From ₹6,500 (1 Day)" : isKanchipuram ? "From ₹3,500 (1 Day)" : isNavagraha ? "From ₹12,000 (2 Days)" : isRameswaram ? "From ₹18,500 (2 Days)" : isSabarimala ? "From ₹26,500 (3 Days)" : isChidambaram ? "From ₹7,400 (1 Day)" : isVellore ? "From ₹4,800 (1 Day)" : "From ₹4,500 (1 Day)"}</span>
@@ -1804,14 +1800,81 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                     serviceTitle={service.title}
                   />
                 ) : (
-                  <PondicherryBookingEngine
+                  <TourBookingEngine
                     client:load
+                    serviceSlug={service.slug}
                     serviceTitle={service.title}
                   />
                 )}
               </section>
-            </div>
 
+              <!-- Prominent Temple Visual Card & Trust Strip (Mobile ONLY, placed directly below booking engine) -->
+              <div class="block lg:hidden w-full mt-4">
+                <div class="relative w-full h-44 rounded-m3-xl overflow-hidden shadow-m3-1 border border-m3-outline-variant/60 mb-2.5 bg-m3-inverse-surface">
+                  {heroImage && (
+                    <OptimizedImage
+                      src={heroImage}
+                      alt={isTirupati 
+                        ? "Sri Venkateswara Swamy Temple Tirumala - Chennai to Tirupati Darshan Cab Package" 
+                        : isThiruvannamalai
+                        ? "Arunachaleswarar Temple & Girivalam - Chennai to Thiruvannamalai Cab Package"
+                        : isKanchipuram
+                        ? "Kamakshi Amman & Ekambareswarar Temple - Chennai to Kanchipuram Cab Package"
+                        : isNavagraha
+                        ? "Kumbakonam 9 Navagraha Temples Parikrama - Chennai to Navagraha Tour Cab Package"
+                        : isRameswaram
+                        ? "Ramanathaswamy Temple & Pamban Bridge - Chennai to Rameswaram Cab Package"
+                        : isSabarimala
+                        ? "Lord Ayyappa Swami Temple - Chennai to Sabarimala Pilgrim Cab Package"
+                        : isChidambaram
+                        ? "Thillai Natarajar Temple & Pichavaram Mangrove Wetlands - Chennai to Chidambaram Cab Package"
+                        : isVellore
+                        ? "Sripuram Sri Lakshmi Narayani Golden Temple - Chennai to Vellore Cab Package"
+                        : "French White Town & Promenade Beach - Chennai to Pondicherry Cab Package"}
+                      class="w-full h-full object-cover"
+                      sizes="(max-width: 640px) 100vw, 480px"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  )}
+                  <div class="absolute inset-0 bg-gradient-to-t from-m3-inverse-surface/85 via-m3-inverse-surface/25 to-transparent pointer-events-none"></div>
+                  <div class="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between pointer-events-none text-white text-xs font-semibold">
+                    <span class="px-2 py-0.5 rounded-m3-full bg-m3-inverse-surface/85 backdrop-blur-sm border border-white/20 flex items-center gap-1.5 shadow-xs truncate max-w-[65%] text-[11px]">
+                      <span class="w-1.5 h-1.5 rounded-full bg-m3-tertiary-fixed shrink-0"></span>
+                      <span class="truncate">
+                        {isTirupati 
+                          ? "Sri Venkateswara Temple, Tirumala" 
+                          : isThiruvannamalai 
+                          ? "Arunachaleswarar & Girivalam" 
+                          : isKanchipuram
+                          ? "Kamakshi Amman & Silk Weavers"
+                          : isNavagraha
+                          ? "9 Navagraha Temples Circuit"
+                          : isRameswaram
+                          ? "Ramanathaswamy & Dhanushkodi"
+                          : isSabarimala
+                          ? "Nilakkal & Pamba Base Camp"
+                          : isChidambaram
+                          ? "Natarajar Temple & Pichavaram"
+                          : isVellore
+                          ? "Sripuram Golden Temple & Fort"
+                          : "French Quarter & Promenade Beach"}
+                      </span>
+                    </span>
+                    <span class="px-2 py-0.5 rounded-m3-full bg-m3-primary text-m3-on-primary text-[10px] font-bold shadow-xs shrink-0">
+                     {isTirupati ? "From ₹6,000 (1 Day)" : isThiruvannamalai ? "From ₹6,500 (1 Day)" : isKanchipuram ? "From ₹3,500 (1 Day)" : isNavagraha ? "From ₹12,000 (2 Days)" : isRameswaram ? "From ₹18,500 (2 Days)" : isSabarimala ? "From ₹26,500 (3 Days)" : isChidambaram ? "From ₹7,400 (1 Day)" : isVellore ? "From ₹4,800 (1 Day)" : "From ₹14/km"}
+                    </span>
+                  </div>
+                </div>
+
+                <div data-mobile-trust-strip class="flex items-center justify-between gap-1 text-[11px] text-m3-on-surface-variant font-medium bg-m3-surface-container-low px-3 py-2 rounded-m3-lg border border-m3-outline-variant/60 shadow-2xs">
+                  <span class="flex items-center gap-1"><span class="text-m3-success font-bold">✓</span> ₹500 Advance</span>
+                  <span class="flex items-center gap-1"><span class="text-m3-success font-bold">✓</span> {isTirupati ? "Tolls & AP Permit Inc." : isThiruvannamalai ? "GST & NH Tolls Inc." : isKanchipuram ? "NH 48 Tolls Inc." : isNavagraha ? "Tolls at Actuals" : isRameswaram ? "Tolls at Actuals" : isSabarimala ? "Permits & Tolls Actuals" : isChidambaram ? "NH 32 Tolls Inc." : isVellore ? "NH 48 Tolls Inc." : "Tolls at Actuals"}</span>
+                  <span class="flex items-center gap-1"><span class="text-m3-success font-bold">✓</span> {isTirupati ? "Hill Ghat Road" : isThiruvannamalai ? "Girivalam Standby" : isKanchipuram ? "Weaver Waiting" : isNavagraha ? "750 km Covered" : isRameswaram ? "1,200 km Covered" : isSabarimala ? "Satvik Chauffeur" : isChidambaram ? "450 km Covered" : isVellore ? "300 km Covered" : "Driver Bata Sep."}</span>
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
       ) : (
@@ -1831,7 +1894,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
             </span>
           </div>
 
-          <h1 class="text-xl sm:text-3xl lg:text-4xl font-extrabold text-m3-on-surface tracking-tight mb-4 leading-tight font-heading">
+          <h1 data-speakable="true" class="text-xl sm:text-3xl lg:text-4xl font-extrabold text-m3-on-surface tracking-tight mb-4 leading-tight font-heading">
             {service.title}
           </h1>
 
@@ -2101,7 +2164,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                     <VehicleCard
                       className="shrink-0 w-[240px] sm:w-[260px] snap-start"
                       name={vehicleName}
-                      image={vehicleImg}
+                      image={vehicleImg || undefined}
                       badge={badge}
                       seats={seats}
                       baggage={baggage}
@@ -2960,8 +3023,8 @@ Please share availability and confirmed quote.`;
         <div class="absolute -left-12 -bottom-12 w-48 h-48 bg-m3-primary/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <div class="relative z-10 max-w-2xl mx-auto text-center space-y-4">
-          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs font-bold text-m3-tertiary-fixed uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5 text-m3-tertiary-fixed shrink-0" />
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs font-bold text-blue-200 uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5 text-blue-300 shrink-0" />
             <span>{hasDedicatedEngine ? "Interactive Fare Calculator" : "Fixed Tariff Rates • ₹500 Token Advance"}</span>
           </div>
 

@@ -86,12 +86,12 @@ const ReviewsCarousel = ({ currentLang }) => {
                         href="https://maps.app.goo.gl/i2LdJhWMi2ZgAiCa8"
                         target="_blank"
                         rel="noopener noreferrer nofollow"
-                        className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-m3-primary hover:bg-m3-inverse-surface text-white font-bold text-sm rounded-m3-full shadow-m3-2 hover:shadow-m3-3 transition-all border border-white/20 group"
+                        className="inline-flex items-center gap-2.5 px-8 py-3.5 !bg-[#0B57D0] hover:!bg-[#0842A0] !text-white font-bold text-sm rounded-m3-full shadow-m3-2 hover:shadow-m3-3 transition-all border border-white/20 group"
                         aria-label="See More Reviews on Google (opens in a new tab)"
                     >
-                        <span className="material-symbols-outlined text-[18px] text-m3-primary">location_on</span>
+                        <span className="material-symbols-outlined text-[18px] text-white">location_on</span>
                         <span>Read 1,500+ Verified Reviews on Google Maps</span>
-                        <ExternalLink className="w-4 h-4 text-m3-success transform group-hover:translate-x-0.5 transition-transform" />
+                        <ExternalLink className="w-4 h-4 text-white transform group-hover:translate-x-0.5 transition-transform" />
                     </a>
                 </div>
             </div>

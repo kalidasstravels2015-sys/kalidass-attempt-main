@@ -962,15 +962,15 @@ Please confirm driver assignment and cab availability.`;
       // - Dedicated interactive booking engines (#booking, TirupatiBookingEngine, QuotationEngine)
       // - Direct WhatsApp buttons ([data-direct-whatsapp], .direct-wa-btn)
       // - Any element already inside an enquiry modal
-      if (target.closest('[role="dialog"], dialog, [data-hide-contact-dock], #booking, .booking-engine, [data-direct-whatsapp="true"], .direct-wa-btn, #bookingEnquiryModal')) {
+      if (target.closest('[role="dialog"], dialog, [data-hide-contact-dock], #booking, .booking-engine, [data-direct-whatsapp="true"], .direct-wa-btn, #bookingEnquiryModal, [data-open-outstation-calc="true"]')) {
         return;
       }
 
       var btn = target.closest('.tariff-whatsapp-btn, .enquire-btn, [data-open-enquiry="true"]');
       if (!btn) return;
 
-      // Do not intercept if marked as direct WhatsApp or skip enquiry
-      if (btn.getAttribute('data-direct-whatsapp') === 'true' || btn.getAttribute('data-skip-enquiry') === 'true') {
+      // Do not intercept if marked as direct WhatsApp, skip enquiry, or outstation calculator
+      if (btn.getAttribute('data-direct-whatsapp') === 'true' || btn.getAttribute('data-skip-enquiry') === 'true' || btn.getAttribute('data-open-outstation-calc') === 'true') {
         return;
       }
 

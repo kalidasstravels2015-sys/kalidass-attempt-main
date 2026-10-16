@@ -73,7 +73,7 @@ const FleetCard = ({ vehicle, isVisible, priority }) => {
                                 <span className="block text-[10px] uppercase font-bold tracking-wider text-m3-outline">
                                     Starting From
                                 </span>
-                                <span className="text-[11px] text-m3-success font-medium">Fixed Per-KM Rates</span>
+                                <span className="text-[11px] text-m3-on-surface-variant font-medium">Fixed Per-KM Rates</span>
                             </div>
                             <span className="text-base sm:text-lg font-extrabold text-m3-on-surface font-heading">
                                 {vehicle.rate}
@@ -87,7 +87,7 @@ const FleetCard = ({ vehicle, isVisible, priority }) => {
             <div className="p-3.5 sm:p-4 pt-0">
                 <a
                     href="/tariff/"
-                    className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-full bg-m3-inverse-surface hover:bg-m3-primary active:bg-black text-white text-xs font-bold transition-all cursor-pointer shadow-2xs group/btn"
+                    className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-full !bg-[#0B57D0] hover:!bg-[#0842A0] active:!bg-[#0842A0] !text-white text-xs font-bold transition-all cursor-pointer shadow-2xs group/btn"
                 >
                     <span>View Rates & Tariff</span>
                     <ChevronRight className="w-3.5 h-3.5 transform group-hover/btn:translate-x-0.5 transition-transform" />

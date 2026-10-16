@@ -32,10 +32,14 @@
 - **Rule 2.1.2 (Fare & Rate Presentation):**
   - All fares, estimates, prices, and rates must be rendered in crisp **Midnight Onyx Slate** (`#1A1C1E` / `text-m3-on-surface` or `#111827`).
 - **Rule 2.1.3 (Primary Action Elements):**
-  - Primary buttons and active selection pills must use Executive Midnight Charcoal (`#1E252D` / `bg-m3-primary`) with white text (`text-m3-on-primary`).
-- **Rule 2.1.4 (Secondary & Tertiary Accents):**
-  - Use Slate Steel (`#475467`) for secondary badges and outline borders.
-  - Use Warm Golden Amber (`#6D5E0F` / `#F8E287`) exclusively for star ratings, review badges, and pilgrimage travel highlights.
+  - Primary buttons and active selection pills must use Google Material 3 Sapphire Blue (`#0B57D0` / `bg-m3-primary`) with white text (`text-m3-on-primary`).
+- **Rule 2.1.4 (Neutral Badges & Chips Governance):**
+  - All vehicle category tags (`BEST VALUE SEDAN`), service category pills, and feature chips must use **Google M3 Assist Chips** (neutral container `bg-m3-surface-container-high`, dark slate text `text-m3-on-surface-variant`, and subtle outline `border-m3-outline-variant`).
+  - Multi-color badge pollution (arbitrary amber, orange, purple, green chips) is strictly prohibited. Warm Golden Amber is reserved exclusively for numerical 5-star ratings.
+- **Rule 2.1.5 (Single Accent Per Card):**
+  - Fleet cards, tariff cards, and tour cards must have **only ONE accent color**: the Google Sapphire Blue CTA button (`#0B57D0`). Inclusions like "Fixed Per-KM Rates", passenger counts, and luggage specs must remain calm neutral slate (`text-m3-on-surface-variant`).
+- **Rule 2.1.6 (No Multi-Color Buttons):**
+  - Primary blue buttons must strictly use white text and white icons. Never place green (`text-m3-success`) arrows or icons inside a blue action button.
 
 ### 2.2 Typography & Icon Standards
 - **Rule 2.2.1 (Google M3 15-Role Typescale):** Use only pre-configured Tailwind M3 typography classes (`text-m3-display-l`, `text-m3-headline-m`, `text-m3-body-l`, `text-m3-label-m`, etc.). Do not write arbitrary inline font sizes.

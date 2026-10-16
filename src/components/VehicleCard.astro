@@ -94,7 +94,7 @@ const {
             <span class="block text-[10px] uppercase font-bold tracking-wider text-m3-on-surface-variant">
               {priceLabel}
             </span>
-            <span class={`text-[11px] font-medium ${priceSubtext.toLowerCase().includes('extra') || priceSubtext.toLowerCase().includes('actual') ? 'text-m3-tertiary' : 'text-m3-success'}`}>{priceSubtext}</span>
+            <span class="text-[11px] font-medium text-m3-on-surface-variant">{priceSubtext}</span>
           </div>
           <span class="text-base sm:text-lg font-extrabold text-m3-on-surface font-heading">
             {price}
@@ -109,7 +109,7 @@ const {
     {actionHref ? (
       <a
         href={actionHref}
-        class={`w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary text-xs font-bold transition-all cursor-pointer shadow-m3-1 hover:shadow-m3-2 group/btn ${actionClass}`}
+        class={`w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full !bg-[#0B57D0] hover:!bg-[#0842A0] active:!bg-[#0842A0] !text-white text-xs font-bold transition-all cursor-pointer shadow-m3-1 hover:shadow-m3-2 group/btn ${actionClass}`}
         {...dataAttributes}
       >
         <span>{actionText}</span>
@@ -120,7 +120,7 @@ const {
         type="button"
         data-select-vehicle={selectVehicleId}
         data-select-pax={selectPax}
-        class={`w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary text-xs font-bold transition-all cursor-pointer shadow-m3-1 hover:shadow-m3-2 group/btn ${actionClass}`}
+        class={`w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full !bg-[#0B57D0] hover:!bg-[#0842A0] active:!bg-[#0842A0] !text-white text-xs font-bold transition-all cursor-pointer shadow-m3-1 hover:shadow-m3-2 group/btn ${actionClass}`}
         {...dataAttributes}
       >
         <span>{actionText}</span>
