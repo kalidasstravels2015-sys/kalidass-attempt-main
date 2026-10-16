@@ -10,7 +10,7 @@ import { Clock } from 'lucide-react';
 export default function LocalRentalBookingEngine({
   showHeader = true,
   title = "Chennai Local City Rental",
-  subtitle = "Hourly City Packages • Fuel & Driver Bata Included • Zero Surge",
+  subtitle = "Hourly City Packages • Fuel & Driver Bata Included",
   currentLang = "en"
 }) {
   return (
@@ -19,6 +19,7 @@ export default function LocalRentalBookingEngine({
         currentLang={currentLang}
         initialTab="local"
         allowedTabs={['local']}
+        showHeader={showHeader}
         title={title}
         subtitle={subtitle}
         headerIcon={<Clock className="w-5 h-5 text-m3-primary" />}

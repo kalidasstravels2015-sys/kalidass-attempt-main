@@ -4,7 +4,6 @@ import {
   MapPin, 
   Calendar, 
   Navigation, 
-  LocateFixed, 
   Clock, 
   Calculator, 
   Receipt, 
@@ -13,10 +12,12 @@ import {
   Phone, 
   Car, 
   AlertCircle, 
+  Info,
   Sparkles,
   ArrowRight
 } from 'lucide-react';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
+import LocationPicker from './LocationPicker';
 import { buildWhatsAppUrl } from '../utils/whatsapp';
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
 import WhatsAppButton from './react/WhatsAppButton.jsx';
@@ -195,16 +196,18 @@ const estimateRoadExtras = (pickup, drop, distanceKm, days, isRoundTrip) => {
   };
 };
 
+// Calculate billing days from pickup and return strings
+// Standard Rule: Up to 24 hours = 1 Day (250 km standard coverage).
+// If duration exceeds 24 hours, duration above 24 hours is billed extra.
 const calculateCalendarDays = (pickupStr, returnStr) => {
   if (!pickupStr || !returnStr) return 1;
   const p = new Date(pickupStr);
   const r = new Date(returnStr);
   if (isNaN(p.getTime()) || isNaN(r.getTime())) return 1;
-  if (r < p) return 1;
-  const pCal = new Date(p.getFullYear(), p.getMonth(), p.getDate());
-  const rCal = new Date(r.getFullYear(), r.getMonth(), r.getDate());
-  const diffDays = Math.round((rCal - pCal) / (1000 * 60 * 60 * 24));
-  return Math.max(1, diffDays + 1);
+  if (r <= p) return 1;
+  const diffHours = (r.getTime() - p.getTime()) / (1000 * 60 * 60);
+  if (diffHours <= 24) return 1;
+  return Math.max(1, Math.ceil(diffHours / 24));
 };
 
 // Parse driving duration in hours from duration string or distance km
@@ -310,6 +313,17 @@ const getEstimatedArrival = (pickupVal, drivingHours) => {
   });
 };
 
+// Min selectable datetime (current time)
+const getMinDateTime = () => {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const hours = String(d.getHours()).padStart(2, '0');
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+
 const getDefaultDepartureTime = () => {
   const d = new Date();
   d.setDate(d.getDate() + 1);
@@ -348,7 +362,10 @@ export default function OutstationQuotationModal() {
   const [pickup, setPickup] = useState('');
   const [drop, setDrop] = useState('');
   const [date, setDate] = useState(() => getDefaultDepartureTime());
-  const [returnDate, setReturnDate] = useState(() => getDefaultReturnTime());
+  const [returnDate, setReturnDate] = useState(() => {
+    const defaultDep = getDefaultDepartureTime();
+    return getMinReturnDateTime(defaultDep, 8);
+  });
   const [days, setDays] = useState(1);
 
   const [distance, setDistance] = useState(null);
@@ -360,12 +377,36 @@ export default function OutstationQuotationModal() {
   const [gettingLocation, setGettingLocation] = useState(false);
   const [errors, setErrors] = useState({});
   const [bookingId, setBookingId] = useState('#KT-OUT-101');
+  const [locationPickerOpen, setLocationPickerOpen] = useState(false);
+  const [pickerField, setPickerField] = useState('pickup');
+
+  const handlePinClick = (field = 'pickup') => {
+    loadGoogleMaps().catch(() => {});
+    setPickerField(field);
+    setLocationPickerOpen(true);
+    trackEvent('location_map_opened', { field, context: 'outstation_modal' });
+  };
+
+  const handleLocationConfirm = (address) => {
+    const clean = address ? address.trim() : '';
+    if (pickerField === 'pickup') {
+      setPickup(clean);
+      if (errors.pickup) setErrors(prev => ({ ...prev, pickup: undefined }));
+      if (drop) resolveDistance(clean, drop);
+    } else {
+      setDrop(clean);
+      if (errors.drop) setErrors(prev => ({ ...prev, drop: undefined }));
+      if (pickup) resolveDistance(pickup, clean);
+    }
+    setLocationPickerOpen(false);
+    trackEvent('location_pin_used', { field: pickerField, method: 'map_picker', success: true });
+  };
 
   const pickupInputRef = useRef(null);
   const dropInputRef = useRef(null);
   const autocompleteInitialized = useRef(false);
 
-  const effDist = distance || (isTirupatiTrip(drop) ? 135 : 0);
+  const effDist = distance || 0;
   const tripReq = getTripDrivingRequirements(effDist, tripType === 'round', duration);
 
   let scheduleAdvisory = null;
@@ -374,6 +415,8 @@ export default function OutstationQuotationModal() {
     const roundKm = (distance * 2).toFixed(0);
     if (diffHours < tripReq.totalDrivingHours) {
       scheduleAdvisory = `Round trip covers ~${roundKm} km (~${Math.round(tripReq.totalDrivingHours)} hrs driving). Selected schedule window (${Math.max(1, Math.round(diffHours))} hrs) is less than round-trip driving time. Minimum ${tripReq.minDays} calendar days required for highway safety.`;
+    } else if (diffHours < tripReq.minRealisticHours) {
+      scheduleAdvisory = `Round trip covers ~${roundKm} km (~${Math.round(tripReq.totalDrivingHours)} hrs driving). Minimum realistic window is ${tripReq.minRealisticHours} hours for safe travel.`;
     } else if (!tripReq.isSameDayFeasible && days === 1) {
       scheduleAdvisory = `Round trip covers ~${roundKm} km (~${Math.round(tripReq.totalDrivingHours)} hrs driving). Same-day return is not feasible for highway safety. Minimum ${tripReq.minDays} calendar days applies.`;
     }
@@ -389,91 +432,48 @@ export default function OutstationQuotationModal() {
     }
   }, [tripType, date, returnDate, distance, duration, tripReq.minDays]);
 
-  function isTirupatiTrip(dest) {
-    const d = (dest || '').toLowerCase();
-    return d.includes('tirupati') || d.includes('tirumala');
-  }
-
   // Recalculate cost when tripType, vehicle, distance, or days change
   useEffect(() => {
-    if (!distance && !isTirupatiTrip(drop)) {
+    if (!distance) {
       setEstimate(0);
       setBreakdown(null);
       return;
     }
 
-    const effDistance = distance || 135;
+    const effDistance = distance;
     const rate = tripType === 'round' ? vehicle.roundTripRate : vehicle.oneWayRate;
     const bata = vehicle.bata;
-    const isTirupati = isTirupatiTrip(drop);
 
     let totalCost = 0;
     let bObj = {};
 
     if (tripType === 'round') {
-      if (isTirupati) {
-        // Tirupati package rates
-        const tirupatiRates = {
-          'Swift Dzire':     { 1: 6000, 2: 9500, 3: 13200, extra: 3500 },
-          'Toyota Etios':    { 1: 6000, 2: 9500, 3: 13200, extra: 3500 },
-          'Maruti Ertiga':   { 1: 7500, 2: 11500, 3: 15800, extra: 4300 },
-          'Toyota Innova':   { 1: 8500, 2: 12500, 3: 17500, extra: 5000 },
-          'Innova':          { 1: 8500, 2: 12500, 3: 17500, extra: 5000 },
-          'Innova Crysta':   { 1: 10000, 2: 16000, 3: 22500, extra: 6500 },
-          'Tempo Traveller': { 1: 12500, 2: 19500, 3: 27000, extra: 7500 },
-        };
-        const vRates = tirupatiRates[vehicle.key] || tirupatiRates['Maruti Ertiga'];
-        const tripDays = Math.max(1, days || 1);
-        const pkgCost = tripDays === 1 ? vRates[1] 
-                      : tripDays === 2 ? vRates[2] 
-                      : tripDays === 3 ? vRates[3] 
-                      : vRates[3] + (tripDays - 3) * vRates.extra;
-        
-        totalCost = pkgCost;
-        bObj = {
-          base_km: tripDays * (vehicle.minKm || 250),
-          actual_km: 320,
-          chargeable_km: 320,
-          free_buffer_km: 0,
-          rate_per_km: rate,
-          km_cost: pkgCost,
-          driver_bata: tripDays * bata,
-          daily_bata: bata,
-          days: tripDays,
-          is_tirupati_pkg: true,
-          all_inclusive_est: pkgCost,
-          tolls_est: 0,
-          state_permit_est: 0
-        };
-      } else {
-        const minKm = (days || 1) * (vehicle.minKm || 250);
-        const actualRoundTripKm = effDistance * 2;
-        const chargeableKm = Math.max(minKm, actualRoundTripKm);
-        const freeBufferKm = Math.max(0, chargeableKm - actualRoundTripKm);
-        const bataTotal = (days || 1) * bata;
-        const kmCost = chargeableKm * rate;
-        totalCost = kmCost + bataTotal;
+      const minKm = (days || 1) * (vehicle.minKm || 250);
+      const actualRoundTripKm = effDistance * 2;
+      const chargeableKm = Math.max(minKm, actualRoundTripKm);
+      const freeBufferKm = Math.max(0, chargeableKm - actualRoundTripKm);
+      const bataTotal = (days || 1) * bata;
+      const kmCost = chargeableKm * rate;
+      totalCost = kmCost + bataTotal;
 
-        const extras = estimateRoadExtras(pickup, drop, effDistance, days, true);
+      const extras = estimateRoadExtras(pickup, drop, effDistance, days, true);
 
-        bObj = {
-          base_km: minKm,
-          actual_km: actualRoundTripKm,
-          chargeable_km: chargeableKm,
-          free_buffer_km: freeBufferKm,
-          rate_per_km: rate,
-          km_cost: kmCost,
-          driver_bata: bataTotal,
-          daily_bata: bata,
-          days: days || 1,
-          state_name: extras.stateName,
-          state_permit_est: extras.statePermitEst,
-          tolls_est: extras.tollsEst,
-          driver_night_stay_est: extras.driverNightStayEst,
-          road_extras_est: extras.roadExtrasEst,
-          all_inclusive_est: Math.round((totalCost + extras.roadExtrasEst) / 10) * 10
-        };
-      }
+      bObj = {
+        base_km: minKm,
+        actual_km: actualRoundTripKm,
+        chargeable_km: chargeableKm,
+        free_buffer_km: freeBufferKm,
+        rate_per_km: rate,
+        km_cost: kmCost,
+        driver_bata: bataTotal,
+        daily_bata: bata,
+        days: days || 1,
+        state_name: extras.stateName,
+        state_permit_est: extras.statePermitEst,
+        tolls_est: extras.tollsEst,
+        driver_night_stay_est: extras.driverNightStayEst,
+        road_extras_est: extras.roadExtrasEst
+      };
     } else {
       // One-Way Drop
       const minDropKm = vehicle.key.includes('Tempo') ? 250 : 130;
@@ -496,7 +496,6 @@ export default function OutstationQuotationModal() {
         state_permit_est: extras.statePermitEst,
         tolls_est: extras.tollsEst,
         road_extras_est: extras.roadExtrasEst,
-        all_inclusive_est: Math.round((totalCost + extras.roadExtrasEst) / 10) * 10,
         is_oneway: true
       };
     }
@@ -511,18 +510,11 @@ export default function OutstationQuotationModal() {
 
     if (tripType === 'round' && distKm) {
       const req = getTripDrivingRequirements(distKm, true, durStr);
-      if (req.minDays > 1) {
-        const curDays = calculateCalendarDays(date, returnDate);
-        if (curDays < req.minDays) {
-          const p = new Date(date || getDefaultDepartureTime());
-          p.setDate(p.getDate() + (req.minDays - 1));
-          p.setHours(21, 0, 0, 0);
-          const year = p.getFullYear();
-          const month = String(p.getMonth() + 1).padStart(2, '0');
-          const day = String(p.getDate()).padStart(2, '0');
-          setReturnDate(`${year}-${month}-${day}T21:00`);
-          setDays(req.minDays);
-        }
+      const minReturn = getMinReturnDateTime(date || getDefaultDepartureTime(), req.minRealisticHours);
+      if (!returnDate || returnDate < minReturn) {
+        setReturnDate(minReturn);
+        const computed = calculateCalendarDays(date || getDefaultDepartureTime(), minReturn);
+        setDays(Math.max(req.minDays, computed));
       }
     }
     setLoading(false);
@@ -541,11 +533,6 @@ export default function OutstationQuotationModal() {
     const known = findKnownDistance(o, d);
     if (known) {
       applyResolvedDistance(known.distance, known.duration);
-      return;
-    }
-
-    if (isTirupatiTrip(d)) {
-      applyResolvedDistance(135, '3.5 - 4 hrs');
       return;
     }
 
@@ -702,6 +689,11 @@ export default function OutstationQuotationModal() {
         bata: data.bata || 500
       });
       setBookingId('#KT-OUT-' + Math.floor(100 + Math.random() * 900));
+      const defaultDep = getDefaultDepartureTime();
+      if (!date) {
+        setDate(defaultDep);
+        setReturnDate(getMinReturnDateTime(defaultDep, 8));
+      }
       setIsOpen(true);
       document.body.style.overflow = 'hidden';
 
@@ -792,16 +784,18 @@ export default function OutstationQuotationModal() {
 📏 *Distance & Driving Time:* ~${roundKm.toFixed(0)} km ${tripType === 'round' ? 'Round Trip' : 'One-Way'}${tripReq.drivingText ? ` (${tripReq.drivingText})` : (duration ? ` (${duration})` : '')}
 
 ━━━━━━━━━━━━━━━━━━━━
-💰 *ESTIMATED FARE BREAKDOWN:*
+💰 *ESTIMATED FARE & TERMS:*
 • Base Vehicle Meter Fare: ₹${(breakdown?.km_cost || finalEstimate).toLocaleString('en-IN')} (${breakdown?.chargeable_km || roundKm} km @ ₹${breakdown?.rate_per_km || (tripType === 'round' ? vehicle.roundTripRate : vehicle.oneWayRate)}/km)
 • Chauffeur Duty & Day Bata: ₹${(breakdown?.driver_bata || vehicle.bata * days).toLocaleString('en-IN')} (${days} ${days > 1 ? 'Days' : 'Day'})
-${breakdown?.free_buffer_km > 0 ? `• Sightseeing Buffer: +${breakdown.free_buffer_km.toFixed(0)} km (Included ₹0)\n` : ''}• Net Estimated Total: *₹${finalEstimate.toLocaleString('en-IN')}*
+${breakdown?.free_buffer_km > 0 ? `• Sightseeing Buffer: +${breakdown.free_buffer_km.toFixed(0)} km (Included ₹0)\n` : ''}• Net Estimated Base Total: *₹${finalEstimate.toLocaleString('en-IN')}*
+• Extras at Actuals: Highway FASTag tolls, interstate permits, parking & night stay charged at exact actuals with zero markup.
+• Duration Standard: 1 Day = up to 24 hrs / 250 km. Duration above 24 hrs billed extra.
 • Advance Token to Confirm: *₹500*
-• Balance on Completion: *₹${Math.max(0, finalEstimate - 500).toLocaleString('en-IN')}* (Pay driver after trip)
+• Balance on Completion: *₹${Math.max(0, finalEstimate - 500).toLocaleString('en-IN')}* Base Fare + Extras at Actuals (Pay driver after trip)
 
 ━━━━━━━━━━━━━━━━━━━━
 ✅ *Inclusions:* Dedicated AC Vehicle, Fuel & Chauffeur Day Bata Included
-ℹ️ *Note:* Highway FASTag tolls and interstate border permits charged at actuals with zero markup.
+ℹ️ *Terms:* We provide estimated base fare; all road extras are strictly at actuals.
 
 Please confirm vehicle availability and driver allocation.`;
 
@@ -912,7 +906,13 @@ Please confirm vehicle availability and driver allocation.`;
             <div className="grid grid-cols-2 gap-2 p-1 bg-m3-surface-container rounded-m3-xl border border-m3-outline-variant/60 text-xs font-bold">
               <button
                 type="button"
-                onClick={() => setTripType('round')}
+                onClick={() => {
+                  setTripType('round');
+                  const minReturn = getMinReturnDateTime(date || getDefaultDepartureTime(), tripReq.minRealisticHours);
+                  if (!returnDate || returnDate < minReturn) {
+                    setReturnDate(minReturn);
+                  }
+                }}
                 className={`py-2 px-3 rounded-m3-lg text-center transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                   tripType === 'round'
                     ? 'bg-m3-primary text-m3-on-primary shadow-xs'
@@ -979,15 +979,15 @@ Please confirm vehicle availability and driver allocation.`;
                     <X className="w-3.5 h-3.5" />
                   </button>
                 )}
-                <button
-                  type="button"
-                  onClick={getCurrentLocation}
-                  disabled={gettingLocation}
-                  className="w-7 h-7 flex items-center justify-center rounded-m3-sm hover:bg-m3-surface-container text-m3-on-surface-variant hover:text-m3-primary transition-colors cursor-pointer disabled:opacity-50"
-                  title="Use current GPS location"
-                >
-                  <LocateFixed className={`w-4 h-4 ${gettingLocation ? 'animate-spin text-m3-primary' : ''}`} />
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => handlePinClick('pickup')}
+                    className="w-7 h-7 flex items-center justify-center rounded-m3-sm hover:bg-m3-surface-container text-m3-primary hover:bg-m3-primary/10 transition-colors cursor-pointer"
+                    title="Pinpoint pickup on map"
+                    aria-label="Pinpoint pickup on map"
+                  >
+                    <MapPin className="w-3.5 h-3.5 text-m3-primary" />
+                  </button>
               </div>
             </div>
             {errors.pickup && (
@@ -1004,7 +1004,7 @@ Please confirm vehicle availability and driver allocation.`;
               <label htmlFor="modal-drop-location" className="block text-xs font-bold text-m3-on-surface">
                 2. Destination / Drop City *
               </label>
-              {(distance || isTirupatiTrip(drop)) && (
+              {distance && (
                 <span className="text-[10px] font-semibold text-m3-primary bg-m3-primary/10 px-2 py-0.5 rounded-m3-xs border border-m3-primary/20">
                   ~{tripType === 'round' ? (effDist * 2).toFixed(0) : effDist.toFixed(0)} km {tripType === 'round' ? 'Round Trip' : 'Drop'}
                   {tripReq.drivingText ? ` • ${tripReq.drivingText}` : ''}
@@ -1033,21 +1033,32 @@ Please confirm vehicle availability and driver allocation.`;
                 onBlur={() => {
                   if (pickup && drop) resolveDistance(pickup, drop);
                 }}
-                className="w-full bg-transparent py-2.5 pl-3 pr-10 text-xs sm:text-sm font-semibold text-m3-on-surface placeholder:text-m3-on-surface-variant/60 outline-none"
+                className="w-full bg-transparent py-2.5 pl-3 pr-16 text-xs sm:text-sm font-semibold text-m3-on-surface placeholder:text-m3-on-surface-variant/60 outline-none"
               />
-              {drop && (
+              <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                {drop && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDrop('');
+                      setDistance(null);
+                    }}
+                    className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-m3-surface-container text-m3-on-surface-variant hover:text-m3-on-surface transition-colors cursor-pointer"
+                    title="Clear text"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
                 <button
                   type="button"
-                  onClick={() => {
-                    setDrop('');
-                    setDistance(null);
-                  }}
-                  className="absolute right-1.5 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center rounded-full hover:bg-m3-surface-container text-m3-on-surface-variant hover:text-m3-on-surface transition-colors cursor-pointer"
-                  title="Clear text"
+                  onClick={() => handlePinClick('drop')}
+                  className="w-7 h-7 flex items-center justify-center rounded-m3-sm hover:bg-m3-surface-container text-m3-primary hover:bg-m3-primary/10 transition-colors cursor-pointer"
+                  title="Pinpoint destination on map"
+                  aria-label="Pinpoint destination on map"
                 >
-                  <X className="w-3.5 h-3.5" />
+                  <MapPin className="w-3.5 h-3.5 text-m3-primary" />
                 </button>
-              )}
+              </div>
             </div>
             {errors.drop && (
               <p className="text-[11px] text-m3-error font-medium flex items-center gap-1 mt-1">
@@ -1097,20 +1108,14 @@ Please confirm vehicle availability and driver allocation.`;
                 <input
                   type="datetime-local"
                   value={date}
+                  min={getMinDateTime()}
                   onChange={(e) => {
                     const val = e.target.value;
                     setDate(val);
-                    if (tripType === 'round') {
-                      const minDays = tripReq.minDays || 1;
-                      const p = new Date(val);
-                      p.setDate(p.getDate() + (minDays - 1));
-                      p.setHours(21, 0, 0, 0);
-                      const curR = new Date(returnDate);
-                      if (isNaN(curR.getTime()) || curR < p) {
-                        const year = p.getFullYear();
-                        const month = String(p.getMonth() + 1).padStart(2, '0');
-                        const day = String(p.getDate()).padStart(2, '0');
-                        setReturnDate(`${year}-${month}-${day}T21:00`);
+                    if (val && tripType === 'round') {
+                      const minReturn = getMinReturnDateTime(val, tripReq.minRealisticHours);
+                      if (!returnDate || returnDate < minReturn) {
+                        setReturnDate(minReturn);
                       }
                     }
                   }}
@@ -1147,17 +1152,19 @@ Please confirm vehicle availability and driver allocation.`;
               )}
             </div>
 
-            {/* Highway Safety & Duration Advisory */}
+            {/* Realistic Travel Advisory */}
             {scheduleAdvisory && (
-              <div className="p-2.5 rounded-m3-md bg-amber-500/10 border border-amber-500/30 text-amber-900 text-[11px] leading-relaxed flex items-start gap-2">
-                <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                <span>{scheduleAdvisory}</span>
+              <div className="p-2.5 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant/60 text-m3-on-surface text-[11px] leading-relaxed flex items-start gap-2 animate-in fade-in">
+                <Info className="w-4 h-4 text-m3-on-surface-variant shrink-0 mt-0.5" />
+                <span>
+                  <strong className="font-bold">Realistic Travel Advisory:</strong> {scheduleAdvisory}
+                </span>
               </div>
             )}
           </div>
 
           {/* Calculate Button (If distance is not yet resolved) */}
-          {(!distance && !isTirupatiTrip(drop)) && (
+          {!distance && (
             <div className="pt-1">
               <button
                 type="button"
@@ -1193,6 +1200,38 @@ Please confirm vehicle availability and driver allocation.`;
           {estimate > 0 && (
             <div className="pt-2 border-t border-m3-outline-variant/60 space-y-3 animate-in fade-in duration-200">
               
+              {/* Short City Trip Alert & Alternative Suggestion */}
+              {tripType === 'round' && (effDist * 2) <= 120 && (
+                <div className="p-3 bg-amber-50 border border-amber-300/80 rounded-xl space-y-2 text-xs">
+                  <div className="flex items-start gap-2.5">
+                    <div className="w-7 h-7 rounded-full bg-amber-100 flex items-center justify-center shrink-0 text-amber-800 font-bold mt-0.5">
+                      💡
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-bold text-amber-950 text-xs sm:text-sm">
+                        Short City Route Detected (~{(effDist * 2).toFixed(0)} km Round Trip)
+                      </div>
+                      <p className="text-amber-900/90 mt-0.5 leading-relaxed text-[11.5px]">
+                        Outstation round trips carry a mandatory 250 km/day interstate minimum (₹{estimate.toLocaleString('en-IN')}). For city travel &amp; round trips within Chennai, our <strong>Local City Packages</strong> (e.g. 5 Hrs / 50 Km at ₹1,500 or 8 Hrs / 80 Km at ₹2,200) are much more economical!
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between gap-2 pt-2 border-t border-amber-200/80 flex-wrap">
+                    <span className="text-[11px] font-semibold text-amber-950">
+                      Save up to ₹{Math.max(0, estimate - 2200).toLocaleString('en-IN')} with our Local Hourly Rental!
+                    </span>
+                    <a
+                      href="/#booking"
+                      onClick={() => onClose()}
+                      className="px-3 py-1.5 bg-amber-900 hover:bg-amber-950 text-white font-bold text-xs rounded-lg transition-colors flex items-center gap-1 cursor-pointer shadow-2xs"
+                    >
+                      <span>View Local Packages</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
+              )}
+
               {/* Hero Price & Inclusions Card */}
               <div className="p-3 sm:p-4 rounded-m3-xl bg-m3-surface-container-low border border-m3-outline-variant/60">
                 <div className="flex items-baseline justify-between gap-2 flex-wrap">
@@ -1210,79 +1249,89 @@ Please confirm vehicle availability and driver allocation.`;
                 </div>
 
                 <p className="mt-1.5 text-xs text-m3-on-surface-variant font-medium leading-relaxed">
-                  {breakdown?.is_tirupati_pkg
-                    ? '100% Fuel + Tolls + AP Interstate Permit + Hill Climb + Driver Bata Included'
-                    : `₹${breakdown?.rate_per_km || (tripType === 'round' ? vehicle.roundTripRate : vehicle.oneWayRate)}/km · Fuel & Chauffeur Day Bata Included${breakdown?.free_buffer_km > 0 ? ` · +${breakdown.free_buffer_km.toFixed(0)} km free buffer` : ''}`}
+                  ₹{breakdown?.rate_per_km || (tripType === 'round' ? vehicle.roundTripRate : vehicle.oneWayRate)}/km · Fuel &amp; Chauffeur Day Bata Included{breakdown?.free_buffer_km > 0 ? ` · +${breakdown.free_buffer_km.toFixed(0)} km free buffer` : ''}
                 </p>
 
-                {!breakdown?.is_tirupati_pkg && breakdown?.road_extras_est > 0 && (
-                  <div className="mt-1 flex items-center gap-1.5 text-[11px] text-m3-on-surface-variant font-medium flex-wrap">
-                    <span>Est. Tolls &amp; Permits: <strong className="text-m3-on-surface">~₹{breakdown.road_extras_est.toLocaleString('en-IN')}</strong></span>
-                    <span>•</span>
-                    <span>All-Inclusive Total: <strong className="text-m3-on-surface font-bold">~₹{breakdown.all_inclusive_est.toLocaleString('en-IN')}</strong></span>
-                  </div>
-                )}
+                <div className="mt-1 text-[11px] text-m3-on-surface-variant font-medium">
+                  <span>Tolls, Permits &amp; Parking: <strong className="text-m3-on-surface">Paid at actuals on route</strong></span>
+                </div>
               </div>
 
-              {/* Itemized Fare Breakdown Section */}
-              <div className="border border-m3-outline-variant/80 rounded-m3-xl overflow-hidden bg-white shadow-2xs">
-                <button
-                  type="button"
-                  onClick={() => setShowBreakdown(!showBreakdown)}
-                  aria-expanded={showBreakdown}
-                  className="w-full px-3.5 py-2.5 min-h-[44px] flex items-center justify-between text-xs font-bold text-m3-on-surface hover:bg-m3-surface-container-low transition-colors cursor-pointer"
-                >
-                  <div className="flex items-center gap-2">
-                    <Receipt className="w-3.5 h-3.5 text-m3-on-surface-variant shrink-0" />
-                    <span>{showBreakdown ? 'Hide Itemized Fare Breakdown' : 'View Itemized Fare Breakdown'}</span>
-                  </div>
-                  <ChevronDown className={`w-4 h-4 text-m3-on-surface-variant transition-transform duration-200 ${showBreakdown ? 'rotate-180' : ''}`} />
-                </button>
-
-                {showBreakdown && (
-                  <div className="p-3 border-t border-m3-outline-variant/60 bg-m3-surface-container-lowest text-xs space-y-1.5 divide-y divide-m3-outline-variant/40">
-                    <div className="flex justify-between items-center py-1">
-                      <span className="text-m3-on-surface-variant">Dedicated AC Vehicle ({vehicle.name}):</span>
-                      <span className="font-bold text-m3-on-surface">₹{(breakdown?.km_cost || estimate).toLocaleString('en-IN')}</span>
-                    </div>
-
-                    {breakdown?.driver_bata > 0 && (
-                      <div className="flex justify-between items-center py-1">
-                        <span className="text-m3-on-surface-variant">Chauffeur Duty &amp; Bata ({days} {days > 1 ? 'Days' : 'Day'}):</span>
-                        <span className="font-bold text-m3-on-surface">₹{breakdown.driver_bata.toLocaleString('en-IN')}</span>
-                      </div>
-                    )}
-
-                    {breakdown?.free_buffer_km > 0 && (
-                      <div className="flex justify-between items-center py-1">
-                        <span className="text-m3-on-surface-variant">Sightseeing Buffer (+{breakdown.free_buffer_km.toFixed(0)} km):</span>
-                        <span className="font-bold text-m3-success">INCLUDED (₹0)</span>
-                      </div>
-                    )}
-
-                    {breakdown?.is_tirupati_pkg && (
-                      <div className="flex justify-between items-center py-1">
-                        <span className="text-m3-on-surface-variant">FASTag Tolls, AP State Tax &amp; Tirumala Ghat:</span>
-                        <span className="font-bold text-m3-success">INCLUDED (₹0)</span>
-                      </div>
-                    )}
-
-                    <div className="flex justify-between items-center pt-2 font-bold text-xs sm:text-sm text-m3-on-surface">
-                      <span>Net Estimated Total:</span>
-                      <span className="text-sm sm:text-base font-extrabold text-m3-on-surface">₹{estimate.toLocaleString('en-IN')}</span>
-                    </div>
-
-                    <div className="flex justify-between items-center pt-1 text-[11px] text-m3-on-surface-variant font-medium">
-                      <span>Advance Booking Token:</span>
-                      <span className="font-bold text-m3-on-surface">₹500 to Confirm Booking</span>
-                    </div>
-
-                    <div className="flex justify-between items-center pt-0.5 text-[11px] text-m3-on-surface-variant">
-                      <span>Balance on Completion:</span>
-                      <span className="font-semibold text-m3-on-surface">₹{Math.max(0, estimate - 500).toLocaleString('en-IN')}</span>
+              {/* Rate Summary in Card — Restaurant Bill Style */}
+              <div className="border border-m3-outline-variant/80 rounded-m3-xl p-3.5 bg-white shadow-2xs text-xs space-y-2.5">
+                {/* Header: Vehicle & Total Fare */}
+                <div className="flex items-center justify-between pb-2 border-b border-m3-outline-variant/60">
+                  <div>
+                    <span className="font-extrabold text-sm text-m3-on-surface">{vehicle.name}</span>
+                    <div className="text-[11px] text-m3-on-surface-variant font-medium mt-0.5">
+                      ~{(distance * (tripType === 'round' ? 2 : 1)).toFixed(0)} km {tripType === 'round' ? 'Round Trip' : 'One Way Drop'}
                     </div>
                   </div>
-                )}
+                  <div className="text-right">
+                    <div className="text-[11px] text-m3-on-surface-variant font-medium">Total Fare</div>
+                    <div className="text-xl font-extrabold text-m3-on-surface">₹{estimate.toLocaleString('en-IN')} <span className="text-xs font-semibold text-m3-on-surface-variant">+ Extra</span></div>
+                  </div>
+                </div>
+
+                {/* Bill Items */}
+                <div className="space-y-1.5">
+                  <div className="flex justify-between items-center text-m3-on-surface-variant">
+                    <span>Cab Hire ({vehicle.name} • Fuel included):</span>
+                    <span className="font-bold text-m3-on-surface">₹{(breakdown?.km_cost || estimate).toLocaleString('en-IN')}</span>
+                  </div>
+
+                  {breakdown?.driver_bata > 0 && (
+                    <div className="flex justify-between items-center text-m3-on-surface-variant">
+                      <span>Driver Allowance ({days} {days > 1 ? 'Days' : 'Day'}):</span>
+                      <span className="font-bold text-m3-on-surface">₹{breakdown.driver_bata.toLocaleString('en-IN')}</span>
+                    </div>
+                  )}
+
+                  {breakdown?.free_buffer_km > 0 && (
+                    <div className="flex justify-between items-center text-m3-on-surface-variant">
+                      <span>Free Sightseeing (+{breakdown.free_buffer_km.toFixed(0)} km):</span>
+                      <span className="font-bold text-emerald-700">FREE (₹0)</span>
+                    </div>
+                  )}
+
+                  <div className="flex justify-between items-center text-m3-on-surface-variant">
+                    <span>Tolls, Parking &amp; Permits:</span>
+                    <span className="font-bold text-m3-on-surface">Extra (At Actuals)</span>
+                  </div>
+                </div>
+
+                {/* Bill Payment Split */}
+                <div className="pt-2 border-t-2 border-slate-200 space-y-1 text-xs">
+                  <div className="flex justify-between items-center py-1 sm:py-1.5 border-b border-slate-200/80 mb-1">
+                    <span className="text-base sm:text-lg font-black text-m3-on-surface tracking-tight">Total Bill:</span>
+                    <span className="text-xl sm:text-2xl font-black text-m3-primary tracking-tight font-heading">
+                      ₹{estimate.toLocaleString('en-IN')} + Extra
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                    <span>Advance to Pay:</span>
+                    <span className="font-bold text-emerald-700">₹500</span>
+                  </div>
+                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface">
+                    <span className="font-medium">Balance to Pay Driver:</span>
+                    <span className="font-bold text-m3-on-surface">₹{Math.max(0, estimate - 500).toLocaleString('en-IN')} + Extra <span className="text-[11px] font-normal text-m3-on-surface-variant">(After trip)</span></span>
+                  </div>
+                </div>
+
+                {/* Cut and Dried Notes */}
+                <div className="pt-2.5 border-t border-dashed border-m3-outline-variant/80 text-[11px] text-m3-on-surface-variant space-y-1.5">
+                  <div className="flex items-center gap-1.5 text-emerald-800 font-medium">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <span>
+                      <strong>Included in Fare:</strong> Dedicated AC Cab, 100% Fuel &amp; Driver Allowance.
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 text-slate-600">
+                    <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <span>1 Day = Up to 24 hrs / 250 km. Duration or km beyond package is billed extra.</span>
+                  </div>
+                </div>
               </div>
 
               {/* 7. Action Buttons (WhatsApp Book & Call Now) */}
@@ -1314,6 +1363,16 @@ Please confirm vehicle availability and driver allocation.`;
 
         </div>
       </div>
+
+      {locationPickerOpen && (
+        <LocationPicker
+          isOpen={locationPickerOpen}
+          onClose={() => setLocationPickerOpen(false)}
+          onConfirm={handleLocationConfirm}
+          type={pickerField}
+          initialAddress={pickerField === 'pickup' ? pickup : drop}
+        />
+      )}
     </div>
   );
 }

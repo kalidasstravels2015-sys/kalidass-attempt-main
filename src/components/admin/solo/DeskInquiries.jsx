@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import AiBookingParser from './AiBookingParser';
+import DeskChatRadar from './DeskChatRadar';
 
 export default function DeskInquiries({
   leads,
+  chatQueries = [],
   onLeadQuoted,
   onConvertToConfirmed,
   showToast
 }) {
+  const [subTab, setSubTab] = useState('leads'); // 'leads' | 'chat_radar'
   const [selectedLead, setSelectedLead] = useState(null);
   const [advanceModalLead, setAdvanceModalLead] = useState(null);
   const [advanceForm, setAdvanceForm] = useState({
@@ -98,18 +101,54 @@ export default function DeskInquiries({
         }}
       />
 
-      {/* Inquiries Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-sm font-extrabold text-m3-on-surface tracking-tight flex items-center gap-1.5">
-            <span className="material-symbols-outlined text-m3-tertiary text-base">forum</span>
-            <span>Inquiries & Price Shoppers ({leads.length})</span>
-          </h2>
-          <span className="text-[11px] text-m3-outline">
-            People who asked for rates. Quote them and request a ₹500 token advance to lock the booking.
-          </span>
-        </div>
+      {/* Sub-Desk Segment Selector */}
+      <div className="flex items-center gap-1.5 p-1 bg-white border border-m3-outline-variant/60 rounded-xl w-fit shadow-sm">
+        <button
+          type="button"
+          onClick={() => setSubTab('leads')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+            subTab === 'leads'
+              ? 'bg-m3-inverse-surface text-white shadow-sm'
+              : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container'
+          }`}
+        >
+          <span className="material-symbols-outlined text-sm">calculate</span>
+          <span>Calculator Leads ({leads.length})</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setSubTab('chat_radar')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+            subTab === 'chat_radar'
+              ? 'bg-m3-tertiary text-white shadow-sm font-extrabold'
+              : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container'
+          }`}
+        >
+          <span className="material-symbols-outlined text-sm">smart_toy</span>
+          <span>Live AI Chat Radar ({chatQueries.length})</span>
+          {chatQueries.length > 0 && (
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          )}
+        </button>
       </div>
+
+      {subTab === 'chat_radar' ? (
+        <DeskChatRadar chatQueries={chatQueries} showToast={showToast} />
+      ) : (
+        <>
+          {/* Inquiries Header */}
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-sm font-extrabold text-m3-on-surface tracking-tight flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-m3-tertiary text-base">forum</span>
+                <span>Inquiries & Price Shoppers ({leads.length})</span>
+              </h2>
+              <span className="text-[11px] text-m3-outline">
+                People who asked for rates. Quote them and request a ₹500 token advance to lock the booking.
+              </span>
+            </div>
+          </div>
 
       {/* Inquiries Stream */}
       {leads.length === 0 ? (
@@ -171,6 +210,8 @@ export default function DeskInquiries({
             </div>
           ))}
         </div>
+      )}
+      </>
       )}
 
       {/* Lock with Advance Modal */}

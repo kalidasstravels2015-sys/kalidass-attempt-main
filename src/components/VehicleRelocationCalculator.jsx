@@ -6,8 +6,10 @@ import {
   ArrowRight,
   Info,
   Car,
-  AlertCircle
+  AlertCircle,
+  X
 } from 'lucide-react';
+import LocationPicker from './LocationPicker';
 import tnBusFares from '../data/tnBusFares.json';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import { trackCalculatorQuote, markQuoteConverted } from '../lib/analytics';
@@ -79,6 +81,27 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
+  const [locationPickerOpen, setLocationPickerOpen] = useState(false);
+  const [pickerField, setPickerField] = useState('pickup');
+
+  const handlePinClick = (field = 'pickup') => {
+    loadGoogleMaps().catch(() => {});
+    setPickerField(field);
+    setLocationPickerOpen(true);
+  };
+
+  const handleLocationConfirm = (address) => {
+    const clean = address ? address.trim() : '';
+    if (pickerField === 'pickup') {
+      setPickup(clean);
+      setFieldErrors(prev => ({ ...prev, pickup: undefined }));
+    } else {
+      setDrop(clean);
+      setFieldErrors(prev => ({ ...prev, drop: undefined }));
+    }
+    setResult(null);
+    setLocationPickerOpen(false);
+  };
   
   const pickupRef = useRef(null);
   const dropRef = useRef(null);
@@ -272,7 +295,7 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
               type="text" 
               value={pickup}
               placeholder="e.g. Coimbatore"
-              className={`w-full pl-10 pr-4 py-3 bg-m3-surface border rounded-m3-md outline-none text-sm font-medium text-m3-on-surface transition-all ${
+              className={`w-full pl-10 pr-16 py-3 bg-m3-surface border rounded-m3-md outline-none text-sm font-medium text-m3-on-surface transition-all ${
                 fieldErrors.pickup 
                   ? 'border-m3-error ring-1 ring-m3-error bg-m3-error-container/20' 
                   : 'border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary'
@@ -284,6 +307,23 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
                 setError('');
               }}
             />
+            <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+              {pickup && (
+                <button type="button" onClick={() => { setPickup(''); setResult(null); }}
+                  className="w-7 h-7 flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-full text-m3-on-surface-variant">
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => handlePinClick('pickup')}
+                className="w-7 h-7 flex items-center justify-center rounded-m3-sm hover:bg-m3-surface-container text-m3-primary hover:bg-m3-primary/10 transition-colors cursor-pointer"
+                title="Pinpoint pickup on map"
+                aria-label="Pinpoint pickup on map"
+              >
+                <MapPin className="w-4 h-4 text-m3-primary" />
+              </button>
+            </div>
           </div>
           {fieldErrors.pickup && (
             <p className="mt-1 text-xs text-m3-error font-medium flex items-center gap-1">
@@ -305,7 +345,7 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
               type="text" 
               value={drop}
               placeholder="e.g. Chennai"
-              className={`w-full pl-10 pr-4 py-3 bg-m3-surface border rounded-m3-md outline-none text-sm font-medium text-m3-on-surface transition-all ${
+              className={`w-full pl-10 pr-16 py-3 bg-m3-surface border rounded-m3-md outline-none text-sm font-medium text-m3-on-surface transition-all ${
                 fieldErrors.drop 
                   ? 'border-m3-error ring-1 ring-m3-error bg-m3-error-container/20' 
                   : 'border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary'
@@ -317,6 +357,23 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
                 setError('');
               }}
             />
+            <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+              {drop && (
+                <button type="button" onClick={() => { setDrop(''); setResult(null); }}
+                  className="w-7 h-7 flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-full text-m3-on-surface-variant">
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => handlePinClick('drop')}
+                className="w-7 h-7 flex items-center justify-center rounded-m3-sm hover:bg-m3-surface-container text-m3-primary hover:bg-m3-primary/10 transition-colors cursor-pointer"
+                title="Pinpoint destination on map"
+                aria-label="Pinpoint destination on map"
+              >
+                <MapPin className="w-4 h-4 text-m3-primary" />
+              </button>
+            </div>
           </div>
           {fieldErrors.drop && (
             <p className="mt-1 text-xs text-m3-error font-medium flex items-center gap-1">
@@ -413,6 +470,16 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
             />
           </div>
         </div>
+      )}
+
+      {locationPickerOpen && (
+        <LocationPicker
+          isOpen={locationPickerOpen}
+          onClose={() => setLocationPickerOpen(false)}
+          onConfirm={handleLocationConfirm}
+          type={pickerField}
+          initialAddress={pickerField === 'pickup' ? pickup : drop}
+        />
       )}
     </div>
   );

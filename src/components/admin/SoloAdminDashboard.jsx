@@ -123,10 +123,11 @@ export default function SoloAdminDashboard() {
     return SEED_LEADS;
   });
 
+  const [chatQueries, setChatQueries] = useState([]);
   const [chauffeurs] = useState(DEFAULT_CHAUFFEURS);
   const [toast, setToast] = useState(null);
   const [activeDutySlipBooking, setActiveDutySlipBooking] = useState(null);
-  const [lastSync, setLastSync] = useState(new Date().toLocaleTimeString());
+  const [lastSync, setLastSync] = useState('Live');
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
@@ -138,9 +139,10 @@ export default function SoloAdminDashboard() {
   // Sync with API
   const refreshData = async () => {
     try {
-      const [bRes, lRes] = await Promise.allSettled([
+      const [bRes, lRes, cRes] = await Promise.allSettled([
         fetch('/api/admin/bookings'),
-        fetch('/api/admin/leads')
+        fetch('/api/admin/leads'),
+        fetch('/api/admin/chat-logs')
       ]);
 
       if (bRes.status === 'fulfilled' && bRes.value.ok) {
@@ -160,8 +162,15 @@ export default function SoloAdminDashboard() {
         }
       }
 
+      if (cRes.status === 'fulfilled' && cRes.value.ok) {
+        const cData = await cRes.value.json();
+        if (cData.queries && cData.queries.length > 0) {
+          setChatQueries(cData.queries);
+        }
+      }
+
       setLastSync(new Date().toLocaleTimeString());
-      showToast('Live bookings & inquiries refreshed!', 'success');
+      showToast('Live bookings, inquiries & AI chat radar refreshed!', 'success');
     } catch (e) {
       showToast('Loaded from local device cache', 'success');
     }
@@ -348,6 +357,7 @@ export default function SoloAdminDashboard() {
         {activeDesk === 'inquiries' && (
           <DeskInquiries
             leads={leads}
+            chatQueries={chatQueries}
             onConvertToConfirmed={handleConvertToConfirmed}
             showToast={showToast}
           />

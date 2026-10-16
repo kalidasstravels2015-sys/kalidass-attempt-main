@@ -1,5 +1,6 @@
 ---
 import AndroidPhoneIcon from './AndroidPhoneIcon.astro';
+import GeminiIcon from './GeminiIcon.astro';
 import { WHATSAPP_CONFIG } from '../utils/whatsapp';
 
 interface Props {
@@ -32,14 +33,12 @@ const callUrl = `tel:${phone}`;
     <!-- M3 Top App Bar: Minimal, One Single Call Number at Top -->
     <header class="flex items-center justify-between px-4 py-3 bg-m3-surface dark:bg-[#1A1B1E] border-b border-m3-outline-variant/40 shrink-0 select-none">
       <!-- Title & Gemini Symbol -->
-      <div class="flex items-center gap-2">
-        <span class="w-8 h-8 rounded-full bg-gradient-to-tr from-[#1E40AF] to-[#7C3AED] text-white flex items-center justify-center shadow-xs">
-          <svg class="w-4 h-4 text-white fill-current" viewBox="0 0 24 24" role="img" aria-label="Google Gemini">
-            <path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81" />
-          </svg>
+      <div class="flex items-center gap-2 min-w-0">
+        <span class="w-8 h-8 rounded-full bg-white dark:bg-white/10 border border-slate-200/80 dark:border-white/10 flex items-center justify-center shadow-xs shrink-0">
+          <GeminiIcon class="w-5 h-5" id="modal-header-gemini" />
         </span>
-        <h2 id="ai-modal-title" class="font-semibold text-sm sm:text-base text-m3-on-surface tracking-tight">
-          Fare Concierge
+        <h2 id="ai-modal-title" class="font-semibold text-sm sm:text-base text-m3-on-surface tracking-tight whitespace-nowrap">
+          Let me Help You
         </h2>
       </div>
 
@@ -119,17 +118,87 @@ const callUrl = `tel:${phone}`;
       </button>
     </div>
 
-    <!-- M3 Search / Text Input Bar (Zero Clutter, Zero Number Repetition) -->
+    <!-- M3 Search / Text Input Bar (Multilingual Mic & Zero Clutter) -->
     <footer class="p-3 bg-m3-surface dark:bg-[#1E1F20] border-t border-m3-outline-variant/40">
-      <form id="ai-chat-form" class="flex items-center gap-2">
-        <input
-          type="text"
-          id="ai-user-input"
-          placeholder="Ask trip fare (e.g. Tirupati, Pondicherry)..."
-          class="flex-1 px-4 py-2.5 rounded-full bg-m3-surface-container dark:bg-[#28292D] text-m3-on-surface placeholder:text-m3-on-surface-variant/60 text-sm border border-transparent focus:border-m3-primary focus:bg-m3-surface-bright focus:outline-none transition-all"
-          autocomplete="off"
-          required
-        />
+      <!-- Voice Listening Status Bar (Visible only when recording) -->
+      <div
+        id="ai-voice-status"
+        class="hidden mb-2 px-3 py-1.5 rounded-2xl bg-red-500/10 dark:bg-red-500/15 border border-red-500/30 flex items-center justify-between text-xs text-red-600 dark:text-red-400 shadow-xs transition-all"
+      >
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="relative flex h-2.5 w-2.5 shrink-0">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
+          </span>
+          <span id="ai-voice-status-text" class="truncate font-semibold tracking-tight text-[11px] sm:text-xs">
+            Listening... Speak now
+          </span>
+        </div>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <span id="ai-voice-listening-lang" class="px-2 py-0.5 rounded-full bg-red-500/20 text-[10px] font-bold">
+            Auto
+          </span>
+          <button
+            type="button"
+            id="ai-voice-cancel-btn"
+            class="px-2.5 py-0.5 rounded-full bg-red-600 hover:bg-red-700 active:scale-95 text-white text-[10px] font-semibold transition-all cursor-pointer shadow-xs"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Toast / Notification Bubble -->
+      <div
+        id="ai-voice-toast"
+        class="hidden mb-2 px-3 py-1.5 rounded-xl bg-m3-surface-container-highest text-m3-on-surface border border-m3-outline-variant/50 text-[11px] font-medium text-center shadow-xs transition-all"
+      ></div>
+
+      <form id="ai-chat-form" class="flex items-center gap-1.5 sm:gap-2">
+        <div class="relative flex-1 flex items-center min-w-0">
+          <input
+            type="text"
+            id="ai-user-input"
+            placeholder="Ask trip fare or tap mic..."
+            class="w-full pl-3.5 pr-20 sm:pr-24 py-2.5 rounded-full bg-m3-surface-container dark:bg-[#28292D] text-m3-on-surface placeholder:text-m3-on-surface-variant/60 text-xs sm:text-sm border border-transparent focus:border-m3-primary focus:bg-m3-surface-bright focus:outline-none transition-all"
+            autocomplete="off"
+            required
+          />
+          <!-- Language Picker Button placed neatly inside input on the right -->
+          <button
+            type="button"
+            id="ai-lang-picker-btn"
+            class="absolute right-1.5 px-2 py-1 rounded-full bg-m3-surface-container-high dark:bg-[#383A40] hover:bg-m3-primary/15 hover:text-m3-primary text-m3-on-surface-variant text-[11px] font-medium flex items-center gap-1 transition-all border border-m3-outline-variant/40 shadow-xs cursor-pointer active:scale-95"
+            title="Change voice speech language (All languages supported)"
+            aria-label="Change voice speech language"
+          >
+            <span class="text-xs">🌐</span>
+            <span id="ai-current-lang-code" class="font-bold tracking-tight text-[10px]">Auto</span>
+          </button>
+        </div>
+
+        <!-- Multilingual Microphone Button -->
+        <button
+          type="button"
+          id="ai-mic-btn"
+          class="w-10 h-10 rounded-full bg-m3-surface-container-high dark:bg-[#28292D] hover:bg-m3-surface-container-highest active:scale-90 text-m3-on-surface flex items-center justify-center shrink-0 transition-all shadow-xs focus:outline-none cursor-pointer group relative border border-m3-outline-variant/40"
+          title="Voice input in any language (Tamil, English, Hindi, Telugu...)"
+          aria-label="Voice input in any language"
+        >
+          <!-- Mic Normal Icon -->
+          <svg id="ai-mic-icon-idle" class="w-4 h-4 text-m3-primary transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+            <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+          </svg>
+          <!-- Mic Recording Pulsing Aura & Red Icon -->
+          <span id="ai-mic-pulse" class="hidden absolute inset-0 rounded-full bg-red-500/30 animate-ping pointer-events-none"></span>
+          <svg id="ai-mic-icon-active" class="hidden w-4 h-4 text-red-600 animate-pulse" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+            <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+          </svg>
+        </button>
+
+        <!-- Send Submit Button -->
         <button
           type="submit"
           id="ai-send-btn"
@@ -143,12 +212,84 @@ const callUrl = `tel:${phone}`;
       </form>
       <!-- Official Google Gemini AI Attribution (Brand Guidelines Compliant) -->
       <div class="mt-2 text-center text-[10px] text-m3-on-surface-variant/70 font-medium tracking-wide flex items-center justify-center gap-1.5 select-none">
-        <svg class="w-2.5 h-2.5 text-[#1A73E8] fill-current" viewBox="0 0 24 24">
-          <path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81" />
-        </svg>
+        <GeminiIcon class="w-3.5 h-3.5" id="modal-footer-gemini" />
         <span>Powered by Google Gemini</span>
       </div>
     </footer>
+
+    <!-- Multilingual Speech Language Picker Modal -->
+    <div
+      id="ai-lang-modal"
+      class="hidden absolute inset-0 z-40 bg-black/60 backdrop-blur-xs flex flex-col justify-end sm:justify-center items-center p-0 sm:p-4 opacity-0 pointer-events-none transition-all duration-200"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="ai-lang-modal-title"
+    >
+      <div
+        id="ai-lang-modal-box"
+        class="w-full sm:max-w-md bg-m3-surface dark:bg-[#1E1F20] text-m3-on-surface rounded-t-3xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[82vh] overflow-hidden border border-m3-outline-variant/50 transform translate-y-6 sm:scale-95 transition-all duration-200"
+      >
+        <!-- Modal Header -->
+        <div class="px-4 py-3 bg-m3-surface-container-low dark:bg-[#18191B] border-b border-m3-outline-variant/40 flex items-center justify-between shrink-0">
+          <div class="flex items-center gap-2.5">
+            <span class="w-8 h-8 rounded-full bg-m3-primary/10 text-m3-primary flex items-center justify-center text-sm shadow-xs">
+              🌐
+            </span>
+            <div>
+              <h3 id="ai-lang-modal-title" class="font-bold text-sm text-m3-on-surface leading-tight">
+                Speech Language
+              </h3>
+              <p class="text-[11px] text-m3-on-surface-variant">Speak in any language</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            id="ai-lang-close-btn"
+            class="w-8 h-8 rounded-full flex items-center justify-center text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container active:scale-90 transition-all cursor-pointer"
+            aria-label="Close language selector"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="p-3 bg-m3-surface dark:bg-[#1E1F20] border-b border-m3-outline-variant/30 shrink-0">
+          <div class="relative flex items-center">
+            <svg class="w-4 h-4 absolute left-3 text-m3-on-surface-variant/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="text"
+              id="ai-lang-search-input"
+              placeholder="Search language (Tamil, Hindi, Telugu, English...)"
+              class="w-full pl-9 pr-8 py-2 rounded-xl bg-m3-surface-container dark:bg-[#28292D] text-xs text-m3-on-surface placeholder:text-m3-on-surface-variant/60 border border-transparent focus:border-m3-primary focus:outline-none transition-all"
+              autocomplete="off"
+            />
+            <button
+              type="button"
+              id="ai-lang-search-clear"
+              class="hidden absolute right-2.5 text-xs text-m3-on-surface-variant hover:text-m3-on-surface p-1 cursor-pointer"
+              aria-label="Clear search"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+
+        <!-- Language List (Scrollable) -->
+        <div id="ai-lang-list" class="overflow-y-auto p-2 space-y-1 text-xs divide-y divide-m3-outline-variant/15 flex-1 min-h-[240px]">
+          <!-- Injected dynamically -->
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="px-4 py-2.5 bg-m3-surface-container-low dark:bg-[#18191B] border-t border-m3-outline-variant/30 text-[11px] text-m3-on-surface-variant flex items-center justify-between shrink-0 select-none">
+          <span id="ai-lang-active-display">Active: <strong class="text-m3-on-surface">Auto Detect</strong></span>
+          <span class="text-m3-primary font-medium text-[10px]">Tap to choose</span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -163,14 +304,169 @@ const callUrl = `tel:${phone}`;
     const sendBtn = document.getElementById('ai-send-btn');
     const quickChips = document.querySelectorAll('.quick-chip');
 
+    // Multilingual Voice Input Elements
+    const micBtn = document.getElementById('ai-mic-btn');
+    const micIconIdle = document.getElementById('ai-mic-icon-idle');
+    const micIconActive = document.getElementById('ai-mic-icon-active');
+    const micPulse = document.getElementById('ai-mic-pulse');
+    const voiceStatus = document.getElementById('ai-voice-status');
+    const voiceStatusText = document.getElementById('ai-voice-status-text');
+    const voiceListeningLang = document.getElementById('ai-voice-listening-lang');
+    const voiceCancelBtn = document.getElementById('ai-voice-cancel-btn');
+    const voiceToast = document.getElementById('ai-voice-toast');
+    const langPickerBtn = document.getElementById('ai-lang-picker-btn');
+    const currentLangCodeEl = document.getElementById('ai-current-lang-code');
+
+    // Language Modal Elements
+    const langModal = document.getElementById('ai-lang-modal');
+    const langModalBox = document.getElementById('ai-lang-modal-box');
+    const langCloseBtn = document.getElementById('ai-lang-close-btn');
+    const langSearchInput = document.getElementById('ai-lang-search-input');
+    const langSearchClear = document.getElementById('ai-lang-search-clear');
+    const langList = document.getElementById('ai-lang-list');
+    const langActiveDisplay = document.getElementById('ai-lang-active-display');
+
+    // Full Comprehensive Multilingual Voice Database
+    const VOICE_LANGUAGES = [
+      { code: 'auto', name: 'Auto Detect (Device / Browser Language)', native: 'Auto Detect', flag: '🌐', group: 'Detected' },
+
+      // Indian Languages (Priority for Kalidass Travels Chennai)
+      { code: 'ta-IN', name: 'Tamil (India)', native: 'தமிழ்', flag: '🇮🇳', group: 'Indian Languages' },
+      { code: 'en-IN', name: 'English (India)', native: 'English (IN)', flag: '🇮🇳', group: 'Indian Languages' },
+      { code: 'hi-IN', name: 'Hindi (India)', native: 'हिन्दी', flag: '🇮🇳', group: 'Indian Languages' },
+      { code: 'te-IN', name: 'Telugu (India)', native: 'తెలుగు', flag: '🇮🇳', group: 'Indian Languages' },
+      { code: 'ml-IN', name: 'Malayalam (India)', native: 'മലയാളം', flag: '🇮🇳', group: 'Indian Languages' },
+      { code: 'kn-IN', name: 'Kannada (India)', native: 'ಕನ್ನಡ', flag: '🇮🇳', group: 'Indian Languages' },
+      { code: 'bn-IN', name: 'Bengali (India)', native: 'বাংলা', flag: '🇮🇳', group: 'Indian Languages' },
+      { code: 'mr-IN', name: 'Marathi (India)', native: 'मराठी', flag: '🇮🇳', group: 'Indian Languages' },
+      { code: 'gu-IN', name: 'Gujarati (India)', native: 'ગુજરાતી', flag: '🇮🇳', group: 'Indian Languages' },
+      { code: 'pa-IN', name: 'Punjabi (India)', native: 'ਪੰਜਾਬੀ', flag: '🇮🇳', group: 'Indian Languages' },
+      { code: 'ur-IN', name: 'Urdu (India)', native: 'اردو', flag: '🇮🇳', group: 'Indian Languages' },
+
+      // International Tamil & NRI English
+      { code: 'ta-LK', name: 'Tamil (Sri Lanka)', native: 'தமிழ் (இலங்கை)', flag: '🇱🇰', group: 'Global' },
+      { code: 'ta-SG', name: 'Tamil (Singapore)', native: 'தமிழ் (சிங்கப்பூர்)', flag: '🇸🇬', group: 'Global' },
+      { code: 'ta-MY', name: 'Tamil (Malaysia)', native: 'தமிழ் (மலேசியா)', flag: '🇲🇾', group: 'Global' },
+      { code: 'en-US', name: 'English (United States)', native: 'English (US)', flag: '🇺🇸', group: 'Global' },
+      { code: 'en-GB', name: 'English (United Kingdom)', native: 'English (UK)', flag: '🇬🇧', group: 'Global' },
+      { code: 'en-AU', name: 'English (Australia)', native: 'English (AU)', flag: '🇦🇺', group: 'Global' },
+      { code: 'en-SG', name: 'English (Singapore)', native: 'English (SG)', flag: '🇸🇬', group: 'Global' },
+      { code: 'en-MY', name: 'English (Malaysia)', native: 'English (MY)', flag: '🇲🇾', group: 'Global' },
+      { code: 'en-AE', name: 'English (UAE / Gulf)', native: 'English (UAE)', flag: '🇦🇪', group: 'Global' },
+
+      // Major World Languages
+      { code: 'ar-SA', name: 'Arabic (Saudi Arabia)', native: 'العربية (السعودية)', flag: '🇸🇦', group: 'Global' },
+      { code: 'ar-AE', name: 'Arabic (UAE)', native: 'العربية (الإمارات)', flag: '🇦🇪', group: 'Global' },
+      { code: 'es-ES', name: 'Spanish (Spain)', native: 'Español', flag: '🇪🇸', group: 'Global' },
+      { code: 'fr-FR', name: 'French (France)', native: 'Français', flag: '🇫🇷', group: 'Global' },
+      { code: 'de-DE', name: 'German (Germany)', native: 'Deutsch', flag: '🇩🇪', group: 'Global' },
+      { code: 'zh-CN', name: 'Chinese (Mandarin / Simplified)', native: '中文 (普通话)', flag: '🇨🇳', group: 'Global' },
+      { code: 'ja-JP', name: 'Japanese', native: '日本語', flag: '🇯🇵', group: 'Global' },
+      { code: 'ko-KR', name: 'Korean', native: '한국어', flag: '🇰🇷', group: 'Global' },
+      { code: 'ru-RU', name: 'Russian', native: 'Русский', flag: '🇷🇺', group: 'Global' },
+      { code: 'pt-BR', name: 'Portuguese (Brazil)', native: 'Português', flag: '🇧🇷', group: 'Global' },
+      { code: 'it-IT', name: 'Italian', native: 'Italiano', flag: '🇮🇹', group: 'Global' },
+      { code: 'id-ID', name: 'Indonesian', native: 'Bahasa Indonesia', flag: '🇮🇩', group: 'Global' },
+      { code: 'ms-MY', name: 'Malay (Malaysia)', native: 'Bahasa Melayu', flag: '🇲🇾', group: 'Global' },
+      { code: 'th-TH', name: 'Thai', native: 'ไทย', flag: '🇹🇭', group: 'Global' },
+      { code: 'tr-TR', name: 'Turkish', native: 'Türkçe', flag: '🇹🇷', group: 'Global' },
+      { code: 'vi-VN', name: 'Vietnamese', native: 'Tiếng Việt', flag: '🇻🇳', group: 'Global' },
+      { code: 'nl-NL', name: 'Dutch', native: 'Nederlands', flag: '🇳🇱', group: 'Global' },
+      { code: 'fil-PH', name: 'Filipino (Tagalog)', native: 'Filipino', flag: '🇵🇭', group: 'Global' },
+      { code: 'sv-SE', name: 'Swedish', native: 'Svenska', flag: '🇸🇪', group: 'Global' },
+      { code: 'pl-PL', name: 'Polish', native: 'Polski', flag: '🇵🇱', group: 'Global' },
+      { code: 'he-IL', name: 'Hebrew', native: 'עברית', flag: '🇮🇱', group: 'Global' }
+    ];
+
     let chatHistory = [];
     let isRequestInProgress = false;
 
+    // Load active voice language (Defaults to Auto Device Language)
+    let selectedVoiceLang = 'auto';
+    try {
+      const saved = localStorage.getItem('kalidass_voice_lang');
+      if (saved && (saved === 'auto' || VOICE_LANGUAGES.some(l => l.code === saved))) {
+        selectedVoiceLang = saved;
+      }
+    } catch (_) {}
+
+    function getLangShortLabel(code) {
+      if (!code || code === 'auto') return 'Auto';
+      if (code === 'ta-IN') return 'தமிழ்';
+      if (code === 'hi-IN') return 'हिन्दी';
+      if (code === 'te-IN') return 'తెలుగు';
+      if (code === 'ml-IN') return 'മലയാളம்';
+      if (code === 'kn-IN') return 'ಕನ್ನಡ';
+      if (code === 'bn-IN') return 'বাংলা';
+      if (code === 'mr-IN') return 'मराठी';
+      if (code === 'gu-IN') return 'ગુજરાતી';
+      if (code === 'pa-IN') return 'ਪੰਜਾਬੀ';
+      if (code === 'ur-IN') return 'اردو';
+      const found = VOICE_LANGUAGES.find(l => l.code === code);
+      if (found) {
+        if (code.startsWith('en-')) return found.native.replace('English', 'EN');
+        return found.native;
+      }
+      return code.split('-')[0].toUpperCase();
+    }
+
+    function getLangFullName(code) {
+      if (!code || code === 'auto') return 'Auto Detect (Device / Browser)';
+      const found = VOICE_LANGUAGES.find(l => l.code === code);
+      return found ? `${found.native} — ${found.name}` : code;
+    }
+
+    function updateLangBadgeUI() {
+      if (currentLangCodeEl) {
+        currentLangCodeEl.textContent = getLangShortLabel(selectedVoiceLang);
+      }
+      if (langActiveDisplay) {
+        langActiveDisplay.innerHTML = `Active: <strong class="text-m3-on-surface">${escapeHtml(getLangFullName(selectedVoiceLang))}</strong>`;
+      }
+    }
+    updateLangBadgeUI();
+
+    let toastTimer = null;
+    function showVoiceToast(msg, duration = 3500) {
+      if (!voiceToast) return;
+      clearTimeout(toastTimer);
+      voiceToast.textContent = msg;
+      voiceToast.classList.remove('hidden');
+      toastTimer = setTimeout(() => {
+        voiceToast.classList.add('hidden');
+      }, duration);
+    }
+
+    // Modal Opening & Closing
     function openAiModal() {
       if (!modal) return;
       modal.classList.remove('hidden', 'pointer-events-none', 'opacity-0');
       modal.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
+
+      // Check on-screen calculation and inject contextual assistance chip
+      const currentCalc = window.__KT_CURRENT_CALCULATION;
+      const quickChipsContainer = document.getElementById('ai-quick-chips');
+      let existingContextChip = document.getElementById('ai-context-chip');
+      if (currentCalc && currentCalc.formattedFare && quickChipsContainer) {
+        const destTitle = currentCalc.destination || 'My Trip';
+        const chipPrompt = `Can you explain the ${currentCalc.formattedFare} rate on my screen for ${destTitle}?`;
+        if (!existingContextChip) {
+          existingContextChip = document.createElement('button');
+          existingContextChip.type = 'button';
+          existingContextChip.id = 'ai-context-chip';
+          existingContextChip.className = 'quick-chip px-3 py-1.5 rounded-full bg-emerald-600/15 dark:bg-emerald-500/20 hover:bg-emerald-600/25 text-emerald-800 dark:text-emerald-300 border border-emerald-500/40 transition-all shrink-0 active:scale-95 font-semibold cursor-pointer flex items-center gap-1.5 animate-pulse';
+          existingContextChip.innerHTML = `<span>✨ On-Screen: ${escapeHtml(currentCalc.vehicleName || 'Cab')} (${escapeHtml(currentCalc.formattedFare)})</span>`;
+          existingContextChip.setAttribute('data-quick-prompt', chipPrompt);
+          existingContextChip.addEventListener('click', () => {
+            handleUserSubmit(existingContextChip.getAttribute('data-quick-prompt'));
+          });
+          quickChipsContainer.prepend(existingContextChip);
+        } else {
+          existingContextChip.innerHTML = `<span>✨ On-Screen: ${escapeHtml(currentCalc.vehicleName || 'Cab')} (${escapeHtml(currentCalc.formattedFare)})</span>`;
+          existingContextChip.setAttribute('data-quick-prompt', chipPrompt);
+        }
+      }
 
       setTimeout(() => {
         modalBox?.classList.remove('translate-y-8', 'sm:translate-y-2', 'sm:scale-95');
@@ -180,6 +476,8 @@ const callUrl = `tel:${phone}`;
 
     function closeAiModal() {
       if (!modal) return;
+      stopListening(false);
+      closeLangModal();
       modalBox?.classList.add('translate-y-8', 'sm:translate-y-2', 'sm:scale-95');
       modal.classList.add('opacity-0');
 
@@ -198,9 +496,282 @@ const callUrl = `tel:${phone}`;
     });
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && !modal?.classList.contains('hidden')) {
-        closeAiModal();
+      if (e.key === 'Escape') {
+        if (langModal && !langModal.classList.contains('hidden')) {
+          closeLangModal();
+          e.stopPropagation();
+          return;
+        }
+        if (!modal?.classList.contains('hidden')) {
+          closeAiModal();
+        }
       }
+    });
+
+    // Language Picker Modal Logic
+    function renderLangList(query = '') {
+      if (!langList) return;
+      langList.innerHTML = '';
+      const q = query.trim().toLowerCase();
+
+      const filtered = VOICE_LANGUAGES.filter(lang => {
+        if (!q) return true;
+        return lang.name.toLowerCase().includes(q) ||
+               lang.native.toLowerCase().includes(q) ||
+               lang.code.toLowerCase().includes(q) ||
+               lang.group.toLowerCase().includes(q);
+      });
+
+      if (filtered.length === 0) {
+        langList.innerHTML = `
+          <div class="py-8 text-center text-m3-on-surface-variant text-xs">
+            No language found matching "${escapeHtml(query)}"
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(lang => {
+        const isSelected = selectedVoiceLang === lang.code;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `w-full px-3 py-2.5 rounded-xl flex items-center justify-between transition-all cursor-pointer text-left ${
+          isSelected
+            ? 'bg-m3-primary/15 text-m3-primary font-bold shadow-xs'
+            : 'hover:bg-m3-surface-container-high text-m3-on-surface'
+        }`;
+        btn.innerHTML = `
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="text-base shrink-0 select-none">${lang.flag}</span>
+            <div class="min-w-0">
+              <div class="font-semibold text-xs text-m3-on-surface flex items-center gap-1.5">
+                <span>${escapeHtml(lang.native)}</span>
+                ${lang.code !== 'auto' ? `<span class="text-[10px] text-m3-on-surface-variant/70 font-mono font-normal">(${lang.code})</span>` : ''}
+              </div>
+              <div class="text-[10px] text-m3-on-surface-variant truncate">${escapeHtml(lang.name)}</div>
+            </div>
+          </div>
+          ${
+            isSelected
+              ? `<span class="w-5 h-5 rounded-full bg-m3-primary text-m3-on-primary flex items-center justify-center text-[10px] shrink-0 font-bold">✓</span>`
+              : `<span class="text-[11px] text-m3-on-surface-variant/40 shrink-0 font-medium">Select</span>`
+          }
+        `;
+
+        btn.addEventListener('click', () => {
+          selectVoiceLang(lang.code);
+        });
+
+        langList.appendChild(btn);
+      });
+    }
+
+    function selectVoiceLang(code) {
+      selectedVoiceLang = code;
+      try {
+        localStorage.setItem('kalidass_voice_lang', code);
+      } catch (_) {}
+      updateLangBadgeUI();
+      closeLangModal();
+      showVoiceToast(`Speech language set to: ${getLangShortLabel(code)}`);
+    }
+
+    function openLangModal() {
+      if (!langModal) return;
+      renderLangList();
+      if (langSearchInput) langSearchInput.value = '';
+      langSearchClear?.classList.add('hidden');
+      langModal.classList.remove('hidden', 'pointer-events-none', 'opacity-0');
+      langModal.setAttribute('aria-hidden', 'false');
+
+      setTimeout(() => {
+        langModalBox?.classList.remove('translate-y-6', 'sm:scale-95');
+        langSearchInput?.focus();
+      }, 10);
+    }
+
+    function closeLangModal() {
+      if (!langModal) return;
+      langModalBox?.classList.add('translate-y-6', 'sm:scale-95');
+      langModal.classList.add('opacity-0');
+
+      setTimeout(() => {
+        langModal.classList.add('hidden', 'pointer-events-none');
+        langModal.setAttribute('aria-hidden', 'true');
+      }, 200);
+    }
+
+    langPickerBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openLangModal();
+    });
+
+    langCloseBtn?.addEventListener('click', closeLangModal);
+    langModal?.addEventListener('click', (e) => {
+      if (e.target === langModal) closeLangModal();
+    });
+
+    langSearchInput?.addEventListener('input', (e) => {
+      const val = e.target.value;
+      if (langSearchClear) {
+        if (val) langSearchClear.classList.remove('hidden');
+        else langSearchClear.classList.add('hidden');
+      }
+      renderLangList(val);
+    });
+
+    langSearchClear?.addEventListener('click', () => {
+      if (langSearchInput) {
+        langSearchInput.value = '';
+        langSearchInput.focus();
+      }
+      langSearchClear.classList.add('hidden');
+      renderLangList();
+    });
+
+    // Speech Recognition Implementation
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognitionInstance = null;
+    let isListening = false;
+    let autoSubmitVoice = false;
+    let liveVoiceBuffer = '';
+
+    function stopListeningUI() {
+      isListening = false;
+      micIconIdle?.classList.remove('hidden');
+      micIconActive?.classList.add('hidden');
+      micPulse?.classList.add('hidden');
+      micBtn?.classList.remove('bg-red-500/20', 'border-red-500');
+      voiceStatus?.classList.add('hidden');
+    }
+
+    function startListeningUI(label, code) {
+      isListening = true;
+      micIconIdle?.classList.add('hidden');
+      micIconActive?.classList.remove('hidden');
+      micPulse?.classList.remove('hidden');
+      micBtn?.classList.add('bg-red-500/20', 'border-red-500');
+
+      if (voiceStatusText) {
+        voiceStatusText.textContent = `Listening in ${label}... Speak now`;
+      }
+      if (voiceListeningLang) {
+        voiceListeningLang.textContent = code || 'Auto';
+      }
+      voiceStatus?.classList.remove('hidden');
+    }
+
+    function stopListening(processSubmit = true) {
+      if (!isListening && !recognitionInstance) return;
+      if (!processSubmit) {
+        autoSubmitVoice = false;
+      }
+      if (recognitionInstance) {
+        try {
+          recognitionInstance.stop();
+        } catch (_) {}
+      }
+      stopListeningUI();
+    }
+
+    function toggleVoiceInput() {
+      if (!SpeechRecognition) {
+        showVoiceToast('⚠️ Voice input is not supported in this browser. Please use Chrome, Edge, or Safari.');
+        return;
+      }
+
+      if (isListening) {
+        stopListening(true);
+        return;
+      }
+
+      try {
+        if (recognitionInstance) {
+          try { recognitionInstance.abort(); } catch (_) {}
+        }
+        recognitionInstance = new SpeechRecognition();
+
+        let effectiveLang = selectedVoiceLang;
+        if (effectiveLang === 'auto') {
+          effectiveLang = navigator.language || 'en-IN';
+        }
+
+        recognitionInstance.lang = effectiveLang;
+        recognitionInstance.interimResults = true;
+        recognitionInstance.continuous = false;
+        recognitionInstance.maxAlternatives = 1;
+
+        autoSubmitVoice = true;
+        liveVoiceBuffer = '';
+
+        recognitionInstance.onstart = () => {
+          startListeningUI(getLangShortLabel(selectedVoiceLang), effectiveLang);
+        };
+
+        recognitionInstance.onresult = (event) => {
+          let interimText = '';
+          let finalText = '';
+
+          for (let i = event.resultIndex; i < event.results.length; ++i) {
+            const item = event.results[i];
+            if (item.isFinal) {
+              finalText += item[0].transcript;
+            } else {
+              interimText += item[0].transcript;
+            }
+          }
+
+          const captured = (finalText || interimText || '').trim();
+          if (captured) {
+            liveVoiceBuffer = captured;
+            if (userInput) {
+              userInput.value = captured;
+            }
+          }
+        };
+
+        recognitionInstance.onerror = (event) => {
+          stopListeningUI();
+          if (event.error === 'not-allowed') {
+            showVoiceToast('🔒 Microphone permission blocked. Allow mic access in browser.');
+          } else if (event.error === 'no-speech') {
+            showVoiceToast('No voice detected. Tap mic to try again.');
+          } else if (event.error === 'network') {
+            showVoiceToast('Network issue with speech recognition service.');
+          }
+        };
+
+        recognitionInstance.onend = () => {
+          stopListeningUI();
+          const query = (userInput?.value || liveVoiceBuffer || '').trim();
+          if (autoSubmitVoice && query.length >= 2) {
+            handleUserSubmit(query);
+          }
+        };
+
+        recognitionInstance.start();
+      } catch (err) {
+        stopListeningUI();
+        showVoiceToast('Microphone error: ' + (err.message || 'Please try again.'));
+      }
+    }
+
+    micBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleVoiceInput();
+    });
+
+    voiceCancelBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      autoSubmitVoice = false;
+      if (recognitionInstance) {
+        try { recognitionInstance.abort(); } catch (_) {}
+      }
+      stopListeningUI();
+      if (userInput && liveVoiceBuffer && userInput.value === liveVoiceBuffer) {
+        userInput.value = '';
+      }
+      liveVoiceBuffer = '';
     });
 
     function escapeHtml(text) {
@@ -214,6 +785,8 @@ const callUrl = `tel:${phone}`;
       let escaped = escapeHtml(text);
       // bold **text**
       escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      // markdown links [text](url)
+      escaped = escaped.replace(/\[(.*?)\]\((https?:\/\/[^\s\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white text-xs font-semibold shadow-xs transition-all active:scale-95 no-underline my-1.5">$1</a>');
       // bullet lists
       escaped = escaped.replace(/(?:^|\n)[•*-]\s*(.+)/g, '<div class="flex items-start gap-1.5 my-1"><span class="text-m3-primary font-bold shrink-0">•</span><span>$1</span></div>');
       // line breaks
@@ -236,7 +809,7 @@ const callUrl = `tel:${phone}`;
         : `<div class="w-7 h-7 rounded-full bg-m3-primary text-m3-on-primary flex items-center justify-center text-xs shrink-0 mt-0.5 font-bold shadow-xs">KT</div>`;
 
       let actionHtml = '';
-      if (!isUser) {
+      if (!isUser && !content.includes('wa.me/')) {
         const waText = encodeURIComponent(
           `Hi Kalidass Travels, I got this fare quote from your website:\n\n${content.substring(0, 250)}...\n\nPlease confirm availability!`
         );
@@ -295,96 +868,310 @@ const callUrl = `tel:${phone}`;
       typingDiv?.remove();
     }
 
-    function getLocalTariffReply(userText) {
-      const q = (userText || '').toLowerCase();
+    function getLocalTariffReply(historyOrText, passedContext) {
+      const messages = Array.isArray(historyOrText)
+        ? historyOrText
+        : [{ role: 'user', content: String(historyOrText || '') }];
 
-      // Check multi-day tour signals (dates like 31.10, 01.11, stay, multi-stop routes)
-      const dateMatches = (userText || '').match(/\b\d{1,2}[./-]\d{1,2}\b/g) || [];
-      const hasMultipleDates = dateMatches.length >= 2;
-      const hasStay = q.includes('stay') || q.includes('night') || q.includes('hotel');
-      const hasMultiCity = (q.includes('vellore') && q.includes('tirupati')) ||
-                           (q.includes('mahabalipuram') && q.includes('tirupati')) ||
-                           (q.includes('kanchipuram') && q.includes('tirupati'));
-      const hasDays = q.includes('5 day') || q.includes('4 day') || q.includes('3 day') || q.includes('days');
+      const userMessages = messages.filter((m) => m.role === 'user');
+      const lastMsg = userMessages[userMessages.length - 1]?.content || '';
+      const lastLower = lastMsg.toLowerCase();
 
-      if (hasMultipleDates || (hasStay && q.includes('tirupati')) || hasMultiCity || (hasDays && hasMultiCity)) {
-        let days = Math.max(dateMatches.length, 3);
-        if (q.includes('31.10') && q.includes('04.11')) days = 5;
-        else if (q.includes('5 day')) days = 5;
-        else if (q.includes('4 day')) days = 4;
-        else if (q.includes('3 day')) days = 3;
-
-        const minKm = days * 250;
-        const tempoKm = days * 300;
-
-        const sedanTotal = (minKm * 14) + (days * 400);
-        const ertigaTotal = (minKm * 17) + (days * 500);
-        const innovaTotal = (minKm * 20) + (days * 600);
-        const crystaTotal = (minKm * 22) + (days * 700);
-        const tempoTotal = (tempoKm * 26) + (days * 800);
-
-        return `Here is the customized quote for your **${days}-Day Tour** (Airport Pickup ➔ Mahabalipuram ➔ Kanchipuram ➔ Vellore ➔ Tirupati / Tirumala ➔ Airport Drop):\n\n` +
-          `• **AC Sedan (Dzire / Etios - 4 Pax):** ~₹${sedanTotal.toLocaleString('en-IN')} (₹14/km + ₹${days * 400} Bata)\n` +
-          `• **Maruti Ertiga / XL6 (6 Pax):** ~₹${ertigaTotal.toLocaleString('en-IN')} (₹17/km + ₹${days * 500} Bata)\n` +
-          `• **Toyota Innova (7 Pax):** ~₹${innovaTotal.toLocaleString('en-IN')} (₹20/km + ₹${days * 600} Bata)\n` +
-          `• **Toyota Innova Crysta (7 Pax):** ~₹${crystaTotal.toLocaleString('en-IN')} (₹22/km + ₹${days * 700} Bata)\n` +
-          `• **Tempo Traveller (12 Pax):** ~₹${tempoTotal.toLocaleString('en-IN')} (₹26/km + ₹${days * 800} Bata)\n\n` +
-          `📋 **Details:**\n` +
-          `• Dedicated AC cab & experienced chauffeur at your disposal for all ${days} days (based on ${minKm} km min quota).\n` +
-          `• NH FASTag Tolls, Parking & AP Border Permit payable at actuals.\n` +
-          `🛡️ **Policy:** ₹500 advance to confirm & lock cab (avoids last-minute cancellation). Balance post-trip!`;
+      if (!passedContext && typeof window !== 'undefined') {
+        passedContext = window.__KT_CURRENT_CALCULATION || null;
       }
 
-      if (q.includes('tirupati') || q.includes('tirumala') || q.includes('balaji')) {
-        return `Here are our official **Chennai ⇄ Tirupati 1-Day Package** rates (same-day return ~320 km):\n\n` +
-          `• **AC Sedan (Dzire / Etios - 4 Pax):** ₹6,000\n` +
-          `• **Maruti Ertiga / XL6 (6 Pax):** ₹7,500\n` +
-          `• **Toyota Innova (7 Pax):** ₹8,500\n` +
-          `• **Toyota Innova Crysta:** ₹10,000\n` +
-          `• **Tempo Traveller (12 Pax):** ₹12,500\n\n` +
-          `✅ **All-Inclusive:** Fuel, NH Tolls, AP State Border Permit, Tirumala Ghat Road ascent & Driver Bata.\n` +
-          `🛡️ **Policy:** ₹500 advance to confirm & lock cab (avoids last-minute cancellation). Balance post-trip.`;
+      // State tracking across all turns
+      let activeDest = null;
+      let days = 1;
+      let hours = 8;
+      let vehicles = [];
+      let isTamil = false;
+
+      // Inherit destination and vehicle from on-screen context if available
+      if (passedContext) {
+        const destStr = ((passedContext.destination || '') + ' ' + (passedContext.serviceSlug || '')).toLowerCase();
+        if (destStr.includes('tirupati') || destStr.includes('tirumala') || destStr.includes('balaji')) activeDest = 'tirupati';
+        else if (destStr.includes('pondy') || destStr.includes('pondicherry')) activeDest = 'pondicherry';
+        else if (destStr.includes('chidambaram')) activeDest = 'chidambaram';
+        else if (destStr.includes('thiruvannamalai') || destStr.includes('tiruvannamalai')) activeDest = 'thiruvannamalai';
+        else if (destStr.includes('kanchipuram')) activeDest = 'kanchipuram';
+        else if (destStr.includes('navagraha')) activeDest = 'navagraha';
+        else if (destStr.includes('rameswaram')) activeDest = 'rameswaram';
+        else if (destStr.includes('sabarimala')) activeDest = 'sabarimala';
+        else if (destStr.includes('vellore')) activeDest = 'vellore';
+        else if (destStr.includes('local')) activeDest = 'local';
+        else if (destStr.includes('airport')) activeDest = 'airport';
+
+        if (passedContext.vehicleName) {
+          const vLow = passedContext.vehicleName.toLowerCase();
+          if (vLow.includes('dzire') || vLow.includes('etios') || vLow.includes('sedan')) vehicles.push('sedan');
+          else if (vLow.includes('ertiga') || vLow.includes('xl6')) vehicles.push('ertiga');
+          else if (vLow.includes('crysta')) vehicles.push('crysta');
+          else if (vLow.includes('innova')) vehicles.push('innova');
+          else if (vLow.includes('tempo')) vehicles.push('tempo');
+        }
       }
 
-      if (q.includes('local') || q.includes('hourly') || q.includes('city') || q.includes('4hr') || q.includes('8hr')) {
-        return `Here are our **Chennai City Local Rental Packages**:\n\n` +
-          `• **AC Sedan (Dzire / Etios):**\n` +
-          `  - 4 hrs / 40 km: ₹1,350\n` +
-          `  - 8 hrs / 80 km: ₹2,200 (Popular)\n` +
-          `  - Extra km: ₹15 | Extra hr: ₹150\n\n` +
-          `• **Maruti Ertiga (6 Seater):**\n` +
-          `  - 4 hrs / 40 km: ₹1,700\n` +
-          `  - 8 hrs / 80 km: ₹2,800\n` +
-          `  - Extra km: ₹17 | Extra hr: ₹200\n\n` +
-          `• **Toyota Innova (7 Seater):**\n` +
-          `  - 8 hrs / 80 km: ₹3,200\n\n` +
-          `🛡️ **Policy:** ₹500 advance to confirm & lock cab (avoids last-minute cancellation). Balance post-trip.`;
+      for (const m of userMessages) {
+        const text = m.content || '';
+        const lower = text.toLowerCase();
+
+        if (/[\u0B80-\u0BFF]/.test(text) || lower.includes('evlo') || lower.includes('sollunga')) {
+          isTamil = true;
+        }
+
+        // Days
+        const dMatch = lower.match(/(\d+)\s*(?:days?|day|நாட்கள்|நாட்களுக்கு|நாளுக்கு|நாள்)/i);
+        if (dMatch) {
+          days = parseInt(dMatch[1], 10);
+        } else if (lower.includes('2-day') || lower.includes('2 day') || lower.includes('two day') || lower.includes('2 நாள்') || lower.includes('2 நாட்கள்')) {
+          days = 2;
+        } else if (lower.includes('3-day') || lower.includes('3 day') || lower.includes('three day') || lower.includes('3 நாள்') || lower.includes('3 நாட்கள்')) {
+          days = 3;
+        } else if (lower.includes('1-day') || lower.includes('1 day') || lower.includes('same day')) {
+          days = 1;
+        }
+
+        // Hours
+        const hMatch = lower.match(/(\d+)\s*(?:hrs?|hours?|மணி)/);
+        if (hMatch) {
+          hours = parseInt(hMatch[1], 10);
+        }
+
+        // Turn vehicles
+        const turnVehicles = [];
+        if (lower.includes('sedan') || lower.includes('dzire') || lower.includes('etios') || lower.includes('செடான்')) turnVehicles.push('sedan');
+        if (lower.includes('ertiga') || lower.includes('xl6') || lower.includes('எர்டிகா')) turnVehicles.push('ertiga');
+        if (lower.includes('crysta') || lower.includes('கிரிஸ்டா')) turnVehicles.push('crysta');
+        else if (lower.includes('innova') || lower.includes('இன்னோவா')) turnVehicles.push('innova');
+        if (lower.includes('tempo') || lower.includes('traveller') || lower.includes('டெம்போ')) turnVehicles.push('tempo');
+        if (turnVehicles.length > 0) vehicles = turnVehicles;
+
+        // Destination
+        if (lower.includes('tirupati') || lower.includes('tirumala') || lower.includes('balaji') || lower.includes('திருப்பதி')) activeDest = 'tirupati';
+        else if (lower.includes('chidambaram') || lower.includes('pichavaram') || lower.includes('சிதம்பரம்')) activeDest = 'chidambaram';
+        else if (lower.includes('thiruvannamalai') || lower.includes('tiruvannamalai') || lower.includes('girivalam') || lower.includes('திருவண்ணாமலை')) activeDest = 'thiruvannamalai';
+        else if (lower.includes('kanchipuram') || lower.includes('kanchi') || lower.includes('காஞ்சிபுரம்')) activeDest = 'kanchipuram';
+        else if (lower.includes('navagraha') || lower.includes('kumbakonam') || lower.includes('நவக்கிரக')) activeDest = 'navagraha';
+        else if (lower.includes('rameswaram') || lower.includes('rameshwaram') || lower.includes('dhanushkodi') || lower.includes('ராமேஸ்வரம்')) activeDest = 'rameswaram';
+        else if (lower.includes('sabarimala') || lower.includes('pamba') || lower.includes('சபரிமலை')) activeDest = 'sabarimala';
+        else if (lower.includes('vellore') || lower.includes('golden temple') || lower.includes('வேலூர்')) activeDest = 'vellore';
+        else if (lower.includes('pondy') || lower.includes('pondicherry') || lower.includes('பாண்டிச்சேரி')) activeDest = 'pondicherry';
+        else if (lower.includes('airport') || lower.includes('flight') || lower.includes('ஏர்போர்ட்')) activeDest = 'airport';
+        else if (lower.includes('acting driver') || lower.includes('ஆக்டிங் டிரைவர்')) activeDest = 'acting_driver';
+        else if (lower.includes('local') || lower.includes('hourly') || lower.includes('லோக்கல்')) activeDest = 'local';
+        else if (lower.includes('bangalore') || lower.includes('bengaluru')) activeDest = 'bangalore';
+        else if (lower.includes('madurai')) activeDest = 'madurai';
+        else if (lower.includes('coimbatore')) activeDest = 'coimbatore';
+        else if (lower.includes('salem')) activeDest = 'salem';
+        else if (lower.includes('ooty')) activeDest = 'ooty';
+        else if (lower.includes('kodaikanal')) activeDest = 'kodaikanal';
       }
 
-      if (q.includes('pondy') || q.includes('pondicherry')) {
-        return `For **Chennai ⇄ Pondicherry (Same Day Return)**:\n\n` +
-          `• **AC Sedan (4 Pax):** ~₹4,500 - ₹5,000 (~320 km round trip at ₹14/km + driver bata ₹400)\n` +
+      // Check policy questions in latest message
+      if (lastLower.includes('advance') || lastLower.includes('deposit') || lastLower.includes('முன்பணம்')) {
+        const destName = activeDest ? activeDest.toUpperCase() : 'your trip';
+        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, I want to pay ₹500 advance to lock cab for ' + destName)}`;
+        if (isTamil) {
+          return `🛡️ **Kalidass Travels முன்பணம் பாலிசி (Advance Policy):**\n\n` +
+            `• **₹500 முன்பணம் மட்டுமே:** காரை உறுதிசெய்து லாக் செய்ய ₹500 மட்டுமே பெறப்படுகிறது.\n` +
+            `• **மீதமுள்ள தொகை பயணத்திற்குப் பின்:** 100% பாக்கித் தொகையை பயணம் முடிந்தவுடன் டிரைவரிடம் செலுத்தலாம்.\n` +
+            `• **முழு ரீஃபண்ட்:** 6 மணிநேரம் முன்பு ரத்து செய்தால் ₹500 திரும்பப் பெறலாம்.\n\n` +
+            `[👉 ₹500 செலுத்தி காரை லாக் செய்ய](${waUrl})`;
+        }
+        return `🛡️ **Kalidass Travels Advance Payment Policy:**\n\n` +
+          `• **Nominal ₹500 Advance:** For outstation trips and tour packages (${destName}), we collect only **₹500 advance** to guarantee cab allocation & schedule driver.\n` +
+          `• **Balance Paid Post-Trip:** Pay the remaining balance directly to your chauffeur after trip completion.\n` +
+          `• **100% Refund Guarantee:** Fully refundable if canceled up to 6 hours before departure.\n\n` +
+          `[👉 Pay ₹500 Advance & Lock Cab on WhatsApp](${waUrl})`;
+      }
+
+      if (lastLower.includes('cancel') || lastLower.includes('refund') || lastLower.includes('ரத்து')) {
+        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, I have a query about cancellation policy.')}`;
+        return `🛡️ **Cancellation & Refund Policy:**\n\n` +
+          `• **Outstation & Tour Packages:** 100% full refund of ₹500 advance if canceled up to **6 hours** prior to journey departure.\n` +
+          `• **Local City & Acting Drivers:** Free cancellation up to 2 hours before scheduled pickup time.\n\n` +
+          `[👉 Contact Support on WhatsApp](${waUrl})`;
+      }
+
+      // Check active on-screen calculation context (Pro-Rata / Current quote)
+      if (passedContext && passedContext.totalFare) {
+        const asksFor2Days = lastLower.includes('2 day') || lastLower.includes('two day') || lastLower.includes('2-day') || lastLower.includes('2 நாள்') || lastLower.includes('2 நாட்கள்');
+        const asksPrice = lastLower.includes('price') || lastLower.includes('cost') || lastLower.includes('fare') || lastLower.includes('rate') || lastLower.includes('how much') || lastLower.includes('quote') || lastLower.includes('evlo') || lastLower.includes('kattanam') || lastLower.includes('tariff');
+        const asksExplain = lastLower.includes('explain') || lastLower.includes('why') || lastLower.includes('breakup') || lastLower.includes('breakdown') || lastLower.includes('details') || lastLower.includes('screen') || lastLower.includes('quote');
+
+        if (asksFor2Days || asksPrice || asksExplain || lastLower.includes('this trip') || lastLower.includes('my trip') || lastLower.includes('selected')) {
+          const destName = passedContext.destination || (passedContext.serviceTitle ? passedContext.serviceTitle.replace(/Chennai to /i, '') : 'your trip');
+          const vehName = passedContext.vehicleName || 'Swift Dzire / Etios';
+          const fareFormatted = passedContext.formattedFare || `₹${passedContext.totalFare?.toLocaleString('en-IN')}`;
+          const durLabel = passedContext.durationLabel || `${passedContext.durationHours || 24} hrs`;
+          const subText = passedContext.durationSubText || (passedContext.isProRata ? '1 Night Stay' : '');
+
+          if (passedContext.isProRata) {
+            const hrs = passedContext.durationHours || 36;
+            const extraHrs = passedContext.extraHours || (hrs - 24);
+            const savings = passedContext.savings ? `₹${passedContext.savings.toLocaleString('en-IN')}` : '₹1,750';
+            const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent(`Hi Kalidass Travels, I have configured a ${durLabel} trip to ${destName} (${fareFormatted} for ${vehName}). Please confirm availability.`)}`;
+
+            if (isTamil) {
+              return `உங்கள் திரையில் தேர்ந்தெடுக்கப்பட்ட பயண அட்டவணை: **${durLabel} (${hrs} மணிநேரம் / ${subText || '1 இரவு தங்குதல்'})**:\n\n` +
+                `• **திரையில் உள்ள புரோ-ரேட்டா கட்டணம்:** **${fareFormatted}** (${vehName})\n` +
+                `  உங்கள் பயணம் முழு 48 மணிநேரம் இல்லாமல் **${hrs} மணிநேரம்** மட்டுமே என்பதால், காளிதாஸ் டிராவல்ஸ் நியாயமான புரோ-ரேட்டா முறையில் கணக்கிட்டு முழு 2-நாள் கட்டணத்தை விட **${savings} மிச்சப்படுத்துகிறது**!\n\n` +
+                `• **முழு 48-மணிநேர 2-நாள் பேக்கேஜ்:**\n` +
+                `  நீங்கள் காரை முழு 48 மணிநேரமும் பயன்படுத்த விரும்பினால்:\n` +
+                `  - **Swift Dzire / Etios (4 Pax):** ₹9,500\n` +
+                `  - **Maruti Ertiga / XL6 (6 Pax):** ₹11,500\n` +
+                `  - **Toyota Innova (7 Pax):** ₹12,500\n` +
+                `  - **Innova Crysta:** ₹16,000\n\n` +
+                `✅ **உள்ளடக்கம்:** சுத்தமான ஏசி கார், டிரைவர் பேட்டா, ஆந்திரா பெர்மிட் & திருமலை மலைப்பாதை அனுமதி.\n` +
+                `🛡️ **பாலிசி:** காரை உறுதிசெய்து லாக் செய்ய **₹500 முன்பணம்** மட்டுமே. மீதமுள்ள தொகை பயண முடிவில்!\n\n` +
+                `[👉 வாட்ஸ்அப்பில் முன்பதிவு செய்ய](${waUrl})`;
+            }
+
+            return `I see your selected schedule on screen is **${durLabel}** (${hrs} hours${subText ? ` / ${subText}` : ''}) for **${destName}**:\n\n` +
+              `• **Your On-Screen Pro-Rata Fare:** **${fareFormatted}** for **${vehName}**\n` +
+              `  Because your trip duration is **${hrs} hours** (rather than the full 48 hours), our transparent tariff charges you pro-rata for 1 Day + ${extraHrs} hrs, **saving you ${savings}** compared to the full 2-day package!\n\n` +
+              `• **Full 48-Hour 2-Day Package Rates:**\n` +
+              `  If you require the cab for the complete 48 hours (e.g. 2 full calendar days or returning late night on Day 2):\n` +
+              `  - **Swift Dzire / Etios (4 Pax):** ₹9,500\n` +
+              `  - **Maruti Ertiga / XL6 (6 Pax):** ₹11,500\n` +
+              `  - **Toyota Innova (7 Pax):** ₹12,500\n` +
+              `  - **Toyota Innova Crysta (7 Pax):** ₹16,000\n` +
+              `  - **Tempo Traveller (12 Pax):** ₹19,500\n\n` +
+              `✅ **Inclusions:** Dedicated AC Cab & Experienced Chauffeur, Fuel, AP State Border Permit, Tirumala Ghat Road ascent, and Driver Bata.\n` +
+              `🛡️ **Policy:** Nominal **₹500 advance** to confirm & lock cab (avoids last-minute cancellation). Remaining balance paid post-trip!\n\n` +
+              `[👉 Confirm Booking on WhatsApp](${waUrl})`;
+          }
+        }
+      }
+
+      // Tirupati package (1, 2, or 3 days)
+      if (activeDest === 'tirupati') {
+        const d = Math.min(Math.max(days, 1), 3);
+        const rates = {
+          1: { sedan: 6000, ertiga: 7500, innova: 8500, crysta: 10000, tempo: 12500 },
+          2: { sedan: 9500, ertiga: 11500, innova: 12500, crysta: 16000, tempo: 19500 },
+          3: { sedan: 13200, ertiga: 15800, innova: 17500, crysta: 22500, tempo: 27000 }
+        }[d];
+
+        const allLines = {
+          sedan: `• **Swift Dzire / Etios (4 Pax):** ₹${rates.sedan.toLocaleString('en-IN')}`,
+          ertiga: `• **Maruti Ertiga / XL6 (6 Pax):** ₹${rates.ertiga.toLocaleString('en-IN')}`,
+          innova: `• **Toyota Innova (7 Pax):** ₹${rates.innova.toLocaleString('en-IN')}`,
+          crysta: `• **Toyota Innova Crysta (7 Pax):** ₹${rates.crysta.toLocaleString('en-IN')}`,
+          tempo: `• **Tempo Traveller (12 Pax):** ₹${rates.tempo.toLocaleString('en-IN')}`
+        };
+
+        let selected = Object.keys(allLines);
+        if (vehicles.length > 0) {
+          const matched = vehicles.filter((v) => allLines[v]);
+          if (matched.length > 0) selected = matched;
+        }
+
+        const linesStr = selected.map((k) => allLines[k]).join('\n');
+        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent(`Hi Kalidass Travels, I want to book Chennai to Tirupati (${d}-Day) package. Please confirm availability.`)}`;
+
+        if (isTamil) {
+          return `சென்னை ⇄ **திருப்பதி ${d}-நாள் பேக்கேஜ்** அதிகாரப்பூர்வ கட்டணங்கள்:\n\n` +
+            `${linesStr}\n\n` +
+            `✅ **உள்ளடக்கம்:** சுத்தமான ஏசி வாகனம், டிரைவர் பேட்டா, திருமலை மலைப்பாதை அனுமதி & சுங்கக் கட்டணம் (1-நாள் பேக்கேஜில் அடங்கும்).\n` +
+            `🛡️ **பாலிசி:** ₹500 முன்பணம் செலுத்தி காரை லாக் செய்யலாம். மீதமுள்ள தொகை பயணத்திற்குப் பின்!\n\n` +
+            `[👉 வாட்ஸ்அப்பில் உறுதிப்படுத்தவும்](${waUrl})`;
+        }
+
+        const incl = d === 1
+          ? 'Fuel, FASTag Tolls, AP Border Permit, Tirumala Ghat Road ascent & Driver Bata.'
+          : 'Dedicated AC cab & experienced chauffeur for all days. Highway Tolls & Parking as per actual plazas.';
+
+        return `Here are our official **Chennai ⇄ Tirupati ${d}-Day Package** rates:\n\n` +
+          `${linesStr}\n\n` +
+          `✅ **Inclusions:** ${incl}\n` +
+          `🛡️ **Policy:** ₹500 advance to confirm & lock cab (avoids last-minute cancellation). Remaining balance paid post-trip!\n\n` +
+          `[👉 Confirm Booking on WhatsApp](${waUrl})`;
+      }
+
+      // Pondicherry package
+      if (activeDest === 'pondicherry') {
+        const d = Math.min(Math.max(days, 1), 2);
+        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent(`Hi Kalidass Travels, I want to book Chennai to Pondicherry (${d}-Day) package.`)}`;
+        if (d === 2) {
+          return `Here are our official **Chennai ⇄ Pondicherry 2-Day Package** rates:\n\n` +
+            `• **AC Sedan (Dzire / Etios - 4 Pax):** ₹7,500\n` +
+            `• **Maruti Ertiga / XL6 (6 Pax):** ₹9,200\n` +
+            `• **Toyota Innova (7 Pax):** ₹10,200\n` +
+            `• **Toyota Innova Crysta:** ₹12,500\n\n` +
+            `✅ **Inclusions:** Dedicated AC cab & experienced chauffeur for 2 days. Tolls & parking at actuals.\n` +
+            `🛡️ **Policy:** ₹500 advance to confirm & lock cab. Balance post-trip!\n\n` +
+            `[👉 Confirm Booking on WhatsApp](${waUrl})`;
+        }
+        return `For **Chennai ⇄ Pondicherry (Same Day Return ~320 km)**:\n\n` +
+          `• **AC Sedan (4 Pax):** ~₹4,500 - ₹5,000 (At ₹14/km + driver bata ₹400)\n` +
           `• **Maruti Ertiga (6 Pax):** ~₹5,800 - ₹6,200 (At ₹17/km + driver bata ₹500)\n` +
           `• **Toyota Innova (7 Pax):** ~₹7,000 (At ₹20/km + driver bata ₹600)\n\n` +
-          `*Highway tolls payable at actual FASTag plazas. ₹500 advance to confirm booking.*`;
+          `🛡️ **Policy:** ₹500 advance to confirm & lock cab. Balance post-trip!\n\n` +
+          `[👉 Confirm Booking on WhatsApp](${waUrl})`;
       }
 
-      if (q.includes('outstation') || q.includes('drop') || q.includes('per km') || q.includes('rate') || q.includes('tariff')) {
-        return `Here are our **Outstation & Intercity Tariff Rates**:\n\n` +
-          `• **Swift Dzire / Etios:** ₹14 / km (Min 250 km/day, Driver Bata ₹400/day)\n` +
-          `• **Maruti Ertiga (6 Seater):** ₹17 / km (Min 250 km/day, Driver Bata ₹500/day)\n` +
-          `• **Toyota Innova (7 Seater):** ₹20 / km (Min 250 km/day, Driver Bata ₹600/day)\n` +
-          `• **Toyota Innova Crysta:** ₹22 / km (Min 250 km/day, Driver Bata ₹700/day)\n` +
-          `• **Tempo Traveller (12 Seater):** ₹26 / km (Min 300 km/day, Driver Bata ₹800/day)\n\n` +
-          `🛡️ **Guarantee:** ₹500 advance to confirm & lock cab (avoids last-minute cancellation). Balance post-trip.`;
+      // Local Chennai Hourly
+      if (activeDest === 'local' || lastLower.includes('local') || lastLower.includes('hourly') || lastLower.includes('8hr') || lastLower.includes('4hr')) {
+        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent(`Hi Kalidass Travels, I want to book Chennai local rental (${hours} hrs).`)}`;
+        return `Here are our official **Chennai City Local Rental Packages**:\n\n` +
+          `• **AC Sedan (Dzire / Etios):**\n` +
+          `  - 4 hrs / 40 km: ₹1,350 (Extra km: ₹15 | Extra hr: ₹150)\n` +
+          `  - 8 hrs / 80 km: ₹2,200 *(Most Popular)*\n` +
+          `  - 10 hrs / 100 km: ₹2,600\n\n` +
+          `• **Maruti Ertiga / XL6 (6 Pax):**\n` +
+          `  - 4 hrs / 40 km: ₹1,700 (Extra km: ₹17 | Extra hr: ₹200)\n` +
+          `  - 8 hrs / 80 km: ₹2,800\n\n` +
+          `• **Toyota Innova (7 Pax):**\n` +
+          `  - 8 hrs / 80 km: ₹3,200 | Innova Crysta: ₹4,500\n\n` +
+          `🛡️ **Policy:** ₹0 advance deposit for local city rentals — pay balance after trip!\n\n` +
+          `[👉 Book on WhatsApp](${waUrl})`;
       }
 
+      // Airport transfer
+      if (activeDest === 'airport' || lastLower.includes('airport')) {
+        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, I need Chennai Airport transfer.')}`;
+        return `Here are our fixed **Chennai Airport (MAA) Taxi Transfer** rates:\n\n` +
+          `• **AC Sedan (Dzire / Etios - 4 Pax):** ₹550 - ₹750 (Depending on locality)\n` +
+          `• **Maruti Ertiga / XL6 (6 Pax):** ₹750 - ₹950\n` +
+          `• **Toyota Innova (7 Pax):** ₹1,000 - ₹1,300\n\n` +
+          `✈️ 24/7 pickup from Domestic & International terminals, real-time flight tracking & zero delay surge!\n\n` +
+          `[👉 Book Airport Cab on WhatsApp](${waUrl})`;
+      }
+
+      // Acting driver
+      if (activeDest === 'acting_driver' || lastLower.includes('acting driver')) {
+        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, I need an Acting Driver for my personal car.')}`;
+        return `Here are our verified **Acting Driver Services** for your personal car:\n\n` +
+          `• **Chennai City Duty:** 4 Hours: ₹500 | 8 Hours: ₹800 (Extra hr: ₹100, Night charge 10 PM - 6 AM: ₹150)\n` +
+          `• **Outstation Round Trip:** ₹1,100 / day (+ ₹300 bata or food/stay)\n\n` +
+          `👮 Police Background Cleared (PVC Cleared) drivers, 5+ years experience.\n\n` +
+          `[👉 Book Driver on WhatsApp](${waUrl})`;
+      }
+
+      // Default tariff menu
       return `I can instantly quote fares for you:\n\n` +
-        `• 🕉️ **Tirupati Balaji 1-Day:** Sedan ₹6,000 | Ertiga ₹7,500\n` +
+        `• 🕉️ **Tirupati Balaji:** 1-Day (Sedan ₹6,000 | Ertiga ₹7,500), 2-Day (Sedan ₹9,500 | Ertiga ₹11,500)\n` +
         `• ⏱️ **Local Chennai 8hr:** Sedan ₹2,200 | Ertiga ₹2,800\n` +
-        `• 🛣️ **Outstation:** ₹14/km Sedan | ₹17/km Ertiga | ₹20/km Innova\n` +
-        `• 🏖️ **Pondicherry:** Sedan ₹4,500 | Ertiga ₹5,800\n\n` +
+        `• 🛣️ **Outstation:** ₹14/km Sedan | ₹17/km Ertiga | ₹20/km Innova (Min 250 km/day)\n` +
+        `• 🏖️ **Pondicherry:** Sedan ₹4,500 | Ertiga ₹5,800\n` +
+        `• ✈️ **Airport Taxi & 👮 Acting Drivers**\n\n` +
         `Tell me your travel destination or vehicle preference to get started!`;
+    }
+
+    function getChatSessionId() {
+      try {
+        let sid = sessionStorage.getItem('kt_ai_chat_session_id');
+        if (!sid) {
+          sid = 'KT-SES-' + Math.floor(1000 + Math.random() * 9000);
+          sessionStorage.setItem('kt_ai_chat_session_id', sid);
+        }
+        return sid;
+      } catch (_) {
+        return 'KT-SES-TEMP';
+      }
     }
 
     async function handleUserSubmit(text) {
@@ -398,12 +1185,22 @@ const callUrl = `tel:${phone}`;
 
       showTypingIndicator();
 
+      const sessionId = getChatSessionId();
+      const sourcePage = window.location.pathname || '/';
+
+      const pageContext = window.__KT_CURRENT_CALCULATION || null;
+
       let reply = '';
       try {
         const response = await fetch('/api/ai-chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages: chatHistory }),
+          body: JSON.stringify({
+            messages: chatHistory,
+            sessionId,
+            sourcePage,
+            pageContext
+          }),
         });
 
         if (response.ok) {
@@ -414,10 +1211,27 @@ const callUrl = `tel:${phone}`;
         }
       } catch (_) {}
 
-      // If backend API is not reachable (e.g. static dev server), use instant client-side tariff engine
+      // If backend API is not reachable, use instant client-side tariff engine with full multi-turn chatHistory
       if (!reply) {
         await new Promise((r) => setTimeout(r, 200));
-        reply = getLocalTariffReply(text);
+        reply = getLocalTariffReply(chatHistory, pageContext);
+
+        // Async telemetry backup for offline client fallback
+        try {
+          fetch('https://script.google.com/macros/s/AKfycbwoEpKqa3Qg-DIvMe06pGUgGLlC_0vJQev61nzIh9ssh1-uHZ5VtYkGzpMVwhEyi7tvEQ/exec', {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({
+              type: 'ai_chat_query',
+              date: new Date().toLocaleString(),
+              sessionId,
+              sourcePage,
+              userQuery: text,
+              aiReply: reply,
+              engine: 'client_local_fallback'
+            })
+          }).catch(() => {});
+        } catch (_) {}
       }
 
       removeTypingIndicator();

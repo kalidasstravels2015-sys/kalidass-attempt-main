@@ -1,16 +1,20 @@
 // Cloudflare Pages Function: /api/ai-chat
-// 24/7 AI Fare Concierge for Kalidass Travels (Chennai)
+// 24/7 AI Travel & Fare Assistant for Kalidass Travels (Chennai)
 // Grounded strictly on published tariff_config.json and tourBookingConfigs.js
 
 const TARIFF_KNOWLEDGE = `
-You are the official 24/7 AI Fare Concierge for Kalidass Travels, Chennai (Helpline: +91 89395 39211).
+You are the official 24/7 AI Travel & Fare Assistant ("Let me Help You") for Kalidass Travels, Chennai (Helpline: +91 89395 39211).
 Your mission is to provide fast, warm, and 100% accurate taxi fare quotes and itinerary advice strictly based on Kalidass Travels' rate card.
 
 CRITICAL RULES:
 1. STRICT TARIFF ADHERENCE: Never invent tariffs, make up numbers, or offer unauthorized discounts. If a customer tries to bargain or asks for a discount, politely explain that Kalidass Travels offers honest, fixed, all-inclusive pricing with transparent rates and no hidden charges.
 2. PAYMENT POLICY: Always highlight: "₹500 advance is required to confirm booking and lock cab assignment (avoids last-minute cancellations). The remaining balance is paid directly to the driver upon trip completion."
 3. CONTACT INFO: Official Helpline & 24/7 Dispatch: +91 89395 39211.
-4. MULTI-LINGUAL: Reply in the language the user speaks — English, Tamil, or Tanglish (Tamil written in English script). Keep responses concise, clean, and nicely formatted with bullet points.
+4. CONVERSATIONAL INTELLIGENCE & MULTI-TURN:
+   - Speak naturally like an experienced, polite human travel advisor (like ChatGPT / Gemini).
+   - In multi-turn conversations, do NOT repeatedly dump identical rigid bulleted lists or canned templates if the user just asks a simple follow-up like "for 2 days" or "what about Ertiga?". Answer the specific question directly, warmly, and concisely.
+   - For example, if they previously asked for a Tirupati 1-day package and now ask "for 2 days", answer: "For a relaxed 2-day Tirupati trip, our package rate is ₹9,500 for Swift Dzire (4 pax) and ₹11,500 for Maruti Ertiga (6 pax). This includes dedicated cab for both days, tolls, AP permit, and driver bata. Would you like me to book this for you?"
+5. MULTI-LINGUAL: Reply in the language the user speaks — English, Tamil (தமிழ்), Tanglish, Hindi (हिन्दी), Telugu (తెలుగు), Malayalam (മലയാളம்), Kannada (ಕನ್ನಡ), or any world language. Keep responses concise, clean, and nicely formatted.
 
 VERIFIED RATE CARD:
 
@@ -67,8 +71,49 @@ VERIFIED RATE CARD:
    - Vellore Golden Temple: Sedan ₹4,200 - ₹4,600 | Ertiga ₹5,200 - ₹5,800
 `;
 
-function deterministicFallback(userText) {
+function deterministicFallback(userText, pageContext) {
   const query = (userText || '').toLowerCase();
+
+  // On-screen context awareness (Pro-Rata / Quoted rates)
+  if (pageContext && pageContext.totalFare) {
+    const asksFor2Days = query.includes('2 day') || query.includes('two day') || query.includes('2-day') || query.includes('2 நாள்') || query.includes('2 நாட்கள்');
+    const asksPrice = query.includes('price') || query.includes('cost') || query.includes('fare') || query.includes('rate') || query.includes('how much') || query.includes('quote') || query.includes('evlo') || query.includes('kattanam') || query.includes('tariff');
+    const asksExplain = query.includes('explain') || query.includes('why') || query.includes('breakup') || query.includes('breakdown') || query.includes('details') || query.includes('screen') || query.includes('quote');
+
+    if (asksFor2Days || asksPrice || asksExplain || query.includes('this trip') || query.includes('my trip') || query.includes('selected')) {
+      const destName = pageContext.destination || (pageContext.serviceTitle ? pageContext.serviceTitle.replace(/Chennai to /i, '') : 'your trip');
+      const vehName = pageContext.vehicleName || 'Swift Dzire / Etios';
+      const fareFormatted = pageContext.formattedFare || `₹${pageContext.totalFare?.toLocaleString('en-IN')}`;
+      const durLabel = pageContext.durationLabel || `${pageContext.durationHours || 24} hrs`;
+      const subText = pageContext.durationSubText || (pageContext.isProRata ? '1 Night Stay' : '');
+
+      if (pageContext.isProRata) {
+        const hrs = pageContext.durationHours || 36;
+        const extraHrs = pageContext.extraHours || (hrs - 24);
+        const savings = pageContext.savings ? `₹${pageContext.savings.toLocaleString('en-IN')}` : '₹1,750';
+
+        return {
+          reply: `I see your selected schedule on screen is **${durLabel}** (${hrs} hours${subText ? ` / ${subText}` : ''}) for **${destName}**:\n\n` +
+            `• **Your On-Screen Pro-Rata Fare:** **${fareFormatted}** for **${vehName}**\n` +
+            `  Because your trip duration is **${hrs} hours** (rather than the full 48 hours), our transparent tariff charges you pro-rata for 1 Day + ${extraHrs} hrs, **saving you ${savings}** compared to the full 2-day package!\n\n` +
+            `• **Full 48-Hour 2-Day Package Rates:**\n` +
+            `  If you require the cab for the complete 48 hours (e.g. 2 full calendar days or returning late night on Day 2):\n` +
+            `  - **Swift Dzire / Etios (4 Pax):** ₹9,500\n` +
+            `  - **Maruti Ertiga / XL6 (6 Pax):** ₹11,500\n` +
+            `  - **Toyota Innova (7 Pax):** ₹12,500\n` +
+            `  - **Toyota Innova Crysta (7 Pax):** ₹16,000\n` +
+            `  - **Tempo Traveller (12 Pax):** ₹19,500\n\n` +
+            `✅ **Inclusions:** Dedicated AC Cab & Experienced Chauffeur, Fuel, AP State Border Permit, Tirumala Ghat Road ascent, and Driver Bata.\n` +
+            `🛡️ **Policy:** Nominal **₹500 advance** to confirm & lock cab (avoids last-minute cancellation). Remaining balance paid post-trip!`,
+          actionSuggestion: {
+            type: 'tirupati_package',
+            label: `Book ${vehName} (${fareFormatted}) on WhatsApp`,
+            whatsappText: `Hi Kalidass Travels, I want to confirm my ${durLabel} trip to ${destName} (${fareFormatted} for ${vehName}).`
+          }
+        };
+      }
+    }
+  }
 
   if (query.includes('tirupati') || query.includes('tirumala') || query.includes('balaji')) {
     return {
@@ -170,12 +215,54 @@ export async function onRequestPost({ request, env }) {
     const messages = body.messages || [];
     const lastUserMessage = [...messages].reverse().find(m => m.role === 'user')?.content || '';
 
+    // Asynchronously log to Google Apps Script Webhook
+    const logToWebhook = (replyText, engineSource) => {
+      try {
+        if (!lastUserMessage) return;
+        const timestamp = new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+        const sessionId = String(body.sessionId || 'KT-SES-' + Math.floor(1000 + Math.random() * 9000)).replace(/,/g, ' ');
+        const sourcePage = String(body.sourcePage || '/').replace(/,/g, ' ');
+
+        const qLow = lastUserMessage.toLowerCase();
+        let intent = 'General Inquiry';
+        if (qLow.includes('tirupati') || qLow.includes('tirumala') || qLow.includes('balaji')) intent = 'Tirupati Package';
+        else if (qLow.includes('airport') || qLow.includes('flight') || qLow.includes('terminal')) intent = 'Airport Transfer';
+        else if (qLow.includes('pondy') || qLow.includes('pondicherry')) intent = 'Pondicherry Tour';
+        else if (qLow.includes('local') || qLow.includes('hourly') || qLow.includes('4hr') || qLow.includes('8hr') || qLow.includes('city')) intent = 'Local Rental';
+        else if (qLow.includes('outstation') || qLow.includes('per km') || qLow.includes('km rate')) intent = 'Outstation Tariff';
+        else if (qLow.includes('temple') || qLow.includes('navagraha') || qLow.includes('kumbakonam') || qLow.includes('girivalam')) intent = 'Temple Tour';
+        else if (qLow.includes('acting') || qLow.includes('call driver') || qLow.includes('personal car')) intent = 'Acting Driver';
+
+        const phoneMatch = lastUserMessage.match(/(?:\+91[\-\s]?)?[6-9]\d{9}/);
+        const contact = phoneMatch ? phoneMatch[0].replace(/[^0-9]/g, '').slice(-10) : 'None';
+
+        fetch('https://script.google.com/macros/s/AKfycbwoEpKqa3Qg-DIvMe06pGUgGLlC_0vJQev61nzIh9ssh1-uHZ5VtYkGzpMVwhEyi7tvEQ/exec', {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({
+            type: 'ai_chat_query',
+            date: timestamp,
+            sessionId,
+            sourcePage,
+            userQuery: lastUserMessage,
+            aiReply: replyText,
+            intent,
+            contact,
+            engine: engineSource
+          })
+        }).catch(() => {});
+      } catch (_) {}
+    };
+
+    const pageContext = body.pageContext || null;
+
     // Check for Gemini API Key in Cloudflare env or process.env
     const apiKey = (env && env.GEMINI_API_KEY) || (typeof process !== 'undefined' && process.env && process.env.GEMINI_API_KEY);
 
     if (!apiKey) {
-      // Deterministic instant response fallback
-      const fallbackResult = deterministicFallback(lastUserMessage);
+      // Deterministic instant response fallback with pageContext
+      const fallbackResult = deterministicFallback(lastUserMessage, pageContext);
+      logToWebhook(fallbackResult.reply, 'cloudflare_deterministic');
       return new Response(JSON.stringify({
         success: true,
         reply: fallbackResult.reply,
@@ -187,31 +274,47 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
-    // Call Google Gemini 2.5 Flash API
+    // Call Google Gemini API (gemini-3.8-flash with gemini-3.5-flash-lite fallback)
+    let systemText = TARIFF_KNOWLEDGE;
+    if (pageContext && pageContext.totalFare) {
+      systemText += `\nACTIVE ON-SCREEN BOOKING ENGINE SELECTION: Destination: ${pageContext.destination || ''}, Vehicle: ${pageContext.vehicleName || ''}, Schedule: ${pageContext.pickupFormatted || ''} to ${pageContext.returnFormatted || ''}, Duration: ${pageContext.durationLabel || ''} (${pageContext.durationHours || 0} hrs), Fare: ${pageContext.formattedFare || ''}, Pro-Rata: ${pageContext.isProRata ? 'YES' : 'NO'}. If customer asks 'for 2 days' or about price, explicitly clarify that their on-screen quote is pro-rata for ${pageContext.durationHours} hrs (saving them ₹${pageContext.savings || 1750} vs full 2-day package).`;
+    }
+
     const geminiPayload = {
       systemInstruction: {
-        parts: [{ text: TARIFF_KNOWLEDGE }]
+        parts: [{ text: systemText }]
       },
       contents: messages.map(m => ({
         role: m.role === 'user' ? 'user' : 'model',
         parts: [{ text: m.content }]
       })),
       generationConfig: {
-        temperature: 0.2,
-        maxOutputTokens: 600,
+        temperature: 0.3,
+        maxOutputTokens: 1200,
       }
     };
 
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
-    const geminiRes = await fetch(geminiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(geminiPayload)
-    });
+    let candidateText = '';
+    for (const model of ['gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-pro-latest', 'gemini-3-flash-preview']) {
+      try {
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+        const geminiRes = await fetch(geminiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(geminiPayload)
+        });
 
-    if (!geminiRes.ok) {
+        if (geminiRes.ok) {
+          const geminiData = await geminiRes.json();
+          candidateText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (candidateText) break;
+        }
+      } catch (_) {}
+    }
+
+    if (!candidateText) {
       // Graceful fallback to deterministic engine on API error
-      const fallbackResult = deterministicFallback(lastUserMessage);
+      const fallbackResult = deterministicFallback(lastUserMessage, pageContext);
       return new Response(JSON.stringify({
         success: true,
         reply: fallbackResult.reply,
@@ -223,10 +326,8 @@ export async function onRequestPost({ request, env }) {
       });
     }
 
-    const geminiData = await geminiRes.json();
-    const candidateText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text;
-
-    const reply = candidateText || deterministicFallback(lastUserMessage).reply;
+    const reply = candidateText || deterministicFallback(lastUserMessage, pageContext).reply;
+    logToWebhook(reply, candidateText ? 'gemini' : 'gemini_fallback');
 
     return new Response(JSON.stringify({
       success: true,

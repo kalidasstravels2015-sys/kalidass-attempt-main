@@ -391,15 +391,19 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
       var dirDropBtn = document.getElementById('sheetDirDropBtn');
       var areaLabel = document.getElementById('sheetPickupAreaLabel');
 
-      // Initialize default date = tomorrow
+      // Initialize default date = tomorrow morning
+      var now = new Date();
+      var todayStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
       var tmr = new Date();
       tmr.setDate(tmr.getDate() + 1);
-      var tmrStr = tmr.toISOString().split('T')[0];
-      var todayStr = new Date().toISOString().split('T')[0];
+      var tmrStr = tmr.getFullYear() + '-' + String(tmr.getMonth() + 1).padStart(2, '0') + '-' + String(tmr.getDate()).padStart(2, '0');
 
       if (dateInput) {
         dateInput.min = todayStr;
         if (!dateInput.value) dateInput.value = tmrStr;
+      }
+      if (timeInput && !timeInput.value) {
+        timeInput.value = '06:00';
       }
 
       // Pre-fill profile if saved
@@ -932,6 +936,17 @@ Please confirm driver assignment and cab availability.`;
       if (incEl && quickBookingContext.inclusions) incEl.textContent = quickBookingContext.inclusions;
 
       var dateInput = document.getElementById('sheetPickupDate');
+      var timeInput = document.getElementById('sheetPickupTime');
+      var now = new Date();
+      var tmr = new Date();
+      tmr.setDate(tmr.getDate() + 1);
+      var tmrStr = tmr.getFullYear() + '-' + String(tmr.getMonth() + 1).padStart(2, '0') + '-' + String(tmr.getDate()).padStart(2, '0');
+      if (dateInput && !dateInput.value) {
+        dateInput.value = tmrStr;
+      }
+      if (timeInput && !timeInput.value) {
+        timeInput.value = '06:00';
+      }
       var returnPreview = document.getElementById('sheetReturnDatePreview');
       if (dateInput && returnPreview) {
         if (quickBookingContext.days === 1) {

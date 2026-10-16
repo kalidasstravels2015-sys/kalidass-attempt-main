@@ -1,6 +1,7 @@
 ---
 import QuotationEngine from "./QuotationEngine.jsx";
 const { lang = "en" } = Astro.props;
+const isTa = lang === "ta";
 ---
 
 <section
@@ -17,15 +18,15 @@ const { lang = "en" } = Astro.props;
   <div class="mt-3 flex flex-wrap items-center justify-center gap-2.5 sm:gap-6 text-m3-label-s sm:text-m3-label-m text-m3-on-surface-variant font-medium">
     <div class="flex items-center gap-1.5">
       <span class="material-symbols-outlined text-[16px] text-m3-success shrink-0">verified</span>
-      <span class="font-bold text-m3-on-surface">Pay Balance After Trip — Zero Hidden Charges</span>
+      <span class="font-bold text-m3-on-surface">{isTa ? "பயண முடிவில் கட்டணம் செலுத்தலாம்" : "Pay Balance After Trip"}</span>
     </div>
     <div class="flex items-center gap-1.5">
       <span class="material-symbols-outlined text-[16px] text-m3-secondary shrink-0">check_circle</span>
-      <span>Instant WhatsApp confirmation</span>
+      <span>{isTa ? "வாட்ஸ்அப் உறுதிப்படுத்தல்" : "Direct WhatsApp Confirmation"}</span>
     </div>
     <div class="flex items-center gap-1.5">
       <span class="material-symbols-outlined text-[16px] text-m3-secondary shrink-0">check_circle</span>
-      <span>Zero hidden charges</span>
+      <span>{isTa ? "வெளிப்படையான கி.மீ கட்டணங்கள்" : "Transparent Per-KM Billing"}</span>
     </div>
   </div>
 </section>

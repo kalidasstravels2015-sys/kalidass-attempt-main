@@ -1,5 +1,6 @@
 ---
 import siteContent from '../data/siteContent.json';
+import tariffConfig from '../data/tariff_config.json';
 import VehicleCard from './VehicleCard.astro';
 import { ChevronDown } from 'lucide-react';
 
@@ -22,6 +23,18 @@ const fleet = limit ? rawFleet.slice(0, limit) : rawFleet;
 
 const labels = siteContent.ui_labels || {};
 const heading = labels.our_premium_fleet || "Our Vehicle Fleet";
+
+const tariffVehicleSlugs = Object.keys(tariffConfig.vehicles || {}).map((name) =>
+  name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+);
+
+const getTariffLink = (vehicleName: string) => {
+  const slug = (vehicleName || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  if (tariffVehicleSlugs.includes(slug)) {
+    return `/tariff/#outstation-${slug}`;
+  }
+  return '/tariff/#outstation-rates';
+};
 
 const getBadge = (name: string) => {
   const v = (name || '').toLowerCase();
@@ -105,7 +118,7 @@ const formatSeats = (caps: string) => {
             priceSubtext="Fixed Per-KM Rates"
             price={vehicle.rate}
             actionText="View Rates & Tariff"
-            actionHref="/tariff/"
+            actionHref={getTariffLink(vehicle.name)}
           />
         ))}
       </div>

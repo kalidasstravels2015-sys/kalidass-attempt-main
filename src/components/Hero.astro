@@ -32,7 +32,7 @@ const heroImageAlts: Record<string, string> = {
         <OptimizedImage
           src={heroImages[0]}
           alt={heroImageAlts[heroImages[0]] || "Kalidass Travels Chennai Cab and Outstation Taxi"}
-          class="w-full h-full object-cover object-center opacity-80"
+          class="w-full h-full object-cover object-center"
           loading="eager"
           decoding="async"
           fetchpriority="high"
@@ -51,7 +51,7 @@ const heroImageAlts: Record<string, string> = {
               <OptimizedImage
                 src={image}
                 alt={heroImageAlts[image] || "Kalidass Travels Chennai Cab and Outstation Taxi"}
-                class="w-full h-full object-cover object-center scale-105 opacity-80"
+                class="w-full h-full object-cover object-center scale-105"
                 loading="lazy"
                 decoding="async"
                 fetchpriority="low"
@@ -62,9 +62,9 @@ const heroImageAlts: Record<string, string> = {
         </template>
       )}
     </div>
-    <!-- Deep Gradient Scrim for 100% Crisp Contrast and Legibility -->
+    <!-- Reduced Gradient Scrim so Background Image is Vivid & Visible while Text Remains Legible -->
     <div
-      class="absolute inset-0 bg-gradient-to-t from-[#041E49] via-[#041E49]/80 to-[#041E49]/45 z-10"
+      class="absolute inset-0 bg-gradient-to-t from-[#041E49]/60 via-[#041E49]/30 to-[#041E49]/20 z-10"
     >
     </div>
   </div>
@@ -74,7 +74,7 @@ const heroImageAlts: Record<string, string> = {
   >
 
     <!-- E-E-A-T Social Proof Eyebrow Badge -->
-    <div class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1 rounded-m3-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-[11px] sm:text-xs font-medium mb-2.5 sm:mb-3.5 shadow-sm">
+    <div class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1 rounded-m3-full bg-slate-900/50 backdrop-blur-md border border-white/25 text-white text-[11px] sm:text-xs font-medium mb-2.5 sm:mb-3.5 shadow-sm">
       <span class="text-white text-xs sm:text-sm">★</span>
       <span class="font-semibold text-white">4.9 Rated</span>
       <span class="text-white/60">•</span>
@@ -83,17 +83,17 @@ const heroImageAlts: Record<string, string> = {
 
     <!-- M3 Display Headline -->
     <h1
-      class="text-2xl min-[380px]:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-2 sm:mb-3 font-heading drop-shadow-sm"
+      class="text-2xl min-[380px]:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-2 sm:mb-3 font-heading drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)]"
     >
       <span class="block text-white">Chennai Taxi Service</span>
-      <span class="block mt-0.5 sm:mt-1 text-white/95 font-extrabold tracking-tight">
+      <span class="block mt-0.5 sm:mt-1 text-white font-extrabold tracking-tight">
         Across South India
       </span>
     </h1>
 
     <!-- Subtitle / Body (M3 Body Large) -->
     <p
-      class="text-xs sm:text-sm md:text-base text-white/90 font-normal max-w-xl mx-auto leading-relaxed mb-4 sm:mb-6 px-2 font-sans"
+      class="text-xs sm:text-sm md:text-base text-white/95 font-medium max-w-xl mx-auto leading-relaxed mb-4 sm:mb-6 px-2 font-sans drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]"
     >
       Doorstep pickups, clean AC cabs, and transparent rates for airport, outstation &amp; temple trips.
     </p>
@@ -113,24 +113,24 @@ const heroImageAlts: Record<string, string> = {
     <div
       class="flex flex-wrap items-center justify-center gap-2 sm:gap-3.5 max-w-2xl px-1"
     >
-      <div class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-m3-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs sm:text-m3-label-m shadow-m3-1 hover:bg-white/20 transition-all">
+      <div class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-m3-full bg-slate-900/50 backdrop-blur-md border border-white/20 text-white text-xs sm:text-m3-label-m shadow-m3-1 hover:bg-slate-900/70 transition-all">
         <span class="material-symbols-outlined text-[16px] sm:text-[18px] text-white/90 shrink-0">shield</span>
-        <span>Pay After Trip · Zero Hidden Fees</span>
+        <span>Pay After Trip</span>
       </div>
-      <div class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-m3-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs sm:text-m3-label-m shadow-m3-1 hover:bg-white/20 transition-all">
+      <div class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-m3-full bg-slate-900/50 backdrop-blur-md border border-white/20 text-white text-xs sm:text-m3-label-m shadow-m3-1 hover:bg-slate-900/70 transition-all">
         <span class="material-symbols-outlined text-[16px] sm:text-[18px] text-white/90 shrink-0">verified_user</span>
         <span>Police Verified Drivers</span>
       </div>
-      <div class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-m3-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs sm:text-m3-label-m shadow-m3-1 hover:bg-white/20 transition-all">
-        <span class="material-symbols-outlined text-[16px] sm:text-[18px] text-white/90 shrink-0">currency_rupee</span>
-        <span>Zero Surge Pricing</span>
+      <div class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-m3-full bg-slate-900/50 backdrop-blur-md border border-white/20 text-white text-xs sm:text-m3-label-m shadow-m3-1 hover:bg-slate-900/70 transition-all">
+        <span class="material-symbols-outlined text-[16px] sm:text-[18px] text-white/90 shrink-0">receipt_long</span>
+        <span>GST Invoice Available</span>
       </div>
       <a
         href="https://wa.me/918939539211?text=Hi%20Kalidass%20Travels%2C%20I%20would%20like%20to%20enquire%20about%20a%20cab%20booking."
         target="_blank"
         rel="noopener noreferrer nofollow"
         aria-label="24/7 Global WhatsApp booking"
-        class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-m3-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs sm:text-m3-label-m shadow-m3-1 hover:bg-white/20 hover:border-emerald-400/50 hover:text-emerald-300 transition-all cursor-pointer"
+        class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-m3-full bg-slate-900/50 backdrop-blur-md border border-white/20 text-white text-xs sm:text-m3-label-m shadow-m3-1 hover:bg-slate-900/70 hover:border-emerald-400/50 hover:text-emerald-300 transition-all cursor-pointer"
       >
         <WhatsAppIcon variant="brand" className="w-[18px] h-[18px] sm:w-[20px] sm:h-[20px] shrink-0" />
         <span>24/7 Global WhatsApp</span>

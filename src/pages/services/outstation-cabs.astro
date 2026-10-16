@@ -507,6 +507,9 @@ const faqSchema = {
           <h1 data-speakable="true" class="text-lg sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight">
             Chennai Outstation Cabs &amp; Intercity Taxi
           </h1>
+          <p class="text-xs text-m3-on-surface-variant font-medium mt-0.5">
+            Transparent pricing • Verified chauffeurs • Zero surge
+          </p>
         </div>
         <div class="hidden sm:flex items-center gap-2">
           <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-m3-surface-container-lowest border border-m3-outline-variant shadow-2xs text-xs font-semibold text-m3-on-surface">
@@ -523,7 +526,7 @@ const faqSchema = {
         <QuotationEngine 
           client:load 
           showAirportTab={false} 
-          title="Outstation Trip Fare Estimator" 
+          showHeader={false}
           variant="card" 
         />
 
@@ -552,9 +555,6 @@ const faqSchema = {
           </a>
           <a href="#commitments" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
             Our Guarantees
-          </a>
-          <a href="#per-km-table" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
-            Per-KM Rates
           </a>
           <a href="#fleet-section" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
             Vehicle Fleet
@@ -728,181 +728,90 @@ const faqSchema = {
         </div>
       </div>
 
-      <!-- 3. UPFRONT PER-KM TARIFF SECTION (Matching Airport Standard Overview) -->
-      <section id="per-km-table" class="mb-8 sm:mb-12 scroll-mt-28">
-        
-        <!-- Section Header (Shared Architecture) -->
-        <div class="flex items-center gap-3 pb-3 mb-4 border-b border-m3-outline-variant">
-          <span class="w-8 h-8 rounded-full bg-m3-surface-container-low text-m3-on-surface flex items-center justify-center shrink-0 border border-m3-outline-variant">
-            <span class="material-symbols-outlined text-[18px]">receipt_long</span>
-          </span>
-          <div class="min-w-0">
-            <h2 class="text-base sm:text-lg font-extrabold text-m3-on-surface font-heading block">
-              Outstation Taxi Rates &amp; Per-KM Tariff from Chennai
-            </h2>
-            <span class="text-xs sm:text-sm text-m3-on-surface-variant block mt-0.5">
-              Fixed transparent distance pricing for Round Trips and One-Way Drops
+
+
+      <!-- 3. VEHICLE SPECIFICATIONS & LUGGAGE CAPACITIES (Unified Fleet & Per-KM Tariff) -->
+      <section id="fleet-section" class="pt-6 sm:pt-8 mt-6 sm:mt-8 border-t border-m3-outline-variant mb-10 sm:mb-14 scroll-mt-28">
+        <span id="per-km-table" class="scroll-mt-28"></span>
+        <div class="mb-6 sm:mb-8 pb-3 border-b border-m3-outline-variant flex items-center justify-between gap-3 flex-wrap">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="w-10 h-10 rounded-xl bg-m3-surface-container text-m3-on-surface flex items-center justify-center shrink-0 border border-m3-outline-variant shadow-2xs">
+              <span class="material-symbols-outlined text-[24px] text-m3-on-surface">directions_car</span>
             </span>
-          </div>
-        </div>
-
-        <!-- 1. Mobile & Tablet Compact Rate Strip View (~260px Height) -->
-        <div class="md:hidden rounded-xl border border-m3-outline-variant bg-white overflow-hidden divide-y divide-slate-100 shadow-xs mb-4">
-          {perKmTariff.map((row) => (
-            <div class="p-3 sm:p-3.5 flex items-center justify-between gap-3 hover:bg-m3-surface-container-low transition-colors">
-              <!-- Left: Car Image & Name -->
-              <div class="flex items-center gap-2.5 min-w-0 flex-1">
-                <div class="w-13 h-9 shrink-0 flex items-center justify-center bg-m3-surface-container-low rounded-m3-md p-1 border border-m3-outline-variant/40">
-                  <img
-                    src={row.image}
-                    alt={`${row.vehicle} Outstation Taxi Chennai`}
-                    width="52"
-                    height="36"
-                    decoding="async"
-                    class="max-w-full max-h-full object-contain"
-                    loading="lazy"
-                  />
-                </div>
-                <div class="min-w-0 flex-1">
-                  <h3 class="font-bold text-xs sm:text-sm text-m3-on-surface truncate font-heading leading-tight">
-                    {row.shortName || row.vehicle}
-                  </h3>
-                  <div class="flex items-center gap-1.5 text-micro text-m3-on-surface-variant mt-0.5">
-                    <span class="font-semibold text-m3-primary">{row.badge}</span>
-                    <span>•</span>
-                    <span>{row.capacity.split('+')[0].trim()}</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Center: Round Trip & One Way Rates -->
-              <div class="text-right shrink-0">
-                <div class="font-bold text-sm sm:text-base text-[#1a73e8] font-heading leading-tight">
-                  {row.roundTrip}
-                </div>
-                <div class="text-micro text-m3-on-surface-variant mt-0.5">
-                  Drop: {row.oneWay}
-                </div>
-              </div>
-
-              <!-- Right: Instant Action Button -->
-              <div class="shrink-0">
-                <button
-                  type="button"
-                  data-open-outstation-calc="true"
-                  data-skip-enquiry="true"
-                  data-vehicle-key={row.vehicleKey || row.shortName}
-                  data-vehicle-name={row.vehicle}
-                  data-badge={row.badge}
-                  data-image={row.image}
-                  data-capacity={row.capacity}
-                  data-round-rate={row.roundTripRate}
-                  data-oneway-rate={row.oneWayRate}
-                  data-bata={row.bataNum}
-                  data-min-km={row.minKmNum}
-                  aria-label={`Calculate fare and book ${row.vehicle} outstation cab`}
-                  class="tariff-whatsapp-btn inline-flex items-center justify-center gap-1 py-1.5 px-2.5 sm:px-3 rounded-m3-full bg-m3-success-container/40 hover:bg-m3-success-container active:bg-m3-success-container text-m3-on-success-container border border-m3-success/40 text-[11px] font-bold shadow-2xs transition-all select-none cursor-pointer"
-                >
-                  <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0" />
-                  <span>Calculate &amp; Book</span>
-                </button>
-              </div>
+            <div class="min-w-0">
+              <h2 class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading leading-tight">
+                Vehicle Specifications &amp; Luggage Capacities
+              </h2>
+              <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-0.5">
+                Punctual doorstep pickup, verified highway chauffeurs, and dedicated luggage boot space.
+              </p>
             </div>
-          ))}
+          </div>
+          <span class="text-xs font-bold text-m3-on-surface bg-m3-surface-container px-3 py-1.5 rounded-full border border-m3-outline-variant shrink-0 hidden sm:inline-block">
+            Transparent Distance Rates • Zero Surge
+          </span>
         </div>
 
-        <!-- 2. Desktop High-Legibility Comparison Table View (hidden on mobile, shown md+) -->
-        <div class="hidden md:block rounded-2xl border border-m3-outline-variant bg-white overflow-hidden shadow-sm">
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm font-sans border-collapse">
-              <thead class="bg-m3-surface-container text-m3-on-surface-variant text-xs font-bold uppercase tracking-wider border-b border-m3-outline-variant">
-                <tr>
-                  <th class="px-5 py-3.5">Vehicle Model</th>
-                  <th class="px-5 py-3.5 text-center">Capacity</th>
-                  <th class="px-5 py-3.5 text-center">Round Trip Rate</th>
-                  <th class="px-5 py-3.5 text-center">One-Way Drop</th>
-                  <th class="px-5 py-3.5 text-center">Min Billing</th>
-                  <th class="px-5 py-3.5 text-center">Driver Bata</th>
-                  <th class="px-5 py-3.5 text-right">Instant Booking</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-m3-outline-variant/60">
-                {perKmTariff.map((row, rIdx) => (
-                  <tr class={`hover:bg-m3-surface-container-low transition-colors ${rIdx % 2 === 0 ? 'bg-m3-surface' : 'bg-m3-surface-container-lowest'}`}>
-                    <td class="px-5 py-3.5">
-                      <div class="flex items-center gap-3">
-                        <div class="w-14 h-9 shrink-0 flex items-center justify-center bg-m3-surface-container-low rounded-m3-md p-1 border border-m3-outline-variant/40">
-                          <img
-                            src={row.image}
-                            alt={`${row.vehicle} Outstation Taxi Chennai`}
-                            width="56"
-                            height="36"
-                            decoding="async"
-                            class="max-w-full max-h-full object-contain"
-                            loading="lazy"
-                          />
-                        </div>
-                        <div>
-                          <span class="font-bold text-m3-on-surface text-sm sm:text-base font-heading block">{row.vehicle}</span>
-                          <span class="text-micro text-[#1a73e8] font-bold uppercase tracking-wider">{row.badge}</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="px-5 py-3.5 text-center text-m3-on-surface-variant text-xs whitespace-nowrap">
-                      {row.capacity}
-                    </td>
-                    <td class="px-5 py-3.5 text-center font-bold text-[#1a73e8] font-heading text-sm sm:text-base">
-                      {row.roundTrip}
-                    </td>
-                    <td class="px-5 py-3.5 text-center font-bold text-m3-on-surface">
-                      {row.oneWay}
-                    </td>
-                    <td class="px-5 py-3.5 text-center text-m3-on-surface-variant text-xs">
-                      {row.minKm}
-                    </td>
-                    <td class="px-5 py-3.5 text-center text-m3-on-surface-variant text-xs">
-                      {row.bata}
-                    </td>
-                    <td class="px-5 py-3.5 text-right whitespace-nowrap">
-                      <div class="inline-flex items-center gap-1.5 justify-end">
-                        <a
-                          href="tel:+918939539211"
-                          aria-label={`Call to book ${row.vehicle} outstation cab`}
-                          class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-primary/5 active:bg-m3-primary-container text-m3-on-surface hover:text-[#1a73e8] border border-m3-outline-variant hover:border-[#1a73e8]/30 text-micro font-bold shadow-xs transition-all select-none"
-                        >
-                          <AndroidPhoneIcon className="w-3 h-3 text-[#1a73e8] shrink-0" />
-                          <span>Call</span>
-                        </a>
-                        <button
-                          type="button"
-                          data-open-outstation-calc="true"
-                          data-skip-enquiry="true"
-                          data-vehicle-key={row.vehicleKey || row.shortName}
-                          data-vehicle-name={row.vehicle}
-                          data-badge={row.badge}
-                          data-image={row.image}
-                          data-capacity={row.capacity}
-                          data-round-rate={row.roundTripRate}
-                          data-oneway-rate={row.oneWayRate}
-                          data-bata={row.bataNum}
-                          data-min-km={row.minKmNum}
-                          aria-label={`Calculate fare and book ${row.vehicle} on WhatsApp`}
-                          class="tariff-whatsapp-btn inline-flex items-center gap-1 px-2.5 py-1.5 rounded-m3-full bg-m3-success-container/40 hover:bg-m3-success-container/70 text-m3-on-success-container border border-m3-success/40 text-micro font-bold shadow-xs transition-all cursor-pointer"
-                        >
-                          <WhatsAppIcon variant="brand" className="w-3 h-3 shrink-0" />
-                          <span>Calculate &amp; Book</span>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <!-- Fleet Grid/Scroll Container (Horizontal Order like Airport & Home Page) -->
+        <div class="relative group/fleet">
+          <!-- Horizontal Swipe Container on Mobile, 4-Col Grid on Desktop -->
+          <div
+            id="spec-fleet-scroller"
+            class="flex overflow-x-auto snap-x snap-mandatory pb-4 space-x-4 px-1 sm:px-2 md:grid md:grid-cols-2 lg:grid-cols-5 md:gap-4 md:space-x-0 md:overflow-visible md:pb-0 scrollbar-hide focus:outline-none"
+            tabindex="0"
+            role="region"
+            aria-label="Outstation Fleet Gallery"
+          >
+            {outstationFleet.map((vehicle) => {
+              const seats = vehicle.capsShort;
+              const luggageShort = vehicle.luggage;
+              return (
+                <VehicleCard
+                  className="shrink-0 w-72 sm:w-80 md:w-auto snap-center md:snap-align-none"
+                  name={vehicle.name}
+                  image={vehicle.image}
+                  badge={vehicle.badge}
+                  seats={seats}
+                  baggage={luggageShort}
+                  priceLabel="Outstation"
+                  priceSubtext="Round Trip / KM"
+                  price={vehicle.price}
+                  actionText="Calculate & Book"
+                  actionClass="spec-book-vehicle-btn"
+                  dataAttributes={{
+                    'data-open-outstation-calc': 'true',
+                    'data-vehicle-key': vehicle.vehicleKey,
+                    'data-vehicle-name': vehicle.name,
+                    'data-badge': vehicle.badge,
+                    'data-image': vehicle.image,
+                    'data-capacity': vehicle.caps,
+                    'data-round-rate': vehicle.roundTripRate.toString(),
+                    'data-oneway-rate': vehicle.oneWayRate.toString(),
+                    'data-bata': vehicle.bata.toString(),
+                    'data-min-km': vehicle.minKm.toString()
+                  }}
+                />
+              );
+            })}
+          </div>
+
+          <!-- Scroll Indicator Dots (Mobile Only) -->
+          <div id="spec-fleet-dots" class="flex justify-center items-center mt-3.5 space-x-1 md:hidden">
+            {outstationFleet.map((_, index) => (
+              <button
+                type="button"
+                class="min-w-[32px] min-h-[32px] flex items-center justify-center p-1.5 cursor-pointer spec-dot"
+                data-index={index}
+                aria-label={`Go to slide ${index + 1}`}
+              >
+                <span class={`h-1.5 rounded-full transition-all duration-300 spec-dot-bar ${index === 0 ? 'bg-m3-primary w-5' : 'bg-m3-outline-variant w-1.5'}`}></span>
+              </button>
+            ))}
           </div>
         </div>
 
         <!-- Transparent Calculation Rules & Guidelines -->
-        <div class="mt-4 bg-m3-surface-container-low rounded-2xl p-4 sm:p-5 border border-m3-outline-variant shadow-xs">
+        <div class="mt-6 bg-m3-surface-container-low rounded-2xl p-4 sm:p-5 border border-m3-outline-variant shadow-xs">
           <div class="flex items-start gap-2 mb-3">
             <Info className="w-4 h-4 text-[#1a73e8] shrink-0 mt-0.5" />
             <p class="text-xs text-m3-on-surface-variant leading-relaxed">
@@ -956,87 +865,6 @@ const faqSchema = {
               </p>
             </div>
           ))}
-        </div>
-
-      </section>
-
-      <!-- 4. VEHICLE SPECIFICATIONS & LUGGAGE CAPACITIES (Matching Airport Taxi Fleet Section) -->
-      <section id="fleet-section" class="pt-6 sm:pt-8 mt-6 sm:mt-8 border-t border-m3-outline-variant mb-10 sm:mb-14 scroll-mt-28">
-        <div class="mb-6 sm:mb-8 pb-3 border-b border-m3-outline-variant flex items-center justify-between gap-3 flex-wrap">
-          <div class="flex items-center gap-3 min-w-0">
-            <span class="w-10 h-10 rounded-xl bg-m3-surface-container text-m3-on-surface flex items-center justify-center shrink-0 border border-m3-outline-variant shadow-2xs">
-              <span class="material-symbols-outlined text-[24px] text-m3-on-surface">directions_car</span>
-            </span>
-            <div class="min-w-0">
-              <h2 class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading leading-tight">
-                Vehicle Specifications &amp; Luggage Capacities
-              </h2>
-              <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-0.5">
-                Punctual doorstep pickup, verified highway chauffeurs, and dedicated luggage boot space.
-              </p>
-            </div>
-          </div>
-          <span class="text-xs font-bold text-m3-on-surface bg-m3-surface-container px-3 py-1.5 rounded-full border border-m3-outline-variant shrink-0 hidden sm:inline-block">
-            Transparent Distance Rates • Zero Surge
-          </span>
-        </div>
-
-        <!-- Fleet Grid/Scroll Container (Horizontal Order like Airport & Home Page) -->
-        <div class="relative group/fleet">
-          <!-- Horizontal Swipe Container on Mobile, 4-Col Grid on Desktop -->
-          <div
-            id="spec-fleet-scroller"
-            class="flex overflow-x-auto snap-x snap-mandatory pb-4 space-x-4 px-1 sm:px-2 md:grid md:grid-cols-2 lg:grid-cols-5 md:gap-4 md:space-x-0 md:overflow-visible md:pb-0 scrollbar-hide focus:outline-none"
-            tabindex="0"
-            role="region"
-            aria-label="Outstation Fleet Gallery"
-          >
-            {outstationFleet.map((vehicle) => {
-              const seats = vehicle.capsShort;
-              const luggageShort = vehicle.luggage;
-              return (
-                <VehicleCard
-                  className="shrink-0 w-72 sm:w-80 md:w-auto snap-center md:snap-align-none"
-                  name={vehicle.name}
-                  image={vehicle.image}
-                  badge={vehicle.badge}
-                  seats={seats}
-                  baggage={luggageShort}
-                  priceLabel="Outstation"
-                  priceSubtext="Round Trip / KM"
-                  price={vehicle.price}
-                  actionText={`Book ${vehicle.shortName}`}
-                  actionClass="spec-book-vehicle-btn"
-                  dataAttributes={{
-                    'data-open-outstation-calc': 'true',
-                    'data-vehicle-key': vehicle.vehicleKey,
-                    'data-vehicle-name': vehicle.name,
-                    'data-badge': vehicle.badge,
-                    'data-image': vehicle.image,
-                    'data-capacity': vehicle.caps,
-                    'data-round-rate': vehicle.roundTripRate.toString(),
-                    'data-oneway-rate': vehicle.oneWayRate.toString(),
-                    'data-bata': vehicle.bata.toString(),
-                    'data-min-km': vehicle.minKm.toString()
-                  }}
-                />
-              );
-            })}
-          </div>
-
-          <!-- Scroll Indicator Dots (Mobile Only) -->
-          <div id="spec-fleet-dots" class="flex justify-center items-center mt-3.5 space-x-1 md:hidden">
-            {outstationFleet.map((_, index) => (
-              <button
-                type="button"
-                class="min-w-[32px] min-h-[32px] flex items-center justify-center p-1.5 cursor-pointer spec-dot"
-                data-index={index}
-                aria-label={`Go to slide ${index + 1}`}
-              >
-                <span class={`h-1.5 rounded-full transition-all duration-300 spec-dot-bar ${index === 0 ? 'bg-m3-primary w-5' : 'bg-m3-outline-variant w-1.5'}`}></span>
-              </button>
-            ))}
-          </div>
         </div>
       </section>
 

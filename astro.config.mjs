@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// Trigger Vite dependency re-optimization (v2)
+// Trigger Vite dependency re-optimization (v3)
 export default defineConfig({
   site: 'https://kalidasstravels.in',
   trailingSlash: 'always',
@@ -117,7 +117,7 @@ export default defineConfig({
   },
   vite: {
     optimizeDeps: {
-      include: ['react', 'react-dom', 'lucide-react']
+      include: ['react', 'react-dom', 'lucide-react', '@astrojs/react/client.js']
     },
     build: {
       rollupOptions: {
@@ -136,6 +136,177 @@ export default defineConfig({
         configureServer(server) {
           server.middlewares.use((req, res, next) => {
             const url = req.url?.split('?')[0] || '';
+
+            if (req.method === 'POST' && (url === '/api/ai-chat' || url === '/api/ai-chat/')) {
+              let body = '';
+              req.on('data', (chunk) => { body += chunk; });
+              req.on('end', async () => {
+                try {
+                  const data = JSON.parse(body || '{}');
+                  const { processAiConciergeQuery } = await import('./src/lib/aiConciergeEngine.ts?t=' + Date.now());
+                  const messages = data.messages || [];
+                  const pageContext = data.pageContext || null;
+                  let result = null;
+
+                  let apiKey = process.env.GEMINI_API_KEY;
+                  if (!apiKey) {
+                    try {
+                      const envPath = path.resolve(process.cwd(), '.env');
+                      if (fs.existsSync(envPath)) {
+                        const m = fs.readFileSync(envPath, 'utf8').match(/GEMINI_API_KEY\s*=\s*(.+)/);
+                        if (m) apiKey = m[1].trim();
+                      }
+                    } catch (_) {}
+                  }
+
+                  if (apiKey) {
+                    try {
+                      let promptCtx = '';
+                      if (pageContext && pageContext.totalFare) {
+                        promptCtx = `\nACTIVE ON-SCREEN BOOKING SELECTION: Destination: ${pageContext.destination || ''}, Vehicle: ${pageContext.vehicleName || ''}, Schedule: ${pageContext.pickupFormatted || ''} to ${pageContext.returnFormatted || ''}, Duration: ${pageContext.durationLabel || ''} (${pageContext.durationHours || 0} hrs, ${pageContext.durationSubText || ''}), Quoted Fare: ${pageContext.formattedFare || ''}, Pro-Rata: ${pageContext.isProRata ? 'YES' : 'NO'}. If customer asks 'for 2 days' or about price, explicitly clarify that their on-screen quote is pro-rata for ${pageContext.durationHours} hrs (saving them ₹${pageContext.savings || 1750} vs full 2-day package).`;
+                      }
+
+                      const systemPrompt = `You are the intelligent, warm, and highly capable 24/7 AI Travel & Fare Concierge ("Let me Help You") for Kalidass Travels, Chennai (Helpline & WhatsApp: +91 89395 39211).
+Your mission is to assist customers naturally and conversationally, understanding their exact questions and providing 100% accurate quotes strictly following Kalidass Travels' rate card.
+
+CONVERSATIONAL INTELLIGENCE GUIDELINES:
+1. Speak naturally like an experienced, polite human travel advisor (like modern ChatGPT / Gemini).
+2. MULTI-TURN CONTEXT AWARENESS:
+   - When a user asks a short follow-up like "for 2 days", "what about ertiga?", "how much?", or "can we halt at vellore?", DO NOT just regurgitate a rigid, repetitive wall of bullet points!
+   - Directly answer their specific follow-up in a natural, friendly tone, acknowledging what vehicle or trip they were previously discussing.
+   - For example, if they previously asked for a Tirupati 1-day package and now ask "for 2 days", answer warmly: "For a relaxed 2-day Tirupati trip, our package rate is ₹9,500 for Swift Dzire (4 pax) and ₹11,500 for Maruti Ertiga (6 pax). This includes dedicated cab with chauffeur for both days, tolls, and driver bata. Would you like me to book this for you?"
+3. MULTILINGUAL & NATURAL:
+   - If the user writes in Tamil (தமிழ்), reply warmly in Tamil.
+   - If the user writes in Tanglish (e.g. "2 days ku evlo aagum", "car booking iruka"), reply warmly in Tanglish / natural Tamil-English.
+   - If in English, reply in polished, warm English.
+4. HONEST, FIXED PRICING:
+   - Mention our transparent policy: Only ₹500 advance to confirm and lock cab assignment (avoids last-minute cancellation). The remaining balance is paid directly after trip completion.
+   - Never invent arbitrary discounts or fictional rates.
+5. WHATSAPP BOOKING CALL-TO-ACTION:
+   - When quoting a specific trip, include a clean markdown link: [👉 Confirm Booking on WhatsApp](https://wa.me/918939539211?text=...) with a pre-filled message.
+
+OFFICIAL TARIFF RATE CARD:
+- CHENNAI ⇄ TIRUPATI / TIRUMALA PACKAGES:
+  * 1-Day: Swift Dzire / Etios: ₹6,000 | Maruti Ertiga: ₹7,500 | Innova: ₹8,500 | Innova Crysta: ₹10,000 | Tempo 12: ₹12,500. (All-inclusive of Fuel, FASTag Tolls, AP Border Permit, Tirumala Ghat Road ascent & Driver Bata).
+  * 2-Day Package: Swift Dzire / Etios: ₹9,500 | Maruti Ertiga / XL6: ₹11,500 | Innova: ₹12,500 | Innova Crysta: ₹16,000 | Tempo 12: ₹19,500.
+  * 3-Day Package: Swift Dzire / Etios: ₹13,200 | Maruti Ertiga: ₹15,800 | Innova: ₹17,500 | Innova Crysta: ₹22,500 | Tempo 12: ₹27,000.
+- POPULAR TOUR PACKAGES:
+  * Pondicherry: 1-Day Sedan ₹4,500 - ₹5,000 | Ertiga ₹5,800 - ₹6,200 | Innova ₹7,000. 2-Day Sedan ₹7,500 | Ertiga ₹9,200.
+  * Chidambaram & Pichavaram: 1-Day Sedan ₹7,400 | Ertiga ₹9,200 | Innova ₹11,000. 2-Day Sedan ₹9,800 | Ertiga ₹12,000.
+  * Thiruvannamalai Girivalam: 1-Day Sedan ₹6,500 | Ertiga ₹7,900 | Innova ₹9,300. 2-Day Sedan ₹8,900 | Ertiga ₹10,900.
+  * Kanchipuram: 1-Day Sedan ₹3,800 | Ertiga ₹4,800 | Innova ₹5,800.
+  * Navagraha (Kumbakonam): 2-Day Sedan ₹14,500 | Ertiga ₹18,500. 3-Day Sedan ₹19,500 | Ertiga ₹24,500.
+  * Rameswaram & Dhanushkodi: 2-Day Sedan ₹18,500 | Ertiga ₹23,500. 3-Day Sedan ₹24,500 | Ertiga ₹30,500.
+- OUTSTATION PER-KM TARIFFS (Round Trips):
+  * Swift Dzire / Etios: ₹14/km | Driver Bata ₹400/day | Min billing 250 km/day.
+  * Maruti Ertiga / XL6: ₹17/km | Driver Bata ₹500/day | Min billing 250 km/day.
+  * Toyota Innova: ₹20/km | Driver Bata ₹600/day | Min billing 250 km/day.
+  * Innova Crysta: ₹22/km | Driver Bata ₹700/day | Min billing 250 km/day.
+  * Tempo Traveller (12 Seater): ₹26/km | Driver Bata ₹800/day | Min billing 300 km/day.
+  * Tolls, state entry permits & parking at actuals.
+- LOCAL CHENNAI HOURLY PACKAGES:
+  * Sedan: 4hr/40km ₹1,350 | 8hr/80km ₹2,200 (Extra km: ₹15, hr: ₹150)
+  * Ertiga: 4hr/40km ₹1,700 | 8hr/80km ₹2,800 (Extra km: ₹17, hr: ₹200)
+  * Innova: 8hr/80km ₹3,200 | Crysta: 8hr/80km ₹4,500
+- ACTING DRIVERS FOR PERSONAL CAR:
+  * City: 4hr ₹500 | 8hr ₹800 (Night charge 10 PM - 6 AM ₹150)
+  * Outstation: ₹1,100/day (+ ₹300 food/stay bata if not provided)
+${promptCtx}`;
+
+                      for (const model of ['gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-pro-latest', 'gemini-3-flash-preview']) {
+                        const gRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            systemInstruction: { parts: [{ text: systemPrompt }] },
+                            contents: messages.map(m => ({ role: m.role === 'user' ? 'user' : 'model', parts: [{ text: m.content }] })),
+                            generationConfig: { temperature: 0.3, maxOutputTokens: 1200 }
+                          })
+                        });
+                        if (gRes.ok) {
+                          const gData = await gRes.json();
+                          const cand = gData.candidates?.[0]?.content?.parts?.[0]?.text;
+                          if (cand) {
+                            result = { reply: cand, source: 'gemini_' + model, meta: { model } };
+                            break;
+                          }
+                        }
+                      }
+                    } catch (_) {}
+                  }
+
+                  if (!result) {
+                    result = processAiConciergeQuery(messages, pageContext);
+                  }
+
+                  // Telemetry: Persistent Logging of User Questions
+                  try {
+                    const rawUserMsg = [...messages].reverse().find(m => m.role === 'user')?.content || '';
+                    if (rawUserMsg) {
+                      const chatCsvPath = path.resolve(process.cwd(), 'Kalidass_Ai_Chat_Queries_2026.csv');
+                      const timestamp = new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+                      const sessionId = (data.sessionId || 'KT-SES-' + Math.floor(1000 + Math.random() * 9000)).replace(/,/g, ' ');
+                      const sourcePage = (data.sourcePage || '/').replace(/,/g, ' ');
+                      const cleanUserQuery = rawUserMsg.replace(/"/g, '""').replace(/\r?\n/g, ' ');
+                      const cleanAiReply = (result.reply || '').replace(/"/g, '""').replace(/\r?\n/g, ' ');
+
+                      // Detect Query Intent
+                      const qLow = rawUserMsg.toLowerCase();
+                      let intent = 'General Inquiry';
+                      if (qLow.includes('tirupati') || qLow.includes('tirumala') || qLow.includes('balaji')) intent = 'Tirupati Package';
+                      else if (qLow.includes('airport') || qLow.includes('flight') || qLow.includes('terminal')) intent = 'Airport Transfer';
+                      else if (qLow.includes('pondy') || qLow.includes('pondicherry')) intent = 'Pondicherry Tour';
+                      else if (qLow.includes('local') || qLow.includes('hourly') || qLow.includes('4hr') || qLow.includes('8hr') || qLow.includes('city')) intent = 'Local Rental';
+                      else if (qLow.includes('outstation') || qLow.includes('per km') || qLow.includes('km rate')) intent = 'Outstation Tariff';
+                      else if (qLow.includes('temple') || qLow.includes('navagraha') || qLow.includes('kumbakonam') || qLow.includes('girivalam')) intent = 'Temple Tour';
+                      else if (qLow.includes('acting') || qLow.includes('call driver') || qLow.includes('personal car')) intent = 'Acting Driver';
+
+                      // Extract Phone if provided
+                      const phoneMatch = rawUserMsg.match(/(?:\+91[\-\s]?)?[6-9]\d{9}/);
+                      const contact = phoneMatch ? phoneMatch[0].replace(/[^0-9]/g, '').slice(-10) : 'None';
+                      const sourceEngine = (result.source || 'AI Engine').replace(/,/g, ' ');
+
+                      if (fs.existsSync(chatCsvPath)) {
+                        const content = fs.readFileSync(chatCsvPath, 'utf8');
+                        const lines = content.trim().split(/\r?\n/).filter(Boolean);
+                        const rowNum = lines.length;
+                        const queryId = `#CHAT-${100 + rowNum}`;
+                        const newRow = `${queryId},"${timestamp}","${sessionId}","${sourcePage}","${cleanUserQuery}","${cleanAiReply}","${intent}","${contact}","${sourceEngine}"\n`;
+                        fs.appendFileSync(chatCsvPath, newRow, 'utf8');
+                      }
+
+                      // Forward to Google Apps Script Webhook
+                      fetch('https://script.google.com/macros/s/AKfycbwoEpKqa3Qg-DIvMe06pGUgGLlC_0vJQev61nzIh9ssh1-uHZ5VtYkGzpMVwhEyi7tvEQ/exec', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain' },
+                        body: JSON.stringify({
+                          type: 'ai_chat_query',
+                          date: timestamp,
+                          sessionId,
+                          sourcePage,
+                          userQuery: rawUserMsg,
+                          aiReply: result.reply,
+                          intent,
+                          contact,
+                          engine: result.source || 'AI Engine'
+                        })
+                      }).catch(() => {});
+                    }
+                  } catch (logErr) {
+                    console.error('Chat logging notice:', logErr.message);
+                  }
+
+                  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                  res.end(JSON.stringify({ success: true, reply: result.reply, source: result.source, meta: result.meta }));
+                } catch (err) {
+                  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                  res.statusCode = 500;
+                  res.end(JSON.stringify({ success: false, error: err.message }));
+                }
+              });
+              return;
+            }
+
             if (req.method === 'POST' && url === '/api/record-booking') {
               let body = '';
               req.on('data', (chunk) => { body += chunk; });
@@ -290,6 +461,52 @@ export default defineConfig({
                 calculations.reverse();
                 res.setHeader('Content-Type', 'application/json; charset=utf-8');
                 res.end(JSON.stringify({ success: true, count: calculations.length, calculations }));
+              } catch (err) {
+                res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                res.statusCode = 500;
+                res.end(JSON.stringify({ error: err.message }));
+              }
+              return;
+            }
+
+            if (req.method === 'GET' && (url === '/api/admin/chat-logs' || url === '/api/chat-queries.json')) {
+              try {
+                const csvPath = path.resolve(process.cwd(), 'Kalidass_Ai_Chat_Queries_2026.csv');
+                if (!fs.existsSync(csvPath)) {
+                  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                  res.end(JSON.stringify({ success: true, count: 0, queries: [] }));
+                  return;
+                }
+                const content = fs.readFileSync(csvPath, 'utf8');
+                const lines = content.trim().split(/\r?\n/).filter(Boolean);
+                const queries = [];
+                for (let i = 1; i < lines.length; i++) {
+                  const line = lines[i];
+                  const matches = line.match(/(?:^|,)(?:"([^"]*(?:""[^"]*)*)"|([^,]*))/g);
+                  if (matches) {
+                    const row = matches.map(m => {
+                      let s = m.replace(/^,/, '').trim();
+                      if (s.startsWith('"') && s.endsWith('"')) {
+                        s = s.slice(1, -1).replace(/""/g, '"');
+                      }
+                      return s;
+                    });
+                    queries.push({
+                      queryId: row[0] || '',
+                      timestamp: row[1] || '',
+                      sessionId: row[2] || '',
+                      sourcePage: row[3] || '',
+                      userQuery: row[4] || '',
+                      aiResponse: row[5] || '',
+                      detectedIntent: row[6] || 'General Inquiry',
+                      customerContact: row[7] || 'None',
+                      sourceEngine: row[8] || 'AI Engine'
+                    });
+                  }
+                }
+                queries.reverse();
+                res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                res.end(JSON.stringify({ success: true, count: queries.length, queries }));
               } catch (err) {
                 res.setHeader('Content-Type', 'application/json; charset=utf-8');
                 res.statusCode = 500;

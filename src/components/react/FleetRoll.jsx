@@ -1,6 +1,19 @@
 import React, { useRef, useState, useEffect } from 'react';
 import siteContent from '../../data/siteContent.json';
+import tariffConfig from '../../data/tariff_config.json';
 import { Users, Luggage, ChevronRight } from 'lucide-react';
+
+const tariffVehicleSlugs = Object.keys(tariffConfig.vehicles || {}).map((name) =>
+    name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+);
+
+const getTariffLink = (vehicleName) => {
+    const slug = (vehicleName || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    if (tariffVehicleSlugs.includes(slug)) {
+        return `/tariff/#outstation-${slug}`;
+    }
+    return '/tariff/#outstation-rates';
+};
 
 const getBadge = (name) => {
     const v = (name || '').toLowerCase();
@@ -86,7 +99,7 @@ const FleetCard = ({ vehicle, isVisible, priority }) => {
             {/* Action Button */}
             <div className="p-3.5 sm:p-4 pt-0">
                 <a
-                    href="/tariff/"
+                    href={getTariffLink(vehicle.name)}
                     className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-full !bg-[#0B57D0] hover:!bg-[#0842A0] active:!bg-[#0842A0] !text-white text-xs font-bold transition-all cursor-pointer shadow-2xs group/btn"
                 >
                     <span>View Rates & Tariff</span>

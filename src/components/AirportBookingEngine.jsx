@@ -1,20 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  Plane, Car, Users, User, Calculator, LocateFixed, X,
+  Plane, Car, Users, User, Calculator, MapPin, X,
   ChevronDown, CheckCircle2, ShieldCheck, Navigation,
   Calendar, Phone, ArrowRight, Clock, AlertCircle, MessageSquare
 } from 'lucide-react';
+import LocationPicker from './LocationPicker';
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import { trackCalculatorQuote, markQuoteConverted } from '../lib/analytics';
+import tariffConfig from '../data/tariff_config.json';
+import tnBusFares from '../data/tnBusFares.json';
+import tripsData from '../data/trips.json';
 
-// ── Zone data ─────────────────────────────────────────────────────────────
-const AIRPORT_ZONES = [
+// ── Chennai Local Airport Zone Data (Flat Zone Packages) ────────────────────
+const AIRPORT_LOCAL_ZONES = [
   {
     name: 'South Chennai & Airport Vicinity',
     keywords: ['guindy','tambaram','pallavaram','velachery','chromepet','medavakkam',
       'porur','alandur','st. thomas mount','meenambakkam','nanmangalam','perungalathur',
-      'keelkattalai','madipakkam'],
+      'keelkattalai','madipakkam','nanganallur'],
     distanceKm: 12, duration: '15–25 mins',
     rates: { 'Swift Dzire': 650, 'Maruti Ertiga': 1150, 'Innova Crysta': 1500, 'Tempo Traveller': 2400 }
   },
@@ -22,44 +26,263 @@ const AIRPORT_ZONES = [
     name: 'Central Chennai & Downtown',
     keywords: ['t. nagar','t nagar','us consulate','anna nagar','nungambakkam','egmore',
       'central','mylapore','alwarpet','kodambakkam','vadapalani','chetpet','kilpauk',
-      'royapettah','triplicane','mount road','teynampet','gopalapuram','thousand lights'],
+      'royapettah','triplicane','mount road','teynampet','gopalapuram','thousand lights',
+      'saidapet','ashok nagar','kk nagar','k.k. nagar'],
     distanceKm: 22, duration: '30–45 mins',
     rates: { 'Swift Dzire': 950, 'Maruti Ertiga': 1550, 'Innova Crysta': 1950, 'Tempo Traveller': 2900 }
   },
   {
     name: 'OMR & IT Corridor (SIPCOT)',
     keywords: ['omr','perungudi','thoraipakkam','sholinganallur','navalur','siruseri',
-      'sipcot','elcot','kelambakkam','padur','karapakkam','semmancheri'],
+      'sipcot','elcot','kelambakkam','padur','karapakkam','semmancheri','kandanchavadi'],
     distanceKm: 18, duration: '25–40 mins',
     rates: { 'Swift Dzire': 1250, 'Maruti Ertiga': 1850, 'Innova Crysta': 2300, 'Tempo Traveller': 3400 }
   },
   {
     name: 'North Chennai & Port Industrial',
     keywords: ['parrys','broadway','madhavaram','ambattur','ennore','tondiarpet',
-      'tiruvottiyur','avadi','red hills','manali','kolathur','perambur','villivakkam'],
+      'tiruvottiyur','avadi','red hills','manali','kolathur','perambur','villivakkam',
+      'korukkupet','royapuram','washermanpet','george town'],
     distanceKm: 30, duration: '45–60 mins',
     rates: { 'Swift Dzire': 1350, 'Maruti Ertiga': 1950, 'Innova Crysta': 2450, 'Tempo Traveller': 3600 }
   },
   {
     name: 'ECR Coastal & Beach Resorts',
     keywords: ['ecr','mahabalipuram','mamallapuram','kovalam','nemmeli','muttukadu',
-      'intercontinental','radisson','taj fisherman','sheraton'],
+      'intercontinental','radisson','taj fisherman','sheraton','thiruvanmiyur','palavakkam',
+      'kottivakkam','neelankarai','injambakkam','akkarai','kanathur'],
     distanceKm: 45, duration: '45–60 mins',
     rates: { 'Swift Dzire': 1650, 'Maruti Ertiga': 2400, 'Innova Crysta': 2950, 'Tempo Traveller': 4200 }
-  },
-  {
-    name: 'Pondicherry & Auroville Direct',
-    keywords: ['pondicherry','pondy','auroville','puducherry','white town','promenade'],
-    distanceKm: 145, duration: '2.5–3 hrs',
-    rates: { 'Swift Dzire': 3900, 'Maruti Ertiga': 5600, 'Innova Crysta': 6800, 'Tempo Traveller': 8900 }
-  },
-  {
-    name: 'Vellore CMC & Tirupati Direct',
-    keywords: ['vellore','cmc','tirupati','vit','chittoor','ranipet'],
-    distanceKm: 135, duration: '3–3.5 hrs',
-    rates: { 'Swift Dzire': 4200, 'Maruti Ertiga': 6200, 'Innova Crysta': 7400, 'Tempo Traveller': 9800 }
-  },
+  }
 ];
+
+const AIRPORT_ZONES = AIRPORT_LOCAL_ZONES;
+
+// ── Known Distances from Chennai for Fast Resolution ────────────────────────
+const COMMON_DISTANCES_FROM_CHENNAI = {
+  'chennai': 0,
+  'pondicherry': 151,
+  'puducherry': 151,
+  'auroville': 148,
+  'bangalore': 346,
+  'bengaluru': 346,
+  'tirupati': 135,
+  'tirumala': 155,
+  'vellore': 137,
+  'kanchipuram': 75,
+  'mahabalipuram': 56,
+  'mamallapuram': 56,
+  'trichy': 332,
+  'tiruchirappalli': 332,
+  'madurai': 462,
+  'coimbatore': 505,
+  'salem': 340,
+  'thanjavur': 342,
+  'tirunelveli': 624,
+  'kanyakumari': 708,
+  'rameshwaram': 575,
+  'kodaikanal': 530,
+  'ooty': 555,
+  'munnar': 580,
+  'mysore': 480,
+  'mysuru': 480,
+  'tiruvannamalai': 195,
+  'thiruvannamalai': 195,
+  'chidambaram': 215,
+  'kumbakonam': 298,
+  'nagapattinam': 315,
+  'velankanni': 325,
+  'yelagiri': 230,
+  'yercaud': 365,
+  'hosur': 305,
+  'krishnagiri': 260,
+  'dharmapuri': 300,
+  'erode': 395,
+  'tirupur': 460,
+  'dindigul': 420,
+  'karur': 375,
+  'neyveli': 215,
+  'cuddalore': 180,
+  'villupuram': 165,
+  'chengalpattu': 55,
+  'tambaram': 30,
+  'sriperumbudur': 45,
+  'arakkonam': 70,
+  'tiruttani': 85,
+  'srikalahasti': 115,
+  'vijayawada': 450,
+  'nellore': 175,
+  'hyderabad': 630
+};
+
+const CHENNAI_FORMS = [
+  'chennai', 'airport', 'maa', 'tambaram', 'guindy', 'koyambedu', 'egmore', 'central',
+  'pallavaram', 'velachery', 'porur', 'annanagar', 'anna nagar', 't nagar', 't. nagar',
+  'sholinganallur', 'omr', 'ecr', 'perungudi', 'thiruvanmiyur', 'adyar', 'mylapore',
+  'chromepet', 'medavakkam', 'madipakkam', 'alandur', 'vadapalani', 'ambattur', 'avadi',
+  'poonamallee', 'kolathur', 'redhills', 'kilpauk', 'nungambakkam', 'triplicane', 'royapettah'
+];
+
+const findKnownDistance = (origin, destination) => {
+  const o = (origin || '').toLowerCase().trim();
+  const d = (destination || '').toLowerCase().trim();
+  if (!o || !d) return null;
+
+  // 1. Check tnBusFares table
+  const busRoute = tnBusFares.find(r => 
+    (o.includes(r.source) && d.includes(r.destination)) ||
+    (o.includes(r.destination) && d.includes(r.source))
+  );
+  if (busRoute) {
+    const km = busRoute.distanceKm;
+    return {
+      distance: km,
+      duration: `~${Math.max(1, Math.round(km / 55))} hrs drive`
+    };
+  }
+
+  // 2. Check trips.json
+  const trip = tripsData.find(t => {
+    const key = t.title.toLowerCase().split(' ')[0];
+    return o.includes(key) || d.includes(key);
+  });
+  if (trip && trip.kmOneWay) {
+    return {
+      distance: trip.kmOneWay,
+      duration: trip.duration || `~${Math.max(1, Math.round(trip.kmOneWay / 55))} hrs drive`
+    };
+  }
+
+  // 3. Check COMMON_DISTANCES_FROM_CHENNAI
+  const isOChennai = CHENNAI_FORMS.some(k => o.includes(k));
+  const isDChennai = CHENNAI_FORMS.some(k => d.includes(k));
+
+  if (isOChennai || isDChennai) {
+    const other = isOChennai ? d : o;
+    for (const [city, km] of Object.entries(COMMON_DISTANCES_FROM_CHENNAI)) {
+      if (city !== 'chennai' && km > 0 && other.includes(city)) {
+        return {
+          distance: km,
+          duration: `~${Math.max(1, Math.round(km / 55))} hrs drive`
+        };
+      }
+    }
+  }
+
+  return null;
+};
+
+// Road extras estimation (Tolls & State Border Permits)
+const estimateRoadExtras = (pickup, drop, distanceKm) => {
+  const text = `${(pickup || '').toLowerCase()} ${(drop || '').toLowerCase()}`;
+  let stateName = 'Tamil Nadu';
+  let statePermitEst = 0;
+  let tollsEst = 0;
+
+  if (text.includes('tirupati') || text.includes('tirumala') || text.includes('andhra') || text.includes('kalahasti') || text.includes('nellore') || text.includes('chittoor')) {
+    stateName = 'Andhra Pradesh';
+    statePermitEst = 500;
+    tollsEst = 220;
+  } else if (text.includes('bangalore') || text.includes('bengaluru') || text.includes('karnataka') || text.includes('mysore') || text.includes('hosur')) {
+    stateName = 'Karnataka';
+    statePermitEst = 700;
+    tollsEst = 250;
+  } else if (text.includes('pondicherry') || text.includes('puducherry') || text.includes('auroville')) {
+    stateName = 'Puducherry (UT)';
+    statePermitEst = 0;
+    tollsEst = 130;
+  } else if (text.includes('kerala') || text.includes('munnar') || text.includes('cochin') || text.includes('kochi')) {
+    stateName = 'Kerala';
+    statePermitEst = 800;
+    tollsEst = 350;
+  } else {
+    stateName = 'Tamil Nadu';
+    statePermitEst = 0;
+    tollsEst = Math.round(((distanceKm || 0) * 0.85) / 10) * 10;
+    if (tollsEst < 80 && (distanceKm || 0) >= 50) tollsEst = 80;
+  }
+
+  return { stateName, statePermitEst, tollsEst, totalExtras: tollsEst + statePermitEst };
+};
+
+// ── Unified Airport Transfer Fare Engine ─────────────────────────────────────
+// Calculates transparent flat packages for local Chennai zones and standard
+// outstation per-km rates for destinations across South India.
+const calculateAirportFare = ({ userLocation, selectedVehicle, currentDistanceKm, currentDuration }) => {
+  const q = (userLocation || '').toLowerCase().trim();
+  const known = findKnownDistance(AIRPORT_HUB, q);
+  const resolvedKm = currentDistanceKm || (known ? known.distance : null);
+
+  // 1. Check local Chennai city zones
+  const matchedLocalZone = AIRPORT_LOCAL_ZONES.find(z => z.keywords.some(kw => q.includes(kw)));
+  
+  // An address is local ONLY IF:
+  // - It matched a known local Chennai keyword AND (distance is unknown or <= 45 km)
+  // - OR resolved road distance is < 45 km and not a recognized outstation destination
+  const isCity = matchedLocalZone && (!resolvedKm || resolvedKm <= 45);
+
+  if (isCity) {
+    const zone = matchedLocalZone || (
+      resolvedKm <= 15 ? AIRPORT_LOCAL_ZONES[0] :
+      resolvedKm <= 28 ? AIRPORT_LOCAL_ZONES[1] :
+      resolvedKm <= 35 ? AIRPORT_LOCAL_ZONES[2] :
+      resolvedKm <= 40 ? AIRPORT_LOCAL_ZONES[3] : AIRPORT_LOCAL_ZONES[4]
+    );
+    const finalRate = zone.rates[selectedVehicle] || 650;
+    return {
+      isOutstation: false,
+      zone,
+      zoneName: zone.name,
+      distanceKm: resolvedKm || zone.distanceKm,
+      duration: currentDuration || zone.duration,
+      estimate: finalRate,
+      breakdown: {
+        type: 'flat_package',
+        inclusions: 'Includes fuel, airport parking, tolls & GST',
+        payment: 'Pay after trip'
+      }
+    };
+  }
+
+  // 2. OUTSTATION TRIP (e.g. Madurai, Trichy, Coimbatore, Bangalore, Pondicherry, Vellore, etc.)
+  // Strictly follows official Kalidass outstation per-km tariffs + driver bata
+  const outstationKm = resolvedKm || (known ? known.distance : 130);
+  const vData = tariffConfig.vehicles[selectedVehicle] || tariffConfig.vehicles['Swift Dzire'];
+  const minDropKm = vData.min_drop_km || (selectedVehicle.includes('Tempo') ? 250 : 130);
+  const chargeableKm = Math.max(minDropKm, outstationKm);
+  const oneWayRate = vData.one_way_rate;
+  const driverBata = vData.driver_bata;
+  const kmCost = chargeableKm * oneWayRate;
+  const totalCost = kmCost + driverBata;
+  const finalRate = Math.round(totalCost / 10) * 10;
+
+  const drivingHours = Math.max(1, Math.round((outstationKm / 55) * 10) / 10);
+  const outDuration = currentDuration || `~${Math.round(drivingHours)} hrs drive`;
+  const extras = estimateRoadExtras(AIRPORT_HUB, userLocation, outstationKm);
+
+  const cityName = userLocation.split(',')[0].trim();
+
+  return {
+    isOutstation: true,
+    zone: null,
+    zoneName: `${cityName} (Outstation Transfer)`,
+    distanceKm: outstationKm,
+    duration: outDuration,
+    estimate: finalRate,
+    breakdown: {
+      type: 'outstation_rate',
+      chargeableKm,
+      oneWayRate,
+      driverBata,
+      kmCost,
+      tollsEst: extras.tollsEst,
+      stateName: extras.stateName,
+      statePermitEst: extras.statePermitEst,
+      inclusions: `₹${oneWayRate}/km (${chargeableKm} km min billed) + Driver Bata ₹${driverBata}`,
+      payment: 'Pay after trip'
+    }
+  };
+};
 
 const VEHICLE_SPECS = {
   'Swift Dzire':     { tag: 'Sedan',        caps: '4 Pax + 2 Bags', pax: '4' },
@@ -118,6 +341,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
   const [countryCode, setCountryCode] = useState('+91');
 
   const [matchedZone, setMatchedZone] = useState(null);
+  const [tripFare,    setTripFare]    = useState(null);
   const [estimate,    setEstimate]    = useState(0);
   const [distanceKm,  setDistanceKm]  = useState(0);
   const [duration,    setDuration]    = useState('');
@@ -149,6 +373,21 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
     return () => window.removeEventListener('airport-set-vehicle', onSetVehicle);
   }, []);
 
+  // Recalculate fare when vehicle changes if result or modal is active
+  useEffect(() => {
+    const userLoc = (direction === 'pickup' ? drop : pickup).trim();
+    if (userLoc && userLoc !== AIRPORT_HUB && (showResult || showBookingModal)) {
+      const fareResult = calculateAirportFare({
+        userLocation: userLoc,
+        selectedVehicle: vehicle,
+        currentDistanceKm: distanceKm,
+        currentDuration: duration
+      });
+      setEstimate(fareResult.estimate);
+      setTripFare(fareResult);
+    }
+  }, [vehicle]);
+
   // ── Sticky bar ─────────────────────────────────────────────────────────
   useEffect(() => {
     if (!enableStickyBar || !cardRef.current) return;
@@ -163,6 +402,46 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
     return () => obs.disconnect();
   }, [enableStickyBar]);
 
+  // ── Distance resolver helper ───────────────────────────────────────────
+  const resolveTripDistance = (addr) => {
+    const clean = (addr || '').trim();
+    if (!clean || clean === AIRPORT_HUB) return;
+
+    // 1. Check known lookup table
+    const known = findKnownDistance(AIRPORT_HUB, clean);
+    if (known) {
+      setDistanceKm(known.distance);
+      setDuration(known.duration);
+      return;
+    }
+
+    // 2. Query Google Distance Matrix
+    if (typeof window !== 'undefined' && window.google?.maps?.DistanceMatrixService) {
+      try {
+        const service = new window.google.maps.DistanceMatrixService();
+        service.getDistanceMatrix(
+          {
+            origins: [direction === 'pickup' ? AIRPORT_HUB : clean],
+            destinations: [direction === 'pickup' ? clean : AIRPORT_HUB],
+            travelMode: window.google.maps.TravelMode.DRIVING,
+            unitSystem: window.google.maps.UnitSystem.METRIC,
+          },
+          (response, status) => {
+            if (
+              status === 'OK' &&
+              response?.rows?.[0]?.elements?.[0]?.status === 'OK'
+            ) {
+              const el = response.rows[0].elements[0];
+              const dist = Math.round((el.distance.value / 1000) * 10) / 10;
+              setDistanceKm(dist);
+              setDuration(el.duration.text);
+            }
+          }
+        );
+      } catch (_) {}
+    }
+  };
+
   // ── Direction swap ──────────────────────────────────────────────────────
   const handleDirectionChange = (dir) => {
     if (dir === direction) return;
@@ -173,10 +452,12 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
       const loc = pickup === AIRPORT_HUB ? '' : pickup;
       setPickup(AIRPORT_HUB);
       setDrop(loc);
+      if (loc) resolveTripDistance(loc);
     } else {
       const loc = drop === AIRPORT_HUB ? '' : drop;
       setPickup(loc);
       setDrop(AIRPORT_HUB);
+      if (loc) resolveTripDistance(loc);
     }
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('airport-direction-change', { detail: { direction: dir } }));
@@ -200,6 +481,16 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
           direction === 'pickup' ? setDrop(addr) : setPickup(addr);
           setShowResult(false);
           setError('');
+
+          // 1. Check known lookup table
+          const known = findKnownDistance(AIRPORT_HUB, addr);
+          if (known) {
+            setDistanceKm(known.distance);
+            setDuration(known.duration);
+            return;
+          }
+
+          // 2. Haversine calculation for immediate accurate feedback
           if (place.geometry?.location) {
             const lat = place.geometry.location.lat();
             const lng = place.geometry.location.lng();
@@ -209,22 +500,49 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
             const dLng = rad(lng - 80.1709);
             const a = Math.sin(dLat/2)**2 + Math.cos(rad(12.9941))*Math.cos(rad(lat))*Math.sin(dLng/2)**2;
             const roadKm = Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)) * 1.35);
-            const zone =
-              roadKm <= 15 ? AIRPORT_ZONES[0] :
-              roadKm <= 28 ? AIRPORT_ZONES[1] :
-              roadKm <= 40 ? AIRPORT_ZONES[2] :
-              roadKm <= 55 ? AIRPORT_ZONES[3] :
-              roadKm <= 80 ? AIRPORT_ZONES[4] :
-              roadKm <= 150? AIRPORT_ZONES[5] : AIRPORT_ZONES[6];
-            setMatchedZone(zone);
+
             setDistanceKm(roadKm);
-            setDuration(`~${Math.max(15, Math.round(roadKm * 1.8))} mins`);
+            if (roadKm <= 45) {
+              const zone =
+                roadKm <= 15 ? AIRPORT_LOCAL_ZONES[0] :
+                roadKm <= 28 ? AIRPORT_LOCAL_ZONES[1] :
+                roadKm <= 35 ? AIRPORT_LOCAL_ZONES[2] :
+                roadKm <= 40 ? AIRPORT_LOCAL_ZONES[3] : AIRPORT_LOCAL_ZONES[4];
+              setMatchedZone(zone);
+              setDuration(`~${Math.max(15, Math.round(roadKm * 1.8))} mins`);
+            } else {
+              setMatchedZone(null);
+              const hrs = Math.max(1, Math.round((roadKm / 55) * 10) / 10);
+              setDuration(`~${Math.round(hrs)} hrs drive`);
+            }
           }
+
+          // 3. Refine via DistanceMatrix if possible
+          resolveTripDistance(addr);
         });
       }).catch(() => {});
     }, 50);
     return () => { isMounted = false; clearTimeout(timer); };
   }, [direction]);
+
+  // ── Map Pinpoint Selection ──────────────────────────────────────────────
+  const [locationPickerOpen, setLocationPickerOpen] = useState(false);
+  const handlePinClick = () => {
+    loadGoogleMaps().catch(() => {});
+    setLocationPickerOpen(true);
+  };
+  const handleLocationConfirm = (address) => {
+    const clean = address ? address.trim() : '';
+    if (direction === 'drop') {
+      setPickup(clean);
+    } else {
+      setDrop(clean);
+    }
+    setLocationPickerOpen(false);
+    setError('');
+    setShowResult(false);
+    if (clean) resolveTripDistance(clean);
+  };
 
   // ── GPS ─────────────────────────────────────────────────────────────────
   const handleGPS = () => {
@@ -238,8 +556,10 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
             { location: { lat, lng } },
             (res, status) => {
               if (status === 'OK' && res[0]) {
-                direction === 'pickup' ? setDrop(res[0].formatted_address) : setPickup(res[0].formatted_address);
+                const addr = res[0].formatted_address;
+                direction === 'pickup' ? setDrop(addr) : setPickup(addr);
                 setShowResult(false);
+                resolveTripDistance(addr);
               }
             }
           );
@@ -272,24 +592,36 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
     const userLoc = (direction === 'pickup' ? drop : pickup).trim();
     if (!userLoc || userLoc === AIRPORT_HUB) {
       setError(direction === 'pickup'
-        ? 'Please enter your drop location / hotel in Chennai'
-        : 'Please enter your pickup doorstep / area in Chennai');
+        ? 'Please enter your drop location / hotel in Chennai or Outstation'
+        : 'Please enter your pickup doorstep / area in Chennai or Outstation');
       destInputRef.current?.focus();
       return;
     }
     setError('');
     setLoading(true);
+
     setTimeout(() => {
-      const q = userLoc.toLowerCase();
-      let zone = matchedZone;
-      if (!zone || !zone.keywords?.some(kw => q.includes(kw))) {
-        zone = AIRPORT_ZONES.find(z => z.keywords.some(kw => q.includes(kw))) || AIRPORT_ZONES[1];
+      // 1. Resolve distance from known table if not already set or if default city distance was held
+      let effKm = distanceKm;
+      let effDur = duration;
+      const known = findKnownDistance(AIRPORT_HUB, userLoc);
+      if (known && (!effKm || effKm <= 45)) {
+        effKm = known.distance;
+        effDur = known.duration;
       }
-      const finalRate = zone.rates[vehicle] || 650;
-      setMatchedZone(zone);
-      setEstimate(finalRate);
-      setDistanceKm(zone.distanceKm);
-      setDuration(zone.duration);
+
+      const fareResult = calculateAirportFare({
+        userLocation: userLoc,
+        selectedVehicle: vehicle,
+        currentDistanceKm: effKm,
+        currentDuration: effDur
+      });
+
+      setMatchedZone(fareResult.zone);
+      setEstimate(fareResult.estimate);
+      setDistanceKm(fareResult.distanceKm);
+      setDuration(fareResult.duration);
+      setTripFare(fareResult);
       setLoading(false);
       setModalErrors({});
       setShowBookingModal(true); // open modal with result + booking form
@@ -297,17 +629,23 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
       trackCalculatorQuote({
         calculatorId: 'airport_taxi',
         calculatorEngine: 'Chennai Airport Taxi Estimator',
-        tripType: direction === 'pickup' ? 'Airport Pickup (To City)' : 'Airport Drop (To Airport)',
+        tripType: direction === 'pickup'
+          ? (fareResult.isOutstation ? 'Airport Outstation Pickup' : 'Airport Pickup (To City)')
+          : (fareResult.isOutstation ? 'Airport Outstation Drop' : 'Airport Drop (To Airport)'),
         pickup: direction === 'pickup' ? AIRPORT_HUB : userLoc,
         drop: direction === 'pickup' ? userLoc : AIRPORT_HUB,
         vehicle,
-        distanceKm: zone.distanceKm,
-        estimatedFare: finalRate,
+        distanceKm: fareResult.distanceKm,
+        estimatedFare: fareResult.estimate,
         meta: {
           direction,
-          zone: zone.name,
+          isOutstation: fareResult.isOutstation,
+          zone: fareResult.zoneName,
           flightNo: flightNo || undefined,
-          duration: zone.duration
+          duration: fareResult.duration,
+          chargeableKm: fareResult.breakdown?.chargeableKm,
+          ratePerKm: fareResult.breakdown?.oneWayRate,
+          driverBata: fareResult.breakdown?.driverBata
         }
       });
     }, 280);
@@ -340,7 +678,8 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
           distance: distanceKm,
           estimate,
           travelDate: dateTime,
-          flightNo
+          flightNo,
+          isOutstation: tripFare?.isOutstation || false
         })
       }).catch(() => {});
     } catch (_) {}
@@ -364,14 +703,22 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
     const fullPhone = `${countryCode} ${phone.trim()}`;
     logBookingLead(isPickup, fullPhone);
 
+    const isOutstation = tripFare?.isOutstation;
     const msg = [
       `*Chennai Airport Cab Reservation — Kalidass Travels*`,
       `• *Passenger:* ${name.trim()} | ${fullPhone}`,
-      `• *Type:* ${isPickup ? 'Airport PICKUP (Meet & Greet at MAA)' : 'Airport DROP (To Departure Terminal)'}`,
+      `• *Type:* ${isPickup 
+        ? (isOutstation ? 'Airport Outstation PICKUP (Meet & Greet at MAA)' : 'Airport PICKUP (Meet & Greet at MAA)') 
+        : (isOutstation ? 'Airport Outstation DROP (To Departure Terminal)' : 'Airport DROP (To Departure Terminal)')}`,
       `• *Route:* ${pickup} ➔ ${drop}`,
+      `• *Distance:* ${distanceKm} km (${duration})`,
       `• *Vehicle:* ${vehicle} (${VEHICLE_SPECS[vehicle].caps})`,
-      `• *Fare:* ₹${estimate.toLocaleString('en-IN')}${currNote} — All-Inclusive Package`,
-      `• *Includes:* Fuel, Tolls, Airport Parking & GST Invoice`,
+      isOutstation
+        ? `• *Estimated Fare:* ₹${estimate.toLocaleString('en-IN')}${currNote} (${tripFare.breakdown.chargeableKm} km @ ₹${tripFare.breakdown.oneWayRate}/km + Driver Bata ₹${tripFare.breakdown.driverBata})`
+        : `• *Fare:* ₹${estimate.toLocaleString('en-IN')}${currNote} — All-Inclusive Package`,
+      isOutstation
+        ? `• *Includes:* Dedicated AC Car, Chauffeur Duty & Fuel (Tolls & State Permits at actuals on route)`
+        : `• *Includes:* Fuel, Tolls, Airport Parking & GST Invoice`,
       `• *Date & Time:* ${dateTime.replace('T', ' ')}`,
       flightNo ? `• *Flight No:* ${flightNo}` : null,
       `• *Payment:* Pay After Trip — Zero Advance`,
@@ -399,13 +746,17 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
     const fullPhone = `${countryCode} ${phone.trim()}`;
     logBookingLead(isPickup, fullPhone);
 
+    const isOutstation = tripFare?.isOutstation;
     const msg = [
       `Chennai Airport Taxi Booking — Kalidass Travels`,
       `Passenger: ${name.trim()} (${fullPhone})`,
-      `Transfer: ${isPickup ? 'Airport Pickup (MAA Arrival)' : 'Airport Drop (MAA Departure)'}`,
+      `Transfer: ${isPickup ? (isOutstation ? 'Airport Outstation Pickup (MAA Arrival)' : 'Airport Pickup (MAA Arrival)') : (isOutstation ? 'Airport Outstation Drop (MAA Departure)' : 'Airport Drop (MAA Departure)')}`,
       `Route: ${pickup} to ${drop}`,
+      `Distance: ${distanceKm} km (${duration})`,
       `Vehicle: ${vehicle} (${VEHICLE_SPECS[vehicle].caps})`,
-      `Fare: Rs. ${estimate.toLocaleString('en-IN')}${currNote} (All-Inclusive)`,
+      isOutstation
+        ? `Fare: Rs. ${estimate.toLocaleString('en-IN')}${currNote} (${tripFare.breakdown.chargeableKm} km @ Rs. ${tripFare.breakdown.oneWayRate}/km + Bata Rs. ${tripFare.breakdown.driverBata})`
+        : `Fare: Rs. ${estimate.toLocaleString('en-IN')}${currNote} (All-Inclusive)`,
       `Pickup Date/Time: ${dateTime.replace('T', ' ')}`,
       flightNo ? `Flight No: ${flightNo}` : null,
       `Payment: Pay after trip (Zero advance)`,
@@ -557,10 +908,14 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                   </button>
                 )}
                 {direction === 'drop' && (
-                  <button type="button" onClick={handleGPS} disabled={gettingLoc}
-                    className="w-7 h-7 flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-sm text-m3-on-surface-variant hover:text-m3-primary transition-colors"
-                    title="Use current location">
-                    <LocateFixed className={`w-4 h-4 ${gettingLoc ? 'animate-spin text-m3-primary' : ''}`} />
+                  <button
+                    type="button"
+                    onClick={handlePinClick}
+                    className="w-7 h-7 flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-sm text-m3-primary hover:bg-m3-primary/10 transition-colors cursor-pointer"
+                    title="Pinpoint on map"
+                    aria-label="Pinpoint on map"
+                  >
+                    <MapPin className="w-4 h-4 text-m3-primary" />
                   </button>
                 )}
                 {direction === 'pickup' && (
@@ -598,10 +953,14 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                   </button>
                 )}
                 {direction === 'pickup' && (
-                  <button type="button" onClick={handleGPS} disabled={gettingLoc}
-                    className="w-7 h-7 flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-sm text-m3-on-surface-variant hover:text-m3-primary transition-colors"
-                    title="Use current location">
-                    <LocateFixed className={`w-4 h-4 ${gettingLoc ? 'animate-spin text-m3-primary' : ''}`} />
+                  <button
+                    type="button"
+                    onClick={handlePinClick}
+                    className="w-7 h-7 flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-sm text-m3-primary hover:bg-m3-primary/10 transition-colors cursor-pointer"
+                    title="Pinpoint on map"
+                    aria-label="Pinpoint on map"
+                  >
+                    <MapPin className="w-4 h-4 text-m3-primary" />
                   </button>
                 )}
                 {direction === 'drop' && (
@@ -758,9 +1117,16 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                 <div className="bg-m3-surface-container-low p-3 rounded-m3-lg border border-m3-outline-variant space-y-1.5">
                   {/* Row 1: Destination + Distance/Time */}
                   <div className="flex items-center justify-between gap-2 text-xs">
-                    <span className="font-bold text-m3-on-surface truncate">
-                      {matchedZone?.name || (direction === 'pickup' ? drop : pickup)}
-                    </span>
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <span className="font-bold text-m3-on-surface truncate">
+                        {tripFare?.zoneName || matchedZone?.name || (direction === 'pickup' ? drop : pickup)}
+                      </span>
+                      {tripFare?.isOutstation && (
+                        <span className="shrink-0 px-1.5 py-0.5 rounded-full bg-m3-primary/10 text-m3-primary text-[10px] font-bold">
+                          Outstation Drop
+                        </span>
+                      )}
+                    </div>
                     <span className="text-[11px] text-m3-on-surface-variant shrink-0 font-medium whitespace-nowrap">
                       {distanceKm} km · {duration}
                     </span>
@@ -791,11 +1157,24 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                     </div>
                   </div>
 
-                  {/* Row 3: Inclusions */}
-                  <div className="flex items-center justify-between text-[11px] text-m3-on-success-container bg-m3-success-container/50 border border-m3-success/30 px-2.5 py-1 rounded-m3-md font-medium">
-                    <span>Includes tolls, parking, fuel & GST</span>
-                    <span className="font-semibold text-m3-success">Pay after trip</span>
-                  </div>
+                  {/* Row 3: Inclusions / Terms */}
+                  {tripFare?.isOutstation ? (
+                    <div className="space-y-1 pt-1">
+                      <div className="flex items-center justify-between text-[11px] text-m3-on-surface-variant bg-m3-surface-container border border-m3-outline-variant/60 px-2.5 py-1 rounded-m3-md font-medium">
+                        <span>Rate: ₹{tripFare.breakdown?.oneWayRate}/km ({tripFare.breakdown?.chargeableKm} km min) + Bata ₹{tripFare.breakdown?.driverBata}</span>
+                        <span className="font-semibold text-m3-primary">One-Way Drop</span>
+                      </div>
+                      <div className="flex items-center justify-between text-[11px] text-m3-on-success-container bg-m3-success-container/50 border border-m3-success/30 px-2.5 py-1 rounded-m3-md font-medium">
+                        <span>Tolls/Permits at actuals • Fuel & Driver duty included</span>
+                        <span className="font-semibold text-m3-success">Pay after trip</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between text-[11px] text-m3-on-success-container bg-m3-success-container/50 border border-m3-success/30 px-2.5 py-1 rounded-m3-md font-medium">
+                      <span>Includes tolls, parking, fuel & GST</span>
+                      <span className="font-semibold text-m3-success">Pay after trip</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Booking Inputs — each in a separate row */}
@@ -948,6 +1327,15 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
         </>
       )}
 
+      {locationPickerOpen && (
+        <LocationPicker
+          isOpen={locationPickerOpen}
+          onClose={() => setLocationPickerOpen(false)}
+          onConfirm={handleLocationConfirm}
+          type={direction === 'drop' ? 'pickup' : 'drop'}
+          initialAddress={direction === 'drop' ? pickup : drop}
+        />
+      )}
     </>
   );
 }

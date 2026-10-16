@@ -45,18 +45,18 @@ test.describe('Outstation Car Card Fare Calculator & Booking Modal', () => {
     await pickupInput.blur();
 
     // 8. Distance & cost calculation should resolve
-    await expect(modal.locator('text=~302 km Round Trip')).toBeVisible();
+    await expect(modal.locator('text=~302 km Round Trip').first()).toBeVisible();
     
     // Net total should be visible (302 km * 17 = 5134 -> rounded to 5130 + 500 bata = 5630 or 320km)
     const priceText = modal.locator('.font-heading:has-text("₹")').first();
     await expect(priceText).toBeVisible();
 
     // 9. Verify Itemized Fare Breakdown is visible
-    await expect(modal.locator('text=Dedicated AC Vehicle (Maruti Ertiga / XL6):')).toBeVisible();
-    await expect(modal.locator('text=Chauffeur Duty & Bata (1 Day):')).toBeVisible();
-    await expect(modal.locator('text=Advance Booking Token:')).toBeVisible();
-    await expect(modal.locator('text=₹500 to Confirm Booking')).toBeVisible();
-    await expect(modal.locator('text=Balance on Completion:')).toBeVisible();
+    await expect(modal.locator('text=Cab Hire (Maruti Ertiga / XL6 • Fuel included):')).toBeVisible();
+    await expect(modal.locator('text=Driver Allowance (1 Day):')).toBeVisible();
+    await expect(modal.locator('text=Total Bill:')).toBeVisible();
+    await expect(modal.locator('text=Advance to Pay:')).toBeVisible();
+    await expect(modal.locator('text=Balance to Pay Driver:')).toBeVisible();
 
     // 10. Verify Action Buttons: Book on WhatsApp & Call
     const waBookBtn = modal.locator('button:has-text("Book on WhatsApp")');

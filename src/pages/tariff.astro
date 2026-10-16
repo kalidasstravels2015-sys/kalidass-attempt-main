@@ -60,6 +60,9 @@ const vehicleBadges: Record<string, string> = {
   "Tempo Traveller": "Group Travel Special",
 };
 
+const getVehicleSlug = (name: string) =>
+  (name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
 // Schema.org structured data for machine-readable tariff pricing
 const tariffSchema = {
   "@type": "OfferCatalog",
@@ -235,7 +238,11 @@ const faqSchema = {
             </thead>
             <tbody class="divide-y divide-m3-outline-variant/40">
               {vehicles.map(([name, v]: [string, any], i) => (
-                <tr class={i % 2 === 0 ? "bg-m3-surface hover:bg-m3-surface-container transition-colors" : "bg-m3-surface-container-lowest hover:bg-m3-surface-container transition-colors"}>
+                <tr
+                  id={`local-row-${getVehicleSlug(name)}`}
+                  data-vehicle-slug={getVehicleSlug(name)}
+                  class={`scroll-mt-36 sm:scroll-mt-40 transition-colors ${i % 2 === 0 ? "bg-m3-surface hover:bg-m3-surface-container" : "bg-m3-surface-container-lowest hover:bg-m3-surface-container"}`}
+                >
                   <td class={`px-5 py-3.5 font-bold text-m3-on-surface sticky left-0 z-10 font-heading ${i % 2 === 0 ? "bg-m3-surface" : "bg-m3-surface-container-lowest"}`}>
                     <div class="flex items-center gap-3">
                       <div class="w-14 h-9 shrink-0 flex items-center justify-center bg-m3-surface-container-low rounded-m3-md p-1 border border-m3-outline-variant/50">
@@ -322,7 +329,11 @@ Please share availability and final quote.`)}
         <div id="local-cards-view" class="block md:hidden">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {vehicles.map(([name, v]: [string, any]) => (
-              <div class="bg-m3-surface rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between hover:shadow-m3-2 transition-all">
+              <div
+                id={`local-${getVehicleSlug(name)}`}
+                data-vehicle-slug={getVehicleSlug(name)}
+                class="scroll-mt-36 sm:scroll-mt-40 bg-m3-surface rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between hover:shadow-m3-2 transition-all"
+              >
                 <div>
                   <!-- Header with vehicle name, badge, and prominent CAR IMAGE -->
                   <div class="flex items-center justify-between gap-3 mb-3.5">
@@ -472,7 +483,11 @@ Please share availability and final quote.`)}
             </thead>
             <tbody class="divide-y divide-m3-outline-variant/40">
               {vehicles.map(([name, v]: [string, any], i) => (
-                <tr class={i % 2 === 0 ? "bg-m3-surface hover:bg-m3-surface-container transition-colors" : "bg-m3-surface-container-lowest hover:bg-m3-surface-container transition-colors"}>
+                <tr
+                  id={`outstation-row-${getVehicleSlug(name)}`}
+                  data-vehicle-slug={getVehicleSlug(name)}
+                  class={`scroll-mt-36 sm:scroll-mt-40 transition-colors ${i % 2 === 0 ? "bg-m3-surface hover:bg-m3-surface-container" : "bg-m3-surface-container-lowest hover:bg-m3-surface-container"}`}
+                >
                   <td class={`px-5 py-3.5 font-bold text-m3-on-surface sticky left-0 z-10 font-heading ${i % 2 === 0 ? "bg-m3-surface" : "bg-m3-surface-container-lowest"}`}>
                     <div class="flex items-center gap-3">
                       <div class="w-14 h-9 shrink-0 flex items-center justify-center bg-m3-surface-container-low rounded-m3-md p-1 border border-m3-outline-variant/50">
@@ -541,7 +556,11 @@ Please share total fare estimation and availability.`)}
         <div id="outstation-cards-view" class="block md:hidden">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 font-sans">
             {vehicles.map(([name, v]: [string, any]) => (
-              <div class="bg-m3-surface rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between hover:shadow-m3-2 transition-all">
+              <div
+                id={`outstation-${getVehicleSlug(name)}`}
+                data-vehicle-slug={getVehicleSlug(name)}
+                class="scroll-mt-36 sm:scroll-mt-40 bg-m3-surface rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between hover:shadow-m3-2 transition-all"
+              >
                 <div>
                   <!-- Header with vehicle name, badge, and prominent CAR IMAGE -->
                   <div class="flex items-center justify-between gap-3 mb-3.5">
@@ -628,9 +647,50 @@ Please share total fare estimation and availability.`)}
         </p>
       </div>
 
-      <!-- Interactive View Switcher Script (Cards View / Table View) -->
+      <!-- Interactive View Switcher & Vehicle Deep-Link Script -->
       <script is:inline>
         (function() {
+          function scrollToHashTarget() {
+            const hash = window.location.hash;
+            if (!hash) return;
+
+            // Match #outstation-[slug] or #local-[slug]
+            const outstationMatch = hash.match(/^#outstation-([a-z0-9-]+)$/);
+            const localMatch = hash.match(/^#local-([a-z0-9-]+)$/);
+            const match = outstationMatch || localMatch;
+
+            if (match) {
+              const section = outstationMatch ? 'outstation' : 'local';
+              const rawSlug = match[1].replace(/^row-/, '');
+              const cardId = `${section}-${rawSlug}`;
+              const rowId = `${section}-row-${rawSlug}`;
+
+              const isDesktop = window.innerWidth >= 768;
+              const cardsContainer = document.getElementById(`${section}-cards-view`);
+              const isCardsVisible = cardsContainer && (window.getComputedStyle(cardsContainer).display !== 'none');
+
+              let target = null;
+              if (isDesktop && !isCardsVisible) {
+                target = document.getElementById(rowId) || document.getElementById(cardId);
+              } else {
+                target = document.getElementById(cardId) || document.getElementById(rowId);
+              }
+
+              if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                target.classList.add('tariff-highlight-active');
+                setTimeout(() => {
+                  target.classList.remove('tariff-highlight-active');
+                }, 2800);
+              }
+            } else if (hash.length > 1) {
+              const el = document.querySelector(hash);
+              if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+            }
+          }
+
           function initSwitchers() {
             function setupSwitcher(btnTableId, btnCardsId, tableId, cardsId) {
               const btnTable = document.getElementById(btnTableId);
@@ -680,12 +740,20 @@ Please share total fare estimation and availability.`)}
             setupSwitcher('outstation-btn-table', 'outstation-btn-cards', 'outstation-table-view', 'outstation-cards-view');
           }
 
-          if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initSwitchers);
-          } else {
+          function init() {
             initSwitchers();
+            setTimeout(scrollToHashTarget, 100);
+            setTimeout(scrollToHashTarget, 400);
           }
-          document.addEventListener('astro:page-load', initSwitchers);
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+          } else {
+            init();
+          }
+
+          window.addEventListener('hashchange', scrollToHashTarget);
+          document.addEventListener('astro:page-load', init);
         })();
       </script>
 
@@ -805,3 +873,20 @@ Please share total fare estimation and availability.`)}
     </div>
   </div>
 </Layout>
+
+<style>
+  :global(.tariff-highlight-active) {
+    outline: 2.5px solid #0B57D0 !important;
+    outline-offset: 3px !important;
+    box-shadow: 0 0 0 4px rgba(11, 87, 208, 0.22), 0 12px 28px -4px rgba(11, 87, 208, 0.25) !important;
+    transform: translateY(-2px);
+    transition: all 0.4s ease;
+  }
+
+  #outstation-cards-view > div:target,
+  #local-cards-view > div:target {
+    outline: 2.5px solid #0B57D0;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px rgba(11, 87, 208, 0.22), 0 12px 28px -4px rgba(11, 87, 208, 0.25);
+  }
+</style>

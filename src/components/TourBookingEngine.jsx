@@ -13,15 +13,16 @@ import {
   FileText,
   Printer,
   Download,
-  Receipt,
   AlertCircle,
   User,
   ChevronDown,
   ChevronRight,
-  LocateFixed,
   Info,
-  Calculator
+  Calculator,
+  Clock,
+  Receipt
 } from 'lucide-react';
+import LocationPicker from './LocationPicker';
 import WhatsAppButton from './react/WhatsAppButton.jsx';
 import { buildWhatsAppUrl } from '../utils/whatsapp';
 import { trackEvent } from '../lib/analytics';
@@ -117,6 +118,7 @@ export default function TourBookingEngine({
   const effectiveServiceTitle = serviceTitle || config.serviceTitle;
   const isTirupati = serviceSlug === 'tirupati-package' || config.slug === 'tirupati-package';
   const isPondicherry = serviceSlug === 'pondicherry-one-day-trip' || config.slug === 'pondicherry-one-day-trip';
+  const isSabarimala = serviceSlug === 'sabarimala-pilgrimage' || config.slug === 'sabarimala-pilgrimage';
 
   const pickupId = useId();
   const dropId = useId();
@@ -130,50 +132,115 @@ export default function TourBookingEngine({
   const [dropDestination, setDropDestination] = useState(config.destination?.editable ? (config.destination.defaultDrop || '') : '');
   const [gettingLocation, setGettingLocation] = useState(false);
   const [validationError, setValidationError] = useState('');
+  const [locationPickerOpen, setLocationPickerOpen] = useState(false);
+  const [pickerField, setPickerField] = useState('pickup');
   const pickupInputRef = useRef(null);
+  const dropInputRef = useRef(null);
   const autocompleteInitializedRef = useRef(false);
+  const dropAutocompleteInitializedRef = useRef(false);
+  const isMountedRef = useRef(true);
 
-  // Initialize Google Places Autocomplete on pickup input
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  const handlePinClick = (field = 'pickup') => {
+    loadGoogleMaps().catch(() => {});
+    setPickerField(field);
+    setLocationPickerOpen(true);
+    trackEvent('location_map_opened', { field, context: 'tour_engine' });
+  };
+
+  const handleLocationConfirm = (address) => {
+    const cleanAddr = address ? address.trim() : '';
+    if (pickerField === 'pickup') {
+      setPickup(cleanAddr);
+      if (validationError) setValidationError('');
+      if (cleanAddr) {
+        setShowResult(true);
+      }
+    } else {
+      setDropDestination(cleanAddr);
+      if (validationError) setValidationError('');
+      if (cleanAddr && pickup.trim()) {
+        setShowResult(true);
+      }
+    }
+    setLocationPickerOpen(false);
+    trackEvent('location_pin_used', { field: pickerField, method: 'map_picker', success: true });
+  };
+
+  // Initialize Google Places Autocomplete on pickup and drop inputs
   useEffect(() => {
     let checkTimer = null;
-    let isMounted = true;
 
     const initAutocomplete = () => {
-      if (autocompleteInitializedRef.current) return;
-      if (!pickupInputRef.current) return;
       if (!window.google?.maps?.places) return;
 
-      try {
-        const options = {
-          componentRestrictions: { country: 'in' },
-          bounds: new window.google.maps.LatLngBounds(
-            new window.google.maps.LatLng(12.7, 79.8), // Chennai SW
-            new window.google.maps.LatLng(13.4, 80.4)  // Chennai NE
-          ),
-          fields: ['formatted_address', 'name', 'geometry'],
-          strictBounds: false
-        };
+      // Pickup Autocomplete
+      if (!autocompleteInitializedRef.current && pickupInputRef.current) {
+        try {
+          const options = {
+            componentRestrictions: { country: 'in' },
+            bounds: new window.google.maps.LatLngBounds(
+              new window.google.maps.LatLng(12.7, 79.8), // Chennai SW
+              new window.google.maps.LatLng(13.4, 80.4)  // Chennai NE
+            ),
+            fields: ['formatted_address', 'name', 'geometry'],
+            strictBounds: false
+          };
 
-        const autocomplete = new window.google.maps.places.Autocomplete(pickupInputRef.current, options);
-        autocomplete.addListener('place_changed', () => {
-          if (!isMounted) return;
-          const place = autocomplete.getPlace();
-          const addr = place?.formatted_address || place?.name;
-          if (addr) {
-            setPickup(addr);
-            if (validationError) setValidationError('');
-          }
-        });
+          const autocomplete = new window.google.maps.places.Autocomplete(pickupInputRef.current, options);
+          autocomplete.addListener('place_changed', () => {
+            if (!isMountedRef.current) return;
+            const place = autocomplete.getPlace();
+            const addr = place?.formatted_address || place?.name;
+            if (addr) {
+              setPickup(addr);
+              setValidationError('');
+              setShowResult(true);
+            }
+          });
 
-        autocompleteInitializedRef.current = true;
-      } catch (err) {
-        console.error('Google Autocomplete initialization error:', err);
+          autocompleteInitializedRef.current = true;
+        } catch (err) {
+          console.error('Google Autocomplete initialization error (pickup):', err);
+        }
+      }
+
+      // Drop Destination Autocomplete (for editable tours like Pondicherry)
+      if (config.destination?.editable && !dropAutocompleteInitializedRef.current && dropInputRef.current) {
+        try {
+          const dropOptions = {
+            componentRestrictions: { country: 'in' },
+            fields: ['formatted_address', 'name', 'geometry'],
+          };
+          const dropAutocomplete = new window.google.maps.places.Autocomplete(dropInputRef.current, dropOptions);
+          dropAutocomplete.addListener('place_changed', () => {
+            if (!isMountedRef.current) return;
+            const place = dropAutocomplete.getPlace();
+            const addr = place?.formatted_address || place?.name;
+            if (addr) {
+              setDropDestination(addr);
+              setValidationError('');
+              if (pickup.trim()) {
+                setShowResult(true);
+              }
+            }
+          });
+          dropAutocompleteInitializedRef.current = true;
+        } catch (err) {
+          console.error('Google Autocomplete initialization error (drop):', err);
+        }
       }
     };
 
     loadGoogleMaps()
       .then(() => {
-        if (isMounted) initAutocomplete();
+        if (isMountedRef.current) initAutocomplete();
       })
       .catch(() => {});
 
@@ -184,17 +251,17 @@ export default function TourBookingEngine({
       checkTimer = setInterval(() => {
         if (window.google?.maps?.places) {
           initAutocomplete();
-          if (autocompleteInitializedRef.current && checkTimer) clearInterval(checkTimer);
+          const fullyReady = autocompleteInitializedRef.current && (!config.destination?.editable || dropAutocompleteInitializedRef.current);
+          if (fullyReady && checkTimer) clearInterval(checkTimer);
         }
       }, 500);
     }
 
     return () => {
-      isMounted = false;
       window.removeEventListener('google-maps-loaded', initAutocomplete);
       if (checkTimer) clearInterval(checkTimer);
     };
-  }, [validationError]);
+  }, []);
 
   const fallbackNominatim = (lat, lng) => {
     fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
@@ -246,40 +313,53 @@ export default function TourBookingEngine({
     );
   };
 
-  // Default departure & return generators for instant live quote
-  const getDefaultPickupTime = () => {
-    const d = new Date();
-    d.setDate(d.getDate() + 1);
-    d.setHours(6, 0, 0, 0);
-    const local = new Date(d.getTime() - (d.getTimezoneOffset() * 60000));
-    return local.toISOString().slice(0, 16);
-  };
-
-  const getDefaultReturnTime = () => {
-    const d = new Date();
-    d.setDate(d.getDate() + 1);
-    d.setHours(21, 0, 0, 0);
-    const local = new Date(d.getTime() - (d.getTimezoneOffset() * 60000));
-    return local.toISOString().slice(0, 16);
-  };
-
-  // Date and Time calculation invariants
-  const [pickupDateTime, setPickupDateTime] = useState(getDefaultPickupTime);
-  const [returnDateTime, setReturnDateTime] = useState(getDefaultReturnTime);
-
   const getMinDateTime = () => {
-    const now = new Date();
-    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    return now.toISOString().slice(0, 16);
+    const d = new Date();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
 
   const getMinReturnDateTime = (pickupVal, minHours) => {
     if (!pickupVal) return getMinDateTime();
     const d = new Date(pickupVal);
+    if (isNaN(d.getTime())) return getMinDateTime();
     d.setHours(d.getHours() + (minHours || config.minRealisticHours));
-    const local = new Date(d.getTime() - (d.getTimezoneOffset() * 60000));
-    return local.toISOString().slice(0, 16);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
+
+  // Default departure & return generators for instant live quote (Next Day Morning 06:00 AM)
+  const getDefaultPickupTime = () => {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    d.setHours(6, 0, 0, 0);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
+  const getDefaultReturnTime = () => {
+    const dep = getDefaultPickupTime();
+    return getMinReturnDateTime(dep, config.minRealisticHours);
+  };
+
+  // Date and Time calculation invariants - always autoselect pickup date next day morning
+  const [pickupDateTime, setPickupDateTime] = useState(() => getDefaultPickupTime());
+  const [returnDateTime, setReturnDateTime] = useState(() => {
+    const dep = getDefaultPickupTime();
+    return getMinReturnDateTime(dep, config.minRealisticHours);
+  });
 
   const calculateDuration = (pickupVal, returnVal) => {
     if (!pickupVal || !returnVal) {
@@ -508,21 +588,20 @@ export default function TourBookingEngine({
     setPickupDateTime(val);
     if (validationError) setValidationError('');
     if (val) {
+      // Auto-select the first eligible return date and time based on realistic minimum duration
       const minReturnStr = getMinReturnDateTime(val, config.minRealisticHours);
-      if (!returnDateTime || returnDateTime < minReturnStr) {
-        setReturnDateTime(getMinReturnDateTime(val, config.recommendedHours));
-      }
+      setReturnDateTime(minReturnStr);
     } else {
       setReturnDateTime('');
     }
   };
 
-  // Passenger & Vehicle Selection — sensible defaults for instant zero-friction quote
-  const [step, setStep] = useState(1);
+  // Passenger & Vehicle Selection — do not show price until pickup location is entered
+  const [showResult, setShowResult] = useState(false);
+  const resultRef = useRef(null);
   const [passengers, setPassengers] = useState('4');
   const [vehicleIdState, setVehicleIdState] = useState(config.vehicles?.[0]?.id || 'dzire');
   const [showPopup, setShowPopup] = useState(false);
-  const [showBreakdown, setShowBreakdown] = useState(false);
   const [downloadToast, setDownloadToast] = useState(false);
 
   // Corporate GST Billing mode
@@ -544,12 +623,13 @@ export default function TourBookingEngine({
       if (vId) {
         if (pax) setPassengers(String(pax));
         setVehicleIdState(vId);
-        setStep(2);
-        if (validationError) setValidationError('');
-        const bookingEl = document.getElementById('booking');
-        if (bookingEl) {
-          bookingEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (pickup.trim()) {
+          setShowResult(true);
+          if (resultRef.current) {
+            resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
         }
+        if (validationError) setValidationError('');
       }
     };
 
@@ -562,7 +642,7 @@ export default function TourBookingEngine({
       if (isTirupati) window.removeEventListener('select-tirupati-vehicle', handleExternalVehicleSelect);
       window.removeEventListener('select-tour-vehicle', handleExternalVehicleSelect);
     };
-  }, [validationError, serviceSlug, isTirupati]);
+  }, [validationError, serviceSlug, isTirupati, pickup]);
 
   const availableVehicles = passengers 
     ? config.vehicles.filter(v => v.capacity >= parseInt(passengers, 10)) 
@@ -573,13 +653,15 @@ export default function TourBookingEngine({
     setPassengers(newPaxCount);
     if (validationError) setValidationError('');
     if (!newPaxCount) {
-      setVehicleIdState('');
       return;
     }
     const paxNum = parseInt(newPaxCount, 10);
     const curVehicleObj = config.vehicles.find(v => v.id === vehicleIdState);
     if (!curVehicleObj || curVehicleObj.capacity < paxNum) {
-      setVehicleIdState('');
+      const eligible = config.vehicles.find(v => v.capacity >= paxNum);
+      if (eligible) {
+        setVehicleIdState(eligible.id);
+      }
     }
   };
 
@@ -730,9 +812,9 @@ export default function TourBookingEngine({
   const finalNetPayable = taxableAmount + totalGst;
   const advanceDeposit = 500;
   const balancePayable = Math.max(0, finalNetPayable - advanceDeposit);
-  const formattedFare = currentFare ? `₹ ${currentFare.toLocaleString('en-IN')}` : null;
-  const formattedBalancePayable = currentFare ? `₹ ${balancePayable.toLocaleString('en-IN')}` : null;
-  const activePayableFare = needGst ? (finalNetPayable ? `₹ ${finalNetPayable.toLocaleString('en-IN')}` : null) : formattedFare;
+  const formattedFare = currentFare ? `₹${currentFare.toLocaleString('en-IN')}` : null;
+  const formattedBalancePayable = currentFare ? `₹${balancePayable.toLocaleString('en-IN')}` : null;
+  const activePayableFare = needGst ? (finalNetPayable ? `₹${finalNetPayable.toLocaleString('en-IN')}` : null) : formattedFare;
   const grandTotalInWords = numberToWordsINR(finalNetPayable);
 
   const [invoiceRefNo, setInvoiceRefNo] = useState('');
@@ -746,6 +828,62 @@ export default function TourBookingEngine({
     ? (dropDestination.trim() || config.destination.defaultDrop || 'Pondicherry French Town')
     : (config.destination?.name || 'Selected Destination');
 
+  // Broadcast current calculation for AI Fare Concierge contextual awareness
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.__KT_CURRENT_CALCULATION = {
+        engine: 'TourBookingEngine',
+        serviceSlug,
+        serviceTitle: effectiveServiceTitle,
+        destination: destinationDisplay,
+        pickup: pickup.trim(),
+        pickupDateTime,
+        returnDateTime,
+        pickupFormatted: formatDT(pickupDateTime),
+        returnFormatted: formatDT(returnDateTime),
+        durationHours: durationInfo?.hours || 0,
+        durationDays: durationInfo?.days || 1,
+        durationLabel: durationInfo?.label || '',
+        durationSubText: durationInfo?.subText || '',
+        isProRata: !!durationInfo?.isProRata,
+        extraHours: durationInfo?.extraHours || 0,
+        vehicleId: activeVehicle?.id,
+        vehicleName: activeVehicle?.name,
+        passengers,
+        totalFare: currentFare,
+        formattedFare,
+        pricingModel: fareBreakdown?.pricingModel || '',
+        savings: fareBreakdown?.savings || 0,
+        maxCapFare: fareBreakdown?.maxCapFare || currentFare,
+        allVehicleQuotes: (availableVehicles || []).map(v => {
+          const fb = calculateVehicleFare(v, durationInfo);
+          return {
+            id: v.id,
+            name: v.name,
+            capacity: v.capacity,
+            totalFare: fb ? fb.totalFare : 0
+          };
+        }),
+        timestamp: Date.now()
+      };
+      window.dispatchEvent(new CustomEvent('kt_calculation_updated', { detail: window.__KT_CURRENT_CALCULATION }));
+    }
+  }, [
+    serviceSlug,
+    effectiveServiceTitle,
+    destinationDisplay,
+    pickup,
+    pickupDateTime,
+    returnDateTime,
+    durationInfo,
+    activeVehicle,
+    passengers,
+    currentFare,
+    formattedFare,
+    fareBreakdown,
+    availableVehicles
+  ]);
+
   const whatsAppMessage = needGst ? `Hi Kalidass Travels, I'd like to book with GST Invoice:
 • *Service:* ${effectiveServiceTitle}
 • *Pickup:* ${pickup.trim() || 'Chennai'}
@@ -754,7 +892,7 @@ export default function TourBookingEngine({
 • *Vehicle:* ${activeVehicle ? activeVehicle.name : 'AC Cab'} (${passengers} Pax)
 • *Fare:* ₹${taxableAmount?.toLocaleString('en-IN') || '0'} + 5% GST (₹${totalGst?.toLocaleString('en-IN') || '0'}) = *₹${finalNetPayable?.toLocaleString('en-IN') || '0'} Total*
 • *Payment:* ₹500 Adv | ${formattedBalancePayable || 'Remaining'} Bal
-• *Ref:* ${effectiveInvoiceRefNo}
+${fareBreakdown?.isAfter24Hours ? '• *Payable at Actuals:* FASTag Tolls & Parking paid directly as per actual receipts\n' : ''}• *Ref:* ${effectiveInvoiceRefNo}
 ${companyName.trim() ? `• *Devotee/Company:* ${companyName.trim()}\n` : ''}${cleanedGst ? `• *GSTIN:* ${cleanedGst} (${recipientStateName})\n` : ''}${customerPhone.trim() ? `• *Contact:* ${customerPhone.trim()}\n` : ''}
 Please confirm booking & issue GST proforma estimate!`
 : `Hi Kalidass Travels, I'd like to book:
@@ -764,7 +902,7 @@ Please confirm booking & issue GST proforma estimate!`
 • *Date & Time:* ${formatDT(pickupDateTime)}${returnDateTime ? ` (Return: ${formatDT(returnDateTime)})` : ''}
 • *Vehicle:* ${activeVehicle ? activeVehicle.name : 'AC Cab'} (${passengers} Pax)
 • *Fare:* ${formattedFare || 'TBD'} (${fareBreakdown?.isAfter24Hours ? 'Multi-Day Tariff' : 'All-inclusive'} | ₹500 Adv / ${formattedBalancePayable || 'Remaining'} Bal)
-• *Ref:* ${effectiveInvoiceRefNo}${companyName.trim() ? ` (${companyName.trim()}${customerPhone.trim() ? ` • ${customerPhone.trim()}` : ''})` : (customerPhone.trim() ? ` (${customerPhone.trim()})` : '')}
+${fareBreakdown?.isAfter24Hours ? '• *Payable at Actuals:* FASTag Tolls & Parking paid directly as per actual receipts\n' : ''}• *Ref:* ${effectiveInvoiceRefNo}${companyName.trim() ? ` (${companyName.trim()}${customerPhone.trim() ? ` • ${customerPhone.trim()}` : ''})` : (customerPhone.trim() ? ` (${customerPhone.trim()})` : '')}
 
 Please confirm booking!`;
 
@@ -778,23 +916,54 @@ Please confirm booking!`;
     }, 300);
   };
 
+  const handleViewInstantFare = () => {
+    const effectivePickup = pickup.trim();
+    if (!effectivePickup) {
+      setValidationError('Please enter your pickup location in Chennai.');
+      if (pickupInputRef.current) {
+        pickupInputRef.current.focus();
+      }
+      return;
+    }
+    if (config.destination?.editable && !dropDestination.trim()) {
+      setValidationError('Please enter your drop destination.');
+      if (dropInputRef.current) {
+        dropInputRef.current.focus();
+      }
+      return;
+    }
+    if (!pickupDateTime) {
+      const dep = getDefaultPickupTime();
+      setPickupDateTime(dep);
+      setReturnDateTime(getMinReturnDateTime(dep, config.minRealisticHours));
+    }
+    setValidationError('');
+    setShowResult(true);
+    setTimeout(() => {
+      if (resultRef.current) {
+        resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }, 50);
+  };
+
+  const handleViewCabs = handleViewInstantFare;
+
   const validateCardInputs = () => {
     if (!pickup.trim()) {
-      setValidationError('Please enter pickup location in Chennai.');
+      setValidationError('Please enter your pickup location in Chennai.');
       if (pickupInputRef.current) pickupInputRef.current.focus();
       return false;
     }
     if (config.destination?.editable && !dropDestination.trim()) {
-      setValidationError('Please enter your destination / drop location.');
-      const el = document.getElementById(dropId);
-      if (el) el.focus();
+      setValidationError('Please enter your drop destination.');
+      if (dropInputRef.current) dropInputRef.current.focus();
       return false;
     }
     if (!pickupDateTime || !returnDateTime) {
-      setValidationError('Please select Pickup and Return Date & Time.');
-      const el = document.getElementById(pickupDateTimeId);
-      if (el) el.focus();
-      return false;
+      const dep = pickupDateTime || getDefaultPickupTime();
+      const ret = returnDateTime || getMinReturnDateTime(dep, config.minRealisticHours);
+      setPickupDateTime(dep);
+      setReturnDateTime(ret);
     }
     if (!passengers) {
       setValidationError('Please select number of passengers.');
@@ -993,98 +1162,11 @@ Please confirm booking!`;
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
         if (showPopup) setShowPopup(false);
-        if (showBreakdown) setShowBreakdown(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [showPopup, showBreakdown]);
-
-  // Shared Fare Breakdown content for Desktop inline view and Mobile Bottom Sheet
-  const renderBreakdownContent = (isMobileSheet = false) => (
-    <div className="space-y-2.5 text-xs text-m3-on-surface">
-      <div className="space-y-1.5 divide-y divide-m3-outline-variant/40 text-[11.5px] sm:text-xs">
-        <div className="flex justify-between items-center py-1">
-          <span className="text-m3-on-surface-variant">Dedicated AC Vehicle Hire &amp; Fuel ({activeVehicle?.name}):</span>
-          <span className="font-bold text-m3-on-surface">₹{Number(fareBreakdown?.vehicleHireFare || taxableAmount).toLocaleString('en-IN')}</span>
-        </div>
-        <div className="flex justify-between items-center py-1">
-          <span className="text-m3-on-surface-variant">Chauffeur Duty &amp; Halting Batta:</span>
-          <span className="font-bold text-m3-on-surface">₹{Number(fareBreakdown?.driverBata || 0).toLocaleString('en-IN')}</span>
-        </div>
-        {isNightBatta && (
-          <div className="flex justify-between items-center py-1 text-m3-on-surface">
-            <span>Late Night Shift Driving Allowance (11 PM - 4 AM):</span>
-            <span className="font-bold">₹400</span>
-          </div>
-        )}
-
-        {/* Dynamic Route Inclusions */}
-        {config.itemizedInclusions?.map((item, idx) => (
-          <div key={idx} className="flex justify-between items-center py-1">
-            <span className="text-m3-on-surface-variant">{item.label}</span>
-            <span className={`font-bold ${isAfter24Hours && item.multiDayValue !== 'INCLUDED (₹0)' ? 'text-m3-on-surface' : 'text-m3-primary'}`}>
-              {isAfter24Hours ? item.multiDayValue : item.value}
-            </span>
-          </div>
-        ))}
-
-        {needGst ? (
-          <>
-            <div className="flex justify-between items-center py-1 text-m3-on-surface-variant font-medium">
-              <span>Subtotal Taxable Base Value:</span>
-              <span className="font-bold text-m3-on-surface">₹{Number(taxableAmount).toLocaleString('en-IN')}</span>
-            </div>
-            {isIntraState ? (
-              <>
-                <div className="flex justify-between items-center py-0.5 text-m3-on-surface">
-                  <span className="pl-2 text-m3-on-surface-variant">CGST @ 2.5% (SAC 9966):</span>
-                  <span className="font-bold">+₹{Number(cgst).toLocaleString('en-IN')}</span>
-                </div>
-                <div className="flex justify-between items-center py-0.5 text-m3-on-surface">
-                  <span className="pl-2 text-m3-on-surface-variant">SGST @ 2.5% (SAC 9966):</span>
-                  <span className="font-bold">+₹{Number(sgst).toLocaleString('en-IN')}</span>
-                </div>
-              </>
-            ) : (
-              <div className="flex justify-between items-center py-0.5 text-m3-on-surface">
-                <span className="pl-2 text-m3-on-surface-variant">IGST @ 5.0% (SAC 9966):</span>
-                <span className="font-bold">+₹{Number(igst).toLocaleString('en-IN')}</span>
-              </div>
-            )}
-            <div className="flex justify-between items-center py-1 text-m3-on-surface font-semibold bg-m3-surface-container -mx-1 px-1 rounded">
-              <span>Total GST Tax Added (5%):</span>
-              <span className="font-bold">+₹{Number(totalGst).toLocaleString('en-IN')}</span>
-            </div>
-            <div className="flex justify-between items-center py-1 text-m3-on-surface-variant font-semibold">
-              <span>Corporate ITC Benefit:</span>
-              <span className="font-bold text-m3-primary">100% Claimable (-₹{Number(totalGst).toLocaleString('en-IN')})</span>
-            </div>
-          </>
-        ) : (
-          <div className="flex justify-between items-center py-1 text-m3-on-surface-variant">
-            <span>GST Tax:</span>
-            <span>₹0 (Cash Package Retail Fare)</span>
-          </div>
-        )}
-
-        <div className="flex justify-between items-center pt-2 font-bold text-xs sm:text-sm text-m3-on-surface">
-          <span>Net Package Total:</span>
-          <span className="text-sm sm:text-base font-extrabold text-m3-on-surface">{activePayableFare}</span>
-        </div>
-        <div className="flex justify-between items-center pt-1 text-[11px] sm:text-xs text-m3-on-surface-variant font-medium">
-          <span>Advance Booking Token:</span>
-          <span className="font-bold text-m3-on-surface">₹500 to Confirm Booking</span>
-        </div>
-        {formattedBalancePayable && (
-          <div className="flex justify-between items-center pt-0.5 text-[11px] sm:text-xs text-m3-on-surface-variant">
-            <span>Balance on Completion:</span>
-            <span className="font-semibold text-m3-on-surface">{formattedBalancePayable}</span>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+  }, [showPopup]);
 
   return (
     <>
@@ -1093,12 +1175,12 @@ Please confirm booking!`;
         className="w-full max-w-2xl mx-auto bg-white rounded-m3-2xl shadow-m3-1 sm:shadow-m3-2 border border-m3-outline-variant overflow-hidden font-sans booking-engine"
       >
         {/* Title Header — Material 3 Standard Elevation */}
-        <div className="py-3 px-4 sm:px-5 border-b border-m3-outline-variant/60 flex items-center bg-m3-surface">
-          <div>
-            <h2 className="text-lg sm:text-xl font-bold text-m3-on-surface font-heading leading-tight">
+        <div className="py-3 px-4 sm:px-5 border-b border-m3-outline-variant/60 flex flex-col items-center justify-center text-center bg-m3-surface">
+          <div className="w-full text-center">
+            <h2 className="text-lg sm:text-xl font-bold text-m3-on-surface font-heading leading-tight text-center">
               {config.engineTitle}
             </h2>
-            <p className="text-xs text-m3-on-surface-variant mt-0.5 font-medium">
+            <p className="text-xs text-m3-on-surface-variant mt-1 font-medium text-center">
               {config.subtitle}
             </p>
           </div>
@@ -1127,8 +1209,22 @@ Please confirm booking!`;
                 enterKeyHint="next"
                 value={pickup}
                 onChange={(e) => {
-                  setPickup(e.target.value);
+                  const val = e.target.value;
+                  setPickup(val);
                   if (validationError) setValidationError('');
+                  if (!val.trim()) {
+                    setShowResult(false);
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    const pac = typeof document !== 'undefined' ? document.querySelector('.pac-container') : null;
+                    const isPacVisible = pac && window.getComputedStyle(pac).display !== 'none';
+                    if (!isPacVisible) {
+                      e.preventDefault();
+                      handleViewCabs();
+                    }
+                  }
                 }}
                 onFocus={(e) => {
                   loadGoogleMaps().catch(() => {});
@@ -1137,27 +1233,31 @@ Please confirm booking!`;
                 placeholder="e.g. T. Nagar, Central Station, Airport, Velachery"
                 className={`w-full min-h-[48px] bg-white border border-m3-outline-variant hover:border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20 rounded-m3-lg px-3.5 py-3 text-sm sm:text-sm ${pickup ? 'text-m3-on-surface font-semibold' : 'text-m3-on-surface font-normal'} placeholder:text-sm placeholder:text-m3-on-surface-variant/75 placeholder:font-normal outline-none transition-all pr-20 shadow-2xs scroll-mt-28 scroll-mb-64`}
               />
-              <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
+              <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
                 {pickup && (
                   <button
                     type="button"
-                    onClick={() => setPickup('')}
+                    onClick={() => {
+                      setPickup('');
+                      setShowResult(false);
+                      if (validationError) setValidationError('');
+                      pickupInputRef.current?.focus();
+                    }}
                     aria-label="Clear pickup location"
                     title="Clear pickup location"
-                    className="w-9 h-9 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-full hover:bg-m3-surface-container active:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-on-surface transition-colors cursor-pointer"
+                    className="w-8 h-8 min-w-[32px] min-h-[32px] flex items-center justify-center rounded-full hover:bg-m3-surface-container active:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-on-surface transition-colors cursor-pointer"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 )}
                 <button
                   type="button"
-                  onClick={handleGetCurrentLocation}
-                  disabled={gettingLocation}
-                  aria-label="Use current location"
-                  title="Use current location"
-                  className="w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-m3-md hover:bg-m3-surface-container active:scale-95 active:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-primary transition-all cursor-pointer disabled:opacity-50"
+                  onClick={() => handlePinClick('pickup')}
+                  aria-label="Pinpoint pickup on map"
+                  title="Pinpoint pickup on map"
+                  className="w-8 h-8 sm:w-9 sm:h-9 min-w-[32px] min-h-[32px] flex items-center justify-center rounded-m3-md hover:bg-m3-surface-container active:scale-95 active:bg-m3-surface-container-high text-m3-primary hover:bg-m3-primary/10 transition-all cursor-pointer"
                 >
-                  <LocateFixed className={`w-4 h-4 ${gettingLocation ? 'animate-spin text-m3-primary' : ''}`} />
+                  <MapPin className="w-4 h-4 text-m3-primary" />
                 </button>
               </div>
             </div>
@@ -1175,18 +1275,53 @@ Please confirm booking!`;
                   ~{config.destination.roundTripKm} km {config.destination?.isCircuit ? 'Circuit' : 'Round Trip'}
                 </span>
               </div>
-              <input
-                id={dropId}
-                type="text"
-                value={dropDestination}
-                onChange={(e) => {
-                  setDropDestination(e.target.value);
-                  if (validationError) setValidationError('');
-                }}
-                onFocus={handleInputFocus}
-                placeholder={config.destination.dropPlaceholder || 'Enter drop location or hotel'}
-                className="w-full min-h-[48px] bg-white border border-m3-outline-variant hover:border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20 rounded-m3-lg px-3.5 py-3 text-sm sm:text-sm text-m3-on-surface font-semibold placeholder:text-sm placeholder:text-m3-on-surface-variant/60 placeholder:font-normal outline-none transition-all shadow-2xs scroll-mt-28 scroll-mb-64"
-              />
+              <div className="relative flex items-center">
+                <input
+                  id={dropId}
+                  ref={dropInputRef}
+                  type="text"
+                  value={dropDestination}
+                  onChange={(e) => {
+                    setDropDestination(e.target.value);
+                    if (validationError) setValidationError('');
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      const pac = typeof document !== 'undefined' ? document.querySelector('.pac-container') : null;
+                      const isPacVisible = pac && window.getComputedStyle(pac).display !== 'none';
+                      if (!isPacVisible) {
+                        e.preventDefault();
+                        handleViewCabs();
+                      }
+                    }
+                  }}
+                  onFocus={handleInputFocus}
+                  placeholder={config.destination.dropPlaceholder || 'Enter drop location or hotel'}
+                  className="w-full min-h-[48px] bg-white border border-m3-outline-variant hover:border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20 rounded-m3-lg px-3.5 py-3 text-sm sm:text-sm text-m3-on-surface font-semibold placeholder:text-sm placeholder:text-m3-on-surface-variant/60 placeholder:font-normal outline-none transition-all pr-20 shadow-2xs scroll-mt-28 scroll-mb-64"
+                />
+                <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                  {dropDestination && (
+                    <button
+                      type="button"
+                      onClick={() => setDropDestination('')}
+                      aria-label="Clear destination"
+                      title="Clear destination"
+                      className="w-9 h-9 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-full hover:bg-m3-surface-container active:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-on-surface transition-colors cursor-pointer"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => handlePinClick('drop')}
+                    aria-label="Pinpoint destination on map"
+                    title="Pinpoint destination on map"
+                    className="w-9 h-9 sm:w-10 sm:h-10 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-m3-md hover:bg-m3-surface-container active:scale-95 active:bg-m3-surface-container-high text-m3-primary hover:bg-m3-primary/10 transition-all cursor-pointer"
+                  >
+                    <MapPin className="w-4 h-4 text-m3-primary" />
+                  </button>
+                </div>
+              </div>
             </div>
           ) : (
             <div className="min-h-[42px] py-2 px-3 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center justify-between gap-2 text-xs text-m3-on-surface">
@@ -1224,6 +1359,7 @@ Please confirm booking!`;
                   value={pickupDateTime}
                   min={getMinDateTime()}
                   onChange={handlePickupDateTimeChange}
+                  onInput={handlePickupDateTimeChange}
                   onFocus={handleInputFocus}
                   className={`w-full bg-transparent text-xs sm:text-sm ${pickupDateTime ? 'text-m3-on-surface font-semibold' : 'text-m3-on-surface-variant/60 font-normal'} outline-none cursor-pointer p-0 scroll-mt-28 scroll-mb-64`}
                 />
@@ -1326,6 +1462,72 @@ Please confirm booking!`;
             )}
           </div>
 
+          {/* 4. Passengers & Vehicle Selection Tiles — Outstation Standard Layout */}
+          <div className="grid grid-cols-2 gap-2 sm:gap-3">
+            {/* Passenger Tile */}
+            <div className="group relative rounded-xl border border-m3-outline-variant bg-slate-50/70 hover:bg-slate-50 hover:border-m3-outline focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/20 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
+              <div className="flex items-center justify-between gap-1 mb-1">
+                <label 
+                  htmlFor={passengersId} 
+                  className="text-[11px] sm:text-xs font-bold text-m3-on-surface-variant flex items-center gap-1.5 cursor-pointer truncate"
+                >
+                  <Users className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
+                  <span className="truncate">Passengers</span>
+                </label>
+              </div>
+              <div className="relative">
+                <select
+                  id={passengersId}
+                  value={passengers}
+                  onChange={(e) => handlePassengerChange(e.target.value)}
+                  className="w-full bg-transparent appearance-none outline-none cursor-pointer pr-5 text-xs sm:text-sm font-semibold text-m3-on-surface truncate p-0"
+                >
+                  {PASSENGER_OPTIONS.map(opt => (
+                    <option key={opt.value} value={opt.value} className="text-m3-on-surface font-semibold">
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="w-3.5 h-3.5 text-m3-on-surface-variant pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 shrink-0" />
+              </div>
+            </div>
+
+            {/* Vehicle Model Tile */}
+            <div className="group relative rounded-xl border border-m3-outline-variant bg-slate-50/70 hover:bg-slate-50 hover:border-m3-outline focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/20 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
+              <div className="flex items-center justify-between gap-1 mb-1">
+                <label 
+                  htmlFor={vehicleId} 
+                  className="text-[11px] sm:text-xs font-bold text-m3-on-surface-variant flex items-center gap-1.5 cursor-pointer truncate"
+                >
+                  <Car className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
+                  <span className="truncate">Vehicle Model</span>
+                </label>
+              </div>
+              <div className="relative">
+                <select
+                  id={vehicleId}
+                  value={vehicleIdState}
+                  onChange={(e) => {
+                    setVehicleIdState(e.target.value);
+                    if (validationError) setValidationError('');
+                  }}
+                  className="w-full bg-transparent appearance-none outline-none cursor-pointer pr-5 text-xs sm:text-sm font-semibold text-m3-on-surface truncate p-0"
+                >
+                  {config.vehicles.map(veh => {
+                    const pax = parseInt(passengers, 10);
+                    const disabled = veh.capacity < pax;
+                    return (
+                      <option key={veh.id} value={veh.id} disabled={disabled} className="text-m3-on-surface font-semibold">
+                        {veh.name} ({veh.capacity} Pax)
+                      </option>
+                    );
+                  })}
+                </select>
+                <ChevronDown className="w-3.5 h-3.5 text-m3-on-surface-variant pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 shrink-0" />
+              </div>
+            </div>
+          </div>
+
           {/* Validation Feedback Text */}
           {validationError && (
             <p 
@@ -1337,215 +1539,131 @@ Please confirm booking!`;
             </p>
           )}
 
-          {/* STEP 1: PRIMARY CTA BUTTON (Compact & Centered Google Blue Button) */}
-          {step === 1 && (
-            <div className="pt-2.5 space-y-1.5 flex flex-col items-center justify-center">
-              <button
-                id="btn-check-tour-cabs"
-                type="button"
-                onClick={() => {
-                  if (!pickup.trim()) {
-                    setValidationError('Please enter your pickup location in Chennai');
-                    if (pickupInputRef.current) pickupInputRef.current.focus();
-                    return;
-                  }
-                  setValidationError('');
-                  setStep(2);
-                  const bookingEl = document.getElementById('booking');
-                  if (bookingEl) bookingEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }}
-                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 min-h-[40px] bg-[#1a73e8] hover:bg-[#1557b0] active:scale-[0.98] text-white font-bold text-xs sm:text-sm rounded-full shadow-sm hover:shadow-md transition-all cursor-pointer"
-              >
-                <Calculator className="w-4 h-4 text-white shrink-0" />
-                <span>View Cabs &amp; Fixed Fares →</span>
-              </button>
-              <p className="text-[11px] text-m3-on-surface-variant/80 text-center font-medium max-w-sm">
-                ✓ ₹500 advance to confirm • Tolls, AP permit &amp; hill climb included • Zero surge
-              </p>
-            </div>
-          )}
+          {/* PRIMARY CTA BUTTON (Compact & Centered Google Blue Button — Outstation Standard) */}
+          <div className="pt-2.5 space-y-1.5 flex flex-col items-center justify-center">
+            <button
+              id="btn-calculate-fare"
+              type="button"
+              onClick={handleViewInstantFare}
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 min-h-[40px] bg-[#1a73e8] hover:bg-[#1557b0] active:scale-[0.98] text-white font-bold text-xs sm:text-sm rounded-full shadow-sm hover:shadow-md transition-all cursor-pointer"
+            >
+              <Calculator className="w-4 h-4 text-white shrink-0" />
+              <span>View Instant Fare →</span>
+            </button>
+            <p className="text-[11px] text-m3-on-surface-variant/80 text-center font-medium max-w-sm">
+              ✓ No phone number required to check fare
+            </p>
+          </div>
 
-          {/* STEP 2: CAB COMPARISON, HERO FARE & BOOKING ACTIONS */}
-          {step === 2 && (
-            <div className="pt-2 border-t border-m3-outline-variant/60 space-y-3 animate-in fade-in duration-200">
-              
-              {/* Route & Schedule Summary Pill with Change Button */}
-              <div className="bg-m3-surface-container-low border border-m3-outline-variant/60 rounded-m3-xl p-2.5 sm:p-3 flex items-center justify-between text-xs">
-                <div className="min-w-0 pr-2">
-                  <span className="font-bold text-m3-on-surface truncate block text-xs sm:text-sm">
-                    Chennai ⇄ {config.destination?.name || 'Destination'}
-                  </span>
-                  <span className="text-[11px] text-m3-on-surface-variant font-medium">
-                    Pickup: {pickup || 'Doorstep Pickup'} • {durationLabel} ({durationHours} hrs)
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setStep(1)}
-                  className="px-3 py-1 rounded-m3-full bg-white border border-m3-outline-variant text-m3-primary font-bold text-xs hover:bg-m3-surface-container-high transition-colors shrink-0 shadow-2xs cursor-pointer"
-                >
-                  Edit Route
-                </button>
-              </div>
-
-              {/* Savaari / MakeMyTrip Style Cab Category Comparison Cards */}
-              <div className="space-y-1.5">
-                <div className="flex items-center justify-between text-xs px-0.5">
-                  <span className="font-bold text-m3-on-surface flex items-center gap-1.5">
-                    <Car className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-                    <span>Compare &amp; Select Cab</span>
-                  </span>
-                  <span className="text-[11px] text-m3-on-surface-variant font-medium">
-                    All-Inclusive Package
-                  </span>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {config.vehicles.map((veh) => {
-                    const vehFareBreakdown = durationInfo.hasDates ? calculateVehicleFare(veh, durationInfo) : null;
-                    const vehPrice = vehFareBreakdown ? vehFareBreakdown.totalFare : (veh.rates?.[1] || 0);
-                    const isSelected = vehicleIdState === veh.id;
-                    return (
-                      <button
-                        key={veh.id}
-                        type="button"
-                        onClick={() => {
-                          setVehicleIdState(veh.id);
-                          if (parseInt(passengers) > veh.capacity) {
-                            setPassengers(String(veh.capacity));
-                          }
-                        }}
-                        className={`p-2.5 rounded-m3-xl border text-left transition-all relative flex flex-col justify-between cursor-pointer active:scale-[0.98] ${
-                          isSelected
-                            ? 'bg-m3-primary/5 border-m3-primary ring-2 ring-m3-primary shadow-xs'
-                            : 'bg-white border-m3-outline-variant hover:border-m3-outline hover:bg-m3-surface-container-low'
-                        }`}
-                      >
-                        {veh.tag && (
-                          <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider mb-1 w-fit ${
-                            isSelected ? 'bg-m3-primary text-white' : 'bg-m3-surface-container-high text-m3-on-surface-variant'
-                          }`}>
-                            {veh.tag}
-                          </span>
-                        )}
-                        <div>
-                          <p className="text-xs font-bold text-m3-on-surface leading-tight">{veh.shortName || veh.name.split('/')[0].trim()}</p>
-                          <p className="text-[10px] text-m3-on-surface-variant truncate">{veh.name}</p>
-                          <p className="text-[10px] text-m3-on-surface-variant/80 mt-0.5">{veh.capacity} Pax • {veh.luggage || 'Bags'}</p>
-                        </div>
-                        <div className="mt-2 pt-1 border-t border-m3-outline-variant/40 flex items-baseline justify-between">
-                          <span className="text-xs sm:text-sm font-extrabold text-m3-on-surface font-heading">
-                            ₹{vehPrice.toLocaleString('en-IN')}
-                          </span>
-                          {isSelected && (
-                            <span className="text-[9.5px] font-bold text-m3-primary">✓ Active</span>
-                          )}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Passenger Fine-Tuning */}
-              <div className="grid grid-cols-2 gap-2.5 pt-0.5">
-                <div className="space-y-1">
-                  <label htmlFor={passengersId} className="text-xs font-bold text-m3-on-surface flex items-center justify-between">
-                    <span className="flex items-center gap-1.5">
-                      <Users className="w-3.5 h-3.5 text-m3-on-surface-variant shrink-0" />
-                      <span>Passengers</span>
-                    </span>
-                  </label>
-                  <div className="relative flex items-center min-h-[44px] bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-lg transition-colors focus-within:border-m3-primary focus-within:ring-2 focus-within:ring-m3-primary/20 shadow-2xs">
-                    <select
-                      id={passengersId}
-                      value={passengers}
-                      onChange={(e) => handlePassengerChange(e.target.value)}
-                      className="w-full min-h-[44px] bg-transparent appearance-none outline-none cursor-pointer px-2.5 py-2 pr-7 text-xs truncate text-m3-on-surface font-semibold"
-                    >
-                      {PASSENGER_OPTIONS.map(opt => (
-                        <option key={opt.value} value={opt.value} className="text-m3-on-surface font-semibold">
-                          {opt.label}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown className="w-4 h-4 text-m3-on-surface-variant pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 shrink-0" />
+          {/* Dynamic Fare Result & Actions Area — Rate Summary with Complete Itemized Breakdown */}
+          {showResult && Boolean(pickup.trim()) && (
+            <div ref={resultRef} className="pt-3 border-t border-m3-outline-variant/60 space-y-3 animate-in fade-in duration-200">
+              {/* Rate Summary Card — Restaurant Bill Style */}
+              <div className="bg-white border border-m3-outline-variant/80 rounded-xl p-3.5 space-y-3 shadow-2xs">
+                {/* Header: Vehicle Name, Pax & Total Fare */}
+                <div className="flex items-center justify-between gap-3 pb-2.5 border-b border-m3-outline-variant/60">
+                  <div>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-base font-extrabold text-m3-on-surface">
+                        {activeVehicle?.name || 'AC Cab'}
+                      </span>
+                      <span className="text-[10px] font-bold bg-[#1a73e8]/10 text-[#1a73e8] px-2 py-0.5 rounded-full">
+                        {activeVehicle?.capacity || passengers} Pax
+                      </span>
+                    </div>
+                    <div className="text-[11px] text-m3-on-surface-variant font-medium mt-0.5">
+                      ~{config.destination?.roundTripKm || 320} km Round Trip · {durationInfo?.label || (isAfter24Hours ? `${days || 1} Days Package` : '1 Day Package (12 hrs)')}
+                    </div>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <div className="text-[11px] text-m3-on-surface-variant font-medium">Total Fare</div>
+                    <div className="text-2xl sm:text-3xl font-extrabold text-m3-on-surface font-heading leading-tight">
+                      {activePayableFare}
+                    </div>
                   </div>
                 </div>
 
-                <div className="space-y-1">
-                  <label htmlFor={vehicleId} className="text-xs font-bold text-m3-on-surface flex items-center justify-between">
-                    <span className="flex items-center gap-1.5">
-                      <Car className="w-3.5 h-3.5 text-m3-on-surface-variant shrink-0" />
-                      <span>Vehicle Model</span>
-                    </span>
-                  </label>
-                  <div className="relative flex items-center min-h-[44px] bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-lg transition-colors focus-within:border-m3-primary focus-within:ring-2 focus-within:ring-m3-primary/20 shadow-2xs">
-                    <select
-                      id={vehicleId}
-                      value={vehicleIdState}
-                      onChange={(e) => {
-                        setVehicleIdState(e.target.value);
-                        if (validationError) setValidationError('');
-                      }}
-                      className="w-full min-h-[44px] bg-transparent appearance-none outline-none cursor-pointer px-2.5 py-2 pr-7 text-xs truncate text-m3-on-surface font-semibold"
-                    >
-                      {availableVehicles.map(veh => (
-                        <option key={veh.id} value={veh.id} className="text-m3-on-surface font-semibold">
-                          {veh.name} ({veh.capacity} Pax)
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown className="w-4 h-4 text-m3-on-surface-variant pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 shrink-0" />
+                {/* Itemized Bill Lines */}
+                <div className="space-y-1.5 text-xs">
+                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                    <span>Cab Hire ({activeVehicle?.name} • Fuel included):</span>
+                    <span className="font-bold text-m3-on-surface">₹{Number(fareBreakdown?.vehicleHireFare || taxableAmount).toLocaleString('en-IN')}</span>
                   </div>
-                </div>
-              </div>
-
-              {/* Hero Price & Inclusions */}
-              <div>
-                <div className="flex items-center gap-2">
-                  <div className="text-3xl sm:text-4xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-none">
-                    {activePayableFare}
+                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                    <span>Driver Allowance ({fareBreakdown?.packageDays || (days || 1)} {(fareBreakdown?.packageDays || (days || 1)) > 1 ? 'Days' : 'Day'}):</span>
+                    <span className="font-bold text-m3-on-surface">₹{Number(fareBreakdown?.driverBata || 0).toLocaleString('en-IN')}</span>
                   </div>
-                  <span className="text-[11px] sm:text-xs font-semibold px-2.5 py-0.5 rounded-m3-sm border whitespace-nowrap shrink-0 text-m3-on-surface bg-m3-surface-container-low border-m3-outline-variant/60">
-                    {isAfter24Hours 
-                      ? (needGst ? '✓ Multi-Day Tariff (+5% GST)' : '✓ Multi-Day Tariff')
-                      : (needGst ? '✓ All-Inclusive GST Fare (+5% ITC)' : (isPondicherry ? '✓ All-Inclusive Package Fare' : '✓ All-Inclusive Fixed Fare'))}
-                  </span>
-                </div>
-                <p className="mt-1 text-xs sm:text-sm text-m3-on-surface-variant font-medium leading-relaxed">
-                  {isAfter24Hours 
-                    ? (config.inclusions?.multiDay || 'Covers Cab & Driver Halting')
-                    : `${config.inclusions?.standard || 'Covers Highway Tolls & Driver Bata'}${needGst ? ' + 5% GST' : ''}`}
-                </p>
-              </div>
+                  {isNightBatta && (
+                    <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                      <span>Night Driver Allowance (11 PM - 4 AM):</span>
+                      <span className="font-bold text-m3-on-surface">₹400</span>
+                    </div>
+                  )}
 
-              {/* Collapsible Fare Breakdown & Line Items */}
-              <div className="border border-m3-outline-variant/80 rounded-m3-xl overflow-hidden bg-white shadow-2xs">
-                <button
-                  type="button"
-                  onClick={() => setShowBreakdown(!showBreakdown)}
-                  aria-expanded={showBreakdown}
-                  className="w-full px-3.5 py-3 min-h-[44px] flex items-center justify-between text-xs sm:text-sm font-bold text-m3-on-surface hover:bg-m3-surface-container-low transition-colors cursor-pointer"
-                >
-                  <div className="flex items-center gap-2">
-                    <Receipt className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
-                    <span>
-                      {showBreakdown 
-                        ? (needGst ? 'Hide GST Itemized Fare Breakdown' : 'Hide Itemized Fare Breakdown')
-                        : (needGst ? 'View GST Itemized Fare Breakdown' : 'View Itemized Fare Breakdown')}
+                  {/* GST line if needGst */}
+                  {needGst && (
+                    <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                      <span>GST (5%):</span>
+                      <span className="font-bold text-m3-on-surface">+₹{Number(totalGst).toLocaleString('en-IN')}</span>
+                    </div>
+                  )}
+                  {isAfter24Hours && (
+                    <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                      <span>Tolls, Parking &amp; Permits:</span>
+                      <span className="font-bold text-m3-on-surface">Extra (At Actuals)</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Bill Payment Split */}
+                <div className="pt-2 border-t-2 border-slate-200 space-y-1 text-xs">
+                  <div className="flex justify-between items-center py-1 sm:py-1.5 border-b border-slate-200/80 mb-1">
+                    <span className="text-base sm:text-lg font-black text-m3-on-surface tracking-tight">Total Bill:</span>
+                    <span className="text-xl sm:text-2xl font-black text-m3-primary tracking-tight font-heading">
+                      {activePayableFare}{isAfter24Hours ? ' + Extra' : ''}
                     </span>
                   </div>
-                  <div className="flex items-center gap-1.5 text-xs text-m3-on-surface-variant font-semibold">
-                    <span className="hidden sm:inline">{showBreakdown ? 'Collapse' : 'Expand'}</span>
-                    <span className="sm:hidden">{showBreakdown ? 'Hide' : 'Details'}</span>
-                    <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showBreakdown ? 'rotate-180' : ''}`} />
+                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                    <span>Advance to Pay:</span>
+                    <span className="font-bold text-emerald-700">₹500</span>
                   </div>
-                </button>
+                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface">
+                    <span className="font-medium">Balance to Pay Driver:</span>
+                    <span className="font-bold text-m3-on-surface">{formattedBalancePayable}{isAfter24Hours ? ' + Extra' : ''} <span className="text-[11px] font-normal text-m3-on-surface-variant">(After trip)</span></span>
+                  </div>
+                </div>
 
-                {/* Desktop Inline Breakdown */}
-                {showBreakdown && (
-                  <div id="fare-breakdown-details" className="hidden sm:block p-3 border-t border-m3-outline-variant/60 bg-m3-surface-container-lowest text-xs animate-in fade-in duration-150">
-                    {renderBreakdownContent(false)}
+                {/* Cut and Dried Notes */}
+                {isAfter24Hours ? (
+                  <div className="pt-2.5 border-t border-dashed border-m3-outline-variant/80 text-[11px] text-m3-on-surface-variant space-y-1.5">
+                    {/* Inclusions Line */}
+                    <div className="flex items-center gap-1.5 text-emerald-800 font-medium">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                      <span>
+                        <strong>Included in Fare:</strong> Dedicated Cab Hire, Fuel &amp; Driver Allowance{isTirupati ? ', Tirumala Hill Climb' : ''}.
+                      </span>
+                    </div>
+
+                    {/* Package Duration & Limits */}
+                    <div className="flex items-center gap-1.5 text-slate-600">
+                      <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                      <span>Trip Duration: {durationLabel || `${days || 1} Days`} (~{config.destination?.roundTripKm || 320} km circuit). Extra hours: ₹{activeVehicle?.extraHourRate || 200}/hr.</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="pt-2 border-t border-dashed border-m3-outline-variant/80 text-[11px] text-m3-on-surface-variant space-y-1">
+                    <div className="flex items-center gap-1.5 text-emerald-800 font-medium">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                      <span>
+                        <strong>Included in Fare:</strong> {isTirupati 
+                          ? 'Fuel, Tolls, AP State Permit, Hill Climb & Parking. No hidden charges.' 
+                          : `${config.inclusions?.standard || 'Fuel, Tolls, Permit & Driver Allowance'}. No hidden charges.`}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-slate-600">
+                      <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                      <span>Trip Limit: Up to ~{config.destination?.roundTripKm || 320} km / {durationHours || 12} hrs (Extra: ₹{activeVehicle?.extraHourRate || 200}/hr).</span>
+                    </div>
                   </div>
                 )}
               </div>
@@ -1599,54 +1717,25 @@ Please confirm booking!`;
                 </a>
               </div>
 
-              {/* Modify Search Link */}
-              <div className="text-center pt-0.5">
-                <button
-                  type="button"
-                  onClick={() => setStep(1)}
-                  className="text-xs text-m3-primary hover:underline font-semibold cursor-pointer"
-                >
-                  ← Modify Pickup Location or Travel Dates
-                </button>
-              </div>
-
               {/* Progressive Disclosure: Corporate GST & Official Estimate */}
               <div className="pt-2 border-t border-m3-outline-variant/40 space-y-2.5">
-                <div className="flex items-center justify-between gap-2.5 flex-wrap sm:flex-nowrap">
-                  <label className="flex-1 min-h-[44px] px-3.5 py-2 rounded-m3-lg border border-m3-outline-variant/50 hover:bg-m3-surface-container-low active:bg-m3-surface-container flex items-center gap-2.5 cursor-pointer select-none text-xs font-semibold text-m3-on-surface hover:text-m3-success transition-colors">
-                    <input
-                      type="checkbox"
-                      checked={needGst}
-                      onChange={(e) => {
-                        setNeedGst(e.target.checked);
-                        if (typeof window !== 'undefined' && window.innerWidth >= 640 && e.target.checked) {
-                          setShowBreakdown(true);
-                        }
-                        if (!e.target.checked) {
-                          setModalValidationError('');
-                          setModalHighlightedField('');
-                        }
-                      }}
-                      className="w-4 h-4 rounded border-m3-outline text-m3-success focus:ring-m3-success cursor-pointer shrink-0"
-                    />
-                    <span className="leading-snug">
-                      Need GST Tax Invoice for Corporate (+5% ITC)
-                    </span>
-                  </label>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (!validateCardInputs()) return;
-                      setShowPopup(true);
+                <label className="w-full min-h-[44px] px-3.5 py-2 rounded-m3-lg border border-m3-outline-variant/50 hover:bg-m3-surface-container-low active:bg-m3-surface-container flex items-center gap-2.5 cursor-pointer select-none text-xs font-semibold text-m3-on-surface hover:text-m3-success transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={needGst}
+                    onChange={(e) => {
+                      setNeedGst(e.target.checked);
+                      if (!e.target.checked) {
+                        setModalValidationError('');
+                        setModalHighlightedField('');
+                      }
                     }}
-                    className="inline-flex items-center justify-center gap-1.5 px-3 py-2 min-h-[40px] rounded-m3-lg bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant/60 text-xs font-semibold text-m3-on-surface transition-colors cursor-pointer shrink-0"
-                    title="View proforma estimate letterhead"
-                  >
-                    <FileText className="w-3.5 h-3.5 text-m3-primary" />
-                    <span>View Proforma Bill</span>
-                  </button>
-                </div>
+                    className="w-4 h-4 rounded border-m3-outline text-m3-success focus:ring-m3-success cursor-pointer shrink-0"
+                  />
+                  <span className="leading-snug">
+                    Need GST Tax Invoice for Corporate (+5% ITC)
+                  </span>
+                </label>
 
                 {/* Expanded Corporate GST Input Box */}
                 {needGst && (
@@ -1726,70 +1815,6 @@ Please confirm booking!`;
           )}
         </div>
       </section>
-
-      {/* MOBILE BOTTOM SHEET DRAWER PORTAL (< sm viewports) */}
-      {showBreakdown && typeof document !== 'undefined' && createPortal(
-        <div 
-          id="fare-breakdown-portal-root"
-          className="fixed inset-0 z-50 flex flex-col justify-end bg-m3-inverse-surface/60 backdrop-blur-xs sm:hidden animate-in fade-in duration-200"
-          onClick={() => setShowBreakdown(false)}
-        >
-          <div 
-            className="w-full max-h-[85vh] bg-white rounded-t-3xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom duration-300"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Grab Handle */}
-            <div className="flex justify-center pt-2.5 pb-1 shrink-0">
-              <div className="w-10 h-1 rounded-full bg-m3-outline-variant" />
-            </div>
-
-            {/* Header */}
-            <div className="px-4 py-2.5 border-b border-m3-outline-variant flex items-center justify-between gap-2 shrink-0 bg-m3-surface-container-low/80">
-              <div className="flex items-center gap-2">
-                <Receipt className="w-4 h-4 text-m3-success shrink-0" />
-                <div>
-                  <h3 className="text-sm font-bold text-m3-on-surface leading-tight">
-                    {needGst ? 'GST Itemized Fare Breakdown' : 'Itemized Fare Breakdown'}
-                  </h3>
-                  <p className="text-[10.5px] text-m3-on-surface-variant font-medium">
-                    {activeVehicle?.name || 'Selected Cab'} • {durationLabel || '1 Day Package'}
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowBreakdown(false)}
-                className="w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface-variant transition cursor-pointer"
-                aria-label="Close fare breakdown"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* Scrollable Line Items */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3">
-              {renderBreakdownContent(true)}
-            </div>
-
-            {/* Sticky Bottom Conversion Footer */}
-            <div className="p-3 border-t border-m3-outline-variant bg-m3-surface-container-low flex items-center shrink-0">
-              <WhatsAppButton 
-                href={whatsAppUrl}
-                onClick={(e) => {
-                  setShowBreakdown(false);
-                  handleDirectWhatsAppClick(e);
-                }}
-                variant="filled"
-                size="md"
-                data-direct-whatsapp="true"
-                className="w-full px-4 py-3 min-h-[50px] text-sm font-bold shadow-xs justify-center active:scale-[0.99]"
-                text={`Book on WhatsApp (${activePayableFare})`}
-              />
-            </div>
-          </div>
-        </div>,
-        document.body
-      )}
 
       {/* POP-UP MODAL — OFFICIAL GST PROFORMA TAX INVOICE & TRIP ESTIMATE */}
       {showPopup && typeof document !== 'undefined' && createPortal(
@@ -1909,6 +1934,23 @@ Please confirm booking!`;
                       <td className="p-2">Chauffeur Duty &amp; Halting Batta:</td>
                       <td className="p-2 text-right font-semibold">₹{Number(fareBreakdown?.driverBata || 0).toLocaleString('en-IN')}</td>
                     </tr>
+                    {isAfter24Hours ? (
+                      <tr className="bg-amber-50/70 text-amber-950">
+                        <td className="p-2 font-medium">
+                          <strong className="text-amber-900">Statutory FASTag Tolls &amp; Parking:</strong><br/>
+                          <span className="text-[10px] text-amber-800">Payable extra directly by passenger on road as per actual receipts</span>
+                        </td>
+                        <td className="p-2 text-right font-bold text-amber-800">AT ACTUALS</td>
+                      </tr>
+                    ) : (
+                      <tr className="bg-emerald-50/70 text-emerald-950">
+                        <td className="p-2 font-medium">
+                          <strong className="text-emerald-900">Highway Tolls, Permits &amp; Parking:</strong><br/>
+                          <span className="text-[10px] text-emerald-800">100% all-inclusive pure agent service</span>
+                        </td>
+                        <td className="p-2 text-right font-bold text-emerald-700">INCLUDED</td>
+                      </tr>
+                    )}
                     <tr className="bg-m3-surface-container-low/50">
                       <td className="p-2 font-semibold">Total Taxable Value:</td>
                       <td className="p-2 text-right font-bold text-m3-on-surface">₹{Number(taxableAmount).toLocaleString('en-IN')}</td>
@@ -1952,6 +1994,16 @@ Please confirm booking!`;
           </div>
         </div>,
         document.body
+      )}
+
+      {locationPickerOpen && (
+        <LocationPicker
+          isOpen={locationPickerOpen}
+          onClose={() => setLocationPickerOpen(false)}
+          onConfirm={handleLocationConfirm}
+          type={pickerField}
+          initialAddress={pickerField === 'pickup' ? pickup : dropDestination}
+        />
       )}
     </>
   );
