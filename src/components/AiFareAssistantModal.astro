@@ -19,16 +19,16 @@ const callUrl = `tel:${phone}`;
 <!-- Material Design 3 AI Fare Concierge Modal (Clean, Minimal, Non-Clumpy) -->
 <div
   id="ai-fare-modal"
-  class="fixed inset-0 z-[100] hidden flex-col justify-end sm:justify-center items-center bg-black/50 backdrop-blur-xs transition-opacity duration-200 p-0 sm:p-4 opacity-0 pointer-events-none"
+  class="fixed inset-0 z-[100] hidden flex-col justify-end items-center sm:items-end p-0 sm:p-6 bg-black/40 backdrop-blur-xs transition-opacity duration-200 opacity-0 pointer-events-none pb-[env(safe-area-inset-bottom,0px)] pr-[env(safe-area-inset-right,0px)]"
   role="dialog"
   aria-modal="true"
   aria-labelledby="ai-modal-title"
   aria-hidden="true"
 >
-  <!-- M3 Dialog / Bottom-Sheet Container -->
+  <!-- M3 Dialog / Bottom-Sheet Container (Docked at bottom-right on desktop near AI Chat button) -->
   <div
     id="ai-modal-box"
-    class="relative w-full sm:max-w-lg md:max-w-xl h-[85vh] sm:h-[580px] max-h-[90vh] flex flex-col bg-m3-surface-bright dark:bg-[#1E1F20] text-m3-on-surface rounded-t-3xl sm:rounded-3xl shadow-m3-4 overflow-hidden border border-m3-outline-variant/50 transform translate-y-8 sm:translate-y-2 sm:scale-95 transition-all duration-200"
+    class="relative w-full sm:w-[500px] md:w-[540px] lg:w-[560px] sm:max-w-[calc(100vw-3rem)] h-[90vh] sm:h-[720px] lg:h-[760px] max-h-[92vh] sm:max-h-[calc(100vh-3rem)] flex flex-col bg-m3-surface-bright dark:bg-[#1E1F20] text-m3-on-surface rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden border border-m3-outline-variant/50 transform translate-y-8 sm:translate-y-4 sm:scale-95 transition-all duration-200 origin-bottom sm:origin-bottom-right pointer-events-auto"
   >
     <!-- M3 Top App Bar: Minimal, One Single Call Number at Top -->
     <header class="flex items-center justify-between px-4 py-3 bg-m3-surface dark:bg-[#1A1B1E] border-b border-m3-outline-variant/40 shrink-0 select-none">
@@ -42,8 +42,8 @@ const callUrl = `tel:${phone}`;
         </h2>
       </div>
 
-      <!-- Action items: ONLY ONE Phone Call Button + Clean Close Icon -->
-      <div class="flex items-center gap-2">
+      <!-- Action items: Phone Call + Expand View + Clean Close Icon -->
+      <div class="flex items-center gap-1.5 sm:gap-2">
         <a
           href={callUrl}
           class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#006D3B] hover:bg-[#00532B] active:scale-95 text-xs font-semibold text-white transition-all shadow-xs"
@@ -55,8 +55,22 @@ const callUrl = `tel:${phone}`;
         </a>
         <button
           type="button"
+          id="ai-expand-modal-btn"
+          class="w-8 h-8 rounded-full hidden sm:flex items-center justify-center text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container active:scale-90 transition-all focus:outline-none cursor-pointer"
+          title="Expand chat view"
+          aria-label="Expand chat view"
+        >
+          <svg id="ai-expand-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+          </svg>
+          <svg id="ai-collapse-icon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9L4 4m0 5h5M9 4V9m6 6l5 5m0-5h-5m5 5v-5M9 15l-5 5m5 0H4m5-5v5m6-6l5-5m-5 0h5m-5 5V4" />
+          </svg>
+        </button>
+        <button
+          type="button"
           id="close-ai-modal-btn"
-          class="w-9 h-9 rounded-full flex items-center justify-center text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container active:scale-90 transition-all focus:outline-none"
+          class="w-9 h-9 rounded-full flex items-center justify-center text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container active:scale-90 transition-all focus:outline-none cursor-pointer"
           aria-label="Close dialog"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -69,15 +83,15 @@ const callUrl = `tel:${phone}`;
     <!-- M3 Chat Thread: Clean, Breathable, Spaced -->
     <main
       id="ai-chat-thread"
-      class="flex-1 overflow-y-auto p-4 space-y-3 bg-m3-surface dark:bg-[#121316] text-sm scroll-smooth"
+      class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3.5 bg-m3-surface dark:bg-[#121316] text-sm scroll-smooth"
     >
       <!-- Clean Welcome Message (Direct & Minimal) -->
-      <div class="flex items-start gap-2.5 max-w-[88%]">
+      <div class="flex items-start gap-2.5 w-full">
         <div class="w-7 h-7 rounded-full bg-m3-primary text-m3-on-primary flex items-center justify-center text-xs shrink-0 mt-0.5 font-bold shadow-xs">
           KT
         </div>
-        <div class="bg-m3-surface-container-low dark:bg-m3-surface-container p-3.5 rounded-2xl rounded-tl-xs border border-m3-outline-variant/40 shadow-xs text-m3-on-surface leading-relaxed text-sm">
-          <p class="font-medium text-m3-on-surface">Vanakkam! Which trip fare can I check for you?</p>
+        <div class="flex-1 bg-m3-surface-container-low dark:bg-m3-surface-container p-4 rounded-2xl rounded-tl-xs border border-m3-outline-variant/40 shadow-xs text-m3-on-surface leading-relaxed text-sm">
+          <p class="font-semibold text-m3-on-surface">Vanakkam! Which trip fare can I check for you?</p>
           <p class="text-xs text-m3-on-surface-variant mt-1">Tap a route below or type your destination.</p>
         </div>
       </div>
@@ -441,6 +455,7 @@ const callUrl = `tel:${phone}`;
     function openAiModal() {
       if (!modal) return;
       modal.classList.remove('hidden', 'pointer-events-none', 'opacity-0');
+      modal.classList.add('flex');
       modal.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
 
@@ -469,26 +484,72 @@ const callUrl = `tel:${phone}`;
       }
 
       setTimeout(() => {
-        modalBox?.classList.remove('translate-y-8', 'sm:translate-y-2', 'sm:scale-95');
+        modalBox?.classList.remove('translate-y-8', 'sm:translate-y-4', 'sm:scale-95');
         userInput?.focus();
       }, 10);
     }
+
+    const expandBtn = document.getElementById('ai-expand-modal-btn');
+    const expandIcon = document.getElementById('ai-expand-icon');
+    const collapseIcon = document.getElementById('ai-collapse-icon');
+    let isModalExpanded = false;
+
+    function resetModalExpandedState() {
+      isModalExpanded = false;
+      modalBox?.classList.add('sm:w-[500px]', 'md:w-[540px]', 'lg:w-[560px]', 'sm:h-[720px]', 'lg:h-[760px]');
+      modalBox?.classList.remove('sm:w-[860px]', 'md:w-[920px]', 'lg:w-[980px]', 'sm:h-[88vh]', 'sm:max-h-[92vh]');
+      modal?.classList.add('sm:items-end', 'sm:justify-end');
+      modal?.classList.remove('sm:items-center', 'sm:justify-center');
+      expandIcon?.classList.remove('hidden');
+      collapseIcon?.classList.add('hidden');
+      expandBtn?.setAttribute('title', 'Expand chat view');
+    }
+
+    function toggleExpandModal() {
+      if (!modalBox || !modal) return;
+      isModalExpanded = !isModalExpanded;
+      if (isModalExpanded) {
+        modalBox.classList.remove('sm:w-[500px]', 'md:w-[540px]', 'lg:w-[560px]', 'sm:h-[720px]', 'lg:h-[760px]');
+        modalBox.classList.add('sm:w-[860px]', 'md:w-[920px]', 'lg:w-[980px]', 'sm:h-[88vh]', 'sm:max-h-[92vh]');
+        modal.classList.remove('sm:items-end', 'sm:justify-end');
+        modal.classList.add('sm:items-center', 'sm:justify-center');
+        expandIcon?.classList.add('hidden');
+        collapseIcon?.classList.remove('hidden');
+        expandBtn?.setAttribute('title', 'Collapse chat view');
+      } else {
+        resetModalExpandedState();
+      }
+    }
+
+    expandBtn?.addEventListener('click', toggleExpandModal);
 
     function closeAiModal() {
       if (!modal) return;
       stopListening(false);
       closeLangModal();
-      modalBox?.classList.add('translate-y-8', 'sm:translate-y-2', 'sm:scale-95');
+      modalBox?.classList.add('translate-y-8', 'sm:translate-y-4', 'sm:scale-95');
       modal.classList.add('opacity-0');
 
       setTimeout(() => {
         modal.classList.add('hidden', 'pointer-events-none');
+        modal.classList.remove('flex');
         modal.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
+        resetModalExpandedState();
       }, 200);
     }
 
+    function toggleAiModal() {
+      if (modal && !modal.classList.contains('hidden') && !modal.classList.contains('opacity-0')) {
+        closeAiModal();
+      } else {
+        openAiModal();
+      }
+    }
+
     window.openAiFareModal = openAiModal;
+    window.closeAiFareModal = closeAiModal;
+    window.toggleAiFareModal = toggleAiModal;
 
     closeBtn?.addEventListener('click', closeAiModal);
     modal?.addEventListener('click', (e) => {
@@ -783,14 +844,27 @@ const callUrl = `tel:${phone}`;
     function formatMarkdown(text) {
       if (!text) return '';
       let escaped = escapeHtml(text);
+      // headings ###
+      escaped = escaped.replace(/(?:^|\n)###\s*(.+)/g, '<div class="font-bold text-sm text-m3-on-surface mt-2.5 mb-1 text-blue-600 dark:text-blue-400">$1</div>');
+      // headings ##
+      escaped = escaped.replace(/(?:^|\n)##\s*(.+)/g, '<div class="font-bold text-base text-m3-on-surface mt-3 mb-1 text-blue-600 dark:text-blue-400">$1</div>');
       // bold **text**
-      escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      // markdown links [text](url)
-      escaped = escaped.replace(/\[(.*?)\]\((https?:\/\/[^\s\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white text-xs font-semibold shadow-xs transition-all active:scale-95 no-underline my-1.5">$1</a>');
+      escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-m3-on-surface">$1</strong>');
+      // italics *text*
+      escaped = escaped.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="text-xs text-m3-on-surface-variant">$1</em>');
+      // markdown links [text](url) — handles both WhatsApp and internal action links
+      escaped = escaped.replace(/\[(.*?)\]\(((?:\/|https?:\/\/)[^\s\)]+)\)/g, function(match, label, href) {
+        const isWa = href.includes('wa.me') || href.includes('whatsapp.com');
+        if (isWa) {
+          return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white text-xs font-semibold shadow-xs transition-all active:scale-95 no-underline my-1.5">${label}</a>`;
+        }
+        // Action Deep-Link to Website Booking Engine
+        return `<a href="${href}" class="ai-action-link inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs font-bold shadow-md transition-all no-underline my-1.5 cursor-pointer border border-blue-500/40"><span>⚡ ${label}</span> <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg></a>`;
+      });
       // bullet lists
-      escaped = escaped.replace(/(?:^|\n)[•*-]\s*(.+)/g, '<div class="flex items-start gap-1.5 my-1"><span class="text-m3-primary font-bold shrink-0">•</span><span>$1</span></div>');
+      escaped = escaped.replace(/(?:^|\n)[•*-]\s*(.+)/g, '<div class="flex items-start gap-1.5 my-0.5"><span class="text-m3-primary font-bold shrink-0">•</span><span>$1</span></div>');
       // line breaks
-      escaped = escaped.replace(/\n\n/g, '<div class="my-2"></div>');
+      escaped = escaped.replace(/\n\n+/g, '<div class="my-1.5"></div>');
       escaped = escaped.replace(/\n/g, '<br/>');
       return escaped;
     }
@@ -802,7 +876,7 @@ const callUrl = `tel:${phone}`;
       const msgDiv = document.createElement('div');
       msgDiv.className = isUser
         ? 'flex items-start justify-end gap-2 max-w-[85%] ml-auto'
-        : 'flex items-start gap-2.5 max-w-[90%] sm:max-w-[85%]';
+        : 'flex items-start gap-2.5 w-full';
 
       const avatar = isUser
         ? ''
@@ -832,7 +906,7 @@ const callUrl = `tel:${phone}`;
 
       const bubbleClasses = isUser
         ? 'bg-m3-primary text-m3-on-primary p-3 rounded-2xl rounded-tr-xs shadow-xs text-sm'
-        : 'bg-m3-surface-container-low dark:bg-m3-surface-container p-3.5 rounded-2xl rounded-tl-xs border border-m3-outline-variant/40 shadow-xs text-m3-on-surface space-y-1.5 leading-relaxed text-sm';
+        : 'flex-1 bg-m3-surface-container-low dark:bg-m3-surface-container p-4 rounded-2xl rounded-tl-xs border border-m3-outline-variant/40 shadow-xs text-m3-on-surface space-y-1.5 leading-relaxed text-sm';
 
       msgDiv.innerHTML = `
         ${avatar}
@@ -849,10 +923,10 @@ const callUrl = `tel:${phone}`;
     function showTypingIndicator() {
       const typingDiv = document.createElement('div');
       typingDiv.id = 'ai-typing-indicator';
-      typingDiv.className = 'flex items-start gap-2.5 max-w-[85%]';
+      typingDiv.className = 'flex items-start gap-2.5 w-full';
       typingDiv.innerHTML = `
         <div class="w-7 h-7 rounded-full bg-m3-primary text-m3-on-primary flex items-center justify-center text-xs shrink-0 mt-0.5 font-bold shadow-xs">KT</div>
-        <div class="bg-m3-surface-container-low dark:bg-m3-surface-container p-3 rounded-2xl rounded-tl-xs border border-m3-outline-variant/40 shadow-xs flex items-center gap-1.5">
+        <div class="flex-1 max-w-[160px] bg-m3-surface-container-low dark:bg-m3-surface-container p-3 rounded-2xl rounded-tl-xs border border-m3-outline-variant/40 shadow-xs flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-m3-primary animate-bounce"></span>
           <span class="w-2 h-2 rounded-full bg-m3-primary animate-bounce [animation-delay:0.2s]"></span>
           <span class="w-2 h-2 rounded-full bg-m3-primary animate-bounce [animation-delay:0.4s]"></span>
@@ -1046,14 +1120,23 @@ const callUrl = `tel:${phone}`;
         }
       }
 
-      // Tirupati package (1, 2, or 3 days)
+      // Tirupati package (1, 2, 3, 4, 5+ days supported)
       if (activeDest === 'tirupati') {
-        const d = Math.min(Math.max(days, 1), 3);
+        const d = Math.max(days, 1);
+        const calc = (base3, extraPerDay, d1, d2) => {
+          if (d === 1) return d1;
+          if (d === 2) return d2;
+          if (d === 3) return base3;
+          return base3 + ((d - 3) * extraPerDay);
+        };
+
         const rates = {
-          1: { sedan: 6000, ertiga: 7500, innova: 8500, crysta: 10000, tempo: 12500 },
-          2: { sedan: 9500, ertiga: 11500, innova: 12500, crysta: 16000, tempo: 19500 },
-          3: { sedan: 13200, ertiga: 15800, innova: 17500, crysta: 22500, tempo: 27000 }
-        }[d];
+          sedan: calc(13200, 3500, 6000, 9500),
+          ertiga: calc(15800, 4000, 7500, 11500),
+          innova: calc(17500, 4000, 8500, 12500),
+          crysta: calc(22500, 6000, 10000, 16000),
+          tempo: calc(27000, 7000, 12500, 19500)
+        };
 
         const allLines = {
           sedan: `• **Swift Dzire / Etios (4 Pax):** ₹${rates.sedan.toLocaleString('en-IN')}`,
@@ -1070,6 +1153,7 @@ const callUrl = `tel:${phone}`;
         }
 
         const linesStr = selected.map((k) => allLines[k]).join('\n');
+        const pageLink = `/services/tirupati-package/?days=${d}`;
         const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent(`Hi Kalidass Travels, I want to book Chennai to Tirupati (${d}-Day) package. Please confirm availability.`)}`;
 
         if (isTamil) {
@@ -1077,17 +1161,19 @@ const callUrl = `tel:${phone}`;
             `${linesStr}\n\n` +
             `✅ **உள்ளடக்கம்:** சுத்தமான ஏசி வாகனம், டிரைவர் பேட்டா, திருமலை மலைப்பாதை அனுமதி & சுங்கக் கட்டணம் (1-நாள் பேக்கேஜில் அடங்கும்).\n` +
             `🛡️ **பாலிசி:** ₹500 முன்பணம் செலுத்தி காரை லாக் செய்யலாம். மீதமுள்ள தொகை பயணத்திற்குப் பின்!\n\n` +
+            `[👉 திருப்பதி ${d}-நாள் கால்குலேட்டரில் பார்க்க](${pageLink})\n\n` +
             `[👉 வாட்ஸ்அப்பில் உறுதிப்படுத்தவும்](${waUrl})`;
         }
 
         const incl = d === 1
-          ? 'Fuel, FASTag Tolls, AP Border Permit, Tirumala Ghat Road ascent & Driver Bata.'
-          : 'Dedicated AC cab & experienced chauffeur for all days. Highway Tolls & Parking as per actual plazas.';
+          ? 'Dedicated Cab, Fuel, NH FASTag Tolls, AP Border Permit, Tirumala Ghat Road ascent & Driver Bata.'
+          : `Dedicated AC cab & experienced chauffeur staying with you for all ${d} days, Tirumala Ghat Road hill climb & Driver Bata.`;
 
         return `Here are our official **Chennai ⇄ Tirupati ${d}-Day Package** rates:\n\n` +
           `${linesStr}\n\n` +
           `✅ **Inclusions:** ${incl}\n` +
-          `🛡️ **Policy:** ₹500 advance to confirm & lock cab (avoids last-minute cancellation). Remaining balance paid post-trip!\n\n` +
+          `🛡️ **Policy:** Nominal ₹500 advance to confirm & lock cab (avoids last-minute cancellation). Remaining balance paid post-trip!\n\n` +
+          `[👉 Open Tirupati ${d}-Day Calculator & View Live Quote](${pageLink})\n\n` +
           `[👉 Confirm Booking on WhatsApp](${waUrl})`;
       }
 
@@ -1238,10 +1324,48 @@ const callUrl = `tel:${phone}`;
       appendMessage('assistant', reply);
       chatHistory.push({ role: 'assistant', content: reply });
 
+      // If user explicitly commanded to "open", "launch", or "calculate":
+      const wantsToOpen = /(?:open|launch|navigate|go to|take me|calculate.*page|set.*calculate)/i.test(text);
+      if (wantsToOpen) {
+        const linkMatch = reply.match(/\[.*?\]\(((?:\/services\/[^\s\)]+)|(?:https?:\/\/[^\s\)]*\/services\/[^\s\)]+))\)/);
+        if (linkMatch && linkMatch[1]) {
+          const targetHref = linkMatch[1];
+          showVoiceToast('🚀 Directing to calculator with requested schedule...');
+          setTimeout(() => {
+            closeAiModal();
+            const target = new URL(targetHref, window.location.origin);
+            if (window.location.pathname === target.pathname) {
+              window.location.search = target.search;
+            } else {
+              window.location.href = targetHref;
+            }
+          }, 1200);
+        }
+      }
+
       isRequestInProgress = false;
       if (sendBtn) sendBtn.disabled = false;
       userInput?.focus();
     }
+
+    // Action link handler for instant deep-linking into booking engines
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('.ai-action-link');
+      if (!link) return;
+      const href = link.getAttribute('href');
+      if (!href) return;
+
+      if (href.startsWith('/') || href.startsWith(window.location.origin)) {
+        e.preventDefault();
+        closeAiModal();
+        const target = new URL(href, window.location.origin);
+        if (window.location.pathname === target.pathname) {
+          window.location.search = target.search;
+        } else {
+          window.location.href = href;
+        }
+      }
+    });
 
     chatForm?.addEventListener('submit', (e) => {
       e.preventDefault();

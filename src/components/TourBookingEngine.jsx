@@ -644,6 +644,75 @@ export default function TourBookingEngine({
     };
   }, [validationError, serviceSlug, isTirupati, pickup]);
 
+  // Deep-linking URL search parameters handler (e.g. ?days=5&vehicle=ertiga&pickup=Chennai)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const searchParams = new URLSearchParams(window.location.search);
+      const urlDays = parseInt(searchParams.get('days') || '', 10);
+      const urlVehicle = searchParams.get('vehicle');
+      const urlPickup = searchParams.get('pickup');
+      const urlDrop = searchParams.get('drop');
+      const urlPax = searchParams.get('passengers') || searchParams.get('pax');
+      const hasEngineParams = searchParams.has('days') || searchParams.has('vehicle') || searchParams.get('calc') === '1';
+
+      if (urlDays && urlDays > 0) {
+        const dep = getDefaultPickupTime();
+        setPickupDateTime(dep);
+        if (urlDays === 1) {
+          setReturnDateTime(getMinReturnDateTime(dep, config.minRealisticHours));
+        } else {
+          const d = new Date(dep);
+          d.setHours(d.getHours() + (urlDays * 24));
+          const yr = d.getFullYear();
+          const mo = String(d.getMonth() + 1).padStart(2, '0');
+          const dy = String(d.getDate()).padStart(2, '0');
+          const hr = String(d.getHours()).padStart(2, '0');
+          const mn = String(d.getMinutes()).padStart(2, '0');
+          setReturnDateTime(`${yr}-${mo}-${dy}T${hr}:${mn}`);
+        }
+      }
+
+      if (urlVehicle) {
+        const vLower = urlVehicle.toLowerCase();
+        const matched = config.vehicles?.find(v => 
+          v.id.toLowerCase() === vLower || 
+          v.name.toLowerCase().includes(vLower) || 
+          v.shortName.toLowerCase().includes(vLower)
+        );
+        if (matched) {
+          setVehicleIdState(matched.id);
+          if (matched.capacity) setPassengers(String(matched.capacity));
+        }
+      }
+
+      if (urlPax) {
+        setPassengers(String(urlPax));
+      }
+
+      if (urlPickup) {
+        setPickup(urlPickup);
+      } else if (hasEngineParams && !pickup.trim()) {
+        setPickup('Chennai (Doorstep Pickup)');
+      }
+
+      if (urlDrop && config.destination?.editable) {
+        setDropDestination(urlDrop);
+      }
+
+      if (hasEngineParams) {
+        setShowResult(true);
+        setTimeout(() => {
+          if (resultRef.current) {
+            resultRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        }, 250);
+      }
+    } catch (e) {
+      console.warn('Error reading URL search params:', e);
+    }
+  }, []);
+
   const availableVehicles = passengers 
     ? config.vehicles.filter(v => v.capacity >= parseInt(passengers, 10)) 
     : config.vehicles;

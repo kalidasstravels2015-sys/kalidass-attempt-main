@@ -604,9 +604,21 @@ export function processAiConciergeQuery(messages: ChatMessage[], pageContext?: a
 // QUOTE BUILDERS & KNOWLEDGE FORMATTERS
 // ─────────────────────────────────────────────────────────────────────────────
 
+function calculateMultiDayTourRate(v: any, numDays: number): number {
+  if (numDays <= 3) {
+    return v.rates?.[numDays] || (v.rates?.[1] ? v.rates[1] * numDays : 0);
+  }
+  const extraDays = numDays - 3;
+  const day2 = v.rates?.[2] || v.rates?.[1] || 0;
+  const day1 = v.rates?.[1] || 0;
+  const extraPerDay = day2 - day1;
+  const base3 = v.rates?.[3] || (day1 * 3);
+  return base3 + (extraDays * extraPerDay);
+}
+
 function getTourPackageQuote(state: ConversationState, isTa: boolean): string | null {
   const dest = state.activeDestination || 'tirupati';
-  const days = Math.min(Math.max(state.durationDays || 1, 1), 3);
+  const days = Math.max(state.durationDays || 1, 1);
 
   // Map destination to TOUR_CONFIG key
   const tourMap: Record<string, string> = {
@@ -652,13 +664,14 @@ function getTourPackageQuote(state: ConversationState, isTa: boolean): string | 
   // Format quotes list
   let lines: string[] = [];
   filteredVehicles.forEach((v: any) => {
-    const rate = v.rates?.[days] || v.rates?.[1] || 0;
-    const bata = v.driverBata?.[days] || v.driverBata?.[1] || 0;
+    const rate = calculateMultiDayTourRate(v, days);
     const name = v.name || v.shortName || 'Cab';
     const tag = v.tag ? ` *(${v.tag})*` : '';
     lines.push(`• **${name} (${v.capacity} Pax):** ₹${rate.toLocaleString('en-IN')}${tag}`);
   });
 
+  const tourSlug = tourMap[dest] || 'tirupati-package';
+  const pageLink = `/services/${tourSlug}/?days=${days}`;
   const whatsappMsg = `Hi Kalidass Travels, I want to book Chennai to ${dest.toUpperCase()} - ${days} Days package. Please confirm availability.`;
   const waUrl = generateWhatsAppLink(whatsappMsg);
 
@@ -699,6 +712,7 @@ function getTourPackageQuote(state: ConversationState, isTa: boolean): string | 
       `${lines.join('\n')}\n\n` +
       `✅ **உள்ளடக்கம்:** சுத்தமான ஏசி வாகனம், டிரைவர் பேட்டா, திருமலை மலைப்பாதை அனுமதி & சுங்கக் கட்டணம் (1-நாள் பேக்கேஜில் அடங்கும்).\n` +
       `🛡️ **முன்பதிவு உத்தரவாதம்:** ₹500 முன்பணம் செலுத்தி காரை லாக் செய்யலாம் (கடைசி நேர ரத்து தவிர்க்க). மீதமுள்ள தொகை பயண முடிவில்!\n\n` +
+      `[👉 ${durationLabel} கால்குலேட்டரில் பார்க்க](${pageLink})\n\n` +
       `[👉 வாட்ஸ்அப்பில் உறுதிப்படுத்தவும்](${waUrl})`
     );
   }
@@ -707,13 +721,14 @@ function getTourPackageQuote(state: ConversationState, isTa: boolean): string | 
   const inclusionNote =
     dest === 'tirupati' && days === 1
       ? 'Fuel, FASTag Tolls, AP Border Permit, Tirumala Ghat Road ascent & Driver Bata.'
-      : 'Dedicated AC cab & experienced chauffeur for all days. Highway Tolls & Parking as per actual plazas.';
+      : `Dedicated AC cab & experienced chauffeur staying with you for all ${days} days, Tirumala Ghat Road ascent & Driver Bata.`;
 
   return (
     `Here are our official **Chennai ⇄ ${dest.toUpperCase()} ${durationLabel} Package** rates:\n\n` +
     `${lines.join('\n')}\n\n` +
     `✅ **Inclusions:** ${inclusionNote}\n` +
-    `🛡️ **Policy:** ₹500 advance to confirm & lock cab (avoids last-minute cancellation). Remaining balance paid post-trip!\n\n` +
+    `🛡️ **Policy:** Nominal ₹500 advance to confirm & lock cab (avoids last-minute cancellation). Remaining balance paid post-trip!\n\n` +
+    `[👉 Open ${dest.toUpperCase()} ${durationLabel} Calculator & View Live Quote](${pageLink})\n\n` +
     `[👉 Confirm Booking on WhatsApp](${waUrl})`
   );
 }

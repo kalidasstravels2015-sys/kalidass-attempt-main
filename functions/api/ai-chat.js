@@ -18,14 +18,34 @@ CRITICAL RULES:
 
 VERIFIED RATE CARD:
 
-1. CHENNAI ⇄ TIRUPATI / TIRUMALA 1-DAY & MULTI-DAY PACKAGES (Round trip ~320 km, 14-16 hours):
-   - AC Sedan (Swift Dzire / Toyota Etios - 4 Pax): ₹6,000 (1 Day) | ₹9,500 (2 Days)
-   - Comfort SUV (Maruti Ertiga / XL6 - 6 Pax): ₹7,500 (1 Day) | ₹11,500 (2 Days)
-   - Spacious MUV (Toyota Innova - 7 Pax): ₹8,500 (1 Day) | ₹12,500 (2 Days)
-   - Premium MUV (Toyota Innova Crysta - 7 Pax): ₹10,000 (1 Day) | ₹15,500 (2 Days)
-   - Tempo Traveller (12 Pax): ₹12,500 (1 Day) | ₹19,500 (2 Days)
-   * SAME-DAY INCLUSIONS: Covers Cab, Fuel, NH FASTag Tolls, AP State Border Permit, Tirumala Ghat Road hill climb & Driver Bata. ₹500 advance to confirm booking.
-   * NOTE ON DARSHAN: Kalidass Travels provides dedicated cab transportation only. Darshan tickets must be arranged via TTD.
+1. CHENNAI ⇄ TIRUPATI / TIRUMALA PACKAGES (Round trip ~320 km, dedicated cab for all days):
+   - AC Sedan (Swift Dzire / Toyota Etios - 4 Pax):
+     1 Day: ₹6,000 | 2 Days: ₹9,500 | 3 Days: ₹13,200 | 4 Days: ₹16,700 | 5 Days: ₹20,200 (Add ₹3,500/extra day beyond 3 days)
+   - Comfort SUV (Maruti Ertiga / XL6 - 6 Pax):
+     1 Day: ₹7,500 | 2 Days: ₹11,500 | 3 Days: ₹15,800 | 4 Days: ₹19,800 | 5 Days: ₹23,800 (Add ₹4,000/extra day beyond 3 days)
+   - Spacious MUV (Toyota Innova - 7 Pax):
+     1 Day: ₹8,500 | 2 Days: ₹12,500 | 3 Days: ₹17,500 | 4 Days: ₹21,500 | 5 Days: ₹25,500 (Add ₹4,000/extra day beyond 3 days)
+   - Premium MUV (Toyota Innova Crysta - 7 Pax):
+     1 Day: ₹10,000 | 2 Days: ₹16,000 | 3 Days: ₹22,500 | 4 Days: ₹28,500 | 5 Days: ₹34,500 (Add ₹6,000/extra day beyond 3 days)
+   - Tempo Traveller (12 Pax):
+     1 Day: ₹12,500 | 2 Days: ₹19,500 | 3 Days: ₹27,000 | 4 Days: ₹34,000 | 5 Days: ₹41,000 (Add ₹7,000/extra day beyond 3 days)
+   * SAME-DAY INCLUSIONS (1 Day): Covers Dedicated Cab, Fuel, NH FASTag Tolls, AP Border Permit, Tirumala Ghat Road hill climb & Driver Bata. ₹500 advance to confirm.
+   * MULTI-DAY INCLUSIONS (2+ Days): Covers Dedicated Cab, Fuel, Tirumala hill climb & Driver Bata for all days. FASTag Tolls & AP permit at actual plazas.
+   * WEBSITE ACTION PROTOCOL & DEEP-LINKING: Whenever answering any package or destination inquiry, ALWAYS provide a direct markdown action link to the website's booking engine with the days pre-filled:
+     - Tirupati (N days): [👉 Open Tirupati N-Day Calculator & View Live Quote](/services/tirupati-package/?days={N})
+     - Pondicherry (N days): [👉 Open Pondicherry Calculator](/services/pondicherry-one-day-trip/?days={N})
+     - Thiruvannamalai: [👉 Open Thiruvannamalai Calculator](/services/thiruvannamalai-girivalam-trip/?days={N})
+     - Kanchipuram: [👉 Open Kanchipuram Calculator](/services/kanchipuram-temple-trip/?days={N})
+     - Chidambaram: [👉 Open Chidambaram Calculator](/services/chidambaram-temple-trip/?days={N})
+     - Navagraha: [👉 Open Navagraha Calculator](/services/navagraha-tour/?days={N})
+     - Rameswaram: [👉 Open Rameswaram Calculator](/services/rameswaram-2-days/?days={N})
+     - Sabarimala: [👉 Open Sabarimala Calculator](/services/sabarimala-trip/?days={N})
+     - Vellore: [👉 Open Vellore Calculator](/services/vellore-golden-temple/?days={N})
+     - Outstation Cabs: [👉 Calculate Outstation Fare](/services/outstation-cabs/)
+     - Airport Taxi: [👉 Book Airport Taxi](/services/chennai-airport-taxi/)
+     - Local Hourly Rental: [👉 View Local Packages](/tariff#local)
+   * If customer asks to 'open', 'launch', 'navigate', or 'calculate' the page (e.g. 'open tirupati package and set 5 days and calculate'), explicitly confirm that you are directing them to the page with 5 days pre-configured, and provide the direct button:
+     [🚀 Launch Tirupati 5-Day Booking Engine Now](/services/tirupati-package/?days=5)
 
 2. LOCAL CHENNAI HOURLY PACKAGES:
    - Sedan (Dzire/Etios):
@@ -56,7 +76,7 @@ VERIFIED RATE CARD:
      * 4 hrs / 40 km: ₹3,500 | 5 hrs / 50 km: ₹4,200 | 8 hrs / 80 km: ₹5,500 | 10 hrs / 100 km: ₹6,500 | 12 hrs / 120 km: ₹7,000
      * Extra km: ₹24 | Extra hr: ₹500
 
-3. OUTSTATION & INTERCITY PER-KM TARIFFS (Round trip / Drop):
+3. OUTSTATION & INTERCITY PER-KM TARIFFS (Applies ONLY to general city trips like Bangalore, Coimbatore, Trichy, Salem, Madurai — NEVER apply per-km billing to Tirupati, Pondicherry, or Tour Packages, which have dedicated multi-day package rates):
    - Swift Dzire / Etios: ₹14 / km (Min 250 km/day, Driver Bata ₹400/calendar day)
    - Maruti Ertiga: ₹17 / km (Min 250 km/day, Driver Bata ₹500/calendar day)
    - Toyota Innova: ₹20 / km (Min 250 km/day, Driver Bata ₹600/calendar day)
@@ -116,20 +136,48 @@ function deterministicFallback(userText, pageContext) {
   }
 
   if (query.includes('tirupati') || query.includes('tirumala') || query.includes('balaji')) {
+    let days = 1;
+    const dMatch = query.match(/(\d+)\s*(?:days?|day|நாட்கள்|நாள்)/i);
+    if (dMatch) days = parseInt(dMatch[1], 10);
+    else if (query.includes('2-day') || query.includes('2 day') || query.includes('two day')) days = 2;
+    else if (query.includes('3-day') || query.includes('3 day') || query.includes('three day')) days = 3;
+    else if (query.includes('4-day') || query.includes('4 day') || query.includes('four day')) days = 4;
+    else if (query.includes('5-day') || query.includes('5 day') || query.includes('five day')) days = 5;
+
+    const calc = (base3, extraPerDay, d1, d2) => {
+      if (days === 1) return d1;
+      if (days === 2) return d2;
+      if (days === 3) return base3;
+      return base3 + ((days - 3) * extraPerDay);
+    };
+
+    const sedanRate = calc(13200, 3500, 6000, 9500);
+    const ertigaRate = calc(15800, 4000, 7500, 11500);
+    const innovaRate = calc(17500, 4000, 8500, 12500);
+    const crystaRate = calc(22500, 6000, 10000, 16000);
+    const tempoRate = calc(27000, 7000, 12500, 19500);
+
+    const durText = days === 1 ? '1-Day' : `${days}-Day`;
+    const incl = days === 1 
+      ? 'Dedicated Cab, Fuel, NH FASTag Tolls, AP Border Permit, Tirumala Ghat Road ascent, and Driver Bata.' 
+      : `Dedicated AC cab & experienced chauffeur staying with you for all ${days} days, Tirumala Ghat Road hill climb & Driver Bata.`;
+
+    const pageLink = `/services/tirupati-package/?days=${days}`;
+
     return {
-      reply: `Here are our official **Chennai ⇄ Tirupati / Tirumala 1-Day Package** rates (same-day return ~320 km):\n\n` +
-        `• **AC Sedan (Dzire / Etios - 4 Pax):** ₹6,000\n` +
-        `• **Maruti Ertiga / XL6 (6 Pax):** ₹7,500\n` +
-        `• **Toyota Innova (7 Pax):** ₹8,500\n` +
-        `• **Toyota Innova Crysta:** ₹10,000\n` +
-        `• **Tempo Traveller (12 Pax):** ₹12,500\n\n` +
-        `✅ **Included in 1-Day Package:** Fuel, NH FASTag Tolls, AP Border Permit, Tirumala Ghat Road ascent, and Driver Bata.\n` +
-        `🛡️ **Policy:** ₹500 advance to confirm & lock cab (avoids last-minute cancellation). Balance post-trip.\n\n` +
-        `Would you like to confirm a booking or check availability for a specific date?`,
+      reply: `Here are our official **Chennai ⇄ Tirupati ${durText} Package** rates:\n\n` +
+        `• **AC Sedan (Dzire / Etios - 4 Pax):** ₹${sedanRate.toLocaleString('en-IN')}\n` +
+        `• **Maruti Ertiga / XL6 (6 Pax):** ₹${ertigaRate.toLocaleString('en-IN')}\n` +
+        `• **Toyota Innova (7 Pax):** ₹${innovaRate.toLocaleString('en-IN')}\n` +
+        `• **Toyota Innova Crysta:** ₹${crystaRate.toLocaleString('en-IN')}\n` +
+        `• **Tempo Traveller (12 Pax):** ₹${tempoRate.toLocaleString('en-IN')}\n\n` +
+        `✅ **Included in ${durText} Package:** ${incl}\n` +
+        `🛡️ **Policy:** Nominal ₹500 advance to confirm & lock cab (avoids last-minute cancellation). Balance post-trip.\n\n` +
+        `[👉 Open Tirupati ${durText} Calculator & View Live Quote](${pageLink})`,
       actionSuggestion: {
         type: 'tirupati_package',
-        label: 'Book Tirupati Package on WhatsApp',
-        whatsappText: 'Hi Kalidass Travels, I want to book a Chennai to Tirupati 1-Day Package.'
+        label: `Book Tirupati ${durText} on WhatsApp`,
+        whatsappText: `Hi Kalidass Travels, I want to book a Chennai to Tirupati ${durText} Package.`
       }
     };
   }
@@ -295,7 +343,7 @@ export async function onRequestPost({ request, env }) {
     };
 
     let candidateText = '';
-    for (const model of ['gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-pro-latest', 'gemini-3-flash-preview']) {
+    for (const model of ['gemini-3.8-flash', 'gemini-3.5-flash', 'gemini-3-flash', 'gemini-flash-latest']) {
       try {
         const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
         const geminiRes = await fetch(geminiUrl, {
