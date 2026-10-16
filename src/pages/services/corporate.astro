@@ -18,13 +18,10 @@ import {
   ShieldCheck, 
   Clock,
   Bus,
-  Film,
-  Building2,
   Factory,
   Briefcase,
   Award,
   MapPin,
-  ArrowRight,
   Phone
 } from 'lucide-react';
 
@@ -194,62 +191,52 @@ const tempoFleet = [
 
 const activeWorkOrders = [
   {
-    client: "Mahindra Logistics",
+    name: "Mahindra Logistics",
     category: "3PL & Supply Chain Hub Transit",
-    badge: "Active Operations",
     logo: "/images/partners/mahindra_logistics_logo.webp",
-    alt: "Mahindra Logistics - Kalidass Travels Corporate Transport Partner",
-    summary: "Dedicated 24/7 supply chain workforce transit across logistics parks, fulfillment hubs, and distribution warehouses in Chennai.",
-    scope: "Multi-point scheduled shift pickups and round-the-clock employee mobility connecting suburban residential belts to logistics hubs.",
-    highlights: [
-      "24/7 continuous shift operations with zero trip cancellations",
-      "Real-time GPS fleet tracking and central dispatch coordination",
-      "Automated digital attendance & consolidated monthly GST billing",
-      "Strict compliance with logistics safety regulations and PPE protocols"
-    ]
+    alt: "Mahindra Logistics - Kalidass Travels Corporate Transport Partner"
   },
   {
-    client: "Kaleesuwari Tech Bio Refinery",
+    name: "Kaleesuwari Tech Bio Refinery",
     category: "Factory & Industrial Plant Commute",
-    badge: "Active Operations",
     logo: "/images/partners/kaleesuwari.webp",
-    alt: "Kaleesuwari Refinery - Kalidass Travels Industrial Staff Transport",
-    summary: "Daily rostered shift commute for engineers, technical operators, and plant personnel to processing units and bio-refineries.",
-    scope: "Dedicated 17-seater Tempo Travellers and fleet shuttles ensuring punctual change of morning, evening, and night factory shifts.",
-    highlights: [
-      "Zero-delay shift transition guarantee ensuring no factory downtime",
-      "Gate-entry compliance, certified drivers, and industrial safety kits",
-      "Sanitized fleet with fixed route pick-up points across catchment zones",
-      "15-day / 30-day bill-to-company credit cycle with transparent logbooks"
-    ]
+    alt: "Kaleesuwari Refinery - Kalidass Travels Industrial Staff Transport"
   },
   {
-    client: "Cinema Studio Agencies & Film Productions",
-    category: "Kollywood & Media Shoot Logistics",
-    badge: "Active Operations",
-    isStudio: true,
-    summary: "Dedicated fleet logistics for Kollywood feature films, OTT series, television commercials, and media production agencies.",
-    scope: "12-hour and 24-hour continuous vehicle standby across studios (Prasad Studios, AVM, EVP Film City) and outdoor shoot locations.",
-    highlights: [
-      "Innova Crysta for directors, cinematographers & lead cast members",
-      "12-seater AC Tempo Travellers for camera, lighting & art crew units",
-      "Generous luggage capacity for shoot equipment, lenses, and costume racks",
-      "Flexible standby schedules accommodating late-night and dawn shoots"
-    ]
+    name: "Larsen & Toubro (L&T)",
+    category: "Infrastructure & Project Site Mobility",
+    logo: "/images/partners/landt.webp",
+    alt: "Larsen & Toubro (L&T) - Corporate Employee Transport Partner"
   },
   {
-    client: "IT Corridors & Tech Parks",
-    category: "TIDEL, OMR, DLF Cybercity & Ambattur",
-    badge: "Active Operations",
-    isIT: true,
-    summary: "Daily scheduled rostered employee transit for IT, ITES, and financial technology enterprises across Chennai's premier tech parks.",
-    scope: "End-to-end employee transportation services (ETS) with automated routing algorithms and mandatory women employee security.",
-    highlights: [
-      "Female employee safety: never first pickup or last drop between 8 PM – 6 AM",
-      "Door-to-gate arrival confirmation and emergency SOS alert systems",
-      "Guaranteed 60-minute emergency backup vehicle dispatch anywhere in Chennai",
-      "Full ITC eligibility with 100% itemized monthly GST tax invoices"
-    ]
+    name: "Cognizant",
+    category: "IT Park & Tech Corridor Commute",
+    logo: "/images/partners/cognizant.webp",
+    alt: "Cognizant Technology Solutions - IT Employee Transit Partner"
+  },
+  {
+    name: "Reliance Jio",
+    category: "Corporate Mobility & Field Operations",
+    logo: "/images/partners/jio.webp",
+    alt: "Reliance Jio Infocomm - Corporate Cab Retainers Chennai"
+  },
+  {
+    name: "Airport Authority of India",
+    category: "Aviation & Official VIP Transfers",
+    logo: "/images/partners/airport-chennai.webp",
+    alt: "Airport Authority of India - Official Taxi Partner Chennai Airport"
+  },
+  {
+    name: "Tamil Nadu Police",
+    category: "Government Duties & Department Shuttles",
+    logo: "/images/partners/tn-police.webp",
+    alt: "Tamil Nadu Police - Trusted Vehicle Provider for Official Duties"
+  },
+  {
+    name: "Saravn Enterprises",
+    category: "Logistics Hub & Staff Transport",
+    logo: "/images/partners/saravn.webp",
+    alt: "Saravn Enterprises - Dedicated Logistics and Staff Transport"
   }
 ];
 
@@ -893,82 +880,34 @@ const faqSchema = {
             </span>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Brand Logo & Names Showcase -->
+          <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             {activeWorkOrders.map((wo) => (
-              <div class="bg-m3-surface rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 p-5 sm:p-6 flex flex-col justify-between hover:shadow-m3-2 transition-all group">
-                <div>
-                  <!-- Header with Client Branding / Category -->
-                  <div class="flex items-start justify-between gap-3 mb-4">
-                    <div class="min-w-0 flex-1">
-                      <span class="inline-flex items-center gap-1 text-[11px] font-bold text-m3-primary uppercase tracking-wider mb-1">
-                        <span class="w-1.5 h-1.5 rounded-full bg-m3-primary"></span>
-                        <span>{wo.category}</span>
-                      </span>
-                      <h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading group-hover:text-m3-primary transition-colors">
-                        {wo.client}
-                      </h3>
-                    </div>
-
-                    <!-- Client Logo or Icon Graphic -->
-                    <div class="shrink-0 w-28 h-12 bg-m3-surface-container rounded-m3-lg border border-m3-outline-variant/60 p-2 flex items-center justify-center">
-                      {wo.logo ? (
-                        <img
-                          src={wo.logo}
-                          alt={wo.alt || wo.client}
-                          width="112"
-                          height="40"
-                          decoding="async"
-                          class="max-w-full max-h-full object-contain"
-                          loading="lazy"
-                        />
-                      ) : wo.isStudio ? (
-                        <div class="flex items-center gap-1.5 text-m3-primary font-bold text-xs font-heading">
-                          <Film className="w-4 h-4 text-m3-primary shrink-0" />
-                          <span>Kollywood</span>
-                        </div>
-                      ) : (
-                        <div class="flex items-center gap-1.5 text-m3-primary font-bold text-xs font-heading">
-                          <Building2 className="w-4 h-4 text-m3-primary shrink-0" />
-                          <span>IT Corridors</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <p class="text-xs sm:text-sm text-m3-on-surface font-medium leading-relaxed mb-2">
-                    {wo.summary}
-                  </p>
-
-                  <p class="text-xs text-m3-on-surface-variant leading-relaxed mb-4 bg-m3-surface-container-low p-3 rounded-m3-xl border border-m3-outline-variant/50">
-                    <strong class="text-m3-on-surface font-semibold">Scope of Duty:</strong> {wo.scope}
-                  </p>
-
-                  <!-- Operational Highlights -->
-                  <div class="space-y-2 mb-4">
-                    <span class="text-micro font-bold uppercase tracking-wider text-m3-on-surface-variant block">Key SLA Execution:</span>
-                    <ul class="space-y-1.5">
-                      {wo.highlights.map((hl) => (
-                        <li class="flex items-start gap-2 text-xs text-m3-on-surface leading-tight">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-m3-success shrink-0 mt-0.5" />
-                          <span>{hl}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+              <div class="bg-m3-surface rounded-m3-xl p-3 sm:p-4 border border-m3-outline-variant/70 hover:border-m3-primary/40 shadow-xs hover:shadow-m3-1 transition-all flex flex-col items-center text-center group">
+                <!-- Brand Logo Container with clean backdrop for high contrast -->
+                <div class="w-full h-14 sm:h-16 bg-white rounded-m3-lg border border-m3-outline-variant/40 p-2 flex items-center justify-center mb-2.5 shadow-2xs group-hover:scale-[1.02] transition-transform">
+                  <img
+                    src={wo.logo}
+                    alt={wo.alt || wo.name}
+                    width="120"
+                    height="48"
+                    decoding="async"
+                    class="max-w-full max-h-full object-contain"
+                    loading="lazy"
+                  />
                 </div>
-
-                <!-- Footer Quick CTA -->
-                <div class="pt-3 border-t border-m3-outline-variant/60 flex items-center justify-between">
-                  <span class="text-micro font-semibold text-m3-on-surface-variant">Custom RFP &amp; Route Proposal</span>
-                  <a
-                    href={buildWhatsAppUrl(`Hi Kalidass Travels, I would like to enquire about enterprise logistics similar to ${wo.client}.`)}
-                    target="_blank"
-                    rel="noopener noreferrer nofollow"
-                    class="inline-flex items-center gap-1.5 text-xs font-bold text-m3-primary hover:text-m3-primary/80 transition-colors"
-                  >
-                    <span>Discuss Scope</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </a>
+                <!-- Brand Name -->
+                <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading leading-tight group-hover:text-m3-primary transition-colors">
+                  {wo.name}
+                </h3>
+                <!-- Operational Category -->
+                <p class="text-[11px] text-m3-on-surface-variant mt-1 line-clamp-1 leading-snug">
+                  {wo.category}
+                </p>
+                <!-- Active Status Indicator -->
+                <div class="mt-2 pt-2 border-t border-m3-outline-variant/40 w-full flex items-center justify-center gap-1.5 text-[10px] font-semibold text-m3-success">
+                  <span class="w-1.5 h-1.5 rounded-full bg-m3-success shrink-0"></span>
+                  <span>Active Deployment</span>
                 </div>
               </div>
             ))}
@@ -985,13 +924,24 @@ const faqSchema = {
                 <span class="text-micro sm:text-xs text-m3-on-surface-variant">We formulate custom shift route matrices, headcount models, and corporate credit agreements within 24 hours.</span>
               </div>
             </div>
-            <a
-              href="tel:+918939539211"
-              class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-m3-full bg-m3-primary text-white text-xs font-bold shrink-0 shadow-xs hover:bg-m3-primary/90 transition-all"
-            >
-              <Phone className="w-3.5 h-3.5" />
-              <span>Talk to B2B Head</span>
-            </a>
+            <div class="flex items-center gap-2 shrink-0">
+              <a
+                href={buildWhatsAppUrl("Hi Kalidass Travels, I would like to enquire about Enterprise B2B Transportation / Work Order scope.")}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+                class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-m3-full bg-m3-success-container/20 hover:bg-m3-success-container/35 text-m3-on-surface border border-m3-success/30 text-xs font-bold transition-all"
+              >
+                <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0" />
+                <span>Enquire Scope</span>
+              </a>
+              <a
+                href="tel:+918939539211"
+                class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-m3-full bg-m3-primary text-white text-xs font-bold shadow-xs hover:bg-m3-primary/90 transition-all"
+              >
+                <AndroidPhoneIcon className="w-3.5 h-3.5 shrink-0" />
+                <span>Talk to B2B Head</span>
+              </a>
+            </div>
           </div>
         </div>
 

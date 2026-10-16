@@ -784,7 +784,7 @@ const callUrl = `tel:${phone}`;
       stopListeningUI();
     }
 
-    function toggleVoiceInput() {
+    async function toggleVoiceInput() {
       if (!SpeechRecognition) {
         showVoiceToast('⚠️ Voice input is not supported in this browser. Please use Chrome, Edge, or Safari.');
         return;
@@ -793,6 +793,17 @@ const callUrl = `tel:${phone}`;
       if (isListening) {
         stopListening(true);
         return;
+      }
+
+      // Pre-flight check: If on HTTPS and permission is prompt, trigger browser permission prompt cleanly
+      if (location.protocol === 'https:' && navigator.mediaDevices && navigator.mediaDevices.getUserMedia && navigator.permissions) {
+        try {
+          const status = await navigator.permissions.query({ name: 'microphone' });
+          if (status.state === 'prompt') {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            stream.getTracks().forEach(t => t.stop());
+          }
+        } catch (_) {}
       }
 
       try {
@@ -840,10 +851,18 @@ const callUrl = `tel:${phone}`;
           }
         };
 
-        recognitionInstance.onerror = (event) => {
+        recognitionInstance.onerror = async (event) => {
           stopListeningUI();
           if (event.error === 'not-allowed') {
-            showVoiceToast('🔒 Microphone permission blocked. Allow mic access in browser.');
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+              try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                stream.getTracks().forEach(t => t.stop());
+                showVoiceToast('✅ Microphone access enabled! Tap mic to speak.');
+                return;
+              } catch (_) {}
+            }
+            showVoiceToast('🔒 Microphone blocked. Click the tune icon in the address bar to Allow, then Reload.');
           } else if (event.error === 'no-speech') {
             showVoiceToast('No voice detected. Tap mic to try again.');
           } else if (event.error === 'network') {

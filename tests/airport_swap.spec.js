@@ -28,6 +28,7 @@ test.describe('Airport Taxi Route Swap Tests', () => {
 
     // 2. Click Tab -> Switches to Airport Pickup Mode
     await tabPickup.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(400);
     await tabPickup.click();
 
     await expect(tabPickup).toHaveAttribute('aria-selected', 'true', { timeout: 7000 });

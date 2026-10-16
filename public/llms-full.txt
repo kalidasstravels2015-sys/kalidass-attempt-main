@@ -220,9 +220,10 @@ All rates are in Indian Rupees (INR). Vehicles are commercial yellow-plate regis
     - Description: Routed employee shift transportation covering OMR, Guindy, Ambattur Industrial Estate, Sriperumbudur, and Oragadam manufacturing corridors.
     - Compliance: Automated GPS route logging, speed governor compliance, verified chauffeurs, female employee SOS protocols.
 
-20. **Chennai Airport Taxi (MAA) – 24/7 Pickup & Drop Cab Service**
+20. **Chennai Airport Taxi & Prepaid Cab Booking (MAA) – 24/7 Transfers**
     - URL: https://kalidasstravels.in/services/chennai-airport-taxi/
-    - Description: Rapid 5-10 minute dispatch from Chennai International & Domestic Airport (MAA). Real-time flight delay tracking with zero wait penalty. Name placard greeting at terminal gate. Flat transparent rates from ₹650.
+    - Description: Dedicated 24/7 airport transfers between Chennai International Airport (MAA) and all Chennai city zones / outstation corridors. Superior, zero-queue alternative to the airport prepaid taxi counter. Automated real-time flight radar tracking with 100% free delay waiting. Name placard meet-and-greet at Terminal 1 Domestic, Terminal 2 & Terminal 4 International exit gates. ₹0 advance payment required (pay post-trip via UPI, Cash, or Card).
+    - Pricing / Fare Chart: Sedan (Dzire/Etios) ₹650–₹1,250 | Maruti Ertiga 6-Seater ₹1,150–₹1,850 | Innova Crysta VIP 7-Seater ₹1,500–₹2,300 | Tempo Traveller 12-Seater ₹2,400–₹3,400. Direct outstation transfers: Pondicherry (₹3,900), Vellore CMC (₹4,200), Tirupati Balaji (₹4,200). Pickup charges and drop charges are completely identical with zero surge.
 
 ### High-Intent Corridors & Suburban Dispatch Hubs
 

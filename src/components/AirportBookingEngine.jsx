@@ -588,10 +588,42 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
     };
   }, [showBookingModal]);
 
-  const handleCalculate = () => {
-    const userLoc = (direction === 'pickup' ? drop : pickup).trim();
+  // ── Listen for external location/neighborhood selection (e.g. from popular neighborhoods) ──
+  useEffect(() => {
+    const onSetLocation = (e) => {
+      const loc = e.detail?.location;
+      const targetDir = e.detail?.direction;
+      const autoCalc = e.detail?.autoCalculate !== false;
+      if (loc) {
+        let activeDir = direction;
+        if (targetDir && targetDir !== direction) {
+          handleDirectionChange(targetDir);
+          activeDir = targetDir;
+        }
+        if (activeDir === 'pickup') {
+          setDrop(loc);
+          setPickup(AIRPORT_HUB);
+        } else {
+          setPickup(loc);
+          setDrop(AIRPORT_HUB);
+        }
+        setShowResult(false);
+        setError('');
+        resolveTripDistance(loc);
+        if (autoCalc) {
+          handleCalculateWithLoc(loc, activeDir);
+        }
+      }
+    };
+    window.addEventListener('airport-set-location', onSetLocation);
+    return () => window.removeEventListener('airport-set-location', onSetLocation);
+  }, [direction, pickup, drop, vehicle, distanceKm, duration]);
+
+  const handleCalculateWithLoc = (overrideLoc, overrideDir) => {
+    const activeDir = overrideDir || direction;
+    const userLoc = (overrideLoc || (activeDir === 'pickup' ? drop : pickup)).trim();
     if (!userLoc || userLoc === AIRPORT_HUB) {
-      setError(direction === 'pickup'
+      setError(activeDir === 'pickup'
         ? 'Please enter your drop location / hotel in Chennai or Outstation'
         : 'Please enter your pickup doorstep / area in Chennai or Outstation');
       destInputRef.current?.focus();
@@ -629,16 +661,16 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
       trackCalculatorQuote({
         calculatorId: 'airport_taxi',
         calculatorEngine: 'Chennai Airport Taxi Estimator',
-        tripType: direction === 'pickup'
+        tripType: activeDir === 'pickup'
           ? (fareResult.isOutstation ? 'Airport Outstation Pickup' : 'Airport Pickup (To City)')
           : (fareResult.isOutstation ? 'Airport Outstation Drop' : 'Airport Drop (To Airport)'),
-        pickup: direction === 'pickup' ? AIRPORT_HUB : userLoc,
-        drop: direction === 'pickup' ? userLoc : AIRPORT_HUB,
+        pickup: activeDir === 'pickup' ? AIRPORT_HUB : userLoc,
+        drop: activeDir === 'pickup' ? userLoc : AIRPORT_HUB,
         vehicle,
         distanceKm: fareResult.distanceKm,
         estimatedFare: fareResult.estimate,
         meta: {
-          direction,
+          direction: activeDir,
           isOutstation: fareResult.isOutstation,
           zone: fareResult.zoneName,
           flightNo: flightNo || undefined,
@@ -650,6 +682,8 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
       });
     }, 280);
   };
+
+  const handleCalculate = () => handleCalculateWithLoc();
 
   // ── Lead Logging to Google Sheets ────────────────────────────────────────
   const logBookingLead = (isPickup, fullPhone) => {
@@ -776,7 +810,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
   const fmtRs = n => `₹${Number(n).toLocaleString('en-IN')}`;
 
   // ── Shared class tokens (unified with QuotationEngine) ──────────────────
-  const inputWrap  = 'relative flex items-center bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant rounded-m3-md px-3 py-2 sm:py-2.5 min-h-[44px] sm:min-h-[48px] focus-within:ring-2 focus-within:ring-m3-primary focus-within:border-m3-primary transition-all';
+  const inputWrap  = 'relative flex items-center bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant rounded-m3-md px-3 py-1.5 sm:py-2 min-h-[40px] sm:min-h-[44px] focus-within:ring-2 focus-within:ring-m3-primary focus-within:border-m3-primary transition-all';
   const inputField = 'bg-transparent w-full outline-none text-sm font-semibold text-m3-on-surface pr-16 placeholder:text-m3-on-surface-variant placeholder:text-xs placeholder:font-normal';
   const labelCls   = 'block text-badge font-bold text-m3-on-surface-variant uppercase tracking-wide mb-1';
   const stickyFrom = direction === 'pickup' ? 'MAA Airport' : (pickup?.split(',')[0] || 'Pickup');
@@ -848,7 +882,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
         )}
 
         {/* Tab Pills — identical to QuotationEngine */}
-        <div className="px-3 sm:px-6 my-4">
+        <div className="px-3 sm:px-6 my-2.5 sm:my-3">
           <div role="tablist" aria-label="Transfer Direction" className="bg-m3-surface-container-high p-1 rounded-m3-full flex gap-1 border border-m3-outline-variant">
             {[
               { key: 'drop',   label: 'Airport Drop',   testId: 'tab-drop' },
@@ -860,7 +894,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                 data-testid={tab.testId}
                 aria-selected={direction === tab.key}
                 onClick={() => handleDirectionChange(tab.key)}
-                className={`flex-1 py-2 px-3 text-xs font-bold rounded-m3-full transition-all min-h-[38px] sm:min-h-[42px] cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary inline-flex items-center justify-center gap-1.5 ${
+                className={`flex-1 py-1.5 sm:py-2 px-3 text-xs font-bold rounded-m3-full transition-all min-h-[36px] sm:min-h-[40px] cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary inline-flex items-center justify-center gap-1.5 ${
                   direction === tab.key
                     ? 'bg-m3-primary text-m3-on-primary shadow-m3-1'
                     : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container-highest'
@@ -873,7 +907,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
           </div>
         </div>
 
-        <form onSubmit={e => { e.preventDefault(); handleCalculate(); }} className="px-3 sm:px-6 pb-5 space-y-3">
+        <form onSubmit={e => { e.preventDefault(); handleCalculate(); }} className="px-3 sm:px-6 pb-3.5 sm:pb-4 space-y-2.5 sm:space-y-3">
 
           {/* Error */}
           {error && (
@@ -1055,7 +1089,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
             id="get-flat-fare-btn"
             data-testid="get-flat-fare-btn"
             disabled={loading}
-            className="w-full max-w-[260px] sm:max-w-[280px] mx-auto !bg-[#0B57D0] hover:!bg-[#0842A0] active:!bg-[#0842A0] active:scale-[0.98] !text-white font-bold py-3.5 rounded-m3-full transition-all flex items-center justify-center gap-2 shadow-m3-2 hover:shadow-m3-3 text-sm sm:text-base min-h-[46px] sm:min-h-[50px] cursor-pointer disabled:opacity-75"
+            className="w-full max-w-[240px] sm:max-w-[260px] mx-auto !bg-[#0B57D0] hover:!bg-[#0842A0] active:!bg-[#0842A0] active:scale-[0.98] !text-white font-bold py-2.5 sm:py-3 rounded-m3-full transition-all flex items-center justify-center gap-2 shadow-m3-2 hover:shadow-m3-3 text-sm min-h-[42px] sm:min-h-[46px] cursor-pointer disabled:opacity-75"
           >
             {loading ? (
               <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /><span>Calculating...</span></>
