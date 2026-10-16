@@ -175,7 +175,7 @@ export const POST: APIRoute = async ({ request }) => {
                   role: m.role === 'user' ? 'user' : 'model',
                   parts: [{ text: m.content }]
                 })),
-                generationConfig: { temperature: 0.3, maxOutputTokens: 1200 }
+                generationConfig: { temperature: 0.3, maxOutputTokens: 3000 }
               })
             });
 

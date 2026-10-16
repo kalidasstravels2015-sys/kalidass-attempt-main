@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// Trigger Vite dependency re-optimization (v3)
+// Trigger Vite dependency re-optimization (v4)
 export default defineConfig({
   site: 'https://kalidasstravels.in',
   trailingSlash: 'always',
@@ -185,19 +185,26 @@ CONVERSATIONAL INTELLIGENCE GUIDELINES:
 5. WHATSAPP BOOKING CALL-TO-ACTION:
    - When quoting a specific trip, include a clean markdown link: [👉 Confirm Booking on WhatsApp](https://wa.me/918939539211?text=...) with a pre-filled message.
 
-OFFICIAL TARIFF RATE CARD:
-- CHENNAI ⇄ TIRUPATI / TIRUMALA PACKAGES:
+OFFICIAL TARIFF RATE CARD & PACKAGES:
+- CHENNAI ⇄ TIRUPATI / TIRUMALA PACKAGES (Round trip ~320 km, dedicated cab for all days):
+  * MANDATORY: If customer asks about Tirupati for ANY number of days (1 to 7+ days), quote the official Tirupati Multi-Day Package Rates. NEVER use outstation per-km rates for Tirupati!
   * 1-Day: Swift Dzire / Etios: ₹6,000 | Maruti Ertiga: ₹7,500 | Innova: ₹8,500 | Innova Crysta: ₹10,000 | Tempo 12: ₹12,500. (All-inclusive of Fuel, FASTag Tolls, AP Border Permit, Tirumala Ghat Road ascent & Driver Bata).
   * 2-Day Package: Swift Dzire / Etios: ₹9,500 | Maruti Ertiga / XL6: ₹11,500 | Innova: ₹12,500 | Innova Crysta: ₹16,000 | Tempo 12: ₹19,500.
   * 3-Day Package: Swift Dzire / Etios: ₹13,200 | Maruti Ertiga: ₹15,800 | Innova: ₹17,500 | Innova Crysta: ₹22,500 | Tempo 12: ₹27,000.
+  * 4-Day Package: Swift Dzire / Etios: ₹16,700 | Maruti Ertiga: ₹19,800 | Innova: ₹21,500 | Innova Crysta: ₹28,500 | Tempo 12: ₹34,000.
+  * 5-Day Package: Swift Dzire / Etios: ₹20,200 | Maruti Ertiga: ₹23,800 | Innova: ₹25,500 | Innova Crysta: ₹34,500 | Tempo 12: ₹41,000.
+    (Multi-day formula for N days >= 4: Base 3-Day Rate + ((N - 3) × (Day 2 Rate - Day 1 Rate))). Dedicated cab stays with customer for all days, hill climb to Tirumala and driver bata included.
+  * ACTION PROTOCOL & DEEP-LINKING (MANDATORY): Always provide the direct calculator action link:
+    [👉 Open Tirupati {N}-Day Booking Engine & View Live Quote](/services/tirupati-package/?days={N})
+    If customer asks to 'open', 'launch', or 'calculate' the page, provide: [🚀 Launch Tirupati 5-Day Booking Engine Now](/services/tirupati-package/?days=5)
 - POPULAR TOUR PACKAGES:
-  * Pondicherry: 1-Day Sedan ₹4,500 - ₹5,000 | Ertiga ₹5,800 - ₹6,200 | Innova ₹7,000. 2-Day Sedan ₹7,500 | Ertiga ₹9,200.
-  * Chidambaram & Pichavaram: 1-Day Sedan ₹7,400 | Ertiga ₹9,200 | Innova ₹11,000. 2-Day Sedan ₹9,800 | Ertiga ₹12,000.
-  * Thiruvannamalai Girivalam: 1-Day Sedan ₹6,500 | Ertiga ₹7,900 | Innova ₹9,300. 2-Day Sedan ₹8,900 | Ertiga ₹10,900.
-  * Kanchipuram: 1-Day Sedan ₹3,800 | Ertiga ₹4,800 | Innova ₹5,800.
-  * Navagraha (Kumbakonam): 2-Day Sedan ₹14,500 | Ertiga ₹18,500. 3-Day Sedan ₹19,500 | Ertiga ₹24,500.
-  * Rameswaram & Dhanushkodi: 2-Day Sedan ₹18,500 | Ertiga ₹23,500. 3-Day Sedan ₹24,500 | Ertiga ₹30,500.
-- OUTSTATION PER-KM TARIFFS (Round Trips):
+  * Pondicherry: 1-Day Sedan ₹4,500 - ₹5,000 | Ertiga ₹5,800 - ₹6,200 | Innova ₹7,000. 2-Day Sedan ₹7,500 | Ertiga ₹9,200. Link: [👉 Open Pondicherry Calculator](/services/pondicherry-one-day-trip/?days={N})
+  * Chidambaram & Pichavaram: 1-Day Sedan ₹7,400 | Ertiga ₹9,200 | Innova ₹11,000. 2-Day Sedan ₹9,800 | Ertiga ₹12,000. Link: [👉 Open Chidambaram Calculator](/services/chidambaram-temple-trip/?days={N})
+  * Thiruvannamalai Girivalam: 1-Day Sedan ₹6,500 | Ertiga ₹7,900 | Innova ₹9,300. 2-Day Sedan ₹8,900 | Ertiga ₹10,900. Link: [👉 Open Thiruvannamalai Calculator](/services/thiruvannamalai-girivalam-trip/?days={N})
+  * Kanchipuram: 1-Day Sedan ₹3,800 | Ertiga ₹4,800 | Innova ₹5,800. Link: [👉 Open Kanchipuram Calculator](/services/kanchipuram-temple-trip/?days={N})
+  * Navagraha (Kumbakonam): 2-Day Sedan ₹14,500 | Ertiga ₹18,500. 3-Day Sedan ₹19,500 | Ertiga ₹24,500. Link: [👉 Open Navagraha Calculator](/services/navagraha-tour/?days={N})
+  * Rameswaram & Dhanushkodi: 2-Day Sedan ₹18,500 | Ertiga ₹23,500. 3-Day Sedan ₹24,500 | Ertiga ₹30,500. Link: [👉 Open Rameswaram Calculator](/services/rameswaram-2-days/?days={N})
+- OUTSTATION PER-KM TARIFFS (Applies ONLY to general city trips like Bangalore, Coimbatore, Trichy, Salem, Madurai — NEVER apply to Tirupati or Tour Packages):
   * Swift Dzire / Etios: ₹14/km | Driver Bata ₹400/day | Min billing 250 km/day.
   * Maruti Ertiga / XL6: ₹17/km | Driver Bata ₹500/day | Min billing 250 km/day.
   * Toyota Innova: ₹20/km | Driver Bata ₹600/day | Min billing 250 km/day.
@@ -213,14 +220,14 @@ OFFICIAL TARIFF RATE CARD:
   * Outstation: ₹1,100/day (+ ₹300 food/stay bata if not provided)
 ${promptCtx}`;
 
-                      for (const model of ['gemini-flash-latest', 'gemini-flash-lite-latest', 'gemini-pro-latest', 'gemini-3-flash-preview']) {
+                      for (const model of ['gemini-3.8-flash', 'gemini-3.5-flash', 'gemini-3-flash', 'gemini-flash-latest']) {
                         const gRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
                           method: 'POST',
                           headers: { 'Content-Type': 'application/json' },
                           body: JSON.stringify({
                             systemInstruction: { parts: [{ text: systemPrompt }] },
                             contents: messages.map(m => ({ role: m.role === 'user' ? 'user' : 'model', parts: [{ text: m.content }] })),
-                            generationConfig: { temperature: 0.3, maxOutputTokens: 1200 }
+                            generationConfig: { temperature: 0.3, maxOutputTokens: 3000 }
                           })
                         });
                         if (gRes.ok) {

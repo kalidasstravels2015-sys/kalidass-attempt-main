@@ -338,7 +338,7 @@ export async function onRequestPost({ request, env }) {
       })),
       generationConfig: {
         temperature: 0.3,
-        maxOutputTokens: 1200,
+        maxOutputTokens: 3000,
       }
     };
 
