@@ -780,3 +780,4 @@ CT/EST/1026/101,"13 Oct 2026, 10:51 pm","/services/tirupati-package/","Tirupati 
 #CALC-689807,"16 Oct 2026, 5:09 pm","/","Outstation Cab Estimator","Round Trip","Pallavaram  Chennai","Tirupati  Andhra Pradesh","Swift Dzire",160,4880,Browsed,"{days:1;travelDate:2026-10-17T06:00}"
 #CALC-595391,"16 Oct 2026, 5:09 pm","/services/outstation-cabs/","Outstation Cab Estimator","Round Trip","Pallavaram  Chennai","Tirupati  Andhra Pradesh","Swift Dzire",160,4880,Browsed,"{days:1;travelDate:2026-10-17T06:00}"
 #CALC-911046,"16 Oct 2026, 5:09 pm","/","Outstation Cab Estimator","Round Trip","Pallavaram  Chennai","Tirupati  Andhra Pradesh","Swift Dzire",160,4880,Browsed,"{days:1;travelDate:2026-10-17T06:00}"
+#CALC-882317,"16 Oct 2026, 5:27 pm","/calculator/","Local Rental Package","Local Package (8hr80km)","Chennai","Local Sightseeing (Chennai City)","Swift Dzire",8hr80km,2200,Browsed,"{days:1;travelDate:2026-10-17T06:00;localPackage:8hr80km}"

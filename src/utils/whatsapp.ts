@@ -8,6 +8,17 @@ export const WHATSAPP_CONFIG = {
   phone: '918939539211',
   /** Formatted phone number for human-readable UI display */
   formattedPhone: '+91 89395 39211',
+  /** Additional contact numbers */
+  additionalPhones: [
+    { phone: '916381939769', formattedPhone: '+91 63819 39769', raw: '6381939769', label: 'Helpline 2' },
+    { phone: '919092303060', formattedPhone: '+91 90923 03060', raw: '9092303060', label: 'Helpline 3' },
+  ],
+  /** Complete list of official contact numbers */
+  allPhones: [
+    { phone: '918939539211', formattedPhone: '+91 89395 39211', raw: '8939539211', label: 'Primary 24/7 Helpline' },
+    { phone: '916381939769', formattedPhone: '+91 63819 39769', raw: '6381939769', label: 'Helpline 2' },
+    { phone: '919092303060', formattedPhone: '+91 90923 03060', raw: '9092303060', label: 'Helpline 3' },
+  ],
   /** Default fallback greeting message */
   defaultGreeting: 'Hi Kalidass Travels, I would like to enquire about a cab booking.',
 } as const;

@@ -15,12 +15,18 @@ export default function DeskDispatchRadar({
 
   // Classify bookings by timeline
   const categorized = useMemo(() => {
+    const unassignedList = [];
     const todayList = [];
     const tomorrowList = [];
     const upcomingList = [];
 
     bookings.forEach(b => {
       if (b.manifestStatus === 'Completed' || b.manifestStatus === 'Cancelled') return;
+
+      if (!b.assignedChauffeur || b.assignedChauffeur === 'Unassigned') {
+        unassignedList.push(b);
+      }
+
       const lower = (b.travelDateTime || '').toLowerCase();
       if (lower.includes('today')) {
         todayList.push(b);
@@ -31,11 +37,12 @@ export default function DeskDispatchRadar({
       }
     });
 
-    return { todayList, tomorrowList, upcomingList };
+    return { unassignedList, todayList, tomorrowList, upcomingList };
   }, [bookings]);
 
   // Active view list
   const activeList = useMemo(() => {
+    if (subFilter === 'unassigned') return categorized.unassignedList;
     if (subFilter === 'today') return categorized.todayList;
     if (subFilter === 'tomorrow') return categorized.tomorrowList;
     if (subFilter === 'upcoming') return categorized.upcomingList;
@@ -130,6 +137,19 @@ export default function DeskDispatchRadar({
     <div className="space-y-4">
       {/* Sub-Filter Timeline Navigation Pills */}
       <div className="bg-white rounded-2xl p-2 border border-m3-outline-variant shadow-sm flex items-center justify-between gap-1 overflow-x-auto">
+        <button
+          type="button"
+          onClick={() => setSubFilter('unassigned')}
+          className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center justify-center gap-1.5 ${
+            subFilter === 'unassigned'
+              ? 'bg-amber-500 text-white shadow-sm'
+              : 'text-amber-700 bg-amber-50 hover:bg-amber-100'
+          }`}
+        >
+          <span className="material-symbols-outlined text-sm">warning</span>
+          <span>Needs Driver ({categorized.unassignedList.length})</span>
+        </button>
+
         <button
           type="button"
           onClick={() => setSubFilter('tomorrow')}

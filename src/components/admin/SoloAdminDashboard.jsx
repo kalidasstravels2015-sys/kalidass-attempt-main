@@ -2,7 +2,9 @@ import React, { useState, useEffect, useMemo } from 'react';
 import DeskInquiries from './solo/DeskInquiries';
 import DeskDispatchRadar from './solo/DeskDispatchRadar';
 import DeskKhataSettlement from './solo/DeskKhataSettlement';
+import DeskChauffeurs from './solo/DeskChauffeurs';
 import SoloDutySlipModal from './solo/SoloDutySlipModal';
+import AiBookingParser from './solo/AiBookingParser';
 
 const DEFAULT_CHAUFFEURS = [
   { name: 'Murugan', phone: '+91 97890 12345', plate: 'TN09 BX 1234', category: 'Sedan (Dzire)', status: 'Available', rating: '4.9' },
@@ -102,7 +104,9 @@ const STORAGE_KEYS = {
 };
 
 export default function SoloAdminDashboard() {
-  const [activeDesk, setActiveDesk] = useState('dispatch'); // 'inquiries', 'dispatch', 'khata'
+  const [activeDesk, setActiveDesk] = useState('dispatch'); // 'dispatch', 'inquiries', 'chauffeurs', 'khata'
+  const [isAiParserModalOpen, setIsAiParserModalOpen] = useState(false);
+
   const [bookings, setBookings] = useState(() => {
     if (typeof window !== 'undefined' && window.localStorage) {
       try {
@@ -242,7 +246,7 @@ export default function SoloAdminDashboard() {
     ));
     setBookings(updated);
     if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(updated));
-    showToast(`Trip ${bookingId} completed! Now ready for Khata settlement.`, 'success');
+    showToast(`Trip ${bookingId} completed! Ready for Khata settlement.`, 'success');
   };
 
   // Record Settlement
@@ -261,16 +265,28 @@ export default function SoloAdminDashboard() {
     return bookings.filter(b => b.manifestStatus !== 'Completed' && b.manifestStatus !== 'Cancelled').length;
   }, [bookings]);
 
+  const unassignedCount = useMemo(() => {
+    return bookings.filter(b => 
+      b.manifestStatus !== 'Completed' && 
+      b.manifestStatus !== 'Cancelled' && 
+      (!b.assignedChauffeur || b.assignedChauffeur === 'Unassigned')
+    ).length;
+  }, [bookings]);
+
   const completedCount = useMemo(() => {
     return bookings.filter(b => b.manifestStatus === 'Completed').length;
   }, [bookings]);
 
+  const totalInquiriesCount = leads.length + chatQueries.length;
+
   return (
-    <div className="min-h-screen bg-m3-surface-container text-m3-on-surface pb-20 font-sans">
+    <div className="min-h-screen bg-slate-100/70 text-slate-900 font-sans flex flex-col">
       {/* Toast Notification */}
       {toast && (
-        <div className={`fixed top-4 right-4 z-50 px-4 py-2.5 rounded-xl shadow-lg text-xs font-bold flex items-center gap-2 animate-fadeIn ${
-          toast.type === 'error' ? 'bg-m3-error text-white' : 'bg-m3-inverse-surface text-m3-success border border-m3-outline-variant/40'
+        <div className={`fixed top-4 right-4 z-50 px-4 py-2.5 rounded-xl shadow-xl text-xs font-bold flex items-center gap-2 animate-fadeIn border ${
+          toast.type === 'error'
+            ? 'bg-rose-600 text-white border-rose-700'
+            : 'bg-slate-900 text-emerald-400 border-slate-700'
         }`}>
           <span className="material-symbols-outlined text-sm">
             {toast.type === 'error' ? 'error' : 'check_circle'}
@@ -279,110 +295,221 @@ export default function SoloAdminDashboard() {
         </div>
       )}
 
-      {/* Top Header */}
-      <header className="sticky top-0 z-30 bg-m3-inverse-surface text-white px-4 py-3 shadow-md border-b border-m3-outline-variant/40">
-        <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="w-8 h-8 rounded-lg bg-m3-tertiary-container/300 text-m3-on-surface font-black text-sm flex items-center justify-center shadow-inner">
+      {/* Global Top App Bar */}
+      <header className="sticky top-0 z-30 bg-slate-900 text-white px-4 lg:px-6 py-2.5 shadow-md border-b border-slate-800">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+          {/* Brand & Sync Pill */}
+          <div className="flex items-center gap-3">
+            <span className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-white font-black text-base flex items-center justify-center shadow-md">
               K
             </span>
             <div>
-              <h1 className="text-sm font-extrabold tracking-tight flex items-center gap-1.5">
-                <span>Kalidass Travels</span>
-                <span className="text-[10px] font-bold bg-m3-tertiary-container/300/20 text-m3-tertiary px-1.5 py-0.2 rounded border border-m3-tertiary/30">
-                  Solo Cockpit
+              <div className="flex items-center gap-2">
+                <h1 className="text-sm font-extrabold tracking-tight text-white">Kalidass Travels</h1>
+                <span className="text-[10px] font-bold bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full border border-amber-500/30">
+                  Command Cockpit
                 </span>
-              </h1>
-              <span className="text-[10px] text-m3-outline-variant font-mono">Sync: {lastSync}</span>
+              </div>
+              <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-mono">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Live Sync: {lastSync}</span>
+              </div>
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={refreshData}
-            className="p-2 rounded-lg bg-m3-surface-container-high hover:bg-m3-surface-container-high text-m3-inverse-on-surface/80 hover:text-white transition-colors"
-            title="Refresh Data"
-          >
-            <span className="material-symbols-outlined text-base">refresh</span>
-          </button>
+          {/* Action Center */}
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setIsAiParserModalOpen(true)}
+              className="px-3.5 py-1.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md shadow-amber-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <span className="material-symbols-outlined text-sm">auto_awesome</span>
+              <span className="hidden sm:inline">⚡ AI Smart Parse & Quick Quote</span>
+              <span className="sm:hidden">⚡ Quick Quote</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={refreshData}
+              className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
+              title="Refresh Data"
+            >
+              <span className="material-symbols-outlined text-base">refresh</span>
+            </button>
+
+            <a
+              href="/"
+              target="_blank"
+              rel="noreferrer"
+              className="hidden lg:flex items-center gap-1 text-[11px] font-bold text-slate-400 hover:text-slate-200 px-2.5 py-1.5 rounded-xl hover:bg-slate-800/60 transition-colors"
+              title="Open Public Website"
+            >
+              <span>Site</span>
+              <span className="material-symbols-outlined text-xs">open_in_new</span>
+            </a>
+          </div>
         </div>
       </header>
 
-      {/* Main 3-Desk Navigation Bar */}
-      <div className="bg-white border-b border-m3-outline-variant sticky top-14 z-20 shadow-sm">
-        <div className="max-w-4xl mx-auto px-3 py-2 flex items-center gap-1.5 overflow-x-auto">
-          <button
-            type="button"
-            onClick={() => setActiveDesk('inquiries')}
-            className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center justify-center gap-1.5 ${
-              activeDesk === 'inquiries'
-                ? 'bg-m3-tertiary-container/300 text-m3-on-surface shadow-sm'
-                : 'text-m3-on-surface-variant hover:bg-m3-surface-container'
-            }`}
-          >
-            <span className="material-symbols-outlined text-sm">forum</span>
-            <span>1. Inquiries & Quotes ({leads.length})</span>
-          </button>
+      {/* Main Responsive Body with Navigation Rail */}
+      <div className="max-w-7xl mx-auto w-full flex-1 flex flex-col md:flex-row gap-4 p-3.5 sm:p-5 lg:p-6">
+        {/* Navigation Rail / Sidebar */}
+        <aside className="w-full md:w-60 flex-shrink-0">
+          <nav className="bg-white rounded-2xl border border-slate-200/80 p-2 shadow-sm space-y-1 sticky top-16">
+            <div className="px-3 py-2 text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+              Operations Desks
+            </div>
 
-          <button
-            type="button"
-            onClick={() => setActiveDesk('dispatch')}
-            className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center justify-center gap-1.5 ${
-              activeDesk === 'dispatch'
-                ? 'bg-m3-inverse-surface text-white shadow-sm'
-                : 'text-m3-on-surface-variant hover:bg-m3-surface-container'
-            }`}
-          >
-            <span className="material-symbols-outlined text-sm">directions_car</span>
-            <span>2. Confirmed Dispatch ({activeDispatchCount})</span>
-          </button>
+            {/* 1. Live Dispatch */}
+            <button
+              type="button"
+              onClick={() => setActiveDesk('dispatch')}
+              className={`w-full py-2.5 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-between gap-2 text-left ${
+                activeDesk === 'dispatch'
+                  ? 'bg-slate-900 text-white shadow-sm'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-2.5 min-w-0">
+                <span className="material-symbols-outlined text-base">directions_car</span>
+                <span className="truncate">Live Dispatch</span>
+              </div>
+              <div className="flex items-center gap-1">
+                {unassignedCount > 0 && (
+                  <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" title={`${unassignedCount} trips need driver`}></span>
+                )}
+                <span className={`text-[11px] font-mono px-2 py-0.5 rounded-full ${
+                  activeDesk === 'dispatch' ? 'bg-slate-800 text-amber-300 font-bold' : 'bg-slate-100 text-slate-600'
+                }`}>
+                  {activeDispatchCount}
+                </span>
+              </div>
+            </button>
 
-          <button
-            type="button"
-            onClick={() => setActiveDesk('khata')}
-            className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center justify-center gap-1.5 ${
-              activeDesk === 'khata'
-                ? 'bg-m3-success text-white shadow-sm'
-                : 'text-m3-on-surface-variant hover:bg-m3-surface-container'
-            }`}
-          >
-            <span className="material-symbols-outlined text-sm">account_balance_wallet</span>
-            <span>3. Money & Khata ({completedCount})</span>
-          </button>
-        </div>
+            {/* 2. Leads & Quotes */}
+            <button
+              type="button"
+              onClick={() => setActiveDesk('inquiries')}
+              className={`w-full py-2.5 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-between gap-2 text-left ${
+                activeDesk === 'inquiries'
+                  ? 'bg-amber-500 text-white shadow-sm'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-2.5 min-w-0">
+                <span className="material-symbols-outlined text-base">forum</span>
+                <span className="truncate">Leads & Quotes</span>
+              </div>
+              <span className={`text-[11px] font-mono px-2 py-0.5 rounded-full ${
+                activeDesk === 'inquiries' ? 'bg-amber-600 text-white font-bold' : 'bg-slate-100 text-slate-600'
+              }`}>
+                {totalInquiriesCount}
+              </span>
+            </button>
+
+            {/* 3. Chauffeurs & Fleet */}
+            <button
+              type="button"
+              onClick={() => setActiveDesk('chauffeurs')}
+              className={`w-full py-2.5 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-between gap-2 text-left ${
+                activeDesk === 'chauffeurs'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-2.5 min-w-0">
+                <span className="material-symbols-outlined text-base">badge</span>
+                <span className="truncate">Chauffeurs & Fleet</span>
+              </div>
+              <span className={`text-[11px] font-mono px-2 py-0.5 rounded-full ${
+                activeDesk === 'chauffeurs' ? 'bg-blue-700 text-white font-bold' : 'bg-slate-100 text-slate-600'
+              }`}>
+                {chauffeurs.length}
+              </span>
+            </button>
+
+            {/* 4. Money & Khata */}
+            <button
+              type="button"
+              onClick={() => setActiveDesk('khata')}
+              className={`w-full py-2.5 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-between gap-2 text-left ${
+                activeDesk === 'khata'
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              <div className="flex items-center gap-2.5 min-w-0">
+                <span className="material-symbols-outlined text-base">account_balance_wallet</span>
+                <span className="truncate">Money & Khata</span>
+              </div>
+              <span className={`text-[11px] font-mono px-2 py-0.5 rounded-full ${
+                activeDesk === 'khata' ? 'bg-emerald-700 text-white font-bold' : 'bg-slate-100 text-slate-600'
+              }`}>
+                {completedCount}
+              </span>
+            </button>
+          </nav>
+        </aside>
+
+        {/* Center Main Stage Area */}
+        <main className="flex-1 min-w-0">
+          {activeDesk === 'dispatch' && (
+            <DeskDispatchRadar
+              bookings={bookings}
+              chauffeurs={chauffeurs}
+              onAssignChauffeur={handleAssignChauffeur}
+              onStatusChange={handleStatusChange}
+              onOpenDutySlip={(b) => setActiveDutySlipBooking(b)}
+              showToast={showToast}
+            />
+          )}
+
+          {activeDesk === 'inquiries' && (
+            <DeskInquiries
+              leads={leads}
+              chatQueries={chatQueries}
+              onConvertToConfirmed={handleConvertToConfirmed}
+              onOpenAiParser={() => setIsAiParserModalOpen(true)}
+              showToast={showToast}
+            />
+          )}
+
+          {activeDesk === 'chauffeurs' && (
+            <DeskChauffeurs
+              chauffeurs={chauffeurs}
+              bookings={bookings}
+              showToast={showToast}
+            />
+          )}
+
+          {activeDesk === 'khata' && (
+            <DeskKhataSettlement
+              bookings={bookings}
+              settlements={[]}
+              onRecordSettlement={handleRecordSettlement}
+              showToast={showToast}
+            />
+          )}
+        </main>
       </div>
 
-      {/* Main Container */}
-      <main className="max-w-4xl mx-auto p-3.5 sm:p-5">
-        {activeDesk === 'inquiries' && (
-          <DeskInquiries
-            leads={leads}
-            chatQueries={chatQueries}
-            onConvertToConfirmed={handleConvertToConfirmed}
-            showToast={showToast}
-          />
-        )}
-
-        {activeDesk === 'dispatch' && (
-          <DeskDispatchRadar
-            bookings={bookings}
-            chauffeurs={chauffeurs}
-            onAssignChauffeur={handleAssignChauffeur}
-            onStatusChange={handleStatusChange}
-            onOpenDutySlip={(b) => setActiveDutySlipBooking(b)}
-            showToast={showToast}
-          />
-        )}
-
-        {activeDesk === 'khata' && (
-          <DeskKhataSettlement
-            bookings={bookings}
-            settlements={[]}
-            onRecordSettlement={handleRecordSettlement}
-            showToast={showToast}
-          />
-        )}
-      </main>
+      {/* Universal AI Smart Parser Modal */}
+      {isAiParserModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-5 bg-black/60 backdrop-blur-sm animate-fadeIn">
+          <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <AiBookingParser
+              showToast={showToast}
+              onClose={() => setIsAiParserModalOpen(false)}
+              onBookingCreated={(newConfirmed) => {
+                handleConvertToConfirmed(newConfirmed);
+                setIsAiParserModalOpen(false);
+                showToast(`Booking ${newConfirmed.bookingId} added directly to Live Dispatch!`, 'success');
+              }}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Duty Slip Modal */}
       {activeDutySlipBooking && (

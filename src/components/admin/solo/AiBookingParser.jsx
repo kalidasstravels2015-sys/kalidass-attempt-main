@@ -7,7 +7,7 @@ const SAMPLE_CHIPS = [
   'Ertiga 6 pax Chennai to Thiruvannamalai round trip Sunday 6am'
 ];
 
-export default function AiBookingParser({ onBookingCreated, showToast }) {
+export default function AiBookingParser({ onBookingCreated, showToast, onClose }) {
   const [inputText, setInputText] = useState('');
   const [parsing, setParsing] = useState(false);
   const [parsedData, setParsedData] = useState(null);
@@ -122,7 +122,19 @@ export default function AiBookingParser({ onBookingCreated, showToast }) {
           <span className="material-symbols-outlined text-xl">psychology</span>
           <h2 className="text-sm font-bold tracking-wide uppercase">AI Smart Booking Parser & 1-Tap Quoter</h2>
         </div>
-        <span className="text-xs bg-m3-tertiary/60 px-2 py-0.5 rounded-full font-medium">Solo Operator Copilot</span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs bg-white/20 px-2 py-0.5 rounded-full font-medium">Solo Operator Copilot</span>
+          {onClose && (
+            <button
+              type="button"
+              onClick={onClose}
+              className="p-1 hover:bg-white/20 rounded-lg text-white transition-colors"
+              title="Close Parser"
+            >
+              <span className="material-symbols-outlined text-lg">close</span>
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="p-4 sm:p-5">

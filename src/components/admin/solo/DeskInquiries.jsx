@@ -7,6 +7,7 @@ export default function DeskInquiries({
   chatQueries = [],
   onLeadQuoted,
   onConvertToConfirmed,
+  onOpenAiParser,
   showToast
 }) {
   const [subTab, setSubTab] = useState('leads'); // 'leads' | 'chat_radar'
@@ -93,44 +94,49 @@ export default function DeskInquiries({
 
   return (
     <div className="space-y-4">
-      {/* AI Smart Parser on Top */}
-      <AiBookingParser
-        showToast={showToast}
-        onBookingCreated={(newConfirmed) => {
-          onConvertToConfirmed(newConfirmed);
-        }}
-      />
+      {/* Top Header & Sub-Desk Segment Selector */}
+      <div className="bg-white rounded-2xl p-3 border border-m3-outline-variant/60 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5">
+        <div className="flex items-center gap-1.5 p-1 bg-m3-surface-container-low border border-m3-outline-variant/60 rounded-xl">
+          <button
+            type="button"
+            onClick={() => setSubTab('leads')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+              subTab === 'leads'
+                ? 'bg-m3-inverse-surface text-white shadow-sm'
+                : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container'
+            }`}
+          >
+            <span className="material-symbols-outlined text-sm">calculate</span>
+            <span>Calculator Leads ({leads.length})</span>
+          </button>
 
-      {/* Sub-Desk Segment Selector */}
-      <div className="flex items-center gap-1.5 p-1 bg-white border border-m3-outline-variant/60 rounded-xl w-fit shadow-sm">
-        <button
-          type="button"
-          onClick={() => setSubTab('leads')}
-          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
-            subTab === 'leads'
-              ? 'bg-m3-inverse-surface text-white shadow-sm'
-              : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container'
-          }`}
-        >
-          <span className="material-symbols-outlined text-sm">calculate</span>
-          <span>Calculator Leads ({leads.length})</span>
-        </button>
+          <button
+            type="button"
+            onClick={() => setSubTab('chat_radar')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+              subTab === 'chat_radar'
+                ? 'bg-m3-tertiary text-white shadow-sm font-extrabold'
+                : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container'
+            }`}
+          >
+            <span className="material-symbols-outlined text-sm">smart_toy</span>
+            <span>Live AI Chat Radar ({chatQueries.length})</span>
+            {chatQueries.length > 0 && (
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            )}
+          </button>
+        </div>
 
-        <button
-          type="button"
-          onClick={() => setSubTab('chat_radar')}
-          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
-            subTab === 'chat_radar'
-              ? 'bg-m3-tertiary text-white shadow-sm font-extrabold'
-              : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container'
-          }`}
-        >
-          <span className="material-symbols-outlined text-sm">smart_toy</span>
-          <span>Live AI Chat Radar ({chatQueries.length})</span>
-          {chatQueries.length > 0 && (
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          )}
-        </button>
+        {onOpenAiParser && (
+          <button
+            type="button"
+            onClick={onOpenAiParser}
+            className="px-3.5 py-1.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all"
+          >
+            <span className="material-symbols-outlined text-sm">psychology</span>
+            <span>Parse WhatsApp / Audio</span>
+          </button>
+        )}
       </div>
 
       {subTab === 'chat_radar' ? (
