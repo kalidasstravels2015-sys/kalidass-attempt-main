@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Car, Calendar, Calculator, Send, ArrowRight, Repeat, Users, User, AlertCircle, Info, Navigation, ShieldCheck, Clock, X, ChevronDown, ChevronRight, CheckCircle2, Plane, ArrowUpDown, MapPin, Phone, Receipt, Edit2 } from 'lucide-react';
+import { Car, Calendar, Send, ArrowRight, Repeat, Users, User, AlertCircle, Info, Navigation, ShieldCheck, Clock, X, ChevronDown, ChevronRight, CheckCircle2, Plane, ArrowUpDown, MapPin, Phone, Receipt, Edit2 } from 'lucide-react';
 import { trackEvent, trackCalculatorQuote, markQuoteConverted } from '../lib/analytics';
 import LocationPicker from './LocationPicker';
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
@@ -2022,10 +2022,7 @@ Please confirm availability and share quote.`;
                     <span>{isTa ? 'கணக்கிடுகிறது...' : 'Calculating Fare...'}</span>
                   </>
                 ) : (
-                  <>
-                    <Calculator className="w-4 h-4 text-white shrink-0" />
-                    <span>{isTa ? 'கட்டணம் பார்க்கவும் →' : 'View Instant Fare →'}</span>
-                  </>
+                  <span>{isTa ? 'கட்டணம் பார்க்கவும்' : 'View Instant Fare'}</span>
                 )}
               </button>
               <p className="text-[11px] text-m3-on-surface-variant/80 text-center font-medium max-w-sm">

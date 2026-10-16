@@ -18,7 +18,6 @@ import {
   ChevronDown,
   ChevronRight,
   Info,
-  Calculator,
   Clock,
   Receipt
 } from 'lucide-react';
@@ -1616,8 +1615,7 @@ Please confirm booking!`;
               onClick={handleViewInstantFare}
               className="inline-flex items-center justify-center gap-2 px-5 py-2.5 min-h-[40px] bg-[#1a73e8] hover:bg-[#1557b0] active:scale-[0.98] text-white font-bold text-xs sm:text-sm rounded-full shadow-sm hover:shadow-md transition-all cursor-pointer"
             >
-              <Calculator className="w-4 h-4 text-white shrink-0" />
-              <span>View Instant Fare →</span>
+              <span>View Instant Fare</span>
             </button>
             <p className="text-[11px] text-m3-on-surface-variant/80 text-center font-medium max-w-sm">
               ✓ No phone number required to check fare

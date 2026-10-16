@@ -3015,16 +3015,16 @@ Please share availability and confirmed quote.`;
       <!-- 5. BOTTOM CTA TO BOOKING ENGINE -->
       <section
         id="bottom-booking-cta"
-        class="bg-gradient-to-br from-m3-inverse-surface via-m3-surface-dim to-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-2xl p-6 sm:p-8 md:p-10 border border-m3-outline-variant/30 shadow-m3-2 relative overflow-hidden"
+        class="bg-gradient-to-br from-[#0B57D0] via-[#0842A0] to-[#041E49] text-white rounded-m3-2xl p-6 sm:p-8 md:p-10 border border-[#0B57D0]/30 shadow-m3-3 relative overflow-hidden"
         aria-label="Booking Engine Call to Action"
       >
         <!-- Subtle Ambient Glow -->
-        <div class="absolute -right-12 -top-12 w-48 h-48 bg-m3-tertiary/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -left-12 -bottom-12 w-48 h-48 bg-m3-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -right-12 -top-12 w-56 h-56 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-12 -bottom-12 w-56 h-56 bg-[#041E49]/40 rounded-full blur-3xl pointer-events-none"></div>
 
         <div class="relative z-10 max-w-2xl mx-auto text-center space-y-4">
-          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs font-bold text-blue-200 uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5 text-blue-300 shrink-0" />
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs font-bold text-white uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5 text-amber-300 shrink-0" />
             <span>{hasDedicatedEngine ? "Interactive Fare Calculator" : "Fixed Tariff Rates • ₹500 Token Advance"}</span>
           </div>
 
@@ -3034,7 +3034,7 @@ Please share availability and confirmed quote.`;
               : `Ready to Reserve Your Cab for ${shortName}?`}
           </h2>
 
-          <p class="text-xs sm:text-sm text-m3-inverse-on-surface/85 leading-relaxed max-w-xl mx-auto font-sans">
+          <p class="text-xs sm:text-sm text-white/90 leading-relaxed max-w-xl mx-auto font-sans">
             {hasDedicatedEngine
               ? "Head back up to booking to select your travel dates, choose your preferred AC vehicle, and calculate dynamic package fares."
               : "Review our transparent fixed package fares above or chat with our 24/7 Chennai travel desk on WhatsApp to confirm your vehicle."}
@@ -3044,32 +3044,31 @@ Please share availability and confirmed quote.`;
             <a
               href={hasDedicatedEngine ? "#booking" : "#tariff"}
               id="back-to-booking-btn"
-              class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary font-bold text-xs sm:text-sm shadow-md transition-all cursor-pointer group"
+              class="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-white hover:bg-[#F0F4F9] active:bg-[#E8F0FE] !text-[#0B57D0] hover:!text-[#0842A0] font-bold text-xs sm:text-sm shadow-md transition-all cursor-pointer group border border-white/40"
             >
               <span>{hasDedicatedEngine ? "Back to Booking" : "View Tariff & Book Now"}</span>
-              <ArrowUp className="w-4 h-4 group-hover:-translate-y-0.5 transition-transform shrink-0" />
+              <ArrowUp className="w-4 h-4 text-[#0B57D0] group-hover:-translate-y-0.5 transition-transform shrink-0" />
             </a>
-
 
             <a
               href="tel:+918939539211"
-              class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-white/10 hover:bg-white/15 active:bg-white/20 text-white font-bold text-xs sm:text-sm border border-white/20 transition-all cursor-pointer"
+              class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-white/15 hover:bg-white/25 active:bg-white/30 text-white font-bold text-xs sm:text-sm border border-white/30 backdrop-blur-xs transition-all cursor-pointer shadow-sm"
             >
-              <Phone className="w-4 h-4 text-m3-success shrink-0" />
+              <Phone className="w-4 h-4 text-emerald-300 shrink-0" />
               <span>Call Us</span>
             </a>
           </div>
 
           <!-- Feature Trust Badges -->
-          <div class="pt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-[11px] sm:text-xs text-m3-inverse-on-surface/70">
+          <div class="pt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-[11px] sm:text-xs text-white/85">
             <span class="flex items-center gap-1">
-              <span class="text-m3-success font-bold">✓</span> Doorstep Chennai Pickup
+              <span class="text-emerald-300 font-bold">✓</span> Doorstep Chennai Pickup
             </span>
             <span class="flex items-center gap-1">
-              <span class="text-m3-success font-bold">✓</span> Tolls &amp; Permits Included
+              <span class="text-emerald-300 font-bold">✓</span> Tolls &amp; Permits Included
             </span>
             <span class="flex items-center gap-1">
-              <span class="text-m3-success font-bold">✓</span> Police-Verified Chauffeurs
+              <span class="text-emerald-300 font-bold">✓</span> Police-Verified Chauffeurs
             </span>
           </div>
         </div>
