@@ -763,8 +763,9 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
         ? `• *Includes:* Dedicated AC Car, Chauffeur Duty & Fuel (Tolls & State Permits at actuals on route)`
         : `• *Includes:* Fuel, Tolls, Airport Parking & GST Invoice`,
       `• *Date & Time:* ${dateTime.replace('T', ' ')}`,
-      flightNo ? `• *Flight No:* ${flightNo}` : null,
-      `• *Payment:* Pay After Trip — Zero Advance`,
+      isOutstation
+        ? `• *Payment:* ₹500 Advance to Confirm • Balance at Drop`
+        : `• *Payment:* Pay After Trip — Zero Advance`,
       ``,
       `Please confirm my airport taxi booking. Thank you!`,
     ].filter(Boolean).join('\n');
@@ -802,7 +803,9 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
         : `Fare: Rs. ${estimate.toLocaleString('en-IN')}${currNote} (All-Inclusive)`,
       `Pickup Date/Time: ${dateTime.replace('T', ' ')}`,
       flightNo ? `Flight No: ${flightNo}` : null,
-      `Payment: Pay after trip (Zero advance)`,
+      isOutstation
+        ? `Payment: Rs. 500 Advance to Confirm • Balance at Drop`
+        : `Payment: Pay after trip (Zero advance)`,
     ].filter(Boolean).join('\n');
 
     const isIOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);

@@ -10,7 +10,10 @@ node_modules/
 dist/
 build/
 *.docx
+*.pdf
 Kalidass_Travels_Org_Structure_and_Roles.*
+Kalidass_Travels_Airport_Campaign_Playbook.*
+scripts/generate_campaign_docs_pdf.cjs
 
 # Logs & debug output
 *.log

@@ -1621,6 +1621,16 @@ Please confirm availability and share quote.`;
                 <span className="capitalize">{tab === 'local' ? (isTa ? 'லோக்கல் பேக்கேஜ்' : 'Local Package') : tab === 'oneway' ? (isTa ? 'ஒரு வழி' : 'One Way') : (isTa ? 'இரு வழி' : 'Round Trip')}</span>
               </button>
             ))}
+            {showAirportTab && (
+              <a
+                href="/services/chennai-airport-taxi/"
+                className="flex-1 py-2 px-2.5 sm:px-4 text-xs font-bold rounded-m3-full transition-all flex items-center justify-center gap-1.5 min-h-[38px] sm:min-h-[42px] cursor-pointer active:scale-[0.98] text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-highest focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary group"
+                title={isTa ? 'சென்னை ஏர்போர்ட் டாக்ஸி முன்பதிவு' : 'Chennai Airport Taxi Transfers (Fixed Fares from ₹650)'}
+              >
+                <Plane className="w-3.5 h-3.5 text-m3-primary shrink-0 transition-transform group-hover:scale-110" />
+                <span>{isTa ? 'ஏர்போர்ட்' : 'Airport Transfer'}</span>
+              </a>
+            )}
           </div>
         </div>
       )}
@@ -1818,6 +1828,25 @@ Please confirm availability and share quote.`;
                 </p>
               )}
             </div>
+
+            {/* Contextual Airport Shortcut Prompt */}
+            {showAirportTab && (origLower.includes('airport') || destLower.includes('airport') || origLower.includes('maa') || destLower.includes('maa')) && (
+              <div className="p-2.5 rounded-m3-lg bg-blue-50/90 border border-blue-200 flex items-center justify-between gap-2 animate-in fade-in text-xs">
+                <div className="flex items-center gap-2 min-w-0">
+                  <Plane className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                  <span className="text-blue-900 font-medium truncate">
+                    {isTa ? 'ஏர்போர்ட் பயணம்? நிலையான கட்டணங்களை பாருங்கள்' : 'Airport trip? Check flat zone fares from ₹650'}
+                  </span>
+                </div>
+                <a
+                  href="/services/chennai-airport-taxi/"
+                  className="font-bold text-blue-700 hover:text-blue-900 underline underline-offset-2 shrink-0 flex items-center gap-0.5 text-[11px]"
+                >
+                  <span>{isTa ? 'ஏர்போர்ட் பக்கம்' : 'Airport Page'}</span>
+                  <ChevronRight className="w-3 h-3" />
+                </a>
+              </div>
+            )}
 
             {/* Alternative Suggestion: Local City Package (Short Distance Round Trip) */}
             {isShortCityRoundTrip && (
@@ -2028,6 +2057,34 @@ Please confirm availability and share quote.`;
               <p className="text-[11px] text-m3-on-surface-variant/80 text-center font-medium max-w-sm">
                 ✓ {isTa ? 'கட்டணம் பார்க்க தொலைபேசி எண் தேவையில்லை' : 'No phone number required to check fare'}
               </p>
+
+              {/* Smart Airport Quick-Access Callout */}
+              {showAirportTab && !showResult && (
+                <div className="w-full pt-1.5">
+                  <a
+                    href="/services/chennai-airport-taxi/"
+                    className="flex items-center justify-between p-2.5 px-3.5 bg-m3-surface-container-high hover:bg-m3-surface-container-highest border border-m3-outline-variant hover:border-m3-primary/40 rounded-m3-xl transition-all text-xs group cursor-pointer"
+                    title={isTa ? 'சென்னை ஏர்போர்ட் டாக்ஸி முன்பதிவு' : 'Chennai Airport Taxi Transfers'}
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="p-1 sm:p-1.5 bg-m3-primary/10 text-m3-primary rounded-m3-full shrink-0 group-hover:scale-110 transition-transform">
+                        <Plane className="w-3.5 h-3.5" />
+                      </span>
+                      <div className="truncate text-left">
+                        <span className="font-bold text-m3-on-surface">
+                          {isTa ? 'சென்னை ஏர்போர்ட் டாக்ஸியா?' : 'Need Chennai Airport Pickup / Drop?'}
+                        </span>
+                        <span className="hidden sm:inline text-m3-on-surface-variant ml-1.5 text-[11px]">
+                          {isTa ? 'நிலையான கட்டணம் ₹650 முதல்' : 'Flat rates from ₹650 • Flight delay tracking'}
+                        </span>
+                      </div>
+                    </div>
+                    <span className="inline-flex items-center gap-0.5 text-[11px] font-bold text-m3-primary shrink-0 group-hover:translate-x-0.5 transition-transform">
+                      {isTa ? 'கட்டணங்கள்' : 'Airport Cabs'} <ChevronRight className="w-3.5 h-3.5" />
+                    </span>
+                  </a>
+                </div>
+              )}
             </div>
 
             {/* Dynamic Fare Result & Actions Area — Rate Summary with Complete Itemized Breakdown */}
