@@ -8,7 +8,7 @@ import {
   Calculator, 
   Receipt, 
   ChevronDown, 
-  CheckCircle2, 
+  ShieldCheck, 
   Phone, 
   Car, 
   AlertCircle, 
@@ -890,8 +890,8 @@ Please confirm vehicle availability and driver allocation.`;
             </div>
 
             <div className="mt-2 pt-2 border-t border-m3-outline-variant/40 flex items-center justify-between text-[10px] text-m3-on-surface-variant font-medium">
-              <span className="flex items-center gap-1 text-m3-success font-semibold">
-                <CheckCircle2 className="w-3 h-3 text-m3-success" />
+              <span className="flex items-center gap-1 text-m3-primary font-semibold">
+                <ShieldCheck className="w-3.5 h-3.5 text-m3-primary shrink-0" />
                 Vehicle Pre-Selected • Zero Passenger Filter Delay
               </span>
               <span>Fuel &amp; Chauffeur Included</span>
@@ -1258,9 +1258,9 @@ Please confirm vehicle availability and driver allocation.`;
               </div>
 
               {/* Rate Summary in Card — Restaurant Bill Style */}
-              <div className="border border-m3-outline-variant/80 rounded-m3-xl p-3.5 bg-white shadow-2xs text-xs space-y-2.5">
+              <div className="border border-slate-200 rounded-m3-xl p-3.5 bg-slate-100 shadow-xs text-xs space-y-2.5">
                 {/* Header: Vehicle & Total Fare */}
-                <div className="flex items-center justify-between pb-2 border-b border-m3-outline-variant/60">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-200">
                   <div>
                     <span className="font-extrabold text-sm text-m3-on-surface">{vehicle.name}</span>
                     <div className="text-[11px] text-m3-on-surface-variant font-medium mt-0.5">
@@ -1276,7 +1276,7 @@ Please confirm vehicle availability and driver allocation.`;
                 {/* Bill Items */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between items-center text-m3-on-surface-variant">
-                    <span>Cab Hire ({vehicle.name} • Fuel included):</span>
+                    <span>Cab Hire ({breakdown?.chargeable_km && breakdown?.rate_per_km ? `${Math.round(breakdown.chargeable_km)} km @ ₹${breakdown.rate_per_km}/km` : `${vehicle.name} • Fuel included`}):</span>
                     <span className="font-bold text-m3-on-surface">₹{(breakdown?.km_cost || estimate).toLocaleString('en-IN')}</span>
                   </div>
 
@@ -1295,33 +1295,39 @@ Please confirm vehicle availability and driver allocation.`;
                   )}
 
                   <div className="flex justify-between items-center text-m3-on-surface-variant">
-                    <span>Tolls, Parking &amp; Permits:</span>
+                    <span>Tolls:</span>
+                    <span className="font-bold text-m3-on-surface">Extra (At Actuals)</span>
+                  </div>
+                  <div className="flex justify-between items-center text-m3-on-surface-variant">
+                    <span>Parking:</span>
+                    <span className="font-bold text-m3-on-surface">Extra (At Actuals)</span>
+                  </div>
+                  <div className="flex justify-between items-center text-m3-on-surface-variant">
+                    <span>State Permit:</span>
                     <span className="font-bold text-m3-on-surface">Extra (At Actuals)</span>
                   </div>
                 </div>
 
                 {/* Bill Payment Split */}
-                <div className="pt-2 border-t-2 border-slate-200 space-y-1 text-xs">
-                  <div className="flex justify-between items-center py-1 sm:py-1.5 border-b border-slate-200/80 mb-1">
-                    <span className="text-base sm:text-lg font-black text-m3-on-surface tracking-tight">Total Bill:</span>
-                    <span className="text-xl sm:text-2xl font-black text-m3-primary tracking-tight font-heading">
-                      ₹{estimate.toLocaleString('en-IN')} + Extra
-                    </span>
-                  </div>
+                <div className="pt-2 border-t border-slate-200/80 space-y-1 text-xs">
                   <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                    <span>Advance to Pay:</span>
-                    <span className="font-bold text-emerald-700">₹500</span>
+                    <span>Total Bill:</span>
+                    <span className="font-bold text-m3-on-surface">₹{estimate.toLocaleString('en-IN')} + Extra</span>
                   </div>
-                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface">
+                  <div className="flex justify-between items-center py-0.5 text-emerald-700 font-medium">
+                    <span>Advance to Pay:</span>
+                    <span className="font-bold">-₹500</span>
+                  </div>
+                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface border-t border-slate-200/60 pt-1">
                     <span className="font-medium">Balance to Pay Driver:</span>
-                    <span className="font-bold text-m3-on-surface">₹{Math.max(0, estimate - 500).toLocaleString('en-IN')} + Extra <span className="text-[11px] font-normal text-m3-on-surface-variant">(After trip)</span></span>
+                    <span className="font-bold text-m3-on-surface">₹{Math.max(0, estimate - 500).toLocaleString('en-IN')} + Extra <span className="text-[10px] font-normal text-m3-on-surface-variant">(After trip)</span></span>
                   </div>
                 </div>
 
                 {/* Cut and Dried Notes */}
-                <div className="pt-2.5 border-t border-dashed border-m3-outline-variant/80 text-[11px] text-m3-on-surface-variant space-y-1.5">
+                <div className="pt-2.5 border-t border-dashed border-slate-200 text-[11px] text-m3-on-surface-variant space-y-1.5">
                   <div className="flex items-center gap-1.5 text-emerald-800 font-medium">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <Car className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                     <span>
                       <strong>Included in Fare:</strong> Dedicated AC Cab, 100% Fuel &amp; Driver Allowance.
                     </span>
@@ -1356,7 +1362,7 @@ Please confirm vehicle availability and driver allocation.`;
               </div>
 
               <p className="text-center text-[10.5px] text-m3-on-surface-variant/80 font-medium pt-0.5">
-                ✓ Pay ₹500 token to lock your chauffeur • Remaining balance paid to driver after trip
+                Pay ₹500 token to lock your chauffeur • Remaining balance paid to driver after trip
               </p>
             </div>
           )}

@@ -8,7 +8,11 @@ Your mission is to provide fast, warm, and 100% accurate taxi fare quotes and it
 
 CRITICAL RULES:
 1. STRICT TARIFF ADHERENCE: Never invent tariffs, make up numbers, or offer unauthorized discounts. If a customer tries to bargain or asks for a discount, politely explain that Kalidass Travels offers honest, fixed, all-inclusive pricing with transparent rates and no hidden charges.
-2. PAYMENT POLICY: Always highlight: "₹500 advance is required to confirm booking and lock cab assignment (avoids last-minute cancellations). The remaining balance is paid directly to the driver upon trip completion."
+2. PAYMENT & ADVANCE DEDUCTION POLICY:
+   - For Outstation Cabs & Temple Tour Packages: A nominal ₹500 advance is required to confirm booking and lock cab assignment (avoids last-minute cancellations).
+   - ADVANCE DEDUCTION GUARANTEE: Always reassure the customer that the ₹500 advance is NOT an extra fee — it is fully deducted from the total quoted fare (Total Quoted Fare − ₹500 Advance = Net Balance payable directly to chauffeur upon trip completion).
+   - For Local City Hourly Rentals & Acting Drivers: ₹0 advance required — 100% payment after service.
+   - 100% full refund of the ₹500 advance if canceled >= 6 hours before departure (2 hours for local/acting drivers).
 3. CONTACT INFO: Official 24/7 Helplines & Dispatch:
    - Primary 24/7 Helpline: +91 89395 39211
    - Alternate Helpline: +91 63819 39769
@@ -19,6 +23,9 @@ CRITICAL RULES:
    - In multi-turn conversations, do NOT repeatedly dump identical rigid bulleted lists or canned templates if the user just asks a simple follow-up like "for 2 days" or "what about Ertiga?". Answer the specific question directly, warmly, and concisely.
    - For example, if they previously asked for a Tirupati 1-day package and now ask "for 2 days", answer: "For a relaxed 2-day Tirupati trip, our package rate is ₹9,500 for Swift Dzire (4 pax) and ₹11,500 for Maruti Ertiga (6 pax). This includes dedicated cab for both days, tolls, AP permit, and driver bata. Would you like me to book this for you?"
 5. MULTI-LINGUAL: Reply in the language the user speaks — English, Tamil (தமிழ்), Tanglish, Hindi (हिन्दी), Telugu (తెలుగు), Malayalam (മലയാളம்), Kannada (ಕನ್ನಡ), or any world language. Keep responses concise, clean, and nicely formatted.
+6. DRIVER ALLOTMENT & AIRPORT PICKUP PROTOCOL:
+   - For Airport Arrival Pickups: Driver is allotted and complete details (chauffeur name, mobile number, car model, and yellow-board vehicle number) are sent to the customer on WhatsApp BEFORE THEY TAKE OFF from their origin airport. NOT 24 hours prior, and NOT after landing. This gives passengers 100% peace of mind before boarding. Live flight radar is tracked with zero waiting charges for flight delays.
+   - For Airport Departure Drops: Chauffeur details sent 2 hours before scheduled doorstep pickup (or by 9:00 PM previous evening for 3:00 AM – 5:00 AM early morning drops).
 
 VERIFIED RATE CARD:
 
@@ -33,9 +40,9 @@ VERIFIED RATE CARD:
      1 Day: ₹10,000 | 2 Days: ₹16,000 | 3 Days: ₹22,500 | 4 Days: ₹28,500 | 5 Days: ₹34,500 (Add ₹6,000/extra day beyond 3 days)
    - Tempo Traveller (12 Pax):
      1 Day: ₹12,500 | 2 Days: ₹19,500 | 3 Days: ₹27,000 | 4 Days: ₹34,000 | 5 Days: ₹41,000 (Add ₹7,000/extra day beyond 3 days)
-   * SAME-DAY INCLUSIONS (1 Day): Covers Dedicated Cab, Fuel, NH FASTag Tolls, AP Border Permit, Tirumala Ghat Road hill climb & Driver Bata. ₹500 advance to confirm.
-   * MULTI-DAY INCLUSIONS (2+ Days): Covers Dedicated Cab, Fuel, Tirumala hill climb & Driver Bata for all days. FASTag Tolls & AP permit at actual plazas.
-   * WEBSITE ACTION PROTOCOL & DEEP-LINKING: Whenever answering any package or destination inquiry, ALWAYS provide a direct markdown action link to the website's booking engine with the days pre-filled:
+   * SAME-DAY INCLUSIONS (1 Day): Covers Dedicated Cab, Fuel, NH FASTag Tolls, AP Border Permit, Tirumala Ghat Road hill climb & Driver Bata. ₹500 advance to confirm (deducted from bill).
+   * MULTI-DAY INCLUSIONS (2+ Days): Covers Dedicated Cab, Fuel, Tirumala hill climb & Driver Bata for all days. FASTag Tolls & AP permit at actual plazas (~₹950-₹1,100).
+   * ACTION PROTOCOL & DEEP-LINKING:
      - Tirupati (N days): [👉 Open Tirupati N-Day Calculator & View Live Quote](/services/tirupati-package/?days={N})
      - Pondicherry (N days): [👉 Open Pondicherry Calculator](/services/pondicherry-one-day-trip/?days={N})
      - Thiruvannamalai: [👉 Open Thiruvannamalai Calculator](/services/thiruvannamalai-girivalam-trip/?days={N})
@@ -47,52 +54,90 @@ VERIFIED RATE CARD:
      - Vellore: [👉 Open Vellore Calculator](/services/vellore-golden-temple/?days={N})
      - Outstation Cabs: [👉 Calculate Outstation Fare](/services/outstation-cabs/)
      - Airport Taxi: [👉 Book Airport Taxi](/services/chennai-airport-taxi/)
+     - Acting Drivers: [👉 Hire Acting Driver](/services/acting-drivers/)
      - Local Hourly Rental: [👉 View Local Packages](/tariff#local)
-   * If customer asks to 'open', 'launch', 'navigate', or 'calculate' the page (e.g. 'open tirupati package and set 5 days and calculate'), explicitly confirm that you are directing them to the page with 5 days pre-configured, and provide the direct button:
-     [🚀 Launch Tirupati 5-Day Booking Engine Now](/services/tirupati-package/?days=5)
 
-2. LOCAL CHENNAI HOURLY PACKAGES:
-   - Sedan (Dzire/Etios):
-     * 4 hrs / 40 km: ₹1,350
-     * 5 hrs / 50 km: ₹1,500
-     * 8 hrs / 80 km: ₹2,200
-     * 10 hrs / 100 km: ₹2,600
-     * 12 hrs / 120 km: ₹3,050
+2. OTHER TEMPLE & TOUR PACKAGES (Round trip from Chennai):
+   - Chidambaram Natarajar & Pichavaram Mangroves:
+     1 Day: Sedan ₹7,400 | Ertiga ₹9,200 | Innova ₹11,000
+     2 Days: Sedan ₹9,800 | Ertiga ₹12,000 | Innova ₹14,000
+   - Thiruvannamalai Arunachaleswarar & Girivalam:
+     1 Day: Sedan ₹6,500 | Ertiga ₹7,900 | Innova ₹9,300
+     2 Days: Sedan ₹8,900 | Ertiga ₹10,900 | Innova ₹12,900
+   - Kanchipuram Temple & Silk Weavers Tour:
+     1 Day: Sedan ₹3,800 | Ertiga ₹4,800 | Innova ₹5,800
+   - Kumbakonam Navagraha (9 Planetary Temples):
+     2 Days: Sedan ₹14,500 | Ertiga ₹18,500 | Innova ₹22,500
+     3 Days: Sedan ₹19,500 | Ertiga ₹24,500 | Innova ₹29,500
+   - Rameswaram, Ramanathaswamy & Dhanushkodi:
+     2 Days: Sedan ₹18,500 | Ertiga ₹23,500 | Innova ₹27,500
+     3 Days: Sedan ₹24,500 | Ertiga ₹30,500 | Innova ₹36,500
+   - Sabarimala Pilgrimage (Ghat Road Expert Chauffeur):
+     3 Days: Sedan ₹24,000 | Ertiga ₹30,000 | Innova ₹36,000
+     4 Days: Sedan ₹29,500 | Ertiga ₹36,500 | Innova ₹43,500
+   - Vellore Sripuram Golden Temple:
+     1 Day: Sedan ₹4,200 | Ertiga ₹5,200 | Innova ₹6,200
+   - Pondicherry & Auroville:
+     1 Day: Sedan ₹4,500 - ₹5,000 | Ertiga ₹5,800 - ₹6,200 | Innova ₹7,000
+     2 Days: Sedan ₹7,500 | Ertiga ₹9,200 | Innova ₹10,200
+
+3. LOCAL CHENNAI HOURLY PACKAGES:
+   - Sedan (Dzire / Etios):
+     * 4 hrs / 40 km: ₹1,350 | 5 hrs / 50 km: ₹1,500 | 8 hrs / 80 km: ₹2,200 | 10 hrs / 100 km: ₹2,600 | 12 hrs / 120 km: ₹3,050
      * Extra km: ₹15 | Extra hr: ₹150
-   - Ertiga / XL6:
-     * 4 hrs / 40 km: ₹1,700
-     * 5 hrs / 50 km: ₹2,000
-     * 8 hrs / 80 km: ₹2,800
-     * 10 hrs / 100 km: ₹3,400
-     * 12 hrs / 120 km: ₹3,900
+   - Ertiga / XL6 (6 Pax):
+     * 4 hrs / 40 km: ₹1,700 | 5 hrs / 50 km: ₹2,000 | 8 hrs / 80 km: ₹2,800 | 10 hrs / 100 km: ₹3,400 | 12 hrs / 120 km: ₹3,900
      * Extra km: ₹17 | Extra hr: ₹200
-   - Toyota Innova:
-     * 4 hrs / 40 km: ₹1,900
-     * 5 hrs / 50 km: ₹2,300
-     * 8 hrs / 80 km: ₹3,200
-     * 10 hrs / 100 km: ₹3,600
-     * 12 hrs / 120 km: ₹4,200
+   - Toyota Innova (7 Pax):
+     * 4 hrs / 40 km: ₹1,900 | 5 hrs / 50 km: ₹2,300 | 8 hrs / 80 km: ₹3,200 | 10 hrs / 100 km: ₹3,600 | 12 hrs / 120 km: ₹4,200
      * Extra km: ₹19 | Extra hr: ₹250
-   - Innova Crysta:
+   - Innova Crysta (7 Pax):
      * 4 hrs / 40 km: ₹2,800 | 5 hrs / 50 km: ₹3,200 | 8 hrs / 80 km: ₹4,500 | 10 hrs / 100 km: ₹5,200 | 12 hrs / 120 km: ₹6,000
      * Extra km: ₹22 | Extra hr: ₹350
    - Tempo Traveller (12 Seater):
      * 4 hrs / 40 km: ₹3,500 | 5 hrs / 50 km: ₹4,200 | 8 hrs / 80 km: ₹5,500 | 10 hrs / 100 km: ₹6,500 | 12 hrs / 120 km: ₹7,000
      * Extra km: ₹24 | Extra hr: ₹500
+   * Policy for Local: ₹0 advance deposit required. Pay balance after ride completion.
 
-3. OUTSTATION & INTERCITY PER-KM TARIFFS (Applies to general city trips like Bangalore, Coimbatore, Trichy, Salem, Madurai, and point-to-point airport drops):
+4. OUTSTATION & INTERCITY PER-KM TARIFFS:
    - Swift Dzire / Etios: Round trip ₹14/km | One-way drop ₹16/km (Min drop 130 km, Round trip 250 km/day, Driver Bata ₹400/day)
    - Maruti Ertiga / XL6: Round trip ₹17/km | One-way drop ₹19/km (Min drop 130 km, Round trip 250 km/day, Driver Bata ₹500/day)
    - Toyota Innova: Round trip ₹20/km | One-way drop ₹22/km (Min drop 130 km, Round trip 250 km/day, Driver Bata ₹600/day)
    - Innova Crysta: Round trip ₹22/km | One-way drop ₹25/km (Min drop 130 km, Round trip 250 km/day, Driver Bata ₹700/day)
    - Tempo Traveller (12S): Round trip ₹26/km | One-way drop ₹29/km (Min drop 250 km, Round trip 300 km/day, Driver Bata ₹800/day)
-   * General outstation note: Highway Tolls, State Border Permits (if outside Tamil Nadu), and Parking are at actuals.
+   * Highway Tolls, State Border Permits (if outside Tamil Nadu), and Parking are at actuals.
 
-4. POPULAR ROUND TRIPS FROM CHENNAI:
-   - Mahabalipuram (Same Day): Sedan ₹2,600 - ₹3,000 | Ertiga ₹3,500 - ₹3,900
-   - Pondicherry (Same Day): Sedan ₹4,500 - ₹5,000 | Ertiga ₹5,800 - ₹6,200
-   - Kanchipuram Temple Tour: Sedan ₹3,000 - ₹3,400 | Ertiga ₹4,000 - ₹4,400
-   - Vellore Golden Temple: Sedan ₹4,200 - ₹4,600 | Ertiga ₹5,200 - ₹5,800
+5. CHENNAI AIRPORT (MAA) TAXI TRANSFERS:
+   - City Hub Fixed Transfers (AC Sedan):
+     * Velachery: ₹650 | Tambaram: ₹550 | Guindy: ₹500 | Chromepet: ₹450 | Pallavaram: ₹400
+     * T. Nagar: ₹700 | Adyar: ₹700 | Medavakkam: ₹700 | OMR: ₹750 | Mylapore: ₹750 | Koyambedu: ₹750
+     * Anna Nagar: ₹800 | Egmore: ₹800 | Chennai Central: ₹850
+     *(Ertiga: +₹200 to ₹250 | Innova: +₹450 to ₹550)*
+   - Direct Highway Outstation Corridors from Airport:
+     * Pondicherry & Auroville (151 km): Sedan ₹2,820 | Innova ₹3,370 | Crysta ₹4,480 | Tempo ₹8,050
+     * Vellore CMC & VIT (140 km): Sedan ₹2,600 | Innova ₹3,120 | Crysta ₹4,150 | Tempo ₹7,450
+     * Tirupati Balaji Temple (135 km): Sedan ₹2,560 | Innova ₹3,070 | Crysta ₹4,080 | Tempo ₹7,250
+     * Mahabalipuram ECR (55 km): Sedan ₹1,650 | Innova ₹2,400 | Crysta ₹2,950 | Tempo ₹4,200
+     * Sriperumbudur SIPCOT (42 km): Sedan ₹1,400 | Innova ₹2,100 | Crysta ₹2,600 | Tempo ₹3,800
+     * Kanchipuram Silk City (75 km): Sedan ₹2,100 | Innova ₹2,650 | Crysta ₹3,400 | Tempo ₹5,200
+     * Tiruvannamalai (195 km): Sedan ₹3,600 | Innova ₹4,350 | Crysta ₹5,800 | Tempo ₹9,800
+   - Operational Guarantee: 24/7 pickup, live flight radar tracking (zero waiting charges for flight delays), and driver allotted before takeoff from origin airport. ₹0 advance for city drops; ₹500 to lock cab for outstation corridors (deducted from bill).
+
+6. ACTING DRIVERS FOR PERSONAL CARS:
+   - Chennai City Duty:
+     * 4 Hours: ₹500 (Extra hour: ₹100)
+     * 8 Hours: ₹800 (Extra hour: ₹100)
+     * Night driving allowance (10:00 PM – 6:00 AM): ₹150
+   - Outstation Round Trip (Your Car - Driver meals included):
+     * Hatchback & Sedan: ₹1,400 / day (₹1,100 base bata + ₹300 food)
+     * Compact SUV / MPV (Ertiga, Creta, Seltos, Carens): ₹1,500 / day (₹1,200 bata + ₹300 food)
+     * Premium SUV / MUV (Innova Crysta, Fortuner): ₹1,600 / day (₹1,300 bata + ₹300 food)
+     * Luxury European (BMW, Mercedes-Benz, Audi): ₹1,800 / day (₹1,500 bata + ₹300 food)
+     * Driver Stay: Free driver dormitory at hotels (TNCDBR rules); ₹300/night lodging allowance if private stay has no dorm.
+   - Outstation One-Way Drop (Car Relocation):
+     * 1-Day Driver Bata + Return Govt. SETC Bus Ticket + ₹300 Food Allowance (e.g. Pondy ~₹1,600, Bangalore ~₹1,850, Trichy ~₹1,820). If >400 km (Madurai ~₹2,500, Coimbatore ~₹2,570), 1.5x Bata applies for return travel.
+   - Safety: 100% Police Clearance Certificate (PVC Verified) chauffeurs, vetted on Manual, Automatic (CVT/DCT/AMT), and EV drivetrains.
+   - Deposit: ₹0 advance required.
 `;
 
 function deterministicFallback(userText, pageContext) {
@@ -186,7 +231,55 @@ function deterministicFallback(userText, pageContext) {
     };
   }
 
-  if (query.includes('local') || query.includes('hourly') || query.includes('city') || query.includes('4hr') || query.includes('8hr')) {
+  if (query.includes('acting') || query.includes('call driver') || query.includes('personal car') || query.includes('driver for my car') || query.includes('ஆக்டிங்')) {
+    return {
+      reply: `Here are our official **Acting Driver Services** for your personal car (MT / AT / EV):\n\n` +
+        `• **Chennai City Duty:**\n` +
+        `  - 4 Hours: ₹500 (Extra hour: ₹100)\n` +
+        `  - 8 Hours: ₹800 *(Full Day Duty)*\n` +
+        `  - Night driving charge (10:00 PM – 6:00 AM): ₹150\n\n` +
+        `• **Outstation Round Trip (Your Car - Driver meals included):**\n` +
+        `  - Hatchback / Sedan: ₹1,400 / day (₹1,100 bata + ₹300 food)\n` +
+        `  - Compact SUV / MPV (Ertiga, Creta, Seltos): ₹1,500 / day (₹1,200 bata + ₹300 food)\n` +
+        `  - Premium SUV / MUV (Innova Crysta, Fortuner): ₹1,600 / day (₹1,300 bata + ₹300 food)\n` +
+        `  - Luxury European (BMW, Mercedes-Benz, Audi): ₹1,800 / day (₹1,500 bata + ₹300 food)\n\n` +
+        `• **Outstation One-Way Drop:** 1-Day Driver Bata + Return SETC Bus Ticket + ₹300 Food (1.5x Bata if >400 km).\n\n` +
+        `👮 **Safety:** 100% Police Clearance Certificate (PVC) verified, 5+ years experience.\n` +
+        `🛡️ **Policy:** **₹0 advance deposit** required — pay after trip completion!\n\n` +
+        `[👉 Hire Acting Driver](/services/acting-drivers/)`,
+      actionSuggestion: {
+        type: 'acting_driver',
+        label: 'Book Acting Driver on WhatsApp',
+        whatsappText: 'Hi Kalidass Travels, I want to book an Acting Driver for my car.'
+      }
+    };
+  }
+
+  if (query.includes('airport') || query.includes('flight') || query.includes('terminal') || query.includes('ஏர்போர்ட்')) {
+    return {
+      reply: `Here are our **Chennai Airport (MAA) Taxi Transfer Rates**:\n\n` +
+        `• **City Hub Drops / Pickups (AC Sedan):**\n` +
+        `  - Velachery: ₹650 | Tambaram: ₹550 | Guindy: ₹500 | Chromepet: ₹450\n` +
+        `  - T. Nagar: ₹700 | Adyar: ₹700 | Medavakkam: ₹700 | OMR: ₹750\n` +
+        `  - Anna Nagar: ₹800 | Egmore: ₹800 | Chennai Central: ₹850\n` +
+        `  *(Ertiga: +₹200 to ₹250 | Innova: +₹450 to ₹550)*\n\n` +
+        `• **Direct Highway Outstation Corridors (Sedan):**\n` +
+        `  - Pondicherry: ₹2,820 | Vellore CMC: ₹2,600 | Tirupati: ₹2,560\n` +
+        `  - Mahabalipuram: ₹1,650 | Sriperumbudur: ₹1,400 | Kanchipuram: ₹2,100\n\n` +
+        `✈️ **Airport Guarantees:**\n` +
+        `• Live flight radar tracking with **zero waiting charges for delayed flights**.\n` +
+        `• Chauffeur details allotted and sent on WhatsApp **before your flight takes off** from your origin airport!\n` +
+        `• ₹0 advance for city drops. Outstation: ₹500 to lock cab (deducted from bill).\n\n` +
+        `[👉 Book Chennai Airport Taxi](/services/chennai-airport-taxi/)`,
+      actionSuggestion: {
+        type: 'airport_booking',
+        label: 'Book Airport Taxi on WhatsApp',
+        whatsappText: 'Hi Kalidass Travels, I need a Chennai Airport taxi transfer.'
+      }
+    };
+  }
+
+  if ((query.includes('local') || query.includes('hourly') || query.includes('city') || query.includes('4hr') || query.includes('8hr')) && !query.includes('acting') && !query.includes('call driver')) {
     return {
       reply: `Here are our **Chennai City Local Rental Packages**:\n\n` +
         `• **AC Sedan (Dzire / Etios):**\n` +
@@ -199,7 +292,7 @@ function deterministicFallback(userText, pageContext) {
         `  - Extra km: ₹17 | Extra hr: ₹200\n\n` +
         `• **Toyota Innova (7 Seater):**\n` +
         `  - 8 hrs / 80 km: ₹3,200\n\n` +
-        `🛡️ **Policy:** ₹500 advance to confirm & lock cab (avoids last-minute cancellation). Balance post-trip.`,
+        `🛡️ **Policy:** ₹0 advance deposit required for local city rentals — pay balance after trip completion!`,
       actionSuggestion: {
         type: 'local_package',
         label: 'Book Local Rental on WhatsApp',
@@ -214,11 +307,139 @@ function deterministicFallback(userText, pageContext) {
         `• **AC Sedan (4 Pax):** ~₹4,500 - ₹5,000 (Based on ~320 km round trip at ₹14/km + driver bata ₹400)\n` +
         `• **Maruti Ertiga (6 Pax):** ~₹5,800 - ₹6,200 (At ₹17/km + driver bata ₹500)\n` +
         `• **Toyota Innova (7 Pax):** ~₹7,000 (At ₹20/km + driver bata ₹600)\n\n` +
-        `*Tolls are payable at actual FASTag plazas. ₹500 advance to confirm booking.*`,
+        `*Tolls are payable at actual FASTag plazas. ₹500 advance to confirm booking (deducted from bill).*`,
       actionSuggestion: {
         type: 'pondicherry_package',
         label: 'Book Pondicherry Cab on WhatsApp',
         whatsappText: 'Hi Kalidass Travels, I need a Chennai to Pondicherry cab quote.'
+      }
+    };
+  }
+
+  if (query.includes('advance') || query.includes('deposit') || query.includes('lock cab') || query.includes('முன்பணம்')) {
+    return {
+      reply: `🛡️ **Kalidass Travels Advance Payment & Deduction Policy:**\n\n` +
+        `• **Nominal ₹500 Advance:** For outstation trips and tour packages, we collect only **₹500 advance** to confirm booking and lock cab allocation.\n` +
+        `• **100% Deducted from Bill:** The ₹500 is NOT an extra fee — it is deducted from your quoted total (e.g. Total ₹6,000 − ₹500 Advance = ₹5,500 Net Balance paid directly to chauffeur post-trip).\n` +
+        `• **Local City & Acting Drivers:** **₹0 advance deposit required** — pay 100% after trip completion!\n` +
+        `• **100% Refund Guarantee:** Fully refundable if canceled up to 6 hours before departure.\n\n` +
+        `[👉 Pay ₹500 Advance & Lock Cab on WhatsApp](https://wa.me/918939539211?text=Hi%20Kalidass%20Travels%2C%20I%20want%20to%20confirm%20my%20booking%20and%20pay%20advance)`,
+      actionSuggestion: {
+        type: 'advance_policy',
+        label: 'Confirm on WhatsApp',
+        whatsappText: 'Hi Kalidass Travels, I want to confirm my booking and pay ₹500 advance.'
+      }
+    };
+  }
+
+  if (query.includes('chidambaram') || query.includes('pichavaram')) {
+    return {
+      reply: `Here are our **Chennai ⇄ Chidambaram & Pichavaram Tour Package** rates:\n\n` +
+        `• **1-Day Package (All-Inclusive):**\n` +
+        `  - AC Sedan: ₹7,400 | Maruti Ertiga: ₹9,200 | Toyota Innova: ₹11,000\n` +
+        `• **2-Day Package:**\n` +
+        `  - AC Sedan: ₹9,800 | Maruti Ertiga: ₹12,000 | Toyota Innova: ₹14,000\n\n` +
+        `✅ Covers dedicated AC cab, fuel, ECR highway tolls, Pichavaram mangrove stop & driver bata.\n` +
+        `🛡️ ₹500 advance to lock cab (deducted from bill); balance paid post-trip!\n\n` +
+        `[👉 Open Chidambaram Calculator](/services/chidambaram-temple-trip/)`,
+      actionSuggestion: {
+        type: 'tour_quote',
+        label: 'Book Chidambaram on WhatsApp',
+        whatsappText: 'Hi Kalidass Travels, I want to book Chennai to Chidambaram tour.'
+      }
+    };
+  }
+
+  if (query.includes('thiruvannamalai') || query.includes('tiruvannamalai') || query.includes('girivalam')) {
+    return {
+      reply: `Here are our **Chennai ⇄ Thiruvannamalai Arunachaleswarar Girivalam Package** rates:\n\n` +
+        `• **1-Day Package:** AC Sedan: ₹6,500 | Maruti Ertiga: ₹7,900 | Toyota Innova: ₹9,300\n` +
+        `• **2-Day Package:** AC Sedan: ₹8,900 | Maruti Ertiga: ₹10,900 | Toyota Innova: ₹12,900\n\n` +
+        `✅ Covers dedicated cab, fuel, NH tolls, Girivalam coordination & driver bata.\n` +
+        `🛡️ ₹500 advance to lock cab (deducted from bill); balance paid post-trip!\n\n` +
+        `[👉 Open Thiruvannamalai Calculator](/services/thiruvannamalai-girivalam-trip/)`,
+      actionSuggestion: {
+        type: 'tour_quote',
+        label: 'Book Thiruvannamalai on WhatsApp',
+        whatsappText: 'Hi Kalidass Travels, I want to book Chennai to Thiruvannamalai Girivalam tour.'
+      }
+    };
+  }
+
+  if (query.includes('navagraha') || query.includes('kumbakonam')) {
+    return {
+      reply: `Here are our **Kumbakonam Navagraha (9 Planetary Temples) Tour Package** rates:\n\n` +
+        `• **2-Day Package:** AC Sedan: ₹14,500 | Maruti Ertiga: ₹18,500 | Toyota Innova: ₹22,500\n` +
+        `• **3-Day Package:** AC Sedan: ₹19,500 | Maruti Ertiga: ₹24,500 | Toyota Innova: ₹29,500\n\n` +
+        `✅ Dedicated AC cab staying with you for all 9 temples, experienced temple route chauffeur.\n` +
+        `🛡️ ₹500 advance to lock cab (deducted from bill); balance paid post-trip!\n\n` +
+        `[👉 Open Navagraha Calculator](/services/navagraha-tour/)`,
+      actionSuggestion: {
+        type: 'tour_quote',
+        label: 'Book Navagraha Tour on WhatsApp',
+        whatsappText: 'Hi Kalidass Travels, I want to book Kumbakonam Navagraha Tour.'
+      }
+    };
+  }
+
+  if (query.includes('rameswaram') || query.includes('rameshwaram') || query.includes('dhanushkodi')) {
+    return {
+      reply: `Here are our **Chennai ⇄ Rameswaram & Dhanushkodi Tour Package** rates:\n\n` +
+        `• **2-Day Package:** AC Sedan: ₹18,500 | Maruti Ertiga: ₹23,500 | Toyota Innova: ₹27,500\n` +
+        `• **3-Day Package:** AC Sedan: ₹24,500 | Maruti Ertiga: ₹30,500 | Toyota Innova: ₹36,500\n\n` +
+        `✅ Covers Pamban Bridge, Ramanathaswamy Temple, 22 Kundas bath, and Dhanushkodi.\n` +
+        `🛡️ ₹500 advance to lock cab (deducted from bill); balance paid post-trip!\n\n` +
+        `[👉 Open Rameswaram Calculator](/services/rameswaram-2-days/)`,
+      actionSuggestion: {
+        type: 'tour_quote',
+        label: 'Book Rameswaram on WhatsApp',
+        whatsappText: 'Hi Kalidass Travels, I want to book Chennai to Rameswaram package.'
+      }
+    };
+  }
+
+  if (query.includes('kanchipuram') || query.includes('kanchi')) {
+    return {
+      reply: `Here are our **Chennai ⇄ Kanchipuram Temple & Silk Tour** rates:\n\n` +
+        `• **Same-Day Return:** AC Sedan: ₹3,800 | Maruti Ertiga: ₹4,800 | Toyota Innova: ₹5,800\n\n` +
+        `✅ Covers Kamakshi Amman, Ekambareswarar, Varadharaja Perumal & handloom weaver centers.\n` +
+        `🛡️ ₹500 advance to lock cab (deducted from bill); balance paid post-trip!\n\n` +
+        `[👉 Open Kanchipuram Calculator](/services/kanchipuram-temple-trip/)`,
+      actionSuggestion: {
+        type: 'tour_quote',
+        label: 'Book Kanchipuram on WhatsApp',
+        whatsappText: 'Hi Kalidass Travels, I want to book Kanchipuram Tour.'
+      }
+    };
+  }
+
+  if (query.includes('vellore') || query.includes('golden temple')) {
+    return {
+      reply: `Here are our **Chennai ⇄ Vellore Sripuram Golden Temple Tour** rates:\n\n` +
+        `• **Same-Day Return:** AC Sedan: ₹4,200 | Maruti Ertiga: ₹5,200 | Toyota Innova: ₹6,200\n\n` +
+        `✅ Covers dedicated AC cab, NH toll plazas, and driver bata.\n` +
+        `🛡️ ₹500 advance to lock cab (deducted from bill); balance paid post-trip!\n\n` +
+        `[👉 Open Vellore Calculator](/services/vellore-golden-temple/)`,
+      actionSuggestion: {
+        type: 'tour_quote',
+        label: 'Book Vellore on WhatsApp',
+        whatsappText: 'Hi Kalidass Travels, I want to book Vellore Golden Temple Tour.'
+      }
+    };
+  }
+
+  if (query.includes('sabarimala') || query.includes('pamba')) {
+    return {
+      reply: `Here are our **Chennai ⇄ Sabarimala Mandala Pooja Tour Package** rates:\n\n` +
+        `• **3-Day Package:** AC Sedan: ₹24,000 | Maruti Ertiga: ₹30,000 | Toyota Innova: ₹36,000\n` +
+        `• **4-Day Package:** AC Sedan: ₹29,500 | Maruti Ertiga: ₹36,500 | Toyota Innova: ₹43,500\n\n` +
+        `✅ Specialized ghat-road senior chauffeurs, Nilakkal / Pamba transit coordination.\n` +
+        `🛡️ ₹500 advance to lock cab (deducted from bill); balance paid post-trip!\n\n` +
+        `[👉 Open Sabarimala Calculator](/services/sabarimala-trip/)`,
+      actionSuggestion: {
+        type: 'tour_quote',
+        label: 'Book Sabarimala on WhatsApp',
+        whatsappText: 'Hi Kalidass Travels, I want to book Sabarimala package.'
       }
     };
   }
@@ -231,7 +452,7 @@ function deterministicFallback(userText, pageContext) {
         `• **Toyota Innova (7 Seater):** ₹20 / km (Min 250 km/day, Driver Bata ₹600/day)\n` +
         `• **Toyota Innova Crysta:** ₹22 / km (Min 250 km/day, Driver Bata ₹700/day)\n` +
         `• **Tempo Traveller (12 Seater):** ₹26 / km (Min 300 km/day, Driver Bata ₹800/day)\n\n` +
-        `🛡️ **Guarantee:** ₹500 advance to confirm & lock cab (avoids last-minute cancellation). Balance post-trip.`,
+        `🛡️ **Policy:** ₹500 advance to confirm & lock cab (deducted from bill). Balance post-trip!`,
       actionSuggestion: {
         type: 'outstation_inquiry',
         label: 'Get Exact Route Quote on WhatsApp',
@@ -243,10 +464,11 @@ function deterministicFallback(userText, pageContext) {
   return {
     reply: `Hello! I am your **Kalidass Travels AI Fare Assistant** 🚕\n\n` +
       `I can instantly help you with:\n` +
-      `• 🕉️ **Tirupati Balaji 1-Day Packages** (Sedan ₹6,000 | Ertiga ₹7,500 all-inclusive)\n` +
+      `• 🕉️ **Tirupati Balaji & Temple Packages** (Tirupati 1-Day Sedan ₹6,000 | Ertiga ₹7,500 all-inclusive)\n` +
+      `• ✈️ **Chennai Airport Taxi Transfers** (City hubs from ₹550 | 24/7 flight tracking)\n` +
+      `• 👮 **Acting Drivers for Personal Car** (City 4hr ₹500, 8hr ₹800 | Outstation ₹1,400/day)\n` +
       `• ⏱️ **Local Chennai Hourly Packages** (4hr, 8hr, 12hr rentals)\n` +
-      `• 🛣️ **Outstation Cabs** (Sedan ₹14/km, Ertiga ₹17/km, Innova ₹20/km)\n` +
-      `• ✈️ **Airport Pickup & Drops**\n\n` +
+      `• 🛣️ **Outstation Cabs** (Sedan ₹14/km, Ertiga ₹17/km, Innova ₹20/km)\n\n` +
       `Please tell me your destination, travel date, or preferred car!`,
     actionSuggestion: null
   };

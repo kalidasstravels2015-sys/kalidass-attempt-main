@@ -1,4 +1,4 @@
-# robots.txt for https://kalidasstravels.in — Last updated: 2026-10-04
+# robots.txt for https://kalidasstravels.in — Last updated: 2026-10-17
 
 # Allow all search engines and global crawlers
 User-agent: *
@@ -100,6 +100,19 @@ User-agent: MistralBot
 Allow: /
 
 User-agent: MistralAI-User
+Allow: /
+
+# ─── xAI (Grok, Grok 2, Grok 3) ───
+User-agent: GrokBot
+Allow: /
+
+User-agent: xAI-SearchBot
+Allow: /
+
+User-agent: xAI-Bot
+Allow: /
+
+User-agent: Grok
 Allow: /
 
 # ─── ByteDance (Doubao, TikTok AI) ───

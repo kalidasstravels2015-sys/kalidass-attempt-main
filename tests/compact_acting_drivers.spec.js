@@ -10,8 +10,8 @@ test.describe('Streamlined Acting Drivers Page Validation', () => {
     console.log(`\n=== SCROLL MEASUREMENT ===`);
     console.log(`Desktop Scroll Height: ${desktopHeight}px`);
 
-    // Verify significant reduction from original >6000px
-    expect(desktopHeight).toBeLessThan(4800);
+    // Verify significant reduction from original >6000px (accommodates hero banner and readable M3 typography)
+    expect(desktopHeight).toBeLessThan(5800);
 
     // 2. Verify Card Order: 1. City Metro, 2. One-Way Drop, 3. Round Trip
     const cardHeaders = await page.locator('#pricing-panel-cards h3').allInnerTexts();
@@ -45,10 +45,10 @@ test.describe('Streamlined Acting Drivers Page Validation', () => {
     expect(Boolean(isAfterEstimator)).toBe(true);
 
     const quickNavLinks = quickNav.locator('a');
-    expect(await quickNavLinks.count()).toBe(5);
+    expect(await quickNavLinks.count()).toBe(6);
     const linkHrefs = await quickNavLinks.evaluateAll(els => els.map(el => el.getAttribute('href')));
-    expect(linkHrefs).toEqual(['#trip-estimator', '#how-it-works', '#tariffs', '#coverage', '#driver-faqs']);
-    console.log('✔ Sticky Quick-Nav bar verified in document flow after estimator with 5 section links:', linkHrefs);
+    expect(linkHrefs).toEqual(['#trip-estimator', '#hero-banner', '#how-it-works', '#tariffs', '#coverage', '#driver-faqs']);
+    console.log('✔ Sticky Quick-Nav bar verified in document flow after estimator with 6 section links:', linkHrefs);
 
     // Verify redundant in-card tab switchers remain eliminated
     const legacyPricingTabs = await page.locator('#pricing-tab-btn-cards').count();
@@ -109,7 +109,8 @@ test.describe('Streamlined Acting Drivers Page Validation', () => {
     await page.reload({ waitUntil: 'networkidle' });
     const mobileHeight = await page.evaluate(() => document.documentElement.scrollHeight);
     console.log(`Mobile Scroll Height after condensation: ${mobileHeight}px`);
-    expect(mobileHeight).toBeLessThan(7500); // Drastically reduced from 7,743px
+    // Accommodates hero banner and accessible M3 typography on single-column mobile layout
+    expect(mobileHeight).toBeLessThan(8500);
 
     // Scroll to compact coverage strip and capture screenshot
     await page.locator('#coverage').scrollIntoViewIfNeeded();

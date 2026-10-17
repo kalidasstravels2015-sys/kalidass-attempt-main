@@ -45,6 +45,14 @@ All booking engines, quotation calculators, and trip booking components across t
 - **Container Theme**: Use the site default theme (`bg-m3-surface`, `text-m3-on-surface`, `border-m3-outline-variant`, `shadow-m3-1`). Inputs should use standard clean white/light styling (`bg-white`, `border-m3-outline-variant`, `text-m3-on-surface`). Avoid dark inverse slabs (`bg-m3-inverse-surface`) unless explicitly requested.
 - **Color Discipline (No Rainbow/Multi-Color Icons)**: Keep field icons, labels, and badges in a calm, neutral, monochromatic palette (`text-m3-on-surface-variant`, neutral containers). Do NOT use multiple competing accent colors (such as blue, amber, green, purple) across form field labels.
 - **WhatsApp CTA**: The standardized `WhatsAppButton` (with its M3 Mint Palette) should be the sole prominent color accent for conversion. Never stretch buttons to full width (`w-full` is prohibited).
+- **Rate Summary Card Subtle Surface Differentiation**:
+  - The fare summary / invoice card must have a subtle background differentiation from the calculator form card.
+  - Use `bg-m3-surface-container-low` (or `bg-slate-50/70` with `border border-m3-outline-variant/60`).
+  - Do NOT use identical flat white backgrounds for both cards, which causes input and output panels to blend together.
+- **Checkmark Icon Discipline (Zero Icon Fatigue)**:
+  - Do NOT litter repetitive checkmark icons (`✓`, `Check`, `CheckCircle`) across standard lists, line items, and feature bullets.
+  - Present inclusions and features with clean typography, subtle bullet dots (`•`), or neutral dividers.
+  - Reserve checkmark icons strictly for active verified confirmations (e.g. the single hero All-Inclusive badge).
 
 ## 5. Government Regulatory Compliance & Fair Tariff Policies
 All tariff calculators, booking engines, and quote generators must adhere to statutory consumer protections and standard transport regulations:
@@ -114,10 +122,40 @@ All fare summary cards and checkout actions must prioritize a calm, frictionless
   - Do NOT repeat "All-Inclusive", "Included", or "Inclusions" in the guarantee heading, inclusions subtext, or breakdown buttons.
   - **Inclusions Subtext**: Use `Covers FASTag Tolls + AP Permit + Ghat Road + Driver Bata` (never `... Included`).
   - **Breakdown Toggle**: Use `View Itemized Fare Breakdown` and `Hide Itemized Fare Breakdown` (never `... & Inclusions`).
+- **Transparent Itemized Distance & Rate Formula ("Km @ Rate/km")**:
+  - In distance-based / outstation booking engines, the "Cab Hire" itemized bill line must NEVER hide the pricing formula behind generic labels (e.g. `Cab Hire ({vehicle} • Fuel included):`).
+  - It must strictly display the explicit billable distance and rate per kilometer: 
+    `Cab Hire (${chargeable_km} km @ ₹${rate_per_km}/km):`
+    (Tamil: `வாகன கட்டணம் (${chargeable_km} கிமீ @ ₹${rate_per_km}/கிமீ):`).
+  - Fuel & driver duty are already highlighted in the dedicated inclusions badge; the cab hire line exists for 100% mathematical pricing transparency.
+- **Separate Rows for Road Extras (Tolls, Parking, State Permit)**:
+  - Road extras must NEVER be lumped together into a single composite line (such as `Tolls, Parking & Permits: Extra (At Actuals)`).
+  - They must always be rendered as 3 distinct, itemized rows across all rate summary cards:
+    - `Tolls:` **Extra (At Actuals)** / `டோல் கட்டணம்:` **கூடுதல் (அசல் ரசீதுப்படி)**
+    - `Parking:` **Extra (At Actuals)** / `பார்க்கிங் கட்டணம்:` **கூடுதல் (அசல் ரசீதுப்படி)**
+    - `State Permit:` **Extra (At Actuals)** / `மாநில அனுமதி வரி:` **கூடுதல் (அசல் ரசீதுப்படி)**
 - **Minimalist Rate Summary (Zero Banner Fatigue)**:
   - Do not add noisy guarantee headlines (such as `Zero Hidden Charges Guarantee` or `Corporate Tax Invoice Guarantee` with shield icons) above the inclusions.
   - Do not add redundant advance bullet points (such as `Zero Advance Required • Pay Chauffeur After Darshan / Return`) under the price, as token advance terms are already detailed inside the itemized breakdown table (`Advance Token Payment: ₹0`).
   - Do not place verbose links (such as `View Full Government Format Proforma Letterhead`) at the bottom of the breakdown table or corporate box. Keep document export discreet via the compact `Save PDF` action.
+- **Receipt-Style Right-Aligned Numbers**:
+  - In itemized fare summaries, all currency figures, rates, deductions, and final totals must be right-aligned (`text-right font-mono font-semibold` or `font-bold`).
+  - Item labels sit on the left (`text-left`), values snap to the right, ensuring clean vertical decimal scanning identical to a restaurant or retail receipt.
+- **Explicit Advance Token Deduction Arithmetic**:
+  - If a token advance is required or paid (e.g., ₹500 token), the fare summary must show clear mathematical subtraction:
+    1. `Gross Estimated Fare: ₹X` (or base cab hire + duty total)
+    2. `Advance Token Paid / Required: -₹Y` (distinctly styled in muted/amber or minus badge)
+    3. `Balance Payable to Chauffeur at Drop: ₹(X - Y)` (prominent bold net total)
+  - The final hero price or payable total must NEVER omit the advance deduction.
+- **Single Hero Metric (No Competing Large Values)**:
+  - Never display two large, competing price figures in equal prominence side-by-side (e.g., gross vs net or one-way vs round-trip).
+  - Feature ONE primary payable hero figure; secondary figures must be subordinate in size (`text-sm font-normal text-m3-on-surface-variant`).
+- **Universal Multi-Engine Synchronization**:
+  - These rate summary formatting standards (explicit formula, disaggregated extras, right-aligned figures, advance subtraction, surface differentiation) apply universally across all engines:
+    - Outstation Cabs (`OutstationBookingEngine.jsx`)
+    - Chennai Airport Taxi (`AirportBookingEngine.jsx` / `AirportTaxiCalculator.jsx`)
+    - Acting Drivers (`ActingDriverBookingEngine.jsx`)
+    - Pilgrimage & Sightseeing Tour Packages (`TirupatiBookingEngine.jsx`, `PondicherryBookingEngine.jsx`, etc.)
 
 ## 9. Sticky Quick-Navigation Placement & Invariants (Learned from Chennai Airport Taxi)
 On service and landing pages featuring a booking engine, fare finder, or trip estimator above the fold:
@@ -132,5 +170,15 @@ On service and landing pages featuring a booking engine, fare finder, or trip es
   - The first link must target the top booking tool (e.g. `href="#trip-estimator"` or `href="#booking-section"`) with default active state (`data-active="true" aria-current="true"`).
 - **Target Section Scroll Margin (`scroll-mt-28`)**:
   - All target anchor sections must specify `scroll-mt-28` (or `scroll-mt-32`) to account for the cumulative height of the site header (`top-16`, 64px) plus the sticky navigation bar (48px).
+
+## 10. Chennai Airport Taxi Specific Standards & Operational SLAs
+- **Default Direction (Airport Pickup First)**:
+  - Airport taxi booking engines must default to **Airport Pickup** (arrivals arriving at Chennai Airport), as arriving travelers represent the highest intent audience.
+  - The direction toggle must place "Pickup from Airport" as the active first option.
+- **Airport Input Pairing**:
+  - Pair `Pickup Date / Landing Date` and `Flight Number` in the same horizontal row (`grid grid-cols-2`) for compact above-the-fold engagement.
+- **Driver Allocation Policy Copy**:
+  - Never state generic or misleading timelines like "Driver details sent 24 hours prior".
+  - Driver allocation copy must accurately reflect airport operations: **"Driver & vehicle details assigned before your flight takes off"** (providing peace of mind before boarding).
 
 

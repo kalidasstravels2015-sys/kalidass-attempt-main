@@ -15,7 +15,7 @@ import BottomCTA from "../components/BottomCTA.astro";
 import { getImage } from "astro:assets";
 import airavatesvaraImg from "../assets/images/hero/airavatesvara.webp";
 
-const ogImage = "/images/logo.png";
+const ogImage = "/images/og-main.png";
 
 const heroOptimized = import.meta.env.PROD
   ? await getImage({
@@ -49,7 +49,7 @@ const homePageSchema = {
   "hasPart": { "@id": "https://kalidasstravels.in/#faq" },
   "primaryImageOfPage": {
     "@type": "ImageObject",
-    "url": "https://kalidasstravels.in/images/logo.png"
+    "url": "https://kalidasstravels.in/images/og-main.png"
   },
   "breadcrumb": {
     "@type": "BreadcrumbList",
@@ -70,6 +70,7 @@ const homePageSchema = {
   title="Kalidass Travels – Best Cabs & Temple Tours Chennai"
   description="Book reliable taxi services in Chennai: Airport cabs from ₹650, outstation cabs from ₹14/km, temple tours & acting drivers from ₹600. 24/7 support."
   keywords="taxi service chennai, cab booking chennai, outstation cabs chennai, chennai to tirupati cab, chennai airport taxi, temple tour packages chennai, acting driver in chennai, call drivers chennai, kalidass travels medavakkam"
+  ogImage={ogImage}
   image={ogImage}
   schema={homePageSchema}
   preloadHero={preloadHero}

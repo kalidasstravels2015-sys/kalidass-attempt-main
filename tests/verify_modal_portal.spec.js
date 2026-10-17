@@ -8,9 +8,8 @@ test.describe('Airport Booking Modal & Sticky Quick-Nav Isolation', () => {
     const nav = page.locator('nav[data-quick-nav]');
     await expect(nav).toBeVisible();
 
-    // Scroll down slightly so sticky pill bar is at its sticky position
-    await page.evaluate(() => window.scrollTo(0, 300));
-    await page.waitForTimeout(300);
+    // Wait for React hydration
+    await page.waitForTimeout(600);
 
     // Click Airport Pickup
     const tabPickup = page.locator('[data-testid="tab-pickup"]');
@@ -18,15 +17,21 @@ test.describe('Airport Booking Modal & Sticky Quick-Nav Isolation', () => {
 
     // Enter destination
     const toInput = page.locator('#airport-to-input');
+    await expect(toInput).not.toHaveAttribute('readonly');
     await toInput.fill('Puducherry, India');
 
-    // Click Get Flat Fare
-    const calcBtn = page.locator('button:has-text("Get Flat Fare")');
-    await calcBtn.click();
+    // Scroll down slightly so sticky pill bar is at its sticky position
+    await page.evaluate(() => window.scrollTo(0, 300));
+    await page.waitForTimeout(300);
+
+    // Click Calculate Button
+    const calcBtn = page.locator('#get-flat-fare-btn');
+    await page.waitForTimeout(200);
+    await calcBtn.click({ force: true });
 
     // Modal should appear
     const modal = page.locator('#airport-booking-modal');
-    await expect(modal).toBeVisible();
+    await expect(modal).toBeVisible({ timeout: 10000 });
 
     // Sticky nav must be hidden while modal is open
     await expect(nav).toBeHidden();
@@ -54,9 +59,8 @@ test.describe('Airport Booking Modal & Sticky Quick-Nav Isolation', () => {
     const nav = page.locator('nav[data-quick-nav]');
     await expect(nav).toBeVisible();
 
-    // Scroll down so quick-nav is in view
-    await page.evaluate(() => window.scrollTo(0, 200));
-    await page.waitForTimeout(300);
+    // Wait for React hydration
+    await page.waitForTimeout(600);
 
     // Click Airport Pickup
     const tabPickup = page.locator('[data-testid="tab-pickup"]');
@@ -64,11 +68,16 @@ test.describe('Airport Booking Modal & Sticky Quick-Nav Isolation', () => {
 
     // Enter destination
     const toInput = page.locator('#airport-to-input');
+    await expect(toInput).not.toHaveAttribute('readonly');
     await toInput.fill('Puducherry, India');
 
-    // Click Get Flat Fare
-    const calcBtn = page.locator('button:has-text("Get Flat Fare")');
-    await calcBtn.click();
+    // Scroll down so quick-nav is in view
+    await page.evaluate(() => window.scrollTo(0, 200));
+    await page.waitForTimeout(300);
+
+    // Click Calculate Button
+    const calcBtn = page.locator('#get-flat-fare-btn');
+    await calcBtn.click({ force: true });
 
     // Modal should appear
     const modal = page.locator('#airport-booking-modal');

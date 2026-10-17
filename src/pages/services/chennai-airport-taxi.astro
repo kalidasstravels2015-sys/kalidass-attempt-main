@@ -3,7 +3,6 @@ import Layout from '../../layouts/Layout.astro';
 import Breadcrumbs from '../../components/SEO/Breadcrumbs.astro';
 import FAQAccordion from '../../components/FAQAccordion.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
-import OptimizedImage from '../../components/OptimizedImage.astro';
 import AirportBookingEngine from '../../components/AirportBookingEngine.jsx';
 import VehicleCard from '../../components/VehicleCard.astro';
 
@@ -18,66 +17,6 @@ const breadcrumbItems = [
 ];
 
 const zoneTariffs = [
-  {
-    id: "zone-south",
-    category: "city",
-    zone: "South Chennai & Airport Perimeter",
-    destinations: "Pallavaram, Guindy, Tambaram, Medavakkam, Velachery, Chromepet",
-    sedan: "₹650",
-    innova: "₹1,150",
-    crysta: "₹1,500",
-    tempo: "₹2,400",
-    distance: "12 km",
-    eta: "10–20 mins",
-    popular: false,
-    whatsappDrop: "Hi Kalidass Travels, I need an Airport DROP to Chennai Airport (MAA) from South Chennai (Guindy/Tambaram/Medavakkam). Date: , Pickup Time: , Address: ",
-    whatsappPickup: "Hi Kalidass Travels, I need an Airport PICKUP at Chennai Airport (MAA) to South Chennai (Guindy/Tambaram/Medavakkam). Flight No: , Arrival Date & Time: "
-  },
-  {
-    id: "zone-central",
-    category: "city",
-    zone: "Central Chennai & Downtown",
-    destinations: "US Consulate, T. Nagar, Anna Nagar, Nungambakkam, Egmore, Central Station",
-    sedan: "₹950",
-    innova: "₹1,550",
-    crysta: "₹1,950",
-    tempo: "₹2,900",
-    distance: "22 km",
-    eta: "30–45 mins",
-    popular: false,
-    whatsappDrop: "Hi Kalidass Travels, I need an Airport DROP to Chennai Airport (MAA) from Central Chennai / US Consulate / T. Nagar. Date: , Pickup Time: , Address: ",
-    whatsappPickup: "Hi Kalidass Travels, I need an Airport PICKUP at Chennai Airport (MAA) to Central Chennai / US Consulate / T. Nagar. Flight No: , Arrival Date & Time: "
-  },
-  {
-    id: "zone-omr",
-    category: "city",
-    zone: "OMR & IT Corridor (SIPCOT)",
-    destinations: "Perungudi, Thoraipakkam, Sholinganallur, Navalur, Siruseri IT Tech Parks",
-    sedan: "₹1,250",
-    innova: "₹1,850",
-    crysta: "₹2,300",
-    tempo: "₹3,400",
-    distance: "18 km",
-    eta: "25–40 mins",
-    popular: true,
-    whatsappDrop: "Hi Kalidass Travels, I need an Airport DROP to Chennai Airport (MAA) from OMR IT Corridor (Perungudi/Sholinganallur/Siruseri). Date: , Pickup Time: , Address: ",
-    whatsappPickup: "Hi Kalidass Travels, I need an Airport PICKUP at Chennai Airport (MAA) to OMR IT Corridor (Perungudi/Sholinganallur/Siruseri). Flight No: , Arrival Date & Time: "
-  },
-  {
-    id: "zone-ecr",
-    category: "city",
-    zone: "ECR Coastal & Beach Resorts",
-    destinations: "Mahabalipuram UNESCO, Kovalam, Nemmeli, InterContinental, Radisson Blu",
-    sedan: "₹1,650",
-    innova: "₹2,400",
-    crysta: "₹2,950",
-    tempo: "₹4,200",
-    distance: "45 km",
-    eta: "45–60 mins",
-    popular: true,
-    whatsappDrop: "Hi Kalidass Travels, I need an Airport DROP to Chennai Airport (MAA) from ECR / Mahabalipuram Resorts. Date: , Pickup Time: , Address: ",
-    whatsappPickup: "Hi Kalidass Travels, I need an Airport PICKUP at Chennai Airport (MAA) to ECR / Mahabalipuram Resorts. Flight No: , Arrival Date & Time: "
-  },
   {
     id: "zone-pondy",
     category: "outstation",
@@ -94,21 +33,97 @@ const zoneTariffs = [
     whatsappPickup: "Hi Kalidass Travels, I need a Direct Highway Airport PICKUP from Chennai Airport (MAA) to Pondicherry / Auroville. Flight No: , Landing Date & Time: "
   },
   {
-    id: "zone-tirupati-vellore",
+    id: "zone-vellore",
     category: "outstation",
-    zone: "Vellore CMC Hospital & Tirupati Direct",
-    destinations: "CMC Hospital Vellore, VIT Campus, Tirupati Balaji Temple (Highway Transfers)",
+    zone: "Vellore CMC Hospital & VIT University",
+    destinations: "CMC Hospital Town Campus, CMC Ranipet Campus, VIT University (Direct Highway)",
+    sedan: "₹2,600",
+    innova: "₹3,120",
+    crysta: "₹4,150",
+    tempo: "₹7,450",
+    distance: "140 km",
+    eta: "2.5–3 hrs",
+    popular: true,
+    whatsappDrop: "Hi Kalidass Travels, I need a Direct Highway Airport DROP from CMC Vellore / VIT to Chennai Airport (MAA). Date: , Pickup Time: , Address: ",
+    whatsappPickup: "Hi Kalidass Travels, I need a Direct Highway Airport PICKUP from Chennai Airport (MAA) to CMC Vellore / VIT. Flight No: , Landing Date & Time: "
+  },
+  {
+    id: "zone-tirupati",
+    category: "outstation",
+    zone: "Tirupati Balaji Temple Darshan",
+    destinations: "Tirupati Base Town, Alipiri Foot, Sri Venkateswara Temple (Direct Highway)",
     sedan: "₹2,560",
     innova: "₹3,070",
     crysta: "₹4,080",
-    tempo: "₹8,050",
+    tempo: "₹7,250",
     distance: "135 km",
     eta: "3–3.5 hrs",
+    popular: true,
+    whatsappDrop: "Hi Kalidass Travels, I need a Direct Highway Airport DROP from Tirupati to Chennai Airport (MAA). Date: , Pickup Time: , Address: ",
+    whatsappPickup: "Hi Kalidass Travels, I need a Direct Highway Airport PICKUP from Chennai Airport (MAA) to Tirupati Balaji Temple. Flight No: , Landing Date & Time: "
+  },
+  {
+    id: "zone-mahabs",
+    category: "outstation",
+    zone: "Mahabalipuram & ECR Beach Resorts",
+    destinations: "Sheraton Grand, InterContinental, Radisson Blu, Shore Temple UNESCO",
+    sedan: "₹1,650",
+    innova: "₹2,400",
+    crysta: "₹2,950",
+    tempo: "₹4,200",
+    distance: "55 km",
+    eta: "50–60 mins",
+    popular: true,
+    whatsappDrop: "Hi Kalidass Travels, I need a Direct Highway Airport DROP from Mahabalipuram to Chennai Airport (MAA). Date: , Pickup Time: , Address: ",
+    whatsappPickup: "Hi Kalidass Travels, I need an airport transfer between Chennai Airport (MAA) and Mahabalipuram / ECR Resorts. Flight No: , Date & Time: "
+  },
+  {
+    id: "zone-sriperumbudur",
+    category: "outstation",
+    zone: "Sriperumbudur & Oragadam Industrial SIPCOT",
+    destinations: "Hyundai, Foxconn, Saint-Gobain, Renault-Nissan, Dell, Irungattukottai Tech Parks",
+    sedan: "₹1,400",
+    innova: "₹2,100",
+    crysta: "₹2,600",
+    tempo: "₹3,800",
+    distance: "42 km",
+    eta: "45–55 mins",
     popular: false,
-    whatsappDrop: "Hi Kalidass Travels, I need a Direct Highway Airport DROP from CMC Vellore / Tirupati to Chennai Airport (MAA). Date: , Pickup Time: , Address: ",
-    whatsappPickup: "Hi Kalidass Travels, I need a Direct Highway Airport PICKUP from Chennai Airport (MAA) to CMC Vellore / Tirupati. Flight No: , Landing Date & Time: "
+    whatsappDrop: "Hi Kalidass Travels, I need a Direct Airport DROP from Sriperumbudur / Oragadam to Chennai Airport (MAA). Date: , Pickup Time: , Address: ",
+    whatsappPickup: "Hi Kalidass Travels, I need a Direct Airport PICKUP from Chennai Airport (MAA) to Sriperumbudur / Oragadam SIPCOT. Flight No: , Landing Date & Time: "
+  },
+  {
+    id: "zone-kanchipuram",
+    category: "outstation",
+    zone: "Kanchipuram Silk Sarees & Temples",
+    destinations: "Kamakshi Amman Temple, Ekambareswarar, Gandhi Road Silk Weavers Society",
+    sedan: "₹2,100",
+    innova: "₹2,650",
+    crysta: "₹3,400",
+    tempo: "₹5,200",
+    distance: "75 km",
+    eta: "1.5–1.8 hrs",
+    popular: false,
+    whatsappDrop: "Hi Kalidass Travels, I need a Direct Highway Airport DROP from Kanchipuram to Chennai Airport (MAA). Date: , Pickup Time: , Address: ",
+    whatsappPickup: "Hi Kalidass Travels, I need a Direct Highway Airport PICKUP from Chennai Airport (MAA) to Kanchipuram Silk Stores. Flight No: , Landing Date & Time: "
+  },
+  {
+    id: "zone-tiruvannamalai",
+    category: "outstation",
+    zone: "Tiruvannamalai Ramana Ashram & Temple",
+    destinations: "Sri Ramana Maharshi Ashram, Arunachaleswarar Temple, Girivalam Path",
+    sedan: "₹3,600",
+    innova: "₹4,350",
+    crysta: "₹5,800",
+    tempo: "₹9,800",
+    distance: "195 km",
+    eta: "3.5–4 hrs",
+    popular: false,
+    whatsappDrop: "Hi Kalidass Travels, I need a Direct Highway Airport DROP from Tiruvannamalai to Chennai Airport (MAA). Date: , Pickup Time: , Address: ",
+    whatsappPickup: "Hi Kalidass Travels, I need a Direct Highway Airport PICKUP from Chennai Airport (MAA) to Tiruvannamalai Ramana Ashram. Flight No: , Landing Date & Time: "
   }
 ];
+
 
 const airportFleet = [
   {
@@ -235,6 +250,10 @@ const faqs = [
     a: "For Terminal 1 (Domestic) and Terminals 2 & 4 (International), your chauffeur is stationed inside the airport perimeter and waits outside the passenger arrival exit gate holding a personalized name-board placard with your name. They assist with heavy luggage and escort you directly to your chilled AC cab parked in the terminal pickup bay."
   },
   {
+    q: "When do I receive my driver and cab details for an airport arrival pickup?",
+    a: "We allot your driver and send chauffeur details (driver name, mobile number, and yellow-board cab registration) to your WhatsApp before you take off from your origin airport (not 24 hours prior or after you land). This guarantees complete peace of mind before boarding your flight, knowing your cab is locked in and your driver is tracking your flight live."
+  },
+  {
     q: "Can I book a midnight (1:00 AM – 4:00 AM) or early morning Chennai airport taxi drop?",
     a: "Yes, early morning (3:00 AM – 5:00 AM) airport drops and midnight arrival pickups are our specialty. For morning drops, chauffeur details and vehicle registration numbers are sent to your WhatsApp by 9:00 PM the previous evening. Your chauffeur arrives 20–30 minutes ahead of scheduled time at your doorstep with 100% guaranteed punctuality."
   },
@@ -248,7 +267,7 @@ const faqs = [
   },
   {
     q: "I am flying from abroad (US, UK, Gulf, Singapore). How does international airport pickup work?",
-    a: "International bookings are completely frictionless. Reserve with your flight number and international WhatsApp number (+1, +44, +65, +971, etc.). Chauffeur tracks your flight radar, coordinates via WhatsApp on terminal Wi-Fi, waits outside Terminal 2 / 4 international arrival exit holding your name placard, and assists with luggage. Zero advance deposit is needed, eliminating foreign card OTP issues or transaction fees upfront."
+    a: "International bookings are completely frictionless. Reserve with your flight number and international WhatsApp number (+1, +44, +65, +971, etc.). We allot your chauffeur and share driver details to your WhatsApp before you take off from your origin airport. Chauffeur tracks your flight radar live, coordinates via WhatsApp on terminal Wi-Fi, waits outside Terminal 2 / 4 international arrival exit holding your name placard, and assists with luggage. Zero advance deposit is needed, eliminating foreign card OTP issues or transaction fees upfront."
   },
   {
     q: "Can international tourists pay in foreign currency or Bitcoin?",
@@ -633,23 +652,23 @@ const tripListSchema = {
     <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 pt-1 sm:pt-2">
 
       <!-- TOP PAGE HEADING & TRUST BADGES -->
-      <div class="max-w-2xl mx-auto mb-1.5 text-center sm:text-left flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-2">
+      <div class="max-w-2xl mx-auto mb-2 text-center sm:text-left flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 sm:gap-2">
         <div>
-          <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-m3-surface-container-low border border-m3-outline-variant text-m3-on-surface text-[10px] font-bold mb-0.5">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-m3-label-s font-semibold mb-1">
+            <span class="w-2 h-2 rounded-m3-full bg-m3-success animate-pulse"></span>
             <span>24/7 MAA Airport Transfers</span>
           </div>
           <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight">
             Chennai Airport Taxi &amp; Cab Booking
           </h1>
-          <p class="text-xs text-m3-on-surface-variant font-medium mt-0.5">
-            Book airport transfer taxi in Chennai · Fares from ₹650 flat · Zero advance payment
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant font-medium mt-0.5">
+            Terminals 1, 2 &amp; 4 · Fixed Fares from ₹650 · ₹500 Token Advance for Outstation
           </p>
         </div>
         <div class="flex items-center justify-center sm:justify-end gap-2 shrink-0">
-          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-m3-surface-container-lowest border border-m3-outline-variant shadow-2xs text-xs font-semibold text-m3-on-surface">
-            <svg class="w-3.5 h-3.5 text-amber-500 fill-amber-500" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-            <span>4.9/5 Rating (5,000+ Trips)</span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container-lowest border border-m3-outline-variant shadow-m3-1 text-m3-label-m font-semibold text-m3-on-surface">
+            <span class="material-symbols-outlined text-m3-tertiary text-base">star</span>
+            <span>4.9★ (5,000+ Trips)</span>
           </span>
         </div>
       </div>
@@ -659,322 +678,388 @@ const tripListSchema = {
       <section class="relative py-0.5 px-1 sm:px-2 max-w-2xl mx-auto mb-2">
         <AirportBookingEngine client:load showHeader={false} />
 
-        <!-- Popular Chennai Neighborhoods (1-Tap Fare Shortcuts) -->
-        <div id="suburban-corridors" class="mt-2.5 pt-2 border-t border-m3-outline-variant/60">
-          <div class="flex items-center justify-between gap-2 mb-1.5 px-0.5">
-            <span class="text-[11px] font-bold text-m3-on-surface flex items-center gap-1">
-              <svg class="w-3.5 h-3.5 text-m3-primary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
-              <span>Popular Neighborhood Shortcuts:</span>
-            </span>
-            <span class="text-[10px] text-m3-on-surface-variant font-medium">Flat Rates · Zero Surge</span>
+        <!-- M3 Trust Reassurance Strip with Material Symbols -->
+        <div class="mt-2.5 flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-m3-label-s text-m3-on-surface-variant font-medium">
+          <div class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-m3-primary text-base shrink-0">verified_user</span>
+            <span class="font-bold text-m3-on-surface">₹500 Token Advance • Balance at Drop</span>
           </div>
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 sm:gap-2">
-            <!-- 1. Tambaram -->
-            <button
-              type="button"
-              data-location="Tambaram, Chennai"
-              data-fare="₹650"
-              class="neighborhood-book-btn flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:bg-m3-surface-container-low transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary shadow-2xs"
-            >
-              <div class="text-left min-w-0">
-                <span class="text-[9px] font-semibold text-m3-on-surface-variant block uppercase leading-none">GST Road</span>
-                <strong class="text-xs font-bold text-m3-on-surface block mt-0.5 leading-tight">Tambaram</strong>
-              </div>
-              <span class="text-xs font-extrabold text-m3-primary shrink-0 ms-1">₹650</span>
-            </button>
-
-            <!-- 2. Velachery -->
-            <button
-              type="button"
-              data-location="Velachery, Chennai"
-              data-fare="₹650"
-              class="neighborhood-book-btn flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:bg-m3-surface-container-low transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary shadow-2xs"
-            >
-              <div class="text-left min-w-0">
-                <span class="text-[9px] font-semibold text-m3-on-surface-variant block uppercase leading-none">South Hub</span>
-                <strong class="text-xs font-bold text-m3-on-surface block mt-0.5 leading-tight">Velachery</strong>
-              </div>
-              <span class="text-xs font-extrabold text-m3-primary shrink-0 ms-1">₹650</span>
-            </button>
-
-            <!-- 3. Porur -->
-            <button
-              type="button"
-              data-location="Porur, Chennai"
-              data-fare="₹650"
-              class="neighborhood-book-btn flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:bg-m3-surface-container-low transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary shadow-2xs"
-            >
-              <div class="text-left min-w-0">
-                <span class="text-[9px] font-semibold text-m3-on-surface-variant block uppercase leading-none">West Corridor</span>
-                <strong class="text-xs font-bold text-m3-on-surface block mt-0.5 leading-tight">Porur</strong>
-              </div>
-              <span class="text-xs font-extrabold text-m3-primary shrink-0 ms-1">₹650</span>
-            </button>
-
-            <!-- 4. Sholinganallur -->
-            <button
-              type="button"
-              data-location="Sholinganallur, Chennai"
-              data-fare="₹1,250"
-              class="neighborhood-book-btn flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:bg-m3-surface-container-low transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary shadow-2xs"
-            >
-              <div class="text-left min-w-0">
-                <span class="text-[9px] font-semibold text-m3-on-surface-variant block uppercase leading-none">OMR IT Hub</span>
-                <strong class="text-xs font-bold text-m3-on-surface block mt-0.5 leading-tight">Sholinganallur</strong>
-              </div>
-              <span class="text-xs font-extrabold text-m3-primary shrink-0 ms-1">₹1,250</span>
-            </button>
-
-            <!-- 5. T. Nagar -->
-            <button
-              type="button"
-              data-location="T. Nagar, Chennai"
-              data-fare="₹950"
-              class="neighborhood-book-btn flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:bg-m3-surface-container-low transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary shadow-2xs"
-            >
-              <div class="text-left min-w-0">
-                <span class="text-[9px] font-semibold text-m3-on-surface-variant block uppercase leading-none">Central Hub</span>
-                <strong class="text-xs font-bold text-m3-on-surface block mt-0.5 leading-tight">T. Nagar</strong>
-              </div>
-              <span class="text-xs font-extrabold text-m3-primary shrink-0 ms-1">₹950</span>
-            </button>
-
-            <!-- 6. Anna Nagar -->
-            <button
-              type="button"
-              data-location="Anna Nagar, Chennai"
-              data-fare="₹950"
-              class="neighborhood-book-btn flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:bg-m3-surface-container-low transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary shadow-2xs"
-            >
-              <div class="text-left min-w-0">
-                <span class="text-[9px] font-semibold text-m3-on-surface-variant block uppercase leading-none">North-West</span>
-                <strong class="text-xs font-bold text-m3-on-surface block mt-0.5 leading-tight">Anna Nagar</strong>
-              </div>
-              <span class="text-xs font-extrabold text-m3-primary shrink-0 ms-1">₹950</span>
-            </button>
+          <div class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-m3-on-surface-variant text-base shrink-0">schedule</span>
+            <span>Free Flight Radar Tracking</span>
           </div>
-        </div>
-
-        <!-- Trust Reassurance Footer Strip with Inline SVGs -->
-        <div class="mt-1.5 flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-[11px] text-m3-on-surface-variant font-medium">
-          <div class="flex items-center gap-1">
-            <svg class="w-3.5 h-3.5 text-m3-primary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-            <span class="font-bold text-m3-on-surface">Book with Ease — Pay Balance at Drop</span>
+          <div class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-m3-on-surface-variant text-base shrink-0">badge</span>
+            <span>Name Placard Meet &amp; Greet</span>
           </div>
-          <div class="flex items-center gap-1">
-            <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-            <span>Instant WhatsApp confirmation</span>
-          </div>
-          <div class="flex items-center gap-1">
-            <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-            <span>Zero hidden charges</span>
+          <div class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-m3-on-surface-variant text-base shrink-0">receipt_long</span>
+            <span>GST Tax Invoices</span>
           </div>
         </div>
       </section>
 
-      <!-- STICKY QUICK-NAV JUMP BAR (Matching Document Flow) -->
-      <nav data-quick-nav aria-label="Airport Taxi Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-b border-m3-outline-variant/60 shadow-xs py-3 mb-6 sm:mb-8 -mx-3 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-6xl mx-auto flex items-center gap-2 text-xs font-semibold text-m3-on-surface whitespace-nowrap overflow-x-auto no-scrollbar py-0.5 pe-6 scroll-px-4">
-          <a href="#booking-section" data-active="true" aria-current="true" class="px-3.5 py-2 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs transition-all shrink-0 hover:bg-m3-primary hover:text-white">
+      <!-- STICKY QUICK-NAV JUMP BAR (M3 Pill Bar) -->
+      <nav data-quick-nav aria-label="Airport Taxi Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-b border-m3-outline-variant/60 shadow-m3-1 py-2.5 mb-6 -mx-3 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto flex items-center gap-2 text-m3-label-m font-semibold text-m3-on-surface whitespace-nowrap overflow-x-auto no-scrollbar py-0.5 pe-6 scroll-px-4">
+          <a href="#booking-section" data-active="true" aria-current="true" class="px-3.5 py-1.5 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs transition-all shrink-0 hover:bg-m3-primary hover:text-white">
             Calculate Fare
           </a>
-          <a href="#trust-promises-section" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
-            Our Guarantees
+          <a href="#arrival-protocol" class="px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+            Arrival Protocol
           </a>
-          <a href="#fleet-section" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+          <a href="#outstation-fares" class="px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+            Outstation Fares
+          </a>
+          <a href="#fleet-section" class="px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
             Vehicle Fleet
           </a>
-          <a href="#zone-tariffs" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
-            Fare Chart
-          </a>
-          <a href="#prepaid-taxi-comparison" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+          <a href="#prepaid-taxi-comparison" class="px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
             Prepaid Comparison
           </a>
-          <a href="#terminal-pickup-drop-guide" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
-            Terminal Guide
-          </a>
-          <a href="#airport-faq" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+          <a href="#airport-faq" class="px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
             Airport FAQs
           </a>
         </div>
       </nav>
 
-      <!-- 1. SIGNATURE HERO BANNER -->
-      <section 
-        class="group relative min-h-[190px] sm:min-h-[220px] rounded-2xl overflow-hidden shadow-md border border-m3-outline-variant/60 bg-m3-inverse-surface flex flex-col justify-end p-4 sm:p-6 mb-8 transition-all duration-300" 
-        aria-label="Quick summary of Chennai Airport taxi and cab services"
-      >
-        <OptimizedImage
-          src="/images/services/airport-transfer.webp"
-          alt="Kalidass Travels - Chennai Airport Taxi & Transfers"
-          class="absolute inset-0 w-full h-full object-cover object-[62%_top] sm:object-[center_28%] transition-transform duration-700 group-hover:scale-105 opacity-80"
-          loading="lazy"
-          fetchpriority="auto"
-          sizes="(max-width: 768px) 100vw, 1024px"
-        />
-        <div class="absolute inset-0 bg-gradient-to-t from-m3-inverse-surface via-m3-inverse-surface/85 to-m3-inverse-surface/50 sm:bg-gradient-to-r sm:from-m3-inverse-surface/95 sm:via-m3-inverse-surface/80 sm:to-transparent"></div>
-
-        <div class="relative z-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
-          <div class="max-w-2xl">
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/10 border border-white/20 text-white text-[11px] font-bold mb-1.5 backdrop-blur-md">
-              <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
-              <span>Quick Facts: Chennai Airport Taxi &amp; Cab Service (MAA)</span>
-            </div>
-            <h2 class="text-lg sm:text-2xl font-extrabold text-white tracking-tight leading-tight font-heading drop-shadow-sm">
-              Official MAA Airport Meet &amp; Greet
-            </h2>
-            <p class="text-xs sm:text-sm text-m3-inverse-on-surface mt-1.5 font-normal leading-relaxed max-w-xl">
-              Skip long queues at the <strong class="text-white font-semibold">Chennai airport prepaid taxi</strong> counter. Kalidass Travels provides 24/7 <strong class="text-white font-semibold">Chennai airport cab service</strong> and a transparent alternative to <strong class="text-white font-semibold">Chennai international airport prepaid taxi</strong> counters, with fixed fares from <strong class="text-white font-bold">₹650 flat</strong>, live flight tracking, and ₹0 advance payment.
-            </p>
-
-            <!-- 4 Quick Fact Badges -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3 pt-3 border-t border-white/15 text-[11px] sm:text-xs">
-              <div class="bg-white/10 backdrop-blur-md rounded-xl p-2 border border-white/15">
-                <span class="text-white/70 block text-[10px]">Starting Fare</span>
-                <span class="font-bold text-white text-xs sm:text-sm">₹650 Flat</span>
-              </div>
-              <div class="bg-white/10 backdrop-blur-md rounded-xl p-2 border border-white/15">
-                <span class="text-white/70 block text-[10px]">Terminals Served</span>
-                <span class="font-bold text-white text-xs sm:text-sm">T1, T2 &amp; T4</span>
-              </div>
-              <div class="bg-white/10 backdrop-blur-md rounded-xl p-2 border border-white/15">
-                <span class="text-white/70 block text-[10px]">Flight Delays</span>
-                <span class="font-bold text-white text-xs sm:text-sm">100% Free Wait</span>
-              </div>
-              <div class="bg-white/10 backdrop-blur-md rounded-xl p-2 border border-white/15">
-                <span class="text-white/70 block text-[10px]">Advance Deposit</span>
-                <span class="font-bold text-white text-xs sm:text-sm">₹0 (Pay After Trip)</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="hidden sm:flex flex-col items-end shrink-0">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 text-xs text-white font-medium">
-              <svg class="w-4 h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-              Direct Ramp Drop · Name Placard Included
-            </span>
-          </div>
-        </div>
-      </section>
-
-      <!-- 2. AIRPORT TRANSFER COMMITMENTS & GUARANTEES CARD -->
-      <section 
-        id="trust-promises-section" 
-        class="rounded-2xl bg-m3-surface-container-lowest border border-m3-outline-variant shadow-sm p-3.5 sm:p-4 mb-6 sm:mb-8 relative overflow-hidden scroll-mt-28"
-        aria-labelledby="commitments-card-heading"
-      >
-        <div class="flex items-center justify-between gap-2 pb-2 mb-2.5 border-b border-m3-outline-variant">
+      <!-- 2. OUR GUARANTEE (COMPACT PICKUP & DROP GUARANTEES) -->
+      <div id="arrival-protocol" class="scroll-mt-28"></div>
+      <section id="our-guarantee" class="rounded-m3-xl bg-m3-surface-container-lowest border border-m3-outline-variant shadow-2xs p-3.5 sm:p-5 mb-6 sm:mb-8 scroll-mt-28">
+        <div class="flex items-center justify-between gap-2 pb-2.5 mb-3 border-b border-m3-outline-variant">
           <div class="flex items-center gap-2">
-            <span class="w-6 h-6 rounded-lg bg-m3-primary text-white flex items-center justify-center shrink-0 shadow-xs">
-              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                <path d="m9 12 2 2 4-4"/>
-              </svg>
+            <span class="w-7 h-7 rounded-m3-lg bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0 border border-m3-primary/20">
+              <span class="material-symbols-outlined text-base">verified_user</span>
             </span>
-            <h2 id="commitments-card-heading" class="text-sm sm:text-base font-extrabold text-m3-on-surface font-heading">
-              Our 5 Airport Guarantees
+            <h2 class="text-base sm:text-lg font-extrabold text-m3-on-surface font-heading leading-none">
+              Our Guarantee (Pickup &amp; Drop)
             </h2>
           </div>
-
-          <span id="commitments-mode-subtitle" class="text-[11px] font-bold text-m3-on-surface bg-m3-surface-container border border-m3-outline-variant px-2.5 py-0.5 rounded-full shrink-0">
-            Pickup Protocol
+          <span class="text-xs text-m3-on-surface-variant font-medium hidden sm:inline">
+            T1, T2 &amp; T4 Terminals · 24/7 Operations
           </span>
         </div>
 
-        <!-- 1. Pickup Commitments (Landing at MAA) -->
-        <div 
-          id="protocol-banner-pickup" 
-          class="grid grid-cols-2 md:grid-cols-5 gap-2 text-xs text-m3-on-surface" 
-          role="list"
-        >
-          <div role="listitem" class="p-2 sm:p-2.5 rounded-xl bg-m3-surface border border-m3-outline-variant/80 flex flex-col justify-start">
-            <div class="flex items-center gap-1.5 mb-0.5">
-              <span class="w-4 h-4 rounded-full bg-m3-primary/10 text-m3-primary font-bold text-[10px] flex items-center justify-center shrink-0">1</span>
-              <strong class="font-bold text-xs text-m3-on-surface leading-tight">₹0 Advance</strong>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
+          <!-- Airport Pickup -->
+          <div class="p-3 sm:p-3.5 rounded-m3-lg bg-m3-surface border border-m3-outline-variant/80">
+            <div class="flex items-center gap-2 font-bold text-xs sm:text-sm text-m3-primary pb-2 mb-2.5 border-b border-m3-outline-variant/50">
+              <svg class="w-5 h-5 text-m3-primary shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M2.5 19h19v2h-19v-2zm16.84-5.46c.74-.35 1.04-1.24.69-1.98l-.7-1.48c-.35-.74-1.24-1.04-1.98-.69l-5.32 2.51-6.1-5.11c-.37-.31-.88-.41-1.39.11l-.87.96c-.33.36-.33.91.11 1.39l4.22 4.68-4.38 2.06-2.83-.73c-.28-.07-.57-.03-.81.11-.28.16-.48.42-.56.73l-.22.96c-.09.39.06.79.37 1.03.3.24.71.28 1.06.12l4.47-1.36 14.25-6.72z"/>
+              </svg>
+              <span>Airport Pickup (Arrival)</span>
             </div>
-            <p class="text-[11px] text-m3-on-surface-variant leading-snug">Pay after trip by UPI, cash, or card</p>
+            <ul class="space-y-2 text-m3-on-surface text-xs sm:text-sm font-medium">
+              <li class="flex items-start gap-2">
+                <span class="w-4 h-4 rounded-full bg-m3-primary/10 text-m3-primary font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">1</span>
+                <span><strong>Live Flight Radar:</strong> Free waiting if domestic or foreign flight is delayed</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="w-4 h-4 rounded-full bg-m3-primary/10 text-m3-primary font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">2</span>
+                <span><strong>Exit Gate Name Placard:</strong> Chauffeur meets you at T1, T2 &amp; T4 arrival exits</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="w-4 h-4 rounded-full bg-m3-primary/10 text-m3-primary font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">3</span>
+                <span><strong>Driver Allotted Before Take-Off:</strong> Chauffeur name, phone &amp; car details sent to WhatsApp before you take off</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="w-4 h-4 rounded-full bg-m3-primary/10 text-m3-primary font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">4</span>
+                <span><strong>Curbside AC Cab Pickup:</strong> Direct ride with balance settlement at destination</span>
+              </li>
+            </ul>
           </div>
-          <div role="listitem" class="p-2 sm:p-2.5 rounded-xl bg-m3-surface border border-m3-outline-variant/80 flex flex-col justify-start">
-            <div class="flex items-center gap-1.5 mb-0.5">
-              <span class="w-4 h-4 rounded-full bg-m3-primary/10 text-m3-primary font-bold text-[10px] flex items-center justify-center shrink-0">2</span>
-              <strong class="font-bold text-xs text-m3-on-surface leading-tight">Zero Delay Fee</strong>
+
+          <!-- Airport Drop -->
+          <div class="p-3 sm:p-3.5 rounded-m3-lg bg-m3-surface border border-m3-outline-variant/80">
+            <div class="flex items-center gap-2 font-bold text-xs sm:text-sm text-m3-primary pb-2 mb-2.5 border-b border-m3-outline-variant/50">
+              <svg class="w-5 h-5 text-m3-primary shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M2.5 19h19v2h-19v-2zm19.57-9.36c-.21-.8-1.04-1.28-1.84-1.06L14.92 10 8.35 3.73c-.15-.14-.35-.23-.56-.23-.27 0-.52.12-.68.32l-.83.99c-.16.19-.22.44-.17.68.05.24.2.45.41.56l4.57 4.34-4.5 1.21-2.48-1.59c-.21-.14-.47-.19-.72-.15-.26.04-.49.18-.65.39l-.54.83c-.29.44-.17 1.03.26 1.33l3.77 2.76 14.15-3.8c.8-.21 1.28-1.05 1.06-1.84z"/>
+              </svg>
+              <span>Airport Drop (Departure)</span>
             </div>
-            <p class="text-[11px] text-m3-on-surface-variant leading-snug">Radar flight tracking; free waiting</p>
-          </div>
-          <div role="listitem" class="p-2 sm:p-2.5 rounded-xl bg-m3-surface border border-m3-outline-variant/80 flex flex-col justify-start">
-            <div class="flex items-center gap-1.5 mb-0.5">
-              <span class="w-4 h-4 rounded-full bg-m3-primary/10 text-m3-primary font-bold text-[10px] flex items-center justify-center shrink-0">3</span>
-              <strong class="font-bold text-xs text-m3-on-surface leading-tight">Meet &amp; Greet</strong>
-            </div>
-            <p class="text-[11px] text-m3-on-surface-variant leading-snug">Name board at T1, T2 &amp; T4 exits</p>
-          </div>
-          <div role="listitem" class="p-2 sm:p-2.5 rounded-xl bg-m3-surface border border-m3-outline-variant/80 flex flex-col justify-start">
-            <div class="flex items-center gap-1.5 mb-0.5">
-              <span class="w-4 h-4 rounded-full bg-m3-primary/10 text-m3-primary font-bold text-[10px] flex items-center justify-center shrink-0">4</span>
-              <strong class="font-bold text-xs text-m3-on-surface leading-tight">Curbside Cab</strong>
-            </div>
-            <p class="text-[11px] text-m3-on-surface-variant leading-snug">Pre-cooled cab; no Aerohub walk</p>
-          </div>
-          <div role="listitem" class="col-span-2 md:col-span-1 p-2 sm:p-2.5 rounded-xl bg-m3-surface border border-m3-outline-variant/80 flex flex-col justify-start">
-            <div class="flex items-center gap-1.5 mb-0.5">
-              <span class="w-4 h-4 rounded-full bg-m3-primary/10 text-m3-primary font-bold text-[10px] flex items-center justify-center shrink-0">5</span>
-              <strong class="font-bold text-xs text-m3-on-surface leading-tight">Fixed Flat Rate</strong>
-            </div>
-            <p class="text-[11px] text-m3-on-surface-variant leading-snug">Guaranteed fare; zero surge pricing</p>
+            <ul class="space-y-2 text-m3-on-surface text-xs sm:text-sm font-medium">
+              <li class="flex items-start gap-2">
+                <span class="w-4 h-4 rounded-full bg-m3-primary/10 text-m3-primary font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">1</span>
+                <span><strong>Guaranteed On-Time Doorstep Pickup:</strong> Chauffeur arrives ahead of schedule</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="w-4 h-4 rounded-full bg-m3-primary/10 text-m3-primary font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">2</span>
+                <span><strong>Direct Departure Ramp Drop:</strong> Curbside baggage drop at T1, T2 or T4 terminal</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="w-4 h-4 rounded-full bg-m3-primary/10 text-m3-primary font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">3</span>
+                <span><strong>Driver Details Before Pickup:</strong> Chauffeur details sent 2 hrs prior (or by 9 PM previous night for early morning drops)</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="w-4 h-4 rounded-full bg-m3-primary/10 text-m3-primary font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">4</span>
+                <span><strong>100% Fixed Transparent Fares:</strong> Zero midnight surge pricing; balance at airport</span>
+              </li>
+            </ul>
           </div>
         </div>
 
-        <!-- 2. Drop Commitments (Going to MAA) -->
-        <div 
-          id="protocol-banner-drop" 
-          class="hidden grid grid-cols-2 md:grid-cols-5 gap-2 text-xs text-m3-on-surface" 
-          role="list"
-        >
-          <div role="listitem" class="p-2 sm:p-2.5 rounded-xl bg-m3-surface border border-m3-outline-variant/80 flex flex-col justify-start">
-            <div class="flex items-center gap-1.5 mb-0.5">
-              <span class="w-4 h-4 rounded-full bg-emerald-600/10 text-emerald-600 font-bold text-[10px] flex items-center justify-center shrink-0">1</span>
-              <strong class="font-bold text-xs text-m3-on-surface leading-tight">₹0 Advance</strong>
-            </div>
-            <p class="text-[11px] text-m3-on-surface-variant leading-snug">Pay after driver drops you at terminal</p>
-          </div>
-          <div role="listitem" class="p-2 sm:p-2.5 rounded-xl bg-m3-surface border border-m3-outline-variant/80 flex flex-col justify-start">
-            <div class="flex items-center gap-1.5 mb-0.5">
-              <span class="w-4 h-4 rounded-full bg-emerald-600/10 text-emerald-600 font-bold text-[10px] flex items-center justify-center shrink-0">2</span>
-              <strong class="font-bold text-xs text-m3-on-surface leading-tight">15 Min Early</strong>
-            </div>
-            <p class="text-[11px] text-m3-on-surface-variant leading-snug">Cab arrives early at your doorstep</p>
-          </div>
-          <div role="listitem" class="p-2 sm:p-2.5 rounded-xl bg-m3-surface border border-m3-outline-variant/80 flex flex-col justify-start">
-            <div class="flex items-center gap-1.5 mb-0.5">
-              <span class="w-4 h-4 rounded-full bg-emerald-600/10 text-emerald-600 font-bold text-[10px] flex items-center justify-center shrink-0">3</span>
-              <strong class="font-bold text-xs text-m3-on-surface leading-tight">Details by 9 PM</strong>
-            </div>
-            <p class="text-[11px] text-m3-on-surface-variant leading-snug">Driver contact sent previous evening</p>
-          </div>
-          <div role="listitem" class="p-2 sm:p-2.5 rounded-xl bg-m3-surface border border-m3-outline-variant/80 flex flex-col justify-start">
-            <div class="flex items-center gap-1.5 mb-0.5">
-              <span class="w-4 h-4 rounded-full bg-emerald-600/10 text-emerald-600 font-bold text-[10px] flex items-center justify-center shrink-0">4</span>
-              <strong class="font-bold text-xs text-m3-on-surface leading-tight">Direct Ramp Drop</strong>
-            </div>
-            <p class="text-[11px] text-m3-on-surface-variant leading-snug">Flyover drop at your departure gate</p>
-          </div>
-          <div role="listitem" class="col-span-2 md:col-span-1 p-2 sm:p-2.5 rounded-xl bg-m3-surface border border-m3-outline-variant/80 flex flex-col justify-start">
-            <div class="flex items-center gap-1.5 mb-0.5">
-              <span class="w-4 h-4 rounded-full bg-emerald-600/10 text-emerald-600 font-bold text-[10px] flex items-center justify-center shrink-0">5</span>
-              <strong class="font-bold text-xs text-m3-on-surface leading-tight">Fixed Flat Rate</strong>
-            </div>
-            <p class="text-[11px] text-m3-on-surface-variant leading-snug">Guaranteed fare; no midnight surge</p>
-          </div>
-        </div>
-
-        <!-- Corporate GST Invoicing Note (Integrated to eliminate vertical scroll) -->
-        <div class="mt-2.5 pt-2 border-t border-m3-outline-variant/60 flex items-center gap-2 text-[11px] sm:text-xs text-m3-on-surface-variant">
-          <svg class="w-3.5 h-3.5 text-m3-primary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="16" height="20" x="4" y="2" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M8 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M16 14h.01"/></svg>
-          <span><strong>Corporate GST Invoices (GSTIN: 33COVPM0531D1Z4):</strong> Itemized tax invoices for business reimbursement and ITC.</span>
+        <div class="mt-3 pt-2.5 border-t border-m3-outline-variant/60 flex items-center gap-2 text-xs text-m3-on-surface-variant">
+          <svg class="w-4 h-4 text-m3-primary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+          <span><strong>Corporate Invoicing (GSTIN: 33COVPM0531D1Z4):</strong> 100% itemized GST tax invoices for business claims and input tax credit.</span>
         </div>
       </section>
 
-      <!-- 3. VEHICLE SPECIFICATIONS & LUGGAGE CAPACITIES -->
+      <!-- 3. OUTSTATION TARIFF CHART -->
+      <section id="outstation-fares" class="pt-5 sm:pt-6 mt-5 sm:mt-6 border-t border-m3-outline-variant mb-8 sm:mb-10 scroll-mt-28">
+        <div id="highway-corridors" class="scroll-mt-28"></div>
+        <div id="zone-tariffs" class="scroll-mt-28"></div>
+
+        <div id="all-zones-container" class="mt-2 mb-6">
+          <!-- Section Header (Clean Flat Section, not a card) -->
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 pb-2.5 mb-3 border-b border-m3-outline-variant">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <span class="w-8 h-8 rounded-xl bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0 border border-m3-primary/20 shadow-2xs">
+                <svg class="w-4 h-4 text-m3-primary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 2v20"/>
+                  <path d="M18 5H6a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h12l3-2-3-2z"/>
+                  <path d="M6 13h12a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H6l-3-2 3-2z"/>
+                </svg>
+              </span>
+              <div class="min-w-0">
+                <h2 class="text-base sm:text-lg md:text-xl font-extrabold text-m3-on-surface font-heading block leading-tight">
+                  Chennai Airport Outstation Taxi Fare &amp; Rates Chart
+                </h2>
+                <span class="text-xs text-m3-on-surface-variant block mt-0.5">
+                  Fixed flat taxi rates from Chennai Airport (MAA) to popular outstation destinations. Same flat rate for pickups &amp; drops · Tolls and airport parking at actuals.
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- MOBILE ACCORDION LIST (hidden on desktop sm+) -->
+          <div class="sm:hidden space-y-1.5 mb-4">
+            {zoneTariffs.map((t) => (
+              <details
+                class="group rounded-xl border border-m3-outline-variant bg-white overflow-hidden shadow-2xs transition-all duration-150 open:border-m3-primary/40 open:shadow-xs"
+                data-zone={t.zone}
+                data-corridor={t.zone.split('&')[0].trim()}
+              >
+                <summary class="flex items-center justify-between px-3 py-2.5 cursor-pointer list-none gap-2 select-none hover:bg-m3-surface-container/50 transition-colors">
+                  <div class="flex items-center gap-2 min-w-0 flex-1">
+                    <div class="min-w-0 flex-1">
+                      <div class="flex items-center gap-1.5">
+                        <span class="font-semibold text-m3-on-surface text-[13px] leading-snug truncate">{t.zone}</span>
+                        {t.popular && (
+                          <span class="shrink-0 px-1.5 py-px rounded-full bg-m3-success-container/70 text-m3-on-surface text-[9px] font-bold uppercase tracking-wider border border-m3-outline-variant">★</span>
+                        )}
+                      </div>
+                      <span class="text-[10px] text-m3-on-surface-variant leading-none mt-0.5 block">
+                        {t.eta} · {t.distance}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-1 shrink-0">
+                    <span class="font-bold text-m3-primary text-[12px]">{t.sedan}</span>
+                    <svg class="w-4 h-4 text-m3-on-surface-variant transition-transform duration-150 group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                  </div>
+                </summary>
+                <div class="px-3 pt-2 pb-2.5 border-t border-m3-outline-variant/60 bg-m3-surface/60">
+                  <p class="text-[11px] text-m3-on-surface-variant mb-2">
+                    <strong class="text-m3-on-surface">Key Destinations:</strong> {t.destinations}
+                  </p>
+                  <!-- 4 Cars in One Row with Flat Rates & Direct Summary Action -->
+                  <div class="grid grid-cols-4 gap-1 text-center mb-2">
+                    <button
+                      type="button"
+                      data-corridor={t.zone.split('&')[0].trim()}
+                      data-vehicle="Swift Dzire"
+                      data-pax="4"
+                      data-fare={t.sedan}
+                      data-distance={t.distance}
+                      data-eta={t.eta}
+                      class="highway-vehicle-select-btn rounded-m3-md bg-m3-surface-container-lowest hover:bg-m3-primary/10 border border-m3-outline-variant hover:border-m3-primary p-1 cursor-pointer transition-all active:scale-[0.98]"
+                    >
+                      <span class="text-[9px] text-m3-on-surface-variant block leading-tight font-medium">Sedan</span>
+                      <strong class="text-[11px] font-bold text-m3-primary block mt-0.5 leading-tight">{t.sedan}</strong>
+                      <span class="text-[8px] text-m3-primary font-bold block mt-0.5">Book →</span>
+                    </button>
+                    <button
+                      type="button"
+                      data-corridor={t.zone.split('&')[0].trim()}
+                      data-vehicle="Maruti Ertiga"
+                      data-pax="6"
+                      data-fare={t.innova}
+                      data-distance={t.distance}
+                      data-eta={t.eta}
+                      class="highway-vehicle-select-btn rounded-m3-md bg-m3-surface-container-lowest hover:bg-m3-primary/10 border border-m3-outline-variant hover:border-m3-primary p-1 cursor-pointer transition-all active:scale-[0.98]"
+                    >
+                      <span class="text-[9px] text-m3-on-surface-variant block leading-tight font-medium">Ertiga</span>
+                      <strong class="text-[11px] font-bold text-m3-primary block mt-0.5 leading-tight">{t.innova}</strong>
+                      <span class="text-[8px] text-m3-primary font-bold block mt-0.5">Book →</span>
+                    </button>
+                    <button
+                      type="button"
+                      data-corridor={t.zone.split('&')[0].trim()}
+                      data-vehicle="Innova Crysta"
+                      data-pax="7"
+                      data-fare={t.crysta}
+                      data-distance={t.distance}
+                      data-eta={t.eta}
+                      class="highway-vehicle-select-btn rounded-m3-md bg-m3-surface-container-lowest hover:bg-m3-primary/10 border border-m3-outline-variant hover:border-m3-primary p-1 cursor-pointer transition-all active:scale-[0.98]"
+                    >
+                      <span class="text-[9px] text-m3-on-surface-variant block leading-tight font-medium">Crysta</span>
+                      <strong class="text-[11px] font-bold text-m3-primary block mt-0.5 leading-tight">{t.crysta}</strong>
+                      <span class="text-[8px] text-m3-primary font-bold block mt-0.5">Book →</span>
+                    </button>
+                    <button
+                      type="button"
+                      data-corridor={t.zone.split('&')[0].trim()}
+                      data-vehicle="Tempo Traveller"
+                      data-pax="12"
+                      data-fare={t.tempo}
+                      data-distance={t.distance}
+                      data-eta={t.eta}
+                      class="highway-vehicle-select-btn rounded-m3-md bg-m3-surface-container-lowest hover:bg-m3-primary/10 border border-m3-outline-variant hover:border-m3-primary p-1 cursor-pointer transition-all active:scale-[0.98]"
+                    >
+                      <span class="text-[9px] text-m3-on-surface-variant block leading-tight font-medium">Tempo</span>
+                      <strong class="text-[11px] font-bold text-m3-primary block mt-0.5 leading-tight">{t.tempo}</strong>
+                      <span class="text-[8px] text-m3-primary font-bold block mt-0.5">Book →</span>
+                    </button>
+                  </div>
+                  <!-- Advance Note WITHOUT WhatsApp Query button -->
+                  <div class="flex items-center justify-between gap-2 pt-1.5 border-t border-m3-outline-variant/60 text-[10px] text-m3-on-surface-variant">
+                    <span class="font-medium">₹500 Advance • Balance at Drop</span>
+                    <span class="text-[9px] text-m3-primary font-bold">Tap car for fare breakdown →</span>
+                  </div>
+                </div>
+              </details>
+            ))}
+          </div>
+
+          <!-- DESKTOP/TABLET: Full table (hidden on mobile, shown sm+) -->
+          <div class="hidden sm:block rounded-xl border border-m3-outline-variant bg-white overflow-hidden shadow-sm">
+            <div class="p-3.5 sm:p-5 pt-3 sm:pt-4">
+              <div class="overflow-x-auto rounded-xl border border-m3-outline-variant bg-white shadow-2xs">
+                <table class="w-full text-left text-xs font-sans border-collapse">
+                  <thead class="bg-m3-surface-container text-m3-on-surface text-xs font-bold uppercase tracking-wider border-b border-m3-outline-variant">
+                    <tr>
+                      <th class="px-4 py-3" id="table-col-location">Destination &amp; Landmarks</th>
+                      <th class="px-3 py-3 text-center">Drive &amp; Distance</th>
+                      <th class="px-3 py-3 text-center">Sedan (4 Pax)</th>
+                      <th class="px-3 py-3 text-center">Innova (6 Pax)</th>
+                      <th class="px-3 py-3 text-center">Innova Crysta</th>
+                      <th class="px-3 py-3 text-center">Tempo (12 Pax)</th>
+                      <th class="px-4 py-3 text-right">Instant Action</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-200">
+                    {zoneTariffs.map((t) => (
+                      <tr
+                        class={`hover:bg-m3-surface transition-colors ${t.popular ? 'bg-m3-surface-container-low' : ''}`}
+                        data-zone={t.zone}
+                        data-service-title={`Chennai Airport Taxi — ${t.zone}`}
+                        data-slug="chennai-airport-taxi"
+                      >
+                        <td class="px-4 py-3">
+                          <div class="flex items-center gap-2">
+                            <span class="font-bold text-m3-on-surface font-heading text-sm">{t.zone}</span>
+                            {t.popular && (
+                              <span class="px-2 py-0.5 rounded-full bg-m3-success-container/70 text-m3-on-surface border border-m3-outline-variant text-[10px] font-bold uppercase tracking-wider">
+                                Popular
+                              </span>
+                            )}
+                          </div>
+                          <p class="text-xs text-m3-on-surface-variant leading-relaxed mt-0.5">{t.destinations}</p>
+                        </td>
+                        <td class="px-3 py-3 text-center text-xs font-medium text-m3-on-surface-variant whitespace-nowrap">
+                          <span class="inline-flex items-center gap-1 bg-m3-surface-container px-2 py-0.5 rounded-full">
+                            <svg class="w-3.5 h-3.5 text-m3-on-surface-variant" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            <span>{t.eta} · {t.distance}</span>
+                          </span>
+                        </td>
+                        <td class="px-3 py-3 text-center">
+                          <button
+                            type="button"
+                            data-corridor={t.zone.split('&')[0].trim()}
+                            data-vehicle="Swift Dzire"
+                            data-pax="4"
+                            data-fare={t.sedan}
+                            data-distance={t.distance}
+                            data-eta={t.eta}
+                            class="highway-vehicle-select-btn font-extrabold text-m3-primary hover:underline hover:bg-m3-primary/10 px-2 py-1 rounded cursor-pointer transition-colors"
+                          >
+                            {t.sedan}
+                          </button>
+                        </td>
+                        <td class="px-3 py-3 text-center">
+                          <button
+                            type="button"
+                            data-corridor={t.zone.split('&')[0].trim()}
+                            data-vehicle="Maruti Ertiga"
+                            data-pax="6"
+                            data-fare={t.innova}
+                            data-distance={t.distance}
+                            data-eta={t.eta}
+                            class="highway-vehicle-select-btn font-extrabold text-m3-primary hover:underline hover:bg-m3-primary/10 px-2 py-1 rounded cursor-pointer transition-colors"
+                          >
+                            {t.innova}
+                          </button>
+                        </td>
+                        <td class="px-3 py-3 text-center">
+                          <button
+                            type="button"
+                            data-corridor={t.zone.split('&')[0].trim()}
+                            data-vehicle="Innova Crysta"
+                            data-pax="7"
+                            data-fare={t.crysta}
+                            data-distance={t.distance}
+                            data-eta={t.eta}
+                            class="highway-vehicle-select-btn font-extrabold text-m3-primary hover:underline hover:bg-m3-primary/10 px-2 py-1 rounded cursor-pointer transition-colors"
+                          >
+                            {t.crysta}
+                          </button>
+                        </td>
+                        <td class="px-3 py-3 text-center">
+                          <button
+                            type="button"
+                            data-corridor={t.zone.split('&')[0].trim()}
+                            data-vehicle="Tempo Traveller"
+                            data-pax="12"
+                            data-fare={t.tempo}
+                            data-distance={t.distance}
+                            data-eta={t.eta}
+                            class="highway-vehicle-select-btn font-extrabold text-m3-primary hover:underline hover:bg-m3-primary/10 px-2 py-1 rounded cursor-pointer transition-colors"
+                          >
+                            {t.tempo}
+                          </button>
+                        </td>
+                        <td class="px-4 py-3 text-right">
+                          <button
+                            type="button"
+                            data-corridor={t.zone.split('&')[0].trim()}
+                            data-vehicle="Swift Dzire"
+                            data-pax="4"
+                            data-fare={t.sedan}
+                            data-distance={t.distance}
+                            data-eta={t.eta}
+                            class="highway-vehicle-select-btn inline-flex items-center gap-1 px-3.5 py-1.5 rounded-xl bg-m3-primary hover:bg-m3-primary/90 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
+                          >
+                            <span>Book Pickup</span>
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. VEHICLE SPECIFICATIONS & LUGGAGE CAPACITIES -->
       <section id="fleet-section" class="pt-5 sm:pt-6 mt-5 sm:mt-6 border-t border-m3-outline-variant mb-8 sm:mb-10 scroll-mt-28">
         <div class="mb-4 sm:mb-6 pb-2.5 border-b border-m3-outline-variant flex items-center justify-between gap-3 flex-wrap">
           <div class="flex items-center gap-2.5 min-w-0">
@@ -1046,222 +1131,6 @@ const tripListSchema = {
         </div>
       </section>
 
-      <!-- 4. FIXED ZONE TARIFFS & RATES CHART (OfferCatalog Schema) -->
-      <section id="zone-tariffs" class="pt-5 sm:pt-6 mt-5 sm:mt-6 border-t border-m3-outline-variant mb-8 sm:mb-12 scroll-mt-28">
-
-        <!-- Standard Transfer Zones & Rates Overview -->
-        <div id="all-zones-container" class="mt-2 mb-6">
-
-          <!-- Section Header -->
-          <div class="flex items-center gap-2.5 pb-2.5 mb-3 border-b border-m3-outline-variant">
-            <span class="w-7 h-7 rounded-full bg-m3-surface-container-low text-m3-on-surface flex items-center justify-center shrink-0 border border-m3-outline-variant">
-              <svg class="w-4 h-4 text-m3-on-surface" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M8 7h8"/><path d="M8 11h8"/><path d="M8 15h5"/></svg>
-            </span>
-            <div class="min-w-0">
-              <h2 class="text-base sm:text-lg font-extrabold text-m3-on-surface font-heading block">
-                Chennai Airport Taxi Fare &amp; Rates Chart (All Zones &amp; Outstation)
-              </h2>
-              <span class="text-xs text-m3-on-surface-variant block mt-0.5">
-                Fixed Chennai airport taxi fare chart across city zones and outstation routes. Same flat rate for pickups &amp; drops · Tolls and airport parking at actuals.
-              </span>
-            </div>
-          </div>
-
-          <!-- MOBILE: Compact M3-style dense list accordion (shown only on < sm) -->
-          <div class="sm:hidden rounded-xl border border-m3-outline-variant bg-white overflow-hidden divide-y divide-slate-100 shadow-xs">
-            {zoneTariffs.map((t) => (
-              <details
-                class={`group ${t.popular ? 'bg-m3-surface-container-low' : 'bg-white'}`}
-                data-zone={t.zone}
-                data-service-title={`Chennai Airport Taxi — ${t.zone}`}
-                data-slug="chennai-airport-taxi"
-                data-rates={JSON.stringify([
-                  { type: 'Sedan', price: t.sedan, names: 'Swift Dzire / Etios' },
-                  { type: 'Innova', price: t.innova, names: 'Maruti Ertiga / Innova' },
-                  { type: 'Crysta', price: t.crysta, names: 'Innova Crysta' },
-                  { type: 'Tempo', price: t.tempo, names: 'Tempo Traveller' }
-                ])}
-              >
-                <summary class="flex items-center justify-between px-3 py-2 cursor-pointer list-none gap-2 select-none">
-                  <div class="min-w-0 flex items-center gap-2 overflow-hidden">
-                    <div class="min-w-0">
-                      <div class="flex items-center gap-1.5">
-                        <span class="font-semibold text-m3-on-surface text-[13px] leading-snug truncate">{t.zone}</span>
-                        {t.popular && (
-                          <span class="shrink-0 px-1.5 py-px rounded-full bg-m3-success-container/70 text-m3-on-surface text-[9px] font-bold uppercase tracking-wider border border-m3-outline-variant">★</span>
-                        )}
-                      </div>
-                      <span class="text-[10px] text-m3-on-surface-variant leading-none mt-0.5 block">
-                        {t.eta} · {t.distance}
-                      </span>
-                    </div>
-                  </div>
-                  <div class="flex items-center gap-1 shrink-0">
-                    <span class="font-bold text-m3-primary text-[12px]">{t.sedan}</span>
-                    <svg class="w-4 h-4 text-m3-on-surface-variant transition-transform duration-150 group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-                  </div>
-                </summary>
-                <div class="px-3 pt-1.5 pb-2.5 border-t border-m3-outline-variant/60 bg-m3-surface/60">
-                  <div class="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide mb-2">
-                    <div class="flex-shrink-0 text-center bg-m3-surface-container-lowest border border-m3-outline-variant rounded-lg px-2.5 py-1">
-                      <span class="text-[9px] text-m3-on-surface-variant block leading-none">Sedan</span>
-                      <span class="text-[11px] font-bold text-m3-on-surface">{t.sedan}</span>
-                    </div>
-                    <div class="flex-shrink-0 text-center bg-m3-surface-container-lowest border border-m3-outline-variant rounded-lg px-2.5 py-1">
-                      <span class="text-[9px] text-m3-on-surface-variant block leading-none">Innova</span>
-                      <span class="text-[11px] font-bold text-m3-on-surface">{t.innova}</span>
-                    </div>
-                    <div class="flex-shrink-0 text-center bg-m3-surface-container-lowest border border-m3-outline-variant rounded-lg px-2.5 py-1">
-                      <span class="text-[9px] text-m3-on-surface-variant block leading-none">Crysta</span>
-                      <span class="text-[11px] font-bold text-m3-on-surface">{t.crysta}</span>
-                    </div>
-                    <div class="flex-shrink-0 text-center bg-m3-surface-container-lowest border border-m3-outline-variant rounded-lg px-2.5 py-1">
-                      <span class="text-[9px] text-m3-on-surface-variant block leading-none">Tempo</span>
-                      <span class="text-[11px] font-bold text-m3-on-surface">{t.tempo}</span>
-                    </div>
-                  </div>
-                  <div class="flex justify-start mt-1">
-                    <WhatsAppButton
-                      id={`mobile-book-${t.id}`}
-                      href={`https://wa.me/918939539211?text=${encodeURIComponent(t.whatsappPickup)}`}
-                      size="sm"
-                      variant="tonal"
-                      text="Book Pickup"
-                      ariaLabel={`Book pickup taxi to ${t.zone} via WhatsApp`}
-                      data-open-enquiry="true"
-                      data-service-title={`Chennai Airport Taxi — ${t.zone}`}
-                      data-zone={t.zone}
-                      data-slug="chennai-airport-taxi"
-                      data-price={t.sedan}
-                      data-vehicle-name="Swift Dzire / Toyota Etios (Sedan)"
-                      data-rates={JSON.stringify([
-                        { type: 'Sedan', price: t.sedan, names: 'Swift Dzire / Etios' },
-                        { type: 'Innova', price: t.innova, names: 'Maruti Ertiga / Innova' },
-                        { type: 'Crysta', price: t.crysta, names: 'Innova Crysta' },
-                        { type: 'Tempo', price: t.tempo, names: 'Tempo Traveller' }
-                      ])}
-                    />
-                  </div>
-                </div>
-              </details>
-            ))}
-          </div>
-
-          <!-- DESKTOP/TABLET: Full table (hidden on mobile, shown sm+) -->
-          <div class="hidden sm:block rounded-xl border border-m3-outline-variant bg-white overflow-hidden shadow-sm">
-            <div class="p-3.5 sm:p-5 pt-3 sm:pt-4">
-              <div class="overflow-x-auto rounded-xl border border-m3-outline-variant bg-white shadow-2xs">
-                <table class="w-full text-left text-xs font-sans border-collapse">
-                  <thead class="bg-m3-surface-container text-m3-on-surface text-xs font-bold uppercase tracking-wider border-b border-m3-outline-variant">
-                    <tr>
-                      <th class="px-4 py-3" id="table-col-location">Destination &amp; Landmarks</th>
-                      <th class="px-3 py-3 text-center">Drive &amp; Distance</th>
-                      <th class="px-3 py-3 text-center">Sedan (4 Pax)</th>
-                      <th class="px-3 py-3 text-center">Innova (6 Pax)</th>
-                      <th class="px-3 py-3 text-center">Innova Crysta</th>
-                      <th class="px-3 py-3 text-center">Tempo (12 Pax)</th>
-                      <th class="px-4 py-3 text-right">Instant Action</th>
-                    </tr>
-                  </thead>
-                  <tbody class="divide-y divide-slate-200">
-                    {zoneTariffs.map((t) => (
-                      <tr
-                        class={`hover:bg-m3-surface transition-colors ${t.popular ? 'bg-m3-surface-container-low' : ''}`}
-                        data-zone={t.zone}
-                        data-service-title={`Chennai Airport Taxi — ${t.zone}`}
-                        data-slug="chennai-airport-taxi"
-                        data-rates={JSON.stringify([
-                          { type: 'Sedan', price: t.sedan, names: 'Swift Dzire / Etios' },
-                          { type: 'Innova', price: t.innova, names: 'Maruti Ertiga / Innova' },
-                          { type: 'Crysta', price: t.crysta, names: 'Innova Crysta' },
-                          { type: 'Tempo', price: t.tempo, names: 'Tempo Traveller' }
-                        ])}
-                      >
-                        <td class="px-4 py-3">
-                          <div class="flex items-center gap-2">
-                            <span class="font-bold text-m3-on-surface font-heading text-sm">{t.zone}</span>
-                            {t.popular && (
-                              <span class="px-2 py-0.5 rounded-full bg-m3-success-container/70 text-m3-on-surface border border-m3-outline-variant text-[10px] font-bold uppercase tracking-wider">
-                                Popular
-                              </span>
-                            )}
-                          </div>
-                          <p class="text-xs text-m3-on-surface-variant leading-relaxed mt-0.5">{t.destinations}</p>
-                        </td>
-                        <td class="px-3 py-3 text-center text-xs font-medium text-m3-on-surface-variant whitespace-nowrap">
-                          <span class="inline-flex items-center gap-1 bg-m3-surface-container px-2 py-0.5 rounded-full">
-                            <svg class="w-3.5 h-3.5 text-m3-on-surface-variant" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            <span>{t.eta} · {t.distance}</span>
-                          </span>
-                        </td>
-                        <td class="px-3 py-3 text-center font-extrabold text-m3-on-surface text-sm">{t.sedan}</td>
-                        <td class="px-3 py-3 text-center font-extrabold text-m3-on-surface text-sm">{t.innova}</td>
-                        <td class="px-3 py-3 text-center font-extrabold text-m3-on-surface text-sm">{t.crysta}</td>
-                        <td class="px-3 py-3 text-center font-extrabold text-m3-on-surface text-sm">{t.tempo}</td>
-                        <td class="px-4 py-3 text-right">
-                          <a
-                            id={`desktop-book-${t.id}`}
-                            data-drop-msg={t.whatsappDrop}
-                            data-pickup-msg={t.whatsappPickup}
-                            data-open-enquiry="true"
-                            data-service-title={`Chennai Airport Taxi — ${t.zone}`}
-                            data-zone={t.zone}
-                            data-slug="chennai-airport-taxi"
-                            data-price={t.sedan}
-                            data-vehicle-name="Swift Dzire / Toyota Etios (Sedan)"
-                            data-rates={JSON.stringify([
-                              { type: 'Sedan', price: t.sedan, names: 'Swift Dzire / Etios' },
-                              { type: 'Innova', price: t.innova, names: 'Maruti Ertiga / Innova' },
-                              { type: 'Crysta', price: t.crysta, names: 'Innova Crysta' },
-                              { type: 'Tempo', price: t.tempo, names: 'Tempo Traveller' }
-                            ])}
-                            href={`https://wa.me/918939539211?text=${encodeURIComponent(t.whatsappPickup)}`}
-                            target="_blank"
-                            rel="noopener noreferrer nofollow"
-                            class="booking-link inline-flex items-center gap-1 px-3.5 py-1.5 rounded-xl bg-m3-primary hover:bg-m3-primary/90 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
-                          >
-                            <span class="action-label">Book Pickup</span>
-                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                          </a>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-
-
-        <!-- SEO/AEO: Visually-hidden fare summary for Google index -->
-        <div class="sr-only" aria-label="Chennai Airport taxi fare summary for all zones" data-speakable="true">
-          <h3>Chennai Airport (MAA) Taxi Transfer Fares, Rates &amp; Prepaid Alternative — All Zones</h3>
-          <p>
-            Kalidass Travels provides 24/7 Chennai airport taxi booking and airport cab transfers across Chennai and outstation corridors.
-            Compare Chennai airport prepaid taxi counter rates with our fixed flat tariffs starting from ₹650 for Sedan, ₹1,150 for Ertiga SUV, ₹1,500 for Innova Crysta, and ₹2,400 for Tempo Traveller.
-            Are Chennai airport pickup charges different from airport drop charges? No, at Kalidass Travels both Chennai airport arrival pickups and doorstep airport drops have the exact same flat transparent base fare with zero extra airport arrival convenience fees or luggage fees. Free live flight radar tracking ensures zero delay waiting fee. Meet and greet at Terminal 1 Domestic and Terminal 2 and 4 International.
-          </p>
-          {zoneTariffs.map((z) => (
-            <div>
-              <h4>Chennai Airport to {z.zone} Taxi Fare &amp; Cab Charges</h4>
-              <p>
-                Fixed flat-rate airport taxi from Chennai International Airport (MAA) to {z.destinations}.
-                Distance: {z.distance}. Drive time: {z.eta}.
-                Sedan (4 passengers): {z.sedan}.
-                Innova / Ertiga (6 passengers): {z.innova}.
-                Innova Crysta VIP (7 passengers): {z.crysta}.
-                Tempo Traveller (12 passengers): {z.tempo}.
-                Zero surge pricing. No advance payment required. Book 24/7 Chennai airport taxi via WhatsApp or call with Kalidass Travels.
-              </p>
-            </div>
-          ))}
-        </div>
-
-      </section>
-
       <!-- 5. CHENNAI AIRPORT PREPAID TAXI VS PRE-BOOKED PRIVATE CAB (isSimilarTo Schema) -->
       <section 
         id="prepaid-taxi-comparison" 
@@ -1331,129 +1200,6 @@ const tripListSchema = {
               </tr>
             </tbody>
           </table>
-        </div>
-
-        <div class="mt-3 p-2.5 sm:p-3 rounded-xl bg-m3-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-2 border border-m3-outline-variant">
-          <div class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-m3-primary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-            <span class="text-xs font-bold text-m3-on-surface">Avoid terminal queues. Reserve your Chennai airport taxi in 60 seconds with ₹0 advance.</span>
-          </div>
-          <a href="#booking-section" class="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-m3-primary text-white text-xs font-semibold shadow-2xs hover:bg-m3-primary/90 shrink-0">
-            <span>Pre-Book Airport Taxi</span>
-            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </a>
-        </div>
-      </section>
-
-      <!-- 6. AIRPORT TERMINAL ARRIVAL & DROP GUIDE (HowTo Step 4 Schema) -->
-      <section id="terminal-pickup-drop-guide" class="pt-5 sm:pt-6 mt-5 sm:mt-6 border-t border-m3-outline-variant mb-8 sm:mb-10 scroll-mt-28">
-        <div class="mb-4 sm:mb-6 pb-2.5 border-b border-m3-outline-variant flex items-center justify-between gap-3 flex-wrap">
-          <div class="flex items-center gap-2.5 min-w-0">
-            <span class="w-8 h-8 rounded-xl bg-m3-surface-container text-m3-on-surface flex items-center justify-center shrink-0 border border-m3-outline-variant shadow-2xs">
-              <svg class="w-4 h-4 text-m3-on-surface" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22h20"/><path d="M6.36 17.4 4 17l-2-4 1.1-.55a2 2 0 0 1 1.8.3L7 14.2l7-2.3-3.2-6.4 1.8-.6 5.3 5.4 3.7-1.2c1.1-.4 2.3.2 2.7 1.3.4 1.1-.2 2.3-1.3 2.7L6.36 17.4z"/></svg>
-            </span>
-            <div class="min-w-0">
-              <h2 class="text-lg sm:text-xl font-extrabold text-m3-on-surface font-heading leading-tight">
-                Chennai Airport Arrival Pick Up &amp; Doorstep Drop: Complete Terminal Guide
-              </h2>
-              <p class="text-xs text-m3-on-surface-variant mt-0.5">
-                Terminal 1 Domestic (IndiGo, Air India, SpiceJet, Akasa) &amp; Terminals 2/4 International (Emirates, Singapore Airlines, etc.)
-              </p>
-            </div>
-          </div>
-          <span class="text-xs font-bold text-m3-on-surface bg-m3-surface-container px-3 py-1 rounded-full border border-m3-outline-variant shrink-0 hidden sm:inline-block">
-            T1 · T2 · T4 Full Terminal Support
-          </span>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-5">
-          <!-- Arrival Pickup Guide Card -->
-          <div class="p-4 sm:p-5 rounded-2xl bg-m3-surface-container-lowest border border-m3-outline-variant shadow-sm flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-2.5">
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 text-[11px] font-bold border border-blue-200">
-                  <svg class="w-3.5 h-3.5 text-blue-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22h20"/><path d="m19 16.5-2.3-1.2-5.4 5.3-.6-1.8 6.4-3.2-2.3-7 1.5-2.1a2 2 0 0 1 1.8-.3l1.1.55-4 2 1.2 3.7c.4 1.1-.2 2.3-1.3 2.7-.4.2-.8.2-1.1.2z"/></svg>
-                  <span>Landing at Chennai Airport (MAA)</span>
-                </span>
-                <span class="text-[11px] font-semibold text-m3-on-surface-variant">Zero Delay Waiting</span>
-              </div>
-              <h3 class="text-sm sm:text-base font-bold text-m3-on-surface font-heading mb-1.5">
-                Arrival Pick Up Protocol (Terminal 1, 2 &amp; 4)
-              </h3>
-              <p class="text-xs text-m3-on-surface-variant leading-relaxed mb-3">
-                How arrival pickup works when your flight touches down at MAA:
-              </p>
-              <ul class="space-y-2.5 text-xs text-m3-on-surface-variant">
-                <li class="flex items-start gap-2">
-                  <span class="w-4 h-4 rounded-full bg-m3-primary/10 text-m3-primary font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">1</span>
-                  <span><strong>Automated Flight Tracking:</strong> Provide your arrival flight number. We track live radar. If your flight arrives early or is delayed by 1 to 6 hours, chauffeur arrival timing adjusts automatically with 100% free waiting.</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="w-4 h-4 rounded-full bg-m3-primary/10 text-m3-primary font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">2</span>
-                  <span><strong>Terminal Exit Meet &amp; Greet:</strong> For Domestic (T1 Gate 4/5 exit) and International (T2 &amp; T4 arrival hall exit), your chauffeur waits right outside the passenger exit gate holding a personalized name board placard. If you do not have an Indian SIM yet, connect to free airport Wi-Fi and message our 24/7 WhatsApp desk.</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="w-4 h-4 rounded-full bg-m3-primary/10 text-m3-primary font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">3</span>
-                  <span><strong>Luggage Assistance (No 400m Walk):</strong> Chauffeur helps carry heavy overseas and domestic luggage straight to your pre-cooled AC cab parked directly in the terminal lane. You do not have to drag bags across to the distant Aerohub multi-level car park.</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="w-4 h-4 rounded-full bg-m3-primary/10 text-m3-primary font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">4</span>
-                  <span><strong>Pay After Safe Arrival:</strong> ₹0 advance deposit required. Settle your transparent flat fare via UPI, Cash, or Card only after reaching your destination safely.</span>
-                </li>
-              </ul>
-            </div>
-            <div class="mt-4 pt-3 border-t border-m3-outline-variant/60 flex items-center justify-between">
-              <span class="text-xs font-semibold text-m3-on-surface">Pickup base fare from ₹650</span>
-              <a href="#booking-section" class="inline-flex items-center gap-1 text-xs font-bold text-m3-primary hover:underline">
-                <span>Book Arrival Pickup</span>
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-              </a>
-            </div>
-          </div>
-
-          <!-- Doorstep Drop Guide Card -->
-          <div class="p-4 sm:p-5 rounded-2xl bg-m3-surface-container-lowest border border-m3-outline-variant shadow-sm flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-2.5">
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold border border-emerald-200">
-                  <svg class="w-3.5 h-3.5 text-emerald-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22h20"/><path d="M6.36 17.4 4 17l-2-4 1.1-.55a2 2 0 0 1 1.8.3L7 14.2l7-2.3-3.2-6.4 1.8-.6 5.3 5.4 3.7-1.2c1.1-.4 2.3.2 2.7 1.3.4 1.1-.2 2.3-1.3 2.7L6.36 17.4z"/></svg>
-                  <span>Heading to Chennai Airport (MAA)</span>
-                </span>
-                <span class="text-[11px] font-semibold text-m3-on-surface-variant">Guaranteed Punctuality</span>
-              </div>
-              <h3 class="text-sm sm:text-base font-bold text-m3-on-surface font-heading mb-1.5">
-                Doorstep Airport Drop Protocol
-              </h3>
-              <p class="text-xs text-m3-on-surface-variant leading-relaxed mb-3">
-                How doorstep drop-off to Chennai Airport (MAA) works:
-              </p>
-              <ul class="space-y-2.5 text-xs text-m3-on-surface-variant">
-                <li class="flex items-start gap-2">
-                  <span class="w-4 h-4 rounded-full bg-emerald-600/10 text-emerald-700 font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">1</span>
-                  <span><strong>Driver Details Before Departure:</strong> Chauffeur name, phone number, and vehicle registration are delivered to your WhatsApp by 9:00 PM the previous evening for 3:00 AM – 5:00 AM early morning departures.</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="w-4 h-4 rounded-full bg-emerald-600/10 text-emerald-700 font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">2</span>
-                  <span><strong>Early Doorstep Arrival:</strong> Chauffeur arrives 15–20 minutes early at your home, hotel, or office to help load luggage into the boot.</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="w-4 h-4 rounded-full bg-emerald-600/10 text-emerald-700 font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">3</span>
-                  <span><strong>Direct Elevated Ramp Drop:</strong> Direct drop right outside your airline gate on the 1st Floor Elevated Departure Flyover (T1 Domestic Gates 1–3, T2/T4 International Gates 5–7). No hauling heavy suitcases up escalators.</span>
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="w-4 h-4 rounded-full bg-emerald-600/10 text-emerald-700 font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">4</span>
-                  <span><strong>Fixed Tariff Guarantee:</strong> Flat agreed fare with highway tolls and official airport parking at actuals. Never any midnight, rain, or office hour surge pricing.</span>
-                </li>
-              </ul>
-            </div>
-            <div class="mt-4 pt-3 border-t border-m3-outline-variant/60 flex items-center justify-between">
-              <span class="text-xs font-semibold text-m3-on-surface">Drop base fare from ₹650</span>
-              <a href="#booking-section" class="inline-flex items-center gap-1 text-xs font-bold text-m3-primary hover:underline">
-                <span>Book Airport Drop</span>
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-              </a>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -1574,17 +1320,29 @@ const tripListSchema = {
         };
       });
 
-      // 3. Connect Popular Neighborhood Buttons directly to On-Page Booking Engine
-      const neighborhoodBtns = document.querySelectorAll<HTMLElement>('.neighborhood-book-btn');
-      neighborhoodBtns.forEach((btn) => {
+      // 3. Connect Highway Corridor Car buttons directly to Respective Booking Summary
+      const highwayVehicleBtns = document.querySelectorAll<HTMLElement>('.highway-vehicle-select-btn');
+      highwayVehicleBtns.forEach((btn) => {
         btn.onclick = () => {
-          const loc = btn.getAttribute('data-location') || 'Tambaram, Chennai';
-          const fareFinder = document.getElementById('airport-fare-finder') || document.getElementById('booking-section');
-          if (fareFinder) {
-            fareFinder.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
+          const corridor = btn.getAttribute('data-corridor') || 'Pondicherry, Tamil Nadu';
+          const vehicle = btn.getAttribute('data-vehicle') || 'Swift Dzire';
+          const rawFare = btn.getAttribute('data-fare') || '';
+          const cleanFare = parseInt(rawFare.replace(/[^\d]/g, ''), 10) || 0;
+          const rawDistance = btn.getAttribute('data-distance') || '';
+          const cleanDistance = parseInt(rawDistance.replace(/[^\d]/g, ''), 10) || 0;
+          const eta = btn.getAttribute('data-eta') || '';
+          const pax = btn.getAttribute('data-pax') || '4';
+
           window.dispatchEvent(new CustomEvent('airport-set-location', {
-            detail: { location: loc, autoCalculate: true }
+            detail: {
+              location: corridor,
+              vehicle: vehicle,
+              passengers: pax,
+              fixedFare: cleanFare > 0 ? cleanFare : undefined,
+              distanceKm: cleanDistance > 0 ? cleanDistance : undefined,
+              duration: eta ? `${eta} drive` : undefined,
+              autoCalculate: true
+            }
           }));
         };
       });
@@ -1621,6 +1379,8 @@ const tripListSchema = {
           };
         });
       }
+
+
     }
 
     if (document.readyState === 'loading') {

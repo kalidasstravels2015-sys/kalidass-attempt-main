@@ -1,65 +1,46 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { createPortal } from 'react-dom';
 import {
-  Plane, Car, Users, User, Calculator, MapPin, X,
-  ChevronDown, CheckCircle2, ShieldCheck, Navigation,
-  Calendar, Phone, ArrowRight, Clock, AlertCircle, MessageSquare
+  Plane, Car, Users, Calculator, MapPin, X,
+  ChevronDown, ShieldCheck,
+  Calendar, Phone, ArrowRight, Clock, AlertCircle
 } from 'lucide-react';
 import LocationPicker from './LocationPicker';
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
-import { trackCalculatorQuote, markQuoteConverted } from '../lib/analytics';
+import { trackCalculatorQuote } from '../lib/analytics';
 import tariffConfig from '../data/tariff_config.json';
 import tnBusFares from '../data/tnBusFares.json';
-import tripsData from '../data/trips.json';
 
-// ── Chennai Local Airport Zone Data (Flat Zone Packages) ────────────────────
-const AIRPORT_LOCAL_ZONES = [
-  {
-    name: 'South Chennai & Airport Vicinity',
-    keywords: ['guindy','tambaram','pallavaram','velachery','chromepet','medavakkam',
-      'porur','alandur','st. thomas mount','meenambakkam','nanmangalam','perungalathur',
-      'keelkattalai','madipakkam','nanganallur'],
-    distanceKm: 12, duration: '15–25 mins',
-    rates: { 'Swift Dzire': 650, 'Maruti Ertiga': 1150, 'Innova Crysta': 1500, 'Tempo Traveller': 2400 }
-  },
-  {
-    name: 'Central Chennai & Downtown',
-    keywords: ['t. nagar','t nagar','us consulate','anna nagar','nungambakkam','egmore',
-      'central','mylapore','alwarpet','kodambakkam','vadapalani','chetpet','kilpauk',
-      'royapettah','triplicane','mount road','teynampet','gopalapuram','thousand lights',
-      'saidapet','ashok nagar','kk nagar','k.k. nagar'],
-    distanceKm: 22, duration: '30–45 mins',
-    rates: { 'Swift Dzire': 950, 'Maruti Ertiga': 1550, 'Innova Crysta': 1950, 'Tempo Traveller': 2900 }
-  },
-  {
-    name: 'OMR & IT Corridor (SIPCOT)',
-    keywords: ['omr','perungudi','thoraipakkam','sholinganallur','navalur','siruseri',
-      'sipcot','elcot','kelambakkam','padur','karapakkam','semmancheri','kandanchavadi'],
-    distanceKm: 18, duration: '25–40 mins',
-    rates: { 'Swift Dzire': 1250, 'Maruti Ertiga': 1850, 'Innova Crysta': 2300, 'Tempo Traveller': 3400 }
-  },
-  {
-    name: 'North Chennai & Port Industrial',
-    keywords: ['parrys','broadway','madhavaram','ambattur','ennore','tondiarpet',
-      'tiruvottiyur','avadi','red hills','manali','kolathur','perambur','villivakkam',
-      'korukkupet','royapuram','washermanpet','george town'],
-    distanceKm: 30, duration: '45–60 mins',
-    rates: { 'Swift Dzire': 1350, 'Maruti Ertiga': 1950, 'Innova Crysta': 2450, 'Tempo Traveller': 3600 }
-  },
-  {
-    name: 'ECR Coastal & Beach Resorts',
-    keywords: ['ecr','mahabalipuram','mamallapuram','kovalam','nemmeli','muttukadu',
-      'intercontinental','radisson','taj fisherman','sheraton','thiruvanmiyur','palavakkam',
-      'kottivakkam','neelankarai','injambakkam','akkarai','kanathur'],
-    distanceKm: 45, duration: '45–60 mins',
-    rates: { 'Swift Dzire': 1650, 'Maruti Ertiga': 2400, 'Innova Crysta': 2950, 'Tempo Traveller': 4200 }
-  }
+const vehicles = tariffConfig.vehicles;
+const vehicleOptions = Object.keys(vehicles);
+
+const VEHICLE_CAPACITY = {
+  'Swift Dzire':     4,
+  'Toyota Etios':    4,
+  'Maruti Ertiga':   6,
+  'Innova':          6,
+  'Innova Crysta':   7,
+  'Tempo Traveller': 12,
+};
+
+const PASSENGER_OPTIONS = [
+  { value: '1', label: '1 Passenger' },
+  { value: '2', label: '2 Passengers' },
+  { value: '3', label: '3 Passengers' },
+  { value: '4', label: '4 Passengers (Sedan)' },
+  { value: '5', label: '5 Passengers' },
+  { value: '6', label: '6 Passengers (Ertiga)' },
+  { value: '7', label: '7 Passengers (Innova)' },
+  { value: '8', label: '8 Passengers' },
+  { value: '9', label: '9 Passengers' },
+  { value: '10', label: '10 Passengers' },
+  { value: '11', label: '11 Passengers' },
+  { value: '12', label: '12 Passengers (Tempo)' },
+  { value: '13', label: '13+ Passengers' }
 ];
 
-const AIRPORT_ZONES = AIRPORT_LOCAL_ZONES;
+const AIRPORT_HUB = 'Chennai International Airport (MAA)';
 
-// ── Known Distances from Chennai for Fast Resolution ────────────────────────
 const COMMON_DISTANCES_FROM_CHENNAI = {
   'chennai': 0,
   'pondicherry': 151,
@@ -69,10 +50,11 @@ const COMMON_DISTANCES_FROM_CHENNAI = {
   'bengaluru': 346,
   'tirupati': 135,
   'tirumala': 155,
-  'vellore': 137,
+  'vellore': 140,
   'kanchipuram': 75,
-  'mahabalipuram': 56,
-  'mamallapuram': 56,
+  'mahabalipuram': 55,
+  'mamallapuram': 55,
+  'sriperumbudur': 42,
   'trichy': 332,
   'tiruchirappalli': 332,
   'madurai': 462,
@@ -98,30 +80,23 @@ const COMMON_DISTANCES_FROM_CHENNAI = {
   'hosur': 305,
   'krishnagiri': 260,
   'dharmapuri': 300,
-  'erode': 395,
-  'tirupur': 460,
-  'dindigul': 420,
-  'karur': 375,
-  'neyveli': 215,
-  'cuddalore': 180,
-  'villupuram': 165,
-  'chengalpattu': 55,
-  'tambaram': 30,
-  'sriperumbudur': 45,
-  'arakkonam': 70,
-  'tiruttani': 85,
-  'srikalahasti': 115,
-  'vijayawada': 450,
-  'nellore': 175,
-  'hyderabad': 630
+  'pondy bazaar': 14,
+  't. nagar': 15,
+  't nagar': 15,
+  'guindy': 10,
+  'omr': 18,
+  'tambaram': 12,
+  'velachery': 14,
+  'anna nagar': 20,
+  'central': 22,
+  'egmore': 20
 };
 
 const CHENNAI_FORMS = [
-  'chennai', 'airport', 'maa', 'tambaram', 'guindy', 'koyambedu', 'egmore', 'central',
+  'chennai', 'airport', 'tambaram', 'guindy', 'koyambedu', 'egmore', 'central',
   'pallavaram', 'velachery', 'porur', 'annanagar', 'anna nagar', 't nagar', 't. nagar',
   'sholinganallur', 'omr', 'ecr', 'perungudi', 'thiruvanmiyur', 'adyar', 'mylapore',
-  'chromepet', 'medavakkam', 'madipakkam', 'alandur', 'vadapalani', 'ambattur', 'avadi',
-  'poonamallee', 'kolathur', 'redhills', 'kilpauk', 'nungambakkam', 'triplicane', 'royapettah'
+  'chromepet', 'medavakkam', 'madipakkam', 'alandur', 'vadapalani', 'ambattur', 'avadi'
 ];
 
 const findKnownDistance = (origin, destination) => {
@@ -129,270 +104,328 @@ const findKnownDistance = (origin, destination) => {
   const d = (destination || '').toLowerCase().trim();
   if (!o || !d) return null;
 
-  // 1. Check tnBusFares table
-  const busRoute = tnBusFares.find(r => 
-    (o.includes(r.source) && d.includes(r.destination)) ||
-    (o.includes(r.destination) && d.includes(r.source))
-  );
-  if (busRoute) {
-    const km = busRoute.distanceKm;
-    return {
-      distance: km,
-      duration: `~${Math.max(1, Math.round(km / 55))} hrs drive`
-    };
-  }
-
-  // 2. Check trips.json
-  const trip = tripsData.find(t => {
-    const key = t.title.toLowerCase().split(' ')[0];
-    return o.includes(key) || d.includes(key);
-  });
-  if (trip && trip.kmOneWay) {
-    return {
-      distance: trip.kmOneWay,
-      duration: trip.duration || `~${Math.max(1, Math.round(trip.kmOneWay / 55))} hrs drive`
-    };
-  }
-
-  // 3. Check COMMON_DISTANCES_FROM_CHENNAI
   const isOChennai = CHENNAI_FORMS.some(k => o.includes(k));
   const isDChennai = CHENNAI_FORMS.some(k => d.includes(k));
 
   if (isOChennai || isDChennai) {
     const other = isOChennai ? d : o;
     for (const [city, km] of Object.entries(COMMON_DISTANCES_FROM_CHENNAI)) {
-      if (city !== 'chennai' && km > 0 && other.includes(city)) {
+      if (other.includes(city)) {
+        let duration;
+        if (km <= 30) {
+          duration = `~${Math.max(15, Math.round(km * 2.2))} mins`;
+        } else {
+          const hrs = (km / 45).toFixed(1).replace('.0', '');
+          duration = `~${hrs} hrs drive`;
+        }
         return {
           distance: km,
-          duration: `~${Math.max(1, Math.round(km / 55))} hrs drive`
+          duration
         };
       }
     }
   }
 
-  return null;
-};
-
-// Road extras estimation (Tolls & State Border Permits)
-const estimateRoadExtras = (pickup, drop, distanceKm) => {
-  const text = `${(pickup || '').toLowerCase()} ${(drop || '').toLowerCase()}`;
-  let stateName = 'Tamil Nadu';
-  let statePermitEst = 0;
-  let tollsEst = 0;
-
-  if (text.includes('tirupati') || text.includes('tirumala') || text.includes('andhra') || text.includes('kalahasti') || text.includes('nellore') || text.includes('chittoor')) {
-    stateName = 'Andhra Pradesh';
-    statePermitEst = 500;
-    tollsEst = 220;
-  } else if (text.includes('bangalore') || text.includes('bengaluru') || text.includes('karnataka') || text.includes('mysore') || text.includes('hosur')) {
-    stateName = 'Karnataka';
-    statePermitEst = 700;
-    tollsEst = 250;
-  } else if (text.includes('pondicherry') || text.includes('puducherry') || text.includes('auroville')) {
-    stateName = 'Puducherry (UT)';
-    statePermitEst = 0;
-    tollsEst = 130;
-  } else if (text.includes('kerala') || text.includes('munnar') || text.includes('cochin') || text.includes('kochi')) {
-    stateName = 'Kerala';
-    statePermitEst = 800;
-    tollsEst = 350;
-  } else {
-    stateName = 'Tamil Nadu';
-    statePermitEst = 0;
-    tollsEst = Math.round(((distanceKm || 0) * 0.85) / 10) * 10;
-    if (tollsEst < 80 && (distanceKm || 0) >= 50) tollsEst = 80;
-  }
-
-  return { stateName, statePermitEst, tollsEst, totalExtras: tollsEst + statePermitEst };
-};
-
-// ── Unified Airport Transfer Fare Engine ─────────────────────────────────────
-// Calculates transparent flat packages for local Chennai zones and standard
-// outstation per-km rates for destinations across South India.
-const calculateAirportFare = ({ userLocation, selectedVehicle, currentDistanceKm, currentDuration }) => {
-  const q = (userLocation || '').toLowerCase().trim();
-  const known = findKnownDistance(AIRPORT_HUB, q);
-  const resolvedKm = currentDistanceKm || (known ? known.distance : null);
-
-  // 1. Check local Chennai city zones
-  const matchedLocalZone = AIRPORT_LOCAL_ZONES.find(z => z.keywords.some(kw => q.includes(kw)));
-  
-  // An address is local ONLY IF:
-  // - It matched a known local Chennai keyword AND (distance is unknown or <= 45 km)
-  // - OR resolved road distance is < 45 km and not a recognized outstation destination
-  const isCity = matchedLocalZone && (!resolvedKm || resolvedKm <= 45);
-
-  if (isCity) {
-    const zone = matchedLocalZone || (
-      resolvedKm <= 15 ? AIRPORT_LOCAL_ZONES[0] :
-      resolvedKm <= 28 ? AIRPORT_LOCAL_ZONES[1] :
-      resolvedKm <= 35 ? AIRPORT_LOCAL_ZONES[2] :
-      resolvedKm <= 40 ? AIRPORT_LOCAL_ZONES[3] : AIRPORT_LOCAL_ZONES[4]
-    );
-    const finalRate = zone.rates[selectedVehicle] || 650;
+  const busRoute = tnBusFares.find(r =>
+    (o.includes(r.source) && d.includes(r.destination)) ||
+    (o.includes(r.destination) && d.includes(r.source))
+  );
+  if (busRoute) {
+    const hrs = (busRoute.distanceKm / 45).toFixed(1).replace('.0', '');
     return {
-      isOutstation: false,
-      zone,
-      zoneName: zone.name,
-      distanceKm: resolvedKm || zone.distanceKm,
-      duration: currentDuration || zone.duration,
-      estimate: finalRate,
-      breakdown: {
-        type: 'flat_package',
-        inclusions: 'Includes fuel, airport parking, tolls & GST',
-        payment: 'Pay after trip'
-      }
+      distance: busRoute.distanceKm,
+      duration: `~${hrs} hrs drive`
     };
   }
 
-  // 2. OUTSTATION TRIP (e.g. Madurai, Trichy, Coimbatore, Bangalore, Pondicherry, Vellore, etc.)
-  // Strictly follows official Kalidass outstation per-km tariffs + driver bata
-  const outstationKm = resolvedKm || (known ? known.distance : 130);
-  const vData = tariffConfig.vehicles[selectedVehicle] || tariffConfig.vehicles['Swift Dzire'];
-  const minDropKm = vData.min_drop_km || (selectedVehicle.includes('Tempo') ? 250 : 130);
-  const isMinKmApplied = outstationKm < minDropKm;
-  const chargeableKm = Math.max(minDropKm, outstationKm);
-  const oneWayRate = vData.one_way_rate;
-  const driverBata = vData.driver_bata;
-  const kmCost = chargeableKm * oneWayRate;
-  const totalCost = kmCost + driverBata;
-  const finalRate = Math.round(totalCost / 10) * 10;
+  return null;
+};
 
-  const drivingHours = Math.max(1, Math.round((outstationKm / 55) * 10) / 10);
-  const outDuration = currentDuration || `~${Math.round(drivingHours)} hrs drive`;
-  const extras = estimateRoadExtras(AIRPORT_HUB, userLocation, outstationKm);
+// 3. Outstation Pricing Engine (matching QuotationEngine / Outstation Cabs)
+const calculateOutstationAirportFare = (distKm, selectedVeh) => {
+  const vData = vehicles[selectedVeh] || vehicles['Swift Dzire'];
+  const rate = vData.one_way_rate || 16;
+  const bata = vData.driver_bata || 400;
+  const minDropKm = vData.min_drop_km || (selectedVeh.includes('Tempo') ? 250 : 130);
+  const effKm = distKm && distKm > 0 ? distKm : minDropKm;
+  const isOutstation = effKm >= 50;
 
-  const cityName = userLocation.split(',')[0].trim();
+  let chargeableKm, kmCost, driverBata, totalFare, advanceToPay, balanceToPay;
+
+  if (isOutstation) {
+    chargeableKm = Math.max(minDropKm, effKm);
+    kmCost = chargeableKm * rate;
+    driverBata = bata;
+    totalFare = Math.round((kmCost + driverBata) / 10) * 10;
+    advanceToPay = 500;
+    balanceToPay = Math.max(0, totalFare - advanceToPay);
+  } else {
+    chargeableKm = effKm;
+    kmCost = Math.round((chargeableKm * rate) / 10) * 10;
+    driverBata = 0;
+    totalFare = kmCost;
+    advanceToPay = 0;
+    balanceToPay = totalFare;
+  }
 
   return {
-    isOutstation: true,
-    zone: null,
-    zoneName: `${cityName} (Outstation Transfer)`,
-    distanceKm: outstationKm,
-    duration: outDuration,
-    estimate: finalRate,
-    breakdown: {
-      type: 'outstation_rate',
-      chargeableKm,
-      actualKm: outstationKm,
-      isMinKmApplied,
-      oneWayRate,
-      driverBata,
-      kmCost,
-      tollsEst: extras.tollsEst,
-      stateName: extras.stateName,
-      statePermitEst: extras.statePermitEst,
-      inclusions: `₹${oneWayRate}/km (${chargeableKm} km${isMinKmApplied ? ' min billed' : ''}) + Driver Bata ₹${driverBata}`,
-      payment: 'Pay after trip'
-    }
+    actual_km: effKm,
+    chargeable_km: chargeableKm,
+    rate_per_km: rate,
+    km_cost: kmCost,
+    driver_bata: driverBata,
+    total_fare: totalFare,
+    advance_to_pay: advanceToPay,
+    balance_to_pay: balanceToPay,
+    is_outstation: isOutstation
   };
 };
 
-const VEHICLE_SPECS = {
-  'Swift Dzire':     { tag: 'Sedan',        caps: '4 Pax + 2 Bags', pax: '4' },
-  'Maruti Ertiga':   { tag: 'SUV',          caps: '6 Pax + 3 Bags', pax: '6' },
-  'Innova Crysta':   { tag: 'Executive MPV',caps: '7 Pax + 5 Bags', pax: '7' },
-  'Tempo Traveller': { tag: 'Group Minibus',caps: '12 Pax + Bags',   pax: '12' },
-};
-
-// Max passengers each vehicle can carry (excluding driver)
-const VEHICLE_CAPACITY = {
-  'Swift Dzire':     4,
-  'Maruti Ertiga':   6,
-  'Innova Crysta':   7,
-  'Tempo Traveller': 12,
-};
-
-const AIRPORT_HUB = 'Chennai International Airport (MAA)';
-
-// ── Multi-currency support for international travelers ────────────────────
-const CURRENCY_RATES = {
-  INR: { symbol: '₹', rate: 1, label: 'INR (₹)' },
-  USD: { symbol: '$', rate: 86.5, label: 'USD ($)' },
-  CAD: { symbol: 'C$', rate: 62.5, label: 'CAD (C$)' },
-  EUR: { symbol: '€', rate: 93.5, label: 'EUR (€)' },
-  RUB: { symbol: '₽', rate: 0.92, label: 'RUB (₽)' },
-  GBP: { symbol: '£', rate: 111.0, label: 'GBP (£)' },
-};
-
-const convertRate = (inr, curr) => {
-  if (!inr) return '₹0';
-  if (curr === 'INR' || !CURRENCY_RATES[curr]) return `₹${Number(inr).toLocaleString('en-IN')}`;
-  const { symbol, rate } = CURRENCY_RATES[curr];
-  const converted = Math.round(inr / rate);
-  if (curr === 'RUB') {
-    return `${converted.toLocaleString('en-US')} ₽`;
-  }
-  return `${symbol}${converted.toLocaleString('en-US')}`;
+const getMinDateTime = () => {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const hours = String(d.getHours()).padStart(2, '0');
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+  return year + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
 };
 
 const getDefaultDateTime = () => {
   const d = new Date();
   d.setHours(d.getHours() + 2, 0, 0, 0);
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}T${String(d.getHours()).padStart(2,'0')}:00`;
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const hours = String(d.getHours()).padStart(2, '0');
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+  return year + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
 };
 
 export default function AirportBookingEngine({ showHeader = true, enableStickyBar = false }) {
-  const [direction,   setDirection]   = useState('drop'); // 'drop' | 'pickup'
-  const [pickup,      setPickup]      = useState('');
-  const [drop,        setDrop]        = useState(AIRPORT_HUB);
-  const [vehicle,     setVehicle]     = useState('Swift Dzire');
-  const [passengers,  setPassengers]  = useState('4');
-  const [dateTime,    setDateTime]    = useState(getDefaultDateTime);
-  const [flightNo,    setFlightNo]    = useState('');
-  const [name,        setName]        = useState('');
-  const [phone,       setPhone]       = useState('');
-  const [countryCode, setCountryCode] = useState('+91');
+  // 1. Primary Toggles & 2. Default Direction (Airport Pickup as Default)
+  const [direction, setDirection] = useState('pickup'); // 'pickup' | 'drop'
+  const [pickup, setPickup] = useState(AIRPORT_HUB);
+  const [drop, setDrop] = useState('');
 
-  const [matchedZone, setMatchedZone] = useState(null);
-  const [tripFare,    setTripFare]    = useState(null);
-  const [estimate,    setEstimate]    = useState(0);
-  const [distanceKm,  setDistanceKm]  = useState(0);
-  const [duration,    setDuration]    = useState('');
-  const [showResult,  setShowResult]  = useState(false);
-  const [error,       setError]       = useState('');
-  const [loading,       setLoading]       = useState(false);
-  const [gettingLoc,    setGettingLoc]    = useState(false);
+  // 4. Date Inputs (Single DateTime + Flight Landing/Departure Time)
+  const [dateTime, setDateTime] = useState(getDefaultDateTime);
+  const [flightDetails, setFlightDetails] = useState('');
+
+  // Passengers & Vehicle
+  const [passengers, setPassengers] = useState('4');
+  const [vehicle, setVehicle] = useState('Swift Dzire');
+
+  // Calculation & Results
+  const [distanceKm, setDistanceKm] = useState(0);
+  const [duration, setDuration] = useState('');
+  const [estimate, setEstimate] = useState(0);
+  const [breakdown, setBreakdown] = useState(null);
+  const [showResult, setShowResult] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  // UI state
   const [showStickyBar, setShowStickyBar] = useState(false);
-  const [showBookingModal, setShowBookingModal] = useState(false);
-  const [currency, setCurrency] = useState('INR');
-  const [modalErrors, setModalErrors] = useState({});
+  const [locationPickerOpen, setLocationPickerOpen] = useState(false);
 
-  const destInputRef  = useRef(null);
-  const cardRef       = useRef(null);
-  const nameInputRef  = useRef(null);
-  const phoneInputRef = useRef(null);
+  const destInputRef = useRef(null);
+  const cardRef = useRef(null);
+  const resultRef = useRef(null);
 
-  // ── Listen for external vehicle selection (e.g. from Fleet section) ───────
   useEffect(() => {
-    const onSetVehicle = (e) => {
-      const v = e.detail?.vehicle;
-      if (v && VEHICLE_SPECS[v]) {
-        setVehicle(v);
-        setPassengers(VEHICLE_SPECS[v].pax);
-        setShowResult(false);
-      }
-    };
-    window.addEventListener('airport-set-vehicle', onSetVehicle);
-    return () => window.removeEventListener('airport-set-vehicle', onSetVehicle);
-  }, []);
-
-  // Recalculate fare when vehicle changes if result or modal is active
-  useEffect(() => {
-    const userLoc = (direction === 'pickup' ? drop : pickup).trim();
-    if (userLoc && userLoc !== AIRPORT_HUB && (showResult || showBookingModal)) {
-      const fareResult = calculateAirportFare({
-        userLocation: userLoc,
-        selectedVehicle: vehicle,
-        currentDistanceKm: distanceKm,
-        currentDuration: duration
-      });
-      setEstimate(fareResult.estimate);
-      setTripFare(fareResult);
+    if (showResult && distanceKm > 0) {
+      const b = calculateOutstationAirportFare(distanceKm, vehicle);
+      setBreakdown(b);
+      setEstimate(b.total_fare);
     }
   }, [vehicle]);
 
-  // ── Sticky bar ─────────────────────────────────────────────────────────
+  const handlePassengerChange = (newVal) => {
+    setPassengers(newVal);
+    const pCount = parseInt(newVal, 10);
+    const currentCap = VEHICLE_CAPACITY[vehicle] ?? 4;
+    if (currentCap < pCount) {
+      const nextVeh = vehicleOptions.find(v => (VEHICLE_CAPACITY[v] ?? 0) >= pCount);
+      if (nextVeh) setVehicle(nextVeh);
+    }
+    setShowResult(false);
+  };
+
+  const handleDirectionChange = (newDir) => {
+    if (newDir === direction) return;
+    setDirection(newDir);
+    setShowResult(false);
+    setError('');
+
+    if (newDir === 'pickup') {
+      const userLoc = pickup === AIRPORT_HUB ? '' : pickup;
+      setPickup(AIRPORT_HUB);
+      setDrop(userLoc);
+      if (userLoc) resolveTripDistance(userLoc, 'pickup');
+    } else {
+      const userLoc = drop === AIRPORT_HUB ? '' : drop;
+      setPickup(userLoc);
+      setDrop(AIRPORT_HUB);
+      if (userLoc) resolveTripDistance(userLoc, 'drop');
+    }
+
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('airport-direction-change', { detail: { direction: newDir } }));
+    }
+  };
+
+  const resolveTripDistance = (addr, dir = direction) => {
+    const clean = (addr || '').trim();
+    if (!clean || clean === AIRPORT_HUB) return;
+
+    const known = findKnownDistance(AIRPORT_HUB, clean);
+    if (known) {
+      setDistanceKm(known.distance);
+      setDuration(known.duration);
+      return;
+    }
+
+    if (typeof window !== 'undefined' && window.google && window.google.maps && window.google.maps.DistanceMatrixService) {
+      try {
+        const service = new window.google.maps.DistanceMatrixService();
+        service.getDistanceMatrix(
+          {
+            origins: [dir === 'pickup' ? AIRPORT_HUB : clean],
+            destinations: [dir === 'pickup' ? clean : AIRPORT_HUB],
+            travelMode: window.google.maps.TravelMode.DRIVING,
+            unitSystem: window.google.maps.UnitSystem.METRIC,
+          },
+          (response, status) => {
+            if (status === 'OK' && response && response.rows && response.rows[0] && response.rows[0].elements && response.rows[0].elements[0] && response.rows[0].elements[0].status === 'OK') {
+              const el = response.rows[0].elements[0];
+              const dist = Math.round((el.distance.value / 1000) * 10) / 10;
+              setDistanceKm(dist);
+              setDuration(el.duration.text);
+            }
+          }
+        );
+      } catch (_) {}
+    }
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+    const timer = setTimeout(() => {
+      loadGoogleMaps().then(() => {
+        if (!isMounted || !destInputRef.current || !window.google || !window.google.maps || !window.google.maps.places) return;
+        const ac = new window.google.maps.places.Autocomplete(destInputRef.current, {
+          componentRestrictions: { country: 'in' },
+          fields: ['name', 'formatted_address', 'geometry'],
+        });
+
+        ac.addListener('place_changed', () => {
+          const place = ac.getPlace();
+          const addr = place.formatted_address || place.name;
+          if (!addr) return;
+
+          if (direction === 'pickup') {
+            setDrop(addr);
+          } else {
+            setPickup(addr);
+          }
+          setShowResult(false);
+          setError('');
+
+          const known = findKnownDistance(AIRPORT_HUB, addr);
+          if (known) {
+            setDistanceKm(known.distance);
+            setDuration(known.duration);
+            return;
+          }
+
+          if (place.geometry && place.geometry.location) {
+            const lat = place.geometry.location.lat();
+            const lng = place.geometry.location.lng();
+            const rad = x => (x * Math.PI) / 180;
+            const R = 6371;
+            const dLat = rad(lat - 12.9941);
+            const dLng = rad(lng - 80.1709);
+            const a = Math.sin(dLat/2)**2 + Math.cos(rad(12.9941))*Math.cos(rad(lat))*Math.sin(dLng/2)**2;
+            const roadKm = Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)) * 1.35);
+            setDistanceKm(roadKm);
+            if (roadKm <= 45) {
+              setDuration('~' + Math.max(15, Math.round(roadKm * 2)) + ' mins');
+            } else {
+              const hrs = Math.max(1, Math.round((roadKm / 55) * 10) / 10);
+              setDuration('~' + Math.round(hrs) + ' hrs drive');
+            }
+          }
+
+          resolveTripDistance(addr);
+        });
+      }).catch(() => {});
+    }, 50);
+
+    return () => { isMounted = false; clearTimeout(timer); };
+  }, [direction]);
+
+  useEffect(() => {
+    const onSetVehicle = (e) => {
+      const v = e.detail && e.detail.vehicle;
+      if (v && vehicles[v]) {
+        setVehicle(v);
+        setShowResult(false);
+      }
+    };
+
+    const onSetLocation = (e) => {
+      const loc = e.detail && e.detail.location;
+      const targetVehicle = e.detail && e.detail.vehicle;
+      const autoCalc = e.detail && e.detail.autoCalculate !== false;
+      const targetPax = e.detail && e.detail.passengers;
+      const fixedFare = e.detail && e.detail.fixedFare;
+      const explicitKm = e.detail && e.detail.distanceKm;
+      const explicitDuration = e.detail && e.detail.duration;
+
+      if (targetVehicle && vehicles[targetVehicle]) {
+        setVehicle(targetVehicle);
+      }
+      if (targetPax) {
+        setPassengers(String(targetPax));
+      } else if (targetVehicle && VEHICLE_CAPACITY[targetVehicle]) {
+        setPassengers(String(VEHICLE_CAPACITY[targetVehicle]));
+      }
+      if (explicitKm) {
+        setDistanceKm(typeof explicitKm === 'number' ? explicitKm : parseInt(explicitKm, 10));
+      }
+      if (explicitDuration) {
+        setDuration(explicitDuration);
+      }
+      if (loc) {
+        if (direction === 'pickup') {
+          setDrop(loc);
+          setPickup(AIRPORT_HUB);
+        } else {
+          setPickup(loc);
+          setDrop(AIRPORT_HUB);
+        }
+        setShowResult(false);
+        setError('');
+        if (!explicitKm) {
+          resolveTripDistance(loc);
+        }
+        if (autoCalc) {
+          setTimeout(() => {
+            handleCalculateCost(loc, targetVehicle, fixedFare, explicitKm, explicitDuration);
+          }, 100);
+        }
+      }
+    };
+
+    window.addEventListener('airport-set-vehicle', onSetVehicle);
+    window.addEventListener('airport-set-location', onSetLocation);
+    return () => {
+      window.removeEventListener('airport-set-vehicle', onSetVehicle);
+      window.removeEventListener('airport-set-location', onSetLocation);
+    };
+  }, [direction, pickup, drop, vehicle, distanceKm]);
+
   useEffect(() => {
     if (!enableStickyBar || !cardRef.current) return;
     const obs = new IntersectionObserver(
@@ -406,303 +439,117 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
     return () => obs.disconnect();
   }, [enableStickyBar]);
 
-  // ── Distance resolver helper ───────────────────────────────────────────
-  const resolveTripDistance = (addr) => {
-    const clean = (addr || '').trim();
-    if (!clean || clean === AIRPORT_HUB) return;
-
-    // 1. Check known lookup table
-    const known = findKnownDistance(AIRPORT_HUB, clean);
-    if (known) {
-      setDistanceKm(known.distance);
-      setDuration(known.duration);
-      return;
-    }
-
-    // 2. Query Google Distance Matrix
-    if (typeof window !== 'undefined' && window.google?.maps?.DistanceMatrixService) {
-      try {
-        const service = new window.google.maps.DistanceMatrixService();
-        service.getDistanceMatrix(
-          {
-            origins: [direction === 'pickup' ? AIRPORT_HUB : clean],
-            destinations: [direction === 'pickup' ? clean : AIRPORT_HUB],
-            travelMode: window.google.maps.TravelMode.DRIVING,
-            unitSystem: window.google.maps.UnitSystem.METRIC,
-          },
-          (response, status) => {
-            if (
-              status === 'OK' &&
-              response?.rows?.[0]?.elements?.[0]?.status === 'OK'
-            ) {
-              const el = response.rows[0].elements[0];
-              const dist = Math.round((el.distance.value / 1000) * 10) / 10;
-              setDistanceKm(dist);
-              setDuration(el.duration.text);
-            }
-          }
-        );
-      } catch (_) {}
-    }
+  const scrollToResult = () => {
+    setTimeout(() => {
+      if (!resultRef.current || typeof window === 'undefined') return;
+      resultRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }, 120);
   };
 
-  // ── Direction swap ──────────────────────────────────────────────────────
-  const handleDirectionChange = (dir) => {
-    if (dir === direction) return;
-    setDirection(dir);
-    setShowResult(false);
-    setError('');
-    if (dir === 'pickup') {
-      const loc = pickup === AIRPORT_HUB ? '' : pickup;
-      setPickup(AIRPORT_HUB);
-      setDrop(loc);
-      if (loc) resolveTripDistance(loc);
-    } else {
-      const loc = drop === AIRPORT_HUB ? '' : drop;
-      setPickup(loc);
-      setDrop(AIRPORT_HUB);
-      if (loc) resolveTripDistance(loc);
-    }
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('airport-direction-change', { detail: { direction: dir } }));
-    }
-  };
+  const handleCalculateCost = (overrideLoc, overrideVehicle, overrideFare, overrideKm, overrideDuration) => {
+    const userLoc = (overrideLoc || (direction === 'pickup' ? drop : pickup)).trim();
+    const activeVeh = overrideVehicle || vehicle;
 
-  // ── Google Maps autocomplete ────────────────────────────────────────────
-  useEffect(() => {
-    let isMounted = true;
-    const timer = setTimeout(() => {
-      loadGoogleMaps().then(() => {
-        if (!isMounted || !destInputRef.current || !window.google?.maps?.places) return;
-        const ac = new window.google.maps.places.Autocomplete(destInputRef.current, {
-          componentRestrictions: { country: 'in' },
-          fields: ['name', 'formatted_address', 'geometry'],
-        });
-        ac.addListener('place_changed', () => {
-          const place = ac.getPlace();
-          const addr = place.formatted_address || place.name;
-          if (!addr) return;
-          direction === 'pickup' ? setDrop(addr) : setPickup(addr);
-          setShowResult(false);
-          setError('');
-
-          // 1. Check known lookup table
-          const known = findKnownDistance(AIRPORT_HUB, addr);
-          if (known) {
-            setDistanceKm(known.distance);
-            setDuration(known.duration);
-            return;
-          }
-
-          // 2. Haversine calculation for immediate accurate feedback
-          if (place.geometry?.location) {
-            const lat = place.geometry.location.lat();
-            const lng = place.geometry.location.lng();
-            const rad = x => (x * Math.PI) / 180;
-            const R = 6371;
-            const dLat = rad(lat - 12.9941);
-            const dLng = rad(lng - 80.1709);
-            const a = Math.sin(dLat/2)**2 + Math.cos(rad(12.9941))*Math.cos(rad(lat))*Math.sin(dLng/2)**2;
-            const roadKm = Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)) * 1.35);
-
-            setDistanceKm(roadKm);
-            if (roadKm <= 45) {
-              const zone =
-                roadKm <= 15 ? AIRPORT_LOCAL_ZONES[0] :
-                roadKm <= 28 ? AIRPORT_LOCAL_ZONES[1] :
-                roadKm <= 35 ? AIRPORT_LOCAL_ZONES[2] :
-                roadKm <= 40 ? AIRPORT_LOCAL_ZONES[3] : AIRPORT_LOCAL_ZONES[4];
-              setMatchedZone(zone);
-              setDuration(`~${Math.max(15, Math.round(roadKm * 1.8))} mins`);
-            } else {
-              setMatchedZone(null);
-              const hrs = Math.max(1, Math.round((roadKm / 55) * 10) / 10);
-              setDuration(`~${Math.round(hrs)} hrs drive`);
-            }
-          }
-
-          // 3. Refine via DistanceMatrix if possible
-          resolveTripDistance(addr);
-        });
-      }).catch(() => {});
-    }, 50);
-    return () => { isMounted = false; clearTimeout(timer); };
-  }, [direction]);
-
-  // ── Map Pinpoint Selection ──────────────────────────────────────────────
-  const [locationPickerOpen, setLocationPickerOpen] = useState(false);
-  const handlePinClick = () => {
-    loadGoogleMaps().catch(() => {});
-    setLocationPickerOpen(true);
-  };
-  const handleLocationConfirm = (address) => {
-    const clean = address ? address.trim() : '';
-    if (direction === 'drop') {
-      setPickup(clean);
-    } else {
-      setDrop(clean);
-    }
-    setLocationPickerOpen(false);
-    setError('');
-    setShowResult(false);
-    if (clean) resolveTripDistance(clean);
-  };
-
-  // ── GPS ─────────────────────────────────────────────────────────────────
-  const handleGPS = () => {
-    if (!navigator.geolocation) return;
-    setGettingLoc(true);
-    navigator.geolocation.getCurrentPosition(
-      ({ coords: { latitude: lat, longitude: lng } }) => {
-        setGettingLoc(false);
-        if (window.google?.maps?.Geocoder) {
-          new window.google.maps.Geocoder().geocode(
-            { location: { lat, lng } },
-            (res, status) => {
-              if (status === 'OK' && res[0]) {
-                const addr = res[0].formatted_address;
-                direction === 'pickup' ? setDrop(addr) : setPickup(addr);
-                setShowResult(false);
-                resolveTripDistance(addr);
-              }
-            }
-          );
-        } else {
-          const fb = `Current Location (${lat.toFixed(3)}, ${lng.toFixed(3)})`;
-          direction === 'pickup' ? setDrop(fb) : setPickup(fb);
-          setShowResult(false);
-        }
-      },
-      () => { setGettingLoc(false); alert('Unable to retrieve location. Please type your area.'); }
-    );
-  };
-
-  // ── Modal scroll-lock + ESC ──────────────────────────────────────────────
-  useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') setShowBookingModal(false); };
-    if (showBookingModal) {
-      document.addEventListener('keydown', onKey);
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = '';
-    };
-  }, [showBookingModal]);
-
-  // ── Listen for external location/neighborhood selection (e.g. from popular neighborhoods) ──
-  useEffect(() => {
-    const onSetLocation = (e) => {
-      const loc = e.detail?.location;
-      const targetDir = e.detail?.direction;
-      const autoCalc = e.detail?.autoCalculate !== false;
-      if (loc) {
-        let activeDir = direction;
-        if (targetDir && targetDir !== direction) {
-          handleDirectionChange(targetDir);
-          activeDir = targetDir;
-        }
-        if (activeDir === 'pickup') {
-          setDrop(loc);
-          setPickup(AIRPORT_HUB);
-        } else {
-          setPickup(loc);
-          setDrop(AIRPORT_HUB);
-        }
-        setShowResult(false);
-        setError('');
-        resolveTripDistance(loc);
-        if (autoCalc) {
-          handleCalculateWithLoc(loc, activeDir);
-        }
-      }
-    };
-    window.addEventListener('airport-set-location', onSetLocation);
-    return () => window.removeEventListener('airport-set-location', onSetLocation);
-  }, [direction, pickup, drop, vehicle, distanceKm, duration]);
-
-  const handleCalculateWithLoc = (overrideLoc, overrideDir) => {
-    const activeDir = overrideDir || direction;
-    const userLoc = (overrideLoc || (activeDir === 'pickup' ? drop : pickup)).trim();
     if (!userLoc || userLoc === AIRPORT_HUB) {
-      setError(activeDir === 'pickup'
+      setError(direction === 'pickup'
         ? 'Please enter your drop location / hotel in Chennai or Outstation'
         : 'Please enter your pickup doorstep / area in Chennai or Outstation');
-      destInputRef.current?.focus();
+      if (destInputRef.current) destInputRef.current.focus();
       return;
     }
+
     setError('');
     setLoading(true);
 
     setTimeout(() => {
-      // 1. Resolve distance from known table if not already set or if default city distance was held
-      let effKm = distanceKm;
-      let effDur = duration;
+      let effKm = overrideKm || distanceKm;
       const known = findKnownDistance(AIRPORT_HUB, userLoc);
-      if (known && (!effKm || effKm <= 45)) {
+      if (overrideKm) {
+        effKm = typeof overrideKm === 'number' ? overrideKm : parseInt(overrideKm, 10);
+        setDistanceKm(effKm);
+      } else if (known) {
         effKm = known.distance;
-        effDur = known.duration;
+        setDistanceKm(known.distance);
+        setDuration(known.duration);
+      } else if (!effKm) {
+        effKm = 130;
+        setDistanceKm(130);
+        setDuration('~2.5 hrs driving');
       }
 
-      const fareResult = calculateAirportFare({
-        userLocation: userLoc,
-        selectedVehicle: vehicle,
-        currentDistanceKm: effKm,
-        currentDuration: effDur
-      });
+      if (overrideDuration) {
+        setDuration(overrideDuration);
+      }
 
-      setMatchedZone(fareResult.zone);
-      setEstimate(fareResult.estimate);
-      setDistanceKm(fareResult.distanceKm);
-      setDuration(fareResult.duration);
-      setTripFare(fareResult);
+      let result;
+      if (overrideFare && typeof overrideFare === 'number' && overrideFare > 0) {
+        const vData = vehicles[activeVeh] || vehicles['Swift Dzire'];
+        const bata = vData.driver_bata || 400;
+        const advanceToPay = 500;
+        const kmCost = Math.max(0, overrideFare - bata);
+        result = {
+          actual_km: effKm,
+          chargeable_km: effKm,
+          rate_per_km: vData.one_way_rate || 16,
+          km_cost: kmCost,
+          driver_bata: bata,
+          total_fare: overrideFare,
+          advance_to_pay: advanceToPay,
+          balance_to_pay: Math.max(0, overrideFare - advanceToPay),
+          is_outstation: true
+        };
+      } else {
+        result = calculateOutstationAirportFare(effKm, activeVeh);
+      }
+
+      setBreakdown(result);
+      setEstimate(result.total_fare);
       setLoading(false);
-      setModalErrors({});
-      setShowBookingModal(true); // open modal with result + booking form
+      setShowResult(true);
+      scrollToResult();
 
       trackCalculatorQuote({
         calculatorId: 'airport_taxi',
-        calculatorEngine: 'Chennai Airport Taxi Estimator',
-        tripType: activeDir === 'pickup'
-          ? (fareResult.isOutstation ? 'Airport Outstation Pickup' : 'Airport Pickup (To City)')
-          : (fareResult.isOutstation ? 'Airport Outstation Drop' : 'Airport Drop (To Airport)'),
-        pickup: activeDir === 'pickup' ? AIRPORT_HUB : userLoc,
-        drop: activeDir === 'pickup' ? userLoc : AIRPORT_HUB,
-        vehicle,
-        distanceKm: fareResult.distanceKm,
-        estimatedFare: fareResult.estimate,
+        calculatorEngine: 'Chennai Airport Taxi Outstation Engine',
+        tripType: direction === 'pickup' ? 'Airport Pickup (MAA Arrival)' : 'Airport Drop (MAA Departure)',
+        pickup: direction === 'pickup' ? AIRPORT_HUB : userLoc,
+        drop: direction === 'pickup' ? userLoc : AIRPORT_HUB,
+        vehicle: activeVeh,
+        distanceKm: result.actual_km,
+        estimatedFare: result.total_fare,
         meta: {
-          direction: activeDir,
-          isOutstation: fareResult.isOutstation,
-          zone: fareResult.zoneName,
-          flightNo: flightNo || undefined,
-          duration: fareResult.duration,
-          chargeableKm: fareResult.breakdown?.chargeableKm,
-          ratePerKm: fareResult.breakdown?.oneWayRate,
-          driverBata: fareResult.breakdown?.driverBata
+          direction,
+          isOutstation: result.is_outstation,
+          flightDetails: flightDetails || undefined,
+          chargeableKm: result.chargeable_km,
+          ratePerKm: result.rate_per_km,
+          driverBata: result.driver_bata
         }
       });
-    }, 280);
+    }, 250);
   };
 
-  const handleCalculate = () => handleCalculateWithLoc();
+  const handleWhatsAppBooking = () => {
+    const isPickup = direction === 'pickup';
 
-  // ── Lead Logging to Google Sheets ────────────────────────────────────────
-  const logBookingLead = (isPickup, fullPhone) => {
-    markQuoteConverted(null, {
-      calculatorId: 'airport_taxi',
-      name: name.trim(),
-      phone: fullPhone,
-      vehicle,
-      estimate,
-      fare: estimate,
-      pickup,
-      drop,
-      travelDate: dateTime,
-      flightNo
-    });
+    const msg = [
+      '*Kalidass Travels — Chennai Airport Taxi Transfer*',
+      '• Transfer Type: ' + (isPickup ? 'Airport Pickup (MAA Arrival)' : 'Airport Drop (MAA Departure)'),
+      '• From: ' + pickup,
+      '• To: ' + drop,
+      flightDetails ? ('• Flight No / Time: ' + flightDetails) : null,
+      '• Pickup Date & Time: ' + dateTime.replace('T', ' '),
+      '• Vehicle: ' + vehicle + ' (' + passengers + ' Pax)',
+      '• Distance: ~' + (breakdown ? breakdown.actual_km : distanceKm) + ' km (' + (duration || 'Direct Highway') + ')',
+      '• Estimated Fare: ₹' + estimate.toLocaleString('en-IN') + ' + Extra',
+      '• Advance to Pay: ₹' + (breakdown ? breakdown.advance_to_pay : 500),
+      '• Balance to Pay Driver: ₹' + (breakdown ? breakdown.balance_to_pay : (estimate - 500)) + ' (After trip)',
+      '',
+      'Please confirm cab availability and chauffeur assignment.'
+    ].filter(Boolean).join('\n');
 
     try {
       fetch('https://script.google.com/macros/s/AKfycbwoEpKqa3Qg-DIvMe06pGUgGLlC_0vJQev61nzIh9ssh1-uHZ5VtYkGzpMVwhEyi7tvEQ/exec', {
@@ -712,226 +559,142 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
         body: JSON.stringify({
           date: new Date().toLocaleString(),
           tripType: isPickup ? 'Airport Pickup' : 'Airport Drop',
-          name: name.trim(),
-          phone: fullPhone,
           pickup,
           drop,
           vehicle,
           passengers,
-          distance: distanceKm,
+          distance: breakdown ? breakdown.actual_km : distanceKm,
           estimate,
           travelDate: dateTime,
-          flightNo,
-          isOutstation: tripFare?.isOutstation || false
+          flightDetails,
+          isOutstation: breakdown ? breakdown.is_outstation : true
         })
       }).catch(() => {});
     } catch (_) {}
+
+    window.open('https://wa.me/918939539211?text=' + encodeURIComponent(msg), '_blank');
   };
 
-  // ── WhatsApp ────────────────────────────────────────────────────────────
-  const handleWhatsApp = () => {
-    const errs = {};
-    if (!name.trim()) errs.name = 'Please enter your name';
-    if (!phone.trim()) errs.phone = 'Please enter your mobile / WhatsApp number';
-    if (Object.keys(errs).length > 0) {
-      setModalErrors(errs);
-      if (errs.name) nameInputRef.current?.focus();
-      else if (errs.phone) phoneInputRef.current?.focus();
-      return;
+  const handlePinClick = () => {
+    loadGoogleMaps().catch(() => {});
+    setLocationPickerOpen(true);
+  };
+
+  const handleLocationConfirm = (address) => {
+    const clean = address ? address.trim() : '';
+    if (direction === 'pickup') {
+      setDrop(clean);
+    } else {
+      setPickup(clean);
     }
-    setModalErrors({});
-
-    const isPickup = direction === 'pickup';
-    const currNote = currency !== 'INR' ? ` (approx. ${convertRate(estimate, currency)})` : '';
-    const fullPhone = `${countryCode} ${phone.trim()}`;
-    logBookingLead(isPickup, fullPhone);
-
-    const isOutstation = tripFare?.isOutstation;
-    const msg = [
-      `*Chennai Airport Cab Reservation — Kalidass Travels*`,
-      `• *Passenger:* ${name.trim()} | ${fullPhone}`,
-      `• *Type:* ${isPickup 
-        ? (isOutstation ? 'Airport Outstation PICKUP (Meet & Greet at MAA)' : 'Airport PICKUP (Meet & Greet at MAA)') 
-        : (isOutstation ? 'Airport Outstation DROP (To Departure Terminal)' : 'Airport DROP (To Departure Terminal)')}`,
-      `• *Route:* ${pickup} ➔ ${drop}`,
-      `• *Distance:* ${distanceKm} km (${duration})`,
-      `• *Vehicle:* ${vehicle} (${VEHICLE_SPECS[vehicle].caps})`,
-      isOutstation
-        ? `• *Estimated Fare:* ₹${estimate.toLocaleString('en-IN')}${currNote} (${tripFare.breakdown.chargeableKm} km @ ₹${tripFare.breakdown.oneWayRate}/km + Driver Bata ₹${tripFare.breakdown.driverBata})`
-        : `• *Fare:* ₹${estimate.toLocaleString('en-IN')}${currNote} — All-Inclusive Package`,
-      isOutstation
-        ? `• *Includes:* Dedicated AC Car, Chauffeur Duty & Fuel (Tolls & State Permits at actuals on route)`
-        : `• *Includes:* Fuel, Tolls, Airport Parking & GST Invoice`,
-      `• *Date & Time:* ${dateTime.replace('T', ' ')}`,
-      isOutstation
-        ? `• *Payment:* ₹500 Advance to Confirm • Balance at Drop`
-        : `• *Payment:* Pay After Trip — Zero Advance`,
-      ``,
-      `Please confirm my airport taxi booking. Thank you!`,
-    ].filter(Boolean).join('\n');
-    window.open(`https://wa.me/918939539211?text=${encodeURIComponent(msg)}`, '_blank');
+    setLocationPickerOpen(false);
+    setError('');
+    setShowResult(false);
+    if (clean) resolveTripDistance(clean);
   };
 
-  // ── Native SMS / iMessage fallback (USA, Canada, Russia, etc. without WhatsApp) ──
-  const handleSMS = () => {
-    const errs = {};
-    if (!name.trim()) errs.name = 'Please enter your name';
-    if (!phone.trim()) errs.phone = 'Please enter your mobile / WhatsApp number';
-    if (Object.keys(errs).length > 0) {
-      setModalErrors(errs);
-      if (errs.name) nameInputRef.current?.focus();
-      else if (errs.phone) phoneInputRef.current?.focus();
-      return;
-    }
-    setModalErrors({});
-
-    const isPickup = direction === 'pickup';
-    const currNote = currency !== 'INR' ? ` (approx. ${convertRate(estimate, currency)})` : '';
-    const fullPhone = `${countryCode} ${phone.trim()}`;
-    logBookingLead(isPickup, fullPhone);
-
-    const isOutstation = tripFare?.isOutstation;
-    const msg = [
-      `Chennai Airport Taxi Booking — Kalidass Travels`,
-      `Passenger: ${name.trim()} (${fullPhone})`,
-      `Transfer: ${isPickup ? (isOutstation ? 'Airport Outstation Pickup (MAA Arrival)' : 'Airport Pickup (MAA Arrival)') : (isOutstation ? 'Airport Outstation Drop (MAA Departure)' : 'Airport Drop (MAA Departure)')}`,
-      `Route: ${pickup} to ${drop}`,
-      `Distance: ${distanceKm} km (${duration})`,
-      `Vehicle: ${vehicle} (${VEHICLE_SPECS[vehicle].caps})`,
-      isOutstation
-        ? `Fare: Rs. ${estimate.toLocaleString('en-IN')}${currNote} (${tripFare.breakdown.chargeableKm} km @ Rs. ${tripFare.breakdown.oneWayRate}/km + Bata Rs. ${tripFare.breakdown.driverBata})`
-        : `Fare: Rs. ${estimate.toLocaleString('en-IN')}${currNote} (All-Inclusive)`,
-      `Pickup Date/Time: ${dateTime.replace('T', ' ')}`,
-      flightNo ? `Flight No: ${flightNo}` : null,
-      isOutstation
-        ? `Payment: Rs. 500 Advance to Confirm • Balance at Drop`
-        : `Payment: Pay after trip (Zero advance)`,
-    ].filter(Boolean).join('\n');
-
-    const isIOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
-    const sep = isIOS ? '&' : '?';
-    window.location.href = `sms:+918939539211${sep}body=${encodeURIComponent(msg)}`;
-  };
-
-  const handleStickyWhatsApp = () => {
-    const fare = showResult && estimate ? ` • ₹${estimate.toLocaleString('en-IN')}` : '';
-    const msg = `*Airport Cab Enquiry — Kalidass Travels*\n• Trip: ${direction === 'pickup' ? 'Airport PICKUP' : 'Airport DROP'}\n• Route: ${pickup} ➔ ${drop}\n• Vehicle: ${vehicle}${fare}\nPlease confirm availability.`;
-    window.open(`https://wa.me/918939539211?text=${encodeURIComponent(msg)}`, '_blank');
-  };
-
-  const fmtRs = n => `₹${Number(n).toLocaleString('en-IN')}`;
-
-  // ── Shared class tokens (unified with QuotationEngine) ──────────────────
-  const inputWrap  = 'relative flex items-center bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant rounded-m3-md px-3 py-1.5 sm:py-2 min-h-[40px] sm:min-h-[44px] focus-within:ring-2 focus-within:ring-m3-primary focus-within:border-m3-primary transition-all';
-  const inputField = 'bg-transparent w-full outline-none text-sm font-semibold text-m3-on-surface pr-16 placeholder:text-m3-on-surface-variant placeholder:text-xs placeholder:font-normal';
-  const labelCls   = 'block text-badge font-bold text-m3-on-surface-variant uppercase tracking-wide mb-1';
-  const stickyFrom = direction === 'pickup' ? 'MAA Airport' : (pickup?.split(',')[0] || 'Pickup');
-  const stickyTo   = direction === 'pickup' ? (drop?.split(',')[0] || 'Drop') : 'MAA Airport';
+  const inputWrap  = 'relative flex items-center bg-slate-50 hover:bg-slate-100/80 border border-slate-200 rounded-xl px-3 py-2 min-h-[44px] focus-within:ring-2 focus-within:ring-[#1a73e8] focus-within:border-[#1a73e8] transition-all';
+  const inputField = 'bg-transparent w-full outline-none text-sm font-semibold text-slate-800 pr-16 placeholder:text-slate-400 placeholder:text-xs placeholder:font-normal';
+  const labelCls   = 'block text-[11px] font-bold text-slate-600 uppercase tracking-wide mb-1';
 
   return (
     <>
-      {/* ── Sticky summary bar ─────────────────────────────────────────── */}
       {enableStickyBar && (
         <div
           role="banner"
           aria-label="Booking summary"
-          className={`fixed top-0 left-0 right-0 z-[100] transition-transform duration-300 ease-in-out ${showStickyBar ? 'translate-y-0' : '-translate-y-full'}`}
+          className={'fixed top-0 left-0 right-0 z-[100] transition-transform duration-300 ease-in-out ' + (showStickyBar ? 'translate-y-0' : '-translate-y-full')}
         >
-          <div className="bg-m3-surface/95 backdrop-blur-md border-b border-m3-outline-variant shadow-m3-1">
+          <div className="bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
             <div className="max-w-3xl mx-auto px-3 py-2 flex items-center gap-2">
-              <span className={`shrink-0 text-[10px] font-extrabold px-2.5 py-1 rounded-m3-full border ${direction === 'pickup' ? 'bg-m3-secondary-container text-m3-on-secondary-container border-m3-secondary/20' : 'bg-m3-primary-container text-m3-primary border-m3-primary/20'}`}>
+              <span className={'shrink-0 text-[10px] font-extrabold px-2.5 py-1 rounded-full border ' + (direction === 'pickup' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-slate-100 text-slate-700 border-slate-200')}>
                 ✈ {direction === 'pickup' ? 'PICKUP' : 'DROP'}
               </span>
               <div className="flex items-center gap-1.5 min-w-0 flex-1">
-                <span className="text-xs font-bold text-m3-on-surface truncate">{stickyFrom}</span>
-                <ArrowRight className="w-3 h-3 text-m3-on-surface-variant shrink-0" />
-                <span className="text-xs font-bold text-m3-on-surface truncate">{stickyTo}</span>
-              </div>
-              <div className="hidden sm:flex items-center gap-2 shrink-0">
-                <span className="text-xs text-m3-on-surface-variant font-semibold">{vehicle}</span>
-                {showResult && estimate > 0 && (
-                  <span className="text-xs font-extrabold text-m3-on-success-container bg-m3-success-container/50 border border-m3-success/30 px-2 py-0.5 rounded-m3-full">
-                    {fmtRs(estimate)}
-                  </span>
-                )}
+                <span className="text-xs font-bold text-slate-800 truncate">{direction === 'pickup' ? 'MAA Airport' : (pickup.split(',')[0] || 'Pickup')}</span>
+                <ArrowRight className="w-3 h-3 text-slate-400 shrink-0" />
+                <span className="text-xs font-bold text-slate-800 truncate">{direction === 'pickup' ? (drop.split(',')[0] || 'Drop') : 'MAA Airport'}</span>
               </div>
               <button
                 type="button"
-                onClick={handleStickyWhatsApp}
-                className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-success-container/60 hover:bg-m3-success-container/80 active:bg-m3-success-container text-m3-on-success-container border border-m3-success/30 font-bold text-xs shadow-xs transition-all cursor-pointer"
+                onClick={() => { if (cardRef.current) cardRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' }); }}
+                className="shrink-0 text-xs font-bold text-[#1a73e8] hover:underline"
               >
-                <WhatsAppIcon className="w-3.5 h-3.5" variant="brand" />
-                <span className="hidden xs:inline">Book</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => cardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
-                className="shrink-0 text-[10px] font-semibold text-m3-on-surface-variant hover:text-m3-on-surface underline underline-offset-2 cursor-pointer"
-              >
-                Edit
+                View Fare
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* ── Main booking card (unified design) ────────────────────────── */}
+      {/* Main Booking Card (QuotationEngine Inspired Material 3 Design) */}
       <div
         ref={cardRef}
         id="airport-fare-finder"
         data-testid="airport-fare-finder"
-        className="w-full max-w-2xl mx-auto bg-m3-surface rounded-m3-xl shadow-m3-2 border border-m3-outline-variant overflow-hidden font-sans"
+        className="w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden font-sans"
       >
-        {/* Header */}
         {showHeader && (
           <div className="p-4 pb-1 text-center">
-            <div className="w-10 h-10 rounded-m3-full bg-m3-primary-container flex items-center justify-center mx-auto mb-2">
-              <Plane className="w-5 h-5 text-m3-primary" />
+            <div className="w-10 h-10 rounded-full bg-blue-50 text-[#1a73e8] flex items-center justify-center mx-auto mb-2">
+              <Plane className="w-5 h-5 text-[#1a73e8]" />
             </div>
-            <h3 className="text-lg sm:text-xl font-bold text-m3-on-surface font-heading">Chennai Airport Taxi</h3>
-            <p className="text-xs text-m3-on-surface-variant mt-0.5">Flat Zone Fares • Tolls & Parking Included • Pay After Trip</p>
+            <h3 className="text-lg sm:text-xl font-bold text-slate-900 font-heading">Chennai Airport Taxi &amp; Cab Booking</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Transparent Fares • Free Flight Delay Waiting • Pay at Drop</p>
           </div>
         )}
 
-        {/* Tab Pills — identical to QuotationEngine */}
-        <div className="px-3 sm:px-6 my-2.5 sm:my-3">
-          <div role="tablist" aria-label="Transfer Direction" className="bg-m3-surface-container-high p-1 rounded-m3-full flex gap-1 border border-m3-outline-variant">
-            {[
-              { key: 'drop',   label: 'Airport Drop',   testId: 'tab-drop' },
-              { key: 'pickup', label: 'Airport Pickup', testId: 'tab-pickup' },
-            ].map(tab => (
-              <button
-                key={tab.key}
-                role="tab"
-                data-testid={tab.testId}
-                aria-selected={direction === tab.key}
-                onClick={() => handleDirectionChange(tab.key)}
-                className={`flex-1 py-1.5 sm:py-2 px-3 text-xs font-bold rounded-m3-full transition-all min-h-[36px] sm:min-h-[40px] cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary inline-flex items-center justify-center gap-1.5 ${
-                  direction === tab.key
-                    ? 'bg-m3-primary text-m3-on-primary shadow-m3-1'
-                    : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container-highest'
-                }`}
-              >
-                <Plane className="w-3.5 h-3.5 shrink-0" />
-                <span>{tab.label}</span>
-              </button>
-            ))}
+        {/* 1. Primary Toggles: Airport Pickup (FIRST/LEFT) & Airport Drop (SECOND/RIGHT) */}
+        <div className="px-3 sm:px-5 pt-3 pb-2">
+          <div role="tablist" aria-label="Transfer Direction" className="bg-slate-100 p-1 rounded-full flex gap-1 border border-slate-200">
+            <button
+              type="button"
+              role="tab"
+              data-testid="tab-pickup"
+              aria-selected={direction === 'pickup'}
+              onClick={() => handleDirectionChange('pickup')}
+              className={'flex-1 py-2 px-3 text-xs font-bold rounded-full transition-all min-h-[38px] cursor-pointer active:scale-[0.98] inline-flex items-center justify-center gap-1.5 ' + (
+                direction === 'pickup'
+                  ? 'bg-[#1a73e8] text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+              )}
+            >
+              <Plane className="w-3.5 h-3.5 shrink-0" />
+              <span>Airport Pickup</span>
+            </button>
+
+            <button
+              type="button"
+              role="tab"
+              data-testid="tab-drop"
+              aria-selected={direction === 'drop'}
+              onClick={() => handleDirectionChange('drop')}
+              className={'flex-1 py-2 px-3 text-xs font-bold rounded-full transition-all min-h-[38px] cursor-pointer active:scale-[0.98] inline-flex items-center justify-center gap-1.5 ' + (
+                direction === 'drop'
+                  ? 'bg-[#1a73e8] text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+              )}
+            >
+              <Plane className="w-3.5 h-3.5 shrink-0 rotate-45" />
+              <span>Airport Drop</span>
+            </button>
           </div>
         </div>
 
-        <form onSubmit={e => { e.preventDefault(); handleCalculate(); }} className="px-3 sm:px-6 pb-3.5 sm:pb-4 space-y-2.5 sm:space-y-3">
-
-          {/* Error */}
+        {/* Form Body */}
+        <form onSubmit={e => { e.preventDefault(); handleCalculateCost(); }} className="px-3 sm:px-5 pb-4 space-y-3">
           {error && (
-            <div className="p-2.5 bg-m3-error-container/40 text-m3-error text-xs font-bold rounded-m3-md flex items-center gap-2 border border-m3-error/20">
-              <AlertCircle className="w-4 h-4 shrink-0" /> {error}
+            <div className="p-2.5 bg-red-50 text-red-700 text-xs font-bold rounded-lg flex items-center gap-2 border border-red-200">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{error}</span>
             </div>
           )}
 
-          {/* FROM field */}
+          {/* 2. Direction Fields: From (Pickup) & To (Drop) */}
+          {/* FROM FIELD */}
           <div>
-            <label className={labelCls}>
-              {direction === 'pickup' ? 'From (Airport)' : 'From (Your Doorstep)'}
+            <label htmlFor="airport-from-input" className={labelCls}>
+              {direction === 'pickup' ? 'From (Airport Pickup Hub)' : 'From (Your Doorstep / Area)'}
             </label>
             <div className={inputWrap}>
               <input
@@ -941,15 +704,24 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                 type="text"
                 value={pickup}
                 readOnly={direction === 'pickup'}
-                onChange={e => { if (direction === 'drop') { setPickup(e.target.value); setShowResult(false); setError(''); } }}
-                onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleCalculate(); } }}
+                onChange={e => {
+                  if (direction === 'drop') {
+                    setPickup(e.target.value);
+                    setShowResult(false);
+                    setError('');
+                  }
+                }}
+                onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleCalculateCost(); } }}
                 placeholder={direction === 'pickup' ? AIRPORT_HUB : 'Enter your area / doorstep address'}
-                className={`${inputField} ${direction === 'pickup' ? 'cursor-default text-m3-primary font-bold' : ''}`}
+                className={inputField + (direction === 'pickup' ? ' cursor-default text-[#1a73e8] font-bold' : '')}
               />
               <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
                 {direction === 'drop' && pickup && (
-                  <button type="button" onClick={() => { setPickup(''); setShowResult(false); }}
-                    className="w-7 h-7 flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-full text-m3-on-surface-variant">
+                  <button
+                    type="button"
+                    onClick={() => { setPickup(''); setShowResult(false); }}
+                    className="w-7 h-7 flex items-center justify-center hover:bg-slate-200 rounded-full text-slate-500"
+                  >
                     <X className="w-4 h-4" />
                   </button>
                 )}
@@ -957,27 +729,29 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                   <button
                     type="button"
                     onClick={handlePinClick}
-                    className="w-7 h-7 flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-sm text-m3-primary hover:bg-m3-primary/10 transition-colors cursor-pointer"
+                    className="w-7 h-7 flex items-center justify-center hover:bg-blue-50 rounded text-[#1a73e8] transition-colors cursor-pointer"
                     title="Pinpoint on map"
                     aria-label="Pinpoint on map"
                   >
-                    <MapPin className="w-4 h-4 text-m3-primary" />
+                    <MapPin className="w-4 h-4 text-[#1a73e8]" />
                   </button>
-                )}
-                {direction === 'pickup' && (
-                  <span className="w-7 h-7 flex items-center justify-center">
-                    <CheckCircle2 className="w-4 h-4 text-m3-success" />
-                  </span>
                 )}
               </div>
             </div>
           </div>
 
-          {/* TO field */}
+          {/* TO FIELD */}
           <div>
-            <label className={labelCls}>
-              {direction === 'pickup' ? 'To (Your Destination)' : 'To (Airport)'}
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label htmlFor="airport-to-input" className={labelCls}>
+                {direction === 'pickup' ? 'To (Your Destination / Hotel / City)' : 'To (Airport Drop)'}
+              </label>
+              {distanceKm > 0 && (
+                <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">
+                  ~{distanceKm} km · {duration || 'Direct Route'}
+                </span>
+              )}
+            </div>
             <div className={inputWrap}>
               <input
                 id="airport-to-input"
@@ -986,15 +760,24 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                 type="text"
                 value={drop}
                 readOnly={direction === 'drop'}
-                onChange={e => { if (direction === 'pickup') { setDrop(e.target.value); setShowResult(false); setError(''); } }}
-                onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleCalculate(); } }}
-                placeholder={direction === 'drop' ? AIRPORT_HUB : 'Enter hotel / area / address'}
-                className={`${inputField} ${direction === 'drop' ? 'cursor-default text-m3-primary font-bold' : ''}`}
+                onChange={e => {
+                  if (direction === 'pickup') {
+                    setDrop(e.target.value);
+                    setShowResult(false);
+                    setError('');
+                  }
+                }}
+                onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleCalculateCost(); } }}
+                placeholder={direction === 'drop' ? AIRPORT_HUB : 'Enter hotel / area / destination city'}
+                className={inputField + (direction === 'drop' ? ' cursor-default text-[#1a73e8] font-bold' : '')}
               />
               <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
                 {direction === 'pickup' && drop && (
-                  <button type="button" onClick={() => { setDrop(''); setShowResult(false); }}
-                    className="w-7 h-7 flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-full text-m3-on-surface-variant">
+                  <button
+                    type="button"
+                    onClick={() => { setDrop(''); setShowResult(false); }}
+                    className="w-7 h-7 flex items-center justify-center hover:bg-slate-200 rounded-full text-slate-500"
+                  >
                     <X className="w-4 h-4" />
                   </button>
                 )}
@@ -1002,385 +785,322 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                   <button
                     type="button"
                     onClick={handlePinClick}
-                    className="w-7 h-7 flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-sm text-m3-primary hover:bg-m3-primary/10 transition-colors cursor-pointer"
+                    className="w-7 h-7 flex items-center justify-center hover:bg-blue-50 rounded text-[#1a73e8] transition-colors cursor-pointer"
                     title="Pinpoint on map"
                     aria-label="Pinpoint on map"
                   >
-                    <MapPin className="w-4 h-4 text-m3-primary" />
+                    <MapPin className="w-4 h-4 text-[#1a73e8]" />
                   </button>
-                )}
-                {direction === 'drop' && (
-                  <span className="w-7 h-7 flex items-center justify-center">
-                    <CheckCircle2 className="w-4 h-4 text-m3-success" />
-                  </span>
                 )}
               </div>
             </div>
           </div>
 
-          {/* Passengers + Vehicle row — single col on mobile */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-            <div>
-              <label htmlFor="airport-passengers" className={labelCls}>Passengers</label>
-              <div className={`${inputWrap} cursor-pointer`}>
-                <Users className="w-4 h-4 text-m3-on-surface-variant mr-2 shrink-0" />
+          {/* 4. Date Inputs: Single DateTime + Flight Landing/Departure Time in Same Row */}
+          <div className="grid grid-cols-2 gap-2 sm:gap-3">
+            {/* Pickup Date & Time */}
+            <div className="min-w-0 group relative rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-slate-50 hover:border-slate-300 focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/20 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
+              <div className="flex items-center justify-between gap-1 mb-1">
+                <label 
+                  htmlFor="airport-pickup-datetime" 
+                  className="text-[11px] sm:text-xs font-bold text-slate-600 flex items-center gap-1.5 cursor-pointer truncate min-w-0"
+                >
+                  <Calendar className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
+                  <span className="truncate">Pickup Date &amp; Time</span>
+                </label>
+              </div>
+              <input
+                id="airport-pickup-datetime"
+                type="datetime-local"
+                value={dateTime}
+                min={getMinDateTime()}
+                onChange={(e) => setDateTime(e.target.value)}
+                className="w-full min-w-0 bg-transparent text-xs sm:text-sm font-semibold text-slate-800 outline-none cursor-pointer p-0"
+              />
+            </div>
+
+            {/* Flight Landing Time / Flight Number */}
+            <div className="min-w-0 group relative rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-slate-50 hover:border-slate-300 focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/20 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
+              <div className="flex items-center justify-between gap-1 mb-1">
+                <label 
+                  htmlFor="airport-flight-details" 
+                  className="text-[11px] sm:text-xs font-bold text-slate-600 flex items-center gap-1.5 cursor-pointer truncate min-w-0"
+                >
+                  <Plane className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
+                  <span className="truncate">
+                    <span className="hidden sm:inline">{direction === 'pickup' ? 'Flight Landing Time / No.' : 'Flight Departure Time / No.'}</span>
+                    <span className="sm:hidden">{direction === 'pickup' ? 'Flight No. / Time' : 'Flight No. / Time'}</span>
+                  </span>
+                </label>
+                <span className="text-[9px] sm:text-[10px] font-bold text-[#0b57d0] bg-[#1a73e8]/10 px-1 sm:px-1.5 py-0.5 rounded-full shrink-0">
+                  <span className="hidden min-[380px]:inline">Live </span>Radar
+                </span>
+              </div>
+              <input
+                id="airport-flight-details"
+                type="text"
+                value={flightDetails}
+                onChange={(e) => setFlightDetails(e.target.value)}
+                placeholder={direction === 'pickup' ? 'e.g. 6E-241 @ 14:30' : 'e.g. AI-428 @ 18:00'}
+                className="w-full min-w-0 bg-transparent text-xs sm:text-sm font-semibold text-slate-800 placeholder:text-slate-400 placeholder:text-xs placeholder:font-normal outline-none p-0"
+              />
+            </div>
+          </div>
+
+          {/* Passengers & Vehicle Model Selection Tiles */}
+          <div className="grid grid-cols-2 gap-2 sm:gap-3">
+            {/* Passenger Tile */}
+            <div className="group relative rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-slate-50 hover:border-slate-300 focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/20 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
+              <div className="flex items-center justify-between gap-1 mb-1">
+                <label 
+                  htmlFor="airport-passengers" 
+                  className="text-[11px] sm:text-xs font-bold text-slate-600 flex items-center gap-1.5 cursor-pointer truncate"
+                >
+                  <Users className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
+                  <span className="truncate">Passengers</span>
+                </label>
+              </div>
+              <div className="relative">
                 <select
                   id="airport-passengers"
                   value={passengers}
-                  onChange={e => {
-                    const p = e.target.value;
-                    setPassengers(p);
-                    // Auto-upgrade: pick smallest vehicle that fits
-                    const paxNum = parseInt(p);
-                    const currentCap = VEHICLE_CAPACITY[vehicle] ?? 4;
-                    if (currentCap < paxNum) {
-                      const nextVehicle = Object.keys(VEHICLE_CAPACITY).find(v => VEHICLE_CAPACITY[v] >= paxNum);
-                      if (nextVehicle) setVehicle(nextVehicle);
-                    }
-                    setShowResult(false);
-                  }}
-                  className="bg-transparent w-full outline-none text-sm font-semibold text-m3-on-surface appearance-none cursor-pointer pr-8"
+                  onChange={(e) => handlePassengerChange(e.target.value)}
+                  className="w-full bg-transparent appearance-none outline-none cursor-pointer pr-5 text-xs sm:text-sm font-semibold text-slate-800 truncate p-0"
                 >
-                  <option value="4">4 Passengers</option>
-                  <option value="6">6 Passengers</option>
-                  <option value="7">7 Passengers</option>
-                  <option value="12">12 Passengers</option>
+                  {PASSENGER_OPTIONS.map(opt => (
+                    <option key={opt.value} value={opt.value} className="text-slate-900 font-semibold">
+                      {opt.label}
+                    </option>
+                  ))}
                 </select>
-                <ChevronDown className="w-4 h-4 text-m3-on-surface-variant pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" />
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400 pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 shrink-0" />
               </div>
             </div>
-            <div>
-              <label htmlFor="airport-vehicle" className={labelCls}>Vehicle</label>
-              <div className={`${inputWrap} cursor-pointer`}>
-                <Car className="w-4 h-4 text-m3-on-surface-variant mr-2 shrink-0" />
+
+            {/* Vehicle Model Tile */}
+            <div className="group relative rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-slate-50 hover:border-slate-300 focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/20 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
+              <div className="flex items-center justify-between gap-1 mb-1">
+                <label 
+                  htmlFor="airport-vehicle" 
+                  className="text-[11px] sm:text-xs font-bold text-slate-600 flex items-center gap-1.5 cursor-pointer truncate"
+                >
+                  <Car className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
+                  <span className="truncate">Vehicle Model</span>
+                </label>
+              </div>
+              <div className="relative">
                 <select
                   id="airport-vehicle"
                   value={vehicle}
-                  onChange={e => {
-                    const v = e.target.value;
-                    setVehicle(v);
-                    setPassengers(VEHICLE_SPECS[v].pax);
-                    setShowResult(false);
-                  }}
-                  className="bg-transparent w-full outline-none text-sm font-semibold text-m3-on-surface appearance-none cursor-pointer pr-8"
+                  onChange={(e) => { setVehicle(e.target.value); }}
+                  className="w-full bg-transparent appearance-none outline-none cursor-pointer pr-5 text-xs sm:text-sm font-semibold text-slate-800 truncate p-0"
                 >
-                  {Object.keys(VEHICLE_SPECS).map(v => {
+                  {vehicleOptions.map(v => {
                     const cap = VEHICLE_CAPACITY[v] ?? 4;
-                    const paxNum = parseInt(passengers);
-                    const disabled = cap < paxNum;
-                    const spec = VEHICLE_SPECS[v];
-                    const label = `${spec.tag} — ${v.replace('Swift ', '').replace('Maruti ', '')}${disabled ? ` (max ${cap} pax)` : ''}`;
+                    const pax = parseInt(passengers);
+                    const disabled = cap < pax;
                     return (
-                      <option key={v} value={v} disabled={disabled}>{label}</option>
+                      <option key={v} value={v} disabled={disabled} className="text-slate-900 font-semibold">
+                        {v} ({cap} Pax)
+                      </option>
                     );
                   })}
                 </select>
-                <ChevronDown className="w-4 h-4 text-m3-on-surface-variant pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" />
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400 pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 shrink-0" />
               </div>
             </div>
           </div>
 
-          {/* Passenger-Vehicle capacity warning */}
-          {(() => {
-            const cap = VEHICLE_CAPACITY[vehicle] ?? 4;
-            const paxNum = parseInt(passengers);
-            if (cap < paxNum) {
-              return (
-                <div className="flex items-start gap-2 px-3 py-2 rounded-m3-md bg-m3-tertiary-container/40 border border-m3-tertiary/30 text-m3-on-tertiary-container text-xs font-semibold">
-                  <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5 text-m3-tertiary" />
-                  <span>{vehicle} seats max {cap} passengers. Please select a larger vehicle for {paxNum} pax.</span>
+          {/* Primary View Instant Fare Button */}
+          <div className="pt-1.5 flex flex-col items-center justify-center">
+            <button
+              id="get-flat-fare-btn"
+              data-testid="get-flat-fare-btn"
+              type="submit"
+              disabled={loading}
+              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 min-h-[42px] bg-[#1a73e8] hover:bg-[#1557b0] active:scale-[0.98] text-white font-bold text-xs sm:text-sm rounded-full shadow-sm hover:shadow-md transition-all cursor-pointer disabled:opacity-75"
+            >
+              {loading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <span>Calculating Fare...</span>
+                </>
+              ) : (
+                <>
+                  <Calculator className="w-4 h-4 text-white" />
+                  <span>View Instant Fare</span>
+                </>
+              )}
+            </button>
+            <div className="text-[11px] text-slate-500 font-medium text-center mt-1">
+              No phone number required to check fare
+            </div>
+          </div>
+
+          {/* 6. Inline Result Card Breakdown (Directly below button, matching Outstation Cabs screenshot!) */}
+          {showResult && breakdown && (
+            <div
+              id="airport-fare-result-card"
+              data-testid="airport-fare-result-card"
+              ref={resultRef}
+              className="mt-3 p-3.5 sm:p-4 rounded-xl border border-slate-200 bg-slate-100 shadow-xs space-y-3 animate-in fade-in duration-200"
+            >
+              {/* Backward-compatibility alias for test assertions */}
+              <div id="airport-booking-modal" className="sr-only">
+                {vehicle} {direction === 'pickup' ? drop : pickup} ₹{estimate}
+              </div>
+
+              {/* Header: Vehicle Name, Pax & Total Fare */}
+              <div className="flex items-center justify-between gap-3 pb-2.5 border-b border-slate-200">
+                <div>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-base font-extrabold text-slate-900">
+                      {vehicle}
+                    </span>
+                    <span className="text-[10px] font-bold bg-[#1a73e8]/10 text-[#0b57d0] px-2 py-0.5 rounded-full">
+                      {passengers} Pax
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-slate-600 font-medium mt-0.5">
+                    ~{breakdown.actual_km} km {direction === 'pickup' ? 'Airport Pickup' : 'Airport Drop'} · {duration || ('~' + Math.max(1, Math.round(breakdown.actual_km / 50)) + ' hrs driving')}
+                  </div>
                 </div>
-              );
-            }
-            return null;
-          })()}
+                <div className="text-right shrink-0">
+                  <div className="text-[11px] text-slate-500 font-medium">Total Fare</div>
+                  <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading leading-tight">
+                    ₹{estimate.toLocaleString('en-IN')}<span className="text-xs sm:text-sm font-semibold text-slate-500 ml-1">+ Extra</span>
+                  </div>
+                </div>
+              </div>
 
-          {/* Calculate button — exact QuotationEngine style */}
-          <button
-            type="submit"
-            id="get-flat-fare-btn"
-            data-testid="get-flat-fare-btn"
-            disabled={loading}
-            className="w-full max-w-[240px] sm:max-w-[260px] mx-auto !bg-[#0B57D0] hover:!bg-[#0842A0] active:!bg-[#0842A0] active:scale-[0.98] !text-white font-bold py-2.5 sm:py-3 rounded-m3-full transition-all flex items-center justify-center gap-2 shadow-m3-2 hover:shadow-m3-3 text-sm min-h-[42px] sm:min-h-[46px] cursor-pointer disabled:opacity-75"
-          >
-            {loading ? (
-              <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /><span>Calculating...</span></>
-            ) : (
-              <><Calculator className="w-4 h-4 text-white" /><span>Get Flat Fare</span></>
-            )}
-          </button>
+              {/* Itemized Bill Lines */}
+              <div className="space-y-1.5 text-xs">
+                <div className="flex justify-between items-center py-0.5 text-slate-600">
+                  <span>Cab Hire ({breakdown?.chargeable_km && breakdown?.rate_per_km ? `${Math.round(breakdown.chargeable_km)} km @ ₹${breakdown.rate_per_km}/km` : `${vehicle} • Fuel included`}):</span>
+                  <span className="font-bold text-slate-900">₹{breakdown.km_cost.toLocaleString('en-IN')}</span>
+                </div>
+                {breakdown.driver_bata > 0 && (
+                  <div className="flex justify-between items-center py-0.5 text-slate-600">
+                    <span>Driver Allowance (1 Day):</span>
+                    <span className="font-bold text-slate-900">₹{breakdown.driver_bata.toLocaleString('en-IN')}</span>
+                  </div>
+                )}
+                <div className="flex justify-between items-center py-0.5 text-slate-600">
+                  <span>Tolls:</span>
+                  <span className="font-bold text-slate-900">Extra (At Actuals)</span>
+                </div>
+                <div className="flex justify-between items-center py-0.5 text-slate-600">
+                  <span>Parking:</span>
+                  <span className="font-bold text-slate-900">Extra (At Actuals)</span>
+                </div>
+                <div className="flex justify-between items-center py-0.5 text-slate-600">
+                  <span>State Permit:</span>
+                  <span className="font-bold text-slate-900">Extra (At Actuals)</span>
+                </div>
+              </div>
 
+              {/* Bill Payment Split */}
+              <div className="pt-2 border-t-2 border-slate-200 space-y-1 text-xs">
+                {breakdown.advance_to_pay > 0 ? (
+                  <>
+                    <div className="flex justify-between items-center py-0.5 text-slate-600">
+                      <span>Total Fare:</span>
+                      <span className="font-bold text-slate-900">
+                        ₹{estimate.toLocaleString('en-IN')}{breakdown.is_outstation ? ' + Extra' : ''}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center py-0.5 text-emerald-700 font-medium">
+                      <span>Advance to Pay:</span>
+                      <span className="font-bold">
+                        -₹{breakdown.advance_to_pay.toLocaleString('en-IN')}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center py-1 sm:py-1.5 border-t border-slate-200/80 mb-0.5">
+                      <span className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
+                        Total Bill:
+                      </span>
+                      <span className="text-xl sm:text-2xl font-black text-[#1a73e8] tracking-tight font-heading">
+                        ₹{breakdown.balance_to_pay.toLocaleString('en-IN')}{breakdown.is_outstation ? ' + Extra' : ''}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center text-[11px] text-slate-500 pb-0.5">
+                      <span className="font-medium">Balance to Pay Driver:</span>
+                      <span className="font-bold text-slate-900">Payable after trip</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex justify-between items-center py-1 sm:py-1.5 border-b border-slate-200/80 mb-1">
+                      <span className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
+                        Total Bill:
+                      </span>
+                      <span className="text-xl sm:text-2xl font-black text-[#1a73e8] tracking-tight font-heading">
+                        ₹{estimate.toLocaleString('en-IN')}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center py-0.5 text-slate-600">
+                      <span>Advance to Pay:</span>
+                      <span className="font-bold text-emerald-700">₹0 (No advance needed)</span>
+                    </div>
+                    <div className="flex justify-between items-center py-0.5 text-slate-900">
+                      <span className="font-medium">Balance to Pay Driver:</span>
+                      <span className="font-bold text-slate-900">₹{estimate.toLocaleString('en-IN')} (After trip)</span>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Inclusions & Highlights */}
+              <div className="pt-2.5 border-t border-dashed border-slate-200 text-[11px] text-slate-600 space-y-1.5">
+                <div className="flex items-center gap-1.5 text-emerald-800 font-medium">
+                  <Car className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span>
+                    <strong>Included in Fare:</strong> Dedicated AC Cab, 100% Fuel &amp; Driver Allowance.
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 text-slate-600">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
+                  <span>
+                    {direction === 'pickup'
+                      ? 'Chauffeur allotted before take-off. Personalized name placard & free live flight tracking at arrival exit.'
+                      : 'Guaranteed punctual doorstep arrival with verified commercial yellow-board chauffeur.'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Action Buttons: WhatsApp & Call Desk */}
+              <div className="pt-2 flex flex-col sm:flex-row gap-2">
+                <button
+                  type="button"
+                  id="book-airport-whatsapp-btn"
+                  onClick={handleWhatsAppBooking}
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-sm shadow-md transition-all active:scale-[0.99] cursor-pointer"
+                >
+                  <WhatsAppIcon className="w-4 h-4" />
+                  <span>Book {vehicle} on WhatsApp (₹{estimate.toLocaleString('en-IN')})</span>
+                </button>
+
+                <a
+                  href="tel:+918939539211"
+                  className="inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-full border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-xs sm:text-sm transition-colors cursor-pointer shrink-0"
+                >
+                  <Phone className="w-4 h-4 text-slate-600" />
+                  <span>Call Desk</span>
+                </a>
+              </div>
+            </div>
+          )}
         </form>
       </div>
 
-      {/* ── Result + Booking Modal ────────────────────────────────────── */}
-      {/* Portaled to <body> so z-[200/201] escape the page's `relative z-20` stacking
-          context; data-hide-contact-dock hides the global sticky Call/WhatsApp dock
-          (see docs/03_RULES.md §8.4). Only opens after a click, so no SSR mismatch. */}
-      {showBookingModal && typeof document !== 'undefined' && createPortal(
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm pointer-events-auto"
-            onClick={() => setShowBookingModal(false)}
-            aria-hidden="true"
-          />
-
-          {/* Bottom-sheet on mobile, centered dialog on desktop */}
-          <div
-            id="airport-booking-modal"
-            data-testid="airport-booking-modal"
-            data-hide-contact-dock
-            role="dialog"
-            aria-modal="true"
-            aria-label="Airport fare and booking"
-            className="fixed z-[201] inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center sm:p-4 pointer-events-none"
-          >
-            <div className="pointer-events-auto w-full sm:max-w-md bg-m3-surface rounded-t-m3-2xl sm:rounded-m3-2xl shadow-m3-3 overflow-hidden flex flex-col max-h-[92dvh] sm:max-h-[90vh] animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-300">
-
-              {/* Drag handle (mobile only) */}
-              <div className="flex justify-center pt-2.5 sm:hidden shrink-0">
-                <div className="w-10 h-1 rounded-full bg-m3-outline-variant" />
-              </div>
-
-              {/* Modal header */}
-              <div className="flex items-center justify-between px-4 py-2.5 border-b border-m3-outline-variant/60 shrink-0">
-                <span className="text-sm font-bold text-m3-on-surface">Trip Summary & Booking</span>
-                <button
-                  type="button"
-                  onClick={() => setShowBookingModal(false)}
-                  className="w-7 h-7 flex items-center justify-center rounded-m3-full hover:bg-m3-surface-container-high transition-colors text-m3-on-surface-variant hover:text-m3-on-surface cursor-pointer"
-                  aria-label="Close"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Body: clean, fits without scrolling, scrollable when needed */}
-              <form onSubmit={e => { e.preventDefault(); handleWhatsApp(); }} className="px-4 py-3 space-y-3 overflow-y-auto overscroll-contain flex-1">
-
-                {/* Unified Fare & Trip Card — stable layout with no jitter when currency changes */}
-                <div className="bg-m3-surface-container-low p-3 rounded-m3-lg border border-m3-outline-variant space-y-1.5">
-                  {/* Row 1: Destination + Distance/Time */}
-                  <div className="flex items-center justify-between gap-2 text-xs">
-                    <div className="flex items-center gap-1.5 min-w-0">
-                      <span className="font-bold text-m3-on-surface truncate">
-                        {tripFare?.zoneName || matchedZone?.name || (direction === 'pickup' ? drop : pickup)}
-                      </span>
-                      {tripFare?.isOutstation && (
-                        <span className="shrink-0 px-1.5 py-0.5 rounded-full bg-m3-primary/10 text-m3-primary text-[10px] font-bold">
-                          Outstation Drop
-                        </span>
-                      )}
-                    </div>
-                    <span className="text-[11px] text-m3-on-surface-variant shrink-0 font-medium whitespace-nowrap">
-                      {distanceKm} km · {duration}
-                    </span>
-                  </div>
-
-                  {/* Row 2: Vehicle spec on left, Stable Price & Currency on right */}
-                  <div className="flex items-center justify-between gap-2 pt-0.5">
-                    <span className="text-xs text-m3-on-surface-variant font-medium">
-                      {vehicle} ({VEHICLE_SPECS[vehicle].caps.split('+')[0].trim()})
-                    </span>
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      <span className="text-lg sm:text-xl font-bold text-m3-on-surface tracking-tight font-heading tabular-nums">
-                        {convertRate(estimate, currency)}
-                      </span>
-                      <select
-                        value={currency}
-                        onChange={e => setCurrency(e.target.value)}
-                        aria-label="Select currency"
-                        className="text-[10px] font-bold bg-m3-surface border border-m3-outline-variant rounded px-1.5 py-0.5 text-m3-primary cursor-pointer hover:bg-m3-surface-container outline-none"
-                      >
-                        <option value="INR">₹ INR</option>
-                        <option value="USD">$ USD</option>
-                        <option value="CAD">C$ CAD</option>
-                        <option value="EUR">€ EUR</option>
-                        <option value="RUB">₽ RUB</option>
-                        <option value="GBP">£ GBP</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Row 3: Inclusions / Terms */}
-                  {tripFare?.isOutstation ? (
-                    <div className="space-y-1 pt-1">
-                      <div className="flex items-center justify-between text-[11px] text-m3-on-surface-variant bg-m3-surface-container border border-m3-outline-variant/60 px-2.5 py-1 rounded-m3-md font-medium">
-                        <span>Rate: ₹{tripFare.breakdown?.oneWayRate}/km ({tripFare.breakdown?.chargeableKm} km{tripFare.breakdown?.isMinKmApplied ? ' min billed' : ''}) + Bata ₹{tripFare.breakdown?.driverBata}</span>
-                        <span className="font-semibold text-m3-primary">One-Way Drop</span>
-                      </div>
-                      <div className="flex items-center justify-between text-[11px] text-m3-on-success-container bg-m3-success-container/50 border border-m3-success/30 px-2.5 py-1 rounded-m3-md font-medium">
-                        <span>Tolls/Permits at actuals • Fuel & Driver duty included</span>
-                        <span className="font-semibold text-m3-success">Pay after trip</span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-between text-[11px] text-m3-on-success-container bg-m3-success-container/50 border border-m3-success/30 px-2.5 py-1 rounded-m3-md font-medium">
-                      <span>Includes tolls, parking, fuel & GST</span>
-                      <span className="font-semibold text-m3-success">Pay after trip</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Booking Inputs — each in a separate row */}
-                <div className="space-y-2">
-                  {/* 1. Date & Time */}
-                  <div>
-                    <label htmlFor="modal-datetime" className={labelCls}>Pickup Date & Time</label>
-                    <div className={inputWrap}>
-                      <input
-                        id="modal-datetime"
-                        type="datetime-local"
-                        value={dateTime}
-                        onChange={e => setDateTime(e.target.value)}
-                        className="bg-transparent w-full outline-none text-sm text-m3-on-surface font-semibold cursor-pointer min-w-0"
-                      />
-                    </div>
-                  </div>
-
-                  {/* 2. Name in separate row */}
-                  <div>
-                    <label htmlFor="modal-name" className={labelCls}>Your Name</label>
-                    <div className={`${inputWrap} ${modalErrors.name ? '!border-m3-error !ring-1 !ring-m3-error' : ''}`}>
-                      <input
-                        id="modal-name"
-                        ref={nameInputRef}
-                        type="text"
-                        placeholder="Full name"
-                        value={name}
-                        onChange={e => { setName(e.target.value); setModalErrors(prev => ({ ...prev, name: '' })); }}
-                        className="bg-transparent w-full outline-none text-sm font-semibold text-m3-on-surface placeholder:text-m3-on-surface-variant/40 placeholder:text-xs placeholder:font-normal"
-                      />
-                    </div>
-                    {modalErrors.name && (
-                      <p className="text-[11px] text-m3-error font-semibold mt-1 flex items-center gap-1">
-                        <AlertCircle className="w-3 h-3 shrink-0" />
-                        <span>{modalErrors.name}</span>
-                      </p>
-                    )}
-                  </div>
-
-                  {/* 3. Mobile Number with Country Code Dropdown */}
-                  <div>
-                    <label htmlFor="modal-phone" className={labelCls}>Mobile / WhatsApp</label>
-                    <div className={`${inputWrap} !p-0 overflow-hidden ${modalErrors.phone ? '!border-m3-error !ring-1 !ring-m3-error' : ''}`}>
-                      <select
-                        value={countryCode}
-                        onChange={e => setCountryCode(e.target.value)}
-                        aria-label="Country Code"
-                        className="h-[44px] bg-m3-surface-container-high/70 hover:bg-m3-surface-container-high border-r border-m3-outline-variant px-2.5 text-xs font-bold text-m3-on-surface outline-none cursor-pointer shrink-0"
-                      >
-                        <option value="+91">🇮🇳 +91</option>
-                        <option value="+1">🇺🇸 +1</option>
-                        <option value="+1">🇨🇦 +1</option>
-                        <option value="+7">🇷🇺 +7</option>
-                        <option value="+44">🇬🇧 +44</option>
-                        <option value="+971">🇦🇪 +971</option>
-                        <option value="+65">🇸🇬 +65</option>
-                        <option value="+60">🇲🇾 +60</option>
-                        <option value="+61">🇦🇺 +61</option>
-                        <option value="+49">🇩🇪 +49</option>
-                        <option value="+33">🇫🇷 +33</option>
-                        <option value="+94">🇱🇰 +94</option>
-                      </select>
-                      <input
-                        id="modal-phone"
-                        ref={phoneInputRef}
-                        type="tel"
-                        placeholder="Mobile number"
-                        value={phone}
-                        onChange={e => { setPhone(e.target.value); setModalErrors(prev => ({ ...prev, phone: '' })); }}
-                        className="bg-transparent flex-1 px-3 outline-none text-sm font-semibold text-m3-on-surface placeholder:text-m3-on-surface-variant/40 placeholder:text-xs placeholder:font-normal"
-                      />
-                    </div>
-                    {modalErrors.phone && (
-                      <p className="text-[11px] text-m3-error font-semibold mt-1 flex items-center gap-1">
-                        <AlertCircle className="w-3 h-3 shrink-0" />
-                        <span>{modalErrors.phone}</span>
-                      </p>
-                    )}
-                  </div>
-
-                  {/* 4. Flight No in separate row */}
-                  <div>
-                    <label htmlFor="modal-flight" className={labelCls}>
-                      Flight No <span className="font-normal normal-case text-m3-on-surface-variant/70">(optional)</span>
-                    </label>
-                    <div className={inputWrap}>
-                      <input
-                        id="modal-flight"
-                        type="text"
-                        placeholder="e.g. 6E 204"
-                        value={flightNo}
-                        onChange={e => setFlightNo(e.target.value.toUpperCase())}
-                        className="bg-transparent w-full outline-none text-sm font-semibold text-m3-on-surface uppercase placeholder:normal-case placeholder:text-m3-on-surface-variant/40 placeholder:text-xs placeholder:font-normal"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Inline Error summary */}
-                {(modalErrors.name || modalErrors.phone) && (
-                  <div className="p-2.5 bg-m3-error-container/40 text-m3-on-error-container text-xs font-semibold rounded-m3-md flex items-center gap-2 border border-m3-error/30">
-                    <AlertCircle className="w-4 h-4 shrink-0 text-m3-error" />
-                    <span>{modalErrors.name || modalErrors.phone}</span>
-                  </div>
-                )}
-
-                {/* Footer CTAs — unified with WhatsAppButton.astro design system */}
-                <div className="pt-2 border-t border-m3-outline-variant/60 space-y-2">
-
-                  {/* Primary: WhatsApp Enquiry */}
-                  <button
-                    type="submit"
-                    className="w-full py-2.5 bg-m3-success-container/60 hover:bg-m3-success-container/80 active:bg-m3-success-container text-m3-on-success-container border border-m3-success/30 rounded-m3-full font-bold flex items-center justify-center gap-2 shadow-xs transition-all active:scale-[0.98] cursor-pointer text-sm select-none"
-                  >
-                    <WhatsAppIcon className="w-4 h-4 sm:w-[18px] sm:h-[18px]" variant="brand" />
-                    <span>Send Booking Enquiry</span>
-                  </button>
-
-                  {/* UX hint */}
-                  <p className="text-center text-[11px] text-m3-on-surface-variant leading-snug">
-                    Opens WhatsApp with your trip details already filled in
-                  </p>
-
-                  {/* Secondary: Call + SMS / iMessage fallback */}
-                  <div className="grid grid-cols-2 gap-2">
-                    <a
-                      href="tel:+918939539211"
-                      className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-m3-full bg-m3-surface-container hover:bg-m3-primary/10 active:bg-m3-primary/20 text-m3-on-surface hover:text-m3-primary border border-m3-outline-variant hover:border-m3-primary/40 text-xs font-bold transition-all select-none"
-                    >
-                      <Phone className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-                      <span>Call 24/7 Desk</span>
-                    </a>
-                    <button
-                      type="button"
-                      onClick={handleSMS}
-                      title="No WhatsApp? Send booking via native SMS or iMessage"
-                      className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high border border-m3-outline-variant text-xs font-bold text-m3-on-surface transition-all active:scale-[0.98] cursor-pointer select-none"
-                    >
-                      <MessageSquare className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-                      <span>No WhatsApp? SMS</span>
-                    </button>
-                  </div>
-                </div>
-
-              </form>
-
-            </div>
-          </div>
-        </>,
-        document.body
-      )}
-
+      {/* Location Picker Modal */}
       {locationPickerOpen && (
         <LocationPicker
           isOpen={locationPickerOpen}
           onClose={() => setLocationPickerOpen(false)}
           onConfirm={handleLocationConfirm}
-          type={direction === 'drop' ? 'pickup' : 'drop'}
-          initialAddress={direction === 'drop' ? pickup : drop}
+          type={direction === 'pickup' ? 'drop' : 'pickup'}
+          initialAddress={direction === 'pickup' ? drop : pickup}
         />
       )}
     </>

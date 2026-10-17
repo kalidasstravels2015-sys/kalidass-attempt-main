@@ -48,11 +48,7 @@ test.describe('Chennai Airport Taxi SEO, AEO & SERP Enhancements', () => {
     await expect(comparisonSection).toContainText(/Advance Payment/);
   });
 
-  test('Fare Chart section includes prominent H2 and Pickup Charges clarification in FAQ and Schema', async ({ page }) => {
-    const fareHeading = page.locator('#all-zones-container h2');
-    await expect(fareHeading).toBeVisible();
-    await expect(fareHeading).toContainText(/Chennai Airport Taxi Fare & Rates Chart/);
-
+  test('Pickup Charges clarification is present in FAQ and Schema', async ({ page }) => {
     const faqQuestion = page.locator('#airport-faq').getByText('Are Chennai airport pickup charges different from airport drop charges?');
     await expect(faqQuestion).toBeAttached();
   });

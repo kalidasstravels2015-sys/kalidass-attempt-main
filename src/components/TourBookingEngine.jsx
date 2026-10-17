@@ -1618,7 +1618,7 @@ Please confirm booking!`;
               <span>View Instant Fare</span>
             </button>
             <p className="text-[11px] text-m3-on-surface-variant/80 text-center font-medium max-w-sm">
-              ✓ No phone number required to check fare
+              No phone number required to check fare
             </p>
           </div>
 
@@ -1626,9 +1626,9 @@ Please confirm booking!`;
           {showResult && Boolean(pickup.trim()) && (
             <div ref={resultRef} className="pt-3 border-t border-m3-outline-variant/60 space-y-3 animate-in fade-in duration-200">
               {/* Rate Summary Card — Restaurant Bill Style */}
-              <div className="bg-white border border-m3-outline-variant/80 rounded-xl p-3.5 space-y-3 shadow-2xs">
+              <div className="bg-slate-100 border border-slate-200 rounded-xl p-3.5 space-y-3 shadow-xs">
                 {/* Header: Vehicle Name, Pax & Total Fare */}
-                <div className="flex items-center justify-between gap-3 pb-2.5 border-b border-m3-outline-variant/60">
+                <div className="flex items-center justify-between gap-3 pb-2.5 border-b border-slate-200">
                   <div>
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span className="text-base font-extrabold text-m3-on-surface">
@@ -1675,34 +1675,42 @@ Please confirm booking!`;
                     </div>
                   )}
                   {isAfter24Hours && (
-                    <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                      <span>Tolls, Parking &amp; Permits:</span>
-                      <span className="font-bold text-m3-on-surface">Extra (At Actuals)</span>
-                    </div>
+                    <>
+                      <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                        <span>Tolls:</span>
+                        <span className="font-bold text-m3-on-surface">Extra (At Actuals)</span>
+                      </div>
+                      <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                        <span>Parking:</span>
+                        <span className="font-bold text-m3-on-surface">Extra (At Actuals)</span>
+                      </div>
+                      <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                        <span>State Permit:</span>
+                        <span className="font-bold text-m3-on-surface">Extra (At Actuals)</span>
+                      </div>
+                    </>
                   )}
                 </div>
 
                 {/* Bill Payment Split */}
-                <div className="pt-2 border-t-2 border-slate-200 space-y-1 text-xs">
-                  <div className="flex justify-between items-center py-1 sm:py-1.5 border-b border-slate-200/80 mb-1">
-                    <span className="text-base sm:text-lg font-black text-m3-on-surface tracking-tight">Total Bill:</span>
-                    <span className="text-xl sm:text-2xl font-black text-m3-primary tracking-tight font-heading">
-                      {activePayableFare}{isAfter24Hours ? ' + Extra' : ''}
-                    </span>
-                  </div>
+                <div className="pt-2 border-t border-slate-200/80 space-y-1 text-xs">
                   <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                    <span>Advance to Pay:</span>
-                    <span className="font-bold text-emerald-700">₹500</span>
+                    <span>Total Bill:</span>
+                    <span className="font-bold text-m3-on-surface">{activePayableFare}{isAfter24Hours ? ' + Extra' : ''}</span>
                   </div>
-                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface">
+                  <div className="flex justify-between items-center py-0.5 text-emerald-700 font-medium">
+                    <span>Advance to Pay:</span>
+                    <span className="font-bold">-₹500</span>
+                  </div>
+                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface border-t border-slate-200/60 pt-1">
                     <span className="font-medium">Balance to Pay Driver:</span>
-                    <span className="font-bold text-m3-on-surface">{formattedBalancePayable}{isAfter24Hours ? ' + Extra' : ''} <span className="text-[11px] font-normal text-m3-on-surface-variant">(After trip)</span></span>
+                    <span className="font-bold text-m3-on-surface">{formattedBalancePayable}{isAfter24Hours ? ' + Extra' : ''} <span className="text-[10px] font-normal text-m3-on-surface-variant">(After trip)</span></span>
                   </div>
                 </div>
 
                 {/* Cut and Dried Notes */}
                 {isAfter24Hours ? (
-                  <div className="pt-2.5 border-t border-dashed border-m3-outline-variant/80 text-[11px] text-m3-on-surface-variant space-y-1.5">
+                  <div className="pt-2.5 border-t border-dashed border-slate-200 text-[11px] text-m3-on-surface-variant space-y-1.5">
                     {/* Inclusions Line */}
                     <div className="flex items-center gap-1.5 text-emerald-800 font-medium">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
@@ -1718,7 +1726,7 @@ Please confirm booking!`;
                     </div>
                   </div>
                 ) : (
-                  <div className="pt-2 border-t border-dashed border-m3-outline-variant/80 text-[11px] text-m3-on-surface-variant space-y-1">
+                  <div className="pt-2 border-t border-dashed border-slate-200 text-[11px] text-m3-on-surface-variant space-y-1">
                     <div className="flex items-center gap-1.5 text-emerald-800 font-medium">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                       <span>

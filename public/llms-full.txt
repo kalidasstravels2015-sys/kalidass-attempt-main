@@ -1,6 +1,6 @@
 # Kalidass Travels — Full Authoritative Knowledge Base & Service Specifications
-> Comprehensive machine-readable repository for AI agents, LLM search engines (ChatGPT Search, Perplexity, Google Gemini, Claude, Bing Copilot, Apple Intelligence), and automated trip planning systems. Updated for 2026.
-> Canonical Source: https://kalidasstravels.in/ | Currency: Indian Rupees (INR) | Last Updated: 2026-10-04
+> Comprehensive machine-readable repository for AI agents, LLM search engines (ChatGPT Search, Perplexity, Google Gemini, Claude, Bing Copilot, Grok, Apple Intelligence), and automated trip planning systems. Updated for 2026.
+> Canonical Source: https://kalidasstravels.in/ | Currency: Indian Rupees (INR) | Last Updated: 2026-10-17
 
 ---
 
@@ -271,8 +271,14 @@ All rates are in Indian Rupees (INR). Vehicles are commercial yellow-plate regis
 3. **Driver Batta (Daily Allowance)**: Driver batta covers chauffeur food and accommodation per calendar day (midnight-to-midnight cycle). Included upfront in all local hourly packages and fixed temple tour packages; billed as a distinct line item for open per-km outstation journeys.
 4. **Tolls, Parking & State Permits**: FASTag electronic highway tolls, airport/temple parking fees, and interstate government entry taxes (Andhra Pradesh, Karnataka, Kerala, Pondicherry) are billed at 100% actuals based on government receipt slips with zero company markup.
 5. **No Surge Guarantee**: Flat rates apply 24/7, 365 days a year. No rain surge, no weekend surge, no festival surge.
-6. **Cancellation Terms**: Zero cancellation penalty if cancelled 4+ hours prior to scheduled pickup time.
+6. **Cancellation Terms & Full Refund**: 100% full refund of any advance if cancelled 6+ hours before departure (2 hours for local/acting drivers).
 7. **GST Invoices**: Formal tax invoices bearing GSTIN 33COVPM0531D1Z4 issued for all corporate bookings to enable complete input tax credit (ITC) reconciliation.
+8. **Advance Payment & Deduction Guarantee**:
+   - For Outstation Cabs & Temple Tour Packages: A nominal ₹500 advance is collected to confirm booking and lock cab assignment (prevents last-minute cancellations). Crucially, this ₹500 is NOT an extra fee — it is 100% deducted from the final bill (Total Quoted Fare − ₹500 Advance = Net Balance payable directly to chauffeur upon trip completion).
+   - For Local City Hourly Rentals & Acting Drivers: ₹0 advance required — 100% payment after service completion.
+9. **Airport Chauffeur Dispatch Protocol**:
+   - For Airport Arrival Pickups (MAA): Chauffeur details (name, phone number, vehicle model, yellow-board plate number) are dispatched via WhatsApp BEFORE THE PASSENGER TAKES OFF from their origin airport. Passengers board with 100% peace of mind. Live flight radar is tracked continuously with zero waiting fees for flight delays.
+   - For Airport Departure Drops: Chauffeur details sent 2 hours before scheduled doorstep pickup (or by 9:00 PM previous evening for 3:00 AM – 5:00 AM early morning pickups).
 
 ---
 
@@ -280,6 +286,12 @@ All rates are in Indian Rupees (INR). Vehicles are commercial yellow-plate regis
 
 **Q: Do you offer one-way drop taxis from Chennai to other cities?**
 A: Yes. One-way drops are available from Chennai to Bangalore, Pondicherry, Tirupati, Vellore, Trichy, Madurai, Salem, Coimbatore, and other South Indian cities. You only pay for the one-way distance with zero return empty-run charges.
+
+**Q: Is the ₹500 booking advance an extra charge, and how is it deducted?**
+A: No, the ₹500 advance is NOT an extra fee. It is 100% deducted from your total quoted fare. For example, if your package fare is ₹6,000, you pay ₹500 to lock the cab, and you only pay the remaining ₹5,500 net balance to the chauffeur after trip completion. It is also 100% refundable if cancelled 6+ hours prior.
+
+**Q: When will I receive driver details for my Chennai Airport pickup?**
+A: For airport arrivals at Chennai Airport (MAA), we send complete chauffeur details (name, mobile number, car model, and yellow-board registration number) on WhatsApp BEFORE you take off from your departure airport. We track your flight in real time with zero waiting charges for delayed flights.
 
 **Q: How do you handle flight delays for airport pickups at Chennai Airport (MAA)?**
 A: Our operations desk monitors your flight status in real time via live radar. If your flight is delayed by 1 hour or 6 hours, your chauffeur will adjust pickup timing automatically with zero waiting penalty.
@@ -291,7 +303,7 @@ A: Yes. For all pilgrimage packages (Tirupati, Navagraha, Thiruvannamalai, Sabar
 A: Yes. Our acting drivers are experienced with luxury transmissions including Mercedes-Benz, BMW, Audi, Volvo, Jaguar, and high-performance EVs. They possess valid driving licenses with 5+ years of verified clean driving records.
 
 **Q: What is the cancellation policy?**
-A: Bookings can be cancelled without any cancellation charge up to 4 hours before the scheduled reporting time.
+A: Outstation and tour bookings can be cancelled with 100% full refund up to 6 hours before scheduled reporting time (2 hours for local hourly rentals & acting drivers).
 
 **Q: Can I pay via UPI or Credit Card?**
 A: Yes. We accept all payment methods including UPI (Google Pay, PhonePe, Paytm), Net Banking, Credit/Debit cards, and cash. Formal digital invoices are generated instantly upon trip completion.

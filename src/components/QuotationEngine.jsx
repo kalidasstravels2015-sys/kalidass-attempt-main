@@ -2055,7 +2055,7 @@ Please confirm availability and share quote.`;
                 )}
               </button>
               <p className="text-[11px] text-m3-on-surface-variant/80 text-center font-medium max-w-sm">
-                ✓ {isTa ? 'கட்டணம் பார்க்க தொலைபேசி எண் தேவையில்லை' : 'No phone number required to check fare'}
+                {isTa ? 'கட்டணம் பார்க்க தொலைபேசி எண் தேவையில்லை' : 'No phone number required to check fare'}
               </p>
 
               {/* Smart Airport Quick-Access Callout */}
@@ -2092,7 +2092,7 @@ Please confirm availability and share quote.`;
               <div ref={resultRef} className="pt-3 border-t border-m3-outline-variant/60 space-y-3 animate-in fade-in duration-200">
                 
                 {/* Rate Summary Card with Itemized Breakdown */}
-                <div className="bg-slate-50 border border-m3-outline-variant/80 rounded-xl p-3.5 space-y-2.5 shadow-2xs">
+                <div className="bg-slate-100 border border-slate-200 rounded-xl p-3.5 space-y-2.5 shadow-xs">
                   {/* Local Package Alternative Banner inside Result Card */}
                   {isShortCityRoundTrip && (
                     <div className="p-2.5 bg-amber-50 border border-amber-300/80 rounded-lg text-xs space-y-1.5 mb-2.5">
@@ -2124,7 +2124,7 @@ Please confirm availability and share quote.`;
                   )}
 
                   {/* Header: Vehicle Name, Pax & Total Fare */}
-                  <div className="flex items-center justify-between gap-3 pb-2.5 border-b border-m3-outline-variant/60">
+                  <div className="flex items-center justify-between gap-3 pb-2.5 border-b border-slate-200">
                     <div>
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <span className="text-base font-extrabold text-m3-on-surface">
@@ -2153,7 +2153,11 @@ Please confirm availability and share quote.`;
                   {/* Itemized Bill Lines */}
                   <div className="space-y-1.5 text-xs">
                     <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                      <span>{isTa ? `வாகன கட்டணம் (${vehicle} • எரிபொருள் உட்பட):` : `Cab Hire (${vehicle} • Fuel included):`}</span>
+                      <span>
+                        {activeTab !== 'local' && breakdown?.chargeable_km && breakdown?.rate_per_km
+                          ? (isTa ? `வாகன கட்டணம் (${Math.round(breakdown.chargeable_km)} கிமீ @ ₹${breakdown.rate_per_km}/கிமீ):` : `Cab Hire (${Math.round(breakdown.chargeable_km)} km @ ₹${breakdown.rate_per_km}/km):`)
+                          : (isTa ? `வாகன கட்டணம் (${vehicle} • எரிபொருள் உட்பட):` : `Cab Hire (${vehicle} • Fuel included):`)}
+                      </span>
                       <span className="font-bold text-m3-on-surface">₹{(breakdown?.km_cost || estimate).toLocaleString('en-IN')}</span>
                     </div>
                     {breakdown?.driver_bata > 0 && (
@@ -2169,47 +2173,62 @@ Please confirm availability and share quote.`;
                       </div>
                     )}
                     {activeTab !== 'local' && (
-                      <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                        <span>{isTa ? 'டோல், பார்க்கிங் & அனுமதி கட்டணங்கள்:' : 'Tolls, Parking & Permits:'}</span>
-                        <span className="font-bold text-m3-on-surface">{isTa ? 'கூடுதல் (அசல் ரசீதுப்படி)' : 'Extra (At Actuals)'}</span>
-                      </div>
+                      <>
+                        <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                          <span>{isTa ? 'டோல் கட்டணம்:' : 'Tolls:'}</span>
+                          <span className="font-bold text-m3-on-surface">{isTa ? 'கூடுதல் (அசல் ரசீதுப்படி)' : 'Extra (At Actuals)'}</span>
+                        </div>
+                        <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                          <span>{isTa ? 'பார்க்கிங் கட்டணம்:' : 'Parking:'}</span>
+                          <span className="font-bold text-m3-on-surface">{isTa ? 'கூடுதல் (அசல் ரசீதுப்படி)' : 'Extra (At Actuals)'}</span>
+                        </div>
+                        <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                          <span>{isTa ? 'மாநில அனுமதி வரி:' : 'State Permit:'}</span>
+                          <span className="font-bold text-m3-on-surface">{isTa ? 'கூடுதல் (அசல் ரசீதுப்படி)' : 'Extra (At Actuals)'}</span>
+                        </div>
+                      </>
                     )}
                   </div>
 
                   {/* Bill Payment Split */}
-                  <div className="pt-2 border-t-2 border-slate-200 space-y-1 text-xs">
-                    <div className="flex justify-between items-center py-1 sm:py-1.5 border-b border-slate-200/80 mb-1">
-                      <span className="text-base sm:text-lg font-black text-m3-on-surface tracking-tight">
-                        {isTa ? 'மொத்த கட்டணம்:' : 'Total Bill:'}
-                      </span>
-                      <span className="text-xl sm:text-2xl font-black text-m3-primary tracking-tight font-heading">
-                        ₹{estimate.toLocaleString('en-IN')}{activeTab !== 'local' ? (isTa ? ' + கூடுதல்' : ' + Extra') : ''}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                      <span>{isTa ? 'முன்பணம்:' : 'Advance to Pay:'}</span>
-                      <span className="font-bold text-emerald-700">
-                        {activeTab === 'local' 
-                          ? (isTa ? '₹0 (முன்பணம் இல்லை)' : '₹0 (No advance needed)') 
-                          : '₹500'}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center py-0.5 text-m3-on-surface">
-                      <span className="font-medium">{isTa ? 'மீதி கட்டணம்:' : 'Balance to Pay Driver:'}</span>
-                      <span className="font-bold text-m3-on-surface">
-                        {activeTab === 'local'
-                          ? `₹${estimate.toLocaleString('en-IN')} ${isTa ? '(பயண முடிவில்)' : '(After trip)'}`
-                          : `₹${Math.max(0, estimate - 500).toLocaleString('en-IN')} ${isTa ? '+ கூடுதல் (பயண முடிவில்)' : '+ Extra (After trip)'}`}
-                      </span>
-                    </div>
+                  <div className="pt-2 border-t border-slate-200/80 space-y-1 text-xs">
+                    {activeTab !== 'local' ? (
+                      <>
+                        <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                          <span>{isTa ? 'மொத்த பில்:' : 'Total Bill:'}</span>
+                          <span className="font-bold text-m3-on-surface">
+                            ₹{estimate.toLocaleString('en-IN')}{isTa ? ' + கூடுதல்' : ' + Extra'}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center py-0.5 text-emerald-700 font-medium">
+                          <span>{isTa ? 'முன்பணம்:' : 'Advance to Pay:'}</span>
+                          <span className="font-bold">
+                            -₹500
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center py-0.5 text-m3-on-surface border-t border-slate-200/60 pt-1">
+                          <span className="font-medium">{isTa ? 'மீதி கட்டணம்:' : 'Balance to Pay Driver:'}</span>
+                          <span className="font-bold text-m3-on-surface">
+                            ₹{Math.max(0, estimate - 500).toLocaleString('en-IN')}{isTa ? ' + கூடுதல்' : ' + Extra'} <span className="text-[10px] font-normal text-m3-on-surface-variant">({isTa ? 'பயண முடிவில்' : 'After trip'})</span>
+                          </span>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex justify-between items-center py-0.5 text-m3-on-surface font-medium">
+                        <span>{isTa ? 'பயண முடிவில் கட்டணம்:' : 'Pay at Drop:'}</span>
+                        <span className="font-bold text-m3-on-surface">
+                          ₹{estimate.toLocaleString('en-IN')} {isTa ? '(முன்பணம் தேவையில்லை)' : '(Zero Advance Required)'}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Cut and Dried Notes */}
-                  <div className="pt-2.5 border-t border-dashed border-m3-outline-variant/80 text-[11px] text-m3-on-surface-variant space-y-1.5">
+                  <div className="pt-2.5 border-t border-dashed border-slate-200 text-[11px] text-m3-on-surface-variant space-y-1.5">
                     {activeTab !== 'local' ? (
                       <>
                         <div className="flex items-center gap-1.5 text-emerald-800 font-medium">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                          <Car className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                           <span>
                             <strong>{isTa ? 'சேர்க்கப்பட்டுள்ளவை:' : 'Included in Fare:'}</strong> {isTa ? 'AC கார், 100% எரிபொருள் மற்றும் ஓட்டுநர் பேட்டா.' : 'Dedicated AC Cab, 100% Fuel & Driver Allowance.'}
                           </span>
@@ -2227,7 +2246,7 @@ Please confirm availability and share quote.`;
                     ) : (
                       <>
                         <div className="flex items-center gap-1.5 text-emerald-800 font-medium">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                          <Car className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                           <span>
                             <strong>{isTa ? 'சேர்க்கப்பட்டுள்ளவை:' : 'Included in Fare:'}</strong> {isTa ? 'AC கார், எரிபொருள் மற்றும் ஓட்டுநர் பேட்டா (சென்னை நகருக்குள்).' : 'Dedicated AC Cab, Fuel & Driver Allowance within Chennai.'}
                           </span>

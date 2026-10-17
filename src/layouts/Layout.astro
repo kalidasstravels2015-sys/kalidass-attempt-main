@@ -21,10 +21,12 @@ const defaultTitle = "Kalidass Travels - Premium Travel Experience";
 const defaultDescription = "Premium travel and cab services across South India. Professional drivers, comfortable vehicles, affordable rates.";
 const defaultKeywords = "taxi service Chennai, temple tours Tamil Nadu, corporate travel Chennai, airport taxi Chennai, outstation cabs Chennai, Kalidass Travels";
 
+const defaultOgImage = "/images/og-main.png";
+
 const {
   title = defaultTitle,
   description = defaultDescription,
-  image = "/images/logo.png",
+  image,
   ogImage,
   type = "website",
   url = Astro.url.href,
@@ -65,13 +67,10 @@ const isCabsAndRentals =
     pathname.includes("corporate") ||
     pathname.includes("acting-driver"));
 
-const fullImage = ogImage
-  ? ogImage.startsWith("http")
-    ? ogImage
-    : `${siteUrl}${ogImage}`
-  : image.startsWith("http")
-    ? image
-    : `${siteUrl}${image}`;
+const rawImage = ogImage || (image && image !== "/images/logo.png" ? image : defaultOgImage);
+const fullImage = rawImage.startsWith("http")
+  ? rawImage
+  : `${siteUrl}${rawImage}`;
 
 const gaId = import.meta.env.PUBLIC_GA_ID || 'G-61YQMR8J7H';
 const googleAdsId = import.meta.env.PUBLIC_GOOGLE_ADS_ID || 'AW-18463679349';
@@ -225,7 +224,7 @@ const localBusinessSchema = {
       {
         "@type": "Offer",
         name: "Chennai Airport Taxi Transfers",
-        description: "Rapid 5-10 min MAA airport taxi dispatch with flight delay tracking and zero surge pricing.",
+        description: "Rapid 5-10 min MAA airport taxi dispatch with live flight delay tracking, zero surge pricing, and driver details sent via WhatsApp before takeoff.",
         price: "650",
         priceCurrency: "INR",
         priceValidUntil: "2027-12-31",
@@ -243,7 +242,7 @@ const localBusinessSchema = {
       {
         "@type": "Offer",
         name: "Outstation Cabs from Chennai",
-        description: "Round trip and one-way outstation cabs from ₹14/km across Tamil Nadu, Pondicherry, and Karnataka.",
+        description: "Round trip and one-way outstation cabs from ₹14/km across Tamil Nadu, Pondicherry, and Karnataka. ₹500 advance fully deducted from final bill.",
         price: "14",
         priceCurrency: "INR",
         priceSpecification: {

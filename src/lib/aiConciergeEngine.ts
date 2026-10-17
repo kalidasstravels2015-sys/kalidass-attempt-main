@@ -859,10 +859,11 @@ function getAirportTransferQuote(state: ConversationState, isTa: boolean): strin
       `• **AC Sedan (Dzire / Etios - 4 Pax):** ₹${rates.sedan}\n` +
       `• **Maruti Ertiga (6 Pax):** ₹${rates.ertiga}\n` +
       `• **Toyota Innova (7 Pax):** ₹${rates.innova}\n\n` +
-      `✈️ **முக்கிய அம்சங்கள்:**\n` +
-      `• நிகழ்நேர விமான கண்காணிப்பு (Flight Tracking) — தாமதத்திற்கு கூடுதல் கட்டணம் இல்லை!\n` +
-      `• 24/7 டெர்மினல் வாசலில் வரவேற்பு & உடனடி பிக்கப்.\n` +
-      `🛡️ **கட்டணம்:** பயண முடிவில் செலுத்தலாம்.\n\n` +
+      `✈️ **விமான நிலைய பிரத்யேக உத்தரவாதங்கள்:**\n` +
+      `• **முன்கூட்டியே ஓட்டுநர் விவரங்கள்:** உங்கள் புறப்படும் விமான நிலையத்தில் நீங்கள் **விமானத்தில் ஏறும் முன்பே (Before Takeoff)** ஓட்டுநர் பெயர், எண் மற்றும் கார் விவரங்கள் வாட்ஸ்அப்பில் அனுப்பப்படும்!\n` +
+      `• நேரடி விமான ரேடார் கண்காணிப்பு — விமான தாமதத்திற்கு கூடுதல் காத்திருப்பு கட்டணம் இல்லை (₹0 Waiting Charge).\n` +
+      `• 24/7 டெர்மினல் வருகை வாசலில் வரவேற்பு & உடனடி பிக்கப்.\n` +
+      `🛡️ **முன்பணம்:** உள்ளூர் டிராப்களுக்கு ₹0 முன்பணம் — பயண முடிவில் செலுத்தலாம்.\n\n` +
       `[👉 வாட்ஸ்அப்பில் டாக்சி புக் செய்ய](${waUrl})`
     );
   }
@@ -872,10 +873,11 @@ function getAirportTransferQuote(state: ConversationState, isTa: boolean): strin
     `• **AC Sedan (Dzire / Etios - 4 Pax):** ₹${rates.sedan}\n` +
     `• **Maruti Ertiga / XL6 (6 Pax):** ₹${rates.ertiga}\n` +
     `• **Toyota Innova (7 Pax):** ₹${rates.innova}\n\n` +
-    `✈️ **Airport Guarantees:**\n` +
-    `• 24/7 pickup from Domestic & International terminals.\n` +
-    `• Zero surge pricing & automatic flight tracking (no penalty for delayed flights).\n` +
-    `🛡️ **Payment:** Pay balance conveniently after drop.\n\n` +
+    `✈️ **Airport Operational Guarantees:**\n` +
+    `• **Chauffeur Details Before Takeoff:** Driver details (chauffeur name, mobile, vehicle number) are sent on WhatsApp **before your flight takes off** from your origin airport — offering 100% peace of mind before boarding!\n` +
+    `• **Live Flight Radar Tracking:** Zero waiting charge penalty for flight delays.\n` +
+    `• 24/7 doorstep pickup or terminal exit greeting.\n` +
+    `🛡️ **Payment:** ₹0 advance deposit for city airport drops — pay balance after drop.\n\n` +
     `[👉 Book Airport Cab on WhatsApp](${waUrl})`
   );
 }
@@ -891,25 +893,36 @@ function getActingDriverQuote(state: ConversationState, isTa: boolean): string {
       `• **சென்னை நகரத்திற்குள் (City Duty):**\n` +
       `  - 4 மணிநேரம்: ₹500 (கூடுதல் மணி: ₹100)\n` +
       `  - 8 மணிநேரம்: ₹800 (முழு நாள் பணி)\n` +
-      `  - இரவு நேர ஓட்டுநர் கட்டணம் (10 PM - 6 AM): ₹150\n\n` +
-      `• **வெளியூர் பயணம் (Outstation Round Trip):**\n` +
-      `  - ஒரு நாளுக்கு: ₹1,100 + உணவு & தங்குமிடம் (அல்லது ₹300 பேட்டா)\n\n` +
-      `👮 **பாதுகாப்பு:** அனைத்து ஓட்டுநர்களும் தமிழ்நாடு போலீஸ் சரிபார்ப்பு சான்றிதழ் (PVC Verified) பெற்றவர்கள் மற்றும் 5+ ஆண்டுகள் அனுபவம் வாய்ந்தவர்கள்.\n\n` +
+      `  - இரவு நேர ஓட்டுநர் கட்டணம் (10:00 PM - 6:00 AM): ₹150\n\n` +
+      `• **வெளியூர் பயணம் (Outstation Round Trip - உணவு பேட்டா உட்பட):**\n` +
+      `  - **Hatchback & Sedan:** ₹1,400 / நாள் (₹1,100 பேட்டா + ₹300 உணவு)\n` +
+      `  - **Compact SUV (Ertiga / Creta):** ₹1,500 / நாள் (₹1,200 பேட்டா + ₹300 உணவு)\n` +
+      `  - **Premium SUV (Innova Crysta):** ₹1,600 / நாள் (₹1,300 பேட்டா + ₹300 உணவு)\n` +
+      `  - **Luxury European (BMW / Audi):** ₹1,800 / நாள் (₹1,500 பேட்டா + ₹300 உணவு)\n\n` +
+      `• **வெளியூர் ஒரு வழி டிராப் (One-Way Relocation):** 1-நாள் பேட்டா + அரசு SETC பேருந்து கட்டணம் + ₹300 உணவு.\n\n` +
+      `👮 **பாதுகாப்பு:** அனைத்து ஓட்டுநர்களும் தமிழ்நாடு போலீஸ் சரிபார்ப்பு சான்றிதழ் (PVC Verified) பெற்றவர்கள் மற்றும் Manual, Automatic (AT/DCT), EV நிபுணர்கள்.\n` +
+      `🛡️ **பாலிசி:** ₹0 முன்பணம் — சேவை முடிந்த பின் கட்டணம் செலுத்தலாம்!\n\n` +
       `[👉 வாட்ஸ்அப்பில் டிரைவரை அழைக்க](${waUrl})`
     );
   }
 
   return (
-    `Here are our verified **Acting Driver Services** for your personal car:\n\n` +
+    `Here are our verified **Acting Driver Services** for your personal car (MT / AT / EV):\n\n` +
     `• **Chennai City Duty:**\n` +
     `  - 4 Hours: ₹500 (Extra hour: ₹100)\n` +
     `  - 8 Hours: ₹800 *(Full Day Duty)*\n` +
     `  - Night drive allowance (10:00 PM - 6:00 AM): ₹150\n\n` +
-    `• **Outstation Round Trip (Your Car):**\n` +
-    `  - ₹1,100 per calendar day (+ food/stay or ₹300 daily allowance)\n\n` +
+    `• **Outstation Round Trip (Your Car - Driver meals included):**\n` +
+    `  - **Hatchback & Sedan:** ₹1,400 / day (₹1,100 base bata + ₹300 food)\n` +
+    `  - **Compact SUV / MPV (Ertiga, Creta, Seltos):** ₹1,500 / day (₹1,200 bata + ₹300 food)\n` +
+    `  - **Premium SUV / MUV (Innova Crysta, Fortuner):** ₹1,600 / day (₹1,300 bata + ₹300 food)\n` +
+    `  - **Luxury European (BMW, Mercedes-Benz, Audi):** ₹1,800 / day (₹1,500 bata + ₹300 food)\n` +
+    `  - *Night Stay:* Free driver dormitory at hotels (TNCDBR rules); ₹300/night lodging allowance if private stay has no dorm.\n\n` +
+    `• **Outstation One-Way Drop:** 1-Day Driver Bata + Return SETC Bus Ticket + ₹300 Food (1.5x Bata if >400 km like Madurai, Coimbatore).\n\n` +
     `👮 **Safety & Verification:**\n` +
-    `• Police Background Verified (PVC Cleared) professional chauffeurs.\n` +
-    `• Highly experienced with all manual, automatic, and luxury vehicles (BMW, Audi, Merc).\n\n` +
+    `• 100% Police Clearance Certificate (PVC Cleared) professional chauffeurs.\n` +
+    `• Experienced with manual, automatic (CVT, DCT, Torque Converter), and EV vehicles.\n` +
+    `🛡️ **Policy:** **₹0 advance deposit** required — pay after service completion!\n\n` +
     `[👉 Book Driver on WhatsApp](${waUrl})`
   );
 }
@@ -943,7 +956,7 @@ function getAdvancePolicyReply(isTa: boolean, destination: string | null): strin
     return (
       `🛡️ **Kalidass Travels முன்பணம் கொள்கை (Advance Payment Policy):**\n\n` +
       `1. **₹500 மட்டுமே முன்பணம்:** வெளியூர் மற்றும் திருப்பதி போன்ற சுற்றுலா பயணங்களுக்கு உங்கள் காரை பிரத்யேகமாக லாக் செய்யவும், கடைசி நேர ரத்துகளைத் தவிர்க்கவும் ₹500 மட்டுமே பெறப்படுகிறது.\n` +
-      `2. **முழு தொகை பயண முடிவில்:** மீதமுள்ள 100% பயணத் தொகையை பயணம் வெற்றிகரமாக முடிந்த பிறகு டிரைவரிடம் நேரில் செலுத்தலாம்.\n` +
+      `2. **பில்லில் கழித்தல் உத்தரவாதம்:** இந்த ₹500 கூடுதல் கட்டணம் அல்ல — இது உங்கள் மொத்த பயணக் கட்டணத்தில் கழிக்கப்படும் (மொத்த கட்டணம் − ₹500 முன்பணம் = மீதமுள்ள நிகரத் தொகை பயண முடிவில் டிரைவரிடம் செலுத்தலாம்).\n` +
       `3. **லோக்கல் வாடகை & ஆக்டிங் டிரைவர்:** ₹0 முன்பணம் — முற்றிலும் பயணத்திற்குப் பின்!\n` +
       `4. **100% ரீஃபண்ட்:** பயணத்திற்கு 6 மணிநேரம் முன்பு ரத்து செய்தால் ₹500 முழுமையாக திரும்ப வழங்கப்படும்.\n\n` +
       `[👉 ₹500 செலுத்தி காரை லாக் செய்ய வாட்ஸ்அப் செல்லவும்](${waUrl})`
@@ -953,7 +966,7 @@ function getAdvancePolicyReply(isTa: boolean, destination: string | null): strin
   return (
     `🛡️ **Kalidass Travels Advance Payment Policy:**\n\n` +
     `1. **Nominal ₹500 Advance:** For outstation trips and tour packages (${destName}), we collect only **₹500 advance** to lock your cab and schedule your verified chauffeur. This protects against last-minute cancellations.\n` +
-    `2. **Balance Paid Post-Trip:** The entire remaining balance is paid directly to your chauffeur only after trip completion!\n` +
+    `2. **100% Deducted from Final Bill:** The ₹500 advance is NOT an extra fee — it is deducted from your quoted total (e.g. Total Fare − ₹500 Advance = Net Balance payable directly to chauffeur upon trip completion).\n` +
     `3. **Local Rides & Acting Drivers:** **₹0 advance deposit** required — pay after service.\n` +
     `4. **100% Refund Guarantee:** If canceled up to 6 hours before departure, your ₹500 advance is fully refunded immediately.\n\n` +
     `[👉 Pay ₹500 Advance & Lock Cab on WhatsApp](${waUrl})`
