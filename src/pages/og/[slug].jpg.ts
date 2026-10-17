@@ -449,9 +449,10 @@ export const GET: APIRoute = async ({ params }) => {
   // ── Load logo ─────────────────────────────────────────────────────────────
   let logoBase64 = "";
   try {
+    const logoMarkPath = path.resolve("./public/images/logo-mark.png");
     const logoPngPath = path.resolve("./public/images/logo.png");
     const logoWebpPath = path.resolve("./public/images/logo.webp");
-    const chosenLogo = existsSync(logoPngPath) ? logoPngPath : logoWebpPath;
+    const chosenLogo = existsSync(logoMarkPath) ? logoMarkPath : existsSync(logoPngPath) ? logoPngPath : logoWebpPath;
     const logoBuffer = readFileSync(chosenLogo);
     const logoPng = await sharp(logoBuffer).png().toBuffer();
     logoBase64 = `data:image/png;base64,${logoPng.toString("base64")}`;

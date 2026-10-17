@@ -41,19 +41,19 @@ export default function TempleTours() {
       whatsapp: 'https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Chennai%20to%20Tirupati%20Balaji%20Car%20Package.'
     },
     {
-      id: 'navagraha',
+      id: 'sabarimala',
       type: 'multiday',
-      name: 'Kumbakonam 9 Navagraha Tour',
-      duration: '2 Days / 1 Night (750 km)',
-      sedan: '₹12,000',
-      ertiga: '₹14,800',
-      innova: '₹16,500',
-      crysta: '₹19,800',
-      tempo: '₹24,500',
-      highlights: 'All 9 planetary temples sequenced without backtracking • 2 Days Bata & Tolls',
-      slug: 'navagraha-tour',
-      badge: 'Complete 9 Temples',
-      whatsapp: 'https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Kumbakonam%20Navagraha%202-Day%20Tour.'
+      name: 'Sabarimala Yatra (Pamba / Nilakkal)',
+      duration: '3 Days / 2 Nights (1,350 km)',
+      sedan: '₹22,500',
+      ertiga: '₹26,500',
+      innova: '₹29,500',
+      crysta: '₹34,500',
+      tempo: '₹42,000',
+      highlights: 'Satvik teetotaler driver • Kerala State Permit • 3 Days Bata included',
+      slug: 'sabarimala-trip',
+      badge: 'Mandala / Makaravilakku',
+      whatsapp: 'https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Sabarimala%20Yatra%203-Day%20Package.'
     },
     {
       id: 'thiruvannamalai',
@@ -71,21 +71,6 @@ export default function TempleTours() {
       whatsapp: 'https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Thiruvannamalai%20Girivalam%20Tour.'
     },
     {
-      id: 'sabarimala',
-      type: 'multiday',
-      name: 'Sabarimala Yatra (Pamba / Nilakkal)',
-      duration: '3 Days / 2 Nights (1,350 km)',
-      sedan: '₹22,500',
-      ertiga: '₹26,500',
-      innova: '₹29,500',
-      crysta: '₹34,500',
-      tempo: '₹42,000',
-      highlights: 'Satvik teetotaler driver • Kerala State Permit • 3 Days Bata included',
-      slug: 'sabarimala-trip',
-      badge: 'Mandala / Makaravilakku',
-      whatsapp: 'https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Sabarimala%20Yatra%203-Day%20Package.'
-    },
-    {
       id: 'rameswaram',
       type: 'multiday',
       name: 'Rameswaram & Dhanushkodi',
@@ -99,6 +84,21 @@ export default function TempleTours() {
       slug: 'rameswaram-2-days',
       badge: 'Char Dham Sthalam',
       whatsapp: 'https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Rameswaram%202-Day%20Pilgrimage%20Package.'
+    },
+    {
+      id: 'navagraha',
+      type: 'multiday',
+      name: 'Kumbakonam 9 Navagraha Tour',
+      duration: '2 Days / 1 Night (750 km)',
+      sedan: '₹12,000',
+      ertiga: '₹14,800',
+      innova: '₹16,500',
+      crysta: '₹19,800',
+      tempo: '₹24,500',
+      highlights: 'All 9 planetary temples sequenced without backtracking • 2 Days Bata & Tolls',
+      slug: 'navagraha-tour',
+      badge: 'Complete 9 Temples',
+      whatsapp: 'https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Kumbakonam%20Navagraha%202-Day%20Tour.'
     },
     {
       id: 'kanchipuram',
@@ -162,13 +162,13 @@ export default function TempleTours() {
       highlights: ['Doorstep 4 AM pickup across Chennai', 'AP Interstate Permit & Alipiri Toll included', 'Kalyana Katta tonsure guidance']
     },
     {
-      title: 'Kumbakonam 9 Navagraha Tour',
-      duration: '2 Days / 1 Night',
-      badge: 'Starts ₹12,000 (750 km)',
-      slug: 'navagraha-tour',
-      icon: Compass,
-      desc: 'Expertly sequenced 9-temple pilgrimage covering Suryanar, Thirunallar, Vaitheeswaran, and Alangudi without afternoon gate closures.',
-      highlights: ['Astronomical 9-temple sequence', 'Satvik food halts in Kumbakonam', '2 Days driver bata included']
+      title: 'Sabarimala Yatra (Pamba)',
+      duration: '3 Days / 2 Nights',
+      badge: 'Starts ₹26,500 (1,350 km)',
+      slug: 'sabarimala-trip',
+      icon: Landmark,
+      desc: 'Devotional 3D/2N pilgrimage with teetotaler drivers, devotional audio, Kerala Interstate Road Tax Permit, and pure-veg food halts.',
+      highlights: ['Satvik non-smoking driver', 'Kerala State Permit included', 'Kumily-Nilakkal hill driving specialist']
     },
     {
       title: 'Thiruvannamalai Girivalam',
@@ -180,15 +180,6 @@ export default function TempleTours() {
       highlights: ['Arunachaleswarar & Ramana Ashram', 'Experienced night highway pilots', 'AC car standby on 14 km route']
     },
     {
-      title: 'Sabarimala Yatra (Pamba)',
-      duration: '3 Days / 2 Nights',
-      badge: 'Starts ₹26,500 (1,350 km)',
-      slug: 'sabarimala-trip',
-      icon: Landmark,
-      desc: 'Devotional 3D/2N pilgrimage with teetotaler drivers, devotional audio, Kerala Interstate Road Tax Permit, and pure-veg food halts.',
-      highlights: ['Satvik non-smoking driver', 'Kerala State Permit included', 'Kumily-Nilakkal hill driving specialist']
-    },
-    {
       title: 'Rameswaram & Dhanushkodi',
       duration: '2 Days / 1 Night',
       badge: 'Starts ₹18,500 (1,200 km)',
@@ -196,6 +187,15 @@ export default function TempleTours() {
       icon: Waves,
       desc: 'Char Dham holy island pilgrimage featuring 22 Theertham baths, Pamban bridge drive, Dhanushkodi ghost town, and APJ Memorial.',
       highlights: ['22 Theertham bath coordination', 'Dhanushkodi / Ram Setu drive', 'All national tolls & 2D bata included']
+    },
+    {
+      title: 'Kumbakonam 9 Navagraha Tour',
+      duration: '2 Days / 1 Night',
+      badge: 'Starts ₹12,000 (750 km)',
+      slug: 'navagraha-tour',
+      icon: Compass,
+      desc: 'Expertly sequenced 9-temple pilgrimage covering Suryanar, Thirunallar, Vaitheeswaran, and Alangudi without afternoon gate closures.',
+      highlights: ['Astronomical 9-temple sequence', 'Satvik food halts in Kumbakonam', '2 Days driver bata included']
     },
     {
       title: 'Kanchipuram Temple & Silk Tour',

@@ -48,13 +48,13 @@ test.describe('Chennai Airport Taxi SEO, AEO & SERP Enhancements', () => {
     await expect(comparisonSection).toContainText(/Advance Payment/);
   });
 
-  test('Fare Chart section includes prominent H2 and Pickup Charges clarification box', async ({ page }) => {
+  test('Fare Chart section includes prominent H2 and Pickup Charges clarification in FAQ and Schema', async ({ page }) => {
     const fareHeading = page.locator('#all-zones-container h2');
     await expect(fareHeading).toBeVisible();
     await expect(fareHeading).toContainText(/Chennai Airport Taxi Fare & Rates Chart/);
 
-    const pickupBox = page.locator('#all-zones-container').getByText('Are Chennai airport pickup charges different from airport drop charges?');
-    await expect(pickupBox).toBeVisible();
+    const faqQuestion = page.locator('#airport-faq').getByText('Are Chennai airport pickup charges different from airport drop charges?');
+    await expect(faqQuestion).toBeAttached();
   });
 
   test('Terminal Pick Up & Drop Guide (T1, T2 & T4) is attached with complete procedures', async ({ page }) => {

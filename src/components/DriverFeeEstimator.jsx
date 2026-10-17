@@ -90,9 +90,8 @@ export default function DriverFeeEstimator({
   const [activeTab,     setActiveTab]     = useState('oneway');
   const [vehicleKey,    setVehicleKey]    = useState('hatchback');
   const [gear,          setGear]          = useState('manual');
-  const [carModel,      setCarModel]      = useState('');
   const [travelDate,    setTravelDate]    = useState('');
-  const [reportingTime, setReportingTime] = useState('');
+  const [reportingTime, setReportingTime] = useState('06:00');
   const [pickup,        setPickup]        = useState('');
   const [drop,          setDrop]          = useState('');
   const [days,          setDays]          = useState(2);
@@ -200,13 +199,13 @@ export default function DriverFeeEstimator({
           distKm: distKm ? distKm * 2 : null,
           bata: vehicle.bata, totalBata, totalFood, totalStay,
           foodProvided, stayProvided, nights, days: d, total,
-          whatsapp: buildWhatsApp('round', total, d, distKm),
+          whatsapp: buildWhatsApp('round', total, d, distKm, false, foodProvided, stayProvided),
         });
       } else {
         const isLongDistance = Boolean(distKm && distKm > 400);
         const bataMultiplier = isLongDistance ? 1.5 : 1;
         const totalBata = Math.round(vehicle.bata * bataMultiplier);
-        const totalFood = FOOD_PER_DAY;
+        const totalFood = foodProvided ? 0 : FOOD_PER_DAY;
         const busFare   = setcFare || (distKm ? Math.round(distKm * 1.2) : 250);
         const total = totalBata + totalFood + busFare;
         setResult({
@@ -215,13 +214,14 @@ export default function DriverFeeEstimator({
           isLongDistance,
           bataMultiplier,
           bata: vehicle.bata, totalBata, totalFood, busFare, total,
-          whatsapp: buildWhatsApp('oneway', total, 1, distKm, isLongDistance),
+          foodProvided,
+          whatsapp: buildWhatsApp('oneway', total, 1, distKm, isLongDistance, foodProvided, false),
         });
       }
 
       const calculatedFare = activeTab === 'round'
         ? (vehicle.bata * d) + (foodProvided ? 0 : FOOD_PER_DAY * d) + (stayProvided ? 0 : STAY_PER_NIGHT * nights)
-        : Math.round(vehicle.bata * (distKm && distKm > 400 ? 1.5 : 1)) + FOOD_PER_DAY + (setcFare || (distKm ? Math.round(distKm * 1.2) : 250));
+        : Math.round(vehicle.bata * (distKm && distKm > 400 ? 1.5 : 1)) + (foodProvided ? 0 : FOOD_PER_DAY) + (setcFare || (distKm ? Math.round(distKm * 1.2) : 250));
 
       trackCalculatorQuote({
         calculatorId: 'acting_driver',
@@ -229,7 +229,7 @@ export default function DriverFeeEstimator({
         tripType: activeTab === 'round' ? `Round Trip (${d} Days)` : 'One Way Drop',
         pickup: pickup || 'Chennai',
         drop: drop || 'N/A',
-        vehicle: carModel.trim() ? `${carModel.trim()} (${vehicle.label})` : vehicle.label,
+        vehicle: vehicle.label,
         distanceKm: distKm ? (activeTab === 'round' ? distKm * 2 : distKm) : '',
         estimatedFare: calculatedFare,
         meta: {
@@ -276,13 +276,35 @@ export default function DriverFeeEstimator({
     doCalc(null, null);
   };
 
-  const buildWhatsApp = (type, total, days, distKm, isLongDistance = false) => {
+  const formatTime12h = (timeVal) => {
+    if (!timeVal) return '';
+    if (timeVal.includes('AM') || timeVal.includes('PM')) return timeVal;
+    const parts = timeVal.split(':');
+    if (parts.length < 2) return timeVal;
+    const hours = parseInt(parts[0], 10);
+    const mins = parts[1];
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12;
+    return `${String(formattedHours).padStart(2, '0')}:${mins} ${ampm}`;
+  };
+
+  const buildWhatsApp = (type, total, days, distKm, isLongDistance = false, foodProv = false, stayProv = false) => {
     const route = drop.trim() ? `${pickup} → ${drop}` : pickup;
     const distStr = distKm ? ` (~${type === 'round' ? distKm * 2 : distKm} km)` : '';
     const longDistNote = isLongDistance ? ' (Includes 1.5x Bata for >400 km return transit)' : '';
     const gearLabel = gear === 'automatic' ? 'Automatic (AT / DCT / EV)' : 'Manual (MT)';
-    const carLabel = carModel.trim() ? `${carModel.trim()} (${vehicle.label})` : vehicle.label;
-    const schedStr = travelDate ? `${travelDate}${reportingTime ? ` @ ${reportingTime}` : ''}` : (reportingTime ? `@ ${reportingTime}` : '');
+    const formattedTime = formatTime12h(reportingTime);
+    const schedStr = travelDate ? `${travelDate}${formattedTime ? ` @ ${formattedTime}` : ''}` : (formattedTime ? `@ ${formattedTime}` : '');
+
+    const foodNote = foodProv 
+      ? 'Customer provides driver meals at halts (₹0 allowance)' 
+      : 'Included in total (Driver self-manages meals — zero food requests to customer)';
+    
+    const stayNote = type === 'round' && days > 1
+      ? (stayProv 
+          ? 'Hotel driver dormitory provided by customer (₹0)' 
+          : 'Included in total (₹300/night lodging allowance)')
+      : null;
 
     const msg = 
       `Hi Kalidass Travels, I need an Outstation Acting Driver:\n\n` +
@@ -292,9 +314,12 @@ export default function DriverFeeEstimator({
       `• Duration: ${days} Day${days > 1 ? 's' : ''}\n` +
       `• Est. Total: ₹${total.toLocaleString('en-IN')}\n\n` +
       `🚗 VEHICLE DETAILS:\n` +
-      `• Car Model: ${carLabel}\n` +
+      `• Vehicle Type: ${vehicle.label}\n` +
       `• Transmission / Gear: ${gearLabel}\n` +
       (schedStr ? `\n📅 SCHEDULE:\n• Travel Date & Time: ${schedStr}\n` : '') +
+      `\n🍽️ MEALS & STAY POLICY:\n` +
+      `• Driver Meals: ${foodNote}\n` +
+      (stayNote ? `• Driver Stay: ${stayNote}\n` : '') +
       `\nPlease assign a verified chauffeur and confirm driver availability.`;
     return buildWhatsAppUrl(msg);
   };
@@ -378,48 +403,32 @@ export default function DriverFeeEstimator({
           <p className="text-micro text-m3-on-surface-variant mt-1">{vehicle.models}</p>
         </div>
 
-        {/* ── Car Model & Transmission (Gear) Intake ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          <div>
-            <label className={labelCls}>Car Model / Name</label>
-            <div className={inputWrap}>
-              <Car className="w-4 h-4 text-m3-on-surface-variant mr-2 shrink-0" />
-              <input
-                type="text"
-                value={carModel}
-                onChange={e => { setCarModel(e.target.value); setShowResult(false); }}
-                placeholder="e.g. Swift, Creta, Innova, City..."
-                className={inputField}
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className={labelCls}>Transmission (Gear)</label>
-            <div className="grid grid-cols-2 gap-1.5 p-0.5 bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-md min-h-[44px] sm:min-h-[48px] items-center">
-              <button
-                type="button"
-                onClick={() => { setGear('manual'); setShowResult(false); }}
-                className={`py-2 px-2 text-xs font-bold rounded transition-all flex items-center justify-center gap-1 cursor-pointer ${
-                  gear === 'manual'
-                    ? 'bg-m3-primary text-m3-on-primary shadow-xs'
-                    : 'text-m3-on-surface hover:bg-m3-surface-container'
-                }`}
-              >
-                <span>⚙️ Manual</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => { setGear('automatic'); setShowResult(false); }}
-                className={`py-2 px-2 text-xs font-bold rounded transition-all flex items-center justify-center gap-1 cursor-pointer ${
-                  gear === 'automatic'
-                    ? 'bg-m3-primary text-m3-on-primary shadow-xs'
-                    : 'text-m3-on-surface hover:bg-m3-surface-container'
-                }`}
-              >
-                <span>🕹️ Automatic</span>
-              </button>
-            </div>
+        {/* ── Transmission (Gear) Intake ── */}
+        <div>
+          <label className={labelCls}>Transmission (Gear)</label>
+          <div className="grid grid-cols-2 gap-1.5 p-0.5 bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-md min-h-[44px] sm:min-h-[48px] items-center">
+            <button
+              type="button"
+              onClick={() => { setGear('manual'); setShowResult(false); }}
+              className={`py-2 px-2 text-xs font-bold rounded transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                gear === 'manual'
+                  ? 'bg-m3-primary text-m3-on-primary shadow-xs'
+                  : 'text-m3-on-surface hover:bg-m3-surface-container'
+              }`}
+            >
+              <span>⚙️ Manual</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => { setGear('automatic'); setShowResult(false); }}
+              className={`py-2 px-2 text-xs font-bold rounded transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                gear === 'automatic'
+                  ? 'bg-m3-primary text-m3-on-primary shadow-xs'
+                  : 'text-m3-on-surface hover:bg-m3-surface-container'
+              }`}
+            >
+              <span>🕹️ Automatic</span>
+            </button>
           </div>
         </div>
 
@@ -534,6 +543,7 @@ export default function DriverFeeEstimator({
               <Calendar className="w-4 h-4 text-m3-on-surface-variant mr-2 shrink-0" />
               <input
                 type="date"
+                min={new Date().toISOString().split('T')[0]}
                 value={travelDate}
                 onChange={e => { setTravelDate(e.target.value); setShowResult(false); }}
                 className={`${inputField} cursor-pointer`}
@@ -541,82 +551,92 @@ export default function DriverFeeEstimator({
             </div>
           </div>
           <div>
-            <label className={labelCls}>Reporting Time</label>
+            <div className="flex items-center justify-between mb-1">
+              <label className={labelCls}>Reporting Time</label>
+              {reportingTime && (
+                <span className="text-[10px] font-bold text-m3-primary font-mono">
+                  {formatTime12h(reportingTime)}
+                </span>
+              )}
+            </div>
             <div className={inputWrap}>
               <Clock className="w-4 h-4 text-m3-on-surface-variant mr-2 shrink-0" />
               <input
-                type="text"
+                id="acting-driver-time-picker"
+                type="time"
                 value={reportingTime}
                 onChange={e => { setReportingTime(e.target.value); setShowResult(false); }}
-                placeholder="e.g. 06:00 AM"
-                className={inputField}
+                className={`${inputField} cursor-pointer`}
               />
             </div>
           </div>
         </div>
 
-        {/* ── Round Trip Extra Fields ── */}
+        {/* ── Round Trip Extra Duration ── */}
         {activeTab === 'round' && (
-          <>
-            <div>
-              <label className={labelCls}>Total Duration (Days)</label>
-              <div className={inputWrap}>
-                <Calendar className="w-4 h-4 text-m3-primary mr-2 shrink-0" />
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  value={days}
-                  onChange={e => {
-                    const v = e.target.value;
-                    if (v === '' || /^\d+$/.test(v)) setDays(v === '' ? '' : parseInt(v));
-                    setShowResult(false);
-                  }}
-                  onBlur={() => { if (!days) setDays(1); }}
-                  placeholder="2"
-                  className={inputField}
-                />
-              </div>
+          <div>
+            <label className={labelCls}>Total Duration (Days)</label>
+            <div className={inputWrap}>
+              <Calendar className="w-4 h-4 text-m3-primary mr-2 shrink-0" />
+              <input
+                type="text"
+                inputMode="numeric"
+                value={days}
+                onChange={e => {
+                  const v = e.target.value;
+                  if (v === '' || /^\d+$/.test(v)) setDays(v === '' ? '' : parseInt(v));
+                  setShowResult(false);
+                }}
+                onBlur={() => { if (!days) setDays(1); }}
+                placeholder="2"
+                className={inputField}
+              />
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              <label className="flex items-start gap-3 p-3 border border-m3-outline-variant rounded-m3-md cursor-pointer hover:border-m3-primary/50 transition-colors bg-m3-surface-container-low">
-                <div className="relative flex items-center mt-0.5 shrink-0">
-                  <input
-                    type="checkbox"
-                    checked={foodProvided}
-                    onChange={e => { setFoodProvided(e.target.checked); setShowResult(false); }}
-                    className="peer h-4 w-4 cursor-pointer appearance-none rounded-sm border border-m3-outline checked:border-m3-primary checked:bg-m3-primary focus-visible:ring-2 focus-visible:ring-m3-primary transition-all"
-                  />
-                  <Check className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 text-m3-on-primary opacity-0 peer-checked:opacity-100 pointer-events-none" />
-                </div>
-                <div>
-                  <span className="block text-xs font-semibold text-m3-on-surface">I will provide Driver Food</span>
-                  <span className="block text-[11px] text-m3-on-surface-variant mt-0.5">
-                    Saves {fmtRs(FOOD_PER_DAY)}/day — invite driver at halts.
-                  </span>
-                </div>
-              </label>
-
-              <label className="flex items-start gap-3 p-3 border border-m3-outline-variant rounded-m3-md cursor-pointer hover:border-m3-primary/50 transition-colors bg-m3-surface-container-low">
-                <div className="relative flex items-center mt-0.5 shrink-0">
-                  <input
-                    type="checkbox"
-                    checked={stayProvided}
-                    onChange={e => { setStayProvided(e.target.checked); setShowResult(false); }}
-                    className="peer h-4 w-4 cursor-pointer appearance-none rounded-sm border border-m3-outline checked:border-m3-primary checked:bg-m3-primary focus-visible:ring-2 focus-visible:ring-m3-primary transition-all"
-                  />
-                  <Check className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 text-m3-on-primary opacity-0 peer-checked:opacity-100 pointer-events-none" />
-                </div>
-                <div>
-                  <span className="block text-xs font-semibold text-m3-on-surface">I will provide Driver Stay</span>
-                  <span className="block text-[11px] text-m3-on-surface-variant mt-0.5">
-                    Saves {fmtRs(STAY_PER_NIGHT)}/night — hotel driver dorm.
-                  </span>
-                </div>
-              </label>
-            </div>
-          </>
+          </div>
         )}
+
+        {/* ── Food & Stay Options (Always transparent) ── */}
+        <div className={`grid grid-cols-1 ${activeTab === 'round' ? 'sm:grid-cols-2' : ''} gap-2.5`}>
+          <label className="flex items-start gap-3 p-3 border border-m3-outline-variant rounded-m3-md cursor-pointer hover:border-m3-primary/50 transition-colors bg-m3-surface-container-low">
+            <div className="relative flex items-center mt-0.5 shrink-0">
+              <input
+                type="checkbox"
+                checked={foodProvided}
+                onChange={e => { setFoodProvided(e.target.checked); setShowResult(false); }}
+                className="peer h-4 w-4 cursor-pointer appearance-none rounded-sm border border-m3-outline checked:border-m3-primary checked:bg-m3-primary focus-visible:ring-2 focus-visible:ring-m3-primary transition-all"
+              />
+              <Check className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 text-m3-on-primary opacity-0 peer-checked:opacity-100 pointer-events-none" />
+            </div>
+            <div>
+              <span className="block text-xs font-semibold text-m3-on-surface">I will provide Driver Food</span>
+              <span className="block text-[11px] text-m3-on-surface-variant mt-0.5">
+                {activeTab === 'round' 
+                  ? `Saves ${fmtRs(FOOD_PER_DAY)}/day — invite driver at halts.`
+                  : `Saves ${fmtRs(FOOD_PER_DAY)} — invite driver at halts.`}
+              </span>
+            </div>
+          </label>
+
+          {activeTab === 'round' && (
+            <label className="flex items-start gap-3 p-3 border border-m3-outline-variant rounded-m3-md cursor-pointer hover:border-m3-primary/50 transition-colors bg-m3-surface-container-low">
+              <div className="relative flex items-center mt-0.5 shrink-0">
+                <input
+                  type="checkbox"
+                  checked={stayProvided}
+                  onChange={e => { setStayProvided(e.target.checked); setShowResult(false); }}
+                  className="peer h-4 w-4 cursor-pointer appearance-none rounded-sm border border-m3-outline checked:border-m3-primary checked:bg-m3-primary focus-visible:ring-2 focus-visible:ring-m3-primary transition-all"
+                />
+                <Check className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 text-m3-on-primary opacity-0 peer-checked:opacity-100 pointer-events-none" />
+              </div>
+              <div>
+                <span className="block text-xs font-semibold text-m3-on-surface">I will provide Driver Stay</span>
+                <span className="block text-[11px] text-m3-on-surface-variant mt-0.5">
+                  Saves {fmtRs(STAY_PER_NIGHT)}/night — hotel driver dorm.
+                </span>
+              </div>
+            </label>
+          )}
+        </div>
 
         {/* ── Calculate Button — exact match to QuotationEngine ── */}
         <button
@@ -678,7 +698,13 @@ export default function DriverFeeEstimator({
                   </span>
                 </div>
                 <p className="text-[10px] text-m3-on-surface-variant font-medium mt-0.5">
-                  Driver Bata + Meals{result.type === 'round' && result.nights > 0 && !result.stayProvided ? ' + Stay' : ''} • <span className="italic">Tolls & parking extra</span>
+                  {result.foodProvided 
+                    ? 'Driver Bata only • Customer provides meals' 
+                    : 'Driver Bata + Driver Meal Allowance (Zero food requests on road)'}
+                  {result.type === 'round' && result.nights > 0 && (
+                    result.stayProvided ? ' • Hotel driver dorm' : ' • Stay allowance included'
+                  )}
+                  {' • '}<span className="italic">Tolls & parking extra</span>
                 </p>
               </div>
 
@@ -688,6 +714,16 @@ export default function DriverFeeEstimator({
                   <span className="font-bold text-m3-on-surface">{fmtRs(vehicle.bata)}/day</span>
                 </div>
               </div>
+            </div>
+
+            {/* Zero Food Hassle Callout Banner */}
+            <div className="flex items-center gap-2 p-2 rounded-m3-md bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 text-[11px] text-emerald-800 dark:text-emerald-200">
+              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>
+                <strong>Zero Food Hassle:</strong> {result.foodProvided 
+                  ? 'You agreed to invite the driver for meals at halts (Food allowance is ₹0).' 
+                  : 'Driver meal allowance is 100% included in this fare. The chauffeur will never ask you for food or cash.'}
+              </span>
             </div>
 
             {/* Compact Itemized Breakdown Box */}
@@ -702,7 +738,9 @@ export default function DriverFeeEstimator({
                   </div>
                   <div className={`flex justify-between items-center pt-1 ${result.foodProvided ? 'text-m3-success dark:text-m3-success font-medium' : ''}`}>
                     <span className="text-m3-on-surface-variant">Food Allowance ({result.days} day{result.days > 1 ? 's' : ''})</span>
-                    <span className="font-bold">{result.foodProvided ? 'Provided with Family (₹0)' : fmtRs(result.totalFood)}</span>
+                    <span className="font-bold">
+                      {result.foodProvided ? 'Provided with Family (₹0)' : `${fmtRs(result.totalFood)} (Driver self-manages)`}
+                    </span>
                   </div>
                   {result.nights > 0 && (
                     <div className={`flex justify-between items-center pt-1 ${result.stayProvided ? 'text-m3-success dark:text-m3-success font-medium' : ''}`}>
@@ -724,9 +762,11 @@ export default function DriverFeeEstimator({
                     </span>
                     <span className="font-bold text-m3-on-surface">{fmtRs(result.totalBata)}</span>
                   </div>
-                  <div className="flex justify-between items-center pt-1">
+                  <div className={`flex justify-between items-center pt-1 ${result.foodProvided ? 'text-m3-success dark:text-m3-success font-medium' : ''}`}>
                     <span className="text-m3-on-surface-variant">Food Allowance</span>
-                    <span className="font-bold text-m3-on-surface">{fmtRs(result.totalFood)}</span>
+                    <span className="font-bold text-m3-on-surface">
+                      {result.foodProvided ? 'Provided with Passenger (₹0)' : `${fmtRs(result.totalFood)} (Driver self-manages)`}
+                    </span>
                   </div>
                   <div className="flex justify-between items-center pt-1">
                     <span className="text-m3-on-surface-variant">Return Bus Ticket (SETC / Actuals)</span>

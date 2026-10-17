@@ -119,3 +119,18 @@ All fare summary cards and checkout actions must prioritize a calm, frictionless
   - Do not add redundant advance bullet points (such as `Zero Advance Required • Pay Chauffeur After Darshan / Return`) under the price, as token advance terms are already detailed inside the itemized breakdown table (`Advance Token Payment: ₹0`).
   - Do not place verbose links (such as `View Full Government Format Proforma Letterhead`) at the bottom of the breakdown table or corporate box. Keep document export discreet via the compact `Save PDF` action.
 
+## 9. Sticky Quick-Navigation Placement & Invariants (Learned from Chennai Airport Taxi)
+On service and landing pages featuring a booking engine, fare finder, or trip estimator above the fold:
+
+- **Positioning Immediately After Booking Engine**:
+  - The sticky jump bar (`nav[data-quick-nav]`) must be positioned immediately **after** the booking engine section in the document flow, preceding downstream informational sections (e.g., How It Works, Tariffs, Coverage, FAQs).
+  - Never place the navigation bar above or inside the booking engine card.
+- **Native CSS Sticky (No JS Fixed Hacks)**:
+  - Must use `class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-b border-m3-outline-variant/60 shadow-xs py-3 mb-6 sm:mb-8 -mx-3 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8"`.
+  - Do NOT implement `fixed` positioning with scroll event listeners toggling `-translate-y-full` or `opacity-0`. Native CSS `sticky` naturally holds the bar at `top-16` only when scrolled past its initial position.
+- **First Pill Jumps to Calculator**:
+  - The first link must target the top booking tool (e.g. `href="#trip-estimator"` or `href="#booking-section"`) with default active state (`data-active="true" aria-current="true"`).
+- **Target Section Scroll Margin (`scroll-mt-28`)**:
+  - All target anchor sections must specify `scroll-mt-28` (or `scroll-mt-32`) to account for the cumulative height of the site header (`top-16`, 64px) plus the sticky navigation bar (48px).
+
+

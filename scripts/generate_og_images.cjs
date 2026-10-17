@@ -298,8 +298,10 @@ async function main() {
   const fontSemiBoldPath = path.resolve("./public/fonts/PlusJakartaSans-SemiBold.ttf");
   const fontSemiBoldData = fs.readFileSync(fontSemiBoldPath);
 
+  const logoMarkPath = path.resolve("./public/images/logo-mark.png");
   const logoPngPath = path.resolve("./public/images/logo.png");
-  const logoBuffer = fs.readFileSync(logoPngPath);
+  const chosenPath = fs.existsSync(logoMarkPath) ? logoMarkPath : logoPngPath;
+  const logoBuffer = fs.readFileSync(chosenPath);
   const logoPng = await sharp(logoBuffer).png().toBuffer();
   const logoBase64 = `data:image/png;base64,${logoPng.toString("base64")}`;
 

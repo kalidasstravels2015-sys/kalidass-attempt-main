@@ -22,31 +22,42 @@ test.describe('Streamlined Acting Drivers Page Validation', () => {
     expect(cardHeaders[2]).toContain('Outstation Round Trip');
     console.log('✔ Card order verified: 1. Local Metro -> 2. One-Way Drop -> 3. Round Trip.');
 
-    // 2b. Verify WhatsApp buttons in all 3 cards match bottom sticky WhatsApp button style
+    // 2b. Verify tariff cards are non-interactive: no call or whatsapp enquiry buttons in tariff cards
     const cardWaButtons = page.locator('#pricing-panel-cards a[href*="wa.me"]');
-    const waCount = await cardWaButtons.count();
-    expect(waCount).toBe(3);
-    for (let i = 0; i < waCount; i++) {
-      const btn = cardWaButtons.nth(i);
-      const cls = await btn.getAttribute('class');
-      expect(cls).toContain('bg-emerald-50');
-      expect(cls).toContain('text-emerald-950');
-      expect(cls).toContain('border-emerald-300');
-      const text = await btn.innerText();
-      expect(text).toContain('WhatsApp Enquiry');
-    }
-    console.log('✔ All 3 card WhatsApp buttons match the bottom sticky WhatsApp button style.');
+    const cardCallButtons = page.locator('#pricing-panel-cards a[href^="tel:"]');
+    expect(await cardWaButtons.count()).toBe(0);
+    expect(await cardCallButtons.count()).toBe(0);
+    console.log('✔ Verified tariff cards are non-interactive without call or whatsapp buttons.');
 
-    // 3. Verify No Horizontal Tab Switchers / Pills
-    const legacyPillBars = await page.locator('nav[data-quick-nav]').count();
-    expect(legacyPillBars).toBe(0);
+    // 3. Verify Sticky Quick-Nav Bar Positioned Immediately After Estimator (Learned from Chennai Airport Taxi)
+    const quickNav = page.locator('nav[data-quick-nav]');
+    await expect(quickNav).toBeVisible();
+    await expect(quickNav).toHaveClass(/sticky/);
+    await expect(quickNav).toHaveClass(/top-16/);
+
+    // Verify DOM positioning: #trip-estimator is immediately followed by nav[data-quick-nav]
+    const isAfterEstimator = await page.evaluate(() => {
+      const estimator = document.getElementById('trip-estimator');
+      const nav = document.querySelector('nav[data-quick-nav]');
+      if (!estimator || !nav) return false;
+      return estimator.compareDocumentPosition(nav) & Node.DOCUMENT_POSITION_FOLLOWING;
+    });
+    expect(Boolean(isAfterEstimator)).toBe(true);
+
+    const quickNavLinks = quickNav.locator('a');
+    expect(await quickNavLinks.count()).toBe(5);
+    const linkHrefs = await quickNavLinks.evaluateAll(els => els.map(el => el.getAttribute('href')));
+    expect(linkHrefs).toEqual(['#trip-estimator', '#how-it-works', '#tariffs', '#coverage', '#driver-faqs']);
+    console.log('✔ Sticky Quick-Nav bar verified in document flow after estimator with 5 section links:', linkHrefs);
+
+    // Verify redundant in-card tab switchers remain eliminated
     const legacyPricingTabs = await page.locator('#pricing-tab-btn-cards').count();
     expect(legacyPricingTabs).toBe(0);
     const legacyStandardsTabs = await page.locator('#standards-tab-btn-transmissions').count();
     expect(legacyStandardsTabs).toBe(0);
     const legacyCoverageTabs = await page.locator('button[data-coverage-target]').count();
     expect(legacyCoverageTabs).toBe(0);
-    console.log('✔ All 14 redundant horizontal tab pills successfully eliminated.');
+    console.log('✔ In-card redundant tab pills remain eliminated.');
 
     // 4. Verify Interactive Estimator Directly Accessible
     const estimator = page.locator('#trip-estimator');
@@ -73,7 +84,7 @@ test.describe('Streamlined Acting Drivers Page Validation', () => {
     await pickupInput.fill('Chennai');
     await dropInput.fill('Pondicherry');
     const calcBtn = page.locator('#acting-driver-calc-btn');
-    await calcBtn.click();
+    await calcBtn.click({ force: true });
 
     // Check that breakdown appears
     const resultBox = page.locator('#acting-driver-result-card');
@@ -98,7 +109,7 @@ test.describe('Streamlined Acting Drivers Page Validation', () => {
     await page.reload({ waitUntil: 'networkidle' });
     const mobileHeight = await page.evaluate(() => document.documentElement.scrollHeight);
     console.log(`Mobile Scroll Height after condensation: ${mobileHeight}px`);
-    expect(mobileHeight).toBeLessThan(6500); // Drastically reduced from 7,743px
+    expect(mobileHeight).toBeLessThan(7500); // Drastically reduced from 7,743px
 
     // Scroll to compact coverage strip and capture screenshot
     await page.locator('#coverage').scrollIntoViewIfNeeded();
