@@ -80,12 +80,12 @@ VERIFIED RATE CARD:
      * 4 hrs / 40 km: ₹3,500 | 5 hrs / 50 km: ₹4,200 | 8 hrs / 80 km: ₹5,500 | 10 hrs / 100 km: ₹6,500 | 12 hrs / 120 km: ₹7,000
      * Extra km: ₹24 | Extra hr: ₹500
 
-3. OUTSTATION & INTERCITY PER-KM TARIFFS (Applies ONLY to general city trips like Bangalore, Coimbatore, Trichy, Salem, Madurai — NEVER apply per-km billing to Tirupati, Pondicherry, or Tour Packages, which have dedicated multi-day package rates):
-   - Swift Dzire / Etios: ₹14 / km (Min 250 km/day, Driver Bata ₹400/calendar day)
-   - Maruti Ertiga: ₹17 / km (Min 250 km/day, Driver Bata ₹500/calendar day)
-   - Toyota Innova: ₹20 / km (Min 250 km/day, Driver Bata ₹600/calendar day)
-   - Innova Crysta: ₹22 / km (Min 250 km/day, Driver Bata ₹700/calendar day)
-   - Tempo Traveller: ₹26 / km (Min 300 km/day, Driver Bata ₹800/calendar day)
+3. OUTSTATION & INTERCITY PER-KM TARIFFS (Applies to general city trips like Bangalore, Coimbatore, Trichy, Salem, Madurai, and point-to-point airport drops):
+   - Swift Dzire / Etios: Round trip ₹14/km | One-way drop ₹16/km (Min drop 130 km, Round trip 250 km/day, Driver Bata ₹400/day)
+   - Maruti Ertiga / XL6: Round trip ₹17/km | One-way drop ₹19/km (Min drop 130 km, Round trip 250 km/day, Driver Bata ₹500/day)
+   - Toyota Innova: Round trip ₹20/km | One-way drop ₹22/km (Min drop 130 km, Round trip 250 km/day, Driver Bata ₹600/day)
+   - Innova Crysta: Round trip ₹22/km | One-way drop ₹25/km (Min drop 130 km, Round trip 250 km/day, Driver Bata ₹700/day)
+   - Tempo Traveller (12S): Round trip ₹26/km | One-way drop ₹29/km (Min drop 250 km, Round trip 300 km/day, Driver Bata ₹800/day)
    * General outstation note: Highway Tolls, State Border Permits (if outside Tamil Nadu), and Parking are at actuals.
 
 4. POPULAR ROUND TRIPS FROM CHENNAI:

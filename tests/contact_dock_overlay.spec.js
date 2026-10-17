@@ -10,17 +10,27 @@ test.describe('Popups hide the floating call button', () => {
     await page.setViewportSize({ width: 412, height: 924 });
   });
 
-  test('Airport "Trip Summary & Booking" sheet hides floating call button and is not covered', async ({ page }) => {
+  test('Airport "Trip Summary & Booking" sheet hides floating call button and sticky nav, and is not covered', async ({ page }) => {
     await page.goto('/services/chennai-airport-taxi/');
-    const callBtn = page.locator('#floating-call-btn');
-    await expect(callBtn).toBeVisible();
+    const floatingDock = page.locator('#floating-actions-container');
+    const quickNav = page.locator('nav[data-quick-nav]');
+    await expect(floatingDock).toBeVisible();
+    await expect(quickNav).toBeVisible();
 
-    await page.locator('#airport-from-input').fill('T. Nagar');
-    await page.locator('#get-flat-fare-btn').click();
+    const tabPickup = page.locator('[data-testid="tab-pickup"]');
+    await tabPickup.click();
+
+    const toInput = page.locator('#airport-to-input');
+    await toInput.fill('Puducherry, India');
+
+    const calcBtn = page.locator('#get-flat-fare-btn');
+    await calcBtn.scrollIntoViewIfNeeded();
+    await calcBtn.click();
 
     const modal = page.locator('#airport-booking-modal');
-    await expect(modal).toBeVisible();
-    await expect(callBtn).toBeHidden();
+    await expect(modal).toBeVisible({ timeout: 10000 });
+    await expect(floatingDock).toBeHidden();
+    await expect(quickNav).toBeHidden();
 
     // Sheet's own secondary CTA row must be fully clickable (not under the button)
     const callDesk = modal.getByRole('link', { name: /Call 24\/7 Desk/i });
@@ -29,38 +39,39 @@ test.describe('Popups hide the floating call button', () => {
 
     await modal.locator('button[aria-label="Close"]').click();
     await expect(modal).toBeHidden();
-    await expect(callBtn).toBeVisible();
+    await expect(floatingDock).toBeVisible();
+    await expect(quickNav).toBeVisible();
   });
 
   test('Careers application <dialog> hides floating call button', async ({ page }) => {
     await page.goto('/careers/');
-    const callBtn = page.locator('#floating-call-btn');
-    await expect(callBtn).toBeVisible();
+    const floatingDock = page.locator('#floating-actions-container');
+    await expect(floatingDock).toBeVisible();
 
     await page.getByRole('button', { name: /^Apply$/i }).first().click();
     const dialog = page.locator('dialog[open]');
     await expect(dialog).toBeVisible();
-    await expect(callBtn).toBeHidden();
+    await expect(floatingDock).toBeHidden();
 
     await page.keyboard.press('Escape');
     await expect(page.locator('dialog[open]')).toHaveCount(0);
-    await expect(callBtn).toBeVisible();
+    await expect(floatingDock).toBeVisible();
   });
 
   test('Home safety <dialog> hides floating call button', async ({ page }) => {
     await page.goto('/');
-    const callBtn = page.locator('#floating-call-btn');
-    await expect(callBtn).toBeVisible();
+    const floatingDock = page.locator('#floating-actions-container');
+    await expect(floatingDock).toBeVisible();
 
     const trigger = page.locator('[data-modal-target]').first();
     await trigger.scrollIntoViewIfNeeded();
     await trigger.click();
     await expect(page.locator('dialog[open]')).toBeVisible();
-    await expect(callBtn).toBeHidden();
+    await expect(floatingDock).toBeHidden();
 
     await page.keyboard.press('Escape');
     await expect(page.locator('dialog[open]')).toHaveCount(0);
-    await expect(callBtn).toBeVisible();
+    await expect(floatingDock).toBeVisible();
   });
 });
 

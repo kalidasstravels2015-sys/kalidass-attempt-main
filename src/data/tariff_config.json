@@ -2,7 +2,7 @@
   "vehicles": {
     "Swift Dzire": {
       "round_trip_rate": 14,
-      "one_way_rate": 14,
+      "one_way_rate": 16,
       "min_km_per_day": 250,
       "driver_bata": 400,
       "min_drop_km": 130,
@@ -16,7 +16,7 @@
     },
     "Toyota Etios": {
       "round_trip_rate": 14,
-      "one_way_rate": 14,
+      "one_way_rate": 16,
       "min_km_per_day": 250,
       "driver_bata": 400,
       "min_drop_km": 130,
@@ -30,7 +30,7 @@
     },
     "Maruti Ertiga": {
       "round_trip_rate": 17,
-      "one_way_rate": 17,
+      "one_way_rate": 19,
       "min_km_per_day": 250,
       "driver_bata": 500,
       "min_drop_km": 130,
@@ -44,7 +44,7 @@
     },
     "Innova": {
       "round_trip_rate": 20,
-      "one_way_rate": 20,
+      "one_way_rate": 22,
       "min_km_per_day": 250,
       "driver_bata": 600,
       "min_drop_km": 130,
@@ -58,7 +58,7 @@
     },
     "Innova Crysta": {
       "round_trip_rate": 22,
-      "one_way_rate": 22,
+      "one_way_rate": 25,
       "min_km_per_day": 250,
       "driver_bata": 700,
       "min_drop_km": 130,
@@ -72,7 +72,7 @@
     },
     "Tempo Traveller": {
       "round_trip_rate": 26,
-      "one_way_rate": 26,
+      "one_way_rate": 29,
       "min_km_per_day": 300,
       "driver_bata": 800,
       "min_drop_km": 250,

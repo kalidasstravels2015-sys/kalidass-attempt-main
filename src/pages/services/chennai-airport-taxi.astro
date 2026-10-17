@@ -83,11 +83,11 @@ const zoneTariffs = [
     category: "outstation",
     zone: "Pondicherry & Auroville Direct",
     destinations: "Auroville, White Town, Promenade Beach, French Quarter (Direct Non-Stop Expressway)",
-    sedan: "₹3,900",
-    innova: "₹5,600",
-    crysta: "₹6,800",
-    tempo: "₹8,900",
-    distance: "145 km",
+    sedan: "₹2,820",
+    innova: "₹3,370",
+    crysta: "₹4,480",
+    tempo: "₹8,050",
+    distance: "151 km",
     eta: "2.5–3 hrs",
     popular: true,
     whatsappDrop: "Hi Kalidass Travels, I need a Direct Highway Airport DROP from Pondicherry / Auroville to Chennai Airport (MAA). Date: , Pickup Time: , Address: ",
@@ -98,10 +98,10 @@ const zoneTariffs = [
     category: "outstation",
     zone: "Vellore CMC Hospital & Tirupati Direct",
     destinations: "CMC Hospital Vellore, VIT Campus, Tirupati Balaji Temple (Highway Transfers)",
-    sedan: "₹4,200",
-    innova: "₹6,200",
-    crysta: "₹7,400",
-    tempo: "₹9,800",
+    sedan: "₹2,560",
+    innova: "₹3,070",
+    crysta: "₹4,080",
+    tempo: "₹8,050",
     distance: "135 km",
     eta: "3–3.5 hrs",
     popular: false,
@@ -264,7 +264,7 @@ const faqs = [
   },
   {
     q: "Can I book a direct highway transfer between MAA Airport and Pondicherry, Vellore, or Tirupati?",
-    a: "Yes! We provide direct non-stop highway airport transfers to/from Pondicherry (₹3,900 flat), Tirupati Balaji (₹4,200 flat), and Vellore CMC Hospital (₹4,200 flat) bypassing city traffic. For complete Tirupati darshan packages with return tolls and AP permit included, check our all-inclusive <a href=\"/services/tirupati-package/\" class=\"text-m3-primary font-bold hover:underline\">Chennai to Tirupati Cab Package</a>."
+    a: "Yes! We provide direct non-stop highway airport transfers to/from Pondicherry (₹2,820), Tirupati Balaji (₹2,560), and Vellore CMC Hospital (₹2,600) bypassing city traffic. For complete Tirupati darshan packages with return tolls and AP permit included, check our all-inclusive <a href=\"/services/tirupati-package/\" class=\"text-m3-primary font-bold hover:underline\">Chennai to Tirupati Cab Package</a>."
   },
   {
     q: "Are Chennai airport transfer rates fixed or subject to rain/traffic surge pricing?",
@@ -332,7 +332,7 @@ const taxiServiceSchema = {
     "@type": "AggregateOffer",
     "priceCurrency": "INR",
     "lowPrice": "650",
-    "highPrice": "4200",
+    "highPrice": "2820",
     "offerCount": zoneTariffs.length.toString(),
     "offers": zoneTariffs.map((z) => ({
       "@type": "Offer",
@@ -411,7 +411,7 @@ const productSchema = {
     "@type": "AggregateOffer",
     "priceCurrency": "INR",
     "lowPrice": "650",
-    "highPrice": "4200",
+    "highPrice": "2820",
     "offerCount": zoneTariffs.length.toString(),
     "priceValidUntil": "2027-12-31",
     "validFrom": "2025-01-01",
@@ -656,8 +656,104 @@ const tripListSchema = {
 
       <!-- 1. BOOKING ENGINE AT THE TOP -->
       <div id="booking-section" class="scroll-mt-24"></div>
-      <section class="relative z-20 py-0.5 px-1 sm:px-2 max-w-2xl mx-auto mb-2">
+      <section class="relative py-0.5 px-1 sm:px-2 max-w-2xl mx-auto mb-2">
         <AirportBookingEngine client:load showHeader={false} />
+
+        <!-- Popular Chennai Neighborhoods (1-Tap Fare Shortcuts) -->
+        <div id="suburban-corridors" class="mt-2.5 pt-2 border-t border-m3-outline-variant/60">
+          <div class="flex items-center justify-between gap-2 mb-1.5 px-0.5">
+            <span class="text-[11px] font-bold text-m3-on-surface flex items-center gap-1">
+              <svg class="w-3.5 h-3.5 text-m3-primary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+              <span>Popular Neighborhood Shortcuts:</span>
+            </span>
+            <span class="text-[10px] text-m3-on-surface-variant font-medium">Flat Rates · Zero Surge</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 sm:gap-2">
+            <!-- 1. Tambaram -->
+            <button
+              type="button"
+              data-location="Tambaram, Chennai"
+              data-fare="₹650"
+              class="neighborhood-book-btn flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:bg-m3-surface-container-low transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary shadow-2xs"
+            >
+              <div class="text-left min-w-0">
+                <span class="text-[9px] font-semibold text-m3-on-surface-variant block uppercase leading-none">GST Road</span>
+                <strong class="text-xs font-bold text-m3-on-surface block mt-0.5 leading-tight">Tambaram</strong>
+              </div>
+              <span class="text-xs font-extrabold text-m3-primary shrink-0 ms-1">₹650</span>
+            </button>
+
+            <!-- 2. Velachery -->
+            <button
+              type="button"
+              data-location="Velachery, Chennai"
+              data-fare="₹650"
+              class="neighborhood-book-btn flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:bg-m3-surface-container-low transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary shadow-2xs"
+            >
+              <div class="text-left min-w-0">
+                <span class="text-[9px] font-semibold text-m3-on-surface-variant block uppercase leading-none">South Hub</span>
+                <strong class="text-xs font-bold text-m3-on-surface block mt-0.5 leading-tight">Velachery</strong>
+              </div>
+              <span class="text-xs font-extrabold text-m3-primary shrink-0 ms-1">₹650</span>
+            </button>
+
+            <!-- 3. Porur -->
+            <button
+              type="button"
+              data-location="Porur, Chennai"
+              data-fare="₹650"
+              class="neighborhood-book-btn flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:bg-m3-surface-container-low transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary shadow-2xs"
+            >
+              <div class="text-left min-w-0">
+                <span class="text-[9px] font-semibold text-m3-on-surface-variant block uppercase leading-none">West Corridor</span>
+                <strong class="text-xs font-bold text-m3-on-surface block mt-0.5 leading-tight">Porur</strong>
+              </div>
+              <span class="text-xs font-extrabold text-m3-primary shrink-0 ms-1">₹650</span>
+            </button>
+
+            <!-- 4. Sholinganallur -->
+            <button
+              type="button"
+              data-location="Sholinganallur, Chennai"
+              data-fare="₹1,250"
+              class="neighborhood-book-btn flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:bg-m3-surface-container-low transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary shadow-2xs"
+            >
+              <div class="text-left min-w-0">
+                <span class="text-[9px] font-semibold text-m3-on-surface-variant block uppercase leading-none">OMR IT Hub</span>
+                <strong class="text-xs font-bold text-m3-on-surface block mt-0.5 leading-tight">Sholinganallur</strong>
+              </div>
+              <span class="text-xs font-extrabold text-m3-primary shrink-0 ms-1">₹1,250</span>
+            </button>
+
+            <!-- 5. T. Nagar -->
+            <button
+              type="button"
+              data-location="T. Nagar, Chennai"
+              data-fare="₹950"
+              class="neighborhood-book-btn flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:bg-m3-surface-container-low transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary shadow-2xs"
+            >
+              <div class="text-left min-w-0">
+                <span class="text-[9px] font-semibold text-m3-on-surface-variant block uppercase leading-none">Central Hub</span>
+                <strong class="text-xs font-bold text-m3-on-surface block mt-0.5 leading-tight">T. Nagar</strong>
+              </div>
+              <span class="text-xs font-extrabold text-m3-primary shrink-0 ms-1">₹950</span>
+            </button>
+
+            <!-- 6. Anna Nagar -->
+            <button
+              type="button"
+              data-location="Anna Nagar, Chennai"
+              data-fare="₹950"
+              class="neighborhood-book-btn flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:bg-m3-surface-container-low transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary shadow-2xs"
+            >
+              <div class="text-left min-w-0">
+                <span class="text-[9px] font-semibold text-m3-on-surface-variant block uppercase leading-none">North-West</span>
+                <strong class="text-xs font-bold text-m3-on-surface block mt-0.5 leading-tight">Anna Nagar</strong>
+              </div>
+              <span class="text-xs font-extrabold text-m3-primary shrink-0 ms-1">₹950</span>
+            </button>
+          </div>
+        </div>
 
         <!-- Trust Reassurance Footer Strip with Inline SVGs -->
         <div class="mt-1.5 flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-[11px] text-m3-on-surface-variant font-medium">
@@ -1138,119 +1234,7 @@ const tripListSchema = {
 
         </div>
 
-        <!-- Popular Chennai Neighborhoods Corridors (Directly grouped with Zone Tariffs) -->
-        <div id="suburban-corridors" class="pt-4 sm:pt-5 border-t border-m3-outline-variant mb-6 scroll-mt-28">
-          <div class="mb-3 pb-2 border-b border-m3-outline-variant flex items-center justify-between gap-3 flex-wrap">
-            <div class="flex items-center gap-2 min-w-0">
-              <span class="w-7 h-7 rounded-lg bg-m3-surface-container-low text-m3-on-surface flex items-center justify-center shrink-0 border border-m3-outline-variant shadow-2xs">
-                <svg class="w-3.5 h-3.5 text-m3-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
-              </span>
-              <div class="min-w-0">
-                <h3 class="text-base sm:text-lg font-extrabold text-m3-on-surface font-heading leading-tight">
-                  Popular Chennai Neighborhoods to Airport (MAA)
-                </h3>
-                <p class="text-xs text-m3-on-surface-variant mt-0.5">
-                  Tap any area below to calculate exact fare and book directly in the booking box above.
-                </p>
-              </div>
-            </div>
-            <span class="text-xs font-bold text-m3-on-surface bg-m3-surface-container-low px-2.5 py-0.5 rounded-full border border-m3-outline-variant shrink-0 hidden sm:inline-block">
-              Zero Surge Guarantee
-            </span>
-          </div>
 
-          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-            <!-- 1. Tambaram -->
-            <button
-              type="button"
-              data-location="Tambaram, Chennai"
-              data-fare="₹650"
-              class="neighborhood-book-btn text-left p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:bg-m3-surface-container-low transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
-            >
-              <span class="text-[10px] font-bold text-m3-on-surface-variant uppercase tracking-wider block">GST Road</span>
-              <strong class="text-xs font-bold text-m3-on-surface block mt-0.5 truncate">Tambaram</strong>
-              <div class="mt-1 flex items-center justify-between text-[11px]">
-                <span class="font-extrabold text-m3-primary">₹650</span>
-                <span class="text-m3-on-surface-variant text-[10px]">11 km</span>
-              </div>
-            </button>
-
-            <!-- 2. Velachery -->
-            <button
-              type="button"
-              data-location="Velachery, Chennai"
-              data-fare="₹650"
-              class="neighborhood-book-btn text-left p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:bg-m3-surface-container-low transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
-            >
-              <span class="text-[10px] font-bold text-m3-on-surface-variant uppercase tracking-wider block">South Hub</span>
-              <strong class="text-xs font-bold text-m3-on-surface block mt-0.5 truncate">Velachery</strong>
-              <div class="mt-1 flex items-center justify-between text-[11px]">
-                <span class="font-extrabold text-m3-primary">₹650</span>
-                <span class="text-m3-on-surface-variant text-[10px]">10 km</span>
-              </div>
-            </button>
-
-            <!-- 3. Porur -->
-            <button
-              type="button"
-              data-location="Porur, Chennai"
-              data-fare="₹650"
-              class="neighborhood-book-btn text-left p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:bg-m3-surface-container-low transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
-            >
-              <span class="text-[10px] font-bold text-m3-on-surface-variant uppercase tracking-wider block">West Corridor</span>
-              <strong class="text-xs font-bold text-m3-on-surface block mt-0.5 truncate">Porur</strong>
-              <div class="mt-1 flex items-center justify-between text-[11px]">
-                <span class="font-extrabold text-m3-primary">₹650</span>
-                <span class="text-m3-on-surface-variant text-[10px]">12 km</span>
-              </div>
-            </button>
-
-            <!-- 4. Sholinganallur -->
-            <button
-              type="button"
-              data-location="Sholinganallur, Chennai"
-              data-fare="₹1,250"
-              class="neighborhood-book-btn text-left p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:bg-m3-surface-container-low transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
-            >
-              <span class="text-[10px] font-bold text-m3-on-surface-variant uppercase tracking-wider block">OMR IT Hub</span>
-              <strong class="text-xs font-bold text-m3-on-surface block mt-0.5 truncate">Sholinganallur</strong>
-              <div class="mt-1 flex items-center justify-between text-[11px]">
-                <span class="font-extrabold text-m3-primary">₹1,250</span>
-                <span class="text-m3-on-surface-variant text-[10px]">14 km</span>
-              </div>
-            </button>
-
-            <!-- 5. T. Nagar -->
-            <button
-              type="button"
-              data-location="T. Nagar, Chennai"
-              data-fare="₹950"
-              class="neighborhood-book-btn text-left p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:bg-m3-surface-container-low transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
-            >
-              <span class="text-[10px] font-bold text-m3-on-surface-variant uppercase tracking-wider block">Central Hub</span>
-              <strong class="text-xs font-bold text-m3-on-surface block mt-0.5 truncate">T. Nagar</strong>
-              <div class="mt-1 flex items-center justify-between text-[11px]">
-                <span class="font-extrabold text-m3-primary">₹950</span>
-                <span class="text-m3-on-surface-variant text-[10px]">15 km</span>
-              </div>
-            </button>
-
-            <!-- 6. Anna Nagar -->
-            <button
-              type="button"
-              data-location="Anna Nagar, Chennai"
-              data-fare="₹950"
-              class="neighborhood-book-btn text-left p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant hover:border-m3-primary hover:bg-m3-surface-container-low transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
-            >
-              <span class="text-[10px] font-bold text-m3-on-surface-variant uppercase tracking-wider block">North-West</span>
-              <strong class="text-xs font-bold text-m3-on-surface block mt-0.5 truncate">Anna Nagar</strong>
-              <div class="mt-1 flex items-center justify-between text-[11px]">
-                <span class="font-extrabold text-m3-primary">₹950</span>
-                <span class="text-m3-on-surface-variant text-[10px]">18 km</span>
-              </div>
-            </button>
-          </div>
-        </div>
 
         <!-- SEO/AEO: Visually-hidden fare summary for Google index -->
         <div class="sr-only" aria-label="Chennai Airport taxi fare summary for all zones" data-speakable="true">

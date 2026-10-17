@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import {
   Plane, Car, Users, User, Calculator, MapPin, X,
   ChevronDown, CheckCircle2, ShieldCheck, Navigation,
@@ -249,6 +250,7 @@ const calculateAirportFare = ({ userLocation, selectedVehicle, currentDistanceKm
   const outstationKm = resolvedKm || (known ? known.distance : 130);
   const vData = tariffConfig.vehicles[selectedVehicle] || tariffConfig.vehicles['Swift Dzire'];
   const minDropKm = vData.min_drop_km || (selectedVehicle.includes('Tempo') ? 250 : 130);
+  const isMinKmApplied = outstationKm < minDropKm;
   const chargeableKm = Math.max(minDropKm, outstationKm);
   const oneWayRate = vData.one_way_rate;
   const driverBata = vData.driver_bata;
@@ -272,13 +274,15 @@ const calculateAirportFare = ({ userLocation, selectedVehicle, currentDistanceKm
     breakdown: {
       type: 'outstation_rate',
       chargeableKm,
+      actualKm: outstationKm,
+      isMinKmApplied,
       oneWayRate,
       driverBata,
       kmCost,
       tollsEst: extras.tollsEst,
       stateName: extras.stateName,
       statePermitEst: extras.statePermitEst,
-      inclusions: `₹${oneWayRate}/km (${chargeableKm} km min billed) + Driver Bata ₹${driverBata}`,
+      inclusions: `₹${oneWayRate}/km (${chargeableKm} km${isMinKmApplied ? ' min billed' : ''}) + Driver Bata ₹${driverBata}`,
       payment: 'Pay after trip'
     }
   };
@@ -692,7 +696,12 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
       name: name.trim(),
       phone: fullPhone,
       vehicle,
-      estimate
+      estimate,
+      fare: estimate,
+      pickup,
+      drop,
+      travelDate: dateTime,
+      flightNo
     });
 
     try {
@@ -1105,11 +1114,11 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
       {/* Portaled to <body> so z-[200/201] escape the page's `relative z-20` stacking
           context; data-hide-contact-dock hides the global sticky Call/WhatsApp dock
           (see docs/03_RULES.md §8.4). Only opens after a click, so no SSR mismatch. */}
-      {showBookingModal && (
+      {showBookingModal && typeof document !== 'undefined' && createPortal(
         <>
           {/* Backdrop */}
           <div
-            className="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm pointer-events-auto"
             onClick={() => setShowBookingModal(false)}
             aria-hidden="true"
           />
@@ -1144,8 +1153,8 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                 </button>
               </div>
 
-              {/* Body: clean, fits without scrolling */}
-              <form onSubmit={e => { e.preventDefault(); handleWhatsApp(); }} className="px-4 py-3 space-y-3">
+              {/* Body: clean, fits without scrolling, scrollable when needed */}
+              <form onSubmit={e => { e.preventDefault(); handleWhatsApp(); }} className="px-4 py-3 space-y-3 overflow-y-auto overscroll-contain flex-1">
 
                 {/* Unified Fare & Trip Card — stable layout with no jitter when currency changes */}
                 <div className="bg-m3-surface-container-low p-3 rounded-m3-lg border border-m3-outline-variant space-y-1.5">
@@ -1195,7 +1204,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                   {tripFare?.isOutstation ? (
                     <div className="space-y-1 pt-1">
                       <div className="flex items-center justify-between text-[11px] text-m3-on-surface-variant bg-m3-surface-container border border-m3-outline-variant/60 px-2.5 py-1 rounded-m3-md font-medium">
-                        <span>Rate: ₹{tripFare.breakdown?.oneWayRate}/km ({tripFare.breakdown?.chargeableKm} km min) + Bata ₹{tripFare.breakdown?.driverBata}</span>
+                        <span>Rate: ₹{tripFare.breakdown?.oneWayRate}/km ({tripFare.breakdown?.chargeableKm} km{tripFare.breakdown?.isMinKmApplied ? ' min billed' : ''}) + Bata ₹{tripFare.breakdown?.driverBata}</span>
                         <span className="font-semibold text-m3-primary">One-Way Drop</span>
                       </div>
                       <div className="flex items-center justify-between text-[11px] text-m3-on-success-container bg-m3-success-container/50 border border-m3-success/30 px-2.5 py-1 rounded-m3-md font-medium">
@@ -1358,7 +1367,8 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
 
             </div>
           </div>
-        </>
+        </>,
+        document.body
       )}
 
       {locationPickerOpen && (

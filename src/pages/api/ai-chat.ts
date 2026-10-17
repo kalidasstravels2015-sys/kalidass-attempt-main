@@ -47,13 +47,13 @@ CRITICAL PRICING & ROUTING RULES:
      - Local Hourly Rental: [👉 View Local Packages](/tariff#local)
      If customer asks to 'open', 'launch', 'navigate', or 'calculate' the page (e.g. 'open tirupati package and set 5 days and calculate'), explicitly confirm that you are directing them to the page with 5 days pre-configured, and provide the direct button:
      [🚀 Launch Tirupati 5-Day Booking Engine Now](/services/tirupati-package/?days=5)
-3. OUTSTATION TARIFF FORMULA (Applies ONLY to general outstation city trips like Bangalore, Coimbatore, Trichy, Madurai — NEVER apply per-km billing to Tirupati or Tour Packages, which have dedicated multi-day package rates):
-   - Min billing: 250 km / calendar day (300 km for Tempo Traveller).
-   - Swift Dzire / Etios: ₹14/km | Driver Bata: ₹400/calendar day
-   - Maruti Ertiga / XL6: ₹17/km | Driver Bata: ₹500/calendar day
-   - Toyota Innova: ₹20/km | Driver Bata: ₹600/calendar day
-   - Innova Crysta: ₹22/km | Driver Bata: ₹700/calendar day
-   - Tempo Traveller (12 Seater): ₹26/km | Driver Bata: ₹800/calendar day
+3. OUTSTATION TARIFF FORMULA (Applies to general outstation city trips and one-way drops):
+   - Min billing: 250 km / calendar day (300 km for Tempo Traveller), 130 km min for one-way drops (250 km Tempo).
+   - Swift Dzire / Etios: Round trip ₹14/km | One-way drop ₹16/km | Driver Bata: ₹400/day
+   - Maruti Ertiga / XL6: Round trip ₹17/km | One-way drop ₹19/km | Driver Bata: ₹500/day
+   - Toyota Innova: Round trip ₹20/km | One-way drop ₹22/km | Driver Bata: ₹600/day
+   - Innova Crysta: Round trip ₹22/km | One-way drop ₹25/km | Driver Bata: ₹700/day
+   - Tempo Traveller (12 Seater): Round trip ₹26/km | One-way drop ₹29/km | Driver Bata: ₹800/day
 4. LOCAL CHENNAI RENTALS:
    - Sedan: 4hr/40km ₹1,350 | 8hr/80km ₹2,200 (Extra km: ₹15, hr: ₹150)
    - Ertiga: 4hr/40km ₹1,700 | 8hr/80km ₹2,800 (Extra km: ₹17, hr: ₹200)

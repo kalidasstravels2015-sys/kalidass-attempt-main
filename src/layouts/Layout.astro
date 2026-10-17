@@ -1051,13 +1051,14 @@ const unifiedSchemaGraph = {
         contain-intrinsic-size: auto none auto 550px;
       }
 
-      /* ── Popup ⇄ Floating Contact Action rule (docs/03_RULES.md §8.4) ──────────
-         Any open popup already has its own enquiry CTA, so hide the global
-         round Call FAB.
+      /* ── Popup ⇄ Floating Contact Action & Sticky Nav rule (docs/03_RULES.md §8.4) ──
+         Any open popup already has its own enquiry CTA and takes full focus,
+         so hide the global floating FAB and sticky quick-navigation pill bar.
          • Native <dialog> via showModal() → matched by dialog:modal automatically
          • Custom overlays → add data-hide-contact-dock to the overlay root
          NOTE: never match [aria-modal] — the nav drawer keeps it permanently. */
-      html:has(dialog:modal, [data-hide-contact-dock]) #floating-actions-container {
+      html:has(dialog:modal, [data-hide-contact-dock]) #floating-actions-container,
+      html:has(dialog:modal, [data-hide-contact-dock]) nav[data-quick-nav] {
         opacity: 0;
         visibility: hidden;
         pointer-events: none;

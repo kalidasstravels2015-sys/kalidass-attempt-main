@@ -147,15 +147,22 @@ export const reportAdsConversion = (params = {}, type = 'quote') => {
 export const trackEvent = (eventName, params = {}) => {
     if (typeof window !== 'undefined' && window.gtag) {
         window.gtag('event', eventName, params);
-        // Automatically forward quote, call & booking lead events to Google Ads conversion
+
+        // Explicitly IGNORE calculator estimate generation (Get Flat Fare / Get Quote).
+        // Generating a quote is an informational browsing step, NOT a billable Google Ads conversion!
+        // We only report conversions when the user fills their details and clicks "Send Booking Enquiry".
+        if (eventName === 'calc_quote_generated' || eventName.includes('quote_generated')) {
+            return;
+        }
+
+        // Automatically forward completed bookings, WhatsApp enquiries, & phone calls to Google Ads conversion
         if (
             eventName.includes('conversion') ||
-            eventName.includes('quote') ||
             eventName.includes('whatsapp') ||
             eventName.includes('booked') ||
             eventName.includes('call_clicked')
         ) {
-            const isQualified = eventName.includes('booked') || Boolean(params.is_qualified_estimate);
+            const isQualified = eventName.includes('booked') || eventName.includes('converted') || Boolean(params.is_qualified_estimate);
             const type = eventName.includes('call')
                 ? 'call'
                 : isQualified
