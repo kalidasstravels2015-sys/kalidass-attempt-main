@@ -1917,7 +1917,7 @@ Please confirm availability and share quote.`;
                         <Calendar className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
                         <span className="truncate">{isTa ? 'திரும்பும் தேதி' : 'Return Date'}</span>
                       </label>
-                      <span className="text-[10px] sm:text-[11px] font-bold text-[#1a73e8] bg-[#1a73e8]/10 px-1.5 py-0.5 rounded-full shrink-0">
+                      <span className="text-[10px] sm:text-[11px] font-bold text-[#0b57d0] bg-[#1a73e8]/10 px-1.5 py-0.5 rounded-full shrink-0">
                         {days} {days > 1 ? (isTa ? 'நாட்கள்' : 'Days') : (isTa ? 'நாள்' : 'Day')}
                       </span>
                     </div>
@@ -2073,7 +2073,7 @@ Please confirm availability and share quote.`;
                         <span className="text-base font-extrabold text-m3-on-surface">
                           {vehicle}
                         </span>
-                        <span className="text-[10px] font-bold bg-[#1a73e8]/10 text-[#1a73e8] px-2 py-0.5 rounded-full">
+                        <span className="text-[10px] font-bold bg-[#1a73e8]/10 text-[#0b57d0] px-2 py-0.5 rounded-full">
                           {passengers} Pax
                         </span>
                       </div>

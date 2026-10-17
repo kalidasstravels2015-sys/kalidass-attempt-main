@@ -1634,7 +1634,7 @@ Please confirm booking!`;
                       <span className="text-base font-extrabold text-m3-on-surface">
                         {activeVehicle?.name || 'AC Cab'}
                       </span>
-                      <span className="text-[10px] font-bold bg-[#1a73e8]/10 text-[#1a73e8] px-2 py-0.5 rounded-full">
+                      <span className="text-[10px] font-bold bg-[#1a73e8]/10 text-[#0b57d0] px-2 py-0.5 rounded-full">
                         {activeVehicle?.capacity || passengers} Pax
                       </span>
                     </div>
