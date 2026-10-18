@@ -77,7 +77,7 @@ const CHENNAI_FORMS = [
   'pallikaranai', 'vandalur', 'guduvanchery', 'siruseri', 'navalur', 'meenambakkam'
 ];
 
-const estimateReturnBusFare = (km) => Math.max(400, Math.round((km * 2.0) / 10) * 10);
+const estimateReturnBusFare = (km) => Math.max(150, Math.round((km * 1.1) / 10) * 10);
 
 const getOneWayTier = (distKm) => {
   const km = distKm || 150;
@@ -139,7 +139,7 @@ const findKnownDistance = (origin, dest) => {
 
   // 4. Both inside Chennai Metro (e.g. Anna Nagar -> Tambaram)
   if (isOChennai && isDChennai) {
-    return { distance: 35, setcFare: 350 };
+    return { distance: 35, setcFare: 150 };
   }
 
   return null;
@@ -295,7 +295,7 @@ export default function DriverFeeEstimator({
         const tier = getOneWayTier(distKm);
         const totalBata = Math.round(vehicle.bata * tier.bataMultiplier);
         const totalFood = foodProvided ? 0 : Math.round(FOOD_PER_DAY * tier.foodMultiplier);
-        const busFare   = setcFare || (distKm ? estimateReturnBusFare(distKm) : 350);
+        const busFare   = setcFare || (distKm ? estimateReturnBusFare(distKm) : 200);
         const total = totalBata + totalFood + busFare;
         calculatedFare = total;
         setResult({

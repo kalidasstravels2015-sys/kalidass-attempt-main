@@ -55,7 +55,7 @@ test.describe('Non-Interactive Tariff Cards Validation', () => {
 
     // Card 2 routes
     await expect(page.locator('#pricing-panel-cards')).toContainText('Chennai → Pondicherry');
-    await expect(page.locator('#pricing-panel-cards')).toContainText('₹2,100');
+    await expect(page.locator('#pricing-panel-cards')).toContainText('₹1,900');
 
     // Card 3 vehicle rates
     await expect(page.locator('#pricing-panel-cards')).toContainText('Hatchback & Sedan');

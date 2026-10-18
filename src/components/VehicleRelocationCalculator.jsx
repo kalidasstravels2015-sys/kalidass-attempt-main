@@ -111,7 +111,7 @@ const CHENNAI_FORMS = [
 ];
 
 const estimateReturnBusFare = (distanceKm) => {
-  return Math.max(400, Math.round((distanceKm * 2.0) / 10) * 10);
+  return Math.max(150, Math.round((distanceKm * 1.1) / 10) * 10);
 };
 
 const getOneWayTier = (distKm) => {
@@ -150,7 +150,7 @@ const findKnownRelocationDistance = (origin, dest) => {
   const isDChennai = CHENNAI_FORMS.some(k => d.includes(k));
 
   if (isOChennai && isDChennai) {
-    return { distance: 35, setcFare: 300 };
+    return { distance: 35, setcFare: 150 };
   }
 
   // 1. Check tnBusFares table (matching Chennai metro aliases to 'chennai')

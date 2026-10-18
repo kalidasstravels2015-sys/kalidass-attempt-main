@@ -899,7 +899,7 @@ function getActingDriverQuote(state: ConversationState, isTa: boolean): string {
       `  - **Compact SUV (Ertiga / Creta):** ₹1,800 / நாள் (₹1,500 பேட்டா + ₹300 உணவு)\n` +
       `  - **Premium SUV (Innova Crysta):** ₹1,900 / நாள் (₹1,600 பேட்டா + ₹300 உணவு)\n` +
       `  - **Luxury European (BMW / Audi):** ₹2,200 / நாள் (₹1,900 பேட்டா + ₹300 உணவு)\n\n` +
-      `• **வெளியூர் ஒரு வழி டிராப் (One-Way Relocation):** தூரத்திற்கு ஏற்ப டிரைவர் பேட்டா + பேருந்து கட்டணம் + உணவு (பாண்டிச்சேரி ₹2,100 | பெங்களூரு ₹3,150 | மதுரை ₹4,200).\n\n` +
+      `• **வெளியூர் ஒரு வழி டிராப் (One-Way Relocation):** தூரத்திற்கு ஏற்ப டிரைவர் பேட்டா + அரசு SETC பேருந்து கட்டணம் + உணவு (பாண்டிச்சேரி ₹1,900 | பெங்களூரு ₹2,820 | மதுரை ₹3,750).\n\n` +
       `👮 **பாதுகாப்பு:** அனைத்து ஓட்டுநர்களும் தமிழ்நாடு போலீஸ் சரிபார்ப்பு சான்றிதழ் (PVC Verified) பெற்றவர்கள் மற்றும் Manual, Automatic (AT/DCT), EV நிபுணர்கள்.\n` +
       `🛡️ **பாலிசி:** ₹0 முன்பணம் — சேவை முடிந்த பின் கட்டணம் செலுத்தலாம்!\n\n` +
       `[👉 வாட்ஸ்அப்பில் டிரைவரை அழைக்க](${waUrl})`
@@ -918,7 +918,7 @@ function getActingDriverQuote(state: ConversationState, isTa: boolean): string {
     `  - **Premium SUV / MUV (Innova Crysta, Fortuner):** ₹1,900 / day (₹1,600 bata + ₹300 food)\n` +
     `  - **Luxury European (BMW, Mercedes-Benz, Audi):** ₹2,200 / day (₹1,900 bata + ₹300 food)\n` +
     `  - *Night Stay:* Free driver dormitory at hotels (TNCDBR rules); ₹300/night lodging allowance if private stay has no dorm.\n\n` +
-    `• **Outstation One-Way Drop:** Tiered Driver Bata (1.0x–2.5x by distance) + Return AC/Sleeper Bus Ticket + Food Allowance (e.g., Pondicherry ₹2,100 | Bangalore ₹3,150 | Madurai ₹4,200).\n\n` +
+    `• **Outstation One-Way Drop:** Tiered Driver Bata (1.0x–2.5x by distance) + Return Govt SETC Bus Ticket + Food Allowance (e.g., Pondicherry ₹1,900 | Bangalore ₹2,820 | Madurai ₹3,750).\n\n` +
     `👮 **Safety & Verification:**\n` +
     `• 100% Police Clearance Certificate (PVC Cleared) professional chauffeurs.\n` +
     `• Experienced with manual, automatic (CVT, DCT, Torque Converter), and EV vehicles.\n` +

@@ -47,8 +47,8 @@ test.describe('Travel Calculators Comprehensive Verification', () => {
     const resultCard = page.locator('#acting-driver-result-card');
     await expect(resultCard).toBeVisible();
     const resultText = await resultCard.innerText();
-    expect(resultText).toContain('2,100'); // 1,400 bata + 300 food + 400 bus
-    console.log('✔ Acting Driver One-Way calculation successful: ₹2,100 for Pallavaram to Tirupati.');
+    expect(resultText).toContain('1,900'); // 1,400 bata + 300 food + 200 SETC bus
+    console.log('✔ Acting Driver One-Way calculation successful: ₹1,900 for Pallavaram to Tirupati.');
 
     // B. Round Trip calculation
     const roundTab = page.locator('#acting-driver-tab-round');
@@ -81,10 +81,10 @@ test.describe('Travel Calculators Comprehensive Verification', () => {
     await vrCalcBtn.click({ force: true });
     await page.waitForTimeout(600);
 
-    // Verify result appears (505 km -> 2.0d bata ₹2,800 + ₹450 food + ₹1,000 bus = ₹4,250)
+    // Verify result appears (505 km -> 2.0d bata ₹2,800 + ₹450 food + ₹550 SETC bus = ₹3,800)
     await expect(page.locator('text=Return Travel (Est)').first()).toBeVisible();
-    await expect(page.locator('text=4,250').first()).toBeVisible();
-    console.log('✔ Vehicle Relocation calculation completed successfully (₹4,250 for Coimbatore to Chennai).');
+    await expect(page.locator('text=3,800').first()).toBeVisible();
+    console.log('✔ Vehicle Relocation calculation completed successfully (₹3,800 for Coimbatore to Chennai).');
 
     // 4. Verify ZERO console errors
     console.log('Console errors encountered:', consoleErrors);
@@ -110,11 +110,11 @@ test.describe('Travel Calculators Comprehensive Verification', () => {
     await expect(dropInput).toBeVisible();
 
     const routesToTest = [
-      { pickup: 'Chennai', drop: 'Pondicherry', expectedTotal: '2,100' },
-      { pickup: 'Chennai', drop: 'Bangalore', expectedTotal: '3,150' },
-      { pickup: 'Chennai', drop: 'Madurai', expectedTotal: '4,200' },
-      { pickup: 'Chennai', drop: 'Kanyakumari', expectedTotal: '5,500' },
-      { pickup: 'Coimbatore', drop: 'Tirupati', expectedTotal: '4,240' },
+      { pickup: 'Chennai', drop: 'Pondicherry', expectedTotal: '1,900' },
+      { pickup: 'Chennai', drop: 'Bangalore', expectedTotal: '2,820' },
+      { pickup: 'Chennai', drop: 'Madurai', expectedTotal: '3,750' },
+      { pickup: 'Chennai', drop: 'Kanyakumari', expectedTotal: '4,850' },
+      { pickup: 'Coimbatore', drop: 'Tirupati', expectedTotal: '3,790' },
     ];
 
     for (const r of routesToTest) {

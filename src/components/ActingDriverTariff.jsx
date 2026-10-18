@@ -104,7 +104,7 @@ export default function ActingDriverTariff() {
             </div>
             <div className="flex justify-between items-center p-3 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant/50">
               <span className="text-m3-on-surface-variant">One-Way Car Relocation (Base 150 km)</span>
-              <span className="font-bold text-m3-on-surface text-base">From ₹2,100</span>
+              <span className="font-bold text-m3-on-surface text-base">From ₹1,900</span>
             </div>
             <div className="flex justify-between items-center p-3 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant/50">
               <span className="text-m3-on-surface-variant">Monthly Office Commute (26 Days)</span>

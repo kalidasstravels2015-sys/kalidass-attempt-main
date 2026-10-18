@@ -1219,12 +1219,12 @@
           "Madurai, Coimbatore, Ooty, Kodaikanal, Tirunelveli (overnight sleeper return)."
         ],
         [
-          "Return Bus + Food Allowance",
-          "AC/Sleeper Bus + ₹300–₹600 Food",
-          "Pondicherry: ₹400 Bus | Trichy/Salem: ₹700 Bus | Bangalore: ₹750 Bus | Madurai: ₹950 Bus | Coimbatore: ₹1,000 Bus."
+          "Return SETC Bus + Food Allowance",
+          "Govt SETC Bus + ₹300–₹600 Food",
+          "Pondicherry: ₹200 Bus | Trichy/Salem: ₹370–₹380 Bus | Bangalore: ₹420 Bus | Madurai: ₹500 Bus | Coimbatore: ₹550 Bus."
         ]
       ],
-      "note": "Transparent Billing Formula: Total = Tiered Driver Bata + Return AC/Sleeper Bus Ticket + Food Allowance. (Example: Chennai to Pondicherry = ₹1,400 + ₹400 + ₹300 = ₹2,100; Chennai to Bangalore = ₹2,100 + ₹750 + ₹300 = ₹3,150. Fuel and FASTag tolls are borne by car owner)."
+      "note": "Transparent Billing Formula: Total = Tiered Driver Bata + Return Govt SETC Bus Ticket + Food Allowance. (Example: Chennai to Pondicherry = ₹1,400 + ₹200 + ₹300 = ₹1,900; Chennai to Bangalore = ₹2,100 + ₹420 + ₹300 = ₹2,820. Fuel and FASTag tolls are borne by car owner)."
     },
     "includes": [
       "Full digital pre-trip inspection (odometer, fuel, tool kit, scratch photos)",
