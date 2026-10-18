@@ -17,17 +17,86 @@ import WhatsAppButton from './react/WhatsAppButton.jsx';
 import { buildWhatsAppUrl } from '../utils/whatsapp';
 
 const COMMON_DISTANCES = {
-  'chennai': 0, 'pondicherry': 151, 'puducherry': 151, 'bangalore': 346,
+  'pondicherry': 151, 'puducherry': 151, 'bangalore': 346,
   'bengaluru': 346, 'tirupati': 135, 'vellore': 137, 'kanchipuram': 75,
-  'mahabalipuram': 56, 'trichy': 332, 'tiruchirappalli': 332, 'madurai': 462,
-  'coimbatore': 505, 'salem': 340, 'thanjavur': 342, 'tirunelveli': 624,
-  'kanyakumari': 708, 'rameshwaram': 575, 'kodaikanal': 530, 'ooty': 555,
-  'munnar': 580, 'mysore': 480, 'tiruvannamalai': 195, 'chidambaram': 215,
-  'kumbakonam': 298, 'nagapattinam': 315, 'velankanni': 325, 'yelagiri': 230,
-  'yercaud': 365, 'hosur': 305, 'krishnagiri': 260, 'erode': 395,
-  'tirupur': 460, 'dindigul': 420, 'karur': 375, 'cuddalore': 180,
-  'villupuram': 165, 'chengalpattu': 55, 'tambaram': 30, 'sriperumbudur': 45,
-  'nellore': 175, 'vijayawada': 450, 'hyderabad': 630,
+  'mahabalipuram': 56, 'mamallapuram': 56, 'trichy': 332, 'tiruchirappalli': 332, 'madurai': 462,
+  'coimbatore': 505, 'salem': 340, 'thanjavur': 342, 'tanjore': 342, 'tirunelveli': 624,
+  'kanyakumari': 708, 'rameshwaram': 575, 'rameswaram': 575, 'kodaikanal': 530, 'ooty': 555,
+  'udhagamandalam': 555, 'munnar': 580, 'mysore': 480, 'mysuru': 480, 'tiruvannamalai': 195,
+  'thiruvannamalai': 195, 'chidambaram': 215, 'kumbakonam': 298, 'nagapattinam': 315,
+  'velankanni': 325, 'yelagiri': 230, 'yercaud': 365, 'hosur': 305, 'krishnagiri': 260,
+  'erode': 395, 'tirupur': 460, 'tiruppur': 460, 'dindigul': 420, 'karur': 375,
+  'cuddalore': 180, 'villupuram': 165, 'chengalpattu': 55, 'sriperumbudur': 45,
+  'nellore': 175, 'vijayawada': 450, 'hyderabad': 630, 'kochi': 690, 'cochin': 690,
+  'trivandrum': 770, 'thiruvananthapuram': 770, 'palani': 485, 'tuticorin': 605,
+  'thoothukudi': 605, 'nagercoil': 690, 'tenkasi': 610, 'karaikudi': 415,
+  'pollachi': 535, 'coonoor': 540, 'valparai': 585, 'namakkal': 380,
+};
+
+const CITY_COORDS = {
+  'chennai': [13.0827, 80.2707],
+  'pondicherry': [11.9416, 79.8083],
+  'puducherry': [11.9416, 79.8083],
+  'bangalore': [12.9716, 77.5946],
+  'bengaluru': [12.9716, 77.5946],
+  'tirupati': [13.6288, 79.4192],
+  'vellore': [12.9165, 79.1325],
+  'kanchipuram': [12.8342, 79.7036],
+  'mahabalipuram': [12.6208, 80.1945],
+  'mamallapuram': [12.6208, 80.1945],
+  'trichy': [10.7905, 78.7047],
+  'tiruchirappalli': [10.7905, 78.7047],
+  'madurai': [9.9252, 78.1198],
+  'coimbatore': [11.0168, 76.9558],
+  'salem': [11.6643, 78.1460],
+  'thanjavur': [10.7870, 79.1378],
+  'tanjore': [10.7870, 79.1378],
+  'tirunelveli': [8.7139, 77.7567],
+  'kanyakumari': [8.0883, 77.5385],
+  'rameshwaram': [9.2876, 79.3129],
+  'rameswaram': [9.2876, 79.3129],
+  'kodaikanal': [10.2381, 77.4892],
+  'ooty': [11.4102, 76.6950],
+  'udhagamandalam': [11.4102, 76.6950],
+  'munnar': [10.0889, 77.0595],
+  'mysore': [12.2958, 76.6394],
+  'mysuru': [12.2958, 76.6394],
+  'tiruvannamalai': [12.2253, 79.0747],
+  'thiruvannamalai': [12.2253, 79.0747],
+  'chidambaram': [11.3992, 79.6939],
+  'kumbakonam': [10.9602, 79.3845],
+  'nagapattinam': [10.7672, 79.8449],
+  'velankanni': [10.6819, 79.8437],
+  'yelagiri': [12.5794, 78.6398],
+  'yercaud': [11.7753, 78.2093],
+  'hosur': [12.7409, 77.8253],
+  'krishnagiri': [12.5186, 78.2137],
+  'erode': [11.3410, 77.7172],
+  'tirupur': [11.1085, 77.3411],
+  'tiruppur': [11.1085, 77.3411],
+  'dindigul': [10.3624, 77.9695],
+  'karur': [10.9601, 78.0766],
+  'cuddalore': [11.7480, 79.7714],
+  'villupuram': [11.9401, 79.4861],
+  'chengalpattu': [12.6819, 79.9888],
+  'sriperumbudur': [12.9675, 79.9419],
+  'nellore': [14.4426, 79.9865],
+  'vijayawada': [16.5062, 80.6480],
+  'hyderabad': [17.3850, 78.4867],
+  'kochi': [9.9312, 76.2673],
+  'cochin': [9.9312, 76.2673],
+  'trivandrum': [8.5241, 76.9366],
+  'thiruvananthapuram': [8.5241, 76.9366],
+  'palani': [10.4500, 77.5161],
+  'tuticorin': [8.7642, 78.1348],
+  'thoothukudi': [8.7642, 78.1348],
+  'nagercoil': [8.1833, 77.4119],
+  'tenkasi': [8.9594, 77.3161],
+  'karaikudi': [10.0735, 78.7732],
+  'pollachi': [10.6609, 77.0048],
+  'coonoor': [11.3530, 76.7959],
+  'valparai': [10.3270, 76.9554],
+  'namakkal': [11.2189, 78.1674],
 };
 
 const CHENNAI_FORMS = [
@@ -35,38 +104,101 @@ const CHENNAI_FORMS = [
   'pallavaram', 'velachery', 'porur', 'annanagar', 'anna nagar', 't nagar', 't. nagar',
   'sholinganallur', 'omr', 'ecr', 'perungudi', 'thiruvanmiyur', 'adyar', 'mylapore',
   'chromepet', 'medavakkam', 'madipakkam', 'alandur', 'vadapalani', 'ambattur', 'avadi',
-  'poonamallee', 'kolathur', 'redhills', 'kilpauk', 'nungambakkam', 'triplicane', 'royapettah'
+  'poonamallee', 'kolathur', 'redhills', 'kilpauk', 'nungambakkam', 'triplicane', 'royapettah',
+  'perambur', 'kodambakkam', 'saidapet', 'ashok nagar', 'kk nagar', 'nanganallur', 'meenambakkam',
+  'gst road', 'kelambakkam', 'siruseri', 'navalur', 'thoraipakkam', 'pallikaranai', 'urapakkam',
+  'guduvancheri', 'maraimalai nagar', 'potheri', 'padappai', 'oragadam', 'enathur'
 ];
+
+const estimateReturnBusFare = (distanceKm) => {
+  return Math.max(400, Math.round((distanceKm * 2.0) / 10) * 10);
+};
+
+const getOneWayTier = (distKm) => {
+  if (distKm > 650) {
+    return { bataMultiplier: 2.5, foodMultiplier: 2.0, bataDaysLabel: '2.5 Days', tierNote: '>650 km Extreme Drop' };
+  }
+  if (distKm > 450) {
+    return { bataMultiplier: 2.0, foodMultiplier: 1.5, bataDaysLabel: '2 Days', tierNote: '451–650 km Overnight Return' };
+  }
+  if (distKm > 250) {
+    return { bataMultiplier: 1.5, foodMultiplier: 1.0, bataDaysLabel: '1.5 Days', tierNote: '251–450 km Medium-Long Drop' };
+  }
+  return { bataMultiplier: 1.0, foodMultiplier: 1.0, bataDaysLabel: '1 Day', tierNote: '' };
+};
+
+const calcRoadDistanceKm = (coordA, coordB) => {
+  const toRad = (deg) => (deg * Math.PI) / 180;
+  const R = 6371;
+  const dLat = toRad(coordB[0] - coordA[0]);
+  const dLon = toRad(coordB[1] - coordA[1]);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(coordA[0])) * Math.cos(toRad(coordB[0])) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const straightKm = R * c;
+  return Math.max(35, Math.round(straightKm * 1.26));
+};
 
 const findKnownRelocationDistance = (origin, dest) => {
   const o = (origin || '').toLowerCase().trim();
   const d = (dest || '').toLowerCase().trim();
   if (!o && !d) return null;
 
-  // 1. Check tnBusFares table
-  if (o && d) {
-    const busRoute = tnBusFares.find(r =>
-      (o.includes(r.source) && d.includes(r.destination)) ||
-      (o.includes(r.destination) && d.includes(r.source))
-    );
-    if (busRoute) return { distance: busRoute.distanceKm, setcFare: busRoute.setcFare };
-  }
-
-  // 2. Chennai metro check
   const isOChennai = CHENNAI_FORMS.some(k => o.includes(k));
   const isDChennai = CHENNAI_FORMS.some(k => d.includes(k));
 
+  if (isOChennai && isDChennai) {
+    return { distance: 35, setcFare: 300 };
+  }
+
+  // 1. Check tnBusFares table (matching Chennai metro aliases to 'chennai')
+  if (o && d) {
+    const busRoute = tnBusFares.find(r => {
+      const matchSrcO = o.includes(r.source) || (r.source === 'chennai' && isOChennai);
+      const matchDstD = d.includes(r.destination) || (r.destination === 'chennai' && isDChennai);
+      const matchSrcD = d.includes(r.source) || (r.source === 'chennai' && isDChennai);
+      const matchDstO = o.includes(r.destination) || (r.destination === 'chennai' && isOChennai);
+      return (matchSrcO && matchDstD) || (matchSrcD && matchDstO);
+    });
+    if (busRoute) return { distance: busRoute.distanceKm, setcFare: busRoute.setcFare };
+  }
+
+  // 2. Chennai metro to/from known city
   if (isOChennai || isDChennai) {
     const other = isOChennai ? d : o;
     for (const [city, km] of Object.entries(COMMON_DISTANCES)) {
-      if (other && other.includes(city)) return { distance: km, setcFare: Math.round(km * 1.2) };
+      if (other && other.includes(city)) {
+        return { distance: km, setcFare: estimateReturnBusFare(km) };
+      }
     }
   }
 
-  const candidate = d || o;
-  for (const [city, km] of Object.entries(COMMON_DISTANCES)) {
-    if (candidate && candidate.includes(city)) {
-      return { distance: km, setcFare: Math.round(km * 1.2) };
+  // 3. Non-Chennai to Non-Chennai intercity lookup via CITY_COORDS
+  if (o && d && !isOChennai && !isDChennai) {
+    let coordO = null;
+    let coordD = null;
+    let cityO = null;
+    let cityD = null;
+    for (const [city, coords] of Object.entries(CITY_COORDS)) {
+      if (!coordO && o.includes(city)) { coordO = coords; cityO = city; }
+      if (!coordD && d.includes(city)) { coordD = coords; cityD = city; }
+    }
+    if (coordO && coordD) {
+      if (cityO === cityD) return { distance: 35, setcFare: 300 };
+      const roadKm = calcRoadDistanceKm(coordO, coordD);
+      return { distance: roadKm, setcFare: estimateReturnBusFare(roadKm) };
+    }
+  }
+
+  // 4. Single-input fallback when only one field has a known city
+  if (!o || !d) {
+    const candidate = d || o;
+    for (const [city, km] of Object.entries(COMMON_DISTANCES)) {
+      if (candidate && candidate.includes(city)) {
+        return { distance: km, setcFare: estimateReturnBusFare(km) };
+      }
     }
   }
 
@@ -164,18 +296,22 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
   }, []);
 
   const finalizeCalculation = (dist, duration, busFare) => {
-    const BATA_PER_DAY = 1000;
+    const BATA_PER_DAY = 1400;
     const FOOD_PER_DAY = 300;
-    
-    const total = BATA_PER_DAY + FOOD_PER_DAY + busFare;
+    const tier = getOneWayTier(dist);
+    const totalBata = Math.round(BATA_PER_DAY * tier.bataMultiplier);
+    const totalFood = Math.round(FOOD_PER_DAY * tier.foodMultiplier);
+    const total = totalBata + totalFood + busFare;
 
     setResult({
       total,
       dist,
       duration,
+      bataDaysLabel: tier.bataDaysLabel,
+      foodMultiplier: tier.foodMultiplier,
       breakdown: {
-        bata: BATA_PER_DAY,
-        food: FOOD_PER_DAY,
+        bata: totalBata,
+        food: totalFood,
         bus: busFare
       }
     });
@@ -192,8 +328,9 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
       estimatedFare: total,
       meta: {
         duration,
-        driverBata: BATA_PER_DAY,
-        foodAllowance: FOOD_PER_DAY,
+        driverBata: totalBata,
+        bataDaysLabel: tier.bataDaysLabel,
+        foodAllowance: totalFood,
         returnBusFare: busFare
       }
     });
@@ -222,7 +359,7 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
       setTimeout(() => {
         const realDist = known.distance;
         const durationText = Math.max(1, Math.round(realDist / 50)) + " hrs (Est)";
-        const busFare = known.setcFare || Math.round(realDist * 1.2);
+        const busFare = known.setcFare || estimateReturnBusFare(realDist);
         finalizeCalculation(realDist, durationText, busFare);
       }, 150);
       return;
@@ -244,19 +381,19 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
             const distanceInMeters = element.distance.value;
             const realDist = Math.round(distanceInMeters / 1000);
             const durationText = element.duration.text;
-            const calculatedFare = Math.round(realDist * 1.2);
+            const calculatedFare = estimateReturnBusFare(realDist);
             finalizeCalculation(realDist, durationText, calculatedFare);
             return;
           }
           // Fallback if Google Maps fails to find exact route
-          finalizeCalculation(300, '6 hrs (Est)', 360);
+          finalizeCalculation(300, '6 hrs (Est)', estimateReturnBusFare(300));
         }
       );
       return;
     }
 
     // 3. Fallback when offline or distance matrix unavailable
-    finalizeCalculation(300, '6 hrs (Est)', 360);
+    finalizeCalculation(300, '6 hrs (Est)', estimateReturnBusFare(300));
   };
 
   return (
@@ -420,7 +557,9 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
               <p className="text-micro font-bold text-m3-on-surface-variant uppercase mb-1">
                 Estimated Total
               </p>
-              <p className="text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">₹{result.total}</p>
+              <p className="text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
+                ₹{result.total.toLocaleString('en-IN')} <span className="text-xs sm:text-sm font-semibold text-m3-on-surface-variant">+ Extra</span>
+              </p>
             </div>
             <div className="text-right">
               <p className="text-sm font-bold text-m3-on-surface font-heading">{result.dist} km</p>
@@ -428,24 +567,42 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
             </div>
           </div>
 
-          <div className="space-y-2 text-sm bg-m3-surface-container-low p-3.5 rounded-m3-md border border-m3-outline-variant/60 font-sans">
+          <div className="space-y-1.5 text-[13px] sm:text-sm bg-slate-100 p-3.5 rounded-m3-md border border-slate-200 font-sans">
             <div className="flex justify-between">
               <span className="text-m3-on-surface-variant">
-                Driver Bata
+                Driver Bata ({result.bataDaysLabel || '1 Day'})
               </span>
-              <span className="font-bold text-m3-on-surface">₹{result.breakdown.bata}</span>
+              <span className="font-bold text-m3-on-surface">₹{result.breakdown.bata.toLocaleString('en-IN')}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-m3-on-surface-variant">
-                Food Allowance
+                Food Allowance{result.foodMultiplier > 1 ? ` (${result.foodMultiplier} Days)` : ''}
               </span>
-              <span className="font-bold text-m3-on-surface">₹{result.breakdown.food}</span>
+              <span className="font-bold text-m3-on-surface">₹{result.breakdown.food.toLocaleString('en-IN')}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-m3-on-surface-variant">
                 Return Travel (Est)
               </span>
-              <span className="font-bold text-m3-on-surface">₹{result.breakdown.bus}</span>
+              <span className="font-bold text-m3-on-surface">₹{result.breakdown.bus.toLocaleString('en-IN')}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-m3-on-surface-variant">
+                State Permit
+              </span>
+              <span className="font-bold text-m3-on-surface">₹0</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-m3-on-surface-variant">
+                Tolls
+              </span>
+              <span className="font-bold text-m3-on-surface">Extra</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-m3-on-surface-variant">
+                Fuel
+              </span>
+              <span className="font-bold text-m3-on-surface">Extra</span>
             </div>
           </div>
 

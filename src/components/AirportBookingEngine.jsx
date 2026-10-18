@@ -1,18 +1,59 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Plane, Car, Users, Calculator, MapPin, X,
-  ChevronDown, ShieldCheck,
+  ChevronDown, ShieldCheck, CheckCircle2,
   Calendar, Phone, ArrowRight, Clock, AlertCircle
 } from 'lucide-react';
 import LocationPicker from './LocationPicker';
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
-import { trackCalculatorQuote } from '../lib/analytics';
+import { trackCalculatorQuote, trackEvent, markQuoteConverted } from '../lib/analytics';
 import tariffConfig from '../data/tariff_config.json';
 import tnBusFares from '../data/tnBusFares.json';
 
 const vehicles = tariffConfig.vehicles;
 const vehicleOptions = Object.keys(vehicles);
+
+const AIRPORT_COMPARISON_VEHICLES = [
+  { key: 'Swift Dzire', shortLabel: 'Sedan (4p)' },
+  { key: 'Maruti Ertiga', shortLabel: 'Ertiga SUV (6p)' },
+  { key: 'Innova', shortLabel: 'Innova (6p)' },
+  { key: 'Innova Crysta', shortLabel: 'Crysta (7p)' },
+];
+
+const estimateAirportRoadExtras = (locText, effKm, isOutstation) => {
+  if (!isOutstation) {
+    return { stateName: 'Tamil Nadu', statePermitEst: 0, tollsEst: 0 };
+  }
+  const text = (locText || '').toLowerCase();
+  let stateName = 'Tamil Nadu';
+  let statePermitEst = 0;
+  let tollsEst = 0;
+
+  if (text.includes('tirupati') || text.includes('tirumala') || text.includes('andhra') || text.includes('kalahasti') || text.includes('nellore') || text.includes('chittoor') || text.includes('renigunta')) {
+    stateName = 'Andhra Pradesh';
+    statePermitEst = 500;
+    tollsEst = 220;
+  } else if (text.includes('bangalore') || text.includes('bengaluru') || text.includes('karnataka') || text.includes('mysore') || text.includes('mysuru') || text.includes('hosur')) {
+    stateName = 'Karnataka';
+    statePermitEst = 700;
+    tollsEst = 250;
+  } else if (text.includes('pondicherry') || text.includes('puducherry') || text.includes('auroville')) {
+    stateName = 'Puducherry (UT)';
+    statePermitEst = 0;
+    tollsEst = 130;
+  } else if (text.includes('kerala') || text.includes('munnar') || text.includes('cochin') || text.includes('kochi')) {
+    stateName = 'Kerala';
+    statePermitEst = 800;
+    tollsEst = 350;
+  } else {
+    stateName = 'Tamil Nadu';
+    statePermitEst = 0;
+    tollsEst = Math.max(80, Math.round((effKm * 0.85) / 10) * 10);
+  }
+
+  return { stateName, statePermitEst, tollsEst };
+};
 
 const VEHICLE_CAPACITY = {
   'Swift Dzire':     4,
@@ -142,7 +183,7 @@ const findKnownDistance = (origin, destination) => {
 };
 
 // 3. Outstation Pricing Engine (matching QuotationEngine / Outstation Cabs)
-const calculateOutstationAirportFare = (distKm, selectedVeh) => {
+const calculateOutstationAirportFare = (distKm, selectedVeh, locText = '') => {
   const vData = vehicles[selectedVeh] || vehicles['Swift Dzire'];
   const rate = vData.one_way_rate || 16;
   const bata = vData.driver_bata || 400;
@@ -168,6 +209,8 @@ const calculateOutstationAirportFare = (distKm, selectedVeh) => {
     balanceToPay = totalFare;
   }
 
+  const extras = estimateAirportRoadExtras(locText, effKm, isOutstation);
+
   return {
     actual_km: effKm,
     chargeable_km: chargeableKm,
@@ -177,7 +220,10 @@ const calculateOutstationAirportFare = (distKm, selectedVeh) => {
     total_fare: totalFare,
     advance_to_pay: advanceToPay,
     balance_to_pay: balanceToPay,
-    is_outstation: isOutstation
+    is_outstation: isOutstation,
+    state_name: extras.stateName,
+    state_permit_est: extras.statePermitEst,
+    tolls_est: extras.tollsEst
   };
 };
 
@@ -228,14 +274,20 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
   // UI state
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [locationPickerOpen, setLocationPickerOpen] = useState(false);
+  const [quoteRefId, setQuoteRefId] = useState('#KT-4092');
 
   const destInputRef = useRef(null);
   const cardRef = useRef(null);
   const resultRef = useRef(null);
 
   useEffect(() => {
+    setQuoteRefId('#KT-' + Math.floor(1000 + Math.random() * 9000));
+  }, []);
+
+  useEffect(() => {
     if (showResult && distanceKm > 0) {
-      const b = calculateOutstationAirportFare(distanceKm, vehicle);
+      const userLoc = (direction === 'pickup' ? drop : pickup).trim();
+      const b = calculateOutstationAirportFare(distanceKm, vehicle, userLoc);
       setBreakdown(b);
       setEstimate(b.total_fare);
     }
@@ -490,6 +542,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
         const bata = vData.driver_bata || 400;
         const advanceToPay = 500;
         const kmCost = Math.max(0, overrideFare - bata);
+        const extras = estimateAirportRoadExtras(userLoc, effKm, true);
         result = {
           actual_km: effKm,
           chargeable_km: effKm,
@@ -499,12 +552,17 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
           total_fare: overrideFare,
           advance_to_pay: advanceToPay,
           balance_to_pay: Math.max(0, overrideFare - advanceToPay),
-          is_outstation: true
+          is_outstation: true,
+          state_name: extras.stateName,
+          state_permit_est: extras.statePermitEst,
+          tolls_est: extras.tollsEst
         };
       } else {
-        result = calculateOutstationAirportFare(effKm, activeVeh);
+        result = calculateOutstationAirportFare(effKm, activeVeh, userLoc);
       }
 
+      const generatedQuoteRef = '#KT-' + Math.floor(1000 + Math.random() * 9000);
+      setQuoteRefId(generatedQuoteRef);
       setBreakdown(result);
       setEstimate(result.total_fare);
       setLoading(false);
@@ -521,6 +579,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
         distanceKm: result.actual_km,
         estimatedFare: result.total_fare,
         meta: {
+          quoteRefId: generatedQuoteRef,
           direction,
           isOutstation: result.is_outstation,
           flightDetails: flightDetails || undefined,
@@ -535,8 +594,26 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
   const handleWhatsAppBooking = () => {
     const isPickup = direction === 'pickup';
 
+    markQuoteConverted(quoteRefId, {
+      calculatorId: 'airport_taxi',
+      tripType: isPickup ? 'Airport Pickup (MAA Arrival)' : 'Airport Drop (MAA Departure)',
+      pickup,
+      drop,
+      vehicle,
+      estimate
+    });
+
+    trackEvent('booking_conversion_whatsapp', {
+      engine: 'airport_booking_engine',
+      trip_type: isPickup ? 'Airport Pickup' : 'Airport Drop',
+      vehicle,
+      fare: estimate,
+      quote_id: quoteRefId
+    });
+
     const msg = [
       '*Kalidass Travels — Chennai Airport Taxi Transfer*',
+      '📌 *Quote Ref:* ' + quoteRefId + ' (24-Hr Rate Lock)',
       '• Transfer Type: ' + (isPickup ? 'Airport Pickup (MAA Arrival)' : 'Airport Drop (MAA Departure)'),
       '• From: ' + pickup,
       '• To: ' + drop,
@@ -544,11 +621,13 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
       '• Pickup Date & Time: ' + dateTime.replace('T', ' '),
       '• Vehicle: ' + vehicle + ' (' + passengers + ' Pax)',
       '• Distance: ~' + (breakdown ? breakdown.actual_km : distanceKm) + ' km (' + (duration || 'Direct Highway') + ')',
-      '• Estimated Fare: ₹' + estimate.toLocaleString('en-IN') + ' + Extra',
-      '• Advance to Pay: ₹' + (breakdown ? breakdown.advance_to_pay : 500),
-      '• Balance to Pay Driver: ₹' + (breakdown ? breakdown.balance_to_pay : (estimate - 500)) + ' (After trip)',
+      '• Total Fare: ₹' + estimate.toLocaleString('en-IN') + ' + Extra',
+      '• State Permit: ' + ((breakdown && breakdown.is_outstation && breakdown.state_permit_est > 0) ? ('₹' + breakdown.state_permit_est.toLocaleString('en-IN')) : '₹0'),
+      '• Tolls & Parking: Extra',
+      '• Advance to Pay: -₹' + (breakdown ? breakdown.advance_to_pay : 500),
+      '• Balance to Pay Driver (After trip): ₹' + (breakdown ? breakdown.balance_to_pay : (estimate - 500)) + ' + Extra',
       '',
-      'Please confirm cab availability and chauffeur assignment.'
+      'Please save my quote & confirm live cab availability.'
     ].filter(Boolean).join('\n');
 
     try {
@@ -558,6 +637,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
         headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify({
           date: new Date().toLocaleString(),
+          quoteId: quoteRefId,
           tripType: isPickup ? 'Airport Pickup' : 'Airport Drop',
           pickup,
           drop,
@@ -950,6 +1030,17 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                 {vehicle} {direction === 'pickup' ? drop : pickup} ₹{estimate}
               </div>
 
+              {/* Official Quote Ref & 24-Hr Price Lock Header */}
+              <div className="flex items-center justify-between gap-2 pb-2 border-b border-slate-200/80 flex-wrap">
+                <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#0b57d0] bg-[#1a73e8]/10 px-2.5 py-0.5 rounded-full">
+                  <span>Official Quote Ref: {quoteRefId}</span>
+                </span>
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-800 bg-emerald-100/90 border border-emerald-200 px-2 py-0.5 rounded-full">
+                  <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
+                  <span>Rate Locked 24 Hrs • Send to WhatsApp to Save</span>
+                </span>
+              </div>
+
               {/* Header: Vehicle Name, Pax & Total Fare */}
               <div className="flex items-center justify-between gap-3 pb-2.5 border-b border-slate-200">
                 <div>
@@ -973,40 +1064,83 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                 </div>
               </div>
 
+              {/* 1-Tap Vehicle Price Comparison Strip */}
+              <div className="pb-2 border-b border-slate-200/80">
+                <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                  Compare &amp; Switch Cab Instantly (1-Tap):
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                  {AIRPORT_COMPARISON_VEHICLES.map((item) => {
+                    const cap = VEHICLE_CAPACITY[item.key] ?? 4;
+                    const paxNum = parseInt(passengers, 10) || 4;
+                    const isDisabled = cap < paxNum;
+                    const isSelected = vehicle === item.key;
+                    const userLoc = (direction === 'pickup' ? drop : pickup).trim();
+                    const cmpFareObj = calculateOutstationAirportFare(breakdown.actual_km || distanceKm || 130, item.key, userLoc);
+                    return (
+                      <button
+                        key={item.key}
+                        type="button"
+                        disabled={isDisabled}
+                        onClick={() => setVehicle(item.key)}
+                        className={`px-2 py-1.5 rounded-lg border text-left transition-all cursor-pointer ${
+                          isSelected
+                            ? 'bg-[#1a73e8] text-white border-[#1a73e8] shadow-2xs'
+                            : isDisabled
+                              ? 'bg-slate-100/60 text-slate-400 border-slate-200/60 opacity-50 cursor-not-allowed'
+                              : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-200'
+                        }`}
+                      >
+                        <div className={`text-[10px] font-bold truncate ${isSelected ? 'text-white/90' : 'text-slate-500'}`}>
+                          {item.shortLabel}
+                        </div>
+                        <div className={`text-xs font-extrabold ${isSelected ? 'text-white' : 'text-slate-900'}`}>
+                          ₹{cmpFareObj.total_fare.toLocaleString('en-IN')}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               {/* Itemized Bill Lines */}
-              <div className="space-y-1.5 text-xs">
-                <div className="flex justify-between items-center py-0.5 text-slate-600">
+              <div className="space-y-1.5 text-[13px] sm:text-sm">
+                <div className="flex justify-between items-center py-0.5 text-slate-700">
                   <span>Cab Hire ({breakdown?.chargeable_km && breakdown?.rate_per_km ? `${Math.round(breakdown.chargeable_km)} km @ ₹${breakdown.rate_per_km}/km` : `${vehicle} • Fuel included`}):</span>
                   <span className="font-bold text-slate-900">₹{breakdown.km_cost.toLocaleString('en-IN')}</span>
                 </div>
                 {breakdown.driver_bata > 0 && (
-                  <div className="flex justify-between items-center py-0.5 text-slate-600">
+                  <div className="flex justify-between items-center py-0.5 text-slate-700">
                     <span>Driver Allowance (1 Day):</span>
                     <span className="font-bold text-slate-900">₹{breakdown.driver_bata.toLocaleString('en-IN')}</span>
                   </div>
                 )}
-                <div className="flex justify-between items-center py-0.5 text-slate-600">
-                  <span>Tolls:</span>
-                  <span className="font-bold text-slate-900">Extra (At Actuals)</span>
-                </div>
-                <div className="flex justify-between items-center py-0.5 text-slate-600">
-                  <span>Parking:</span>
-                  <span className="font-bold text-slate-900">Extra (At Actuals)</span>
-                </div>
-                <div className="flex justify-between items-center py-0.5 text-slate-600">
+                <div className="flex justify-between items-center py-0.5 text-slate-700">
                   <span>State Permit:</span>
-                  <span className="font-bold text-slate-900">Extra (At Actuals)</span>
+                  <span className="font-bold text-slate-900">
+                    {breakdown.is_outstation && breakdown.state_permit_est > 0
+                      ? `₹${breakdown.state_permit_est.toLocaleString('en-IN')}`
+                      : '₹0'}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center py-0.5 text-slate-700">
+                  <span>Tolls:</span>
+                  <span className="font-bold text-slate-900">Extra</span>
+                </div>
+                <div className="flex justify-between items-center py-0.5 text-slate-700">
+                  <span>Parking:</span>
+                  <span className="font-bold text-slate-900">Extra</span>
                 </div>
               </div>
 
               {/* Bill Payment Split */}
-              <div className="pt-2 border-t-2 border-slate-200 space-y-1 text-xs">
+              <div className="pt-2 border-t-2 border-slate-200 space-y-1 text-[13px] sm:text-sm">
                 {breakdown.advance_to_pay > 0 ? (
                   <>
-                    <div className="flex justify-between items-center py-0.5 text-slate-600">
+                    <div className="flex justify-between items-center py-0.5 text-slate-700">
                       <span>Total Fare:</span>
                       <span className="font-bold text-slate-900">
-                        ₹{estimate.toLocaleString('en-IN')}{breakdown.is_outstation ? ' + Extra' : ''}
+                        ₹{estimate.toLocaleString('en-IN')} + Extra
                       </span>
                     </div>
                     <div className="flex justify-between items-center py-0.5 text-emerald-700 font-medium">
@@ -1016,35 +1150,33 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                       </span>
                     </div>
                     <div className="flex justify-between items-center py-1 sm:py-1.5 border-t border-slate-200/80 mb-0.5">
-                      <span className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
-                        Total Bill:
+                      <span className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">
+                        Balance to Pay Driver <span className="text-xs font-medium text-slate-500">(After trip)</span>:
                       </span>
-                      <span className="text-xl sm:text-2xl font-black text-[#1a73e8] tracking-tight font-heading">
-                        ₹{breakdown.balance_to_pay.toLocaleString('en-IN')}{breakdown.is_outstation ? ' + Extra' : ''}
+                      <span className="text-xl sm:text-2xl font-black text-[#1a73e8] tracking-tight font-heading shrink-0">
+                        ₹{breakdown.balance_to_pay.toLocaleString('en-IN')} + Extra
                       </span>
-                    </div>
-                    <div className="flex justify-between items-center text-[11px] text-slate-500 pb-0.5">
-                      <span className="font-medium">Balance to Pay Driver:</span>
-                      <span className="font-bold text-slate-900">Payable after trip</span>
                     </div>
                   </>
                 ) : (
                   <>
-                    <div className="flex justify-between items-center py-1 sm:py-1.5 border-b border-slate-200/80 mb-1">
-                      <span className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
-                        Total Bill:
-                      </span>
-                      <span className="text-xl sm:text-2xl font-black text-[#1a73e8] tracking-tight font-heading">
-                        ₹{estimate.toLocaleString('en-IN')}
+                    <div className="flex justify-between items-center py-0.5 text-slate-700">
+                      <span>Total Fare:</span>
+                      <span className="font-bold text-slate-900">
+                        ₹{estimate.toLocaleString('en-IN')} + Extra
                       </span>
                     </div>
-                    <div className="flex justify-between items-center py-0.5 text-slate-600">
+                    <div className="flex justify-between items-center py-0.5 text-emerald-700 font-medium">
                       <span>Advance to Pay:</span>
-                      <span className="font-bold text-emerald-700">₹0 (No advance needed)</span>
+                      <span className="font-bold">₹0</span>
                     </div>
-                    <div className="flex justify-between items-center py-0.5 text-slate-900">
-                      <span className="font-medium">Balance to Pay Driver:</span>
-                      <span className="font-bold text-slate-900">₹{estimate.toLocaleString('en-IN')} (After trip)</span>
+                    <div className="flex justify-between items-center py-1 sm:py-1.5 border-t border-slate-200/80 mb-0.5">
+                      <span className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">
+                        Balance to Pay Driver <span className="text-xs font-medium text-slate-500">(After trip)</span>:
+                      </span>
+                      <span className="text-xl sm:text-2xl font-black text-[#1a73e8] tracking-tight font-heading shrink-0">
+                        ₹{estimate.toLocaleString('en-IN')} + Extra
+                      </span>
                     </div>
                   </>
                 )}
@@ -1069,24 +1201,29 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
               </div>
 
               {/* Action Buttons: WhatsApp & Call Desk */}
-              <div className="pt-2 flex flex-col sm:flex-row gap-2">
-                <button
-                  type="button"
-                  id="book-airport-whatsapp-btn"
-                  onClick={handleWhatsAppBooking}
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-sm shadow-md transition-all active:scale-[0.99] cursor-pointer"
-                >
-                  <WhatsAppIcon className="w-4 h-4" />
-                  <span>Book {vehicle} on WhatsApp (₹{estimate.toLocaleString('en-IN')})</span>
-                </button>
+              <div className="pt-2 space-y-2">
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <button
+                    type="button"
+                    id="book-airport-whatsapp-btn"
+                    onClick={handleWhatsAppBooking}
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-sm shadow-md transition-all active:scale-[0.99] cursor-pointer"
+                  >
+                    <WhatsAppIcon className="w-4 h-4" />
+                    <span>Send Quote &amp; Book {vehicle} on WhatsApp (₹{estimate.toLocaleString('en-IN')})</span>
+                  </button>
 
-                <a
-                  href="tel:+918939539211"
-                  className="inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-full border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-xs sm:text-sm transition-colors cursor-pointer shrink-0"
-                >
-                  <Phone className="w-4 h-4 text-slate-600" />
-                  <span>Call Desk</span>
-                </a>
+                  <a
+                    href="tel:+918939539211"
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-full border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-xs sm:text-sm transition-colors cursor-pointer shrink-0"
+                  >
+                    <Phone className="w-4 h-4 text-slate-600" />
+                    <span>Call Desk</span>
+                  </a>
+                </div>
+                <p className="text-[11px] text-slate-600 text-center font-medium">
+                  ✓ Lock Rate 24 Hrs ({quoteRefId}) • ✓ Check Live Cab Availability • ✓ Pay ₹500 Token Only After Confirmation
+                </p>
               </div>
             </div>
           )}

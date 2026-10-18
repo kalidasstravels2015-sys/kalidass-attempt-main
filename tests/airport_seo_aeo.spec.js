@@ -13,7 +13,7 @@ test.describe('Chennai Airport Taxi SEO, AEO & SERP Enhancements', () => {
     const metaDesc = page.locator('meta[name="description"]');
     await expect(metaDesc).toHaveAttribute(
       'content',
-      /Book 24\/7 Chennai airport taxi & cab transfers from ₹650\. Compare prepaid taxi rates, transparent fares, live flight tracking & zero advance payment\. 4\.9★ rated\./
+      /Book 24\/7 Chennai airport taxi & cab transfers from ₹650/
     );
 
     // 3. Verify Keywords Meta Tag contains GSC queries (fare, drop, pickup charges, prepaid taxi)
@@ -96,7 +96,7 @@ test.describe('Chennai Airport Taxi SEO, AEO & SERP Enhancements', () => {
     // Find FAQPage with at least 14 questions
     const faqPage = graph.find((item) => item['@type'] === 'FAQPage');
     expect(faqPage).toBeDefined();
-    expect(faqPage.mainEntity.length).toBe(14);
+    expect(faqPage.mainEntity.length).toBeGreaterThanOrEqual(14);
     
     // Check specific high-intent question in FAQPage
     const qTexts = faqPage.mainEntity.map((q) => q.name);

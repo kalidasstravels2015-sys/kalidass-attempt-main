@@ -17,12 +17,12 @@ export const TOUR_CONFIGS = {
     advisoryText: 'Chennai ⇄ Tirupati is ~320 km round trip (approx. 8–9 hrs highway & ghat road driving + temple darshan). Recommended same-day return window is 14–16 hours (minimum 12 hours required).',
     inclusions: {
       standard: 'Covers FASTag Tolls + AP Permit + Hill Climb + Driver Bata + Parking',
-      multiDay: 'Covers Cab, Hill Climb & Driver Bata • Tolls & AP Permit (~₹1,100)'
+      multiDay: 'Covers Cab, Hill Climb & Driver Bata • Tolls & AP Permit Extra'
     },
     itemizedInclusions: [
-      { label: 'NH FASTag Tolls & AP State Border Permit:', value: 'INCLUDED (₹0)', multiDayValue: '~₹950 (Direct at Plazas)' },
-      { label: 'Tirumala Ghat Road Ascent & Hill Climb:', value: 'INCLUDED (₹0)', multiDayValue: 'INCLUDED (₹0)' },
-      { label: 'Tirupati & TTD Hilltop Parking:', value: 'INCLUDED (₹0)', multiDayValue: '~₹150 (Direct at Counter)' }
+      { label: 'Tirumala Ghat Road Ascent & Hill Climb:', value: '₹0', multiDayValue: '₹0' },
+      { label: 'NH FASTag Tolls & AP State Border Permit:', value: '₹0', multiDayValue: 'Extra' },
+      { label: 'Tirupati & TTD Hilltop Parking:', value: '₹0', multiDayValue: 'Extra' }
     ],
     eventPrefix: 'tirupati_engine',
     vehicles: [
@@ -119,8 +119,8 @@ export const TOUR_CONFIGS = {
       multiDay: 'Covers Cab, ECR Tolls & Driver Halting Bata'
     },
     itemizedInclusions: [
-      { label: 'ECR & NH 32 Highway Tolls:', value: 'INCLUDED (₹0)', multiDayValue: 'INCLUDED (₹0)' },
-      { label: 'Pichavaram Mangrove Boating Coordination:', value: 'INCLUDED (₹0)', multiDayValue: 'INCLUDED (₹0)' }
+      { label: 'ECR & NH 32 Highway Tolls:', value: '₹0', multiDayValue: '₹0' },
+      { label: 'Pichavaram Mangrove Boating Coordination:', value: '₹0', multiDayValue: '₹0' }
     ],
     eventPrefix: 'chidambaram_engine',
     vehicles: [
@@ -205,8 +205,8 @@ export const TOUR_CONFIGS = {
       multiDay: 'Covers Cab, NH Tolls & 14 km Girivalam Standby + Halting Bata'
     },
     itemizedInclusions: [
-      { label: 'NH 48 / NH 77 Highway Tolls:', value: 'INCLUDED (₹0)', multiDayValue: 'INCLUDED (₹0)' },
-      { label: '14 km Girivalam Outer Ring Standby:', value: 'INCLUDED (₹0)', multiDayValue: 'INCLUDED (₹0)' }
+      { label: 'NH 48 / NH 77 Highway Tolls:', value: '₹0', multiDayValue: '₹0' },
+      { label: '14 km Girivalam Outer Ring Standby:', value: '₹0', multiDayValue: '₹0' }
     ],
     eventPrefix: 'thiruvannamalai_engine',
     vehicles: [
@@ -291,8 +291,8 @@ export const TOUR_CONFIGS = {
       multiDay: 'Covers Cab, NH Tolls, Weaver Waiting & Halting Bata'
     },
     itemizedInclusions: [
-      { label: 'NH 48 Sriperumbudur Highway Tolls:', value: 'INCLUDED (₹0)', multiDayValue: 'INCLUDED (₹0)' },
-      { label: 'Temple Parking & Weaver Co-op Standby:', value: 'INCLUDED (₹0)', multiDayValue: 'INCLUDED (₹0)' }
+      { label: 'NH 48 Sriperumbudur Highway Tolls:', value: '₹0', multiDayValue: '₹0' },
+      { label: 'Temple Parking & Weaver Co-op Standby:', value: '₹0', multiDayValue: '₹0' }
     ],
     eventPrefix: 'kanchipuram_engine',
     vehicles: [
@@ -378,9 +378,9 @@ export const TOUR_CONFIGS = {
       multiDay: 'Covers Cab & 9 Temples Circuit • Highway Tolls & Driver Bata at Actuals'
     },
     itemizedInclusions: [
-      { label: 'NH 32 / NH 36 Highway FASTag Tolls:', value: 'Extra (At Actuals / Direct at Plazas)', multiDayValue: 'Extra (At Actuals / Direct at Plazas)' },
-      { label: 'Chauffeur Outstation Duty & Halting Bata:', value: 'Extra (At Actuals / Direct to Driver)', multiDayValue: 'Extra (At Actuals / Direct to Driver)' },
-      { label: 'All 9 Planetary Temples Sequential Route:', value: 'INCLUDED (₹0)', multiDayValue: 'INCLUDED (₹0)' }
+      { label: 'All 9 Planetary Temples Sequential Route:', value: '₹0', multiDayValue: '₹0' },
+      { label: 'NH 32 / NH 36 Highway FASTag Tolls:', value: 'Extra', multiDayValue: 'Extra' },
+      { label: 'Chauffeur Outstation Duty & Halting Bata:', value: 'Extra', multiDayValue: 'Extra' }
     ],
     eventPrefix: 'navagraha_engine',
     vehicles: [
@@ -462,13 +462,13 @@ export const TOUR_CONFIGS = {
     recommendedHours: 72,
     advisoryText: 'Chennai to Rameswaram round trip is ~1,150–1,200 km (~10 hrs driving each way + 22 theertham holy baths, Pamban bridge & Dhanushkodi). Minimum 2 Days (48 hrs) is strictly required.',
     inclusions: {
-      standard: 'Covers 1,200 km Run & Fuel • NH Tolls & Driver Bata at Actuals',
-      multiDay: 'Covers Cab & 1,200 km Run • NH Tolls & Driver Bata at Actuals'
+      standard: 'Covers 1,200 km Run & Fuel • NH Tolls & Driver Bata Extra',
+      multiDay: 'Covers Cab & 1,200 km Run • NH Tolls & Driver Bata Extra'
     },
     itemizedInclusions: [
-      { label: 'NH 45 / NH 87 Highway FASTag Tolls:', value: 'Extra (At Actuals / Direct at Plazas)', multiDayValue: 'Extra (At Actuals / Direct at Plazas)' },
-      { label: 'Chauffeur Outstation Duty & Halting Bata:', value: 'Extra (At Actuals / Direct to Driver)', multiDayValue: 'Extra (At Actuals / Direct to Driver)' },
-      { label: 'Dhanushkodi / Arichal Munai Waiting:', value: 'INCLUDED (₹0)', multiDayValue: 'INCLUDED (₹0)' }
+      { label: 'Dhanushkodi / Arichal Munai Waiting:', value: '₹0', multiDayValue: '₹0' },
+      { label: 'NH 45 / NH 87 Highway FASTag Tolls:', value: 'Extra', multiDayValue: 'Extra' },
+      { label: 'Chauffeur Outstation Duty & Halting Bata:', value: 'Extra', multiDayValue: 'Extra' }
     ],
     eventPrefix: 'rameswaram_engine',
     vehicles: [
@@ -550,13 +550,13 @@ export const TOUR_CONFIGS = {
     recommendedHours: 72,
     advisoryText: 'Chennai to Sabarimala (Pamba / Nilakkal) round trip is ~1,350 km through Western Ghats routes. Minimum 3 Days (48–72 hrs) is required for safe driving and darshan.',
     inclusions: {
-      standard: 'Covers 1,350 km Run & Fuel • Kerala Interstate Permit, Tolls & Bata at Actuals',
-      multiDay: 'Covers Cab & 1,350 km Run • Kerala Permit, Tolls & Bata at Actuals'
+      standard: 'Covers 1,350 km Run & Fuel • Kerala Interstate Permit, Tolls & Bata Extra',
+      multiDay: 'Covers Cab & 1,350 km Run • Kerala Permit, Tolls & Bata Extra'
     },
     itemizedInclusions: [
-      { label: 'Kerala Motor Vehicles Interstate Permit:', value: 'Extra (At Actuals / Checkpost)', multiDayValue: 'Extra (At Actuals / Checkpost)' },
-      { label: 'NH Tolls & Pamba Hill Ghat Standby:', value: 'Extra (At Actuals / Toll Plazas)', multiDayValue: 'Extra (At Actuals / Toll Plazas)' },
-      { label: 'Chauffeur Outstation Duty & Halting Bata:', value: 'Extra (At Actuals / Direct to Driver)', multiDayValue: 'Extra (At Actuals / Direct to Driver)' }
+      { label: 'Kerala Motor Vehicles Interstate Permit:', value: '₹800', multiDayValue: '₹800' },
+      { label: 'NH Tolls & Pamba Hill Ghat Standby:', value: 'Extra', multiDayValue: 'Extra' },
+      { label: 'Chauffeur Outstation Duty & Halting Bata:', value: 'Extra', multiDayValue: 'Extra' }
     ],
     eventPrefix: 'sabarimala_engine',
     vehicles: [
@@ -641,8 +641,8 @@ export const TOUR_CONFIGS = {
       multiDay: 'Covers Cab, NH 48 Tolls, Golden Temple Waiting & Halting Bata'
     },
     itemizedInclusions: [
-      { label: 'NH 48 Sriperumbudur & Walajah Tolls:', value: 'INCLUDED (₹0)', multiDayValue: 'INCLUDED (₹0)' },
-      { label: 'Golden Temple & Jalakandeswarar Waiting:', value: 'INCLUDED (₹0)', multiDayValue: 'INCLUDED (₹0)' }
+      { label: 'NH 48 Sriperumbudur & Walajah Tolls:', value: '₹0', multiDayValue: '₹0' },
+      { label: 'Golden Temple & Jalakandeswarar Waiting:', value: '₹0', multiDayValue: '₹0' }
     ],
     eventPrefix: 'vellore_engine',
     vehicles: [
@@ -729,8 +729,8 @@ export const TOUR_CONFIGS = {
       multiDay: 'Covers Cab, ECR Tolls, Beach Promenade & Halting Bata'
     },
     itemizedInclusions: [
-      { label: 'East Coast Road (ECR) Highway Tolls:', value: 'INCLUDED (₹0)', multiDayValue: 'INCLUDED (₹0)' },
-      { label: 'Auroville & French Quarter Standby:', value: 'INCLUDED (₹0)', multiDayValue: 'INCLUDED (₹0)' }
+      { label: 'East Coast Road (ECR) Highway Tolls:', value: '₹0', multiDayValue: '₹0' },
+      { label: 'Auroville & French Quarter Standby:', value: '₹0', multiDayValue: '₹0' }
     ],
     eventPrefix: 'pondy_engine',
     vehicles: [

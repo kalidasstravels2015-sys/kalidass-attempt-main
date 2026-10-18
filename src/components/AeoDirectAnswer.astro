@@ -1,0 +1,71 @@
+---
+interface TableRow {
+  vehicle: string;
+  seating: string;
+  rates: Record<string, string>; // e.g. { "1-Day": "₹6,000", "2-Day": "₹9,500" }
+}
+
+interface Props {
+  id?: string;
+  question: string;
+  directAnswer: string;
+  columns: string[];
+  rows: TableRow[];
+  class?: string;
+}
+
+const {
+  id = "quick-tariff-summary",
+  question,
+  directAnswer,
+  columns,
+  rows,
+  class: className = "",
+} = Astro.props;
+---
+
+<section aria-labelledby={id} class:list={["max-w-4xl mx-auto my-6 px-4", className]}>
+  <div class="rounded-2xl border border-m3-outline-variant/60 bg-m3-surface-container-low p-5 sm:p-6 shadow-xs">
+    <div class="flex items-center gap-2 mb-2 text-m3-primary font-semibold text-m3-label-l">
+      <span class="material-symbols-outlined text-[20px] text-m3-primary" aria-hidden="true">
+        verified
+      </span>
+      <span>Official Live Tariff & Policy Summary</span>
+    </div>
+
+    <h2 id={id} class="text-m3-title-m sm:text-m3-title-l font-bold text-m3-on-surface mb-3 tracking-tight">
+      {question}
+    </h2>
+    
+    <!-- 45-50 WORD AEO DIRECT ANSWER TARGET (PARSED BY GOOGLE SGE & PERPLEXITY) -->
+    <p data-speakable="true" class="lead text-m3-body-m sm:text-m3-body-l text-m3-on-surface-variant mb-5 leading-relaxed font-normal">
+      <Fragment set:html={directAnswer} />
+    </p>
+
+    <!-- SEMANTIC HTML TABLE FOR GOOGLE FEATURED TABLE SNIPPETS -->
+    <div class="overflow-x-auto rounded-xl border border-m3-outline-variant/40 bg-m3-surface-container-lowest shadow-none">
+      <table class="w-full text-left border-collapse text-m3-body-m text-m3-on-surface">
+        <thead>
+          <tr class="bg-m3-surface-container-highest text-m3-label-l border-b border-m3-outline-variant/60">
+            <th class="py-3 px-4 font-semibold">Vehicle Type</th>
+            <th class="py-3 px-4 font-semibold">Seating</th>
+            {columns.map((col) => (
+              <th class="py-3 px-4 font-semibold">{col}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-m3-outline-variant/30 text-m3-body-m">
+          {rows.map((row) => (
+            <tr class="hover:bg-m3-surface-container-low/50 transition-colors">
+              <td class="py-3 px-4 font-medium text-m3-on-surface">{row.vehicle}</td>
+              <td class="py-3 px-4 text-m3-on-surface-variant text-xs sm:text-sm">{row.seating}</td>
+              {columns.map((col) => (
+                <td class="py-3 px-4 font-semibold text-m3-on-surface">{row.rates[col] || "—"}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

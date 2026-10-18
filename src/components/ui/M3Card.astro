@@ -1,0 +1,36 @@
+---
+interface Props {
+  variant?: "elevated" | "filled" | "outlined";
+  class?: string;
+  id?: string;
+  [key: string]: any;
+}
+
+const {
+  variant = "filled",
+  class: className = "",
+  id,
+  ...rest
+} = Astro.props;
+
+const variantClasses = {
+  elevated:
+    "bg-m3-surface-container-lowest text-m3-on-surface shadow-sm hover:shadow-md border border-m3-outline-variant/40",
+  filled:
+    "bg-m3-surface-container-low text-m3-on-surface border border-transparent hover:bg-m3-surface-container",
+  outlined:
+    "bg-m3-surface text-m3-on-surface border border-m3-outline-variant hover:bg-m3-surface-container-lowest",
+}[variant];
+---
+
+<div
+  id={id}
+  class:list={[
+    "rounded-2xl p-5 sm:p-6 transition-all duration-200",
+    variantClasses,
+    className,
+  ]}
+  {...rest}
+>
+  <slot />
+</div>

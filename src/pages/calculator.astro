@@ -90,7 +90,7 @@ const webAppSchema = {
     "@type": "AggregateOffer",
     "priceCurrency": "INR",
     "priceValidUntil": "2027-12-31",
-    "lowPrice": "499",
+    "lowPrice": "600",
     "highPrice": "35000",
     "offerCount": "24",
     "url": "https://kalidasstravels.in/calculator/",
@@ -167,7 +167,7 @@ const faqItems = [
   },
   {
     q: "How are acting driver fees calculated for personal cars?",
-    a: "For city duty within Chennai, acting driver fees start at ₹499 for the first 4 hours, plus ₹99 per additional hour. A night allowance of ₹200 applies between 10:00 PM and 06:00 AM. For outstation trips in your car, outstation driver duty is billed at ₹1,100/day bata + ₹300 food allowance + return public transit ticket for one-way drops."
+    a: "For city duty within Chennai, acting driver fees start at ₹750 for the first 4 hours (₹1,200 for 8 hours), plus ₹120 per additional hour. A night allowance of ₹150 applies between 10:00 PM and 05:00 AM. For outstation trips in your car, outstation driver duty is billed at ₹1,400/day base bata + ₹300/day food allowance (₹1,700/day total for Sedans), and one-way drops use our 4-tier distance formula (1.0x–2.5x bata + return AC/Sleeper bus ticket + food allowance)."
   },
   {
     q: "Can I get a GST-compliant tax invoice for corporate travel claims?",
@@ -244,10 +244,10 @@ const serviceSchemas = [
     "name": "Acting Driver Services in Chennai",
     "serviceType": "Chauffeur Service",
     "provider": { "@id": "https://kalidasstravels.in/#localbusiness" },
-    "description": "Background-verified professional acting drivers for personal cars on hourly city duty or outstation daily bata starting from ₹499.",
+    "description": "Background-verified professional acting drivers for personal cars on hourly city duty or outstation daily bata starting from ₹750.",
     "offers": {
       "@type": "Offer",
-      "price": "499",
+      "price": "750",
       "priceCurrency": "INR"
     }
   },
@@ -260,7 +260,7 @@ const serviceSchemas = [
     "description": "Professional door-to-door car and SUV driveaway relocation across South India with live GPS tracking and trip insurance.",
     "offers": {
       "@type": "Offer",
-      "price": "3500",
+      "price": "2100",
       "priceCurrency": "INR"
     }
   }
@@ -695,8 +695,8 @@ const serviceSchemas = [
                 <h3 class="font-bold text-m3-on-surface font-heading text-base min-w-0">Acting Driver Charges Formula</h3>
               </div>
               <div class="bg-m3-surface-container-low p-3 rounded-m3-lg font-mono text-xs text-m3-on-surface mb-3 border border-m3-outline-variant/60 leading-relaxed">
-                City Duty = Base (₹499 for 4h / ₹800 for 8h) + (Extra Hrs × ₹99) + Night Bata (₹200)<br/>
-                <span class="text-micro text-m3-on-surface-variant">Outstation = (Days × Driver Bata [₹1,100–₹1,500]) + (Days × Food [₹300]) + Bus Fare</span>
+                City Duty = Base (₹750 for 4h / ₹1,200 for 8h) + (Extra Hrs × ₹120) + Night Bata (₹150)<br/>
+                <span class="text-micro text-m3-on-surface-variant">Outstation = (Days × Driver Bata [₹1,400–₹1,900]) + (Days × Food [₹300]) + Bus Fare</span>
               </div>
               <ul class="space-y-2 text-xs text-m3-on-surface-variant font-sans">
                 <li class="flex items-start gap-2">
@@ -705,7 +705,7 @@ const serviceSchemas = [
                 </li>
                 <li class="flex items-start gap-2">
                   <span class="w-1.5 h-1.5 rounded-full bg-m3-primary mt-1.5 shrink-0"></span>
-                  <span><strong>Outstation Driver Duty by Vehicle:</strong> Daily driver allowance: Hatchback/Sedan ₹1,100, SUV ₹1,200, Crysta ₹1,300, Luxury ₹1,500 + ₹300/day food. For one-way drops, return bus fare is reimbursed at actuals.</span>
+                  <span><strong>Outstation Driver Duty by Vehicle:</strong> Daily driver allowance: Hatchback/Sedan ₹1,400, SUV ₹1,500, Crysta ₹1,600, Luxury ₹1,900 + ₹300/day food. For one-way drops, tiered bata + return bus fare applies.</span>
                 </li>
                 <li class="flex items-start gap-2">
                   <span class="w-1.5 h-1.5 rounded-full bg-m3-primary mt-1.5 shrink-0"></span>
@@ -727,7 +727,7 @@ const serviceSchemas = [
                 <h3 class="font-bold text-m3-on-surface font-heading text-base min-w-0">Vehicle Relocation Charges Formula</h3>
               </div>
               <div class="bg-m3-surface-container-low p-3 rounded-m3-lg font-mono text-xs text-m3-on-surface mb-3 border border-m3-outline-variant/60 leading-relaxed">
-                Total = Driver Transit Bata (₹1,000/day) + Food Allowance (₹300/day) + Return Bus Ticket (SETC actuals)
+                Total = Tiered Driver Bata (from ₹1,400) + Food Allowance (₹300–₹600) + Return Bus Ticket (AC/Sleeper)
               </div>
               <ul class="space-y-2 text-xs text-m3-on-surface-variant font-sans">
                 <li class="flex items-start gap-2">

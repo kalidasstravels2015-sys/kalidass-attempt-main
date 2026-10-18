@@ -13,16 +13,17 @@ test.describe('Travel Calculators Comprehensive Verification', () => {
 
     // 1. Taxi Fare Estimator (QuotationEngine)
     console.log('--- 1. Testing Taxi Fare Estimator on /calculator/ ---');
-    const taxiPickup = page.locator('#pickup-input, input[placeholder*="pickup" i]').first();
-    const taxiDrop = page.locator('#drop-input, input[placeholder*="drop" i]').first();
+    const taxiPickup = page.locator('#outstation-estimator #pickup-input, #outstation-estimator input[placeholder*="pickup" i]').first();
+    const taxiDrop = page.locator('#outstation-estimator #drop-input, #outstation-estimator input[placeholder*="drop" i]').first();
     await taxiPickup.fill('Chennai');
     await taxiDrop.fill('Pondicherry');
+    await page.keyboard.press('Escape');
 
-    const taxiCalcBtn = page.locator('button:has-text("Calculate Cost"), button:has-text("செலவைக் கணக்கிடுங்கள்")').first();
-    await taxiCalcBtn.click();
+    const taxiCalcBtn = page.locator('#outstation-estimator button:has-text("View Instant Fare"), #outstation-estimator button:has-text("Calculate Cost"), #outstation-estimator button:has-text("செலவைக் கணக்கிடுங்கள்")').first();
+    await taxiCalcBtn.click({ force: true });
     await page.waitForTimeout(600);
 
-    const taxiEstimate = page.locator('text=Transparent Estimate').first();
+    const taxiEstimate = page.locator('#outstation-estimator').locator('text=Total Fare').first();
     await expect(taxiEstimate).toBeVisible();
     console.log('✔ Taxi fare estimate successfully displayed.');
 
@@ -46,8 +47,8 @@ test.describe('Travel Calculators Comprehensive Verification', () => {
     const resultCard = page.locator('#acting-driver-result-card');
     await expect(resultCard).toBeVisible();
     const resultText = await resultCard.innerText();
-    expect(resultText).toContain('1,562'); // 1,100 bata + 300 food + 162 bus
-    console.log('✔ Acting Driver One-Way calculation successful: ₹1,562 for Pallavaram to Tirupati.');
+    expect(resultText).toContain('2,100'); // 1,400 bata + 300 food + 400 bus
+    console.log('✔ Acting Driver One-Way calculation successful: ₹2,100 for Pallavaram to Tirupati.');
 
     // B. Round Trip calculation
     const roundTab = page.locator('#acting-driver-tab-round');
@@ -65,6 +66,8 @@ test.describe('Travel Calculators Comprehensive Verification', () => {
     console.log('✔ Acting Driver Round Trip calculation successful.');
     expect(roundResultText).toContain('Driver Bata');
     expect(roundResultText).toContain('Food Allowance');
+    expect(roundResultText).toContain('462 km one-way (924 km Round Trip)');
+    expect(roundResultText).toContain('3,700'); // 2 days min enforced for 462 km (2,800 bata + 600 food + 300 night stay)
 
     // 3. Vehicle Relocation Calculator
     console.log('--- 3. Testing Vehicle Relocation Calculator on /calculator/ ---');
@@ -78,9 +81,10 @@ test.describe('Travel Calculators Comprehensive Verification', () => {
     await vrCalcBtn.click({ force: true });
     await page.waitForTimeout(600);
 
-    // Verify result appears
+    // Verify result appears (505 km -> 2.0d bata ₹2,800 + ₹450 food + ₹1,000 bus = ₹4,250)
     await expect(page.locator('text=Return Travel (Est)').first()).toBeVisible();
-    console.log('✔ Vehicle Relocation calculation completed successfully.');
+    await expect(page.locator('text=4,250').first()).toBeVisible();
+    console.log('✔ Vehicle Relocation calculation completed successfully (₹4,250 for Coimbatore to Chennai).');
 
     // 4. Verify ZERO console errors
     console.log('Console errors encountered:', consoleErrors);
@@ -88,7 +92,7 @@ test.describe('Travel Calculators Comprehensive Verification', () => {
     console.log('✔ Zero console errors on /calculator/ page.');
   });
 
-  test('Verify /services/acting-drivers/ page calculator interactivity', async ({ page }) => {
+  test('Verify /services/acting-drivers/ page calculator interactivity across multiple routes', async ({ page }) => {
     const consoleErrors = [];
     page.on('console', msg => {
       if (msg.type() === 'error') consoleErrors.push(msg.text());
@@ -100,21 +104,31 @@ test.describe('Travel Calculators Comprehensive Verification', () => {
     const pickupInput = page.locator('#acting-driver-pickup-input');
     const dropInput = page.locator('#acting-driver-drop-input');
     const calcBtn = page.locator('#acting-driver-calc-btn');
+    const resultBox = page.locator('#acting-driver-result-card');
 
     await expect(pickupInput).toBeVisible();
     await expect(dropInput).toBeVisible();
 
-    await pickupInput.fill('Chennai');
-    await dropInput.fill('Pondicherry');
-    await page.keyboard.press('Escape');
-    await calcBtn.click({ force: true });
-    await page.waitForTimeout(600);
+    const routesToTest = [
+      { pickup: 'Chennai', drop: 'Pondicherry', expectedTotal: '2,100' },
+      { pickup: 'Chennai', drop: 'Bangalore', expectedTotal: '3,150' },
+      { pickup: 'Chennai', drop: 'Madurai', expectedTotal: '4,200' },
+      { pickup: 'Chennai', drop: 'Kanyakumari', expectedTotal: '5,500' },
+      { pickup: 'Coimbatore', drop: 'Tirupati', expectedTotal: '4,240' },
+    ];
 
-    const resultBox = page.locator('#acting-driver-result-card');
-    await expect(resultBox).toBeVisible();
-    const resultText = await resultBox.innerText();
-    expect(resultText).toContain('1,600');
-    console.log('✔ /services/acting-drivers/ calculator executed successfully (₹1,600).');
+    for (const r of routesToTest) {
+      await pickupInput.fill(r.pickup);
+      await dropInput.fill(r.drop);
+      await page.keyboard.press('Escape');
+      await calcBtn.click({ force: true });
+      await page.waitForTimeout(400);
+
+      await expect(resultBox).toBeVisible();
+      const resultText = await resultBox.innerText();
+      expect(resultText).toContain(r.expectedTotal);
+      console.log(`✔ Verified ${r.pickup} -> ${r.drop}: ₹${r.expectedTotal}`);
+    }
 
     // Verify vehicle dropdown does NOT contain prices
     const vehicleOptions = await page.locator('#trip-estimator select option').allInnerTexts();
@@ -159,11 +173,11 @@ test.describe('Travel Calculators Comprehensive Verification', () => {
     // Capture screenshot of calculator section
     await page.setViewportSize({ width: 375, height: 812 });
     await page.locator('#trip-estimator').scrollIntoViewIfNeeded();
-    await page.screenshot({ path: 'C:/Users/spoll/.gemini/antigravity-ide/brain/d009ebb2-bab8-4f29-9d14-26c200720c6a/acting_driver_calc_mobile.png' });
+    await page.screenshot({ path: 'C:/Users/spoll/.gemini/antigravity/brain/fef1a749-a8b2-4c41-a055-38e6d2294c8a/acting_driver_calc_mobile.png' });
 
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.locator('#trip-estimator').scrollIntoViewIfNeeded();
-    await page.screenshot({ path: 'C:/Users/spoll/.gemini/antigravity-ide/brain/d009ebb2-bab8-4f29-9d14-26c200720c6a/acting_driver_calc_desktop.png' });
+    await page.screenshot({ path: 'C:/Users/spoll/.gemini/antigravity/brain/fef1a749-a8b2-4c41-a055-38e6d2294c8a/acting_driver_calc_desktop.png' });
     console.log('✔ Screenshots captured.');
   });
 });

@@ -24,7 +24,7 @@ import {
 import LocationPicker from './LocationPicker';
 import WhatsAppButton from './react/WhatsAppButton.jsx';
 import { buildWhatsAppUrl } from '../utils/whatsapp';
-import { trackEvent } from '../lib/analytics';
+import { trackEvent, markQuoteConverted } from '../lib/analytics';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import { printInvoiceLetterhead, getEstimateRefNo, downloadEstimateDocument } from '../utils/invoiceLetterhead';
 import { TOUR_CONFIGS } from '../data/tourBookingConfigs.js';
@@ -1125,6 +1125,14 @@ Please confirm booking!`;
     };
 
     trackEvent(`${config.eventPrefix}_booked`, bookingPayload);
+    markQuoteConverted(effectiveInvoiceRefNo, {
+      calculatorId: serviceSlug || 'tour_package',
+      tripType: `${days || 1} Day Package`,
+      pickup: pickup.trim() || 'Chennai',
+      drop: destinationDisplay,
+      vehicle: activeVehicle?.name || 'Cab',
+      estimate: currentFare
+    });
 
     if (typeof window !== 'undefined' && typeof window.reportGoogleAdsConversion === 'function') {
       window.reportGoogleAdsConversion('qualified_booking', {
@@ -1282,6 +1290,8 @@ Please confirm booking!`;
                   if (validationError) setValidationError('');
                   if (!val.trim()) {
                     setShowResult(false);
+                  } else if (!config.destination?.editable || dropDestination.trim()) {
+                    setShowResult(true);
                   }
                 }}
                 onKeyDown={(e) => {
@@ -1298,7 +1308,7 @@ Please confirm booking!`;
                   loadGoogleMaps().catch(() => {});
                   handleInputFocus(e);
                 }}
-                placeholder="e.g. T. Nagar, Central Station, Airport, Velachery"
+                placeholder="Enter pickup address in Chennai (e.g. T. Nagar, Airport, Velachery)"
                 className={`w-full min-h-[48px] bg-white border border-m3-outline-variant hover:border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20 rounded-m3-lg px-3.5 py-3 text-sm sm:text-sm ${pickup ? 'text-m3-on-surface font-semibold' : 'text-m3-on-surface font-normal'} placeholder:text-sm placeholder:text-m3-on-surface-variant/75 placeholder:font-normal outline-none transition-all pr-20 shadow-2xs scroll-mt-28 scroll-mb-64`}
               />
               <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
@@ -1350,8 +1360,12 @@ Please confirm booking!`;
                   type="text"
                   value={dropDestination}
                   onChange={(e) => {
-                    setDropDestination(e.target.value);
+                    const val = e.target.value;
+                    setDropDestination(val);
                     if (validationError) setValidationError('');
+                    if (val.trim() && pickup.trim()) {
+                      setShowResult(true);
+                    }
                   }}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
@@ -1627,6 +1641,17 @@ Please confirm booking!`;
             <div ref={resultRef} className="pt-3 border-t border-m3-outline-variant/60 space-y-3 animate-in fade-in duration-200">
               {/* Rate Summary Card — Restaurant Bill Style */}
               <div className="bg-slate-100 border border-slate-200 rounded-xl p-3.5 space-y-3 shadow-xs">
+                {/* Official Quote Ref & 24-Hr Price Lock Header */}
+                <div className="flex items-center justify-between gap-2 pb-2 border-b border-slate-200/80 flex-wrap">
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#0b57d0] bg-[#1a73e8]/10 px-2.5 py-0.5 rounded-full">
+                    <span>Quoted Fare • Ref: {effectiveInvoiceRefNo}</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-800 bg-emerald-100/90 border border-emerald-200 px-2 py-0.5 rounded-full">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
+                    <span>Rate Locked 24 Hrs • Send to WhatsApp to Save</span>
+                  </span>
+                </div>
+
                 {/* Header: Vehicle Name, Pax & Total Fare */}
                 <div className="flex items-center justify-between gap-3 pb-2.5 border-b border-slate-200">
                   <div>
@@ -1645,13 +1670,54 @@ Please confirm booking!`;
                   <div className="text-right shrink-0">
                     <div className="text-[11px] text-m3-on-surface-variant font-medium">Total Fare</div>
                     <div className="text-2xl sm:text-3xl font-extrabold text-m3-on-surface font-heading leading-tight">
-                      {activePayableFare}
+                      {activePayableFare}{isAfter24Hours && <span className="text-xs sm:text-sm font-semibold text-m3-on-surface-variant ml-1">+ Extra</span>}
                     </div>
                   </div>
                 </div>
 
+                {/* 1-Tap Vehicle Price Comparison Strip */}
+                {config.vehicles && config.vehicles.length > 1 && (
+                  <div className="pb-2 border-b border-slate-200/80">
+                    <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                      Compare &amp; Switch Cab Instantly (1-Tap):
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                      {config.vehicles.slice(0, 4).map((veh) => {
+                        const paxNum = parseInt(passengers, 10) || 4;
+                        const isDisabled = veh.capacity < paxNum;
+                        const isSelected = vehicleIdState === veh.id;
+                        const vBreakdown = durationInfo?.hasDates ? calculateVehicleFare(veh, durationInfo) : null;
+                        const vFare = vBreakdown ? vBreakdown.totalFare : (veh.rates?.[1] || 0);
+                        const vDisplayFare = needGst ? Math.round(vFare * 1.05) : vFare;
+                        return (
+                          <button
+                            key={veh.id}
+                            type="button"
+                            disabled={isDisabled}
+                            onClick={() => setVehicleIdState(veh.id)}
+                            className={`px-2 py-1.5 rounded-lg border text-left transition-all cursor-pointer ${
+                              isSelected
+                                ? 'bg-[#1a73e8] text-white border-[#1a73e8] shadow-2xs'
+                                : isDisabled
+                                  ? 'bg-slate-100/60 text-slate-400 border-slate-200/60 opacity-50 cursor-not-allowed'
+                                  : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-200'
+                            }`}
+                          >
+                            <div className={`text-[10px] font-bold truncate ${isSelected ? 'text-white/90' : 'text-slate-500'}`}>
+                              {veh.shortName || veh.name.split('/')[0].trim()} ({veh.capacity}p)
+                            </div>
+                            <div className={`text-xs font-extrabold ${isSelected ? 'text-white' : 'text-slate-900'}`}>
+                              ₹{vDisplayFare.toLocaleString('en-IN')}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
                 {/* Itemized Bill Lines */}
-                <div className="space-y-1.5 text-xs">
+                <div className="space-y-1.5 text-[13px] sm:text-sm">
                   <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
                     <span>Cab Hire ({activeVehicle?.name} • Fuel included):</span>
                     <span className="font-bold text-m3-on-surface">₹{Number(fareBreakdown?.vehicleHireFare || taxableAmount).toLocaleString('en-IN')}</span>
@@ -1674,26 +1740,43 @@ Please confirm booking!`;
                       <span className="font-bold text-m3-on-surface">+₹{Number(totalGst).toLocaleString('en-IN')}</span>
                     </div>
                   )}
-                  {isAfter24Hours && (
+                  {isAfter24Hours ? (
                     <>
                       <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                        <span>State Permit:</span>
+                        <span className="font-bold text-m3-on-surface">
+                          {isTirupati ? '₹500' : (serviceSlug === 'sabarimala-trip' ? '₹800' : '₹0')}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
                         <span>Tolls:</span>
-                        <span className="font-bold text-m3-on-surface">Extra (At Actuals)</span>
+                        <span className="font-bold text-m3-on-surface">Extra</span>
                       </div>
                       <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
                         <span>Parking:</span>
-                        <span className="font-bold text-m3-on-surface">Extra (At Actuals)</span>
+                        <span className="font-bold text-m3-on-surface">Extra</span>
                       </div>
+                    </>
+                  ) : (
+                    <>
                       <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
                         <span>State Permit:</span>
-                        <span className="font-bold text-m3-on-surface">Extra (At Actuals)</span>
+                        <span className="font-bold text-emerald-700">₹0</span>
+                      </div>
+                      <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                        <span>Tolls:</span>
+                        <span className="font-bold text-emerald-700">₹0</span>
+                      </div>
+                      <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                        <span>Parking:</span>
+                        <span className="font-bold text-emerald-700">₹0</span>
                       </div>
                     </>
                   )}
                 </div>
 
                 {/* Bill Payment Split */}
-                <div className="pt-2 border-t border-slate-200/80 space-y-1 text-xs">
+                <div className="pt-2 border-t border-slate-200/80 space-y-1 text-[13px] sm:text-sm">
                   <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
                     <span>Total Bill:</span>
                     <span className="font-bold text-m3-on-surface">{activePayableFare}{isAfter24Hours ? ' + Extra' : ''}</span>
@@ -1702,9 +1785,13 @@ Please confirm booking!`;
                     <span>Advance to Pay:</span>
                     <span className="font-bold">-₹500</span>
                   </div>
-                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface border-t border-slate-200/60 pt-1">
-                    <span className="font-medium">Balance to Pay Driver:</span>
-                    <span className="font-bold text-m3-on-surface">{formattedBalancePayable}{isAfter24Hours ? ' + Extra' : ''} <span className="text-[10px] font-normal text-m3-on-surface-variant">(After trip)</span></span>
+                  <div className="flex justify-between items-center py-1 text-m3-on-surface border-t border-slate-200/80">
+                    <span className="text-sm sm:text-base font-extrabold text-m3-on-surface tracking-tight">
+                      Balance to Pay Driver <span className="text-xs font-medium text-m3-on-surface-variant">(After trip)</span>:
+                    </span>
+                    <span className="text-lg sm:text-xl font-black text-[#1a73e8] tracking-tight font-heading shrink-0">
+                      {formattedBalancePayable}{isAfter24Hours ? ' + Extra' : ''}
+                    </span>
                   </div>
                 </div>
 
@@ -1770,26 +1857,31 @@ Please confirm booking!`;
               )}
 
               {/* Primary M3 Action Buttons (Full-Width WhatsApp + Secondary Call) */}
-              <div className="pt-1 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5">
-                <WhatsAppButton 
-                  href={whatsAppUrl}
-                  onClick={handleDirectWhatsAppClick}
-                  variant="filled"
-                  size="md"
-                  data-direct-whatsapp="true"
-                  className="flex-1 px-5 py-3.5 min-h-[48px] text-sm font-bold shadow-m3-1 justify-center active:scale-[0.99]"
-                  text={`Book on WhatsApp (${activePayableFare})`}
-                />
+              <div className="pt-1 space-y-2">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5">
+                  <WhatsAppButton 
+                    href={whatsAppUrl}
+                    onClick={handleDirectWhatsAppClick}
+                    variant="filled"
+                    size="md"
+                    data-direct-whatsapp="true"
+                    className="flex-1 px-5 py-3.5 min-h-[48px] text-sm font-bold shadow-m3-1 justify-center active:scale-[0.99]"
+                    text={`Send Quote & Book on WhatsApp (${activePayableFare})`}
+                  />
 
-                <a
-                  href="tel:+918939539211"
-                  onClick={handleCall}
-                  className="inline-flex items-center justify-center gap-2 px-5 py-3.5 min-h-[48px] bg-white hover:bg-m3-surface-container active:scale-[0.99] text-m3-on-surface font-semibold text-sm rounded-m3-full border border-m3-outline-variant shadow-2xs transition-colors shrink-0 cursor-pointer"
-                  aria-label="Call +91 89395 39211"
-                >
-                  <Phone className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
-                  <span>{isPondicherry ? 'Call Dispatch' : 'Call: +91 89395 39211'}</span>
-                </a>
+                  <a
+                    href="tel:+918939539211"
+                    onClick={handleCall}
+                    className="inline-flex items-center justify-center gap-2 px-5 py-3.5 min-h-[48px] bg-white hover:bg-m3-surface-container active:scale-[0.99] text-m3-on-surface font-semibold text-sm rounded-m3-full border border-m3-outline-variant shadow-2xs transition-colors shrink-0 cursor-pointer"
+                    aria-label="Call +91 89395 39211"
+                  >
+                    <Phone className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
+                    <span>{isPondicherry ? 'Call Dispatch' : 'Call: +91 89395 39211'}</span>
+                  </a>
+                </div>
+                <p className="text-[11px] text-m3-on-surface-variant text-center font-medium">
+                  ✓ Lock Rate 24 Hrs ({effectiveInvoiceRefNo}) • ✓ Check Live Cab Availability • ✓ Pay ₹500 Token Only After Confirmation
+                </p>
               </div>
 
               {/* Progressive Disclosure: Corporate GST & Official Estimate */}
@@ -2012,18 +2104,16 @@ Please confirm booking!`;
                     {isAfter24Hours ? (
                       <tr className="bg-amber-50/70 text-amber-950">
                         <td className="p-2 font-medium">
-                          <strong className="text-amber-900">Statutory FASTag Tolls &amp; Parking:</strong><br/>
-                          <span className="text-[10px] text-amber-800">Payable extra directly by passenger on road as per actual receipts</span>
+                          <strong className="text-amber-900">Tolls &amp; Parking:</strong>
                         </td>
-                        <td className="p-2 text-right font-bold text-amber-800">AT ACTUALS</td>
+                        <td className="p-2 text-right font-bold text-amber-800">Extra</td>
                       </tr>
                     ) : (
                       <tr className="bg-emerald-50/70 text-emerald-950">
                         <td className="p-2 font-medium">
-                          <strong className="text-emerald-900">Highway Tolls, Permits &amp; Parking:</strong><br/>
-                          <span className="text-[10px] text-emerald-800">100% all-inclusive pure agent service</span>
+                          <strong className="text-emerald-900">State Permit, Tolls &amp; Parking:</strong>
                         </td>
-                        <td className="p-2 text-right font-bold text-emerald-700">INCLUDED</td>
+                        <td className="p-2 text-right font-bold text-emerald-700">₹0</td>
                       </tr>
                     )}
                     <tr className="bg-m3-surface-container-low/50">

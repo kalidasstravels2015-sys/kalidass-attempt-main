@@ -126,7 +126,7 @@ const organizationSchema = {
   ],
 };
 
-const localBusinessReviews = (siteContent.reviews || []).slice(0, 5).map((r: any, idx: number) => ({
+const localBusinessReviews = (siteContent.reviews || []).slice(0, 5).map((r: any) => ({
   "@type": "Review",
   "author": {
     "@type": "Person",
@@ -139,7 +139,7 @@ const localBusinessReviews = (siteContent.reviews || []).slice(0, 5).map((r: any
     "worstRating": "1",
   },
   "reviewBody": r.quote,
-  "datePublished": `2024-0${(idx % 9) + 1}-01`,
+  ...(r.date ? { "datePublished": r.date } : {}),
 }));
 
 const localBusinessSchema = {
@@ -225,8 +225,14 @@ const localBusinessSchema = {
         "@type": "Offer",
         name: "Chennai Airport Taxi Transfers",
         description: "Rapid 5-10 min MAA airport taxi dispatch with live flight delay tracking, zero surge pricing, and driver details sent via WhatsApp before takeoff.",
-        price: "650",
+        price: "450",
         priceCurrency: "INR",
+        priceSpecification: {
+          "@type": "AggregateOffer",
+          lowPrice: "450",
+          highPrice: "850",
+          priceCurrency: "INR",
+        },
         priceValidUntil: "2027-12-31",
         availability: "https://schema.org/InStock",
         url: "https://kalidasstravels.in/services/chennai-airport-taxi/",
@@ -267,8 +273,8 @@ const localBusinessSchema = {
         "@type": "Offer",
         name: "South India Temple Tour Cab Packages",
         serviceType: "Temple Pilgrimage Taxi Packages",
-        description: "All-inclusive darshan packages to Tirupati, Navagraha, Thiruvannamalai, Rameswaram, and Sabarimala.",
-        price: "3200",
+        description: "Dedicated darshan cab packages to Kanchipuram, Tirupati, Navagraha, Thiruvannamalai, Rameswaram, and Sabarimala starting from ₹3,800.",
+        price: "3800",
         priceCurrency: "INR",
         priceValidUntil: "2027-12-31",
         availability: "https://schema.org/InStock",
@@ -284,13 +290,31 @@ const localBusinessSchema = {
       },
       {
         "@type": "Offer",
+        name: "Chennai to Kanchipuram 1-Day Temple Tour Cab Package",
+        price: "3800",
+        priceCurrency: "INR",
+        priceValidUntil: "2027-12-31",
+        availability: "https://schema.org/InStock",
+        url: "https://kalidasstravels.in/services/kanchipuram-temple-trip/",
+        description: "1-Day Kanchipuram Divya Desam & Kamakshi Amman temple darshan package in AC Sedan (₹3,800), Ertiga (₹4,800), or Innova (₹5,800).",
+        seller: {
+          "@id": "https://kalidasstravels.in/#localbusiness",
+        },
+        itemOffered: {
+          "@type": "TaxiService",
+          name: "Chennai to Kanchipuram Temple Cab Package",
+          serviceType: "Pilgrimage Taxi Package",
+        },
+      },
+      {
+        "@type": "Offer",
         name: "Chennai to Tirupati Balaji Darshan Cab Package",
         price: "6000",
         priceCurrency: "INR",
         priceValidUntil: "2027-12-31",
         availability: "https://schema.org/InStock",
         url: "https://kalidasstravels.in/services/tirupati-package/",
-        description: "Doorstep 1-Day Chennai to Tirupati car package covering sanitized AC Sedan, tolls, AP border permit, and driver bata.",
+        description: "Doorstep 1-Day Chennai to Tirupati car package in AC Sedan (₹6,000), Ertiga (₹7,500), or Innova (₹8,500) with driver bata included.",
         seller: {
           "@id": "https://kalidasstravels.in/#localbusiness",
         },
@@ -302,31 +326,13 @@ const localBusinessSchema = {
       },
       {
         "@type": "Offer",
-        name: "Kumbakonam 9 Navagraha Temples Tour Cab Package",
-        price: "8600",
-        priceCurrency: "INR",
-        priceValidUntil: "2027-12-31",
-        availability: "https://schema.org/InStock",
-        url: "https://kalidasstravels.in/services/navagraha-tour/",
-        description: "2 Days / 1 Night complete 9 planetary temples tour around Kumbakonam with tolls, fuel, and driver bata included.",
-        seller: {
-          "@id": "https://kalidasstravels.in/#localbusiness",
-        },
-        itemOffered: {
-          "@type": "TaxiService",
-          name: "Kumbakonam 9 Navagraha Temples Tour Cab Package",
-          serviceType: "Pilgrimage Taxi Package",
-        },
-      },
-      {
-        "@type": "Offer",
         name: "Chennai to Thiruvannamalai Girivalam Cab Package",
         price: "6500",
         priceCurrency: "INR",
         priceValidUntil: "2027-12-31",
         availability: "https://schema.org/InStock",
         url: "https://kalidasstravels.in/services/thiruvannamalai-girivalam-trip/",
-        description: "Arunachaleswarar temple darshan and 14 km Pournami Girivalam car standby package with night highway expert driver.",
+        description: "1-Day Arunachaleswarar temple darshan and 14 km Pournami Girivalam package in AC Sedan (₹6,500), Ertiga (₹7,900), or Innova (₹9,300).",
         seller: {
           "@id": "https://kalidasstravels.in/#localbusiness",
         },
@@ -338,31 +344,13 @@ const localBusinessSchema = {
       },
       {
         "@type": "Offer",
-        name: "Chennai to Rameswaram & Dhanushkodi Cab Package",
-        price: "15500",
-        priceCurrency: "INR",
-        priceValidUntil: "2027-12-31",
-        availability: "https://schema.org/InStock",
-        url: "https://kalidasstravels.in/services/rameswaram-2-days/",
-        description: "2 Days / 1 Night pilgrimage covering Ramanathaswamy Temple, 22 Holy Theerthams, Pamban Bridge, and Dhanushkodi.",
-        seller: {
-          "@id": "https://kalidasstravels.in/#localbusiness",
-        },
-        itemOffered: {
-          "@type": "TaxiService",
-          name: "Chennai to Rameswaram & Dhanushkodi Cab Package",
-          serviceType: "Pilgrimage Taxi Package",
-        },
-      },
-      {
-        "@type": "Offer",
         name: "Chennai to Chidambaram Natarajar & Pichavaram Cab Package",
         price: "7400",
         priceCurrency: "INR",
         priceValidUntil: "2027-12-31",
         availability: "https://schema.org/InStock",
         url: "https://kalidasstravels.in/services/chidambaram-temple-trip/",
-        description: "1 Day coastal pilgrimage to Thillai Natarajar Temple and Pichavaram Mangrove forest boating with all tolls included.",
+        description: "1-Day coastal pilgrimage to Thillai Natarajar Temple and Pichavaram Mangrove forest in AC Sedan (₹7,400), Ertiga (₹9,200), or Innova (₹11,000).",
         seller: {
           "@id": "https://kalidasstravels.in/#localbusiness",
         },
@@ -374,13 +362,49 @@ const localBusinessSchema = {
       },
       {
         "@type": "Offer",
+        name: "Kumbakonam 9 Navagraha Temples Tour Cab Package",
+        price: "14500",
+        priceCurrency: "INR",
+        priceValidUntil: "2027-12-31",
+        availability: "https://schema.org/InStock",
+        url: "https://kalidasstravels.in/services/navagraha-tour/",
+        description: "2 Days / 1 Night complete 9 planetary temples tour around Kumbakonam in AC Sedan (₹14,500), Ertiga (₹18,500), or Innova (₹22,500).",
+        seller: {
+          "@id": "https://kalidasstravels.in/#localbusiness",
+        },
+        itemOffered: {
+          "@type": "TaxiService",
+          name: "Kumbakonam 9 Navagraha Temples Tour Cab Package",
+          serviceType: "Pilgrimage Taxi Package",
+        },
+      },
+      {
+        "@type": "Offer",
+        name: "Chennai to Rameswaram & Dhanushkodi Cab Package",
+        price: "18500",
+        priceCurrency: "INR",
+        priceValidUntil: "2027-12-31",
+        availability: "https://schema.org/InStock",
+        url: "https://kalidasstravels.in/services/rameswaram-2-days/",
+        description: "2 Days / 1 Night pilgrimage covering Ramanathaswamy Temple, Pamban Bridge, and Dhanushkodi in AC Sedan (₹18,500), Ertiga (₹23,500), or Innova (₹27,500).",
+        seller: {
+          "@id": "https://kalidasstravels.in/#localbusiness",
+        },
+        itemOffered: {
+          "@type": "TaxiService",
+          name: "Chennai to Rameswaram & Dhanushkodi Cab Package",
+          serviceType: "Pilgrimage Taxi Package",
+        },
+      },
+      {
+        "@type": "Offer",
         name: "Chennai to Sabarimala Pilgrim Yatra Cab Package",
-        price: "15900",
+        price: "24000",
         priceCurrency: "INR",
         priceValidUntil: "2027-12-31",
         availability: "https://schema.org/InStock",
         url: "https://kalidasstravels.in/services/sabarimala-trip/",
-        description: "3 Days / 2 Nights Sabarimala Mandala pooja yatra to Pamba/Nilakkal with satvik driver and Kerala interstate road permit.",
+        description: "3 Days / 2 Nights Sabarimala yatra to Pamba/Nilakkal in AC Sedan (₹24,000), Ertiga (₹30,000), or Innova (₹36,000) with experienced ghat driver.",
         seller: {
           "@id": "https://kalidasstravels.in/#localbusiness",
         },
@@ -411,8 +435,8 @@ const localBusinessSchema = {
       {
         "@type": "Offer",
         name: "Acting Driver Services in Chennai",
-        description: "Police background-verified hourly and outstation chauffeurs for your personal car.",
-        price: "600",
+        description: "Police background-verified chauffeurs for your personal car. City 4hr (₹500), 8hr (₹800), and Outstation round trip (₹1,400/day).",
+        price: "500",
         priceCurrency: "INR",
         priceValidUntil: "2027-12-31",
         availability: "https://schema.org/InStock",

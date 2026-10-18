@@ -1041,22 +1041,22 @@
       "rows": [
         [
           "4 Hours Short Duty",
-          "₹500",
-          "Unlimited stops within Chennai Metro. ₹100/extra hr."
+          "₹750",
+          "Unlimited stops within Chennai Metro. ₹120/extra hr."
         ],
         [
           "8 Hours Full Day Duty",
-          "₹800",
-          "Standard full day duty across all Chennai zones. ₹100/extra hr."
+          "₹1,200",
+          "Standard full day duty across all Chennai zones. ₹120/extra hr."
         ],
         [
           "12 Hours Extended Day",
-          "₹1,200",
+          "₹1,650",
           "Ideal for full-day weddings, multiple client visits."
         ],
         [
           "Night Duty Allowance (10 PM – 5 AM)",
-          "+₹100 flat",
+          "+₹150 flat",
           "Applicable only if duty extends into late night hours."
         ]
       ],
@@ -1076,7 +1076,7 @@
     "faq": [
       {
         "q": "Can I extend the duty if my shopping or event takes longer?",
-        "a": "Yes! You do not need to call the office. Inform your driver directly. Extra hours are billed at a flat ₹100/hr at final settlement."
+        "a": "Yes! You do not need to call the office. Inform your driver directly. Extra hours are billed at a flat ₹120/hr at final settlement."
       },
       {
         "q": "Are your drivers experienced with high-end automatic / luxury cars?",
@@ -1093,7 +1093,7 @@
     ],
     "travelGuide": {
       "history": "• Citywide Coverage: All North, South, Central & OMR\n• Peak Traffic Relief: Relax while our driver steers\n• Transmission Ready: Manual, Automatic, EV & Luxury\n• Flexible Hours: 4-hr, 8-hr, or Full Day packages",
-      "timings": "• Standard Operating Hours: 06:00 AM to 10:00 PM\n• Night Duty Hours: 10:00 PM to 05:00 AM (Flat +₹100 night allowance)\n• Recommended Booking Lead Time: Minimum 1 to 2 hours for guaranteed prompt dispatch.",
+      "timings": "• Standard Operating Hours: 06:00 AM to 10:00 PM\n• Night Duty Hours: 10:00 PM to 05:00 AM (Flat +₹150 night allowance)\n• Recommended Booking Lead Time: Minimum 1 to 2 hours for guaranteed prompt dispatch.",
       "tips": [
         "Ensure your vehicle RC, insurance, and PUC documents are up to date in the glovebox.",
         "Keep adequate fuel in the tank before the driver arrives.",
@@ -1103,7 +1103,7 @@
     },
     "whatsappMsg": "Hi Kalidass Travels, I need a within-Chennai Acting Driver for my car.",
     "metaTitle": "Hire Acting Driver in Chennai | Kalidass Travels",
-    "metaDescription": "Hire verified acting drivers in Chennai for your car (Manual, Auto, EV). 4 hrs @ ₹500, 8 hrs @ ₹800. Punctual 30-min doorstep arrival.",
+    "metaDescription": "Hire verified acting drivers in Chennai for your car (Manual, Auto, EV). 4 hrs @ ₹750, 8 hrs @ ₹1,200. Punctual 30-min doorstep arrival.",
     "keywords": "acting driver in chennai, hire acting driver chennai, call driver chennai, personal car driver hire chennai, hourly driver chennai, acting driver medavakkam velachery tambaram, daily driver chennai",
     "serviceType": "ChauffeurService",
     "origin": "Chennai",
@@ -1118,36 +1118,36 @@
       "headers": [
         "Vehicle Type",
         "Daily Driver Bata",
-        "Max Daily Duty",
+        "With Meals Included",
         "Night Driving (10 PM - 6 AM)"
       ],
       "rows": [
         [
           "Hatchback & Sedan (Dzire, Etios, City, Verna)",
-          "₹1,100 / day",
-          "Up to 14 Hours",
+          "₹1,400 / day",
+          "₹1,700 / day",
           "+₹200 / night"
         ],
         [
           "Compact SUV / MPV (Ertiga, Creta, Carens, Seltos)",
-          "₹1,200 / day",
-          "Up to 14 Hours",
+          "₹1,500 / day",
+          "₹1,800 / day",
           "+₹200 / night"
         ],
         [
           "Premium SUV / MPV (Innova, Crysta, Fortuner, XUV700)",
-          "₹1,300 / day",
-          "Up to 14 Hours",
+          "₹1,600 / day",
+          "₹1,900 / day",
           "+₹200 / night"
         ],
         [
           "Luxury European Cars (BMW, Audi, Mercedes, Volvo)",
-          "₹1,500 / day",
-          "Up to 14 Hours",
+          "₹1,900 / day",
+          "₹2,200 / day",
           "+₹250 / night"
         ]
       ],
-      "note": "Daily Driver Bata covers up to 14 hours of duty per calendar day. Overtime beyond 14 hrs is ₹100/hr. Overnight stay: if hotel does not provide driver dormitory, ₹300 lodging allowance applies."
+      "note": "Daily Driver Bata covers up to 14 hours of duty per calendar day. Overtime beyond 14 hrs is ₹120/hr. Overnight stay: if hotel does not provide driver dormitory, ₹300 lodging allowance applies."
     },
     "includes": [
       "Highway-specialist driver with minimum 8+ years expressway experience",
@@ -1157,7 +1157,7 @@
     ],
     "excludes": [
       "Fuel, FASTag highway tolls & parking fees",
-      "Driver food (₹150/meal if not sharing meals with family) & lodging (₹300/night if no driver dorm)"
+      "Driver food (₹300/day if not sharing meals with family) & lodging (₹300/night if no driver dorm)"
     ],
     "travelGuide": {
       "history": "• Highway Specialists: Experienced on expressways\n• Ghat Road Trained: Skilled on hill hairpin turns\n• Night Vision Tested: Safe night glare navigation\n• Zero Toll Dispute: You control route & halts",
@@ -1176,7 +1176,7 @@
       },
       {
         "q": "What about the driver's food and stay?",
-        "a": "You can either invite the driver to eat satvik meals at the same highway restaurants or provide ₹150/meal. For overnight stay, if your hotel has a driver dorm, no fee is charged; otherwise, a ₹300/night room allowance applies."
+        "a": "You can either invite the driver to eat satvik meals at the same highway restaurants (paying base bata from ₹1,400/day) or include ₹300/day food allowance. For overnight stay, if your hotel has a driver dorm, no fee is charged; otherwise, a ₹300/night room allowance applies."
       },
       {
         "q": "Are your drivers trained for hill stations (Ooty, Kodaikanal)?",
@@ -1185,7 +1185,7 @@
     ],
     "whatsappMsg": "Hi Kalidass Travels, I need an Outstation Round-Trip Acting Driver for my car.",
     "metaTitle": "Outstation Acting Driver Chennai | Kalidass Travels",
-    "metaDescription": "Hire experienced highway acting drivers in Chennai for personal car outstation trips. Safe night driving, ₹1,100/day bata & zero surge pricing.",
+    "metaDescription": "Hire experienced highway acting drivers in Chennai for personal car outstation trips. Safe night driving, ₹1,400/day bata & zero surge pricing.",
     "keywords": "outstation acting driver chennai, outstation call driver chennai, driver for personal car outstation chennai, highway driver hire chennai, acting driver for outstation trip, temporary driver for highway trip",
     "serviceType": "ChauffeurService",
     "origin": "Chennai",
@@ -1204,27 +1204,27 @@
       ],
       "rows": [
         [
-          "Standard Day Bata (≤ 400 km)",
-          "₹1,100 – ₹1,300 flat",
-          "1-Day outstation bata (Sedan ₹1,100, SUV ₹1,200, Innova ₹1,300)."
+          "Short Drop Bata (≤ 250 km)",
+          "1.0x Day Bata (₹1,400 – ₹1,900)",
+          "Pondicherry, Tirupati, Vellore, Tiruvannamalai (same-day return)."
         ],
         [
-          "Long-Distance Bata (> 400 km)",
-          "1.5 Days Bata (₹1,650 – ₹1,950)",
-          "Applied for Madurai, Coimbatore, Tirunelveli to cover return transit day."
+          "Medium-Long Bata (251–450 km)",
+          "1.5x Days Bata (₹2,100 – ₹2,850)",
+          "Trichy, Salem, Thanjavur, Bangalore (6–8h drive + 6–8h return bus)."
         ],
         [
-          "Driver Return Transit Ticket",
-          "Actual SETC Bus / Sleeper Fare",
-          "Pondicherry: ~₹200 | Bangalore: ~₹450 | Trichy: ~₹410 | Madurai: ~₹550 | Coimbatore: ~₹620."
+          "Long Overnight Bata (451–650 km)",
+          "2.0x Days Bata (₹2,800 – ₹3,800)",
+          "Madurai, Coimbatore, Ooty, Kodaikanal, Tirunelveli (overnight sleeper return)."
         ],
         [
-          "Transit Food Allowance",
-          "₹300 flat",
-          "Covers driver meals during the journey & return public transit."
+          "Return Bus + Food Allowance",
+          "AC/Sleeper Bus + ₹300–₹600 Food",
+          "Pondicherry: ₹400 Bus | Trichy/Salem: ₹700 Bus | Bangalore: ₹750 Bus | Madurai: ₹950 Bus | Coimbatore: ₹1,000 Bus."
         ]
       ],
-      "note": "Transparent Billing Formula: Total = Driver Day Bata + Return SETC Bus Ticket + ₹300 Food Allowance. (Example: Chennai to Bangalore = ₹1,100 + ₹450 + ₹300 = ₹1,850 total driver fee. Fuel and FASTag tolls are borne by car owner)."
+      "note": "Transparent Billing Formula: Total = Tiered Driver Bata + Return AC/Sleeper Bus Ticket + Food Allowance. (Example: Chennai to Pondicherry = ₹1,400 + ₹400 + ₹300 = ₹2,100; Chennai to Bangalore = ₹2,100 + ₹750 + ₹300 = ₹3,150. Fuel and FASTag tolls are borne by car owner)."
     },
     "includes": [
       "Full digital pre-trip inspection (odometer, fuel, tool kit, scratch photos)",
@@ -1249,7 +1249,7 @@
     "faq": [
       {
         "q": "How is the One-Way Drop acting driver price calculated?",
-        "a": "Pricing follows the Tamil Nadu driver community standard: 1-Day Driver Bata (₹1,100 for Sedan, ₹1,200 for SUV) + Return SETC Bus Ticket back to Chennai + ₹300 Food Allowance. For destinations over 400 km (like Madurai or Coimbatore), 1.5 Days Bata applies to cover the driver's return travel day."
+        "a": "Pricing follows our transparent 4-tier distance formula: Driver Bata (1.0x up to 250 km, 1.5x for 251–450 km, 2.0x for 451–650 km, 2.5x above 650 km) + Return AC/Sleeper Bus Ticket + Food Allowance (₹300–₹600)."
       },
       {
         "q": "How is my car's safety verified before handover?",
@@ -2272,7 +2272,7 @@
         "Book from Local HQ: Because our fleet is stationed right in Medavakkam, you get the fastest dispatch times and lowest dead-mileage rates.",
         "Early Morning Airport Rides: Schedule your 03:00 AM or 04:00 AM airport taxi the evening before for 100% guaranteed on-time doorstep arrival.",
         "Outstation Trips to Pondicherry / Tirupati: Starting from Medavakkam gives direct access to ECR via Sholinganallur or NH via Tambaram bypass.",
-        "Acting Drivers for Your Car: Need a professional driver to drive your personal automatic or manual car? Book an acting driver from ₹500.",
+        "Acting Drivers for Your Car: Need a professional driver to drive your personal automatic or manual car? Book an acting driver from ₹750.",
         "Cashless & Transparent: Pay via UPI (GPay, PhonePe, Paytm), cash, or card directly to the driver upon trip completion."
       ]
     },
@@ -2299,7 +2299,7 @@
       },
       {
         "q": "Can I hire an acting driver for my own car in Medavakkam?",
-        "a": "Yes. If you need a police-verified professional driver to drive your manual, automatic, or luxury car within Chennai or outstation, you can hire an acting driver starting from ₹500."
+        "a": "Yes. If you need a police-verified professional driver to drive your manual, automatic, or luxury car within Chennai or outstation, you can hire an acting driver starting from ₹750."
       },
       {
         "q": "Do your cabs charge surge pricing during peak hours or heavy rains?",

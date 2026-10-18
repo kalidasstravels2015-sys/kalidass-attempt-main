@@ -891,15 +891,15 @@ function getActingDriverQuote(state: ConversationState, isTa: boolean): string {
     return (
       `**சொந்த காருக்கான ஆக்டிங் டிரைவர் கட்டணங்கள் (Acting Driver Service in Chennai):**\n\n` +
       `• **சென்னை நகரத்திற்குள் (City Duty):**\n` +
-      `  - 4 மணிநேரம்: ₹500 (கூடுதல் மணி: ₹100)\n` +
-      `  - 8 மணிநேரம்: ₹800 (முழு நாள் பணி)\n` +
-      `  - இரவு நேர ஓட்டுநர் கட்டணம் (10:00 PM - 6:00 AM): ₹150\n\n` +
+      `  - 4 மணிநேரம்: ₹750 (கூடுதல் மணி: ₹120)\n` +
+      `  - 8 மணிநேரம்: ₹1,200 (முழு நாள் பணி)\n` +
+      `  - இரவு நேர ஓட்டுநர் கட்டணம் (10:00 PM - 5:00 AM): ₹150\n\n` +
       `• **வெளியூர் பயணம் (Outstation Round Trip - உணவு பேட்டா உட்பட):**\n` +
-      `  - **Hatchback & Sedan:** ₹1,400 / நாள் (₹1,100 பேட்டா + ₹300 உணவு)\n` +
-      `  - **Compact SUV (Ertiga / Creta):** ₹1,500 / நாள் (₹1,200 பேட்டா + ₹300 உணவு)\n` +
-      `  - **Premium SUV (Innova Crysta):** ₹1,600 / நாள் (₹1,300 பேட்டா + ₹300 உணவு)\n` +
-      `  - **Luxury European (BMW / Audi):** ₹1,800 / நாள் (₹1,500 பேட்டா + ₹300 உணவு)\n\n` +
-      `• **வெளியூர் ஒரு வழி டிராப் (One-Way Relocation):** 1-நாள் பேட்டா + அரசு SETC பேருந்து கட்டணம் + ₹300 உணவு.\n\n` +
+      `  - **Hatchback & Sedan:** ₹1,700 / நாள் (₹1,400 பேட்டா + ₹300 உணவு)\n` +
+      `  - **Compact SUV (Ertiga / Creta):** ₹1,800 / நாள் (₹1,500 பேட்டா + ₹300 உணவு)\n` +
+      `  - **Premium SUV (Innova Crysta):** ₹1,900 / நாள் (₹1,600 பேட்டா + ₹300 உணவு)\n` +
+      `  - **Luxury European (BMW / Audi):** ₹2,200 / நாள் (₹1,900 பேட்டா + ₹300 உணவு)\n\n` +
+      `• **வெளியூர் ஒரு வழி டிராப் (One-Way Relocation):** தூரத்திற்கு ஏற்ப டிரைவர் பேட்டா + பேருந்து கட்டணம் + உணவு (பாண்டிச்சேரி ₹2,100 | பெங்களூரு ₹3,150 | மதுரை ₹4,200).\n\n` +
       `👮 **பாதுகாப்பு:** அனைத்து ஓட்டுநர்களும் தமிழ்நாடு போலீஸ் சரிபார்ப்பு சான்றிதழ் (PVC Verified) பெற்றவர்கள் மற்றும் Manual, Automatic (AT/DCT), EV நிபுணர்கள்.\n` +
       `🛡️ **பாலிசி:** ₹0 முன்பணம் — சேவை முடிந்த பின் கட்டணம் செலுத்தலாம்!\n\n` +
       `[👉 வாட்ஸ்அப்பில் டிரைவரை அழைக்க](${waUrl})`
@@ -909,16 +909,16 @@ function getActingDriverQuote(state: ConversationState, isTa: boolean): string {
   return (
     `Here are our verified **Acting Driver Services** for your personal car (MT / AT / EV):\n\n` +
     `• **Chennai City Duty:**\n` +
-    `  - 4 Hours: ₹500 (Extra hour: ₹100)\n` +
-    `  - 8 Hours: ₹800 *(Full Day Duty)*\n` +
-    `  - Night drive allowance (10:00 PM - 6:00 AM): ₹150\n\n` +
+    `  - 4 Hours: ₹750 (Extra hour: ₹120)\n` +
+    `  - 8 Hours: ₹1,200 *(Full Day Duty)*\n` +
+    `  - Night drive allowance (10:00 PM - 5:00 AM): ₹150\n\n` +
     `• **Outstation Round Trip (Your Car - Driver meals included):**\n` +
-    `  - **Hatchback & Sedan:** ₹1,400 / day (₹1,100 base bata + ₹300 food)\n` +
-    `  - **Compact SUV / MPV (Ertiga, Creta, Seltos):** ₹1,500 / day (₹1,200 bata + ₹300 food)\n` +
-    `  - **Premium SUV / MUV (Innova Crysta, Fortuner):** ₹1,600 / day (₹1,300 bata + ₹300 food)\n` +
-    `  - **Luxury European (BMW, Mercedes-Benz, Audi):** ₹1,800 / day (₹1,500 bata + ₹300 food)\n` +
+    `  - **Hatchback & Sedan:** ₹1,700 / day (₹1,400 base bata + ₹300 food)\n` +
+    `  - **Compact SUV / MPV (Ertiga, Creta, Seltos):** ₹1,800 / day (₹1,500 bata + ₹300 food)\n` +
+    `  - **Premium SUV / MUV (Innova Crysta, Fortuner):** ₹1,900 / day (₹1,600 bata + ₹300 food)\n` +
+    `  - **Luxury European (BMW, Mercedes-Benz, Audi):** ₹2,200 / day (₹1,900 bata + ₹300 food)\n` +
     `  - *Night Stay:* Free driver dormitory at hotels (TNCDBR rules); ₹300/night lodging allowance if private stay has no dorm.\n\n` +
-    `• **Outstation One-Way Drop:** 1-Day Driver Bata + Return SETC Bus Ticket + ₹300 Food (1.5x Bata if >400 km like Madurai, Coimbatore).\n\n` +
+    `• **Outstation One-Way Drop:** Tiered Driver Bata (1.0x–2.5x by distance) + Return AC/Sleeper Bus Ticket + Food Allowance (e.g., Pondicherry ₹2,100 | Bangalore ₹3,150 | Madurai ₹4,200).\n\n` +
     `👮 **Safety & Verification:**\n` +
     `• 100% Police Clearance Certificate (PVC Cleared) professional chauffeurs.\n` +
     `• Experienced with manual, automatic (CVT, DCT, Torque Converter), and EV vehicles.\n` +

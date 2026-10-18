@@ -14,7 +14,8 @@ import {
   AlertCircle, 
   Info,
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  CheckCircle2
 } from 'lucide-react';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import LocationPicker from './LocationPicker';
@@ -747,6 +748,23 @@ export default function OutstationQuotationModal() {
     const formattedPickupDate = new Date(date).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
     const formattedReturnDate = tripType === 'round' ? new Date(returnDate).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : '';
 
+    markQuoteConverted(bookingId, {
+      calculatorId: 'outstation_modal',
+      tripType: tripType === 'round' ? 'Round Trip' : 'One Way Drop',
+      pickup,
+      drop,
+      vehicle: vehicle.name,
+      estimate: finalEstimate
+    });
+
+    trackEvent('booking_conversion_whatsapp', {
+      engine: 'outstation_quotation_modal',
+      trip_type: tripType,
+      vehicle: vehicle.name,
+      fare: finalEstimate,
+      quote_id: bookingId
+    });
+
     // Record booking in operations system
     try {
       fetch('/api/record-booking', {
@@ -775,7 +793,7 @@ export default function OutstationQuotationModal() {
     const message = 
 `*Kalidass Travels — Outstation Cab Booking Quote* 🚕
 ━━━━━━━━━━━━━━━━━━━━
-📌 *Ref ID:* ${bookingId}
+📌 *Ref ID:* ${bookingId} (24-Hr Rate Lock)
 🚗 *Vehicle:* ${vehicle.name} (${vehicle.capacity})
 🔄 *Trip Type:* ${tripType === 'round' ? 'Round Trip (Same Cab Return)' : 'One-Way Drop Taxi'}
 📍 *Pickup in Chennai:* ${pickup}
@@ -788,7 +806,8 @@ export default function OutstationQuotationModal() {
 • Base Vehicle Meter Fare: ₹${(breakdown?.km_cost || finalEstimate).toLocaleString('en-IN')} (${breakdown?.chargeable_km || roundKm} km @ ₹${breakdown?.rate_per_km || (tripType === 'round' ? vehicle.roundTripRate : vehicle.oneWayRate)}/km)
 • Chauffeur Duty & Day Bata: ₹${(breakdown?.driver_bata || vehicle.bata * days).toLocaleString('en-IN')} (${days} ${days > 1 ? 'Days' : 'Day'})
 ${breakdown?.free_buffer_km > 0 ? `• Sightseeing Buffer: +${breakdown.free_buffer_km.toFixed(0)} km (Included ₹0)\n` : ''}• Net Estimated Base Total: *₹${finalEstimate.toLocaleString('en-IN')}*
-• Extras at Actuals: Highway FASTag tolls, interstate permits, parking & night stay charged at exact actuals with zero markup.
+• Highway FASTag Tolls: ${breakdown?.tolls_est > 0 ? `Approx. ~₹${breakdown.tolls_est} (At Actuals • May vary)` : 'Paid at Actuals (May vary)'}
+• State Permit${breakdown?.state_name && breakdown.state_name !== 'Tamil Nadu' ? ` (${breakdown.state_name})` : ''}: ${breakdown?.state_permit_est > 0 ? `Approx. ~₹${breakdown.state_permit_est} (At Actuals • May vary)` : '₹0 (Within Tamil Nadu / No Permit)'}
 • Duration Standard: 1 Day = up to 24 hrs / 250 km. Duration above 24 hrs billed extra.
 • Advance Token to Confirm: *₹500*
 • Balance on Completion: *₹${Math.max(0, finalEstimate - 500).toLocaleString('en-IN')}* Base Fare + Extras at Actuals (Pay driver after trip)
@@ -797,7 +816,7 @@ ${breakdown?.free_buffer_km > 0 ? `• Sightseeing Buffer: +${breakdown.free_buf
 ✅ *Inclusions:* Dedicated AC Vehicle, Fuel & Chauffeur Day Bata Included
 ℹ️ *Terms:* We provide estimated base fare; all road extras are strictly at actuals.
 
-Please confirm vehicle availability and driver allocation.`;
+Please save my quote & confirm live cab availability.`;
 
     window.open(buildWhatsAppUrl(message), '_blank');
   };
@@ -830,9 +849,15 @@ Please confirm vehicle availability and driver allocation.`;
                   Outstation Fare Calculator &amp; Booking
                 </h2>
               </div>
-              <span className="text-[10px] font-bold text-m3-on-primary-container bg-m3-primary-container px-2 py-0.5 rounded-full inline-block mt-0.5">
-                Ref: {bookingId}
-              </span>
+              <div className="flex items-center gap-1.5 flex-wrap mt-0.5">
+                <span className="text-[10px] font-bold text-m3-on-primary-container bg-m3-primary-container px-2 py-0.5 rounded-full inline-block">
+                  Ref: {bookingId}
+                </span>
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-800 bg-emerald-100/90 border border-emerald-200 px-2 py-0.5 rounded-full">
+                  <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
+                  <span>Rate Locked 24 Hrs • Send to WhatsApp to Save</span>
+                </span>
+              </div>
             </div>
             <button
               type="button"
@@ -1253,30 +1278,31 @@ Please confirm vehicle availability and driver allocation.`;
                 </p>
 
                 <div className="mt-1 text-[11px] text-m3-on-surface-variant font-medium">
-                  <span>Tolls, Permits &amp; Parking: <strong className="text-m3-on-surface">Paid at actuals on route</strong></span>
+                  <span>Tolls &amp; Parking: <strong className="text-m3-on-surface">Extra</strong> · State Permit: <strong className="text-m3-on-surface">{breakdown?.state_permit_est > 0 ? `₹${breakdown.state_permit_est.toLocaleString('en-IN')}` : '₹0'}</strong></span>
                 </div>
               </div>
 
               {/* Rate Summary in Card — Restaurant Bill Style */}
-              <div className="border border-slate-200 rounded-m3-xl p-3.5 bg-slate-100 shadow-xs text-xs space-y-2.5">
+              <div className="border border-slate-200 rounded-m3-xl p-3.5 bg-slate-100 shadow-xs text-[13px] sm:text-sm space-y-2.5">
                 {/* Header: Vehicle & Total Fare */}
                 <div className="flex items-center justify-between pb-2 border-b border-slate-200">
                   <div>
-                    <span className="font-extrabold text-sm text-m3-on-surface">{vehicle.name}</span>
+                    <span className="font-extrabold text-sm sm:text-base text-m3-on-surface">{vehicle.name}</span>
                     <div className="text-[11px] text-m3-on-surface-variant font-medium mt-0.5">
                       ~{(distance * (tripType === 'round' ? 2 : 1)).toFixed(0)} km {tripType === 'round' ? 'Round Trip' : 'One Way Drop'}
+                      {breakdown?.chargeable_km && breakdown?.rate_per_km ? ` (${Math.round(breakdown.chargeable_km)} km @ ₹${breakdown.rate_per_km}/km)` : ''}
                     </div>
                   </div>
                   <div className="text-right">
                     <div className="text-[11px] text-m3-on-surface-variant font-medium">Total Fare</div>
-                    <div className="text-xl font-extrabold text-m3-on-surface">₹{estimate.toLocaleString('en-IN')} <span className="text-xs font-semibold text-m3-on-surface-variant">+ Extra</span></div>
+                    <div className="text-xl sm:text-2xl font-extrabold text-m3-on-surface">₹{estimate.toLocaleString('en-IN')} <span className="text-xs font-semibold text-m3-on-surface-variant">+ Extra</span></div>
                   </div>
                 </div>
 
                 {/* Bill Items */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between items-center text-m3-on-surface-variant">
-                    <span>Cab Hire ({breakdown?.chargeable_km && breakdown?.rate_per_km ? `${Math.round(breakdown.chargeable_km)} km @ ₹${breakdown.rate_per_km}/km` : `${vehicle.name} • Fuel included`}):</span>
+                    <span>Cab Hire ({vehicle.name} • Fuel included):</span>
                     <span className="font-bold text-m3-on-surface">₹{(breakdown?.km_cost || estimate).toLocaleString('en-IN')}</span>
                   </div>
 
@@ -1290,26 +1316,30 @@ Please confirm vehicle availability and driver allocation.`;
                   {breakdown?.free_buffer_km > 0 && (
                     <div className="flex justify-between items-center text-m3-on-surface-variant">
                       <span>Free Sightseeing (+{breakdown.free_buffer_km.toFixed(0)} km):</span>
-                      <span className="font-bold text-emerald-700">FREE (₹0)</span>
+                      <span className="font-bold text-emerald-700">₹0</span>
                     </div>
                   )}
 
                   <div className="flex justify-between items-center text-m3-on-surface-variant">
+                    <span>State Permit:</span>
+                    <span className="font-bold text-m3-on-surface">
+                      {breakdown?.state_permit_est > 0
+                        ? `₹${breakdown.state_permit_est.toLocaleString('en-IN')}`
+                        : '₹0'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center text-m3-on-surface-variant">
                     <span>Tolls:</span>
-                    <span className="font-bold text-m3-on-surface">Extra (At Actuals)</span>
+                    <span className="font-bold text-m3-on-surface">Extra</span>
                   </div>
                   <div className="flex justify-between items-center text-m3-on-surface-variant">
                     <span>Parking:</span>
-                    <span className="font-bold text-m3-on-surface">Extra (At Actuals)</span>
-                  </div>
-                  <div className="flex justify-between items-center text-m3-on-surface-variant">
-                    <span>State Permit:</span>
-                    <span className="font-bold text-m3-on-surface">Extra (At Actuals)</span>
+                    <span className="font-bold text-m3-on-surface">Extra</span>
                   </div>
                 </div>
 
                 {/* Bill Payment Split */}
-                <div className="pt-2 border-t border-slate-200/80 space-y-1 text-xs">
+                <div className="pt-2 border-t border-slate-200/80 space-y-1 text-[13px] sm:text-sm">
                   <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
                     <span>Total Bill:</span>
                     <span className="font-bold text-m3-on-surface">₹{estimate.toLocaleString('en-IN')} + Extra</span>
@@ -1318,9 +1348,13 @@ Please confirm vehicle availability and driver allocation.`;
                     <span>Advance to Pay:</span>
                     <span className="font-bold">-₹500</span>
                   </div>
-                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface border-t border-slate-200/60 pt-1">
-                    <span className="font-medium">Balance to Pay Driver:</span>
-                    <span className="font-bold text-m3-on-surface">₹{Math.max(0, estimate - 500).toLocaleString('en-IN')} + Extra <span className="text-[10px] font-normal text-m3-on-surface-variant">(After trip)</span></span>
+                  <div className="flex justify-between items-center py-1 text-m3-on-surface border-t border-slate-200/80">
+                    <span className="text-sm sm:text-base font-extrabold text-m3-on-surface tracking-tight">
+                      Balance to Pay Driver <span className="text-xs font-medium text-m3-on-surface-variant">(After trip)</span>:
+                    </span>
+                    <span className="text-lg sm:text-xl font-black text-[#1a73e8] tracking-tight font-heading shrink-0">
+                      ₹{Math.max(0, estimate - 500).toLocaleString('en-IN')} + Extra
+                    </span>
                   </div>
                 </div>
 
@@ -1348,7 +1382,7 @@ Please confirm vehicle availability and driver allocation.`;
                   size="md"
                   data-direct-whatsapp="true"
                   className="flex-1 px-4 py-3 min-h-[46px] text-xs sm:text-sm font-bold shadow-m3-1 justify-center active:scale-[0.99]"
-                  text={`Book on WhatsApp (₹${estimate.toLocaleString('en-IN')})`}
+                  text={`Send Quote & Book on WhatsApp (₹${estimate.toLocaleString('en-IN')})`}
                 />
 
                 <a
@@ -1361,8 +1395,8 @@ Please confirm vehicle availability and driver allocation.`;
                 </a>
               </div>
 
-              <p className="text-center text-[10.5px] text-m3-on-surface-variant/80 font-medium pt-0.5">
-                Pay ₹500 token to lock your chauffeur • Remaining balance paid to driver after trip
+              <p className="text-center text-[10.5px] text-m3-on-surface-variant/90 font-medium pt-0.5">
+                ✓ Lock Rate 24 Hrs ({bookingId}) • ✓ Check Live Cab Availability • ✓ Pay ₹500 Token Only After Confirmation
               </p>
             </div>
           )}

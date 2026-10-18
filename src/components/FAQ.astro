@@ -47,16 +47,35 @@ const faqs = [
     a: "For local city trips and airport transfers, 2 to 4 hours advance notice is sufficient. For weekend temple pilgrimages, outstation tours, and festival periods (Girivalam, Pongal, Diwali), booking 24-48 hours ahead is recommended."
   }
 ];
+const currentPath = Astro.url.pathname.replace(/\/$/, "");
+const canonicalPageUrl = `https://kalidasstravels.in${currentPath}/`;
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": `${canonicalPageUrl}#faq`,
+  isPartOf: {
+    "@id": `${canonicalPageUrl}#webpage`,
+  },
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.q,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: faq.a,
+    },
+  })),
+};
 ---
 
 <section id="faq" class="offscreen-defer py-10 md:py-14 bg-m3-surface-container-low border-t border-m3-outline-variant/60 scroll-mt-24 sm:scroll-mt-28">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- Section Header -->
+    <!-- Section Header with M3 Typescale -->
     <div class="text-center max-w-3xl mx-auto mb-8">
-      <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+      <h2 class="text-m3-headline-s sm:text-m3-headline-m md:text-m3-headline-l font-bold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
         Frequently Asked Questions
       </h2>
-      <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant font-normal max-w-2xl mx-auto leading-relaxed mb-6 font-sans">
+      <p class="text-m3-body-m sm:text-m3-body-l text-m3-on-surface-variant font-normal max-w-2xl mx-auto leading-relaxed mb-6 font-sans">
         Transparent answers about our taxi rates, booking process, driver safety, and outstation trips.
       </p>
     </div>
@@ -68,20 +87,5 @@ const faqs = [
 
 <script
   type="application/ld+json"
-  set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "@id": "https://kalidasstravels.in/#faq",
-    isPartOf: {
-      "@id": "https://kalidasstravels.in/#webpage"
-    },
-    mainEntity: faqs.map(faq => ({
-      "@type": "Question",
-      name: faq.q,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: faq.a,
-      },
-    })),
-  })}
+  set:html={JSON.stringify(faqSchema)}
 />

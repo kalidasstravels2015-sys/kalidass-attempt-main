@@ -1,0 +1,60 @@
+---
+interface Props {
+  variant?: "filled" | "tonal" | "outlined" | "text";
+  href?: string;
+  type?: "button" | "submit" | "reset";
+  icon?: string; // Material Symbol name, e.g., "directions_car", "call", "arrow_forward"
+  class?: string;
+  target?: string;
+  rel?: string;
+  id?: string;
+  [key: string]: any;
+}
+
+const {
+  variant = "filled",
+  href,
+  type = "button",
+  icon,
+  class: className = "",
+  target,
+  rel,
+  id,
+  ...rest
+} = Astro.props;
+
+const Tag = href ? "a" : "button";
+
+const baseClasses =
+  "relative inline-flex items-center justify-center h-10 rounded-full text-m3-label-l font-medium transition-all duration-200 select-none overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-m3-primary disabled:opacity-38 disabled:pointer-events-none";
+
+const paddingClasses = icon ? "pl-4 pr-6 gap-2" : "px-6";
+
+const variantClasses = {
+  filled:
+    "bg-m3-primary text-m3-on-primary shadow-none hover:shadow-sm after:absolute after:inset-0 after:bg-white/0 hover:after:bg-white/[0.08] active:after:bg-white/[0.12]",
+  tonal:
+    "bg-m3-secondary-container text-m3-on-secondary-container hover:shadow-xs after:absolute after:inset-0 after:bg-m3-on-secondary-container/0 hover:after:bg-m3-on-secondary-container/[0.08] active:after:bg-m3-on-secondary-container/[0.12]",
+  outlined:
+    "border border-m3-outline text-m3-primary bg-transparent after:absolute after:inset-0 after:bg-m3-primary/0 hover:after:bg-m3-primary/[0.08] active:after:bg-m3-primary/[0.12]",
+  text:
+    "text-m3-primary bg-transparent px-3 after:absolute after:inset-0 after:bg-m3-primary/0 hover:after:bg-m3-primary/[0.08] active:after:bg-m3-primary/[0.12]",
+}[variant];
+---
+
+<Tag
+  href={href}
+  type={!href ? type : undefined}
+  target={href ? target : undefined}
+  rel={href && target === "_blank" ? (rel || "noopener noreferrer") : rel}
+  id={id}
+  class:list={[baseClasses, paddingClasses, variantClasses, className]}
+  {...rest}
+>
+  {icon && (
+    <span class="material-symbols-outlined text-[18px] leading-none shrink-0" aria-hidden="true">
+      {icon}
+    </span>
+  )}
+  <span class="relative z-10"><slot /></span>
+</Tag>

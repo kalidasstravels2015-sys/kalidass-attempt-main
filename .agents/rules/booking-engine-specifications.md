@@ -128,12 +128,13 @@ All fare summary cards and checkout actions must prioritize a calm, frictionless
     `Cab Hire (${chargeable_km} km @ ₹${rate_per_km}/km):`
     (Tamil: `வாகன கட்டணம் (${chargeable_km} கிமீ @ ₹${rate_per_km}/கிமீ):`).
   - Fuel & driver duty are already highlighted in the dedicated inclusions badge; the cab hire line exists for 100% mathematical pricing transparency.
-- **Separate Rows for Road Extras (Tolls, Parking, State Permit)**:
+- **Separate Rows for Road Extras (State Permit, Tolls, Parking — Option 1 Senior-Friendly Standard)**:
   - Road extras must NEVER be lumped together into a single composite line (such as `Tolls, Parking & Permits: Extra (At Actuals)`).
-  - They must always be rendered as 3 distinct, itemized rows across all rate summary cards:
-    - `Tolls:` **Extra (At Actuals)** / `டோல் கட்டணம்:` **கூடுதல் (அசல் ரசீதுப்படி)**
-    - `Parking:` **Extra (At Actuals)** / `பார்க்கிங் கட்டணம்:` **கூடுதல் (அசல் ரசீதுப்படி)**
-    - `State Permit:` **Extra (At Actuals)** / `மாநில அனுமதி வரி:` **கூடுதல் (அசல் ரசீதுப்படி)**
+  - Never place verbose parenthetical explanations (`Approx. ~₹130 (At Actuals • May vary)`, `₹0 (Within Tamil Nadu / No Permit)`) in the right-hand value column.
+  - Keep all `₹` numeric rows on top (`Cab Hire`, `Driver Allowance`, `State Permit: ₹0`) and place all `Extra` rows at the bottom of the itemized list (`Tolls: Extra`, `Parking: Extra`), using the exact same word (`Extra` / `கூடுதல்`) as the `+ Extra` in the totals:
+    - `State Permit:` **₹0** (or exact interstate permit figure) / `மாநில அனுமதி வரி:` **₹0**
+    - `Tolls:` **Extra** / `டோல் கட்டணம்:` **கூடுதல்**
+    - `Parking:` **Extra** / `பார்க்கிங்:` **கூடுதல்**
 - **Minimalist Rate Summary (Zero Banner Fatigue)**:
   - Do not add noisy guarantee headlines (such as `Zero Hidden Charges Guarantee` or `Corporate Tax Invoice Guarantee` with shield icons) above the inclusions.
   - Do not add redundant advance bullet points (such as `Zero Advance Required • Pay Chauffeur After Darshan / Return`) under the price, as token advance terms are already detailed inside the itemized breakdown table (`Advance Token Payment: ₹0`).

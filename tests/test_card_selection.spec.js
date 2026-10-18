@@ -50,16 +50,16 @@ test.describe('Non-Interactive Tariff Cards Validation', () => {
     await expect(cardHeaders.nth(2)).toContainText('Outstation Round Trip');
 
     // Card 1 rates
-    await expect(page.locator('#pricing-panel-cards').first()).toContainText('₹500');
-    await expect(page.locator('#pricing-panel-cards').first()).toContainText('₹800');
+    await expect(page.locator('#pricing-panel-cards').first()).toContainText('₹750');
+    await expect(page.locator('#pricing-panel-cards').first()).toContainText('₹1,200');
 
     // Card 2 routes
     await expect(page.locator('#pricing-panel-cards')).toContainText('Chennai → Pondicherry');
-    await expect(page.locator('#pricing-panel-cards')).toContainText('₹1,600');
+    await expect(page.locator('#pricing-panel-cards')).toContainText('₹2,100');
 
     // Card 3 vehicle rates
     await expect(page.locator('#pricing-panel-cards')).toContainText('Hatchback & Sedan');
-    await expect(page.locator('#pricing-panel-cards')).toContainText('₹1,400 / day');
+    await expect(page.locator('#pricing-panel-cards')).toContainText('₹1,700 / day');
 
     console.log('✔ All 3 tariff cards verified with complete static rate information.');
   });

@@ -10,21 +10,62 @@ import WhatsAppButton from './react/WhatsAppButton.jsx';
 import { buildWhatsAppUrl } from '../utils/whatsapp';
 import tnBusFares from '../data/tnBusFares.json';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
-import { trackCalculatorQuote, markQuoteConverted } from '../lib/analytics';
+import { trackCalculatorQuote, markQuoteConverted, trackEvent } from '../lib/analytics';
 
-// ── Shared distance lookup (same as QuotationEngine) ──────────────────────
+// ── Calibrated highway distances from Chennai (km) ────────────────────────
 const COMMON_DISTANCES = {
-  'chennai': 0, 'pondicherry': 151, 'puducherry': 151, 'bangalore': 346,
-  'bengaluru': 346, 'tirupati': 135, 'vellore': 137, 'kanchipuram': 75,
-  'mahabalipuram': 56, 'trichy': 332, 'tiruchirappalli': 332, 'madurai': 462,
+  'pondicherry': 151, 'puducherry': 151, 'bangalore': 346,
+  'bengaluru': 346, 'tirupati': 135, 'tirupathi': 135, 'vellore': 137, 'kanchipuram': 75,
+  'mahabalipuram': 56, 'mamallapuram': 56, 'trichy': 332, 'tiruchirappalli': 332, 'madurai': 462,
   'coimbatore': 505, 'salem': 340, 'thanjavur': 342, 'tirunelveli': 624,
-  'kanyakumari': 708, 'rameshwaram': 575, 'kodaikanal': 530, 'ooty': 555,
-  'munnar': 580, 'mysore': 480, 'tiruvannamalai': 195, 'chidambaram': 215,
-  'kumbakonam': 298, 'nagapattinam': 315, 'velankanni': 325, 'yelagiri': 230,
-  'yercaud': 365, 'hosur': 305, 'krishnagiri': 260, 'erode': 395,
-  'tirupur': 460, 'dindigul': 420, 'karur': 375, 'cuddalore': 180,
-  'villupuram': 165, 'chengalpattu': 55, 'tambaram': 30, 'sriperumbudur': 45,
-  'nellore': 175, 'vijayawada': 450, 'hyderabad': 630,
+  'kanyakumari': 708, 'nagercoil': 690, 'rameshwaram': 575, 'rameswaram': 575, 'kodaikanal': 530, 'ooty': 555,
+  'udhagamandalam': 555, 'munnar': 580, 'mysore': 480, 'mysuru': 480, 'tiruvannamalai': 195,
+  'thiruvannamalai': 195, 'chidambaram': 215, 'kumbakonam': 298, 'nagapattinam': 315, 'velankanni': 325,
+  'mayiladuthurai': 280, 'thiruvarur': 310, 'yelagiri': 230, 'yercaud': 365, 'hosur': 305,
+  'krishnagiri': 260, 'dharmapuri': 300, 'erode': 395, 'tirupur': 460, 'namakkal': 380,
+  'dindigul': 420, 'palani': 485, 'theni': 500, 'karur': 375, 'cuddalore': 180,
+  'villupuram': 165, 'kallakurichi': 240, 'perambalur': 275, 'ariyalur': 295, 'pudukkottai': 390,
+  'karaikudi': 425, 'sivaganga': 450, 'ramanathapuram': 515, 'virudhunagar': 510, 'thoothukudi': 605,
+  'tuticorin': 605, 'tenkasi': 615, 'pollachi': 545, 'valparai': 600, 'ranipet': 115,
+  'tirupattur': 225, 'chengalpattu': 55, 'sriperumbudur': 45, 'tiruttani': 85, 'arakkonam': 75,
+  'srikalahasti': 115, 'nellore': 175, 'vijayawada': 450, 'hyderabad': 630, 'kochi': 690,
+  'cochin': 690, 'trivandrum': 750, 'thiruvananthapuram': 750, 'sabarimala': 650, 'guruvayur': 635,
+};
+
+// ── Coordinates for inter-city routes when neither origin nor dest is Chennai ──
+const CITY_COORDS = {
+  'chennai': [13.0827, 80.2707], 'pondicherry': [11.9416, 79.8083], 'puducherry': [11.9416, 79.8083],
+  'bangalore': [12.9716, 77.5946], 'bengaluru': [12.9716, 77.5946], 'tirupati': [13.6288, 79.4192],
+  'tirupathi': [13.6288, 79.4192], 'vellore': [12.9165, 79.1325], 'kanchipuram': [12.8342, 79.7036],
+  'mahabalipuram': [12.6208, 80.1945], 'trichy': [10.7905, 78.7047], 'tiruchirappalli': [10.7905, 78.7047],
+  'madurai': [9.9252, 78.1198], 'coimbatore': [11.0168, 76.9558], 'salem': [11.6643, 78.1460],
+  'thanjavur': [10.7870, 79.1378], 'tirunelveli': [8.7139, 77.7567], 'kanyakumari': [8.0883, 77.5385],
+  'nagercoil': [8.1833, 77.4119], 'rameshwaram': [9.2876, 79.3129], 'rameswaram': [9.2876, 79.3129],
+  'kodaikanal': [10.2381, 77.4892], 'ooty': [11.4102, 76.6950], 'udhagamandalam': [11.4102, 76.6950],
+  'munnar': [10.0889, 77.0595], 'mysore': [12.2958, 76.6394], 'mysuru': [12.2958, 76.6394],
+  'tiruvannamalai': [12.2253, 79.0747], 'thiruvannamalai': [12.2253, 79.0747], 'chidambaram': [11.3992, 79.6933],
+  'kumbakonam': [10.9602, 79.3845], 'nagapattinam': [10.7672, 79.8449], 'velankanni': [10.6819, 79.8437],
+  'mayiladuthurai': [11.1018, 79.6522], 'yelagiri': [12.5794, 78.6395], 'yercaud': [11.7753, 78.2093],
+  'hosur': [12.7409, 77.8253], 'krishnagiri': [12.5186, 78.2137], 'dharmapuri': [12.1211, 78.1582],
+  'erode': [11.3410, 77.7172], 'tirupur': [11.1085, 77.3411], 'namakkal': [11.2189, 78.1674],
+  'dindigul': [10.3624, 77.9695], 'palani': [10.4500, 77.5167], 'theni': [10.0104, 77.4768],
+  'karur': [10.9601, 78.0766], 'cuddalore': [11.7480, 79.7714], 'villupuram': [11.9401, 79.4861],
+  'pudukkottai': [10.3833, 78.8001], 'karaikudi': [10.0735, 78.7732], 'thoothukudi': [8.7642, 78.1348],
+  'tuticorin': [8.7642, 78.1348], 'tenkasi': [8.9594, 77.3161], 'pollachi': [10.6609, 77.0048],
+  'nellore': [14.4426, 79.9865], 'vijayawada': [16.5062, 80.6480], 'hyderabad': [17.3850, 78.4867],
+  'kochi': [9.9312, 76.2673], 'cochin': [9.9312, 76.2673], 'trivandrum': [8.5241, 76.9366],
+};
+
+const calcRoadDistanceKm = ([lat1, lon1], [lat2, lon2]) => {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return Math.max(25, Math.round(R * c * 1.25));
 };
 
 const CHENNAI_FORMS = [
@@ -32,51 +73,84 @@ const CHENNAI_FORMS = [
   'pallavaram', 'velachery', 'porur', 'annanagar', 'anna nagar', 't nagar', 't. nagar',
   'sholinganallur', 'omr', 'ecr', 'perungudi', 'thiruvanmiyur', 'adyar', 'mylapore',
   'chromepet', 'medavakkam', 'madipakkam', 'alandur', 'vadapalani', 'ambattur', 'avadi',
-  'poonamallee', 'kolathur', 'redhills', 'kilpauk', 'nungambakkam', 'triplicane', 'royapettah'
+  'poonamallee', 'kolathur', 'redhills', 'kilpauk', 'nungambakkam', 'triplicane', 'royapettah',
+  'pallikaranai', 'vandalur', 'guduvanchery', 'siruseri', 'navalur', 'meenambakkam'
 ];
+
+const estimateReturnBusFare = (km) => Math.max(400, Math.round((km * 2.0) / 10) * 10);
+
+const getOneWayTier = (distKm) => {
+  const km = distKm || 150;
+  if (km > 650) {
+    return { bataMultiplier: 2.5, foodMultiplier: 2, bataDaysLabel: '2.5 Days', tierNote: '>650 km Ultra-Long Return' };
+  }
+  if (km > 450) {
+    return { bataMultiplier: 2, foodMultiplier: 1.5, bataDaysLabel: '2 Days', tierNote: '451–650 km Long-Haul Return' };
+  }
+  if (km > 250) {
+    return { bataMultiplier: 1.5, foodMultiplier: 1, bataDaysLabel: '1.5 Days', tierNote: '251–450 km Intercity Return' };
+  }
+  return { bataMultiplier: 1, foodMultiplier: 1, bataDaysLabel: '1 Day', tierNote: '' };
+};
 
 const findKnownDistance = (origin, dest) => {
   const o = (origin || '').toLowerCase().trim();
   const d = (dest || '').toLowerCase().trim();
   if (!o && !d) return null;
 
-  // 1. tnBusFares table lookup
-  if (o && d) {
+  const isOChennai = CHENNAI_FORMS.some(k => o.includes(k));
+  const isDChennai = CHENNAI_FORMS.some(k => d.includes(k));
+
+  // Normalize Chennai suburban names so tnBusFares matches e.g. "Pallavaram" -> "chennai"
+  const oNorm = isOChennai ? `${o} chennai` : o;
+  const dNorm = isDChennai ? `${d} chennai` : d;
+
+  // 1. tnBusFares table lookup (only when one side is Chennai and the other is outstation)
+  if (o && d && !(isOChennai && isDChennai)) {
     const busRoute = tnBusFares.find(r =>
-      (o.includes(r.source) && d.includes(r.destination)) ||
-      (o.includes(r.destination) && d.includes(r.source))
+      (oNorm.includes(r.source) && dNorm.includes(r.destination)) ||
+      (oNorm.includes(r.destination) && dNorm.includes(r.source))
     );
     if (busRoute) return { distance: busRoute.distanceKm, setcFare: busRoute.setcFare };
   }
 
-  // 2. Check if either origin or destination is in Chennai metropolitan area
-  const isOChennai = CHENNAI_FORMS.some(k => o.includes(k));
-  const isDChennai = CHENNAI_FORMS.some(k => d.includes(k));
-
-  if (isOChennai || isDChennai) {
+  // 2. Check if one side is in Chennai Metro and the other is a known city from Chennai
+  if ((isOChennai || isDChennai) && !(isOChennai && isDChennai)) {
     const other = isOChennai ? d : o;
     for (const [city, km] of Object.entries(COMMON_DISTANCES)) {
-      if (other && other.includes(city)) return { distance: km, setcFare: Math.round(km * 1.2) };
+      if (other && other.includes(city)) {
+        return { distance: km, setcFare: estimateReturnBusFare(km) };
+      }
     }
   }
 
-  // 3. Fallback: single known city from Chennai
-  const candidate = d || o;
-  for (const [city, km] of Object.entries(COMMON_DISTANCES)) {
-    if (candidate && candidate.includes(city)) {
-      return { distance: km, setcFare: Math.round(km * 1.2) };
+  // 3. Inter-city lookup when neither origin nor destination is in Chennai (e.g. Coimbatore -> Madurai, Coimbatore -> Tirupati)
+  if (o && d && !isOChennai && !isDChennai) {
+    let coordO = null, coordD = null, cityO = null, cityD = null;
+    for (const [city, coords] of Object.entries(CITY_COORDS)) {
+      if (!coordO && o.includes(city)) { coordO = coords; cityO = city; }
+      if (!coordD && d.includes(city)) { coordD = coords; cityD = city; }
     }
+    if (coordO && coordD && cityO !== cityD) {
+      const km = calcRoadDistanceKm(coordO, coordD);
+      return { distance: km, setcFare: estimateReturnBusFare(km) };
+    }
+  }
+
+  // 4. Both inside Chennai Metro (e.g. Anna Nagar -> Tambaram)
+  if (isOChennai && isDChennai) {
+    return { distance: 35, setcFare: 350 };
   }
 
   return null;
 };
 
-// ── Vehicle data (updated Chennai market rates) ────────────────────────────
+// ── Vehicle data (2026 Chennai & Tamil Nadu Chauffeur Standards w/ Outsource Margin) ──
 const VEHICLES = [
-  { key: 'hatchback', label: 'Hatchback & Sedan',  models: 'Dzire, Etios, Honda City, Verna', bata: 1100 },
-  { key: 'suv',       label: 'Compact SUV / MPV',   models: 'Ertiga, Creta, Seltos, Carens',  bata: 1200 },
-  { key: 'premium',   label: 'Premium SUV / MUV',   models: 'Innova Crysta, Fortuner, Safari', bata: 1300 },
-  { key: 'luxury',    label: 'Luxury European',      models: 'BMW, Mercedes-Benz, Audi',        bata: 1500 },
+  { key: 'hatchback', label: 'Hatchback & Sedan',  models: 'Dzire, Etios, Honda City, Verna', bata: 1400 },
+  { key: 'suv',       label: 'Compact SUV / MPV',   models: 'Ertiga, Creta, Seltos, Carens',  bata: 1500 },
+  { key: 'premium',   label: 'Premium SUV / MUV',   models: 'Innova Crysta, Fortuner, Safari', bata: 1600 },
+  { key: 'luxury',    label: 'Luxury European',      models: 'BMW, Mercedes-Benz, Audi',        bata: 1900 },
 ];
 
 const FOOD_PER_DAY   = 300; // 2 meals @ ₹150
@@ -104,6 +178,11 @@ export default function DriverFeeEstimator({
   const [fieldErrors,   setFieldErrors]   = useState({});
   const [locationPickerOpen, setLocationPickerOpen] = useState(false);
   const [pickerField, setPickerField] = useState('pickup');
+  const [quoteRefId, setQuoteRefId] = useState('#KT-4092');
+
+  useEffect(() => {
+    setQuoteRefId('#KT-' + Math.floor(1000 + Math.random() * 9000));
+  }, []);
 
   const handlePinClick = (field = 'pickup') => {
     loadGoogleMaps().catch(() => {});
@@ -186,42 +265,52 @@ export default function DriverFeeEstimator({
     setLoading(true);
 
     const doCalc = (distKm, setcFare) => {
-      const d = Math.max(1, parseInt(days) || 1);
+      const minDaysForDist = activeTab === 'round' && distKm ? (distKm > 520 ? 3 : distKm > 220 ? 2 : 1) : 1;
+      const rawDays = Math.max(1, parseInt(days) || 1);
+      const d = activeTab === 'round' ? Math.max(rawDays, minDaysForDist) : 1;
+      const autoAdjustedDays = activeTab === 'round' && d > rawDays;
+      if (autoAdjustedDays) setDays(d);
+
       const nights = Math.max(0, d - 1);
+      const generatedQuoteRef = '#KT-' + Math.floor(1000 + Math.random() * 9000);
+      setQuoteRefId(generatedQuoteRef);
+
+      let calculatedFare = 0;
 
       if (activeTab === 'round') {
         const totalBata = vehicle.bata * d;
         const totalFood = foodProvided ? 0 : FOOD_PER_DAY * d;
         const totalStay = stayProvided ? 0 : STAY_PER_NIGHT * nights;
         const total = totalBata + totalFood + totalStay;
+        calculatedFare = total;
         setResult({
           type: 'round',
-          distKm: distKm ? distKm * 2 : null,
+          distKm: distKm || null,
+          minRecommendedDays: minDaysForDist,
           bata: vehicle.bata, totalBata, totalFood, totalStay,
-          foodProvided, stayProvided, nights, days: d, total,
-          whatsapp: buildWhatsApp('round', total, d, distKm, false, foodProvided, stayProvided),
+          foodProvided, stayProvided, nights, days: d, autoAdjustedDays, total,
+          whatsapp: buildWhatsApp('round', total, d, distKm, null, foodProvided, stayProvided, generatedQuoteRef),
         });
       } else {
-        const isLongDistance = Boolean(distKm && distKm > 400);
-        const bataMultiplier = isLongDistance ? 1.5 : 1;
-        const totalBata = Math.round(vehicle.bata * bataMultiplier);
-        const totalFood = foodProvided ? 0 : FOOD_PER_DAY;
-        const busFare   = setcFare || (distKm ? Math.round(distKm * 1.2) : 250);
+        const tier = getOneWayTier(distKm);
+        const totalBata = Math.round(vehicle.bata * tier.bataMultiplier);
+        const totalFood = foodProvided ? 0 : Math.round(FOOD_PER_DAY * tier.foodMultiplier);
+        const busFare   = setcFare || (distKm ? estimateReturnBusFare(distKm) : 350);
         const total = totalBata + totalFood + busFare;
+        calculatedFare = total;
         setResult({
           type: 'oneway',
           distKm,
-          isLongDistance,
-          bataMultiplier,
+          isLongDistance: tier.bataMultiplier > 1,
+          bataMultiplier: tier.bataMultiplier,
+          bataDaysLabel: tier.bataDaysLabel,
+          tierNote: tier.tierNote,
+          foodMultiplier: tier.foodMultiplier,
           bata: vehicle.bata, totalBata, totalFood, busFare, total,
           foodProvided,
-          whatsapp: buildWhatsApp('oneway', total, 1, distKm, isLongDistance, foodProvided, false),
+          whatsapp: buildWhatsApp('oneway', total, 1, distKm, tier, foodProvided, false, generatedQuoteRef),
         });
       }
-
-      const calculatedFare = activeTab === 'round'
-        ? (vehicle.bata * d) + (foodProvided ? 0 : FOOD_PER_DAY * d) + (stayProvided ? 0 : STAY_PER_NIGHT * nights)
-        : Math.round(vehicle.bata * (distKm && distKm > 400 ? 1.5 : 1)) + (foodProvided ? 0 : FOOD_PER_DAY) + (setcFare || (distKm ? Math.round(distKm * 1.2) : 250));
 
       trackCalculatorQuote({
         calculatorId: 'acting_driver',
@@ -233,6 +322,7 @@ export default function DriverFeeEstimator({
         distanceKm: distKm ? (activeTab === 'round' ? distKm * 2 : distKm) : '',
         estimatedFare: calculatedFare,
         meta: {
+          quoteRefId: generatedQuoteRef,
           gear,
           days: d,
           nights,
@@ -288,10 +378,10 @@ export default function DriverFeeEstimator({
     return `${String(formattedHours).padStart(2, '0')}:${mins} ${ampm}`;
   };
 
-  const buildWhatsApp = (type, total, days, distKm, isLongDistance = false, foodProv = false, stayProv = false) => {
+  const buildWhatsApp = (type, total, days, distKm, tier = null, foodProv = false, stayProv = false, refId = quoteRefId) => {
     const route = drop.trim() ? `${pickup} → ${drop}` : pickup;
     const distStr = distKm ? ` (~${type === 'round' ? distKm * 2 : distKm} km)` : '';
-    const longDistNote = isLongDistance ? ' (Includes 1.5x Bata for >400 km return transit)' : '';
+    const longDistNote = tier && tier.bataMultiplier > 1 ? ` (Includes ${tier.bataDaysLabel} Bata for ${tier.tierNote})` : '';
     const gearLabel = gear === 'automatic' ? 'Automatic (AT / DCT / EV)' : 'Manual (MT)';
     const formattedTime = formatTime12h(reportingTime);
     const schedStr = travelDate ? `${travelDate}${formattedTime ? ` @ ${formattedTime}` : ''}` : (formattedTime ? `@ ${formattedTime}` : '');
@@ -308,6 +398,7 @@ export default function DriverFeeEstimator({
 
     const msg = 
       `Hi Kalidass Travels, I need an Outstation Acting Driver:\n\n` +
+      `📌 *Quote Ref:* ${refId} (24-Hr Rate Lock)\n` +
       `📋 BOOKING DETAILS:\n` +
       `• Trip: ${type === 'round' ? 'Round Trip' : 'One Way Drop'}${longDistNote}\n` +
       `• Route: ${route}${distStr}\n` +
@@ -320,7 +411,7 @@ export default function DriverFeeEstimator({
       `\n🍽️ MEALS & STAY POLICY:\n` +
       `• Driver Meals: ${foodNote}\n` +
       (stayNote ? `• Driver Stay: ${stayNote}\n` : '') +
-      `\nPlease assign a verified chauffeur and confirm driver availability.`;
+      `\nPlease save my quote & confirm verified chauffeur availability.`;
     return buildWhatsAppUrl(msg);
   };
 
@@ -685,6 +776,17 @@ export default function DriverFeeEstimator({
             ref={resultRef}
             className="border border-slate-200 rounded-m3-xl p-3.5 sm:p-4 bg-slate-100 shadow-xs text-xs space-y-2.5 animate-in fade-in slide-in-from-top-2 duration-300"
           >
+            {/* Official Quote Ref & 24-Hr Price Lock Header */}
+            <div className="flex items-center justify-between gap-2 pb-2 border-b border-slate-200/80 flex-wrap">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#0b57d0] bg-[#1a73e8]/10 px-2.5 py-0.5 rounded-full">
+                <span>Official Quote Ref: {quoteRefId}</span>
+              </span>
+              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-800 bg-emerald-100/90 border border-emerald-200 px-2 py-0.5 rounded-full">
+                <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
+                <span>Rate Locked 24 Hrs • Send to WhatsApp to Save</span>
+              </span>
+            </div>
+
             {/* Header: Vehicle & Total Fare */}
             <div className="flex justify-between items-start gap-2 pb-2.5 border-b border-slate-200">
               <div>
@@ -698,8 +800,8 @@ export default function DriverFeeEstimator({
                 </div>
                 <div className="text-[11px] text-m3-on-surface-variant font-medium mt-0.5">
                   {result.type === 'round'
-                    ? `~${result.distKm ? `${result.distKm} km Round Trip` : 'Round Trip'} • ${result.days} Day${result.days > 1 ? 's' : ''} • Transparent Estimate`
-                    : `~${result.distKm ? `${result.distKm} km Drop` : 'One Way Drop'} • ~${result.distKm ? Math.round(result.distKm / 50) : 3} hrs driving • Transparent Estimate`}
+                    ? `~${result.distKm ? `${result.distKm} km one-way (${result.distKm * 2} km Round Trip)` : 'Round Trip'} • ${result.days} Day${result.days > 1 ? 's' : ''}${result.autoAdjustedDays ? ` (Min ${result.minRecommendedDays}d for distance)` : ''} • Transparent Estimate`
+                    : `~${result.distKm ? `${result.distKm} km Drop` : 'One Way Drop'} • ~${result.distKm ? Math.max(1, Math.round(result.distKm / 50)) : 3} hrs driving • Transparent Estimate`}
                 </div>
               </div>
               <div className="text-right shrink-0">
@@ -711,7 +813,7 @@ export default function DriverFeeEstimator({
             </div>
 
             {/* Itemized Bill Lines */}
-            <div className="space-y-1.5 text-xs">
+            <div className="space-y-1.5 text-[13px] sm:text-sm">
               {result.type === 'round' ? (
                 <>
                   <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
@@ -721,40 +823,40 @@ export default function DriverFeeEstimator({
                   <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
                     <span>Food Allowance ({result.days} {result.days > 1 ? 'Days' : 'Day'}):</span>
                     <span className={`font-bold ${result.foodProvided ? 'text-emerald-700' : 'text-m3-on-surface'}`}>
-                      {result.foodProvided ? 'Waived (₹0)' : `₹${result.totalFood.toLocaleString('en-IN')}`}
+                      {result.foodProvided ? '₹0' : `₹${result.totalFood.toLocaleString('en-IN')}`}
                     </span>
                   </div>
                   {result.nights > 0 && (
                     <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
                       <span>Night Stay ({result.nights} {result.nights > 1 ? 'Nights' : 'Night'}):</span>
                       <span className={`font-bold ${result.stayProvided ? 'text-emerald-700' : 'text-m3-on-surface'}`}>
-                        {result.stayProvided ? 'Free Dorm (₹0)' : `₹${result.totalStay.toLocaleString('en-IN')}`}
+                        {result.stayProvided ? '₹0' : `₹${result.totalStay.toLocaleString('en-IN')}`}
                       </span>
                     </div>
                   )}
                   <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                    <span>State Permit:</span>
+                    <span className="font-bold text-m3-on-surface">₹0</span>
+                  </div>
+                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
                     <span>Tolls:</span>
-                    <span className="font-bold text-m3-on-surface">Extra (At Actuals)</span>
+                    <span className="font-bold text-m3-on-surface">Extra</span>
                   </div>
                   <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
                     <span>Parking:</span>
-                    <span className="font-bold text-m3-on-surface">Extra (At Actuals)</span>
-                  </div>
-                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                    <span>State Permit:</span>
-                    <span className="font-bold text-m3-on-surface">Extra (At Actuals)</span>
+                    <span className="font-bold text-m3-on-surface">Extra</span>
                   </div>
                 </>
               ) : (
                 <>
                   <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                    <span>Driver Bata ({result.isLongDistance ? '1.5 Days' : '1 Day'}{result.isLongDistance ? ' • >400 km Return' : ''}):</span>
+                    <span>Driver Bata ({result.bataDaysLabel || '1 Day'}{result.tierNote ? ` • ${result.tierNote}` : ''}):</span>
                     <span className="font-bold text-m3-on-surface">₹{result.totalBata.toLocaleString('en-IN')}</span>
                   </div>
                   <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                    <span>Food Allowance:</span>
+                    <span>Food Allowance{result.foodMultiplier > 1 ? ` (${result.foodMultiplier} Days)` : ''}:</span>
                     <span className={`font-bold ${result.foodProvided ? 'text-emerald-700' : 'text-m3-on-surface'}`}>
-                      {result.foodProvided ? 'Waived (₹0)' : `₹${result.totalFood.toLocaleString('en-IN')}`}
+                      {result.foodProvided ? '₹0' : `₹${result.totalFood.toLocaleString('en-IN')}`}
                     </span>
                   </div>
                   <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
@@ -762,27 +864,37 @@ export default function DriverFeeEstimator({
                     <span className="font-bold text-m3-on-surface">₹{result.busFare.toLocaleString('en-IN')}</span>
                   </div>
                   <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                    <span>State Permit:</span>
+                    <span className="font-bold text-m3-on-surface">₹0</span>
+                  </div>
+                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
                     <span>Tolls:</span>
-                    <span className="font-bold text-m3-on-surface">Extra (At Actuals)</span>
+                    <span className="font-bold text-m3-on-surface">Extra</span>
                   </div>
                   <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
                     <span>Parking:</span>
-                    <span className="font-bold text-m3-on-surface">Extra (At Actuals)</span>
-                  </div>
-                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                    <span>State Permit:</span>
-                    <span className="font-bold text-m3-on-surface">Extra (At Actuals)</span>
+                    <span className="font-bold text-m3-on-surface">Extra</span>
                   </div>
                 </>
               )}
             </div>
 
             {/* Bill Payment Split */}
-            <div className="pt-2 border-t border-slate-200/80 space-y-1 text-xs">
-              <div className="flex justify-between items-center py-0.5 text-m3-on-surface font-medium">
-                <span>Pay at Drop:</span>
-                <span className="font-bold text-m3-on-surface">
-                  ₹{result.total.toLocaleString('en-IN')} + Extra <span className="text-[10px] font-normal text-m3-on-surface-variant">(Zero Advance Required)</span>
+            <div className="pt-2 border-t border-slate-200/80 space-y-1 text-[13px] sm:text-sm">
+              <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                <span>Total Fare:</span>
+                <span className="font-bold text-m3-on-surface">₹{result.total.toLocaleString('en-IN')} + Extra</span>
+              </div>
+              <div className="flex justify-between items-center py-0.5 text-emerald-700 font-medium">
+                <span>Advance to Pay:</span>
+                <span className="font-bold">₹0</span>
+              </div>
+              <div className="flex justify-between items-center py-1 text-m3-on-surface border-t border-slate-200/80">
+                <span className="text-sm sm:text-base font-extrabold text-m3-on-surface tracking-tight">
+                  Pay at Drop <span className="text-xs font-medium text-m3-on-surface-variant">(After trip)</span>:
+                </span>
+                <span className="text-lg sm:text-xl font-black text-[#1a73e8] tracking-tight font-heading shrink-0">
+                  ₹{result.total.toLocaleString('en-IN')} + Extra
                 </span>
               </div>
             </div>
@@ -807,32 +919,44 @@ export default function DriverFeeEstimator({
             </div>
 
             {/* Direct Booking Actions */}
-            <div className="pt-1 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2">
-              <WhatsAppButton
-                href={result.whatsapp}
-                onClick={() => {
-                  markQuoteConverted(null, {
-                    calculatorId: 'acting_driver',
-                    tripType: result.type,
-                    vehicle: vehicle.label,
-                    estimate: result.total
-                  });
-                }}
-                variant="filled"
-                size="md"
-                data-direct-whatsapp="true"
-                className="w-full sm:flex-1 px-5 py-3.5 min-h-[46px] text-sm font-bold shadow-m3-1 justify-center active:scale-[0.99]"
-                text={`Book Driver on WhatsApp (₹${result.total.toLocaleString('en-IN')})`}
-              />
+            <div className="pt-1 space-y-2">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2">
+                <WhatsAppButton
+                  href={result.whatsapp}
+                  onClick={() => {
+                    markQuoteConverted(quoteRefId, {
+                      calculatorId: 'acting_driver',
+                      tripType: result.type,
+                      vehicle: vehicle.label,
+                      estimate: result.total
+                    });
+                    trackEvent('booking_conversion_whatsapp', {
+                      engine: 'acting_driver_estimator',
+                      trip_type: result.type,
+                      vehicle: vehicle.label,
+                      fare: result.total,
+                      quote_id: quoteRefId
+                    });
+                  }}
+                  variant="filled"
+                  size="md"
+                  data-direct-whatsapp="true"
+                  className="w-full sm:flex-1 px-5 py-3.5 min-h-[46px] text-sm font-bold shadow-m3-1 justify-center active:scale-[0.99]"
+                  text={`Send Quote & Book Driver on WhatsApp (₹${result.total.toLocaleString('en-IN')})`}
+                />
 
-              <a
-                href="tel:+918939539211"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 min-h-[46px] bg-white hover:bg-slate-50 active:scale-[0.99] text-m3-on-surface font-semibold text-sm rounded-full border border-m3-outline-variant shadow-2xs transition-colors shrink-0 cursor-pointer"
-                aria-label="Call +91 89395 39211"
-              >
-                <Phone className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
-                <span>Call Desk</span>
-              </a>
+                <a
+                  href="tel:+918939539211"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 min-h-[46px] bg-white hover:bg-slate-50 active:scale-[0.99] text-m3-on-surface font-semibold text-sm rounded-full border border-m3-outline-variant shadow-2xs transition-colors shrink-0 cursor-pointer"
+                  aria-label="Call +91 89395 39211"
+                >
+                  <Phone className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
+                  <span>Call Desk</span>
+                </a>
+              </div>
+              <p className="text-[11px] text-m3-on-surface-variant text-center font-medium">
+                ✓ Lock Rate 24 Hrs ({quoteRefId}) • ✓ Check Live Chauffeur Availability • ✓ Zero Advance Required (Pay After Trip)
+              </p>
             </div>
           </div>
         )}

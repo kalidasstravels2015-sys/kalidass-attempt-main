@@ -91,8 +91,8 @@ test.describe('Streamlined Acting Drivers Page Validation', () => {
     await expect(resultBox).toBeVisible({ timeout: 5000 });
     const resultText = await resultBox.innerText();
     expect(resultText.toUpperCase()).toContain('TRANSPARENT ESTIMATE');
-    expect(resultText).toContain('1,600');
-    console.log('✔ Custom calculation executed successfully: ₹1,600 for Pondicherry One-Way.');
+    expect(resultText).toContain('2,100');
+    console.log('✔ Custom calculation executed successfully: ₹2,100 for Pondicherry One-Way.');
 
     // 6. Verify Compact Coverage Hub Strip
     const coverageSection = page.locator('#coverage');
