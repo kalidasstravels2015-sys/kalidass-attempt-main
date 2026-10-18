@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import LocationPicker from './LocationPicker';
-import { buildWhatsAppUrl } from '../utils/whatsapp';
+import { buildWhatsAppUrl, buildMapsLinks } from '../utils/whatsapp';
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
 import WhatsAppButton from './react/WhatsAppButton.jsx';
 import { trackEvent, trackCalculatorQuote, markQuoteConverted } from '../lib/analytics';
@@ -789,6 +789,14 @@ export default function OutstationQuotationModal() {
       });
     } catch (e) {}
 
+    // Google Maps navigation links
+    const { pickupPin: omPickupPin, directions: omDirections } = buildMapsLinks(pickup, drop, tripType);
+    const omMapsBlock = (omPickupPin || omDirections)
+      ? `\n\n🗺️ NAVIGATION LINKS:\n` +
+        (omPickupPin  ? `• 📍 Pickup Pin: ${omPickupPin}\n`  : '') +
+        (omDirections ? `• 🧭 Route Map: ${omDirections}`    : '')
+      : '';
+
     // Build complete WhatsApp message
     const message = 
 `*Kalidass Travels — Outstation Cab Booking Quote* 🚕
@@ -816,7 +824,7 @@ ${breakdown?.free_buffer_km > 0 ? `• Sightseeing Buffer: +${breakdown.free_buf
 ✅ *Inclusions:* Dedicated AC Vehicle, Fuel & Chauffeur Day Bata Included
 ℹ️ *Terms:* We provide estimated base fare; all road extras are strictly at actuals.
 
-Please save my quote & confirm live cab availability.`;
+Please save my quote & confirm live cab availability.` + omMapsBlock;
 
     window.open(buildWhatsAppUrl(message), '_blank');
   };

@@ -11,10 +11,10 @@ export default function SoloKhataModal({
   if (!isOpen) return null;
 
   const [form, setForm] = useState({
-    chauffeurName: chauffeurs[0]?.name || 'Murugan',
+    chauffeurName: chauffeurs[0]?.name || '',
     bookingId: bookings[0]?.bookingId || '',
-    guestCashCollected: '6000',
-    driverAgreedPayout: '4800',
+    guestCashCollected: '',
+    driverAgreedPayout: '',
     tollsPaidByDriver: '0',
     paymentMode: 'UPI',
     upiRef: '',

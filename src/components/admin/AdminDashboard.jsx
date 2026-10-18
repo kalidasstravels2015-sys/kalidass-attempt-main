@@ -1,13 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 
 // Chauffeurs Master Baseline
-const DEFAULT_CHAUFFEURS = [
-  { name: 'Murugan', phone: '+91 97890 12345', plate: 'TN09 BX 1234', category: 'Sedan (Dzire)', status: 'Available', fcExpiry: '2027-04-15', permitExpiry: '2026-11-20', rating: '4.9' },
-  { name: 'Selvam', phone: '+91 98402 54321', plate: 'TN11 CY 5678', category: 'Ertiga (6 Pax)', status: 'Available', fcExpiry: '2026-12-10', permitExpiry: '2027-01-05', rating: '4.8' },
-  { name: 'Perumal Manikumar', phone: '+91 89395 39211', plate: 'TN09 CZ 9999', category: 'Innova Crysta', status: 'Available', fcExpiry: '2027-08-30', permitExpiry: '2027-06-15', rating: '4.9' },
-  { name: 'Hariharan', phone: '+91 97103 44556', plate: 'TN22 AZ 3421', category: 'Sedan (Etios)', status: 'Available', fcExpiry: '2026-10-28', permitExpiry: '2026-12-01', rating: '4.7' },
-  { name: 'Karthik Kumar', phone: '+91 98401 99887', plate: 'TN07 DJ 4321', category: 'Tempo Traveller', status: 'Available', fcExpiry: '2027-02-14', permitExpiry: '2027-03-20', rating: '4.9' },
-];
+const DEFAULT_CHAUFFEURS = [];
 
 // Curated Tour Packages Master (Chennai to Tirupati, Chennai to Madurai, Chennai to Pondicherry)
 const TOUR_PACKAGES = [
@@ -88,87 +82,9 @@ const safeSetStorage = (key, data) => {
   }
 };
 
-const DEFAULT_SEED_BOOKINGS = [
-  {
-    bookingId: '#KT-TPT-101',
-    guestNamePhone: 'Senthil Nathan (+91 98401 22334)',
-    travelDateTime: 'Tomorrow @ 04:30 AM',
-    pickupAddress: 'T. Nagar, Chennai',
-    vehicleCategory: 'Innova Crysta',
-    partySize: '6 Pax',
-    kycStatus: 'Verified',
-    darshanStatus: 'Assigned',
-    assignedChauffeur: 'Perumal Manikumar - TN09 CZ 9999',
-    manifestStatus: 'Dispatched',
-    terminalFare: 10000,
-    chauffeurPayout: 8000,
-    companyMargin: 2000,
-    financialClosure: 'Unreconciled'
-  },
-  {
-    bookingId: '#KT-TPT-102',
-    guestNamePhone: 'Ravi Shankar (+91 97890 55443)',
-    travelDateTime: '12-Oct-2026 @ 05:00 AM',
-    pickupAddress: 'Anna Nagar West, Chennai',
-    vehicleCategory: 'Sedan (Dzire / Etios)',
-    partySize: '4 Pax',
-    kycStatus: 'Pending',
-    darshanStatus: 'Unassigned',
-    assignedChauffeur: 'Unassigned',
-    manifestStatus: 'Pending',
-    terminalFare: 6000,
-    chauffeurPayout: 4800,
-    companyMargin: 1200,
-    financialClosure: 'Unreconciled'
-  },
-  {
-    bookingId: '#KT-PND-103',
-    guestNamePhone: 'Anand Krishnan (+91 98410 77665)',
-    travelDateTime: 'Today @ 06:00 AM',
-    pickupAddress: 'Adyar, Chennai',
-    vehicleCategory: 'Ertiga (6 Pax)',
-    partySize: '5 Pax',
-    kycStatus: 'Verified',
-    darshanStatus: 'N/A',
-    assignedChauffeur: 'Selvam - TN11 CY 5678',
-    manifestStatus: 'In Transit',
-    terminalFare: 5500,
-    chauffeurPayout: 4400,
-    companyMargin: 1100,
-    financialClosure: 'Unreconciled'
-  }
-];
+const DEFAULT_SEED_BOOKINGS = [];
 
-const DEFAULT_SEED_LEADS = [
-  {
-    quoteId: '#WA-98803',
-    timestamp: '09-Oct-2026, 11:29 am',
-    sourcePage: 'WhatsApp (+91 98803 09619)',
-    calculatorEngine: 'WhatsApp Direct Chat',
-    tripType: 'One Day Round Trip (19-Oct)',
-    pickup: 'Chennai (Oct 19th - 4 Pax)',
-    drop: 'Tirupati Balaji Darshan (4 Pax)',
-    vehicle: 'Sedan (Dzire / Etios)',
-    distanceKm: '300',
-    estimatedFare: 6000,
-    status: 'Active Enquiry',
-    metadata: 'WhatsApp Lead: +91 98803 09619 | 4 Pax | Travel Date: Oct 19th | Inquiry: Balaji Darshan'
-  },
-  {
-    quoteId: '#WA-73038',
-    timestamp: '09-Oct-2026, 10:49 am',
-    sourcePage: 'WhatsApp (+91 73038 09755)',
-    calculatorEngine: 'WhatsApp Direct Chat',
-    tripType: 'One Day Round Trip',
-    pickup: 'Chennai',
-    drop: 'Tirumala 1-Day Trip',
-    vehicle: 'Sedan (Dzire / Etios)',
-    distanceKm: '320',
-    estimatedFare: 6000,
-    status: 'Rates Quoted',
-    metadata: 'WhatsApp Lead: +91 73038 09755 | Inquiry: Chennai to Tirumala 1-Day Trip Sedan Rs.6000'
-  }
-];
+const DEFAULT_SEED_LEADS = [];
 
 export default function AdminDashboard() {
   // Navigation Desks
@@ -737,11 +653,13 @@ export default function AdminDashboard() {
 
   // 1-Click WhatsApp Links
   const getDriverManifestWhatsapp = (b) => {
+    const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.pickupAddress)}`;
     const text = `*KALIDASS TRAVELS — DUTY ASSIGNMENT*\n` +
       `Booking ID: ${b.bookingId}\n` +
       `Guest: ${b.guestNamePhone}\n` +
       `Travel Date/Time: ${b.travelDateTime}\n` +
       `Pickup Location: ${b.pickupAddress}\n` +
+      `Open in Maps: ${mapsLink}\n` +
       `Vehicle: ${b.vehicleCategory} (Capacity: ${b.partySize})\n` +
       `Terminal Fare: Rs.${b.terminalFare}\n` +
       `Driver Payout: Rs.${b.chauffeurPayout}\n` +
@@ -751,12 +669,14 @@ export default function AdminDashboard() {
   };
 
   const getGuestConfirmationWhatsapp = (b) => {
+    const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.pickupAddress)}`;
     const text = `*KALIDASS TRAVELS — BOOKING CONFIRMATION*\n` +
       `Booking ID: ${b.bookingId}\n` +
       `Dear Guest, your cab has been allocated:\n\n` +
       `Chauffeur: ${b.assignedChauffeur}\n` +
       `Travel Date/Time: ${b.travelDateTime}\n` +
       `Pickup Address: ${b.pickupAddress}\n` +
+      `📍 Open Pickup in Maps: ${mapsLink}\n` +
       `Car Category: ${b.vehicleCategory}\n` +
       `Estimated Fare: Rs.${b.terminalFare}\n\n` +
       `24x7 Operations Desk: +91 89395 39211\n` +

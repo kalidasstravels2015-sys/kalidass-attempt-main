@@ -4,7 +4,7 @@ import { trackEvent, trackCalculatorQuote, markQuoteConverted } from '../lib/ana
 import LocationPicker from './LocationPicker';
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
 import WhatsAppButton from './react/WhatsAppButton.jsx';
-import { buildWhatsAppUrl } from '../utils/whatsapp';
+import { buildWhatsAppUrl, buildMapsLinks } from '../utils/whatsapp';
 import { useVirtualKeyboard } from '../hooks/useVirtualKeyboard';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import siteContent from '../data/siteContent.json';
@@ -1537,6 +1537,18 @@ ${breakdown.free_buffer_km > 0 ? `• *Free Sightseeing Buffer:* +${breakdown.fr
 • *Quoted Fare:* *₹${finalEstimate.toLocaleString('en-IN')}* (AC Cab + Fuel + Driver Included)
 • *Payment Terms:* ₹0 Advance Required • Pay after trip completion.`;
 
+    // Google Maps navigation links
+    const { pickupPin: mapsPickupPin, directions: mapsDirections } = buildMapsLinks(
+      sanitizeInput(pickup),
+      activeTab === 'local' ? '' : sanitizeInput(drop),
+      activeTab
+    );
+    const mapsBlock = (mapsPickupPin || mapsDirections)
+      ? `\n\n🗺️ NAVIGATION LINKS:\n` +
+        (mapsPickupPin  ? `• 📍 Pickup Pin: ${mapsPickupPin}\n`  : '') +
+        (mapsDirections ? `• 🧭 Route Map: ${mapsDirections}`    : '')
+      : '';
+
     const message = `*Kalidass Travels — Official Quotation (${quoteRefId})*
 ${driverLine}• *Trip:* ${tripTypeTitle}
 • *Pickup:* ${sanitizeInput(pickup)}
@@ -1545,7 +1557,7 @@ ${activeTab !== 'local' ? `• *Distance:* ~${currentDist ? (activeTab === 'roun
 ${activeTab === 'round' ? `• *Return Schedule:* ${returnDate ? new Date(returnDate).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : 'Not Specified'}\n` : ''}• *Selected Vehicle:* ${vehicle} (${passengers} Pax)
 ${breakdownDetails}
 
-Please confirm cab availability and lock this quotation (${quoteRefId}).`;
+Please confirm cab availability and lock this quotation (${quoteRefId}).` + mapsBlock;
 
     trackEvent('booking_conversion_whatsapp', {
       quote_id: quoteRefId,

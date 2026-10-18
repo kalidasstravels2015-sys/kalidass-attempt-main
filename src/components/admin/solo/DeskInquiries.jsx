@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import AiBookingParser from './AiBookingParser';
 import DeskChatRadar from './DeskChatRadar';
+import { buildMapsBlock } from '../../../utils/whatsapp';
 
 export default function DeskInquiries({
   leads,
@@ -76,6 +77,8 @@ export default function DeskInquiries({
     const fare = Number(lead.estimatedFare) || 6000;
     const advance = 500;
 
+    const mapsBlock = buildMapsBlock(lead.pickup, lead.drop, lead.tripType || 'Round Trip');
+
     const message = `*KALIDASS TRAVELS CHENNAI — TRIP QUOTATION*\n\n` +
       `Namaskaram! Thank you for inquiring with Kalidass Travels.\n\n` +
       `📍 *Route:* ${lead.pickup} ➔ ${lead.drop} (${lead.tripType || 'Round Trip'})\n` +
@@ -83,7 +86,8 @@ export default function DeskInquiries({
       `💰 *Estimated All-Inclusive Fare:* Rs.${fare.toLocaleString('en-IN')}\n` +
       `_(Includes Car, Chauffeur Bata & Fuel. Tolls/Parking at actuals)_\n\n` +
       `🔒 *To Confirm Your Booking:* Kindly pay a token advance of *Rs.${advance}* via UPI to *8939539211@okbizaxis* (Kalidass Travels) to lock your vehicle.\n\n` +
-      `Chauffeur & vehicle details will be sent the evening before departure. Have a wonderful trip! 🌟`;
+      `Chauffeur & vehicle details will be sent the evening before departure. Have a wonderful trip! 🌟` +
+      mapsBlock;
 
     const cleanPhone = guestPhone.length >= 10 ? guestPhone.slice(-10) : '';
     const url = cleanPhone

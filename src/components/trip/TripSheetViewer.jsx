@@ -1,25 +1,9 @@
 import React, { useState, useEffect } from 'react';
-
-const DEFAULT_TRIP = {
-  bookingId: '#KT-TPT-101',
-  guestNamePhone: 'Venkatesh S (+91 98401 22334)',
-  travelDateTime: 'Tomorrow @ 05:00 AM',
-  pickupAddress: 'Medavakkam, Chennai ➔ Tirupati Balaji Temple (Round Trip)',
-  vehicleCategory: 'Innova Crysta (Clean AC)',
-  partySize: '6 Pax',
-  kycStatus: 'Verified',
-  darshanStatus: 'Confirmed',
-  assignedChauffeur: 'Murugan (TN 09 CZ 9999) - 97890 12345',
-  manifestStatus: 'Dispatched',
-  terminalFare: 6500,
-  chauffeurPayout: 5000,
-  companyMargin: 1500,
-  advancePaid: 1000,
-  dutySlip: null
-};
+import { buildMapsLinks } from '../../utils/whatsapp';
 
 export default function TripSheetViewer() {
-  const [trip, setTrip] = useState(DEFAULT_TRIP);
+  const [trip, setTrip] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('passenger'); // 'passenger' | 'driver'
   const [editOdo, setEditOdo] = useState({
     startKm: '',
@@ -93,7 +77,9 @@ export default function TripSheetViewer() {
             populateEditOdo(data.bookings[0]);
           }
         }
-      } catch (_) {}
+      } catch (_) {} finally {
+        setLoading(false);
+      }
     };
 
     fetchTrip();
@@ -144,6 +130,12 @@ export default function TripSheetViewer() {
   const advancePaid = Number(trip?.advancePaid || 1000);
   const grossTotal = baseFare + extraKmCharge + tollsNum + parkingNum;
   const balanceToCollect = Math.max(0, grossTotal - advancePaid);
+  const rawRoute = trip?.pickupAddress || '';
+  const routeParts = rawRoute.split(/➔|->|→/).map(s => s.trim()).filter(Boolean);
+  const routePickup = routeParts[0] || rawRoute;
+  const routeDrop = routeParts.length > 1 ? routeParts[1].replace(/\(.*?\)/g, '').trim() : '';
+  const routeTripType = rawRoute.toLowerCase().includes('round') ? 'round' : 'oneway';
+  const mapsLinks = buildMapsLinks(routePickup, routeDrop, routeTripType);
 
   const handleSaveOdometer = async () => {
     setIsSavingOdo(true);
@@ -251,38 +243,56 @@ export default function TripSheetViewer() {
 
       {/* Main Content Container */}
       <main className="max-w-md mx-auto w-full p-4 flex-1 space-y-3.5">
-        
-        {/* View Switcher Tabs: Guest View vs Chauffeur Duty Sheet */}
-        <div className="bg-m3-inverse-surface p-1 rounded-xl border border-m3-outline-variant/40 flex text-xs font-bold shadow-inner">
-          <button
-            type="button"
-            onClick={() => setActiveTab('passenger')}
-            className={`flex-1 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${
-              activeTab === 'passenger'
-                ? 'bg-m3-tertiary-container/300 text-m3-on-surface shadow-md'
-                : 'text-m3-outline-variant hover:text-white'
-            }`}
-          >
-            <span className="material-symbols-outlined text-sm">person</span>
-            <span>Passenger Voucher</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('driver')}
-            className={`flex-1 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${
-              activeTab === 'driver'
-                ? 'bg-m3-tertiary-container/300 text-m3-on-surface shadow-md'
-                : 'text-m3-outline-variant hover:text-white'
-            }`}
-          >
-            <span className="material-symbols-outlined text-sm">receipt_long</span>
-            <span>Duty Sheet & KM</span>
-          </button>
-        </div>
+        {!trip ? (
+          <div className="bg-m3-inverse-surface rounded-2xl p-8 text-center border border-m3-outline-variant/40 shadow-md space-y-3">
+            <span className="material-symbols-outlined text-4xl text-amber-500">route</span>
+            <h2 className="text-sm font-bold text-white">No Trip Found</h2>
+            <p className="text-xs text-m3-outline-variant">
+              Please open this page with your booking reference link (e.g. /trip/?ref=KT-BOK-101) or contact Kalidass Travels dispatch.
+            </p>
+            <div className="pt-2">
+              <a
+                href="tel:+918939539211"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 rounded-xl text-xs font-bold transition-all shadow-sm"
+              >
+                <span className="material-symbols-outlined text-sm">phone</span>
+                <span>Call Helpline (+91 89395 39211)</span>
+              </a>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* View Switcher Tabs: Guest View vs Chauffeur Duty Sheet */}
+            <div className="bg-m3-inverse-surface p-1 rounded-xl border border-m3-outline-variant/40 flex text-xs font-bold shadow-inner">
+              <button
+                type="button"
+                onClick={() => setActiveTab('passenger')}
+                className={`flex-1 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${
+                  activeTab === 'passenger'
+                    ? 'bg-m3-tertiary-container/300 text-m3-on-surface shadow-md'
+                    : 'text-m3-outline-variant hover:text-white'
+                }`}
+              >
+                <span className="material-symbols-outlined text-sm">person</span>
+                <span>Passenger Voucher</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('driver')}
+                className={`flex-1 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${
+                  activeTab === 'driver'
+                    ? 'bg-m3-tertiary-container/300 text-m3-on-surface shadow-md'
+                    : 'text-m3-outline-variant hover:text-white'
+                }`}
+              >
+                <span className="material-symbols-outlined text-sm">receipt_long</span>
+                <span>Duty Sheet & KM</span>
+              </button>
+            </div>
 
-        {/* Status & Trip Header Card */}
-        <div className="bg-gradient-to-br from-m3-inverse-surface to-m3-inverse-surface rounded-2xl p-4 border border-m3-outline-variant/40 shadow-md">
-          <div className="flex items-center justify-between mb-2">
+            {/* Status & Trip Header Card */}
+            <div className="bg-gradient-to-br from-m3-inverse-surface to-m3-inverse-surface rounded-2xl p-4 border border-m3-outline-variant/40 shadow-md">
+              <div className="flex items-center justify-between mb-2">
             <span className="text-[11px] font-mono font-bold text-m3-tertiary bg-m3-tertiary-container/30 border border-m3-tertiary/40 px-2 py-0.5 rounded-full">
               {trip.bookingId}
             </span>
@@ -353,16 +363,29 @@ export default function TripSheetViewer() {
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-m3-outline-variant/40">
-                <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(trip.pickupAddress)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-2 bg-m3-inverse-surface hover:bg-m3-inverse-surface text-m3-inverse-on-surface/90 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors border border-m3-outline-variant/40"
-                >
-                  <span className="material-symbols-outlined text-sm text-m3-primary">map</span>
-                  <span>Open Pickup in Google Maps</span>
-                </a>
+              <div className="pt-2 border-t border-m3-outline-variant/40 flex flex-col sm:flex-row gap-2">
+                {mapsLinks.pickupPin && (
+                  <a
+                    href={mapsLinks.pickupPin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 py-2 bg-m3-inverse-surface hover:bg-m3-inverse-surface text-m3-inverse-on-surface/90 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors border border-m3-outline-variant/40"
+                  >
+                    <span className="material-symbols-outlined text-sm text-m3-primary">location_on</span>
+                    <span>Pickup Pin</span>
+                  </a>
+                )}
+                {mapsLinks.directions && (
+                  <a
+                    href={mapsLinks.directions}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 py-2 bg-m3-primary/10 hover:bg-m3-primary/20 text-m3-primary rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors border border-m3-primary/30"
+                  >
+                    <span className="material-symbols-outlined text-sm">navigation</span>
+                    <span>Route Directions</span>
+                  </a>
+                )}
               </div>
             </div>
 
@@ -450,6 +473,44 @@ export default function TripSheetViewer() {
               </span>
             </div>
 
+            {/* Route & Navigation Card for Driver */}
+            <div className="bg-m3-inverse-surface rounded-2xl p-4 border border-m3-outline-variant/40 shadow-md space-y-2.5">
+              <span className="text-[10px] font-bold text-m3-outline-variant uppercase tracking-wider block">
+                Trip Route & Navigation
+              </span>
+
+              <div className="flex items-start gap-2 text-xs">
+                <span className="material-symbols-outlined text-m3-tertiary text-base shrink-0 mt-0.5">location_on</span>
+                <div className="flex-1">
+                  <p className="text-white font-medium line-clamp-3">{trip.pickupAddress}</p>
+                </div>
+              </div>
+
+              <div className="pt-2 border-t border-m3-outline-variant/40 flex flex-col sm:flex-row gap-2">
+                {mapsLinks.pickupPin && (
+                  <a
+                    href={mapsLinks.pickupPin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 py-2 bg-m3-inverse-surface hover:bg-m3-inverse-surface text-m3-inverse-on-surface/90 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors border border-m3-outline-variant/40"
+                  >
+                    <span className="material-symbols-outlined text-sm text-m3-primary">location_on</span>
+                    <span>Pickup Pin</span>
+                  </a>
+                )}
+                {mapsLinks.directions && (
+                  <a
+                    href={mapsLinks.directions}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 py-2 bg-m3-primary/10 hover:bg-m3-primary/20 text-m3-primary rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors border border-m3-primary/30"
+                  >
+                    <span className="material-symbols-outlined text-sm">navigation</span>
+                    <span>Start Navigation</span>
+                  </a>
+                )}
+              </div>
+            </div>
             {/* Odometer Inputs */}
             <div className="bg-m3-inverse-surface rounded-2xl p-4 border border-m3-outline-variant/40 shadow-md space-y-3">
               <span className="text-[10px] font-bold text-m3-outline-variant uppercase tracking-wider block">
@@ -572,6 +633,8 @@ export default function TripSheetViewer() {
             </div>
 
           </div>
+        )}
+        </>
         )}
 
       </main>

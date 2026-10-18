@@ -8,6 +8,7 @@ import LocationPicker from './LocationPicker';
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import { trackCalculatorQuote, trackEvent, markQuoteConverted } from '../lib/analytics';
+import { buildMapsLinks } from '../utils/whatsapp';
 import tariffConfig from '../data/tariff_config.json';
 import tnBusFares from '../data/tnBusFares.json';
 
@@ -627,7 +628,15 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
       '• Advance to Pay: -₹' + (breakdown ? breakdown.advance_to_pay : 500),
       '• Balance to Pay Driver (After trip): ₹' + (breakdown ? breakdown.balance_to_pay : (estimate - 500)) + ' + Extra',
       '',
-      'Please save my quote & confirm live cab availability.'
+      'Please save my quote & confirm live cab availability.',
+      (() => {
+        const { pickupPin, directions } = buildMapsLinks(pickup, drop, 'oneway');
+        return (pickupPin || directions)
+          ? '\n🗺️ NAVIGATION LINKS:\n' +
+            (pickupPin  ? '• 📍 Pickup Pin: ' + pickupPin + '\n'  : '') +
+            (directions ? '• 🧭 Route Map: ' + directions          : '')
+          : null;
+      })()
     ].filter(Boolean).join('\n');
 
     try {

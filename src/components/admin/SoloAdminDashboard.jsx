@@ -6,101 +6,10 @@ import DeskChauffeurs from './solo/DeskChauffeurs';
 import SoloDutySlipModal from './solo/SoloDutySlipModal';
 import AiBookingParser from './solo/AiBookingParser';
 
-const DEFAULT_CHAUFFEURS = [
-  { name: 'Murugan', phone: '+91 97890 12345', plate: 'TN09 BX 1234', category: 'Sedan (Dzire)', status: 'Available', rating: '4.9' },
-  { name: 'Selvam', phone: '+91 98402 54321', plate: 'TN11 CY 5678', category: 'Ertiga (6 Pax)', status: 'Available', rating: '4.8' },
-  { name: 'Perumal Manikumar', phone: '+91 89395 39211', plate: 'TN09 CZ 9999', category: 'Innova Crysta', status: 'Available', rating: '4.9' },
-  { name: 'Hariharan', phone: '+91 97103 44556', plate: 'TN22 AZ 3421', category: 'Sedan (Etios)', status: 'Available', rating: '4.7' },
-  { name: 'Karthik Kumar', phone: '+91 98401 99887', plate: 'TN07 DJ 4321', category: 'Tempo Traveller', status: 'Available', rating: '4.9' }
-];
-
-const SEED_BOOKINGS = [
-  {
-    bookingId: '#KT-TPT-101',
-    guestNamePhone: 'Senthil Nathan (+91 98401 22334)',
-    travelDateTime: 'Tomorrow @ 04:30 AM',
-    pickupAddress: 'T. Nagar, Chennai ➔ Tirupati Balaji Temple',
-    vehicleCategory: 'Innova Crysta',
-    partySize: '6 Pax',
-    kycStatus: 'Verified',
-    darshanStatus: 'Assigned',
-    assignedChauffeur: 'Perumal Manikumar - TN09 CZ 9999',
-    manifestStatus: 'Dispatched',
-    terminalFare: 10000,
-    chauffeurPayout: 8000,
-    companyMargin: 2000,
-    advancePaid: 1000,
-    balanceDue: 9000,
-    financialClosure: 'Unreconciled'
-  },
-  {
-    bookingId: '#KT-PND-103',
-    guestNamePhone: 'Anand Krishnan (+91 98410 77665)',
-    travelDateTime: 'Today @ 06:00 AM',
-    pickupAddress: 'Adyar, Chennai ➔ White Town, Pondicherry',
-    vehicleCategory: 'Ertiga (6 Pax)',
-    partySize: '5 Pax',
-    kycStatus: 'Verified',
-    darshanStatus: 'N/A',
-    assignedChauffeur: 'Selvam - TN11 CY 5678',
-    manifestStatus: 'In Transit',
-    terminalFare: 5500,
-    chauffeurPayout: 4400,
-    companyMargin: 1100,
-    advancePaid: 500,
-    balanceDue: 5000,
-    financialClosure: 'Unreconciled'
-  },
-  {
-    bookingId: '#KT-TPT-105',
-    guestNamePhone: 'Karthikeyan (+91 98803 09619)',
-    travelDateTime: '25-Oct-2026 @ 05:00 AM',
-    pickupAddress: 'Medavakkam, Chennai ➔ Tirupati Special Darshan',
-    vehicleCategory: 'Innova Crysta',
-    partySize: '6 Pax',
-    kycStatus: 'Verified',
-    darshanStatus: 'Assigned',
-    assignedChauffeur: 'Unassigned',
-    manifestStatus: 'Pending',
-    terminalFare: 10000,
-    chauffeurPayout: 8000,
-    companyMargin: 2000,
-    advancePaid: 1000,
-    balanceDue: 9000,
-    financialClosure: 'Unreconciled'
-  }
-];
-
-const SEED_LEADS = [
-  {
-    quoteId: '#INQ-98803',
-    timestamp: 'Just now',
-    sourcePage: 'WhatsApp (+91 98803 09619)',
-    tripType: 'Round Trip',
-    pickup: 'Medavakkam, Chennai',
-    drop: 'Tirupati Balaji Temple',
-    vehicle: 'Innova Crysta',
-    partySize: '6 Pax',
-    estimatedFare: 10000,
-    status: 'Inquiry'
-  },
-  {
-    quoteId: '#INQ-73038',
-    timestamp: '2 hours ago',
-    sourcePage: 'WhatsApp (+91 73038 09755)',
-    tripType: 'Round Trip',
-    pickup: 'Velachery, Chennai',
-    drop: 'Pondicherry (Rock Beach)',
-    vehicle: 'Sedan (Dzire / Etios)',
-    partySize: '3 Pax',
-    estimatedFare: 4500,
-    status: 'Quoted'
-  }
-];
-
 const STORAGE_KEYS = {
-  BOOKINGS: 'kt_solo_real_bookings_v3',
-  LEADS: 'kt_solo_real_leads_v3'
+  BOOKINGS: 'kt_solo_real_bookings_v4',
+  LEADS: 'kt_solo_real_leads_v4',
+  CHAUFFEURS: 'kt_solo_real_chauffeurs_v4'
 };
 
 export default function SoloAdminDashboard() {
@@ -114,7 +23,7 @@ export default function SoloAdminDashboard() {
         if (cached) return JSON.parse(cached);
       } catch (e) {}
     }
-    return SEED_BOOKINGS;
+    return [];
   });
 
   const [leads, setLeads] = useState(() => {
@@ -124,11 +33,19 @@ export default function SoloAdminDashboard() {
         if (cached) return JSON.parse(cached);
       } catch (e) {}
     }
-    return SEED_LEADS;
+    return [];
   });
 
   const [chatQueries, setChatQueries] = useState([]);
-  const [chauffeurs] = useState(DEFAULT_CHAUFFEURS);
+  const [chauffeurs, setChauffeurs] = useState(() => {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      try {
+        const cached = localStorage.getItem(STORAGE_KEYS.CHAUFFEURS);
+        if (cached) return JSON.parse(cached);
+      } catch (e) {}
+    }
+    return [];
+  });
   const [toast, setToast] = useState(null);
   const [activeDutySlipBooking, setActiveDutySlipBooking] = useState(null);
   const [lastSync, setLastSync] = useState('Live');
@@ -138,6 +55,25 @@ export default function SoloAdminDashboard() {
     setTimeout(() => {
       setToast(prev => (prev?.message === message ? null : prev));
     }, 3500);
+  };
+
+  // Add / Delete Chauffeurs
+  const handleAddChauffeur = (newDriver) => {
+    const updated = [newDriver, ...chauffeurs];
+    setChauffeurs(updated);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(STORAGE_KEYS.CHAUFFEURS, JSON.stringify(updated));
+    }
+    showToast(`Driver ${newDriver.name} added to roster!`, 'success');
+  };
+
+  const handleDeleteChauffeur = (index) => {
+    const updated = chauffeurs.filter((_, i) => i !== index);
+    setChauffeurs(updated);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(STORAGE_KEYS.CHAUFFEURS, JSON.stringify(updated));
+    }
+    showToast('Driver removed from roster.', 'info');
   };
 
   // Sync with API
@@ -151,26 +87,25 @@ export default function SoloAdminDashboard() {
 
       if (bRes.status === 'fulfilled' && bRes.value.ok) {
         const bData = await bRes.value.json();
-        if (bData.bookings && bData.bookings.length > 0) {
-          setBookings(bData.bookings);
-          if (typeof window !== 'undefined') {
-            localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(bData.bookings));
-          }
+        const apiBookings = bData.bookings || [];
+        setBookings(apiBookings);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(apiBookings));
         }
       }
 
       if (lRes.status === 'fulfilled' && lRes.value.ok) {
         const lData = await lRes.value.json();
-        if (lData.leads && lData.leads.length > 0) {
-          setLeads(lData.leads.slice(0, 10));
+        const apiLeads = lData.leads || [];
+        setLeads(apiLeads.slice(0, 15));
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(STORAGE_KEYS.LEADS, JSON.stringify(apiLeads.slice(0, 15)));
         }
       }
 
       if (cRes.status === 'fulfilled' && cRes.value.ok) {
         const cData = await cRes.value.json();
-        if (cData.queries && cData.queries.length > 0) {
-          setChatQueries(cData.queries);
-        }
+        setChatQueries(cData.queries || []);
       }
 
       setLastSync(new Date().toLocaleTimeString());
@@ -181,6 +116,12 @@ export default function SoloAdminDashboard() {
   };
 
   useEffect(() => {
+    // Purge old mock storage keys from user browser
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.removeItem('kt_solo_real_bookings_v3');
+      localStorage.removeItem('kt_solo_real_leads_v3');
+      localStorage.removeItem('kt_admin_bookings_v1');
+    }
     refreshData();
   }, []);
 
@@ -479,6 +420,8 @@ export default function SoloAdminDashboard() {
             <DeskChauffeurs
               chauffeurs={chauffeurs}
               bookings={bookings}
+              onAddChauffeur={handleAddChauffeur}
+              onDeleteChauffeur={handleDeleteChauffeur}
               showToast={showToast}
             />
           )}

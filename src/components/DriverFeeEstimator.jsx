@@ -7,7 +7,7 @@ import {
 import LocationPicker from './LocationPicker';
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
 import WhatsAppButton from './react/WhatsAppButton.jsx';
-import { buildWhatsAppUrl } from '../utils/whatsapp';
+import { buildWhatsAppUrl, buildMapsLinks } from '../utils/whatsapp';
 import tnBusFares from '../data/tnBusFares.json';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import { trackCalculatorQuote, markQuoteConverted, trackEvent } from '../lib/analytics';
@@ -396,6 +396,14 @@ export default function DriverFeeEstimator({
           : 'Included in total (₹300/night lodging allowance)')
       : null;
 
+    // Google Maps navigation links
+    const { pickupPin, directions } = buildMapsLinks(pickup.trim(), drop.trim(), type);
+    const mapsBlock = (pickupPin || directions)
+      ? `\n\n🗺️ NAVIGATION LINKS:\n` +
+        (pickupPin  ? `• 📍 Pickup Pin: ${pickupPin}\n`  : '') +
+        (directions ? `• 🧭 Route Map: ${directions}`    : '')
+      : '';
+
     const msg = 
       `Hi Kalidass Travels, I need an Outstation Acting Driver:\n\n` +
       `📌 *Quote Ref:* ${refId} (24-Hr Rate Lock)\n` +
@@ -411,7 +419,8 @@ export default function DriverFeeEstimator({
       `\n🍽️ MEALS & STAY POLICY:\n` +
       `• Driver Meals: ${foodNote}\n` +
       (stayNote ? `• Driver Stay: ${stayNote}\n` : '') +
-      `\nPlease save my quote & confirm verified chauffeur availability.`;
+      `\nPlease save my quote & confirm verified chauffeur availability.` +
+      mapsBlock;
     return buildWhatsAppUrl(msg);
   };
 

@@ -20,8 +20,8 @@ export default function SoloDutySlipModal({
     ? booking.assignedChauffeur.split('-')[1].trim()
     : 'TN09 CZ 9999';
 
-  const defaultDriverName = booking.assignedChauffeur?.split('(')[0]?.split('-')[0]?.trim() || 'Murugan';
-  const defaultDriverPhone = (booking.assignedChauffeur?.match(/(?:\+91[\-\s]?)?[6-9]\d{9}/) || ['9789012345'])[0];
+  const defaultDriverName = booking.assignedChauffeur?.split('(')[0]?.split('-')[0]?.trim() || '';
+  const defaultDriverPhone = (booking.assignedChauffeur?.match(/(?:\+91[\-\s]?)?[6-9]\d{9}/) || [''])[0];
 
   const isTempo = booking.vehicleCategory?.toLowerCase().includes('tempo');
   const isCrysta = booking.vehicleCategory?.toLowerCase().includes('crysta');
@@ -31,9 +31,9 @@ export default function SoloDutySlipModal({
   const defaultExtraKmRate = isTempo ? 24 : isCrysta ? 22 : isErtiga ? 17 : 14;
 
   const [form, setForm] = useState({
-    bookingId: booking.bookingId || '#KT-101',
-    guestName: booking.guestNamePhone?.split('(')[0].trim() || 'Guest',
-    guestPhone: (booking.guestNamePhone?.match(/(?:\+91[\-\s]?)?[6-9]\d{9}/) || ['9840122334'])[0],
+    bookingId: booking.bookingId || '',
+    guestName: booking.guestNamePhone?.split('(')[0].trim() || '',
+    guestPhone: (booking.guestNamePhone?.match(/(?:\+91[\-\s]?)?[6-9]\d{9}/) || [''])[0],
     chauffeurName: defaultDriverName,
     chauffeurPhone: defaultDriverPhone,
     vehiclePlate: defaultPlate,

@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import LocationPicker from './LocationPicker';
 import WhatsAppButton from './react/WhatsAppButton.jsx';
-import { buildWhatsAppUrl } from '../utils/whatsapp';
+import { buildWhatsAppUrl, buildMapsLinks } from '../utils/whatsapp';
 import { trackEvent, markQuoteConverted } from '../lib/analytics';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import { printInvoiceLetterhead, getEstimateRefNo, downloadEstimateDocument } from '../utils/invoiceLetterhead';
@@ -952,6 +952,18 @@ export default function TourBookingEngine({
     availableVehicles
   ]);
 
+  // Google Maps navigation links for tour bookings
+  const { pickupPin: tourPickupPin, directions: tourDirections } = buildMapsLinks(
+    pickup.trim() || 'Chennai',
+    destinationDisplay,
+    'oneway'
+  );
+  const tourMapsBlock = (tourPickupPin || tourDirections)
+    ? `\n\n🗺️ NAVIGATION LINKS:\n` +
+      (tourPickupPin  ? `• 📍 Pickup Pin: ${tourPickupPin}\n`  : '') +
+      (tourDirections ? `• 🧭 Route Map: ${tourDirections}`    : '')
+    : '';
+
   const whatsAppMessage = needGst ? `Hi Kalidass Travels, I'd like to book with GST Invoice:
 • *Service:* ${effectiveServiceTitle}
 • *Pickup:* ${pickup.trim() || 'Chennai'}
@@ -962,7 +974,7 @@ export default function TourBookingEngine({
 • *Payment:* ₹500 Adv | ${formattedBalancePayable || 'Remaining'} Bal
 ${fareBreakdown?.isAfter24Hours ? '• *Payable at Actuals:* FASTag Tolls & Parking paid directly as per actual receipts\n' : ''}• *Ref:* ${effectiveInvoiceRefNo}
 ${companyName.trim() ? `• *Devotee/Company:* ${companyName.trim()}\n` : ''}${cleanedGst ? `• *GSTIN:* ${cleanedGst} (${recipientStateName})\n` : ''}${customerPhone.trim() ? `• *Contact:* ${customerPhone.trim()}\n` : ''}
-Please confirm booking & issue GST proforma estimate!`
+Please confirm booking & issue GST proforma estimate!` + tourMapsBlock
 : `Hi Kalidass Travels, I'd like to book:
 • *Service:* ${effectiveServiceTitle}
 • *Pickup:* ${pickup.trim() || 'Chennai'}
@@ -972,7 +984,7 @@ Please confirm booking & issue GST proforma estimate!`
 • *Fare:* ${formattedFare || 'TBD'} (${fareBreakdown?.isAfter24Hours ? 'Multi-Day Tariff' : 'All-inclusive'} | ₹500 Adv / ${formattedBalancePayable || 'Remaining'} Bal)
 ${fareBreakdown?.isAfter24Hours ? '• *Payable at Actuals:* FASTag Tolls & Parking paid directly as per actual receipts\n' : ''}• *Ref:* ${effectiveInvoiceRefNo}${companyName.trim() ? ` (${companyName.trim()}${customerPhone.trim() ? ` • ${customerPhone.trim()}` : ''})` : (customerPhone.trim() ? ` (${customerPhone.trim()})` : '')}
 
-Please confirm booking!`;
+Please confirm booking!` + tourMapsBlock;
 
   const whatsAppUrl = buildWhatsAppUrl(whatsAppMessage);
 

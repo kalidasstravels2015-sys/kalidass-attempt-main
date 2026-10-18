@@ -127,8 +127,8 @@ export function generateDutySlipCanvas(data) {
 
   ctx.fillStyle = '#0F172A';
   ctx.font = 'bold 16px "Plus Jakarta Sans", sans-serif';
-  ctx.fillText(data.chauffeurName || 'Murugan', cardX + 34, y + 45);
-  ctx.fillText(`${data.vehicleCategory || 'Sedan'} (${data.vehiclePlate || 'TN09 CZ 9999'})`, cardX + 380, y + 45);
+  ctx.fillText(data.chauffeurName || 'Assigned Driver', cardX + 34, y + 45);
+  ctx.fillText(`${data.vehicleCategory || 'Commercial Vehicle'} (${data.vehiclePlate || 'Assigned Plate'})`, cardX + 380, y + 45);
 
   ctx.fillStyle = '#64748B';
   ctx.font = '12px "JetBrains Mono", monospace';

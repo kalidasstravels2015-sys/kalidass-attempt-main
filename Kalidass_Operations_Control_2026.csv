@@ -1,3 +1,1 @@
 Booking ID,Guest Name & Phone,Travel Date & Pickup Time,Pickup Address,Vehicle Category,Pilgrim Party Size,KYC Status,Darshan Ticket Status,Assigned Chauffeur & Plate,Chauffeur Manifest,Terminal Fare (Guest),Chauffeur Payout,Company Margin,Financial Closure
-#KT-TPT-101,"Venkatesh S (+91 98401 22334)","Tomorrow @ 05:00 AM","Medavakkam, Chennai ➔ Tirupati Balaji Temple (Round Trip)",Crysta,6 Pax,Verified,Confirmed,"Murugan (TN 09 CZ 9999) - 97890 12345",Dispatched,6500,5000,1500,Unreconciled
-#KT-MAA-102,"Dr. Ananthakrishnan (+91 94440 55667)","Tomorrow @ 08:30 PM","Chennai International Airport (MAA) ➔ Navalur OMR",Sedan,3 Pax,Pending,N/A,Unassigned,Pending,1400,1100,300,Unreconciled

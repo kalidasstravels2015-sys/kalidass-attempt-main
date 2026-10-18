@@ -210,6 +210,13 @@ export const POST: APIRoute = async ({ request }) => {
     const advanceSuggested = 500;
 
     // 10. Generate WhatsApp Click-Ready Quote
+    const pickupEncoded    = encodeURIComponent(pickup);
+    const dropEncoded      = encodeURIComponent(drop);
+    const mapsPickupPin    = `https://www.google.com/maps/search/?api=1&query=${pickupEncoded}`;
+    const mapsDirections   = isRound
+      ? `https://www.google.com/maps/dir/?api=1&origin=${pickupEncoded}&destination=${pickupEncoded}&waypoints=${dropEncoded}`
+      : `https://www.google.com/maps/dir/?api=1&origin=${pickupEncoded}&destination=${dropEncoded}`;
+
     const whatsAppQuote = `*KALIDASS TRAVELS CHENNAI — TRIP QUOTATION*\n\n` +
       `Hello ${guestName} ji, thank you for contacting Kalidass Travels!\n\n` +
       `📍 *Route:* ${pickup} ➔ ${drop} (${tripType})\n` +
@@ -220,7 +227,10 @@ export const POST: APIRoute = async ({ request }) => {
       `_(Includes Car, Chauffeur Bata & Fuel. Tolls & Parking as per actuals)_\n\n` +
       `🔒 *To Confirm Your Booking:* Kindly pay a token advance of *Rs.${advanceSuggested}* via UPI to *8939539211@okbizaxis* (Kalidass Travels) to lock your vehicle.\n\n` +
       `Chauffeur and car details will be sent 4 hours prior to departure.\n` +
-      `Have a safe journey! 🌟`;
+      `Have a safe journey! 🌟\n\n` +
+      `🗺️ NAVIGATION LINKS:\n` +
+      `• 📍 Pickup Pin: ${mapsPickupPin}\n` +
+      `• 🧭 Route Map: ${mapsDirections}`;
 
     const result: ParsedResult = {
       guestName,

@@ -48,11 +48,13 @@ export default function SoloDispatchCard({
     }
 
     const driverPhone = assignedChauffeurObj?.phone?.replace(/[^0-9]/g, '') || '8939539211';
+    const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(booking.pickupAddress)}`;
     const message = `*KALIDASS TRAVELS — TRIP DISPATCH MANIFEST*\n` +
       `Trip Ref: *${booking.bookingId}*\n\n` +
       `👤 *Guest:* ${booking.guestNamePhone}\n` +
       `🗓 *Travel Time:* ${booking.travelDateTime}\n` +
       `📍 *Pickup / Route:* ${booking.pickupAddress}\n` +
+      `🗺️ *Open in Maps:* ${mapsLink}\n` +
       `🚗 *Assigned Vehicle:* ${booking.vehicleCategory} (${booking.partySize})\n` +
       `💰 *Total Billable to Guest:* Rs.${booking.terminalFare}\n` +
       `💵 *Your Trip Share:* Rs.${booking.chauffeurPayout}\n\n` +

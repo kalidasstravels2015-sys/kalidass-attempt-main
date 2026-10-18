@@ -66,10 +66,12 @@ export default function DeskDispatchRadar({
     const terminalFare = Number(broadcastBooking.terminalFare) || 6000;
     const driverPayout = Math.max(0, terminalFare - officeMargin);
 
+    const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(broadcastBooking.pickupAddress)}`;
     const message = `🚕 *DUTY BROADCAST — KALIDASS TRAVELS*\n` +
       `Trip Ref: *${broadcastBooking.bookingId}*\n\n` +
       `🗓 *Travel Time:* ${broadcastBooking.travelDateTime}\n` +
       `📍 *Route:* ${broadcastBooking.pickupAddress}\n` +
+      `🗺️ *Open in Maps:* ${mapsLink}\n` +
       `🚗 *Required Vehicle:* ${broadcastBooking.vehicleCategory} (${broadcastBooking.partySize})\n` +
       `💰 *Driver Net Payout:* *Rs. ${driverPayout.toLocaleString('en-IN')} Net*\n` +
       `_(Tolls & Parking paid by guest at actuals)_\n\n` +

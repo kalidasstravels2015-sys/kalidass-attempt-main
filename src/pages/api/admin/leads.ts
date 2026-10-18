@@ -43,11 +43,14 @@ export const GET: APIRoute = async () => {
       });
     }
 
-    const leads = [];
-    for (let i = 1; i < lines.length; i++) {
+    // Prioritize actionable customer inquiries (WhatsApp, Calls, Active enquiries) over raw anonymous browses
+    const actionableLeads = [];
+    const browsedLeads = [];
+
+    for (let i = lines.length - 1; i >= 1; i--) {
       const row = parseCsvLine(lines[i]);
       if (row.length > 0 && row[0]) {
-        leads.push({
+        const item = {
           quoteId: row[0] || '',
           timestamp: row[1] || '',
           sourcePage: row[2] || '',
@@ -60,12 +63,17 @@ export const GET: APIRoute = async () => {
           estimatedFare: parseInt(row[9] || '0', 10) || 0,
           status: row[10] || 'Browsed',
           metadata: row[11] || ''
-        });
+        };
+        const isActionable = item.status !== 'Browsed' || item.sourcePage.includes('+91') || item.quoteId.startsWith('#WA') || item.quoteId.startsWith('#CALL');
+        if (isActionable) {
+          actionableLeads.push(item);
+        } else {
+          browsedLeads.push(item);
+        }
       }
     }
 
-    // Newest first
-    leads.reverse();
+    const leads = [...actionableLeads, ...browsedLeads];
 
     return new Response(JSON.stringify({ success: true, count: leads.length, leads }), {
       status: 200,
