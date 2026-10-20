@@ -1479,8 +1479,19 @@ export default function QuotationEngine({
 
     const finalEstimate = currentEst || estimate;
 
-    trackEvent('booking_submit_attempt', { trip_type: activeTab, vehicle, estimate: finalEstimate });
-    markQuoteConverted(null, { vehicle, tripType: activeTab, estimate: finalEstimate });
+    markQuoteConverted(quoteRefId, {
+      quoteId: quoteRefId,
+      sourcePage: '/services/outstation-cabs/',
+      calculatorEngine: 'Outstation Fare Engine',
+      tripType: activeTab === 'local' ? `Local Package (${localPackage})` : activeTab === 'oneway' ? 'One Way Drop' : `Round Trip (${days} Days)`,
+      pickup: sanitizeInput(pickup),
+      drop: sanitizeInput(drop || 'Local Sightseeing'),
+      vehicle,
+      estimatedFare: finalEstimate,
+      distanceKm: currentDist ? (activeTab === 'round' ? currentDist * 2 : currentDist) : '',
+      travelDate: date ? `${date}` : '',
+      status: 'WhatsApp Clicked'
+    });
 
     // 5. Send Data to Sheet
     const bookingData = {

@@ -2,54 +2,24 @@ import type { APIRoute } from 'astro';
 
 export const prerender = false;
 
-// Pre-compiled distance & package lookup from Chennai
-const ROUTE_DISTANCES: Record<string, { oneWayKm: number; name: string; fixedSedan?: number; fixedErtiga?: number; fixedCrysta?: number; fixedTempo?: number }> = {
-  'tirupati': { oneWayKm: 135, name: 'Chennai ➔ Tirupati', fixedSedan: 6000, fixedErtiga: 7500, fixedCrysta: 10000, fixedTempo: 12500 },
-  'pondicherry': { oneWayKm: 155, name: 'Chennai ➔ Pondicherry', fixedSedan: 4500, fixedErtiga: 5500, fixedCrysta: 7500, fixedTempo: 9500 },
-  'pondy': { oneWayKm: 155, name: 'Chennai ➔ Pondicherry', fixedSedan: 4500, fixedErtiga: 5500, fixedCrysta: 7500, fixedTempo: 9500 },
-  'madurai': { oneWayKm: 460, name: 'Chennai ➔ Madurai', fixedSedan: 13500, fixedErtiga: 16500, fixedCrysta: 21500, fixedTempo: 26000 },
-  'bangalore': { oneWayKm: 345, name: 'Chennai ➔ Bangalore' },
-  'bengaluru': { oneWayKm: 345, name: 'Chennai ➔ Bangalore' },
-  'velankanni': { oneWayKm: 310, name: 'Chennai ➔ Velankanni' },
-  'thiruvannamalai': { oneWayKm: 195, name: 'Chennai ➔ Thiruvannamalai', fixedSedan: 5200, fixedErtiga: 6500, fixedCrysta: 8500, fixedTempo: 10500 },
-  'tiruvannamalai': { oneWayKm: 195, name: 'Chennai ➔ Thiruvannamalai', fixedSedan: 5200, fixedErtiga: 6500, fixedCrysta: 8500, fixedTempo: 10500 },
-  'kanchipuram': { oneWayKm: 75, name: 'Chennai ➔ Kanchipuram', fixedSedan: 3200, fixedErtiga: 4200, fixedCrysta: 5500, fixedTempo: 7000 },
-  'vellore': { oneWayKm: 140, name: 'Chennai ➔ Vellore (Golden Temple)', fixedSedan: 4400, fixedErtiga: 5400, fixedCrysta: 7200, fixedTempo: 9000 },
-  'kumbakonam': { oneWayKm: 290, name: 'Chennai ➔ Kumbakonam (Navagraha)' },
-  'rameswaram': { oneWayKm: 560, name: 'Chennai ➔ Rameswaram' },
-  'coimbatore': { oneWayKm: 510, name: 'Chennai ➔ Coimbatore' },
-  'trichy': { oneWayKm: 330, name: 'Chennai ➔ Trichy' },
-  'ooty': { oneWayKm: 540, name: 'Chennai ➔ Ooty' },
-  'kodaikanal': { oneWayKm: 520, name: 'Chennai ➔ Kodaikanal' },
-  'airport': { oneWayKm: 25, name: 'Chennai Airport Transfer', fixedSedan: 750, fixedErtiga: 1200, fixedCrysta: 1800, fixedTempo: 2500 }
-};
-
-interface ParsedResult {
-  guestName: string;
-  phone: string;
-  pickup: string;
-  drop: string;
-  travelDate: string;
-  pickupTime: string;
-  vehicleCategory: string;
-  partySize: string;
-  tripType: string;
-  distanceKm: number;
-  estimatedFare: number;
-  chauffeurPayout: number;
-  companyMargin: number;
-  advanceSuggested: number;
-  whatsAppQuote: string;
-  confidence: number;
-}
-
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const body = await request.json();
-    const rawText = String(body.text || '').trim();
+    let body: any = {};
+    try {
+      body = await request.json();
+    } catch (_) {
+      try {
+        const text = await request.text();
+        body = JSON.parse(text);
+      } catch (e) {}
+    }
 
-    if (!rawText) {
-      return new Response(JSON.stringify({ error: 'No text provided to parse' }), {
+    const rawText = String(body.text || '').trim();
+    const phoneInput = String(body.phone || '').trim();
+    const guestNameInput = String(body.guestName || '').trim();
+
+    if (!rawText && !phoneInput) {
+      return new Response(JSON.stringify({ error: 'No text or phone provided to parse' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json; charset=utf-8' }
       });
@@ -57,201 +27,215 @@ export const POST: APIRoute = async ({ request }) => {
 
     const lower = rawText.toLowerCase();
 
-    // 1. Extract Phone Number (10 digits, optionally with +91 or 0)
-    let phone = '';
-    const phoneMatch = rawText.match(/(?:\+91[\-\s]?)?[6-9]\d{9}/);
-    if (phoneMatch) {
-      phone = phoneMatch[0].replace(/[\s\-]/g, '');
-      if (!phone.startsWith('+91')) {
-        phone = phone.startsWith('91') && phone.length === 12 ? `+${phone}` : `+91 ${phone.slice(-10)}`;
+    // 1. Phone Extraction
+    let phone = phoneInput.replace(/[^0-9]/g, '');
+    if (phone.length >= 10) {
+      phone = phone.startsWith('91') && phone.length === 12 ? `+${phone}` : `+91 ${phone.slice(-10)}`;
+    } else {
+      const phoneMatch = rawText.match(/(?:\+91[\-\s]?)?[6-9]\d{9}/);
+      if (phoneMatch) {
+        const clean = phoneMatch[0].replace(/[\s\-]/g, '');
+        phone = clean.startsWith('+91') ? clean : (clean.startsWith('91') && clean.length === 12 ? `+${clean}` : `+91 ${clean.slice(-10)}`);
+      } else {
+        phone = phoneInput ? phoneInput.trim() : '';
       }
     }
 
-    // 2. Extract Guest Name (e.g., "from Rajesh", "name: Kumar", "Hi I am Suresh", or first capital word)
-    let guestName = 'Guest';
-    const namePatterns = [
-      /(?:name\s*[:=\-]\s*|i am\s+|this is\s+|mr\.?\s+|mrs\.?\s+)([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)/i,
-      /(?:from\s+)([A-Z][a-z]+)/
+    // 2. Quote Ref Extraction
+    let quoteRefId = '';
+    const quoteRefMatch = rawText.match(/(?:Quote Ref:?\s*\*?)(#[A-Za-z0-9\-]+)/i);
+    if (quoteRefMatch) {
+      quoteRefId = quoteRefMatch[1].trim();
+    } else {
+      const altQuoteMatch = rawText.match(/\((#[A-Za-z0-9\-]+)\)/);
+      if (altQuoteMatch) {
+        quoteRefId = altQuoteMatch[1].trim();
+      } else {
+        quoteRefId = `#KT-${Math.floor(1000 + Math.random() * 9000)}`;
+      }
+    }
+
+    // 3. Service Type Detection
+    let serviceCategory = 'Cab Booking';
+    if (/acting driver/i.test(lower)) {
+      serviceCategory = 'Acting Driver';
+    } else if (/airport/i.test(lower)) {
+      serviceCategory = 'Airport Taxi';
+    } else if (/temple|darshan|tour/i.test(lower)) {
+      serviceCategory = 'Temple Tour';
+    } else if (/outstation/i.test(lower)) {
+      serviceCategory = 'Outstation Cab';
+    }
+
+    // 4. Trip Type Extraction
+    let tripType = 'Round Trip';
+    const tripMatch = rawText.match(/(?:Trip|Transfer Type):\s*\*?([^\n\r•]+)/i);
+    if (tripMatch) {
+      tripType = tripMatch[1].trim().replace(/\*+/g, '');
+    } else if (/one[\s\-]?way|drop only/i.test(lower)) {
+      tripType = 'One Way Drop';
+    } else if (/airport pickup/i.test(lower)) {
+      tripType = 'Airport Pickup';
+    } else if (/airport drop/i.test(lower)) {
+      tripType = 'Airport Drop';
+    } else if (/local package|local sightseeing/i.test(lower)) {
+      tripType = 'Local Package';
+    }
+
+    // 5. Route Extraction (Pickup -> Drop)
+    let pickup = 'Chennai';
+    let drop = 'Outstation';
+    let distanceKm = 0;
+
+    const routeMatch = rawText.match(/Route:\s*\*?([^\n\r]+?)\s*(?:->|➔|to)\s*([^\n\r]+?)(?:\s*\((?:~)?(\d+)\s*km\))?$/im);
+    if (routeMatch) {
+      pickup = routeMatch[1].trim().replace(/^[-•*]\s*/, '').replace(/\*+/g, '');
+      drop = routeMatch[2].trim().replace(/\*+/g, '');
+      if (routeMatch[3]) distanceKm = parseInt(routeMatch[3], 10);
+    } else {
+      const fromMatch = rawText.match(/(?:From|Pickup):\s*\*?([^\n\r]+)/i);
+      const toMatch = rawText.match(/(?:To|Drop):\s*\*?([^\n\r]+)/i);
+      if (fromMatch) pickup = fromMatch[1].trim().replace(/^[-•*]\s*/, '').replace(/\*+/g, '');
+      if (toMatch) drop = toMatch[1].trim().replace(/^[-•*]\s*/, '').replace(/\*+/g, '');
+
+      const distMatch = rawText.match(/(?:Distance|Est\.?\s*Distance):\s*\*?~?(\d+)\s*km/i);
+      if (distMatch) distanceKm = parseInt(distMatch[1], 10);
+    }
+
+    // 6. Fare Extraction
+    let estimatedFare = 0;
+    const farePatterns = [
+      /(?:Est\.?\s*Total|Total Fare|Quoted Fare|Quoted Package Fare|Package Fare|Total):\s*\*?₹?\s*\*?([\d,]+)/i,
+      /(?:Fare|Rate|Amount|Cost):\s*\*?₹?\s*\*?([\d,]+)/i
     ];
-    for (const pat of namePatterns) {
-      const match = rawText.match(pat);
-      if (match && match[1]) {
-        guestName = match[1].trim();
+    for (const pat of farePatterns) {
+      const fm = rawText.match(pat);
+      if (fm && fm[1]) {
+        estimatedFare = parseInt(fm[1].replace(/,/g, ''), 10);
         break;
       }
     }
 
-    // 3. Extract Vehicle Type
+    // 7. Schedule (Date & Time) Extraction
+    let travelDate = 'Tomorrow';
+    let pickupTime = '05:00 AM';
+    const schedMatch = rawText.match(/(?:Travel Date & Time|Pickup Date & Time|Pickup Schedule|Pickup Date|Travel Date):\s*\*?([^\n\r]+)/i);
+    if (schedMatch) {
+      let rawSched = schedMatch[1].trim().replace(/^[-•*]\s*/, '').replace(/\*+/g, '');
+      if (rawSched.includes('@')) {
+        const parts = rawSched.split('@');
+        travelDate = parts[0].trim();
+        pickupTime = parts[1].trim();
+      } else if (rawSched.includes(' ')) {
+        const tm = rawSched.match(/(\d{1,2}:\d{2}\s*(?:AM|PM|am|pm)?)/i);
+        if (tm) {
+          pickupTime = tm[1].toUpperCase();
+          travelDate = rawSched.replace(tm[0], '').trim();
+        } else {
+          travelDate = rawSched;
+        }
+      } else {
+        travelDate = rawSched;
+      }
+    }
+
+    // 8. Vehicle & Gear Extraction
     let vehicleCategory = 'Sedan (Dzire / Etios)';
-    if (/crysta|innova crysta/i.test(lower)) {
+    const vehMatch = rawText.match(/(?:Vehicle Type|Vehicle|Selected Vehicle):\s*\*?([^\n\r]+)/i);
+    if (vehMatch) {
+      vehicleCategory = vehMatch[1].trim().replace(/\*+/g, '');
+    } else if (/crysta/i.test(lower)) {
       vehicleCategory = 'Innova Crysta';
     } else if (/innova/i.test(lower)) {
       vehicleCategory = 'Toyota Innova';
-    } else if (/ertiga|maruti ertiga|xl6/i.test(lower)) {
+    } else if (/ertiga|xl6/i.test(lower)) {
       vehicleCategory = 'Ertiga (6 Pax)';
-    } else if (/tempo|traveller|12 seater|14 seater|16 seater|bus/i.test(lower)) {
+    } else if (/tempo|traveller/i.test(lower)) {
       vehicleCategory = 'Tempo Traveller';
-    } else if (/sedan|dzire|etios|car/i.test(lower)) {
-      vehicleCategory = 'Sedan (Dzire / Etios)';
+    } else if (/compact suv|suv/i.test(lower)) {
+      vehicleCategory = 'Compact SUV / MPV';
     }
 
-    // 4. Extract Passenger Count
+    const gearMatch = rawText.match(/(?:Transmission \/ Gear|Transmission|Gear):\s*\*?([^\n\r]+)/i);
+    if (gearMatch) {
+      vehicleCategory += ` (${gearMatch[1].trim().replace(/\*+/g, '')})`;
+    }
+
+    // 9. Party Size
     let partySize = '4 Pax';
-    const paxMatch = rawText.match(/(\d+)\s*(?:pax|people|persons?|passengers?|members?|adults?)/i);
+    const paxMatch = rawText.match(/(\d+)\s*(?:pax|people|persons?|passengers?|members?)/i);
     if (paxMatch) {
-      const num = parseInt(paxMatch[1], 10);
-      partySize = `${num} Pax`;
-      // Auto-escalate vehicle if passenger count exceeds capacity
-      if (num > 4 && vehicleCategory.startsWith('Sedan')) {
-        vehicleCategory = num <= 6 ? 'Ertiga (6 Pax)' : 'Innova Crysta';
-      }
-      if (num > 7) {
-        vehicleCategory = 'Tempo Traveller';
+      partySize = `${paxMatch[1]} Pax`;
+    } else if (serviceCategory === 'Acting Driver') {
+      partySize = 'Car Owner Vehicle';
+    }
+
+    // 10. Guest Name
+    let guestName = guestNameInput.trim() || 'Guest';
+    if (guestName === 'Guest') {
+      const nameMatch = rawText.match(/(?:Name|Guest|Customer):\s*([^\n\r]+)/i);
+      if (nameMatch) {
+        guestName = nameMatch[1].trim();
+      } else if (phone) {
+        guestName = `Customer (${phone.slice(-4)})`;
       }
     }
 
-    // 5. Extract Date
-    let travelDate = 'Tomorrow';
-    const today = new Date();
-    if (/today/i.test(lower)) {
-      travelDate = 'Today';
-    } else if (/day after tomorrow|day after/i.test(lower)) {
-      const d = new Date(today);
-      d.setDate(d.getDate() + 2);
-      travelDate = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
-    } else if (/tomorrow/i.test(lower)) {
-      const d = new Date(today);
-      d.setDate(d.getDate() + 1);
-      travelDate = `${d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })} (Tomorrow)`;
+    // 11. Financial Calculations
+    let chauffeurPayout = 0;
+    let companyMargin = 0;
+    let advanceSuggested = 500;
+
+    if (estimatedFare > 0) {
+      if (serviceCategory === 'Acting Driver') {
+        chauffeurPayout = Math.round((estimatedFare * 0.82) / 50) * 50;
+        companyMargin = estimatedFare - chauffeurPayout;
+        advanceSuggested = 0;
+      } else {
+        chauffeurPayout = Math.round((estimatedFare * 0.80) / 50) * 50;
+        companyMargin = estimatedFare - chauffeurPayout;
+        advanceSuggested = Math.min(1000, Math.max(500, Math.round((estimatedFare * 0.1) / 100) * 100));
+      }
     } else {
-      // Look for dates like 19-Oct, Oct 19, 19/10, etc.
-      const dateMatch = rawText.match(/(\d{1,2}(?:st|nd|rd|th)?[\s\/\-\.](?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|\d{1,2})(?:[\s\/\-\.]\d{2,4})?)/i);
-      if (dateMatch) {
-        travelDate = dateMatch[1];
-      }
+      estimatedFare = 6000;
+      chauffeurPayout = 4900;
+      companyMargin = 1100;
     }
 
-    // 6. Extract Time
-    let pickupTime = '05:00 AM';
-    const timeMatch = rawText.match(/(\d{1,2}(?::\d{2})?\s*(?:am|pm|hrs|hours?))/i);
-    if (timeMatch) {
-      pickupTime = timeMatch[1].toUpperCase();
-    } else {
-      const rawHourMatch = rawText.match(/(?:at|around|morning|night|evening)\s*(\d{1,2})(?!\d)/i);
-      if (rawHourMatch) {
-        const hr = parseInt(rawHourMatch[1], 10);
-        pickupTime = hr < 12 ? `${hr}:00 AM` : `${hr}:00 PM`;
-      }
-    }
+    // 12. Pre-formatted WhatsApp Confirmation Reply
+    const whatsAppReply =
+      `Namaskaram ${guestName} ji! 🙏 Thank you for contacting Kalidass Travels.\n\n` +
+      `📌 *Quote Ref:* ${quoteRefId} (24-Hr Rate Lock)\n` +
+      `🚗 *Service:* ${serviceCategory}\n` +
+      `📍 *Route:* ${pickup} ➔ ${drop}\n` +
+      `🗓 *Schedule:* ${travelDate} @ ${pickupTime}\n` +
+      `🚙 *Vehicle:* ${vehicleCategory}\n` +
+      `💰 *Fare:* Rs.${estimatedFare.toLocaleString('en-IN')}\n\n` +
+      (serviceCategory === 'Acting Driver'
+        ? `✅ Verified chauffeur availability confirmed. Zero advance required — pay driver after trip completion.`
+        : `✅ Vehicle availability confirmed.\n🔒 To confirm booking, kindly pay *Rs.${advanceSuggested} Advance* via UPI to *8939539211@okbizaxis* (Kalidass Travels) and share receipt.`);
 
-    // 7. Extract Destination & Origin
-    let pickup = 'Chennai (Medavakkam / City)';
-    let drop = 'Tirupati';
-    let matchedRouteKey = 'tirupati';
-
-    // Scan for destinations
-    for (const key of Object.keys(ROUTE_DISTANCES)) {
-      const regex = new RegExp(`\\b${key}\\b`, 'i');
-      if (regex.test(lower)) {
-        matchedRouteKey = key;
-        drop = ROUTE_DISTANCES[key].name.replace('Chennai ➔ ', '');
-        break;
-      }
-    }
-
-    // Scan for specific pickup localities in Chennai
-    const chennaiAreas = ['medavakkam', 'velachery', 't nagar', 't. nagar', 'anna nagar', 'adyar', 'tambaram', 'omr', 'sholinganallur', 'porur', 'guindy', 'mylapore', 'thoraipakkam', 'perungudi', 'chromepet', 'airport'];
-    for (const area of chennaiAreas) {
-      if (lower.includes(area)) {
-        pickup = area.charAt(0).toUpperCase() + area.slice(1) + ', Chennai';
-        break;
-      }
-    }
-
-    // 8. Trip Type
-    let tripType = 'Round Trip';
-    if (/one way|drop only|drop\b/i.test(lower) && !/round\s*trip/i.test(lower)) {
-      tripType = 'One-Way Drop';
-    } else if (/airport/i.test(lower) || matchedRouteKey === 'airport') {
-      tripType = 'Airport Transfer';
-    }
-
-    // 9. Calculate Distance & Estimated Fare
-    const routeInfo = ROUTE_DISTANCES[matchedRouteKey] || { oneWayKm: 150, name: `Chennai ➔ ${drop}` };
-    const isRound = tripType === 'Round Trip';
-    const distanceKm = isRound ? Math.max(250, routeInfo.oneWayKm * 2) : Math.max(130, routeInfo.oneWayKm);
-
-    let estimatedFare = 6000;
-
-    // Check fixed package pricing first
-    if (isRound && routeInfo.fixedSedan) {
-      if (vehicleCategory.startsWith('Sedan')) estimatedFare = routeInfo.fixedSedan;
-      else if (vehicleCategory.includes('Ertiga')) estimatedFare = routeInfo.fixedErtiga || Math.round(routeInfo.fixedSedan * 1.25);
-      else if (vehicleCategory.includes('Crysta')) estimatedFare = routeInfo.fixedCrysta || Math.round(routeInfo.fixedSedan * 1.6);
-      else if (vehicleCategory.includes('Tempo')) estimatedFare = routeInfo.fixedTempo || Math.round(routeInfo.fixedSedan * 2.0);
-      else estimatedFare = Math.round(routeInfo.fixedSedan * 1.4);
-    } else {
-      // Dynamic calculation
-      let perKm = 14;
-      let bata = 400;
-      if (vehicleCategory.includes('Ertiga')) { perKm = 17; bata = 500; }
-      else if (vehicleCategory.includes('Crysta')) { perKm = 22; bata = 700; }
-      else if (vehicleCategory.includes('Innova')) { perKm = 20; bata = 600; }
-      else if (vehicleCategory.includes('Tempo')) { perKm = 26; bata = 800; }
-
-      estimatedFare = (distanceKm * perKm) + (isRound ? bata : 0);
-      // Round to nearest 50
-      estimatedFare = Math.round(estimatedFare / 50) * 50;
-    }
-
-    // Chauffeur payout (typically 80% of fare)
-    const chauffeurPayout = Math.round((estimatedFare * 0.8) / 50) * 50;
-    const companyMargin = estimatedFare - chauffeurPayout;
-    const advanceSuggested = 500;
-
-    // 10. Generate WhatsApp Click-Ready Quote
-    const pickupEncoded    = encodeURIComponent(pickup);
-    const dropEncoded      = encodeURIComponent(drop);
-    const mapsPickupPin    = `https://www.google.com/maps/search/?api=1&query=${pickupEncoded}`;
-    const mapsDirections   = isRound
-      ? `https://www.google.com/maps/dir/?api=1&origin=${pickupEncoded}&destination=${pickupEncoded}&waypoints=${dropEncoded}`
-      : `https://www.google.com/maps/dir/?api=1&origin=${pickupEncoded}&destination=${dropEncoded}`;
-
-    const whatsAppQuote = `*KALIDASS TRAVELS CHENNAI — TRIP QUOTATION*\n\n` +
-      `Hello ${guestName} ji, thank you for contacting Kalidass Travels!\n\n` +
-      `📍 *Route:* ${pickup} ➔ ${drop} (${tripType})\n` +
-      `🗓 *Date & Time:* ${travelDate} @ ${pickupTime}\n` +
-      `🚗 *Vehicle:* ${vehicleCategory} (${partySize})\n` +
-      `📏 *Est. Distance:* ~${distanceKm} km\n` +
-      `💰 *Estimated All-Inclusive Fare:* Rs.${estimatedFare.toLocaleString('en-IN')}\n` +
-      `_(Includes Car, Chauffeur Bata & Fuel. Tolls & Parking as per actuals)_\n\n` +
-      `🔒 *To Confirm Your Booking:* Kindly pay a token advance of *Rs.${advanceSuggested}* via UPI to *8939539211@okbizaxis* (Kalidass Travels) to lock your vehicle.\n\n` +
-      `Chauffeur and car details will be sent 4 hours prior to departure.\n` +
-      `Have a safe journey! 🌟\n\n` +
-      `🗺️ NAVIGATION LINKS:\n` +
-      `• 📍 Pickup Pin: ${mapsPickupPin}\n` +
-      `• 🧭 Route Map: ${mapsDirections}`;
-
-    const result: ParsedResult = {
+    const parsed = {
+      quoteRefId,
       guestName,
       phone,
+      serviceCategory,
+      tripType,
       pickup,
       drop,
-      travelDate,
-      pickupTime,
-      vehicleCategory,
-      partySize,
-      tripType,
       distanceKm,
       estimatedFare,
       chauffeurPayout,
       companyMargin,
       advanceSuggested,
-      whatsAppQuote,
-      confidence: 0.95
+      travelDate,
+      pickupTime,
+      vehicleCategory,
+      partySize,
+      whatsAppQuote: whatsAppReply
     };
 
-    return new Response(JSON.stringify({ success: true, parsed: result }), {
+    return new Response(JSON.stringify({ success: true, parsed }), {
       status: 200,
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
@@ -259,8 +243,8 @@ export const POST: APIRoute = async ({ request }) => {
       }
     });
 
-  } catch (error: any) {
-    return new Response(JSON.stringify({ error: error.message || 'AI Parse failed' }), {
+  } catch (err: any) {
+    return new Response(JSON.stringify({ success: false, error: err.message || 'AI Parse failed' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json; charset=utf-8' }
     });

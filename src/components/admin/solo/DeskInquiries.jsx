@@ -7,31 +7,96 @@ export default function DeskInquiries({
   leads,
   chatQueries = [],
   onLeadQuoted,
+  onAddManualLead,
   onConvertToConfirmed,
   onOpenAiParser,
   showToast
 }) {
   const [subTab, setSubTab] = useState('leads'); // 'leads' | 'chat_radar'
+  const [showQuickPhoneForm, setShowQuickPhoneForm] = useState(false);
+  const [quickPhoneLead, setQuickPhoneLead] = useState({
+    guestName: '',
+    phone: '',
+    sourceChannel: 'Phone Call',
+    pickup: '',
+    drop: '',
+    tripType: 'Round Trip',
+    vehicle: 'Sedan (Dzire / Etios)',
+    estimatedFare: ''
+  });
   const [selectedLead, setSelectedLead] = useState(null);
   const [advanceModalLead, setAdvanceModalLead] = useState(null);
   const [advanceForm, setAdvanceForm] = useState({
     advanceAmount: '500',
-    travelDate: 'Tomorrow',
-    pickupTime: '05:00 AM',
+    travelDate: '',
+    pickupTime: '',
     pickupAddress: '',
     vehicleCategory: 'Sedan (Dzire / Etios)',
-    fare: '6000'
+    fare: ''
   });
+
+  const handleCreateQuickPhoneLead = (e, sendWaImmediately = false) => {
+    e.preventDefault();
+    if (!quickPhoneLead.phone.trim() && !quickPhoneLead.guestName.trim()) {
+      showToast?.('Enter Customer Name or Phone Number', 'error');
+      return;
+    }
+    const cleanPhone = quickPhoneLead.phone.replace(/[^0-9]/g, '').slice(-10);
+    const newLead = {
+      quoteId: `#ENQ-${Date.now().toString().slice(-4)}`,
+      timestamp: new Date().toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' }),
+      guestName: quickPhoneLead.guestName.trim() || 'Phone Caller',
+      sourcePage: cleanPhone ? `${quickPhoneLead.sourceChannel} (+91 ${cleanPhone})` : quickPhoneLead.sourceChannel,
+      calculatorEngine: quickPhoneLead.sourceChannel,
+      tripType: quickPhoneLead.tripType,
+      pickup: quickPhoneLead.pickup.trim() || 'Chennai',
+      drop: quickPhoneLead.drop.trim() || 'Outstation',
+      vehicle: quickPhoneLead.vehicle,
+      estimatedFare: Number(quickPhoneLead.estimatedFare) || 0,
+      status: 'Quote Sent - Waiting Advance'
+    };
+    onAddManualLead?.(newLead);
+    if (sendWaImmediately) {
+      handleSendWhatsAppQuote(newLead);
+    }
+    setQuickPhoneLead({
+      guestName: '',
+      phone: '',
+      sourceChannel: 'Phone Call',
+      pickup: '',
+      drop: '',
+      tripType: 'Round Trip',
+      vehicle: 'Sedan (Dzire / Etios)',
+      estimatedFare: ''
+    });
+    setShowQuickPhoneForm(false);
+  };
+
+  // 1-Tap Polite Follow-Up on WhatsApp (to boost 2/10 conversion rate)
+  const handleSendFollowUpWhatsApp = (lead) => {
+    const guestPhone = (lead.sourcePage || '').replace(/[^0-9]/g, '');
+    const fare = Number(lead.estimatedFare) || 0;
+    const message = `*KALIDASS TRAVELS CHENNAI — BOOKING FOLLOW-UP*\n\n` +
+      `Namaskaram ${lead.guestName || 'Sir/Madam'}! Checking in regarding your cab enquiry for *${lead.pickup} ➔ ${lead.drop}* (${lead.vehicle}${fare > 0 ? ` @ Rs.${fare.toLocaleString('en-IN')}` : ''}).\n\n` +
+      `🚗 Our verified commercial vehicle is currently available for your slot.\n` +
+      `🔒 To lock the cab & driver immediately, kindly send a token advance of *Rs.500* via GPay/PhonePe/UPI to *8939539211@okbizaxis* (Kalidass Travels) and share the screenshot here.\n\n` +
+      `Call +91 89395 39211 if you have any questions! 🙏`;
+    const cleanPhone = guestPhone.length >= 10 ? guestPhone.slice(-10) : '';
+    const url = cleanPhone
+      ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(message)}`
+      : `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  };
 
   const handleOpenAdvanceModal = (lead) => {
     setAdvanceModalLead(lead);
     setAdvanceForm({
       advanceAmount: '500',
-      travelDate: lead.travelDate || 'Tomorrow',
-      pickupTime: lead.pickupTime || '05:00 AM',
+      travelDate: lead.travelDate || '',
+      pickupTime: lead.pickupTime || '',
       pickupAddress: `${lead.pickup} ➔ ${lead.drop}`,
       vehicleCategory: lead.vehicle || 'Sedan (Dzire / Etios)',
-      fare: String(lead.estimatedFare || 6000)
+      fare: String(lead.estimatedFare || '')
     });
   };
 
@@ -40,12 +105,12 @@ export default function DeskInquiries({
     if (!advanceModalLead) return;
 
     const advanceNum = Number(advanceForm.advanceAmount) || 500;
-    const totalFare = Number(advanceForm.fare) || 6000;
+    const totalFare = Number(advanceForm.fare) || 0;
     const driverPayout = Math.round(totalFare * 0.8);
     const companyMargin = totalFare - driverPayout;
 
     const guestPhoneMatch = (advanceModalLead.sourcePage || '').match(/(?:\+91[\-\s]?)?[6-9]\d{9}/);
-    const phone = guestPhoneMatch ? guestPhoneMatch[0] : '9840100000';
+    const phone = guestPhoneMatch ? guestPhoneMatch[0] : '';
 
     const confirmedBooking = {
       bookingId: `#KT-BOK-${Date.now().toString().slice(-4)}`,
@@ -98,50 +163,96 @@ export default function DeskInquiries({
 
   return (
     <div className="space-y-4">
-      {/* Top Header & Sub-Desk Segment Selector */}
-      <div className="bg-white rounded-2xl p-3 border border-m3-outline-variant/60 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5">
-        <div className="flex items-center gap-1.5 p-1 bg-m3-surface-container-low border border-m3-outline-variant/60 rounded-xl">
+      {/* M3 Top Header & Filter Chips */}
+      <div className="bg-m3-surface-container-lowest rounded-m3-xl p-3.5 border border-m3-outline-variant/70 shadow-m3-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5">
+        <div className="flex items-center gap-2 flex-wrap">
           <button
             type="button"
             onClick={() => setSubTab('leads')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+            className={`h-9 px-3.5 rounded-m3-sm text-m3-label-l font-medium transition-all flex items-center gap-1.5 border ${
               subTab === 'leads'
-                ? 'bg-m3-inverse-surface text-white shadow-sm'
-                : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container'
+                ? 'bg-m3-secondary-container text-m3-on-secondary-container border-transparent font-bold shadow-xs'
+                : 'bg-m3-surface text-m3-on-surface-variant border-m3-outline-variant hover:bg-m3-surface-container-high'
             }`}
           >
-            <span className="material-symbols-outlined text-sm">calculate</span>
-            <span>Calculator Leads ({leads.length})</span>
+            <span className="material-symbols-outlined text-[18px]">{subTab === 'leads' ? 'check' : 'forum'}</span>
+            <span>Enquiries ({leads.length})</span>
           </button>
 
           <button
             type="button"
             onClick={() => setSubTab('chat_radar')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+            className={`h-9 px-3.5 rounded-m3-sm text-m3-label-l font-medium transition-all flex items-center gap-1.5 border ${
               subTab === 'chat_radar'
-                ? 'bg-m3-tertiary text-white shadow-sm font-extrabold'
-                : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container'
+                ? 'bg-m3-secondary-container text-m3-on-secondary-container border-transparent font-bold shadow-xs'
+                : 'bg-m3-surface text-m3-on-surface-variant border-m3-outline-variant hover:bg-m3-surface-container-high'
             }`}
           >
-            <span className="material-symbols-outlined text-sm">smart_toy</span>
-            <span>Live AI Chat Radar ({chatQueries.length})</span>
-            {chatQueries.length > 0 && (
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            )}
+            <span className="material-symbols-outlined text-[18px]">{subTab === 'chat_radar' ? 'check' : 'smart_toy'}</span>
+            <span>AI Chat Radar ({chatQueries.length})</span>
           </button>
         </div>
 
-        {onOpenAiParser && (
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
-            onClick={onOpenAiParser}
-            className="px-3.5 py-1.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all"
+            onClick={() => setShowQuickPhoneForm(!showQuickPhoneForm)}
+            className="h-10 px-4 bg-m3-secondary-container hover:bg-m3-surface-container-high text-m3-on-secondary-container rounded-m3-full text-m3-label-l font-semibold flex items-center gap-1.5 transition-all"
           >
-            <span className="material-symbols-outlined text-sm">psychology</span>
-            <span>Parse WhatsApp / Audio</span>
+            <span className="material-symbols-outlined text-[18px]">add_call</span>
+            <span>+ Phone / WA Enquiry</span>
           </button>
-        )}
+
+          {onOpenAiParser && (
+            <button
+              type="button"
+              onClick={onOpenAiParser}
+              className="h-10 px-4 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-m3-full text-m3-label-l font-semibold flex items-center gap-1.5 shadow-m3-1 transition-all"
+            >
+              <span className="material-symbols-outlined text-[18px]">psychology</span>
+              <span>AI Quick Quote</span>
+            </button>
+          )}
+        </div>
       </div>
+
+      {showQuickPhoneForm && (
+        <form
+          onSubmit={(e) => handleCreateQuickPhoneLead(e, false)}
+          className="bg-amber-50/90 border-2 border-amber-400 rounded-2xl p-3.5 shadow-md space-y-2.5 animate-fadeIn text-xs"
+        >
+          <div className="flex items-center justify-between">
+            <span className="font-extrabold text-slate-900 uppercase">📞 Quick Phone / WhatsApp Enquiry (While Talking to Customer)</span>
+            <button type="button" onClick={() => setShowQuickPhoneForm(false)} className="text-slate-500 font-bold">✕</button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <input type="text" placeholder="Customer Name (e.g. Ramesh)" value={quickPhoneLead.guestName} onChange={(e) => setQuickPhoneLead({ ...quickPhoneLead, guestName: e.target.value })} className="p-2 rounded-xl border border-slate-300 bg-white font-semibold" />
+            <input type="tel" placeholder="Mobile (10 digits)" value={quickPhoneLead.phone} onChange={(e) => setQuickPhoneLead({ ...quickPhoneLead, phone: e.target.value })} className="p-2 rounded-xl border border-slate-300 bg-white font-mono font-bold" />
+            <select value={quickPhoneLead.sourceChannel} onChange={(e) => setQuickPhoneLead({ ...quickPhoneLead, sourceChannel: e.target.value })} className="p-2 rounded-xl border border-slate-300 bg-white font-bold">
+              <option value="Phone Call">📞 Phone Call</option>
+              <option value="Google Ads">🎯 Google Ads</option>
+              <option value="WhatsApp Form">💬 WhatsApp Form</option>
+              <option value="ChatGPT / Gemini AI">🤖 ChatGPT / Gemini AI</option>
+            </select>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <input type="text" placeholder="Pickup" value={quickPhoneLead.pickup} onChange={(e) => setQuickPhoneLead({ ...quickPhoneLead, pickup: e.target.value })} className="p-2 rounded-xl border border-slate-300 bg-white" />
+            <input type="text" placeholder="Drop" value={quickPhoneLead.drop} onChange={(e) => setQuickPhoneLead({ ...quickPhoneLead, drop: e.target.value })} className="p-2 rounded-xl border border-slate-300 bg-white" />
+            <select value={quickPhoneLead.vehicle} onChange={(e) => setQuickPhoneLead({ ...quickPhoneLead, vehicle: e.target.value })} className="p-2 rounded-xl border border-slate-300 bg-white font-semibold">
+              <option value="Sedan (Dzire / Etios)">Sedan (Dzire/Etios)</option>
+              <option value="SUV (Ertiga 6+1)">SUV (Ertiga 6+1)</option>
+              <option value="Innova Crysta (7+1)">Innova Crysta</option>
+              <option value="Tempo Traveller">Tempo Traveller</option>
+              <option value="Acting Driver">Acting Driver</option>
+            </select>
+            <input type="number" placeholder="Quoted Fare Rs." value={quickPhoneLead.estimatedFare} onChange={(e) => setQuickPhoneLead({ ...quickPhoneLead, estimatedFare: e.target.value })} className="p-2 rounded-xl border border-slate-300 bg-white font-mono font-extrabold text-emerald-700" />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button type="submit" className="flex-1 py-2 bg-slate-900 text-white rounded-xl font-bold">Save Enquiry</button>
+            <button type="button" onClick={(e) => handleCreateQuickPhoneLead(e, true)} className="flex-1 py-2 bg-emerald-600 text-white rounded-xl font-bold">Save & Send WA Quote</button>
+          </div>
+        </form>
+      )}
 
       {subTab === 'chat_radar' ? (
         <DeskChatRadar chatQueries={chatQueries} showToast={showToast} />
@@ -152,10 +263,10 @@ export default function DeskInquiries({
             <div>
               <h2 className="text-sm font-extrabold text-m3-on-surface tracking-tight flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-m3-tertiary text-base">forum</span>
-                <span>Inquiries & Price Shoppers ({leads.length})</span>
+                <span>Step 1: Enquiries from Google Ads, Website, WhatsApp & AI ({leads.length})</span>
               </h2>
               <span className="text-[11px] text-m3-outline">
-                People who asked for rates. Quote them and request a ₹500 token advance to lock the booking.
+                2 out of 10 enquiries convert to bookings. Send Quote WA ➔ Follow-Up WA ➔ Collect ₹500 Advance to Lock Booking.
               </span>
             </div>
           </div>
@@ -197,24 +308,33 @@ export default function DeskInquiries({
                 </div>
               </div>
 
-              {/* Action Ribbon */}
-              <div className="flex items-center gap-2 pt-2 border-t border-m3-outline-variant/40">
+              {/* Action Ribbon (M3 Pill Buttons) */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2.5 border-t border-m3-outline-variant/40">
                 <button
                   type="button"
                   onClick={() => handleSendWhatsAppQuote(l)}
-                  className="flex-1 px-3 py-1.5 bg-m3-success-container/40 hover:bg-m3-success-container/70 text-m3-on-success-container border border-m3-success/30 rounded-lg text-xs font-bold flex items-center justify-center gap-1 transition-colors"
+                  className="h-9 px-3 bg-m3-secondary-container hover:bg-m3-surface-container-high text-m3-on-secondary-container rounded-m3-full text-m3-label-m font-semibold flex items-center justify-center gap-1.5 transition-colors"
                 >
-                  <span className="material-symbols-outlined text-sm">send</span>
-                  <span>1-Tap WA Quote</span>
+                  <span className="material-symbols-outlined text-[16px]">send</span>
+                  <span>1. Send Quote WA</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleSendFollowUpWhatsApp(l)}
+                  className="h-9 px-3 bg-m3-surface hover:bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant rounded-m3-full text-m3-label-m font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[16px]">notifications_active</span>
+                  <span>2. Follow-Up WA</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => handleOpenAdvanceModal(l)}
-                  className="flex-1 px-3 py-1.5 bg-m3-tertiary-container/300 hover:bg-m3-tertiary text-m3-on-surface rounded-lg text-xs font-bold flex items-center justify-center gap-1 shadow-sm transition-all"
+                  className="h-9 px-3 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-m3-full text-m3-label-m font-semibold flex items-center justify-center gap-1.5 shadow-m3-1 transition-all"
                 >
-                  <span className="material-symbols-outlined text-sm">lock</span>
-                  <span>Advance Received (Lock)</span>
+                  <span className="material-symbols-outlined text-[16px]">lock</span>
+                  <span>3. Advance Paid (Book)</span>
                 </button>
               </div>
             </div>
@@ -253,26 +373,48 @@ export default function DeskInquiries({
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="block text-[11px] font-semibold text-m3-on-surface-variant mb-1">Advance Token (Rs)</label>
-                  <input
-                    type="number"
-                    required
-                    value={advanceForm.advanceAmount}
-                    onChange={(e) => setAdvanceForm({ ...advanceForm, advanceAmount: e.target.value })}
-                    className="w-full font-mono font-bold text-m3-tertiary rounded-lg border border-m3-outline-variant p-2 focus:ring-2 focus:ring-m3-tertiary"
-                  />
+              <div>
+                <label className="block text-[11px] font-semibold text-m3-on-surface-variant mb-1">
+                  Token Advance Amount (Rs)
+                </label>
+                <div className="flex items-center gap-1.5 mb-2">
+                  {['500', '1000', '2000'].map((amt) => (
+                    <button
+                      key={amt}
+                      type="button"
+                      onClick={() => setAdvanceForm({ ...advanceForm, advanceAmount: amt })}
+                      className={`px-3 py-1 rounded-lg text-xs font-bold font-mono transition-all border ${
+                        advanceForm.advanceAmount === amt
+                          ? 'bg-amber-500 text-white border-amber-600 shadow-sm'
+                          : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-300'
+                      }`}
+                    >
+                      Rs.{amt} {amt === '500' ? '(Standard)' : ''}
+                    </button>
+                  ))}
                 </div>
-                <div>
-                  <label className="block text-[11px] font-semibold text-m3-on-surface-variant mb-1">Total Agreed Fare (Rs)</label>
-                  <input
-                    type="number"
-                    required
-                    value={advanceForm.fare}
-                    onChange={(e) => setAdvanceForm({ ...advanceForm, fare: e.target.value })}
-                    className="w-full font-mono font-bold text-m3-on-surface rounded-lg border border-m3-outline-variant p-2 focus:ring-2 focus:ring-m3-tertiary"
-                  />
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <input
+                      type="number"
+                      required
+                      value={advanceForm.advanceAmount}
+                      onChange={(e) => setAdvanceForm({ ...advanceForm, advanceAmount: e.target.value })}
+                      placeholder="Custom Rs."
+                      className="w-full font-mono font-bold text-amber-700 rounded-lg border border-m3-outline-variant p-2 focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="number"
+                      required
+                      value={advanceForm.fare}
+                      onChange={(e) => setAdvanceForm({ ...advanceForm, fare: e.target.value })}
+                      placeholder="Agreed Fare Rs."
+                      className="w-full font-mono font-bold text-m3-on-surface rounded-lg border border-m3-outline-variant p-2 focus:ring-2 focus:ring-amber-500"
+                    />
+                  </div>
                 </div>
               </div>
 

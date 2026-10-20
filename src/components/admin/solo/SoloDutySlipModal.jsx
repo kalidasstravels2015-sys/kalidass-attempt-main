@@ -18,7 +18,7 @@ export default function SoloDutySlipModal({
     ? booking.assignedChauffeur.split('(')[1].split(')')[0].trim()
     : booking.assignedChauffeur?.includes('-')
     ? booking.assignedChauffeur.split('-')[1].trim()
-    : 'TN09 CZ 9999';
+    : '';
 
   const defaultDriverName = booking.assignedChauffeur?.split('(')[0]?.split('-')[0]?.trim() || '';
   const defaultDriverPhone = (booking.assignedChauffeur?.match(/(?:\+91[\-\s]?)?[6-9]\d{9}/) || [''])[0];
@@ -38,13 +38,13 @@ export default function SoloDutySlipModal({
     chauffeurPhone: defaultDriverPhone,
     vehiclePlate: defaultPlate,
     vehicleCategory: booking.vehicleCategory || 'Sedan (Dzire / Etios)',
-    pickupAddress: booking.pickupAddress || 'Chennai ➔ Tirupati',
+    pickupAddress: booking.pickupAddress || '',
 
     // Dates & Times
-    startDate: booking.travelDateTime?.split('@')[0]?.trim() || 'Tomorrow',
-    startTime: booking.travelDateTime?.split('@')[1]?.trim() || '05:00 AM',
-    endDate: 'Same Day',
-    endTime: '10:00 PM',
+    startDate: booking.travelDateTime?.split('@')[0]?.trim() || '',
+    startTime: booking.travelDateTime?.split('@')[1]?.trim() || '',
+    endDate: '',
+    endTime: '',
 
     // Odometer
     startKm: '',
@@ -64,8 +64,8 @@ export default function SoloDutySlipModal({
     statePermit: '',
 
     // Base Fare & Advance
-    basePackageFare: String(booking.terminalFare || 6000),
-    advancePaid: String(booking.advancePaid || 1000),
+    basePackageFare: String(booking.terminalFare || ''),
+    advancePaid: String(booking.advancePaid || 0),
     paymentMode: 'Cash to Driver'
   });
 
@@ -270,6 +270,26 @@ export default function SoloDutySlipModal({
     } finally {
       setSaving(false);
     }
+  };
+
+  // Finalize & Immediately Send Review Request via WhatsApp
+  const handleFinalizeAndSendReview = async () => {
+    const guestPhone = form.guestPhone?.replace(/[^0-9]/g, '') || '';
+    const guestName = form.guestName || 'Guest';
+
+    const message = `*KALIDASS TRAVELS — THANK YOU FOR TRAVELING WITH US!*\n\n` +
+      `Dear ${guestName} ji, thank you for traveling with Kalidass Travels today (Trip ${form.bookingId}).\n\n` +
+      `We hope Chauffeur ${form.chauffeurName || 'your driver'} took wonderful care of you. Could you spare 30 seconds to support our team with a 5-star review on Google?\n\n` +
+      `⭐ *Tap here to review:* https://share.google/1IOq41QwMkhDJvrLY\n\n` +
+      `Your support helps our family-run team tremendously. Thank you! 🙏`;
+
+    const cleanPhone = guestPhone.length >= 10 ? guestPhone.slice(-10) : '';
+    const url = cleanPhone
+      ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(message)}`
+      : `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+
+    await handleSaveAndComplete();
   };
 
   return (
@@ -540,15 +560,27 @@ export default function SoloDutySlipModal({
               <span>Share Mobile Web Trip Sheet (WhatsApp)</span>
             </button>
 
-            <button
-              type="button"
-              onClick={handleSaveAndComplete}
-              disabled={saving}
-              className="w-full py-2.5 bg-m3-inverse-surface hover:bg-m3-surface-container-high text-white rounded-xl font-bold flex items-center justify-center gap-1.5 transition-all"
-            >
-              <span className="material-symbols-outlined text-sm">check_circle</span>
-              <span>Finalize & Complete Duty Slip</span>
-            </button>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={handleSaveAndComplete}
+                disabled={saving}
+                className="py-2.5 px-3 bg-m3-inverse-surface hover:bg-m3-surface-container-high text-white rounded-xl font-bold flex items-center justify-center gap-1.5 transition-all text-xs"
+              >
+                <span className="material-symbols-outlined text-sm">check_circle</span>
+                <span>Finalize & Complete</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleFinalizeAndSendReview}
+                disabled={saving}
+                className="py-2.5 px-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl font-bold flex items-center justify-center gap-1.5 transition-all text-xs shadow-md shadow-amber-500/20"
+              >
+                <span className="material-symbols-outlined text-sm">star</span>
+                <span>Finalize & Send 5★ Review</span>
+              </button>
+            </div>
           </div>
         ) : (
           /* Live Canvas Voucher Card View */

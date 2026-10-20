@@ -934,10 +934,17 @@ export default function DriverFeeEstimator({
                   href={result.whatsapp}
                   onClick={() => {
                     markQuoteConverted(quoteRefId, {
-                      calculatorId: 'acting_driver',
-                      tripType: result.type,
-                      vehicle: vehicle.label,
-                      estimate: result.total
+                      quoteId: quoteRefId,
+                      sourcePage: '/services/acting-drivers/',
+                      calculatorEngine: 'Acting Driver Cost Calculator',
+                      tripType: result.type === 'round' ? `Round Trip (${days} Days)` : 'One Way Drop',
+                      pickup: pickup.trim(),
+                      drop: drop.trim(),
+                      distanceKm: distKm ? (result.type === 'round' ? distKm * 2 : distKm) : '',
+                      vehicle: `${vehicle.label} (${gear === 'auto' ? 'Automatic' : 'Manual'})`,
+                      estimatedFare: result.total,
+                      travelDate: date ? `${date}${time ? ' @ ' + time : ''}` : '',
+                      status: 'WhatsApp Clicked'
                     });
                     trackEvent('booking_conversion_whatsapp', {
                       engine: 'acting_driver_estimator',

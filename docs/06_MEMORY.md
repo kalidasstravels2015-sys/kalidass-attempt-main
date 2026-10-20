@@ -52,7 +52,14 @@
 - **Decision:** Embed a pre-compiled JSON matrix of 40+ key South India travel routes (Pondicherry, Bangalore, Tirupati, Kumbakonam, Madurai, etc.) directly in `QuotationEngine.jsx`.
 - **Rationale:** When API calls fail or return an error, the engine seamlessly falls back to the static distance matrix with zero user disruption.
 
+### ADR-005: Paid Advertising Strategy — Search Phone Call (Call-Only) Over Web Traffic Ads
+
+- **Context:** Evaluated Google Ads campaign performance targeting **Chennai Airport (MAA) to Outstation Highway Transfers** (Campaign: `Search - Chennai Airport Transfers`, Oct 2026). The commercial objective is strictly high-ticket outstation routes (Vellore CMC/VIT, Pondicherry/Auroville, Tirupati Balaji, Kumbakonam — ₹2,500 to ₹8,000+), NOT low-margin local city drops. Standard search text ads driving to landing pages burned **₹1,000 with zero success / 0 converted leads** (averaging ~₹23/click) because long-distance outstation travelers arriving with families, heavy luggage, or medical patients refuse to submit multi-step website forms while planning travel.
+- **Decision:** Mandate **Search Phone Call Ads (Call-Only Campaigns)** targeting specific outstation corridors from MAA.
+- **Rationale:** A single closed outstation booking (e.g. MAA to Vellore Innova @ ₹3,120 – ₹4,150) pays for an entire week of ad spend. Outstation passengers demanding terminal meet-and-greet, spacious luggage boots, and fixed highway pricing convert 10x higher through direct telephone conversations with the Dispatch Controller (`+91 89395 39211`). Phone call campaigns eliminate web bounce drop-offs and deliver direct, actionable outstation booking leads.
+
 ---
+
 
 ## 3. Critical System Gotchas & Engineering Quirks
 

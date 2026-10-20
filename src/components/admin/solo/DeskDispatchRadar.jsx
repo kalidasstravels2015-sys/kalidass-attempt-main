@@ -6,10 +6,11 @@ export default function DeskDispatchRadar({
   chauffeurs,
   onAssignChauffeur,
   onStatusChange,
+  onReviewStatusChange,
   onOpenDutySlip,
   showToast
 }) {
-  const [subFilter, setSubFilter] = useState('tomorrow'); // 'tomorrow', 'today', 'upcoming', 'all'
+  const [subFilter, setSubFilter] = useState('tomorrow'); // 'tomorrow', 'today', 'upcoming', 'reviews', 'all'
   const [attachingBookingId, setAttachingBookingId] = useState(null);
   const [driverInput, setDriverInput] = useState({ name: '', phone: '', plate: '' });
 
@@ -19,9 +20,14 @@ export default function DeskDispatchRadar({
     const todayList = [];
     const tomorrowList = [];
     const upcomingList = [];
+    const completedList = [];
 
     bookings.forEach(b => {
-      if (b.manifestStatus === 'Completed' || b.manifestStatus === 'Cancelled') return;
+      if (b.manifestStatus === 'Completed') {
+        completedList.push(b);
+        return;
+      }
+      if (b.manifestStatus === 'Cancelled') return;
 
       if (!b.assignedChauffeur || b.assignedChauffeur === 'Unassigned') {
         unassignedList.push(b);
@@ -37,7 +43,7 @@ export default function DeskDispatchRadar({
       }
     });
 
-    return { unassignedList, todayList, tomorrowList, upcomingList };
+    return { unassignedList, todayList, tomorrowList, upcomingList, completedList };
   }, [bookings]);
 
   // Active view list
@@ -46,6 +52,7 @@ export default function DeskDispatchRadar({
     if (subFilter === 'today') return categorized.todayList;
     if (subFilter === 'tomorrow') return categorized.tomorrowList;
     if (subFilter === 'upcoming') return categorized.upcomingList;
+    if (subFilter === 'reviews') return categorized.completedList;
     return bookings.filter(b => b.manifestStatus !== 'Cancelled');
   }, [subFilter, categorized, bookings]);
 
@@ -63,7 +70,7 @@ export default function DeskDispatchRadar({
 
   const handleExecuteBroadcast = () => {
     if (!broadcastBooking) return;
-    const terminalFare = Number(broadcastBooking.terminalFare) || 6000;
+    const terminalFare = Number(broadcastBooking.terminalFare) || 0;
     const driverPayout = Math.max(0, terminalFare - officeMargin);
 
     const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(broadcastBooking.pickupAddress)}`;
@@ -96,30 +103,55 @@ export default function DeskDispatchRadar({
     showToast?.(`Driver assigned to ${bookingId}! Now send details to guest.`, 'success');
   };
 
-  const getTripUrl = (bookingId) => {
-    const cleanRef = (bookingId || 'KT101').replace(/[^A-Za-z0-9]/g, '');
-    if (typeof window !== 'undefined' && window.location && window.location.origin) {
-      return `${window.location.origin}/trip/?ref=${cleanRef}`;
+  const getTripUrl = (booking) => {
+    const bookingId = typeof booking === 'string' ? booking : booking?.bookingId;
+    const cleanRef = (bookingId || '').replace(/[^A-Za-z0-9]/g, '');
+    const base =
+      typeof window !== 'undefined' && window.location && window.location.origin
+        ? `${window.location.origin}/trip/?ref=${cleanRef}`
+        : `https://kalidasstravels.in/trip/?ref=${cleanRef}`;
+
+    if (booking && typeof booking === 'object') {
+      try {
+        const compact = {
+          bookingId: booking.bookingId,
+          guestNamePhone: booking.guestNamePhone,
+          travelDateTime: booking.travelDateTime,
+          pickupAddress: booking.pickupAddress,
+          vehicleCategory: booking.vehicleCategory,
+          partySize: booking.partySize,
+          assignedChauffeur: booking.assignedChauffeur,
+          manifestStatus: booking.manifestStatus,
+          terminalFare: booking.terminalFare,
+          chauffeurPayout: booking.chauffeurPayout,
+          advancePaid: booking.advancePaid || 0
+        };
+        const encoded = btoa(encodeURIComponent(JSON.stringify(compact)));
+        return `${base}&d=${encodeURIComponent(encoded)}`;
+      } catch (_) {}
     }
-    return `https://kalidasstravels.in/trip/?ref=${cleanRef}`;
+    return base;
   };
 
-  // 1-Tap "Send Chauffeur to Guest" WhatsApp message with Mobile Web Link
+  // 1-Tap "Send Duty Slip to Customer" WhatsApp message with Mobile Web Link
   const handleSendChauffeurToGuest = (booking) => {
     const guestPhoneMatch = (booking.guestNamePhone || '').match(/(?:\+91[\-\s]?)?[6-9]\d{9}/);
     const guestPhone = guestPhoneMatch ? guestPhoneMatch[0].replace(/[^0-9]/g, '') : '';
     const guestName = booking.guestNamePhone?.split('(')[0].trim() || 'Guest';
-    const tripUrl = getTripUrl(booking.bookingId);
+    const tripUrl = getTripUrl(booking);
+    const totalFare = Number(booking.terminalFare) || 0;
+    const adv = Number(booking.advancePaid) || 0;
+    const balance = Math.max(0, totalFare - adv);
 
-    const message = `*KALIDASS TRAVELS CHENNAI — CHAUFFEUR ASSIGNMENT*\n\n` +
-      `Namaskaram ${guestName} ji! Your chauffeur details for Trip *${booking.bookingId}* are ready:\n\n` +
-      `👨‍✈️ *Chauffeur:* ${booking.assignedChauffeur}\n` +
-      `🚗 *Vehicle:* ${booking.vehicleCategory}\n` +
+    const message = `*KALIDASS TRAVELS CHENNAI — CUSTOMER DUTY SLIP*\n\n` +
+      `Namaskaram ${guestName} ji! Your cab & driver are assigned for Trip *${booking.bookingId}*:\n\n` +
+      `👨‍✈️ *Driver & Cab:* ${booking.assignedChauffeur}\n` +
+      `🚗 *Vehicle Class:* ${booking.vehicleCategory}\n` +
       `🗓 *Pickup Time:* ${booking.travelDateTime}\n` +
-      `📍 *Pickup Address:* ${booking.pickupAddress}\n\n` +
-      `📱 *Live Digital Trip Sheet & Chauffeur Details:*\n${tripUrl}\n\n` +
-      `Your chauffeur will reach 10-15 minutes prior to departure. For 24/7 support, call our control line at +91 89395 39211.\n` +
-      `Wishing you a blessed and safe journey! 🌟`;
+      `📍 *Route:* ${booking.pickupAddress}\n` +
+      `💰 *Agreed Fare:* Rs.${totalFare.toLocaleString('en-IN')} | *Advance Paid:* Rs.${adv} | *Balance:* Rs.${balance.toLocaleString('en-IN')} (+ Tolls/Parking at actuals)\n\n` +
+      `📱 *Open Live Digital Duty Slip & Track Trip:*\n${tripUrl}\n\n` +
+      `For 24/7 support, call +91 89395 39211. Wishing you a safe journey! 🌟`;
 
     const cleanPhone = guestPhone.length >= 10 ? guestPhone.slice(-10) : '';
     const url = cleanPhone
@@ -128,11 +160,68 @@ export default function DeskDispatchRadar({
     window.open(url, '_blank');
   };
 
+  // 1-Tap "Send Duty Slip to Driver" WhatsApp message with Pickup Pin & Odometer Link
+  const handleSendDutySlipToDriver = (booking) => {
+    const driverPhoneMatch = (booking.assignedChauffeur || '').match(/(?:\+91[\-\s]?)?[6-9]\d{9}/);
+    const driverPhone = driverPhoneMatch ? driverPhoneMatch[0].replace(/[^0-9]/g, '') : '';
+    const driverName = booking.assignedChauffeur?.split('(')[0]?.trim() || 'Driver';
+    const tripUrl = getTripUrl(booking);
+    const totalFare = Number(booking.terminalFare) || 0;
+    const adv = Number(booking.advancePaid) || 0;
+    const balanceToCollect = Math.max(0, totalFare - adv);
+    const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(booking.pickupAddress || 'Chennai')}`;
+
+    const message = `🚕 *KALIDASS TRAVELS — DRIVER DUTY SLIP*\n` +
+      `Trip ID: *${booking.bookingId}*\n\n` +
+      `👨‍✈️ *Driver:* ${driverName}\n` +
+      `👤 *Customer Name & Phone:* ${booking.guestNamePhone}\n` +
+      `🗓 *Pickup Date & Time:* ${booking.travelDateTime}\n` +
+      `📍 *Pickup & Route:* ${booking.pickupAddress}\n` +
+      `🗺️ *Google Maps Pickup Pin:* ${mapsLink}\n\n` +
+      `💵 *Collect Balance from Customer at Drop:* *Rs.${balanceToCollect.toLocaleString('en-IN')}* (+ Extra KM/Tolls/Parking)\n` +
+      `🤝 *Your Net Driver Share:* Rs.${Number(booking.chauffeurPayout || Math.round(totalFare * 0.8)).toLocaleString('en-IN')}\n\n` +
+      `📱 *Enter Start KM, End KM & Toll Bill Here:*\n${tripUrl}`;
+
+    const cleanPhone = driverPhone.length >= 10 ? driverPhone.slice(-10) : '';
+    const url = cleanPhone
+      ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(message)}`
+      : `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  };
+
   // 1-Tap "Send Trip Link to Both"
   const handleSendTripLinkToBoth = (booking) => {
-    const tripUrl = getTripUrl(booking.bookingId);
+    const tripUrl = getTripUrl(booking);
     const text = `*KALIDASS TRAVELS — DIGITAL TRIP SHEET*\nTrip Ref: *${booking.bookingId}*\nRoute: ${booking.pickupAddress}\n\n📱 Live Trip Details: ${tripUrl}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+  };
+
+  // 1-Tap Google Review Request to Guest via WhatsApp
+  const handleSendReviewToGuest = (booking) => {
+    const guestPhoneMatch = (booking.guestNamePhone || '').match(/(?:\+91[\-\s]?)?[6-9]\d{9}/);
+    const guestPhone = guestPhoneMatch ? guestPhoneMatch[0].replace(/[^0-9]/g, '') : '';
+    const guestName = booking.guestNamePhone?.split('(')[0].trim() || 'Guest';
+
+    const message = `*KALIDASS TRAVELS — THANK YOU FOR TRAVELING WITH US!*\n\n` +
+      `Dear ${guestName} ji, we hope you had a comfortable and pleasant journey with Kalidass Travels.\n\n` +
+      `Your support helps our family-run team grow. If you enjoyed our service, could you take 30 seconds to rate us on Google?\n\n` +
+      `⭐ *Tap here to leave a 5-star review:* https://share.google/1IOq41QwMkhDJvrLY\n\n` +
+      `Thank you for choosing Kalidass Travels! Safe travels and see you again soon. 🙏`;
+
+    const cleanPhone = guestPhone.length >= 10 ? guestPhone.slice(-10) : '';
+    const url = cleanPhone
+      ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(message)}`
+      : `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+    onReviewStatusChange?.(booking.bookingId, 'Requested');
+    showToast?.(`5-star review request sent to ${guestName}! Status updated to Requested.`, 'success');
+  };
+
+  // Toggle Review Received
+  const handleToggleReviewReceived = (bookingId, currentStatus) => {
+    const nextStatus = currentStatus === 'Received' ? 'Requested' : 'Received';
+    onReviewStatusChange?.(bookingId, nextStatus);
+    showToast?.(`Review status updated to: ${nextStatus}`, 'success');
   };
 
   return (
@@ -188,7 +277,20 @@ export default function DeskDispatchRadar({
           }`}
         >
           <span className="material-symbols-outlined text-sm">calendar_month</span>
-          <span>Next Week & Beyond ({categorized.upcomingList.length})</span>
+          <span>Next Week ({categorized.upcomingList.length})</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setSubFilter('reviews')}
+          className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center justify-center gap-1.5 ${
+            subFilter === 'reviews'
+              ? 'bg-purple-600 text-white shadow-sm'
+              : 'text-purple-800 bg-purple-50 hover:bg-purple-100'
+          }`}
+        >
+          <span className="material-symbols-outlined text-sm">reviews</span>
+          <span>Completed & Reviews ({categorized.completedList.length})</span>
         </button>
 
         <button
@@ -205,6 +307,19 @@ export default function DeskDispatchRadar({
       </div>
 
       {/* Helper Banner for Selected Tab */}
+      {subFilter === 'reviews' && (
+        <div className="p-3 rounded-xl bg-purple-50 border border-purple-200 text-purple-900 text-xs flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-purple-700 text-base">grade</span>
+            <span>
+              <strong>Customer Reputation Engine:</strong> Send 1-tap Google Review requests via WhatsApp to guests who completed their trips.
+            </span>
+          </div>
+          <span className="text-[10px] font-bold bg-purple-200/80 text-purple-900 px-2.5 py-0.5 rounded-full uppercase font-mono">
+            {categorized.completedList.filter(b => b.reviewStatus === 'Received').length} / {categorized.completedList.length} Reviewed
+          </span>
+        </div>
+      )}
       {subFilter === 'tomorrow' && (
         <div className="p-3 rounded-xl bg-m3-tertiary-container/30 border border-m3-tertiary/30 text-m3-on-tertiary-container text-xs flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -261,11 +376,28 @@ export default function DeskDispatchRadar({
                   {/* Top Bar */}
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-1.5">
                         <span className="font-mono font-bold text-sm text-m3-on-surface">{b.bookingId}</span>
-                        <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-m3-success-container/70 text-m3-on-success-container border border-m3-success/40">
-                          Advance Locked
-                        </span>
+                        {b.manifestStatus === 'Completed' ? (
+                          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                            Completed
+                          </span>
+                        ) : (
+                          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-m3-success-container/70 text-m3-on-success-container border border-m3-success/40">
+                            Advance Locked
+                          </span>
+                        )}
+                        {b.manifestStatus === 'Completed' && (
+                          <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${
+                            b.reviewStatus === 'Received'
+                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                              : b.reviewStatus === 'Requested'
+                              ? 'bg-purple-50 text-purple-700 border-purple-200'
+                              : 'bg-amber-50 text-amber-700 border-amber-200'
+                          }`}>
+                            {b.reviewStatus === 'Received' ? '⭐ Review Received' : b.reviewStatus === 'Requested' ? '💬 Review Requested' : '⚠️ Review Pending'}
+                          </span>
+                        )}
                       </div>
                       <div className="flex items-center gap-1 text-xs font-semibold text-m3-tertiary mt-0.5">
                         <span className="material-symbols-outlined text-sm">schedule</span>
@@ -337,6 +469,37 @@ export default function DeskDispatchRadar({
                         {/* Inline Driver Attachment Form */}
                         {attachingBookingId === b.bookingId && (
                           <div className="pt-2 border-t border-m3-tertiary/30 space-y-2 animate-fadeIn">
+                            {chauffeurs && chauffeurs.length > 0 && (
+                              <div>
+                                <label className="block text-[10px] font-bold uppercase text-slate-600 mb-1">
+                                  Quick Select from Your Saved Drivers:
+                                </label>
+                                <select
+                                  onChange={(e) => {
+                                    const val = e.target.value;
+                                    if (!val) return;
+                                    onAssignChauffeur(b.bookingId, val);
+                                    setAttachingBookingId(null);
+                                    showToast?.(`Driver assigned to ${b.bookingId}! Now send Duty Slips.`, 'success');
+                                  }}
+                                  defaultValue=""
+                                  className="w-full text-xs p-2 rounded-lg border border-slate-300 bg-white font-bold"
+                                >
+                                  <option value="">-- Choose Saved Driver & Cab --</option>
+                                  {chauffeurs.map((c, idx) => (
+                                    <option
+                                      key={idx}
+                                      value={`${c.name} (${c.plate}) - ${c.phone}`}
+                                    >
+                                      {c.name} • {c.plate} ({c.category}) • {c.phone}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            )}
+                            <div className="text-[10px] font-bold uppercase text-slate-500">
+                              Or Enter Outside / Partner Driver & Cab:
+                            </div>
                             <div className="grid grid-cols-3 gap-2">
                               <input
                                 type="text"
@@ -365,36 +528,90 @@ export default function DeskDispatchRadar({
                               onClick={() => handleSaveAttachedDriver(b.bookingId)}
                               className="w-full py-1.5 bg-m3-inverse-surface hover:bg-m3-surface-container-high text-white text-xs font-bold rounded-lg"
                             >
-                              Confirm & Lock Driver
+                              Confirm & Assign Driver
                             </button>
                           </div>
                         )}
                       </div>
                     ) : (
-                      <div className="p-3 rounded-xl bg-m3-surface-container-low border border-m3-outline-variant flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                        <div>
-                          <span className="text-[10px] uppercase font-bold text-m3-outline-variant block">Assigned Chauffeur</span>
-                          <span className="font-bold text-xs text-m3-on-surface">{b.assignedChauffeur}</span>
-                        </div>
-
-                        <div className="flex items-center gap-1.5">
-                          <button
-                            type="button"
-                            onClick={() => handleSendChauffeurToGuest(b)}
-                            className="px-3 py-1.5 bg-m3-secondary-container/40 hover:bg-m3-secondary-container/70 text-m3-on-secondary-container border border-m3-secondary/30 rounded-lg text-xs font-bold flex items-center gap-1"
-                          >
-                            <span className="material-symbols-outlined text-sm">send</span>
-                            <span>Send to Guest</span>
-                          </button>
-
+                      <div className="p-3 rounded-xl bg-m3-surface-container-low border border-m3-outline-variant space-y-2.5">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                          <div>
+                            <span className="text-[10px] uppercase font-bold text-emerald-700 block">✅ Step 3: Driver & Cab Assigned</span>
+                            <span className="font-bold text-xs text-m3-on-surface">{b.assignedChauffeur}</span>
+                          </div>
                           <button
                             type="button"
                             onClick={() => onAssignChauffeur(b.bookingId, 'Unassigned')}
-                            className="px-2 py-1.5 text-m3-outline-variant hover:text-m3-error text-xs"
-                            title="Re-open assignment"
+                            className="self-start sm:self-auto px-2.5 py-1 rounded-lg border border-slate-300 bg-white text-slate-600 hover:text-rose-600 text-[11px] font-bold"
                           >
-                            Change
+                            Change Driver
                           </button>
+                        </div>
+
+                        {/* Step 4: Send Duty Slip to BOTH Customer and Driver */}
+                        <div className="pt-2 border-t border-slate-200/80">
+                          <span className="text-[10px] uppercase font-extrabold text-slate-500 block mb-1.5">
+                            Step 4: Send Duty Slip to Customer & Driver (WhatsApp)
+                          </span>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <button
+                              type="button"
+                              onClick={() => handleSendChauffeurToGuest(b)}
+                              className="py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition-all"
+                            >
+                              <span className="material-symbols-outlined text-sm">person</span>
+                              <span>📲 Duty Slip to Customer</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleSendDutySlipToDriver(b)}
+                              className="py-2 px-3 bg-slate-900 hover:bg-slate-800 text-amber-300 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition-all"
+                            >
+                              <span className="material-symbols-outlined text-sm">local_taxi</span>
+                              <span>🚕 Duty Slip to Driver</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Step 5: Follow Live Trip Movement */}
+                        <div className="pt-2 border-t border-slate-200/80">
+                          <div className="flex items-center justify-between mb-1.5">
+                            <span className="text-[10px] uppercase font-extrabold text-slate-500">
+                              Step 5: Follow Trip Movement (Tap to Update Live Status)
+                            </span>
+                            <span className="text-[10px] font-mono font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded">
+                              {b.manifestStatus || 'Scheduled'}
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                            {[
+                              { label: '1. Driver En Route', val: 'Driver En Route' },
+                              { label: '2. At Pickup', val: 'At Pickup' },
+                              { label: '3. Trip Started', val: 'In Progress' },
+                              { label: '4. Completed', val: 'Completed' }
+                            ].map((st) => {
+                              const active = (b.manifestStatus || '') === st.val;
+                              return (
+                                <button
+                                  key={st.val}
+                                  type="button"
+                                  onClick={() => {
+                                    onStatusChange?.(b.bookingId, st.val);
+                                    showToast?.(`Trip ${b.bookingId} status: ${st.val}`, 'success');
+                                  }}
+                                  className={`py-1.5 px-2 rounded-lg text-[11px] font-bold border transition-all ${
+                                    active
+                                      ? 'bg-amber-500 text-white border-amber-600 shadow-sm'
+                                      : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                                  }`}
+                                >
+                                  {st.label}
+                                </button>
+                              );
+                            })}
+                          </div>
                         </div>
                       </div>
                     )}
@@ -408,10 +625,50 @@ export default function DeskDispatchRadar({
                       className="flex-1 py-2 px-3 bg-m3-tertiary-container/300 hover:bg-m3-tertiary text-m3-on-surface font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all"
                     >
                       <span className="material-symbols-outlined text-sm">receipt_long</span>
-                      <span>Generate / Edit Duty Slip</span>
+                      <span>Calculate Final Bill (Start/End KM & Balance)</span>
                     </button>
 
-                    {!isUnassigned && (
+                    {b.manifestStatus === 'Completed' && (
+                      <div className="flex items-center gap-1.5 w-full sm:w-auto">
+                        <button
+                          type="button"
+                          onClick={() => handleSendReviewToGuest(b)}
+                          className={`flex-1 sm:flex-none py-2 px-3.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition-all ${
+                            b.reviewStatus === 'Received'
+                              ? 'bg-emerald-600 text-white'
+                              : b.reviewStatus === 'Requested'
+                              ? 'bg-purple-600 text-white hover:bg-purple-700'
+                              : 'bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:scale-[1.02]'
+                          }`}
+                          title="Send 5-Star Google Review Link to Guest WhatsApp"
+                        >
+                          <span className="material-symbols-outlined text-sm">star</span>
+                          <span>
+                            {b.reviewStatus === 'Received'
+                              ? '5★ Received'
+                              : b.reviewStatus === 'Requested'
+                              ? 'Resend Review WA'
+                              : 'Send 5★ Review WA'}
+                          </span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleToggleReviewReceived(b.bookingId, b.reviewStatus)}
+                          className="py-2 px-2.5 rounded-xl text-xs font-bold border border-slate-300 bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 flex items-center gap-1 transition-colors"
+                          title="Toggle Review Received Status"
+                        >
+                          <span className="material-symbols-outlined text-sm text-emerald-600">
+                            {b.reviewStatus === 'Received' ? 'check_circle' : 'radio_button_unchecked'}
+                          </span>
+                          <span className="hidden sm:inline">
+                            {b.reviewStatus === 'Received' ? 'Marked' : 'Mark Received'}
+                          </span>
+                        </button>
+                      </div>
+                    )}
+
+                    {!isUnassigned && b.manifestStatus !== 'Completed' && (
                       <button
                         type="button"
                         onClick={() => handleSendTripLinkToBoth(b)}

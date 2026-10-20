@@ -98,7 +98,7 @@ export default function SoloDispatchCard({
     const message = `*KALIDASS TRAVELS — THANK YOU FOR TRAVELING WITH US!*\n\n` +
       `Dear ${guestName} ji, we hope you had a pleasant and smooth trip with Kalidass Travels.\n\n` +
       `Your feedback means the world to our family-run team. If you enjoyed our service, could you take 30 seconds to give us a 5-star review on Google?\n\n` +
-      `⭐ *Tap here to review:* https://g.page/r/kalidasstravels/review\n\n` +
+      `⭐ *Tap here to review:* https://share.google/1IOq41QwMkhDJvrLY\n\n` +
       `Thank you for your patronage! We look forward to serving you again. 🙏`;
 
     const destPhone = cleanGuestPhone.length >= 10 ? cleanGuestPhone : '';

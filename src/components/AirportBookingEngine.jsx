@@ -596,12 +596,18 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
     const isPickup = direction === 'pickup';
 
     markQuoteConverted(quoteRefId, {
+      quoteId: quoteRefId,
+      sourcePage: '/services/chennai-airport-taxi/',
+      calculatorEngine: 'Chennai Airport Taxi Engine',
       calculatorId: 'airport_taxi',
       tripType: isPickup ? 'Airport Pickup (MAA Arrival)' : 'Airport Drop (MAA Departure)',
       pickup,
       drop,
       vehicle,
-      estimate
+      estimatedFare: estimate,
+      distanceKm: breakdown ? breakdown.actual_km : distanceKm,
+      travelDate: dateTime ? dateTime.replace('T', ' ') : '',
+      status: 'WhatsApp Clicked'
     });
 
     trackEvent('booking_conversion_whatsapp', {

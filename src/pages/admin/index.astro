@@ -21,7 +21,74 @@ const title = "Solo Pilot Command Tower — Kalidass Travels | Admin Console";
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
-    <style is:inline>
+    <style is:global>
+      :root {
+        color-scheme: light;
+        --md-sys-color-primary-rgb: 11 87 208;
+        --md-sys-color-primary: #0B57D0;
+        --md-sys-color-on-primary-rgb: 255 255 255;
+        --md-sys-color-on-primary: #FFFFFF;
+        --md-sys-color-primary-container-rgb: 211 227 253;
+        --md-sys-color-primary-container: #D3E3FD;
+        --md-sys-color-on-primary-container-rgb: 4 30 73;
+        --md-sys-color-on-primary-container: #041E49;
+        --md-sys-color-secondary-rgb: 71 84 103;
+        --md-sys-color-secondary: #475467;
+        --md-sys-color-on-secondary-rgb: 255 255 255;
+        --md-sys-color-on-secondary: #FFFFFF;
+        --md-sys-color-secondary-container-rgb: 234 236 240;
+        --md-sys-color-secondary-container: #EAECF0;
+        --md-sys-color-on-secondary-container-rgb: 29 41 57;
+        --md-sys-color-on-secondary-container: #1D2939;
+        --md-sys-color-tertiary-rgb: 71 84 103;
+        --md-sys-color-tertiary: #475467;
+        --md-sys-color-on-tertiary-rgb: 255 255 255;
+        --md-sys-color-on-tertiary: #FFFFFF;
+        --md-sys-color-tertiary-container-rgb: 243 244 246;
+        --md-sys-color-tertiary-container: #F3F4F6;
+        --md-sys-color-on-tertiary-container-rgb: 31 41 55;
+        --md-sys-color-on-tertiary-container: #1F2937;
+        --md-sys-color-success-rgb: 0 109 59;
+        --md-sys-color-success: #006D3B;
+        --md-sys-color-on-success-rgb: 255 255 255;
+        --md-sys-color-on-success: #FFFFFF;
+        --md-sys-color-success-container-rgb: 183 241 196;
+        --md-sys-color-success-container: #B7F1C4;
+        --md-sys-color-on-success-container-rgb: 0 33 14;
+        --md-sys-color-on-success-container: #00210E;
+        --md-sys-color-error-rgb: 186 26 26;
+        --md-sys-color-error: #BA1A1A;
+        --md-sys-color-on-error-rgb: 255 255 255;
+        --md-sys-color-on-error: #FFFFFF;
+        --md-sys-color-error-container-rgb: 255 218 214;
+        --md-sys-color-error-container: #FFDAD6;
+        --md-sys-color-on-error-container-rgb: 65 0 2;
+        --md-sys-color-on-error-container: #410002;
+        --md-sys-color-surface-rgb: 249 250 251;
+        --md-sys-color-surface: #F9FAFB;
+        --md-sys-color-surface-container-lowest-rgb: 255 255 255;
+        --md-sys-color-surface-container-lowest: #FFFFFF;
+        --md-sys-color-surface-container-low-rgb: 243 244 246;
+        --md-sys-color-surface-container-low: #F3F4F6;
+        --md-sys-color-surface-container-rgb: 236 238 241;
+        --md-sys-color-surface-container: #ECEEF1;
+        --md-sys-color-surface-container-high-rgb: 232 234 237;
+        --md-sys-color-surface-container-high: #E8EAED;
+        --md-sys-color-surface-container-highest-rgb: 226 228 233;
+        --md-sys-color-surface-container-highest: #E2E4E9;
+        --md-sys-color-on-surface-rgb: 17 24 39;
+        --md-sys-color-on-surface: #111827;
+        --md-sys-color-on-surface-variant-rgb: 75 85 99;
+        --md-sys-color-on-surface-variant: #4B5563;
+        --md-sys-color-outline-rgb: 107 114 128;
+        --md-sys-color-outline: #6B7280;
+        --md-sys-color-outline-variant-rgb: 201 205 211;
+        --md-sys-color-outline-variant: #C9CDD3;
+        --md-sys-color-inverse-surface-rgb: 31 41 55;
+        --md-sys-color-inverse-surface: #1F2937;
+        --md-sys-color-inverse-on-surface-rgb: 249 250 251;
+        --md-sys-color-inverse-on-surface: #F9FAFB;
+      }
       body {
         font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       }

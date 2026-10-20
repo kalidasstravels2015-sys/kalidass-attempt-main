@@ -16,6 +16,18 @@ export async function onRequestPost({ request }) {
       body = await request.json();
     } catch (_) {}
 
+    try {
+      fetch('https://script.google.com/macros/s/AKfycbwoEpKqa3Qg-DIvMe06pGUgGLlC_0vJQev61nzIh9ssh1-uHZ5VtYkGzpMVwhEyi7tvEQ/exec', {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({
+          type: 'admin_booking_sync',
+          date: new Date().toLocaleString('en-IN'),
+          ...body
+        })
+      }).catch(() => {});
+    } catch (_) {}
+
     return new Response(JSON.stringify({ success: true, booking: body }), {
       status: 200,
       headers: {

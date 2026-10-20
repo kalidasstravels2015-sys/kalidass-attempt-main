@@ -148,3 +148,13 @@
   - UI action buttons must display `[📋 Ticketing Desk]` (never personal names).
   - Customer messages must refer to `"Our Pilgrimage Ticketing Desk"` under statutory guidelines.
   - Procurement dossiers must state the formal desk title and enforce the 120-minute SLA requirement.
+
+---
+
+## 9. Paid Advertising & Acquisition Standards
+
+### 9.1 Call-First Strategy for MAA Airport to Outstation Corridors
+- **Rule 9.1.1 (Search Phone Call Over Landing Page Clicks for Outstation Transfers):** For high-ticket Chennai Airport (MAA) to Outstation transfers (Vellore CMC/VIT, Pondicherry/Auroville, Tirupati Balaji, Kumbakonam — ₹2,500 to ₹8,000+), do not run standard search text ads driving to landing page URLs. Visitors bounce after burning budget (₹1,000 burned with zero success across web search clicks).
+- **Rule 9.1.2 (Direct Call Ads Mandate):** Paid Google Ads for MAA to Outstation transit must utilize **Call-Only Campaigns** routing directly to `+91 89395 39211`. Outstation travelers landing with families, heavy luggage, or medical patients convert through direct telephone coordination with the Dispatch Controller.
+
+

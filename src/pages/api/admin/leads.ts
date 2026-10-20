@@ -64,16 +64,26 @@ export const GET: APIRoute = async () => {
           status: row[10] || 'Browsed',
           metadata: row[11] || ''
         };
-        const isActionable = item.status !== 'Browsed' || item.sourcePage.includes('+91') || item.quoteId.startsWith('#WA') || item.quoteId.startsWith('#CALL');
+        const isAnonymousZeroClick =
+          item.estimatedFare <= 0 ||
+          item.drop.toLowerCase().includes('whatsapp chat') ||
+          item.pickup.toLowerCase().includes('tariff card') ||
+          item.pickup.toLowerCase().includes('best cabs & temple tours') ||
+          item.pickup.toLowerCase().includes('outstation cabs from chennai') ||
+          item.pickup.toLowerCase().includes('airport taxi & cab booking');
+
+        if (isAnonymousZeroClick) {
+          continue;
+        }
+
+        const isActionable = item.status !== 'Browsed' || item.sourcePage.includes('+91') || item.quoteId.startsWith('#WA') || item.quoteId.startsWith('#CALL') || item.quoteId.startsWith('#QT') || item.quoteId.startsWith('#ENQ');
         if (isActionable) {
           actionableLeads.push(item);
-        } else {
-          browsedLeads.push(item);
         }
       }
     }
 
-    const leads = [...actionableLeads, ...browsedLeads];
+    const leads = actionableLeads;
 
     return new Response(JSON.stringify({ success: true, count: leads.length, leads }), {
       status: 200,

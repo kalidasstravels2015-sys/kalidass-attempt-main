@@ -32,4 +32,6 @@
      - Customer message: `"Our Pilgrimage Ticketing Desk is processing your slot"` (never `"Karthik is processing"`).
      - Dossier header: `PILGRIM KYC DOSSIER — TICKETING DESK` (with explicit 120-min SLA).
 
+10. **Paid Ad Conversion Standard (Search Phone Call for MAA to Outstation Transfers):** For high-ticket Chennai Airport (MAA) to Outstation transfers (Vellore CMC/VIT, Pondicherry, Tirupati — ₹2,500 to ₹8,000+), never run standard web-click search ads (₹1,000 burned with zero success). Focus Google Ads budget exclusively on **Search Phone Call (Call-Only)** campaigns to route long-distance passengers straight into direct phone conversations with the Dispatch Controller (`+91 89395 39211`).
+
 See [docs/03_RULES.md](./docs/03_RULES.md) for full quality standards.
