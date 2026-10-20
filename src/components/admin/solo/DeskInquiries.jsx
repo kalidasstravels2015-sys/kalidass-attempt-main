@@ -79,7 +79,7 @@ export default function DeskInquiries({
     const message = `*KALIDASS TRAVELS CHENNAI — BOOKING FOLLOW-UP*\n\n` +
       `Namaskaram ${lead.guestName || 'Sir/Madam'}! Checking in regarding your cab enquiry for *${lead.pickup} ➔ ${lead.drop}* (${lead.vehicle}${fare > 0 ? ` @ Rs.${fare.toLocaleString('en-IN')}` : ''}).\n\n` +
       `🚗 Our verified commercial vehicle is currently available for your slot.\n` +
-      `🔒 To lock the cab & driver immediately, kindly send a token advance of *Rs.500* via GPay/PhonePe/UPI to *8939539211@okbizaxis* (Kalidass Travels) and share the screenshot here.\n\n` +
+      `🔒 To reserve the cab & driver immediately, kindly send an advance of *Rs.500* via GPay/PhonePe/UPI to *8939539211@okbizaxis* (Kalidass Travels) and share the screenshot here.\n\n` +
       `Call +91 89395 39211 if you have any questions! 🙏`;
     const cleanPhone = guestPhone.length >= 10 ? guestPhone.slice(-10) : '';
     const url = cleanPhone
@@ -150,7 +150,7 @@ export default function DeskInquiries({
       `🚗 *Vehicle:* ${lead.vehicle}\n` +
       `💰 *Estimated All-Inclusive Fare:* Rs.${fare.toLocaleString('en-IN')}\n` +
       `_(Includes Car, Chauffeur Bata & Fuel. Tolls/Parking at actuals)_\n\n` +
-      `🔒 *To Confirm Your Booking:* Kindly pay a token advance of *Rs.${advance}* via UPI to *8939539211@okbizaxis* (Kalidass Travels) to lock your vehicle.\n\n` +
+      `🔒 *To Confirm Your Booking:* Kindly pay an advance of *Rs.${advance}* via UPI to *8939539211@okbizaxis* (Kalidass Travels) to reserve your cab & driver.\n\n` +
       `Chauffeur & vehicle details will be sent the evening before departure. Have a wonderful trip! 🌟` +
       mapsBlock;
 
@@ -367,7 +367,7 @@ export default function DeskInquiries({
 
             <form onSubmit={handleConfirmAdvanceSubmit} className="p-4 space-y-3 text-xs">
               <div className="p-2.5 rounded-xl bg-m3-tertiary-container/30 border border-m3-tertiary/30 text-m3-on-tertiary-container">
-                <span className="font-bold block">Token Advance Received:</span>
+                <span className="font-bold block">Advance Received:</span>
                 <span className="text-[11px]">
                   Confirming this locks the trip on your dispatch schedule. You can broadcast to your driver group 24h before travel.
                 </span>
@@ -375,7 +375,7 @@ export default function DeskInquiries({
 
               <div>
                 <label className="block text-[11px] font-semibold text-m3-on-surface-variant mb-1">
-                  Token Advance Amount (Rs)
+                  Advance Amount (Rs)
                 </label>
                 <div className="flex items-center gap-1.5 mb-2">
                   {['500', '1000', '2000'].map((amt) => (

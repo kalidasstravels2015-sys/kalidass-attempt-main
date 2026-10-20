@@ -336,7 +336,7 @@ export default function DeskDispatchRadar({
         <div className="p-3 rounded-xl bg-m3-surface-container-low border border-m3-outline-variant text-m3-on-surface-variant text-xs flex items-center gap-2">
           <span className="material-symbols-outlined text-m3-outline text-base">lock_clock</span>
           <span>
-            <strong>Advance Bookings:</strong> These trips are 100% locked with token advance. Driver sourcing opens the evening before departure.
+            <strong>Advance Bookings:</strong> These trips are 100% locked with advance payment. Driver sourcing opens the evening before departure.
           </span>
         </div>
       )}

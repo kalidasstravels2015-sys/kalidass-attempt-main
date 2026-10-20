@@ -60,7 +60,7 @@ test.describe('Functional Tests', () => {
         // Fill some data and check if Calculate button is there
         await pickupInput.fill('Chennai Airport');
         await dropInput.fill('T Nagar');
-        const calculateBtn = page.getByRole('button', { name: /Calculate Cost/i }).first();
+        const calculateBtn = page.locator('#btn-calculate-fare, button:has-text("View Instant Fare"), button:has-text("Calculate")').first();
         await expect(calculateBtn).toBeVisible();
     });
 

@@ -110,7 +110,7 @@ When designing marketing collateral for Kalidass Travels, designers must follow 
     - `✓ Doorstep Chennai Pickup & Drop Included`
   - Total Tariff: **`From ₹4,500 Complete Package`** in `#111827` Midnight Onyx.
 - **Advance Booking Pill (10%):**
-  - Emerald Green tint `#ECFDF5` badge: `"₹500 Advance Token Only — Balance on Drop"`.
+  - Emerald Green tint `#ECFDF5` badge: `"₹500 Advance to Reserve Cab & Driver — Balance on Drop"`.
 - **Primary CTA:** WhatsApp Button in `#25D366` with phone number `+91 89395 39211`.
 
 ---

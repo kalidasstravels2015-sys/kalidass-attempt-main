@@ -1,21 +1,38 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import UnifiedDutiesBoard from './solo/UnifiedDutiesBoard';
+import EnquiriesView from './solo/EnquiriesView';
+import ActiveTripsView from './solo/ActiveTripsView';
+import CompletedTripsView from './solo/CompletedTripsView';
+import DeskChauffeurs from './solo/DeskChauffeurs';
+import OperatorRateCalcWorkspace from './solo/OperatorRateCalcWorkspace';
+import SettingsView from './solo/SettingsView';
 import SoloDutySlipModal from './solo/SoloDutySlipModal';
 import AiBookingParser from './solo/AiBookingParser';
-import DeskChauffeurs from './solo/DeskChauffeurs';
-import DeskPhoneQuoteEngine from './solo/DeskPhoneQuoteEngine';
+import WebsiteRadarView from './solo/WebsiteRadarView';
+import { getActiveGoogleSheetUrl } from '../../config/googleSheets';
 
 const STORAGE_KEYS = {
-  BOOKINGS: 'kt_solo_real_bookings_v7',
-  LEADS: 'kt_solo_real_leads_v7',
-  CHAUFFEURS: 'kt_solo_real_chauffeurs_v7'
+  BOOKINGS: 'kt_solo_real_bookings_v8',
+  LEADS: 'kt_solo_real_leads_v8',
+  CHAUFFEURS: 'kt_solo_real_chauffeurs_v8'
 };
 
 export default function SoloAdminDashboard() {
+  // Dedicated Page/View Navigation:
+  // 'ENQUIRIES' | 'ACTIVE_TRIPS' | 'COMPLETED' | 'DRIVERS' | 'CALCULATOR' | 'SETTINGS'
+  const [currentView, setCurrentView] = useState('ENQUIRIES');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Modals for focused tasks
   const [isAiParserModalOpen, setIsAiParserModalOpen] = useState(false);
   const [isPhoneQuoteModalOpen, setIsPhoneQuoteModalOpen] = useState(false);
-  const [isDriversModalOpen, setIsDriversModalOpen] = useState(false);
-  const [showWorkflowGuide, setShowWorkflowGuide] = useState(false);
+  const [activeDutySlipBooking, setActiveDutySlipBooking] = useState(null);
+  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
+
+  // Connection & sync state
+  const [isSheetConnected, setIsSheetConnected] = useState(false);
+  const [lastSync, setLastSync] = useState('Live');
+  const [toast, setToast] = useState(null);
 
   // Security PIN Gate (Master Owner PIN: 2015)
   const [isUnlocked, setIsUnlocked] = useState(() => {
@@ -41,7 +58,7 @@ export default function SoloAdminDashboard() {
     }
   };
 
-  // Zero mock bookings: Starts completely empty until real bookings are created
+  // State: Bookings
   const [bookings, setBookings] = useState(() => {
     if (typeof window !== 'undefined' && window.localStorage) {
       try {
@@ -55,7 +72,7 @@ export default function SoloAdminDashboard() {
     return [];
   });
 
-  // Real customer leads from backend
+  // State: Leads / Enquiries
   const [leads, setLeads] = useState(() => {
     if (typeof window !== 'undefined' && window.localStorage) {
       try {
@@ -69,7 +86,7 @@ export default function SoloAdminDashboard() {
     return [];
   });
 
-  // Zero mock drivers: Starts empty until real partner drivers are added
+  // State: Chauffeurs / Drivers
   const [chauffeurs, setChauffeurs] = useState(() => {
     if (typeof window !== 'undefined' && window.localStorage) {
       try {
@@ -83,9 +100,7 @@ export default function SoloAdminDashboard() {
     return [];
   });
 
-  const [toast, setToast] = useState(null);
-  const [activeDutySlipBooking, setActiveDutySlipBooking] = useState(null);
-  const [lastSync, setLastSync] = useState('Live');
+  const [calculatorQuotes, setCalculatorQuotes] = useState([]);
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
@@ -93,6 +108,32 @@ export default function SoloAdminDashboard() {
       setToast(prev => (prev?.message === message ? null : prev));
     }, 3500);
   };
+
+  // Counts for sidebar badges
+  const validLeads = useMemo(
+    () => leads.filter(l => Number(l.estimatedFare) > 0 && !(l.drop || '').toLowerCase().includes('whatsapp chat')),
+    [leads]
+  );
+
+  const activeBookings = useMemo(
+    () => bookings.filter(b => b.manifestStatus !== 'Completed' && b.manifestStatus !== 'Cancelled'),
+    [bookings]
+  );
+
+  const needDriverCount = useMemo(
+    () => activeBookings.filter(b => !b.assignedChauffeur || b.assignedChauffeur === 'Unassigned').length,
+    [activeBookings]
+  );
+
+  const completedBookings = useMemo(
+    () => bookings.filter(b => b.manifestStatus === 'Completed'),
+    [bookings]
+  );
+
+  const validCalculatorQuotes = useMemo(
+    () => calculatorQuotes.filter(q => Number(q.estimatedFare) > 0 && !(q.drop || '').toLowerCase().includes('whatsapp chat')),
+    [calculatorQuotes]
+  );
 
   // Add manual or phone lead
   const handleAddManualLead = async (newLead) => {
@@ -130,30 +171,75 @@ export default function SoloAdminDashboard() {
     showToast('Driver removed from roster.', 'info');
   };
 
-  // Sync with Backend CSV API
+  // Sync with Backend API & Google Sheets
   const refreshData = async () => {
     try {
+      const sheetUrl = getActiveGoogleSheetUrl();
+      setIsSheetConnected(Boolean(sheetUrl));
+      const webhookParam = sheetUrl ? `?webhook=${encodeURIComponent(sheetUrl)}` : '';
+
       const [bRes, lRes] = await Promise.allSettled([
-        fetch('/api/admin/bookings'),
-        fetch('/api/admin/leads')
+        fetch(`/api/admin/bookings${webhookParam}`),
+        fetch(`/api/admin/leads${webhookParam}`)
       ]);
+
+      let apiBookings = [];
+      let apiLeads = [];
+      let apiQuotes = [];
 
       if (bRes.status === 'fulfilled' && bRes.value.ok) {
         const bData = await bRes.value.json();
-        const apiBookings = bData.bookings || [];
-        setBookings(apiBookings);
-        if (typeof window !== 'undefined') {
-          localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(apiBookings));
-        }
+        apiBookings = bData.bookings || [];
       }
 
       if (lRes.status === 'fulfilled' && lRes.value.ok) {
         const lData = await lRes.value.json();
-        const apiLeads = lData.leads || [];
-        setLeads(apiLeads);
+        apiLeads = lData.leads || [];
+        apiQuotes = lData.calculatorQuotes || [];
+      }
+
+      // Fallback: direct Google Sheet fetch if backend returned 0 leads
+      if (apiLeads.length === 0 && sheetUrl && sheetUrl.startsWith('http')) {
+        try {
+          const directRes = await fetch(sheetUrl, { redirect: 'follow' });
+          if (directRes.ok) {
+            const directJson = await directRes.json();
+            if (directJson && directJson.success) {
+              if (Array.isArray(directJson.leads)) apiLeads = directJson.leads;
+              if (Array.isArray(directJson.calculatorQuotes)) apiQuotes = directJson.calculatorQuotes;
+              if (Array.isArray(directJson.bookings) && apiBookings.length === 0) apiBookings = directJson.bookings;
+            }
+          }
+        } catch (_) {}
+      }
+
+      // Merge remote leads with local manual leads
+      setLeads(prevLeads => {
+        const map = new Map();
+        (prevLeads || []).forEach(l => { if (l && l.quoteId) map.set(l.quoteId, l); });
+        apiLeads.forEach(l => { if (l && l.quoteId) map.set(l.quoteId, l); });
+        const merged = Array.from(map.values());
         if (typeof window !== 'undefined') {
-          localStorage.setItem(STORAGE_KEYS.LEADS, JSON.stringify(apiLeads));
+          localStorage.setItem(STORAGE_KEYS.LEADS, JSON.stringify(merged));
         }
+        return merged;
+      });
+
+      if (apiQuotes.length > 0) {
+        setCalculatorQuotes(apiQuotes);
+      }
+
+      if (apiBookings.length > 0) {
+        setBookings(prevBookings => {
+          const map = new Map();
+          (prevBookings || []).forEach(b => { if (b && b.bookingId) map.set(b.bookingId, b); });
+          apiBookings.forEach(b => { if (b && b.bookingId) map.set(b.bookingId, b); });
+          const merged = Array.from(map.values());
+          if (typeof window !== 'undefined') {
+            localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(merged));
+          }
+          return merged;
+        });
       }
 
       setLastSync(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
@@ -164,64 +250,41 @@ export default function SoloAdminDashboard() {
   };
 
   useEffect(() => {
-    // Actively purge all old mock keys from user's browser localStorage
-    if (typeof window !== 'undefined' && window.localStorage) {
-      [
-        'kt_solo_real_bookings_v6', 'kt_solo_real_leads_v6', 'kt_solo_real_chauffeurs_v6',
-        'kt_solo_real_bookings_v5', 'kt_solo_real_chauffeurs_v5',
-        'kt_solo_real_bookings_v4', 'kt_solo_real_chauffeurs_v4',
-        'kt_solo_real_bookings_v3', 'kt_solo_real_leads_v3',
-        'kt_admin_bookings_v1', 'kt_admin_leads_v1', 'kt_admin_duty_slips_v1', 'kt_admin_settlements_v1'
-      ].forEach(k => {
-        try { localStorage.removeItem(k); } catch (_) {}
-      });
-    }
+    setIsSheetConnected(Boolean(getActiveGoogleSheetUrl()));
     refreshData();
   }, []);
 
-  // Update Chauffeur Assignment
-  const handleAssignChauffeur = async (bookingId, assignedChauffeur) => {
-    const updated = bookings.map(b => (b.bookingId === bookingId ? { ...b, assignedChauffeur } : b));
-    setBookings(updated);
-    if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(updated));
-
+  // Full reset handler
+  const handleExecuteFullReset = async () => {
+    setIsResetting(true);
     try {
-      await fetch('/api/admin/bookings', {
+      const res = await fetch('/api/admin/reset-data/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'update', bookingId, assignedChauffeur })
+        body: JSON.stringify({ pin: '2015' })
       });
-    } catch (e) {}
-  };
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Failed to reset server data');
+      }
 
-  // Update Status
-  const handleStatusChange = async (bookingId, manifestStatus) => {
-    const updated = bookings.map(b => (b.bookingId === bookingId ? { ...b, manifestStatus } : b));
-    setBookings(updated);
-    if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(updated));
-
-    try {
-      await fetch('/api/admin/bookings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'update', bookingId, manifestStatus })
-      });
-    } catch (e) {}
-  };
-
-  // Update Review Status
-  const handleReviewStatusChange = async (bookingId, reviewStatus) => {
-    const updated = bookings.map(b => (b.bookingId === bookingId ? { ...b, reviewStatus } : b));
-    setBookings(updated);
-    if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(updated));
-
-    try {
-      await fetch('/api/admin/bookings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'update', bookingId, reviewStatus })
-      });
-    } catch (e) {}
+      if (typeof window !== 'undefined' && window.localStorage) {
+        localStorage.removeItem(STORAGE_KEYS.BOOKINGS);
+        localStorage.removeItem(STORAGE_KEYS.LEADS);
+        localStorage.removeItem(STORAGE_KEYS.CHAUFFEURS);
+      }
+      setBookings([]);
+      setLeads([]);
+      setChauffeurs([]);
+      setCalculatorQuotes([]);
+      setIsResetConfirmOpen(false);
+      showToast('All admin data has been reset to zero.', 'success');
+      setCurrentView('ENQUIRIES');
+    } catch (err) {
+      showToast(err.message || 'Reset failed', 'error');
+    } finally {
+      setIsResetting(false);
+    }
   };
 
   // Convert Inquiry to Confirmed Booking (Advance Received)
@@ -243,9 +306,69 @@ export default function SoloAdminDashboard() {
         body: JSON.stringify(newConfirmed)
       });
     } catch (e) {}
+
+    // Switch view automatically to Active Trips so user can allot driver
+    setCurrentView('ACTIVE_TRIPS');
   };
 
-  // Duty Slip Saved (Start/End KM and Final Closure)
+  // Assign Driver
+  const handleAssignChauffeur = async (bookingId, assignedChauffeur) => {
+    const updated = bookings.map(b => (
+      b.bookingId === bookingId
+        ? {
+            ...b,
+            assignedChauffeur,
+            manifestStatus: assignedChauffeur === 'Unassigned' ? 'Need Driver' : 'Allotted'
+          }
+        : b
+    ));
+    setBookings(updated);
+    if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(updated));
+
+    try {
+      await fetch('/api/admin/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'update', bookingId, assignedChauffeur })
+      });
+    } catch (e) {}
+  };
+
+  // Change Trip Status
+  const handleStatusChange = async (bookingId, manifestStatus) => {
+    const updated = bookings.map(b => (b.bookingId === bookingId ? { ...b, manifestStatus } : b));
+    setBookings(updated);
+    if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(updated));
+
+    try {
+      await fetch('/api/admin/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'update', bookingId, manifestStatus })
+      });
+    } catch (e) {}
+
+    if (manifestStatus === 'Completed') {
+      setCurrentView('COMPLETED');
+    }
+  };
+
+  // Update Review Status
+  const handleReviewStatusChange = async (bookingId, reviewStatus) => {
+    const updated = bookings.map(b => (b.bookingId === bookingId ? { ...b, reviewStatus } : b));
+    setBookings(updated);
+    if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(updated));
+
+    try {
+      await fetch('/api/admin/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'update', bookingId, reviewStatus })
+      });
+    } catch (e) {}
+  };
+
+  // Duty Slip Saved
   const handleDutySlipSaved = (dutySlip, bookingId, finalFare) => {
     const updated = bookings.map(b => (
       b.bookingId === bookingId
@@ -254,18 +377,8 @@ export default function SoloAdminDashboard() {
     ));
     setBookings(updated);
     if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(updated));
-    showToast(`Trip ${bookingId} completed! Ready for 5★ review & balance settlement.`, 'success');
-  };
-
-  // Record Financial Settlement
-  const handleRecordSettlement = async (settlement) => {
-    const updated = bookings.map(b => (
-      b.bookingId === settlement.bookingId
-        ? { ...b, financialClosure: 'Reconciled' }
-        : b
-    ));
-    setBookings(updated);
-    if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(updated));
+    showToast(`Trip ${bookingId} completed! Moved to Step 3.`, 'success');
+    setCurrentView('COMPLETED');
   };
 
   // PIN Protection Gate
@@ -279,7 +392,7 @@ export default function SoloAdminDashboard() {
           <h2 className="text-m3-title-l font-bold text-m3-on-surface">Kalidass Travels</h2>
           <p className="text-m3-body-s text-m3-on-surface-variant mt-1 mb-6">Admin Operations Console • Medavakkam</p>
 
-          <form onSubmit={handleVerifyPin} className="space-y-4">
+          <form onSubmit={handleVerifyPin} action="javascript:void(0);" className="space-y-4">
             <div>
               <label className="block text-m3-label-m font-semibold text-m3-on-surface-variant uppercase tracking-wider mb-2">
                 Enter 4-Digit Owner PIN
@@ -292,8 +405,15 @@ export default function SoloAdminDashboard() {
                 autoFocus
                 value={pinInput}
                 onChange={(e) => {
-                  setPinInput(e.target.value);
+                  const val = e.target.value;
+                  setPinInput(val);
                   setPinError(false);
+                  if (val.trim() === '2015') {
+                    setIsUnlocked(true);
+                    if (typeof window !== 'undefined' && window.sessionStorage) {
+                      sessionStorage.setItem('kt_admin_pin_verified', 'true');
+                    }
+                  }
                 }}
                 placeholder="• • • •"
                 className={`w-full text-center text-2xl tracking-[0.5em] font-mono-code font-bold py-3 px-4 rounded-m3-md bg-m3-surface-container-low border ${
@@ -321,8 +441,66 @@ export default function SoloAdminDashboard() {
     );
   }
 
+  // Navigation Items
+  const navItems = [
+    {
+      id: 'ENQUIRIES',
+      label: '1. New Enquiries',
+      icon: 'phone_in_talk',
+      badge: validLeads.length > 0 ? validLeads.length : null,
+      badgeColor: 'bg-amber-100 text-amber-900 border-amber-300',
+      description: 'Calls, WhatsApp & quotes'
+    },
+    {
+      id: 'ACTIVE_TRIPS',
+      label: '2. Active Trips',
+      icon: 'local_taxi',
+      badge: activeBookings.length > 0 ? (needDriverCount > 0 ? `⚠️ ${needDriverCount}` : activeBookings.length) : null,
+      badgeColor: needDriverCount > 0 ? 'bg-red-100 text-red-900 border-red-300' : 'bg-blue-100 text-blue-900 border-blue-300',
+      description: 'Driver allotment & Duty Slips'
+    },
+    {
+      id: 'COMPLETED',
+      label: '3. Completed Trips',
+      icon: 'verified',
+      badge: completedBookings.length > 0 ? completedBookings.length : null,
+      badgeColor: 'bg-emerald-100 text-emerald-900 border-emerald-300',
+      description: 'Closed duties & 5★ reviews'
+    },
+    {
+      id: 'DRIVERS',
+      label: '4. Driver Roster',
+      icon: 'badge',
+      badge: chauffeurs.length > 0 ? chauffeurs.length : null,
+      badgeColor: 'bg-m3-surface-container-high text-m3-on-surface border-m3-outline-variant',
+      description: 'Partner drivers & cars'
+    },
+    {
+      id: 'CALCULATOR',
+      label: '5. Rate Calculator',
+      icon: 'calculate',
+      description: 'Inbound phone tariff engine'
+    },
+    {
+      id: 'WEB_RADAR',
+      label: '6. Website Calc Radar',
+      icon: 'radar',
+      badge: validCalculatorQuotes.length > 0 ? validCalculatorQuotes.length : null,
+      badgeColor: 'bg-emerald-100 text-emerald-900 border-emerald-300',
+      description: 'Live visitor fare calculations'
+    },
+    {
+      id: 'SETTINGS',
+      label: '7. Google Sheet Sync',
+      icon: 'table_chart',
+      badge: isSheetConnected ? 'Synced' : 'Action',
+      badgeColor: isSheetConnected ? 'bg-emerald-100 text-emerald-900 border-emerald-300' : 'bg-amber-100 text-amber-900 border-amber-300',
+      description: '2-way Google Sheets sync'
+    }
+  ];
+
   return (
-    <div className="min-h-screen bg-m3-surface text-m3-on-surface font-sans flex flex-col">
+    <div className="min-h-screen bg-m3-surface text-m3-on-surface font-sans flex flex-col md:flex-row">
       {/* Toast Notification */}
       {toast && (
         <div className={`fixed bottom-6 right-4 z-50 px-4 py-3 rounded-m3-md shadow-m3-3 text-m3-label-m font-semibold flex items-center gap-2.5 animate-fadeIn ${
@@ -337,106 +515,91 @@ export default function SoloAdminDashboard() {
         </div>
       )}
 
-      {/* Top Header Bar */}
-      <header className="sticky top-0 z-30 bg-m3-surface-container-lowest text-m3-on-surface px-4 sm:px-6 h-16 border-b border-m3-outline-variant/60 flex items-center">
-        <div className="w-full max-w-7xl mx-auto flex items-center justify-between gap-3">
-          {/* Logo & Identity */}
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="w-9 h-9 rounded-m3-md bg-logo-red text-white font-black text-base flex items-center justify-center shadow-m3-1 shrink-0">
+      {/* ========================================================= */}
+      {/* LEFT SIDEBAR (Clean, Dedicated Navigation for Each Step)  */}
+      {/* ========================================================= */}
+      <aside className={`
+        fixed inset-y-0 left-0 z-40 w-64 bg-m3-surface-container-lowest border-r border-m3-outline-variant/70 flex flex-col transition-transform duration-200 ease-in-out md:static md:translate-x-0
+        ${mobileMenuOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'}
+      `}>
+        {/* Brand Header */}
+        <div className="p-4 border-b border-m3-outline-variant/60 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-m3-md bg-logo-red text-white font-black text-lg flex items-center justify-center shadow-m3-1 shrink-0">
               K
             </div>
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <h1 className="text-m3-title-s sm:text-m3-title-m font-bold text-m3-on-surface truncate">
-                  Kalidass Travels
-                </h1>
-                <span className="inline-flex items-center gap-1 text-m3-label-s font-medium bg-m3-secondary-container text-m3-on-secondary-container px-2.5 py-0.5 rounded-m3-full">
-                  <span className="w-1.5 h-1.5 rounded-full bg-m3-success"></span>
-                  <span>Sync {lastSync}</span>
-                </span>
-              </div>
-              <p className="text-m3-body-s text-m3-on-surface-variant truncate hidden sm:block">
-                Sole-Operator Booking & Dispatch Workflow • Medavakkam
-              </p>
+            <div>
+              <h1 className="text-sm font-black text-m3-on-surface leading-tight">Kalidass Travels</h1>
+              <p className="text-[11px] text-m3-on-surface-variant">Medavakkam, Chennai</p>
             </div>
           </div>
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(false)}
+            className="md:hidden w-8 h-8 rounded-full hover:bg-m3-surface-container-high flex items-center justify-center text-m3-on-surface-variant"
+          >
+            ✕
+          </button>
+        </div>
 
-          {/* Quick Header Actions */}
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              type="button"
-              onClick={() => setShowWorkflowGuide(!showWorkflowGuide)}
-              className={`h-9 px-3 rounded-m3-full text-m3-label-m font-medium border transition-colors flex items-center gap-1.5 ${
-                showWorkflowGuide
-                  ? 'bg-m3-primary-container text-m3-on-primary-container border-transparent'
-                  : 'bg-m3-surface text-m3-on-surface-variant border-m3-outline-variant hover:bg-m3-surface-container-high'
-              }`}
-            >
-              <span className="material-symbols-outlined text-[18px]">help</span>
-              <span className="hidden md:inline">7-Step Guide</span>
-            </button>
+        {/* Navigation Menu Links */}
+        <nav className="p-3 space-y-1.5 flex-1 overflow-y-auto">
+          {navItems.map((item) => {
+            const isActive = currentView === item.id;
 
-            <button
-              type="button"
-              onClick={() => setIsDriversModalOpen(true)}
-              className="h-9 px-3 bg-m3-secondary-container hover:bg-m3-surface-container-high text-m3-on-secondary-container rounded-m3-full text-m3-label-m font-bold flex items-center gap-1.5 transition-colors"
-              title="Manage Drivers & Fleet Roster"
-            >
-              <span className="material-symbols-outlined text-[18px]">badge</span>
-              <span className="hidden sm:inline">Drivers Roster</span>
-              <span className="text-m3-label-s px-1.5 py-0.2 rounded-full bg-m3-surface-container-highest">
-                {chauffeurs.length}
-              </span>
-            </button>
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => {
+                  setCurrentView(item.id);
+                  setMobileMenuOpen(false);
+                }}
+                className={`w-full p-2.5 rounded-m3-lg text-left transition-all flex items-center justify-between gap-2.5 ${
+                  isActive
+                    ? 'bg-m3-primary-container/80 text-m3-on-primary-container font-black shadow-xs'
+                    : 'text-m3-on-surface-variant hover:bg-m3-surface-container-low hover:text-m3-on-surface font-semibold'
+                }`}
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <span className={`material-symbols-outlined text-[20px] ${isActive ? 'text-m3-primary' : 'text-m3-on-surface-variant'}`}>
+                    {item.icon}
+                  </span>
+                  <div className="min-w-0">
+                    <span className="text-xs truncate block">{item.label}</span>
+                    <span className="text-[10px] text-m3-on-surface-variant/80 truncate block">{item.description}</span>
+                  </div>
+                </div>
 
-            <button
-              type="button"
-              onClick={() => setIsPhoneQuoteModalOpen(true)}
-              className="h-9 px-3.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-m3-full text-m3-label-m font-bold flex items-center gap-1.5 shadow-m3-1 transition-all"
-              title="Take Phone Call & Auto-Calculate Fare"
-            >
-              <span className="material-symbols-outlined text-[18px]">calculate</span>
-              <span className="hidden sm:inline">Phone Rate Calc</span>
-              <span className="sm:hidden">Rate Calc</span>
-            </button>
+                {item.badge && (
+                  <span className={`text-[10px] font-mono-code font-bold px-2 py-0.5 rounded-full border shrink-0 ${item.badgeColor}`}>
+                    {item.badge}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </nav>
 
-            <button
-              type="button"
-              onClick={() => setIsAiParserModalOpen(true)}
-              className="h-9 px-3.5 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-m3-full text-m3-label-m font-bold flex items-center gap-1.5 shadow-m3-1 transition-all"
-            >
-              <span className="material-symbols-outlined text-[18px]">auto_awesome</span>
-              <span className="hidden sm:inline">AI Quote / Paste</span>
-              <span className="sm:hidden">AI Paste</span>
-            </button>
+        {/* Sidebar Footer: Sync Status & Controls */}
+        <div className="p-3 border-t border-m3-outline-variant/60 bg-m3-surface-container-low/50 space-y-2">
+          <div className="flex items-center justify-between text-[11px]">
+            <span className="flex items-center gap-1.5 font-bold text-m3-on-surface">
+              <span className={`w-2 h-2 rounded-full ${isSheetConnected ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
+              <span>{isSheetConnected ? 'Sheet Connected' : 'Sheet Offline'}</span>
+            </span>
+            <span className="text-m3-on-surface-variant">{lastSync}</span>
+          </div>
 
+          <div className="flex items-center gap-1.5 pt-1">
             <button
               type="button"
               onClick={refreshData}
-              className="w-9 h-9 rounded-m3-full hover:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-on-surface flex items-center justify-center transition-colors"
-              title="Refresh Data"
+              className="flex-1 h-8 bg-white hover:bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant rounded-full text-[11px] font-bold flex items-center justify-center gap-1 transition-colors"
+              title="Refresh data from server & Google Sheets"
             >
-              <span className="material-symbols-outlined text-[20px]">refresh</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                if (typeof window !== 'undefined' && window.localStorage) {
-                  Object.keys(localStorage).forEach(k => {
-                    if (k.startsWith('kt_')) localStorage.removeItem(k);
-                  });
-                }
-                setBookings([]);
-                setLeads([]);
-                setChauffeurs([]);
-                refreshData();
-                showToast('Local browser storage cleared!', 'info');
-              }}
-              className="w-9 h-9 rounded-m3-full hover:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-on-surface flex items-center justify-center transition-colors"
-              title="Purge Browser Cache & Dummy Data"
-            >
-              <span className="material-symbols-outlined text-[20px]">delete_sweep</span>
+              <span className="material-symbols-outlined text-[15px]">refresh</span>
+              <span>Refresh</span>
             </button>
 
             <button
@@ -445,95 +608,124 @@ export default function SoloAdminDashboard() {
                 sessionStorage.removeItem('kt_admin_pin_verified');
                 setIsUnlocked(false);
               }}
-              className="w-9 h-9 rounded-m3-full hover:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-on-surface flex items-center justify-center transition-colors"
+              className="h-8 px-2.5 bg-white hover:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-on-surface border border-m3-outline-variant rounded-full text-[11px] font-bold flex items-center justify-center"
               title="Lock Console (PIN: 2015)"
             >
-              <span className="material-symbols-outlined text-[20px]">lock</span>
+              <span className="material-symbols-outlined text-[15px]">lock</span>
             </button>
           </div>
         </div>
-      </header>
+      </aside>
 
-      {/* 7-Step Workflow Guide Banner */}
-      {showWorkflowGuide && (
-        <div className="bg-m3-surface-container-low border-b border-m3-outline-variant/60 px-4 py-3 animate-fadeIn">
-          <div className="max-w-7xl mx-auto space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-m3-label-m font-bold text-m3-on-surface uppercase tracking-wide">
-                Main Booking & Operations Workflow (7 Proven Steps)
-              </span>
-              <button
-                type="button"
-                onClick={() => setShowWorkflowGuide(false)}
-                className="text-m3-on-surface-variant font-bold text-sm"
-              >
-                ✕ Close
-              </button>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 text-m3-body-s">
-              {[
-                { step: '1. Enquiry', desc: 'Google Ads, Web Calc, WA or Call ➔ Instant Quote' },
-                { step: '2. Advance', desc: 'Collect ₹500 via UPI (8939539211@okbizaxis) to lock cab' },
-                { step: '3. Driver & Cab', desc: 'Pick from Roster or 1-tap WhatsApp Group Broadcast' },
-                { step: '4. Duty Slips', desc: '1-tap WhatsApp Duty Slip to Customer & Driver' },
-                { step: '5. Trip Follow', desc: 'Follow trip movement via live /trip/?ref=... link' },
-                { step: '6. Collect Bal.', desc: 'End KM, tolls, parking ➔ Collect balance & settle driver' },
-                { step: '7. 5★ Review', desc: '1-tap Google Review link sent to customer WhatsApp' }
-              ].map((item, i) => (
-                <div
-                  key={i}
-                  className="p-2.5 rounded-m3-md bg-m3-surface-container-lowest border border-m3-outline-variant/70 text-left"
-                >
-                  <span className="font-bold text-m3-primary block text-m3-label-s">{item.step}</span>
-                  <span className="text-m3-on-surface-variant text-[11px] block mt-0.5 leading-snug">{item.desc}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+      {/* Backdrop for mobile drawer */}
+      {mobileMenuOpen && (
+        <div
+          onClick={() => setMobileMenuOpen(false)}
+          className="fixed inset-0 z-30 bg-black/50 md:hidden"
+        />
       )}
 
-      {/* Main Single-Workflow Body (Directly Renders UnifiedDutiesBoard) */}
-      <main className="flex-1 w-full max-w-7xl mx-auto p-3.5 sm:p-5 lg:p-6 min-h-0">
-        <UnifiedDutiesBoard
-          leads={leads}
-          bookings={bookings}
-          chauffeurs={chauffeurs}
-          onAddManualLead={handleAddManualLead}
-          onConvertToConfirmed={handleConvertToConfirmed}
-          onAssignChauffeur={handleAssignChauffeur}
-          onStatusChange={handleStatusChange}
-          onReviewStatusChange={handleReviewStatusChange}
-          onOpenDutySlip={(b) => setActiveDutySlipBooking(b)}
-          onRecordSettlement={handleRecordSettlement}
-          onOpenAiParser={() => setIsAiParserModalOpen(true)}
-          onOpenDriversModal={() => setIsDriversModalOpen(true)}
-          onOpenPhoneQuoteEngine={() => setIsPhoneQuoteModalOpen(true)}
-          showToast={showToast}
-        />
-      </main>
+      {/* ========================================================= */}
+      {/* MAIN VIEW CONTENT AREA (Renders ONLY the Selected Page)   */}
+      {/* ========================================================= */}
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
+        {/* Top Header Bar */}
+        <header className="sticky top-0 z-20 bg-m3-surface-container-lowest border-b border-m3-outline-variant/60 px-4 h-14 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(true)}
+              className="md:hidden w-9 h-9 rounded-full hover:bg-m3-surface-container-high flex items-center justify-center text-m3-on-surface"
+              title="Open Navigation Menu"
+            >
+              <span className="material-symbols-outlined text-[22px]">menu</span>
+            </button>
 
-      {/* Chauffeurs & Commercial Fleet Roster Modal */}
-      {isDriversModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-6 bg-black/60 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-m3-surface-container-lowest border border-m3-outline-variant rounded-m3-2xl shadow-m3-4 w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
-            <div className="p-4 border-b border-m3-outline-variant flex items-center justify-between bg-m3-surface-container-low">
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-m3-primary text-[22px]">badge</span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-black uppercase text-m3-primary tracking-wider">
+                {currentView === 'ENQUIRIES' && 'Step 1: Enquiries'}
+                {currentView === 'ACTIVE_TRIPS' && 'Step 2: Active Trips'}
+                {currentView === 'COMPLETED' && 'Step 3: Completed Trips'}
+                {currentView === 'DRIVERS' && 'Driver Roster'}
+                {currentView === 'CALCULATOR' && 'Rate Calculator'}
+                {currentView === 'WEB_RADAR' && 'Website Calc Radar'}
+                {currentView === 'SETTINGS' && 'System Settings'}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setIsPhoneQuoteModalOpen(true)}
+              className="h-8 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-xs font-bold flex items-center gap-1 shadow-xs transition-colors"
+              title="Quick Rate Calculator"
+            >
+              <span className="material-symbols-outlined text-[16px]">calculate</span>
+              <span className="hidden sm:inline">Rate Calc</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsAiParserModalOpen(true)}
+              className="h-8 px-3 bg-m3-primary hover:bg-m3-primary/90 text-white rounded-full text-xs font-bold flex items-center gap-1 shadow-xs transition-colors"
+              title="Paste incoming WhatsApp quote"
+            >
+              <span className="material-symbols-outlined text-[16px]">content_paste</span>
+              <span className="hidden sm:inline">Paste WA</span>
+            </button>
+          </div>
+        </header>
+
+        {/* View Switcher: Dedicated Clean Views */}
+        <main className="flex-1 p-3.5 sm:p-5 lg:p-6 overflow-y-auto">
+          {/* VIEW 1: ENQUIRIES */}
+          {currentView === 'ENQUIRIES' && (
+            <EnquiriesView
+              leads={leads}
+              onAddManualLead={handleAddManualLead}
+              onConvertToConfirmed={handleConvertToConfirmed}
+              onOpenPhoneQuoteEngine={() => setIsPhoneQuoteModalOpen(true)}
+              onOpenAiParser={() => setIsAiParserModalOpen(true)}
+              showToast={showToast}
+            />
+          )}
+
+          {/* VIEW 2: ACTIVE TRIPS */}
+          {currentView === 'ACTIVE_TRIPS' && (
+            <ActiveTripsView
+              bookings={bookings}
+              chauffeurs={chauffeurs}
+              onAssignChauffeur={handleAssignChauffeur}
+              onStatusChange={handleStatusChange}
+              onOpenDutySlip={(b) => setActiveDutySlipBooking(b)}
+              onOpenDriversModal={() => setCurrentView('DRIVERS')}
+              showToast={showToast}
+            />
+          )}
+
+          {/* VIEW 3: COMPLETED TRIPS */}
+          {currentView === 'COMPLETED' && (
+            <CompletedTripsView
+              bookings={bookings}
+              onReviewStatusChange={handleReviewStatusChange}
+              showToast={showToast}
+            />
+          )}
+
+          {/* VIEW 4: DRIVERS ROSTER */}
+          {currentView === 'DRIVERS' && (
+            <div className="space-y-4">
+              <div className="bg-m3-surface-container-lowest p-4 rounded-m3-xl border border-m3-outline-variant/70 shadow-m3-1 flex items-center justify-between">
                 <div>
-                  <h3 className="text-m3-title-s font-bold text-m3-on-surface">Drivers & Cabs Roster</h3>
-                  <p className="text-m3-label-s text-m3-on-surface-variant">Add or manage verified partner drivers for duty assignment</p>
+                  <h2 className="text-m3-title-m font-black text-m3-on-surface">
+                    4. Drivers & Commercial Fleet Roster
+                  </h2>
+                  <p className="text-xs text-m3-on-surface-variant mt-0.5">
+                    Manage verified partner drivers and vehicle models for instant duty assignment.
+                  </p>
                 </div>
               </div>
-              <button
-                type="button"
-                onClick={() => setIsDriversModalOpen(false)}
-                className="w-8 h-8 rounded-full hover:bg-m3-surface-container-high flex items-center justify-center text-m3-on-surface-variant"
-              >
-                <span className="material-symbols-outlined text-[20px]">close</span>
-              </button>
-            </div>
-            <div className="p-4 overflow-y-auto flex-1">
               <DeskChauffeurs
                 chauffeurs={chauffeurs}
                 bookings={bookings}
@@ -542,11 +734,58 @@ export default function SoloAdminDashboard() {
                 showToast={showToast}
               />
             </div>
-          </div>
-        </div>
-      )}
+          )}
 
-      {/* AI Booking / Call Smart Parser Modal */}
+          {/* VIEW 5: PHONE RATE CALCULATOR */}
+          {currentView === 'CALCULATOR' && (
+            <OperatorRateCalcWorkspace
+              isOpen={true}
+              isPageMode={true}
+              onClose={() => setCurrentView('ENQUIRIES')}
+              onSaveLead={(newLead) => {
+                handleAddManualLead(newLead);
+                setCurrentView('ENQUIRIES');
+              }}
+              onConfirmBooking={(newBooking) => {
+                handleConvertToConfirmed(newBooking);
+                setCurrentView('ACTIVE_TRIPS');
+              }}
+              showToast={showToast}
+            />
+          )}
+
+          {/* VIEW 6: WEBSITE VISITOR CALC RADAR */}
+          {currentView === 'WEB_RADAR' && (
+            <WebsiteRadarView
+              calculatorQuotes={calculatorQuotes}
+              onConvertToConfirmed={(b) => {
+                handleConvertToConfirmed(b);
+                setCurrentView('ACTIVE_TRIPS');
+              }}
+              showToast={showToast}
+            />
+          )}
+
+          {/* VIEW 7: GOOGLE SHEET SYNC & SETTINGS */}
+          {currentView === 'SETTINGS' && (
+            <SettingsView
+              calculatorQuotes={calculatorQuotes}
+              onSyncSuccess={() => {
+                setIsSheetConnected(true);
+                refreshData();
+              }}
+              onOpenResetModal={() => setIsResetConfirmOpen(true)}
+              showToast={showToast}
+            />
+          )}
+        </main>
+      </div>
+
+      {/* ========================================================= */}
+      {/* FOCUSED TASK MODALS (Only When User Explicitly Clicks)     */}
+      {/* ========================================================= */}
+
+      {/* AI Booking Parser Modal */}
       {isAiParserModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-5 bg-black/60 backdrop-blur-sm animate-fadeIn">
           <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -556,30 +795,33 @@ export default function SoloAdminDashboard() {
               onLeadCreated={(newLead) => {
                 handleAddManualLead(newLead);
                 setIsAiParserModalOpen(false);
-                showToast(`Enquiry ${newLead.quoteId} added to Stage 1 Quotes!`, 'success');
+                setCurrentView('ENQUIRIES');
               }}
               onBookingCreated={(newConfirmed) => {
                 handleConvertToConfirmed(newConfirmed);
                 setIsAiParserModalOpen(false);
-                showToast(`Booking ${newConfirmed.bookingId} confirmed in Stage 2 (Need Driver)!`, 'success');
+                setCurrentView('ACTIVE_TRIPS');
               }}
             />
           </div>
         </div>
       )}
 
-      {/* Inbound Phone Call Rate Calculator & Booking Engine Modal */}
+      {/* Rate Calculator Modal (when opened from top button) */}
       {isPhoneQuoteModalOpen && (
-        <DeskPhoneQuoteEngine
+        <OperatorRateCalcWorkspace
           isOpen={isPhoneQuoteModalOpen}
+          isPageMode={false}
           onClose={() => setIsPhoneQuoteModalOpen(false)}
           onSaveLead={(newLead) => {
             handleAddManualLead(newLead);
             setIsPhoneQuoteModalOpen(false);
+            setCurrentView('ENQUIRIES');
           }}
           onConfirmBooking={(newBooking) => {
             handleConvertToConfirmed(newBooking);
             setIsPhoneQuoteModalOpen(false);
+            setCurrentView('ACTIVE_TRIPS');
           }}
           showToast={showToast}
         />
@@ -595,6 +837,61 @@ export default function SoloAdminDashboard() {
           onDutySlipSaved={handleDutySlipSaved}
           showToast={showToast}
         />
+      )}
+
+      {/* Reset Confirmation Modal */}
+      {isResetConfirmOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+          <div className="w-full max-w-md bg-m3-surface-container-high border border-m3-outline-variant/30 rounded-2xl p-6 shadow-2xl relative text-m3-on-surface">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-full bg-red-500/10 text-red-500 flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-2xl">warning</span>
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-m3-on-surface">Reset All Admin Data?</h3>
+                <p className="text-xs text-m3-on-surface-variant">Clean slate for operations</p>
+              </div>
+            </div>
+
+            <div className="text-xs text-m3-on-surface-variant space-y-2 mb-6 bg-m3-surface-container/60 p-3.5 rounded-xl border border-m3-outline-variant/15">
+              <p className="font-semibold text-m3-on-surface">This action will reset:</p>
+              <ul className="list-disc pl-4 space-y-1">
+                <li>All calculation quotes & customer leads</li>
+                <li>All active duties & fleet booking records</li>
+                <li>Local browser cache & rosters</li>
+              </ul>
+            </div>
+
+            <div className="flex items-center justify-end gap-3">
+              <button
+                type="button"
+                disabled={isResetting}
+                onClick={() => setIsResetConfirmOpen(false)}
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-m3-on-surface-variant hover:bg-m3-surface-container transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={isResetting}
+                onClick={handleExecuteFullReset}
+                className="px-4 py-2 rounded-xl text-xs font-bold bg-red-600 hover:bg-red-700 text-white flex items-center gap-2 shadow-lg shadow-red-600/20 transition-all disabled:opacity-50"
+              >
+                {isResetting ? (
+                  <>
+                    <span className="material-symbols-outlined text-sm animate-spin">progress_activity</span>
+                    Resetting...
+                  </>
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined text-sm">delete_forever</span>
+                    Yes, Reset All to Zero
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

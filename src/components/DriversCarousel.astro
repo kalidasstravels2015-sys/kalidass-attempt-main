@@ -1,0 +1,121 @@
+---
+import siteContent from '../data/siteContent.json';
+
+interface Props {
+  currentLang?: string;
+}
+
+const { currentLang = 'en' } = Astro.props;
+const drivers = siteContent.drivers || [];
+const labels = siteContent.ui_labels;
+const heading = labels.our_professional_drivers || "Our Professional Drivers";
+---
+
+<section
+  id="drivers"
+  class="offscreen-defer py-10 md:py-14 bg-m3-surface-container-low border-t border-m3-outline-variant/60 scroll-mt-24 sm:scroll-mt-28"
+  aria-labelledby="drivers-heading"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Section Header -->
+    <div class="text-center max-w-3xl mx-auto mb-8">
+      <h2
+        id="drivers-heading"
+        class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading"
+      >
+        {heading}
+      </h2>
+      <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant font-normal max-w-2xl mx-auto leading-relaxed mb-6 font-sans">
+        Police background-verified, experienced, and courteous drivers dedicated to your safety.
+      </p>
+    </div>
+
+    <!-- Compact Responsive Grid (Horizontal Swipe on Mobile, 3-Col on Desktop) -->
+    <div
+      tabindex="0"
+      role="region"
+      aria-label="Verified Drivers"
+      class="flex overflow-x-auto snap-x snap-mandatory gap-4 sm:gap-6 pb-4 scrollbar-hide sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:overflow-visible focus:outline-none focus:ring-1 focus:ring-m3-primary/30"
+    >
+      {drivers.map((driver) => (
+        <div class="flex-none w-[300px] sm:w-auto snap-center bg-m3-surface rounded-m3-xl shadow-m3-1 hover:shadow-m3-2 border border-m3-outline-variant p-3 sm:p-3.5 transition-all duration-200 group flex gap-3 sm:gap-3.5 items-stretch">
+          <!-- Leading Media: 1:1 Square Thumbnail -->
+          <div class="relative shrink-0 w-24 h-24 sm:w-28 sm:h-28 rounded-m3-lg overflow-hidden bg-m3-surface-container-high self-start">
+            <img
+              src={driver.image}
+              width="112"
+              height="112"
+              decoding="async"
+              class="w-full h-full object-cover object-center"
+              alt={`${driver.name} - Verified Chauffeur at Kalidass Travels`}
+              loading="lazy"
+            />
+            <span class="absolute bottom-1 left-1 bg-m3-inverse-surface/85 backdrop-blur-md text-white text-[9px] font-bold px-1.5 py-0.5 rounded-m3-full leading-none shadow-sm">
+              {driver.tag}
+            </span>
+          </div>
+
+          <!-- Content & Details -->
+          <div class="flex-1 min-w-0 flex flex-col justify-center py-0.5">
+            <!-- Name & Rating Row -->
+            <div class="flex items-center justify-between gap-1.5 mb-1">
+              <h3 class="font-bold text-sm sm:text-base text-m3-on-surface truncate font-heading">
+                {driver.name}
+              </h3>
+              <div class="inline-flex items-center gap-0.5 bg-m3-tertiary-container/30 border border-m3-tertiary/30 px-1.5 py-0.5 rounded-m3-full shrink-0">
+                <span class="material-symbols-outlined text-[13px] text-m3-tertiary">star</span>
+                <span class="text-[11px] font-bold text-m3-on-surface leading-none">{driver.rating}</span>
+              </div>
+            </div>
+
+            <!-- M3 Chips -->
+            <div class="flex flex-wrap items-center gap-1.5 mb-1.5">
+              <span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 bg-m3-success-container/40 border border-m3-success/30 rounded-m3-xs text-[10px] font-bold text-m3-on-success-container">
+                <span class="material-symbols-outlined text-[12px] text-m3-success">verified</span>
+                PVC Verified
+              </span>
+              {driver.trips && (
+                <span class="inline-flex items-center px-1.5 py-0.5 bg-m3-surface-container-high rounded-m3-xs text-[10px] font-semibold text-m3-on-surface-variant">
+                  {driver.trips} Trips
+                </span>
+              )}
+            </div>
+
+            <!-- Driver Specs -->
+            <div class="text-[11px] text-m3-on-surface-variant space-y-0.5">
+              <div class="flex items-center gap-1 truncate">
+                <span class="material-symbols-outlined text-[13px] text-m3-on-surface-variant/70 shrink-0">schedule</span>
+                <span class="truncate">{driver.experience}</span>
+              </div>
+              <div class="flex items-center gap-1 truncate">
+                <span class="material-symbols-outlined text-[13px] text-m3-on-surface-variant/70 shrink-0">translate</span>
+                <span class="truncate">{driver.languages}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- View All Drivers Hub Action -->
+    <div class="text-center mt-8">
+      <a
+        href="/drivers/"
+        class="inline-flex items-center gap-2 px-6 py-2.5 rounded-m3-full bg-m3-surface border border-m3-outline text-m3-on-surface font-bold text-xs sm:text-sm hover:bg-m3-surface-container-high shadow-m3-1 hover:shadow-m3-2 transition-all cursor-pointer group"
+      >
+        <span>View All Verified Drivers &amp; Profiles</span>
+        <span class="material-symbols-outlined text-[16px] text-m3-on-surface-variant group-hover:translate-x-1 transition-transform">arrow_forward</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+</style>

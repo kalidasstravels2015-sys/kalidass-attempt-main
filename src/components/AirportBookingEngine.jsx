@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  Plane, Car, Users, Calculator, MapPin, X,
+  Plane, Car, Users, User, Calculator, MapPin, X,
   ChevronDown, ShieldCheck, CheckCircle2,
   Calendar, Phone, ArrowRight, Clock, AlertCircle
 } from 'lucide-react';
@@ -9,6 +9,7 @@ import WhatsAppIcon from './react/WhatsAppIcon.jsx';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import { trackCalculatorQuote, trackEvent, markQuoteConverted } from '../lib/analytics';
 import { buildMapsLinks } from '../utils/whatsapp';
+import { getActiveGoogleSheetUrl } from '../config/googleSheets';
 import tariffConfig from '../data/tariff_config.json';
 import tnBusFares from '../data/tnBusFares.json';
 
@@ -249,7 +250,14 @@ const getDefaultDateTime = () => {
   return year + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
 };
 
-export default function AirportBookingEngine({ showHeader = true, enableStickyBar = false }) {
+export default function AirportBookingEngine({
+  showHeader = true,
+  enableStickyBar = false,
+  isOperatorMode = false,
+  operatorCallerPhone = '',
+  operatorCallerName = '',
+  onQuoteCalculated = null
+}) {
   // 1. Primary Toggles & 2. Default Direction (Airport Pickup as Default)
   const [direction, setDirection] = useState('pickup'); // 'pickup' | 'drop'
   const [pickup, setPickup] = useState(AIRPORT_HUB);
@@ -258,6 +266,8 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
   // 4. Date Inputs (Single DateTime + Flight Landing/Departure Time)
   const [dateTime, setDateTime] = useState(getDefaultDateTime);
   const [flightDetails, setFlightDetails] = useState('');
+  const [guestName, setGuestName] = useState(() => operatorCallerName || '');
+  const [guestPhone, setGuestPhone] = useState(() => operatorCallerPhone || '');
 
   // Passengers & Vehicle
   const [passengers, setPassengers] = useState('4');
@@ -570,6 +580,27 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
       setShowResult(true);
       scrollToResult();
 
+      const calcData = {
+        quoteRefId: generatedQuoteRef,
+        serviceTitle: `Chennai Airport Taxi (${direction === 'pickup' ? 'MAA Arrival Pickup' : 'MAA Departure Drop'})`,
+        activeTab: 'airport',
+        pickup: direction === 'pickup' ? AIRPORT_HUB : userLoc,
+        destination: direction === 'pickup' ? userLoc : AIRPORT_HUB,
+        pickupDateTime: dateTime,
+        returnDateTime: '',
+        durationDays: 1,
+        vehicleName: activeVeh,
+        passengers,
+        distanceKm: result.actual_km,
+        totalFare: result.total_fare,
+        formattedFare: `₹${result.total_fare.toLocaleString('en-IN')}`,
+        flightDetails: flightDetails || '',
+        timestamp: Date.now()
+      };
+      window.__KT_CURRENT_CALCULATION = calcData;
+      window.dispatchEvent(new CustomEvent('kt_calculation_updated', { detail: calcData }));
+      onQuoteCalculated?.(calcData);
+
       trackCalculatorQuote({
         calculatorId: 'airport_taxi',
         calculatorEngine: 'Chennai Airport Taxi Outstation Engine',
@@ -595,9 +626,17 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
   const handleWhatsAppBooking = () => {
     const isPickup = direction === 'pickup';
 
+    const cleanGuestPhone = (guestPhone || '').replace(/[^0-9]/g, '').slice(-10);
+    const guestLabel = (guestName || '').trim() || (cleanGuestPhone ? `Customer (${cleanGuestPhone})` : 'Airport Visitor');
+    const sourceWithPhone = cleanGuestPhone
+      ? `/services/chennai-airport-taxi/ (+91 ${cleanGuestPhone})`
+      : '/services/chennai-airport-taxi/';
+
     markQuoteConverted(quoteRefId, {
       quoteId: quoteRefId,
-      sourcePage: '/services/chennai-airport-taxi/',
+      guestName: guestLabel,
+      phone: cleanGuestPhone ? `+91 ${cleanGuestPhone}` : '',
+      sourcePage: sourceWithPhone,
       calculatorEngine: 'Chennai Airport Taxi Engine',
       calculatorId: 'airport_taxi',
       tripType: isPickup ? 'Airport Pickup (MAA Arrival)' : 'Airport Drop (MAA Departure)',
@@ -618,9 +657,69 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
       quote_id: quoteRefId
     });
 
+    // 1. Post to internal /api/record-calculation
+    try {
+      fetch('/api/record-calculation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          quoteId: quoteRefId,
+          timestamp: new Date().toLocaleString('en-IN'),
+          guestName: guestLabel,
+          phone: cleanGuestPhone ? `+91 ${cleanGuestPhone}` : '',
+          sourcePage: sourceWithPhone,
+          calculatorEngine: 'Chennai Airport Taxi Engine',
+          tripType: isPickup ? 'Airport Pickup' : 'Airport Drop',
+          pickup,
+          drop,
+          vehicle,
+          estimatedFare: estimate,
+          distanceKm: breakdown ? `${breakdown.actual_km} km` : `${distanceKm} km`,
+          status: 'WhatsApp Clicked',
+          metadata: flightDetails ? `Flight: ${flightDetails}` : ''
+        })
+      }).catch(() => {});
+    } catch (_) {}
+
+    // 2. Post to Google Sheet Webhook if configured
+    const activeSheetUrl = getActiveGoogleSheetUrl();
+    if (activeSheetUrl && activeSheetUrl.startsWith('http')) {
+      try {
+        fetch(activeSheetUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({
+            type: 'calculator_activity',
+            date: new Date().toLocaleString('en-IN'),
+            quoteId: quoteRefId,
+            tripType: isPickup ? 'Airport Pickup' : 'Airport Drop',
+            guestName: guestLabel,
+            phone: cleanGuestPhone ? `+91 ${cleanGuestPhone}` : '',
+            pickup,
+            drop,
+            vehicle,
+            passengers,
+            distance: breakdown ? breakdown.actual_km : distanceKm,
+            estimate,
+            travelDate: dateTime,
+            flightDetails,
+            isOutstation: breakdown ? breakdown.is_outstation : true,
+            sourcePage: sourceWithPhone,
+            status: 'WhatsApp Clicked'
+          })
+        }).catch(() => {});
+      } catch (_) {}
+    }
+
+    const customerLine = (guestName.trim() || cleanGuestPhone)
+      ? ('• Customer: ' + (guestName.trim() || 'Customer') + (cleanGuestPhone ? ' (+91 ' + cleanGuestPhone + ')' : ''))
+      : null;
+
     const msg = [
       '*Kalidass Travels — Chennai Airport Taxi Transfer*',
       '📌 *Quote Ref:* ' + quoteRefId + ' (24-Hr Rate Lock)',
+      customerLine,
       '• Transfer Type: ' + (isPickup ? 'Airport Pickup (MAA Arrival)' : 'Airport Drop (MAA Departure)'),
       '• From: ' + pickup,
       '• To: ' + drop,
@@ -645,29 +744,12 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
       })()
     ].filter(Boolean).join('\n');
 
-    try {
-      fetch('https://script.google.com/macros/s/AKfycbwoEpKqa3Qg-DIvMe06pGUgGLlC_0vJQev61nzIh9ssh1-uHZ5VtYkGzpMVwhEyi7tvEQ/exec', {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({
-          date: new Date().toLocaleString(),
-          quoteId: quoteRefId,
-          tripType: isPickup ? 'Airport Pickup' : 'Airport Drop',
-          pickup,
-          drop,
-          vehicle,
-          passengers,
-          distance: breakdown ? breakdown.actual_km : distanceKm,
-          estimate,
-          travelDate: dateTime,
-          flightDetails,
-          isOutstation: breakdown ? breakdown.is_outstation : true
-        })
-      }).catch(() => {});
-    } catch (_) {}
-
-    window.open('https://wa.me/918939539211?text=' + encodeURIComponent(msg), '_blank');
+    const cleanTargetPhone = isOperatorMode && operatorCallerPhone ? operatorCallerPhone.replace(/[^0-9]/g, '').slice(-10) : '';
+    if (cleanTargetPhone.length === 10) {
+      window.open('https://wa.me/91' + cleanTargetPhone + '?text=' + encodeURIComponent(msg), '_blank');
+    } else {
+      window.open('https://wa.me/918939539211?text=' + encodeURIComponent(msg), '_blank');
+    }
   };
 
   const handlePinClick = () => {
@@ -1215,6 +1297,36 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                 </div>
               </div>
 
+              {/* Optional Customer Contact for Faster Dispatch */}
+              <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-2.5 sm:p-3 space-y-1.5 text-left">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-bold text-slate-700 flex items-center gap-1.5">
+                    <User className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Your Name &amp; Mobile Number (Optional)</span>
+                  </span>
+                  <span className="text-[10px] text-slate-500 font-medium bg-white px-2 py-0.5 rounded border border-slate-200">
+                    Faster Coordination
+                  </span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <input
+                    type="text"
+                    value={guestName}
+                    onChange={(e) => setGuestName(e.target.value)}
+                    placeholder="Your Name (e.g. Kumar)"
+                    className="w-full h-9 bg-white border border-slate-200 rounded-lg px-2.5 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-m3-primary"
+                  />
+                  <input
+                    type="tel"
+                    maxLength={10}
+                    value={guestPhone}
+                    onChange={(e) => setGuestPhone(e.target.value.replace(/[^0-9]/g, ''))}
+                    placeholder="10-Digit Mobile Number"
+                    className="w-full h-9 bg-white border border-slate-200 rounded-lg px-2.5 text-xs font-mono text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-m3-primary"
+                  />
+                </div>
+              </div>
+
               {/* Action Buttons: WhatsApp & Call Desk */}
               <div className="pt-2 space-y-2">
                 <div className="flex flex-col sm:flex-row gap-2">
@@ -1237,7 +1349,7 @@ export default function AirportBookingEngine({ showHeader = true, enableStickyBa
                   </a>
                 </div>
                 <p className="text-[11px] text-slate-600 text-center font-medium">
-                  ✓ Lock Rate 24 Hrs ({quoteRefId}) • ✓ Check Live Cab Availability • ✓ Pay ₹500 Token Only After Confirmation
+                  ✓ Lock Rate 24 Hrs ({quoteRefId}) • ✓ Reserve Cab & Driver • ✓ Advance ₹500 Only After Confirmation
                 </p>
               </div>
             </div>

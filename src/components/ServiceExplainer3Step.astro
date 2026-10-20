@@ -6,7 +6,7 @@ export interface Step {
   desc: string;
   illustrationTitle?: string;
   illustrationSub?: string;
-  theme?: 'primary' | 'secondary' | 'tertiary' | 'surface';
+  theme?: 'primary' | 'secondary' | 'tertiary' | 'surface' | 'purple' | 'blue' | 'emerald' | 'amber';
   iconType?: 'car' | 'driver' | 'relax' | 'map' | 'pickup' | 'road';
 }
 
@@ -26,51 +26,51 @@ const pathname = Astro.url.pathname.endsWith("/") ? Astro.url.pathname : `${Astr
 const pageUrl = `https://kalidasstravels.in${pathname}`;
 ---
 
-<!-- Ultra-Compact Horizontal 3-Step Row (No Wasted Vertical Scrolling) -->
-<div class="my-4 sm:my-6">
-  <div class="bg-m3-surface-container-low rounded-m3-xl p-3 sm:p-4 border border-m3-outline-variant shadow-xs">
+<!-- Responsive Horizontal 3-Step Row with High-Contrast Typography & Breathing Room -->
+<div class="my-6 sm:my-8">
+  <div class="bg-m3-surface-container-low rounded-m3-2xl p-4 sm:p-6 border border-slate-200/80 shadow-xs">
     
     <!-- Header Bar -->
-    <div class="flex items-center justify-between gap-2 mb-2.5 pb-2 border-b border-m3-outline-variant/50">
-      <div class="flex items-center gap-2 min-w-0">
-        <span class="w-2 h-2 rounded-full bg-m3-primary shrink-0"></span>
-        <h2 class="text-xs sm:text-sm font-extrabold text-m3-on-surface font-heading tracking-tight truncate uppercase">
+    <div class="flex items-center justify-between gap-3 mb-3.5 pb-3 border-b border-slate-200/70">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <span class="w-2.5 h-2.5 rounded-full bg-m3-primary shrink-0"></span>
+        <h2 class="text-xs sm:text-sm md:text-base font-extrabold text-m3-on-surface font-heading tracking-tight truncate uppercase">
           {title}
         </h2>
         {subtitle && (
-          <span class="hidden md:inline text-micro text-m3-on-surface-variant font-sans truncate">
+          <span class="hidden md:inline text-xs sm:text-sm text-slate-600 font-sans truncate">
             — {subtitle}
           </span>
         )}
       </div>
-      <div class="flex items-center gap-1.5 shrink-0">
-        <span class="text-micro font-bold uppercase tracking-wider text-m3-primary bg-m3-primary/10 px-2 py-0.5 rounded-m3-full border border-m3-primary/20">
+      <div class="flex items-center gap-2 shrink-0">
+        <span class="text-xs font-bold uppercase tracking-wider text-m3-primary bg-m3-primary/10 px-2.5 py-1 rounded-m3-full border border-m3-primary/20">
           3 Easy Steps
         </span>
-        <span class="inline md:hidden text-micro text-m3-on-surface-variant font-medium">
+        <span class="inline md:hidden text-xs text-slate-500 font-medium">
           Swipe ➔
         </span>
       </div>
     </div>
 
     <!-- 3 Steps in a Single Horizontal Row (Mobile: Snap Row, Desktop: 3-Col Grid) -->
-    <div class="flex md:grid md:grid-cols-3 gap-2 sm:gap-3 overflow-x-auto snap-x snap-mandatory pb-1 md:pb-0 scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden items-stretch">
+    <div class="flex md:grid md:grid-cols-3 gap-3 sm:gap-4 overflow-x-auto snap-x snap-mandatory pb-1 md:pb-0 scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden items-stretch">
       {steps.map((s, idx) => (
-        <div class="min-w-[240px] sm:min-w-[270px] md:min-w-0 flex-1 shrink-0 md:shrink snap-start bg-m3-surface-container-lowest rounded-m3-lg p-2.5 sm:p-3 border border-m3-outline-variant hover:border-m3-primary/40 transition-colors flex items-start gap-2.5 relative">
+        <div class="min-w-[240px] sm:min-w-[270px] md:min-w-0 flex-1 shrink-0 md:shrink snap-start bg-m3-surface-container-lowest rounded-m3-xl p-3.5 sm:p-4 border border-slate-200/80 hover:border-m3-primary/40 transition-colors flex items-start gap-3 relative shadow-xs">
           
           <!-- Step Number Pill -->
-          <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-m3-md bg-m3-primary/10 text-m3-primary border border-m3-primary/20 flex items-center justify-center shrink-0 font-heading font-black text-xs shadow-xs">
+          <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-m3-lg bg-m3-primary/10 text-m3-primary border border-m3-primary/20 flex items-center justify-center shrink-0 font-heading font-black text-xs sm:text-sm shadow-xs">
             {s.stepNumber}
           </div>
 
           <!-- Step Content -->
           <div class="min-w-0 flex-1">
-            <div class="flex items-center justify-between gap-1 mb-0.5">
+            <div class="flex items-center justify-between gap-1 mb-1">
               <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading truncate">
                 {s.title}
               </h3>
             </div>
-            <p class="text-micro text-m3-on-surface-variant leading-relaxed line-clamp-2">
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed line-clamp-2">
               {s.desc}
             </p>
           </div>
@@ -90,34 +90,3 @@ const pageUrl = `https://kalidasstravels.in${pathname}`;
 
   </div>
 </div>
-
-<script
-  type="application/ld+json"
-  set:html={JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "HowTo",
-    "@id": `${pageUrl}#howto`,
-    "isPartOf": {
-      "@id": `${pageUrl}#webpage`
-    },
-    "name": title,
-    "description": subtitle,
-    "image": {
-      "@type": "ImageObject",
-      "url": "https://kalidasstravels.in/images/logo.webp",
-      "width": "200",
-      "height": "200"
-    },
-    "totalTime": "PT5M",
-    "step": steps.map((s, idx) => ({
-      "@type": "HowToStep",
-      "position": idx + 1,
-      "name": s.title,
-      "text": s.desc,
-      "image": {
-        "@type": "ImageObject",
-        "url": "https://kalidasstravels.in/images/logo.webp"
-      }
-    })),
-  })}
-/>

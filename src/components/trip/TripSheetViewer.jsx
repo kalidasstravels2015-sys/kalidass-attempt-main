@@ -35,7 +35,7 @@ export default function TripSheetViewer() {
     // 2. Check LocalStorage for instantly cached bookings
     if (typeof window !== 'undefined' && window.localStorage && refParam) {
       try {
-        const rawLocal = localStorage.getItem('kt_solo_real_bookings_v3');
+        const rawLocal = localStorage.getItem('kt_solo_real_bookings_v8') || localStorage.getItem('kt_solo_real_bookings_v7') || localStorage.getItem('kt_solo_real_bookings_v3');
         if (rawLocal) {
           const localList = JSON.parse(rawLocal);
           if (Array.isArray(localList)) {
@@ -423,7 +423,7 @@ export default function TripSheetViewer() {
                 )}
 
                 <div className="flex justify-between text-m3-success pt-1 border-t border-m3-outline-variant/40 font-semibold">
-                  <span>Advance Token Paid:</span>
+                  <span>Advance Paid:</span>
                   <span>-Rs. {advancePaid.toLocaleString('en-IN')}</span>
                 </div>
 
@@ -606,7 +606,7 @@ export default function TripSheetViewer() {
                 <span>Rs. {grossTotal.toLocaleString('en-IN')}</span>
               </div>
               <div className="flex justify-between text-m3-tertiary">
-                <span>Less Advance Token:</span>
+                <span>Less Advance Paid:</span>
                 <span>-Rs. {advancePaid.toLocaleString('en-IN')}</span>
               </div>
               <div className="border-t border-m3-outline-variant/40 pt-2 flex justify-between text-base font-extrabold text-m3-success">

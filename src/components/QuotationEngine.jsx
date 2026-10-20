@@ -7,6 +7,7 @@ import WhatsAppButton from './react/WhatsAppButton.jsx';
 import { buildWhatsAppUrl, buildMapsLinks } from '../utils/whatsapp';
 import { useVirtualKeyboard } from '../hooks/useVirtualKeyboard';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
+import { getActiveGoogleSheetUrl } from '../config/googleSheets';
 import siteContent from '../data/siteContent.json';
 
 import tariffConfig from '../data/tariff_config.json';
@@ -475,7 +476,11 @@ export default function QuotationEngine({
   allowedTabs = null,
   initialPickup = '',
   initialDrop = '',
-  autoCalculate = false
+  autoCalculate = false,
+  isOperatorMode = false,
+  operatorCallerPhone = '',
+  operatorCallerName = '',
+  onQuoteCalculated = null
 }) {
   const isTa = currentLang === 'ta';
   const labels = siteContent.ui_labels;
@@ -521,6 +526,8 @@ export default function QuotationEngine({
   const [breakdown, setBreakdown] = useState(null);
 
   // Customer Details & Validation
+  const [guestName, setGuestName] = useState('');
+  const [guestPhone, setGuestPhone] = useState('');
   const [date, setDate] = useState(() => getDefaultDepartureTime());
   const [returnDate, setReturnDate] = useState(() => {
     const defaultDep = getDefaultDepartureTime();
@@ -540,6 +547,7 @@ export default function QuotationEngine({
   const [requestedDriver, setRequestedDriver] = useState('');
   const [quoteRefId, setQuoteRefId] = useState('#KT-4820');
   const [showStickyQuoteBar, setShowStickyQuoteBar] = useState(false);
+  const [vehicleHighlighted, setVehicleHighlighted] = useState(false);
   const stableFormId = "booking-form-v1"; // Using stable ID for hydration safety
   const hasCalculatedResult = Boolean(showResult && estimate > 0 && pickup && (drop || activeTab === 'local'));
 
@@ -693,12 +701,55 @@ export default function QuotationEngine({
 
   useEffect(() => {
     setMounted(true);
-    // Eagerly load Google Maps Places for autocomplete and distance calculations
-    loadGoogleMaps().catch(() => {});
-    // Read ?driver= param set by the driver profile "Book" button
-    const params = new URLSearchParams(window.location.search);
-    const driver = params.get('driver');
-    if (driver) setRequestedDriver(decodeURIComponent(driver));
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const driver = params.get('driver');
+      if (driver) setRequestedDriver(decodeURIComponent(driver));
+
+      let vehParam = params.get('vehicle');
+      if (!vehParam && window.location.hash.includes('vehicle=')) {
+        const hashQuery = window.location.hash.split('?')[1];
+        if (hashQuery) {
+          vehParam = new URLSearchParams(hashQuery).get('vehicle');
+        }
+      }
+      if (vehParam) {
+        const decoded = decodeURIComponent(vehParam).trim();
+        const matched = vehicleOptions.find(
+          opt => opt.toLowerCase() === decoded.toLowerCase() ||
+                 opt.toLowerCase().includes(decoded.toLowerCase()) ||
+                 decoded.toLowerCase().includes(opt.toLowerCase())
+        );
+        if (matched) {
+          setVehicle(matched);
+          const maxCap = VEHICLE_CAPACITY[matched] || 4;
+          setPassengers(p => (parseInt(p, 10) > maxCap ? String(maxCap) : p));
+          setVehicleHighlighted(true);
+          setTimeout(() => setVehicleHighlighted(false), 2500);
+        }
+      }
+    }
+
+    const handleExternalVehicleSelect = (e) => {
+      const v = e?.detail?.vehicle;
+      if (!v) return;
+      const cleanV = String(v).trim();
+      const matched = vehicleOptions.find(
+        opt => opt.toLowerCase() === cleanV.toLowerCase() ||
+               opt.toLowerCase().includes(cleanV.toLowerCase()) ||
+               cleanV.toLowerCase().includes(opt.toLowerCase())
+      );
+      if (matched) {
+        setVehicle(matched);
+        const maxCap = VEHICLE_CAPACITY[matched] || 4;
+        setPassengers(p => (parseInt(p, 10) > maxCap ? String(maxCap) : p));
+        setVehicleHighlighted(true);
+        setTimeout(() => setVehicleHighlighted(false), 2500);
+      }
+    };
+
+    window.addEventListener('select-quote-vehicle', handleExternalVehicleSelect);
+    return () => window.removeEventListener('select-quote-vehicle', handleExternalVehicleSelect);
   }, []);
 
   // Analytics Hooks
@@ -751,6 +802,7 @@ export default function QuotationEngine({
           timestamp: Date.now()
         };
         window.dispatchEvent(new CustomEvent('kt_calculation_updated', { detail: window.__KT_CURRENT_CALCULATION }));
+        onQuoteCalculated?.(window.__KT_CURRENT_CALCULATION);
       }
     }
   }, [estimate, showResult, vehicle, activeTab, pickup, drop, date, returnDate, days, passengers, distance, localPackage]);
@@ -1478,10 +1530,17 @@ export default function QuotationEngine({
     }
 
     const finalEstimate = currentEst || estimate;
+    const cleanGuestPhone = (guestPhone || '').replace(/[^0-9]/g, '').slice(-10);
+    const guestLabel = (guestName || '').trim() || (cleanGuestPhone ? `Customer (${cleanGuestPhone})` : 'Website Visitor');
+    const sourceWithPhone = cleanGuestPhone 
+      ? `Website Booking Engine (+91 ${cleanGuestPhone})` 
+      : 'Website Booking Engine';
 
     markQuoteConverted(quoteRefId, {
       quoteId: quoteRefId,
-      sourcePage: '/services/outstation-cabs/',
+      guestName: guestLabel,
+      phone: cleanGuestPhone ? `+91 ${cleanGuestPhone}` : '',
+      sourcePage: sourceWithPhone,
       calculatorEngine: 'Outstation Fare Engine',
       tripType: activeTab === 'local' ? `Local Package (${localPackage})` : activeTab === 'oneway' ? 'One Way Drop' : `Round Trip (${days} Days)`,
       pickup: sanitizeInput(pickup),
@@ -1493,36 +1552,44 @@ export default function QuotationEngine({
       status: 'WhatsApp Clicked'
     });
 
-    // 5. Send Data to Sheet
+    // 5. Send Data to Google Sheet Webhook if configured
+    const activeSheetUrl = getActiveGoogleSheetUrl();
     const bookingData = {
-      date: new Date().toLocaleString(),
+      type: 'calculator_activity',
+      quoteId: quoteRefId,
+      date: new Date().toLocaleString('en-IN'),
       tripType: activeTab === 'local' ? `Local Package (${localPackage})` : activeTab === 'oneway' ? 'One Way Drop' : 'Round Trip',
-      name: 'Not Provided',
-      phone: 'Not Provided',
+      guestName: guestLabel,
+      phone: cleanGuestPhone ? `+91 ${cleanGuestPhone}` : '',
       pickup: sanitizeInput(pickup),
       drop: sanitizeInput(drop || 'Local Sightseeing (Chennai City)'),
       vehicle,
       passengers,
-      distance: currentDist ? currentDist.toFixed(1) : (activeTab === 'local' ? localPackage : ''),
+      distance: currentDist ? (activeTab === 'round' ? (currentDist * 2).toFixed(1) : currentDist.toFixed(1)) : (activeTab === 'local' ? localPackage : ''),
       estimate: finalEstimate,
       travelDate: date,
       returnDate: activeTab === 'round' ? returnDate : '',
-      days: activeTab === 'round' ? days : 1
+      days: activeTab === 'round' ? days : 1,
+      sourcePage: sourceWithPhone,
+      status: 'WhatsApp Clicked'
     };
 
-    try {
-      await fetch('https://script.google.com/macros/s/AKfycbwoEpKqa3Qg-DIvMe06pGUgGLlC_0vJQev61nzIh9ssh1-uHZ5VtYkGzpMVwhEyi7tvEQ/exec', {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify(bookingData)
-      });
-    } catch (e) {
-      console.log("Logging simplified");
+    if (activeSheetUrl && activeSheetUrl.startsWith('http')) {
+      try {
+        fetch(activeSheetUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify(bookingData)
+        }).catch(() => {});
+      } catch (e) {}
     }
 
     // 6. Build Crisp Official WhatsApp Quotation Message (Single Selected Vehicle + Approx Tolls/Permit + Quote Ref)
     const driverLine = requestedDriver ? `• *Requested Chauffeur:* ${requestedDriver}\n` : '';
+    const customerLine = (guestName.trim() || cleanGuestPhone)
+      ? `• *Customer:* ${guestName.trim() || 'Guest'}${cleanGuestPhone ? ` (+91 ${cleanGuestPhone})` : ''}\n`
+      : '';
     const tripTypeTitle = activeTab === 'local' 
       ? `Local Package (${localPackage === '5hr50km' ? '5 Hours / 50 Km' : localPackage === '8hr80km' ? '8 Hours / 80 Km' : '12 Hours / 120 Km'})`
       : activeTab === 'oneway' ? 'One Way Drop' : `Round Trip (${days} ${days > 1 ? 'Days' : 'Day'})`;
@@ -1561,7 +1628,7 @@ ${breakdown.free_buffer_km > 0 ? `• *Free Sightseeing Buffer:* +${breakdown.fr
       : '';
 
     const message = `*Kalidass Travels — Official Quotation (${quoteRefId})*
-${driverLine}• *Trip:* ${tripTypeTitle}
+${customerLine}${driverLine}• *Trip:* ${tripTypeTitle}
 • *Pickup:* ${sanitizeInput(pickup)}
 • *Drop:* ${activeTab === 'local' ? 'Local Sightseeing (Chennai City Limits)' : sanitizeInput(drop)}
 ${activeTab !== 'local' ? `• *Distance:* ~${currentDist ? (activeTab === 'round' ? (currentDist * 2).toFixed(0) : currentDist.toFixed(0)) : 'N/A'} km (${tripReq.drivingText || duration || 'Highway Route'})\n` : ''}• *Pickup Schedule:* ${date ? new Date(date).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : 'Not Specified'}
@@ -1577,7 +1644,8 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
       vehicle
     });
 
-    window.open(buildWhatsAppUrl(message), '_blank');
+    const targetPhone = isOperatorMode && operatorCallerPhone ? operatorCallerPhone : undefined;
+    window.open(buildWhatsAppUrl(message, targetPhone), '_blank');
   };
 
   // Helper for Input Classes
@@ -1756,10 +1824,10 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                   }}
                   onFocus={handleLocationFocus}
                   placeholder={isTa ? 'எ.கா: தி.நகர், ஏர்போர்ட், சென்ட்ரல்' : 'e.g. T. Nagar, Central, Airport, OMR'}
-                  className={`w-full min-h-[48px] bg-white border rounded-m3-lg px-3.5 py-3 text-sm ${
+                  className={`w-full min-h-[48px] bg-slate-50/50 hover:bg-white focus:bg-white border rounded-m3-lg px-3.5 py-3 text-sm ${
                     errors.pickup 
                       ? 'border-m3-error ring-1 ring-m3-error bg-m3-error-container/10' 
-                      : 'border-m3-outline-variant hover:border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20'
+                      : 'border-slate-200/90 hover:border-slate-300 focus:border-[#1a73e8] focus:ring-2 focus:ring-[#1a73e8]/15'
                   } ${pickup ? 'text-m3-on-surface font-semibold' : 'text-m3-on-surface font-normal'} placeholder:text-sm placeholder:text-m3-on-surface-variant/75 placeholder:font-normal outline-none transition-all pr-20 shadow-2xs`}
                 />
                 <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
@@ -1843,10 +1911,10 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                   }}
                   onFocus={handleLocationFocus}
                   placeholder={isTa ? 'எ.கா: பாண்டிச்சேரி, பெங்களூரு, திருப்பதி' : 'e.g. Pondicherry, Bangalore, Tirupati, Vellore'}
-                  className={`w-full min-h-[48px] bg-white border rounded-m3-lg px-3.5 py-3 text-sm ${
+                  className={`w-full min-h-[48px] bg-slate-50/50 hover:bg-white focus:bg-white border rounded-m3-lg px-3.5 py-3 text-sm ${
                     errors.drop 
                       ? 'border-m3-error ring-1 ring-m3-error bg-m3-error-container/10' 
-                      : 'border-m3-outline-variant hover:border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20'
+                      : 'border-slate-200/90 hover:border-slate-300 focus:border-[#1a73e8] focus:ring-2 focus:ring-[#1a73e8]/15'
                   } ${drop ? 'text-m3-on-surface font-semibold' : 'text-m3-on-surface font-normal'} placeholder:text-sm placeholder:text-m3-on-surface-variant/75 placeholder:font-normal outline-none transition-all pr-20 shadow-2xs`}
                 />
                 <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
@@ -1960,7 +2028,7 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
             <div className="space-y-2">
               <div className={`grid ${activeTab === 'round' ? 'grid-cols-2' : 'grid-cols-1'} gap-2 sm:gap-3`}>
                 {/* Pickup Date Tile */}
-                <div className="group relative rounded-xl border border-m3-outline-variant bg-slate-50/70 hover:bg-slate-50 hover:border-m3-outline focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/20 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
+                <div className="group relative rounded-xl border border-slate-200/90 bg-slate-50/60 hover:bg-white hover:border-slate-300 focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/15 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
                   <div className="flex items-center justify-between gap-1 mb-1">
                     <label 
                       htmlFor={`${stableFormId}-pickup-date-main`} 
@@ -1993,7 +2061,7 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
 
                 {/* Return Date Tile (for Round Trip) */}
                 {activeTab === 'round' && (
-                  <div className="group relative rounded-xl border border-m3-outline-variant bg-slate-50/70 hover:bg-slate-50 hover:border-m3-outline focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/20 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
+                  <div className="group relative rounded-xl border border-slate-200/90 bg-slate-50/60 hover:bg-white hover:border-slate-300 focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/15 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
                     <div className="flex items-center justify-between gap-1 mb-1">
                       <label 
                         htmlFor={`${stableFormId}-return-date-main`} 
@@ -2031,7 +2099,7 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
             {/* 4. Passengers & Vehicle Selection Tiles */}
             <div className="grid grid-cols-2 gap-2 sm:gap-3">
               {/* Passenger Tile */}
-              <div className="group relative rounded-xl border border-m3-outline-variant bg-slate-50/70 hover:bg-slate-50 hover:border-m3-outline focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/20 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
+              <div className="group relative rounded-xl border border-slate-200/90 bg-slate-50/60 hover:bg-white hover:border-slate-300 focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/15 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
                 <div className="flex items-center justify-between gap-1 mb-1">
                   <label 
                     htmlFor={`${stableFormId}-passengers`} 
@@ -2059,7 +2127,11 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
               </div>
 
               {/* Vehicle Model Tile */}
-              <div className="group relative rounded-xl border border-m3-outline-variant bg-slate-50/70 hover:bg-slate-50 hover:border-m3-outline focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/20 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
+              <div className={`group relative rounded-xl border transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer ${
+                vehicleHighlighted
+                  ? 'border-[#1a73e8] ring-2 ring-[#1a73e8]/30 bg-blue-50/80 shadow-md'
+                  : 'border-slate-200/90 bg-slate-50/60 hover:bg-white hover:border-slate-300 focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/15'
+              }`}>
                 <div className="flex items-center justify-between gap-1 mb-1">
                   <label 
                     htmlFor={`${stableFormId}-vehicle`} 
@@ -2068,6 +2140,11 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                     <Car className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
                     <span className="truncate">{isTa ? 'வாகனம்' : 'Vehicle Model'}</span>
                   </label>
+                  {vehicleHighlighted && (
+                    <span className="text-[10px] font-bold text-[#1a73e8] bg-white px-1.5 py-0.5 rounded-full border border-[#1a73e8]/30 animate-pulse shrink-0">
+                      {isTa ? 'தேர்ந்தெடுக்கப்பட்டது' : 'Selected'}
+                    </span>
+                  )}
                 </div>
                 <div className="relative">
                   <select
@@ -2380,6 +2457,36 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                   </div>
                 </div>
 
+                {/* Optional Customer Contact for Faster Dispatch */}
+                <div className="bg-m3-surface-container-low border border-m3-outline-variant/60 rounded-m3-lg p-2.5 sm:p-3 space-y-1.5">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-bold text-m3-on-surface flex items-center gap-1.5">
+                      <User className="w-3.5 h-3.5 text-m3-on-surface-variant" />
+                      <span>{isTa ? 'உங்கள் பெயர் & மொபைல் எண் (விருப்பத்தேர்வு)' : 'Your Name & Mobile Number (Optional)'}</span>
+                    </span>
+                    <span className="text-[10px] text-m3-on-surface-variant font-medium bg-m3-surface px-2 py-0.5 rounded border border-m3-outline-variant/40">
+                      {isTa ? 'விருப்பத்தேர்வு' : 'Faster Coordination'}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <input
+                      type="text"
+                      value={guestName}
+                      onChange={(e) => setGuestName(e.target.value)}
+                      placeholder={isTa ? "பெயர் (எ.கா: குமார்)" : "Your Name (e.g. Kumar)"}
+                      className="w-full h-9 bg-m3-surface border border-m3-outline-variant rounded-m3-md px-2.5 text-xs text-m3-on-surface placeholder:text-m3-on-surface-variant/50 focus:outline-none focus:border-m3-primary"
+                    />
+                    <input
+                      type="tel"
+                      maxLength={10}
+                      value={guestPhone}
+                      onChange={(e) => setGuestPhone(e.target.value.replace(/[^0-9]/g, ''))}
+                      placeholder={isTa ? "10 இலக்க மொபைல் எண்" : "10-Digit Mobile Number"}
+                      className="w-full h-9 bg-m3-surface border border-m3-outline-variant rounded-m3-md px-2.5 text-xs font-mono text-m3-on-surface placeholder:text-m3-on-surface-variant/50 focus:outline-none focus:border-m3-primary"
+                    />
+                  </div>
+                </div>
+
                 {/* Direct Booking & Official WhatsApp Quotation Actions */}
                 <div className="pt-1 space-y-1.5">
                   <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2">
@@ -2403,8 +2510,8 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                   </div>
                   <p className="text-[11px] text-emerald-800 font-semibold text-center bg-emerald-50/80 border border-emerald-200/70 rounded-lg py-1 px-2.5">
                     {isTa
-                      ? `✓ வாட்ஸ்அப்பில் அதிகாரப்பூர்வ மேற்கோள் (${quoteRefId}) • ✓ வண்டி இருப்பை அறியவும் • ✓ உறுதி செய்த பின்னரே ₹500 முன்பணம்`
-                      : `✓ Lock Rate 24 Hrs (${quoteRefId}) • ✓ Check Live Cab Availability • ✓ Pay ₹500 Token Only After Confirmation`}
+                      ? `✓ வாட்ஸ்அப்பில் மேற்கோள் (${quoteRefId}) • ✓ வண்டி & ஓட்டுநர் ஒதுக்கீடு • ✓ முன்பதிவு செய்ய ₹500 முன்பணம் மட்டும்`
+                      : `✓ Lock Rate 24 Hrs (${quoteRefId}) • ✓ Reserve Cab & Driver • ✓ Advance ₹500 Only After Confirmation`}
                   </p>
                 </div>
 

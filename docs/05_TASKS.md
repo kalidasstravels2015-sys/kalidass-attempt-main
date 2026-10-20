@@ -21,7 +21,7 @@
                                      │
 ┌────────────────────────────────────▼────────────────────────────────────┐
 │ Phase 3: Driver & Payment Automation (UPCOMING)                         │
-│ Razorpay UPI Advance Token • Driver Dispatch PWA • Digital Trip Sheet   │
+│ Razorpay UPI Advance Booking • Driver Dispatch PWA • Digital Trip Sheet │
 └────────────────────────────────────┬────────────────────────────────────┘
                                      │
 ┌────────────────────────────────────▼────────────────────────────────────┐
@@ -73,8 +73,8 @@
 ---
 
 ### Phase 3: Driver & Payment Automation (Upcoming 📅)
-- [ ] **TASK-301: Razorpay / Cashfree UPI Token Advance Gateway**
-  - Add optional ₹300–₹500 advance deposit token for outstation and airport bookings to eliminate customer cancellations and no-shows.
+- [ ] **TASK-301: Razorpay / Cashfree UPI Advance Booking Gateway**
+  - Add optional ₹300–₹500 advance deposit to reserve cab & driver for outstation and airport bookings to eliminate customer cancellations and no-shows.
 - [ ] **TASK-302: Driver Progressive Web App (PWA)**
   - Zero-install web dashboard for drivers:
     - Receive trip assignments via WhatsApp link.

@@ -5,14 +5,14 @@ import WhatsAppIcon from "./WhatsAppIcon.astro";
 
 const hero = siteContent.hero;
 const heroImages = hero.images && hero.images.length > 0 ? hero.images : [
-  "/images/hero/airavatesvara.webp",
-  "/images/hero/coimbatore.webp",
   "/images/hero/madurai.webp",
+  "/images/hero/airavatesvara.webp",
+  "/images/hero/kanchipuram.webp",
 ];
 const heroImageAlts: Record<string, string> = {
-  "/images/hero/airavatesvara.webp": "Airavatesvara Temple Darasuram - Kalidass Travels Tamil Nadu Pilgrimage Tour",
-  "/images/hero/coimbatore.webp": "Adiyogi Shiva statue Coimbatore - Kalidass Travels Outstation Cab",
   "/images/hero/madurai.webp": "Madurai Meenakshi Amman Temple Gopuram - Kalidass Travels Chauffeur Taxi",
+  "/images/hero/airavatesvara.webp": "Airavatesvara Temple Darasuram - Kalidass Travels Tamil Nadu Pilgrimage Tour",
+  "/images/hero/kanchipuram.webp": "Kanchipuram Kailasanathar Temple - Kalidass Travels Outstation Cab",
 };
 ---
 
@@ -73,13 +73,20 @@ const heroImageAlts: Record<string, string> = {
     class="relative z-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center"
   >
 
-    <!-- E-E-A-T Social Proof Eyebrow Badge -->
-    <div class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1 rounded-m3-full bg-slate-900/50 backdrop-blur-md border border-white/25 text-white text-[11px] sm:text-xs font-medium mb-2.5 sm:mb-3.5 shadow-sm">
-      <span class="text-white text-xs sm:text-sm">★</span>
-      <span class="font-semibold text-white">4.9 Rated</span>
+    <!-- E-E-A-T Social Proof Eyebrow Badge (Direct link to Google Maps 5.0 Star Profile) -->
+    <a
+      href="https://maps.app.goo.gl/i2LdJhWMi2ZgAiCa8"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 py-1.5 rounded-m3-full bg-slate-900/65 hover:bg-slate-900/85 backdrop-blur-md border border-white/25 text-white text-[11px] sm:text-xs font-medium mb-2.5 sm:mb-3.5 shadow-sm transition-all hover:scale-105 active:scale-95 group cursor-pointer"
+      title="View 5.0 Star Verified Google Reviews for Kalidass Travels"
+    >
+      <span class="text-amber-400 text-xs sm:text-sm">★</span>
+      <span class="font-bold text-white">5.0 on Google Maps</span>
       <span class="text-white/60">•</span>
-      <span>1,000+ Happy Families</span>
-    </div>
+      <span class="text-white/90 group-hover:underline">12 Verified Reviews</span>
+      <span class="material-symbols-outlined text-[13px] text-white/70 ml-0.5 group-hover:translate-x-0.5 transition-transform">open_in_new</span>
+    </a>
 
     <!-- M3 Display Headline -->
     <h1
@@ -98,14 +105,22 @@ const heroImageAlts: Record<string, string> = {
       Doorstep pickups, clean AC cabs, and transparent rates for airport, outstation &amp; temple trips.
     </p>
 
-    <!-- M3 Signature Action Button (Google Sapphire Blue) -->
-    <div class="mb-4 sm:mb-6">
+    <!-- M3 Signature Action Buttons: Instant Fare Calculation + Direct Tap-to-Call -->
+    <div class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3.5 mb-4 sm:mb-6">
       <a
         href="#booking-panel"
-        class="inline-flex items-center gap-2 sm:gap-2.5 px-6 sm:px-8 py-3 sm:py-3.5 !bg-[#0B57D0] hover:!bg-[#0842A0] active:!bg-[#0842A0] !text-white text-xs sm:text-sm font-bold rounded-m3-full shadow-m3-2 hover:shadow-m3-3 transition-all transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer border border-white/20 group"
+        class="inline-flex items-center gap-2 sm:gap-2.5 px-5 sm:px-8 py-3 sm:py-3.5 !bg-[#0B57D0] hover:!bg-[#0842A0] active:!bg-[#0842A0] !text-white text-xs sm:text-sm font-bold rounded-m3-full shadow-m3-2 hover:shadow-m3-3 transition-all transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer border border-white/20 group"
       >
         <span class="text-xs sm:text-m3-label-l font-bold text-white">Calculate Fare &amp; Rates</span>
         <span class="material-symbols-outlined text-[18px] sm:text-[20px] text-white transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+      </a>
+      <a
+        href="tel:+919092303060"
+        class="inline-flex items-center gap-2 px-4 sm:px-6 py-3 sm:py-3.5 bg-emerald-600/90 hover:bg-emerald-600 active:bg-emerald-700 text-white text-xs sm:text-sm font-bold rounded-m3-full shadow-m3-2 hover:shadow-m3-3 transition-all transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer border border-white/20 backdrop-blur-sm"
+        aria-label="Call Kalidass Travels on 090923 03060"
+      >
+        <span class="material-symbols-outlined text-[18px] sm:text-[20px] text-white">call</span>
+        <span class="text-xs sm:text-m3-label-l font-bold text-white">Call 090923 03060</span>
       </a>
     </div>
 

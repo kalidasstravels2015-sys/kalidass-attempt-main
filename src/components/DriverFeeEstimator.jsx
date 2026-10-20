@@ -160,6 +160,10 @@ export default function DriverFeeEstimator({
   title    = 'Outstation Driver Estimator',
   subtitle = 'Calculate exact Bata, Stay & Transit',
   embedded = false,
+  isOperatorMode = false,
+  operatorCallerPhone = '',
+  operatorCallerName = '',
+  onQuoteCalculated = null,
 }) {
   const [activeTab,     setActiveTab]     = useState('oneway');
   const [vehicleKey,    setVehicleKey]    = useState('hatchback');
@@ -312,6 +316,27 @@ export default function DriverFeeEstimator({
         });
       }
 
+      const calcData = {
+        quoteRefId: generatedQuoteRef,
+        serviceTitle: `Acting Driver (${activeTab === 'round' ? 'Round Trip' : 'One Way Drop'})`,
+        activeTab: 'driver',
+        pickup: pickup || 'Chennai',
+        destination: drop || 'Outstation',
+        pickupDateTime: travelDate ? `${travelDate} ${reportingTime}` : '',
+        returnDateTime: '',
+        durationDays: d,
+        vehicleName: vehicle.label,
+        passengers: 'Acting Driver',
+        distanceKm: distKm ? (activeTab === 'round' ? distKm * 2 : distKm) : 0,
+        totalFare: calculatedFare,
+        formattedFare: `₹${calculatedFare.toLocaleString('en-IN')}`,
+        gear,
+        timestamp: Date.now()
+      };
+      window.__KT_CURRENT_CALCULATION = calcData;
+      window.dispatchEvent(new CustomEvent('kt_calculation_updated', { detail: calcData }));
+      onQuoteCalculated?.(calcData);
+
       trackCalculatorQuote({
         calculatorId: 'acting_driver',
         calculatorEngine: 'Acting Driver Cost Calculator',
@@ -421,7 +446,7 @@ export default function DriverFeeEstimator({
       (stayNote ? `• Driver Stay: ${stayNote}\n` : '') +
       `\nPlease save my quote & confirm verified chauffeur availability.` +
       mapsBlock;
-    return buildWhatsAppUrl(msg);
+    return buildWhatsAppUrl(msg, isOperatorMode && operatorCallerPhone ? operatorCallerPhone : undefined);
   };
 
   const fmtRs = n => `₹${Number(n).toLocaleString('en-IN')}`;

@@ -153,7 +153,7 @@ const faqs = [
 
 // ── Schema.org Structured Data ───────────────────────────────────────────
 const chauffeurServiceSchema = {
-  "@type": ["Service", "TaxiService"],
+  "@type": "Service",
   "@id": "https://kalidasstravels.in/services/acting-drivers/#service",
   "name": "Acting Driver & Personal Car Chauffeur Service in Chennai",
   "alternateName": [
@@ -170,19 +170,7 @@ const chauffeurServiceSchema = {
   "hoursAvailable": "Mo-Su 00:00-23:59",
   "termsOfService": "Zero advance payment, pay post-trip, police-verified chauffeurs, flat rates with zero surge pricing",
   "provider": {
-    "@type": "LocalBusiness",
-    "@id": "https://kalidasstravels.in/#localbusiness",
-    "name": "Kalidass Travels",
-    "telephone": "+918939539211",
-    "priceRange": "₹₹",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "No. 14, VGP Shanthi Nagar, Pallikaranai / Medavakkam",
-      "addressLocality": "Chennai",
-      "addressRegion": "Tamil Nadu",
-      "postalCode": "600100",
-      "addressCountry": "IN"
-    }
+    "@id": "https://kalidasstravels.in/#localbusiness"
   },
   "areaServed": [
     { "@type": "City", "name": "Chennai" },
@@ -259,132 +247,6 @@ const chauffeurServiceSchema = {
   }
 };
 
-const productSchema = {
-  "@type": "Product",
-  "@id": "https://kalidasstravels.in/services/acting-drivers/#product",
-  "name": "Acting Driver Service for Personal Cars in Chennai",
-  "sku": "ACTING-DRIVER-CHENNAI-750",
-  "description": description,
-  "image": "https://kalidasstravels.in/images/services/acting-drivers.webp",
-  "brand": {
-    "@type": "Brand",
-    "name": "Kalidass Travels"
-  },
-  "offers": {
-    "@type": "AggregateOffer",
-    "priceCurrency": "INR",
-    "lowPrice": "750",
-    "highPrice": "5500",
-    "offerCount": (cityTariff.length + outstationTariff.length + onewayDropTariff.length).toString(),
-    "priceValidUntil": "2027-12-31",
-    "validFrom": "2025-01-01",
-    "url": "https://kalidasstravels.in/services/acting-drivers/#tariffs",
-    "availability": "https://schema.org/InStock",
-    "seller": {
-      "@id": "https://kalidasstravels.in/#localbusiness"
-    },
-    "offers": [
-      ...cityTariff.map((item) => ({
-        "@type": "Offer",
-        "name": item.name,
-        "description": `${item.hours} local duty: ${item.idealFor}`,
-        "price": item.rate.replace(/[^0-9]/g, ""),
-        "priceCurrency": "INR",
-        "priceValidUntil": "2027-12-31",
-        "validFrom": "2025-01-01",
-        "availability": "https://schema.org/InStock",
-        "url": "https://kalidasstravels.in/services/acting-drivers/#tariffs",
-        "seller": { "@id": "https://kalidasstravels.in/#localbusiness" }
-      })),
-      ...outstationTariff.map((item) => ({
-        "@type": "Offer",
-        "name": `Outstation Acting Driver - ${item.vehicle}`,
-        "description": `Outstation duty for ${item.examples} at ${item.rate}`,
-        "price": item.rate.replace(/[^0-9]/g, ""),
-        "priceCurrency": "INR",
-        "priceValidUntil": "2027-12-31",
-        "validFrom": "2025-01-01",
-        "availability": "https://schema.org/InStock",
-        "url": "https://kalidasstravels.in/services/acting-drivers/#tariffs",
-        "seller": { "@id": "https://kalidasstravels.in/#localbusiness" }
-      })),
-      ...onewayDropTariff.map((item) => ({
-        "@type": "Offer",
-        "name": `One-Way Drop: ${item.route}`,
-        "description": `${item.dest} - ${item.breakdown}`,
-        "price": item.total.replace(/[^0-9]/g, ""),
-        "priceCurrency": "INR",
-        "priceValidUntil": "2027-12-31",
-        "validFrom": "2025-01-01",
-        "availability": "https://schema.org/InStock",
-        "url": "https://kalidasstravels.in/services/acting-drivers/#tariffs",
-        "seller": { "@id": "https://kalidasstravels.in/#localbusiness" }
-      }))
-    ]
-  },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "reviewCount": "1280",
-    "bestRating": "5",
-    "worstRating": "1"
-  },
-  "review": [
-    {
-      "@type": "Review",
-      "author": { "@type": "Person", "name": "Sundararajan V." },
-      "datePublished": "2026-03-15",
-      "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
-      "reviewBody": "Booked an acting driver for my automatic Honda City for a 4-hour shopping trip in T. Nagar. Driver reported 15 mins early in clean uniform, negotiated peak Chennai traffic smoothly, and waited patiently. Paid ₹750 post-trip via GPay. Highly recommended!"
-    },
-    {
-      "@type": "Review",
-      "author": { "@type": "Person", "name": "Meenakshi Ramanathan" },
-      "datePublished": "2026-03-28",
-      "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
-      "reviewBody": "Hired an outstation acting driver to drive our sedan from Chennai to Pondicherry one-way. Very courteous, smooth 80 km/h highway speed, zero jerky overtakes. The ₹1,900 transparent package included SETC bus return ticket. Zero advance needed."
-    }
-  ]
-};
-
-const howToSchema = {
-  "@type": "HowTo",
-  "@id": "https://kalidasstravels.in/services/acting-drivers/#howto",
-  "name": "How to Book a Police-Verified Acting Driver in Chennai",
-  "description": "Step-by-step process for hiring a verified chauffeur to drive your personal car in Chennai or for outstation trips with zero advance deposit.",
-  "totalTime": "PT2M",
-  "step": [
-    {
-      "@type": "HowToStep",
-      "position": 1,
-      "name": "Share Car Model & Pickup Details",
-      "text": "Share your car model, transmission type (Manual, Automatic, or EV), reporting address in Chennai, and departure time via WhatsApp, calculator or phone call.",
-      "url": "https://kalidasstravels.in/services/acting-drivers/#trip-estimator"
-    },
-    {
-      "@type": "HowToStep",
-      "position": 2,
-      "name": "Verified Chauffeur Assigned",
-      "text": "Our 24/7 dispatch desk assigns the nearest police background-verified (PVC) chauffeur and shares their contact details and credentials in advance.",
-      "url": "https://kalidasstravels.in/services/acting-drivers/#tariffs"
-    },
-    {
-      "@type": "HowToStep",
-      "position": 3,
-      "name": "2-Minute Joint Vehicle Inspection",
-      "text": "Driver reports 15 minutes early in clean uniform. Complete a quick 2-minute check of fuel gauge, odometer reading, and any vehicle quirks.",
-      "url": "https://kalidasstravels.in/services/acting-drivers/#how-it-works"
-    },
-    {
-      "@type": "HowToStep",
-      "position": 4,
-      "name": "Relax and Pay After Trip",
-      "text": "Enjoy your ride with zero driving fatigue. Pay the exact transparent agreed fare post-trip via UPI or cash with zero advance deposit.",
-      "url": "https://kalidasstravels.in/services/acting-drivers/#how-it-works"
-    }
-  ]
-};
-
 const faqSchema = {
   "@type": "FAQPage",
   "@id": "https://kalidasstravels.in/services/acting-drivers/#faq",
@@ -433,7 +295,7 @@ const tariffListSchema = {
   keywords={keywords}
   image="/images/services/acting-drivers.webp"
   ogImage="/og/acting-drivers.jpg"
-  schema={[chauffeurServiceSchema, productSchema, howToSchema, faqSchema, tariffListSchema]}
+  schema={[chauffeurServiceSchema, faqSchema, tariffListSchema]}
 >
   <Breadcrumbs items={breadcrumbItems} />
 

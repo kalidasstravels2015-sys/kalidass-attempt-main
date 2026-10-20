@@ -15,18 +15,18 @@ const {
 
 const variantClasses = {
   elevated:
-    "bg-m3-surface-container-lowest text-m3-on-surface shadow-sm hover:shadow-md border border-m3-outline-variant/40",
+    "bg-m3-surface-container-lowest text-m3-on-surface shadow-ambient hover:shadow-ambient-hover border border-slate-200/80 hover:border-slate-300",
   filled:
-    "bg-m3-surface-container-low text-m3-on-surface border border-transparent hover:bg-m3-surface-container",
+    "bg-m3-surface-container-low text-m3-on-surface border border-transparent hover:bg-m3-surface-container shadow-xs",
   outlined:
-    "bg-m3-surface text-m3-on-surface border border-m3-outline-variant hover:bg-m3-surface-container-lowest",
+    "bg-m3-surface text-m3-on-surface border border-m3-outline-variant hover:border-m3-primary/40 hover:bg-m3-surface-container-lowest shadow-xs",
 }[variant];
 ---
 
 <div
   id={id}
   class:list={[
-    "rounded-2xl p-5 sm:p-6 transition-all duration-200",
+    "rounded-m3-2xl p-6 sm:p-8 transition-all duration-200",
     variantClasses,
     className,
   ]}

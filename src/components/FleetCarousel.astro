@@ -117,8 +117,11 @@ const formatSeats = (caps: string) => {
             priceLabel="Starting From"
             priceSubtext="Fixed Per-KM Rates"
             price={vehicle.rate}
-            actionText="View Rates & Tariff"
-            actionHref={getTariffLink(vehicle.name)}
+            actionText="Reserve"
+            actionHref={`/?vehicle=${encodeURIComponent(vehicle.name)}#booking-panel`}
+            dataAttributes={{ 'data-fleet-select': vehicle.name }}
+            secondaryActionText="View Rates & Tariff"
+            secondaryActionHref={getTariffLink(vehicle.name)}
           />
         ))}
       </div>
@@ -194,5 +197,28 @@ const formatSeats = (caps: string) => {
         }, { passive: true });
       }
     }
+
+    // Connect "Reserve" directly to Quotation Engine on pages with booking-panel
+    document.querySelectorAll('[data-fleet-select]').forEach((el) => {
+      el.addEventListener('click', (e) => {
+        const bookingPanel = document.getElementById('booking-panel') || document.getElementById('booking');
+        if (bookingPanel) {
+          e.preventDefault();
+          const vehName = el.getAttribute('data-fleet-select');
+          if (vehName) {
+            window.dispatchEvent(new CustomEvent('select-quote-vehicle', {
+              detail: { vehicle: vehName }
+            }));
+          }
+          bookingPanel.scrollIntoView({ behavior: 'smooth' });
+          setTimeout(() => {
+            const input = bookingPanel.querySelector('input[placeholder*="pickup" i], input[placeholder*="Pickup" i], input[type="text"]');
+            if (input && input instanceof HTMLElement) {
+              input.focus({ preventScroll: true });
+            }
+          }, 450);
+        }
+      });
+    });
   })();
 </script>

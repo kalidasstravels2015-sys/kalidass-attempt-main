@@ -210,19 +210,33 @@ Key icons in standard usage:
 
 ---
 
-## 6. Typography Hygiene & Touch Target Standards
+## 6. Typography Hygiene, Touch Targets & Section Rhythm Standards
 
-1. **Strict No Faux-Italics Rule:**  
-   Because only normal-weight Latin `plus-jakarta-sans-latin.woff2` is loaded, never use `font-style: italic` or `<i>` on body sans-serif text. The browser synthetically distorts geometric sans-serif curves into sheared oblique angles. Testimonials must use clean, normal-weight typography (`text-xs sm:text-sm text-m3-on-surface font-normal leading-relaxed`).
+1. **Strict 44px–48px Ergonomic Touch Targets (WCAG 2.1 Level AA/AAA):**  
+   - All interactive buttons, action links, and form controls have a strict **minimum height floor of 44px (`min-h-[44px] h-11`)** on both mobile and desktop (Level AA).
+   - Primary hero conversion CTAs and floating action buttons (FABs) use **48px–52px (`min-h-[48px] h-12` / `min-h-[52px]`)** (Level AAA).
+   - All interactive touch targets must include micro-haptic press physics (`active:scale-[0.98] transition-transform`).
 
-2. **No Monospace Contamination:**  
-   Do not use `font-mono` on customer-facing navigation chips, headers, or buttons. All consumer UI elements strictly use `font-sans` (`Plus Jakarta Sans`).
+2. **Absolute 12px Legibility Floor:**  
+   - Font sizes must never drop below **12px (`text-xs` / `text-micro` = 12px / 0.75rem)**.
+   - The obsolete 10px micro-text pattern is completely eliminated from the design system to ensure 100% legibility in sunlight and for all age groups.
 
-3. **Button Label & Touch Target Standards (WCAG 2.1 AA/AAA):**  
-   - All interactive action buttons must have a **minimum height of 38px on mobile** and **44–48px on desktop**.
-   - Button font size must never drop below **12px (`text-xs` / `text-m3-label-m`)**. Never use `text-micro` (10px) on interactive buttons.
-   - Paragraph and descriptive card text must never use `text-badge` (11px bold); use `text-xs sm:text-sm text-m3-on-surface-variant font-normal leading-relaxed`.
+3. **Tabular Numerals on Rates & Tariffs (`.tabular-nums`):**  
+   - All monetary figures, per-km rates, and tariff tables must use `font-variant-numeric: tabular-nums` (`.tabular-nums`) to ensure vertical alignment of digits across comparison grids and pricing cards.
 
-4. **Section Heading Uniformity:**  
-   Headlines must maintain uniform, high-contrast `#111827` (`text-m3-on-surface`). Never use pseudo-accent spans like `<span class="text-m3-primary">` on charcoal headers, which creates barely perceptible color jitter.
+4. **Section Spacing & Vertical Breathing Room:**  
+   - Standard section vertical rhythm is set to **80px–96px on desktop (`my-14 md:my-20 space-y-16 lg:space-y-20`)** and **48px–64px on mobile (`my-10 sm:my-12`)**.
+   - Major container cards utilize generous internal padding: **`p-6 sm:p-8`**, while atomic cards use **`p-4 sm:p-5`**.
+
+5. **Multi-Layer Ambient Elevation Shadows:**  
+   - Surfaces utilize multi-layered ambient elevation (`.shadow-ambient`, `.elevation-resting`, `.elevation-hover`) combining a soft wide-radius ambient glow with a crisp micro-rim border (`border-slate-200/80` or `border-m3-outline-variant/60`) for modern tactile depth.
+
+6. **Strict No Faux-Italics Rule:**  
+   - Because only normal-weight Latin `plus-jakarta-sans-latin.woff2` is loaded, never use `font-style: italic` or `<i>` on body sans-serif text. The browser synthetically distorts geometric sans-serif curves into sheared oblique angles. Testimonials must use clean, normal-weight typography (`text-xs sm:text-sm text-m3-on-surface font-normal leading-relaxed`).
+
+7. **No Monospace Contamination:**  
+   - Do not use `font-mono` on customer-facing navigation chips, headers, or buttons. All consumer UI elements strictly use `font-sans` (`Plus Jakarta Sans`).
+
+8. **Section Heading Uniformity & High Contrast:**  
+   - Headlines must maintain uniform, high-contrast `#111827` (`text-m3-on-surface`). Never use pseudo-accent spans like `<span class="text-m3-primary">` on charcoal headers, which creates barely perceptible color jitter. Supporting body text maintains WCAG AAA contrast (minimum 7:1) using `#374151` (`text-slate-700`).
 

@@ -11,7 +11,10 @@ import { fileURLToPath } from 'node:url';
 export default defineConfig({
   site: 'https://kalidasstravels.in',
   trailingSlash: 'always',
-  prefetch: true,
+  prefetch: {
+    prefetchAll: false,
+    defaultStrategy: 'hover',
+  },
   redirects: {
     '/outstation': '/services/outstation-cabs/',
     '/services/outstation': '/services/outstation-cabs/',
@@ -380,6 +383,13 @@ ${promptCtx}`;
                   const fareNum = parseInt(String(data.estimatedFare || data.estimate || '0').replace(/[^0-9]/g, ''), 10) || 0;
                   const status = data.status || 'Browsed';
                   const metadata = (data.meta ? JSON.stringify(data.meta).replace(/,/g, ';').replace(/"/g, '') : 'None');
+                  const CALC_HEADER = 'Quote ID,Timestamp,Source Page,Calculator Engine,Trip Type,Pickup Location,Drop Location,Vehicle,Distance (km),Calculated Fare (INR),Status,Metadata\n';
+
+                  if (!fs.existsSync(csvPath)) {
+                    try {
+                      fs.writeFileSync(csvPath, CALC_HEADER, 'utf8');
+                    } catch (_) {}
+                  }
 
                   if (fs.existsSync(csvPath)) {
                     const content = fs.readFileSync(csvPath, 'utf8');
@@ -519,6 +529,56 @@ ${promptCtx}`;
                 res.statusCode = 500;
                 res.end(JSON.stringify({ error: err.message }));
               }
+              return;
+            }
+
+            if (url.startsWith('/api/admin/reset-data')) {
+              let body = '';
+              req.on('data', (chunk) => { body += chunk; });
+              req.on('end', () => {
+                try {
+                  let parsed = {};
+                  try { parsed = JSON.parse(body || '{}'); } catch (_) {}
+                  const queryPin = new URL(req.url, 'http://localhost').searchParams.get('pin');
+                  const pin = String(parsed.pin || queryPin || '').trim();
+
+                  if (pin !== '2015') {
+                    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                    res.statusCode = 401;
+                    res.end(JSON.stringify({ success: false, error: 'Unauthorized: Invalid Admin PIN' }));
+                    return;
+                  }
+
+                  const cwd = process.cwd();
+                  const CALC_HEADER = 'Quote ID,Timestamp,Source Page,Calculator Engine,Trip Type,Pickup Location,Drop Location,Vehicle,Distance (km),Calculated Fare (INR),Status,Metadata\n';
+                  const OPS_HEADER = 'Booking ID,Guest Name & Phone,Travel Date & Pickup Time,Pickup Address,Vehicle Category,Pilgrim Party Size,KYC Status,Darshan Ticket Status,Assigned Chauffeur & Plate,Chauffeur Manifest,Terminal Fare (Guest),Chauffeur Payout,Company Margin,Financial Closure,Review Status\n';
+                  const AI_HEADER = 'QueryId,Timestamp,SessionId,SourcePage,UserQuery,AiResponse,DetectedIntent,CustomerContact,SourceEngine\n';
+
+                  fs.writeFileSync(path.resolve(cwd, 'Kalidass_Calculations_Log_2026.csv'), CALC_HEADER, 'utf8');
+                  fs.writeFileSync(path.resolve(cwd, 'Kalidass_Operations_Control_2026.csv'), OPS_HEADER, 'utf8');
+                  fs.writeFileSync(path.resolve(cwd, 'Kalidass_Ai_Chat_Queries_2026.csv'), AI_HEADER, 'utf8');
+
+                  const slipsPath = path.resolve(cwd, 'Kalidass_Duty_Slips_2026.json');
+                  if (fs.existsSync(slipsPath)) {
+                    try { fs.unlinkSync(slipsPath); } catch (_) {}
+                  }
+
+                  const settlePath = path.resolve(cwd, 'Kalidass_Driver_Settlements_2026.json');
+                  if (fs.existsSync(settlePath)) {
+                    try { fs.unlinkSync(settlePath); } catch (_) {}
+                  }
+
+                  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                  res.end(JSON.stringify({
+                    success: true,
+                    message: 'All admin data logs and operations files have been reset to a clean slate.'
+                  }));
+                } catch (err) {
+                  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                  res.statusCode = 500;
+                  res.end(JSON.stringify({ success: false, error: err.message }));
+                }
+              });
               return;
             }
 

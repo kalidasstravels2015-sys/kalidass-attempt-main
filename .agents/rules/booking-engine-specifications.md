@@ -137,15 +137,15 @@ All fare summary cards and checkout actions must prioritize a calm, frictionless
     - `Parking:` **Extra** / `பார்க்கிங்:` **கூடுதல்**
 - **Minimalist Rate Summary (Zero Banner Fatigue)**:
   - Do not add noisy guarantee headlines (such as `Zero Hidden Charges Guarantee` or `Corporate Tax Invoice Guarantee` with shield icons) above the inclusions.
-  - Do not add redundant advance bullet points (such as `Zero Advance Required • Pay Chauffeur After Darshan / Return`) under the price, as token advance terms are already detailed inside the itemized breakdown table (`Advance Token Payment: ₹0`).
+  - Do not add redundant advance bullet points (such as `Zero Advance Required • Pay Chauffeur After Darshan / Return`) under the price, as advance terms are already detailed inside the itemized breakdown table (`Advance Payment: ₹0`).
   - Do not place verbose links (such as `View Full Government Format Proforma Letterhead`) at the bottom of the breakdown table or corporate box. Keep document export discreet via the compact `Save PDF` action.
 - **Receipt-Style Right-Aligned Numbers**:
   - In itemized fare summaries, all currency figures, rates, deductions, and final totals must be right-aligned (`text-right font-mono font-semibold` or `font-bold`).
   - Item labels sit on the left (`text-left`), values snap to the right, ensuring clean vertical decimal scanning identical to a restaurant or retail receipt.
-- **Explicit Advance Token Deduction Arithmetic**:
-  - If a token advance is required or paid (e.g., ₹500 token), the fare summary must show clear mathematical subtraction:
+- **Explicit Advance Deduction Arithmetic**:
+  - If an advance is required or paid (e.g., ₹500 advance to reserve cab & driver), the fare summary must show clear mathematical subtraction:
     1. `Gross Estimated Fare: ₹X` (or base cab hire + duty total)
-    2. `Advance Token Paid / Required: -₹Y` (distinctly styled in muted/amber or minus badge)
+    2. `Advance to Reserve Cab & Driver: -₹Y` (distinctly styled in muted/amber or minus badge)
     3. `Balance Payable to Chauffeur at Drop: ₹(X - Y)` (prominent bold net total)
   - The final hero price or payable total must NEVER omit the advance deduction.
 - **Single Hero Metric (No Competing Large Values)**:

@@ -28,29 +28,30 @@ export const GET: APIRoute = async ({ request, url }) => {
   try {
     const targetUrl = url || new URL(request.url);
     const queryRef = (targetUrl.searchParams.get('bookingId') || targetUrl.searchParams.get('ref') || '').trim().toLowerCase();
+    const customWebhook = targetUrl.searchParams.get('webhook') || process.env.GOOGLE_SHEET_WEBHOOK_URL;
+    let remoteBookings: any[] = [];
+
+    // Fetch from Google Apps Script if configured
+    if (customWebhook && customWebhook.startsWith('http')) {
+      try {
+        const remoteRes = await fetch(customWebhook, {
+          method: 'GET',
+          redirect: 'follow',
+          headers: { 'Accept': 'application/json' }
+        });
+        if (remoteRes.ok) {
+          const remoteJson = await remoteRes.json();
+          if (remoteJson && remoteJson.success && Array.isArray(remoteJson.bookings)) {
+            remoteBookings = remoteJson.bookings;
+          }
+        }
+      } catch (remoteErr: any) {
+        console.warn('Google Sheet Sync bookings notice:', remoteErr.message);
+      }
+    }
 
     const csvPath = path.resolve(process.cwd(), 'Kalidass_Operations_Control_2026.csv');
-    if (!fs.existsSync(csvPath)) {
-      return new Response(JSON.stringify({ success: true, count: 0, bookings: [] }), {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8',
-          'Access-Control-Allow-Origin': '*'
-        }
-      });
-    }
-
-    const content = fs.readFileSync(csvPath, 'utf8');
-    const lines = content.trim().split(/\r?\n/).filter(Boolean);
-    if (lines.length <= 1) {
-      return new Response(JSON.stringify({ success: true, count: 0, bookings: [] }), {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8',
-          'Access-Control-Allow-Origin': '*'
-        }
-      });
-    }
+    const bookings: any[] = [...remoteBookings];
 
     // Load duty slips if available to enrich booking
     let dutySlipsMap = new Map();
@@ -66,13 +67,18 @@ export const GET: APIRoute = async ({ request, url }) => {
       } catch (_) {}
     }
 
-    const bookings = [];
-    for (let i = 1; i < lines.length; i++) {
-      const row = parseCsvLine(lines[i]);
-      if (row.length > 0 && row[0]) {
-        const bId = row[0] || '';
-        const slip = dutySlipsMap.get(bId.toLowerCase()) || null;
-        bookings.push({
+    if (fs.existsSync(csvPath)) {
+      const content = fs.readFileSync(csvPath, 'utf8');
+      const lines = content.trim().split(/\r?\n/).filter(Boolean);
+
+      for (let i = 1; i < lines.length; i++) {
+        const row = parseCsvLine(lines[i]);
+        if (row.length > 0 && row[0]) {
+          const bId = row[0] || '';
+          const exists = bookings.some(b => b.bookingId.toLowerCase() === bId.toLowerCase());
+          if (!exists) {
+            const slip = dutySlipsMap.get(bId.toLowerCase()) || null;
+            bookings.push({
           bookingId: bId,
           guestNamePhone: row[1] || '',
           travelDateTime: row[2] || '',
@@ -92,6 +98,8 @@ export const GET: APIRoute = async ({ request, url }) => {
         });
       }
     }
+  }
+}
 
     if (queryRef) {
       const matched = bookings.find(b =>

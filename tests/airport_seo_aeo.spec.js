@@ -63,7 +63,7 @@ test.describe('Chennai Airport Taxi SEO, AEO & SERP Enhancements', () => {
     await expect(terminalGuide).toContainText(/Direct Elevated Ramp Drop/);
   });
 
-  test('JSON-LD Structured Data includes TaxiService, Product, FAQPage, HowTo and ItemList', async ({ page }) => {
+  test('JSON-LD Structured Data includes TaxiService, FAQPage and ItemList', async ({ page }) => {
     const jsonLdScripts = page.locator('script[type="application/ld+json"]');
     const count = await jsonLdScripts.count();
     expect(count).toBeGreaterThan(0);
@@ -87,12 +87,6 @@ test.describe('Chennai Airport Taxi SEO, AEO & SERP Enhancements', () => {
     expect(taxiService.name).toContain('Chennai Airport Taxi & Cab Transfers (MAA)');
     expect(taxiService.serviceType).toContain('Airport Taxi, Cab Transfers & Prepaid Taxi Alternative');
 
-    // Find Product with AggregateRating & Reviews
-    const product = graph.find((item) => item['@type'] === 'Product');
-    expect(product).toBeDefined();
-    expect(product.aggregateRating.ratingValue).toBe('4.9');
-    expect(product.review.length).toBeGreaterThanOrEqual(3);
-
     // Find FAQPage with at least 14 questions
     const faqPage = graph.find((item) => item['@type'] === 'FAQPage');
     expect(faqPage).toBeDefined();
@@ -105,9 +99,8 @@ test.describe('Chennai Airport Taxi SEO, AEO & SERP Enhancements', () => {
     expect(qTexts).toContain('Are Chennai airport pickup charges different from airport drop charges?');
     expect(qTexts).toContain('Where does the chauffeur meet me for Chennai airport arrival pick up?');
 
-    // Find HowTo
-    const howTo = graph.find((item) => item['@type'] === 'HowTo');
-    expect(howTo).toBeDefined();
-    expect(howTo.step.length).toBe(4);
+    // Find ItemList (Trip list for zone tariffs)
+    const tripList = graph.find((item) => item['@id'] && item['@id'].includes('zone-route-list'));
+    expect(tripList).toBeDefined();
   });
 });

@@ -200,7 +200,7 @@ export function generateDutySlipCanvas(data) {
   ctx.fillText(`Total Trip Gross: Rs. ${Number(data.grossFare || 0).toLocaleString('en-IN')}`, cardX + 36, y + 32);
 
   ctx.fillStyle = '#F59E0B';
-  ctx.fillText(`Token Advance Received: -Rs. ${Number(data.advance || 0).toLocaleString('en-IN')}`, cardX + 36, y + 54);
+  ctx.fillText(`Advance Received: -Rs. ${Number(data.advance || 0).toLocaleString('en-IN')}`, cardX + 36, y + 54);
 
   ctx.fillStyle = '#10B981';
   ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif';

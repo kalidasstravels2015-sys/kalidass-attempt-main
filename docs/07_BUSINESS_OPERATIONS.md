@@ -89,7 +89,7 @@ To scale from a local travel agency to an executive regional mobility brand, des
 - **Implementation:** Connect Meta WhatsApp Cloud API (or Wati / Gallabox) to the website webhook.
 - **Workflow:**
   1. When a user clicks "Book via WhatsApp", the bot automatically parses the parameters: Origin, Destination, Vehicle, and Date.
-  2. The bot instantly responds: _"Hi Karthik! We have received your request for an Innova Crysta to Tirupati on Sep 25. Your estimated fare is ₹7,200. Would you like to confirm with our ₹500 booking token?"_
+  2. The bot instantly responds: _"Hi Karthik! We have received your request for an Innova Crysta to Tirupati on Sep 25. Your estimated fare is ₹7,200. Would you like to reserve your cab and driver with an advance of ₹500?"_
   3. Seamless 1-tap human handoff if the user requests custom modifications.
 
 ### 2.2 Driver Progressive Web App (PWA)
@@ -101,7 +101,7 @@ To scale from a local travel agency to an executive regional mobility brand, des
   - **Automated Toll & Fuel Logger:** Driver enters toll plaza amounts; system reconciles billable vs non-billable items.
   - **Trip End OTP:** Passenger gives a 4-digit code to conclude the trip and receive their digital receipt.
 
-### 2.3 Automated Advance Token Deposit System
+### 2.3 Automated Advance Deposit to Reserve Cab & Driver
 
 - **Problem:** Last-minute customer cancellations and "no-shows" cost taxi operators significant fuel and lost opportunity.
 - **Solution:** Integrate **Razorpay / Cashfree UPI Payment Gateway** for a nominal ₹300 – ₹500 advance deposit on outstation and airport bookings.

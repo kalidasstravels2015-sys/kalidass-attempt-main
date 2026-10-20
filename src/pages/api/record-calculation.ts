@@ -4,10 +4,12 @@ import path from 'node:path';
 
 export const prerender = false;
 
-const GOOGLE_SHEET_WEBHOOK = 'https://script.google.com/macros/s/AKfycbwoEpKqa3Qg-DIvMe06pGUgGLlC_0vJQev61nzIh9ssh1-uHZ5VtYkGzpMVwhEyi7tvEQ/exec';
+const DEFAULT_GOOGLE_SHEET_WEBHOOK = process.env.GOOGLE_SHEET_WEBHOOK_URL || '';
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, url }) => {
   try {
+    const targetUrl = url || new URL(request.url);
+    const webhookUrl = targetUrl.searchParams.get('webhook') || DEFAULT_GOOGLE_SHEET_WEBHOOK;
     let data: any;
     try {
       data = await request.json();
@@ -35,6 +37,13 @@ export const POST: APIRoute = async ({ request }) => {
     const status = data.status || 'Browsed';
     const metadata = (data.meta ? JSON.stringify(data.meta).replace(/,/g, ';').replace(/"/g, '') : (data.metadata || 'None'));
 
+    const CALC_HEADER = 'Quote ID,Timestamp,Source Page,Calculator Engine,Trip Type,Pickup Location,Drop Location,Vehicle,Distance (km),Calculated Fare (INR),Status,Metadata\n';
+    if (!fs.existsSync(csvPath)) {
+      try {
+        fs.writeFileSync(csvPath, CALC_HEADER, 'utf8');
+      } catch (_) {}
+    }
+
     if (fs.existsSync(csvPath)) {
       const content = fs.readFileSync(csvPath, 'utf8');
       const lines = content.trim().split(/\r?\n/).filter(Boolean);
@@ -57,26 +66,31 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Backup Forwarding to Google Apps Script Webhook asynchronously
-    try {
-      fetch(GOOGLE_SHEET_WEBHOOK, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({
-          type: 'calculator_activity',
-          quoteId,
-          date: timestamp,
-          sourcePage,
-          calculatorEngine,
-          tripType,
-          pickup,
-          drop,
-          vehicle,
-          distance: distanceKm,
-          estimate: fareNum,
-          status,
-        })
-      }).catch(() => {});
-    } catch (_) {}
+    if (webhookUrl && webhookUrl.startsWith('http')) {
+      try {
+        fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({
+            type: 'calculator_activity',
+            quoteId,
+            date: timestamp,
+            guestName: data.guestName || data.name || '',
+            phone: data.phone || data.mobile || '',
+            sourcePage,
+            calculatorEngine,
+            tripType,
+            pickup,
+            drop,
+            vehicle,
+            distance: distanceKm,
+            estimate: fareNum,
+            status,
+            metadata
+          })
+        }).catch(() => {});
+      } catch (_) {}
+    }
 
     return new Response(JSON.stringify({ success: true, quoteId }), {
       status: 200,

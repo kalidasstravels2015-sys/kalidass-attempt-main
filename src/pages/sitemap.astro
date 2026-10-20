@@ -220,32 +220,20 @@ const machineEndpoints = [
   },
 ];
 
-// Schema for Sitemap Page
-const sitemapSchema = {
-  "@type": "ItemPage",
-  "@id": `${canonicalURL}#webpage`,
-  "name": title,
-  "description": description,
-  "url": canonicalURL,
-  "isPartOf": {
-    "@id": "https://kalidasstravels.in/#website"
-  },
-  "about": {
-    "@id": "https://kalidasstravels.in/#localbusiness"
-  },
-  "mainEntity": {
-    "@type": "ItemList",
-    "name": "Kalidass Travels Complete Directory",
-    "description": "Index of all web pages, services, tour packages, fleet categories, and machine-readable resources.",
-    "numberOfItems": corePortals.length + coreHubs.length + serviceDetails.length + driversList.length + machineEndpoints.length
-  }
+// Schema for Sitemap Directory
+const sitemapDirectorySchema = {
+  "@type": "ItemList",
+  "@id": `${canonicalURL}#directory`,
+  "name": "Kalidass Travels Complete Directory",
+  "description": "Index of all web pages, services, tour packages, fleet categories, and machine-readable resources.",
+  "numberOfItems": corePortals.length + coreHubs.length + serviceDetails.length + driversList.length + machineEndpoints.length
 };
 ---
 
 <Layout
   title={title}
   description={description}
-  schema={sitemapSchema}
+  schema={sitemapDirectorySchema}
 >
   <Breadcrumbs items={breadcrumbItems} />
 

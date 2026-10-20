@@ -45,6 +45,7 @@ const VEHICLE_KEYS = [
 
 export default function DeskPhoneQuoteEngine({
   isOpen = true,
+  isPageMode = false,
   onClose,
   onSaveLead,
   onConfirmBooking,
@@ -261,11 +262,10 @@ export default function DeskPhoneQuoteEngine({
     onClose?.();
   };
 
-  if (!isOpen) return null;
+  if (!isOpen && !isPageMode) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-m3-surface-container-lowest border border-m3-outline-variant rounded-m3-2xl shadow-m3-4 w-full max-w-4xl max-h-[92vh] overflow-hidden flex flex-col font-sans">
+  const cardContent = (
+    <div className={`bg-m3-surface-container-lowest border border-m3-outline-variant rounded-m3-2xl shadow-m3-2 w-full ${isPageMode ? '' : 'max-w-4xl max-h-[92vh]'} overflow-hidden flex flex-col font-sans`}>
         {/* Header */}
         <div className="p-4 border-b border-m3-outline-variant bg-gradient-to-r from-m3-primary to-m3-primary/95 text-white flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2.5">
@@ -767,6 +767,15 @@ export default function DeskPhoneQuoteEngine({
           </div>
         </div>
       </div>
+    );
+
+  if (isPageMode) {
+    return cardContent;
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-sm animate-fadeIn">
+      {cardContent}
     </div>
   );
 }

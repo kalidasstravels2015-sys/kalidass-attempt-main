@@ -24,68 +24,97 @@ function escapeCsvCell(cell: any): string {
   return str;
 }
 
-export const GET: APIRoute = async () => {
+export const GET: APIRoute = async ({ request, url }) => {
   try {
-    const csvPath = path.resolve(process.cwd(), 'Kalidass_Calculations_Log_2026.csv');
-    if (!fs.existsSync(csvPath)) {
-      return new Response(JSON.stringify({ success: true, count: 0, leads: [] }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json; charset=utf-8' }
-      });
-    }
+    const targetUrl = url || new URL(request.url);
+    const customWebhook = targetUrl.searchParams.get('webhook') || process.env.GOOGLE_SHEET_WEBHOOK_URL;
+    let remoteLeads: any[] = [];
+    let remoteQuotes: any[] = [];
 
-    const content = fs.readFileSync(csvPath, 'utf8');
-    const lines = content.trim().split(/\r?\n/).filter(Boolean);
-    if (lines.length <= 1) {
-      return new Response(JSON.stringify({ success: true, count: 0, leads: [] }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json; charset=utf-8' }
-      });
-    }
-
-    // Prioritize actionable customer inquiries (WhatsApp, Calls, Active enquiries) over raw anonymous browses
-    const actionableLeads = [];
-    const browsedLeads = [];
-
-    for (let i = lines.length - 1; i >= 1; i--) {
-      const row = parseCsvLine(lines[i]);
-      if (row.length > 0 && row[0]) {
-        const item = {
-          quoteId: row[0] || '',
-          timestamp: row[1] || '',
-          sourcePage: row[2] || '',
-          calculatorEngine: row[3] || '',
-          tripType: row[4] || '',
-          pickup: row[5] || '',
-          drop: row[6] || '',
-          vehicle: row[7] || '',
-          distanceKm: row[8] || '',
-          estimatedFare: parseInt(row[9] || '0', 10) || 0,
-          status: row[10] || 'Browsed',
-          metadata: row[11] || ''
-        };
-        const isAnonymousZeroClick =
-          item.estimatedFare <= 0 ||
-          item.drop.toLowerCase().includes('whatsapp chat') ||
-          item.pickup.toLowerCase().includes('tariff card') ||
-          item.pickup.toLowerCase().includes('best cabs & temple tours') ||
-          item.pickup.toLowerCase().includes('outstation cabs from chennai') ||
-          item.pickup.toLowerCase().includes('airport taxi & cab booking');
-
-        if (isAnonymousZeroClick) {
-          continue;
+    // 1. Fetch from Google Apps Script Webhook if configured
+    if (customWebhook && customWebhook.startsWith('http')) {
+      try {
+        const remoteRes = await fetch(customWebhook, {
+          method: 'GET',
+          redirect: 'follow',
+          headers: { 'Accept': 'application/json' }
+        });
+        if (remoteRes.ok) {
+          const remoteJson = await remoteRes.json();
+          if (remoteJson && remoteJson.success && Array.isArray(remoteJson.leads)) {
+            remoteLeads = remoteJson.leads;
+            remoteQuotes = remoteJson.calculatorQuotes || remoteJson.leads;
+          }
         }
+      } catch (remoteErr: any) {
+        console.warn('Google Sheet Sync fetch notice:', remoteErr.message);
+      }
+    }
 
-        const isActionable = item.status !== 'Browsed' || item.sourcePage.includes('+91') || item.quoteId.startsWith('#WA') || item.quoteId.startsWith('#CALL') || item.quoteId.startsWith('#QT') || item.quoteId.startsWith('#ENQ');
-        if (isActionable) {
-          actionableLeads.push(item);
+    const csvPath = path.resolve(process.cwd(), 'Kalidass_Calculations_Log_2026.csv');
+    const actionableLeads: any[] = [...remoteLeads];
+    const browsedLeads: any[] = [...remoteQuotes];
+
+    if (fs.existsSync(csvPath)) {
+      const content = fs.readFileSync(csvPath, 'utf8');
+      const lines = content.trim().split(/\r?\n/).filter(Boolean);
+
+      for (let i = lines.length - 1; i >= 1; i--) {
+        const row = parseCsvLine(lines[i]);
+        if (row.length > 0 && row[0]) {
+          const item = {
+            quoteId: row[0] || '',
+            timestamp: row[1] || '',
+            sourcePage: row[2] || '',
+            calculatorEngine: row[3] || '',
+            tripType: row[4] || '',
+            pickup: row[5] || '',
+            drop: row[6] || '',
+            vehicle: row[7] || '',
+            distanceKm: row[8] || '',
+            estimatedFare: parseInt(row[9] || '0', 10) || 0,
+            status: row[10] || 'Browsed',
+            metadata: row[11] || ''
+          };
+          const isAnonymousZeroClick =
+            item.estimatedFare <= 0 ||
+            item.drop.toLowerCase().includes('whatsapp chat') ||
+            item.pickup.toLowerCase().includes('tariff card') ||
+            item.pickup.toLowerCase().includes('best cabs & temple tours') ||
+            item.pickup.toLowerCase().includes('outstation cabs from chennai') ||
+            item.pickup.toLowerCase().includes('airport taxi & cab booking');
+
+          if (isAnonymousZeroClick) {
+            continue;
+          }
+
+          // Avoid duplicates if already present in remote leads
+          const exists = actionableLeads.some(l => l.quoteId === item.quoteId);
+          if (!exists) {
+            const hasPhone = /[6-9]\d{9}/.test(`${item.sourcePage} ${item.pickup} ${item.drop} ${item.metadata}`);
+            const isConfirmedContact = hasPhone || item.quoteId.startsWith('#QT') || item.quoteId.startsWith('#CALL') || item.quoteId.startsWith('#ENQ') || (item.quoteId.startsWith('#WA') && !item.quoteId.startsWith('#CALC'));
+            if (isConfirmedContact) {
+              actionableLeads.push(item);
+            } else {
+              browsedLeads.push(item);
+            }
+          }
         }
       }
     }
 
     const leads = actionableLeads;
+    const allCalculations = [...actionableLeads, ...browsedLeads].filter(item => item.quoteId.startsWith('#CALC') || item.status === 'Browsed' || (item.status || '').toLowerCase().includes('whatsapp'));
 
-    return new Response(JSON.stringify({ success: true, count: leads.length, leads }), {
+    return new Response(JSON.stringify({
+      success: true,
+      count: leads.length,
+      leads,
+      calculatorQuotes: allCalculations,
+      allQuotes: [...actionableLeads, ...browsedLeads],
+      allCount: actionableLeads.length + browsedLeads.length,
+      syncedWithRemote: remoteLeads.length > 0
+    }), {
       status: 200,
       headers: {
         'Content-Type': 'application/json; charset=utf-8',

@@ -1,20 +1,81 @@
 // Cloudflare Pages Function: /api/admin/leads
-export async function onRequestGet() {
-  return new Response(JSON.stringify({ success: true, count: 0, leads: [] }), {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-      'Access-Control-Allow-Origin': '*'
+// Connects Admin Duties Board with Google Sheets 2-Way Sync
+
+export async function onRequestGet({ request, env }) {
+  try {
+    const url = new URL(request.url);
+    const customWebhook = url.searchParams.get('webhook') || (env && env.GOOGLE_SHEET_WEBHOOK_URL);
+
+    if (customWebhook && customWebhook.startsWith('http')) {
+      try {
+        const response = await fetch(customWebhook, {
+          method: 'GET',
+          redirect: 'follow',
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (response.ok) {
+          const text = await response.text();
+          try {
+            const data = JSON.parse(text);
+            if (data && data.success) {
+              return new Response(JSON.stringify({
+                success: true,
+                count: (data.leads || []).length,
+                leads: data.leads || [],
+                calculatorQuotes: data.calculatorQuotes || data.leads || [],
+                syncedFrom: 'GoogleSheet'
+              }), {
+                status: 200,
+                headers: {
+                  'Content-Type': 'application/json; charset=utf-8',
+                  'Access-Control-Allow-Origin': '*',
+                  'Cache-Control': 'no-store, max-age=0'
+                }
+              });
+            }
+          } catch (jsonErr) {}
+        }
+      } catch (fetchErr) {
+        console.warn('Google Sheet Sync fetch notice:', fetchErr.message);
+      }
     }
-  });
+
+    return new Response(JSON.stringify({ success: true, count: 0, leads: [], calculatorQuotes: [] }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Access-Control-Allow-Origin': '*'
+      }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ success: false, error: err.message, leads: [] }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Access-Control-Allow-Origin': '*'
+      }
+    });
+  }
 }
 
-export async function onRequestPost({ request }) {
+export async function onRequestPost({ request, env }) {
   try {
     let body = {};
     try {
       body = await request.json();
     } catch (_) {}
+
+    const url = new URL(request.url);
+    const customWebhook = url.searchParams.get('webhook') || (env && env.GOOGLE_SHEET_WEBHOOK_URL);
+
+    if (customWebhook && customWebhook.startsWith('http')) {
+      fetch(customWebhook, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(body)
+      }).catch(() => {});
+    }
 
     return new Response(JSON.stringify({ success: true, lead: body }), {
       status: 200,

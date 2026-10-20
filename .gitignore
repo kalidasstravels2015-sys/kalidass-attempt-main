@@ -47,11 +47,46 @@ origin_show.txt
 download-font.cjs
 verify_fare.js
 
+# Runtime customer logs, calculations, duty slips, and operational data (SENSITIVE - NEVER COMMIT)
+Kalidass_Calculations_Log_*.csv
+Kalidass_Operations_Control_*.csv
+Kalidass_Ai_Chat_Queries_*.csv
+Kalidass_Duty_Slips_*.json
+Kalidass_Driver_Settlements_*.json
+Kalidass_*.csv
+Kalidass_*.json
+*.csv
+!brand/canva-palette.csv
+
 # Test & audit artifacts
 playwright-report/
 test-results/
 lighthouse-*.json
 lighthouse-report.json
+tests/*.png
+tests/**/*.png
+tests/*.pdf
+tests/**/*.pdf
+tests/*_report.json
+
+# Secrets, keys, certs, and database dumps
+*.pem
+*.key
+*.p12
+*.cer
+*.cert
+*.id_rsa
+*.id_ed25519
+*.bak
+*.backup
+*.dump
+*.sqlite
+*.sqlite3
+*.db
 
 # IDE & editor files
 .vs/
+.idea/
+.vscode/
+*.swp
+*.swo

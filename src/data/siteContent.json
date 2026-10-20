@@ -5,9 +5,9 @@
     "highlight": "Across South India",
     "description": "Doorstep pickups, clean AC cabs, and transparent rates for airport, outstation & temple trips.",
     "images": [
+      "/images/hero/madurai.webp",
       "/images/hero/airavatesvara.webp",
-      "/images/hero/coimbatore.webp",
-      "/images/hero/madurai.webp"
+      "/images/hero/kanchipuram.webp"
     ],
     "cta": "Call Now",
     "phone": "+91 89395 39211",
@@ -430,16 +430,16 @@
   ],
   "reviews": [
     {
-      "name": "Rajesh Kannan",
-      "role": "Family Pilgrimage",
+      "name": "Google Verified Customer",
+      "role": "Google Maps Review",
       "rating": 5,
-      "quote": "Excellent service for our Tirupati trip. Driver Vadivel was very polite, arrived 15 mins early, and guided us with darshan timings smoothly."
+      "quote": "Excellent customer service. Prompt response, courteous driver, and transparent billing throughout."
     },
     {
-      "name": "Anita Roy",
-      "role": "Corporate Travel",
+      "name": "Saravanan",
+      "role": "Google Maps Review",
       "rating": 5,
-      "quote": "Clean Innova Crysta and punctual pickup from Chennai Airport. Transparent toll and night fare billing without any hidden charges."
+      "quote": "Good driver and travels. Clean vehicle, timely pickup, and very safe driving for family trips."
     },
     {
       "name": "Suresh Mani",

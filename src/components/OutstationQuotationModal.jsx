@@ -817,7 +817,7 @@ ${breakdown?.free_buffer_km > 0 ? `• Sightseeing Buffer: +${breakdown.free_buf
 • Highway FASTag Tolls: ${breakdown?.tolls_est > 0 ? `Approx. ~₹${breakdown.tolls_est} (At Actuals • May vary)` : 'Paid at Actuals (May vary)'}
 • State Permit${breakdown?.state_name && breakdown.state_name !== 'Tamil Nadu' ? ` (${breakdown.state_name})` : ''}: ${breakdown?.state_permit_est > 0 ? `Approx. ~₹${breakdown.state_permit_est} (At Actuals • May vary)` : '₹0 (Within Tamil Nadu / No Permit)'}
 • Duration Standard: 1 Day = up to 24 hrs / 250 km. Duration above 24 hrs billed extra.
-• Advance Token to Confirm: *₹500*
+• Advance to Reserve Cab & Driver: *₹500*
 • Balance on Completion: *₹${Math.max(0, finalEstimate - 500).toLocaleString('en-IN')}* Base Fare + Extras at Actuals (Pay driver after trip)
 
 ━━━━━━━━━━━━━━━━━━━━
@@ -1404,7 +1404,7 @@ Please save my quote & confirm live cab availability.` + omMapsBlock;
               </div>
 
               <p className="text-center text-[10.5px] text-m3-on-surface-variant/90 font-medium pt-0.5">
-                ✓ Lock Rate 24 Hrs ({bookingId}) • ✓ Check Live Cab Availability • ✓ Pay ₹500 Token Only After Confirmation
+                ✓ Lock Rate 24 Hrs ({bookingId}) • ✓ Reserve Cab & Driver • ✓ Advance ₹500 Only After Confirmation
               </p>
             </div>
           )}

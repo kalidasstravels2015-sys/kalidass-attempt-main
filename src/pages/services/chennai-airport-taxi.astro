@@ -3,6 +3,9 @@ import Layout from '../../layouts/Layout.astro';
 import Breadcrumbs from '../../components/SEO/Breadcrumbs.astro';
 import FAQAccordion from '../../components/FAQAccordion.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
+import WhatsAppIcon from '../../components/WhatsAppIcon.astro';
+import AndroidPhoneIcon from '../../components/AndroidPhoneIcon.astro';
+import { buildWhatsAppUrl } from '../../utils/whatsapp';
 import AirportBookingEngine from '../../components/AirportBookingEngine.jsx';
 import OptimizedImage from '../../components/OptimizedImage.astro';
 import VehicleCard from '../../components/VehicleCard.astro';
@@ -341,13 +344,6 @@ const taxiServiceSchema = {
     { "@type": "City", "name": "Vellore" },
     { "@type": "City", "name": "Tirupati" }
   ],
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "reviewCount": "1250",
-    "bestRating": "5",
-    "worstRating": "1"
-  },
   "offers": {
     "@type": "AggregateOffer",
     "priceCurrency": "INR",
@@ -414,136 +410,6 @@ const taxiServiceSchema = {
       }
     }
   }
-};
-
-const productSchema = {
-  "@type": "Product",
-  "@id": "https://kalidasstravels.in/services/chennai-airport-taxi/#product",
-  "name": "Chennai Airport Taxi & Prepaid Cab Booking (MAA)",
-  "sku": "MAA-AIRPORT-TAXI-650",
-  "description": description,
-  "image": "https://kalidasstravels.in/images/services/airport-transfer.webp",
-  "brand": {
-    "@type": "Brand",
-    "name": "Kalidass Travels"
-  },
-  "offers": {
-    "@type": "AggregateOffer",
-    "priceCurrency": "INR",
-    "lowPrice": "650",
-    "highPrice": "2820",
-    "offerCount": zoneTariffs.length.toString(),
-    "priceValidUntil": "2027-12-31",
-    "validFrom": "2025-01-01",
-    "url": "https://kalidasstravels.in/services/chennai-airport-taxi/#zone-tariffs",
-    "availability": "https://schema.org/InStock",
-    "seller": {
-      "@id": "https://kalidasstravels.in/#localbusiness"
-    },
-    "offers": zoneTariffs.map((z) => ({
-      "@type": "Offer",
-      "name": `${z.zone} Airport Taxi`,
-      "description": `Doorstep airport drop or terminal arrival pickup between Chennai Airport (MAA) and ${z.destinations}`,
-      "priceCurrency": "INR",
-      "price": z.sedan.replace(/[^0-9]/g, ''),
-      "priceValidUntil": "2027-12-31",
-      "validFrom": "2025-01-01",
-      "url": "https://kalidasstravels.in/services/chennai-airport-taxi/#zone-tariffs",
-      "availability": "https://schema.org/InStock",
-      "seller": {
-        "@id": "https://kalidasstravels.in/#localbusiness"
-      }
-    }))
-  },
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "reviewCount": "1250",
-    "bestRating": "5",
-    "worstRating": "1"
-  },
-  "review": [
-    {
-      "@type": "Review",
-      "author": {
-        "@type": "Person",
-        "name": "Karthik Subramanian"
-      },
-      "datePublished": "2026-02-18",
-      "reviewRating": {
-        "@type": "Rating",
-        "ratingValue": "5",
-        "bestRating": "5"
-      },
-      "reviewBody": "Booked Chennai airport pickup cab from T4 arrival to OMR. Flight landed 35 minutes late, but chauffeur was waiting patiently with name board. Exact flat fare of ₹650 with zero surge."
-    },
-    {
-      "@type": "Review",
-      "author": {
-        "@type": "Person",
-        "name": "Dr. Aruna Natarajan"
-      },
-      "datePublished": "2026-03-04",
-      "reviewRating": {
-        "@type": "Rating",
-        "ratingValue": "5",
-        "bestRating": "5"
-      },
-      "reviewBody": "Prompt 3:30 AM doorstep airport drop from Anna Nagar. Clean Dzire sedan, driver arrived 20 minutes early, smooth ride through the flyover."
-    },
-    {
-      "@type": "Review",
-      "author": {
-        "@type": "Person",
-        "name": "David Miller"
-      },
-      "datePublished": "2026-03-22",
-      "reviewRating": {
-        "@type": "Rating",
-        "ratingValue": "5",
-        "bestRating": "5"
-      },
-      "reviewBody": "Flew from London Heathrow to Chennai (MAA). Skipped the long prepaid taxi counter line inside the arrival hall. Chauffeur was waiting outside T4 international exit with a name placard and cold AC Ertiga. Paid in cash INR after drop in Medavakkam. Exceptional service!"
-    }
-  ]
-};
-
-const howToSchema = {
-  "@type": "HowTo",
-  "@id": "https://kalidasstravels.in/services/chennai-airport-taxi/#howto",
-  "name": "How to Book Chennai Airport Taxi Online (Arrival Pickup or Doorstep Drop)",
-  "description": "Step-by-step procedure to book a fixed-rate Chennai Airport taxi or cab transfer with Kalidass Travels with zero advance deposit.",
-  "totalTime": "PT2M",
-  "step": [
-    {
-      "@type": "HowToStep",
-      "position": 1,
-      "name": "Select Ride Direction & Pickup/Drop Location",
-      "text": "Choose whether you need a doorstep cab To Airport (Drop) or terminal pickup From Airport (Arrival) and enter your address or hotel.",
-      "url": "https://kalidasstravels.in/services/chennai-airport-taxi/#booking-section"
-    },
-    {
-      "@type": "HowToStep",
-      "position": 2,
-      "name": "Check Transparent Zone Fare & Select Vehicle",
-      "text": "Review transparent zone tariffs from ₹650 flat. Pick between Sedan (Dzire/Etios), 6-seater Ertiga SUV, 7-seater Innova Crysta, or 12-seater Tempo Traveller.",
-      "url": "https://kalidasstravels.in/services/chennai-airport-taxi/#zone-tariffs"
-    },
-    {
-      "@type": "HowToStep",
-      "position": 3,
-      "name": "Confirm with ₹0 Advance & Flight Details",
-      "text": "Reserve with your travel date, pickup time, and flight number. No credit card or Indian bank OTP is required.",
-      "url": "https://kalidasstravels.in/services/chennai-airport-taxi/#booking-section"
-    },
-    {
-      "@type": "HowToStep",
-      "position": 4,
-      "name": "Meet Chauffeur at Arrival Gate or Doorstep",
-      "text": "For airport arrivals, your chauffeur monitors live radar for delays and greets you at the terminal exit with a name board placard. For airport drops, driver arrives 20-30 mins early.",
-      "url": "https://kalidasstravels.in/services/chennai-airport-taxi/#terminal-pickup-drop-guide"
-    }
-  ]
 };
 
 const faqSchema = {
@@ -645,7 +511,7 @@ const tripListSchema = {
   keywords={keywords}
   image="/images/services/airport-transfer.webp"
   ogImage="/og/chennai-airport-taxi.jpg"
-  schema={[taxiServiceSchema, productSchema, faqSchema, howToSchema, tripListSchema]}
+  schema={[taxiServiceSchema, faqSchema, tripListSchema]}
 >
   <Breadcrumbs items={breadcrumbItems} />
 
@@ -663,7 +529,7 @@ const tripListSchema = {
             Chennai Airport Taxi &amp; Cab Booking
           </h1>
           <p class="text-xs text-m3-on-surface-variant font-medium mt-0.5">
-            Terminals 1, 2 &amp; 4 · Fixed Fares from ₹650 · ₹500 Token Advance for Outstation
+            Terminals 1, 2 &amp; 4 · Fixed Fares from ₹650 · ₹500 Advance to Reserve Cab &amp; Driver
           </p>
         </div>
         <div class="hidden sm:flex items-center gap-2">
@@ -685,7 +551,7 @@ const tripListSchema = {
         <div class="mt-2 flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-[11px] text-m3-on-surface-variant font-medium">
           <div class="flex items-center gap-1">
             <span class="material-symbols-outlined text-[14px] text-m3-primary shrink-0">verified</span>
-            <span class="font-bold text-m3-on-surface">₹500 Token Advance • Balance at Drop</span>
+            <span class="font-bold text-m3-on-surface">Advance ₹500 to Reserve Cab &amp; Driver • Balance at Drop</span>
           </div>
           <div class="flex items-center gap-1">
             <span class="material-symbols-outlined text-[14px] text-m3-primary shrink-0">check_circle</span>
@@ -1045,35 +911,35 @@ const tripListSchema = {
           <div class="sm:hidden space-y-1.5 mb-4">
             {zoneTariffs.map((t) => (
               <details
-                class="group rounded-xl border border-m3-outline-variant bg-white overflow-hidden shadow-2xs transition-all duration-150 open:border-m3-primary/40 open:shadow-xs"
+                class="group rounded-2xl border border-slate-200/90 bg-white overflow-hidden shadow-2xs transition-all duration-150 open:border-slate-300 open:shadow-xs"
                 data-zone={t.zone}
                 data-corridor={t.zone.split('&')[0].trim()}
               >
-                <summary class="flex items-center justify-between px-3 py-2.5 cursor-pointer list-none gap-2 select-none hover:bg-m3-surface-container/50 transition-colors">
+                <summary class="flex items-center justify-between px-3.5 py-3 cursor-pointer list-none gap-2 select-none hover:bg-slate-50 transition-colors">
                   <div class="flex items-center gap-2 min-w-0 flex-1">
                     <div class="min-w-0 flex-1">
                       <div class="flex items-center gap-1.5">
-                        <span class="font-semibold text-m3-on-surface text-[13px] leading-snug truncate">{t.zone}</span>
+                        <span class="font-bold text-[#111827] text-[13px] leading-snug truncate">{t.zone}</span>
                         {t.popular && (
-                          <span class="shrink-0 px-1.5 py-px rounded-full bg-m3-success-container/70 text-m3-on-surface text-[9px] font-bold uppercase tracking-wider border border-m3-outline-variant">★</span>
+                          <span class="shrink-0 px-1.5 py-px rounded-full bg-slate-100 text-[#1a73e8] text-[9px] font-bold uppercase tracking-wider border border-slate-200">★ Popular</span>
                         )}
                       </div>
-                      <span class="text-[10px] text-m3-on-surface-variant leading-none mt-0.5 block">
+                      <span class="text-[11px] text-slate-500 leading-none mt-0.5 block">
                         {t.eta} · {t.distance}
                       </span>
                     </div>
                   </div>
                   <div class="flex items-center gap-1 shrink-0">
-                    <span class="font-bold text-m3-primary text-[12px]">{t.sedan}</span>
-                    <svg class="w-4 h-4 text-m3-on-surface-variant transition-transform duration-150 group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                    <span class="font-extrabold text-[#111827] text-[13px]">{t.sedan}</span>
+                    <svg class="w-4 h-4 text-slate-400 transition-transform duration-150 group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
                   </div>
                 </summary>
-                <div class="px-3 pt-2 pb-2.5 border-t border-m3-outline-variant/60 bg-m3-surface/60">
-                  <p class="text-[11px] text-m3-on-surface-variant mb-2">
-                    <strong class="text-m3-on-surface">Key Destinations:</strong> {t.destinations}
+                <div class="px-3.5 pt-2 pb-3 border-t border-slate-200/70 bg-slate-50/50">
+                  <p class="text-[11px] text-slate-600 mb-2">
+                    <strong class="text-[#111827]">Key Destinations:</strong> {t.destinations}
                   </p>
                   <!-- 4 Cars in One Row with Flat Rates & Direct Summary Action -->
-                  <div class="grid grid-cols-4 gap-1 text-center mb-2">
+                  <div class="grid grid-cols-4 gap-1.5 text-center mb-2">
                     <button
                       type="button"
                       data-corridor={t.zone.split('&')[0].trim()}
@@ -1082,11 +948,11 @@ const tripListSchema = {
                       data-fare={t.sedan}
                       data-distance={t.distance}
                       data-eta={t.eta}
-                      class="highway-vehicle-select-btn rounded-m3-md bg-m3-surface-container-lowest hover:bg-m3-primary/10 border border-m3-outline-variant hover:border-m3-primary p-1 cursor-pointer transition-all active:scale-[0.98]"
+                      class="highway-vehicle-select-btn rounded-xl bg-white hover:border-[#1a73e8] border border-slate-200 p-1.5 cursor-pointer transition-all active:scale-[0.98] shadow-2xs"
                     >
-                      <span class="text-[9px] text-m3-on-surface-variant block leading-tight font-medium">Sedan</span>
-                      <strong class="text-[11px] font-bold text-m3-primary block mt-0.5 leading-tight">{t.sedan}</strong>
-                      <span class="text-[8px] text-m3-primary font-bold block mt-0.5">Book →</span>
+                      <span class="text-[10px] text-slate-500 block leading-tight font-medium">Sedan</span>
+                      <strong class="text-[11px] font-bold text-[#111827] block mt-0.5 leading-tight">{t.sedan}</strong>
+                      <span class="text-[8px] text-[#1a73e8] font-bold block mt-0.5">Select →</span>
                     </button>
                     <button
                       type="button"
@@ -1096,11 +962,11 @@ const tripListSchema = {
                       data-fare={t.innova}
                       data-distance={t.distance}
                       data-eta={t.eta}
-                      class="highway-vehicle-select-btn rounded-m3-md bg-m3-surface-container-lowest hover:bg-m3-primary/10 border border-m3-outline-variant hover:border-m3-primary p-1 cursor-pointer transition-all active:scale-[0.98]"
+                      class="highway-vehicle-select-btn rounded-xl bg-white hover:border-[#1a73e8] border border-slate-200 p-1.5 cursor-pointer transition-all active:scale-[0.98] shadow-2xs"
                     >
-                      <span class="text-[9px] text-m3-on-surface-variant block leading-tight font-medium">Ertiga</span>
-                      <strong class="text-[11px] font-bold text-m3-primary block mt-0.5 leading-tight">{t.innova}</strong>
-                      <span class="text-[8px] text-m3-primary font-bold block mt-0.5">Book →</span>
+                      <span class="text-[10px] text-slate-500 block leading-tight font-medium">Ertiga</span>
+                      <strong class="text-[11px] font-bold text-[#111827] block mt-0.5 leading-tight">{t.innova}</strong>
+                      <span class="text-[8px] text-[#1a73e8] font-bold block mt-0.5">Select →</span>
                     </button>
                     <button
                       type="button"
@@ -1110,11 +976,11 @@ const tripListSchema = {
                       data-fare={t.crysta}
                       data-distance={t.distance}
                       data-eta={t.eta}
-                      class="highway-vehicle-select-btn rounded-m3-md bg-m3-surface-container-lowest hover:bg-m3-primary/10 border border-m3-outline-variant hover:border-m3-primary p-1 cursor-pointer transition-all active:scale-[0.98]"
+                      class="highway-vehicle-select-btn rounded-xl bg-white hover:border-[#1a73e8] border border-slate-200 p-1.5 cursor-pointer transition-all active:scale-[0.98] shadow-2xs"
                     >
-                      <span class="text-[9px] text-m3-on-surface-variant block leading-tight font-medium">Crysta</span>
-                      <strong class="text-[11px] font-bold text-m3-primary block mt-0.5 leading-tight">{t.crysta}</strong>
-                      <span class="text-[8px] text-m3-primary font-bold block mt-0.5">Book →</span>
+                      <span class="text-[10px] text-slate-500 block leading-tight font-medium">Crysta</span>
+                      <strong class="text-[11px] font-bold text-[#111827] block mt-0.5 leading-tight">{t.crysta}</strong>
+                      <span class="text-[8px] text-[#1a73e8] font-bold block mt-0.5">Select →</span>
                     </button>
                     <button
                       type="button"
@@ -1124,17 +990,33 @@ const tripListSchema = {
                       data-fare={t.tempo}
                       data-distance={t.distance}
                       data-eta={t.eta}
-                      class="highway-vehicle-select-btn rounded-m3-md bg-m3-surface-container-lowest hover:bg-m3-primary/10 border border-m3-outline-variant hover:border-m3-primary p-1 cursor-pointer transition-all active:scale-[0.98]"
+                      class="highway-vehicle-select-btn rounded-xl bg-white hover:border-[#1a73e8] border border-slate-200 p-1.5 cursor-pointer transition-all active:scale-[0.98] shadow-2xs"
                     >
-                      <span class="text-[9px] text-m3-on-surface-variant block leading-tight font-medium">Tempo</span>
-                      <strong class="text-[11px] font-bold text-m3-primary block mt-0.5 leading-tight">{t.tempo}</strong>
-                      <span class="text-[8px] text-m3-primary font-bold block mt-0.5">Book →</span>
+                      <span class="text-[10px] text-slate-500 block leading-tight font-medium">Tempo</span>
+                      <strong class="text-[11px] font-bold text-[#111827] block mt-0.5 leading-tight">{t.tempo}</strong>
+                      <span class="text-[8px] text-[#1a73e8] font-bold block mt-0.5">Select →</span>
                     </button>
                   </div>
-                  <!-- Advance Note WITHOUT WhatsApp Query button -->
-                  <div class="flex items-center justify-between gap-2 pt-1.5 border-t border-m3-outline-variant/60 text-[10px] text-m3-on-surface-variant">
-                    <span class="font-medium">₹500 Advance • Balance at Drop</span>
-                    <span class="text-[9px] text-m3-primary font-bold">Tap car for fare breakdown →</span>
+                  <!-- 1-Tap Call & WhatsApp Direct Actions -->
+                  <div class="grid grid-cols-2 gap-2 mt-2.5 pt-2 border-t border-slate-200/80">
+                    <a
+                      href="tel:+918939539211"
+                      aria-label={`Call to book Chennai airport to ${t.zone} taxi`}
+                      class="min-h-[44px] h-11 inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 border border-slate-200 text-xs font-bold transition-all select-none active:scale-[0.98]"
+                    >
+                      <AndroidPhoneIcon className="w-3.5 h-3.5 text-slate-700 shrink-0" />
+                      <span>Call Desk</span>
+                    </a>
+                    <a
+                      href={buildWhatsAppUrl(t.whatsappPickup)}
+                      target="_blank"
+                      rel="noopener noreferrer nofollow"
+                      aria-label={`Book Chennai airport to ${t.zone} taxi on WhatsApp`}
+                      class="min-h-[44px] h-11 inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white shadow-xs text-xs font-bold transition-all select-none cursor-pointer active:scale-[0.98]"
+                    >
+                      <WhatsAppIcon variant="brand" className="w-4 h-4 shrink-0 brightness-0 invert" />
+                      <span>WhatsApp Quote</span>
+                    </a>
                   </div>
                 </div>
               </details>
@@ -1191,7 +1073,7 @@ const tripListSchema = {
                             data-fare={t.sedan}
                             data-distance={t.distance}
                             data-eta={t.eta}
-                            class="highway-vehicle-select-btn font-extrabold text-m3-primary hover:underline hover:bg-m3-primary/10 px-2 py-1 rounded cursor-pointer transition-colors"
+                            class="highway-vehicle-select-btn font-extrabold text-m3-primary hover:underline hover:bg-m3-primary/10 px-2 py-1 rounded cursor-pointer transition-colors tabular-nums min-h-[36px] inline-flex items-center justify-center"
                           >
                             {t.sedan}
                           </button>
@@ -1205,7 +1087,7 @@ const tripListSchema = {
                             data-fare={t.innova}
                             data-distance={t.distance}
                             data-eta={t.eta}
-                            class="highway-vehicle-select-btn font-extrabold text-m3-primary hover:underline hover:bg-m3-primary/10 px-2 py-1 rounded cursor-pointer transition-colors"
+                            class="highway-vehicle-select-btn font-extrabold text-m3-primary hover:underline hover:bg-m3-primary/10 px-2 py-1 rounded cursor-pointer transition-colors tabular-nums min-h-[36px] inline-flex items-center justify-center"
                           >
                             {t.innova}
                           </button>
@@ -1219,7 +1101,7 @@ const tripListSchema = {
                             data-fare={t.crysta}
                             data-distance={t.distance}
                             data-eta={t.eta}
-                            class="highway-vehicle-select-btn font-extrabold text-m3-primary hover:underline hover:bg-m3-primary/10 px-2 py-1 rounded cursor-pointer transition-colors"
+                            class="highway-vehicle-select-btn font-extrabold text-m3-primary hover:underline hover:bg-m3-primary/10 px-2 py-1 rounded cursor-pointer transition-colors tabular-nums min-h-[36px] inline-flex items-center justify-center"
                           >
                             {t.crysta}
                           </button>
@@ -1233,25 +1115,44 @@ const tripListSchema = {
                             data-fare={t.tempo}
                             data-distance={t.distance}
                             data-eta={t.eta}
-                            class="highway-vehicle-select-btn font-extrabold text-m3-primary hover:underline hover:bg-m3-primary/10 px-2 py-1 rounded cursor-pointer transition-colors"
+                            class="highway-vehicle-select-btn font-extrabold text-m3-primary hover:underline hover:bg-m3-primary/10 px-2 py-1 rounded cursor-pointer transition-colors tabular-nums min-h-[36px] inline-flex items-center justify-center"
                           >
                             {t.tempo}
                           </button>
                         </td>
-                        <td class="px-4 py-3 text-right">
-                          <button
-                            type="button"
-                            data-corridor={t.zone.split('&')[0].trim()}
-                            data-vehicle="Swift Dzire"
-                            data-pax="4"
-                            data-fare={t.sedan}
-                            data-distance={t.distance}
-                            data-eta={t.eta}
-                            class="highway-vehicle-select-btn inline-flex items-center gap-1 px-3.5 py-1.5 rounded-xl bg-m3-primary hover:bg-m3-primary/90 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
-                          >
-                            <span>Book Pickup</span>
-                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                          </button>
+                        <td class="px-4 py-3 text-right whitespace-nowrap">
+                          <div class="inline-flex items-center gap-1.5 justify-end">
+                            <a
+                              href="tel:+918939539211"
+                              aria-label={`Call to book Chennai airport to ${t.zone} taxi`}
+                              class="min-h-[36px] inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 border border-slate-200 text-xs font-bold shadow-2xs transition-all select-none active:scale-[0.98]"
+                            >
+                              <AndroidPhoneIcon className="w-3.5 h-3.5 text-slate-700 shrink-0" />
+                              <span>Call</span>
+                            </a>
+                            <a
+                              href={buildWhatsAppUrl(t.whatsappPickup)}
+                              target="_blank"
+                              rel="noopener noreferrer nofollow"
+                              aria-label={`Book Chennai airport to ${t.zone} taxi on WhatsApp`}
+                              class="min-h-[36px] inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white shadow-xs text-xs font-bold transition-all cursor-pointer active:scale-[0.98]"
+                            >
+                              <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0 brightness-0 invert" />
+                              <span>WhatsApp</span>
+                            </a>
+                            <button
+                              type="button"
+                              data-corridor={t.zone.split('&')[0].trim()}
+                              data-vehicle="Swift Dzire"
+                              data-pax="4"
+                              data-fare={t.sedan}
+                              data-distance={t.distance}
+                              data-eta={t.eta}
+                              class="highway-vehicle-select-btn inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#1a73e8] hover:bg-[#1557b0] text-white text-micro font-bold shadow-xs transition-all cursor-pointer"
+                            >
+                              <span>Book Online</span>
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -1298,30 +1199,30 @@ const tripListSchema = {
       <!-- 5. CHENNAI AIRPORT PREPAID TAXI VS PRE-BOOKED PRIVATE CAB (isSimilarTo Schema) -->
       <section 
         id="prepaid-taxi-comparison" 
-        class="pt-6 sm:pt-8 mt-6 sm:mt-8 border-t border-m3-outline-variant mb-10 sm:mb-14 scroll-mt-28"
+        class="pt-8 sm:pt-12 mt-8 sm:mt-12 border-t border-m3-outline-variant my-12 sm:my-16 lg:my-20 scroll-mt-28"
         aria-labelledby="prepaid-comparison-heading"
       >
-        <div class="bg-m3-surface rounded-2xl border border-m3-outline-variant shadow-sm p-4 sm:p-6">
-          <div class="max-w-2xl mb-4 sm:mb-5">
-            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-m3-success-container/30 text-m3-on-success-container text-xs font-bold uppercase tracking-wider mb-2 border border-m3-success/20">
+        <div class="bg-m3-surface rounded-2xl border border-m3-outline-variant shadow-sm p-5 sm:p-8">
+          <div class="max-w-2xl mb-6 sm:mb-8">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-m3-success-container/30 text-m3-on-success-container text-xs font-bold uppercase tracking-wider mb-2.5 border border-m3-success/20">
               <svg class="w-3.5 h-3.5 text-m3-success shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
               <span>Transparent Comparison</span>
             </div>
-            <h2 id="prepaid-comparison-heading" class="text-lg sm:text-2xl font-extrabold text-m3-on-surface font-heading tracking-tight">
+            <h2 id="prepaid-comparison-heading" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface font-heading tracking-tight">
               Why Travelers Choose Kalidass Pre-Booked Cabs vs Airport Prepaid Taxi
             </h2>
-            <p class="text-xs sm:text-sm text-m3-on-surface-variant font-sans mt-1">
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant font-sans mt-2 leading-relaxed">
               Pre-booking saves 20–40 minutes of queueing at terminal taxi counters. Here is how pre-booking compares:
             </p>
           </div>
 
           <div class="overflow-x-auto rounded-xl border border-m3-outline-variant">
             <table class="w-full text-left text-xs sm:text-sm font-sans border-collapse">
-              <thead class="bg-m3-surface-container text-m3-on-surface-variant font-bold uppercase tracking-wider text-micro sm:text-xs">
+              <thead class="bg-m3-surface-container text-m3-on-surface-variant font-bold uppercase tracking-wider text-xs">
                 <tr>
-                  <th class="p-2 sm:p-3.5 w-1/4">Feature</th>
-                  <th class="p-2 sm:p-3.5 bg-m3-success-container/25 text-m3-on-surface font-extrabold whitespace-nowrap">Kalidass Travels</th>
-                  <th class="p-2 sm:p-3.5 text-m3-on-surface-variant">
+                  <th class="p-3 sm:p-4 w-1/4">Feature</th>
+                  <th class="p-3 sm:p-4 bg-m3-success-container/25 text-m3-on-surface font-extrabold whitespace-nowrap">Kalidass Travels</th>
+                  <th class="p-3 sm:p-4 text-m3-on-surface-variant">
                     <span class="sm:hidden">Prepaid Taxi</span>
                     <span class="hidden sm:inline">AAI Airport Prepaid Taxi Counter</span>
                   </th>
@@ -1329,39 +1230,39 @@ const tripListSchema = {
               </thead>
               <tbody class="divide-y divide-m3-outline-variant text-m3-on-surface">
                 <tr class="hover:bg-m3-surface-container-low transition-colors">
-                  <td class="p-2 sm:p-3.5 font-semibold align-top">Terminal Waiting Time</td>
-                  <td class="p-2 sm:p-3.5 bg-m3-success-container/15 font-bold text-m3-on-surface align-top">0 min (Chauffeur waiting with name board at exit)</td>
-                  <td class="p-2 sm:p-3.5 text-m3-on-surface-variant align-top">20–40 min queue at counter &amp; stand</td>
+                  <td class="p-3 sm:p-4 font-semibold align-top">Terminal Waiting Time</td>
+                  <td class="p-3 sm:p-4 bg-m3-success-container/15 font-bold text-m3-on-surface align-top">0 min (Chauffeur waiting with name board at exit)</td>
+                  <td class="p-3 sm:p-4 text-m3-on-surface-variant align-top">20–40 min queue at counter &amp; stand</td>
                 </tr>
                 <tr class="hover:bg-m3-surface-container-low transition-colors">
-                  <td class="p-2 sm:p-3.5 font-semibold align-top">Flight Delay Handling</td>
-                  <td class="p-2 sm:p-3.5 bg-m3-success-container/15 font-bold text-m3-on-surface align-top">100% Free live flight radar tracking; driver waits</td>
-                  <td class="p-2 sm:p-3.5 text-m3-on-surface-variant align-top">Manual queueing only after landing</td>
+                  <td class="p-3 sm:p-4 font-semibold align-top">Flight Delay Handling</td>
+                  <td class="p-3 sm:p-4 bg-m3-success-container/15 font-bold text-m3-on-surface align-top">100% Free live flight radar tracking; driver waits</td>
+                  <td class="p-3 sm:p-4 text-m3-on-surface-variant align-top">Manual queueing only after landing</td>
                 </tr>
                 <tr class="hover:bg-m3-surface-container-low transition-colors">
-                  <td class="p-2 sm:p-3.5 font-semibold align-top">Vehicle Quality &amp; AC</td>
-                  <td class="p-2 sm:p-3.5 bg-m3-success-container/15 font-bold text-m3-on-surface align-top">Guaranteed clean, verified AC Sedan / SUV / Crysta</td>
-                  <td class="p-2 sm:p-3.5 text-m3-on-surface-variant align-top">Mixed older fleet; AC may cost extra</td>
+                  <td class="p-3 sm:p-4 font-semibold align-top">Vehicle Quality &amp; AC</td>
+                  <td class="p-3 sm:p-4 bg-m3-success-container/15 font-bold text-m3-on-surface align-top">Guaranteed clean, verified AC Sedan / SUV / Crysta</td>
+                  <td class="p-3 sm:p-4 text-m3-on-surface-variant align-top">Mixed older fleet; AC may cost extra</td>
                 </tr>
                 <tr class="hover:bg-m3-surface-container-low transition-colors">
-                  <td class="p-2 sm:p-3.5 font-semibold align-top">Luggage Assistance</td>
-                  <td class="p-2 sm:p-3.5 bg-m3-success-container/15 font-bold text-m3-on-surface align-top">Chauffeur meets at arrival gate &amp; carries luggage</td>
-                  <td class="p-2 sm:p-3.5 text-m3-on-surface-variant align-top">Self-carry heavy baggage to parking stand</td>
+                  <td class="p-3 sm:p-4 font-semibold align-top">Luggage Assistance</td>
+                  <td class="p-3 sm:p-4 bg-m3-success-container/15 font-bold text-m3-on-surface align-top">Chauffeur meets at arrival gate &amp; carries luggage</td>
+                  <td class="p-3 sm:p-4 text-m3-on-surface-variant align-top">Self-carry heavy baggage to parking stand</td>
                 </tr>
                 <tr class="hover:bg-m3-surface-container-low transition-colors">
-                  <td class="p-2 sm:p-3.5 font-semibold align-top">Advance Payment</td>
-                  <td class="p-2 sm:p-3.5 bg-m3-success-container/15 font-bold text-m3-on-surface align-top">₹0 Advance (Balance after trip completion)</td>
-                  <td class="p-2 sm:p-3.5 text-m3-on-surface-variant align-top">100% upfront kiosk cash/card payment with queue</td>
+                  <td class="p-3 sm:p-4 font-semibold align-top">Advance Payment</td>
+                  <td class="p-3 sm:p-4 bg-m3-success-container/15 font-bold text-m3-on-surface align-top">₹0 Advance (Balance after trip completion)</td>
+                  <td class="p-3 sm:p-4 text-m3-on-surface-variant align-top">100% upfront kiosk cash/card payment with queue</td>
                 </tr>
                 <tr class="hover:bg-m3-surface-container-low transition-colors">
-                  <td class="p-2 sm:p-3.5 font-semibold align-top">Midnight &amp; Rain Surge</td>
-                  <td class="p-2 sm:p-3.5 bg-m3-success-container/15 font-bold text-m3-on-surface align-top">100% Flat fixed pricing with zero surge</td>
-                  <td class="p-2 sm:p-3.5 text-m3-on-surface-variant align-top">Night charges or separate counter fees</td>
+                  <td class="p-3 sm:p-4 font-semibold align-top">Midnight &amp; Rain Surge</td>
+                  <td class="p-3 sm:p-4 bg-m3-success-container/15 font-bold text-m3-on-surface align-top">100% Flat fixed pricing with zero surge</td>
+                  <td class="p-3 sm:p-4 text-m3-on-surface-variant align-top">Night charges or separate counter fees</td>
                 </tr>
                 <tr class="hover:bg-m3-surface-container-low transition-colors">
-                  <td class="p-2 sm:p-3.5 font-semibold align-top">Vehicle Selection</td>
-                  <td class="p-2 sm:p-3.5 bg-m3-success-container/15 font-bold text-m3-on-surface align-top">Choose Dzire, Ertiga (6 Pax), Crysta (7 Pax), or Tempo</td>
-                  <td class="p-2 sm:p-3.5 text-m3-on-surface-variant align-top">Random allocation; hard to get 6/7-seater SUVs</td>
+                  <td class="p-3 sm:p-4 font-semibold align-top">Vehicle Selection</td>
+                  <td class="p-3 sm:p-4 bg-m3-success-container/15 font-bold text-m3-on-surface align-top">Choose Dzire, Ertiga (6 Pax), Crysta (7 Pax), or Tempo</td>
+                  <td class="p-3 sm:p-4 text-m3-on-surface-variant align-top">Random allocation; hard to get 6/7-seater SUVs</td>
                 </tr>
               </tbody>
             </table>
@@ -1370,7 +1271,7 @@ const tripListSchema = {
       </section>
 
       <!-- 6. FREQUENTLY ASKED QUESTIONS (FAQPage Schema) -->
-      <section id="airport-faq" class="max-w-3xl mx-auto mb-12 sm:mb-16 scroll-mt-28">
+      <section id="airport-faq" class="max-w-3xl mx-auto my-14 sm:my-20 scroll-mt-28">
         <span id="faqs" class="scroll-mt-28"></span>
         <h2 class="text-2xl sm:text-3xl font-extrabold text-m3-on-surface font-heading mb-6 text-center tracking-tight">
           Airport Transfer FAQs (Pickups &amp; Drops)
@@ -1379,23 +1280,23 @@ const tripListSchema = {
       </section>
 
       <!-- 7. BOTTOM CONVERSION STRIP -->
-      <section class="rounded-2xl bg-gradient-to-br from-[#0B57D0] via-[#0842A0] to-[#041E49] text-white p-7 sm:p-10 text-center shadow-md mb-10 border border-[#0B57D0]/20">
-        <h2 class="text-2xl sm:text-3xl font-extrabold font-heading text-white mb-2.5 tracking-tight">
+      <section class="rounded-2xl bg-gradient-to-br from-[#0B57D0] via-[#0842A0] to-[#041E49] text-white p-8 sm:p-12 text-center shadow-md my-14 sm:my-20 border border-[#0B57D0]/20">
+        <h2 class="text-2xl sm:text-3xl font-extrabold font-heading text-white mb-3 tracking-tight">
           Flying into or out of Chennai International Airport (MAA)?
         </h2>
-        <p class="text-white/90 text-sm sm:text-base max-w-lg mx-auto mb-6 leading-relaxed">
+        <p class="text-white/90 text-sm sm:text-base max-w-lg mx-auto mb-8 leading-relaxed">
           Book your doorstep airport drop or arrival terminal pickup in seconds on WhatsApp.
         </p>
-        <div class="flex flex-wrap items-center justify-center gap-3">
+        <div class="flex flex-wrap items-center justify-center gap-3.5">
           <WhatsAppButton 
             href="https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20reserve%20an%20airport%20transfer%20(Drop/Pickup)%20at%20Chennai%20Airport."
-            size="md"
+            size="lg"
             variant="filled"
             text="Instant WhatsApp Booking"
           />
           <a 
             href="tel:+918939539211"
-            class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-white/15 hover:bg-white/25 active:bg-white/30 text-white text-xs sm:text-sm font-semibold backdrop-blur-xs transition-all border border-white/30 shadow-sm"
+            class="min-h-[48px] h-12 inline-flex items-center justify-center gap-2 px-6 rounded-full bg-white/15 hover:bg-white/25 active:bg-white/30 text-white text-xs sm:text-sm font-semibold backdrop-blur-xs transition-all border border-white/30 shadow-sm active:scale-[0.98]"
           >
             <span class="material-symbols-outlined text-[18px] text-white">call</span>
             <span>Call 24/7 Desk (+91 89395 39211)</span>

@@ -26,12 +26,12 @@ const {
   ...rest
 } = Astro.props;
 
-// Google Material Design 3 (M3) button dimensions & tokens
+// Google Material Design 3 (M3) button dimensions & tokens - WCAG 44px-48px Touch Ergonomics
 const sizeClasses = {
-  sm: "py-2 px-3.5 text-xs gap-2 min-h-[36px]",
-  md: "py-2.5 px-5 text-xs sm:text-sm gap-2.5 min-h-[42px]",
-  lg: "py-3 px-6 text-sm sm:text-base gap-2.5 min-h-[48px]",
-  icon: "p-2.5 min-h-[40px] min-w-[40px] justify-center"
+  sm: "py-2.5 px-4 text-xs sm:text-sm gap-2 min-h-[44px]",
+  md: "py-3 px-5 text-sm sm:text-base gap-2.5 min-h-[48px]",
+  lg: "py-3.5 px-6 text-base sm:text-lg gap-3 min-h-[52px]",
+  icon: "p-2.5 min-h-[44px] min-w-[44px] justify-center"
 }[size];
 
 const iconSize = {
@@ -57,7 +57,7 @@ const iconVariant = (variant === 'filled' || variant === 'elevated') ? 'white' :
   id={id}
   target="_blank"
   rel="noopener noreferrer nofollow"
-  class={`inline-flex items-center justify-center font-bold font-sans rounded-m3-full transition-all duration-200 cursor-pointer select-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-m3-success ${sizeClasses} ${variantClasses} ${className}`}
+  class={`inline-flex items-center justify-center font-bold font-sans rounded-m3-full transition-all duration-200 cursor-pointer select-none active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-m3-success shadow-xs ${sizeClasses} ${variantClasses} ${className}`}
   {...rest}
 >
   <WhatsAppIcon variant={iconVariant} className={iconSize} />

@@ -5,7 +5,7 @@
 
 let loadPromise: Promise<void> | null = null;
 
-export function loadGoogleMaps(apiKey = 'AIzaSyBPpRgTPIkv20IMdaBqqdlz0S0FEGU5400'): Promise<void> {
+export function loadGoogleMaps(apiKey = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_GOOGLE_MAPS_API_KEY) || 'AIzaSyBPpRgTPIkv20IMdaBqqdlz0S0FEGU5400'): Promise<void> {
   if (typeof window === 'undefined') return Promise.resolve();
 
   (window as any).loadGoogleMaps = loadGoogleMaps;

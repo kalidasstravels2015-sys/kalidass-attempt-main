@@ -27,6 +27,7 @@ import { buildWhatsAppUrl, buildMapsLinks } from '../utils/whatsapp';
 import { trackEvent, markQuoteConverted } from '../lib/analytics';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import { printInvoiceLetterhead, getEstimateRefNo, downloadEstimateDocument } from '../utils/invoiceLetterhead';
+import { getActiveGoogleSheetUrl } from '../config/googleSheets';
 import { TOUR_CONFIGS } from '../data/tourBookingConfigs.js';
 
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
@@ -111,7 +112,11 @@ const PASSENGER_OPTIONS = [
 export default function TourBookingEngine({
   serviceSlug = 'tirupati-package',
   serviceTitle,
-  customConfig = null
+  customConfig = null,
+  isOperatorMode = false,
+  operatorCallerPhone = '',
+  operatorCallerName = '',
+  onQuoteCalculated = null
 }) {
   const config = customConfig || TOUR_CONFIGS[serviceSlug] || TOUR_CONFIGS['tirupati-package'];
   const effectiveServiceTitle = serviceTitle || config.serviceTitle;
@@ -935,6 +940,7 @@ export default function TourBookingEngine({
         timestamp: Date.now()
       };
       window.dispatchEvent(new CustomEvent('kt_calculation_updated', { detail: window.__KT_CURRENT_CALCULATION }));
+      onQuoteCalculated?.(window.__KT_CURRENT_CALCULATION);
     }
   }, [
     serviceSlug,
@@ -986,7 +992,7 @@ ${fareBreakdown?.isAfter24Hours ? '• *Payable at Actuals:* FASTag Tolls & Park
 
 Please confirm booking!` + tourMapsBlock;
 
-  const whatsAppUrl = buildWhatsAppUrl(whatsAppMessage);
+  const whatsAppUrl = buildWhatsAppUrl(whatsAppMessage, isOperatorMode && operatorCallerPhone ? operatorCallerPhone : undefined);
 
   const handleInputFocus = (e) => {
     setTimeout(() => {
@@ -1161,6 +1167,8 @@ Please confirm booking!` + tourMapsBlock;
     }
 
     try {
+      const cleanPhone = (customerPhone || '').replace(/[^0-9]/g, '').slice(-10);
+      const guestNameVal = companyName.trim() || (cleanPhone ? `Customer (${cleanPhone})` : 'Pilgrim Devotee');
       const leadPayload = {
         leadType: 'whatsapp',
         status: 'WhatsApp Estimate Booked',
@@ -1173,12 +1181,41 @@ Please confirm booking!` + tourMapsBlock;
         estimatedFare: currentFare,
         distanceKm: `${config.destination?.roundTripKm || 320} km return`,
         quoteId: invoiceRefNo,
+        guestName: guestNameVal,
+        phone: cleanPhone ? `+91 ${cleanPhone}` : '',
         metadata: `Pax: ${passengers} | Fare: ₹${currentFare}`
       };
       if (navigator.sendBeacon) {
         navigator.sendBeacon(window.location.origin + '/api/record-calculation', new Blob([JSON.stringify(leadPayload)], { type: 'application/json' }));
       } else {
         fetch('/api/record-calculation', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(leadPayload), keepalive: true }).catch(() => {});
+      }
+
+      // Forward directly to Google Sheet Webhook if configured
+      const activeSheetUrl = getActiveGoogleSheetUrl();
+      if (activeSheetUrl && activeSheetUrl.startsWith('http')) {
+        fetch(activeSheetUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({
+            type: 'calculator_activity',
+            quoteId: invoiceRefNo,
+            date: new Date().toLocaleString('en-IN'),
+            guestName: guestNameVal,
+            phone: cleanPhone ? `+91 ${cleanPhone}` : '',
+            sourcePage: window.location.pathname || `/services/${serviceSlug}/`,
+            calculatorEngine: `${config.destination?.name || 'Tour'} Engine`,
+            tripType: `${days || 1} Day Package`,
+            pickup: pickup.trim(),
+            drop: destinationDisplay,
+            vehicle: activeVehicle?.name || 'Cab',
+            estimatedFare: currentFare,
+            distanceKm: `${config.destination?.roundTripKm || 320} km`,
+            status: 'WhatsApp Clicked',
+            metadata: `Pax: ${passengers} | Fare: ₹${currentFare}`
+          })
+        }).catch(() => {});
       }
     } catch (_) {}
 
@@ -1892,7 +1929,7 @@ Please confirm booking!` + tourMapsBlock;
                   </a>
                 </div>
                 <p className="text-[11px] text-m3-on-surface-variant text-center font-medium">
-                  ✓ Lock Rate 24 Hrs ({effectiveInvoiceRefNo}) • ✓ Check Live Cab Availability • ✓ Pay ₹500 Token Only After Confirmation
+                  ✓ Lock Rate 24 Hrs ({effectiveInvoiceRefNo}) • ✓ Reserve Cab & Driver • ✓ Advance ₹500 Only After Confirmation
                 </p>
               </div>
 

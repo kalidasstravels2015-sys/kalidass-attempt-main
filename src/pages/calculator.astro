@@ -79,13 +79,6 @@ const webAppSchema = {
     "@id": "https://kalidasstravels.in/#localbusiness"
   },
   "description": "Instant transparent fare estimators for Outstation Cabs, Chennai Local Hourly Packages, Chennai Airport Taxi, Acting Drivers, and Vehicle Relocation with zero surge pricing.",
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "reviewCount": "1250",
-    "bestRating": "5",
-    "worstRating": "1"
-  },
   "offers": {
     "@type": "AggregateOffer",
     "priceCurrency": "INR",
@@ -103,44 +96,6 @@ const webAppSchema = {
     "Acting Driver Hourly and Daily Duty Fee Calculator",
     "Interstate Vehicle Relocation & Road Transit Cost Estimation",
     "Zero Surge Pricing Transparent Fare Breakdown & FASTag Toll Transparency"
-  ]
-};
-
-const howToSchema = {
-  "@type": "HowTo",
-  "@id": "https://kalidasstravels.in/calculator/#howto",
-  "name": "How to Calculate Taxi & Outstation Trip Fares in Chennai",
-  "description": "Calculate exact travel costs for outstation cabs, Chennai Airport flat rates, local city rentals, and acting drivers without surge pricing.",
-  "totalTime": "PT1M",
-  "step": [
-    {
-      "@type": "HowToStep",
-      "position": 1,
-      "name": "Select Your Travel Engine",
-      "text": "Choose from Airport Taxi (flat zone fare), Local Rental (hourly packages), Outstation Cabs (per-km billing), Acting Drivers, or Vehicle Relocation.",
-      "url": "https://kalidasstravels.in/calculator/#airport-taxi-estimator"
-    },
-    {
-      "@type": "HowToStep",
-      "position": 2,
-      "name": "Input Origin & Destination or Package Hours",
-      "text": "Type your pickup and drop location for point-to-point calculation, or select standard rental durations like 5h/50km or 10h/100km.",
-      "url": "https://kalidasstravels.in/calculator/#local-rental-estimator"
-    },
-    {
-      "@type": "HowToStep",
-      "position": 3,
-      "name": "Select Vehicle Class",
-      "text": "Pick from Sedan (Dzire/Etios), 6-Seater SUV (Ertiga), Luxury MUV (Innova Crysta), or 12-Seater Tempo Traveller based on your group size.",
-      "url": "https://kalidasstravels.in/calculator/#outstation-estimator"
-    },
-    {
-      "@type": "HowToStep",
-      "position": 4,
-      "name": "Review Transparent Estimate & Book",
-      "text": "Review transparent rates including base kilometers, driver bata, and toll guidelines with zero surge pricing, then confirm via WhatsApp or phone.",
-      "url": "https://kalidasstravels.in/calculator/#acting-driver-estimator"
-    }
   ]
 };
 
@@ -272,7 +227,7 @@ const serviceSchemas = [
   description="Instant travel cost & taxi fare calculator in Chennai. Transparent rates for outstation cabs (₹14/km), Chennai airport flat fares (₹650), local hourly packages & acting drivers with 100% zero surge pricing."
   ogImage="/og/calculator.jpg"
   keywords="taxi fare calculator chennai, outstation cab fare calculator chennai, travel cost calculator, trip amount calculator, km calculator car rent chennai, local taxi package calculator, chennai airport taxi calculator, acting driver charges calculator, vehicle relocation cost calculator, kalidass travels fare calculator"
-  schema={[webAppSchema, howToSchema, faqSchema, ...serviceSchemas]}
+  schema={[webAppSchema, faqSchema, ...serviceSchemas]}
 >
   <Breadcrumbs items={breadcrumbItems} />
   

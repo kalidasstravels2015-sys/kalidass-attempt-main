@@ -630,8 +630,8 @@ export function generateInvoiceLetterheadHtml(data = {}) {
         </div>
         ` : ''}
         <div class="sum-row advance-row">
-          <span>Advance Deposit to Confirm:</span>
-          <strong style="color: #059669;">₹${Number(advanceDeposit).toLocaleString('en-IN')} (Booking Token)</strong>
+          <span>Advance to Reserve Cab & Driver:</span>
+          <strong style="color: #059669;">₹${Number(advanceDeposit).toLocaleString('en-IN')} (Advance Deposit)</strong>
         </div>
         <div class="sum-row grand-total">
           <span>BALANCE ON COMPLETION:</span>
