@@ -998,17 +998,14 @@ Please confirm booking!` + tourMapsBlock;
     loadGoogleMaps().catch(() => {});
     const target = e?.currentTarget || e?.target;
     if (!target || typeof window === 'undefined') return;
-    if (window.innerWidth <= 768 || 'ontouchstart' in window || navigator.maxTouchPoints > 0) {
-      const scrollIt = () => {
+    if (window.innerWidth <= 768) {
+      setTimeout(() => {
         const rect = target.getBoundingClientRect();
         const headerOffset = 72;
-        if (rect.top > 120 || rect.top < 60) {
+        if (rect.top > 140 || rect.top < 60) {
           window.scrollTo({ top: Math.max(0, window.scrollY + rect.top - headerOffset), behavior: 'smooth' });
         }
-      };
-      scrollIt();
-      setTimeout(scrollIt, 120);
-      setTimeout(scrollIt, 320);
+      }, 150);
     }
   };
 

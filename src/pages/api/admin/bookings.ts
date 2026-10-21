@@ -27,6 +27,7 @@ function escapeCsvCell(cell: any): string {
 export const GET: APIRoute = async ({ request, url }) => {
   try {
     const targetUrl = url || new URL(request.url);
+    const queryRef = (targetUrl.searchParams.get('bookingId') || targetUrl.searchParams.get('ref') || targetUrl.searchParams.get('id') || '').trim().toLowerCase();
     const customWebhook = targetUrl.searchParams.get('webhook') || process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL;
     let remoteBookings: any[] = [];
 

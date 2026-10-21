@@ -1153,14 +1153,8 @@ export default function QuotationEngine({
   const handleLocationFocus = (e) => {
     loadGoogleMaps().catch(() => {});
     const inputEl = e.currentTarget;
-    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-      scrollInputAboveKeyboard(inputEl, 240);
-      // Fallback smooth center adjustment once virtual keyboard is open
-      setTimeout(() => {
-        if (inputEl) {
-          inputEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      }, 350);
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+      scrollInputAboveKeyboard(inputEl, 220);
     }
   };
 

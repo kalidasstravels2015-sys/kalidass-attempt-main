@@ -85,44 +85,26 @@ export function useVirtualKeyboard() {
    * Scroll `inputEl` so that at least `reservePx` of space remains below it
    * for an autocomplete dropdown — accounting for the actual keyboard position.
    */
-  const scrollInputAboveKeyboard = useCallback((inputEl, reservePx = 250) => {
+  const scrollInputAboveKeyboard = useCallback((inputEl, reservePx = 220) => {
     if (!inputEl || typeof window === 'undefined') return;
 
-    const doScroll = () => {
+    setTimeout(() => {
       // If inside a fixed/modal dialog, let the modal manage scrolling
       const modalParent = inputEl.closest?.('[role="dialog"], .fixed');
       if (modalParent) {
-        inputEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        inputEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         return;
       }
 
-      const vv = window.visualViewport;
       const rect = inputEl.getBoundingClientRect();
       const headerOffset = 72; // Headroom for sticky header
 
-      if (vv) {
-        const visibleBottom = vv.offsetTop + vv.height;
-        const inputBottom = rect.bottom;
-        const spaceBelow = visibleBottom - inputBottom;
-
-        // If space below is insufficient or the input is pushed down (> 120px from top), scroll to top zone
-        if (spaceBelow < reservePx || rect.top > 120 || rect.top < 60) {
-          const targetY = window.scrollY + rect.top - headerOffset;
-          window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
-        }
-      } else {
+      // Only scroll if the input is below the upper viewport zone
+      if (rect.top > 140 || rect.top < 60) {
         const targetY = window.scrollY + rect.top - headerOffset;
         window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
       }
-
-      // Nudge Google Places to reposition its dropdown
-      window.dispatchEvent(new Event('resize'));
-    };
-
-    // Staggered scrolls: immediate, at 120ms, and at 320ms to handle keyboard opening animation
-    doScroll();
-    setTimeout(doScroll, 120);
-    setTimeout(doScroll, 320);
+    }, 150);
   }, []);
 
   return { keyboardHeight, isKeyboardOpen, visibleHeight, scrollInputAboveKeyboard };

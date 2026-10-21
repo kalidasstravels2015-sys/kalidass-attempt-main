@@ -765,20 +765,21 @@ Please confirm driver assignment and cab availability.`;
               method: 'POST',
               mode: 'no-cors',
               headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify({
-              date: new Date().toLocaleString(),
-              tripType: quickBookingContext.packageTitle,
-              name: name,
-              phone: '+91 ' + rawPhone,
-              pickup: area,
-              vehicle: quickBookingContext.vehicleName,
-              estimate: quickBookingContext.price,
-              travelDate: formattedPickupDate + ' @ ' + formattedPickupTime,
-              returnDate: formattedReturnDate,
-              days: quickBookingContext.days,
-              bookingId: quickBookingContext.bookingId
-            })
-          }).catch(function () {});
+              body: JSON.stringify({
+                date: new Date().toLocaleString(),
+                tripType: quickBookingContext.packageTitle,
+                name: name,
+                phone: '+91 ' + rawPhone,
+                pickup: area,
+                vehicle: quickBookingContext.vehicleName,
+                estimate: quickBookingContext.price,
+                travelDate: formattedPickupDate + ' @ ' + formattedPickupTime,
+                returnDate: formattedReturnDate,
+                days: quickBookingContext.days,
+                bookingId: quickBookingContext.bookingId
+              })
+            }).catch(function () {});
+          }
         } catch (err) {}
 
         // Open WhatsApp Web/App

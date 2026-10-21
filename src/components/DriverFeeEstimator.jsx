@@ -600,10 +600,6 @@ export default function DriverFeeEstimator({
                 setPickup(val);
                 setShowResult(false);
                 setFieldErrors(prev => ({ ...prev, pickup: undefined }));
-                if (typeof window !== 'undefined' && (window.innerWidth <= 768 || 'ontouchstart' in window)) {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  if (rect.top > 120) scrollInputAboveKeyboard(e.currentTarget, 250);
-                }
               }}
               onFocus={handleLocationFocus}
               placeholder="e.g. Pallavaram, Chennai"
@@ -658,10 +654,6 @@ export default function DriverFeeEstimator({
                 setDrop(val);
                 setShowResult(false);
                 setFieldErrors(prev => ({ ...prev, drop: undefined }));
-                if (typeof window !== 'undefined' && (window.innerWidth <= 768 || 'ontouchstart' in window)) {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  if (rect.top > 120) scrollInputAboveKeyboard(e.currentTarget, 250);
-                }
               }}
               onFocus={handleLocationFocus}
               placeholder={activeTab === 'round' ? 'e.g. Tirupati, Madurai, Ooty' : 'e.g. Tirupati, Madurai'}
