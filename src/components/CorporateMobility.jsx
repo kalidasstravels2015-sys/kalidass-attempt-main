@@ -41,37 +41,37 @@ export default function CorporateMobility() {
       id: 'retainer-sedan',
       type: 'retainer',
       name: 'Executive Sedan Monthly Retainer (Dzire / Etios)',
-      duration: '26 Days / 10 Hours Daily',
-      rate: '₹42,000 / mo',
-      extraRate: 'OT: ₹120/hr • Fuel actuals',
+      duration: '8 GeM Slabs (1,000 to 3,000 Km)',
+      rate: '₹36,000 – ₹56,000 / monthly',
+      extraRate: 'Addl KM: ₹12/km • OT: ₹120/hr',
       highlight: 'Dedicated uniformed chauffeur, replacement within 60 mins',
       slug: 'monthly-car-with-driver-corporate',
       badge: 'Managerial Travel',
-      whatsapp: 'https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20enquire%20about%20Executive%20Sedan%20Monthly%20Retainer.'
+      whatsapp: 'https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20enquire%20about%20Executive%20Sedan%20Monthly%20Retainer%20(GeM%20Standard).'
     },
     {
       id: 'retainer-suv',
       type: 'retainer',
       name: 'Mid SUV Monthly Retainer (Maruti Ertiga / XL6)',
-      duration: '26 Days / 10 Hours Daily',
-      rate: '₹52,000 / mo',
-      extraRate: 'OT: ₹140/hr • Fuel actuals',
+      duration: '8 GeM Slabs (1,000 to 3,000 Km)',
+      rate: '₹44,000 – ₹68,000 / monthly',
+      extraRate: 'Addl KM: ₹14/km • OT: ₹140/hr',
       highlight: '6-seater spacious vehicle for project teams & client visits',
       slug: 'monthly-car-with-driver-corporate',
       badge: 'Team Mobility',
-      whatsapp: 'https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20enquire%20about%20Ertiga%20SUV%20Monthly%20Retainer.'
+      whatsapp: 'https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20enquire%20about%20Ertiga%20SUV%20Monthly%20Retainer%20(GeM%20Standard).'
     },
     {
       id: 'retainer-crysta',
       type: 'retainer',
       name: 'Toyota Innova Crysta Monthly Retainer',
-      duration: '26 Days / 10 Hours Daily',
-      rate: '₹65,000 / mo',
-      extraRate: 'OT: ₹175/hr • Fuel actuals',
+      duration: '8 GeM Slabs (1,000 to 3,000 Km)',
+      rate: '₹55,000 – ₹86,000 / monthly',
+      extraRate: 'Addl KM: ₹18/km • OT: ₹175/hr',
       highlight: 'Premium VIP chauffeur, leather captain seats for leadership/expats',
       slug: 'monthly-car-with-driver-corporate',
       badge: 'CXO & Director Mobility',
-      whatsapp: 'https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20enquire%20about%20Innova%20Crysta%20Monthly%20Retainer.'
+      whatsapp: 'https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20enquire%20about%20Innova%20Crysta%20Monthly%20Retainer%20(GeM%20Standard).'
     },
     {
       id: 'airport-central',

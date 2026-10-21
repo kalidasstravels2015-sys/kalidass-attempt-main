@@ -877,6 +877,7 @@ export default function AirportBookingEngine({
               <input
                 id="airport-from-input"
                 data-testid="airport-from-input"
+                data-autocomplete-input="true"
                 ref={direction === 'drop' ? destInputRef : null}
                 type="text"
                 value={pickup}
@@ -890,7 +891,7 @@ export default function AirportBookingEngine({
                 }}
                 onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleCalculateCost(); } }}
                 placeholder={direction === 'pickup' ? AIRPORT_HUB : 'Enter your area / doorstep address'}
-                className={inputField + (direction === 'pickup' ? ' cursor-default text-[#1a73e8] font-bold' : '')}
+                className={inputField + ' scroll-mt-20 sm:scroll-mt-24' + (direction === 'pickup' ? ' cursor-default text-[#1a73e8] font-bold' : '')}
               />
               <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
                 {direction === 'drop' && pickup && (
@@ -933,6 +934,7 @@ export default function AirportBookingEngine({
               <input
                 id="airport-to-input"
                 data-testid="airport-to-input"
+                data-autocomplete-input="true"
                 ref={direction === 'pickup' ? destInputRef : null}
                 type="text"
                 value={drop}
@@ -946,7 +948,7 @@ export default function AirportBookingEngine({
                 }}
                 onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleCalculateCost(); } }}
                 placeholder={direction === 'drop' ? AIRPORT_HUB : 'Enter hotel / area / destination city'}
-                className={inputField + (direction === 'drop' ? ' cursor-default text-[#1a73e8] font-bold' : '')}
+                className={inputField + ' scroll-mt-20 sm:scroll-mt-24' + (direction === 'drop' ? ' cursor-default text-[#1a73e8] font-bold' : '')}
               />
               <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
                 {direction === 'pickup' && drop && (

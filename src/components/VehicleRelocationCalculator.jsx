@@ -430,9 +430,10 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
               id="vr-pickup-input"
               ref={pickupRef}
               type="text" 
+              data-autocomplete-input="true"
               value={pickup}
               placeholder="e.g. Coimbatore"
-              className={`w-full pl-10 pr-16 py-3 bg-m3-surface border rounded-m3-md outline-none text-sm font-medium text-m3-on-surface transition-all ${
+              className={`w-full pl-10 pr-16 py-3 bg-m3-surface border rounded-m3-md outline-none text-sm font-medium text-m3-on-surface transition-all scroll-mt-20 sm:scroll-mt-24 ${
                 fieldErrors.pickup 
                   ? 'border-m3-error ring-1 ring-m3-error bg-m3-error-container/20' 
                   : 'border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary'
@@ -480,9 +481,10 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
               id="vr-drop-input"
               ref={dropRef}
               type="text" 
+              data-autocomplete-input="true"
               value={drop}
               placeholder="e.g. Chennai"
-              className={`w-full pl-10 pr-16 py-3 bg-m3-surface border rounded-m3-md outline-none text-sm font-medium text-m3-on-surface transition-all ${
+              className={`w-full pl-10 pr-16 py-3 bg-m3-surface border rounded-m3-md outline-none text-sm font-medium text-m3-on-surface transition-all scroll-mt-20 sm:scroll-mt-24 ${
                 fieldErrors.drop 
                   ? 'border-m3-error ring-1 ring-m3-error bg-m3-error-container/20' 
                   : 'border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary'

@@ -1,4 +1,5 @@
 import { onCLS, onLCP, onFCP, onTTFB, onINP } from 'web-vitals';
+import { getActiveGoogleSheetUrl } from '../config/googleSheets';
 
 const GA_MEASUREMENT_ID = import.meta.env.PUBLIC_GA_ID || 'G-61YQMR8J7H';
 const GOOGLE_ADS_ID = import.meta.env.PUBLIC_GOOGLE_ADS_ID || 'AW-18463679349';
@@ -199,7 +200,7 @@ export const trackCalculatorQuote = (payload = {}) => {
     const vehicle = payload.vehicle ? String(payload.vehicle).trim() : 'Standard';
     const distanceKm = payload.distanceKm || payload.distance || '';
     const estimatedFare = Number(payload.estimatedFare || payload.estimate || 0);
-    const status = payload.status || 'Browsed';
+    const status = payload.status || 'Rate Locked';
     const meta = payload.meta || {};
 
     // Deduplication / Debounce: Ignore duplicate calls within 2.5 seconds with exact same payload
@@ -211,8 +212,11 @@ export const trackCalculatorQuote = (payload = {}) => {
     lastQuoteSignature = signature;
     lastQuoteTime = now;
 
-    const quoteId = `#CALC-${Math.floor(100000 + Math.random() * 900000)}`;
+    // Use the exact quote ID visible to customer on screen (e.g. #KT-5046) if provided
+    const quoteId = payload.quoteId || payload.meta?.quoteRefId || `#KT-${Math.floor(1000 + Math.random() * 9000)}`;
     lastActiveQuoteId = quoteId;
+
+    const sheetUrl = getActiveGoogleSheetUrl();
 
     const recordData = {
         quoteId,
@@ -227,10 +231,11 @@ export const trackCalculatorQuote = (payload = {}) => {
         distanceKm,
         estimatedFare,
         status,
-        meta
+        meta,
+        webhookUrl: sheetUrl
     };
 
-    // 1. Send to Local & Google Sheets Backend Logger
+    // 1. Send to Local & Google Sheets Backend Logger (/api/record-calculation)
     try {
         fetch('/api/record-calculation', {
             method: 'POST',
@@ -239,7 +244,35 @@ export const trackCalculatorQuote = (payload = {}) => {
         }).catch(() => {});
     } catch (_) {}
 
-    // 2. Dispatch to GA4
+    // 2. Direct client-side fire-and-forget sync to Google Sheets Webhook
+    if (sheetUrl && sheetUrl.startsWith('https://script.google.com/macros/s/')) {
+        try {
+            fetch(sheetUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify({
+                    type: 'calculator_activity',
+                    quoteId: quoteId,
+                    date: new Date().toLocaleString('en-IN'),
+                    guestName: payload.guestName || payload.name || 'Website Visitor',
+                    phone: payload.phone || payload.mobile || '',
+                    sourcePage: sourcePage,
+                    calculatorEngine: calculatorEngine,
+                    tripType: tripType,
+                    pickup: pickup,
+                    drop: drop,
+                    vehicle: vehicle,
+                    distanceKm: distanceKm ? String(distanceKm) : 'N/A',
+                    estimatedFare: estimatedFare,
+                    status: status,
+                    metadata: typeof meta === 'object' ? JSON.stringify(meta) : String(meta || '')
+                })
+            }).catch(() => {});
+        } catch (_) {}
+    }
+
+    // 3. Dispatch to GA4
     trackEvent('calc_quote_generated', {
         quote_id: quoteId,
         calculator_id: calculatorId,
@@ -258,23 +291,56 @@ export const trackCalculatorQuote = (payload = {}) => {
 export const markQuoteConverted = (quoteId, extra = {}) => {
     if (typeof window === 'undefined') return;
     const targetQuoteId = quoteId || lastActiveQuoteId;
+    const sheetUrl = getActiveGoogleSheetUrl();
+    const status = extra.status || 'WhatsApp Clicked';
     
-    // Update local and sheet record
+    const updatePayload = {
+        quoteId: targetQuoteId,
+        status: status,
+        ...extra,
+        webhookUrl: sheetUrl
+    };
+
+    // Update local and backend record
     try {
         fetch('/api/record-calculation', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                quoteId: targetQuoteId,
-                status: 'WhatsApp Clicked',
-                ...extra
-            }),
+            body: JSON.stringify(updatePayload),
         }).catch(() => {});
     } catch (_) {}
 
+    // Direct client-side update to Google Sheets Webhook
+    if (sheetUrl && sheetUrl.startsWith('https://script.google.com/macros/s/')) {
+        try {
+            fetch(sheetUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify({
+                    type: 'calculator_activity',
+                    quoteId: targetQuoteId,
+                    date: new Date().toLocaleString('en-IN'),
+                    guestName: extra.guestName || extra.name || '',
+                    phone: extra.phone || extra.mobile || '',
+                    sourcePage: extra.sourcePage || '',
+                    calculatorEngine: extra.calculatorEngine || 'Booking Engine',
+                    tripType: extra.tripType || '',
+                    pickup: extra.pickup || '',
+                    drop: extra.drop || '',
+                    vehicle: extra.vehicle || '',
+                    distanceKm: extra.distanceKm ? String(extra.distanceKm) : '',
+                    estimatedFare: extra.estimatedFare || 0,
+                    status: status,
+                    metadata: typeof extra.meta === 'object' ? JSON.stringify(extra.meta) : (extra.metadata || '')
+                })
+            }).catch(() => {});
+        } catch (_) {}
+    }
+
     trackEvent('calc_quote_whatsapp_converted', {
         quote_id: targetQuoteId,
-        status: 'WhatsApp Clicked',
+        status: status,
         ...extra
     });
 

@@ -27,8 +27,7 @@ function escapeCsvCell(cell: any): string {
 export const GET: APIRoute = async ({ request, url }) => {
   try {
     const targetUrl = url || new URL(request.url);
-    const queryRef = (targetUrl.searchParams.get('bookingId') || targetUrl.searchParams.get('ref') || '').trim().toLowerCase();
-    const customWebhook = targetUrl.searchParams.get('webhook') || process.env.GOOGLE_SHEET_WEBHOOK_URL;
+    const customWebhook = targetUrl.searchParams.get('webhook') || process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL;
     let remoteBookings: any[] = [];
 
     // Fetch from Google Apps Script if configured
@@ -225,26 +224,29 @@ export const POST: APIRoute = async ({ request }) => {
     fs.appendFileSync(csvPath, newRow + '\n', 'utf8');
 
     // Cloud Webhook Backup to Google Sheets & Google Calendar
-    try {
-      fetch('https://script.google.com/macros/s/AKfycbwoEpKqa3Qg-DIvMe06pGUgGLlC_0vJQev61nzIh9ssh1-uHZ5VtYkGzpMVwhEyi7tvEQ/exec', {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({
-          type: 'admin_booking_sync',
-          bookingId,
-          date: new Date().toLocaleString('en-IN'),
-          name: guestNamePhone,
-          phone: guestNamePhone,
-          tripType: vehicleCategory,
-          pickup: pickupAddress,
-          drop: pickupAddress,
-          vehicle: vehicleCategory,
-          passengers: partySize,
-          estimate: terminalFare,
-          travelDate: travelDateTime
-        })
-      }).catch(() => {});
-    } catch (_) {}
+    const webhookUrl = (data && data.webhookUrl) || process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL;
+    if (webhookUrl && webhookUrl.startsWith('http')) {
+      try {
+        fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({
+            type: 'admin_booking_sync',
+            bookingId,
+            date: new Date().toLocaleString('en-IN'),
+            name: guestNamePhone,
+            phone: guestNamePhone,
+            tripType: vehicleCategory,
+            pickup: pickupAddress,
+            drop: pickupAddress,
+            vehicle: vehicleCategory,
+            passengers: partySize,
+            estimate: terminalFare,
+            travelDate: travelDateTime
+          })
+        }).catch(() => {});
+      } catch (_) {}
+    }
 
     return new Response(JSON.stringify({ success: true, bookingId, action: 'created' }), {
       status: 200,

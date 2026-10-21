@@ -85,36 +85,44 @@ export function useVirtualKeyboard() {
    * Scroll `inputEl` so that at least `reservePx` of space remains below it
    * for an autocomplete dropdown — accounting for the actual keyboard position.
    */
-  const scrollInputAboveKeyboard = useCallback((inputEl, reservePx = 220) => {
-    if (!inputEl) return;
+  const scrollInputAboveKeyboard = useCallback((inputEl, reservePx = 250) => {
+    if (!inputEl || typeof window === 'undefined') return;
 
     const doScroll = () => {
+      // If inside a fixed/modal dialog, let the modal manage scrolling
+      const modalParent = inputEl.closest?.('[role="dialog"], .fixed');
+      if (modalParent) {
+        inputEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+
       const vv = window.visualViewport;
       const rect = inputEl.getBoundingClientRect();
+      const headerOffset = 72; // Headroom for sticky header
 
       if (vv) {
-        // Visible area bottom edge (above keyboard)
         const visibleBottom = vv.offsetTop + vv.height;
-        // How far down is the input's bottom from the visible bottom?
         const inputBottom = rect.bottom;
         const spaceBelow = visibleBottom - inputBottom;
 
-        if (spaceBelow < reservePx) {
-          // Need to scroll up so `reservePx` fits below the input
-          const scrollDelta = reservePx - spaceBelow;
-          window.scrollBy({ top: scrollDelta, behavior: 'smooth' });
+        // If space below is insufficient or the input is pushed down (> 120px from top), scroll to top zone
+        if (spaceBelow < reservePx || rect.top > 120 || rect.top < 60) {
+          const targetY = window.scrollY + rect.top - headerOffset;
+          window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
         }
       } else {
-        // Fallback: put input at top of viewport
-        inputEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const targetY = window.scrollY + rect.top - headerOffset;
+        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
       }
 
       // Nudge Google Places to reposition its dropdown
       window.dispatchEvent(new Event('resize'));
     };
 
-    // 400 ms — lets the keyboard finish its open animation before we measure
-    setTimeout(doScroll, 400);
+    // Staggered scrolls: immediate, at 120ms, and at 320ms to handle keyboard opening animation
+    doScroll();
+    setTimeout(doScroll, 120);
+    setTimeout(doScroll, 320);
   }, []);
 
   return { keyboardHeight, isKeyboardOpen, visibleHeight, scrollInputAboveKeyboard };

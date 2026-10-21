@@ -1,7 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Breadcrumbs from '../../components/SEO/Breadcrumbs.astro';
-import ServiceExplainer3Step from '../../components/ServiceExplainer3Step.astro';
 import FAQAccordion from '../../components/FAQAccordion.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
 import WhatsAppIcon from '../../components/WhatsAppIcon.astro';
@@ -10,19 +9,12 @@ import { buildWhatsAppUrl } from '../../utils/whatsapp';
 import OptimizedImage from '../../components/OptimizedImage.astro';
 import { 
   Sparkles, 
-  Users, 
   CheckCircle2, 
-  ChevronRight, 
-  Info, 
   Car, 
   ShieldCheck, 
   Clock,
   Bus,
-  Factory,
-  Briefcase,
-  Award,
-  MapPin,
-  Phone
+  Award
 } from 'lucide-react';
 
 const title = "Corporate Cab Service Chennai | Employee Transport & Tempo Rental";
@@ -35,154 +27,348 @@ const breadcrumbItems = [
   { name: "Corporate Mobility", item: "/services/corporate/" },
 ];
 
-const explainerSteps = [
+// Official GeM Standard Monthly Cab & Taxi Hiring Packages (8 Standard Slabs)
+const gemStandardPackages = [
   {
-    stepNumber: "1",
-    badge: "Step 1: Choose Service",
-    title: "Choose Your Fleet & Contract Type",
-    desc: "Select from executive monthly retainers (Dzire, Ertiga, Innova), routed shift commutes, or 12–20 seater AC Tempo Travellers for teams & plant shuttles.",
-    illustrationTitle: "Select Corporate Plan",
-    illustrationSub: "Retainers • Shifts • Tempo Travellers • Film Shoots",
-    theme: "purple" as const,
-    iconType: "car" as const
+    id: "pkg-1000",
+    name: "1,000 Km / 200 Hrs",
+    shortLabel: "1,000 Km",
+    duty: "25 Days / 8 Hours Daily",
+    dailyKm: "~40 Km / day",
+    useCase: "Admin / City Light Duty",
+    description: "Light city administration, local errands, intra-city office transit.",
+    badge: "City Light",
+    rates: {
+      sedan: "₹36,000",
+      ertiga: "₹44,000",
+      crysta: "₹55,000"
+    },
+    numericRates: {
+      sedan: 36000,
+      ertiga: 44000,
+      crysta: 55000
+    }
   },
   {
-    stepNumber: "2",
-    badge: "Step 2: Deployment",
-    title: "Verified Chauffeur & Dedicated Fleet",
-    desc: "Police-verified drivers in uniform, commercial yellow-board vehicles with active GPS, and a guaranteed 60-minute emergency backup replacement.",
-    illustrationTitle: "Dedicated Fleet & Chauffeur",
-    illustrationSub: "60-Min Replacement Guarantee",
-    theme: "blue" as const,
-    iconType: "driver" as const
+    id: "pkg-1200",
+    name: "1,200 Km / 208 Hrs",
+    shortLabel: "1,200 Km",
+    duty: "26 Days / 8 Hours Daily",
+    dailyKm: "~46 Km / day",
+    useCase: "Govt & PSU Office Standard",
+    description: "Standard daily 8-hour shift for branch managers & government / PSU officials.",
+    badge: "Govt / PSU Standard",
+    rates: {
+      sedan: "₹38,000",
+      ertiga: "₹46,500",
+      crysta: "₹58,000"
+    },
+    numericRates: {
+      sedan: 38000,
+      ertiga: 46500,
+      crysta: 58000
+    }
   },
   {
-    stepNumber: "3",
-    badge: "Step 3: GST Invoicing",
-    title: "Consolidated Monthly Invoicing",
-    desc: "Transparent digital duty slips, odometer logbook reconciliation, and 100% GST-compliant monthly tax invoices for your company's full Input Tax Credit (ITC).",
-    illustrationTitle: "100% GST Invoicing",
-    illustrationSub: "Monthly Corporate Invoices",
-    theme: "emerald" as const,
-    iconType: "relax" as const
+    id: "pkg-1500",
+    name: "1,500 Km / 260 Hrs",
+    shortLabel: "1,500 Km",
+    duty: "26 Days / 10 Hours Daily",
+    dailyKm: "~58 Km / day",
+    useCase: "Corporate Baseline (10h)",
+    description: "Standard corporate business day with commute plus inter-branch client meetings.",
+    badge: "Corporate Baseline",
+    rates: {
+      sedan: "₹42,000",
+      ertiga: "₹52,000",
+      crysta: "₹65,000"
+    },
+    numericRates: {
+      sedan: 42000,
+      ertiga: 52000,
+      crysta: 65000
+    }
+  },
+  {
+    id: "pkg-2000-260",
+    name: "2,000 Km / 260 Hrs",
+    shortLabel: "2,000 Km (10h)",
+    duty: "26 Days / 10 Hours Daily",
+    dailyKm: "~77 Km / day",
+    useCase: "Transit Corridors (OMR/Sriperumbudur)",
+    description: "Regular travel between Chennai city and manufacturing corridors / tech hubs.",
+    badge: "Corridor Transit",
+    rates: {
+      sedan: "₹46,000",
+      ertiga: "₹57,000",
+      crysta: "₹72,000"
+    },
+    numericRates: {
+      sedan: 46000,
+      ertiga: 57000,
+      crysta: 72000
+    }
+  },
+  {
+    id: "pkg-2000-320",
+    name: "2,000 Km / 320 Hrs",
+    shortLabel: "2,000 Km (12h)",
+    duty: "26 Days / 12 Hours Daily",
+    dailyKm: "~77 Km / day",
+    useCase: "Plant 12h Shift Duty",
+    description: "Extended plant shift supervision in Oragadam, Maraimalai Nagar & Ennore.",
+    badge: "Plant Shift (12h)",
+    rates: {
+      sedan: "₹49,000",
+      ertiga: "₹60,500",
+      crysta: "₹76,500"
+    },
+    numericRates: {
+      sedan: 49000,
+      ertiga: 60500,
+      crysta: 76500
+    }
+  },
+  {
+    id: "pkg-2500",
+    name: "2,500 Km / 320 Hrs",
+    shortLabel: "2,500 Km",
+    duty: "26 Days / 12 Hours Daily",
+    dailyKm: "~96 Km / day",
+    useCase: "Multi-Site Operations",
+    description: "Frequent multi-facility oversight across Chennai, Tiruvallur, and Kanchipuram.",
+    badge: "Multi-Site Ops",
+    rates: {
+      sedan: "₹52,000",
+      ertiga: "₹64,000",
+      crysta: "₹81,000"
+    },
+    numericRates: {
+      sedan: 52000,
+      ertiga: 64000,
+      crysta: 81000
+    }
+  },
+  {
+    id: "pkg-3000",
+    name: "3,000 Km / 360 Hrs",
+    shortLabel: "3,000 Km (CXO ⭐)",
+    duty: "26 Days / 12–14 Hours Daily",
+    dailyKm: "~115 Km / day",
+    useCase: "CXO & Director Mobility",
+    description: "Dedicated full-day mobility for C-Suite executives, managing directors, and visiting leadership.",
+    badge: "CXO Choice",
+    isRecommended: true,
+    rates: {
+      sedan: "₹56,000",
+      ertiga: "₹68,000",
+      crysta: "₹86,000"
+    },
+    numericRates: {
+      sedan: 56000,
+      ertiga: 68000,
+      crysta: 86000
+    }
+  },
+  {
+    id: "pkg-24x7",
+    name: "24×7 Shift (Multi-Driver)",
+    shortLabel: "24×7 Shift",
+    duty: "30 Days / Continuous (Round-the-Clock)",
+    dailyKm: "Continuous Duty",
+    useCase: "Critical Infrastructure & Plant",
+    description: "24/7 round-the-clock standby with dual/triple chauffeur rosters for continuous operations.",
+    badge: "24×7 Continuous",
+    rates: {
+      sedan: "₹68,000",
+      ertiga: "₹82,000",
+      crysta: "₹1,05,000"
+    },
+    numericRates: {
+      sedan: 68000,
+      ertiga: 82000,
+      crysta: 105000
+    }
   }
 ];
 
-const retainers = [
+const defaultPkgId = "pkg-3000";
+const defaultPkg = gemStandardPackages.find(p => p.id === defaultPkgId) || gemStandardPackages[6];
+
+// Vehicle Retainer Fleet Categories with Fixed Additional Overage Slabs
+const retainerVehicles = [
   {
+    id: "sedan" as const,
     plan: "Executive Sedan Retainer",
     cars: "Swift Dzire / Toyota Etios",
     shortName: "Swift Dzire",
     image: "/images/fleet/swift-dzire.webp",
     capacity: "4 Pax + Chauffeur",
-    scope: "26 Days / 10 Hours Daily",
-    rate: "₹42,000 / mo",
-    extra: "OT: ₹120/hr • Fuel actuals",
-    badge: "Best Value Sedan",
-    highlight: "Dedicated chauffeur in uniform, replacement vehicle within 60 minutes anywhere in Chennai.",
-    whatsappMsg: "Hi Kalidass Travels, I want to enquire about the Executive Sedan Monthly Retainer (₹42,000/mo)."
+    addlKmRate: 12,
+    addlHourRate: 120,
+    addlKm: "₹12 / km",
+    addlHour: "₹120 / hr",
+    nightOt: "₹350 / night",
+    ratesByPkg: {
+      "pkg-1000": "₹36,000",
+      "pkg-1200": "₹38,000",
+      "pkg-1500": "₹42,000",
+      "pkg-2000-260": "₹46,000",
+      "pkg-2000-320": "₹49,000",
+      "pkg-2500": "₹52,000",
+      "pkg-3000": "₹56,000",
+      "pkg-24x7": "₹68,000"
+    }
   },
   {
+    id: "ertiga" as const,
     plan: "Mid SUV Monthly Retainer",
     cars: "Maruti Ertiga / XL6",
     shortName: "Maruti Ertiga",
     image: "/images/fleet/maruti-ertiga.webp",
     capacity: "6 Pax + Chauffeur",
-    scope: "26 Days / 10 Hours Daily",
-    rate: "₹52,000 / mo",
-    extra: "OT: ₹140/hr • Fuel actuals",
-    badge: "Team Mobility MPV",
-    highlight: "Spacious 6-seater vehicle for site visits, project teams, and client meetings with chilled dual AC.",
-    whatsappMsg: "Hi Kalidass Travels, I want to enquire about the Ertiga SUV Monthly Retainer (₹52,000/mo)."
+    addlKmRate: 14,
+    addlHourRate: 140,
+    addlKm: "₹14 / km",
+    addlHour: "₹140 / hr",
+    nightOt: "₹400 / night",
+    ratesByPkg: {
+      "pkg-1000": "₹44,000",
+      "pkg-1200": "₹46,500",
+      "pkg-1500": "₹52,000",
+      "pkg-2000-260": "₹57,000",
+      "pkg-2000-320": "₹60,500",
+      "pkg-2500": "₹64,000",
+      "pkg-3000": "₹68,000",
+      "pkg-24x7": "₹82,000"
+    }
   },
   {
+    id: "crysta" as const,
     plan: "Toyota Innova Crysta Retainer",
     cars: "Innova Crysta (7-Seater)",
     shortName: "Innova Crysta",
     image: "/images/fleet/suv.webp",
     capacity: "7 Pax + Chauffeur",
-    scope: "26 Days / 10 Hours Daily",
-    rate: "₹65,000 / mo",
-    extra: "OT: ₹175/hr • Fuel actuals",
-    badge: "Executive Luxury VIP",
-    highlight: "Experienced senior chauffeur, comfortable captain seats, ideal for leadership, directors, and visiting clients.",
-    whatsappMsg: "Hi Kalidass Travels, I want to enquire about the Innova Crysta Monthly Retainer (₹65,000/mo)."
+    addlKmRate: 18,
+    addlHourRate: 175,
+    addlKm: "₹18 / km",
+    addlHour: "₹175 / hr",
+    nightOt: "₹500 / night",
+    ratesByPkg: {
+      "pkg-1000": "₹55,000",
+      "pkg-1200": "₹58,000",
+      "pkg-1500": "₹65,000",
+      "pkg-2000-260": "₹72,000",
+      "pkg-2000-320": "₹76,500",
+      "pkg-2500": "₹81,000",
+      "pkg-3000": "₹86,000",
+      "pkg-24x7": "₹1,05,000"
+    }
   }
 ];
 
 const tempoFleet = [
   {
+    id: "tempo-12",
     name: "12-Seater Luxury AC Tempo Traveller",
+    shortTitle: "12-Seater Luxury",
     image: "/images/fleet/tempo.webp",
     badge: "Executive & VIP Delegation",
-    capacity: "12 Staff / Crew + Chauffeur",
+    capacity: "12 Pax + Chauffeur",
     seating: "2x1 Pushback Leatherette Seats",
     rates: {
       shift: "₹500 – ₹700 / route",
       spot: "₹5,500 (8h / 80km)",
       outstation: "₹24 / km"
     },
+    numericRates: {
+      spot: 5500,
+      shiftMin: 500,
+      outstationPerKm: 24
+    },
     features: [
-      "Individual AC louvers & mobile charging points",
-      "Spacious boot for team luggage & cinema shoot equipment",
-      "Premium interior with ambient roof lighting",
-      "Ideal for CXO delegations, client audits & film crew units"
+      "2x1 pushback ergonomic leatherette seats",
+      "Individual AC vents & USB charging ports",
+      "Dedicated luggage boot for airport / team gear",
+      "ARAI speed governor (80 km/h) & active GPS"
     ],
-    whatsappMsg: "Hi Kalidass Travels, I need a quotation for the 12-Seater Luxury AC Tempo Traveller for Corporate use."
+    whatsappMsg: "Hi Kalidass Travels, I need a quotation for the 12-Seater Luxury AC Tempo Traveller for Corporate mobility."
   },
   {
+    id: "tempo-14",
     name: "14-Seater Executive AC Tempo Traveller",
+    shortTitle: "14-Seater Exec",
     image: "/images/fleet/tempo.webp",
     badge: "Project Teams & Site Visits",
-    capacity: "14 Staff + Chauffeur",
+    capacity: "14 Pax + Chauffeur",
     seating: "2x1 Reclining Comfort Layout",
     rates: {
       shift: "₹550 – ₹750 / route",
       spot: "₹6,000 (8h / 80km)",
       outstation: "₹25 / km"
     },
+    numericRates: {
+      spot: 6000,
+      shiftMin: 550,
+      outstationPerKm: 25
+    },
     features: [
-      "Spacious center aisle with ergonomic high-back seats",
-      "Dual high-capacity air conditioning for Chennai climate",
-      "Air-suspension shock absorbers for smooth highway drives",
-      "Perfect for mid-size engineering teams & corporate offsites"
+      "Center aisle with high-back ergonomic seats",
+      "Dual high-capacity air conditioning",
+      "Air-suspension shock absorbers for highway smoothness",
+      "Perfect for project audits & engineering offsites"
     ],
     whatsappMsg: "Hi Kalidass Travels, I need a quotation for the 14-Seater Executive AC Tempo Traveller for Corporate team commute."
   },
   {
+    id: "tempo-17",
     name: "17-Seater Deluxe AC Tempo Traveller",
+    shortTitle: "17-Seater Deluxe",
     image: "/images/fleet/tempo.webp",
-    badge: "High-Demand Shift Commute",
-    capacity: "17 Staff + Chauffeur",
+    badge: "Shift Commute & IT Routes",
+    capacity: "17 Pax + Chauffeur",
     seating: "Stand-Up High Roof Coach",
     rates: {
       shift: "₹650 – ₹850 / route",
       spot: "₹6,500 (8h / 80km)",
       outstation: "₹26 / km"
     },
+    numericRates: {
+      spot: 6500,
+      shiftMin: 650,
+      outstationPerKm: 26
+    },
     features: [
       "Full standing height interior with overhead parcel racks",
       "Commercial speed-governor fitted (80 km/h compliance)",
       "Daily scheduled shift commute for IT parks & factory routes",
-      "First aid kit, emergency fire extinguisher & active GPS"
+      "First aid kit, emergency fire extinguisher & GPS tracking"
     ],
     whatsappMsg: "Hi Kalidass Travels, I need a quotation for the 17-Seater Deluxe AC Tempo Traveller for Daily Employee Shift routes."
   },
   {
+    id: "tempo-20",
     name: "20–26 Seater Corporate Mini-Bus & Coach",
+    shortTitle: "20–26 Coach",
     image: "/images/fleet/tempo.webp",
     badge: "Industrial & Plant Workforce",
     capacity: "20–26 Industrial Staff",
     seating: "High-Capacity Forward Facing Seats",
     rates: {
-      shift: "Route Based Quote",
-      spot: "Custom Contract",
-      outstation: "Custom RFP"
+      shift: "Route Based RFP Quote",
+      spot: "Custom Day Contract",
+      outstation: "Custom Corridor RFP"
+    },
+    numericRates: {
+      spot: 8500,
+      shiftMin: 950,
+      outstationPerKm: 32
     },
     features: [
       "Maximum headcount capacity for bio-refineries & factories",
       "Pneumatic passenger doors & reinforced commercial chassis",
-      "Regular scheduled shuttle between transit hubs & manufacturing plants",
+      "Scheduled shuttle between transit hubs & manufacturing plants",
       "Dedicated account manager with monthly digital trip sheets"
     ],
     whatsappMsg: "Hi Kalidass Travels, I need a Corporate RFP quotation for 20-26 Seater Staff Buses / Mini-Coaches."
@@ -272,14 +458,84 @@ const faqs = [
   {
     q: "Are all vehicles registered with commercial yellow boards and verified drivers?",
     a: "100% yes. Every vehicle in our corporate fleet is registered under commercial transport authority permits (yellow board), carries comprehensive commercial passenger insurance, is fitted with ARAI-approved speed governors, and is piloted by Police Verification Certified (PVC) chauffeurs trained in corporate etiquette."
+  },
+  {
+    q: "What are the 8 standard GeM monthly usage packages and how are additional KM / OT billed?",
+    a: "Under Government e-Marketplace (GeM) standard hiring norms, we offer 8 standardized monthly slabs: 1,000 Km (200h), 1,200 Km (208h), 1,500 Km (260h), 2,000 Km (260h), 2,000 Km (320h), 2,500 Km (320h), 3,000 Km (360h - CXO slab), and 24×7 multi-driver continuous duty. Fuel for contracted kilometers is included. Extra usage beyond the slab is billed at transparent fixed rates: Additional KM at ₹12/km (Sedan), ₹14/km (Ertiga), and ₹18/km (Innova Crysta); Overtime hours at ₹120/hr (Sedan), ₹140/hr (Ertiga), and ₹175/hr (Innova Crysta) reconciled monthly with digital GPS logbooks."
   }
 ];
+
+// Schema.org Graph Formulation (Multi-Tier TaxiService + Detailed OfferCatalog)
+const retainerOffers = retainerVehicles.flatMap(vehicle => {
+  return gemStandardPackages.map(pkg => ({
+    "@type": "Offer",
+    "@id": `https://kalidasstravels.in/services/corporate/#offer-${vehicle.id}-${pkg.id}`,
+    "name": `${vehicle.plan} - ${pkg.name}`,
+    "description": `${vehicle.cars} on monthly retainer under GeM slab ${pkg.name} (${pkg.duty}). Fuel included. Addl KM: ${vehicle.addlKm}, OT: ${vehicle.addlHour}. 60-min replacement SLA.`,
+    "price": String(pkg.numericRates[vehicle.id]),
+    "priceCurrency": "INR",
+    "priceValidUntil": "2027-12-31",
+    "availability": "https://schema.org/InStock",
+    "url": "https://kalidasstravels.in/services/corporate/",
+    "seller": { "@id": "https://kalidasstravels.in/#localbusiness" },
+    "priceSpecification": {
+      "@type": "UnitPriceSpecification",
+      "price": String(pkg.numericRates[vehicle.id]),
+      "priceCurrency": "INR",
+      "unitText": "MONTH",
+      "referenceQuantity": {
+        "@type": "QuantitativeValue",
+        "value": 1,
+        "unitCode": "MON"
+      }
+    },
+    "itemOffered": {
+      "@type": "TaxiService",
+      "name": `${vehicle.plan} (${vehicle.cars})`,
+      "description": `Dedicated chauffeur, fuel included, commercial yellow-board registration. ${pkg.duty}.`,
+      "provider": { "@id": "https://kalidasstravels.in/#localbusiness" }
+    }
+  }));
+});
+
+const tempoOffers = tempoFleet.map(tempo => ({
+  "@type": "Offer",
+  "@id": `https://kalidasstravels.in/services/corporate/#offer-${tempo.id}`,
+  "name": `${tempo.name} Corporate Rental`,
+  "description": `${tempo.capacity}, ${tempo.seating}. Daily 8h/80km: ${tempo.rates.spot}, Outstation: ${tempo.rates.outstation}, Shift route: ${tempo.rates.shift}.`,
+  "price": String(tempo.numericRates.spot),
+  "priceCurrency": "INR",
+  "priceValidUntil": "2027-12-31",
+  "availability": "https://schema.org/InStock",
+  "url": "https://kalidasstravels.in/services/corporate/",
+  "seller": { "@id": "https://kalidasstravels.in/#localbusiness" },
+  "priceSpecification": {
+    "@type": "UnitPriceSpecification",
+    "price": String(tempo.numericRates.spot),
+    "priceCurrency": "INR",
+    "unitText": "DAY",
+    "referenceQuantity": {
+      "@type": "QuantitativeValue",
+      "value": 1,
+      "unitCode": "DAY"
+    }
+  },
+  "itemOffered": {
+    "@type": "TaxiService",
+    "name": tempo.name,
+    "description": `Commercial AC Tempo Traveller for corporate employee shift routes, VIP delegations, and production crews.`,
+    "provider": { "@id": "https://kalidasstravels.in/#localbusiness" }
+  }
+}));
 
 const schema = {
   "@type": ["Service", "TaxiService"],
   "@id": "https://kalidasstravels.in/services/corporate/#service",
-  "name": "Corporate Mobility, Employee Transport & B2B Fleet Retainers",
-  "serviceType": "Corporate Mobility, Employee Transportation (ETS) & B2B Fleet Retainers",
+  "mainEntityOfPage": {
+    "@id": "https://kalidasstravels.in/services/corporate/#webpage"
+  },
+  "name": "Corporate Mobility, Employee Transport & B2B Fleet Retainers Chennai",
+  "serviceType": "Corporate Mobility, Employee Transportation (ETS), Monthly Car Retainers, Corporate Tempo Traveller Rental",
   "description": description,
   "url": "https://kalidasstravels.in/services/corporate/",
   "image": "https://kalidasstravels.in/images/services/corporate.webp",
@@ -310,94 +566,27 @@ const schema = {
   ],
   "hasOfferCatalog": {
     "@type": "OfferCatalog",
-    "name": "Corporate Mobility, Tempo Traveller & B2B Chauffeur Solutions",
+    "@id": "https://kalidasstravels.in/services/corporate/#catalog",
+    "name": "Corporate Mobility, Monthly Chauffeur Retainers & Tempo Traveller Fleet Solutions",
     "itemListElement": [
+      ...retainerOffers,
+      ...tempoOffers,
       {
         "@type": "Offer",
-        "name": "Executive Sedan Monthly Retainer (Swift Dzire / Toyota Etios)",
-        "description": "26 Days / 10 Hours Daily dedicated Sedan with uniformed chauffeur, GPS tracking, and 60-minute emergency replacement guarantee.",
-        "price": "42000",
-        "priceCurrency": "INR",
-        "priceValidUntil": "2027-12-31",
-        "availability": "https://schema.org/InStock",
-        "seller": { "@id": "https://kalidasstravels.in/#localbusiness" },
-        "url": "https://kalidasstravels.in/services/corporate/"
-      },
-      {
-        "@type": "Offer",
-        "name": "Mid SUV Monthly Retainer (Maruti Ertiga / XL6)",
-        "description": "26 Days / 10 Hours Daily 6-seater team mobility for project visits, field audits, and client meetings.",
-        "price": "52000",
-        "priceCurrency": "INR",
-        "priceValidUntil": "2027-12-31",
-        "availability": "https://schema.org/InStock",
-        "seller": { "@id": "https://kalidasstravels.in/#localbusiness" },
-        "url": "https://kalidasstravels.in/services/corporate/"
-      },
-      {
-        "@type": "Offer",
-        "name": "Toyota Innova Crysta Monthly Retainer (7-Seater Luxury)",
-        "description": "26 Days / 10 Hours Daily 7-seater Innova Crysta with experienced senior driver. Comfortable captain seats for client meetings and leadership travel.",
-        "price": "65000",
-        "priceCurrency": "INR",
-        "priceValidUntil": "2027-12-31",
-        "availability": "https://schema.org/InStock",
-        "seller": { "@id": "https://kalidasstravels.in/#localbusiness" },
-        "url": "https://kalidasstravels.in/services/corporate/"
-      },
-      {
-        "@type": "Offer",
-        "name": "12-Seater Luxury AC Tempo Traveller Corporate Rental",
-        "description": "Luxury 12-seater AC Tempo Traveller with 2x1 pushback leatherette seats, individual charging ports, and dedicated luggage boot for executive delegations, film shoots, and corporate offsites.",
-        "price": "5500",
-        "priceCurrency": "INR",
-        "priceValidUntil": "2027-12-31",
-        "availability": "https://schema.org/InStock",
-        "seller": { "@id": "https://kalidasstravels.in/#localbusiness" },
-        "url": "https://kalidasstravels.in/services/corporate/"
-      },
-      {
-        "@type": "Offer",
-        "name": "17-Seater Deluxe AC Tempo Traveller Shift Commute",
-        "description": "High-roof 17-seater AC Tempo Traveller with speed governors and GPS live tracking for daily scheduled employee shift commute and industrial workforce transit.",
-        "price": "6500",
-        "priceCurrency": "INR",
-        "priceValidUntil": "2027-12-31",
-        "availability": "https://schema.org/InStock",
-        "seller": { "@id": "https://kalidasstravels.in/#localbusiness" },
-        "url": "https://kalidasstravels.in/services/corporate/"
-      },
-      {
-        "@type": "Offer",
-        "name": "Industrial & Bio-Refinery Plant Workforce Shuttle Commute",
-        "description": "Scheduled shift transit for manufacturing plants, bio-refineries, and 3PL logistics hubs (including active operations with Kaleesuwari Refinery and Mahindra Logistics).",
-        "price": "500",
-        "priceCurrency": "INR",
-        "priceValidUntil": "2027-12-31",
-        "availability": "https://schema.org/InStock",
-        "seller": { "@id": "https://kalidasstravels.in/#localbusiness" },
-        "url": "https://kalidasstravels.in/services/corporate/"
-      },
-      {
-        "@type": "Offer",
-        "name": "Film Studio & Cinema Production Fleet Logistics",
-        "description": "Dedicated vehicle fleet for Kollywood feature films, OTT shoots, and ad agencies. 12h/24h continuous standby with Innova Crysta and 12-17 seater Tempo Travellers.",
-        "price": "5500",
-        "priceCurrency": "INR",
-        "priceValidUntil": "2027-12-31",
-        "availability": "https://schema.org/InStock",
-        "seller": { "@id": "https://kalidasstravels.in/#localbusiness" },
-        "url": "https://kalidasstravels.in/services/corporate/"
-      },
-      {
-        "@type": "Offer",
+        "@id": "https://kalidasstravels.in/services/corporate/#offer-ets-route",
         "name": "Corporate Employee Shift Commute (ETS per route)",
-        "description": "GPS-tracked scheduled shift routes with doorstep verification. Female employees are never the first pickup or last drop during night shifts (8 PM to 6 AM).",
+        "description": "GPS-tracked scheduled shift routes with doorstep verification. Female employees are never first pickup or last drop during night shifts (8 PM to 6 AM).",
         "price": "350",
         "priceCurrency": "INR",
         "priceValidUntil": "2027-12-31",
         "availability": "https://schema.org/InStock",
         "seller": { "@id": "https://kalidasstravels.in/#localbusiness" },
+        "priceSpecification": {
+          "@type": "UnitPriceSpecification",
+          "price": "350",
+          "priceCurrency": "INR",
+          "unitText": "ROUTE"
+        }
       }
     ]
   }
@@ -406,6 +595,9 @@ const schema = {
 const faqSchema = {
   "@type": "FAQPage",
   "@id": "https://kalidasstravels.in/services/corporate/#faq",
+  "isPartOf": {
+    "@id": "https://kalidasstravels.in/services/corporate/#webpage"
+  },
   "mainEntity": faqs.map(item => ({
     "@type": "Question",
     "name": item.q,
@@ -427,494 +619,540 @@ const faqSchema = {
 >
   <Breadcrumbs items={breadcrumbItems} />
 
-  <main class="bg-m3-surface text-m3-on-surface font-sans pb-16">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10">
+  <main class="bg-[#F8FAFC] text-slate-900 font-sans pb-16">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 sm:pt-8">
 
-      <!-- 1. HERO SECTION -->
-      <section class="max-w-4xl mx-auto mb-8 sm:mb-12 text-center">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container text-xs font-bold uppercase tracking-wider mb-3.5 border border-m3-primary/20">
+      <!-- 1. EXECUTIVE HERO (COMPACT & CUT-AND-DRIED) -->
+      <section class="max-w-3xl mx-auto mb-6 sm:mb-8 text-center">
+        <!-- Badge Pill -->
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900 text-white text-[11px] font-bold uppercase tracking-wider mb-3">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
           <span>Enterprise B2B Transport • 100% GST Compliant</span>
         </div>
-        <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-3 font-heading">
-          Corporate Cab, <span class="text-m3-primary">Employee Mobility</span> &amp; Tempo Fleet in Chennai
+
+        <!-- H1 Headline -->
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-2.5 font-heading">
+          Corporate Cab, <span class="text-[#1E252D]">Employee Mobility</span> &amp; Tempo Fleet in Chennai
         </h1>
-        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed font-normal mb-5">
-          Dependable transportation partner for IT corridors, manufacturing plants, bio-refineries, and cinema studios. 24/7 routed employee shifts, executive car retainers, and 12–20 seater AC Tempo Travellers with 100% GST billing.
+
+        <!-- Cut-and-Dried Subtitle -->
+        <p class="text-xs sm:text-sm text-slate-600 max-w-2xl mx-auto leading-relaxed mb-4">
+          Dependable transport partner for IT corridors, manufacturing plants, bio-refineries, and cinema crews. 24/7 routed shift commutes, monthly executive retainers, and 12–20 seater AC Tempo Travellers.
         </p>
 
-        <!-- Quick Proof Badges -->
-        <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-6">
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant text-micro sm:text-xs font-semibold text-m3-on-surface">
-            <CheckCircle2 className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-            <span>50,000+ Monthly Seat Trips</span>
+        <!-- Fast Proof Chips -->
+        <div class="flex flex-wrap items-center justify-center gap-2 mb-5">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-slate-200 text-xs font-semibold text-slate-800 shadow-2xs">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+            <span>100% Commercial Yellow Board</span>
           </span>
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant text-micro sm:text-xs font-semibold text-m3-on-surface">
-            <Clock className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-slate-200 text-xs font-semibold text-slate-800 shadow-2xs">
+            <Clock className="w-3.5 h-3.5 text-slate-700 shrink-0" />
             <span>60-Min Replacement SLA</span>
           </span>
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant text-micro sm:text-xs font-semibold text-m3-on-surface">
-            <ShieldCheck className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-            <span>100% Yellow Plate Fleet</span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-slate-200 text-xs font-semibold text-slate-800 shadow-2xs">
+            <Award className="w-3.5 h-3.5 text-slate-700 shrink-0" />
+            <span>100% GST Invoiced (ITC Claim)</span>
           </span>
         </div>
 
-        <!-- Service Visual Hero Banner -->
-        <div class="relative w-full h-48 sm:h-64 md:h-80 rounded-m3-xl overflow-hidden shadow-m3-1 border border-m3-outline-variant/60 bg-m3-inverse-surface text-left">
+        <!-- Hero Visual Banner (Compact 180px - 260px) -->
+        <div class="relative w-full h-44 sm:h-56 md:h-64 rounded-2xl overflow-hidden shadow-xs border border-slate-200 bg-slate-900 text-left">
           <OptimizedImage
             src="/images/services/corporate.webp"
-            alt="Kalidass Travels - Corporate Cab, Employee Mobility and Tempo Traveller Fleet in Chennai"
+            alt="Kalidass Travels Corporate Cab, Employee Mobility and Tempo Traveller Fleet in Chennai"
             class="w-full h-full object-cover object-[center_35%]"
             loading="eager"
             fetchpriority="high"
-            sizes="(max-width: 640px) 100vw, 896px"
+            sizes="(max-width: 640px) 100vw, 768px"
           />
-
-          <!-- Subtle Bottom Gradient Scrim & Badges -->
-          <div class="absolute inset-0 bg-gradient-to-t from-m3-inverse-surface/80 via-transparent to-transparent pointer-events-none"></div>
-          <div class="absolute bottom-3.5 left-3.5 right-3.5 flex items-center justify-between pointer-events-none gap-2">
-            <span class="px-2.5 py-1 rounded-m3-full bg-m3-inverse-surface/80 backdrop-blur-md text-white text-micro font-semibold border border-white/20 shadow-sm truncate max-w-[50%]">
-              Corporate Retainers &amp; Tempo Fleet
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent pointer-events-none"></div>
+          
+          <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none gap-2">
+            <span class="px-2.5 py-1 rounded-full bg-slate-900/80 backdrop-blur-md text-white text-[11px] font-semibold border border-white/20 shadow-xs truncate max-w-[55%]">
+              Monthly Retainers &amp; Tempo Shuttles
             </span>
-            <span class="px-2.5 py-1 rounded-m3-full bg-m3-primary/95 backdrop-blur-md text-white text-micro font-bold shadow-sm truncate max-w-[50%]">
-              100% GST Invoicing • 24/7 SLA
+            <span class="px-2.5 py-1 rounded-full bg-emerald-600/95 backdrop-blur-md text-white text-[11px] font-bold shadow-xs truncate max-w-[45%]">
+              24/7 Dispatch Desk
             </span>
           </div>
         </div>
+
+        <!-- Instant B2B Action Buttons -->
+        <div class="flex items-center justify-center gap-2.5 mt-4">
+          <a
+            href={buildWhatsAppUrl("Hi Kalidass Travels, I would like to request an Enterprise RFP for Corporate Mobility & Fleet Retainers.")}
+            target="_blank"
+            rel="noopener noreferrer nofollow"
+            class="h-10 px-4 rounded-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white text-xs font-bold inline-flex items-center justify-center gap-1.5 shadow-xs transition-transform active:scale-[0.98]"
+          >
+            <WhatsAppIcon variant="brand" className="w-4 h-4 shrink-0 brightness-0 invert" />
+            <span>Request Enterprise RFP</span>
+          </a>
+          <a
+            href="tel:+918939539211"
+            class="h-10 px-4 rounded-full bg-white hover:bg-slate-100 active:bg-slate-200 text-slate-800 border border-slate-300 text-xs font-bold inline-flex items-center justify-center gap-1.5 shadow-2xs transition-transform active:scale-[0.98]"
+          >
+            <AndroidPhoneIcon className="w-3.5 h-3.5 text-slate-700 shrink-0" />
+            <span>Call: +91 89395 39211</span>
+          </a>
+        </div>
       </section>
 
-      <!-- STICKY QUICK-NAV JUMP BAR -->
-      <nav data-quick-nav aria-label="Corporate Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-3 mb-8 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-6xl mx-auto flex items-center gap-1.5 sm:gap-2 text-xs font-semibold whitespace-nowrap overflow-x-auto no-scrollbar py-0.5 pe-6 scroll-px-4">
-          <span class="text-micro uppercase tracking-wider text-m3-on-surface-variant mr-1 font-bold hidden sm:inline">Jump To:</span>
-          <a href="#how-it-works" data-active="true" aria-current="true" class="px-3.5 py-2 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs transition-all shrink-0 hover:bg-m3-primary hover:text-white">How It Works</a>
-          <a href="#retainers" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">Executive Retainers</a>
-          <a href="#tempo-fleet" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">Corporate Tempo Fleet</a>
-          <a href="#active-work-orders" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">Active Work Orders</a>
-          <a href="#compliance" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">Enterprise SLA</a>
-          <a href="#faqs" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">B2B FAQs</a>
+      <!-- STICKY QUICK-NAV JUMP BAR (Tracks Scrolling Progress) -->
+      <nav data-quick-nav aria-label="Corporate Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-2.5 sm:py-3 mb-6 sm:mb-8 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-5xl mx-auto flex items-center gap-1.5 sm:gap-2 text-xs font-semibold whitespace-nowrap overflow-x-auto no-scrollbar py-0.5 pe-6 scroll-px-4">
+          <span class="text-[11px] uppercase tracking-wider text-m3-on-surface-variant mr-1 font-bold hidden sm:inline">Jump To:</span>
+          <a href="#retainers" data-active="true" aria-current="true" class="px-3.5 py-1.5 sm:py-2 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs transition-all shrink-0 hover:bg-m3-primary hover:text-white">
+            Car Retainers
+          </a>
+          <a href="#tempo-fleet" class="px-3.5 py-1.5 sm:py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+            Tempo Fleet
+          </a>
+          <a href="#active-work-orders" class="px-3.5 py-1.5 sm:py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+            Active Work Orders
+          </a>
+          <a href="#compliance" class="px-3.5 py-1.5 sm:py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+            Enterprise SLAs
+          </a>
+          <a href="#faqs" class="px-3.5 py-1.5 sm:py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+            B2B FAQs
+          </a>
         </div>
       </nav>
 
-      <!-- 2. ⚡ 3-STEP VISUAL WORKFLOW ILLUSTRATION -->
-      <div id="how-it-works" class="scroll-mt-40">
-        <ServiceExplainer3Step 
-          title="How Corporate Mobility Works"
-          subtitle="Transparent contracts, verified chauffeurs, and automated GST billing in 3 simple steps"
-          steps={explainerSteps}
-        />
-      </div>
-
-      <!-- 3. UPFRONT B2B RATE CARDS -->
-      <section class="my-12 md:my-20 space-y-16 lg:space-y-20">
-        
-        <!-- Monthly Retainer Plans -->
-        <div id="retainers" class="bg-m3-surface-container-lowest rounded-m3-2xl p-6 sm:p-8 border border-m3-outline-variant shadow-m3-1 scroll-mt-40">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-m3-outline-variant/60 pb-4 mb-6">
-            <div>
-              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container text-xs font-bold uppercase tracking-wider mb-2 border border-m3-primary/20">
-                <span>Monthly Retainers</span>
-              </div>
-              <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading">
-                Dedicated Executive Cars <span class="text-m3-primary">&amp; Chauffeur Retainers</span>
-              </h2>
-              <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1.5 leading-relaxed">
-                Fixed monthly contracts (26 days / 10 hours daily) for Directors, CXOs, and corporate branch offices.
-              </p>
+      <!-- 2. MONTHLY CAR RETAINERS -->
+      <section id="retainers" class="mb-8 bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-xs scroll-mt-28 sm:scroll-mt-32">
+        <!-- Retainers Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3 mb-4">
+          <div>
+            <div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-900 text-white text-[10px] font-bold uppercase tracking-wider mb-1.5">
+              <Car className="w-3 h-3 text-emerald-400" />
+              <span>Dedicated Car Fleet</span>
             </div>
-            <span class="inline-flex items-center text-xs font-semibold text-m3-on-surface bg-m3-surface-container-high border border-m3-outline-variant px-3 py-1.5 rounded-m3-full w-fit shrink-0">
-              60-Min Replacement SLA
+            <h2 class="text-base sm:text-lg font-bold text-slate-900 font-heading">
+              Monthly Car Retainers with Dedicated Chauffeur
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">
+              Official GeM standard slabs • Fuel included • 60-min replacement guarantee • 100% GST
+            </p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0 text-[11px] text-slate-600">
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-100 border border-slate-200 font-semibold text-slate-800">
+              <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+              <span>60-Min SLA</span>
+            </span>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-slate-100 border border-slate-200 font-semibold text-slate-800">
+              100% GST ITC
             </span>
           </div>
+        </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {retainers.map((plan) => (
-              <div class="bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant shadow-xs flex flex-col justify-between hover:shadow-ambient hover:border-m3-primary/40 transition-all overflow-hidden group">
-                <div class="p-6 sm:p-7">
-                  <!-- Top Badges Row -->
-                  <div class="flex items-center justify-between gap-2 mb-4">
-                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-m3-full bg-m3-primary/10 text-m3-primary text-xs font-bold tracking-wider uppercase border border-m3-primary/20">
-                      <Sparkles className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-                      <span>{plan.badge}</span>
-                    </span>
-                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 text-xs font-semibold text-m3-on-surface-variant">
-                      <Users className="w-3.5 h-3.5 text-m3-secondary shrink-0" />
-                      <span>{plan.capacity}</span>
-                    </span>
+        <!-- Master Package Slab Switcher (Horizontal Pill Bar) -->
+        <div class="mb-4">
+          <div class="flex items-center justify-between text-xs font-semibold text-slate-700 mb-2">
+            <span>Select Monthly Usage Slab (GeM Standard):</span>
+            <span class="text-[11px] text-slate-500 font-normal hidden sm:inline">Tap any slab to update all cars</span>
+          </div>
+
+          <!-- Horizontal Scrollable Pill Bar -->
+          <div 
+            role="tablist" 
+            aria-label="GeM Standard Monthly Usage Slabs" 
+            class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 pe-2 -mx-1 px-1 scroll-px-2"
+          >
+            {gemStandardPackages.map((pkg) => (
+              <button
+                type="button"
+                role="tab"
+                id={`slab-tab-${pkg.id}`}
+                data-pkg-slab-tab={pkg.id}
+                aria-selected={pkg.id === defaultPkgId ? "true" : "false"}
+                class={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  pkg.id === defaultPkgId
+                    ? "bg-slate-900 text-white font-bold shadow-xs"
+                    : "bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80"
+                }`}
+              >
+                <span>{pkg.shortLabel}</span>
+              </button>
+            ))}
+          </div>
+
+          <!-- Active Slab Summary Strip -->
+          <div id="active-slab-summary" class="mt-2.5 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-slate-600 gap-1">
+            <div>
+              Active Slab: <strong id="active-slab-name" class="text-slate-900 font-bold">{defaultPkg.name}</strong>
+              <span class="mx-1 text-slate-400">•</span>
+              <span id="active-slab-duty">{defaultPkg.duty}</span>
+            </div>
+            <div class="text-slate-500 italic">
+              <span id="active-slab-usecase">{defaultPkg.useCase}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Ultra-Compact Retainer Cards (~85px tall each on mobile) -->
+        <div class="space-y-2.5">
+          {retainerVehicles.map((vehicle) => {
+            const currentRate = defaultPkg.rates[vehicle.id];
+            const whatsappText = `Hi Kalidass Travels, I want to enquire about the ${vehicle.plan} - ${defaultPkg.name} (${currentRate}/monthly).`;
+            return (
+              <div class="bg-white rounded-xl border border-slate-200 hover:border-slate-400 transition-colors p-2.5 sm:p-3 shadow-2xs">
+                <div class="flex items-center justify-between gap-3">
+                  
+                  <!-- Left: Vehicle Thumbnail -->
+                  <div class="w-16 h-14 sm:w-20 sm:h-16 shrink-0 bg-slate-50 rounded-lg p-1 flex items-center justify-center border border-slate-200">
+                    <img
+                      src={vehicle.image}
+                      alt={vehicle.cars}
+                      width="80"
+                      height="48"
+                      loading="lazy"
+                      decoding="async"
+                      class="max-w-full max-h-full object-contain"
+                    />
                   </div>
 
-                  <!-- Vehicle Identity & Preview Row with CAR IMAGE -->
-                  <div class="flex items-center justify-between gap-3 mb-4">
-                    <div class="min-w-0 flex-1">
-                      <h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading leading-snug group-hover:text-m3-primary transition-colors">
-                        {plan.plan}
+                  <!-- Middle: Car Title, Live Rate & Overage -->
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-baseline gap-1.5 flex-wrap">
+                      <h3 class="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
+                        {vehicle.plan}
                       </h3>
-                      <p class="text-xs text-m3-on-surface-variant mt-0.5 font-medium">
-                        {plan.cars} • Dedicated Chauffeur
-                      </p>
-                    </div>
-                    <div class="shrink-0 w-20 h-12 sm:w-24 sm:h-14 flex items-center justify-end">
-                      <img
-                        src={plan.image}
-                        alt={plan.cars}
-                        width="112"
-                        height="56"
-                        decoding="async"
-                        class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-xs"
-                        loading="lazy"
-                      />
-                    </div>
-                  </div>
-
-                  <!-- M3 Tonal Surface Price Slabs -->
-                  <div class="bg-m3-surface-container-low p-4 sm:p-5 rounded-m3-xl border border-m3-outline-variant/60 mb-4 space-y-3">
-                    <div class="flex flex-col gap-0.5">
-                      <span class="text-micro font-bold text-m3-on-surface-variant uppercase tracking-wider">
-                        Monthly Retainer Fee
+                      <span class="text-[10px] sm:text-xs text-slate-500 font-medium">
+                        ({vehicle.cars} • {vehicle.capacity})
                       </span>
-                      <strong class="text-xl sm:text-2xl font-bold text-m3-primary font-heading tracking-tight leading-none tabular-nums">
-                        {plan.rate}
+                    </div>
+
+                    <!-- Monthly Price Line -->
+                    <div class="mt-1 flex items-baseline gap-2">
+                      <strong 
+                        class="text-sm sm:text-base font-extrabold text-slate-900 tabular-nums" 
+                        data-rate-display={vehicle.id}
+                      >
+                        {currentRate} / monthly
                       </strong>
+                      <span class="text-[10px] text-emerald-700 font-semibold bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200/60 hidden sm:inline">
+                        Fuel Included
+                      </span>
                     </div>
 
-                    <div class="pt-2.5 border-t border-m3-outline-variant/50 space-y-2">
-                      <div class="flex items-center justify-between text-xs py-0.5">
-                        <span class="text-m3-on-surface-variant font-medium">Standard Duty Scope</span>
-                        <strong class="font-bold text-m3-on-surface">{plan.scope}</strong>
-                      </div>
-                      <div class="flex items-center justify-between text-xs py-0.5">
-                        <span class="text-m3-on-surface-variant font-medium">Overtime / Fuel Rules</span>
-                        <strong class="font-bold text-m3-on-surface">{plan.extra}</strong>
-                      </div>
-                    </div>
-
-                    <div class="pt-2 border-t border-m3-outline-variant/40 flex items-center gap-1.5 text-xs font-semibold text-emerald-700">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span>60-Min Replacement SLA • 100% GST Invoice</span>
+                    <!-- Cut-and-Dried Overage Specifications (Clean, wrapped, no truncation) -->
+                    <div class="text-[10px] sm:text-xs text-slate-600 mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                      <span>Addl. KM: <strong class="text-slate-900 font-semibold">{vehicle.addlKm}</strong></span>
+                      <span class="text-slate-300">•</span>
+                      <span>OT: <strong class="text-slate-900 font-semibold">{vehicle.addlHour}</strong></span>
+                      <span class="text-slate-300">•</span>
+                      <span>Night: <strong class="text-slate-900 font-semibold">{vehicle.nightOt}</strong></span>
                     </div>
                   </div>
 
-                  <!-- Key Highlights -->
-                  <p class="text-xs text-m3-on-surface-variant leading-relaxed mb-2">
-                    {plan.highlight}
-                  </p>
-                </div>
-
-                <!-- Card Action Area (Dual Ergonomic Action Buttons) -->
-                <div class="px-6 pb-6 pt-1">
-                  <div class="grid grid-cols-2 gap-2.5">
+                  <!-- Right: Clean Single Enquire CTA (No Call Button) -->
+                  <div class="shrink-0">
                     <a
-                      href="tel:+918939539211"
-                      aria-label={`Call for ${plan.shortName}`}
-                      class="min-h-[44px] h-11 inline-flex items-center justify-center gap-1.5 px-3.5 rounded-m3-full bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-800 border border-slate-300 shadow-2xs text-xs font-bold transition-all select-none active:scale-[0.98]"
-                    >
-                      <AndroidPhoneIcon className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-                      <span>Call Now</span>
-                    </a>
-                    <a
-                      href={buildWhatsAppUrl(plan.whatsappMsg)}
+                      href={buildWhatsAppUrl(whatsappText)}
                       target="_blank"
                       rel="noopener noreferrer nofollow"
-                      aria-label={`Enquire about ${plan.plan} on WhatsApp`}
-                      class="min-h-[44px] h-11 inline-flex items-center justify-center gap-1.5 px-3.5 rounded-m3-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white shadow-xs text-xs font-bold transition-all select-none active:scale-[0.98]"
+                      aria-label={`Enquire about ${vehicle.plan} on WhatsApp`}
+                      data-wa-btn={vehicle.id}
+                      class="h-8 sm:h-9 px-3 sm:px-4 rounded-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white text-xs font-bold inline-flex items-center justify-center gap-1.5 shadow-2xs transition-transform active:scale-[0.98]"
                     >
-                      <WhatsAppIcon variant="brand" className="w-4 h-4 shrink-0 brightness-0 invert" />
+                      <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0 brightness-0 invert" />
                       <span>Enquire</span>
                     </a>
                   </div>
+
                 </div>
               </div>
-            ))}
-          </div>
-
-          <div class="mt-6 pt-4 border-t border-m3-outline-variant/60 text-xs text-m3-on-surface-variant flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <span>* Consolidated monthly 100% GST tax invoices provided for corporate tax deductibility.</span>
-            <span class="text-m3-on-surface font-semibold">15-day and 30-day billing credit cycles available</span>
-          </div>
+            );
+          })}
         </div>
 
-        <!-- 4. CORPORATE TEMPO TRAVELLER FLEET SHOWCASE -->
-        <div id="tempo-fleet" class="bg-m3-surface-container-lowest rounded-m3-2xl p-6 sm:p-8 border border-m3-outline-variant shadow-m3-1 scroll-mt-40">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-m3-outline-variant/60 pb-4 mb-6">
-            <div>
-              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-tertiary-container text-m3-on-tertiary-container text-xs font-bold uppercase tracking-wider mb-2 border border-m3-tertiary/20">
-                <Bus className="w-3.5 h-3.5" />
-                <span>Group &amp; Staff Transit</span>
-              </div>
-              <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading">
-                Corporate Tempo Traveller Fleet <span class="text-m3-primary">for Shifts &amp; Delegations</span>
-              </h2>
-              <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1.5 leading-relaxed">
-                High-comfort 12 to 20-seater AC Tempo Travellers for IT shift shuttles, industrial plant worker commutes, corporate offsites, and cinema production crews.
-              </p>
-            </div>
-            <span class="inline-flex items-center text-xs font-semibold text-m3-on-surface bg-m3-surface-container-high border border-m3-outline-variant px-3 py-1.5 rounded-m3-full w-fit shrink-0">
-              12, 14, 17 &amp; 20-Seater Options
-            </span>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {tempoFleet.map((tempo) => (
-              <div class="bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant shadow-xs flex flex-col justify-between hover:shadow-ambient hover:border-m3-primary/40 transition-all overflow-hidden group">
-                <div class="p-6 sm:p-7">
-                  <!-- Badges Header -->
-                  <div class="flex items-center justify-between gap-2 mb-4">
-                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-m3-full bg-m3-primary/10 text-m3-primary text-xs font-bold tracking-wider uppercase border border-m3-primary/20">
-                      <Sparkles className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-                      <span>{tempo.badge}</span>
-                    </span>
-                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 text-xs font-semibold text-m3-on-surface-variant">
-                      <Users className="w-3.5 h-3.5 text-m3-secondary shrink-0" />
-                      <span>{tempo.capacity}</span>
-                    </span>
-                  </div>
-
-                  <!-- Vehicle Identity Row with Tempo Image -->
-                  <div class="flex items-center justify-between gap-3 mb-4">
-                    <div class="min-w-0 flex-1">
-                      <h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading leading-snug group-hover:text-m3-primary transition-colors">
-                        {tempo.name}
-                      </h3>
-                      <p class="text-xs text-m3-primary font-semibold mt-0.5">
-                        {tempo.seating}
-                      </p>
-                    </div>
-                    <div class="shrink-0 w-24 h-14 sm:w-28 sm:h-16 flex items-center justify-end">
-                      <img
-                        src={tempo.image}
-                        alt={tempo.name}
-                        width="112"
-                        height="56"
-                        decoding="async"
-                        class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-xs"
-                        loading="lazy"
-                      />
-                    </div>
-                  </div>
-
-                  <!-- Rate Slabs Comparison Card -->
-                  <div class="bg-m3-surface-container-low p-4 sm:p-5 rounded-m3-xl border border-m3-outline-variant/60 mb-4 space-y-2.5">
-                    <div class="text-xs font-bold text-m3-on-surface uppercase tracking-wider">
-                      Commercial Tariff Structure
-                    </div>
-                    <div class="grid grid-cols-3 gap-2 pt-1 border-t border-m3-outline-variant/40 text-center">
-                      <div class="bg-white p-2.5 rounded-m3-lg border border-slate-200/80 shadow-2xs">
-                        <span class="text-micro text-slate-600 block uppercase font-bold">Shift Route</span>
-                        <strong class="text-xs sm:text-sm font-bold text-m3-primary block mt-0.5 tabular-nums">{tempo.rates.shift}</strong>
-                      </div>
-                      <div class="bg-white p-2.5 rounded-m3-lg border border-slate-200/80 shadow-2xs">
-                        <span class="text-micro text-slate-600 block uppercase font-bold">Day (8h/80km)</span>
-                        <strong class="text-xs sm:text-sm font-bold text-m3-primary block mt-0.5 tabular-nums">{tempo.rates.spot}</strong>
-                      </div>
-                      <div class="bg-white p-2.5 rounded-m3-lg border border-slate-200/80 shadow-2xs">
-                        <span class="text-micro text-slate-600 block uppercase font-bold">Outstation</span>
-                        <strong class="text-xs sm:text-sm font-bold text-m3-primary block mt-0.5 tabular-nums">{tempo.rates.outstation}</strong>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Key Features Checklist -->
-                  <ul class="space-y-2 mb-2 text-xs text-m3-on-surface-variant font-medium">
-                    {tempo.features.map((feat) => (
-                      <li class="flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-m3-primary shrink-0 mt-0.5" />
-                        <span class="text-slate-700">{feat}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <!-- Action Buttons (Ergonomic 44px) -->
-                <div class="px-6 pb-6 pt-1">
-                  <div class="grid grid-cols-2 gap-2.5">
-                    <a
-                      href="tel:+918939539211"
-                      aria-label={`Call to book ${tempo.name}`}
-                      class="min-h-[44px] h-11 inline-flex items-center justify-center gap-1.5 px-3.5 rounded-m3-full bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-800 border border-slate-300 shadow-2xs text-xs font-bold transition-all select-none active:scale-[0.98]"
-                    >
-                      <AndroidPhoneIcon className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-                      <span>Call Desk</span>
-                    </a>
-                    <a
-                      href={buildWhatsAppUrl(tempo.whatsappMsg)}
-                      target="_blank"
-                      rel="noopener noreferrer nofollow"
-                      aria-label={`Enquire about ${tempo.name} on WhatsApp`}
-                      class="min-h-[44px] h-11 inline-flex items-center justify-center gap-1.5 px-3.5 rounded-m3-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white shadow-xs text-xs font-bold transition-all select-none active:scale-[0.98]"
-                    >
-                      <WhatsAppIcon variant="brand" className="w-4 h-4 shrink-0 brightness-0 invert" />
-                      <span>Enquire</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <!-- Feature Trust Strip -->
-          <div class="mt-6 pt-4 border-t border-m3-outline-variant/60 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-semibold text-slate-700">
-            <div class="flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-m3-primary shrink-0" />
-              <span>Dual Compressor AC Cooling</span>
-            </div>
-            <div class="flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-m3-primary shrink-0" />
-              <span>Pushback Reclining Seats</span>
-            </div>
-            <div class="flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-m3-primary shrink-0" />
-              <span>Speed Governor (80 km/h)</span>
-            </div>
-            <div class="flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-m3-primary shrink-0" />
-              <span>First Aid &amp; Fire Extinguisher</span>
-            </div>
-          </div>
+        <!-- Retainers Footnote -->
+        <div class="mt-3 pt-2.5 border-t border-slate-200 text-[11px] text-slate-500 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+          <span>* Fuel included for contracted kilometers. Toll, parking, and state permits billed at actuals.</span>
+          <span class="text-slate-700 font-semibold">15-day &amp; 30-day corporate credit terms available</span>
         </div>
-
-        <!-- 5. ACTIVE WORK ORDERS & LIVE CORPORATE OPERATIONS -->
-        <div id="active-work-orders" class="bg-m3-surface-container-low rounded-m3-2xl p-6 sm:p-8 border border-m3-outline-variant shadow-m3-1 scroll-mt-40">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-m3-outline-variant/60 pb-4 mb-6">
-            <div>
-              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container text-xs font-bold uppercase tracking-wider mb-2 border border-m3-primary/20">
-                <Award className="w-3.5 h-3.5" />
-                <span>Proven Enterprise Experience</span>
-              </div>
-              <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading">
-                Active Work Orders &amp; <span class="text-m3-primary">Live Operations</span>
-              </h2>
-              <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1.5 leading-relaxed">
-                Real-world operational deployments powering supply chain hubs, industrial bio-refineries, cinema production agencies, and IT corridors.
-              </p>
-            </div>
-            <span class="inline-flex items-center text-xs font-semibold text-m3-on-surface bg-m3-surface border border-m3-outline-variant px-3 py-1.5 rounded-m3-full w-fit shrink-0">
-              Contract Validated
-            </span>
-          </div>
-
-          <!-- Brand Logo & Names Showcase -->
-          <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3.5 sm:gap-4">
-            {activeWorkOrders.map((wo) => (
-              <div class="bg-white rounded-m3-xl p-3.5 sm:p-4 border border-slate-200/80 hover:border-m3-primary/40 shadow-xs hover:shadow-ambient transition-all flex flex-col items-center text-center group">
-                <!-- Brand Logo Container with clean backdrop for high contrast -->
-                <div class="w-full h-14 sm:h-16 bg-slate-50/60 rounded-m3-lg border border-slate-200/60 p-2 flex items-center justify-center mb-2.5 shadow-2xs group-hover:scale-[1.02] transition-transform">
-                  <img
-                    src={wo.logo}
-                    alt={wo.alt || wo.name}
-                    width="120"
-                    height="48"
-                    decoding="async"
-                    class="max-w-full max-h-full object-contain"
-                    loading="lazy"
-                  />
-                </div>
-                <!-- Brand Name -->
-                <h3 class="text-xs sm:text-sm font-bold text-slate-800 font-heading leading-tight group-hover:text-m3-primary transition-colors">
-                  {wo.name}
-                </h3>
-                <!-- Operational Category -->
-                <p class="text-xs text-slate-500 mt-1 line-clamp-1 leading-snug">
-                  {wo.category}
-                </p>
-                <!-- Active Status Indicator -->
-                <div class="mt-2.5 pt-2 border-t border-slate-100 w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-emerald-700">
-                  <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
-                  <span>Active Deployment</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
       </section>
 
-      <!-- 6. ENTERPRISE COMMITMENTS (4 PILLARS) -->
-      <section id="compliance" class="my-14 md:my-20 bg-m3-surface-container-low rounded-m3-2xl p-6 sm:p-10 border border-m3-outline-variant scroll-mt-40">
-        <div class="text-center max-w-2xl mx-auto mb-8">
-          <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-m3-on-surface font-heading">
-            Built for Reliable Corporate Transportation
+      <!-- 3. CORPORATE TEMPO TRAVELLER FLEET (VISIBLE DIRECTLY ON PAGE) -->
+      <section id="tempo-fleet" class="mb-10 bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-xs scroll-mt-24">
+        <!-- Tempo Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3 mb-4">
+          <div>
+            <div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-900 text-white text-[10px] font-bold uppercase tracking-wider mb-1.5">
+              <Bus className="w-3 h-3 text-emerald-400" />
+              <span>Group &amp; Staff Transit</span>
+            </div>
+            <h2 class="text-base sm:text-lg font-bold text-slate-900 font-heading">
+              Corporate Tempo Traveller &amp; Plant Staff Shuttles
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">
+              12, 14, 17 and 20–26 seater commercial AC coaches for shifts, site audits &amp; film crews.
+            </p>
+          </div>
+          <span class="inline-flex items-center text-[11px] font-semibold text-slate-800 bg-slate-100 border border-slate-200 px-2.5 py-0.5 rounded-full w-fit">
+            Commercial Yellow Plate Fleet
+          </span>
+        </div>
+
+        <!-- 4-Segmented Tempo Tab Selector -->
+        <div class="mb-4">
+          <div class="flex items-center justify-between text-xs font-semibold text-slate-700 mb-2">
+            <span>Select Tempo Configuration:</span>
+            <span class="text-[11px] text-slate-500 font-normal hidden sm:inline">Tap to view exact tariff &amp; seating</span>
+          </div>
+
+          <!-- Segment Bar -->
+          <div 
+            role="tablist" 
+            aria-label="Tempo Traveller Seating Configurations" 
+            class="grid grid-cols-2 sm:grid-cols-4 gap-1.5"
+          >
+            {tempoFleet.map((tempo, idx) => (
+              <button
+                type="button"
+                role="tab"
+                id={`tempo-tab-${tempo.id}`}
+                data-tempo-tab={tempo.id}
+                aria-selected={idx === 0 ? "true" : "false"}
+                class={`px-3 py-2 rounded-lg text-xs font-semibold text-center transition-all cursor-pointer ${
+                  idx === 0
+                    ? "bg-slate-900 text-white font-bold shadow-xs"
+                    : "bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80"
+                }`}
+              >
+                <span class="block truncate">{tempo.shortTitle}</span>
+                <span class="block text-[10px] opacity-75 font-normal truncate">{tempo.capacity}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <!-- Dynamic Single Tempo Card View (~160px tall) -->
+        {tempoFleet.map((tempo, idx) => (
+          <div 
+            id={`tempo-card-${tempo.id}`} 
+            data-tempo-card={tempo.id}
+            class={`${idx === 0 ? "block" : "hidden"} bg-slate-50 rounded-xl p-3.5 sm:p-4 border border-slate-200`}
+          >
+            <!-- Card Row 1: Identity & Image -->
+            <div class="flex items-start justify-between gap-3 mb-3">
+              <div class="flex-1 min-w-0">
+                <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-200/80 text-slate-700 text-[10px] font-bold uppercase mb-1">
+                  <Sparkles className="w-3 h-3 text-slate-700 shrink-0" />
+                  <span>{tempo.badge}</span>
+                </div>
+                <h3 class="text-sm sm:text-base font-bold text-slate-900 leading-snug">
+                  {tempo.name}
+                </h3>
+                <p class="text-xs text-slate-600 font-medium">
+                  {tempo.seating} • {tempo.capacity}
+                </p>
+              </div>
+
+              <div class="w-24 h-14 sm:w-28 sm:h-16 shrink-0 bg-white rounded-lg p-1 flex items-center justify-center border border-slate-200 shadow-2xs">
+                <img
+                  src={tempo.image}
+                  alt={tempo.name}
+                  width="112"
+                  height="56"
+                  loading="lazy"
+                  decoding="async"
+                  class="max-w-full max-h-full object-contain"
+                />
+              </div>
+            </div>
+
+            <!-- Card Row 2: 3-Box Commercial Tariff Matrix -->
+            <div class="grid grid-cols-3 gap-2 mb-3 text-center">
+              <div class="bg-white p-2 rounded-lg border border-slate-200 shadow-2xs">
+                <span class="text-[10px] text-slate-500 block uppercase font-bold">Shift Route</span>
+                <strong class="text-xs sm:text-sm font-bold text-slate-900 block mt-0.5 tabular-nums">{tempo.rates.shift}</strong>
+              </div>
+              <div class="bg-white p-2 rounded-lg border border-slate-200 shadow-2xs">
+                <span class="text-[10px] text-slate-500 block uppercase font-bold">Day (8h/80km)</span>
+                <strong class="text-xs sm:text-sm font-bold text-slate-900 block mt-0.5 tabular-nums">{tempo.rates.spot}</strong>
+              </div>
+              <div class="bg-white p-2 rounded-lg border border-slate-200 shadow-2xs">
+                <span class="text-[10px] text-slate-500 block uppercase font-bold">Outstation</span>
+                <strong class="text-xs sm:text-sm font-bold text-slate-900 block mt-0.5 tabular-nums">{tempo.rates.outstation}</strong>
+              </div>
+            </div>
+
+            <!-- Card Row 3: Key Specs Checklist -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs text-slate-600 mb-3.5">
+              {tempo.features.map(feat => (
+                <div class="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span class="truncate">{feat}</span>
+                </div>
+              ))}
+            </div>
+
+            <!-- Card Row 4: Clean Action Button (No Call button) -->
+            <div class="flex items-center justify-end pt-2.5 border-t border-slate-200">
+              <a
+                href={buildWhatsAppUrl(tempo.whatsappMsg)}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+                aria-label={`Enquire about ${tempo.name} on WhatsApp`}
+                class="h-8 sm:h-9 px-3.5 sm:px-4 rounded-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white text-xs font-bold inline-flex items-center gap-1.5 shadow-2xs transition-transform active:scale-[0.98]"
+              >
+                <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0 brightness-0 invert" />
+                <span>Enquire on WhatsApp</span>
+              </a>
+            </div>
+          </div>
+        ))}
+
+        <!-- Tempo Trust Strip -->
+        <div class="mt-3 pt-2.5 border-t border-slate-200 grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] font-semibold text-slate-600">
+          <div class="flex items-center gap-1">
+            <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
+            <span>Dual AC Compressor</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
+            <span>Pushback Seats</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
+            <span>Speed Governor (80 km/h)</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
+            <span>First Aid &amp; Fire Ext.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. ACTIVE WORK ORDERS & CLIENT PROOF (4x2 CLEAN GRID) -->
+      <section id="active-work-orders" class="mb-12 bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-xs scroll-mt-28 sm:scroll-mt-32">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3 mb-5">
+          <div>
+            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-0.5">
+              Enterprise Trust &amp; Track Record
+            </span>
+            <h2 class="text-base sm:text-lg font-bold text-slate-900 font-heading">
+              Active Work Orders &amp; Contract Deployments
+            </h2>
+          </div>
+          <span class="inline-flex items-center text-[11px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full w-fit">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
+            Live Operational Deployments
+          </span>
+        </div>
+
+        <!-- 8 Logos Grid (2 cols mobile, 4 cols desktop) -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {activeWorkOrders.map((wo) => (
+            <div class="bg-slate-50/70 rounded-xl p-3 border border-slate-200/80 flex flex-col items-center text-center">
+              <div class="w-full h-12 bg-white rounded-lg border border-slate-200/70 p-1.5 flex items-center justify-center mb-2 shadow-2xs">
+                <img
+                  src={wo.logo}
+                  alt={wo.alt || wo.name}
+                  width="110"
+                  height="40"
+                  loading="lazy"
+                  decoding="async"
+                  class="max-w-full max-h-full object-contain"
+                />
+              </div>
+              <h3 class="text-xs font-bold text-slate-900 leading-tight">
+                {wo.name}
+              </h3>
+              <p class="text-[11px] text-slate-500 mt-0.5 line-clamp-1 leading-snug">
+                {wo.category}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- 4. 4 ENTERPRISE SLA GUARANTEES (CLEAN MONOCHROME CARDS) -->
+      <section id="compliance" class="mb-12 scroll-mt-28 sm:scroll-mt-32">
+        <div class="text-center max-w-xl mx-auto mb-6">
+          <h2 class="text-lg sm:text-xl font-bold text-slate-900 font-heading">
+            Enterprise Commitments &amp; SLAs
           </h2>
-          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-2 leading-relaxed">
-            How Kalidass Travels guarantees compliance, safety, and business uptime across every fleet assignment.
+          <p class="text-xs text-slate-500 mt-1">
+            Built for guaranteed uptime, legal compliance, and workforce security.
           </p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5">
-          <div class="bg-white p-5 rounded-m3-xl border border-slate-200/80 shadow-2xs hover:shadow-ambient transition-all">
-            <div class="w-10 h-10 rounded-m3-lg bg-m3-primary/10 text-m3-primary flex items-center justify-center mb-3">
-              <ShieldCheck className="w-5 h-5 text-m3-primary" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
+            <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center mb-2.5">
+              <ShieldCheck className="w-4 h-4 text-slate-800" />
             </div>
-            <h3 class="text-sm font-bold text-slate-800 font-heading">Women Night Shift Safety</h3>
-            <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">Doorstep pickup &amp; drop verification, never first-in or last-drop on night shifts, with active GPS tracking.</p>
+            <h3 class="text-xs font-bold text-slate-900 font-heading">Women Night Safety</h3>
+            <p class="text-[11px] text-slate-600 mt-1 leading-relaxed">
+              Doorstep verification; female staff are never first-in or last-drop on night shifts (8 PM–6 AM) with active GPS.
+            </p>
           </div>
 
-          <div class="bg-white p-5 rounded-m3-xl border border-slate-200/80 shadow-2xs hover:shadow-ambient transition-all">
-            <div class="w-10 h-10 rounded-m3-lg bg-m3-primary/10 text-m3-primary flex items-center justify-center mb-3">
-              <Clock className="w-5 h-5 text-m3-primary" />
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
+            <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center mb-2.5">
+              <Clock className="w-4 h-4 text-slate-800" />
             </div>
-            <h3 class="text-sm font-bold text-slate-800 font-heading">60-Min Backup Guarantee</h3>
-            <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">Immediate backup driver and vehicle dispatch within 60 minutes anywhere in Chennai to eliminate downtime.</p>
+            <h3 class="text-xs font-bold text-slate-900 font-heading">60-Min Backup SLA</h3>
+            <p class="text-[11px] text-slate-600 mt-1 leading-relaxed">
+              Guaranteed emergency replacement vehicle and verified driver dispatched within 60 minutes anywhere in Chennai.
+            </p>
           </div>
 
-          <div class="bg-white p-5 rounded-m3-xl border border-slate-200/80 shadow-2xs hover:shadow-ambient transition-all">
-            <div class="w-10 h-10 rounded-m3-lg bg-m3-primary/10 text-m3-primary flex items-center justify-center mb-3">
-              <CheckCircle2 className="w-5 h-5 text-m3-primary" />
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
+            <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center mb-2.5">
+              <CheckCircle2 className="w-4 h-4 text-slate-800" />
             </div>
-            <h3 class="text-sm font-bold text-slate-800 font-heading">100% GST Tax Invoicing</h3>
-            <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">Itemized monthly B2B tax invoices with logbook reconciliation for seamless Input Tax Credit (ITC) deduction.</p>
+            <h3 class="text-xs font-bold text-slate-900 font-heading">100% GST Tax Invoicing</h3>
+            <p class="text-[11px] text-slate-600 mt-1 leading-relaxed">
+              Itemized monthly B2B tax invoices with logbook reconciliation for your company's full Input Tax Credit (ITC).
+            </p>
           </div>
 
-          <div class="bg-white p-5 rounded-m3-xl border border-slate-200/80 shadow-2xs hover:shadow-ambient transition-all">
-            <div class="w-10 h-10 rounded-m3-lg bg-m3-primary/10 text-m3-primary flex items-center justify-center mb-3">
-              <Award className="w-5 h-5 text-m3-primary" />
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
+            <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center mb-2.5">
+              <Award className="w-4 h-4 text-slate-800" />
             </div>
-            <h3 class="text-sm font-bold text-slate-800 font-heading">Corporate Credit Terms</h3>
-            <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">15-day and 30-day bill-to-company credit terms with designated corporate account onboarding.</p>
+            <h3 class="text-xs font-bold text-slate-900 font-heading">Corporate Credit Terms</h3>
+            <p class="text-[11px] text-slate-600 mt-1 leading-relaxed">
+              15-day and 30-day bill-to-company credit terms with designated corporate account onboarding.
+            </p>
           </div>
         </div>
       </section>
 
-      <!-- 7. FREQUENTLY ASKED QUESTIONS -->
-      <section id="faqs" class="my-14 md:my-20 max-w-3xl mx-auto scroll-mt-40">
-        <div class="text-center mb-8">
-          <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-m3-on-surface font-heading">
-            Corporate Mobility &amp; Fleet Rental <span class="text-m3-primary">FAQs</span>
+      <!-- 5. SCHEMA-LINKED B2B FAQS -->
+      <section id="faqs" class="mb-12 max-w-3xl mx-auto scroll-mt-28 sm:scroll-mt-32">
+        <div class="text-center mb-6">
+          <h2 class="text-lg sm:text-xl font-bold text-slate-900 font-heading">
+            Corporate Mobility &amp; Fleet Rental FAQs
           </h2>
-          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-2 leading-relaxed">Information on vendor onboarding, backup guarantees, credit terms, and fleet specifications</p>
+          <p class="text-xs text-slate-500 mt-1">
+            Vendor onboarding, GeM slabs, backup guarantees, credit terms, and fleet permits.
+          </p>
         </div>
 
         <FAQAccordion items={faqs} columns={1} name="corporate-faq" />
       </section>
 
-      <!-- 8. BOTTOM CONVERSION CTA BANNER (CONSOLIDATED ENTERPRISE RFP DESK) -->
-      <section class="bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-2xl p-6 sm:p-12 text-center shadow-m3-3 border border-m3-outline-variant/30 my-14 md:my-20">
-        <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-m3-full bg-white/10 text-white text-xs font-bold uppercase tracking-wider mb-4 border border-white/15">
-          <ShieldCheck className="w-3.5 h-3.5 text-m3-primary-fixed" />
+      <!-- 6. BOTTOM CONVERSION CTA BANNER -->
+      <section class="bg-slate-900 text-white rounded-2xl p-6 sm:p-8 text-center shadow-xs border border-slate-800 mb-8">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-white text-[11px] font-bold uppercase tracking-wider mb-3 border border-white/15">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
           <span>Enterprise RFP &amp; 24-Hour Rate Formulation</span>
         </div>
-        <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold font-heading text-white mb-3">
+        <h2 class="text-lg sm:text-2xl font-extrabold font-heading text-white mb-2">
           Looking for an Enterprise Cab &amp; Tempo Partner in Chennai?
         </h2>
-        <p class="text-white/80 text-xs sm:text-sm max-w-2xl mx-auto mb-8 leading-relaxed">
-          Connect directly with our corporate transport desk. We formulate custom employee shift route matrices, headcount transport models, monthly executive retainers, and 15/30-day corporate credit agreements within 24 hours.
+        <p class="text-white/80 text-xs sm:text-sm max-w-xl mx-auto mb-6 leading-relaxed">
+          Connect directly with our corporate transport desk. We formulate custom employee shift route matrices, monthly executive retainers, and 15/30-day credit agreements within 24 hours.
         </p>
 
-        <!-- Fast Proof Points -->
-        <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-xs text-white/90 font-medium mb-8">
-          <span class="inline-flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>24-Hour Custom RFP Quotations</span>
-          </span>
-          <span class="inline-flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>100% Itemized GST Tax Invoicing</span>
-          </span>
-          <span class="inline-flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>Dedicated B2B Account Manager</span>
-          </span>
-        </div>
-
-        <div class="flex flex-wrap items-center justify-center gap-3.5">
+        <div class="flex flex-wrap items-center justify-center gap-3">
           <WhatsAppButton
             href={buildWhatsAppUrl("Hi Kalidass Travels, I would like to request an Enterprise RFP & Corporate Fleet Proposal.")}
             size="lg"
@@ -923,10 +1161,10 @@ const faqSchema = {
           />
           <a
             href="tel:+918939539211"
-            class="min-h-[48px] h-12 inline-flex items-center gap-2 px-6 bg-white hover:bg-slate-100 active:bg-slate-200 text-slate-900 font-bold text-xs sm:text-sm rounded-m3-full shadow-m3-1 transition-all active:scale-[0.98]"
+            class="min-h-[44px] h-11 inline-flex items-center gap-2 px-5 bg-white hover:bg-slate-100 active:bg-slate-200 text-slate-900 font-bold text-xs sm:text-sm rounded-full shadow-2xs transition-transform active:scale-[0.98]"
           >
-            <AndroidPhoneIcon className="w-4 h-4 text-m3-primary shrink-0" />
-            <span>Talk to B2B Head: +91 89395 39211</span>
+            <AndroidPhoneIcon className="w-4 h-4 text-slate-800 shrink-0" />
+            <span>Call B2B Head: +91 89395 39211</span>
           </a>
         </div>
       </section>
@@ -934,3 +1172,99 @@ const faqSchema = {
     </div>
   </main>
 </Layout>
+
+<!-- Client-Side Synchronization Script for Tabs & Slabs -->
+<script is:inline define:vars={{ gemStandardPackages, retainerVehicles, defaultPkgId, tempoFleet }}>
+  function setupCorporateMobility() {
+    // 1. Master Slab Switcher for Retainers
+    const slabTabs = document.querySelectorAll('[data-pkg-slab-tab]');
+    const slabNameEl = document.getElementById('active-slab-name');
+    const slabDutyEl = document.getElementById('active-slab-duty');
+    const slabUseCaseEl = document.getElementById('active-slab-usecase');
+
+    function updateRetainerSlab(pkgId) {
+      const pkg = gemStandardPackages.find(function(p) { return p.id === pkgId; });
+      if (!pkg) return;
+
+      // Update slab button styles
+      slabTabs.forEach(function(tab) {
+        const isCurrent = tab.getAttribute('data-pkg-slab-tab') === pkgId;
+        tab.setAttribute('aria-selected', isCurrent ? 'true' : 'false');
+        if (isCurrent) {
+          tab.className = 'shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-white shadow-xs transition-all cursor-pointer';
+        } else {
+          tab.className = 'shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 transition-all cursor-pointer';
+        }
+      });
+
+      // Update active slab description text
+      if (slabNameEl) slabNameEl.textContent = pkg.name;
+      if (slabDutyEl) slabDutyEl.textContent = pkg.duty;
+      if (slabUseCaseEl) slabUseCaseEl.textContent = pkg.useCase;
+
+      // Update 3 vehicle rates and WhatsApp buttons
+      retainerVehicles.forEach(function(vehicle) {
+        const rate = pkg.rates[vehicle.id];
+        const fullRateStr = rate + ' / monthly';
+
+        document.querySelectorAll('[data-rate-display="' + vehicle.id + '"]').forEach(function(el) {
+          el.textContent = fullRateStr;
+        });
+
+        const waMsg = encodeURIComponent('Hi Kalidass Travels, I want to enquire about the ' + vehicle.plan + ' - ' + pkg.name + ' (' + fullRateStr + ').');
+        const waUrl = 'https://wa.me/918939539211?text=' + waMsg;
+        document.querySelectorAll('[data-wa-btn="' + vehicle.id + '"]').forEach(function(btn) {
+          btn.setAttribute('href', waUrl);
+        });
+      });
+    }
+
+    slabTabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        const pkgId = tab.getAttribute('data-pkg-slab-tab');
+        if (pkgId) updateRetainerSlab(pkgId);
+      });
+    });
+
+    // 2. Tempo Configuration Switcher
+    const tempoTabs = document.querySelectorAll('[data-tempo-tab]');
+    const tempoCards = document.querySelectorAll('[data-tempo-card]');
+
+    function setTempoModel(tempoId) {
+      tempoTabs.forEach(function(tab) {
+        const isCurrent = tab.getAttribute('data-tempo-tab') === tempoId;
+        tab.setAttribute('aria-selected', isCurrent ? 'true' : 'false');
+        if (isCurrent) {
+          tab.className = 'px-3 py-2 rounded-lg text-xs font-bold text-center bg-slate-900 text-white shadow-xs transition-all cursor-pointer';
+        } else {
+          tab.className = 'px-3 py-2 rounded-lg text-xs font-semibold text-center bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80 transition-all cursor-pointer';
+        }
+      });
+
+      tempoCards.forEach(function(card) {
+        const matches = card.getAttribute('data-tempo-card') === tempoId;
+        if (matches) {
+          card.classList.remove('hidden');
+          card.classList.add('block');
+        } else {
+          card.classList.add('hidden');
+          card.classList.remove('block');
+        }
+      });
+    }
+
+    tempoTabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        const tempoId = tab.getAttribute('data-tempo-tab');
+        if (tempoId) setTempoModel(tempoId);
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupCorporateMobility);
+  } else {
+    setupCorporateMobility();
+  }
+  document.addEventListener('astro:page-load', setupCorporateMobility);
+</script>

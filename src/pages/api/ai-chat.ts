@@ -155,21 +155,24 @@ export const POST: APIRoute = async ({ request }) => {
         const contact = phoneMatch ? phoneMatch[0].replace(/[^0-9]/g, '').slice(-10) : 'None';
 
         // Google Apps Script Webhook
-        fetch('https://script.google.com/macros/s/AKfycbwoEpKqa3Qg-DIvMe06pGUgGLlC_0vJQev61nzIh9ssh1-uHZ5VtYkGzpMVwhEyi7tvEQ/exec', {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify({
-            type: 'ai_chat_query',
-            date: timestamp,
-            sessionId,
-            sourcePage,
-            userQuery: rawUserMsg,
-            aiReply: replyText,
-            intent,
-            contact,
-            engine: engineSource
-          })
-        }).catch(() => {});
+        const webhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL;
+        if (webhookUrl && webhookUrl.startsWith('http')) {
+          fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({
+              type: 'ai_chat_query',
+              date: timestamp,
+              sessionId,
+              sourcePage,
+              userQuery: rawUserMsg,
+              aiReply: replyText,
+              intent,
+              contact,
+              engine: engineSource
+            })
+          }).catch(() => {});
+        }
       } catch (_) {}
     };
 

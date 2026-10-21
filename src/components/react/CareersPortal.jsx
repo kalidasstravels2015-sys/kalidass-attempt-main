@@ -12,6 +12,7 @@ import {
   X,
 } from 'lucide-react';
 import { JOB_CATEGORIES, JOB_POSITIONS } from '../../data/careersData';
+import { getActiveGoogleSheetUrl } from '../../config/googleSheets';
 
 export default function CareersPortal() {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -202,22 +203,25 @@ export default function CareersPortal() {
 
     // 1. Backup Lead Logging to Google Sheet (non-blocking)
     try {
-      fetch('https://script.google.com/macros/s/AKfycbwoEpKqa3Qg-DIvMe06pGUgGLlC_0vJQev61nzIh9ssh1-uHZ5VtYkGzpMVwhEyi7tvEQ/exec', {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({
-          date: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
-          tripType: `Careers Application: ${selectedJob.title}`,
-          name: formData.fullName.trim(),
-          phone: formData.phone.trim(),
-          pickup: formData.livingArea.trim(),
-          drop: `Exp: ${formData.experience} | File: ${formData.resumeFile ? formData.resumeFile.name : 'In WhatsApp'}`,
-          notes: formData.notes || '',
-          email: formData.email || '',
-          referenceId: refId
-        })
-      }).catch(() => {});
+      const sheetUrl = getActiveGoogleSheetUrl();
+      if (sheetUrl && sheetUrl.startsWith('https://script.google.com/macros/s/')) {
+        fetch(sheetUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({
+            date: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+            tripType: `Careers Application: ${selectedJob.title}`,
+            name: formData.fullName.trim(),
+            phone: formData.phone.trim(),
+            pickup: formData.livingArea.trim(),
+            drop: `Exp: ${formData.experience} | File: ${formData.resumeFile ? formData.resumeFile.name : 'In WhatsApp'}`,
+            notes: formData.notes || '',
+            email: formData.email || '',
+            referenceId: refId
+          })
+        }).catch(() => {});
+      }
     } catch (_) {}
 
     // 2. Open WhatsApp immediately on user submission

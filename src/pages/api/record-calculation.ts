@@ -9,7 +9,6 @@ const DEFAULT_GOOGLE_SHEET_WEBHOOK = process.env.GOOGLE_SHEET_WEBHOOK_URL || '';
 export const POST: APIRoute = async ({ request, url }) => {
   try {
     const targetUrl = url || new URL(request.url);
-    const webhookUrl = targetUrl.searchParams.get('webhook') || DEFAULT_GOOGLE_SHEET_WEBHOOK;
     let data: any;
     try {
       data = await request.json();
@@ -22,8 +21,9 @@ export const POST: APIRoute = async ({ request, url }) => {
       }
     }
 
+    const webhookUrl = targetUrl.searchParams.get('webhook') || (data && data.webhookUrl) || process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL || DEFAULT_GOOGLE_SHEET_WEBHOOK;
     const csvPath = path.resolve(process.cwd(), 'Kalidass_Calculations_Log_2026.csv');
-    let quoteId = data.quoteId;
+    let quoteId = data.quoteId || (data.meta && data.meta.quoteRefId);
 
     const timestamp = data.timestamp || new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
     const sourcePage = (data.sourcePage || '/').replace(/,/g, ' ');
@@ -34,7 +34,7 @@ export const POST: APIRoute = async ({ request, url }) => {
     const vehicle = (data.vehicle || 'Standard').replace(/,/g, ' ');
     const distanceKm = data.distanceKm || (data.distance ? String(data.distance) : 'N/A');
     const fareNum = parseInt(String(data.estimatedFare || data.estimate || '0').replace(/[^0-9]/g, ''), 10) || 0;
-    const status = data.status || 'Browsed';
+    const status = data.status || 'Rate Locked';
     const metadata = (data.meta ? JSON.stringify(data.meta).replace(/,/g, ';').replace(/"/g, '') : (data.metadata || 'None'));
 
     const CALC_HEADER = 'Quote ID,Timestamp,Source Page,Calculator Engine,Trip Type,Pickup Location,Drop Location,Vehicle,Distance (km),Calculated Fare (INR),Status,Metadata\n';
@@ -55,7 +55,7 @@ export const POST: APIRoute = async ({ request, url }) => {
         } else if (data.leadType === 'whatsapp' || status.includes('WhatsApp')) {
           quoteId = `#WA-${100 + rowNum}`;
         } else {
-          quoteId = `#CALC-${100 + rowNum}`;
+          quoteId = `#KT-${Math.floor(1000 + Math.random() * 9000)}`;
         }
       }
 

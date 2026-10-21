@@ -13,13 +13,13 @@ export async function onRequestPost({ request, env }) {
       } catch (e) {}
     }
 
-    const quoteId = data.quoteId || `#QT-${Math.floor(1000 + Math.random() * 9000)}`;
+    const quoteId = data.quoteId || (data.meta && data.meta.quoteRefId) || ('#KT-' + Math.floor(1000 + Math.random() * 9000));
     const url = new URL(request.url);
-    const webhookUrl = url.searchParams.get('webhook') || (env && env.GOOGLE_SHEET_WEBHOOK_URL) || data.webhookUrl;
+    const webhookUrl = url.searchParams.get('webhook') || data.webhookUrl || (env && (env.GOOGLE_SHEET_WEBHOOK_URL || env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL));
 
     if (webhookUrl && webhookUrl.startsWith('http')) {
       try {
-        fetch(webhookUrl, {
+        await fetch(webhookUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify({
@@ -36,10 +36,10 @@ export async function onRequestPost({ request, env }) {
             vehicle: data.vehicle || 'Swift Dzire',
             distanceKm: data.distanceKm || data.distance || 'N/A',
             estimatedFare: data.estimatedFare || data.fare || data.estimate || 0,
-            status: data.status || 'WhatsApp Clicked',
-            metadata: data.metadata || ''
+            status: data.status || 'Rate Locked',
+            metadata: typeof data.meta === 'object' ? JSON.stringify(data.meta) : (data.metadata || '')
           })
-        }).catch(() => {});
+        });
       } catch (_) {}
     }
 

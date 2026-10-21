@@ -8,7 +8,7 @@ import SettingsView from './solo/SettingsView';
 import SoloDutySlipModal from './solo/SoloDutySlipModal';
 import AiBookingParser from './solo/AiBookingParser';
 import WebsiteRadarView from './solo/WebsiteRadarView';
-import { getActiveGoogleSheetUrl } from '../../config/googleSheets';
+import { getActiveGoogleSheetUrl, fetchRemoteGoogleSheetUrl } from '../../config/googleSheets';
 
 const STORAGE_KEYS = {
   BOOKINGS: 'kt_solo_real_bookings_v8',
@@ -250,8 +250,13 @@ export default function SoloAdminDashboard() {
   };
 
   useEffect(() => {
-    setIsSheetConnected(Boolean(getActiveGoogleSheetUrl()));
-    refreshData();
+    fetchRemoteGoogleSheetUrl().then((url) => {
+      setIsSheetConnected(Boolean(url));
+      refreshData();
+    }).catch(() => {
+      setIsSheetConnected(Boolean(getActiveGoogleSheetUrl()));
+      refreshData();
+    });
   }, []);
 
   // Full reset handler

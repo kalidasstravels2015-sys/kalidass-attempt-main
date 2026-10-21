@@ -1467,19 +1467,23 @@ const callUrl = `tel:${phone}`;
 
         // Async telemetry backup for offline client fallback
         try {
-          fetch('https://script.google.com/macros/s/AKfycbwoEpKqa3Qg-DIvMe06pGUgGLlC_0vJQev61nzIh9ssh1-uHZ5VtYkGzpMVwhEyi7tvEQ/exec', {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify({
-              type: 'ai_chat_query',
-              date: new Date().toLocaleString(),
-              sessionId,
-              sourcePage,
-              userQuery: text,
-              aiReply: reply,
-              engine: 'client_local_fallback'
-            })
-          }).catch(() => {});
+          var sheetUrl = (typeof window !== 'undefined' && window.localStorage && window.localStorage.getItem('kt_google_sheet_webhook_url')) || '';
+          if (sheetUrl && sheetUrl.startsWith('https://script.google.com/macros/s/')) {
+            fetch(sheetUrl, {
+              method: 'POST',
+              mode: 'no-cors',
+              headers: { 'Content-Type': 'text/plain' },
+              body: JSON.stringify({
+                type: 'ai_chat_query',
+                date: new Date().toLocaleString(),
+                sessionId,
+                sourcePage,
+                userQuery: text,
+                aiReply: reply,
+                engine: 'client_local_fallback'
+              })
+            }).catch(() => {});
+          }
         } catch (_) {}
       }
 

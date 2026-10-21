@@ -364,6 +364,48 @@ ${promptCtx}`;
               return;
             }
 
+            if (url === '/api/admin/sheet-config') {
+              if (req.method === 'GET') {
+                const currentUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL || '';
+                res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                res.end(JSON.stringify({ success: true, webhookUrl: currentUrl }));
+                return;
+              }
+              if (req.method === 'POST') {
+                let body = '';
+                req.on('data', (c) => { body += c; });
+                req.on('end', () => {
+                  try {
+                    const data = JSON.parse(body || '{}');
+                    const clean = (data.webhookUrl || '').trim();
+                    process.env.GOOGLE_SHEET_WEBHOOK_URL = clean;
+                    process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL = clean;
+                    const envPath = path.resolve(process.cwd(), '.env');
+                    if (fs.existsSync(envPath)) {
+                      let envContent = fs.readFileSync(envPath, 'utf8');
+                      if (envContent.includes('GOOGLE_SHEET_WEBHOOK_URL=')) {
+                        envContent = envContent.replace(/GOOGLE_SHEET_WEBHOOK_URL=.*(\r?\n|$)/, `GOOGLE_SHEET_WEBHOOK_URL=${clean}\n`);
+                      } else {
+                        envContent += `\nGOOGLE_SHEET_WEBHOOK_URL=${clean}\n`;
+                      }
+                      if (envContent.includes('PUBLIC_GOOGLE_SHEET_WEBHOOK_URL=')) {
+                        envContent = envContent.replace(/PUBLIC_GOOGLE_SHEET_WEBHOOK_URL=.*(\r?\n|$)/, `PUBLIC_GOOGLE_SHEET_WEBHOOK_URL=${clean}\n`);
+                      } else {
+                        envContent += `PUBLIC_GOOGLE_SHEET_WEBHOOK_URL=${clean}\n`;
+                      }
+                      fs.writeFileSync(envPath, envContent, 'utf8');
+                    }
+                    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                    res.end(JSON.stringify({ success: true, webhookUrl: clean }));
+                  } catch (e) {
+                    res.statusCode = 500;
+                    res.end(JSON.stringify({ error: e.message }));
+                  }
+                });
+                return;
+              }
+            }
+
             if (req.method === 'POST' && url === '/api/record-calculation') {
               let body = '';
               req.on('data', (chunk) => { body += chunk; });
@@ -397,34 +439,37 @@ ${promptCtx}`;
                     const rowNum = lines.length;
 
                     if (!quoteId) {
-                      quoteId = `#CALC-${100 + rowNum}`;
+                      quoteId = (data.meta && data.meta.quoteRefId) || `#KT-${Math.floor(1000 + Math.random() * 9000)}`;
                     }
 
-                    const newRow = `${quoteId},"${timestamp}","${sourcePage}","${calculatorEngine}","${tripType}","${pickup}","${drop}","${vehicle}",${distanceKm},${fareNum},${status},"${metadata}"\n`;
+                    const newRow = `${quoteId},"${timestamp}","${sourcePage}","${calculatorEngine}","${tripType}","${pickup}","${drop}","${vehicle}",${distanceKm},${fareNum},"${status}","${metadata}"\n`;
                     fs.appendFileSync(csvPath, newRow, 'utf8');
                   }
 
                   // Backup Forward to Google Apps Script Webhook
-                  try {
-                    fetch('https://script.google.com/macros/s/AKfycbwoEpKqa3Qg-DIvMe06pGUgGLlC_0vJQev61nzIh9ssh1-uHZ5VtYkGzpMVwhEyi7tvEQ/exec', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'text/plain' },
-                      body: JSON.stringify({
-                        type: 'calculator_activity',
-                        quoteId,
-                        date: timestamp,
-                        sourcePage,
-                        calculatorEngine,
-                        tripType,
-                        pickup,
-                        drop,
-                        vehicle,
-                        distance: distanceKm,
-                        estimate: fareNum,
-                        status
-                      })
-                    }).catch(() => {});
-                  } catch (_) {}
+                  const webhookUrl = data.webhookUrl || process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL;
+                  if (webhookUrl && webhookUrl.startsWith('http')) {
+                    try {
+                      fetch(webhookUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain' },
+                        body: JSON.stringify({
+                          type: 'calculator_activity',
+                          quoteId,
+                          date: timestamp,
+                          sourcePage,
+                          calculatorEngine,
+                          tripType,
+                          pickup,
+                          drop,
+                          vehicle,
+                          distance: distanceKm,
+                          estimate: fareNum,
+                          status: status || 'Rate Locked'
+                        })
+                      }).catch(() => {});
+                    } catch (_) {}
+                  }
 
                   res.setHeader('Content-Type', 'application/json; charset=utf-8');
                   res.end(JSON.stringify({ success: true, quoteId }));

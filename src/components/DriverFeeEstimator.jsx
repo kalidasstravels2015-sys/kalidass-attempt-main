@@ -11,6 +11,7 @@ import { buildWhatsAppUrl, buildMapsLinks } from '../utils/whatsapp';
 import tnBusFares from '../data/tnBusFares.json';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import { trackCalculatorQuote, markQuoteConverted, trackEvent } from '../lib/analytics';
+import { useVirtualKeyboard } from '../hooks/useVirtualKeyboard';
 
 // ── Calibrated highway distances from Chennai (km) ────────────────────────
 const COMMON_DISTANCES = {
@@ -207,6 +208,16 @@ export default function DriverFeeEstimator({
     setLocationPickerOpen(false);
   };
 
+  const { scrollInputAboveKeyboard } = useVirtualKeyboard();
+
+  const handleLocationFocus = (e) => {
+    loadGoogleMaps().catch(() => {});
+    const inputEl = e.currentTarget;
+    if (typeof window !== 'undefined' && (window.innerWidth <= 768 || 'ontouchstart' in window || navigator.maxTouchPoints > 0)) {
+      scrollInputAboveKeyboard(inputEl, 250);
+    }
+  };
+
   const pickupRef       = useRef(null);
   const dropRef         = useRef(null);
   const autocompleteRef = useRef(false);
@@ -338,21 +349,25 @@ export default function DriverFeeEstimator({
       onQuoteCalculated?.(calcData);
 
       trackCalculatorQuote({
+        quoteId: generatedQuoteRef,
         calculatorId: 'acting_driver',
         calculatorEngine: 'Acting Driver Cost Calculator',
+        sourcePage: '/services/acting-drivers/',
         tripType: activeTab === 'round' ? `Round Trip (${d} Days)` : 'One Way Drop',
         pickup: pickup || 'Chennai',
         drop: drop || 'N/A',
-        vehicle: vehicle.label,
+        vehicle: `${vehicle.label} (${gear === 'automatic' ? 'Automatic' : 'Manual'})`,
         distanceKm: distKm ? (activeTab === 'round' ? distKm * 2 : distKm) : '',
         estimatedFare: calculatedFare,
+        status: 'Rate Locked',
         meta: {
           quoteRefId: generatedQuoteRef,
           gear,
           days: d,
           nights,
           stayProvided,
-          foodProvided
+          foodProvided,
+          travelSchedule: travelDate ? `${travelDate}${reportingTime ? ' @ ' + reportingTime : ''}` : ''
         }
       });
 
@@ -578,16 +593,22 @@ export default function DriverFeeEstimator({
               id="acting-driver-pickup-input"
               ref={pickupRef}
               type="text"
+              data-autocomplete-input="true"
               value={pickup}
               onChange={e => {
-                setPickup(e.target.value);
+                const val = e.target.value;
+                setPickup(val);
                 setShowResult(false);
                 setFieldErrors(prev => ({ ...prev, pickup: undefined }));
+                if (typeof window !== 'undefined' && (window.innerWidth <= 768 || 'ontouchstart' in window)) {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  if (rect.top > 120) scrollInputAboveKeyboard(e.currentTarget, 250);
+                }
               }}
-              onFocus={() => loadGoogleMaps().catch(() => {})}
+              onFocus={handleLocationFocus}
               placeholder="e.g. Pallavaram, Chennai"
               autoComplete="off"
-              className={inputField}
+              className={`${inputField} scroll-mt-20 sm:scroll-mt-24`}
             />
             <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
               {pickup && (
@@ -630,16 +651,22 @@ export default function DriverFeeEstimator({
               id="acting-driver-drop-input"
               ref={dropRef}
               type="text"
+              data-autocomplete-input="true"
               value={drop}
               onChange={e => {
-                setDrop(e.target.value);
+                const val = e.target.value;
+                setDrop(val);
                 setShowResult(false);
                 setFieldErrors(prev => ({ ...prev, drop: undefined }));
+                if (typeof window !== 'undefined' && (window.innerWidth <= 768 || 'ontouchstart' in window)) {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  if (rect.top > 120) scrollInputAboveKeyboard(e.currentTarget, 250);
+                }
               }}
-              onFocus={() => loadGoogleMaps().catch(() => {})}
+              onFocus={handleLocationFocus}
               placeholder={activeTab === 'round' ? 'e.g. Tirupati, Madurai, Ooty' : 'e.g. Tirupati, Madurai'}
               autoComplete="off"
-              className={inputField}
+              className={`${inputField} scroll-mt-20 sm:scroll-mt-24`}
             />
             <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
               {drop && (
@@ -965,10 +992,10 @@ export default function DriverFeeEstimator({
                       tripType: result.type === 'round' ? `Round Trip (${days} Days)` : 'One Way Drop',
                       pickup: pickup.trim(),
                       drop: drop.trim(),
-                      distanceKm: distKm ? (result.type === 'round' ? distKm * 2 : distKm) : '',
-                      vehicle: `${vehicle.label} (${gear === 'auto' ? 'Automatic' : 'Manual'})`,
+                      distanceKm: result.distKm ? (result.type === 'round' ? result.distKm * 2 : result.distKm) : '',
+                      vehicle: `${vehicle.label} (${gear === 'automatic' ? 'Automatic' : 'Manual'})`,
                       estimatedFare: result.total,
-                      travelDate: date ? `${date}${time ? ' @ ' + time : ''}` : '',
+                      travelDate: travelDate ? `${travelDate}${reportingTime ? ' @ ' + reportingTime : ''}` : '',
                       status: 'WhatsApp Clicked'
                     });
                     trackEvent('booking_conversion_whatsapp', {
@@ -988,6 +1015,21 @@ export default function DriverFeeEstimator({
 
                 <a
                   href="tel:+918939539211"
+                  onClick={() => {
+                    markQuoteConverted(quoteRefId, {
+                      quoteId: quoteRefId,
+                      sourcePage: '/services/acting-drivers/',
+                      calculatorEngine: 'Acting Driver Cost Calculator',
+                      tripType: result.type === 'round' ? `Round Trip (${days} Days)` : 'One Way Drop',
+                      pickup: pickup.trim(),
+                      drop: drop.trim(),
+                      distanceKm: result.distKm ? (result.type === 'round' ? result.distKm * 2 : result.distKm) : '',
+                      vehicle: `${vehicle.label} (${gear === 'automatic' ? 'Automatic' : 'Manual'})`,
+                      estimatedFare: result.total,
+                      travelDate: travelDate ? `${travelDate}${reportingTime ? ' @ ' + reportingTime : ''}` : '',
+                      status: 'Call Desk Clicked'
+                    });
+                  }}
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 min-h-[46px] bg-white hover:bg-slate-50 active:scale-[0.99] text-m3-on-surface font-semibold text-sm rounded-full border border-m3-outline-variant shadow-2xs transition-colors shrink-0 cursor-pointer"
                   aria-label="Call +91 89395 39211"
                 >

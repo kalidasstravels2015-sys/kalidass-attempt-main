@@ -4,7 +4,7 @@
 export async function onRequestGet({ request, env }) {
   try {
     const url = new URL(request.url);
-    const customWebhook = url.searchParams.get('webhook') || (env && env.GOOGLE_SHEET_WEBHOOK_URL);
+    const customWebhook = url.searchParams.get('webhook') || (env && (env.GOOGLE_SHEET_WEBHOOK_URL || env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL));
 
     if (customWebhook && customWebhook.startsWith('http')) {
       try {
@@ -67,7 +67,7 @@ export async function onRequestPost({ request, env }) {
     } catch (_) {}
 
     const url = new URL(request.url);
-    const customWebhook = url.searchParams.get('webhook') || (env && env.GOOGLE_SHEET_WEBHOOK_URL);
+    const customWebhook = url.searchParams.get('webhook') || (env && (env.GOOGLE_SHEET_WEBHOOK_URL || env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL));
 
     if (customWebhook && customWebhook.startsWith('http')) {
       fetch(customWebhook, {

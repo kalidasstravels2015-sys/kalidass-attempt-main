@@ -995,11 +995,21 @@ Please confirm booking!` + tourMapsBlock;
   const whatsAppUrl = buildWhatsAppUrl(whatsAppMessage, isOperatorMode && operatorCallerPhone ? operatorCallerPhone : undefined);
 
   const handleInputFocus = (e) => {
-    setTimeout(() => {
-      if (e?.target) {
-        e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }, 300);
+    loadGoogleMaps().catch(() => {});
+    const target = e?.currentTarget || e?.target;
+    if (!target || typeof window === 'undefined') return;
+    if (window.innerWidth <= 768 || 'ontouchstart' in window || navigator.maxTouchPoints > 0) {
+      const scrollIt = () => {
+        const rect = target.getBoundingClientRect();
+        const headerOffset = 72;
+        if (rect.top > 120 || rect.top < 60) {
+          window.scrollTo({ top: Math.max(0, window.scrollY + rect.top - headerOffset), behavior: 'smooth' });
+        }
+      };
+      scrollIt();
+      setTimeout(scrollIt, 120);
+      setTimeout(scrollIt, 320);
+    }
   };
 
   const handleViewInstantFare = () => {
@@ -1357,6 +1367,7 @@ Please confirm booking!` + tourMapsBlock;
                   loadGoogleMaps().catch(() => {});
                   handleInputFocus(e);
                 }}
+                data-autocomplete-input="true"
                 placeholder="Enter pickup address in Chennai (e.g. T. Nagar, Airport, Velachery)"
                 className={`w-full min-h-[48px] bg-white border border-m3-outline-variant hover:border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20 rounded-m3-lg px-3.5 py-3 text-sm sm:text-sm ${pickup ? 'text-m3-on-surface font-semibold' : 'text-m3-on-surface font-normal'} placeholder:text-sm placeholder:text-m3-on-surface-variant/75 placeholder:font-normal outline-none transition-all pr-20 shadow-2xs scroll-mt-28 scroll-mb-64`}
               />
@@ -1407,6 +1418,7 @@ Please confirm booking!` + tourMapsBlock;
                   id={dropId}
                   ref={dropInputRef}
                   type="text"
+                  data-autocomplete-input="true"
                   value={dropDestination}
                   onChange={(e) => {
                     const val = e.target.value;

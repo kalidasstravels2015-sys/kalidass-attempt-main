@@ -14,18 +14,21 @@ export async function onRequestPost({ request }) {
     const bookingId = data.bookingId || `#KT-BK-${Date.now().toString().slice(-4)}`;
 
     // Asynchronously forward to Google Apps Script Webhook backup
-    try {
-      fetch('https://script.google.com/macros/s/AKfycbwoEpKqa3Qg-DIvMe06pGUgGLlC_0vJQev61nzIh9ssh1-uHZ5VtYkGzpMVwhEyi7tvEQ/exec', {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({
-          type: 'booking_activity',
-          bookingId,
-          date: new Date().toLocaleString(),
-          ...data
-        })
-      }).catch(() => {});
-    } catch (_) {}
+    const webhookUrl = data.webhookUrl || (env && (env.GOOGLE_SHEET_WEBHOOK_URL || env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL));
+    if (webhookUrl && webhookUrl.startsWith('http')) {
+      try {
+        await fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({
+            type: 'booking_activity',
+            bookingId,
+            date: new Date().toLocaleString(),
+            ...data
+          })
+        });
+      } catch (_) {}
+    }
 
     return new Response(JSON.stringify({ success: true, bookingId }), {
       status: 200,

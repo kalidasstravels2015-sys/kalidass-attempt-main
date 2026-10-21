@@ -92,7 +92,15 @@ export const GET: APIRoute = async ({ request, url }) => {
           const exists = actionableLeads.some(l => l.quoteId === item.quoteId);
           if (!exists) {
             const hasPhone = /[6-9]\d{9}/.test(`${item.sourcePage} ${item.pickup} ${item.drop} ${item.metadata}`);
-            const isConfirmedContact = hasPhone || item.quoteId.startsWith('#QT') || item.quoteId.startsWith('#CALL') || item.quoteId.startsWith('#ENQ') || (item.quoteId.startsWith('#WA') && !item.quoteId.startsWith('#CALC'));
+            const statusLower = (item.status || '').toLowerCase();
+            const isConfirmedContact = hasPhone || 
+              statusLower.includes('whatsapp') || 
+              statusLower.includes('call') || 
+              statusLower.includes('advance') ||
+              item.quoteId.startsWith('#QT') || 
+              item.quoteId.startsWith('#CALL') || 
+              item.quoteId.startsWith('#ENQ') || 
+              (item.quoteId.startsWith('#WA') && !item.quoteId.startsWith('#CALC'));
             if (isConfirmedContact) {
               actionableLeads.push(item);
             } else {
@@ -104,7 +112,14 @@ export const GET: APIRoute = async ({ request, url }) => {
     }
 
     const leads = actionableLeads;
-    const allCalculations = [...actionableLeads, ...browsedLeads].filter(item => item.quoteId.startsWith('#CALC') || item.status === 'Browsed' || (item.status || '').toLowerCase().includes('whatsapp'));
+    const allCalculations = [...actionableLeads, ...browsedLeads].filter(item => 
+      Number(item.estimatedFare) > 0 ||
+      item.quoteId.startsWith('#KT') ||
+      item.quoteId.startsWith('#CALC') || 
+      item.status === 'Browsed' || 
+      (item.status || '').toLowerCase().includes('rate locked') ||
+      (item.status || '').toLowerCase().includes('whatsapp')
+    );
 
     return new Response(JSON.stringify({
       success: true,

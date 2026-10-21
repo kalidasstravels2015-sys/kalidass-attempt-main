@@ -187,13 +187,14 @@ function doPost(e) {
     var enqSheet = sheets.enqSheet;
     var bookSheet = sheets.bookSheet;
 
-    var isBooking = data.type === 'admin_booking_sync' ||
-                    data.type === 'booking' ||
-                    (data.bookingId && String(data.bookingId).startsWith('#KT-'));
+    var isBooking = (data.type === 'admin_booking_sync' ||
+                     data.type === 'booking' ||
+                     Boolean(data.bookingId && String(data.bookingId).startsWith('#KT-BK-'))) &&
+                     data.type !== 'calculator_activity';
 
     if (isBooking) {
       // Record or update Confirmed Booking
-      var bookingId = data.bookingId || ('#KT-' + Math.floor(1000 + Math.random() * 9000));
+      var bookingId = data.bookingId || ('#KT-BK-' + Math.floor(1000 + Math.random() * 9000));
       var guestNamePhone = data.guestNamePhone || (data.name ? (data.name + ' (' + (data.phone || '') + ')') : (data.phone || 'Customer'));
       var schedule = data.travelDateTime || data.travelDate || data.pickupDate || 'Tomorrow';
       var route = data.pickupAddress || (data.pickup + ' ➔ ' + (data.drop || 'Outstation'));
@@ -247,7 +248,7 @@ function doPost(e) {
 
     } else {
       // Record Customer Enquiry / Quote
-      var quoteId = data.quoteId || ('#QT-' + Math.floor(1000 + Math.random() * 9000));
+      var quoteId = data.quoteId || ('#KT-' + Math.floor(1000 + Math.random() * 9000));
       var timestamp = data.timestamp || data.date || new Date().toLocaleString('en-IN');
       var name = (data.guestName || data.name || '').trim();
       var rawPhone = data.phone || data.mobile || data.callerPhone || '';
@@ -258,11 +259,24 @@ function doPost(e) {
       var vehicle = data.vehicle || 'Swift Dzire';
       var distance = String(data.distanceKm || data.distance || 'N/A');
       var estimate = parseInt(String(data.estimatedFare || data.fare || data.estimate || 0).replace(/[^0-9]/g, ''), 10) || 0;
-      var status = data.status || 'WhatsApp Clicked';
+      var status = data.status || 'Rate Locked';
       var source = data.sourcePage || data.calculatorEngine || 'Website Booking Engine';
       var meta = typeof data.metadata === 'object' ? JSON.stringify(data.metadata) : (data.metadata || data.notes || '');
 
-      enqSheet.appendRow([
+      // Check if enquiry with this quoteId already exists in Enquiries sheet
+      var eLast = enqSheet.getLastRow();
+      var foundEnqRow = -1;
+      if (eLast > 1) {
+        var eIds = enqSheet.getRange(2, 1, eLast - 1, 1).getValues();
+        for (var m = 0; m < eIds.length; m++) {
+          if (String(eIds[m][0]).trim().toLowerCase() === quoteId.trim().toLowerCase()) {
+            foundEnqRow = m + 2;
+            break;
+          }
+        }
+      }
+
+      var eRowData = [
         quoteId,
         timestamp,
         name || (cleanPhone ? 'Customer (' + cleanPhone + ')' : 'Website Visitor'),
@@ -276,10 +290,21 @@ function doPost(e) {
         status,
         source,
         meta
-      ]);
+      ];
+
+      if (foundEnqRow > 0) {
+        // Update existing row
+        var existingRow = enqSheet.getRange(foundEnqRow, 1, 1, 13).getValues()[0];
+        if (!name && existingRow[2] && existingRow[2] !== 'Website Visitor') eRowData[2] = existingRow[2];
+        if (!cleanPhone && existingRow[3] && existingRow[3] !== 'Not Provided') eRowData[3] = existingRow[3];
+        eRowData[1] = existingRow[1]; // Keep original creation timestamp
+        enqSheet.getRange(foundEnqRow, 1, 1, eRowData.length).setValues([eRowData]);
+      } else {
+        enqSheet.appendRow(eRowData);
+      }
 
       return ContentService
-        .createTextOutput(JSON.stringify({ success: true, quoteId: quoteId }))
+        .createTextOutput(JSON.stringify({ success: true, quoteId: quoteId, action: foundEnqRow > 0 ? 'updated' : 'created' }))
         .setMimeType(ContentService.MimeType.JSON);
     }
 
