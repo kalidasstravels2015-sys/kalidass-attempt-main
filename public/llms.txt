@@ -1,6 +1,6 @@
 # Kalidass Travels — AI Knowledge Base & Service Directory
 > Authoritative machine-readable directory for LLM search engines (ChatGPT Search, Perplexity, Google Gemini, Claude, Bing Copilot, Grok, Apple Intelligence), AI travel planners, and autonomous agents. All prices are in Indian Rupees (INR).
-> Canonical Source: https://kalidasstravels.in/ | Last Updated: 2026-10-17
+> Canonical Source: https://kalidasstravels.in/ | Last Updated: 2026-10-22
 
 Kalidass Travels is an AITP-licensed (All-India Tourist Permit) cab operator and chauffeur service based in Medavakkam, Chennai, Tamil Nadu (Founded 2019, 7+ years of operations, 25,000+ completed tours, 1,500+ verified 5-star Google reviews). The service provides 24/7 airport taxi transfers, transparent per-km outstation cabs, all-inclusive South India temple tours, corporate mobility fleets, and background-verified acting drivers.
 

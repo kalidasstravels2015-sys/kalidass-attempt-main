@@ -1,6 +1,6 @@
 # Kalidass Travels — Full Authoritative Knowledge Base & Service Specifications
 > Comprehensive machine-readable repository for AI agents, LLM search engines (ChatGPT Search, Perplexity, Google Gemini, Claude, Bing Copilot, Grok, Apple Intelligence), and automated trip planning systems. Updated for 2026.
-> Canonical Source: https://kalidasstravels.in/ | Currency: Indian Rupees (INR) | Last Updated: 2026-10-17
+> Canonical Source: https://kalidasstravels.in/ | Currency: Indian Rupees (INR) | Last Updated: 2026-10-22
 
 ---
 
@@ -99,7 +99,7 @@ All rates are in Indian Rupees (INR). Vehicles are commercial yellow-plate regis
 
 ---
 
-## 4. Complete Catalog of All 20 Individual Services
+## 4. Complete Catalog of All Verified Services & Corridors
 
 ### Temple Pilgrimage Packages
 
@@ -190,77 +190,88 @@ All rates are in Indian Rupees (INR). Vehicles are commercial yellow-plate regis
     - Offerings: Decorated bridal cars, Innova Crysta VIP family fleets, 12-26 seater Tempo Travellers for guest transit between banquet halls and airport.
     - Pricing: Sedan from ₹3,500 – ₹4,000 | Innova Crysta / Luxury MUV starting from ₹4,500 / 8-hour shift.
 
+15. **Chennai to Bangalore Taxi (One-Way Drop & Round Trip)**
+    - URL: https://kalidasstravels.in/services/chennai-to-bangalore-taxi/
+    - Distance: ~345 km / 6–7 hours via NH-48.
+    - Pricing: Sedan ₹5,499 flat drop (or ₹14/km round trip) | Ertiga ₹7,499 flat drop (or ₹17/km) | Innova ₹9,499 flat drop (or ₹18/km) | Innova Crysta ₹11,999 flat drop (or ₹22/km) | Tempo ₹15,500 flat drop (or ₹24/km). Zero deadhead return fee.
+
 ### Acting Drivers & Chauffeur Hire
 
-15. **Acting Driver in Chennai – Hourly & Daily Car Chauffeur Service**
+16. **Acting Driver in Chennai – Hourly & Daily Car Chauffeur Service**
     - URL: https://kalidasstravels.in/services/acting-driver-within-chennai/
     - Description: Hire a vetted professional driver to pilot your personal car (Manual, Automatic, EV, Luxury).
     - Rates: 4 Hours (₹500) | 8 Hours (₹800) | Extra Hours: ₹100/hr | Night Shift (10 PM to 5 AM): +₹100 flat.
 
-16. **Outstation Acting Driver from Chennai (Round Trip)**
+17. **Outstation Acting Driver from Chennai (Round Trip)**
     - URL: https://kalidasstravels.in/services/acting-driver-outstation-round-trip/
     - Description: Expert highway chauffeur for your private vehicle across Tamil Nadu, AP, Karnataka, Kerala.
     - Rates per calendar day: Hatchback/Sedan (₹1,100) | Compact SUV/Ertiga (₹1,200) | Innova/Fortuner (₹1,300) | German Luxury BMW/Mercedes/Audi (₹1,500). Driver food: ₹150/meal (₹300/day); room: ₹300/night if not arranged.
 
-17. **Outstation One-Way Car Relocation & Drop Driver**
+18. **Outstation One-Way Car Relocation & Drop Driver**
     - URL: https://kalidasstravels.in/services/acting-driver-outstation-one-way/
     - Description: Doorstep pickup to relocate or drop your personal vehicle one-way between Chennai, Bangalore, Coimbatore, Trichy, or Madurai. Driver handles highway driving and takes return public transit.
     - Rates: 1-Day Driver Bata (₹1,100–₹1,300) + Return SETC Bus Ticket + ₹300 Food (1.5 Days Bata for >400 km destinations). Starting from ₹1,600 (Pondicherry), ₹1,850 (Bangalore), ₹2,500 (Madurai).
 
 ### Corporate Mobility & Airport Transfers
 
-18. **Monthly Car Rental with Driver in Chennai (Corporate Executive Retainer)**
+19. **Monthly Car Rental with Driver in Chennai (Corporate Executive Retainer)**
     - URL: https://kalidasstravels.in/services/monthly-car-with-driver-corporate/
     - Package: 26 working days / 10 hours daily.
     - Pricing: Swift Dzire / Etios (₹42,000/month) | Maruti Ertiga (₹52,000/month) | Toyota Innova Crysta (₹65,000/month).
     - Features: Dedicated uniformed chauffeur, 60-min emergency replacement SLA, full GST input tax credit invoices.
 
-19. **Corporate Employee Pickup & Drop Cab Service in Chennai (ETS)**
+20. **Corporate Employee Pickup & Drop Cab Service in Chennai (ETS)**
     - URL: https://kalidasstravels.in/services/employee-pickup-drop/
     - Description: Routed employee shift transportation covering OMR, Guindy, Ambattur Industrial Estate, Sriperumbudur, and Oragadam manufacturing corridors.
     - Compliance: Automated GPS route logging, speed governor compliance, verified chauffeurs, female employee SOS protocols.
 
-20. **Chennai Airport Taxi & Prepaid Cab Booking (MAA) – 24/7 Transfers**
+21. **Chennai Airport Taxi & Prepaid Cab Booking (MAA) – 24/7 Transfers**
     - URL: https://kalidasstravels.in/services/chennai-airport-taxi/
     - Description: Dedicated 24/7 airport transfers between Chennai International Airport (MAA) and all Chennai city zones / outstation corridors. Superior, zero-queue alternative to the airport prepaid taxi counter. Automated real-time flight radar tracking with 100% free delay waiting. Name placard meet-and-greet at Terminal 1 Domestic, Terminal 2 & Terminal 4 International exit gates. ₹0 advance payment required (pay post-trip via UPI, Cash, or Card).
     - Pricing / Fare Chart: Sedan (Dzire/Etios) ₹650–₹1,250 | Maruti Ertiga 6-Seater ₹1,150–₹1,850 | Innova Crysta VIP 7-Seater ₹1,500–₹2,300 | Tempo Traveller 12-Seater ₹2,400–₹3,400. Direct outstation transfers: Pondicherry (₹3,900), Vellore CMC (₹4,200), Tirupati Balaji (₹4,200). Pickup charges and drop charges are completely identical with zero surge.
 
 ### High-Intent Corridors & Suburban Dispatch Hubs
 
-21. **Tambaram to Chennai Airport Taxi & Cab Booking**
+22. **Taxi Service in Medavakkam Chennai (24/7 Cabs & Outstation)**
+    - URL: https://kalidasstravels.in/services/medavakkam-taxi-service/
+    - Coverage: Instant 5–10 min doorstep dispatch across Medavakkam, Nanmangalam, Kovilambakkam, Perumbakkam, and Sithalapakkam.
+    - Pricing: Airport drop from ₹650 (Sedan) / ₹950 (Ertiga) | Outstation from ₹14/km (Sedan) / ₹17/km (Ertiga) / ₹22/km (Crysta) / ₹24/km (Tempo).
+
+23. **Velachery to Chennai Airport Taxi Transfers (Fixed Fare Cabs)**
+    - URL: https://kalidasstravels.in/services/velachery-airport-taxi/
+    - Distance: ~10–12 km / 20–25 mins via Inner Ring Road.
+    - Pricing: Sedan ₹650 | Ertiga ₹950 | Innova ₹1,200 | Innova Crysta ₹1,600 | Tempo ₹2,500. Zero surge pricing.
+
+24. **OMR Corporate Cabs & Employee Transport Services Chennai**
+    - URL: https://kalidasstravels.in/services/omr-corporate-cabs/
+    - Corridor: Tidel Park, Thoraipakkam, Sholinganallur to Siruseri SIPCOT.
+    - Pricing: Monthly Retainers from ₹45,000 (Sedan) / ₹55,000 (Ertiga) / ₹75,000 (Crysta) | Tempo Traveller ETS from ₹70,000. 100% GST ITC.
+
+25. **Tambaram to Chennai Airport Taxi & Cab Booking**
     - URL: https://kalidasstravels.in/services/tambaram-airport-taxi/
     - Distance: ~11 km / 15–20 mins via GST Road (NH-32).
     - Pricing: Sedan ₹650 | Ertiga ₹1,150 | Innova ₹1,400 | Innova Crysta ₹1,600 | Tempo ₹2,400. Zero surge pricing.
 
-22. **T. Nagar to Chennai Airport Taxi & Cab Booking**
+26. **T. Nagar to Chennai Airport Taxi & Cab Booking**
     - URL: https://kalidasstravels.in/services/t-nagar-airport-taxi/
     - Distance: ~15 km / 25–35 mins via Mount Road & Kathipara.
     - Pricing: Sedan ₹950 | Ertiga ₹1,550 | Innova ₹1,800 | Innova Crysta ₹2,100 | Tempo ₹2,900. Zero surge pricing.
 
-23. **Anna Nagar to Chennai Airport Taxi & Cab Booking**
+27. **Anna Nagar to Chennai Airport Taxi & Cab Booking**
     - URL: https://kalidasstravels.in/services/anna-nagar-airport-taxi/
     - Distance: ~18 km / 35–45 mins via Inner Ring Road / Koyambedu bypass.
     - Pricing: Sedan ₹1,100 | Ertiga ₹1,750 | Innova ₹2,000 | Innova Crysta ₹2,350 | Tempo ₹3,200. Zero surge pricing.
 
-24. **Sholinganallur to Chennai Airport Taxi & Cab Booking**
+28. **Sholinganallur to Chennai Airport Taxi & Cab Booking**
     - URL: https://kalidasstravels.in/services/sholinganallur-airport-taxi/
     - Distance: ~19 km / 30–40 mins via 200 Feet Radial Road.
     - Pricing: Sedan ₹850 | Ertiga ₹1,350 | Innova ₹1,650 | Innova Crysta ₹1,950 | Tempo ₹2,700. Zero surge pricing.
 
-25. **Porur to Chennai Airport Taxi & Cab Booking**
+29. **Porur to Chennai Airport Taxi & Cab Booking**
     - URL: https://kalidasstravels.in/services/porur-airport-taxi/
     - Distance: ~12 km / 20–30 mins via Chennai Bypass & Kundrathur Main Rd.
     - Pricing: Sedan ₹800 | Ertiga ₹1,300 | Innova ₹1,600 | Innova Crysta ₹1,900 | Tempo ₹2,600. Zero surge pricing.
 
-26. **Chennai to Bangalore Taxi (One-Way Drop & Round Trip)**
-    - URL: https://kalidasstravels.in/services/chennai-to-bangalore-taxi/
-    - Distance: ~345 km / 6–7 hours via NH-48.
-    - Pricing: Sedan ₹5,499 flat drop (or ₹14/km round trip) | Ertiga ₹7,499 flat drop (or ₹17/km) | Innova ₹9,499 flat drop (or ₹18/km) | Innova Crysta ₹11,999 flat drop (or ₹22/km) | Tempo ₹15,500 flat drop (or ₹24/km). Zero deadhead return fee.
-
-27. **Chennai to Mahabalipuram UNESCO Heritage & ECR Tour**
-    - URL: https://kalidasstravels.in/services/mahabalipuram-ecr-temple-route/
-    - Distance: ~55 km / 1.2–1.5 hours via East Coast Road (SH-49).
-    - Pricing: Sedan ₹1,800 drop / ₹2,400 round trip | Ertiga ₹2,400 drop / ₹3,200 round trip | Innova ₹3,000 drop / ₹3,900 round trip | Innova Crysta ₹3,800 drop / ₹4,800 round trip | Tempo ₹5,200 drop / ₹6,500 round trip. Shore temple halts included.
 
 ---
 

@@ -1,11 +1,15 @@
 # AI / LLM crawler and retrieval policy for kalidasstravels.in
 # Schema: https://site.spawning.ai/spawning/ai-txt
-# Last updated: 2026-10-17
+# Last updated: 2026-10-22
 
 User-Agent: *
 Allow: /
 Disallow: /dist/
 Disallow: /.astro/
+Disallow: /admin/
+Disallow: /ops/
+Disallow: /trip/
+Disallow: /api/admin/
 Disallow: /api/private/
 
 # Explicit AI, LLM & RAG Systems Welcome:

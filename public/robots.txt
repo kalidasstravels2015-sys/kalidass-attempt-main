@@ -1,9 +1,13 @@
-# robots.txt for https://kalidasstravels.in — Last updated: 2026-10-17
+# robots.txt for https://kalidasstravels.in — Last updated: 2026-10-22
 
 # Allow all search engines and global crawlers
 User-agent: *
 Allow: /
 Disallow: /cdn-cgi/
+Disallow: /admin/
+Disallow: /ops/
+Disallow: /trip/
+Disallow: /api/admin/
 
 # ─── OpenAI (ChatGPT, SearchGPT, GPT-4, GPT-5) ───
 User-agent: GPTBot
