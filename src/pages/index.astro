@@ -13,17 +13,17 @@ import Reviews from "../components/Reviews.astro";
 import FAQ from "../components/FAQ.astro";
 import BottomCTA from "../components/BottomCTA.astro";
 import { getImage } from "astro:assets";
-import maduraiImg from "../assets/images/hero/madurai.webp";
+import heroImg from "../assets/images/hero/outstation-highway.webp";
 
 const ogImage = "/images/og-main.png";
 
 const heroOptimized = import.meta.env.PROD
   ? await getImage({
-      src: maduraiImg,
-      widths: [240, 360, 480, 640, 800, 1080, 1440],
-      sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1200px",
+      src: heroImg,
+      widths: [360, 640, 800, 1080, 1440, 1920],
+      sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw",
       format: "avif",
-      quality: 24,
+      quality: 82,
     })
   : null;
 
@@ -31,10 +31,10 @@ const preloadHero = heroOptimized
   ? {
       href: heroOptimized.src,
       srcset: heroOptimized.srcSet.attribute,
-      sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1200px",
+      sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw",
     }
   : {
-      href: "/images/hero/madurai.webp",
+      href: "/images/hero/outstation-highway.webp",
     };
 
 ---

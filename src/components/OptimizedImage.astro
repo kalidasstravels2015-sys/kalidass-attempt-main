@@ -12,6 +12,7 @@ interface Props {
   fetchpriority?: "high" | "low" | "auto";
   sizes?: string;
   format?: "webp" | "avif";
+  quality?: number;
 }
 
 const {
@@ -24,6 +25,7 @@ const {
   fetchpriority,
   sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
   format = "webp",
+  quality = 82,
 } = Astro.props;
 
 // glob all images from src/assets/images
@@ -81,12 +83,12 @@ if (!isRemote) {
       alt={alt}
       class={className}
       style={style}
-      widths={[240, 360, 480, 640, 800, 1080, 1440]}
+      widths={[240, 360, 480, 640, 800, 1080, 1440, 1920]}
       sizes={sizes}
       format={format}
       loading={loading}
       decoding={decoding}
-      quality={24}
+      quality={quality}
       fetchpriority={fetchpriority}
     />
   ) : (

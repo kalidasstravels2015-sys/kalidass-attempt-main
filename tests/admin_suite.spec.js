@@ -11,6 +11,7 @@ async function clickSidebarNav(page, text) {
   const menuBtn = page.locator('button[title="Open Navigation Menu"]');
   if (await menuBtn.isVisible()) {
     await menuBtn.click();
+    await page.waitForTimeout(250);
   }
   await page.click(`button:has-text("${text}")`);
 }
