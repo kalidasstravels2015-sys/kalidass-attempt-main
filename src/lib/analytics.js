@@ -235,6 +235,19 @@ export const trackCalculatorQuote = (payload = {}) => {
         webhookUrl: sheetUrl
     };
 
+    // 0. Immediate Local Storage Persistence & Cross-Tab Live Event for Admin Radar
+    if (typeof window !== 'undefined' && window.localStorage) {
+        try {
+            const STORAGE_QUOTES_KEY = 'kt_website_calculator_quotes_v1';
+            const rawStored = localStorage.getItem(STORAGE_QUOTES_KEY);
+            const list = rawStored ? JSON.parse(rawStored) : [];
+            const filtered = Array.isArray(list) ? list.filter(item => item && item.quoteId !== quoteId) : [];
+            const updated = [recordData, ...filtered].slice(0, 100);
+            localStorage.setItem(STORAGE_QUOTES_KEY, JSON.stringify(updated));
+            window.dispatchEvent(new CustomEvent('kt_new_calculation', { detail: recordData }));
+        } catch (_) {}
+    }
+
     // 1. Send to Local & Google Sheets Backend Logger (/api/record-calculation)
     try {
         fetch('/api/record-calculation', {
@@ -300,6 +313,31 @@ export const markQuoteConverted = (quoteId, extra = {}) => {
         ...extra,
         webhookUrl: sheetUrl
     };
+
+    // 0. Update quote status in Local Storage for Admin Radar
+    if (typeof window !== 'undefined' && window.localStorage) {
+        try {
+            const STORAGE_QUOTES_KEY = 'kt_website_calculator_quotes_v1';
+            const rawStored = localStorage.getItem(STORAGE_QUOTES_KEY);
+            if (rawStored) {
+                const list = JSON.parse(rawStored);
+                let updatedAny = false;
+                const updated = list.map(item => {
+                    if (item && item.quoteId === targetQuoteId) {
+                        updatedAny = true;
+                        return { ...item, status: status, ...extra };
+                    }
+                    return item;
+                });
+                if (updatedAny) {
+                    localStorage.setItem(STORAGE_QUOTES_KEY, JSON.stringify(updated));
+                    window.dispatchEvent(new CustomEvent('kt_new_calculation', {
+                        detail: { quoteId: targetQuoteId, status, ...extra }
+                    }));
+                }
+            }
+        } catch (_) {}
+    }
 
     // Update local and backend record
     try {

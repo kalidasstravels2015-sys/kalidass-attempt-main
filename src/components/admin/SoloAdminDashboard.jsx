@@ -13,7 +13,8 @@ import { getActiveGoogleSheetUrl, fetchRemoteGoogleSheetUrl } from '../../config
 const STORAGE_KEYS = {
   BOOKINGS: 'kt_solo_real_bookings_v8',
   LEADS: 'kt_solo_real_leads_v8',
-  CHAUFFEURS: 'kt_solo_real_chauffeurs_v8'
+  CHAUFFEURS: 'kt_solo_real_chauffeurs_v8',
+  QUOTES: 'kt_website_calculator_quotes_v1'
 };
 
 export default function SoloAdminDashboard() {
@@ -100,7 +101,18 @@ export default function SoloAdminDashboard() {
     return [];
   });
 
-  const [calculatorQuotes, setCalculatorQuotes] = useState([]);
+  const [calculatorQuotes, setCalculatorQuotes] = useState(() => {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      try {
+        const cached = localStorage.getItem(STORAGE_KEYS.QUOTES);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed)) return parsed;
+        }
+      } catch (_) {}
+    }
+    return [];
+  });
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
@@ -178,14 +190,16 @@ export default function SoloAdminDashboard() {
       setIsSheetConnected(Boolean(sheetUrl));
       const webhookParam = sheetUrl ? `?webhook=${encodeURIComponent(sheetUrl)}` : '';
 
-      const [bRes, lRes] = await Promise.allSettled([
+      const [bRes, lRes, cRes] = await Promise.allSettled([
         fetch(`/api/admin/bookings${webhookParam}`),
-        fetch(`/api/admin/leads${webhookParam}`)
+        fetch(`/api/admin/leads${webhookParam}`),
+        fetch('/api/calculations.json')
       ]);
 
       let apiBookings = [];
       let apiLeads = [];
       let apiQuotes = [];
+      let csvCalculations = [];
 
       if (bRes.status === 'fulfilled' && bRes.value.ok) {
         const bData = await bRes.value.json();
@@ -196,6 +210,11 @@ export default function SoloAdminDashboard() {
         const lData = await lRes.value.json();
         apiLeads = lData.leads || [];
         apiQuotes = lData.calculatorQuotes || [];
+      }
+
+      if (cRes.status === 'fulfilled' && cRes.value.ok) {
+        const cData = await cRes.value.json();
+        csvCalculations = cData.calculations || [];
       }
 
       // Fallback: direct Google Sheet fetch if backend returned 0 leads
@@ -225,9 +244,28 @@ export default function SoloAdminDashboard() {
         return merged;
       });
 
-      if (apiQuotes.length > 0) {
-        setCalculatorQuotes(apiQuotes);
-      }
+      // Merge quotes from API, CSV calculations log, Google Sheet, and localStorage
+      setCalculatorQuotes(prevQuotes => {
+        let storedQuotes = [];
+        if (typeof window !== 'undefined' && window.localStorage) {
+          try {
+            const raw = localStorage.getItem(STORAGE_KEYS.QUOTES);
+            if (raw) storedQuotes = JSON.parse(raw);
+          } catch (_) {}
+        }
+
+        const map = new Map();
+        (storedQuotes || []).forEach(q => { if (q && q.quoteId) map.set(q.quoteId, q); });
+        (prevQuotes || []).forEach(q => { if (q && q.quoteId) map.set(q.quoteId, q); });
+        (csvCalculations || []).forEach(q => { if (q && q.quoteId) map.set(q.quoteId, q); });
+        (apiQuotes || []).forEach(q => { if (q && q.quoteId) map.set(q.quoteId, q); });
+
+        const merged = Array.from(map.values());
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(STORAGE_KEYS.QUOTES, JSON.stringify(merged.slice(0, 100)));
+        }
+        return merged;
+      });
 
       if (apiBookings.length > 0) {
         setBookings(prevBookings => {
@@ -257,6 +295,45 @@ export default function SoloAdminDashboard() {
       setIsSheetConnected(Boolean(getActiveGoogleSheetUrl()));
       refreshData();
     });
+
+    // Real-Time Cross-Tab & Calculator Event Listeners
+    const handleNewCalculation = (e) => {
+      const newCalc = e.detail;
+      if (newCalc && newCalc.quoteId) {
+        setCalculatorQuotes(prev => {
+          const map = new Map();
+          map.set(newCalc.quoteId, newCalc);
+          (prev || []).forEach(q => { if (q && q.quoteId) map.set(q.quoteId, q); });
+          const merged = Array.from(map.values()).slice(0, 100);
+          if (typeof window !== 'undefined') {
+            localStorage.setItem(STORAGE_KEYS.QUOTES, JSON.stringify(merged));
+          }
+          return merged;
+        });
+        const fareVal = Number(newCalc.estimatedFare || newCalc.fare || 0);
+        if (fareVal > 0) {
+          showToast(`⚡ Live calculation: ${newCalc.pickup || 'Chennai'} ➔ ${newCalc.drop || 'Trip'} (₹${fareVal.toLocaleString('en-IN')})`, 'info');
+        }
+      }
+    };
+
+    const handleStorageChange = (e) => {
+      if (e.key === STORAGE_KEYS.QUOTES && e.newValue) {
+        try {
+          const updated = JSON.parse(e.newValue);
+          if (Array.isArray(updated)) {
+            setCalculatorQuotes(updated);
+          }
+        } catch (_) {}
+      }
+    };
+
+    window.addEventListener('kt_new_calculation', handleNewCalculation);
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('kt_new_calculation', handleNewCalculation);
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   // Full reset handler
@@ -277,6 +354,7 @@ export default function SoloAdminDashboard() {
         localStorage.removeItem(STORAGE_KEYS.BOOKINGS);
         localStorage.removeItem(STORAGE_KEYS.LEADS);
         localStorage.removeItem(STORAGE_KEYS.CHAUFFEURS);
+        localStorage.removeItem(STORAGE_KEYS.QUOTES);
       }
       setBookings([]);
       setLeads([]);

@@ -1,5 +1,4 @@
-// Cloudflare Pages Function: /api/admin/leads
-// Connects Admin Duties Board with Google Sheets 2-Way Sync
+import { getRecentQuotes } from '../_quotesBuffer.js';
 
 export async function onRequestGet({ request, env }) {
   try {
@@ -19,11 +18,17 @@ export async function onRequestGet({ request, env }) {
           try {
             const data = JSON.parse(text);
             if (data && data.success) {
+              const sheetQuotes = data.calculatorQuotes || data.leads || [];
+              const bufferQuotes = getRecentQuotes();
+              const quoteMap = new Map();
+              bufferQuotes.forEach(q => { if (q && q.quoteId) quoteMap.set(q.quoteId, q); });
+              sheetQuotes.forEach(q => { if (q && q.quoteId) quoteMap.set(q.quoteId, q); });
+
               return new Response(JSON.stringify({
                 success: true,
                 count: (data.leads || []).length,
                 leads: data.leads || [],
-                calculatorQuotes: data.calculatorQuotes || data.leads || [],
+                calculatorQuotes: Array.from(quoteMap.values()),
                 syncedFrom: 'GoogleSheet'
               }), {
                 status: 200,
@@ -41,7 +46,8 @@ export async function onRequestGet({ request, env }) {
       }
     }
 
-    return new Response(JSON.stringify({ success: true, count: 0, leads: [], calculatorQuotes: [] }), {
+    const localBufferQuotes = getRecentQuotes();
+    return new Response(JSON.stringify({ success: true, count: 0, leads: [], calculatorQuotes: localBufferQuotes }), {
       status: 200,
       headers: {
         'Content-Type': 'application/json; charset=utf-8',

@@ -1,6 +1,8 @@
 // Cloudflare Pages Function: /api/record-calculation
 // Handles POST requests on production and forwards to Google Apps Script Webhook
 
+import { addQuoteToBuffer } from './_quotesBuffer.js';
+
 export async function onRequestPost({ request, env }) {
   try {
     let data = {};
@@ -16,6 +18,22 @@ export async function onRequestPost({ request, env }) {
     const quoteId = data.quoteId || (data.meta && data.meta.quoteRefId) || ('#KT-' + Math.floor(1000 + Math.random() * 9000));
     const url = new URL(request.url);
     const webhookUrl = url.searchParams.get('webhook') || data.webhookUrl || (env && (env.GOOGLE_SHEET_WEBHOOK_URL || env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL));
+
+    // Store in edge worker memory buffer
+    addQuoteToBuffer({
+      quoteId,
+      timestamp: data.timestamp || new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }),
+      sourcePage: data.sourcePage || '/services/outstation-cabs/',
+      calculatorEngine: data.calculatorEngine || 'Booking Engine',
+      tripType: data.tripType || 'Round Trip',
+      pickup: data.pickup || 'Chennai',
+      drop: data.drop || 'Outstation',
+      vehicle: data.vehicle || 'Swift Dzire',
+      distanceKm: data.distanceKm || data.distance || 'N/A',
+      estimatedFare: Number(data.estimatedFare || data.fare || data.estimate || 0),
+      status: data.status || 'Rate Locked',
+      metadata: typeof data.meta === 'object' ? JSON.stringify(data.meta) : (data.metadata || '')
+    });
 
     if (webhookUrl && webhookUrl.startsWith('http')) {
       try {

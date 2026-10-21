@@ -15,7 +15,7 @@ export default function WebsiteRadarView({
   const [search, setSearch] = useState('');
 
   const validQuotes = useMemo(
-    () => (calculatorQuotes || []).filter(q => Number(q.estimatedFare) > 0 && !(q.drop || '').toLowerCase().includes('whatsapp chat')),
+    () => (calculatorQuotes || []).filter(q => Number(q.estimatedFare || q.fare || q.estimate || 0) > 0 && !(q.drop || '').toLowerCase().includes('whatsapp chat')),
     [calculatorQuotes]
   );
 
@@ -39,7 +39,7 @@ export default function WebsiteRadarView({
       if (engineFilter === 'AIRPORT') return engine.includes('airport');
       if (engineFilter === 'OUTSTATION') return engine.includes('outstation');
       if (engineFilter === 'TOUR') return engine.includes('tour') || engine.includes('package');
-      if (engineFilter === 'DRIVER') return engine.includes('driver');
+      if (engineFilter === 'DRIVER') return engine.includes('driver') || engine.includes('relocation');
 
       return true;
     });

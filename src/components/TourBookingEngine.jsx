@@ -24,7 +24,7 @@ import {
 import LocationPicker from './LocationPicker';
 import WhatsAppButton from './react/WhatsAppButton.jsx';
 import { buildWhatsAppUrl, buildMapsLinks } from '../utils/whatsapp';
-import { trackEvent, markQuoteConverted } from '../lib/analytics';
+import { trackEvent, markQuoteConverted, trackCalculatorQuote } from '../lib/analytics';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import { printInvoiceLetterhead, getEstimateRefNo, downloadEstimateDocument } from '../utils/invoiceLetterhead';
 import { getActiveGoogleSheetUrl } from '../config/googleSheets';
@@ -941,6 +941,28 @@ export default function TourBookingEngine({
       };
       window.dispatchEvent(new CustomEvent('kt_calculation_updated', { detail: window.__KT_CURRENT_CALCULATION }));
       onQuoteCalculated?.(window.__KT_CURRENT_CALCULATION);
+
+      if (showResult && currentFare > 0) {
+        trackCalculatorQuote({
+          quoteId: effectiveInvoiceRefNo,
+          calculatorId: serviceSlug || 'tour_package',
+          calculatorEngine: `${config.destination?.name || 'Tour'} Engine`,
+          tripType: `${durationInfo?.days || 1} Day Package`,
+          sourcePage: window.location.pathname || `/services/${serviceSlug}/`,
+          pickup: pickup.trim() || 'Chennai',
+          drop: destinationDisplay,
+          vehicle: activeVehicle?.name || 'Cab',
+          distanceKm: `${config.destination?.roundTripKm || 320} km return`,
+          estimatedFare: currentFare,
+          status: 'Rate Locked',
+          meta: {
+            days: durationInfo?.days || 1,
+            passengers,
+            pickupDateTime,
+            returnDateTime
+          }
+        });
+      }
     }
   }, [
     serviceSlug,
