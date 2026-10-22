@@ -1,7 +1,11 @@
 import type { APIRoute } from 'astro';
+import fs from 'node:fs';
+import path from 'node:path';
 import { processAiConciergeQuery, type ChatMessage } from '../../lib/aiConciergeEngine';
 
 export const prerender = false;
+
+const chatLogPath = path.resolve(process.cwd(), 'src/data/chat-log.csv');
 
 const SYSTEM_PROMPT = `
 You are the official 24/7 AI Travel & Fare Assistant ("Let me Help You") for Kalidass Travels, Chennai (Helplines: +91 89395 39211, +91 63819 39769, +91 90923 03060).
@@ -137,7 +141,13 @@ export const POST: APIRoute = async ({ request }) => {
         if (!rawUserMsg) return;
 
         const timestamp = new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
-        const sessionId = String(body.sessionId || 'KT-SES-' + Math.floor(1000 + Math.random() * 9000)).replace(/,/g, ' ');
+        let rowCount = 0;
+        if (fs.existsSync(chatLogPath)) {
+          try {
+            rowCount = fs.readFileSync(chatLogPath, 'utf8').trim().split(/\r?\n/).filter(Boolean).length;
+          } catch (_) {}
+        }
+        const sessionId = String(body.sessionId || `KT-SES-${100 + rowCount + 1}`).replace(/,/g, ' ');
         const sourcePage = String(body.sourcePage || '/').replace(/,/g, ' ');
 
         // Detect Query Intent

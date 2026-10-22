@@ -1,6 +1,6 @@
 import { onCLS, onLCP, onFCP, onTTFB, onINP } from 'web-vitals';
 import { getActiveGoogleSheetUrl } from '../config/googleSheets';
-import { getNextQuotationId } from '../utils/sequenceGenerator';
+import { getNextQuotationId, isSequentialId } from '../utils/sequenceGenerator';
 
 const GA_MEASUREMENT_ID = import.meta.env.PUBLIC_GA_ID || 'G-61YQMR8J7H';
 const GOOGLE_ADS_ID = import.meta.env.PUBLIC_GOOGLE_ADS_ID || 'AW-18463679349';
@@ -213,8 +213,9 @@ export const trackCalculatorQuote = (payload = {}) => {
     lastQuoteSignature = signature;
     lastQuoteTime = now;
 
-    // Use the exact quote ID visible to customer on screen (e.g. #QT-101) if provided
-    const quoteId = payload.quoteId || payload.meta?.quoteRefId || getNextQuotationId();
+    // Strictly continuous sequential numbering starting from 101 (#QT-101, #QT-102...)
+    const candidateId = payload.quoteId || payload.meta?.quoteRefId;
+    const quoteId = (candidateId && isSequentialId(String(candidateId), 500)) ? String(candidateId) : getNextQuotationId();
     lastActiveQuoteId = quoteId;
 
     const sheetUrl = getActiveGoogleSheetUrl();

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { validateCustomerContact } from '../../../utils/bookingContactValidator';
+import { getNextEnquiryId } from '../../../utils/sequenceGenerator';
 
 // In-browser Instant Parser (0ms latency fallback)
 function parseBookingInquiryClient(rawText, phoneInput = '', guestNameInput = '') {
@@ -30,7 +31,7 @@ function parseBookingInquiryClient(rawText, phoneInput = '', guestNameInput = ''
     if (altQuoteMatch) {
       quoteRefId = altQuoteMatch[1].trim();
     } else {
-      quoteRefId = `#KT-${Math.floor(1000 + Math.random() * 9000)}`;
+      quoteRefId = getNextEnquiryId([], '#ENQ-');
     }
   }
 
@@ -447,7 +448,7 @@ export default function AiBookingParser({ onBookingCreated, onLeadCreated, showT
               className="w-full text-xs rounded-xl border border-m3-outline-variant p-3 pr-24 focus:outline-none focus:ring-2 focus:ring-m3-primary resize-none bg-m3-surface-container-low placeholder-slate-400 font-mono-code"
               placeholder={`Paste message, e.g.:
 Hi Kalidass Travels, I need an Outstation Acting Driver:
-📌 Quote Ref: #KT-6450
+📌 Quote Ref: #ENQ-101
 Route: Chetpet, Chennai -> Rasipuram (~367 km)
 Est. Total: ₹2,970`}
               value={inputText}
@@ -471,50 +472,50 @@ Est. Total: ₹2,970`}
 
         {/* Extracted Result Card */}
         {parsedData && (
-          <div className="p-4 rounded-xl bg-m3-primary-container/20 border-2 border-m3-primary/40 animate-fadeIn space-y-3">
-            <div className="flex items-center justify-between border-b border-m3-primary/20 pb-2">
+          <div className="p-4 rounded-m3-xl bg-m3-surface-container-low border border-m3-outline-variant/80 animate-fadeIn space-y-3">
+            <div className="flex items-center justify-between border-b border-m3-outline-variant/50 pb-2">
               <div className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-m3-primary">verified</span>
                 <div>
-                  <span className="text-xs font-black text-m3-primary font-mono-code uppercase">{parsedData.quoteRefId}</span>
+                  <span className="text-xs font-bold text-m3-primary font-mono-code uppercase">{parsedData.quoteRefId}</span>
                   <span className="text-xs text-m3-on-surface-variant ml-2">• {parsedData.serviceCategory}</span>
                 </div>
               </div>
-              <span className="text-sm bg-m3-success text-white font-extrabold px-3 py-0.5 rounded-full shadow-xs">
+              <span className="text-sm bg-m3-secondary-container text-m3-on-secondary-container font-bold px-3 py-0.5 rounded-full">
                 Rs. {parsedData.estimatedFare.toLocaleString('en-IN')}
               </span>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
-              <div className="p-2 rounded-lg bg-white border border-m3-outline-variant/60">
-                <span className="text-m3-outline block text-[10px] uppercase font-bold">Customer</span>
+              <div className="p-2.5 rounded-m3-md bg-m3-surface-container-lowest border border-m3-outline-variant/60">
+                <span className="text-m3-on-surface-variant block text-[10px] uppercase font-semibold">Customer</span>
                 <span className="font-bold text-m3-on-surface block truncate">{parsedData.guestName}</span>
                 <span className="text-m3-primary text-[11px] font-mono-code font-bold block">{parsedData.phone || 'No phone'}</span>
               </div>
-              <div className="p-2 rounded-lg bg-white border border-m3-outline-variant/60">
-                <span className="text-m3-outline block text-[10px] uppercase font-bold">Route & Type</span>
+              <div className="p-2.5 rounded-m3-md bg-m3-surface-container-lowest border border-m3-outline-variant/60">
+                <span className="text-m3-on-surface-variant block text-[10px] uppercase font-semibold">Route & Type</span>
                 <span className="font-bold text-m3-on-surface block truncate" title={`${parsedData.pickup} ➔ ${parsedData.drop}`}>
                   {parsedData.pickup} ➔ {parsedData.drop}
                 </span>
                 <span className="text-m3-on-surface-variant text-[11px] block">{parsedData.tripType}</span>
               </div>
-              <div className="p-2 rounded-lg bg-white border border-m3-outline-variant/60">
-                <span className="text-m3-outline block text-[10px] uppercase font-bold">Date & Time</span>
+              <div className="p-2.5 rounded-m3-md bg-m3-surface-container-lowest border border-m3-outline-variant/60">
+                <span className="text-m3-on-surface-variant block text-[10px] uppercase font-semibold">Date & Time</span>
                 <span className="font-bold text-m3-on-surface block">{parsedData.travelDate}</span>
                 <span className="text-m3-primary text-[11px] font-bold block">{parsedData.pickupTime}</span>
               </div>
-              <div className="p-2 rounded-lg bg-white border border-m3-outline-variant/60">
-                <span className="text-m3-outline block text-[10px] uppercase font-bold">Vehicle & Pax</span>
+              <div className="p-2.5 rounded-m3-md bg-m3-surface-container-lowest border border-m3-outline-variant/60">
+                <span className="text-m3-on-surface-variant block text-[10px] uppercase font-semibold">Vehicle & Pax</span>
                 <span className="font-bold text-m3-on-surface block truncate">{parsedData.vehicleCategory}</span>
                 <span className="text-m3-on-surface-variant text-[11px] block">{parsedData.partySize}</span>
               </div>
             </div>
 
             {/* Financial Split Pill */}
-            <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-lg bg-white border border-m3-outline-variant/70 text-xs">
-              <span>Driver Net Payout: <strong className="text-m3-on-surface font-mono-code">Rs.{parsedData.chauffeurPayout.toLocaleString('en-IN')}</strong></span>
-              <span>Your Profit Margin: <strong className="text-m3-success font-mono-code font-bold">+Rs.{parsedData.companyMargin.toLocaleString('en-IN')}</strong></span>
-              <span>Suggested Advance: <strong className="text-m3-primary font-mono-code font-bold">Rs.{parsedData.advanceSuggested}</strong></span>
+            <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-m3-md bg-m3-surface-container-lowest border border-m3-outline-variant/70 text-xs">
+              <span className="text-m3-on-surface-variant">Driver Net: <strong className="text-m3-on-surface font-mono-code">Rs.{parsedData.chauffeurPayout.toLocaleString('en-IN')}</strong></span>
+              <span className="text-m3-on-surface-variant">Profit Margin: <strong className="text-m3-primary font-mono-code font-bold">+Rs.{parsedData.companyMargin.toLocaleString('en-IN')}</strong></span>
+              <span className="text-m3-on-surface-variant">Advance Due: <strong className="text-m3-primary font-mono-code font-bold">Rs.{parsedData.advanceSuggested}</strong></span>
             </div>
 
             {/* 3 Direct Actions */}
@@ -522,7 +523,7 @@ Est. Total: ₹2,970`}
               <button
                 type="button"
                 onClick={handleSaveAsLead}
-                className="flex-1 sm:flex-none px-4 py-2 bg-m3-secondary-container hover:bg-m3-surface-container-high text-m3-on-secondary-container rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs transition-all"
+                className="flex-1 sm:flex-none px-4 py-2 bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container rounded-full text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs transition-all"
                 title="Save into Stage 1 Quotes list"
               >
                 <span className="material-symbols-outlined text-base">forum</span>
@@ -532,7 +533,7 @@ Est. Total: ₹2,970`}
               <button
                 type="button"
                 onClick={handleSaveAsBooking}
-                className="flex-1 sm:flex-none px-4 py-2 bg-m3-primary hover:bg-m3-primary/90 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition-all"
+                className="flex-1 sm:flex-none px-4 py-2 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-full text-xs font-bold flex items-center justify-center gap-1.5 shadow-m3-1 transition-all"
                 title="Confirm booking and move to Need Driver"
               >
                 <span className="material-symbols-outlined text-base">check_circle</span>
@@ -542,7 +543,7 @@ Est. Total: ₹2,970`}
               <button
                 type="button"
                 onClick={handleOpenWhatsApp}
-                className="px-3 py-2 bg-m3-success hover:bg-m3-success/90 text-white rounded-xl text-xs font-bold flex items-center gap-1 shadow-xs transition-all"
+                className="px-3.5 py-2 bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container rounded-full text-xs font-bold flex items-center gap-1 shadow-xs transition-all"
                 title="Send confirmation reply to customer on WhatsApp"
               >
                 <span className="material-symbols-outlined text-base">send</span>
@@ -552,7 +553,7 @@ Est. Total: ₹2,970`}
               <button
                 type="button"
                 onClick={handleCopyQuote}
-                className="px-2.5 py-2 bg-white hover:bg-m3-surface-container-low text-m3-on-surface-variant border border-m3-outline-variant rounded-xl text-xs font-semibold flex items-center gap-1 transition-all"
+                className="px-3 py-2 bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface border border-m3-outline-variant rounded-full text-xs font-semibold flex items-center gap-1 transition-all"
               >
                 <span className="material-symbols-outlined text-sm">{copied ? 'done' : 'content_copy'}</span>
                 <span>{copied ? 'Copied' : 'Copy'}</span>
@@ -561,7 +562,7 @@ Est. Total: ₹2,970`}
               <button
                 type="button"
                 onClick={() => setParsedData(null)}
-                className="px-2 py-2 text-m3-outline hover:text-m3-on-surface text-xs ml-auto"
+                className="px-2 py-2 text-m3-on-surface-variant hover:text-m3-on-surface text-xs ml-auto"
                 title="Clear"
               >
                 <span className="material-symbols-outlined text-base">close</span>

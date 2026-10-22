@@ -13,10 +13,10 @@ export const POST: APIRoute = async ({ request }) => {
     if (fs.existsSync(csvPath)) {
       const content = fs.readFileSync(csvPath, 'utf8');
       const lines = content.trim().split(/\r?\n/).filter(Boolean);
-      const rowNum = lines.length + 1;
+      const rowNum = lines.length;
 
       if (!bookingId) {
-        bookingId = `#KT-CAB-${100 + rowNum}`;
+        bookingId = `#KT-BK-${100 + rowNum}`;
       }
 
       const guestNamePhone = `${data.name || 'Guest'} (+91 ${data.phone || '9840100000'})`;

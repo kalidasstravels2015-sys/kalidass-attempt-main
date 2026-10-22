@@ -62,11 +62,11 @@ export default function CompletedTripsView({
       <div className="bg-m3-surface-container-lowest p-4 rounded-m3-xl border border-m3-outline-variant/70 shadow-m3-1 flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-emerald-600"></span>
-            <h2 className="text-m3-title-m font-black text-emerald-950">
+            <span className="w-2.5 h-2.5 rounded-full bg-m3-primary"></span>
+            <h2 className="text-m3-title-m font-bold text-m3-on-surface">
               3. Completed Trips & Reviews
             </h2>
-            <span className="text-xs font-black bg-emerald-100 text-emerald-900 border border-emerald-300 px-2.5 py-0.5 rounded-full">
+            <span className="text-xs font-bold bg-m3-secondary-container text-m3-on-secondary-container px-2.5 py-0.5 rounded-full">
               {completedBookings.length} Trips Closed
             </span>
           </div>
@@ -76,15 +76,15 @@ export default function CompletedTripsView({
         </div>
 
         {/* Profit Metric Card */}
-        <div className="flex items-center gap-4 bg-emerald-50 border border-emerald-300 p-2.5 px-4 rounded-m3-lg">
+        <div className="flex items-center gap-4 bg-m3-surface-container-low border border-m3-outline-variant/70 p-2.5 px-4 rounded-m3-lg">
           <div>
-            <span className="text-[11px] font-bold text-emerald-800 uppercase block">Total Fares</span>
-            <span className="text-sm font-black text-emerald-950">Rs.{totalFareCollected.toLocaleString('en-IN')}</span>
+            <span className="text-[11px] font-semibold text-m3-on-surface-variant uppercase tracking-wider block">Total Fares</span>
+            <span className="text-sm font-bold text-m3-on-surface">Rs.{totalFareCollected.toLocaleString('en-IN')}</span>
           </div>
-          <div className="h-8 w-px bg-emerald-300"></div>
+          <div className="h-8 w-px bg-m3-outline-variant/60"></div>
           <div>
-            <span className="text-[11px] font-bold text-emerald-800 uppercase block">Company Profit</span>
-            <span className="text-base font-black text-emerald-700">+Rs.{totalProfitEarned.toLocaleString('en-IN')}</span>
+            <span className="text-[11px] font-semibold text-m3-on-surface-variant uppercase tracking-wider block">Company Profit</span>
+            <span className="text-base font-bold text-m3-primary">+Rs.{totalProfitEarned.toLocaleString('en-IN')}</span>
           </div>
         </div>
       </div>
@@ -99,7 +99,7 @@ export default function CompletedTripsView({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search by passenger, route, or driver..."
-          className="w-full pl-9 pr-8 py-2 text-xs font-semibold rounded-full border border-m3-outline-variant bg-m3-surface-container-lowest focus:ring-2 focus:ring-m3-primary text-m3-on-surface"
+          className="w-full pl-9 pr-8 py-2 text-xs font-medium rounded-full border border-m3-outline-variant bg-m3-surface-container-lowest focus:ring-2 focus:ring-m3-primary text-m3-on-surface"
         />
         {search && (
           <button
@@ -115,7 +115,7 @@ export default function CompletedTripsView({
       {/* Completed Trips List */}
       {filteredBookings.length === 0 ? (
         <div className="p-10 text-center bg-m3-surface-container-lowest rounded-m3-xl border border-m3-outline-variant/70 space-y-3">
-          <div className="w-14 h-14 mx-auto rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center">
+          <div className="w-14 h-14 mx-auto rounded-full bg-m3-secondary-container text-m3-on-secondary-container flex items-center justify-center">
             <span className="material-symbols-outlined text-3xl">star</span>
           </div>
           <h3 className="text-sm font-bold text-m3-on-surface">No Completed Trips in Register</h3>
@@ -134,11 +134,11 @@ export default function CompletedTripsView({
             return (
               <div
                 key={b.bookingId}
-                className="p-4 rounded-m3-xl bg-m3-surface-container-lowest border border-m3-outline-variant/80 shadow-m3-1 flex flex-col lg:flex-row lg:items-center justify-between gap-3 hover:border-emerald-300 transition-all"
+                className="p-4 rounded-m3-xl bg-m3-surface-container-lowest border border-m3-outline-variant/80 shadow-m3-1 flex flex-col lg:flex-row lg:items-center justify-between gap-3 hover:border-m3-outline transition-all"
               >
                 <div className="space-y-1 flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-mono-code text-xs font-black bg-emerald-100 text-emerald-950 border border-emerald-300 px-2 py-0.5 rounded-full">
+                    <span className="font-mono-code text-xs font-bold bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant px-2 py-0.5 rounded-full">
                       {b.bookingId}
                     </span>
                     <span className="text-xs font-bold text-m3-on-surface">
@@ -149,12 +149,12 @@ export default function CompletedTripsView({
                     </span>
                   </div>
 
-                  <div className="text-xs font-bold text-m3-on-surface">
+                  <div className="text-xs font-medium text-m3-on-surface">
                     📍 {b.pickupAddress} • 🗓️ {b.travelDateTime}
                   </div>
 
-                  <div className="text-xs text-m3-on-surface-variant font-medium">
-                    Total Fare: <strong>Rs.{fare.toLocaleString('en-IN')}</strong> • Driver Net: Rs.{driverShare.toLocaleString('en-IN')} • <strong className="text-emerald-700">Profit: +Rs.{profit.toLocaleString('en-IN')}</strong>
+                  <div className="text-xs text-m3-on-surface-variant font-normal">
+                    Total Fare: <strong className="text-m3-on-surface">Rs.{fare.toLocaleString('en-IN')}</strong> • Driver Net: Rs.{driverShare.toLocaleString('en-IN')} • <strong className="text-m3-primary font-bold">Profit: +Rs.{profit.toLocaleString('en-IN')}</strong>
                   </div>
                 </div>
 
@@ -163,10 +163,10 @@ export default function CompletedTripsView({
                   <button
                     type="button"
                     onClick={() => handleSendReviewWA(b)}
-                    className={`h-9 px-4 rounded-full text-xs font-black flex items-center gap-1.5 transition-all shadow-xs ${
+                    className={`h-9 px-4 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs ${
                       isReviewSent
-                        ? 'bg-emerald-100 text-emerald-900 border border-emerald-300 hover:bg-emerald-200'
-                        : 'bg-amber-500 hover:bg-amber-600 text-amber-950 shadow-m3-1'
+                        ? 'bg-m3-surface-container-high text-m3-on-surface-variant border border-m3-outline-variant hover:bg-m3-surface-container-highest'
+                        : 'bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary shadow-m3-1'
                     }`}
                   >
                     <span className="material-symbols-outlined text-[16px]">star</span>

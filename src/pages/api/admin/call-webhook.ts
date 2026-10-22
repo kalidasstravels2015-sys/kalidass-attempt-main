@@ -40,7 +40,7 @@ export const POST: APIRoute = async ({ request }) => {
     const timestamp = new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
     const csvPath = path.resolve(process.cwd(), 'Kalidass_Calculations_Log_2026.csv');
 
-    let quoteId = `#CALL-REC-${Date.now().toString().slice(-4)}`;
+    let quoteId = '#CALL-IN-101';
 
     if (fs.existsSync(csvPath)) {
       const content = fs.readFileSync(csvPath, 'utf8');

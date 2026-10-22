@@ -77,15 +77,15 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 animate-fadeIn">
       {/* Header & Controls */}
-      <div className="bg-white rounded-2xl p-4 border border-m3-outline-variant/60 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div className="bg-m3-surface-container-lowest rounded-m3-xl p-4 border border-m3-outline-variant/70 shadow-m3-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-sm font-extrabold text-m3-on-surface flex items-center gap-2">
-            <span className="material-symbols-outlined text-blue-600 text-lg">badge</span>
+          <h2 className="text-sm font-bold text-m3-on-surface flex items-center gap-2">
+            <span className="material-symbols-outlined text-m3-primary text-lg">badge</span>
             <span>Chauffeurs & Commercial Fleet Roster ({chauffeurs.length})</span>
           </h2>
-          <p className="text-xs text-m3-outline mt-0.5">
+          <p className="text-xs text-m3-on-surface-variant mt-0.5">
             Verified partner drivers with live duty availability & direct WhatsApp line.
           </p>
         </div>
@@ -93,20 +93,20 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
         {/* Filter & Actions */}
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           <div className="relative flex-1 sm:w-48">
-            <span className="material-symbols-outlined absolute left-2.5 top-2 text-m3-outline text-base">search</span>
+            <span className="material-symbols-outlined absolute left-2.5 top-2 text-m3-on-surface-variant text-base">search</span>
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search driver or plate..."
-              className="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl border border-m3-outline-variant bg-m3-surface-container-low focus:ring-2 focus:ring-blue-600 focus:outline-none"
+              className="w-full pl-8 pr-3 py-1.5 text-xs rounded-full border border-m3-outline-variant bg-m3-surface-container-low focus:ring-2 focus:ring-m3-primary text-m3-on-surface focus:outline-none"
             />
           </div>
 
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
-            className="py-1.5 px-3 text-xs rounded-xl border border-m3-outline-variant bg-white font-semibold text-m3-on-surface focus:ring-2 focus:ring-blue-600"
+            className="py-1.5 px-3 text-xs rounded-full border border-m3-outline-variant bg-m3-surface-container-lowest font-medium text-m3-on-surface focus:ring-2 focus:ring-m3-primary"
           >
             <option value="ALL">All Cars</option>
             <option value="Sedan">Sedan (Dzire / Etios)</option>
@@ -118,7 +118,7 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
           <button
             type="button"
             onClick={() => setIsAddModalOpen(true)}
-            className="py-1.5 px-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all whitespace-nowrap"
+            className="py-1.5 px-4 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-full text-xs font-bold flex items-center gap-1.5 shadow-m3-1 transition-all whitespace-nowrap"
           >
             <span className="material-symbols-outlined text-sm">person_add</span>
             <span>Add Chauffeur</span>
@@ -128,28 +128,28 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
 
       {/* Roster Cards Grid / Empty State */}
       {chauffeurs.length === 0 ? (
-        <div className="bg-white rounded-2xl p-10 text-center border border-m3-outline-variant shadow-sm space-y-3">
-          <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto">
+        <div className="bg-m3-surface-container-lowest rounded-m3-xl p-10 text-center border border-m3-outline-variant/70 shadow-m3-1 space-y-3">
+          <div className="w-14 h-14 bg-m3-secondary-container text-m3-on-secondary-container rounded-full flex items-center justify-center mx-auto">
             <span className="material-symbols-outlined text-3xl">badge</span>
           </div>
           <div>
-            <h3 className="text-sm font-bold text-slate-900">No Drivers Added to Roster Yet</h3>
-            <p className="text-xs text-slate-500 max-w-sm mx-auto mt-1">
+            <h3 className="text-sm font-bold text-m3-on-surface">No Drivers Added to Roster Yet</h3>
+            <p className="text-xs text-m3-on-surface-variant max-w-sm mx-auto mt-1">
               Add your verified partner drivers with their real phone numbers and plate numbers to easily assign duties and broadcast trips.
             </p>
           </div>
           <button
             type="button"
             onClick={() => setIsAddModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-full text-xs font-bold shadow-m3-1 transition-all"
           >
             <span className="material-symbols-outlined text-base">person_add</span>
             <span>Add Real Driver</span>
           </button>
         </div>
       ) : filtered.length === 0 ? (
-        <div className="bg-white rounded-2xl p-8 text-center border border-m3-outline-variant shadow-sm">
-          <p className="text-xs font-bold text-slate-600">No chauffeurs match your search or filter.</p>
+        <div className="bg-m3-surface-container-lowest rounded-m3-xl p-8 text-center border border-m3-outline-variant/70 shadow-m3-1">
+          <p className="text-xs font-medium text-m3-on-surface-variant">No chauffeurs match your search or filter.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
@@ -159,18 +159,18 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
             return (
               <div
                 key={driver.phone || driver.originalIdx}
-                className="bg-white rounded-2xl border border-m3-outline-variant/70 p-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
+                className="bg-m3-surface-container-lowest rounded-m3-xl border border-m3-outline-variant/70 p-4 shadow-m3-1 hover:border-m3-outline transition-all flex flex-col justify-between"
               >
                 <div>
                   {/* Top Badge & Rating */}
                   <div className="flex items-start justify-between gap-2 mb-2.5">
                     <div className="flex items-center gap-2">
-                      <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center font-black text-slate-700 text-sm">
+                      <div className="w-10 h-10 rounded-full bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center font-bold text-m3-on-surface text-sm">
                         {(driver.name || 'D').charAt(0)}
                       </div>
                       <div>
                         <h3 className="text-sm font-bold text-m3-on-surface leading-tight">{driver.name}</h3>
-                        <span className="text-[11px] font-mono font-semibold text-m3-outline block">
+                        <span className="text-[11px] font-mono text-m3-on-surface-variant block">
                           {driver.phone}
                         </span>
                       </div>
@@ -178,7 +178,7 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
 
                     <div className="flex flex-col items-end">
                       <div className="flex items-center gap-1.5">
-                        <span className="flex items-center gap-0.5 text-xs font-black text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                        <span className="flex items-center gap-0.5 text-xs font-bold text-m3-on-secondary-container bg-m3-secondary-container px-2 py-0.5 rounded-full border border-m3-outline-variant/40">
                           <span className="material-symbols-outlined text-[14px]">star</span>
                           <span>{driver.rating || '4.9'}</span>
                         </span>
@@ -186,7 +186,7 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
                           <button
                             type="button"
                             onClick={() => onDeleteChauffeur(driver.originalIdx)}
-                            className="text-slate-400 hover:text-red-500 transition-colors p-0.5"
+                            className="text-m3-on-surface-variant hover:text-m3-error transition-colors p-0.5"
                             title="Remove Driver"
                           >
                             <span className="material-symbols-outlined text-sm">delete</span>
@@ -194,7 +194,7 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
                         )}
                       </div>
                       <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 ${
-                        isBusy ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'
+                        isBusy ? 'bg-m3-surface-container-high text-m3-on-surface-variant' : 'bg-m3-secondary-container text-m3-on-secondary-container'
                       }`}>
                         {isBusy ? 'Assigned On Duty' : 'Available'}
                       </span>
@@ -202,14 +202,14 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
                   </div>
 
                   {/* Vehicle Details */}
-                  <div className="p-2.5 bg-m3-surface-container-low rounded-xl border border-m3-outline-variant/40 mb-3 space-y-1">
+                  <div className="p-2.5 bg-m3-surface-container-low rounded-m3-lg border border-m3-outline-variant/40 mb-3 space-y-1">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-m3-outline font-semibold">Vehicle Class:</span>
+                      <span className="text-m3-on-surface-variant font-medium">Vehicle Class:</span>
                       <span className="font-bold text-m3-on-surface">{driver.category}</span>
                     </div>
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-m3-outline font-semibold">Plate Number:</span>
-                      <span className="font-mono font-bold text-slate-800 bg-amber-200/60 px-1.5 py-0.2 rounded border border-amber-300">
+                      <span className="text-m3-on-surface-variant font-medium">Plate Number:</span>
+                      <span className="font-mono text-xs font-bold text-m3-on-surface bg-m3-surface-container-high px-1.5 py-0.5 rounded border border-m3-outline-variant">
                         {driver.plate}
                       </span>
                     </div>
@@ -217,15 +217,15 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
 
                   {/* Current Active Trip if any */}
                   {driver.currentDuty && (
-                    <div className="p-2.5 bg-blue-50 border border-blue-200 rounded-xl mb-3 text-xs">
-                      <div className="flex items-center justify-between text-[11px] text-blue-800 font-bold mb-1">
+                    <div className="p-2.5 bg-m3-surface-container-low border border-m3-outline-variant/80 rounded-m3-lg mb-3 text-xs">
+                      <div className="flex items-center justify-between text-[11px] text-m3-primary font-bold mb-1">
                         <span>Active Booking: {driver.currentDuty.bookingId}</span>
-                        <span className="uppercase text-[9px] bg-blue-200 px-1.5 py-0.2 rounded">{driver.currentDuty.manifestStatus}</span>
+                        <span className="uppercase text-[9px] bg-m3-secondary-container text-m3-on-secondary-container px-1.5 py-0.5 rounded font-bold">{driver.currentDuty.manifestStatus}</span>
                       </div>
-                      <p className="text-[11px] text-blue-900 truncate font-semibold">
+                      <p className="text-[11px] text-m3-on-surface truncate font-medium">
                         {driver.currentDuty.pickupAddress}
                       </p>
-                      <span className="text-[10px] text-blue-700 font-mono block mt-0.5">
+                      <span className="text-[10px] text-m3-on-surface-variant font-mono block mt-0.5">
                         {driver.currentDuty.travelDateTime}
                       </span>
                     </div>
@@ -237,7 +237,7 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
                   <button
                     type="button"
                     onClick={() => handleWhatsApp(driver.phone, driver.name)}
-                    className="flex-1 py-1.5 px-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-bold flex items-center justify-center gap-1 transition-colors"
+                    className="flex-1 py-1.5 px-2 bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container rounded-full text-xs font-bold flex items-center justify-center gap-1 transition-colors"
                   >
                     <span className="material-symbols-outlined text-sm">chat</span>
                     <span>WhatsApp</span>
@@ -246,7 +246,7 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
                   <button
                     type="button"
                     onClick={() => handleCall(driver.phone)}
-                    className="py-1.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold flex items-center justify-center gap-1 transition-colors"
+                    className="py-1.5 px-3 bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface rounded-full text-xs font-bold flex items-center justify-center gap-1 transition-colors"
                     title="Direct Phone Call"
                   >
                     <span className="material-symbols-outlined text-sm">phone</span>
@@ -261,17 +261,17 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
 
       {/* Add Real Chauffeur Modal */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3.5 bg-black/60 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-slate-200">
-            <div className="bg-slate-900 text-white p-4 flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3.5 bg-black/50 backdrop-blur-xs animate-fadeIn">
+          <div className="bg-m3-surface-container-lowest rounded-m3-2xl shadow-m3-3 w-full max-w-md overflow-hidden border border-m3-outline-variant/80">
+            <div className="bg-m3-surface-container-low text-m3-on-surface p-4 flex items-center justify-between border-b border-m3-outline-variant/60">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-blue-400">person_add</span>
+                <span className="material-symbols-outlined text-m3-primary">person_add</span>
                 <h3 className="text-sm font-bold">Add Real Partner Chauffeur</h3>
               </div>
               <button
                 type="button"
                 onClick={() => setIsAddModalOpen(false)}
-                className="text-slate-400 hover:text-white"
+                className="text-m3-on-surface-variant hover:text-m3-on-surface"
               >
                 <span className="material-symbols-outlined text-lg">close</span>
               </button>
@@ -279,36 +279,36 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
 
             <form onSubmit={handleSaveNewDriver} className="p-4 space-y-3 text-xs">
               <div>
-                <label className="block text-[11px] font-semibold text-slate-700 mb-1">Chauffeur Name</label>
+                <label className="block text-[11px] font-semibold text-m3-on-surface mb-1">Chauffeur Name</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Ramesh"
                   value={newDriver.name}
                   onChange={(e) => setNewDriver({ ...newDriver, name: e.target.value })}
-                  className="w-full rounded-xl border border-slate-300 p-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                  className="w-full rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-lowest p-2 text-xs text-m3-on-surface focus:ring-2 focus:ring-m3-primary focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-700 mb-1">WhatsApp / Mobile Number</label>
+                <label className="block text-[11px] font-semibold text-m3-on-surface mb-1">WhatsApp / Mobile Number</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. 98401 23456"
                   value={newDriver.phone}
                   onChange={(e) => setNewDriver({ ...newDriver, phone: e.target.value })}
-                  className="w-full rounded-xl border border-slate-300 p-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-mono"
+                  className="w-full rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-lowest p-2 text-xs text-m3-on-surface focus:ring-2 focus:ring-m3-primary focus:outline-none font-mono"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">Vehicle Class</label>
+                  <label className="block text-[11px] font-semibold text-m3-on-surface mb-1">Vehicle Class</label>
                   <select
                     value={newDriver.category}
                     onChange={(e) => setNewDriver({ ...newDriver, category: e.target.value })}
-                    className="w-full rounded-xl border border-slate-300 p-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white font-semibold"
+                    className="w-full rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-lowest p-2 text-xs text-m3-on-surface focus:ring-2 focus:ring-m3-primary focus:outline-none font-semibold"
                   >
                     <option value="Sedan (Dzire / Etios)">Sedan (Dzire / Etios)</option>
                     <option value="Ertiga (6 Pax)">Ertiga (6 Pax)</option>
@@ -318,29 +318,29 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-semibold text-slate-700 mb-1">Car Plate Number</label>
+                  <label className="block text-[11px] font-semibold text-m3-on-surface mb-1">Car Plate Number</label>
                   <input
                     type="text"
                     required
                     placeholder="e.g. TN 09 CZ 1234"
                     value={newDriver.plate}
                     onChange={(e) => setNewDriver({ ...newDriver, plate: e.target.value })}
-                    className="w-full rounded-xl border border-slate-300 p-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-mono uppercase"
+                    className="w-full rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-lowest p-2 text-xs text-m3-on-surface focus:ring-2 focus:ring-m3-primary focus:outline-none font-mono uppercase"
                   />
                 </div>
               </div>
 
-              <div className="pt-2 flex items-center justify-end gap-2 border-t border-slate-100">
+              <div className="pt-2 flex items-center justify-end gap-2 border-t border-m3-outline-variant/60">
                 <button
                   type="button"
                   onClick={() => setIsAddModalOpen(false)}
-                  className="px-3 py-2 text-slate-600 hover:bg-slate-100 rounded-xl font-bold"
+                  className="px-3.5 py-1.5 text-m3-on-surface-variant hover:bg-m3-surface-container-high rounded-full font-bold"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-sm"
+                  className="px-4 py-1.5 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-full font-bold shadow-m3-1"
                 >
                   Save Chauffeur
                 </button>

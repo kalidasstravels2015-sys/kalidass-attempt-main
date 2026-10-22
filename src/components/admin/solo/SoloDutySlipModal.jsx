@@ -293,26 +293,26 @@ export default function SoloDutySlipModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/70 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[94vh] overflow-y-auto border border-m3-outline-variant text-m3-on-surface">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/50 backdrop-blur-xs animate-fadeIn">
+      <div className="bg-m3-surface-container-lowest rounded-m3-2xl shadow-m3-3 w-full max-w-xl max-h-[94vh] overflow-y-auto border border-m3-outline-variant/80 text-m3-on-surface">
         
         {/* Header */}
-        <div className="bg-gradient-to-r from-m3-inverse-surface via-m3-surface-container-high to-m3-tertiary-container text-white p-4 flex items-center justify-between sticky top-0 z-10 shadow-md">
+        <div className="bg-m3-surface-container-low text-m3-on-surface p-4 flex items-center justify-between sticky top-0 z-10 border-b border-m3-outline-variant/60 shadow-xs">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-m3-tertiary text-xl">receipt_long</span>
+            <span className="material-symbols-outlined text-m3-primary text-xl">receipt_long</span>
             <div>
-              <h2 className="text-sm font-extrabold tracking-wide uppercase">Official Duty Slip & Trip Sheet</h2>
-              <span className="text-[11px] text-m3-inverse-on-surface/80 font-mono">{form.bookingId} • {form.guestName}</span>
+              <h2 className="text-sm font-bold tracking-wide uppercase">Official Duty Slip & Trip Sheet</h2>
+              <span className="text-[11px] text-m3-on-surface-variant font-mono">{form.bookingId} • {form.guestName}</span>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="bg-m3-surface-container-high/80 p-0.5 rounded-lg border border-m3-outline-variant/40 flex text-xs">
+            <div className="bg-m3-surface-container-high p-0.5 rounded-full border border-m3-outline-variant/60 flex text-xs">
               <button
                 type="button"
                 onClick={() => setActiveTab('edit')}
-                className={`px-2.5 py-1 rounded-md font-bold transition-all ${
-                  activeTab === 'edit' ? 'bg-m3-tertiary-container/300 text-m3-on-surface' : 'text-m3-inverse-on-surface/80 hover:text-white'
+                className={`px-3 py-1 rounded-full font-bold transition-all ${
+                  activeTab === 'edit' ? 'bg-m3-primary text-m3-on-primary shadow-xs' : 'text-m3-on-surface-variant hover:text-m3-on-surface'
                 }`}
               >
                 Inputs
@@ -320,8 +320,8 @@ export default function SoloDutySlipModal({
               <button
                 type="button"
                 onClick={() => setActiveTab('preview')}
-                className={`px-2.5 py-1 rounded-md font-bold transition-all ${
-                  activeTab === 'preview' ? 'bg-m3-tertiary-container/300 text-m3-on-surface' : 'text-m3-inverse-on-surface/80 hover:text-white'
+                className={`px-3 py-1 rounded-full font-bold transition-all ${
+                  activeTab === 'preview' ? 'bg-m3-primary text-m3-on-primary shadow-xs' : 'text-m3-on-surface-variant hover:text-m3-on-surface'
                 }`}
               >
                 Voucher Card (Image)
@@ -331,7 +331,7 @@ export default function SoloDutySlipModal({
             <button
               type="button"
               onClick={onClose}
-              className="text-m3-outline-variant hover:text-white p-1 rounded-lg"
+              className="text-m3-on-surface-variant hover:text-m3-on-surface p-1 rounded-full"
             >
               <span className="material-symbols-outlined text-xl">close</span>
             </button>
@@ -342,55 +342,55 @@ export default function SoloDutySlipModal({
           <div className="p-4 sm:p-5 space-y-4 text-xs">
             
             {/* 1. Trip Timing Section */}
-            <div className="p-3 bg-m3-surface-container-low rounded-xl border border-m3-outline-variant">
-              <span className="text-[11px] font-bold text-m3-on-surface-variant uppercase tracking-wide block mb-2 flex items-center gap-1">
-                <span className="material-symbols-outlined text-m3-tertiary text-sm">schedule</span>
+            <div className="p-3 bg-m3-surface-container-low rounded-m3-lg border border-m3-outline-variant/70">
+              <span className="text-[11px] font-bold text-m3-on-surface uppercase tracking-wide block mb-2 flex items-center gap-1">
+                <span className="material-symbols-outlined text-m3-primary text-sm">schedule</span>
                 <span>1. Trip Timings (Departure & Closing)</span>
               </span>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                 <div>
-                  <label className="block text-[10px] font-semibold text-m3-outline mb-0.5">Start Date</label>
+                  <label className="block text-[10px] font-semibold text-m3-on-surface-variant mb-0.5">Start Date</label>
                   <input
                     type="text"
                     value={form.startDate}
                     onChange={(e) => setForm({ ...form, startDate: e.target.value })}
-                    className="w-full text-xs font-semibold rounded-lg border border-m3-outline-variant p-2 bg-white"
+                    className="w-full text-xs font-semibold rounded-m3-md border border-m3-outline-variant p-2 bg-m3-surface-container-lowest text-m3-on-surface"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-semibold text-m3-outline mb-0.5">Start Time</label>
+                  <label className="block text-[10px] font-semibold text-m3-on-surface-variant mb-0.5">Start Time</label>
                   <input
                     type="text"
                     value={form.startTime}
                     onChange={(e) => setForm({ ...form, startTime: e.target.value })}
-                    className="w-full text-xs font-semibold rounded-lg border border-m3-outline-variant p-2 bg-white"
+                    className="w-full text-xs font-semibold rounded-m3-md border border-m3-outline-variant p-2 bg-m3-surface-container-lowest text-m3-on-surface"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-semibold text-m3-outline mb-0.5">End Date</label>
+                  <label className="block text-[10px] font-semibold text-m3-on-surface-variant mb-0.5">End Date</label>
                   <input
                     type="text"
                     value={form.endDate}
                     onChange={(e) => setForm({ ...form, endDate: e.target.value })}
-                    className="w-full text-xs font-semibold rounded-lg border border-m3-outline-variant p-2 bg-white"
+                    className="w-full text-xs font-semibold rounded-m3-md border border-m3-outline-variant p-2 bg-m3-surface-container-lowest text-m3-on-surface"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-semibold text-m3-outline mb-0.5">End Time</label>
+                  <label className="block text-[10px] font-semibold text-m3-on-surface-variant mb-0.5">End Time</label>
                   <input
                     type="text"
                     value={form.endTime}
                     onChange={(e) => setForm({ ...form, endTime: e.target.value })}
-                    className="w-full text-xs font-semibold rounded-lg border border-m3-outline-variant p-2 bg-white"
+                    className="w-full text-xs font-semibold rounded-m3-md border border-m3-outline-variant p-2 bg-m3-surface-container-lowest text-m3-on-surface"
                   />
                 </div>
               </div>
             </div>
 
             {/* 2. Odometer Section */}
-            <div className="p-3 bg-m3-tertiary-container/30/70 rounded-xl border border-m3-tertiary/30">
-              <span className="text-[11px] font-bold text-m3-on-tertiary-container uppercase tracking-wide block mb-2 flex items-center gap-1">
-                <span className="material-symbols-outlined text-m3-tertiary text-sm">speed</span>
+            <div className="p-3 bg-m3-surface-container-low rounded-m3-lg border border-m3-outline-variant/70">
+              <span className="text-[11px] font-bold text-m3-on-surface uppercase tracking-wide block mb-2 flex items-center gap-1">
+                <span className="material-symbols-outlined text-m3-primary text-sm">speed</span>
                 <span>2. Odometer Readings (KM Tracking)</span>
               </span>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-2">
@@ -401,7 +401,7 @@ export default function SoloDutySlipModal({
                     placeholder="e.g. 10450"
                     value={form.startKm}
                     onChange={(e) => setForm({ ...form, startKm: e.target.value })}
-                    className="w-full font-mono font-bold text-xs rounded-lg border border-m3-outline-variant p-2 bg-white"
+                    className="w-full font-mono font-bold text-xs rounded-m3-md border border-m3-outline-variant p-2 bg-m3-surface-container-lowest text-m3-on-surface"
                   />
                 </div>
                 <div>
@@ -411,7 +411,7 @@ export default function SoloDutySlipModal({
                     placeholder="e.g. 10780"
                     value={form.endKm}
                     onChange={(e) => setForm({ ...form, endKm: e.target.value })}
-                    className="w-full font-mono font-bold text-xs rounded-lg border border-m3-outline-variant p-2 bg-white"
+                    className="w-full font-mono font-bold text-xs rounded-m3-md border border-m3-outline-variant p-2 bg-m3-surface-container-lowest text-m3-on-surface"
                   />
                 </div>
                 <div>
@@ -420,7 +420,7 @@ export default function SoloDutySlipModal({
                     type="number"
                     value={form.packageAllowedKm}
                     onChange={(e) => setForm({ ...form, packageAllowedKm: e.target.value })}
-                    className="w-full font-mono text-xs rounded-lg border border-m3-outline-variant p-2 bg-white"
+                    className="w-full font-mono text-xs rounded-m3-md border border-m3-outline-variant p-2 bg-m3-surface-container-lowest text-m3-on-surface"
                   />
                 </div>
                 <div>
@@ -429,64 +429,64 @@ export default function SoloDutySlipModal({
                     type="number"
                     value={form.extraKmRate}
                     onChange={(e) => setForm({ ...form, extraKmRate: e.target.value })}
-                    className="w-full font-mono text-xs rounded-lg border border-m3-outline-variant p-2 bg-white"
+                    className="w-full font-mono text-xs rounded-m3-md border border-m3-outline-variant p-2 bg-m3-surface-container-lowest text-m3-on-surface"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center justify-between text-xs text-m3-on-surface bg-white/90 p-2 rounded-lg border border-m3-tertiary/30/80 font-mono">
+              <div className="flex items-center justify-between text-xs text-m3-on-surface bg-m3-surface-container-lowest p-2 rounded-m3-md border border-m3-outline-variant/60 font-mono">
                 <span>Total KM: <strong>{totalKm} km</strong></span>
-                <span className={extraKm > 0 ? 'text-m3-error font-bold' : 'text-m3-success font-semibold'}>
+                <span className={extraKm > 0 ? 'text-m3-error font-bold' : 'text-m3-primary font-bold'}>
                   Extra: {extraKm} km (+Rs.{extraKmCharge})
                 </span>
               </div>
             </div>
 
             {/* 3. Tolls, Parking & Extras */}
-            <div className="p-3 bg-m3-surface-container-low rounded-xl border border-m3-outline-variant">
-              <span className="text-[11px] font-bold text-m3-on-surface-variant uppercase tracking-wide block mb-2 flex items-center gap-1">
-                <span className="material-symbols-outlined text-m3-tertiary text-sm">local_atm</span>
+            <div className="p-3 bg-m3-surface-container-low rounded-m3-lg border border-m3-outline-variant/70">
+              <span className="text-[11px] font-bold text-m3-on-surface uppercase tracking-wide block mb-2 flex items-center gap-1">
+                <span className="material-symbols-outlined text-m3-primary text-sm">local_atm</span>
                 <span>3. Tolls, Parking & Extras</span>
               </span>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                 <div>
-                  <label className="block text-[10px] font-semibold text-m3-outline mb-0.5">FASTag Tolls (Rs)</label>
+                  <label className="block text-[10px] font-semibold text-m3-on-surface-variant mb-0.5">FASTag Tolls (Rs)</label>
                   <input
                     type="number"
                     placeholder="0"
                     value={form.tollsFastag}
                     onChange={(e) => setForm({ ...form, tollsFastag: e.target.value })}
-                    className="w-full font-mono text-xs rounded-lg border border-m3-outline-variant p-2 bg-white"
+                    className="w-full font-mono text-xs rounded-m3-md border border-m3-outline-variant p-2 bg-m3-surface-container-lowest text-m3-on-surface"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-semibold text-m3-outline mb-0.5">Parking (Rs)</label>
+                  <label className="block text-[10px] font-semibold text-m3-on-surface-variant mb-0.5">Parking (Rs)</label>
                   <input
                     type="number"
                     placeholder="0"
                     value={form.parking}
                     onChange={(e) => setForm({ ...form, parking: e.target.value })}
-                    className="w-full font-mono text-xs rounded-lg border border-m3-outline-variant p-2 bg-white"
+                    className="w-full font-mono text-xs rounded-m3-md border border-m3-outline-variant p-2 bg-m3-surface-container-lowest text-m3-on-surface"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-semibold text-m3-outline mb-0.5">State Permit (Rs)</label>
+                  <label className="block text-[10px] font-semibold text-m3-on-surface-variant mb-0.5">State Permit (Rs)</label>
                   <input
                     type="number"
                     placeholder="0"
                     value={form.statePermit}
                     onChange={(e) => setForm({ ...form, statePermit: e.target.value })}
-                    className="w-full font-mono text-xs rounded-lg border border-m3-outline-variant p-2 bg-white"
+                    className="w-full font-mono text-xs rounded-m3-md border border-m3-outline-variant p-2 bg-m3-surface-container-lowest text-m3-on-surface"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-semibold text-m3-outline mb-0.5">Night Allowance (Rs)</label>
+                  <label className="block text-[10px] font-semibold text-m3-on-surface-variant mb-0.5">Night Allowance (Rs)</label>
                   <input
                     type="number"
                     placeholder="0"
                     value={form.nightAllowance}
                     onChange={(e) => setForm({ ...form, nightAllowance: e.target.value })}
-                    className="w-full font-mono text-xs rounded-lg border border-m3-outline-variant p-2 bg-white"
+                    className="w-full font-mono text-xs rounded-m3-md border border-m3-outline-variant p-2 bg-m3-surface-container-lowest text-m3-on-surface"
                   />
                 </div>
               </div>
@@ -500,7 +500,7 @@ export default function SoloDutySlipModal({
                   type="number"
                   value={form.basePackageFare}
                   onChange={(e) => setForm({ ...form, basePackageFare: e.target.value })}
-                  className="w-full font-mono font-bold text-xs rounded-lg border border-m3-outline-variant p-2 bg-white"
+                  className="w-full font-mono font-bold text-xs rounded-m3-md border border-m3-outline-variant p-2 bg-m3-surface-container-lowest text-m3-on-surface"
                 />
               </div>
               <div>
@@ -509,22 +509,22 @@ export default function SoloDutySlipModal({
                   type="number"
                   value={form.advancePaid}
                   onChange={(e) => setForm({ ...form, advancePaid: e.target.value })}
-                  className="w-full font-mono font-bold text-m3-tertiary text-xs rounded-lg border border-m3-outline-variant p-2 bg-white"
+                  className="w-full font-mono font-bold text-m3-primary text-xs rounded-m3-md border border-m3-outline-variant p-2 bg-m3-surface-container-lowest"
                 />
               </div>
             </div>
 
             {/* Total Balance Card */}
-            <div className="bg-m3-inverse-surface text-white p-3.5 rounded-xl font-mono space-y-1">
-              <div className="flex justify-between text-xs text-m3-inverse-on-surface/80">
+            <div className="bg-m3-surface-container-low text-m3-on-surface p-3.5 rounded-m3-xl font-mono border border-m3-outline-variant/70 space-y-1">
+              <div className="flex justify-between text-xs text-m3-on-surface-variant">
                 <span>Total Trip Gross:</span>
-                <span>Rs. {grossFare.toLocaleString('en-IN')}</span>
+                <span className="font-bold text-m3-on-surface">Rs. {grossFare.toLocaleString('en-IN')}</span>
               </div>
-              <div className="flex justify-between text-xs text-m3-tertiary">
+              <div className="flex justify-between text-xs text-m3-on-surface-variant">
                 <span>Advance Deducted:</span>
-                <span>-Rs. {advance.toLocaleString('en-IN')}</span>
+                <span className="font-bold text-m3-primary">-Rs. {advance.toLocaleString('en-IN')}</span>
               </div>
-              <div className="border-t border-m3-outline-variant/40 pt-1.5 flex justify-between text-sm sm:text-base font-extrabold text-m3-success">
+              <div className="border-t border-m3-outline-variant/50 pt-1.5 flex justify-between text-sm sm:text-base font-bold text-m3-primary">
                 <span>NET BALANCE DUE:</span>
                 <span>Rs. {balanceToCollect.toLocaleString('en-IN')}</span>
               </div>
@@ -535,7 +535,7 @@ export default function SoloDutySlipModal({
               <button
                 type="button"
                 onClick={handleDownloadImageCard}
-                className="py-2.5 px-3 bg-m3-success hover:bg-m3-success text-white rounded-xl font-bold flex items-center justify-center gap-1.5 shadow-sm transition-all"
+                className="py-2.5 px-3 bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container rounded-full font-bold flex items-center justify-center gap-1.5 shadow-xs transition-all"
               >
                 <span className="material-symbols-outlined text-sm">image</span>
                 <span>Save Voucher Image (PNG)</span>
@@ -544,7 +544,7 @@ export default function SoloDutySlipModal({
               <button
                 type="button"
                 onClick={() => setActiveTab('preview')}
-                className="py-2.5 px-3 bg-m3-tertiary-container/300 hover:bg-m3-tertiary text-m3-on-surface rounded-xl font-bold flex items-center justify-center gap-1.5 shadow-sm transition-all"
+                className="py-2.5 px-3 bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface rounded-full font-bold flex items-center justify-center gap-1.5 border border-m3-outline-variant shadow-xs transition-all"
               >
                 <span className="material-symbols-outlined text-sm">visibility</span>
                 <span>Preview Voucher Card</span>
@@ -554,7 +554,7 @@ export default function SoloDutySlipModal({
             <button
               type="button"
               onClick={handleShareMobileWebLink}
-              className="w-full py-2.5 px-3 bg-m3-secondary hover:bg-m3-secondary-container/400 text-white rounded-xl font-bold flex items-center justify-center gap-1.5 shadow-sm transition-all"
+              className="w-full py-2.5 px-3 border border-m3-outline hover:bg-m3-surface-container-high text-m3-on-surface rounded-full font-bold flex items-center justify-center gap-1.5 shadow-xs transition-all"
             >
               <span className="material-symbols-outlined text-sm">link</span>
               <span>Share Mobile Web Trip Sheet (WhatsApp)</span>
@@ -565,7 +565,7 @@ export default function SoloDutySlipModal({
                 type="button"
                 onClick={handleSaveAndComplete}
                 disabled={saving}
-                className="py-2.5 px-3 bg-m3-inverse-surface hover:bg-m3-surface-container-high text-white rounded-xl font-bold flex items-center justify-center gap-1.5 transition-all text-xs"
+                className="py-2.5 px-3 bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface border border-m3-outline-variant rounded-full font-bold flex items-center justify-center gap-1.5 transition-all text-xs"
               >
                 <span className="material-symbols-outlined text-sm">check_circle</span>
                 <span>Finalize & Complete</span>
@@ -575,7 +575,7 @@ export default function SoloDutySlipModal({
                 type="button"
                 onClick={handleFinalizeAndSendReview}
                 disabled={saving}
-                className="py-2.5 px-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl font-bold flex items-center justify-center gap-1.5 transition-all text-xs shadow-md shadow-amber-500/20"
+                className="py-2.5 px-3 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-full font-bold flex items-center justify-center gap-1.5 transition-all text-xs shadow-m3-1"
               >
                 <span className="material-symbols-outlined text-sm">star</span>
                 <span>Finalize & Send 5★ Review</span>
@@ -585,10 +585,10 @@ export default function SoloDutySlipModal({
         ) : (
           /* Live Canvas Voucher Card View */
           <div className="p-4 sm:p-5 space-y-4">
-            <div className="bg-m3-inverse-surface p-2 rounded-2xl shadow-inner border border-m3-outline-variant/40 flex justify-center">
+            <div className="bg-m3-surface-container-low p-2 rounded-m3-xl shadow-inner border border-m3-outline-variant/60 flex justify-center">
               <canvas
                 ref={canvasRef}
-                className="w-full max-w-md h-auto rounded-xl shadow-md border border-m3-outline-variant/40"
+                className="w-full max-w-md h-auto rounded-m3-lg shadow-m3-1 border border-m3-outline-variant/60"
               />
             </div>
 
@@ -596,7 +596,7 @@ export default function SoloDutySlipModal({
               <button
                 type="button"
                 onClick={handleDownloadImageCard}
-                className="py-2.5 px-3 bg-m3-success hover:bg-m3-success text-white rounded-xl font-bold flex items-center justify-center gap-1.5 shadow-sm transition-all text-xs"
+                className="py-2.5 px-3 bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container rounded-full font-bold flex items-center justify-center gap-1.5 shadow-xs transition-all text-xs"
               >
                 <span className="material-symbols-outlined text-sm">share</span>
                 <span>Share / Save Voucher Image</span>
@@ -605,7 +605,7 @@ export default function SoloDutySlipModal({
               <button
                 type="button"
                 onClick={handlePrintSlip}
-                className="py-2.5 px-3 bg-m3-surface-container-high hover:bg-m3-surface-container-high text-white rounded-xl font-bold flex items-center justify-center gap-1.5 transition-all text-xs"
+                className="py-2.5 px-3 bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface border border-m3-outline-variant rounded-full font-bold flex items-center justify-center gap-1.5 transition-all text-xs"
               >
                 <span className="material-symbols-outlined text-sm">print</span>
                 <span>Print / Save as PDF</span>

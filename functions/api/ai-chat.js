@@ -494,7 +494,7 @@ export async function onRequestPost({ request, env }) {
       try {
         if (!lastUserMessage) return;
         const timestamp = new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
-        const sessionId = String(body.sessionId || 'KT-SES-' + Math.floor(1000 + Math.random() * 9000)).replace(/,/g, ' ');
+        const sessionId = String(body.sessionId || 'KT-SES-101').replace(/,/g, ' ');
         const sourcePage = String(body.sourcePage || '/').replace(/,/g, ' ');
 
         const qLow = lastUserMessage.toLowerCase();

@@ -16,7 +16,20 @@ export async function onRequestPost({ request, env }) {
     }
 
     const isEnquiry = data.type === 'enquiry' || data.leadType === 'enquiry';
-    const quoteId = data.quoteId || (data.meta && data.meta.quoteRefId) || (isEnquiry ? '#ENQ-101' : '#QT-101');
+    const defaultPrefix = isEnquiry ? '#ENQ-' : '#QT-';
+    let incomingId = data.quoteId || (data.meta && data.meta.quoteRefId);
+    let quoteId = '';
+    if (incomingId) {
+      const match = String(incomingId).match(/(?:QT|ENQ|KT|CALC|CALL|WA)-?(\d+)/i);
+      const n = match ? parseInt(match[1], 10) : 0;
+      if (n >= 101 && n <= 500) {
+        quoteId = String(incomingId);
+      }
+    }
+    if (!quoteId) {
+      const recentList = typeof getRecentQuotes === 'function' ? getRecentQuotes() : [];
+      quoteId = `${defaultPrefix}${101 + recentList.length}`;
+    }
     const url = new URL(request.url);
     const webhookUrl = url.searchParams.get('webhook') || data.webhookUrl || (env && (env.GOOGLE_SHEET_WEBHOOK_URL || env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL));
 

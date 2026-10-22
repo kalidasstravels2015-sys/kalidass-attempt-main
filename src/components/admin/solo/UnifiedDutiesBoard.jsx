@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { buildMapsBlock } from '../../../utils/whatsapp';
-import { getNextEnquiryId, getOrderedEnquiryId } from '../../../utils/sequenceGenerator';
+import { getNextEnquiryId, getOrderedEnquiryId, getNextBookingId, isSequentialId } from '../../../utils/sequenceGenerator';
 import { validateCustomerContact, extractValidMobile, isPlaceholderCustomerName } from '../../../utils/bookingContactValidator';
 
 /**
@@ -226,7 +226,7 @@ export default function UnifiedDutiesBoard({
     const routeLabel = lead.pickup.includes('+91') ? lead.drop : `${lead.pickup} ➔ ${lead.drop}`;
 
     const confirmed = {
-      bookingId: `#KT-${Date.now().toString().slice(-4)}`,
+      bookingId: (lead.quoteId && isSequentialId(lead.quoteId)) ? lead.quoteId.replace('#ENQ-', '#KT-').replace('#QT-', '#KT-') : getNextBookingId(),
       guestNamePhone: validation.formattedGuestNamePhone,
       travelDateTime: lead.travelDate || 'Tomorrow @ 05:00 AM',
       pickupAddress: routeLabel,
@@ -380,7 +380,7 @@ export default function UnifiedDutiesBoard({
     const driverShare = Math.round(fareNum * 0.82);
 
     const newBooking = {
-      bookingId: `#KT-${Date.now().toString().slice(-4)}`,
+      bookingId: getNextBookingId(),
       guestNamePhone: validation.formattedGuestNamePhone,
       travelDateTime: quickEntry.travelDate || 'Tomorrow @ 05:00 AM',
       pickupAddress: `${quickEntry.pickup.trim() || 'Chennai'} ➔ ${quickEntry.drop.trim() || 'Outstation'}`,

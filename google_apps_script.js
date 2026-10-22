@@ -193,8 +193,21 @@ function doPost(e) {
                      data.type !== 'calculator_activity';
 
     if (isBooking) {
-      // Record or update Confirmed Booking
-      var bookingId = data.bookingId || ('#KT-BK-' + Math.floor(1000 + Math.random() * 9000));
+      // Record or update Confirmed Booking (Strict continuous serial numbering starting from 101)
+      var incomingBookingId = String(data.bookingId || '').trim();
+      var hasSeqBooking = false;
+      var bLast = bookSheet.getLastRow();
+      var bMaxAllowed = (101 - 1) + Math.max(bLast + 50, 100);
+      if (incomingBookingId) {
+        var bNumMatch = incomingBookingId.match(/(?:KT|BK|CAB|MAA|OUT|TPT|PDY|TMP|ACT)-?(\d+)/i);
+        if (bNumMatch) {
+          var bn = parseInt(bNumMatch[1], 10);
+          if (!isNaN(bn) && bn >= 101 && bn <= bMaxAllowed) {
+            hasSeqBooking = true;
+          }
+        }
+      }
+      var bookingId = hasSeqBooking ? incomingBookingId : getNextSequenceId(bookSheet, '#KT-BK-');
       var guestNamePhone = data.guestNamePhone || (data.name ? (data.name + ' (' + (data.phone || '') + ')') : (data.phone || 'Customer'));
       var schedule = data.travelDateTime || data.travelDate || data.pickupDate || 'Tomorrow';
       var route = data.pickupAddress || (data.pickup + ' ➔ ' + (data.drop || 'Outstation'));
@@ -208,7 +221,6 @@ function doPost(e) {
       var notes = data.metadata || data.notes || '';
 
       // Check if booking already exists to update
-      var bLast = bookSheet.getLastRow();
       var foundRow = -1;
       if (bLast > 1) {
         var bIds = bookSheet.getRange(2, 1, bLast - 1, 1).getValues();
@@ -257,28 +269,30 @@ function doPost(e) {
         .setMimeType(ContentService.MimeType.JSON);
 
     } else {
-      // Record Customer Enquiry / Quote (Numbers in order, starting from 101)
+      // Record Customer Enquiry / Quote / Website Calculation (Strict continuous serial numbering starting from 101)
+      var incomingId = String(data.quoteId || data.bookingId || (data.meta && data.meta.quoteRefId) || '').trim();
       var isExplicitEnquiry = data.type === 'enquiry' ||
                               data.leadType === 'enquiry' ||
-                              (data.quoteId && String(data.quoteId).startsWith('#ENQ'));
+                              Boolean(incomingId && (incomingId.indexOf('ENQ') !== -1 || incomingId.indexOf('MAA') !== -1 || incomingId.indexOf('CAB') !== -1 || incomingId.indexOf('TMP') !== -1 || incomingId.indexOf('ACT') !== -1 || incomingId.indexOf('PDY') !== -1 || incomingId.indexOf('TPT') !== -1));
 
       var prefix = isExplicitEnquiry ? '#ENQ-' : '#QT-';
 
-      // Check if incoming quoteId already has an in-order sequential number (>= 101)
-      var incomingId = String(data.quoteId || (data.meta && data.meta.quoteRefId) || '').trim();
+      // Check if incoming quoteId already has a valid continuous sequential number (>= 101)
       var hasSeqNum = false;
+      var eLast = enqSheet.getLastRow();
+      var eMaxAllowed = (101 - 1) + Math.max(eLast + 50, 100);
+
       if (incomingId) {
-        var numMatch = incomingId.match(/(?:QT|ENQ|KT)-?(\d+)/i);
+        var numMatch = incomingId.match(/(?:QT|ENQ|KT|CALC|CALL|WA)[-_/A-Za-z0-9]*[-_]?(\d+)/i) || incomingId.match(/(\d+)/);
         if (numMatch) {
           var n = parseInt(numMatch[1], 10);
-          if (!isNaN(n) && n >= 101 && n < 5000) {
+          if (!isNaN(n) && n >= 101 && n <= eMaxAllowed) {
             hasSeqNum = true;
           }
         }
       }
 
       // Check if enquiry with this quoteId already exists in Enquiries sheet
-      var eLast = enqSheet.getLastRow();
       var foundEnqRow = -1;
       if (eLast > 1 && incomingId) {
         var eIds = enqSheet.getRange(2, 1, eLast - 1, 1).getValues();
@@ -293,6 +307,20 @@ function doPost(e) {
       var quoteId = foundEnqRow > 0 
         ? enqSheet.getRange(foundEnqRow, 1).getValue()
         : (hasSeqNum ? incomingId : getNextSequenceId(enqSheet, prefix));
+
+      var timestamp = data.date || data.timestamp || new Date().toLocaleString('en-IN');
+      var name = data.guestName || data.name || '';
+      var rawPhone = data.phone || data.mobile || '';
+      var cleanPhone = String(rawPhone).replace(/[^0-9]/g, '').slice(-10);
+      var tripType = data.tripType || 'Round Trip';
+      var pickup = data.pickup || 'Chennai';
+      var drop = data.drop || 'Outstation';
+      var vehicle = data.vehicle || 'Swift Dzire';
+      var distance = data.distance || data.distanceKm || 'N/A';
+      var estimate = parseInt(String(data.estimate || data.estimatedFare || data.fare || 0).replace(/[^0-9]/g, ''), 10) || 0;
+      var status = data.status || 'Rate Locked';
+      var source = data.sourcePage || data.calculatorEngine || 'Website Calculator';
+      var meta = typeof data.metadata === 'object' ? JSON.stringify(data.metadata) : (data.metadata || (data.meta ? JSON.stringify(data.meta) : ''));
 
       var eRowData = [
         quoteId,
@@ -334,39 +362,49 @@ function doPost(e) {
 }
 
 /**
- * Helper to compute the next sequential number starting from 101.
- * Ensures Quotations (#QT-101+) and Enquiries (#ENQ-101+) stay strictly in order.
+ * Helper to compute the next continuous sequential number starting from 101.
+ * Ensures Quotations (#QT-101+), Enquiries (#ENQ-101+) and Bookings (#KT-BK-101+) stay strictly continuous.
+ * Ignores any past random numbers.
  */
 function getNextSequenceId(sheet, prefix) {
   var lastRow = sheet.getLastRow();
   var startSeq = 101;
+  prefix = prefix || '#QT-';
   if (lastRow <= 1) {
-    return (prefix || '#QT-') + startSeq;
+    return prefix + startSeq;
   }
 
   var values = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
   var maxNum = startSeq - 1; // 100
-  var threshold = Math.max(500, lastRow + 200);
+  // Threshold strictly ignores legacy random 4-digit numbers (e.g. 5046, 9123, 866992)
+  var threshold = (startSeq - 1) + Math.max(values.length + 30, 100);
+
+  var cleanPrefix = prefix.replace(/[^A-Za-z]/g, '').toUpperCase();
 
   for (var i = 0; i < values.length; i++) {
     var val = String(values[i][0] || '').trim();
-    var match = val.match(/(?:QT|ENQ|KT|CALL|WA)-?(\d+)/i);
-    if (match) {
-      var num = parseInt(match[1], 10);
-      if (!isNaN(num) && num >= startSeq && num <= threshold) {
-        if (num > maxNum) {
-          maxNum = num;
+    if (!val) continue;
+
+    // Filter for matching prefix
+    if (!cleanPrefix || val.toUpperCase().indexOf(cleanPrefix) !== -1 || (cleanPrefix === 'QT' && val.indexOf('CALC') !== -1)) {
+      var match = val.match(/(\d+)/);
+      if (match) {
+        var num = parseInt(match[1], 10);
+        if (!isNaN(num) && num >= startSeq && num <= threshold) {
+          if (num > maxNum) {
+            maxNum = num;
+          }
         }
       }
     }
   }
 
-  // If no sequential numbers exist yet among rows, calculate from row count
+  // If no valid continuous sequence numbers exist yet, count from row count
   if (maxNum === startSeq - 1) {
     maxNum = (startSeq - 1) + (lastRow - 1);
   }
 
-  return (prefix || '#QT-') + (maxNum + 1);
+  return prefix + (maxNum + 1);
 }
 
 /**
@@ -389,6 +427,30 @@ function renumberEnquiriesAndQuotesFrom101() {
     var currentId = String(values[i][0] || '').trim();
     var prefix = currentId.indexOf('ENQ') !== -1 ? '#ENQ-' : '#QT-';
     values[i][0] = prefix + seq;
+    seq++;
+  }
+
+  idsRange.setValues(values);
+}
+
+/**
+ * Optional Maintenance Utility:
+ * Run this function from Apps Script editor to re-number any existing rows in the
+ * 'Bookings' sheet in order starting from 101 (#KT-BK-101, #KT-BK-102...).
+ */
+function renumberBookingsFrom101() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('Bookings');
+  if (!sheet) return;
+  var lastRow = sheet.getLastRow();
+  if (lastRow <= 1) return;
+
+  var idsRange = sheet.getRange(2, 1, lastRow - 1, 1);
+  var values = idsRange.getValues();
+  var seq = 101;
+
+  for (var i = 0; i < values.length; i++) {
+    values[i][0] = '#KT-BK-' + seq;
     seq++;
   }
 

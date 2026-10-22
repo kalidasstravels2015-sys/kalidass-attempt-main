@@ -1409,12 +1409,16 @@ const callUrl = `tel:${phone}`;
       try {
         let sid = sessionStorage.getItem('kt_ai_chat_session_id');
         if (!sid) {
-          sid = 'KT-SES-' + Math.floor(1000 + Math.random() * 9000);
+          let seq = parseInt(localStorage.getItem('kt_last_ai_chat_seq') || '100', 10);
+          if (isNaN(seq) || seq < 100) seq = 100;
+          seq += 1;
+          localStorage.setItem('kt_last_ai_chat_seq', String(seq));
+          sid = 'KT-SES-' + seq;
           sessionStorage.setItem('kt_ai_chat_session_id', sid);
         }
         return sid;
       } catch (_) {
-        return 'KT-SES-TEMP';
+        return 'KT-SES-101';
       }
     }
 

@@ -45,8 +45,21 @@ export const POST: APIRoute = async ({ request }) => {
     // Negative: Driver collected less than their share, office must pay driver
     const netOfficeReceivable = guestCashCollected - (driverAgreedPayout + tollsPaidByDriver);
 
+    const settlePath = path.resolve(process.cwd(), 'Kalidass_Driver_Settlements_2026.json');
+    let settlements: any[] = [];
+    if (fs.existsSync(settlePath)) {
+      try {
+        settlements = JSON.parse(fs.readFileSync(settlePath, 'utf8') || '[]');
+      } catch (e) {
+        settlements = [];
+      }
+    }
+
+    const nextSettleNum = 101 + settlements.length;
+    const settlementId = data.settlementId || `#SETTLE-${nextSettleNum}`;
+
     const record = {
-      settlementId: `SETTLE-${Date.now().toString().slice(-6)}`,
+      settlementId,
       timestamp: new Date().toISOString(),
       bookingId: data.bookingId || '',
       chauffeurName: data.chauffeurName || 'Unassigned',
@@ -59,16 +72,6 @@ export const POST: APIRoute = async ({ request }) => {
       upiRef: data.upiRef || '',
       notes: data.notes || ''
     };
-
-    const settlePath = path.resolve(process.cwd(), 'Kalidass_Driver_Settlements_2026.json');
-    let settlements: any[] = [];
-    if (fs.existsSync(settlePath)) {
-      try {
-        settlements = JSON.parse(fs.readFileSync(settlePath, 'utf8') || '[]');
-      } catch (e) {
-        settlements = [];
-      }
-    }
 
     settlements.unshift(record);
     fs.writeFileSync(settlePath, JSON.stringify(settlements, null, 2), 'utf8');

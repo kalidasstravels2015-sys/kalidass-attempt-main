@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import AiBookingParser from './AiBookingParser';
 import DeskChatRadar from './DeskChatRadar';
 import { buildMapsBlock } from '../../../utils/whatsapp';
-import { getNextEnquiryId } from '../../../utils/sequenceGenerator';
+import { getNextEnquiryId, getNextBookingId, isSequentialId } from '../../../utils/sequenceGenerator';
 import { validateCustomerContact } from '../../../utils/bookingContactValidator';
 
 export default function DeskInquiries({
@@ -120,7 +120,7 @@ export default function DeskInquiries({
     }
 
     const confirmedBooking = {
-      bookingId: `#KT-BOK-${Date.now().toString().slice(-4)}`,
+      bookingId: (advanceModalLead.quoteId && isSequentialId(advanceModalLead.quoteId)) ? advanceModalLead.quoteId.replace('#ENQ-', '#KT-').replace('#QT-', '#KT-') : getNextBookingId(),
       guestNamePhone: validation.formattedGuestNamePhone,
       travelDateTime: `${advanceForm.travelDate} @ ${advanceForm.pickupTime}`,
       pickupAddress: advanceForm.pickupAddress,

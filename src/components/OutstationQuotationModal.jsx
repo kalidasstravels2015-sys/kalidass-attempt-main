@@ -23,6 +23,7 @@ import { buildWhatsAppUrl, buildMapsLinks } from '../utils/whatsapp';
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
 import WhatsAppButton from './react/WhatsAppButton.jsx';
 import { trackEvent, trackCalculatorQuote, markQuoteConverted } from '../lib/analytics';
+import { getNextQuotationId, peekNextQuotationId } from '../utils/sequenceGenerator';
 import tnBusFares from '../data/tnBusFares.json';
 import tripsData from '../data/trips.json';
 import tariffConfig from '../data/tariff_config.json';
@@ -377,7 +378,7 @@ export default function OutstationQuotationModal() {
   const [loading, setLoading] = useState(false);
   const [gettingLocation, setGettingLocation] = useState(false);
   const [errors, setErrors] = useState({});
-  const [bookingId, setBookingId] = useState('#KT-OUT-101');
+  const [bookingId, setBookingId] = useState(() => (typeof window !== 'undefined' ? peekNextQuotationId([], '#KT-OUT-') : '#KT-OUT-101'));
   const [locationPickerOpen, setLocationPickerOpen] = useState(false);
   const [pickerField, setPickerField] = useState('pickup');
 
@@ -689,7 +690,7 @@ export default function OutstationQuotationModal() {
         minKm: data.minKm || 250,
         bata: data.bata || 500
       });
-      setBookingId('#KT-OUT-' + Math.floor(100 + Math.random() * 900));
+      setBookingId(getNextQuotationId([], '#KT-OUT-'));
       const defaultDep = getDefaultDepartureTime();
       if (!date) {
         setDate(defaultDep);

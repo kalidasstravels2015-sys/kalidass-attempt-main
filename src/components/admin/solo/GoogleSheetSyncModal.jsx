@@ -100,7 +100,7 @@ export default function GoogleSheetSyncModal({
         {/* Header */}
         <div className="px-5 py-4 bg-m3-surface-container-low border-b border-m3-outline-variant/60 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-m3-md bg-[#0f9d58] text-white flex items-center justify-center font-bold text-sm">
+            <div className="w-8 h-8 rounded-m3-md bg-m3-primary text-m3-on-primary flex items-center justify-center font-bold text-sm shadow-xs">
               <span className="material-symbols-outlined text-[18px]">table_chart</span>
             </div>
             <div>
@@ -120,15 +120,15 @@ export default function GoogleSheetSyncModal({
         {/* Form Body */}
         <div className="p-4 sm:p-5 overflow-y-auto space-y-4 text-xs sm:text-sm">
           {/* Quick Setup Instructions */}
-          <div className="p-3 rounded-m3-xl bg-emerald-50/80 border border-emerald-200 text-emerald-900 space-y-2">
-            <div className="font-bold text-xs flex items-center gap-1.5 text-emerald-800">
+          <div className="p-3.5 rounded-m3-xl bg-m3-surface-container-low border border-m3-outline-variant/70 text-m3-on-surface space-y-2">
+            <div className="font-bold text-xs flex items-center gap-1.5 text-m3-primary">
               <span className="material-symbols-outlined text-[16px]">help</span>
               <span>How to Link Your Google Sheet (Takes 2 Minutes):</span>
             </div>
-            <ol className="list-decimal list-inside space-y-1 text-[11px] text-emerald-800/90 leading-relaxed font-medium">
-              <li>Create a new sheet on <a href="https://sheets.new" target="_blank" rel="noreferrer" className="underline font-bold">Google Sheets</a>.</li>
+            <ol className="list-decimal list-inside space-y-1 text-[11px] text-m3-on-surface-variant leading-relaxed font-medium">
+              <li>Create a new sheet on <a href="https://sheets.new" target="_blank" rel="noreferrer" className="underline font-bold text-m3-primary">Google Sheets</a>.</li>
               <li>Click <strong>Extensions &gt; Apps Script</strong>.</li>
-              <li>Copy and paste all code from <code className="bg-emerald-100 px-1 py-0.5 rounded font-mono">google_apps_script.js</code> in your project folder.</li>
+              <li>Copy and paste all code from <code className="bg-m3-surface-container-high px-1 py-0.5 rounded font-mono text-m3-on-surface">google_apps_script.js</code> in your project folder.</li>
               <li>Click <strong>Deploy &gt; New deployment &gt; Select "Web app"</strong>.</li>
               <li>Set <em>"Who has access"</em> to <strong>"Anyone"</strong> and click Deploy.</li>
               <li>Copy your <strong>Web App URL</strong> and paste it below!</li>
@@ -145,15 +145,15 @@ export default function GoogleSheetSyncModal({
                 value={webhookUrl}
                 onChange={(e) => setWebhookUrl(e.target.value)}
                 placeholder="https://script.google.com/macros/s/AKfycb.../exec"
-                className="w-full h-11 bg-white border border-m3-outline-variant rounded-m3-md px-3 text-xs font-mono text-m3-on-surface focus:outline-none focus:border-m3-primary focus:ring-1 focus:ring-m3-primary"
+                className="w-full h-11 bg-m3-surface-container-lowest border border-m3-outline-variant rounded-m3-md px-3 text-xs font-mono text-m3-on-surface focus:outline-none focus:border-m3-primary focus:ring-1 focus:ring-m3-primary"
               />
             </div>
 
             {testResult && (
               <div className={`p-3 rounded-m3-lg text-xs font-medium border flex items-start gap-2 ${
                 testResult.success
-                  ? 'bg-emerald-50 border-emerald-300 text-emerald-800'
-                  : 'bg-red-50 border-red-300 text-red-800'
+                  ? 'bg-m3-secondary-container border-m3-outline-variant/60 text-m3-on-secondary-container'
+                  : 'bg-m3-error-container border-m3-outline-variant/60 text-m3-on-error-container'
               }`}>
                 <span className="material-symbols-outlined text-[18px] shrink-0 mt-0.5">
                   {testResult.success ? 'check_circle' : 'error'}
@@ -167,7 +167,7 @@ export default function GoogleSheetSyncModal({
                 <button
                   type="button"
                   onClick={handleDisconnect}
-                  className="px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-50 rounded-m3-md transition-colors"
+                  className="px-3.5 py-1.5 text-xs font-bold text-m3-error hover:bg-m3-error-container/20 rounded-full transition-colors"
                 >
                   Unlink Sheet
                 </button>
@@ -179,14 +179,14 @@ export default function GoogleSheetSyncModal({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2 text-xs font-semibold text-m3-on-surface-variant hover:bg-m3-surface-container rounded-m3-full"
+                  className="px-4 py-2 text-xs font-semibold text-m3-on-surface-variant hover:bg-m3-surface-container-high rounded-full"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isTesting}
-                  className="px-5 py-2.5 bg-[#0f9d58] hover:bg-[#0b8043] disabled:opacity-50 text-white font-bold text-xs rounded-m3-full shadow-m3-1 flex items-center gap-1.5 transition-all"
+                  className="px-5 py-2.5 bg-m3-primary hover:bg-m3-primary/90 disabled:opacity-50 text-m3-on-primary font-bold text-xs rounded-full shadow-m3-1 flex items-center gap-1.5 transition-all"
                 >
                   {isTesting ? (
                     <>

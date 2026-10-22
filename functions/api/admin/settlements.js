@@ -17,7 +17,7 @@ export async function onRequestPost({ request }) {
     } catch (_) {}
 
     const settlement = {
-      settlementId: `#SETTLE-${Date.now().toString().slice(-4)}`,
+      settlementId: body.settlementId || '#SETTLE-101',
       ...body,
       settledAt: new Date().toLocaleString()
     };

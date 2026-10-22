@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { buildMapsBlock } from '../../../utils/whatsapp';
 import { validateCustomerContact, extractValidMobile, isPlaceholderCustomerName } from '../../../utils/bookingContactValidator';
-import { getNextEnquiryId, getOrderedEnquiryId } from '../../../utils/sequenceGenerator';
+import { getNextEnquiryId, getOrderedEnquiryId, getNextBookingId, isSequentialId } from '../../../utils/sequenceGenerator';
 
 /**
  * EnquiriesView - Step 1: Inbound Customer Calls & Quotes
@@ -144,7 +144,7 @@ export default function EnquiriesView({
     const routeLabel = lead.pickup.includes('+91') ? lead.drop : `${lead.pickup} ➔ ${lead.drop}`;
 
     const confirmed = {
-      bookingId: `#KT-${Date.now().toString().slice(-4)}`,
+      bookingId: (lead.quoteId && isSequentialId(lead.quoteId)) ? lead.quoteId.replace('#ENQ-', '#KT-').replace('#QT-', '#KT-') : getNextBookingId(),
       guestNamePhone: validation.formattedGuestNamePhone,
       travelDateTime: lead.travelDate || 'Tomorrow @ 05:00 AM',
       pickupAddress: routeLabel,
@@ -185,7 +185,7 @@ export default function EnquiriesView({
     const routeLabel = convertModalLead.pickup.includes('+91') ? convertModalLead.drop : `${convertModalLead.pickup} ➔ ${convertModalLead.drop}`;
 
     const confirmed = {
-      bookingId: `#KT-${Date.now().toString().slice(-4)}`,
+      bookingId: (convertModalLead.quoteId && isSequentialId(convertModalLead.quoteId)) ? convertModalLead.quoteId.replace('#ENQ-', '#KT-').replace('#QT-', '#KT-') : getNextBookingId(),
       guestNamePhone: validation.formattedGuestNamePhone,
       travelDateTime: convertForm.travelDateTime.trim() || 'Tomorrow @ 05:00 AM',
       pickupAddress: routeLabel,
@@ -264,7 +264,7 @@ export default function EnquiriesView({
     const driverShare = Math.round(fareNum * 0.82);
 
     const newBooking = {
-      bookingId: `#KT-${Date.now().toString().slice(-4)}`,
+      bookingId: getNextBookingId(),
       guestNamePhone: validation.formattedGuestNamePhone,
       travelDateTime: newCall.travelDate || 'Tomorrow @ 05:00 AM',
       pickupAddress: `${newCall.pickup.trim() || 'Chennai'} ➔ ${newCall.drop.trim() || 'Outstation'}`,
@@ -407,7 +407,7 @@ export default function EnquiriesView({
             return (
               <div
                 key={lead.quoteId || idx}
-                className="p-4 rounded-m3-xl bg-m3-surface-container-lowest border border-m3-outline-variant/80 shadow-m3-1 flex flex-col lg:flex-row lg:items-center justify-between gap-3 hover:border-amber-300 transition-all"
+                className="p-4 rounded-m3-xl bg-m3-surface-container-lowest border border-m3-outline-variant/80 shadow-m3-1 flex flex-col lg:flex-row lg:items-center justify-between gap-3 hover:border-m3-outline transition-all"
               >
                 {/* Left: Lead Details */}
                 <div className="space-y-1.5 flex-1 min-w-0">
@@ -416,13 +416,7 @@ export default function EnquiriesView({
                       {getOrderedEnquiryId(lead, idx, filteredLeads.length)}
                     </span>
 
-                    <span className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1 ${
-                      isGoogleAds
-                        ? 'bg-m3-primary-container/80 text-m3-on-primary-container'
-                        : isWhatsApp
-                        ? 'bg-m3-success-container/80 text-m3-on-success-container'
-                        : 'bg-m3-secondary-container/80 text-m3-on-secondary-container'
-                    }`}>
+                    <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1 bg-m3-secondary-container text-m3-on-secondary-container">
                       <span className="material-symbols-outlined text-[13px]">
                         {isGoogleAds ? 'campaign' : isWhatsApp ? 'chat' : 'call'}
                       </span>
@@ -436,7 +430,7 @@ export default function EnquiriesView({
                     {phone && (
                       <a
                         href={`tel:+91${phone}`}
-                        className="text-xs font-mono-code font-bold text-m3-primary hover:underline bg-m3-primary-container/40 px-2 py-0.5 rounded-full flex items-center gap-1"
+                        className="text-xs font-mono-code font-bold text-m3-primary hover:underline bg-m3-secondary-container/60 px-2 py-0.5 rounded-full flex items-center gap-1"
                       >
                         <span className="material-symbols-outlined text-[13px]">call</span>
                         <span>+91 {phone}</span>
@@ -479,7 +473,7 @@ export default function EnquiriesView({
                     onClick={() => handleSendQuoteWA(lead)}
                     className="h-9 px-3.5 bg-m3-surface-container-low hover:bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant rounded-m3-full text-xs font-semibold flex items-center gap-1.5 transition-colors"
                   >
-                    <span className="material-symbols-outlined text-[16px] text-emerald-700">chat</span>
+                    <span className="material-symbols-outlined text-[16px]">chat</span>
                     <span>Send Quote (WA)</span>
                   </button>
 
@@ -489,7 +483,7 @@ export default function EnquiriesView({
                     className="h-9 px-3 bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container rounded-m3-full text-xs font-semibold flex items-center gap-1.5 transition-colors"
                     title="Send follow-up reminder to confirm cab"
                   >
-                    <span className="material-symbols-outlined text-[15px] text-amber-700">ring_volume</span>
+                    <span className="material-symbols-outlined text-[15px]">ring_volume</span>
                     <span className="hidden sm:inline">Follow-up</span>
                   </button>
 
@@ -617,7 +611,7 @@ export default function EnquiriesView({
                     placeholder="e.g. 4500"
                     value={newCall.fare}
                     onChange={(e) => setNewCall({ ...newCall, fare: e.target.value })}
-                    className="w-full p-2.5 rounded-m3-md border border-amber-400 bg-amber-50/50 font-black text-sm text-amber-900"
+                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low font-bold text-xs text-m3-on-surface focus:border-m3-primary focus:bg-m3-surface-container-lowest font-mono-code"
                   />
                 </div>
               </div>
@@ -697,7 +691,7 @@ export default function EnquiriesView({
               {/* Lead Summary */}
               <div className="p-3 bg-m3-surface-container-low rounded-m3-lg border border-m3-outline-variant/70 flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] font-mono-code font-bold bg-blue-100 text-blue-950 px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] font-mono-code font-bold bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant px-2 py-0.5 rounded-full">
                     {convertModalLead.quoteId}
                   </span>
                   <div className="text-xs font-bold text-m3-on-surface mt-1">
@@ -708,7 +702,7 @@ export default function EnquiriesView({
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="text-xs font-black text-blue-700">
+                  <span className="text-xs font-bold text-m3-on-surface font-mono-code">
                     ₹{Number(convertModalLead.estimatedFare || 0).toLocaleString('en-IN')}
                   </span>
                   <span className="block text-[10px] text-m3-on-surface-variant font-semibold">Total Fare</span>
@@ -716,8 +710,8 @@ export default function EnquiriesView({
               </div>
 
               {convertError && (
-                <div className="p-2.5 bg-red-50 border border-red-200 rounded-m3-md text-xs font-bold text-red-800 flex items-center gap-1.5 animate-shake">
-                  <span className="material-symbols-outlined text-[16px] text-red-600">error</span>
+                <div className="p-2.5 bg-m3-error-container text-m3-on-error-container border border-m3-error/20 rounded-m3-md text-xs font-bold flex items-center gap-1.5 animate-shake">
+                  <span className="material-symbols-outlined text-[16px]">error</span>
                   <span>{convertError}</span>
                 </div>
               )}
@@ -725,7 +719,7 @@ export default function EnquiriesView({
               {/* Customer Name */}
               <div>
                 <label className="block text-xs font-bold text-m3-on-surface mb-1 flex items-center justify-between">
-                  <span>Customer Name <span className="text-red-500">*</span></span>
+                  <span>Customer Name <span className="text-m3-error">*</span></span>
                   <span className="text-[10px] text-m3-on-surface-variant font-normal">Real passenger name</span>
                 </label>
                 <input
@@ -738,18 +732,18 @@ export default function EnquiriesView({
                     setConvertForm({ ...convertForm, guestName: e.target.value });
                     if (convertError) setConvertError('');
                   }}
-                  className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-white text-xs font-bold text-m3-on-surface focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low text-xs font-bold text-m3-on-surface focus:outline-none focus:ring-2 focus:ring-m3-primary"
                 />
               </div>
 
               {/* 10-digit Phone */}
               <div>
                 <label className="block text-xs font-bold text-m3-on-surface mb-1 flex items-center justify-between">
-                  <span>Mobile Number <span className="text-red-500">*</span></span>
+                  <span>Mobile Number <span className="text-m3-error">*</span></span>
                   <span className="text-[10px] text-m3-on-surface-variant font-normal">10 digits starting with 6-9</span>
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-2.5 text-xs font-black text-m3-on-surface-variant">+91</span>
+                  <span className="absolute left-3 top-2.5 text-xs font-bold text-m3-on-surface-variant">+91</span>
                   <input
                     type="tel"
                     required
@@ -761,7 +755,7 @@ export default function EnquiriesView({
                       setConvertForm({ ...convertForm, phone: val });
                       if (convertError) setConvertError('');
                     }}
-                    className="w-full pl-12 pr-3 py-2.5 rounded-m3-md border border-m3-outline-variant bg-white text-xs font-bold text-m3-on-surface focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono-code"
+                    className="w-full pl-12 pr-3 py-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low text-xs font-bold text-m3-on-surface focus:outline-none focus:ring-2 focus:ring-m3-primary font-mono-code"
                   />
                 </div>
               </div>

@@ -143,12 +143,25 @@ export default function CareersPortal() {
     }
   };
 
+  const getNextAppId = () => {
+    try {
+      const key = 'kt_last_app_seq';
+      let seq = parseInt(localStorage.getItem(key) || '100', 10);
+      if (isNaN(seq) || seq < 100) seq = 100;
+      seq += 1;
+      localStorage.setItem(key, String(seq));
+      return `KT-APP-${new Date().getFullYear()}-${seq}`;
+    } catch (_) {
+      return `KT-APP-${new Date().getFullYear()}-101`;
+    }
+  };
+
   const generateWhatsAppUrl = (customRefId = null) => {
     const name = formData.fullName.trim() || '[Applicant Name]';
     const phone = formData.phone.trim() || '[Phone Number]';
     const area = formData.livingArea.trim() || '[Area]';
     const roleTitle = selectedJob.title;
-    const refId = customRefId || submittedData?.referenceId || `KT-APP-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const refId = customRefId || submittedData?.referenceId || getNextAppId();
     const fileName = formData.resumeFile ? formData.resumeFile.name : (submittedData?.fileName || 'Attached in chat');
 
     let text = `*Job Application — Kalidass Travels*\n\n`;
@@ -198,7 +211,7 @@ export default function CareersPortal() {
 
     setIsSubmitting(true);
 
-    const refId = `KT-APP-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const refId = getNextAppId();
     const waUrl = generateWhatsAppUrl(refId);
 
     // 1. Backup Lead Logging to Google Sheet (non-blocking)

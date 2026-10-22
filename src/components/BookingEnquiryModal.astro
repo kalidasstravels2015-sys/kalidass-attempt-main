@@ -315,6 +315,22 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
 
 <script is:inline>
   (function () {
+    function getNextContinuousSeq(key, startSeq) {
+      startSeq = startSeq || 101;
+      var current = startSeq - 1;
+      try {
+        var stored = parseInt(localStorage.getItem(key) || '0', 10);
+        if (!isNaN(stored) && stored >= startSeq) {
+          current = stored;
+        }
+      } catch (e) {}
+      var next = current + 1;
+      try {
+        localStorage.setItem(key, String(next));
+      } catch (e) {}
+      return next;
+    }
+
     var quickBookingContext = {
       packageTitle: 'Chennai Airport Taxi',
       vehicleName: 'Swift Dzire / Toyota Etios (Sedan)',
@@ -326,7 +342,7 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
       isAirport: false,
       direction: 'pickup',
       passengers: '1-4 Pax',
-      bookingId: '#KT-MAA-' + Math.floor(100 + Math.random() * 900)
+      bookingId: '#KT-MAA-101'
     };
 
     function formatDate(dateStr) {
@@ -766,6 +782,9 @@ Please confirm driver assignment and cab availability.`;
               mode: 'no-cors',
               headers: { 'Content-Type': 'text/plain' },
               body: JSON.stringify({
+                type: 'enquiry',
+                quoteId: quickBookingContext.bookingId,
+                bookingId: quickBookingContext.bookingId,
                 date: new Date().toLocaleString(),
                 tripType: quickBookingContext.packageTitle,
                 name: name,
@@ -776,7 +795,7 @@ Please confirm driver assignment and cab availability.`;
                 travelDate: formattedPickupDate + ' @ ' + formattedPickupTime,
                 returnDate: formattedReturnDate,
                 days: quickBookingContext.days,
-                bookingId: quickBookingContext.bookingId
+                sourcePage: quickBookingContext.packageTitle || 'Booking Enquiry'
               })
             }).catch(function () {});
           }
@@ -813,7 +832,8 @@ Please confirm driver assignment and cab availability.`;
       else if (slug.indexOf('temple') !== -1) prefix = '#KT-TMP-';
       else if (slug.indexOf('acting') !== -1) prefix = '#KT-ACT-';
 
-      quickBookingContext.bookingId = prefix + Math.floor(100 + Math.random() * 900);
+      var nextSeq = getNextContinuousSeq('kt_last_enquiry_seq', 101);
+      quickBookingContext.bookingId = prefix + nextSeq;
       quickBookingContext.slug = slug;
       if (options.packageTitle) quickBookingContext.packageTitle = options.packageTitle;
       if (options.vehicleName) quickBookingContext.vehicleName = options.vehicleName;

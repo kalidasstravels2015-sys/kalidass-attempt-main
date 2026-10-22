@@ -531,7 +531,7 @@ export default function SoloAdminDashboard() {
     return (
       <div className="min-h-screen bg-m3-surface text-m3-on-surface flex items-center justify-center p-4 font-sans">
         <div className="bg-m3-surface-container-lowest border border-m3-outline-variant rounded-m3-2xl p-6 sm:p-8 max-w-sm w-full shadow-m3-3 text-center animate-fadeIn">
-          <div className="w-14 h-14 mx-auto rounded-m3-lg bg-logo-red text-white font-black text-2xl flex items-center justify-center shadow-m3-2 mb-4">
+          <div className="w-14 h-14 mx-auto rounded-m3-lg bg-m3-primary text-m3-on-primary font-black text-2xl flex items-center justify-center shadow-m3-2 mb-4">
             K
           </div>
           <h2 className="text-m3-title-l font-bold text-m3-on-surface">Kalidass Travels</h2>
@@ -609,7 +609,7 @@ export default function SoloAdminDashboard() {
       label: '3. Completed Trips',
       icon: 'verified',
       badge: completedBookings.length > 0 ? completedBookings.length : null,
-      badgeColor: 'bg-m3-success-container text-m3-on-success-container',
+      badgeColor: 'bg-m3-secondary-container text-m3-on-secondary-container',
       description: 'Closed duties & 5★ reviews'
     },
     {
@@ -638,17 +638,17 @@ export default function SoloAdminDashboard() {
       id: 'SETTINGS',
       label: '7. Google Sheet Sync',
       icon: 'table_chart',
-      badge: isSheetConnected ? 'Synced' : 'Action',
-      badgeColor: isSheetConnected ? 'bg-m3-success-container text-m3-on-success-container' : 'bg-m3-error-container text-m3-on-error-container',
+      badge: isSheetConnected ? 'Synced' : 'Offline',
+      badgeColor: isSheetConnected ? 'bg-m3-secondary-container text-m3-on-secondary-container' : 'bg-m3-error-container text-m3-on-error-container',
       description: '2-way Google Sheets sync'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-m3-surface text-m3-on-surface font-sans flex flex-col md:flex-row">
+    <div className="min-h-screen bg-m3-surface text-m3-on-surface font-sans flex flex-col md:flex-row overflow-x-hidden">
       {/* Toast Notification */}
       {toast && (
-        <div className={`fixed bottom-6 right-4 z-50 px-4 py-3 rounded-m3-md shadow-m3-3 text-m3-label-m font-semibold flex items-center gap-2.5 animate-fadeIn ${
+        <div className={`fixed bottom-20 md:bottom-6 right-4 z-50 px-4 py-3 rounded-m3-md shadow-m3-3 text-m3-label-m font-semibold flex items-center gap-2.5 animate-fadeIn ${
           toast.type === 'error'
             ? 'bg-m3-error text-m3-on-error'
             : 'bg-m3-inverse-surface text-m3-inverse-on-surface'
@@ -670,7 +670,7 @@ export default function SoloAdminDashboard() {
         {/* Brand Header */}
         <div className="p-4 border-b border-m3-outline-variant/60 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-m3-md bg-logo-red text-white font-black text-lg flex items-center justify-center shadow-m3-1 shrink-0">
+            <div className="w-10 h-10 rounded-m3-md bg-m3-primary text-m3-on-primary font-black text-lg flex items-center justify-center shadow-m3-1 shrink-0">
               K
             </div>
             <div>
@@ -730,7 +730,7 @@ export default function SoloAdminDashboard() {
         <div className="p-3 border-t border-m3-outline-variant/60 bg-m3-surface-container-low/50 space-y-2">
           <div className="flex items-center justify-between text-[11px]">
             <span className="flex items-center gap-1.5 font-bold text-m3-on-surface">
-              <span className={`w-2 h-2 rounded-full ${isSheetConnected ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
+              <span className={`w-2 h-2 rounded-full ${isSheetConnected ? 'bg-m3-primary' : 'bg-m3-outline'}`}></span>
               <span>{isSheetConnected ? 'Sheet Connected' : 'Sheet Offline'}</span>
             </span>
             <span className="text-m3-on-surface-variant">{lastSync}</span>
@@ -740,7 +740,7 @@ export default function SoloAdminDashboard() {
             <button
               type="button"
               onClick={refreshData}
-              className="flex-1 h-8 bg-white hover:bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant rounded-full text-[11px] font-bold flex items-center justify-center gap-1 transition-colors"
+              className="flex-1 h-8 bg-m3-surface-container-lowest hover:bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant rounded-full text-[11px] font-bold flex items-center justify-center gap-1 transition-colors"
               title="Refresh data from server & Google Sheets"
             >
               <span className="material-symbols-outlined text-[15px]">refresh</span>
@@ -753,7 +753,7 @@ export default function SoloAdminDashboard() {
                 sessionStorage.removeItem('kt_admin_pin_verified');
                 setIsUnlocked(false);
               }}
-              className="h-8 px-2.5 bg-white hover:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-on-surface border border-m3-outline-variant rounded-full text-[11px] font-bold flex items-center justify-center"
+              className="h-8 px-2.5 bg-m3-surface-container-lowest hover:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-on-surface border border-m3-outline-variant rounded-full text-[11px] font-bold flex items-center justify-center"
               title="Lock Console (PIN: 2015)"
             >
               <span className="material-symbols-outlined text-[15px]">lock</span>
@@ -775,19 +775,19 @@ export default function SoloAdminDashboard() {
       {/* ========================================================= */}
       <div className="flex-1 flex flex-col min-w-0 min-h-screen">
         {/* Top Header Bar */}
-        <header className="sticky top-0 z-20 bg-m3-surface-container-lowest border-b border-m3-outline-variant/60 px-4 h-14 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
+        <header className="sticky top-0 z-20 bg-m3-surface-container-lowest border-b border-m3-outline-variant/60 px-3 sm:px-4 h-14 flex items-center justify-between gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
-              className="md:hidden w-9 h-9 rounded-full hover:bg-m3-surface-container-high flex items-center justify-center text-m3-on-surface"
+              className="md:hidden w-9 h-9 rounded-full hover:bg-m3-surface-container-high flex items-center justify-center text-m3-on-surface shrink-0"
               title="Open Navigation Menu"
             >
               <span className="material-symbols-outlined text-[22px]">menu</span>
             </button>
 
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-black uppercase text-m3-primary tracking-wider">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="text-xs font-black uppercase text-m3-primary tracking-wider truncate">
                 {currentView === 'ENQUIRIES' && 'Step 1: Enquiries'}
                 {currentView === 'ACTIVE_TRIPS' && 'Step 2: Active Trips'}
                 {currentView === 'COMPLETED' && 'Step 3: Completed Trips'}
@@ -799,11 +799,11 @@ export default function SoloAdminDashboard() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <button
               type="button"
               onClick={() => setIsPhoneQuoteModalOpen(true)}
-              className="h-9 px-3.5 bg-m3-surface-container-low hover:bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant rounded-m3-full text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-none"
+              className="h-9 px-2.5 sm:px-3.5 bg-m3-surface-container-low hover:bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant rounded-m3-full text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-none"
               title="Quick Rate Calculator"
             >
               <span className="material-symbols-outlined text-[17px] text-m3-on-surface-variant">calculate</span>
@@ -813,7 +813,7 @@ export default function SoloAdminDashboard() {
             <button
               type="button"
               onClick={() => setIsAiParserModalOpen(true)}
-              className="h-9 px-3.5 bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container rounded-m3-full text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-none"
+              className="h-9 px-2.5 sm:px-3.5 bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container rounded-m3-full text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-none"
               title="Paste incoming WhatsApp quote"
             >
               <span className="material-symbols-outlined text-[17px]">content_paste</span>
@@ -822,8 +822,8 @@ export default function SoloAdminDashboard() {
           </div>
         </header>
 
-        {/* View Switcher: Dedicated Clean Views */}
-        <main className="flex-1 p-3.5 sm:p-5 lg:p-6 overflow-y-auto">
+        {/* View Switcher: Dedicated Clean Views with Bottom Padding for Mobile Nav */}
+        <main className="flex-1 p-3 sm:p-5 lg:p-6 overflow-y-auto pb-20 md:pb-6">
           {/* VIEW 1: ENQUIRIES */}
           {currentView === 'ENQUIRIES' && (
             <EnquiriesView
@@ -927,6 +927,56 @@ export default function SoloAdminDashboard() {
           )}
         </main>
       </div>
+
+      {/* ========================================================= */}
+      {/* MOBILE BOTTOM NAVIGATION BAR (Google Material Design 3)   */}
+      {/* ========================================================= */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 h-16 bg-m3-surface-container-lowest/95 backdrop-blur-md border-t border-m3-outline-variant/60 flex items-center justify-around px-1 shadow-m3-2">
+        {[
+          { id: 'ENQUIRIES', label: 'Enquiries', icon: 'phone_in_talk', badge: validLeads.length > 0 ? validLeads.length : null },
+          { id: 'ACTIVE_TRIPS', label: 'Active', icon: 'local_taxi', badge: activeBookings.length > 0 ? (needDriverCount > 0 ? '!' : activeBookings.length) : null },
+          { id: 'COMPLETED', label: 'Done', icon: 'verified', badge: null },
+          { id: 'CALCULATOR', label: 'Rate Calc', icon: 'calculate', badge: null },
+          { id: 'MENU', label: 'More', icon: 'menu', badge: null }
+        ].map((tab) => {
+          const isActive = currentView === tab.id;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => {
+                if (tab.id === 'MENU') {
+                  setMobileMenuOpen(true);
+                } else {
+                  setCurrentView(tab.id);
+                  setMobileMenuOpen(false);
+                }
+              }}
+              className="flex-1 flex flex-col items-center justify-center py-1 relative touch-manipulation"
+            >
+              <div className={`relative px-4 py-0.5 rounded-full transition-colors flex items-center justify-center ${
+                isActive
+                  ? 'bg-m3-secondary-container text-m3-on-secondary-container'
+                  : 'text-m3-on-surface-variant hover:text-m3-on-surface'
+              }`}>
+                <span className={`material-symbols-outlined text-[20px] ${isActive ? 'text-m3-primary font-variation-fill' : ''}`}>
+                  {tab.icon}
+                </span>
+                {tab.badge && (
+                  <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-m3-primary text-m3-on-primary text-[10px] font-mono-code font-bold flex items-center justify-center">
+                    {tab.badge}
+                  </span>
+                )}
+              </div>
+              <span className={`text-[10px] mt-0.5 transition-colors ${
+                isActive ? 'font-bold text-m3-primary' : 'font-medium text-m3-on-surface-variant'
+              }`}>
+                {tab.label}
+              </span>
+            </button>
+          );
+        })}
+      </nav>
 
       {/* ========================================================= */}
       {/* FOCUSED TASK MODALS (Only When User Explicitly Clicks)     */}

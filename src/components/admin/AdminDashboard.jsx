@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { getNextBookingId, getNextEnquiryId, isSequentialId } from '../../utils/sequenceGenerator';
 
 // Chauffeurs Master Baseline
 const DEFAULT_CHAUFFEURS = [];
@@ -281,7 +282,7 @@ export default function AdminDashboard() {
 
   // Convert Lead to Booking (Optimistic + Persisted)
   const convertLeadToBooking = (lead) => {
-    const bookingId = `#KT-LEAD-${Date.now().toString().slice(-4)}`;
+    const bookingId = (lead.quoteId && isSequentialId(lead.quoteId)) ? lead.quoteId.replace('#ENQ-', '#KT-').replace('#QT-', '#KT-') : getNextBookingId(bookings);
     
     // Dynamically extract phone number from lead
     const combined = `${lead.pickup} ${lead.metadata || ''} ${lead.sourcePage || ''}`;
@@ -357,7 +358,7 @@ export default function AdminDashboard() {
   // Create New Booking Submit (Optimistic + Persisted)
   const handleNewBookingSubmit = (e) => {
     e.preventDefault();
-    const bookingId = `#KT-MANUAL-${Date.now().toString().slice(-4)}`;
+    const bookingId = getNextBookingId(bookings, '#KT-MANUAL-');
     const fare = Number(newBooking.fare) || 650;
     const payout = Math.round(fare * 0.8);
     const margin = fare - payout;
@@ -416,7 +417,7 @@ export default function AdminDashboard() {
     if (!callForm.callerPhone) return;
 
     const isWA = callForm.channel === 'whatsapp';
-    const quoteId = `#LEAD-${Date.now().toString().slice(-4)}`;
+    const quoteId = getNextEnquiryId(leads, '#LEAD-');
     const timestamp = new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
     const pickup = callForm.guestName
       ? `${callForm.guestName} (+91 ${callForm.callerPhone})`
@@ -557,7 +558,7 @@ export default function AdminDashboard() {
   // Submit Duty Slip (Optimistic + Persisted)
   const handleDutySlipSubmit = (e) => {
     e.preventDefault();
-    const dutySlipId = `#DS-${Date.now().toString().slice(-4)}`;
+    const dutySlipId = `#DS-${101 + dutySlips.length}`;
     const newSlip = {
       dutySlipId,
       ...slipForm,
@@ -611,7 +612,7 @@ export default function AdminDashboard() {
   // Submit Khata Settlement (Optimistic + Persisted)
   const handleKhataSubmit = (e) => {
     e.preventDefault();
-    const settlementId = `#SETTLE-${Date.now().toString().slice(-4)}`;
+    const settlementId = `#SETTLE-${101 + settlements.length}`;
     const newSettlement = {
       settlementId,
       ...khataForm,

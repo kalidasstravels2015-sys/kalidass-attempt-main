@@ -95,15 +95,11 @@ export default function SettingsView({
       <div className="bg-m3-surface-container-lowest p-4 rounded-m3-xl border border-m3-outline-variant/70 shadow-m3-1 flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <span className={`w-3 h-3 rounded-full ${isConnected ? 'bg-emerald-600' : 'bg-amber-500'}`}></span>
-            <h2 className="text-m3-title-m font-black text-m3-on-surface">
+            <span className={`w-2.5 h-2.5 rounded-full ${isConnected ? 'bg-m3-primary' : 'bg-m3-on-surface-variant'}`}></span>
+            <h2 className="text-m3-title-m font-bold text-m3-on-surface">
               6. Google Sheet Sync & Settings
             </h2>
-            <span className={`text-xs font-black px-2.5 py-0.5 rounded-full border ${
-              isConnected
-                ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                : 'bg-amber-50 text-amber-800 border-amber-300'
-            }`}>
+            <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-m3-secondary-container text-m3-on-secondary-container border border-m3-outline-variant/50">
               {isConnected ? '🟢 Live Sync Active' : '⚠️ Action Needed'}
             </span>
           </div>
@@ -138,8 +134,8 @@ export default function SettingsView({
           {testResult && (
             <div className={`p-3 rounded-m3-md border text-xs font-semibold flex items-start gap-2 ${
               testResult.success
-                ? 'bg-emerald-50 text-emerald-900 border-emerald-300'
-                : 'bg-red-50 text-red-900 border-red-300'
+                ? 'bg-m3-secondary-container text-m3-on-secondary-container border-m3-outline-variant/60'
+                : 'bg-m3-error-container text-m3-on-error-container border-m3-outline-variant/60'
             }`}>
               <span className="material-symbols-outlined text-[18px] shrink-0">
                 {testResult.success ? 'check_circle' : 'error'}
@@ -152,7 +148,7 @@ export default function SettingsView({
             <button
               type="submit"
               disabled={isTesting}
-              className="h-10 px-5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-full font-bold text-xs flex items-center gap-1.5 shadow-xs transition-colors"
+              className="h-10 px-5 bg-m3-primary hover:bg-m3-primary/90 disabled:opacity-50 text-m3-on-primary rounded-full font-bold text-xs flex items-center gap-1.5 shadow-m3-1 transition-colors"
             >
               {isTesting ? (
                 <>
@@ -171,7 +167,7 @@ export default function SettingsView({
 
         {/* Sync Explanation for Beginners */}
         <div className="pt-4 border-t border-m3-outline-variant/60">
-          <h4 className="text-xs font-black uppercase text-m3-on-surface mb-2">How 2-Way Sync Works:</h4>
+          <h4 className="text-xs font-bold uppercase text-m3-on-surface mb-2">How 2-Way Sync Works:</h4>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
             <div className="p-3 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/50">
               <span className="font-bold text-m3-primary block mb-0.5">1. Website Leads</span>
@@ -180,13 +176,13 @@ export default function SettingsView({
               </p>
             </div>
             <div className="p-3 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/50">
-              <span className="font-bold text-blue-700 block mb-0.5">2. Manual Calls</span>
+              <span className="font-bold text-m3-primary block mb-0.5">2. Manual Calls</span>
               <p className="text-m3-on-surface-variant text-[11px]">
                 When your office staff enters a Google Ads call or direct phone call, it is merged and preserved safely.
               </p>
             </div>
             <div className="p-3 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/50">
-              <span className="font-bold text-emerald-700 block mb-0.5">3. Live Bookings</span>
+              <span className="font-bold text-m3-primary block mb-0.5">3. Live Bookings</span>
               <p className="text-m3-on-surface-variant text-[11px]">
                 Active duties, driver assignments, and duty slips are synced so your data is never lost.
               </p>
@@ -200,8 +196,8 @@ export default function SettingsView({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-blue-600 text-[20px]">trending_up</span>
-              <h3 className="text-sm font-black text-m3-on-surface">
+              <span className="material-symbols-outlined text-m3-primary text-[20px]">trending_up</span>
+              <h3 className="text-sm font-bold text-m3-on-surface">
                 Website Visitor Search Trends ({calculatorQuotes.length} Price Checks)
               </h3>
             </div>
@@ -209,7 +205,7 @@ export default function SettingsView({
               Anonymous visitors comparing rates on your website calculators. Stored in your Google Sheet (<code>Calculator_Quotes</code> tab) for route popularity and ad budget planning.
             </p>
           </div>
-          <span className="text-[11px] font-bold text-blue-800 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-full shrink-0">
+          <span className="text-[11px] font-bold text-m3-on-secondary-container bg-m3-secondary-container border border-m3-outline-variant/50 px-2.5 py-1 rounded-full shrink-0">
             📊 Market Intelligence
           </span>
         </div>
@@ -235,11 +231,11 @@ export default function SettingsView({
                       <span>•</span>
                       <span>{q.tripType || 'Round Trip'}</span>
                       <span>•</span>
-                      <span className="text-m3-outline">{q.timestamp}</span>
+                      <span className="text-m3-on-surface-variant/70">{q.timestamp}</span>
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <span className="font-black text-emerald-700 block">
+                    <span className="font-bold text-m3-primary block">
                       Rs.{Number(q.estimatedFare || 0).toLocaleString('en-IN')}
                     </span>
                     <span className="text-[10px] text-m3-on-surface-variant">Estimated</span>
@@ -247,7 +243,7 @@ export default function SettingsView({
                 </div>
               ))}
             </div>
-            <p className="text-[11px] text-m3-outline text-right">
+            <p className="text-[11px] text-m3-on-surface-variant text-right">
               Showing recent searches • All entries saved in Google Sheet (Calculator_Quotes)
             </p>
           </div>
@@ -255,17 +251,17 @@ export default function SettingsView({
       </div>
 
       {/* Danger Zone: Full System Reset */}
-      <div className="bg-red-50/50 p-4 rounded-m3-xl border border-red-200 flex items-center justify-between gap-3 text-xs">
+      <div className="bg-m3-error-container/40 p-4 rounded-m3-xl border border-m3-outline-variant/70 flex items-center justify-between gap-3 text-xs">
         <div>
-          <span className="font-black text-red-950 block">Clear All Test / Old Data</span>
-          <span className="text-red-900/80 text-[11px]">
+          <span className="font-bold text-m3-on-surface block">Clear All Test / Old Data</span>
+          <span className="text-m3-on-surface-variant text-[11px]">
             Permanently clear all test entries and start with a clean slate for real business operations.
           </span>
         </div>
         <button
           type="button"
           onClick={onOpenResetModal}
-          className="h-9 px-4 bg-red-600 hover:bg-red-700 text-white rounded-full font-bold shrink-0 flex items-center gap-1 shadow-xs transition-colors"
+          className="h-9 px-4 bg-m3-error hover:bg-m3-error/90 text-m3-on-error rounded-full font-bold shrink-0 flex items-center gap-1 shadow-xs transition-colors"
         >
           <span className="material-symbols-outlined text-[16px]">delete_sweep</span>
           <span>Reset to Zero</span>

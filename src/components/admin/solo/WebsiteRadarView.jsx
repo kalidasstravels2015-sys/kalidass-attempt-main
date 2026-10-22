@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { buildMapsBlock } from '../../../utils/whatsapp';
 import { validateCustomerContact } from '../../../utils/bookingContactValidator';
+import { getNextBookingId, isSequentialId } from '../../../utils/sequenceGenerator';
 
 /**
  * WebsiteRadarView - Left Sidebar View
@@ -257,7 +258,7 @@ export default function WebsiteRadarView({
     const adv = Number(convertForm.advancePaid) || 500;
 
     const newBooking = {
-      bookingId: `#KT-${Date.now().toString().slice(-4)}`,
+      bookingId: (convertingQuote.quoteId && isSequentialId(convertingQuote.quoteId)) ? convertingQuote.quoteId.replace('#QT-', '#KT-').replace('#ENQ-', '#KT-') : getNextBookingId(),
       guestNamePhone: validation.formattedGuestNamePhone,
       travelDateTime: convertForm.travelDateTime.trim() || 'Tomorrow @ 05:00 AM',
       pickupAddress: `${convertingQuote.pickup} ➔ ${convertingQuote.drop}`,
@@ -292,11 +293,11 @@ export default function WebsiteRadarView({
               <span className="material-symbols-outlined text-m3-primary">radar</span>
               <span>Website Fare Calculator Radar</span>
             </h2>
-            <span className="text-xs font-semibold bg-m3-primary-container text-m3-on-primary-container px-2.5 py-0.5 rounded-full">
+            <span className="text-xs font-semibold bg-m3-secondary-container text-m3-on-secondary-container px-2.5 py-0.5 rounded-full">
               {validQuotes.length} Live Estimates
             </span>
             {hotQuotesCount > 0 && (
-              <span className="text-xs font-semibold bg-m3-success-container text-m3-on-success-container px-2.5 py-0.5 rounded-full">
+              <span className="text-xs font-semibold bg-m3-secondary-container text-m3-on-secondary-container px-2.5 py-0.5 rounded-full border border-m3-outline-variant/40">
                 🔥 {hotQuotesCount} WhatsApp Clicked
               </span>
             )}
@@ -327,45 +328,45 @@ export default function WebsiteRadarView({
 
       {/* Explainer Drawer (When User clicks "How this works?") */}
       {showGuide && (
-        <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 p-4 rounded-m3-xl shadow-xs space-y-3 animate-fadeIn">
+        <div className="bg-m3-surface-container-low border border-m3-outline-variant/70 p-4 rounded-m3-xl shadow-xs space-y-3 animate-fadeIn">
           <div className="flex items-center justify-between">
-            <h3 className="text-xs font-black uppercase tracking-wider text-emerald-900 flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-[18px]">psychology</span>
+            <h3 className="text-xs font-bold uppercase tracking-wider text-m3-on-surface flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-[18px] text-m3-primary">psychology</span>
               <span>Why am I seeing these calculations & How does this work?</span>
             </h3>
             <button
               type="button"
               onClick={() => setShowGuide(false)}
-              className="text-xs font-bold text-emerald-700 hover:text-emerald-900"
+              className="text-xs font-bold text-m3-on-surface-variant hover:text-m3-on-surface"
             >
               ✕ Close
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs text-slate-700">
-            <div className="bg-white p-3 rounded-lg border border-emerald-100 shadow-xs space-y-1">
-              <div className="font-bold text-emerald-800 flex items-center gap-1">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs text-m3-on-surface">
+            <div className="bg-m3-surface-container-lowest p-3 rounded-m3-lg border border-m3-outline-variant/60 shadow-xs space-y-1">
+              <div className="font-bold text-m3-primary flex items-center gap-1">
                 <span>1. What is this?</span>
               </div>
-              <p className="text-[11px] leading-relaxed text-slate-600">
+              <p className="text-[11px] leading-relaxed text-m3-on-surface-variant">
                 These are <strong>real-time price searches</strong> made by people browsing your website. When a visitor checks fares for Airport Taxi or Outstation Cabs, it streams here instantly.
               </p>
             </div>
 
-            <div className="bg-white p-3 rounded-lg border border-emerald-100 shadow-xs space-y-1">
-              <div className="font-bold text-emerald-800 flex items-center gap-1">
+            <div className="bg-m3-surface-container-lowest p-3 rounded-m3-lg border border-m3-outline-variant/60 shadow-xs space-y-1">
+              <div className="font-bold text-m3-primary flex items-center gap-1">
                 <span>2. How do we get it?</span>
               </div>
-              <p className="text-[11px] leading-relaxed text-slate-600">
+              <p className="text-[11px] leading-relaxed text-m3-on-surface-variant">
                 As soon as a visitor clicks <em>"Calculate Fare"</em>, your website logs the route, car, and tariff to your Google Sheet and sends a live signal to this screen.
               </p>
             </div>
 
-            <div className="bg-white p-3 rounded-lg border border-emerald-100 shadow-xs space-y-1">
-              <div className="font-bold text-emerald-800 flex items-center gap-1">
+            <div className="bg-m3-surface-container-lowest p-3 rounded-m3-lg border border-m3-outline-variant/60 shadow-xs space-y-1">
+              <div className="font-bold text-m3-primary flex items-center gap-1">
                 <span>3. How to use it?</span>
               </div>
-              <p className="text-[11px] leading-relaxed text-slate-600">
+              <p className="text-[11px] leading-relaxed text-m3-on-surface-variant">
                 If the visitor clicks WhatsApp or calls saying <em>"I checked a quote on your website"</em>, you already have their exact fare breakdown ready and can click <strong>+ Convert to Booking</strong>!
               </p>
             </div>
@@ -381,8 +382,8 @@ export default function WebsiteRadarView({
             onClick={() => setViewTab('FEED')}
             className={`px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all ${
               viewTab === 'FEED'
-                ? 'bg-slate-900 text-white shadow-xs'
-                : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+                ? 'bg-m3-primary text-m3-on-primary shadow-xs'
+                : 'bg-m3-surface-container-lowest text-m3-on-surface-variant hover:bg-m3-surface-container-high border border-m3-outline-variant'
             }`}
           >
             <span className="material-symbols-outlined text-[16px]">stream</span>
@@ -394,14 +395,14 @@ export default function WebsiteRadarView({
             onClick={() => setViewTab('INTELLIGENCE')}
             className={`px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all ${
               viewTab === 'INTELLIGENCE'
-                ? 'bg-emerald-700 text-white shadow-xs'
-                : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-300'
+                ? 'bg-m3-primary text-m3-on-primary shadow-xs'
+                : 'bg-m3-surface-container-lowest text-m3-on-surface-variant hover:bg-m3-surface-container-high border border-m3-outline-variant'
             }`}
           >
             <span className="material-symbols-outlined text-[16px]">insights</span>
             <span>📊 Route Demand & Google Ads</span>
             {routeStats.length > 0 && (
-              <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-emerald-200 text-emerald-900 font-mono-code font-black">
+              <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-m3-secondary-container text-m3-on-secondary-container font-mono-code font-bold">
                 {routeStats.length} routes
               </span>
             )}
@@ -414,10 +415,10 @@ export default function WebsiteRadarView({
             <button
               type="button"
               onClick={handleCopyAllKeywords}
-              className="h-8 px-3 rounded-full text-xs font-bold bg-blue-50 hover:bg-blue-100 text-blue-900 border border-blue-200 flex items-center gap-1 shadow-xs transition-colors"
+              className="h-8 px-3 rounded-full text-xs font-bold bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container flex items-center gap-1 shadow-xs transition-colors"
               title="Copy all recommended keywords for Google Ads"
             >
-              <span className="material-symbols-outlined text-[15px] text-blue-700">content_copy</span>
+              <span className="material-symbols-outlined text-[15px]">content_copy</span>
               <span>Copy All Ad Keywords</span>
             </button>
           )}
@@ -426,10 +427,10 @@ export default function WebsiteRadarView({
             <button
               type="button"
               onClick={handleExportCSV}
-              className="h-8 px-3 rounded-full text-xs font-bold bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 flex items-center gap-1 shadow-xs transition-colors"
+              className="h-8 px-3 rounded-full text-xs font-bold bg-m3-surface-container-lowest hover:bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant flex items-center gap-1 shadow-xs transition-colors"
               title="Download calculation searches as CSV"
             >
-              <span className="material-symbols-outlined text-[15px] text-slate-500">download</span>
+              <span className="material-symbols-outlined text-[15px] text-m3-on-surface-variant">download</span>
               <span className="hidden sm:inline">Export CSV</span>
             </button>
           )}
@@ -441,47 +442,47 @@ export default function WebsiteRadarView({
         <div className="space-y-4 animate-fadeIn">
           {/* KPI Summary Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-            <div className="bg-white p-3.5 rounded-m3-lg border border-slate-200 shadow-xs">
-              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Price Searches</span>
-              <span className="text-xl font-black text-slate-900">{validQuotes.length}</span>
-              <span className="text-[10px] text-slate-400 block mt-0.5">Website visitors</span>
+            <div className="bg-m3-surface-container-lowest p-3.5 rounded-m3-lg border border-m3-outline-variant/70 shadow-xs">
+              <span className="text-[11px] font-semibold text-m3-on-surface-variant uppercase tracking-wider block">Price Searches</span>
+              <span className="text-xl font-bold text-m3-on-surface">{validQuotes.length}</span>
+              <span className="text-[10px] text-m3-on-surface-variant block mt-0.5">Website visitors</span>
             </div>
 
-            <div className="bg-white p-3.5 rounded-m3-lg border border-slate-200 shadow-xs">
-              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Unique Routes</span>
-              <span className="text-xl font-black text-emerald-700">{routeStats.length}</span>
-              <span className="text-[10px] text-slate-400 block mt-0.5">Destinations compared</span>
+            <div className="bg-m3-surface-container-lowest p-3.5 rounded-m3-lg border border-m3-outline-variant/70 shadow-xs">
+              <span className="text-[11px] font-semibold text-m3-on-surface-variant uppercase tracking-wider block">Unique Routes</span>
+              <span className="text-xl font-bold text-m3-primary">{routeStats.length}</span>
+              <span className="text-[10px] text-m3-on-surface-variant block mt-0.5">Destinations compared</span>
             </div>
 
-            <div className="bg-white p-3.5 rounded-m3-lg border border-slate-200 shadow-xs">
-              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Average Quoted Rate</span>
-              <span className="text-xl font-black text-blue-700">₹{avgMarketFare.toLocaleString('en-IN')}</span>
-              <span className="text-[10px] text-slate-400 block mt-0.5">Across all engines</span>
+            <div className="bg-m3-surface-container-lowest p-3.5 rounded-m3-lg border border-m3-outline-variant/70 shadow-xs">
+              <span className="text-[11px] font-semibold text-m3-on-surface-variant uppercase tracking-wider block">Average Quoted Rate</span>
+              <span className="text-xl font-bold text-m3-primary">₹{avgMarketFare.toLocaleString('en-IN')}</span>
+              <span className="text-[10px] text-m3-on-surface-variant block mt-0.5">Across all engines</span>
             </div>
 
-            <div className="bg-white p-3.5 rounded-m3-lg border border-slate-200 shadow-xs">
-              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">WhatsApp Lead Rate</span>
-              <span className="text-xl font-black text-amber-700">
+            <div className="bg-m3-surface-container-lowest p-3.5 rounded-m3-lg border border-m3-outline-variant/70 shadow-xs">
+              <span className="text-[11px] font-semibold text-m3-on-surface-variant uppercase tracking-wider block">WhatsApp Lead Rate</span>
+              <span className="text-xl font-bold text-m3-on-surface">
                 {validQuotes.length ? Math.round((hotQuotesCount / validQuotes.length) * 100) : 0}%
               </span>
-              <span className="text-[10px] text-slate-400 block mt-0.5">{hotQuotesCount} clicked WA</span>
+              <span className="text-[10px] text-m3-on-surface-variant block mt-0.5">{hotQuotesCount} clicked WA</span>
             </div>
           </div>
 
           {/* Google Ads Strategy Guide Callout */}
-          <div className="bg-blue-50/70 border border-blue-200 p-4 rounded-m3-xl text-xs space-y-2">
-            <div className="flex items-center gap-1.5 font-bold text-blue-900">
-              <span className="material-symbols-outlined text-[18px] text-blue-700">campaign</span>
+          <div className="bg-m3-surface-container-low border border-m3-outline-variant/70 p-4 rounded-m3-xl text-xs space-y-2">
+            <div className="flex items-center gap-1.5 font-bold text-m3-on-surface">
+              <span className="material-symbols-outlined text-[18px] text-m3-primary">campaign</span>
               <span>How to Run Google Ads on Top Demanded Routes</span>
             </div>
-            <p className="text-[11px] text-blue-800 leading-relaxed">
+            <p className="text-[11px] text-m3-on-surface-variant leading-relaxed">
               Below are your website visitors' most-searched routes. Instead of bidding on generic keywords, click <strong>"Copy Ad Keywords"</strong> for any route and paste them into your <strong>Google Ads Search Campaign</strong> targeting Chennai & Tamil Nadu with a landing page link to your fare calculator!
             </p>
           </div>
 
           {/* Routes Demand & Keyword Table */}
           {routeStats.length === 0 ? (
-            <div className="p-8 text-center bg-white rounded-m3-xl border border-slate-200 text-xs text-slate-500">
+            <div className="p-8 text-center bg-m3-surface-container-lowest rounded-m3-xl border border-m3-outline-variant/70 text-xs text-m3-on-surface-variant">
               No routes logged yet. As soon as visitors calculate fares, they will be analyzed here.
             </div>
           ) : (
@@ -489,34 +490,34 @@ export default function WebsiteRadarView({
               {routeStats.map((stat, idx) => (
                 <div
                   key={stat.routeKey}
-                  className="bg-white p-4 rounded-m3-xl border border-slate-200/90 shadow-xs space-y-3 hover:border-emerald-300 transition-all"
+                  className="bg-m3-surface-container-lowest p-4 rounded-m3-xl border border-m3-outline-variant/70 shadow-xs space-y-3 hover:border-m3-outline transition-all"
                 >
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-slate-100">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-m3-outline-variant/50">
                     <div className="flex items-center gap-2">
-                      <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 font-mono-code font-black text-xs flex items-center justify-center shrink-0">
+                      <span className="w-6 h-6 rounded-full bg-m3-secondary-container text-m3-on-secondary-container font-mono-code font-bold text-xs flex items-center justify-center shrink-0">
                         #{idx + 1}
                       </span>
                       <div>
-                        <h4 className="text-sm font-black text-slate-900 flex items-center gap-1">
+                        <h4 className="text-sm font-bold text-m3-on-surface flex items-center gap-1">
                           <span>{stat.from}</span>
-                          <span className="text-emerald-600">➔</span>
+                          <span className="text-m3-primary">➔</span>
                           <span>{stat.to}</span>
                         </h4>
-                        <span className="text-[11px] text-slate-500">
-                          {stat.count} {stat.count === 1 ? 'visitor price check' : 'visitor price checks'} • Top vehicle: <strong>{stat.topVehicle}</strong>
+                        <span className="text-[11px] text-m3-on-surface-variant">
+                          {stat.count} {stat.count === 1 ? 'visitor price check' : 'visitor price checks'} • Top vehicle: <strong className="text-m3-on-surface">{stat.topVehicle}</strong>
                         </span>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-2 self-start sm:self-auto">
                       <div className="text-right mr-1">
-                        <span className="text-sm font-black text-emerald-800 block">₹{stat.avgFare.toLocaleString('en-IN')}</span>
-                        <span className="text-[10px] text-slate-400">Avg Quoted Rate</span>
+                        <span className="text-sm font-bold text-m3-primary block">₹{stat.avgFare.toLocaleString('en-IN')}</span>
+                        <span className="text-[10px] text-m3-on-surface-variant">Avg Quoted Rate</span>
                       </div>
                       <button
                         type="button"
                         onClick={() => handleCopyKeywords(stat.keywords, `${stat.from} to ${stat.to}`)}
-                        className="h-8 px-3 rounded-full text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-1 shadow-xs transition-colors"
+                        className="h-8 px-3 rounded-full text-xs font-bold bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary flex items-center gap-1 shadow-xs transition-colors"
                         title="Copy keywords for Google Ads"
                       >
                         <span className="material-symbols-outlined text-[15px]">content_copy</span>
@@ -527,14 +528,14 @@ export default function WebsiteRadarView({
 
                   {/* Recommended Google Ads Keywords List */}
                   <div>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
+                    <span className="text-[10px] font-bold text-m3-on-surface-variant uppercase tracking-wider block mb-1.5">
                       Ready-to-use Google Ads Target Keywords (Exact & Phrase Match):
                     </span>
                     <div className="flex flex-wrap items-center gap-1.5">
                       {stat.keywords.map((kw, kIdx) => (
                         <span
                           key={kIdx}
-                          className="bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-800 text-[11px] font-mono-code px-2.5 py-1 rounded-md cursor-pointer transition-colors"
+                          className="bg-m3-surface-container-low hover:bg-m3-surface-container-high border border-m3-outline-variant/60 text-m3-on-surface text-[11px] font-mono-code px-2.5 py-1 rounded-m3-sm cursor-pointer transition-colors"
                           onClick={() => handleCopyKeywords([kw], kw)}
                           title="Click to copy single keyword"
                         >
@@ -589,7 +590,7 @@ export default function WebsiteRadarView({
                   key={f.id}
                   type="button"
                   onClick={() => setEngineFilter(f.id)}
-                  className={`h-8 px-3 rounded-m3-sm text-xs font-semibold transition-colors ${
+                  className={`h-8 px-3 rounded-full text-xs font-semibold transition-colors ${
                     engineFilter === f.id
                       ? 'bg-m3-secondary-container text-m3-on-secondary-container border-0'
                       : 'bg-m3-surface-container-lowest text-m3-on-surface-variant border border-m3-outline-variant hover:bg-m3-surface-container-high'
@@ -604,7 +605,7 @@ export default function WebsiteRadarView({
           {/* Quotes Cards Feed */}
           {filteredQuotes.length === 0 ? (
             <div className="p-10 text-center bg-m3-surface-container-lowest rounded-m3-xl border border-m3-outline-variant/70 space-y-3">
-              <div className="w-14 h-14 mx-auto rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center">
+              <div className="w-14 h-14 mx-auto rounded-full bg-m3-secondary-container text-m3-on-secondary-container flex items-center justify-center">
                 <span className="material-symbols-outlined text-3xl">radar</span>
               </div>
               <h3 className="text-sm font-bold text-m3-on-surface">No Website Calculations Found</h3>
@@ -625,8 +626,8 @@ export default function WebsiteRadarView({
                     key={q.quoteId || idx}
                     className={`p-4 rounded-m3-xl border transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-3 shadow-xs ${
                       isWhatsAppClicked
-                        ? 'bg-emerald-50/50 border-emerald-300 ring-1 ring-emerald-300/60'
-                        : 'bg-m3-surface-container-lowest border-m3-outline-variant/80 hover:border-emerald-300'
+                        ? 'bg-m3-surface-container-low border-m3-outline ring-1 ring-m3-outline/40'
+                        : 'bg-m3-surface-container-lowest border-m3-outline-variant/80 hover:border-m3-outline'
                     }`}
                   >
                     {/* Left: Quote Details */}
@@ -634,13 +635,13 @@ export default function WebsiteRadarView({
                       <div className="flex flex-wrap items-center gap-2">
                         {/* Status Pill */}
                         {isWhatsAppClicked ? (
-                          <span className="text-[11px] font-extrabold bg-green-100 text-green-900 border border-green-300 px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
-                            <span className="material-symbols-outlined text-[13px] text-green-700">chat</span>
+                          <span className="text-[11px] font-bold bg-m3-secondary-container text-m3-on-secondary-container border border-m3-outline-variant/40 px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
+                            <span className="material-symbols-outlined text-[13px] text-m3-primary">chat</span>
                             <span>🔥 WhatsApp Clicked (Hot Lead)</span>
                           </span>
                         ) : (
-                          <span className="text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                            <span className="material-symbols-outlined text-[13px] text-emerald-600">visibility</span>
+                          <span className="text-[11px] font-semibold bg-m3-surface-container-high text-m3-on-surface-variant border border-m3-outline-variant/60 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                            <span className="material-symbols-outlined text-[13px]">visibility</span>
                             <span>Browsed on Website</span>
                           </span>
                         )}
@@ -652,30 +653,30 @@ export default function WebsiteRadarView({
 
                         {/* Quote ID */}
                         {q.quoteId && (
-                          <span className="text-[11px] font-mono-code font-bold bg-white text-m3-on-surface-variant border border-m3-outline-variant px-2 py-0.5 rounded-full">
+                          <span className="text-[11px] font-mono-code font-bold bg-m3-surface-container-lowest text-m3-on-surface-variant border border-m3-outline-variant px-2 py-0.5 rounded-full">
                             {q.quoteId}
                           </span>
                         )}
 
                         {/* Timestamp */}
-                        <span className="text-[11px] text-m3-outline ml-auto">
+                        <span className="text-[11px] text-m3-on-surface-variant ml-auto">
                           🕒 {q.timestamp}
                         </span>
                       </div>
 
                       {/* Route */}
-                      <div className="text-sm font-black text-m3-on-surface truncate flex items-center gap-1.5">
-                        <span className="material-symbols-outlined text-emerald-700 text-[18px]">near_me</span>
+                      <div className="text-sm font-bold text-m3-on-surface truncate flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-m3-primary text-[18px]">near_me</span>
                         <span>{q.pickup || 'Chennai'} ➔ {q.drop || 'Destination'}</span>
                       </div>
 
                       {/* Vehicle, Distance, Badges */}
                       <div className="text-xs text-m3-on-surface-variant flex flex-wrap items-center gap-1.5 font-medium">
-                        <span className="bg-slate-100 text-slate-800 font-bold px-2 py-0.5 rounded-full">
+                        <span className="bg-m3-surface-container-high text-m3-on-surface font-semibold px-2 py-0.5 rounded-full">
                           🚗 {q.vehicle || 'Vehicle'}
                         </span>
                         <span>•</span>
-                        <span className="bg-blue-50 text-blue-800 font-semibold px-2 py-0.5 rounded-full">
+                        <span className="bg-m3-surface-container-low text-m3-on-surface font-medium px-2 py-0.5 rounded-full">
                           {q.tripType || 'One Way'}
                         </span>
 
@@ -683,14 +684,14 @@ export default function WebsiteRadarView({
                         {badges.map((badge, bIdx) => (
                           <span
                             key={bIdx}
-                            className="bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full text-[11px] font-semibold"
+                            className="bg-m3-surface-container-low text-m3-on-surface border border-m3-outline-variant/60 px-2 py-0.5 rounded-full text-[11px] font-medium"
                           >
                             {badge}
                           </span>
                         ))}
 
                         {q.sourcePage && (
-                          <span className="text-[11px] text-slate-400 font-mono-code ml-auto">
+                          <span className="text-[11px] text-m3-on-surface-variant font-mono-code ml-auto">
                             via {q.sourcePage.replace(/\/$/, '').split('/').pop() || q.sourcePage}
                           </span>
                         )}
@@ -700,10 +701,10 @@ export default function WebsiteRadarView({
                     {/* Right: Price & Quick Action */}
                     <div className="flex flex-wrap items-center gap-2 shrink-0 pt-2 lg:pt-0 border-t lg:border-t-0 border-m3-outline-variant/50">
                       <div className="text-left lg:text-right mr-1">
-                        <span className="text-base font-black text-emerald-800 block">
+                        <span className="text-base font-bold text-m3-primary block">
                           Rs.{Number(q.estimatedFare || 0).toLocaleString('en-IN')}
                         </span>
-                        <span className="text-[10px] text-m3-on-surface-variant uppercase tracking-wider font-bold">
+                        <span className="text-[10px] text-m3-on-surface-variant uppercase tracking-wider font-semibold">
                           Customer Estimate
                         </span>
                       </div>
@@ -711,17 +712,17 @@ export default function WebsiteRadarView({
                       <button
                         type="button"
                         onClick={() => handleSendQuoteWA(q)}
-                        className="h-9 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300 rounded-full text-xs font-bold flex items-center gap-1 transition-colors"
+                        className="h-9 px-3 bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container rounded-full text-xs font-bold flex items-center gap-1 transition-colors"
                         title="Send quote format on WhatsApp"
                       >
-                        <span className="material-symbols-outlined text-[15px] text-emerald-700">send</span>
+                        <span className="material-symbols-outlined text-[15px]">send</span>
                         <span>WA Quote</span>
                       </button>
 
                       <button
                         type="button"
                         onClick={() => handleOpenConvertModal(q)}
-                        className="h-9 px-3.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-xs font-bold flex items-center gap-1 shadow-xs transition-all"
+                        className="h-9 px-3.5 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-full text-xs font-bold flex items-center gap-1 shadow-m3-1 transition-all"
                         title="Customer called to book! Enter customer name & phone to move to Step 2: Active Trips"
                       >
                         <span className="material-symbols-outlined text-[15px]">verified</span>
@@ -738,22 +739,22 @@ export default function WebsiteRadarView({
 
       {/* Modal: Convert Enquiry to Active Trip (Requires Customer Name & Mobile) */}
       {convertingQuote && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-m3-surface-container-lowest border border-m3-outline-variant rounded-m3-2xl shadow-m3-4 w-full max-w-lg max-h-[92vh] overflow-hidden flex flex-col">
-            <div className="p-4 border-b border-m3-outline-variant bg-emerald-50/70 flex items-center justify-between">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/50 backdrop-blur-xs animate-fadeIn">
+          <div className="bg-m3-surface-container-lowest border border-m3-outline-variant/80 rounded-m3-2xl shadow-m3-3 w-full max-w-lg max-h-[92vh] overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-m3-outline-variant/60 bg-m3-surface-container-low flex items-center justify-between text-m3-on-surface">
               <div className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center">
-                  <span className="material-symbols-outlined text-[20px]">verified</span>
+                <div className="w-8 h-8 rounded-full bg-m3-primary text-m3-on-primary flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[18px]">verified</span>
                 </div>
                 <div>
-                  <h3 className="text-sm font-black text-emerald-950">Convert Enquiry to Active Trip</h3>
-                  <p className="text-xs text-emerald-900/80">Customer name & 10-digit mobile are required for driver dispatch</p>
+                  <h3 className="text-sm font-bold text-m3-on-surface">Convert Enquiry to Active Trip</h3>
+                  <p className="text-xs text-m3-on-surface-variant">Customer name & 10-digit mobile are required for driver dispatch</p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setConvertingQuote(null)}
-                className="w-8 h-8 rounded-full hover:bg-emerald-200/50 flex items-center justify-center text-emerald-950 font-bold"
+                className="w-8 h-8 rounded-full hover:bg-m3-surface-container-high flex items-center justify-center text-m3-on-surface-variant font-bold"
               >
                 ✕
               </button>
@@ -771,16 +772,16 @@ export default function WebsiteRadarView({
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="text-xs font-black text-emerald-700">
+                  <span className="text-xs font-bold text-m3-primary">
                     ₹{Number(convertingQuote.estimatedFare || 0).toLocaleString('en-IN')}
                   </span>
-                  <span className="block text-[10px] text-m3-on-surface-variant font-semibold">Total Fare</span>
+                  <span className="block text-[10px] text-m3-on-surface-variant font-medium">Total Fare</span>
                 </div>
               </div>
 
               {formError && (
-                <div className="p-2.5 bg-red-50 border border-red-200 rounded-m3-md text-xs font-bold text-red-800 flex items-center gap-1.5 animate-shake">
-                  <span className="material-symbols-outlined text-[16px] text-red-600">error</span>
+                <div className="p-2.5 bg-m3-error-container text-m3-on-error-container rounded-m3-md text-xs font-bold flex items-center gap-1.5 animate-shake">
+                  <span className="material-symbols-outlined text-[16px]">error</span>
                   <span>{formError}</span>
                 </div>
               )}
@@ -788,7 +789,7 @@ export default function WebsiteRadarView({
               {/* Required: Passenger Name */}
               <div>
                 <label className="block text-xs font-bold text-m3-on-surface mb-1 flex items-center justify-between">
-                  <span>Customer / Passenger Name <span className="text-red-500">*</span></span>
+                  <span>Customer / Passenger Name <span className="text-m3-error">*</span></span>
                   <span className="text-[10px] text-m3-on-surface-variant font-normal">Cannot be blank or generic</span>
                 </label>
                 <input
@@ -801,18 +802,18 @@ export default function WebsiteRadarView({
                     setConvertForm({ ...convertForm, guestName: e.target.value });
                     if (formError) setFormError('');
                   }}
-                  className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-white text-xs font-bold text-m3-on-surface focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-lowest text-xs font-bold text-m3-on-surface focus:outline-none focus:ring-2 focus:ring-m3-primary"
                 />
               </div>
 
               {/* Required: 10-Digit Mobile Number */}
               <div>
                 <label className="block text-xs font-bold text-m3-on-surface mb-1 flex items-center justify-between">
-                  <span>Passenger Mobile Number <span className="text-red-500">*</span></span>
+                  <span>Passenger Mobile Number <span className="text-m3-error">*</span></span>
                   <span className="text-[10px] text-m3-on-surface-variant font-normal">10 digits starting with 6-9</span>
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-2.5 text-xs font-black text-m3-on-surface-variant">+91</span>
+                  <span className="absolute left-3 top-2.5 text-xs font-bold text-m3-on-surface-variant">+91</span>
                   <input
                     type="tel"
                     required
@@ -824,7 +825,7 @@ export default function WebsiteRadarView({
                       setConvertForm({ ...convertForm, phone: val });
                       if (formError) setFormError('');
                     }}
-                    className="w-full pl-12 pr-3 py-2.5 rounded-m3-md border border-m3-outline-variant bg-white text-xs font-bold text-m3-on-surface focus:outline-none focus:ring-2 focus:ring-emerald-500 font-mono-code"
+                    className="w-full pl-12 pr-3 py-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-lowest text-xs font-bold text-m3-on-surface focus:outline-none focus:ring-2 focus:ring-m3-primary font-mono-code"
                   />
                 </div>
               </div>
@@ -839,7 +840,7 @@ export default function WebsiteRadarView({
                     type="text"
                     value={convertForm.travelDateTime}
                     onChange={(e) => setConvertForm({ ...convertForm, travelDateTime: e.target.value })}
-                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-white text-xs font-medium text-m3-on-surface"
+                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-lowest text-xs font-medium text-m3-on-surface"
                     placeholder="e.g. Tomorrow @ 05:00 AM"
                   />
                 </div>
@@ -851,7 +852,7 @@ export default function WebsiteRadarView({
                     type="number"
                     value={convertForm.advancePaid}
                     onChange={(e) => setConvertForm({ ...convertForm, advancePaid: e.target.value })}
-                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-white text-xs font-bold text-m3-on-surface font-mono-code"
+                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-lowest text-xs font-bold text-m3-on-surface font-mono-code"
                     placeholder="500"
                   />
                 </div>
@@ -868,7 +869,7 @@ export default function WebsiteRadarView({
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black shadow-m3-1 flex items-center gap-1.5 transition-all"
+                  className="px-5 py-2 rounded-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary text-xs font-bold shadow-m3-1 flex items-center gap-1.5 transition-all"
                 >
                   <span className="material-symbols-outlined text-[16px]">verified</span>
                   <span>Confirm & Move to Active Trips (Step 2)</span>

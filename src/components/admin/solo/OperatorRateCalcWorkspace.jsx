@@ -31,11 +31,11 @@ import { buildWhatsAppUrl, buildMapsBlock } from '../../../utils/whatsapp';
 import { getNextQuotationId } from '../../../utils/sequenceGenerator';
 
 const ENQUIRY_SOURCES = [
-  { id: 'Google Ads Call', label: 'Google Ads Call', color: 'bg-blue-100 text-blue-800 border-blue-200' },
-  { id: 'Old / Repeat Customer', label: 'Repeat Customer', color: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
-  { id: 'Website Phone Call', label: 'Website Phone Call', color: 'bg-amber-100 text-amber-800 border-amber-200' },
-  { id: 'WhatsApp Enquiry', label: 'WhatsApp Enquiry', color: 'bg-green-100 text-green-800 border-green-200' },
-  { id: 'JustDial / Sulekha', label: 'JustDial / Sulekha', color: 'bg-purple-100 text-purple-800 border-purple-200' }
+  { id: 'Google Ads Call', label: 'Google Ads Call', color: 'bg-m3-secondary-container text-m3-on-secondary-container border-m3-outline-variant/40' },
+  { id: 'Old / Repeat Customer', label: 'Repeat Customer', color: 'bg-m3-secondary-container text-m3-on-secondary-container border-m3-outline-variant/40' },
+  { id: 'Website Phone Call', label: 'Website Phone Call', color: 'bg-m3-secondary-container text-m3-on-secondary-container border-m3-outline-variant/40' },
+  { id: 'WhatsApp Enquiry', label: 'WhatsApp Enquiry', color: 'bg-m3-secondary-container text-m3-on-secondary-container border-m3-outline-variant/40' },
+  { id: 'JustDial / Sulekha', label: 'JustDial / Sulekha', color: 'bg-m3-secondary-container text-m3-on-secondary-container border-m3-outline-variant/40' }
 ];
 
 const TOUR_CIRCUITS = [
@@ -254,25 +254,25 @@ export default function OperatorRateCalcWorkspace({
   if (!isOpen) return null;
 
   const content = (
-    <div className="w-full max-w-6xl mx-auto space-y-4 pb-28 sm:pb-32 font-sans">
+    <div className="w-full max-w-6xl mx-auto space-y-4 pb-28 sm:pb-32 font-sans animate-fadeIn">
       {/* ── TOP CALLER CONTEXT BAR ────────────────────────────────────── */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-4 sm:p-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-slate-100">
+      <div className="bg-m3-surface-container-lowest rounded-m3-xl border border-m3-outline-variant/70 shadow-m3-1 p-4 sm:p-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-m3-outline-variant/50">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-sm shadow-blue-500/20">
+            <div className="w-9 h-9 rounded-m3-md bg-m3-primary text-m3-on-primary flex items-center justify-center shadow-m3-1">
               <Phone className="w-4 h-4" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base sm:text-lg font-bold text-slate-900 leading-tight">
+                <h2 className="text-base sm:text-lg font-bold text-m3-on-surface leading-tight">
                   Operator Rate Calculator & Booking Workspace
                 </h2>
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span>
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-m3-secondary-container text-m3-on-secondary-container border border-m3-outline-variant/40">
+                  <span className="w-1.5 h-1.5 rounded-full bg-m3-primary mr-1.5 animate-pulse"></span>
                   Live Website Engines
                 </span>
               </div>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-m3-on-surface-variant mt-0.5">
                 Uses the exact production calculation algorithms from your website pages to quote callers & dispatch quotations on WhatsApp.
               </p>
             </div>
@@ -281,7 +281,7 @@ export default function OperatorRateCalcWorkspace({
           {!isPageMode && onClose && (
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors self-end sm:self-center"
+              className="p-1.5 rounded-full text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container-high transition-colors self-end sm:self-center"
               aria-label="Close Calculator"
             >
               <X className="w-5 h-5" />
@@ -293,25 +293,25 @@ export default function OperatorRateCalcWorkspace({
         <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 mt-3.5">
           {/* Mobile Phone Input */}
           <div className="sm:col-span-5">
-            <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1">
+            <label className="block text-[11px] font-semibold text-m3-on-surface uppercase tracking-wider mb-1">
               Customer Mobile (WhatsApp)
             </label>
-            <div className={`relative flex items-center bg-slate-50 border rounded-xl px-3 py-2 transition-all ${
+            <div className={`relative flex items-center bg-m3-surface-container-low border rounded-m3-md px-3 py-2 transition-all ${
               isPhoneValid
-                ? 'border-emerald-400 ring-2 ring-emerald-100 bg-emerald-50/20'
-                : 'border-slate-300 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500'
+                ? 'border-m3-primary ring-2 ring-m3-primary/20 bg-m3-secondary-container/20'
+                : 'border-m3-outline-variant focus-within:ring-2 focus-within:ring-m3-primary focus-within:border-m3-primary'
             }`}>
-              <span className="text-xs font-bold text-slate-500 mr-2 select-none">+91</span>
+              <span className="text-xs font-bold text-m3-on-surface-variant mr-2 select-none">+91</span>
               <input
                 type="tel"
                 placeholder="Enter 10-digit phone"
                 value={callerPhone}
                 onChange={(e) => setCallerPhone(e.target.value)}
                 maxLength={14}
-                className="w-full bg-transparent text-sm font-semibold text-slate-800 outline-none placeholder:text-slate-400 placeholder:font-normal"
+                className="w-full bg-transparent text-sm font-semibold text-m3-on-surface outline-none placeholder:text-m3-on-surface-variant/60 placeholder:font-normal"
               />
               {isPhoneValid && (
-                <div className="flex items-center gap-1 text-[11px] font-bold text-emerald-600 shrink-0">
+                <div className="flex items-center gap-1 text-[11px] font-bold text-m3-primary shrink-0">
                   <Check className="w-3.5 h-3.5" />
                   <span>Ready</span>
                 </div>
@@ -321,30 +321,30 @@ export default function OperatorRateCalcWorkspace({
 
           {/* Customer Name */}
           <div className="sm:col-span-4">
-            <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1">
+            <label className="block text-[11px] font-semibold text-m3-on-surface uppercase tracking-wider mb-1">
               Caller / Guest Name (Optional)
             </label>
-            <div className="flex items-center bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-all">
-              <User className="w-4 h-4 text-slate-400 mr-2 shrink-0" />
+            <div className="flex items-center bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-md px-3 py-2 focus-within:ring-2 focus-within:ring-m3-primary focus-within:border-m3-primary transition-all">
+              <User className="w-4 h-4 text-m3-on-surface-variant mr-2 shrink-0" />
               <input
                 type="text"
                 placeholder="e.g. Ramesh / Priya"
                 value={callerName}
                 onChange={(e) => setCallerName(e.target.value)}
-                className="w-full bg-transparent text-sm font-semibold text-slate-800 outline-none placeholder:text-slate-400 placeholder:font-normal"
+                className="w-full bg-transparent text-sm font-semibold text-m3-on-surface outline-none placeholder:text-m3-on-surface-variant/60 placeholder:font-normal"
               />
             </div>
           </div>
 
           {/* Lead Source */}
           <div className="sm:col-span-3">
-            <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1">
+            <label className="block text-[11px] font-semibold text-m3-on-surface uppercase tracking-wider mb-1">
               Enquiry Source
             </label>
             <select
               value={source}
               onChange={(e) => setSource(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs sm:text-sm font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all cursor-pointer"
+              className="w-full bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-md px-3 py-2 text-xs sm:text-sm font-semibold text-m3-on-surface outline-none focus:ring-2 focus:ring-m3-primary focus:border-m3-primary transition-all cursor-pointer"
             >
               {ENQUIRY_SOURCES.map((s) => (
                 <option key={s.id} value={s.id}>
@@ -357,15 +357,15 @@ export default function OperatorRateCalcWorkspace({
       </div>
 
       {/* ── 4 ENGINE NAVIGATION TABS ─────────────────────────────────── */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-1.5 sm:p-2">
+      <div className="bg-m3-surface-container-lowest rounded-m3-xl border border-m3-outline-variant/70 shadow-m3-1 p-1.5 sm:p-2">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
           <button
             type="button"
             onClick={() => setActiveEngineTab('outstation')}
-            className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer ${
+            className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-full font-bold text-xs sm:text-sm transition-all cursor-pointer ${
               activeEngineTab === 'outstation'
-                ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/25 ring-2 ring-blue-600/20'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                ? 'bg-m3-primary text-m3-on-primary shadow-m3-1'
+                : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container-high'
             }`}
           >
             <Car className="w-4 h-4 shrink-0" />
@@ -375,10 +375,10 @@ export default function OperatorRateCalcWorkspace({
           <button
             type="button"
             onClick={() => setActiveEngineTab('airport')}
-            className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer ${
+            className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-full font-bold text-xs sm:text-sm transition-all cursor-pointer ${
               activeEngineTab === 'airport'
-                ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/25 ring-2 ring-blue-600/20'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                ? 'bg-m3-primary text-m3-on-primary shadow-m3-1'
+                : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container-high'
             }`}
           >
             <Plane className="w-4 h-4 shrink-0" />
@@ -388,10 +388,10 @@ export default function OperatorRateCalcWorkspace({
           <button
             type="button"
             onClick={() => setActiveEngineTab('tours')}
-            className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer ${
+            className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-full font-bold text-xs sm:text-sm transition-all cursor-pointer ${
               activeEngineTab === 'tours'
-                ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/25 ring-2 ring-blue-600/20'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                ? 'bg-m3-primary text-m3-on-primary shadow-m3-1'
+                : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container-high'
             }`}
           >
             <Compass className="w-4 h-4 shrink-0" />
@@ -401,10 +401,10 @@ export default function OperatorRateCalcWorkspace({
           <button
             type="button"
             onClick={() => setActiveEngineTab('drivers')}
-            className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer ${
+            className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-full font-bold text-xs sm:text-sm transition-all cursor-pointer ${
               activeEngineTab === 'drivers'
-                ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/25 ring-2 ring-blue-600/20'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                ? 'bg-m3-primary text-m3-on-primary shadow-m3-1'
+                : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container-high'
             }`}
           >
             <User className="w-4 h-4 shrink-0" />
@@ -414,9 +414,9 @@ export default function OperatorRateCalcWorkspace({
 
         {/* Secondary Sub-Bar for Tour Packages */}
         {activeEngineTab === 'tours' && (
-          <div className="mt-2.5 pt-2.5 border-t border-slate-100">
+          <div className="mt-2.5 pt-2.5 border-t border-m3-outline-variant/50">
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs scrollbar-thin">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-1 shrink-0">
+              <span className="text-[11px] font-semibold text-m3-on-surface-variant uppercase tracking-wider px-1 shrink-0">
                 Circuit:
               </span>
               {TOUR_CIRCUITS.map((t) => (
@@ -424,10 +424,10 @@ export default function OperatorRateCalcWorkspace({
                   key={t.slug}
                   type="button"
                   onClick={() => setSelectedTourSlug(t.slug)}
-                  className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg font-semibold shrink-0 text-xs transition-all cursor-pointer ${
+                  className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full font-semibold shrink-0 text-xs transition-all cursor-pointer ${
                     selectedTourSlug === t.slug
-                      ? 'bg-slate-900 text-white shadow-xs'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      ? 'bg-m3-primary text-m3-on-primary shadow-xs'
+                      : 'bg-m3-surface-container-low text-m3-on-surface hover:bg-m3-surface-container-high'
                   }`}
                 >
                   <span>{t.icon}</span>
@@ -440,7 +440,7 @@ export default function OperatorRateCalcWorkspace({
       </div>
 
       {/* ── EMBEDDED PRODUCTION WEBSITE ENGINE ───────────────────────── */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-3 sm:p-5 overflow-hidden">
+      <div className="bg-m3-surface-container-lowest rounded-m3-xl border border-m3-outline-variant/70 shadow-m3-1 p-3 sm:p-5 overflow-hidden">
         {activeEngineTab === 'outstation' && (
           <QuotationEngine
             showHeader={false}
@@ -484,40 +484,40 @@ export default function OperatorRateCalcWorkspace({
       </div>
 
       {/* ── PERSISTENT OPERATOR ACTION DOCK (FIXED AT BOTTOM) ─────────── */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 backdrop-blur-md text-white border-t border-slate-800 shadow-2xl p-3 sm:p-4 animate-slideUp">
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-m3-surface-container-highest/95 backdrop-blur-md text-m3-on-surface border-t border-m3-outline-variant shadow-m3-3 p-3 sm:p-4 animate-slideUp">
         <div className="w-full max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4">
           {/* Left: Live Fare Breakdown */}
           <div className="flex items-center gap-3.5 w-full md:w-auto justify-between md:justify-start">
             <div className="shrink-0">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">
+              <span className="text-[10px] font-semibold text-m3-on-surface-variant uppercase tracking-widest block">
                 Official Quoted Fare
               </span>
               <div className="flex items-baseline gap-1.5">
-                <span className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                <span className="text-xl sm:text-2xl font-bold text-m3-primary tracking-tight">
                   ₹{totalFare.toLocaleString('en-IN')}
                 </span>
                 {totalFare > 0 && (
-                  <span className="text-[11px] font-semibold text-emerald-400">
+                  <span className="text-[11px] font-bold text-m3-primary">
                     (+₹{companyMargin} Margin)
                   </span>
                 )}
               </div>
             </div>
 
-            <div className="h-8 w-px bg-slate-800 hidden sm:block"></div>
+            <div className="h-8 w-px bg-m3-outline-variant/60 hidden sm:block"></div>
 
-            <div className="text-right sm:text-left text-xs text-slate-300">
+            <div className="text-right sm:text-left text-xs text-m3-on-surface">
               {currentCalc ? (
                 <>
-                  <div className="font-bold text-white truncate max-w-[200px] sm:max-w-xs">
+                  <div className="font-bold text-m3-on-surface truncate max-w-[200px] sm:max-w-xs">
                     {currentCalc.pickup || 'Chennai'} ➔ {currentCalc.destination || 'Destination'}
                   </div>
-                  <div className="text-[11px] text-slate-400">
+                  <div className="text-[11px] text-m3-on-surface-variant">
                     {currentCalc.vehicleName || 'AC Cab'} • ₹500 Adv / ₹{balanceDue.toLocaleString('en-IN')} Bal
                   </div>
                 </>
               ) : (
-                <div className="text-amber-300 text-[11px] font-semibold">
+                <div className="text-m3-on-surface-variant text-[11px] font-semibold">
                   ⚠️ Calculate trip in engine above to activate quotation actions
                 </div>
               )}
@@ -531,10 +531,10 @@ export default function OperatorRateCalcWorkspace({
               type="button"
               onClick={handleOpenWhatsApp}
               disabled={!totalFare}
-              className={`flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl font-bold text-xs sm:text-sm shadow-sm transition-all cursor-pointer ${
+              className={`flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full font-bold text-xs sm:text-sm shadow-xs transition-all cursor-pointer ${
                 totalFare
-                  ? 'bg-emerald-600 hover:bg-emerald-500 text-white active:scale-95 shadow-emerald-500/20'
-                  : 'bg-slate-800 text-slate-500 cursor-not-allowed'
+                  ? 'bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container active:scale-95'
+                  : 'bg-m3-surface-container-high text-m3-on-surface-variant/40 cursor-not-allowed'
               }`}
             >
               <Send className="w-3.5 h-3.5" />
@@ -546,9 +546,9 @@ export default function OperatorRateCalcWorkspace({
               type="button"
               onClick={handleCopyQuotation}
               disabled={!totalFare}
-              className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs sm:text-sm border border-slate-700 active:scale-95 transition-all cursor-pointer"
+              className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-full bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface font-bold text-xs sm:text-sm border border-m3-outline-variant active:scale-95 transition-all cursor-pointer"
             >
-              {copiedQuote ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+              {copiedQuote ? <Check className="w-3.5 h-3.5 text-m3-primary" /> : <Copy className="w-3.5 h-3.5" />}
               <span>{copiedQuote ? 'Copied!' : 'Copy Quote'}</span>
             </button>
 
@@ -557,7 +557,7 @@ export default function OperatorRateCalcWorkspace({
               type="button"
               onClick={handleSaveToStage1Lead}
               disabled={!totalFare}
-              className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-blue-600/90 hover:bg-blue-600 text-white font-bold text-xs sm:text-sm active:scale-95 transition-all cursor-pointer"
+              className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-full border border-m3-outline hover:bg-m3-primary/10 text-m3-primary font-bold text-xs sm:text-sm active:scale-95 transition-all cursor-pointer"
             >
               <BookmarkPlus className="w-3.5 h-3.5" />
               <span>Save Lead</span>
@@ -568,9 +568,9 @@ export default function OperatorRateCalcWorkspace({
               type="button"
               onClick={handleConfirmAdvancePaid}
               disabled={!totalFare}
-              className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs sm:text-sm active:scale-95 transition-all cursor-pointer shadow-md shadow-amber-500/20"
+              className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary font-bold text-xs sm:text-sm active:scale-95 transition-all cursor-pointer shadow-m3-1"
             >
-              <CheckCircle2 className="w-4 h-4 text-slate-950" />
+              <CheckCircle2 className="w-4 h-4 text-m3-on-primary" />
               <span>₹500 Paid (Confirm Trip)</span>
             </button>
 
@@ -578,7 +578,7 @@ export default function OperatorRateCalcWorkspace({
             <button
               type="button"
               onClick={() => setShowQrModal(true)}
-              className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors"
+              className="p-2.5 rounded-full bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface border border-m3-outline-variant transition-colors"
               title="Show ₹500 Advance UPI QR Code"
             >
               <QrCode className="w-4 h-4" />
@@ -589,42 +589,42 @@ export default function OperatorRateCalcWorkspace({
 
       {/* ── UPI QR MODAL (FOR ADVANCE PAYMENT VIA PHONEPE/GPAY) ─────── */}
       {showQrModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-fadeIn">
-          <div className="w-full max-w-sm bg-white rounded-2xl p-5 text-center shadow-2xl border border-slate-200">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fadeIn">
+          <div className="w-full max-w-sm bg-m3-surface-container-lowest rounded-m3-2xl p-5 text-center shadow-m3-3 border border-m3-outline-variant/80">
+            <div className="flex items-center justify-between pb-3 border-b border-m3-outline-variant/50">
               <div className="flex items-center gap-2">
-                <QrCode className="w-5 h-5 text-blue-600" />
-                <h3 className="font-bold text-slate-900 text-sm">₹500 Advance QR Code</h3>
+                <QrCode className="w-5 h-5 text-m3-primary" />
+                <h3 className="font-bold text-m3-on-surface text-sm">₹500 Advance QR Code</h3>
               </div>
               <button
                 onClick={() => setShowQrModal(false)}
-                className="text-slate-400 hover:text-slate-600 p-1"
+                className="text-m3-on-surface-variant hover:text-m3-on-surface p-1"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="my-4 p-2 bg-slate-50 border border-slate-200 rounded-xl inline-block">
+            <div className="my-4 p-2 bg-m3-surface-container-low border border-m3-outline-variant/60 rounded-m3-lg inline-block">
               <img
                 src={upiQrUrl}
                 alt="Kalidass Travels ₹500 Advance QR"
-                className="w-48 h-48 mx-auto rounded-lg"
+                className="w-48 h-48 mx-auto rounded-m3-md"
               />
             </div>
 
-            <div className="text-xs text-slate-600 space-y-1">
-              <p className="font-bold text-slate-800">Kalidass Travels Official UPI:</p>
-              <p className="font-mono text-blue-600 font-bold bg-blue-50 px-2 py-1 rounded select-all">
+            <div className="text-xs text-m3-on-surface-variant space-y-1">
+              <p className="font-bold text-m3-on-surface">Kalidass Travels Official UPI:</p>
+              <p className="font-mono text-m3-primary font-bold bg-m3-secondary-container text-m3-on-secondary-container px-2 py-1 rounded select-all">
                 8939539211@okbizaxis
               </p>
-              <p className="text-[11px] text-slate-400 mt-2">
+              <p className="text-[11px] text-m3-on-surface-variant mt-2">
                 Ask customer to scan with Google Pay / PhonePe / Paytm & share screenshot.
               </p>
             </div>
 
             <button
               onClick={() => setShowQrModal(false)}
-              className="mt-4 w-full py-2 bg-slate-900 text-white font-bold text-xs rounded-xl hover:bg-slate-800 transition-colors"
+              className="mt-4 w-full py-2 bg-m3-primary text-m3-on-primary font-bold text-xs rounded-full hover:bg-m3-primary/90 transition-colors shadow-m3-1"
             >
               Close
             </button>

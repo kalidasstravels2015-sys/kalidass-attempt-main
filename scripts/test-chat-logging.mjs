@@ -5,7 +5,7 @@ async function runTest() {
   console.log('--- 🧪 Testing AI Chat Query Telemetry & Monitoring Pipeline ---');
 
   const testQuery = 'Hello, can I get Ertiga for Tirupati 1 day trip tomorrow morning?';
-  const testSessionId = 'KT-TEST-' + Date.now().toString().slice(-4);
+  const testSessionId = 'KT-TEST-101';
   const testSourcePage = '/services/tirupati-package/';
 
   console.log(`1. Posting test chat message to /api/ai-chat...`);

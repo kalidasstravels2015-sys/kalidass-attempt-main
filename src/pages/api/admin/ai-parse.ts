@@ -2,6 +2,8 @@ import type { APIRoute } from 'astro';
 
 export const prerender = false;
 
+let aiParseSeq = 101;
+
 export const POST: APIRoute = async ({ request }) => {
   try {
     let body: any = {};
@@ -51,7 +53,7 @@ export const POST: APIRoute = async ({ request }) => {
       if (altQuoteMatch) {
         quoteRefId = altQuoteMatch[1].trim();
       } else {
-        quoteRefId = `#KT-${Math.floor(1000 + Math.random() * 9000)}`;
+        quoteRefId = `#ENQ-${aiParseSeq++}`;
       }
     }
 

@@ -5,6 +5,8 @@ import path from 'node:path';
 export const prerender = false;
 
 interface DutySlipInput {
+  dutySlipId?: string;
+  slipId?: string;
   bookingId: string;
   guestName: string;
   guestPhone?: string;
@@ -102,8 +104,22 @@ export const POST: APIRoute = async ({ request }) => {
     const grossFare = basePackageFare + extraKmCharge + tollsFastag + parking + statePermit + driverBata;
     const netBalanceToCollect = Math.max(0, grossFare - advancePaid);
 
+    // Save to Kalidass_Duty_Slips_2026.json
+    const slipsPath = path.resolve(process.cwd(), 'Kalidass_Duty_Slips_2026.json');
+    let existingSlips: any[] = [];
+    if (fs.existsSync(slipsPath)) {
+      try {
+        existingSlips = JSON.parse(fs.readFileSync(slipsPath, 'utf8') || '[]');
+      } catch (e) {
+        existingSlips = [];
+      }
+    }
+
+    const nextSlipNum = 101 + existingSlips.length;
+    const slipId = data.dutySlipId || data.slipId || `#DS-${nextSlipNum}`;
+
     const slipRecord = {
-      slipId: `DS-${data.bookingId.replace(/[^A-Za-z0-9]/g, '')}-${Date.now().toString().slice(-4)}`,
+      slipId,
       createdAt: new Date().toISOString(),
       bookingId: data.bookingId,
       guestName: data.guestName,
@@ -131,17 +147,6 @@ export const POST: APIRoute = async ({ request }) => {
       notes: data.notes || '',
       whatsappSummary: `*KALIDASS TRAVELS — TRIP DUTY SLIP*\nRef: ${data.bookingId}\nGuest: ${data.guestName}\nVehicle: ${data.vehiclePlate} (${data.chauffeurName})\n\nStart KM: ${startKm} | End KM: ${endKm}\nTotal KM: ${totalKm} km (Package: ${packageAllowedKm} km)\nExtra KM: ${extraKm} km @ Rs.${extraKmRate} = Rs.${extraKmCharge}\nBase Package: Rs.${basePackageFare}\nTolls (FASTag): Rs.${tollsFastag}\nPermit/Parking: Rs.${parking + statePermit}\nDriver Bata: Rs.${driverBata}\n---------------------------\n*Total Bill: Rs.${grossFare}*\nAdvance Received: -Rs.${advancePaid}\n*BALANCE TO PAY: Rs.${netBalanceToCollect}*\n\nThank you for choosing Kalidass Travels Chennai!`
     };
-
-    // Save to Kalidass_Duty_Slips_2026.json
-    const slipsPath = path.resolve(process.cwd(), 'Kalidass_Duty_Slips_2026.json');
-    let existingSlips: any[] = [];
-    if (fs.existsSync(slipsPath)) {
-      try {
-        existingSlips = JSON.parse(fs.readFileSync(slipsPath, 'utf8') || '[]');
-      } catch (e) {
-        existingSlips = [];
-      }
-    }
 
     existingSlips.unshift(slipRecord);
     fs.writeFileSync(slipsPath, JSON.stringify(existingSlips, null, 2), 'utf8');

@@ -1,6 +1,8 @@
 // Cloudflare Pages Function: /api/admin/ai-parse
 // Parses raw WhatsApp enquiry messages, booking engine quotes, or voice transcripts
 
+let edgeAiParseSeq = 101;
+
 export async function onRequestPost({ request }) {
   try {
     let body = {};
@@ -50,7 +52,7 @@ export async function onRequestPost({ request }) {
       if (altQuoteMatch) {
         quoteRefId = altQuoteMatch[1].trim();
       } else {
-        quoteRefId = `#KT-${Math.floor(1000 + Math.random() * 9000)}`;
+        quoteRefId = `#ENQ-${edgeAiParseSeq++}`;
       }
     }
 

@@ -7,14 +7,25 @@
 
 import { KALIDASS_LOGO_BASE64 } from './brandLogoBase64.js';
 
+let letterheadSerial = 101;
 export function getEstimateRefNo(pickupDateTime) {
   const now = new Date();
   const d = pickupDateTime && !isNaN(new Date(pickupDateTime).getTime()) ? new Date(pickupDateTime) : now;
   const m = String(d.getMonth() + 1).padStart(2, '0');
   const y = String(d.getFullYear()).slice(-2);
   const my = `${m}${y}`;
-  const offset = pickupDateTime ? Math.abs(parseInt(pickupDateTime.replace(/[^0-9]/g, '').slice(-2), 10) || 0) : 0;
-  const serial = 101 + (offset % 899);
+  let serial = 101;
+  if (typeof window !== 'undefined' && window.localStorage) {
+    try {
+      const stored = parseInt(localStorage.getItem('kt_last_tour_est_seq') || '0', 10);
+      serial = Math.max(101, stored + 1);
+      localStorage.setItem('kt_last_tour_est_seq', String(serial));
+    } catch (_) {
+      serial = letterheadSerial++;
+    }
+  } else {
+    serial = letterheadSerial++;
+  }
   return `CT/EST/${my}/${serial}`;
 }
 

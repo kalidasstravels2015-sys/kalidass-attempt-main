@@ -1,3 +1,5 @@
+let edgeBookingSeq = 101;
+
 // Cloudflare Pages Function: /api/record-booking
 export async function onRequestPost({ request }) {
   try {
@@ -11,7 +13,7 @@ export async function onRequestPost({ request }) {
       } catch (e) {}
     }
 
-    const bookingId = data.bookingId || `#KT-BK-${Date.now().toString().slice(-4)}`;
+    const bookingId = data.bookingId || `#KT-BK-${edgeBookingSeq++}`;
 
     // Asynchronously forward to Google Apps Script Webhook backup
     const webhookUrl = data.webhookUrl || (env && (env.GOOGLE_SHEET_WEBHOOK_URL || env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL));

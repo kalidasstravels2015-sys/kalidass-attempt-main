@@ -89,6 +89,20 @@ const title = "Solo Pilot Command Tower — Kalidass Travels | Admin Console";
         --md-sys-color-inverse-on-surface-rgb: 249 250 251;
         --md-sys-color-inverse-on-surface: #F9FAFB;
       }
+      @font-face {
+        font-family: 'Plus Jakarta Sans';
+        font-style: normal;
+        font-weight: 400 800;
+        font-display: swap;
+        src: url('/fonts/plus-jakarta-sans-latin.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'Material Symbols Outlined';
+        font-style: normal;
+        font-weight: 100 700;
+        font-display: block;
+        src: url('/fonts/material-symbols-full.woff2') format('woff2');
+      }
       body {
         font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       }
@@ -108,7 +122,12 @@ const title = "Solo Pilot Command Tower — Kalidass Travels | Admin Console";
         word-wrap: normal;
         direction: ltr;
         -webkit-font-feature-settings: 'liga';
+        font-feature-settings: 'liga';
         -webkit-font-smoothing: antialiased;
+        vertical-align: middle;
+      }
+      .font-variation-fill {
+        font-variation-settings: 'FILL' 1;
       }
       /* Custom clean scrollbar */
       ::-webkit-scrollbar {

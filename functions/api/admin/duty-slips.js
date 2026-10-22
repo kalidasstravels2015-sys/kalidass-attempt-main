@@ -17,7 +17,7 @@ export async function onRequestPost({ request }) {
     } catch (_) {}
 
     const dutySlip = {
-      dutySlipId: `#DS-${Date.now().toString().slice(-4)}`,
+      dutySlipId: body.dutySlipId || body.slipId || '#DS-101',
       ...body,
       createdAt: new Date().toLocaleString()
     };

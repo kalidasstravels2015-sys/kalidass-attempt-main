@@ -255,7 +255,13 @@ ${promptCtx}`;
                     if (rawUserMsg) {
                       const chatCsvPath = path.resolve(process.cwd(), 'Kalidass_Ai_Chat_Queries_2026.csv');
                       const timestamp = new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
-                      const sessionId = (data.sessionId || 'KT-SES-' + Math.floor(1000 + Math.random() * 9000)).replace(/,/g, ' ');
+                      let rowCount = 0;
+                      if (fs.existsSync(chatCsvPath)) {
+                        try {
+                          rowCount = fs.readFileSync(chatCsvPath, 'utf8').trim().split(/\r?\n/).filter(Boolean).length;
+                        } catch (_) {}
+                      }
+                      const sessionId = (data.sessionId || `KT-SES-${100 + rowCount + 1}`).replace(/,/g, ' ');
                       const sourcePage = (data.sourcePage || '/').replace(/,/g, ' ');
                       const cleanUserQuery = rawUserMsg.replace(/"/g, '""').replace(/\r?\n/g, ' ');
                       const cleanAiReply = (result.reply || '').replace(/"/g, '""').replace(/\r?\n/g, ' ');
@@ -328,10 +334,10 @@ ${promptCtx}`;
                   if (fs.existsSync(csvPath)) {
                     const content = fs.readFileSync(csvPath, 'utf8');
                     const lines = content.trim().split(/\r?\n/).filter(Boolean);
-                    const rowNum = lines.length + 1;
+                    const rowNum = lines.length;
 
                     if (!bookingId) {
-                      bookingId = `#KT-TPT-${100 + rowNum}`;
+                      bookingId = `#KT-BK-${100 + rowNum}`;
                     }
 
                     const guestNamePhone = `${data.name || 'Guest'} (+91 ${data.phone || '9840100000'})`;
@@ -435,11 +441,22 @@ ${promptCtx}`;
 
                   if (fs.existsSync(csvPath)) {
                     const content = fs.readFileSync(csvPath, 'utf8');
-                    const lines = content.trim().split(/\r?\n/).filter(Boolean);
                     const rowNum = lines.length;
-
-                    if (!quoteId) {
-                      quoteId = (data.meta && data.meta.quoteRefId) || `#KT-${Math.floor(1000 + Math.random() * 9000)}`;
+                    const isEnquiry = data.type === 'enquiry' || data.leadType === 'enquiry';
+                    const defaultPrefix = isEnquiry ? '#ENQ-' : '#QT-';
+                    let candidateId = quoteId || (data.meta && data.meta.quoteRefId);
+                    let validSeq = false;
+                    if (candidateId) {
+                      const match = String(candidateId).match(/(?:QT|ENQ|KT|CALC|CALL|WA)-?(\d+)/i);
+                      const n = match ? parseInt(match[1], 10) : 0;
+                      if (n >= 101 && n <= (100 + rowNum + 50)) {
+                        validSeq = true;
+                      }
+                    }
+                    if (!candidateId || !validSeq) {
+                      quoteId = `${defaultPrefix}${100 + rowNum}`;
+                    } else {
+                      quoteId = String(candidateId);
                     }
 
                     const newRow = `${quoteId},"${timestamp}","${sourcePage}","${calculatorEngine}","${tripType}","${pickup}","${drop}","${vehicle}",${distanceKm},${fareNum},"${status}","${metadata}"\n`;

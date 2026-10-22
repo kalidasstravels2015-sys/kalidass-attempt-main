@@ -49,12 +49,17 @@ export const POST: APIRoute = async ({ request, url }) => {
       const lines = content.trim().split(/\r?\n/).filter(Boolean);
       const rowNum = lines.length;
 
-      if (!quoteId) {
+      // Only keep incoming quoteId if it is a valid continuous sequential number
+      const numMatch = quoteId ? String(quoteId).match(/(?:QT|ENQ|KT|CALC|CALL|WA)-?(\d+)/i) : null;
+      const n = numMatch ? parseInt(numMatch[1], 10) : 0;
+      const isValidSeq = n >= 101 && n <= (100 + rowNum + 50);
+
+      if (!quoteId || !isValidSeq) {
         if (data.leadType === 'call' || status.includes('Call')) {
           quoteId = `#CALL-${100 + rowNum}`;
         } else if (data.leadType === 'whatsapp' || status.includes('WhatsApp')) {
           quoteId = `#WA-${100 + rowNum}`;
-        } else if (data.leadType === 'enquiry') {
+        } else if (data.leadType === 'enquiry' || data.type === 'enquiry') {
           quoteId = `#ENQ-${100 + rowNum}`;
         } else {
           quoteId = `#QT-${100 + rowNum}`;

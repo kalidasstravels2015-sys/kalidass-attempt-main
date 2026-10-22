@@ -259,13 +259,13 @@ export default function ActiveTripsView({
                   {/* 1. Booking ID, Passenger & Actions */}
                   <div>
                     <div className="flex items-center gap-1.5 mb-1.5 flex-wrap">
-                      <span className="font-mono-code text-xs font-black bg-blue-100 text-blue-950 border border-blue-300 px-2 py-0.5 rounded-full">
+                      <span className="font-mono-code text-xs font-bold bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant px-2 py-0.5 rounded-full">
                         {b.bookingId}
                       </span>
-                      <span className={`text-[11px] font-black px-2 py-0.5 rounded-full ${
+                      <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
                         isUnassigned
-                          ? 'bg-red-100 text-red-800 border border-red-300'
-                          : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                          ? 'bg-m3-error-container text-m3-on-error-container border border-m3-error/20'
+                          : 'bg-m3-secondary-container text-m3-on-secondary-container border border-m3-outline-variant/60'
                       }`}>
                         {isUnassigned ? '⚠️ Need Driver' : `Driver Assigned`}
                       </span>
@@ -276,7 +276,7 @@ export default function ActiveTripsView({
                             onDeleteBooking?.(b.bookingId);
                           }
                         }}
-                        className="ml-auto text-[11px] font-bold text-red-600 hover:text-red-800 hover:bg-red-50 px-2 py-0.5 rounded transition-colors flex items-center gap-0.5"
+                        className="ml-auto text-[11px] font-bold text-m3-error hover:bg-m3-error-container/40 px-2 py-0.5 rounded transition-colors flex items-center gap-0.5"
                         title="Cancel and remove trip from Active Trips"
                       >
                         <span className="material-symbols-outlined text-[13px]">delete</span>
@@ -290,12 +290,12 @@ export default function ActiveTripsView({
                       if (!contact.isValid) {
                         return (
                           <div className="space-y-1">
-                            <div className="text-sm font-black text-amber-950 flex items-center gap-1">
+                            <div className="text-sm font-bold text-m3-on-surface flex items-center gap-1">
                               <span>{b.guestNamePhone}</span>
                             </div>
                             <div className="flex items-center gap-1.5 flex-wrap">
-                              <span className="text-[10px] font-black bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded-full flex items-center gap-1">
-                                <span className="material-symbols-outlined text-[12px] text-amber-700">warning</span>
+                              <span className="text-[10px] font-bold bg-m3-error-container text-m3-on-error-container border border-m3-error/20 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                <span className="material-symbols-outlined text-[12px]">warning</span>
                                 Incomplete Contact
                               </span>
                               <button
@@ -308,7 +308,7 @@ export default function ActiveTripsView({
                                   });
                                   setEditContactError('');
                                 }}
-                                className="text-[11px] font-bold text-blue-700 hover:text-blue-950 underline flex items-center gap-0.5"
+                                className="text-[11px] font-bold text-m3-primary hover:underline flex items-center gap-0.5"
                               >
                                 <span className="material-symbols-outlined text-[13px]">edit</span>
                                 <span>+ Add Name & Phone</span>
@@ -366,7 +366,7 @@ export default function ActiveTripsView({
                             onAssignChauffeur?.(b.bookingId, e.target.value);
                             showToast?.(`Driver assigned to ${b.bookingId}! Now send Duty Slips.`, 'success');
                           }}
-                          className="w-full p-2 rounded-m3-md border border-blue-300 bg-blue-50/50 text-xs font-bold text-blue-950"
+                          className="w-full p-2 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low text-xs font-bold text-m3-on-surface focus:border-m3-primary"
                         >
                           <option value="">-- Pick Driver from Roster --</option>
                           {chauffeurs.map((c, idx) => (
@@ -380,7 +380,7 @@ export default function ActiveTripsView({
                           <button
                             type="button"
                             onClick={() => handleBroadcastToDriverGroup(b)}
-                            className="flex-1 h-7 px-2 bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 rounded-full text-[11px] font-bold flex items-center justify-center gap-1"
+                            className="flex-1 h-7 px-2 bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container border border-m3-outline-variant/60 rounded-full text-[11px] font-bold flex items-center justify-center gap-1"
                             title="Share duty in Driver WhatsApp group"
                           >
                             <span className="material-symbols-outlined text-[13px]">campaign</span>
@@ -390,19 +390,19 @@ export default function ActiveTripsView({
                           <button
                             type="button"
                             onClick={() => setShowOutsideFormId(showOutsideFormId === b.bookingId ? null : b.bookingId)}
-                            className="h-7 px-2 bg-white hover:bg-m3-surface-container-high border border-m3-outline-variant rounded-full text-[11px] font-bold text-m3-on-surface"
+                            className="h-7 px-2 bg-m3-surface-container-lowest hover:bg-m3-surface-container-high border border-m3-outline-variant rounded-full text-[11px] font-bold text-m3-on-surface"
                           >
                             + Outside Cab
                           </button>
                         </div>
                       </div>
                     ) : (
-                      <div className="mt-1 p-2 rounded-m3-md bg-emerald-50 border border-emerald-200">
-                        <div className="text-xs font-black text-emerald-950">👨‍✈️ {b.assignedChauffeur}</div>
+                      <div className="mt-1 p-2 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant">
+                        <div className="text-xs font-bold text-m3-on-surface">👨‍✈️ {b.assignedChauffeur}</div>
                         <button
                           type="button"
                           onClick={() => onAssignChauffeur?.(b.bookingId, 'Unassigned')}
-                          className="text-[11px] text-blue-700 hover:underline font-bold mt-0.5 block"
+                          className="text-[11px] text-m3-primary hover:underline font-bold mt-0.5 block"
                         >
                           Change Driver
                         </button>
@@ -416,45 +416,45 @@ export default function ActiveTripsView({
                       <span className="text-m3-on-surface-variant font-medium">Total Fare:</span>
                       <strong className="text-m3-on-surface font-black">Rs.{fare.toLocaleString('en-IN')}</strong>
                     </div>
-                    <div className="flex justify-between text-emerald-900">
+                    <div className="flex justify-between text-m3-on-surface">
                       <span className="font-semibold">Advance Paid:</span>
                       <span className="font-bold">Rs.{adv}</span>
                     </div>
-                    <div className="flex justify-between border-t border-m3-outline-variant/50 pt-1 font-black text-amber-950">
+                    <div className="flex justify-between border-t border-m3-outline-variant/50 pt-1 font-bold text-m3-on-surface">
                       <span>Balance to Collect:</span>
-                      <span className="text-sm text-red-700">Rs.{balanceDue.toLocaleString('en-IN')}</span>
+                      <span className="text-sm font-black font-mono-code">Rs.{balanceDue.toLocaleString('en-IN')}</span>
                     </div>
                     <div className="flex justify-between text-[11px] text-m3-on-surface-variant pt-0.5">
                       <span>Driver: Rs.{driverShare}</span>
-                      <span className="text-emerald-700 font-bold">Profit: +Rs.{profit}</span>
+                      <span className="text-m3-primary font-bold">Profit: +Rs.{profit}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Inline Outside Driver Input Form */}
                 {showOutsideFormId === b.bookingId && (
-                  <div className="p-3 rounded-m3-md bg-amber-50/70 border border-amber-300 flex flex-wrap items-center gap-2 text-xs animate-fadeIn">
-                    <span className="font-bold text-amber-950 text-xs w-full">Enter Outside Market Driver:</span>
+                  <div className="p-3 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant flex flex-wrap items-center gap-2 text-xs animate-fadeIn">
+                    <span className="font-bold text-m3-on-surface text-xs w-full">Enter Outside Market Driver:</span>
                     <input
                       type="text"
                       placeholder="Driver Name (e.g. Mani)"
                       value={outsideDriverMap[b.bookingId]?.name || ''}
                       onChange={(e) => setOutsideDriverMap({ ...outsideDriverMap, [b.bookingId]: { ...(outsideDriverMap[b.bookingId] || {}), name: e.target.value } })}
-                      className="flex-1 min-w-[120px] p-2 rounded-m3-sm border border-m3-outline-variant bg-white"
+                      className="flex-1 min-w-[120px] p-2 rounded-m3-sm border border-m3-outline-variant bg-m3-surface-container-lowest"
                     />
                     <input
                       type="tel"
                       placeholder="Driver Mobile (10 Digits)"
                       value={outsideDriverMap[b.bookingId]?.phone || ''}
                       onChange={(e) => setOutsideDriverMap({ ...outsideDriverMap, [b.bookingId]: { ...(outsideDriverMap[b.bookingId] || {}), phone: e.target.value } })}
-                      className="flex-1 min-w-[120px] p-2 rounded-m3-sm border border-m3-outline-variant bg-white"
+                      className="flex-1 min-w-[120px] p-2 rounded-m3-sm border border-m3-outline-variant bg-m3-surface-container-lowest"
                     />
                     <input
                       type="text"
                       placeholder="Car Plate (TN 09 BX 1234)"
                       value={outsideDriverMap[b.bookingId]?.plate || ''}
                       onChange={(e) => setOutsideDriverMap({ ...outsideDriverMap, [b.bookingId]: { ...(outsideDriverMap[b.bookingId] || {}), plate: e.target.value.toUpperCase() } })}
-                      className="flex-1 min-w-[120px] p-2 rounded-m3-sm border border-m3-outline-variant bg-white"
+                      className="flex-1 min-w-[120px] p-2 rounded-m3-sm border border-m3-outline-variant bg-m3-surface-container-lowest font-mono-code uppercase"
                     />
                     <button
                       type="button"
@@ -468,7 +468,7 @@ export default function ActiveTripsView({
                         setShowOutsideFormId(null);
                         showToast?.(`Outside driver assigned to ${b.bookingId}!`, 'success');
                       }}
-                      className="h-8 px-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-bold text-xs"
+                      className="h-8 px-3.5 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-m3-full font-semibold text-xs shadow-m3-1"
                     >
                       Save & Allot Driver
                     </button>
@@ -482,18 +482,18 @@ export default function ActiveTripsView({
                       <button
                         type="button"
                         onClick={() => handleSendCustomerDutySlip(b)}
-                        className="h-8 px-3 bg-blue-50 hover:bg-blue-100 text-blue-900 border border-blue-300 rounded-full text-xs font-bold flex items-center gap-1.5 transition-colors"
+                        className="h-8 px-3 bg-m3-surface-container-low hover:bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant rounded-full text-xs font-semibold flex items-center gap-1.5 transition-colors"
                       >
-                        <span className="material-symbols-outlined text-[15px] text-blue-700">person</span>
+                        <span className="material-symbols-outlined text-[15px] text-m3-on-surface-variant">person</span>
                         <span>Duty Slip ➔ Customer (WA)</span>
                       </button>
 
                       <button
                         type="button"
                         onClick={() => handleSendDriverDutySlip(b)}
-                        className="h-8 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300 rounded-full text-xs font-bold flex items-center gap-1.5 transition-colors"
+                        className="h-8 px-3 bg-m3-surface-container-low hover:bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant rounded-full text-xs font-semibold flex items-center gap-1.5 transition-colors"
                       >
-                        <span className="material-symbols-outlined text-[15px] text-emerald-700">local_taxi</span>
+                        <span className="material-symbols-outlined text-[15px] text-m3-on-surface-variant">local_taxi</span>
                         <span>Duty Slip ➔ Driver (WA)</span>
                       </button>
 
@@ -501,7 +501,7 @@ export default function ActiveTripsView({
                         <button
                           type="button"
                           onClick={() => onOpenDutySlip(b)}
-                          className="h-8 px-2.5 bg-white hover:bg-m3-surface-container-high border border-m3-outline-variant rounded-full text-xs font-semibold text-m3-on-surface flex items-center gap-1"
+                          className="h-8 px-2.5 bg-m3-surface-container-lowest hover:bg-m3-surface-container-high border border-m3-outline-variant rounded-full text-xs font-semibold text-m3-on-surface flex items-center gap-1"
                         >
                           <span className="material-symbols-outlined text-[15px]">speed</span>
                           <span>Meter KM & Tolls</span>
@@ -515,10 +515,10 @@ export default function ActiveTripsView({
                           key={st}
                           type="button"
                           onClick={() => onStatusChange?.(b.bookingId, st)}
-                          className={`h-7 px-2 rounded-full text-[11px] font-bold border transition-colors ${
+                          className={`h-7 px-2 rounded-full text-[11px] font-semibold border transition-colors ${
                             b.manifestStatus === st
-                              ? 'bg-blue-600 text-white border-blue-700'
-                              : 'bg-white text-m3-on-surface-variant border-m3-outline-variant hover:bg-m3-surface-container-high'
+                              ? 'bg-m3-secondary-container text-m3-on-secondary-container border-0'
+                              : 'bg-m3-surface-container-lowest text-m3-on-surface-variant border-m3-outline-variant hover:bg-m3-surface-container-high'
                           }`}
                         >
                           {st}
@@ -532,7 +532,7 @@ export default function ActiveTripsView({
                           onStatusChange?.(b.bookingId, 'Completed');
                           showToast?.(`🎉 Trip ${b.bookingId} marked Completed! Moved to Step 3.`, 'success');
                         }}
-                        className="h-8 px-3.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-xs font-black flex items-center gap-1 shadow-xs transition-colors"
+                        className="h-8 px-3.5 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-full text-xs font-semibold flex items-center gap-1 shadow-m3-1 transition-colors"
                       >
                         <span className="material-symbols-outlined text-[15px]">check_circle</span>
                         <span>🏁 Mark Completed</span>
@@ -550,20 +550,20 @@ export default function ActiveTripsView({
       {editingContactBooking && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-sm animate-fadeIn">
           <div className="bg-m3-surface-container-lowest border border-m3-outline-variant rounded-m3-2xl shadow-m3-4 w-full max-w-md overflow-hidden flex flex-col">
-            <div className="p-4 border-b border-m3-outline-variant bg-blue-50/70 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center">
-                  <span className="material-symbols-outlined text-[18px]">person</span>
+            <div className="p-4 border-b border-m3-outline-variant/70 bg-m3-surface-container-low flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-full bg-m3-primary-container text-m3-on-primary-container flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[20px]">person</span>
                 </div>
                 <div>
-                  <h3 className="text-sm font-black text-blue-950">Update Passenger Contact</h3>
-                  <p className="text-xs text-blue-900/80">{editingContactBooking.bookingId} • Required for driver dispatch</p>
+                  <h3 className="text-sm font-bold text-m3-on-surface">Update Passenger Contact</h3>
+                  <p className="text-xs text-m3-on-surface-variant">{editingContactBooking.bookingId} • Required for driver dispatch</p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setEditingContactBooking(null)}
-                className="w-8 h-8 rounded-full hover:bg-blue-200/50 flex items-center justify-center text-blue-950 font-bold"
+                className="w-8 h-8 rounded-full hover:bg-m3-surface-container-high flex items-center justify-center text-m3-on-surface-variant font-bold"
               >
                 ✕
               </button>
@@ -586,15 +586,15 @@ export default function ActiveTripsView({
               className="p-5 space-y-4"
             >
               {editContactError && (
-                <div className="p-2.5 bg-red-50 border border-red-200 rounded-m3-md text-xs font-bold text-red-800 flex items-center gap-1.5 animate-shake">
-                  <span className="material-symbols-outlined text-[16px] text-red-600">error</span>
+                <div className="p-2.5 bg-m3-error-container text-m3-on-error-container border border-m3-error/20 rounded-m3-md text-xs font-bold flex items-center gap-1.5 animate-shake">
+                  <span className="material-symbols-outlined text-[16px]">error</span>
                   <span>{editContactError}</span>
                 </div>
               )}
 
               <div>
                 <label className="block text-xs font-bold text-m3-on-surface mb-1">
-                  Customer / Passenger Name <span className="text-red-500">*</span>
+                  Customer / Passenger Name <span className="text-m3-error">*</span>
                 </label>
                 <input
                   type="text"
@@ -606,16 +606,16 @@ export default function ActiveTripsView({
                     setEditContactForm({ ...editContactForm, name: e.target.value });
                     if (editContactError) setEditContactError('');
                   }}
-                  className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-white text-xs font-bold text-m3-on-surface focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low text-xs font-bold text-m3-on-surface focus:outline-none focus:ring-2 focus:ring-m3-primary"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-m3-on-surface mb-1">
-                  Mobile Number (10 digits) <span className="text-red-500">*</span>
+                  Mobile Number (10 digits) <span className="text-m3-error">*</span>
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-2.5 text-xs font-black text-m3-on-surface-variant">+91</span>
+                  <span className="absolute left-3 top-2.5 text-xs font-bold text-m3-on-surface-variant">+91</span>
                   <input
                     type="tel"
                     required
@@ -627,7 +627,7 @@ export default function ActiveTripsView({
                       setEditContactForm({ ...editContactForm, phone: val });
                       if (editContactError) setEditContactError('');
                     }}
-                    className="w-full pl-12 pr-3 py-2.5 rounded-m3-md border border-m3-outline-variant bg-white text-xs font-bold text-m3-on-surface focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono-code"
+                    className="w-full pl-12 pr-3 py-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low text-xs font-bold text-m3-on-surface focus:outline-none focus:ring-2 focus:ring-m3-primary font-mono-code"
                   />
                 </div>
               </div>
@@ -636,13 +636,13 @@ export default function ActiveTripsView({
                 <button
                   type="button"
                   onClick={() => setEditingContactBooking(null)}
-                  className="px-4 py-2 rounded-full border border-m3-outline-variant text-xs font-bold text-m3-on-surface-variant hover:bg-m3-surface-container-high"
+                  className="px-4 py-2 rounded-full border border-m3-outline-variant text-xs font-bold text-m3-on-surface-variant hover:bg-m3-surface-container-high transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-black shadow-m3-1"
+                  className="px-5 py-2.5 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary text-xs font-semibold shadow-m3-1 transition-all"
                 >
                   Save Contact Details
                 </button>
