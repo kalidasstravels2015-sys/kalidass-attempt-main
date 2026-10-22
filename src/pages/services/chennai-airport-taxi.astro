@@ -243,7 +243,7 @@ const faqs = [
   },
   {
     q: "Is prepaid taxi available at Chennai airport, and should I choose prepaid or pre-book online?",
-    a: "Yes, Chennai International Airport (MAA) has an Aviation Authority (AAI) prepaid taxi counter inside the arrival concourse. However, prepaid counters frequently have 20–40 minute queues during peak domestic and international arrival banks, unpredictable vehicle conditions, and limited 6-seater/7-seater SUV availability. By pre-booking online with Kalidass Travels, your chauffeur waits right outside the arrival gate holding a personalized name placard, tracks your flight radar live with zero waiting charges, provides a guaranteed clean AC vehicle of your choice, and requires ₹0 advance payment."
+    a: "Yes, Chennai International Airport (MAA) has an Aviation Authority (AAI) prepaid taxi counter inside the arrival concourse. However, prepaid counters frequently have 20–40 minute queues during peak domestic and international arrival banks, unpredictable vehicle conditions, and limited 6-seater/7-seater SUV availability. By pre-booking online with Kalidass Travels, your chauffeur waits right outside the arrival gate holding a personalized name placard, tracks your flight radar live with zero waiting charges, provides a guaranteed clean AC vehicle of your choice, and requires only a nominal ₹500 advance to confirm (100% deducted from your final fare)."
   },
   {
     q: "Are Chennai airport pickup charges different from airport drop charges?",
@@ -271,7 +271,7 @@ const faqs = [
   },
   {
     q: "I am flying from abroad (US, UK, Gulf, Singapore). How does international airport pickup work?",
-    a: "International bookings are completely frictionless. Reserve with your flight number and international WhatsApp number (+1, +44, +65, +971, etc.). We allot your chauffeur and share driver details to your WhatsApp before you take off from your origin airport. Chauffeur tracks your flight radar live, coordinates via WhatsApp on terminal Wi-Fi, waits outside Terminal 2 / 4 international arrival exit holding your name placard, and assists with luggage. Zero advance deposit is needed, eliminating foreign card OTP issues or transaction fees upfront."
+    a: "International bookings are completely frictionless. Reserve with your flight number and international WhatsApp number (+1, +44, +65, +971, etc.). We allot your chauffeur and share driver details to your WhatsApp before you take off from your origin airport. Chauffeur tracks your flight radar live, coordinates via WhatsApp on terminal Wi-Fi, waits outside Terminal 2 / 4 international arrival exit holding your name placard, and assists with luggage. A nominal ₹500 advance locks your cab (100% credited against your final fare), with balance payable after reaching your destination."
   },
   {
     q: "Can international tourists pay in foreign currency or Bitcoin?",
@@ -279,7 +279,7 @@ const faqs = [
   },
   {
     q: "Do I need to pay an advance when booking early, or can I pay after the trip?",
-    a: "For local airport drops within Chennai, zero advance is needed—pay after your trip. For outstation trips (Vellore, Pondicherry, Tirupati, etc.), a nominal ₹500 booking advance secures your car and driver, with the remaining balance payable upon arrival at your destination."
+    a: "Only a nominal ₹500 advance is required to confirm and lock your cab (100% deducted from your final fare). The remaining balance is payable after reaching your destination via UPI, Cash, or Card."
   },
   {
     q: "Which vehicle models are available for Chennai airport transfers, and how much luggage can they carry?",
@@ -315,7 +315,7 @@ const taxiServiceSchema = {
   "url": "https://kalidasstravels.in/services/chennai-airport-taxi/",
   "image": "https://kalidasstravels.in/images/services/airport-transfer.webp",
   "hoursAvailable": "Mo-Su 00:00-23:59",
-  "termsOfService": "Zero advance payment, free flight delay waiting, flat rates with zero surge pricing, tolls & GST inclusive options",
+  "termsOfService": "₹500 advance deposit (100% deducted from fare), free flight delay waiting, flat rates with zero surge pricing, tolls & GST inclusive options",
   "provider": {
     "@id": "https://kalidasstravels.in/#localbusiness"
   },
@@ -392,7 +392,7 @@ const taxiServiceSchema = {
   "potentialAction": {
     "@type": "ReserveAction",
     "name": "Reserve Chennai Airport Taxi",
-    "description": "Reserve doorstep airport drop or arrival terminal pickup with ₹0 advance payment",
+    "description": "Reserve doorstep airport drop or arrival terminal pickup with ₹500 advance to confirm cab",
     "target": {
       "@type": "EntryPoint",
       "urlTemplate": "https://kalidasstravels.in/services/chennai-airport-taxi/#booking-section",
@@ -1251,7 +1251,7 @@ const tripListSchema = {
                 </tr>
                 <tr class="hover:bg-m3-surface-container-low transition-colors">
                   <td class="p-3 sm:p-4 font-semibold align-top">Advance Payment</td>
-                  <td class="p-3 sm:p-4 bg-m3-success-container/15 font-bold text-m3-on-surface align-top">₹0 Advance (Balance after trip completion)</td>
+                  <td class="p-3 sm:p-4 bg-m3-success-container/15 font-bold text-m3-on-surface align-top">₹500 Advance (Balance after trip completion)</td>
                   <td class="p-3 sm:p-4 text-m3-on-surface-variant align-top">100% upfront kiosk cash/card payment with queue</td>
                 </tr>
                 <tr class="hover:bg-m3-surface-container-low transition-colors">

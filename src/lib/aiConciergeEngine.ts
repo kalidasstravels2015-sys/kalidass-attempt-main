@@ -840,7 +840,7 @@ function getLocalRentalQuote(state: ConversationState, isTa: boolean): string {
     `• **Toyota Innova / Crysta:**\n` +
     `  - Innova (8 hrs / 80 km): ₹3,200\n` +
     `  - Innova Crysta (8 hrs / 80 km): ₹4,500\n\n` +
-    `🛡️ **Policy:** ₹0 advance deposit for local city rentals — pay balance smoothly after trip!\n\n` +
+    `🛡️ **Policy:** ₹500 advance to confirm & lock cab (100% deducted from bill; balance after trip)!\n\n` +
     `[👉 Book on WhatsApp](${waUrl})`
   );
 }
@@ -863,7 +863,7 @@ function getAirportTransferQuote(state: ConversationState, isTa: boolean): strin
       `• **முன்கூட்டியே ஓட்டுநர் விவரங்கள்:** உங்கள் புறப்படும் விமான நிலையத்தில் நீங்கள் **விமானத்தில் ஏறும் முன்பே (Before Takeoff)** ஓட்டுநர் பெயர், எண் மற்றும் கார் விவரங்கள் வாட்ஸ்அப்பில் அனுப்பப்படும்!\n` +
       `• நேரடி விமான ரேடார் கண்காணிப்பு — விமான தாமதத்திற்கு கூடுதல் காத்திருப்பு கட்டணம் இல்லை (₹0 Waiting Charge).\n` +
       `• 24/7 டெர்மினல் வருகை வாசலில் வரவேற்பு & உடனடி பிக்கப்.\n` +
-      `🛡️ **முன்பணம்:** உள்ளூர் டிராப்களுக்கு ₹0 முன்பணம் — பயண முடிவில் செலுத்தலாம்.\n\n` +
+      `🛡️ **முன்பணம்:** ₹500 முன்பணம் லாக் செய்ய (பில்லில் கழிக்கப்படும்) — மீதம் பயண முடிவில்.\n\n` +
       `[👉 வாட்ஸ்அப்பில் டாக்சி புக் செய்ய](${waUrl})`
     );
   }
@@ -877,7 +877,7 @@ function getAirportTransferQuote(state: ConversationState, isTa: boolean): strin
     `• **Chauffeur Details Before Takeoff:** Driver details (chauffeur name, mobile, vehicle number) are sent on WhatsApp **before your flight takes off** from your origin airport — offering 100% peace of mind before boarding!\n` +
     `• **Live Flight Radar Tracking:** Zero waiting charge penalty for flight delays.\n` +
     `• 24/7 doorstep pickup or terminal exit greeting.\n` +
-    `🛡️ **Payment:** ₹0 advance deposit for city airport drops — pay balance after drop.\n\n` +
+    `🛡️ **Payment:** ₹500 advance deposit to lock cab (deducted from bill) — pay balance after drop.\n\n` +
     `[👉 Book Airport Cab on WhatsApp](${waUrl})`
   );
 }
@@ -901,7 +901,7 @@ function getActingDriverQuote(state: ConversationState, isTa: boolean): string {
       `  - **Luxury European (BMW / Audi):** ₹2,200 / நாள் (₹1,900 பேட்டா + ₹300 உணவு)\n\n` +
       `• **வெளியூர் ஒரு வழி டிராப் (One-Way Relocation):** தூரத்திற்கு ஏற்ப டிரைவர் பேட்டா + அரசு SETC பேருந்து கட்டணம் + உணவு (பாண்டிச்சேரி ₹1,900 | பெங்களூரு ₹2,820 | மதுரை ₹3,750).\n\n` +
       `👮 **பாதுகாப்பு:** அனைத்து ஓட்டுநர்களும் தமிழ்நாடு போலீஸ் சரிபார்ப்பு சான்றிதழ் (PVC Verified) பெற்றவர்கள் மற்றும் Manual, Automatic (AT/DCT), EV நிபுணர்கள்.\n` +
-      `🛡️ **பாலிசி:** ₹0 முன்பணம் — சேவை முடிந்த பின் கட்டணம் செலுத்தலாம்!\n\n` +
+      `🛡️ **பாலிசி:** ₹500 முன்பணம் லாக் செய்ய (பில்லில் கழிக்கப்படும்) — மீதமுள்ள தொகை பணி முடிந்த பின்!\n\n` +
       `[👉 வாட்ஸ்அப்பில் டிரைவரை அழைக்க](${waUrl})`
     );
   }
@@ -922,7 +922,7 @@ function getActingDriverQuote(state: ConversationState, isTa: boolean): string {
     `👮 **Safety & Verification:**\n` +
     `• 100% Police Clearance Certificate (PVC Cleared) professional chauffeurs.\n` +
     `• Experienced with manual, automatic (CVT, DCT, Torque Converter), and EV vehicles.\n` +
-    `🛡️ **Policy:** **₹0 advance deposit** required — pay after service completion!\n\n` +
+    `🛡️ **Policy:** **₹500 advance deposit** to lock driver (deducted from bill) — balance after service completion!\n\n` +
     `[👉 Book Driver on WhatsApp](${waUrl})`
   );
 }
@@ -955,20 +955,18 @@ function getAdvancePolicyReply(isTa: boolean, destination: string | null): strin
   if (isTa) {
     return (
       `🛡️ **Kalidass Travels முன்பணம் கொள்கை (Advance Payment Policy):**\n\n` +
-      `1. **₹500 மட்டுமே முன்பணம்:** வெளியூர் மற்றும் திருப்பதி போன்ற சுற்றுலா பயணங்களுக்கு உங்கள் காரை பிரத்யேகமாக லாக் செய்யவும், கடைசி நேர ரத்துகளைத் தவிர்க்கவும் ₹500 மட்டுமே பெறப்படுகிறது.\n` +
+      `1. **₹500 மட்டுமே முன்பணம்:** அனைத்து பயணங்களுக்கும் உங்கள் காரை பிரத்யேகமாக லாக் செய்யவும், கடைசி நேர ரத்துகளைத் தவிர்க்கவும் ₹500 மட்டுமே பெறப்படுகிறது.\n` +
       `2. **பில்லில் கழித்தல் உத்தரவாதம்:** இந்த ₹500 கூடுதல் கட்டணம் அல்ல — இது உங்கள் மொத்த பயணக் கட்டணத்தில் கழிக்கப்படும் (மொத்த கட்டணம் − ₹500 முன்பணம் = மீதமுள்ள நிகரத் தொகை பயண முடிவில் டிரைவரிடம் செலுத்தலாம்).\n` +
-      `3. **லோக்கல் வாடகை & ஆக்டிங் டிரைவர்:** ₹0 முன்பணம் — முற்றிலும் பயணத்திற்குப் பின்!\n` +
-      `4. **100% ரீஃபண்ட்:** பயணத்திற்கு 6 மணிநேரம் முன்பு ரத்து செய்தால் ₹500 முழுமையாக திரும்ப வழங்கப்படும்.\n\n` +
+      `3. **100% ரீஃபண்ட்:** பயணத்திற்கு 6 மணிநேரம் முன்பு ரத்து செய்தால் ₹500 முழுமையாக திரும்ப வழங்கப்படும்.\n\n` +
       `[👉 ₹500 செலுத்தி காரை லாக் செய்ய வாட்ஸ்அப் செல்லவும்](${waUrl})`
     );
   }
 
   return (
     `🛡️ **Kalidass Travels Advance Payment Policy:**\n\n` +
-    `1. **Nominal ₹500 Advance:** For outstation trips and tour packages (${destName}), we collect only **₹500 advance** to lock your cab and schedule your verified chauffeur. This protects against last-minute cancellations.\n` +
+    `1. **Nominal ₹500 Advance:** For all trips and packages (${destName}), we collect only **₹500 advance** to lock your cab and schedule your verified chauffeur. This protects against last-minute cancellations.\n` +
     `2. **100% Deducted from Final Bill:** The ₹500 advance is NOT an extra fee — it is deducted from your quoted total (e.g. Total Fare − ₹500 Advance = Net Balance payable directly to chauffeur upon trip completion).\n` +
-    `3. **Local Rides & Acting Drivers:** **₹0 advance deposit** required — pay after service.\n` +
-    `4. **100% Refund Guarantee:** If canceled up to 6 hours before departure, your ₹500 advance is fully refunded immediately.\n\n` +
+    `3. **100% Refund Guarantee:** If canceled up to 6 hours before departure, your ₹500 advance is fully refunded immediately.\n\n` +
     `[👉 Pay ₹500 Advance & Lock Cab on WhatsApp](${waUrl})`
   );
 }

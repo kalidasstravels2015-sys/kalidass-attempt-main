@@ -1119,14 +1119,14 @@ const callUrl = `tel:${phone}`;
           return `🛡️ **Kalidass Travels முன்பணம் பாலிசி (Advance Policy):**\n\n` +
             `• **₹500 முன்பணம் மட்டுமே:** காரை உறுதிசெய்து லாக் செய்ய ₹500 மட்டுமே பெறப்படுகிறது.\n` +
             `• **பில்லில் கழித்தல் உத்தரவாதம்:** இந்த ₹500 கூடுதல் கட்டணம் அல்ல — உங்கள் மொத்த கட்டணத்தில் கழிக்கப்பட்டு மீதமுள்ள தொகை மட்டுமே பயண முடிவில் செலுத்த வேண்டும்!\n` +
-            `• **லோக்கல் & ஆக்டிங் டிரைவர்:** ₹0 முன்பணம் — சேவை முடிந்த பின் செலுத்தலாம்.\n` +
+            `• **அனைத்து பயணங்களுக்கும்:** ₹500 முன்பணம் — மீதம் பயணத்திற்குப் பின்!\n` +
             `• **முழு ரீஃபண்ட்:** 6 மணிநேரம் முன்பு ரத்து செய்தால் ₹500 முழுமையாக திரும்பப் பெறலாம்.\n\n` +
             `[👉 ₹500 செலுத்தி காரை லாக் செய்ய](${waUrl})`;
         }
         return `🛡️ **Kalidass Travels Advance Payment Policy:**\n\n` +
-          `• **Nominal ₹500 Advance:** For outstation trips and tour packages (${destName}), we collect only **₹500 advance** to guarantee cab allocation & lock verified driver.\n` +
+          `• **Nominal ₹500 Advance:** For all trips and packages (${destName}), we collect only **₹500 advance** to guarantee cab allocation & lock verified driver.\n` +
           `• **100% Deducted from Final Bill:** The ₹500 is NOT an extra fee — it is deducted from your quoted total (Total Quote − ₹500 Advance = Net Balance paid directly to driver post-trip).\n` +
-          `• **Local City & Acting Drivers:** **₹0 advance deposit** required — pay after service completion.\n` +
+          `• **All Services Covered:** Nominal ₹500 advance to confirm — balance paid after service completion.\n` +
           `• **100% Refund Guarantee:** Fully refundable if canceled up to 6 hours before departure.\n\n` +
           `[👉 Pay ₹500 Advance & Lock Cab on WhatsApp](${waUrl})`;
       }
@@ -1284,7 +1284,7 @@ const callUrl = `tel:${phone}`;
           `  - Luxury European (BMW, Mercedes-Benz, Audi): ₹1,800 / day (₹1,500 bata + ₹300 food)\n\n` +
           `• **Outstation One-Way Drop:** 1-Day Driver Bata + Return SETC Bus ticket + ₹300 food.\n\n` +
           `👮 100% Police Clearance Certificate (PVC) verified chauffeurs.\n` +
-          `🛡️ **Policy:** **₹0 advance deposit required** — pay after service completion!\n\n` +
+          `🛡️ **Policy:** **₹500 advance deposit** to lock driver (deducted from bill) — balance after duty!\n\n` +
           `[👉 Hire Acting Driver](/services/acting-drivers/)`;
       }
 
@@ -1303,7 +1303,7 @@ const callUrl = `tel:${phone}`;
           `✈️ **Airport Guarantees:**\n` +
           `• **Chauffeur Details Before Takeoff:** Driver details sent on WhatsApp **before your flight takes off** from your origin airport!\n` +
           `• Live flight radar tracking with **zero waiting charges for delayed flights**.\n` +
-          `• ₹0 advance for city drops. Outstation: ₹500 to lock cab (deducted from bill).\n\n` +
+          `• ₹500 advance to confirm & lock cab (deducted from bill); balance post-trip.\n\n` +
           `[👉 Book Chennai Airport Taxi](/services/chennai-airport-taxi/)`;
       }
 
@@ -1320,7 +1320,7 @@ const callUrl = `tel:${phone}`;
           `  - 8 hrs / 80 km: ₹2,800\n\n` +
           `• **Toyota Innova (7 Pax):**\n` +
           `  - 8 hrs / 80 km: ₹3,200 | Innova Crysta: ₹4,500\n\n` +
-          `🛡️ **Policy:** ₹0 advance deposit for local city rentals — pay balance after trip!\n\n` +
+          `🛡️ **Policy:** ₹500 advance deposit to lock cab (deducted from bill) — pay balance after trip!\n\n` +
           `[👉 Book on WhatsApp](${waUrl})`;
       }
 
@@ -1471,7 +1471,7 @@ const callUrl = `tel:${phone}`;
 
         // Async telemetry backup for offline client fallback
         try {
-          var sheetUrl = (typeof window !== 'undefined' && window.localStorage && window.localStorage.getItem('kt_google_sheet_webhook_url')) || '';
+          var sheetUrl = (window.KT_SHEET_WEBHOOK_URL || (window.localStorage && window.localStorage.getItem('kt_google_sheet_webhook_url')) || '').trim();
           if (sheetUrl && sheetUrl.startsWith('https://script.google.com/macros/s/')) {
             fetch(sheetUrl, {
               method: 'POST',

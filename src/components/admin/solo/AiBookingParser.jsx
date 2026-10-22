@@ -170,11 +170,11 @@ function parseBookingInquiryClient(rawText, phoneInput = '', guestNameInput = ''
     if (serviceCategory === 'Acting Driver') {
       chauffeurPayout = Math.round((estimatedFare * 0.82) / 50) * 50;
       companyMargin = estimatedFare - chauffeurPayout;
-      advanceSuggested = 0;
+      advanceSuggested = 500;
     } else {
       chauffeurPayout = Math.round((estimatedFare * 0.80) / 50) * 50;
       companyMargin = estimatedFare - chauffeurPayout;
-      advanceSuggested = Math.min(1000, Math.max(500, Math.round((estimatedFare * 0.1) / 100) * 100));
+      advanceSuggested = 500;
     }
   } else {
     estimatedFare = 0;
@@ -190,9 +190,7 @@ function parseBookingInquiryClient(rawText, phoneInput = '', guestNameInput = ''
     `🗓 *Schedule:* ${travelDate} @ ${pickupTime}\n` +
     `🚙 *Vehicle:* ${vehicleCategory}\n` +
     `💰 *Fare:* Rs.${estimatedFare.toLocaleString('en-IN')}\n\n` +
-    (serviceCategory === 'Acting Driver'
-      ? `✅ Verified chauffeur availability confirmed. Zero advance required — pay driver after trip completion.`
-      : `✅ Vehicle availability confirmed.\n🔒 To confirm booking, kindly pay *Rs.${advanceSuggested} Advance* via UPI to *8939539211@okbizaxis* (Kalidass Travels) and share receipt.`);
+    `✅ Availability confirmed.\n🔒 To confirm booking & lock cab, kindly pay *Rs.500 Advance* (100% deducted from bill) via UPI to *8939539211@okbizaxis* (Kalidass Travels) and share receipt. Pay remaining balance directly to chauffeur after trip completion.`;
 
   return {
     quoteRefId,
@@ -353,7 +351,7 @@ export default function AiBookingParser({ onBookingCreated, onLeadCreated, showT
         pickupAddress: payload.pickupAddress,
         vehicleCategory: payload.vehicleCategory,
         partySize: payload.partySize,
-        kycStatus: adv > 0 ? 'Advance Paid' : 'Zero Advance (Pay at Drop)',
+        kycStatus: adv > 0 ? 'Advance Paid' : '₹500 Advance Pending',
         darshanStatus: parsedData.serviceCategory,
         assignedChauffeur: 'Unassigned',
         manifestStatus: 'Need Driver',

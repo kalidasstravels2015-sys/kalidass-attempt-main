@@ -2469,7 +2469,7 @@
       },
       {
         "q": "Is advance payment required?",
-        "a": "No advance payment is needed. You can pay after reaching the airport terminal safely."
+        "a": "Only a nominal ₹500 advance is required to confirm and lock your cab (100% deducted from the final fare). The remaining balance is payable after reaching your destination."
       },
       {
         "q": "Can I book a return airport drop from Velachery?",
@@ -3344,12 +3344,12 @@
       },
       {
         "q": "Is advance payment required to book a Chennai to Bangalore cab?",
-        "a": "No advance deposit is required. You can book via WhatsApp or call and pay the driver upon reaching Bangalore via cash or UPI."
+        "a": "Only a nominal ₹500 advance is required to lock your cab (100% deducted from your total fare). You can pay the remaining balance to the driver upon reaching Bangalore via cash or UPI."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I would like to book a taxi from Chennai to Bangalore. Please confirm availability.",
     "metaTitle": "Chennai to Bangalore Taxi | One-Way & Round Trip Cabs from ₹5,500",
-    "metaDescription": "Book Chennai to Bangalore taxi from ₹5,500 one-way drop and ₹9,500 round trip. Clean AC Sedans & Innova Crysta. Fastag tolls & doorstep pickup. ₹0 advance.",
+    "metaDescription": "Book Chennai to Bangalore taxi from ₹5,500 one-way drop and ₹9,500 round trip. Clean AC Sedans & Innova Crysta. Fastag tolls & doorstep pickup. ₹500 advance to confirm.",
     "keywords": "chennai to bangalore taxi, chennai to bangalore cab fare, one way cab chennai to bangalore, chennai to bangalore outstation taxi, chennai to bangalore innova crysta, bangalore drop taxi chennai",
     "serviceType": "TaxiService",
     "origin": "Chennai",

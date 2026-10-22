@@ -152,6 +152,8 @@ function doGet(e) {
 
     var result = {
       success: true,
+      spreadsheetName: ss.getName(),
+      spreadsheetUrl: ss.getUrl(),
       count: leads.length,
       leads: leads,
       calculatorQuotes: leads,
@@ -214,7 +216,7 @@ function doPost(e) {
       var vehicle = data.vehicleCategory || data.vehicle || 'Sedan';
       var pax = data.partySize || data.passengers || '4 Pax';
       var fare = parseInt(String(data.terminalFare || data.fare || data.estimate || 0).replace(/[^0-9]/g, ''), 10) || 0;
-      var advance = parseInt(String(data.advancePaid || data.advance || 0).replace(/[^0-9]/g, ''), 10) || 0;
+      var advance = parseInt(String(data.advancePaid || data.advance || (fare > 0 ? 500 : 0)).replace(/[^0-9]/g, ''), 10) || (fare > 0 ? 500 : 0);
       var payout = parseInt(String(data.chauffeurPayout || Math.round(fare * 0.8)).replace(/[^0-9]/g, ''), 10) || 0;
       var driver = data.assignedChauffeur || 'Unassigned';
       var status = data.manifestStatus || 'Need Driver';

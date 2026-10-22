@@ -208,8 +208,8 @@ const calculateOutstationAirportFare = (distKm, selectedVeh, locText = '') => {
     kmCost = Math.round((chargeableKm * rate) / 10) * 10;
     driverBata = 0;
     totalFare = kmCost;
-    advanceToPay = 0;
-    balanceToPay = totalFare;
+    advanceToPay = 500;
+    balanceToPay = Math.max(0, totalFare - advanceToPay);
   }
 
   const extras = estimateAirportRoadExtras(locText, effKm, isOutstation);
@@ -732,7 +732,8 @@ export default function AirportBookingEngine({
       '• State Permit: ' + ((breakdown && breakdown.is_outstation && breakdown.state_permit_est > 0) ? ('₹' + breakdown.state_permit_est.toLocaleString('en-IN')) : '₹0'),
       '• Tolls & Parking: Extra',
       '• Advance to Pay: -₹' + (breakdown ? breakdown.advance_to_pay : 500),
-      '• Balance to Pay Driver (After trip): ₹' + (breakdown ? breakdown.balance_to_pay : (estimate - 500)) + ' + Extra',
+      '• Balance to Pay Driver (After trip): ₹' + (breakdown ? breakdown.balance_to_pay : Math.max(0, estimate - 500)) + ' + Extra',
+      '• Payment Terms: ₹500 Advance to Confirm (Deducted from Fare) • Balance after trip',
       '',
       'Please save my quote & confirm live cab availability.',
       (() => {
@@ -1235,51 +1236,26 @@ export default function AirportBookingEngine({
 
               {/* Bill Payment Split */}
               <div className="pt-2 border-t-2 border-slate-200 space-y-1 text-[13px] sm:text-sm">
-                {breakdown.advance_to_pay > 0 ? (
-                  <>
-                    <div className="flex justify-between items-center py-0.5 text-slate-700">
-                      <span>Total Fare:</span>
-                      <span className="font-bold text-slate-900">
-                        ₹{estimate.toLocaleString('en-IN')} + Extra
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center py-0.5 text-emerald-700 font-medium">
-                      <span>Advance to Pay:</span>
-                      <span className="font-bold">
-                        -₹{breakdown.advance_to_pay.toLocaleString('en-IN')}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center py-1 sm:py-1.5 border-t border-slate-200/80 mb-0.5">
-                      <span className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">
-                        Balance to Pay Driver <span className="text-xs font-medium text-slate-500">(After trip)</span>:
-                      </span>
-                      <span className="text-xl sm:text-2xl font-black text-[#1a73e8] tracking-tight font-heading shrink-0">
-                        ₹{breakdown.balance_to_pay.toLocaleString('en-IN')} + Extra
-                      </span>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="flex justify-between items-center py-0.5 text-slate-700">
-                      <span>Total Fare:</span>
-                      <span className="font-bold text-slate-900">
-                        ₹{estimate.toLocaleString('en-IN')} + Extra
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center py-0.5 text-emerald-700 font-medium">
-                      <span>Advance to Pay:</span>
-                      <span className="font-bold">₹0</span>
-                    </div>
-                    <div className="flex justify-between items-center py-1 sm:py-1.5 border-t border-slate-200/80 mb-0.5">
-                      <span className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">
-                        Balance to Pay Driver <span className="text-xs font-medium text-slate-500">(After trip)</span>:
-                      </span>
-                      <span className="text-xl sm:text-2xl font-black text-[#1a73e8] tracking-tight font-heading shrink-0">
-                        ₹{estimate.toLocaleString('en-IN')} + Extra
-                      </span>
-                    </div>
-                  </>
-                )}
+                <div className="flex justify-between items-center py-0.5 text-slate-700">
+                  <span>Total Fare:</span>
+                  <span className="font-bold text-slate-900">
+                    ₹{estimate.toLocaleString('en-IN')} + Extra
+                  </span>
+                </div>
+                <div className="flex justify-between items-center py-0.5 text-emerald-700 font-medium">
+                  <span>Advance to Pay:</span>
+                  <span className="font-bold">
+                    -₹{(breakdown.advance_to_pay || 500).toLocaleString('en-IN')}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center py-1 sm:py-1.5 border-t border-slate-200/80 mb-0.5">
+                  <span className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">
+                    Balance to Pay Driver <span className="text-xs font-medium text-slate-500">(After trip)</span>:
+                  </span>
+                  <span className="text-xl sm:text-2xl font-black text-[#1a73e8] tracking-tight font-heading shrink-0">
+                    ₹{Math.max(0, estimate - (breakdown.advance_to_pay || 500)).toLocaleString('en-IN')} + Extra
+                  </span>
+                </div>
               </div>
 
               {/* Inclusions & Highlights */}

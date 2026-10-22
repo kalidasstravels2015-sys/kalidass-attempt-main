@@ -451,8 +451,9 @@ export default function DriverFeeEstimator({
       `📋 BOOKING DETAILS:\n` +
       `• Trip: ${type === 'round' ? 'Round Trip' : 'One Way Drop'}${longDistNote}\n` +
       `• Route: ${route}${distStr}\n` +
-      `• Duration: ${days} Day${days > 1 ? 's' : ''}\n` +
-      `• Est. Total: ₹${total.toLocaleString('en-IN')}\n\n` +
+      `• Est. Total: ₹${total.toLocaleString('en-IN')}\n` +
+      `• Advance to Lock Chauffeur: ₹500 (Deducted from bill)\n` +
+      `• Balance Payable at Drop: ₹${Math.max(0, total - 500).toLocaleString('en-IN')} (Pay after trip)\n\n` +
       `🚗 VEHICLE DETAILS:\n` +
       `• Vehicle Type: ${vehicle.label}\n` +
       `• Transmission / Gear: ${gearLabel}\n` +
@@ -941,14 +942,14 @@ export default function DriverFeeEstimator({
               </div>
               <div className="flex justify-between items-center py-0.5 text-emerald-700 font-medium">
                 <span>Advance to Pay:</span>
-                <span className="font-bold">₹0</span>
+                <span className="font-bold">-₹500</span>
               </div>
               <div className="flex justify-between items-center py-1 text-m3-on-surface border-t border-slate-200/80">
                 <span className="text-sm sm:text-base font-extrabold text-m3-on-surface tracking-tight">
-                  Pay at Drop <span className="text-xs font-medium text-m3-on-surface-variant">(After trip)</span>:
+                  Balance at Drop <span className="text-xs font-medium text-m3-on-surface-variant">(After trip)</span>:
                 </span>
                 <span className="text-lg sm:text-xl font-black text-[#1a73e8] tracking-tight font-heading shrink-0">
-                  ₹{result.total.toLocaleString('en-IN')} + Extra
+                  ₹{Math.max(0, result.total - 500).toLocaleString('en-IN')} + Extra
                 </span>
               </div>
             </div>
@@ -1031,7 +1032,7 @@ export default function DriverFeeEstimator({
                 </a>
               </div>
               <p className="text-[11px] text-m3-on-surface-variant text-center font-medium">
-                ✓ Lock Rate 24 Hrs ({quoteRefId}) • ✓ Check Live Chauffeur Availability • ✓ Zero Advance Required (Pay After Trip)
+                ✓ Lock Rate 24 Hrs ({quoteRefId}) • ✓ Check Live Chauffeur Availability • ✓ ₹500 Advance to Lock (Deducted from Fare)
               </p>
             </div>
           </div>

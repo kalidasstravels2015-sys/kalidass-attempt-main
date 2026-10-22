@@ -191,11 +191,11 @@ export async function onRequestPost({ request }) {
       if (serviceCategory === 'Acting Driver') {
         chauffeurPayout = Math.round((estimatedFare * 0.82) / 50) * 50;
         companyMargin = estimatedFare - chauffeurPayout;
-        advanceSuggested = 0;
+        advanceSuggested = 500;
       } else {
         chauffeurPayout = Math.round((estimatedFare * 0.80) / 50) * 50;
         companyMargin = estimatedFare - chauffeurPayout;
-        advanceSuggested = Math.min(1000, Math.max(500, Math.round((estimatedFare * 0.1) / 100) * 100));
+        advanceSuggested = 500;
       }
     } else {
       estimatedFare = 6000;
@@ -212,9 +212,7 @@ export async function onRequestPost({ request }) {
       `🗓 *Schedule:* ${travelDate} @ ${pickupTime}\n` +
       `🚙 *Vehicle:* ${vehicleCategory}\n` +
       `💰 *Fare:* Rs.${estimatedFare.toLocaleString('en-IN')}\n\n` +
-      (serviceCategory === 'Acting Driver'
-        ? `✅ Verified chauffeur availability confirmed. Zero advance required — pay driver after trip completion.`
-        : `✅ Vehicle availability confirmed.\n🔒 To confirm booking, kindly pay *Rs.${advanceSuggested} Advance* via UPI to *8939539211@okbizaxis* (Kalidass Travels) and share receipt.`);
+      `✅ Availability confirmed.\n🔒 To confirm booking & lock cab, kindly pay *Rs.500 Advance* (100% deducted from bill) via UPI to *8939539211@okbizaxis* (Kalidass Travels) and share receipt. Pay remaining balance directly to chauffeur after trip completion.`;
 
     const parsed = {
       quoteRefId,

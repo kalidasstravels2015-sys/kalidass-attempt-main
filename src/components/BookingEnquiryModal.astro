@@ -74,6 +74,7 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
               ₹650
             </strong>
             <span class="text-[9px] text-m3-on-surface-variant font-medium">All-Inclusive</span>
+            <span class="text-[9px] text-emerald-700 font-bold block">₹500 Advance to Lock</span>
           </div>
         </div>
 
@@ -306,7 +307,7 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
         </div>
 
         <p class="text-center text-[11px] text-m3-on-surface-variant font-medium">
-          ₹0 Advance Required • Pay Driver After Trip
+          ₹500 Advance to Confirm Cab (100% Deducted from Fare) • Balance After Trip
         </p>
       </form>
     </div>
@@ -726,6 +727,12 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
           routeDetails = `• *Pickup Location:* ${area}\n• *Destination / Package:* ${quickBookingContext.packageTitle}`;
         }
 
+        var numFare = parseInt(String(quickBookingContext.price || '').replace(/[^0-9]/g, ''), 10) || 0;
+        var advAmt = 500;
+        var balText = numFare >= advAmt
+          ? '₹' + (numFare - advAmt).toLocaleString('en-IN') + ' (Pay driver after trip completion)'
+          : 'Remaining balance payable after trip completion';
+
         // Auto-compile 100% complete WhatsApp booking entry
         var message = 
 `*Kalidass Travels — Confirmed Booking Request* 🚕
@@ -739,6 +746,8 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
 • *Party Size:* ${quickBookingContext.passengers || '4 Pax'}
 • *Trip Duration:* ${quickBookingContext.duration}
 • *Total Fare:* ${quickBookingContext.price} (Flat All-Inclusive)
+• *Advance to Confirm:* ₹500 (100% Deducted from bill)
+• *Balance Due at Drop:* ${balText}
 
 📅 *SCHEDULE & ROUTE*
 • *Pickup Date:* ${formattedPickupDate}
@@ -747,7 +756,7 @@ ${routeDetails}
 
 ━━━━━━━━━━━━━━━━━━━━
 ✅ *Inclusions:* ${quickBookingContext.inclusions || 'Fuel, Highway Tolls, Parking, Driver Allowance & GST Invoice'}
-💰 *Payment Policy:* ₹0 Advance. Pay driver after trip completion.
+💰 *Payment Policy:* ₹500 Advance to confirm & lock cab (deducted from bill). Balance payable to driver after trip completion.
 
 Please confirm driver assignment and cab availability.`;
 
@@ -768,14 +777,18 @@ Please confirm driver assignment and cab availability.`;
               pickupDate: formattedPickupDate,
               pickupTime: formattedPickupTime,
               returnDate: formattedReturnDate,
-              fare: quickBookingContext.price
+              fare: quickBookingContext.price,
+              advance: 500,
+              advancePaid: 500,
+              balance: Math.max(0, numFare - 500)
             })
           }).catch(function () {});
         } catch (err) {}
 
         // Google Sheet Webhook backup
         try {
-          var sheetUrl = (typeof window !== 'undefined' && window.localStorage && window.localStorage.getItem('kt_google_sheet_webhook_url')) || '';
+          // Customers never have the admin's localStorage key, so prefer the build-time public URL
+          var sheetUrl = (window.KT_SHEET_WEBHOOK_URL || (window.localStorage && window.localStorage.getItem('kt_google_sheet_webhook_url')) || '').trim();
           if (sheetUrl && sheetUrl.startsWith('https://script.google.com/macros/s/')) {
             fetch(sheetUrl, {
               method: 'POST',
@@ -792,6 +805,9 @@ Please confirm driver assignment and cab availability.`;
                 pickup: area,
                 vehicle: quickBookingContext.vehicleName,
                 estimate: quickBookingContext.price,
+                advance: 500,
+                advancePaid: 500,
+                balance: Math.max(0, numFare - 500),
                 travelDate: formattedPickupDate + ' @ ' + formattedPickupTime,
                 returnDate: formattedReturnDate,
                 days: quickBookingContext.days,

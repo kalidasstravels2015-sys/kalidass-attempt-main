@@ -1599,18 +1599,23 @@ export default function QuotationEngine({
 *FARE SUMMARY*
 • *Quoted Package Fare:* *₹${finalEstimate.toLocaleString('en-IN')}* (${localPackage === '5hr50km' ? '5 Hrs / 50 Km' : localPackage === '8hr80km' ? '8 Hrs / 80 Km' : '12 Hrs / 120 Km'} — AC Car + Fuel + Chauffeur Included)
 • *Extra Usage (if exceeded):* ₹${vehicles[vehicle]?.extra_km_rate || 15}/km • ₹${vehicles[vehicle]?.extra_hr_rate || 150}/hr
-• *Payment Terms:* ₹0 Advance Required • Pay after trip completion.`
+• *Advance to Pay:* -₹500
+• *Balance to Pay Driver (After trip):* ₹${Math.max(0, finalEstimate - 500).toLocaleString('en-IN')}
+• *Payment Terms:* ₹500 Advance to Confirm (Deducted from Bill) • Balance after trip completion.`
     : (breakdown && !breakdown.is_city) ? `
 *FARE SUMMARY*
 • *Total Fare:* *₹${finalEstimate.toLocaleString('en-IN')} + Extra* (${breakdown.chargeable_km} km @ ₹${breakdown.rate_per_km}/km + Driver Allowance ₹${breakdown.driver_bata})
 ${breakdown.free_buffer_km > 0 ? `• *Free Sightseeing Buffer:* +${breakdown.free_buffer_km.toFixed(0)} km (₹0)\n` : ''}• *State Permit:* ${statePermitText}
 • *Tolls & Parking:* Extra
 • *Advance to Pay:* -₹500
-• *Balance to Pay Driver (After trip):* ₹${Math.max(0, finalEstimate - 500).toLocaleString('en-IN')} + Extra`
+• *Balance to Pay Driver (After trip):* ₹${Math.max(0, finalEstimate - 500).toLocaleString('en-IN')} + Extra
+• *Payment Terms:* ₹500 Advance to Confirm (Deducted from Bill) • Balance after trip completion.`
     : `
 *FARE SUMMARY*
 • *Quoted Fare:* *₹${finalEstimate.toLocaleString('en-IN')}* (AC Cab + Fuel + Driver Included)
-• *Payment Terms:* ₹0 Advance Required • Pay after trip completion.`;
+• *Advance to Pay:* -₹500
+• *Balance to Pay Driver (After trip):* ₹${Math.max(0, finalEstimate - 500).toLocaleString('en-IN')}
+• *Payment Terms:* ₹500 Advance to Confirm (Deducted from Bill) • Balance after trip completion.`;
 
     // Google Maps navigation links
     const { pickupPin: mapsPickupPin, directions: mapsDirections } = buildMapsLinks(
@@ -2380,37 +2385,26 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
 
                   {/* Bill Payment Split */}
                   <div className="pt-2 border-t border-slate-200/80 space-y-1 text-[13px] sm:text-sm">
-                    {activeTab !== 'local' ? (
-                      <>
-                        <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                          <span>{isTa ? 'மொத்த கட்டணம்:' : 'Total Fare:'}</span>
-                          <span className="font-bold text-m3-on-surface">
-                            ₹{estimate.toLocaleString('en-IN')}{isTa ? ' + கூடுதல்' : ' + Extra'}
-                          </span>
-                        </div>
-                        <div className="flex justify-between items-center py-0.5 text-emerald-700 font-medium">
-                          <span>{isTa ? 'முன்பணம்:' : 'Advance to Pay:'}</span>
-                          <span className="font-bold">
-                            -₹500
-                          </span>
-                        </div>
-                        <div className="flex justify-between items-center py-1 border-t border-slate-200/80">
-                          <span className="text-sm sm:text-base font-extrabold text-m3-on-surface tracking-tight">
-                            {isTa ? 'மீதி கட்டணம்' : 'Balance to Pay Driver'} <span className="text-xs font-medium text-m3-on-surface-variant">({isTa ? 'பயண முடிவில்' : 'After trip'})</span>:
-                          </span>
-                          <span className="text-lg sm:text-xl font-black text-[#1a73e8] tracking-tight font-heading shrink-0">
-                            ₹{Math.max(0, estimate - 500).toLocaleString('en-IN')}{isTa ? ' + கூடுதல்' : ' + Extra'}
-                          </span>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="flex justify-between items-center py-0.5 text-m3-on-surface font-medium">
-                        <span>{isTa ? 'பயண முடிவில் கட்டணம்:' : 'Pay at Drop:'}</span>
-                        <span className="font-bold text-m3-on-surface">
-                          ₹{estimate.toLocaleString('en-IN')}
-                        </span>
-                      </div>
-                    )}
+                    <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
+                      <span>{isTa ? 'மொத்த கட்டணம்:' : 'Total Fare:'}</span>
+                      <span className="font-bold text-m3-on-surface">
+                        ₹{estimate.toLocaleString('en-IN')}{activeTab !== 'local' ? (isTa ? ' + கூடுதல்' : ' + Extra') : ''}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center py-0.5 text-emerald-700 font-medium">
+                      <span>{isTa ? 'முன்பணம்:' : 'Advance to Pay:'}</span>
+                      <span className="font-bold">
+                        -₹500
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center py-1 border-t border-slate-200/80">
+                      <span className="text-sm sm:text-base font-extrabold text-m3-on-surface tracking-tight">
+                        {isTa ? 'மீதி கட்டணம்' : 'Balance to Pay Driver'} <span className="text-xs font-medium text-m3-on-surface-variant">({isTa ? 'பயண முடிவில்' : 'After trip'})</span>:
+                      </span>
+                      <span className="text-lg sm:text-xl font-black text-[#1a73e8] tracking-tight font-heading shrink-0">
+                        ₹{Math.max(0, estimate - 500).toLocaleString('en-IN')}{activeTab !== 'local' ? (isTa ? ' + கூடுதல்' : ' + Extra') : ''}
+                      </span>
+                    </div>
                   </div>
 
                   {/* Cut and Dried Notes */}

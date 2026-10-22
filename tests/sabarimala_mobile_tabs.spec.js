@@ -13,7 +13,7 @@ test.describe('Sabarimala Mobile & Desktop Itinerary, Guide and Navigation', () 
     // 2. Mobile Trust Strip is visible
     const trustStrip = page.locator('[data-mobile-trust-strip]');
     await expect(trustStrip).toBeVisible();
-    await expect(trustStrip.getByText('₹0 Advance')).toBeVisible();
+    await expect(trustStrip.getByText('₹500 Advance')).toBeVisible();
     await expect(trustStrip.getByText('Kerala Permit Inc.')).toBeVisible();
     await expect(trustStrip.getByText('Satvik Chauffeur')).toBeVisible();
 

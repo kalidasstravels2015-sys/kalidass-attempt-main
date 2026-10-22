@@ -13,7 +13,7 @@ test.describe('Tirupati Mobile & Desktop Itinerary, Guide and Navigation', () =>
     // 2. Mobile Trust Strip is visible
     const trustStrip = page.locator('[data-mobile-trust-strip]');
     await expect(trustStrip).toBeVisible();
-    await expect(trustStrip.getByText('₹0 Advance')).toBeVisible();
+    await expect(trustStrip.getByText('₹500 Advance')).toBeVisible();
 
     // 3. Quick Navigation is visible with all 4 section links
     const nav = page.locator('nav[data-quick-nav]');
