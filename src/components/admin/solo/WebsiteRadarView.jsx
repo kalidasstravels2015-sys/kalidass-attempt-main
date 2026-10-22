@@ -287,24 +287,24 @@ export default function WebsiteRadarView({
       <div className="bg-m3-surface-container-lowest p-4 rounded-m3-xl border border-m3-outline-variant/70 shadow-m3-1 flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
-            <h2 className="text-m3-title-m font-black text-emerald-950 flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-emerald-700">radar</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-m3-primary"></span>
+            <h2 className="text-m3-title-m font-bold text-m3-on-surface flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-m3-primary">radar</span>
               <span>Website Fare Calculator Radar</span>
             </h2>
-            <span className="text-xs font-black bg-emerald-100 text-emerald-900 border border-emerald-300 px-2.5 py-0.5 rounded-full">
+            <span className="text-xs font-semibold bg-m3-primary-container text-m3-on-primary-container px-2.5 py-0.5 rounded-full">
               {validQuotes.length} Live Estimates
             </span>
             {hotQuotesCount > 0 && (
-              <span className="text-xs font-black bg-green-100 text-green-900 border border-green-300 px-2 py-0.5 rounded-full animate-bounce">
+              <span className="text-xs font-semibold bg-m3-success-container text-m3-on-success-container px-2.5 py-0.5 rounded-full">
                 🔥 {hotQuotesCount} WhatsApp Clicked
               </span>
             )}
           </div>
           <p className="text-xs text-m3-on-surface-variant mt-1 max-w-2xl">
             Live stream of fares calculated by visitors browsing on your website booking engines (Airport Taxi, Outstation Cabs, Tour Packages, Acting Drivers).
-            <span className="font-bold text-amber-900 block mt-0.5">
-              ⚠️ Note: These are passive web visitors checking prices. Real customer inquiries who call or message appear in "1. New Enquiries".
+            <span className="font-semibold text-m3-on-surface block mt-0.5">
+              💡 Passive web visitors checking prices. Real customer inquiries who call or message appear in "1. New Enquiries".
             </span>
           </p>
         </div>
@@ -313,14 +313,14 @@ export default function WebsiteRadarView({
           <button
             type="button"
             onClick={() => setShowGuide(prev => !prev)}
-            className="px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-300 hover:bg-emerald-100 flex items-center gap-1 transition-colors"
+            className="px-3.5 py-1.5 rounded-m3-full text-xs font-semibold bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container flex items-center gap-1.5 transition-colors"
           >
             <span className="material-symbols-outlined text-[16px]">help</span>
             <span>{showGuide ? 'Hide Guide' : 'How this works?'}</span>
           </button>
           <div className="text-right pl-3 border-l border-m3-outline-variant">
             <span className="text-xs text-m3-on-surface-variant block">Total Calculations</span>
-            <span className="text-lg font-black text-emerald-900 font-mono-code">{validQuotes.length}</span>
+            <span className="text-lg font-bold text-m3-on-surface font-mono-code">{validQuotes.length}</span>
           </div>
         </div>
       </div>
@@ -554,7 +554,7 @@ export default function WebsiteRadarView({
           {/* Filter and Search Bar */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 px-1">
             <div className="relative flex-1 max-w-md">
-              <span className="material-symbols-outlined absolute left-3 top-2.5 text-m3-on-surface-variant text-[18px]">
+              <span className="material-symbols-outlined absolute left-3 top-2 text-m3-on-surface-variant text-[18px]">
                 search
               </span>
               <input
@@ -562,7 +562,7 @@ export default function WebsiteRadarView({
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search route, destination, vehicle, or quote ID..."
-                className="w-full pl-9 pr-8 py-2 text-xs font-semibold rounded-full border border-m3-outline-variant bg-m3-surface-container-lowest focus:ring-2 focus:ring-emerald-600 text-m3-on-surface"
+                className="w-full pl-9 pr-8 h-9 text-xs font-medium rounded-m3-full border border-m3-outline-variant/80 bg-m3-surface-container-low focus:bg-m3-surface-container-lowest focus:border-m3-primary text-m3-on-surface transition-colors"
               />
               {search && (
                 <button
@@ -589,10 +589,10 @@ export default function WebsiteRadarView({
                   key={f.id}
                   type="button"
                   onClick={() => setEngineFilter(f.id)}
-                  className={`h-7 px-2.5 rounded-full text-[11px] font-bold border transition-colors ${
+                  className={`h-8 px-3 rounded-m3-sm text-xs font-semibold transition-colors ${
                     engineFilter === f.id
-                      ? 'bg-emerald-600 text-white border-emerald-700 shadow-xs'
-                      : 'bg-m3-surface-container-lowest text-m3-on-surface-variant border-m3-outline-variant hover:bg-m3-surface-container-high'
+                      ? 'bg-m3-secondary-container text-m3-on-secondary-container border-0'
+                      : 'bg-m3-surface-container-lowest text-m3-on-surface-variant border border-m3-outline-variant hover:bg-m3-surface-container-high'
                   }`}
                 >
                   {f.label}

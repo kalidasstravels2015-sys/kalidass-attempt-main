@@ -46,6 +46,14 @@ export default function SoloAdminDashboard() {
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
 
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.sessionStorage) {
+      if (sessionStorage.getItem('kt_admin_pin_verified') === 'true') {
+        setIsUnlocked(true);
+      }
+    }
+  }, []);
+
   const handleVerifyPin = (e) => {
     e.preventDefault();
     if (pinInput.trim() === '2015') {
@@ -585,7 +593,7 @@ export default function SoloAdminDashboard() {
       label: '1. New Enquiries',
       icon: 'phone_in_talk',
       badge: validLeads.length > 0 ? validLeads.length : null,
-      badgeColor: 'bg-amber-100 text-amber-900 border-amber-300',
+      badgeColor: 'bg-m3-primary-container text-m3-on-primary-container',
       description: 'Calls, WhatsApp & quotes'
     },
     {
@@ -593,7 +601,7 @@ export default function SoloAdminDashboard() {
       label: '2. Active Trips',
       icon: 'local_taxi',
       badge: activeBookings.length > 0 ? (needDriverCount > 0 ? `⚠️ ${needDriverCount}` : activeBookings.length) : null,
-      badgeColor: needDriverCount > 0 ? 'bg-red-100 text-red-900 border-red-300' : 'bg-blue-100 text-blue-900 border-blue-300',
+      badgeColor: needDriverCount > 0 ? 'bg-m3-error-container text-m3-on-error-container' : 'bg-m3-secondary-container text-m3-on-secondary-container',
       description: 'Driver allotment & Duty Slips'
     },
     {
@@ -601,7 +609,7 @@ export default function SoloAdminDashboard() {
       label: '3. Completed Trips',
       icon: 'verified',
       badge: completedBookings.length > 0 ? completedBookings.length : null,
-      badgeColor: 'bg-emerald-100 text-emerald-900 border-emerald-300',
+      badgeColor: 'bg-m3-success-container text-m3-on-success-container',
       description: 'Closed duties & 5★ reviews'
     },
     {
@@ -609,7 +617,7 @@ export default function SoloAdminDashboard() {
       label: '4. Driver Roster',
       icon: 'badge',
       badge: chauffeurs.length > 0 ? chauffeurs.length : null,
-      badgeColor: 'bg-m3-surface-container-high text-m3-on-surface border-m3-outline-variant',
+      badgeColor: 'bg-m3-surface-container-high text-m3-on-surface',
       description: 'Partner drivers & cars'
     },
     {
@@ -623,7 +631,7 @@ export default function SoloAdminDashboard() {
       label: '6. Website Calc Radar',
       icon: 'radar',
       badge: validCalculatorQuotes.length > 0 ? validCalculatorQuotes.length : null,
-      badgeColor: 'bg-emerald-100 text-emerald-900 border-emerald-300',
+      badgeColor: 'bg-m3-primary-container text-m3-on-primary-container',
       description: 'Live visitor fare calculations'
     },
     {
@@ -631,7 +639,7 @@ export default function SoloAdminDashboard() {
       label: '7. Google Sheet Sync',
       icon: 'table_chart',
       badge: isSheetConnected ? 'Synced' : 'Action',
-      badgeColor: isSheetConnected ? 'bg-emerald-100 text-emerald-900 border-emerald-300' : 'bg-amber-100 text-amber-900 border-amber-300',
+      badgeColor: isSheetConnected ? 'bg-m3-success-container text-m3-on-success-container' : 'bg-m3-error-container text-m3-on-error-container',
       description: '2-way Google Sheets sync'
     }
   ];
@@ -692,14 +700,14 @@ export default function SoloAdminDashboard() {
                   setCurrentView(item.id);
                   setMobileMenuOpen(false);
                 }}
-                className={`w-full p-2.5 rounded-m3-lg text-left transition-all flex items-center justify-between gap-2.5 ${
+                className={`w-full px-3.5 py-2.5 rounded-m3-full text-left transition-colors flex items-center justify-between gap-2.5 ${
                   isActive
-                    ? 'bg-m3-primary-container/80 text-m3-on-primary-container font-black shadow-xs'
-                    : 'text-m3-on-surface-variant hover:bg-m3-surface-container-low hover:text-m3-on-surface font-semibold'
+                    ? 'bg-m3-secondary-container text-m3-on-secondary-container font-bold shadow-none'
+                    : 'text-m3-on-surface-variant hover:bg-m3-surface-container-high hover:text-m3-on-surface font-medium'
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <span className={`material-symbols-outlined text-[20px] ${isActive ? 'text-m3-primary' : 'text-m3-on-surface-variant'}`}>
+                  <span className={`material-symbols-outlined text-[20px] ${isActive ? 'text-m3-primary font-variation-fill' : 'text-m3-on-surface-variant'}`}>
                     {item.icon}
                   </span>
                   <div className="min-w-0">
@@ -709,7 +717,7 @@ export default function SoloAdminDashboard() {
                 </div>
 
                 {item.badge && (
-                  <span className={`text-[10px] font-mono-code font-bold px-2 py-0.5 rounded-full border shrink-0 ${item.badgeColor}`}>
+                  <span className={`text-[10px] font-mono-code font-bold px-2 py-0.5 rounded-full shrink-0 ${item.badgeColor}`}>
                     {item.badge}
                   </span>
                 )}
@@ -795,20 +803,20 @@ export default function SoloAdminDashboard() {
             <button
               type="button"
               onClick={() => setIsPhoneQuoteModalOpen(true)}
-              className="h-8 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-xs font-bold flex items-center gap-1 shadow-xs transition-colors"
+              className="h-9 px-3.5 bg-m3-surface-container-low hover:bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant rounded-m3-full text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-none"
               title="Quick Rate Calculator"
             >
-              <span className="material-symbols-outlined text-[16px]">calculate</span>
+              <span className="material-symbols-outlined text-[17px] text-m3-on-surface-variant">calculate</span>
               <span className="hidden sm:inline">Rate Calc</span>
             </button>
 
             <button
               type="button"
               onClick={() => setIsAiParserModalOpen(true)}
-              className="h-8 px-3 bg-m3-primary hover:bg-m3-primary/90 text-white rounded-full text-xs font-bold flex items-center gap-1 shadow-xs transition-colors"
+              className="h-9 px-3.5 bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container rounded-m3-full text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-none"
               title="Paste incoming WhatsApp quote"
             >
-              <span className="material-symbols-outlined text-[16px]">content_paste</span>
+              <span className="material-symbols-outlined text-[17px]">content_paste</span>
               <span className="hidden sm:inline">Paste WA</span>
             </button>
           </div>

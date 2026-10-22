@@ -152,15 +152,15 @@ export default function ActiveTripsView({
       <div className="bg-m3-surface-container-lowest p-4 rounded-m3-xl border border-m3-outline-variant/70 shadow-m3-1 flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-blue-600"></span>
-            <h2 className="text-m3-title-m font-black text-blue-950">
+            <span className="w-2.5 h-2.5 rounded-full bg-m3-primary"></span>
+            <h2 className="text-m3-title-m font-bold text-m3-on-surface">
               2. Active Trips & Dispatch
             </h2>
-            <span className="text-xs font-black bg-blue-100 text-blue-900 border border-blue-300 px-2.5 py-0.5 rounded-full">
+            <span className="text-xs font-semibold bg-m3-primary-container text-m3-on-primary-container px-2.5 py-0.5 rounded-full">
               {activeBookings.length} Active Trips
             </span>
             {needDriverBookings.length > 0 && (
-              <span className="text-xs font-black bg-red-100 text-red-800 border border-red-300 px-2 py-0.5 rounded-full animate-bounce">
+              <span className="text-xs font-semibold bg-m3-error-container text-m3-on-error-container px-2.5 py-0.5 rounded-full">
                 ⚠️ {needDriverBookings.length} Need Driver
               </span>
             )}
@@ -174,7 +174,7 @@ export default function ActiveTripsView({
           <button
             type="button"
             onClick={onOpenDriversModal}
-            className="h-10 px-4 bg-m3-secondary-container hover:bg-m3-surface-container-high text-m3-on-secondary-container rounded-full text-xs font-bold flex items-center gap-1.5 transition-colors"
+            className="h-10 px-4 bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container rounded-m3-full text-xs font-semibold flex items-center gap-1.5 transition-colors"
           >
             <span className="material-symbols-outlined text-[18px]">badge</span>
             <span>Manage Driver Roster ({chauffeurs.length})</span>
@@ -185,7 +185,7 @@ export default function ActiveTripsView({
       {/* Filter & Search Bar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 px-1">
         <div className="relative flex-1 max-w-md">
-          <span className="material-symbols-outlined absolute left-3 top-2.5 text-m3-on-surface-variant text-[18px]">
+          <span className="material-symbols-outlined absolute left-3 top-2 text-m3-on-surface-variant text-[18px]">
             search
           </span>
           <input
@@ -193,7 +193,7 @@ export default function ActiveTripsView({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search passenger, route, booking ID, or driver..."
-            className="w-full pl-9 pr-8 py-2 text-xs font-semibold rounded-full border border-m3-outline-variant bg-m3-surface-container-lowest focus:ring-2 focus:ring-m3-primary text-m3-on-surface"
+            className="w-full pl-9 pr-8 h-9 text-xs font-medium rounded-m3-full border border-m3-outline-variant/80 bg-m3-surface-container-low focus:bg-m3-surface-container-lowest focus:border-m3-primary text-m3-on-surface transition-colors"
           />
           {search && (
             <button
@@ -216,10 +216,10 @@ export default function ActiveTripsView({
               key={f.id}
               type="button"
               onClick={() => setStatusFilter(f.id)}
-              className={`h-7 px-2.5 rounded-full text-[11px] font-bold border transition-colors ${
+              className={`h-8 px-3 rounded-m3-sm text-xs font-semibold transition-colors ${
                 statusFilter === f.id
-                  ? 'bg-blue-600 text-white border-blue-700 shadow-xs'
-                  : 'bg-m3-surface-container-lowest text-m3-on-surface-variant border-m3-outline-variant hover:bg-m3-surface-container-high'
+                  ? 'bg-m3-secondary-container text-m3-on-secondary-container border-0'
+                  : 'bg-m3-surface-container-lowest text-m3-on-surface-variant border border-m3-outline-variant hover:bg-m3-surface-container-high'
               }`}
             >
               {f.label}
@@ -230,8 +230,8 @@ export default function ActiveTripsView({
 
       {/* Active Trips List */}
       {filteredBookings.length === 0 ? (
-        <div className="p-10 text-center bg-m3-surface-container-lowest rounded-m3-xl border border-m3-outline-variant/70 space-y-3">
-          <div className="w-14 h-14 mx-auto rounded-full bg-blue-100 text-blue-800 flex items-center justify-center">
+        <div className="p-10 text-center bg-m3-surface-container-lowest rounded-m3-xl border border-m3-outline-variant/70 shadow-m3-1 space-y-3">
+          <div className="w-14 h-14 mx-auto rounded-full bg-m3-surface-container-high text-m3-on-surface-variant flex items-center justify-center">
             <span className="material-symbols-outlined text-3xl">local_taxi</span>
           </div>
           <h3 className="text-sm font-bold text-m3-on-surface">No Active Trips Found</h3>

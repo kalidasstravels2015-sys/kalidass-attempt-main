@@ -305,11 +305,11 @@ export default function EnquiriesView({
       <div className="bg-m3-surface-container-lowest p-4 rounded-m3-xl border border-m3-outline-variant/70 shadow-m3-1 flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-amber-500 animate-pulse"></span>
-            <h2 className="text-m3-title-m font-black text-amber-950">
+            <span className="w-2.5 h-2.5 rounded-full bg-m3-primary"></span>
+            <h2 className="text-m3-title-m font-bold text-m3-on-surface">
               1. Customer Enquiries & Quotes
             </h2>
-            <span className="text-xs font-black bg-amber-100 text-amber-900 border border-amber-300 px-2.5 py-0.5 rounded-full">
+            <span className="text-xs font-semibold bg-m3-primary-container text-m3-on-primary-container px-2.5 py-0.5 rounded-full">
               {validLeads.length} Inquiries
             </span>
           </div>
@@ -318,45 +318,23 @@ export default function EnquiriesView({
           </p>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-wrap items-center gap-2">
+        {/* Primary Action Button (Rate Calc & Paste WA are in the top app bar) */}
+        <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => setShowNewCallModal(true)}
-            className="h-10 px-4 bg-amber-500 hover:bg-amber-600 text-amber-950 rounded-full text-xs font-black flex items-center gap-1.5 shadow-m3-1 transition-all"
+            className="h-10 px-5 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-m3-full text-xs font-semibold flex items-center gap-2 shadow-m3-1 transition-all"
           >
             <span className="material-symbols-outlined text-[18px]">add_call</span>
             <span>+ New Customer Call</span>
           </button>
-
-          {onOpenPhoneQuoteEngine && (
-            <button
-              type="button"
-              onClick={onOpenPhoneQuoteEngine}
-              className="h-10 px-3.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-xs font-bold flex items-center gap-1.5 shadow-xs transition-colors"
-            >
-              <span className="material-symbols-outlined text-[18px]">calculate</span>
-              <span className="hidden sm:inline">Rate Calc</span>
-            </button>
-          )}
-
-          {onOpenAiParser && (
-            <button
-              type="button"
-              onClick={onOpenAiParser}
-              className="h-10 px-3.5 bg-m3-primary hover:bg-m3-primary/90 text-white rounded-full text-xs font-bold flex items-center gap-1.5 shadow-xs transition-colors"
-            >
-              <span className="material-symbols-outlined text-[18px]">content_paste</span>
-              <span className="hidden sm:inline">Paste WhatsApp</span>
-            </button>
-          )}
         </div>
       </div>
 
       {/* Filter & Search Bar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 px-1">
         <div className="relative flex-1 max-w-md">
-          <span className="material-symbols-outlined absolute left-3 top-2.5 text-m3-on-surface-variant text-[18px]">
+          <span className="material-symbols-outlined absolute left-3 top-2 text-m3-on-surface-variant text-[18px]">
             search
           </span>
           <input
@@ -364,7 +342,7 @@ export default function EnquiriesView({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by customer name, phone, or route..."
-            className="w-full pl-9 pr-8 py-2 text-xs font-semibold rounded-full border border-m3-outline-variant bg-m3-surface-container-lowest focus:ring-2 focus:ring-m3-primary text-m3-on-surface"
+            className="w-full pl-9 pr-8 h-9 text-xs font-medium rounded-m3-full border border-m3-outline-variant/80 bg-m3-surface-container-low focus:bg-m3-surface-container-lowest focus:border-m3-primary text-m3-on-surface transition-colors"
           />
           {search && (
             <button
@@ -388,10 +366,10 @@ export default function EnquiriesView({
               key={f.id}
               type="button"
               onClick={() => setSourceFilter(f.id)}
-              className={`h-7 px-2.5 rounded-full text-[11px] font-bold border transition-colors ${
+              className={`h-8 px-3 rounded-m3-sm text-xs font-semibold transition-colors ${
                 sourceFilter === f.id
-                  ? 'bg-amber-500 text-amber-950 border-amber-600 shadow-xs'
-                  : 'bg-m3-surface-container-lowest text-m3-on-surface-variant border-m3-outline-variant hover:bg-m3-surface-container-high'
+                  ? 'bg-m3-secondary-container text-m3-on-secondary-container border-0'
+                  : 'bg-m3-surface-container-lowest text-m3-on-surface-variant border border-m3-outline-variant hover:bg-m3-surface-container-high'
               }`}
             >
               {f.label}
@@ -402,8 +380,8 @@ export default function EnquiriesView({
 
       {/* Enquiries List */}
       {filteredLeads.length === 0 ? (
-        <div className="p-10 text-center bg-m3-surface-container-lowest rounded-m3-xl border border-m3-outline-variant/70 space-y-3">
-          <div className="w-14 h-14 mx-auto rounded-full bg-amber-100 text-amber-800 flex items-center justify-center">
+        <div className="p-10 text-center bg-m3-surface-container-lowest rounded-m3-xl border border-m3-outline-variant/70 shadow-m3-1 space-y-3">
+          <div className="w-14 h-14 mx-auto rounded-full bg-m3-surface-container-high text-m3-on-surface-variant flex items-center justify-center">
             <span className="material-symbols-outlined text-3xl">phone_in_talk</span>
           </div>
           <h3 className="text-sm font-bold text-m3-on-surface">No Pending Enquiries</h3>
@@ -413,10 +391,10 @@ export default function EnquiriesView({
           <button
             type="button"
             onClick={() => setShowNewCallModal(true)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-amber-950 rounded-full text-xs font-black shadow-xs"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container rounded-m3-full text-xs font-semibold transition-colors"
           >
             <span className="material-symbols-outlined text-sm">add_call</span>
-            <span>+ Record Customer Call</span>
+            <span>Record Customer Call</span>
           </button>
         </div>
       ) : (
@@ -434,16 +412,16 @@ export default function EnquiriesView({
                 {/* Left: Lead Details */}
                 <div className="space-y-1.5 flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-mono-code text-xs font-black bg-amber-100 text-amber-950 border border-amber-300 px-2 py-0.5 rounded-full">
+                    <span className="font-mono-code text-xs font-bold bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant/70 px-2.5 py-0.5 rounded-full">
                       {getOrderedEnquiryId(lead, idx, filteredLeads.length)}
                     </span>
 
-                    <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border flex items-center gap-1 ${
+                    <span className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1 ${
                       isGoogleAds
-                        ? 'bg-blue-50 text-blue-800 border-blue-200'
+                        ? 'bg-m3-primary-container/80 text-m3-on-primary-container'
                         : isWhatsApp
-                        ? 'bg-green-50 text-green-800 border-green-200'
-                        : 'bg-amber-50 text-amber-800 border-amber-200'
+                        ? 'bg-m3-success-container/80 text-m3-on-success-container'
+                        : 'bg-m3-secondary-container/80 text-m3-on-secondary-container'
                     }`}>
                       <span className="material-symbols-outlined text-[13px]">
                         {isGoogleAds ? 'campaign' : isWhatsApp ? 'chat' : 'call'}
@@ -458,7 +436,7 @@ export default function EnquiriesView({
                     {phone && (
                       <a
                         href={`tel:+91${phone}`}
-                        className="text-xs font-mono-code font-bold text-blue-700 hover:underline bg-blue-50 px-2 py-0.5 rounded-full flex items-center gap-1"
+                        className="text-xs font-mono-code font-bold text-m3-primary hover:underline bg-m3-primary-container/40 px-2 py-0.5 rounded-full flex items-center gap-1"
                       >
                         <span className="material-symbols-outlined text-[13px]">call</span>
                         <span>+91 {phone}</span>
@@ -470,7 +448,7 @@ export default function EnquiriesView({
                     </span>
                   </div>
 
-                  <div className="text-sm font-black text-m3-on-surface truncate">
+                  <div className="text-sm font-bold text-m3-on-surface truncate">
                     📍 {lead.pickup} ➔ {lead.drop}
                   </div>
 
@@ -490,7 +468,7 @@ export default function EnquiriesView({
                 {/* Right: Price & 3 Action Buttons */}
                 <div className="flex flex-wrap items-center gap-2 shrink-0 pt-2 lg:pt-0 border-t lg:border-t-0 border-m3-outline-variant/50">
                   <div className="text-left lg:text-right mr-1">
-                    <span className="text-base font-black text-amber-950 block">
+                    <span className="text-base font-bold text-m3-on-surface block">
                       Rs.{Number(lead.estimatedFare || 0).toLocaleString('en-IN')}
                     </span>
                     <span className="text-[11px] text-m3-on-surface-variant font-medium">Quoted Fare</span>
@@ -499,7 +477,7 @@ export default function EnquiriesView({
                   <button
                     type="button"
                     onClick={() => handleSendQuoteWA(lead)}
-                    className="h-9 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300 rounded-full text-xs font-bold flex items-center gap-1 transition-colors"
+                    className="h-9 px-3.5 bg-m3-surface-container-low hover:bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant rounded-m3-full text-xs font-semibold flex items-center gap-1.5 transition-colors"
                   >
                     <span className="material-symbols-outlined text-[16px] text-emerald-700">chat</span>
                     <span>Send Quote (WA)</span>
@@ -508,7 +486,7 @@ export default function EnquiriesView({
                   <button
                     type="button"
                     onClick={() => handleSendFollowUpWA(lead)}
-                    className="h-9 px-2.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 rounded-full text-xs font-bold flex items-center gap-1 transition-colors"
+                    className="h-9 px-3 bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container rounded-m3-full text-xs font-semibold flex items-center gap-1.5 transition-colors"
                     title="Send follow-up reminder to confirm cab"
                   >
                     <span className="material-symbols-outlined text-[15px] text-amber-700">ring_volume</span>
@@ -518,11 +496,11 @@ export default function EnquiriesView({
                   <button
                     type="button"
                     onClick={() => handleLockLeadWithAdvance(lead)}
-                    className="h-9 px-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-full text-xs font-black flex items-center gap-1.5 shadow-m3-1 transition-all"
+                    className="h-9 px-4 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-m3-full text-xs font-semibold flex items-center gap-1.5 shadow-m3-1 transition-all"
                     title="Customer paid ₹500 advance. Move to Step 2: Active Trips"
                   >
                     <span className="material-symbols-outlined text-[16px]">verified</span>
-                    <span>✅ Got ₹500 Adv (Confirm)</span>
+                    <span>Got ₹500 Adv (Confirm)</span>
                   </button>
                 </div>
               </div>
@@ -535,20 +513,20 @@ export default function EnquiriesView({
       {showNewCallModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-sm animate-fadeIn">
           <div className="bg-m3-surface-container-lowest border border-m3-outline-variant rounded-m3-2xl shadow-m3-4 w-full max-w-xl max-h-[92vh] overflow-hidden flex flex-col">
-            <div className="p-4 border-b border-m3-outline-variant bg-amber-50/70 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-full bg-amber-500 text-amber-950 flex items-center justify-center">
+            <div className="p-4 border-b border-m3-outline-variant/70 bg-m3-surface-container-low flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-full bg-m3-primary-container text-m3-on-primary-container flex items-center justify-center">
                   <span className="material-symbols-outlined text-[20px]">add_call</span>
                 </div>
                 <div>
-                  <h3 className="text-sm font-black text-amber-950">Record Inbound Customer Call</h3>
-                  <p className="text-xs text-amber-900/80">Enter customer details ➔ send WhatsApp quote or confirm</p>
+                  <h3 className="text-sm font-bold text-m3-on-surface">Record Inbound Customer Call</h3>
+                  <p className="text-xs text-m3-on-surface-variant">Enter customer details ➔ send WhatsApp quote or confirm</p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setShowNewCallModal(false)}
-                className="w-8 h-8 rounded-full hover:bg-amber-200/50 flex items-center justify-center text-amber-950 font-bold"
+                className="w-8 h-8 rounded-full hover:bg-m3-surface-container-high flex items-center justify-center text-m3-on-surface-variant font-bold"
               >
                 ✕
               </button>
@@ -657,10 +635,10 @@ export default function EnquiriesView({
                       key={s.id}
                       type="button"
                       onClick={() => setNewCall({ ...newCall, source: s.id })}
-                      className={`p-2 rounded-m3-sm border text-center font-bold text-[11px] transition-colors ${
+                      className={`p-2 rounded-m3-sm border text-center font-semibold text-[11px] transition-colors ${
                         newCall.source === s.id
-                          ? 'bg-amber-500 text-amber-950 border-amber-600 shadow-xs'
-                          : 'bg-m3-surface-container-low text-m3-on-surface-variant border-m3-outline-variant'
+                          ? 'bg-m3-secondary-container text-m3-on-secondary-container border-0'
+                          : 'bg-m3-surface-container-low text-m3-on-surface-variant border-m3-outline-variant hover:bg-m3-surface-container-high'
                       }`}
                     >
                       {s.label}
@@ -669,10 +647,10 @@ export default function EnquiriesView({
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-m3-outline-variant flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2">
+              <div className="pt-3 border-t border-m3-outline-variant/70 flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2">
                 <button
                   type="submit"
-                  className="h-10 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs"
+                  className="h-10 px-4 bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container rounded-m3-full font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors"
                 >
                   <span className="material-symbols-outlined text-[17px]">send</span>
                   <span>1. Save & Send WhatsApp Quote</span>
@@ -681,7 +659,7 @@ export default function EnquiriesView({
                 <button
                   type="button"
                   onClick={handleQuickConfirmBooking}
-                  className="h-10 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-black text-xs flex items-center justify-center gap-1.5 shadow-m3-1"
+                  className="h-10 px-4 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-m3-full font-semibold text-xs flex items-center justify-center gap-1.5 shadow-m3-1 transition-all"
                 >
                   <span className="material-symbols-outlined text-[17px]">verified</span>
                   <span>2. ₹500 Advance Received (Confirm Trip)</span>
@@ -696,20 +674,20 @@ export default function EnquiriesView({
       {convertModalLead && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-sm animate-fadeIn">
           <div className="bg-m3-surface-container-lowest border border-m3-outline-variant rounded-m3-2xl shadow-m3-4 w-full max-w-lg max-h-[92vh] overflow-hidden flex flex-col">
-            <div className="p-4 border-b border-m3-outline-variant bg-blue-50/70 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center">
+            <div className="p-4 border-b border-m3-outline-variant/70 bg-m3-surface-container-low flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-full bg-m3-primary-container text-m3-on-primary-container flex items-center justify-center">
                   <span className="material-symbols-outlined text-[20px]">person_check</span>
                 </div>
                 <div>
-                  <h3 className="text-sm font-black text-blue-950">Customer Contact Details Required</h3>
-                  <p className="text-xs text-blue-900/80">Name and 10-digit mobile number are required before moving to Active Trips</p>
+                  <h3 className="text-sm font-bold text-m3-on-surface">Customer Contact Details Required</h3>
+                  <p className="text-xs text-m3-on-surface-variant">Name and 10-digit mobile number are required before moving to Active Trips</p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setConvertModalLead(null)}
-                className="w-8 h-8 rounded-full hover:bg-blue-200/50 flex items-center justify-center text-blue-950 font-bold"
+                className="w-8 h-8 rounded-full hover:bg-m3-surface-container-high flex items-center justify-center text-m3-on-surface-variant font-bold"
               >
                 ✕
               </button>
@@ -827,7 +805,7 @@ export default function EnquiriesView({
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-black shadow-m3-1 flex items-center gap-1.5 transition-all"
+                  className="px-5 py-2.5 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary text-xs font-semibold shadow-m3-1 flex items-center gap-1.5 transition-all"
                 >
                   <span className="material-symbols-outlined text-[16px]">verified</span>
                   <span>Confirm & Move to Active Trips (Step 2)</span>
