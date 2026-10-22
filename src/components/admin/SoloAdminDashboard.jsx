@@ -226,15 +226,15 @@ export default function SoloAdminDashboard() {
         csvCalculations = cData.calculations || [];
       }
 
-      // Fallback: direct Google Sheet fetch if backend returned 0 leads
-      if (apiLeads.length === 0 && sheetUrl && sheetUrl.startsWith('http')) {
+      // Fallback: direct Google Sheet fetch if backend returned 0 leads or 0 bookings
+      if ((apiLeads.length === 0 || apiBookings.length === 0) && sheetUrl && sheetUrl.startsWith('http')) {
         try {
           const directRes = await fetch(sheetUrl, { redirect: 'follow' });
           if (directRes.ok) {
             const directJson = await directRes.json();
             if (directJson && directJson.success) {
-              if (Array.isArray(directJson.leads)) apiLeads = directJson.leads;
-              if (Array.isArray(directJson.calculatorQuotes)) apiQuotes = directJson.calculatorQuotes;
+              if (Array.isArray(directJson.leads) && apiLeads.length === 0) apiLeads = directJson.leads;
+              if (Array.isArray(directJson.calculatorQuotes) && apiQuotes.length === 0) apiQuotes = directJson.calculatorQuotes;
               if (Array.isArray(directJson.bookings) && apiBookings.length === 0) apiBookings = directJson.bookings;
             }
           }
@@ -276,18 +276,28 @@ export default function SoloAdminDashboard() {
         return merged;
       });
 
-      if (apiBookings.length > 0) {
-        setBookings(prevBookings => {
-          const map = new Map();
-          (prevBookings || []).forEach(b => { if (b && b.bookingId) map.set(b.bookingId, b); });
-          apiBookings.forEach(b => { if (b && b.bookingId) map.set(b.bookingId, b); });
-          const merged = Array.from(map.values());
-          if (typeof window !== 'undefined') {
-            localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(merged));
-          }
-          return merged;
-        });
-      }
+      // Merge remote bookings with local device bookings
+      setBookings(prevBookings => {
+        const map = new Map();
+        (prevBookings || []).forEach(b => { if (b && b.bookingId) map.set(b.bookingId, b); });
+        apiBookings.forEach(b => { if (b && b.bookingId) map.set(b.bookingId, b); });
+        const merged = Array.from(map.values());
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(merged));
+        }
+
+        // Auto-reconcile: If local bookings exist that aren't yet recorded in Google Sheet, sync them up
+        if (sheetUrl && sheetUrl.startsWith('http')) {
+          const remoteIds = new Set(apiBookings.map(b => b.bookingId));
+          (prevBookings || []).forEach(localB => {
+            if (localB && localB.bookingId && !remoteIds.has(localB.bookingId)) {
+              syncBookingToRemote(localB).catch(() => {});
+            }
+          });
+        }
+
+        return merged;
+      });
 
       setLastSync(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
       showToast('Live bookings and enquiries synced!', 'success');
@@ -379,6 +389,36 @@ export default function SoloAdminDashboard() {
     }
   };
 
+  // Helper: Synchronize booking changes with server endpoint and Google Sheets
+  const syncBookingToRemote = async (payload) => {
+    const sheetUrl = getActiveGoogleSheetUrl();
+    const webhookParam = sheetUrl ? `?webhook=${encodeURIComponent(sheetUrl)}` : '';
+
+    // 1. Post to API endpoint with ?webhook= parameter
+    try {
+      await fetch(`/api/admin/bookings${webhookParam}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } catch (_) {}
+
+    // 2. Direct fallback to Google Apps Script Web App URL
+    if (sheetUrl && sheetUrl.startsWith('https://script.google.com/macros/s/')) {
+      try {
+        await fetch(sheetUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({
+            type: 'admin_booking_sync',
+            date: new Date().toLocaleString('en-IN'),
+            ...payload
+          })
+        });
+      } catch (_) {}
+    }
+  };
+
   // Convert Inquiry to Confirmed Booking (Advance Received)
   const handleConvertToConfirmed = async (newConfirmed, quoteIdToRemove) => {
     // Strict Guard: Without valid customer name and 10-digit mobile number, enquiries cannot move to Active Trips
@@ -398,13 +438,7 @@ export default function SoloAdminDashboard() {
       if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.LEADS, JSON.stringify(remainingLeads));
     }
 
-    try {
-      await fetch('/api/admin/bookings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newConfirmed)
-      });
-    } catch (e) {}
+    await syncBookingToRemote(newConfirmed);
 
     // Switch view automatically to Active Trips so user can allot driver
     setCurrentView('ACTIVE_TRIPS');
@@ -417,14 +451,7 @@ export default function SoloAdminDashboard() {
     setBookings(nextList);
     if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(nextList));
 
-    try {
-      await fetch('/api/admin/bookings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'delete', bookingId })
-      });
-    } catch (e) {}
-
+    await syncBookingToRemote({ action: 'delete', bookingId });
     showToast(`Trip ${bookingId} has been removed.`, 'info');
   };
 
@@ -444,14 +471,7 @@ export default function SoloAdminDashboard() {
     setBookings(updated);
     if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(updated));
 
-    try {
-      await fetch('/api/admin/bookings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'update', bookingId, guestNamePhone: validation.formattedGuestNamePhone })
-      });
-    } catch (e) {}
-
+    await syncBookingToRemote({ action: 'update', bookingId, guestNamePhone: validation.formattedGuestNamePhone });
     showToast(`Customer contact updated for trip ${bookingId}!`, 'success');
     return true;
   };
@@ -470,13 +490,7 @@ export default function SoloAdminDashboard() {
     setBookings(updated);
     if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(updated));
 
-    try {
-      await fetch('/api/admin/bookings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'update', bookingId, assignedChauffeur })
-      });
-    } catch (e) {}
+    await syncBookingToRemote({ action: 'update', bookingId, assignedChauffeur });
   };
 
   // Change Trip Status
@@ -485,13 +499,7 @@ export default function SoloAdminDashboard() {
     setBookings(updated);
     if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(updated));
 
-    try {
-      await fetch('/api/admin/bookings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'update', bookingId, manifestStatus })
-      });
-    } catch (e) {}
+    await syncBookingToRemote({ action: 'update', bookingId, manifestStatus });
 
     if (manifestStatus === 'Completed') {
       setCurrentView('COMPLETED');
@@ -504,17 +512,11 @@ export default function SoloAdminDashboard() {
     setBookings(updated);
     if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(updated));
 
-    try {
-      await fetch('/api/admin/bookings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'update', bookingId, reviewStatus })
-      });
-    } catch (e) {}
+    await syncBookingToRemote({ action: 'update', bookingId, reviewStatus });
   };
 
   // Duty Slip Saved
-  const handleDutySlipSaved = (dutySlip, bookingId, finalFare) => {
+  const handleDutySlipSaved = async (dutySlip, bookingId, finalFare) => {
     const updated = bookings.map(b => (
       b.bookingId === bookingId
         ? { ...b, manifestStatus: 'Completed', terminalFare: finalFare, financialClosure: 'Unreconciled' }
@@ -522,6 +524,8 @@ export default function SoloAdminDashboard() {
     ));
     setBookings(updated);
     if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(updated));
+
+    await syncBookingToRemote({ action: 'update', bookingId, manifestStatus: 'Completed', terminalFare: finalFare });
     showToast(`Trip ${bookingId} completed! Moved to Step 3.`, 'success');
     setCurrentView('COMPLETED');
   };

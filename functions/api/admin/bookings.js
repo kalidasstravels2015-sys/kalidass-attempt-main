@@ -70,7 +70,7 @@ export async function onRequestPost({ request, env }) {
 
     if (customWebhook && customWebhook.startsWith('http')) {
       try {
-        fetch(customWebhook, {
+        await fetch(customWebhook, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify({
@@ -78,8 +78,10 @@ export async function onRequestPost({ request, env }) {
             date: new Date().toLocaleString('en-IN'),
             ...body
           })
-        }).catch(() => {});
-      } catch (_) {}
+        });
+      } catch (sheetErr) {
+        console.warn('Google Sheet Sync post notice:', sheetErr.message);
+      }
     }
 
     return new Response(JSON.stringify({ success: true, booking: body }), {
