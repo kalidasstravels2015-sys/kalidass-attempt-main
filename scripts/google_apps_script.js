@@ -97,9 +97,16 @@ function doGet(e) {
         var row = values[i];
         if (row[0]) {
           var cleanPhone = String(row[3] || '').replace(/[^0-9]/g, '').slice(-10);
+          var rawDate = row[1];
+          var timestampStr = '';
+          if (rawDate instanceof Date) {
+            timestampStr = Utilities.formatDate(rawDate, 'Asia/Kolkata', 'dd MMM yyyy, hh:mm a');
+          } else {
+            timestampStr = String(rawDate || '');
+          }
           leads.push({
             quoteId: String(row[0] || ''),
-            timestamp: String(row[1] || ''),
+            timestamp: timestampStr,
             guestName: String(row[2] || (cleanPhone ? 'Customer (' + cleanPhone + ')' : 'Website Visitor')),
             phone: cleanPhone,
             sourcePage: cleanPhone ? (row[11] ? row[11] + ' (+91 ' + cleanPhone + ')' : '+91 ' + cleanPhone) : String(row[11] || 'Website Enquiry'),
@@ -212,7 +219,7 @@ function doPost(e) {
       var bookingId = hasSeqBooking ? incomingBookingId : getNextSequenceId(bookSheet, '#KT-BK-');
       var guestNamePhone = data.guestNamePhone || (data.name ? (data.name + ' (' + (data.phone || '') + ')') : (data.phone || 'Customer'));
       var schedule = data.travelDateTime || data.travelDate || data.pickupDate || 'Tomorrow';
-      var route = data.pickupAddress || (data.pickup + ' ➔ ' + (data.drop || 'Outstation'));
+      var route = data.pickupAddress || (data.pickup ? (data.pickup + ' ➔ ' + (data.drop || 'Outstation')) : (data.drop || 'Chennai ➔ Outstation'));
       var vehicle = data.vehicleCategory || data.vehicle || 'Sedan';
       var pax = data.partySize || data.passengers || '4 Pax';
       var fare = parseInt(String(data.terminalFare || data.fare || data.estimate || 0).replace(/[^0-9]/g, ''), 10) || 0;

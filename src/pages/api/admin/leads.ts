@@ -94,13 +94,10 @@ export const GET: APIRoute = async ({ request, url }) => {
             const hasPhone = /[6-9]\d{9}/.test(`${item.sourcePage} ${item.pickup} ${item.drop} ${item.metadata}`);
             const statusLower = (item.status || '').toLowerCase();
             const isConfirmedContact = hasPhone || 
-              statusLower.includes('whatsapp') || 
-              statusLower.includes('call') || 
               statusLower.includes('advance') ||
-              item.quoteId.startsWith('#QT') || 
-              item.quoteId.startsWith('#CALL') || 
-              item.quoteId.startsWith('#ENQ') || 
-              (item.quoteId.startsWith('#WA') && !item.quoteId.startsWith('#CALC'));
+              (item.quoteId.startsWith('#CALL') && hasPhone) || 
+              (item.quoteId.startsWith('#ENQ') && hasPhone) || 
+              (item.quoteId.startsWith('#WA') && hasPhone);
             if (isConfirmedContact) {
               actionableLeads.push(item);
             } else {

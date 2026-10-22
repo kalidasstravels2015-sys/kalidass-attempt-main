@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getActiveGoogleSheetUrl, saveActiveGoogleSheetUrl } from '../../../config/googleSheets';
+import { formatCleanDateTime, cleanLocationName } from '../../../utils/dateFormatter';
 
 /**
  * SettingsView - Step 6: Google Sheet Sync & System Settings
@@ -224,14 +225,18 @@ export default function SettingsView({
                 >
                   <div className="min-w-0">
                     <div className="font-bold text-m3-on-surface truncate">
-                      📍 {q.pickup || 'Chennai'} ➔ {q.drop}
+                      📍 {cleanLocationName(q.pickup) || 'Chennai'} ➔ {cleanLocationName(q.drop)}
                     </div>
                     <div className="text-[11px] text-m3-on-surface-variant flex items-center gap-1.5 mt-0.5">
                       <span>🚗 {q.vehicle}</span>
                       <span>•</span>
                       <span>{q.tripType || 'Round Trip'}</span>
-                      <span>•</span>
-                      <span className="text-m3-on-surface-variant/70">{q.timestamp}</span>
+                      {q.timestamp && (
+                        <>
+                          <span>•</span>
+                          <span className="text-m3-on-surface-variant/80 font-mono-code">{formatCleanDateTime(q.timestamp)}</span>
+                        </>
+                      )}
                     </div>
                   </div>
                   <div className="text-right shrink-0">

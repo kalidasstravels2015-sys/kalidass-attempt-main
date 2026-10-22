@@ -8,8 +8,9 @@ import SettingsView from './solo/SettingsView';
 import SoloDutySlipModal from './solo/SoloDutySlipModal';
 import AiBookingParser from './solo/AiBookingParser';
 import WebsiteRadarView from './solo/WebsiteRadarView';
+import OperationsCalendarView from './solo/OperationsCalendarView';
 import { getActiveGoogleSheetUrl, fetchRemoteGoogleSheetUrl } from '../../config/googleSheets';
-import { parseAndValidateContact, validateCustomerContact } from '../../utils/bookingContactValidator';
+import { parseAndValidateContact, validateCustomerContact, isActionableLead, deduplicateCalculatorQuotes } from '../../utils/bookingContactValidator';
 
 const STORAGE_KEYS = {
   BOOKINGS: 'kt_solo_real_bookings_v8',
@@ -132,7 +133,7 @@ export default function SoloAdminDashboard() {
 
   // Counts for sidebar badges
   const validLeads = useMemo(
-    () => leads.filter(l => Number(l.estimatedFare) > 0 && !(l.drop || '').toLowerCase().includes('whatsapp chat')),
+    () => leads.filter(isActionableLead),
     [leads]
   );
 
@@ -152,7 +153,7 @@ export default function SoloAdminDashboard() {
   );
 
   const validCalculatorQuotes = useMemo(
-    () => calculatorQuotes.filter(q => Number(q.estimatedFare) > 0 && !(q.drop || '').toLowerCase().includes('whatsapp chat')),
+    () => deduplicateCalculatorQuotes(calculatorQuotes),
     [calculatorQuotes]
   );
 
@@ -244,8 +245,8 @@ export default function SoloAdminDashboard() {
       // Merge remote leads with local manual leads
       setLeads(prevLeads => {
         const map = new Map();
-        (prevLeads || []).forEach(l => { if (l && l.quoteId) map.set(l.quoteId, l); });
-        apiLeads.forEach(l => { if (l && l.quoteId) map.set(l.quoteId, l); });
+        (prevLeads || []).filter(isActionableLead).forEach(l => { if (l && l.quoteId) map.set(l.quoteId, l); });
+        (apiLeads || []).filter(isActionableLead).forEach(l => { if (l && l.quoteId) map.set(l.quoteId, l); });
         const merged = Array.from(map.values());
         if (typeof window !== 'undefined') {
           localStorage.setItem(STORAGE_KEYS.LEADS, JSON.stringify(merged));
@@ -269,7 +270,8 @@ export default function SoloAdminDashboard() {
         (csvCalculations || []).forEach(q => { if (q && q.quoteId) map.set(q.quoteId, q); });
         (apiQuotes || []).forEach(q => { if (q && q.quoteId) map.set(q.quoteId, q); });
 
-        const merged = Array.from(map.values());
+        const rawList = Array.from(map.values());
+        const merged = deduplicateCalculatorQuotes(rawList);
         if (typeof window !== 'undefined') {
           localStorage.setItem(STORAGE_KEYS.QUOTES, JSON.stringify(merged.slice(0, 100)));
         }
@@ -604,9 +606,17 @@ export default function SoloAdminDashboard() {
       id: 'ACTIVE_TRIPS',
       label: '2. Active Trips',
       icon: 'local_taxi',
-      badge: activeBookings.length > 0 ? (needDriverCount > 0 ? `⚠️ ${needDriverCount}` : activeBookings.length) : null,
+      badge: activeBookings.length > 0 ? (needDriverCount > 0 ? `⚠️ ${activeBookings.length}` : activeBookings.length) : null,
       badgeColor: needDriverCount > 0 ? 'bg-m3-error-container text-m3-on-error-container' : 'bg-m3-secondary-container text-m3-on-secondary-container',
       description: 'Driver allotment & Duty Slips'
+    },
+    {
+      id: 'CALENDAR',
+      label: 'Dispatch Calendar',
+      icon: 'calendar_month',
+      badge: needDriverCount > 0 ? `⚠️ ${needDriverCount}` : null,
+      badgeColor: 'bg-m3-error-container text-m3-on-error-container',
+      description: 'Month & day dispatch schedule'
     },
     {
       id: 'COMPLETED',
@@ -794,6 +804,7 @@ export default function SoloAdminDashboard() {
               <span className="text-xs font-black uppercase text-m3-primary tracking-wider truncate">
                 {currentView === 'ENQUIRIES' && 'Step 1: Enquiries'}
                 {currentView === 'ACTIVE_TRIPS' && 'Step 2: Active Trips'}
+                {currentView === 'CALENDAR' && 'Operations & Trip Calendar'}
                 {currentView === 'COMPLETED' && 'Step 3: Completed Trips'}
                 {currentView === 'DRIVERS' && 'Driver Roster'}
                 {currentView === 'CALCULATOR' && 'Rate Calculator'}
@@ -853,6 +864,20 @@ export default function SoloAdminDashboard() {
               onUpdateContact={handleUpdateBookingContact}
               onOpenDutySlip={(b) => setActiveDutySlipBooking(b)}
               onOpenDriversModal={() => setCurrentView('DRIVERS')}
+              showToast={showToast}
+            />
+          )}
+
+          {/* VIEW 2.5: OPERATIONS CALENDAR */}
+          {currentView === 'CALENDAR' && (
+            <OperationsCalendarView
+              bookings={bookings}
+              leads={leads}
+              chauffeurs={chauffeurs}
+              onAssignChauffeur={handleAssignChauffeur}
+              onStatusChange={handleStatusChange}
+              onConvertToConfirmed={handleConvertToConfirmed}
+              onOpenDutySlip={(b) => setActiveDutySlipBooking(b)}
               showToast={showToast}
             />
           )}
@@ -940,9 +965,9 @@ export default function SoloAdminDashboard() {
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 h-16 bg-m3-surface-container-lowest/95 backdrop-blur-md border-t border-m3-outline-variant/60 flex items-center justify-around px-1 shadow-m3-2">
         {[
           { id: 'ENQUIRIES', label: 'Enquiries', icon: 'phone_in_talk', badge: validLeads.length > 0 ? validLeads.length : null },
+          { id: 'CALENDAR', label: 'Calendar', icon: 'calendar_month', badge: needDriverCount > 0 ? '!' : null },
           { id: 'ACTIVE_TRIPS', label: 'Active', icon: 'local_taxi', badge: activeBookings.length > 0 ? (needDriverCount > 0 ? '!' : activeBookings.length) : null },
           { id: 'COMPLETED', label: 'Done', icon: 'verified', badge: null },
-          { id: 'CALCULATOR', label: 'Rate Calc', icon: 'calculate', badge: null },
           { id: 'MENU', label: 'More', icon: 'menu', badge: null }
         ].map((tab) => {
           const isActive = currentView === tab.id;

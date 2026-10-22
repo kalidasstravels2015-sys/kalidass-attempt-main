@@ -1,7 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { buildMapsBlock } from '../../../utils/whatsapp';
-import { validateCustomerContact, extractValidMobile, isPlaceholderCustomerName } from '../../../utils/bookingContactValidator';
+import { validateCustomerContact, extractValidMobile, isPlaceholderCustomerName, isActionableLead, deduplicateCalculatorQuotes } from '../../../utils/bookingContactValidator';
 import { getNextEnquiryId, getOrderedEnquiryId, getNextBookingId, isSequentialId } from '../../../utils/sequenceGenerator';
+import { formatCleanDateTime, formatFriendlyTravelDateTime, cleanLocationName } from '../../../utils/dateFormatter';
+import { buildGoogleCalendarUrl } from '../../../utils/googleCalendarHelper';
 
 /**
  * EnquiriesView - Step 1: Inbound Customer Calls & Quotes
@@ -51,31 +53,14 @@ export default function EnquiriesView({
   };
 
   const validLeads = useMemo(
-    () => leads.filter(l => {
-      const fare = Number(l.estimatedFare) > 0;
-      const notChat = !(l.drop || '').toLowerCase().includes('whatsapp chat');
-      const phone = extractPhone(l);
-      const isActionable = Boolean(phone || (l.guestName && !l.guestName.toLowerCase().includes('visitor')));
-      return fare && notChat && isActionable;
-    }),
+    () => leads.filter(isActionableLead),
     [leads]
   );
 
-  const validVisitorQuotes = useMemo(() => {
-    const map = new Map();
-    (calculatorQuotes || []).forEach(q => {
-      if (!q) return;
-      const fare = Number(q.estimatedFare || q.fare || q.estimate || 0);
-      if (fare <= 0) return;
-      if ((q.drop || '').toLowerCase().includes('whatsapp chat')) return;
-      const idKey = (q.quoteId || '').trim();
-      const dedupKey = idKey || `${q.pickup}_${q.drop}_${fare}_${q.vehicle}`;
-      if (!map.has(dedupKey)) {
-        map.set(dedupKey, q);
-      }
-    });
-    return Array.from(map.values());
-  }, [calculatorQuotes]);
+  const validVisitorQuotes = useMemo(
+    () => deduplicateCalculatorQuotes(calculatorQuotes),
+    [calculatorQuotes]
+  );
 
   const baseList = useMemo(() => {
     if (sourceFilter === 'VISITORS') {
@@ -157,7 +142,7 @@ export default function EnquiriesView({
       setConvertForm({
         guestName: validation.cleanName || '',
         phone: validation.cleanPhone || '',
-        travelDateTime: lead.travelDate || 'Tomorrow @ 05:00 AM',
+        travelDateTime: formatFriendlyTravelDateTime(lead.travelDate),
         advancePaid: '500'
       });
       setConvertError(validation.error);
@@ -166,12 +151,14 @@ export default function EnquiriesView({
 
     const fare = Number(lead.estimatedFare) || 6000;
     const driverShare = Math.round(fare * 0.82);
-    const routeLabel = lead.pickup.includes('+91') ? lead.drop : `${lead.pickup} ➔ ${lead.drop}`;
+    const cleanFrom = cleanLocationName(lead.pickup);
+    const cleanTo = cleanLocationName(lead.drop);
+    const routeLabel = lead.pickup.includes('+91') ? cleanTo : `${cleanFrom} ➔ ${cleanTo}`;
 
     const confirmed = {
       bookingId: (lead.quoteId && isSequentialId(lead.quoteId)) ? lead.quoteId.replace('#ENQ-', '#KT-').replace('#QT-', '#KT-') : getNextBookingId(),
       guestNamePhone: validation.formattedGuestNamePhone,
-      travelDateTime: lead.travelDate || 'Tomorrow @ 05:00 AM',
+      travelDateTime: formatFriendlyTravelDateTime(lead.travelDate),
       pickupAddress: routeLabel,
       vehicleCategory: lead.vehicle || 'Sedan (Dzire / Etios)',
       partySize: '4 Pax',
@@ -206,8 +193,9 @@ export default function EnquiriesView({
 
     const fare = Number(convertModalLead.estimatedFare) || 6000;
     const driverShare = Math.round(fare * 0.82);
-    const adv = Number(convertForm.advancePaid) || 500;
-    const routeLabel = convertModalLead.pickup.includes('+91') ? convertModalLead.drop : `${convertModalLead.pickup} ➔ ${convertModalLead.drop}`;
+    const cleanFrom = cleanLocationName(convertModalLead.pickup);
+    const cleanTo = cleanLocationName(convertModalLead.drop);
+    const routeLabel = convertModalLead.pickup.includes('+91') ? cleanTo : `${cleanFrom} ➔ ${cleanTo}`;
 
     const confirmed = {
       bookingId: (convertModalLead.quoteId && isSequentialId(convertModalLead.quoteId)) ? convertModalLead.quoteId.replace('#ENQ-', '#KT-').replace('#QT-', '#KT-') : getNextBookingId(),
@@ -495,13 +483,16 @@ export default function EnquiriesView({
                       </a>
                     )}
 
-                    <span className="text-[11px] text-m3-outline ml-auto">
-                      🕒 {lead.timestamp}
-                    </span>
+                    {lead.timestamp && (
+                      <span className="text-[11px] font-semibold text-m3-outline ml-auto font-mono-code bg-m3-surface-container-low px-2 py-0.5 rounded-full border border-m3-outline-variant/40 flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[12px]">schedule</span>
+                        <span>{formatCleanDateTime(lead.timestamp)}</span>
+                      </span>
+                    )}
                   </div>
 
                   <div className="text-sm font-bold text-m3-on-surface truncate">
-                    📍 {lead.pickup} ➔ {lead.drop}
+                    📍 {cleanLocationName(lead.pickup)} ➔ {cleanLocationName(lead.drop)}
                   </div>
 
                   <div className="text-xs text-m3-on-surface-variant flex flex-wrap items-center gap-2 font-medium">
@@ -511,7 +502,9 @@ export default function EnquiriesView({
                     {lead.travelDate && (
                       <>
                         <span>•</span>
-                        <span className="font-semibold text-m3-on-surface">🗓️ {lead.travelDate}</span>
+                        <span className="font-semibold text-m3-on-surface bg-m3-surface-container-low px-2 py-0.5 rounded-full border border-m3-outline-variant/40">
+                          🗓️ {formatFriendlyTravelDateTime(lead.travelDate)}
+                        </span>
                       </>
                     )}
                   </div>
@@ -543,6 +536,24 @@ export default function EnquiriesView({
                   >
                     <span className="material-symbols-outlined text-[15px]">ring_volume</span>
                     <span className="hidden sm:inline">Follow-up</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const url = buildGoogleCalendarUrl({
+                        ...lead,
+                        bookingId: lead.quoteId,
+                        notes: 'Customer enquiry follow-up: pending ₹500 advance confirmation'
+                      });
+                      window.open(url, '_blank');
+                      showToast?.('Follow-up reminder opened in Google Calendar!', 'success');
+                    }}
+                    className="h-9 px-2.5 bg-m3-surface-container-low hover:bg-m3-surface-container-high text-m3-primary border border-m3-outline-variant rounded-m3-full text-xs font-semibold flex items-center gap-1 transition-colors"
+                    title="Set Google Calendar follow-up reminder"
+                  >
+                    <span className="material-symbols-outlined text-[15px]">event</span>
+                    <span className="hidden sm:inline">Cal Reminder</span>
                   </button>
 
                   <button

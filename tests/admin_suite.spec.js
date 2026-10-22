@@ -155,6 +155,34 @@ test.describe('Admin Operations Command Tower Suite', () => {
     await expect(page.locator('text=Suresh Raina (+91 9840155555)')).toBeVisible();
   });
 
+  test('should navigate to Operations & Trip Monitoring Calendar and switch views', async ({ page }) => {
+    await page.goto('/admin/');
+    await expect(page.locator('text=Kalidass Travels').first()).toBeVisible();
+
+    // Click Dispatch Calendar in sidebar
+    await clickSidebarNav(page, "Dispatch Calendar");
+    await expect(page.locator('text=Operations & Trip Monitoring Calendar')).toBeVisible();
+
+    // Verify 4-stage follow-up radar indicators
+    await expect(page.locator('text=1. ₹500 Advance')).toBeVisible();
+    await expect(page.locator('text=2. Need Driver')).toBeVisible();
+    await expect(page.locator('text=3. Ready & Live')).toBeVisible();
+    await expect(page.locator('text=4. Month Revenue')).toBeVisible();
+
+    // Verify view toggle
+    await expect(page.locator('button:has-text("Month View")')).toBeVisible();
+    await expect(page.locator('button:has-text("Day Agenda")')).toBeVisible();
+
+    // Switch to Day Agenda
+    await page.click('button:has-text("Day Agenda")');
+    await expect(page.locator('h4:has-text("Morning Departures")')).toBeVisible();
+    await expect(page.locator('h4:has-text("Afternoon & Night Departures")')).toBeVisible();
+
+    // Switch back to Month View
+    await page.click('button:has-text("Month View")');
+    await expect(page.locator('button:has-text("Jump to Today")')).toBeVisible();
+  });
+
   test('should redirect legacy /ops to /admin/', async ({ page }) => {
     await page.goto('/ops/');
     await expect(page).toHaveURL(/\/admin\/?/);

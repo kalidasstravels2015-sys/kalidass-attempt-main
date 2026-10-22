@@ -109,3 +109,45 @@ export function parseAndValidateContact(guestNamePhone, fallbackPhone = '') {
 
   return validateCustomerContact(rawName, phone);
 }
+
+/**
+ * Checks if a lead or inquiry is actionable:
+ * Has positive estimated fare, is not a dummy whatsapp text,
+ * and has a valid 10-digit customer phone OR a real named customer (not an anonymous website visitor).
+ */
+export function isActionableLead(lead) {
+  if (!lead) return false;
+  const fare = Number(lead.estimatedFare || lead.fare || 0);
+  if (fare <= 0) return false;
+  if ((lead.drop || '').toLowerCase().includes('whatsapp chat')) return false;
+
+  const phone = extractValidMobile(lead);
+  const hasRealName = lead.guestName && !isPlaceholderCustomerName(lead.guestName);
+  return Boolean(phone || hasRealName);
+}
+
+/**
+ * Deduplicates and filters website calculator quotes:
+ * Removes zero-fare quotes, dummy chats, and merges repeat calculations for identical routes.
+ */
+export function deduplicateCalculatorQuotes(quotes = []) {
+  const map = new Map();
+  (quotes || []).forEach(q => {
+    if (!q) return;
+    const fare = Number(q.estimatedFare || q.fare || q.estimate || 0);
+    if (fare <= 0) return;
+    if ((q.drop || '').toLowerCase().includes('whatsapp chat')) return;
+    const idKey = (q.quoteId || '').trim();
+    const dedupKey = idKey || `${q.pickup}_${q.drop}_${fare}_${q.vehicle}`;
+    if (!map.has(dedupKey)) {
+      map.set(dedupKey, q);
+    } else {
+      const existing = map.get(dedupKey);
+      if ((q.status || '').toLowerCase().includes('whatsapp')) {
+        map.set(dedupKey, { ...existing, ...q });
+      }
+    }
+  });
+  return Array.from(map.values());
+}
+

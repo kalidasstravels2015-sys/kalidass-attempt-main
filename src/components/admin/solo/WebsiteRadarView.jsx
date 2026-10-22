@@ -1,7 +1,16 @@
 import React, { useState, useMemo } from 'react';
 import { buildMapsBlock } from '../../../utils/whatsapp';
-import { validateCustomerContact } from '../../../utils/bookingContactValidator';
+import { validateCustomerContact, deduplicateCalculatorQuotes } from '../../../utils/bookingContactValidator';
 import { getNextBookingId, isSequentialId } from '../../../utils/sequenceGenerator';
+import {
+  formatCleanDateTime,
+  formatFriendlyTravelDateTime,
+  cleanLocationName,
+  parseMetadata,
+  getMetadataBadges,
+  cleanEngineName,
+  cleanSourcePage
+} from '../../../utils/dateFormatter';
 
 /**
  * WebsiteRadarView - Left Sidebar View
@@ -30,32 +39,15 @@ export default function WebsiteRadarView({
   const [formError, setFormError] = useState('');
 
   const validQuotes = useMemo(() => {
-    const map = new Map();
-    (calculatorQuotes || []).forEach(q => {
-      if (!q) return;
-      const fare = Number(q.estimatedFare || q.fare || q.estimate || 0);
-      if (fare <= 0) return;
-      if ((q.drop || '').toLowerCase().includes('whatsapp chat')) return;
-      const idKey = (q.quoteId || '').trim();
-      const dedupKey = idKey || `${q.pickup}_${q.drop}_${fare}_${q.vehicle}`;
-      if (!map.has(dedupKey)) {
-        map.set(dedupKey, q);
-      } else {
-        const existing = map.get(dedupKey);
-        if ((q.status || '').toLowerCase().includes('whatsapp')) {
-          map.set(dedupKey, { ...existing, ...q });
-        }
-      }
-    });
-    return Array.from(map.values());
+    return deduplicateCalculatorQuotes(calculatorQuotes);
   }, [calculatorQuotes]);
 
   // Aggregate Market Intelligence & Top In-Demand Routes
   const routeStats = useMemo(() => {
     const routesMap = {};
     (validQuotes || []).forEach(q => {
-      const from = (q.pickup || 'Chennai').trim();
-      const to = (q.drop || 'Outstation').trim();
+      const from = cleanLocationName(q.pickup || 'Chennai');
+      const to = cleanLocationName(q.drop || 'Outstation');
       const routeKey = `${from} ➔ ${to}`;
       if (!routesMap[routeKey]) {
         routesMap[routeKey] = {
@@ -132,40 +124,6 @@ export default function WebsiteRadarView({
     });
   }, [validQuotes, engineFilter, search]);
 
-  // Format metadata into human-readable chips instead of raw JSON
-  const getMetadataBadges = (metadata) => {
-    if (!metadata || metadata === 'None') return [];
-    let parsed = null;
-    if (typeof metadata === 'object') {
-      parsed = metadata;
-    } else if (typeof metadata === 'string') {
-      const trimmed = metadata.trim();
-      if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
-        try {
-          parsed = JSON.parse(trimmed);
-        } catch (_) {}
-      }
-    }
-
-    if (parsed && typeof parsed === 'object') {
-      const badges = [];
-      if (parsed.chargeableKm) badges.push(`📏 ${parsed.chargeableKm} km`);
-      if (parsed.ratePerKm) badges.push(`🏷️ ₹${parsed.ratePerKm}/km`);
-      if (parsed.driverBeta || parsed.driverBata) badges.push(`☕ Driver Batta ₹${parsed.driverBeta || parsed.driverBata}`);
-      if (parsed.direction === 'pickup') badges.push(`🛬 Airport Arrival`);
-      if (parsed.direction === 'drop') badges.push(`🛫 Airport Departure`);
-      if (parsed.isOutstation) badges.push(`🛣️ Outstation`);
-      if (parsed.flightDetails) badges.push(`✈️ ${parsed.flightDetails}`);
-      if (badges.length > 0) return badges;
-    }
-
-    if (typeof metadata === 'string') {
-      const cleaned = metadata.replace(/[{}"\\]/g, '').trim();
-      if (cleaned && cleaned !== 'None') return [cleaned];
-    }
-    return [];
-  };
-
   // Copy Google Ads keywords to clipboard
   const handleCopyKeywords = (keywords, label) => {
     const text = keywords.join('\n');
@@ -184,20 +142,20 @@ export default function WebsiteRadarView({
     }
   };
 
-  // Export calculation searches as CSV
+  // Export calculation searches as CSV with clean AM/PM timestamps
   const handleExportCSV = () => {
     if (!validQuotes.length) return;
-    const headers = ['Quote ID', 'Timestamp', 'Pickup', 'Drop', 'Vehicle', 'Trip Type', 'Fare (INR)', 'Status', 'Engine / Source'];
+    const headers = ['Quote ID', 'Date & Time (AM/PM)', 'Pickup', 'Drop', 'Vehicle', 'Trip Type', 'Fare (INR)', 'Status', 'Engine / Source'];
     const rows = validQuotes.map(q => [
       `"${q.quoteId || ''}"`,
-      `"${q.timestamp || ''}"`,
-      `"${q.pickup || ''}"`,
-      `"${q.drop || ''}"`,
+      `"${formatCleanDateTime(q.timestamp)}"`,
+      `"${cleanLocationName(q.pickup || '')}"`,
+      `"${cleanLocationName(q.drop || '')}"`,
       `"${q.vehicle || ''}"`,
       `"${q.tripType || ''}"`,
       `"${q.estimatedFare || 0}"`,
       `"${q.status || ''}"`,
-      `"${q.sourcePage || q.calculatorEngine || ''}"`
+      `"${cleanEngineName(q.calculatorEngine, q.sourcePage)}"`
     ]);
     const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
     const encodedUri = encodeURI(csvContent);
@@ -213,11 +171,13 @@ export default function WebsiteRadarView({
   // Format outbound quote for WhatsApp if visitor contacts
   const handleSendQuoteWA = (quote) => {
     const fare = Number(quote.estimatedFare) || 0;
-    const mapsBlock = buildMapsBlock(quote.pickup, quote.drop, quote.tripType || 'One Way');
+    const cleanFrom = cleanLocationName(quote.pickup || 'Chennai');
+    const cleanTo = cleanLocationName(quote.drop || 'Outstation');
+    const mapsBlock = buildMapsBlock(cleanFrom, cleanTo, quote.tripType || 'One Way');
     const msg =
       `*KALIDASS TRAVELS CHENNAI — WEBSITE FARE ESTIMATE*\n\n` +
       `Namaskaram!\n` +
-      `📍 *Route:* ${quote.pickup} ➔ ${quote.drop}\n` +
+      `📍 *Route:* ${cleanFrom} ➔ ${cleanTo}\n` +
       `🚗 *Vehicle:* ${quote.vehicle}\n` +
       `💰 *Estimated Fare:* Rs.${fare.toLocaleString('en-IN')}\n\n` +
       `🔒 *To Confirm Your Cab:*\n` +
@@ -232,10 +192,14 @@ export default function WebsiteRadarView({
   // Open Modal: Convert Quote to Active Trip (Requires Customer Name & Mobile)
   const handleOpenConvertModal = (quote) => {
     setConvertingQuote(quote);
+    const meta = parseMetadata(quote.metadata);
+    const travelTime = meta.travelDate
+      ? formatFriendlyTravelDateTime(meta.travelDate)
+      : (quote.travelDate ? formatFriendlyTravelDateTime(quote.travelDate) : 'Tomorrow @ 05:00 AM');
     setConvertForm({
       guestName: '',
       phone: '',
-      travelDateTime: quote.travelDate || 'Tomorrow @ 05:00 AM',
+      travelDateTime: travelTime,
       advancePaid: '500'
     });
     setFormError('');
@@ -256,16 +220,18 @@ export default function WebsiteRadarView({
     const fare = Number(convertingQuote.estimatedFare) || 0;
     const driverShare = Math.round(fare * 0.82);
     const adv = Number(convertForm.advancePaid) || 500;
+    const cleanFrom = cleanLocationName(convertingQuote.pickup || 'Chennai');
+    const cleanTo = cleanLocationName(convertingQuote.drop || 'Destination');
 
     const newBooking = {
       bookingId: (convertingQuote.quoteId && isSequentialId(convertingQuote.quoteId)) ? convertingQuote.quoteId.replace('#QT-', '#KT-').replace('#ENQ-', '#KT-') : getNextBookingId(),
       guestNamePhone: validation.formattedGuestNamePhone,
       travelDateTime: convertForm.travelDateTime.trim() || 'Tomorrow @ 05:00 AM',
-      pickupAddress: `${convertingQuote.pickup} ➔ ${convertingQuote.drop}`,
+      pickupAddress: `${cleanFrom} ➔ ${cleanTo}`,
       vehicleCategory: convertingQuote.vehicle || 'Sedan (Dzire / Etios)',
       partySize: '4 Pax',
       kycStatus: 'Advance Paid',
-      darshanStatus: convertingQuote.calculatorEngine || 'Website Calculator',
+      darshanStatus: cleanEngineName(convertingQuote.calculatorEngine, convertingQuote.sourcePage),
       assignedChauffeur: 'Unassigned',
       manifestStatus: 'Need Driver',
       terminalFare: fare,
@@ -620,6 +586,11 @@ export default function WebsiteRadarView({
               {filteredQuotes.map((q, idx) => {
                 const isWhatsAppClicked = (q.status || '').toLowerCase().includes('whatsapp');
                 const badges = getMetadataBadges(q.metadata);
+                const cleanFrom = cleanLocationName(q.pickup || 'Chennai');
+                const cleanTo = cleanLocationName(q.drop || 'Destination');
+                const engineLabel = cleanEngineName(q.calculatorEngine, q.sourcePage);
+                const sourceLabel = cleanSourcePage(q.sourcePage);
+                const timeFormatted = formatCleanDateTime(q.timestamp);
 
                 return (
                   <div
@@ -631,7 +602,7 @@ export default function WebsiteRadarView({
                     }`}
                   >
                     {/* Left: Quote Details */}
-                    <div className="space-y-1.5 flex-1 min-w-0">
+                    <div className="space-y-2 flex-1 min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
                         {/* Status Pill */}
                         {isWhatsAppClicked ? (
@@ -648,7 +619,7 @@ export default function WebsiteRadarView({
 
                         {/* Engine Name */}
                         <span className="text-[11px] font-bold bg-m3-surface-container-high text-m3-on-surface px-2.5 py-0.5 rounded-full border border-m3-outline-variant">
-                          {q.calculatorEngine || 'Booking Engine'}
+                          {engineLabel}
                         </span>
 
                         {/* Quote ID */}
@@ -658,16 +629,19 @@ export default function WebsiteRadarView({
                           </span>
                         )}
 
-                        {/* Timestamp */}
-                        <span className="text-[11px] text-m3-on-surface-variant ml-auto">
-                          🕒 {q.timestamp}
-                        </span>
+                        {/* Timestamp in clear 12-Hour AM/PM format */}
+                        {timeFormatted && (
+                          <span className="text-[11px] font-semibold text-m3-on-surface-variant ml-auto font-mono-code flex items-center gap-1 bg-m3-surface-container-low px-2.5 py-0.5 rounded-full border border-m3-outline-variant/50">
+                            <span className="material-symbols-outlined text-[13px] text-m3-outline">schedule</span>
+                            <span>{timeFormatted}</span>
+                          </span>
+                        )}
                       </div>
 
                       {/* Route */}
                       <div className="text-sm font-bold text-m3-on-surface truncate flex items-center gap-1.5">
                         <span className="material-symbols-outlined text-m3-primary text-[18px]">near_me</span>
-                        <span>{q.pickup || 'Chennai'} ➔ {q.drop || 'Destination'}</span>
+                        <span>{cleanFrom} ➔ {cleanTo}</span>
                       </div>
 
                       {/* Vehicle, Distance, Badges */}
@@ -676,7 +650,7 @@ export default function WebsiteRadarView({
                           🚗 {q.vehicle || 'Vehicle'}
                         </span>
                         <span>•</span>
-                        <span className="bg-m3-surface-container-low text-m3-on-surface font-medium px-2 py-0.5 rounded-full">
+                        <span className="bg-m3-surface-container-low text-m3-on-surface font-medium px-2 py-0.5 rounded-full border border-m3-outline-variant/50">
                           {q.tripType || 'One Way'}
                         </span>
 
@@ -690,9 +664,9 @@ export default function WebsiteRadarView({
                           </span>
                         ))}
 
-                        {q.sourcePage && (
-                          <span className="text-[11px] text-m3-on-surface-variant font-mono-code ml-auto">
-                            via {q.sourcePage.replace(/\/$/, '').split('/').pop() || q.sourcePage}
+                        {sourceLabel && (
+                          <span className="text-[11px] text-m3-on-surface-variant font-medium ml-auto bg-m3-surface-container-low px-2 py-0.5 rounded-full">
+                            {sourceLabel}
                           </span>
                         )}
                       </div>
@@ -765,7 +739,7 @@ export default function WebsiteRadarView({
               <div className="p-3 bg-m3-surface-container-low rounded-m3-lg border border-m3-outline-variant/70 flex items-center justify-between">
                 <div>
                   <div className="text-xs font-bold text-m3-on-surface">
-                    {convertingQuote.pickup} ➔ {convertingQuote.drop}
+                    {cleanLocationName(convertingQuote.pickup)} ➔ {cleanLocationName(convertingQuote.drop)}
                   </div>
                   <div className="text-[11px] text-m3-on-surface-variant mt-0.5">
                     🚗 {convertingQuote.vehicle} • {convertingQuote.tripType || 'One Way'}

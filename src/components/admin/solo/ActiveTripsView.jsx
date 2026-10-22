@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { parseAndValidateContact, validateCustomerContact } from '../../../utils/bookingContactValidator';
+import { buildGoogleCalendarUrl } from '../../../utils/googleCalendarHelper';
 
 /**
  * ActiveTripsView - Step 2: Confirmed Active Trips & Driver Dispatch
@@ -310,11 +311,11 @@ export default function ActiveTripsView({
         <div className="space-y-3">
           {filteredBookings.map((b) => {
             const isUnassigned = !b.assignedChauffeur || b.assignedChauffeur === 'Unassigned';
-            const fare = Number(b.terminalFare) || 6000;
-            const adv = Number(b.advancePaid) || 500;
+            const fare = Number(b.terminalFare) || 0;
+            const adv = Number(b.advancePaid) || 0;
             const balanceDue = Math.max(0, fare - adv);
-            const driverShare = Number(b.chauffeurPayout) || Math.round(fare * 0.82);
-            const profit = fare - driverShare;
+            const driverShare = Number(b.chauffeurPayout) || (fare > 0 ? Math.round(fare * 0.82) : 0);
+            const profit = Math.max(0, fare - driverShare);
 
             return (
               <div
@@ -424,7 +425,9 @@ export default function ActiveTripsView({
                   {/* 2. Route & Vehicle */}
                   <div>
                     <span className="text-[11px] font-bold uppercase text-m3-on-surface-variant block">Route & Vehicle</span>
-                    <div className="text-xs font-bold text-m3-on-surface mt-0.5">{b.pickupAddress}</div>
+                    <div className="text-xs font-bold text-m3-on-surface mt-0.5">
+                      {b.pickupAddress ? b.pickupAddress.replace(/^undefined\s*(?:➔|->)+\s*/i, '') : 'Route not specified'}
+                    </div>
                     <div className="text-xs text-m3-on-surface-variant mt-0.5">
                       🚗 {b.vehicleCategory} • {b.partySize || '4 Pax'}
                     </div>

@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { buildMapsBlock } from '../../../utils/whatsapp';
 import { getNextEnquiryId, getOrderedEnquiryId, getNextBookingId, isSequentialId } from '../../../utils/sequenceGenerator';
-import { validateCustomerContact, extractValidMobile, isPlaceholderCustomerName } from '../../../utils/bookingContactValidator';
+import { validateCustomerContact, extractValidMobile, isPlaceholderCustomerName, isActionableLead, deduplicateCalculatorQuotes } from '../../../utils/bookingContactValidator';
+import { formatCleanDateTime, cleanLocationName } from '../../../utils/dateFormatter';
 
 /**
  * Simple 3-Step Taxi Operations Register
@@ -77,12 +78,12 @@ export default function UnifiedDutiesBoard({
   );
 
   const validLeads = useMemo(
-    () => leads.filter(l => Number(l.estimatedFare) > 0 && !(l.drop || '').toLowerCase().includes('whatsapp chat')),
+    () => leads.filter(isActionableLead),
     [leads]
   );
 
   const validCalculatorQuotes = useMemo(
-    () => (calculatorQuotes || []).filter(q => Number(q.estimatedFare) > 0 && !(q.drop || '').toLowerCase().includes('whatsapp chat')),
+    () => deduplicateCalculatorQuotes(calculatorQuotes),
     [calculatorQuotes]
   );
 
@@ -818,10 +819,18 @@ export default function UnifiedDutiesBoard({
                   <div key={q.quoteId || idx} className="p-2.5 rounded-m3-lg bg-white border border-emerald-200 flex items-center justify-between gap-2 shadow-2xs">
                     <div className="min-w-0">
                       <div className="font-bold text-xs text-m3-on-surface truncate">
-                        {q.pickup || 'Chennai'} ➔ {q.drop}
+                        {cleanLocationName(q.pickup) || 'Chennai'} ➔ {cleanLocationName(q.drop)}
                       </div>
-                      <div className="text-[11px] text-m3-on-surface-variant">
-                        {q.vehicle} • <strong>Rs.{Number(q.estimatedFare || 0).toLocaleString('en-IN')}</strong> • {q.timestamp}
+                      <div className="text-[11px] text-m3-on-surface-variant flex items-center gap-1.5 flex-wrap">
+                        <span>{q.vehicle}</span>
+                        <span>•</span>
+                        <strong>Rs.{Number(q.estimatedFare || 0).toLocaleString('en-IN')}</strong>
+                        {q.timestamp && (
+                          <>
+                            <span>•</span>
+                            <span className="font-mono-code">{formatCleanDateTime(q.timestamp)}</span>
+                          </>
+                        )}
                       </div>
                     </div>
                     <button

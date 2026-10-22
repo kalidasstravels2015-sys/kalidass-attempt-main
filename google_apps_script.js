@@ -97,9 +97,16 @@ function doGet(e) {
         var row = values[i];
         if (row[0]) {
           var cleanPhone = String(row[3] || '').replace(/[^0-9]/g, '').slice(-10);
+          var rawDate = row[1];
+          var timestampStr = '';
+          if (rawDate instanceof Date) {
+            timestampStr = Utilities.formatDate(rawDate, 'Asia/Kolkata', 'dd MMM yyyy, hh:mm a');
+          } else {
+            timestampStr = String(rawDate || '');
+          }
           leads.push({
             quoteId: String(row[0] || ''),
-            timestamp: String(row[1] || ''),
+            timestamp: timestampStr,
             guestName: String(row[2] || (cleanPhone ? 'Customer (' + cleanPhone + ')' : 'Website Visitor')),
             phone: cleanPhone,
             sourcePage: cleanPhone ? (row[11] ? row[11] + ' (+91 ' + cleanPhone + ')' : '+91 ' + cleanPhone) : String(row[11] || 'Website Enquiry'),
@@ -210,7 +217,7 @@ function doPost(e) {
       var bookingId = hasSeqBooking ? incomingBookingId : getNextSequenceId(bookSheet, '#KT-BK-');
       var guestNamePhone = data.guestNamePhone || (data.name ? (data.name + ' (' + (data.phone || '') + ')') : (data.phone || 'Customer'));
       var schedule = data.travelDateTime || data.travelDate || data.pickupDate || 'Tomorrow';
-      var route = data.pickupAddress || (data.pickup + ' ➔ ' + (data.drop || 'Outstation'));
+      var route = data.pickupAddress || (data.pickup ? (data.pickup + ' ➔ ' + (data.drop || 'Outstation')) : (data.drop || 'Chennai ➔ Outstation'));
       var vehicle = data.vehicleCategory || data.vehicle || 'Sedan';
       var pax = data.partySize || data.passengers || '4 Pax';
       var fare = parseInt(String(data.terminalFare || data.fare || data.estimate || 0).replace(/[^0-9]/g, ''), 10) || 0;
@@ -237,6 +244,9 @@ function doPost(e) {
         if (foundRow > 0) {
           bookSheet.deleteRow(foundRow);
         }
+        try {
+          syncBookingToGoogleCalendar({ bookingId: bookingId, action: 'delete' });
+        } catch (_) {}
         return ContentService
           .createTextOutput(JSON.stringify({ success: true, bookingId: bookingId, action: 'deleted' }))
           .setMimeType(ContentService.MimeType.JSON);
@@ -262,6 +272,26 @@ function doPost(e) {
         bookSheet.getRange(foundRow, 1, 1, bRowData.length).setValues([bRowData]);
       } else {
         bookSheet.appendRow(bRowData);
+      }
+
+      // Sync confirmed booking to Google Calendar with 24h and 2h reminders
+      try {
+        syncBookingToGoogleCalendar({
+          bookingId: bookingId,
+          action: foundRow > 0 ? 'update' : 'create',
+          guestNamePhone: guestNamePhone,
+          schedule: schedule,
+          route: route,
+          vehicle: vehicle,
+          pax: pax,
+          fare: fare,
+          advance: advance,
+          driver: driver,
+          status: status,
+          notes: notes
+        });
+      } catch (calErr) {
+        Logger.log('Calendar sync skipped: ' + calErr.toString());
       }
 
       return ContentService
@@ -456,3 +486,109 @@ function renumberBookingsFrom101() {
 
   idsRange.setValues(values);
 }
+
+/**
+ * Automatically syncs Confirmed Bookings to Google Calendar with 24h and 2h reminders.
+ */
+function syncBookingToGoogleCalendar(b) {
+  if (typeof CalendarApp === 'undefined') return;
+
+  var cal = CalendarApp.getDefaultCalendar();
+  if (!cal) return;
+
+  var bookingId = b.bookingId;
+  if (!bookingId) return;
+
+  var now = new Date();
+  var searchEnd = new Date(now.getTime() + 90 * 24 * 60 * 60 * 1000); // 90 days ahead
+  var searchStart = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 days in past
+  var existingEvents = cal.getEvents(searchStart, searchEnd, { search: bookingId });
+
+  // Handle Cancel / Delete action
+  if (b.action === 'delete' || b.action === 'cancel' || b.status === 'Cancelled') {
+    for (var i = 0; i < existingEvents.length; i++) {
+      existingEvents[i].deleteEvent();
+    }
+    return;
+  }
+
+  // Parse Travel Date
+  var scheduleStr = String(b.schedule || '');
+  var startTime = new Date();
+  var lower = scheduleStr.toLowerCase();
+
+  if (lower.indexOf('tomorrow') !== -1) {
+    startTime.setDate(startTime.getDate() + 1);
+    startTime.setHours(6, 0, 0, 0);
+  } else if (lower.indexOf('today') !== -1) {
+    startTime.setHours(6, 0, 0, 0);
+  } else {
+    var cleanSchedule = scheduleStr.replace('@', ' ').replace(/\s+/g, ' ').trim();
+    var parsed = Date.parse(cleanSchedule);
+    if (!isNaN(parsed)) {
+      startTime = new Date(parsed);
+    } else {
+      startTime.setDate(startTime.getDate() + 1);
+      startTime.setHours(6, 0, 0, 0);
+    }
+  }
+
+  // Check for specific time like "05:00 AM"
+  var timeMatch = scheduleStr.match(/(\d{1,2}):(\d{2})\s*(am|pm)?/i);
+  if (timeMatch) {
+    var h = parseInt(timeMatch[1], 10);
+    var m = parseInt(timeMatch[2], 10);
+    var meridian = (timeMatch[3] || '').toLowerCase();
+    if (meridian === 'pm' && h < 12) h += 12;
+    if (meridian === 'am' && h === 12) h = 0;
+    startTime.setHours(h, m, 0, 0);
+  }
+
+  // Default duration: 6 hours
+  var endTime = new Date(startTime.getTime() + 6 * 60 * 60 * 1000);
+
+  var title = '[' + bookingId + '] ' + b.guestNamePhone + ' - ' + b.vehicle + ' (' + b.route + ')';
+  var cleanRef = bookingId.replace(/[^A-Za-z0-9]/g, '');
+  var tripSheetUrl = 'https://kalidasstravels.in/trip/?ref=' + cleanRef;
+
+  var description = [
+    '🚕 KALIDASS TRAVELS — TRIP DUTY SLIP',
+    '--------------------------------------',
+    'Booking ID: ' + bookingId,
+    'Passenger: ' + b.guestNamePhone,
+    'Route: ' + b.route,
+    'Vehicle: ' + b.vehicle + ' (' + (b.pax || '4 Pax') + ')',
+    'Assigned Chauffeur: ' + (b.driver || 'Unassigned'),
+    'Duty Status: ' + (b.status || 'Need Driver'),
+    'Total Fare: ₹' + (b.fare || 0),
+    'Advance Paid: ₹' + (b.advance || 0),
+    'Balance Due at Drop: ₹' + Math.max(0, (b.fare || 0) - (b.advance || 0)),
+    '--------------------------------------',
+    'Live Trip Sheet: ' + tripSheetUrl,
+    'Office Helpline: +91 89395 39211',
+    'Headquarters: Medavakkam, Chennai'
+  ].join('\n');
+
+  if (b.notes) {
+    description += '\nNotes: ' + b.notes;
+  }
+
+  var location = String(b.route || '').split('➔')[0].trim() || 'Medavakkam, Chennai';
+
+  if (existingEvents.length > 0) {
+    var event = existingEvents[0];
+    event.setTitle(title);
+    event.setDescription(description);
+    event.setLocation(location);
+    event.setTime(startTime, endTime);
+  } else {
+    var newEvent = cal.createEvent(title, startTime, endTime, {
+      description: description,
+      location: location
+    });
+    // 24 hours (1440m) & 2 hours (120m) push/email alerts on phone
+    newEvent.addPopupReminder(1440);
+    newEvent.addPopupReminder(120);
+  }
+}
+
