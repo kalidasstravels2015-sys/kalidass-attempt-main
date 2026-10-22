@@ -370,6 +370,167 @@ ${promptCtx}`;
               return;
             }
 
+            if (url === '/api/admin/bookings' || url === '/api/admin/bookings/') {
+              const fullParsedUrl = new URL(req.url, 'http://localhost');
+              const actionQuery = (req.headers['x-action'] || fullParsedUrl.searchParams.get('action') || '').trim().toLowerCase();
+              const bookingIdQuery = (req.headers['x-booking-id'] || fullParsedUrl.searchParams.get('bookingId') || fullParsedUrl.searchParams.get('id') || fullParsedUrl.searchParams.get('ref') || '').trim();
+              const customWebhook = fullParsedUrl.searchParams.get('webhook') || process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL || '';
+
+              const csvPath = path.resolve(process.cwd(), 'Kalidass_Operations_Control_2026.csv');
+              const slipsPath = path.resolve(process.cwd(), 'Kalidass_Duty_Slips_2026.json');
+
+              const handleDeleteBooking = async (targetBookingId) => {
+                if (!targetBookingId) return;
+                const targetLower = targetBookingId.toLowerCase();
+
+                // 1. Remove from local CSV
+                if (fs.existsSync(csvPath)) {
+                  try {
+                    const content = fs.readFileSync(csvPath, 'utf8');
+                    const lines = content.trim().split(/\r?\n/).filter(Boolean);
+                    if (lines.length > 0) {
+                      const header = lines[0];
+                      const remaining = [header];
+                      for (let i = 1; i < lines.length; i++) {
+                        const m = lines[i].match(/(?:^|,)(?:"([^"]*(?:""[^"]*)*)"|([^,]*))/g);
+                        const row0 = m ? m[0].replace(/^,/, '').replace(/^"|"$/g, '').trim().toLowerCase() : '';
+                        if (row0 !== targetLower) {
+                          remaining.push(lines[i]);
+                        }
+                      }
+                      fs.writeFileSync(csvPath, remaining.join('\n') + '\n', 'utf8');
+                    }
+                  } catch (_) {}
+                }
+
+                // 2. Remove duty slip
+                if (fs.existsSync(slipsPath)) {
+                  try {
+                    const parsed = JSON.parse(fs.readFileSync(slipsPath, 'utf8') || '[]');
+                    if (Array.isArray(parsed)) {
+                      const rem = parsed.filter(s => (s?.bookingId || '').trim().toLowerCase() !== targetLower);
+                      fs.writeFileSync(slipsPath, JSON.stringify(rem, null, 2), 'utf8');
+                    }
+                  } catch (_) {}
+                }
+
+                // 3. Forward delete & cancel to Google Sheets Webhook
+                if (customWebhook && customWebhook.startsWith('http')) {
+                  try {
+                    await fetch(customWebhook, {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'text/plain' },
+                      body: JSON.stringify({
+                        type: 'admin_booking_sync',
+                        action: 'delete',
+                        bookingId: targetBookingId,
+                        manifestStatus: 'Cancelled'
+                      })
+                    });
+                  } catch (_) {}
+                }
+              };
+
+              if (req.method === 'GET') {
+                if (actionQuery === 'delete' || actionQuery === 'cancel') {
+                  handleDeleteBooking(bookingIdQuery).then(() => {
+                    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                    res.end(JSON.stringify({ success: true, bookingId: bookingIdQuery, action: 'deleted' }));
+                  }).catch(err => {
+                    res.statusCode = 500;
+                    res.end(JSON.stringify({ error: err.message }));
+                  });
+                  return;
+                }
+
+                (async () => {
+                  try {
+                    let remoteBookings = [];
+                    if (customWebhook && customWebhook.startsWith('http')) {
+                      try {
+                        const rRes = await fetch(customWebhook, { method: 'GET', redirect: 'follow', headers: { 'Accept': 'application/json' } });
+                        if (rRes.ok) {
+                          const rJson = await rRes.json();
+                          if (rJson && rJson.success && Array.isArray(rJson.bookings)) {
+                            remoteBookings = rJson.bookings.filter(b => b && b.manifestStatus !== 'Cancelled');
+                          }
+                        }
+                      } catch (_) {}
+                    }
+
+                    const bookings = [...remoteBookings];
+                    if (fs.existsSync(csvPath)) {
+                      const content = fs.readFileSync(csvPath, 'utf8');
+                      const lines = content.trim().split(/\r?\n/).filter(Boolean);
+                      for (let i = 1; i < lines.length; i++) {
+                        const matches = lines[i].match(/(?:^|,)(?:"([^"]*(?:""[^"]*)*)"|([^,]*))/g);
+                        if (matches) {
+                          const row = matches.map(m => {
+                            let s = m.replace(/^,/, '').trim();
+                            if (s.startsWith('"') && s.endsWith('"')) s = s.slice(1, -1).replace(/""/g, '"');
+                            return s;
+                          });
+                          const bId = row[0] || '';
+                          const mStatus = row[9] || 'Pending';
+                          if (mStatus === 'Cancelled') continue;
+                          if (!bookings.some(b => (b.bookingId || '').toLowerCase() === bId.toLowerCase())) {
+                            bookings.push({
+                              bookingId: bId,
+                              guestNamePhone: row[1] || '',
+                              travelDateTime: row[2] || '',
+                              pickupAddress: row[3] || '',
+                              vehicleCategory: row[4] || 'Sedan',
+                              partySize: row[5] || '4 Pax',
+                              kycStatus: row[6] || 'Pending',
+                              darshanStatus: row[7] || 'Unassigned',
+                              assignedChauffeur: row[8] || 'Unassigned',
+                              manifestStatus: mStatus,
+                              terminalFare: parseInt(row[10] || '0', 10) || 0,
+                              chauffeurPayout: parseInt(row[11] || '0', 10) || 0,
+                              companyMargin: parseInt(row[12] || '0', 10) || 0,
+                              financialClosure: row[13] || 'Unreconciled',
+                              reviewStatus: row[14] || 'Pending',
+                              dutySlip: null
+                            });
+                          }
+                        }
+                      }
+                    }
+
+                    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                    res.end(JSON.stringify({ success: true, count: bookings.length, bookings }));
+                  } catch (err) {
+                    res.statusCode = 500;
+                    res.end(JSON.stringify({ error: err.message }));
+                  }
+                })();
+                return;
+              }
+
+              if (req.method === 'POST') {
+                let body = '';
+                req.on('data', c => { body += c; });
+                req.on('end', async () => {
+                  try {
+                    const data = JSON.parse(body || '{}');
+                    if (data.action === 'delete' || data.action === 'cancel' || data.manifestStatus === 'Cancelled') {
+                      await handleDeleteBooking(data.bookingId || bookingIdQuery);
+                      res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                      res.end(JSON.stringify({ success: true, bookingId: data.bookingId || bookingIdQuery, action: 'deleted' }));
+                      return;
+                    }
+
+                    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                    res.end(JSON.stringify({ success: true, bookingId: data.bookingId }));
+                  } catch (err) {
+                    res.statusCode = 500;
+                    res.end(JSON.stringify({ error: err.message }));
+                  }
+                });
+                return;
+              }
+            }
+
             if (url === '/api/admin/sheet-config') {
               if (req.method === 'GET') {
                 const currentUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL || '';

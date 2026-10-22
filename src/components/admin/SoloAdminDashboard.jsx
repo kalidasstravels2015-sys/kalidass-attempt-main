@@ -14,6 +14,7 @@ import { parseAndValidateContact, validateCustomerContact, isActionableLead, ded
 
 const STORAGE_KEYS = {
   BOOKINGS: 'kt_solo_real_bookings_v8',
+  DELETED_BOOKINGS: 'kt_solo_deleted_bookings_v8',
   LEADS: 'kt_solo_real_leads_v8',
   CHAUFFEURS: 'kt_solo_real_chauffeurs_v8',
   QUOTES: 'kt_website_calculator_quotes_v1'
@@ -69,14 +70,38 @@ export default function SoloAdminDashboard() {
     }
   };
 
-  // State: Bookings
+  // State: Deleted Bookings Tombstones (prevents resurrection across page refreshes)
+  const [deletedBookingIds, setDeletedBookingIds] = useState(() => {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEYS.DELETED_BOOKINGS);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) return new Set(parsed.map(id => String(id).trim().toLowerCase()));
+        }
+      } catch (_) {}
+    }
+    return new Set();
+  });
+
+  // State: Bookings (strictly excludes deleted and cancelled bookings)
   const [bookings, setBookings] = useState(() => {
     if (typeof window !== 'undefined' && window.localStorage) {
       try {
+        let deletedSet = new Set();
+        const rawDel = localStorage.getItem(STORAGE_KEYS.DELETED_BOOKINGS);
+        if (rawDel) {
+          const parsedDel = JSON.parse(rawDel);
+          if (Array.isArray(parsedDel)) {
+            parsedDel.forEach(id => deletedSet.add(String(id).trim().toLowerCase()));
+          }
+        }
         const cached = localStorage.getItem(STORAGE_KEYS.BOOKINGS);
         if (cached) {
           const parsed = JSON.parse(cached);
-          if (Array.isArray(parsed)) return parsed;
+          if (Array.isArray(parsed)) {
+            return parsed.filter(b => b && b.bookingId && !deletedSet.has(String(b.bookingId).trim().toLowerCase()) && b.manifestStatus !== 'Cancelled');
+          }
         }
       } catch (_) {}
     }
@@ -200,9 +225,11 @@ export default function SoloAdminDashboard() {
       setIsSheetConnected(Boolean(sheetUrl));
       const webhookParam = sheetUrl ? `?webhook=${encodeURIComponent(sheetUrl)}` : '';
 
+      const bookUrl = sheetUrl ? `/api/admin/bookings/?webhook=${encodeURIComponent(sheetUrl)}` : '/api/admin/bookings/';
+      const leadUrl = sheetUrl ? `/api/admin/leads/?webhook=${encodeURIComponent(sheetUrl)}` : '/api/admin/leads/';
       const [bRes, lRes, cRes] = await Promise.allSettled([
-        fetch(`/api/admin/bookings${webhookParam}`),
-        fetch(`/api/admin/leads${webhookParam}`),
+        fetch(bookUrl),
+        fetch(leadUrl),
         fetch('/api/calculations.json')
       ]);
 
@@ -213,7 +240,7 @@ export default function SoloAdminDashboard() {
 
       if (bRes.status === 'fulfilled' && bRes.value.ok) {
         const bData = await bRes.value.json();
-        apiBookings = bData.bookings || [];
+        apiBookings = (bData.bookings || []).filter(b => b && b.manifestStatus !== 'Cancelled');
       }
 
       if (lRes.status === 'fulfilled' && lRes.value.ok) {
@@ -236,7 +263,9 @@ export default function SoloAdminDashboard() {
             if (directJson && directJson.success) {
               if (Array.isArray(directJson.leads) && apiLeads.length === 0) apiLeads = directJson.leads;
               if (Array.isArray(directJson.calculatorQuotes) && apiQuotes.length === 0) apiQuotes = directJson.calculatorQuotes;
-              if (Array.isArray(directJson.bookings) && apiBookings.length === 0) apiBookings = directJson.bookings;
+              if (Array.isArray(directJson.bookings) && apiBookings.length === 0) {
+                apiBookings = directJson.bookings.filter(b => b && b.manifestStatus !== 'Cancelled');
+              }
             }
           }
         } catch (_) {}
@@ -278,22 +307,55 @@ export default function SoloAdminDashboard() {
         return merged;
       });
 
-      // Merge remote bookings with local device bookings
+      // Merge remote bookings with local device bookings, strictly honoring deleted tombstones
       setBookings(prevBookings => {
+        let deletedSet = new Set(deletedBookingIds);
+        if (typeof window !== 'undefined' && window.localStorage) {
+          try {
+            const rawDel = localStorage.getItem(STORAGE_KEYS.DELETED_BOOKINGS);
+            if (rawDel) {
+              const parsedDel = JSON.parse(rawDel);
+              if (Array.isArray(parsedDel)) {
+                parsedDel.forEach(id => deletedSet.add(String(id).trim().toLowerCase()));
+              }
+            }
+          } catch (_) {}
+        }
+
         const map = new Map();
-        (prevBookings || []).forEach(b => { if (b && b.bookingId) map.set(b.bookingId, b); });
-        apiBookings.forEach(b => { if (b && b.bookingId) map.set(b.bookingId, b); });
+        (prevBookings || []).forEach(b => {
+          if (b && b.bookingId) {
+            const key = String(b.bookingId).trim().toLowerCase();
+            if (!deletedSet.has(key) && b.manifestStatus !== 'Cancelled') {
+              map.set(key, b);
+            }
+          }
+        });
+
+        (apiBookings || []).forEach(b => {
+          if (b && b.bookingId) {
+            const key = String(b.bookingId).trim().toLowerCase();
+            if (!deletedSet.has(key) && b.manifestStatus !== 'Cancelled') {
+              map.set(key, b);
+            }
+          }
+        });
+
         const merged = Array.from(map.values());
         if (typeof window !== 'undefined') {
           localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(merged));
         }
 
         // Auto-reconcile: If local bookings exist that aren't yet recorded in Google Sheet, sync them up
+        // IMPORTANT: Never auto-reconcile deleted or cancelled bookings!
         if (sheetUrl && sheetUrl.startsWith('http')) {
-          const remoteIds = new Set(apiBookings.map(b => b.bookingId));
+          const remoteIds = new Set((apiBookings || []).map(b => String(b.bookingId).trim().toLowerCase()));
           (prevBookings || []).forEach(localB => {
-            if (localB && localB.bookingId && !remoteIds.has(localB.bookingId)) {
-              syncBookingToRemote(localB).catch(() => {});
+            if (localB && localB.bookingId) {
+              const localKey = String(localB.bookingId).trim().toLowerCase();
+              if (!deletedSet.has(localKey) && localB.manifestStatus !== 'Cancelled' && !remoteIds.has(localKey)) {
+                syncBookingToRemote(localB).catch(() => {});
+              }
             }
           });
         }
@@ -373,11 +435,13 @@ export default function SoloAdminDashboard() {
 
       if (typeof window !== 'undefined' && window.localStorage) {
         localStorage.removeItem(STORAGE_KEYS.BOOKINGS);
+        localStorage.removeItem(STORAGE_KEYS.DELETED_BOOKINGS);
         localStorage.removeItem(STORAGE_KEYS.LEADS);
         localStorage.removeItem(STORAGE_KEYS.CHAUFFEURS);
         localStorage.removeItem(STORAGE_KEYS.QUOTES);
       }
       setBookings([]);
+      setDeletedBookingIds(new Set());
       setLeads([]);
       setChauffeurs([]);
       setCalculatorQuotes([]);
@@ -394,14 +458,21 @@ export default function SoloAdminDashboard() {
   // Helper: Synchronize booking changes with server endpoint and Google Sheets
   const syncBookingToRemote = async (payload) => {
     const sheetUrl = getActiveGoogleSheetUrl();
-    const webhookParam = sheetUrl ? `?webhook=${encodeURIComponent(sheetUrl)}` : '';
+    const queryParams = new URLSearchParams();
+    if (sheetUrl) queryParams.set('webhook', sheetUrl);
+    if (payload.action) queryParams.set('action', payload.action);
+    if (payload.bookingId) queryParams.set('bookingId', payload.bookingId);
+    if (payload.manifestStatus) queryParams.set('manifestStatus', payload.manifestStatus);
 
-    // 1. Post to API endpoint with ?webhook= parameter
+    const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
+
+    // 1. Post to API endpoint with trailing slash and query params (GET for delete, POST for update/create)
     try {
-      await fetch(`/api/admin/bookings${webhookParam}`, {
-        method: 'POST',
+      const isDelete = payload.action === 'delete' || payload.action === 'cancel';
+      await fetch(`/api/admin/bookings/${queryString}`, {
+        method: isDelete ? 'GET' : 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: isDelete ? undefined : JSON.stringify(payload)
       });
     } catch (_) {}
 
@@ -449,12 +520,35 @@ export default function SoloAdminDashboard() {
 
   // Delete / Cancel Booking from Active Trips
   const handleDeleteBooking = async (bookingId) => {
-    const nextList = bookings.filter(b => b.bookingId !== bookingId);
-    setBookings(nextList);
-    if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(nextList));
+    if (!bookingId) return;
+    const cleanId = String(bookingId).trim();
+    const lowerId = cleanId.toLowerCase();
 
-    await syncBookingToRemote({ action: 'delete', bookingId });
-    showToast(`Trip ${bookingId} has been removed.`, 'info');
+    // 1. Permanently record tombstone in state and localStorage
+    setDeletedBookingIds(prev => {
+      const next = new Set(prev);
+      next.add(lowerId);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(STORAGE_KEYS.DELETED_BOOKINGS, JSON.stringify(Array.from(next)));
+      }
+      return next;
+    });
+
+    // 2. Immediately remove from local bookings state and localStorage
+    const nextList = bookings.filter(b => String(b.bookingId || '').trim().toLowerCase() !== lowerId);
+    setBookings(nextList);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(nextList));
+    }
+
+    // 3. Sync deletion to server and Google Sheets with manifestStatus: 'Cancelled'
+    await syncBookingToRemote({
+      action: 'delete',
+      bookingId: cleanId,
+      manifestStatus: 'Cancelled'
+    });
+
+    showToast(`Trip ${cleanId} has been removed.`, 'info');
   };
 
   // Update Customer Contact on an Active Trip

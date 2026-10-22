@@ -24,11 +24,90 @@ function escapeCsvCell(cell: any): string {
   return str;
 }
 
+function getEnvWebhook(): string {
+  try {
+    const envPath = path.resolve(process.cwd(), '.env');
+    if (fs.existsSync(envPath)) {
+      const raw = fs.readFileSync(envPath, 'utf8');
+      const match = raw.match(/(?:PUBLIC_)?GOOGLE_SHEET_WEBHOOK_URL=([^\r\n]+)/);
+      if (match && match[1]) return match[1].trim();
+    }
+  } catch (_) {}
+  return process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL || '';
+}
+
 export const GET: APIRoute = async ({ request, url }) => {
   try {
     const targetUrl = url || new URL(request.url);
-    const queryRef = (targetUrl.searchParams.get('bookingId') || targetUrl.searchParams.get('ref') || targetUrl.searchParams.get('id') || '').trim().toLowerCase();
-    const customWebhook = targetUrl.searchParams.get('webhook') || process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL;
+    const actionQuery = (request.headers.get('x-action') || targetUrl.searchParams.get('action') || '').trim().toLowerCase();
+    const queryRef = (request.headers.get('x-booking-id') || targetUrl.searchParams.get('bookingId') || targetUrl.searchParams.get('ref') || targetUrl.searchParams.get('id') || '').trim().toLowerCase();
+    const customWebhook = targetUrl.searchParams.get('webhook') || getEnvWebhook();
+
+    const csvPath = path.resolve(process.cwd(), 'Kalidass_Operations_Control_2026.csv');
+
+    // Universal Delete / Cancel Handler via GET (supports query params and headers)
+    if (actionQuery === 'delete' || actionQuery === 'cancel') {
+      const deleteBookingId = (request.headers.get('x-booking-id') || targetUrl.searchParams.get('bookingId') || targetUrl.searchParams.get('id') || targetUrl.searchParams.get('ref') || queryRef || '').trim();
+      if (deleteBookingId) {
+        const targetId = deleteBookingId.toLowerCase();
+
+        // 1. Remove from local Operations Control CSV
+        if (fs.existsSync(csvPath)) {
+          const content = fs.readFileSync(csvPath, 'utf8');
+          const lines = content.trim().split(/\r?\n/).filter(Boolean);
+          if (lines.length > 0) {
+            const header = lines[0];
+            const remainingLines = [header];
+            for (let i = 1; i < lines.length; i++) {
+              const row = parseCsvLine(lines[i]);
+              const rowId = (row[0] || '').trim().toLowerCase();
+              if (rowId !== targetId) {
+                remainingLines.push(lines[i]);
+              }
+            }
+            fs.writeFileSync(csvPath, remainingLines.join('\n') + '\n', 'utf8');
+          }
+        }
+
+        // 2. Remove duty slip if present
+        const slipsPath = path.resolve(process.cwd(), 'Kalidass_Duty_Slips_2026.json');
+        if (fs.existsSync(slipsPath)) {
+          try {
+            const parsed = JSON.parse(fs.readFileSync(slipsPath, 'utf8') || '[]');
+            if (Array.isArray(parsed)) {
+              const remainingSlips = parsed.filter((s: any) => (s?.bookingId || '').trim().toLowerCase() !== targetId);
+              fs.writeFileSync(slipsPath, JSON.stringify(remainingSlips, null, 2), 'utf8');
+            }
+          } catch (_) {}
+        }
+
+        // 3. Forward delete & cancel to Google Sheets Webhook
+        if (customWebhook && customWebhook.startsWith('http')) {
+          try {
+            await fetch(customWebhook, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain' },
+              body: JSON.stringify({
+                type: 'admin_booking_sync',
+                action: 'delete',
+                bookingId: deleteBookingId,
+                manifestStatus: 'Cancelled'
+              })
+            });
+          } catch (_) {}
+        }
+
+        return new Response(JSON.stringify({ success: true, bookingId: deleteBookingId, action: 'deleted' }), {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            'Access-Control-Allow-Origin': '*',
+            'Cache-Control': 'no-store, max-age=0'
+          }
+        });
+      }
+    }
+
     let remoteBookings: any[] = [];
 
     // Fetch from Google Apps Script if configured
@@ -42,7 +121,8 @@ export const GET: APIRoute = async ({ request, url }) => {
         if (remoteRes.ok) {
           const remoteJson = await remoteRes.json();
           if (remoteJson && remoteJson.success && Array.isArray(remoteJson.bookings)) {
-            remoteBookings = remoteJson.bookings;
+            // Strictly exclude any cancelled bookings returned by remote
+            remoteBookings = remoteJson.bookings.filter((b: any) => b && b.manifestStatus !== 'Cancelled');
           }
         }
       } catch (remoteErr: any) {
@@ -50,7 +130,6 @@ export const GET: APIRoute = async ({ request, url }) => {
       }
     }
 
-    const csvPath = path.resolve(process.cwd(), 'Kalidass_Operations_Control_2026.csv');
     const bookings: any[] = [...remoteBookings];
 
     // Load duty slips if available to enrich booking
@@ -75,31 +154,34 @@ export const GET: APIRoute = async ({ request, url }) => {
         const row = parseCsvLine(lines[i]);
         if (row.length > 0 && row[0]) {
           const bId = row[0] || '';
+          const manifestStatus = row[9] || 'Pending';
+          if (manifestStatus === 'Cancelled') continue;
+
           const exists = bookings.some(b => b.bookingId.toLowerCase() === bId.toLowerCase());
           if (!exists) {
             const slip = dutySlipsMap.get(bId.toLowerCase()) || null;
             bookings.push({
-          bookingId: bId,
-          guestNamePhone: row[1] || '',
-          travelDateTime: row[2] || '',
-          pickupAddress: row[3] || '',
-          vehicleCategory: row[4] || 'Sedan',
-          partySize: row[5] || '4 Pax',
-          kycStatus: row[6] || 'Pending',
-          darshanStatus: row[7] || 'Unassigned',
-          assignedChauffeur: row[8] || 'Unassigned',
-          manifestStatus: row[9] || 'Pending',
-          terminalFare: parseInt(row[10] || '0', 10) || 0,
-          chauffeurPayout: parseInt(row[11] || '0', 10) || 0,
-          companyMargin: parseInt(row[12] || '0', 10) || ((parseInt(row[10] || '0', 10) || 0) - (parseInt(row[11] || '0', 10) || 0)),
-          financialClosure: row[13] || 'Unreconciled',
-          reviewStatus: row[14] || 'Pending',
-          dutySlip: slip
-        });
+              bookingId: bId,
+              guestNamePhone: row[1] || '',
+              travelDateTime: row[2] || '',
+              pickupAddress: row[3] || '',
+              vehicleCategory: row[4] || 'Sedan',
+              partySize: row[5] || '4 Pax',
+              kycStatus: row[6] || 'Pending',
+              darshanStatus: row[7] || 'Unassigned',
+              assignedChauffeur: row[8] || 'Unassigned',
+              manifestStatus: manifestStatus,
+              terminalFare: parseInt(row[10] || '0', 10) || 0,
+              chauffeurPayout: parseInt(row[11] || '0', 10) || 0,
+              companyMargin: parseInt(row[12] || '0', 10) || ((parseInt(row[10] || '0', 10) || 0) - (parseInt(row[11] || '0', 10) || 0)),
+              financialClosure: row[13] || 'Unreconciled',
+              reviewStatus: row[14] || 'Pending',
+              dutySlip: slip
+            });
+          }
+        }
       }
     }
-  }
-}
 
     if (queryRef) {
       const matched = bookings.find(b =>
@@ -136,7 +218,16 @@ export const GET: APIRoute = async ({ request, url }) => {
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const data = await request.json();
+    const targetUrl = new URL(request.url);
+    let data: any = {};
+    try {
+      data = await request.json();
+    } catch (_) {}
+
+    const action = String(data.action || request.headers.get('x-action') || targetUrl.searchParams.get('action') || '').trim();
+    const bookingId = String(data.bookingId || request.headers.get('x-booking-id') || targetUrl.searchParams.get('bookingId') || '').trim();
+    const manifestStatusParam = String(data.manifestStatus || request.headers.get('x-manifest-status') || targetUrl.searchParams.get('manifestStatus') || '').trim();
+
     const csvPath = path.resolve(process.cwd(), 'Kalidass_Operations_Control_2026.csv');
 
     if (!fs.existsSync(csvPath)) {
@@ -146,6 +237,59 @@ export const POST: APIRoute = async ({ request }) => {
 
     const content = fs.readFileSync(csvPath, 'utf8');
     const lines = content.trim().split(/\r?\n/).filter(Boolean);
+
+    // If deleting / cancelling a booking from Active Trips
+    if ((action === 'delete' || action === 'cancel') && bookingId) {
+      const targetId = bookingId.toLowerCase();
+
+      // 1. Remove from local Operations Control CSV
+      if (lines.length > 0) {
+        const header = lines[0];
+        const remainingLines = [header];
+        for (let i = 1; i < lines.length; i++) {
+          const row = parseCsvLine(lines[i]);
+          const rowId = (row[0] || '').trim().toLowerCase();
+          if (rowId !== targetId) {
+            remainingLines.push(lines[i]);
+          }
+        }
+        fs.writeFileSync(csvPath, remainingLines.join('\n') + '\n', 'utf8');
+      }
+
+      // 2. Remove duty slip if present
+      const slipsPath = path.resolve(process.cwd(), 'Kalidass_Duty_Slips_2026.json');
+      if (fs.existsSync(slipsPath)) {
+        try {
+          const parsed = JSON.parse(fs.readFileSync(slipsPath, 'utf8') || '[]');
+          if (Array.isArray(parsed)) {
+            const remainingSlips = parsed.filter((s: any) => (s?.bookingId || '').trim().toLowerCase() !== targetId);
+            fs.writeFileSync(slipsPath, JSON.stringify(remainingSlips, null, 2), 'utf8');
+          }
+        } catch (_) {}
+      }
+
+      // 3. Forward delete & cancel to Google Sheets Webhook
+      const webhookUrl = (data && data.webhookUrl) || getEnvWebhook();
+      if (webhookUrl && webhookUrl.startsWith('http')) {
+        try {
+          await fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({
+              type: 'admin_booking_sync',
+              action: 'delete',
+              bookingId: data.bookingId,
+              manifestStatus: 'Cancelled'
+            })
+          });
+        } catch (_) {}
+      }
+
+      return new Response(JSON.stringify({ success: true, bookingId: data.bookingId, action: 'deleted' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json; charset=utf-8' }
+      });
+    }
 
     // If updating an existing booking
     if (data.action === 'update' && data.bookingId) {
@@ -179,6 +323,23 @@ export const POST: APIRoute = async ({ request }) => {
 
       if (updated) {
         fs.writeFileSync(csvPath, newLines.join('\n') + '\n', 'utf8');
+
+        // Forward update to Google Sheets Webhook
+        const webhookUrl = (data && data.webhookUrl) || getEnvWebhook();
+        if (webhookUrl && webhookUrl.startsWith('http')) {
+          try {
+            fetch(webhookUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain' },
+              body: JSON.stringify({
+                type: 'admin_booking_sync',
+                action: 'update',
+                ...data
+              })
+            }).catch(() => {});
+          } catch (_) {}
+        }
+
         return new Response(JSON.stringify({ success: true, bookingId: data.bookingId, action: 'updated' }), {
           status: 200,
           headers: { 'Content-Type': 'application/json; charset=utf-8' }
@@ -186,9 +347,16 @@ export const POST: APIRoute = async ({ request }) => {
       }
     }
 
-    // Creating new booking
+    // Creating new booking (strictly requires valid booking contact or route)
+    if (!data.guestNamePhone && !data.name && !data.phone && !data.pickupAddress && !data.pickup && action !== 'create') {
+      return new Response(JSON.stringify({ success: false, error: 'No booking data provided', action, bookingId, url: targetUrl.toString() }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json; charset=utf-8' }
+      });
+    }
+
     const rowNum = lines.length + 1;
-    const bookingId = data.bookingId || `#KT-BOOK-${100 + rowNum}`;
+    const finalBookingId = bookingId || `#KT-BOOK-${100 + rowNum}`;
     const guestNamePhone = data.guestNamePhone || `${data.name || 'Guest'} (+91 ${data.phone || '9840100000'})`;
     const travelDateTime = data.travelDateTime || `${data.pickupDate || 'Today'} @ ${data.pickupTime || '04:30 AM'}`;
     const pickupAddress = data.pickupAddress || data.pickup || 'Chennai';
