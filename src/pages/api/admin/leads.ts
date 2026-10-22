@@ -27,7 +27,52 @@ function escapeCsvCell(cell: any): string {
 export const GET: APIRoute = async ({ request, url }) => {
   try {
     const targetUrl = url || new URL(request.url);
+    const actionQuery = (request.headers.get('x-action') || targetUrl.searchParams.get('action') || '').trim().toLowerCase();
+    const quoteIdQuery = (request.headers.get('x-quote-id') || targetUrl.searchParams.get('quoteId') || targetUrl.searchParams.get('id') || targetUrl.searchParams.get('ref') || '').trim();
     const customWebhook = targetUrl.searchParams.get('webhook') || process.env.GOOGLE_SHEET_WEBHOOK_URL;
+    const csvPath = path.resolve(process.cwd(), 'Kalidass_Calculations_Log_2026.csv');
+
+    // Handle Delete / Cancel enquiry
+    if (actionQuery === 'delete' || actionQuery === 'cancel') {
+      if (quoteIdQuery && fs.existsSync(csvPath)) {
+        const targetLower = quoteIdQuery.toLowerCase();
+        const content = fs.readFileSync(csvPath, 'utf8');
+        const lines = content.trim().split(/\r?\n/).filter(Boolean);
+        if (lines.length > 0) {
+          const header = lines[0];
+          const remaining = [header];
+          for (let i = 1; i < lines.length; i++) {
+            const m = lines[i].match(/(?:^|,)(?:"([^"]*(?:""[^"]*)*)"|([^,]*))/g);
+            const row0 = m ? m[0].replace(/^,/, '').replace(/^"|"$/g, '').trim().toLowerCase() : '';
+            if (row0 !== targetLower) {
+              remaining.push(lines[i]);
+            }
+          }
+          fs.writeFileSync(csvPath, remaining.join('\n') + '\n', 'utf8');
+        }
+      }
+
+      if (customWebhook && customWebhook.startsWith('http')) {
+        try {
+          await fetch(customWebhook, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({
+              type: 'admin_lead_sync',
+              action: 'delete',
+              quoteId: quoteIdQuery,
+              status: 'Cancelled'
+            })
+          });
+        } catch (_) {}
+      }
+
+      return new Response(JSON.stringify({ success: true, quoteId: quoteIdQuery, action: 'deleted' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json; charset=utf-8' }
+      });
+    }
+
     let remoteLeads: any[] = [];
     let remoteQuotes: any[] = [];
 
@@ -42,8 +87,8 @@ export const GET: APIRoute = async ({ request, url }) => {
         if (remoteRes.ok) {
           const remoteJson = await remoteRes.json();
           if (remoteJson && remoteJson.success && Array.isArray(remoteJson.leads)) {
-            remoteLeads = remoteJson.leads;
-            remoteQuotes = remoteJson.calculatorQuotes || remoteJson.leads;
+            remoteLeads = remoteJson.leads.filter((l: any) => l && l.status !== 'Cancelled' && l.status !== 'Deleted');
+            remoteQuotes = (remoteJson.calculatorQuotes || remoteJson.leads).filter((q: any) => q && q.status !== 'Cancelled' && q.status !== 'Deleted');
           }
         }
       } catch (remoteErr: any) {
@@ -51,7 +96,6 @@ export const GET: APIRoute = async ({ request, url }) => {
       }
     }
 
-    const csvPath = path.resolve(process.cwd(), 'Kalidass_Calculations_Log_2026.csv');
     const actionableLeads: any[] = [...remoteLeads];
     const browsedLeads: any[] = [...remoteQuotes];
 
@@ -154,6 +198,44 @@ export const POST: APIRoute = async ({ request }) => {
 
     const content = fs.readFileSync(csvPath, 'utf8');
     const lines = content.trim().split(/\r?\n/).filter(Boolean);
+
+    // Handle Delete / Cancel enquiry in POST
+    if (data.action === 'delete' || data.action === 'cancel' || data.status === 'Cancelled' || data.status === 'Deleted') {
+      const targetQuoteId = (data.quoteId || '').trim();
+      const targetLower = targetQuoteId.toLowerCase();
+      if (targetQuoteId && lines.length > 0) {
+        const remainingLines = [lines[0]];
+        for (let i = 1; i < lines.length; i++) {
+          const m = lines[i].match(/(?:^|,)(?:"([^"]*(?:""[^"]*)*)"|([^,]*))/g);
+          const row0 = m ? m[0].replace(/^,/, '').replace(/^"|"$/g, '').trim().toLowerCase() : '';
+          if (row0 !== targetLower) {
+            remainingLines.push(lines[i]);
+          }
+        }
+        fs.writeFileSync(csvPath, remainingLines.join('\n') + '\n', 'utf8');
+      }
+
+      const customWebhook = process.env.GOOGLE_SHEET_WEBHOOK_URL;
+      if (customWebhook && customWebhook.startsWith('http')) {
+        try {
+          await fetch(customWebhook, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({
+              type: 'admin_lead_sync',
+              action: 'delete',
+              quoteId: targetQuoteId,
+              status: 'Cancelled'
+            })
+          });
+        } catch (_) {}
+      }
+
+      return new Response(JSON.stringify({ success: true, quoteId: targetQuoteId, action: 'deleted' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json; charset=utf-8' }
+      });
+    }
 
     let updated = false;
     const newLines = lines.map((line, idx) => {

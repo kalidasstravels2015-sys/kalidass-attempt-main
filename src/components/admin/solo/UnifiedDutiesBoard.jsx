@@ -27,6 +27,7 @@ export default function UnifiedDutiesBoard({
   onOpenAiParser,
   onOpenDriversModal,
   onOpenPhoneQuoteEngine,
+  onDeleteLead,
   showToast
 }) {
   // 3 Primary Register Tabs: 'ENQUIRIES' | 'ACTIVE_TRIPS' | 'COMPLETED'
@@ -170,41 +171,47 @@ export default function UnifiedDutiesBoard({
     }
   };
 
-  // Action: Send WhatsApp Quotation to Customer
+  // Action: Send WhatsApp Quotation to Customer (Clean 4-Line Format, Rupee Symbol)
   const handleSendQuoteWA = (lead) => {
     const cleanPhone = extractPhone(lead);
     const fare = Number(lead.estimatedFare) || 0;
-    const mapsBlock = buildMapsBlock(lead.pickup, lead.drop, lead.tripType || 'Round Trip');
+    const pkg = lead.tripType || 'Round Trip';
+    const pickup = cleanLocationName(lead.pickup);
+    const drop = cleanLocationName(lead.drop);
+    const guestName = lead.guestName && !isPlaceholderCustomerName(lead.guestName) ? lead.guestName.split('(')[0].trim() : 'Sir/Madam';
+
     const msg =
-      `*KALIDASS TRAVELS CHENNAI — TRIP QUOTATION*\n\n` +
-      `Namaskaram ${lead.guestName || 'Sir/Madam'}!\n` +
-      `📍 *Route:* ${lead.pickup} ➔ ${lead.drop}\n` +
-      `🚗 *Vehicle:* ${lead.vehicle}\n` +
-      `💰 *All-Inclusive Fare:* Rs.${fare.toLocaleString('en-IN')}\n\n` +
-      `🔒 *To Confirm Your Cab:*\n` +
-      `Transfer *Rs.500 Advance* via UPI to *8939539211@okbizaxis* (Kalidass Travels) and send screenshot.\n` +
-      `Our team will instantly block the vehicle and assign your driver.\n\n` +
-      `📞 24/7 Support: +91 89395 39211` +
-      mapsBlock;
+      `🚕 *KALIDASS TRAVELS — TRIP QUOTE*\n\n` +
+      `Namaskaram ${guestName}!\n` +
+      `📍 *Route:* ${pickup} ➔ ${drop}\n` +
+      `🚗 *Car:* ${lead.vehicle || 'AC Sedan'}${pkg ? ` (${pkg})` : ''}\n` +
+      `💰 *All-Inclusive Fare:* ₹${fare.toLocaleString('en-IN')}\n` +
+      `*(Includes Toll, Driver Beta & Fuel. No hidden charges)*\n\n` +
+      `🔒 *To Confirm Booking:*\n` +
+      `Pay *₹500 Advance* via UPI: *8939539211@okbizaxis* (Kalidass Travels)\n` +
+      `Vehicle & driver allocated instantly upon payment.\n\n` +
+      `📞 24/7 Helpline: +91 89395 39211`;
 
     window.open(cleanPhone ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
-    showToast?.(`WhatsApp quote opened for ${lead.guestName || 'Customer'}!`, 'success');
+    showToast?.(`WhatsApp quote opened for ${guestName}!`, 'success');
   };
 
-  // Action: Send Follow-up WhatsApp Reminder
+  // Action: Send Follow-up WhatsApp Reminder (Clean, polite, Rupee symbol)
   const handleSendFollowUpWA = (lead) => {
     const cleanPhone = extractPhone(lead);
-    const guestName = lead.guestName || 'Sir/Madam';
+    const guestName = lead.guestName && !isPlaceholderCustomerName(lead.guestName) ? lead.guestName.split('(')[0].trim() : 'Sir/Madam';
     const fare = Number(lead.estimatedFare) || 0;
+    const route = `${cleanLocationName(lead.pickup)} ➔ ${cleanLocationName(lead.drop)}`;
+    const pkg = lead.tripType || 'Outstation Trip';
     const msg =
       `Namaskaram ${guestName} ji! 🙏\n\n` +
-      `Following up from *Kalidass Travels Chennai* regarding your trip inquiry:\n` +
-      `📍 *Route:* ${lead.pickup} ➔ ${lead.drop}\n` +
-      `🚗 *Vehicle:* ${lead.vehicle}\n` +
-      (fare > 0 ? `💰 *Fare Quoted:* Rs.${fare.toLocaleString('en-IN')}\n\n` : `\n`) +
-      `Shall we confirm and block your cab? 🚕\n` +
-      `Kindly transfer *Rs.500 Advance* via UPI to *8939539211@okbizaxis* (Kalidass Travels) to lock your vehicle & driver.\n\n` +
-      `For any questions, call us directly at +91 89395 39211. Thank you!`;
+      `Following up from *Kalidass Travels Chennai* regarding your cab enquiry:\n` +
+      `📍 *Route:* ${route}\n` +
+      `🚗 *Car:* ${lead.vehicle || 'AC Cab'}${pkg ? ` (${pkg})` : ''}\n` +
+      (fare > 0 ? `💰 *All-Inclusive Fare:* ₹${fare.toLocaleString('en-IN')}\n\n` : `\n`) +
+      `Shall we block your vehicle? 🚕\n` +
+      `Kindly transfer *₹500 Advance* via UPI to *8939539211@okbizaxis* (Kalidass Travels) to lock your cab & driver.\n\n` +
+      `📞 24/7 Helpline: +91 89395 39211. Thank you!`;
     window.open(cleanPhone ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     showToast?.(`Follow-up reminder sent to ${guestName}!`, 'success');
   };
@@ -262,12 +269,12 @@ export default function UnifiedDutiesBoard({
       `🗓 *Pickup Time:* ${b.travelDateTime}\n` +
       `📍 *Route:* ${b.pickupAddress}\n` +
       `🚗 *Vehicle:* ${b.vehicleCategory}\n` +
-      `💰 *Driver Net Payment:* *Rs.${driverNet.toLocaleString('en-IN')} Net* (+ Tolls/Parking paid by customer)\n` +
-      `📱 *Reply with Driver Name & Car Plate to lock this duty!*`;
+      `💰 *Driver Net Payment:* *₹${driverNet.toLocaleString('en-IN')} Net* (+ Tolls/Parking paid by customer)\n` +
+      `📱 *Reply with Driver Name & Car Plate to take this duty!*`;
     window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
-  // Action: Send Customer Duty Slip via WhatsApp
+  // Action: Send Customer Duty Slip via WhatsApp (Step 3: Driver & Cab Details)
   const handleSendCustomerDutySlip = (b) => {
     const cleanPhone = extractPhone(b);
     const guestName = (b.guestNamePhone || 'Customer').split('(')[0].trim();
@@ -276,14 +283,18 @@ export default function UnifiedDutiesBoard({
     const adv = Number(b.advancePaid) || 0;
     const bal = Math.max(0, fare - adv);
     const msg =
-      `*KALIDASS TRAVELS — CUSTOMER DUTY SLIP*\n` +
+      `🚖 *KALIDASS TRAVELS — CAB & DRIVER DETAILS*\n` +
       `Booking ID: *${b.bookingId}*\n\n` +
       `👨‍✈️ *Driver & Cab:* ${b.assignedChauffeur}\n` +
       `🚗 *Vehicle:* ${b.vehicleCategory}\n` +
       `🗓 *Pickup Time:* ${b.travelDateTime}\n` +
-      `📍 *Route:* ${b.pickupAddress}\n` +
-      `💰 *Total Fare:* Rs.${fare.toLocaleString('en-IN')} | *Advance:* Rs.${adv} | *Balance to Driver:* Rs.${bal.toLocaleString('en-IN')}\n\n` +
-      `📱 *Open Digital Duty Slip & Live Status:*\n${tripUrl}`;
+      `📍 *Route:* ${b.pickupAddress}\n\n` +
+      `💰 *Total Fare:* ₹${fare.toLocaleString('en-IN')}\n` +
+      `🟢 *Advance Paid:* ₹${adv.toLocaleString('en-IN')}\n` +
+      `🔴 *Balance to Pay Driver:* ₹${bal.toLocaleString('en-IN')}\n\n` +
+      `📱 *Open Live Digital Duty Slip:*\n${tripUrl}\n\n` +
+      `Have a safe and pleasant journey! ✨\n` +
+      `📞 24/7 Helpline: +91 89395 39211`;
     window.open(cleanPhone ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     showToast?.(`Duty slip sent to customer ${guestName}!`, 'success');
   };
@@ -296,16 +307,18 @@ export default function UnifiedDutiesBoard({
     const fare = Number(b.terminalFare) || 0;
     const adv = Number(b.advancePaid) || 0;
     const bal = Math.max(0, fare - adv);
+    const driverShare = Number(b.chauffeurPayout) || Math.round(fare * 0.82);
     const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.pickupAddress || 'Chennai')}`;
     const msg =
       `🚕 *KALIDASS TRAVELS — DRIVER DUTY SLIP*\n` +
-      `Trip ID: *${b.bookingId}*\n` +
+      `Trip ID: *${b.bookingId}*\n\n` +
       `👤 *Passenger:* ${b.guestNamePhone}\n` +
       `🗓 *Pickup Time:* ${b.travelDateTime}\n` +
       `📍 *Route:* ${b.pickupAddress}\n` +
-      `🗺️ *Google Maps Pin:* ${mapsLink}\n` +
-      `💵 *Collect Balance from Customer at Drop:* *Rs.${bal.toLocaleString('en-IN')}*\n` +
-      `📱 *Digital Duty Slip:*\n${tripUrl}`;
+      `🗺️ *Google Maps Pin:* ${mapsLink}\n\n` +
+      `💵 *Collect Balance from Customer at Drop:* *₹${bal.toLocaleString('en-IN')}*\n` +
+      `🤝 *Your Net Driver Share:* ₹${driverShare.toLocaleString('en-IN')}\n\n` +
+      `📱 *Enter Start/End KM & Close Bill Here:*\n${tripUrl}`;
     window.open(cleanPhone ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     showToast?.(`Duty slip sent to driver!`, 'success');
   };
@@ -314,12 +327,13 @@ export default function UnifiedDutiesBoard({
   const handleSendReviewWA = (b) => {
     const cleanPhone = extractPhone(b);
     const guestName = (b.guestNamePhone || 'Customer').split('(')[0].trim();
+    const dest = (b.pickupAddress || '').split(/➔|->|→/)[1]?.trim() || 'your destination';
     const msg =
-      `Namaskaram ${guestName} ji! 🙏 Thank you for travelling with *Kalidass Travels Chennai*.\n\n` +
-      `We hope you had a pleasant and safe journey with our cab and driver. ⭐\n\n` +
+      `Namaskaram ${guestName} ji! 🙏 Thank you for choosing *Kalidass Travels Chennai* for your trip to ${dest}.\n\n` +
+      `We hope your driver took great care of you and your journey was comfortable and safe! ⭐\n\n` +
       `⭐⭐⭐⭐⭐ Kindly take 10 seconds to share your 5-star Google review here:\n` +
       `https://share.google/1IOq41QwMkhDJvrLY\n\n` +
-      `Your support helps our family-run team grow. Thank you! 🙏`;
+      `Your kind review means the world to our family-run team. Looking forward to serving you again! 🙏`;
     onReviewStatusChange?.(b.bookingId, 'Requested');
     showToast?.(`Review request sent to ${guestName}!`, 'success');
     window.open(cleanPhone ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
@@ -505,7 +519,7 @@ export default function UnifiedDutiesBoard({
           <div className="flex items-baseline gap-2">
             <span className="text-3xl font-black text-emerald-950">{completedBookings.length}</span>
             <span className="text-xs font-black text-emerald-800 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded-full">
-              +Rs.{totalCommissionEarned.toLocaleString('en-IN')} Profit
+              +₹{totalCommissionEarned.toLocaleString('en-IN')} Profit
             </span>
           </div>
           <p className="text-xs text-emerald-900/80 mt-1">
@@ -687,7 +701,7 @@ export default function UnifiedDutiesBoard({
                 </div>
 
                 <div>
-                  <label className="block font-bold text-m3-on-surface mb-1">Quoted Fare (Rs.)</label>
+                  <label className="block font-bold text-m3-on-surface mb-1">Quoted Fare (₹)</label>
                   <input
                     type="number"
                     required
@@ -824,7 +838,7 @@ export default function UnifiedDutiesBoard({
                       <div className="text-[11px] text-m3-on-surface-variant flex items-center gap-1.5 flex-wrap">
                         <span>{q.vehicle}</span>
                         <span>•</span>
-                        <strong>Rs.{Number(q.estimatedFare || 0).toLocaleString('en-IN')}</strong>
+                        <strong>₹{Number(q.estimatedFare || 0).toLocaleString('en-IN')}</strong>
                         {q.timestamp && (
                           <>
                             <span>•</span>
@@ -943,7 +957,7 @@ export default function UnifiedDutiesBoard({
                     <div className="flex flex-wrap items-center gap-2 shrink-0 pt-2 lg:pt-0 border-t lg:border-t-0 border-m3-outline-variant/50">
                       <div className="text-left lg:text-right mr-1">
                         <span className="text-base font-black text-amber-950 block">
-                          Rs.{Number(lead.estimatedFare || 0).toLocaleString('en-IN')}
+                          ₹{Number(lead.estimatedFare || 0).toLocaleString('en-IN')}
                         </span>
                         <span className="text-[11px] text-m3-on-surface-variant font-medium">Quoted Fare</span>
                       </div>
@@ -979,6 +993,22 @@ export default function UnifiedDutiesBoard({
                       >
                         <span className="material-symbols-outlined text-[16px]">verified</span>
                         <span>✅ Got ₹500 Adv (Confirm)</span>
+                      </button>
+
+                      {/* 4. Delete / Dismiss Enquiry */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const targetId = lead.quoteId || getOrderedEnquiryId(lead, idx, validLeads.length);
+                          if (window.confirm(`Are you sure you want to delete enquiry ${targetId}?`)) {
+                            onDeleteLead?.(targetId);
+                          }
+                        }}
+                        className="h-9 px-2.5 text-m3-error hover:bg-m3-error-container/30 border border-m3-error/30 hover:border-m3-error/60 rounded-full text-xs font-bold flex items-center gap-1 transition-colors"
+                        title="Delete / Dismiss this enquiry"
+                      >
+                        <span className="material-symbols-outlined text-[16px]">delete</span>
+                        <span>Delete</span>
                       </button>
                     </div>
                   </div>
@@ -1153,19 +1183,19 @@ export default function UnifiedDutiesBoard({
                       <div className="p-2.5 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant/60 text-xs space-y-1">
                         <div className="flex justify-between">
                           <span className="text-m3-on-surface-variant font-medium">Total Fare:</span>
-                          <strong className="text-m3-on-surface font-black">Rs.{fare.toLocaleString('en-IN')}</strong>
+                          <strong className="text-m3-on-surface font-black">₹{fare.toLocaleString('en-IN')}</strong>
                         </div>
                         <div className="flex justify-between text-emerald-900">
                           <span className="font-semibold">Advance Paid:</span>
-                          <span className="font-bold">Rs.{adv}</span>
+                          <span className="font-bold">₹{adv}</span>
                         </div>
                         <div className="flex justify-between border-t border-m3-outline-variant/50 pt-1 font-black text-amber-950">
                           <span>Balance to Collect:</span>
-                          <span className="text-sm text-red-700">Rs.{balanceDue.toLocaleString('en-IN')}</span>
+                          <span className="text-sm text-red-700">₹{balanceDue.toLocaleString('en-IN')}</span>
                         </div>
                         <div className="flex justify-between text-[11px] text-m3-on-surface-variant pt-0.5">
-                          <span>Driver Net: Rs.{driverShare}</span>
-                          <span className="text-emerald-700 font-bold">Profit: +Rs.{profit}</span>
+                          <span>Driver Net: ₹{driverShare}</span>
+                          <span className="text-emerald-700 font-bold">Profit: +₹{profit}</span>
                         </div>
                       </div>
                     </div>
@@ -1310,7 +1340,7 @@ export default function UnifiedDutiesBoard({
             <div className="text-left sm:text-right">
               <span className="text-xs font-medium text-emerald-900 block">Total Profit Earned:</span>
               <span className="text-lg font-black text-emerald-900">
-                +Rs.{totalCommissionEarned.toLocaleString('en-IN')}
+                +₹{totalCommissionEarned.toLocaleString('en-IN')}
               </span>
             </div>
           </div>
@@ -1357,7 +1387,7 @@ export default function UnifiedDutiesBoard({
                       </div>
 
                       <div className="text-xs text-m3-on-surface-variant">
-                        Fare: <strong>Rs.{fare.toLocaleString('en-IN')}</strong> • Driver: Rs.{driverShare.toLocaleString('en-IN')} • <strong className="text-emerald-700">Profit: +Rs.{profit.toLocaleString('en-IN')}</strong>
+                        Fare: <strong>₹{fare.toLocaleString('en-IN')}</strong> • Driver: ₹{driverShare.toLocaleString('en-IN')} • <strong className="text-emerald-700">Profit: +₹{profit.toLocaleString('en-IN')}</strong>
                       </div>
                     </div>
 

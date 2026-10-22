@@ -99,12 +99,12 @@ export default function ActiveTripsView({
       `🗓 *Pickup Time:* ${b.travelDateTime}\n` +
       `📍 *Route:* ${b.pickupAddress}\n` +
       `🚗 *Vehicle:* ${b.vehicleCategory}\n` +
-      `💰 *Driver Net Payment:* *Rs.${driverNet.toLocaleString('en-IN')} Net* (+ Tolls/Parking paid by customer)\n` +
+      `💰 *Driver Net Payment:* *₹${driverNet.toLocaleString('en-IN')} Net* (+ Tolls/Parking paid by customer)\n` +
       `📱 *Reply with Driver Name & Car Plate to take this duty!*`;
     window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
-  // Customer Duty Slip
+  // Customer Duty Slip (Step 3: Driver & Cab Details)
   const handleSendCustomerDutySlip = (b) => {
     const cleanPhone = extractPhone(b);
     const guestName = (b.guestNamePhone || 'Customer').split('(')[0].trim();
@@ -113,14 +113,18 @@ export default function ActiveTripsView({
     const adv = Number(b.advancePaid) || 0;
     const bal = Math.max(0, fare - adv);
     const msg =
-      `*KALIDASS TRAVELS — CUSTOMER DUTY SLIP*\n` +
+      `🚖 *KALIDASS TRAVELS — CAB & DRIVER DETAILS*\n` +
       `Booking ID: *${b.bookingId}*\n\n` +
       `👨‍✈️ *Driver & Cab:* ${b.assignedChauffeur}\n` +
       `🚗 *Vehicle:* ${b.vehicleCategory}\n` +
       `🗓 *Pickup Time:* ${b.travelDateTime}\n` +
-      `📍 *Route:* ${b.pickupAddress}\n` +
-      `💰 *Total Fare:* Rs.${fare.toLocaleString('en-IN')} | *Advance:* Rs.${adv} | *Balance to Driver:* Rs.${bal.toLocaleString('en-IN')}\n\n` +
-      `📱 *Open Digital Duty Slip & Live Status:*\n${tripUrl}`;
+      `📍 *Route:* ${b.pickupAddress}\n\n` +
+      `💰 *Total Fare:* ₹${fare.toLocaleString('en-IN')}\n` +
+      `🟢 *Advance Paid:* ₹${adv.toLocaleString('en-IN')}\n` +
+      `🔴 *Balance to Pay Driver:* ₹${bal.toLocaleString('en-IN')}\n\n` +
+      `📱 *Open Live Digital Duty Slip:*\n${tripUrl}\n\n` +
+      `Have a safe and pleasant journey! ✨\n` +
+      `📞 24/7 Helpline: +91 89395 39211`;
     window.open(cleanPhone ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     showToast?.(`Duty slip sent to customer ${guestName}!`, 'success');
   };
@@ -133,16 +137,18 @@ export default function ActiveTripsView({
     const fare = Number(b.terminalFare) || 0;
     const adv = Number(b.advancePaid) || 0;
     const bal = Math.max(0, fare - adv);
+    const driverShare = Number(b.chauffeurPayout) || Math.round(fare * 0.82);
     const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.pickupAddress || 'Chennai')}`;
     const msg =
       `🚕 *KALIDASS TRAVELS — DRIVER DUTY SLIP*\n` +
-      `Trip ID: *${b.bookingId}*\n` +
+      `Trip ID: *${b.bookingId}*\n\n` +
       `👤 *Passenger:* ${b.guestNamePhone}\n` +
       `🗓 *Pickup Time:* ${b.travelDateTime}\n` +
       `📍 *Route:* ${b.pickupAddress}\n` +
-      `🗺️ *Google Maps Pin:* ${mapsLink}\n` +
-      `💵 *Collect Balance from Customer at Drop:* *Rs.${bal.toLocaleString('en-IN')}*\n` +
-      `📱 *Digital Duty Slip:*\n${tripUrl}`;
+      `🗺️ *Google Maps Pin:* ${mapsLink}\n\n` +
+      `💵 *Collect Balance from Customer at Drop:* *₹${bal.toLocaleString('en-IN')}*\n` +
+      `🤝 *Your Net Driver Share:* ₹${driverShare.toLocaleString('en-IN')}\n\n` +
+      `📱 *Enter Start/End KM & Close Bill Here:*\n${tripUrl}`;
     window.open(cleanPhone ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     showToast?.(`Duty slip sent to driver!`, 'success');
   };
@@ -201,9 +207,9 @@ export default function ActiveTripsView({
       `⏰ Pickup Time: ${b.travelDateTime}\n` +
       `👨‍✈️ Driver: ${b.assignedChauffeur || 'Unassigned'}\n\n` +
       `💰 FARE & ACCOUNTS:\n` +
-      `• Total Fare: Rs.${fare.toLocaleString('en-IN')}\n` +
-      `• Advance Paid: Rs.${adv.toLocaleString('en-IN')}\n` +
-      `• Balance to Collect by Driver: Rs.${bal.toLocaleString('en-IN')}\n\n` +
+      `• Total Fare: ₹${fare.toLocaleString('en-IN')}\n` +
+      `• Advance Paid: ₹${adv.toLocaleString('en-IN')}\n` +
+      `• Balance to Collect by Driver: ₹${bal.toLocaleString('en-IN')}\n\n` +
       `⚠️ DISPATCH CHECKLIST:\n` +
       `1. Evening prior (8:00 PM): Assign Driver & send Duty Slip on WhatsApp\n` +
       `2. 30 mins prior: Check Driver is on route\n` +
@@ -503,19 +509,19 @@ export default function ActiveTripsView({
                   <div className="p-2.5 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant/60 text-xs space-y-1">
                     <div className="flex justify-between">
                       <span className="text-m3-on-surface-variant font-medium">Total Fare:</span>
-                      <strong className="text-m3-on-surface font-black">Rs.{fare.toLocaleString('en-IN')}</strong>
+                      <strong className="text-m3-on-surface font-black">₹{fare.toLocaleString('en-IN')}</strong>
                     </div>
                     <div className="flex justify-between text-m3-on-surface">
                       <span className="font-semibold">Advance Paid:</span>
-                      <span className="font-bold">Rs.{adv}</span>
+                      <span className="font-bold">₹{adv}</span>
                     </div>
                     <div className="flex justify-between border-t border-m3-outline-variant/50 pt-1 font-bold text-m3-on-surface">
                       <span>Balance to Collect:</span>
-                      <span className="text-sm font-black font-mono-code">Rs.{balanceDue.toLocaleString('en-IN')}</span>
+                      <span className="text-sm font-black font-mono-code">₹{balanceDue.toLocaleString('en-IN')}</span>
                     </div>
                     <div className="flex justify-between text-[11px] text-m3-on-surface-variant pt-0.5">
-                      <span>Driver: Rs.{driverShare}</span>
-                      <span className="text-m3-primary font-bold">Profit: +Rs.{profit}</span>
+                      <span>Driver: ₹{driverShare}</span>
+                      <span className="text-m3-primary font-bold">Profit: +₹{profit}</span>
                     </div>
                   </div>
                 </div>

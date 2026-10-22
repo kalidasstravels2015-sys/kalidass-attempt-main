@@ -437,7 +437,7 @@ export default function SoloDutySlipModal({
               <div className="flex items-center justify-between text-xs text-m3-on-surface bg-m3-surface-container-lowest p-2 rounded-m3-md border border-m3-outline-variant/60 font-mono">
                 <span>Total KM: <strong>{totalKm} km</strong></span>
                 <span className={extraKm > 0 ? 'text-m3-error font-bold' : 'text-m3-primary font-bold'}>
-                  Extra: {extraKm} km (+Rs.{extraKmCharge})
+                  Extra: {extraKm} km (+₹{extraKmCharge})
                 </span>
               </div>
             </div>
@@ -518,15 +518,15 @@ export default function SoloDutySlipModal({
             <div className="bg-m3-surface-container-low text-m3-on-surface p-3.5 rounded-m3-xl font-mono border border-m3-outline-variant/70 space-y-1">
               <div className="flex justify-between text-xs text-m3-on-surface-variant">
                 <span>Total Trip Gross:</span>
-                <span className="font-bold text-m3-on-surface">Rs. {grossFare.toLocaleString('en-IN')}</span>
+                <span className="font-bold text-m3-on-surface">₹{grossFare.toLocaleString('en-IN')}</span>
               </div>
               <div className="flex justify-between text-xs text-m3-on-surface-variant">
                 <span>Advance Deducted:</span>
-                <span className="font-bold text-m3-primary">-Rs. {advance.toLocaleString('en-IN')}</span>
+                <span className="font-bold text-m3-primary">-₹{advance.toLocaleString('en-IN')}</span>
               </div>
               <div className="border-t border-m3-outline-variant/50 pt-1.5 flex justify-between text-sm sm:text-base font-bold text-m3-primary">
                 <span>NET BALANCE DUE:</span>
-                <span>Rs. {balanceToCollect.toLocaleString('en-IN')}</span>
+                <span>₹{balanceToCollect.toLocaleString('en-IN')}</span>
               </div>
             </div>
 

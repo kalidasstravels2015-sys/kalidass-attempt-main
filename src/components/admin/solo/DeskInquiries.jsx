@@ -78,11 +78,15 @@ export default function DeskInquiries({
   const handleSendFollowUpWhatsApp = (lead) => {
     const guestPhone = (lead.sourcePage || '').replace(/[^0-9]/g, '');
     const fare = Number(lead.estimatedFare) || 0;
-    const message = `*KALIDASS TRAVELS CHENNAI — BOOKING FOLLOW-UP*\n\n` +
-      `Namaskaram ${lead.guestName || 'Sir/Madam'}! Checking in regarding your cab enquiry for *${lead.pickup} ➔ ${lead.drop}* (${lead.vehicle}${fare > 0 ? ` @ Rs.${fare.toLocaleString('en-IN')}` : ''}).\n\n` +
-      `🚗 Our verified commercial vehicle is currently available for your slot.\n` +
-      `🔒 To reserve the cab & driver immediately, kindly send an advance of *Rs.500* via GPay/PhonePe/UPI to *8939539211@okbizaxis* (Kalidass Travels) and share the screenshot here.\n\n` +
-      `Call +91 89395 39211 if you have any questions! 🙏`;
+    const message =
+      `Namaskaram ${lead.guestName || 'Sir/Madam'} ji! 🙏\n\n` +
+      `Following up from *Kalidass Travels Chennai* regarding your cab enquiry:\n` +
+      `📍 *Route:* ${lead.pickup} ➔ ${lead.drop}\n` +
+      `🚗 *Car:* ${lead.vehicle || 'AC Cab'}\n` +
+      (fare > 0 ? `💰 *All-Inclusive Fare:* ₹${fare.toLocaleString('en-IN')}\n\n` : `\n`) +
+      `Shall we block your vehicle? 🚕\n` +
+      `Kindly transfer *₹500 Advance* via UPI to *8939539211@okbizaxis* (Kalidass Travels) to lock your cab & driver.\n\n` +
+      `📞 24/7 Helpline: +91 89395 39211. Thank you!`;
     const cleanPhone = guestPhone.length >= 10 ? guestPhone.slice(-10) : '';
     const url = cleanPhone
       ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(message)}`
@@ -140,7 +144,7 @@ export default function DeskInquiries({
 
     onConvertToConfirmed(confirmedBooking, advanceModalLead.quoteId);
     setAdvanceModalLead(null);
-    showToast?.(`Booking ${confirmedBooking.bookingId} locked with Rs.${advanceNum} advance!`, 'success');
+    showToast?.(`Booking ${confirmedBooking.bookingId} locked with ₹${advanceNum} advance!`, 'success');
   };
 
   // 1-Tap WhatsApp Quote to Inquiring Guest
@@ -151,15 +155,17 @@ export default function DeskInquiries({
 
     const mapsBlock = buildMapsBlock(lead.pickup, lead.drop, lead.tripType || 'Round Trip');
 
-    const message = `*KALIDASS TRAVELS CHENNAI — TRIP QUOTATION*\n\n` +
-      `Namaskaram! Thank you for inquiring with Kalidass Travels.\n\n` +
+    const message =
+      `🚕 *KALIDASS TRAVELS — TRIP QUOTE*\n\n` +
+      `Namaskaram!\n` +
       `📍 *Route:* ${lead.pickup} ➔ ${lead.drop} (${lead.tripType || 'Round Trip'})\n` +
-      `🚗 *Vehicle:* ${lead.vehicle}\n` +
-      `💰 *Estimated All-Inclusive Fare:* Rs.${fare.toLocaleString('en-IN')}\n` +
-      `_(Includes Car, Chauffeur Bata & Fuel. Tolls/Parking at actuals)_\n\n` +
-      `🔒 *To Confirm Your Booking:* Kindly pay an advance of *Rs.${advance}* via UPI to *8939539211@okbizaxis* (Kalidass Travels) to reserve your cab & driver.\n\n` +
-      `Chauffeur & vehicle details will be sent the evening before departure. Have a wonderful trip! 🌟` +
-      mapsBlock;
+      `🚗 *Car:* ${lead.vehicle || 'AC Cab'}\n` +
+      `💰 *All-Inclusive Fare:* ₹${fare.toLocaleString('en-IN')}\n` +
+      `*(Includes Toll, Driver Beta & Fuel. No hidden charges)*\n\n` +
+      `🔒 *To Confirm Booking:*\n` +
+      `Pay *₹${advance} Advance* via UPI: *8939539211@okbizaxis* (Kalidass Travels)\n` +
+      `Vehicle & driver allocated instantly upon payment.\n\n` +
+      `📞 24/7 Helpline: +91 89395 39211`;
 
     const cleanPhone = guestPhone.length >= 10 ? guestPhone.slice(-10) : '';
     const url = cleanPhone
@@ -252,7 +258,7 @@ export default function DeskInquiries({
               <option value="Tempo Traveller">Tempo Traveller</option>
               <option value="Acting Driver">Acting Driver</option>
             </select>
-            <input type="number" placeholder="Quoted Fare Rs." value={quickPhoneLead.estimatedFare} onChange={(e) => setQuickPhoneLead({ ...quickPhoneLead, estimatedFare: e.target.value })} className="p-2 rounded-xl border border-slate-300 bg-white font-mono font-extrabold text-emerald-700" />
+            <input type="number" placeholder="Quoted Fare ₹" value={quickPhoneLead.estimatedFare} onChange={(e) => setQuickPhoneLead({ ...quickPhoneLead, estimatedFare: e.target.value })} className="p-2 rounded-xl border border-slate-300 bg-white font-mono font-extrabold text-emerald-700" />
           </div>
           <div className="flex flex-wrap gap-2">
             <button type="submit" className="flex-1 py-2 bg-slate-900 text-white rounded-xl font-bold">Save Enquiry</button>
@@ -309,7 +315,7 @@ export default function DeskInquiries({
 
                 <div className="text-right">
                   <span className="text-sm font-extrabold text-m3-on-surface font-mono block">
-                    Rs. {Number(l.estimatedFare || 0).toLocaleString('en-IN')}
+                    ₹{Number(l.estimatedFare || 0).toLocaleString('en-IN')}
                   </span>
                   <span className="text-[10px] text-m3-outline-variant">Quoted Rate</span>
                 </div>
@@ -396,7 +402,7 @@ export default function DeskInquiries({
                           : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-300'
                       }`}
                     >
-                      Rs.{amt} {amt === '500' ? '(Standard)' : ''}
+                      ₹{amt} {amt === '500' ? '(Standard)' : ''}
                     </button>
                   ))}
                 </div>
@@ -408,7 +414,7 @@ export default function DeskInquiries({
                       required
                       value={advanceForm.advanceAmount}
                       onChange={(e) => setAdvanceForm({ ...advanceForm, advanceAmount: e.target.value })}
-                      placeholder="Custom Rs."
+                      placeholder="Custom ₹"
                       className="w-full font-mono font-bold text-amber-700 rounded-lg border border-m3-outline-variant p-2 focus:ring-2 focus:ring-amber-500"
                     />
                   </div>
@@ -418,7 +424,7 @@ export default function DeskInquiries({
                       required
                       value={advanceForm.fare}
                       onChange={(e) => setAdvanceForm({ ...advanceForm, fare: e.target.value })}
-                      placeholder="Agreed Fare Rs."
+                      placeholder="Agreed Fare ₹"
                       className="w-full font-mono font-bold text-m3-on-surface rounded-lg border border-m3-outline-variant p-2 focus:ring-2 focus:ring-amber-500"
                     />
                   </div>

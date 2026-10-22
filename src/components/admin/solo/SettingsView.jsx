@@ -241,7 +241,7 @@ export default function SettingsView({
                   </div>
                   <div className="text-right shrink-0">
                     <span className="font-bold text-m3-primary block">
-                      Rs.{Number(q.estimatedFare || 0).toLocaleString('en-IN')}
+                      ₹{Number(q.estimatedFare || 0).toLocaleString('en-IN')}
                     </span>
                     <span className="text-[10px] text-m3-on-surface-variant">Estimated</span>
                   </div>

@@ -157,8 +157,8 @@ export default function DeskPhoneQuoteEngine({
     return (
       `Kalidass Travels Quote ${quoteId}: ` +
       `${activePickup} to ${activeDrop} | ${selectedVehicle} (${tripType}) | ` +
-      `Fare: Rs.${effectiveFare.toLocaleString('en-IN')}. ` +
-      `To lock cab, GPay/PhonePe Rs.500 advance to UPI: 8939539211@okbizaxis & share screenshot on WA/SMS. ` +
+      `Fare: ₹${effectiveFare.toLocaleString('en-IN')}. ` +
+      `To lock cab, pay ₹500 advance to UPI: 8939539211@okbizaxis & share screenshot. ` +
       `Ph: 8939539211`
     );
   }, [quoteId, activePickup, activeDrop, selectedVehicle, tripType, effectiveFare]);
@@ -169,21 +169,16 @@ export default function DeskPhoneQuoteEngine({
     const mapsBlock = buildMapsBlock(activePickup, activeDrop, tripType);
 
     return (
-      `*KALIDASS TRAVELS CHENNAI — OFFICIAL QUOTATION*\n` +
-      `📌 *Quote Ref:* ${quoteId} (Rate Locked)\n\n` +
-      `Namaskaram ${custLabel}! 🙏 Thank you for calling Kalidass Travels.\n\n` +
+      `🚕 *KALIDASS TRAVELS — TRIP QUOTE*\n\n` +
+      `Namaskaram ${custLabel}!\n` +
       `📍 *Route:* ${activePickup} ➔ ${activeDrop}\n` +
-      `🚗 *Vehicle:* ${selectedVehicle} (${tripType})\n` +
-      `🗓 *Schedule:* ${travelDateTime}\n` +
-      `🛣️ *Distance:* ~${distanceKmOneWay * (tripType === 'Round Trip' ? 2 : 1)} km (Highway Route)\n\n` +
-      `💰 *All-Inclusive Fare:* *Rs.${effectiveFare.toLocaleString('en-IN')}*\n` +
-      `   • Includes Cab, Fuel & Driver Allowance (Bata)\n` +
-      `   • Zero Surge Pricing | Clean AC Cab | Verified Chauffeur\n\n` +
-      `🔒 *To Lock Your Cab & Confirm Duty:*\n` +
-      `Kindly pay *Rs.500 Advance* via Google Pay / PhonePe to:\n` +
-      `UPI ID: *8939539211@okbizaxis* (Kalidass Travels)\n` +
-      `and share the screenshot here. Balance *Rs.${effectiveBalance.toLocaleString('en-IN')}* payable to driver directly.` +
-      mapsBlock
+      `🚗 *Car:* ${selectedVehicle} (${tripType})\n` +
+      `💰 *All-Inclusive Fare:* ₹${effectiveFare.toLocaleString('en-IN')}\n` +
+      `*(Includes Toll, Driver Beta & Fuel. No hidden charges)*\n\n` +
+      `🔒 *To Confirm Booking:*\n` +
+      `Pay *₹500 Advance* via UPI: *8939539211@okbizaxis* (Kalidass Travels)\n` +
+      `Vehicle & driver allocated instantly upon payment. Balance ₹${effectiveBalance.toLocaleString('en-IN')} payable to driver directly.\n\n` +
+      `📞 24/7 Helpline: +91 89395 39211`
     );
   }, [quoteId, callerName, activePickup, activeDrop, selectedVehicle, tripType, travelDateTime, distanceKmOneWay, effectiveFare, effectiveBalance]);
 
@@ -580,20 +575,20 @@ export default function DeskPhoneQuoteEngine({
                     </div>
 
                     <div className="text-xl font-black text-m3-primary">
-                      Rs.{vRate.totalFare.toLocaleString('en-IN')}
+                      ₹{vRate.totalFare.toLocaleString('en-IN')}
                     </div>
                     <div className="text-[11px] text-m3-on-surface-variant mt-1 space-y-0.5">
                       <div className="flex justify-between">
                         <span>Advance:</span>
-                        <span className="font-bold text-m3-on-surface">Rs.{vRate.advance}</span>
+                        <span className="font-bold text-m3-on-surface">₹{vRate.advance}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Driver Net:</span>
-                        <span className="font-semibold text-m3-success">Rs.{vRate.driverShare.toLocaleString('en-IN')}</span>
+                        <span className="font-semibold text-m3-success">₹{vRate.driverShare.toLocaleString('en-IN')}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Profit Margin:</span>
-                        <span className="font-bold text-m3-primary">+Rs.{vRate.companyMargin.toLocaleString('en-IN')}</span>
+                        <span className="font-bold text-m3-primary">+₹{vRate.companyMargin.toLocaleString('en-IN')}</span>
                       </div>
                     </div>
                   </button>
@@ -628,10 +623,10 @@ export default function DeskPhoneQuoteEngine({
             </div>
 
             <div className="flex flex-wrap items-center gap-3 font-semibold">
-              <span>Selected Fare: <strong className="text-sm font-bold text-m3-on-surface">Rs.{effectiveFare.toLocaleString('en-IN')}</strong></span>
-              <span>Driver Share (82%): <strong className="text-m3-success font-bold">Rs.{effectiveDriverShare.toLocaleString('en-IN')}</strong></span>
-              <span>Your Profit (18%): <strong className="text-m3-primary font-bold">+Rs.{effectiveProfit.toLocaleString('en-IN')}</strong></span>
-              <span>Advance to Lock: <strong className="text-m3-on-surface font-bold">Rs.{effectiveAdvance}</strong></span>
+              <span>Selected Fare: <strong className="text-sm font-bold text-m3-on-surface">₹{effectiveFare.toLocaleString('en-IN')}</strong></span>
+              <span>Driver Share (82%): <strong className="text-m3-success font-bold">₹{effectiveDriverShare.toLocaleString('en-IN')}</strong></span>
+              <span>Your Profit (18%): <strong className="text-m3-primary font-bold">+₹{effectiveProfit.toLocaleString('en-IN')}</strong></span>
+              <span>Advance to Lock: <strong className="text-m3-on-surface font-bold">₹{effectiveAdvance}</strong></span>
             </div>
           </div>
 

@@ -64,13 +64,13 @@ export default function SoloKhataModal({
       `Date: ${new Date().toLocaleDateString('en-GB')}\n` +
       `Chauffeur: *${form.chauffeurName}*\n` +
       `Trip Ref: *${form.bookingId}*\n\n` +
-      `💵 Cash Collected from Guest: Rs.${cashCollected}\n` +
-      `🚗 Your Agreed Trip Share: Rs.${driverPayout}\n` +
-      (driverTolls > 0 ? `⛽ Tolls/Expenses Paid by You: Rs.${driverTolls}\n` : '') +
+      `💵 Cash Collected from Guest: ₹${cashCollected}\n` +
+      `🚗 Your Agreed Trip Share: ₹${driverPayout}\n` +
+      (driverTolls > 0 ? `⛽ Tolls/Expenses Paid by You: ₹${driverTolls}\n` : '') +
       `--------------------------------\n` +
       (netBalance >= 0
-        ? `*NET OFFICE BALANCE TO RETURN: Rs.${netBalance}*\n_Kindly UPI to 8939539211@okbizaxis (Kalidass Travels)_`
-        : `*NET OFFICE OWES YOU: Rs.${Math.abs(netBalance)}*\n_Will be credited to your UPI tonight._`) +
+        ? `*NET OFFICE BALANCE TO RETURN: ₹${netBalance}*\n_Kindly UPI to 8939539211@okbizaxis (Kalidass Travels)_`
+        : `*NET OFFICE OWES YOU: ₹${Math.abs(netBalance)}*\n_Will be credited to your UPI tonight._`) +
       `\n\nThank you for your dedicated service! 🌟`;
 
     window.open(`https://wa.me/${driverPhone.startsWith('91') ? driverPhone : '91' + driverPhone.slice(-10)}?text=${encodeURIComponent(text)}`, '_blank');
@@ -172,9 +172,9 @@ export default function SoloKhataModal({
             </span>
             <div className="text-base sm:text-lg font-bold">
               {netBalance >= 0 ? (
-                <span>Driver Owes Office: <span className="font-bold">Rs. {netBalance.toLocaleString('en-IN')}</span></span>
+                <span>Driver Owes Office: <span className="font-bold">₹{netBalance.toLocaleString('en-IN')}</span></span>
               ) : (
-                <span>Office Owes Driver: <span className="font-bold">Rs. {Math.abs(netBalance).toLocaleString('en-IN')}</span></span>
+                <span>Office Owes Driver: <span className="font-bold">₹{Math.abs(netBalance).toLocaleString('en-IN')}</span></span>
               )}
             </div>
             <span className="text-[11px] opacity-80 mt-1 block">

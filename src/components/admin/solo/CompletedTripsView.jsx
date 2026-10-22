@@ -45,12 +45,13 @@ export default function CompletedTripsView({
   const handleSendReviewWA = (b) => {
     const cleanPhone = extractPhone(b);
     const guestName = (b.guestNamePhone || 'Customer').split('(')[0].trim();
+    const dest = (b.pickupAddress || '').split(/➔|->|→/)[1]?.trim() || 'your destination';
     const msg =
-      `Namaskaram ${guestName} ji! 🙏 Thank you for travelling with *Kalidass Travels Chennai*.\n\n` +
-      `We hope you had a pleasant and comfortable journey with our cab and driver. ⭐\n\n` +
+      `Namaskaram ${guestName} ji! 🙏 Thank you for choosing *Kalidass Travels Chennai* for your journey to ${dest}.\n\n` +
+      `We hope your driver took great care of you and your journey was comfortable and safe! ⭐\n\n` +
       `⭐⭐⭐⭐⭐ Kindly take 10 seconds to share your 5-star Google review here:\n` +
       `https://share.google/1IOq41QwMkhDJvrLY\n\n` +
-      `Your support means a lot to our family-run team. Thank you! 🙏`;
+      `Your kind review means the world to our family-run team. Looking forward to serving you again! 🙏`;
     onReviewStatusChange?.(b.bookingId, 'Requested');
     showToast?.(`Review request sent to ${guestName}!`, 'success');
     window.open(cleanPhone ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
@@ -79,12 +80,12 @@ export default function CompletedTripsView({
         <div className="flex items-center gap-4 bg-m3-surface-container-low border border-m3-outline-variant/70 p-2.5 px-4 rounded-m3-lg">
           <div>
             <span className="text-[11px] font-semibold text-m3-on-surface-variant uppercase tracking-wider block">Total Fares</span>
-            <span className="text-sm font-bold text-m3-on-surface">Rs.{totalFareCollected.toLocaleString('en-IN')}</span>
+            <span className="text-sm font-bold text-m3-on-surface">₹{totalFareCollected.toLocaleString('en-IN')}</span>
           </div>
           <div className="h-8 w-px bg-m3-outline-variant/60"></div>
           <div>
             <span className="text-[11px] font-semibold text-m3-on-surface-variant uppercase tracking-wider block">Company Profit</span>
-            <span className="text-base font-bold text-m3-primary">+Rs.{totalProfitEarned.toLocaleString('en-IN')}</span>
+            <span className="text-base font-bold text-m3-primary">+₹{totalProfitEarned.toLocaleString('en-IN')}</span>
           </div>
         </div>
       </div>
@@ -154,7 +155,7 @@ export default function CompletedTripsView({
                   </div>
 
                   <div className="text-xs text-m3-on-surface-variant font-normal">
-                    Total Fare: <strong className="text-m3-on-surface">Rs.{fare.toLocaleString('en-IN')}</strong> • Driver Net: Rs.{driverShare.toLocaleString('en-IN')} • <strong className="text-m3-primary font-bold">Profit: +Rs.{profit.toLocaleString('en-IN')}</strong>
+                    Total Fare: <strong className="text-m3-on-surface">₹{fare.toLocaleString('en-IN')}</strong> • Driver Net: ₹{driverShare.toLocaleString('en-IN')} • <strong className="text-m3-primary font-bold">Profit: +₹{profit.toLocaleString('en-IN')}</strong>
                   </div>
                 </div>
 

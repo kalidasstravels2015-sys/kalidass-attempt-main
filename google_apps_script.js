@@ -104,6 +104,9 @@ function doGet(e) {
           } else {
             timestampStr = String(rawDate || '');
           }
+          var status = String(row[10] || 'Enquiry Sent');
+          if (status === 'Cancelled' || status === 'Deleted') continue;
+
           leads.push({
             quoteId: String(row[0] || ''),
             timestamp: timestampStr,
@@ -117,7 +120,7 @@ function doGet(e) {
             vehicle: String(row[7] || 'Swift Dzire'),
             distanceKm: String(row[8] || 'N/A'),
             estimatedFare: parseInt(String(row[9] || '0').replace(/[^0-9]/g, ''), 10) || 0,
-            status: String(row[10] || 'Enquiry Sent'),
+            status: status,
             metadata: String(row[12] || '')
           });
         }
@@ -332,6 +335,16 @@ function doPost(e) {
             break;
           }
         }
+      }
+
+      // Handle Delete / Cancel enquiry
+      if (data.action === 'delete' || data.action === 'cancel' || data.status === 'Cancelled' || data.status === 'Deleted') {
+        if (foundEnqRow > 0) {
+          enqSheet.deleteRow(foundEnqRow);
+        }
+        return ContentService
+          .createTextOutput(JSON.stringify({ success: true, quoteId: incomingId, action: 'deleted' }))
+          .setMimeType(ContentService.MimeType.JSON);
       }
 
       var quoteId = foundEnqRow > 0 

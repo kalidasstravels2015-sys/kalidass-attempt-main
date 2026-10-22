@@ -8,6 +8,10 @@ export interface CalendarTripItem {
   quoteId?: string;
   travelDateTime?: string;
   travelDate?: string;
+  followUpDate?: string;
+  followUpTime?: string;
+  isFollowUp?: boolean;
+  tripType?: string;
   guestNamePhone?: string;
   name?: string;
   phone?: string;
@@ -31,7 +35,7 @@ export interface CalendarTripItem {
 /**
  * Normalizes travel schedule strings into standard Date objects.
  * Handles:
- * - "Tomorrow @ 05:00 AM", "Today @ 06:30 PM"
+ * - "Tomorrow @ 05:00 AM", "Today @ 06:30 PM", "Today Evening @ 05:00 PM"
  * - "2026-10-25T06:00", "2026-10-25"
  * - "25 Oct 2026 @ 07:00 AM", "25-Oct-2026"
  * - "25/10/2026, 06:00:00 AM"
@@ -61,13 +65,13 @@ export function parseTravelDateToDate(dateStr?: string, refDate: Date = new Date
     dateBase.setDate(dateBase.getDate() - 1);
   }
 
-  // 2. Extract time portion if available (e.g. "@ 05:00 AM" or "06:30 PM" or "14:30")
+  // 2. Extract time portion if available (e.g. "@ 05:00 AM" or "06:30 PM" or "14:30" or "5 PM")
   let hours = 6;
   let minutes = 0;
-  const timeMatch = raw.match(/(\d{1,2}):(\d{2})(?::\d{2})?\s*(am|pm)?/i);
+  const timeMatch = raw.match(/(\d{1,2})(?::(\d{2}))?(?::\d{2})?\s*(am|pm)?/i);
   if (timeMatch) {
     let h = parseInt(timeMatch[1], 10);
-    const m = parseInt(timeMatch[2], 10);
+    const m = timeMatch[2] ? parseInt(timeMatch[2], 10) : 0;
     const meridian = (timeMatch[3] || '').toLowerCase();
     if (meridian === 'pm' && h < 12) h += 12;
     if (meridian === 'am' && h === 12) h = 0;
@@ -142,9 +146,11 @@ function toGCalDateTimeString(date: Date): string {
 
 /**
  * Generates a direct "Add to Google Calendar" URL with prefilled parameters.
+ * Automatically recognizes enquiry follow-up reminders vs confirmed trip duties.
  */
 export function buildGoogleCalendarUrl(item: CalendarTripItem): string {
   const isBooking = Boolean(item.bookingId || (item.manifestStatus && item.manifestStatus !== 'Enquiry'));
+  const isFollowUpReminder = Boolean(item.isFollowUp || item.followUpTime || item.followUpDate || (!isBooking && item.notes?.toLowerCase().includes('follow-up')));
   const id = item.bookingId || item.quoteId || 'Duty';
   
   // Passenger Info
@@ -161,9 +167,45 @@ export function buildGoogleCalendarUrl(item: CalendarTripItem): string {
   const balance = Math.max(0, fare - advance);
   const driver = item.assignedChauffeur || 'Unassigned';
 
-  // Date Calculation
+  // If this is an enquiry follow-up reminder, set the event at follow-up time for 30 minutes
+  if (isFollowUpReminder) {
+    const followUpTarget = item.followUpTime || item.followUpDate || 'Today @ 05:00 PM';
+    const startDate = parseTravelDateToDate(followUpTarget);
+    const endDate = new Date(startDate.getTime() + 30 * 60 * 1000); // 30 minutes reminder
+
+    const title = `[Follow-Up] ${guestName} - ${route} (Quoted ₹${fare.toLocaleString('en-IN')})`;
+    const descriptionLines = [
+      `📞 KALIDASS TRAVELS — CUSTOMER ENQUIRY FOLLOW-UP`,
+      `--------------------------------------`,
+      `Enquiry ID: ${id}`,
+      `Passenger: ${guestName} (+91 ${guestPhone})`,
+      `Route: ${route}`,
+      `Vehicle: ${vehicle}`,
+      `Package / Trip Type: ${item.tripType || 'Outstation Package'}`,
+      `Quoted Fare: ₹${fare.toLocaleString('en-IN')}`,
+      `Expected Travel Date: ${item.travelDateTime || item.travelDate || 'Pending confirmation'}`,
+      `Follow-up Schedule: ${followUpTarget}`,
+      `--------------------------------------`,
+      `Action: Call customer to confirm booking and collect ₹500 advance`,
+      `UPI ID for Advance: 8939539211@okbizaxis (Kalidass Travels)`,
+      `Notes: ${item.notes || 'Customer to confirm today evening'}`,
+      `24/7 Desk: +91 89395 39211`
+    ];
+
+    const location = item.pickupAddress || item.pickup || 'Medavakkam, Chennai';
+    const params = new URLSearchParams({
+      action: 'TEMPLATE',
+      text: title,
+      dates: `${toGCalDateTimeString(startDate)}/${toGCalDateTimeString(endDate)}`,
+      details: descriptionLines.join('\n'),
+      location: location
+    });
+
+    return `https://calendar.google.com/calendar/render?${params.toString()}`;
+  }
+
+  // Otherwise, it's a confirmed travel duty (6 hours default)
   const startDate = parseTravelDateToDate(item.travelDateTime || item.travelDate);
-  // Default duration: 6 hours for outstation / airport trip
   const endDate = new Date(startDate.getTime() + 6 * 60 * 60 * 1000);
 
   // Title

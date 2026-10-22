@@ -398,33 +398,33 @@ export default function TripSheetViewer() {
               <div className="space-y-1.5 text-xs font-mono">
                 <div className="flex justify-between text-m3-inverse-on-surface/80">
                   <span>Base Package ({packageKm} km package):</span>
-                  <span>Rs. {baseFare.toLocaleString('en-IN')}</span>
+                  <span>₹{baseFare.toLocaleString('en-IN')}</span>
                 </div>
 
                 {extraKmCharge > 0 && (
                   <div className="flex justify-between text-m3-tertiary">
-                    <span>Extra KM ({extraKm} km @ Rs.{extraKmRate}):</span>
-                    <span>+Rs. {extraKmCharge.toLocaleString('en-IN')}</span>
+                    <span>Extra KM ({extraKm} km @ ₹{extraKmRate}):</span>
+                    <span>+₹{extraKmCharge.toLocaleString('en-IN')}</span>
                   </div>
                 )}
 
                 {tollsNum > 0 && (
                   <div className="flex justify-between text-m3-inverse-on-surface/80">
                     <span>FASTag Tolls:</span>
-                    <span>+Rs. {tollsNum.toLocaleString('en-IN')}</span>
+                    <span>+₹{tollsNum.toLocaleString('en-IN')}</span>
                   </div>
                 )}
 
                 {parkingNum > 0 && (
                   <div className="flex justify-between text-m3-inverse-on-surface/80">
                     <span>Parking & Permits:</span>
-                    <span>+Rs. {parkingNum.toLocaleString('en-IN')}</span>
+                    <span>+₹{parkingNum.toLocaleString('en-IN')}</span>
                   </div>
                 )}
 
                 <div className="flex justify-between text-m3-success pt-1 border-t border-m3-outline-variant/40 font-semibold">
                   <span>Advance Paid:</span>
-                  <span>-Rs. {advancePaid.toLocaleString('en-IN')}</span>
+                  <span>-₹{advancePaid.toLocaleString('en-IN')}</span>
                 </div>
 
                 {/* Final Net Amount */}
@@ -434,7 +434,7 @@ export default function TripSheetViewer() {
                       Balance to Pay at Drop
                     </span>
                     <span className="text-xl font-extrabold text-m3-success font-mono">
-                      Rs. {balanceToCollect.toLocaleString('en-IN')}
+                      ₹{balanceToCollect.toLocaleString('en-IN')}
                     </span>
                   </div>
                   <span className="text-[10px] text-m3-outline-variant text-right">
@@ -577,7 +577,7 @@ export default function TripSheetViewer() {
               <div className="bg-m3-inverse-surface p-2.5 rounded-xl border border-m3-outline-variant/40 text-xs font-mono flex items-center justify-between">
                 <span>Total Run: <strong className="text-white">{totalKm} km</strong></span>
                 <span className={extraKm > 0 ? 'text-m3-tertiary font-bold' : 'text-m3-outline-variant'}>
-                  Extra: {extraKm} km (+Rs.{extraKmCharge})
+                  Extra: {extraKm} km (+₹{extraKmCharge})
                 </span>
               </div>
 
@@ -603,15 +603,15 @@ export default function TripSheetViewer() {
             <div className="bg-m3-inverse-surface rounded-2xl p-4 border border-m3-outline-variant/40 shadow-md font-mono text-xs space-y-1.5">
               <div className="flex justify-between text-m3-outline-variant">
                 <span>Gross Fare:</span>
-                <span>Rs. {grossTotal.toLocaleString('en-IN')}</span>
+                <span>₹{grossTotal.toLocaleString('en-IN')}</span>
               </div>
               <div className="flex justify-between text-m3-tertiary">
                 <span>Less Advance Paid:</span>
-                <span>-Rs. {advancePaid.toLocaleString('en-IN')}</span>
+                <span>-₹{advancePaid.toLocaleString('en-IN')}</span>
               </div>
               <div className="border-t border-m3-outline-variant/40 pt-2 flex justify-between text-base font-extrabold text-m3-success">
                 <span>CASH TO COLLECT:</span>
-                <span>Rs. {balanceToCollect.toLocaleString('en-IN')}</span>
+                <span>₹{balanceToCollect.toLocaleString('en-IN')}</span>
               </div>
             </div>
 

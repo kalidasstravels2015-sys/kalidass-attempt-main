@@ -168,22 +168,23 @@ export default function WebsiteRadarView({
     showToast?.('Exported calculation log CSV!', 'success');
   };
 
-  // Format outbound quote for WhatsApp if visitor contacts
+  // Format outbound quote for WhatsApp if visitor contacts (Clean 4-Line Format, Rupee Symbol)
   const handleSendQuoteWA = (quote) => {
     const fare = Number(quote.estimatedFare) || 0;
     const cleanFrom = cleanLocationName(quote.pickup || 'Chennai');
     const cleanTo = cleanLocationName(quote.drop || 'Outstation');
-    const mapsBlock = buildMapsBlock(cleanFrom, cleanTo, quote.tripType || 'One Way');
+    const pkg = quote.tripType || 'One Way';
     const msg =
-      `*KALIDASS TRAVELS CHENNAI — WEBSITE FARE ESTIMATE*\n\n` +
+      `🚕 *KALIDASS TRAVELS — TRIP QUOTE*\n\n` +
       `Namaskaram!\n` +
       `📍 *Route:* ${cleanFrom} ➔ ${cleanTo}\n` +
-      `🚗 *Vehicle:* ${quote.vehicle}\n` +
-      `💰 *Estimated Fare:* Rs.${fare.toLocaleString('en-IN')}\n\n` +
-      `🔒 *To Confirm Your Cab:*\n` +
-      `Transfer *Rs.500 Advance* via UPI to *8939539211@okbizaxis* (Kalidass Travels) to lock your vehicle & driver.\n\n` +
-      `📞 24/7 Operations Desk: +91 89395 39211` +
-      mapsBlock;
+      `🚗 *Car:* ${quote.vehicle || 'AC Sedan'}${pkg ? ` (${pkg})` : ''}\n` +
+      `💰 *All-Inclusive Fare:* ₹${fare.toLocaleString('en-IN')}\n` +
+      `*(Includes Toll, Driver Beta & Fuel. No hidden charges)*\n\n` +
+      `🔒 *To Confirm Booking:*\n` +
+      `Pay *₹500 Advance* via UPI: *8939539211@okbizaxis* (Kalidass Travels)\n` +
+      `Vehicle & driver allocated instantly upon payment.\n\n` +
+      `📞 24/7 Helpline: +91 89395 39211`;
 
     window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     showToast?.('WhatsApp quote opened!', 'success');
@@ -676,7 +677,7 @@ export default function WebsiteRadarView({
                     <div className="flex flex-wrap items-center gap-2 shrink-0 pt-2 lg:pt-0 border-t lg:border-t-0 border-m3-outline-variant/50">
                       <div className="text-left lg:text-right mr-1">
                         <span className="text-base font-bold text-m3-primary block">
-                          Rs.{Number(q.estimatedFare || 0).toLocaleString('en-IN')}
+                          ₹{Number(q.estimatedFare || 0).toLocaleString('en-IN')}
                         </span>
                         <span className="text-[10px] text-m3-on-surface-variant uppercase tracking-wider font-semibold">
                           Customer Estimate

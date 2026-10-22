@@ -3,12 +3,12 @@ import { buildMapsBlock } from '../../../utils/whatsapp';
 import { validateCustomerContact, extractValidMobile, isPlaceholderCustomerName, isActionableLead, deduplicateCalculatorQuotes } from '../../../utils/bookingContactValidator';
 import { getNextEnquiryId, getOrderedEnquiryId, getNextBookingId, isSequentialId } from '../../../utils/sequenceGenerator';
 import { formatCleanDateTime, formatFriendlyTravelDateTime, cleanLocationName } from '../../../utils/dateFormatter';
-import { buildGoogleCalendarUrl } from '../../../utils/googleCalendarHelper';
+import { buildGoogleCalendarUrl, parseTravelDateToDate } from '../../../utils/googleCalendarHelper';
 
 /**
  * EnquiriesView - Step 1: Inbound Customer Calls & Quotes
  * Dedicated view for non-technical office staff:
- * Only manages new inquiries, sending quotes on WhatsApp, and collecting ₹500 advance.
+ * Only manages new inquiries, sending quotes on WhatsApp, follow-ups, and collecting ₹500 advance.
  */
 export default function EnquiriesView({
   leads = [],
@@ -16,6 +16,8 @@ export default function EnquiriesView({
   onNavigateToRadar,
   onAddManualLead,
   onConvertToConfirmed,
+  onDeleteLead,
+  onUpdateLead,
   onOpenPhoneQuoteEngine,
   onOpenAiParser,
   showToast
@@ -34,16 +36,29 @@ export default function EnquiriesView({
   });
   const [convertError, setConvertError] = useState('');
 
+  // Modal State: Quick Edit Follow-Up / Schedule for existing enquiry
+  const [editModalLead, setEditModalLead] = useState(null);
+  const [editForm, setEditForm] = useState({
+    followUpTime: '',
+    travelDate: '',
+    tripType: '',
+    estimatedFare: '',
+    notes: ''
+  });
+
   const [newCall, setNewCall] = useState({
     guestName: '',
     phone: '',
     source: 'Google Ads Call',
-    travelDate: '',
+    travelDate: 'Tomorrow @ 06:00 AM',
+    tripType: '2 Days Outstation Package',
     pickup: 'Chennai',
     drop: '',
     vehicle: 'Sedan (Dzire / Etios)',
     fare: '',
-    advance: '500'
+    advance: '500',
+    followUpTime: 'Today Evening @ 05:00 PM',
+    notes: ''
   });
 
   const extractPhone = (item) => {
@@ -56,6 +71,24 @@ export default function EnquiriesView({
     () => leads.filter(isActionableLead),
     [leads]
   );
+
+  const isFollowUpDueToday = (lead) => {
+    if (!lead) return false;
+    const combined = `${lead.followUpTime || ''} ${lead.followUpDate || ''} ${lead.notes || ''}`.toLowerCase();
+    if (combined.includes('today')) return true;
+    if (lead.followUpTime) {
+      try {
+        const d = parseTravelDateToDate(lead.followUpTime);
+        const now = new Date();
+        return d.getDate() === now.getDate() && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+      } catch (_) {}
+    }
+    return false;
+  };
+
+  const todayFollowUpCount = useMemo(() => {
+    return validLeads.filter(isFollowUpDueToday).length;
+  }, [validLeads]);
 
   const validVisitorQuotes = useMemo(
     () => deduplicateCalculatorQuotes(calculatorQuotes),
@@ -72,9 +105,12 @@ export default function EnquiriesView({
   const filteredLeads = useMemo(() => {
     return baseList.filter(l => {
       const q = search.toLowerCase().trim();
-      const combined = `${l.guestName || ''} ${l.pickup || ''} ${l.drop || ''} ${l.vehicle || ''} ${l.quoteId || ''} ${l.sourcePage || ''} ${l.calculatorEngine || ''}`.toLowerCase();
+      const combined = `${l.guestName || ''} ${l.pickup || ''} ${l.drop || ''} ${l.vehicle || ''} ${l.quoteId || ''} ${l.sourcePage || ''} ${l.calculatorEngine || ''} ${l.tripType || ''} ${l.followUpTime || ''} ${l.notes || ''}`.toLowerCase();
       if (q && !combined.includes(q)) return false;
 
+      if (sourceFilter === 'FOLLOW_UP_TODAY') {
+        return isFollowUpDueToday(l);
+      }
       if (sourceFilter === 'GOOGLE_ADS') {
         return combined.includes('google ads') || combined.includes('call campaign');
       }
@@ -88,41 +124,47 @@ export default function EnquiriesView({
     });
   }, [baseList, search, sourceFilter]);
 
-  // Send WhatsApp Quote
+  // Send WhatsApp Quote (Clean 4-Line Format, Zero Anxiety, Rupee Symbol)
   const handleSendQuoteWA = (lead) => {
     const cleanPhone = extractPhone(lead);
     const fare = Number(lead.estimatedFare) || 0;
-    const mapsBlock = buildMapsBlock(lead.pickup, lead.drop, lead.tripType || 'Round Trip');
+    const pkg = lead.tripType || 'Round Trip';
+    const pickup = cleanLocationName(lead.pickup);
+    const drop = cleanLocationName(lead.drop);
+    const guestName = lead.guestName && !isPlaceholderCustomerName(lead.guestName) ? lead.guestName.split('(')[0].trim() : 'Sir/Madam';
+
     const msg =
-      `*KALIDASS TRAVELS CHENNAI — TRIP QUOTATION*\n\n` +
-      `Namaskaram ${lead.guestName || 'Sir/Madam'}!\n` +
-      `📍 *Route:* ${lead.pickup} ➔ ${lead.drop}\n` +
-      `🚗 *Vehicle:* ${lead.vehicle}\n` +
-      `💰 *All-Inclusive Fare:* Rs.${fare.toLocaleString('en-IN')}\n\n` +
-      `🔒 *To Confirm Your Cab:*\n` +
-      `Transfer *Rs.500 Advance* via UPI to *8939539211@okbizaxis* (Kalidass Travels) and send screenshot.\n` +
-      `Our team will instantly block the vehicle and allot your driver.\n\n` +
-      `📞 24/7 Support: +91 89395 39211` +
-      mapsBlock;
+      `🚕 *KALIDASS TRAVELS — TRIP QUOTE*\n\n` +
+      `Namaskaram ${guestName}!\n` +
+      `📍 *Route:* ${pickup} ➔ ${drop}\n` +
+      `🚗 *Car:* ${lead.vehicle || 'AC Sedan'}${pkg ? ` (${pkg})` : ''}\n` +
+      `💰 *All-Inclusive Fare:* ₹${fare.toLocaleString('en-IN')}\n` +
+      `*(Includes Toll, Driver Beta & Fuel. No hidden charges)*\n\n` +
+      `🔒 *To Confirm Booking:*\n` +
+      `Pay *₹500 Advance* via UPI: *8939539211@okbizaxis* (Kalidass Travels)\n` +
+      `Vehicle & driver allocated instantly upon payment.\n\n` +
+      `📞 24/7 Helpline: +91 89395 39211`;
 
     window.open(cleanPhone ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
-    showToast?.(`WhatsApp quote opened for ${lead.guestName || 'Customer'}!`, 'success');
+    showToast?.(`WhatsApp quote opened for ${guestName}!`, 'success');
   };
 
-  // Follow-up ping
+  // Follow-up ping (Clean, polite, Rupee symbol)
   const handleSendFollowUpWA = (lead) => {
     const cleanPhone = extractPhone(lead);
-    const guestName = lead.guestName || 'Sir/Madam';
+    const guestName = lead.guestName && !isPlaceholderCustomerName(lead.guestName) ? lead.guestName.split('(')[0].trim() : 'Sir/Madam';
     const fare = Number(lead.estimatedFare) || 0;
+    const route = `${cleanLocationName(lead.pickup)} ➔ ${cleanLocationName(lead.drop)}`;
+    const pkg = lead.tripType || 'Outstation Trip';
     const msg =
       `Namaskaram ${guestName} ji! 🙏\n\n` +
-      `Following up from *Kalidass Travels Chennai* regarding your trip inquiry:\n` +
-      `📍 *Route:* ${lead.pickup} ➔ ${lead.drop}\n` +
-      `🚗 *Vehicle:* ${lead.vehicle}\n` +
-      (fare > 0 ? `💰 *Fare Quoted:* Rs.${fare.toLocaleString('en-IN')}\n\n` : `\n`) +
-      `Shall we confirm and block your cab? 🚕\n` +
-      `Kindly transfer *Rs.500 Advance* via UPI to *8939539211@okbizaxis* (Kalidass Travels) to lock your vehicle & driver.\n\n` +
-      `For any questions, call us directly at +91 89395 39211. Thank you!`;
+      `Following up from *Kalidass Travels Chennai* regarding your cab enquiry:\n` +
+      `📍 *Route:* ${route}\n` +
+      `🚗 *Car:* ${lead.vehicle || 'AC Cab'}${pkg ? ` (${pkg})` : ''}\n` +
+      (fare > 0 ? `💰 *All-Inclusive Fare:* ₹${fare.toLocaleString('en-IN')}\n\n` : `\n`) +
+      `Shall we block your vehicle? 🚕\n` +
+      `Kindly transfer *₹500 Advance* via UPI to *8939539211@okbizaxis* (Kalidass Travels) to lock your cab & driver.\n\n` +
+      `📞 24/7 Helpline: +91 89395 39211. Thank you!`;
     window.open(cleanPhone ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     showToast?.(`Follow-up reminder sent to ${guestName}!`, 'success');
   };
@@ -222,47 +264,88 @@ export default function EnquiriesView({
     setConvertModalLead(null);
   };
 
-  // Fast Phone Call Saver
-  const handleQuickSaveCall = (e) => {
-    e.preventDefault();
+  // Fast Phone Call Saver: Supports quiet save (follow-up scheduled) OR save & send WhatsApp quote
+  const handleSaveCallLead = (openWhatsAppQuote = false) => {
     if (!newCall.phone.trim() && !newCall.guestName.trim()) {
       showToast?.('Please enter Customer Name or Mobile Number', 'error');
       return;
     }
     const cleanPhone = newCall.phone.replace(/[^0-9]/g, '').slice(-10);
     const fareNum = Number(newCall.fare) || 0;
+    const pkg = newCall.tripType || '2 Days Outstation Package';
+    const followUp = newCall.followUpTime?.trim() || '';
+    const noteText = newCall.notes?.trim() || (followUp ? `Customer will confirm ${followUp}` : '');
+
     const newLead = {
       quoteId: getNextEnquiryId(leads),
       timestamp: new Date().toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' }),
       guestName: newCall.guestName.trim() || (cleanPhone ? `Customer (${cleanPhone})` : 'Phone Caller'),
       sourcePage: cleanPhone ? `${newCall.source} (+91 ${cleanPhone})` : newCall.source,
       calculatorEngine: newCall.source,
-      tripType: 'Round Trip',
+      tripType: pkg,
       pickup: newCall.pickup.trim() || 'Chennai',
       drop: newCall.drop.trim() || 'Outstation',
       vehicle: newCall.vehicle,
       estimatedFare: fareNum,
-      travelDate: newCall.travelDate || 'Tomorrow @ 05:00 AM',
-      status: 'Quote Sent - Waiting Advance'
+      travelDate: newCall.travelDate || 'Tomorrow @ 06:00 AM',
+      followUpTime: followUp,
+      notes: noteText,
+      status: openWhatsAppQuote ? 'Quote Sent - Waiting Advance' : 'Follow-Up Scheduled'
     };
 
     onAddManualLead?.(newLead);
-    if (cleanPhone) {
+    if (openWhatsAppQuote && cleanPhone) {
       handleSendQuoteWA(newLead);
     }
     setNewCall({
       guestName: '',
       phone: '',
       source: 'Google Ads Call',
-      travelDate: '',
+      travelDate: 'Tomorrow @ 06:00 AM',
+      tripType: '2 Days Outstation Package',
       pickup: 'Chennai',
       drop: '',
       vehicle: 'Sedan (Dzire / Etios)',
       fare: '',
-      advance: '500'
+      advance: '500',
+      followUpTime: 'Today Evening @ 05:00 PM',
+      notes: ''
     });
     setShowNewCallModal(false);
-    showToast?.(`New enquiry ${newLead.quoteId} recorded!`, 'success');
+    showToast?.(
+      openWhatsAppQuote
+        ? `Enquiry ${newLead.quoteId} recorded & WhatsApp quote opened!`
+        : `✅ Enquiry ${newLead.quoteId} saved! Follow-up set for ${newLead.followUpTime || 'Today'}.`,
+      'success'
+    );
+  };
+
+  // Open Edit Follow-Up / Schedule Modal
+  const handleOpenEditFollowUp = (lead) => {
+    setEditModalLead(lead);
+    setEditForm({
+      followUpTime: lead.followUpTime || 'Today Evening @ 05:00 PM',
+      travelDate: lead.travelDate || 'Tomorrow @ 06:00 AM',
+      tripType: lead.tripType || '2 Days Outstation Package',
+      estimatedFare: lead.estimatedFare || '',
+      notes: lead.notes || ''
+    });
+  };
+
+  const handleSaveEditFollowUp = (e) => {
+    e?.preventDefault?.();
+    if (!editModalLead) return;
+    const updated = {
+      ...editModalLead,
+      followUpTime: editForm.followUpTime,
+      travelDate: editForm.travelDate,
+      tripType: editForm.tripType,
+      estimatedFare: Number(editForm.estimatedFare) || editModalLead.estimatedFare,
+      notes: editForm.notes
+    };
+    onUpdateLead?.(updated);
+    setEditModalLead(null);
+    showToast?.(`Follow-up schedule updated for ${editModalLead.guestName || 'Enquiry'}!`, 'success');
   };
 
   // Direct Advance Received & Confirm (Strict: Requires BOTH Customer Name & valid 10-digit Phone)
@@ -284,7 +367,7 @@ export default function EnquiriesView({
       vehicleCategory: newCall.vehicle,
       partySize: '4 Pax',
       kycStatus: 'Advance Paid',
-      darshanStatus: newCall.source,
+      darshanStatus: `${newCall.source} (${newCall.tripType || 'Trip'})`,
       assignedChauffeur: 'Unassigned',
       manifestStatus: 'Need Driver',
       terminalFare: fareNum,
@@ -293,7 +376,8 @@ export default function EnquiriesView({
       advancePaid: advNum,
       balanceDue: Math.max(0, fareNum - advNum),
       financialClosure: 'Unreconciled',
-      reviewStatus: 'Pending'
+      reviewStatus: 'Pending',
+      notes: newCall.notes
     };
 
     onConvertToConfirmed?.(newBooking);
@@ -301,12 +385,15 @@ export default function EnquiriesView({
       guestName: '',
       phone: '',
       source: 'Google Ads Call',
-      travelDate: '',
+      travelDate: 'Tomorrow @ 06:00 AM',
+      tripType: '2 Days Outstation Package',
       pickup: 'Chennai',
       drop: '',
       vehicle: 'Sedan (Dzire / Etios)',
       fare: '',
-      advance: '500'
+      advance: '500',
+      followUpTime: 'Today Evening @ 05:00 PM',
+      notes: ''
     });
     setShowNewCallModal(false);
     showToast?.(`✅ Booking ${newBooking.bookingId} confirmed! Check Active Trips.`, 'success');
@@ -400,7 +487,12 @@ export default function EnquiriesView({
 
         <div className="flex flex-wrap items-center gap-1.5">
           {[
-            { id: 'ALL', label: `All Calls & Enquiries (${validLeads.length})` },
+            { id: 'ALL', label: `All Calls (${validLeads.length})` },
+            {
+              id: 'FOLLOW_UP_TODAY',
+              label: `⏰ Follow-up Today (${todayFollowUpCount})`,
+              highlight: todayFollowUpCount > 0
+            },
             { id: 'VISITORS', label: `🌐 Website Visitors (${validVisitorQuotes.length})` },
             { id: 'GOOGLE_ADS', label: 'Google Ads' },
             { id: 'WHATSAPP', label: 'WhatsApp' },
@@ -413,6 +505,8 @@ export default function EnquiriesView({
               className={`h-8 px-3 rounded-m3-sm text-xs font-semibold transition-colors ${
                 sourceFilter === f.id
                   ? 'bg-m3-secondary-container text-m3-on-secondary-container border-0'
+                  : f.highlight
+                  ? 'bg-amber-500/15 text-amber-800 dark:text-amber-200 border border-amber-500/40 hover:bg-amber-500/25 font-bold'
                   : 'bg-m3-surface-container-lowest text-m3-on-surface-variant border border-m3-outline-variant hover:bg-m3-surface-container-high'
               }`}
             >
@@ -447,11 +541,14 @@ export default function EnquiriesView({
             const phone = extractPhone(lead);
             const isGoogleAds = (lead.sourcePage || '').toLowerCase().includes('google ads') || (lead.calculatorEngine || '').toLowerCase().includes('google ads');
             const isWhatsApp = (lead.quoteId || '').startsWith('#WA') || (lead.sourcePage || '').toLowerCase().includes('whatsapp');
+            const isDueToday = isFollowUpDueToday(lead);
 
             return (
               <div
                 key={lead.quoteId || idx}
-                className="p-4 rounded-m3-xl bg-m3-surface-container-lowest border border-m3-outline-variant/80 shadow-m3-1 flex flex-col lg:flex-row lg:items-center justify-between gap-3 hover:border-m3-outline transition-all"
+                className={`p-4 rounded-m3-xl bg-m3-surface-container-lowest border shadow-m3-1 flex flex-col lg:flex-row lg:items-center justify-between gap-3 hover:border-m3-outline transition-all ${
+                  isDueToday ? 'border-amber-500/70 ring-1 ring-amber-500/20' : 'border-m3-outline-variant/80'
+                }`}
               >
                 {/* Left: Lead Details */}
                 <div className="space-y-1.5 flex-1 min-w-0">
@@ -489,6 +586,21 @@ export default function EnquiriesView({
                         <span>{formatCleanDateTime(lead.timestamp)}</span>
                       </span>
                     )}
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const targetId = lead.quoteId || getOrderedEnquiryId(lead, idx, filteredLeads.length);
+                        if (window.confirm(`Are you sure you want to delete enquiry ${targetId}?`)) {
+                          onDeleteLead?.(targetId);
+                        }
+                      }}
+                      className="text-[11px] font-bold text-m3-error hover:bg-m3-error-container/40 px-2 py-0.5 rounded transition-colors flex items-center gap-0.5"
+                      title="Delete / Dismiss enquiry"
+                    >
+                      <span className="material-symbols-outlined text-[13px]">delete</span>
+                      <span>Delete</span>
+                    </button>
                   </div>
 
                   <div className="text-sm font-bold text-m3-on-surface truncate">
@@ -498,23 +610,45 @@ export default function EnquiriesView({
                   <div className="text-xs text-m3-on-surface-variant flex flex-wrap items-center gap-2 font-medium">
                     <span>🚗 {lead.vehicle}</span>
                     <span>•</span>
-                    <span>{lead.tripType || 'Round Trip'}</span>
+                    <span className="font-semibold text-m3-on-surface bg-m3-surface-container-high px-2 py-0.5 rounded-full border border-m3-outline-variant/50">
+                      🎒 {lead.tripType || 'Round Trip'}
+                    </span>
                     {lead.travelDate && (
                       <>
                         <span>•</span>
                         <span className="font-semibold text-m3-on-surface bg-m3-surface-container-low px-2 py-0.5 rounded-full border border-m3-outline-variant/40">
-                          🗓️ {formatFriendlyTravelDateTime(lead.travelDate)}
+                          🗓️ Travel: {formatFriendlyTravelDateTime(lead.travelDate)}
+                        </span>
+                      </>
+                    )}
+                    {lead.followUpTime && (
+                      <>
+                        <span>•</span>
+                        <span className={`font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 ${
+                          isDueToday
+                            ? 'bg-amber-500/20 text-amber-900 dark:text-amber-200 border border-amber-500/50'
+                            : 'bg-m3-surface-container-high text-m3-on-surface-variant border border-m3-outline-variant/40'
+                        }`}>
+                          <span className="material-symbols-outlined text-[13px] text-amber-600">alarm</span>
+                          <span>Follow-up: {lead.followUpTime}</span>
                         </span>
                       </>
                     )}
                   </div>
+
+                  {lead.notes && (
+                    <div className="text-xs text-m3-on-surface-variant font-medium bg-m3-surface-container-low px-2.5 py-1 rounded-m3-md border border-m3-outline-variant/40 flex items-center gap-1.5 mt-1">
+                      <span className="material-symbols-outlined text-[14px] text-amber-600 shrink-0">edit_note</span>
+                      <span className="truncate">{lead.notes}</span>
+                    </div>
+                  )}
                 </div>
 
-                {/* Right: Price & 3 Action Buttons */}
+                {/* Right: Price & Action Buttons */}
                 <div className="flex flex-wrap items-center gap-2 shrink-0 pt-2 lg:pt-0 border-t lg:border-t-0 border-m3-outline-variant/50">
                   <div className="text-left lg:text-right mr-1">
                     <span className="text-base font-bold text-m3-on-surface block">
-                      Rs.{Number(lead.estimatedFare || 0).toLocaleString('en-IN')}
+                      ₹{Number(lead.estimatedFare || 0).toLocaleString('en-IN')}
                     </span>
                     <span className="text-[11px] text-m3-on-surface-variant font-medium">Quoted Fare</span>
                   </div>
@@ -522,10 +656,11 @@ export default function EnquiriesView({
                   <button
                     type="button"
                     onClick={() => handleSendQuoteWA(lead)}
-                    className="h-9 px-3.5 bg-m3-surface-container-low hover:bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant rounded-m3-full text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                    className="h-9 px-3 bg-m3-surface-container-low hover:bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant rounded-m3-full text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                    title="Send initial quote on WhatsApp"
                   >
-                    <span className="material-symbols-outlined text-[16px]">chat</span>
-                    <span>Send Quote (WA)</span>
+                    <span className="material-symbols-outlined text-[15px]">chat</span>
+                    <span className="hidden sm:inline">Send Quote</span>
                   </button>
 
                   <button
@@ -535,7 +670,17 @@ export default function EnquiriesView({
                     title="Send follow-up reminder to confirm cab"
                   >
                     <span className="material-symbols-outlined text-[15px]">ring_volume</span>
-                    <span className="hidden sm:inline">Follow-up</span>
+                    <span>Follow-up</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleOpenEditFollowUp(lead)}
+                    className="h-9 px-2.5 bg-m3-surface-container-low hover:bg-m3-surface-container-high text-amber-800 dark:text-amber-200 border border-amber-500/40 rounded-m3-full text-xs font-semibold flex items-center gap-1 transition-colors"
+                    title="Edit follow-up time, package, or call notes"
+                  >
+                    <span className="material-symbols-outlined text-[15px] text-amber-600">edit_calendar</span>
+                    <span className="hidden sm:inline">Edit Time</span>
                   </button>
 
                   <button
@@ -544,7 +689,9 @@ export default function EnquiriesView({
                       const url = buildGoogleCalendarUrl({
                         ...lead,
                         bookingId: lead.quoteId,
-                        notes: 'Customer enquiry follow-up: pending ₹500 advance confirmation'
+                        isFollowUp: Boolean(lead.followUpTime),
+                        followUpTime: lead.followUpTime,
+                        notes: lead.notes || (lead.followUpTime ? `Customer confirmation call: ${lead.followUpTime}` : 'Customer enquiry follow-up: pending ₹500 advance confirmation')
                       });
                       window.open(url, '_blank');
                       showToast?.('Follow-up reminder opened in Google Calendar!', 'success');
@@ -564,6 +711,20 @@ export default function EnquiriesView({
                   >
                     <span className="material-symbols-outlined text-[16px]">verified</span>
                     <span>Got ₹500 Adv (Confirm)</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const targetId = lead.quoteId || getOrderedEnquiryId(lead, idx, filteredLeads.length);
+                      if (window.confirm(`Are you sure you want to delete enquiry ${targetId}?`)) {
+                        onDeleteLead?.(targetId);
+                      }
+                    }}
+                    className="h-9 px-2 text-m3-error hover:bg-m3-error-container/30 border border-m3-error/30 hover:border-m3-error/60 rounded-m3-full text-xs font-semibold flex items-center gap-1 transition-colors"
+                    title="Delete / Dismiss this enquiry"
+                  >
+                    <span className="material-symbols-outlined text-[15px]">delete</span>
                   </button>
                 </div>
               </div>
@@ -595,17 +756,18 @@ export default function EnquiriesView({
               </button>
             </div>
 
-            <form onSubmit={handleQuickSaveCall} className="p-4 overflow-y-auto space-y-3.5 text-xs">
+            <form onSubmit={(e) => { e.preventDefault(); handleSaveCallLead(false); }} className="p-4 overflow-y-auto space-y-3.5 text-xs">
+              {/* Customer Contact */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block font-bold text-m3-on-surface mb-1">Customer Name</label>
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Ramesh Kumar"
+                    placeholder="e.g. Dhanalakshmi / Ramesh Kumar"
                     value={newCall.guestName}
                     onChange={(e) => setNewCall({ ...newCall, guestName: e.target.value })}
-                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low font-semibold text-xs"
+                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low font-semibold text-xs text-m3-on-surface"
                   />
                 </div>
 
@@ -614,23 +776,24 @@ export default function EnquiriesView({
                   <input
                     type="tel"
                     required
-                    placeholder="e.g. 9840123456"
+                    placeholder="e.g. 99406 29716"
                     value={newCall.phone}
                     onChange={(e) => setNewCall({ ...newCall, phone: e.target.value })}
-                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low font-mono-code font-bold text-xs"
+                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low font-mono-code font-bold text-xs text-m3-on-surface"
                   />
                 </div>
               </div>
 
+              {/* Route */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block font-bold text-m3-on-surface mb-1">Pickup Location</label>
                   <input
                     type="text"
-                    placeholder="e.g. Medavakkam / Chennai Airport"
+                    placeholder="e.g. Chennai / Medavakkam"
                     value={newCall.pickup}
                     onChange={(e) => setNewCall({ ...newCall, pickup: e.target.value })}
-                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low font-semibold text-xs"
+                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low font-semibold text-xs text-m3-on-surface"
                   />
                 </div>
 
@@ -638,24 +801,41 @@ export default function EnquiriesView({
                   <label className="block font-bold text-m3-on-surface mb-1">Drop Destination</label>
                   <input
                     type="text"
-                    placeholder="e.g. Tirupati / Pondicherry / Vellore"
+                    placeholder="e.g. Tiruchi / Tirupati / Pondicherry"
                     value={newCall.drop}
                     onChange={(e) => setNewCall({ ...newCall, drop: e.target.value })}
-                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low font-semibold text-xs"
+                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low font-semibold text-xs text-m3-on-surface"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {/* Travel Date, Package / Trip Type, Vehicle, Fare */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 <div>
-                  <label className="block font-bold text-m3-on-surface mb-1">Travel Date & Time</label>
+                  <label className="block font-bold text-m3-on-surface mb-1">Actual Travel Date</label>
                   <input
                     type="text"
-                    placeholder="Tomorrow @ 05:00 AM"
+                    placeholder="Tomorrow @ 06:00 AM"
                     value={newCall.travelDate}
                     onChange={(e) => setNewCall({ ...newCall, travelDate: e.target.value })}
-                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low font-semibold text-xs"
+                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low font-semibold text-xs text-m3-on-surface"
                   />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-m3-on-surface mb-1">Package / Trip Type</label>
+                  <select
+                    value={newCall.tripType}
+                    onChange={(e) => setNewCall({ ...newCall, tripType: e.target.value })}
+                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low font-bold text-xs text-m3-on-surface"
+                  >
+                    <option value="2 Days Outstation Package">2 Days Outstation Package</option>
+                    <option value="1 Day Round Trip">1 Day Round Trip</option>
+                    <option value="One Way Drop">One Way Drop</option>
+                    <option value="3 Days Outstation Package">3 Days Outstation Package</option>
+                    <option value="4+ Days Tour Package">4+ Days Tour Package</option>
+                    <option value="Local Hourly Rental">Local Hourly Rental</option>
+                  </select>
                 </div>
 
                 <div>
@@ -663,7 +843,7 @@ export default function EnquiriesView({
                   <select
                     value={newCall.vehicle}
                     onChange={(e) => setNewCall({ ...newCall, vehicle: e.target.value })}
-                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low font-bold text-xs"
+                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low font-bold text-xs text-m3-on-surface"
                   >
                     <option value="Sedan (Dzire / Etios)">Sedan (Dzire / Etios 4 Pax)</option>
                     <option value="SUV (Ertiga 6+1)">SUV (Ertiga 6 Pax)</option>
@@ -673,11 +853,11 @@ export default function EnquiriesView({
                 </div>
 
                 <div>
-                  <label className="block font-bold text-m3-on-surface mb-1">Quoted Fare (Rs.)</label>
+                  <label className="block font-bold text-m3-on-surface mb-1">Quoted Fare (₹)</label>
                   <input
                     type="number"
                     required
-                    placeholder="e.g. 4500"
+                    placeholder="e.g. 10000"
                     value={newCall.fare}
                     onChange={(e) => setNewCall({ ...newCall, fare: e.target.value })}
                     className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low font-bold text-xs text-m3-on-surface focus:border-m3-primary focus:bg-m3-surface-container-lowest font-mono-code"
@@ -685,6 +865,69 @@ export default function EnquiriesView({
                 </div>
               </div>
 
+              {/* Dedicated Follow-Up Section */}
+              <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-m3-lg space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-amber-900 dark:text-amber-200 font-bold text-xs">
+                    <span className="material-symbols-outlined text-[16px] text-amber-600">alarm</span>
+                    <span>Follow-Up & Confirmation Schedule (When to Call Back)</span>
+                  </div>
+                  <span className="text-[10px] text-amber-700 dark:text-amber-300 font-medium">Customer confirmation time</span>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-1.5">
+                  {[
+                    { label: 'Today Evening @ 05:00 PM', val: 'Today Evening @ 05:00 PM' },
+                    { label: 'Today Night @ 08:00 PM', val: 'Today Night @ 08:00 PM' },
+                    { label: 'Tomorrow Morning @ 10:00 AM', val: 'Tomorrow Morning @ 10:00 AM' },
+                    { label: 'No Follow-up', val: '' }
+                  ].map((preset) => (
+                    <button
+                      key={preset.label}
+                      type="button"
+                      onClick={() => {
+                        setNewCall(prev => ({
+                          ...prev,
+                          followUpTime: preset.val,
+                          notes: preset.val ? (prev.notes || `Customer will confirm ${preset.val}`) : prev.notes
+                        }));
+                      }}
+                      className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border transition-all ${
+                        newCall.followUpTime === preset.val
+                          ? 'bg-amber-600 text-white border-amber-700 shadow-sm'
+                          : 'bg-white/80 dark:bg-black/30 text-amber-900 dark:text-amber-200 border-amber-500/30 hover:bg-amber-500/20'
+                      }`}
+                    >
+                      {preset.label}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                  <div>
+                    <label className="block text-[11px] font-bold text-amber-950 dark:text-amber-200 mb-0.5">Follow-Up Schedule</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Today Evening @ 05:00 PM"
+                      value={newCall.followUpTime}
+                      onChange={(e) => setNewCall({ ...newCall, followUpTime: e.target.value })}
+                      className="w-full p-2 rounded-m3-md border border-amber-500/40 bg-white dark:bg-black/40 font-semibold text-xs text-m3-on-surface"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-amber-950 dark:text-amber-200 mb-0.5">Call Notes / Remarks</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Quoted ₹10,000 for 2-day package. Will confirm in evening."
+                      value={newCall.notes}
+                      onChange={(e) => setNewCall({ ...newCall, notes: e.target.value })}
+                      className="w-full p-2 rounded-m3-md border border-amber-500/40 bg-white dark:bg-black/40 font-semibold text-xs text-m3-on-surface"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Enquiry Source */}
               <div>
                 <label className="block font-bold text-m3-on-surface mb-1">Enquiry Source</label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -710,23 +953,42 @@ export default function EnquiriesView({
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-m3-outline-variant/70 flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2">
-                <button
-                  type="submit"
-                  className="h-10 px-4 bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container rounded-m3-full font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors"
-                >
-                  <span className="material-symbols-outlined text-[17px]">send</span>
-                  <span>1. Save & Send WhatsApp Quote</span>
-                </button>
+              {/* Action Buttons */}
+              <div className="pt-3 border-t border-m3-outline-variant/70 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
+                <div className="text-[11px] text-m3-on-surface-variant font-medium">
+                  💡 Already sent quote? Click <b className="text-emerald-700 dark:text-emerald-300">1. Save (Follow-Up Scheduled)</b>
+                </div>
 
-                <button
-                  type="button"
-                  onClick={handleQuickConfirmBooking}
-                  className="h-10 px-4 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-m3-full font-semibold text-xs flex items-center justify-center gap-1.5 shadow-m3-1 transition-all"
-                >
-                  <span className="material-symbols-outlined text-[17px]">verified</span>
-                  <span>2. ₹500 Advance Received (Confirm Trip)</span>
-                </button>
+                <div className="flex flex-wrap items-center justify-end gap-2">
+                  <button
+                    type="submit"
+                    className="h-10 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-m3-full font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all"
+                    title="Save enquiry and schedule follow-up without opening WhatsApp"
+                  >
+                    <span className="material-symbols-outlined text-[17px]">bookmark_added</span>
+                    <span>1. Save (Follow-Up Scheduled)</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleSaveCallLead(true)}
+                    className="h-10 px-3.5 bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container rounded-m3-full font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors"
+                    title="Save enquiry and open WhatsApp to send formal quote"
+                  >
+                    <span className="material-symbols-outlined text-[17px]">send</span>
+                    <span>2. Save & Send WA Quote</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleQuickConfirmBooking}
+                    className="h-10 px-3.5 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-m3-full font-semibold text-xs flex items-center justify-center gap-1.5 shadow-m3-1 transition-all"
+                    title="Move immediately to Step 2 Active Trips"
+                  >
+                    <span className="material-symbols-outlined text-[17px]">verified</span>
+                    <span>3. Got ₹500 Adv (Confirm)</span>
+                  </button>
+                </div>
               </div>
             </form>
           </div>
@@ -872,6 +1134,167 @@ export default function EnquiriesView({
                 >
                   <span className="material-symbols-outlined text-[16px]">verified</span>
                   <span>Confirm & Move to Active Trips (Step 2)</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Edit Follow-Up / Schedule for Existing Enquiry */}
+      {editModalLead && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-m3-surface-container-lowest border border-m3-outline-variant rounded-m3-2xl shadow-m3-4 w-full max-w-lg max-h-[92vh] overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-m3-outline-variant/70 bg-m3-surface-container-low flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-300 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[20px]">edit_calendar</span>
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-m3-on-surface">
+                    Edit Follow-Up: {editModalLead.guestName || 'Customer'}
+                  </h3>
+                  <p className="text-xs text-m3-on-surface-variant">Update call schedule, package duration, or notes</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditModalLead(null)}
+                className="w-8 h-8 rounded-full hover:bg-m3-surface-container-high flex items-center justify-center text-m3-on-surface-variant font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveEditFollowUp} className="p-4 overflow-y-auto space-y-3.5 text-xs">
+              {/* Lead Summary Info */}
+              <div className="p-2.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center justify-between">
+                <div>
+                  <div className="font-bold text-m3-on-surface text-xs">
+                    📍 {cleanLocationName(editModalLead.pickup)} ➔ {cleanLocationName(editModalLead.drop)}
+                  </div>
+                  <div className="text-[11px] text-m3-on-surface-variant">
+                    🚗 {editModalLead.vehicle}
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span className="font-mono-code font-bold text-xs text-m3-on-surface">
+                    ₹{Number(editForm.estimatedFare || editModalLead.estimatedFare || 0).toLocaleString('en-IN')}
+                  </span>
+                  <span className="block text-[10px] text-m3-on-surface-variant">Quoted Fare</span>
+                </div>
+              </div>
+
+              {/* Package & Fare */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-bold text-m3-on-surface mb-1">Package / Trip Type</label>
+                  <select
+                    value={editForm.tripType}
+                    onChange={(e) => setEditForm({ ...editForm, tripType: e.target.value })}
+                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low font-bold text-xs text-m3-on-surface"
+                  >
+                    <option value="2 Days Outstation Package">2 Days Outstation Package</option>
+                    <option value="1 Day Round Trip">1 Day Round Trip</option>
+                    <option value="One Way Drop">One Way Drop</option>
+                    <option value="3 Days Outstation Package">3 Days Outstation Package</option>
+                    <option value="4+ Days Tour Package">4+ Days Tour Package</option>
+                    <option value="Local Hourly Rental">Local Hourly Rental</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block font-bold text-m3-on-surface mb-1">Quoted Fare (₹)</label>
+                  <input
+                    type="number"
+                    value={editForm.estimatedFare}
+                    onChange={(e) => setEditForm({ ...editForm, estimatedFare: e.target.value })}
+                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low font-bold text-xs text-m3-on-surface font-mono-code"
+                  />
+                </div>
+              </div>
+
+              {/* Travel Date */}
+              <div>
+                <label className="block font-bold text-m3-on-surface mb-1">Actual Travel Date</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Tomorrow @ 06:00 AM"
+                  value={editForm.travelDate}
+                  onChange={(e) => setEditForm({ ...editForm, travelDate: e.target.value })}
+                  className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low font-semibold text-xs text-m3-on-surface"
+                />
+              </div>
+
+              {/* Follow-Up Schedule & Presets */}
+              <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-m3-lg space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-amber-950 dark:text-amber-200 font-bold text-xs">
+                    <span className="material-symbols-outlined text-[16px] text-amber-600">alarm</span>
+                    <span>Follow-Up Reminder Time</span>
+                  </div>
+                  <span className="text-[10px] text-amber-700 dark:text-amber-300 font-medium">When to call</span>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-1.5">
+                  {[
+                    { label: 'Today Evening @ 05:00 PM', val: 'Today Evening @ 05:00 PM' },
+                    { label: 'Today Night @ 08:00 PM', val: 'Today Night @ 08:00 PM' },
+                    { label: 'Tomorrow Morning @ 10:00 AM', val: 'Tomorrow Morning @ 10:00 AM' },
+                    { label: 'Clear / None', val: '' }
+                  ].map((preset) => (
+                    <button
+                      key={preset.label}
+                      type="button"
+                      onClick={() => setEditForm({ ...editForm, followUpTime: preset.val })}
+                      className={`px-2 py-0.5 rounded-full text-[11px] font-semibold border transition-all ${
+                        editForm.followUpTime === preset.val
+                          ? 'bg-amber-600 text-white border-amber-700 shadow-sm'
+                          : 'bg-white/80 dark:bg-black/30 text-amber-900 dark:text-amber-200 border-amber-500/30 hover:bg-amber-500/20'
+                      }`}
+                    >
+                      {preset.label}
+                    </button>
+                  ))}
+                </div>
+
+                <div>
+                  <input
+                    type="text"
+                    placeholder="e.g. Today Evening @ 05:00 PM"
+                    value={editForm.followUpTime}
+                    onChange={(e) => setEditForm({ ...editForm, followUpTime: e.target.value })}
+                    className="w-full p-2 rounded-m3-md border border-amber-500/40 bg-white dark:bg-black/40 font-semibold text-xs text-m3-on-surface"
+                  />
+                </div>
+              </div>
+
+              {/* Call Notes / Remarks */}
+              <div>
+                <label className="block font-bold text-m3-on-surface mb-1">Call Notes / Remarks</label>
+                <textarea
+                  rows={2}
+                  placeholder="e.g. Customer will confirm in evening. Prefers AC sedan with polite driver."
+                  value={editForm.notes}
+                  onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
+                  className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low text-xs text-m3-on-surface font-medium resize-none"
+                />
+              </div>
+
+              {/* Modal Buttons */}
+              <div className="pt-2 flex items-center justify-end gap-2 border-t border-m3-outline-variant/60">
+                <button
+                  type="button"
+                  onClick={() => setEditModalLead(null)}
+                  className="px-4 py-2 rounded-full border border-m3-outline-variant text-xs font-bold text-m3-on-surface-variant hover:bg-m3-surface-container-high transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary text-xs font-bold shadow-m3-1 flex items-center gap-1.5 transition-all"
+                >
+                  <span className="material-symbols-outlined text-[16px]">save</span>
+                  <span>Update Enquiry</span>
                 </button>
               </div>
             </form>

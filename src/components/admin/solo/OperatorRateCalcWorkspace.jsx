@@ -130,23 +130,16 @@ export default function OperatorRateCalcWorkspace({
     const distText = currentCalc.distanceKm ? `~${currentCalc.distanceKm} km (Highway Route)` : 'Highway Route';
 
     return (
-      `*KALIDASS TRAVELS CHENNAI — OFFICIAL QUOTATION*\n` +
-      `📌 *Quote Ref:* ${quoteId} (Rate Locked for 24 Hrs)\n\n` +
-      `Namaskaram ${custLabel}! 🙏 Thank you for contacting Kalidass Travels.\n\n` +
+      `🚕 *KALIDASS TRAVELS — TRIP QUOTE*\n\n` +
+      `Namaskaram ${custLabel}!\n` +
       `📍 *Route:* ${currentCalc.pickup || 'Chennai'} ➔ ${currentCalc.destination || 'Destination'}\n` +
-      `🚗 *Vehicle / Service:* ${currentCalc.vehicleName || 'AC Cab'} (${currentCalc.serviceTitle || 'Trip'})\n` +
-      (currentCalc.pickupDateTime ? `🗓 *Pickup Schedule:* ${currentCalc.pickupDateTime}\n` : '') +
-      (currentCalc.returnDateTime ? `🗓 *Return Schedule:* ${currentCalc.returnDateTime}\n` : '') +
-      `🛣️ *Distance:* ${distText}\n\n` +
-      `💰 *All-Inclusive Fare:* *₹${totalFare.toLocaleString('en-IN')}*\n` +
-      `   • Includes AC Cab, Fuel & Chauffeur Allowance (Bata)\n` +
-      `   • Zero Surge Pricing | Spotless Clean Vehicle | 100% On-Time Guarantee\n\n` +
-      `🔒 *To Lock Your Cab & Confirm Duty:*\n` +
-      `Kindly pay *₹500 Advance* via Google Pay / PhonePe to:\n` +
-      `UPI ID: *8939539211@okbizaxis* (Kalidass Travels)\n` +
-      `and share the payment screenshot here. Remaining balance *₹${balanceDue.toLocaleString('en-IN')}* payable to driver directly on trip completion.` +
-      mapsBlock +
-      `\n\n📞 *Kalidass Travels Helpline:* 089395 39211 (24/7 Dispatch Desk)`
+      `🚗 *Car:* ${currentCalc.vehicleName || 'AC Cab'} (${currentCalc.serviceTitle || 'Trip'})\n` +
+      `💰 *All-Inclusive Fare:* ₹${totalFare.toLocaleString('en-IN')}\n` +
+      `*(Includes Toll, Driver Beta & Fuel. No hidden charges)*\n\n` +
+      `🔒 *To Confirm Booking:*\n` +
+      `Pay *₹500 Advance* via UPI: *8939539211@okbizaxis* (Kalidass Travels)\n` +
+      `Vehicle & driver allocated instantly upon payment. Balance ₹${balanceDue.toLocaleString('en-IN')} payable to driver directly.\n\n` +
+      `📞 24/7 Helpline: +91 89395 39211`
     );
   }, [currentCalc, totalFare, quoteId, callerName, cleanPhone, isPhoneValid, balanceDue]);
 

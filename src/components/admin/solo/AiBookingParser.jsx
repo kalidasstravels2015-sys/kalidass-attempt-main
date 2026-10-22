@@ -183,14 +183,16 @@ function parseBookingInquiryClient(rawText, phoneInput = '', guestNameInput = ''
   }
 
   const whatsAppReply =
-    `Namaskaram ${guestName} ji! 🙏 Thank you for contacting Kalidass Travels.\n\n` +
-    `📌 *Quote Ref:* ${quoteRefId} (24-Hr Rate Lock)\n` +
-    `🚗 *Service:* ${serviceCategory}\n` +
+    `🚕 *KALIDASS TRAVELS — TRIP QUOTE*\n\n` +
+    `Namaskaram ${guestName}!\n` +
     `📍 *Route:* ${pickup} ➔ ${drop}\n` +
-    `🗓 *Schedule:* ${travelDate} @ ${pickupTime}\n` +
-    `🚙 *Vehicle:* ${vehicleCategory}\n` +
-    `💰 *Fare:* Rs.${estimatedFare.toLocaleString('en-IN')}\n\n` +
-    `✅ Availability confirmed.\n🔒 To confirm booking & lock cab, kindly pay *Rs.500 Advance* (100% deducted from bill) via UPI to *8939539211@okbizaxis* (Kalidass Travels) and share receipt. Pay remaining balance directly to chauffeur after trip completion.`;
+    `🚗 *Car:* ${vehicleCategory}\n` +
+    `💰 *All-Inclusive Fare:* ₹${estimatedFare.toLocaleString('en-IN')}\n` +
+    `*(Includes Toll, Driver Beta & Fuel. No hidden charges)*\n\n` +
+    `🔒 *To Confirm Booking:*\n` +
+    `Pay *₹500 Advance* via UPI: *8939539211@okbizaxis* (Kalidass Travels)\n` +
+    `Vehicle & driver allocated instantly upon payment.\n\n` +
+    `📞 24/7 Helpline: +91 89395 39211`;
 
   return {
     quoteRefId,
@@ -480,7 +482,7 @@ Est. Total: ₹2,970`}
                 </div>
               </div>
               <span className="text-sm bg-m3-secondary-container text-m3-on-secondary-container font-bold px-3 py-0.5 rounded-full">
-                Rs. {parsedData.estimatedFare.toLocaleString('en-IN')}
+                ₹{parsedData.estimatedFare.toLocaleString('en-IN')}
               </span>
             </div>
 
@@ -511,9 +513,9 @@ Est. Total: ₹2,970`}
 
             {/* Financial Split Pill */}
             <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-m3-md bg-m3-surface-container-lowest border border-m3-outline-variant/70 text-xs">
-              <span className="text-m3-on-surface-variant">Driver Net: <strong className="text-m3-on-surface font-mono-code">Rs.{parsedData.chauffeurPayout.toLocaleString('en-IN')}</strong></span>
-              <span className="text-m3-on-surface-variant">Profit Margin: <strong className="text-m3-primary font-mono-code font-bold">+Rs.{parsedData.companyMargin.toLocaleString('en-IN')}</strong></span>
-              <span className="text-m3-on-surface-variant">Advance Due: <strong className="text-m3-primary font-mono-code font-bold">Rs.{parsedData.advanceSuggested}</strong></span>
+              <span className="text-m3-on-surface-variant">Driver Net: <strong className="text-m3-on-surface font-mono-code">₹{parsedData.chauffeurPayout.toLocaleString('en-IN')}</strong></span>
+              <span className="text-m3-on-surface-variant">Profit Margin: <strong className="text-m3-primary font-mono-code font-bold">+₹{parsedData.companyMargin.toLocaleString('en-IN')}</strong></span>
+              <span className="text-m3-on-surface-variant">Advance Due: <strong className="text-m3-primary font-mono-code font-bold">₹{parsedData.advanceSuggested}</strong></span>
             </div>
 
             {/* 3 Direct Actions */}

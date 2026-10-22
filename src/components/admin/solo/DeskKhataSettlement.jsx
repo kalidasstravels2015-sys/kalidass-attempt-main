@@ -26,10 +26,10 @@ export default function DeskKhataSettlement({
     const text = `*KALIDASS TRAVELS — TRIP SETTLEMENT REMINDER*\n\n` +
       `Namaskaram ${driverName}!\n` +
       `For Trip *${b.bookingId}* (${b.pickupAddress}):\n\n` +
-      `💵 Balance Cash Collected from Guest: Rs.${Number(b.terminalFare - (b.advancePaid || 500))}\n` +
-      `🚗 Your Agreed Net Share: Rs.${b.chauffeurPayout}\n` +
+      `💵 Balance Cash Collected from Guest: ₹${Number(b.terminalFare - (b.advancePaid || 500))}\n` +
+      `🚗 Your Agreed Net Share: ₹${b.chauffeurPayout}\n` +
       `--------------------------------\n` +
-      `*BALANCE DUE TO OFFICE: Rs.${amountDue}*\n\n` +
+      `*BALANCE DUE TO OFFICE: ₹${amountDue}*\n\n` +
       `Kindly GPay / PhonePe to *8939539211@okbizaxis* (Kalidass Travels) to close today's duty. Thank you!`;
 
     window.open(`https://wa.me/91${driverPhone.slice(-10)}?text=${encodeURIComponent(text)}`, '_blank');
@@ -59,7 +59,7 @@ export default function DeskKhataSettlement({
             Today's Net Profit (In Your Pocket)
           </span>
           <span className="text-2xl font-black font-mono">
-            Rs. {totalProfit.toLocaleString('en-IN')}
+            ₹{totalProfit.toLocaleString('en-IN')}
           </span>
         </div>
         <div className="text-right">
@@ -121,10 +121,10 @@ export default function DeskKhataSettlement({
 
                   <div className="text-right">
                     <span className="text-sm font-extrabold text-m3-on-surface font-mono block">
-                      Rs. {totalFare.toLocaleString('en-IN')}
+                      ₹{totalFare.toLocaleString('en-IN')}
                     </span>
                     <span className="text-[10px] text-m3-success font-bold block">
-                      Your Margin: Rs.{companyMargin}
+                      Your Margin: ₹{companyMargin}
                     </span>
                   </div>
                 </div>
@@ -168,18 +168,18 @@ export default function DeskKhataSettlement({
                   <div className="p-3 rounded-xl bg-m3-tertiary-container/30/70 border border-m3-tertiary/30 text-xs mb-3">
                     <div className="flex items-center justify-between font-mono mb-1">
                       <span>Cash with Driver:</span>
-                      <strong>Rs. {driverCashCollected}</strong>
+                      <strong>₹{driverCashCollected}</strong>
                     </div>
                     <div className="flex items-center justify-between font-mono mb-1.5">
                       <span>Driver's Net Share:</span>
-                      <strong>-Rs. {driverPayout}</strong>
+                      <strong>-₹{driverPayout}</strong>
                     </div>
                     <div className="border-t border-m3-tertiary/30 pt-1.5 flex items-center justify-between text-m3-on-tertiary-container font-bold">
                       <span>
                         {driverOwesOffice >= 0 ? 'Driver Owes Office:' : 'Office Owes Driver:'}
                       </span>
                       <span className="text-sm font-mono font-extrabold text-m3-on-tertiary-container">
-                        Rs. {Math.abs(driverOwesOffice)}
+                        ₹{Math.abs(driverOwesOffice)}
                       </span>
                     </div>
                   </div>
@@ -187,12 +187,12 @@ export default function DeskKhataSettlement({
                   <div className="p-3 rounded-xl bg-m3-secondary-container/40/70 border border-m3-secondary/30 text-xs mb-3">
                     <div className="flex items-center justify-between font-mono mb-1">
                       <span>Office Holds Full Fare:</span>
-                      <strong>Rs. {totalFare}</strong>
+                      <strong>₹{totalFare}</strong>
                     </div>
                     <div className="border-t border-m3-secondary/30 pt-1.5 flex items-center justify-between text-m3-on-secondary-container font-bold">
                       <span>Office Must Transfer to Driver:</span>
                       <span className="text-sm font-mono font-extrabold text-m3-on-secondary-container">
-                        Rs. {officeOwesDriver}
+                        ₹{officeOwesDriver}
                       </span>
                     </div>
                   </div>

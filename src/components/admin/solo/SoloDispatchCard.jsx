@@ -49,15 +49,15 @@ export default function SoloDispatchCard({
 
     const driverPhone = assignedChauffeurObj?.phone?.replace(/[^0-9]/g, '') || '8939539211';
     const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(booking.pickupAddress)}`;
-    const message = `*KALIDASS TRAVELS — TRIP DISPATCH MANIFEST*\n` +
+    const message = `🚕 *KALIDASS TRAVELS — TRIP DISPATCH MANIFEST*\n` +
       `Trip Ref: *${booking.bookingId}*\n\n` +
       `👤 *Guest:* ${booking.guestNamePhone}\n` +
       `🗓 *Travel Time:* ${booking.travelDateTime}\n` +
       `📍 *Pickup / Route:* ${booking.pickupAddress}\n` +
       `🗺️ *Open in Maps:* ${mapsLink}\n` +
       `🚗 *Assigned Vehicle:* ${booking.vehicleCategory} (${booking.partySize})\n` +
-      `💰 *Total Billable to Guest:* Rs.${booking.terminalFare}\n` +
-      `💵 *Your Trip Share:* Rs.${booking.chauffeurPayout}\n\n` +
+      `💰 *Total Billable to Guest:* ₹${booking.terminalFare}\n` +
+      `💵 *Your Trip Share:* ₹${booking.chauffeurPayout}\n\n` +
       `📱 *Digital Trip Sheet & Odometer:* ${tripUrl}\n\n` +
       `_Instructions: Please call the guest 15 mins before arrival. Take starting odometer photo. Keep car clean and AC on. Safe driving!_`;
 
@@ -75,8 +75,8 @@ export default function SoloDispatchCard({
     const driverPhone = assignedChauffeurObj?.phone || '+91 89395 39211';
     const vehiclePlate = assignedChauffeurObj?.plate || booking.assignedChauffeur.split('-')[1]?.trim() || 'Commercial Plate';
 
-    const message = `*KALIDASS TRAVELS CHENNAI — CHAUFFEUR ASSIGNMENT*\n\n` +
-      `Namaskaram ${guestName} ji! Your chauffeur details for Trip *${booking.bookingId}* are:\n\n` +
+    const message = `🚖 *KALIDASS TRAVELS — CAB & DRIVER DETAILS*\n` +
+      `Booking ID: *${booking.bookingId}*\n\n` +
       `👨‍✈️ *Chauffeur:* ${driverName}\n` +
       `📞 *Contact Number:* ${driverPhone}\n` +
       `🚗 *Vehicle:* ${booking.vehicleCategory} (${vehiclePlate})\n` +
@@ -84,7 +84,7 @@ export default function SoloDispatchCard({
       `📍 *Pickup Address:* ${booking.pickupAddress}\n\n` +
       `📱 *Live Digital Trip Sheet & Chauffeur Details:*\n${tripUrl}\n\n` +
       `Your chauffeur will reach 10-15 minutes prior to departure. For 24/7 help, call our control room at +91 89395 39211.\n` +
-      `Wishing you a blessed and comfortable journey! ✨`;
+      `Have a safe and pleasant journey! ✨`;
 
     const destPhone = cleanGuestPhone.length >= 10 ? cleanGuestPhone : '';
     const url = destPhone
@@ -164,10 +164,10 @@ export default function SoloDispatchCard({
 
           <div className="text-right">
             <span className="text-base font-bold text-m3-on-surface font-mono-code block">
-              Rs. {Number(booking.terminalFare || 0).toLocaleString('en-IN')}
+              ₹{Number(booking.terminalFare || 0).toLocaleString('en-IN')}
             </span>
             <span className="text-[11px] text-m3-primary font-bold font-mono-code">
-              Margin: Rs.{booking.companyMargin || (booking.terminalFare - booking.chauffeurPayout)}
+              Margin: ₹{booking.companyMargin || (booking.terminalFare - booking.chauffeurPayout)}
             </span>
           </div>
         </div>

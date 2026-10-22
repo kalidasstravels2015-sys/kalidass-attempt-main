@@ -531,6 +531,179 @@ ${promptCtx}`;
               }
             }
 
+            if (url === '/api/admin/leads' || url === '/api/admin/leads/') {
+              const fullParsedUrl = new URL(req.url, 'http://localhost');
+              const actionQuery = (req.headers['x-action'] || fullParsedUrl.searchParams.get('action') || '').trim().toLowerCase();
+              const quoteIdQuery = (req.headers['x-quote-id'] || fullParsedUrl.searchParams.get('quoteId') || fullParsedUrl.searchParams.get('id') || fullParsedUrl.searchParams.get('ref') || '').trim();
+              const customWebhook = fullParsedUrl.searchParams.get('webhook') || process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL || '';
+
+              const csvPath = path.resolve(process.cwd(), 'Kalidass_Calculations_Log_2026.csv');
+
+              const handleDeleteLead = async (targetQuoteId) => {
+                if (!targetQuoteId) return;
+                const targetLower = targetQuoteId.toLowerCase();
+
+                // 1. Remove matching row from Kalidass_Calculations_Log_2026.csv
+                if (fs.existsSync(csvPath)) {
+                  try {
+                    const content = fs.readFileSync(csvPath, 'utf8');
+                    const lines = content.trim().split(/\r?\n/).filter(Boolean);
+                    if (lines.length > 0) {
+                      const header = lines[0];
+                      const remaining = [header];
+                      for (let i = 1; i < lines.length; i++) {
+                        const m = lines[i].match(/(?:^|,)(?:"([^"]*(?:""[^"]*)*)"|([^,]*))/g);
+                        const row0 = m ? m[0].replace(/^,/, '').replace(/^"|"$/g, '').trim().toLowerCase() : '';
+                        if (row0 !== targetLower) {
+                          remaining.push(lines[i]);
+                        }
+                      }
+                      fs.writeFileSync(csvPath, remaining.join('\n') + '\n', 'utf8');
+                    }
+                  } catch (_) {}
+                }
+
+                // 2. Forward delete to Google Sheets Webhook
+                if (customWebhook && customWebhook.startsWith('http')) {
+                  try {
+                    await fetch(customWebhook, {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'text/plain' },
+                      body: JSON.stringify({
+                        type: 'admin_lead_sync',
+                        action: 'delete',
+                        quoteId: targetQuoteId,
+                        status: 'Cancelled'
+                      })
+                    });
+                  } catch (_) {}
+                }
+              };
+
+              if (req.method === 'GET') {
+                if (actionQuery === 'delete' || actionQuery === 'cancel') {
+                  handleDeleteLead(quoteIdQuery).then(() => {
+                    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                    res.end(JSON.stringify({ success: true, quoteId: quoteIdQuery, action: 'deleted' }));
+                  }).catch(err => {
+                    res.statusCode = 500;
+                    res.end(JSON.stringify({ error: err.message }));
+                  });
+                  return;
+                }
+
+                (async () => {
+                  try {
+                    let remoteLeads = [];
+                    let remoteQuotes = [];
+                    if (customWebhook && customWebhook.startsWith('http')) {
+                      try {
+                        const rRes = await fetch(customWebhook, { method: 'GET', redirect: 'follow', headers: { 'Accept': 'application/json' } });
+                        if (rRes.ok) {
+                          const rJson = await rRes.json();
+                          if (rJson && rJson.success) {
+                            if (Array.isArray(rJson.leads)) {
+                              remoteLeads = rJson.leads.filter(l => l && l.status !== 'Cancelled' && l.status !== 'Deleted');
+                            }
+                            if (Array.isArray(rJson.calculatorQuotes)) {
+                              remoteQuotes = rJson.calculatorQuotes.filter(q => q && q.status !== 'Cancelled' && q.status !== 'Deleted');
+                            }
+                          }
+                        }
+                      } catch (_) {}
+                    }
+
+                    const actionableLeads = [...remoteLeads];
+                    const browsedLeads = [...remoteQuotes];
+
+                    if (fs.existsSync(csvPath)) {
+                      const content = fs.readFileSync(csvPath, 'utf8');
+                      const lines = content.trim().split(/\r?\n/).filter(Boolean);
+                      for (let i = lines.length - 1; i >= 1; i--) {
+                        const matches = lines[i].match(/(?:^|,)(?:"([^"]*(?:""[^"]*)*)"|([^,]*))/g);
+                        if (matches) {
+                          const row = matches.map(m => {
+                            let s = m.replace(/^,/, '').trim();
+                            if (s.startsWith('"') && s.endsWith('"')) s = s.slice(1, -1).replace(/""/g, '"');
+                            return s;
+                          });
+                          const qId = row[0] || '';
+                          const status = row[10] || 'Browsed';
+                          if (status === 'Cancelled' || status === 'Deleted') continue;
+
+                          const item = {
+                            quoteId: qId,
+                            timestamp: row[1] || '',
+                            sourcePage: row[2] || '',
+                            calculatorEngine: row[3] || '',
+                            tripType: row[4] || '',
+                            pickup: row[5] || '',
+                            drop: row[6] || '',
+                            vehicle: row[7] || '',
+                            distanceKm: row[8] || '',
+                            estimatedFare: parseInt(row[9] || '0', 10) || 0,
+                            status: status,
+                            metadata: row[11] || ''
+                          };
+
+                          if (item.estimatedFare <= 0 || (item.drop || '').toLowerCase().includes('whatsapp chat')) continue;
+
+                          const exists = actionableLeads.some(l => (l.quoteId || '').toLowerCase() === qId.toLowerCase());
+                          if (!exists) {
+                            const hasPhone = /[6-9]\d{9}/.test(`${item.sourcePage} ${item.pickup} ${item.drop} ${item.metadata}`);
+                            const isConfirmedContact = hasPhone || (item.quoteId.startsWith('#CALL') && hasPhone) || (item.quoteId.startsWith('#ENQ') && hasPhone) || (item.quoteId.startsWith('#WA') && hasPhone);
+                            if (isConfirmedContact) {
+                              actionableLeads.push(item);
+                            } else {
+                              browsedLeads.push(item);
+                            }
+                          }
+                        }
+                      }
+                    }
+
+                    const leads = actionableLeads;
+                    const allCalculations = [...actionableLeads, ...browsedLeads];
+
+                    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                    res.end(JSON.stringify({
+                      success: true,
+                      count: leads.length,
+                      leads,
+                      calculatorQuotes: allCalculations
+                    }));
+                  } catch (err) {
+                    res.statusCode = 500;
+                    res.end(JSON.stringify({ error: err.message }));
+                  }
+                })();
+                return;
+              }
+
+              if (req.method === 'POST') {
+                let body = '';
+                req.on('data', c => { body += c; });
+                req.on('end', async () => {
+                  try {
+                    const data = JSON.parse(body || '{}');
+                    if (data.action === 'delete' || data.action === 'cancel' || data.status === 'Cancelled' || data.status === 'Deleted') {
+                      await handleDeleteLead(data.quoteId || quoteIdQuery);
+                      res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                      res.end(JSON.stringify({ success: true, quoteId: data.quoteId || quoteIdQuery, action: 'deleted' }));
+                      return;
+                    }
+
+                    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                    res.end(JSON.stringify({ success: true }));
+                  } catch (err) {
+                    res.statusCode = 500;
+                    res.end(JSON.stringify({ error: err.message }));
+                  }
+                });
+                return;
+              }
+            }
+
             if (url === '/api/admin/sheet-config') {
               if (req.method === 'GET') {
                 const currentUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL || '';

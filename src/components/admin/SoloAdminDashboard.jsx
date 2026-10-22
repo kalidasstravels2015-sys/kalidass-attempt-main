@@ -16,6 +16,7 @@ const STORAGE_KEYS = {
   BOOKINGS: 'kt_solo_real_bookings_v8',
   DELETED_BOOKINGS: 'kt_solo_deleted_bookings_v8',
   LEADS: 'kt_solo_real_leads_v8',
+  DELETED_LEADS: 'kt_solo_deleted_leads_v8',
   CHAUFFEURS: 'kt_solo_real_chauffeurs_v8',
   QUOTES: 'kt_website_calculator_quotes_v1'
 };
@@ -108,14 +109,38 @@ export default function SoloAdminDashboard() {
     return [];
   });
 
-  // State: Leads / Enquiries
+  // State: Deleted Leads Tombstones (prevents resurrection across page refreshes)
+  const [deletedLeadIds, setDeletedLeadIds] = useState(() => {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEYS.DELETED_LEADS);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) return new Set(parsed.map(id => String(id).trim().toLowerCase()));
+        }
+      } catch (_) {}
+    }
+    return new Set();
+  });
+
+  // State: Leads / Enquiries (strictly excludes deleted tombstones and cancelled leads)
   const [leads, setLeads] = useState(() => {
     if (typeof window !== 'undefined' && window.localStorage) {
       try {
+        let deletedSet = new Set();
+        const rawDel = localStorage.getItem(STORAGE_KEYS.DELETED_LEADS);
+        if (rawDel) {
+          const parsedDel = JSON.parse(rawDel);
+          if (Array.isArray(parsedDel)) {
+            parsedDel.forEach(id => deletedSet.add(String(id).trim().toLowerCase()));
+          }
+        }
         const cached = localStorage.getItem(STORAGE_KEYS.LEADS);
         if (cached) {
           const parsed = JSON.parse(cached);
-          if (Array.isArray(parsed)) return parsed;
+          if (Array.isArray(parsed)) {
+            return parsed.filter(l => l && l.quoteId && !deletedSet.has(String(l.quoteId).trim().toLowerCase()) && l.status !== 'Cancelled' && l.status !== 'Deleted');
+          }
         }
       } catch (_) {}
     }
@@ -271,11 +296,38 @@ export default function SoloAdminDashboard() {
         } catch (_) {}
       }
 
-      // Merge remote leads with local manual leads
+      // Merge remote leads with local manual leads, strictly honoring deleted tombstones
       setLeads(prevLeads => {
+        let deletedSet = new Set(deletedLeadIds);
+        if (typeof window !== 'undefined' && window.localStorage) {
+          try {
+            const rawDel = localStorage.getItem(STORAGE_KEYS.DELETED_LEADS);
+            if (rawDel) {
+              const parsedDel = JSON.parse(rawDel);
+              if (Array.isArray(parsedDel)) {
+                parsedDel.forEach(id => deletedSet.add(String(id).trim().toLowerCase()));
+              }
+            }
+          } catch (_) {}
+        }
+
         const map = new Map();
-        (prevLeads || []).filter(isActionableLead).forEach(l => { if (l && l.quoteId) map.set(l.quoteId, l); });
-        (apiLeads || []).filter(isActionableLead).forEach(l => { if (l && l.quoteId) map.set(l.quoteId, l); });
+        (prevLeads || []).filter(isActionableLead).forEach(l => {
+          if (l && l.quoteId) {
+            const key = String(l.quoteId).trim().toLowerCase();
+            if (!deletedSet.has(key) && l.status !== 'Cancelled' && l.status !== 'Deleted') {
+              map.set(key, l);
+            }
+          }
+        });
+        (apiLeads || []).filter(isActionableLead).forEach(l => {
+          if (l && l.quoteId) {
+            const key = String(l.quoteId).trim().toLowerCase();
+            if (!deletedSet.has(key) && l.status !== 'Cancelled' && l.status !== 'Deleted') {
+              map.set(key, l);
+            }
+          }
+        });
         const merged = Array.from(map.values());
         if (typeof window !== 'undefined') {
           localStorage.setItem(STORAGE_KEYS.LEADS, JSON.stringify(merged));
@@ -285,6 +337,19 @@ export default function SoloAdminDashboard() {
 
       // Merge quotes from API, CSV calculations log, Google Sheet, and localStorage
       setCalculatorQuotes(prevQuotes => {
+        let deletedSet = new Set(deletedLeadIds);
+        if (typeof window !== 'undefined' && window.localStorage) {
+          try {
+            const rawDel = localStorage.getItem(STORAGE_KEYS.DELETED_LEADS);
+            if (rawDel) {
+              const parsedDel = JSON.parse(rawDel);
+              if (Array.isArray(parsedDel)) {
+                parsedDel.forEach(id => deletedSet.add(String(id).trim().toLowerCase()));
+              }
+            }
+          } catch (_) {}
+        }
+
         let storedQuotes = [];
         if (typeof window !== 'undefined' && window.localStorage) {
           try {
@@ -294,10 +359,12 @@ export default function SoloAdminDashboard() {
         }
 
         const map = new Map();
-        (storedQuotes || []).forEach(q => { if (q && q.quoteId) map.set(q.quoteId, q); });
-        (prevQuotes || []).forEach(q => { if (q && q.quoteId) map.set(q.quoteId, q); });
-        (csvCalculations || []).forEach(q => { if (q && q.quoteId) map.set(q.quoteId, q); });
-        (apiQuotes || []).forEach(q => { if (q && q.quoteId) map.set(q.quoteId, q); });
+        const isValidQuote = (q) => q && q.quoteId && !deletedSet.has(String(q.quoteId).trim().toLowerCase()) && q.status !== 'Cancelled' && q.status !== 'Deleted';
+
+        (storedQuotes || []).forEach(q => { if (isValidQuote(q)) map.set(q.quoteId, q); });
+        (prevQuotes || []).forEach(q => { if (isValidQuote(q)) map.set(q.quoteId, q); });
+        (csvCalculations || []).forEach(q => { if (isValidQuote(q)) map.set(q.quoteId, q); });
+        (apiQuotes || []).forEach(q => { if (isValidQuote(q)) map.set(q.quoteId, q); });
 
         const rawList = Array.from(map.values());
         const merged = deduplicateCalculatorQuotes(rawList);
@@ -549,6 +616,93 @@ export default function SoloAdminDashboard() {
     });
 
     showToast(`Trip ${cleanId} has been removed.`, 'info');
+  };
+
+  // Helper: Synchronize lead deletion with server endpoint and Google Sheets
+  const syncLeadDeletionToRemote = async (quoteId) => {
+    const sheetUrl = getActiveGoogleSheetUrl();
+    const queryParams = new URLSearchParams();
+    if (sheetUrl) queryParams.set('webhook', sheetUrl);
+    queryParams.set('action', 'delete');
+    queryParams.set('quoteId', quoteId);
+    queryParams.set('status', 'Cancelled');
+
+    const queryString = queryParams.toString() ? `?${queryParams.toString()}` : '';
+
+    // 1. API endpoint call (GET/POST)
+    try {
+      await fetch(`/api/admin/leads/${queryString}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      });
+    } catch (_) {}
+
+    // 2. Direct fallback to Google Apps Script Web App URL
+    if (sheetUrl && sheetUrl.startsWith('https://script.google.com/macros/s/')) {
+      try {
+        await fetch(sheetUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({
+            type: 'admin_lead_sync',
+            action: 'delete',
+            quoteId,
+            status: 'Cancelled',
+            date: new Date().toLocaleString('en-IN')
+          })
+        });
+      } catch (_) {}
+    }
+  };
+
+  // Delete / Dismiss Enquiry / Quote
+  const handleDeleteLead = async (quoteId) => {
+    if (!quoteId) return;
+    const cleanId = String(quoteId).trim();
+    const lowerId = cleanId.toLowerCase();
+
+    // 1. Permanently record tombstone in state and localStorage
+    setDeletedLeadIds(prev => {
+      const next = new Set(prev);
+      next.add(lowerId);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(STORAGE_KEYS.DELETED_LEADS, JSON.stringify(Array.from(next)));
+      }
+      return next;
+    });
+
+    // 2. Immediately remove from local leads state and localStorage
+    const nextLeads = leads.filter(l => String(l.quoteId || '').trim().toLowerCase() !== lowerId);
+    setLeads(nextLeads);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(STORAGE_KEYS.LEADS, JSON.stringify(nextLeads));
+    }
+
+    // Also remove from calculatorQuotes state and localStorage
+    setCalculatorQuotes(prev => {
+      const nextQ = prev.filter(q => String(q.quoteId || '').trim().toLowerCase() !== lowerId);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(STORAGE_KEYS.QUOTES, JSON.stringify(nextQ.slice(0, 100)));
+      }
+      return nextQ;
+    });
+
+    // 3. Sync lead deletion to server and Google Sheets
+    await syncLeadDeletionToRemote(cleanId);
+
+    showToast(`Enquiry ${cleanId} has been removed.`, 'info');
+  };
+
+  // Update Enquiry (e.g. reschedule follow-up or edit notes)
+  const handleUpdateLead = (updatedLead) => {
+    if (!updatedLead || !updatedLead.quoteId) return;
+    const targetId = String(updatedLead.quoteId).trim().toLowerCase();
+    const nextLeads = leads.map(l => (String(l.quoteId || '').trim().toLowerCase() === targetId ? { ...l, ...updatedLead } : l));
+    setLeads(nextLeads);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(STORAGE_KEYS.LEADS, JSON.stringify(nextLeads));
+    }
+    showToast(`Enquiry ${updatedLead.quoteId} updated!`, 'success');
   };
 
   // Update Customer Contact on an Active Trip
@@ -941,6 +1095,8 @@ export default function SoloAdminDashboard() {
               onNavigateToRadar={() => setCurrentView('WEB_RADAR')}
               onAddManualLead={handleAddManualLead}
               onConvertToConfirmed={handleConvertToConfirmed}
+              onDeleteLead={handleDeleteLead}
+              onUpdateLead={handleUpdateLead}
               onOpenPhoneQuoteEngine={() => setIsPhoneQuoteModalOpen(true)}
               onOpenAiParser={() => setIsAiParserModalOpen(true)}
               showToast={showToast}

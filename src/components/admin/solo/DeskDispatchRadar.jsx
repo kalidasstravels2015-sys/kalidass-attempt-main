@@ -80,7 +80,7 @@ export default function DeskDispatchRadar({
       `📍 *Route:* ${broadcastBooking.pickupAddress}\n` +
       `🗺️ *Open in Maps:* ${mapsLink}\n` +
       `🚗 *Required Vehicle:* ${broadcastBooking.vehicleCategory} (${broadcastBooking.partySize})\n` +
-      `💰 *Driver Net Payout:* *Rs. ${driverPayout.toLocaleString('en-IN')} Net*\n` +
+      `💰 *Driver Net Payout:* *₹${driverPayout.toLocaleString('en-IN')} Net*\n` +
       `_(Tolls & Parking paid by guest at actuals)_\n\n` +
       `📱 *First driver to reply with Car Plate & Phone Number gets this duty!*`;
 
@@ -143,15 +143,18 @@ export default function DeskDispatchRadar({
     const adv = Number(booking.advancePaid) || 0;
     const balance = Math.max(0, totalFare - adv);
 
-    const message = `*KALIDASS TRAVELS CHENNAI — CUSTOMER DUTY SLIP*\n\n` +
-      `Namaskaram ${guestName} ji! Your cab & driver are assigned for Trip *${booking.bookingId}*:\n\n` +
+    const message = `🚖 *KALIDASS TRAVELS — CAB & DRIVER DETAILS*\n` +
+      `Booking ID: *${booking.bookingId}*\n\n` +
       `👨‍✈️ *Driver & Cab:* ${booking.assignedChauffeur}\n` +
-      `🚗 *Vehicle Class:* ${booking.vehicleCategory}\n` +
+      `🚗 *Vehicle:* ${booking.vehicleCategory}\n` +
       `🗓 *Pickup Time:* ${booking.travelDateTime}\n` +
-      `📍 *Route:* ${booking.pickupAddress}\n` +
-      `💰 *Agreed Fare:* Rs.${totalFare.toLocaleString('en-IN')} | *Advance Paid:* Rs.${adv} | *Balance:* Rs.${balance.toLocaleString('en-IN')} (+ Tolls/Parking at actuals)\n\n` +
-      `📱 *Open Live Digital Duty Slip & Track Trip:*\n${tripUrl}\n\n` +
-      `For 24/7 support, call +91 89395 39211. Wishing you a safe journey! 🌟`;
+      `📍 *Route:* ${booking.pickupAddress}\n\n` +
+      `💰 *Total Fare:* ₹${totalFare.toLocaleString('en-IN')}\n` +
+      `🟢 *Advance Paid:* ₹${adv.toLocaleString('en-IN')}\n` +
+      `🔴 *Balance to Pay Driver:* ₹${balance.toLocaleString('en-IN')}\n\n` +
+      `📱 *Open Live Digital Duty Slip:*\n${tripUrl}\n\n` +
+      `Have a safe and pleasant journey! ✨\n` +
+      `📞 24/7 Helpline: +91 89395 39211`;
 
     const cleanPhone = guestPhone.length >= 10 ? guestPhone.slice(-10) : '';
     const url = cleanPhone
@@ -169,18 +172,18 @@ export default function DeskDispatchRadar({
     const totalFare = Number(booking.terminalFare) || 0;
     const adv = Number(booking.advancePaid) || 0;
     const balanceToCollect = Math.max(0, totalFare - adv);
+    const driverShare = Number(booking.chauffeurPayout) || Math.round(totalFare * 0.82);
     const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(booking.pickupAddress || 'Chennai')}`;
 
     const message = `🚕 *KALIDASS TRAVELS — DRIVER DUTY SLIP*\n` +
       `Trip ID: *${booking.bookingId}*\n\n` +
-      `👨‍✈️ *Driver:* ${driverName}\n` +
-      `👤 *Customer Name & Phone:* ${booking.guestNamePhone}\n` +
+      `👤 *Passenger:* ${booking.guestNamePhone}\n` +
       `🗓 *Pickup Date & Time:* ${booking.travelDateTime}\n` +
       `📍 *Pickup & Route:* ${booking.pickupAddress}\n` +
-      `🗺️ *Google Maps Pickup Pin:* ${mapsLink}\n\n` +
-      `💵 *Collect Balance from Customer at Drop:* *Rs.${balanceToCollect.toLocaleString('en-IN')}* (+ Extra KM/Tolls/Parking)\n` +
-      `🤝 *Your Net Driver Share:* Rs.${Number(booking.chauffeurPayout || Math.round(totalFare * 0.8)).toLocaleString('en-IN')}\n\n` +
-      `📱 *Enter Start KM, End KM & Toll Bill Here:*\n${tripUrl}`;
+      `🗺️ *Google Maps Pin:* ${mapsLink}\n\n` +
+      `💵 *Collect Balance from Customer at Drop:* *₹${balanceToCollect.toLocaleString('en-IN')}*\n` +
+      `🤝 *Your Net Driver Share:* ₹${driverShare.toLocaleString('en-IN')}\n\n` +
+      `📱 *Enter Start/End KM & Close Bill Here:*\n${tripUrl}`;
 
     const cleanPhone = driverPhone.length >= 10 ? driverPhone.slice(-10) : '';
     const url = cleanPhone
@@ -407,10 +410,10 @@ export default function DeskDispatchRadar({
 
                     <div className="text-right">
                       <span className="text-base font-extrabold text-m3-on-surface font-mono block">
-                        Rs. {Number(b.terminalFare || 0).toLocaleString('en-IN')}
+                        ₹{Number(b.terminalFare || 0).toLocaleString('en-IN')}
                       </span>
                       <span className="text-[11px] text-m3-success font-semibold font-mono">
-                        Profit: Rs.{b.companyMargin || (b.terminalFare - b.chauffeurPayout)}
+                        Profit: ₹{b.companyMargin || (b.terminalFare - b.chauffeurPayout)}
                       </span>
                     </div>
                   </div>
@@ -442,7 +445,7 @@ export default function DeskDispatchRadar({
                             <span>Chauffeur Not Assigned Yet</span>
                           </span>
                           <span className="text-[11px] text-m3-outline font-mono">
-                            Driver Share: Rs.{b.chauffeurPayout || Math.round(b.terminalFare * 0.8)}
+                            Driver Share: ₹{b.chauffeurPayout || Math.round(b.terminalFare * 0.8)}
                           </span>
                         </div>
 
@@ -715,7 +718,7 @@ export default function DeskDispatchRadar({
                 <div className="flex justify-between items-center text-xs">
                   <span className="text-m3-outline font-semibold">Total Fare from Guest:</span>
                   <span className="font-mono font-extrabold text-m3-on-surface text-sm">
-                    Rs. {Number(broadcastBooking.terminalFare || 6000).toLocaleString('en-IN')}
+                    ₹{Number(broadcastBooking.terminalFare || 6000).toLocaleString('en-IN')}
                   </span>
                 </div>
 
@@ -725,7 +728,7 @@ export default function DeskDispatchRadar({
                       Select Office Margin (Your Cut):
                     </span>
                     <span className="font-mono font-bold text-m3-success text-xs">
-                      Rs. {officeMargin}
+                      ₹{officeMargin}
                     </span>
                   </div>
 
@@ -742,7 +745,7 @@ export default function DeskDispatchRadar({
                             : 'bg-white text-m3-on-surface-variant border-m3-outline-variant hover:bg-m3-surface-container'
                         }`}
                       >
-                        Rs.{m}
+                        ₹{m}
                       </button>
                     ))}
                   </div>
@@ -765,7 +768,7 @@ export default function DeskDispatchRadar({
                       Driver Guaranteed Payout:
                     </span>
                     <span className="text-base font-black text-m3-success font-mono">
-                      Rs. {Math.max(0, (Number(broadcastBooking.terminalFare) || 6000) - officeMargin).toLocaleString('en-IN')} Net
+                      ₹{Math.max(0, (Number(broadcastBooking.terminalFare) || 6000) - officeMargin).toLocaleString('en-IN')} Net
                     </span>
                   </div>
                   <span className="text-[10px] text-m3-on-success-container text-right">
@@ -780,7 +783,7 @@ export default function DeskDispatchRadar({
                   WhatsApp Broadcast Preview:
                 </span>
                 <div className="bg-m3-inverse-surface text-m3-inverse-on-surface/90 p-2.5 rounded-xl font-mono text-[11px] leading-relaxed whitespace-pre-line border border-m3-outline-variant/40 max-h-36 overflow-y-auto">
-                  {`🚕 *DUTY BROADCAST — KALIDASS TRAVELS*\nTrip Ref: *${broadcastBooking.bookingId}*\n\n🗓 *Travel:* ${broadcastBooking.travelDateTime}\n📍 *Route:* ${broadcastBooking.pickupAddress}\n🚗 *Required:* ${broadcastBooking.vehicleCategory} (${broadcastBooking.partySize})\n💰 *Driver Payout:* *Rs. ${Math.max(0, (Number(broadcastBooking.terminalFare) || 6000) - officeMargin).toLocaleString('en-IN')} Net*\n_(Tolls & Parking paid by guest at actuals)_\n\n📱 *First driver to reply with Car Plate & Phone gets this duty!*`}
+                  {`🚕 *DUTY BROADCAST — KALIDASS TRAVELS*\nTrip Ref: *${broadcastBooking.bookingId}*\n\n🗓 *Travel:* ${broadcastBooking.travelDateTime}\n📍 *Route:* ${broadcastBooking.pickupAddress}\n🚗 *Required:* ${broadcastBooking.vehicleCategory} (${broadcastBooking.partySize})\n💰 *Driver Payout:* *₹${Math.max(0, (Number(broadcastBooking.terminalFare) || 6000) - officeMargin).toLocaleString('en-IN')} Net*\n_(Tolls & Parking paid by guest at actuals)_\n\n📱 *First driver to reply with Car Plate & Phone gets this duty!*`}
                 </div>
               </div>
 

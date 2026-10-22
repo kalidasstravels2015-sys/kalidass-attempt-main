@@ -662,8 +662,8 @@ export default function AdminDashboard() {
       `Pickup Location: ${b.pickupAddress}\n` +
       `Open in Maps: ${mapsLink}\n` +
       `Vehicle: ${b.vehicleCategory} (Capacity: ${b.partySize})\n` +
-      `Terminal Fare: Rs.${b.terminalFare}\n` +
-      `Driver Payout: Rs.${b.chauffeurPayout}\n` +
+      `Terminal Fare: ₹${b.terminalFare}\n` +
+      `Driver Payout: ₹${b.chauffeurPayout}\n` +
       `Duty Status: Dispatched\n\n` +
       `Please call guest 15 mins prior to arrival. Safe journey!`;
     return `https://wa.me/?text=${encodeURIComponent(text)}`;
@@ -679,7 +679,7 @@ export default function AdminDashboard() {
       `Pickup Address: ${b.pickupAddress}\n` +
       `📍 Open Pickup in Maps: ${mapsLink}\n` +
       `Car Category: ${b.vehicleCategory}\n` +
-      `Estimated Fare: Rs.${b.terminalFare}\n\n` +
+      `Estimated Fare: ₹${b.terminalFare}\n\n` +
       `24x7 Operations Desk: +91 89395 39211\n` +
       `Thank you for traveling with Kalidass Travels Chennai!`;
     return `https://wa.me/?text=${encodeURIComponent(text)}`;
