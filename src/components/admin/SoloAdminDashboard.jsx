@@ -9,6 +9,7 @@ import SoloDutySlipModal from './solo/SoloDutySlipModal';
 import AiBookingParser from './solo/AiBookingParser';
 import WebsiteRadarView from './solo/WebsiteRadarView';
 import { getActiveGoogleSheetUrl, fetchRemoteGoogleSheetUrl } from '../../config/googleSheets';
+import { parseAndValidateContact, validateCustomerContact } from '../../utils/bookingContactValidator';
 
 const STORAGE_KEYS = {
   BOOKINGS: 'kt_solo_real_bookings_v8',
@@ -372,6 +373,13 @@ export default function SoloAdminDashboard() {
 
   // Convert Inquiry to Confirmed Booking (Advance Received)
   const handleConvertToConfirmed = async (newConfirmed, quoteIdToRemove) => {
+    // Strict Guard: Without valid customer name and 10-digit mobile number, enquiries cannot move to Active Trips
+    const validation = parseAndValidateContact(newConfirmed?.guestNamePhone);
+    if (!validation.isValid) {
+      showToast(validation.error || 'Cannot move to Active Trips: Customer Name and a valid 10-digit Mobile Number are strictly required.', 'error');
+      return false;
+    }
+
     const nextList = [newConfirmed, ...bookings];
     setBookings(nextList);
     if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(nextList));
@@ -392,6 +400,52 @@ export default function SoloAdminDashboard() {
 
     // Switch view automatically to Active Trips so user can allot driver
     setCurrentView('ACTIVE_TRIPS');
+    return true;
+  };
+
+  // Delete / Cancel Booking from Active Trips
+  const handleDeleteBooking = async (bookingId) => {
+    const nextList = bookings.filter(b => b.bookingId !== bookingId);
+    setBookings(nextList);
+    if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(nextList));
+
+    try {
+      await fetch('/api/admin/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'delete', bookingId })
+      });
+    } catch (e) {}
+
+    showToast(`Trip ${bookingId} has been removed.`, 'info');
+  };
+
+  // Update Customer Contact on an Active Trip
+  const handleUpdateBookingContact = async (bookingId, guestName, phone) => {
+    const validation = validateCustomerContact(guestName, phone);
+    if (!validation.isValid) {
+      showToast(validation.error || 'Please enter Customer Name and a valid 10-digit Mobile Number.', 'error');
+      return false;
+    }
+
+    const updated = bookings.map(b => (
+      b.bookingId === bookingId
+        ? { ...b, guestNamePhone: validation.formattedGuestNamePhone }
+        : b
+    ));
+    setBookings(updated);
+    if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(updated));
+
+    try {
+      await fetch('/api/admin/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'update', bookingId, guestNamePhone: validation.formattedGuestNamePhone })
+      });
+    } catch (e) {}
+
+    showToast(`Customer contact updated for trip ${bookingId}!`, 'success');
+    return true;
   };
 
   // Assign Driver
@@ -781,6 +835,8 @@ export default function SoloAdminDashboard() {
               chauffeurs={chauffeurs}
               onAssignChauffeur={handleAssignChauffeur}
               onStatusChange={handleStatusChange}
+              onDeleteBooking={handleDeleteBooking}
+              onUpdateContact={handleUpdateBookingContact}
               onOpenDutySlip={(b) => setActiveDutySlipBooking(b)}
               onOpenDriversModal={() => setCurrentView('DRIVERS')}
               showToast={showToast}

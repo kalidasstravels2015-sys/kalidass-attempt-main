@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { buildMapsBlock } from '../../../utils/whatsapp';
+import { getNextEnquiryId, getOrderedEnquiryId } from '../../../utils/sequenceGenerator';
+import { validateCustomerContact, extractValidMobile, isPlaceholderCustomerName } from '../../../utils/bookingContactValidator';
 
 /**
  * Simple 3-Step Taxi Operations Register
@@ -208,15 +210,24 @@ export default function UnifiedDutiesBoard({
 
   // Action: Advance Received ➔ Convert Enquiry to Confirmed Active Trip
   const handleLockLeadWithAdvance = (lead) => {
-    const cleanPhone = extractPhone(lead) || '9840100000';
+    const cleanPhone = extractValidMobile(lead);
+    const guestLabel = lead.guestName && !isPlaceholderCustomerName(lead.guestName)
+      ? lead.guestName.split('(')[0].trim()
+      : (lead.pickup && lead.pickup.includes('+91') ? lead.pickup.split('(')[0].trim() : '');
+
+    const validation = validateCustomerContact(guestLabel, cleanPhone);
+    if (!validation.isValid) {
+      showToast?.(validation.error || 'Customer Name and a valid 10-digit Mobile Number are required before moving to Active Trips.', 'error');
+      return;
+    }
+
     const fare = Number(lead.estimatedFare) || 6000;
     const driverShare = Math.round(fare * 0.82);
-    const guestLabel = lead.guestName || (lead.pickup.includes('+91') ? lead.pickup.split('(')[0].trim() : 'Customer');
     const routeLabel = lead.pickup.includes('+91') ? lead.drop : `${lead.pickup} ➔ ${lead.drop}`;
 
     const confirmed = {
       bookingId: `#KT-${Date.now().toString().slice(-4)}`,
-      guestNamePhone: `${guestLabel} (+91 ${cleanPhone})`,
+      guestNamePhone: validation.formattedGuestNamePhone,
       travelDateTime: lead.travelDate || 'Tomorrow @ 05:00 AM',
       pickupAddress: routeLabel,
       vehicleCategory: lead.vehicle || 'Sedan (Dzire / Etios)',
@@ -323,7 +334,7 @@ export default function UnifiedDutiesBoard({
     const cleanPhone = quickEntry.phone.replace(/[^0-9]/g, '').slice(-10);
     const fareNum = Number(quickEntry.fare) || 0;
     const newLead = {
-      quoteId: `#QT-${Date.now().toString().slice(-4)}`,
+      quoteId: getNextEnquiryId(leads),
       timestamp: new Date().toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' }),
       guestName: quickEntry.guestName.trim() || (cleanPhone ? `Customer (${cleanPhone})` : 'Phone Caller'),
       sourcePage: cleanPhone ? `${quickEntry.source} (+91 ${cleanPhone})` : quickEntry.source,
@@ -357,20 +368,20 @@ export default function UnifiedDutiesBoard({
     showToast?.(`New enquiry ${newLead.quoteId} recorded!`, 'success');
   };
 
-  // Fast Direct Advance Paid & Confirm Booking
+  // Fast Direct Advance Paid & Confirm Booking (Requires Customer Name & 10-digit Mobile)
   const handleQuickConfirmBooking = () => {
-    if (!quickEntry.phone.trim() && !quickEntry.guestName.trim()) {
-      showToast?.('Please enter Customer Name or Mobile Number', 'error');
+    const validation = validateCustomerContact(quickEntry.guestName, quickEntry.phone);
+    if (!validation.isValid) {
+      showToast?.(validation.error || 'Please enter Customer Name and a valid 10-digit Mobile Number before moving to Active Trips.', 'error');
       return;
     }
-    const cleanPhone = quickEntry.phone.replace(/[^0-9]/g, '').slice(-10);
     const fareNum = Number(quickEntry.fare) || 0;
     const advNum = Number(quickEntry.advance) || 500;
     const driverShare = Math.round(fareNum * 0.82);
 
     const newBooking = {
       bookingId: `#KT-${Date.now().toString().slice(-4)}`,
-      guestNamePhone: `${quickEntry.guestName.trim() || 'Customer'}${cleanPhone ? ` (+91 ${cleanPhone})` : ''}`,
+      guestNamePhone: validation.formattedGuestNamePhone,
       travelDateTime: quickEntry.travelDate || 'Tomorrow @ 05:00 AM',
       pickupAddress: `${quickEntry.pickup.trim() || 'Chennai'} ➔ ${quickEntry.drop.trim() || 'Outstation'}`,
       vehicleCategory: quickEntry.vehicle,
@@ -862,7 +873,7 @@ export default function UnifiedDutiesBoard({
                       <div className="flex flex-wrap items-center gap-2">
                         {/* Quote ID Badge */}
                         <span className="font-mono-code text-xs font-black bg-amber-100 text-amber-950 border border-amber-300 px-2 py-0.5 rounded-full">
-                          {lead.quoteId || `#QT-${idx + 1}`}
+                          {getOrderedEnquiryId(lead, idx, leads.length)}
                         </span>
 
                         {/* Source Tag */}

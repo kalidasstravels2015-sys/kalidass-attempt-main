@@ -54,8 +54,10 @@ export const POST: APIRoute = async ({ request, url }) => {
           quoteId = `#CALL-${100 + rowNum}`;
         } else if (data.leadType === 'whatsapp' || status.includes('WhatsApp')) {
           quoteId = `#WA-${100 + rowNum}`;
+        } else if (data.leadType === 'enquiry') {
+          quoteId = `#ENQ-${100 + rowNum}`;
         } else {
-          quoteId = `#KT-${Math.floor(1000 + Math.random() * 9000)}`;
+          quoteId = `#QT-${100 + rowNum}`;
         }
       }
 

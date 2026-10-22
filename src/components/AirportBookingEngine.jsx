@@ -10,6 +10,7 @@ import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import { trackCalculatorQuote, trackEvent, markQuoteConverted } from '../lib/analytics';
 import { buildMapsLinks } from '../utils/whatsapp';
 import { getActiveGoogleSheetUrl } from '../config/googleSheets';
+import { getNextQuotationId, peekNextQuotationId } from '../utils/sequenceGenerator';
 import tariffConfig from '../data/tariff_config.json';
 import tnBusFares from '../data/tnBusFares.json';
 
@@ -285,14 +286,14 @@ export default function AirportBookingEngine({
   // UI state
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [locationPickerOpen, setLocationPickerOpen] = useState(false);
-  const [quoteRefId, setQuoteRefId] = useState('#KT-4092');
+  const [quoteRefId, setQuoteRefId] = useState('#QT-101');
 
   const destInputRef = useRef(null);
   const cardRef = useRef(null);
   const resultRef = useRef(null);
 
   useEffect(() => {
-    setQuoteRefId('#KT-' + Math.floor(1000 + Math.random() * 9000));
+    setQuoteRefId(peekNextQuotationId());
   }, []);
 
   useEffect(() => {
@@ -572,7 +573,7 @@ export default function AirportBookingEngine({
         result = calculateOutstationAirportFare(effKm, activeVeh, userLoc);
       }
 
-      const generatedQuoteRef = '#KT-' + Math.floor(1000 + Math.random() * 9000);
+      const generatedQuoteRef = getNextQuotationId();
       setQuoteRefId(generatedQuoteRef);
       setBreakdown(result);
       setEstimate(result.total_fare);

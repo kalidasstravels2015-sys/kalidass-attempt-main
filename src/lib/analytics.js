@@ -1,5 +1,6 @@
 import { onCLS, onLCP, onFCP, onTTFB, onINP } from 'web-vitals';
 import { getActiveGoogleSheetUrl } from '../config/googleSheets';
+import { getNextQuotationId } from '../utils/sequenceGenerator';
 
 const GA_MEASUREMENT_ID = import.meta.env.PUBLIC_GA_ID || 'G-61YQMR8J7H';
 const GOOGLE_ADS_ID = import.meta.env.PUBLIC_GOOGLE_ADS_ID || 'AW-18463679349';
@@ -212,8 +213,8 @@ export const trackCalculatorQuote = (payload = {}) => {
     lastQuoteSignature = signature;
     lastQuoteTime = now;
 
-    // Use the exact quote ID visible to customer on screen (e.g. #KT-5046) if provided
-    const quoteId = payload.quoteId || payload.meta?.quoteRefId || `#KT-${Math.floor(1000 + Math.random() * 9000)}`;
+    // Use the exact quote ID visible to customer on screen (e.g. #QT-101) if provided
+    const quoteId = payload.quoteId || payload.meta?.quoteRefId || getNextQuotationId();
     lastActiveQuoteId = quoteId;
 
     const sheetUrl = getActiveGoogleSheetUrl();

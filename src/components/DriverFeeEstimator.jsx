@@ -11,6 +11,7 @@ import { buildWhatsAppUrl, buildMapsLinks } from '../utils/whatsapp';
 import tnBusFares from '../data/tnBusFares.json';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import { trackCalculatorQuote, markQuoteConverted, trackEvent } from '../lib/analytics';
+import { getNextQuotationId, peekNextQuotationId } from '../utils/sequenceGenerator';
 import { useVirtualKeyboard } from '../hooks/useVirtualKeyboard';
 
 // ── Calibrated highway distances from Chennai (km) ────────────────────────
@@ -183,10 +184,10 @@ export default function DriverFeeEstimator({
   const [fieldErrors,   setFieldErrors]   = useState({});
   const [locationPickerOpen, setLocationPickerOpen] = useState(false);
   const [pickerField, setPickerField] = useState('pickup');
-  const [quoteRefId, setQuoteRefId] = useState('#KT-4092');
+  const [quoteRefId, setQuoteRefId] = useState('#QT-101');
 
   useEffect(() => {
-    setQuoteRefId('#KT-' + Math.floor(1000 + Math.random() * 9000));
+    setQuoteRefId(peekNextQuotationId());
   }, []);
 
   const handlePinClick = (field = 'pickup') => {
@@ -287,7 +288,7 @@ export default function DriverFeeEstimator({
       if (autoAdjustedDays) setDays(d);
 
       const nights = Math.max(0, d - 1);
-      const generatedQuoteRef = '#KT-' + Math.floor(1000 + Math.random() * 9000);
+      const generatedQuoteRef = getNextQuotationId();
       setQuoteRefId(generatedQuoteRef);
 
       let calculatedFare = 0;

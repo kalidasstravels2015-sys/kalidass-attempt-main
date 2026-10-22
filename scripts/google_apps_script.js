@@ -220,6 +220,16 @@ function doPost(e) {
         }
       }
 
+      // Handle Delete / Cancel booking
+      if (data.action === 'delete' || data.action === 'cancel') {
+        if (foundRow > 0) {
+          bookSheet.deleteRow(foundRow);
+        }
+        return ContentService
+          .createTextOutput(JSON.stringify({ success: true, bookingId: bookingId, action: 'deleted' }))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+
       var bRowData = [
         bookingId,
         new Date().toLocaleString('en-IN'),
@@ -247,34 +257,42 @@ function doPost(e) {
         .setMimeType(ContentService.MimeType.JSON);
 
     } else {
-      // Record Customer Enquiry / Quote
-      var quoteId = data.quoteId || ('#KT-' + Math.floor(1000 + Math.random() * 9000));
-      var timestamp = data.timestamp || data.date || new Date().toLocaleString('en-IN');
-      var name = (data.guestName || data.name || '').trim();
-      var rawPhone = data.phone || data.mobile || data.callerPhone || '';
-      var cleanPhone = String(rawPhone).replace(/[^0-9]/g, '').slice(-10);
-      var tripType = data.tripType || data.package || 'Round Trip';
-      var pickup = data.pickup || 'Chennai';
-      var drop = data.drop || 'Outstation';
-      var vehicle = data.vehicle || 'Swift Dzire';
-      var distance = String(data.distanceKm || data.distance || 'N/A');
-      var estimate = parseInt(String(data.estimatedFare || data.fare || data.estimate || 0).replace(/[^0-9]/g, ''), 10) || 0;
-      var status = data.status || 'Rate Locked';
-      var source = data.sourcePage || data.calculatorEngine || 'Website Booking Engine';
-      var meta = typeof data.metadata === 'object' ? JSON.stringify(data.metadata) : (data.metadata || data.notes || '');
+      // Record Customer Enquiry / Quote (Numbers in order, starting from 101)
+      var isExplicitEnquiry = data.type === 'enquiry' ||
+                              data.leadType === 'enquiry' ||
+                              (data.quoteId && String(data.quoteId).startsWith('#ENQ'));
+
+      var prefix = isExplicitEnquiry ? '#ENQ-' : '#QT-';
+
+      // Check if incoming quoteId already has an in-order sequential number (>= 101)
+      var incomingId = String(data.quoteId || (data.meta && data.meta.quoteRefId) || '').trim();
+      var hasSeqNum = false;
+      if (incomingId) {
+        var numMatch = incomingId.match(/(?:QT|ENQ|KT)-?(\d+)/i);
+        if (numMatch) {
+          var n = parseInt(numMatch[1], 10);
+          if (!isNaN(n) && n >= 101 && n < 5000) {
+            hasSeqNum = true;
+          }
+        }
+      }
 
       // Check if enquiry with this quoteId already exists in Enquiries sheet
       var eLast = enqSheet.getLastRow();
       var foundEnqRow = -1;
-      if (eLast > 1) {
+      if (eLast > 1 && incomingId) {
         var eIds = enqSheet.getRange(2, 1, eLast - 1, 1).getValues();
         for (var m = 0; m < eIds.length; m++) {
-          if (String(eIds[m][0]).trim().toLowerCase() === quoteId.trim().toLowerCase()) {
+          if (String(eIds[m][0]).trim().toLowerCase() === incomingId.toLowerCase()) {
             foundEnqRow = m + 2;
             break;
           }
         }
       }
+
+      var quoteId = foundEnqRow > 0 
+        ? enqSheet.getRange(foundEnqRow, 1).getValue()
+        : (hasSeqNum ? incomingId : getNextSequenceId(enqSheet, prefix));
 
       var eRowData = [
         quoteId,
@@ -313,4 +331,66 @@ function doPost(e) {
       .createTextOutput(JSON.stringify({ success: false, error: error.toString() }))
       .setMimeType(ContentService.MimeType.JSON);
   }
+}
+
+/**
+ * Helper to compute the next sequential number starting from 101.
+ * Ensures Quotations (#QT-101+) and Enquiries (#ENQ-101+) stay strictly in order.
+ */
+function getNextSequenceId(sheet, prefix) {
+  var lastRow = sheet.getLastRow();
+  var startSeq = 101;
+  if (lastRow <= 1) {
+    return (prefix || '#QT-') + startSeq;
+  }
+
+  var values = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
+  var maxNum = startSeq - 1; // 100
+  var threshold = Math.max(500, lastRow + 200);
+
+  for (var i = 0; i < values.length; i++) {
+    var val = String(values[i][0] || '').trim();
+    var match = val.match(/(?:QT|ENQ|KT|CALL|WA)-?(\d+)/i);
+    if (match) {
+      var num = parseInt(match[1], 10);
+      if (!isNaN(num) && num >= startSeq && num <= threshold) {
+        if (num > maxNum) {
+          maxNum = num;
+        }
+      }
+    }
+  }
+
+  // If no sequential numbers exist yet among rows, calculate from row count
+  if (maxNum === startSeq - 1) {
+    maxNum = (startSeq - 1) + (lastRow - 1);
+  }
+
+  return (prefix || '#QT-') + (maxNum + 1);
+}
+
+/**
+ * Optional Maintenance Utility:
+ * Run this function from Apps Script editor to re-number any existing rows in the
+ * 'Enquiries' sheet in order starting from 101 (#ENQ-101, #ENQ-102 or #QT-101...).
+ */
+function renumberEnquiriesAndQuotesFrom101() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('Enquiries');
+  if (!sheet) return;
+  var lastRow = sheet.getLastRow();
+  if (lastRow <= 1) return;
+
+  var idsRange = sheet.getRange(2, 1, lastRow - 1, 1);
+  var values = idsRange.getValues();
+  var seq = 101;
+
+  for (var i = 0; i < values.length; i++) {
+    var currentId = String(values[i][0] || '').trim();
+    var prefix = currentId.indexOf('ENQ') !== -1 ? '#ENQ-' : '#QT-';
+    values[i][0] = prefix + seq;
+    seq++;
+  }
+
+  idsRange.setValues(values);
 }

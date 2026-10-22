@@ -23,10 +23,12 @@ import {
 } from 'lucide-react';
 import QuotationEngine from '../../QuotationEngine';
 import AirportBookingEngine from '../../AirportBookingEngine';
+import { validateCustomerContact } from '../../../utils/bookingContactValidator';
 import TourBookingEngine from '../../TourBookingEngine';
 import DriverFeeEstimator from '../../DriverFeeEstimator';
 import { TOUR_CONFIGS } from '../../../data/tourBookingConfigs.js';
 import { buildWhatsAppUrl, buildMapsBlock } from '../../../utils/whatsapp';
+import { getNextQuotationId } from '../../../utils/sequenceGenerator';
 
 const ENQUIRY_SOURCES = [
   { id: 'Google Ads Call', label: 'Google Ads Call', color: 'bg-blue-100 text-blue-800 border-blue-200' },
@@ -105,10 +107,10 @@ export default function OperatorRateCalcWorkspace({
     }
   };
 
-  // Generate unique quote ref id
+  // Generate unique quote ref id in order, starting from 101
   const quoteId = useMemo(() => {
     if (currentCalc?.quoteRefId) return currentCalc.quoteRefId;
-    return `#QT-${Date.now().toString().slice(-4)}`;
+    return getNextQuotationId();
   }, [currentCalc?.quoteRefId]);
 
   // Derived financial shares
@@ -217,10 +219,16 @@ export default function OperatorRateCalcWorkspace({
       return;
     }
 
+    const validation = validateCustomerContact(callerName, cleanPhone);
+    if (!validation.isValid) {
+      showToast?.(validation.error || 'Please enter Customer Name and a valid 10-digit Mobile Number before moving to Active Trips.', 'error');
+      return;
+    }
+
     const bookingId = quoteId.replace('#QT-', '#KT-');
     const newBooking = {
       bookingId,
-      guestNamePhone: `${callerName.trim() || 'Customer'} (+91 ${cleanPhone || '9840100000'})`,
+      guestNamePhone: validation.formattedGuestNamePhone,
       travelDateTime: currentCalc.pickupDateTime || 'Today / Tomorrow',
       pickupAddress: `${currentCalc.pickup || 'Chennai'} ➔ ${currentCalc.destination || 'Destination'}`,
       vehicleCategory: currentCalc.vehicleName || 'Sedan (Dzire / Etios)',
@@ -239,7 +247,7 @@ export default function OperatorRateCalcWorkspace({
     };
 
     onConfirmBooking?.(newBooking);
-    showToast?.(`Booking ${bookingId} confirmed! Moved to Step 2: Active Trips.`, 'success');
+    showToast?.(`Booking ${bookingId} confirmed for ${validation.cleanName}! Moved to Step 2: Active Trips.`, 'success');
     if (!isPageMode) onClose?.();
   };
 

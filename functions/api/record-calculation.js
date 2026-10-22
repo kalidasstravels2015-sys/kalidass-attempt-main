@@ -15,7 +15,8 @@ export async function onRequestPost({ request, env }) {
       } catch (e) {}
     }
 
-    const quoteId = data.quoteId || (data.meta && data.meta.quoteRefId) || ('#KT-' + Math.floor(1000 + Math.random() * 9000));
+    const isEnquiry = data.type === 'enquiry' || data.leadType === 'enquiry';
+    const quoteId = data.quoteId || (data.meta && data.meta.quoteRefId) || (isEnquiry ? '#ENQ-101' : '#QT-101');
     const url = new URL(request.url);
     const webhookUrl = url.searchParams.get('webhook') || data.webhookUrl || (env && (env.GOOGLE_SHEET_WEBHOOK_URL || env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL));
 

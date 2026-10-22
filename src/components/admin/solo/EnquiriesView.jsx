@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { buildMapsBlock } from '../../../utils/whatsapp';
+import { validateCustomerContact, extractValidMobile, isPlaceholderCustomerName } from '../../../utils/bookingContactValidator';
+import { getNextEnquiryId, getOrderedEnquiryId } from '../../../utils/sequenceGenerator';
 
 /**
  * EnquiriesView - Step 1: Inbound Customer Calls & Quotes
@@ -17,6 +19,16 @@ export default function EnquiriesView({
   const [search, setSearch] = useState('');
   const [sourceFilter, setSourceFilter] = useState('ALL');
   const [showNewCallModal, setShowNewCallModal] = useState(false);
+
+  // Modal State: Convert Enquiry to Active Trip when Name/Phone missing
+  const [convertModalLead, setConvertModalLead] = useState(null);
+  const [convertForm, setConvertForm] = useState({
+    guestName: '',
+    phone: '',
+    travelDateTime: 'Tomorrow @ 05:00 AM',
+    advancePaid: '500'
+  });
+  const [convertError, setConvertError] = useState('');
 
   const [newCall, setNewCall] = useState({
     guestName: '',
@@ -105,17 +117,35 @@ export default function EnquiriesView({
     showToast?.(`Follow-up reminder sent to ${guestName}!`, 'success');
   };
 
-  // Advance Received ➔ Move to Active Trips
+  // Advance Received ➔ Move to Active Trips (Requires Valid Name & 10-digit Phone)
   const handleLockLeadWithAdvance = (lead) => {
-    const cleanPhone = extractPhone(lead) || '9840100000';
+    const cleanPhone = extractValidMobile(lead);
+    const guestLabel = lead.guestName && !isPlaceholderCustomerName(lead.guestName)
+      ? lead.guestName.split('(')[0].trim()
+      : (lead.pickup && lead.pickup.includes('+91') ? lead.pickup.split('(')[0].trim() : '');
+
+    const validation = validateCustomerContact(guestLabel, cleanPhone);
+
+    // If either name or phone is missing/invalid, open modal so operator can enter them
+    if (!validation.isValid) {
+      setConvertModalLead(lead);
+      setConvertForm({
+        guestName: validation.cleanName || '',
+        phone: validation.cleanPhone || '',
+        travelDateTime: lead.travelDate || 'Tomorrow @ 05:00 AM',
+        advancePaid: '500'
+      });
+      setConvertError(validation.error);
+      return;
+    }
+
     const fare = Number(lead.estimatedFare) || 6000;
     const driverShare = Math.round(fare * 0.82);
-    const guestLabel = lead.guestName || (lead.pickup.includes('+91') ? lead.pickup.split('(')[0].trim() : 'Customer');
     const routeLabel = lead.pickup.includes('+91') ? lead.drop : `${lead.pickup} ➔ ${lead.drop}`;
 
     const confirmed = {
       bookingId: `#KT-${Date.now().toString().slice(-4)}`,
-      guestNamePhone: `${guestLabel} (+91 ${cleanPhone})`,
+      guestNamePhone: validation.formattedGuestNamePhone,
       travelDateTime: lead.travelDate || 'Tomorrow @ 05:00 AM',
       pickupAddress: routeLabel,
       vehicleCategory: lead.vehicle || 'Sedan (Dzire / Etios)',
@@ -137,6 +167,48 @@ export default function EnquiriesView({
     showToast?.(`✅ ₹500 Advance Received! Booking ${confirmed.bookingId} moved to Active Trips.`, 'success');
   };
 
+  // Submit modal when entering missing customer name & phone for an enquiry
+  const handleConfirmLeadConvert = (e) => {
+    e?.preventDefault?.();
+    if (!convertModalLead) return;
+
+    const validation = validateCustomerContact(convertForm.guestName, convertForm.phone);
+    if (!validation.isValid) {
+      setConvertError(validation.error);
+      showToast?.(validation.error, 'error');
+      return;
+    }
+
+    const fare = Number(convertModalLead.estimatedFare) || 6000;
+    const driverShare = Math.round(fare * 0.82);
+    const adv = Number(convertForm.advancePaid) || 500;
+    const routeLabel = convertModalLead.pickup.includes('+91') ? convertModalLead.drop : `${convertModalLead.pickup} ➔ ${convertModalLead.drop}`;
+
+    const confirmed = {
+      bookingId: `#KT-${Date.now().toString().slice(-4)}`,
+      guestNamePhone: validation.formattedGuestNamePhone,
+      travelDateTime: convertForm.travelDateTime.trim() || 'Tomorrow @ 05:00 AM',
+      pickupAddress: routeLabel,
+      vehicleCategory: convertModalLead.vehicle || 'Sedan (Dzire / Etios)',
+      partySize: '4 Pax',
+      kycStatus: 'Advance Paid',
+      darshanStatus: convertModalLead.sourcePage || convertModalLead.calculatorEngine || 'Direct Call',
+      assignedChauffeur: 'Unassigned',
+      manifestStatus: 'Need Driver',
+      terminalFare: fare,
+      chauffeurPayout: driverShare,
+      companyMargin: fare - driverShare,
+      advancePaid: adv,
+      balanceDue: Math.max(0, fare - adv),
+      financialClosure: 'Unreconciled',
+      reviewStatus: 'Pending'
+    };
+
+    onConvertToConfirmed?.(confirmed, convertModalLead.quoteId);
+    showToast?.(`✅ ₹${adv} Advance Received! Booking ${confirmed.bookingId} confirmed for ${validation.cleanName}.`, 'success');
+    setConvertModalLead(null);
+  };
+
   // Fast Phone Call Saver
   const handleQuickSaveCall = (e) => {
     e.preventDefault();
@@ -147,7 +219,7 @@ export default function EnquiriesView({
     const cleanPhone = newCall.phone.replace(/[^0-9]/g, '').slice(-10);
     const fareNum = Number(newCall.fare) || 0;
     const newLead = {
-      quoteId: `#QT-${Date.now().toString().slice(-4)}`,
+      quoteId: getNextEnquiryId(leads),
       timestamp: new Date().toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' }),
       guestName: newCall.guestName.trim() || (cleanPhone ? `Customer (${cleanPhone})` : 'Phone Caller'),
       sourcePage: cleanPhone ? `${newCall.source} (+91 ${cleanPhone})` : newCall.source,
@@ -180,20 +252,20 @@ export default function EnquiriesView({
     showToast?.(`New enquiry ${newLead.quoteId} recorded!`, 'success');
   };
 
-  // Direct Advance Received & Confirm
+  // Direct Advance Received & Confirm (Strict: Requires BOTH Customer Name & valid 10-digit Phone)
   const handleQuickConfirmBooking = () => {
-    if (!newCall.phone.trim() && !newCall.guestName.trim()) {
-      showToast?.('Please enter Customer Name or Mobile Number', 'error');
+    const validation = validateCustomerContact(newCall.guestName, newCall.phone);
+    if (!validation.isValid) {
+      showToast?.(validation.error || 'Please enter Customer Name and a valid 10-digit Mobile Number before moving to Active Trips.', 'error');
       return;
     }
-    const cleanPhone = newCall.phone.replace(/[^0-9]/g, '').slice(-10);
     const fareNum = Number(newCall.fare) || 0;
     const advNum = Number(newCall.advance) || 500;
     const driverShare = Math.round(fareNum * 0.82);
 
     const newBooking = {
       bookingId: `#KT-${Date.now().toString().slice(-4)}`,
-      guestNamePhone: `${newCall.guestName.trim() || 'Customer'}${cleanPhone ? ` (+91 ${cleanPhone})` : ''}`,
+      guestNamePhone: validation.formattedGuestNamePhone,
       travelDateTime: newCall.travelDate || 'Tomorrow @ 05:00 AM',
       pickupAddress: `${newCall.pickup.trim() || 'Chennai'} ➔ ${newCall.drop.trim() || 'Outstation'}`,
       vehicleCategory: newCall.vehicle,
@@ -363,7 +435,7 @@ export default function EnquiriesView({
                 <div className="space-y-1.5 flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="font-mono-code text-xs font-black bg-amber-100 text-amber-950 border border-amber-300 px-2 py-0.5 rounded-full">
-                      {lead.quoteId || `#QT-${idx + 1}`}
+                      {getOrderedEnquiryId(lead, idx, filteredLeads.length)}
                     </span>
 
                     <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border flex items-center gap-1 ${
@@ -613,6 +685,152 @@ export default function EnquiriesView({
                 >
                   <span className="material-symbols-outlined text-[17px]">verified</span>
                   <span>2. ₹500 Advance Received (Confirm Trip)</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Customer Contact Required to Move Enquiry to Active Trips */}
+      {convertModalLead && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-m3-surface-container-lowest border border-m3-outline-variant rounded-m3-2xl shadow-m3-4 w-full max-w-lg max-h-[92vh] overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-m3-outline-variant bg-blue-50/70 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[20px]">person_check</span>
+                </div>
+                <div>
+                  <h3 className="text-sm font-black text-blue-950">Customer Contact Details Required</h3>
+                  <p className="text-xs text-blue-900/80">Name and 10-digit mobile number are required before moving to Active Trips</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setConvertModalLead(null)}
+                className="w-8 h-8 rounded-full hover:bg-blue-200/50 flex items-center justify-center text-blue-950 font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleConfirmLeadConvert} className="p-5 overflow-y-auto space-y-4">
+              {/* Lead Summary */}
+              <div className="p-3 bg-m3-surface-container-low rounded-m3-lg border border-m3-outline-variant/70 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] font-mono-code font-bold bg-blue-100 text-blue-950 px-2 py-0.5 rounded-full">
+                    {convertModalLead.quoteId}
+                  </span>
+                  <div className="text-xs font-bold text-m3-on-surface mt-1">
+                    {convertModalLead.pickup} ➔ {convertModalLead.drop}
+                  </div>
+                  <div className="text-[11px] text-m3-on-surface-variant">
+                    🚗 {convertModalLead.vehicle}
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span className="text-xs font-black text-blue-700">
+                    ₹{Number(convertModalLead.estimatedFare || 0).toLocaleString('en-IN')}
+                  </span>
+                  <span className="block text-[10px] text-m3-on-surface-variant font-semibold">Total Fare</span>
+                </div>
+              </div>
+
+              {convertError && (
+                <div className="p-2.5 bg-red-50 border border-red-200 rounded-m3-md text-xs font-bold text-red-800 flex items-center gap-1.5 animate-shake">
+                  <span className="material-symbols-outlined text-[16px] text-red-600">error</span>
+                  <span>{convertError}</span>
+                </div>
+              )}
+
+              {/* Customer Name */}
+              <div>
+                <label className="block text-xs font-bold text-m3-on-surface mb-1 flex items-center justify-between">
+                  <span>Customer Name <span className="text-red-500">*</span></span>
+                  <span className="text-[10px] text-m3-on-surface-variant font-normal">Real passenger name</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  autoFocus
+                  placeholder="e.g. Ramesh Kumar"
+                  value={convertForm.guestName}
+                  onChange={(e) => {
+                    setConvertForm({ ...convertForm, guestName: e.target.value });
+                    if (convertError) setConvertError('');
+                  }}
+                  className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-white text-xs font-bold text-m3-on-surface focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              {/* 10-digit Phone */}
+              <div>
+                <label className="block text-xs font-bold text-m3-on-surface mb-1 flex items-center justify-between">
+                  <span>Mobile Number <span className="text-red-500">*</span></span>
+                  <span className="text-[10px] text-m3-on-surface-variant font-normal">10 digits starting with 6-9</span>
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-2.5 text-xs font-black text-m3-on-surface-variant">+91</span>
+                  <input
+                    type="tel"
+                    required
+                    maxLength={10}
+                    placeholder="98401 23456"
+                    value={convertForm.phone}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
+                      setConvertForm({ ...convertForm, phone: val });
+                      if (convertError) setConvertError('');
+                    }}
+                    className="w-full pl-12 pr-3 py-2.5 rounded-m3-md border border-m3-outline-variant bg-white text-xs font-bold text-m3-on-surface focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono-code"
+                  />
+                </div>
+              </div>
+
+              {/* Schedule & Advance */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-m3-on-surface mb-1">
+                    Pickup Schedule
+                  </label>
+                  <input
+                    type="text"
+                    value={convertForm.travelDateTime}
+                    onChange={(e) => setConvertForm({ ...convertForm, travelDateTime: e.target.value })}
+                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-white text-xs font-medium text-m3-on-surface"
+                    placeholder="e.g. Tomorrow @ 05:00 AM"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-m3-on-surface mb-1">
+                    Advance Paid (₹)
+                  </label>
+                  <input
+                    type="number"
+                    value={convertForm.advancePaid}
+                    onChange={(e) => setConvertForm({ ...convertForm, advancePaid: e.target.value })}
+                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-white text-xs font-bold text-m3-on-surface font-mono-code"
+                    placeholder="500"
+                  />
+                </div>
+              </div>
+
+              {/* Buttons */}
+              <div className="pt-2 flex items-center justify-end gap-2 border-t border-m3-outline-variant/60">
+                <button
+                  type="button"
+                  onClick={() => setConvertModalLead(null)}
+                  className="px-4 py-2 rounded-full border border-m3-outline-variant text-xs font-bold text-m3-on-surface-variant hover:bg-m3-surface-container-high transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-black shadow-m3-1 flex items-center gap-1.5 transition-all"
+                >
+                  <span className="material-symbols-outlined text-[16px]">verified</span>
+                  <span>Confirm & Move to Active Trips (Step 2)</span>
                 </button>
               </div>
             </form>

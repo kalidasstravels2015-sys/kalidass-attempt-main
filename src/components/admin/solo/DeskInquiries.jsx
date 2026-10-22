@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import AiBookingParser from './AiBookingParser';
 import DeskChatRadar from './DeskChatRadar';
 import { buildMapsBlock } from '../../../utils/whatsapp';
+import { getNextEnquiryId } from '../../../utils/sequenceGenerator';
+import { validateCustomerContact } from '../../../utils/bookingContactValidator';
 
 export default function DeskInquiries({
   leads,
@@ -43,7 +45,7 @@ export default function DeskInquiries({
     }
     const cleanPhone = quickPhoneLead.phone.replace(/[^0-9]/g, '').slice(-10);
     const newLead = {
-      quoteId: `#ENQ-${Date.now().toString().slice(-4)}`,
+      quoteId: getNextEnquiryId(leads),
       timestamp: new Date().toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' }),
       guestName: quickPhoneLead.guestName.trim() || 'Phone Caller',
       sourcePage: cleanPhone ? `${quickPhoneLead.sourceChannel} (+91 ${cleanPhone})` : quickPhoneLead.sourceChannel,
@@ -111,10 +113,15 @@ export default function DeskInquiries({
 
     const guestPhoneMatch = (advanceModalLead.sourcePage || '').match(/(?:\+91[\-\s]?)?[6-9]\d{9}/);
     const phone = guestPhoneMatch ? guestPhoneMatch[0] : '';
+    const validation = validateCustomerContact(advanceModalLead.guestName, phone);
+    if (!validation.isValid) {
+      showToast?.(validation.error || 'Customer Name and a valid 10-digit Mobile Number are required before moving to Active Trips.', 'error');
+      return;
+    }
 
     const confirmedBooking = {
       bookingId: `#KT-BOK-${Date.now().toString().slice(-4)}`,
-      guestNamePhone: `${advanceModalLead.guestName || 'Guest'} (+91 ${phone.replace(/[^0-9]/g, '').slice(-10)})`,
+      guestNamePhone: validation.formattedGuestNamePhone,
       travelDateTime: `${advanceForm.travelDate} @ ${advanceForm.pickupTime}`,
       pickupAddress: advanceForm.pickupAddress,
       vehicleCategory: advanceForm.vehicleCategory,

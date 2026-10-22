@@ -105,6 +105,56 @@ test.describe('Admin Operations Command Tower Suite', () => {
     await expect(page.locator('text=Rs.4,200').first()).toBeVisible();
   });
 
+  test('should require customer name and mobile number before moving enquiry to active trips', async ({ page }) => {
+    await page.goto('/admin/');
+    await expect(page.locator('text=Kalidass Travels').first()).toBeVisible();
+
+    // 1. Go to Website Calc Radar
+    await clickSidebarNav(page, "6. Website Calc Radar");
+    await expect(page.locator('text=Website Fare Calculator Radar')).toBeVisible();
+
+    // 2. Dispatch a test calculation
+    await page.evaluate(() => {
+      window.dispatchEvent(new CustomEvent('kt_new_calculation', {
+        detail: {
+          quoteId: '#KT-TEST-RADAR-1',
+          timestamp: 'Just now',
+          sourcePage: '/services/outstation-cabs/',
+          calculatorEngine: 'Outstation Cab Estimator',
+          tripType: 'One Way',
+          pickup: 'Chennai Airport',
+          drop: 'Mahabalipuram',
+          vehicle: 'Swift Dzire',
+          distanceKm: 55,
+          estimatedFare: 1650,
+          status: 'Calculated'
+        }
+      }));
+    });
+
+    await expect(page.locator('text=#KT-TEST-RADAR-1').first()).toBeVisible({ timeout: 5000 });
+
+    // 3. Click "+ Convert to Booking"
+    const convertBtn = page.locator('button:has-text("+ Convert to Booking")').first();
+    await convertBtn.click();
+
+    // 4. Verify conversion modal pops up requiring Customer Name & Mobile
+    await expect(page.locator('text=Convert Enquiry to Active Trip')).toBeVisible();
+    await expect(page.locator('text=Customer / Passenger Name')).toBeVisible();
+    await expect(page.locator('text=Passenger Mobile Number')).toBeVisible();
+
+    // 5. Fill valid Name & Mobile
+    await page.fill('input[placeholder="e.g. Ramesh Kumar"]', 'Suresh Raina');
+    await page.fill('input[placeholder="98401 23456"]', '9840155555');
+
+    // 6. Submit confirmation
+    await page.click('button:has-text("Confirm & Move to Active Trips")');
+
+    // 7. Verify it automatically navigates to Active Trips and shows the confirmed passenger
+    await expect(page.locator('text=2. Active Trips & Dispatch')).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('text=Suresh Raina (+91 9840155555)')).toBeVisible();
+  });
+
   test('should redirect legacy /ops to /admin/', async ({ page }) => {
     await page.goto('/ops/');
     await expect(page).toHaveURL(/\/admin\/?/);

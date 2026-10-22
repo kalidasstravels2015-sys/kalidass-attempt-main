@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import tariffConfig from '../../../data/tariff_config.json';
 import tnBusFares from '../../../data/tnBusFares.json';
 import { buildWhatsAppUrl, buildMapsBlock } from '../../../utils/whatsapp';
+import { getNextQuotationId } from '../../../utils/sequenceGenerator';
 
 // Preset high-ticket highway outstation and airport routes targeting Google Ads & Outstation callers
 const POPULAR_CALL_ROUTES = [
@@ -142,8 +143,8 @@ export default function DeskPhoneQuoteEngine({
   const [showQrModal, setShowQrModal] = useState(false);
   const [smsCopied, setSmsCopied] = useState(false);
 
-  // Auto-generate professional Quote ID
-  const quoteId = useMemo(() => `#QT-${Date.now().toString().slice(-4)}`, []);
+  // Auto-generate professional Quote ID in order, starting from 101
+  const quoteId = useMemo(() => getNextQuotationId(), []);
 
   // UPI QR Code URL for ₹500 advance
   const upiQrUrl = useMemo(() => {

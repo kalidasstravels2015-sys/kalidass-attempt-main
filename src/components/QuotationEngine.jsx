@@ -8,6 +8,7 @@ import { buildWhatsAppUrl, buildMapsLinks } from '../utils/whatsapp';
 import { useVirtualKeyboard } from '../hooks/useVirtualKeyboard';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import { getActiveGoogleSheetUrl } from '../config/googleSheets';
+import { getNextQuotationId, peekNextQuotationId } from '../utils/sequenceGenerator';
 import siteContent from '../data/siteContent.json';
 
 import tariffConfig from '../data/tariff_config.json';
@@ -545,7 +546,7 @@ export default function QuotationEngine({
   const [pickerField, setPickerField] = useState(null);
   const [mounted, setMounted] = useState(false);
   const [requestedDriver, setRequestedDriver] = useState('');
-  const [quoteRefId, setQuoteRefId] = useState('#KT-4820');
+  const [quoteRefId, setQuoteRefId] = useState(() => (typeof window !== 'undefined' ? peekNextQuotationId() : '#QT-101'));
   const [showStickyQuoteBar, setShowStickyQuoteBar] = useState(false);
   const [vehicleHighlighted, setVehicleHighlighted] = useState(false);
   const stableFormId = "booking-form-v1"; // Using stable ID for hydration safety
@@ -779,7 +780,9 @@ export default function QuotationEngine({
           localPackage: activeTab === 'local' ? localPackage : undefined,
         }
       });
-      const formattedRef = rawId ? String(rawId).replace('#CALC-', '#KT-') : `#KT-${Math.floor(1000 + Math.random() * 9000)}`;
+      const formattedRef = (rawId && (String(rawId).startsWith('#QT-') || String(rawId).startsWith('#KT-'))) 
+        ? String(rawId) 
+        : getNextQuotationId();
       setQuoteRefId(formattedRef);
 
       if (typeof window !== 'undefined') {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { validateCustomerContact } from '../../../utils/bookingContactValidator';
 
 // In-browser Instant Parser (0ms latency fallback)
 function parseBookingInquiryClient(rawText, phoneInput = '', guestNameInput = '') {
@@ -308,14 +309,21 @@ export default function AiBookingParser({ onBookingCreated, onLeadCreated, showT
   // Action 2: Save as Confirmed Booking in Stage 2 (Need Driver)
   const handleSaveAsBooking = async () => {
     if (!parsedData) return;
+    const name = parsedData.guestName || customerName || '';
     const phone = parsedData.phone || customerPhone || '';
-    const cleanPhone = phone.replace(/[^0-9]/g, '').slice(-10);
+    const validation = validateCustomerContact(name, phone);
+    if (!validation.isValid) {
+      showToast?.(validation.error || 'Customer Name and a valid 10-digit Mobile Number are required before saving as Active Booking.', 'error');
+      return;
+    }
+
+    const cleanPhone = validation.cleanPhone;
     const adv = parsedData.advanceSuggested || 0;
     const fare = parsedData.estimatedFare || 0;
     const driverPayout = parsedData.chauffeurPayout || Math.round(fare * 0.82);
 
     const payload = {
-      name: parsedData.guestName || customerName || 'Customer',
+      name: validation.cleanName,
       phone: cleanPhone,
       pickupDate: parsedData.travelDate,
       pickupTime: parsedData.pickupTime,

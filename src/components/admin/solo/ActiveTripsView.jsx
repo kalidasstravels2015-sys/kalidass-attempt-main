@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { parseAndValidateContact, validateCustomerContact } from '../../../utils/bookingContactValidator';
 
 /**
  * ActiveTripsView - Step 2: Confirmed Active Trips & Driver Dispatch
@@ -10,6 +11,8 @@ export default function ActiveTripsView({
   chauffeurs = [],
   onAssignChauffeur,
   onStatusChange,
+  onDeleteBooking,
+  onUpdateContact,
   onOpenDutySlip,
   onOpenDriversModal,
   showToast
@@ -18,6 +21,11 @@ export default function ActiveTripsView({
   const [statusFilter, setStatusFilter] = useState('ALL'); // 'ALL' | 'NEED_DRIVER' | 'ON_TRIP'
   const [showOutsideFormId, setShowOutsideFormId] = useState(null);
   const [outsideDriverMap, setOutsideDriverMap] = useState({});
+
+  // Modal State: Update passenger details for incomplete/existing trips
+  const [editingContactBooking, setEditingContactBooking] = useState(null);
+  const [editContactForm, setEditContactForm] = useState({ name: '', phone: '' });
+  const [editContactError, setEditContactError] = useState('');
 
   const activeBookings = useMemo(
     () => bookings.filter(b => b.manifestStatus !== 'Completed' && b.manifestStatus !== 'Cancelled'),
@@ -248,9 +256,9 @@ export default function ActiveTripsView({
               >
                 {/* Top Row: Trip Info & Money Summary */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-3 items-start">
-                  {/* 1. Booking ID & Passenger */}
+                  {/* 1. Booking ID, Passenger & Actions */}
                   <div>
-                    <div className="flex items-center gap-2 mb-1">
+                    <div className="flex items-center gap-1.5 mb-1.5 flex-wrap">
                       <span className="font-mono-code text-xs font-black bg-blue-100 text-blue-950 border border-blue-300 px-2 py-0.5 rounded-full">
                         {b.bookingId}
                       </span>
@@ -261,9 +269,77 @@ export default function ActiveTripsView({
                       }`}>
                         {isUnassigned ? '⚠️ Need Driver' : `Driver Assigned`}
                       </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (window.confirm(`Are you sure you want to cancel and remove booking ${b.bookingId}?`)) {
+                            onDeleteBooking?.(b.bookingId);
+                          }
+                        }}
+                        className="ml-auto text-[11px] font-bold text-red-600 hover:text-red-800 hover:bg-red-50 px-2 py-0.5 rounded transition-colors flex items-center gap-0.5"
+                        title="Cancel and remove trip from Active Trips"
+                      >
+                        <span className="material-symbols-outlined text-[13px]">delete</span>
+                        <span>Cancel</span>
+                      </button>
                     </div>
-                    <div className="text-sm font-black text-m3-on-surface">{b.guestNamePhone}</div>
-                    <div className="text-xs text-m3-on-surface-variant flex items-center gap-1 mt-0.5">
+
+                    {/* Passenger Name & Phone with Validation */}
+                    {(() => {
+                      const contact = parseAndValidateContact(b.guestNamePhone);
+                      if (!contact.isValid) {
+                        return (
+                          <div className="space-y-1">
+                            <div className="text-sm font-black text-amber-950 flex items-center gap-1">
+                              <span>{b.guestNamePhone}</span>
+                            </div>
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span className="text-[10px] font-black bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                <span className="material-symbols-outlined text-[12px] text-amber-700">warning</span>
+                                Incomplete Contact
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setEditingContactBooking(b);
+                                  setEditContactForm({
+                                    name: contact.cleanName || '',
+                                    phone: contact.cleanPhone || ''
+                                  });
+                                  setEditContactError('');
+                                }}
+                                className="text-[11px] font-bold text-blue-700 hover:text-blue-950 underline flex items-center gap-0.5"
+                              >
+                                <span className="material-symbols-outlined text-[13px]">edit</span>
+                                <span>+ Add Name & Phone</span>
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      }
+                      return (
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-sm font-black text-m3-on-surface">{b.guestNamePhone}</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditingContactBooking(b);
+                              setEditContactForm({
+                                name: contact.cleanName || '',
+                                phone: contact.cleanPhone || ''
+                              });
+                              setEditContactError('');
+                            }}
+                            className="w-5 h-5 rounded hover:bg-m3-surface-container-high text-m3-on-surface-variant flex items-center justify-center transition-colors"
+                            title="Edit passenger name & phone"
+                          >
+                            <span className="material-symbols-outlined text-[13px]">edit</span>
+                          </button>
+                        </div>
+                      );
+                    })()}
+
+                    <div className="text-xs text-m3-on-surface-variant flex items-center gap-1 mt-1">
                       <span className="material-symbols-outlined text-[14px]">schedule</span>
                       <span className="font-bold text-m3-on-surface">{b.travelDateTime}</span>
                     </div>
@@ -467,6 +543,112 @@ export default function ActiveTripsView({
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* Modal: Edit / Add Customer Contact on Active Trip */}
+      {editingContactBooking && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-m3-surface-container-lowest border border-m3-outline-variant rounded-m3-2xl shadow-m3-4 w-full max-w-md overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-m3-outline-variant bg-blue-50/70 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[18px]">person</span>
+                </div>
+                <div>
+                  <h3 className="text-sm font-black text-blue-950">Update Passenger Contact</h3>
+                  <p className="text-xs text-blue-900/80">{editingContactBooking.bookingId} • Required for driver dispatch</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingContactBooking(null)}
+                className="w-8 h-8 rounded-full hover:bg-blue-200/50 flex items-center justify-center text-blue-950 font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const validation = validateCustomerContact(editContactForm.name, editContactForm.phone);
+                if (!validation.isValid) {
+                  setEditContactError(validation.error);
+                  showToast?.(validation.error, 'error');
+                  return;
+                }
+                const success = await onUpdateContact?.(editingContactBooking.bookingId, validation.cleanName, validation.cleanPhone);
+                if (success) {
+                  setEditingContactBooking(null);
+                }
+              }}
+              className="p-5 space-y-4"
+            >
+              {editContactError && (
+                <div className="p-2.5 bg-red-50 border border-red-200 rounded-m3-md text-xs font-bold text-red-800 flex items-center gap-1.5 animate-shake">
+                  <span className="material-symbols-outlined text-[16px] text-red-600">error</span>
+                  <span>{editContactError}</span>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs font-bold text-m3-on-surface mb-1">
+                  Customer / Passenger Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  autoFocus
+                  placeholder="e.g. Ramesh Kumar"
+                  value={editContactForm.name}
+                  onChange={(e) => {
+                    setEditContactForm({ ...editContactForm, name: e.target.value });
+                    if (editContactError) setEditContactError('');
+                  }}
+                  className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-white text-xs font-bold text-m3-on-surface focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-m3-on-surface mb-1">
+                  Mobile Number (10 digits) <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-2.5 text-xs font-black text-m3-on-surface-variant">+91</span>
+                  <input
+                    type="tel"
+                    required
+                    maxLength={10}
+                    placeholder="98401 23456"
+                    value={editContactForm.phone}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
+                      setEditContactForm({ ...editContactForm, phone: val });
+                      if (editContactError) setEditContactError('');
+                    }}
+                    className="w-full pl-12 pr-3 py-2.5 rounded-m3-md border border-m3-outline-variant bg-white text-xs font-bold text-m3-on-surface focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono-code"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-2 flex items-center justify-end gap-2 border-t border-m3-outline-variant/60">
+                <button
+                  type="button"
+                  onClick={() => setEditingContactBooking(null)}
+                  className="px-4 py-2 rounded-full border border-m3-outline-variant text-xs font-bold text-m3-on-surface-variant hover:bg-m3-surface-container-high"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-black shadow-m3-1"
+                >
+                  Save Contact Details
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>

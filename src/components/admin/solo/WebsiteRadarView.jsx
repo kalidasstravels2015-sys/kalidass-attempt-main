@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { buildMapsBlock } from '../../../utils/whatsapp';
+import { validateCustomerContact } from '../../../utils/bookingContactValidator';
 
 /**
  * WebsiteRadarView - Left Sidebar View
@@ -16,6 +17,16 @@ export default function WebsiteRadarView({
 
   const [showGuide, setShowGuide] = useState(false);
   const [viewTab, setViewTab] = useState('FEED'); // 'FEED' | 'INTELLIGENCE'
+
+  // Modal State: Convert Enquiry to Active Trip requires Name & Phone
+  const [convertingQuote, setConvertingQuote] = useState(null);
+  const [convertForm, setConvertForm] = useState({
+    guestName: '',
+    phone: '',
+    travelDateTime: 'Tomorrow @ 05:00 AM',
+    advancePaid: '500'
+  });
+  const [formError, setFormError] = useState('');
 
   const validQuotes = useMemo(() => {
     const map = new Map();
@@ -217,33 +228,57 @@ export default function WebsiteRadarView({
     showToast?.('WhatsApp quote opened!', 'success');
   };
 
-  // Convert Quote to Active Trip if customer calls to confirm
-  const handleConvertToBooking = (quote) => {
-    const fare = Number(quote.estimatedFare) || 0;
+  // Open Modal: Convert Quote to Active Trip (Requires Customer Name & Mobile)
+  const handleOpenConvertModal = (quote) => {
+    setConvertingQuote(quote);
+    setConvertForm({
+      guestName: '',
+      phone: '',
+      travelDateTime: quote.travelDate || 'Tomorrow @ 05:00 AM',
+      advancePaid: '500'
+    });
+    setFormError('');
+  };
+
+  // Confirm and move to Active Trips only when Name & Phone are valid
+  const handleConfirmConvert = (e) => {
+    e?.preventDefault?.();
+    if (!convertingQuote) return;
+
+    const validation = validateCustomerContact(convertForm.guestName, convertForm.phone);
+    if (!validation.isValid) {
+      setFormError(validation.error);
+      showToast?.(validation.error, 'error');
+      return;
+    }
+
+    const fare = Number(convertingQuote.estimatedFare) || 0;
     const driverShare = Math.round(fare * 0.82);
+    const adv = Number(convertForm.advancePaid) || 500;
 
     const newBooking = {
       bookingId: `#KT-${Date.now().toString().slice(-4)}`,
-      guestNamePhone: `Website Caller (${quote.quoteId})`,
-      travelDateTime: 'Tomorrow @ 05:00 AM',
-      pickupAddress: `${quote.pickup} ➔ ${quote.drop}`,
-      vehicleCategory: quote.vehicle || 'Sedan (Dzire / Etios)',
+      guestNamePhone: validation.formattedGuestNamePhone,
+      travelDateTime: convertForm.travelDateTime.trim() || 'Tomorrow @ 05:00 AM',
+      pickupAddress: `${convertingQuote.pickup} ➔ ${convertingQuote.drop}`,
+      vehicleCategory: convertingQuote.vehicle || 'Sedan (Dzire / Etios)',
       partySize: '4 Pax',
       kycStatus: 'Advance Paid',
-      darshanStatus: quote.calculatorEngine || 'Website Calculator',
+      darshanStatus: convertingQuote.calculatorEngine || 'Website Calculator',
       assignedChauffeur: 'Unassigned',
       manifestStatus: 'Need Driver',
       terminalFare: fare,
       chauffeurPayout: driverShare,
       companyMargin: fare - driverShare,
-      advancePaid: 500,
-      balanceDue: Math.max(0, fare - 500),
+      advancePaid: adv,
+      balanceDue: Math.max(0, fare - adv),
       financialClosure: 'Unreconciled',
       reviewStatus: 'Pending'
     };
 
     onConvertToConfirmed?.(newBooking);
-    showToast?.(`Converted ${quote.quoteId} into confirmed booking! Check Active Trips.`, 'success');
+    showToast?.(`✅ Booking ${newBooking.bookingId} confirmed for ${validation.cleanName}! Check Active Trips.`, 'success');
+    setConvertingQuote(null);
   };
 
   return (
@@ -685,9 +720,9 @@ export default function WebsiteRadarView({
 
                       <button
                         type="button"
-                        onClick={() => handleConvertToBooking(q)}
+                        onClick={() => handleOpenConvertModal(q)}
                         className="h-9 px-3.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-xs font-bold flex items-center gap-1 shadow-xs transition-all"
-                        title="Customer called to book! Convert directly to Step 2: Active Trips"
+                        title="Customer called to book! Enter customer name & phone to move to Step 2: Active Trips"
                       >
                         <span className="material-symbols-outlined text-[15px]">verified</span>
                         <span>+ Convert to Booking</span>
@@ -699,6 +734,149 @@ export default function WebsiteRadarView({
             </div>
           )}
         </>
+      )}
+
+      {/* Modal: Convert Enquiry to Active Trip (Requires Customer Name & Mobile) */}
+      {convertingQuote && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-m3-surface-container-lowest border border-m3-outline-variant rounded-m3-2xl shadow-m3-4 w-full max-w-lg max-h-[92vh] overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-m3-outline-variant bg-emerald-50/70 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[20px]">verified</span>
+                </div>
+                <div>
+                  <h3 className="text-sm font-black text-emerald-950">Convert Enquiry to Active Trip</h3>
+                  <p className="text-xs text-emerald-900/80">Customer name & 10-digit mobile are required for driver dispatch</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setConvertingQuote(null)}
+                className="w-8 h-8 rounded-full hover:bg-emerald-200/50 flex items-center justify-center text-emerald-950 font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleConfirmConvert} className="p-5 overflow-y-auto space-y-4">
+              {/* Route & Quoted Fare Summary Card */}
+              <div className="p-3 bg-m3-surface-container-low rounded-m3-lg border border-m3-outline-variant/70 flex items-center justify-between">
+                <div>
+                  <div className="text-xs font-bold text-m3-on-surface">
+                    {convertingQuote.pickup} ➔ {convertingQuote.drop}
+                  </div>
+                  <div className="text-[11px] text-m3-on-surface-variant mt-0.5">
+                    🚗 {convertingQuote.vehicle} • {convertingQuote.tripType || 'One Way'}
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span className="text-xs font-black text-emerald-700">
+                    ₹{Number(convertingQuote.estimatedFare || 0).toLocaleString('en-IN')}
+                  </span>
+                  <span className="block text-[10px] text-m3-on-surface-variant font-semibold">Total Fare</span>
+                </div>
+              </div>
+
+              {formError && (
+                <div className="p-2.5 bg-red-50 border border-red-200 rounded-m3-md text-xs font-bold text-red-800 flex items-center gap-1.5 animate-shake">
+                  <span className="material-symbols-outlined text-[16px] text-red-600">error</span>
+                  <span>{formError}</span>
+                </div>
+              )}
+
+              {/* Required: Passenger Name */}
+              <div>
+                <label className="block text-xs font-bold text-m3-on-surface mb-1 flex items-center justify-between">
+                  <span>Customer / Passenger Name <span className="text-red-500">*</span></span>
+                  <span className="text-[10px] text-m3-on-surface-variant font-normal">Cannot be blank or generic</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  autoFocus
+                  placeholder="e.g. Ramesh Kumar"
+                  value={convertForm.guestName}
+                  onChange={(e) => {
+                    setConvertForm({ ...convertForm, guestName: e.target.value });
+                    if (formError) setFormError('');
+                  }}
+                  className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-white text-xs font-bold text-m3-on-surface focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+
+              {/* Required: 10-Digit Mobile Number */}
+              <div>
+                <label className="block text-xs font-bold text-m3-on-surface mb-1 flex items-center justify-between">
+                  <span>Passenger Mobile Number <span className="text-red-500">*</span></span>
+                  <span className="text-[10px] text-m3-on-surface-variant font-normal">10 digits starting with 6-9</span>
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-2.5 text-xs font-black text-m3-on-surface-variant">+91</span>
+                  <input
+                    type="tel"
+                    required
+                    maxLength={10}
+                    placeholder="98401 23456"
+                    value={convertForm.phone}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);
+                      setConvertForm({ ...convertForm, phone: val });
+                      if (formError) setFormError('');
+                    }}
+                    className="w-full pl-12 pr-3 py-2.5 rounded-m3-md border border-m3-outline-variant bg-white text-xs font-bold text-m3-on-surface focus:outline-none focus:ring-2 focus:ring-emerald-500 font-mono-code"
+                  />
+                </div>
+              </div>
+
+              {/* Schedule and Advance Received */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-m3-on-surface mb-1">
+                    Pickup Schedule
+                  </label>
+                  <input
+                    type="text"
+                    value={convertForm.travelDateTime}
+                    onChange={(e) => setConvertForm({ ...convertForm, travelDateTime: e.target.value })}
+                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-white text-xs font-medium text-m3-on-surface"
+                    placeholder="e.g. Tomorrow @ 05:00 AM"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-m3-on-surface mb-1">
+                    Advance Paid (₹)
+                  </label>
+                  <input
+                    type="number"
+                    value={convertForm.advancePaid}
+                    onChange={(e) => setConvertForm({ ...convertForm, advancePaid: e.target.value })}
+                    className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-white text-xs font-bold text-m3-on-surface font-mono-code"
+                    placeholder="500"
+                  />
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="pt-2 flex items-center justify-end gap-2 border-t border-m3-outline-variant/60">
+                <button
+                  type="button"
+                  onClick={() => setConvertingQuote(null)}
+                  className="px-4 py-2 rounded-full border border-m3-outline-variant text-xs font-bold text-m3-on-surface-variant hover:bg-m3-surface-container-high transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black shadow-m3-1 flex items-center gap-1.5 transition-all"
+                >
+                  <span className="material-symbols-outlined text-[16px]">verified</span>
+                  <span>Confirm & Move to Active Trips (Step 2)</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   );
