@@ -146,6 +146,73 @@ export default function ActiveTripsView({
     showToast?.(`Duty slip sent to driver!`, 'success');
   };
 
+  // 1-Click Add to Google Calendar with reminders
+  const handleAddToGoogleCalendar = (b) => {
+    const guestClean = (b.guestNamePhone || 'Guest').split('(')[0].trim();
+    const title = `🚕 Kalidass Cab: ${guestClean} (${b.bookingId || 'Trip'})`;
+    const location = b.pickupAddress || 'Chennai';
+
+    // Parse pickup datetime (e.g., "25th october 2026 4:45 AM", "Tomorrow @ 05:00 AM", or "25 Oct 2026 @ 05:00 AM")
+    let startDate = new Date();
+    try {
+      const rawStr = (b.travelDateTime || '').trim();
+      if (/tomorrow/i.test(rawStr)) {
+        startDate.setDate(startDate.getDate() + 1);
+        const timeMatch = rawStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
+        if (timeMatch) {
+          let hrs = parseInt(timeMatch[1], 10);
+          const mins = parseInt(timeMatch[2], 10);
+          const ampm = (timeMatch[3] || '').toUpperCase();
+          if (ampm === 'PM' && hrs < 12) hrs += 12;
+          if (ampm === 'AM' && hrs === 12) hrs = 0;
+          startDate.setHours(hrs, mins, 0, 0);
+        }
+      } else {
+        const cleanDateStr = rawStr
+          .replace(/(\d+)(st|nd|rd|th)/gi, '$1')
+          .replace(/@/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+        const parsed = new Date(cleanDateStr);
+        if (!isNaN(parsed.getTime())) {
+          startDate = parsed;
+        }
+      }
+    } catch (_) {}
+
+    const pad = (n) => String(n).padStart(2, '0');
+    const toGCalString = (d) =>
+      `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+
+    // Default 10 hours for day trip
+    const endDate = new Date(startDate.getTime() + 10 * 60 * 60 * 1000);
+    const dates = `${toGCalString(startDate)}/${toGCalString(endDate)}`;
+
+    const fare = Number(b.terminalFare) || 0;
+    const adv = Number(b.advancePaid) || 0;
+    const bal = Math.max(0, fare - adv);
+
+    const details =
+      `📌 Booking ID: ${b.bookingId}\n` +
+      `👤 Passenger: ${b.guestNamePhone}\n` +
+      `🚗 Vehicle: ${b.vehicleCategory} (${b.partySize || '4 Pax'})\n` +
+      `📍 Route: ${b.pickupAddress}\n` +
+      `⏰ Pickup Time: ${b.travelDateTime}\n` +
+      `👨‍✈️ Driver: ${b.assignedChauffeur || 'Unassigned'}\n\n` +
+      `💰 FARE & ACCOUNTS:\n` +
+      `• Total Fare: Rs.${fare.toLocaleString('en-IN')}\n` +
+      `• Advance Paid: Rs.${adv.toLocaleString('en-IN')}\n` +
+      `• Balance to Collect by Driver: Rs.${bal.toLocaleString('en-IN')}\n\n` +
+      `⚠️ DISPATCH CHECKLIST:\n` +
+      `1. Evening prior (8:00 PM): Assign Driver & send Duty Slip on WhatsApp\n` +
+      `2. 30 mins prior: Check Driver is on route\n` +
+      `3. 15 mins prior: Driver arrives at Gate/Tower`;
+
+    const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${dates}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}&ctz=Asia/Kolkata`;
+    window.open(gcalUrl, '_blank');
+    showToast?.(`Opening Google Calendar for ${b.bookingId}...`, 'info');
+  };
+
   return (
     <div className="space-y-4 animate-fadeIn">
       {/* Page Header Bar */}
@@ -271,6 +338,15 @@ export default function ActiveTripsView({
                       </span>
                       <button
                         type="button"
+                        onClick={() => handleAddToGoogleCalendar(b)}
+                        className="text-[11px] font-bold text-m3-primary hover:bg-m3-primary/10 border border-m3-primary/30 px-2 py-0.5 rounded-full transition-colors flex items-center gap-1 shadow-xs"
+                        title="Add trip & follow-up reminders to Google Calendar"
+                      >
+                        <span className="material-symbols-outlined text-[13px]">calendar_today</span>
+                        <span>+ Calendar</span>
+                      </button>
+                      <button
+                        type="button"
                         onClick={() => {
                           if (window.confirm(`Are you sure you want to cancel and remove booking ${b.bookingId}?`)) {
                             onDeleteBooking?.(b.bookingId);
@@ -394,6 +470,16 @@ export default function ActiveTripsView({
                           >
                             + Outside Cab
                           </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleAddToGoogleCalendar(b)}
+                            className="h-7 px-2.5 bg-m3-surface-container-lowest hover:bg-m3-surface-container-high border border-m3-outline-variant rounded-full text-[11px] font-bold text-m3-primary flex items-center gap-1 transition-colors"
+                            title="Add to Google Calendar"
+                          >
+                            <span className="material-symbols-outlined text-[13px]">event</span>
+                            <span>Calendar</span>
+                          </button>
                         </div>
                       </div>
                     ) : (
@@ -507,6 +593,16 @@ export default function ActiveTripsView({
                           <span>Meter KM & Tolls</span>
                         </button>
                       )}
+
+                      <button
+                        type="button"
+                        onClick={() => handleAddToGoogleCalendar(b)}
+                        className="h-8 px-3 bg-m3-surface-container-low hover:bg-m3-surface-container-high text-m3-primary border border-m3-primary/30 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                        title="Add trip to Google Calendar"
+                      >
+                        <span className="material-symbols-outlined text-[15px]">calendar_today</span>
+                        <span>Calendar</span>
+                      </button>
                     </div>
 
                     <div className="flex flex-wrap items-center gap-1.5">
