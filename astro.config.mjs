@@ -441,6 +441,7 @@ ${promptCtx}`;
 
                   if (fs.existsSync(csvPath)) {
                     const content = fs.readFileSync(csvPath, 'utf8');
+                    const lines = content.trim().split(/\r?\n/).filter(Boolean);
                     const rowNum = lines.length;
                     const isEnquiry = data.type === 'enquiry' || data.leadType === 'enquiry';
                     const defaultPrefix = isEnquiry ? '#ENQ-' : '#QT-';

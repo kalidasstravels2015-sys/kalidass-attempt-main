@@ -828,6 +828,8 @@ export default function SoloAdminDashboard() {
           {currentView === 'ENQUIRIES' && (
             <EnquiriesView
               leads={leads}
+              calculatorQuotes={calculatorQuotes}
+              onNavigateToRadar={() => setCurrentView('WEB_RADAR')}
               onAddManualLead={handleAddManualLead}
               onConvertToConfirmed={handleConvertToConfirmed}
               onOpenPhoneQuoteEngine={() => setIsPhoneQuoteModalOpen(true)}

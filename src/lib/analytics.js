@@ -1,5 +1,5 @@
 import { onCLS, onLCP, onFCP, onTTFB, onINP } from 'web-vitals';
-import { getActiveGoogleSheetUrl } from '../config/googleSheets';
+import { getActiveGoogleSheetUrl, fetchRemoteGoogleSheetUrl } from '../config/googleSheets';
 import { getNextQuotationId, isSequentialId } from '../utils/sequenceGenerator';
 
 const GA_MEASUREMENT_ID = import.meta.env.PUBLIC_GA_ID || 'G-61YQMR8J7H';
@@ -97,6 +97,9 @@ export const initAnalytics = () => {
         window.addEventListener('touchstart', trigger, { once: true, passive: true });
         window.addEventListener('keydown', trigger, { once: true, passive: true });
     };
+
+    // Always fetch remote Google Sheet Webhook URL in background for visitor calculations
+    fetchRemoteGoogleSheetUrl().catch(() => {});
 
     // Immediate initialization for Google Ads traffic or Tag Assistant verification
     if (isGoogleAuditOrAd) {

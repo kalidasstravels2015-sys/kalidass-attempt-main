@@ -47,7 +47,19 @@ export async function onRequestGet({ request, env }) {
     }
 
     const localBufferQuotes = getRecentQuotes();
-    return new Response(JSON.stringify({ success: true, count: 0, leads: [], calculatorQuotes: localBufferQuotes }), {
+    const actionLeads = localBufferQuotes.filter(q => {
+      if (!q) return false;
+      const statusLower = (q.status || '').toLowerCase();
+      const hasPhone = Boolean(q.phone && String(q.phone).replace(/\D/g, '').length >= 10);
+      return hasPhone || statusLower.includes('whatsapp') || statusLower.includes('call') || (q.quoteId || '').startsWith('#ENQ') || (q.quoteId || '').startsWith('#QT');
+    });
+
+    return new Response(JSON.stringify({
+      success: true,
+      count: actionLeads.length,
+      leads: actionLeads,
+      calculatorQuotes: localBufferQuotes
+    }), {
       status: 200,
       headers: {
         'Content-Type': 'application/json; charset=utf-8',

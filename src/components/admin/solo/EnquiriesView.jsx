@@ -10,6 +10,8 @@ import { getNextEnquiryId, getOrderedEnquiryId, getNextBookingId, isSequentialId
  */
 export default function EnquiriesView({
   leads = [],
+  calculatorQuotes = [],
+  onNavigateToRadar,
   onAddManualLead,
   onConvertToConfirmed,
   onOpenPhoneQuoteEngine,
@@ -59,24 +61,47 @@ export default function EnquiriesView({
     [leads]
   );
 
+  const validVisitorQuotes = useMemo(() => {
+    const map = new Map();
+    (calculatorQuotes || []).forEach(q => {
+      if (!q) return;
+      const fare = Number(q.estimatedFare || q.fare || q.estimate || 0);
+      if (fare <= 0) return;
+      if ((q.drop || '').toLowerCase().includes('whatsapp chat')) return;
+      const idKey = (q.quoteId || '').trim();
+      const dedupKey = idKey || `${q.pickup}_${q.drop}_${fare}_${q.vehicle}`;
+      if (!map.has(dedupKey)) {
+        map.set(dedupKey, q);
+      }
+    });
+    return Array.from(map.values());
+  }, [calculatorQuotes]);
+
+  const baseList = useMemo(() => {
+    if (sourceFilter === 'VISITORS') {
+      return validVisitorQuotes;
+    }
+    return validLeads;
+  }, [sourceFilter, validVisitorQuotes, validLeads]);
+
   const filteredLeads = useMemo(() => {
-    return validLeads.filter(l => {
+    return baseList.filter(l => {
       const q = search.toLowerCase().trim();
-      const combined = `${l.guestName || ''} ${l.pickup || ''} ${l.drop || ''} ${l.vehicle || ''} ${l.quoteId || ''} ${l.sourcePage || ''}`.toLowerCase();
+      const combined = `${l.guestName || ''} ${l.pickup || ''} ${l.drop || ''} ${l.vehicle || ''} ${l.quoteId || ''} ${l.sourcePage || ''} ${l.calculatorEngine || ''}`.toLowerCase();
       if (q && !combined.includes(q)) return false;
 
       if (sourceFilter === 'GOOGLE_ADS') {
         return combined.includes('google ads') || combined.includes('call campaign');
       }
       if (sourceFilter === 'WHATSAPP') {
-        return (l.quoteId || '').startsWith('#WA') || combined.includes('whatsapp');
+        return (l.quoteId || '').startsWith('#WA') || (l.status || '').toLowerCase().includes('whatsapp') || combined.includes('whatsapp');
       }
       if (sourceFilter === 'PHONE') {
         return combined.includes('phone') || combined.includes('call') || combined.includes('direct');
       }
       return true;
     });
-  }, [validLeads, search, sourceFilter]);
+  }, [baseList, search, sourceFilter]);
 
   // Send WhatsApp Quote
   const handleSendQuoteWA = (lead) => {
@@ -331,6 +356,36 @@ export default function EnquiriesView({
         </div>
       </div>
 
+      {/* Website Visitor Live Radar Quick Access Callout */}
+      {validVisitorQuotes.length > 0 && sourceFilter !== 'VISITORS' && (
+        <div className="bg-m3-surface-container-low border border-m3-outline-variant/70 p-3 rounded-m3-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs animate-fadeIn">
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-m3-primary text-[20px]">radar</span>
+            <span className="text-m3-on-surface">
+              <strong>{validVisitorQuotes.length} Website Visitors</strong> recently calculated cab fares on your website!
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setSourceFilter('VISITORS')}
+              className="px-3 py-1 bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container rounded-full text-xs font-bold transition-all"
+            >
+              Show Here ({validVisitorQuotes.length})
+            </button>
+            {onNavigateToRadar && (
+              <button
+                type="button"
+                onClick={onNavigateToRadar}
+                className="px-3 py-1 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-full text-xs font-bold transition-all"
+              >
+                Open Live Radar ➔
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Filter & Search Bar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 px-1">
         <div className="relative flex-1 max-w-md">
@@ -357,7 +412,8 @@ export default function EnquiriesView({
 
         <div className="flex flex-wrap items-center gap-1.5">
           {[
-            { id: 'ALL', label: `All (${validLeads.length})` },
+            { id: 'ALL', label: `All Calls & Enquiries (${validLeads.length})` },
+            { id: 'VISITORS', label: `🌐 Website Visitors (${validVisitorQuotes.length})` },
             { id: 'GOOGLE_ADS', label: 'Google Ads' },
             { id: 'WHATSAPP', label: 'WhatsApp' },
             { id: 'PHONE', label: 'Direct Calls' }
@@ -418,9 +474,11 @@ export default function EnquiriesView({
 
                     <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1 bg-m3-secondary-container text-m3-on-secondary-container">
                       <span className="material-symbols-outlined text-[13px]">
-                        {isGoogleAds ? 'campaign' : isWhatsApp ? 'chat' : 'call'}
+                        {isGoogleAds ? 'campaign' : isWhatsApp ? 'chat' : (lead.calculatorEngine || (lead.guestName || '').includes('Visitor')) ? 'radar' : 'call'}
                       </span>
-                      <span>{isGoogleAds ? 'Google Ads Call' : isWhatsApp ? 'WhatsApp' : 'Phone Call'}</span>
+                      <span>
+                        {isGoogleAds ? 'Google Ads Call' : isWhatsApp ? 'WhatsApp' : (lead.calculatorEngine || (lead.guestName || '').includes('Visitor') ? (lead.calculatorEngine || 'Website Visitor') : 'Phone Call')}
+                      </span>
                     </span>
 
                     <span className="text-xs font-bold text-m3-on-surface">
