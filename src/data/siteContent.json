@@ -76,21 +76,6 @@
       "alt": "Maruti Swift Dzire 4-seater AC taxi for family trips and outstation travel from Chennai"
     },
     {
-      "name": "Toyota Etios",
-      "image": "/images/fleet/toyoto-etios.webp",
-      "caps": "4 Passenger + Driver",
-      "bags": "2 Bags",
-      "rate": "₹14/km",
-      "details": [
-        "Comfort City Ride",
-        "Executive Sedan for Client Visits",
-        "Best for Small family",
-        "AC and Entertainment",
-        "Sanitized Every Trip"
-      ],
-      "alt": "Toyota Etios executive sedan taxi for corporate client visits and comfortable outstation travel"
-    },
-    {
       "name": "Maruti Ertiga",
       "image": "/images/fleet/maruti-ertiga.webp",
       "caps": "6 Passenger + Driver",
@@ -106,21 +91,6 @@
       "alt": "Maruti Ertiga 6-seater MPV taxi rental in Chennai for family and outstation trips"
     },
     {
-      "name": "Innova",
-      "image": "/images/fleet/suv.webp",
-      "caps": "7 Passenger + Driver",
-      "bags": "4 Bags",
-      "rate": "₹18/km",
-      "details": [
-        "For Hills & Outstation",
-        "Executive SUV for Client Visits",
-        "Best for Large family",
-        "AC and Entertainment",
-        "Sanitized Every Trip"
-      ],
-      "alt": "Toyota Innova 7-seater SUV taxi for large families and long-distance pilgrimages"
-    },
-    {
       "name": "Innova Crysta",
       "image": "/images/fleet/suv.webp",
       "caps": "7 Passenger + Driver",
@@ -134,6 +104,51 @@
         "Sanitized Every Trip"
       ],
       "alt": "Toyota Innova Crysta premium SUV rental for luxury outstation travel"
+    },
+    {
+      "name": "Tempo Traveller",
+      "image": "/images/fleet/tempo.webp",
+      "caps": "12 Passenger + Driver",
+      "bags": "8 Bags",
+      "rate": "₹24/km",
+      "details": [
+        "For Group Trips & Hills",
+        "Perfect for Corporate Team Outings",
+        "Best for Large Groups",
+        "Push back seats",
+        "Sanitized coach"
+      ],
+      "alt": "12-seater Tempo Traveller van rental for corporate team outings and family pilgrimage groups"
+    },
+    {
+      "name": "Toyota Etios",
+      "image": "/images/fleet/toyoto-etios.webp",
+      "caps": "4 Passenger + Driver",
+      "bags": "2 Bags",
+      "rate": "₹14/km",
+      "details": [
+        "Comfort City Ride",
+        "Executive Sedan for Client Visits",
+        "Best for Small family",
+        "AC and Entertainment",
+        "Sanitized Every Trip"
+      ],
+      "alt": "Toyota Etios executive sedan taxi for corporate client visits and comfortable outstation travel"
+    },
+    {
+      "name": "Innova",
+      "image": "/images/fleet/suv.webp",
+      "caps": "7 Passenger + Driver",
+      "bags": "4 Bags",
+      "rate": "₹18/km",
+      "details": [
+        "For Hills & Outstation",
+        "Executive SUV for Client Visits",
+        "Best for Large family",
+        "AC and Entertainment",
+        "Sanitized Every Trip"
+      ],
+      "alt": "Toyota Innova 7-seater SUV taxi for large families and long-distance pilgrimages"
     },
     {
       "name": "Mahindra Bolero",
@@ -164,21 +179,6 @@
         "Sanitized Every Trip"
       ],
       "alt": "Tata Sumo spacious 7-seater taxi for group travel and economical outstation trips"
-    },
-    {
-      "name": "Tempo Traveller",
-      "image": "/images/fleet/tempo.webp",
-      "caps": "12 Passenger + Driver",
-      "bags": "8 Bags",
-      "rate": "₹24/km",
-      "details": [
-        "For Group Trips & Hills",
-        "Perfect for Corporate Team Outings",
-        "Best for Large Groups",
-        "Push back seats",
-        "Sanitized coach"
-      ],
-      "alt": "12-seater Tempo Traveller van rental for corporate team outings and family pilgrimage groups"
     }
   ],
   "tours": [

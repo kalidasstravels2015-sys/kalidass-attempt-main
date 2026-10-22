@@ -54,6 +54,7 @@ const formatSeats = (caps: string) => {
   const match = caps.match(/\d+/);
   return match ? `${match[0]} Passengers` : '4 Passengers';
 };
+const gridColsClass = fleet.length === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3';
 ---
 
 <section id="fleet" class={`${hideHeader ? 'py-4' : 'offscreen-defer py-10 md:py-14 bg-m3-surface border-t border-m3-outline-variant/60'} scroll-mt-24 sm:scroll-mt-28`} aria-labelledby="fleet-heading">
@@ -101,7 +102,7 @@ const formatSeats = (caps: string) => {
       <!-- Horizontal Snap Scroll Carousel on Mobile, Grid on Tablet/Desktop -->
       <div
         id="fleet-home-carousel-track"
-        class="flex gap-3.5 sm:gap-4 overflow-x-auto snap-x snap-mandatory py-1 pb-3 no-scrollbar scroll-smooth md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6 md:overflow-visible md:pb-0 focus:outline-none"
+        class={`flex gap-3.5 sm:gap-4 overflow-x-auto snap-x snap-mandatory py-1 pb-3 no-scrollbar scroll-smooth md:grid md:grid-cols-2 ${gridColsClass} md:gap-6 md:overflow-visible md:pb-0 focus:outline-none`}
         tabindex="0"
         role="region"
         aria-label="Fleet Gallery"
