@@ -56,7 +56,7 @@ test.describe('Outstation Car Card Fare Calculator & Booking Modal', () => {
     await expect(modal.locator('text=Driver Allowance (1 Day):')).toBeVisible();
     await expect(modal.locator('text=Total Bill:')).toBeVisible();
     await expect(modal.locator('text=Advance to Pay:')).toBeVisible();
-    await expect(modal.locator('text=Balance to Pay Driver:')).toBeVisible();
+    await expect(modal.locator('text=Balance to Pay Driver').first()).toBeVisible();
 
     // 10. Verify Action Buttons: Book on WhatsApp & Call
     const waBookBtn = modal.locator('button:has-text("Book on WhatsApp")');

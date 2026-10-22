@@ -16,7 +16,7 @@ import { useVirtualKeyboard } from '../hooks/useVirtualKeyboard';
 
 // ── Calibrated highway distances from Chennai (km) ────────────────────────
 const COMMON_DISTANCES = {
-  'pondicherry': 151, 'puducherry': 151, 'bangalore': 346,
+  'pondicherry': 151, 'puducherry': 151, 'karaikal': 295, 'thiruvettakudy': 285, 'nitpy': 285, 'thirunallar': 295, 'bangalore': 346,
   'bengaluru': 346, 'tirupati': 135, 'tirupathi': 135, 'vellore': 137, 'kanchipuram': 75,
   'mahabalipuram': 56, 'mamallapuram': 56, 'trichy': 332, 'tiruchirappalli': 332, 'madurai': 462,
   'coimbatore': 505, 'salem': 340, 'thanjavur': 342, 'tirunelveli': 624,
@@ -107,20 +107,57 @@ const findKnownDistance = (origin, dest) => {
   const oNorm = isOChennai ? `${o} chennai` : o;
   const dNorm = isDChennai ? `${d} chennai` : d;
 
+  const isKaraikalEnclave = (str) => {
+    return str.includes('karaikal') || 
+           str.includes('thiruvettakudy') || 
+           str.includes('thirunallar') || 
+           str.includes('nitpy') || 
+           str.includes('nedungadu') || 
+           str.includes('kottucherry') || 
+           str.includes('neravy') || 
+           str.includes('tr pattinam') ||
+           /609\d{3}/.test(str);
+  };
+
+  if ((isOChennai || isDChennai) && !(isOChennai && isDChennai)) {
+    const target = isOChennai ? d : o;
+    if (isKaraikalEnclave(target)) {
+      return { distance: 285, setcFare: 330 };
+    }
+  }
+
   // 1. tnBusFares table lookup (only when one side is Chennai and the other is outstation)
   if (o && d && !(isOChennai && isDChennai)) {
-    const busRoute = tnBusFares.find(r =>
+    const matches = tnBusFares.filter(r =>
       (oNorm.includes(r.source) && dNorm.includes(r.destination)) ||
       (oNorm.includes(r.destination) && dNorm.includes(r.source))
     );
-    if (busRoute) return { distance: busRoute.distanceKm, setcFare: busRoute.setcFare };
+    if (matches.length > 0) {
+      const target = isOChennai ? d : o;
+      let best = matches[0];
+      if (isKaraikalEnclave(target)) {
+        const kMatch = matches.find(m => m.destination === 'karaikal' || m.destination === 'thiruvettakudy' || m.destination === 'nitpy');
+        best = kMatch || { distanceKm: 285, setcFare: 330 };
+      } else {
+        best = matches.reduce((longest, curr) => 
+          (curr.destination.length > longest.destination.length ? curr : longest), matches[0]
+        );
+      }
+      return { distance: best.distanceKm, setcFare: best.setcFare };
+    }
   }
 
   // 2. Check if one side is in Chennai Metro and the other is a known city from Chennai
   if ((isOChennai || isDChennai) && !(isOChennai && isDChennai)) {
     const other = isOChennai ? d : o;
+    if (isKaraikalEnclave(other)) {
+      return { distance: 285, setcFare: 330 };
+    }
     for (const [city, km] of Object.entries(COMMON_DISTANCES)) {
       if (other && other.includes(city)) {
+        if ((city === 'pondicherry' || city === 'puducherry') && isKaraikalEnclave(other)) {
+          continue;
+        }
         return { distance: km, setcFare: estimateReturnBusFare(km) };
       }
     }
@@ -199,9 +236,11 @@ export default function DriverFeeEstimator({
   const handleLocationConfirm = (address) => {
     const clean = address ? address.trim() : '';
     if (pickerField === 'pickup') {
+      pickupPlaceRef.current = null;
       setPickup(clean);
       setFieldErrors(prev => ({ ...prev, pickup: undefined }));
     } else {
+      dropPlaceRef.current = null;
       setDrop(clean);
       setFieldErrors(prev => ({ ...prev, drop: undefined }));
     }
@@ -221,6 +260,8 @@ export default function DriverFeeEstimator({
 
   const pickupRef       = useRef(null);
   const dropRef         = useRef(null);
+  const pickupPlaceRef  = useRef(null);
+  const dropPlaceRef    = useRef(null);
   const autocompleteRef = useRef(false);
   const resultRef       = useRef(null);
 
@@ -233,11 +274,12 @@ export default function DriverFeeEstimator({
     const init = () => {
       if (autocompleteRef.current) return;
       if (!window.google?.maps?.places) return;
-      const opts = { componentRestrictions: { country: 'in' }, fields: ['name', 'formatted_address'] };
+      const opts = { componentRestrictions: { country: 'in' }, fields: ['name', 'formatted_address', 'geometry'] };
       if (pickupRef.current) {
         const ac = new window.google.maps.places.Autocomplete(pickupRef.current, opts);
         ac.addListener('place_changed', () => {
           const p = ac.getPlace();
+          pickupPlaceRef.current = p;
           setPickup(p.formatted_address || p.name || '');
           setShowResult(false);
           setFieldErrors(prev => ({ ...prev, pickup: undefined }));
@@ -247,6 +289,7 @@ export default function DriverFeeEstimator({
         const ac = new window.google.maps.places.Autocomplete(dropRef.current, opts);
         ac.addListener('place_changed', () => {
           const p = ac.getPlace();
+          dropPlaceRef.current = p;
           setDrop(p.formatted_address || p.name || '');
           setShowResult(false);
           setFieldErrors(prev => ({ ...prev, drop: undefined }));
@@ -383,23 +426,41 @@ export default function DriverFeeEstimator({
       }, 60);
     };
 
-    // 1. Local fast lookup
-    const known = findKnownDistance(pickup, drop);
-    if (known) { setTimeout(() => doCalc(known.distance, known.setcFare), 200); return; }
-
-    // 2. Google Distance Matrix
+    // 1. Google Distance Matrix (Primary Real-time Highway km)
     if (window.google?.maps && drop.trim() && pickup.trim()) {
-      const svc = new window.google.maps.DistanceMatrixService();
-      svc.getDistanceMatrix(
-        { origins: [pickup.trim()], destinations: [drop.trim()], travelMode: 'DRIVING', unitSystem: 0 },
-        (res, status) => {
-          if (status === 'OK' && res.rows[0]?.elements[0]?.status === 'OK') {
-            doCalc(Math.round(res.rows[0].elements[0].distance.value / 1000), null);
-          } else {
-            doCalc(null, null);
+      try {
+        const originReq = (pickupPlaceRef.current && pickupPlaceRef.current.geometry?.location)
+          ? pickupPlaceRef.current.geometry.location
+          : pickup.trim();
+        const destReq = (dropPlaceRef.current && dropPlaceRef.current.geometry?.location)
+          ? dropPlaceRef.current.geometry.location
+          : drop.trim();
+
+        const svc = new window.google.maps.DistanceMatrixService();
+        svc.getDistanceMatrix(
+          { origins: [originReq], destinations: [destReq], travelMode: 'DRIVING', unitSystem: 0 },
+          (res, status) => {
+            if (status === 'OK' && res?.rows?.[0]?.elements?.[0]?.status === 'OK') {
+              const km = Math.round(res.rows[0].elements[0].distance.value / 1000);
+              const known = findKnownDistance(pickup, drop);
+              doCalc(km, known?.setcFare || null);
+            } else {
+              // Fallback to local table if Distance Matrix returns no route
+              const known = findKnownDistance(pickup, drop);
+              doCalc(known?.distance || null, known?.setcFare || null);
+            }
           }
-        }
-      );
+        );
+        return;
+      } catch (err) {
+        console.warn('DriverFeeEstimator: DistanceMatrixService error, falling back:', err);
+      }
+    }
+
+    // 2. Offline / Fast fallback lookup
+    const known = findKnownDistance(pickup, drop);
+    if (known) {
+      setTimeout(() => doCalc(known.distance, known.setcFare), 100);
       return;
     }
 
@@ -598,6 +659,7 @@ export default function DriverFeeEstimator({
               data-autocomplete-input="true"
               value={pickup}
               onChange={e => {
+                pickupPlaceRef.current = null;
                 const val = e.target.value;
                 setPickup(val);
                 setShowResult(false);
@@ -610,7 +672,7 @@ export default function DriverFeeEstimator({
             />
             <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
               {pickup && (
-                <button type="button" onClick={() => { setPickup(''); setShowResult(false); }}
+                <button type="button" onClick={() => { pickupPlaceRef.current = null; setPickup(''); setShowResult(false); }}
                   className="w-7 h-7 flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-full text-m3-on-surface-variant">
                   <X className="w-4 h-4" />
                 </button>
@@ -652,6 +714,7 @@ export default function DriverFeeEstimator({
               data-autocomplete-input="true"
               value={drop}
               onChange={e => {
+                dropPlaceRef.current = null;
                 const val = e.target.value;
                 setDrop(val);
                 setShowResult(false);
@@ -664,7 +727,7 @@ export default function DriverFeeEstimator({
             />
             <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
               {drop && (
-                <button type="button" onClick={() => { setDrop(''); setShowResult(false); }}
+                <button type="button" onClick={() => { dropPlaceRef.current = null; setDrop(''); setShowResult(false); }}
                   className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-full text-m3-on-surface-variant">
                   <X className="w-4 h-4" />
                 </button>

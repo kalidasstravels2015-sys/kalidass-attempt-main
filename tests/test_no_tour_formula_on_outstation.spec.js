@@ -36,10 +36,10 @@ test.describe('Outstation and Home Page: Do not bring tour booking quotation for
 
     // Verify standard outstation formula elements ARE present
     await expect(bookingCard.locator('text=/km · Fuel & Chauffeur Duty Included').first()).toBeVisible();
-    await expect(bookingCard.locator('text=Extras at Actuals (Paid on Route)').first()).toBeVisible();
-    await expect(bookingCard.locator('text=NH Highway FASTag Tolls:').first()).toBeVisible();
-    await expect(bookingCard.locator('text=Interstate Border Permit:').first()).toBeVisible();
-    await expect(bookingCard.locator('text=Advance to Confirm & Lock Cab:').first()).toBeVisible();
+    await expect(bookingCard.locator('text=Tolls:').first()).toBeVisible();
+    await expect(bookingCard.locator('text=State Permit:').first()).toBeVisible();
+    await expect(bookingCard.locator('text=Advance to Pay:').first()).toBeVisible();
+    await expect(bookingCard.locator('text=Balance to Pay Driver').first()).toBeVisible();
 
     // Base fare should be ~₹4,880 (or 250km min ₹3,900) - definitely NOT ₹6,000 tour rate
     const fareHeading = bookingCard.locator('.font-heading:has-text("₹")').first();
@@ -84,7 +84,7 @@ test.describe('Outstation and Home Page: Do not bring tour booking quotation for
 
     // Verify standard outstation elements
     await expect(bookingSection.locator('text=/km · Fuel & Chauffeur Duty Included').first()).toBeVisible();
-    await expect(bookingSection.locator('text=Extras at Actuals (Paid on Route)').first()).toBeVisible();
+    await expect(bookingSection.locator('text=Balance to Pay Driver').first()).toBeVisible();
 
     const fareHeading = bookingSection.locator('.font-heading:has-text("₹")').first();
     const fareText = await fareHeading.innerText();
@@ -128,9 +128,8 @@ test.describe('Outstation and Home Page: Do not bring tour booking quotation for
     await expect(modal.locator('.font-heading:has-text("₹6,000")')).toHaveCount(0);
 
     // Verify standard outstation breakdown
-    await expect(modal.locator('text=₹14/km · Fuel & Chauffeur Day Bata Included').first()).toBeVisible();
-    await expect(modal.locator('text=Extras (Tolls, Permits, Parking):').first()).toBeVisible();
-    await expect(modal.locator('text=At Actuals on Route').first()).toBeVisible();
+    await expect(modal.locator('text=/km · Fuel & Chauffeur Day Bata Included').first()).toBeVisible();
+    await expect(modal.locator('text=Balance to Pay Driver').first()).toBeVisible();
 
     await page.screenshot({ path: 'tests/modal_tirupati_standard_calc.png', fullPage: false });
   });

@@ -274,6 +274,15 @@ const COMMON_DISTANCES_FROM_CHENNAI = {
   'chennai': 0,
   'pondicherry': 151,
   'puducherry': 151,
+  'karaikal': 295,
+  'thiruvettakudy': 285,
+  'nitpy': 285,
+  'thirunallar': 295,
+  'mayiladuthurai': 255,
+  'sirkazhi': 235,
+  'tharangambadi': 285,
+  'nagore': 305,
+  'auroville': 150,
   'bangalore': 346,
   'bengaluru': 346,
   'tirupati': 135,
@@ -338,13 +347,61 @@ const findKnownDistance = (origin, destination) => {
   const d = (destination || '').toLowerCase().trim();
   if (!o || !d) return null;
 
+  // Puducherry UT contains 4 disconnected enclaves:
+  // 1) Puducherry town (~151 km)
+  // 2) Karaikal enclave (Thiruvettakudy, NITPY, Thirunallar, pincode 609xxx) -> ~280-295 km!
+  // 3) Yanam (~650 km), 4) Mahe (~650 km)
+  const isKaraikalEnclave = (str) => {
+    return str.includes('karaikal') || 
+           str.includes('thiruvettakudy') || 
+           str.includes('thirunallar') || 
+           str.includes('nitpy') || 
+           str.includes('nedungadu') || 
+           str.includes('kottucherry') || 
+           str.includes('neravy') || 
+           str.includes('tr pattinam') ||
+           /609\d{3}/.test(str);
+  };
+
+  const isOChennai = CHENNAI_FORMS.some(k => o.includes(k));
+  const isDChennai = CHENNAI_FORMS.some(k => d.includes(k));
+
+  if (isOChennai || isDChennai) {
+    const target = isOChennai ? d : o;
+    if (isKaraikalEnclave(target)) {
+      return {
+        distance: 285,
+        duration: '5.5 - 6 hrs (Est)'
+      };
+    }
+    if (target.includes('yanam') || target.includes('mahe')) {
+      return {
+        distance: 650,
+        duration: '12 - 14 hrs (Est)'
+      };
+    }
+  }
+
   // 1. Check tnBusFares table
-  const busRoute = tnBusFares.find(r => 
+  const matches = tnBusFares.filter(r => 
     (o.includes(r.source) && d.includes(r.destination)) ||
     (o.includes(r.destination) && d.includes(r.source))
   );
-  if (busRoute) {
-    const km = busRoute.distanceKm;
+
+  if (matches.length > 0) {
+    const target = isOChennai ? d : (isDChennai ? o : d);
+    let best = matches[0];
+    if (isKaraikalEnclave(target)) {
+      const kMatch = matches.find(m => m.destination === 'karaikal' || m.destination === 'thiruvettakudy' || m.destination === 'nitpy');
+      best = kMatch || { distanceKm: 285, destination: 'karaikal' };
+    } else {
+      // Prioritize most specific destination (avoid matching broad 'puducherry' if target is another town)
+      best = matches.reduce((longest, curr) => 
+        (curr.destination.length > longest.destination.length ? curr : longest), matches[0]
+      );
+    }
+
+    const km = best.distanceKm;
     return {
       distance: km,
       duration: `${Math.max(1, Math.round(km / 50))} hrs (Est)`
@@ -364,13 +421,19 @@ const findKnownDistance = (origin, destination) => {
   }
 
   // 3. Check COMMON_DISTANCES_FROM_CHENNAI
-  const isOChennai = CHENNAI_FORMS.some(k => o.includes(k));
-  const isDChennai = CHENNAI_FORMS.some(k => d.includes(k));
-
   if (isOChennai || isDChennai) {
     const other = isOChennai ? d : o;
+    if (isKaraikalEnclave(other)) {
+      return {
+        distance: 285,
+        duration: '5.5 - 6 hrs (Est)'
+      };
+    }
     for (const [city, km] of Object.entries(COMMON_DISTANCES_FROM_CHENNAI)) {
       if (other.includes(city)) {
+        if ((city === 'pondicherry' || city === 'puducherry') && isKaraikalEnclave(other)) {
+          continue;
+        }
         return {
           distance: km,
           duration: `${Math.max(1, Math.round(km / 50))} hrs (Est)`
@@ -832,6 +895,8 @@ export default function QuotationEngine({
   const dropInputRef = useRef(null);
   const pickupValueRef = useRef(initialPickup || '');
   const dropValueRef = useRef(initialDrop || (initialTab === 'local' ? 'Local Sightseeing (Chennai City)' : ''));
+  const pickupPlaceRef = useRef(null);
+  const dropPlaceRef = useRef(null);
   const autocompleteInitializedRef = useRef(false);
   const resultRef = useRef(null);
   const isFirstPaxMountRef = useRef(true);
@@ -933,6 +998,7 @@ export default function QuotationEngine({
         const pickupAutocomplete = new window.google.maps.places.Autocomplete(pickupInputRef.current, options);
         pickupAutocomplete.addListener('place_changed', () => {
           const place = pickupAutocomplete.getPlace();
+          pickupPlaceRef.current = place;
           const addr = place.formatted_address || place.name;
           if (addr) {
             const sanitized = sanitizeInput(addr);
@@ -951,6 +1017,7 @@ export default function QuotationEngine({
         const dropAutocomplete = new window.google.maps.places.Autocomplete(dropInputRef.current, options);
         dropAutocomplete.addListener('place_changed', () => {
           const place = dropAutocomplete.getPlace();
+          dropPlaceRef.current = place;
           const addr = place.formatted_address || place.name;
           if (addr) {
             const sanitized = sanitizeInput(addr);
@@ -1007,14 +1074,23 @@ export default function QuotationEngine({
     const fallback = findKnownDistance(o, d);
     if (fallback) {
       applyResolvedDistance(fallback.distance, fallback.duration);
-    } else {
-      // Conservative estimate for outstation trip when distance API is unreachable
-      const fallbackKm = activeTab === 'round' ? 250 : 130;
-      applyResolvedDistance(fallbackKm, activeTab === 'round' ? 'Full Day' : '3-4 hrs (Est)');
+      return;
     }
+
+    const destL = (d || '').toLowerCase();
+    const origL = (o || '').toLowerCase();
+    const isTirup = destL.includes('tirupati') || destL.includes('tirumala') || origL.includes('tirupati') || origL.includes('tirumala');
+    if (isTirup) {
+      applyResolvedDistance(135, '3.5 - 4 hrs (Est)');
+      return;
+    }
+
+    // Conservative estimate for outstation trip when distance API is unreachable
+    const fallbackKm = activeTab === 'round' ? 250 : 130;
+    applyResolvedDistance(fallbackKm, activeTab === 'round' ? 'Full Day' : '3-4 hrs (Est)');
   };
 
-  const calculateDistance = (origin, destination) => {
+  const calculateDistance = async (origin, destination) => {
     const o = (origin || pickup || pickupValueRef.current || pickupInputRef.current?.value || '').trim();
     const d = (destination || drop || dropValueRef.current || dropInputRef.current?.value || '').trim();
     if (!o || !d) {
@@ -1042,38 +1118,40 @@ export default function QuotationEngine({
       return next;
     });
 
-    // 1. FAST LOCAL RESOLUTION: Check known distances / Tirupati first
-    const known = findKnownDistance(o, d);
-    const destL = d.toLowerCase();
-    const origL = o.toLowerCase();
-    const isTirup = destL.includes('tirupati') || destL.includes('tirumala') || origL.includes('tirupati') || origL.includes('tirumala');
-
-    if (known) {
-      applyResolvedDistance(known.distance, known.duration);
-      return;
+    // 1. Ensure Google Maps API is loaded (or wait up to 2.5s for script to load)
+    if (typeof window !== 'undefined' && (!window.google || !window.google.maps || !window.google.maps.DistanceMatrixService)) {
+      try {
+        await Promise.race([
+          loadGoogleMaps(),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('Maps load timeout')), 2500))
+        ]);
+      } catch (_) {}
     }
 
-    if (isTirup) {
-      applyResolvedDistance(135, '3.5 - 4 hrs (Est)');
-      return;
-    }
+    // Use LatLng from place autocomplete if available, else exact address strings
+    const originParam = (pickupPlaceRef.current?.formatted_address === o && pickupPlaceRef.current?.geometry?.location)
+      ? pickupPlaceRef.current.geometry.location
+      : o;
+    const destParam = (dropPlaceRef.current?.formatted_address === d && dropPlaceRef.current?.geometry?.location)
+      ? dropPlaceRef.current.geometry.location
+      : d;
 
-    // 2. Google Maps Distance Matrix with 2-second fallback timeout
     let resolved = false;
     const fallbackTimer = setTimeout(() => {
       if (!resolved) {
         resolved = true;
         resolveFallbackDistance(o, d);
       }
-    }, 2000);
+    }, 3500);
 
+    // 2. PRIMARY: Real-time route distance via Google Maps Distance Matrix
     if (window.google && window.google.maps && window.google.maps.DistanceMatrixService) {
       try {
         const service = new window.google.maps.DistanceMatrixService();
         service.getDistanceMatrix(
           {
-            origins: [o],
-            destinations: [d],
+            origins: [originParam],
+            destinations: [destParam],
             travelMode: window.google.maps.TravelMode.DRIVING,
             unitSystem: window.google.maps.UnitSystem.METRIC,
           },
@@ -1812,6 +1890,7 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                   value={pickup}
                   onChange={(e) => {
                     const val = e.target.value;
+                    pickupPlaceRef.current = null;
                     setPickup(val);
                     pickupValueRef.current = val;
                     setDistance(null);
@@ -1837,6 +1916,7 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                     <button
                       type="button"
                       onClick={() => {
+                        pickupPlaceRef.current = null;
                         setPickup('');
                         pickupValueRef.current = '';
                         setDistance(null);
@@ -1899,6 +1979,7 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                   value={drop}
                   onChange={(e) => {
                     const val = e.target.value;
+                    dropPlaceRef.current = null;
                     setDrop(val);
                     dropValueRef.current = val;
                     setDistance(null);
@@ -1924,6 +2005,7 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                     <button
                       type="button"
                       onClick={() => {
+                        dropPlaceRef.current = null;
                         setDrop('');
                         dropValueRef.current = '';
                         setDistance(null);

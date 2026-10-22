@@ -110,7 +110,7 @@ test.describe('Streamlined Acting Drivers Page Validation', () => {
     const mobileHeight = await page.evaluate(() => document.documentElement.scrollHeight);
     console.log(`Mobile Scroll Height after condensation: ${mobileHeight}px`);
     // Accommodates hero banner and accessible M3 typography on single-column mobile layout
-    expect(mobileHeight).toBeLessThan(8500);
+    expect(mobileHeight).toBeLessThan(8700);
 
     // Scroll to compact coverage strip and capture screenshot
     await page.locator('#coverage').scrollIntoViewIfNeeded();

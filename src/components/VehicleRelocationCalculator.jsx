@@ -17,7 +17,7 @@ import WhatsAppButton from './react/WhatsAppButton.jsx';
 import { buildWhatsAppUrl, buildMapsLinks } from '../utils/whatsapp';
 
 const COMMON_DISTANCES = {
-  'pondicherry': 151, 'puducherry': 151, 'bangalore': 346,
+  'pondicherry': 151, 'puducherry': 151, 'karaikal': 295, 'thiruvettakudy': 285, 'nitpy': 285, 'thirunallar': 295, 'bangalore': 346,
   'bengaluru': 346, 'tirupati': 135, 'vellore': 137, 'kanchipuram': 75,
   'mahabalipuram': 56, 'mamallapuram': 56, 'trichy': 332, 'tiruchirappalli': 332, 'madurai': 462,
   'coimbatore': 505, 'salem': 340, 'thanjavur': 342, 'tanjore': 342, 'tirunelveli': 624,
@@ -153,23 +153,60 @@ const findKnownRelocationDistance = (origin, dest) => {
     return { distance: 35, setcFare: 150 };
   }
 
+  const isKaraikalEnclave = (str) => {
+    return str.includes('karaikal') || 
+           str.includes('thiruvettakudy') || 
+           str.includes('thirunallar') || 
+           str.includes('nitpy') || 
+           str.includes('nedungadu') || 
+           str.includes('kottucherry') || 
+           str.includes('neravy') || 
+           str.includes('tr pattinam') ||
+           /609\d{3}/.test(str);
+  };
+
+  if (isOChennai || isDChennai) {
+    const target = isOChennai ? d : o;
+    if (isKaraikalEnclave(target)) {
+      return { distance: 285, setcFare: 330 };
+    }
+  }
+
   // 1. Check tnBusFares table (matching Chennai metro aliases to 'chennai')
   if (o && d) {
-    const busRoute = tnBusFares.find(r => {
+    const matches = tnBusFares.filter(r => {
       const matchSrcO = o.includes(r.source) || (r.source === 'chennai' && isOChennai);
       const matchDstD = d.includes(r.destination) || (r.destination === 'chennai' && isDChennai);
       const matchSrcD = d.includes(r.source) || (r.source === 'chennai' && isDChennai);
       const matchDstO = o.includes(r.destination) || (r.destination === 'chennai' && isOChennai);
       return (matchSrcO && matchDstD) || (matchSrcD && matchDstO);
     });
-    if (busRoute) return { distance: busRoute.distanceKm, setcFare: busRoute.setcFare };
+    if (matches.length > 0) {
+      const target = isOChennai ? d : (isDChennai ? o : d);
+      let best = matches[0];
+      if (isKaraikalEnclave(target)) {
+        const kMatch = matches.find(m => m.destination === 'karaikal' || m.destination === 'thiruvettakudy' || m.destination === 'nitpy');
+        best = kMatch || { distanceKm: 285, setcFare: 330 };
+      } else {
+        best = matches.reduce((longest, curr) => 
+          (curr.destination.length > longest.destination.length ? curr : longest), matches[0]
+        );
+      }
+      return { distance: best.distanceKm, setcFare: best.setcFare };
+    }
   }
 
   // 2. Chennai metro to/from known city
   if (isOChennai || isDChennai) {
     const other = isOChennai ? d : o;
+    if (isKaraikalEnclave(other)) {
+      return { distance: 285, setcFare: 330 };
+    }
     for (const [city, km] of Object.entries(COMMON_DISTANCES)) {
       if (other && other.includes(city)) {
+        if ((city === 'pondicherry' || city === 'puducherry') && isKaraikalEnclave(other)) {
+          continue;
+        }
         return { distance: km, setcFare: estimateReturnBusFare(km) };
       }
     }
@@ -336,7 +373,7 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
     });
   };
 
-  const calculateCost = () => {
+  const calculateCost = async () => {
     setError('');
     const newFieldErrors = {};
     if (!pickup.trim()) newFieldErrors.pickup = 'Please enter pickup city.';
@@ -351,21 +388,38 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
     setFieldErrors({});
     setLoading(true);
     setResult(null);
-    loadGoogleMaps().catch(() => {});
 
-    // 1. Local Lookup
-    const known = findKnownRelocationDistance(pickup, drop);
-    if (known) {
-      setTimeout(() => {
+    // Ensure Google Maps is loaded
+    if (typeof window !== 'undefined' && (!window.google || !window.google.maps || !window.google.maps.DistanceMatrixService)) {
+      try {
+        await Promise.race([
+          loadGoogleMaps(),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 2500))
+        ]);
+      } catch (_) {}
+    }
+
+    const fallbackCalculation = () => {
+      const known = findKnownRelocationDistance(pickup, drop);
+      if (known) {
         const realDist = known.distance;
         const durationText = Math.max(1, Math.round(realDist / 50)) + " hrs (Est)";
         const busFare = known.setcFare || estimateReturnBusFare(realDist);
         finalizeCalculation(realDist, durationText, busFare);
-      }, 150);
-      return;
-    }
+        return;
+      }
+      finalizeCalculation(300, '6 hrs (Est)', estimateReturnBusFare(300));
+    };
 
-    // 2. Google Distance Matrix API
+    let resolved = false;
+    const fallbackTimer = setTimeout(() => {
+      if (!resolved) {
+        resolved = true;
+        fallbackCalculation();
+      }
+    }, 3500);
+
+    // 1. Google Distance Matrix API (Primary)
     if (window.google && window.google.maps && window.google.maps.DistanceMatrixService) {
       const service = new window.google.maps.DistanceMatrixService();
       service.getDistanceMatrix(
@@ -376,24 +430,30 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
           unitSystem: window.google.maps.UnitSystem.METRIC,
         },
         (response, status) => {
+          if (resolved) return;
+          resolved = true;
+          clearTimeout(fallbackTimer);
           if (status === "OK" && response?.rows?.[0]?.elements?.[0]?.status === "OK") {
             const element = response.rows[0].elements[0];
             const distanceInMeters = element.distance.value;
             const realDist = Math.round(distanceInMeters / 1000);
             const durationText = element.duration.text;
-            const calculatedFare = estimateReturnBusFare(realDist);
+            const known = findKnownRelocationDistance(pickup, drop);
+            const calculatedFare = known?.setcFare || estimateReturnBusFare(realDist);
             finalizeCalculation(realDist, durationText, calculatedFare);
             return;
           }
-          // Fallback if Google Maps fails to find exact route
-          finalizeCalculation(300, '6 hrs (Est)', estimateReturnBusFare(300));
+          fallbackCalculation();
         }
       );
       return;
+    } else {
+      if (!resolved) {
+        resolved = true;
+        clearTimeout(fallbackTimer);
+        fallbackCalculation();
+      }
     }
-
-    // 3. Fallback when offline or distance matrix unavailable
-    finalizeCalculation(300, '6 hrs (Est)', estimateReturnBusFare(300));
   };
 
   return (
