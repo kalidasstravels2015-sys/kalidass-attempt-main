@@ -6,9 +6,9 @@ test.describe('Vellore Mobile & Desktop Itinerary, Guide and Navigation', () => 
     await page.goto('/services/vellore-golden-temple/');
 
     // 1. Prominent Vellore Temple visual hero card is visible on mobile
-    const templeImage = page.locator('img[alt*="Sripuram Sri Lakshmi Narayani Golden Temple"]');
+    const templeImage = page.locator('[data-hero-mobile] img[alt*="Sripuram Sri Lakshmi Narayani Golden Temple"]');
     await expect(templeImage).toBeVisible();
-    await expect(page.getByText('Sripuram Golden Temple & Fort', { exact: true })).toBeVisible();
+    await expect(page.locator('[data-hero-mobile]').getByText('Sripuram Golden Temple & Fort')).toBeVisible();
 
     // 2. Mobile Trust Strip is visible
     const trustStrip = page.locator('[data-mobile-trust-strip]');
@@ -44,7 +44,7 @@ test.describe('Vellore Mobile & Desktop Itinerary, Guide and Navigation', () => 
 
     // 5. Booking Engine is rendered with Vellore destination
     await expect(page.getByText('Book Chennai to Vellore')).toBeVisible();
-    await expect(page.getByText('Fixed Destination: Sripuram Golden Temple, Vellore')).toBeVisible();
+    await expect(page.locator('#booking').getByText('Sripuram Golden Temple & Fort')).toBeVisible();
 
     // 6. Test Guide Tabs on mobile
     const btnTimings = page.locator('#guide-tab-btn-practical');
@@ -66,7 +66,7 @@ test.describe('Vellore Mobile & Desktop Itinerary, Guide and Navigation', () => 
     await page.goto('/services/vellore-golden-temple/');
 
     // Prominent Vellore Temple visual hero card is visible on desktop
-    const templeImage = page.locator('img[alt*="Sripuram Sri Lakshmi Narayani Golden Temple"]');
+    const templeImage = page.locator('[data-hero-desktop] img[alt*="Sripuram Sri Lakshmi Narayani Golden Temple"]');
     await expect(templeImage).toBeVisible();
 
     // Dedicated Vellore Booking Engine is visible in initial hero viewport

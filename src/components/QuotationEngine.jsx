@@ -1118,8 +1118,13 @@ export default function QuotationEngine({
       return next;
     });
 
-    // 1. Ensure Google Maps API is loaded (or wait up to 2.5s for script to load)
+    // 1. Ensure Google Maps API is loaded (or fallback immediately for known city pairs)
     if (typeof window !== 'undefined' && (!window.google || !window.google.maps || !window.google.maps.DistanceMatrixService)) {
+      const known = findKnownDistance(o, d);
+      if (known) {
+        resolveFallbackDistance(o, d);
+        return;
+      }
       try {
         await Promise.race([
           loadGoogleMaps(),
@@ -1585,6 +1590,16 @@ export default function QuotationEngine({
       currentDist = known ? known.distance : isTirup ? 135 : (activeTab === 'round' ? 250 : 130);
       setDistance(currentDist);
 
+      if (activeTab === 'round' && currentDist) {
+        const req = getTripDrivingRequirements(currentDist, true);
+        const minReturn = getMinReturnDateTime(date || getDefaultDepartureTime(), req.minRealisticHours);
+        if (!returnDate || returnDate < minReturn) {
+          setReturnDate(minReturn);
+          const computed = calculateCalendarDays(date || getDefaultDepartureTime(), minReturn);
+          setDays(Math.max(req.minDays, computed));
+        }
+      }
+
       const vData = vehicles[vehicle];
       if (vData) {
         const rate = activeTab === 'round' ? vData.round_trip_rate : vData.one_way_rate;
@@ -1828,6 +1843,8 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
             {showAirportTab && (
               <a
                 href="/services/chennai-airport-taxi/"
+                role="tab"
+                aria-selected={false}
                 className="flex-1 py-2 px-2.5 sm:px-4 text-xs font-bold rounded-m3-full transition-all flex items-center justify-center gap-1.5 min-h-[38px] sm:min-h-[42px] cursor-pointer active:scale-[0.98] text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-highest focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary group"
                 title={isTa ? 'சென்னை ஏர்போர்ட் டாக்ஸி முன்பதிவு' : 'Chennai Airport Taxi Transfers (Fixed Fares from ₹650)'}
               >

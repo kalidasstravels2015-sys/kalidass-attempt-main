@@ -596,7 +596,7 @@ export default function WebsiteRadarView({
                 return (
                   <div
                     key={q.quoteId || idx}
-                    className={`p-4 rounded-m3-xl border transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-3 shadow-xs ${
+                    className={`p-4 rounded-m3-xl border transition-all flex flex-col xl:flex-row xl:items-center justify-between gap-3 shadow-xs ${
                       isWhatsAppClicked
                         ? 'bg-m3-surface-container-low border-m3-outline ring-1 ring-m3-outline/40'
                         : 'bg-m3-surface-container-lowest border-m3-outline-variant/80 hover:border-m3-outline'
@@ -607,32 +607,32 @@ export default function WebsiteRadarView({
                       <div className="flex flex-wrap items-center gap-2">
                         {/* Status Pill */}
                         {isWhatsAppClicked ? (
-                          <span className="text-[11px] font-bold bg-m3-secondary-container text-m3-on-secondary-container border border-m3-outline-variant/40 px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
+                          <span className="text-[11px] font-bold bg-m3-secondary-container text-m3-on-secondary-container border border-m3-outline-variant/40 px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-xs whitespace-nowrap shrink-0">
                             <span className="material-symbols-outlined text-[13px] text-m3-primary">chat</span>
                             <span>🔥 WhatsApp Clicked (Hot Lead)</span>
                           </span>
                         ) : (
-                          <span className="text-[11px] font-semibold bg-m3-surface-container-high text-m3-on-surface-variant border border-m3-outline-variant/60 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                          <span className="text-[11px] font-semibold bg-m3-surface-container-high text-m3-on-surface-variant border border-m3-outline-variant/60 px-2.5 py-0.5 rounded-full flex items-center gap-1 whitespace-nowrap shrink-0">
                             <span className="material-symbols-outlined text-[13px]">visibility</span>
                             <span>Browsed on Website</span>
                           </span>
                         )}
 
                         {/* Engine Name */}
-                        <span className="text-[11px] font-bold bg-m3-surface-container-high text-m3-on-surface px-2.5 py-0.5 rounded-full border border-m3-outline-variant">
+                        <span className="text-[11px] font-bold bg-m3-surface-container-high text-m3-on-surface px-2.5 py-0.5 rounded-full border border-m3-outline-variant whitespace-nowrap shrink-0">
                           {engineLabel}
                         </span>
 
                         {/* Quote ID */}
                         {q.quoteId && (
-                          <span className="text-[11px] font-mono-code font-bold bg-m3-surface-container-lowest text-m3-on-surface-variant border border-m3-outline-variant px-2 py-0.5 rounded-full">
+                          <span className="text-[11px] font-mono-code font-bold bg-m3-surface-container-lowest text-m3-on-surface-variant border border-m3-outline-variant px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">
                             {q.quoteId}
                           </span>
                         )}
 
                         {/* Timestamp in clear 12-Hour AM/PM format */}
                         {timeFormatted && (
-                          <span className="text-[11px] font-semibold text-m3-on-surface-variant ml-auto font-mono-code flex items-center gap-1 bg-m3-surface-container-low px-2.5 py-0.5 rounded-full border border-m3-outline-variant/50">
+                          <span className="text-[11px] font-semibold text-m3-on-surface-variant font-mono-code flex items-center gap-1 bg-m3-surface-container-low px-2.5 py-0.5 rounded-full border border-m3-outline-variant/50 whitespace-nowrap shrink-0 sm:ml-auto">
                             <span className="material-symbols-outlined text-[13px] text-m3-outline">schedule</span>
                             <span>{timeFormatted}</span>
                           </span>
@@ -640,18 +640,18 @@ export default function WebsiteRadarView({
                       </div>
 
                       {/* Route */}
-                      <div className="text-sm font-bold text-m3-on-surface truncate flex items-center gap-1.5">
-                        <span className="material-symbols-outlined text-m3-primary text-[18px]">near_me</span>
+                      <div className="text-sm font-bold text-m3-on-surface break-words flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-m3-primary text-[18px] shrink-0">near_me</span>
                         <span>{cleanFrom} ➔ {cleanTo}</span>
                       </div>
 
                       {/* Vehicle, Distance, Badges */}
                       <div className="text-xs text-m3-on-surface-variant flex flex-wrap items-center gap-1.5 font-medium">
-                        <span className="bg-m3-surface-container-high text-m3-on-surface font-semibold px-2 py-0.5 rounded-full">
+                        <span className="bg-m3-surface-container-high text-m3-on-surface font-semibold px-2 py-0.5 rounded-full whitespace-nowrap">
                           🚗 {q.vehicle || 'Vehicle'}
                         </span>
                         <span>•</span>
-                        <span className="bg-m3-surface-container-low text-m3-on-surface font-medium px-2 py-0.5 rounded-full border border-m3-outline-variant/50">
+                        <span className="bg-m3-surface-container-low text-m3-on-surface font-medium px-2 py-0.5 rounded-full border border-m3-outline-variant/50 whitespace-nowrap">
                           {q.tripType || 'One Way'}
                         </span>
 
@@ -659,14 +659,14 @@ export default function WebsiteRadarView({
                         {badges.map((badge, bIdx) => (
                           <span
                             key={bIdx}
-                            className="bg-m3-surface-container-low text-m3-on-surface border border-m3-outline-variant/60 px-2 py-0.5 rounded-full text-[11px] font-medium"
+                            className="bg-m3-surface-container-low text-m3-on-surface border border-m3-outline-variant/60 px-2 py-0.5 rounded-full text-[11px] font-medium whitespace-nowrap"
                           >
                             {badge}
                           </span>
                         ))}
 
                         {sourceLabel && (
-                          <span className="text-[11px] text-m3-on-surface-variant font-medium ml-auto bg-m3-surface-container-low px-2 py-0.5 rounded-full">
+                          <span className="text-[11px] text-m3-on-surface-variant font-medium sm:ml-auto bg-m3-surface-container-low px-2 py-0.5 rounded-full whitespace-nowrap">
                             {sourceLabel}
                           </span>
                         )}
@@ -674,8 +674,8 @@ export default function WebsiteRadarView({
                     </div>
 
                     {/* Right: Price & Quick Action */}
-                    <div className="flex flex-wrap items-center gap-2 shrink-0 pt-2 lg:pt-0 border-t lg:border-t-0 border-m3-outline-variant/50">
-                      <div className="text-left lg:text-right mr-1">
+                    <div className="flex flex-wrap items-center justify-between xl:justify-end gap-2.5 pt-3 xl:pt-0 border-t xl:border-t-0 border-m3-outline-variant/50">
+                      <div className="text-left xl:text-right mr-1 shrink-0">
                         <span className="text-base font-bold text-m3-primary block">
                           ₹{Number(q.estimatedFare || 0).toLocaleString('en-IN')}
                         </span>

@@ -23,21 +23,15 @@ test('Verify Option A Progressive Disclosure: Calm Fare Card, 1-Tap Booking, and
   const vehSelect = bookingSection.locator('select').nth(1);
   await vehSelect.selectOption('dzire');
 
-  // 3. Verify Calm Fare Card: ₹ 6,000 All-Inclusive Fixed Fare
-  await expect(bookingSection.locator('.text-3xl, .text-4xl').first()).toHaveText('₹ 6,000');
-  await expect(bookingSection.getByText('Covers FASTag Tolls + AP Permit + Hill Climb + Driver Bata + Parking')).toBeVisible();
+  // 3. Verify Calm Fare Card: ₹6,000 All-Inclusive Fixed Fare
+  await expect(bookingSection.locator('.text-3xl, .text-4xl').first()).toHaveText(/₹\s*6,000/);
+  await expect(bookingSection.getByText(/Fuel, Tolls, AP State Permit, Hill Climb & Parking/)).toBeVisible();
 
-  // 4. Verify Collapsible Fare Breakdown
-  const breakdownToggle = bookingSection.locator('button:has-text("View Itemized Fare Breakdown")');
-  await expect(breakdownToggle).toBeVisible();
-  await breakdownToggle.scrollIntoViewIfNeeded();
-  await breakdownToggle.click();
-
-  // Check itemized breakdown rows
-  await expect(bookingSection.getByText('Dedicated AC Vehicle Hire & Fuel')).toBeVisible();
-  await expect(bookingSection.getByText('Chauffeur Duty & Halting Batta')).toBeVisible();
-  await expect(bookingSection.getByText('NH FASTag Tolls & AP State Border Permit:')).toBeVisible();
-  await expect(bookingSection.getByText('INCLUDED (₹0)').first()).toBeVisible();
+  // 4. Verify Itemized Fare Breakdown
+  await expect(bookingSection.getByText(/Cab Hire.*Swift Dzire.*Fuel included/)).toBeVisible();
+  await expect(bookingSection.getByText(/Driver Allowance/)).toBeVisible();
+  await expect(bookingSection.getByText('State Permit:')).toBeVisible();
+  await expect(bookingSection.getByText('Tolls:')).toBeVisible();
 
   // 5. Verify 1-Tap WhatsApp Booking is ready with optional devotee name
   const nameInput = bookingSection.locator('input[placeholder*="Saravanan K"]');

@@ -6,15 +6,15 @@ test.describe('Sabarimala Mobile & Desktop Itinerary, Guide and Navigation', () 
     await page.goto('/services/sabarimala-trip/');
 
     // 1. Prominent Sabarimala Temple visual hero card is visible on mobile
-    const templeImage = page.locator('img[alt*="Lord Ayyappa Swami Temple"]');
+    const templeImage = page.locator('[data-hero-mobile] img[alt*="Lord Ayyappa Swami Temple"]');
     await expect(templeImage).toBeVisible();
-    await expect(page.getByText('Nilakkal & Pamba Base Camp', { exact: true })).toBeVisible();
+    await expect(page.locator('[data-hero-mobile]').getByText('Nilakkal & Pamba Base Camp')).toBeVisible();
 
     // 2. Mobile Trust Strip is visible
     const trustStrip = page.locator('[data-mobile-trust-strip]');
     await expect(trustStrip).toBeVisible();
     await expect(trustStrip.getByText('₹500 Advance')).toBeVisible();
-    await expect(trustStrip.getByText('Kerala Permit Inc.')).toBeVisible();
+    await expect(trustStrip.getByText('Permits & Tolls Actuals')).toBeVisible();
     await expect(trustStrip.getByText('Satvik Chauffeur')).toBeVisible();
 
     // 3. Quick Navigation is visible with all 4 section links
@@ -44,7 +44,7 @@ test.describe('Sabarimala Mobile & Desktop Itinerary, Guide and Navigation', () 
 
     // 5. Booking Engine is rendered with Sabarimala destination
     await expect(page.getByText('Book Chennai to Sabarimala')).toBeVisible();
-    await expect(page.getByText('Nilakkal Base Camp & Pamba')).toBeVisible();
+    await expect(page.locator('#booking').getByText('Nilakkal & Pamba Base Camp')).toBeVisible();
 
     // 6. Test Guide Tabs on mobile
     const btnTimings = page.locator('#guide-tab-btn-practical');
@@ -66,7 +66,7 @@ test.describe('Sabarimala Mobile & Desktop Itinerary, Guide and Navigation', () 
     await page.goto('/services/sabarimala-trip/');
 
     // Prominent Sabarimala Temple visual hero card is visible on desktop
-    const templeImage = page.locator('img[alt*="Lord Ayyappa Swami Temple"]');
+    const templeImage = page.locator('[data-hero-desktop] img[alt*="Lord Ayyappa Swami Temple"]');
     await expect(templeImage).toBeVisible();
 
     // Dedicated Sabarimala Booking Engine is visible in initial hero viewport

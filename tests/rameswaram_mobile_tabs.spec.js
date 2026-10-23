@@ -6,15 +6,15 @@ test.describe('Rameswaram Mobile & Desktop Itinerary, Guide and Navigation', () 
     await page.goto('/services/rameswaram-2-days/');
 
     // 1. Prominent Rameswaram Temple visual hero card is visible on mobile
-    const templeImage = page.locator('img[alt*="Ramanathaswamy Temple & Pamban Bridge"]');
+    const templeImage = page.locator('[data-hero-mobile] img[alt*="Ramanathaswamy Temple & Pamban Bridge"]');
     await expect(templeImage).toBeVisible();
-    await expect(page.getByText('Ramanathaswamy & Dhanushkodi', { exact: true })).toBeVisible();
+    await expect(page.locator('[data-hero-mobile]').getByText('Ramanathaswamy & Dhanushkodi')).toBeVisible();
 
     // 2. Mobile Trust Strip is visible
     const trustStrip = page.locator('[data-mobile-trust-strip]');
     await expect(trustStrip).toBeVisible();
     await expect(trustStrip.getByText('₹500 Advance')).toBeVisible();
-    await expect(trustStrip.getByText('NH 87 Tolls Inc.')).toBeVisible();
+    await expect(trustStrip.getByText('Tolls at Actuals')).toBeVisible();
     await expect(trustStrip.getByText('1,200 km Covered')).toBeVisible();
 
     // 3. Quick Navigation is visible with all 4 section links
@@ -66,7 +66,7 @@ test.describe('Rameswaram Mobile & Desktop Itinerary, Guide and Navigation', () 
     await page.goto('/services/rameswaram-2-days/');
 
     // Prominent Rameswaram Temple visual hero card is visible on desktop
-    const templeImage = page.locator('img[alt*="Ramanathaswamy Temple & Pamban Bridge"]');
+    const templeImage = page.locator('[data-hero-desktop] img[alt*="Ramanathaswamy Temple & Pamban Bridge"]');
     await expect(templeImage).toBeVisible();
 
     // Dedicated Rameswaram Booking Engine is visible in initial hero viewport

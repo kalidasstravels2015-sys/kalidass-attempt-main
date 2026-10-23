@@ -86,12 +86,11 @@ test.describe('Universal First Eligible Return Date & Realistic Travel Advisory 
     await calcBtn.click();
 
     // Wait for distance to resolve and return date to auto-sync
-    await page.waitForTimeout(1000);
-
-    // Return date should be at least first eligible
-    const returnVal = await returnDateInput.inputValue();
-    expect(returnVal).toBeTruthy();
-    expect(new Date(returnVal) >= new Date('2026-10-26T06:00')).toBe(true);
+    await expect(async () => {
+      const returnVal = await returnDateInput.inputValue();
+      expect(returnVal).toBeTruthy();
+      expect(new Date(returnVal) >= new Date('2026-10-26T06:00')).toBe(true);
+    }).toPass({ timeout: 6000 });
 
     // Advisory should NOT be shown automatically
     await expect(form.getByText('Realistic Travel Advisory:')).not.toBeVisible();

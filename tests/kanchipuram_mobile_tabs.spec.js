@@ -6,9 +6,9 @@ test.describe('Kanchipuram Mobile & Desktop Itinerary, Guide and Navigation', ()
     await page.goto('/services/kanchipuram-temple-trip/');
 
     // 1. Prominent Kanchipuram Temple visual hero card is visible on mobile
-    const templeImage = page.locator('img[alt*="Kamakshi Amman & Ekambareswarar Temple"]');
+    const templeImage = page.locator('[data-hero-mobile] img[alt*="Kamakshi Amman & Ekambareswarar Temple"]');
     await expect(templeImage).toBeVisible();
-    await expect(page.getByText('Kamakshi Amman & Silk Weavers')).toBeVisible();
+    await expect(page.locator('[data-hero-mobile]').getByText('Kamakshi Amman & Silk Weavers')).toBeVisible();
 
     // 2. Mobile Trust Strip is visible
     const trustStrip = page.locator('[data-mobile-trust-strip]');
@@ -44,7 +44,7 @@ test.describe('Kanchipuram Mobile & Desktop Itinerary, Guide and Navigation', ()
 
     // 5. Booking Engine is rendered with Kanchipuram destination
     await expect(page.getByText('Book Chennai to Kanchipuram')).toBeVisible();
-    await expect(page.getByText('Kanchipuram Temples & Certified Silk Weavers')).toBeVisible();
+    await expect(page.locator('#booking').getByText('Kanchipuram & Silk Weavers')).toBeVisible();
 
     // 6. Test Guide Tabs on mobile
     const btnTimings = page.locator('#guide-tab-btn-practical');
@@ -66,7 +66,7 @@ test.describe('Kanchipuram Mobile & Desktop Itinerary, Guide and Navigation', ()
     await page.goto('/services/kanchipuram-temple-trip/');
 
     // Prominent Kanchipuram Temple visual hero card is visible on desktop
-    const templeImage = page.locator('img[alt*="Kamakshi Amman & Ekambareswarar Temple"]');
+    const templeImage = page.locator('[data-hero-desktop] img[alt*="Kamakshi Amman & Ekambareswarar Temple"]');
     await expect(templeImage).toBeVisible();
 
     // Dedicated Kanchipuram Booking Engine is visible in initial hero viewport

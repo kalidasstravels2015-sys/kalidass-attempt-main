@@ -6,9 +6,9 @@ test.describe('Thiruvannamalai Mobile & Desktop Itinerary, Guide and Navigation'
     await page.goto('/services/thiruvannamalai-girivalam-trip/');
 
     // 1. Prominent Thiruvannamalai Temple visual hero card is visible on mobile
-    const templeImage = page.locator('img[alt*="Arunachaleswarar Temple & Girivalam"]');
+    const templeImage = page.locator('[data-hero-mobile] img[alt*="Arunachaleswarar Temple & Girivalam"]');
     await expect(templeImage).toBeVisible();
-    await expect(page.getByText('Arunachaleswarar & Girivalam')).toBeVisible();
+    await expect(page.locator('[data-hero-mobile]').getByText('Arunachaleswarar & Girivalam')).toBeVisible();
 
     // 2. Mobile Trust Strip is visible
     const trustStrip = page.locator('[data-mobile-trust-strip]');
@@ -42,7 +42,7 @@ test.describe('Thiruvannamalai Mobile & Desktop Itinerary, Guide and Navigation'
 
     // 5. Booking Engine is rendered with Thiruvannamalai destination
     await expect(page.getByText('Book Chennai to Thiruvannamalai')).toBeVisible();
-    await expect(page.getByText('Arunachaleswarar Temple & Girivalam Path')).toBeVisible();
+    await expect(page.locator('#booking').getByText('Arunachaleswarar & Girivalam')).toBeVisible();
 
     // 6. Test Guide Tabs on mobile
     const btnTimings = page.locator('#guide-tab-btn-practical');
@@ -64,7 +64,7 @@ test.describe('Thiruvannamalai Mobile & Desktop Itinerary, Guide and Navigation'
     await page.goto('/services/thiruvannamalai-girivalam-trip/');
 
     // Prominent Thiruvannamalai Temple visual hero card is visible on desktop
-    const templeImage = page.locator('img[alt*="Arunachaleswarar Temple & Girivalam"]');
+    const templeImage = page.locator('[data-hero-desktop] img[alt*="Arunachaleswarar Temple & Girivalam"]');
     await expect(templeImage).toBeVisible();
 
     // Dedicated Thiruvannamalai Booking Engine is visible in initial hero viewport

@@ -358,12 +358,9 @@ export default function TourBookingEngine({
     return getMinReturnDateTime(dep, config.minRealisticHours);
   };
 
-  // Date and Time calculation invariants - always autoselect pickup date next day morning
-  const [pickupDateTime, setPickupDateTime] = useState(() => getDefaultPickupTime());
-  const [returnDateTime, setReturnDateTime] = useState(() => {
-    const dep = getDefaultPickupTime();
-    return getMinReturnDateTime(dep, config.minRealisticHours);
-  });
+  // Date and Time calculation invariants - start empty to require pickup selection and enforce realistic validation
+  const [pickupDateTime, setPickupDateTime] = useState('');
+  const [returnDateTime, setReturnDateTime] = useState('');
 
   const calculateDuration = (pickupVal, returnVal) => {
     if (!pickupVal || !returnVal) {
@@ -1749,7 +1746,10 @@ Please confirm booking!` + tourMapsBlock;
                   </div>
                   <div className="text-right shrink-0">
                     <div className="text-[11px] text-m3-on-surface-variant font-medium">Total Fare</div>
-                    <div className="text-2xl sm:text-3xl font-extrabold text-m3-on-surface font-heading leading-tight">
+                    <div 
+                      data-tour-fare="true"
+                      className="text-3xl font-extrabold text-m3-on-surface font-heading leading-tight"
+                    >
                       {activePayableFare}{isAfter24Hours && <span className="text-xs sm:text-sm font-semibold text-m3-on-surface-variant ml-1">+ Extra</span>}
                     </div>
                   </div>

@@ -6,9 +6,9 @@ test.describe('Pondicherry Mobile & Desktop Itinerary, Guide and Navigation', ()
     await page.goto('/services/pondicherry-one-day-trip/');
 
     // 1. Prominent Pondicherry visual hero card is visible on mobile
-    const heroImage = page.locator('img[alt*="French White Town & Promenade Beach"]');
+    const heroImage = page.locator('[data-hero-mobile] img[alt*="French White Town & Promenade Beach"]');
     await expect(heroImage).toBeVisible();
-    await expect(page.getByText('French Quarter & Promenade Beach', { exact: true })).toBeVisible();
+    await expect(page.locator('[data-hero-mobile]').getByText('French Quarter & Promenade Beach')).toBeVisible();
 
     // 2. Mobile Trust Strip is visible
     const trustStrip = page.locator('[data-mobile-trust-strip]');
@@ -44,7 +44,7 @@ test.describe('Pondicherry Mobile & Desktop Itinerary, Guide and Navigation', ()
 
     // 5. Booking Engine is rendered with Pondicherry drop location input
     await expect(page.getByText('Book Chennai to Pondicherry')).toBeVisible();
-    await expect(page.getByText('Drop Location in Pondicherry')).toBeVisible();
+    await expect(page.locator('#booking').getByText('Destination / Drop in Pondicherry')).toBeVisible();
     await expect(page.locator('input[placeholder*="White Town"]')).toBeVisible();
 
     // 6. Test Guide Tabs on mobile
@@ -67,7 +67,7 @@ test.describe('Pondicherry Mobile & Desktop Itinerary, Guide and Navigation', ()
     await page.goto('/services/pondicherry-one-day-trip/');
 
     // Prominent Pondicherry visual hero card is visible on desktop
-    const heroImage = page.locator('img[alt*="French White Town & Promenade Beach"]');
+    const heroImage = page.locator('[data-hero-desktop] img[alt*="French White Town & Promenade Beach"]');
     await expect(heroImage).toBeVisible();
 
     // Dedicated Pondicherry Booking Engine is visible in initial hero viewport

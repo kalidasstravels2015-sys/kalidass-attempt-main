@@ -135,22 +135,22 @@ export default function CompletedTripsView({
             return (
               <div
                 key={b.bookingId}
-                className="p-4 rounded-m3-xl bg-m3-surface-container-lowest border border-m3-outline-variant/80 shadow-m3-1 flex flex-col lg:flex-row lg:items-center justify-between gap-3 hover:border-m3-outline transition-all"
+                className="p-4 rounded-m3-xl bg-m3-surface-container-lowest border border-m3-outline-variant/80 shadow-m3-1 flex flex-col xl:flex-row xl:items-center justify-between gap-3 hover:border-m3-outline transition-all"
               >
                 <div className="space-y-1 flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-mono-code text-xs font-bold bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant px-2 py-0.5 rounded-full">
+                    <span className="font-mono-code text-xs font-bold bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">
                       {b.bookingId}
                     </span>
-                    <span className="text-xs font-bold text-m3-on-surface">
+                    <span className="text-xs font-bold text-m3-on-surface whitespace-nowrap">
                       👤 {b.guestNamePhone}
                     </span>
-                    <span className="text-[11px] text-m3-on-surface-variant">
+                    <span className="text-[11px] text-m3-on-surface-variant whitespace-nowrap">
                       👨‍✈️ Driver: {b.assignedChauffeur}
                     </span>
                   </div>
 
-                  <div className="text-xs font-medium text-m3-on-surface">
+                  <div className="text-xs font-medium text-m3-on-surface break-words">
                     📍 {b.pickupAddress} • 🗓️ {b.travelDateTime}
                   </div>
 
@@ -160,11 +160,11 @@ export default function CompletedTripsView({
                 </div>
 
                 {/* Google Review Button */}
-                <div className="shrink-0 flex items-center gap-2 pt-2 lg:pt-0 border-t lg:border-t-0 border-m3-outline-variant/40">
+                <div className="shrink-0 flex items-center gap-2 pt-2 xl:pt-0 border-t xl:border-t-0 border-m3-outline-variant/40">
                   <button
                     type="button"
                     onClick={() => handleSendReviewWA(b)}
-                    className={`h-9 px-4 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs ${
+                    className={`h-9 px-4 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs whitespace-nowrap ${
                       isReviewSent
                         ? 'bg-m3-surface-container-high text-m3-on-surface-variant border border-m3-outline-variant hover:bg-m3-surface-container-highest'
                         : 'bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary shadow-m3-1'

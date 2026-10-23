@@ -6,9 +6,9 @@ test.describe('Chidambaram Mobile & Desktop Itinerary, Guide and Navigation', ()
     await page.goto('/services/chidambaram-temple-trip/');
 
     // 1. Prominent Chidambaram Temple visual hero card is visible on mobile
-    const templeImage = page.locator('img[alt*="Thillai Natarajar Temple & Pichavaram"]');
+    const templeImage = page.locator('[data-hero-mobile] img[alt*="Thillai Natarajar Temple & Pichavaram"]');
     await expect(templeImage).toBeVisible();
-    await expect(page.getByText('Natarajar Temple & Pichavaram', { exact: true })).toBeVisible();
+    await expect(page.locator('[data-hero-mobile]').getByText('Natarajar Temple & Pichavaram')).toBeVisible();
 
     // 2. Mobile Trust Strip is visible
     const trustStrip = page.locator('[data-mobile-trust-strip]');
@@ -44,7 +44,7 @@ test.describe('Chidambaram Mobile & Desktop Itinerary, Guide and Navigation', ()
 
     // 5. Booking Engine is rendered with Chidambaram destination
     await expect(page.getByText('Book Chennai to Chidambaram')).toBeVisible();
-    await expect(page.getByText('Fixed Destination: Chidambaram & Pichavaram')).toBeVisible();
+    await expect(page.locator('#booking').getByText('Chidambaram & Pichavaram')).toBeVisible();
 
     // 6. Test Guide Tabs on mobile
     const btnTimings = page.locator('#guide-tab-btn-practical');
@@ -66,7 +66,7 @@ test.describe('Chidambaram Mobile & Desktop Itinerary, Guide and Navigation', ()
     await page.goto('/services/chidambaram-temple-trip/');
 
     // Prominent Chidambaram Temple visual hero card is visible on desktop
-    const templeImage = page.locator('img[alt*="Thillai Natarajar Temple & Pichavaram"]');
+    const templeImage = page.locator('[data-hero-desktop] img[alt*="Thillai Natarajar Temple & Pichavaram"]');
     await expect(templeImage).toBeVisible();
 
     // Dedicated Chidambaram Booking Engine is visible in initial hero viewport

@@ -499,6 +499,7 @@ const callUrl = `tel:${phone}`;
     // Modal Opening & Closing
     function openAiModal() {
       if (!modal) return;
+      modal.setAttribute('data-hide-contact-dock', 'true');
       modal.classList.remove('hidden', 'pointer-events-none', 'opacity-0');
       modal.classList.add('flex');
       modal.setAttribute('aria-hidden', 'false');
@@ -580,6 +581,7 @@ const callUrl = `tel:${phone}`;
       modal.classList.add('opacity-0');
 
       setTimeout(() => {
+        modal.removeAttribute('data-hide-contact-dock');
         modal.classList.add('hidden', 'pointer-events-none');
         modal.classList.remove('flex');
         modal.setAttribute('aria-hidden', 'true');

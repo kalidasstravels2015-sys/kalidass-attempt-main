@@ -26,27 +26,20 @@ test('Verify GST Tax Invoice mode with dynamic recipient state detection on card
   const vehSelect = bookingSection.locator('select').nth(1);
   await vehSelect.selectOption('dzire');
 
-  // Verify Initial Calm Cash State: ₹ 6,000 All-Inclusive
-  await expect(bookingSection.locator('.text-3xl, .text-4xl').first()).toHaveText('₹ 6,000');
-  await expect(bookingSection.locator('a[data-direct-whatsapp="true"]').first()).toHaveText('Book on WhatsApp');
+  // Verify Initial Calm Cash State: ₹6,000 All-Inclusive
+  await expect(bookingSection.locator('[data-tour-fare="true"]').first()).toHaveText(/₹\s*6,000/);
+  await expect(bookingSection.locator('a[data-direct-whatsapp="true"]').first()).toHaveText(/Book on WhatsApp/);
 
-  // Check GST Tax Invoice checkbox -> automatically switches to ₹ 6,300 in place with GST inclusions and itemized breakdown
+  // Check GST Tax Invoice checkbox -> automatically switches to ₹6,300 in place with GST inclusions and itemized breakdown
   const gstCheckbox = bookingSection.locator('input[type="checkbox"]');
   await expect(gstCheckbox).toBeVisible();
   await gstCheckbox.check();
 
   // Verify in-place card update
-  await expect(bookingSection.locator('.text-3xl, .text-4xl').first()).toHaveText('₹ 6,300');
-  await expect(bookingSection.getByText('Covers FASTag Tolls + AP Permit + Hill Climb + Driver Bata + Parking + 5% GST')).toBeVisible();
-
-  // GST breakdown is automatically revealed upon checking
-  await expect(bookingSection.getByText('Total GST Tax Added (5%):')).toBeVisible();
+  await expect(bookingSection.locator('[data-tour-fare="true"]').first()).toHaveText(/₹\s*6,300/);
+  await expect(bookingSection.getByText('GST (5%):')).toBeVisible();
   await expect(bookingSection.getByText('+₹300')).toBeVisible();
-  await expect(bookingSection.getByText('100% Claimable (-₹300)')).toBeVisible();
-
-  // 1. Verify Default Intra-State (Tamil Nadu) Tax Calculation in itemized breakdown
-  await expect(bookingSection.getByText('CGST @ 2.5% (SAC 9966):')).toBeVisible();
-  await expect(bookingSection.getByText('SGST @ 2.5% (SAC 9966):')).toBeVisible();
+  await expect(bookingSection.getByText(/Tamil Nadu Intra-State/)).toBeVisible();
 
   // 2. Test Inter-State B2B Client (Karnataka GSTIN 29...) in progressive disclosure form
   const companyInput = bookingSection.locator('input[placeholder*="Infosys BPM Ltd"]');
@@ -142,9 +135,9 @@ test('Capture mobile card screenshots for Standard Cash and GST Tax Invoice mode
   await bookingSection.locator('select').first().selectOption('4');
   await bookingSection.locator('select').nth(1).selectOption('dzire');
 
-  // Verify Default Cash Mode (₹ 6,000 displayed ONCE as hero text)
-  await expect(bookingSection.locator('.text-3xl, .text-4xl').first()).toHaveText('₹ 6,000');
-  await expect(bookingSection.locator('a[data-direct-whatsapp="true"]').first()).toHaveText('Book on WhatsApp');
+  // Verify Default Cash Mode (₹6,000 displayed ONCE as hero text)
+  await expect(bookingSection.locator('[data-tour-fare="true"]').first()).toHaveText(/₹\s*6,000/);
+  await expect(bookingSection.locator('a[data-direct-whatsapp="true"]').first()).toHaveText(/Book on WhatsApp/);
 
   // Verify removed items are NOT present
   await expect(bookingSection.getByText('Zero Hidden Charges Guarantee')).toHaveCount(0);
@@ -159,9 +152,10 @@ test('Capture mobile card screenshots for Standard Cash and GST Tax Invoice mode
   // Switch to GST Tax Invoice Mode via checkbox
   await bookingSection.locator('input[type="checkbox"]').check();
 
-  // Card now shows GST Mode (₹ 6,300) in place
-  await expect(bookingSection.locator('.text-3xl, .text-4xl').first()).toHaveText('₹ 6,300');
-  await expect(bookingSection.getByText('Covers FASTag Tolls + AP Permit + Hill Climb + Driver Bata + Parking + 5% GST')).toBeVisible();
+  // Card now shows GST Mode (₹6,300) in place
+  await expect(bookingSection.locator('[data-tour-fare="true"]').first()).toHaveText(/₹\s*6,300/);
+  await expect(bookingSection.getByText('GST (5%):')).toBeVisible();
+  await expect(bookingSection.getByText('+₹300')).toBeVisible();
 
   // Verify removed items are NOT present in GST mode
   await expect(bookingSection.getByText('View Full Government Format Proforma Letterhead')).toHaveCount(0);

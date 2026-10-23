@@ -151,6 +151,40 @@ const title = "Solo Pilot Command Tower — Kalidass Travels | Admin Console";
       .animate-fadeIn {
         animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       }
+
+      /* Google Places Autocomplete - High z-index to overlay cleanly over admin modals */
+      .pac-container {
+        z-index: 99999 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.22), 0 0 0 1px rgba(15, 23, 42, 0.08) !important;
+        border: 1px solid #E2E8F0 !important;
+        background-color: #FFFFFF !important;
+        margin-top: 4px !important;
+        font-family: 'Plus Jakarta Sans', system-ui, sans-serif !important;
+        font-size: 12px !important;
+        overflow-y: auto !important;
+        max-height: 280px !important;
+        pointer-events: auto !important;
+      }
+      .pac-item {
+        padding: 8px 12px !important;
+        cursor: pointer !important;
+        border-top: 1px solid #F1F5F9 !important;
+        font-size: 12px !important;
+        line-height: 1.4 !important;
+      }
+      .pac-item:hover, .pac-item-selected {
+        background-color: #F8FAFC !important;
+      }
+      .pac-item-query {
+        font-size: 13px !important;
+        color: #0F172A !important;
+        font-weight: 600 !important;
+      }
+      .pac-matched {
+        font-weight: 700 !important;
+        color: #0B57D0 !important;
+      }
     </style>
   </head>
   <body class="min-h-full bg-m3-surface text-m3-on-surface flex flex-col">

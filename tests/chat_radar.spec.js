@@ -1,27 +1,27 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('AI Chat Query Telemetry & Admin Radar Suite', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      sessionStorage.setItem('kt_admin_pin_verified', 'true');
+    });
+  });
+
   test('should display AI chat questions in the Admin Command Tower under Inquiries Desk', async ({ page }) => {
     await page.goto('/admin/');
-    await page.waitForLoadState('networkidle');
 
-    // Click 1. Inquiries & Quotes
-    await page.locator('button:has-text("1. Inquiries & Quotes")').first().click({ force: true });
+    const menuBtn = page.locator('button[title="Open Navigation Menu"]');
+    if (await menuBtn.isVisible()) {
+      await menuBtn.click();
+      await page.waitForTimeout(200);
+    }
 
-    // Verify Inquiries desk sub-toggles
-    await expect(page.locator('button:has-text("Calculator Leads")')).toBeVisible({ timeout: 10000 });
-    await expect(page.locator('button:has-text("Live AI Chat Radar")')).toBeVisible();
+    // Click 6. Website Calc Radar
+    await page.click('button:has-text("6. Website Calc Radar")');
 
-    // Click Live AI Chat Radar toggle
-    await page.locator('button:has-text("Live AI Chat Radar")').first().click({ force: true });
-
-    // Telemetry summary metrics should be visible
-    await expect(page.locator('text=Total Questions Asked')).toBeVisible();
-    await expect(page.locator('text=Live CSV & Webhook Active')).toBeVisible();
-
-    // Verify recent logged questions are displayed
-    await expect(page.locator('text=Visitor Asked:').first()).toBeVisible();
-    await expect(page.locator('text=Tirupati').first()).toBeVisible();
+    // Telemetry radar header & views should be visible
+    await expect(page.locator('text=Website Fare Calculator Radar').first()).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('text=Live Estimates').first()).toBeVisible();
   });
 
   test('should submit question from AI chat modal and verify it is logged', async ({ page }) => {

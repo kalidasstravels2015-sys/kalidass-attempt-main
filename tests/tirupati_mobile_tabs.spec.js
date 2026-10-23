@@ -6,9 +6,9 @@ test.describe('Tirupati Mobile & Desktop Itinerary, Guide and Navigation', () =>
     await page.goto('/services/tirupati-package/');
 
     // 1. Prominent Tirupati Temple visual hero card is visible on mobile
-    const templeImage = page.locator('img[alt*="Sri Venkateswara Swamy Temple Tirumala"]');
+    const templeImage = page.locator('[data-hero-mobile] img[alt*="Sri Venkateswara Swamy Temple Tirumala"]');
     await expect(templeImage).toBeVisible();
-    await expect(page.getByText('Sri Venkateswara Temple, Tirumala')).toBeVisible();
+    await expect(page.locator('[data-hero-mobile]').getByText('Sri Venkateswara Temple, Tirumala')).toBeVisible();
 
     // 2. Mobile Trust Strip is visible
     const trustStrip = page.locator('[data-mobile-trust-strip]');
@@ -58,7 +58,7 @@ test.describe('Tirupati Mobile & Desktop Itinerary, Guide and Navigation', () =>
     await page.goto('/services/tirupati-package/');
 
     // Prominent Tirupati Temple visual hero card is visible on desktop
-    const templeImage = page.locator('img[alt*="Sri Venkateswara Swamy Temple Tirumala"]');
+    const templeImage = page.locator('[data-hero-desktop] img[alt*="Sri Venkateswara Swamy Temple Tirumala"]');
     await expect(templeImage).toBeVisible();
 
     // Redundant action strip is completely removed

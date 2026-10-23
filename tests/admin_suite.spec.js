@@ -102,7 +102,7 @@ test.describe('Admin Operations Command Tower Suite', () => {
     // Verify it instantly appears on the radar
     await expect(page.locator('text=#KT-TEST-99').first()).toBeVisible({ timeout: 5000 });
     await expect(page.locator('text=Chennai Central ➔ Puducherry Beach').first()).toBeVisible();
-    await expect(page.locator('text=Rs.4,200').first()).toBeVisible();
+    await expect(page.locator('text=4,200').first()).toBeVisible();
   });
 
   test('should require customer name and mobile number before moving enquiry to active trips', async ({ page }) => {

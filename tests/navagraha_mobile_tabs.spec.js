@@ -6,15 +6,15 @@ test.describe('Navagraha Mobile & Desktop Itinerary, Guide and Navigation', () =
     await page.goto('/services/navagraha-tour/');
 
     // 1. Prominent Navagraha Temple visual hero card is visible on mobile
-    const templeImage = page.locator('img[alt*="Kumbakonam 9 Navagraha Temples Parikrama"]');
+    const templeImage = page.locator('[data-hero-mobile] img[alt*="Kumbakonam 9 Navagraha Temples Parikrama"]');
     await expect(templeImage).toBeVisible();
-    await expect(page.getByText('9 Navagraha Temples Circuit', { exact: true })).toBeVisible();
+    await expect(page.locator('[data-hero-mobile]').getByText('9 Navagraha Temples Circuit')).toBeVisible();
 
     // 2. Mobile Trust Strip is visible
     const trustStrip = page.locator('[data-mobile-trust-strip]');
     await expect(trustStrip).toBeVisible();
     await expect(trustStrip.getByText('₹500 Advance')).toBeVisible();
-    await expect(trustStrip.getByText('NH 36 Tolls Inc.')).toBeVisible();
+    await expect(trustStrip.getByText('Tolls at Actuals')).toBeVisible();
     await expect(trustStrip.getByText('750 km Covered')).toBeVisible();
 
     // 3. Quick Navigation is visible with all 4 section links
@@ -43,8 +43,8 @@ test.describe('Navagraha Mobile & Desktop Itinerary, Guide and Navigation', () =
     await expect(faqSection).toBeVisible();
 
     // 5. Booking Engine is rendered with Navagraha destination
-    await expect(page.getByText('Book Chennai to Kumbakonam 9 Navagraha')).toBeVisible();
-    await expect(page.getByText('Kumbakonam 9 Navagraha Temples Circuit')).toBeVisible();
+    await expect(page.getByText('Book Kumbakonam Navagraha Tour')).toBeVisible();
+    await expect(page.locator('#booking').getByText('9 Navagraha Temples Circuit')).toBeVisible();
 
     // 6. Test Guide Tabs on mobile
     const btnTimings = page.locator('#guide-tab-btn-practical');
@@ -66,13 +66,13 @@ test.describe('Navagraha Mobile & Desktop Itinerary, Guide and Navigation', () =
     await page.goto('/services/navagraha-tour/');
 
     // Prominent Navagraha Temple visual hero card is visible on desktop
-    const templeImage = page.locator('img[alt*="Kumbakonam 9 Navagraha Temples Parikrama"]');
+    const templeImage = page.locator('[data-hero-desktop] img[alt*="Kumbakonam 9 Navagraha Temples Parikrama"]');
     await expect(templeImage).toBeVisible();
 
     // Dedicated Navagraha Booking Engine is visible in initial hero viewport
     const bookingSection = page.locator('#booking');
     await expect(bookingSection).toBeVisible();
-    await expect(page.getByText('Book Chennai to Kumbakonam 9 Navagraha')).toBeVisible();
+    await expect(page.getByText('Book Kumbakonam Navagraha Tour')).toBeVisible();
 
     // Fleet Carousel is visible with Select in Booking Engine buttons
     const carouselTrack = page.locator('#fleet-carousel-track');

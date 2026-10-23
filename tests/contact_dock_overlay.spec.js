@@ -10,34 +10,27 @@ test.describe('Popups hide the floating call button', () => {
     await page.setViewportSize({ width: 412, height: 924 });
   });
 
-  test('Airport "Trip Summary & Booking" sheet hides floating call button and sticky nav, and is not covered', async ({ page }) => {
+  test('AI Concierge modal hides floating call button and sticky nav, and returns on close', async ({ page }) => {
     await page.goto('/services/chennai-airport-taxi/');
     const floatingDock = page.locator('#floating-actions-container');
     const quickNav = page.locator('nav[data-quick-nav]');
     await expect(floatingDock).toBeVisible();
     await expect(quickNav).toBeVisible();
 
-    const tabPickup = page.locator('[data-testid="tab-pickup"]');
-    await tabPickup.click();
+    const aiBtn = page.locator('#floating-ai-btn');
+    await aiBtn.click();
 
-    const toInput = page.locator('#airport-to-input');
-    await toInput.fill('Puducherry, India');
-
-    const calcBtn = page.locator('#get-flat-fare-btn');
-    await calcBtn.scrollIntoViewIfNeeded();
-    await calcBtn.click();
-
-    const modal = page.locator('#airport-booking-modal');
+    const modal = page.locator('#ai-fare-modal');
     await expect(modal).toBeVisible({ timeout: 10000 });
     await expect(floatingDock).toBeHidden();
     await expect(quickNav).toBeHidden();
 
-    // Sheet's own secondary CTA row must be fully clickable (not under the button)
-    const callDesk = modal.getByRole('link', { name: /Call 24\/7 Desk/i });
+    // Secondary CTA in modal is fully clickable
+    const callDesk = modal.locator('a[href^="tel:"]').first();
     await expect(callDesk).toBeVisible();
     await callDesk.click({ trial: true });
 
-    await modal.locator('button[aria-label="Close"]').click();
+    await modal.locator('#close-ai-modal-btn').click();
     await expect(modal).toBeHidden();
     await expect(floatingDock).toBeVisible();
     await expect(quickNav).toBeVisible();

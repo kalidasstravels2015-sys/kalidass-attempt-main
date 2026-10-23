@@ -2,15 +2,14 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Careers Page Visual & Icon Audit', () => {
   test('should render all icons cleanly without font fallback glyphs on mobile', async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto('http://localhost:4321/careers/', { waitUntil: 'networkidle' });
+    await page.goto('/careers/');
 
     // Verify 0 Tamil characters in visible page content
     const pageText = await page.locator('main').first().innerText();
     expect(/[\u0B80-\u0BFF]/.test(pageText)).toBe(false);
 
     // Check Hero section buttons & chips
-    const applyOnlineBtn = page.locator('a:has-text("Apply Online")');
+    const applyOnlineBtn = page.locator('#heroApplyOnlineBtn, button:has-text("Apply Online"), a:has-text("Apply Online")');
     await expect(applyOnlineBtn).toBeVisible();
     await expect(applyOnlineBtn.locator('svg')).toBeVisible();
 
@@ -39,23 +38,18 @@ test.describe('Careers Page Visual & Icon Audit', () => {
     await cardApplyBtns.first().scrollIntoViewIfNeeded();
     await page.screenshot({ path: 'test-results/careers-mobile-cards.png', fullPage: false });
 
-    // Scroll to application form and take screenshot of the form inputs
-    const form = page.locator('#application-form');
-    await form.scrollIntoViewIfNeeded();
-    await page.screenshot({ path: 'test-results/careers-mobile-form-inputs.png', fullPage: false });
+    // Open application modal dialog
+    await cardApplyBtns.first().click();
+    const dialog = page.locator('dialog[aria-labelledby="apply-modal-title"]');
+    await expect(dialog).toBeVisible();
 
-    // Scroll to form submit button with offset above bottom dock
-    const submitBtn = page.locator('#application-form button[type="submit"]');
-    await submitBtn.scrollIntoViewIfNeeded();
-    await page.evaluate(() => window.scrollBy(0, 120));
+    const submitBtn = dialog.getByRole('button', { name: /Apply & Send via WhatsApp/i });
     await expect(submitBtn).toBeVisible();
-    await expect(submitBtn).toHaveText(/Apply Now/);
     await page.screenshot({ path: 'test-results/careers-mobile-form-submit.png', fullPage: false });
   });
 
   test('should render all icons cleanly on desktop', async ({ page }) => {
-    await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto('http://localhost:4321/careers/', { waitUntil: 'networkidle' });
+    await page.goto('/careers/');
 
     await page.screenshot({ path: 'test-results/careers-desktop-hero.png', fullPage: false });
   });

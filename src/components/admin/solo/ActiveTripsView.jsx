@@ -329,14 +329,14 @@ export default function ActiveTripsView({
                 className="p-4 rounded-m3-xl bg-m3-surface-container-lowest border border-m3-outline-variant/80 shadow-m3-1 space-y-3"
               >
                 {/* Top Row: Trip Info & Money Summary */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-3 items-start">
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 items-start">
                   {/* 1. Booking ID, Passenger & Actions */}
                   <div>
                     <div className="flex items-center gap-1.5 mb-1.5 flex-wrap">
-                      <span className="font-mono-code text-xs font-bold bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant px-2 py-0.5 rounded-full">
+                      <span className="font-mono-code text-xs font-bold bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">
                         {b.bookingId}
                       </span>
-                      <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
+                      <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap shrink-0 ${
                         isUnassigned
                           ? 'bg-m3-error-container text-m3-on-error-container border border-m3-error/20'
                           : 'bg-m3-secondary-container text-m3-on-secondary-container border border-m3-outline-variant/60'
