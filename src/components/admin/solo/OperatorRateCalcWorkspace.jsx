@@ -71,6 +71,7 @@ export default function OperatorRateCalcWorkspace({
   const [currentCalc, setCurrentCalc] = useState(null);
   const [copiedQuote, setCopiedQuote] = useState(false);
   const [showQrModal, setShowQrModal] = useState(false);
+  const [quoteLang, setQuoteLang] = useState('en'); // 'en' | 'ta'
 
   // Clean 10-digit customer phone
   const cleanPhone = useMemo(() => {
@@ -120,7 +121,7 @@ export default function OperatorRateCalcWorkspace({
   const advanceRequired = 500;
   const balanceDue = Math.max(0, totalFare - advanceRequired);
 
-  // Formatted official WhatsApp Quotation text
+  // Formatted official WhatsApp Quotation text (Bilingual EN/TA)
   const quotationText = useMemo(() => {
     if (!currentCalc || !totalFare) {
       return '';
@@ -128,6 +129,21 @@ export default function OperatorRateCalcWorkspace({
     const custLabel = callerName.trim() ? callerName.trim() : (isPhoneValid ? `Customer (+91 ${cleanPhone})` : 'Sir/Madam');
     const mapsBlock = buildMapsBlock(currentCalc.pickup || 'Chennai', currentCalc.destination || '', currentCalc.activeTab || 'oneway');
     const distText = currentCalc.distanceKm ? `~${currentCalc.distanceKm} km (Highway Route)` : 'Highway Route';
+
+    if (quoteLang === 'ta') {
+      return (
+        `வணக்கம் ${custLabel}! 🙏\n` +
+        `*காளிதாஸ் டிராவல்ஸ் (சென்னை) — பயண மேற்கோள்*\n\n` +
+        `📍 *பாதை:* ${currentCalc.pickup || 'சென்னை'} ➔ ${currentCalc.destination || 'இடம்'}\n` +
+        `🚗 *வாகனம்:* ${currentCalc.vehicleName || 'AC கார்'} (${currentCalc.serviceTitle || 'பயணம்'})\n` +
+        `💰 *முழு கட்டணம்:* ₹${totalFare.toLocaleString('en-IN')}\n` +
+        `*(எரிபொருள், நெடுஞ்சாலை சுங்கச்சாவடி & ஓட்டுநர் பேட்டா உட்பட. மறைமுக கட்டணம் எதுவும் இல்லை)*\n\n` +
+        `🔒 *முன்பதிவை உறுதி செய்ய:*\n` +
+        `UPI மூலம் *₹500 முன்பணம்* செலுத்தவும்: *8939539211@okbizaxis* (Kalidass Travels)\n` +
+        `வண்டி & ஓட்டுநர் உடனே ஒதுக்கப்படும். மீதித் தொகை ₹${balanceDue.toLocaleString('en-IN')} பயணம் முடிந்து ஓட்டுநரிடம் செலுத்தலாம்.\n\n` +
+        `📞 24/7 உதவி எண்: +91 89395 39211`
+      );
+    }
 
     return (
       `🚕 *KALIDASS TRAVELS — TRIP QUOTE*\n\n` +
@@ -141,7 +157,7 @@ export default function OperatorRateCalcWorkspace({
       `Vehicle & driver allocated instantly upon payment. Balance ₹${balanceDue.toLocaleString('en-IN')} payable to driver directly.\n\n` +
       `📞 24/7 Helpline: +91 89395 39211`
     );
-  }, [currentCalc, totalFare, quoteId, callerName, cleanPhone, isPhoneValid, balanceDue]);
+  }, [currentCalc, totalFare, quoteId, callerName, cleanPhone, isPhoneValid, balanceDue, quoteLang]);
 
   // UPI QR Code URL for ₹500 advance
   const upiQrUrl = useMemo(() => {
@@ -517,8 +533,30 @@ export default function OperatorRateCalcWorkspace({
             </div>
           </div>
 
-          {/* Right: The 4 High-Leverage Operator Action Buttons */}
+          {/* Right: The High-Leverage Operator Action Buttons */}
           <div className="flex items-center gap-2 w-full md:w-auto justify-end flex-wrap sm:flex-nowrap">
+            {/* Bilingual Quote Language Toggle */}
+            <div className="inline-flex rounded-full p-0.5 bg-m3-surface-container-high border border-m3-outline-variant shrink-0" title="Select quotation language">
+              <button
+                type="button"
+                onClick={() => setQuoteLang('en')}
+                className={`px-2.5 py-1 text-xs font-bold rounded-full transition-colors ${
+                  quoteLang === 'en' ? 'bg-m3-primary text-m3-on-primary shadow-2xs' : 'text-m3-on-surface hover:text-m3-primary'
+                }`}
+              >
+                EN
+              </button>
+              <button
+                type="button"
+                onClick={() => setQuoteLang('ta')}
+                className={`px-2.5 py-1 text-xs font-bold rounded-full transition-colors ${
+                  quoteLang === 'ta' ? 'bg-emerald-700 text-white shadow-2xs' : 'text-m3-on-surface hover:text-emerald-700'
+                }`}
+              >
+                தமிழ்
+              </button>
+            </div>
+
             {/* 1. Direct WhatsApp Dispatch */}
             <button
               type="button"

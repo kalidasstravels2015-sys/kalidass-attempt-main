@@ -16,6 +16,7 @@ import siteContent from "../data/siteContent.json";
 import FloatingActions from "../components/FloatingActions.astro";
 import BookingEnquiryModal from "../components/BookingEnquiryModal.astro";
 import AndroidPhoneIcon from "../components/AndroidPhoneIcon.astro";
+import { Phone, Menu, CheckCircle2, ShieldCheck, MapPin, Mail } from "lucide-react";
 
 const defaultTitle = "Kalidass Travels - Premium Travel Experience";
 const defaultDescription = "Premium travel and cab services across South India. Professional drivers, comfortable vehicles, affordable rates.";
@@ -520,6 +521,13 @@ const siteNavigationSchema = {
       name: "Website Sitemap",
       description: "Complete architectural directory and HTML sitemap of all routes, services, rates, verified drivers, and AI knowledge endpoints.",
       url: "https://kalidasstravels.in/sitemap/",
+    },
+    {
+      "@type": "SiteNavigationElement",
+      position: 10,
+      name: "Attach Taxi & Driver Registration",
+      description: "Official driver onboarding and commercial vehicle attachment portal for Kalidass Travels Medavakkam Hub.",
+      url: "https://kalidasstravels.in/attach-cab/",
     },
   ],
 };
@@ -1621,6 +1629,18 @@ const unifiedSchemaGraph = {
                     <div class="text-[11px] text-m3-on-surface-variant">Per-KM rates &amp; one-way drops (₹14/km)</div>
                   </div>
                 </a>
+                <a href="/services/tempo-traveller-rental-chennai/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-m3-primary-container/40 transition-colors group/item" role="menuitem">
+                  <svg class="w-4 h-4 text-m3-primary shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="18" height="12" x="3" y="4" rx="2"/>
+                    <circle cx="7" cy="18" r="2"/>
+                    <circle cx="17" cy="18" r="2"/>
+                    <path d="M7 16h10"/>
+                  </svg>
+                  <div>
+                    <div class="text-xs font-bold text-m3-on-surface group-hover/item:text-m3-primary">Tempo Traveller Rental</div>
+                    <div class="text-[11px] text-m3-on-surface-variant">12, 14, 17, 20-Seater &amp; Urbania (₹24/km)</div>
+                  </div>
+                </a>
                 <a href="/services/corporate/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-m3-primary-container/40 transition-colors group/item" role="menuitem">
                   <svg class="w-4 h-4 text-m3-primary shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect width="16" height="20" x="4" y="2" rx="2"/>
@@ -1848,22 +1868,22 @@ const unifiedSchemaGraph = {
             <!-- Mobile Direct Call Button -->
             <a
               href="tel:+918939539211"
-              class="md:hidden inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-bold shadow-xs transition-all mr-1"
+              class="md:hidden min-h-[44px] inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-bold shadow-xs transition-all mr-1"
               aria-label="Call Kalidass Travels on 89395 39211"
             >
-              <span class="material-symbols-outlined text-[16px]">call</span>
+              <Phone className="w-4 h-4" />
               <span>Call</span>
             </a>
 
             <!-- Mobile Icon Button (M3 Standard Icon Button) -->
             <button
               id="mobile-menu-btn"
-              class="md:hidden text-m3-on-surface hover:bg-m3-surface-container p-2.5 rounded-m3-full min-h-[48px] min-w-[48px] flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary"
+              class="md:hidden text-m3-on-surface hover:bg-m3-surface-container p-2.5 rounded-m3-full min-h-[48px] min-w-[48px] flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary cursor-pointer"
               aria-label="Open mobile menu"
               aria-expanded="false"
               aria-controls="mobile-menu-drawer"
             >
-              <span class="material-symbols-outlined text-[24px]">menu</span>
+              <Menu className="w-6 h-6" />
             </button>
           </div>
         </div>
@@ -1960,6 +1980,7 @@ const unifiedSchemaGraph = {
           <div id="cabs-submenu" class="mt-0.5 space-y-0.5 pl-5 pr-1 pb-1">
             <a href="/services/chennai-airport-taxi/" class="block px-2 py-2.5 min-h-[44px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors">Airport Transfers (MAA)</a>
             <a href="/services/outstation-cabs/" class="block px-2 py-2.5 min-h-[44px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors">Outstation Cabs (₹14/km)</a>
+            <a href="/services/tempo-traveller-rental-chennai/" class="block px-2 py-2.5 min-h-[44px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors">Tempo Traveller (₹24/km)</a>
             <a href="/services/corporate/" class="block px-2 py-2.5 min-h-[44px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors">Corporate Mobility</a>
             <a href="/services/acting-drivers/" class="block px-2 py-2.5 min-h-[44px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors">Acting Drivers</a>
             <a href="/services/" class="block px-2 py-2.5 min-h-[44px] flex items-center rounded-m3-xs text-[12px] font-bold text-m3-primary hover:bg-m3-surface-container-lowest transition-colors">All Services Overview &rarr;</a>
@@ -2073,7 +2094,7 @@ const unifiedSchemaGraph = {
           </p>
 
           <!-- Government Registration Credentials Strip -->
-          <div class="rounded-m3-lg bg-white/[0.05] border border-white/10 px-2.5 sm:px-3 py-2 flex flex-wrap items-center justify-between gap-1.5 sm:gap-2 text-[10px] min-[380px]:text-[11px] text-xs">
+          <div class="rounded-m3-lg bg-white/[0.05] border border-white/10 px-2.5 sm:px-3 py-2 flex flex-wrap items-center justify-between gap-1.5 sm:gap-2 text-xs">
             <a
               href="https://services.gst.gov.in/services/searchtp?gstin=33COVPM0531D1Z4"
               target="_blank"
@@ -2081,7 +2102,7 @@ const unifiedSchemaGraph = {
               class="inline-flex items-center gap-1 text-white/90 hover:text-white transition-colors group min-w-0"
               title="Verify GSTIN 33COVPM0531D1Z4 on Official Govt Portal"
             >
-              <span class="material-symbols-outlined text-[14px] text-m3-success group-hover:text-m3-success shrink-0">verified</span>
+              <CheckCircle2 className="w-3.5 h-3.5 text-m3-success group-hover:text-m3-success shrink-0" />
               <span class="font-bold text-white shrink-0">GST:</span>
               <span class="font-mono text-white/90 group-hover:underline truncate">33COVPM0531D1Z4</span>
             </a>
@@ -2095,7 +2116,7 @@ const unifiedSchemaGraph = {
               class="inline-flex items-center gap-1 text-white/90 hover:text-white transition-colors group min-w-0"
               title="Verify MSME / Udyam Reg. UDYAM-TN-08-0018345 on Official Govt Portal"
             >
-              <span class="material-symbols-outlined text-[14px] text-m3-tertiary group-hover:text-m3-tertiary shrink-0">verified_user</span>
+              <ShieldCheck className="w-3.5 h-3.5 text-m3-tertiary group-hover:text-m3-tertiary shrink-0" />
               <span class="font-bold text-white shrink-0">MSME:</span>
               <span class="font-mono text-white/90 group-hover:underline truncate">UDYAM-TN-08-0018345</span>
             </a>
@@ -2114,7 +2135,7 @@ const unifiedSchemaGraph = {
               rel="noopener noreferrer"
               class="inline-flex items-center gap-1.5 font-semibold text-white/90 hover:text-white transition-colors group"
             >
-              <span class="material-symbols-outlined text-[15px] text-m3-primary group-hover:scale-110 transition-transform">location_on</span>
+              <MapPin className="w-3.5 h-3.5 text-m3-primary group-hover:scale-110 transition-transform" />
               <span>View on Google Maps (5.0 ★)</span>
             </a>
           </div>
@@ -2131,7 +2152,13 @@ const unifiedSchemaGraph = {
             <li>
               <a href="/careers/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs inline-flex items-center gap-1.5">
                 <span>Join Our Team (Careers)</span>
-                <span class="px-1.5 py-0.2 rounded-m3-xs bg-white/10 text-white/80 text-[10px] font-medium border border-white/20">Hiring</span>
+                <span class="px-2 py-0.5 rounded-m3-xs bg-white/10 text-white/90 text-xs font-medium border border-white/20">Hiring</span>
+              </a>
+            </li>
+            <li>
+              <a href="/attach-cab/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs inline-flex items-center gap-1.5 font-medium">
+                <span>Attach Taxi &amp; Driver Join</span>
+                <span class="px-2 py-0.5 rounded-m3-xs bg-emerald-500/20 text-emerald-300 text-xs font-semibold border border-emerald-500/30">Partner</span>
               </a>
             </li>
           </ul>
@@ -2144,6 +2171,7 @@ const unifiedSchemaGraph = {
             <li><a href="/services/chennai-airport-taxi/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs font-semibold text-emerald-400">Airport Transfers (MAA)</a></li>
             <li><a href="/services/tirupati-package/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Chennai to Tirupati Cab</a></li>
             <li><a href="/services/outstation-cabs/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Outstation Cabs</a></li>
+            <li><a href="/services/tempo-traveller-rental-chennai/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Tempo Traveller Rental</a></li>
             <li><a href="/services/tours/temple-tours/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Temple Tours</a></li>
             <li><a href="/services/navagraha-tour/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Kumbakonam Navagraha Tour</a></li>
             <li><a href="/services/corporate/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Corporate Mobility</a></li>
@@ -2159,20 +2187,20 @@ const unifiedSchemaGraph = {
           </p>
           <div class="space-y-2">
             <a href="tel:+918939539211" class="flex items-center gap-2 text-xs font-semibold text-emerald-400 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">
-              <span class="material-symbols-outlined text-[16px]">call</span>
+              <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
               <span>+91 89395 39211 (Primary 24/7 Helpline)</span>
             </a>
             <a href="tel:+919092303060" class="flex items-center gap-2 text-xs font-semibold text-m3-primary-fixed hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">
-              <span class="material-symbols-outlined text-[16px]">call</span>
+              <Phone className="w-3.5 h-3.5 text-m3-primary-fixed shrink-0" />
               <span>+91 90923 03060 (Google Maps Helpline)</span>
             </a>
             <a href="tel:+916381939769" class="flex items-center gap-2 text-xs font-semibold text-m3-primary-fixed hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">
-              <span class="material-symbols-outlined text-[16px]">call</span>
+              <Phone className="w-3.5 h-3.5 text-m3-primary-fixed shrink-0" />
               <span>+91 63819 39769</span>
             </a>
             <!--email_off-->
             <a href="mailto:kalidasstravels2015@gmail.com" class="flex items-center gap-2 text-xs text-m3-inverse-on-surface/80 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">
-              <span class="material-symbols-outlined text-[16px]">mail</span>
+              <Mail className="w-3.5 h-3.5 text-white/80 shrink-0" />
               <span>kalidasstravels2015@gmail.com</span>
             </a>
             <!--/email_off-->
@@ -2181,7 +2209,7 @@ const unifiedSchemaGraph = {
       </div>
 
       <!-- Legal & Copyright -->
-      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-m3-inverse-on-surface/60 gap-4">
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-m3-inverse-on-surface/60 gap-4">
         <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
           <p>&copy; {new Date().getFullYear()} Kalidass Travels | All rights reserved.</p>
           <a href="/privacy/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Privacy Policy</a>

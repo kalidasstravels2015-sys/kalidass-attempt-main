@@ -57,7 +57,7 @@ CRITICAL PRICING & ROUTING RULES:
    - Maruti Ertiga / XL6: Round trip ₹17/km | One-way drop ₹19/km | Driver Bata: ₹500/day
    - Toyota Innova: Round trip ₹20/km | One-way drop ₹22/km | Driver Bata: ₹600/day
    - Innova Crysta: Round trip ₹22/km | One-way drop ₹25/km | Driver Bata: ₹700/day
-   - Tempo Traveller (12 Seater): Round trip ₹26/km | One-way drop ₹29/km | Driver Bata: ₹800/day
+   - Tempo Traveller (12 Seater): Round trip ₹24/km | One-way drop ₹26/km | Driver Bata: ₹800/day
 4. LOCAL CHENNAI RENTALS:
    - Sedan: 4hr/40km ₹1,350 | 8hr/80km ₹2,200 (Extra km: ₹15, hr: ₹150)
    - Ertiga: 4hr/40km ₹1,700 | 8hr/80km ₹2,800 (Extra km: ₹17, hr: ₹200)

@@ -1300,37 +1300,83 @@ Please save my quote & confirm live cab availability.` + omMapsBlock;
           {estimate > 0 && (
             <div className="pt-2 border-t border-m3-outline-variant/60 space-y-3 animate-in fade-in duration-200">
               
-              {/* Short City Trip Alert & Alternative Suggestion */}
-              {tripType === 'round' && (effDist * 2) <= 120 && (
-                <div className="p-3 bg-amber-50 border border-amber-300/80 rounded-xl space-y-2 text-xs">
-                  <div className="flex items-start gap-2.5">
-                    <div className="w-7 h-7 rounded-full bg-amber-100 flex items-center justify-center shrink-0 text-amber-800 font-bold mt-0.5">
-                      💡
-                    </div>
-                    <div className="flex-1">
-                      <div className="font-bold text-amber-950 text-xs sm:text-sm">
-                        Short City Route Detected (~{(effDist * 2).toFixed(0)} km Round Trip)
+              {/* Short City Trip Alert & Alternative Suggestion (Only for genuine intra-city rides) */}
+              {(() => {
+                const isOutstationKw = (txt) => {
+                  if (!txt) return false;
+                  const l = txt.toLowerCase();
+                  return ['mahabalipuram', 'mamallapuram', 'pondicherry', 'puducherry', 'tirupati', 'kanchipuram', 'chengalpattu', 'sriperumbudur', 'vellore', 'tiruvallur', 'thiruvallur', 'arakkonam', 'thiruthani', 'gummidipoondi', 'sri city'].some(k => l.includes(k));
+                };
+                const isHwy = isOutstationKw(drop) || isOutstationKw(pickup) || effDist >= 45;
+                const isMahabs = /mahabalipuram|mamallapuram/i.test(drop || '') || /mahabalipuram|mamallapuram/i.test(pickup || '');
+
+                if (isMahabs && tripType === 'round') {
+                  return (
+                    <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl space-y-2 text-xs">
+                      <div className="flex items-start gap-2.5">
+                        <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center shrink-0 text-blue-800 font-bold mt-0.5">
+                          🏛️
+                        </div>
+                        <div className="flex-1">
+                          <div className="font-bold text-blue-950 text-xs sm:text-sm">
+                            Mahabalipuram 1-Day ECR Tour Package Available
+                          </div>
+                          <p className="text-blue-900/90 mt-0.5 leading-relaxed text-[11.5px]">
+                            Visiting Shore Temple, Five Rathas &amp; Kovalam Beach? Book our dedicated <strong>8-Hr / 120-Km Day Tour package</strong> starting from ₹3,500 (Sedan) / ₹4,500 (Ertiga) with flexible photo stops!
+                          </p>
+                        </div>
                       </div>
-                      <p className="text-amber-900/90 mt-0.5 leading-relaxed text-[11.5px]">
-                        Outstation round trips carry a mandatory 250 km/day interstate minimum (₹{estimate.toLocaleString('en-IN')}). For city travel &amp; round trips within Chennai, our <strong>Local City Packages</strong> (e.g. 5 Hrs / 50 Km at ₹1,500 or 8 Hrs / 80 Km at ₹2,200) are much more economical!
-                      </p>
+                      <div className="flex items-center justify-between gap-2 pt-2 border-t border-blue-200/80 flex-wrap">
+                        <span className="text-[11px] font-semibold text-blue-950">
+                          Fixed Day Tour • 8 Hours / 120 Km
+                        </span>
+                        <a
+                          href="/services/mahabalipuram-ecr-temple-route/"
+                          className="px-3 py-1.5 bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs rounded-lg transition-colors flex items-center gap-1 cursor-pointer shadow-2xs"
+                        >
+                          <span>View Mahabalipuram Tour</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </a>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center justify-between gap-2 pt-2 border-t border-amber-200/80 flex-wrap">
-                    <span className="text-[11px] font-semibold text-amber-950">
-                      Save up to ₹{Math.max(0, estimate - 2200).toLocaleString('en-IN')} with our Local Hourly Rental!
-                    </span>
-                    <a
-                      href="/#booking"
-                      onClick={() => onClose()}
-                      className="px-3 py-1.5 bg-amber-900 hover:bg-amber-950 text-white font-bold text-xs rounded-lg transition-colors flex items-center gap-1 cursor-pointer shadow-2xs"
-                    >
-                      <span>View Local Packages</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </a>
-                  </div>
-                </div>
-              )}
+                  );
+                }
+
+                if (tripType === 'round' && (effDist * 2) <= 120 && !isHwy) {
+                  return (
+                    <div className="p-3 bg-amber-50 border border-amber-300/80 rounded-xl space-y-2 text-xs">
+                      <div className="flex items-start gap-2.5">
+                        <div className="w-7 h-7 rounded-full bg-amber-100 flex items-center justify-center shrink-0 text-amber-800 font-bold mt-0.5">
+                          💡
+                        </div>
+                        <div className="flex-1">
+                          <div className="font-bold text-amber-950 text-xs sm:text-sm">
+                            Short City Route Detected (~{(effDist * 2).toFixed(0)} km Round Trip)
+                          </div>
+                          <p className="text-amber-900/90 mt-0.5 leading-relaxed text-[11.5px]">
+                            Outstation round trips carry a mandatory 250 km/day interstate minimum (₹{estimate.toLocaleString('en-IN')}). For city travel &amp; round trips within Chennai, our <strong>Local City Packages</strong> (e.g. 5 Hrs / 50 Km at ₹1,500 or 8 Hrs / 80 Km at ₹2,200) are much more economical!
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between gap-2 pt-2 border-t border-amber-200/80 flex-wrap">
+                        <span className="text-[11px] font-semibold text-amber-950">
+                          Save up to ₹{Math.max(0, estimate - 2200).toLocaleString('en-IN')} with our Local Hourly Rental!
+                        </span>
+                        <a
+                          href="/#booking"
+                          onClick={() => onClose()}
+                          className="px-3 py-1.5 bg-amber-900 hover:bg-amber-950 text-white font-bold text-xs rounded-lg transition-colors flex items-center gap-1 cursor-pointer shadow-2xs"
+                        >
+                          <span>View Local Packages</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </a>
+                      </div>
+                    </div>
+                  );
+                }
+
+                return null;
+              })()}
 
               {/* Hero Price & Inclusions Card */}
               <div className="p-3 sm:p-4 rounded-m3-xl bg-m3-surface-container-low border border-m3-outline-variant/60">
@@ -1457,7 +1503,7 @@ Please save my quote & confirm live cab availability.` + omMapsBlock;
                   size="md"
                   data-direct-whatsapp="true"
                   className="flex-1 px-4 py-3 min-h-[46px] text-xs sm:text-sm font-bold shadow-m3-1 justify-center active:scale-[0.99]"
-                  text={`Send Quote & Book on WhatsApp (₹${estimate.toLocaleString('en-IN')})`}
+                  text="Book on WhatsApp"
                 />
 
                 <a

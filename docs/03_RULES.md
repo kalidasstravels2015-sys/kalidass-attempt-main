@@ -43,7 +43,7 @@
 
 ### 2.2 Typography & Icon Standards
 - **Rule 2.2.1 (Google M3 15-Role Typescale):** Use only pre-configured Tailwind M3 typography classes (`text-m3-display-l`, `text-m3-headline-m`, `text-m3-body-l`, `text-m3-label-m`, etc.). Do not write arbitrary inline font sizes.
-- **Rule 2.2.2 (Icon Uniformity):** Use **Google Material Symbols Outlined** or **Lucide React** icons. Always provide an accessible `aria-label` or `aria-hidden="true"` on every icon element.
+- **Rule 2.2.2 (Vector SVG Icon Standardization):** Always use **Lucide React** (`lucide-react`) vector SVG icons or native inline SVGs across all `.astro`, `.jsx`, and `.tsx` pages/components. NEVER use `<span class="material-symbols-outlined">...</span>` on new or modified pages; the local font is a 5.6 KB subset containing only ~12 glyphs for homepage LCP, causing glyphs outside the subset to render as clipped 1em raw text fragments (`d`, `t`, `h`). Always provide an accessible `aria-label` or `aria-hidden="true"` on interactive/decorative icon elements.
 
 ---
 

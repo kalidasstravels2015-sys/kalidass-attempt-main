@@ -2,6 +2,7 @@
 // QuickAnswer.astro — High-authority AEO & AI Overview Snapshot Component
 // Designed according to DESIGN_SYSTEM.md (M3 Luxe Ruby & Warm Amber)
 import WhatsAppButton from './WhatsAppButton.astro';
+import { CheckCircle2, Phone, Award, Route, Star, ExternalLink, ShieldCheck } from 'lucide-react';
 ---
 
 <section
@@ -21,7 +22,7 @@ import WhatsAppButton from './WhatsAppButton.astro';
           <div
             class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide"
           >
-            <span class="material-symbols-outlined text-[15px] text-m3-primary shrink-0">verified</span>
+            <CheckCircle2 className="w-4 h-4 text-m3-primary shrink-0" />
             <span>AITP Certified Commercial Fleet · Serving Since 2019</span>
           </div>
 
@@ -40,7 +41,7 @@ import WhatsAppButton from './WhatsAppButton.astro';
           <!-- Micro Links for AI / Humans -->
           <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-m3-on-surface-variant">
             <span class="inline-flex items-center gap-1 font-medium text-m3-on-surface">
-              <span class="material-symbols-outlined text-[16px] text-m3-primary">verified</span>
+              <CheckCircle2 className="w-3.5 h-3.5 text-m3-primary shrink-0" />
               <span>Updated for 2026</span>
             </span>
             <span class="text-m3-outline">•</span>
@@ -71,10 +72,10 @@ import WhatsAppButton from './WhatsAppButton.astro';
           <!-- Direct Phone Call -->
           <a
             href="tel:+918939539211"
-            class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-surface-container border border-m3-outline-variant text-m3-on-surface font-bold text-xs sm:text-sm shadow-m3-1 transition-all"
+            class="inline-flex items-center justify-center min-h-[44px] gap-2 px-5 py-3 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-surface-container border border-m3-outline-variant text-m3-on-surface font-bold text-xs sm:text-sm shadow-m3-1 transition-all"
             aria-label="Call Kalidass Travels dispatch desk"
           >
-            <span class="material-symbols-outlined text-[18px] text-m3-primary">call</span>
+            <Phone className="w-4 h-4 text-m3-primary shrink-0" />
             <span class="text-m3-label-l font-bold">Call +91 89395 39211</span>
           </a>
         </div>
@@ -86,41 +87,50 @@ import WhatsAppButton from './WhatsAppButton.astro';
       >
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center shrink-0 shadow-m3-0">
-            <span class="material-symbols-outlined text-[20px] text-m3-primary">military_tech</span>
+            <Award className="w-5 h-5 text-m3-primary shrink-0" />
           </div>
           <div>
             <div class="text-xs font-bold text-m3-on-surface">7+ Years Service</div>
-            <div class="text-[11px] text-m3-on-surface-variant">Since 2019</div>
+            <div class="text-xs text-m3-on-surface-variant">Since 2019</div>
           </div>
         </div>
 
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center shrink-0 shadow-m3-0">
-            <span class="material-symbols-outlined text-[20px] text-m3-primary">route</span>
+            <Route className="w-5 h-5 text-m3-primary shrink-0" />
           </div>
           <div>
             <div class="text-xs font-bold text-m3-on-surface">25,000+ Trips</div>
-            <div class="text-[11px] text-m3-on-surface-variant">South India Covered</div>
+            <div class="text-xs text-m3-on-surface-variant">South India Covered</div>
           </div>
         </div>
 
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center shrink-0 shadow-m3-0">
-            <span class="material-symbols-outlined text-[20px] text-m3-tertiary">star</span>
+        <a
+          href="https://maps.app.goo.gl/i2LdJhWMi2ZgAiCa8"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex items-center gap-3 group"
+          title="View 5.0 Star Verified Google Reviews for Kalidass Travels"
+        >
+          <div class="w-10 h-10 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center shrink-0 shadow-m3-0 group-hover:scale-105 transition-transform">
+            <Star className="w-5 h-5 text-amber-500 fill-amber-500 shrink-0" />
           </div>
           <div>
-            <div class="text-xs font-bold text-m3-on-surface">4.9★ Rating</div>
-            <div class="text-[11px] text-m3-on-surface-variant">1,500+ Family Reviews</div>
+            <div class="text-xs font-bold text-m3-on-surface flex items-center gap-1">
+              <span>5.0★ Google Maps</span>
+              <ExternalLink className="w-3.5 h-3.5 text-m3-outline opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+            </div>
+            <div class="text-xs text-m3-on-surface-variant group-hover:underline">12 Verified Reviews</div>
           </div>
-        </div>
+        </a>
 
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center shrink-0 shadow-m3-0">
-            <span class="material-symbols-outlined text-[20px] text-m3-primary">verified_user</span>
+            <ShieldCheck className="w-5 h-5 text-m3-primary shrink-0" />
           </div>
           <div>
             <div class="text-xs font-bold text-m3-on-surface">AITP Certified</div>
-            <div class="text-[11px] text-m3-on-surface-variant">100% PVC Drivers</div>
+            <div class="text-xs text-m3-on-surface-variant">100% PVC Drivers</div>
           </div>
         </div>
       </div>

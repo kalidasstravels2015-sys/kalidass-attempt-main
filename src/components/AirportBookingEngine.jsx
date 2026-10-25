@@ -774,7 +774,7 @@ export default function AirportBookingEngine({
 
   const inputWrap  = 'relative flex items-center bg-slate-50 hover:bg-slate-100/80 border border-slate-200 rounded-xl px-3 py-2 min-h-[44px] focus-within:ring-2 focus-within:ring-[#1a73e8] focus-within:border-[#1a73e8] transition-all';
   const inputField = 'bg-transparent w-full outline-none text-sm font-semibold text-slate-800 pr-16 placeholder:text-slate-400 placeholder:text-xs placeholder:font-normal';
-  const labelCls   = 'block text-[11px] font-bold text-slate-600 uppercase tracking-wide mb-1';
+  const labelCls   = 'block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1';
 
   return (
     <>
@@ -786,7 +786,7 @@ export default function AirportBookingEngine({
         >
           <div className="bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
             <div className="max-w-3xl mx-auto px-3 py-2 flex items-center gap-2">
-              <span className={'shrink-0 text-[10px] font-extrabold px-2.5 py-1 rounded-full border ' + (direction === 'pickup' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-slate-100 text-slate-700 border-slate-200')}>
+              <span className={'shrink-0 text-xs font-extrabold px-2.5 py-1 rounded-full border ' + (direction === 'pickup' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-slate-100 text-slate-700 border-slate-200')}>
                 ✈ {direction === 'pickup' ? 'PICKUP' : 'DROP'}
               </span>
               <div className="flex items-center gap-1.5 min-w-0 flex-1">
@@ -927,7 +927,7 @@ export default function AirportBookingEngine({
                 {direction === 'pickup' ? 'To (Your Destination / Hotel / City)' : 'To (Airport Drop)'}
               </label>
               {distanceKm > 0 && (
-                <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">
+                <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
                   ~{distanceKm} km · {duration || 'Direct Route'}
                 </span>
               )}
@@ -984,7 +984,7 @@ export default function AirportBookingEngine({
               <div className="flex items-center justify-between gap-1 mb-1">
                 <label 
                   htmlFor="airport-pickup-datetime" 
-                  className="text-[11px] sm:text-xs font-bold text-slate-600 flex items-center gap-1.5 cursor-pointer truncate min-w-0"
+                  className="text-xs font-bold text-slate-600 flex items-center gap-1.5 cursor-pointer truncate min-w-0"
                 >
                   <Calendar className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
                   <span className="truncate">Pickup Date &amp; Time</span>
@@ -1005,7 +1005,7 @@ export default function AirportBookingEngine({
               <div className="flex items-center justify-between gap-1 mb-1">
                 <label 
                   htmlFor="airport-flight-details" 
-                  className="text-[11px] sm:text-xs font-bold text-slate-600 flex items-center gap-1.5 cursor-pointer truncate min-w-0"
+                  className="text-xs font-bold text-slate-600 flex items-center gap-1.5 cursor-pointer truncate min-w-0"
                 >
                   <Plane className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
                   <span className="truncate">
@@ -1013,7 +1013,7 @@ export default function AirportBookingEngine({
                     <span className="sm:hidden">{direction === 'pickup' ? 'Flight No. / Time' : 'Flight No. / Time'}</span>
                   </span>
                 </label>
-                <span className="text-[9px] sm:text-[10px] font-bold text-[#0b57d0] bg-[#1a73e8]/10 px-1 sm:px-1.5 py-0.5 rounded-full shrink-0">
+                <span className="text-xs font-bold text-[#0b57d0] bg-[#1a73e8]/10 px-2 py-0.5 rounded-full shrink-0">
                   <span className="hidden min-[380px]:inline">Live </span>Radar
                 </span>
               </div>
@@ -1025,70 +1025,6 @@ export default function AirportBookingEngine({
                 placeholder={direction === 'pickup' ? 'e.g. 6E-241 @ 14:30' : 'e.g. AI-428 @ 18:00'}
                 className="w-full min-w-0 bg-transparent text-xs sm:text-sm font-semibold text-slate-800 placeholder:text-slate-400 placeholder:text-xs placeholder:font-normal outline-none p-0"
               />
-            </div>
-          </div>
-
-          {/* Passengers & Vehicle Model Selection Tiles */}
-          <div className="grid grid-cols-2 gap-2 sm:gap-3">
-            {/* Passenger Tile */}
-            <div className="group relative rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-slate-50 hover:border-slate-300 focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/20 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
-              <div className="flex items-center justify-between gap-1 mb-1">
-                <label 
-                  htmlFor="airport-passengers" 
-                  className="text-[11px] sm:text-xs font-bold text-slate-600 flex items-center gap-1.5 cursor-pointer truncate"
-                >
-                  <Users className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
-                  <span className="truncate">Passengers</span>
-                </label>
-              </div>
-              <div className="relative">
-                <select
-                  id="airport-passengers"
-                  value={passengers}
-                  onChange={(e) => handlePassengerChange(e.target.value)}
-                  className="w-full bg-transparent appearance-none outline-none cursor-pointer pr-5 text-xs sm:text-sm font-semibold text-slate-800 truncate p-0"
-                >
-                  {PASSENGER_OPTIONS.map(opt => (
-                    <option key={opt.value} value={opt.value} className="text-slate-900 font-semibold">
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="w-3.5 h-3.5 text-slate-400 pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 shrink-0" />
-              </div>
-            </div>
-
-            {/* Vehicle Model Tile */}
-            <div className="group relative rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-slate-50 hover:border-slate-300 focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/20 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
-              <div className="flex items-center justify-between gap-1 mb-1">
-                <label 
-                  htmlFor="airport-vehicle" 
-                  className="text-[11px] sm:text-xs font-bold text-slate-600 flex items-center gap-1.5 cursor-pointer truncate"
-                >
-                  <Car className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
-                  <span className="truncate">Vehicle Model</span>
-                </label>
-              </div>
-              <div className="relative">
-                <select
-                  id="airport-vehicle"
-                  value={vehicle}
-                  onChange={(e) => { setVehicle(e.target.value); }}
-                  className="w-full bg-transparent appearance-none outline-none cursor-pointer pr-5 text-xs sm:text-sm font-semibold text-slate-800 truncate p-0"
-                >
-                  {vehicleOptions.map(v => {
-                    const cap = VEHICLE_CAPACITY[v] ?? 4;
-                    const pax = parseInt(passengers);
-                    const disabled = cap < pax;
-                    return (
-                      <option key={v} value={v} disabled={disabled} className="text-slate-900 font-semibold">
-                        {v} ({cap} Pax)
-                      </option>
-                    );
-                  })}
-                </select>
-                <ChevronDown className="w-3.5 h-3.5 text-slate-400 pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 shrink-0" />
-              </div>
             </div>
           </div>
 
@@ -1113,7 +1049,7 @@ export default function AirportBookingEngine({
                 </>
               )}
             </button>
-            <div className="text-[11px] text-slate-500 font-medium text-center mt-1">
+            <div className="text-xs text-slate-500 font-medium text-center mt-1">
               No phone number required to check fare
             </div>
           </div>
@@ -1133,11 +1069,11 @@ export default function AirportBookingEngine({
 
               {/* Official Quote Ref & 24-Hr Price Lock Header */}
               <div className="flex items-center justify-between gap-2 pb-2 border-b border-slate-200/80 flex-wrap">
-                <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#0b57d0] bg-[#1a73e8]/10 px-2.5 py-0.5 rounded-full">
+                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0b57d0] bg-[#1a73e8]/10 px-2.5 py-0.5 rounded-full">
                   <span>Official Quote Ref: {quoteRefId}</span>
                 </span>
-                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-800 bg-emerald-100/90 border border-emerald-200 px-2 py-0.5 rounded-full">
-                  <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-800 bg-emerald-100/90 border border-emerald-200 px-2 py-0.5 rounded-full">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                   <span>Rate Locked 24 Hrs • Send to WhatsApp to Save</span>
                 </span>
               </div>
@@ -1149,16 +1085,16 @@ export default function AirportBookingEngine({
                     <span className="text-base font-extrabold text-slate-900">
                       {vehicle}
                     </span>
-                    <span className="text-[10px] font-bold bg-[#1a73e8]/10 text-[#0b57d0] px-2 py-0.5 rounded-full">
+                    <span className="text-xs font-bold bg-[#1a73e8]/10 text-[#0b57d0] px-2 py-0.5 rounded-full">
                       {passengers} Pax
                     </span>
                   </div>
-                  <div className="text-[11px] text-slate-600 font-medium mt-0.5">
+                  <div className="text-xs text-slate-600 font-medium mt-0.5">
                     ~{breakdown.actual_km} km {direction === 'pickup' ? 'Airport Pickup' : 'Airport Drop'} · {duration || ('~' + Math.max(1, Math.round(breakdown.actual_km / 50)) + ' hrs driving')}
                   </div>
                 </div>
                 <div className="text-right shrink-0">
-                  <div className="text-[11px] text-slate-500 font-medium">Total Fare</div>
+                  <div className="text-xs text-slate-500 font-medium">Total Fare</div>
                   <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading leading-tight">
                     ₹{estimate.toLocaleString('en-IN')}<span className="text-xs sm:text-sm font-semibold text-slate-500 ml-1">+ Extra</span>
                   </div>
@@ -1167,14 +1103,12 @@ export default function AirportBookingEngine({
 
               {/* 1-Tap Vehicle Price Comparison Strip */}
               <div className="pb-2 border-b border-slate-200/80">
-                <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
-                  Compare &amp; Switch Cab Instantly (1-Tap):
+                <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+                  <span>Select Vehicle (1-Tap Instant Comparison):</span>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
                   {AIRPORT_COMPARISON_VEHICLES.map((item) => {
                     const cap = VEHICLE_CAPACITY[item.key] ?? 4;
-                    const paxNum = parseInt(passengers, 10) || 4;
-                    const isDisabled = cap < paxNum;
                     const isSelected = vehicle === item.key;
                     const userLoc = (direction === 'pickup' ? drop : pickup).trim();
                     const cmpFareObj = calculateOutstationAirportFare(breakdown.actual_km || distanceKm || 130, item.key, userLoc);
@@ -1182,20 +1116,25 @@ export default function AirportBookingEngine({
                       <button
                         key={item.key}
                         type="button"
-                        disabled={isDisabled}
-                        onClick={() => setVehicle(item.key)}
-                        className={`px-2 py-1.5 rounded-lg border text-left transition-all cursor-pointer ${
+                        onClick={() => {
+                          setVehicle(item.key);
+                          setPassengers(String(cap));
+                        }}
+                        className={`p-2 rounded-xl border text-left transition-all cursor-pointer relative ${
                           isSelected
-                            ? 'bg-[#1a73e8] text-white border-[#1a73e8] shadow-2xs'
-                            : isDisabled
-                              ? 'bg-slate-100/60 text-slate-400 border-slate-200/60 opacity-50 cursor-not-allowed'
-                              : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-200'
+                            ? 'bg-blue-50/90 border-[#1a73e8] ring-2 ring-[#1a73e8]/30 shadow-xs'
+                            : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-200 shadow-2xs'
                         }`}
                       >
-                        <div className={`text-[10px] font-bold truncate ${isSelected ? 'text-white/90' : 'text-slate-500'}`}>
-                          {item.shortLabel}
+                        <div className="flex items-center justify-between gap-1">
+                          <span className={`text-xs font-bold truncate ${isSelected ? 'text-[#0b57d0]' : 'text-slate-800'}`}>
+                            {item.shortLabel}
+                          </span>
                         </div>
-                        <div className={`text-xs font-extrabold ${isSelected ? 'text-white' : 'text-slate-900'}`}>
+                        <div className="text-xs text-slate-500 font-medium mt-0.5 truncate">
+                          {cap} Pax
+                        </div>
+                        <div className={`text-xs sm:text-sm font-extrabold mt-1 ${isSelected ? 'text-[#0b57d0]' : 'text-slate-900'}`}>
                           ₹{cmpFareObj.total_fare.toLocaleString('en-IN')}
                         </div>
                       </button>
@@ -1259,7 +1198,7 @@ export default function AirportBookingEngine({
               </div>
 
               {/* Inclusions & Highlights */}
-              <div className="pt-2.5 border-t border-dashed border-slate-200 text-[11px] text-slate-600 space-y-1.5">
+              <div className="pt-2.5 border-t border-dashed border-slate-200 text-xs text-slate-600 space-y-1.5">
                 <div className="flex items-center gap-1.5 text-emerald-800 font-medium">
                   <Car className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                   <span>
@@ -1283,7 +1222,7 @@ export default function AirportBookingEngine({
                     <User className="w-3.5 h-3.5 text-slate-500" />
                     <span>Your Name &amp; Mobile Number (Optional)</span>
                   </span>
-                  <span className="text-[10px] text-slate-500 font-medium bg-white px-2 py-0.5 rounded border border-slate-200">
+                  <span className="text-xs text-slate-500 font-medium bg-white px-2 py-0.5 rounded border border-slate-200">
                     Faster Coordination
                   </span>
                 </div>
@@ -1316,7 +1255,7 @@ export default function AirportBookingEngine({
                     className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-sm shadow-md transition-all active:scale-[0.99] cursor-pointer"
                   >
                     <WhatsAppIcon className="w-4 h-4" />
-                    <span>Send Quote &amp; Book {vehicle} on WhatsApp (₹{estimate.toLocaleString('en-IN')})</span>
+                    <span>Book on WhatsApp</span>
                   </button>
 
                   <a
@@ -1327,7 +1266,7 @@ export default function AirportBookingEngine({
                     <span>Call Desk</span>
                   </a>
                 </div>
-                <p className="text-[11px] text-slate-600 text-center font-medium">
+                <p className="text-xs text-slate-600 text-center font-medium">
                   ✓ Lock Rate 24 Hrs ({quoteRefId}) • ✓ Reserve Cab & Driver • ✓ Advance ₹500 Only After Confirmation
                 </p>
               </div>

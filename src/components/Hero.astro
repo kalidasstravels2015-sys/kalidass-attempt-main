@@ -2,6 +2,8 @@
 import OptimizedImage from "./OptimizedImage.astro";
 import siteContent from "../data/siteContent.json";
 import WhatsAppIcon from "./WhatsAppIcon.astro";
+import GoogleRatingBadge from "./GoogleRatingBadge.astro";
+import { ArrowRight, Phone, Shield, ShieldCheck, ChevronDown } from "lucide-react";
 
 const hero = siteContent.hero;
 const heroImages = hero.images && hero.images.length > 0 ? hero.images : [
@@ -76,19 +78,7 @@ const heroImageAlts: Record<string, string> = {
   >
 
     <!-- E-E-A-T Social Proof Eyebrow Badge (Direct link to Google Maps 5.0 Star Profile) -->
-    <a
-      href="https://maps.app.goo.gl/i2LdJhWMi2ZgAiCa8"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 py-1.5 rounded-m3-full bg-slate-900/65 hover:bg-slate-900/85 backdrop-blur-md border border-white/25 text-white text-[11px] sm:text-xs font-medium mb-2.5 sm:mb-3.5 shadow-sm transition-all hover:scale-105 active:scale-95 group cursor-pointer"
-      title="View 5.0 Star Verified Google Reviews for Kalidass Travels"
-    >
-      <span class="text-amber-400 text-xs sm:text-sm">★</span>
-      <span class="font-bold text-white">5.0 on Google Maps</span>
-      <span class="text-white/60">•</span>
-      <span class="text-white/90 group-hover:underline">12 Verified Reviews</span>
-      <span class="material-symbols-outlined text-[13px] text-white/70 ml-0.5 group-hover:translate-x-0.5 transition-transform">open_in_new</span>
-    </a>
+    <GoogleRatingBadge variant="dark" class="mb-2.5 sm:mb-3.5" />
 
     <!-- M3 Display Headline -->
     <h1
@@ -111,17 +101,17 @@ const heroImageAlts: Record<string, string> = {
     <div class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3.5 mb-4 sm:mb-6">
       <a
         href="#booking-panel"
-        class="inline-flex items-center gap-2 sm:gap-2.5 px-5 sm:px-8 py-3 sm:py-3.5 !bg-[#0B57D0] hover:!bg-[#0842A0] active:!bg-[#0842A0] !text-white text-xs sm:text-sm font-bold rounded-m3-full shadow-m3-2 hover:shadow-m3-3 transition-all transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer border border-white/20 group"
+        class="inline-flex items-center gap-2 sm:gap-2.5 px-5 sm:px-8 py-3 sm:py-3.5 min-h-[44px] !bg-[#0B57D0] hover:!bg-[#0842A0] active:!bg-[#0842A0] !text-white text-xs sm:text-sm font-bold rounded-m3-full shadow-m3-2 hover:shadow-m3-3 transition-all transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer border border-white/20 group"
       >
         <span class="text-xs sm:text-m3-label-l font-bold text-white">Calculate Fare &amp; Rates</span>
-        <span class="material-symbols-outlined text-[18px] sm:text-[20px] text-white transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+        <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-white transform group-hover:translate-x-1 transition-transform shrink-0" />
       </a>
       <a
         href="tel:+918939539211"
-        class="inline-flex items-center gap-2 px-4 sm:px-6 py-3 sm:py-3.5 bg-emerald-600/90 hover:bg-emerald-600 active:bg-emerald-700 text-white text-xs sm:text-sm font-bold rounded-m3-full shadow-m3-2 hover:shadow-m3-3 transition-all transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer border border-white/20 backdrop-blur-sm"
+        class="inline-flex items-center gap-2 px-4 sm:px-6 py-3 sm:py-3.5 min-h-[44px] bg-emerald-600/90 hover:bg-emerald-600 active:bg-emerald-700 text-white text-xs sm:text-sm font-bold rounded-m3-full shadow-m3-2 hover:shadow-m3-3 transition-all transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer border border-white/20 backdrop-blur-sm"
         aria-label="Call Kalidass Travels on 89395 39211"
       >
-        <span class="material-symbols-outlined text-[18px] sm:text-[20px] text-white">call</span>
+        <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-white shrink-0" />
         <span class="text-xs sm:text-m3-label-l font-bold text-white">Call 89395 39211</span>
       </a>
     </div>
@@ -131,11 +121,11 @@ const heroImageAlts: Record<string, string> = {
       class="flex flex-wrap items-center justify-center gap-2 sm:gap-3.5 max-w-2xl px-1"
     >
       <div class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-m3-full bg-slate-900/50 backdrop-blur-md border border-white/20 text-white text-xs sm:text-m3-label-m shadow-m3-1 hover:bg-slate-900/70 transition-all">
-        <span class="material-symbols-outlined text-[16px] sm:text-[18px] text-white/90 shrink-0">shield</span>
+        <Shield className="w-4 h-4 text-white/90 shrink-0" />
         <span>Pay After Trip</span>
       </div>
       <div class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-m3-full bg-slate-900/50 backdrop-blur-md border border-white/20 text-white text-xs sm:text-m3-label-m shadow-m3-1 hover:bg-slate-900/70 transition-all">
-        <span class="material-symbols-outlined text-[16px] sm:text-[18px] text-white/90 shrink-0">verified_user</span>
+        <ShieldCheck className="w-4 h-4 text-white/90 shrink-0" />
         <span>Police Verified Drivers</span>
       </div>
     </div>
@@ -144,10 +134,10 @@ const heroImageAlts: Record<string, string> = {
   <!-- Down Arrow Jump Indicator (Clean Unboxed Chevron - White) -->
   <a
     href="#booking-panel"
-    class="hero-down-arrow absolute left-1/2 -translate-x-1/2 z-40 p-2 flex items-center justify-center text-white/80 hover:text-white active:scale-95 transition-transform hover:scale-125 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-full"
+    class="hero-down-arrow absolute left-1/2 -translate-x-1/2 z-40 p-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-white/80 hover:text-white active:scale-95 transition-transform hover:scale-125 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-full"
     aria-label="Scroll to booking section"
   >
-    <span class="material-symbols-outlined text-[34px] sm:text-[40px] animate-bounce drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)] leading-none select-none">keyboard_arrow_down</span>
+    <ChevronDown className="w-8 h-8 sm:w-10 sm:h-10 animate-bounce drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)] shrink-0" />
   </a>
 </section>
 

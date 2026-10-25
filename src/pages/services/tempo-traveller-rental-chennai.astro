@@ -1,0 +1,2334 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Breadcrumbs from "../../components/SEO/Breadcrumbs.astro";
+import WhatsAppButton from "../../components/WhatsAppButton.astro";
+import TempoQuotationEngine from "../../components/TempoQuotationEngine.jsx";
+import GoogleRatingBadge from "../../components/GoogleRatingBadge.astro";
+import OptimizedImage from "../../components/OptimizedImage.astro";
+import { buildWhatsAppUrl, WHATSAPP_CONFIG } from "../../utils/whatsapp";
+import {
+  ShieldCheck,
+  CheckCircle2,
+  Info,
+  MapPin,
+  Landmark,
+  Receipt,
+  Luggage,
+  Users,
+  Zap,
+  Wind,
+  ChevronRight,
+  ArrowUpDown,
+  ArrowRight,
+  SlidersHorizontal,
+  X
+} from "lucide-react";
+
+const title = "Tempo Traveller Rental in Chennai | 12, 17 Seater & Urbania | Kalidass Travels";
+const description = "Hire luxury 12 & 17-Seater Force Tempo Travellers & Urbania in Chennai. Clean pushback AC, satvik drivers, and all-inclusive packages to Tirupati, Pondy, & Kumbakonam.";
+const canonicalURL = "https://kalidasstravels.in/services/tempo-traveller-rental-chennai/";
+const keywords = "tempo traveller rental chennai, tempo traveller in chennai, 12 seater tempo traveller in chennai, 17 seater tempo traveller chennai, chennai to tirupati tempo traveller package, force urbania rental in chennai, luxury tempo traveller rental chennai, tempo traveller for rent in chennai with driver, chennai to pondicherry tempo traveller price, kumbakonam tempo traveller package";
+
+const breadcrumbItems = [
+  { name: "Home", item: "/" },
+  { name: "Services", item: "/services/" },
+  { name: "Tempo Traveller Rental Chennai", item: "/services/tempo-traveller-rental-chennai/" },
+];
+
+// Clean 3-Tier Fleet with Detailed Specifications, Accurate Luggage Capacities & Schema Metadata
+// Clean 6-Tier Fleet with Detailed Specifications, Accurate Luggage Capacities & Schema Metadata
+const vanFleet = [
+  {
+    id: "van-12",
+    vehicleKey: "12",
+    name: "12-Seater Luxury Force Tempo",
+    shortTitle: "12-Seater",
+    badge: "MOST POPULAR FOR FAMILIES",
+    capacityNumber: 12,
+    dailyMinPrice: 7200,
+    perKmRate: 24,
+    seating: "8–12 Passengers",
+    baggage: "5–6 Boot Bags + 10–12 Carrier Bags",
+    bootBags: "5–6 Medium (24\") or 4 Large (28\") Bags",
+    overheadBags: "10–12 Soft Backpacks / Daypacks",
+    roofCarrierBags: "10–12 Bulk Bags (Waterproof Tarpaulin)",
+    bootDisplay: "5–6 Bags",
+    cabinDisplay: "10–12 Packs",
+    roofDisplay: "10–12 Bulk",
+    luggageSummary: "5–6 Suitcases in Rear Boot • 10–12 on Weatherproof Top Carrier",
+    headroom: "6.2 ft (1,920 mm) Walk upright",
+    recline: "135° Pushback Recliner",
+    legroom: "32-Inch Generous Pitch",
+    acSystem: "Dual Commercial Compressors + Overhead Louvers",
+    charging: "2.4A Fast USB Ports at Every Row",
+    suspension: "Parabolic Leaf Springs + Anti-Roll Bar",
+    chassis: "Force 3350 WB (Medium Wheelbase)",
+    engine: "2.6L FM CR ED Turbo Diesel (115 HP)",
+    entertainment: "24\" Full HD LED TV + Bluetooth + PA Guide Mic",
+    elderStep: "280 mm Low Boarding Step + Safety Grab Handles",
+    bodyType: "Minibus",
+    cargoLiters: 1200,
+    cargoDesc: "5-6 medium suitcases in rear boot plus heavy-duty weatherproof rooftop carrier",
+    roofLoadKg: 150,
+    image: "/images/fleet/tempo-12.webp",
+    layout: "1x1 Maharaja or 2x1 Luxury Pushback Recliners",
+    idealFor: "Joint family vacations, Tirupati Balaji darshan, Pondicherry weekend trips, wedding guest transfers.",
+    comfortHighlights: [
+      "Plush individual pushback seats with neck support",
+      "High-power dual AC vents across all rows",
+      "Individual 2.4A USB mobile charging points",
+      "Walkthrough high-roof cabin (no crouching)",
+      "LED screen & premium sound system"
+    ],
+    whatsappMsg: "Hi Kalidass Travels Dispatch Desk, I would like to book a 12-Seater Tempo Traveller."
+  },
+  {
+    id: "van-14",
+    vehicleKey: "14",
+    name: "14-Seater Executive Force Tempo",
+    shortTitle: "14-Seater",
+    badge: "EXTRA BOOT SPACE & LEG ROOM",
+    capacityNumber: 14,
+    dailyMinPrice: 7500,
+    perKmRate: 25,
+    seating: "10–14 Passengers",
+    baggage: "6–7 Boot Bags + 12–14 Carrier Bags",
+    bootBags: "6–7 Medium (24\") or 5 Large (28\") Bags",
+    overheadBags: "12–14 Soft Backpacks / Daypacks",
+    roofCarrierBags: "12–14 Bulk Bags (Waterproof Tarpaulin)",
+    bootDisplay: "6–7 Bags",
+    cabinDisplay: "12–14 Packs",
+    roofDisplay: "12–14 Bulk",
+    luggageSummary: "6–7 Suitcases in Extended Boot • 12+ on Weatherproof Top Carrier",
+    headroom: "6.2 ft (1,920 mm) Walk upright",
+    recline: "135° Pushback Recliner",
+    legroom: "33-Inch Comfort Pitch",
+    acSystem: "Dual Commercial Compressors + Row Louvers",
+    charging: "2.4A Fast USB Ports at Every Row",
+    suspension: "Parabolic Leaf Springs + Heavy Anti-Roll Bar",
+    chassis: "Force 3700 WB (Medium-Long Wheelbase)",
+    engine: "2.6L FM CR ED Turbo Diesel (115 HP)",
+    entertainment: "28\" Full HD LED TV + Bluetooth + PA Guide Mic",
+    elderStep: "Low Boarding Footstep + Safety Grab Rail",
+    bodyType: "Minibus",
+    cargoLiters: 1400,
+    cargoDesc: "6-7 medium suitcases in extended boot plus reinforced weatherproof rooftop carrier",
+    roofLoadKg: 160,
+    image: "/images/fleet/tempo-12.webp",
+    layout: "2x1 Luxury Pushback Recliners • Medium-Long Chassis",
+    idealFor: "10–12 person families with multi-day luggage, Yercaud & Yelagiri trips, Kanipakam-Tirupati circuits.",
+    comfortHighlights: [
+      "Dedicated rear luggage compartment ensuring zero bags inside cabin",
+      "Generous 33-inch legroom pitch for restful highway cruising",
+      "High-output dual AC vents tailored for Tamil Nadu summer climate",
+      "Individual USB fast chargers and cup holders at every row",
+      "Balanced medium wheelbase providing easy city turning and highway stability"
+    ],
+    whatsappMsg: "Hi Kalidass Travels Dispatch Desk, I would like to book a 14-Seater Tempo Traveller."
+  },
+  {
+    id: "van-17",
+    vehicleKey: "17",
+    name: "17-Seater Executive Force Tempo (4020 WB)",
+    shortTitle: "17-Seater",
+    badge: "BEST VALUE FOR LARGE GROUPS",
+    capacityNumber: 17,
+    dailyMinPrice: 7800,
+    perKmRate: 26,
+    seating: "13–17 Passengers",
+    baggage: "7–8 Boot Bags + 15 Carrier Bags",
+    bootBags: "7–8 Medium (24\") or 5–6 Large (28\") Bags",
+    overheadBags: "14–17 Soft Backpacks / Daypacks",
+    roofCarrierBags: "15–18 Bulk Bags (Waterproof Tarpaulin)",
+    bootDisplay: "7–8 Bags",
+    cabinDisplay: "14–17 Packs",
+    roofDisplay: "15–18 Bulk",
+    luggageSummary: "7–8 Suitcases in Extended Boot • 15+ on Weatherproof Top Carrier",
+    headroom: "6.3 ft (1,950 mm) Walk upright",
+    recline: "135° Pushback Recliner",
+    legroom: "32-Inch Generous Pitch",
+    acSystem: "Heavy-Duty Twin AC Compressors + Row Louvers",
+    charging: "2.4A Fast USB Ports at Every Row",
+    suspension: "Parabolic Leaf Springs + Anti-Roll Bar",
+    chassis: "Force 4020 WB (Long Wheelbase)",
+    engine: "2.6L FM CR ED Turbo Diesel (115 HP)",
+    entertainment: "32\" Full HD LED TV + Bluetooth + PA Guide Mic",
+    elderStep: "Automatic Electric Boarding Step + Grab Handles",
+    bodyType: "Minibus",
+    cargoLiters: 1600,
+    cargoDesc: "7-8 medium suitcases in extended rear boot plus reinforced weatherproof rooftop carrier",
+    roofLoadKg: 180,
+    image: "/images/fleet/tempo-17.webp",
+    layout: "2x1 High-Back Recliners • Long Wheelbase",
+    idealFor: "Kumbakonam Navagraha circuits, Sabarimala yatra, wedding entourages, corporate team offsites.",
+    comfortHighlights: [
+      "Long wheelbase chassis (4020 WB) for smooth highway riding",
+      "Spacious dedicated rear luggage trunk for all bags",
+      "Heavy-duty twin commercial air conditioning compressors",
+      "Deep recline ergonomic seats for comfortable night travel",
+      "Smooth air-suspension ride on state and national highways"
+    ],
+    whatsappMsg: "Hi Kalidass Travels Dispatch Desk, I would like to book a 17-Seater Tempo Traveller."
+  },
+  {
+    id: "van-20",
+    vehicleKey: "20",
+    name: "20-Seater Grand Force Tempo (High Roof)",
+    shortTitle: "20-Seater",
+    badge: "EXTENDED FAMILY & WEDDINGS",
+    capacityNumber: 20,
+    dailyMinPrice: 9000,
+    perKmRate: 30,
+    seating: "16–20 Passengers",
+    baggage: "8–10 Boot Bags + 20 Carrier Bags",
+    bootBags: "8–10 Medium (24\") or 6–7 Large (28\") Bags",
+    overheadBags: "18–20 Soft Backpacks / Daypacks",
+    roofCarrierBags: "18–22 Bulk Bags (Waterproof Tarpaulin)",
+    bootDisplay: "8–10 Bags",
+    cabinDisplay: "18–20 Packs",
+    roofDisplay: "18–22 Bulk",
+    luggageSummary: "8–10 Suitcases in Rear Boot • 20+ on Weatherproof Top Carrier",
+    headroom: "6.4 ft (1,960 mm) Walk upright",
+    recline: "135° Pushback Recliner",
+    legroom: "32-Inch Generous Pitch",
+    acSystem: "Twin Heavy-Duty High-CFM Dual AC Compressors",
+    charging: "2.4A Fast USB Ports at Every Row",
+    suspension: "Heavy-Duty Multi-Leaf Parabolic Suspension",
+    chassis: "Force 4020 WB High Roof Super Long",
+    engine: "2.6L FM CR ED Turbo Diesel (115 HP / 350 Nm)",
+    entertainment: "32\" Full HD LED TV + PA Guide System",
+    elderStep: "Low Footstep with Dual Handrail Support",
+    bodyType: "Minibus",
+    cargoLiters: 1800,
+    cargoDesc: "8-10 suitcases in rear trunk with full-length weatherproof top rack",
+    roofLoadKg: 200,
+    image: "/images/fleet/tempo-17.webp",
+    layout: "2x1 / 2x2 High-Back Ergonomic Recliners",
+    idealFor: "Grand family weddings, Madurai-Rameswaram pilgrimages, saves ₹15,000 vs. renting two 10-seaters.",
+    comfortHighlights: [
+      "Accommodates up to 20 passengers comfortably in a single air-conditioned vehicle",
+      "High-roof cabin allows tall passengers to walk upright without stooping",
+      "Dual commercial air-conditioning compressors ensure rapid cooling across all rows",
+      "Deep under-seat luggage clearance and high-capacity roof luggage carrier",
+      "Significant cost savings on highway toll gates and driver allowances"
+    ],
+    whatsappMsg: "Hi Kalidass Travels Dispatch Desk, I would like to book a 20-Seater Tempo Traveller."
+  },
+  {
+    id: "van-26",
+    vehicleKey: "26",
+    name: "26-Seater Force Mini Bus Coach",
+    shortTitle: "26-Seater",
+    badge: "LARGE DELEGATIONS & BUS CHARTER",
+    capacityNumber: 26,
+    dailyMinPrice: 12600,
+    perKmRate: 36,
+    seating: "20–26 Passengers",
+    baggage: "15+ Boot Bags + 25 Carrier Bags",
+    bootBags: "12–15 Large (28\") Hard Suitcases",
+    overheadBags: "24–26 Soft Backpacks / Daypacks",
+    roofCarrierBags: "25+ Bulk Bags (Industrial Carrier)",
+    bootDisplay: "15+ Bags",
+    cabinDisplay: "24+ Packs",
+    roofDisplay: "25+ Bulk",
+    luggageSummary: "15+ Large Suitcases in Trunk • 25+ on Industrial Top Carrier",
+    headroom: "6.4 ft (1,960 mm) Wide Walkthrough Aisle",
+    recline: "135° Pushback Coach Seats",
+    legroom: "31-Inch Coach Pitch",
+    acSystem: "Roof-Mounted Heavy-Duty Commercial Bus AC Unit",
+    charging: "USB Charging Points Across Cabin",
+    suspension: "Long-Travel Parabolic Leaf Springs + Heavy Shocks",
+    chassis: "Force Monobus / Super Long Coach Chassis",
+    engine: "2.6L / 3.2L Common Rail High-Torque Turbo Diesel",
+    entertainment: "32\" Smart LED Screen + Full PA Chauffeur Mic",
+    elderStep: "Low Wide Entrance Steps with Illuminated Handrail",
+    bodyType: "Mini Bus",
+    cargoLiters: 2400,
+    cargoDesc: "Deep under-chassis / rear luggage hold plus industrial heavy-duty roof carrier",
+    roofLoadKg: 250,
+    image: "/images/fleet/tempo.webp",
+    layout: "2x2 Spacious High-Back Pushback Coach Seats",
+    idealFor: "Wedding party guest shuttles, corporate plant visits (Oragadam/Sriperumbudur), college & school tours.",
+    comfortHighlights: [
+      "Carries 25-26 passengers together — ideal for large wedding parties and corporate groups",
+      "2x2 pushback coach seats with wide center aisle for effortless boarding",
+      "High-capacity roof-mounted commercial air conditioning for consistent cooling",
+      "Massive luggage storage in dedicated rear hold and heavy-duty rooftop carrier",
+      "Professional commercial heavy-vehicle certified chauffeur with hill-driving experience"
+    ],
+    whatsappMsg: "Hi Kalidass Travels Dispatch Desk, I would like to book a 26-Seater Mini Bus Coach."
+  },
+  {
+    id: "van-urbania",
+    vehicleKey: "urbania",
+    name: "Force Urbania VIP Luxury Chauffeur Van",
+    shortTitle: "Force Urbania",
+    badge: "SUPER LUXURY VIP",
+    capacityNumber: 12,
+    dailyMinPrice: 9600,
+    perKmRate: 32,
+    seating: "10–12 Passengers",
+    baggage: "8–10 Executive Suitcases in Boot",
+    bootBags: "8–10 Hard-Case Executive Trolleys",
+    overheadBags: "12 Aircraft-Style Overhead Bins",
+    roofCarrierBags: "Enclosed Clean Aerodynamic Roof",
+    bootDisplay: "8–10 Trolleys",
+    cabinDisplay: "12 Air Bins",
+    roofDisplay: "Aero Roof",
+    luggageSummary: "8–10 Executive Suitcases in Hydraulic Rear Trunk",
+    headroom: "6.5 ft (1,980 mm) Flat Floor Walkthrough",
+    recline: "140° Executive Captain Recliner",
+    legroom: "35-Inch Business-Class Pitch",
+    acSystem: "Triple-Zone Automatic Climate Control",
+    charging: "Dual USB Fast Ports + Reading Lamp Per Seat",
+    suspension: "European Monocoque Independent Coil Suspension",
+    chassis: "Monocoque Architecture (3615 WB)",
+    engine: "Mercedes-Derived 2.6L FM CR (115 HP / 350 Nm)",
+    entertainment: "32\" Smart LED TV + Premium Acoustic Surround Sound",
+    elderStep: "Low Triple-Seal Sliding Door Step + Illuminated Boarding",
+    bodyType: "Executive Passenger Van",
+    cargoLiters: 1400,
+    cargoDesc: "Deep hydraulic hatch boot holding 8-10 executive hard-case suitcases with overhead bins",
+    roofLoadKg: 0,
+    image: "/images/fleet/force-urbania.webp",
+    layout: "Independent Aircraft-Style Luxury Recliners",
+    idealFor: "VIP corporate delegations, luxury weddings, NRI temple tours, high-comfort vacations.",
+    comfortHighlights: [
+      "Next-generation European monocoque chassis for zero body roll",
+      "Aircraft-style individual AC vents and reading lights",
+      "Triple-zone climate control with acoustic noise deadening",
+      "Panoramic UV-cut privacy windows and ambient lighting",
+      "Electronic Stability Program (ESP) & advanced ABS braking"
+    ],
+    whatsappMsg: "Hi Kalidass Travels Dispatch Desk, I would like to book a Force Urbania Luxury Van."
+  }
+];
+
+// Top 6 Fixed All-Inclusive Packages with Valid Numeric Pricing for Schema
+const popularPackages = [
+  {
+    id: "pkg-tirupati",
+    destination: "Tirupati Balaji Darshan",
+    destinationQuery: "Tirupati",
+    days: 1,
+    image: "/images/temple/tirupati-balaji.webp",
+    imageAlt: "Chennai to Tirupati Balaji Temple Darshan Tour in Tempo Traveller",
+    duration: "1 Day (Same Day)",
+    distance: "350 km Round Trip",
+    maxKm: 350,
+    fare12: "₹12,499",
+    fare17: "₹13,899",
+    price12: 12499,
+    price17: 13899,
+    priceUrbania: 18500,
+    inclusions: "Vehicle, Commercial Diesel, Chauffeur Allowance, NH Tolls, AP Border Permit, Tirumala Ghat Transit.",
+    whatsappMsg: "Hi Kalidass Travels Dispatch Desk, I want to book the Chennai to Tirupati Balaji (1 Day Package) in a Tempo Traveller."
+  },
+  {
+    id: "pkg-pondicherry",
+    destination: "Pondicherry & Auroville",
+    destinationQuery: "Pondicherry",
+    days: 2,
+    image: "/images/temple/pondicherry.webp",
+    imageAlt: "Chennai to Pondicherry and Auroville 2-Day Tour in Tempo Traveller",
+    duration: "2 Days / 1 Night",
+    distance: "360 km Round Trip",
+    maxKm: 400,
+    fare12: "₹9,799",
+    fare17: "₹11,199",
+    price12: 9799,
+    price17: 11199,
+    priceUrbania: 16500,
+    inclusions: "Vehicle, Commercial Diesel, 2 Days Chauffeur Bata, ECR Tolls, French Quarter & Auroville Transit.",
+    whatsappMsg: "Hi Kalidass Travels Dispatch Desk, I want to book the Chennai to Pondicherry (2 Days Package) in a Tempo Traveller."
+  },
+  {
+    id: "pkg-thiruvannamalai",
+    destination: "Thiruvannamalai Girivalam",
+    destinationQuery: "Thiruvannamalai",
+    days: 1,
+    image: "/images/temple/thiruvannamalai-girivalam.webp",
+    imageAlt: "Chennai to Thiruvannamalai Girivalam Temple Tour in Tempo Traveller",
+    duration: "1 Day / Night",
+    distance: "400 km Round Trip",
+    maxKm: 450,
+    fare12: "₹10,999",
+    fare17: "₹12,499",
+    price12: 10999,
+    price17: 12499,
+    priceUrbania: 17500,
+    inclusions: "Vehicle, Commercial Diesel, Chauffeur Bata, All Highway Tolls, 14 km Girivalam Night Standby.",
+    whatsappMsg: "Hi Kalidass Travels Dispatch Desk, I want to book the Chennai to Thiruvannamalai Girivalam Package in a Tempo Traveller."
+  },
+  {
+    id: "pkg-kumbakonam",
+    destination: "Kumbakonam 9 Navagraha Temples",
+    destinationQuery: "Kumbakonam",
+    days: 3,
+    image: "/images/temple/navagraha.webp",
+    imageAlt: "Chennai to Kumbakonam 9 Navagraha Temples Circuit in Tempo Traveller",
+    duration: "3 Days / 2 Nights",
+    distance: "850 km Round Trip",
+    maxKm: 900,
+    fare12: "₹19,999",
+    fare17: "₹22,999",
+    price12: 19999,
+    price17: 22999,
+    priceUrbania: 32000,
+    inclusions: "Vehicle, Commercial Fuel, 3 Days Chauffeur Allowance, All Tolls, Complete 9 Planetary Temples Transit.",
+    whatsappMsg: "Hi Kalidass Travels Dispatch Desk, I want to book the Kumbakonam 9 Navagraha (3 Days Circuit) in a Tempo Traveller."
+  },
+  {
+    id: "pkg-vellore",
+    destination: "Vellore Golden Temple & Sripuram",
+    destinationQuery: "Vellore",
+    days: 1,
+    image: "/images/temple/vellore-golden.webp",
+    imageAlt: "Chennai to Vellore Sripuram Golden Temple Tour in Tempo Traveller",
+    duration: "1 Day (Express)",
+    distance: "300 km Round Trip",
+    maxKm: 320,
+    fare12: "₹9,499",
+    fare17: "₹10,999",
+    price12: 9499,
+    price17: 10999,
+    priceUrbania: 15500,
+    inclusions: "Vehicle, Commercial Diesel, Driver Bata, NH48 Expressway Tolls, Sripuram Golden Temple Drop.",
+    whatsappMsg: "Hi Kalidass Travels Dispatch Desk, I want to book the Chennai to Vellore Golden Temple Package in a Tempo Traveller."
+  },
+  {
+    id: "pkg-sabarimala",
+    destination: "Sabarimala Pilgrim Yatra (Pamba)",
+    destinationQuery: "Sabarimala",
+    days: 4,
+    image: "/images/temple/sabarimala-temple.webp",
+    imageAlt: "Chennai to Sabarimala Pamba Pilgrim Yatra in Tempo Traveller",
+    duration: "4 Days / 3 Nights",
+    distance: "1,500 km Round Trip",
+    maxKm: 1500,
+    fare12: "₹42,999",
+    fare17: "₹48,999",
+    price12: 42999,
+    price17: 48999,
+    priceUrbania: 64000,
+    inclusions: "Vehicle, Commercial Diesel, Kerala Inter-State Tourist Permit, 4 Days Satvik Chauffeur with Ghat Allowance, Nilakkal Standby.",
+    whatsappMsg: "Hi Kalidass Travels Dispatch Desk, I want to book the Chennai to Sabarimala Pilgrim Yatra (4 Days) in a Tempo Traveller."
+  }
+];
+
+// Top 7 Real Passenger FAQs
+const passengerFaqs = [
+  {
+    q: "How much luggage can fit in a 12-seater and 17-seater Tempo Traveller?",
+    a: "In a 12-Seater, the dedicated internal rear boot comfortably holds 5 to 6 medium (24\") trolley suitcases or 4 large (28\") bags, while overhead parcel racks hold 10–12 day packs. For larger groups with 10–15 bulk suitcases (airport check-ins or weddings), our vehicles come with a heavy-duty reinforced rooftop carrier protected by a 100% waterproof tarpaulin. The 17-Seater (4020 Long Wheelbase) features a deeper trunk holding 7–8 medium bags. Pro-Tip: For airport transfers or weddings with 2+ large bags per person, book a 17-Seater for 10–12 passengers so all bags stay inside without using the roof carrier."
+  },
+  {
+    q: "Are tolls, driver bata, and state permits included in your packages?",
+    a: "Yes. All our fixed tour packages (Tirupati, Pondicherry, Kumbakonam, Sabarimala) are 100% all-inclusive covering vehicle hire, commercial diesel, driver bata, NH FASTag tolls, and interstate border permits. There are zero surprise road expenses."
+  },
+  {
+    q: "How does the ₹500 booking advance work?",
+    a: "We collect a nominal ₹500 advance to confirm your vehicle and assign your chauffeur. Crucially, this ₹500 is 100% deducted from your final bill (Total Package Price − ₹500 = Net Balance payable to driver upon trip completion). If cancelled 6+ hours prior, it is 100% refunded."
+  },
+  {
+    q: "Can we arrange multiple doorstep pickups in Chennai?",
+    a: "Yes! We provide doorstep pickup across Chennai. Pickups within our South Chennai hub (Medavakkam, Velachery, Tambaram, Pallavaram, OMR, and Chennai Airport) have zero positioning fees. For routes with multiple pickups on the way, our Dispatch Controller coordinates the route smoothly."
+  },
+  {
+    q: "Can the Tempo Traveller drop each passenger at their individual homes upon return?",
+    a: "Every package includes 1 primary pickup and 1 common drop point. Any drops directly along your return highway corridor (e.g. GST Road or Poonamallee bypass) are 100% complimentary. If passengers require individual doorstep drops across scattered Chennai neighborhoods (e.g. Tambaram + Velachery + Anna Nagar), kilometers exceeding the package cap are billed strictly on the dashboard odometer at ₹24/km with zero hidden markup. We also provide a complimentary 45-minute grace period past midnight (up to 00:45 AM) for highway traffic."
+  },
+  {
+    q: "Does the air-conditioning work when climbing steep hills like Ooty?",
+    a: "Under commercial motor vehicle safety regulations, vehicle air conditioning is temporarily paused during steep 2nd/3rd gear ghat road ascents (such as the 36 hairpin bends in Ooty) to ensure maximum engine torque and prevent overheating. AC runs continuously across all highway plains and gentler slopes."
+  },
+  {
+    q: "Do you assign vegetarian, non-smoking drivers for temple yatras?",
+    a: "Yes. For spiritual yatras including Sabarimala, Kumbakonam Navagraha, and Tirupati Balaji, our Dispatch Desk assigns exclusively satvik, non-smoking, teetotaler chauffeurs who maintain strict pilgrimage sanctity."
+  }
+];
+
+
+// Transparent Tariff Matrix: Local vs Outstation (Clean 6-Tier Fleet)
+const tariffMatrix = [
+  {
+    id: "12-seater",
+    name: "12-Seater Luxury Force",
+    shortName: "12-Seater Force",
+    image: "/images/fleet/tempo-12.webp",
+    capacity: "8–12 Passengers",
+    luggage: "10–12 Large Bags",
+    outstationRate: "₹24 / km",
+    minKm: "300 km / day",
+    driverBata: "₹800 / day",
+    nightBata: "₹300 (11 PM–6 AM)",
+    local5h50km: "₹3,800",
+    local10h100km: "₹6,500",
+    extraKm: "₹24 / km",
+    extraHr: "₹350 / hr",
+    badge: "MOST POPULAR FOR FAMILIES"
+  },
+  {
+    id: "14-seater",
+    name: "14-Seater Executive Force",
+    shortName: "14-Seater Executive",
+    image: "/images/fleet/tempo-12.webp",
+    capacity: "10–14 Passengers",
+    luggage: "12–14 Large Bags",
+    outstationRate: "₹25 / km",
+    minKm: "300 km / day",
+    driverBata: "₹800 / day",
+    nightBata: "₹300 (11 PM–6 AM)",
+    local5h50km: "₹4,200",
+    local10h100km: "₹6,800",
+    extraKm: "₹25 / km",
+    extraHr: "₹400 / hr",
+    badge: "EXTRA BOOT SPACE"
+  },
+  {
+    id: "17-seater",
+    name: "17-Seater Executive Force (4020 WB)",
+    shortName: "17-Seater Executive",
+    image: "/images/fleet/tempo-17.webp",
+    capacity: "13–17 Passengers",
+    luggage: "15–18 Large Bags",
+    outstationRate: "₹26 / km",
+    minKm: "300 km / day",
+    driverBata: "₹800 / day",
+    nightBata: "₹300 (11 PM–6 AM)",
+    local5h50km: "₹4,500",
+    local10h100km: "₹7,200",
+    extraKm: "₹26 / km",
+    extraHr: "₹400 / hr",
+    badge: "BEST VALUE FOR LARGE GROUPS"
+  },
+  {
+    id: "20-seater",
+    name: "20-Seater Grand Force Tempo",
+    shortName: "20-Seater Grand",
+    image: "/images/fleet/tempo-17.webp",
+    capacity: "16–20 Passengers",
+    luggage: "18–20 Large Bags",
+    outstationRate: "₹30 / km",
+    minKm: "300 km / day",
+    driverBata: "₹900 / day",
+    nightBata: "₹300 (11 PM–6 AM)",
+    local5h50km: "₹5,500",
+    local10h100km: "₹8,500",
+    extraKm: "₹30 / km",
+    extraHr: "₹500 / hr",
+    badge: "EXTENDED FAMILY & WEDDINGS"
+  },
+  {
+    id: "26-seater",
+    name: "26-Seater Force Mini Bus Coach",
+    shortName: "26-Seater Mini Bus",
+    image: "/images/fleet/tempo.webp",
+    capacity: "20–26 Passengers",
+    luggage: "24–26 Large Bags",
+    outstationRate: "₹36 / km",
+    minKm: "350 km / day",
+    driverBata: "₹1,000 / day",
+    nightBata: "₹400 (11 PM–6 AM)",
+    local5h50km: "₹7,000",
+    local10h100km: "₹10,500",
+    extraKm: "₹36 / km",
+    extraHr: "₹600 / hr",
+    badge: "LARGE DELEGATIONS & BUS CHARTER"
+  },
+  {
+    id: "urbania",
+    name: "Force Urbania VIP Luxury Chauffeur Van",
+    shortName: "Force Urbania VIP",
+    image: "/images/fleet/force-urbania.webp",
+    capacity: "10–12 Passengers",
+    luggage: "12 Executive Bags",
+    outstationRate: "₹32 / km",
+    minKm: "300 km / day",
+    driverBata: "₹900 / day",
+    nightBata: "₹400 (11 PM–6 AM)",
+    local5h50km: "₹5,500",
+    local10h100km: "₹9,500",
+    extraKm: "₹32 / km",
+    extraHr: "₹500 / hr",
+    badge: "SUPER LUXURY VIP"
+  }
+];
+
+// 4-Step Booking Workflow
+const bookingSteps = [
+  {
+    step: "01",
+    title: "Get Live Quote Online",
+    desc: "Calculate your route instantly using our transparent Quotation Engine. Select 12-Seater, 17-Seater, or Urbania with zero registration barrier.",
+    icon: "Receipt"
+  },
+  {
+    step: "02",
+    title: "Confirm with ₹500 Advance",
+    desc: "Lock in your vehicle and chauffeur with a nominal ₹500 advance via UPI/GPay. Crucially, ₹500 is 100% credited against your final trip balance.",
+    icon: "ShieldCheck"
+  },
+  {
+    step: "03",
+    title: "WhatsApp Dispatch Confirmation",
+    desc: "Receive your vehicle registration number, chauffeur photo ID, and direct contact details via WhatsApp 12–24 hours before your departure.",
+    icon: "CheckCircle2"
+  },
+  {
+    step: "04",
+    title: "Doorstep Pickup & Post-Trip Settlement",
+    desc: "Your chauffeur arrives punctually at your Chennai doorstep. Pay the remaining trip balance comfortably to the driver at the end of the journey.",
+    icon: "Bus"
+  }
+];
+
+// 100% Google Search Central Compliant Schema Graph with Strict Numeric Pricing & Valid ISO Currency
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["AutoRental", "TravelAgency"],
+      "@id": "https://kalidasstravels.in/services/tempo-traveller-rental-chennai/#business",
+      "name": "Kalidass Travels — Tempo Traveller Rental Chennai",
+      "legalName": "Kalidass Travels",
+      "parentOrganization": { "@id": "https://kalidasstravels.in/#localbusiness" },
+      "url": "https://kalidasstravels.in/services/tempo-traveller-rental-chennai/",
+      "logo": "https://kalidasstravels.in/images/logo.webp",
+      "image": "https://kalidasstravels.in/images/fleet/tempo.webp",
+      "description": description,
+      "telephone": "+918939539211",
+      "priceRange": "₹₹",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "No. 4/220, E88, Ponniamman Kovil Street, Annamalai Nagar, Medavakkam",
+        "addressLocality": "Chennai",
+        "addressRegion": "Tamil Nadu",
+        "postalCode": "600100",
+        "addressCountry": "IN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 12.9171,
+        "longitude": 80.1923
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        "opens": "00:00",
+        "closes": "23:59"
+      },
+      "areaServed": [
+        { "@type": "City", "name": "Chennai" },
+        { "@type": "AdministrativeArea", "name": "Tamil Nadu" },
+        { "@type": "AdministrativeArea", "name": "Andhra Pradesh" },
+        { "@type": "AdministrativeArea", "name": "Karnataka" },
+        { "@type": "AdministrativeArea", "name": "Kerala" },
+        { "@type": "AdministrativeArea", "name": "Puducherry" }
+      ],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "1520",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "hasMerchantReturnPolicy": {
+        "@type": "MerchantReturnPolicy",
+        "applicableCountry": "IN",
+        "returnPolicyCategory": "https://schema.org/RefundFullAmount",
+        "merchantReturnDays": 1,
+        "returnMethod": "https://schema.org/ReturnInStore",
+        "returnFees": "https://schema.org/FreeReturn"
+      }
+    },
+    {
+      "@type": "Service",
+      "@id": "https://kalidasstravels.in/services/tempo-traveller-rental-chennai/#service",
+      "name": "Tempo Traveller Rental in Chennai",
+      "serviceType": "Tempo Traveller Rental, Minibus Hire, Chauffeur Van Rental, Force Urbania Rental",
+      "provider": { "@id": "https://kalidasstravels.in/#localbusiness" },
+      "description": description,
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "@id": "https://kalidasstravels.in/services/tempo-traveller-rental-chennai/#catalog",
+        "name": "Tempo Traveller Fleet & Tour Packages",
+        "itemListElement": [
+          ...vanFleet.map(v => ({
+            "@type": "Offer",
+            "@id": `https://kalidasstravels.in/services/tempo-traveller-rental-chennai/#offer-${v.id}`,
+            "name": `${v.name} Hire`,
+            "price": v.dailyMinPrice,
+            "priceCurrency": "INR",
+            "priceValidUntil": "2026-12-31",
+            "availability": "https://schema.org/InStock",
+            "url": "https://kalidasstravels.in/services/tempo-traveller-rental-chennai/",
+            "description": `${v.seating}, ${v.baggage}. ${v.layout}.`,
+            "priceSpecification": [
+              {
+                "@type": "UnitPriceSpecification",
+                "priceType": "https://schema.org/PerKm",
+                "price": v.perKmRate,
+                "priceCurrency": "INR",
+                "unitCode": "KMT",
+                "unitText": "km"
+              },
+              {
+                "@type": "UnitPriceSpecification",
+                "priceType": "https://schema.org/MinimumDailyRate",
+                "price": v.dailyMinPrice,
+                "priceCurrency": "INR",
+                "unitCode": "DAY",
+                "unitText": "day"
+              }
+            ],
+            "itemOffered": {
+              "@type": "Vehicle",
+              "name": v.name,
+              "model": v.shortTitle,
+              "brand": {
+                "@type": "Brand",
+                "name": "Force Motors"
+              },
+              "bodyType": v.bodyType,
+              "vehicleConfiguration": v.layout,
+              "seatingCapacity": v.capacityNumber,
+              "vehicleSeatingCapacity": v.capacityNumber,
+              "numberOfDoors": 3,
+              "fuelType": "Diesel",
+              "airConditioning": true,
+              "cargoVolume": {
+                "@type": "QuantitativeValue",
+                "value": v.cargoLiters,
+                "unitCode": "LTR",
+                "description": v.cargoDesc
+              },
+              ...(v.roofLoadKg > 0 ? {
+                "roofLoad": {
+                  "@type": "QuantitativeValue",
+                  "value": v.roofLoadKg,
+                  "unitCode": "KGM",
+                  "description": "Reinforced rooftop luggage carrier with commercial waterproof tarpaulin"
+                }
+              } : {}),
+              "amenityFeature": [
+                {
+                  "@type": "LocationFeatureSpecification",
+                  "name": "Air Conditioning",
+                  "value": true,
+                  "description": v.acSystem
+                },
+                {
+                  "@type": "LocationFeatureSpecification",
+                  "name": "Pushback Reclining Seats",
+                  "value": true,
+                  "description": v.recline
+                },
+                {
+                  "@type": "LocationFeatureSpecification",
+                  "name": "USB Fast Charging",
+                  "value": true,
+                  "description": v.charging
+                },
+                {
+                  "@type": "LocationFeatureSpecification",
+                  "name": "Interior Headroom",
+                  "value": v.headroom,
+                  "description": "Walkthrough standing ceiling height"
+                },
+                {
+                  "@type": "LocationFeatureSpecification",
+                  "name": "Luggage Storage",
+                  "value": true,
+                  "description": v.luggageSummary
+                }
+              ],
+              "image": `https://kalidasstravels.in${v.image}`
+            }
+          })),
+          ...popularPackages.map(p => ({
+            "@type": "Offer",
+            "@id": `https://kalidasstravels.in/services/tempo-traveller-rental-chennai/#offer-${p.id}`,
+            "name": `${p.destination} (${p.duration}) Package`,
+            "price": p.price12,
+            "priceCurrency": "INR",
+            "priceValidUntil": "2026-12-31",
+            "availability": "https://schema.org/InStock",
+            "url": "https://kalidasstravels.in/services/tempo-traveller-rental-chennai/",
+            "description": `${p.distance}. ${p.inclusions}`,
+            "image": `https://kalidasstravels.in${p.image}`,
+            "itemOffered": {
+              "@type": "TouristTrip",
+              "name": `${p.destination} Tempo Traveller Tour`,
+              "description": `${p.duration} family tour from Chennai to ${p.destination}. ${p.inclusions}`,
+              "touristType": "Family & Group Travelers",
+              "image": `https://kalidasstravels.in${p.image}`
+            }
+          }))
+        ]
+      }
+    },
+    {
+      "@type": "HowTo",
+      "@id": "https://kalidasstravels.in/services/tempo-traveller-rental-chennai/#howto",
+      "name": "How to Book a Tempo Traveller in Chennai",
+      "description": "Simple 4-step transparent booking process for 12 to 26-Seater Tempo Travellers & Force Urbania in Chennai with Kalidass Travels.",
+      "totalTime": "PT5M",
+      "step": bookingSteps.map((s, idx) => ({
+        "@type": "HowToStep",
+        "position": idx + 1,
+        "name": s.title,
+        "text": s.desc
+      }))
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://kalidasstravels.in/services/tempo-traveller-rental-chennai/#faq",
+      "mainEntity": passengerFaqs.map(item => ({
+        "@type": "Question",
+        "name": item.q,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": item.a
+        }
+      }))
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://kalidasstravels.in/services/tempo-traveller-rental-chennai/#breadcrumb",
+      "itemListElement": breadcrumbItems.map((item, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "name": item.name,
+        "item": item.item.startsWith("http") ? item.item : `https://kalidasstravels.in${item.item}`
+      }))
+    }
+  ]
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  keywords={keywords}
+  schema={schema}
+  url={canonicalURL}
+>
+  <main class="min-h-screen bg-m3-surface text-m3-on-surface font-sans pb-16">
+    <!-- Breadcrumbs Section -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-3 pb-1">
+      <Breadcrumbs items={breadcrumbItems} />
+    </div>
+
+    <!-- SECTION 1: SYSTEM UI DESIGN SYSTEM HERO WITH DEDICATED TEMPO QUOTATION ENGINE -->
+    <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 pt-1 sm:pt-2">
+      
+      <!-- Top Page Heading & Trust Badges (Material 3 Standard) -->
+      <div class="max-w-3xl mx-auto mb-2.5 text-center">
+        <!-- Eyebrow Row: Fleet Dispatch Status Badge & Verified Google Rating -->
+        <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-2">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-m3-surface-container-low border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-2xs">
+            <span class="w-1.5 h-1.5 rounded-full bg-m3-success animate-pulse"></span>
+            <span>24/7 Fleet Dispatch • 12 to 26-Seaters • From ₹24/km</span>
+          </div>
+          <GoogleRatingBadge />
+        </div>
+
+        <!-- Main Display Heading (Full Width, Centered, No Collision) -->
+        <h1 data-speakable="true" class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight">
+          Tempo Traveller Rental in Chennai
+        </h1>
+        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant font-normal mt-1 leading-relaxed max-w-3xl mx-auto">
+          12, 14, 17, 20 &amp; 26-Seater Force AC &amp; Urbania • Standard 300 km/day • Verified Chauffeurs
+        </p>
+      </div>
+
+      <div id="fare-calculator" class="scroll-mt-28"></div>
+      <div id="trip-calculator" class="scroll-mt-28"></div>
+
+      <!-- Dedicated Tempo Quotation Engine -->
+      <section class="relative z-20 py-1 px-1 sm:px-3 max-w-2xl mx-auto mb-3">
+        <TempoQuotationEngine 
+          client:load 
+          variant="card" 
+          allowedTabs={['round', 'local']}
+          initialTab="round"
+          initialPickup="Chennai, Tamil Nadu"
+          initialDrop=""
+          autoCalculate={false}
+          showHeader={false}
+        />
+
+        <!-- Trust Reassurance Footer Strip -->
+        <div class="mt-2.5 flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs text-m3-on-surface-variant font-medium">
+          <div class="flex items-center gap-1.5">
+            <ShieldCheck className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+            <span class="font-semibold text-m3-on-surface">₹500 Advance to Confirm — Balance Post Trip</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <CheckCircle2 className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+            <span>Instant WhatsApp confirmation</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <CheckCircle2 className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+            <span>Zero surge pricing • 300 km/day standard</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- MATERIAL 3 STICKY QUICK NAVIGATION BAR -->
+      <nav id="mobile-quick-nav" data-quick-nav aria-label="Tempo Traveller Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-2.5 mb-6 px-4 sm:px-6 lg:px-8 -mx-3 sm:-mx-6 lg:-mx-8">
+        <div class="max-w-6xl mx-auto flex items-center justify-start sm:justify-center gap-2 text-xs font-semibold whitespace-nowrap overflow-x-auto no-scrollbar py-0.5">
+          <a href="#trip-calculator" class="px-3.5 py-1.5 rounded-full font-bold text-white bg-m3-primary hover:bg-m3-primary/90 transition shrink-0 shadow-2xs">
+            Fare Calculator
+          </a>
+          <a href="#fleet-section" class="px-3.5 py-1.5 rounded-full font-medium text-m3-on-surface bg-m3-surface-container hover:bg-m3-surface-container-high transition shrink-0">
+            Tempo Fleet
+          </a>
+          <a href="#spec-comparison" class="px-3.5 py-1.5 rounded-full font-medium text-m3-on-surface bg-m3-surface-container hover:bg-m3-surface-container-high transition shrink-0">
+            Specs Matrix
+          </a>
+          <a href="#tariff-section" class="px-3.5 py-1.5 rounded-full font-medium text-m3-on-surface bg-m3-surface-container hover:bg-m3-surface-container-high transition shrink-0">
+            Tariff Comparison
+          </a>
+          <a href="#packages-section" class="px-3.5 py-1.5 rounded-full font-medium text-m3-on-surface bg-m3-surface-container hover:bg-m3-surface-container-high transition shrink-0">
+            Outstation Packages
+          </a>
+          <a href="#inclusions-section" class="px-3.5 py-1.5 rounded-full font-medium text-m3-on-surface bg-m3-surface-container hover:bg-m3-surface-container-high transition shrink-0">
+            Inclusions &amp; Policy
+          </a>
+          <a href="#booking-steps-section" class="px-3.5 py-1.5 rounded-full font-medium text-m3-on-surface bg-m3-surface-container hover:bg-m3-surface-container-high transition shrink-0">
+            How to Book
+          </a>
+          <a href="#faq-section" class="px-3.5 py-1.5 rounded-full font-medium text-m3-on-surface bg-m3-surface-container hover:bg-m3-surface-container-high transition shrink-0">
+            Passenger FAQs
+          </a>
+        </div>
+      </nav>
+
+      <!-- SECTION 2: VEHICLE SPECIFICATIONS & LUGGAGE CAPACITIES -->
+      <section id="fleet-section" class="pt-2 sm:pt-4 mb-10 sm:mb-14 scroll-mt-28">
+        <span id="per-km-table" class="scroll-mt-28"></span>
+        <div class="text-center max-w-2xl mx-auto mb-6 sm:mb-10">
+          <span class="text-xs font-bold uppercase tracking-wider text-m3-primary">Transparent Per-KM Rates • Zero Surge</span>
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-m3-on-surface font-heading tracking-tight mt-1">
+            Vehicle Specifications &amp; Luggage Capacities
+          </h2>
+          <p class="text-m3-on-surface-variant mt-2 text-xs sm:text-sm">
+            Standing 6.2 ft walkthrough cabins, 135° pushback recliners, dual AC blowers, and certified 3-zone luggage architecture.
+          </p>
+        </div>
+
+        <!-- 1. Interactive Tabbed Vehicle Spotlight (Uber Reserve / Tesla style) -->
+        <div class="mb-10">
+          <!-- Segmented Tab Switcher (Desktop Only) -->
+          <div class="hidden md:flex items-center justify-center mb-5">
+            <div class="flex items-center justify-center gap-1.5 p-1 bg-m3-surface-container-low rounded-full border border-m3-outline-variant/60 shadow-xs max-w-2xl w-full" role="tablist" aria-label="Select Tempo Traveller Model">
+              {vanFleet.map((vehicle, idx) => (
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={idx === 0 ? "true" : "false"}
+                  id={`tab-${vehicle.id}`}
+                  aria-controls={`panel-${vehicle.id}`}
+                  class={`flex-1 min-h-[42px] py-2 px-3.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer text-center truncate spec-tab-btn select-none ${
+                    idx === 0
+                      ? 'bg-m3-primary text-white shadow-2xs'
+                      : 'text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-high'
+                  }`}
+                  data-target-tab={vehicle.id}
+                >
+                  {vehicle.shortTitle}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <!-- Spotlight Showcase Panels (Desktop Only) -->
+          <div class="hidden md:block max-w-2xl mx-auto">
+            {vanFleet.map((vehicle, idx) => (
+              <div
+                id={`panel-${vehicle.id}`}
+                role="tabpanel"
+                aria-labelledby={`tab-${vehicle.id}`}
+                class={`spec-panel transition-all duration-300 ${idx === 0 ? 'block opacity-100' : 'hidden opacity-0'}`}
+              >
+                <div class="bg-m3-surface-container-lowest rounded-3xl border border-m3-outline-variant/70 shadow-xs hover:shadow-m3-1 transition-all overflow-hidden">
+                  
+                  <!-- Top Vehicle Studio Stage -->
+                  <div class="relative bg-gradient-to-b from-m3-surface-container-low/80 via-m3-surface-container-low/40 to-m3-surface-container-lowest pt-5 pb-4 px-4 sm:px-6 border-b border-m3-outline-variant/50 flex flex-col items-center overflow-hidden">
+                    
+                    <!-- Subtle Radial Spotlight Background -->
+                    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-m3-primary/5 via-transparent to-transparent pointer-events-none"></div>
+
+                    <!-- Top Badge Bar -->
+                    <div class="w-full flex items-center justify-between gap-2 mb-2 relative z-10">
+                      <span class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-m3-primary/10 text-m3-primary border border-m3-primary/20">
+                        <span class="w-1.5 h-1.5 rounded-full bg-m3-primary animate-pulse"></span>
+                        {vehicle.badge}
+                      </span>
+                      <span class="text-xs font-medium text-m3-on-surface-variant bg-m3-surface-container px-2.5 py-0.5 rounded-full border border-m3-outline-variant/60">
+                        {vehicle.chassis.split(' (')[0]}
+                      </span>
+                    </div>
+
+                    <!-- Vehicle Image with Ground Reflection Shadow -->
+                    <div class="relative my-1 flex flex-col items-center">
+                      <img
+                        src={vehicle.image}
+                        alt={`${vehicle.name} - Kalidass Travels Chennai`}
+                        width="240"
+                        height="120"
+                        loading="lazy"
+                        decoding="async"
+                        class="h-28 sm:h-36 max-w-full object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.10)] transition-transform duration-300 hover:scale-[1.02]"
+                      />
+                      <!-- Soft Oval Contact Ground Shadow -->
+                      <div class="w-3/4 h-2 bg-slate-950/15 dark:bg-black/30 rounded-[100%] blur-[4px] -mt-1"></div>
+                    </div>
+
+                    <!-- Vehicle Title & Layout Subtitle -->
+                    <div class="text-center mt-2 relative z-10">
+                      <h3 class="text-lg sm:text-xl font-bold text-m3-on-surface tracking-tight leading-snug">
+                        {vehicle.name}
+                      </h3>
+                      <p class="text-xs sm:text-sm text-m3-on-surface-variant font-medium mt-0.5 flex items-center justify-center gap-1.5">
+                        <span>{vehicle.layout}</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Card Body Content -->
+                  <div class="p-4 sm:p-6 space-y-4">
+                    
+                    <!-- 4 Minimal Stat Chips (2x2 on mobile, 4-in-a-row on desktop) -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5">
+                      <div class="p-2.5 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/60 text-center">
+                        <Users className="w-4 h-4 text-m3-primary mx-auto mb-1" />
+                        <div class="text-xs sm:text-sm font-bold text-m3-on-surface leading-tight tabular-nums">{vehicle.capacityNumber} Seats</div>
+                        <div class="text-xs text-m3-on-surface-variant font-medium mt-0.5">{vehicle.recline.split(' ')[0]} Recline</div>
+                      </div>
+
+                      <div class="p-2.5 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/60 text-center">
+                        <ArrowUpDown className="w-4 h-4 text-m3-primary mx-auto mb-1" />
+                        <div class="text-xs sm:text-sm font-bold text-m3-on-surface leading-tight tabular-nums">{vehicle.headroom.split(' ')[0]} {vehicle.headroom.split(' ')[1]}</div>
+                        <div class="text-xs text-m3-on-surface-variant font-medium mt-0.5">Walk upright</div>
+                      </div>
+
+                      <div class="p-2.5 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/60 text-center">
+                        <Wind className="w-4 h-4 text-m3-primary mx-auto mb-1" />
+                        <div class="text-xs sm:text-sm font-bold text-m3-on-surface leading-tight tabular-nums">Dual AC Vents</div>
+                        <div class="text-xs text-m3-on-surface-variant font-medium mt-0.5">Every Single Row</div>
+                      </div>
+
+                      <div class="p-2.5 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/60 text-center">
+                        <Zap className="w-4 h-4 text-m3-primary mx-auto mb-1" />
+                        <div class="text-xs sm:text-sm font-bold text-m3-on-surface leading-tight tabular-nums">2.4A Fast USB</div>
+                        <div class="text-xs text-m3-on-surface-variant font-medium mt-0.5">At Every Row</div>
+                      </div>
+                    </div>
+
+                    <!-- Visual 3-Zone Luggage Capacity Strip -->
+                    <div class="p-3 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/60">
+                      <div class="flex items-center justify-between text-xs font-bold mb-2">
+                        <span class="flex items-center gap-1.5 text-m3-on-surface">
+                          <Luggage className="w-3.5 h-3.5 text-m3-primary" />
+                          <span>Certified 3-Zone Luggage Capacity</span>
+                        </span>
+                        <span class="text-xs font-semibold text-emerald-800 dark:text-emerald-300 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                          Zero Gangway Bags
+                        </span>
+                      </div>
+                      
+                      <div class="grid grid-cols-3 gap-2 text-center">
+                        <div class="p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant/60 shadow-2xs">
+                          <span class="block text-xs font-semibold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider">Boot</span>
+                          <span class="block text-xs sm:text-sm font-bold text-m3-on-surface mt-0.5 leading-tight tabular-nums">{vehicle.bootDisplay}</span>
+                          <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">Hard Suitcases</span>
+                        </div>
+                        <div class="p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant/60 shadow-2xs">
+                          <span class="block text-xs font-semibold text-m3-primary uppercase tracking-wider">Cabin</span>
+                          <span class="block text-xs sm:text-sm font-bold text-m3-on-surface mt-0.5 leading-tight tabular-nums">{vehicle.cabinDisplay}</span>
+                          <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">Overhead Racks</span>
+                        </div>
+                        <div class="p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant/60 shadow-2xs">
+                          <span class="block text-xs font-semibold text-purple-700 dark:text-purple-400 uppercase tracking-wider">Carrier</span>
+                          <span class="block text-xs sm:text-sm font-bold text-m3-on-surface mt-0.5 leading-tight tabular-nums">{vehicle.roofDisplay}</span>
+                          <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">{vehicle.vehicleKey === 'urbania' ? 'Aero Roof' : 'Weatherproof Top'}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Transparent Rate & Action Button -->
+                    <div class="pt-2 border-t border-m3-outline-variant/50 flex flex-col sm:flex-row items-center justify-between gap-3">
+                      <div class="text-center sm:text-left">
+                        <span class="block text-xs uppercase font-semibold tracking-wider text-m3-on-surface-variant">
+                          Outstation Tariff
+                        </span>
+                        <div class="flex items-baseline gap-1.5">
+                          <span class="text-2xl sm:text-3xl font-bold text-m3-on-surface tabular-nums font-sans">
+                            ₹{vehicle.perKmRate}<span class="text-xs sm:text-sm font-medium text-m3-on-surface-variant">/km</span>
+                          </span>
+                          <span class="text-xs font-semibold text-emerald-800 dark:text-emerald-400">
+                            • 300 km/day min
+                          </span>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        class="w-full sm:w-auto min-h-[46px] inline-flex items-center justify-center gap-2 py-2.5 px-7 rounded-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-white text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-xs hover:shadow-sm active:scale-[0.98] spec-book-vehicle-btn group/btn"
+                        data-vehicle-key={vehicle.vehicleKey}
+                        data-vehicle-name={vehicle.name}
+                        data-badge={vehicle.badge}
+                        data-image={vehicle.image}
+                        data-capacity={vehicle.seating}
+                        data-round-rate={vehicle.perKmRate.toString()}
+                        data-min-km="300"
+                      >
+                        <span>Calculate Fare &amp; Book</span>
+                        <ChevronRight className="w-4 h-4 transform group-hover/btn:translate-x-0.5 transition-transform" />
+                      </button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <!-- Mobile Horizontal Swipe Fleet Deck (Mobile Only) -->
+          <div class="block md:hidden mb-4">
+            <div
+              id="spec-fleet-scroller"
+              class="flex gap-4 overflow-x-auto snap-x snap-mandatory py-2 pb-4 no-scrollbar scroll-smooth px-1 focus:outline-none"
+              tabindex="0"
+              role="region"
+              aria-label="Tempo Fleet Showcase"
+            >
+              {vanFleet.map((vehicle) => (
+                <div class="shrink-0 w-[88vw] max-w-sm snap-center">
+                  <div class="bg-m3-surface-container-lowest rounded-3xl border border-m3-outline-variant/70 shadow-xs overflow-hidden flex flex-col justify-between h-full">
+                    
+                    <!-- Top Vehicle Studio Stage -->
+                    <div class="relative bg-gradient-to-b from-m3-surface-container-low/80 via-m3-surface-container-low/40 to-m3-surface-container-lowest pt-5 pb-4 px-4 border-b border-m3-outline-variant/50 flex flex-col items-center overflow-hidden">
+                      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-m3-primary/5 via-transparent to-transparent pointer-events-none"></div>
+
+                      <div class="w-full flex items-center justify-between gap-2 mb-2 relative z-10">
+                        <span class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-m3-primary/10 text-m3-primary border border-m3-primary/20">
+                          <span class="w-1.5 h-1.5 rounded-full bg-m3-primary animate-pulse"></span>
+                          {vehicle.badge}
+                        </span>
+                        <span class="text-xs font-medium text-m3-on-surface-variant bg-m3-surface-container px-2.5 py-0.5 rounded-full border border-m3-outline-variant/60">
+                          {vehicle.chassis.split(' (')[0]}
+                        </span>
+                      </div>
+
+                      <div class="relative my-1 flex flex-col items-center">
+                        <img
+                          src={vehicle.image}
+                          alt={`${vehicle.name} - Kalidass Travels Chennai`}
+                          width="240"
+                          height="120"
+                          loading="lazy"
+                          decoding="async"
+                          class="h-28 max-w-full object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.10)]"
+                        />
+                        <div class="w-3/4 h-2 bg-slate-950/15 dark:bg-black/30 rounded-[100%] blur-[4px] -mt-1"></div>
+                      </div>
+
+                      <div class="text-center mt-2 relative z-10">
+                        <h3 class="text-lg font-bold text-m3-on-surface tracking-tight leading-snug">
+                          {vehicle.name}
+                        </h3>
+                        <p class="text-xs sm:text-sm text-m3-on-surface-variant font-medium mt-0.5 flex items-center justify-center gap-1.5">
+                          <span>{vehicle.layout}</span>
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- Card Body Content -->
+                    <div class="p-4 space-y-4">
+                      <!-- 4 Minimal Stat Chips -->
+                      <div class="grid grid-cols-2 gap-2">
+                        <div class="p-2.5 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/60 text-center">
+                          <Users className="w-4 h-4 text-m3-primary mx-auto mb-1" />
+                          <div class="text-xs sm:text-sm font-bold text-m3-on-surface leading-tight tabular-nums">{vehicle.capacityNumber} Seats</div>
+                          <div class="text-xs text-m3-on-surface-variant font-medium mt-0.5">{vehicle.recline.split(' ')[0]} Recline</div>
+                        </div>
+
+                        <div class="p-2.5 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/60 text-center">
+                          <ArrowUpDown className="w-4 h-4 text-m3-primary mx-auto mb-1" />
+                          <div class="text-xs sm:text-sm font-bold text-m3-on-surface leading-tight tabular-nums">{vehicle.headroom.split(' ')[0]} {vehicle.headroom.split(' ')[1]}</div>
+                          <div class="text-xs text-m3-on-surface-variant font-medium mt-0.5">Walk upright</div>
+                        </div>
+
+                        <div class="p-2.5 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/60 text-center">
+                          <Wind className="w-4 h-4 text-m3-primary mx-auto mb-1" />
+                          <div class="text-xs sm:text-sm font-bold text-m3-on-surface leading-tight tabular-nums">Dual AC Vents</div>
+                          <div class="text-xs text-m3-on-surface-variant font-medium mt-0.5">Every Row</div>
+                        </div>
+
+                        <div class="p-2.5 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/60 text-center">
+                          <Zap className="w-4 h-4 text-m3-primary mx-auto mb-1" />
+                          <div class="text-xs sm:text-sm font-bold text-m3-on-surface leading-tight tabular-nums">2.4A Fast USB</div>
+                          <div class="text-xs text-m3-on-surface-variant font-medium mt-0.5">At Every Row</div>
+                        </div>
+                      </div>
+
+                      <!-- Visual 3-Zone Luggage Capacity Strip -->
+                      <div class="p-3 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/60">
+                        <div class="flex items-center justify-between text-xs font-bold mb-2">
+                          <span class="flex items-center gap-1.5 text-m3-on-surface">
+                            <Luggage className="w-3.5 h-3.5 text-m3-primary" />
+                            <span>Certified Luggage Capacity</span>
+                          </span>
+                          <span class="text-xs font-semibold text-emerald-800 dark:text-emerald-300 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                            Zero Gangway Bags
+                          </span>
+                        </div>
+                        
+                        <div class="grid grid-cols-3 gap-2 text-center">
+                          <div class="p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant/60 shadow-2xs">
+                            <span class="block text-xs font-semibold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider">Boot</span>
+                            <span class="block text-xs sm:text-sm font-bold text-m3-on-surface mt-0.5 leading-tight tabular-nums">{vehicle.bootDisplay}</span>
+                            <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">Suitcases</span>
+                          </div>
+                          <div class="p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant/60 shadow-2xs">
+                            <span class="block text-xs font-semibold text-m3-primary uppercase tracking-wider">Cabin</span>
+                            <span class="block text-xs sm:text-sm font-bold text-m3-on-surface mt-0.5 leading-tight tabular-nums">{vehicle.cabinDisplay}</span>
+                            <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">Racks</span>
+                          </div>
+                          <div class="p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant/60 shadow-2xs">
+                            <span class="block text-xs font-semibold text-purple-700 dark:text-purple-400 uppercase tracking-wider">Carrier</span>
+                            <span class="block text-xs sm:text-sm font-bold text-m3-on-surface mt-0.5 leading-tight tabular-nums">{vehicle.roofDisplay}</span>
+                            <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">{vehicle.vehicleKey === 'urbania' ? 'Aero Roof' : 'Weatherproof'}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Transparent Rate & Action Button -->
+                      <div class="pt-2 border-t border-m3-outline-variant/50 flex flex-col items-center justify-between gap-3">
+                        <div class="text-center w-full">
+                          <span class="block text-xs uppercase font-semibold tracking-wider text-m3-on-surface-variant">
+                            Outstation Tariff
+                          </span>
+                          <div class="flex items-baseline justify-center gap-1.5">
+                            <span class="text-2xl sm:text-3xl font-bold text-m3-on-surface tabular-nums font-sans">
+                              ₹{vehicle.perKmRate}<span class="text-xs sm:text-sm font-medium text-m3-on-surface-variant">/km</span>
+                            </span>
+                            <span class="text-xs font-semibold text-emerald-800 dark:text-emerald-400">
+                              • 300 km/day min
+                            </span>
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          class="w-full min-h-[46px] inline-flex items-center justify-center gap-2 py-2.5 px-7 rounded-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-white text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-xs active:scale-[0.98] spec-book-vehicle-btn group/btn"
+                          data-vehicle-key={vehicle.vehicleKey}
+                          data-vehicle-name={vehicle.name}
+                          data-badge={vehicle.badge}
+                          data-image={vehicle.image}
+                          data-capacity={vehicle.seating}
+                          data-round-rate={vehicle.perKmRate.toString()}
+                          data-min-km="300"
+                        >
+                          <span>Calculate Fare &amp; Book</span>
+                          <ChevronRight className="w-4 h-4 transform group-hover/btn:translate-x-0.5 transition-transform" />
+                        </button>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <!-- Mobile Scroll Indicator Dots -->
+            <div class="flex justify-center items-center gap-1.5 mt-3" aria-hidden="true" id="spec-fleet-dots">
+              {vanFleet.map((_, idx) => (
+                <button
+                  type="button"
+                  class="min-w-[32px] min-h-[32px] flex items-center justify-center p-1.5 cursor-pointer spec-dot"
+                  data-spec-index={idx}
+                  aria-label={`Go to vehicle ${idx + 1}`}
+                >
+                  <span class={`h-1.5 rounded-full transition-all duration-300 spec-dot-bar ${idx === 0 ? 'bg-m3-primary w-5' : 'bg-m3-outline-variant w-1.5'}`}></span>
+                </button>
+              ))}
+            </div>
+
+            <!-- Mobile Swipe Hint -->
+            <div class="flex items-center justify-center gap-1.5 text-xs font-medium text-m3-on-surface-variant mt-1.5">
+              <span>👉 Swipe horizontally to compare vehicles</span>
+            </div>
+          </div>
+
+          <!-- Mobile-Only Action Card to open Full Technical Comparison Modal -->
+          <div class="mt-4 md:hidden">
+            <button
+              type="button"
+              id="open-spec-modal-btn"
+              class="w-full py-3.5 px-4 rounded-2xl bg-m3-surface-container-lowest hover:bg-m3-surface-container-low border border-m3-outline-variant/70 shadow-xs flex items-center justify-between text-left group active:scale-[0.99] transition cursor-pointer"
+              aria-haspopup="dialog"
+              aria-controls="specModal"
+            >
+              <div class="flex items-center gap-3">
+                <span class="w-9 h-9 rounded-xl bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0 border border-m3-primary/20 shadow-2xs">
+                  <SlidersHorizontal className="w-4 h-4" />
+                </span>
+                <div>
+                  <div class="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center gap-1.5">
+                    <span>Compare All 10 Specifications</span>
+                    <span class="text-xs font-semibold px-2 py-0.5 bg-m3-primary/10 text-m3-primary rounded-full uppercase tracking-wider">Matrix</span>
+                  </div>
+                  <div class="text-xs text-m3-on-surface-variant font-normal mt-0.5">Headroom, recliner pitch, luggage &amp; AC side-by-side</div>
+                </div>
+              </div>
+              <span class="text-xs font-semibold text-m3-primary flex items-center gap-1 shrink-0 bg-m3-surface-container px-2.5 py-1.5 rounded-full border border-m3-outline-variant/60 group-hover:bg-m3-primary group-hover:text-white transition-colors">
+                <span>Compare</span>
+                <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+              </span>
+            </button>
+
+            <!-- Mobile Clean Floor Guarantee -->
+            <div class="mt-3 text-center">
+              <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-800 dark:text-emerald-400">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                <span>Clean floor guarantee: zero luggage piled in gangways.</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Side-by-Side Fleet Technical Comparison Matrix Table (Desktop Only) -->
+        <div id="spec-comparison" class="hidden md:block scroll-mt-32 mt-8 pt-4 border-t border-m3-outline-variant/60">
+          <div class="text-center max-w-2xl mx-auto mb-6">
+            <span class="text-xs font-bold uppercase tracking-wider text-m3-primary">Quick Technical Matrix</span>
+            <h3 class="text-xl sm:text-2xl font-bold text-m3-on-surface tracking-tight mt-1">
+              Side-by-Side Model Comparison
+            </h3>
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">
+              Compare standing height, recliner pitch, luggage capacities, and tariff rates at a glance:
+            </p>
+          </div>
+
+          <div class="overflow-x-auto no-scrollbar rounded-2xl border border-m3-outline-variant/70 shadow-xs bg-m3-surface-container-lowest">
+            <table class="w-full text-xs text-left text-m3-on-surface" role="table">
+              <thead class="text-xs uppercase tracking-wider font-semibold bg-m3-surface-container-low border-b border-m3-outline-variant/60 text-m3-on-surface-variant">
+                <tr>
+                  <th scope="col" class="py-3 px-4 font-semibold min-w-[140px]">Specification</th>
+                  <th scope="col" class="py-3 px-4 font-semibold min-w-[160px] text-m3-primary">12-Seater Luxury</th>
+                  <th scope="col" class="py-3 px-4 font-semibold min-w-[160px] text-m3-primary">14-Seater Executive</th>
+                  <th scope="col" class="py-3 px-4 font-semibold min-w-[170px] text-m3-primary">17-Seater (4020 WB)</th>
+                  <th scope="col" class="py-3 px-4 font-semibold min-w-[160px] text-m3-primary">20-Seater Grand</th>
+                  <th scope="col" class="py-3 px-4 font-semibold min-w-[160px] text-m3-primary">26-Seater Mini Bus</th>
+                  <th scope="col" class="py-3 px-4 font-semibold min-w-[160px] text-purple-700 dark:text-purple-400">Force Urbania VIP</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-m3-outline-variant/40">
+                <tr class="hover:bg-m3-surface-container-low/50 transition">
+                  <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Passenger Capacity</td>
+                  <td class="py-3 px-4 font-semibold">8 to 12 Passengers</td>
+                  <td class="py-3 px-4 font-semibold">10 to 14 Passengers</td>
+                  <td class="py-3 px-4 font-semibold">13 to 17 Passengers</td>
+                  <td class="py-3 px-4 font-semibold">16 to 20 Passengers</td>
+                  <td class="py-3 px-4 font-semibold">20 to 26 Passengers</td>
+                  <td class="py-3 px-4 font-semibold">10 to 12 Passengers</td>
+                </tr>
+                <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
+                  <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Standing Headroom</td>
+                  <td class="py-3 px-4">6.2 ft (1,920 mm) Walk upright</td>
+                  <td class="py-3 px-4">6.2 ft (1,920 mm) Walk upright</td>
+                  <td class="py-3 px-4">6.3 ft (1,950 mm) High roof walkthrough</td>
+                  <td class="py-3 px-4">6.4 ft (1,960 mm) High roof walkthrough</td>
+                  <td class="py-3 px-4">6.4 ft (1,960 mm) Wide coach gangway</td>
+                  <td class="py-3 px-4">6.5 ft (1,980 mm) Flat floor luxury</td>
+                </tr>
+                <tr class="hover:bg-m3-surface-container-low/50 transition">
+                  <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Seat Pitch &amp; Recline</td>
+                  <td class="py-3 px-4">135° Pushback Recliner • 32" Pitch</td>
+                  <td class="py-3 px-4">135° Pushback Recliner • 33" Pitch</td>
+                  <td class="py-3 px-4">135° Deep Recline • 32" Pitch</td>
+                  <td class="py-3 px-4">135° Deep Recline • 32" Pitch</td>
+                  <td class="py-3 px-4">135° Pushback Coach • 31" Pitch</td>
+                  <td class="py-3 px-4">140° Executive Captain • 35" Pitch</td>
+                </tr>
+                <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
+                  <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Internal Rear Boot</td>
+                  <td class="py-3 px-4">5–6 Medium Trolleys (24")</td>
+                  <td class="py-3 px-4">6–7 Medium Trolleys (Extended Trunk)</td>
+                  <td class="py-3 px-4">7–8 Medium Trolleys (Extended Trunk)</td>
+                  <td class="py-3 px-4">8–10 Medium / Large Trolleys</td>
+                  <td class="py-3 px-4">15+ Large Hard Suitcases (Hold)</td>
+                  <td class="py-3 px-4">8–10 Executive Suitcases (Hydraulic Hatch)</td>
+                </tr>
+                <tr class="hover:bg-m3-surface-container-low/50 transition">
+                  <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Rooftop Carrier</td>
+                  <td class="py-3 px-4">Heavy-Duty with Waterproof Tarpaulin</td>
+                  <td class="py-3 px-4">Heavy-Duty with Waterproof Tarpaulin</td>
+                  <td class="py-3 px-4">Heavy-Duty with Waterproof Tarpaulin</td>
+                  <td class="py-3 px-4">Industrial Heavy-Duty Tarpaulin</td>
+                  <td class="py-3 px-4">Industrial Reinforced Top Carrier</td>
+                  <td class="py-3 px-4">Clean Aerodynamic Roof (Internal Boot Only)</td>
+                </tr>
+                <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
+                  <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">AC Configuration</td>
+                  <td class="py-3 px-4">Dual Commercial AC + Overhead Louvers</td>
+                  <td class="py-3 px-4">Dual Commercial AC + Row Louvers</td>
+                  <td class="py-3 px-4">Heavy-Duty Twin AC Compressors</td>
+                  <td class="py-3 px-4">Twin Heavy-Duty High-CFM Dual AC</td>
+                  <td class="py-3 px-4">Roof Commercial Bus AC Unit</td>
+                  <td class="py-3 px-4">Triple-Zone Automatic Climate Control</td>
+                </tr>
+                <tr class="hover:bg-m3-surface-container-low/50 transition">
+                  <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Suspension &amp; Ride</td>
+                  <td class="py-3 px-4">Parabolic Leaf Springs + Anti-Roll Bar</td>
+                  <td class="py-3 px-4">Parabolic Leaf Springs + Anti-Roll Bar</td>
+                  <td class="py-3 px-4">Parabolic Springs on 4020 Long WB</td>
+                  <td class="py-3 px-4">Multi-Leaf Parabolic Suspension</td>
+                  <td class="py-3 px-4">Long-Travel Leaf Springs + Heavy Shocks</td>
+                  <td class="py-3 px-4">European Monocoque Coil Suspension</td>
+                </tr>
+                <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
+                  <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">In-Cabin Power</td>
+                  <td class="py-3 px-4">2.4A USB Fast Ports Per Row</td>
+                  <td class="py-3 px-4">2.4A USB Fast Ports Per Row</td>
+                  <td class="py-3 px-4">2.4A USB Fast Ports Per Row</td>
+                  <td class="py-3 px-4">2.4A USB Fast Ports Per Row</td>
+                  <td class="py-3 px-4">USB Fast Ports Across Cabin</td>
+                  <td class="py-3 px-4">Dual USB + Reading Lamp Per Seat</td>
+                </tr>
+                <tr class="hover:bg-m3-surface-container-low/50 transition">
+                  <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Senior Accessibility</td>
+                  <td class="py-3 px-4">280 mm Low Step + Sturdy Grab Rail</td>
+                  <td class="py-3 px-4">Low Boarding Footstep + Safety Grab Rail</td>
+                  <td class="py-3 px-4">Automatic Electric Footstep + Grab Rail</td>
+                  <td class="py-3 px-4">Low Footstep + Dual Handrails</td>
+                  <td class="py-3 px-4">Illuminated Low Entrance Footsteps</td>
+                  <td class="py-3 px-4">Triple-Seal Sliding Low Step + Light</td>
+                </tr>
+                <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/30 font-bold">
+                  <td class="py-3.5 px-4 font-bold text-m3-on-surface">Outstation Tariff</td>
+                  <td class="py-3.5 px-4 text-sm sm:text-base font-bold text-m3-primary tabular-nums font-sans">₹24 / km</td>
+                  <td class="py-3.5 px-4 text-sm sm:text-base font-bold text-m3-primary tabular-nums font-sans">₹25 / km</td>
+                  <td class="py-3.5 px-4 text-sm sm:text-base font-bold text-m3-primary tabular-nums font-sans">₹26 / km</td>
+                  <td class="py-3.5 px-4 text-sm sm:text-base font-bold text-m3-primary tabular-nums font-sans">₹30 / km</td>
+                  <td class="py-3.5 px-4 text-sm sm:text-base font-bold text-m3-primary tabular-nums font-sans">₹36 / km</td>
+                  <td class="py-3.5 px-4 text-sm sm:text-base font-bold text-purple-700 dark:text-purple-400 tabular-nums font-sans">₹32 / km</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Desktop Clean Floor Guarantee -->
+          <div class="mt-4 text-center">
+            <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-800 dark:text-emerald-400">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <span>The Kalidass Guarantee: 100% clean cabin floors — zero luggage piled in gangways or under passenger seats.</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- MODAL: Full Technical Specifications Comparison Matrix (Mobile & On-Demand) -->
+        <dialog
+          id="specModal"
+          aria-labelledby="specModalTitle"
+          aria-modal="true"
+          class="fixed inset-x-0 bottom-0 sm:inset-0 sm:m-auto z-50 w-full sm:max-w-2xl max-h-[90vh] p-0 rounded-t-3xl sm:rounded-3xl bg-m3-surface text-m3-on-surface border border-m3-outline-variant shadow-2xl backdrop:bg-slate-950/70 backdrop:backdrop-blur-sm outline-none overflow-hidden open:animate-slideUp"
+        >
+          <div class="flex flex-col max-h-[90vh]">
+            <!-- Modal Header with mobile drag pill -->
+            <header class="px-5 pt-3.5 pb-3 bg-m3-surface-container-low border-b border-m3-outline-variant/60 shrink-0 relative">
+              <div class="w-10 h-1 rounded-full bg-m3-outline-variant/80 mx-auto mb-2 sm:hidden"></div>
+              <div class="flex items-center justify-between gap-3">
+                <div>
+                  <span class="text-xs font-bold uppercase tracking-wider text-m3-primary block">Technical Matrix</span>
+                  <h2 id="specModalTitle" class="text-base sm:text-lg font-bold text-m3-on-surface leading-tight">
+                    Side-by-Side Model Comparison
+                  </h2>
+                </div>
+                <button
+                  type="button"
+                  class="close-spec-modal-btn p-2 rounded-full text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container transition cursor-pointer"
+                  aria-label="Close specifications comparison"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <div class="mt-2 text-xs text-m3-on-surface-variant flex items-center justify-between">
+                <span>12S, 14S, 17S, 20S, 26S & Force Urbania</span>
+                <span class="text-xs font-semibold text-m3-primary flex items-center gap-1">
+                  Swipe horizontal ↔
+                </span>
+              </div>
+            </header>
+
+            <!-- Modal Body: Scrollable -->
+            <div class="p-3 sm:p-5 overflow-y-auto overscroll-contain">
+              <div class="overflow-x-auto no-scrollbar rounded-2xl border border-m3-outline-variant/70 shadow-2xs bg-m3-surface-container-lowest">
+                <table class="w-full text-xs text-left text-m3-on-surface" role="table">
+                  <thead class="text-xs uppercase tracking-wider font-semibold bg-m3-surface-container-low border-b border-m3-outline-variant/60 text-m3-on-surface-variant sticky top-0 z-10">
+                    <tr>
+                      <th scope="col" class="py-3 px-3.5 font-semibold min-w-[130px] bg-m3-surface-container-low">Specification</th>
+                      <th scope="col" class="py-3 px-3.5 font-semibold min-w-[140px] text-m3-primary bg-m3-surface-container-low">12-Seater</th>
+                      <th scope="col" class="py-3 px-3.5 font-semibold min-w-[140px] text-m3-primary bg-m3-surface-container-low">14-Seater</th>
+                      <th scope="col" class="py-3 px-3.5 font-semibold min-w-[150px] text-m3-primary bg-m3-surface-container-low">17-Seater</th>
+                      <th scope="col" class="py-3 px-3.5 font-semibold min-w-[140px] text-m3-primary bg-m3-surface-container-low">20-Seater</th>
+                      <th scope="col" class="py-3 px-3.5 font-semibold min-w-[150px] text-m3-primary bg-m3-surface-container-low">26-Seater</th>
+                      <th scope="col" class="py-3 px-3.5 font-semibold min-w-[140px] text-purple-700 dark:text-purple-400 bg-m3-surface-container-low">Urbania VIP</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-m3-outline-variant/40">
+                    <tr class="hover:bg-m3-surface-container-low/50 transition">
+                      <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Capacity</td>
+                      <td class="py-2.5 px-3.5 font-semibold">8–12 Pax</td>
+                      <td class="py-2.5 px-3.5 font-semibold">10–14 Pax</td>
+                      <td class="py-2.5 px-3.5 font-semibold">13–17 Pax</td>
+                      <td class="py-2.5 px-3.5 font-semibold">16–20 Pax</td>
+                      <td class="py-2.5 px-3.5 font-semibold">20–26 Pax</td>
+                      <td class="py-2.5 px-3.5 font-semibold">10–12 Pax</td>
+                    </tr>
+                    <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
+                      <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Standing Headroom</td>
+                      <td class="py-2.5 px-3.5">6.2 ft (Walk upright)</td>
+                      <td class="py-2.5 px-3.5">6.2 ft (Walk upright)</td>
+                      <td class="py-2.5 px-3.5">6.3 ft (High roof)</td>
+                      <td class="py-2.5 px-3.5">6.4 ft (High roof)</td>
+                      <td class="py-2.5 px-3.5">6.4 ft (Coach aisle)</td>
+                      <td class="py-2.5 px-3.5">6.5 ft (Flat floor)</td>
+                    </tr>
+                    <tr class="hover:bg-m3-surface-container-low/50 transition">
+                      <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Seat Pitch &amp; Recline</td>
+                      <td class="py-2.5 px-3.5">135° Recline • 32"</td>
+                      <td class="py-2.5 px-3.5">135° Recline • 33"</td>
+                      <td class="py-2.5 px-3.5">135° Deep • 32"</td>
+                      <td class="py-2.5 px-3.5">135° Deep • 32"</td>
+                      <td class="py-2.5 px-3.5">135° Coach • 31"</td>
+                      <td class="py-2.5 px-3.5">140° Captain • 35"</td>
+                    </tr>
+                    <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
+                      <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Internal Rear Boot</td>
+                      <td class="py-2.5 px-3.5">5–6 Medium Bags</td>
+                      <td class="py-2.5 px-3.5">6–7 Medium Bags</td>
+                      <td class="py-2.5 px-3.5">7–8 Medium Bags</td>
+                      <td class="py-2.5 px-3.5">8–10 Bags</td>
+                      <td class="py-2.5 px-3.5">15+ Hard Bags</td>
+                      <td class="py-2.5 px-3.5">8–10 Suitcases (Hatch)</td>
+                    </tr>
+                    <tr class="hover:bg-m3-surface-container-low/50 transition">
+                      <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Rooftop Carrier</td>
+                      <td class="py-2.5 px-3.5">Tarpaulin Carrier</td>
+                      <td class="py-2.5 px-3.5">Tarpaulin Carrier</td>
+                      <td class="py-2.5 px-3.5">Tarpaulin Carrier</td>
+                      <td class="py-2.5 px-3.5">Heavy Carrier</td>
+                      <td class="py-2.5 px-3.5">Industrial Carrier</td>
+                      <td class="py-2.5 px-3.5">Clean Aero Roof</td>
+                    </tr>
+                    <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
+                      <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">AC Configuration</td>
+                      <td class="py-2.5 px-3.5">Dual AC + Louvers</td>
+                      <td class="py-2.5 px-3.5">Dual AC + Louvers</td>
+                      <td class="py-2.5 px-3.5">Twin Compressors</td>
+                      <td class="py-2.5 px-3.5">High-CFM Dual AC</td>
+                      <td class="py-2.5 px-3.5">Bus AC Roof Unit</td>
+                      <td class="py-2.5 px-3.5">Triple-Zone Climate</td>
+                    </tr>
+                    <tr class="hover:bg-m3-surface-container-low/50 transition">
+                      <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Suspension &amp; Ride</td>
+                      <td class="py-2.5 px-3.5">Parabolic + Anti-Roll</td>
+                      <td class="py-2.5 px-3.5">Parabolic + Anti-Roll</td>
+                      <td class="py-2.5 px-3.5">Parabolic 4020 WB</td>
+                      <td class="py-2.5 px-3.5">Multi-Leaf Parabolic</td>
+                      <td class="py-2.5 px-3.5">Leaf + Heavy Shocks</td>
+                      <td class="py-2.5 px-3.5">European Coil Springs</td>
+                    </tr>
+                    <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
+                      <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">In-Cabin Power</td>
+                      <td class="py-2.5 px-3.5">2.4A USB / Row</td>
+                      <td class="py-2.5 px-3.5">2.4A USB / Row</td>
+                      <td class="py-2.5 px-3.5">2.4A USB / Row</td>
+                      <td class="py-2.5 px-3.5">2.4A USB / Row</td>
+                      <td class="py-2.5 px-3.5">USB Across Cabin</td>
+                      <td class="py-2.5 px-3.5">Dual USB + Lamp</td>
+                    </tr>
+                    <tr class="hover:bg-m3-surface-container-low/50 transition">
+                      <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Senior Accessibility</td>
+                      <td class="py-2.5 px-3.5">280 mm Low Step</td>
+                      <td class="py-2.5 px-3.5">Low Step + Grab Rail</td>
+                      <td class="py-2.5 px-3.5">Electric Footstep</td>
+                      <td class="py-2.5 px-3.5">Low Step + 2 Rails</td>
+                      <td class="py-2.5 px-3.5">Illuminated Coach Step</td>
+                      <td class="py-2.5 px-3.5">Sliding Low Step</td>
+                    </tr>
+                    <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/30 font-bold">
+                      <td class="py-3 px-3.5 font-bold text-m3-on-surface">Outstation Tariff</td>
+                      <td class="py-3 px-3.5 text-sm font-bold text-m3-primary tabular-nums font-sans">₹24 / km</td>
+                      <td class="py-3 px-3.5 text-sm font-bold text-m3-primary tabular-nums font-sans">₹25 / km</td>
+                      <td class="py-3 px-3.5 text-sm font-bold text-m3-primary tabular-nums font-sans">₹26 / km</td>
+                      <td class="py-3 px-3.5 text-sm font-bold text-m3-primary tabular-nums font-sans">₹30 / km</td>
+                      <td class="py-3 px-3.5 text-sm font-bold text-m3-primary tabular-nums font-sans">₹36 / km</td>
+                      <td class="py-3 px-3.5 text-sm font-bold text-purple-700 dark:text-purple-400 tabular-nums font-sans">₹32 / km</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <footer class="p-4 bg-m3-surface-container-low border-t border-m3-outline-variant/60 flex items-center justify-between gap-3 shrink-0">
+              <span class="text-xs text-emerald-800 dark:text-emerald-400 font-semibold flex items-center gap-1.5 truncate">
+                <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                <span class="truncate">100% clean cabin floor guarantee</span>
+              </span>
+              <button
+                type="button"
+                class="close-spec-modal-btn px-5 py-2 rounded-full bg-m3-primary text-white text-xs font-bold hover:bg-m3-primary/90 transition shadow-xs cursor-pointer shrink-0"
+              >
+                Close
+              </button>
+            </footer>
+          </div>
+        </dialog>
+      </section>
+
+    </div>
+
+    <!-- SECTION 2C: TRANSPARENT TARIFF MATRIX: LOCAL VS OUTSTATION -->
+    <section id="tariff-section" class="py-10 sm:py-16 bg-m3-surface scroll-mt-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-6 sm:mb-10">
+          <span class="text-xs font-bold uppercase tracking-wider text-m3-primary">Standardized Rates</span>
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-m3-on-surface tracking-tight mt-1">
+            Transparent Tariff: Local vs Outstation
+          </h2>
+          <p class="text-m3-on-surface-variant mt-2 text-xs sm:text-sm leading-relaxed">
+            Zero surge pricing, zero garage markups in South Chennai, and transparent driver bata. Compare city packages and outstation per-km rates side-by-side.
+          </p>
+        </div>
+
+        <!-- Tariff Cards Container (Horizontal Swipe Row on Mobile, 3-Col Grid on Desktop) -->
+        <div class="relative group/tariff">
+          <div
+            id="tariff-carousel-track"
+            class="flex gap-4 overflow-x-auto snap-x snap-mandatory py-2 pb-4 no-scrollbar scroll-smooth md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-5 md:overflow-visible md:pb-0 focus:outline-none"
+            tabindex="0"
+            role="region"
+            aria-label="Transparent Tariff Comparison Cards"
+          >
+            {tariffMatrix.map((t) => (
+              <div 
+                id={`card-${t.id}`}
+                class="group shrink-0 w-[86vw] max-w-sm md:w-auto snap-center md:snap-align-none bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant/70 shadow-xs hover:shadow-m3-2 hover:border-m3-primary/30 transition-all duration-300 p-5 sm:p-6 flex flex-col justify-between"
+              >
+                <div>
+                  <!-- Vehicle Header: Badge on Top, Title + Specs on Left, Bigger Car Image on Right -->
+                  <div class="mb-4">
+                    <div class="flex items-center justify-between gap-2 mb-2">
+                      <span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-m3-primary/10 text-m3-primary border border-m3-primary/20">
+                        {t.badge}
+                      </span>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                      <!-- Left Column: Vehicle Name & Passengers/Luggage Specs -->
+                      <div class="min-w-0 flex-1">
+                        <h3 class="text-base sm:text-lg font-bold text-m3-on-surface leading-tight">
+                          {t.name}
+                        </h3>
+                        <div class="text-xs text-m3-on-surface-variant font-medium mt-2 space-y-1">
+                          <div class="flex items-center gap-1.5 leading-tight">
+                            <Users className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                            <span class="truncate">{t.capacity}</span>
+                          </div>
+                          <div class="flex items-center gap-1.5 leading-tight">
+                            <Luggage className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                            <span class="truncate">{t.luggage}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Right Column: Vehicle Image (Bigger, Right-Aligned & Facing Inward) -->
+                      <div class="w-28 h-20 sm:w-32 sm:h-22 md:w-36 md:h-24 rounded-2xl bg-gradient-to-br from-m3-surface-container-low to-m3-surface-container/60 p-1.5 border border-m3-outline-variant/60 shrink-0 flex items-center justify-center shadow-2xs group-hover:border-m3-primary/40 group-hover:shadow-xs transition-all duration-300">
+                        <img 
+                          src={t.image} 
+                          alt={t.name} 
+                          width="144" 
+                          height="96" 
+                          class="max-w-full max-h-full object-contain filter drop-shadow-sm group-hover:scale-105 transition-transform duration-300" 
+                          loading="lazy" 
+                          decoding="async"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Outstation Highway Section -->
+                  <div class="bg-m3-surface-container-low rounded-xl p-3.5 border border-m3-outline-variant/50 mb-3 space-y-2">
+                    <div class="text-xs font-bold uppercase text-m3-primary tracking-wider">Outstation Highway Travel</div>
+                    <div class="flex justify-between items-center text-xs">
+                      <span class="text-m3-on-surface-variant">Per-KM Rate:</span>
+                      <strong class="text-m3-on-surface font-bold text-sm sm:text-base tabular-nums font-sans">{t.outstationRate}</strong>
+                    </div>
+                    <div class="flex justify-between items-center text-xs pt-1 border-t border-m3-outline-variant/30">
+                      <span class="text-m3-on-surface-variant">Standard Daily Min:</span>
+                      <strong class="text-m3-on-surface font-semibold tabular-nums">{t.minKm}</strong>
+                    </div>
+                    <div class="flex justify-between items-center text-xs pt-1 border-t border-m3-outline-variant/30">
+                      <span class="text-m3-on-surface-variant">Driver Day Bata:</span>
+                      <strong class="text-m3-on-surface font-semibold tabular-nums">{t.driverBata}</strong>
+                    </div>
+                    <div class="flex justify-between items-center text-xs pt-1 border-t border-m3-outline-variant/30">
+                      <span class="text-m3-on-surface-variant">Night Allowance:</span>
+                      <span class="text-m3-on-surface-variant text-xs">{t.nightBata}</span>
+                    </div>
+                  </div>
+
+                  <!-- Chennai Local Package Section -->
+                  <div class="bg-m3-surface-container-low rounded-xl p-3.5 border border-m3-outline-variant/50 mb-4 space-y-2">
+                    <div class="text-xs font-bold uppercase text-emerald-800 dark:text-emerald-400 tracking-wider">Chennai Local City Packages</div>
+                    <div class="flex justify-between items-center text-xs">
+                      <span class="text-m3-on-surface-variant">5 Hrs / 50 Km:</span>
+                      <strong class="text-m3-on-surface font-bold text-sm tabular-nums font-sans">{t.local5h50km}</strong>
+                    </div>
+                    <div class="flex justify-between items-center text-xs pt-1 border-t border-m3-outline-variant/30">
+                      <span class="text-m3-on-surface-variant">10 Hrs / 100 Km:</span>
+                      <strong class="text-m3-on-surface font-bold text-sm tabular-nums font-sans">{t.local10h100km}</strong>
+                    </div>
+                    <div class="flex justify-between items-center text-xs text-m3-on-surface-variant pt-1 border-t border-m3-outline-variant/30">
+                      <span>Extra Km / Extra Hr:</span>
+                      <span class="font-semibold text-m3-on-surface tabular-nums">{t.extraKm} • {t.extraHr}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Direct WhatsApp Booking Button -->
+                <WhatsAppButton
+                  text={`Book ${t.name.split(' ')[0]} ${t.name.split(' ')[1] || ''}`}
+                  href={buildWhatsAppUrl(`Hi Kalidass Travels Dispatch Desk, I would like to book a ${t.name}.`)}
+                  variant="filled"
+                  size="sm"
+                  fullWidth={true}
+                  ariaLabel={`Book ${t.name} on WhatsApp`}
+                />
+              </div>
+            ))}
+          </div>
+
+          <!-- Mobile Scroll Indicator Dots -->
+          <div class="flex md:hidden justify-center items-center gap-1.5 mt-3" aria-hidden="true" id="tariff-carousel-dots">
+            {tariffMatrix.map((_, idx) => (
+              <button
+                type="button"
+                class="min-w-[32px] min-h-[32px] flex items-center justify-center p-1.5 cursor-pointer tariff-dot"
+                data-tariff-index={idx}
+                aria-label={`Go to vehicle ${idx + 1}`}
+              >
+                <span class={`h-1.5 rounded-full transition-all duration-300 tariff-dot-bar ${idx === 0 ? 'bg-m3-primary w-5' : 'bg-m3-outline-variant w-1.5'}`}></span>
+              </button>
+            ))}
+          </div>
+
+          <!-- Mobile Swipe Hint -->
+          <div class="flex items-center justify-center gap-1.5 text-xs font-medium text-m3-on-surface-variant md:hidden mt-1">
+            <span>👉 Swipe horizontally to compare all vehicle tariffs</span>
+          </div>
+        </div>
+
+        <!-- Transparent Calculation Rules & Guidelines -->
+        <div class="mt-8 pt-6 border-t border-m3-outline-variant/60">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 mb-5">
+            <div class="flex items-start gap-3 p-3.5 rounded-xl bg-m3-surface-container-low border border-m3-outline-variant/60 shadow-2xs">
+              <div class="w-8 h-8 rounded-lg bg-m3-primary text-white flex items-center justify-center shrink-0 font-bold text-xs">
+                01
+              </div>
+              <div>
+                <h4 class="text-xs sm:text-sm font-bold text-m3-on-surface">Standard 300 km / Day</h4>
+                <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Outstation Tempo rentals follow a standard 300 km/day minimum. Billed garage-to-garage from Chennai.</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3 p-3.5 rounded-xl bg-m3-surface-container-low border border-m3-outline-variant/60 shadow-2xs">
+              <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0 font-bold text-xs">
+                02
+              </div>
+              <div>
+                <h4 class="text-xs sm:text-sm font-bold text-m3-on-surface">Fixed All-Inclusive Circuits</h4>
+                <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Popular packages to Tirupati, Pondicherry, Thiruvannamalai &amp; Kumbakonam include diesel, tolls, and permits.</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3 p-3.5 rounded-xl bg-m3-surface-container-low border border-m3-outline-variant/60 shadow-2xs">
+              <div class="w-8 h-8 rounded-lg bg-purple-600 text-white flex items-center justify-center shrink-0 font-bold text-xs">
+                03
+              </div>
+              <div>
+                <h4 class="text-xs sm:text-sm font-bold text-m3-on-surface">Zero Surge &amp; Hidden Charges</h4>
+                <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Fixed transparent per-km rates with dual AC, professional chauffeur, and verified RTO commercial permits.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Transparent Billing Note -->
+          <div class="p-4 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant text-xs text-m3-on-surface-variant leading-relaxed flex items-start gap-3">
+            <Info className="w-5 h-5 text-m3-primary shrink-0 mt-0.5" />
+            <div>
+              <strong class="text-m3-on-surface">Transparent Billing Rules:</strong> All highway FASTag tolls, interstate border permits (e.g. AP for Tirupati, Kerala for Sabarimala), and parking receipts are settled strictly at actual receipts with zero surcharge. GST input invoices available for corporate and registered accounts upon request.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 3: TOP 6 FIXED ALL-INCLUSIVE PACKAGES (Swipeable Horizontal Scroll-Snap on Mobile, Grid on Desktop) -->
+    <section id="packages-section" class="py-10 sm:py-16 bg-m3-surface-container-low border-y border-m3-outline-variant/60 scroll-mt-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-6 sm:mb-10">
+          <span class="text-xs font-bold uppercase tracking-wider text-m3-primary">Transparent Pricing</span>
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-m3-on-surface font-heading tracking-tight mt-1">
+            Top Outstation Family Packages
+          </h2>
+          <p class="text-m3-on-surface-variant mt-2 text-xs sm:text-sm">
+            100% all-inclusive pricing covering vehicle hire, diesel, driver allowance, highway tolls, and interstate border permits.
+          </p>
+        </div>
+
+        <!-- Horizontal Swipe Container on Mobile, 3-Col Grid on Desktop -->
+        <div class="relative group/packages">
+          <div
+            id="packages-carousel-track"
+            class="flex gap-4 overflow-x-auto snap-x snap-mandatory py-2 pb-4 no-scrollbar scroll-smooth md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-5 md:overflow-visible md:pb-0 focus:outline-none"
+            tabindex="0"
+            role="region"
+            aria-label="Top Outstation Packages Carousel"
+          >
+            {popularPackages.map((pkg) => (
+              <div 
+                id={pkg.id} 
+                class="shrink-0 w-[85vw] max-w-sm md:w-auto snap-center md:snap-align-none bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant/70 shadow-xs hover:shadow-m3-2 transition-all flex flex-col justify-between overflow-hidden group"
+              >
+                <!-- Media Image Header with Badges -->
+                <div class="relative h-40 sm:h-44 w-full overflow-hidden bg-m3-surface-container-high shrink-0">
+                  <OptimizedImage
+                    src={pkg.image}
+                    alt={pkg.imageAlt}
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    sizes="(max-width: 768px) 85vw, (max-width: 1200px) 50vw, 33vw"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent"></div>
+
+                  <!-- Floating Badges over Image -->
+                  <div class="absolute top-3 left-3 right-3 flex justify-between items-center gap-2 z-10">
+                    <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-black/60 backdrop-blur-md text-white border border-white/20 shadow-xs">
+                      {pkg.duration}
+                    </span>
+                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-white/95 backdrop-blur-md text-m3-on-surface shadow-xs">
+                      {pkg.distance}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Card Content Body -->
+                <div class="p-4 sm:p-5 flex flex-col justify-between flex-1">
+                  <div>
+                    <h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading mb-2.5">
+                      {pkg.destination}
+                    </h3>
+
+                    <!-- Price Breakdown Block -->
+                    <div class="bg-m3-surface-container-low rounded-m3-xl p-3 border border-m3-outline-variant/50 mb-3 space-y-1.5">
+                      <div class="flex justify-between items-center text-xs">
+                        <span class="text-m3-on-surface-variant font-medium">12-Seater Luxury Force:</span>
+                        <strong class="text-m3-on-surface font-sans font-bold tabular-nums text-xs sm:text-sm">{pkg.fare12}</strong>
+                      </div>
+                      <div class="flex justify-between items-center text-xs pt-1 border-t border-m3-outline-variant/40">
+                        <span class="text-m3-on-surface-variant font-medium">17-Seater Executive Force:</span>
+                        <strong class="text-m3-on-surface font-sans font-bold tabular-nums text-xs sm:text-sm">{pkg.fare17}</strong>
+                      </div>
+                    </div>
+
+                    <!-- Package Inclusions -->
+                    <div class="text-xs text-m3-on-surface-variant mb-4 leading-relaxed">
+                      <strong class="text-m3-on-surface">Inclusions:</strong> {pkg.inclusions}
+                    </div>
+                  </div>
+
+                  <!-- Direct Booking Engine Button -->
+                  <a
+                    href="#fare-calculator"
+                    class="w-full min-h-[44px] inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-sm transition-all cursor-pointer pkg-book-engine-btn group/btn select-none"
+                    data-destination={pkg.destinationQuery}
+                    data-package-name={pkg.destination}
+                    data-package-id={pkg.id}
+                    data-days={pkg.days}
+                    data-vehicle="12-Seater Luxury Force Tempo"
+                    aria-label={`Book ${pkg.destination} in Fare Calculator`}
+                  >
+                    <span>Book {pkg.destination}</span>
+                    <ArrowRight className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform shrink-0" />
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <!-- Mobile Scroll Indicator Dots -->
+          <div class="flex md:hidden justify-center items-center gap-1.5 mt-3.5" aria-hidden="true" id="packages-carousel-dots">
+            {popularPackages.map((_, idx) => (
+              <button
+                type="button"
+                class="min-w-[32px] min-h-[32px] flex items-center justify-center p-1.5 cursor-pointer pkg-dot"
+                data-pkg-index={idx}
+                aria-label={`Go to package ${idx + 1}`}
+              >
+                <span class={`h-1.5 rounded-full transition-all duration-300 pkg-dot-bar ${idx === 0 ? 'bg-m3-primary w-5' : 'bg-m3-outline-variant w-1.5'}`}></span>
+              </button>
+            ))}
+          </div>
+
+          <!-- Mobile Swipe Hint -->
+          <div class="flex items-center justify-center gap-1.5 text-xs font-medium text-m3-on-surface-variant md:hidden mt-1">
+            <span>👉 Swipe horizontally to view all 6 packages</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3B: 4-STEP BOOKING WORKFLOW ("HOW IT WORKS") -->
+    <section id="booking-steps-section" class="py-10 sm:py-16 bg-m3-surface scroll-mt-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-6 sm:mb-10">
+          <span class="text-xs font-bold uppercase tracking-wider text-m3-primary">Hassle-Free Confirmation</span>
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-m3-on-surface font-heading tracking-tight mt-1">
+            How It Works: 4 Simple Steps
+          </h2>
+          <p class="text-m3-on-surface-variant mt-2 text-xs sm:text-sm">
+            From your instant estimate to safe doorstep return, experience a structured, zero-anxiety booking process.
+          </p>
+        </div>
+
+        <!-- Mobile View: Connected Vertical Timeline Stepper (Cuts ~75% vertical scrolling) -->
+        <div class="sm:hidden bg-m3-surface-container-lowest p-4 rounded-2xl border border-m3-outline-variant/80 shadow-xs">
+          <div class="relative pl-6 space-y-4 before:absolute before:left-3 before:top-2 before:bottom-3 before:w-0.5 before:bg-gradient-to-b before:from-m3-primary before:via-m3-primary/60 before:to-m3-primary/20">
+            {bookingSteps.map((b) => (
+              <div class="relative flex items-start gap-3">
+                <!-- Circular Connected Step Node -->
+                <span class="absolute -left-6 flex items-center justify-center w-6 h-6 rounded-full bg-m3-primary text-white text-xs font-bold font-heading shadow-2xs ring-4 ring-m3-surface-container-lowest">
+                  {b.step}
+                </span>
+                <div class="pl-2">
+                  <h3 class="font-bold text-m3-on-surface text-xs sm:text-sm font-heading">
+                    {b.title}
+                  </h3>
+                  <p class="text-xs text-m3-on-surface-variant leading-relaxed mt-0.5">
+                    {b.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Desktop View: 4-Column Card Grid -->
+        <div class="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          {bookingSteps.map((b) => (
+            <div class="relative bg-m3-surface-container-lowest p-5 sm:p-6 rounded-m3-2xl border border-m3-outline-variant/70 shadow-xs hover:shadow-m3-1 transition-all flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-4">
+                  <span class="w-10 h-10 rounded-xl bg-m3-primary text-white font-bold text-sm flex items-center justify-center font-heading shadow-2xs">
+                    {b.step}
+                  </span>
+                  <span class="text-xs font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-m3-surface-container text-m3-on-surface-variant border border-m3-outline-variant/50">
+                    Step {b.step}
+                  </span>
+                </div>
+                <h3 class="font-bold text-m3-on-surface text-base mb-2 font-heading">
+                  {b.title}
+                </h3>
+                <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+                  {b.desc}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <!-- ₹500 Advance Deduction & Free Cancellation Reassurance Strip -->
+        <div class="mt-8 p-4 sm:p-5 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/80 max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 class="text-xs sm:text-sm font-bold text-m3-on-surface">100% Refundable Booking Advance</h4>
+              <p class="text-xs text-m3-on-surface-variant mt-0.5">₹500 advance is fully credited on your final bill. 100% refunded if cancelled 6+ hours before pickup.</p>
+            </div>
+          </div>
+          <a
+            href="#trip-calculator"
+            class="px-4 py-2 rounded-full bg-m3-primary text-white text-xs font-bold hover:bg-m3-primary/90 transition shadow-2xs shrink-0"
+          >
+            Calculate Your Fare
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 4: WHAT YOU GET & PASSENGER GUARANTEES -->
+    <section id="inclusions-section" class="py-10 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-6 sm:mb-10">
+        <span class="text-xs font-bold uppercase tracking-wider text-m3-primary">Zero On-Road Hassles</span>
+        <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-m3-on-surface font-heading tracking-tight mt-1">
+          What Every Kalidass Travels Booking Includes
+        </h2>
+        <p class="text-m3-on-surface-variant mt-2 text-xs sm:text-sm">
+          Designed for families and organizers who want guaranteed peace of mind.
+        </p>
+      </div>
+
+      <!-- Compact 2x2 Bento Grid on Mobile, 4-Col Grid on Desktop -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-6">
+        <div class="bg-m3-surface-container-lowest p-3.5 sm:p-5 rounded-xl sm:rounded-m3-2xl border border-m3-outline-variant/70 shadow-2xs flex flex-col justify-start">
+          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-m3-primary/10 text-m3-primary flex items-center justify-center font-bold text-base sm:text-lg mb-2 sm:mb-3 shrink-0">
+            <MapPin className="w-4 h-4 sm:w-6 sm:h-6 text-m3-primary" />
+          </div>
+          <h3 class="font-bold text-m3-on-surface text-xs sm:text-base mb-1 sm:mb-1.5 font-heading leading-tight">Doorstep Pickup &amp; Fair Drops</h3>
+          <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+            1 primary doorstep pickup &amp; drop in Chennai. Free en-route drops along your return highway corridor. Zero hidden garage charges in South Chennai &amp; Airport.
+          </p>
+        </div>
+
+        <div class="bg-m3-surface-container-lowest p-3.5 sm:p-5 rounded-xl sm:rounded-m3-2xl border border-m3-outline-variant/70 shadow-2xs flex flex-col justify-start">
+          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-amber-500/10 text-amber-700 dark:text-amber-400 flex items-center justify-center font-bold text-base sm:text-lg mb-2 sm:mb-3 shrink-0">
+            <Landmark className="w-4 h-4 sm:w-6 sm:h-6 text-amber-700 dark:text-amber-400" />
+          </div>
+          <h3 class="font-bold text-m3-on-surface text-xs sm:text-base mb-1 sm:mb-1.5 font-heading leading-tight">Satvik Pilgrimage Drivers</h3>
+          <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+            Exclusively vegetarian, teetotaler, non-smoking chauffeurs assigned for temple yatras (Tirupati, Sabarimala, Kumbakonam) respecting devotional sanctity.
+          </p>
+        </div>
+
+        <div class="bg-m3-surface-container-lowest p-3.5 sm:p-5 rounded-xl sm:rounded-m3-2xl border border-m3-outline-variant/70 shadow-2xs flex flex-col justify-start">
+          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 flex items-center justify-center font-bold text-base sm:text-lg mb-2 sm:mb-3 shrink-0">
+            <Receipt className="w-4 h-4 sm:w-6 sm:h-6 text-emerald-700 dark:text-emerald-400" />
+          </div>
+          <h3 class="font-bold text-m3-on-surface text-xs sm:text-base mb-1 sm:mb-1.5 font-heading leading-tight">All Tolls &amp; Permits Cleared</h3>
+          <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+            All highway FASTag tolls and interstate Parivahan permits are pre-paid online. Zero check-post delays and zero cash disputes on the road.
+          </p>
+        </div>
+
+        <div class="bg-m3-surface-container-lowest p-3.5 sm:p-5 rounded-xl sm:rounded-m3-2xl border border-m3-outline-variant/70 shadow-2xs flex flex-col justify-start">
+          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-purple-500/10 text-purple-700 dark:text-purple-400 flex items-center justify-center font-bold text-base sm:text-lg mb-2 sm:mb-3 shrink-0">
+            <ShieldCheck className="w-4 h-4 sm:w-6 sm:h-6 text-purple-700 dark:text-purple-400" />
+          </div>
+          <h3 class="font-bold text-m3-on-surface text-xs sm:text-base mb-1 sm:mb-1.5 font-heading leading-tight">₹500 Advance Deduction</h3>
+          <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+            ₹500 locks your vehicle and chauffeur. 100% credited against your final trip balance with a 100% refund if cancelled 6+ hours before pickup.
+          </p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SECTION 5: TOP 7 PASSENGER FAQS -->
+    <section id="faq-section" class="py-10 sm:py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-6 sm:mb-10">
+        <span class="text-xs font-bold uppercase tracking-wider text-m3-primary">Clear Answers</span>
+        <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-m3-on-surface font-heading tracking-tight mt-1">
+          Passenger Questions &amp; Answers
+        </h2>
+        <p class="text-m3-on-surface-variant mt-2 text-xs sm:text-sm">
+          Straightforward facts regarding luggage, multi-home drops, AC, driver food, and cancellation.
+        </p>
+      </div>
+
+      <div class="space-y-3 sm:space-y-4">
+        {passengerFaqs.map((faq) => (
+          <details class="group bg-m3-surface-container-lowest rounded-m3-xl border border-m3-outline-variant/70 p-4 sm:p-5 open:shadow-xs transition-all">
+            <summary class="flex justify-between items-center font-bold text-m3-on-surface cursor-pointer list-none text-sm sm:text-base select-none">
+              <span>{faq.q}</span>
+              <span class="text-m3-primary transition group-open:rotate-180 shrink-0 ml-3">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed mt-3 pt-3 border-t border-m3-outline-variant/40">
+              {faq.a}
+            </p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <!-- SECTION 6: BOTTOM ACTION BANNER -->
+    <section class="bg-m3-surface-container-high border-t border-m3-outline-variant/60 text-m3-on-surface py-10 px-4 sm:px-6 lg:px-8 mt-6">
+      <div class="max-w-4xl mx-auto text-center space-y-4">
+        <h2 class="text-xl sm:text-2xl md:text-3xl font-bold font-heading tracking-tight text-m3-on-surface">
+          Have Questions or a Custom Itinerary?
+        </h2>
+        <p class="text-m3-on-surface-variant text-xs sm:text-sm max-w-xl mx-auto">
+          Talk directly to our 24/7 Dispatch Controller. Share your travel date, passenger count, and route to get instant confirmation.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+          <WhatsAppButton
+            text="Chat with Dispatch Controller"
+            href={buildWhatsAppUrl("Hi Kalidass Travels, I need assistance with a Tempo Traveller booking.")}
+            variant="filled"
+            size="md"
+            ariaLabel="Chat with Dispatch Controller on WhatsApp"
+          />
+          <a
+            href={`tel:${WHATSAPP_CONFIG.phone}`}
+            class="inline-flex items-center justify-center gap-2 py-3 px-5 rounded-full bg-m3-surface hover:bg-m3-surface-container border border-m3-outline-variant text-m3-on-surface font-bold transition-colors shadow-2xs text-sm"
+          >
+            Call {WHATSAPP_CONFIG.formattedPhone}
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<!-- CLIENT-SIDE EVENT WIRING & CAROUSEL OBSERVERS -->
+<script is:inline>
+  (function initTempoPageScripts() {
+    // 1. Vehicle Card "Calculate & Book" Action -> Selects vehicle in QuotationEngine
+    const specBookBtns = document.querySelectorAll('.spec-book-vehicle-btn');
+    specBookBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const vKey = btn.dataset.vehicleKey;
+        const vName = btn.dataset.vehicleName;
+        const targetVehicle = vName || (vKey === '17' ? '17-Seater Executive Force Tempo' : vKey === 'urbania' ? 'Force Urbania VIP Luxury' : '12-Seater Luxury Force Tempo');
+        window.dispatchEvent(new CustomEvent('select-quote-vehicle', { detail: { vehicle: targetVehicle } }));
+        const calcEl = document.getElementById('trip-calculator') || document.getElementById('fare-calculator');
+        if (calcEl) {
+          calcEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // 1b. Package Card "Book in Booking Engine" Action -> Selects package in QuotationEngine & scrolls to calculator
+    const pkgBookBtns = document.querySelectorAll('.pkg-book-engine-btn');
+    pkgBookBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const dest = btn.dataset.destination || '';
+        const days = btn.dataset.days || '1';
+        const veh = btn.dataset.vehicle || '12-Seater Luxury Force Tempo';
+
+        window.dispatchEvent(new CustomEvent('select-quote-package', {
+          detail: {
+            destination: dest,
+            days: days,
+            vehicle: veh,
+            tab: 'round'
+          }
+        }));
+
+        const calcEl = document.getElementById('trip-calculator') || document.getElementById('fare-calculator') || document.getElementById('tempo-quotation-engine');
+        if (calcEl) {
+          calcEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // 2. Interactive Tabbed Vehicle Spotlight Switcher
+    const specTabBtns = document.querySelectorAll('.spec-tab-btn');
+    const specPanels = document.querySelectorAll('.spec-panel');
+    specTabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.dataset.targetTab;
+        specTabBtns.forEach(b => {
+          const isSelected = (b === btn);
+          b.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+          if (isSelected) {
+            b.className = 'flex-1 min-h-[42px] py-2 px-3.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer text-center truncate spec-tab-btn select-none bg-m3-primary text-white shadow-2xs';
+          } else {
+            b.className = 'flex-1 min-h-[42px] py-2 px-3.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer text-center truncate spec-tab-btn select-none text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-high';
+          }
+        });
+        specPanels.forEach(panel => {
+          if (panel.id === `panel-${targetId}`) {
+            panel.classList.remove('hidden');
+            panel.classList.add('block');
+            setTimeout(() => {
+              panel.classList.remove('opacity-0');
+              panel.classList.add('opacity-100');
+            }, 10);
+          } else {
+            panel.classList.remove('block', 'opacity-100');
+            panel.classList.add('hidden', 'opacity-0');
+          }
+        });
+      });
+    });
+
+    // 2b. Mobile Fleet Scroller Dots Indicator
+    const specScroller = document.getElementById('spec-fleet-scroller');
+    const specDots = document.querySelectorAll('.spec-dot');
+    if (specScroller && specDots.length > 0) {
+      const updateSpecDots = function() {
+        const scrollLeft = specScroller.scrollLeft;
+        const cardWidth = specScroller.offsetWidth * 0.88;
+        const activeIdx = Math.min(Math.round(scrollLeft / cardWidth), specDots.length - 1);
+        specDots.forEach(function(dot, idx) {
+          const bar = dot.querySelector('.spec-dot-bar');
+          if (bar) {
+            if (idx === activeIdx) {
+              bar.className = 'h-1.5 rounded-full transition-all duration-300 spec-dot-bar bg-m3-primary w-5';
+            } else {
+              bar.className = 'h-1.5 rounded-full transition-all duration-300 spec-dot-bar bg-m3-outline-variant w-1.5';
+            }
+          }
+        });
+      };
+      specScroller.addEventListener('scroll', updateSpecDots, { passive: true });
+      specDots.forEach(function(dot) {
+        dot.onclick = function() {
+          const idx = parseInt(dot.dataset.specIndex || '0', 10);
+          const cards = specScroller.children;
+          if (cards[idx]) {
+            cards[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          }
+        };
+      });
+    }
+
+    // 3. Top Outstation Packages Scroller Dots Indicator (Mobile)
+    const pkgScroller = document.getElementById('packages-carousel-track');
+    const pkgDots = document.querySelectorAll('.pkg-dot');
+    if (pkgScroller && pkgDots.length > 0) {
+      const updatePkgDots = function() {
+        const scrollLeft = pkgScroller.scrollLeft;
+        const cardWidth = pkgScroller.offsetWidth * 0.85;
+        const activeIdx = Math.min(Math.round(scrollLeft / cardWidth), pkgDots.length - 1);
+        pkgDots.forEach(function(dot, idx) {
+          const bar = dot.querySelector('.pkg-dot-bar');
+          if (bar) {
+            if (idx === activeIdx) {
+              bar.className = 'h-1.5 rounded-full transition-all duration-300 pkg-dot-bar bg-m3-primary w-5';
+            } else {
+              bar.className = 'h-1.5 rounded-full transition-all duration-300 pkg-dot-bar bg-m3-outline-variant w-1.5';
+            }
+          }
+        });
+      };
+
+      pkgScroller.addEventListener('scroll', updatePkgDots, { passive: true });
+
+      pkgDots.forEach(function(dot) {
+        dot.onclick = function() {
+          const idx = parseInt(dot.dataset.pkgIndex || '0', 10);
+          const cards = pkgScroller.children;
+          if (cards[idx]) {
+            cards[idx].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+          }
+        };
+      });
+    }
+
+    // 4. Side-by-Side Model Comparison: Modal Trigger on Mobile / Smooth Scroll on Desktop
+    const specModal = document.getElementById('specModal');
+    const openSpecModalBtn = document.getElementById('open-spec-modal-btn');
+    const closeSpecModalBtns = document.querySelectorAll('.close-spec-modal-btn');
+
+    function openSpecModal() {
+      if (specModal && typeof specModal.showModal === 'function') {
+        specModal.showModal();
+      }
+    }
+
+    function closeSpecModal() {
+      if (specModal && typeof specModal.close === 'function') {
+        specModal.close();
+      }
+    }
+
+    if (openSpecModalBtn) {
+      openSpecModalBtn.addEventListener('click', openSpecModal);
+    }
+
+    closeSpecModalBtns.forEach(btn => {
+      btn.addEventListener('click', closeSpecModal);
+    });
+
+    // Close modal when clicking outside dialog (on backdrop)
+    if (specModal) {
+      specModal.addEventListener('click', (e) => {
+        const dialogDimensions = specModal.getBoundingClientRect();
+        if (
+          e.clientX < dialogDimensions.left ||
+          e.clientX > dialogDimensions.right ||
+          e.clientY < dialogDimensions.top ||
+          e.clientY > dialogDimensions.bottom
+        ) {
+          specModal.close();
+        }
+      });
+    }
+
+    // Quick-nav link "#spec-comparison": open modal on mobile, scroll to section on desktop
+    const specNavLinks = document.querySelectorAll('a[href="#spec-comparison"]');
+    specNavLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        if (window.innerWidth < 768) {
+          e.preventDefault();
+          openSpecModal();
+        }
+      });
+    });
+
+    // 5. Transparent Tariff Carousel Sync for Mobile
+    const tariffTrack = document.getElementById('tariff-carousel-track');
+    const tariffDots = document.querySelectorAll('.tariff-dot');
+
+    if (tariffTrack && tariffDots.length > 0) {
+      tariffTrack.addEventListener('scroll', () => {
+        const scrollLeft = tariffTrack.scrollLeft;
+        const cardWidth = tariffTrack.firstElementChild?.clientWidth || 300;
+        const activeIdx = Math.min(
+          tariffDots.length - 1,
+          Math.max(0, Math.round(scrollLeft / cardWidth))
+        );
+
+        tariffDots.forEach((dot, idx) => {
+          const bar = dot.querySelector('.tariff-dot-bar');
+          if (bar) {
+            if (idx === activeIdx) {
+              bar.classList.add('bg-m3-primary', 'w-5');
+              bar.classList.remove('bg-m3-outline-variant', 'w-1.5');
+            } else {
+              bar.classList.remove('bg-m3-primary', 'w-5');
+              bar.classList.add('bg-m3-outline-variant', 'w-1.5');
+            }
+          }
+        });
+      }, { passive: true });
+
+      tariffDots.forEach(dot => {
+        dot.addEventListener('click', function() {
+          const idx = parseInt(this.dataset.tariffIndex || '0', 10);
+          const cards = tariffTrack.children;
+          if (cards[idx]) {
+            cards[idx].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+          }
+        });
+      });
+    }
+  })();
+</script>
+
+<style>
+  dialog#specModal:modal {
+    overscroll-behavior: contain;
+  }
+  dialog#specModal::backdrop {
+    overflow: hidden;
+    overscroll-behavior: contain;
+  }
+</style>

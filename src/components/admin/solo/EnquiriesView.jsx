@@ -999,6 +999,95 @@ export default function EnquiriesView({
     showToast?.(`Follow-up reminder sent to ${guestName}!`, 'success');
   };
 
+  // Send Official Quote in Pure Tamil (தமிழ் மேற்கோள்)
+  const handleSendQuoteTamilWA = (lead) => {
+    const cleanPhone = extractPhone(lead);
+    const fare = Number(lead.estimatedFare) || 0;
+    const pkg = lead.tripType || 'அவுட்ஸ்டேஷன் பயணம்';
+    const pickup = cleanLocationName(lead.pickup) || 'சென்னை';
+    const drop = cleanLocationName(lead.drop) || 'இடம்';
+    const guestName = lead.guestName && !isPlaceholderCustomerName(lead.guestName) ? lead.guestName.split('(')[0].trim() : 'வணக்கம்';
+    const vehicle = lead.vehicle || 'AC கார்';
+    const travelDate = lead.travelDate && lead.travelDate !== 'Departure date pending' ? lead.travelDate : 'திட்டமிட்டபடி';
+
+    const msg =
+      `வணக்கம் ${guestName}! 🙏\n` +
+      `*காளிதாஸ் டிராவல்ஸ் (சென்னை) — பயண மேற்கோள்*\n\n` +
+      `• *பயணம்:* ${pkg}\n` +
+      `• *பாதை:* ${pickup} ➔ ${drop}\n` +
+      `• *வாகனம்:* ${vehicle}\n` +
+      `• *முழு கட்டணம்:* ₹${fare.toLocaleString('en-IN')}\n` +
+      `• *உட்பட்டவை:* எரிபொருள் (Fuel), ஓட்டுநர் பேட்டா (Driver Bata) & நெடுஞ்சாலை சுங்கச்சாவடி (Tolls) — மறைமுக கட்டணம் எதுவும் இல்லை.\n` +
+      `• *பயண நாள்:* ${travelDate}\n\n` +
+      `🔒 *முன்பதிவை உறுதி செய்ய:*\n` +
+      `• வண்டி & ஓட்டுநரை ஒதுக்க *₹500 முன்பணம்* மட்டும் செலுத்தவும்.\n` +
+      `• UPI ID: *8939539211@okbizaxis* (Google Pay / PhonePe / Paytm)\n` +
+      `• மீதித் தொகையை பயணம் முடிந்து ஓட்டுநரிடம் நேரடியாக செலுத்தலாம்.\n\n` +
+      `📞 24/7 உதவி எண்: +91 89395 39211. நன்றி!`;
+
+    window.open(cleanPhone ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    showToast?.(`தமிழ் மேற்கோள் வாட்ஸ்அப்பில் திறக்கப்பட்டது!`, 'success');
+  };
+
+  // Send 3-Vehicle Comparison Quote (Sedan vs Ertiga vs Innova Crysta)
+  const handleSendComparisonWA = (lead) => {
+    const cleanPhone = extractPhone(lead);
+    const pickup = cleanLocationName(lead.pickup) || 'Chennai';
+    const drop = cleanLocationName(lead.drop) || 'Destination';
+    const guestName = lead.guestName && !isPlaceholderCustomerName(lead.guestName) ? lead.guestName.split('(')[0].trim() : 'Customer';
+    const travelDate = lead.travelDate && lead.travelDate !== 'Departure date pending' ? lead.travelDate : 'As per schedule';
+    const baseFare = Number(lead.estimatedFare) || 0;
+
+    const sedanFare = Math.round(baseFare / 10) * 10;
+    const suvFare = Math.round((baseFare * 1.25) / 50) * 50;
+    const crystaFare = Math.round((baseFare * 1.55) / 50) * 50;
+
+    const msg =
+      `🚕 *KALIDASS TRAVELS — VEHICLE COMPARISON QUOTE*\n\n` +
+      `Namaskaram ${guestName}! Here are our transparent fixed options for:\n` +
+      `📍 *Route:* ${pickup} ➔ ${drop}\n` +
+      `📅 *Date:* ${travelDate}\n\n` +
+      `1️⃣ *Sedan (Swift Dzire / Etios - 4 Pax)*\n` +
+      `   • Fare: *₹${sedanFare.toLocaleString('en-IN')}*\n` +
+      `   • Ideal for: Couples & small families with 2 bags\n\n` +
+      `2️⃣ *Comfort SUV (Maruti Ertiga - 6 Pax)*\n` +
+      `   • Fare: *₹${suvFare.toLocaleString('en-IN')}*\n` +
+      `   • Ideal for: Families with extra luggage & kids\n\n` +
+      `3️⃣ *Premium MUV (Toyota Innova Crysta - 7 Pax)*\n` +
+      `   • Fare: *₹${crystaFare.toLocaleString('en-IN')}*\n` +
+      `   • Ideal for: Maximum comfort, legroom & elderly passengers\n\n` +
+      `✅ *All rates include:* Fuel, Driver Bata & NH Tolls.\n` +
+      `🔒 Reserve with nominal *₹500 advance* via UPI: *8939539211@okbizaxis*\n\n` +
+      `Which car shall we confirm for your trip?\n` +
+      `📞 24/7 Helpline: +91 89395 39211`;
+
+    window.open(cleanPhone ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    showToast?.(`Comparison quote opened for ${guestName}!`, 'success');
+  };
+
+  // Send UPI ₹500 Advance Link & Instructions
+  const handleSendUpiAdvanceWA = (lead) => {
+    const cleanPhone = extractPhone(lead);
+    const guestName = lead.guestName && !isPlaceholderCustomerName(lead.guestName) ? lead.guestName.split('(')[0].trim() : 'Sir/Madam';
+    const fare = Number(lead.estimatedFare) || 0;
+    const balance = Math.max(0, fare - 500);
+    const route = `${cleanLocationName(lead.pickup)} ➔ ${cleanLocationName(lead.drop)}`;
+
+    const msg =
+      `Namaskaram ${guestName}! 🙏\n\n` +
+      `To lock your vehicle & assign our verified driver for your trip (*${route}*):\n\n` +
+      `💳 *Advance Amount:* ₹500 (Deducted from your total bill)\n` +
+      `📱 *Google Pay / PhonePe / Paytm UPI ID:* *8939539211@okbizaxis*\n` +
+      `🏦 *Account Name:* Kalidass Travels\n` +
+      `🔗 *Direct UPI Pay Link:* upi://pay?pa=8939539211@okbizaxis&pn=Kalidass%20Travels&am=500&cu=INR&tn=Advance%20${lead.quoteId || 'Booking'}\n\n` +
+      `• Remaining balance: *₹${balance.toLocaleString('en-IN')}* payable directly to chauffeur upon trip completion.\n` +
+      `• Once paid, kindly share the screenshot here. We will immediately dispatch your chauffeur & car details!\n\n` +
+      `📞 24/7 Helpline: +91 89395 39211`;
+
+    window.open(cleanPhone ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    showToast?.(`UPI advance request opened for ${guestName}!`, 'success');
+  };
+
   // Advance Received ➔ Move to Active Trips (Requires Valid Name & 10-digit Phone)
   const handleLockLeadWithAdvance = (lead) => {
     const cleanPhone = extractValidMobile(lead);
@@ -1466,14 +1555,55 @@ export default function EnquiriesView({
                   </div>
 
                   <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                    {extractPhone(lead) && (
+                      <a
+                        href={`tel:+91${extractPhone(lead)}`}
+                        className="h-9 px-3 bg-emerald-700 hover:bg-emerald-800 text-white rounded-m3-full text-xs font-semibold flex items-center gap-1.5 transition-colors whitespace-nowrap shadow-xs"
+                        title={`Direct Call +91 ${extractPhone(lead)}`}
+                      >
+                        <span className="material-symbols-outlined text-[15px]">call</span>
+                        <span>Call</span>
+                      </a>
+                    )}
+
                     <button
                       type="button"
                       onClick={() => handleSendQuoteWA(lead)}
                       className="h-9 px-3 bg-m3-surface-container-low hover:bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant rounded-m3-full text-xs font-semibold flex items-center gap-1.5 transition-colors whitespace-nowrap"
-                      title="Send initial quote on WhatsApp"
+                      title="Send initial quote on WhatsApp (English)"
                     >
                       <span className="material-symbols-outlined text-[15px]">chat</span>
                       <span>Send Quote</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleSendQuoteTamilWA(lead)}
+                      className="h-9 px-2.5 bg-m3-surface-container-low hover:bg-m3-surface-container-high text-emerald-800 dark:text-emerald-300 border border-emerald-500/40 rounded-m3-full text-xs font-semibold flex items-center gap-1 transition-colors whitespace-nowrap"
+                      title="Send official quote in pure Tamil on WhatsApp (தமிழ் மேற்கோள்)"
+                    >
+                      <span className="material-symbols-outlined text-[15px] text-emerald-600">translate</span>
+                      <span>தமிழ்</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleSendComparisonWA(lead)}
+                      className="h-9 px-2.5 bg-m3-surface-container-low hover:bg-m3-surface-container-high text-indigo-800 dark:text-indigo-300 border border-indigo-500/40 rounded-m3-full text-xs font-semibold flex items-center gap-1 transition-colors whitespace-nowrap"
+                      title="Send 3-vehicle comparison quote (Sedan vs Ertiga vs Innova Crysta)"
+                    >
+                      <span className="material-symbols-outlined text-[15px] text-indigo-600">compare_arrows</span>
+                      <span>Compare (3-Car)</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleSendUpiAdvanceWA(lead)}
+                      className="h-9 px-2.5 bg-m3-surface-container-low hover:bg-m3-surface-container-high text-teal-800 dark:text-teal-300 border border-teal-500/40 rounded-m3-full text-xs font-semibold flex items-center gap-1 transition-colors whitespace-nowrap"
+                      title="Send UPI ₹500 advance payment link & instructions"
+                    >
+                      <span className="material-symbols-outlined text-[15px] text-teal-600">qr_code</span>
+                      <span>₹500 Link</span>
                     </button>
 
                     <button

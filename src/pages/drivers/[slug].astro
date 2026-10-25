@@ -3,6 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import Breadcrumbs from "../../components/SEO/Breadcrumbs.astro";
 import WhatsAppIcon from "../../components/WhatsAppIcon.astro";
 import { getAllDrivers, type Driver } from "../../data/driversData";
+import { ShieldCheck, Car, Route, ArrowRight, CheckCircle2, Phone } from "lucide-react";
 
 export async function getStaticPaths() {
   const drivers = getAllDrivers();
@@ -149,11 +150,11 @@ const faqSchema = {
               <span class="text-xs font-bold tracking-wider uppercase block text-m3-tertiary-fixed leading-none font-heading">
                 Kalidass Travels
               </span>
-              <span class="text-[10px] text-m3-on-primary/80">Driver Identification &amp; Credentials Card</span>
+              <span class="text-xs text-m3-on-primary/80">Driver Identification &amp; Credentials Card</span>
             </div>
           </div>
 
-          <span class="inline-flex items-center gap-1 text-[10px] font-bold text-m3-success-container bg-m3-success/20 border border-m3-success/40 px-2.5 py-0.5 rounded-m3-full">
+          <span class="inline-flex items-center gap-1 text-xs font-bold text-m3-success-container bg-m3-success/20 border border-m3-success/40 px-2.5 py-0.5 rounded-m3-full">
             <span class="w-1.5 h-1.5 rounded-full bg-m3-success animate-pulse"></span>
             <span>VERIFIED PVC</span>
           </span>
@@ -173,7 +174,7 @@ const faqSchema = {
                 height="128"
                 class="w-full h-full object-cover object-center"
               />
-              <span class="absolute bottom-1 left-1 bg-m3-primary/90 text-m3-tertiary-fixed text-[9px] font-bold px-1.5 py-0.5 rounded-m3-xs shadow-xs">
+              <span class="absolute bottom-1 left-1 bg-m3-primary/90 text-m3-tertiary-fixed text-xs font-bold px-1.5 py-0.5 rounded-m3-xs shadow-xs">
                 {driver.tag}
               </span>
             </div>
@@ -214,7 +215,7 @@ const faqSchema = {
           <!-- Official Verification Endorsements -->
           <div class="pt-5 space-y-3">
             <div class="flex items-center gap-1.5 pb-0.5">
-              <span class="material-symbols-outlined text-[18px] text-m3-success" aria-hidden="true">verified_user</span>
+              <ShieldCheck className="w-4 h-4 text-m3-success shrink-0" />
               <h2 class="text-xs sm:text-sm font-bold text-m3-on-surface uppercase tracking-wider font-heading">Official Verification &amp; Clearance Status</h2>
             </div>
             
@@ -223,10 +224,10 @@ const faqSchema = {
               <div class="bg-m3-surface-container-low rounded-m3-xl p-3.5 border border-m3-outline-variant/60">
                 <div class="text-xs font-bold text-m3-on-surface mb-1.5 flex items-center justify-between">
                   <div class="flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-[16px] text-m3-primary">directions_car</span>
+                    <Car className="w-4 h-4 text-m3-primary shrink-0" />
                     <span>Driving License (RTO)</span>
                   </div>
-                  <span class="text-[10px] text-m3-on-surface-variant font-mono">TN Commercial</span>
+                  <span class="text-xs text-m3-on-surface-variant font-mono">TN Commercial</span>
                 </div>
 
                 <div class="text-xs space-y-1 text-m3-on-surface">
@@ -241,7 +242,7 @@ const faqSchema = {
                     </span>
                   </div>
                 </div>
-                <p class="text-[9px] text-m3-on-surface-variant mt-1 font-normal">
+                <p class="text-xs text-m3-on-surface-variant mt-1 font-normal">
                   * Commercial badge &amp; RTO category verified; middle digits masked for privacy.
                 </p>
               </div>
@@ -250,10 +251,10 @@ const faqSchema = {
               <div class="bg-m3-surface-container-low rounded-m3-xl p-3.5 border border-m3-outline-variant/60">
                 <div class="text-xs font-bold text-m3-on-surface mb-1.5 flex items-center justify-between">
                   <div class="flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-[16px] text-m3-success">verified_user</span>
+                    <ShieldCheck className="w-4 h-4 text-m3-success shrink-0" />
                     <span>Police Clearance (PVC)</span>
                   </div>
-                  <span class="text-[10px] font-bold text-m3-on-success-container bg-m3-success-container/70 px-1.5 py-0.5 rounded-m3-xs">
+                  <span class="text-xs font-bold text-m3-on-success-container bg-m3-success-container/70 px-1.5 py-0.5 rounded-m3-xs">
                     CLEARED
                   </span>
                 </div>
@@ -268,7 +269,7 @@ const faqSchema = {
                     <span class="font-mono text-m3-on-surface font-semibold">{driver.pvcNumber}</span>
                   </div>
                 </div>
-                <p class="text-[9px] text-m3-on-surface-variant mt-1 font-normal">
+                <p class="text-xs text-m3-on-surface-variant mt-1 font-normal">
                   * Official Tamil Nadu Police background clearance certificate on file.
                 </p>
               </div>
@@ -277,11 +278,11 @@ const faqSchema = {
             <!-- Authorized By Strip -->
             <div class="pt-3 flex items-center justify-between text-xs text-m3-on-surface-variant border-t border-m3-outline-variant/60">
               <div>
-                <span class="block text-[10px] text-m3-on-surface-variant leading-none mb-0.5">Fleet Organization:</span>
+                <span class="block text-xs text-m3-on-surface-variant leading-none mb-0.5">Fleet Organization:</span>
                 <strong class="text-m3-on-surface">Kalidass Travels Chennai (Regd. Medavakkam)</strong>
               </div>
               <div class="text-right">
-                <span class="block text-[10px] text-m3-on-surface-variant leading-none mb-0.5">24/7 Dispatch Desk:</span>
+                <span class="block text-xs text-m3-on-surface-variant leading-none mb-0.5">24/7 Dispatch Desk:</span>
                 <a href="tel:+918939539211" class="font-bold text-m3-primary hover:underline">+91 89395 39211</a>
               </div>
             </div>
@@ -296,7 +297,7 @@ const faqSchema = {
           href={`https://wa.me/918939539211?text=${waText}`}
           target="_blank"
           rel="noopener noreferrer nofollow"
-          class="inline-flex items-center justify-center gap-2 py-3 px-5 rounded-m3-full bg-m3-success-container hover:bg-m3-success/20 active:bg-m3-success/30 text-m3-on-success-container border border-m3-success/30 font-bold text-sm shadow-xs transition-all text-center"
+          class="inline-flex items-center justify-center min-h-[44px] gap-2 py-3 px-5 rounded-m3-full bg-m3-success-container hover:bg-m3-success/20 active:bg-m3-success/30 text-m3-on-success-container border border-m3-success/30 font-bold text-sm shadow-xs transition-all text-center"
         >
           <WhatsAppIcon class="w-4 h-4" variant="brand" />
           <span>Book {driver.name} on WhatsApp</span>
@@ -304,11 +305,9 @@ const faqSchema = {
 
         <a
           href="tel:+918939539211"
-          class="inline-flex items-center justify-center gap-2 py-3 px-5 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary font-bold text-sm shadow-m3-1 transition-colors text-center"
+          class="inline-flex items-center justify-center min-h-[44px] gap-2 py-3 px-5 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary font-bold text-sm shadow-m3-1 transition-colors text-center"
         >
-          <svg class="w-4 h-4 text-m3-on-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-          </svg>
+          <Phone className="w-4 h-4 text-m3-on-primary shrink-0" />
           <span>Call Dispatch (+91 89395 39211)</span>
         </a>
       </div>
@@ -337,10 +336,10 @@ const faqSchema = {
                 class="flex items-center justify-between p-3 rounded-m3-xl bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant/60 hover:border-m3-primary/40 transition-colors group"
               >
                 <div class="flex items-center gap-2 text-xs font-semibold text-m3-on-surface group-hover:text-m3-primary">
-                  <span class="material-symbols-outlined text-[16px] text-m3-primary">route</span>
+                  <Route className="w-4 h-4 text-m3-primary shrink-0" />
                   <span>{r.name}</span>
                 </div>
-                <span class="material-symbols-outlined text-[16px] text-m3-on-surface-variant group-hover:text-m3-primary transition-colors">arrow_forward</span>
+                <ArrowRight className="w-4 h-4 text-m3-on-surface-variant group-hover:text-m3-primary transition-colors shrink-0" />
               </a>
             ))}
           </div>
@@ -353,19 +352,19 @@ const faqSchema = {
           </h3>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-m3-on-surface-variant">
             <div class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-[16px] text-m3-success">check_circle</span>
+              <CheckCircle2 className="w-4 h-4 text-m3-success shrink-0" />
               <span>100% Teetotaler &amp; Non-Smoker</span>
             </div>
             <div class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-[16px] text-m3-success">check_circle</span>
+              <CheckCircle2 className="w-4 h-4 text-m3-success shrink-0" />
               <span>Zero-Accident Clean Highway Record</span>
             </div>
             <div class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-[16px] text-m3-success">check_circle</span>
+              <CheckCircle2 className="w-4 h-4 text-m3-success shrink-0" />
               <span>Comfortable in Manual, Automatic &amp; Luxury EVs</span>
             </div>
             <div class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-[16px] text-m3-success">check_circle</span>
+              <CheckCircle2 className="w-4 h-4 text-m3-success shrink-0" />
               <span>Real-Time GPS Tracking &amp; Route Telemetry</span>
             </div>
           </div>
@@ -401,22 +400,22 @@ const faqSchema = {
           Explore Kalidass Travels Mobility Services
         </h2>
         <div class="flex flex-wrap gap-2 text-xs">
-          <a href="/services/chennai-airport-taxi/" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface font-semibold transition-colors">
+          <a href="/services/chennai-airport-taxi/" class="inline-flex items-center justify-center min-h-[44px] px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface font-semibold transition-colors">
             Chennai Airport Taxi
           </a>
-          <a href="/services/outstation-cabs/" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface font-semibold transition-colors">
+          <a href="/services/outstation-cabs/" class="inline-flex items-center justify-center min-h-[44px] px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface font-semibold transition-colors">
             Outstation Cabs (₹14/km)
           </a>
-          <a href="/services/acting-drivers/" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface font-semibold transition-colors">
+          <a href="/services/acting-drivers/" class="inline-flex items-center justify-center min-h-[44px] px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface font-semibold transition-colors">
             Acting Drivers in Chennai
           </a>
-          <a href="/services/tirupati-package/" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface font-semibold transition-colors">
+          <a href="/services/tirupati-package/" class="inline-flex items-center justify-center min-h-[44px] px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface font-semibold transition-colors">
             Tirupati Balaji Package
           </a>
-          <a href="/tariff/" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface font-semibold transition-colors">
+          <a href="/tariff/" class="inline-flex items-center justify-center min-h-[44px] px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface font-semibold transition-colors">
             Transparent Tariff Card
           </a>
-          <a href="/calculator/" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface font-semibold transition-colors">
+          <a href="/calculator/" class="inline-flex items-center justify-center min-h-[44px] px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface font-semibold transition-colors">
             Fare Calculator
           </a>
         </div>

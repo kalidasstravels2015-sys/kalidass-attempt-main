@@ -48,13 +48,8 @@ const variantClasses = {
   target={href ? target : undefined}
   rel={href && target === "_blank" ? (rel || "noopener noreferrer") : rel}
   id={id}
-  class:list={[baseClasses, paddingClasses, variantClasses, className]}
+  class:list={[baseClasses, variantClasses, className]}
   {...rest}
 >
-  {icon && (
-    <span class="material-symbols-outlined text-[18px] leading-none shrink-0" aria-hidden="true">
-      {icon}
-    </span>
-  )}
-  <span class="relative z-10"><slot /></span>
+  <span class="relative z-10 flex items-center justify-center gap-2"><slot /></span>
 </Tag>

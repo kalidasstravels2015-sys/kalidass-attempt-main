@@ -111,7 +111,7 @@ const categoryHubs: Record<string, {
     includes: [
       "Airport Transfers, Outstation Cabs & Temple Tours",
       "Police-Verified Professional Chauffeurs for Your Car",
-      "4.9 ★ Rated • 1,500+ Happy Devotees & Travelers"
+      "5.0 ★ on Google Maps • 12 Verified Reviews"
     ],
     heroImage: "/images/services/airport-transfer.webp"
   },
@@ -499,8 +499,8 @@ export const GET: APIRoute = async ({ params }) => {
           <!-- Rating badge -->
           <div style="display:flex;flex-direction:row;align-items:center;background-color:rgba(10,14,26,0.75);border:1px solid rgba(255,255,255,0.2);padding:8px 18px;border-radius:9999px;backdrop-filter:blur(4px);">
             ${starSvg}
-            <span style="color:#FBBF24;font-size:16px;font-weight:800;margin-right:8px;">4.9</span>
-            <span style="color:#CBD5E1;font-size:14px;font-weight:600;">1,500+ Verified Trips</span>
+            <span style="color:#FBBF24;font-size:16px;font-weight:800;margin-right:8px;">5.0</span>
+            <span style="color:#CBD5E1;font-size:14px;font-weight:600;">Google Maps • 12 Reviews</span>
           </div>
         </div>
 

@@ -1,5 +1,5 @@
 ---
-// Bottom CTA banner with Material Symbols
+import { Calculator, ArrowRight } from "lucide-react";
 ---
 
 <section class="offscreen-defer py-12 md:py-18 bg-gradient-to-br from-[#0B57D0] via-[#0842A0] to-[#041E49] text-white relative overflow-hidden border-t border-[#0B57D0]/20">
@@ -18,9 +18,9 @@
         href="#booking-panel"
         class="min-h-[48px] h-12 inline-flex items-center justify-center gap-2.5 px-9 rounded-m3-full bg-white hover:bg-[#F0F4F9] active:bg-[#E8F0FE] !text-[#0B57D0] hover:!text-[#0842A0] text-sm font-bold shadow-m3-2 hover:shadow-m3-3 transition-all cursor-pointer border border-white/40 group active:scale-[0.98]"
       >
-        <span class="material-symbols-outlined text-[20px] text-[#0B57D0]">calculate</span>
+        <Calculator className="w-5 h-5 text-[#0B57D0] shrink-0" />
         <span>Calculate Your Fare</span>
-        <span class="material-symbols-outlined text-[18px] text-[#0B57D0] transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+        <ArrowRight className="w-4 h-4 text-[#0B57D0] transform group-hover:translate-x-1 transition-transform shrink-0" />
       </a>
     </div>
   </div>

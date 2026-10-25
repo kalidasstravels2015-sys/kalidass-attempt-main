@@ -1,4 +1,5 @@
 ---
+import { CheckCircle2, ClipboardCheck, Building2, ExternalLink, Shield, AlertTriangle, Phone } from "lucide-react";
 ---
 
 <section id="safety" class="offscreen-defer py-10 md:py-14 bg-m3-surface border-t border-m3-outline-variant/60 scroll-mt-24 sm:scroll-mt-28">
@@ -20,7 +21,7 @@
       <div class="bg-m3-surface rounded-m3-xl p-3.5 sm:p-6 shadow-m3-1 hover:shadow-m3-3 border border-m3-outline-variant transition-all duration-300 flex flex-col justify-between h-full">
         <div>
           <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-m3-md bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center mb-3 sm:mb-4 text-m3-primary">
-            <span class="material-symbols-outlined text-[24px] sm:text-[28px]">task_alt</span>
+            <CheckCircle2 className="w-6 h-6 sm:w-7 sm:h-7 text-m3-primary" />
           </div>
           <h3 class="text-sm sm:text-lg font-bold text-m3-on-surface mb-1.5 sm:mb-2 font-heading leading-snug">
             Travel Responsibility
@@ -33,9 +34,9 @@
           <button
             type="button"
             data-modal-target="responsibility-modal"
-            class="w-full inline-flex items-center justify-center gap-1.5 !bg-[#0B57D0] hover:!bg-[#0842A0] !text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-m3-full font-bold text-xs sm:text-sm shadow-m3-1 hover:shadow-m3-2 transition-all cursor-pointer whitespace-nowrap min-h-[38px] sm:min-h-[42px]"
+            class="w-full inline-flex items-center justify-center gap-1.5 !bg-[#0B57D0] hover:!bg-[#0842A0] !text-white px-3 sm:px-4 py-2.5 rounded-m3-full font-bold text-xs sm:text-sm shadow-m3-1 hover:shadow-m3-2 transition-all cursor-pointer whitespace-nowrap min-h-[44px]"
           >
-            <span class="material-symbols-outlined text-[16px] text-white">checklist</span>
+            <ClipboardCheck className="w-4 h-4 text-white shrink-0" />
             <span>View Checklist</span>
           </button>
         </div>
@@ -45,7 +46,7 @@
       <div class="bg-m3-surface rounded-m3-xl p-3.5 sm:p-6 shadow-m3-1 hover:shadow-m3-3 border border-m3-outline-variant transition-all duration-300 flex flex-col justify-between h-full">
         <div>
           <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-m3-md bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center mb-3 sm:mb-4 text-m3-primary">
-            <span class="material-symbols-outlined text-[24px] sm:text-[28px]">account_balance</span>
+            <Building2 className="w-6 h-6 sm:w-7 sm:h-7 text-m3-primary" />
           </div>
           <h3 class="text-sm sm:text-lg font-bold text-m3-on-surface mb-1.5 sm:mb-2 font-heading leading-snug">
             Official Portals
@@ -58,9 +59,9 @@
           <button
             type="button"
             data-modal-target="resources-modal"
-            class="w-full inline-flex items-center justify-center gap-1.5 bg-m3-surface hover:bg-m3-surface-container-high text-m3-on-surface border border-m3-outline px-3 sm:px-4 py-2 sm:py-2.5 rounded-m3-full font-bold text-xs sm:text-sm shadow-m3-1 transition-all cursor-pointer whitespace-nowrap min-h-[38px] sm:min-h-[42px]"
+            class="w-full inline-flex items-center justify-center gap-1.5 bg-m3-surface hover:bg-m3-surface-container-high text-m3-on-surface border border-m3-outline px-3 sm:px-4 py-2.5 rounded-m3-full font-bold text-xs sm:text-sm shadow-m3-1 transition-all cursor-pointer whitespace-nowrap min-h-[44px]"
           >
-            <span class="material-symbols-outlined text-[16px] text-m3-on-surface-variant">open_in_new</span>
+            <ExternalLink className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
             <span>Official Portals</span>
           </button>
         </div>
@@ -70,7 +71,7 @@
       <div class="bg-m3-surface rounded-m3-xl p-3.5 sm:p-6 shadow-m3-1 hover:shadow-m3-3 border border-m3-outline-variant transition-all duration-300 flex flex-col justify-between h-full">
         <div>
           <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-m3-md bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center mb-3 sm:mb-4 text-m3-primary">
-            <span class="material-symbols-outlined text-[24px] sm:text-[28px]">shield</span>
+            <Shield className="w-6 h-6 sm:w-7 sm:h-7 text-m3-primary" />
           </div>
           <h3 class="text-sm sm:text-lg font-bold text-m3-on-surface mb-1.5 sm:mb-2 font-heading leading-snug">
             Kaaval Uthavi App
@@ -85,7 +86,7 @@
             href="https://play.google.com/store/apps/details?id=com.amtexsystems.kaavaluthavi&hl=en_IN&pli=1"
             target="_blank"
             rel="noopener noreferrer nofollow"
-            class="w-full inline-flex items-center justify-center gap-1.5 bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface border border-m3-outline-variant py-2 sm:py-2.5 px-2.5 rounded-m3-full text-xs font-bold transition-colors min-h-[36px] sm:min-h-[40px]"
+            class="w-full inline-flex items-center justify-center gap-1.5 bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface border border-m3-outline-variant py-2.5 px-3 rounded-m3-full text-xs font-bold transition-colors min-h-[44px]"
             title="Download Kaaval Uthavi for Android"
           >
             <svg class="w-3.5 h-3.5 text-m3-primary shrink-0" viewBox="0 0 24 24" fill="currentColor">
@@ -98,7 +99,7 @@
             href="https://apps.apple.com/in/app/kaaval-uthavi/id1388361252"
             target="_blank"
             rel="noopener noreferrer nofollow"
-            class="w-full inline-flex items-center justify-center gap-1.5 bg-m3-surface-container-highest hover:bg-m3-outline text-m3-on-surface py-2 sm:py-2.5 px-2.5 rounded-m3-full text-xs font-bold transition-colors min-h-[36px] sm:min-h-[40px]"
+            class="w-full inline-flex items-center justify-center gap-1.5 bg-m3-surface-container-highest hover:bg-m3-outline text-m3-on-surface py-2.5 px-3 rounded-m3-full text-xs font-bold transition-colors min-h-[44px]"
             title="Download Kaaval Uthavi for iOS"
           >
             <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
@@ -113,7 +114,7 @@
       <div class="bg-m3-surface rounded-m3-xl p-3.5 sm:p-6 shadow-m3-1 hover:shadow-m3-3 border border-m3-outline-variant transition-all duration-300 flex flex-col justify-between h-full">
         <div>
           <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-m3-md bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center mb-3 sm:mb-4 text-m3-primary">
-            <span class="material-symbols-outlined text-[24px] sm:text-[28px]">emergency</span>
+            <AlertTriangle className="w-6 h-6 sm:w-7 sm:h-7 text-m3-primary" />
           </div>
           <h3 class="text-sm sm:text-lg font-bold text-m3-on-surface mb-1.5 sm:mb-2 font-heading leading-snug">
             Emergency Helpline
@@ -126,9 +127,9 @@
         <div class="pt-2">
           <a
             href="tel:112"
-            class="w-full inline-flex items-center justify-center gap-1.5 !bg-[#0B57D0] hover:!bg-[#0842A0] !text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-m3-full font-bold text-xs sm:text-sm shadow-m3-1 transition-all whitespace-nowrap min-h-[38px] sm:min-h-[42px]"
+            class="w-full inline-flex items-center justify-center gap-1.5 !bg-[#0B57D0] hover:!bg-[#0842A0] !text-white px-3 sm:px-4 py-2.5 rounded-m3-full font-bold text-xs sm:text-sm shadow-m3-1 transition-all whitespace-nowrap min-h-[44px]"
           >
-            <span class="material-symbols-outlined text-[16px]">call</span>
+            <Phone className="w-4 h-4 text-white shrink-0" />
             <span>Call 112 SOS</span>
           </a>
         </div>
@@ -183,7 +184,7 @@
           </ul>
         </div>
         <div class="bg-m3-surface-container-low px-6 py-4 border-t border-m3-outline-variant/40 flex justify-end">
-          <button type="button" class="px-5 py-2.5 rounded-m3-full !bg-[#0B57D0] hover:!bg-[#0842A0] !text-white font-bold text-xs transition-colors shadow-m3-1 cursor-pointer" data-modal-close="responsibility-modal">
+          <button type="button" class="inline-flex items-center justify-center min-h-[44px] px-5 py-2.5 rounded-m3-full !bg-[#0B57D0] hover:!bg-[#0842A0] !text-white font-bold text-xs sm:text-sm transition-colors shadow-m3-1 cursor-pointer" data-modal-close="responsibility-modal">
             I Understand
           </button>
         </div>
@@ -243,7 +244,7 @@
           </div>
         </div>
         <div class="bg-m3-surface-container-low px-6 py-4 border-t border-m3-outline-variant/40 flex justify-end">
-          <button type="button" class="px-5 py-2.5 rounded-m3-full bg-m3-surface border border-m3-outline text-m3-on-surface font-bold text-xs hover:bg-m3-surface-container-high transition-colors shadow-m3-1 cursor-pointer" data-modal-close="resources-modal">
+          <button type="button" class="inline-flex items-center justify-center min-h-[44px] px-5 py-2.5 rounded-m3-full bg-m3-surface border border-m3-outline text-m3-on-surface font-bold text-xs sm:text-sm hover:bg-m3-surface-container-high transition-colors shadow-m3-1 cursor-pointer" data-modal-close="resources-modal">
             Close
           </button>
         </div>

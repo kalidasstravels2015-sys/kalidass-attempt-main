@@ -1,5 +1,5 @@
 ---
-import { ShieldCheck, Star, Users, CheckCircle2, ArrowRight } from "lucide-react";
+import { ShieldCheck, Star, Users, CheckCircle2, ArrowRight, ExternalLink } from "lucide-react";
 
 const reviews = [
   {
@@ -41,15 +41,29 @@ const reviews = [
 
     <!-- 4 Trust Badges Grid -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8">
-      <div class="bg-m3-surface p-3.5 sm:p-4 rounded-m3-xl border border-m3-outline-variant shadow-m3-1 flex items-center gap-3">
-        <div class="w-10 h-10 rounded-m3-lg bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center text-m3-tertiary shrink-0">
-          <Star className="w-5 h-5 fill-m3-tertiary text-m3-tertiary" />
+      <a
+        href="https://maps.app.goo.gl/i2LdJhWMi2ZgAiCa8"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="bg-m3-surface hover:bg-m3-surface-container p-3.5 sm:p-4 rounded-m3-xl border border-m3-outline-variant shadow-m3-1 flex items-center gap-3 transition group cursor-pointer"
+        title="View 5.0 Star Verified Google Reviews for Kalidass Travels"
+      >
+        <div class="w-10 h-10 rounded-m3-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center shrink-0 shadow-xs">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
         </div>
         <div>
-          <p class="text-base sm:text-lg font-extrabold text-m3-on-surface leading-none font-heading">4.9 / 5.0</p>
-          <p class="text-badge text-m3-on-surface-variant font-medium mt-0.5">1,200+ Google Reviews</p>
+          <p class="text-base sm:text-lg font-extrabold text-m3-on-surface leading-none font-heading flex items-center gap-1">
+            5.0 / 5.0
+            <ExternalLink className="w-3.5 h-3.5 text-m3-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity" />
+          </p>
+          <p class="text-xs text-m3-on-surface-variant font-medium mt-0.5 group-hover:underline">12 Google Reviews</p>
         </div>
-      </div>
+      </a>
 
       <div class="bg-m3-surface p-3.5 sm:p-4 rounded-m3-xl border border-m3-outline-variant shadow-m3-1 flex items-center gap-3">
         <div class="w-10 h-10 rounded-m3-lg bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center text-m3-primary shrink-0">
@@ -57,7 +71,7 @@ const reviews = [
         </div>
         <div>
           <p class="text-base sm:text-lg font-extrabold text-m3-on-surface leading-none font-heading">100% Verified</p>
-          <p class="text-badge text-m3-on-surface-variant font-medium mt-0.5">Police Checked Drivers</p>
+          <p class="text-xs text-m3-on-surface-variant font-medium mt-0.5">Police Checked Drivers</p>
         </div>
       </div>
 
@@ -67,7 +81,7 @@ const reviews = [
         </div>
         <div>
           <p class="text-base sm:text-lg font-extrabold text-m3-on-surface leading-none font-heading">Zero Hidden Fees</p>
-          <p class="text-badge text-m3-on-surface-variant font-medium mt-0.5">Pay Balance Post-Trip</p>
+          <p class="text-xs text-m3-on-surface-variant font-medium mt-0.5">Pay Balance Post-Trip</p>
         </div>
       </div>
 
@@ -77,7 +91,7 @@ const reviews = [
         </div>
         <div>
           <p class="text-base sm:text-lg font-extrabold text-m3-on-surface leading-none font-heading">24/7 Support</p>
-          <p class="text-badge text-m3-on-surface-variant font-medium mt-0.5">Live GPS &amp; Helpline</p>
+          <p class="text-xs text-m3-on-surface-variant font-medium mt-0.5">Live GPS &amp; Helpline</p>
         </div>
       </div>
     </div>
@@ -97,9 +111,9 @@ const reviews = [
           <div class="flex items-center justify-between border-t border-m3-outline-variant/60 pt-2.5">
             <div>
               <p class="text-xs font-bold text-m3-on-surface font-heading">{rev.name}</p>
-              <p class="text-micro text-m3-on-surface-variant font-medium">{rev.role}</p>
+              <p class="text-xs text-m3-on-surface-variant font-medium">{rev.role}</p>
             </div>
-            <span class="text-micro font-bold text-m3-on-surface bg-m3-surface-container-high px-2 py-0.5 rounded-m3-full border border-m3-outline-variant">
+            <span class="text-xs font-bold text-m3-on-surface bg-m3-surface-container-high px-2 py-0.5 rounded-m3-full border border-m3-outline-variant">
               Verified Trip
             </span>
           </div>
@@ -111,18 +125,18 @@ const reviews = [
     <div class="flex flex-wrap items-center justify-center gap-3 text-xs sm:text-sm">
       <a
         href="/drivers/"
-        class="inline-flex items-center gap-1.5 text-m3-primary font-bold hover:underline py-1 px-3.5 rounded-m3-full hover:bg-m3-primary-container/30 transition-colors"
+        class="inline-flex items-center justify-center min-h-[44px] gap-1.5 text-m3-primary font-bold hover:underline py-2 px-3.5 rounded-m3-full hover:bg-m3-primary-container/30 transition-colors"
       >
         <span>Meet Our 12+ Professional Chauffeurs</span>
-        <ArrowRight className="w-3.5 h-3.5" />
+        <ArrowRight className="w-3.5 h-3.5 shrink-0" />
       </a>
       <span class="text-m3-outline hidden sm:inline">•</span>
       <a
         href="/#safety"
-        class="inline-flex items-center gap-1.5 text-m3-on-surface-variant font-semibold hover:text-m3-on-surface py-1 px-3.5 rounded-m3-full hover:bg-m3-surface-container transition-colors"
+        class="inline-flex items-center justify-center min-h-[44px] gap-1.5 text-m3-on-surface-variant font-semibold hover:text-m3-on-surface py-2 px-3.5 rounded-m3-full hover:bg-m3-surface-container transition-colors"
       >
         <span>View Safety &amp; Government Guidelines</span>
-        <ArrowRight className="w-3.5 h-3.5" />
+        <ArrowRight className="w-3.5 h-3.5 shrink-0" />
       </a>
     </div>
   </div>

@@ -1,4 +1,6 @@
 ---
+import { CheckCircle2 } from "lucide-react";
+
 interface TableRow {
   vehicle: string;
   seating: string;
@@ -27,9 +29,7 @@ const {
 <section aria-labelledby={id} class:list={["max-w-4xl mx-auto my-6 px-4", className]}>
   <div class="rounded-2xl border border-m3-outline-variant/60 bg-m3-surface-container-low p-5 sm:p-6 shadow-xs">
     <div class="flex items-center gap-2 mb-2 text-m3-primary font-semibold text-m3-label-l">
-      <span class="material-symbols-outlined text-[20px] text-m3-primary" aria-hidden="true">
-        verified
-      </span>
+      <CheckCircle2 className="w-5 h-5 text-m3-primary shrink-0" aria-hidden="true" />
       <span>Official Live Tariff & Policy Summary</span>
     </div>
 

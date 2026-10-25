@@ -1067,7 +1067,7 @@ export default function DriverFeeEstimator({
                   size="md"
                   data-direct-whatsapp="true"
                   className="w-full sm:flex-1 px-5 py-3.5 min-h-[46px] text-sm font-bold shadow-m3-1 justify-center active:scale-[0.99]"
-                  text={`Send Quote & Book Driver on WhatsApp (₹${result.total.toLocaleString('en-IN')})`}
+                  text="Book Driver on WhatsApp"
                 />
 
                 <a

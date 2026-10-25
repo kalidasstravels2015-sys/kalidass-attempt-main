@@ -1812,47 +1812,49 @@
           "Sedan (Dzire/Etios)",
           "4 Passengers",
           "₹3,500",
-          "Ideal for 2–4 passengers • 120 km round trip & ECR tolls included"
+          "Ideal for 2–4 passengers • 8 Hrs / 120 km round trip, fuel & driver bata included (Tolls & Parking at actuals)"
         ],
         [
           "SUV (Ertiga – 6 Pax)",
           "6 Passengers",
           "₹4,500",
-          "Comfortable 6-seater • Perfect for family beach day trip"
+          "Comfortable 6-seater • 8 Hrs / 120 km round trip, fuel & driver bata included (Tolls & Parking at actuals)"
         ],
         [
           "Innova (7 Pax)",
           "7 Passengers",
           "₹5,500",
-          "Spacious 7-seater MUV • High comfort & luggage space"
+          "Spacious 7-seater MUV • 8 Hrs / 120 km round trip, fuel & driver bata included (Tolls & Parking at actuals)"
         ],
         [
           "Innova Crysta (Luxury)",
           "7 Passengers",
           "₹6,500",
-          "Executive plush captain seats • Premium AC comfort"
+          "Executive plush captain seats • 8 Hrs / 120 km round trip, fuel & driver bata included (Tolls & Parking at actuals)"
         ],
         [
           "Tempo Traveller (12 Pax)",
           "12 Passengers",
           "₹8,000",
-          "12-seater group coach • Pushback seats for family/friends tour"
+          "12-seater group coach • 8 Hrs / 120 km round trip, fuel & driver bata included"
         ]
       ],
-      "note": "Total Cost covers 120 km round trip (Chennai–Mahabalipuram–Chennai) + Driver Bata + ECR Tolls. Extra km charged at standard rate."
+      "note": "Total Cost covers 8 Hours / 120 km round trip (Chennai–Mahabalipuram–Chennai) + Fuel + Driver Bata. Highway tolls (~₹100) and monument parking are at actuals. Extra km beyond 120 km charged at standard rate (₹14/km Sedan, ₹17/km SUV, ₹24/km Tempo). Extra hours at ₹150/hr."
     },
     "includes": [
       "Doorstep pickup & drop anywhere in Chennai",
       "Clean AC vehicle with fuel for entire 120 km round trip",
-      "All ECR FASTag highway tolls & parking charges",
+      "Driver Bata (Day Allowance) 100% included in package",
       "Courteous, experienced highway driver with local Mahabalipuram knowledge",
       "Flexible photo stops, tea/coconut halts on ECR"
     ],
     "excludes": [
+      "ECR FASTag highway tolls and monument parking (payable at actuals by guest)",
+      "Extra kilometres beyond 120 km (charged at ₹14/km for sedan, ₹17/km for SUV, ₹24/km for Tempo)",
+      "Extra duration beyond 8 hours (₹150/hr for cars, ₹300/hr for Tempo)",
       "Archaeological Survey of India (ASI) monument entry tickets (₹40–₹80 per person)",
       "Lunch and personal expenses",
-      "Seashell Museum entry (optional, ₹50/person)",
-      "Extra kilometres beyond 120 km"
+      "Seashell Museum entry (optional, ₹50/person)"
     ],
     "travelGuide": {
       "history": "• Shore Temple: 8th-Century Pallava Rock Sanctuary\n• Pancha Rathas: Monolithic Chariot Stone Shrines\n• Arjuna's Penance: World's Largest Stone Bas-Relief\n• ECR Coastal Highway: Scenic Bay of Bengal Drive",

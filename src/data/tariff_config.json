@@ -71,8 +71,8 @@
       "extra_hr_rate": 350
     },
     "Tempo Traveller": {
-      "round_trip_rate": 26,
-      "one_way_rate": 29,
+      "round_trip_rate": 24,
+      "one_way_rate": 26,
       "min_km_per_day": 300,
       "driver_bata": 800,
       "min_drop_km": 250,

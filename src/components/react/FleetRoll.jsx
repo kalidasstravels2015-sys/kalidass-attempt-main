@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import siteContent from '../../data/siteContent.json';
 import tariffConfig from '../../data/tariff_config.json';
-import { Users, Luggage, ChevronRight } from 'lucide-react';
+import { Users, Luggage, ChevronRight, ArrowRight } from 'lucide-react';
 
 const tariffVehicleSlugs = Object.keys(tariffConfig.vehicles || {}).map((name) =>
     name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
@@ -191,10 +191,10 @@ const FleetRoll = ({ currentLang = 'en', hideHeader = false, limit, sectionHeadi
                         <div className="text-center mt-8">
                             <a
                                 href="/fleet/"
-                                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-m3-full bg-m3-surface border border-m3-outline text-m3-on-surface text-m3-label-l font-bold hover:bg-m3-surface-container-high shadow-m3-1 transition-all"
+                                className="inline-flex items-center justify-center min-h-[44px] gap-2 px-6 py-2.5 rounded-m3-full bg-m3-surface border border-m3-outline text-m3-on-surface text-m3-label-l font-bold hover:bg-m3-surface-container-high shadow-m3-1 transition-all group"
                             >
                                 <span>Explore All 8+ Vehicles & Full Tariff</span>
-                                <span className="material-symbols-outlined text-[18px] text-m3-primary">arrow_forward</span>
+                                <ArrowRight className="w-4 h-4 text-m3-primary group-hover:translate-x-1 transition-transform shrink-0" />
                             </a>
                         </div>
                     )}

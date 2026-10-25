@@ -182,4 +182,16 @@ On service and landing pages featuring a booking engine, fare finder, or trip es
   - Never state generic or misleading timelines like "Driver details sent 24 hours prior".
   - Driver allocation copy must accurately reflect airport operations: **"Driver & vehicle details assigned before your flight takes off"** (providing peace of mind before boarding).
 
+## 11. Schema.org Unified Knowledge Graph Standard
+All pages providing structured data must adhere to the site's unified `@graph` architecture in `src/layouts/Layout.astro`:
+- **Flat Array Schema Format**: Pass a flat array of schema objects to `<Layout schema={pageSchemas} />`.
+- **Explicit Canonical `@id` Fragments**: Every schema node must declare an explicit `@id` with a canonical URL fragment (e.g., `${pageUrl}#webpage`, `${pageUrl}#service`, `${pageUrl}#job-posting`, `${pageUrl}#faq`).
+- **Entity Cross-Referencing**: Link child entities directly into root graph nodes: `isPartOf: { "@id": "https://kalidasstravels.in/#website" }`, `about: { "@id": "https://kalidasstravels.in/#localbusiness" }`, and `hiringOrganization: { "@id": "https://kalidasstravels.in/#organization" }`.
+- **No Nested `@context`**: Never include nested `@context: "https://schema.org"` declarations inside individual array items.
+
+## 12. Icon System Standards: Lucide React SVG Components
+- **Zero Material Symbols Webfonts**: Never use `<span class="material-symbols-outlined">...</span>` on new or modified pages. `/fonts/material-symbols-outlined.woff2` is a 5.6 KB stripped subset containing only ~12 homepage icons; any icon outside this subset renders as broken, clipped text (`C`, `I`, `≡\`) due to `.material-symbols-outlined { width: 1em; overflow: hidden; }`.
+- **Mandatory Lucide React Import**: Always import vector SVG components from `lucide-react` (e.g. `import { Car, MapPin, Camera, FileText, Send, CheckCircle2 } from "lucide-react"`).
+- **Zero Font Dependencies**: Lucide React components are pure vector SVGs that render instantly with 100% reliability across all browsers and viewports.
+
 

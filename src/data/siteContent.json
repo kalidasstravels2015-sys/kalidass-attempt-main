@@ -57,6 +57,13 @@
       "icon": "building",
       "image": "/images/services/corporate.webp",
       "link": "/services/corporate/"
+    },
+    {
+      "title": "Tempo Traveller Rental",
+      "description": "12, 14, 17, 20-Seater & Urbania luxury Tempo Travellers for outstation family pilgrimages, joint tours, weddings, and corporate transit from ₹24/km.",
+      "icon": "bus",
+      "image": "/images/fleet/tempo.webp",
+      "link": "/services/tempo-traveller-rental-chennai/"
     }
   ],
   "fleet": [

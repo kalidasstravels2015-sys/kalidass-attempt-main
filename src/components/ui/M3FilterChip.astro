@@ -1,8 +1,9 @@
 ---
+import { Check } from "lucide-react";
+
 interface Props {
   selected?: boolean;
   label: string;
-  icon?: string;
   count?: string | number;
   href?: string;
   id?: string;
@@ -13,7 +14,6 @@ interface Props {
 const {
   selected = false,
   label,
-  icon,
   count,
   href,
   id,
@@ -24,7 +24,7 @@ const {
 const Tag = href ? "a" : "button";
 
 const baseClasses =
-  "relative inline-flex items-center justify-center h-8 rounded-lg text-m3-label-m font-medium transition-all duration-200 select-none overflow-hidden border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-m3-primary";
+  "relative inline-flex items-center justify-center min-h-[44px] px-3.5 gap-1.5 rounded-lg text-m3-label-m font-medium transition-all duration-200 select-none overflow-hidden border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-m3-primary";
 
 const stateClasses = selected
   ? "bg-m3-secondary-container text-m3-on-secondary-container border-transparent shadow-xs"
@@ -37,24 +37,17 @@ const stateClasses = selected
   class:list={[
     baseClasses,
     stateClasses,
-    icon ? "pl-2.5 pr-3.5 gap-1.5" : "px-3.5 gap-1.5",
     className,
   ]}
   aria-pressed={!href ? selected : undefined}
   {...rest}
 >
-  {selected ? (
-    <span class="material-symbols-outlined text-[16px] leading-none shrink-0" aria-hidden="true">
-      check
-    </span>
-  ) : icon ? (
-    <span class="material-symbols-outlined text-[16px] leading-none shrink-0" aria-hidden="true">
-      {icon}
-    </span>
-  ) : null}
+  {selected && (
+    <Check className="w-4 h-4 shrink-0" aria-hidden="true" />
+  )}
   <span>{label}</span>
   {count !== undefined && (
-    <span class="ml-1 text-[11px] font-semibold opacity-75">
+    <span class="ml-1 text-xs font-semibold opacity-75">
       ({count})
     </span>
   )}

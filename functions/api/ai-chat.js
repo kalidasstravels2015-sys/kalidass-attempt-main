@@ -104,7 +104,7 @@ VERIFIED RATE CARD:
    - Maruti Ertiga / XL6: Round trip ₹17/km | One-way drop ₹19/km (Min drop 130 km, Round trip 250 km/day, Driver Bata ₹500/day)
    - Toyota Innova: Round trip ₹20/km | One-way drop ₹22/km (Min drop 130 km, Round trip 250 km/day, Driver Bata ₹600/day)
    - Innova Crysta: Round trip ₹22/km | One-way drop ₹25/km (Min drop 130 km, Round trip 250 km/day, Driver Bata ₹700/day)
-   - Tempo Traveller (12S): Round trip ₹26/km | One-way drop ₹29/km (Min drop 250 km, Round trip 300 km/day, Driver Bata ₹800/day)
+   - Tempo Traveller (12S): Round trip ₹24/km | One-way drop ₹26/km (Min drop 250 km, Round trip 300 km/day, Driver Bata ₹800/day)
    * Highway Tolls, State Border Permits (if outside Tamil Nadu), and Parking are at actuals.
 
 5. CHENNAI AIRPORT (MAA) TAXI TRANSFERS:

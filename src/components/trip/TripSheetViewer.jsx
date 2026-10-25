@@ -120,9 +120,17 @@ export default function TripSheetViewer() {
   const startKmNum = Number(editOdo.startKm) || 0;
   const endKmNum = Number(editOdo.endKm) || 0;
   const totalKm = Math.max(0, endKmNum - startKmNum);
-  const packageKm = 250;
+  const packageKm = Number(trip?.dutySlip?.packageAllowedKm) ||
+    Number(trip?.packageAllowedKm) ||
+    Number(trip?.allowedKm) ||
+    (trip?.pickupAddress?.toLowerCase().includes('mahabalipuram') || trip?.pickupAddress?.toLowerCase().includes('mamallapuram') ? 120 :
+     trip?.vehicleCategory?.toLowerCase().includes('tempo') ? 300 : 250);
   const extraKm = Math.max(0, totalKm - packageKm);
-  const extraKmRate = trip?.vehicleCategory?.toLowerCase().includes('tempo') ? 24 : trip?.vehicleCategory?.toLowerCase().includes('crysta') ? 22 : 14;
+  const extraKmRate = Number(trip?.dutySlip?.extraKmRate) ||
+    (trip?.vehicleCategory?.toLowerCase().includes('tempo') ? 24 :
+     trip?.vehicleCategory?.toLowerCase().includes('crysta') ? 22 :
+     trip?.vehicleCategory?.toLowerCase().includes('innova') ? 20 :
+     trip?.vehicleCategory?.toLowerCase().includes('ertiga') ? 17 : 14);
   const extraKmCharge = extraKm * extraKmRate;
   const tollsNum = Number(editOdo.tolls) || 0;
   const parkingNum = Number(editOdo.parking) || 0;

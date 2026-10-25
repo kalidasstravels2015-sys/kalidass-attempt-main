@@ -1,6 +1,7 @@
 ---
 import OptimizedImage from './OptimizedImage.astro';
 import siteContent from '../data/siteContent.json';
+import { ArrowRight } from 'lucide-react';
 const services = siteContent.services;
 ---
 
@@ -49,7 +50,7 @@ const services = siteContent.services;
             <!-- Action Button (Proportionate compact chip) -->
             <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/20 group-hover:!bg-[#0B57D0] text-white text-xs font-semibold tracking-normal shadow-sm transition-all w-fit border border-white/20 whitespace-nowrap">
               <span>Explore</span>
-              <span class="material-symbols-outlined text-[14px] text-white transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+              <ArrowRight className="w-3.5 h-3.5 text-white transform group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
         </a>
@@ -60,10 +61,10 @@ const services = siteContent.services;
     <div class="text-center">
       <a
         href="/services/"
-        class="inline-flex items-center gap-2.5 px-6 py-3 bg-white hover:bg-m3-surface-container-high border border-[#0B57D0]/40 text-[#0B57D0] hover:text-[#0842A0] text-xs sm:text-sm font-bold rounded-m3-full shadow-m3-1 hover:shadow-m3-2 transition-all group"
+        class="inline-flex items-center gap-2.5 px-6 py-3 bg-white hover:bg-m3-surface-container-high border border-[#0B57D0]/40 text-[#0B57D0] hover:text-[#0842A0] text-xs sm:text-sm font-bold rounded-m3-full shadow-m3-1 hover:shadow-m3-2 transition-all group min-h-[44px]"
       >
         <span>View All Services</span>
-        <span class="material-symbols-outlined text-[18px] text-[#0B57D0] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+        <ArrowRight className="w-4 h-4 text-[#0B57D0] group-hover:translate-x-1 transition-transform" />
       </a>
     </div>
   </div>

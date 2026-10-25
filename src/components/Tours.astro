@@ -3,6 +3,7 @@ import OptimizedImage from "./OptimizedImage.astro";
 import AndroidPhoneIcon from "./AndroidPhoneIcon.astro";
 import WhatsAppIcon from "./WhatsAppIcon.astro";
 import serviceDetails from "../data/serviceDetails.json";
+import { Car, Clock, CheckCircle2, ArrowRight } from "lucide-react";
 
 // 1. Temple Trips (Strictly religious/pilgrimage)
 const templeTripsSlugs = [
@@ -142,7 +143,7 @@ const templePackageMeta: Record<string, TourMeta> = {
     <!-- Section Header -->
     <div class="text-center max-w-3xl mx-auto mb-8">
       <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
-        <span class="material-symbols-outlined text-[15px] text-m3-primary">directions_car</span>
+        <Car className="w-4 h-4 text-m3-primary" />
         <span>All-Inclusive Pilgrimage Cabs</span>
       </div>
       <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
@@ -182,13 +183,13 @@ const templePackageMeta: Record<string, TourMeta> = {
                 <div class="absolute inset-0 bg-gradient-to-t from-m3-inverse-surface/75 via-transparent to-transparent z-10"></div>
                 
                 <!-- Differentiating USP Badge -->
-                <span class="absolute top-3 left-3 bg-m3-inverse-surface/85 backdrop-blur-md border border-white/20 text-white text-[11px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-m3-full shadow-sm z-20">
+                <span class="absolute top-3 left-3 bg-m3-inverse-surface/85 backdrop-blur-md border border-white/20 text-white text-xs font-bold tracking-wider uppercase px-2.5 py-1 rounded-m3-full shadow-sm z-20">
                   {meta.badge}
                 </span>
 
                 <!-- Duration & Distance Chip -->
                 <span class="absolute bottom-3 left-3 inline-flex items-center gap-1.5 bg-white/95 backdrop-blur-md text-m3-on-surface text-xs font-semibold px-2.5 py-1 rounded-m3-sm shadow-sm z-20">
-                  <span class="material-symbols-outlined text-[14px] text-m3-primary" aria-hidden="true">schedule</span>
+                  <Clock className="w-3.5 h-3.5 text-m3-primary" />
                   <span>{meta.durationLabel}</span>
                 </span>
               </a>
@@ -205,7 +206,7 @@ const templePackageMeta: Record<string, TourMeta> = {
                 <ul class="space-y-2 text-xs text-m3-on-surface-variant font-sans" role="list">
                   {meta.highlights.map((item) => (
                     <li class="flex items-start gap-2 leading-relaxed">
-                      <span class="material-symbols-outlined text-[16px] text-m3-success shrink-0 mt-0.5" aria-hidden="true">check_circle</span>
+                      <CheckCircle2 className="w-4 h-4 text-m3-success shrink-0 mt-0.5" />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -216,7 +217,7 @@ const templePackageMeta: Record<string, TourMeta> = {
             <!-- Material Action Footer (Single Crisp Row) -->
             <div class="px-4 sm:px-5 py-3.5 border-t border-m3-outline-variant/60 flex items-center justify-between bg-m3-surface-container-lowest">
               <div>
-                <span class="block text-[10px] uppercase tracking-wider text-m3-on-surface-variant font-semibold">Starts From</span>
+                <span class="block text-xs uppercase tracking-wider text-m3-on-surface-variant font-semibold">Starts From</span>
                 <div class="flex items-baseline gap-1">
                   <span class="text-xl sm:text-2xl font-extrabold text-m3-on-surface tracking-tight font-heading leading-none">{meta.startingPrice}</span>
                   <span class="text-xs text-m3-on-surface-variant font-medium">({meta.carType})</span>
@@ -228,7 +229,7 @@ const templePackageMeta: Record<string, TourMeta> = {
                 <a
                   href="tel:+918939539211"
                   aria-label={`Call to book ${meta.cleanTitle}`}
-                  class="w-9 h-9 rounded-m3-full bg-m3-primary-container/40 hover:bg-m3-primary-container active:bg-m3-primary-container text-m3-primary flex items-center justify-center border border-m3-primary/20 shadow-xs transition-all shrink-0"
+                  class="min-w-[44px] min-h-[44px] w-11 h-11 rounded-m3-full bg-m3-primary-container/40 hover:bg-m3-primary-container active:bg-m3-primary-container text-m3-primary flex items-center justify-center border border-m3-primary/20 shadow-xs transition-all shrink-0 cursor-pointer"
                   title="Call Dispatch"
                 >
                   <AndroidPhoneIcon className="w-4 h-4 text-m3-primary" />
@@ -237,7 +238,7 @@ const templePackageMeta: Record<string, TourMeta> = {
                   href={`https://wa.me/918939539211?text=${encodeURIComponent(meta.whatsappMsg)}`}
                   target="_blank"
                   rel="noopener noreferrer nofollow"
-                  class="w-9 h-9 rounded-m3-full bg-m3-success-container/40 hover:bg-m3-success-container active:bg-m3-success-container text-m3-on-success-container flex items-center justify-center border border-m3-success/30 shadow-xs transition-colors shrink-0"
+                  class="min-w-[44px] min-h-[44px] w-11 h-11 rounded-m3-full bg-m3-success-container/40 hover:bg-m3-success-container active:bg-m3-success-container text-m3-on-success-container flex items-center justify-center border border-m3-success/30 shadow-xs transition-colors shrink-0 cursor-pointer"
                   aria-label={`Book ${meta.cleanTitle} via WhatsApp`}
                   title="Quick WhatsApp Inquiry"
                 >
@@ -245,11 +246,11 @@ const templePackageMeta: Record<string, TourMeta> = {
                 </a>
                 <a
                   href={`/services/${tour.slug}/`}
-                  class="inline-flex items-center gap-1 px-3.5 py-2 !bg-[#0B57D0] hover:!bg-[#0842A0] active:!bg-[#0842A0] !text-white font-bold text-xs rounded-m3-full transition-colors shadow-m3-1 shrink-0"
+                  class="min-h-[44px] inline-flex items-center gap-1.5 px-4 py-2.5 !bg-[#0B57D0] hover:!bg-[#0842A0] active:!bg-[#0842A0] !text-white font-bold text-xs rounded-m3-full transition-colors shadow-m3-1 shrink-0 cursor-pointer"
                   aria-label={`View itinerary for ${meta.cleanTitle}`}
                 >
                   <span>Itinerary</span>
-                  <span class="material-symbols-outlined text-[15px]" aria-hidden="true">arrow_forward</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>
             </div>
@@ -262,10 +263,10 @@ const templePackageMeta: Record<string, TourMeta> = {
     <div class="text-center mt-8">
       <a
         href="/services/tours/temple-tours/"
-        class="inline-flex items-center gap-2 px-6 py-2.5 rounded-m3-full bg-m3-surface border border-m3-outline text-m3-on-surface text-m3-label-l font-bold hover:bg-m3-surface-container-high shadow-m3-1 transition-all"
+        class="min-h-[44px] inline-flex items-center gap-2 px-6 py-2.5 rounded-m3-full bg-m3-surface border border-m3-outline text-m3-on-surface text-m3-label-l font-bold hover:bg-m3-surface-container-high shadow-m3-1 transition-all"
       >
         <span>View All Temple Tour Packages</span>
-        <span class="material-symbols-outlined text-[18px] text-m3-primary" aria-hidden="true">arrow_forward</span>
+        <ArrowRight className="w-4 h-4 text-m3-primary" />
       </a>
     </div>
   </div>

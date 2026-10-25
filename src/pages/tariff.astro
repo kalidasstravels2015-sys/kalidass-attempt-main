@@ -6,6 +6,7 @@ import tariffConfig from "../data/tariff_config.json";
 import WhatsAppIcon from "../components/WhatsAppIcon.astro";
 import AndroidPhoneIcon from "../components/AndroidPhoneIcon.astro";
 import { buildWhatsAppUrl } from "../utils/whatsapp";
+import { Calculator, Briefcase, ArrowRight, Phone } from "lucide-react";
 
 const tariffFaqs = [
   {
@@ -167,7 +168,7 @@ const faqSchema = {
       <nav data-quick-nav aria-label="Tariff Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-3 mb-10 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-2 overflow-x-auto no-scrollbar pe-6 scroll-px-4">
           <div class="flex items-center gap-1.5 sm:gap-2 text-xs font-semibold whitespace-nowrap py-0.5">
-            <span class="text-micro uppercase tracking-wider text-m3-on-surface-variant mr-1 font-bold hidden sm:inline">Jump To:</span>
+            <span class="text-xs uppercase tracking-wider text-m3-on-surface-variant mr-1 font-bold hidden sm:inline">Jump To:</span>
             <a href="#local-rates" data-active="true" aria-current="true" class="px-3.5 py-2 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs transition-all shrink-0 hover:bg-m3-primary hover:text-white">Local Hourly</a>
             <a href="#outstation-rates" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">Outstation Per-KM</a>
             <a href="#fare-rules" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">Inclusions &amp; Terms</a>
@@ -176,9 +177,9 @@ const faqSchema = {
           <div class="flex items-center gap-2 shrink-0">
             <a
               href="/calculator/"
-              class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary font-bold text-micro sm:text-xs rounded-m3-full transition-all shadow-xs"
+              class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary font-bold text-xs rounded-m3-full transition-all shadow-xs"
             >
-              <span class="material-symbols-outlined text-[14px]">calculate</span>
+              <Calculator className="w-3.5 h-3.5 shrink-0" />
               <span>Live Calculator</span>
             </a>
           </div>
@@ -260,10 +261,10 @@ const faqSchema = {
                         <div class="flex items-center gap-1.5">
                           <span class="text-sm font-bold text-m3-on-surface">{name}</span>
                           {name === "Maruti Ertiga" && (
-                            <span class="text-micro font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-m3-xs bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant">7-Seater</span>
+                            <span class="text-xs font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-m3-xs bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant">7-Seater</span>
                           )}
                         </div>
-                        <span class="text-micro text-m3-primary font-semibold uppercase tracking-wider block">{vehicleBadges[name]}</span>
+                        <span class="text-xs text-m3-primary font-semibold uppercase tracking-wider block">{vehicleBadges[name]}</span>
                       </div>
                     </div>
                   </td>
@@ -341,12 +342,12 @@ Please share availability and final quote.`)}
                       <div class="flex items-center gap-1.5 flex-wrap">
                         <span class="font-bold text-[#111827] text-base font-heading">{name}</span>
                         {name === "Maruti Ertiga" && (
-                          <span class="text-micro font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-m3-xs bg-slate-100 text-[#111827] border border-slate-200">7-Seater</span>
+                          <span class="text-xs font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-m3-xs bg-slate-100 text-[#111827] border border-slate-200">7-Seater</span>
                         )}
                       </div>
                       <div class="flex items-center gap-2 mt-1">
-                        <span class="text-micro text-[#1a73e8] font-bold uppercase tracking-wider">{vehicleBadges[name]}</span>
-                        <span class="text-micro text-slate-600 font-medium bg-slate-100 px-2 py-0.5 rounded-full">
+                        <span class="text-xs text-[#1a73e8] font-bold uppercase tracking-wider">{vehicleBadges[name]}</span>
+                        <span class="text-xs text-slate-600 font-medium bg-slate-100 px-2 py-0.5 rounded-full">
                           {vehicleCapacity[name] || "4 Pax"}
                         </span>
                       </div>
@@ -367,19 +368,19 @@ Please share availability and final quote.`)}
                   <!-- Rate Grid -->
                   <div class="grid grid-cols-2 gap-2 text-center text-xs mb-3">
                     <div class="bg-slate-50/70 p-2.5 rounded-xl border border-slate-200/70">
-                      <div class="text-micro text-slate-600 font-semibold uppercase tracking-wider">5 Hr / 50 KM</div>
+                      <div class="text-xs text-slate-600 font-semibold uppercase tracking-wider">5 Hr / 50 KM</div>
                       <div class="text-sm sm:text-base font-extrabold text-[#111827] mt-0.5 tabular-nums">₹{v.local_5hr_pkg ? v.local_5hr_pkg.toLocaleString("en-IN") : "-"}</div>
                     </div>
                     <div class="bg-slate-50/70 p-2.5 rounded-xl border border-slate-200/70">
-                      <div class="text-micro text-slate-600 font-semibold uppercase tracking-wider">8 Hr / 80 KM</div>
+                      <div class="text-xs text-slate-600 font-semibold uppercase tracking-wider">8 Hr / 80 KM</div>
                       <div class="text-sm sm:text-base font-extrabold text-[#111827] mt-0.5 tabular-nums">₹{v.local_8hr_pkg ? v.local_8hr_pkg.toLocaleString("en-IN") : "-"}</div>
                     </div>
                     <div class="bg-slate-50/70 p-2.5 rounded-xl border border-slate-200/70">
-                      <div class="text-micro text-slate-600 font-semibold uppercase tracking-wider">10 Hr / 100 KM</div>
+                      <div class="text-xs text-slate-600 font-semibold uppercase tracking-wider">10 Hr / 100 KM</div>
                       <div class="text-sm sm:text-base font-extrabold text-[#111827] mt-0.5 tabular-nums">₹{v.local_10hr_pkg ? v.local_10hr_pkg.toLocaleString("en-IN") : "-"}</div>
                     </div>
                     <div class="bg-slate-50/70 p-2.5 rounded-xl border border-slate-200/70">
-                      <div class="text-micro text-slate-600 font-semibold uppercase tracking-wider">12 Hr / 120 KM</div>
+                      <div class="text-xs text-slate-600 font-semibold uppercase tracking-wider">12 Hr / 120 KM</div>
                       <div class="text-sm sm:text-base font-extrabold text-[#111827] mt-0.5 tabular-nums">₹{v.local_12hr_pkg ? v.local_12hr_pkg.toLocaleString("en-IN") : "-"}</div>
                     </div>
                   </div>
@@ -503,7 +504,7 @@ Please share availability and final quote.`)}
                       </div>
                       <div>
                         <span class="text-sm font-bold text-m3-on-surface block">{name}</span>
-                        <span class="text-micro text-m3-primary font-semibold uppercase tracking-wider">{vehicleBadges[name]}</span>
+                        <span class="text-xs text-m3-primary font-semibold uppercase tracking-wider">{vehicleBadges[name]}</span>
                       </div>
                     </div>
                   </td>
@@ -517,7 +518,7 @@ Please share availability and final quote.`)}
                       <a
                         href="tel:+918939539211"
                         aria-label={`Call to book ${name} outstation cab`}
-                        class="min-h-[36px] inline-flex items-center gap-1 px-3 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-primary-container/30 active:bg-m3-primary-container/50 text-m3-on-surface hover:text-m3-primary border border-m3-outline-variant hover:border-m3-primary/40 text-xs font-bold shadow-xs transition-all select-none active:scale-[0.98]"
+                        class="min-h-[44px] inline-flex items-center gap-1 px-3.5 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-primary-container/30 active:bg-m3-primary-container/50 text-m3-on-surface hover:text-m3-primary border border-m3-outline-variant hover:border-m3-primary/40 text-xs font-bold shadow-xs transition-all select-none active:scale-[0.98]"
                       >
                         <AndroidPhoneIcon className="w-3.5 h-3.5 text-m3-primary shrink-0" />
                         <span>Call</span>
@@ -536,7 +537,7 @@ Please share total fare estimation and availability.`)}
                         target="_blank"
                         rel="noopener noreferrer nofollow"
                         aria-label={`Book ${name} outstation cab on WhatsApp`}
-                        class="tariff-whatsapp-btn min-h-[36px] inline-flex items-center gap-1 px-3 py-1.5 rounded-m3-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white text-xs font-bold shadow-xs transition-all cursor-pointer active:scale-[0.98]"
+                        class="tariff-whatsapp-btn min-h-[44px] inline-flex items-center gap-1 px-3.5 py-2 rounded-m3-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white text-xs font-bold shadow-xs transition-all cursor-pointer active:scale-[0.98]"
                         data-open-enquiry="true"
                         data-vehicle-name={name}
                         data-service-title="Chennai Outstation Taxi Service"
@@ -567,8 +568,8 @@ Please share total fare estimation and availability.`)}
                     <div class="min-w-0 flex-1">
                       <h3 class="font-bold text-[#111827] font-heading text-base">{name}</h3>
                       <div class="flex items-center gap-2 mt-1">
-                        <span class="text-micro text-[#1a73e8] font-bold uppercase tracking-wider">{vehicleBadges[name]}</span>
-                        <span class="text-micro text-slate-600 font-medium bg-slate-100 px-2 py-0.5 rounded-full">
+                        <span class="text-xs text-[#1a73e8] font-bold uppercase tracking-wider">{vehicleBadges[name]}</span>
+                        <span class="text-xs text-slate-600 font-medium bg-slate-100 px-2 py-0.5 rounded-full">
                           {vehicleCapacity[name] || "4 Pax"}
                         </span>
                       </div>
@@ -589,11 +590,11 @@ Please share total fare estimation and availability.`)}
                   <!-- Rate Slabs -->
                   <div class="grid grid-cols-2 gap-2 mb-3">
                     <div class="bg-slate-50/70 p-2.5 rounded-xl border border-slate-200/70">
-                      <div class="text-micro text-slate-600 font-semibold uppercase tracking-wider">One Way</div>
+                      <div class="text-xs text-slate-600 font-semibold uppercase tracking-wider">One Way</div>
                       <div class="text-sm sm:text-base font-extrabold text-[#111827] mt-0.5 tabular-nums">₹{v.one_way_rate} <span class="text-badge font-normal text-slate-500">/km</span></div>
                     </div>
                     <div class="bg-slate-50/70 p-2.5 rounded-xl border border-slate-200/70">
-                      <div class="text-micro text-slate-600 font-semibold uppercase tracking-wider">Round Trip</div>
+                      <div class="text-xs text-slate-600 font-semibold uppercase tracking-wider">Round Trip</div>
                       <div class="text-sm sm:text-base font-extrabold text-[#111827] mt-0.5 tabular-nums">₹{v.round_trip_rate} <span class="text-badge font-normal text-slate-500">/km</span></div>
                     </div>
                   </div>
@@ -760,7 +761,7 @@ Please share total fare estimation and availability.`)}
       <!-- Subtle Corporate Mobility Cross-Link -->
       <div class="bg-m3-surface-container-low border border-m3-outline-variant/60 rounded-m3-lg p-4 sm:p-5 mb-12 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
         <div class="flex items-center gap-3">
-          <span class="material-symbols-outlined text-m3-primary text-2xl shrink-0">business_center</span>
+          <Briefcase className="w-6 h-6 text-m3-primary shrink-0" />
           <p class="text-xs sm:text-sm text-m3-on-surface font-sans">
             Need dedicated employee transportation, monthly retainers, or corporate billing accounts?
           </p>
@@ -770,7 +771,7 @@ Please share total fare estimation and availability.`)}
           class="inline-flex items-center gap-1.5 px-4 py-2 bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface text-xs font-bold rounded-m3-full border border-m3-outline-variant/80 shrink-0 transition-colors shadow-m3-1"
         >
           <span>Explore Corporate Mobility</span>
-          <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          <ArrowRight className="w-4 h-4 shrink-0" />
         </a>
       </div>
 
@@ -864,7 +865,7 @@ Please share total fare estimation and availability.`)}
             href="tel:+918939539211"
             class="min-h-[48px] h-12 inline-flex items-center justify-center gap-2 px-8 bg-white/15 hover:bg-white/25 active:bg-white/30 text-white font-bold rounded-m3-full transition-all text-sm border border-white/30 shadow-m3-1 active:scale-[0.98]"
           >
-            <span class="material-symbols-outlined text-[18px] text-white">call</span>
+            <Phone className="w-4 h-4 text-white shrink-0" />
             <span>Call +91 89395 39211</span>
           </a>
         </div>

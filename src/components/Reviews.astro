@@ -1,5 +1,7 @@
 ---
 import siteContent from '../data/siteContent.json';
+import GoogleRatingBadge from './GoogleRatingBadge.astro';
+import { MapPin, ArrowRight } from "lucide-react";
 const reviews = siteContent.reviews;
 ---
 
@@ -7,19 +9,7 @@ const reviews = siteContent.reviews;
   <div class="max-w-7xl mx-auto px-4">
     <!-- Section Header -->
     <div class="text-center mb-8">
-      <a
-        href="https://maps.app.goo.gl/i2LdJhWMi2ZgAiCa8"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-m3-full bg-m3-surface hover:bg-m3-surface-container border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide transition-all group"
-        title="Open Kalidass Travels on Google Maps"
-      >
-        <span class="material-symbols-outlined text-[16px] text-m3-primary">location_on</span>
-        <span class="font-bold text-m3-on-surface">Google Verified Reviews</span>
-        <span class="text-m3-on-surface-variant">•</span>
-        <span class="text-amber-800 dark:text-amber-400 font-bold">5.0 / 5.0 Rating</span>
-        <span class="material-symbols-outlined text-[14px] text-m3-primary group-hover:translate-x-0.5 transition-transform">open_in_new</span>
-      </a>
+      <GoogleRatingBadge class="mb-3.5" />
       <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
         Customer Experiences
       </h2>
@@ -41,7 +31,7 @@ const reviews = siteContent.reviews;
                 <div>
                   <span class="block text-sm font-bold text-m3-on-surface leading-none font-heading">{review.name}</span>
                   {review.role && (
-                    <span class="block text-[11px] text-m3-on-surface-variant font-medium mt-0.5">{review.role}</span>
+                    <span class="block text-xs text-m3-on-surface-variant font-medium mt-0.5">{review.role}</span>
                   )}
                   <div class="flex text-m3-tertiary gap-0.5 mt-1">
                     {[...Array(5)].map(() => (
@@ -68,10 +58,10 @@ const reviews = siteContent.reviews;
     </div>
 
     <div class="text-center mt-6">
-      <a href="https://maps.app.goo.gl/i2LdJhWMi2ZgAiCa8" target="_blank" rel="noopener noreferrer nofollow" class="inline-flex items-center gap-2 text-m3-primary hover:text-m3-primary/80 font-bold text-xs sm:text-sm hover:underline transition group">
-        <span class="material-symbols-outlined text-[18px] text-m3-primary">location_on</span>
+      <a href="https://maps.app.goo.gl/i2LdJhWMi2ZgAiCa8" target="_blank" rel="noopener noreferrer nofollow" class="inline-flex items-center justify-center min-h-[44px] gap-2 px-4 py-2 text-m3-primary hover:text-m3-primary/80 font-bold text-xs sm:text-sm hover:underline transition group">
+        <MapPin className="w-4 h-4 text-m3-primary shrink-0" />
         <span>See More Reviews on Google Maps</span>
-        <span class="material-symbols-outlined text-[18px] text-m3-primary transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+        <ArrowRight className="w-4 h-4 text-m3-primary transform group-hover:translate-x-1 transition-transform shrink-0" />
       </a>
     </div>
   </div>

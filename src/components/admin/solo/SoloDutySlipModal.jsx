@@ -26,8 +26,14 @@ export default function SoloDutySlipModal({
   const isTempo = booking.vehicleCategory?.toLowerCase().includes('tempo');
   const isCrysta = booking.vehicleCategory?.toLowerCase().includes('crysta');
   const isErtiga = booking.vehicleCategory?.toLowerCase().includes('ertiga');
+  const isMahabalipuramBooking = /mahabalipuram|mamallapuram/i.test(booking.pickupAddress || '') || /mahabalipuram|mamallapuram/i.test(booking.notes || '');
+  const isLocalBooking = /local/i.test(booking.pickupAddress || '') || /local/i.test(booking.notes || '');
 
-  const defaultAllowedKm = isTempo ? 300 : 250;
+  const defaultAllowedKm = isMahabalipuramBooking
+    ? 120
+    : isLocalBooking
+    ? (booking.pickupAddress?.includes('50') ? 50 : booking.pickupAddress?.includes('80') ? 80 : 120)
+    : (isTempo ? 300 : 250);
   const defaultExtraKmRate = isTempo ? 24 : isCrysta ? 22 : isErtiga ? 17 : 14;
 
   const [form, setForm] = useState({

@@ -34,4 +34,23 @@
 
 10. **Paid Ad Conversion Standard (Search Phone Call for MAA to Outstation Transfers):** For high-ticket Chennai Airport (MAA) to Outstation transfers (Vellore CMC/VIT, Pondicherry, Tirupati — ₹2,500 to ₹8,000+), never run standard web-click search ads (₹1,000 burned with zero success). Focus Google Ads budget exclusively on **Search Phone Call (Call-Only)** campaigns to route long-distance passengers straight into direct phone conversations with the Dispatch Controller (`+91 89395 39211`).
 
+11. **Tempo Traveller Operations & Tariff Standards:**
+   - **Minimum Billing Slab:** Strictly 300 km per calendar day (Midnight to Midnight, 00:00 – 23:59). Multi-day outstation packages accumulate linearly (e.g. 2 Days = 600 km, 3 Days = 900 km, 4 Days = 1,200 km).
+   - **Target Operating Margin:** Quotes must maintain a 25.0% – 30.0% gross operating margin after Direct COGS (Fuel @ ₹93.50/L, Driver Bata @ ₹800–₹900/day, FASTag LCV Class 4 tolls, and Parivahan e-permit taxes).
+   - **Package Km Cap & Multi-Drop Protection Standard (The Anti-Tada Rule):**
+     - All package quotes must explicitly declare included kilometers and include **1 primary pickup and 1 primary drop point**.
+     - En-route drops along the direct highway/return corridor (e.g., GST Road, Poonamallee High Road) are 100% complimentary.
+     - Cross-city detours to separate residential neighborhoods exceeding the package cap are billed at ₹24/km (12S) or ₹26/km (17S) based on physical dashboard odometer photos taken at trip start and final drop.
+   - **Calendar Day Cutoff & 45-Min Grace Period:** Calendar day ends at 23:59. Genuine highway traffic delays receive a 45-minute grace period (up to 00:45 AM). Trips extending past 00:45 AM due to customer itinerary additions/multi-home drops incur Day 2 driver bata (₹600).
+   - **Mandatory Ghat / Hill Surcharge & AC Protocol:** Flat ₹1,500 hill surcharge per trip on ghat routes (Ooty, Kodaikanal, Yercaud, Yelagiri) for 36-hairpin wear. Air conditioning is paused during steep uphill climbs on ghat roads for engine power and overheating prevention; runs continuously on all highways.
+   - **Pre-Cleared Parivahan E-Permits & Zero Cash Demands:** Chauffeurs and dispatchers must pre-pay and print Andhra Pradesh, Kerala, or Karnataka state tourist vehicle permits online via Parivahan before rollout. Zero checkpost delays and zero cash demands from passengers on the road. Only monument/temple parking slips are paid at actuals by the passenger.
+   - **Doorstep vs. Garage Origin Radius:** Zero garage fees for pickups within Medavakkam, Velachery, Tambaram, Pallavaram, and Chennai Airport (MAA). Flat ₹500 vehicle positioning charge for pickups north of Koyambedu / Anna Nagar.
+   - **Chauffeur Vetting Protocol:** Minimum 5+ years commercial HPV license badge; strictly satvik, teetotaler, non-smoking chauffeurs assigned to temple tours (Tirupati, Sabarimala, Navagraha).
+
+12. **Vector SVG Icon Standardization (Lucide React vs. Material Symbols Font):**
+   - **Strict Invariant:** NEVER use `<span class="material-symbols-outlined">...</span>` on new or modified pages/components.
+   - **Reasoning:** The local `material-symbols-outlined.woff2` font in `Layout.astro` is an ultra-compressed 5.6 KB subset containing only ~12 glyphs for homepage LCP. Unrecognized ligature names render as clipped 1em raw text fragments (`d`, `t`, `h`, `o`).
+   - **Standard:** Always import and render vector SVG icons from `lucide-react` (e.g., `Car`, `Bus`, `Users`, `Luggage`, `CheckCircle2`, `ShieldCheck`, `MapPin`, `Landmark`, `Receipt`, `ExternalLink`, `Info`) or use inline SVGs.
+   - See [.agents/rules/icon-standardization.md](./.agents/rules/icon-standardization.md) for full rationale and guidelines.
+
 See [docs/03_RULES.md](./docs/03_RULES.md) for full quality standards.

@@ -212,7 +212,7 @@ OFFICIAL TARIFF RATE CARD & PACKAGES:
   * Maruti Ertiga / XL6: Round trip ₹17/km | One-way drop ₹19/km (Min drop 130 km) | Driver Bata ₹500/day | Min round trip 250 km/day.
   * Toyota Innova: Round trip ₹20/km | One-way drop ₹22/km (Min drop 130 km) | Driver Bata ₹600/day | Min round trip 250 km/day.
   * Innova Crysta: Round trip ₹22/km | One-way drop ₹25/km (Min drop 130 km) | Driver Bata ₹700/day | Min round trip 250 km/day.
-  * Tempo Traveller (12 Seater): Round trip ₹26/km | One-way drop ₹29/km (Min drop 250 km) | Driver Bata ₹800/day | Min round trip 300 km/day.
+  * Tempo Traveller (12 Seater): Round trip ₹24/km | One-way drop ₹26/km (Min drop 250 km) | Driver Bata ₹800/day | Min round trip 300 km/day.
   * Tolls, state entry permits & parking at actuals.
 - LOCAL CHENNAI HOURLY PACKAGES:
   * Sedan: 4hr/40km ₹1,350 | 8hr/80km ₹2,200 (Extra km: ₹15, hr: ₹150)
