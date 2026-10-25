@@ -823,24 +823,14 @@ const schema = {
     <!-- SECTION 1: SYSTEM UI DESIGN SYSTEM HERO WITH DEDICATED TEMPO QUOTATION ENGINE -->
     <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 pt-1 sm:pt-2">
       
-      <!-- Top Page Heading & Trust Badges (Material 3 Standard) -->
-      <div class="max-w-3xl mx-auto mb-2.5 text-center">
-        <!-- Eyebrow Row: Fleet Dispatch Status Badge & Verified Google Rating -->
-        <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-2">
-          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-m3-surface-container-low border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-2xs">
-            <span class="w-1.5 h-1.5 rounded-full bg-m3-success animate-pulse"></span>
-            <span>24/7 Fleet Dispatch • 12 to 26-Seaters • From ₹24/km</span>
-          </div>
+      <!-- Top Page Heading & Google Rating Badge (Minimalist, No Clutter) -->
+      <div class="max-w-3xl mx-auto mb-2 text-center">
+        <div class="flex items-center justify-center mb-1.5">
           <GoogleRatingBadge />
         </div>
-
-        <!-- Main Display Heading (Full Width, Centered, No Collision) -->
         <h1 data-speakable="true" class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight">
           Tempo Traveller Rental in Chennai
         </h1>
-        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant font-normal mt-1 leading-relaxed max-w-3xl mx-auto">
-          12, 14, 17, 20 &amp; 26-Seater Force AC &amp; Urbania • Standard 300 km/day • Verified Chauffeurs
-        </p>
       </div>
 
       <div id="fare-calculator" class="scroll-mt-28"></div>
@@ -858,22 +848,6 @@ const schema = {
           autoCalculate={false}
           showHeader={false}
         />
-
-        <!-- Trust Reassurance Footer Strip -->
-        <div class="mt-2.5 flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-xs text-m3-on-surface-variant font-medium">
-          <div class="flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-            <span class="font-semibold text-m3-on-surface">₹500 Advance to Confirm — Balance Post Trip</span>
-          </div>
-          <div class="flex items-center gap-1.5">
-            <CheckCircle2 className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-            <span>Instant WhatsApp confirmation</span>
-          </div>
-          <div class="flex items-center gap-1.5">
-            <CheckCircle2 className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-            <span>Zero surge pricing • 300 km/day standard</span>
-          </div>
-        </div>
       </section>
 
       <!-- MATERIAL 3 STICKY QUICK NAVIGATION BAR -->

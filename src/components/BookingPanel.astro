@@ -1,8 +1,6 @@
 ---
 import QuotationEngine from "./QuotationEngine.jsx";
-import { CheckCircle2, MessageCircle, Receipt } from "lucide-react";
 const { lang = "en" } = Astro.props;
-const isTa = lang === "ta";
 ---
 
 <section
@@ -14,20 +12,4 @@ const isTa = lang === "ta";
 
   <!-- Interactive Quotation Engine Card -->
   <QuotationEngine client:visible currentLang={lang} showAirportTab={true} variant="card" />
-
-  <!-- Trust Reassurance Footer Strip -->
-  <div class="mt-3 flex flex-wrap items-center justify-center gap-2.5 sm:gap-6 text-m3-label-s sm:text-m3-label-m text-m3-on-surface-variant font-medium">
-    <div class="flex items-center gap-1.5">
-      <CheckCircle2 className="w-4 h-4 text-m3-success shrink-0" />
-      <span class="font-bold text-m3-on-surface">{isTa ? "பயண முடிவில் கட்டணம் செலுத்தலாம்" : "Pay Balance After Trip"}</span>
-    </div>
-    <div class="flex items-center gap-1.5">
-      <MessageCircle className="w-4 h-4 text-m3-outline shrink-0" />
-      <span>{isTa ? "வாட்ஸ்அப் உறுதிப்படுத்தல்" : "Direct WhatsApp Confirmation"}</span>
-    </div>
-    <div class="flex items-center gap-1.5">
-      <Receipt className="w-4 h-4 text-m3-outline shrink-0" />
-      <span>{isTa ? "வெளிப்படையான கி.மீ கட்டணங்கள்" : "Transparent Per-KM Billing"}</span>
-    </div>
-  </div>
 </section>

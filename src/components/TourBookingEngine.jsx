@@ -1960,7 +1960,7 @@ Please confirm booking!` + tourMapsBlock;
                   </a>
                 </div>
                 <p className="text-xs text-m3-on-surface-variant text-center font-medium">
-                  ✓ Lock Rate 24 Hrs ({effectiveInvoiceRefNo}) • ✓ Reserve Cab & Driver • ✓ Advance ₹500 Only After Confirmation
+                  ✓ Rate locked for 24 hours ({effectiveInvoiceRefNo})
                 </p>
               </div>
 

@@ -1517,7 +1517,7 @@ Please save my quote & confirm live cab availability.` + omMapsBlock;
               </div>
 
               <p className="text-center text-[10.5px] text-m3-on-surface-variant/90 font-medium pt-0.5">
-                ✓ Lock Rate 24 Hrs ({bookingId}) • ✓ Reserve Cab & Driver • ✓ Advance ₹500 Only After Confirmation
+                ✓ Rate locked for 24 hours ({bookingId})
               </p>
             </div>
           )}

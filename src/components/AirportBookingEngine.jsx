@@ -1266,8 +1266,8 @@ export default function AirportBookingEngine({
                     <span>Call Desk</span>
                   </a>
                 </div>
-                <p className="text-xs text-slate-600 text-center font-medium">
-                  ✓ Lock Rate 24 Hrs ({quoteRefId}) • ✓ Reserve Cab & Driver • ✓ Advance ₹500 Only After Confirmation
+                <p className="text-xs text-slate-500 text-center font-medium">
+                  ✓ Rate locked for 24 hours ({quoteRefId})
                 </p>
               </div>
             </div>

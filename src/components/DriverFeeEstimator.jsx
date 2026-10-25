@@ -1095,7 +1095,7 @@ export default function DriverFeeEstimator({
                 </a>
               </div>
               <p className="text-[11px] text-m3-on-surface-variant text-center font-medium">
-                ✓ Lock Rate 24 Hrs ({quoteRefId}) • ✓ Check Live Chauffeur Availability • ✓ ₹500 Advance to Lock (Deducted from Fare)
+                ✓ Rate locked for 24 hours ({quoteRefId})
               </p>
             </div>
           </div>
