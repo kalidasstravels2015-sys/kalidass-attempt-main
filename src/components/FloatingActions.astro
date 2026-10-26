@@ -15,35 +15,43 @@ const {
 } = Astro.props;
 ---
 
-<!-- Single Floating Google Gemini AI "Ask me" Pill Button -->
+<!-- Single Floating "Plan My Trip" Pill Button -->
 <div 
   id="floating-actions-container"
   class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex items-center pointer-events-none select-none pb-[env(safe-area-inset-bottom,0px)] pr-[env(safe-area-inset-right,0px)] transition-all duration-300"
   role="region"
-  aria-label="AI Travel Assistant - Let me Help You"
+  aria-label="Plan My Trip - Outstation & Tour Fare"
 >
-  <!-- Tactile Google Gemini Extended FAB Pill Button -->
+  <!-- Tactile Extended FAB Pill Button -->
   <button
     type="button"
     id="floating-ai-btn"
     class="pointer-events-auto group relative flex items-center gap-2 pl-3 pr-3.5 py-2 sm:pl-3.5 sm:pr-4 sm:py-2.5 rounded-full bg-white/95 dark:bg-[#1E252D]/95 backdrop-blur-md text-slate-800 dark:text-white shadow-[0_10px_25px_-3px_rgba(66,133,244,0.22),0_4px_10px_-2px_rgba(0,0,0,0.08),inset_0_1px_1.5px_rgba(255,255,255,0.95)] hover:shadow-[0_14px_30px_-3px_rgba(66,133,244,0.38),0_6px_14px_-2px_rgba(0,0,0,0.14)] border border-slate-200/90 dark:border-white/15 hover:border-blue-400/50 transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-blue-400 cursor-pointer"
-    aria-label="Ask me - Let me Help You"
-    title="Ask me - Let me Help You"
+    aria-label="Plan My Trip - Ask me for trip fare"
+    title="Plan My Trip - Multi-Stop & Tour Fare"
     onclick="window.toggleAiFareModal ? window.toggleAiFareModal() : (window.openAiFareModal && window.openAiFareModal())"
   >
-    <!-- Living Gemini Aurora Halo -->
+    <!-- Living Aurora Halo -->
     <span class="absolute -inset-1 rounded-full bg-gradient-to-r from-[#4285F4]/25 via-[#969DFF]/25 to-[#BD99FE]/30 blur-sm opacity-70 group-hover:opacity-100 animate-pulse pointer-events-none transition-opacity"></span>
 
-    <!-- Current Official Google Gemini 4-Color Sparkle Brand Icon -->
-    <GeminiIcon 
-      className="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6 drop-shadow-[0_2px_4px_rgba(0,0,0,0.12)] relative z-10 shrink-0"
-      id="floating-fab-gemini"
-      ariaHidden={true}
-    />
+    <!-- Trip Location / Route Icon (Signals travel planning, not a robot bot) -->
+    <svg 
+      class="w-5 h-5 sm:w-5.5 sm:h-5.5 text-blue-600 dark:text-blue-400 transition-transform duration-300 group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.12)] relative z-10 shrink-0" 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      stroke-width="2.2" 
+      stroke-linecap="round" 
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/>
+      <circle cx="12" cy="10" r="3"/>
+    </svg>
 
-    <!-- "Ask me" Label in Google Gemini Typography -->
+    <!-- "Plan My Trip" Label in Simple 4th-grade English -->
     <span class="relative z-10 text-xs sm:text-sm font-bold tracking-tight text-slate-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors whitespace-nowrap pr-0.5">
-      Ask me
+      Plan My Trip
     </span>
   </button>
 </div>

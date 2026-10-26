@@ -103,18 +103,18 @@ const TEMPO_VEHICLES = {
   'Force Urbania VIP Luxury': {
     name: 'Force Urbania VIP Luxury Van',
     shortName: 'Urbania VIP',
-    round_trip_rate: 32,
-    one_way_rate: 36,
+    round_trip_rate: 38,
+    one_way_rate: 42,
     min_km_per_day: 300,
-    driver_bata: 900,
+    driver_bata: 1100,
     min_drop_km: 250,
-    local_4hr_pkg: 5500,
-    local_5hr_pkg: 7000,
-    local_8hr_pkg: 8800,
-    local_10hr_pkg: 10500,
-    local_12hr_pkg: 12000,
-    extra_km_rate: 32,
-    extra_hr_rate: 700,
+    local_4hr_pkg: 5000,
+    local_5hr_pkg: 6000,
+    local_8hr_pkg: 9500,
+    local_10hr_pkg: 11000,
+    local_12hr_pkg: 13000,
+    extra_km_rate: 38,
+    extra_hr_rate: 600,
   }
 };
 
@@ -2634,6 +2634,52 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                 </div>
               )}
             </div>
+
+            {/* Multi-Stop / Many Places Helper Tile (4th-grade English) */}
+            {activeTab !== 'local' && (
+              <div className="p-2.5 sm:p-3 rounded-xl bg-gradient-to-r from-blue-50/90 to-indigo-50/70 border border-blue-200/90 text-xs space-y-1.5 animate-in fade-in">
+                <div className="flex items-center justify-between gap-2 flex-wrap">
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <span className="text-base shrink-0">🗺️</span>
+                    <span className="font-bold text-slate-800 text-xs sm:text-[13px]">
+                      {isTa ? 'ஒன்றுக்கும் மேற்பட்ட இடங்கள் அல்லது கோயில் பயணமா?' : 'Going to more than 1 place or temple?'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (typeof window !== 'undefined') {
+                          if (window.openAiFareModal) window.openAiFareModal('multiple places');
+                          else if (window.toggleAiFareModal) window.toggleAiFareModal();
+                        }
+                      }}
+                      className="px-2.5 py-1 rounded-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-[11px] sm:text-xs transition-all shadow-2xs cursor-pointer flex items-center gap-1"
+                    >
+                      <span>{isTa ? 'சுற்றுலா திட்டம்' : 'Plan My Trip'}</span>
+                      <span>→</span>
+                    </button>
+                    <a
+                      href={`https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, we want to book a trip to multiple places. Please give us a vehicle quote:\n\n1. From: Chennai\n2. Places to visit:\n3. Number of days:\n4. Number of people:\n\nThank you!')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-2.5 py-1 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] active:scale-95 text-white font-bold text-[11px] sm:text-xs transition-all shadow-2xs flex items-center gap-1"
+                      title="Send your route on WhatsApp for quick quote"
+                    >
+                      <svg className="w-3 h-3 fill-current shrink-0" viewBox="0 0 24 24">
+                        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.586 1.761.882 2.796.883h.005c3.179 0 5.767-2.587 5.767-5.766.001-3.187-2.575-5.77-5.772-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.353.101.173.449.741.964 1.201.663.591 1.221.774 1.394.86.173.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.203c.044.072.044.419-.1.824z"/>
+                      </svg>
+                      <span>{isTa ? 'வாட்ஸ்அப்' : 'WhatsApp Route'}</span>
+                    </a>
+                  </div>
+                </div>
+                <p className="text-[11px] text-slate-600 leading-tight">
+                  {isTa 
+                    ? 'எங்கள் ஓட்டுநர்கள் பல இடங்கள், கோயில்கள் மற்றும் சுற்றிப் பார்க்கும் இடங்களுக்கு மகிழ்ச்சியுடன் அழைத்துச் செல்வார்கள். முழுக் கட்டணத்தை அறிய கிளிக் செய்யவும்.'
+                    : 'Visiting 2 or more towns, temples, or sightseeing spots? Get a package quote or send your places on WhatsApp!'}
+                </p>
+              </div>
+            )}
 
             {/* Contextual Airport Shortcut Prompt */}
             {showAirportTab && (origLower.includes('airport') || destLower.includes('airport') || origLower.includes('maa') || destLower.includes('maa')) && (

@@ -82,8 +82,8 @@ All rates are in Indian Rupees (INR). Vehicles are commercial yellow-plate regis
 
 ### Executive Luxury Van (Force Urbania — 10, 12, 16 Seater)
 - Configurations: 10-seater, 12-seater, 16-seater luxury recliners
-- Standard Tariff: Starting from ₹28 / km
-- Chauffeur Batta: ₹600 / calendar day
+- Standard Tariff: Starting from ₹38 / km
+- Chauffeur Batta: ₹1,100 / calendar day
 - Minimum Outstation Billing: 300 km / calendar day
 - Features: Panoramic sealed windows, individual air suspension, overhead luggage racks, separate rear luggage boot, reading lights and USB charging ports at each seat.
 - Best Suited For: Destination weddings, corporate retreats, VIP guest group logistics.

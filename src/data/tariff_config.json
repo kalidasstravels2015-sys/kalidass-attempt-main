@@ -83,6 +83,20 @@
       "local_12hr_pkg": 7000,
       "extra_km_rate": 24,
       "extra_hr_rate": 500
+    },
+    "Force Urbania": {
+      "round_trip_rate": 38,
+      "one_way_rate": 42,
+      "min_km_per_day": 300,
+      "driver_bata": 1100,
+      "min_drop_km": 250,
+      "local_4hr_pkg": 5000,
+      "local_5hr_pkg": 6000,
+      "local_8hr_pkg": 9500,
+      "local_10hr_pkg": 11000,
+      "local_12hr_pkg": 13000,
+      "extra_km_rate": 38,
+      "extra_hr_rate": 600
     }
   }
 }

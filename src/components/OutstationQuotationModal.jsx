@@ -533,7 +533,8 @@ export default function OutstationQuotationModal() {
       };
     } else {
       // One-Way Drop
-      const minDropKm = vehicle.key.includes('Tempo') ? 250 : 130;
+      const vehStr = `${vehicle.key || ''} ${vehicle.vehicle || ''} ${vehicle.shortName || ''}`;
+      const minDropKm = vehStr.includes('Tempo') || vehStr.includes('Urbania') ? 250 : 130;
       const chargeableKm = Math.max(minDropKm, effDistance);
       const kmCost = chargeableKm * rate;
       totalCost = kmCost + bata;

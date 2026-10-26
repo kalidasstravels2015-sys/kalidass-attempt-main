@@ -37,7 +37,7 @@ test.describe('Material Design 3 Floating Action Button (FAB)', () => {
         expect(styles.iconWidth).toBeTruthy();
 
         // Accessible title and label
-        await expect(aiBtn).toHaveAttribute('aria-label', /Ask me/i);
+        await expect(aiBtn).toHaveAttribute('aria-label', /Plan My Trip|Ask me/i);
     });
 
     test('FAB opens AI Concierge modal with accessible 24/7 Helpline on click', async ({ page }) => {

@@ -9,6 +9,7 @@ import SoloDutySlipModal from './solo/SoloDutySlipModal';
 import AiBookingParser from './solo/AiBookingParser';
 import WebsiteRadarView from './solo/WebsiteRadarView';
 import OperationsCalendarView from './solo/OperationsCalendarView';
+import FastQuoteDesk from './FastQuoteDesk';
 import { getActiveGoogleSheetUrl, fetchRemoteGoogleSheetUrl } from '../../config/googleSheets';
 import { parseAndValidateContact, validateCustomerContact, isActionableLead, deduplicateCalculatorQuotes } from '../../utils/bookingContactValidator';
 
@@ -889,6 +890,14 @@ export default function SoloAdminDashboard() {
       description: 'Inbound phone tariff engine'
     },
     {
+      id: 'FAST_QUOTE',
+      label: '⚡ Fast Quote Desk',
+      icon: 'bolt',
+      badge: 'New',
+      badgeColor: 'bg-emerald-600 text-white',
+      description: 'Zero-loss WhatsApp quote generator'
+    },
+    {
       id: 'WEB_RADAR',
       label: '6. Website Calc Radar',
       icon: 'radar',
@@ -1180,6 +1189,13 @@ export default function SoloAdminDashboard() {
               }}
               showToast={showToast}
             />
+          )}
+
+          {/* VIEW 5.5: FAST QUOTE DESK */}
+          {currentView === 'FAST_QUOTE' && (
+            <div className="p-2 sm:p-4">
+              <FastQuoteDesk />
+            </div>
           )}
 
           {/* VIEW 6: WEBSITE VISITOR CALC RADAR */}

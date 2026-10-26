@@ -749,6 +749,7 @@ function getOutstationDynamicQuote(state: ConversationState, isTa: boolean): str
   const innovaCost = billedKmCar * 20 + days * 600;
   const crystaCost = billedKmCar * 22 + days * 700;
   const tempoCost = billedKmTempo * 26 + days * 800;
+  const urbaniaCost = billedKmTempo * 38 + days * 1100;
 
   // Vehicle lines mapping
   const vehicleQuotesEn: Record<string, string> = {
@@ -756,7 +757,8 @@ function getOutstationDynamicQuote(state: ConversationState, isTa: boolean): str
     ertiga: `• **Maruti Ertiga / XL6 (6 Pax):** ~₹${ertigaCost.toLocaleString('en-IN')} (₹17/km + ₹${days * 500} Bata)`,
     innova: `• **Toyota Innova (7 Pax):** ~₹${innovaCost.toLocaleString('en-IN')} (₹20/km + ₹${days * 600} Bata)`,
     crysta: `• **Toyota Innova Crysta (7 Pax):** ~₹${crystaCost.toLocaleString('en-IN')} (₹22/km + ₹${days * 700} Bata)`,
-    tempo: `• **Tempo Traveller (12 Pax):** ~₹${tempoCost.toLocaleString('en-IN')} (₹26/km + ₹${days * 800} Bata)`
+    tempo: `• **Tempo Traveller (12 Pax):** ~₹${tempoCost.toLocaleString('en-IN')} (₹26/km + ₹${days * 800} Bata)`,
+    urbania: `• **Force Urbania (12-14 Pax Luxury):** ~₹${urbaniaCost.toLocaleString('en-IN')} (₹38/km + ₹${days * 1100} Bata)`
   };
 
   const vehicleQuotesTa: Record<string, string> = {
@@ -764,7 +766,8 @@ function getOutstationDynamicQuote(state: ConversationState, isTa: boolean): str
     ertiga: `• **Maruti Ertiga / XL6 (6 Pax):** ~₹${ertigaCost.toLocaleString('en-IN')} (₹17/கி.மீ + ₹${days * 500} பேட்டா)`,
     innova: `• **Toyota Innova (7 Pax):** ~₹${innovaCost.toLocaleString('en-IN')} (₹20/கி.மீ + ₹${days * 600} பேட்டா)`,
     crysta: `• **Toyota Innova Crysta (7 Pax):** ~₹${crystaCost.toLocaleString('en-IN')} (₹22/கி.மீ + ₹${days * 700} பேட்டா)`,
-    tempo: `• **Tempo Traveller (12 Pax):** ~₹${tempoCost.toLocaleString('en-IN')} (₹26/கி.மீ + ₹${days * 800} பேட்டா)`
+    tempo: `• **Tempo Traveller (12 Pax):** ~₹${tempoCost.toLocaleString('en-IN')} (₹26/கி.மீ + ₹${days * 800} பேட்டா)`,
+    urbania: `• **Force Urbania (12-14 சொகுசு வேன்):** ~₹${urbaniaCost.toLocaleString('en-IN')} (₹38/கி.மீ + ₹${days * 1100} பேட்டா)`
   };
 
   let selectedVehicles = Object.keys(vehicleQuotesEn);

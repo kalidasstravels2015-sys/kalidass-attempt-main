@@ -1,0 +1,29 @@
+---
+// Security & Operations: Fast Mobile Quotation Desk
+// Standalone Mobile Web App (Add to Home Screen)
+import FastQuoteDesk from '../../components/admin/FastQuoteDesk.jsx';
+
+const title = "Fast Quote Desk — Kalidass Travels | Mobile Quotation & Zero-Loss Guard";
+---
+
+<!doctype html>
+<html lang="en" class="h-full bg-slate-900 text-slate-100 antialiased">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="KT Quote Desk" />
+
+    <!-- Google Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="min-h-full bg-slate-100 text-slate-900 font-sans selection:bg-blue-600 selection:text-white">
+    <FastQuoteDesk client:load />
+  </body>
+</html>

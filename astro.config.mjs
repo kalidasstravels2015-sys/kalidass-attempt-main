@@ -323,6 +323,25 @@ ${promptCtx}`;
               return;
             }
 
+            if (req.method === 'POST' && (url === '/api/quote-assistant' || url === '/api/quote-assistant/')) {
+              let body = '';
+              req.on('data', (chunk) => { body += chunk; });
+              req.on('end', async () => {
+                try {
+                  const data = JSON.parse(body || '{}');
+                  const { processQuoteAssistant } = await import('./src/lib/quoteAssistantEngine.ts?t=' + Date.now());
+                  const result = await processQuoteAssistant(data);
+                  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                  res.end(JSON.stringify(result));
+                } catch (err) {
+                  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                  res.statusCode = 500;
+                  res.end(JSON.stringify({ success: false, error: err.message }));
+                }
+              });
+              return;
+            }
+
             if (req.method === 'POST' && url === '/api/record-booking') {
               let body = '';
               req.on('data', (chunk) => { body += chunk; });
