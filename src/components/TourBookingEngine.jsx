@@ -603,6 +603,7 @@ export default function TourBookingEngine({
   const [passengers, setPassengers] = useState('4');
   const [vehicleIdState, setVehicleIdState] = useState(config.vehicles?.[0]?.id || 'dzire');
   const [showPopup, setShowPopup] = useState(false);
+  const [showFareBreakup, setShowFareBreakup] = useState(false);
   const [downloadToast, setDownloadToast] = useState(false);
 
   // Corporate GST Billing mode
@@ -1343,11 +1344,11 @@ Please confirm booking!` + tourMapsBlock;
           {/* 1. Pickup Input Field (M3 Outlined Text Field) */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <label htmlFor={pickupId} className="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center gap-1.5">
+              <label htmlFor={pickupId} className="text-xs sm:text-sm font-medium text-slate-700 flex items-center gap-1.5">
                 <MapPin className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
                 <span>Pickup Location in Chennai</span>
               </label>
-              <span className="text-xs text-m3-on-surface-variant font-medium">Doorstep Pickup Included</span>
+              <span className="text-xs text-slate-500 font-normal">Doorstep Pickup Included</span>
             </div>
             <div className="relative flex items-center">
               <input
@@ -1421,11 +1422,11 @@ Please confirm booking!` + tourMapsBlock;
           {config.destination?.editable ? (
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label htmlFor={dropId} className="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center gap-1.5">
+                <label htmlFor={dropId} className="text-xs sm:text-sm font-medium text-slate-700 flex items-center gap-1.5">
                   <Navigation className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
                   <span>Destination / Drop in {config.destination.name.split('&')[0].trim()}</span>
                 </label>
-                <span className="text-xs font-semibold text-m3-on-surface-variant bg-white px-2 py-0.5 rounded border border-m3-outline-variant/50">
+                <span className="text-xs font-medium text-slate-600 bg-white px-2 py-0.5 rounded border border-m3-outline-variant/50">
                   ~{config.destination.roundTripKm} km {config.destination?.isCircuit ? 'Circuit' : 'Round Trip'}
                 </span>
               </div>
@@ -1506,7 +1507,7 @@ Please confirm booking!` + tourMapsBlock;
                 <div className="flex items-center justify-between gap-1 mb-1">
                   <label 
                     htmlFor={pickupDateTimeId} 
-                    className="text-xs font-bold text-m3-on-surface-variant flex items-center gap-1.5 cursor-pointer truncate"
+                    className="text-xs font-medium text-slate-600 flex items-center gap-1.5 cursor-pointer truncate"
                   >
                     <Calendar className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
                     <span className="truncate">Pickup Date &amp; Time</span>
@@ -1533,7 +1534,7 @@ Please confirm booking!` + tourMapsBlock;
                 <div className="flex items-center justify-between gap-1 mb-1">
                   <label 
                     htmlFor={returnDateTimeId} 
-                    className="text-xs font-bold text-m3-on-surface-variant flex items-center gap-1.5 cursor-pointer truncate"
+                    className="text-xs font-medium text-slate-600 flex items-center gap-1.5 cursor-pointer truncate"
                   >
                     <Calendar className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
                     <span className="truncate">Return Date &amp; Time</span>
@@ -1628,7 +1629,7 @@ Please confirm booking!` + tourMapsBlock;
               <div className="flex items-center justify-between gap-1 mb-1">
                 <label 
                   htmlFor={passengersId} 
-                  className="text-xs font-bold text-m3-on-surface-variant flex items-center gap-1.5 cursor-pointer truncate"
+                  className="text-xs font-medium text-slate-600 flex items-center gap-1.5 cursor-pointer truncate"
                 >
                   <Users className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
                   <span className="truncate">Passengers</span>
@@ -1656,7 +1657,7 @@ Please confirm booking!` + tourMapsBlock;
               <div className="flex items-center justify-between gap-1 mb-1">
                 <label 
                   htmlFor={vehicleId} 
-                  className="text-xs font-bold text-m3-on-surface-variant flex items-center gap-1.5 cursor-pointer truncate"
+                  className="text-xs font-medium text-slate-600 flex items-center gap-1.5 cursor-pointer truncate"
                 >
                   <Car className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
                   <span className="truncate">Vehicle Model</span>
@@ -1716,21 +1717,10 @@ Please confirm booking!` + tourMapsBlock;
           {/* Dynamic Fare Result & Actions Area — Rate Summary with Complete Itemized Breakdown */}
           {showResult && Boolean(pickup.trim()) && (
             <div ref={resultRef} className="pt-3 border-t border-m3-outline-variant/60 space-y-3 animate-in fade-in duration-200">
-              {/* Rate Summary Card — Restaurant Bill Style */}
+              {/* Rate Summary Card — Savaari Clean Standard */}
               <div className="bg-slate-100 border border-slate-200 rounded-xl p-3.5 space-y-3 shadow-xs">
-                {/* Official Quote Ref & 24-Hr Price Lock Header */}
-                <div className="flex items-center justify-between gap-2 pb-2 border-b border-slate-200/80 flex-wrap">
-                  <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0b57d0] bg-[#1a73e8]/10 px-2.5 py-0.5 rounded-full">
-                    <span>Quoted Fare • Ref: {effectiveInvoiceRefNo}</span>
-                  </span>
-                  <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-800 bg-emerald-100/90 border border-emerald-200 px-2 py-0.5 rounded-full">
-                    <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
-                    <span>Rate Locked 24 Hrs • Send to WhatsApp to Save</span>
-                  </span>
-                </div>
-
                 {/* Header: Vehicle Name, Pax & Total Fare */}
-                <div className="flex items-center justify-between gap-3 pb-2.5 border-b border-slate-200">
+                <div className="flex items-start justify-between gap-3 pb-2.5 border-b border-slate-200">
                   <div>
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span className="text-base font-extrabold text-m3-on-surface">
@@ -1748,46 +1738,49 @@ Please confirm booking!` + tourMapsBlock;
                     <div className="text-xs text-m3-on-surface-variant font-medium">Total Fare</div>
                     <div 
                       data-tour-fare="true"
-                      className="text-3xl font-extrabold text-m3-on-surface font-heading leading-tight"
+                      className="text-2xl sm:text-3xl font-extrabold text-m3-on-surface font-heading leading-tight"
                     >
-                      {activePayableFare}{isAfter24Hours && <span className="text-xs sm:text-sm font-semibold text-m3-on-surface-variant ml-1">+ Extra</span>}
+                      {activePayableFare}
+                    </div>
+                    <div className="text-[11px] font-medium text-slate-500 mt-0.5">
+                      {isAfter24Hours ? '+ Tolls & parking extra (as per actual receipts)' : 'All-inclusive: Fuel, Tolls & Permit included'}
                     </div>
                   </div>
                 </div>
 
-                {/* 1-Tap Vehicle Price Comparison Strip */}
+                {/* 1-Line Payment Reassurance */}
+                <div className="text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200/80 rounded-lg px-3 py-2 flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span>Pay 50% on cab arrival, balance after trip ends</span>
+                </div>
+
+                {/* 1-Tap Vehicle Switcher Tabs (No duplicate prices) */}
                 {config.vehicles && config.vehicles.length > 1 && (
-                  <div className="pb-2 border-b border-slate-200/80">
+                  <div className="pb-1">
                     <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
-                      Compare &amp; Switch Cab Instantly (1-Tap):
+                      Select Vehicle:
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
                       {config.vehicles.slice(0, 4).map((veh) => {
                         const paxNum = parseInt(passengers, 10) || 4;
                         const isDisabled = veh.capacity < paxNum;
                         const isSelected = vehicleIdState === veh.id;
-                        const vBreakdown = durationInfo?.hasDates ? calculateVehicleFare(veh, durationInfo) : null;
-                        const vFare = vBreakdown ? vBreakdown.totalFare : (veh.rates?.[1] || 0);
-                        const vDisplayFare = needGst ? Math.round(vFare * 1.05) : vFare;
                         return (
                           <button
                             key={veh.id}
                             type="button"
                             disabled={isDisabled}
                             onClick={() => setVehicleIdState(veh.id)}
-                            className={`px-2 py-1.5 rounded-lg border text-left transition-all cursor-pointer ${
+                            className={`p-2 rounded-xl border text-center transition-all cursor-pointer ${
                               isSelected
-                                ? 'bg-[#1a73e8] text-white border-[#1a73e8] shadow-2xs'
+                                ? 'bg-blue-50/90 border-[#1a73e8] ring-2 ring-[#1a73e8]/30 shadow-xs'
                                 : isDisabled
                                   ? 'bg-slate-100/60 text-slate-400 border-slate-200/60 opacity-50 cursor-not-allowed'
-                                  : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-200'
+                                  : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-200 shadow-2xs'
                             }`}
                           >
-                            <div className={`text-xs font-bold truncate ${isSelected ? 'text-white/90' : 'text-slate-500'}`}>
+                            <div className={`text-xs font-bold truncate ${isSelected ? 'text-[#0b57d0]' : 'text-slate-800'}`}>
                               {veh.shortName || veh.name.split('/')[0].trim()} ({veh.capacity}p)
-                            </div>
-                            <div className={`text-xs font-extrabold ${isSelected ? 'text-white' : 'text-slate-900'}`}>
-                              ₹{vDisplayFare.toLocaleString('en-IN')}
                             </div>
                           </button>
                         );
@@ -1796,145 +1789,89 @@ Please confirm booking!` + tourMapsBlock;
                   </div>
                 )}
 
-                {/* Itemized Bill Lines */}
-                <div className="space-y-1.5 text-[13px] sm:text-sm">
-                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                    <span>Cab Hire ({activeVehicle?.name} • Fuel included):</span>
-                    <span className="font-bold text-m3-on-surface">₹{Number(fareBreakdown?.vehicleHireFare || taxableAmount).toLocaleString('en-IN')}</span>
-                  </div>
-                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                    <span>Driver Allowance ({fareBreakdown?.packageDays || (days || 1)} {(fareBreakdown?.packageDays || (days || 1)) > 1 ? 'Days' : 'Day'}):</span>
-                    <span className="font-bold text-m3-on-surface">₹{Number(fareBreakdown?.driverBata || 0).toLocaleString('en-IN')}</span>
-                  </div>
-                  {isNightBatta && (
-                    <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                      <span>Night Driver Allowance (11 PM - 4 AM):</span>
-                      <span className="font-bold text-m3-on-surface">₹400</span>
-                    </div>
-                  )}
+                {/* Expandable Complete Fare Breakup */}
+                <div className="pt-1 border-t border-slate-200">
+                  <button
+                    type="button"
+                    onClick={() => setShowFareBreakup(!showFareBreakup)}
+                    className="w-full flex items-center justify-between py-2 text-xs font-bold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer"
+                  >
+                    <span>View Complete Fare Breakup &amp; Inclusions</span>
+                    <ChevronDown className={`w-4 h-4 text-slate-500 transition-transform duration-200 ${showFareBreakup ? 'rotate-180' : ''}`} />
+                  </button>
 
-                  {/* GST line if needGst */}
-                  {needGst && (
-                    <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                      <span>GST (5%):</span>
-                      <span className="font-bold text-m3-on-surface">+₹{Number(totalGst).toLocaleString('en-IN')}</span>
+                  {showFareBreakup && (
+                    <div className="pt-2 pb-1 space-y-2 text-xs border-t border-slate-200/60 animate-in fade-in duration-150">
+                      <div className="space-y-1.5 text-m3-on-surface-variant">
+                        <div className="flex justify-between items-center py-0.5">
+                          <span>Cab Hire ({activeVehicle?.name} • Fuel included):</span>
+                          <span className="font-bold text-m3-on-surface">₹{Number(fareBreakdown?.vehicleHireFare || taxableAmount).toLocaleString('en-IN')}</span>
+                        </div>
+                        <div className="flex justify-between items-center py-0.5">
+                          <span>Driver Allowance ({fareBreakdown?.packageDays || (days || 1)} {(fareBreakdown?.packageDays || (days || 1)) > 1 ? 'Days' : 'Day'}):</span>
+                          <span className="font-bold text-m3-on-surface">₹{Number(fareBreakdown?.driverBata || 0).toLocaleString('en-IN')}</span>
+                        </div>
+                        {isNightBatta && (
+                          <div className="flex justify-between items-center py-0.5">
+                            <span>Night Driver Allowance (11 PM - 4 AM):</span>
+                            <span className="font-bold text-m3-on-surface">₹400</span>
+                          </div>
+                        )}
+                        {needGst && (
+                          <div className="flex justify-between items-center py-0.5">
+                            <span>GST (5%):</span>
+                            <span className="font-bold text-m3-on-surface">+₹{Number(totalGst).toLocaleString('en-IN')}</span>
+                          </div>
+                        )}
+                        {isAfter24Hours ? (
+                          <>
+                            <div className="flex justify-between items-center py-0.5">
+                              <span>State Permit:</span>
+                              <span className="font-bold text-m3-on-surface">
+                                {isTirupati ? '₹500' : (serviceSlug === 'sabarimala-trip' ? '₹800' : '₹0')}
+                              </span>
+                            </div>
+                            <div className="flex justify-between items-center py-0.5">
+                              <span>Tolls &amp; Parking:</span>
+                              <span className="font-bold text-m3-on-surface">As per actual receipts</span>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="flex justify-between items-center py-0.5">
+                              <span>State Permit &amp; Tolls:</span>
+                              <span className="font-bold text-emerald-700">₹0 (All-inclusive in package)</span>
+                            </div>
+                            <div className="flex justify-between items-center py-0.5">
+                              <span>Parking:</span>
+                              <span className="font-bold text-emerald-700">₹0 (Included)</span>
+                            </div>
+                          </>
+                        )}
+                      </div>
+
+                      <div className="pt-2 border-t border-dashed border-slate-200 text-xs text-m3-on-surface-variant space-y-1">
+                        <div className="flex items-center gap-1.5 text-emerald-800 font-medium">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                          <span>
+                            {isAfter24Hours
+                              ? 'Dedicated Cab Hire, 100% Fuel & Driver Allowance included.'
+                              : (isTirupati ? 'Fuel, Tolls, AP State Permit, Hill Climb & Parking included. No hidden charges.' : `${config.inclusions?.standard || 'Fuel, Tolls, Permit & Driver Allowance'}. No hidden charges.`)}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1.5 text-slate-500">
+                          <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                          <span>
+                            {isAfter24Hours
+                              ? `Duration: ${durationLabel || `${days || 1} Days`} (~${config.destination?.roundTripKm || 320} km circuit). Extra hours: ₹${activeVehicle?.extraHourRate || 200}/hr.`
+                              : `Trip Limit: Up to ~${config.destination?.roundTripKm || 320} km / ${durationHours || 12} hrs (Extra: ₹${activeVehicle?.extraHourRate || 200}/hr).`}
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                  )}
-                  {isAfter24Hours ? (
-                    <>
-                      <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                        <span>State Permit:</span>
-                        <span className="font-bold text-m3-on-surface">
-                          {isTirupati ? '₹500' : (serviceSlug === 'sabarimala-trip' ? '₹800' : '₹0')}
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                        <span>Tolls:</span>
-                        <span className="font-bold text-m3-on-surface">Extra</span>
-                      </div>
-                      <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                        <span>Parking:</span>
-                        <span className="font-bold text-m3-on-surface">Extra</span>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                        <span>State Permit:</span>
-                        <span className="font-bold text-emerald-700">₹0</span>
-                      </div>
-                      <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                        <span>Tolls:</span>
-                        <span className="font-bold text-emerald-700">₹0</span>
-                      </div>
-                      <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                        <span>Parking:</span>
-                        <span className="font-bold text-emerald-700">₹0</span>
-                      </div>
-                    </>
                   )}
                 </div>
-
-                {/* Bill Payment Split */}
-                <div className="pt-2 border-t border-slate-200/80 space-y-1 text-[13px] sm:text-sm">
-                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                    <span>Total Bill:</span>
-                    <span className="font-bold text-m3-on-surface">{activePayableFare}{isAfter24Hours ? ' + Extra' : ''}</span>
-                  </div>
-                  <div className="flex justify-between items-center py-0.5 text-emerald-700 font-medium">
-                    <span>Advance to Pay:</span>
-                    <span className="font-bold">-₹500</span>
-                  </div>
-                  <div className="flex justify-between items-center py-1 text-m3-on-surface border-t border-slate-200/80">
-                    <span className="text-sm sm:text-base font-extrabold text-m3-on-surface tracking-tight">
-                      Balance to Pay Driver <span className="text-xs font-medium text-m3-on-surface-variant">(After trip)</span>:
-                    </span>
-                    <span className="text-lg sm:text-xl font-black text-[#1a73e8] tracking-tight font-heading shrink-0">
-                      {formattedBalancePayable}{isAfter24Hours ? ' + Extra' : ''}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Cut and Dried Notes */}
-                {isAfter24Hours ? (
-                  <div className="pt-2.5 border-t border-dashed border-slate-200 text-xs text-m3-on-surface-variant space-y-1.5">
-                    {/* Inclusions Line */}
-                    <div className="flex items-center gap-1.5 text-emerald-800 font-medium">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                      <span>
-                        <strong>Included in Fare:</strong> Dedicated Cab Hire, Fuel &amp; Driver Allowance{isTirupati ? ', Tirumala Hill Climb' : ''}.
-                      </span>
-                    </div>
-
-                    {/* Package Duration & Limits */}
-                    <div className="flex items-center gap-1.5 text-slate-600">
-                      <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                      <span>Trip Duration: {durationLabel || `${days || 1} Days`} (~{config.destination?.roundTripKm || 320} km circuit). Extra hours: ₹{activeVehicle?.extraHourRate || 200}/hr.</span>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="pt-2 border-t border-dashed border-slate-200 text-xs text-m3-on-surface-variant space-y-1">
-                    <div className="flex items-center gap-1.5 text-emerald-800 font-medium">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                      <span>
-                        <strong>Included in Fare:</strong> {isTirupati 
-                          ? 'Fuel, Tolls, AP State Permit, Hill Climb & Parking. No hidden charges.' 
-                          : `${config.inclusions?.standard || 'Fuel, Tolls, Permit & Driver Allowance'}. No hidden charges.`}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1.5 text-slate-600">
-                      <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                      <span>Trip Limit: Up to ~{config.destination?.roundTripKm || 320} km / {durationHours || 12} hrs (Extra: ₹{activeVehicle?.extraHourRate || 200}/hr).</span>
-                    </div>
-                  </div>
-                )}
               </div>
-
-              {/* Optional Passenger / Devotee Name (Compact & Non-blocking) */}
-              {!needGst && (
-                <div className="space-y-1">
-                  <label className="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center justify-between">
-                    <span className="flex items-center gap-1.5">
-                      <User className="w-3.5 h-3.5 text-m3-on-surface-variant shrink-0" />
-                      <span>Passenger / Devotee Name</span>
-                    </span>
-                    <span className="text-xs text-m3-on-surface-variant font-normal">Optional</span>
-                  </label>
-                  <input
-                    ref={companyNameInputRef}
-                    type="text"
-                    value={companyName}
-                    onChange={(e) => {
-                      setCompanyName(e.target.value);
-                      if (validationError) setValidationError('');
-                    }}
-                    onFocus={handleInputFocus}
-                    enterKeyHint="done"
-                    placeholder="e.g. Saravanan K (or confirm on WhatsApp)"
-                    className={`w-full min-h-[44px] h-11 bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-lg px-3.5 py-2 text-sm ${companyName ? 'text-m3-on-surface font-semibold' : 'text-m3-on-surface font-normal'} placeholder:text-sm placeholder:text-m3-on-surface-variant/60 placeholder:font-normal focus:outline-none focus:border-m3-primary focus:ring-2 focus:ring-m3-primary/20 shadow-2xs scroll-mt-28 scroll-mb-64`}
-                  />
-                </div>
-              )}
 
               {/* Primary M3 Action Buttons (Full-Width WhatsApp + Secondary Call) */}
               <div className="pt-1 space-y-2">
@@ -1999,7 +1936,7 @@ Please confirm booking!` + tourMapsBlock;
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                       <div>
-                        <label className="block text-xs font-bold text-m3-on-surface-variant mb-0.5">Devotee / Company Name *</label>
+                        <label className="block text-xs font-medium text-slate-600 mb-0.5">Devotee / Company Name *</label>
                         <input
                           ref={companyNameInputRef}
                           type="text"
@@ -2010,7 +1947,7 @@ Please confirm booking!` + tourMapsBlock;
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-m3-on-surface-variant mb-0.5">GSTIN (15 Digits) Optional</label>
+                        <label className="block text-xs font-medium text-slate-600 mb-0.5">GSTIN (15 Digits) Optional</label>
                         <input
                           ref={customerGstInputRef}
                           type="text"
@@ -2022,7 +1959,7 @@ Please confirm booking!` + tourMapsBlock;
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-m3-on-surface-variant mb-0.5">Contact Phone *</label>
+                        <label className="block text-xs font-medium text-slate-600 mb-0.5">Contact Phone *</label>
                         <input
                           ref={customerPhoneInputRef}
                           type="tel"

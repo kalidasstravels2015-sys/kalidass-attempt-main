@@ -76,7 +76,7 @@ test.describe('Outstation Car Card Fare Calculator & Booking Modal', () => {
     await page.screenshot({ path: 'tests/outstation_car_card_modal_scrolled.png' });
   });
 
-  test('desktop toggle between Round Trip and One Way Drop updates rate and cost', async ({ page }) => {
+  test('desktop modal verifies Round Trip only with min 250 km/day rate', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto('/services/outstation-cabs/', { waitUntil: 'networkidle' });
 
@@ -90,15 +90,12 @@ test.describe('Outstation Car Card Fare Calculator & Booking Modal', () => {
     await expect(modal.locator('text=Toyota Innova')).toBeVisible();
     await expect(modal.locator('text=₹20 / km')).toBeVisible();
 
-    // Switch to One Way Drop
-    const oneWayBtn = modal.locator('button:has-text("One Way Drop")');
-    await oneWayBtn.click();
+    // Verify Round Trip badge is displayed and One Way Drop is not present
+    await expect(modal.locator('text=Round Trip (இரு வழி)')).toBeVisible();
+    await expect(modal.locator('text=Min 250 km/day').first()).toBeVisible();
+    await expect(modal.locator('button:has-text("One Way Drop")')).toBeHidden();
 
-    // Rate should update to ₹22 / km
-    await expect(modal.locator('text=₹22 / km')).toBeVisible();
-    await expect(modal.locator('text=One-Way Drop Rate')).toBeVisible();
-
-    // Return date should now be hidden
-    await expect(modal.locator('text=Return Date & Time *')).toBeHidden();
+    // Return date should be visible for Round Trip
+    await expect(modal.locator('text=Return Date & Time *')).toBeVisible();
   });
 });

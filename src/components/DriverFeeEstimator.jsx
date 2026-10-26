@@ -216,6 +216,7 @@ export default function DriverFeeEstimator({
   const [stayProvided,  setStayProvided]  = useState(false);
   const [loading,       setLoading]       = useState(false);
   const [showResult,    setShowResult]    = useState(false);
+  const [showFeeBreakup, setShowFeeBreakup] = useState(false);
   const [result,        setResult]        = useState(null);
   const [error,         setError]         = useState('');
   const [fieldErrors,   setFieldErrors]   = useState({});
@@ -532,7 +533,7 @@ export default function DriverFeeEstimator({
   // ── Shared class helpers (mirrors QuotationEngine exactly) ─────────────
   const inputWrap  = 'relative flex items-center bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant rounded-m3-md px-3 py-2 sm:py-2.5 min-h-[44px] sm:min-h-[48px] focus-within:ring-2 focus-within:ring-m3-primary focus-within:border-m3-primary transition-all';
   const inputField = 'bg-transparent w-full outline-none text-sm font-semibold text-m3-on-surface pr-8 placeholder:text-m3-on-surface-variant placeholder:text-xs placeholder:font-normal';
-  const labelCls   = 'block text-m3-label-m font-semibold text-m3-on-surface-variant uppercase tracking-wider mb-1';
+  const labelCls   = 'block text-xs font-medium text-slate-600 mb-1';
 
   const outerCls = embedded
     ? 'w-full font-sans'
@@ -593,10 +594,12 @@ export default function DriverFeeEstimator({
             {/* Column 1: Vehicle Type */}
             <div>
               <div className="flex items-center mb-1">
-                <label className={`${labelCls} !mb-0 truncate`}>Vehicle Type</label>
+                <label className={`${labelCls} !mb-0 truncate flex items-center gap-1.5`}>
+                  <Car className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                  <span>Vehicle Type</span>
+                </label>
               </div>
               <div className={`${inputWrap} cursor-pointer px-2.5 sm:px-3`}>
-                <Car className="w-4 h-4 text-m3-on-surface-variant mr-1.5 sm:mr-2 shrink-0" />
                 <select
                   value={vehicleKey}
                   onChange={e => { setVehicleKey(e.target.value); setShowResult(false); }}
@@ -619,39 +622,41 @@ export default function DriverFeeEstimator({
                 <button
                   type="button"
                   onClick={() => { setGear('manual'); setShowResult(false); }}
-                  className={`py-1.5 sm:py-2 px-1 sm:px-2 text-[11px] sm:text-xs font-bold rounded-m3-sm transition-all flex items-center justify-center gap-1 cursor-pointer min-h-[36px] sm:min-h-[38px] ${
+                  className={`py-1.5 sm:py-2 px-1 sm:px-2 text-[11px] sm:text-xs font-semibold rounded-m3-sm transition-all flex items-center justify-center gap-1 cursor-pointer min-h-[36px] sm:min-h-[38px] ${
                     gear === 'manual'
                       ? 'bg-m3-primary text-m3-on-primary shadow-m3-1'
                       : 'text-m3-on-surface hover:bg-m3-surface-container'
                   }`}
                 >
-                  <span className="truncate">⚙️ Manual</span>
+                  <span className="truncate">Manual</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => { setGear('automatic'); setShowResult(false); }}
-                  className={`py-1.5 sm:py-2 px-1 sm:px-2 text-[11px] sm:text-xs font-bold rounded-m3-sm transition-all flex items-center justify-center gap-1 cursor-pointer min-h-[36px] sm:min-h-[38px] ${
+                  className={`py-1.5 sm:py-2 px-1 sm:px-2 text-[11px] sm:text-xs font-semibold rounded-m3-sm transition-all flex items-center justify-center gap-1 cursor-pointer min-h-[36px] sm:min-h-[38px] ${
                     gear === 'automatic'
                       ? 'bg-m3-primary text-m3-on-primary shadow-m3-1'
                       : 'text-m3-on-surface hover:bg-m3-surface-container'
                   }`}
                 >
-                  <span className="truncate">🕹️ Auto<span className="hidden sm:inline">matic</span></span>
+                  <span className="truncate">Automatic</span>
                 </button>
               </div>
             </div>
           </div>
-          <p className="text-m3-body-s text-m3-on-surface-variant mt-1.5 flex items-center gap-1">
-            <span className="font-semibold text-m3-on-surface shrink-0">Models:</span>
+          <p className="text-xs text-slate-500 mt-1.5 flex items-center gap-1">
+            <span className="font-medium text-slate-600 shrink-0">Models:</span>
             <span className="truncate">{vehicle.models}</span>
           </p>
         </div>
 
         {/* ── Pickup Location (both tabs) ── */}
         <div>
-          <label className={labelCls}>Pickup Location</label>
+          <label className={`${labelCls} flex items-center gap-1.5`}>
+            <MapPin className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+            <span>Pickup Location</span>
+          </label>
           <div className={`${inputWrap} ${fieldErrors.pickup ? 'border-m3-error ring-1 ring-m3-error bg-m3-error-container/20' : ''}`}>
-            <MapPin className="w-4 h-4 text-m3-on-surface-variant mr-2 shrink-0" />
             <input
               id="acting-driver-pickup-input"
               ref={pickupRef}
@@ -698,15 +703,15 @@ export default function DriverFeeEstimator({
 
         {/* ── Drop / Destination Location ── */}
         <div>
-          <label className={labelCls}>
+          <label className={`${labelCls} flex items-center gap-1.5`}>
+            <Navigation className="w-3.5 h-3.5 text-m3-primary shrink-0" />
             {activeTab === 'round' ? (
-              <span>Destination City / Outstation Route <span className="normal-case font-normal text-m3-on-surface-variant text-[11px]">(optional for round trip)</span></span>
+              <span>Destination City / Outstation Route <span className="normal-case font-normal text-slate-500 text-[11px]">(optional for round trip)</span></span>
             ) : (
-              'Drop Location'
+              <span>Drop Location</span>
             )}
           </label>
           <div className={`${inputWrap} ${fieldErrors.drop ? 'border-m3-error ring-1 ring-m3-error bg-m3-error-container/20' : ''}`}>
-            <Navigation className="w-4 h-4 text-m3-on-surface-variant mr-2 shrink-0" />
             <input
               id="acting-driver-drop-input"
               ref={dropRef}
@@ -728,7 +733,7 @@ export default function DriverFeeEstimator({
             <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
               {drop && (
                 <button type="button" onClick={() => { dropPlaceRef.current = null; setDrop(''); setShowResult(false); }}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-full text-m3-on-surface-variant">
+                  className="w-7 h-7 flex items-center justify-center hover:bg-m3-surface-container-high rounded-m3-full text-m3-on-surface-variant">
                   <X className="w-4 h-4" />
                 </button>
               )}
@@ -750,8 +755,9 @@ export default function DriverFeeEstimator({
             </p>
           )}
           {activeTab === 'round' && (
-            <p className="text-m3-body-s text-m3-on-surface-variant mt-1">
-              ℹ️ Round trip returns to pickup — cost is time-based (days × bata) with zero return km fee.
+            <p className="text-xs text-slate-500 mt-1 flex items-center gap-1.5">
+              <Info className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+              <span>Round trip returns to pickup — cost is time-based (days × bata) with zero return km fee.</span>
             </p>
           )}
         </div>
@@ -760,10 +766,12 @@ export default function DriverFeeEstimator({
         <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
           <div>
             <div className="flex items-center mb-1">
-              <label className={`${labelCls} !mb-0 truncate`}>Travel Date</label>
+              <label className={`${labelCls} !mb-0 truncate flex items-center gap-1.5`}>
+                <Calendar className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                <span>Travel Date</span>
+              </label>
             </div>
             <div className={`${inputWrap} px-2.5 sm:px-3`}>
-              <Calendar className="w-4 h-4 text-m3-on-surface-variant mr-1.5 sm:mr-2 shrink-0" />
               <input
                 type="date"
                 min={new Date().toISOString().split('T')[0]}
@@ -775,7 +783,10 @@ export default function DriverFeeEstimator({
           </div>
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className={`${labelCls} !mb-0 truncate`}>Reporting Time</label>
+              <label className={`${labelCls} !mb-0 truncate flex items-center gap-1.5`}>
+                <Clock className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                <span>Reporting Time</span>
+              </label>
               {reportingTime && (
                 <span className="hidden sm:inline text-m3-label-s font-bold text-m3-primary shrink-0 ml-1">
                   {formatTime12h(reportingTime)}
@@ -783,7 +794,6 @@ export default function DriverFeeEstimator({
               )}
             </div>
             <div className={`${inputWrap} px-2.5 sm:px-3`}>
-              <Clock className="w-4 h-4 text-m3-on-surface-variant mr-1.5 sm:mr-2 shrink-0" />
               <input
                 id="acting-driver-time-picker"
                 type="time"
@@ -798,9 +808,11 @@ export default function DriverFeeEstimator({
         {/* ── Round Trip Extra Duration ── */}
         {activeTab === 'round' && (
           <div>
-            <label className={labelCls}>Total Duration (Days)</label>
+            <label className={`${labelCls} flex items-center gap-1.5`}>
+              <Calendar className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+              <span>Total Duration (Days)</span>
+            </label>
             <div className={inputWrap}>
-              <Calendar className="w-4 h-4 text-m3-primary mr-2 shrink-0" />
               <input
                 type="text"
                 inputMode="numeric"
@@ -831,8 +843,8 @@ export default function DriverFeeEstimator({
               <Check className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 text-m3-on-primary opacity-0 peer-checked:opacity-100 pointer-events-none" />
             </div>
             <div>
-              <span className="block text-xs font-semibold text-m3-on-surface">I will provide Driver Food</span>
-              <span className="block text-[11px] text-m3-on-surface-variant mt-0.5">
+              <span className="block text-xs font-medium text-slate-800">I will provide Driver Food</span>
+              <span className="block text-[11px] text-slate-500 mt-0.5 font-normal">
                 {activeTab === 'round' 
                   ? `Saves ${fmtRs(FOOD_PER_DAY)}/day — invite driver at halts.`
                   : `Saves ${fmtRs(FOOD_PER_DAY)} — invite driver at halts.`}
@@ -852,8 +864,8 @@ export default function DriverFeeEstimator({
                 <Check className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 text-m3-on-primary opacity-0 peer-checked:opacity-100 pointer-events-none" />
               </div>
               <div>
-                <span className="block text-xs font-semibold text-m3-on-surface">I will provide Driver Stay</span>
-                <span className="block text-[11px] text-m3-on-surface-variant mt-0.5">
+                <span className="block text-xs font-medium text-slate-800">I will provide Driver Stay</span>
+                <span className="block text-[11px] text-slate-500 mt-0.5 font-normal">
                   Saves {fmtRs(STAY_PER_NIGHT)}/night — hotel driver dorm.
                 </span>
               </div>
@@ -887,24 +899,13 @@ export default function DriverFeeEstimator({
           )}
         </button>
 
-        {/* ── Results — Outstation Rate Summary Format ── */}
+        {/* ── Results — Savaari Clean Standard ── */}
         {showResult && result && (
           <div
             id="acting-driver-result-card"
             ref={resultRef}
-            className="border border-slate-200 rounded-m3-xl p-3.5 sm:p-4 bg-slate-100 shadow-xs text-xs space-y-2.5 animate-in fade-in slide-in-from-top-2 duration-300"
+            className="border border-slate-200 rounded-m3-xl p-3.5 sm:p-4 bg-slate-100 shadow-xs text-xs space-y-3 animate-in fade-in slide-in-from-top-2 duration-300"
           >
-            {/* Official Quote Ref & 24-Hr Price Lock Header */}
-            <div className="flex items-center justify-between gap-2 pb-2 border-b border-slate-200/80 flex-wrap">
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#0b57d0] bg-[#1a73e8]/10 px-2.5 py-0.5 rounded-full">
-                <span>Official Quote Ref: {quoteRefId}</span>
-              </span>
-              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-800 bg-emerald-100/90 border border-emerald-200 px-2 py-0.5 rounded-full">
-                <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
-                <span>Rate Locked 24 Hrs • Send to WhatsApp to Save</span>
-              </span>
-            </div>
-
             {/* Header: Vehicle & Total Fare */}
             <div className="flex justify-between items-start gap-2 pb-2.5 border-b border-slate-200">
               <div>
@@ -918,122 +919,102 @@ export default function DriverFeeEstimator({
                 </div>
                 <div className="text-[11px] text-m3-on-surface-variant font-medium mt-0.5">
                   {result.type === 'round'
-                    ? `~${result.distKm ? `${result.distKm} km one-way (${result.distKm * 2} km Round Trip)` : 'Round Trip'} • ${result.days} Day${result.days > 1 ? 's' : ''}${result.autoAdjustedDays ? ` (Min ${result.minRecommendedDays}d for distance)` : ''} • Transparent Estimate`
-                    : `~${result.distKm ? `${result.distKm} km Drop` : 'One Way Drop'} • ~${result.distKm ? Math.max(1, Math.round(result.distKm / 50)) : 3} hrs driving • Transparent Estimate`}
+                    ? `~${result.distKm ? `${result.distKm} km one-way (${result.distKm * 2} km Round Trip)` : 'Round Trip'} • ${result.days} Day${result.days > 1 ? 's' : ''}`
+                    : `~${result.distKm ? `${result.distKm} km Drop` : 'One Way Drop'} • ~${result.distKm ? Math.max(1, Math.round(result.distKm / 50)) : 3} hrs driving`}
                 </div>
               </div>
               <div className="text-right shrink-0">
                 <div className="text-[11px] text-m3-on-surface-variant font-medium">Total Fare</div>
                 <div className="text-2xl sm:text-3xl font-extrabold text-m3-on-surface font-heading leading-tight">
-                  ₹{result.total.toLocaleString('en-IN')} <span className="text-xs sm:text-sm font-semibold text-m3-on-surface-variant ml-0.5">+ Extra</span>
+                  ₹{result.total.toLocaleString('en-IN')}
+                </div>
+                <div className="text-[11px] font-medium text-slate-500 mt-0.5">
+                  + Tolls &amp; parking paid by vehicle owner directly
                 </div>
               </div>
             </div>
 
-            {/* Itemized Bill Lines */}
-            <div className="space-y-1.5 text-[13px] sm:text-sm">
-              {result.type === 'round' ? (
-                <>
-                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                    <span>Driver Bata ({result.days} {result.days > 1 ? 'Days' : 'Day'} • ₹{result.bata.toLocaleString('en-IN')}/day):</span>
-                    <span className="font-bold text-m3-on-surface">₹{result.totalBata.toLocaleString('en-IN')}</span>
+            {/* 1-Line Payment Reassurance */}
+            <div className="text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200/80 rounded-lg px-3 py-2 flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <span>Pay driver after trip ends • Zero advance required</span>
+            </div>
+
+            {/* Expandable Complete Fee Breakup */}
+            <div className="pt-1 border-t border-slate-200">
+              <button
+                type="button"
+                onClick={() => setShowFeeBreakup(!showFeeBreakup)}
+                className="w-full flex items-center justify-between py-2 text-xs font-bold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer"
+              >
+                <span>View Complete Fee Breakup &amp; Inclusions</span>
+                <ChevronDown className={`w-4 h-4 text-slate-500 transition-transform duration-200 ${showFeeBreakup ? 'rotate-180' : ''}`} />
+              </button>
+
+              {showFeeBreakup && (
+                <div className="pt-2 pb-1 space-y-2 text-xs border-t border-slate-200/60 animate-in fade-in duration-150">
+                  <div className="space-y-1.5 text-m3-on-surface-variant">
+                    {result.type === 'round' ? (
+                      <>
+                        <div className="flex justify-between items-center py-0.5">
+                          <span>Driver Bata ({result.days} {result.days > 1 ? 'Days' : 'Day'} • ₹{result.bata.toLocaleString('en-IN')}/day):</span>
+                          <span className="font-bold text-m3-on-surface">₹{result.totalBata.toLocaleString('en-IN')}</span>
+                        </div>
+                        <div className="flex justify-between items-center py-0.5">
+                          <span>Food Allowance ({result.days} {result.days > 1 ? 'Days' : 'Day'}):</span>
+                          <span className={`font-bold ${result.foodProvided ? 'text-emerald-700' : 'text-m3-on-surface'}`}>
+                            {result.foodProvided ? '₹0 (Provided by you)' : `₹${result.totalFood.toLocaleString('en-IN')}`}
+                          </span>
+                        </div>
+                        {result.nights > 0 && (
+                          <div className="flex justify-between items-center py-0.5">
+                            <span>Night Stay ({result.nights} {result.nights > 1 ? 'Nights' : 'Night'}):</span>
+                            <span className={`font-bold ${result.stayProvided ? 'text-emerald-700' : 'text-m3-on-surface'}`}>
+                              {result.stayProvided ? '₹0 (Provided by you)' : `₹${result.totalStay.toLocaleString('en-IN')}`}
+                            </span>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex justify-between items-center py-0.5">
+                          <span>Driver Bata ({result.bataDaysLabel || '1 Day'}{result.tierNote ? ` • ${result.tierNote}` : ''}):</span>
+                          <span className="font-bold text-m3-on-surface">₹{result.totalBata.toLocaleString('en-IN')}</span>
+                        </div>
+                        <div className="flex justify-between items-center py-0.5">
+                          <span>Food Allowance{result.foodMultiplier > 1 ? ` (${result.foodMultiplier} Days)` : ''}:</span>
+                          <span className={`font-bold ${result.foodProvided ? 'text-emerald-700' : 'text-m3-on-surface'}`}>
+                            {result.foodProvided ? '₹0 (Provided by you)' : `₹${result.totalFood.toLocaleString('en-IN')}`}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center py-0.5">
+                          <span>Return Bus Ticket (Govt SETC / Bus):</span>
+                          <span className="font-bold text-m3-on-surface">₹{result.busFare.toLocaleString('en-IN')}</span>
+                        </div>
+                      </>
+                    )}
+                    <div className="flex justify-between items-center py-0.5">
+                      <span>Tolls &amp; Parking:</span>
+                      <span className="font-bold text-m3-on-surface">Paid directly by car owner</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                    <span>Food Allowance ({result.days} {result.days > 1 ? 'Days' : 'Day'}):</span>
-                    <span className={`font-bold ${result.foodProvided ? 'text-emerald-700' : 'text-m3-on-surface'}`}>
-                      {result.foodProvided ? '₹0' : `₹${result.totalFood.toLocaleString('en-IN')}`}
-                    </span>
-                  </div>
-                  {result.nights > 0 && (
-                    <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                      <span>Night Stay ({result.nights} {result.nights > 1 ? 'Nights' : 'Night'}):</span>
-                      <span className={`font-bold ${result.stayProvided ? 'text-emerald-700' : 'text-m3-on-surface'}`}>
-                        {result.stayProvided ? '₹0' : `₹${result.totalStay.toLocaleString('en-IN')}`}
+
+                  <div className="pt-2 border-t border-dashed border-slate-200 text-xs text-m3-on-surface-variant space-y-1">
+                    <div className="flex items-center gap-1.5 text-emerald-800 font-medium">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                      <span>Dedicated Chauffeur Duty, Food Allowance{result.type === 'oneway' ? ' & Return Bus Fare' : ''} included.</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-slate-500">
+                      <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                      <span>
+                        {result.type === 'round'
+                          ? '1 Day = Up to 12 hrs duty. Duration or hours above package is billed extra.'
+                          : 'Tolls, Parking & FASTag are paid directly by the car owner as per actual slips.'}
                       </span>
                     </div>
-                  )}
-                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                    <span>State Permit:</span>
-                    <span className="font-bold text-m3-on-surface">₹0</span>
                   </div>
-                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                    <span>Tolls:</span>
-                    <span className="font-bold text-m3-on-surface">Extra</span>
-                  </div>
-                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                    <span>Parking:</span>
-                    <span className="font-bold text-m3-on-surface">Extra</span>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                    <span>Driver Bata ({result.bataDaysLabel || '1 Day'}{result.tierNote ? ` • ${result.tierNote}` : ''}):</span>
-                    <span className="font-bold text-m3-on-surface">₹{result.totalBata.toLocaleString('en-IN')}</span>
-                  </div>
-                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                    <span>Food Allowance{result.foodMultiplier > 1 ? ` (${result.foodMultiplier} Days)` : ''}:</span>
-                    <span className={`font-bold ${result.foodProvided ? 'text-emerald-700' : 'text-m3-on-surface'}`}>
-                      {result.foodProvided ? '₹0' : `₹${result.totalFood.toLocaleString('en-IN')}`}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                    <span>Return Bus Ticket (Govt SETC / Bus):</span>
-                    <span className="font-bold text-m3-on-surface">₹{result.busFare.toLocaleString('en-IN')}</span>
-                  </div>
-                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                    <span>State Permit:</span>
-                    <span className="font-bold text-m3-on-surface">₹0</span>
-                  </div>
-                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                    <span>Tolls:</span>
-                    <span className="font-bold text-m3-on-surface">Extra</span>
-                  </div>
-                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                    <span>Parking:</span>
-                    <span className="font-bold text-m3-on-surface">Extra</span>
-                  </div>
-                </>
+                </div>
               )}
-            </div>
-
-            {/* Bill Payment Split */}
-            <div className="pt-2 border-t border-slate-200/80 space-y-1 text-[13px] sm:text-sm">
-              <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                <span>Total Fare:</span>
-                <span className="font-bold text-m3-on-surface">₹{result.total.toLocaleString('en-IN')} + Extra</span>
-              </div>
-              <div className="flex justify-between items-center py-0.5 text-emerald-700 font-medium">
-                <span>Advance to Pay:</span>
-                <span className="font-bold">-₹500</span>
-              </div>
-              <div className="flex justify-between items-center py-1 text-m3-on-surface border-t border-slate-200/80">
-                <span className="text-sm sm:text-base font-extrabold text-m3-on-surface tracking-tight">
-                  Balance at Drop <span className="text-xs font-medium text-m3-on-surface-variant">(After trip)</span>:
-                </span>
-                <span className="text-lg sm:text-xl font-black text-[#1a73e8] tracking-tight font-heading shrink-0">
-                  ₹{Math.max(0, result.total - 500).toLocaleString('en-IN')} + Extra
-                </span>
-              </div>
-            </div>
-
-            {/* Cut and Dried Notes */}
-            <div className="pt-2.5 border-t border-dashed border-slate-200 text-[11px] text-m3-on-surface-variant space-y-1.5">
-              <div className="flex items-center gap-1.5 text-emerald-800 font-medium">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>
-                  <strong>Included in Fare:</strong> Dedicated Chauffeur Duty, Food Allowance{result.type === 'oneway' ? ' & Return Bus Fare' : ''}.
-                </span>
-              </div>
-
-              <div className="flex items-center gap-1.5 text-slate-600">
-                <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                <span>
-                  {result.type === 'round'
-                    ? '1 Day = Up to 12 hrs duty. Duration or hours above package is billed extra.'
-                    : 'Tolls, Parking & FASTag are paid directly by the car owner as per actual slips.'}
-                </span>
-              </div>
             </div>
 
             {/* Direct Booking Actions */}

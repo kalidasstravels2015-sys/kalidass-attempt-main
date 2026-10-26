@@ -481,11 +481,11 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
        
       <div className="space-y-4">
         <div>
-          <label className="block text-badge font-bold text-m3-on-surface-variant uppercase mb-1.5">
-            Pickup City
+          <label className="block text-xs font-medium text-slate-600 mb-1 flex items-center gap-1.5">
+            <MapPin className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+            <span>Pickup City</span>
           </label>
           <div className="relative">
-            <MapPin className="absolute left-3.5 top-3.5 w-4 h-4 text-m3-on-surface-variant" />
             <input 
               id="vr-pickup-input"
               ref={pickupRef}
@@ -493,7 +493,7 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
               data-autocomplete-input="true"
               value={pickup}
               placeholder="e.g. Coimbatore"
-              className={`w-full pl-10 pr-16 py-3 bg-m3-surface border rounded-m3-md outline-none text-sm font-medium text-m3-on-surface transition-all scroll-mt-20 sm:scroll-mt-24 ${
+              className={`w-full pl-3.5 pr-16 py-3 bg-m3-surface border rounded-m3-md outline-none text-sm font-medium text-m3-on-surface transition-all scroll-mt-20 sm:scroll-mt-24 ${
                 fieldErrors.pickup 
                   ? 'border-m3-error ring-1 ring-m3-error bg-m3-error-container/20' 
                   : 'border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary'
@@ -532,11 +532,11 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
         </div>
 
         <div>
-          <label className="block text-badge font-bold text-m3-on-surface-variant uppercase mb-1.5">
-            Drop City
+          <label className="block text-xs font-medium text-slate-600 mb-1 flex items-center gap-1.5">
+            <Navigation className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+            <span>Drop City</span>
           </label>
           <div className="relative">
-            <Navigation className="absolute left-3.5 top-3.5 w-4 h-4 text-m3-on-surface-variant" />
             <input 
               id="vr-drop-input"
               ref={dropRef}
@@ -544,7 +544,7 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
               data-autocomplete-input="true"
               value={drop}
               placeholder="e.g. Chennai"
-              className={`w-full pl-10 pr-16 py-3 bg-m3-surface border rounded-m3-md outline-none text-sm font-medium text-m3-on-surface transition-all scroll-mt-20 sm:scroll-mt-24 ${
+              className={`w-full pl-3.5 pr-16 py-3 bg-m3-surface border rounded-m3-md outline-none text-sm font-medium text-m3-on-surface transition-all scroll-mt-20 sm:scroll-mt-24 ${
                 fieldErrors.drop 
                   ? 'border-m3-error ring-1 ring-m3-error bg-m3-error-container/20' 
                   : 'border-m3-outline focus:border-m3-primary focus:ring-2 focus:ring-m3-primary'

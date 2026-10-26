@@ -534,13 +534,13 @@ const COMMON_DISTANCES_FROM_CHENNAI = {
   'hyderabad': 630
 };
 
-// Comprehensive Chennai localities & transit hubs for resilient local fallback
 const CHENNAI_FORMS = [
   'chennai', 'airport', 'tambaram', 'guindy', 'koyambedu', 'egmore', 'central',
   'pallavaram', 'velachery', 'porur', 'annanagar', 'anna nagar', 't nagar', 't. nagar',
   'sholinganallur', 'omr', 'ecr', 'perungudi', 'thiruvanmiyur', 'adyar', 'mylapore',
   'chromepet', 'medavakkam', 'madipakkam', 'alandur', 'vadapalani', 'ambattur', 'avadi',
-  'poonamallee', 'kolathur', 'redhills', 'kilpauk', 'nungambakkam', 'triplicane', 'royapettah'
+  'poonamallee', 'kolathur', 'redhills', 'kilpauk', 'nungambakkam', 'triplicane', 'royapettah',
+  'besant nagar', 'besantnagar', 'siruseri', 'navalur'
 ];
 
 const findKnownDistance = (origin, destination) => {
@@ -566,6 +566,14 @@ const findKnownDistance = (origin, destination) => {
 
   const isOChennai = CHENNAI_FORMS.some(k => o.includes(k));
   const isDChennai = CHENNAI_FORMS.some(k => d.includes(k));
+
+  // Both pickup and drop are within Chennai (intra-city)
+  if (isOChennai && isDChennai) {
+    return {
+      distance: 19,
+      duration: '45 mins (Est)'
+    };
+  }
 
   if (isOChennai || isDChennai) {
     const target = isOChennai ? d : o;
@@ -710,8 +718,35 @@ const ERROR_MSGS = {
   locations: { en: "Enter valid pickup & drop locations", ta: "சரியான இடங்களை உள்ளிடவும்" },
   date: { en: "Date must be in future", ta: "தேதி எதிர்காலத்தில் இருக்க வேண்டும்" },
 };
+// Helper to detect if a route involves Chennai Airport
+const isAirportRoute = (orig, dest) => {
+  const o = (orig || '').toLowerCase();
+  const d = (dest || '').toLowerCase();
+  const kw = ['airport', 'terminal', 'maa', 'meenambakkam', 'chennai airport', 'kamraj domestic', 'anna international'];
+  return kw.some(k => o.includes(k) || d.includes(k));
+};
 
-
+// Fixed flat tariff benchmark for Chennai Airport Transfers
+const getAirportTransferEstimate = (locText, vehKey = '') => {
+  const t = (locText || '').toLowerCase();
+  let baseSedan = 650;
+  if (t.includes('omr') || t.includes('sholinganallur') || t.includes('siruseri') || t.includes('navalur')) {
+    baseSedan = 1250;
+  } else if (t.includes('ecr') || t.includes('mahabalipuram') || t.includes('kovalam') || t.includes('thiruvanmiyur')) {
+    baseSedan = 1650;
+  } else if (t.includes('central') || t.includes('t nagar') || t.includes('t. nagar') || t.includes('anna nagar') || t.includes('egmore') || t.includes('mylapore') || t.includes('besant nagar')) {
+    baseSedan = 950;
+  } else if (t.includes('ambattur') || t.includes('avadi') || t.includes('madhavaram')) {
+    baseSedan = 1150;
+  }
+  
+  const v = vehKey || '';
+  if (v.includes('Ertiga')) return Math.round(baseSedan * 1.5 / 50) * 50;
+  if (v.includes('Innova Crysta')) return Math.round(baseSedan * 2.0 / 50) * 50;
+  if (v.includes('Innova')) return Math.round(baseSedan * 1.8 / 50) * 50;
+  if (v.includes('Tempo') || v.includes('Urbania')) return Math.max(2400, Math.round(baseSedan * 2.8 / 50) * 50);
+  return baseSedan;
+};
 
 /**
  * @param {Object} props
@@ -742,6 +777,7 @@ export default function QuotationEngine({
   allowedTabs = null,
   initialPickup = '',
   initialDrop = '',
+  initialReturnDate = '',
   autoCalculate = false,
   isOperatorMode = false,
   operatorCallerPhone = '',
@@ -769,7 +805,7 @@ export default function QuotationEngine({
 
   const visibleTabs = allowedTabs && allowedTabs.length > 0
     ? allowedTabs
-    : (tempoOnly ? ['round', 'local'] : ['oneway', 'round', 'local'].filter(tab => tab !== 'local' || showAirportTab));
+    : ['round', 'local'];
 
   const safeInitialTab = visibleTabs.includes(initialTab) ? initialTab : (visibleTabs[0] || 'round');
   const [activeTab, setActiveTab] = useState(safeInitialTab);
@@ -801,6 +837,9 @@ export default function QuotationEngine({
   });
   const [estimate, setEstimate] = useState(0);
 
+  const [airportDetected, setAirportDetected] = useState(false);
+  const [cityAutoRouted, setCityAutoRouted] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [days, setDays] = useState(1);
   const [showBreakdown, setShowBreakdown] = useState(false);
@@ -810,14 +849,7 @@ export default function QuotationEngine({
   const [guestName, setGuestName] = useState('');
   const [guestPhone, setGuestPhone] = useState('');
   const [date, setDate] = useState(() => getDefaultDepartureTime());
-  const [returnDate, setReturnDate] = useState(() => {
-    const defaultDep = getDefaultDepartureTime();
-    const effD = initialDrop ? (findKnownDistance(initialPickup, initialDrop)?.distance || 0) : 0;
-    const req = getTripDrivingRequirements(effD, initialTab === 'round', null);
-    const minRet = getMinReturnDateTime(defaultDep, req.minRealisticHours);
-    const defaultRet = getDefaultReturnTime();
-    return defaultRet > minRet ? defaultRet : minRet;
-  });
+  const [returnDate, setReturnDate] = useState(() => initialReturnDate || '');
   const [returnClampedNotice, setReturnClampedNotice] = useState(false);
   const [showResult, setShowResult] = useState(() => {
     return Boolean(autoCalculate || (initialPickup && initialDrop));
@@ -864,7 +896,7 @@ export default function QuotationEngine({
   // Short City Round Trip Detection & Alternative Local Package Suggestion
   // Strictly for genuine intra-city trips within Chennai limits (NOT outstation / highway routes)
   const roundTripKm = distance ? Math.round(distance * 2) : 0;
-  const isShortCityRoundTrip = activeTab === 'round' && Boolean(distance && roundTripKm <= 120 && !isHighwayOrOutstation);
+  const isShortCityRoundTrip = activeTab === 'round' && !airportDetected && !cityAutoRouted && Boolean(distance && roundTripKm <= 120 && !isHighwayOrOutstation);
 
   const recLocalPkgKey = roundTripKm <= 50 ? '5hr50km' : roundTripKm <= 80 ? '8hr80km' : '12hr120km';
   const recLocalPkgLabel = roundTripKm <= 50 ? '5 Hrs / 50 Km' : roundTripKm <= 80 ? '8 Hrs / 80 Km' : '12 Hrs / 120 Km';
@@ -1185,7 +1217,7 @@ export default function QuotationEngine({
           pickup: pickup || 'Chennai',
           destination: drop || (activeTab === 'local' ? 'Chennai City' : ''),
           pickupDateTime: date,
-          returnDateTime: activeTab === 'round' ? (minReturnDateTime && returnDate < minReturnDateTime ? minReturnDateTime : returnDate) : '',
+          returnDateTime: activeTab === 'round' ? (returnDate ? (minReturnDateTime && returnDate < minReturnDateTime ? minReturnDateTime : returnDate) : '') : '',
           durationDays: activeTab === 'round' ? days : 1,
           vehicleName: vehicle,
           passengers,
@@ -1392,6 +1424,35 @@ export default function QuotationEngine({
     setDistance(distKm);
     setDuration(durStr);
 
+    const o = (pickup || pickupValueRef.current || '').trim();
+    const d = (drop || dropValueRef.current || '').trim();
+
+    // 1. Airport Route Detection: route to airport transfer mode
+    if (activeTab === 'round' && isAirportRoute(o, d)) {
+      setAirportDetected(true);
+      setCityAutoRouted(false);
+      setLoading(false);
+      setShowResult(true);
+      return;
+    }
+
+    // 2. Intra-City Route Detection: Auto-switch to Local Package directly (no 3900 outstation quote!)
+    const isHwy = isDropOutstation(d) || isDropOutstation(o) || (distKm && distKm >= 45);
+    const isCity = activeTab === 'round' && distKm && (distKm * 2 <= 100) && !isHwy;
+    if (isCity) {
+      setAirportDetected(false);
+      setCityAutoRouted(true);
+      setActiveTab('local');
+      const recPkg = distKm * 2 <= 50 ? '5hr50km' : distKm * 2 <= 80 ? '8hr80km' : '12hr120km';
+      setLocalPackage(recPkg);
+      setLoading(false);
+      setShowResult(true);
+      return;
+    }
+
+    setAirportDetected(false);
+    setCityAutoRouted(false);
+
     if (activeTab === 'round' && distKm) {
       const req = getTripDrivingRequirements(distKm, true, durStr);
       const minReturn = getMinReturnDateTime(date || getDefaultDepartureTime(), req.minRealisticHours);
@@ -1554,6 +1615,24 @@ export default function QuotationEngine({
     if (d !== drop) {
       setDrop(d);
       dropValueRef.current = d;
+    }
+
+    if (activeTab === 'round' && isAirportRoute(o, d)) {
+      setAirportDetected(true);
+      setCityAutoRouted(false);
+      setShowResult(true);
+      scrollToResult();
+      return;
+    }
+
+    // Intra-city route: auto-route directly to local package without demanding outstation return date
+    const knownCity = findKnownDistance(o, d);
+    const isHwy = isDropOutstation(d) || isDropOutstation(o) || (knownCity?.distance && knownCity.distance >= 45);
+    const isCity = activeTab === 'round' && knownCity?.distance && (knownCity.distance * 2 <= 100) && !isHwy;
+    if (isCity) {
+      applyResolvedDistance(knownCity.distance, knownCity.duration);
+      scrollToResult();
+      return;
     }
 
     if (activeTab === 'round' && !returnDate) {
@@ -1779,6 +1858,12 @@ export default function QuotationEngine({
       return;
     }
 
+    // If airport route is detected while on round, do NOT compute 3900 outstation minimum!
+    if (activeTab === 'round' && isAirportRoute(pickup, drop)) {
+      setAirportDetected(true);
+      return;
+    }
+
     // 2. OUTSTATION / POINT-TO-POINT: Round Trip & One Way
     if ((distance || autoCalculate) && vehicleData) {
       const effDistance = distance || 130;
@@ -1886,13 +1971,45 @@ export default function QuotationEngine({
 
   useEffect(() => {
     if (activeTab === 'local') {
-      setDrop('Local Sightseeing (Chennai City)');
+      if (!cityAutoRouted) {
+        setDrop('Local Sightseeing (Chennai City)');
+      }
       if (pickup === 'Chennai International Airport (MAA)') setPickup('');
     } else if (drop === 'Local Sightseeing (Chennai City)') {
       setDrop('');
       setDistance(null);
     }
-  }, [activeTab]);
+  }, [activeTab, cityAutoRouted]);
+
+  const handleWhatsAppAirport = () => {
+    if (!checkRateLimit()) return;
+    const pLoc = sanitizeInput(pickup || 'Chennai Airport (MAA)');
+    const dLoc = sanitizeInput(drop || 'Chennai City');
+    const airportEst = getAirportTransferEstimate(drop || pickup, vehicle);
+    const cleanGuestPhone = (guestPhone || '').replace(/[^0-9]/g, '').slice(-10);
+    const guestLabel = (guestName || '').trim() || (cleanGuestPhone ? `Customer (${cleanGuestPhone})` : 'Website Visitor');
+
+    const msg = `*Kalidass Travels — Chennai Airport Transfer Quotation (${quoteRefId})*
+• *Customer:* ${guestLabel}
+• *Transfer Type:* Chennai Airport Transfer (MAA)
+• *Pickup:* ${pLoc}
+• *Drop:* ${dLoc}
+• *Pickup Schedule:* ${date ? new Date(date).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : 'Immediate / Today'}
+• *Vehicle:* ${vehicle} (${passengers} Pax)
+• *Estimated Flat Fare:* ~₹${airportEst.toLocaleString('en-IN')} (Fuel, AC & Doorstep Chauffeur Included)
+• *Airport Inclusions:* 60 Min Free Waiting Buffer on Flight Delay • Zero Surge Pricing • Dedicated Boot Space
+
+Please confirm driver & vehicle availability for this airport transfer (${quoteRefId}).`;
+
+    trackEvent('booking_conversion_whatsapp', {
+      quote_id: quoteRefId,
+      estimate: airportEst,
+      trip_type: 'airport',
+      vehicle
+    });
+
+    window.open(`https://wa.me/918939539211?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
+  };
 
   const handleWhatsApp = async () => {
     // 1. Honeypot Check
@@ -2000,7 +2117,7 @@ export default function QuotationEngine({
 
     // 5. Send Data to Google Sheet Webhook if configured
     const activeSheetUrl = getActiveGoogleSheetUrl();
-    const safeReturnDate = (activeTab === 'round' && minReturnDateTime && (!returnDate || returnDate < minReturnDateTime))
+    const safeReturnDate = (activeTab === 'round' && returnDate && minReturnDateTime && returnDate < minReturnDateTime)
       ? minReturnDateTime
       : returnDate;
 
@@ -2036,12 +2153,25 @@ export default function QuotationEngine({
     }
 
     // 6. Build Crisp Official WhatsApp Quotation Message (Single Selected Vehicle + Approx Tolls/Permit + Quote Ref)
+    const isTempoBooking = tempoOnly || (vehicle && (vehicle.toLowerCase().includes('tempo') || vehicle.toLowerCase().includes('urbania')));
+    const is50PercentPayment = isTempoBooking || activeTab !== 'local';
+    const currentVehData = activeVehicles[vehicle] || (tempoOnly ? TEMPO_VEHICLES['12-Seater Luxury Force Tempo'] : vehicles['Swift Dzire']);
+    const extraKmPrice = currentVehData?.extra_km_rate || currentVehData?.round_trip_rate || (tempoOnly ? 24 : 14);
+    const extraHrPrice = currentVehData?.extra_hr_rate || (tempoOnly ? 350 : 150);
+    const advanceAmount = is50PercentPayment ? Math.round(finalEstimate * 0.5) : 500;
+    const balanceAmount = Math.max(0, finalEstimate - advanceAmount);
+    const advanceLabel = is50PercentPayment 
+      ? `50% (₹${advanceAmount.toLocaleString('en-IN')}) on cab arrival`
+      : `₹500 advance to confirm`;
+
+    const localPkgName = localPackage === '5hr50km' ? '5 Hours / 50 Km' : localPackage === '8hr80km' ? '8 Hours / 80 Km' : localPackage === '10hr100km' ? '10 Hours / 100 Km' : '12 Hours / 120 Km';
+
     const driverLine = requestedDriver ? `• *Requested Chauffeur:* ${requestedDriver}\n` : '';
     const customerLine = (guestName.trim() || cleanGuestPhone)
       ? `• *Customer:* ${guestName.trim() || 'Guest'}${cleanGuestPhone ? ` (+91 ${cleanGuestPhone})` : ''}\n`
       : '';
     const tripTypeTitle = activeTab === 'local' 
-      ? `Local Package (${localPackage === '5hr50km' ? '5 Hours / 50 Km' : localPackage === '8hr80km' ? '8 Hours / 80 Km' : '12 Hours / 120 Km'})`
+      ? `Local Package (${localPkgName})`
       : activeTab === 'oneway' ? 'One Way Drop' : `Round Trip (${days} ${days > 1 ? 'Days' : 'Day'})`;
 
     const statePermitText = breakdown?.state_permit_est > 0
@@ -2050,25 +2180,28 @@ export default function QuotationEngine({
 
     const breakdownDetails = activeTab === 'local' ? `
 *FARE SUMMARY*
-• *Quoted Package Fare:* *₹${finalEstimate.toLocaleString('en-IN')}* (${localPackage === '5hr50km' ? '5 Hrs / 50 Km' : localPackage === '8hr80km' ? '8 Hrs / 80 Km' : '12 Hrs / 120 Km'} — AC Car + Fuel + Chauffeur Included)
-• *Extra Usage (if exceeded):* ₹${vehicles[vehicle]?.extra_km_rate || 15}/km • ₹${vehicles[vehicle]?.extra_hr_rate || 150}/hr
-• *Advance to Pay:* -₹500
-• *Balance to Pay Driver (After trip):* ₹${Math.max(0, finalEstimate - 500).toLocaleString('en-IN')}
-• *Payment Terms:* ₹500 Advance to Confirm (Deducted from Bill) • Balance after trip completion.`
+• *Quoted Package Fare:* *₹${finalEstimate.toLocaleString('en-IN')}* (${localPkgName} — AC Vehicle + Fuel + Driver Included)
+• *Included Limits:* ${localPkgName}
+• *Extra Usage (if exceeded):* ₹${extraKmPrice}/km • ₹${extraHrPrice}/hr
+• *Advance Payment:* ${advanceLabel}
+• *Balance to Pay:* ₹${balanceAmount.toLocaleString('en-IN')} (Pay driver after trip completion)
+• *Terms:* Zero shed charges (meter starts at your pickup location) • Tolls & parking extra at actuals.`
     : (breakdown && !breakdown.is_city) ? `
 *FARE SUMMARY*
 • *Total Fare:* *₹${finalEstimate.toLocaleString('en-IN')} + Extra* (${breakdown.chargeable_km} km @ ₹${breakdown.rate_per_km}/km + Driver Allowance ₹${breakdown.driver_bata})
+• *Included Distance:* ${breakdown.chargeable_km} km (Extra: ₹${extraKmPrice}/km)
 ${breakdown.free_buffer_km > 0 ? `• *Free Sightseeing Buffer:* +${breakdown.free_buffer_km.toFixed(0)} km (₹0)\n` : ''}• *State Permit:* ${statePermitText}
-• *Tolls & Parking:* Extra
-• *Advance to Pay:* -₹500
-• *Balance to Pay Driver (After trip):* ₹${Math.max(0, finalEstimate - 500).toLocaleString('en-IN')} + Extra
-• *Payment Terms:* ₹500 Advance to Confirm (Deducted from Bill) • Balance after trip completion.`
+• *Tolls & Parking:* Extra at actuals
+• *Advance Payment:* ${advanceLabel}
+• *Balance to Pay Driver:* ₹${balanceAmount.toLocaleString('en-IN')} + Extra
+• *Terms:* Zero shed charges • Balance after trip completion.`
     : `
 *FARE SUMMARY*
 • *Quoted Fare:* *₹${finalEstimate.toLocaleString('en-IN')}* (AC Cab + Fuel + Driver Included)
-• *Advance to Pay:* -₹500
-• *Balance to Pay Driver (After trip):* ₹${Math.max(0, finalEstimate - 500).toLocaleString('en-IN')}
-• *Payment Terms:* ₹500 Advance to Confirm (Deducted from Bill) • Balance after trip completion.`;
+• *Included Usage:* Extra ₹${extraKmPrice}/km if exceeded
+• *Advance Payment:* ${advanceLabel}
+• *Balance to Pay Driver:* ₹${balanceAmount.toLocaleString('en-IN')}
+• *Terms:* Zero shed charges • Balance after trip completion.`;
 
     // Google Maps navigation links
     const { pickupPin: mapsPickupPin, directions: mapsDirections } = buildMapsLinks(
@@ -2179,7 +2312,7 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                   }
                   if (tab === 'round') {
                     const minReturn = getMinReturnDateTime(date || getDefaultDepartureTime(), tripReq.minRealisticHours);
-                    if (!returnDate || returnDate < minReturn) {
+                    if (returnDate && returnDate < minReturn) {
                       setReturnDate(minReturn);
                     }
                   }
@@ -2197,7 +2330,7 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                     : 'text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container-highest'
                 }`}
               >
-                <span className="capitalize">{tab === 'local' ? (isTa ? 'லோக்கல் பேக்கேஜ்' : 'Local Package') : tab === 'oneway' ? (isTa ? 'ஒரு வழி' : 'One Way') : (isTa ? 'இரு வழி' : 'Round Trip')}</span>
+                <span className="capitalize">{tab === 'local' ? (isTa ? 'லோக்கல் பேக்கேஜ்' : 'Local Package') : (isTa ? 'சுற்றுப்பயணம் (இரு வழி)' : 'Outstation (Round Trip)')}</span>
               </button>
             ))}
           </div>
@@ -2214,7 +2347,7 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
         )}
 
         {/* 1-Line Trip Summary Bar (When Quote is Displayed) — MakeMyTrip / Savaari Pattern for Zero-Scroll Initial View */}
-        {showResult && estimate > 0 && (
+        {showResult && (airportDetected || estimate > 0) && (
           <div className="bg-slate-50 border border-slate-200/90 rounded-xl px-3 py-2 flex items-center justify-between gap-2 shadow-2xs">
             <div className="min-w-0 pr-1">
               <div className="font-bold text-slate-900 text-xs sm:text-sm truncate flex items-center gap-1.5">
@@ -2226,7 +2359,7 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
               <div className="text-slate-500 text-[11px] font-medium mt-0.5 truncate flex items-center gap-2">
                 <span>{date ? date.replace('T', ' ') : ''}</span>
                 <span>•</span>
-                <span className="capitalize">{activeTab === 'local' ? (localPackage === '5hr50km' ? '5 Hr/50 Km' : localPackage === '8hr80km' ? '8 Hr/80 Km' : localPackage === '10hr100km' ? '10 Hr/100 Km' : '12 Hr/120 Km') : activeTab === 'round' ? `${days || 1} Day${(days || 1) > 1 ? 's' : ''}` : (isTa ? 'ஒரு வழி' : 'One Way')}</span>
+                <span className="capitalize">{airportDetected ? (isTa ? 'ஏர்போர்ட் பயணம்' : 'Airport Transfer') : activeTab === 'local' ? (localPackage === '5hr50km' ? '5 Hr/50 Km' : localPackage === '8hr80km' ? '8 Hr/80 Km' : localPackage === '10hr100km' ? '10 Hr/100 Km' : '12 Hr/120 Km') : activeTab === 'round' ? `${days || 1} Day${(days || 1) > 1 ? 's' : ''}` : (isTa ? 'சுற்றுப்பயணம்' : 'Round Trip')}</span>
                 {distance > 0 && <span>• ~{distance.toFixed(0)} km</span>}
               </div>
             </div>
@@ -2249,7 +2382,7 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
         )}
 
         {/* Search Inputs & Calculate CTA — Hidden when Quote is displayed, keeping DOM nodes/IDs intact */}
-        <div className={showResult && estimate > 0 ? 'hidden' : 'space-y-3 sm:space-y-3.5'}>
+        <div className={showResult && (airportDetected || estimate > 0) ? 'hidden' : 'space-y-3 sm:space-y-3.5'}>
 
         {/* Local Package Selection */}
             {activeTab === 'local' && (
@@ -2272,11 +2405,11 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
             {/* 1. Pickup Location Input Field */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label htmlFor={activeTab === 'local' ? 'local-pickup-input' : 'pickup-input'} className="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center gap-1.5">
+                <label htmlFor={activeTab === 'local' ? 'local-pickup-input' : 'pickup-input'} className="text-xs sm:text-sm font-medium text-slate-700 flex items-center gap-1.5">
                   <MapPin className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
                   <span>{isTa ? 'சென்னையில் பிக்கப் இடம்' : 'Pickup Location in Chennai'}</span>
                 </label>
-                <span className="text-xs text-m3-on-surface-variant font-medium hidden sm:inline">
+                <span className="text-xs text-slate-500 font-normal hidden sm:inline">
                   {isTa ? 'வீட்டு வாசலில் பிக்கப் சேர்க்கப்பட்டுள்ளது' : 'Doorstep Pickup Included'}
                 </span>
               </div>
@@ -2355,16 +2488,16 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
             {/* 2. Drop Location Field */}
             <div className={activeTab === 'local' ? 'hidden' : 'space-y-1.5'}>
               <div className="flex items-center justify-between">
-                <label htmlFor="drop-input" className="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center gap-1.5">
+                <label htmlFor="drop-input" className="text-xs sm:text-sm font-medium text-slate-700 flex items-center gap-1.5">
                   <Navigation className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
                   <span>{isTa ? 'டிராப் இடம் / சேருமிடம்' : 'Drop Location / City'}</span>
                 </label>
                 {distance ? (
-                  <span className="text-xs font-semibold text-m3-on-surface-variant bg-white px-2 py-0.5 rounded border border-m3-outline-variant/50">
+                  <span className="text-xs font-medium text-slate-600 bg-white px-2 py-0.5 rounded border border-m3-outline-variant/50">
                     ~{activeTab === 'round' ? (distance * 2).toFixed(0) : distance.toFixed(0)} km {activeTab === 'round' ? 'Round Trip' : 'One Way'} • {tripReq.drivingText}
                   </span>
                 ) : (
-                  <span className="text-xs text-m3-on-surface-variant font-medium hidden sm:inline">
+                  <span className="text-xs text-slate-500 font-normal hidden sm:inline">
                     {isTa ? 'தென்னிந்தியா முழுவதும் சேவை' : 'Anywhere in South India'}
                   </span>
                 )}
@@ -2587,7 +2720,7 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                   <div className="flex items-center justify-between gap-1 mb-1">
                     <label 
                       htmlFor={`${stableFormId}-pickup-date-main`} 
-                      className="text-xs font-bold text-m3-on-surface-variant flex items-center gap-1.5 cursor-pointer truncate"
+                      className="text-xs font-medium text-slate-600 flex items-center gap-1.5 cursor-pointer truncate"
                     >
                       <Calendar className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
                       <span className="truncate">{isTa ? 'புறப்படும் தேதி & நேரம்' : 'Pickup Date & Time'}</span>
@@ -2626,7 +2759,7 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                     <div className="flex items-center justify-between gap-1 mb-1">
                       <label 
                         htmlFor={`${stableFormId}-return-date-main`} 
-                        className="text-xs font-bold text-m3-on-surface-variant flex items-center gap-1.5 cursor-pointer truncate"
+                        className="text-xs font-medium text-slate-600 flex items-center gap-1.5 cursor-pointer truncate"
                       >
                         <Calendar className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
                         <span className="truncate">{isTa ? 'திரும்பும் தேதி' : 'Return Date'}</span>
@@ -2699,7 +2832,7 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                   <div className="flex items-center justify-between gap-1 mb-1">
                     <label 
                       htmlFor={`${stableFormId}-passengers`} 
-                      className="text-xs font-bold text-m3-on-surface-variant flex items-center gap-1.5 cursor-pointer truncate"
+                      className="text-xs font-medium text-slate-600 flex items-center gap-1.5 cursor-pointer truncate"
                     >
                       <Users className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
                       <span className="truncate">{isTa ? 'பயணிகள்' : 'Passengers'}</span>
@@ -2727,7 +2860,7 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                   <div className="flex items-center justify-between gap-1 mb-1">
                     <label 
                       htmlFor={`${stableFormId}-vehicle`} 
-                      className="text-xs font-bold text-m3-on-surface-variant flex items-center gap-1.5 cursor-pointer truncate"
+                      className="text-xs font-medium text-slate-600 flex items-center gap-1.5 cursor-pointer truncate"
                     >
                       <Car className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
                       <span className="truncate">{isTa ? 'வாகனம்' : (tempoOnly ? 'Force Tempo / Urbania' : 'Vehicle Model')}</span>
@@ -2808,34 +2941,115 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
         </div>
 
         {/* Dynamic Fare Result & Actions Area — Rate Summary with Complete Itemized Breakdown */}
-        {showResult && estimate > 0 && (
+        {showResult && (airportDetected || estimate > 0) && (
           <div ref={resultRef} id="quotation-fare-result-card" className="space-y-2.5 animate-in fade-in duration-200">
             
-            {/* Rate Summary Card: Standard Layout matching Airport & Outstation Engines */}
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-3 sm:p-4 space-y-2.5 shadow-sm">
-              
-              {/* 1. Official Quote Reference & 24-Hr Rate Lock Guaranteed Header */}
-              <div className="flex items-center justify-between gap-2 pb-2 border-b border-slate-100 text-xs flex-wrap">
-                <span className="font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200/80 shadow-2xs">
-                  {isTa ? `மேற்கோள் எண்: ${quoteRefId}` : `Quote Ref: ${quoteRefId}`}
-                </span>
-                <span className="font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>{isTa ? '24 மணிநேர கட்டண உத்தரவாதம் • உயர்வு இல்லை' : 'Rate Locked 24 Hrs • Zero Surge'}</span>
-                </span>
-              </div>
+            {/* Airport Transfer Result Card */}
+            {airportDetected ? (
+              <div className="bg-white border border-blue-200 rounded-2xl p-3 sm:p-4 space-y-3 shadow-sm">
+                <div className="flex items-center justify-between gap-2 pb-2 border-b border-blue-100 text-xs flex-wrap">
+                  <span className="font-mono font-bold text-blue-900 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 shadow-2xs">
+                    {isTa ? `மேற்கோள் எண்: ${quoteRefId}` : `Quote Ref: ${quoteRefId}`}
+                  </span>
+                  <span className="font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <span>{isTa ? 'நிலையான கட்டணம் • உயர்வு இல்லை' : 'Fixed Flat Fare • Zero Surge'}</span>
+                  </span>
+                </div>
 
-                  {/* 2. 1-Tap Vehicle Price Comparison Strip */}
-                  <div className="pb-2 border-b border-slate-200/80">
-                    <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 flex items-center justify-between">
-                      <span>{isTa ? 'வாகனத்தை தேர்வு செய்யவும் (1-தட்டலில் மாற்றலாம்):' : 'Select Vehicle (1-Tap Instant Comparison):'}</span>
-                      <span className="text-xs font-semibold text-m3-primary sm:hidden">
-                        ← Swipe to compare →
+                <div className="p-3 bg-blue-50/80 border border-blue-200 rounded-xl space-y-2.5 text-xs">
+                  <div className="flex items-start gap-2.5">
+                    <div className="w-8 h-8 rounded-full bg-[#1a73e8] text-white flex items-center justify-center shrink-0 mt-0.5">
+                      <Plane className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div className="font-bold text-blue-950 text-sm">
+                        {isTa ? 'சென்னை ஏர்போர்ட் டாக்ஸி முன்பதிவு' : 'Chennai Airport Transfer (MAA)'}
+                      </div>
+                      <p className="text-blue-900/90 text-xs mt-0.5 leading-relaxed">
+                        {isTa
+                          ? 'சென்னை ஏர்போர்ட் பிக்கப் மற்றும் டிராப்பிற்கு நிலையான கட்டணங்கள் (ரூ. 650 முதல்). விமான கண்காணிப்பு மற்றும் 60 நிமிட இலவச காத்திருப்பு நேரம் சேர்க்கப்பட்டுள்ளது.'
+                          : 'Guaranteed flat airport fares from ₹650. Live flight radar tracking, zero delay waiting charges & doorstep pickup included.'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Airport Vehicle Price Strip */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+                    {[
+                      { name: 'Sedan (4 Pax)', fare: getAirportTransferEstimate(drop || pickup, 'Swift Dzire') },
+                      { name: 'Ertiga (6 Pax)', fare: getAirportTransferEstimate(drop || pickup, 'Maruti Ertiga') },
+                      { name: 'Innova (7 Pax)', fare: getAirportTransferEstimate(drop || pickup, 'Innova') },
+                      { name: 'Tempo (12 Pax)', fare: getAirportTransferEstimate(drop || pickup, 'Tempo Traveller') }
+                    ].map(item => (
+                      <div key={item.name} className="p-2 bg-white rounded-lg border border-blue-200 text-center shadow-2xs">
+                        <div className="text-[11px] font-semibold text-slate-600 truncate">{item.name}</div>
+                        <div className="text-sm font-extrabold text-blue-900 mt-0.5">₹{item.fare.toLocaleString('en-IN')}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Airport Action Buttons */}
+                <div className="pt-1 space-y-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <a
+                      href="/services/chennai-airport-taxi/"
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#1a73e8] hover:bg-[#1557b0] text-white font-bold text-xs sm:text-sm shadow-md transition-all cursor-pointer min-h-[42px]"
+                    >
+                      <span>{isTa ? 'முழுமையான ஏர்போர்ட் கட்டணங்களை பார்க்க' : 'View Airport Transfers & Book (From ₹650)'}</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </a>
+                    <button
+                      type="button"
+                      onClick={handleWhatsAppAirport}
+                      className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs sm:text-sm shadow-md transition-all cursor-pointer min-h-[42px]"
+                    >
+                      <WhatsAppIcon className="w-4 h-4" />
+                      <span>{isTa ? 'வாட்ஸ்அப்' : 'WhatsApp'}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* Rate Summary Card: Standard Layout matching Airport & Outstation Engines */
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-3 sm:p-4 space-y-2.5 shadow-sm">
+                
+                {/* 1. Official Quote Reference & 24-Hr Rate Lock Guaranteed Header */}
+                <div className="flex items-center justify-between gap-2 pb-2 border-b border-slate-100 text-xs text-slate-500 font-medium">
+                  <span className="font-mono font-bold text-slate-700">
+                    {isTa ? `மேற்கோள்: ${quoteRefId}` : `Quote Ref: ${quoteRefId}`}
+                  </span>
+                  <span className="flex items-center gap-1 text-slate-600 font-semibold">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <span>{isTa ? '24 மணிநேர கட்டண உத்தரவாதம்' : 'Rate Locked for 24 Hrs'}</span>
+                  </span>
+                </div>
+
+                {/* City Auto-Routed Notice (if automatically routed from intra-city route) */}
+                {cityAutoRouted && (
+                  <div className="p-2.5 bg-blue-50 border border-blue-200 rounded-xl text-xs flex items-center justify-between gap-2 animate-in fade-in">
+                    <div className="flex items-center gap-2 text-blue-950 font-medium">
+                      <span className="text-base shrink-0">💡</span>
+                      <span className="leading-snug">
+                        {isTa 
+                          ? `உள்ளூர் பயணம் கண்டறியப்பட்டது: எங்கள் ${recLocalPkgLabel} லோக்கல் பேக்கேஜ் (₹${estimate.toLocaleString('en-IN')}) தேர்வு செய்யப்பட்டுள்ளது. ஏசி வாகனம் மற்றும் ஓட்டுநர் சேவை உட்பட.`
+                          : `Intra-city route detected: Showing our ${recLocalPkgLabel} Local City Package (₹${estimate.toLocaleString('en-IN')}) with private AC car & dedicated chauffeur.`}
                       </span>
                     </div>
-                    <div className={`flex gap-2 overflow-x-auto no-scrollbar py-1 snap-x snap-mandatory ${tempoOnly ? 'sm:grid sm:grid-cols-3 lg:grid-cols-6 sm:overflow-visible' : 'sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible'}`}>
+                  </div>
+                )}
+
+                  {/* 2. Sleek Segmented Vehicle Tabs (Savaari Style - Clean, No Price Duplication) */}
+                  <div className="pb-2 border-b border-slate-100">
+                    <div className="flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                      <span>{isTa ? 'வாகனத்தை தேர்வு செய்யவும்:' : 'Select Vehicle:'}</span>
+                      <span className="text-[11px] font-normal text-slate-400 capitalize">
+                        {isTa ? '1-தட்டலில் மாற்றலாம்' : 'Tap to switch'}
+                      </span>
+                    </div>
+                    <div className="flex gap-1.5 overflow-x-auto no-scrollbar py-0.5">
                       {activeComparisonVehicles.map((v) => {
-                        const vFare = getEstimatedFareFor(v.key);
                         const isSelected = vehicle === v.key;
                         return (
                           <button
@@ -2845,23 +3059,14 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                               setVehicle(v.key);
                               setPassengers(String(v.maxPax));
                             }}
-                            className={`shrink-0 min-w-[125px] sm:min-w-0 snap-start p-2 rounded-xl border text-left transition-all cursor-pointer relative ${
+                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
                               isSelected
-                                ? 'bg-blue-50/90 border-[#1a73e8] ring-2 ring-[#1a73e8]/30 shadow-xs'
-                                : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-200 shadow-2xs'
+                                ? 'bg-[#1a73e8] text-white shadow-xs'
+                                : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
                             }`}
                           >
-                            <div className="flex items-center justify-between gap-1">
-                              <span className={`text-xs font-bold truncate ${isSelected ? 'text-[#0b57d0]' : 'text-slate-800'}`}>
-                                {v.name}
-                              </span>
-                            </div>
-                            <div className="text-xs text-slate-500 font-medium mt-0.5 truncate">
-                              {v.pax}
-                            </div>
-                            <div className={`text-xs sm:text-sm font-extrabold mt-1 ${isSelected ? 'text-[#0b57d0]' : 'text-slate-900'}`}>
-                              ₹{vFare.toLocaleString('en-IN')}
-                            </div>
+                            <span>{v.name}</span>
+                            <span className={`text-[10px] ${isSelected ? 'text-blue-100' : 'text-slate-500'}`}>({v.maxPax}p)</span>
                           </button>
                         );
                       })}
@@ -2899,7 +3104,8 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                   {/* 3. MakeMyTrip / Savaari Style Fare Card with 3-Stage Payment Timeline */}
                   {(() => {
                     const isTempoBooking = tempoOnly || (vehicle && (vehicle.toLowerCase().includes('tempo') || vehicle.toLowerCase().includes('urbania')));
-                    const advanceAmount = isTempoBooking ? Math.round(estimate * 0.5) : 500;
+                    const is50PercentPayment = isTempoBooking || activeTab !== 'local';
+                    const advanceAmount = is50PercentPayment ? Math.round(estimate * 0.5) : 500;
                     const balanceAmount = Math.max(0, estimate - advanceAmount);
                     
                     const currentVehData = activeVehicles[vehicle] || (tempoOnly ? TEMPO_VEHICLES['12-Seater Luxury Force Tempo'] : vehicles['Swift Dzire']);
@@ -2926,106 +3132,62 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                           : (isTa ? '12 மணி/120 கிமீ' : '12 Hr / 120 Km');
 
                     return (
-                      <div className="bg-slate-50 border border-slate-200/90 rounded-2xl p-3 sm:p-4 text-left space-y-3 shadow-2xs">
-                        {/* 1. Hero Header: Vehicle & Prominent Total Fare */}
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-slate-200">
+                      <div className="bg-slate-50/70 border border-slate-200/90 rounded-2xl p-3 sm:p-4 text-left space-y-3">
+                        {/* 1. Hero Header: Vehicle & Clean Total Fare */}
+                        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2.5 pb-2.5 border-b border-slate-200">
                           <div>
-                            <div className="flex items-center gap-1.5 flex-wrap">
-                              <span className="text-sm sm:text-base font-extrabold text-slate-900">
-                                {vehicle}
-                              </span>
-                              <span className="text-xs text-slate-500 font-medium">
-                                · {activeTab === 'local' ? localPkgLabel : `${coveredKm} km (${packageDaysCount} ${packageDaysCount > 1 ? (isTa ? 'நாட்கள்' : 'Days') : (isTa ? 'நாள்' : 'Day')})`}
-                              </span>
-                            </div>
-                            <div className="mt-1">
-                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-bold rounded-full">
-                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                                <span>{isTa ? '100% எரிபொருள், ஏசி & ஓட்டுநர் படி அடங்கும்' : '100% Fuel, AC & Driver Allowance Included'}</span>
-                              </span>
-                            </div>
+                            <span className="text-base font-extrabold text-slate-900 block">
+                              {vehicle}
+                            </span>
+                            <span className="text-xs text-slate-500 font-medium mt-0.5 block">
+                              {tempoOnly ? (isTa ? 'ஏசி • சொகுசு புஷ்பேக் இருக்கைகள் • மியூசிக் சிஸ்டம்' : 'AC • Luxury Pushback Seats • Sound System') : (isTa ? 'ஏசி • தொழில்முறை ஓட்டுநர் • சுத்தமான கேப்' : 'AC • Professional Chauffeur • Clean Cab')}
+                            </span>
                           </div>
-                          <div className="text-left sm:text-right shrink-0">
+                          
+                          <div className="flex flex-col items-start sm:items-end shrink-0">
                             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
                               {isTa ? 'மொத்த பயணக் கட்டணம்' : 'Total Fare'}
                             </span>
                             <span className="text-2xl sm:text-3xl font-black text-slate-900 font-heading leading-tight block">
                               ₹{estimate.toLocaleString('en-IN')}
                             </span>
+                            
+                            {/* Immediate Tolls & Parking Qualification (Outstation / One-Way) */}
                             {activeTab !== 'local' && (
-                              <span className="block text-[10px] font-semibold text-amber-700">
-                                {isTa ? '+ டோல், பார்க்கிங் தனி (ரசீதுப்படி)' : '+ Tolls & Parking Extra (Pay at actuals)'}
+                              <span className="text-xs font-semibold text-amber-800/90 mt-0.5 block">
+                                {isTa ? '+ டோல் & பார்க்கிங் தனி (ரசீதுப்படி)' : '+ Tolls & parking extra (as per actual receipts)'}
                               </span>
                             )}
+
+                            {/* Clear Package Limit & Overage Info (Clean Savaari Typography) */}
+                            <span className="text-xs font-semibold text-slate-700 mt-1 block">
+                              {activeTab === 'local' ? (
+                                isTa 
+                                  ? `${localPkgLabel} அடங்கும் • கூடுதல்: ₹${extraKmPrice}/கிமீ | ₹${extraHrPrice}/மணி` 
+                                  : `Includes ${localPkgLabel} • Extra: ₹${extraKmPrice}/km | ₹${extraHrPrice}/hr`
+                              ) : (
+                                isTa
+                                  ? `${coveredKm} கிமீ அடங்கும் (${packageDaysCount} ${packageDaysCount > 1 ? 'நாட்கள்' : 'நாள்'}) • கூடுதல்: ₹${extraKmPrice}/கிமீ`
+                                  : `Includes ${coveredKm} km (${packageDaysCount} ${packageDaysCount > 1 ? 'Days' : 'Day'}) • Extra: ₹${extraKmPrice}/km`
+                              )}
+                            </span>
                           </div>
                         </div>
 
-                        {/* 2. Reassuring 2-Stage Payment Schedule */}
-                        <div className="bg-white border border-slate-200/90 rounded-xl p-2 sm:p-2.5 space-y-1.5 shadow-2xs">
-                          <div className="flex items-center justify-between">
-                            <span className="text-[10px] sm:text-[11px] font-extrabold text-slate-600 uppercase tracking-wider">
-                              {isTa ? 'கட்டணம் செலுத்தும் முறை (2 நிலைகள்):' : 'Payment Schedule (2 Easy Steps):'}
-                            </span>
-                            <span className="text-[10px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                              {isTa ? '2 தவணைகள்' : 'Pay in 2 Parts'}
+                        {/* 2. Reassuring 1-Line Payment Schedule (Savaari Style - Zero Duplicate Numbers) */}
+                        <div className="p-2.5 bg-white rounded-xl border border-slate-200 text-xs text-slate-700 flex items-center justify-between gap-2 shadow-2xs">
+                          <div className="flex items-center gap-2">
+                            <span className="text-base shrink-0">💳</span>
+                            <span className="font-semibold text-slate-800">
+                              {is50PercentPayment 
+                                ? (isTa ? 'கட்டணம்: வாகனம் வந்ததும் 50%, மீதி பயணம் முடிந்ததும்' : 'Payment: Pay 50% on cab arrival, balance after trip ends')
+                                : (isTa ? 'கட்டணம்: முன்பணம் ₹500, மீதி பயணம் முடிந்ததும்' : 'Payment: ₹500 advance to confirm, balance after trip ends')}
                             </span>
                           </div>
-                          
-                          <div className="grid grid-cols-2 gap-2">
-                            {/* Step 1: On Arrival / Advance */}
-                            <div className="bg-blue-50/60 p-2 sm:p-2.5 rounded-lg border border-blue-200/80">
-                              <div className="flex items-center gap-1 sm:gap-1.5">
-                                <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-blue-100 text-[#1a73e8] font-bold text-[10px] sm:text-xs flex items-center justify-center shrink-0">1</span>
-                                <span className="text-[11px] sm:text-xs font-bold text-blue-900 truncate">
-                                  {isTempoBooking 
-                                    ? (isTa ? 'வாகனம் வந்ததும்' : 'On Cab Arrival')
-                                    : (isTa ? 'முன்பணம்' : 'Advance to Confirm')}
-                                </span>
-                              </div>
-                              <div className="mt-1">
-                                <div className="text-xs sm:text-sm font-black text-[#1a73e8]">
-                                  {isTempoBooking ? `50% (₹${advanceAmount.toLocaleString('en-IN')})` : `₹${advanceAmount.toLocaleString('en-IN')}`}
-                                </div>
-                                <div className="text-[10px] text-slate-600 truncate">
-                                  {isTempoBooking 
-                                    ? (isTa ? 'வாசல் வந்ததும் ரொக்கம்/UPI' : 'Pay when cab arrives')
-                                    : (isTa ? 'டிரைவர் & கேப் லாக் செய்ய' : 'Locks cab & driver')}
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Step 2: Post-Trip Balance */}
-                            <div className="bg-slate-50/90 p-2 sm:p-2.5 rounded-lg border border-slate-200">
-                              <div className="flex items-center gap-1 sm:gap-1.5">
-                                <span className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-slate-200 text-slate-700 font-bold text-[10px] sm:text-xs flex items-center justify-center shrink-0">2</span>
-                                <span className="text-[11px] sm:text-xs font-bold text-slate-700 truncate">{isTa ? 'பயணம் முடிந்ததும்' : 'Post-Trip Balance'}</span>
-                              </div>
-                              <div className="mt-1">
-                                <div className="text-xs sm:text-sm font-black text-slate-900">
-                                  ₹{balanceAmount.toLocaleString('en-IN')}{activeTab !== 'local' ? (isTa ? ' + கூடுதல்' : ' + Extra') : ''}
-                                </div>
-                                <div className="text-[10px] text-slate-500 truncate">{isTa ? 'ஓட்டுநரிடம் நேரடியாக' : 'Pay driver directly'}</div>
-                              </div>
-                            </div>
-                          </div>
+                          <span className="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 shrink-0">
+                            {isTa ? 'பாதுகாப்பானது' : 'Transparent'}
+                          </span>
                         </div>
-
-                        {/* 3. Streamlined Essential Limits & Policy Strip */}
-                        <div className="space-y-2 text-xs text-slate-700">
-                          {/* 1-Line Limits & Trust Strip */}
-                          <div className="flex flex-wrap items-center justify-between gap-1.5 p-2 bg-white rounded-xl border border-slate-200/90 text-[11px] shadow-2xs">
-                            <span className="font-semibold text-slate-800 flex items-center gap-1.5">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                              <span>
-                                {isTa 
-                                  ? `${coveredKm} கிமீ அடங்கும் (கூடுதல் ₹${extraKmPrice}/கிமீ • ₹${extraHrPrice}/மணி)` 
-                                  : `${coveredKm} km included (Extra ₹${extraKmPrice}/km • ₹${extraHrPrice}/hr)`}
-                              </span>
-                            </span>
-                            <span className="text-[10px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/80">
-                              {isTa ? 'ஷெட் கட்டணம் இல்லை • டோல் ரசீதுப்படி' : 'Zero shed charges • Tolls at actuals'}
-                            </span>
-                          </div>
 
                           {/* Subtle Expandable Fare Breakup Button */}
                           <div className="border border-slate-200/80 rounded-xl overflow-hidden bg-white">
@@ -3096,42 +3258,34 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                                   <span>{isTa ? 'மொத்தக் கட்டணம்:' : 'Total Calculated Fare:'}</span>
                                   <span>₹{estimate.toLocaleString('en-IN')}{activeTab !== 'local' ? (isTa ? ' + கூடுதல்' : ' + Extra') : ''}</span>
                                 </div>
+
+                                {/* Standard Inclusions & Doorstep Policy */}
+                                <div className="pt-2 mt-1.5 border-t border-slate-100 space-y-1 text-[11px]">
+                                  <div className="flex items-center gap-1.5 text-slate-700 font-medium">
+                                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                                    <span>{isTa ? '100% எரிபொருள், ஏசி & ஓட்டுநர் படி அடங்கும்' : '100% Fuel, AC & Chauffeur allowance included'}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1.5 text-slate-700 font-medium">
+                                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                                    <span>{isTa ? 'ஷெட் கட்டணம் இல்லை (பிக்கப் இடத்திலிருந்து கணக்கீடு)' : 'Zero garage charges (Billing begins from your pickup point)'}</span>
+                                  </div>
+                                </div>
                               </div>
                             )}
                           </div>
-
-                          {/* Fast Booking Contact Details (Compact 1-Row Optional) */}
-                          <div className="flex gap-2 pt-0.5">
-                            <input
-                              type="text"
-                              value={guestName}
-                              onChange={(e) => setGuestName(e.target.value)}
-                              placeholder={isTa ? "உங்கள் பெயர் (விருப்பத்தேர்வு)" : "Your Name (Optional)"}
-                              className="flex-1 h-9 bg-white border border-slate-200/90 rounded-xl px-2.5 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-[#1a73e8] shadow-2xs"
-                            />
-                            <input
-                              type="tel"
-                              maxLength={10}
-                              value={guestPhone}
-                              onChange={(e) => setGuestPhone(e.target.value.replace(/[^0-9]/g, ''))}
-                              placeholder={isTa ? "மொபைல் எண் (விருப்பத்தேர்வு)" : "Mobile Number (Optional)"}
-                              className="flex-1 h-9 bg-white border border-slate-200/90 rounded-xl px-2.5 text-xs font-mono text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-[#1a73e8] shadow-2xs"
-                            />
-                          </div>
                         </div>
-                      </div>
-                    );
-                  })()}
+                      );
+                    })()}
 
-                  {/* 7. Action Buttons: WhatsApp & Call Desk */}
-                  <div className="pt-1.5 space-y-1.5">
+                  {/* 5. Direct 1-Tap Booking Actions: WhatsApp & Call Desk */}
+                  <div className="pt-1.5">
                     <div className="flex gap-2">
                       <button
                         type="button"
                         id="book-tempo-whatsapp-btn"
                         onClick={handleWhatsApp}
                         data-direct-whatsapp="true"
-                        className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs sm:text-sm shadow-md transition-all active:scale-[0.99] cursor-pointer min-h-[42px]"
+                        className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs sm:text-sm shadow-md transition-all active:scale-[0.99] cursor-pointer min-h-[44px]"
                       >
                         <WhatsAppIcon className="w-4 h-4 shrink-0" />
                         <span>{isTa ? 'வாட்ஸ்அப்பில் முன்பதிவு செய்க' : 'Book on WhatsApp'}</span>
@@ -3139,49 +3293,18 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
 
                       <a
                         href="tel:+918939539211"
-                        className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-full border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-xs sm:text-sm transition-colors cursor-pointer shrink-0 min-h-[42px]"
+                        className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-full border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-xs sm:text-sm transition-colors cursor-pointer shrink-0 min-h-[44px]"
                         aria-label="Call +91 89395 39211"
                       >
                         <Phone className="w-4 h-4 text-slate-600 shrink-0" />
                         <span>Call Desk</span>
                       </a>
                     </div>
-                    <p className="text-[11px] text-slate-500 text-center font-medium">
-                      {isTa
-                        ? `✓ கட்டண உத்தரவாதம் 24 மணிநேரம் (${quoteRefId})`
-                        : `✓ Rate locked for 24 hours (${quoteRefId})`}
-                    </p>
                   </div>
-                </div>
-
-                {/* Smart Airport Quick-Access Callout — Hidden when quote is displayed to preserve initial screen view */}
-                {showAirportTab && !showResult && (
-                  <div className="pt-1">
-                    <a
-                      href="/services/chennai-airport-taxi/"
-                      className="flex items-center justify-between p-2.5 px-3.5 bg-m3-surface-container-high hover:bg-m3-surface-container-highest border border-m3-outline-variant hover:border-m3-primary/40 rounded-m3-xl transition-all text-xs group cursor-pointer"
-                    >
-                      <div className="flex items-center gap-2 min-w-0">
-                        <span className="p-1 sm:p-1.5 bg-m3-primary/10 text-m3-primary rounded-m3-full shrink-0 group-hover:scale-110 transition-transform">
-                          <Plane className="w-3.5 h-3.5" />
-                        </span>
-                        <div className="truncate text-left">
-                          <span className="font-bold text-m3-on-surface">
-                            {isTa ? 'சென்னை ஏர்போர்ட் டாக்ஸியா?' : 'Chennai Airport Pickup / Drop?'}
-                          </span>
-                          <span className="hidden sm:inline text-m3-on-surface-variant ml-1.5 text-xs">
-                            {isTa ? 'நிலையான கட்டணம் ₹650 முதல்' : 'Flat rates from ₹650'}
-                          </span>
-                        </div>
-                      </div>
-                      <span className="inline-flex items-center gap-0.5 text-xs font-bold text-m3-primary shrink-0 group-hover:translate-x-0.5 transition-transform">
-                        {isTa ? 'கட்டணங்கள்' : 'Flat Rates'} <ChevronRight className="w-3.5 h-3.5" />
-                      </span>
-                    </a>
-                  </div>
-                )}
               </div>
             )}
+          </div>
+        )}
       </div>
 
 

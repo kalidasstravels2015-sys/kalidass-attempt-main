@@ -21,6 +21,12 @@ test.describe('Outstation and Home Page: Do not bring tour booking quotation for
     await dropInput.fill('Tirupati, Andhra Pradesh');
     await dropInput.blur();
 
+    // Fill return date for outstation round trip
+    const returnInput = bookingCard.locator('input[id*="return-date"], input[type="datetime-local"]').nth(1);
+    const pickupVal = await bookingCard.locator('input[type="datetime-local"]').first().inputValue();
+    const returnVal = pickupVal.slice(0, 11) + '22:00';
+    await returnInput.fill(returnVal);
+
     // Click View Instant Fare
     const calcBtn = bookingCard.locator('button:has-text("View Instant Fare"), button:has-text("Recalculate Fare")').first();
     await expect(calcBtn).toBeVisible();
@@ -35,11 +41,9 @@ test.describe('Outstation and Home Page: Do not bring tour booking quotation for
     await expect(bookingCard.locator('.font-heading:has-text("₹6,000")')).toHaveCount(0);
 
     // Verify standard outstation formula elements ARE present
-    await expect(bookingCard.locator('text=/km · Fuel & Chauffeur Duty Included').first()).toBeVisible();
-    await expect(bookingCard.locator('text=Tolls:').first()).toBeVisible();
-    await expect(bookingCard.locator('text=State Permit:').first()).toBeVisible();
-    await expect(bookingCard.locator('text=Advance to Pay:').first()).toBeVisible();
-    await expect(bookingCard.locator('text=Balance to Pay Driver').first()).toBeVisible();
+    await expect(bookingCard.locator('text=100% Fuel, Chauffeur & AC Included').first()).toBeVisible();
+    await expect(bookingCard.locator('text=Payment:').first()).toBeVisible();
+    await expect(bookingCard.locator('text=advance to confirm').first()).toBeVisible();
 
     // Base fare should be ~₹4,880 (or 250km min ₹3,900) - definitely NOT ₹6,000 tour rate
     const fareHeading = bookingCard.locator('.font-heading:has-text("₹")').first();
@@ -71,6 +75,12 @@ test.describe('Outstation and Home Page: Do not bring tour booking quotation for
     await dropInput.fill('Tirupati, Andhra Pradesh');
     await dropInput.blur();
 
+    // Fill return date for outstation round trip
+    const returnInput = bookingSection.locator('input[id*="return-date"], input[type="datetime-local"]').nth(1);
+    const pickupVal = await bookingSection.locator('input[type="datetime-local"]').first().inputValue();
+    const returnVal = pickupVal.slice(0, 11) + '22:00';
+    await returnInput.fill(returnVal);
+
     const calcBtn = bookingSection.locator('button:has-text("View Instant Fare"), button:has-text("Recalculate Fare")').first();
     await expect(calcBtn).toBeVisible();
     await calcBtn.click();
@@ -83,8 +93,9 @@ test.describe('Outstation and Home Page: Do not bring tour booking quotation for
     await expect(bookingSection.locator('.font-heading:has-text("₹6,000")')).toHaveCount(0);
 
     // Verify standard outstation elements
-    await expect(bookingSection.locator('text=/km · Fuel & Chauffeur Duty Included').first()).toBeVisible();
-    await expect(bookingSection.locator('text=Balance to Pay Driver').first()).toBeVisible();
+    await expect(bookingSection.locator('text=100% Fuel, Chauffeur & AC Included').first()).toBeVisible();
+    await expect(bookingSection.locator('text=Payment:').first()).toBeVisible();
+    await expect(bookingSection.locator('text=advance to confirm').first()).toBeVisible();
 
     const fareHeading = bookingSection.locator('.font-heading:has-text("₹")').first();
     const fareText = await fareHeading.innerText();

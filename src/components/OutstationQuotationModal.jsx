@@ -422,17 +422,14 @@ export default function OutstationQuotationModal() {
   const [pickup, setPickup] = useState('');
   const [drop, setDrop] = useState('');
   const [date, setDate] = useState(() => getDefaultDepartureTime());
-  const [returnDate, setReturnDate] = useState(() => {
-    const defaultDep = getDefaultDepartureTime();
-    return getMinReturnDateTime(defaultDep, 8);
-  });
+  const [returnDate, setReturnDate] = useState('');
   const [days, setDays] = useState(1);
 
   const [distance, setDistance] = useState(null);
   const [duration, setDuration] = useState(null);
   const [estimate, setEstimate] = useState(0);
   const [breakdown, setBreakdown] = useState(null);
-  const [showBreakdown, setShowBreakdown] = useState(true);
+  const [showBreakdown, setShowBreakdown] = useState(false);
   const [loading, setLoading] = useState(false);
   const [gettingLocation, setGettingLocation] = useState(false);
   const [errors, setErrors] = useState({});
@@ -571,7 +568,7 @@ export default function OutstationQuotationModal() {
     if (tripType === 'round' && distKm) {
       const req = getTripDrivingRequirements(distKm, true, durStr);
       const minReturn = getMinReturnDateTime(date || getDefaultDepartureTime(), req.minRealisticHours);
-      if (!returnDate || returnDate < minReturn) {
+      if (returnDate && returnDate < minReturn) {
         setReturnDate(minReturn);
         const computed = calculateCalendarDays(date || getDefaultDepartureTime(), minReturn);
         setDays(Math.max(req.minDays, computed));
@@ -760,7 +757,6 @@ export default function OutstationQuotationModal() {
       const defaultDep = getDefaultDepartureTime();
       if (!date) {
         setDate(defaultDep);
-        setReturnDate(getMinReturnDateTime(defaultDep, 8));
       }
       setIsOpen(true);
       document.body.style.overflow = 'hidden';
@@ -998,40 +994,19 @@ Please save my quote & confirm live cab availability.` + omMapsBlock;
             </div>
           </div>
 
-          {/* 2. Trip Type Switcher (Round Trip vs One Way Drop) */}
+          {/* 2. Trip Type Indicator (Outstation Round Trip) */}
           <div>
             <label className="block text-xs font-bold text-m3-on-surface mb-1">
-              Select Trip Type:
+              Trip Type:
             </label>
-            <div className="grid grid-cols-2 gap-2 p-1 bg-m3-surface-container rounded-m3-xl border border-m3-outline-variant/60 text-xs font-bold">
-              <button
-                type="button"
-                onClick={() => {
-                  setTripType('round');
-                  const minReturn = getMinReturnDateTime(date || getDefaultDepartureTime(), tripReq.minRealisticHours);
-                  if (!returnDate || returnDate < minReturn) {
-                    setReturnDate(minReturn);
-                  }
-                }}
-                className={`py-2 px-3 rounded-m3-lg text-center transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                  tripType === 'round'
-                    ? 'bg-m3-primary text-m3-on-primary shadow-xs'
-                    : 'text-m3-on-surface-variant hover:text-m3-on-surface'
-                }`}
-              >
+            <div className="flex items-center justify-between p-2.5 bg-m3-surface-container rounded-m3-xl border border-m3-outline-variant/60 text-xs">
+              <span className="font-bold text-m3-primary flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                 <span>Round Trip (இரு வழி)</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setTripType('oneway')}
-                className={`py-2 px-3 rounded-m3-lg text-center transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                  tripType === 'oneway'
-                    ? 'bg-m3-primary text-m3-on-primary shadow-xs'
-                    : 'text-m3-on-surface-variant hover:text-m3-on-surface'
-                }`}
-              >
-                <span>One Way Drop (ஒரு வழி)</span>
-              </button>
+              </span>
+              <span className="text-[11px] font-semibold text-m3-on-surface-variant bg-white px-2 py-0.5 rounded-full border border-slate-200">
+                Min 250 km/day
+              </span>
             </div>
           </div>
 
@@ -1214,7 +1189,7 @@ Please save my quote & confirm live cab availability.` + omMapsBlock;
                     setDate(val);
                     if (val && tripType === 'round') {
                       const minReturn = getMinReturnDateTime(val, tripReq.minRealisticHours);
-                      if (!returnDate || returnDate < minReturn) {
+                      if (returnDate && returnDate < minReturn) {
                         setReturnDate(minReturn);
                       }
                     }
@@ -1238,7 +1213,7 @@ Please save my quote & confirm live cab availability.` + omMapsBlock;
                       <span>Return Date &amp; Time *</span>
                     </label>
                     <span className="text-[10px] font-bold text-m3-primary bg-m3-primary/10 px-1.5 py-0.5 rounded-m3-xs">
-                      {days} {days > 1 ? 'Days' : 'Day'}
+                      {returnDate ? `${days} ${days > 1 ? 'Days' : 'Day'}` : 'Select'}
                     </span>
                   </div>
                   <input
@@ -1378,120 +1353,87 @@ Please save my quote & confirm live cab availability.` + omMapsBlock;
                 return null;
               })()}
 
-              {/* Hero Price & Inclusions Card */}
-              <div className="p-3 sm:p-4 rounded-m3-xl bg-m3-surface-container-low border border-m3-outline-variant/60">
-                <div className="flex items-baseline justify-between gap-2 flex-wrap">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-2xl sm:text-3xl font-extrabold text-m3-on-surface font-heading leading-none">
-                      ₹{estimate.toLocaleString('en-IN')}
-                    </span>
-                    <span className="text-[10px] font-bold text-m3-on-surface bg-m3-surface-container-high px-2 py-0.5 rounded-full uppercase tracking-wider">
-                      Transparent Estimate
-                    </span>
-                  </div>
-                  <span className="text-xs font-semibold text-m3-on-surface-variant">
-                    ~{tripType === 'round' ? (effDist * 2).toFixed(0) : effDist.toFixed(0)} km {tripType === 'round' ? 'Round Trip' : 'Drop'}{tripReq.drivingText ? ` · ${tripReq.drivingText}` : ''}
-                  </span>
-                </div>
-
-                <p className="mt-1.5 text-xs text-m3-on-surface-variant font-medium leading-relaxed">
-                  ₹{breakdown?.rate_per_km || (tripType === 'round' ? vehicle.roundTripRate : vehicle.oneWayRate)}/km · Fuel &amp; Chauffeur Day Bata Included{breakdown?.free_buffer_km > 0 ? ` · +${breakdown.free_buffer_km.toFixed(0)} km free buffer` : ''}
-                </p>
-
-                <div className="mt-1 text-[11px] text-m3-on-surface-variant font-medium">
-                  <span>Tolls &amp; Parking: <strong className="text-m3-on-surface">Extra</strong> · State Permit: <strong className="text-m3-on-surface">{breakdown?.state_permit_est > 0 ? `₹${breakdown.state_permit_est.toLocaleString('en-IN')}` : '₹0'}</strong></span>
-                </div>
-              </div>
-
-              {/* Rate Summary in Card — Restaurant Bill Style */}
-              <div className="border border-slate-200 rounded-m3-xl p-3.5 bg-slate-100 shadow-xs text-[13px] sm:text-sm space-y-2.5">
+              {/* Fare Result Card — Savaari Clean Standard */}
+              <div className="border border-slate-200 rounded-m3-xl p-3.5 sm:p-4 bg-slate-100 shadow-xs text-xs sm:text-sm space-y-3">
                 {/* Header: Vehicle & Total Fare */}
-                <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                <div className="flex items-start justify-between gap-3 pb-2.5 border-b border-slate-200">
                   <div>
                     <span className="font-extrabold text-sm sm:text-base text-m3-on-surface">{vehicle.name}</span>
-                    <div className="text-[11px] text-m3-on-surface-variant font-medium mt-0.5">
-                      ~{(distance * (tripType === 'round' ? 2 : 1)).toFixed(0)} km {tripType === 'round' ? 'Round Trip' : 'One Way Drop'}
-                      {breakdown?.chargeable_km && breakdown?.rate_per_km ? ` (${Math.round(breakdown.chargeable_km)} km @ ₹${breakdown.rate_per_km}/km)` : ''}
+                    <div className="text-xs text-m3-on-surface-variant font-medium mt-0.5">
+                      ~{(distance * (tripType === 'round' ? 2 : 1)).toFixed(0)} km {tripType === 'round' ? 'Round Trip' : 'Drop'}{tripReq.drivingText ? ` · ${tripReq.drivingText}` : ''}
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-[11px] text-m3-on-surface-variant font-medium">Total Fare</div>
-                    <div className="text-xl sm:text-2xl font-extrabold text-m3-on-surface">₹{estimate.toLocaleString('en-IN')} <span className="text-xs font-semibold text-m3-on-surface-variant">+ Extra</span></div>
+                  <div className="text-right shrink-0">
+                    <div className="text-xs text-m3-on-surface-variant font-medium">Total Fare</div>
+                    <div className="text-2xl sm:text-3xl font-extrabold text-m3-on-surface font-heading leading-tight">
+                      ₹{estimate.toLocaleString('en-IN')}
+                    </div>
+                    <div className="text-[11px] font-medium text-slate-500 mt-0.5">
+                      + Tolls &amp; parking extra (as per actual receipts)
+                    </div>
                   </div>
                 </div>
 
-                {/* Bill Items */}
-                <div className="space-y-1.5">
-                  <div className="flex justify-between items-center text-m3-on-surface-variant">
-                    <span>Cab Hire ({vehicle.name} • Fuel included):</span>
-                    <span className="font-bold text-m3-on-surface">₹{(breakdown?.km_cost || estimate).toLocaleString('en-IN')}</span>
-                  </div>
+                {/* 1-Line Payment Reassurance */}
+                <div className="text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200/80 rounded-lg px-3 py-2 flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span>Pay 50% on cab arrival, balance after trip ends</span>
+                </div>
 
-                  {breakdown?.driver_bata > 0 && (
-                    <div className="flex justify-between items-center text-m3-on-surface-variant">
-                      <span>Driver Allowance ({days} {days > 1 ? 'Days' : 'Day'}):</span>
-                      <span className="font-bold text-m3-on-surface">₹{breakdown.driver_bata.toLocaleString('en-IN')}</span>
+                {/* Expandable Complete Fare Breakup */}
+                <div className="pt-1 border-t border-slate-200">
+                  <button
+                    type="button"
+                    onClick={() => setShowBreakdown(!showBreakdown)}
+                    className="w-full flex items-center justify-between py-2 text-xs font-bold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer"
+                  >
+                    <span>View Complete Fare Breakup &amp; Inclusions</span>
+                    <ChevronDown className={`w-4 h-4 text-slate-500 transition-transform duration-200 ${showBreakdown ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {showBreakdown && (
+                    <div className="pt-2 pb-1 space-y-2 text-xs border-t border-slate-200/60 animate-in fade-in duration-150">
+                      <div className="space-y-1.5 text-m3-on-surface-variant">
+                        <div className="flex justify-between items-center py-0.5">
+                          <span>Cab Hire ({vehicle.name} • Fuel included):</span>
+                          <span className="font-bold text-m3-on-surface">₹{(breakdown?.km_cost || estimate).toLocaleString('en-IN')}</span>
+                        </div>
+                        {breakdown?.driver_bata > 0 && (
+                          <div className="flex justify-between items-center py-0.5">
+                            <span>Driver Allowance ({days} {days > 1 ? 'Days' : 'Day'}):</span>
+                            <span className="font-bold text-m3-on-surface">₹{breakdown.driver_bata.toLocaleString('en-IN')}</span>
+                          </div>
+                        )}
+                        {breakdown?.free_buffer_km > 0 && (
+                          <div className="flex justify-between items-center py-0.5">
+                            <span>Free Sightseeing (+{breakdown.free_buffer_km.toFixed(0)} km):</span>
+                            <span className="font-bold text-emerald-700">₹0</span>
+                          </div>
+                        )}
+                        <div className="flex justify-between items-center py-0.5">
+                          <span>State Permit:</span>
+                          <span className="font-bold text-m3-on-surface">
+                            {breakdown?.state_permit_est > 0 ? `₹${breakdown.state_permit_est.toLocaleString('en-IN')}` : '₹0'}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center py-0.5">
+                          <span>Tolls &amp; Parking:</span>
+                          <span className="font-bold text-m3-on-surface">As per actual receipts</span>
+                        </div>
+                      </div>
+
+                      <div className="pt-2 border-t border-dashed border-slate-200 text-xs text-m3-on-surface-variant space-y-1">
+                        <div className="flex items-center gap-1.5 text-emerald-800 font-medium">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                          <span>100% Fuel, Chauffeur &amp; AC Included. Zero garage charges.</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 text-slate-500">
+                          <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                          <span>1 Day = Up to 24 hrs / 250 km. Duration or km beyond package is billed extra.</span>
+                        </div>
+                      </div>
                     </div>
                   )}
-
-                  {breakdown?.free_buffer_km > 0 && (
-                    <div className="flex justify-between items-center text-m3-on-surface-variant">
-                      <span>Free Sightseeing (+{breakdown.free_buffer_km.toFixed(0)} km):</span>
-                      <span className="font-bold text-emerald-700">₹0</span>
-                    </div>
-                  )}
-
-                  <div className="flex justify-between items-center text-m3-on-surface-variant">
-                    <span>State Permit:</span>
-                    <span className="font-bold text-m3-on-surface">
-                      {breakdown?.state_permit_est > 0
-                        ? `₹${breakdown.state_permit_est.toLocaleString('en-IN')}`
-                        : '₹0'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-m3-on-surface-variant">
-                    <span>Tolls:</span>
-                    <span className="font-bold text-m3-on-surface">Extra</span>
-                  </div>
-                  <div className="flex justify-between items-center text-m3-on-surface-variant">
-                    <span>Parking:</span>
-                    <span className="font-bold text-m3-on-surface">Extra</span>
-                  </div>
-                </div>
-
-                {/* Bill Payment Split */}
-                <div className="pt-2 border-t border-slate-200/80 space-y-1 text-[13px] sm:text-sm">
-                  <div className="flex justify-between items-center py-0.5 text-m3-on-surface-variant">
-                    <span>Total Bill:</span>
-                    <span className="font-bold text-m3-on-surface">₹{estimate.toLocaleString('en-IN')} + Extra</span>
-                  </div>
-                  <div className="flex justify-between items-center py-0.5 text-emerald-700 font-medium">
-                    <span>Advance to Pay:</span>
-                    <span className="font-bold">-₹500</span>
-                  </div>
-                  <div className="flex justify-between items-center py-1 text-m3-on-surface border-t border-slate-200/80">
-                    <span className="text-sm sm:text-base font-extrabold text-m3-on-surface tracking-tight">
-                      Balance to Pay Driver <span className="text-xs font-medium text-m3-on-surface-variant">(After trip)</span>:
-                    </span>
-                    <span className="text-lg sm:text-xl font-black text-[#1a73e8] tracking-tight font-heading shrink-0">
-                      ₹{Math.max(0, estimate - 500).toLocaleString('en-IN')} + Extra
-                    </span>
-                  </div>
-                </div>
-
-                {/* Cut and Dried Notes */}
-                <div className="pt-2.5 border-t border-dashed border-slate-200 text-[11px] text-m3-on-surface-variant space-y-1.5">
-                  <div className="flex items-center gap-1.5 text-emerald-800 font-medium">
-                    <Car className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                    <span>
-                      <strong>Included in Fare:</strong> Dedicated AC Cab, 100% Fuel &amp; Driver Allowance.
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-1.5 text-slate-600">
-                    <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                    <span>1 Day = Up to 24 hrs / 250 km. Duration or km beyond package is billed extra.</span>
-                  </div>
                 </div>
               </div>
 

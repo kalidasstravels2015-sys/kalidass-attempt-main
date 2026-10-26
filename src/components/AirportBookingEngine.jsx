@@ -286,6 +286,7 @@ export default function AirportBookingEngine({
   // UI state
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [locationPickerOpen, setLocationPickerOpen] = useState(false);
+  const [showFareBreakup, setShowFareBreakup] = useState(false);
   const [quoteRefId, setQuoteRefId] = useState('#QT-101');
 
   const destInputRef = useRef(null);
@@ -774,7 +775,7 @@ export default function AirportBookingEngine({
 
   const inputWrap  = 'relative flex items-center bg-slate-50 hover:bg-slate-100/80 border border-slate-200 rounded-xl px-3 py-2 min-h-[44px] focus-within:ring-2 focus-within:ring-[#1a73e8] focus-within:border-[#1a73e8] transition-all';
   const inputField = 'bg-transparent w-full outline-none text-sm font-semibold text-slate-800 pr-16 placeholder:text-slate-400 placeholder:text-xs placeholder:font-normal';
-  const labelCls   = 'block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1';
+  const labelCls   = 'block text-xs font-medium text-slate-600 mb-1';
 
   return (
     <>
@@ -786,8 +787,9 @@ export default function AirportBookingEngine({
         >
           <div className="bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
             <div className="max-w-3xl mx-auto px-3 py-2 flex items-center gap-2">
-              <span className={'shrink-0 text-xs font-extrabold px-2.5 py-1 rounded-full border ' + (direction === 'pickup' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-slate-100 text-slate-700 border-slate-200')}>
-                ✈ {direction === 'pickup' ? 'PICKUP' : 'DROP'}
+              <span className={'shrink-0 text-xs font-bold px-2.5 py-1 rounded-full border flex items-center gap-1 ' + (direction === 'pickup' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-slate-100 text-slate-700 border-slate-200')}>
+                <Plane className="w-3.5 h-3.5 shrink-0" />
+                <span>{direction === 'pickup' ? 'PICKUP' : 'DROP'}</span>
               </span>
               <div className="flex items-center gap-1.5 min-w-0 flex-1">
                 <span className="text-xs font-bold text-slate-800 truncate">{direction === 'pickup' ? 'MAA Airport' : (pickup.split(',')[0] || 'Pickup')}</span>
@@ -872,8 +874,18 @@ export default function AirportBookingEngine({
           {/* 2. Direction Fields: From (Pickup) & To (Drop) */}
           {/* FROM FIELD */}
           <div>
-            <label htmlFor="airport-from-input" className={labelCls}>
-              {direction === 'pickup' ? 'From (Airport Pickup Hub)' : 'From (Your Doorstep / Area)'}
+            <label htmlFor="airport-from-input" className={`${labelCls} flex items-center gap-1.5`}>
+              {direction === 'pickup' ? (
+                <>
+                  <Plane className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
+                  <span>From (Airport Pickup Hub)</span>
+                </>
+              ) : (
+                <>
+                  <MapPin className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
+                  <span>From (Your Doorstep / Area)</span>
+                </>
+              )}
             </label>
             <div className={inputWrap}>
               <input
@@ -923,8 +935,18 @@ export default function AirportBookingEngine({
           {/* TO FIELD */}
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label htmlFor="airport-to-input" className={labelCls}>
-                {direction === 'pickup' ? 'To (Your Destination / Hotel / City)' : 'To (Airport Drop)'}
+              <label htmlFor="airport-to-input" className={`${labelCls} flex items-center gap-1.5`}>
+                {direction === 'pickup' ? (
+                  <>
+                    <MapPin className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
+                    <span>To (Your Destination / Hotel / City)</span>
+                  </>
+                ) : (
+                  <>
+                    <Plane className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
+                    <span>To (Airport Drop)</span>
+                  </>
+                )}
               </label>
               {distanceKm > 0 && (
                 <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
@@ -984,7 +1006,7 @@ export default function AirportBookingEngine({
               <div className="flex items-center justify-between gap-1 mb-1">
                 <label 
                   htmlFor="airport-pickup-datetime" 
-                  className="text-xs font-bold text-slate-600 flex items-center gap-1.5 cursor-pointer truncate min-w-0"
+                  className="text-xs font-medium text-slate-600 flex items-center gap-1.5 cursor-pointer truncate min-w-0"
                 >
                   <Calendar className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
                   <span className="truncate">Pickup Date &amp; Time</span>
@@ -1005,7 +1027,7 @@ export default function AirportBookingEngine({
               <div className="flex items-center justify-between gap-1 mb-1">
                 <label 
                   htmlFor="airport-flight-details" 
-                  className="text-xs font-bold text-slate-600 flex items-center gap-1.5 cursor-pointer truncate min-w-0"
+                  className="text-xs font-medium text-slate-600 flex items-center gap-1.5 cursor-pointer truncate min-w-0"
                 >
                   <Plane className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
                   <span className="truncate">
@@ -1054,7 +1076,7 @@ export default function AirportBookingEngine({
             </div>
           </div>
 
-          {/* 6. Inline Result Card Breakdown (Directly below button, matching Outstation Cabs screenshot!) */}
+          {/* 6. Inline Result Card Breakdown (Savaari Clean Standard) */}
           {showResult && breakdown && (
             <div
               id="airport-fare-result-card"
@@ -1067,19 +1089,8 @@ export default function AirportBookingEngine({
                 {vehicle} {direction === 'pickup' ? drop : pickup} ₹{estimate}
               </div>
 
-              {/* Official Quote Ref & 24-Hr Price Lock Header */}
-              <div className="flex items-center justify-between gap-2 pb-2 border-b border-slate-200/80 flex-wrap">
-                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0b57d0] bg-[#1a73e8]/10 px-2.5 py-0.5 rounded-full">
-                  <span>Official Quote Ref: {quoteRefId}</span>
-                </span>
-                <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-800 bg-emerald-100/90 border border-emerald-200 px-2 py-0.5 rounded-full">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>Rate Locked 24 Hrs • Send to WhatsApp to Save</span>
-                </span>
-              </div>
-
               {/* Header: Vehicle Name, Pax & Total Fare */}
-              <div className="flex items-center justify-between gap-3 pb-2.5 border-b border-slate-200">
+              <div className="flex items-start justify-between gap-3 pb-2.5 border-b border-slate-200">
                 <div>
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <span className="text-base font-extrabold text-slate-900">
@@ -1096,22 +1107,33 @@ export default function AirportBookingEngine({
                 <div className="text-right shrink-0">
                   <div className="text-xs text-slate-500 font-medium">Total Fare</div>
                   <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading leading-tight">
-                    ₹{estimate.toLocaleString('en-IN')}<span className="text-xs sm:text-sm font-semibold text-slate-500 ml-1">+ Extra</span>
+                    ₹{estimate.toLocaleString('en-IN')}
+                  </div>
+                  <div className="text-[11px] font-medium text-slate-500 mt-0.5">
+                    + Tolls &amp; parking extra (as per actual receipts)
                   </div>
                 </div>
               </div>
 
-              {/* 1-Tap Vehicle Price Comparison Strip */}
-              <div className="pb-2 border-b border-slate-200/80">
-                <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 flex items-center justify-between">
-                  <span>Select Vehicle (1-Tap Instant Comparison):</span>
+              {/* 1-Line Payment Reassurance */}
+              <div className="text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200/80 rounded-lg px-3 py-2 flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <span>
+                  {breakdown.is_outstation 
+                    ? 'Pay 50% on cab arrival, balance after trip ends' 
+                    : 'Pay directly to driver at drop • Zero advance required'}
+                </span>
+              </div>
+
+              {/* 1-Tap Vehicle Switcher Tabs (No duplicate prices) */}
+              <div className="pb-1">
+                <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                  Select Vehicle:
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
                   {AIRPORT_COMPARISON_VEHICLES.map((item) => {
                     const cap = VEHICLE_CAPACITY[item.key] ?? 4;
                     const isSelected = vehicle === item.key;
-                    const userLoc = (direction === 'pickup' ? drop : pickup).trim();
-                    const cmpFareObj = calculateOutstationAirportFare(breakdown.actual_km || distanceKm || 130, item.key, userLoc);
                     return (
                       <button
                         key={item.key}
@@ -1120,22 +1142,14 @@ export default function AirportBookingEngine({
                           setVehicle(item.key);
                           setPassengers(String(cap));
                         }}
-                        className={`p-2 rounded-xl border text-left transition-all cursor-pointer relative ${
+                        className={`p-2 rounded-xl border text-center transition-all cursor-pointer ${
                           isSelected
                             ? 'bg-blue-50/90 border-[#1a73e8] ring-2 ring-[#1a73e8]/30 shadow-xs'
                             : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-200 shadow-2xs'
                         }`}
                       >
-                        <div className="flex items-center justify-between gap-1">
-                          <span className={`text-xs font-bold truncate ${isSelected ? 'text-[#0b57d0]' : 'text-slate-800'}`}>
-                            {item.shortLabel}
-                          </span>
-                        </div>
-                        <div className="text-xs text-slate-500 font-medium mt-0.5 truncate">
-                          {cap} Pax
-                        </div>
-                        <div className={`text-xs sm:text-sm font-extrabold mt-1 ${isSelected ? 'text-[#0b57d0]' : 'text-slate-900'}`}>
-                          ₹{cmpFareObj.total_fare.toLocaleString('en-IN')}
+                        <div className={`text-xs font-bold truncate ${isSelected ? 'text-[#0b57d0]' : 'text-slate-800'}`}>
+                          {item.shortLabel}
                         </div>
                       </button>
                     );
@@ -1143,110 +1157,64 @@ export default function AirportBookingEngine({
                 </div>
               </div>
 
-              {/* Itemized Bill Lines */}
-              <div className="space-y-1.5 text-[13px] sm:text-sm">
-                <div className="flex justify-between items-center py-0.5 text-slate-700">
-                  <span>Cab Hire ({breakdown?.chargeable_km && breakdown?.rate_per_km ? `${Math.round(breakdown.chargeable_km)} km @ ₹${breakdown.rate_per_km}/km` : `${vehicle} • Fuel included`}):</span>
-                  <span className="font-bold text-slate-900">₹{breakdown.km_cost.toLocaleString('en-IN')}</span>
-                </div>
-                {breakdown.driver_bata > 0 && (
-                  <div className="flex justify-between items-center py-0.5 text-slate-700">
-                    <span>Driver Allowance (1 Day):</span>
-                    <span className="font-bold text-slate-900">₹{breakdown.driver_bata.toLocaleString('en-IN')}</span>
+              {/* Expandable Complete Fare Breakup */}
+              <div className="pt-1 border-t border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => setShowFareBreakup(!showFareBreakup)}
+                  className="w-full flex items-center justify-between py-2 text-xs font-bold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer"
+                >
+                  <span>View Complete Fare Breakup &amp; Inclusions</span>
+                  <ChevronDown className={`w-4 h-4 text-slate-500 transition-transform duration-200 ${showFareBreakup ? 'rotate-180' : ''}`} />
+                </button>
+
+                {showFareBreakup && (
+                  <div className="pt-2 pb-1 space-y-2 text-xs border-t border-slate-200/60 animate-in fade-in duration-150">
+                    <div className="space-y-1.5 text-slate-600">
+                      <div className="flex justify-between items-center py-0.5">
+                        <span>Cab Hire ({breakdown?.chargeable_km && breakdown?.rate_per_km ? `${Math.round(breakdown.chargeable_km)} km @ ₹${breakdown.rate_per_km}/km` : `${vehicle} • Fuel included`}):</span>
+                        <span className="font-bold text-slate-900">₹{breakdown.km_cost.toLocaleString('en-IN')}</span>
+                      </div>
+                      {breakdown.driver_bata > 0 && (
+                        <div className="flex justify-between items-center py-0.5">
+                          <span>Driver Allowance (1 Day):</span>
+                          <span className="font-bold text-slate-900">₹{breakdown.driver_bata.toLocaleString('en-IN')}</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between items-center py-0.5">
+                        <span>State Permit:</span>
+                        <span className="font-bold text-slate-900">
+                          {breakdown.is_outstation && breakdown.state_permit_est > 0
+                            ? `₹${breakdown.state_permit_est.toLocaleString('en-IN')}`
+                            : '₹0 (Included / Not applicable)'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center py-0.5">
+                        <span>Tolls &amp; Parking:</span>
+                        <span className="font-bold text-slate-900">As per actual receipts</span>
+                      </div>
+                    </div>
+
+                    <div className="pt-2 border-t border-dashed border-slate-200 text-slate-600 space-y-1">
+                      <div className="flex items-center gap-1.5 text-emerald-800 font-medium">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <span>Dedicated AC Cab, 100% Fuel &amp; Chauffeur included.</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-slate-500">
+                        <ShieldCheck className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
+                        <span>
+                          {direction === 'pickup'
+                            ? 'Free live flight tracking & pickup coordination at terminal exit.'
+                            : 'Doorstep pickup with verified commercial chauffeur.'}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 )}
-                <div className="flex justify-between items-center py-0.5 text-slate-700">
-                  <span>State Permit:</span>
-                  <span className="font-bold text-slate-900">
-                    {breakdown.is_outstation && breakdown.state_permit_est > 0
-                      ? `₹${breakdown.state_permit_est.toLocaleString('en-IN')}`
-                      : '₹0'}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center py-0.5 text-slate-700">
-                  <span>Tolls:</span>
-                  <span className="font-bold text-slate-900">Extra</span>
-                </div>
-                <div className="flex justify-between items-center py-0.5 text-slate-700">
-                  <span>Parking:</span>
-                  <span className="font-bold text-slate-900">Extra</span>
-                </div>
-              </div>
-
-              {/* Bill Payment Split */}
-              <div className="pt-2 border-t-2 border-slate-200 space-y-1 text-[13px] sm:text-sm">
-                <div className="flex justify-between items-center py-0.5 text-slate-700">
-                  <span>Total Fare:</span>
-                  <span className="font-bold text-slate-900">
-                    ₹{estimate.toLocaleString('en-IN')} + Extra
-                  </span>
-                </div>
-                <div className="flex justify-between items-center py-0.5 text-emerald-700 font-medium">
-                  <span>Advance to Pay:</span>
-                  <span className="font-bold">
-                    -₹{(breakdown.advance_to_pay || 500).toLocaleString('en-IN')}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center py-1 sm:py-1.5 border-t border-slate-200/80 mb-0.5">
-                  <span className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">
-                    Balance to Pay Driver <span className="text-xs font-medium text-slate-500">(After trip)</span>:
-                  </span>
-                  <span className="text-xl sm:text-2xl font-black text-[#1a73e8] tracking-tight font-heading shrink-0">
-                    ₹{Math.max(0, estimate - (breakdown.advance_to_pay || 500)).toLocaleString('en-IN')} + Extra
-                  </span>
-                </div>
-              </div>
-
-              {/* Inclusions & Highlights */}
-              <div className="pt-2.5 border-t border-dashed border-slate-200 text-xs text-slate-600 space-y-1.5">
-                <div className="flex items-center gap-1.5 text-emerald-800 font-medium">
-                  <Car className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>
-                    <strong>Included in Fare:</strong> Dedicated AC Cab, 100% Fuel &amp; Driver Allowance.
-                  </span>
-                </div>
-                <div className="flex items-center gap-1.5 text-slate-600">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
-                  <span>
-                    {direction === 'pickup'
-                      ? 'Chauffeur allotted before take-off. Personalized name placard & free live flight tracking at arrival exit.'
-                      : 'Guaranteed punctual doorstep arrival with verified commercial yellow-board chauffeur.'}
-                  </span>
-                </div>
-              </div>
-
-              {/* Optional Customer Contact for Faster Dispatch */}
-              <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-2.5 sm:p-3 space-y-1.5 text-left">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-slate-700 flex items-center gap-1.5">
-                    <User className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Your Name &amp; Mobile Number (Optional)</span>
-                  </span>
-                  <span className="text-xs text-slate-500 font-medium bg-white px-2 py-0.5 rounded border border-slate-200">
-                    Faster Coordination
-                  </span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <input
-                    type="text"
-                    value={guestName}
-                    onChange={(e) => setGuestName(e.target.value)}
-                    placeholder="Your Name (e.g. Kumar)"
-                    className="w-full h-9 bg-white border border-slate-200 rounded-lg px-2.5 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-m3-primary"
-                  />
-                  <input
-                    type="tel"
-                    maxLength={10}
-                    value={guestPhone}
-                    onChange={(e) => setGuestPhone(e.target.value.replace(/[^0-9]/g, ''))}
-                    placeholder="10-Digit Mobile Number"
-                    className="w-full h-9 bg-white border border-slate-200 rounded-lg px-2.5 text-xs font-mono text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-m3-primary"
-                  />
-                </div>
               </div>
 
               {/* Action Buttons: WhatsApp & Call Desk */}
-              <div className="pt-2 space-y-2">
+              <div className="pt-1 space-y-2">
                 <div className="flex flex-col sm:flex-row gap-2">
                   <button
                     type="button"
