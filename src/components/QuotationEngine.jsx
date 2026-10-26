@@ -134,7 +134,7 @@ const TEMPO_COMPARISON_VEHICLES = [
     models: '12S Force Tempo',
     pax: '12 Pax',
     maxPax: 12,
-    bags: '12 Bags',
+    bags: '3–4 Trolleys',
     tag: 'Most Popular'
   },
   {
@@ -143,7 +143,7 @@ const TEMPO_COMPARISON_VEHICLES = [
     models: '14S Medium WB',
     pax: '14 Pax',
     maxPax: 14,
-    bags: '14 Bags',
+    bags: '5–6 Trolleys',
     tag: 'Extra Boot'
   },
   {
@@ -152,7 +152,7 @@ const TEMPO_COMPARISON_VEHICLES = [
     models: '17S 4020 WB',
     pax: '17 Pax',
     maxPax: 17,
-    bags: '18 Bags',
+    bags: '6–7 Trolleys',
     tag: 'Pilgrims & Teams'
   },
   {
@@ -161,7 +161,7 @@ const TEMPO_COMPARISON_VEHICLES = [
     models: '20S High Roof',
     pax: '20 Pax',
     maxPax: 20,
-    bags: '20 Bags',
+    bags: '7–8 Trolleys',
     tag: 'Family Marriages'
   },
   {
@@ -170,7 +170,7 @@ const TEMPO_COMPARISON_VEHICLES = [
     models: '26S Mini Bus',
     pax: '26 Pax',
     maxPax: 26,
-    bags: '25 Bags',
+    bags: '10–12 Bags',
     tag: 'Large Delegations'
   },
   {
@@ -179,7 +179,7 @@ const TEMPO_COMPARISON_VEHICLES = [
     models: 'Force Urbania',
     pax: '12 Pax',
     maxPax: 12,
-    bags: '12 Bags',
+    bags: '6–8 Trolleys',
     tag: 'VIP Luxury'
   }
 ];
@@ -809,7 +809,7 @@ export default function QuotationEngine({
 
   const safeInitialTab = visibleTabs.includes(initialTab) ? initialTab : (visibleTabs[0] || 'round');
   const [activeTab, setActiveTab] = useState(safeInitialTab);
-  const [localPackage, setLocalPackage] = useState(tempoOnly ? '5hr50km' : '8hr80km');
+  const [localPackage, setLocalPackage] = useState(tempoOnly ? '10hr100km' : '8hr80km');
   const [vehicle, setVehicle] = useState(defaultVehicle);
   const [passengers, setPassengers] = useState(defaultPax);
   const [pickup, setPickup] = useState(() => initialPickup || '');
@@ -1061,8 +1061,9 @@ export default function QuotationEngine({
       const pkgCost = (
         localPackage === '5hr50km' ? vData.local_5hr_pkg
         : localPackage === '8hr80km' ? vData.local_8hr_pkg
+        : localPackage === '10hr100km' ? vData.local_10hr_pkg
         : vData.local_12hr_pkg
-      ) || (tempoOnly ? 4200 : 2000);
+      ) || (tempoOnly ? 6500 : 2000);
       return pkgCost;
     }
     if (!distance) return 0;
@@ -1835,6 +1836,7 @@ export default function QuotationEngine({
       const pkgCost = (
         localPackage === '5hr50km' ? vehicleData.local_5hr_pkg
         : localPackage === '8hr80km' ? vehicleData.local_8hr_pkg
+        : localPackage === '10hr100km' ? vehicleData.local_10hr_pkg
         : vehicleData.local_12hr_pkg
       ) || 2000;
 
@@ -1848,13 +1850,15 @@ export default function QuotationEngine({
         extra_km_rate: vehicleData.extra_km_rate || 15,
         extra_hr_rate: vehicleData.extra_hr_rate || 150,
         inclusions: [
-          localPackage === '5hr50km' ? '50 Km Limit' : localPackage === '8hr80km' ? '80 Km Limit' : '120 Km Limit',
-          localPackage === '5hr50km' ? '5 Hours Limit' : localPackage === '8hr80km' ? '8 Hours Limit' : '12 Hours Limit',
+          localPackage === '5hr50km' ? '50 Km Limit' : localPackage === '8hr80km' ? '80 Km Limit' : localPackage === '10hr100km' ? '100 Km Limit' : '120 Km Limit',
+          localPackage === '5hr50km' ? '5 Hours Limit' : localPackage === '8hr80km' ? '8 Hours Limit' : localPackage === '10hr100km' ? '10 Hours Limit' : '12 Hours Limit',
           'AC Vehicle & Fuel Included',
           'Chauffeur Duty Included'
         ]
       });
-      setShowResult(true);
+      if (isAuto) {
+        setShowResult(true);
+      }
       return;
     }
 
@@ -2317,7 +2321,11 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                     }
                   }
                   if (tab === 'local') {
-                    if (pickup) setShowResult(true);
+                    if (autoCalculate) {
+                      setShowResult(true);
+                    } else {
+                      setShowResult(false);
+                    }
                   } else if (pickup && drop && distance) {
                     setShowResult(true);
                   } else {
@@ -2348,36 +2356,56 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
 
         {/* 1-Line Trip Summary Bar (When Quote is Displayed) — MakeMyTrip / Savaari Pattern for Zero-Scroll Initial View */}
         {showResult && (airportDetected || estimate > 0) && (
-          <div className="bg-slate-50 border border-slate-200/90 rounded-xl px-3 py-2 flex items-center justify-between gap-2 shadow-2xs">
-            <div className="min-w-0 pr-1">
-              <div className="font-bold text-slate-900 text-xs sm:text-sm truncate flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
-                <span className="truncate">{pickup ? pickup.split(',')[0] : 'Chennai'}</span>
-                <span className="text-slate-400">➔</span>
-                <span className="truncate">{drop ? drop.split(',')[0] : (activeTab === 'local' ? (isTa ? 'லோக்கல் டூர்' : 'Local Tour') : (isTa ? 'சேருமிடம்' : 'Destination'))}</span>
+          <div className="space-y-2">
+            <div className="bg-slate-50 border border-slate-200/90 rounded-xl px-3 py-2 flex items-center justify-between gap-2 shadow-2xs">
+              <div className="min-w-0 pr-1">
+                <div className="font-bold text-slate-900 text-xs sm:text-sm truncate flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
+                  <span className="truncate">{pickup ? pickup.split(',')[0] : 'Chennai'}</span>
+                  <span className="text-slate-400">➔</span>
+                  <span className="truncate">{drop ? drop.split(',')[0] : (activeTab === 'local' ? (isTa ? 'லோக்கல் டூர்' : 'Local Tour') : (isTa ? 'சேருமிடம்' : 'Destination'))}</span>
+                </div>
+                <div className="text-slate-500 text-[11px] font-medium mt-0.5 truncate flex items-center gap-2">
+                  <span>{date ? date.replace('T', ' ') : ''}</span>
+                  <span>•</span>
+                  <span className="capitalize">{airportDetected ? (isTa ? 'ஏர்போர்ட் பயணம்' : 'Airport Transfer') : activeTab === 'local' ? (localPackage === '5hr50km' ? '5 Hr/50 Km' : localPackage === '8hr80km' ? '8 Hr/80 Km' : localPackage === '10hr100km' ? '10 Hr/100 Km' : '12 Hr/120 Km') : activeTab === 'round' ? `${days || 1} Day${(days || 1) > 1 ? 's' : ''}` : (isTa ? 'சுற்றுப்பயணம்' : 'Round Trip')}</span>
+                  {distance > 0 && <span>• ~{distance.toFixed(0)} km</span>}
+                </div>
               </div>
-              <div className="text-slate-500 text-[11px] font-medium mt-0.5 truncate flex items-center gap-2">
-                <span>{date ? date.replace('T', ' ') : ''}</span>
-                <span>•</span>
-                <span className="capitalize">{airportDetected ? (isTa ? 'ஏர்போர்ட் பயணம்' : 'Airport Transfer') : activeTab === 'local' ? (localPackage === '5hr50km' ? '5 Hr/50 Km' : localPackage === '8hr80km' ? '8 Hr/80 Km' : localPackage === '10hr100km' ? '10 Hr/100 Km' : '12 Hr/120 Km') : activeTab === 'round' ? `${days || 1} Day${(days || 1) > 1 ? 's' : ''}` : (isTa ? 'சுற்றுப்பயணம்' : 'Round Trip')}</span>
-                {distance > 0 && <span>• ~{distance.toFixed(0)} km</span>}
-              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowResult(false);
+                  setTimeout(() => {
+                    const pEl = document.getElementById(`${stableFormId}-pickup`);
+                    if (pEl) pEl.focus();
+                  }, 100);
+                }}
+                className="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg text-blue-600 font-bold text-xs shrink-0 flex items-center gap-1 shadow-2xs cursor-pointer hover:border-blue-400 transition-colors"
+                title={isTa ? 'பயண விவரங்களை மாற்ற' : 'Edit pickup, drop or dates'}
+              >
+                <Edit2 className="w-3 h-3" />
+                <span>{isTa ? 'மாற்று' : 'Edit'}</span>
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={() => {
-                setShowResult(false);
-                setTimeout(() => {
-                  const pEl = document.getElementById(`${stableFormId}-pickup`);
-                  if (pEl) pEl.focus();
-                }, 100);
-              }}
-              className="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg text-blue-600 font-bold text-xs shrink-0 flex items-center gap-1 shadow-2xs cursor-pointer hover:border-blue-400 transition-colors"
-              title={isTa ? 'பயண விவரங்களை மாற்ற' : 'Edit pickup, drop or dates'}
-            >
-              <Edit2 className="w-3 h-3" />
-              <span>{isTa ? 'மாற்று' : 'Edit'}</span>
-            </button>
+
+            {/* Quick Package Switcher Pills inside Quote View for 1-Tap Switching */}
+            {activeTab === 'local' && (
+              <div className="flex justify-center pb-0.5">
+                <div className="bg-m3-surface-container-high p-1 rounded-m3-lg flex text-[11px] sm:text-xs font-bold w-full border border-m3-outline-variant gap-1">
+                  {['5hr50km', '8hr80km', '10hr100km', '12hr120km'].map(pkg => (
+                    <button
+                      key={`quote-${pkg}`}
+                      type="button"
+                      onClick={() => setLocalPackage(pkg)}
+                      className={`flex-1 px-1.5 py-1.5 rounded-m3-md transition-all min-h-[34px] font-bold ${localPackage === pkg ? 'bg-white text-m3-primary shadow-m3-1 border border-m3-outline-variant/60' : 'text-m3-on-surface-variant hover:text-m3-on-surface'}`}
+                    >
+                      {pkg === '5hr50km' ? (isTa ? '5 மணி/50 கிமீ' : '5h / 50km') : pkg === '8hr80km' ? (isTa ? '8 மணி/80 கிமீ' : '8h / 80km') : pkg === '10hr100km' ? (isTa ? '10 மணி/100 கிமீ' : '10h / 100km') : (isTa ? '12 மணி/120 கிமீ' : '12h / 120km')}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -2387,15 +2415,15 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
         {/* Local Package Selection */}
             {activeTab === 'local' && (
               <div className="flex justify-center pb-0.5">
-                <div className="bg-m3-surface-container-high p-1 rounded-m3-lg flex text-xs font-bold w-full border border-m3-outline-variant">
-                  {['5hr50km', '8hr80km', '12hr120km'].map(pkg => (
+                <div className="bg-m3-surface-container-high p-1 rounded-m3-lg flex text-[11px] sm:text-xs font-bold w-full border border-m3-outline-variant gap-1">
+                  {['5hr50km', '8hr80km', '10hr100km', '12hr120km'].map(pkg => (
                     <button
                       key={pkg}
                       type="button"
                       onClick={() => setLocalPackage(pkg)}
-                      className={`flex-1 px-2 py-2 rounded-m3-md transition-all min-h-[36px] font-bold ${localPackage === pkg ? 'bg-white text-m3-primary shadow-m3-1 border border-m3-outline-variant/60' : 'text-m3-on-surface-variant hover:text-m3-on-surface'}`}
+                      className={`flex-1 px-1.5 py-2 rounded-m3-md transition-all min-h-[36px] font-bold ${localPackage === pkg ? 'bg-white text-m3-primary shadow-m3-1 border border-m3-outline-variant/60' : 'text-m3-on-surface-variant hover:text-m3-on-surface'}`}
                     >
-                      {pkg === '5hr50km' ? (isTa ? '5 மணி / 50 கிமீ' : '5Hrs / 50Kms') : pkg === '8hr80km' ? (isTa ? '8 மணி / 80 கிமீ' : '8Hrs / 80Kms') : (isTa ? '12 மணி / 120 கிமீ' : '12Hrs / 120Kms')}
+                      {pkg === '5hr50km' ? (isTa ? '5 மணி / 50 கிமீ' : '5h / 50km') : pkg === '8hr80km' ? (isTa ? '8 மணி / 80 கிமீ' : '8h / 80km') : pkg === '10hr100km' ? (isTa ? '10 மணி / 100 கிமீ' : '10h / 100km') : (isTa ? '12 மணி / 120 கிமீ' : '12h / 120km')}
                     </button>
                   ))}
                 </div>
@@ -2703,7 +2731,7 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                   <Navigation className="w-3.5 h-3.5 text-m3-primary shrink-0" />
                   <span className="truncate">
                     <strong className="text-m3-on-surface font-bold">{isTa ? 'பேக்கேஜ் எல்லை:' : 'Coverage:'}</strong>{' '}
-                    <span className="font-semibold text-m3-on-surface-variant">Chennai City Limits ({localPackage === '5hr50km' ? '5 Hrs / 50 Km' : localPackage === '8hr80km' ? '8 Hrs / 80 Km' : '12 Hrs / 120 Km'})</span>
+                    <span className="font-semibold text-m3-on-surface-variant">Chennai City Limits ({localPackage === '5hr50km' ? '5 Hrs / 50 Km' : localPackage === '8hr80km' ? '8 Hrs / 80 Km' : localPackage === '10hr100km' ? '10 Hrs / 100 Km' : '12 Hrs / 120 Km'})</span>
                   </span>
                 </div>
                 <span className="text-xs font-semibold text-m3-on-surface-variant bg-m3-surface-container-high px-2 py-0.5 rounded border border-m3-outline-variant/60 shrink-0">

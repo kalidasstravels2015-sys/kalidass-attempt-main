@@ -131,6 +131,16 @@ test.describe('Tempo Traveller Rental in Chennai Passenger-First Flow & SEO', ()
     await expect(faqSection).toContainText(/Can the Tempo Traveller drop each passenger at their individual homes upon return\?/);
   });
 
+  test('Fleet section displays realistic luggage capacities without fake rooftop carrier on 12-seater', async ({ page }) => {
+    const fleetSection = page.locator('#fleet-section');
+    await expect(fleetSection).toBeVisible();
+
+    // 12-seater shows 3–4 Trolleys in boot, 8–10 Packs in cabin, and No Carrier
+    await expect(fleetSection).toContainText(/3–4 Trolleys/);
+    await expect(fleetSection).toContainText(/No Carrier/);
+    await expect(fleetSection).toContainText(/Best for 8–10 Pax with luggage/);
+  });
+
   test('JSON-LD Structured Data conforms to Google Search Central guidelines with numeric prices', async ({ page }) => {
     const jsonLdScripts = page.locator('script[type="application/ld+json"]');
     const count = await jsonLdScripts.count();

@@ -86,63 +86,152 @@ const PASSENGER_OPTIONS = [
 
 const AIRPORT_HUB = 'Chennai International Airport (MAA)';
 
-const COMMON_DISTANCES_FROM_CHENNAI = {
-  'chennai': 0,
-  'pondicherry': 151,
-  'puducherry': 151,
-  'auroville': 148,
-  'bangalore': 346,
-  'bengaluru': 346,
-  'tirupati': 135,
-  'tirumala': 155,
-  'vellore': 140,
-  'kanchipuram': 75,
-  'mahabalipuram': 55,
-  'mamallapuram': 55,
-  'sriperumbudur': 42,
-  'trichy': 332,
-  'tiruchirappalli': 332,
-  'madurai': 462,
-  'coimbatore': 505,
-  'salem': 340,
-  'thanjavur': 342,
-  'tirunelveli': 624,
-  'kanyakumari': 708,
-  'rameshwaram': 575,
-  'kodaikanal': 530,
-  'ooty': 555,
-  'munnar': 580,
-  'mysore': 480,
-  'mysuru': 480,
-  'tiruvannamalai': 195,
-  'thiruvannamalai': 195,
-  'chidambaram': 215,
-  'kumbakonam': 298,
-  'nagapattinam': 315,
-  'velankanni': 325,
-  'yelagiri': 230,
-  'yercaud': 365,
-  'hosur': 305,
-  'krishnagiri': 260,
-  'dharmapuri': 300,
-  'pondy bazaar': 14,
-  't. nagar': 15,
-  't nagar': 15,
-  'guindy': 10,
-  'omr': 18,
-  'tambaram': 12,
-  'velachery': 14,
-  'anna nagar': 20,
-  'central': 22,
-  'egmore': 20
+// 1. Accurate Hub Distances from Chennai International Airport (MAA) in Meenambakkam
+const AIRPORT_HUB_DISTANCES = {
+  // Central Chennai (~12–21 km)
+  'besant nagar': { km: 13, duration: '~20–25 mins', zone: 'central' },
+  'tiruvalluvar nagar': { km: 13, duration: '~20–25 mins', zone: 'central' },
+  'adyar': { km: 12, duration: '~20 mins', zone: 'central' },
+  'thiruvanmiyur': { km: 14, duration: '~20–25 mins', zone: 'central' },
+  't. nagar': { km: 14, duration: '~20–25 mins', zone: 'central' },
+  't nagar': { km: 14, duration: '~20–25 mins', zone: 'central' },
+  'pondy bazaar': { km: 14, duration: '~20–25 mins', zone: 'central' },
+  'central': { km: 21, duration: '~35 mins', zone: 'central' },
+  'chennai central': { km: 21, duration: '~35 mins', zone: 'central' },
+  'egmore': { km: 19, duration: '~30 mins', zone: 'central' },
+  'anna nagar': { km: 18, duration: '~30 mins', zone: 'central' },
+  'mylapore': { km: 15, duration: '~25 mins', zone: 'central' },
+  'triplicane': { km: 18, duration: '~30 mins', zone: 'central' },
+  'marina': { km: 18, duration: '~30 mins', zone: 'central' },
+  'nungambakkam': { km: 16, duration: '~25 mins', zone: 'central' },
+  'vadapalani': { km: 12, duration: '~20 mins', zone: 'central' },
+  'koyambedu': { km: 15, duration: '~25 mins', zone: 'central' },
+  'kilpauk': { km: 18, duration: '~30 mins', zone: 'central' },
+  'royapettah': { km: 16, duration: '~25 mins', zone: 'central' },
+
+  // South Chennai (~4–14 km)
+  'guindy': { km: 8, duration: '~15 mins', zone: 'south' },
+  'tambaram': { km: 10, duration: '~15 mins', zone: 'south' },
+  'chromepet': { km: 6, duration: '~10 mins', zone: 'south' },
+  'pallavaram': { km: 4, duration: '~8 mins', zone: 'south' },
+  'alandur': { km: 6, duration: '~10 mins', zone: 'south' },
+  'velachery': { km: 12, duration: '~20 mins', zone: 'south' },
+  'medavakkam': { km: 13, duration: '~20 mins', zone: 'south' },
+  'madipakkam': { km: 9, duration: '~15 mins', zone: 'south' },
+  'porur': { km: 12, duration: '~20 mins', zone: 'south' },
+  'poonamallee': { km: 18, duration: '~25 mins', zone: 'south' },
+
+  // OMR IT Corridor (~15–26 km)
+  'omr': { km: 16, duration: '~25 mins', zone: 'omr' },
+  'perungudi': { km: 15, duration: '~25 mins', zone: 'omr' },
+  'thoraipakkam': { km: 16, duration: '~25 mins', zone: 'omr' },
+  'sholinganallur': { km: 18, duration: '~30 mins', zone: 'omr' },
+  'navalur': { km: 22, duration: '~35 mins', zone: 'omr' },
+  'siruseri': { km: 24, duration: '~35 mins', zone: 'omr' },
+  'kelambakkam': { km: 28, duration: '~45 mins', zone: 'omr' },
+
+  // North Chennai & Outer Suburbs (~22–32 km)
+  'ambattur': { km: 22, duration: '~35 mins', zone: 'north' },
+  'avadi': { km: 25, duration: '~40 mins', zone: 'north' },
+  'madhavaram': { km: 26, duration: '~40 mins', zone: 'north' },
+  'redhills': { km: 32, duration: '~50 mins', zone: 'north' },
+  'red hills': { km: 32, duration: '~50 mins', zone: 'north' },
+  'kolathur': { km: 24, duration: '~35 mins', zone: 'north' },
+
+  // ECR & Coastal Suburbs (~16–35 km)
+  'ecr': { km: 16, duration: '~25 mins', zone: 'ecr' },
+  'akkarai': { km: 20, duration: '~30 mins', zone: 'ecr' },
+  'kanathur': { km: 24, duration: '~35 mins', zone: 'ecr' },
+  'muttukadu': { km: 28, duration: '~40 mins', zone: 'ecr' },
+  'kovalam': { km: 32, duration: '~45 mins', zone: 'ecr' },
+
+  // Outstation & Near Highways
+  'sriperumbudur': { km: 42, duration: '~45–55 mins', zone: 'outstation' },
+  'chengalpattu': { km: 48, duration: '~50–55 mins', zone: 'outstation' },
+  'mahabalipuram': { km: 55, duration: '~50–60 mins', zone: 'outstation' },
+  'mamallapuram': { km: 55, duration: '~50–60 mins', zone: 'outstation' },
+  'kanchipuram': { km: 75, duration: '~1.5–1.8 hrs', zone: 'outstation' },
+  'tirupati': { km: 135, duration: '~3–3.5 hrs', zone: 'outstation' },
+  'tirumala': { km: 155, duration: '~3.5–4 hrs', zone: 'outstation' },
+  'vellore': { km: 140, duration: '~2.5–3 hrs', zone: 'outstation' },
+  'pondicherry': { km: 151, duration: '~2.5–3 hrs', zone: 'outstation' },
+  'puducherry': { km: 151, duration: '~2.5–3 hrs', zone: 'outstation' },
+  'auroville': { km: 148, duration: '~2.5–3 hrs', zone: 'outstation' },
+  'tiruvannamalai': { km: 195, duration: '~3.5–4 hrs', zone: 'outstation' },
+  'thiruvannamalai': { km: 195, duration: '~3.5–4 hrs', zone: 'outstation' },
+  'bangalore': { km: 346, duration: '~5.5–6 hrs', zone: 'outstation' },
+  'bengaluru': { km: 346, duration: '~5.5–6 hrs', zone: 'outstation' },
+  'trichy': { km: 332, duration: '~5 hrs', zone: 'outstation' },
+  'madurai': { km: 462, duration: '~7 hrs', zone: 'outstation' },
+  'coimbatore': { km: 505, duration: '~8 hrs', zone: 'outstation' },
+  'salem': { km: 340, duration: '~5.5 hrs', zone: 'outstation' }
 };
 
 const CHENNAI_FORMS = [
   'chennai', 'airport', 'tambaram', 'guindy', 'koyambedu', 'egmore', 'central',
   'pallavaram', 'velachery', 'porur', 'annanagar', 'anna nagar', 't nagar', 't. nagar',
   'sholinganallur', 'omr', 'ecr', 'perungudi', 'thiruvanmiyur', 'adyar', 'mylapore',
-  'chromepet', 'medavakkam', 'madipakkam', 'alandur', 'vadapalani', 'ambattur', 'avadi'
+  'chromepet', 'medavakkam', 'madipakkam', 'alandur', 'vadapalani', 'ambattur', 'avadi',
+  'besant nagar', 'besantnagar', 'tiruvalluvar nagar', 'siruseri', 'navalur'
 ];
+
+const OUTSTATION_AIRPORT_KEYWORDS = [
+  'pondicherry', 'puducherry', 'auroville', 'tirupati', 'tirumala', 'vellore',
+  'kanchipuram', 'sriperumbudur', 'chengalpattu', 'chengalpet', 'tiruvannamalai',
+  'thiruvannamalai', 'mahabalipuram', 'mamallapuram', 'bangalore', 'bengaluru',
+  'trichy', 'madurai', 'coimbatore', 'salem', 'hosur', 'mysore', 'kumbakonam',
+  'thanjavur', 'yelagiri', 'yercaud', 'chittoor', 'kalahasti', 'nellore', 'tada'
+];
+
+const isAirportOutstationRoute = (text = '', distKm = 0) => {
+  const lower = (text || '').toLowerCase();
+  if (OUTSTATION_AIRPORT_KEYWORDS.some(k => lower.includes(k))) return true;
+  if (distKm && distKm >= 50) return true;
+  return false;
+};
+
+// Official published zone tariffs for outstation routes from Chennai Airport
+const PUBLISHED_AIRPORT_OUTSTATION_TARIFFS = {
+  'pondicherry': { distance: 151, duration: '2.5–3 hrs', sedan: 2820, ertiga: 3370, innova: 3370, crysta: 4480, tempo: 8050 },
+  'puducherry': { distance: 151, duration: '2.5–3 hrs', sedan: 2820, ertiga: 3370, innova: 3370, crysta: 4480, tempo: 8050 },
+  'auroville': { distance: 148, duration: '2.5–3 hrs', sedan: 2820, ertiga: 3370, innova: 3370, crysta: 4480, tempo: 8050 },
+  'vellore': { distance: 140, duration: '2.5–3 hrs', sedan: 2600, ertiga: 3120, innova: 3120, crysta: 4150, tempo: 7450 },
+  'tirupati': { distance: 135, duration: '3–3.5 hrs', sedan: 2560, ertiga: 3070, innova: 3070, crysta: 4080, tempo: 7250 },
+  'tirumala': { distance: 155, duration: '3.5–4 hrs', sedan: 2860, ertiga: 3370, innova: 3370, crysta: 4480, tempo: 7850 },
+  'mahabalipuram': { distance: 55, duration: '50–60 mins', sedan: 1650, ertiga: 2400, innova: 2400, crysta: 2950, tempo: 4200 },
+  'mamallapuram': { distance: 55, duration: '50–60 mins', sedan: 1650, ertiga: 2400, innova: 2400, crysta: 2950, tempo: 4200 },
+  'sriperumbudur': { distance: 42, duration: '45–55 mins', sedan: 1400, ertiga: 2100, innova: 2100, crysta: 2600, tempo: 3800 },
+  'kanchipuram': { distance: 75, duration: '1.5–1.8 hrs', sedan: 2100, ertiga: 2650, innova: 2650, crysta: 3400, tempo: 5200 },
+  'tiruvannamalai': { distance: 195, duration: '3.5–4 hrs', sedan: 3600, ertiga: 4350, innova: 4350, crysta: 5800, tempo: 9800 },
+  'thiruvannamalai': { distance: 195, duration: '3.5–4 hrs', sedan: 3600, ertiga: 4350, innova: 4350, crysta: 5800, tempo: 9800 }
+};
+
+// Fixed flat tariff benchmark for Chennai Airport Transfers (matching QuotationEngine & official FAQ)
+const getCityAirportFlatFare = (locText = '', selectedVeh = 'Swift Dzire') => {
+  const t = (locText || '').toLowerCase();
+  let baseSedan = 650; // Default South Chennai (Tambaram, Guindy, Pallavaram, Medavakkam, Velachery)
+
+  if (t.includes('omr') || t.includes('sholinganallur') || t.includes('siruseri') || t.includes('navalur') || t.includes('perungudi') || t.includes('thoraipakkam') || t.includes('kelambakkam')) {
+    baseSedan = 1250;
+  } else if (t.includes('ecr') || t.includes('kovalam') || t.includes('muttukadu') || t.includes('kanathur') || t.includes('akkarai')) {
+    baseSedan = 1400;
+  } else if (t.includes('central') || t.includes('t nagar') || t.includes('t. nagar') || t.includes('anna nagar') || t.includes('egmore') || t.includes('mylapore') || t.includes('besant nagar') || t.includes('adyar') || t.includes('triplicane') || t.includes('marina') || t.includes('nungambakkam') || t.includes('vadapalani') || t.includes('koyambedu') || t.includes('kilpauk') || t.includes('royapettah') || t.includes('tiruvalluvar nagar') || t.includes('thiruvanmiyur')) {
+    baseSedan = 950;
+  } else if (t.includes('ambattur') || t.includes('avadi') || t.includes('madhavaram') || t.includes('redhills') || t.includes('red hills') || t.includes('kolathur')) {
+    baseSedan = 1150;
+  } else if (t.includes('tambaram') || t.includes('guindy') || t.includes('pallavaram') || t.includes('chromepet') || t.includes('alandur') || t.includes('velachery') || t.includes('medavakkam') || t.includes('madipakkam') || t.includes('porur') || t.includes('poonamallee')) {
+    baseSedan = 650;
+  } else {
+    baseSedan = 950; // General Chennai city default
+  }
+
+  const v = selectedVeh || '';
+  if (v.includes('Ertiga')) return Math.round(baseSedan * 1.5 / 50) * 50;
+  if (v.includes('Innova Crysta')) return Math.round(baseSedan * 2.0 / 50) * 50;
+  if (v.includes('Innova')) return Math.round(baseSedan * 1.8 / 50) * 50;
+  if (v.includes('Tempo') || v.includes('Urbania')) return Math.max(2400, Math.round(baseSedan * 2.8 / 50) * 50);
+  return baseSedan;
+};
 
 const findKnownDistance = (origin, destination) => {
   const o = (origin || '').toLowerCase().trim();
@@ -154,18 +243,15 @@ const findKnownDistance = (origin, destination) => {
 
   if (isOChennai || isDChennai) {
     const other = isOChennai ? d : o;
-    for (const [city, km] of Object.entries(COMMON_DISTANCES_FROM_CHENNAI)) {
-      if (other.includes(city)) {
-        let duration;
-        if (km <= 30) {
-          duration = `~${Math.max(15, Math.round(km * 2.2))} mins`;
-        } else {
-          const hrs = (km / 45).toFixed(1).replace('.0', '');
-          duration = `~${hrs} hrs drive`;
-        }
+    // Check known hub distances by longest match first (avoids sub-string false positives)
+    const sortedKeys = Object.keys(AIRPORT_HUB_DISTANCES).sort((a, b) => b.length - a.length);
+    for (const key of sortedKeys) {
+      if (other.includes(key)) {
+        const item = AIRPORT_HUB_DISTANCES[key];
         return {
-          distance: km,
-          duration
+          distance: item.km,
+          duration: item.duration,
+          zone: item.zone
         };
       }
     }
@@ -179,46 +265,81 @@ const findKnownDistance = (origin, destination) => {
     const hrs = (busRoute.distanceKm / 45).toFixed(1).replace('.0', '');
     return {
       distance: busRoute.distanceKm,
-      duration: `~${hrs} hrs drive`
+      duration: `~${hrs} hrs drive`,
+      zone: 'outstation'
+    };
+  }
+
+  // If address contains "chennai" or "airport" but no specific hub matched, default to Central Chennai (~16 km, ~25 mins)
+  if (o.includes('chennai') || d.includes('chennai') || o.includes('airport') || d.includes('airport')) {
+    return {
+      distance: 16,
+      duration: '~25 mins',
+      zone: 'central'
     };
   }
 
   return null;
 };
 
-// 3. Outstation Pricing Engine (matching QuotationEngine / Outstation Cabs)
-const calculateOutstationAirportFare = (distKm, selectedVeh, locText = '') => {
+// 3. Dual-Mode Airport Pricing Engine (City Flat Tariff + Outstation Drop)
+const calculateAirportFare = (distKm, selectedVeh, locText = '') => {
   const vData = vehicles[selectedVeh] || vehicles['Swift Dzire'];
-  const rate = vData.one_way_rate || 16;
-  const bata = vData.driver_bata || 400;
-  const minDropKm = vData.min_drop_km || (selectedVeh.includes('Tempo') ? 250 : 130);
-  const effKm = distKm && distKm > 0 ? distKm : minDropKm;
-  const isOutstation = effKm >= 50;
+  const isOutstation = isAirportOutstationRoute(locText, distKm);
+  const text = (locText || '').toLowerCase();
 
-  let chargeableKm, kmCost, driverBata, totalFare, advanceToPay, balanceToPay;
+  let actualKm = distKm && distKm > 0 ? distKm : 14;
+  let chargeableKm = actualKm;
+  let totalFare = 0;
+  let driverBata = 0;
+  let kmCost = 0;
+  const advanceToPay = 500;
 
   if (isOutstation) {
-    chargeableKm = Math.max(minDropKm, effKm);
-    kmCost = chargeableKm * rate;
-    driverBata = bata;
-    totalFare = Math.round((kmCost + driverBata) / 10) * 10;
-    advanceToPay = 500;
-    balanceToPay = Math.max(0, totalFare - advanceToPay);
+    // Check if published zone tariff exists
+    let matchedZone = null;
+    for (const [key, data] of Object.entries(PUBLISHED_AIRPORT_OUTSTATION_TARIFFS)) {
+      if (text.includes(key)) {
+        matchedZone = data;
+        break;
+      }
+    }
+
+    if (matchedZone) {
+      actualKm = matchedZone.distance;
+      chargeableKm = matchedZone.distance;
+      const v = selectedVeh || '';
+      if (v.includes('Ertiga')) totalFare = matchedZone.ertiga || Math.round(matchedZone.sedan * 1.25);
+      else if (v.includes('Innova Crysta')) totalFare = matchedZone.crysta || Math.round(matchedZone.sedan * 1.6);
+      else if (v.includes('Innova')) totalFare = matchedZone.innova || Math.round(matchedZone.sedan * 1.35);
+      else if (v.includes('Tempo')) totalFare = matchedZone.tempo || Math.round(matchedZone.sedan * 2.8);
+      else totalFare = matchedZone.sedan;
+      driverBata = vData.driver_bata || 400;
+      kmCost = Math.max(0, totalFare - driverBata);
+    } else {
+      const rate = vData.one_way_rate || 16;
+      const bata = vData.driver_bata || 400;
+      const minDropKm = vData.min_drop_km || (selectedVeh.includes('Tempo') ? 250 : 130);
+      actualKm = Math.max(50, actualKm);
+      chargeableKm = Math.max(minDropKm, actualKm);
+      kmCost = chargeableKm * rate;
+      driverBata = bata;
+      totalFare = Math.round((kmCost + driverBata) / 10) * 10;
+    }
   } else {
-    chargeableKm = effKm;
-    kmCost = Math.round((chargeableKm * rate) / 10) * 10;
+    // Chennai Local City Airport Transfer
+    totalFare = getCityAirportFlatFare(locText, selectedVeh);
     driverBata = 0;
-    totalFare = kmCost;
-    advanceToPay = 500;
-    balanceToPay = Math.max(0, totalFare - advanceToPay);
+    kmCost = totalFare;
   }
 
-  const extras = estimateAirportRoadExtras(locText, effKm, isOutstation);
+  const balanceToPay = Math.max(0, totalFare - advanceToPay);
+  const extras = estimateAirportRoadExtras(locText, actualKm, isOutstation);
 
   return {
-    actual_km: effKm,
+    actual_km: actualKm,
     chargeable_km: chargeableKm,
-    rate_per_km: rate,
+    rate_per_km: isOutstation ? (vData.one_way_rate || 16) : 0,
     km_cost: kmCost,
     driver_bata: driverBata,
     total_fare: totalFare,
@@ -303,7 +424,7 @@ export default function AirportBookingEngine({
   useEffect(() => {
     if (showResult && distanceKm > 0) {
       const userLoc = (direction === 'pickup' ? drop : pickup).trim();
-      const b = calculateOutstationAirportFare(distanceKm, vehicle, userLoc);
+      const b = calculateAirportFare(distanceKm, vehicle, userLoc);
       setBreakdown(b);
       setEstimate(b.total_fare);
     }
@@ -553,9 +674,10 @@ export default function AirportBookingEngine({
         setDistanceKm(known.distance);
         setDuration(known.duration);
       } else if (!effKm) {
-        effKm = 130;
-        setDistanceKm(130);
-        setDuration('~2.5 hrs driving');
+        const isOut = isAirportOutstationRoute(userLoc, 0);
+        effKm = isOut ? 130 : 16;
+        setDistanceKm(effKm);
+        setDuration(isOut ? '~2.5 hrs driving' : '~25 mins');
       }
 
       if (overrideDuration) {
@@ -584,7 +706,7 @@ export default function AirportBookingEngine({
           tolls_est: extras.tollsEst
         };
       } else {
-        result = calculateOutstationAirportFare(effKm, activeVeh, userLoc);
+        result = calculateAirportFare(effKm, activeVeh, userLoc);
       }
 
       const generatedQuoteRef = getNextQuotationId();
@@ -1124,6 +1246,12 @@ export default function AirportBookingEngine({
                     <span className="text-xs font-bold bg-[#1a73e8]/10 text-[#0b57d0] px-2 py-0.5 rounded-full">
                       {passengers} Pax
                     </span>
+                    {!breakdown.is_outstation && (
+                      <span className="text-[11px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-700" />
+                        <span>Fixed Flat Fare • Zero Surge</span>
+                      </span>
+                    )}
                   </div>
                   <div className="text-xs text-slate-600 font-medium mt-0.5">
                     ~{breakdown.actual_km} km {direction === 'pickup' ? 'Airport Pickup' : 'Airport Drop'} · {duration || ('~' + Math.max(1, Math.round(breakdown.actual_km / 50)) + ' hrs driving')}

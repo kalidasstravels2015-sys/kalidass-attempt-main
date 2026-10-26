@@ -48,14 +48,17 @@ const vanFleet = [
     dailyMinPrice: 7200,
     perKmRate: 24,
     seating: "8–12 Passengers",
-    baggage: "5–6 Boot Bags + 10–12 Carrier Bags",
-    bootBags: "5–6 Medium (24\") or 4 Large (28\") Bags",
-    overheadBags: "10–12 Soft Backpacks / Daypacks",
-    roofCarrierBags: "10–12 Bulk Bags (Waterproof Tarpaulin)",
-    bootDisplay: "5–6 Bags",
-    cabinDisplay: "10–12 Packs",
-    roofDisplay: "10–12 Bulk",
-    luggageSummary: "5–6 Suitcases in Rear Boot • 10–12 on Weatherproof Top Carrier",
+    baggage: "3–4 Medium Trolleys + 8–10 Soft Backpacks",
+    bootBags: "3–4 Medium (20\"–24\") Trolleys or 4–5 Soft Duffels",
+    overheadBags: "8–10 Soft Backpacks (Under-Seat & Parcel Racks)",
+    roofCarrier: "None (RTO Compliant • Clean Roof)",
+    roofCarrierBags: "No Rooftop Carrier (Strict RTO Norms & Clean Roof)",
+    bootDisplay: "3–4 Trolleys",
+    cabinDisplay: "8–10 Packs",
+    roofDisplay: "No Carrier",
+    roofSubDisplay: "100% Inside",
+    luggageSummary: "3–4 Medium Trolleys in Rear Boot • 8–10 Soft Packs Inside • No Rooftop Carrier",
+    fitAdvice: "Best for 8–10 Pax with luggage, or 12 Pax with light cabin bags",
     headroom: "6.2 ft (1,920 mm) Walk upright",
     recline: "135° Pushback Recliner",
     legroom: "32-Inch Generous Pitch",
@@ -67,18 +70,18 @@ const vanFleet = [
     entertainment: "24\" Full HD LED TV + Bluetooth + PA Guide Mic",
     elderStep: "280 mm Low Boarding Step + Safety Grab Handles",
     bodyType: "Minibus",
-    cargoLiters: 1200,
-    cargoDesc: "5-6 medium suitcases in rear boot plus heavy-duty weatherproof rooftop carrier",
-    roofLoadKg: 150,
+    cargoLiters: 450,
+    cargoDesc: "Compact 450L rear boot behind last row holding 3-4 medium trolleys. 100% inside storage with zero roof carrier.",
+    roofLoadKg: 0,
     image: "/images/fleet/tempo-12.webp",
     layout: "1x1 Maharaja or 2x1 Luxury Pushback Recliners",
-    idealFor: "Joint family vacations, Tirupati Balaji darshan, Pondicherry weekend trips, wedding guest transfers.",
+    idealFor: "Family day trips, Tirupati Balaji darshan, Pondicherry weekend getaways, local wedding transfers (8-10 pax with bags).",
     comfortHighlights: [
       "Plush individual pushback seats with neck support",
       "High-power dual AC vents across all rows",
       "Individual 2.4A USB mobile charging points",
       "Walkthrough high-roof cabin (no crouching)",
-      "LED screen & premium sound system"
+      "Compact rear boot (3–4 trolleys) + under-seat backpack clearance"
     ],
     whatsappMsg: "Hi Kalidass Travels Dispatch Desk, I would like to book a 12-Seater Tempo Traveller."
   },
@@ -92,28 +95,31 @@ const vanFleet = [
     dailyMinPrice: 7500,
     perKmRate: 25,
     seating: "10–14 Passengers",
-    baggage: "6–7 Boot Bags + 12–14 Carrier Bags",
-    bootBags: "6–7 Medium (24\") or 5 Large (28\") Bags",
-    overheadBags: "12–14 Soft Backpacks / Daypacks",
-    roofCarrierBags: "12–14 Bulk Bags (Waterproof Tarpaulin)",
-    bootDisplay: "6–7 Bags",
-    cabinDisplay: "12–14 Packs",
-    roofDisplay: "12–14 Bulk",
-    luggageSummary: "6–7 Suitcases in Extended Boot • 12+ on Weatherproof Top Carrier",
+    baggage: "5–6 Medium Trolleys + 10–12 Soft Backpacks",
+    bootBags: "5–6 Medium (24\") Trolleys or 4 Large (28\") Bags",
+    overheadBags: "10–12 Soft Backpacks / Daypacks",
+    roofCarrier: "None (Extended Rear Boot • All Inside Storage)",
+    roofCarrierBags: "No Rooftop Carrier (Protected Internal Boot)",
+    bootDisplay: "5–6 Trolleys",
+    cabinDisplay: "10–12 Packs",
+    roofDisplay: "Ext. Boot",
+    roofSubDisplay: "100% Inside",
+    luggageSummary: "5–6 Medium Trolleys in Extended Rear Boot • 10–12 Packs Inside",
+    fitAdvice: "Best for 10–12 Pax with multi-day luggage (Extended boot prevents cabin cramping)",
     headroom: "6.2 ft (1,920 mm) Walk upright",
     recline: "135° Pushback Recliner",
     legroom: "33-Inch Comfort Pitch",
     acSystem: "Dual Commercial Compressors + Row Louvers",
     charging: "2.4A Fast USB Ports at Every Row",
     suspension: "Parabolic Leaf Springs + Heavy Anti-Roll Bar",
-    chassis: "Force 3700 WB (Medium-Long Wheelbase)",
+    chassis: "Force 3700 / 4020 WB (Extended Luggage Chassis)",
     engine: "2.6L FM CR ED Turbo Diesel (115 HP)",
     entertainment: "28\" Full HD LED TV + Bluetooth + PA Guide Mic",
     elderStep: "Low Boarding Footstep + Safety Grab Rail",
     bodyType: "Minibus",
-    cargoLiters: 1400,
-    cargoDesc: "6-7 medium suitcases in extended boot plus reinforced weatherproof rooftop carrier",
-    roofLoadKg: 160,
+    cargoLiters: 750,
+    cargoDesc: "Extended 750L dedicated rear luggage trunk holding 5-6 medium suitcases completely inside the vehicle.",
+    roofLoadKg: 0,
     image: "/images/fleet/tempo-12.webp",
     layout: "2x1 Luxury Pushback Recliners • Medium-Long Chassis",
     idealFor: "10–12 person families with multi-day luggage, Yercaud & Yelagiri trips, Kanipakam-Tirupati circuits.",
@@ -136,14 +142,17 @@ const vanFleet = [
     dailyMinPrice: 7800,
     perKmRate: 26,
     seating: "13–17 Passengers",
-    baggage: "7–8 Boot Bags + 15 Carrier Bags",
-    bootBags: "7–8 Medium (24\") or 5–6 Large (28\") Bags",
-    overheadBags: "14–17 Soft Backpacks / Daypacks",
-    roofCarrierBags: "15–18 Bulk Bags (Waterproof Tarpaulin)",
-    bootDisplay: "7–8 Bags",
-    cabinDisplay: "14–17 Packs",
-    roofDisplay: "15–18 Bulk",
-    luggageSummary: "7–8 Suitcases in Extended Boot • 15+ on Weatherproof Top Carrier",
+    baggage: "6–7 Medium Trolleys + 14–16 Soft Backpacks",
+    bootBags: "6–7 Medium (24\") Trolleys or 5 Large (28\") Bags",
+    overheadBags: "14–16 Soft Backpacks / Daypacks",
+    roofCarrier: "None (Deep 4020 Rear Trunk • All Inside Storage)",
+    roofCarrierBags: "No Rooftop Carrier (Weather-Safe Deep Trunk)",
+    bootDisplay: "6–7 Trolleys",
+    cabinDisplay: "14–16 Packs",
+    roofDisplay: "Deep Trunk",
+    roofSubDisplay: "100% Inside",
+    luggageSummary: "6–7 Medium Trolleys in Deep 4020 Rear Trunk • 14–16 Packs Inside",
+    fitAdvice: "Best for 13–15 Pax with luggage, or 17 Pax with moderate luggage",
     headroom: "6.3 ft (1,950 mm) Walk upright",
     recline: "135° Pushback Recliner",
     legroom: "32-Inch Generous Pitch",
@@ -155,9 +164,9 @@ const vanFleet = [
     entertainment: "32\" Full HD LED TV + Bluetooth + PA Guide Mic",
     elderStep: "Automatic Electric Boarding Step + Grab Handles",
     bodyType: "Minibus",
-    cargoLiters: 1600,
-    cargoDesc: "7-8 medium suitcases in extended rear boot plus reinforced weatherproof rooftop carrier",
-    roofLoadKg: 180,
+    cargoLiters: 950,
+    cargoDesc: "Deep 950L rear luggage trunk on long wheelbase chassis holding 6-7 medium suitcases securely inside.",
+    roofLoadKg: 0,
     image: "/images/fleet/tempo-17.webp",
     layout: "2x1 High-Back Recliners • Long Wheelbase",
     idealFor: "Kumbakonam Navagraha circuits, Sabarimala yatra, wedding entourages, corporate team offsites.",
@@ -166,7 +175,7 @@ const vanFleet = [
       "Spacious dedicated rear luggage trunk for all bags",
       "Heavy-duty twin commercial air conditioning compressors",
       "Deep recline ergonomic seats for comfortable night travel",
-      "Smooth air-suspension ride on state and national highways"
+      "Smooth parabolic suspension ride on state and national highways"
     ],
     whatsappMsg: "Hi Kalidass Travels Dispatch Desk, I would like to book a 17-Seater Tempo Traveller."
   },
@@ -180,14 +189,17 @@ const vanFleet = [
     dailyMinPrice: 9000,
     perKmRate: 30,
     seating: "16–20 Passengers",
-    baggage: "8–10 Boot Bags + 20 Carrier Bags",
-    bootBags: "8–10 Medium (24\") or 6–7 Large (28\") Bags",
-    overheadBags: "18–20 Soft Backpacks / Daypacks",
-    roofCarrierBags: "18–22 Bulk Bags (Waterproof Tarpaulin)",
-    bootDisplay: "8–10 Bags",
-    cabinDisplay: "18–20 Packs",
-    roofDisplay: "18–22 Bulk",
-    luggageSummary: "8–10 Suitcases in Rear Boot • 20+ on Weatherproof Top Carrier",
+    baggage: "7–8 Medium Trolleys + 16–20 Soft Backpacks",
+    bootBags: "7–8 Medium (24\") Trolleys or 5–6 Large (28\") Bags",
+    overheadBags: "16–20 Soft Backpacks / Daypacks",
+    roofCarrier: "None (High-Cube Internal Rear Hold)",
+    roofCarrierBags: "No Rooftop Carrier (Internal High-Cube Storage)",
+    bootDisplay: "7–8 Trolleys",
+    cabinDisplay: "16–20 Packs",
+    roofDisplay: "High Hold",
+    roofSubDisplay: "100% Inside",
+    luggageSummary: "7–8 Suitcases in High-Cube Rear Trunk • 16–20 Packs Inside",
+    fitAdvice: "Best for 16–18 Pax with luggage, or 20 Pax with standard bags",
     headroom: "6.4 ft (1,960 mm) Walk upright",
     recline: "135° Pushback Recliner",
     legroom: "32-Inch Generous Pitch",
@@ -199,9 +211,9 @@ const vanFleet = [
     entertainment: "32\" Full HD LED TV + PA Guide System",
     elderStep: "Low Footstep with Dual Handrail Support",
     bodyType: "Minibus",
-    cargoLiters: 1800,
-    cargoDesc: "8-10 suitcases in rear trunk with full-length weatherproof top rack",
-    roofLoadKg: 200,
+    cargoLiters: 1100,
+    cargoDesc: "High-cube 1100L rear cargo hold holding 7-8 suitcases inside the air-conditioned shell.",
+    roofLoadKg: 0,
     image: "/images/fleet/tempo-17.webp",
     layout: "2x1 / 2x2 High-Back Ergonomic Recliners",
     idealFor: "Grand family weddings, Madurai-Rameswaram pilgrimages, saves ₹15,000 vs. renting two 10-seaters.",
@@ -209,7 +221,7 @@ const vanFleet = [
       "Accommodates up to 20 passengers comfortably in a single air-conditioned vehicle",
       "High-roof cabin allows tall passengers to walk upright without stooping",
       "Dual commercial air-conditioning compressors ensure rapid cooling across all rows",
-      "Deep under-seat luggage clearance and high-capacity roof luggage carrier",
+      "Deep under-seat luggage clearance and high-cube rear luggage trunk",
       "Significant cost savings on highway toll gates and driver allowances"
     ],
     whatsappMsg: "Hi Kalidass Travels Dispatch Desk, I would like to book a 20-Seater Tempo Traveller."
@@ -224,14 +236,17 @@ const vanFleet = [
     dailyMinPrice: 12600,
     perKmRate: 36,
     seating: "20–26 Passengers",
-    baggage: "15+ Boot Bags + 25 Carrier Bags",
-    bootBags: "12–15 Large (28\") Hard Suitcases",
-    overheadBags: "24–26 Soft Backpacks / Daypacks",
-    roofCarrierBags: "25+ Bulk Bags (Industrial Carrier)",
-    bootDisplay: "15+ Bags",
-    cabinDisplay: "24+ Packs",
-    roofDisplay: "25+ Bulk",
-    luggageSummary: "15+ Large Suitcases in Trunk • 25+ on Industrial Top Carrier",
+    baggage: "10–12 Large / Medium Suitcases + 20+ Soft Backpacks",
+    bootBags: "10–12 Hard Suitcases (Dedicated Coach Rear Hold)",
+    overheadBags: "20–25 Full Length Parcel Rack Bags",
+    roofCarrier: "Dedicated Rear Hold (Clean Aerodynamic Coach)",
+    roofCarrierBags: "Integrated Rear Coach Hold (No Open Roof Rack)",
+    bootDisplay: "10–12 Bags",
+    cabinDisplay: "20+ Packs",
+    roofDisplay: "Coach Hold",
+    roofSubDisplay: "Rear Trunk Hold",
+    luggageSummary: "10–12 Large Suitcases in Rear Coach Hold • 20+ Packs in Full Parcel Racks",
+    fitAdvice: "Best for 20–24 Pax with suitcases, or 26 Pax standard group delegations",
     headroom: "6.4 ft (1,960 mm) Wide Walkthrough Aisle",
     recline: "135° Pushback Coach Seats",
     legroom: "31-Inch Coach Pitch",
@@ -243,9 +258,9 @@ const vanFleet = [
     entertainment: "32\" Smart LED Screen + Full PA Chauffeur Mic",
     elderStep: "Low Wide Entrance Steps with Illuminated Handrail",
     bodyType: "Mini Bus",
-    cargoLiters: 2400,
-    cargoDesc: "Deep under-chassis / rear luggage hold plus industrial heavy-duty roof carrier",
-    roofLoadKg: 250,
+    cargoLiters: 1600,
+    cargoDesc: "Dedicated 1600L coach rear luggage compartment holding 10-12 large suitcases plus expansive interior racks.",
+    roofLoadKg: 0,
     image: "/images/fleet/tempo.webp",
     layout: "2x2 Spacious High-Back Pushback Coach Seats",
     idealFor: "Wedding party guest shuttles, corporate plant visits (Oragadam/Sriperumbudur), college & school tours.",
@@ -253,7 +268,7 @@ const vanFleet = [
       "Carries 25-26 passengers together — ideal for large wedding parties and corporate groups",
       "2x2 pushback coach seats with wide center aisle for effortless boarding",
       "High-capacity roof-mounted commercial air conditioning for consistent cooling",
-      "Massive luggage storage in dedicated rear hold and heavy-duty rooftop carrier",
+      "Massive luggage storage in dedicated rear hold compartment and overhead parcel racks",
       "Professional commercial heavy-vehicle certified chauffeur with hill-driving experience"
     ],
     whatsappMsg: "Hi Kalidass Travels Dispatch Desk, I would like to book a 26-Seater Mini Bus Coach."
@@ -268,14 +283,17 @@ const vanFleet = [
     dailyMinPrice: 9600,
     perKmRate: 32,
     seating: "10–12 Passengers",
-    baggage: "8–10 Executive Suitcases in Boot",
-    bootBags: "8–10 Hard-Case Executive Trolleys",
-    overheadBags: "12 Aircraft-Style Overhead Bins",
-    roofCarrierBags: "Enclosed Clean Aerodynamic Roof",
-    bootDisplay: "8–10 Trolleys",
+    baggage: "6–8 Executive Medium Trolleys (24\") + 12 Overhead Bins",
+    bootBags: "6–8 Executive Hard-Case Trolleys (24\")",
+    overheadBags: "12 Aircraft-Style Enclosed Overhead Bins",
+    roofCarrier: "Clean Aero Roof (Strictly Zero External Rack)",
+    roofCarrierBags: "Enclosed European Aerodynamic Monocoque Body",
+    bootDisplay: "6–8 Trolleys",
     cabinDisplay: "12 Air Bins",
     roofDisplay: "Aero Roof",
-    luggageSummary: "8–10 Executive Suitcases in Hydraulic Rear Trunk",
+    roofSubDisplay: "No Roof Carrier",
+    luggageSummary: "6–8 Executive Trolleys in Rear Hydraulic Hatch • 12 Aircraft Overhead Bins",
+    fitAdvice: "Best for 8–10 Pax with executive luggage, or 12 Pax with standard cabin bags",
     headroom: "6.5 ft (1,980 mm) Flat Floor Walkthrough",
     recline: "140° Executive Captain Recliner",
     legroom: "35-Inch Business-Class Pitch",
@@ -287,8 +305,8 @@ const vanFleet = [
     entertainment: "32\" Smart LED TV + Premium Acoustic Surround Sound",
     elderStep: "Low Triple-Seal Sliding Door Step + Illuminated Boarding",
     bodyType: "Executive Passenger Van",
-    cargoLiters: 1400,
-    cargoDesc: "Deep hydraulic hatch boot holding 8-10 executive hard-case suitcases with overhead bins",
+    cargoLiters: 1000,
+    cargoDesc: "Deep 1000L hydraulic rear hatch trunk holding 6-8 executive suitcases with sealed aircraft overhead bins.",
     roofLoadKg: 0,
     image: "/images/fleet/force-urbania.webp",
     layout: "Independent Aircraft-Style Luxury Recliners",
@@ -420,7 +438,7 @@ const popularPackages = [
 const passengerFaqs = [
   {
     q: "How much luggage can fit in a 12-seater and 17-seater Tempo Traveller?",
-    a: "In a 12-Seater, the dedicated internal rear boot comfortably holds 5 to 6 medium (24\") trolley suitcases or 4 large (28\") bags, while overhead parcel racks hold 10–12 day packs. For larger groups with 10–15 bulk suitcases (airport check-ins or weddings), our vehicles come with a heavy-duty reinforced rooftop carrier protected by a 100% waterproof tarpaulin. The 17-Seater (4020 Long Wheelbase) features a deeper trunk holding 7–8 medium bags. Pro-Tip: For airport transfers or weddings with 2+ large bags per person, book a 17-Seater for 10–12 passengers so all bags stay inside without using the roof carrier."
+    a: "In Chennai and Tamil Nadu, 12-Seater Tempo Travellers DO NOT have rooftop luggage carriers due to strict RTO safety regulations and roof AC condenser placement. All luggage is stored 100% safely inside the vehicle. In a 12-Seater (3350 WB), the rear boot space behind the last row of pushback seats fits 3 to 4 medium (20\"–24\") trolley suitcases or 4–5 soft duffle bags, while overhead parcel racks and under-seat spaces hold 8–10 soft backpacks. Pro-Tip & Fit Guide: If your group has 8 to 10 passengers with regular suitcases, a 12-Seater is comfortable; for 11–12 passengers, it is ideal with light cabin bags. If 12+ passengers all carry large check-in suitcases (weddings, airport departures, or multi-day outstation), we strongly recommend booking a 14-Seater or 17-Seater (4020 Long Wheelbase), which feature dedicated extended rear luggage compartments holding 6 to 8 suitcases without cramping passenger legroom or blocking gangways."
   },
   {
     q: "Are tolls, driver bata, and state permits included in your packages?",
@@ -457,7 +475,7 @@ const tariffMatrix = [
     shortName: "12-Seater Force",
     image: "/images/fleet/tempo-12.webp",
     capacity: "8–12 Passengers",
-    luggage: "10–12 Large Bags",
+    luggage: "3–4 Trolleys + 8–10 Packs",
     outstationRate: "₹24 / km",
     minKm: "300 km / day",
     driverBata: "₹800 / day",
@@ -474,7 +492,7 @@ const tariffMatrix = [
     shortName: "14-Seater Executive",
     image: "/images/fleet/tempo-12.webp",
     capacity: "10–14 Passengers",
-    luggage: "12–14 Large Bags",
+    luggage: "5–6 Trolleys + 10–12 Packs",
     outstationRate: "₹25 / km",
     minKm: "300 km / day",
     driverBata: "₹800 / day",
@@ -491,7 +509,7 @@ const tariffMatrix = [
     shortName: "17-Seater Executive",
     image: "/images/fleet/tempo-17.webp",
     capacity: "13–17 Passengers",
-    luggage: "15–18 Large Bags",
+    luggage: "6–7 Trolleys + 14–16 Packs",
     outstationRate: "₹26 / km",
     minKm: "300 km / day",
     driverBata: "₹800 / day",
@@ -508,7 +526,7 @@ const tariffMatrix = [
     shortName: "20-Seater Grand",
     image: "/images/fleet/tempo-17.webp",
     capacity: "16–20 Passengers",
-    luggage: "18–20 Large Bags",
+    luggage: "7–8 Trolleys + 16–20 Packs",
     outstationRate: "₹30 / km",
     minKm: "300 km / day",
     driverBata: "₹900 / day",
@@ -525,7 +543,7 @@ const tariffMatrix = [
     shortName: "26-Seater Mini Bus",
     image: "/images/fleet/tempo.webp",
     capacity: "20–26 Passengers",
-    luggage: "24–26 Large Bags",
+    luggage: "10–12 Suitcases + 20+ Packs",
     outstationRate: "₹36 / km",
     minKm: "350 km / day",
     driverBata: "₹1,000 / day",
@@ -542,7 +560,7 @@ const tariffMatrix = [
     shortName: "Force Urbania VIP",
     image: "/images/fleet/force-urbania.webp",
     capacity: "10–12 Passengers",
-    luggage: "12 Executive Bags",
+    luggage: "6–8 Trolleys + 12 Air Bins",
     outstationRate: "₹32 / km",
     minKm: "300 km / day",
     driverBata: "₹900 / day",
@@ -884,7 +902,7 @@ const schema = {
       <section id="fleet-section" class="pt-2 sm:pt-4 mb-10 sm:mb-14 scroll-mt-28">
         <span id="per-km-table" class="scroll-mt-28"></span>
         <div class="text-center max-w-2xl mx-auto mb-6 sm:mb-10">
-          <span class="text-xs font-bold uppercase tracking-wider text-m3-primary">Transparent Per-KM Rates • Zero Surge</span>
+          <span class="text-xs font-bold uppercase tracking-wider text-m3-primary">Verified Dimensions &amp; Capacities</span>
           <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-m3-on-surface font-heading tracking-tight mt-1">
             Vehicle Specifications &amp; Luggage Capacities
           </h2>
@@ -1007,7 +1025,7 @@ const schema = {
                       <div class="flex items-center justify-between text-xs font-bold mb-2">
                         <span class="flex items-center gap-1.5 text-m3-on-surface">
                           <Luggage className="w-3.5 h-3.5 text-m3-primary" />
-                          <span>Certified 3-Zone Luggage Capacity</span>
+                          <span>Certified Luggage Capacity</span>
                         </span>
                         <span class="text-xs font-semibold text-emerald-800 dark:text-emerald-300 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
                           Zero Gangway Bags
@@ -1018,40 +1036,34 @@ const schema = {
                         <div class="p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant/60 shadow-2xs">
                           <span class="block text-xs font-semibold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider">Boot</span>
                           <span class="block text-xs sm:text-sm font-bold text-m3-on-surface mt-0.5 leading-tight tabular-nums">{vehicle.bootDisplay}</span>
-                          <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">Hard Suitcases</span>
+                          <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">Rear Space</span>
                         </div>
                         <div class="p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant/60 shadow-2xs">
                           <span class="block text-xs font-semibold text-m3-primary uppercase tracking-wider">Cabin</span>
                           <span class="block text-xs sm:text-sm font-bold text-m3-on-surface mt-0.5 leading-tight tabular-nums">{vehicle.cabinDisplay}</span>
-                          <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">Overhead Racks</span>
+                          <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">Racks &amp; Seats</span>
                         </div>
                         <div class="p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant/60 shadow-2xs">
-                          <span class="block text-xs font-semibold text-purple-700 dark:text-purple-400 uppercase tracking-wider">Carrier</span>
+                          <span class="block text-xs font-semibold text-purple-700 dark:text-purple-400 uppercase tracking-wider">Storage</span>
                           <span class="block text-xs sm:text-sm font-bold text-m3-on-surface mt-0.5 leading-tight tabular-nums">{vehicle.roofDisplay}</span>
-                          <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">{vehicle.vehicleKey === 'urbania' ? 'Aero Roof' : 'Weatherproof Top'}</span>
+                          <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">{vehicle.roofSubDisplay}</span>
                         </div>
+                      </div>
+
+                      <!-- Real Passenger & Luggage Fit Guidance -->
+                      <div class="mt-2.5 pt-2 border-t border-m3-outline-variant/50 text-left">
+                        <p class="text-xs text-m3-on-surface-variant font-medium flex items-start gap-1.5 leading-normal">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                          <span><strong class="text-m3-on-surface font-semibold">Fit Guide:</strong> {vehicle.fitAdvice}</span>
+                        </p>
                       </div>
                     </div>
 
-                    <!-- Transparent Rate & Action Button -->
-                    <div class="pt-2 border-t border-m3-outline-variant/50 flex flex-col sm:flex-row items-center justify-between gap-3">
-                      <div class="text-center sm:text-left">
-                        <span class="block text-xs uppercase font-semibold tracking-wider text-m3-on-surface-variant">
-                          Outstation Tariff
-                        </span>
-                        <div class="flex items-baseline gap-1.5">
-                          <span class="text-2xl sm:text-3xl font-bold text-m3-on-surface tabular-nums font-sans">
-                            ₹{vehicle.perKmRate}<span class="text-xs sm:text-sm font-medium text-m3-on-surface-variant">/km</span>
-                          </span>
-                          <span class="text-xs font-semibold text-emerald-800 dark:text-emerald-400">
-                            • 300 km/day min
-                          </span>
-                        </div>
-                      </div>
-
+                    <!-- Action Button -->
+                    <div class="pt-2 border-t border-m3-outline-variant/50 flex items-center justify-center">
                       <button
                         type="button"
-                        class="w-full sm:w-auto min-h-[46px] inline-flex items-center justify-center gap-2 py-2.5 px-7 rounded-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-white text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-xs hover:shadow-sm active:scale-[0.98] spec-book-vehicle-btn group/btn"
+                        class="w-full sm:w-auto min-h-[46px] inline-flex items-center justify-center gap-2 py-2.5 px-8 rounded-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-white text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-xs hover:shadow-sm active:scale-[0.98] spec-book-vehicle-btn group/btn"
                         data-vehicle-key={vehicle.vehicleKey}
                         data-vehicle-name={vehicle.name}
                         data-badge={vehicle.badge}
@@ -1166,37 +1178,31 @@ const schema = {
                           <div class="p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant/60 shadow-2xs">
                             <span class="block text-xs font-semibold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider">Boot</span>
                             <span class="block text-xs sm:text-sm font-bold text-m3-on-surface mt-0.5 leading-tight tabular-nums">{vehicle.bootDisplay}</span>
-                            <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">Suitcases</span>
+                            <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">Rear Space</span>
                           </div>
                           <div class="p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant/60 shadow-2xs">
                             <span class="block text-xs font-semibold text-m3-primary uppercase tracking-wider">Cabin</span>
                             <span class="block text-xs sm:text-sm font-bold text-m3-on-surface mt-0.5 leading-tight tabular-nums">{vehicle.cabinDisplay}</span>
-                            <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">Racks</span>
+                            <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">Racks &amp; Seats</span>
                           </div>
                           <div class="p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant/60 shadow-2xs">
-                            <span class="block text-xs font-semibold text-purple-700 dark:text-purple-400 uppercase tracking-wider">Carrier</span>
+                            <span class="block text-xs font-semibold text-purple-700 dark:text-purple-400 uppercase tracking-wider">Storage</span>
                             <span class="block text-xs sm:text-sm font-bold text-m3-on-surface mt-0.5 leading-tight tabular-nums">{vehicle.roofDisplay}</span>
-                            <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">{vehicle.vehicleKey === 'urbania' ? 'Aero Roof' : 'Weatherproof'}</span>
+                            <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">{vehicle.roofSubDisplay}</span>
                           </div>
+                        </div>
+
+                        <!-- Real Passenger & Luggage Fit Guidance -->
+                        <div class="mt-2.5 pt-2 border-t border-m3-outline-variant/50 text-left">
+                          <p class="text-xs text-m3-on-surface-variant font-medium flex items-start gap-1.5 leading-normal">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                            <span><strong class="text-m3-on-surface font-semibold">Fit Guide:</strong> {vehicle.fitAdvice}</span>
+                          </p>
                         </div>
                       </div>
 
-                      <!-- Transparent Rate & Action Button -->
-                      <div class="pt-2 border-t border-m3-outline-variant/50 flex flex-col items-center justify-between gap-3">
-                        <div class="text-center w-full">
-                          <span class="block text-xs uppercase font-semibold tracking-wider text-m3-on-surface-variant">
-                            Outstation Tariff
-                          </span>
-                          <div class="flex items-baseline justify-center gap-1.5">
-                            <span class="text-2xl sm:text-3xl font-bold text-m3-on-surface tabular-nums font-sans">
-                              ₹{vehicle.perKmRate}<span class="text-xs sm:text-sm font-medium text-m3-on-surface-variant">/km</span>
-                            </span>
-                            <span class="text-xs font-semibold text-emerald-800 dark:text-emerald-400">
-                              • 300 km/day min
-                            </span>
-                          </div>
-                        </div>
-
+                      <!-- Action Button -->
+                      <div class="pt-2 border-t border-m3-outline-variant/50">
                         <button
                           type="button"
                           class="w-full min-h-[46px] inline-flex items-center justify-center gap-2 py-2.5 px-7 rounded-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-white text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-xs active:scale-[0.98] spec-book-vehicle-btn group/btn"
@@ -1254,7 +1260,7 @@ const schema = {
                 </span>
                 <div>
                   <div class="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center gap-1.5">
-                    <span>Compare All 10 Specifications</span>
+                    <span>Compare Technical Specifications</span>
                     <span class="text-xs font-semibold px-2 py-0.5 bg-m3-primary/10 text-m3-primary rounded-full uppercase tracking-wider">Matrix</span>
                   </div>
                   <div class="text-xs text-m3-on-surface-variant font-normal mt-0.5">Headroom, recliner pitch, luggage &amp; AC side-by-side</div>
@@ -1284,7 +1290,7 @@ const schema = {
               Side-by-Side Model Comparison
             </h3>
             <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">
-              Compare standing height, recliner pitch, luggage capacities, and tariff rates at a glance:
+              Compare standing height, recliner pitch, and luggage capacities at a glance:
             </p>
           </div>
 
@@ -1331,21 +1337,30 @@ const schema = {
                 </tr>
                 <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
                   <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Internal Rear Boot</td>
-                  <td class="py-3 px-4">5–6 Medium Trolleys (24")</td>
-                  <td class="py-3 px-4">6–7 Medium Trolleys (Extended Trunk)</td>
-                  <td class="py-3 px-4">7–8 Medium Trolleys (Extended Trunk)</td>
-                  <td class="py-3 px-4">8–10 Medium / Large Trolleys</td>
-                  <td class="py-3 px-4">15+ Large Hard Suitcases (Hold)</td>
-                  <td class="py-3 px-4">8–10 Executive Suitcases (Hydraulic Hatch)</td>
+                  <td class="py-3 px-4">3–4 Medium Trolleys (20"–24")</td>
+                  <td class="py-3 px-4">5–6 Medium Trolleys (Extended Trunk)</td>
+                  <td class="py-3 px-4">6–7 Medium Trolleys (Deep 4020 Trunk)</td>
+                  <td class="py-3 px-4">7–8 Medium Trolleys (High Trunk)</td>
+                  <td class="py-3 px-4">10–12 Large / Medium Suitcases</td>
+                  <td class="py-3 px-4">6–8 Executive Trolleys (Hydraulic Hatch)</td>
                 </tr>
                 <tr class="hover:bg-m3-surface-container-low/50 transition">
-                  <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Rooftop Carrier</td>
-                  <td class="py-3 px-4">Heavy-Duty with Waterproof Tarpaulin</td>
-                  <td class="py-3 px-4">Heavy-Duty with Waterproof Tarpaulin</td>
-                  <td class="py-3 px-4">Heavy-Duty with Waterproof Tarpaulin</td>
-                  <td class="py-3 px-4">Industrial Heavy-Duty Tarpaulin</td>
-                  <td class="py-3 px-4">Industrial Reinforced Top Carrier</td>
-                  <td class="py-3 px-4">Clean Aerodynamic Roof (Internal Boot Only)</td>
+                  <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Rooftop Carrier Status</td>
+                  <td class="py-3 px-4 font-medium text-emerald-800 dark:text-emerald-400">None (RTO Compliant • Clean Roof)</td>
+                  <td class="py-3 px-4 font-medium text-emerald-800 dark:text-emerald-400">None (All Internal Luggage)</td>
+                  <td class="py-3 px-4 font-medium text-emerald-800 dark:text-emerald-400">None (Deep Internal Trunk)</td>
+                  <td class="py-3 px-4 font-medium text-emerald-800 dark:text-emerald-400">None (Internal Rear Hold)</td>
+                  <td class="py-3 px-4">Rear Coach Hold (No Open Carrier)</td>
+                  <td class="py-3 px-4">Zero Roof Rack (European Monocoque)</td>
+                </tr>
+                <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
+                  <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Luggage Fit Advice</td>
+                  <td class="py-3 px-4">8–10 Pax with bags • 12 Pax light</td>
+                  <td class="py-3 px-4">10–12 Pax with multi-day bags</td>
+                  <td class="py-3 px-4">13–15 Pax with luggage • 17 Pax std</td>
+                  <td class="py-3 px-4">16–18 Pax with luggage • 20 Pax std</td>
+                  <td class="py-3 px-4">20–24 Pax with suitcases</td>
+                  <td class="py-3 px-4">8–10 Pax with executive luggage</td>
                 </tr>
                 <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
                   <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">AC Configuration</td>
@@ -1383,15 +1398,7 @@ const schema = {
                   <td class="py-3 px-4">Illuminated Low Entrance Footsteps</td>
                   <td class="py-3 px-4">Triple-Seal Sliding Low Step + Light</td>
                 </tr>
-                <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/30 font-bold">
-                  <td class="py-3.5 px-4 font-bold text-m3-on-surface">Outstation Tariff</td>
-                  <td class="py-3.5 px-4 text-sm sm:text-base font-bold text-m3-primary tabular-nums font-sans">₹24 / km</td>
-                  <td class="py-3.5 px-4 text-sm sm:text-base font-bold text-m3-primary tabular-nums font-sans">₹25 / km</td>
-                  <td class="py-3.5 px-4 text-sm sm:text-base font-bold text-m3-primary tabular-nums font-sans">₹26 / km</td>
-                  <td class="py-3.5 px-4 text-sm sm:text-base font-bold text-m3-primary tabular-nums font-sans">₹30 / km</td>
-                  <td class="py-3.5 px-4 text-sm sm:text-base font-bold text-m3-primary tabular-nums font-sans">₹36 / km</td>
-                  <td class="py-3.5 px-4 text-sm sm:text-base font-bold text-purple-700 dark:text-purple-400 tabular-nums font-sans">₹32 / km</td>
-                </tr>
+
               </tbody>
             </table>
           </div>
@@ -1484,21 +1491,30 @@ const schema = {
                     </tr>
                     <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
                       <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Internal Rear Boot</td>
-                      <td class="py-2.5 px-3.5">5–6 Medium Bags</td>
-                      <td class="py-2.5 px-3.5">6–7 Medium Bags</td>
-                      <td class="py-2.5 px-3.5">7–8 Medium Bags</td>
-                      <td class="py-2.5 px-3.5">8–10 Bags</td>
-                      <td class="py-2.5 px-3.5">15+ Hard Bags</td>
-                      <td class="py-2.5 px-3.5">8–10 Suitcases (Hatch)</td>
+                      <td class="py-2.5 px-3.5">3–4 Trolleys (20"–24")</td>
+                      <td class="py-2.5 px-3.5">5–6 Trolleys (Ext. Boot)</td>
+                      <td class="py-2.5 px-3.5">6–7 Trolleys (4020 Trunk)</td>
+                      <td class="py-2.5 px-3.5">7–8 Trolleys (High Trunk)</td>
+                      <td class="py-2.5 px-3.5">10–12 Large Bags (Hold)</td>
+                      <td class="py-2.5 px-3.5">6–8 Trolleys (Hatch)</td>
                     </tr>
                     <tr class="hover:bg-m3-surface-container-low/50 transition">
-                      <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Rooftop Carrier</td>
-                      <td class="py-2.5 px-3.5">Tarpaulin Carrier</td>
-                      <td class="py-2.5 px-3.5">Tarpaulin Carrier</td>
-                      <td class="py-2.5 px-3.5">Tarpaulin Carrier</td>
-                      <td class="py-2.5 px-3.5">Heavy Carrier</td>
-                      <td class="py-2.5 px-3.5">Industrial Carrier</td>
-                      <td class="py-2.5 px-3.5">Clean Aero Roof</td>
+                      <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Rooftop Carrier Status</td>
+                      <td class="py-2.5 px-3.5 font-medium text-emerald-800 dark:text-emerald-400">None (RTO Compliant)</td>
+                      <td class="py-2.5 px-3.5 font-medium text-emerald-800 dark:text-emerald-400">None (Inside Storage)</td>
+                      <td class="py-2.5 px-3.5 font-medium text-emerald-800 dark:text-emerald-400">None (Inside Trunk)</td>
+                      <td class="py-2.5 px-3.5 font-medium text-emerald-800 dark:text-emerald-400">None (Inside Hold)</td>
+                      <td class="py-2.5 px-3.5">Rear Coach Hold</td>
+                      <td class="py-2.5 px-3.5">Zero Roof Rack</td>
+                    </tr>
+                    <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
+                      <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Luggage Fit Advice</td>
+                      <td class="py-2.5 px-3.5">8–10 Pax with bags</td>
+                      <td class="py-2.5 px-3.5">10–12 Pax with bags</td>
+                      <td class="py-2.5 px-3.5">13–15 Pax with bags</td>
+                      <td class="py-2.5 px-3.5">16–18 Pax with bags</td>
+                      <td class="py-2.5 px-3.5">20–24 Pax with bags</td>
+                      <td class="py-2.5 px-3.5">8–10 Pax executive</td>
                     </tr>
                     <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
                       <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">AC Configuration</td>
@@ -1536,15 +1552,7 @@ const schema = {
                       <td class="py-2.5 px-3.5">Illuminated Coach Step</td>
                       <td class="py-2.5 px-3.5">Sliding Low Step</td>
                     </tr>
-                    <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/30 font-bold">
-                      <td class="py-3 px-3.5 font-bold text-m3-on-surface">Outstation Tariff</td>
-                      <td class="py-3 px-3.5 text-sm font-bold text-m3-primary tabular-nums font-sans">₹24 / km</td>
-                      <td class="py-3 px-3.5 text-sm font-bold text-m3-primary tabular-nums font-sans">₹25 / km</td>
-                      <td class="py-3 px-3.5 text-sm font-bold text-m3-primary tabular-nums font-sans">₹26 / km</td>
-                      <td class="py-3 px-3.5 text-sm font-bold text-m3-primary tabular-nums font-sans">₹30 / km</td>
-                      <td class="py-3 px-3.5 text-sm font-bold text-m3-primary tabular-nums font-sans">₹36 / km</td>
-                      <td class="py-3 px-3.5 text-sm font-bold text-purple-700 dark:text-purple-400 tabular-nums font-sans">₹32 / km</td>
-                    </tr>
+
                   </tbody>
                 </table>
               </div>

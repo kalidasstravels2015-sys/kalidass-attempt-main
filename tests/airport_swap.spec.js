@@ -77,4 +77,44 @@ test.describe('Airport Taxi Route Swap Tests', () => {
     await expect(resultCard).toContainText(/Total Fare/i);
     await expect(resultCard).toContainText(/₹/);
   });
+
+  test('Airport Taxi calculates Chennai local transfer (Besant Nagar) as ~13 km and ₹950 flat fare', async ({ page }) => {
+    await page.setViewportSize({ width: 400, height: 850 });
+    await page.goto('/services/chennai-airport-taxi/', { waitUntil: 'networkidle' });
+
+    const finder = page.locator('#airport-fare-finder');
+    await expect(finder).toBeVisible();
+
+    const toInput = page.locator('#airport-to-input');
+    await expect(toInput).toBeVisible();
+    await toInput.fill('5th Ave, Tiruvalluvar Nagar, Besant Nagar, Chennai');
+    await toInput.blur();
+    await page.waitForTimeout(400);
+
+    const calcBtn = page.locator('#get-flat-fare-btn');
+    await calcBtn.click();
+
+    const resultCard = page.locator('#airport-fare-result-card');
+    await expect(resultCard).toBeVisible();
+
+    // Verify distance is ~13 km, NOT ~130 km!
+    await expect(resultCard).toContainText(/~13 km Airport Pickup/);
+    await expect(resultCard).not.toContainText(/~130 km/);
+
+    // Verify flat fare is ₹950 (Sedan), NOT ₹2,480!
+    await expect(resultCard.locator('text=₹950').first()).toBeVisible();
+    await expect(resultCard).not.toContainText(/₹2,480/);
+
+    // Verify payment split: Advance ₹500, Balance ₹450
+    await expect(resultCard.locator('text=₹500').first()).toBeVisible();
+    await expect(resultCard.locator('text=₹450').first()).toBeVisible();
+
+    // Verify Fixed Flat Fare badge
+    await expect(resultCard.locator('text=Fixed Flat Fare • Zero Surge')).toBeVisible();
+
+    // Switch vehicle to Ertiga SUV (6p) -> should be ₹1,450
+    const ertigaBtn = resultCard.locator('button:has-text("Ertiga SUV (6p)")');
+    await ertigaBtn.click();
+    await expect(resultCard.locator('text=₹1,450').first()).toBeVisible();
+  });
 });
