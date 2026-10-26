@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import LocationPicker from './LocationPicker';
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
+import M3MobileSearchView from './M3MobileSearchView';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import { trackCalculatorQuote, trackEvent, markQuoteConverted } from '../lib/analytics';
 import { buildMapsLinks } from '../utils/whatsapp';
@@ -286,6 +287,8 @@ export default function AirportBookingEngine({
   // UI state
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [locationPickerOpen, setLocationPickerOpen] = useState(false);
+  const [m3SearchOpen, setM3SearchOpen] = useState(false);
+  const [m3SearchTarget, setM3SearchTarget] = useState('drop'); // 'pickup' | 'drop'
   const [showFareBreakup, setShowFareBreakup] = useState(false);
   const [quoteRefId, setQuoteRefId] = useState('#QT-101');
 
@@ -374,6 +377,50 @@ export default function AirportBookingEngine({
     }
   };
 
+  const handleLocationSelected = (addr, place = null) => {
+    if (!addr) return;
+    const clean = addr.trim();
+
+    if (direction === 'pickup') {
+      setDrop(clean);
+    } else {
+      setPickup(clean);
+    }
+    setShowResult(false);
+    setError('');
+
+    const known = findKnownDistance(AIRPORT_HUB, clean);
+    if (known) {
+      setDistanceKm(known.distance);
+      setDuration(known.duration);
+      return;
+    }
+
+    if (place && place.geometry && place.geometry.location) {
+      const lat = typeof place.geometry.location.lat === 'function'
+        ? place.geometry.location.lat()
+        : place.geometry.location.lat;
+      const lng = typeof place.geometry.location.lng === 'function'
+        ? place.geometry.location.lng()
+        : place.geometry.location.lng;
+      const rad = x => (x * Math.PI) / 180;
+      const R = 6371;
+      const dLat = rad(lat - 12.9941);
+      const dLng = rad(lng - 80.1709);
+      const a = Math.sin(dLat/2)**2 + Math.cos(rad(12.9941))*Math.cos(rad(lat))*Math.sin(dLng/2)**2;
+      const roadKm = Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)) * 1.35);
+      setDistanceKm(roadKm);
+      if (roadKm <= 45) {
+        setDuration('~' + Math.max(15, Math.round(roadKm * 2)) + ' mins');
+      } else {
+        const hrs = Math.max(1, Math.round((roadKm / 55) * 10) / 10);
+        setDuration('~' + Math.round(hrs) + ' hrs drive');
+      }
+    }
+
+    resolveTripDistance(clean);
+  };
+
   useEffect(() => {
     let isMounted = true;
     const timer = setTimeout(() => {
@@ -386,43 +433,9 @@ export default function AirportBookingEngine({
 
         ac.addListener('place_changed', () => {
           const place = ac.getPlace();
-          const addr = place.formatted_address || place.name;
+          const addr = place?.formatted_address || place?.name;
           if (!addr) return;
-
-          if (direction === 'pickup') {
-            setDrop(addr);
-          } else {
-            setPickup(addr);
-          }
-          setShowResult(false);
-          setError('');
-
-          const known = findKnownDistance(AIRPORT_HUB, addr);
-          if (known) {
-            setDistanceKm(known.distance);
-            setDuration(known.duration);
-            return;
-          }
-
-          if (place.geometry && place.geometry.location) {
-            const lat = place.geometry.location.lat();
-            const lng = place.geometry.location.lng();
-            const rad = x => (x * Math.PI) / 180;
-            const R = 6371;
-            const dLat = rad(lat - 12.9941);
-            const dLng = rad(lng - 80.1709);
-            const a = Math.sin(dLat/2)**2 + Math.cos(rad(12.9941))*Math.cos(rad(lat))*Math.sin(dLng/2)**2;
-            const roadKm = Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)) * 1.35);
-            setDistanceKm(roadKm);
-            if (roadKm <= 45) {
-              setDuration('~' + Math.max(15, Math.round(roadKm * 2)) + ' mins');
-            } else {
-              const hrs = Math.max(1, Math.round((roadKm / 55) * 10) / 10);
-              setDuration('~' + Math.round(hrs) + ' hrs drive');
-            }
-          }
-
-          resolveTripDistance(addr);
+          handleLocationSelected(addr, place);
         });
       }).catch(() => {});
     }, 50);
@@ -896,6 +909,12 @@ export default function AirportBookingEngine({
                 type="text"
                 value={pickup}
                 readOnly={direction === 'pickup'}
+                onClick={() => {
+                  if (direction === 'drop' && typeof window !== 'undefined' && window.innerWidth < 768) {
+                    setM3SearchTarget('pickup');
+                    setM3SearchOpen(true);
+                  }
+                }}
                 onChange={e => {
                   if (direction === 'drop') {
                     setPickup(e.target.value);
@@ -963,6 +982,12 @@ export default function AirportBookingEngine({
                 type="text"
                 value={drop}
                 readOnly={direction === 'drop'}
+                onClick={() => {
+                  if (direction === 'pickup' && typeof window !== 'undefined' && window.innerWidth < 768) {
+                    setM3SearchTarget('drop');
+                    setM3SearchOpen(true);
+                  }
+                }}
                 onChange={e => {
                   if (direction === 'pickup') {
                     setDrop(e.target.value);
@@ -1115,14 +1140,18 @@ export default function AirportBookingEngine({
                 </div>
               </div>
 
-              {/* 1-Line Payment Reassurance */}
-              <div className="text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200/80 rounded-lg px-3 py-2 flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>
-                  {breakdown.is_outstation 
-                    ? 'Pay 50% on cab arrival, balance after trip ends' 
-                    : 'Pay directly to driver at drop • Zero advance required'}
-                </span>
+              {/* Payment Split & Reassurance */}
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div className="p-2.5 rounded-lg bg-emerald-50/80 border border-emerald-200 text-emerald-900">
+                  <span className="text-slate-500 block text-[11px] font-medium">Advance to Pay</span>
+                  <span className="font-extrabold text-sm text-emerald-800">₹{breakdown.advance_to_pay}</span>
+                  <span className="text-[10px] text-emerald-700/80 block mt-0.5">to reserve cab &amp; driver</span>
+                </div>
+                <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-900">
+                  <span className="text-slate-500 block text-[11px] font-medium">Balance to Pay Driver</span>
+                  <span className="font-extrabold text-sm text-slate-900">₹{breakdown.balance_to_pay?.toLocaleString('en-IN')}</span>
+                  <span className="text-[10px] text-slate-500 block mt-0.5">after trip completion</span>
+                </div>
               </div>
 
               {/* 1-Tap Vehicle Switcher Tabs (No duplicate prices) */}
@@ -1223,7 +1252,7 @@ export default function AirportBookingEngine({
                     className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-sm shadow-md transition-all active:scale-[0.99] cursor-pointer"
                   >
                     <WhatsAppIcon className="w-4 h-4" />
-                    <span>Book on WhatsApp</span>
+                    <span>Book {vehicle} on WhatsApp</span>
                   </button>
 
                   <a
@@ -1253,6 +1282,21 @@ export default function AirportBookingEngine({
           initialAddress={direction === 'pickup' ? drop : pickup}
         />
       )}
+
+      {/* Material Design 3 Mobile Search View (Full-Screen Overlay on Mobile) */}
+      <M3MobileSearchView
+        isOpen={m3SearchOpen}
+        onClose={() => setM3SearchOpen(false)}
+        onSelect={(addr, place) => handleLocationSelected(addr, place)}
+        initialValue={m3SearchTarget === 'pickup' ? (pickup === AIRPORT_HUB ? '' : pickup) : (drop === AIRPORT_HUB ? '' : drop)}
+        placeholder={
+          m3SearchTarget === 'pickup'
+            ? 'Enter pickup area / doorstep address...'
+            : 'Enter destination hotel / area / city...'
+        }
+        title={m3SearchTarget === 'pickup' ? 'Airport Pickup Location' : 'Airport Drop Destination'}
+        onPinClick={handlePinClick}
+      />
     </>
   );
 }

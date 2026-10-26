@@ -70,6 +70,7 @@ test.describe('Airport Taxi Route Swap Tests', () => {
     // 5. Test Drop Mode Calculation
     await tabDrop.click();
     await fromInput.fill('Vellore');
+    await fromInput.blur();
     await calcBtn.click();
 
     await expect(resultCard).toBeVisible();

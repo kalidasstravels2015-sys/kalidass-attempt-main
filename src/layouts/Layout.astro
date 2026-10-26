@@ -633,7 +633,7 @@ const unifiedSchemaGraph = {
   <head>
 
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content" />
     <!-- Public Google Sheet webhook (build-time) so CUSTOMER browsers can log enquiries to the admin sheet -->
     <script is:inline define:vars={{ ktSheetUrl: import.meta.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL || '' }}>
       window.KT_SHEET_WEBHOOK_URL = ktSheetUrl;
@@ -1057,7 +1057,7 @@ const unifiedSchemaGraph = {
         margin-top: 4px !important;
         font-family: "Plus Jakarta Sans", sans-serif !important;
         overflow-y: auto !important;
-        max-height: min(300px, calc(100svh - 220px)) !important;
+        max-height: min(300px, calc(100dvh - var(--keyboard-height, 0px) - 180px)) !important;
         -webkit-overflow-scrolling: touch !important;
         pointer-events: auto !important;
         overscroll-behavior: contain !important;
