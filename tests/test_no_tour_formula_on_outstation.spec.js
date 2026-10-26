@@ -41,9 +41,8 @@ test.describe('Outstation and Home Page: Do not bring tour booking quotation for
     await expect(bookingCard.locator('.font-heading:has-text("₹6,000")')).toHaveCount(0);
 
     // Verify standard outstation formula elements ARE present
-    await expect(bookingCard.locator('text=100% Fuel, Chauffeur & AC Included').first()).toBeVisible();
-    await expect(bookingCard.locator('text=Payment:').first()).toBeVisible();
-    await expect(bookingCard.locator('text=advance to confirm').first()).toBeVisible();
+    await expect(bookingCard.locator('text=Pay 50% on cab arrival').first()).toBeVisible();
+    await expect(bookingCard.locator('text=balance after trip ends').first()).toBeVisible();
 
     // Base fare should be ~₹4,880 (or 250km min ₹3,900) - definitely NOT ₹6,000 tour rate
     const fareHeading = bookingCard.locator('.font-heading:has-text("₹")').first();
@@ -93,9 +92,8 @@ test.describe('Outstation and Home Page: Do not bring tour booking quotation for
     await expect(bookingSection.locator('.font-heading:has-text("₹6,000")')).toHaveCount(0);
 
     // Verify standard outstation elements
-    await expect(bookingSection.locator('text=100% Fuel, Chauffeur & AC Included').first()).toBeVisible();
-    await expect(bookingSection.locator('text=Payment:').first()).toBeVisible();
-    await expect(bookingSection.locator('text=advance to confirm').first()).toBeVisible();
+    await expect(bookingSection.locator('text=Pay 50% on cab arrival').first()).toBeVisible();
+    await expect(bookingSection.locator('text=balance after trip ends').first()).toBeVisible();
 
     const fareHeading = bookingSection.locator('.font-heading:has-text("₹")').first();
     const fareText = await fareHeading.innerText();
@@ -139,8 +137,9 @@ test.describe('Outstation and Home Page: Do not bring tour booking quotation for
     await expect(modal.locator('.font-heading:has-text("₹6,000")')).toHaveCount(0);
 
     // Verify standard outstation breakdown
-    await expect(modal.locator('text=/km · Fuel & Chauffeur Day Bata Included').first()).toBeVisible();
-    await expect(modal.locator('text=Balance to Pay Driver').first()).toBeVisible();
+    await expect(modal.locator('text=Pay 50% on cab arrival, balance after trip ends').first()).toBeVisible();
+    await modal.locator('button:has-text("View Complete Fare Breakup")').click();
+    await expect(modal.locator('text=100% Fuel, Chauffeur & AC Included').first()).toBeVisible();
 
     await page.screenshot({ path: 'tests/modal_tirupati_standard_calc.png', fullPage: false });
   });

@@ -51,12 +51,18 @@ test.describe('Outstation Car Card Fare Calculator & Booking Modal', () => {
     const priceText = modal.locator('.font-heading:has-text("₹")').first();
     await expect(priceText).toBeVisible();
 
-    // 9. Verify Itemized Fare Breakdown is visible
+    // 9. Verify Savaari-style clean fare card & 50% payment reassurance
+    await expect(modal.locator('text=Pay 50% on cab arrival, balance after trip ends')).toBeVisible();
+
+    // Expand Fare Breakup
+    const toggleBreakdownBtn = modal.locator('button:has-text("View Complete Fare Breakup")');
+    await expect(toggleBreakdownBtn).toBeVisible();
+    await toggleBreakdownBtn.click();
+
+    // Verify Itemized Fare Breakdown & Inclusions
     await expect(modal.locator('text=Cab Hire (Maruti Ertiga / XL6 • Fuel included):')).toBeVisible();
     await expect(modal.locator('text=Driver Allowance (1 Day):')).toBeVisible();
-    await expect(modal.locator('text=Total Bill:')).toBeVisible();
-    await expect(modal.locator('text=Advance to Pay:')).toBeVisible();
-    await expect(modal.locator('text=Balance to Pay Driver').first()).toBeVisible();
+    await expect(modal.locator('text=100% Fuel, Chauffeur & AC Included')).toBeVisible();
 
     // 10. Verify Action Buttons: Book on WhatsApp & Call
     const waBookBtn = modal.locator('button:has-text("Book on WhatsApp")');
