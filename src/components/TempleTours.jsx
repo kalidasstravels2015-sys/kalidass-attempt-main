@@ -95,7 +95,7 @@ export default function TempleTours() {
       innova: '₹16,500',
       crysta: '₹19,800',
       tempo: '₹24,500',
-      highlights: 'All 9 planetary temples sequenced without backtracking • 2 Days Bata & Tolls',
+      highlights: 'All 9 planetary temples sequenced without backtracking • 2 Days Driver Bata (Tolls at actuals)',
       slug: 'navagraha-tour',
       badge: 'Complete 9 Temples',
       whatsapp: 'https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Kumbakonam%20Navagraha%202-Day%20Tour.'
@@ -186,7 +186,7 @@ export default function TempleTours() {
       slug: 'rameswaram-2-days',
       icon: Waves,
       desc: 'Char Dham holy island pilgrimage featuring 22 Theertham baths, Pamban bridge drive, Dhanushkodi ghost town, and APJ Memorial.',
-      highlights: ['22 Theertham bath coordination', 'Dhanushkodi / Ram Setu drive', 'All national tolls & 2D bata included']
+      highlights: ['22 Theertham bath coordination', 'Dhanushkodi / Ram Setu drive', '2 Days driver bata included (Tolls at actuals)']
     },
     {
       title: 'Kumbakonam 9 Navagraha Tour',

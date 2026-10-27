@@ -7,10 +7,11 @@ import WhatsAppButton from '../../../components/WhatsAppButton.astro';
 import { buildWhatsAppUrl } from '../../../utils/whatsapp';
 import OptimizedImage from '../../../components/OptimizedImage.astro';
 import VehicleCard from '../../../components/VehicleCard.astro';
-import { ChevronRight, ArrowRight } from 'lucide-react';
+import GoogleRatingBadge from '../../../components/GoogleRatingBadge.astro';
+import { ChevronRight, ArrowRight, ShieldCheck } from 'lucide-react';
 
 const title = "Temple Tour Packages from Chennai (From ₹3,500)";
-const description = "Temple tour packages from Chennai: Tirupati, Navagraha, Thiruvannamalai, Sabarimala & Rameswaram. AC cabs, courteous drivers & tolls included.";
+const description = "Temple tour packages from Chennai: Tirupati, Navagraha, Thiruvannamalai, Sabarimala & Rameswaram. AC cabs, courteous satvik drivers with tolls pre-included on 1-day tours.";
 const keywords = "temple tour packages from chennai, south india temple tour packages from chennai, chennai to tirupati cab package, kumbakonam navagraha taxi, thiruvannamalai girivalam cab, rameswaram pilgrimage taxi, sabarimala taxi chennai, kanchipuram temple taxi, vellore golden temple cab, chidambaram temple taxi";
 
 const breadcrumbItems = [
@@ -407,14 +408,64 @@ const faqSchema = {
   <main class="bg-m3-surface text-m3-on-surface font-sans pb-16">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10">
 
-      <!-- 1. HERO SECTION -->
-      <section class="text-center max-w-3xl mx-auto mb-8 sm:mb-12">
+      <!-- 1. HERO SECTION (Material Design 3 Elevated Pilgrim Showcase) -->
+      <section class="max-w-4xl mx-auto mb-8 sm:mb-10 text-center">
+        <!-- Eyebrow Row: Google Rating & Pilgrimage Badge -->
+        <div class="flex flex-wrap items-center justify-center gap-2 mb-3">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-2xs">
+            <ShieldCheck className="w-4 h-4 text-m3-primary shrink-0" />
+            <span>Verified South India Pilgrimage Yatras • From ₹3,500</span>
+          </div>
+          <GoogleRatingBadge />
+        </div>
+
         <h1 data-speakable="true" class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-3 font-heading">
           Chennai to <span class="text-m3-primary">Temple Tour Packages</span> (All-Inclusive)
         </h1>
-        <p data-speakable="true" class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed font-normal">
+        <p data-speakable="true" class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed font-normal mb-5">
           Hassle-free pilgrimage yatras from Chennai to South India's sacred shrines. Clean AC cabs, courteous satvik drivers, and all highway FASTag tolls paid upfront.
         </p>
+
+        <!-- Destination Highlights Row -->
+        <div class="flex flex-wrap items-center justify-center gap-2 mb-6 text-xs">
+          <a href="/services/tirupati-package/" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high border border-m3-outline-variant/60 font-semibold text-m3-on-surface transition-colors shadow-2xs">
+            Tirupati Balaji
+          </a>
+          <a href="/services/thiruvannamalai-girivalam-trip/" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high border border-m3-outline-variant/60 font-semibold text-m3-on-surface transition-colors shadow-2xs">
+            Thiruvannamalai Girivalam
+          </a>
+          <a href="/services/kanchipuram-temple-trip/" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high border border-m3-outline-variant/60 font-semibold text-m3-on-surface transition-colors shadow-2xs">
+            Kanchipuram Temples
+          </a>
+          <a href="/services/navagraha-tour/" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high border border-m3-outline-variant/60 font-semibold text-m3-on-surface transition-colors shadow-2xs">
+            Kumbakonam Navagraha
+          </a>
+          <a href="/services/rameswaram-2-days/" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high border border-m3-outline-variant/60 font-semibold text-m3-on-surface transition-colors shadow-2xs">
+            Rameswaram &amp; Dhanushkodi
+          </a>
+        </div>
+
+        <!-- Visual Hero Showcase Banner -->
+        <div class="relative w-full h-48 sm:h-56 md:h-64 rounded-m3-2xl overflow-hidden shadow-m3-1 border border-m3-outline-variant/60 bg-m3-inverse-surface group text-left">
+          <OptimizedImage
+            src="/images/services/temple-tours.webp"
+            alt="Kalidass Travels - South India Temple Tour Cab Packages from Chennai"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90"
+            sizes="(max-width: 640px) 100vw, 896px"
+            loading="eager"
+            fetchpriority="high"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-m3-inverse-surface/90 via-m3-inverse-surface/30 to-transparent pointer-events-none"></div>
+          <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between pointer-events-none text-white text-xs font-semibold gap-2">
+            <span class="px-3 py-1 rounded-m3-full bg-m3-inverse-surface/90 backdrop-blur-md border border-white/20 flex items-center gap-1.5 shadow-xs truncate max-w-[62%]">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0"></span>
+              <span class="truncate">Doorstep Chennai Pickup • Satvik Teetotaler Chauffeurs</span>
+            </span>
+            <span class="px-3 py-1 rounded-m3-full bg-m3-primary text-m3-on-primary text-xs font-bold shadow-xs shrink-0">
+              From ₹3,500 Flat
+            </span>
+          </div>
+        </div>
       </section>
 
       <!-- STICKY QUICK-NAV JUMP BAR (Below Hero) -->
@@ -609,8 +660,8 @@ const faqSchema = {
             <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
-            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">All Tolls Included</h3>
-            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">FASTag highway tolls, parking fees &amp; state permits 100% paid.</p>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Tolls Covered on 1-Day Tours</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">1-day tour packages include highway FASTag tolls upfront. Multi-day &amp; outstation trips billed transparently with tolls at actual receipts.</p>
           </div>
 
           <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">

@@ -51,17 +51,37 @@ const driversSchema = {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
       {/* Header */}
-      <div class="text-center max-w-3xl mx-auto mb-8">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
+      <div class="text-center max-w-3xl mx-auto mb-10">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-xs mb-3.5 tracking-wide">
           <ShieldCheck className="w-4 h-4 text-m3-primary shrink-0" />
-          <span>Police Background Verified (PVC)</span>
+          <span>Police Background Verified (PVC) · Zero Incident Track Record</span>
         </div>
-        <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-m3-on-surface tracking-tight leading-tight mb-3 font-heading">
           Our Verified <span class="text-m3-primary">Drivers &amp; Chauffeurs</span>
         </h1>
         <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed mb-6 font-normal font-sans">
-          All our drivers are permanent team members with verified police clearance (PVC) and clean highway records. Meet the drivers behind Kalidass Travels.
+          All our drivers are permanent team members with verified police clearance (PVC), clean highway records, and 10+ years of expert navigation across South India.
         </p>
+
+        <!-- Desktop Trust Pill Strip -->
+        <div class="flex flex-wrap items-center justify-center gap-2 max-w-3xl mx-auto">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 text-xs font-medium text-m3-on-surface shadow-2xs">
+            <CheckCircle2 className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+            <span>Police Clearance Certificate (PVC)</span>
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 text-xs font-medium text-m3-on-surface shadow-2xs">
+            <Clock className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+            <span>10+ Years Highway Experience</span>
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 text-xs font-medium text-m3-on-surface shadow-2xs">
+            <Globe className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+            <span>Multi-Lingual (Tamil, English, Hindi)</span>
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 text-xs font-medium text-m3-on-surface shadow-2xs">
+            <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500 shrink-0" />
+            <span>4.9★ Average Rider Rating</span>
+          </span>
+        </div>
       </div>
 
       {/* Driver Cards Grid */}

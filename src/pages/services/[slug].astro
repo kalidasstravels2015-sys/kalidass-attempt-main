@@ -18,6 +18,7 @@ import VelloreBookingEngine from '../../components/VelloreBookingEngine.jsx';
 import PondicherryBookingEngine from '../../components/PondicherryBookingEngine.jsx';
 import TourBookingEngine from '../../components/TourBookingEngine.jsx';
 import VehicleCard from '../../components/VehicleCard.astro';
+import GoogleRatingBadge from '../../components/GoogleRatingBadge.astro';
 import { buildWhatsAppUrl } from '../../utils/whatsapp';
 import { 
   ShieldCheck, 
@@ -548,10 +549,10 @@ const getFallbackStayOptions = (r: Record<number, number>, vehicleName: string):
       label: "2 Days / 1 Night (Driver Night Bata Included)",
       km: `${2 * minKmDay} km Min Coverage (${minKmDay} km/day @ ₹${rateKm}/km = ₹${(2 * minKmDay * rateKm).toLocaleString('en-IN')})`,
       bata: `2 Calendar Days Bata: ₹${(2 * dailyBata).toLocaleString('en-IN')}`,
-      tolls: "All Highway Tolls & Permits Included",
+      tolls: "FASTag Tolls & State Permits: Payable at Actuals",
       stay: `1 Night Driver Lodging Allowance Included (₹${stayLodging.toLocaleString('en-IN')})`,
       sightseeing: "2 Days Local Sightseeing & Temple Route",
-      inclusions: "Fuel, Highway Tolls & Driver Night Bata Included"
+      inclusions: "Fuel & Driver Night Bata Included • Tolls at Actuals"
     },
     {
       value: "3",
@@ -560,10 +561,10 @@ const getFallbackStayOptions = (r: Record<number, number>, vehicleName: string):
       label: "3 Days / 2 Nights (2 Nights Driver Bata Included)",
       km: `${3 * minKmDay} km Min Coverage (${minKmDay} km/day @ ₹${rateKm}/km = ₹${(3 * minKmDay * rateKm).toLocaleString('en-IN')})`,
       bata: `3 Calendar Days Bata: ₹${(3 * dailyBata).toLocaleString('en-IN')}`,
-      tolls: "All Highway Tolls & Permits Included",
+      tolls: "FASTag Tolls & State Permits: Payable at Actuals",
       stay: `2 Nights Driver Lodging Allowance Included (₹${(2 * stayLodging).toLocaleString('en-IN')})`,
       sightseeing: "3 Days Extended Sightseeing Circuit",
-      inclusions: "Fuel, Highway Tolls & 2 Nights Driver Bata Included"
+      inclusions: "Fuel & 2 Nights Driver Bata Included • Tolls at Actuals"
     }
   ];
 };
@@ -578,7 +579,7 @@ const resolveStayOptionDetails = (opt: StayDropdownOption, vehicleName: string):
     ...opt,
     km: opt.km || (isOneDay ? `~${minKmDay} km Minimum Run Included` : `${dayNum * minKmDay} km Min Run (${minKmDay} km/day @ ₹${rateKm}/km)`),
     bata: opt.bata || `${dayNum} Day${dayNum > 1 ? 's' : ''} Driver Bata: ₹${(dayNum * dailyBata).toLocaleString('en-IN')}`,
-    tolls: opt.tolls || "All FASTag Highway Tolls Included",
+    tolls: opt.tolls || (isOneDay ? "FASTag Highway Tolls Included" : "FASTag Tolls & State Permits: Payable at Actuals"),
     stay: opt.stay || (isOneDay ? "₹0 (Same-Day Return)" : `${dayNum - 1} Night${dayNum > 2 ? 's' : ''} Driver Night Bata Included (₹${((dayNum - 1) * stayLodging).toLocaleString('en-IN')})`),
     sightseeing: opt.sightseeing || "Local Temples & Sightseeing Route"
   };
@@ -649,10 +650,10 @@ const PILGRIM_ROUTES: Record<string, {
           label: "2 Days / 1 Night (Driver Night Bata Included)", 
           km: `${2 * minKmDay} km Min Run (${minKmDay} km/day @ ₹${rateKm}/km = ₹${(2 * minKmDay * rateKm).toLocaleString('en-IN')})`,
           bata: `2 Calendar Days Bata: ₹${(2 * dailyBata).toLocaleString('en-IN')}`,
-          tolls: "AP State Permit & Round-Trip Highway Tolls Included",
+          tolls: "FASTag Tolls & AP State Permit: Payable at Actuals",
           stay: `1 Night Driver Lodging Allowance Included (₹${stayLodging.toLocaleString('en-IN')})`,
           sightseeing: "Tirumala + Tiruchanur + Srinivasa Mangapuram + Kanipakam",
-          inclusions: "Fuel, FASTag Tolls, AP Border Permit & Driver Night Bata Included" 
+          inclusions: "Fuel & Driver Night Bata Included • Tolls & AP Permit at Actuals" 
         },
         { 
           value: "3", 
@@ -661,10 +662,10 @@ const PILGRIM_ROUTES: Record<string, {
           label: "3 Days / 2 Nights (2 Nights Driver Bata Included)", 
           km: `${3 * minKmDay} km Min Run (${minKmDay} km/day @ ₹${rateKm}/km = ₹${(3 * minKmDay * rateKm).toLocaleString('en-IN')})`,
           bata: `3 Calendar Days Bata: ₹${(3 * dailyBata).toLocaleString('en-IN')}`,
-          tolls: "AP State Permit & Highway FASTag Tolls Included",
+          tolls: "FASTag Tolls & AP State Permit: Payable at Actuals",
           stay: `2 Nights Driver Lodging Allowance Included (₹${(2 * stayLodging).toLocaleString('en-IN')})`,
           sightseeing: "Tirumala + Srikalahasti + Kanipakam + Local Temples",
-          inclusions: "Fuel, FASTag Tolls, AP Border Permit & 2 Nights Driver Bata Included" 
+          inclusions: "Fuel & 2 Nights Driver Bata Included • Tolls & AP Permit at Actuals" 
         }
       ];
     },
@@ -698,8 +699,8 @@ const PILGRIM_ROUTES: Record<string, {
     stayLabelSub: 'Girivalam Standby & Tolls Included',
     getDropdownOptions: (r) => [
       { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "1 Day (Daytime Return)", inclusions: "Fuel, Highway Tolls, Temple Visit & Driver Bata Included", label: "1 Day (Daytime Return • 6 AM to 10 PM)", selected: true },
-      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "Overnight Pournami Package (Girivalam Standby)", inclusions: "Fuel, Tolls, All-Night Girivalam Standby & 2 Days Driver Bata Included", label: "Overnight Pournami Package (All-Night Standby)" },
-      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, Tolls, 2 Days Sightseeing & Driver Night Bata Included", label: "2 Days / 1 Night (Driver Night Bata Included)" }
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "Overnight Pournami Package (Girivalam Standby)", inclusions: "Fuel, All-Night Girivalam Standby & 2 Days Driver Bata Included • Tolls at Actuals", label: "Overnight Pournami Package (All-Night Standby)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, 2 Days Sightseeing & Driver Night Bata Included • Tolls at Actuals", label: "2 Days / 1 Night (Driver Night Bata Included)" }
     ],
     baseInclusionsText: 'Fuel, Highway Tolls, Girivalam Standby & Driver Bata Included',
     comparisonTitle: 'Why Pilgrims Choose Kalidass Travels vs Online Cab Aggregators',
@@ -731,8 +732,8 @@ const PILGRIM_ROUTES: Record<string, {
     stayLabelSub: 'Tolls & Shopping Waiting Included',
     getDropdownOptions: (r) => [
       { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "1 Day (Same Day Return)", inclusions: "Fuel, Highway Tolls, Weaver Waiting Time & Driver Bata Included", label: "1 Day (Same Day Return • 06:30 AM to 08:30 PM)", selected: true },
-      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, Highway Tolls, 2 Days Sightseeing & Driver Night Bata Included", label: "2 Days / 1 Night (Driver Night Bata Included)" },
-      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Extended Stay", inclusions: "Fuel, Highway Tolls, Divya Desam Tour & 2 Nights Driver Bata Included", label: "3 Days / 2 Nights Extended (Weddings & Multi-Day Tour)" }
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, 2 Days Sightseeing & Driver Night Bata Included • Tolls at Actuals", label: "2 Days / 1 Night (Driver Night Bata Included)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Extended Stay", inclusions: "Fuel, Divya Desam Tour & 2 Nights Driver Bata Included • Tolls at Actuals", label: "3 Days / 2 Nights Extended (Weddings & Multi-Day Tour)" }
     ],
     baseInclusionsText: 'Fuel, Highway Tolls, Weaver Waiting Time & Driver Bata Included',
     comparisonTitle: 'Why Travelers Choose Kalidass Travels for Kanchipuram',
@@ -756,18 +757,18 @@ const PILGRIM_ROUTES: Record<string, {
     travelTimeSub: 'To Kumbakonam Circuit',
     startingFare: '₹12,000 Flat',
     startingFareSub: 'AC Sedan 2-Day Round-Trip',
-    tollsLabel: 'Highway Tolls & Bata',
-    tollsValue: '100% Included',
+    tollsLabel: 'FASTag Tolls & Parking',
+    tollsValue: 'Payable at Actuals',
     tollsSub: 'All 9 Temples & 750 KM Covered',
     calloutTitle: 'Optimized Circuit Sequencing (Zero Backtracking) • Experienced Navagraha Chauffeur • ₹500 Advance to Confirm Booking',
-    calloutDesc: 'Includes all 9 Navagraha shrines (Suryanar to Thirunallar), Thanjavur / Kumbakonam hotel coordination, and complete highway toll coverage.',
-    stayLabelSub: '750 KM, Tolls & Driver Bata Included',
+    calloutDesc: 'Includes all 9 Navagraha shrines (Suryanar to Thirunallar), Thanjavur / Kumbakonam hotel coordination, and expert routing.',
+    stayLabelSub: '750 KM & Driver Bata Included',
     getDropdownOptions: (r) => [
-      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night (Standard 9 Temples Circuit)", inclusions: "Fuel, Highway Tolls, 9 Temples Coverage & 2 Days Driver Bata Included", label: "2 Days / 1 Night (Standard 9 Temples • 750 km Circuit)", selected: true },
-      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, Highway Tolls, 9 Temples + Thanjavur & 2 Nights Driver Bata Included", label: "3 Days / 2 Nights (Relaxed Senior Citizen Darshan + Thanjavur)" },
-      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Extended Stay", inclusions: "Fuel, Tolls, Complete Chola Temple Circuit & 3 Nights Driver Bata Included", label: "4 Days / 3 Nights (Complete Chola Circuit & Trichy Rockfort)" }
+      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night (Standard 9 Temples Circuit)", inclusions: "Cab Hire, Fuel, 9 Temples Coverage & 2 Days Driver Bata • Tolls at Actuals", label: "2 Days / 1 Night (Standard 9 Temples • 750 km Circuit)", selected: true },
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Cab Hire, Fuel, 9 Temples + Thanjavur & 2 Nights Driver Bata • Tolls at Actuals", label: "3 Days / 2 Nights (Relaxed Senior Citizen Darshan + Thanjavur)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Extended Stay", inclusions: "Cab Hire, Fuel, Complete Chola Circuit & 3 Nights Driver Bata • Tolls at Actuals", label: "4 Days / 3 Nights (Complete Chola Circuit & Trichy Rockfort)" }
     ],
-    baseInclusionsText: 'Fuel, Highway Tolls, 9 Temples Coverage & 2 Days Driver Bata Included',
+    baseInclusionsText: 'Fuel, 9 Temples Coverage & 2 Days Driver Bata Included (Tolls at Actuals)',
     comparisonTitle: 'Why Pilgrims Choose Kalidass Travels for Kumbakonam Navagraha',
     comparisonDesc: 'App aggregators bill per-km with inadequate 250 km/day allowances and drivers who do not know temple closure hours. Here is how Kalidass Travels compares:',
     comparisonRows: [
@@ -776,7 +777,7 @@ const PILGRIM_ROUTES: Record<string, {
       { feature: 'Afternoon Temple Closures', kalidass: 'Zero Waiting Charges (Plan syncs with 12:30–4 PM closures)', aggregators: '₹150–₹200/hr waiting fee while temples are closed' },
       { feature: 'Navagraha Route Knowledge', kalidass: 'Optimized parikrama sequence without backtracking', aggregators: 'City drivers get lost between rural temple villages' },
       { feature: 'Advance Payment', kalidass: '₹500 Advance (Balance after trip completion)', aggregators: '100% upfront card/wallet prepayment with cancellation fees' },
-      { feature: 'NH Highway Tolls', kalidass: 'All FASTag Tolls Paid by Us', aggregators: 'Passenger pays ₹450+ out of pocket at toll plazas' }
+      { feature: 'NH Highway Tolls', kalidass: 'Billed Transparently at Actual FASTag Receipts', aggregators: 'Arbitrary passenger cash demands by drivers' }
     ],
     ctaHeading: 'Ready to Book Your Chennai to Kumbakonam 9 Navagraha Cab (2, 3 or 4 Days)?'
   },
@@ -790,17 +791,17 @@ const PILGRIM_ROUTES: Record<string, {
     startingFare: '₹26,500 Flat',
     startingFareSub: 'AC Ertiga SUV 3-Day Yatra',
     tollsLabel: 'Kerala Permit & Bata',
-    tollsValue: '100% Included',
-    tollsSub: 'Commercial Permit Pre-Cleared',
+    tollsValue: 'Permit Pre-Paid',
+    tollsSub: 'Commercial Permit Handled',
     calloutTitle: 'Satvik Teetotaler Chauffeurs • Irumudi Safe Storage • Nilakkal Parking Guidance • ₹500 Advance to Confirm',
     calloutDesc: 'Includes pre-arranged Kerala Interstate Commercial Permit, pure vegetarian dining stops, and experienced Western Ghats driving.',
-    stayLabelSub: 'Kerala Permit, Tolls & Driver Bata Included',
+    stayLabelSub: 'Kerala Permit & Driver Bata Included',
     getDropdownOptions: (r) => [
-      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights (Direct Nilakkal Return)", inclusions: "Fuel, Kerala Permit, Highway Tolls & 3 Days Driver Bata Included", label: "3 Days / 2 Nights (Direct Nilakkal Base Camp Return • 1,350 km)", selected: true },
-      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Stay", inclusions: "Fuel, Kerala Permit, Extended Kerala Temple Sightseeing & 4 Days Bata Included", label: "4 Days / 3 Nights (Darshan + Erumely & Chottanikkara / Guruvayur)" },
-      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "5 Days / 4 Nights Extended Stay", inclusions: "Fuel, Kerala Permit, Complete Kerala Yatra & 4 Nights Driver Bata Included", label: "5 Days / 4 Nights (Complete Kerala Pilgrim Circuit)" }
+      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights (Direct Nilakkal Return)", inclusions: "Fuel, Kerala Permit & 3 Days Driver Bata Included • Tolls at Actuals", label: "3 Days / 2 Nights (Direct Nilakkal Base Camp Return • 1,350 km)", selected: true },
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Stay", inclusions: "Fuel, Kerala Permit, Extended Kerala Temple Sightseeing & 4 Days Bata Included • Tolls at Actuals", label: "4 Days / 3 Nights (Darshan + Erumely & Chottanikkara / Guruvayur)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "5 Days / 4 Nights Extended Stay", inclusions: "Fuel, Kerala Permit, Complete Kerala Yatra & 4 Nights Driver Bata Included • Tolls at Actuals", label: "5 Days / 4 Nights (Complete Kerala Pilgrim Circuit)" }
     ],
-    baseInclusionsText: 'Fuel, Kerala Interstate Permit, Highway Tolls & 3 Days Driver Bata Included',
+    baseInclusionsText: 'Fuel, Kerala Interstate Permit & 3 Days Driver Bata Included (Tolls at Actuals)',
     comparisonTitle: 'Why Ayyappa Devotees Choose Kalidass Travels for Sabarimala',
     comparisonDesc: 'Aggregators do not arrange Kerala permits and city drivers refuse long night ghat journeys to Nilakkal. Here is how Kalidass Travels compares:',
     comparisonRows: [
@@ -822,23 +823,23 @@ const PILGRIM_ROUTES: Record<string, {
     travelTimeSub: 'Via NH 38 & NH 87',
     startingFare: '₹18,500 Flat',
     startingFareSub: 'AC Sedan 2-Day Round-Trip',
-    tollsLabel: 'Highway Tolls & Bata',
-    tollsValue: '100% Included',
-    tollsSub: '1,200 KM & All NH Tolls Covered',
+    tollsLabel: 'FASTag Tolls & Parking',
+    tollsValue: 'Payable at Actuals',
+    tollsSub: '1,200 KM Run Covered',
     calloutTitle: '22 Theertham snanam guidance • Dhanushkodi beach drop • Kalam Memorial • ₹500 Advance to Confirm',
     calloutDesc: 'Covers Ramanathaswamy Temple, Agni Theertham, 22 sacred wells, Arichal Munai (Land\'s End), and Pamban Bridge view.',
-    stayLabelSub: '1,200 KM, Tolls & Driver Bata Included',
+    stayLabelSub: '1,200 KM & Driver Bata Included',
     getDropdownOptions: (r) => [
-      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night (Rameswaram & Dhanushkodi Return)", inclusions: "Fuel, All Highway Tolls, 22 Theerthams, Dhanushkodi & 2 Days Driver Bata Included", label: "2 Days / 1 Night (Rameswaram & Dhanushkodi Return • 1,200 km)", selected: true },
-      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, Tolls, Rameswaram + Madurai Darshan & 2 Nights Driver Bata Included", label: "3 Days / 2 Nights (Rameswaram + Madurai Meenakshi Amman)" },
-      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Extended Stay", inclusions: "Fuel, Tolls, Complete Southern Pilgrimage Circuit & 3 Nights Driver Bata Included", label: "4 Days / 3 Nights (Southern Pilgrimage: Rameswaram + Madurai + Kanyakumari)" }
+      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night (Rameswaram & Dhanushkodi Return)", inclusions: "Fuel, 22 Theerthams, Dhanushkodi & 2 Days Driver Bata Included • Tolls at Actuals", label: "2 Days / 1 Night (Rameswaram & Dhanushkodi Return • 1,200 km)", selected: true },
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, Rameswaram + Madurai Darshan & 2 Nights Driver Bata Included • Tolls at Actuals", label: "3 Days / 2 Nights (Rameswaram + Madurai Meenakshi Amman)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Extended Stay", inclusions: "Fuel, Complete Southern Pilgrimage Circuit & 3 Nights Driver Bata Included • Tolls at Actuals", label: "4 Days / 3 Nights (Southern Pilgrimage: Rameswaram + Madurai + Kanyakumari)" }
     ],
-    baseInclusionsText: 'Fuel, Highway Tolls, Dhanushkodi Drop & 2 Days Driver Bata Included',
+    baseInclusionsText: 'Fuel, Dhanushkodi Drop & 2 Days Driver Bata Included (Tolls at Actuals)',
     comparisonTitle: 'Why Pilgrims Choose Kalidass Travels for Rameswaram & Dhanushkodi',
     comparisonDesc: 'Aggregators advertise misleading low base rates but bill return tolls and driver charges extra. Here is how Kalidass Travels compares:',
     comparisonRows: [
-      { feature: 'Round-Trip Pricing', kalidass: '₹18,500 Flat 2-Day All-Inclusive (Sedan)', aggregators: 'Base fare only; return tolls & driver night charges billed extra' },
-      { feature: '1,200 KM Highway Tolls', kalidass: 'All NH FASTag Tolls Paid by Us', aggregators: 'Passenger pays ₹750+ out of pocket at multiple toll plazas' },
+      { feature: 'Round-Trip Pricing', kalidass: '₹18,500 Flat 2-Day Package (Sedan)', aggregators: 'Base fare only; return tolls & driver night charges billed extra' },
+      { feature: '1,200 KM Highway Tolls', kalidass: 'Billed Transparently at Actual FASTag Receipts', aggregators: 'Arbitrary cash demands at toll plazas' },
       { feature: 'Dhanushkodi Land\'s End', kalidass: 'Direct drive up to Arichal Munai beach endpoint', aggregators: 'Drivers stop at town outskirts or demand ₹800+ extra cash' },
       { feature: '22 Theerthams Coordination', kalidass: 'Chauffeur coordinates dress changing rooms & guides to wells', aggregators: 'Curbside highway drop; zero knowledge of temple rituals' },
       { feature: 'Early Morning Darshan', kalidass: '4:30 AM pickup for Spatika Linga Puja without surcharge', aggregators: 'High night cancellation rates; drivers refuse 4 AM pickups' },
@@ -863,8 +864,8 @@ const PILGRIM_ROUTES: Record<string, {
     stayLabelSub: 'ECR Tolls & Free Boating Waiting Included',
     getDropdownOptions: (r) => [
       { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "1 Day (Same Day Return)", inclusions: "Fuel, ECR Highway Tolls, Pichavaram Boating Waiting & Driver Bata Included", label: "1 Day (Same Day Return • 05:30 AM to 10:30 PM)", selected: true },
-      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, ECR Tolls, Vaitheeswaran Kovil & Driver Night Bata Included", label: "2 Days / 1 Night Stay (Chidambaram + Vaitheeswaran Kovil + Pichavaram)" },
-      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Extended Stay", inclusions: "Fuel, Tolls, Chidambaram + Kumbakonam Circuit & 2 Nights Driver Bata Included", label: "3 Days / 2 Nights Extended (Chidambaram + Kumbakonam Temples Circuit)" }
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, Vaitheeswaran Kovil & Driver Night Bata Included • Tolls at Actuals", label: "2 Days / 1 Night Stay (Chidambaram + Vaitheeswaran Kovil + Pichavaram)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Extended Stay", inclusions: "Fuel, Chidambaram + Kumbakonam Circuit & 2 Nights Driver Bata Included • Tolls at Actuals", label: "3 Days / 2 Nights Extended (Chidambaram + Kumbakonam Temples Circuit)" }
     ],
     baseInclusionsText: 'Fuel, ECR Highway Tolls, Pichavaram Waiting & Driver Bata Included',
     comparisonTitle: 'Why Travelers Choose Kalidass Travels for Chidambaram & Pichavaram',
@@ -896,8 +897,8 @@ const PILGRIM_ROUTES: Record<string, {
     stayLabelSub: 'NH Tolls & Star Path Waiting Included',
     getDropdownOptions: (r) => [
       { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "1 Day (Same Day Return)", inclusions: "Fuel, Bangalore Highway Tolls, Star Path Waiting & Driver Bata Included", label: "1 Day (Same Day Return • 06:00 AM to 08:30 PM)", selected: true },
-      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, Highway Tolls, Yelagiri Hills Sightseeing & Driver Night Bata Included", label: "2 Days / 1 Night Stay (Golden Temple + Jalakandeswarar Fort + Yelagiri Hills)" },
-      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Extended Stay", inclusions: "Fuel, Tolls, Multi-Day Pilgrim Circuit & 2 Nights Driver Bata Included", label: "3 Days / 2 Nights Extended (Vellore + Tirupati or Kanchipuram Circuit)" }
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, Yelagiri Hills Sightseeing & Driver Night Bata Included • Tolls at Actuals", label: "2 Days / 1 Night Stay (Golden Temple + Jalakandeswarar Fort + Yelagiri Hills)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Extended Stay", inclusions: "Fuel, Multi-Day Pilgrim Circuit & 2 Nights Driver Bata Included • Tolls at Actuals", label: "3 Days / 2 Nights Extended (Vellore + Tirupati or Kanchipuram Circuit)" }
     ],
     baseInclusionsText: 'Fuel, Bangalore Highway Tolls, Star Path Waiting & Driver Bata Included',
     comparisonTitle: 'Why Devotees Choose Kalidass Travels for Vellore Golden Temple',
@@ -929,8 +930,8 @@ const PILGRIM_ROUTES: Record<string, {
     stayLabelSub: 'ECR Tolls & Sightseeing Included',
     getDropdownOptions: (r) => [
       { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "1 Day (Same Day Return)", inclusions: "Fuel, ECR FASTag Tolls & Driver Bata Included", label: "1 Day (Same Day Return • Up to 320 km)", selected: true },
-      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, ECR Tolls, 2 Days Sightseeing & Driver Night Bata Included", label: "2 Days / 1 Night (Driver Night Bata Included)" },
-      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, ECR Tolls, 3 Days Sightseeing & 2 Nights Driver Bata Included", label: "3 Days / 2 Nights (2 Nights Driver Bata Included)" }
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, 2 Days Sightseeing & Driver Night Bata Included • Tolls at Actuals", label: "2 Days / 1 Night (Driver Night Bata Included)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, 3 Days Sightseeing & 2 Nights Driver Bata Included • Tolls at Actuals", label: "3 Days / 2 Nights (2 Nights Driver Bata Included)" }
     ],
     baseInclusionsText: 'Fuel, ECR FASTag Tolls & Driver Bata Included',
     comparisonTitle: 'Why Travelers Choose Kalidass Travels for Pondicherry vs App Cabs',
@@ -1019,24 +1020,24 @@ const PILGRIM_ROUTES: Record<string, {
     travelTimeSub: 'Scenic Highway & Hill Climb',
     startingFare: '₹7,500 Flat',
     startingFareSub: 'AC Sedan 2 Days / 1 Night',
-    tollsLabel: 'NH Tolls & Bata',
-    tollsValue: '100% Included',
+    tollsLabel: 'FASTag Tolls & Parking',
+    tollsValue: 'Payable at Actuals',
     tollsSub: 'Driver Night Bata Included',
     calloutTitle: 'Doorstep Pickup Anywhere in Chennai • ₹500 Advance to Confirm Booking',
     calloutDesc: 'Includes Punganoor Lake, Jalagamparai Falls, Swamimalai Trek point, and 14 hairpin bend ascent.',
-    stayLabelSub: 'Driver Night Bata & Tolls Included',
+    stayLabelSub: 'Driver Night Bata Included',
     getDropdownOptions: (r) => [
-      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, NH 48 Tolls, Ghat Road Clearance & Driver Night Bata Included", label: "2 Days / 1 Night (Driver Night Bata Included)", selected: true },
-      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, Tolls, Sightseeing & 2 Nights Driver Bata Included", label: "3 Days / 2 Nights (2 Nights Driver Bata Included)" },
-      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Stay", inclusions: "Fuel, Tolls, Sightseeing & 3 Nights Driver Bata Included", label: "4 Days / 3 Nights (3 Nights Driver Bata Included)" }
+      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, Ghat Road Clearance & Driver Night Bata Included • Tolls at Actuals", label: "2 Days / 1 Night (Driver Night Bata Included)", selected: true },
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, Sightseeing & 2 Nights Driver Bata Included • Tolls at Actuals", label: "3 Days / 2 Nights (2 Nights Driver Bata Included)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Stay", inclusions: "Fuel, Sightseeing & 3 Nights Driver Bata Included • Tolls at Actuals", label: "4 Days / 3 Nights (3 Nights Driver Bata Included)" }
     ],
-    baseInclusionsText: 'Fuel, NH 48 Tolls, Ghat Road Clearance & Driver Night Bata Included',
+    baseInclusionsText: 'Fuel, Ghat Road Clearance & Driver Night Bata Included (Tolls at Actuals)',
     comparisonTitle: 'Why Travelers Choose Kalidass Travels for Yelagiri Hills vs App Cabs',
     comparisonDesc: 'Climbing 14 hairpin bends requires experienced mountain drivers; online app drivers frequently cancel. Here is how we compare:',
     comparisonRows: [
-      { feature: 'Round-Trip Pricing', kalidass: '₹7,500 Flat All-Inclusive (2 Days Sedan)', aggregators: 'Base fare only; return tolls & return driver night charges billed extra' },
+      { feature: 'Round-Trip Pricing', kalidass: '₹7,500 Flat 2-Day Package (Sedan)', aggregators: 'Base fare only; return tolls & return driver night charges billed extra' },
       { feature: '14 Hairpin Bend Ascent', kalidass: 'Guaranteed hill climb with skilled highway chauffeurs', aggregators: 'High cancellation; city drivers refuse steep hill hairpin turns' },
-      { feature: 'NH 48 Highway Tolls', kalidass: 'All FASTag Tolls Paid by Us', aggregators: 'Passenger pays ₹400+ out of pocket at Sriperumbudur/Walajapet' },
+      { feature: 'NH 48 Highway Tolls', kalidass: 'Billed Transparently at Actual FASTag Receipts', aggregators: 'Arbitrary passenger cash demands at toll plazas' },
       { feature: 'Driver Night Bata / Allowance', kalidass: '100% Included in the package fare', aggregators: 'Passenger must pay ₹500–₹800/night cash directly to driver' },
       { feature: 'Advance Payment', kalidass: '₹500 Advance (Balance after trip completion)', aggregators: '100% upfront card/wallet prepayment with cancellation fees' },
       { feature: 'Local Sightseeing', kalidass: 'Full standby for Punganoor Lake, Nature Park & Falls', aggregators: 'Hotel drop only; demands extra cash for local viewpoints' }
@@ -1052,24 +1053,24 @@ const PILGRIM_ROUTES: Record<string, {
     travelTimeSub: 'Expressway & 20 Hairpin Bends',
     startingFare: '₹10,500 Flat',
     startingFareSub: 'AC Sedan 2 Days / 1 Night',
-    tollsLabel: 'NH Tolls & Bata',
-    tollsValue: '100% Included',
+    tollsLabel: 'FASTag Tolls & Parking',
+    tollsValue: 'Payable at Actuals',
     tollsSub: 'Driver Night Bata Included',
     calloutTitle: 'Doorstep Pickup Anywhere in Chennai • ₹500 Advance to Confirm Booking',
     calloutDesc: 'Includes Yercaud Lake, Pagoda Point, Shevaroy Temple, Lady\'s Seat, and Salem ghat ascent.',
-    stayLabelSub: 'Driver Night Bata & Tolls Included',
+    stayLabelSub: 'Driver Night Bata Included',
     getDropdownOptions: (r) => [
-      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, NH FASTag Tolls, Ghat Road Clearance & Driver Night Bata Included", label: "2 Days / 1 Night (Driver Night Bata Included)", selected: true },
-      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, Tolls, Sightseeing & 2 Nights Driver Bata Included", label: "3 Days / 2 Nights (2 Nights Driver Bata Included)" },
-      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Stay", inclusions: "Fuel, Tolls, Sightseeing & 3 Nights Driver Bata Included", label: "4 Days / 3 Nights (3 Nights Driver Bata Included)" }
+      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, Ghat Road Clearance & Driver Night Bata Included • Tolls at Actuals", label: "2 Days / 1 Night (Driver Night Bata Included)", selected: true },
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, Sightseeing & 2 Nights Driver Bata Included • Tolls at Actuals", label: "3 Days / 2 Nights (2 Nights Driver Bata Included)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Stay", inclusions: "Fuel, Sightseeing & 3 Nights Driver Bata Included • Tolls at Actuals", label: "4 Days / 3 Nights (3 Nights Driver Bata Included)" }
     ],
-    baseInclusionsText: 'Fuel, NH FASTag Tolls, Ghat Road Clearance & Driver Night Bata Included',
+    baseInclusionsText: 'Fuel, Ghat Road Clearance & Driver Night Bata Included (Tolls at Actuals)',
     comparisonTitle: 'Why Travelers Choose Kalidass Travels for Yercaud Weekend Cabs',
     comparisonDesc: 'Navigating 20 hairpin bends from Salem to Yercaud requires skilled drivers. Here is how Kalidass Travels compares to online aggregators:',
     comparisonRows: [
-      { feature: 'Round-Trip Pricing', kalidass: '₹10,500 Flat All-Inclusive (2 Days Sedan)', aggregators: 'Base fare only; return expressway tolls billed extra' },
+      { feature: 'Round-Trip Pricing', kalidass: '₹10,500 Flat 2-Day Package (Sedan)', aggregators: 'Base fare only; return expressway tolls billed extra' },
       { feature: '20 Hairpin Bend Ascent', kalidass: 'Guaranteed hill ascent with certified mountain drivers', aggregators: 'Frequent refusal by plains drivers to climb Salem ghats' },
-      { feature: 'Highway FASTag Tolls', kalidass: 'All Tolls on NH 48 & NH 44 Paid by Us', aggregators: 'Passenger pays ₹600+ out of pocket at multiple toll plazas' },
+      { feature: 'Highway FASTag Tolls', kalidass: 'Billed Transparently at Actual FASTag Receipts', aggregators: 'Arbitrary passenger cash demands at multiple toll plazas' },
       { feature: 'Driver Night Bata / Allowance', kalidass: '100% Included in the flat package rate (Driver expenses)', aggregators: 'Devotee/tourist forced to pay ₹600–₹800/night out of pocket' },
       { feature: 'Advance Payment', kalidass: '₹500 Advance (Balance after trip completion)', aggregators: '100% upfront card/wallet prepayment with cancellation penalties' },
       { feature: 'Sightseeing Standby', kalidass: 'Free car standby for Emerald Lake, Pagoda Point & viewpoints', aggregators: 'Curbside resort drop only; refuses local viewpoint runs' }
@@ -1613,30 +1614,30 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
     <section class="bg-m3-surface border-b border-m3-outline-variant pt-3 sm:pt-6 pb-6 sm:pb-8 px-3 sm:px-6 lg:px-8">
       {hasDedicatedEngine ? (
         <div class="max-w-6xl mx-auto">
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
             
             <!-- Left Column: Package Overview & Trust Inclusions -->
-            <div class="lg:col-span-5 flex flex-col justify-start">
-              {/* Category & Status Chips */}
-              <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-3">
+            <div class="lg:col-span-5 flex flex-col justify-center">
+              <div class="flex flex-wrap items-center gap-2 mb-2 sm:mb-3">
                 <a 
                   href={`/services/${categorySlug}/`}
-                  class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container text-xs font-bold uppercase tracking-wider border border-m3-primary/20 hover:bg-m3-primary/15 transition-colors"
+                  class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container text-xs font-bold uppercase tracking-wider border border-m3-primary/20 hover:bg-m3-primary/15 transition-colors shadow-2xs"
                 >
                   <span>{service.category}</span>
                 </a>
-                <span class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant text-m3-on-surface text-xs font-medium">
+                <span class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant text-m3-on-surface text-xs font-medium shadow-2xs">
                   <ShieldCheck className="w-3.5 h-3.5 text-m3-primary" />
                   <span>Verified SLA</span>
                 </span>
+                <GoogleRatingBadge />
               </div>
 
-              <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-m3-on-surface tracking-tight mb-1.5 sm:mb-3 leading-tight font-heading">
+              <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-m3-on-surface tracking-tight mb-2 sm:mb-3 leading-[1.15] font-heading">
                 {service.title}
               </h1>
 
-              {/* Crisp, Direct Overview (Desktop sm+) */}
-              <p class="hidden sm:block text-xs sm:text-sm text-m3-on-surface leading-relaxed mb-3 sm:mb-4">
+              {/* Crisp, Direct Overview */}
+              <p class="text-xs sm:text-sm lg:text-base text-m3-on-surface-variant leading-relaxed mb-4 sm:mb-6 font-normal max-w-xl">
                 {isTirupati
                   ? "Doorstep Chennai to Tirupati round-trip private cab rental with driver. Fixed all-inclusive fares with ₹500 advance to confirm — balance after trip completion."
                   : isThiruvannamalai
@@ -1656,110 +1657,20 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                   : "Doorstep Chennai to Pondicherry round-trip private cab rental via scenic ECR. Covers Auroville, French White Town, Promenade Beach & ₹500 advance."}
               </p>
 
-              <!-- DIRECT ANSWER & GOOGLE FEATURED SNIPPET BLOCK (data-speakable) -->
-              <div class="mb-3 p-3 sm:p-3.5 rounded-m3-xl bg-m3-surface-container-low border border-m3-outline-variant/60 shadow-2xs">
-                <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface mb-1 font-heading">
-                  What is the {service.title} Fare &amp; Inclusions?
-                </h3>
-                <p data-speakable="true" class="text-xs sm:text-sm text-m3-on-surface leading-normal">
-                  {isTirupati ? (
-                    <>Round-trip flat rates: <strong>₹6,000 (Sedan)</strong> • <strong>₹7,500 (Ertiga)</strong> • <strong>₹8,500 (Innova)</strong>. Covers up to <strong>300 km / 14 hours</strong> with doorstep pickup, highway FASTag tolls, Andhra Pradesh entry permit, Tirumala hill ascent, and driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
-                  ) : isThiruvannamalai ? (
-                    <>Round-trip flat rates: <strong>₹6,500 (Sedan)</strong> • <strong>₹7,900 (Ertiga)</strong> • <strong>₹9,300 (Innova)</strong>. Covers <strong>~400 km round-trip</strong> with doorstep pickup, GST Road &amp; NH 77 tolls, Arunachaleswarar temple stop, 14 km Girivalam car standby, and driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
-                  ) : isKanchipuram ? (
-                    <>Round-trip flat rates: <strong>₹3,500 (Sedan)</strong> • <strong>₹4,500 (Ertiga)</strong> • <strong>₹5,500 (Innova)</strong>. Covers <strong>~160 km round-trip</strong> with doorstep pickup, NH 48 tolls, Kamakshi Amman temple stop, silk weaver shopping waiting time, and driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
-                  ) : isNavagraha ? (
-                    <>Round-trip flat rates: <strong>₹12,000 (Sedan)</strong> • <strong>₹16,500 (Ertiga)</strong> • <strong>₹19,500 (Innova)</strong>. Covers <strong>~750 km complete 9 Navagraha circuit</strong> with doorstep pickup, NH 36 tolls, 2-day parikrama without backtracking, and driver night bata included. <strong>₹500 advance payment to confirm</strong>.</>
-                  ) : isRameswaram ? (
-                    <>Round-trip flat rates: <strong>₹18,500 (Sedan)</strong> • <strong>₹24,500 (Ertiga)</strong> • <strong>₹28,500 (Innova)</strong>. Covers <strong>~1,200 km round-trip</strong> with doorstep pickup, NH 87 tolls, Ramanathaswamy temple &amp; Dhanushkodi beach, Pamban bridge transit, and 2 nights driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
-                  ) : isSabarimala ? (
-                    <>Round-trip flat rates: <strong>₹26,500 (Ertiga SUV)</strong> • <strong>₹34,500 (Innova)</strong>. Covers <strong>~1,350 km round-trip</strong> with doorstep pickup, interstate permit, Nilakkal parking guidance, satvik teetotaler chauffeur, and 3 nights driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
-                  ) : isChidambaram ? (
-                    <>Round-trip flat rates: <strong>₹7,400 (Sedan)</strong> • <strong>₹9,400 (Ertiga)</strong> • <strong>₹10,800 (Innova)</strong>. Covers <strong>~450 km round-trip</strong> with doorstep pickup, ECR scenic route, Natarajar temple &amp; Pichavaram mangrove boating, and driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
-                  ) : isVellore ? (
-                    <>Round-trip flat rates: <strong>₹4,800 (Sedan)</strong> • <strong>₹6,200 (Ertiga)</strong> • <strong>₹7,500 (Innova)</strong>. Covers <strong>~300 km round-trip</strong> with doorstep pickup, Bangalore highway NH 48 tolls, Sripuram Golden Temple &amp; Fort stop, and driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
-                  ) : (
-                    <>Round-trip flat rates: <strong>₹4,500 (Sedan)</strong> • <strong>₹5,800 (Ertiga)</strong> • <strong>₹6,800 (Innova)</strong>. Covers <strong>320 km round-trip via scenic ECR</strong> with doorstep pickup, scenic ECR tolls, Auroville, French Quarter &amp; Promenade beach sightseeing, and driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
-                  )}
-                </p>
-              </div>
-
-              {/* Prominent Temple Visual Card (Desktop lg+ only in left column) */}
-              <div data-hero-desktop class="hidden lg:block relative w-full h-44 sm:h-50 lg:h-52 rounded-m3-xl overflow-hidden shadow-m3-1 border border-m3-outline-variant/60 mb-3 sm:mb-4 bg-m3-inverse-surface">
-                {heroImage && (
-                  <OptimizedImage
-                    src={heroImage}
-                    alt={isTirupati 
-                      ? "Sri Venkateswara Swamy Temple Tirumala - Chennai to Tirupati Darshan Cab Package" 
-                      : isThiruvannamalai
-                      ? "Arunachaleswarar Temple & Girivalam - Chennai to Thiruvannamalai Cab Package"
-                      : isKanchipuram
-                      ? "Kamakshi Amman & Ekambareswarar Temple - Chennai to Kanchipuram Cab Package"
-                      : isNavagraha
-                      ? "Kumbakonam 9 Navagraha Temples Parikrama - Chennai to Navagraha Tour Cab Package"
-                      : isRameswaram
-                      ? "Ramanathaswamy Temple & Pamban Bridge - Chennai to Rameswaram Cab Package"
-                      : isSabarimala
-                      ? "Lord Ayyappa Swami Temple - Chennai to Sabarimala Pilgrim Cab Package"
-                      : isChidambaram
-                      ? "Thillai Natarajar Temple & Pichavaram Mangrove Wetlands - Chennai to Chidambaram Cab Package"
-                      : isVellore
-                      ? "Sripuram Sri Lakshmi Narayani Golden Temple - Chennai to Vellore Cab Package"
-                      : "French White Town & Promenade Beach - Chennai to Pondicherry Cab Package"}
-                    class="w-full h-full object-cover"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 480px"
-                    loading="eager"
-                    fetchpriority="high"
-                  />
-                )}
-                <div class="absolute inset-0 bg-gradient-to-t from-m3-inverse-surface/85 via-m3-inverse-surface/25 to-transparent pointer-events-none"></div>
-                <div class="absolute bottom-2.5 left-3 right-3 flex items-center justify-between pointer-events-none text-white text-xs font-semibold">
-                  <span class="px-2.5 py-1 rounded-m3-full bg-m3-inverse-surface/85 backdrop-blur-sm border border-white/20 flex items-center gap-1.5 shadow-xs truncate max-w-[65%]">
-                    <span class="w-1.5 h-1.5 rounded-full bg-m3-tertiary-fixed shrink-0"></span>
-                    <span class="truncate">
-                      {isTirupati 
-                        ? "Sri Venkateswara Temple, Tirumala" 
-                        : isThiruvannamalai 
-                        ? "Arunachaleswarar & Girivalam" 
-                        : isKanchipuram
-                        ? "Kamakshi Amman & Silk Weavers"
-                        : isNavagraha
-                        ? "9 Navagraha Temples Circuit"
-                        : isRameswaram
-                        ? "Ramanathaswamy & Dhanushkodi"
-                        : isSabarimala
-                        ? "Nilakkal & Pamba Base Camp"
-                        : isChidambaram
-                        ? "Natarajar Temple & Pichavaram"
-                        : isVellore
-                        ? "Sripuram Golden Temple & Fort"
-                        : "French Quarter & Promenade Beach"}
-                    </span>
-                  </span>
-                  <span class="px-2.5 py-1 rounded-m3-full bg-m3-primary text-m3-on-primary text-xs font-bold shadow-xs shrink-0">
-                   {isTirupati ? "From ₹6,000 (1 Day)" : isThiruvannamalai ? "From ₹6,500 (1 Day)" : isKanchipuram ? "From ₹3,500 (1 Day)" : isNavagraha ? "From ₹12,000 (2 Days)" : isRameswaram ? "From ₹18,500 (2 Days)" : isSabarimala ? "From ₹26,500 (3 Days)" : isChidambaram ? "From ₹7,400 (1 Day)" : isVellore ? "From ₹4,800 (1 Day)" : isPondicherry ? "From ₹4,500 (1 Day)" : "From ₹14/km"}
-                  </span>
-                </div>
-              </div>
-
-              <!-- Inclusions Matrix (Desktop lg+ only) -->
-              <div class="hidden lg:grid grid-cols-2 gap-2 mb-3 sm:mb-4 text-xs">
-                <div class="p-2 sm:p-2.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center gap-1.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
-                  <span class="font-semibold text-m3-on-surface">{isTirupati ? "From ₹6,000 (1 Day)" : isThiruvannamalai ? "From ₹6,500 (1 Day)" : isKanchipuram ? "From ₹3,500 (1 Day)" : isNavagraha ? "From ₹12,000 (2 Days)" : isRameswaram ? "From ₹18,500 (2 Days)" : isSabarimala ? "From ₹26,500 (3 Days)" : isChidambaram ? "From ₹7,400 (1 Day)" : isVellore ? "From ₹4,800 (1 Day)" : "From ₹4,500 (1 Day)"}</span>
-                </div>
-                <div class="p-2 sm:p-2.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center gap-1.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
-                  <span class="font-semibold text-m3-on-surface">{isTirupati ? "Tolls & AP Permit Inc." : isThiruvannamalai ? "GST & NH Tolls Inc." : isKanchipuram ? "NH 48 Tolls Inc." : isNavagraha ? "Tolls & Bata at Actuals" : isRameswaram ? "Tolls & Bata at Actuals" : isSabarimala ? "Permits & Tolls Actuals" : isChidambaram ? "NH 32 Tolls Inc." : isVellore ? "NH 48 Tolls Inc." : "Tolls at Actuals"}</span>
-                </div>
-                <div class="p-2 sm:p-2.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center gap-1.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
-                  <span class="font-semibold text-m3-on-surface">{isTirupati ? "Tirumala Ghat Hill Inc." : isThiruvannamalai ? "14 km Girivalam Standby" : isKanchipuram ? "Free Weaver Waiting" : isNavagraha ? "Complete 750 km Circuit" : isRameswaram ? "1,200 km & Dhanushkodi" : isSabarimala ? "Nilakkal Ghat Route" : isChidambaram ? "450 km & Pichavaram" : isVellore ? "300 km & Vellore Fort" : "Driver Bata Separate"}</span>
-                </div>
-                <div class="p-2 sm:p-2.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 flex items-center gap-1.5">
-                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
-                  <span class="font-semibold text-m3-on-surface">Doorstep Pickup</span>
-                </div>
+              <!-- Compact Inline Trust Chips (Desktop single clean row) -->
+              <div class="hidden lg:flex flex-wrap items-center gap-2 pt-1">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant/70 text-xs font-semibold text-m3-on-surface shadow-2xs">
+                  <Sparkles className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                  <span>Tolls Covered on 1-Day Tours</span>
+                </span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant/70 text-xs font-semibold text-m3-on-surface shadow-2xs">
+                  <ShieldCheck className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                  <span>Verified Highway Chauffeur</span>
+                </span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant/70 text-xs font-semibold text-m3-on-surface shadow-2xs">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                  <span>Pay Balance After Trip</span>
+                </span>
               </div>
 
             </div>
@@ -1816,8 +1727,41 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                 )}
               </section>
 
-              <!-- Prominent Temple Visual Card & Trust Strip (Mobile ONLY, placed directly below booking engine) -->
+              <!-- Prominent Temple Visual Card, Direct Answer & Trust Strip (Mobile ONLY, placed directly below booking engine) -->
               <div data-hero-mobile class="block lg:hidden w-full mt-4">
+                <!-- Mobile DIRECT ANSWER & GOOGLE FEATURED SNIPPET BLOCK (data-speakable) -->
+                <div class="mb-3.5 p-3 sm:p-3.5 rounded-r-m3-xl rounded-l-xs bg-m3-surface-container-low border border-m3-outline-variant/60 border-l-4 border-l-m3-primary shadow-2xs">
+                  <div class="flex items-center gap-1.5 mb-1.5">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-m3-primary/10 text-m3-primary text-[10px] sm:text-xs font-bold tracking-wide uppercase">
+                      ⚡ Quick Fare &amp; Route Summary
+                    </span>
+                  </div>
+                  <h3 class="sr-only">
+                    What is the {service.title} Fare &amp; Inclusions?
+                  </h3>
+                  <p data-speakable="true" class="text-xs sm:text-sm text-m3-on-surface leading-relaxed">
+                    {isTirupati ? (
+                      <>Round-trip flat rates: <strong>₹6,000 (Sedan)</strong> • <strong>₹7,500 (Ertiga)</strong> • <strong>₹8,500 (Innova)</strong>. Covers up to <strong>300 km / 14 hours</strong> with doorstep pickup, highway FASTag tolls, Andhra Pradesh entry permit, Tirumala hill ascent, and driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
+                    ) : isThiruvannamalai ? (
+                      <>Round-trip flat rates: <strong>₹6,500 (Sedan)</strong> • <strong>₹7,900 (Ertiga)</strong> • <strong>₹9,300 (Innova)</strong>. Covers <strong>~400 km round-trip</strong> with doorstep pickup, GST Road &amp; NH 77 tolls, Arunachaleswarar temple stop, 14 km Girivalam car standby, and driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
+                    ) : isKanchipuram ? (
+                      <>Round-trip flat rates: <strong>₹3,500 (Sedan)</strong> • <strong>₹4,500 (Ertiga)</strong> • <strong>₹5,500 (Innova)</strong>. Covers <strong>~160 km round-trip</strong> with doorstep pickup, NH 48 tolls, Kamakshi Amman temple stop, silk weaver shopping waiting time, and driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
+                    ) : isNavagraha ? (
+                      <>Round-trip flat rates: <strong>₹12,000 (Sedan)</strong> • <strong>₹16,500 (Ertiga)</strong> • <strong>₹19,500 (Innova)</strong>. Covers <strong>~750 km complete 9 Navagraha circuit</strong> with doorstep pickup, NH 36 tolls, 2-day parikrama without backtracking, and driver night bata included. <strong>₹500 advance payment to confirm</strong>.</>
+                    ) : isRameswaram ? (
+                      <>Round-trip flat rates: <strong>₹18,500 (Sedan)</strong> • <strong>₹24,500 (Ertiga)</strong> • <strong>₹28,500 (Innova)</strong>. Covers <strong>~1,200 km round-trip</strong> with doorstep pickup, NH 87 tolls, Ramanathaswamy temple &amp; Dhanushkodi beach, Pamban bridge transit, and 2 nights driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
+                    ) : isSabarimala ? (
+                      <>Round-trip flat rates: <strong>₹26,500 (Ertiga SUV)</strong> • <strong>₹34,500 (Innova)</strong>. Covers <strong>~1,350 km round-trip</strong> with doorstep pickup, interstate permit, Nilakkal parking guidance, satvik teetotaler chauffeur, and 3 nights driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
+                    ) : isChidambaram ? (
+                      <>Round-trip flat rates: <strong>₹7,400 (Sedan)</strong> • <strong>₹9,400 (Ertiga)</strong> • <strong>₹10,800 (Innova)</strong>. Covers <strong>~450 km round-trip</strong> with doorstep pickup, ECR scenic route, Natarajar temple &amp; Pichavaram mangrove boating, and driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
+                    ) : isVellore ? (
+                      <>Round-trip flat rates: <strong>₹4,800 (Sedan)</strong> • <strong>₹6,200 (Ertiga)</strong> • <strong>₹7,500 (Innova)</strong>. Covers <strong>~300 km round-trip</strong> with doorstep pickup, Bangalore highway NH 48 tolls, Sripuram Golden Temple &amp; Fort stop, and driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
+                    ) : (
+                      <>Round-trip flat rates: <strong>₹4,500 (Sedan)</strong> • <strong>₹5,800 (Ertiga)</strong> • <strong>₹6,800 (Innova)</strong>. Covers <strong>320 km round-trip via scenic ECR</strong> with doorstep pickup, scenic ECR tolls, Auroville, French Quarter &amp; Promenade beach sightseeing, and driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
+                    )}
+                  </p>
+                </div>
+
                 <div class="relative w-full h-44 rounded-m3-xl overflow-hidden shadow-m3-1 border border-m3-outline-variant/60 mb-2.5 bg-m3-inverse-surface">
                   {heroImage && (
                     <OptimizedImage

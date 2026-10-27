@@ -53,4 +53,9 @@
    - **Standard:** Always import and render vector SVG icons from `lucide-react` (e.g., `Car`, `Bus`, `Users`, `Luggage`, `CheckCircle2`, `ShieldCheck`, `MapPin`, `Landmark`, `Receipt`, `ExternalLink`, `Info`) or use inline SVGs.
    - See [.agents/rules/icon-standardization.md](./.agents/rules/icon-standardization.md) for full rationale and guidelines.
 
+13. **The 1-Day Toll Invariant (Strict Commercial Standard):**
+    - **1-Day Packages Only:** Highway FASTag tolls and statutory state entry permits are pre-included upfront for **1-Day fixed tour packages ONLY** (Tirupati, Thiruvannamalai, Kanchipuram, Pondicherry, Vellore, Chidambaram, Mahabalipuram).
+    - **Multi-Day & Outstation at Actuals:** For ALL multi-day packages (>1 Day, e.g. 2-Day, 3-Day, Kumbakonam Navagraha, Rameswaram, Sabarimala) and open per-km outstation rentals, highway tolls, parking fees, and state entry permits are strictly payable at actuals by the passenger as per official FASTag receipts.
+    - **Strict UI & SEO Rule:** Never display "All Tolls Included", "Tolls Included", or pre-paid toll promises on multi-day tour cards, stay duration dropdowns, FAQs, or SEO metadata. Service promise badge must read `"Tolls Covered on 1-Day Tours"`.
+
 See [docs/03_RULES.md](./docs/03_RULES.md) for full quality standards.

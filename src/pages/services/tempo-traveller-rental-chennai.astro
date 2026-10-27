@@ -841,31 +841,104 @@ const schema = {
     <!-- SECTION 1: SYSTEM UI DESIGN SYSTEM HERO WITH DEDICATED TEMPO QUOTATION ENGINE -->
     <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 pt-1 sm:pt-2">
       
-      <!-- Top Page Heading & Google Rating Badge (Minimalist, No Clutter) -->
-      <div class="max-w-3xl mx-auto mb-2 text-center">
-        <div class="flex items-center justify-center mb-1.5">
-          <GoogleRatingBadge />
+      <!-- Top Hero Section (Desktop Clean Executive Split / Mobile Stacked) -->
+      <section class="mb-4 sm:mb-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
+          
+          <!-- Left Column: Value Proposition & Trust Highlights -->
+          <div class="lg:col-span-5 flex flex-col justify-center">
+            <!-- Eyebrow Row: Fleet Capacity Badge & Google Rating -->
+            <div class="flex flex-wrap items-center gap-2 mb-2 sm:mb-3">
+              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-2xs">
+                <span class="w-1.5 h-1.5 rounded-full bg-m3-success animate-pulse"></span>
+                <span>12 to 26 Seater &amp; Force Urbania</span>
+              </div>
+              <GoogleRatingBadge />
+            </div>
+
+            <!-- Main Display Heading -->
+            <h1 data-speakable="true" class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-m3-on-surface font-heading tracking-tight mb-2 sm:mb-3 leading-[1.15]">
+              Tempo Traveller Rental in Chennai
+            </h1>
+            <p class="text-xs sm:text-sm lg:text-base text-m3-on-surface-variant font-normal leading-relaxed mb-4 sm:mb-6 max-w-xl">
+              Sanitized 12, 14, 17, 20 &amp; 26-seater AC Tempo Travellers &amp; Force Urbania with verified highway chauffeurs for family tours, pilgrimages &amp; corporate events.
+            </p>
+
+            <!-- Compact Inline Trust Chips (Desktop single clean row) -->
+            <div class="hidden lg:flex flex-wrap items-center gap-2 pt-1">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant/70 text-xs font-semibold text-m3-on-surface shadow-2xs">
+                <Users className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                <span>Pushback Reclining Seats</span>
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant/70 text-xs font-semibold text-m3-on-surface shadow-2xs">
+                <ShieldCheck className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                <span>Police Verified Drivers</span>
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant/70 text-xs font-semibold text-m3-on-surface shadow-2xs">
+                <Luggage className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                <span>Dedicated Luggage Boot</span>
+              </span>
+            </div>
+
+          </div>
+
+          <!-- Right Column: Dedicated Tempo Quotation Engine -->
+          <div class="lg:col-span-7 w-full">
+            <div id="fare-calculator" class="scroll-mt-28"></div>
+            <div id="trip-calculator" class="scroll-mt-28"></div>
+            <div class="w-full">
+              <TempoQuotationEngine 
+                client:load 
+                variant="card" 
+                allowedTabs={['round', 'local']}
+                initialTab="round"
+                initialPickup="Chennai, Tamil Nadu"
+                initialDrop=""
+                autoCalculate={false}
+                showHeader={false}
+              />
+            </div>
+
+            <!-- Mobile ONLY: Direct Answer Block & Trust Highlights (placed directly below tempo quotation engine) -->
+            <div data-hero-mobile class="block lg:hidden w-full mt-3.5">
+              <!-- Mobile DIRECT ANSWER & GOOGLE FEATURED SNIPPET BLOCK (data-speakable) -->
+              <div class="mb-3 p-3 sm:p-3.5 rounded-r-m3-xl rounded-l-xs bg-m3-surface-container-low border border-m3-outline-variant/60 border-l-4 border-l-m3-primary shadow-2xs">
+                <div class="flex items-center gap-1.5 mb-1.5">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-m3-primary/10 text-m3-primary text-[10px] sm:text-xs font-bold tracking-wide uppercase">
+                    ⚡ Van Rental Rates &amp; Inclusions
+                  </span>
+                </div>
+                <h3 class="sr-only">
+                  What are Chennai Tempo Traveller Rental Rates &amp; Inclusions?
+                </h3>
+                <p data-speakable="true" class="text-xs sm:text-sm text-m3-on-surface leading-relaxed">
+                  Outstation base rates: <strong>₹24/km (12S)</strong> • <strong>₹26/km (17S)</strong> • <strong>₹30/km (20S)</strong> • <strong>₹38/km (Force Urbania VIP)</strong>. Local packages from ₹4,200 (5h/50km). Pushback recliners, dual AC &amp; luggage carrier included. <strong>₹500 advance to confirm</strong>.
+                </p>
+              </div>
+
+              <!-- Mobile Trust Matrix Strip -->
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <div class="px-3 py-2 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 flex items-center gap-2 shadow-2xs">
+                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
+                  <span class="font-semibold text-m3-on-surface truncate">Pushback Ergonomic Seats</span>
+                </div>
+                <div class="px-3 py-2 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 flex items-center gap-2 shadow-2xs">
+                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
+                  <span class="font-semibold text-m3-on-surface truncate">Dual AC &amp; USB Charging</span>
+                </div>
+                <div class="px-3 py-2 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 flex items-center gap-2 shadow-2xs">
+                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
+                  <span class="font-semibold text-m3-on-surface truncate">Ample Luggage Boot Space</span>
+                </div>
+                <div class="px-3 py-2 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 flex items-center gap-2 shadow-2xs">
+                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
+                  <span class="font-semibold text-m3-on-surface truncate">Police Verified Chauffeurs</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
-        <h1 data-speakable="true" class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight">
-          Tempo Traveller Rental in Chennai
-        </h1>
-      </div>
-
-      <div id="fare-calculator" class="scroll-mt-28"></div>
-      <div id="trip-calculator" class="scroll-mt-28"></div>
-
-      <!-- Dedicated Tempo Quotation Engine -->
-      <section class="relative z-20 py-1 px-1 sm:px-3 max-w-2xl mx-auto mb-3">
-        <TempoQuotationEngine 
-          client:load 
-          variant="card" 
-          allowedTabs={['round', 'local']}
-          initialTab="round"
-          initialPickup="Chennai, Tamil Nadu"
-          initialDrop=""
-          autoCalculate={false}
-          showHeader={false}
-        />
       </section>
 
       <!-- MATERIAL 3 STICKY QUICK NAVIGATION BAR -->

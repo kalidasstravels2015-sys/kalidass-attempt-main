@@ -16,75 +16,87 @@ const {
 const callUrl = `tel:${phone}`;
 ---
 
-<!-- Material Design 3 AI Fare Concierge Modal (Clean, Minimal, Non-Clumpy) -->
+<!-- Google "Ask Gemini" Full-Height Side Panel Drawer (Desktop) & Bottom Sheet (Mobile) -->
 <div
   id="ai-fare-modal"
-  class="fixed inset-0 z-[100] hidden flex-col justify-end items-center sm:items-end p-0 sm:p-6 bg-black/40 backdrop-blur-xs transition-opacity duration-200 opacity-0 pointer-events-none pb-[env(safe-area-inset-bottom,0px)] pr-[env(safe-area-inset-right,0px)]"
+  class="fixed inset-0 z-[100] hidden flex-col justify-end sm:justify-start items-end bg-black/50 backdrop-blur-xs transition-opacity duration-300 opacity-0 pointer-events-none pb-[env(safe-area-inset-bottom,0px)] pr-[env(safe-area-inset-right,0px)]"
   role="dialog"
   aria-modal="true"
   aria-labelledby="ai-modal-title"
   aria-hidden="true"
 >
-  <!-- M3 Dialog / Bottom-Sheet Container (Docked at bottom-right on desktop near AI Chat button) -->
+  <!-- Ask Gemini Side Panel Box: Docked flush right edge full height on desktop, smooth slide-up on mobile -->
   <div
     id="ai-modal-box"
-    class="relative w-full sm:w-[500px] md:w-[540px] lg:w-[560px] sm:max-w-[calc(100vw-3rem)] h-[90vh] sm:h-[720px] lg:h-[760px] max-h-[92vh] sm:max-h-[calc(100vh-3rem)] flex flex-col bg-m3-surface-bright dark:bg-[#1E1F20] text-m3-on-surface rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden border border-m3-outline-variant/50 transform translate-y-8 sm:translate-y-4 sm:scale-95 transition-all duration-200 origin-bottom sm:origin-bottom-right pointer-events-auto"
+    class="relative w-full sm:w-[440px] md:w-[460px] lg:w-[480px] h-[92vh] sm:h-full max-h-[92vh] sm:max-h-screen flex flex-col bg-white dark:bg-[#131314] text-slate-800 dark:text-[#E3E3E3] rounded-t-3xl sm:rounded-none sm:rounded-l-3xl shadow-2xl overflow-hidden border-t sm:border-t-0 sm:border-l border-slate-200/80 dark:border-white/10 transform translate-y-full sm:translate-y-0 sm:translate-x-full transition-transform duration-300 ease-out pointer-events-auto"
   >
-    <!-- M3 Top App Bar: Minimal, One Single Call Number at Top -->
-    <header class="flex items-center justify-between px-4 py-3 bg-m3-surface dark:bg-[#1A1B1E] border-b border-m3-outline-variant/40 shrink-0 select-none">
-      <!-- Title & Gemini Symbol -->
+    <!-- M3 & Gemini Top App Bar: Minimal, Clean & Distinctive -->
+    <header class="flex items-center justify-between px-4 py-3 bg-white/90 dark:bg-[#131314]/90 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 shrink-0 select-none z-10">
+      <!-- Title & Official Google Gemini Sparkle -->
       <div class="flex items-center gap-2 min-w-0">
-        <span class="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-800/40 flex items-center justify-center shadow-xs shrink-0">
-          <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/>
-            <circle cx="12" cy="10" r="3"/>
-          </svg>
-        </span>
-        <h2 id="ai-modal-title" class="font-semibold text-sm sm:text-base text-m3-on-surface tracking-tight whitespace-nowrap">
-          Plan My Trip
+        <div class="relative w-7 h-7 rounded-full bg-gradient-to-tr from-[#4285F4]/15 via-[#9B72CB]/15 to-[#D96570]/15 border border-slate-200/70 dark:border-white/15 flex items-center justify-center shrink-0 shadow-xs">
+          <GeminiIcon class="w-4 h-4" />
+        </div>
+        <h2 id="ai-modal-title" class="font-bold text-sm sm:text-base text-slate-900 dark:text-white tracking-tight whitespace-nowrap">
+          Ask Gemini
         </h2>
       </div>
 
-      <!-- Action items: Phone Call + Expand View + Clean Close Icon -->
-      <div class="flex items-center gap-1.5 sm:gap-2">
+      <!-- Action items: New Chat + Multi-Helpline Call + Clean Close Icon -->
+      <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
+        <!-- New Chat Reset Button -->
+        <button
+          type="button"
+          id="ai-new-chat-btn"
+          class="inline-flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-full text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
+          title="Start fresh conversation"
+          aria-label="Start fresh conversation"
+        >
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          <span class="hidden md:inline">New Chat</span>
+        </button>
+
         <!-- Helpline Call Button with Multi-Number Quick Popover -->
         <div class="relative group">
           <a
             href={callUrl}
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#006D3B] hover:bg-[#00532B] active:scale-95 text-xs font-semibold text-white transition-all shadow-xs"
+            class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-[#006D3B] hover:bg-[#00532B] active:scale-95 text-xs font-semibold text-white transition-all shadow-xs"
             title={`Call Helpline ${displayPhone}`}
             aria-label={`Call Helpline ${displayPhone}`}
           >
-            <AndroidPhoneIcon className="w-3.5 h-3.5 shrink-0 text-white" />
-            <span class="tracking-tight">{displayPhone}</span>
-            <svg class="w-3 h-3 text-white/80 group-hover:rotate-180 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <AndroidPhoneIcon className="w-3 h-3 shrink-0 text-white" />
+            <span class="hidden sm:inline tracking-tight text-[11px] sm:text-xs">{displayPhone}</span>
+            <span class="sm:hidden text-[11px] font-bold">Call</span>
+            <svg class="w-2.5 h-2.5 text-white/80 group-hover:rotate-180 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
             </svg>
           </a>
 
           <!-- Popover with all 3 helplines -->
           <div class="absolute right-0 top-full pt-1.5 w-56 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto transition-all duration-200 z-50">
-            <div class="bg-m3-surface-container-lowest dark:bg-[#1E1F20] text-m3-on-surface rounded-2xl shadow-xl border border-m3-outline-variant/60 p-1.5 space-y-1">
-              <div class="px-2.5 py-1 text-[9px] font-bold text-m3-on-surface-variant uppercase tracking-wider">
+            <div class="bg-white dark:bg-[#1E1F20] text-slate-800 dark:text-white rounded-2xl shadow-xl border border-slate-200 dark:border-white/15 p-1.5 space-y-1">
+              <div class="px-2.5 py-1 text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                 24/7 Helplines
               </div>
               <a
                 href="tel:+918939539211"
-                class="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-m3-surface-container dark:hover:bg-white/10 transition-colors"
+                class="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
               >
                 <span>+91 89395 39211</span>
                 <span class="text-[9px] text-[#006D3B] dark:text-emerald-400 font-bold">Primary</span>
               </a>
               <a
                 href="tel:+916381939769"
-                class="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-m3-surface-container dark:hover:bg-white/10 transition-colors"
+                class="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
               >
                 <span>+91 63819 39769</span>
                 <span class="text-[9px] text-blue-600 dark:text-blue-400 font-bold">Line 2</span>
               </a>
               <a
                 href="tel:+919092303060"
-                class="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-m3-surface-container dark:hover:bg-white/10 transition-colors"
+                class="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
               >
                 <span>+91 90923 03060</span>
                 <span class="text-[9px] text-amber-600 dark:text-amber-400 font-bold">Line 3</span>
@@ -92,103 +104,149 @@ const callUrl = `tel:${phone}`;
             </div>
           </div>
         </div>
-        <button
-          type="button"
-          id="ai-expand-modal-btn"
-          class="w-8 h-8 rounded-full hidden sm:flex items-center justify-center text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container active:scale-90 transition-all focus:outline-none cursor-pointer"
-          title="Expand chat view"
-          aria-label="Expand chat view"
-        >
-          <svg id="ai-expand-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-          </svg>
-          <svg id="ai-collapse-icon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9L4 4m0 5h5M9 4V9m6 6l5 5m0-5h-5m5 5v-5M9 15l-5 5m5 0H4m5-5v5m6-6l5-5m-5 0h5m-5 5V4" />
-          </svg>
-        </button>
+
+        <!-- Clean Close Icon -->
         <button
           type="button"
           id="close-ai-modal-btn"
-          class="w-9 h-9 rounded-full flex items-center justify-center text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container active:scale-90 transition-all focus:outline-none cursor-pointer"
+          class="w-8 h-8 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 active:scale-90 transition-all focus:outline-none cursor-pointer"
           aria-label="Close dialog"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
     </header>
 
-    <!-- M3 Chat Thread: Clean, Breathable, Spaced -->
+    <!-- Main Content Area: Seamlessly hosts Welcome Hero OR Active Chat Thread -->
     <main
       id="ai-chat-thread"
-      class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3.5 bg-m3-surface dark:bg-[#121316] text-sm scroll-smooth"
+      class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 text-sm scroll-smooth bg-slate-50/50 dark:bg-[#131314]"
     >
-      <!-- Clean Welcome Message (Direct & Minimal in 4th-Grade English) -->
-      <div class="flex items-start gap-2.5 w-full">
-        <div class="w-7 h-7 rounded-full bg-m3-primary text-m3-on-primary flex items-center justify-center text-xs shrink-0 mt-0.5 font-bold shadow-xs">
-          KT
+      <!-- Initial Welcome Hero (Empty State, Exactly like Google Ask Gemini) -->
+      <div id="ai-welcome-hero" class="py-6 sm:py-8 px-2 flex flex-col items-center text-center select-none">
+        <!-- Glowing Gemini Animated Sparkle -->
+        <div class="relative mb-4 flex items-center justify-center">
+          <span class="absolute -inset-3 rounded-full bg-gradient-to-r from-[#4285F4]/30 via-[#9B72CB]/30 to-[#D96570]/30 blur-lg animate-pulse"></span>
+          <div class="relative w-14 h-14 rounded-2xl bg-white dark:bg-[#1E1F20] border border-slate-200/90 dark:border-white/15 shadow-xl flex items-center justify-center">
+            <GeminiIcon class="w-8 h-8" />
+          </div>
         </div>
-        <div class="flex-1 bg-m3-surface-container-low dark:bg-m3-surface-container p-4 rounded-2xl rounded-tl-xs border border-m3-outline-variant/40 shadow-xs text-m3-on-surface leading-relaxed text-sm">
-          <p class="font-semibold text-m3-on-surface">Vanakkam! Going to multiple places, temples, or on a family tour?</p>
-          <p class="text-xs text-m3-on-surface-variant mt-1.5">Tell me where you want to go, number of days, and people (for example: <em>"3 days Chennai to Kumbakonam temples for 6 people"</em>). I will give you the exact car cost!</p>
+
+        <h3 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white mb-1.5">
+          Plan your journey with Gemini
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xs leading-relaxed mb-6">
+          Ask about outstation itineraries, temple circuits, or compare car and tempo options with 100% verified rates.
+        </p>
+
+        <!-- Vertically Stacked Prompt Starter Cards (Ask Gemini Style) -->
+        <div class="w-full max-w-sm space-y-2 text-left" id="ai-welcome-prompts">
+          <button
+            type="button"
+            data-quick-prompt="We are going to multiple places. How do you calculate the outstation car cost for 2 or 3 days?"
+            class="welcome-prompt-card w-full p-3 rounded-2xl bg-white dark:bg-[#1E1F20] hover:bg-blue-50/60 dark:hover:bg-[#28292D] border border-slate-200/80 dark:border-white/10 hover:border-blue-400/60 transition-all duration-200 cursor-pointer active:scale-[0.99] flex items-center justify-between gap-3 shadow-xs hover:shadow-md group text-left"
+          >
+            <div class="flex items-center gap-3 min-w-0">
+              <span class="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition-transform">
+                🗺️
+              </span>
+              <div class="min-w-0">
+                <div class="font-bold text-xs text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  Multiple Places & Outstation Tour
+                </div>
+                <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                  Calculate 2 or 3-day car cost with driver
+                </div>
+              </div>
+            </div>
+            <svg class="w-4 h-4 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-0.5 transition-all shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            data-quick-prompt="How much for Chennai to Kumbakonam 9 temples 3-day package in Ertiga and Innova?"
+            class="welcome-prompt-card w-full p-3 rounded-2xl bg-white dark:bg-[#1E1F20] hover:bg-blue-50/60 dark:hover:bg-[#28292D] border border-slate-200/80 dark:border-white/10 hover:border-blue-400/60 transition-all duration-200 cursor-pointer active:scale-[0.99] flex items-center justify-between gap-3 shadow-xs hover:shadow-md group text-left"
+          >
+            <div class="flex items-center gap-3 min-w-0">
+              <span class="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition-transform">
+                🕉️
+              </span>
+              <div class="min-w-0">
+                <div class="font-bold text-xs text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                  Kumbakonam Navagraha 9 Temples
+                </div>
+                <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                  3-day temple circuit in Ertiga & Innova
+                </div>
+              </div>
+            </div>
+            <svg class="w-4 h-4 text-slate-400 group-hover:text-purple-600 group-hover:translate-x-0.5 transition-all shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            data-quick-prompt="How much for Chennai to Tirupati 1-day or 2-day package in Sedan and Ertiga?"
+            class="welcome-prompt-card w-full p-3 rounded-2xl bg-white dark:bg-[#1E1F20] hover:bg-blue-50/60 dark:hover:bg-[#28292D] border border-slate-200/80 dark:border-white/10 hover:border-blue-400/60 transition-all duration-200 cursor-pointer active:scale-[0.99] flex items-center justify-between gap-3 shadow-xs hover:shadow-md group text-left"
+          >
+            <div class="flex items-center gap-3 min-w-0">
+              <span class="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition-transform">
+                ⛰️
+              </span>
+              <div class="min-w-0">
+                <div class="font-bold text-xs text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                  Tirupati Balaji Darshan Package
+                </div>
+                <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                  1-day & 2-day rates, ghat road permit
+                </div>
+              </div>
+            </div>
+            <svg class="w-4 h-4 text-slate-400 group-hover:text-amber-600 group-hover:translate-x-0.5 transition-all shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            data-quick-prompt="What is the outstation per km rate for Tempo Traveller 12, 14, 20 seater and Force Urbania?"
+            class="welcome-prompt-card w-full p-3 rounded-2xl bg-white dark:bg-[#1E1F20] hover:bg-blue-50/60 dark:hover:bg-[#28292D] border border-slate-200/80 dark:border-white/10 hover:border-blue-400/60 transition-all duration-200 cursor-pointer active:scale-[0.99] flex items-center justify-between gap-3 shadow-xs hover:shadow-md group text-left"
+          >
+            <div class="flex items-center gap-3 min-w-0">
+              <span class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition-transform">
+                🚐
+              </span>
+              <div class="min-w-0">
+                <div class="font-bold text-xs text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                  Tempo Traveller & Force Urbania
+                </div>
+                <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                  12, 14, 20 & 26-seater group travel tariffs
+                </div>
+              </div>
+            </div>
+            <svg class="w-4 h-4 text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-0.5 transition-all shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
         </div>
+
+        <p class="text-[11px] text-slate-500 dark:text-slate-500 mt-6 max-w-xs leading-normal">
+          Instant tariff calculations strictly follow Kalidass Travels rate card. For custom schedules, call
+          <a href="tel:+918939539211" class="text-blue-600 dark:text-blue-400 underline font-semibold">+91 89395 39211</a>.
+        </p>
       </div>
+
+      <!-- Chat Bubbles will be appended here dynamically -->
     </main>
 
-    <!-- M3 Assist Chips (Clean, 4th-Grade English) -->
-    <div
-      id="ai-quick-chips"
-      class="px-4 py-2 bg-m3-surface-container-low dark:bg-[#1A1B1E] border-t border-m3-outline-variant/40 flex items-center gap-1.5 overflow-x-auto no-scrollbar whitespace-nowrap text-xs"
-    >
-      <button
-        type="button"
-        data-quick-prompt="We are going to multiple places. How do you calculate the outstation car cost for 2 or 3 days?"
-        class="quick-chip px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 text-blue-900 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60 transition-all shrink-0 active:scale-95 font-semibold cursor-pointer"
-      >
-        🗺️ Multiple Places
-      </button>
-      <button
-        type="button"
-        data-quick-prompt="How much for Chennai to Kumbakonam 9 temples 3-day package in Ertiga and Innova?"
-        class="quick-chip px-3 py-1.5 rounded-full bg-m3-surface-container-high dark:bg-[#2A2B30] hover:bg-m3-primary/10 text-m3-on-surface border border-m3-outline-variant/60 transition-all shrink-0 active:scale-95 font-medium cursor-pointer"
-      >
-        🕉️ Kumbakonam Temples
-      </button>
-      <button
-        type="button"
-        data-quick-prompt="How much for Chennai to Tirupati 1-day or 2-day package in Sedan and Ertiga?"
-        class="quick-chip px-3 py-1.5 rounded-full bg-m3-surface-container-high dark:bg-[#2A2B30] hover:bg-m3-primary/10 text-m3-on-surface border border-m3-outline-variant/60 transition-all shrink-0 active:scale-95 font-medium cursor-pointer"
-      >
-        🕉️ Tirupati Balaji
-      </button>
-      <button
-        type="button"
-        data-quick-prompt="How much for Chennai to Pondicherry 2-day trip in Sedan and Ertiga?"
-        class="quick-chip px-3 py-1.5 rounded-full bg-m3-surface-container-high dark:bg-[#2A2B30] hover:bg-m3-primary/10 text-m3-on-surface border border-m3-outline-variant/60 transition-all shrink-0 active:scale-95 font-medium cursor-pointer"
-      >
-        🏖️ Pondicherry Trip
-      </button>
-      <button
-        type="button"
-        data-quick-prompt="What is the outstation per km rate for Dzire, Ertiga, and Innova?"
-        class="quick-chip px-3 py-1.5 rounded-full bg-m3-surface-container-high dark:bg-[#2A2B30] hover:bg-m3-primary/10 text-m3-on-surface border border-m3-outline-variant/60 transition-all shrink-0 active:scale-95 font-medium cursor-pointer"
-      >
-        🛣️ Per-KM Rates
-      </button>
-      <a
-        href="https://wa.me/918939539211?text=Hi%20Kalidass%20Travels%2C%20we%20want%20to%20book%20a%20trip%20to%20multiple%20places.%20Please%20give%20us%20a%20quote."
-        target="_blank"
-        rel="noopener noreferrer"
-        class="px-3 py-1.5 rounded-full bg-[#25D366]/15 hover:bg-[#25D366]/25 text-[#006D3B] dark:text-emerald-400 border border-[#25D366]/40 transition-all shrink-0 active:scale-95 font-semibold cursor-pointer flex items-center gap-1"
-      >
-        <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.586 1.761.882 2.796.883h.005c3.179 0 5.767-2.587 5.767-5.766.001-3.187-2.575-5.77-5.772-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.353.101.173.449.741.964 1.201.663.591 1.221.774 1.394.86.173.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.203c.044.072.044.419-.1.824z"/></svg>
-        <span>📲 WhatsApp Route</span>
-      </a>
-    </div>
-
-    <!-- M3 Search / Text Input Bar (Multilingual Mic & Zero Clutter) -->
-    <footer class="p-3 bg-m3-surface dark:bg-[#1E1F20] border-t border-m3-outline-variant/40">
+    <!-- Google Ask Gemini Bottom Bar: Context Pill + Capsule Input + Attribution -->
+    <footer class="p-3 sm:p-3.5 bg-white dark:bg-[#131314] border-t border-slate-200/80 dark:border-white/10 shrink-0">
       <!-- Voice Listening Status Bar (Visible only when recording) -->
       <div
         id="ai-voice-status"
@@ -220,16 +278,38 @@ const callUrl = `tel:${phone}`;
       <!-- Quick Toast / Notification Bubble -->
       <div
         id="ai-voice-toast"
-        class="hidden mb-2 px-3 py-1.5 rounded-xl bg-m3-surface-container-highest text-m3-on-surface border border-m3-outline-variant/50 text-[11px] font-medium text-center shadow-xs transition-all"
+        class="hidden mb-2 px-3 py-1.5 rounded-xl bg-slate-800 text-white dark:bg-white dark:text-slate-900 border border-transparent text-[11px] font-medium text-center shadow-md transition-all"
       ></div>
 
+      <!-- Google-Style Context Awareness Pill (Like Ask Gemini's "Sharing Google" chip) -->
+      <div id="ai-context-container" class="mb-2 hidden">
+        <div
+          id="ai-context-pill"
+          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60 text-xs font-semibold shadow-2xs hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-all cursor-pointer active:scale-95"
+          title="Click to ask about current page or quote"
+        >
+          <span id="ai-context-icon" class="text-xs">📍</span>
+          <span id="ai-context-text" class="truncate max-w-[280px]">Viewing: Outstation Cabs</span>
+          <button
+            type="button"
+            id="ai-context-dismiss-btn"
+            class="w-4 h-4 rounded-full flex items-center justify-center hover:bg-blue-200/80 dark:hover:bg-blue-800/80 text-blue-700 dark:text-blue-300 text-[10px] ml-0.5"
+            title="Dismiss context"
+            aria-label="Dismiss context"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Input Bar Form -->
       <form id="ai-chat-form" class="flex items-center gap-1.5 sm:gap-2">
-        <div class="relative flex-1 flex items-center min-w-0">
+        <div class="relative flex-1 flex items-center min-w-0 rounded-full bg-slate-100 dark:bg-[#1E1F20] border border-slate-200 dark:border-white/15 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all p-1">
           <input
             type="text"
             id="ai-user-input"
-            placeholder="Type your places or tap mic (e.g. 3 days Kumbakonam)..."
-            class="w-full pl-3.5 pr-20 sm:pr-24 py-2.5 rounded-full bg-m3-surface-container dark:bg-[#28292D] text-m3-on-surface placeholder:text-m3-on-surface-variant/60 text-xs sm:text-sm border border-transparent focus:border-m3-primary focus:bg-m3-surface-bright focus:outline-none transition-all"
+            placeholder="Ask Gemini (e.g. 3 days Kumbakonam)..."
+            class="w-full pl-3 pr-16 py-1.5 bg-transparent text-slate-900 dark:text-white placeholder:text-slate-400 text-xs sm:text-sm focus:outline-none"
             autocomplete="off"
             required
           />
@@ -237,12 +317,12 @@ const callUrl = `tel:${phone}`;
           <button
             type="button"
             id="ai-lang-picker-btn"
-            class="absolute right-1.5 px-2 py-1 rounded-full bg-m3-surface-container-high dark:bg-[#383A40] hover:bg-m3-primary/15 hover:text-m3-primary text-m3-on-surface-variant text-[11px] font-medium flex items-center gap-1 transition-all border border-m3-outline-variant/40 shadow-xs cursor-pointer active:scale-95"
+            class="absolute right-1 px-2 py-1 rounded-full bg-white dark:bg-[#2A2B30] hover:bg-slate-50 dark:hover:bg-white/10 text-slate-600 dark:text-slate-300 text-[10px] font-semibold flex items-center gap-1 transition-all border border-slate-200 dark:border-white/10 shadow-2xs cursor-pointer active:scale-95"
             title="Change voice speech language (All languages supported)"
             aria-label="Change voice speech language"
           >
-            <span class="text-xs">🌐</span>
-            <span id="ai-current-lang-code" class="font-bold tracking-tight text-[10px]">Auto</span>
+            <span class="text-[11px]">🌐</span>
+            <span id="ai-current-lang-code" class="font-bold tracking-tight">Auto</span>
           </button>
         </div>
 
@@ -250,12 +330,12 @@ const callUrl = `tel:${phone}`;
         <button
           type="button"
           id="ai-mic-btn"
-          class="w-10 h-10 rounded-full bg-m3-surface-container-high dark:bg-[#28292D] hover:bg-m3-surface-container-highest active:scale-90 text-m3-on-surface flex items-center justify-center shrink-0 transition-all shadow-xs focus:outline-none cursor-pointer group relative border border-m3-outline-variant/40"
+          class="w-9 h-9 rounded-full bg-slate-100 dark:bg-[#1E1F20] hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 flex items-center justify-center shrink-0 transition-all shadow-xs focus:outline-none cursor-pointer group relative border border-slate-200 dark:border-white/10 active:scale-90"
           title="Voice input in any language (Tamil, English, Hindi, Telugu...)"
           aria-label="Voice input in any language"
         >
           <!-- Mic Normal Icon -->
-          <svg id="ai-mic-icon-idle" class="w-4 h-4 text-m3-primary transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="currentColor">
+          <svg id="ai-mic-icon-idle" class="w-4 h-4 text-slate-600 dark:text-slate-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
             <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
           </svg>
@@ -271,18 +351,19 @@ const callUrl = `tel:${phone}`;
         <button
           type="submit"
           id="ai-send-btn"
-          class="w-10 h-10 rounded-full bg-m3-primary hover:bg-m3-primary/90 active:scale-95 text-m3-on-primary flex items-center justify-center shrink-0 transition-all shadow-xs focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+          class="w-9 h-9 rounded-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white flex items-center justify-center shrink-0 transition-all shadow-xs focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
           aria-label="Send message"
         >
           <svg class="w-4 h-4 translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
           </svg>
         </button>
       </form>
-      <!-- Official Google Gemini AI Attribution (Brand Guidelines Compliant) -->
-      <div class="mt-2 text-center text-[10px] text-m3-on-surface-variant/70 font-medium tracking-wide flex items-center justify-center gap-1.5 select-none">
+
+      <!-- Official Google Gemini AI Attribution -->
+      <div class="mt-2 text-center text-[10px] text-slate-500 dark:text-slate-500 font-medium tracking-wide flex items-center justify-center gap-1.5 select-none">
         <GeminiIcon class="w-3.5 h-3.5" id="modal-footer-gemini" />
-        <span>Powered by Google Gemini</span>
+        <span>Powered by Google Gemini 3.8 Flash</span>
       </div>
     </footer>
 
@@ -296,25 +377,25 @@ const callUrl = `tel:${phone}`;
     >
       <div
         id="ai-lang-modal-box"
-        class="w-full sm:max-w-md bg-m3-surface dark:bg-[#1E1F20] text-m3-on-surface rounded-t-3xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[82vh] overflow-hidden border border-m3-outline-variant/50 transform translate-y-6 sm:scale-95 transition-all duration-200"
+        class="w-full sm:max-w-md bg-white dark:bg-[#1E1F20] text-slate-800 dark:text-white rounded-t-3xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[82vh] overflow-hidden border border-slate-200 dark:border-white/10 transform translate-y-6 sm:scale-95 transition-all duration-200"
       >
         <!-- Modal Header -->
-        <div class="px-4 py-3 bg-m3-surface-container-low dark:bg-[#18191B] border-b border-m3-outline-variant/40 flex items-center justify-between shrink-0">
+        <div class="px-4 py-3 bg-slate-50 dark:bg-[#18191B] border-b border-slate-200 dark:border-white/10 flex items-center justify-between shrink-0">
           <div class="flex items-center gap-2.5">
-            <span class="w-8 h-8 rounded-full bg-m3-primary/10 text-m3-primary flex items-center justify-center text-sm shadow-xs">
+            <span class="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center text-sm shadow-xs">
               🌐
             </span>
             <div>
-              <h3 id="ai-lang-modal-title" class="font-bold text-sm text-m3-on-surface leading-tight">
+              <h3 id="ai-lang-modal-title" class="font-bold text-sm text-slate-900 dark:text-white leading-tight">
                 Speech Language
               </h3>
-              <p class="text-[11px] text-m3-on-surface-variant">Speak in any language</p>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400">Speak in any language</p>
             </div>
           </div>
           <button
             type="button"
             id="ai-lang-close-btn"
-            class="w-8 h-8 rounded-full flex items-center justify-center text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container active:scale-90 transition-all cursor-pointer"
+            class="w-8 h-8 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 active:scale-90 transition-all cursor-pointer"
             aria-label="Close language selector"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -324,22 +405,22 @@ const callUrl = `tel:${phone}`;
         </div>
 
         <!-- Search Bar -->
-        <div class="p-3 bg-m3-surface dark:bg-[#1E1F20] border-b border-m3-outline-variant/30 shrink-0">
+        <div class="p-3 bg-white dark:bg-[#1E1F20] border-b border-slate-200 dark:border-white/10 shrink-0">
           <div class="relative flex items-center">
-            <svg class="w-4 h-4 absolute left-3 text-m3-on-surface-variant/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 absolute left-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <input
               type="text"
               id="ai-lang-search-input"
               placeholder="Search language (Tamil, Hindi, Telugu, English...)"
-              class="w-full pl-9 pr-8 py-2 rounded-xl bg-m3-surface-container dark:bg-[#28292D] text-xs text-m3-on-surface placeholder:text-m3-on-surface-variant/60 border border-transparent focus:border-m3-primary focus:outline-none transition-all"
+              class="w-full pl-9 pr-8 py-2 rounded-xl bg-slate-100 dark:bg-[#28292D] text-xs text-slate-900 dark:text-white placeholder:text-slate-400 border border-transparent focus:border-blue-500 focus:outline-none transition-all"
               autocomplete="off"
             />
             <button
               type="button"
               id="ai-lang-search-clear"
-              class="hidden absolute right-2.5 text-xs text-m3-on-surface-variant hover:text-m3-on-surface p-1 cursor-pointer"
+              class="hidden absolute right-2.5 text-xs text-slate-400 hover:text-slate-700 dark:hover:text-white p-1 cursor-pointer"
               aria-label="Clear search"
             >
               ✕
@@ -348,14 +429,14 @@ const callUrl = `tel:${phone}`;
         </div>
 
         <!-- Language List (Scrollable) -->
-        <div id="ai-lang-list" class="overflow-y-auto p-2 space-y-1 text-xs divide-y divide-m3-outline-variant/15 flex-1 min-h-[240px]">
+        <div id="ai-lang-list" class="overflow-y-auto p-2 space-y-1 text-xs divide-y divide-slate-100 dark:divide-white/5 flex-1 min-h-[240px]">
           <!-- Injected dynamically -->
         </div>
 
         <!-- Modal Footer -->
-        <div class="px-4 py-2.5 bg-m3-surface-container-low dark:bg-[#18191B] border-t border-m3-outline-variant/30 text-[11px] text-m3-on-surface-variant flex items-center justify-between shrink-0 select-none">
-          <span id="ai-lang-active-display">Active: <strong class="text-m3-on-surface">Auto Detect</strong></span>
-          <span class="text-m3-primary font-medium text-[10px]">Tap to choose</span>
+        <div class="px-4 py-2.5 bg-slate-50 dark:bg-[#18191B] border-t border-slate-200 dark:border-white/10 text-[11px] text-slate-500 dark:text-slate-400 flex items-center justify-between shrink-0 select-none">
+          <span id="ai-lang-active-display">Active: <strong class="text-slate-900 dark:text-white">Auto Detect</strong></span>
+          <span class="text-blue-600 dark:text-blue-400 font-medium text-[10px]">Tap to choose</span>
         </div>
       </div>
     </div>
@@ -367,11 +448,21 @@ const callUrl = `tel:${phone}`;
     const modal = document.getElementById('ai-fare-modal');
     const modalBox = document.getElementById('ai-modal-box');
     const closeBtn = document.getElementById('close-ai-modal-btn');
+    const newChatBtn = document.getElementById('ai-new-chat-btn');
     const chatForm = document.getElementById('ai-chat-form');
     const userInput = document.getElementById('ai-user-input');
     const chatThread = document.getElementById('ai-chat-thread');
+    const welcomeHero = document.getElementById('ai-welcome-hero');
     const sendBtn = document.getElementById('ai-send-btn');
-    const quickChips = document.querySelectorAll('.quick-chip');
+    const welcomePromptCards = document.querySelectorAll('.welcome-prompt-card');
+
+    // Context Awareness Elements
+    const contextContainer = document.getElementById('ai-context-container');
+    const contextPill = document.getElementById('ai-context-pill');
+    const contextText = document.getElementById('ai-context-text');
+    const contextIcon = document.getElementById('ai-context-icon');
+    const contextDismissBtn = document.getElementById('ai-context-dismiss-btn');
+    let currentContextPrompt = '';
 
     // Multilingual Voice Input Elements
     const micBtn = document.getElementById('ai-mic-btn');
@@ -398,8 +489,6 @@ const callUrl = `tel:${phone}`;
     // Full Comprehensive Multilingual Voice Database
     const VOICE_LANGUAGES = [
       { code: 'auto', name: 'Auto Detect (Device / Browser Language)', native: 'Auto Detect', flag: '🌐', group: 'Detected' },
-
-      // Indian Languages (Priority for Kalidass Travels Chennai)
       { code: 'ta-IN', name: 'Tamil (India)', native: 'தமிழ்', flag: '🇮🇳', group: 'Indian Languages' },
       { code: 'en-IN', name: 'English (India)', native: 'English (IN)', flag: '🇮🇳', group: 'Indian Languages' },
       { code: 'hi-IN', name: 'Hindi (India)', native: 'हिन्दी', flag: '🇮🇳', group: 'Indian Languages' },
@@ -407,12 +496,10 @@ const callUrl = `tel:${phone}`;
       { code: 'ml-IN', name: 'Malayalam (India)', native: 'മലയാളം', flag: '🇮🇳', group: 'Indian Languages' },
       { code: 'kn-IN', name: 'Kannada (India)', native: 'ಕನ್ನಡ', flag: '🇮🇳', group: 'Indian Languages' },
       { code: 'bn-IN', name: 'Bengali (India)', native: 'বাংলা', flag: '🇮🇳', group: 'Indian Languages' },
-      { code: 'mr-IN', name: 'Marathi (India)', native: 'मराठी', flag: '🇮🇳', group: 'Indian Languages' },
+      { code: 'mr-IN', name: 'Marathi (India)', native: 'मராठी', flag: '🇮🇳', group: 'Indian Languages' },
       { code: 'gu-IN', name: 'Gujarati (India)', native: 'ગુજરાતી', flag: '🇮🇳', group: 'Indian Languages' },
       { code: 'pa-IN', name: 'Punjabi (India)', native: 'ਪੰਜਾਬੀ', flag: '🇮🇳', group: 'Indian Languages' },
       { code: 'ur-IN', name: 'Urdu (India)', native: 'اردو', flag: '🇮🇳', group: 'Indian Languages' },
-
-      // International Tamil & NRI English
       { code: 'ta-LK', name: 'Tamil (Sri Lanka)', native: 'தமிழ் (இலங்கை)', flag: '🇱🇰', group: 'Global' },
       { code: 'ta-SG', name: 'Tamil (Singapore)', native: 'தமிழ் (சிங்கப்பூர்)', flag: '🇸🇬', group: 'Global' },
       { code: 'ta-MY', name: 'Tamil (Malaysia)', native: 'தமிழ் (மலேசியா)', flag: '🇲🇾', group: 'Global' },
@@ -422,14 +509,11 @@ const callUrl = `tel:${phone}`;
       { code: 'en-SG', name: 'English (Singapore)', native: 'English (SG)', flag: '🇸🇬', group: 'Global' },
       { code: 'en-MY', name: 'English (Malaysia)', native: 'English (MY)', flag: '🇲🇾', group: 'Global' },
       { code: 'en-AE', name: 'English (UAE / Gulf)', native: 'English (UAE)', flag: '🇦🇪', group: 'Global' },
-
-      // Major World Languages
       { code: 'ar-SA', name: 'Arabic (Saudi Arabia)', native: 'العربية (السعودية)', flag: '🇸🇦', group: 'Global' },
-      { code: 'ar-AE', name: 'Arabic (UAE)', native: 'العربية (الإمارات)', flag: '🇦🇪', group: 'Global' },
       { code: 'es-ES', name: 'Spanish (Spain)', native: 'Español', flag: '🇪🇸', group: 'Global' },
       { code: 'fr-FR', name: 'French (France)', native: 'Français', flag: '🇫🇷', group: 'Global' },
       { code: 'de-DE', name: 'German (Germany)', native: 'Deutsch', flag: '🇩🇪', group: 'Global' },
-      { code: 'zh-CN', name: 'Chinese (Mandarin / Simplified)', native: '中文 (普通话)', flag: '🇨🇳', group: 'Global' },
+      { code: 'zh-CN', name: 'Chinese (Mandarin)', native: '中文 (普通话)', flag: '🇨🇳', group: 'Global' },
       { code: 'ja-JP', name: 'Japanese', native: '日本語', flag: '🇯🇵', group: 'Global' },
       { code: 'ko-KR', name: 'Korean', native: '한국어', flag: '🇰🇷', group: 'Global' },
       { code: 'ru-RU', name: 'Russian', native: 'Русский', flag: '🇷🇺', group: 'Global' },
@@ -439,18 +523,13 @@ const callUrl = `tel:${phone}`;
       { code: 'ms-MY', name: 'Malay (Malaysia)', native: 'Bahasa Melayu', flag: '🇲🇾', group: 'Global' },
       { code: 'th-TH', name: 'Thai', native: 'ไทย', flag: '🇹🇭', group: 'Global' },
       { code: 'tr-TR', name: 'Turkish', native: 'Türkçe', flag: '🇹🇷', group: 'Global' },
-      { code: 'vi-VN', name: 'Vietnamese', native: 'Tiếng Việt', flag: '🇻🇳', group: 'Global' },
-      { code: 'nl-NL', name: 'Dutch', native: 'Nederlands', flag: '🇳🇱', group: 'Global' },
-      { code: 'fil-PH', name: 'Filipino (Tagalog)', native: 'Filipino', flag: '🇵🇭', group: 'Global' },
-      { code: 'sv-SE', name: 'Swedish', native: 'Svenska', flag: '🇸🇪', group: 'Global' },
-      { code: 'pl-PL', name: 'Polish', native: 'Polski', flag: '🇵🇱', group: 'Global' },
-      { code: 'he-IL', name: 'Hebrew', native: 'עברית', flag: '🇮🇱', group: 'Global' }
+      { code: 'vi-VN', name: 'Vietnamese', native: 'Tiếng Việt', flag: '🇻🇳', group: 'Global' }
     ];
 
     let chatHistory = [];
     let isRequestInProgress = false;
 
-    // Load active voice language (Defaults to Auto Device Language)
+    // Load active voice language
     let selectedVoiceLang = 'auto';
     try {
       const saved = localStorage.getItem('kalidass_voice_lang');
@@ -464,13 +543,8 @@ const callUrl = `tel:${phone}`;
       if (code === 'ta-IN') return 'தமிழ்';
       if (code === 'hi-IN') return 'हिन्दी';
       if (code === 'te-IN') return 'తెలుగు';
-      if (code === 'ml-IN') return 'മലയാളம்';
+      if (code === 'ml-IN') return 'മലയാളം';
       if (code === 'kn-IN') return 'ಕನ್ನಡ';
-      if (code === 'bn-IN') return 'বাংলা';
-      if (code === 'mr-IN') return 'मराठी';
-      if (code === 'gu-IN') return 'ગુજરાતી';
-      if (code === 'pa-IN') return 'ਪੰਜਾਬੀ';
-      if (code === 'ur-IN') return 'اردو';
       const found = VOICE_LANGUAGES.find(l => l.code === code);
       if (found) {
         if (code.startsWith('en-')) return found.native.replace('English', 'EN');
@@ -490,7 +564,7 @@ const callUrl = `tel:${phone}`;
         currentLangCodeEl.textContent = getLangShortLabel(selectedVoiceLang);
       }
       if (langActiveDisplay) {
-        langActiveDisplay.innerHTML = `Active: <strong class="text-m3-on-surface">${escapeHtml(getLangFullName(selectedVoiceLang))}</strong>`;
+        langActiveDisplay.innerHTML = `Active: <strong class="text-slate-900 dark:text-white">${escapeHtml(getLangFullName(selectedVoiceLang))}</strong>`;
       }
     }
     updateLangBadgeUI();
@@ -515,98 +589,123 @@ const callUrl = `tel:${phone}`;
       );
     }
 
-    // Modal Opening & Closing
+    // Update Context Awareness Pill
+    function updateContextPill() {
+      if (!contextContainer || !contextText || !contextIcon) return;
+
+      const currentCalc = window.__KT_CURRENT_CALCULATION;
+      if (currentCalc && currentCalc.formattedFare) {
+        const destTitle = currentCalc.destination || 'My Trip';
+        contextIcon.textContent = '✨';
+        contextText.textContent = `On-Screen: ${currentCalc.vehicleName || 'Cab'} (${currentCalc.formattedFare})`;
+        currentContextPrompt = `Can you explain the ${currentCalc.formattedFare} quote on my screen for ${destTitle}?`;
+        contextContainer.classList.remove('hidden');
+        return;
+      }
+
+      // Detect current page context
+      const path = (window.location.pathname || '').toLowerCase();
+      let pageTitle = '';
+      let promptSuggestion = '';
+
+      if (path.includes('tempo-traveller')) {
+        pageTitle = 'Tempo Traveller Rental';
+        promptSuggestion = 'What are the Tempo Traveller seating options and per-km rates?';
+      } else if (path.includes('tirupati')) {
+        pageTitle = 'Tirupati Package';
+        promptSuggestion = 'What are the Chennai to Tirupati 1-day and 2-day package rates?';
+      } else if (path.includes('pondicherry')) {
+        pageTitle = 'Pondicherry Tour';
+        promptSuggestion = 'What is the fare for Chennai to Pondicherry 2-day trip in Sedan and Ertiga?';
+      } else if (path.includes('kumbakonam') || path.includes('navagraha')) {
+        pageTitle = 'Navagraha Kumbakonam Temples';
+        promptSuggestion = 'How much for Kumbakonam 9 temples 3-day package?';
+      } else if (path.includes('thiruvannamalai')) {
+        pageTitle = 'Thiruvannamalai Girivalam';
+        promptSuggestion = 'What is the package rate for Chennai to Thiruvannamalai Girivalam?';
+      } else if (path.includes('airport')) {
+        pageTitle = 'Chennai Airport Taxi';
+        promptSuggestion = 'What are the Chennai Airport pickup and drop rates?';
+      } else if (path.includes('acting-driver')) {
+        pageTitle = 'Acting Drivers';
+        promptSuggestion = 'What are the acting driver charges for city and outstation?';
+      } else if (path.includes('outstation')) {
+        pageTitle = 'Outstation Cabs';
+        promptSuggestion = 'How do you calculate outstation car cost for multi-destination trips?';
+      }
+
+      if (pageTitle) {
+        contextIcon.textContent = '📍';
+        contextText.textContent = `Viewing: ${pageTitle}`;
+        currentContextPrompt = promptSuggestion;
+        contextContainer.classList.remove('hidden');
+      } else {
+        contextContainer.classList.add('hidden');
+      }
+    }
+
+    contextPill?.addEventListener('click', (e) => {
+      if (e.target.closest('#ai-context-dismiss-btn')) return;
+      if (currentContextPrompt) {
+        handleUserSubmit(currentContextPrompt);
+      }
+    });
+
+    contextDismissBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      contextContainer?.classList.add('hidden');
+    });
+
+    // Reset Chat to Welcome Hero
+    function resetChatToWelcome() {
+      chatHistory = [];
+      const messages = chatThread?.querySelectorAll('.ai-chat-bubble-row');
+      messages?.forEach(m => m.remove());
+      welcomeHero?.classList.remove('hidden');
+      if (userInput) userInput.value = '';
+      updateContextPill();
+      if (chatThread) chatThread.scrollTop = 0;
+    }
+
+    newChatBtn?.addEventListener('click', () => {
+      resetChatToWelcome();
+      showVoiceToast('✨ Started a new conversation with Gemini');
+    });
+
+    // Modal Opening & Closing (Side Panel Slide-In)
     function openAiModal(initialQuery) {
-      if (!modal) return;
+      if (!modal || !modalBox) return;
       modal.setAttribute('data-hide-contact-dock', 'true');
       modal.classList.remove('hidden', 'pointer-events-none', 'opacity-0');
       modal.classList.add('flex');
       modal.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
 
-      // If initialQuery is provided, automatically handle submission
+      updateContextPill();
+
+      setTimeout(() => {
+        modalBox.classList.remove('translate-y-full', 'sm:translate-x-full');
+        if (!isMobileDevice()) {
+          userInput?.focus();
+        }
+      }, 10);
+
       if (initialQuery && typeof initialQuery === 'string') {
         const queryText = initialQuery === 'multiple places'
           ? 'We are going to multiple places. How do you calculate the outstation car cost for 2 or 3 days?'
           : initialQuery;
         setTimeout(() => {
           handleUserSubmit(queryText);
-        }, 150);
-      }
-
-      // Check on-screen calculation and inject contextual assistance chip
-      const currentCalc = window.__KT_CURRENT_CALCULATION;
-      const quickChipsContainer = document.getElementById('ai-quick-chips');
-      let existingContextChip = document.getElementById('ai-context-chip');
-      if (currentCalc && currentCalc.formattedFare && quickChipsContainer) {
-        const destTitle = currentCalc.destination || 'My Trip';
-        const chipPrompt = `Can you explain the ${currentCalc.formattedFare} rate on my screen for ${destTitle}?`;
-        if (!existingContextChip) {
-          existingContextChip = document.createElement('button');
-          existingContextChip.type = 'button';
-          existingContextChip.id = 'ai-context-chip';
-          existingContextChip.className = 'quick-chip px-3 py-1.5 rounded-full bg-emerald-600/15 dark:bg-emerald-500/20 hover:bg-emerald-600/25 text-emerald-800 dark:text-emerald-300 border border-emerald-500/40 transition-all shrink-0 active:scale-95 font-semibold cursor-pointer flex items-center gap-1.5 animate-pulse';
-          existingContextChip.innerHTML = `<span>✨ On-Screen: ${escapeHtml(currentCalc.vehicleName || 'Cab')} (${escapeHtml(currentCalc.formattedFare)})</span>`;
-          existingContextChip.setAttribute('data-quick-prompt', chipPrompt);
-          existingContextChip.addEventListener('click', () => {
-            if (isMobileDevice()) userInput?.blur();
-            handleUserSubmit(existingContextChip.getAttribute('data-quick-prompt'));
-          });
-          quickChipsContainer.prepend(existingContextChip);
-        } else {
-          existingContextChip.innerHTML = `<span>✨ On-Screen: ${escapeHtml(currentCalc.vehicleName || 'Cab')} (${escapeHtml(currentCalc.formattedFare)})</span>`;
-          existingContextChip.setAttribute('data-quick-prompt', chipPrompt);
-        }
-      }
-
-      setTimeout(() => {
-        modalBox?.classList.remove('translate-y-8', 'sm:translate-y-4', 'sm:scale-95');
-        // Do not auto-open keyboard on mobile devices when opening modal
-        if (!isMobileDevice()) {
-          userInput?.focus();
-        }
-      }, 10);
-    }
-
-    const expandBtn = document.getElementById('ai-expand-modal-btn');
-    const expandIcon = document.getElementById('ai-expand-icon');
-    const collapseIcon = document.getElementById('ai-collapse-icon');
-    let isModalExpanded = false;
-
-    function resetModalExpandedState() {
-      isModalExpanded = false;
-      modalBox?.classList.add('sm:w-[500px]', 'md:w-[540px]', 'lg:w-[560px]', 'sm:h-[720px]', 'lg:h-[760px]');
-      modalBox?.classList.remove('sm:w-[860px]', 'md:w-[920px]', 'lg:w-[980px]', 'sm:h-[88vh]', 'sm:max-h-[92vh]');
-      modal?.classList.add('sm:items-end', 'sm:justify-end');
-      modal?.classList.remove('sm:items-center', 'sm:justify-center');
-      expandIcon?.classList.remove('hidden');
-      collapseIcon?.classList.add('hidden');
-      expandBtn?.setAttribute('title', 'Expand chat view');
-    }
-
-    function toggleExpandModal() {
-      if (!modalBox || !modal) return;
-      isModalExpanded = !isModalExpanded;
-      if (isModalExpanded) {
-        modalBox.classList.remove('sm:w-[500px]', 'md:w-[540px]', 'lg:w-[560px]', 'sm:h-[720px]', 'lg:h-[760px]');
-        modalBox.classList.add('sm:w-[860px]', 'md:w-[920px]', 'lg:w-[980px]', 'sm:h-[88vh]', 'sm:max-h-[92vh]');
-        modal.classList.remove('sm:items-end', 'sm:justify-end');
-        modal.classList.add('sm:items-center', 'sm:justify-center');
-        expandIcon?.classList.add('hidden');
-        collapseIcon?.classList.remove('hidden');
-        expandBtn?.setAttribute('title', 'Collapse chat view');
-      } else {
-        resetModalExpandedState();
+        }, 200);
       }
     }
-
-    expandBtn?.addEventListener('click', toggleExpandModal);
 
     function closeAiModal() {
-      if (!modal) return;
-      stopListening(false);
+      if (!modal || !modalBox) return;
+      stopListeningUI();
       closeLangModal();
-      modalBox?.classList.add('translate-y-8', 'sm:translate-y-4', 'sm:scale-95');
+
+      modalBox.classList.add('translate-y-full', 'sm:translate-x-full');
       modal.classList.add('opacity-0');
 
       setTimeout(() => {
@@ -615,8 +714,7 @@ const callUrl = `tel:${phone}`;
         modal.classList.remove('flex');
         modal.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
-        resetModalExpandedState();
-      }, 200);
+      }, 300);
     }
 
     function toggleAiModal() {
@@ -649,6 +747,16 @@ const callUrl = `tel:${phone}`;
       }
     });
 
+    // Welcome Prompt Card Click Handlers
+    welcomePromptCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const prompt = card.getAttribute('data-quick-prompt');
+        if (prompt) {
+          handleUserSubmit(prompt);
+        }
+      });
+    });
+
     // Language Picker Modal Logic
     function renderLangList(query = '') {
       if (!langList) return;
@@ -665,7 +773,7 @@ const callUrl = `tel:${phone}`;
 
       if (filtered.length === 0) {
         langList.innerHTML = `
-          <div class="py-8 text-center text-m3-on-surface-variant text-xs">
+          <div class="py-8 text-center text-slate-400 text-xs">
             No language found matching "${escapeHtml(query)}"
           </div>
         `;
@@ -678,24 +786,24 @@ const callUrl = `tel:${phone}`;
         btn.type = 'button';
         btn.className = `w-full px-3 py-2.5 rounded-xl flex items-center justify-between transition-all cursor-pointer text-left ${
           isSelected
-            ? 'bg-m3-primary/15 text-m3-primary font-bold shadow-xs'
-            : 'hover:bg-m3-surface-container-high text-m3-on-surface'
+            ? 'bg-blue-500/15 text-blue-600 dark:text-blue-400 font-bold shadow-2xs'
+            : 'hover:bg-slate-100 dark:hover:bg-white/5 text-slate-800 dark:text-slate-200'
         }`;
         btn.innerHTML = `
           <div class="flex items-center gap-2.5 min-w-0">
             <span class="text-base shrink-0 select-none">${lang.flag}</span>
             <div class="min-w-0">
-              <div class="font-semibold text-xs text-m3-on-surface flex items-center gap-1.5">
+              <div class="font-semibold text-xs text-slate-900 dark:text-white flex items-center gap-1.5">
                 <span>${escapeHtml(lang.native)}</span>
-                ${lang.code !== 'auto' ? `<span class="text-[10px] text-m3-on-surface-variant/70 font-mono font-normal">(${lang.code})</span>` : ''}
+                ${lang.code !== 'auto' ? `<span class="text-[10px] text-slate-400 font-mono font-normal">(${lang.code})</span>` : ''}
               </div>
-              <div class="text-[10px] text-m3-on-surface-variant truncate">${escapeHtml(lang.name)}</div>
+              <div class="text-[10px] text-slate-500 dark:text-slate-400 truncate">${escapeHtml(lang.name)}</div>
             </div>
           </div>
           ${
             isSelected
-              ? `<span class="w-5 h-5 rounded-full bg-m3-primary text-m3-on-primary flex items-center justify-center text-[10px] shrink-0 font-bold">✓</span>`
-              : `<span class="text-[11px] text-m3-on-surface-variant/40 shrink-0 font-medium">Select</span>`
+              ? `<span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] shrink-0 font-bold">✓</span>`
+              : `<span class="text-[11px] text-slate-400 shrink-0 font-medium">Select</span>`
           }
         `;
 
@@ -718,7 +826,7 @@ const callUrl = `tel:${phone}`;
     }
 
     function openLangModal() {
-      if (!langModal) return;
+      if (!langModal || !langModalBox) return;
       renderLangList();
       if (langSearchInput) langSearchInput.value = '';
       langSearchClear?.classList.add('hidden');
@@ -726,14 +834,14 @@ const callUrl = `tel:${phone}`;
       langModal.setAttribute('aria-hidden', 'false');
 
       setTimeout(() => {
-        langModalBox?.classList.remove('translate-y-6', 'sm:scale-95');
+        langModalBox.classList.remove('translate-y-6', 'sm:scale-95');
         langSearchInput?.focus();
       }, 10);
     }
 
     function closeLangModal() {
-      if (!langModal) return;
-      langModalBox?.classList.add('translate-y-6', 'sm:scale-95');
+      if (!langModal || !langModalBox) return;
+      langModalBox.classList.add('translate-y-6', 'sm:scale-95');
       langModal.classList.add('opacity-0');
 
       setTimeout(() => {
@@ -770,7 +878,7 @@ const callUrl = `tel:${phone}`;
       renderLangList();
     });
 
-    // Speech Recognition Implementation
+    // Speech Recognition
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     let recognitionInstance = null;
     let isListening = false;
@@ -802,110 +910,87 @@ const callUrl = `tel:${phone}`;
       voiceStatus?.classList.remove('hidden');
     }
 
-    function stopListening(processSubmit = true) {
-      if (!isListening && !recognitionInstance) return;
-      if (!processSubmit) {
-        autoSubmitVoice = false;
-      }
+    function stopListening(submit = false) {
       if (recognitionInstance) {
         try {
           recognitionInstance.stop();
         } catch (_) {}
       }
       stopListeningUI();
+      if (submit && userInput && userInput.value.trim().length > 0) {
+        handleUserSubmit(userInput.value.trim());
+      }
     }
 
-    async function toggleVoiceInput() {
-      if (!SpeechRecognition) {
-        showVoiceToast('⚠️ Voice input is not supported in this browser. Please use Chrome, Edge, or Safari.');
-        return;
-      }
-
+    function toggleVoiceInput() {
       if (isListening) {
         stopListening(true);
         return;
       }
 
-      // Pre-flight check: If on HTTPS and permission is prompt, trigger browser permission prompt cleanly
-      if (location.protocol === 'https:' && navigator.mediaDevices && navigator.mediaDevices.getUserMedia && navigator.permissions) {
-        try {
-          const status = await navigator.permissions.query({ name: 'microphone' });
-          if (status.state === 'prompt') {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            stream.getTracks().forEach(t => t.stop());
-          }
-        } catch (_) {}
+      if (!SpeechRecognition) {
+        showVoiceToast('Voice recognition is not supported on this browser. Try Chrome on Android/Desktop.');
+        return;
       }
 
       try {
         if (recognitionInstance) {
           try { recognitionInstance.abort(); } catch (_) {}
         }
-        recognitionInstance = new SpeechRecognition();
 
-        let effectiveLang = selectedVoiceLang;
-        if (effectiveLang === 'auto') {
-          effectiveLang = navigator.language || 'en-IN';
+        recognitionInstance = new SpeechRecognition();
+        recognitionInstance.continuous = false;
+        recognitionInstance.interimResults = true;
+
+        let activeCode = selectedVoiceLang;
+        let activeLabel = getLangShortLabel(selectedVoiceLang);
+
+        if (!activeCode || activeCode === 'auto') {
+          activeCode = navigator.language || 'ta-IN';
+          activeLabel = 'Auto (' + activeCode.split('-')[0].toUpperCase() + ')';
         }
 
-        recognitionInstance.lang = effectiveLang;
-        recognitionInstance.interimResults = true;
-        recognitionInstance.continuous = false;
-        recognitionInstance.maxAlternatives = 1;
-
-        autoSubmitVoice = true;
+        recognitionInstance.lang = activeCode;
         liveVoiceBuffer = '';
+        autoSubmitVoice = true;
 
         recognitionInstance.onstart = () => {
-          startListeningUI(getLangShortLabel(selectedVoiceLang), effectiveLang);
+          startListeningUI(activeLabel, activeCode);
         };
 
         recognitionInstance.onresult = (event) => {
-          let interimText = '';
-          let finalText = '';
+          let interimTranscript = '';
+          let finalTranscript = '';
 
           for (let i = event.resultIndex; i < event.results.length; ++i) {
-            const item = event.results[i];
-            if (item.isFinal) {
-              finalText += item[0].transcript;
+            if (event.results[i].isFinal) {
+              finalTranscript += event.results[i][0].transcript;
             } else {
-              interimText += item[0].transcript;
+              interimTranscript += event.results[i][0].transcript;
             }
           }
 
-          const captured = (finalText || interimText || '').trim();
-          if (captured) {
-            liveVoiceBuffer = captured;
-            if (userInput) {
-              userInput.value = captured;
-            }
+          const currentText = finalTranscript || interimTranscript;
+          if (currentText) {
+            liveVoiceBuffer = currentText.trim();
+            if (userInput) userInput.value = liveVoiceBuffer;
           }
         };
 
-        recognitionInstance.onerror = async (event) => {
+        recognitionInstance.onerror = (event) => {
           stopListeningUI();
           if (event.error === 'not-allowed') {
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-              try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                stream.getTracks().forEach(t => t.stop());
-                showVoiceToast('✅ Microphone access enabled! Tap mic to speak.');
-                return;
-              } catch (_) {}
-            }
-            showVoiceToast('🔒 Microphone blocked. Click the tune icon in the address bar to Allow, then Reload.');
+            showVoiceToast('Microphone access blocked. Please allow microphone permission.');
           } else if (event.error === 'no-speech') {
-            showVoiceToast('No voice detected. Tap mic to try again.');
-          } else if (event.error === 'network') {
-            showVoiceToast('Network issue with speech recognition service.');
+            showVoiceToast('No voice detected. Please tap mic and speak clearly.');
           }
         };
 
         recognitionInstance.onend = () => {
           stopListeningUI();
-          const query = (userInput?.value || liveVoiceBuffer || '').trim();
-          if (autoSubmitVoice && query.length >= 2) {
-            handleUserSubmit(query);
+          if (autoSubmitVoice && liveVoiceBuffer && liveVoiceBuffer.length > 2) {
+            handleUserSubmit(liveVoiceBuffer);
+            liveVoiceBuffer = '';
           }
         };
 
@@ -940,46 +1025,124 @@ const callUrl = `tel:${phone}`;
       return div.innerHTML;
     }
 
+    function createVehicleCard(name, capacity, rateDetails, waHref) {
+      let icon = '🚗';
+      const nLow = name.toLowerCase();
+      if (nLow.includes('tempo')) icon = '🚐';
+      else if (nLow.includes('urbania')) icon = '✨';
+      else if (nLow.includes('innova')) icon = '🚙';
+      else if (nLow.includes('ertiga') || nLow.includes('xl6')) icon = '🚘';
+
+      return `<div class="my-2 p-3 rounded-2xl bg-white dark:bg-[#1E1F20] border border-slate-200/90 dark:border-white/10 shadow-2xs hover:shadow-xs transition-shadow"><div class="flex items-center justify-between gap-2 mb-1.5"><div class="flex items-center gap-2 min-w-0"><span class="text-base shrink-0">${icon}</span><span class="font-bold text-xs text-slate-900 dark:text-white truncate">${escapeHtml(name)}</span></div>${capacity ? `<span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-white/10 text-[10px] text-slate-600 dark:text-slate-300 font-semibold shrink-0">${escapeHtml(capacity)}</span>` : ''}</div><div class="flex items-center justify-between gap-2 pt-1.5 border-t border-slate-100 dark:border-white/5"><span class="font-semibold text-xs text-blue-600 dark:text-blue-400">${escapeHtml(rateDetails)}</span><a href="${waHref}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#25D366]/15 hover:bg-[#25D366]/25 text-[#006D3B] dark:text-emerald-400 text-[11px] font-semibold transition-all shrink-0"><span>Book</span><svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.586 1.761.882 2.796.883h.005c3.179 0 5.767-2.587 5.767-5.766.001-3.187-2.575-5.77-5.772-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.353.101.173.449.741.964 1.201.663.591 1.221.774 1.394.86.173.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.203c.044.072.044.419-.1.824z"/></svg></a></div></div>`;
+    }
+
+    function createFormulaCard(formula) {
+      return `<div class="my-2.5 p-3 rounded-2xl bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-transparent border border-blue-500/20 shadow-2xs"><div class="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-1">📐 Transparent Billing Formula</div><div class="font-mono text-xs text-slate-900 dark:text-white font-semibold">${escapeHtml(formula)}</div></div>`;
+    }
+
+    // Advanced Rich Card & Clean Markdown Synthesizer
     function formatMarkdown(text) {
       if (!text) return '';
-      let escaped = escapeHtml(text);
-      // headings ###
-      escaped = escaped.replace(/(?:^|\n)###\s*(.+)/g, '<div class="font-bold text-sm text-m3-on-surface mt-2.5 mb-1 text-blue-600 dark:text-blue-400">$1</div>');
-      // headings ##
-      escaped = escaped.replace(/(?:^|\n)##\s*(.+)/g, '<div class="font-bold text-base text-m3-on-surface mt-3 mb-1 text-blue-600 dark:text-blue-400">$1</div>');
-      // bold **text**
-      escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-m3-on-surface">$1</strong>');
-      // italics *text*
-      escaped = escaped.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="text-xs text-m3-on-surface-variant">$1</em>');
-      // markdown links [text](url) — handles both WhatsApp and internal action links
-      escaped = escaped.replace(/\[(.*?)\]\(((?:\/|https?:\/\/)[^\s\)]+)\)/g, function(match, label, href) {
-        const isWa = href.includes('wa.me') || href.includes('whatsapp.com');
-        if (isWa) {
-          return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white text-xs font-semibold shadow-xs transition-all active:scale-95 no-underline my-1.5">${label}</a>`;
+
+      // 1. Clean accidental LaTeX math blocks ($$ or \[ \]) into a sleek formula card
+      let clean = text
+        .replace(/\$\$([\s\S]*?)\$\$/g, (_, math) => {
+          const formula = math.replace(/\\text\{([^}]+)\}/g, '$1').replace(/\\times/g, '×').replace(/\\pm/g, '±').trim();
+          return `\n:::FORMULA:::${formula}:::ENDFORMULA:::\n`;
+        })
+        .replace(/\\\[([\s\S]*?)\\\]/g, (_, math) => {
+          const formula = math.replace(/\\text\{([^}]+)\}/g, '$1').replace(/\\times/g, '×').replace(/\\pm/g, '±').trim();
+          return `\n:::FORMULA:::${formula}:::ENDFORMULA:::\n`;
+        })
+        .replace(/\\text\{([^}]+)\}/g, '$1');
+
+      // 2. Convert accidental markdown table rows
+      clean = clean.replace(/(?:^|\n)\|([^\n]+)\|/g, (match, row) => {
+        if (/^[\s\-:|]+$/.test(row)) return '';
+        const cells = row.split('|').map(c => c.trim()).filter(Boolean);
+        if (cells.length === 0) return '';
+        if (/^(?:vehicle|capacity|rate|model|fare)/i.test(cells[0])) {
+          return '\n• **' + cells.join(' | ') + '**';
         }
-        // Action Deep-Link to Website Booking Engine
-        return `<a href="${href}" class="ai-action-link inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs font-bold shadow-md transition-all no-underline my-1.5 cursor-pointer border border-blue-500/40"><span>⚡ ${label}</span> <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg></a>`;
+        return '\n• ' + cells.join(' — ');
       });
-      // bullet lists
-      escaped = escaped.replace(/(?:^|\n)[•*-]\s*(.+)/g, '<div class="flex items-start gap-1.5 my-0.5"><span class="text-m3-primary font-bold shrink-0">•</span><span>$1</span></div>');
-      // line breaks
-      escaped = escaped.replace(/\n\n+/g, '<div class="my-1.5"></div>');
-      escaped = escaped.replace(/\n/g, '<br/>');
-      return escaped;
+
+      const lines = clean.split('\n');
+      const processedLines = [];
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+
+        if (line.includes(':::FORMULA:::')) {
+          const fMatch = line.match(/:::FORMULA:::([\s\S]*?):::ENDFORMULA:::/);
+          if (fMatch) {
+            processedLines.push(createFormulaCard(fMatch[1]));
+            continue;
+          }
+        }
+
+        // Match vehicle lines: e.g. "   - Sedan (4 seats - Dzire / Etios): ₹14/km + ₹400 driver bata/day"
+        // or "- Sedan: ₹14/km" or "• Swift Dzire: ₹6,000"
+        const vehMatch = line.match(/^\s*[•*-]\s*(?:\*\*)?([^:(]+?)(?:\(([^)]+)\))?(?:\*\*)?\s*:\s*(.+)$/i);
+        if (vehMatch) {
+          const name = vehMatch[1].replace(/\*\*/g, '').trim();
+          const capacity = vehMatch[2] ? vehMatch[2].replace(/\*\*/g, '').trim() : '';
+          const rateDetails = vehMatch[3].replace(/\*\*/g, '').trim();
+          const isVehicle = /\b(?:sedan|dzire|etios|ertiga|xl6|innova|crysta|tempo|traveller|urbania|car|cars|van|vans|minibus|bus|coach|hatchback|suv|force)\b/i.test(name);
+          const hasRate = /(?:₹|\/km|per km)/i.test(rateDetails);
+
+          if (isVehicle && hasRate) {
+            const encodedVehQuery = encodeURIComponent(`Hi Kalidass Travels, I would like to book the ${name} (${rateDetails}) as quoted on your website.`);
+            const waHref = `https://wa.me/918939539211?text=${encodedVehQuery}`;
+            processedLines.push(createVehicleCard(name, capacity, rateDetails, waHref));
+            continue;
+          }
+        }
+
+        processedLines.push(line);
+      }
+
+      // Convert standard markdown tokens without breaking HTML card attributes
+      let parsed = processedLines.map(l => {
+        if (l.startsWith('<div class="my-2 p-3') || l.startsWith('<div class="my-2.5 p-3')) {
+          return l;
+        }
+        let p = l.replace(/(?:^|\n)###\s*(.+)/g, '<div class="font-bold text-sm text-slate-900 dark:text-white mt-2.5 mb-1">$1</div>');
+        p = p.replace(/(?:^|\n)##\s*(.+)/g, '<div class="font-bold text-base text-slate-900 dark:text-white mt-3 mb-1.5">$1</div>');
+        p = p.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-slate-900 dark:text-white">$1</strong>');
+        p = p.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em class="text-xs text-slate-500 dark:text-slate-400">$1</em>');
+        p = p.replace(/\[(.*?)\]\(((?:\/|https?:\/\/)[^\s\)]+)\)/g, function(match, label, href) {
+          const isWa = href.includes('wa.me') || href.includes('whatsapp.com');
+          if (isWa) {
+            return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white text-xs font-semibold shadow-xs transition-all active:scale-95 no-underline my-1.5">${label}</a>`;
+          }
+          return `<a href="${href}" class="ai-action-link inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs font-bold shadow-md transition-all no-underline my-1.5 cursor-pointer border border-blue-500/40"><span>⚡ ${label}</span> <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg></a>`;
+        });
+        p = p.replace(/^\s*[•*-]\s*(.+)/g, '<div class="flex items-start gap-2 my-1"><span class="text-blue-600 dark:text-blue-400 font-bold shrink-0 mt-0.5">•</span><span class="flex-1">$1</span></div>');
+        return p;
+      }).join('<div class="my-1"></div>');
+
+      return parsed;
     }
 
     function appendMessage(role, content) {
       if (!chatThread) return;
 
+      welcomeHero?.classList.add('hidden');
+
       const isUser = role === 'user';
       const msgDiv = document.createElement('div');
-      msgDiv.className = isUser
-        ? 'flex items-start justify-end gap-2 max-w-[85%] ml-auto'
-        : 'flex items-start gap-2.5 w-full';
+      msgDiv.className = `ai-chat-bubble-row ${isUser ? 'flex items-start justify-end gap-2 max-w-[85%] ml-auto' : 'flex items-start gap-3 w-full'}`;
 
       const avatar = isUser
         ? ''
-        : `<div class="w-7 h-7 rounded-full bg-m3-primary text-m3-on-primary flex items-center justify-center text-xs shrink-0 mt-0.5 font-bold shadow-xs">KT</div>`;
+        : `
+          <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-[#4285F4]/20 via-[#9B72CB]/20 to-[#D96570]/20 border border-slate-200/80 dark:border-white/10 flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+            <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/>
+            </svg>
+          </div>
+        `;
 
       let actionHtml = '';
       if (!isUser && !content.includes('wa.me/')) {
@@ -987,7 +1150,7 @@ const callUrl = `tel:${phone}`;
           `Hi Kalidass Travels, I got this fare quote from your website:\n\n${content.substring(0, 250)}...\n\nPlease confirm availability!`
         );
         actionHtml = `
-          <div class="pt-2 border-t border-m3-outline-variant/30 mt-2">
+          <div class="pt-2 border-t border-slate-200/60 dark:border-white/10 mt-2 flex items-center justify-between gap-2">
             <a
               href="https://wa.me/918939539211?text=${waText}"
               target="_blank"
@@ -999,37 +1162,60 @@ const callUrl = `tel:${phone}`;
               </svg>
               <span>Confirm on WhatsApp</span>
             </a>
+            <button
+              type="button"
+              class="ai-copy-btn p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors cursor-pointer"
+              title="Copy message"
+              aria-label="Copy message"
+            >
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+            </button>
           </div>
         `;
       }
 
       const bubbleClasses = isUser
-        ? 'bg-m3-primary text-m3-on-primary p-3 rounded-2xl rounded-tr-xs shadow-xs text-sm'
-        : 'flex-1 bg-m3-surface-container-low dark:bg-m3-surface-container p-4 rounded-2xl rounded-tl-xs border border-m3-outline-variant/40 shadow-xs text-m3-on-surface space-y-1.5 leading-relaxed text-sm';
+        ? 'bg-blue-600 text-white p-3 rounded-2xl rounded-tr-xs shadow-xs text-sm font-medium'
+        : 'flex-1 bg-white dark:bg-[#1E1F20] p-4 rounded-2xl rounded-tl-xs border border-slate-200/80 dark:border-white/10 shadow-xs text-slate-800 dark:text-[#E3E3E3] space-y-2 leading-relaxed text-sm';
 
       msgDiv.innerHTML = `
         ${avatar}
         <div class="${bubbleClasses}">
-          <div>${isUser ? escapeHtml(content) : formatMarkdown(content)}</div>
+          <div class="ai-msg-content">${isUser ? escapeHtml(content) : formatMarkdown(content)}</div>
           ${actionHtml}
         </div>
       `;
+
+      const copyBtn = msgDiv.querySelector('.ai-copy-btn');
+      copyBtn?.addEventListener('click', () => {
+        navigator.clipboard.writeText(content).then(() => {
+          showVoiceToast('📋 Copied to clipboard!');
+        });
+      });
 
       chatThread.appendChild(msgDiv);
       chatThread.scrollTop = chatThread.scrollHeight;
     }
 
     function showTypingIndicator() {
+      welcomeHero?.classList.add('hidden');
       const typingDiv = document.createElement('div');
       typingDiv.id = 'ai-typing-indicator';
-      typingDiv.className = 'flex items-start gap-2.5 w-full';
+      typingDiv.className = 'flex items-start gap-3 w-full';
       typingDiv.innerHTML = `
-        <div class="w-7 h-7 rounded-full bg-m3-primary text-m3-on-primary flex items-center justify-center text-xs shrink-0 mt-0.5 font-bold shadow-xs">KT</div>
-        <div class="flex-1 max-w-[160px] bg-m3-surface-container-low dark:bg-m3-surface-container p-3 rounded-2xl rounded-tl-xs border border-m3-outline-variant/40 shadow-xs flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-m3-primary animate-bounce"></span>
-          <span class="w-2 h-2 rounded-full bg-m3-primary animate-bounce [animation-delay:0.2s]"></span>
-          <span class="w-2 h-2 rounded-full bg-m3-primary animate-bounce [animation-delay:0.4s]"></span>
-          <span class="text-xs text-m3-on-surface-variant ml-1.5">Checking tariff...</span>
+        <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-[#4285F4]/20 via-[#9B72CB]/20 to-[#D96570]/20 border border-slate-200/80 dark:border-white/10 flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+          <svg class="w-4 h-4 text-blue-600 dark:text-blue-400 animate-spin" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/>
+          </svg>
+        </div>
+        <div class="flex-1 max-w-[170px] bg-white dark:bg-[#1E1F20] p-3 rounded-2xl rounded-tl-xs border border-slate-200/80 dark:border-white/10 shadow-xs flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-blue-600 animate-bounce"></span>
+          <span class="w-2 h-2 rounded-full bg-purple-600 animate-bounce [animation-delay:0.2s]"></span>
+          <span class="w-2 h-2 rounded-full bg-pink-600 animate-bounce [animation-delay:0.4s]"></span>
+          <span class="text-xs text-slate-500 dark:text-slate-400 ml-1.5">Thinking...</span>
         </div>
       `;
       chatThread?.appendChild(typingDiv);
@@ -1039,419 +1225,6 @@ const callUrl = `tel:${phone}`;
     function removeTypingIndicator() {
       const typingDiv = document.getElementById('ai-typing-indicator');
       typingDiv?.remove();
-    }
-
-    function getLocalTariffReply(historyOrText, passedContext) {
-      const messages = Array.isArray(historyOrText)
-        ? historyOrText
-        : [{ role: 'user', content: String(historyOrText || '') }];
-
-      const userMessages = messages.filter((m) => m.role === 'user');
-      const lastMsg = userMessages[userMessages.length - 1]?.content || '';
-      const lastLower = lastMsg.toLowerCase();
-
-      if (!passedContext && typeof window !== 'undefined') {
-        passedContext = window.__KT_CURRENT_CALCULATION || null;
-      }
-
-      // State tracking across all turns
-      let activeDest = null;
-      let days = 1;
-      let hours = 8;
-      let vehicles = [];
-      let isTamil = false;
-
-      // Inherit destination and vehicle from on-screen context if available
-      if (passedContext) {
-        const destStr = ((passedContext.destination || '') + ' ' + (passedContext.serviceSlug || '')).toLowerCase();
-        if (destStr.includes('tirupati') || destStr.includes('tirumala') || destStr.includes('balaji')) activeDest = 'tirupati';
-        else if (destStr.includes('pondy') || destStr.includes('pondicherry')) activeDest = 'pondicherry';
-        else if (destStr.includes('chidambaram')) activeDest = 'chidambaram';
-        else if (destStr.includes('thiruvannamalai') || destStr.includes('tiruvannamalai')) activeDest = 'thiruvannamalai';
-        else if (destStr.includes('kanchipuram')) activeDest = 'kanchipuram';
-        else if (destStr.includes('navagraha')) activeDest = 'navagraha';
-        else if (destStr.includes('rameswaram')) activeDest = 'rameswaram';
-        else if (destStr.includes('sabarimala')) activeDest = 'sabarimala';
-        else if (destStr.includes('vellore')) activeDest = 'vellore';
-        else if (destStr.includes('local')) activeDest = 'local';
-        else if (destStr.includes('airport')) activeDest = 'airport';
-
-        if (passedContext.vehicleName) {
-          const vLow = passedContext.vehicleName.toLowerCase();
-          if (vLow.includes('dzire') || vLow.includes('etios') || vLow.includes('sedan')) vehicles.push('sedan');
-          else if (vLow.includes('ertiga') || vLow.includes('xl6')) vehicles.push('ertiga');
-          else if (vLow.includes('crysta')) vehicles.push('crysta');
-          else if (vLow.includes('innova')) vehicles.push('innova');
-          else if (vLow.includes('tempo')) vehicles.push('tempo');
-        }
-      }
-
-      for (const m of userMessages) {
-        const text = m.content || '';
-        const lower = text.toLowerCase();
-
-        if (/[\u0B80-\u0BFF]/.test(text) || lower.includes('evlo') || lower.includes('sollunga')) {
-          isTamil = true;
-        }
-
-        // Days
-        const dMatch = lower.match(/(\d+)\s*(?:days?|day|நாட்கள்|நாட்களுக்கு|நாளுக்கு|நாள்)/i);
-        if (dMatch) {
-          days = parseInt(dMatch[1], 10);
-        } else if (lower.includes('2-day') || lower.includes('2 day') || lower.includes('two day') || lower.includes('2 நாள்') || lower.includes('2 நாட்கள்')) {
-          days = 2;
-        } else if (lower.includes('3-day') || lower.includes('3 day') || lower.includes('three day') || lower.includes('3 நாள்') || lower.includes('3 நாட்கள்')) {
-          days = 3;
-        } else if (lower.includes('1-day') || lower.includes('1 day') || lower.includes('same day')) {
-          days = 1;
-        }
-
-        // Hours
-        const hMatch = lower.match(/(\d+)\s*(?:hrs?|hours?|மணி)/);
-        if (hMatch) {
-          hours = parseInt(hMatch[1], 10);
-        }
-
-        // Turn vehicles
-        const turnVehicles = [];
-        if (lower.includes('sedan') || lower.includes('dzire') || lower.includes('etios') || lower.includes('செடான்')) turnVehicles.push('sedan');
-        if (lower.includes('ertiga') || lower.includes('xl6') || lower.includes('எர்டிகா')) turnVehicles.push('ertiga');
-        if (lower.includes('crysta') || lower.includes('கிரிஸ்டா')) turnVehicles.push('crysta');
-        else if (lower.includes('innova') || lower.includes('இன்னோவா')) turnVehicles.push('innova');
-        if (lower.includes('tempo') || lower.includes('traveller') || lower.includes('டெம்போ')) turnVehicles.push('tempo');
-        if (turnVehicles.length > 0) vehicles = turnVehicles;
-
-        // Destination
-        if (lower.includes('tirupati') || lower.includes('tirumala') || lower.includes('balaji') || lower.includes('திருப்பதி')) activeDest = 'tirupati';
-        else if (lower.includes('chidambaram') || lower.includes('pichavaram') || lower.includes('சிதம்பரம்')) activeDest = 'chidambaram';
-        else if (lower.includes('thiruvannamalai') || lower.includes('tiruvannamalai') || lower.includes('girivalam') || lower.includes('திருவண்ணாமலை')) activeDest = 'thiruvannamalai';
-        else if (lower.includes('kanchipuram') || lower.includes('kanchi') || lower.includes('காஞ்சிபுரம்')) activeDest = 'kanchipuram';
-        else if (lower.includes('navagraha') || lower.includes('kumbakonam') || lower.includes('நவக்கிரக')) activeDest = 'navagraha';
-        else if (lower.includes('rameswaram') || lower.includes('rameshwaram') || lower.includes('dhanushkodi') || lower.includes('ராமேஸ்வரம்')) activeDest = 'rameswaram';
-        else if (lower.includes('sabarimala') || lower.includes('pamba') || lower.includes('சபரிமலை')) activeDest = 'sabarimala';
-        else if (lower.includes('vellore') || lower.includes('golden temple') || lower.includes('வேலூர்')) activeDest = 'vellore';
-        else if (lower.includes('pondy') || lower.includes('pondicherry') || lower.includes('பாண்டிச்சேரி')) activeDest = 'pondicherry';
-        else if (lower.includes('airport') || lower.includes('flight') || lower.includes('ஏர்போர்ட்')) activeDest = 'airport';
-        else if (lower.includes('acting driver') || lower.includes('ஆக்டிங் டிரைவர்')) activeDest = 'acting_driver';
-        else if (lower.includes('local') || lower.includes('hourly') || lower.includes('லோக்கல்')) activeDest = 'local';
-        else if (lower.includes('bangalore') || lower.includes('bengaluru')) activeDest = 'bangalore';
-        else if (lower.includes('madurai')) activeDest = 'madurai';
-        else if (lower.includes('coimbatore')) activeDest = 'coimbatore';
-        else if (lower.includes('salem')) activeDest = 'salem';
-        else if (lower.includes('ooty')) activeDest = 'ooty';
-        else if (lower.includes('kodaikanal')) activeDest = 'kodaikanal';
-      }
-
-      // Check policy questions in latest message
-      if (lastLower.includes('advance') || lastLower.includes('deposit') || lastLower.includes('முன்பணம்')) {
-        const destName = activeDest ? activeDest.toUpperCase() : 'your trip';
-        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, I want to pay ₹500 advance to lock cab for ' + destName)}`;
-        if (isTamil) {
-          return `🛡️ **Kalidass Travels முன்பணம் பாலிசி (Advance Policy):**\n\n` +
-            `• **₹500 முன்பணம் மட்டுமே:** காரை உறுதிசெய்து லாக் செய்ய ₹500 மட்டுமே பெறப்படுகிறது.\n` +
-            `• **பில்லில் கழித்தல் உத்தரவாதம்:** இந்த ₹500 கூடுதல் கட்டணம் அல்ல — உங்கள் மொத்த கட்டணத்தில் கழிக்கப்பட்டு மீதமுள்ள தொகை மட்டுமே பயண முடிவில் செலுத்த வேண்டும்!\n` +
-            `• **அனைத்து பயணங்களுக்கும்:** ₹500 முன்பணம் — மீதம் பயணத்திற்குப் பின்!\n` +
-            `• **முழு ரீஃபண்ட்:** 6 மணிநேரம் முன்பு ரத்து செய்தால் ₹500 முழுமையாக திரும்பப் பெறலாம்.\n\n` +
-            `[👉 ₹500 செலுத்தி காரை லாக் செய்ய](${waUrl})`;
-        }
-        return `🛡️ **Kalidass Travels Advance Payment Policy:**\n\n` +
-          `• **Nominal ₹500 Advance:** For all trips and packages (${destName}), we collect only **₹500 advance** to guarantee cab allocation & lock verified driver.\n` +
-          `• **100% Deducted from Final Bill:** The ₹500 is NOT an extra fee — it is deducted from your quoted total (Total Quote − ₹500 Advance = Net Balance paid directly to driver post-trip).\n` +
-          `• **All Services Covered:** Nominal ₹500 advance to confirm — balance paid after service completion.\n` +
-          `• **100% Refund Guarantee:** Fully refundable if canceled up to 6 hours before departure.\n\n` +
-          `[👉 Pay ₹500 Advance & Lock Cab on WhatsApp](${waUrl})`;
-      }
-
-      if (lastLower.includes('cancel') || lastLower.includes('refund') || lastLower.includes('ரத்து')) {
-        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, I have a query about cancellation policy.')}`;
-        return `🛡️ **Cancellation & Refund Policy:**\n\n` +
-          `• **Outstation & Tour Packages:** 100% full refund of ₹500 advance if canceled up to **6 hours** prior to journey departure.\n` +
-          `• **Local City & Acting Drivers:** Free cancellation up to 2 hours before scheduled pickup time.\n\n` +
-          `[👉 Contact Support on WhatsApp](${waUrl})`;
-      }
-
-      // Check active on-screen calculation context (Pro-Rata / Current quote)
-      if (passedContext && passedContext.totalFare) {
-        const asksFor2Days = lastLower.includes('2 day') || lastLower.includes('two day') || lastLower.includes('2-day') || lastLower.includes('2 நாள்') || lastLower.includes('2 நாட்கள்');
-        const asksPrice = lastLower.includes('price') || lastLower.includes('cost') || lastLower.includes('fare') || lastLower.includes('rate') || lastLower.includes('how much') || lastLower.includes('quote') || lastLower.includes('evlo') || lastLower.includes('kattanam') || lastLower.includes('tariff');
-        const asksExplain = lastLower.includes('explain') || lastLower.includes('why') || lastLower.includes('breakup') || lastLower.includes('breakdown') || lastLower.includes('details') || lastLower.includes('screen') || lastLower.includes('quote');
-
-        if (asksFor2Days || asksPrice || asksExplain || lastLower.includes('this trip') || lastLower.includes('my trip') || lastLower.includes('selected')) {
-          const destName = passedContext.destination || (passedContext.serviceTitle ? passedContext.serviceTitle.replace(/Chennai to /i, '') : 'your trip');
-          const vehName = passedContext.vehicleName || 'Swift Dzire / Etios';
-          const fareFormatted = passedContext.formattedFare || `₹${passedContext.totalFare?.toLocaleString('en-IN')}`;
-          const durLabel = passedContext.durationLabel || `${passedContext.durationHours || 24} hrs`;
-          const subText = passedContext.durationSubText || (passedContext.isProRata ? '1 Night Stay' : '');
-
-          if (passedContext.isProRata) {
-            const hrs = passedContext.durationHours || 36;
-            const extraHrs = passedContext.extraHours || (hrs - 24);
-            const savings = passedContext.savings ? `₹${passedContext.savings.toLocaleString('en-IN')}` : '₹1,750';
-            const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent(`Hi Kalidass Travels, I have configured a ${durLabel} trip to ${destName} (${fareFormatted} for ${vehName}). Please confirm availability.`)}`;
-
-            if (isTamil) {
-              return `உங்கள் திரையில் தேர்ந்தெடுக்கப்பட்ட பயண அட்டவணை: **${durLabel} (${hrs} மணிநேரம் / ${subText || '1 இரவு தங்குதல்'})**:\n\n` +
-                `• **திரையில் உள்ள புரோ-ரேட்டா கட்டணம்:** **${fareFormatted}** (${vehName})\n` +
-                `  உங்கள் பயணம் முழு 48 மணிநேரம் இல்லாமல் **${hrs} மணிநேரம்** மட்டுமே என்பதால், காளிதாஸ் டிராவல்ஸ் நியாயமான புரோ-ரேட்டா முறையில் கணக்கிட்டு முழு 2-நாள் கட்டணத்தை விட **${savings} மிச்சப்படுத்துகிறது**!\n\n` +
-                `• **முழு 48-மணிநேர 2-நாள் பேக்கேஜ்:**\n` +
-                `  நீங்கள் காரை முழு 48 மணிநேரமும் பயன்படுத்த விரும்பினால்:\n` +
-                `  - **Swift Dzire / Etios (4 Pax):** ₹9,500\n` +
-                `  - **Maruti Ertiga / XL6 (6 Pax):** ₹11,500\n` +
-                `  - **Toyota Innova (7 Pax):** ₹12,500\n` +
-                `  - **Innova Crysta:** ₹16,000\n\n` +
-                `✅ **உள்ளடக்கம்:** சுத்தமான ஏசி கார், டிரைவர் பேட்டா, ஆந்திரா பெர்மிட் & திருமலை மலைப்பாதை அனுமதி.\n` +
-                `🛡️ **பாலிசி:** காரை உறுதிசெய்து லாக் செய்ய **₹500 முன்பணம்** மட்டுமே. மீதமுள்ள தொகை பயண முடிவில்!\n\n` +
-                `[👉 வாட்ஸ்அப்பில் முன்பதிவு செய்ய](${waUrl})`;
-            }
-
-            return `I see your selected schedule on screen is **${durLabel}** (${hrs} hours${subText ? ` / ${subText}` : ''}) for **${destName}**:\n\n` +
-              `• **Your On-Screen Pro-Rata Fare:** **${fareFormatted}** for **${vehName}**\n` +
-              `  Because your trip duration is **${hrs} hours** (rather than the full 48 hours), our transparent tariff charges you pro-rata for 1 Day + ${extraHrs} hrs, **saving you ${savings}** compared to the full 2-day package!\n\n` +
-              `• **Full 48-Hour 2-Day Package Rates:**\n` +
-              `  If you require the cab for the complete 48 hours (e.g. 2 full calendar days or returning late night on Day 2):\n` +
-              `  - **Swift Dzire / Etios (4 Pax):** ₹9,500\n` +
-              `  - **Maruti Ertiga / XL6 (6 Pax):** ₹11,500\n` +
-              `  - **Toyota Innova (7 Pax):** ₹12,500\n` +
-              `  - **Toyota Innova Crysta (7 Pax):** ₹16,000\n` +
-              `  - **Tempo Traveller (12 Pax):** ₹19,500\n\n` +
-              `✅ **Inclusions:** Dedicated AC Cab & Experienced Chauffeur, Fuel, AP State Border Permit, Tirumala Ghat Road ascent, and Driver Bata.\n` +
-              `🛡️ **Policy:** Nominal **₹500 advance** to confirm & lock cab (avoids last-minute cancellation). Remaining balance paid post-trip!\n\n` +
-              `[👉 Confirm Booking on WhatsApp](${waUrl})`;
-          }
-        }
-      }
-
-      // Tirupati package (1, 2, 3, 4, 5+ days supported)
-      if (activeDest === 'tirupati') {
-        const d = Math.max(days, 1);
-        const calc = (base3, extraPerDay, d1, d2) => {
-          if (d === 1) return d1;
-          if (d === 2) return d2;
-          if (d === 3) return base3;
-          return base3 + ((d - 3) * extraPerDay);
-        };
-
-        const rates = {
-          sedan: calc(13200, 3500, 6000, 9500),
-          ertiga: calc(15800, 4000, 7500, 11500),
-          innova: calc(17500, 4000, 8500, 12500),
-          crysta: calc(22500, 6000, 10000, 16000),
-          tempo: calc(27000, 7000, 12500, 19500)
-        };
-
-        const allLines = {
-          sedan: `• **Swift Dzire / Etios (4 Pax):** ₹${rates.sedan.toLocaleString('en-IN')}`,
-          ertiga: `• **Maruti Ertiga / XL6 (6 Pax):** ₹${rates.ertiga.toLocaleString('en-IN')}`,
-          innova: `• **Toyota Innova (7 Pax):** ₹${rates.innova.toLocaleString('en-IN')}`,
-          crysta: `• **Toyota Innova Crysta (7 Pax):** ₹${rates.crysta.toLocaleString('en-IN')}`,
-          tempo: `• **Tempo Traveller (12 Pax):** ₹${rates.tempo.toLocaleString('en-IN')}`
-        };
-
-        let selected = Object.keys(allLines);
-        if (vehicles.length > 0) {
-          const matched = vehicles.filter((v) => allLines[v]);
-          if (matched.length > 0) selected = matched;
-        }
-
-        const linesStr = selected.map((k) => allLines[k]).join('\n');
-        const pageLink = `/services/tirupati-package/?days=${d}`;
-        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent(`Hi Kalidass Travels, I want to book Chennai to Tirupati (${d}-Day) package. Please confirm availability.`)}`;
-
-        if (isTamil) {
-          return `சென்னை ⇄ **திருப்பதி ${d}-நாள் பேக்கேஜ்** அதிகாரப்பூர்வ கட்டணங்கள்:\n\n` +
-            `${linesStr}\n\n` +
-            `✅ **உள்ளடக்கம்:** சுத்தமான ஏசி வாகனம், டிரைவர் பேட்டா, திருமலை மலைப்பாதை அனுமதி & சுங்கக் கட்டணம் (1-நாள் பேக்கேஜில் அடங்கும்).\n` +
-            `🛡️ **பாலிசி:** ₹500 முன்பணம் செலுத்தி காரை லாக் செய்யலாம். மீதமுள்ள தொகை பயணத்திற்குப் பின்!\n\n` +
-            `[👉 திருப்பதி ${d}-நாள் கால்குலேட்டரில் பார்க்க](${pageLink})\n\n` +
-            `[👉 வாட்ஸ்அப்பில் உறுதிப்படுத்தவும்](${waUrl})`;
-        }
-
-        const incl = d === 1
-          ? 'Dedicated Cab, Fuel, NH FASTag Tolls, AP Border Permit, Tirumala Ghat Road ascent & Driver Bata.'
-          : `Dedicated AC cab & experienced chauffeur staying with you for all ${d} days, Tirumala Ghat Road hill climb & Driver Bata.`;
-
-        return `Here are our official **Chennai ⇄ Tirupati ${d}-Day Package** rates:\n\n` +
-          `${linesStr}\n\n` +
-          `✅ **Inclusions:** ${incl}\n` +
-          `🛡️ **Policy:** Nominal ₹500 advance to confirm & lock cab (avoids last-minute cancellation). Remaining balance paid post-trip!\n\n` +
-          `[👉 Open Tirupati ${d}-Day Calculator & View Live Quote](${pageLink})\n\n` +
-          `[👉 Confirm Booking on WhatsApp](${waUrl})`;
-      }
-
-      // Pondicherry package
-      if (activeDest === 'pondicherry') {
-        const d = Math.min(Math.max(days, 1), 2);
-        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent(`Hi Kalidass Travels, I want to book Chennai to Pondicherry (${d}-Day) package.`)}`;
-        if (d === 2) {
-          return `Here are our official **Chennai ⇄ Pondicherry 2-Day Package** rates:\n\n` +
-            `• **AC Sedan (Dzire / Etios - 4 Pax):** ₹7,500\n` +
-            `• **Maruti Ertiga / XL6 (6 Pax):** ₹9,200\n` +
-            `• **Toyota Innova (7 Pax):** ₹10,200\n` +
-            `• **Toyota Innova Crysta:** ₹12,500\n\n` +
-            `✅ **Inclusions:** Dedicated AC cab & experienced chauffeur for 2 days. Tolls & parking at actuals.\n` +
-            `🛡️ **Policy:** ₹500 advance to confirm & lock cab. Balance post-trip!\n\n` +
-            `[👉 Confirm Booking on WhatsApp](${waUrl})`;
-        }
-        return `For **Chennai ⇄ Pondicherry (Same Day Return ~320 km)**:\n\n` +
-          `• **AC Sedan (4 Pax):** ~₹4,500 - ₹5,000 (At ₹14/km + driver bata ₹400)\n` +
-          `• **Maruti Ertiga (6 Pax):** ~₹5,800 - ₹6,200 (At ₹17/km + driver bata ₹500)\n` +
-          `• **Toyota Innova (7 Pax):** ~₹7,000 (At ₹20/km + driver bata ₹600)\n\n` +
-          `🛡️ **Policy:** ₹500 advance to confirm & lock cab. Balance post-trip!\n\n` +
-          `[👉 Confirm Booking on WhatsApp](${waUrl})`;
-      }
-
-      // Acting driver
-      if (activeDest === 'acting_driver' || lastLower.includes('acting driver') || lastLower.includes('call driver') || lastLower.includes('driver for my car') || lastLower.includes('personal car') || lastLower.includes('ஆக்டிங்')) {
-        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, I need an Acting Driver for my personal car.')}`;
-        return `Here are our verified **Acting Driver Services** for your personal car (MT / AT / EV):\n\n` +
-          `• **Chennai City Duty:**\n` +
-          `  - 4 Hours: ₹500 (Extra hour: ₹100)\n` +
-          `  - 8 Hours: ₹800 *(Full Day Duty)*\n` +
-          `  - Night driving allowance (10:00 PM – 6:00 AM): ₹150\n\n` +
-          `• **Outstation Round Trip (Driver meals included):**\n` +
-          `  - Hatchback / Sedan: ₹1,400 / day (₹1,100 bata + ₹300 food)\n` +
-          `  - Compact SUV / MPV (Ertiga, Creta): ₹1,500 / day (₹1,200 bata + ₹300 food)\n` +
-          `  - Premium SUV / MUV (Innova Crysta): ₹1,600 / day (₹1,300 bata + ₹300 food)\n` +
-          `  - Luxury European (BMW, Mercedes-Benz, Audi): ₹1,800 / day (₹1,500 bata + ₹300 food)\n\n` +
-          `• **Outstation One-Way Drop:** 1-Day Driver Bata + Return SETC Bus ticket + ₹300 food.\n\n` +
-          `👮 100% Police Clearance Certificate (PVC) verified chauffeurs.\n` +
-          `🛡️ **Policy:** **₹500 advance deposit** to lock driver (deducted from bill) — balance after duty!\n\n` +
-          `[👉 Hire Acting Driver](/services/acting-drivers/)`;
-      }
-
-      // Airport transfer
-      if (activeDest === 'airport' || lastLower.includes('airport') || lastLower.includes('flight') || lastLower.includes('ஏர்போர்ட்')) {
-        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, I need Chennai Airport transfer.')}`;
-        return `Here are our **Chennai Airport (MAA) Taxi Transfer Rates**:\n\n` +
-          `• **City Hub Drops / Pickups (AC Sedan):**\n` +
-          `  - Velachery: ₹650 | Tambaram: ₹550 | Guindy: ₹500 | Chromepet: ₹450\n` +
-          `  - T. Nagar: ₹700 | Adyar: ₹700 | Medavakkam: ₹700 | OMR: ₹750\n` +
-          `  - Anna Nagar: ₹800 | Egmore: ₹800 | Chennai Central: ₹850\n` +
-          `  *(Ertiga: +₹200 to ₹250 | Innova: +₹450 to ₹550)*\n\n` +
-          `• **Direct Highway Corridors (Sedan):**\n` +
-          `  - Pondicherry: ₹2,820 | Vellore CMC: ₹2,600 | Tirupati: ₹2,560\n` +
-          `  - Mahabalipuram: ₹1,650 | Sriperumbudur: ₹1,400 | Kanchipuram: ₹2,100\n\n` +
-          `✈️ **Airport Guarantees:**\n` +
-          `• **Chauffeur Details Before Takeoff:** Driver details sent on WhatsApp **before your flight takes off** from your origin airport!\n` +
-          `• Live flight radar tracking with **zero waiting charges for delayed flights**.\n` +
-          `• ₹500 advance to confirm & lock cab (deducted from bill); balance post-trip.\n\n` +
-          `[👉 Book Chennai Airport Taxi](/services/chennai-airport-taxi/)`;
-      }
-
-      // Local Chennai Hourly
-      if ((activeDest === 'local' || lastLower.includes('local') || lastLower.includes('hourly') || lastLower.includes('8hr') || lastLower.includes('4hr')) && !lastLower.includes('acting') && !lastLower.includes('call driver')) {
-        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent(`Hi Kalidass Travels, I want to book Chennai local rental (${hours} hrs).`)}`;
-        return `Here are our official **Chennai City Local Rental Packages**:\n\n` +
-          `• **AC Sedan (Dzire / Etios):**\n` +
-          `  - 4 hrs / 40 km: ₹1,350 (Extra km: ₹15 | Extra hr: ₹150)\n` +
-          `  - 8 hrs / 80 km: ₹2,200 *(Most Popular)*\n` +
-          `  - 10 hrs / 100 km: ₹2,600\n\n` +
-          `• **Maruti Ertiga / XL6 (6 Pax):**\n` +
-          `  - 4 hrs / 40 km: ₹1,700 (Extra km: ₹17 | Extra hr: ₹200)\n` +
-          `  - 8 hrs / 80 km: ₹2,800\n\n` +
-          `• **Toyota Innova (7 Pax):**\n` +
-          `  - 8 hrs / 80 km: ₹3,200 | Innova Crysta: ₹4,500\n\n` +
-          `🛡️ **Policy:** ₹500 advance deposit to lock cab (deducted from bill) — pay balance after trip!\n\n` +
-          `[👉 Book on WhatsApp](${waUrl})`;
-      }
-
-      // Chidambaram
-      if (activeDest === 'chidambaram' || lastLower.includes('chidambaram')) {
-        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, I want to book Chennai to Chidambaram tour.')}`;
-        return `Here are our **Chennai ⇄ Chidambaram & Pichavaram Tour Package** rates:\n\n` +
-          `• **1-Day Package (All-Inclusive):** Sedan ₹7,400 | Ertiga ₹9,200 | Innova ₹11,000\n` +
-          `• **2-Day Package:** Sedan ₹9,800 | Ertiga ₹12,000 | Innova ₹14,000\n\n` +
-          `✅ Covers dedicated AC cab, fuel, ECR highway tolls, Pichavaram stop & driver bata.\n` +
-          `🛡️ ₹500 advance to lock cab (deducted from bill); balance post-trip!\n\n` +
-          `[👉 Open Chidambaram Calculator](/services/chidambaram-temple-trip/)`;
-      }
-
-      // Thiruvannamalai
-      if (activeDest === 'thiruvannamalai' || lastLower.includes('thiruvannamalai') || lastLower.includes('girivalam')) {
-        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, I want to book Chennai to Thiruvannamalai tour.')}`;
-        return `Here are our **Chennai ⇄ Thiruvannamalai Girivalam Package** rates:\n\n` +
-          `• **1-Day Package:** Sedan ₹6,500 | Ertiga ₹7,900 | Innova ₹9,300\n` +
-          `• **2-Day Package:** Sedan ₹8,900 | Ertiga ₹10,900 | Innova ₹12,900\n\n` +
-          `✅ Covers dedicated cab, fuel, NH tolls, Girivalam coordination & driver bata.\n` +
-          `🛡️ ₹500 advance to lock cab (deducted from bill); balance post-trip!\n\n` +
-          `[👉 Open Thiruvannamalai Calculator](/services/thiruvannamalai-girivalam-trip/)`;
-      }
-
-      // Navagraha
-      if (activeDest === 'navagraha' || lastLower.includes('navagraha') || lastLower.includes('kumbakonam')) {
-        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, I want to book Kumbakonam Navagraha Tour.')}`;
-        return `Here are our **Kumbakonam Navagraha (9 Temples) Tour Package** rates:\n\n` +
-          `• **2-Day Package:** Sedan ₹14,500 | Ertiga ₹18,500 | Innova ₹22,500\n` +
-          `• **3-Day Package:** Sedan ₹19,500 | Ertiga ₹24,500 | Innova ₹29,500\n\n` +
-          `✅ Covers all 9 temples, experienced temple route chauffeur. ₹500 advance (deducted from bill).\n\n` +
-          `[👉 Open Navagraha Calculator](/services/navagraha-tour/)`;
-      }
-
-      // Rameswaram
-      if (activeDest === 'rameswaram' || lastLower.includes('rameswaram') || lastLower.includes('dhanushkodi')) {
-        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, I want to book Chennai to Rameswaram package.')}`;
-        return `Here are our **Chennai ⇄ Rameswaram & Dhanushkodi Tour Package** rates:\n\n` +
-          `• **2-Day Package:** Sedan ₹18,500 | Ertiga ₹23,500 | Innova ₹27,500\n` +
-          `• **3-Day Package:** Sedan ₹24,500 | Ertiga ₹30,500 | Innova ₹36,500\n\n` +
-          `✅ Covers Ramanathaswamy Temple, 22 Kundas bath & Dhanushkodi. ₹500 advance (deducted from bill).\n\n` +
-          `[👉 Open Rameswaram Calculator](/services/rameswaram-2-days/)`;
-      }
-
-      // Kanchipuram
-      if (activeDest === 'kanchipuram' || lastLower.includes('kanchipuram')) {
-        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, I want to book Kanchipuram Tour.')}`;
-        return `Here are our **Chennai ⇄ Kanchipuram Temple & Silk Tour** rates:\n\n` +
-          `• **Same-Day Return:** Sedan ₹3,800 | Ertiga ₹4,800 | Innova ₹5,800\n\n` +
-          `✅ Covers Kamakshi Amman, Ekambareswarar & silk weaver centers. ₹500 advance (deducted from bill).\n\n` +
-          `[👉 Open Kanchipuram Calculator](/services/kanchipuram-temple-trip/)`;
-      }
-
-      // Vellore
-      if (activeDest === 'vellore' || lastLower.includes('vellore')) {
-        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, I want to book Vellore Golden Temple Tour.')}`;
-        return `Here are our **Chennai ⇄ Vellore Sripuram Golden Temple Tour** rates:\n\n` +
-          `• **Same-Day Return:** Sedan ₹4,200 | Ertiga ₹5,200 | Innova ₹6,200\n\n` +
-          `✅ Covers dedicated AC cab, NH toll plazas & driver bata. ₹500 advance (deducted from bill).\n\n` +
-          `[👉 Open Vellore Calculator](/services/vellore-golden-temple/)`;
-      }
-
-      // Sabarimala
-      if (activeDest === 'sabarimala' || lastLower.includes('sabarimala')) {
-        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, I want to book Sabarimala package.')}`;
-        return `Here are our **Chennai ⇄ Sabarimala Mandala Pooja Tour Package** rates:\n\n` +
-          `• **3-Day Package:** Sedan ₹24,000 | Ertiga ₹30,000 | Innova ₹36,000\n` +
-          `• **4-Day Package:** Sedan ₹29,500 | Ertiga ₹36,500 | Innova ₹43,500\n\n` +
-          `✅ Specialized ghat-road senior chauffeurs. ₹500 advance (deducted from bill).\n\n` +
-          `[👉 Open Sabarimala Calculator](/services/sabarimala-trip/)`;
-      }
-
-      // Multi-stop / Multiple Places Outstation Trips
-      if (lastLower.includes('multiple') || lastLower.includes('places') || lastLower.includes('multi') || lastLower.includes('many places') || lastLower.includes('more than 1') || lastLower.includes('tour plan') || lastLower.includes('plan my trip')) {
-        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, we want to book a trip to multiple places. Please give us a vehicle quote:\n\n1. From: Chennai\n2. Places to visit:\n3. Number of days:\n4. Number of people:\n\nThank you!')}`;
-        return `### 🚗 Trips to Multiple Places & Temples\n\n` +
-          `Yes! Your cab and chauffeur stay with you for your entire trip to visit all your places.\n\n` +
-          `**How the billing works (Simple & Clear):**\n` +
-          `• **Daily Minimum:** 250 km per calendar day (2 days = 500 km, 3 days = 750 km)\n` +
-          `• **Per-KM Rates:**\n` +
-          `  - **Swift Dzire (4 seater):** ₹14/km (Driver bata ₹400/day)\n` +
-          `  - **Maruti Ertiga (6 seater):** ₹17/km (Driver bata ₹500/day)\n` +
-          `  - **Toyota Innova (7 seater):** ₹20/km (Driver bata ₹600/day)\n` +
-          `  - **Innova Crysta (7 seater):** ₹22/km (Driver bata ₹700/day)\n` +
-          `  - **Tempo Traveller (12 seater):** ₹24/km (Driver bata ₹800/day)\n\n` +
-          `✅ **Inclusions:** Driver takes you to all your temples, sightseeing spots & hotel halts with zero extra hourly charges!\n` +
-          `🛡️ **Booking Policy:** ₹500 advance to lock your car (deducted from bill); pay the rest after your trip.\n\n` +
-          `[📲 Send Your Route on WhatsApp for Quick Quote](${waUrl})`;
-      }
-
-      // Default tariff menu
-      return `I can instantly quote fares for you:\n\n` +
-        `• 🕉️ **Tirupati Balaji & Temple Tours** (Tirupati 1-Day Sedan ₹6,000 | Ertiga ₹7,500 all-inclusive)\n` +
-        `• ✈️ **Chennai Airport Taxi Transfers** (City hubs from ₹550 | 24/7 flight tracking)\n` +
-        `• 👮 **Acting Drivers for Personal Car** (City 4hr ₹500, 8hr ₹800 | Outstation ₹1,400/day)\n` +
-        `• ⏱️ **Local Chennai Hourly Rentals** (4hr, 8hr, 12hr rentals)\n` +
-        `• 🛣️ **Outstation Cabs** (Sedan ₹14/km, Ertiga ₹17/km, Innova ₹20/km)\n` +
-        `• 🏖️ **Pondicherry & Tour Packages**\n\n` +
-        `Tell me your travel destination or vehicle preference to get started!`;
     }
 
     function getChatSessionId() {
@@ -1476,7 +1249,6 @@ const callUrl = `tel:${phone}`;
       isRequestInProgress = true;
       if (sendBtn) sendBtn.disabled = true;
 
-      // On mobile, dismiss keyboard while waiting for response to keep full view
       if (isMobileDevice()) {
         userInput?.blur();
       }
@@ -1489,7 +1261,6 @@ const callUrl = `tel:${phone}`;
 
       const sessionId = getChatSessionId();
       const sourcePage = window.location.pathname || '/';
-
       const pageContext = window.__KT_CURRENT_CALCULATION || null;
 
       let reply = '';
@@ -1513,44 +1284,21 @@ const callUrl = `tel:${phone}`;
         }
       } catch (_) {}
 
-      // If backend API is not reachable, use instant client-side tariff engine with full multi-turn chatHistory
       if (!reply) {
         await new Promise((r) => setTimeout(r, 200));
         reply = getLocalTariffReply(chatHistory, pageContext);
-
-        // Async telemetry backup for offline client fallback
-        try {
-          var sheetUrl = (window.KT_SHEET_WEBHOOK_URL || (window.localStorage && window.localStorage.getItem('kt_google_sheet_webhook_url')) || '').trim();
-          if (sheetUrl && sheetUrl.startsWith('https://script.google.com/macros/s/')) {
-            fetch(sheetUrl, {
-              method: 'POST',
-              mode: 'no-cors',
-              headers: { 'Content-Type': 'text/plain' },
-              body: JSON.stringify({
-                type: 'ai_chat_query',
-                date: new Date().toLocaleString(),
-                sessionId,
-                sourcePage,
-                userQuery: text,
-                aiReply: reply,
-                engine: 'client_local_fallback'
-              })
-            }).catch(() => {});
-          }
-        } catch (_) {}
       }
 
       removeTypingIndicator();
       appendMessage('assistant', reply);
       chatHistory.push({ role: 'assistant', content: reply });
 
-      // If user explicitly commanded to "open", "launch", or "calculate":
       const wantsToOpen = /(?:open|launch|navigate|go to|take me|calculate.*page|set.*calculate)/i.test(text);
       if (wantsToOpen) {
         const linkMatch = reply.match(/\[.*?\]\(((?:\/services\/[^\s\)]+)|(?:https?:\/\/[^\s\)]*\/services\/[^\s\)]+))\)/);
         if (linkMatch && linkMatch[1]) {
           const targetHref = linkMatch[1];
-          showVoiceToast('🚀 Directing to calculator with requested schedule...');
+          showVoiceToast('🚀 Directing to calculator...');
           setTimeout(() => {
             closeAiModal();
             const target = new URL(targetHref, window.location.origin);
@@ -1566,7 +1314,6 @@ const callUrl = `tel:${phone}`;
       isRequestInProgress = false;
       if (sendBtn) sendBtn.disabled = false;
 
-      // On mobile: DO NOT open keyboard after answering; user will tap input if they want to ask again
       if (!isMobileDevice()) {
         userInput?.focus();
       } else {
@@ -1574,15 +1321,18 @@ const callUrl = `tel:${phone}`;
       }
     }
 
-    // Action link handler for instant deep-linking into booking engines
+    chatForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const query = userInput?.value.trim();
+      if (query) {
+        handleUserSubmit(query);
+      }
+    });
+
     document.addEventListener('click', (e) => {
       const link = e.target.closest('.ai-action-link');
-      if (!link) return;
-      const href = link.getAttribute('href');
-      if (!href) return;
-
-      if (href.startsWith('/') || href.startsWith(window.location.origin)) {
-        e.preventDefault();
+      if (link && link.getAttribute('href')) {
+        const href = link.getAttribute('href');
         closeAiModal();
         const target = new URL(href, window.location.origin);
         if (window.location.pathname === target.pathname) {
@@ -1593,23 +1343,107 @@ const callUrl = `tel:${phone}`;
       }
     });
 
-    chatForm?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const text = userInput?.value?.trim();
-      if (text) {
-        if (isMobileDevice()) userInput?.blur();
-        handleUserSubmit(text);
-      }
-    });
+    function getLocalTariffReply(historyOrText, passedContext) {
+      const messages = Array.isArray(historyOrText)
+        ? historyOrText
+        : [{ role: 'user', content: String(historyOrText || '') }];
 
-    quickChips.forEach((chip) => {
-      chip.addEventListener('click', () => {
-        const prompt = chip.getAttribute('data-quick-prompt');
-        if (prompt) {
-          if (isMobileDevice()) userInput?.blur();
-          handleUserSubmit(prompt);
+      const userMessages = messages.filter((m) => m.role === 'user');
+      const lastMsg = userMessages[userMessages.length - 1]?.content || '';
+      const lastLower = lastMsg.toLowerCase();
+
+      if (!passedContext && typeof window !== 'undefined') {
+        passedContext = window.__KT_CURRENT_CALCULATION || null;
+      }
+
+      let activeDest = null;
+      let days = 1;
+      let vehicles = [];
+      let isTamil = false;
+
+      for (const m of userMessages) {
+        const text = m.content || '';
+        const lower = text.toLowerCase();
+
+        if (/[\u0B80-\u0BFF]/.test(text) || lower.includes('evlo') || lower.includes('sollunga')) {
+          isTamil = true;
         }
-      });
-    });
+
+        const dMatch = lower.match(/(\d+)\s*(?:days?|day|நாட்கள்|நாளுக்கு)/i);
+        if (dMatch) days = parseInt(dMatch[1], 10);
+        else if (lower.includes('2-day') || lower.includes('2 day') || lower.includes('two day')) days = 2;
+        else if (lower.includes('3-day') || lower.includes('3 day') || lower.includes('three day')) days = 3;
+
+        if (lower.includes('sedan') || lower.includes('dzire') || lower.includes('etios')) vehicles.push('sedan');
+        if (lower.includes('ertiga') || lower.includes('xl6')) vehicles.push('ertiga');
+        if (lower.includes('crysta')) vehicles.push('crysta');
+        else if (lower.includes('innova')) vehicles.push('innova');
+        if (lower.includes('tempo') || lower.includes('traveller')) vehicles.push('tempo');
+
+        if (lower.includes('tirupati') || lower.includes('tirumala') || lower.includes('balaji')) activeDest = 'tirupati';
+        else if (lower.includes('navagraha') || lower.includes('kumbakonam')) activeDest = 'navagraha';
+        else if (lower.includes('pondy') || lower.includes('pondicherry')) activeDest = 'pondicherry';
+        else if (lower.includes('thiruvannamalai') || lower.includes('tiruvannamalai')) activeDest = 'thiruvannamalai';
+        else if (lower.includes('chidambaram')) activeDest = 'chidambaram';
+      }
+
+      if (lastLower.includes('permit') || lastLower.includes('border') || lastLower.includes('entry tax')) {
+        return `• **Interstate State Permits (NOT INCLUDED):**\n` +
+          `- For all outstation trips outside Tamil Nadu (Andhra Pradesh, Karnataka, Kerala, Puducherry), state border entry permits are NOT included in the car rate.\n` +
+          `- You pay actual border checkpost receipts.\n` +
+          `• **Tolls & Parking (NOT INCLUDED):** Highway tolls and parking are also NOT included in the car rate. Pay actual plaza receipts.\n` +
+          `• **Exception (1-Day Tirupati Package):** The same-day Chennai ⇄ Tirupati package (₹6,000 Sedan) ALREADY INCLUDES AP border permit and NH FASTag tolls.\n` +
+          `• **Advance:** ₹500 advance to lock your vehicle (deducted from your final bill).\n\n` +
+          `[👉 Chat on WhatsApp](https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, I have a question about interstate permits and tolls.')})`;
+      }
+
+      if (passedContext && passedContext.totalFare && (lastLower.includes('screen') || lastLower.includes('quote') || lastLower.includes('explain'))) {
+        const destName = passedContext.destination || 'your trip';
+        const vehName = passedContext.vehicleName || 'Swift Dzire';
+        const fareFormatted = passedContext.formattedFare || `₹${passedContext.totalFare}`;
+        const isTirupati1Day = (destName.toLowerCase().includes('tirupati') || destName.toLowerCase().includes('tirumala')) && !passedContext.isMultiDay;
+        const inclusionText = isTirupati1Day
+          ? 'AC cab, fuel, NH FASTag toll plaza receipts, AP border permit, and chauffeur allowance.'
+          : 'AC cab, fuel, and chauffeur allowance. Highway tolls, parking, and interstate state border permits are strictly NOT included and payable at actual checkposts.';
+        return `Here is the explanation of your on-screen quote for **${destName}**:\n\n` +
+          `• **Quoted Vehicle:** ${vehName}\n` +
+          `• **Quoted Total:** **${fareFormatted}**\n` +
+          `• **Inclusions:** ${inclusionText}\n` +
+          `• **Booking Advance:** Pay ₹500 to lock vehicle (deducted from final bill). Pay remaining balance post-trip.\n\n` +
+          `[👉 Confirm Booking on WhatsApp](https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, I would like to book the on-screen quote of ' + fareFormatted + ' for ' + destName)})`;
+      }
+
+      if (activeDest === 'tirupati') {
+        const d = Math.max(days, 1);
+        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent(`Hi Kalidass Travels, I want to book Chennai to Tirupati (${d}-Day) package.`)}`;
+        return `Official **Chennai ⇄ Tirupati ${d}-Day Package** rates:\n\n` +
+          `- **Sedan (4 Seats - Dzire / Etios)**: ₹${d === 1 ? '6,000' : (d === 2 ? '9,500' : '13,200')}\n` +
+          `- **Maruti Ertiga (6 Seats)**: ₹${d === 1 ? '7,500' : (d === 2 ? '11,500' : '15,800')}\n` +
+          `- **Toyota Innova (7 Seats)**: ₹${d === 1 ? '8,500' : (d === 2 ? '12,500' : '17,500')}\n` +
+          `- **Innova Crysta (7 Seats)**: ₹${d === 1 ? '10,000' : (d === 2 ? '16,000' : '22,500')}\n` +
+          `- **Tempo Traveller 12-Seater**: ₹${d === 1 ? '12,500' : (d === 2 ? '19,500' : '27,000')}\n\n` +
+          `• **All-Inclusive (1-Day):** Dedicated AC cab, NH FASTag Tolls, AP Border Permit, Tirumala Ghat Road ascent & Driver Bata.\n` +
+          `• **Booking Policy:** ₹500 advance to confirm & lock cab (deducted from final bill).\n\n` +
+          `[👉 Open Tirupati Calculator](/services/tirupati-package/?days=${d})\n\n` +
+          `[👉 Book on WhatsApp](${waUrl})`;
+      }
+
+      const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, we want to book a trip to multiple places. Please give us a quote.')}`;
+      return `Calculating outstation fares for multi-destination trips is 100% transparent:\n\n` +
+        `:::FORMULA:::(Total KM × Per KM Rate) + (Driver Bata × Days) [Tolls, Parking & State Permits at Actuals]:::ENDFORMULA:::\n\n` +
+        `- **Sedan (4 Seats - Dzire / Etios)**: ₹14/km + ₹400 driver bata/day (Min 250 km/day)\n` +
+        `- **Maruti Ertiga (6 Seats)**: ₹17/km + ₹500 driver bata/day (Min 250 km/day)\n` +
+        `- **Toyota Innova (7 Seats)**: ₹20/km + ₹600 driver bata/day (Min 250 km/day)\n` +
+        `- **Innova Crysta (7 Seats)**: ₹22/km + ₹700 driver bata/day (Min 250 km/day)\n` +
+        `- **Tempo Traveller 12-Seater**: ₹24/km + ₹800 driver bata/day (Min 300 km/day)\n` +
+        `- **Tempo 14-Seater Executive**: ₹25/km + ₹900 driver bata/day (Min 350 km/day)\n` +
+        `- **Tempo 20-Seater Grand**: ₹30/km + ₹900 driver bata/day (Min 300 km/day)\n` +
+        `- **Force Urbania VIP Luxury**: ₹34/km + ₹1,000 driver bata/day (Min 300 km/day)\n\n` +
+        `• **Your Cab & Chauffeur:** The vehicle stays with you for all days with zero extra hourly charges.\n` +
+        `• **Tolls, Parking & State Permits (NOT INCLUDED):** State border entry permits, highway tolls, and parking tickets are NOT included in the car rate. Pay actual receipts at toll plazas and border checkposts.\n` +
+        `• **Booking Advance:** ₹500 to lock your car (deducted from final bill).\n\n` +
+        `[👉 Calculate Outstation Fare](/services/outstation-cabs/)\n\n` +
+        `[👉 Send Route on WhatsApp for Quick Quote](${waUrl})`;
+    }
   })();
 </script>

@@ -3,7 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import FleetCarousel from "../components/FleetCarousel.astro";
 import Breadcrumbs from "../components/SEO/Breadcrumbs.astro";
 import tariffConfig from "../data/tariff_config.json";
-import { ArrowRight, Phone } from "lucide-react";
+import { ArrowRight, Phone, ShieldCheck, CheckCircle2, Sparkles, Navigation } from "lucide-react";
 
 const breadcrumbItems = [
   { name: "Home", item: "/" },
@@ -74,17 +74,37 @@ const schema = {
   <main class="bg-m3-surface-container-low min-h-screen pt-6 pb-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
-      <div class="text-center max-w-3xl mx-auto mb-8">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-amber-400 border border-amber-500 text-slate-950 text-xs font-black shadow-sm mb-3.5 tracking-wide uppercase">
+      <div class="text-center max-w-3xl mx-auto mb-10">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-m3-full bg-amber-400 border border-amber-500 text-slate-950 text-xs font-black shadow-xs mb-3.5 tracking-wide uppercase">
           <span class="w-2 h-2 rounded-full bg-slate-950"></span>
           <span>Commercial Yellow-Plate AITP Fleet</span>
         </div>
-        <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-m3-on-surface tracking-tight leading-tight mb-3 font-heading">
           Our Premium Fleet &amp; <span class="text-m3-primary">Taxi Models</span>
         </h1>
         <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed mb-6 font-normal font-sans">
           Pristine, sanitized, and commercial-plated vehicles driven by background-verified chauffeurs. Fixed rates per km with zero surge pricing.
         </p>
+
+        <!-- Desktop Trust Pill Strip -->
+        <div class="flex flex-wrap items-center justify-center gap-2 max-w-3xl mx-auto">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 text-xs font-medium text-m3-on-surface shadow-2xs">
+            <ShieldCheck className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+            <span>100% Commercial Yellow Plates</span>
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 text-xs font-medium text-m3-on-surface shadow-2xs">
+            <Navigation className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+            <span>GPS Tracked &amp; FASTag Enabled</span>
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 text-xs font-medium text-m3-on-surface shadow-2xs">
+            <Sparkles className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+            <span>Daily Sanitized Interiors</span>
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 text-xs font-medium text-m3-on-surface shadow-2xs">
+            <CheckCircle2 className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+            <span>Working AC Guaranteed</span>
+          </span>
+        </div>
       </div>
 
       <!-- Fleet Component -->

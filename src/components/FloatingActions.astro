@@ -32,27 +32,22 @@ const {
     onclick="window.toggleAiFareModal ? window.toggleAiFareModal() : (window.openAiFareModal && window.openAiFareModal())"
   >
     <!-- Living Aurora Halo -->
-    <span class="absolute -inset-1 rounded-full bg-gradient-to-r from-[#4285F4]/25 via-[#969DFF]/25 to-[#BD99FE]/30 blur-sm opacity-70 group-hover:opacity-100 animate-pulse pointer-events-none transition-opacity"></span>
+    <span class="absolute -inset-1 rounded-full bg-gradient-to-r from-[#4285F4]/30 via-[#9B72CB]/30 to-[#D96570]/30 blur-sm opacity-80 group-hover:opacity-100 animate-pulse pointer-events-none transition-opacity"></span>
 
-    <!-- Trip Location / Route Icon (Signals travel planning, not a robot bot) -->
-    <svg 
-      class="w-5 h-5 sm:w-5.5 sm:h-5.5 text-blue-600 dark:text-blue-400 transition-transform duration-300 group-hover:scale-110 drop-shadow-[0_1px_2px_rgba(0,0,0,0.12)] relative z-10 shrink-0" 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      stroke-width="2.2" 
-      stroke-linecap="round" 
-      stroke-linejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/>
-      <circle cx="12" cy="10" r="3"/>
-    </svg>
+    <!-- Official Google Gemini Brand Sparkle -->
+    <div class="relative z-10 w-5 h-5 flex items-center justify-center shrink-0">
+      <GeminiIcon class="w-4 h-4 sm:w-4.5 sm:h-4.5 transition-transform duration-300 group-hover:scale-110 drop-shadow-xs" />
+    </div>
 
-    <!-- "Plan My Trip" Label in Simple 4th-grade English -->
-    <span class="relative z-10 text-xs sm:text-sm font-bold tracking-tight text-slate-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors whitespace-nowrap pr-0.5">
-      Plan My Trip
-    </span>
+    <!-- "Plan My Trip" Label with Gemini AI Pill -->
+    <div class="relative z-10 flex items-center gap-1.5 pr-0.5">
+      <span class="text-xs sm:text-sm font-bold tracking-tight text-slate-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors whitespace-nowrap">
+        Plan My Trip
+      </span>
+      <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-blue-500/10 dark:bg-blue-400/15 text-blue-600 dark:text-blue-400 font-bold border border-blue-500/20 tracking-wider uppercase">
+        AI
+      </span>
+    </div>
   </button>
 </div>
 

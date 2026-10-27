@@ -116,10 +116,10 @@ export const TOUR_CONFIGS = {
     advisoryText: 'Chennai to Chidambaram round trip covers ~450 km (~8-9 hrs driving + temple darshan & Pichavaram). Minimum realistic round trip duration is 14 hours. Please verify return schedule if planning same-day return.',
     inclusions: {
       standard: 'Covers ECR & NH 32 Tolls + Pichavaram Stop + Driver Bata',
-      multiDay: 'Covers Cab, ECR Tolls & Driver Halting Bata'
+      multiDay: 'Covers Cab, Pichavaram Stop & Driver Halting Bata • Tolls Extra'
     },
     itemizedInclusions: [
-      { label: 'ECR & NH 32 Highway Tolls:', value: '₹0', multiDayValue: '₹0' },
+      { label: 'ECR & NH 32 Highway Tolls:', value: '₹0', multiDayValue: 'Extra' },
       { label: 'Pichavaram Mangrove Boating Coordination:', value: '₹0', multiDayValue: '₹0' }
     ],
     eventPrefix: 'chidambaram_engine',
@@ -202,10 +202,10 @@ export const TOUR_CONFIGS = {
     advisoryText: 'Chennai to Thiruvannamalai round trip covers ~390 km (~7-8 hrs driving + temple darshan & 14 km Girivalam). Recommended round trip window is 14–16 hours.',
     inclusions: {
       standard: 'Covers GST & NH Tolls + 14 km Girivalam Standby + Driver Bata',
-      multiDay: 'Covers Cab, NH Tolls & 14 km Girivalam Standby + Halting Bata'
+      multiDay: 'Covers Cab & 14 km Girivalam Standby + Halting Bata • Tolls Extra'
     },
     itemizedInclusions: [
-      { label: 'NH 48 / NH 77 Highway Tolls:', value: '₹0', multiDayValue: '₹0' },
+      { label: 'NH 48 / NH 77 Highway Tolls:', value: '₹0', multiDayValue: 'Extra' },
       { label: '14 km Girivalam Outer Ring Standby:', value: '₹0', multiDayValue: '₹0' }
     ],
     eventPrefix: 'thiruvannamalai_engine',
@@ -288,10 +288,10 @@ export const TOUR_CONFIGS = {
     advisoryText: 'Chennai to Kanchipuram round trip covers ~150 km (~3 hrs driving + Kamakshi Amman, Ekambareswarar, Varadharaja Perumal & Silk saree weaver visits). Recommended window is 8–10 hours.',
     inclusions: {
       standard: 'Covers NH 48 Tolls + Weaver Waiting + Driver Bata',
-      multiDay: 'Covers Cab, NH Tolls, Weaver Waiting & Halting Bata'
+      multiDay: 'Covers Cab, Weaver Waiting & Halting Bata • Tolls Extra'
     },
     itemizedInclusions: [
-      { label: 'NH 48 Sriperumbudur Highway Tolls:', value: '₹0', multiDayValue: '₹0' },
+      { label: 'NH 48 Sriperumbudur Highway Tolls:', value: '₹0', multiDayValue: 'Extra' },
       { label: 'Temple Parking & Weaver Co-op Standby:', value: '₹0', multiDayValue: '₹0' }
     ],
     eventPrefix: 'kanchipuram_engine',
@@ -638,10 +638,10 @@ export const TOUR_CONFIGS = {
     advisoryText: 'Chennai to Vellore round trip covers ~280 km (~5 hrs driving + Sripuram Golden Temple spiritual darshan & Vellore Fort visit). Recommended window is 10–12 hours.',
     inclusions: {
       standard: 'Covers NH 48 Tolls + Golden Temple Waiting + Driver Bata',
-      multiDay: 'Covers Cab, NH 48 Tolls, Golden Temple Waiting & Halting Bata'
+      multiDay: 'Covers Cab, Golden Temple Waiting & Halting Bata • Tolls Extra'
     },
     itemizedInclusions: [
-      { label: 'NH 48 Sriperumbudur & Walajah Tolls:', value: '₹0', multiDayValue: '₹0' },
+      { label: 'NH 48 Sriperumbudur & Walajah Tolls:', value: '₹0', multiDayValue: 'Extra' },
       { label: 'Golden Temple & Jalakandeswarar Waiting:', value: '₹0', multiDayValue: '₹0' }
     ],
     eventPrefix: 'vellore_engine',
@@ -726,10 +726,10 @@ export const TOUR_CONFIGS = {
     advisoryText: 'Chennai to Pondicherry round trip covers ~310 km via East Coast Road (~6-7 hrs driving + beach, Auroville & French Quarter exploration). Recommended window is 12–14 hours.',
     inclusions: {
       standard: 'Covers ECR Tolls + Beach Promenade + Driver Bata',
-      multiDay: 'Covers Cab, ECR Tolls, Beach Promenade & Halting Bata'
+      multiDay: 'Covers Cab, Beach Promenade & Halting Bata • Tolls Extra'
     },
     itemizedInclusions: [
-      { label: 'East Coast Road (ECR) Highway Tolls:', value: '₹0', multiDayValue: '₹0' },
+      { label: 'East Coast Road (ECR) Highway Tolls:', value: '₹0', multiDayValue: 'Extra' },
       { label: 'Auroville & French Quarter Standby:', value: '₹0', multiDayValue: '₹0' }
     ],
     eventPrefix: 'pondy_engine',
