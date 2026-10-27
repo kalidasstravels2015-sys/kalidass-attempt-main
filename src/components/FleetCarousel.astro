@@ -30,7 +30,7 @@ const tariffVehicleSlugs = Object.keys(tariffConfig.vehicles || {}).map((name) =
 
 const getTariffLink = (vehicleName: string) => {
   const slug = (vehicleName || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-  if (slug.includes('tempo') || slug.includes('traveller')) {
+  if (slug.includes('tempo') || slug.includes('traveller') || slug.includes('urbania') || slug.includes('bus')) {
     return '/services/tempo-traveller-rental-chennai/';
   }
   if (tariffVehicleSlugs.includes(slug)) {
@@ -41,21 +41,24 @@ const getTariffLink = (vehicleName: string) => {
 
 const getBadge = (name: string) => {
   const v = (name || '').toLowerCase();
+  if (v.includes('urbania')) return 'Super Luxury VIP';
+  if (v.includes('26-seater') || v.includes('mini bus')) return 'Bus Charter';
+  if (v.includes('20-seater')) return 'Large Weddings';
+  if (v.includes('17-seater')) return 'Pilgrims & Teams';
+  if (v.includes('14-seater')) return 'Extra Boot Space';
+  if (v.includes('12-seater')) return 'Most Popular Tempo';
   if (v.includes('tempo') || v.includes('traveller')) return 'Group Coach';
   if (v.includes('crysta')) return 'Luxury MPV';
   if (v.includes('innova')) return 'Comfort MUV';
   if (v.includes('ertiga') || v.includes('xl6')) return 'Family Favorite';
   if (v.includes('etios')) return 'Comfort Sedan';
   if (v.includes('dzire')) return 'Best Value Sedan';
-  if (v.includes('bolero')) return 'Rugged Hill SUV';
-  if (v.includes('sumo')) return 'Spacious MUV';
   return 'Verified Fleet';
 };
 
 const formatSeats = (caps: string) => {
   if (!caps) return '4 Passengers';
-  const match = caps.match(/\d+/);
-  return match ? `${match[0]} Passengers` : '4 Passengers';
+  return caps.replace(/\s*\+\s*(Driver|Chauffeur)/i, '').trim();
 };
 const gridColsClass = fleet.length === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3';
 ---
@@ -147,7 +150,7 @@ const gridColsClass = fleet.length === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3';
             href="/fleet/"
             class="inline-flex items-center justify-center min-h-[44px] gap-2 px-6 py-2.5 rounded-m3-full bg-white border border-[#0B57D0]/40 text-[#0B57D0] hover:text-[#0842A0] text-m3-label-l font-bold hover:bg-m3-surface-container-high shadow-m3-1 transition-all group"
           >
-            <span>Explore All 8+ Vehicles & Full Tariff</span>
+            <span>Explore All 11+ Vehicles & Full Fleet Specifications</span>
             <ArrowRight className="w-4 h-4 text-[#0B57D0] group-hover:translate-x-1 transition-transform shrink-0" />
           </a>
         </div>

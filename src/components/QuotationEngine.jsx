@@ -866,6 +866,93 @@ export default function QuotationEngine({
   const stableFormId = "booking-form-v1"; // Using stable ID for hydration safety
   const hasCalculatedResult = Boolean(showResult && estimate > 0 && pickup && (drop || activeTab === 'local'));
 
+  // Handle external vehicle selection from URL query parameters and custom events
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const matchVehicle = (query) => {
+      if (!query) return null;
+      const q = String(query).toLowerCase().replace(/[^a-z0-9]/g, '');
+      for (const opt of activeVehicleOptions) {
+        const cleanOpt = opt.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (cleanOpt === q || cleanOpt.includes(q) || q.includes(cleanOpt)) {
+          return opt;
+        }
+      }
+      if (q.includes('dzire') || q.includes('sedan') || q.includes('etios')) {
+        return activeVehicleOptions.find(o => /dzire|etios|sedan/i.test(o)) || activeVehicleOptions[0];
+      }
+      if (q.includes('ertiga')) {
+        return activeVehicleOptions.find(o => /ertiga/i.test(o)) || null;
+      }
+      if (q.includes('crysta')) {
+        return activeVehicleOptions.find(o => /crysta/i.test(o)) || null;
+      }
+      if (q.includes('innova')) {
+        return activeVehicleOptions.find(o => /innova/i.test(o)) || null;
+      }
+      if (q.includes('tempo') || q.includes('traveller')) {
+        return activeVehicleOptions.find(o => /tempo|traveller/i.test(o)) || null;
+      }
+      if (q.includes('urbania')) {
+        return activeVehicleOptions.find(o => /urbania/i.test(o)) || null;
+      }
+      return null;
+    };
+
+    const applySelection = (vehQuery, tabQuery) => {
+      if (vehQuery) {
+        const matched = matchVehicle(vehQuery);
+        if (matched) {
+          setVehicle(matched);
+          const cap = activeVehicleCapacity[matched] || 4;
+          setPassengers(String(cap));
+          setVehicleHighlighted(true);
+          setTimeout(() => setVehicleHighlighted(false), 2000);
+        }
+      }
+      if (tabQuery && visibleTabs.includes(tabQuery)) {
+        setActiveTab(tabQuery);
+      }
+    };
+
+    // 1. Initial URL Params check
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const vParam = params.get('vehicle');
+      const tabParam = params.get('tab');
+      if (vParam || tabParam) {
+        applySelection(vParam, tabParam);
+      }
+      const pickupParam = params.get('pickup');
+      if (pickupParam) setPickup(pickupParam);
+      const dropParam = params.get('drop');
+      if (dropParam) setDrop(dropParam);
+    } catch (_) {}
+
+    // 2. Custom Events from external card buttons
+    const handleSelectVehicle = (e) => {
+      if (e?.detail?.vehicle) {
+        applySelection(e.detail.vehicle, e.detail.tab);
+      }
+    };
+
+    const handleSelectPackage = (e) => {
+      if (e?.detail) {
+        if (e.detail.vehicle) applySelection(e.detail.vehicle, e.detail.tab || 'round');
+        if (e.detail.destination) setDrop(e.detail.destination);
+        if (e.detail.days) setDays(parseInt(e.detail.days, 10) || 1);
+      }
+    };
+
+    window.addEventListener('select-quote-vehicle', handleSelectVehicle);
+    window.addEventListener('select-quote-package', handleSelectPackage);
+    return () => {
+      window.removeEventListener('select-quote-vehicle', handleSelectVehicle);
+      window.removeEventListener('select-quote-package', handleSelectPackage);
+    };
+  }, [activeVehicleOptions, activeVehicleCapacity, visibleTabs]);
+
   const effDist = distance || 0;
   const tripReq = getTripDrivingRequirements(effDist, activeTab === 'round', duration);
   const minReturnDateTime = (activeTab === 'round' && date)
@@ -1799,7 +1886,7 @@ export default function QuotationEngine({
       },
       (error) => {
         setGettingLocation(null);
-        console.error('❌ Geolocation error:', error);
+        // Geolocation error handled via UI state
 
         let errorMsg = 'Unable to get location';
 
@@ -2018,7 +2105,6 @@ Please confirm driver & vehicle availability for this airport transfer (${quoteR
   const handleWhatsApp = async () => {
     // 1. Honeypot Check
     if (botField) {
-      console.warn("Bot detected");
       return;
     }
 
@@ -2219,7 +2305,7 @@ ${breakdown.free_buffer_km > 0 ? `• *Free Sightseeing Buffer:* +${breakdown.fr
         (mapsDirections ? `• 🧭 Route Map: ${mapsDirections}`    : '')
       : '';
 
-    const message = `*Kalidass Travels — Official Quotation (${quoteRefId})*
+    const message = `🚖 *KALIDASS TRAVELS — VERIFIED ONLINE BOOKING (${quoteRefId})*
 ${customerLine}${driverLine}• *Trip:* ${tripTypeTitle}
 • *Pickup:* ${sanitizeInput(pickup)}
 • *Drop:* ${activeTab === 'local' ? 'Local Sightseeing (Chennai City Limits)' : sanitizeInput(drop)}
@@ -2265,7 +2351,7 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
       />
 
       {/* Title Header — Material 3 Standard Elevation */}
-      {showHeader && (
+      {showHeader ? (
         <div className="py-3 px-4 sm:px-5 border-b border-m3-outline-variant/60 flex flex-col items-center justify-center text-center bg-m3-surface">
           <div className="flex items-center justify-center gap-2 max-w-full">
             {headerIcon && (
@@ -2288,6 +2374,12 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
               ? (isTa ? 'சென்னைக்குள் வாடகை கார் • எரிபொருள் & டிரைவர் உட்பட' : 'Hourly car rental within Chennai • Fuel & Chauffeur included')
               : (isTa ? 'வெளிப்படையான கட்டணங்கள் • சரிபார்க்கப்பட்ட ஓட்டுநர்கள்' : 'Transparent pricing • Verified chauffeurs'))}
           </p>
+        </div>
+      ) : (
+        <div className="pt-3.5 sm:pt-4 pb-1 text-center px-4">
+          <h2 className="text-base sm:text-lg font-bold text-m3-on-surface font-heading tracking-tight">
+            {isTa ? 'உங்கள் பயணத்தை பதிவு செய்யுங்கள்' : 'Book Your Trip'}
+          </h2>
         </div>
       )}
 
@@ -2654,23 +2746,11 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                           else if (window.toggleAiFareModal) window.toggleAiFareModal();
                         }
                       }}
-                      className="px-2.5 py-1 rounded-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-[11px] sm:text-xs transition-all shadow-2xs cursor-pointer flex items-center gap-1"
+                      className="px-3 py-1 rounded-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-[11px] sm:text-xs transition-all shadow-2xs cursor-pointer flex items-center gap-1.5"
                     >
                       <span>{isTa ? 'சுற்றுலா திட்டம்' : 'Plan My Trip'}</span>
                       <span>→</span>
                     </button>
-                    <a
-                      href={`https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, we want to book a trip to multiple places. Please give us a vehicle quote:\n\n1. From: Chennai\n2. Places to visit:\n3. Number of days:\n4. Number of people:\n\nThank you!')}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-2.5 py-1 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] active:scale-95 text-white font-bold text-[11px] sm:text-xs transition-all shadow-2xs flex items-center gap-1"
-                      title="Send your route on WhatsApp for quick quote"
-                    >
-                      <svg className="w-3 h-3 fill-current shrink-0" viewBox="0 0 24 24">
-                        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.586 1.761.882 2.796.883h.005c3.179 0 5.767-2.587 5.767-5.766.001-3.187-2.575-5.77-5.772-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.353.101.173.449.741.964 1.201.663.591 1.221.774 1.394.86.173.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.203c.044.072.044.419-.1.824z"/>
-                      </svg>
-                      <span>{isTa ? 'வாட்ஸ்அப்' : 'WhatsApp Route'}</span>
-                    </a>
                   </div>
                 </div>
                 <p className="text-[11px] text-slate-600 leading-tight">
@@ -3352,11 +3432,11 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                     })()}
 
                   {/* 5. Direct 1-Tap Booking Actions: WhatsApp & Call Desk */}
-                  <div className="pt-1.5">
+                  <div className="pt-1.5 space-y-1.5">
                     <div className="flex gap-2">
                       <button
                         type="button"
-                        id="book-tempo-whatsapp-btn"
+                        id="book-cab-whatsapp-btn"
                         onClick={handleWhatsApp}
                         data-direct-whatsapp="true"
                         className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs sm:text-sm shadow-md transition-all active:scale-[0.99] cursor-pointer min-h-[44px]"
@@ -3367,13 +3447,16 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
 
                       <a
                         href="tel:+918939539211"
-                        className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-full border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-xs sm:text-sm transition-colors cursor-pointer shrink-0 min-h-[44px]"
-                        aria-label="Call +91 89395 39211"
+                        className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-full border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-xs sm:text-sm transition-colors cursor-pointer shrink-0 min-h-[44px]"
+                        aria-label="Call Passenger Booking Desk +91 89395 39211"
                       >
-                        <Phone className="w-4 h-4 text-slate-600 shrink-0" />
-                        <span>Call Desk</span>
+                        <Phone className="w-4 h-4 text-emerald-700 shrink-0" />
+                        <span>{isTa ? 'அழைக்க' : 'Call Booking Desk'}</span>
                       </a>
                     </div>
+                    <p className="text-[11px] text-slate-500 text-center font-medium">
+                      {isTa ? '24/7 முன்பதிவு உதவி: +91 89395 39211 • ₹500 முன்பணம் செலுத்தி உறுதி செய்யவும்' : '24/7 Passenger Helpline: +91 89395 39211 • Confirm ride with ₹500 advance'}
+                    </p>
                   </div>
               </div>
             )}

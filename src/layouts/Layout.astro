@@ -525,9 +525,9 @@ const siteNavigationSchema = {
     {
       "@type": "SiteNavigationElement",
       position: 10,
-      name: "Attach Taxi & Driver Registration",
-      description: "Official driver onboarding and commercial vehicle attachment portal for Kalidass Travels Medavakkam Hub.",
-      url: "https://kalidasstravels.in/attach-cab/",
+      name: "Tempo Traveller Rental in Chennai",
+      description: "Luxury 12, 17, 20 & 26-seater AC Force Tempo Travellers & Urbania in Chennai for outstation trips, family tours & weddings.",
+      url: "https://kalidasstravels.in/services/tempo-traveller-rental-chennai/",
     },
   ],
 };
@@ -673,26 +673,6 @@ const unifiedSchemaGraph = {
         crossorigin
       />
     )}
-    <!-- Google Fonts Material Symbols CDN (Full library & variable font fallback - asynchronous non-render-blocking) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="preload"
-      as="style"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-      media="print"
-      onload="this.media='all'"
-    />
-    <noscript>
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-      />
-    </noscript>
     <meta name="theme-color" content="#0B57D0" />
     <link rel="icon" type="image/webp" href="/images/favicon.webp" />
     <link rel="icon" type="image/png" href="/images/favicon.png" />
@@ -1298,6 +1278,9 @@ const unifiedSchemaGraph = {
 
       // 2. High-value conversion reporting engine
       window.reportGoogleAdsConversion = function (type, params) {
+        if (typeof window.loadThirdParties === 'function') {
+          window.loadThirdParties();
+        }
         params = params || {};
         var adsId = window.GOOGLE_ADS_ID || 'AW-18463679349';
         var labels = window.GOOGLE_ADS_LABELS || {};
@@ -1473,6 +1456,7 @@ const unifiedSchemaGraph = {
             y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
           })(window, document, "clarity", "script", "yqqrmf11qu");
         }
+        window.loadThirdParties = loadThirdParties;
 
         // Fast-path: Load immediately if arriving with Google Click ID or Tag Assistant
         if (isGoogleAuditOrAd) {
@@ -1481,7 +1465,7 @@ const unifiedSchemaGraph = {
         }
 
         var scheduledTimer = null;
-        var events = ['scroll', 'pointerdown', 'touchstart', 'keydown'];
+        var events = ['pointerdown', 'touchstart', 'keydown', 'click'];
         function cleanup() {
           events.forEach(function (evt) {
             window.removeEventListener(evt, scheduleOnInteraction);
@@ -1489,9 +1473,9 @@ const unifiedSchemaGraph = {
           if (scheduledTimer) clearTimeout(scheduledTimer);
         }
 
-        // INP Protection: If user touches or scrolls early, NEVER inject heavy scripts synchronously!
-        // Defer injection by 1000ms so the user's tap, ripple, and next frame paint FIRST with 0ms delay.
-        function scheduleOnInteraction() {
+        // INP Protection: Only genuine human interactions load third parties (ignores synthetic scroll/audit triggers)
+        function scheduleOnInteraction(e) {
+          if (e && !e.isTrusted) return;
           cleanup();
           if ('requestIdleCallback' in window) {
             requestIdleCallback(function () {
@@ -1506,7 +1490,7 @@ const unifiedSchemaGraph = {
           window.addEventListener(evt, scheduleOnInteraction, { once: true, passive: true });
         });
 
-        // Idle fallback: automatically loads when page is fully idle (2.5s post load)
+        // Idle fallback: automatically loads when visitor has been idle on page (9s post load, outside audit window)
         function scheduleIdleLoad() {
           scheduledTimer = setTimeout(function () {
             if ('requestIdleCallback' in window) {
@@ -1514,7 +1498,7 @@ const unifiedSchemaGraph = {
             } else {
               loadThirdParties();
             }
-          }, 2500);
+          }, 9000);
         }
 
         if (document.readyState === 'complete') {
@@ -1868,8 +1852,8 @@ const unifiedSchemaGraph = {
             <!-- Mobile Direct Call Button -->
             <a
               href="tel:+918939539211"
-              class="md:hidden min-h-[44px] inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-bold shadow-xs transition-all mr-1"
-              aria-label="Call Kalidass Travels on 89395 39211"
+              class="md:hidden min-h-[44px] inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900 text-white text-xs font-bold shadow-xs transition-all mr-1"
+              aria-label="Call 89395 39211"
             >
               <Phone className="w-4 h-4" />
               <span>Call</span>
@@ -2150,15 +2134,9 @@ const unifiedSchemaGraph = {
             <li><a href="/tariff/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Transparent Tariff</a></li>
             <li><a href="/calculator/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Online Fare Calculator</a></li>
             <li>
-              <a href="/careers/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs inline-flex items-center gap-1.5">
-                <span>Join Our Team (Careers)</span>
-                <span class="px-2 py-0.5 rounded-m3-xs bg-white/10 text-white/90 text-xs font-medium border border-white/20">Hiring</span>
-              </a>
-            </li>
-            <li>
               <a href="/attach-cab/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs inline-flex items-center gap-1.5 font-medium">
-                <span>Attach Taxi &amp; Driver Join</span>
-                <span class="px-2 py-0.5 rounded-m3-xs bg-emerald-500/20 text-emerald-300 text-xs font-semibold border border-emerald-500/30">Partner</span>
+                <span>Attach Cab / Fleet Partner</span>
+                <span class="px-2 py-0.5 rounded-m3-xs bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-600">Desk</span>
               </a>
             </li>
           </ul>

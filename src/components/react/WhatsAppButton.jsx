@@ -30,11 +30,11 @@ export default function WhatsAppButton({
   }[size] || "w-4 h-4 sm:w-5 sm:h-5";
 
   const variantClasses = {
-    filled: "bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white font-bold shadow-m3-1 hover:shadow-m3-2",
-    elevated: "bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white font-bold shadow-m3-1 hover:shadow-m3-2",
+    filled: "bg-[#075E54] hover:bg-[#128C7E] active:bg-[#054c44] text-white font-bold shadow-m3-1 hover:shadow-m3-2",
+    elevated: "bg-[#075E54] hover:bg-[#128C7E] active:bg-[#054c44] text-white font-bold shadow-m3-1 hover:shadow-m3-2",
     tonal: "bg-[#25D366]/15 hover:bg-[#25D366]/25 active:bg-[#25D366]/30 text-[#075E54] font-bold border border-[#25D366]/30 shadow-xs",
     outlined: "bg-white hover:bg-[#25D366]/10 text-[#075E54] border border-[#25D366]/50 shadow-xs"
-  }[variant] || "bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white font-bold shadow-m3-1";
+  }[variant] || "bg-[#075E54] hover:bg-[#128C7E] active:bg-[#054c44] text-white font-bold shadow-m3-1";
 
   const iconVariant = (variant === 'filled' || variant === 'elevated') ? 'white' : 'brand';
   const label = children || text;

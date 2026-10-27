@@ -35,8 +35,7 @@ export default function PopularDestinations() {
       tempo: '₹9,500',
       highlight: 'Auroville, French Colony, Promenade Beach & ECR Tolls included',
       slug: 'pondicherry-one-day-trip',
-      badge: 'Top Weekend Trip',
-      whatsapp: 'https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Chennai%20to%20Pondicherry%20Day%20Trip.'
+      badge: 'Top Weekend Trip'
     },
     {
       id: 'mahabalipuram',
@@ -49,8 +48,7 @@ export default function PopularDestinations() {
       tempo: '₹8,000',
       highlight: 'Shore Temple, Five Rathas, Butter Ball, Seashell Museum + Tolls',
       slug: 'mahabalipuram-ecr-temple-route',
-      badge: 'Heritage & Beach',
-      whatsapp: 'https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Mahabalipuram%20Day%20Tour.'
+      badge: 'Heritage & Beach'
     },
     {
       id: 'chennai-city',
@@ -63,8 +61,7 @@ export default function PopularDestinations() {
       tempo: '₹5,500',
       highlight: 'Kapaleeshwarar, Santhome, Marina Beach, Egmore Museum & Fort St. George',
       slug: 'one-day-chennai-city-tour',
-      badge: 'City Tour',
-      whatsapp: 'https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20the%20Chennai%20City%20Sightseeing%20Tour.'
+      badge: 'City Tour'
     }
   ];
 
@@ -79,8 +76,7 @@ export default function PopularDestinations() {
       minKm: '250 km / day',
       driverBata: '₹400 / day',
       highlight: 'Best for small families & couples. Smooth AC comfort.',
-      slug: 'outstation-car-rental-per-km',
-      whatsapp: 'https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20need%20a%20Sedan%20for%20an%20outstation%20trip.'
+      slug: 'outstation-car-rental-per-km'
     },
     {
       id: 'km-ertiga',
@@ -92,8 +88,7 @@ export default function PopularDestinations() {
       minKm: '250 km / day',
       driverBata: '₹500 / day',
       highlight: '6-seater spacious layout with dual AC for small groups.',
-      slug: 'outstation-car-rental-per-km',
-      whatsapp: 'https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20need%20an%20Ertiga%20SUV%20for%20an%20outstation%20trip.'
+      slug: 'outstation-car-rental-per-km'
     },
     {
       id: 'km-innova',
@@ -105,8 +100,7 @@ export default function PopularDestinations() {
       minKm: '250 km / day',
       driverBata: '₹600 / day',
       highlight: 'Gold standard for long-distance family highway comfort.',
-      slug: 'outstation-car-rental-per-km',
-      whatsapp: 'https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20need%20a%20Toyota%20Innova%20for%20an%20outstation%20trip.'
+      slug: 'outstation-car-rental-per-km'
     },
     {
       id: 'km-crysta',
@@ -118,8 +112,7 @@ export default function PopularDestinations() {
       minKm: '250 km / day',
       driverBata: '₹700 / day',
       highlight: 'Luxury captain seats, superior suspension & VIP comfort.',
-      slug: 'outstation-car-rental-per-km',
-      whatsapp: 'https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20need%20an%20Innova%20Crysta%20for%20an%20outstation%20trip.'
+      slug: 'outstation-car-rental-per-km'
     },
     {
       id: 'km-tempo',
@@ -131,8 +124,7 @@ export default function PopularDestinations() {
       minKm: '300 km / day',
       driverBata: '₹800 / day',
       highlight: 'Push-back seats, high roof & audio/video system for group tours.',
-      slug: 'outstation-car-rental-per-km',
-      whatsapp: 'https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20need%20a%20Tempo%20Traveller%20for%20a%20group%20trip.'
+      slug: 'outstation-car-rental-per-km'
     }
   ];
 
@@ -697,12 +689,13 @@ export default function PopularDestinations() {
             Book your car in 60 seconds on WhatsApp. Share your destination and travel dates to receive an instant all-inclusive quote.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <WhatsAppButton
-              href="https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20book%20an%20Outstation%20Cab."
-              size="lg"
-              variant="filled"
-              text="Chat on WhatsApp (+91 89395 39211)"
-            />
+            <a
+              href="/#booking-panel"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] active:scale-95 text-white px-6 py-3.5 rounded-m3-full font-bold text-xs sm:text-sm shadow-m3-2 transition-all cursor-pointer"
+            >
+              <span>Calculate Fare &amp; Book Online</span>
+              <ArrowRight className="w-4 h-4" />
+            </a>
             <a
               href="tel:+918939539211"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface px-6 py-3.5 rounded-m3-full font-semibold text-xs sm:text-sm shadow-m3-1 transition-all"

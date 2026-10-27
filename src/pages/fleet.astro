@@ -1,96 +1,529 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import FleetCarousel from "../components/FleetCarousel.astro";
 import Breadcrumbs from "../components/SEO/Breadcrumbs.astro";
-import tariffConfig from "../data/tariff_config.json";
-import { ArrowRight, Phone, ShieldCheck, CheckCircle2, Sparkles, Navigation } from "lucide-react";
+import {
+  Users,
+  Luggage,
+  Wind,
+  ShieldCheck,
+  CheckCircle2,
+  Navigation,
+  Sparkles,
+  ArrowRight,
+  Phone,
+  ChevronRight,
+  ChevronDown,
+  SlidersHorizontal,
+  Check,
+  HelpCircle
+} from "lucide-react";
+import WhatsAppIcon from "../components/WhatsAppIcon.astro";
+import { buildWhatsAppUrl } from "../utils/whatsapp";
 
 const breadcrumbItems = [
   { name: "Home", item: "/" },
   { name: "Fleet", item: "/fleet/" },
 ];
 
-const vehicleImages: Record<string, string> = {
-  "Swift Dzire": "/images/fleet/swift-dzire.webp",
-  "Toyota Etios": "/images/fleet/toyoto-etios.webp",
-  "Maruti Ertiga": "/images/fleet/maruti-ertiga.webp",
-  "Innova": "/images/fleet/suv.webp",
-  "Innova Crysta": "/images/fleet/suv.webp",
-  "Tempo Traveller": "/images/fleet/tempo.webp",
-  "Force Urbania": "/images/fleet/force-urbania.webp",
-};
+interface FleetVehicle {
+  id: string;
+  name: string;
+  shortTitle: string;
+  category: "sedan" | "suv" | "tempo" | "luxury";
+  categoryLabel: string;
+  badge: string;
+  image: string;
+  alt: string;
+  seats: string;
+  seatCount: number;
+  baggage: string;
+  bootDesc: string;
+  acType: string;
+  roundTripRate: number;
+  oneWayRate?: number;
+  minKm: number;
+  driverBata: number;
+  chassis?: string;
+  highlights: string[];
+  idealFor: string;
+  bookingSlug: string;
+  tariffHref: string;
+  tariffLabel: string;
+}
 
+const fleetVehicles: FleetVehicle[] = [
+  // SEDANS
+  {
+    id: "dzire",
+    name: "Maruti Swift Dzire",
+    shortTitle: "Swift Dzire",
+    category: "sedan",
+    categoryLabel: "Sedan",
+    badge: "BEST VALUE SEDAN",
+    image: "/images/fleet/swift-dzire.webp",
+    alt: "Maruti Swift Dzire commercial AC taxi rental in Chennai for outstation and airport travel",
+    seats: "4 Passengers",
+    seatCount: 4,
+    baggage: "2 Medium Suitcases + 2 Handbags",
+    bootDesc: "378L Dedicated Rear Boot",
+    acType: "Dual Zone AC with Rapid Cooling",
+    roundTripRate: 14,
+    oneWayRate: 16,
+    minKm: 250,
+    driverBata: 400,
+    chassis: "Sedan • 5-Speed Manual",
+    highlights: [
+      "Most economical outstation sedan in Chennai",
+      "Dedicated 378L boot for airport luggage",
+      "Pristine sanitized cabin with dual zone AC",
+      "5-10 min rapid airport (MAA) dispatch",
+      "Verified commercial yellow-plate chauffeur"
+    ],
+    idealFor: "Couple weekend getaways, airport transfers, business transits, and day trips to Vellore/Pondicherry.",
+    bookingSlug: "Swift Dzire",
+    tariffHref: "/tariff/#outstation-swift-dzire",
+    tariffLabel: "View Dzire Tariff"
+  },
+  {
+    id: "etios",
+    name: "Toyota Etios Executive",
+    shortTitle: "Toyota Etios",
+    category: "sedan",
+    categoryLabel: "Sedan",
+    badge: "COMFORT SEDAN",
+    image: "/images/fleet/toyoto-etios.webp",
+    alt: "Toyota Etios executive sedan taxi rental in Chennai with spacious 592L boot",
+    seats: "4 Passengers",
+    seatCount: 4,
+    baggage: "2 Large Suitcases + 2 Handbags",
+    bootDesc: "Expansive 592L Deep Rear Boot",
+    acType: "Chilled High-Output AC",
+    roundTripRate: 14,
+    oneWayRate: 16,
+    minKm: 250,
+    driverBata: 400,
+    chassis: "Executive Sedan",
+    highlights: [
+      "Generous rear legroom for tall passengers",
+      "Massive 592L boot space (holds 2 large bags easily)",
+      "Smooth highway suspension on NH & state corridors",
+      "Zero surge pricing with fixed ₹14/km rate",
+      "Clean sanitized upholstery and quiet ride"
+    ],
+    idealFor: "Corporate client visits, long-distance highway travel, and multi-bag airport transfers.",
+    bookingSlug: "Toyota Etios",
+    tariffHref: "/tariff/#outstation-toyota-etios",
+    tariffLabel: "View Etios Tariff"
+  },
+
+  // FAMILY MPVS & SUVS
+  {
+    id: "ertiga",
+    name: "Maruti Ertiga / XL6",
+    shortTitle: "Maruti Ertiga",
+    category: "suv",
+    categoryLabel: "Family MPV",
+    badge: "FAMILY FAVORITE MPV",
+    image: "/images/fleet/maruti-ertiga.webp",
+    alt: "Maruti Ertiga 6-seater family MPV cab rental in Chennai for outstation trips",
+    seats: "6 Passengers",
+    seatCount: 6,
+    baggage: "3 Medium Suitcases + 3 Backpacks",
+    bootDesc: "Flexible Split-Folding Rear Boot",
+    acType: "Dual AC with Rear Overhead Vents",
+    roundTripRate: 17,
+    oneWayRate: 19,
+    minKm: 250,
+    driverBata: 500,
+    chassis: "Smart 6-Seater MPV",
+    highlights: [
+      "Most economical 6-passenger vehicle in Tamil Nadu",
+      "Dedicated overhead AC blowers reaching row 3",
+      "Flexible split-folding seats for variable luggage",
+      "Ideal for Tirupati, Kanchipuram, and Vellore tours",
+      "Daily sanitized interior with USB chargers"
+    ],
+    idealFor: "Medium families (5-6 pax), 1-day temple tours, and budget-friendly airport pickups.",
+    bookingSlug: "Maruti Ertiga",
+    tariffHref: "/tariff/#outstation-maruti-ertiga",
+    tariffLabel: "View Ertiga Tariff"
+  },
+  {
+    id: "innova",
+    name: "Toyota Innova (7 Pax)",
+    shortTitle: "Toyota Innova",
+    category: "suv",
+    categoryLabel: "Comfort MUV",
+    badge: "LEGENDARY HIGHWAY COMFORT",
+    image: "/images/fleet/suv.webp",
+    alt: "Toyota Innova 7-seater SUV rental in Chennai for long-distance family tours",
+    seats: "7 Passengers",
+    seatCount: 7,
+    baggage: "4 Large Suitcases + 4 Handbags",
+    bootDesc: "Spacious Deep Rear Cargo Area",
+    acType: "Dual AC with Roof Louvers",
+    roundTripRate: 20,
+    oneWayRate: 22,
+    minKm: 250,
+    driverBata: 600,
+    chassis: "Rugged Body-on-Frame MUV",
+    highlights: [
+      "Legendary highway comfort and unmatched durability",
+      "Dedicated roof air conditioning vents across all 3 rows",
+      "Plush captain seating for elder and family comfort",
+      "Superior stability on ghat roads and hill stations",
+      "Verified commercial yellow-plate chauffeur"
+    ],
+    idealFor: "Navagraha 9-temple circuits, Sabarimala pilgrimages, and 3 to 5-day outstation road trips.",
+    bookingSlug: "Innova",
+    tariffHref: "/tariff/#outstation-innova",
+    tariffLabel: "View Innova Tariff"
+  },
+  {
+    id: "crysta",
+    name: "Toyota Innova Crysta (VIP)",
+    shortTitle: "Innova Crysta",
+    category: "suv",
+    categoryLabel: "Luxury MPV",
+    badge: "VIP EXECUTIVE LUXURY",
+    image: "/images/fleet/suv.webp",
+    alt: "Toyota Innova Crysta premium luxury MPV rental in Chennai for VIP executive travel",
+    seats: "7 Passengers",
+    seatCount: 7,
+    baggage: "5 Large Suitcases + Handbags",
+    bootDesc: "Deep Dedicated Rear Luggage Trunk",
+    acType: "Automatic Multi-Zone Climate Control",
+    roundTripRate: 22,
+    oneWayRate: 25,
+    minKm: 250,
+    driverBata: 700,
+    chassis: "Premium Executive MPV",
+    highlights: [
+      "Plush reclining captain chairs with padded armrests",
+      "Whisper-quiet acoustic cabin insulation",
+      "Automatic multi-zone rapid digital climate control",
+      "Powerful diesel engine ideal for Ooty/Kodaikanal hills",
+      "Preferred vehicle for VIP delegations and NRI tours"
+    ],
+    idealFor: "VIP corporate transfers, luxury weddings, hill station tours, and executive outstation trips.",
+    bookingSlug: "Innova Crysta",
+    tariffHref: "/tariff/#outstation-innova-crysta",
+    tariffLabel: "View Crysta Tariff"
+  },
+
+  // TEMPO TRAVELLERS & COACHES
+  {
+    id: "tempo-12",
+    name: "12-Seater Luxury Force Tempo",
+    shortTitle: "12-Seater Tempo",
+    category: "tempo",
+    categoryLabel: "Tempo Traveller",
+    badge: "MOST POPULAR FOR FAMILIES",
+    image: "/images/fleet/tempo-12.webp",
+    alt: "12-seater Force Tempo Traveller luxury AC rental in Chennai with pushback recliners",
+    seats: "8–12 Passengers",
+    seatCount: 12,
+    baggage: "3–4 Medium Trolleys + 8–10 Soft Backpacks",
+    bootDesc: "Compact 450L Rear Boot (100% Inside)",
+    acType: "Dual Commercial Compressors + Row Louvers",
+    roundTripRate: 24,
+    oneWayRate: 26,
+    minKm: 300,
+    driverBata: 800,
+    chassis: "Force 3350 WB (Medium Wheelbase)",
+    highlights: [
+      "135° Individual pushback reclining seats with neck support",
+      "6.2 ft walkthrough high-roof cabin (walk fully upright)",
+      "2.4A fast USB mobile charging points at every row",
+      "Compact rear boot holding 3-4 medium trolleys inside",
+      "Zero open rooftop carrier (100% weather-safe inside boot)"
+    ],
+    idealFor: "Family day trips, Tirupati Balaji darshan, Pondicherry getaways, and local wedding shuttles.",
+    bookingSlug: "12-Seater Luxury Force Tempo",
+    tariffHref: "/services/tempo-traveller-rental-chennai/",
+    tariffLabel: "View 12-Seater Details"
+  },
+  {
+    id: "tempo-14",
+    name: "14-Seater Executive Force Tempo",
+    shortTitle: "14-Seater Tempo",
+    category: "tempo",
+    categoryLabel: "Tempo Traveller",
+    badge: "EXTRA BOOT SPACE & LEGROOM",
+    image: "/images/fleet/tempo-12.webp",
+    alt: "14-seater Force Tempo Traveller rental in Chennai with extended luggage trunk",
+    seats: "10–14 Passengers",
+    seatCount: 14,
+    baggage: "5–6 Medium Trolleys + 10–12 Soft Backpacks",
+    bootDesc: "Extended 750L Dedicated Rear Luggage Trunk",
+    acType: "Dual Commercial Compressors + Individual Louvers",
+    roundTripRate: 25,
+    oneWayRate: 27,
+    minKm: 300,
+    driverBata: 800,
+    chassis: "Force 3700 / 4020 WB (Extended Luggage Chassis)",
+    highlights: [
+      "Extended 750L trunk guarantees zero luggage in cabin",
+      "Generous 33-inch comfort legroom pitch for highway cruising",
+      "High-output dual AC vents engineered for Tamil Nadu climate",
+      "Individual USB charging points and cup holders at every seat",
+      "Balanced medium wheelbase for effortless turning on hill roads"
+    ],
+    idealFor: "10-12 pax families with multi-day luggage, Yercaud & Yelagiri trips, and Kanipakam-Tirupati circuits.",
+    bookingSlug: "14-Seater Executive Force Tempo",
+    tariffHref: "/services/tempo-traveller-rental-chennai/",
+    tariffLabel: "View 14-Seater Details"
+  },
+  {
+    id: "tempo-17",
+    name: "17-Seater Executive Force Tempo (4020 WB)",
+    shortTitle: "17-Seater Tempo",
+    category: "tempo",
+    categoryLabel: "Tempo Traveller",
+    badge: "BEST VALUE FOR LARGE GROUPS",
+    image: "/images/fleet/tempo-17.webp",
+    alt: "17-seater Force Tempo Traveller rental in Chennai with 4020 WB long chassis",
+    seats: "13–17 Passengers",
+    seatCount: 17,
+    baggage: "6–7 Medium Trolleys + 14–16 Soft Backpacks",
+    bootDesc: "Deep 950L Rear Luggage Trunk (Long Chassis)",
+    acType: "Heavy-Duty Twin Commercial AC Compressors",
+    roundTripRate: 26,
+    oneWayRate: 29,
+    minKm: 300,
+    driverBata: 800,
+    chassis: "Force 4020 WB (Long Wheelbase)",
+    highlights: [
+      "Long wheelbase chassis (4020 WB) for supreme highway stability",
+      "Deep 950L dedicated rear luggage trunk holds 6-7 medium suitcases",
+      "Heavy-duty twin commercial AC compressors for rapid cooling",
+      "Deep 135° recline ergonomic seats for comfortable overnight trips",
+      "Automatic electric boarding step and PA guide microphone"
+    ],
+    idealFor: "Kumbakonam Navagraha circuits, Sabarimala yatra, wedding entourages, and corporate offsites.",
+    bookingSlug: "17-Seater Executive Force Tempo",
+    tariffHref: "/services/tempo-traveller-rental-chennai/",
+    tariffLabel: "View 17-Seater Details"
+  },
+  {
+    id: "tempo-20",
+    name: "20-Seater Grand Force Tempo (High Roof)",
+    shortTitle: "20-Seater Tempo",
+    category: "tempo",
+    categoryLabel: "Tempo Traveller",
+    badge: "EXTENDED FAMILY & WEDDINGS",
+    image: "/images/fleet/tempo-17.webp",
+    alt: "20-seater Force Tempo Traveller hire in Chennai with high roof and 1100L luggage hold",
+    seats: "16–20 Passengers",
+    seatCount: 20,
+    baggage: "7–8 Medium Trolleys + 16–20 Soft Backpacks",
+    bootDesc: "High-Cube 1,100L Dedicated Rear Luggage Hold",
+    acType: "Twin High-CFM Dual AC Compressors",
+    roundTripRate: 30,
+    oneWayRate: 33,
+    minKm: 300,
+    driverBata: 900,
+    chassis: "Force 4020 WB High Roof Super Long",
+    highlights: [
+      "Accommodates up to 20 passengers in a single AC vehicle",
+      "6.4 ft high-roof cabin allows tall passengers to walk upright",
+      "High-cube 1,100L rear cargo hold holding 7-8 suitcases inside",
+      "Saves ₹15,000+ vs renting two separate 10-seater cabs",
+      "Parabolic multi-leaf suspension for smooth highway riding"
+    ],
+    idealFor: "Grand family weddings, Madurai-Rameswaram pilgrimages, and college/corporate reunions.",
+    bookingSlug: "20-Seater Grand Force Tempo",
+    tariffHref: "/services/tempo-traveller-rental-chennai/",
+    tariffLabel: "View 20-Seater Details"
+  },
+  {
+    id: "tempo-26",
+    name: "26-Seater Force Mini Bus Coach",
+    shortTitle: "26-Seater Mini Bus",
+    category: "tempo",
+    categoryLabel: "Mini Bus Coach",
+    badge: "LARGE DELEGATIONS & BUS CHARTER",
+    image: "/images/fleet/tempo.webp",
+    alt: "26-seater Force Mini Bus Coach rental in Chennai for corporate team travel and marriage functions",
+    seats: "20–26 Passengers",
+    seatCount: 26,
+    baggage: "10–12 Large Suitcases + 20+ Soft Backpacks",
+    bootDesc: "Massive 1,600L Dedicated Coach Rear Hold",
+    acType: "Roof-Mounted Heavy-Duty Commercial Bus AC",
+    roundTripRate: 36,
+    oneWayRate: 40,
+    minKm: 350,
+    driverBata: 1000,
+    chassis: "Force Monobus / Super Long Coach Chassis",
+    highlights: [
+      "2x2 Spacious pushback coach recliners with wide aisle",
+      "Massive 1,600L dedicated coach rear trunk for heavy luggage",
+      "Roof-mounted high-tonnage bus air conditioning unit",
+      "Illuminated low entrance steps for comfortable elder boarding",
+      "Commercial heavy-vehicle certified chauffeur with hill experience"
+    ],
+    idealFor: "Wedding party shuttles, corporate plant visits (Oragadam/Sriperumbudur), and large pilgrim groups.",
+    bookingSlug: "26-Seater Force Mini Bus",
+    tariffHref: "/services/tempo-traveller-rental-chennai/",
+    tariffLabel: "View 26-Seater Details"
+  },
+
+  // LUXURY VIP VAN
+  {
+    id: "urbania",
+    name: "Force Urbania VIP Luxury Chauffeur Van",
+    shortTitle: "Force Urbania VIP",
+    category: "luxury",
+    categoryLabel: "Luxury VIP Van",
+    badge: "SUPER LUXURY VIP",
+    image: "/images/fleet/force-urbania.webp",
+    alt: "Force Urbania VIP luxury van rental in Chennai with monocoque chassis and aircraft recliners",
+    seats: "10–12 Passengers",
+    seatCount: 12,
+    baggage: "6–8 Executive Hard Trolleys + 12 Overhead Bins",
+    bootDesc: "Deep 1,000L Hydraulic Rear Hatch Trunk",
+    acType: "Triple-Zone Automatic Climate Control",
+    roundTripRate: 38,
+    oneWayRate: 42,
+    minKm: 300,
+    driverBata: 1100,
+    chassis: "European Monocoque Architecture (3615 WB)",
+    highlights: [
+      "European monocoque chassis with independent coil suspension (zero roll)",
+      "Aircraft-style independent luxury recliners with reading lamps",
+      "Triple-zone climate control with acoustic noise deadening",
+      "Panoramic UV-cut privacy windows and ambient cabin illumination",
+      "Electronic Stability Program (ESP) and advanced ABS braking"
+    ],
+    idealFor: "VIP corporate delegations, luxury weddings, NRI temple tours, and premium family vacations.",
+    bookingSlug: "Force Urbania",
+    tariffHref: "/services/tempo-traveller-rental-chennai/",
+    tariffLabel: "View Urbania Details"
+  }
+];
+
+const categories = [
+  { key: "all", label: "All Vehicles", count: fleetVehicles.length },
+  { key: "sedan", label: "Sedans", count: fleetVehicles.filter(v => v.category === "sedan").length },
+  { key: "suv", label: "Family MPVs & SUVs", count: fleetVehicles.filter(v => v.category === "suv").length },
+  { key: "tempo", label: "Tempo Travellers & Coaches", count: fleetVehicles.filter(v => v.category === "tempo").length },
+  { key: "luxury", label: "Force Urbania VIP", count: fleetVehicles.filter(v => v.category === "luxury").length },
+];
+
+const faqs = [
+  {
+    q: "What commercial vehicles are available for hire in Chennai with Kalidass Travels?",
+    a: "Our yellow-plate commercial fleet includes 4-seater Sedans (Swift Dzire, Toyota Etios), 6–7 seater Family MPVs (Maruti Ertiga, Toyota Innova, Innova Crysta VIP), 12 to 26-seater Force Tempo Travellers (12S, 14S, 17S, 20S, and 26-Seater Mini Bus Coach), and the luxury Force Urbania VIP Chauffeur Van."
+  },
+  {
+    q: "What is the key difference between 12-seater and 17-seater Tempo Travellers?",
+    a: "The 12-seater Tempo Traveller is built on a 3350 mm medium wheelbase chassis with a compact 450L rear boot holding 3–4 medium trolleys. The 17-seater Tempo Traveller is built on an extended 4020 mm long wheelbase chassis with a deep 950L dedicated rear luggage hold accommodating 6–7 medium suitcases plus 14–16 soft backpacks inside, making it ideal for joint families and multi-day temple circuits like Kumbakonam or Sabarimala."
+  },
+  {
+    q: "Why do Kalidass Travels Tempo Travellers not have rooftop luggage carriers?",
+    a: "In accordance with strict Tamil Nadu and interstate RTO highway safety standards, open rooftop carriers are prohibited as they alter vehicle center-of-gravity, create aerodynamic drag, and expose passenger luggage to highway dust and tropical rain. All Kalidass Travels Force Tempo Travellers and Urbania vans feature dedicated internal rear luggage trunks (450L to 1,600L) ensuring 100% weather-proof, inside storage."
+  },
+  {
+    q: "How does Force Urbania VIP differ from a standard Force Tempo Traveller?",
+    a: "Force Urbania is built on a European monocoque architecture with independent front coil suspension, delivering passenger-car ride smoothness with virtually zero body roll. It features aircraft-style independent recliners, individual reading lights, triple-zone climate control, and sealed aircraft-style overhead cabin bins, providing business-class comfort for VIP delegations, NRIs, and destination weddings."
+  },
+  {
+    q: "What are the minimum billing kilometers for outstation cab rentals in Chennai?",
+    a: "Outstation round trips carry a standard commercial minimum billing of 250 kilometers per calendar day for Sedans (Dzire, Etios) and Family MPVs (Ertiga, Innova). For Innova Crysta, Tempo Travellers (12S, 14S, 17S, 20S), and Force Urbania, the minimum billing is 300 km per calendar day (350 km/day for 26-Seater Coach). If actual kilometers exceed the daily slab, additional kilometers are billed at the published flat per-km rate with zero surge."
+  }
+];
+
+// Schema.org Structured Data: ItemList and FAQPage
 const schema = {
-  "@type": "ItemList",
-  "@id": "https://kalidasstravels.in/fleet/#itemlist",
-  name: "Kalidass Travels Fleet",
-  description: "Our fleet of well-maintained vehicles for outstation, temple tours, and corporate travel across South India.",
-  url: "https://kalidasstravels.in/fleet/",
-  itemListElement: Object.entries(tariffConfig.vehicles).map(([name, v]: [string, any], idx: number) => ({
-    "@type": "ListItem",
-    position: idx + 1,
-    item: {
-      "@type": "Product",
-      name: `${name} Taxi Rental`,
-      description: `Commercial AC vehicle with driver. Round trip from ₹${v.round_trip_rate}/km, One way from ₹${v.one_way_rate}/km.`,
-      image: `https://kalidasstravels.in${vehicleImages[name] || "/images/fleet/swift-dzire.webp"}`,
-      sku: `FLEET-${name.toUpperCase().replace(/\s+/g, '-')}`,
-      brand: {
-        "@type": "Brand",
-        name: "Kalidass Travels"
-      },
-      offers: {
-        "@type": "Offer",
-        priceCurrency: "INR",
-        price: v.round_trip_rate,
-        priceSpecification: {
-          "@type": "UnitPriceSpecification",
-          price: v.round_trip_rate,
-          priceCurrency: "INR",
-          unitText: "KM"
-        },
-        priceValidUntil: "2027-12-31",
-        validFrom: "2025-01-01",
-        availability: "https://schema.org/InStock",
-        url: "https://kalidasstravels.in/fleet/",
-        seller: {
-          "@id": "https://kalidasstravels.in/#localbusiness"
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ItemList",
+      "@id": "https://kalidasstravels.in/fleet/#itemlist",
+      name: "Kalidass Travels Commercial Taxi & Van Fleet",
+      description: "Pristine, sanitized commercial yellow-plate taxi fleet in Chennai: Swift Dzire, Toyota Etios, Maruti Ertiga, Toyota Innova, Innova Crysta, 12 to 26-Seater Force Tempo Travellers, and Force Urbania VIP with background-verified chauffeurs.",
+      url: "https://kalidasstravels.in/fleet/",
+      numberOfItems: fleetVehicles.length,
+      itemListElement: fleetVehicles.map((v, idx) => ({
+        "@type": "ListItem",
+        position: idx + 1,
+        item: {
+          "@type": "Product",
+          name: `${v.name} Commercial Taxi Rental`,
+          description: `Commercial AC vehicle with verified chauffeur. ${v.seats}, ${v.baggage}. Outstation round trip from ₹${v.roundTripRate}/km, driver allowance ₹${v.driverBata}/day.`,
+          image: `https://kalidasstravels.in${v.image}`,
+          sku: `FLEET-${v.id.toUpperCase()}`,
+          brand: {
+            "@type": "Brand",
+            name: "Kalidass Travels"
+          },
+          offers: {
+            "@type": "Offer",
+            priceCurrency: "INR",
+            price: v.roundTripRate,
+            priceSpecification: {
+              "@type": "UnitPriceSpecification",
+              price: v.roundTripRate,
+              priceCurrency: "INR",
+              unitText: "KM"
+            },
+            priceValidUntil: "2027-12-31",
+            validFrom: "2025-01-01",
+            availability: "https://schema.org/InStock",
+            url: `https://kalidasstravels.in/fleet/#${v.id}`,
+            seller: {
+              "@id": "https://kalidasstravels.in/#localbusiness"
+            }
+          }
         }
-      }
+      }))
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://kalidasstravels.in/fleet/#faq",
+      mainEntity: faqs.map(faq => ({
+        "@type": "Question",
+        name: faq.q,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq.a
+        }
+      }))
     }
-  }))
+  ]
 };
 ---
 
 <Layout
-  title="Commercial Cab Fleet in Chennai | Kalidass Travels"
-  description="Sanitized commercial taxi fleet in Chennai: Swift Dzire, Ertiga, Innova Crysta & 12–17 seater Tempo Travellers with verified drivers."
+  title="Commercial Taxi & Van Fleet in Chennai | Sedans, Tempo Travellers & Urbania | Kalidass Travels"
+  description="Explore Kalidass Travels commercial taxi and van fleet in Chennai: Swift Dzire, Etios, Ertiga, Innova Crysta, 12–26 seater Tempo Travellers & Force Urbania VIP."
   ogImage="/og/fleet.jpg"
-  keywords="cab fleet chennai, innova crysta rental chennai, tempo traveller hire chennai, sedan taxi chennai, ertiga cab booking chennai, commercial vehicles with driver chennai"
+  keywords="commercial fleet chennai, cab fleet chennai, tempo traveller hire chennai, 12 seater tempo traveller chennai, 17 seater tempo traveller chennai, force urbania rental chennai, innova crysta rental chennai, ertiga cab chennai, sedan taxi chennai, commercial cabs with driver chennai"
   schema={schema}
 >
   <Breadcrumbs items={breadcrumbItems} />
 
-  <main class="bg-m3-surface-container-low min-h-screen pt-6 pb-12">
+  <main class="bg-m3-surface-container-low min-h-screen pt-4 pb-14">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- Header -->
-      <div class="text-center max-w-3xl mx-auto mb-10">
+      
+      <!-- 1. Page Header -->
+      <header id="fleet-page-header" class="text-center max-w-4xl mx-auto mb-8 sm:mb-10">
         <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-m3-full bg-amber-400 border border-amber-500 text-slate-950 text-xs font-black shadow-xs mb-3.5 tracking-wide uppercase">
           <span class="w-2 h-2 rounded-full bg-slate-950"></span>
-          <span>Commercial Yellow-Plate AITP Fleet</span>
+          <span>100% Commercial Yellow-Plate AITP Fleet</span>
         </div>
         <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-m3-on-surface tracking-tight leading-tight mb-3 font-heading">
-          Our Premium Fleet &amp; <span class="text-m3-primary">Taxi Models</span>
+          Our Commercial Fleet &amp; <span class="text-m3-primary">Luxury Cabs</span>
         </h1>
-        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed mb-6 font-normal font-sans">
-          Pristine, sanitized, and commercial-plated vehicles driven by background-verified chauffeurs. Fixed rates per km with zero surge pricing.
+        <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-3xl mx-auto leading-relaxed mb-6 font-normal font-sans">
+          Sanitized sedans, spacious MPVs, 12 to 26-seater Force Tempo Travellers, and luxury Force Urbania VIP vans driven by police background-verified chauffeurs. Fixed per-km rates with zero surge pricing.
         </p>
 
-        <!-- Desktop Trust Pill Strip -->
+        <!-- Trust Pill Strip -->
         <div class="flex flex-wrap items-center justify-center gap-2 max-w-3xl mx-auto">
           <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 text-xs font-medium text-m3-on-surface shadow-2xs">
             <ShieldCheck className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-            <span>100% Commercial Yellow Plates</span>
+            <span>100% Yellow Commercial Plates</span>
           </span>
           <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 text-xs font-medium text-m3-on-surface shadow-2xs">
             <Navigation className="w-3.5 h-3.5 text-m3-primary shrink-0" />
@@ -101,23 +534,329 @@ const schema = {
             <span>Daily Sanitized Interiors</span>
           </span>
           <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 text-xs font-medium text-m3-on-surface shadow-2xs">
-            <CheckCircle2 className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-            <span>Working AC Guaranteed</span>
+            <Wind className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+            <span>Chilled Commercial AC Guaranteed</span>
           </span>
         </div>
-      </div>
+      </header>
 
-      <!-- Fleet Component -->
-      <FleetCarousel hideHeader={true} sectionHeading="Available Cabs and Commercial Vehicles" />
+      <!-- 2. Interactive Category Filter Chips -->
+      <section class="mb-8" aria-label="Filter Vehicles by Category">
+        <div class="flex items-center justify-center flex-wrap gap-2 sm:gap-2.5">
+          {categories.map((cat, idx) => (
+            <button
+              type="button"
+              data-fleet-filter={cat.key}
+              aria-pressed={idx === 0 ? "true" : "false"}
+              class={`fleet-filter-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-m3-full text-xs sm:text-sm font-bold min-h-[44px] transition-all cursor-pointer border ${
+                idx === 0
+                  ? "bg-m3-primary text-white border-m3-primary shadow-xs"
+                  : "bg-white text-slate-700 border-slate-300 hover:bg-slate-100"
+              }`}
+            >
+              <span>{cat.label}</span>
+              <span class={`text-xs px-2 py-0.5 rounded-full font-bold ${
+                idx === 0 ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600"
+              }`}>
+                {cat.count}
+              </span>
+            </button>
+          ))}
+        </div>
+      </section>
 
-      <!-- Bottom Booking CTA Banner -->
-      <div class="mt-10 bg-gradient-to-br from-[#0B57D0] via-[#0842A0] to-[#041E49] text-white rounded-m3-2xl p-6 sm:p-8 text-center shadow-m3-3 border border-[#0B57D0]/20 relative overflow-hidden">
+      <!-- 3. Comprehensive Vehicle Cards Grid -->
+      <section id="fleet-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mb-14" aria-label="Fleet Vehicles Catalog">
+        {fleetVehicles.map((vehicle) => {
+          return (
+            <article
+              id={vehicle.id}
+              data-category={vehicle.category}
+              class="fleet-card bg-m3-surface-container-lowest rounded-m3-2xl border border-slate-200/90 shadow-ambient hover:shadow-ambient-hover hover:border-slate-300 transition-all flex flex-col justify-between overflow-hidden group select-none scroll-mt-28"
+            >
+              <div>
+                <!-- Vehicle Image Showcase Container -->
+                <div class="relative h-44 sm:h-48 bg-m3-surface-container-low flex items-center justify-center p-4 border-b border-slate-200/60 overflow-hidden">
+                  <!-- Category Badge -->
+                  <span class="absolute top-3 left-3 z-10 text-[11px] font-black uppercase tracking-wider px-2.5 py-1 rounded-m3-full bg-white/95 text-slate-900 border border-slate-200 shadow-2xs">
+                    {vehicle.badge}
+                  </span>
+
+                  <!-- Commercial Plate Tag -->
+                  <span class="absolute top-3 right-3 z-10 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-m3-full bg-amber-400 text-slate-950 border border-amber-500 shadow-2xs">
+                    <span class="w-1.5 h-1.5 rounded-full bg-slate-950"></span>
+                    <span>Yellow Plate</span>
+                  </span>
+
+                  <!-- Vehicle Photo -->
+                  <img
+                    src={vehicle.image}
+                    alt={vehicle.alt}
+                    width="260"
+                    height="140"
+                    loading="lazy"
+                    decoding="async"
+                    class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-md"
+                  />
+                </div>
+
+                <!-- Card Body -->
+                <div class="p-4 sm:p-5">
+                  <div class="flex items-baseline justify-between gap-2 mb-1">
+                    <h2 class="text-base sm:text-lg font-black text-m3-on-surface font-heading leading-tight truncate" title={vehicle.name}>
+                      {vehicle.name}
+                    </h2>
+                  </div>
+
+                  {vehicle.chassis && (
+                    <p class="text-[11px] font-semibold text-slate-500 mb-3 uppercase tracking-wider">
+                      {vehicle.chassis}
+                    </p>
+                  )}
+
+                  <!-- Spec Strip: Passenger & Luggage Standards -->
+                  <div class="grid grid-cols-2 gap-2 text-xs text-slate-700 bg-slate-50 rounded-m3-lg p-2.5 border border-slate-200/70 mb-3.5">
+                    <div class="flex items-center gap-1.5">
+                      <Users className="w-4 h-4 text-m3-primary shrink-0" />
+                      <span class="font-bold">{vehicle.seats}</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <Wind className="w-4 h-4 text-m3-primary shrink-0" />
+                      <span class="font-medium truncate" title={vehicle.acType}>{vehicle.acType}</span>
+                    </div>
+                    <div class="col-span-2 flex items-start gap-1.5 pt-1 border-t border-slate-200/60">
+                      <Luggage className="w-4 h-4 text-m3-primary shrink-0 mt-0.5" />
+                      <span class="font-medium text-[11px] leading-tight text-slate-600">
+                        {vehicle.baggage}
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Rate Display Box -->
+                  <div class="p-3 bg-m3-surface-container rounded-m3-lg border border-slate-200/80 mb-4">
+                    <div class="flex items-baseline justify-between">
+                      <div>
+                        <span class="block text-[10px] uppercase font-bold tracking-wider text-slate-500">
+                          Outstation Rate
+                        </span>
+                        <span class="text-xs text-slate-600 font-semibold">
+                          Min {vehicle.minKm} km/day
+                        </span>
+                      </div>
+                      <div class="text-right">
+                        <span class="text-lg sm:text-xl font-black text-slate-950 font-heading tabular-nums">
+                          ₹{vehicle.roundTripRate}<span class="text-xs font-normal text-slate-600">/km</span>
+                        </span>
+                        <span class="block text-[11px] font-medium text-slate-600">
+                          Bata ₹{vehicle.driverBata}/day
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Feature Highlights Checklist -->
+                  <div class="space-y-1.5 mb-4">
+                    {vehicle.highlights.map((item) => (
+                      <div class="flex items-start gap-2 text-xs text-slate-700">
+                        <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                        <span class="leading-tight">{item}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <!-- Ideal For Route Recommendation -->
+                  <div class="bg-blue-50/70 rounded-m3-md p-2.5 border border-blue-100 text-[11px] text-blue-900 leading-tight">
+                    <span class="font-bold">Best For: </span>
+                    <span>{vehicle.idealFor}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card Actions -->
+              <div class="p-4 sm:p-5 pt-0 space-y-2">
+                <a
+                  href={`/?vehicle=${encodeURIComponent(vehicle.bookingSlug)}#booking-panel`}
+                  class="w-full inline-flex items-center justify-center gap-2 py-3 px-4 min-h-[44px] rounded-m3-full bg-m3-primary hover:bg-[#0B57D0] active:bg-[#0842A0] text-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-sm transition-all cursor-pointer group/btn"
+                >
+                  <span>Reserve This Cab</span>
+                  <ChevronRight className="w-4 h-4 transform group-hover/btn:translate-x-0.5 transition-transform" />
+                </a>
+
+                <div class="flex items-center justify-between gap-2 pt-1 text-xs">
+                  <a
+                    href={`/?vehicle=${encodeURIComponent(vehicle.bookingSlug)}#booking-panel`}
+                    class="inline-flex items-center gap-1.5 text-emerald-700 hover:text-emerald-800 font-bold transition-colors"
+                  >
+                    <WhatsAppIcon variant="brand" className="w-3.5 h-3.5" />
+                    <span>Instant Fare Quote</span>
+                  </a>
+
+                  <a
+                    href={vehicle.tariffHref}
+                    class="inline-flex items-center gap-1 text-slate-600 hover:text-m3-primary font-bold transition-colors"
+                  >
+                    <span>{vehicle.tariffLabel}</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </section>
+
+      <!-- 4. Fleet Comparison & Luggage Decision Matrix -->
+      <section class="mb-14" aria-labelledby="fleet-comparison-heading">
+        <div class="text-center max-w-3xl mx-auto mb-6">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-blue-50 text-m3-primary text-xs font-bold mb-2">
+            <SlidersHorizontal className="w-3.5 h-3.5 shrink-0" />
+            <span>Instant Capacity &amp; Tariff Comparison</span>
+          </div>
+          <h2 id="fleet-comparison-heading" class="text-2xl sm:text-3xl font-extrabold text-m3-on-surface font-heading tracking-tight">
+            Commercial Fleet Specifications Matrix
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant font-normal font-sans max-w-2xl mx-auto mt-2">
+            Compare passenger seating, luggage holding capacity, AC configuration, and outstation rates across all 11 vehicles.
+          </p>
+        </div>
+
+        <div class="bg-white rounded-m3-2xl border border-slate-200/90 shadow-ambient overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs sm:text-sm">
+              <thead>
+                <tr class="bg-slate-900 text-white font-heading text-xs uppercase tracking-wider">
+                  <th scope="col" class="py-3.5 px-4 font-bold">Vehicle Model</th>
+                  <th scope="col" class="py-3.5 px-4 font-bold">Seating</th>
+                  <th scope="col" class="py-3.5 px-4 font-bold">Luggage Capacity</th>
+                  <th scope="col" class="py-3.5 px-4 font-bold">AC System</th>
+                  <th scope="col" class="py-3.5 px-4 font-bold">Rate/KM</th>
+                  <th scope="col" class="py-3.5 px-4 font-bold">Min Distance</th>
+                  <th scope="col" class="py-3.5 px-4 font-bold">Driver Bata</th>
+                  <th scope="col" class="py-3.5 px-4 font-bold text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200">
+                {fleetVehicles.map((v, idx) => (
+                  <tr class={idx % 2 === 0 ? "bg-white hover:bg-slate-50/80 transition-colors" : "bg-slate-50/50 hover:bg-slate-100/60 transition-colors"}>
+                    <td class="py-3.5 px-4 font-bold text-slate-900 whitespace-nowrap">
+                      <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
+                        <span>{v.name}</span>
+                      </div>
+                    </td>
+                    <td class="py-3.5 px-4 font-semibold text-slate-700 whitespace-nowrap">{v.seats}</td>
+                    <td class="py-3.5 px-4 text-slate-600 max-w-[200px] leading-tight">{v.baggage}</td>
+                    <td class="py-3.5 px-4 text-slate-600 whitespace-nowrap">{v.acType}</td>
+                    <td class="py-3.5 px-4 font-black text-slate-950 font-heading whitespace-nowrap">₹{v.roundTripRate}/km</td>
+                    <td class="py-3.5 px-4 text-slate-600 whitespace-nowrap">{v.minKm} km/day</td>
+                    <td class="py-3.5 px-4 text-slate-600 whitespace-nowrap">₹{v.driverBata}/day</td>
+                    <td class="py-3.5 px-4 text-center whitespace-nowrap">
+                      <a
+                        href={`/?vehicle=${encodeURIComponent(v.bookingSlug)}#booking-panel`}
+                        class="inline-flex items-center justify-center px-3 py-1.5 rounded-m3-full bg-m3-primary hover:bg-[#0B57D0] text-white text-xs font-bold transition-all shadow-2xs"
+                      >
+                        Book
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Fleet Quality & Safety Guarantees Grid -->
+      <section class="mb-14" aria-labelledby="fleet-guarantees-heading">
+        <div class="text-center max-w-3xl mx-auto mb-8">
+          <h2 id="fleet-guarantees-heading" class="text-2xl sm:text-3xl font-extrabold text-m3-on-surface font-heading tracking-tight">
+            Our Commercial Fleet Standards &amp; Safety Guarantees
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant max-w-2xl mx-auto mt-2 font-normal font-sans">
+            Every vehicle in our fleet is operated under strict institutional transport standards for your family's safety and peace of mind.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+          <div class="bg-white rounded-m3-xl p-5 border border-slate-200/90 shadow-2xs">
+            <div class="w-10 h-10 rounded-m3-lg bg-blue-50 text-m3-primary flex items-center justify-center mb-3">
+              <ShieldCheck className="w-5 h-5 shrink-0" />
+            </div>
+            <h3 class="text-sm font-bold text-slate-900 mb-1 font-heading">100% Commercial Yellow Plates</h3>
+            <p class="text-xs text-slate-600 leading-relaxed font-sans">
+              All vehicles operate with valid All-India Tourist Permits (AITP). Zero private white-plate police checkpost seizure risks.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-m3-xl p-5 border border-slate-200/90 shadow-2xs">
+            <div class="w-10 h-10 rounded-m3-lg bg-emerald-50 text-emerald-700 flex items-center justify-center mb-3">
+              <CheckCircle2 className="w-5 h-5 shrink-0" />
+            </div>
+            <h3 class="text-sm font-bold text-slate-900 mb-1 font-heading">100% Inside Luggage Storage</h3>
+            <p class="text-xs text-slate-600 leading-relaxed font-sans">
+              Weather-safe internal luggage trunks on all Tempo Travellers and Urbania vans. Zero open rooftop carrier violations.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-m3-xl p-5 border border-slate-200/90 shadow-2xs">
+            <div class="w-10 h-10 rounded-m3-lg bg-amber-50 text-amber-800 flex items-center justify-center mb-3">
+              <Navigation className="w-5 h-5 shrink-0" />
+            </div>
+            <h3 class="text-sm font-bold text-slate-900 mb-1 font-heading">Verified Satvik Chauffeurs</h3>
+            <p class="text-xs text-slate-600 leading-relaxed font-sans">
+              Police background-verified chauffeurs with minimum 5+ years commercial highway experience. Strictly non-smoking and satvik.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-m3-xl p-5 border border-slate-200/90 shadow-2xs">
+            <div class="w-10 h-10 rounded-m3-lg bg-purple-50 text-purple-700 flex items-center justify-center mb-3">
+              <Sparkles className="w-5 h-5 shrink-0" />
+            </div>
+            <h3 class="text-sm font-bold text-slate-900 mb-1 font-heading">Itemized GST Invoicing</h3>
+            <p class="text-xs text-slate-600 leading-relaxed font-sans">
+              Complete invoice breakdown with base fare, km log, and actual FASTag toll slips for corporate and tax reimbursements.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Frequently Asked Questions Accordion -->
+      <section class="mb-14 max-w-4xl mx-auto" aria-labelledby="fleet-faqs-heading">
+        <div class="text-center mb-8">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-blue-50 text-m3-primary text-xs font-bold mb-2">
+            <HelpCircle className="w-3.5 h-3.5 shrink-0" />
+            <span>Common Fleet Questions</span>
+          </div>
+          <h2 id="fleet-faqs-heading" class="text-2xl sm:text-3xl font-extrabold text-m3-on-surface font-heading tracking-tight">
+            Frequently Asked Questions About Our Fleet
+          </h2>
+        </div>
+
+        <div class="space-y-3">
+          {faqs.map((faq) => (
+            <details class="group bg-white rounded-m3-xl border border-slate-200/90 shadow-2xs p-4 sm:p-5 transition-all open:shadow-xs">
+              <summary class="flex items-center justify-between gap-3 cursor-pointer list-none text-sm sm:text-base font-bold text-slate-900 font-heading">
+                <span>{faq.q}</span>
+                <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center shrink-0 group-open:rotate-180 transition-transform">
+                  <ChevronDown className="w-4 h-4 text-slate-600" />
+                </span>
+              </summary>
+              <div class="mt-3 pt-3 border-t border-slate-100 text-xs sm:text-sm text-slate-600 leading-relaxed font-sans">
+                {faq.a}
+              </div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <!-- 7. Bottom Booking CTA Banner -->
+      <div class="bg-gradient-to-br from-[#0B57D0] via-[#0842A0] to-[#041E49] text-white rounded-m3-2xl p-6 sm:p-10 text-center shadow-m3-3 border border-[#0B57D0]/20 relative overflow-hidden">
         <div class="relative z-10 max-w-2xl mx-auto">
           <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight leading-tight mb-2.5 font-heading text-white">
-            Need Help Choosing the <span class="text-white">Right Vehicle?</span>
+            Need Help Choosing the Right Vehicle for Your Trip?
           </h2>
           <p class="text-xs sm:text-sm md:text-base text-white/90 max-w-2xl mx-auto mb-6 leading-relaxed font-normal font-sans">
-            Whether it's a 4-seater sedan for Chennai city errands or a 12-seater Tempo Traveller for an outstation pilgrimage, our team is available 24/7.
+            Whether you need a 4-seater sedan for Chennai Airport transfer, an Innova Crysta for a family hill station trip, or a 17-seater Tempo Traveller for a spiritual pilgrimage, our 24/7 Dispatch Desk is ready to assist.
           </p>
           <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
             <a
@@ -132,11 +871,59 @@ const schema = {
               class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] bg-white/15 hover:bg-white/25 text-white font-bold text-xs sm:text-sm rounded-m3-full border border-white/30 shadow-m3-1 transition-all"
             >
               <Phone className="w-4 h-4 text-white shrink-0" />
-              <span>Call Helpline: +91 89395 39211</span>
+              <span>Call Dispatch Desk: +91 89395 39211</span>
             </a>
           </div>
         </div>
       </div>
+
     </div>
   </main>
 </Layout>
+
+<script>
+  // Interactive Category Filter Logic with progressive enhancement
+  function initFleetCategoryFilters() {
+    const filterButtons = document.querySelectorAll<HTMLButtonElement>('[data-fleet-filter]');
+    const cards = document.querySelectorAll<HTMLElement>('.fleet-card');
+
+    if (!filterButtons.length || !cards.length) return;
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetCategory = btn.getAttribute('data-fleet-filter') || 'all';
+
+        // Update button states
+        filterButtons.forEach(b => {
+          const isActive = b === btn;
+          b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+          if (isActive) {
+            b.className = 'fleet-filter-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-m3-full text-xs sm:text-sm font-bold min-h-[44px] transition-all cursor-pointer border bg-m3-primary text-white border-m3-primary shadow-xs';
+            const badge = b.querySelector('span:last-child');
+            if (badge) badge.className = 'text-xs px-2 py-0.5 rounded-full font-bold bg-white/20 text-white';
+          } else {
+            b.className = 'fleet-filter-btn inline-flex items-center gap-2 px-4 py-2.5 rounded-m3-full text-xs sm:text-sm font-bold min-h-[44px] transition-all cursor-pointer border bg-white text-slate-700 border-slate-300 hover:bg-slate-100';
+            const badge = b.querySelector('span:last-child');
+            if (badge) badge.className = 'text-xs px-2 py-0.5 rounded-full font-bold bg-slate-100 text-slate-600';
+          }
+        });
+
+        // Filter cards smoothly
+        cards.forEach(card => {
+          const cardCategory = card.getAttribute('data-category');
+          if (targetCategory === 'all' || cardCategory === targetCategory) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFleetCategoryFilters);
+  } else {
+    initFleetCategoryFilters();
+  }
+</script>

@@ -211,7 +211,7 @@ export default function TourBookingEngine({
 
           autocompleteInitializedRef.current = true;
         } catch (err) {
-          console.error('Google Autocomplete initialization error (pickup):', err);
+          // Graceful fallback to manual text input without console errors
         }
       }
 
@@ -237,7 +237,7 @@ export default function TourBookingEngine({
           });
           dropAutocompleteInitializedRef.current = true;
         } catch (err) {
-          console.error('Google Autocomplete initialization error (drop):', err);
+          // Graceful fallback to manual text input without console errors
         }
       }
     };

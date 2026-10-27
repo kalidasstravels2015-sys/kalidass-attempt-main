@@ -294,13 +294,11 @@ const faqSchema = {
       <!-- Action Buttons Directly Below Card -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
         <a
-          href={`https://wa.me/918939539211?text=${waText}`}
-          target="_blank"
-          rel="noopener noreferrer nofollow"
-          class="inline-flex items-center justify-center min-h-[44px] gap-2 py-3 px-5 rounded-m3-full bg-m3-success-container hover:bg-m3-success/20 active:bg-m3-success/30 text-m3-on-success-container border border-m3-success/30 font-bold text-sm shadow-xs transition-all text-center"
+          href={`/?driver=${encodeURIComponent(driver.name)}#booking-panel`}
+          class="inline-flex items-center justify-center min-h-[44px] gap-2 py-3 px-5 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 text-white font-bold text-sm shadow-xs transition-all text-center"
         >
-          <WhatsAppIcon class="w-4 h-4" variant="brand" />
-          <span>Book {driver.name} on WhatsApp</span>
+          <span>Calculate Fare &amp; Reserve {driver.name}</span>
+          <span>→</span>
         </a>
 
         <a

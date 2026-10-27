@@ -7,7 +7,6 @@ const serviceSlugs = serviceDetails.map(s => `/services/${s.slug}/`);
 const CORE_URLS = [
   '/',
   '/calculator/',
-  '/careers/',
   '/drivers/',
   '/fleet/',
   '/tariff/',

@@ -78,19 +78,128 @@ export function loadTariffConfig() {
 }
 
 export async function processQuoteAssistant(body: any) {
-  const mode = body.mode || 'ai'; // 'ai' | 'calc'
+  const mode = body.mode || 'ai'; // 'ai' | 'calc' | 'adjust'
   const rawText = String(body.text || '').trim();
   const audioBase64 = body.audioBase64 || null;
   const audioMimeType = body.audioMimeType || 'audio/mp3';
   const apiKey = getApiKey();
 
+  // Mode: Interactive AI Adjustment of Existing Quotation
+  if (mode === 'adjust') {
+    const currentQuote = String(body.currentQuote || '').trim();
+    const instruction = String(body.instruction || '').trim();
+    if (!instruction) {
+      return { success: false, error: 'No adjustment instruction provided' };
+    }
+
+    if (apiKey) {
+      try {
+        const adjustPrompt = `You are the lead travel quote dispatcher for Kalidass Travels (Chennai).
+Your job is to update an existing WhatsApp customer fare quotation based on the business operator's adjustment or correction instruction.
+
+OPERATOR'S CORRECTION / INSTRUCTION:
+"${instruction}"
+
+CURRENT WHATSAPP QUOTATION:
+"""
+${currentQuote}
+"""
+
+RULES:
+1. Apply the correction precisely:
+   - If they ask for a discount (e.g. "₹300 discount", "give 5% off"), adjust the total estimate price clearly and mention the discount.
+   - If they ask to add tolls/permits (e.g. "Add Tirumala permit ₹500", "Add AP border tax"), add it cleanly to EXTRA CHARGES or the fare breakdown.
+   - If they specify pickup time or location (e.g. "Pickup at 4:30 AM Chennai Airport T2"), update the TRIP DETAILS section.
+   - If they ask to change vehicle options or focus (e.g. "Only Dzire and Innova", "Remove tempo"), modify the VEHICLE FARE OPTIONS section accordingly.
+   - If they ask for a night stay charge, add driver night accommodation (₹350/night).
+   - If they ask for Tamil greeting or friendly local touch, add appropriate greetings (e.g. "வணக்கம் / Hello").
+   - If they ask to make it shorter/punchier, condense bullet points while retaining rates, vehicle, and booking terms.
+2. Maintain standard WhatsApp formatting:
+   - Use emojis, clean bullet points (•), and bolding (*like this*).
+   - Retain Kalidass Travels booking terms: ₹500 advance deposit to confirm (UPI: 8939539211@okbizaxis), 50% on boarding, balance at drop.
+3. Return ONLY the finalized, ready-to-send WhatsApp quotation text.
+   Do NOT output markdown code blocks (no \`\`\` or \`\`\`whatsapp), and do NOT include any introductory or concluding chat remarks like "Here is your updated quote:". Just the message itself.`;
+
+        const geminiModels = ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-2.5-flash-lite', 'gemini-pro-latest'];
+        for (const model of geminiModels) {
+          try {
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: [{ role: 'user', parts: [{ text: adjustPrompt }] }],
+                generationConfig: { temperature: 0.2, maxOutputTokens: 2000 }
+              })
+            });
+
+            if (res.ok) {
+              const data = await res.json();
+              let textPart = data.candidates?.[0]?.content?.parts?.find((p: any) => p.text && !p.thought)?.text || data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+              textPart = textPart.replace(/^```(?:whatsapp|markdown|text)?\n?/i, '').replace(/\n?```$/i, '').trim();
+              if (textPart && textPart.length > 50) {
+                return {
+                  success: true,
+                  updatedQuote: textPart,
+                  instructionApplied: instruction,
+                  method: 'ai'
+                };
+              }
+            }
+          } catch (_) {}
+        }
+      } catch (_) {}
+    }
+
+    // Smart Fallback Rule Engine if API is unavailable
+    let fallbackText = currentQuote;
+    const lowerInst = instruction.toLowerCase();
+
+    // Check discount
+    const discMatch = lowerInst.match(/(?:discount|reduce|less|off|minus)\s*(?:by|of)?\s*(?:rs\.?|₹)?\s*(\d+)/i) ||
+                      lowerInst.match(/(\d+)\s*(?:rs|₹)?\s*(?:discount|off|less|reduce)/i);
+    if (discMatch) {
+      const disc = parseInt(discMatch[1], 10);
+      fallbackText = fallbackText.replace(/(👉\s*TOTAL ESTIMATE\s*:\s*₹?)([0-9,]+)/g, (_, prefix, val) => {
+        const orig = parseInt(val.replace(/,/g, ''), 10);
+        const updated = Math.max(0, orig - disc);
+        return `${prefix}${updated.toLocaleString('en-IN')} *(Special Owner Discount applied: -₹${disc})*`;
+      });
+    }
+
+    // Check pickup time
+    const timeMatch = instruction.match(/(\d{1,2}(?::\d{2})?\s*(?:am|pm|a\.m\.|p\.m\.))/i);
+    if (timeMatch && fallbackText.includes('Dates:')) {
+      fallbackText = fallbackText.replace(/(Dates:[^\n]+)/, `$1\n• Reporting Time: ${timeMatch[1].toUpperCase()} sharp`);
+    }
+
+    // Check night stay
+    if (lowerInst.includes('night stay') || lowerInst.includes('lodging') || lowerInst.includes('driver stay')) {
+      if (!fallbackText.includes('Driver Night Stay: ₹350')) {
+        fallbackText = fallbackText.replace(/EXTRA CHARGES/i, 'EXTRA CHARGES\n• Driver Night Stay: ₹350 per night (payable to driver)');
+      }
+    }
+
+    // Check Tamil greeting
+    if (lowerInst.includes('tamil') || lowerInst.includes('vanakkam')) {
+      fallbackText = fallbackText.replace(/Hello [^,]+,/i, 'வணக்கம் / Hello Sir/Madam,');
+    }
+
+    return {
+      success: true,
+      updatedQuote: fallbackText,
+      instructionApplied: instruction,
+      method: 'heuristic'
+    };
+  }
+
   let extracted = {
     customerName: body.customerName || 'Guest',
     customerPhone: body.customerPhone || '',
-    pickup: body.pickup || 'Chennai Airport',
+    pickup: body.pickup || 'Chennai',
     destination: body.destination || 'Puducherry',
     travelDates: body.travelDates || 'Upcoming',
     days: Number(body.days) || 1,
+    paxCount: Number(body.paxCount) || 4,
     vehicleKey: body.vehicleKey || 'Swift Dzire',
     tripType: body.tripType || 'Round Trip',
     estimatedKmOneWay: Number(body.estimatedKmOneWay) || 150,
@@ -106,32 +215,31 @@ Analyze the customer's text message or spoken call recording.
 Extract the trip details accurately into JSON.
 
 Rules:
-1. customerName: Name if mentioned, else "Guest"
-2. customerPhone: 10-digit Indian phone number if mentioned, else ""
-3. pickup: Pickup location/city (default: "Chennai Airport" if airport mentioned, else "Chennai")
-4. destination: Main destination or tour route (e.g. "Puducherry & Pichavaram")
-5. travelDates: e.g. "26 Nov to 29 Nov"
-6. days: Total calendar days the vehicle is needed (e.g. 26 to 29 Nov is 4 days). Minimum is 1.
-7. vehicleKey: Must be one of:
-   - "Swift Dzire" (for sedan, dzire, etios, aura)
-   - "Toyota Etios"
-   - "Maruti Ertiga" (for ertiga, 6 seater, 7 seater)
-   - "Innova"
-   - "Innova Crysta"
-   - "Tempo Traveller" (for tempo, van, 12 seater, 17 seater)
-8. tripType: "Round Trip", "One Way Drop", or "Local Package"
-9. estimatedKmOneWay: Approximate one-way distance in km from Chennai (e.g. Pondicherry is 151, Pichavaram is 225, Tirupati is 135, Bangalore is 346).
-10. notes: Any special notes like flight timings, pickup time, luggage, etc.
+1. customerName: Name if mentioned (e.g. Hari, Suresh), else "Guest"
+2. customerPhone: 10-digit Indian phone number if present in text, else ""
+3. pickup: Pickup city/locality (default: "Chennai")
+4. destination: Main destination or tour route (e.g. "Puducherry / Pondy")
+5. travelDates: e.g. "21st Nov 8:00 AM to 22nd Nov 8:00 PM"
+6. days: Total calendar days the vehicle is needed (e.g. 21st to 22nd Nov is 2 days). Minimum is 1.
+7. paxCount: Number of passengers / members traveling (e.g. "7 members" -> 7, "2 people" -> 2). Default 4.
+8. vehicleKey: Choose the best vehicle for the passenger count:
+   - If paxCount >= 7: "Innova" or "Innova Crysta" or "Tempo Traveller"
+   - If paxCount 5 or 6: "Maruti Ertiga" or "Innova"
+   - If paxCount <= 4: "Swift Dzire"
+9. tripType: "Round Trip", "One Way Drop", or "Local Package"
+10. estimatedKmOneWay: Approximate one-way distance in km from Chennai (Pondicherry is 151, Pichavaram is 225, Tirupati is 135, Bangalore is 346, Kumbakonam is 298).
+11. notes: Any special notes.
 
 Return ONLY raw JSON matching this schema, no markdown code fence, no commentary:
 {
-  "customerName": "...",
+  "customerName": "Hari",
   "customerPhone": "...",
-  "pickup": "...",
-  "destination": "...",
-  "travelDates": "...",
-  "days": 4,
-  "vehicleKey": "Swift Dzire",
+  "pickup": "Chennai",
+  "destination": "Pondicherry",
+  "travelDates": "21 Nov to 22 Nov",
+  "days": 2,
+  "paxCount": 7,
+  "vehicleKey": "Innova",
   "tripType": "Round Trip",
   "estimatedKmOneWay": 151,
   "notes": "..."
@@ -151,7 +259,7 @@ Return ONLY raw JSON matching this schema, no markdown code fence, no commentary
           parts.push({ text: 'Please transcribe the spoken audio (Tamil/English) and extract the trip parameters.' });
         }
 
-        const geminiModels = ['gemini-3.8-flash', 'gemini-3.5-flash', 'gemini-flash-latest'];
+        const geminiModels = ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-2.5-flash-lite', 'gemini-pro-latest'];
         for (const model of geminiModels) {
           try {
             const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
@@ -170,9 +278,17 @@ Return ONLY raw JSON matching this schema, no markdown code fence, no commentary
               const jsonMatch = textPart.match(/\{[\s\S]*\}/);
               if (jsonMatch) {
                 const parsed = JSON.parse(jsonMatch[0]);
+                const pax = Number(parsed.paxCount) || 4;
+                let autoVehicle = parsed.vehicleKey;
+                if (!autoVehicle || autoVehicle === 'Swift Dzire') {
+                  if (pax >= 7) autoVehicle = 'Innova';
+                  else if (pax >= 5) autoVehicle = 'Maruti Ertiga';
+                }
                 extracted = {
                   ...extracted,
                   ...parsed,
+                  paxCount: pax,
+                  vehicleKey: autoVehicle || extracted.vehicleKey,
                   days: Math.max(1, Number(parsed.days) || 1),
                   estimatedKmOneWay: Number(parsed.estimatedKmOneWay) || extracted.estimatedKmOneWay
                 };
@@ -199,24 +315,31 @@ Return ONLY raw JSON matching this schema, no markdown code fence, no commentary
 
   // Tariff calculation & Zero-Loss Margin Guard
   const tariff = loadTariffConfig();
-  const vConfig = (tariff.vehicles as any)[extracted.vehicleKey] || (tariff.vehicles as any)['Swift Dzire'];
   const days = Math.max(1, Number(extracted.days) || 1);
-  const minKmPerDay = vConfig.min_km_per_day || 250;
-  const minRunKm = days * minKmPerDay;
-  const ratePerKm = extracted.tripType === 'One Way Drop' ? vConfig.one_way_rate : vConfig.round_trip_rate;
-  const dailyBata = vConfig.driver_bata || 400;
-
-  // Actual travel estimation
   const isRoundTrip = extracted.tripType === 'Round Trip';
   const baseDistanceKm = isRoundTrip ? extracted.estimatedKmOneWay * 2 : extracted.estimatedKmOneWay;
   const localSightseeingBufferKm = isRoundTrip && days > 1 ? (days - 1) * 40 : 20;
   const actualTotalEstimatedRunKm = baseDistanceKm + localSightseeingBufferKm;
 
-  // Billable KM
-  const billableKm = Math.max(minRunKm, actualTotalEstimatedRunKm);
-  const carAndFuelCharge = billableKm * ratePerKm;
-  const driverBataTotal = days * dailyBata;
-  const totalQuoteFare = carAndFuelCharge + driverBataTotal;
+  // Helper to calculate single vehicle fare
+  const calcFareForVehicle = (vKey: string) => {
+    const vConf = (tariff.vehicles as any)[vKey] || (tariff.vehicles as any)['Swift Dzire'];
+    const minKm = days * (vConf.min_km_per_day || 250);
+    const billable = Math.max(minKm, actualTotalEstimatedRunKm);
+    const rate = extracted.tripType === 'One Way Drop' ? vConf.one_way_rate : vConf.round_trip_rate;
+    const bataTotal = days * (vConf.driver_bata || 400);
+    const carHire = billable * rate;
+    const total = carHire + bataTotal;
+    return { vConf, minKm, billable, rate, bataTotal, carHire, total, dailyBata: vConf.driver_bata || 400 };
+  };
+
+  const primaryCalc = calcFareForVehicle(extracted.vehicleKey);
+  const billableKm = primaryCalc.billable;
+  const ratePerKm = primaryCalc.rate;
+  const carAndFuelCharge = primaryCalc.carHire;
+  const dailyBata = primaryCalc.dailyBata;
+  const driverBataTotal = primaryCalc.bataTotal;
+  const totalQuoteFare = primaryCalc.total;
 
   // Internal Cost & Zero-Loss Calculation (Internal Operator Eyes Only)
   const mileage = VEHICLE_MILEAGE[extracted.vehicleKey] || 15.0;
@@ -229,52 +352,129 @@ Return ONLY raw JSON matching this schema, no markdown code fence, no commentary
   const isSafe = netOwnerProfit >= (days * 1200);
 
   // Road toll estimates based on route
-  let estimatedTollsText = 'approx Rs 700 total';
+  let estimatedTollsText = 'approx ₹600 - ₹700 via Fastag actuals';
   let tollsAmount = 700;
   const destLower = String(extracted.destination).toLowerCase();
   if (destLower.includes('tirupati')) {
-    estimatedTollsText = 'approx Rs 400 + Rs 500 AP Permit';
+    estimatedTollsText = 'approx ₹400 Fastag + ₹500 AP Permit';
     tollsAmount = 900;
   } else if (destLower.includes('bangalore') || destLower.includes('bengaluru')) {
-    estimatedTollsText = 'approx Rs 450 + Rs 700 KA Permit';
+    estimatedTollsText = 'approx ₹450 Fastag + ₹700 KA Permit';
     tollsAmount = 1150;
-  } else if (destLower.includes('pondicherry') || destLower.includes('puducherry')) {
-    estimatedTollsText = 'approx Rs 700 total';
+  } else if (destLower.includes('pondicherry') || destLower.includes('puducherry') || destLower.includes('pondi')) {
+    estimatedTollsText = 'approx ₹600 - ₹700 via Fastag actuals';
     tollsAmount = 700;
   }
 
-  // Restaurant-Bill Style WhatsApp Quote (No Icons, 4th Grade English)
-  const whatsappBill = `KALIDASS TRAVELS - TRIP QUOTATION
+  // Determine appropriate multi-options based on passenger count
+  let optionKeys = ['Swift Dzire', 'Maruti Ertiga', 'Innova'];
+  if (extracted.paxCount >= 7) {
+    optionKeys = ['Innova', 'Innova Crysta', 'Tempo Traveller'];
+  } else if (extracted.paxCount >= 5) {
+    optionKeys = ['Maruti Ertiga', 'Innova', 'Innova Crysta'];
+  }
+
+  const multiVehicleLines = optionKeys.map((key, idx) => {
+    const c = calcFareForVehicle(key);
+    let tag = '';
+    let label = key;
+    if (key === 'Swift Dzire') label = 'SWIFT DZIRE (Sedan AC)';
+    else if (key === 'Maruti Ertiga') label = 'MARUTI ERTIGA (6+1 Seater AC)';
+    else if (key === 'Innova') {
+      label = 'TOYOTA INNOVA (7+1 Seater AC)';
+      tag = extracted.paxCount >= 7 ? '\n*(Best value for 7 members with soft luggage)*' : '';
+    } else if (key === 'Innova Crysta') {
+      label = 'INNOVA CRYSTA (7+1 Seater AC)';
+      tag = '\n*(Superior comfort & smooth highway ride)*';
+    } else if (key === 'Tempo Traveller') {
+      label = 'TEMPO TRAVELLER (12-Seater AC)';
+      tag = '\n*(Pushback bucket seats, high roof, ample space for 7+ pax & large luggage)*';
+    }
+    const numEmoji = idx === 0 ? '1️⃣' : idx === 1 ? '2️⃣' : '3️⃣';
+    return `${numEmoji} ${label}
+• ${c.billable.toLocaleString('en-IN')} km @ ₹${c.rate}/km : ₹${c.carHire.toLocaleString('en-IN')}
+• Driver Allowance (${days} Days @ ₹${c.dailyBata}) : ₹${c.bataTotal.toLocaleString('en-IN')}
+👉 TOTAL ESTIMATE : ₹${c.total.toLocaleString('en-IN')}${tag}`;
+  }).join('\n\n');
+
+  // Customer Name greeting
+  const custGreeting = extracted.customerName && extracted.customerName !== 'Guest' ? `${extracted.customerName} sir` : 'Sir/Madam';
+
+  // Multi-Option High-Converting WhatsApp Bill
+  const whatsappMultiBill = `Hello ${custGreeting}, greetings from Kalidass Travels! 🙏
+
+Here is the customized fare quotation for your ${days}-Day ${extracted.destination} trip:
+
+📋 TRIP DETAILS:
+• Pickup: ${extracted.pickup}
+• Destination: ${extracted.destination} (${extracted.tripType})
+• Dates: ${extracted.travelDates} (${days} ${days === 1 ? 'Day' : 'Days'})
+• Passengers: ${extracted.paxCount} Members
+• Package Allowance: ${billableKm.toLocaleString('en-IN')} km included (Covers round trip + local sightseeing)
+
+------------------------------------------
+VEHICLE FARE OPTIONS (${days} ${days === 1 ? 'DAY' : 'DAYS'})
+------------------------------------------
+
+${multiVehicleLines}
+
+------------------------------------------
+WHAT IS INCLUDED:
+------------------------------------------
+✅ Dedicated AC vehicle for all ${days} ${days === 1 ? 'day' : 'days'} (Doorstep pickup to drop)
+✅ Fuel charges up to package km (${billableKm.toLocaleString('en-IN')} km run)
+✅ Driver allowance for all ${days} ${days === 1 ? 'day' : 'days'}
+✅ Local sightseeing along the route
+
+EXTRA CHARGES (Actuals):
+• Highway Tolls & Parking (${estimatedTollsText})
+• Driver night stay: ₹350 (only if accommodation is not provided by your hotel)
+• Extra km beyond package (billed at standard per km vehicle rate)
+
+------------------------------------------
+PAYMENT TERMS:
+------------------------------------------
+1. Booking Advance: ₹500 to confirm & lock your vehicle and chauffeur
+   (UPI: 8939539211@okbizaxis - Kalidass Travels)
+2. At Trip Start: 50% upon boarding
+3. At Trip End: Remaining balance settled at final drop
+
+Please let us know your preferred vehicle choice to confirm your booking! 🚖`;
+
+  // Fallback single-vehicle bill
+  const whatsappSingleBill = `KALIDASS TRAVELS - TRIP QUOTATION
 
 Customer: ${extracted.customerName}
 Trip: ${extracted.pickup} to ${extracted.destination}
 Car: ${extracted.vehicleKey} AC
 Dates: ${extracted.travelDates} (${days} ${days === 1 ? 'Day' : 'Days'})
+Passengers: ${extracted.paxCount} Members
 
 ------------------------------------------
 BILL BREAKUP
 ------------------------------------------
-1. Car and Fuel (${billableKm.toLocaleString('en-IN')} km @ Rs ${ratePerKm}/km) : Rs ${carAndFuelCharge.toLocaleString('en-IN')}
-2. Driver Allowance (${days} ${days === 1 ? 'Day' : 'Days'} @ Rs ${dailyBata}/day) : Rs ${driverBataTotal.toLocaleString('en-IN')}
+1. Car and Fuel (${billableKm.toLocaleString('en-IN')} km @ ₹${ratePerKm}/km) : ₹${carAndFuelCharge.toLocaleString('en-IN')}
+2. Driver Allowance (${days} ${days === 1 ? 'Day' : 'Days'} @ ₹${dailyBata}/day) : ₹${driverBataTotal.toLocaleString('en-IN')}
 ------------------------------------------
-TOTAL ESTIMATE : Rs ${totalQuoteFare.toLocaleString('en-IN')}
+TOTAL ESTIMATE : ₹${totalQuoteFare.toLocaleString('en-IN')}
 ------------------------------------------
 
 What is included:
 - AC ${extracted.vehicleKey} for all ${days} ${days === 1 ? 'day' : 'days'}
-- Complete fuel for ${billableKm.toLocaleString('en-IN')} km run
+- Fuel charges for ${billableKm.toLocaleString('en-IN')} km run
 - Driver allowance for all ${days} ${days === 1 ? 'day' : 'days'}
 
 Extra charges (pay on actual bill):
 - Highway tolls and parking (${estimatedTollsText})
-- Driver night stay (approx Rs 350 per night, only if your hotel has no free driver stay)
-- Extra run above ${billableKm.toLocaleString('en-IN')} km (Rs ${ratePerKm} per km)
+- Driver night stay (₹350 per night, only if hotel has no driver room)
+- Extra run above ${billableKm.toLocaleString('en-IN')} km (₹${ratePerKm} per km)
 
-GST Bill:
-- If you need a GST tax invoice, 5% GST bill can be provided.
+Payment Terms:
+1. Booking Advance: ₹500 to lock vehicle and chauffeur (UPI: 8939539211@okbizaxis)
+2. At Trip Start: 50% upon boarding
+3. At Trip End: Remaining balance settled at final drop
 
-To book:
-- Advance payment is Rs 500. Balance you can pay to the driver during the trip.`;
+To book: Please confirm your vehicle choice with Kalidass Travels!`;
 
   return {
     success: true,
@@ -282,7 +482,7 @@ To book:
     calculation: {
       days,
       ratePerKm,
-      minRunKm,
+      minRunKm: primaryCalc.minKm,
       actualTotalEstimatedRunKm,
       billableKm,
       carAndFuelCharge,
@@ -298,6 +498,7 @@ To book:
       estimatedTollsText,
       tollsAmount
     },
-    whatsappBill
+    whatsappBill: whatsappMultiBill,
+    whatsappSingleBill
   };
 }

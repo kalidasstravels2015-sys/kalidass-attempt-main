@@ -19,7 +19,7 @@ import PondicherryBookingEngine from '../../components/PondicherryBookingEngine.
 import TourBookingEngine from '../../components/TourBookingEngine.jsx';
 import VehicleCard from '../../components/VehicleCard.astro';
 import GoogleRatingBadge from '../../components/GoogleRatingBadge.astro';
-import { buildWhatsAppUrl } from '../../utils/whatsapp';
+import { buildWhatsAppUrl, WHATSAPP_CONFIG } from '../../utils/whatsapp';
 import { 
   ShieldCheck, 
   Clock, 
@@ -1657,6 +1657,38 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                   : "Doorstep Chennai to Pondicherry round-trip private cab rental via scenic ECR. Covers Auroville, French White Town, Promenade Beach & ₹500 advance."}
               </p>
 
+              <!-- Trust Reassurance Strip (Mobile + Desktop) -->
+              <div class="mb-3.5 p-2.5 sm:p-3 rounded-m3-xl bg-m3-surface-container-low border border-m3-outline-variant/60 shadow-2xs">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                  <div class="flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-m3-primary shrink-0" />
+                    <span class="font-medium text-m3-on-surface"><strong>Zero Cancellation Guarantee</strong> • Dedicated Chauffeur</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-m3-success shrink-0" />
+                    <span class="font-medium text-m3-on-surface"><strong>Transparent Pricing</strong> • {isTirupati ? 'Fuel, Tolls & AP Permit Included' : 'Fuel & Driver Included'}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Direct Quick Action CTAs (Call & WhatsApp) -->
+              <div class="flex flex-wrap items-center gap-2.5 mb-4 sm:mb-5">
+                <a
+                  href="#booking"
+                  class="inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-m3-full bg-[#25D366] hover:bg-[#20ba59] text-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-sm transition-all"
+                >
+                  <MessageCircle className="w-4 h-4 shrink-0" />
+                  <span>Calculate &amp; Confirm Booking</span>
+                </a>
+                <a
+                  href={`tel:${WHATSAPP_CONFIG.formattedPhone.replace(/\s+/g, '')}`}
+                  class="inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface text-xs sm:text-sm font-semibold border border-m3-outline-variant shadow-2xs hover:shadow-xs transition-all"
+                >
+                  <Phone className="w-4 h-4 text-m3-primary shrink-0" />
+                  <span>Call 24/7 Helpline</span>
+                </a>
+              </div>
+
               <!-- Compact Inline Trust Chips (Desktop single clean row) -->
               <div class="hidden lg:flex flex-wrap items-center gap-2 pt-1">
                 <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant/70 text-xs font-semibold text-m3-on-surface shadow-2xs">
@@ -2304,20 +2336,12 @@ Please share availability and confirmed quote.`;
                             <span>Call Now</span>
                           </a>
                           <a
-                            href={buildWhatsAppUrl(bookingText)}
-                            target="_blank"
-                            rel="noopener noreferrer nofollow"
-                            data-open-enquiry="true"
-                            data-service-title={service.title}
-                            data-vehicle-name={vehicleName}
-                            data-price={heroPrice}
-                            data-slug={service.slug}
-                            data-duration={pilgrimConfig ? "1 Day (Same Day Return)" : ""}
-                            aria-label={`Book ${vehicleName} on WhatsApp for ${heroPrice}`}
+                            href="#booking"
+                            aria-label={`Book ${vehicleName} in booking engine for ${heroPrice}`}
                             class="tariff-whatsapp-btn inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full bg-m3-success-container/20 hover:bg-m3-success-container/35 active:bg-m3-success-container/50 text-m3-on-surface border border-m3-success/30 text-xs font-bold transition-all select-none cursor-pointer"
                           >
                             <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0" />
-                            <span>Enquire</span>
+                            <span>Book in Engine</span>
                           </a>
                         </div>
                       </div>
@@ -2441,9 +2465,8 @@ Please share availability and confirmed quote.`;
                     if (waBtn) {
                       waBtn.setAttribute('data-price', price);
                       waBtn.setAttribute('data-duration', duration);
-                      const newMsg = `*Kalidass Travels - Booking Enquiry*\n• Service: ${serviceTitle}\n• Vehicle: ${vehicleName} (${duration})\n• All-Inclusive Fare: ${price}\n• Travel Date: \n• Pickup Time: \n• Pickup Location in Chennai: \n\nPlease share availability and confirmed quote.`;
-                      waBtn.setAttribute('href', `https://wa.me/918939539211?text=${encodeURIComponent(newMsg)}`);
-                      waBtn.setAttribute('aria-label', `Book ${vehicleName} on WhatsApp for ${price}`);
+                      waBtn.setAttribute('href', '#booking');
+                      waBtn.setAttribute('aria-label', `Book ${vehicleName} in booking engine for ${price}`);
                     }
                   });
                 });

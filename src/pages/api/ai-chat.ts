@@ -75,7 +75,7 @@ VERIFIED OFFICIAL RATE CARD & RULES:
        - Force Urbania VIP Luxury: ₹34/km + ₹1,000 driver bata/day (Min 300 km/day)
      • **Tolls, Parking & State Permits (NOT INCLUDED):** State border entry permits, highway tolls, and parking tickets are NOT included in the car rate. Pay actual receipts at toll plazas and border checkposts.
      • **Booking Advance:** ₹500 to lock your vehicle (deducted from your final bill). Pay the rest after your trip.
-     • [📲 Send route on WhatsApp for quick quote](https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20we%20want%20to%20visit%20multiple%20places...)
+     • [🚖 Calculate Exact Fare & Book Online](/#booking-panel)
 
 2. TIRUPATI & TOUR PACKAGES (ALWAYS FIXED PACKAGE RATES, NEVER PER-KM):
    - 1-Day: Sedan ₹6,000 | Ertiga ₹7,500 | Innova ₹8,500 | Crysta ₹10,000 | Tempo 12 ₹12,500

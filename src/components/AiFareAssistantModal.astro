@@ -302,62 +302,88 @@ const callUrl = `tel:${phone}`;
         </div>
       </div>
 
-      <!-- Main Input Bar Form -->
-      <form id="ai-chat-form" class="flex items-center gap-1.5 sm:gap-2">
-        <div class="relative flex-1 flex items-center min-w-0 rounded-full bg-slate-100 dark:bg-[#1E1F20] border border-slate-200 dark:border-white/15 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all p-1">
-          <input
-            type="text"
-            id="ai-user-input"
-            placeholder="Ask Gemini (e.g. 3 days Kumbakonam)..."
-            class="w-full pl-3 pr-16 py-1.5 bg-transparent text-slate-900 dark:text-white placeholder:text-slate-400 text-xs sm:text-sm focus:outline-none"
-            autocomplete="off"
-            required
-          />
-          <!-- Language Picker Button placed neatly inside input on the right -->
-          <button
-            type="button"
-            id="ai-lang-picker-btn"
-            class="absolute right-1 px-2 py-1 rounded-full bg-white dark:bg-[#2A2B30] hover:bg-slate-50 dark:hover:bg-white/10 text-slate-600 dark:text-slate-300 text-[10px] font-semibold flex items-center gap-1 transition-all border border-slate-200 dark:border-white/10 shadow-2xs cursor-pointer active:scale-95"
-            title="Change voice speech language (All languages supported)"
-            aria-label="Change voice speech language"
-          >
-            <span class="text-[11px]">🌐</span>
-            <span id="ai-current-lang-code" class="font-bold tracking-tight">Auto</span>
-          </button>
+      <!-- Main Input Bar Form (Modern Auto-Expanding Chat Box) -->
+      <form id="ai-chat-form" class="flex flex-col rounded-2xl bg-slate-100 dark:bg-[#1E1F20] border border-slate-200 dark:border-white/15 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all p-2 shadow-xs">
+        <label for="ai-user-input" class="sr-only">Ask Gemini or plan your trip</label>
+        <textarea
+          id="ai-user-input"
+          rows="1"
+          placeholder="Ask Gemini or plan your trip (destinations, dates, pax)..."
+          class="w-full px-2 py-1 bg-transparent text-slate-900 dark:text-white placeholder:text-slate-400 text-xs sm:text-sm focus:outline-none resize-none min-h-[38px] max-h-[140px] leading-relaxed block"
+          autocomplete="off"
+          required
+        ></textarea>
+
+        <!-- Bottom Toolbar inside chat input card -->
+        <div class="flex items-center justify-between pt-1 gap-1.5 border-t border-slate-200/50 dark:border-white/5 mt-1">
+          <!-- Left: Bullet Formatting + Language Picker + Shortcut hint -->
+          <div class="flex items-center gap-1.5 min-w-0">
+            <!-- Bullet Point Helper Button -->
+            <button
+              type="button"
+              id="ai-bullet-btn"
+              class="px-2 py-1 rounded-full bg-white dark:bg-[#2A2B30] hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 text-[10px] font-semibold flex items-center gap-1 transition-all border border-slate-200 dark:border-white/10 shadow-2xs cursor-pointer active:scale-95 shrink-0"
+              title="Add bullet point (•) for destinations, stops, or dates"
+              aria-label="Add bullet point"
+            >
+              <span class="text-xs leading-none font-bold text-blue-600 dark:text-blue-400">•</span>
+              <span>Bullet</span>
+            </button>
+
+            <!-- Language Picker Button -->
+            <button
+              type="button"
+              id="ai-lang-picker-btn"
+              class="px-2 py-1 rounded-full bg-white dark:bg-[#2A2B30] hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-slate-200 text-[10px] font-semibold flex items-center gap-1 transition-all border border-slate-200 dark:border-white/10 shadow-2xs cursor-pointer active:scale-95 shrink-0"
+              title="Change voice speech language (All languages supported)"
+              aria-label="Change voice speech language"
+            >
+              <span class="text-[11px]">🌐</span>
+              <span id="ai-current-lang-code" class="font-bold tracking-tight">Auto</span>
+            </button>
+
+            <!-- Desktop shortcut hint -->
+            <span class="hidden sm:inline text-[10px] text-slate-400 dark:text-slate-500 font-medium select-none truncate">
+              Shift+Enter ↵ new line
+            </span>
+          </div>
+
+          <!-- Right: Mic + Send Buttons -->
+          <div class="flex items-center gap-1.5 shrink-0">
+            <!-- Multilingual Microphone Button -->
+            <button
+              type="button"
+              id="ai-mic-btn"
+              class="w-8 h-8 rounded-full bg-white dark:bg-[#2A2B30] hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 flex items-center justify-center shrink-0 transition-all shadow-2xs focus:outline-none cursor-pointer group relative border border-slate-200 dark:border-white/10 active:scale-90"
+              title="Voice input in any language (Tamil, English, Hindi, Telugu...)"
+              aria-label="Voice input in any language"
+            >
+              <!-- Mic Normal Icon -->
+              <svg id="ai-mic-icon-idle" class="w-3.5 h-3.5 text-slate-600 dark:text-slate-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+              </svg>
+              <!-- Mic Recording Pulsing Aura & Red Icon -->
+              <span id="ai-mic-pulse" class="hidden absolute inset-0 rounded-full bg-red-500/30 animate-ping pointer-events-none"></span>
+              <svg id="ai-mic-icon-active" class="hidden w-3.5 h-3.5 text-red-600 animate-pulse" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+              </svg>
+            </button>
+
+            <!-- Send Submit Button -->
+            <button
+              type="submit"
+              id="ai-send-btn"
+              class="w-8 h-8 rounded-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white flex items-center justify-center shrink-0 transition-all shadow-xs focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+              aria-label="Send message"
+            >
+              <svg class="w-3.5 h-3.5 translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </button>
+          </div>
         </div>
-
-        <!-- Multilingual Microphone Button -->
-        <button
-          type="button"
-          id="ai-mic-btn"
-          class="w-9 h-9 rounded-full bg-slate-100 dark:bg-[#1E1F20] hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 flex items-center justify-center shrink-0 transition-all shadow-xs focus:outline-none cursor-pointer group relative border border-slate-200 dark:border-white/10 active:scale-90"
-          title="Voice input in any language (Tamil, English, Hindi, Telugu...)"
-          aria-label="Voice input in any language"
-        >
-          <!-- Mic Normal Icon -->
-          <svg id="ai-mic-icon-idle" class="w-4 h-4 text-slate-600 dark:text-slate-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
-            <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
-          </svg>
-          <!-- Mic Recording Pulsing Aura & Red Icon -->
-          <span id="ai-mic-pulse" class="hidden absolute inset-0 rounded-full bg-red-500/30 animate-ping pointer-events-none"></span>
-          <svg id="ai-mic-icon-active" class="hidden w-4 h-4 text-red-600 animate-pulse" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
-            <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
-          </svg>
-        </button>
-
-        <!-- Send Submit Button -->
-        <button
-          type="submit"
-          id="ai-send-btn"
-          class="w-9 h-9 rounded-full bg-blue-600 hover:bg-blue-700 active:scale-95 text-white flex items-center justify-center shrink-0 transition-all shadow-xs focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-          aria-label="Send message"
-        >
-          <svg class="w-4 h-4 translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
-        </button>
       </form>
 
       <!-- Official Google Gemini AI Attribution -->
@@ -451,10 +477,27 @@ const callUrl = `tel:${phone}`;
     const newChatBtn = document.getElementById('ai-new-chat-btn');
     const chatForm = document.getElementById('ai-chat-form');
     const userInput = document.getElementById('ai-user-input');
+    const bulletBtn = document.getElementById('ai-bullet-btn');
     const chatThread = document.getElementById('ai-chat-thread');
     const welcomeHero = document.getElementById('ai-welcome-hero');
     const sendBtn = document.getElementById('ai-send-btn');
     const welcomePromptCards = document.querySelectorAll('.welcome-prompt-card');
+
+    function autoResizeInput() {
+      if (!userInput) return;
+      userInput.style.height = 'auto';
+      const scrollH = userInput.scrollHeight;
+      const minH = 38;
+      const maxH = 140;
+      const newH = Math.min(Math.max(scrollH, minH), maxH);
+      userInput.style.height = newH + 'px';
+      userInput.style.overflowY = scrollH > maxH ? 'auto' : 'hidden';
+    }
+
+    userInput?.addEventListener('input', autoResizeInput);
+    userInput?.addEventListener('paste', () => {
+      setTimeout(autoResizeInput, 0);
+    });
 
     // Context Awareness Elements
     const contextContainer = document.getElementById('ai-context-container');
@@ -662,7 +705,11 @@ const callUrl = `tel:${phone}`;
       const messages = chatThread?.querySelectorAll('.ai-chat-bubble-row');
       messages?.forEach(m => m.remove());
       welcomeHero?.classList.remove('hidden');
-      if (userInput) userInput.value = '';
+      if (userInput) {
+        userInput.value = '';
+        userInput.style.height = '38px';
+        userInput.style.overflowY = 'hidden';
+      }
       updateContextPill();
       if (chatThread) chatThread.scrollTop = 0;
     }
@@ -973,7 +1020,10 @@ const callUrl = `tel:${phone}`;
           const currentText = finalTranscript || interimTranscript;
           if (currentText) {
             liveVoiceBuffer = currentText.trim();
-            if (userInput) userInput.value = liveVoiceBuffer;
+            if (userInput) {
+              userInput.value = liveVoiceBuffer;
+              autoResizeInput();
+            }
           }
         };
 
@@ -1015,6 +1065,8 @@ const callUrl = `tel:${phone}`;
       stopListeningUI();
       if (userInput && liveVoiceBuffer && userInput.value === liveVoiceBuffer) {
         userInput.value = '';
+        userInput.style.height = '38px';
+        userInput.style.overflowY = 'hidden';
       }
       liveVoiceBuffer = '';
     });
@@ -1092,7 +1144,7 @@ const callUrl = `tel:${phone}`;
           const hasRate = /(?:₹|\/km|per km)/i.test(rateDetails);
 
           if (isVehicle && hasRate) {
-            const encodedVehQuery = encodeURIComponent(`Hi Kalidass Travels, I would like to book the ${name} (${rateDetails}) as quoted on your website.`);
+            const encodedVehQuery = encodeURIComponent(`🚖 *KALIDASS TRAVELS — VERIFIED ONLINE BOOKING*\n━━━━━━━━━━━━━━━━━━━━\n🚗 Vehicle: ${name}\n💰 Quoted Rate: ${rateDetails}\n${capacity ? `👥 Capacity: ${capacity}\n` : ''}━━━━━━━━━━━━━━━━━━━━\nPlease confirm booking & driver assignment.`);
             const waHref = `https://wa.me/918939539211?text=${encodedVehQuery}`;
             processedLines.push(createVehicleCard(name, capacity, rateDetails, waHref));
             continue;
@@ -1146,8 +1198,9 @@ const callUrl = `tel:${phone}`;
 
       let actionHtml = '';
       if (!isUser && !content.includes('wa.me/')) {
+        const cleanExcerpt = content.replace(/[*#_~`]/g, '').trim().substring(0, 240);
         const waText = encodeURIComponent(
-          `Hi Kalidass Travels, I got this fare quote from your website:\n\n${content.substring(0, 250)}...\n\nPlease confirm availability!`
+          `🚖 *KALIDASS TRAVELS — VERIFIED AI FARE ESTIMATE*\n━━━━━━━━━━━━━━━━━━━━\n${cleanExcerpt}...\n━━━━━━━━━━━━━━━━━━━━\nPlease confirm booking availability!`
         );
         actionHtml = `
           <div class="pt-2 border-t border-slate-200/60 dark:border-white/10 mt-2 flex items-center justify-between gap-2">
@@ -1178,7 +1231,7 @@ const callUrl = `tel:${phone}`;
       }
 
       const bubbleClasses = isUser
-        ? 'bg-blue-600 text-white p-3 rounded-2xl rounded-tr-xs shadow-xs text-sm font-medium'
+        ? 'bg-blue-600 text-white p-3 rounded-2xl rounded-tr-xs shadow-xs text-sm font-medium whitespace-pre-wrap break-words leading-relaxed'
         : 'flex-1 bg-white dark:bg-[#1E1F20] p-4 rounded-2xl rounded-tl-xs border border-slate-200/80 dark:border-white/10 shadow-xs text-slate-800 dark:text-[#E3E3E3] space-y-2 leading-relaxed text-sm';
 
       msgDiv.innerHTML = `
@@ -1255,7 +1308,11 @@ const callUrl = `tel:${phone}`;
 
       appendMessage('user', text);
       chatHistory.push({ role: 'user', content: text });
-      if (userInput) userInput.value = '';
+      if (userInput) {
+        userInput.value = '';
+        userInput.style.height = '38px';
+        userInput.style.overflowY = 'hidden';
+      }
 
       showTypingIndicator();
 
@@ -1320,6 +1377,66 @@ const callUrl = `tel:${phone}`;
         userInput?.blur();
       }
     }
+
+    bulletBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (!userInput) return;
+      const start = userInput.selectionStart ?? userInput.value.length;
+      const end = userInput.selectionEnd ?? userInput.value.length;
+      const val = userInput.value;
+
+      if (start !== end) {
+        const selected = val.substring(start, end);
+        const transformed = selected
+          .split('\n')
+          .map(l => (l.trim().startsWith('• ') ? l : (l.trim() ? '• ' + l : l)))
+          .join('\n');
+        userInput.value = val.substring(0, start) + transformed + val.substring(end);
+        userInput.selectionStart = start;
+        userInput.selectionEnd = start + transformed.length;
+      } else {
+        const before = val.substring(0, start);
+        const after = val.substring(end);
+        const needsNewline = before.length > 0 && !before.endsWith('\n');
+        const insertText = (needsNewline ? '\n' : '') + '• ';
+        userInput.value = before + insertText + after;
+        const newPos = start + insertText.length;
+        userInput.selectionStart = newPos;
+        userInput.selectionEnd = newPos;
+      }
+      autoResizeInput();
+      userInput.focus();
+    });
+
+    userInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        if (e.shiftKey) {
+          // Allow native Shift+Enter newline
+          setTimeout(autoResizeInput, 0);
+          return;
+        }
+
+        // Ctrl+Enter or Cmd+Enter submits
+        if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+          chatForm?.requestSubmit();
+          return;
+        }
+
+        // On mobile / touch keyboards, let Enter insert newline so users can easily type lists
+        if (isMobileDevice()) {
+          setTimeout(autoResizeInput, 0);
+          return;
+        }
+
+        // Desktop Enter: submit (with IME composition safety)
+        e.preventDefault();
+        if (e.isComposing || e.keyCode === 229) {
+          return;
+        }
+        chatForm?.requestSubmit();
+      }
+    });
 
     chatForm?.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -1394,7 +1511,7 @@ const callUrl = `tel:${phone}`;
           `• **Tolls & Parking (NOT INCLUDED):** Highway tolls and parking are also NOT included in the car rate. Pay actual plaza receipts.\n` +
           `• **Exception (1-Day Tirupati Package):** The same-day Chennai ⇄ Tirupati package (₹6,000 Sedan) ALREADY INCLUDES AP border permit and NH FASTag tolls.\n` +
           `• **Advance:** ₹500 advance to lock your vehicle (deducted from your final bill).\n\n` +
-          `[👉 Chat on WhatsApp](https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, I have a question about interstate permits and tolls.')})`;
+          `[👉 Calculate Verified Fare Online](/#booking-panel)`;
       }
 
       if (passedContext && passedContext.totalFare && (lastLower.includes('screen') || lastLower.includes('quote') || lastLower.includes('explain'))) {
@@ -1405,17 +1522,19 @@ const callUrl = `tel:${phone}`;
         const inclusionText = isTirupati1Day
           ? 'AC cab, fuel, NH FASTag toll plaza receipts, AP border permit, and chauffeur allowance.'
           : 'AC cab, fuel, and chauffeur allowance. Highway tolls, parking, and interstate state border permits are strictly NOT included and payable at actual checkposts.';
+        const waBookingMsg = encodeURIComponent(
+          `🚖 *KALIDASS TRAVELS — VERIFIED ONLINE BOOKING*\n━━━━━━━━━━━━━━━━━━━━\n📍 Destination: ${destName}\n🚗 Quoted Vehicle: ${vehName}\n💰 Quoted Total: ${fareFormatted}\n📋 Inclusions: ${inclusionText}\n💳 Advance to Lock: ₹500 (Deducted from bill)\n━━━━━━━━━━━━━━━━━━━━\nPlease confirm booking & driver assignment.`
+        );
         return `Here is the explanation of your on-screen quote for **${destName}**:\n\n` +
           `• **Quoted Vehicle:** ${vehName}\n` +
           `• **Quoted Total:** **${fareFormatted}**\n` +
           `• **Inclusions:** ${inclusionText}\n` +
           `• **Booking Advance:** Pay ₹500 to lock vehicle (deducted from final bill). Pay remaining balance post-trip.\n\n` +
-          `[👉 Confirm Booking on WhatsApp](https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, I would like to book the on-screen quote of ' + fareFormatted + ' for ' + destName)})`;
+          `[👉 Confirm Booking on WhatsApp](https://wa.me/918939539211?text=${waBookingMsg})`;
       }
 
       if (activeDest === 'tirupati') {
         const d = Math.max(days, 1);
-        const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent(`Hi Kalidass Travels, I want to book Chennai to Tirupati (${d}-Day) package.`)}`;
         return `Official **Chennai ⇄ Tirupati ${d}-Day Package** rates:\n\n` +
           `- **Sedan (4 Seats - Dzire / Etios)**: ₹${d === 1 ? '6,000' : (d === 2 ? '9,500' : '13,200')}\n` +
           `- **Maruti Ertiga (6 Seats)**: ₹${d === 1 ? '7,500' : (d === 2 ? '11,500' : '15,800')}\n` +
@@ -1424,11 +1543,9 @@ const callUrl = `tel:${phone}`;
           `- **Tempo Traveller 12-Seater**: ₹${d === 1 ? '12,500' : (d === 2 ? '19,500' : '27,000')}\n\n` +
           `• **All-Inclusive (1-Day):** Dedicated AC cab, NH FASTag Tolls, AP Border Permit, Tirumala Ghat Road ascent & Driver Bata.\n` +
           `• **Booking Policy:** ₹500 advance to confirm & lock cab (deducted from final bill).\n\n` +
-          `[👉 Open Tirupati Calculator](/services/tirupati-package/?days=${d})\n\n` +
-          `[👉 Book on WhatsApp](${waUrl})`;
+          `[👉 Open Tirupati Calculator](/services/tirupati-package/?days=${d})`;
       }
 
-      const waUrl = `https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, we want to book a trip to multiple places. Please give us a quote.')}`;
       return `Calculating outstation fares for multi-destination trips is 100% transparent:\n\n` +
         `:::FORMULA:::(Total KM × Per KM Rate) + (Driver Bata × Days) [Tolls, Parking & State Permits at Actuals]:::ENDFORMULA:::\n\n` +
         `- **Sedan (4 Seats - Dzire / Etios)**: ₹14/km + ₹400 driver bata/day (Min 250 km/day)\n` +
@@ -1438,12 +1555,33 @@ const callUrl = `tel:${phone}`;
         `- **Tempo Traveller 12-Seater**: ₹24/km + ₹800 driver bata/day (Min 300 km/day)\n` +
         `- **Tempo 14-Seater Executive**: ₹25/km + ₹900 driver bata/day (Min 350 km/day)\n` +
         `- **Tempo 20-Seater Grand**: ₹30/km + ₹900 driver bata/day (Min 300 km/day)\n` +
+        `- **Tempo 26-Seater Mini Bus**: ₹36/km + ₹1,000 driver bata/day (Min 350 km/day)\n` +
         `- **Force Urbania VIP Luxury**: ₹34/km + ₹1,000 driver bata/day (Min 300 km/day)\n\n` +
         `• **Your Cab & Chauffeur:** The vehicle stays with you for all days with zero extra hourly charges.\n` +
         `• **Tolls, Parking & State Permits (NOT INCLUDED):** State border entry permits, highway tolls, and parking tickets are NOT included in the car rate. Pay actual receipts at toll plazas and border checkposts.\n` +
         `• **Booking Advance:** ₹500 to lock your car (deducted from final bill).\n\n` +
-        `[👉 Calculate Outstation Fare](/services/outstation-cabs/)\n\n` +
-        `[👉 Send Route on WhatsApp for Quick Quote](${waUrl})`;
+        `[👉 Calculate Exact Fare Online](/#booking-panel)`;
     }
   })();
 </script>
+
+<style>
+  #ai-user-input::-webkit-scrollbar {
+    width: 4px;
+  }
+  #ai-user-input::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  #ai-user-input::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.4);
+    border-radius: 9999px;
+  }
+  #ai-user-input::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(156, 163, 175, 0.7);
+  }
+  @supports (field-sizing: content) {
+    #ai-user-input {
+      field-sizing: content;
+    }
+  }
+</style>

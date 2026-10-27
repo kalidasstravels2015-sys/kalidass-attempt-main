@@ -333,7 +333,7 @@ const serviceSchemas = [
       </nav>
 
       <!-- Pure Engines Dashboard (Direct Side-by-Side 2-Column Grid) -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start mb-16">
+      <div id="booking" class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start mb-16">
         
         {/* 1. Chennai Airport Taxi Engine */}
         <section id="airport-taxi-estimator" class="w-full flex justify-center scroll-mt-40" aria-label="Chennai Airport Taxi Estimator">
@@ -915,12 +915,14 @@ const serviceSchemas = [
 
             <!-- Action buttons in E-E-A-T panel -->
             <div class="flex flex-col sm:flex-row lg:flex-col gap-2.5 shrink-0 lg:min-w-[200px]">
-              <WhatsAppButton
-                href="https://wa.me/918939539211?text=Hi%20Kalidass%20Travels%2C%20I%20have%20a%20query%20about%20your%20fare%20calculator%20rates."
-                size="md"
-                text="WhatsApp Quote"
-                ariaLabel="Ask Kalidass Travels on WhatsApp about fare rates"
-              />
+              <a
+                href="#booking"
+                class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-m3-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs shadow-m3-1 transition-all"
+                aria-label="Calculate instant fare above"
+              >
+                <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0 brightness-0 invert" />
+                <span>Calculate Fare Above</span>
+              </a>
               <a
                 href="tel:+918939539211"
                 class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-surface-container border border-m3-outline-variant text-m3-on-surface font-bold text-xs shadow-m3-1 transition-all"
@@ -962,12 +964,10 @@ const serviceSchemas = [
         </p>
         <div class="flex flex-wrap items-center justify-center gap-4">
           <a
-            href="https://wa.me/918939539211?text=Hi%20Kalidass%20Travels%2C%20I%20used%20your%20online%20calculator%20and%20would%20like%20to%20confirm%20a%20booking."
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#booking"
             class="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-m3-success hover:bg-m3-success text-white font-bold rounded-m3-full shadow-m3-2 transition-all cursor-pointer text-sm border border-m3-success/30"
           >
-            <span>Book via WhatsApp</span>
+            <span>Calculate &amp; Confirm on WhatsApp</span>
             <WhatsAppIcon className="w-4 h-4 text-white shrink-0" variant="brand" />
           </a>
           <a

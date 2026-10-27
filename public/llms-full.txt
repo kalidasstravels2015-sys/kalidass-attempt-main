@@ -320,29 +320,7 @@ A: Yes. We accept all payment methods including UPI (Google Pay, PhonePe, Paytm)
 
 ---
 
-## 7. Careers & Hiring
-
-- Careers Portal: https://kalidasstravels.in/careers/
-- Work Location: Medavakkam Operations Hub, Chennai 600100 (field roles across South India).
-- How to Apply: Submit the online application on the careers portal or call/WhatsApp the HR desk at +91 89395 39211. Driver roles do not require a resume.
-
-### Driver Positions
-1. Outstation & Temple Tour Chauffeur — ₹25,000 – ₹38,000 / month + daily bata
-2. Chennai Airport (MAA) 24/7 Transfer Chauffeur — ₹22,000 – ₹32,000 / month
-3. Executive Acting Driver / Private Car Chauffeur — ₹900 – ₹1,600 / day (₹24,000 – ₹36,000 / month)
-4. Heavy Passenger Vehicle (HPV) Chauffeur — Tempo Traveller & Mini Bus — ₹28,000 – ₹42,000 / month
-
-### Operations & Office Positions
-5. Fleet Operations & Maintenance Supervisor — ₹24,000 – ₹35,000 / month
-6. 24/7 Operations & Dispatch Coordinator — ₹20,000 – ₹30,000 / month
-7. Customer Booking & Helpdesk Executive — ₹22,000 – ₹32,000 / month
-8. South India Tour Itinerary Planner & Travel Consultant — ₹25,000 – ₹40,000 / month
-9. Corporate Mobility & B2B Sales Executive — ₹28,000 – ₹45,000 / month
-10. Billing, Accounts & Driver Settlement Executive — ₹22,000 – ₹32,000 / month
-
----
-
-## 8. Machine-Readable Endpoints & Direct Booking
+## 7. Machine-Readable Endpoints & Direct Booking
 
 - Primary Phone: +91 89395 39211
 - WhatsApp Dispatch: https://wa.me/918939539211
@@ -358,4 +336,3 @@ A: Yes. We accept all payment methods including UPI (Google Pay, PhonePe, Paytm)
 - Full Knowledge Base: https://kalidasstravels.in/llms-full.txt
 - RFC AI Context: https://kalidasstravels.in/.well-known/llms.txt
 - AI Crawler Policy: https://kalidasstravels.in/ai.txt
-- Careers Portal: https://kalidasstravels.in/careers/

@@ -665,13 +665,13 @@ const faqSchema = {
             </div>
 
             <!-- Instant B2B Action Buttons -->
-            <div class="flex flex-wrap items-center gap-3">
-              <WhatsAppButton
-                href={buildWhatsAppUrl("Hi Kalidass Travels, I would like to request an Enterprise RFP for Corporate Mobility & Fleet Retainers.")}
-                text="Request Enterprise RFP"
-                size="md"
-                variant="tonal"
-              />
+              <a
+                href="mailto:kalidasstravels2015@gmail.com?subject=Enterprise%20RFP%20Request%20-%20Corporate%20Mobility&body=Company%20Name:%0D%0AEmployee%20Count%20/%20Requirement:%0D%0AContact%20Person:%0D%0APhone:%0D%0A"
+                class="min-h-[44px] px-5 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 text-white text-xs sm:text-sm font-bold inline-flex items-center justify-center gap-2 shadow-2xs transition-all active:scale-[0.98]"
+              >
+                <span>Request Enterprise RFP</span>
+                <span>→</span>
+              </a>
               <a
                 href="tel:+918939539211"
                 class="min-h-[44px] px-5 rounded-m3-full bg-m3-surface hover:bg-m3-surface-container active:bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant text-xs sm:text-sm font-bold inline-flex items-center justify-center gap-2 shadow-2xs transition-all active:scale-[0.98]"
@@ -1163,12 +1163,13 @@ const faqSchema = {
         </p>
 
         <div class="flex flex-wrap items-center justify-center gap-3">
-          <WhatsAppButton
-            href={buildWhatsAppUrl("Hi Kalidass Travels, I would like to request an Enterprise RFP & Corporate Fleet Proposal.")}
-            size="lg"
-            variant="filled"
-            text="Request RFP on WhatsApp"
-          />
+          <a
+            href="mailto:kalidasstravels2015@gmail.com?subject=Enterprise%20RFP%20Request%20-%20Corporate%20Mobility&body=Company%20Name:%0D%0AEmployee%20Count%20/%20Requirement:%0D%0AContact%20Person:%0D%0APhone:%0D%0A"
+            class="min-h-[44px] h-11 inline-flex items-center gap-2 px-6 bg-white hover:bg-slate-100 active:bg-slate-200 text-slate-900 font-bold text-xs sm:text-sm rounded-full shadow-2xs transition-transform active:scale-[0.98]"
+          >
+            <span>Request RFP by Email</span>
+            <span>→</span>
+          </a>
           <a
             href="tel:+918939539211"
             class="min-h-[44px] h-11 inline-flex items-center gap-2 px-5 bg-white hover:bg-slate-100 active:bg-slate-200 text-slate-900 font-bold text-xs sm:text-sm rounded-full shadow-2xs transition-transform active:scale-[0.98]"
@@ -1221,7 +1222,7 @@ const faqSchema = {
           el.textContent = fullRateStr;
         });
 
-        const waMsg = encodeURIComponent('Hi Kalidass Travels, I want to enquire about the ' + vehicle.plan + ' - ' + pkg.name + ' (' + fullRateStr + ').');
+        const waMsg = encodeURIComponent('🏢 *KALIDASS TRAVELS — CORPORATE RETAINER INQUIRY*\n━━━━━━━━━━━━━━━━━━━━\n📋 Plan: ' + vehicle.plan + '\n📦 Slab: ' + pkg.name + '\n💰 Monthly Rate: ' + fullRateStr + '\n⏱️ Duty: ' + pkg.duty + '\n━━━━━━━━━━━━━━━━━━━━\nPlease share official contract terms and GST invoice details.');
         const waUrl = 'https://wa.me/918939539211?text=' + waMsg;
         document.querySelectorAll('[data-wa-btn="' + vehicle.id + '"]').forEach(function(btn) {
           btn.setAttribute('href', waUrl);

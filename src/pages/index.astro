@@ -20,10 +20,10 @@ const ogImage = "/images/logo-clean-white.png";
 const heroOptimized = import.meta.env.PROD
   ? await getImage({
       src: heroImg,
-      widths: [360, 640, 800, 1080, 1440, 1920],
-      sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw",
+      widths: [240, 360, 480, 640, 800, 1080, 1440, 1920],
+      sizes: "100vw",
       format: "avif",
-      quality: 82,
+      quality: 72,
     })
   : null;
 
@@ -31,7 +31,7 @@ const preloadHero = heroOptimized
   ? {
       href: heroOptimized.src,
       srcset: heroOptimized.srcSet.attribute,
-      sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw",
+      sizes: "100vw",
     }
   : {
       href: "/images/hero/outstation-highway.webp",

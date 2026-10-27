@@ -31,6 +31,7 @@ export default defineConfig({
     '/smart-travel-solution': '/',
     '/driver-cards': '/drivers/',
     '/ta': '/',
+    '/careers': '/',
   },
   integrations: [
     tailwind(),
@@ -38,6 +39,7 @@ export default defineConfig({
     sitemap({
       filter: (page) =>
         !page.includes('/driver-cards/') &&
+        !page.includes('/careers') &&
         !page.includes('/404') &&
         !page.includes('/og/') &&
         !page.includes('/admin') &&
@@ -73,8 +75,7 @@ export default defineConfig({
           url.includes('/services/sabarimala-trip/') ||
           url.includes('/services/rameswaram-2-days/') ||
           url.includes('/services/acting-drivers/') ||
-          url.includes('/services/corporate/') ||
-          url.includes('/careers/')
+          url.includes('/services/corporate/')
         ) {
           item.changefreq = 'weekly';
           item.priority = 0.85;

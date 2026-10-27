@@ -950,15 +950,12 @@ export default function AirportBookingEngine({
         data-testid="airport-fare-finder"
         className="w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden font-sans"
       >
-        {showHeader && (
-          <div className="p-4 pb-1 text-center">
-            <div className="w-10 h-10 rounded-full bg-blue-50 text-[#1a73e8] flex items-center justify-center mx-auto mb-2">
-              <Plane className="w-5 h-5 text-[#1a73e8]" />
-            </div>
-            <h3 className="text-lg sm:text-xl font-bold text-slate-900 font-heading">Chennai Airport Taxi &amp; Cab Booking</h3>
-            <p className="text-xs text-slate-500 mt-0.5">Transparent Fares • Free Flight Delay Waiting • Pay at Drop</p>
-          </div>
-        )}
+        {/* 0. Card Header: "Book Your Trip" */}
+        <div className="pt-3.5 sm:pt-4 pb-1 text-center px-4">
+          <h2 className="text-base sm:text-lg font-bold text-slate-900 font-heading tracking-tight">
+            Book Your Trip
+          </h2>
+        </div>
 
         {/* 1. Primary Toggles: Airport Pickup (FIRST/LEFT) & Airport Drop (SECOND/RIGHT) */}
         <div className="px-3 sm:px-5 pt-3 pb-2">
@@ -1377,7 +1374,7 @@ export default function AirportBookingEngine({
                     type="button"
                     id="book-airport-whatsapp-btn"
                     onClick={handleWhatsAppBooking}
-                    className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-sm shadow-md transition-all active:scale-[0.99] cursor-pointer"
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-[#075E54] hover:bg-[#128C7E] active:bg-[#054c44] text-white font-bold text-sm shadow-md transition-all active:scale-[0.99] cursor-pointer"
                   >
                     <WhatsAppIcon className="w-4 h-4" />
                     <span>Book {vehicle} on WhatsApp</span>

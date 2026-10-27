@@ -199,6 +199,7 @@ export default function DriverFeeEstimator({
   title    = 'Outstation Driver Estimator',
   subtitle = 'Calculate exact Bata, Stay & Transit',
   embedded = false,
+  showHeader = true,
   isOperatorMode = false,
   operatorCallerPhone = '',
   operatorCallerName = '',
@@ -542,14 +543,20 @@ export default function DriverFeeEstimator({
   return (
     <div className={outerCls}>
 
-      {/* ── Header (hidden when embedded) ── */}
-      {!embedded && (
+      {/* ── Header ── */}
+      {!embedded && showHeader ? (
         <div className="p-4 pb-1 text-center">
           <div className="w-10 h-10 rounded-m3-full bg-m3-primary-container flex items-center justify-center mx-auto mb-2">
             <User className="w-5 h-5 text-m3-primary" />
           </div>
           <h3 className="text-lg sm:text-xl font-bold text-m3-on-surface font-heading">{title}</h3>
           <p className="text-xs text-m3-on-surface-variant mt-0.5">{subtitle}</p>
+        </div>
+      ) : (
+        <div className="pt-3.5 sm:pt-4 pb-1 text-center px-4">
+          <h2 className="text-base sm:text-lg font-bold text-m3-on-surface font-heading tracking-tight">
+            Book Your Trip
+          </h2>
         </div>
       )}
 

@@ -15,7 +15,7 @@
     "email": "kalidasstravels2015@gmail.com"
   },
   "ui_labels": {
-    "book_your_ride": "Book your Ride",
+    "book_your_ride": "Book Your Trip",
     "our_premium_fleet": "Our Vehicle Fleet",
     "trusted_by_industry_leaders": "Trusted by Leading Organizations",
     "our_professional_drivers": "Our Verified Drivers",
@@ -70,14 +70,14 @@
     {
       "name": "Swift Dzire",
       "image": "/images/fleet/swift-dzire.webp",
-      "caps": "4 Passenger + Driver",
+      "caps": "4 Passengers + Chauffeur",
       "bags": "2 Bags",
       "rate": "₹14/km",
       "details": [
-        "Quick City Ride",
-        "Best for Small family",
-        "AC and Entertainment",
-        "Daily/Outstation",
+        "Quick City & Airport Ride",
+        "Best for Small Family & Couples",
+        "Dual Zone AC & Music System",
+        "Fixed Per-KM Outstation Tariff",
         "Sanitized Every Trip"
       ],
       "alt": "Maruti Swift Dzire 4-seater AC taxi for family trips and outstation travel from Chennai"
@@ -85,13 +85,13 @@
     {
       "name": "Maruti Ertiga",
       "image": "/images/fleet/maruti-ertiga.webp",
-      "caps": "6 Passenger + Driver",
+      "caps": "6 Passengers + Chauffeur",
       "bags": "3 Bags",
       "rate": "₹17/km",
       "details": [
-        "Economical 6-Seater MPV",
-        "Best for Medium Family Trips",
-        "Dual AC & Comfortable Seating",
+        "Economical 6-Seater Family MPV",
+        "Dual AC with Rear Overhead Vents",
+        "Flexible Foldable Rear Seating",
         "Daily City & Outstation Tours",
         "Sanitized Every Trip"
       ],
@@ -100,92 +100,137 @@
     {
       "name": "Innova Crysta",
       "image": "/images/fleet/suv.webp",
-      "caps": "7 Passenger + Driver",
-      "bags": "4 Bags",
+      "caps": "7 Passengers + Chauffeur",
+      "bags": "5 Bags",
       "rate": "₹22/km",
       "details": [
-        "Premium Luxury Travel",
-        "For Hills & Outstation",
-        "Best for VIP Clients",
-        "Superior Comfort",
+        "VIP Luxury Recliner Captain Seats",
+        "Automatic Multi-Zone Climate Control",
+        "Supreme Highway Comfort & Quiet Cabin",
+        "Best for Hills & Executive Travel",
         "Sanitized Every Trip"
       ],
       "alt": "Toyota Innova Crysta premium SUV rental for luxury outstation travel"
     },
     {
-      "name": "Tempo Traveller",
-      "image": "/images/fleet/tempo.webp",
-      "caps": "12 Passenger + Driver",
-      "bags": "8 Bags",
+      "name": "12-Seater Luxury Force Tempo",
+      "image": "/images/fleet/tempo-12.webp",
+      "caps": "8–12 Passengers",
+      "bags": "3–4 Trolleys + 8–10 Packs",
       "rate": "₹24/km",
       "details": [
-        "For Group Trips & Hills",
-        "Perfect for Corporate Team Outings",
-        "Best for Large Groups",
-        "Push back seats",
-        "Sanitized coach"
+        "135° Pushback Reclining Seats",
+        "Dual Commercial High-Cooling AC",
+        "2.4A Fast USB Charging at Every Row",
+        "6.2 ft Walkthrough High-Roof Cabin",
+        "Dedicated Rear Boot (100% Inside Storage)"
       ],
-      "alt": "12-seater Tempo Traveller van rental for corporate team outings and family pilgrimage groups"
+      "alt": "12-seater Force Tempo Traveller luxury AC rental for outstation family trips in Chennai"
+    },
+    {
+      "name": "17-Seater Executive Force Tempo",
+      "image": "/images/fleet/tempo-17.webp",
+      "caps": "13–17 Passengers",
+      "bags": "6–7 Trolleys + 14–16 Packs",
+      "rate": "₹26/km",
+      "details": [
+        "Long Wheelbase Chassis (4020 WB)",
+        "Deep 950L Dedicated Rear Luggage Trunk",
+        "Heavy-Duty Twin Commercial AC Compressors",
+        "Pushback Recliners with Generous Legroom",
+        "Best for Kumbakonam, Sabarimala & Marriages"
+      ],
+      "alt": "17-seater Force Tempo Traveller rental in Chennai for joint family pilgrimages and large groups"
+    },
+    {
+      "name": "Force Urbania VIP Luxury",
+      "image": "/images/fleet/force-urbania.webp",
+      "caps": "10–12 Passengers",
+      "bags": "6–8 Trolleys + 12 Air Bins",
+      "rate": "₹38/km",
+      "details": [
+        "European Monocoque Architecture (Zero Roll)",
+        "Aircraft-Style Independent Captain Recliners",
+        "Triple-Zone Automatic Climate Control",
+        "Deep 1,000L Hydraulic Rear Luggage Trunk",
+        "Electronic Stability Program (ESP) & ABS"
+      ],
+      "alt": "Force Urbania VIP luxury van rental in Chennai with chauffeur for corporate travel and weddings"
+    },
+    {
+      "name": "14-Seater Executive Force Tempo",
+      "image": "/images/fleet/tempo-12.webp",
+      "caps": "10–14 Passengers",
+      "bags": "5–6 Trolleys + 10–12 Packs",
+      "rate": "₹25/km",
+      "details": [
+        "Extended 750L Dedicated Rear Trunk",
+        "Generous 33-Inch Comfort Legroom Pitch",
+        "Dual Commercial AC & Row Louvers",
+        "Balanced Wheelbase for City & Ghat Roads",
+        "Zero Cabin Luggage Crowding"
+      ],
+      "alt": "14-seater Force Tempo Traveller hire in Chennai with extended luggage trunk"
+    },
+    {
+      "name": "20-Seater Grand Force Tempo",
+      "image": "/images/fleet/tempo-17.webp",
+      "caps": "16–20 Passengers",
+      "bags": "7–8 Trolleys + 16–20 Packs",
+      "rate": "₹30/km",
+      "details": [
+        "Accommodates up to 20 Pax in Single AC Coach",
+        "6.4 ft Walk-Upright High Roof Cabin",
+        "High-Cube 1,100L Dedicated Rear Luggage Hold",
+        "High-CFM Twin Heavy-Duty AC Compressors",
+        "Saves ₹15,000+ vs Hiring Multiple Cabs"
+      ],
+      "alt": "20-seater Force Tempo Traveller rental in Chennai for large family weddings and tours"
+    },
+    {
+      "name": "26-Seater Force Mini Bus Coach",
+      "image": "/images/fleet/tempo.webp",
+      "caps": "20–26 Passengers",
+      "bags": "10–12 Bags + 20+ Packs",
+      "rate": "₹36/km",
+      "details": [
+        "2x2 Spacious High-Back Pushback Recliners",
+        "Expansive 1,600L Dedicated Coach Rear Hold",
+        "Roof-Mounted Commercial Bus Air Conditioning",
+        "Illuminated Low Step & Wide Center Aisle",
+        "Commercial Heavy-Vehicle Certified Chauffeur"
+      ],
+      "alt": "26-seater Force Mini Bus Coach rental in Chennai for corporate offsites and wedding parties"
+    },
+    {
+      "name": "Toyota Innova",
+      "image": "/images/fleet/suv.webp",
+      "caps": "7 Passengers + Chauffeur",
+      "bags": "4 Bags",
+      "rate": "₹20/km",
+      "details": [
+        "Proven Highway Reliability & Comfort",
+        "Dual AC with Roof Air Louvers",
+        "Ideal for Outstation Darshan & Family Trips",
+        "Spacious 7-Seater Cabin",
+        "Sanitized Commercial Vehicle"
+      ],
+      "alt": "Toyota Innova 7-seater SUV taxi for outstation family trips from Chennai"
     },
     {
       "name": "Toyota Etios",
       "image": "/images/fleet/toyoto-etios.webp",
-      "caps": "4 Passenger + Driver",
+      "caps": "4 Passengers + Chauffeur",
       "bags": "2 Bags",
       "rate": "₹14/km",
       "details": [
-        "Comfort City Ride",
-        "Executive Sedan for Client Visits",
-        "Best for Small family",
-        "AC and Entertainment",
+        "Comfortable City & Outstation Sedan",
+        "Spacious Rear Legroom & Large 592L Boot",
+        "Smooth Highway Ride & Chilled AC",
+        "Fixed Per-KM Outstation Tariff",
         "Sanitized Every Trip"
       ],
       "alt": "Toyota Etios executive sedan taxi for corporate client visits and comfortable outstation travel"
-    },
-    {
-      "name": "Innova",
-      "image": "/images/fleet/suv.webp",
-      "caps": "7 Passenger + Driver",
-      "bags": "4 Bags",
-      "rate": "₹18/km",
-      "details": [
-        "For Hills & Outstation",
-        "Executive SUV for Client Visits",
-        "Best for Large family",
-        "AC and Entertainment",
-        "Sanitized Every Trip"
-      ],
-      "alt": "Toyota Innova 7-seater SUV taxi for large families and long-distance pilgrimages"
-    },
-    {
-      "name": "Mahindra Bolero",
-      "image": "/images/fleet/mahindra-bolero.webp",
-      "caps": "7 Passenger + Driver",
-      "bags": "3 Bags",
-      "rate": "₹15/km",
-      "details": [
-        "Best for Large family and Outstation",
-        "AC and Entertainment",
-        "Best for Mountain ride and long trip",
-        "Sanitized Every Trip",
-        "Rugged"
-      ],
-      "alt": "Mahindra Bolero rugged SUV rental for hill station trips and rough terrain travel"
-    },
-    {
-      "name": "Tata Sumo",
-      "image": "/images/fleet/tata-sumo.webp",
-      "caps": "7 Passenger + Driver",
-      "bags": "3 Bags",
-      "rate": "₹16/km",
-      "details": [
-        "Best for Large family and outstation",
-        "AC and Entertainment",
-        "Spacious",
-        "Best for Mountain ride and long trip",
-        "Sanitized Every Trip"
-      ],
-      "alt": "Tata Sumo spacious 7-seater taxi for group travel and economical outstation trips"
     }
   ],
   "tours": [

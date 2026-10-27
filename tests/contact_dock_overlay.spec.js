@@ -36,21 +36,6 @@ test.describe('Popups hide the floating call button', () => {
     await expect(quickNav).toBeVisible();
   });
 
-  test('Careers application <dialog> hides floating call button', async ({ page }) => {
-    await page.goto('/careers/');
-    const floatingDock = page.locator('#floating-actions-container');
-    await expect(floatingDock).toBeVisible();
-
-    await page.getByRole('button', { name: /^Apply$/i }).first().click();
-    const dialog = page.locator('dialog[open]');
-    await expect(dialog).toBeVisible();
-    await expect(floatingDock).toBeHidden();
-
-    await page.keyboard.press('Escape');
-    await expect(page.locator('dialog[open]')).toHaveCount(0);
-    await expect(floatingDock).toBeVisible();
-  });
-
   test('Home safety <dialog> hides floating call button', async ({ page }) => {
     await page.goto('/');
     const floatingDock = page.locator('#floating-actions-container');

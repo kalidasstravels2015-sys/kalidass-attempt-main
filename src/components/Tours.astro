@@ -224,7 +224,7 @@ const templePackageMeta: Record<string, TourMeta> = {
                 </div>
               </div>
 
-              <!-- Action Links: Call + WhatsApp + Itinerary -->
+              <!-- Action Links: Call + Tour Booking Engine -->
               <div class="flex items-center gap-1.5 shrink-0">
                 <a
                   href="tel:+918939539211"
@@ -235,21 +235,11 @@ const templePackageMeta: Record<string, TourMeta> = {
                   <AndroidPhoneIcon className="w-4 h-4 text-m3-primary" />
                 </a>
                 <a
-                  href={`https://wa.me/918939539211?text=${encodeURIComponent(meta.whatsappMsg)}`}
-                  target="_blank"
-                  rel="noopener noreferrer nofollow"
-                  class="min-w-[44px] min-h-[44px] w-11 h-11 rounded-m3-full bg-m3-success-container/40 hover:bg-m3-success-container active:bg-m3-success-container text-m3-on-success-container flex items-center justify-center border border-m3-success/30 shadow-xs transition-colors shrink-0 cursor-pointer"
-                  aria-label={`Book ${meta.cleanTitle} via WhatsApp`}
-                  title="Quick WhatsApp Inquiry"
-                >
-                  <WhatsAppIcon variant="brand" className="w-4 h-4 shrink-0" />
-                </a>
-                <a
-                  href={`/services/${tour.slug}/`}
+                  href={`/services/${tour.slug}/#booking`}
                   class="min-h-[44px] inline-flex items-center gap-1.5 px-4 py-2.5 !bg-[#0B57D0] hover:!bg-[#0842A0] active:!bg-[#0842A0] !text-white font-bold text-xs rounded-m3-full transition-colors shadow-m3-1 shrink-0 cursor-pointer"
-                  aria-label={`View itinerary for ${meta.cleanTitle}`}
+                  aria-label={`View itinerary and calculate booking for ${meta.cleanTitle}`}
                 >
-                  <span>Itinerary</span>
+                  <span>Book in Engine</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>

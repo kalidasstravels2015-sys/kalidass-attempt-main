@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Breadcrumbs from '../../components/SEO/Breadcrumbs.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
+import WhatsAppIcon from '../../components/WhatsAppIcon.astro';
 import AndroidPhoneIcon from '../../components/AndroidPhoneIcon.astro';
 import { buildWhatsAppUrl } from '../../utils/whatsapp';
 import OptimizedImage from '../../components/OptimizedImage.astro';
@@ -377,12 +378,15 @@ const faqSchema = {
                   >
                     <AndroidPhoneIcon className="w-4 h-4 text-m3-primary" />
                   </a>
-                  <WhatsAppButton
+                  <a
                     href={buildWhatsAppUrl(srv.whatsappMsg)}
-                    size="icon"
-                    variant="filled"
-                    ariaLabel={`Book ${srv.title} on WhatsApp`}
-                  />
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="w-10 h-10 rounded-m3-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white flex items-center justify-center shadow-xs transition-all shrink-0"
+                    aria-label={`Book ${srv.title} on WhatsApp`}
+                  >
+                    <WhatsAppIcon variant="brand" className="w-4 h-4 shrink-0 brightness-0 invert" />
+                  </a>
                 </div>
               </div>
             </div>
@@ -444,10 +448,10 @@ const faqSchema = {
         </p>
         <div class="flex flex-wrap items-center justify-center gap-3">
           <WhatsAppButton
-            href={buildWhatsAppUrl("Hi Kalidass Travels, I need help choosing the right travel service.")}
+            href="/#booking-panel"
             size="md"
             variant="filled"
-            text="Chat on WhatsApp"
+            text="Calculate Fare & Book"
           />
           <a
             href="tel:+918939539211"

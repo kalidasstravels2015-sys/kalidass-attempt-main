@@ -92,59 +92,7 @@ const serviceSchema = {
   }
 };
 
-// 3. Google for Jobs Compliant JobPosting Schema
-const jobPostingSchema = {
-  "@type": "JobPosting",
-  "@id": `${pageUrl}#job-driver-partner`,
-  "title": "Commercial Taxi Driver & Outstation Chauffeur",
-  "description": "<h3>Role Overview</h3><p>Join Kalidass Travels as an attached cab driver partner or full-time outstation chauffeur. Operate out of our Medavakkam dispatch hub with guaranteed round-trip outstation bookings across Tamil Nadu, transparent per-km billing, and same-day settlements.</p><h3>Requirements</h3><ul><li>Valid Commercial Driving License (LMV with Badge or HMV for Tempo Travellers)</li><li>Minimum 1-3 years highway driving experience</li><li>Clean background with zero criminal history (Police Verification / PVC required)</li><li>Yellow-Board commercial permit for attached vehicles</li></ul><h3>Benefits & Compensation</h3><ul><li>Earnings: ₹25,000 to ₹45,000 per month based on trips</li><li>Daily driver food and night allowance (Driver Batta)</li><li>Prompt same-day or 24-hour trip settlements</li><li>Zero onboarding or registration fees</li></ul>",
-  "identifier": {
-    "@type": "PropertyValue",
-    "name": "Kalidass Travels",
-    "value": "driver-partner-2026"
-  },
-  "datePosted": "2026-01-15T00:00:00+05:30",
-  "validThrough": "2027-12-31T23:59:59+05:30",
-  "employmentType": ["FULL_TIME", "CONTRACTOR"],
-  "directApply": true,
-  "industry": "Transportation & Travel",
-  "occupationalCategory": "53-3058.00",
-  "hiringOrganization": {
-    "@type": "Organization",
-    "@id": `${site}/#organization`,
-    "name": "Kalidass Travels",
-    "sameAs": site,
-    "logo": `${site}/images/logo.webp`
-  },
-  "jobLocation": {
-    "@type": "Place",
-    "name": "Kalidass Travels Medavakkam Hub",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "No. 4/220, E88, Ponniamman Kovil Street, Annamalai Nagar",
-      "addressLocality": "Medavakkam, Chennai",
-      "addressRegion": "Tamil Nadu",
-      "postalCode": "600100",
-      "addressCountry": "IN"
-    }
-  },
-  "applicantLocationRequirements": {
-    "@type": "Country",
-    "name": "IN"
-  },
-  "baseSalary": {
-    "@type": "MonetaryAmount",
-    "currency": "INR",
-    "value": {
-      "@type": "QuantitativeValue",
-      "minValue": 25000,
-      "maxValue": 45000,
-      "unitText": "MONTH"
-    }
-  }
-};
-
-// 4. FAQPage Schema derived strictly from visible page FAQs
+// 3. FAQPage Schema derived strictly from visible page FAQs
 const faqSchema = {
   "@type": "FAQPage",
   "@id": `${pageUrl}#faq`,
@@ -158,37 +106,54 @@ const faqSchema = {
   }))
 };
 
-// Flat schema array passed to Layout for unified @graph integration
-const pageSchemas = [webPageSchema, serviceSchema, jobPostingSchema, faqSchema];
+// Flat schema array passed to Layout for unified @graph integration (JobPosting excluded to isolate driver inquiries)
+const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
 ---
 
 <Layout
-  title="Attach Car & Driver Registration | Kalidass Travels Chennai"
-  description="Official driver partner & commercial cab attachment registration. Attach your Swift Dzire, Innova Crysta, Ertiga, or Tempo Traveller for outstation duties."
-  keywords="attach taxi chennai, attach car travels chennai, driver vacancy medavakkam, cab attachment kalidass travels, outstation driver duty chennai"
+  title="Commercial Cab & Fleet Attachment | Kalidass Travels Chennai"
+  description="Official commercial vehicle attachment portal for taxi owners and fleet operators. Attach Swift Dzire, Innova Crysta, Ertiga, or Tempo Traveller with Kalidass Travels Medavakkam Hub."
+  keywords="attach taxi chennai, attach car travels chennai, cab attachment kalidass travels, fleet attachment chennai, commercial vehicle attachment medavakkam"
   schema={pageSchemas}
-  showFloatingActions={true}
+  showFloatingActions={false}
 >
   <Breadcrumbs items={breadcrumbItems} />
 
   <main class="bg-m3-surface-container-low min-h-screen text-m3-on-surface font-sans py-6 sm:py-10 px-4 sm:px-6">
     <div class="max-w-2xl mx-auto space-y-5">
       
+      {/* Passenger Redirection Alert */}
+      <div class="bg-amber-50 border border-amber-200 rounded-m3-xl p-3.5 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-amber-950">
+        <div class="flex items-center gap-2">
+          <span class="text-base shrink-0">🚖</span>
+          <span><strong>Looking to book a cab for a trip?</strong> This portal is strictly for commercial car owners & driver partners.</span>
+        </div>
+        <a
+          href="tel:+918939539211"
+          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shrink-0 shadow-2xs transition-all"
+        >
+          <span>Book a Cab: +91 89395 39211</span>
+        </a>
+      </div>
+
       {/* Header Section */}
       <div class="text-center">
         <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface border border-m3-outline-variant/60 text-xs font-semibold text-m3-on-surface-variant shadow-2xs mb-2.5">
           <Handshake className="w-4 h-4 text-m3-primary shrink-0" />
-          <span>Official Partner Registration</span>
+          <span>Commercial Fleet & Partner Registration</span>
         </div>
         <h1 class="text-2xl sm:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
-          Attach Car or Join as Driver
+          Commercial Cab &amp; Fleet Attachment
         </h1>
         <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1.5 max-w-lg mx-auto">
-          Steady outstation trips · Daily driver allowance · Prompt same-day settlements
+          Yellow-board sedans, SUVs &amp; Tempo Travellers · South India tours &amp; corporate transport · Same-day settlements
+        </p>
+        <p class="text-[11px] font-semibold text-m3-primary mt-2">
+          Driver &amp; Fleet Helpdesk: <a href="tel:+919092303060" class="hover:underline">+91 90923 03060</a> (10:00 AM – 6:00 PM)
         </p>
       </div>
 
-      {/* Notice Banner (Monochromatic Neutral Palette - No Rainbow Colors) */}
+      {/* Notice Banner */}
       <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-4 shadow-2xs flex items-start gap-3">
         <Info className="w-5 h-5 text-m3-on-surface-variant shrink-0 mt-0.5" />
         <div class="text-xs sm:text-sm leading-relaxed">
@@ -196,7 +161,7 @@ const pageSchemas = [webPageSchema, serviceSchema, jobPostingSchema, faqSchema];
             Notice: Do NOT Send Documents on WhatsApp
           </span>
           <span class="text-m3-on-surface-variant mt-0.5 block">
-            Please do not send identity cards or vehicle documents on WhatsApp chat. All applications must be submitted through this official form. Our dispatch desk will call you directly.
+            Please do not send identity cards or vehicle documents on personal WhatsApp. All applications must be submitted through this official form. Our onboarding team (+91 90923 03060) will review and call you directly.
           </span>
         </div>
       </div>
@@ -498,7 +463,7 @@ const pageSchemas = [webPageSchema, serviceSchema, jobPostingSchema, faqSchema];
           </div>
 
           <div class="text-center text-[11px] text-m3-on-surface-variant">
-            Registration is free of charge. Operating from Medavakkam Hub, Chennai.
+            Registration is free of charge. Fleet &amp; Driver Partner Desk: <a href="tel:+919092303060" class="font-bold text-m3-primary hover:underline">+91 90923 03060</a>.
           </div>
 
         </form>

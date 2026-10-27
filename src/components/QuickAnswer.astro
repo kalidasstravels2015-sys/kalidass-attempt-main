@@ -61,13 +61,15 @@ import { CheckCircle2, Phone, Award, Route, Star, ExternalLink, ShieldCheck } fr
 
         <!-- Right: Multi-Channel Instant Actions -->
         <div class="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0 lg:min-w-[220px]">
-          <!-- WhatsApp Quick Quote -->
-          <WhatsAppButton
-            href="https://wa.me/918939539211?text=Hi%20Kalidass%20Travels%2C%20I%20would%20like%20a%20quick%20quote%20for%20a%20trip."
-            size="md"
-            text="WhatsApp Quick Quote"
-            ariaLabel="Chat on WhatsApp for instant quote"
-          />
+          <!-- Instant Fare Calculator & Booking -->
+          <a
+            href="#booking-panel"
+            class="inline-flex items-center justify-center min-h-[44px] gap-2 px-5 py-3 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 text-white font-bold text-xs sm:text-sm shadow-m3-1 transition-all active:scale-[0.98]"
+            aria-label="Calculate instant fare & book cab online"
+          >
+            <span>Instant Fare Calculator</span>
+            <span>→</span>
+          </a>
 
           <!-- Direct Phone Call -->
           <a

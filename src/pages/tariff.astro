@@ -321,25 +321,12 @@ const faqSchema = {
                         <span>Call</span>
                       </a>
                       <a
-                        href={buildWhatsAppUrl(`*Kalidass Travels - Local Chennai City Package Enquiry*
-• Vehicle: ${name}
-• Package: Local City (4 Hr / 8 Hr / 10 Hr)
-• Travel Date: 
-• Pickup Time: 
-• Pickup Area (Chennai): 
-• Number of Passengers: 
-
-Please share availability and final quote.`)}
-                        target="_blank"
-                        rel="noopener noreferrer nofollow"
-                        aria-label={`Book ${name} local package on WhatsApp`}
-                        class="tariff-whatsapp-btn min-h-[36px] inline-flex items-center gap-1 px-3 py-1.5 rounded-m3-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white text-xs font-bold shadow-xs transition-all cursor-pointer active:scale-[0.98]"
-                        data-open-enquiry="true"
-                        data-vehicle-name={name}
-                        data-service-title="Chennai Local Cab Rental Package"
+                        href={`/calculator/?tab=local&vehicle=${encodeURIComponent(name)}#booking`}
+                        aria-label={`Book ${name} local package`}
+                        class="min-h-[36px] inline-flex items-center gap-1 px-3 py-1.5 rounded-m3-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white text-xs font-bold shadow-xs transition-all cursor-pointer active:scale-[0.98]"
                       >
                         <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0 brightness-0 invert" />
-                        <span>Enquire</span>
+                        <span>Book Package</span>
                       </a>
                     </div>
                   </td>
@@ -425,25 +412,12 @@ Please share availability and final quote.`)}
                     <span>Call Now</span>
                   </a>
                   <a
-                    href={buildWhatsAppUrl(`*Kalidass Travels - Local Chennai City Package Enquiry*
-• Vehicle: ${name}
-• Package: Local City (4 Hr / 8 Hr / 10 Hr)
-• Travel Date: 
-• Pickup Time: 
-• Pickup Area (Chennai): 
-• Number of Passengers: 
-
-Please share availability and final quote.`)}
-                    target="_blank"
-                    rel="noopener noreferrer nofollow"
-                    aria-label={`Book ${name} local package on WhatsApp`}
-                    class="tariff-whatsapp-btn min-h-[44px] h-11 inline-flex items-center justify-center gap-1.5 px-3 rounded-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white shadow-xs text-xs font-bold transition-all select-none cursor-pointer active:scale-[0.98]"
-                    data-open-enquiry="true"
-                    data-vehicle-name={name}
-                    data-service-title="Chennai Local Cab Rental Package"
+                    href={`/calculator/?tab=local&vehicle=${encodeURIComponent(name)}#booking`}
+                    aria-label={`Book ${name} local package`}
+                    class="min-h-[44px] h-11 inline-flex items-center justify-center gap-1.5 px-3 rounded-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white shadow-xs text-xs font-bold transition-all select-none cursor-pointer active:scale-[0.98]"
                   >
                     <WhatsAppIcon variant="brand" className="w-4 h-4 shrink-0 brightness-0 invert" />
-                    <span>Enquire</span>
+                    <span>Book Package</span>
                   </a>
                 </div>
               </div>
@@ -547,26 +521,12 @@ Please share availability and final quote.`)}
                         <span>Call</span>
                       </a>
                       <a
-                        href={buildWhatsAppUrl(`*Kalidass Travels - Outstation Cab Enquiry*
-• Vehicle: ${name} (Starting ₹${v.outstation_rate || 14}/km)
-• Pickup Area (Chennai): 
-• Destination / Route: 
-• Travel Date: 
-• Pickup Time: 
-• Trip Type: [Round Trip / One-Way Drop]
-• Number of Passengers: 
-
-Please share total fare estimation and availability.`)}
-                        target="_blank"
-                        rel="noopener noreferrer nofollow"
-                        aria-label={`Book ${name} outstation cab on WhatsApp`}
-                        class="tariff-whatsapp-btn min-h-[44px] inline-flex items-center gap-1 px-3.5 py-2 rounded-m3-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white text-xs font-bold shadow-xs transition-all cursor-pointer active:scale-[0.98]"
-                        data-open-enquiry="true"
-                        data-vehicle-name={name}
-                        data-service-title="Chennai Outstation Taxi Service"
+                        href={`/?vehicle=${encodeURIComponent(name)}#booking-panel`}
+                        aria-label={`Book ${name} outstation cab`}
+                        class="min-h-[44px] inline-flex items-center gap-1 px-3.5 py-2 rounded-m3-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white text-xs font-bold shadow-xs transition-all cursor-pointer active:scale-[0.98]"
                       >
                         <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0 brightness-0 invert" />
-                        <span>Enquire</span>
+                        <span>Book Outstation</span>
                       </a>
                     </div>
                   </td>
@@ -639,26 +599,12 @@ Please share total fare estimation and availability.`)}
                     <span>Call Now</span>
                   </a>
                   <a
-                    href={buildWhatsAppUrl(`*Kalidass Travels - Outstation Cab Enquiry*
-• Vehicle: ${name} (Starting ₹${v.outstation_rate || 14}/km)
-• Pickup Area (Chennai): 
-• Destination / Route: 
-• Travel Date: 
-• Pickup Time: 
-• Trip Type: [Round Trip / One-Way Drop]
-• Number of Passengers: 
-
-Please share total fare estimation and availability.`)}
-                    target="_blank"
-                    rel="noopener noreferrer nofollow"
-                    aria-label={`Book ${name} outstation cab on WhatsApp`}
-                    class="tariff-whatsapp-btn min-h-[44px] h-11 inline-flex items-center justify-center gap-1.5 px-3 rounded-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white shadow-xs text-xs font-bold transition-all select-none cursor-pointer active:scale-[0.98]"
-                    data-open-enquiry="true"
-                    data-vehicle-name={name}
-                    data-service-title="Chennai Outstation Taxi Service"
+                    href={`/?vehicle=${encodeURIComponent(name)}#booking-panel`}
+                    aria-label={`Book ${name} outstation cab`}
+                    class="min-h-[44px] h-11 inline-flex items-center justify-center gap-1.5 px-3 rounded-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white shadow-xs text-xs font-bold transition-all select-none cursor-pointer active:scale-[0.98]"
                   >
                     <WhatsAppIcon variant="brand" className="w-4 h-4 shrink-0 brightness-0 invert" />
-                    <span>Enquire</span>
+                    <span>Book Outstation</span>
                   </a>
                 </div>
               </div>

@@ -39,26 +39,33 @@ const fleetDetails: Record<string, { category: string; seats: number; luggage_ca
     ac_type: "Automatic climate control",
     best_for: "VIP corporate transfers, hill station travel (Munnar/Ooty)"
   },
+  "Tempo Traveller": {
+    category: "Group Van",
+    seats: 12,
+    luggage_capacity: "3-4 medium suitcases + 8-10 soft bags (100% inside rear boot)",
+    ac_type: "High-capacity dual commercial AC",
+    best_for: "Navagraha temple circuits, family reunions, joint pilgrimages"
+  },
   "Tempo Traveller 12": {
     category: "Group Van",
     seats: 12,
-    luggage_capacity: "Dedicated rear luggage boot",
+    luggage_capacity: "3-4 medium suitcases + 8-10 soft bags (100% inside rear boot)",
     ac_type: "High-capacity dual blower AC",
     best_for: "Navagraha temple circuits, family reunions"
   },
-  "Tempo Traveller 18": {
+  "Tempo Traveller 17": {
     category: "Group Coach",
-    seats: 18,
-    luggage_capacity: "High roof luggage racks + boot",
-    ac_type: "Central climate control",
-    best_for: "Corporate team outings, wedding guest transfers"
+    seats: 17,
+    luggage_capacity: "6-7 medium suitcases + 14-16 soft bags (deep 4020 trunk)",
+    ac_type: "Heavy-duty twin commercial AC",
+    best_for: "Corporate team outings, wedding guest transfers, Sabarimala yatra"
   },
   "Force Urbania": {
     category: "Executive Luxury Van",
-    seats: 16,
-    luggage_capacity: "Spacious individual baggage bay",
-    ac_type: "Individual overhead AC vents",
-    best_for: "Luxury delegations, VIP airport transfers"
+    seats: 12,
+    luggage_capacity: "6-8 executive suitcases + 12 overhead aircraft bins",
+    ac_type: "Triple-zone automatic climate control",
+    best_for: "Luxury corporate delegations, VIP airport transfers, destination weddings"
   }
 };
 

@@ -13,14 +13,21 @@ const path = require('path');
   // Find floating Ask me / Gemini button and click it
   const askMeBtn = page.locator('#ask-me-fab, button:has-text("Ask me"), #modal-header-gemini').first();
   await page.evaluate(() => {
-    // Open modal directly if button is tricky
-    const modal = document.getElementById('ai-fare-modal');
-    if (modal) {
-      modal.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
-      modal.classList.add('flex', 'opacity-100', 'pointer-events-auto');
+    if (window.openAiFareModal) {
+      window.openAiFareModal();
+    } else {
+      const modal = document.getElementById('ai-fare-modal');
+      const box = document.getElementById('ai-modal-box');
+      if (modal) {
+        modal.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+        modal.classList.add('flex', 'opacity-100', 'pointer-events-auto');
+      }
+      if (box) {
+        box.classList.remove('translate-y-full', 'sm:translate-x-full');
+      }
     }
   });
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(600);
 
   const input = page.locator('#ai-user-input');
   const sendBtn = page.locator('#ai-send-btn');

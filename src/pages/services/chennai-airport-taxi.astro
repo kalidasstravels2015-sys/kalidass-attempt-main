@@ -2,22 +2,18 @@
 import Layout from '../../layouts/Layout.astro';
 import Breadcrumbs from '../../components/SEO/Breadcrumbs.astro';
 import FAQAccordion from '../../components/FAQAccordion.astro';
+import AirportBookingEngine from '../../components/AirportBookingEngine.jsx';
+import OptimizedImage from '../../components/OptimizedImage.astro';
+import GoogleRatingBadge from '../../components/GoogleRatingBadge.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
 import WhatsAppIcon from '../../components/WhatsAppIcon.astro';
 import AndroidPhoneIcon from '../../components/AndroidPhoneIcon.astro';
-import { buildWhatsAppUrl } from '../../utils/whatsapp';
-import AirportBookingEngine from '../../components/AirportBookingEngine.jsx';
-import OptimizedImage from '../../components/OptimizedImage.astro';
 import VehicleCard from '../../components/VehicleCard.astro';
-import GoogleRatingBadge from '../../components/GoogleRatingBadge.astro';
 import { 
   CheckCircle2, 
-  ShieldCheck, 
   Building2, 
   Info, 
-  Phone,
-  Clock,
-  Plane
+  Phone
 } from 'lucide-react';
 
 const title = "Chennai Airport Taxi & Cab Booking (MAA) | Fares from ₹650";
@@ -528,55 +524,31 @@ const tripListSchema = {
   <div class="bg-m3-surface text-m3-on-surface font-sans pb-16">
     <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 pt-2 sm:pt-4">
 
-      <!-- Top Hero Section (Desktop 2-Column Split / Mobile Stacked) -->
-      <!-- Top Hero Section (Desktop Clean Executive Split / Mobile Stacked) -->
+      <!-- Top Hero Section (Centered Clean Heading & Engine Focus) -->
       <section class="mb-4 sm:mb-6">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
-          
-          <!-- Left Column: Value Proposition & Trust Highlights -->
-          <div class="lg:col-span-5 flex flex-col justify-center">
-            <!-- Eyebrow Row: 24/7 Status Badge & Verified Google Rating -->
-            <div class="flex flex-wrap items-center gap-2 mb-2 sm:mb-3">
-              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-2xs">
-                <span class="w-2 h-2 rounded-full bg-m3-success animate-pulse"></span>
-                <span>24/7 MAA Airport Transfers</span>
-              </div>
-              <GoogleRatingBadge />
+        <div class="text-center max-w-3xl mx-auto flex flex-col items-center justify-center mb-3 sm:mb-4">
+          <!-- Eyebrow Row: 1 Status Badge Pill & Verified Google Rating Centered -->
+          <div class="flex flex-wrap items-center justify-center gap-2 mb-2 sm:mb-2.5">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-2xs">
+              <span class="w-2 h-2 rounded-full bg-m3-success animate-pulse"></span>
+              <span>24/7 MAA Airport Transfers</span>
             </div>
-
-            <!-- Main Display Heading -->
-            <h1 data-speakable="true" class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-m3-on-surface font-heading tracking-tight mb-2 sm:mb-3 leading-[1.15]">
-              Chennai Airport Taxi &amp; Cab Booking
-            </h1>
-            <p class="text-xs sm:text-sm lg:text-base text-m3-on-surface-variant font-normal leading-relaxed mb-4 sm:mb-6 max-w-xl">
-              Pre-booked flat zone fares for Terminals 1, 2 &amp; 4. Curbside pickup with automated flight delay tracking &amp; verified chauffeurs.
-            </p>
-
-            <!-- Compact Inline Trust Chips (Desktop single clean row) -->
-            <div class="hidden lg:flex flex-wrap items-center gap-2 pt-1">
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant/70 text-xs font-semibold text-m3-on-surface shadow-2xs">
-                <Plane className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-                <span>Flight Delay Tracking</span>
-              </span>
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant/70 text-xs font-semibold text-m3-on-surface shadow-2xs">
-                <ShieldCheck className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-                <span>Zero Surge Guarantee</span>
-              </span>
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant/70 text-xs font-semibold text-m3-on-surface shadow-2xs">
-                <Clock className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-                <span>60-Min Free Wait</span>
-              </span>
-            </div>
-
+            <GoogleRatingBadge />
           </div>
 
-          <!-- Right Column: Dedicated Airport Booking Panel -->
-          <div class="lg:col-span-7 w-full">
-            <div id="booking-section" class="scroll-mt-28"></div>
-            <div id="fare-calculator" class="scroll-mt-28"></div>
-            <div class="w-full">
-              <AirportBookingEngine client:load showHeader={false} />
-            </div>
+          <!-- Main Display Heading Centered -->
+          <h1 data-speakable="true" class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-[1.15]">
+            Chennai Airport Taxi &amp; Cab Booking
+          </h1>
+        </div>
+
+        <!-- Dedicated Airport Booking Panel (Centered) -->
+        <div class="max-w-2xl mx-auto w-full">
+          <div id="booking-section" class="scroll-mt-28"></div>
+          <div id="fare-calculator" class="scroll-mt-28"></div>
+          <div class="w-full">
+            <AirportBookingEngine client:load showHeader={false} />
+          </div>
 
             <!-- Mobile ONLY: Direct Answer Block & Trust Highlights (placed directly below airport booking engine) -->
             <div data-hero-mobile class="block lg:hidden w-full mt-3.5">
@@ -616,7 +588,6 @@ const tripListSchema = {
               </div>
             </div>
           </div>
-
         </div>
       </section>
 
@@ -1050,16 +1021,19 @@ const tripListSchema = {
                       <AndroidPhoneIcon className="w-3.5 h-3.5 text-slate-700 shrink-0" />
                       <span>Call Desk</span>
                     </a>
-                    <a
-                      href={buildWhatsAppUrl(t.whatsappPickup)}
-                      target="_blank"
-                      rel="noopener noreferrer nofollow"
-                      aria-label={`Book Chennai airport to ${t.zone} taxi on WhatsApp`}
-                      class="min-h-[44px] h-11 inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white shadow-xs text-xs font-bold transition-all select-none cursor-pointer active:scale-[0.98]"
+                    <button
+                      type="button"
+                      data-corridor={t.zone.split('&')[0].trim()}
+                      data-vehicle="Swift Dzire"
+                      data-pax="4"
+                      data-fare={t.sedan}
+                      data-distance={t.distance}
+                      data-eta={t.eta}
+                      class="highway-vehicle-select-btn min-h-[44px] h-11 inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white shadow-xs text-xs font-bold transition-all select-none cursor-pointer active:scale-[0.98]"
                     >
                       <WhatsAppIcon variant="brand" className="w-4 h-4 shrink-0 brightness-0 invert" />
-                      <span>WhatsApp Quote</span>
-                    </a>
+                      <span>Calculate Fare</span>
+                    </button>
                   </div>
                 </div>
               </details>
@@ -1173,16 +1147,19 @@ const tripListSchema = {
                               <AndroidPhoneIcon className="w-3.5 h-3.5 text-slate-700 shrink-0" />
                               <span>Call</span>
                             </a>
-                            <a
-                              href={buildWhatsAppUrl(t.whatsappPickup)}
-                              target="_blank"
-                              rel="noopener noreferrer nofollow"
-                              aria-label={`Book Chennai airport to ${t.zone} taxi on WhatsApp`}
-                              class="min-h-[36px] inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white shadow-xs text-xs font-bold transition-all cursor-pointer active:scale-[0.98]"
+                            <button
+                              type="button"
+                              data-corridor={t.zone.split('&')[0].trim()}
+                              data-vehicle="Swift Dzire"
+                              data-pax="4"
+                              data-fare={t.sedan}
+                              data-distance={t.distance}
+                              data-eta={t.eta}
+                              class="highway-vehicle-select-btn min-h-[36px] inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white shadow-xs text-xs font-bold transition-all cursor-pointer active:scale-[0.98]"
                             >
                               <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0 brightness-0 invert" />
-                              <span>WhatsApp</span>
-                            </a>
+                              <span>Calculate</span>
+                            </button>
                             <button
                               type="button"
                               data-corridor={t.zone.split('&')[0].trim()}
@@ -1332,10 +1309,10 @@ const tripListSchema = {
         </p>
         <div class="flex flex-wrap items-center justify-center gap-3.5">
           <WhatsAppButton 
-            href="https://wa.me/918939539211?text=Hi%20Kalidass%20Travels,%20I%20want%20to%20reserve%20an%20airport%20transfer%20(Drop/Pickup)%20at%20Chennai%20Airport."
+            href="#booking-section"
             size="lg"
             variant="filled"
-            text="Instant WhatsApp Booking"
+            text="Calculate & Book Airport Transfer"
           />
           <a 
             href="tel:+918939539211"
@@ -1357,8 +1334,6 @@ const tripListSchema = {
       const protocolPickup = document.getElementById('protocol-banner-pickup');
       const protocolDrop = document.getElementById('protocol-banner-drop');
       const commitmentsSubtitle = document.getElementById('commitments-mode-subtitle');
-      const desktopLinks = document.querySelectorAll<HTMLAnchorElement>('.booking-link');
-
       function updateDirectionUI(dir: 'drop' | 'pickup') {
         const isDrop = dir === 'drop';
         if (protocolPickup && protocolDrop) {
@@ -1373,17 +1348,6 @@ const tripListSchema = {
         if (commitmentsSubtitle) {
           commitmentsSubtitle.textContent = isDrop ? 'Drop Protocol' : 'Pickup Protocol';
         }
-        desktopLinks.forEach((link) => {
-          const msg = isDrop ? link.getAttribute('data-drop-msg') : link.getAttribute('data-pickup-msg');
-          if (msg) {
-            link.href = `https://wa.me/918939539211?text=${encodeURIComponent(msg)}`;
-          }
-          link.setAttribute('data-direction', dir);
-          const label = link.querySelector('.action-label');
-          if (label) {
-            label.textContent = isDrop ? 'Book Drop' : 'Book Pickup';
-          }
-        });
         const mobileBtns = document.querySelectorAll<HTMLElement>('[id^="mobile-book-"]');
         mobileBtns.forEach((btn) => {
           btn.setAttribute('data-direction', dir);
@@ -1455,6 +1419,11 @@ const tripListSchema = {
               autoCalculate: true
             }
           }));
+
+          const bookingSec = document.getElementById('booking-section') || document.getElementById('airport-fare-finder');
+          if (bookingSec) {
+            bookingSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
         };
       });
 
