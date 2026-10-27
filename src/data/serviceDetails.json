@@ -1486,41 +1486,41 @@
       "rows": [
         [
           "Sedan (Swift, Etios)",
-          "₹11/km",
+          "₹14/km",
           "₹500",
-          "₹400",
-          "₹4,500"
+          "At Actuals",
+          "₹4,730"
         ],
         [
           "SUV (Ertiga)",
-          "₹14/km",
-          "₹600",
-          "₹400",
-          "₹5,500"
+          "₹17/km",
+          "₹500",
+          "At Actuals",
+          "₹5,630"
         ],
         [
           "Innova",
-          "₹17/km",
-          "₹700",
-          "₹400",
-          "₹6,500"
+          "₹20/km",
+          "₹600",
+          "At Actuals",
+          "₹6,640"
         ],
         [
           "Innova Crysta",
-          "₹20/km",
-          "₹800",
-          "₹400",
-          "₹7,500"
+          "₹22/km",
+          "₹600",
+          "At Actuals",
+          "₹7,240"
         ],
         [
           "Tempo Traveller (12 Seater)",
-          "₹25/km",
-          "₹1,000",
-          "₹500",
-          "₹9,500"
+          "₹26/km",
+          "₹800",
+          "At Actuals",
+          "₹8,650"
         ]
       ],
-      "note": "Total Cost based on ~320 km round trip (Chennai ↔ Pondicherry via ECR). Includes driver bata & ECR FASTag tolls. Extra km charged at listed rate if exceeded."
+      "note": "Total Cost based on ~302 km round trip (Chennai ↔ Pondicherry via ECR). Includes 100% fuel, AC cab, and driver bata. Highway FASTag tolls and parking payable at actuals."
     },
     "includes": [
       "Doorstep pickup & drop anywhere in Chennai",

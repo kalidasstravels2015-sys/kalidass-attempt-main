@@ -67,8 +67,8 @@ export function loadTariffConfig() {
   } catch (_) {}
   return {
     vehicles: {
-      'Swift Dzire': { round_trip_rate: 14, one_way_rate: 15, driver_bata: 400, min_km_per_day: 250 },
-      'Toyota Etios': { round_trip_rate: 14, one_way_rate: 15, driver_bata: 400, min_km_per_day: 250 },
+      'Swift Dzire': { round_trip_rate: 14, one_way_rate: 15, driver_bata: 500, min_km_per_day: 250 },
+      'Toyota Etios': { round_trip_rate: 14, one_way_rate: 15, driver_bata: 500, min_km_per_day: 250 },
       'Maruti Ertiga': { round_trip_rate: 18, one_way_rate: 19, driver_bata: 500, min_km_per_day: 250 },
       'Innova': { round_trip_rate: 20, one_way_rate: 22, driver_bata: 600, min_km_per_day: 300 },
       'Innova Crysta': { round_trip_rate: 24, one_way_rate: 26, driver_bata: 700, min_km_per_day: 300 },
@@ -362,7 +362,7 @@ Return ONLY raw JSON matching this schema, no markdown code fence, no commentary
     estimatedTollsText = 'approx ₹450 Fastag + ₹700 KA Permit';
     tollsAmount = 1150;
   } else if (destLower.includes('pondicherry') || destLower.includes('puducherry') || destLower.includes('pondi')) {
-    estimatedTollsText = 'approx ₹600 - ₹700 via Fastag actuals';
+    estimatedTollsText = 'approx ₹200 Fastag + approx ₹500 Puducherry Permit (at actuals)';
     tollsAmount = 700;
   }
 

@@ -86,7 +86,7 @@ export const GET: APIRoute = async () => {
       luggage_capacity: details.luggage_capacity,
       rate_per_km_inr: data.round_trip_rate,
       one_way_rate_per_km_inr: (data as any).one_way_rate || data.round_trip_rate + 2,
-      driver_batta_per_day_inr: (data as any).driver_bata || 400,
+      driver_batta_per_day_inr: (data as any).driver_bata || 500,
       min_km_per_day: data.min_km_per_day || 250,
       ac_type: details.ac_type,
       best_for: details.best_for

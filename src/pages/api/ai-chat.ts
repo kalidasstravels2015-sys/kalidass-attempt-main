@@ -64,7 +64,7 @@ VERIFIED OFFICIAL RATE CARD & RULES:
      • **Your Cab & Chauffeur:** The cab stays with you for all days. You can visit all your places and temples with no extra hourly charges.
      • **Minimum Kilometers:** 250 km per day (2 days = 500 km min, 3 days = 750 km min). Tempo Traveller is 300 km/day. If you travel more, you pay for actual km.
      • **Car & Van Rates (Round Trip):**
-       - Sedan (4 seats - Dzire / Etios): ₹14/km + ₹400 driver bata/day
+       - Sedan (4 seats - Dzire / Etios): ₹14/km + ₹500 driver bata/day
        - Ertiga (6 seats): ₹17/km + ₹500 driver bata/day
        - Innova (7 seats): ₹20/km + ₹600 driver bata/day
        - Innova Crysta (7 seats): ₹22/km + ₹700 driver bata/day

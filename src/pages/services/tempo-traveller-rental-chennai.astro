@@ -8,6 +8,7 @@ import GoogleRatingBadge from "../../components/GoogleRatingBadge.astro";
 import OptimizedImage from "../../components/OptimizedImage.astro";
 import { WHATSAPP_CONFIG } from "../../utils/whatsapp";
 import {
+  Phone,
   ShieldCheck,
   CheckCircle2,
   Info,
@@ -842,78 +843,64 @@ const schema = {
     <!-- SECTION 1: SYSTEM UI DESIGN SYSTEM HERO WITH DEDICATED TEMPO QUOTATION ENGINE -->
     <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 pt-1 sm:pt-2">
       
-      <!-- Top Hero Section (Centered Clean Heading & Engine Focus) -->
-      <section class="mb-4 sm:mb-6">
-        <div class="text-center max-w-3xl mx-auto flex flex-col items-center justify-center mb-3 sm:mb-4">
-          <!-- Eyebrow Row: Fleet Capacity Badge & Google Rating Centered -->
-          <div class="flex flex-wrap items-center justify-center gap-2 mb-2 sm:mb-2.5">
-            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-2xs">
-              <span class="w-2 h-2 rounded-full bg-m3-success animate-pulse"></span>
-              <span>12 to 26 Seater &amp; Force Urbania</span>
-            </div>
-            <GoogleRatingBadge />
-          </div>
-
-          <!-- Main Display Heading Centered -->
-          <h1 data-speakable="true" class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-[1.15]">
+      <!-- Top Hero Section (M3 Adaptive: 2-Column Split on Desktop, App-First on Mobile) -->
+      <section class="mb-5 sm:mb-7">
+        <!-- Mobile ONLY Heading + Separate Google Rating Row -->
+        <div class="block lg:hidden text-center max-w-xl mx-auto mb-3">
+          <h1 data-speakable="true" class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight">
             Tempo Traveller Rental in Chennai
           </h1>
+          <div class="mt-2 flex justify-center">
+            <GoogleRatingBadge />
+          </div>
         </div>
 
-        <!-- Dedicated Tempo Quotation Engine (Centered) -->
-        <div class="max-w-2xl mx-auto w-full">
-          <div id="fare-calculator" class="scroll-mt-28"></div>
-          <div id="trip-calculator" class="scroll-mt-28"></div>
-          <div class="w-full">
-            <TempoQuotationEngine 
-              client:load 
-              variant="card" 
-              allowedTabs={['round', 'local']}
-              initialTab="round"
-              initialPickup="Chennai, Tamil Nadu"
-              initialDrop=""
-              autoCalculate={false}
-              showHeader={false}
-            />
-          </div>
-
-          <!-- Direct Answer Block & Trust Highlights below tempo quotation engine -->
-          <div data-hero-mobile class="w-full mt-3.5">
-            <!-- DIRECT ANSWER & GOOGLE FEATURED SNIPPET BLOCK (data-speakable) -->
-            <div class="mb-3 p-3 sm:p-3.5 rounded-r-m3-xl rounded-l-xs bg-m3-surface-container-low border border-m3-outline-variant/60 border-l-4 border-l-m3-primary shadow-2xs">
-              <div class="flex items-center gap-1.5 mb-1.5">
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-m3-primary/10 text-m3-primary text-[10px] sm:text-xs font-bold tracking-wide uppercase">
-                  ⚡ Van Rental Rates &amp; Inclusions
-                </span>
-              </div>
-              <h3 class="sr-only">
-                What are Chennai Tempo Traveller Rental Rates &amp; Inclusions?
-              </h3>
-              <p data-speakable="true" class="text-xs sm:text-sm text-m3-on-surface leading-relaxed">
-                Outstation base rates: <strong>₹24/km (12S)</strong> • <strong>₹26/km (17S)</strong> • <strong>₹30/km (20S)</strong> • <strong>₹38/km (Force Urbania VIP)</strong>. Local packages from ₹4,200 (5h/50km). Pushback recliners, dual AC &amp; luggage carrier included. <strong>₹500 advance to confirm</strong>.
-              </p>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+          
+          <!-- Left Column: Visible on Desktop (lg+) -->
+          <div class="hidden lg:flex lg:col-span-5 flex-col justify-start pt-2">
+            <!-- Desktop H1 + Separate Google Star Rating Row -->
+            <h1 data-speakable="true" class="text-3xl lg:text-4xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight mb-2.5">
+              Tempo Traveller Rental in Chennai
+            </h1>
+            <div class="mb-3.5">
+              <GoogleRatingBadge />
             </div>
 
-            <!-- Trust Matrix Strip -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-              <div class="px-3 py-2 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 flex items-center gap-2 shadow-2xs">
-                <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
-                <span class="font-semibold text-m3-on-surface truncate">Pushback Ergonomic Seats</span>
-              </div>
-              <div class="px-3 py-2 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 flex items-center gap-2 shadow-2xs">
-                <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
-                <span class="font-semibold text-m3-on-surface truncate">Dual AC &amp; USB Charging</span>
-              </div>
-              <div class="px-3 py-2 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 flex items-center gap-2 shadow-2xs">
-                <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
-                <span class="font-semibold text-m3-on-surface truncate">Ample Luggage Boot Space</span>
-              </div>
-              <div class="px-3 py-2 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 flex items-center gap-2 shadow-2xs">
-                <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
-                <span class="font-semibold text-m3-on-surface truncate">Police Verified Chauffeurs</span>
-              </div>
+            <p data-speakable="true" class="text-sm text-m3-on-surface-variant leading-relaxed mb-4">
+              12 to 20-Seater Force Tempo Travellers &amp; Luxury Force Urbania in Chennai. Outstation rates: <strong>₹24/km (12S)</strong> • <strong>₹26/km (17S)</strong> • <strong>₹30/km (20S)</strong> • <strong>₹38/km (Urbania VIP)</strong>. Local packages from ₹4,200 (5h/50km), ₹500 advance to confirm.
+            </p>
+
+            <!-- Desktop Direct Call CTA -->
+            <div class="flex items-center gap-3">
+              <a
+                href="tel:+918939539211"
+                class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface text-sm font-semibold border border-m3-outline-variant shadow-2xs hover:shadow-xs transition-all"
+              >
+                <Phone className="w-4 h-4 text-m3-primary shrink-0" />
+                <span>Call Van Booking: +91 89395 39211</span>
+              </a>
             </div>
           </div>
+
+          <!-- Right Column: Elevated Booking Engine Card -->
+          <div class="lg:col-span-7 w-full max-w-2xl mx-auto lg:max-w-none">
+            <div id="fare-calculator" class="scroll-mt-28"></div>
+            <div id="trip-calculator" class="scroll-mt-28"></div>
+            <div class="w-full rounded-m3-2xl shadow-m3-2 border border-m3-outline-variant/60 bg-white dark:bg-m3-surface-container p-2 sm:p-3">
+              <TempoQuotationEngine 
+                client:load 
+                variant="card" 
+                allowedTabs={['round', 'local']}
+                initialTab="round"
+                initialPickup="Chennai, Tamil Nadu"
+                initialDrop=""
+                autoCalculate={false}
+                showHeader={false}
+              />
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -1767,49 +1754,9 @@ const schema = {
           </div>
         </div>
 
-        <!-- Transparent Calculation Rules & Guidelines -->
-        <div class="mt-8 pt-6 border-t border-m3-outline-variant/60">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 mb-5">
-            <div class="flex items-start gap-3 p-3.5 rounded-xl bg-m3-surface-container-low border border-m3-outline-variant/60 shadow-2xs">
-              <div class="w-8 h-8 rounded-lg bg-m3-primary text-white flex items-center justify-center shrink-0 font-bold text-xs">
-                01
-              </div>
-              <div>
-                <h4 class="text-xs sm:text-sm font-bold text-m3-on-surface">Standard 300 km / Day</h4>
-                <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Outstation Tempo rentals follow a standard 300 km/day minimum. Billed garage-to-garage from Chennai.</p>
-              </div>
-            </div>
-
-            <div class="flex items-start gap-3 p-3.5 rounded-xl bg-m3-surface-container-low border border-m3-outline-variant/60 shadow-2xs">
-              <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0 font-bold text-xs">
-                02
-              </div>
-              <div>
-                <h4 class="text-xs sm:text-sm font-bold text-m3-on-surface">Fixed All-Inclusive Circuits</h4>
-                <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Popular packages to Tirupati, Pondicherry, Thiruvannamalai &amp; Kumbakonam include diesel, tolls, and permits.</p>
-              </div>
-            </div>
-
-            <div class="flex items-start gap-3 p-3.5 rounded-xl bg-m3-surface-container-low border border-m3-outline-variant/60 shadow-2xs">
-              <div class="w-8 h-8 rounded-lg bg-purple-600 text-white flex items-center justify-center shrink-0 font-bold text-xs">
-                03
-              </div>
-              <div>
-                <h4 class="text-xs sm:text-sm font-bold text-m3-on-surface">Zero Surge &amp; Hidden Charges</h4>
-                <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Fixed transparent per-km rates with dual AC, professional chauffeur, and verified RTO commercial permits.</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Transparent Billing Note -->
-          <div class="p-4 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant text-xs text-m3-on-surface-variant leading-relaxed flex items-start gap-3">
-            <Info className="w-5 h-5 text-m3-primary shrink-0 mt-0.5" />
-            <div>
-              <strong class="text-m3-on-surface">Transparent Billing Rules:</strong> All highway FASTag tolls, interstate border permits (e.g. AP for Tirupati, Kerala for Sabarimala), and parking receipts are settled strictly at actual receipts with zero surcharge. GST input invoices available for corporate and registered accounts upon request.
-            </div>
-          </div>
-        </div>
-
+        <p class="mt-5 text-xs text-m3-on-surface-variant text-center">
+          Standard 300 km/day minimum for outstation • Garage-to-garage distance • Highway FASTag tolls &amp; interstate permits at actual receipts • GST invoices available.
+        </p>
       </div>
     </section>
 
@@ -1984,25 +1931,6 @@ const schema = {
               </div>
             </div>
           ))}
-        </div>
-
-        <!-- ₹500 Advance Deduction & Free Cancellation Reassurance Strip -->
-        <div class="mt-8 p-4 sm:p-5 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/80 max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 class="text-xs sm:text-sm font-bold text-m3-on-surface">100% Refundable Booking Advance</h4>
-              <p class="text-xs text-m3-on-surface-variant mt-0.5">₹500 advance is fully credited on your final bill. 100% refunded if cancelled 6+ hours before pickup.</p>
-            </div>
-          </div>
-          <a
-            href="#trip-calculator"
-            class="px-4 py-2 rounded-full bg-m3-primary text-white text-xs font-bold hover:bg-m3-primary/90 transition shadow-2xs shrink-0"
-          >
-            Calculate Your Fare
-          </a>
         </div>
 
       </div>

@@ -457,7 +457,7 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
   };
 
   return (
-    <div className="w-full bg-m3-surface rounded-m3-xl shadow-m3-2 border border-m3-outline-variant overflow-hidden max-w-md mx-auto font-sans p-6 text-m3-on-surface">
+    <div className="w-full bg-m3-surface rounded-m3-2xl shadow-m3-2 border border-m3-outline-variant overflow-hidden max-w-md mx-auto font-sans p-6 text-m3-on-surface">
       <div className="flex flex-col items-center text-center gap-2 mb-6">
         <div className="w-12 h-12 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center text-m3-primary">
           <Car className="w-6 h-6 text-m3-primary" />

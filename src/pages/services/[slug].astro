@@ -1614,102 +1614,63 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
     <section class="bg-m3-surface border-b border-m3-outline-variant pt-3 sm:pt-6 pb-6 sm:pb-8 px-3 sm:px-6 lg:px-8">
       {hasDedicatedEngine ? (
         <div class="max-w-6xl mx-auto">
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
+          <!-- Mobile ONLY Heading + Separate Google Rating Row -->
+          <div class="block lg:hidden text-center max-w-xl mx-auto mb-3">
+            <h1 data-speakable="true" class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight">
+              {service.title}
+            </h1>
+            <div class="mt-2 flex justify-center">
+              <GoogleRatingBadge />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
             
-            <!-- Left Column: Package Overview & Trust Inclusions -->
-            <div class="lg:col-span-5 flex flex-col justify-center">
-              <div class="flex flex-wrap items-center gap-2 mb-2 sm:mb-3">
-                <a 
-                  href={`/services/${categorySlug}/`}
-                  class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container text-xs font-bold uppercase tracking-wider border border-m3-primary/20 hover:bg-m3-primary/15 transition-colors shadow-2xs"
-                >
-                  <span>{service.category}</span>
-                </a>
-                <span class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant text-m3-on-surface text-xs font-medium shadow-2xs">
-                  <ShieldCheck className="w-3.5 h-3.5 text-m3-primary" />
-                  <span>Verified SLA</span>
-                </span>
+            <!-- Left Column: Package Overview (Visible on Desktop lg+) -->
+            <div class="hidden lg:flex lg:col-span-5 flex-col justify-start pt-1">
+              <h1 data-speakable="true" class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-[1.15] font-heading mb-2.5">
+                {service.title}
+              </h1>
+              <div class="mb-3.5">
                 <GoogleRatingBadge />
               </div>
 
-              <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-m3-on-surface tracking-tight mb-2 sm:mb-3 leading-[1.15] font-heading">
-                {service.title}
-              </h1>
-
               {/* Crisp, Direct Overview */}
-              <p class="text-xs sm:text-sm lg:text-base text-m3-on-surface-variant leading-relaxed mb-4 sm:mb-6 font-normal max-w-xl">
+              <p data-speakable="true" class="text-xs sm:text-sm lg:text-base text-m3-on-surface-variant leading-relaxed mb-4 font-normal max-w-xl">
                 {isTirupati
-                  ? "Doorstep Chennai to Tirupati round-trip private cab rental with driver. Fixed all-inclusive fares with ₹500 advance to confirm — balance after trip completion."
+                  ? "Doorstep Chennai to Tirupati round-trip private cab rental with driver. Flat rates from ₹6,000 (Sedan), ₹7,500 (Ertiga), ₹8,500 (Innova) covering 300 km, highway tolls, AP entry permit & driver bata. ₹500 advance to confirm."
                   : isThiruvannamalai
-                  ? "Doorstep Chennai to Thiruvannamalai round-trip private cab rental with verified chauffeur. 14 km Pournami Girivalam car standby, fixed fares & ₹500 advance."
+                  ? "Doorstep Chennai to Thiruvannamalai round-trip private cab rental with verified chauffeur. Flat rates from ₹6,500 (Sedan), 14 km Pournami Girivalam car standby, NH tolls & driver bata included. ₹500 advance to confirm."
                   : isKanchipuram
-                  ? "Doorstep Chennai to Kanchipuram round-trip private cab rental with verified chauffeur. Kamakshi Amman & Varadharaja darshan, certified silk weaver shopping & ₹500 advance."
+                  ? "Doorstep Chennai to Kanchipuram round-trip private cab rental with verified chauffeur. Flat rates from ₹3,500 (Sedan) covering Kamakshi Amman darshan, silk weaver shopping wait & NH 48 tolls. ₹500 advance to confirm."
                   : isNavagraha
-                  ? "Doorstep Chennai to Kumbakonam 9 Navagraha temples round-trip cab rental with verified chauffeur. Optimized parikrama route, 750 km coverage & ₹500 advance."
+                  ? "Doorstep Chennai to Kumbakonam 9 Navagraha temples round-trip cab rental with verified chauffeur. Flat rates from ₹12,000 (Sedan) covering ~750 km 2-day parikrama route. ₹500 advance to confirm."
                   : isRameswaram
-                  ? "Doorstep Chennai to Rameswaram & Dhanushkodi round-trip cab rental with verified chauffeur. 22 holy theertham baths, Pamban bridge transit, 1,200 km coverage & ₹500 advance."
+                  ? "Doorstep Chennai to Rameswaram & Dhanushkodi round-trip cab rental with verified chauffeur. Flat rates from ₹18,500 (Sedan) covering ~1,200 km, 22 holy theertham baths & Pamban bridge transit. ₹500 advance to confirm."
                   : isSabarimala
-                  ? "Doorstep Chennai to Sabarimala round-trip cab rental with satvik teetotaler chauffeur. Pre-cleared Kerala interstate permit, Nilakkal parking guidance & ₹500 advance."
+                  ? "Doorstep Chennai to Sabarimala round-trip cab rental with satvik teetotaler chauffeur. Flat rates from ₹26,500 (Ertiga SUV) covering ~1,350 km, Nilakkal parking guidance & ₹500 advance to confirm."
                   : isChidambaram
-                  ? "Doorstep Chennai to Chidambaram Natarajar Temple & Pichavaram round-trip cab rental with verified chauffeur. ECR scenic drive, mangrove boating stop, 450 km coverage & ₹500 advance."
+                  ? "Doorstep Chennai to Chidambaram Natarajar Temple & Pichavaram round-trip cab rental with verified chauffeur. Flat rates from ₹7,400 (Sedan) covering ~450 km via ECR & mangrove boating stop. ₹500 advance to confirm."
                   : isVellore
-                  ? "Doorstep Chennai to Vellore Sripuram Golden Temple round-trip cab rental with verified chauffeur. Fast Bangalore expressway drive, Fort & Jalakandeswarar stop, 300 km coverage & ₹500 advance."
-                  : "Doorstep Chennai to Pondicherry round-trip private cab rental via scenic ECR. Covers Auroville, French White Town, Promenade Beach & ₹500 advance."}
+                  ? "Doorstep Chennai to Vellore Sripuram Golden Temple round-trip cab rental with verified chauffeur. Flat rates from ₹4,800 (Sedan) covering ~300 km, NH 48 tolls, Fort & Jalakandeswarar stop. ₹500 advance to confirm."
+                  : "Doorstep Chennai to Pondicherry round-trip private cab rental via scenic ECR. Flat rates from ₹4,500 (Sedan) covering 320 km, Auroville, French White Town, Promenade Beach & ECR tolls. ₹500 advance to confirm."}
               </p>
 
-              <!-- Trust Reassurance Strip (Mobile + Desktop) -->
-              <div class="mb-3.5 p-2.5 sm:p-3 rounded-m3-xl bg-m3-surface-container-low border border-m3-outline-variant/60 shadow-2xs">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                  <div class="flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-m3-primary shrink-0" />
-                    <span class="font-medium text-m3-on-surface"><strong>Zero Cancellation Guarantee</strong> • Dedicated Chauffeur</span>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-m3-success shrink-0" />
-                    <span class="font-medium text-m3-on-surface"><strong>Transparent Pricing</strong> • {isTirupati ? 'Fuel, Tolls & AP Permit Included' : 'Fuel & Driver Included'}</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Direct Quick Action CTAs (Call & WhatsApp) -->
-              <div class="flex flex-wrap items-center gap-2.5 mb-4 sm:mb-5">
-                <a
-                  href="#booking"
-                  class="inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-m3-full bg-[#25D366] hover:bg-[#20ba59] text-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-sm transition-all"
-                >
-                  <MessageCircle className="w-4 h-4 shrink-0" />
-                  <span>Calculate &amp; Confirm Booking</span>
-                </a>
+              <!-- Direct Quick Action CTA -->
+              <div class="flex flex-wrap items-center gap-2.5">
                 <a
                   href={`tel:${WHATSAPP_CONFIG.formattedPhone.replace(/\s+/g, '')}`}
-                  class="inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface text-xs sm:text-sm font-semibold border border-m3-outline-variant shadow-2xs hover:shadow-xs transition-all"
+                  class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface text-xs sm:text-sm font-semibold border border-m3-outline-variant shadow-2xs hover:shadow-xs transition-all"
                 >
                   <Phone className="w-4 h-4 text-m3-primary shrink-0" />
-                  <span>Call 24/7 Helpline</span>
+                  <span>Call 24/7 Helpline: +91 89395 39211</span>
                 </a>
               </div>
-
-              <!-- Compact Inline Trust Chips (Desktop single clean row) -->
-              <div class="hidden lg:flex flex-wrap items-center gap-2 pt-1">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant/70 text-xs font-semibold text-m3-on-surface shadow-2xs">
-                  <Sparkles className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-                  <span>Tolls Covered on 1-Day Tours</span>
-                </span>
-                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant/70 text-xs font-semibold text-m3-on-surface shadow-2xs">
-                  <ShieldCheck className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-                  <span>Verified Highway Chauffeur</span>
-                </span>
-                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant/70 text-xs font-semibold text-m3-on-surface shadow-2xs">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-                  <span>Pay Balance After Trip</span>
-                </span>
-              </div>
-
             </div>
 
             <!-- Right Column: Instant Round-Trip Pilgrimage Booking Engine in Initial View -->
-            <div class="lg:col-span-7 w-full">
-              <section id="booking" aria-label={`Book ${service.title}`} class="scroll-mt-24">
+            <div class="lg:col-span-7 w-full max-w-2xl mx-auto lg:max-w-none">
+              <section id="booking" aria-label={`Book ${service.title}`} class="scroll-mt-28 w-full rounded-m3-2xl shadow-m3-2 border border-m3-outline-variant/60 bg-white dark:bg-m3-surface-container p-2 sm:p-3">
                 {isTirupati ? (
                   <TirupatiBookingEngine
                     client:load
@@ -1758,129 +1719,19 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                   />
                 )}
               </section>
-
-              <!-- Prominent Temple Visual Card, Direct Answer & Trust Strip (Mobile ONLY, placed directly below booking engine) -->
-              <div data-hero-mobile class="block lg:hidden w-full mt-4">
-                <!-- Mobile DIRECT ANSWER & GOOGLE FEATURED SNIPPET BLOCK (data-speakable) -->
-                <div class="mb-3.5 p-3 sm:p-3.5 rounded-r-m3-xl rounded-l-xs bg-m3-surface-container-low border border-m3-outline-variant/60 border-l-4 border-l-m3-primary shadow-2xs">
-                  <div class="flex items-center gap-1.5 mb-1.5">
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-m3-primary/10 text-m3-primary text-[10px] sm:text-xs font-bold tracking-wide uppercase">
-                      ⚡ Quick Fare &amp; Route Summary
-                    </span>
-                  </div>
-                  <h3 class="sr-only">
-                    What is the {service.title} Fare &amp; Inclusions?
-                  </h3>
-                  <p data-speakable="true" class="text-xs sm:text-sm text-m3-on-surface leading-relaxed">
-                    {isTirupati ? (
-                      <>Round-trip flat rates: <strong>₹6,000 (Sedan)</strong> • <strong>₹7,500 (Ertiga)</strong> • <strong>₹8,500 (Innova)</strong>. Covers up to <strong>300 km / 14 hours</strong> with doorstep pickup, highway FASTag tolls, Andhra Pradesh entry permit, Tirumala hill ascent, and driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
-                    ) : isThiruvannamalai ? (
-                      <>Round-trip flat rates: <strong>₹6,500 (Sedan)</strong> • <strong>₹7,900 (Ertiga)</strong> • <strong>₹9,300 (Innova)</strong>. Covers <strong>~400 km round-trip</strong> with doorstep pickup, GST Road &amp; NH 77 tolls, Arunachaleswarar temple stop, 14 km Girivalam car standby, and driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
-                    ) : isKanchipuram ? (
-                      <>Round-trip flat rates: <strong>₹3,500 (Sedan)</strong> • <strong>₹4,500 (Ertiga)</strong> • <strong>₹5,500 (Innova)</strong>. Covers <strong>~160 km round-trip</strong> with doorstep pickup, NH 48 tolls, Kamakshi Amman temple stop, silk weaver shopping waiting time, and driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
-                    ) : isNavagraha ? (
-                      <>Round-trip flat rates: <strong>₹12,000 (Sedan)</strong> • <strong>₹16,500 (Ertiga)</strong> • <strong>₹19,500 (Innova)</strong>. Covers <strong>~750 km complete 9 Navagraha circuit</strong> with doorstep pickup, NH 36 tolls, 2-day parikrama without backtracking, and driver night bata included. <strong>₹500 advance payment to confirm</strong>.</>
-                    ) : isRameswaram ? (
-                      <>Round-trip flat rates: <strong>₹18,500 (Sedan)</strong> • <strong>₹24,500 (Ertiga)</strong> • <strong>₹28,500 (Innova)</strong>. Covers <strong>~1,200 km round-trip</strong> with doorstep pickup, NH 87 tolls, Ramanathaswamy temple &amp; Dhanushkodi beach, Pamban bridge transit, and 2 nights driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
-                    ) : isSabarimala ? (
-                      <>Round-trip flat rates: <strong>₹26,500 (Ertiga SUV)</strong> • <strong>₹34,500 (Innova)</strong>. Covers <strong>~1,350 km round-trip</strong> with doorstep pickup, interstate permit, Nilakkal parking guidance, satvik teetotaler chauffeur, and 3 nights driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
-                    ) : isChidambaram ? (
-                      <>Round-trip flat rates: <strong>₹7,400 (Sedan)</strong> • <strong>₹9,400 (Ertiga)</strong> • <strong>₹10,800 (Innova)</strong>. Covers <strong>~450 km round-trip</strong> with doorstep pickup, ECR scenic route, Natarajar temple &amp; Pichavaram mangrove boating, and driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
-                    ) : isVellore ? (
-                      <>Round-trip flat rates: <strong>₹4,800 (Sedan)</strong> • <strong>₹6,200 (Ertiga)</strong> • <strong>₹7,500 (Innova)</strong>. Covers <strong>~300 km round-trip</strong> with doorstep pickup, Bangalore highway NH 48 tolls, Sripuram Golden Temple &amp; Fort stop, and driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
-                    ) : (
-                      <>Round-trip flat rates: <strong>₹4,500 (Sedan)</strong> • <strong>₹5,800 (Ertiga)</strong> • <strong>₹6,800 (Innova)</strong>. Covers <strong>320 km round-trip via scenic ECR</strong> with doorstep pickup, scenic ECR tolls, Auroville, French Quarter &amp; Promenade beach sightseeing, and driver bata included. <strong>₹500 advance payment to confirm</strong>.</>
-                    )}
-                  </p>
-                </div>
-
-                <div class="relative w-full h-44 rounded-m3-xl overflow-hidden shadow-m3-1 border border-m3-outline-variant/60 mb-2.5 bg-m3-inverse-surface">
-                  {heroImage && (
-                    <OptimizedImage
-                      src={heroImage}
-                      alt={isTirupati 
-                        ? "Sri Venkateswara Swamy Temple Tirumala - Chennai to Tirupati Darshan Cab Package" 
-                        : isThiruvannamalai
-                        ? "Arunachaleswarar Temple & Girivalam - Chennai to Thiruvannamalai Cab Package"
-                        : isKanchipuram
-                        ? "Kamakshi Amman & Ekambareswarar Temple - Chennai to Kanchipuram Cab Package"
-                        : isNavagraha
-                        ? "Kumbakonam 9 Navagraha Temples Parikrama - Chennai to Navagraha Tour Cab Package"
-                        : isRameswaram
-                        ? "Ramanathaswamy Temple & Pamban Bridge - Chennai to Rameswaram Cab Package"
-                        : isSabarimala
-                        ? "Lord Ayyappa Swami Temple - Chennai to Sabarimala Pilgrim Cab Package"
-                        : isChidambaram
-                        ? "Thillai Natarajar Temple & Pichavaram Mangrove Wetlands - Chennai to Chidambaram Cab Package"
-                        : isVellore
-                        ? "Sripuram Sri Lakshmi Narayani Golden Temple - Chennai to Vellore Cab Package"
-                        : "French White Town & Promenade Beach - Chennai to Pondicherry Cab Package"}
-                      class="w-full h-full object-cover"
-                      sizes="(max-width: 640px) 100vw, 480px"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  )}
-                  <div class="absolute inset-0 bg-gradient-to-t from-m3-inverse-surface/85 via-m3-inverse-surface/25 to-transparent pointer-events-none"></div>
-                  <div class="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between pointer-events-none text-white text-xs font-semibold">
-                    <span class="px-2.5 py-0.5 rounded-m3-full bg-m3-inverse-surface/85 backdrop-blur-sm border border-white/20 flex items-center gap-1.5 shadow-xs truncate max-w-[65%] text-xs">
-                      <span class="w-1.5 h-1.5 rounded-full bg-m3-tertiary-fixed shrink-0"></span>
-                      <span class="truncate">
-                        {isTirupati 
-                          ? "Sri Venkateswara Temple, Tirumala" 
-                          : isThiruvannamalai 
-                          ? "Arunachaleswarar & Girivalam" 
-                          : isKanchipuram
-                          ? "Kamakshi Amman & Silk Weavers"
-                          : isNavagraha
-                          ? "9 Navagraha Temples Circuit"
-                          : isRameswaram
-                          ? "Ramanathaswamy & Dhanushkodi"
-                          : isSabarimala
-                          ? "Nilakkal & Pamba Base Camp"
-                          : isChidambaram
-                          ? "Natarajar Temple & Pichavaram"
-                          : isVellore
-                          ? "Sripuram Golden Temple & Fort"
-                          : "French Quarter & Promenade Beach"}
-                      </span>
-                    </span>
-                    <span class="px-2.5 py-0.5 rounded-m3-full bg-m3-primary text-m3-on-primary text-xs font-bold shadow-xs shrink-0">
-                     {isTirupati ? "From ₹6,000 (1 Day)" : isThiruvannamalai ? "From ₹6,500 (1 Day)" : isKanchipuram ? "From ₹3,500 (1 Day)" : isNavagraha ? "From ₹12,000 (2 Days)" : isRameswaram ? "From ₹18,500 (2 Days)" : isSabarimala ? "From ₹26,500 (3 Days)" : isChidambaram ? "From ₹7,400 (1 Day)" : isVellore ? "From ₹4,800 (1 Day)" : isPondicherry ? "From ₹4,500 (1 Day)" : "From ₹14/km"}
-                    </span>
-                  </div>
-                </div>
-
-                <div data-mobile-trust-strip class="flex items-center justify-between gap-1 text-xs text-m3-on-surface-variant font-medium bg-m3-surface-container-low px-3 py-2 rounded-m3-lg border border-m3-outline-variant/60 shadow-2xs">
-                  <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span> ₹500 Advance</span>
-                  <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span> {isTirupati ? "Tolls & AP Permit Inc." : isThiruvannamalai ? "GST & NH Tolls Inc." : isKanchipuram ? "NH 48 Tolls Inc." : isNavagraha ? "Tolls at Actuals" : isRameswaram ? "Tolls at Actuals" : isSabarimala ? "Permits & Tolls Actuals" : isChidambaram ? "NH 32 Tolls Inc." : isVellore ? "NH 48 Tolls Inc." : isPondicherry ? "ECR Tolls Inc." : "Tolls at Actuals"}</span>
-                  <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span> {isTirupati ? "Hill Ghat Road" : isThiruvannamalai ? "Girivalam Standby" : isKanchipuram ? "Weaver Waiting" : isNavagraha ? "750 km Covered" : isRameswaram ? "1,200 km Covered" : isSabarimala ? "Satvik Chauffeur" : isChidambaram ? "450 km Covered" : isVellore ? "300 km Covered" : isPondicherry ? "Free Beach Waiting" : "Driver Bata Sep."}</span>
-                </div>
-              </div>
-
             </div>
           </div>
         </div>
       ) : (
         <div class="max-w-4xl mx-auto">
-          
-          {/* Category & Status Chips */}
-          <div class="flex flex-wrap items-center gap-2 mb-3">
-            <a 
-              href={`/services/${categorySlug}/`}
-              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container text-xs font-bold uppercase tracking-wider border border-m3-primary/20 hover:bg-m3-primary/15 transition-colors"
-            >
-              <span>{service.category}</span>
-            </a>
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant text-m3-on-surface text-xs font-medium">
-              <ShieldCheck className="w-3.5 h-3.5 text-m3-primary" />
-              <span>Verified &amp; Guaranteed SLA</span>
-            </span>
+          <div class="mb-4">
+            <h1 data-speakable="true" class="text-xl sm:text-3xl lg:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight font-heading mb-2">
+              {service.title}
+            </h1>
+            <div>
+              <GoogleRatingBadge />
+            </div>
           </div>
-
-          <h1 data-speakable="true" class="text-xl sm:text-3xl lg:text-4xl font-extrabold text-m3-on-surface tracking-tight mb-4 leading-tight font-heading">
-            {service.title}
-          </h1>
 
           <!-- Service Visual Hero Banner / Placeholder -->
           <div class="relative w-full h-44 sm:h-64 md:h-72 rounded-m3-xl overflow-hidden shadow-m3-1 border border-m3-outline-variant/60 mb-5 bg-m3-inverse-surface">

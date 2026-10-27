@@ -538,7 +538,7 @@ export default function DriverFeeEstimator({
 
   const outerCls = embedded
     ? 'w-full font-sans'
-    : 'w-full max-w-2xl mx-auto bg-m3-surface rounded-m3-xl shadow-m3-2 border border-m3-outline-variant overflow-hidden font-sans';
+    : 'w-full max-w-2xl mx-auto bg-m3-surface rounded-m3-2xl shadow-m3-2 border border-m3-outline-variant overflow-hidden font-sans';
 
   return (
     <div className={outerCls}>

@@ -250,7 +250,7 @@ const callUrl = `tel:${phone}`;
       <!-- Voice Listening Status Bar (Visible only when recording) -->
       <div
         id="ai-voice-status"
-        class="hidden mb-2 px-3 py-1.5 rounded-2xl bg-red-500/10 dark:bg-red-500/15 border border-red-500/30 flex items-center justify-between text-xs text-red-600 dark:text-red-400 shadow-xs transition-all"
+        class="hidden mb-2 px-3 py-1.5 rounded-2xl bg-red-500/10 dark:bg-red-500/15 border border-red-500/30 flex items-center justify-between text-xs text-red-600 dark:text-red-400 shadow-xs transition-all gap-1.5"
       >
         <div class="flex items-center gap-2 min-w-0">
           <span class="relative flex h-2.5 w-2.5 shrink-0">
@@ -258,7 +258,7 @@ const callUrl = `tel:${phone}`;
             <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
           </span>
           <span id="ai-voice-status-text" class="truncate font-semibold tracking-tight text-[11px] sm:text-xs">
-            Listening... Speak now
+            Listening... Speak freely
           </span>
         </div>
         <div class="flex items-center gap-1.5 shrink-0">
@@ -267,8 +267,18 @@ const callUrl = `tel:${phone}`;
           </span>
           <button
             type="button"
+            id="ai-voice-done-btn"
+            class="px-2.5 py-0.5 rounded-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-[10px] font-semibold transition-all cursor-pointer shadow-xs flex items-center gap-1"
+            title="Finish speaking and send query"
+          >
+            <span>Done</span>
+            <svg class="w-2.5 h-2.5 fill-current" viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+          </button>
+          <button
+            type="button"
             id="ai-voice-cancel-btn"
-            class="px-2.5 py-0.5 rounded-full bg-red-600 hover:bg-red-700 active:scale-95 text-white text-[10px] font-semibold transition-all cursor-pointer shadow-xs"
+            class="px-2.5 py-0.5 rounded-full bg-slate-200 hover:bg-slate-300 dark:bg-white/10 dark:hover:bg-white/20 active:scale-95 text-slate-700 dark:text-slate-200 text-[10px] font-semibold transition-all cursor-pointer shadow-xs"
+            title="Cancel voice input"
           >
             Cancel
           </button>
@@ -494,7 +504,15 @@ const callUrl = `tel:${phone}`;
       userInput.style.overflowY = scrollH > maxH ? 'auto' : 'hidden';
     }
 
-    userInput?.addEventListener('input', autoResizeInput);
+    userInput?.addEventListener('input', () => {
+      autoResizeInput();
+      if (isListening && (voiceSilenceTimer || voiceCountdownTimer)) {
+        clearVoiceTimers();
+        if (voiceStatusText) {
+          voiceStatusText.textContent = `Listening in ${getLangShortLabel(selectedVoiceLang)}... (Auto-send paused while typing)`;
+        }
+      }
+    });
     userInput?.addEventListener('paste', () => {
       setTimeout(autoResizeInput, 0);
     });
@@ -515,6 +533,7 @@ const callUrl = `tel:${phone}`;
     const voiceStatus = document.getElementById('ai-voice-status');
     const voiceStatusText = document.getElementById('ai-voice-status-text');
     const voiceListeningLang = document.getElementById('ai-voice-listening-lang');
+    const voiceDoneBtn = document.getElementById('ai-voice-done-btn');
     const voiceCancelBtn = document.getElementById('ai-voice-cancel-btn');
     const voiceToast = document.getElementById('ai-voice-toast');
     const langPickerBtn = document.getElementById('ai-lang-picker-btn');
@@ -701,6 +720,9 @@ const callUrl = `tel:${phone}`;
 
     // Reset Chat to Welcome Hero
     function resetChatToWelcome() {
+      if (isListening) {
+        stopListening(false);
+      }
       chatHistory = [];
       const messages = chatThread?.querySelectorAll('.ai-chat-bubble-row');
       messages?.forEach(m => m.remove());
@@ -749,7 +771,7 @@ const callUrl = `tel:${phone}`;
 
     function closeAiModal() {
       if (!modal || !modalBox) return;
-      stopListeningUI();
+      stopListening(false);
       closeLangModal();
 
       modalBox.classList.add('translate-y-full', 'sm:translate-x-full');
@@ -929,10 +951,25 @@ const callUrl = `tel:${phone}`;
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     let recognitionInstance = null;
     let isListening = false;
-    let autoSubmitVoice = false;
-    let liveVoiceBuffer = '';
+    let voiceBasePrompt = '';
+    let voiceLiveSpeech = '';
+    let voiceSilenceTimer = null;
+    let voiceCountdownTimer = null;
+    let voiceCountdownRemaining = 0;
+
+    function clearVoiceTimers() {
+      if (voiceSilenceTimer) {
+        clearTimeout(voiceSilenceTimer);
+        voiceSilenceTimer = null;
+      }
+      if (voiceCountdownTimer) {
+        clearInterval(voiceCountdownTimer);
+        voiceCountdownTimer = null;
+      }
+    }
 
     function stopListeningUI() {
+      clearVoiceTimers();
       isListening = false;
       micIconIdle?.classList.remove('hidden');
       micIconActive?.classList.add('hidden');
@@ -949,7 +986,7 @@ const callUrl = `tel:${phone}`;
       micBtn?.classList.add('bg-red-500/20', 'border-red-500');
 
       if (voiceStatusText) {
-        voiceStatusText.textContent = `Listening in ${label}... Speak now`;
+        voiceStatusText.textContent = `Listening in ${label}... Speak freely (pauses allowed)`;
       }
       if (voiceListeningLang) {
         voiceListeningLang.textContent = code || 'Auto';
@@ -958,19 +995,26 @@ const callUrl = `tel:${phone}`;
     }
 
     function stopListening(submit = false) {
-      if (recognitionInstance) {
+      clearVoiceTimers();
+      const instance = recognitionInstance;
+      recognitionInstance = null;
+      if (instance) {
         try {
-          recognitionInstance.stop();
+          instance.stop();
         } catch (_) {}
       }
       stopListeningUI();
-      if (submit && userInput && userInput.value.trim().length > 0) {
-        handleUserSubmit(userInput.value.trim());
+      if (submit && userInput) {
+        const textToSubmit = userInput.value.trim();
+        if (textToSubmit.length > 0) {
+          handleUserSubmit(textToSubmit);
+        }
       }
     }
 
     function toggleVoiceInput() {
       if (isListening) {
+        // Tapping active mic finishes speaking and submits
         stopListening(true);
         return;
       }
@@ -981,13 +1025,21 @@ const callUrl = `tel:${phone}`;
       }
 
       try {
+        clearVoiceTimers();
         if (recognitionInstance) {
           try { recognitionInstance.abort(); } catch (_) {}
+          recognitionInstance = null;
         }
 
+        voiceBasePrompt = userInput ? userInput.value : '';
+        voiceLiveSpeech = '';
+
         recognitionInstance = new SpeechRecognition();
-        recognitionInstance.continuous = false;
+        // Crucial fix: continuous = true keeps the mic listening across pauses & breaths.
+        // It will NOT close or cut off when taking a breath.
+        recognitionInstance.continuous = true;
         recognitionInstance.interimResults = true;
+        recognitionInstance.maxAlternatives = 1;
 
         let activeCode = selectedVoiceLang;
         let activeLabel = getLangShortLabel(selectedVoiceLang);
@@ -998,49 +1050,87 @@ const callUrl = `tel:${phone}`;
         }
 
         recognitionInstance.lang = activeCode;
-        liveVoiceBuffer = '';
-        autoSubmitVoice = true;
 
         recognitionInstance.onstart = () => {
           startListeningUI(activeLabel, activeCode);
         };
 
         recognitionInstance.onresult = (event) => {
-          let interimTranscript = '';
-          let finalTranscript = '';
+          clearVoiceTimers();
 
-          for (let i = event.resultIndex; i < event.results.length; ++i) {
+          let finalTranscript = '';
+          let interimTranscript = '';
+
+          // Accumulate all recognized segments across continuous speech
+          for (let i = 0; i < event.results.length; ++i) {
+            const piece = event.results[i][0].transcript;
             if (event.results[i].isFinal) {
-              finalTranscript += event.results[i][0].transcript;
+              finalTranscript += piece + ' ';
             } else {
-              interimTranscript += event.results[i][0].transcript;
+              interimTranscript += piece;
             }
           }
 
-          const currentText = finalTranscript || interimTranscript;
-          if (currentText) {
-            liveVoiceBuffer = currentText.trim();
+          voiceLiveSpeech = (finalTranscript + interimTranscript).trim();
+          if (voiceLiveSpeech) {
+            const prefix = voiceBasePrompt ? voiceBasePrompt.trim() + ' ' : '';
             if (userInput) {
-              userInput.value = liveVoiceBuffer;
+              userInput.value = prefix + voiceLiveSpeech;
               autoResizeInput();
             }
+
+            if (voiceStatusText) {
+              voiceStatusText.textContent = `Listening in ${activeLabel}... Speak freely`;
+            }
+
+            // Silence detection:
+            // After 3.0s of continuous silence after speech, start a 2s countdown before auto-submit.
+            // Total quiet time before auto-send = 5.0 seconds (breaths of 0.5-1.5s will NEVER trigger this).
+            // Any new word immediately cancels and resets this timer.
+            voiceSilenceTimer = setTimeout(() => {
+              voiceCountdownRemaining = 2;
+              if (voiceStatusText) {
+                voiceStatusText.textContent = `Paused... Auto-sending in ${voiceCountdownRemaining}s (keep speaking)`;
+              }
+              voiceCountdownTimer = setInterval(() => {
+                voiceCountdownRemaining -= 1;
+                if (voiceCountdownRemaining > 0) {
+                  if (voiceStatusText) {
+                    voiceStatusText.textContent = `Paused... Auto-sending in ${voiceCountdownRemaining}s (keep speaking)`;
+                  }
+                } else {
+                  clearVoiceTimers();
+                  stopListening(true);
+                }
+              }, 1000);
+            }, 3000);
           }
         };
 
         recognitionInstance.onerror = (event) => {
-          stopListeningUI();
+          clearVoiceTimers();
           if (event.error === 'not-allowed') {
+            stopListeningUI();
             showVoiceToast('Microphone access blocked. Please allow microphone permission.');
           } else if (event.error === 'no-speech') {
-            showVoiceToast('No voice detected. Please tap mic and speak clearly.');
+            // In continuous mode, if user already spoke words, silence is expected. Only toast if empty.
+            if (!voiceLiveSpeech && (!userInput || !userInput.value.trim())) {
+              stopListeningUI();
+              showVoiceToast('No voice detected. Please tap mic and speak clearly.');
+            }
+          } else if (event.error !== 'aborted') {
+            stopListeningUI();
+            showVoiceToast('Microphone error: ' + (event.error || 'Please try again.'));
           }
         };
 
         recognitionInstance.onend = () => {
+          if (!isListening) return;
+          clearVoiceTimers();
           stopListeningUI();
-          if (autoSubmitVoice && liveVoiceBuffer && liveVoiceBuffer.length > 2) {
-            handleUserSubmit(liveVoiceBuffer);
-            liveVoiceBuffer = '';
+          // If browser engine closed audio stream and we have transcribed text, submit
+          if (userInput && userInput.value.trim().length > 2 && voiceLiveSpeech.length > 2) {
+            handleUserSubmit(userInput.value.trim());
           }
         };
 
@@ -1056,19 +1146,26 @@ const callUrl = `tel:${phone}`;
       toggleVoiceInput();
     });
 
+    voiceDoneBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      stopListening(true);
+    });
+
     voiceCancelBtn?.addEventListener('click', (e) => {
       e.preventDefault();
-      autoSubmitVoice = false;
-      if (recognitionInstance) {
-        try { recognitionInstance.abort(); } catch (_) {}
+      clearVoiceTimers();
+      const instance = recognitionInstance;
+      recognitionInstance = null;
+      if (instance) {
+        try { instance.abort(); } catch (_) {}
       }
       stopListeningUI();
-      if (userInput && liveVoiceBuffer && userInput.value === liveVoiceBuffer) {
-        userInput.value = '';
-        userInput.style.height = '38px';
-        userInput.style.overflowY = 'hidden';
+      if (userInput) {
+        userInput.value = voiceBasePrompt;
+        autoResizeInput();
       }
-      liveVoiceBuffer = '';
+      voiceLiveSpeech = '';
+      voiceBasePrompt = '';
     });
 
     function escapeHtml(text) {
@@ -1299,6 +1396,9 @@ const callUrl = `tel:${phone}`;
 
     async function handleUserSubmit(text) {
       if (!text || isRequestInProgress) return;
+      if (isListening) {
+        stopListening(false);
+      }
       isRequestInProgress = true;
       if (sendBtn) sendBtn.disabled = true;
 

@@ -192,7 +192,7 @@ export default function FastQuoteDesk() {
     const vConfig = tariffConfig.vehicles[vKey] || tariffConfig.vehicles['Swift Dzire'];
     const minKm = days * (vConfig.min_km_per_day || 250);
     const rate = tripType === 'One Way Drop' ? vConfig.one_way_rate : vConfig.round_trip_rate;
-    const dailyBata = vConfig.driver_bata || 400;
+    const dailyBata = vConfig.driver_bata || 500;
 
     const baseDistance = tripType === 'Round Trip' ? distanceKmOneWay * 2 : distanceKmOneWay;
     const localRunBuffer = tripType === 'Round Trip' && days > 1 ? (days - 1) * 40 : 20;

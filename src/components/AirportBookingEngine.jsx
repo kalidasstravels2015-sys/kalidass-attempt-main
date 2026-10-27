@@ -25,30 +25,35 @@ const AIRPORT_COMPARISON_VEHICLES = [
   { key: 'Innova Crysta', shortLabel: 'Crysta (7p)' },
 ];
 
-const estimateAirportRoadExtras = (locText, effKm, isOutstation) => {
+const estimateAirportRoadExtras = (locText, effKm, isOutstation, vehicle) => {
   if (!isOutstation) {
     return { stateName: 'Tamil Nadu', statePermitEst: 0, tollsEst: 0 };
   }
   const text = (locText || '').toLowerCase();
+  const vStr = String(vehicle || '').toLowerCase();
+  const isTempo = vStr.includes('tempo') || vStr.includes('urbania') || vStr.includes('bus') || vStr.includes('coach');
+  const isMUV = vStr.includes('innova') || vStr.includes('crysta');
+  const isSUV = vStr.includes('ertiga') || vStr.includes('xl6');
+
   let stateName = 'Tamil Nadu';
   let statePermitEst = 0;
   let tollsEst = 0;
 
   if (text.includes('tirupati') || text.includes('tirumala') || text.includes('andhra') || text.includes('kalahasti') || text.includes('nellore') || text.includes('chittoor') || text.includes('renigunta')) {
     stateName = 'Andhra Pradesh';
-    statePermitEst = 500;
+    statePermitEst = isTempo ? 2000 : isMUV ? 900 : isSUV ? 700 : 500;
     tollsEst = 220;
   } else if (text.includes('bangalore') || text.includes('bengaluru') || text.includes('karnataka') || text.includes('mysore') || text.includes('mysuru') || text.includes('hosur')) {
     stateName = 'Karnataka';
-    statePermitEst = 700;
+    statePermitEst = isTempo ? 2500 : isMUV ? 1500 : isSUV ? 1200 : 700;
     tollsEst = 250;
   } else if (text.includes('pondicherry') || text.includes('puducherry') || text.includes('auroville')) {
     stateName = 'Puducherry (UT)';
-    statePermitEst = 0;
+    statePermitEst = isTempo ? 3500 : isMUV ? 2500 : isSUV ? 1600 : 500;
     tollsEst = 130;
   } else if (text.includes('kerala') || text.includes('munnar') || text.includes('cochin') || text.includes('kochi')) {
     stateName = 'Kerala';
-    statePermitEst = 800;
+    statePermitEst = isTempo ? 3000 : isMUV ? 1800 : isSUV ? 1400 : 800;
     tollsEst = 350;
   } else {
     stateName = 'Tamil Nadu';
@@ -314,11 +319,11 @@ const calculateAirportFare = (distKm, selectedVeh, locText = '') => {
       else if (v.includes('Innova')) totalFare = matchedZone.innova || Math.round(matchedZone.sedan * 1.35);
       else if (v.includes('Tempo')) totalFare = matchedZone.tempo || Math.round(matchedZone.sedan * 2.8);
       else totalFare = matchedZone.sedan;
-      driverBata = vData.driver_bata || 400;
+      driverBata = vData.driver_bata || 500;
       kmCost = Math.max(0, totalFare - driverBata);
     } else {
       const rate = vData.one_way_rate || 16;
-      const bata = vData.driver_bata || 400;
+      const bata = vData.driver_bata || 500;
       const minDropKm = vData.min_drop_km || (selectedVeh.includes('Tempo') ? 250 : 130);
       actualKm = Math.max(50, actualKm);
       chargeableKm = Math.max(minDropKm, actualKm);
@@ -334,7 +339,7 @@ const calculateAirportFare = (distKm, selectedVeh, locText = '') => {
   }
 
   const balanceToPay = Math.max(0, totalFare - advanceToPay);
-  const extras = estimateAirportRoadExtras(locText, actualKm, isOutstation);
+  const extras = estimateAirportRoadExtras(locText, actualKm, isOutstation, selectedVeh);
 
   return {
     actual_km: actualKm,
@@ -687,10 +692,10 @@ export default function AirportBookingEngine({
       let result;
       if (overrideFare && typeof overrideFare === 'number' && overrideFare > 0) {
         const vData = vehicles[activeVeh] || vehicles['Swift Dzire'];
-        const bata = vData.driver_bata || 400;
+        const bata = vData.driver_bata || 500;
         const advanceToPay = 500;
         const kmCost = Math.max(0, overrideFare - bata);
-        const extras = estimateAirportRoadExtras(userLoc, effKm, true);
+        const extras = estimateAirportRoadExtras(userLoc, effKm, true, selectedVeh);
         result = {
           actual_km: effKm,
           chargeable_km: effKm,
@@ -948,7 +953,7 @@ export default function AirportBookingEngine({
         ref={cardRef}
         id="airport-fare-finder"
         data-testid="airport-fare-finder"
-        className="w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden font-sans"
+        className="w-full max-w-2xl mx-auto bg-white dark:bg-m3-surface-container rounded-m3-2xl shadow-m3-1 sm:shadow-m3-2 border border-m3-outline-variant overflow-hidden font-sans"
       >
         {/* 0. Card Header: "Book Your Trip" */}
         <div className="pt-3.5 sm:pt-4 pb-1 text-center px-4">
@@ -1338,9 +1343,14 @@ export default function AirportBookingEngine({
                       <div className="flex justify-between items-center py-0.5">
                         <span>State Permit:</span>
                         <span className="font-bold text-slate-900">
-                          {breakdown.is_outstation && breakdown.state_permit_est > 0
-                            ? `₹${breakdown.state_permit_est.toLocaleString('en-IN')}`
-                            : '₹0 (Included / Not applicable)'}
+                          {breakdown.is_outstation && breakdown.state_permit_est > 0 ? (
+                            <span>
+                              ~₹{breakdown.state_permit_est.toLocaleString('en-IN')}{' '}
+                              <span className="text-[11px] font-normal text-slate-500">(Approx • At actuals)</span>
+                            </span>
+                          ) : (
+                            <span className="text-emerald-700 font-semibold text-xs">₹0 (Not required - TN)</span>
+                          )}
                         </span>
                       </div>
                       <div className="flex justify-between items-center py-0.5">

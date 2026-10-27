@@ -524,156 +524,81 @@ const tripListSchema = {
   <div class="bg-m3-surface text-m3-on-surface font-sans pb-16">
     <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 pt-2 sm:pt-4">
 
-      <!-- Top Hero Section (Centered Clean Heading & Engine Focus) -->
-      <section class="mb-4 sm:mb-6">
-        <div class="text-center max-w-3xl mx-auto flex flex-col items-center justify-center mb-3 sm:mb-4">
-          <!-- Eyebrow Row: 1 Status Badge Pill & Verified Google Rating Centered -->
-          <div class="flex flex-wrap items-center justify-center gap-2 mb-2 sm:mb-2.5">
-            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-2xs">
-              <span class="w-2 h-2 rounded-full bg-m3-success animate-pulse"></span>
-              <span>24/7 MAA Airport Transfers</span>
-            </div>
-            <GoogleRatingBadge />
-          </div>
-
-          <!-- Main Display Heading Centered -->
-          <h1 data-speakable="true" class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-[1.15]">
+      <!-- Top Hero Section (M3 Adaptive: 2-Column Split on Desktop, App-First on Mobile) -->
+      <section class="mb-5 sm:mb-7">
+        <!-- Mobile ONLY Heading + Separate Google Rating Row -->
+        <div class="block lg:hidden text-center max-w-xl mx-auto mb-3">
+          <h1 data-speakable="true" class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight">
             Chennai Airport Taxi &amp; Cab Booking
           </h1>
+          <div class="mt-2 flex justify-center">
+            <GoogleRatingBadge />
+          </div>
         </div>
 
-        <!-- Dedicated Airport Booking Panel (Centered) -->
-        <div class="max-w-2xl mx-auto w-full">
-          <div id="booking-section" class="scroll-mt-28"></div>
-          <div id="fare-calculator" class="scroll-mt-28"></div>
-          <div class="w-full">
-            <AirportBookingEngine client:load showHeader={false} />
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+          
+          <!-- Left Column: Visible on Desktop (lg+) -->
+          <div class="hidden lg:flex lg:col-span-5 flex-col justify-start pt-2">
+            <!-- Desktop H1 + Separate Google Star Rating Row -->
+            <h1 data-speakable="true" class="text-3xl lg:text-4xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight mb-2.5">
+              Chennai Airport Taxi &amp; Cab Booking
+            </h1>
+            <div class="mb-3.5">
+              <GoogleRatingBadge />
+            </div>
+
+            <p data-speakable="true" class="text-sm text-m3-on-surface-variant leading-relaxed mb-4">
+              24/7 doorstep pickups and terminal drops across T1, T2 &amp; T4. Fixed zone fares: <strong>₹650 (Sedan)</strong> • <strong>₹1,150 (Ertiga)</strong> • <strong>₹1,500 (Innova Crysta)</strong>. Includes automated flight delay tracking, 60-min free arrival wait, and ₹500 advance to confirm.
+            </p>
+
+            <!-- Desktop Direct Call CTA -->
+            <div class="flex items-center gap-3">
+              <a
+                href="tel:+918939539211"
+                class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface text-sm font-semibold border border-m3-outline-variant shadow-2xs hover:shadow-xs transition-all"
+              >
+                <Phone className="w-4 h-4 text-m3-primary shrink-0" />
+                <span>Call 24/7 Helpline: +91 89395 39211</span>
+              </a>
+            </div>
           </div>
 
-            <!-- Mobile ONLY: Direct Answer Block & Trust Highlights (placed directly below airport booking engine) -->
-            <div data-hero-mobile class="block lg:hidden w-full mt-3.5">
-              <!-- Mobile DIRECT ANSWER & GOOGLE FEATURED SNIPPET BLOCK (data-speakable) -->
-              <div class="mb-3 p-3 sm:p-3.5 rounded-r-m3-xl rounded-l-xs bg-m3-surface-container-low border border-m3-outline-variant/60 border-l-4 border-l-m3-primary shadow-2xs">
-                <div class="flex items-center gap-1.5 mb-1.5">
-                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-m3-primary/10 text-m3-primary text-[10px] sm:text-xs font-bold tracking-wide uppercase">
-                    ⚡ Fixed Zone Fares &amp; Inclusions
-                  </span>
-                </div>
-                <h3 class="sr-only">
-                  What are Chennai Airport Taxi Fares &amp; Inclusions?
-                </h3>
-                <p data-speakable="true" class="text-xs sm:text-sm text-m3-on-surface leading-relaxed">
-                  Flat zone rates: <strong>₹650 (Sedan)</strong> • <strong>₹1,150 (Ertiga)</strong> • <strong>₹1,500 (Innova Crysta)</strong>. Includes toll, airport entry parking, flight delay tracking &amp; 60 mins complimentary waiting post-landing. <strong>₹500 advance to confirm</strong>.
-                </p>
-              </div>
-
-              <!-- Mobile Trust Matrix Strip -->
-              <div class="grid grid-cols-2 gap-2 text-xs">
-                <div class="px-3 py-2 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 flex items-center gap-2 shadow-2xs">
-                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
-                  <span class="font-semibold text-m3-on-surface truncate">Flight Delay Tracking</span>
-                </div>
-                <div class="px-3 py-2 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 flex items-center gap-2 shadow-2xs">
-                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
-                  <span class="font-semibold text-m3-on-surface truncate">Terminal Curbside Pickup</span>
-                </div>
-                <div class="px-3 py-2 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 flex items-center gap-2 shadow-2xs">
-                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
-                  <span class="font-semibold text-m3-on-surface truncate">Zero Surge Guarantee</span>
-                </div>
-                <div class="px-3 py-2 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 flex items-center gap-2 shadow-2xs">
-                  <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
-                  <span class="font-semibold text-m3-on-surface truncate">60-Min Free Wait Post-Touchdown</span>
-                </div>
+          <!-- Right Column: Elevated Booking Engine Card -->
+          <div class="lg:col-span-7 w-full max-w-2xl mx-auto lg:max-w-none">
+            <div id="booking-section" class="scroll-mt-28 w-full">
+              <div id="fare-calculator" class="w-full rounded-m3-2xl shadow-m3-2 border border-m3-outline-variant/60 bg-white dark:bg-m3-surface-container p-2 sm:p-3">
+                <AirportBookingEngine client:load showHeader={false} />
               </div>
             </div>
           </div>
+
         </div>
       </section>
 
-      <!-- STICKY QUICK-NAV JUMP BAR (Matching Document Flow) -->
-      <nav data-quick-nav aria-label="Airport Taxi Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-b border-m3-outline-variant/60 shadow-xs py-3 mb-8 px-4 sm:px-6 lg:px-8">
+      <!-- STICKY QUICK-NAV JUMP BAR -->
+      <nav data-quick-nav aria-label="Airport Taxi Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-b border-m3-outline-variant/60 shadow-xs py-2.5 mb-6 px-4 sm:px-6 lg:px-8">
         <div class="max-w-6xl mx-auto flex items-center gap-2 text-xs font-semibold text-m3-on-surface whitespace-nowrap overflow-x-auto no-scrollbar py-0.5 pe-6 scroll-px-4">
-          <a href="#booking-section" data-active="true" aria-current="true" class="px-3.5 py-2 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs transition-all shrink-0 hover:bg-m3-primary hover:text-white">
+          <a href="#booking-section" data-active="true" aria-current="true" class="px-3.5 py-1.5 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs transition-all shrink-0 hover:bg-m3-primary hover:text-white">
             Calculate Fare
           </a>
-          <a href="#arrival-protocol" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
-            Our Guarantees
+          <a href="#arrival-protocol" class="px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+            Terminal Guide
           </a>
-          <a href="#fleet-section" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+          <a href="#fleet-section" class="px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
             Vehicle Fleet
           </a>
-          <a href="#outstation-fares" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+          <a href="#outstation-fares" class="px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
             Outstation Fares
           </a>
-          <a href="#prepaid-taxi-comparison" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+          <a href="#prepaid-taxi-comparison" class="px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
             Prepaid Comparison
           </a>
-          <a href="#airport-faq" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+          <a href="#airport-faq" class="px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
             Airport FAQs
           </a>
         </div>
       </nav>
-
-      <!-- 1. SIGNATURE HERO BANNER (Full-width cinematic banner below quick-nav) -->
-      <section 
-        class="group relative min-h-[200px] sm:min-h-[240px] md:min-h-[260px] rounded-2xl overflow-hidden shadow-md border border-m3-outline-variant/60 bg-m3-inverse-surface flex flex-col justify-end p-5 sm:p-7 md:p-8 mb-8 transition-all duration-300" 
-        aria-label="Quick summary of Chennai Airport taxi and cab services"
-      >
-        <!-- Background Image with Scrim -->
-        <OptimizedImage
-          src="/images/services/airport-transfer.webp"
-          alt="Kalidass Travels - Chennai Airport Taxi & Transfers"
-          class="absolute inset-0 w-full h-full object-cover object-[62%_top] sm:object-[center_28%] transition-transform duration-700 group-hover:scale-105 opacity-80"
-          loading="lazy"
-          fetchpriority="auto"
-          sizes="(max-width: 768px) 100vw, 1024px"
-        />
-        <!-- High-Contrast Scrim Gradient for 100% Text Legibility -->
-        <div class="absolute inset-0 bg-gradient-to-t from-m3-inverse-surface via-m3-inverse-surface/85 to-m3-inverse-surface/50 sm:bg-gradient-to-r sm:from-m3-inverse-surface/95 sm:via-m3-inverse-surface/80 sm:to-transparent"></div>
-
-        <div class="relative z-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-          <div class="max-w-2xl">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white text-xs font-bold mb-2 backdrop-blur-md">
-              <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
-              <span>Quick Facts: Chennai Airport Taxi &amp; Cab Service (MAA)</span>
-            </div>
-            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-tight leading-tight font-heading drop-shadow-sm">
-              Official MAA Airport Meet &amp; Greet
-            </h2>
-            <p data-speakable="true" class="text-xs sm:text-sm md:text-base text-m3-inverse-on-surface mt-2 font-normal leading-relaxed max-w-2xl drop-shadow-xs pr-8 sm:pr-0">
-              Doorstep Chennai airport transfers start from <strong class="text-white font-bold">₹650 Flat</strong> for an AC Sedan across <strong class="text-white font-semibold">T1, T2 &amp; T4</strong> terminals. Enjoy <strong class="text-white font-semibold">100% Free Wait</strong> with automated live flight radar tracking. A reliable, transparent alternative to <strong class="text-white font-semibold">Chennai airport prepaid taxi</strong> with driver details sent on WhatsApp before takeoff.
-            </p>
-
-            <!-- 4 Quick Fact Badges -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3 pt-3 border-t border-white/15 text-xs">
-              <div class="bg-white/10 backdrop-blur-md rounded-xl p-2.5 border border-white/15">
-                <span class="text-white/80 block text-xs font-medium">Starting Fare</span>
-                <span class="font-bold text-white text-xs sm:text-sm">₹650 Flat</span>
-              </div>
-              <div class="bg-white/10 backdrop-blur-md rounded-xl p-2.5 border border-white/15">
-                <span class="text-white/80 block text-xs font-medium">Terminals Served</span>
-                <span class="font-bold text-white text-xs sm:text-sm">T1, T2 &amp; T4</span>
-              </div>
-              <div class="bg-white/10 backdrop-blur-md rounded-xl p-2.5 border border-white/15">
-                <span class="text-white/80 block text-xs font-medium">Flight Delays</span>
-                <span class="font-bold text-white text-xs sm:text-sm">100% Free Wait</span>
-              </div>
-              <div class="bg-white/10 backdrop-blur-md rounded-xl p-2.5 border border-white/15">
-                <span class="text-white/80 block text-xs font-medium">Driver Details</span>
-                <span class="font-bold text-white text-xs sm:text-sm">Before Take-Off</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="hidden sm:flex flex-col items-end shrink-0">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 text-xs text-white font-medium">
-              <CheckCircle2 className="w-4 h-4 text-m3-success shrink-0" />
-              Automated Flight Radar Tracking
-            </span>
-          </div>
-        </div>
-      </section>
 
       <!-- 2. OUR GUARANTEE & TERMINAL PICKUP GUIDE -->
       <div id="arrival-protocol" class="scroll-mt-28"></div>
@@ -691,9 +616,7 @@ const tripListSchema = {
               Terminal Pick Up &amp; Drop Guide (T1, T2 &amp; T4)
             </h2>
           </div>
-          <span class="text-xs font-bold text-m3-on-surface bg-m3-surface-container border border-m3-outline-variant px-3 py-1 rounded-full shrink-0">
-            T1, T2 &amp; T4 Terminals · 24/7 Operations
-          </span>
+
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
@@ -754,23 +677,6 @@ const tripListSchema = {
           </div>
         </div>
       </section>
-
-      <!-- Corporate GST Invoicing Card (Matching Outstation Cabs Page) -->
-      <div class="mb-8 p-4 sm:p-5 rounded-2xl bg-m3-surface-container-lowest border border-m3-outline-variant shadow-sm">
-        <div class="flex items-start gap-3.5">
-          <span class="w-8 h-8 rounded-xl bg-m3-surface-container text-m3-on-surface flex items-center justify-center shrink-0 border border-m3-outline-variant">
-            <Building2 className="w-5 h-5 text-m3-on-surface" />
-          </span>
-          <div>
-            <h3 class="text-sm sm:text-base font-bold text-m3-on-surface font-heading leading-tight mb-1">
-              Corporate GST Invoicing &amp; Executive Desks
-            </h3>
-            <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed">
-              Itemized GST tax invoices (GSTIN: 33COVPM0531D1Z4) for corporate travel reimbursement, monthly billing accounts, and executive airport transfers.
-            </p>
-          </div>
-        </div>
-      </div>
 
       <!-- 3. VEHICLE SPECIFICATIONS & LUGGAGE CAPACITIES (Unified Fleet) -->
       <section id="fleet-section" class="pt-6 sm:pt-8 mt-6 sm:mt-8 border-t border-m3-outline-variant mb-10 sm:mb-14 scroll-mt-28">
@@ -835,47 +741,9 @@ const tripListSchema = {
           </div>
         </div>
 
-        <!-- Transparent Calculation Rules & Guidelines -->
-        <div class="mt-6 bg-m3-surface-container-low rounded-2xl p-4 sm:p-5 border border-m3-outline-variant shadow-xs">
-          <div class="flex items-start gap-2 mb-3">
-            <Info className="w-5 h-5 text-m3-primary shrink-0 mt-0.5" />
-            <p class="text-xs text-m3-on-surface-variant leading-relaxed">
-              Fixed flat rates for both terminal pickups and doorstep drops. Dedicated luggage boot space. Tolls and official parking at actual receipts.
-            </p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div class="flex items-start gap-3 p-3 rounded-xl bg-white border border-m3-outline-variant/60 shadow-2xs">
-              <div class="w-7 h-7 rounded-lg bg-m3-primary text-white flex items-center justify-center shrink-0 font-bold text-xs">
-                01
-              </div>
-              <div>
-                <h4 class="text-xs font-bold text-m3-on-surface">100% Fixed Flat Fares</h4>
-                <p class="text-xs text-m3-on-surface-variant mt-0.5 leading-relaxed">Transparent rates from ₹650. Zero midnight, rain, or rush-hour surge pricing.</p>
-              </div>
-            </div>
-
-            <div class="flex items-start gap-3 p-3 rounded-xl bg-white border border-m3-outline-variant/60 shadow-2xs">
-              <div class="w-7 h-7 rounded-lg bg-m3-success-container text-m3-on-success-container flex items-center justify-center shrink-0 font-bold text-xs">
-                02
-              </div>
-              <div>
-                <h4 class="text-xs font-bold text-m3-on-surface">100% Free Delay Waiting</h4>
-                <p class="text-xs text-m3-on-surface-variant mt-0.5 leading-relaxed">Automated live flight radar tracking. No waiting penalties if flights are delayed.</p>
-              </div>
-            </div>
-
-            <div class="flex items-start gap-3 p-3 rounded-xl bg-white border border-m3-outline-variant/60 shadow-2xs">
-              <div class="w-7 h-7 rounded-lg bg-m3-surface-container-high text-m3-primary flex items-center justify-center shrink-0 font-bold text-xs">
-                03
-              </div>
-              <div>
-                <h4 class="text-xs font-bold text-m3-on-surface">Dedicated Luggage Boot</h4>
-                <p class="text-xs text-m3-on-surface-variant mt-0.5 leading-relaxed">Clean commercial yellow-board vehicles with ample boot capacity and driver assistance.</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <p class="mt-4 text-xs text-m3-on-surface-variant text-center">
+          Fixed flat rates for terminal pickups and doorstep drops • Free flight delay waiting • Tolls &amp; airport parking at actual receipts • GST invoices available.
+        </p>
 
         <!-- SEO/AEO: Visually-hidden fare summary for Google mobile-first index -->
         <div class="sr-only" aria-label="Chennai Airport taxi fare summary" data-speakable="true">

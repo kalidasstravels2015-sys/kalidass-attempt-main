@@ -446,135 +446,81 @@ const faqSchema = {
   <div class="bg-m3-surface text-m3-on-surface font-sans pb-16">
     <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 pt-2 sm:pt-4">
 
-      <!-- Top Hero Section (Centered Clean Heading & Engine Focus) -->
-      <section class="mb-4 sm:mb-6">
-        <div class="text-center max-w-3xl mx-auto flex flex-col items-center justify-center mb-3 sm:mb-4">
-          <!-- Eyebrow Row: 1 Fleet Dispatch Status Badge Pill & Verified Google Rating Centered -->
-          <div class="flex flex-wrap items-center justify-center gap-2 mb-2 sm:mb-2.5">
-            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-2xs">
-              <span class="w-1.5 h-1.5 rounded-full bg-m3-success animate-pulse"></span>
-              <span>24/7 Dispatch • Flat ₹14/km</span>
-            </div>
-            <GoogleRatingBadge />
-          </div>
-
-          <!-- Main Display Heading Centered -->
-          <h1 data-speakable="true" class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-[1.15]">
+      <!-- Top Hero Section (M3 Adaptive: 2-Column Split on Desktop, App-First on Mobile) -->
+      <section class="mb-5 sm:mb-7">
+        <!-- Mobile ONLY Heading + Separate Google Rating Row -->
+        <div class="block lg:hidden text-center max-w-xl mx-auto mb-3">
+          <h1 data-speakable="true" class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight">
             Chennai Outstation Cabs &amp; Intercity Taxi
           </h1>
+          <div class="mt-2 flex justify-center">
+            <GoogleRatingBadge />
+          </div>
         </div>
 
-        <!-- Dedicated Outstation Quotation Engine (Centered) -->
-        <div class="max-w-2xl mx-auto w-full">
-          <div id="fare-calculator" class="scroll-mt-28"></div>
-          <div class="w-full">
-            <QuotationEngine 
-              client:load 
-              showAirportTab={false} 
-              variant="card" 
-              showHeader={false}
-            />
-          </div>
-
-          <!-- Direct Answer Block & Trust Highlights below quotation engine -->
-          <div data-hero-mobile class="w-full mt-3.5">
-            <!-- DIRECT ANSWER & GOOGLE FEATURED SNIPPET BLOCK (data-speakable) -->
-            <div class="mb-3 p-3 sm:p-3.5 rounded-r-m3-xl rounded-l-xs bg-m3-surface-container-low border border-m3-outline-variant/60 border-l-4 border-l-m3-primary shadow-2xs">
-              <div class="flex items-center gap-1.5 mb-1.5">
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-m3-primary/10 text-m3-primary text-[10px] sm:text-xs font-bold tracking-wide uppercase">
-                  ⚡ Intercity Rates &amp; Inclusions
-                </span>
-              </div>
-              <h3 class="sr-only">
-                What are Chennai Outstation Cab Rates &amp; Inclusions?
-              </h3>
-              <p data-speakable="true" class="text-xs sm:text-sm text-m3-on-surface leading-relaxed">
-                Round-trip base rates: <strong>₹14/km (Sedan)</strong> • <strong>₹17/km (Ertiga)</strong> • <strong>₹20/km (Innova)</strong> • <strong>₹22/km (Crysta)</strong> • <strong>₹26/km (Tempo)</strong>. Covers vehicle, fuel, clean AC &amp; doorstep pickup. FASTag tolls &amp; driver bata at actuals. <strong>₹500 advance to confirm</strong>.
-              </p>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+          
+          <!-- Left Column: Visible on Desktop (lg+) -->
+          <div class="hidden lg:flex lg:col-span-5 flex-col justify-start pt-2">
+            <!-- Desktop H1 + Separate Google Star Rating Row -->
+            <h1 data-speakable="true" class="text-3xl lg:text-4xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight mb-2.5">
+              Chennai Outstation Cabs &amp; Intercity Taxi
+            </h1>
+            <div class="mb-3.5">
+              <GoogleRatingBadge />
             </div>
 
-            <!-- Trust Matrix Strip -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-              <div class="px-3 py-2 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 flex items-center gap-2 shadow-2xs">
-                <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
-                <span class="font-semibold text-m3-on-surface truncate">Zero Surge Pricing</span>
-              </div>
-              <div class="px-3 py-2 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 flex items-center gap-2 shadow-2xs">
-                <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
-                <span class="font-semibold text-m3-on-surface truncate">Police Verified Chauffeurs</span>
-              </div>
-              <div class="px-3 py-2 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 flex items-center gap-2 shadow-2xs">
-                <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
-                <span class="font-semibold text-m3-on-surface truncate">Pay After Trip</span>
-              </div>
-              <div class="px-3 py-2 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant/60 flex items-center gap-2 shadow-2xs">
-                <span class="w-1.5 h-1.5 rounded-full bg-m3-primary shrink-0"></span>
-                <span class="font-semibold text-m3-on-surface truncate">Commercial Yellow Board</span>
-              </div>
+            <p data-speakable="true" class="text-sm text-m3-on-surface-variant leading-relaxed mb-4">
+              Doorstep outstation cabs across South India. Round-trip rates: <strong>₹14/km (Sedan)</strong> • <strong>₹17/km (Ertiga)</strong> • <strong>₹20/km (Innova)</strong> • <strong>₹22/km (Crysta)</strong>. Fuel &amp; AC included, FASTag tolls at actuals, and ₹500 advance to confirm.
+            </p>
+
+            <!-- Desktop Direct Call CTA -->
+            <div class="flex items-center gap-3">
+              <a
+                href="tel:+918939539211"
+                class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface text-sm font-semibold border border-m3-outline-variant shadow-2xs hover:shadow-xs transition-all"
+              >
+                <Phone className="w-4 h-4 text-m3-primary shrink-0" />
+                <span>Call 24/7 Helpline: +91 89395 39211</span>
+              </a>
             </div>
           </div>
+
+          <!-- Right Column: Elevated Booking Engine Card -->
+          <div class="lg:col-span-7 w-full max-w-2xl mx-auto lg:max-w-none">
+            <div id="fare-calculator" class="scroll-mt-28 w-full rounded-m3-2xl shadow-m3-2 border border-m3-outline-variant/60 bg-white dark:bg-m3-surface-container p-2 sm:p-3">
+              <QuotationEngine 
+                client:load 
+                showAirportTab={false} 
+                variant="card" 
+                showHeader={false}
+              />
+            </div>
+          </div>
+
         </div>
       </section>
 
-      <!-- STICKY QUICK-NAV JUMP BAR (Matching Document Flow) -->
-      <nav data-quick-nav aria-label="Outstation Cabs Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-b border-m3-outline-variant/60 shadow-xs py-3 mb-8 px-4 sm:px-6 lg:px-8">
+      <!-- STICKY QUICK-NAV JUMP BAR -->
+      <nav data-quick-nav aria-label="Outstation Cabs Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-b border-m3-outline-variant/60 shadow-xs py-2.5 mb-6 px-4 sm:px-6 lg:px-8">
         <div class="max-w-6xl mx-auto flex items-center gap-2 text-xs font-semibold text-m3-on-surface whitespace-nowrap overflow-x-auto no-scrollbar py-0.5 pe-6 scroll-px-4">
-          <a href="#fare-calculator" data-active="true" aria-current="true" class="px-3.5 py-2 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs transition-all shrink-0 hover:bg-m3-primary hover:text-white">
+          <a href="#fare-calculator" data-active="true" aria-current="true" class="px-3.5 py-1.5 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs transition-all shrink-0 hover:bg-m3-primary hover:text-white">
             Calculate Fare
           </a>
-          <a href="#commitments" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+          <a href="#commitments" class="px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
             Our Guarantees
           </a>
-          <a href="#fleet-section" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+          <a href="#fleet-section" class="px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
             Vehicle Fleet
           </a>
-          <a href="#popular-routes" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+          <a href="#popular-routes" class="px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
             Top Routes
           </a>
-          <a href="#safety-benchmark" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
-            Highway Safety
-          </a>
-          <a href="#faqs" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+          <a href="#faqs" class="px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
             Outstation FAQs
           </a>
         </div>
       </nav>
-
-      <!-- 1. SIGNATURE HERO BANNER (Full-width cinematic banner below quick-nav) -->
-      <section class="group relative min-h-[200px] sm:min-h-[240px] md:min-h-[260px] rounded-2xl overflow-hidden shadow-md border border-m3-outline-variant/60 bg-m3-inverse-surface flex flex-col justify-end p-5 sm:p-7 md:p-8 mb-8 transition-all duration-300">
-        <!-- Background Image with Scrim -->
-        <OptimizedImage
-          src="/images/temple/mahabalipuram-ecr-temples.webp"
-          alt="Kalidass Travels - Chennai Outstation Cabs & Taxi Service"
-          class="absolute inset-0 w-full h-full object-cover object-[center_35%] transition-transform duration-700 group-hover:scale-105 opacity-80"
-          loading="lazy"
-          fetchpriority="auto"
-          sizes="(max-width: 768px) 100vw, 1024px"
-        />
-        <!-- High-Contrast Scrim Gradient for 100% Text Legibility -->
-        <div class="absolute inset-0 bg-gradient-to-t from-m3-inverse-surface via-m3-inverse-surface/75 to-m3-inverse-surface/40 sm:bg-gradient-to-r sm:from-m3-inverse-surface/95 sm:via-m3-inverse-surface/70 sm:to-transparent"></div>
-
-        <div class="relative z-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-          <div class="max-w-2xl">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white text-xs font-bold mb-2 backdrop-blur-md">
-              <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
-              <span>24/7 Verified Highway Chauffeur Service</span>
-            </div>
-            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-tight leading-tight font-heading drop-shadow-sm">
-              South India Intercity Highway Taxi &amp; Drops
-            </h2>
-            <p class="text-xs sm:text-sm md:text-base text-m3-inverse-on-surface mt-2 font-normal leading-relaxed max-w-2xl drop-shadow-xs pr-8 sm:pr-0">
-              Planning an outstation holiday, business trip, or family pilgrimage? Advance ₹500 to reserve your private cab and driver. Settle the balance only after safe return. Verified chauffeurs, honest odometer readings, and zero surge pricing.
-            </p>
-          </div>
-          <div class="hidden sm:flex flex-col items-end shrink-0">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 text-xs text-white font-medium">
-              <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-              Strict 80–90 km/h Highway Limit • 24/7 Support
-            </span>
-          </div>
-        </div>
-      </section>
 
       <!-- 2. OUTSTATION COMMITMENTS & GUARANTEES CARD (Matching Airport 5 Guarantees) -->
       <section 
@@ -596,9 +542,7 @@ const faqSchema = {
             </h3>
           </div>
 
-          <span class="text-xs font-bold text-m3-on-surface bg-m3-surface-container border border-m3-outline-variant px-3 py-1 rounded-full shrink-0">
-            Highway Protocol
-          </span>
+
         </div>
 
         <!-- 5 Commitments Grid -->
@@ -680,25 +624,6 @@ const faqSchema = {
         </div>
       </section>
 
-      <!-- Corporate GST Invoicing Card (Matching Airport Taxi Page) -->
-      <div class="mb-8 p-4 sm:p-5 rounded-2xl bg-m3-surface-container-lowest border border-m3-outline-variant shadow-sm">
-        <div class="flex items-start gap-3.5">
-          <span class="w-8 h-8 rounded-xl bg-m3-surface-container text-m3-on-surface flex items-center justify-center shrink-0 border border-m3-outline-variant">
-            <Building2 className="w-4 h-4 text-m3-on-surface" />
-          </span>
-          <div>
-            <h3 class="text-sm sm:text-base font-bold text-m3-on-surface font-heading leading-tight mb-1">
-              Corporate GST Invoicing &amp; Executive Desks
-            </h3>
-            <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed">
-              Itemized GST tax invoices (GSTIN: 33COVPM0531D1Z4) for corporate expense claims, monthly billing accounts, and executive outstation business trips.
-            </p>
-          </div>
-        </div>
-      </div>
-
-
-
       <!-- 3. VEHICLE SPECIFICATIONS & LUGGAGE CAPACITIES (Unified Fleet & Per-KM Tariff) -->
       <section id="fleet-section" class="pt-6 sm:pt-8 mt-6 sm:mt-8 border-t border-m3-outline-variant mb-10 sm:mb-14 scroll-mt-28">
         <span id="per-km-table" class="scroll-mt-28"></span>
@@ -770,47 +695,9 @@ const faqSchema = {
           </div>
         </div>
 
-        <!-- Transparent Calculation Rules & Guidelines -->
-        <div class="mt-6 bg-m3-surface-container-low rounded-2xl p-5 sm:p-6 border border-m3-outline-variant shadow-xs">
-          <div class="flex items-start gap-2.5 mb-4">
-            <Info className="w-5 h-5 text-[#1a73e8] shrink-0 mt-0.5" />
-            <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed">
-              Standard minimum 250 km/day (300 km for Tempo). Garage-to-garage distance. Fuel &amp; dual-AC included. FASTag highway tolls and interstate permits at actuals.
-            </p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-            <div class="flex items-start gap-3 p-3.5 rounded-xl bg-white border border-m3-outline-variant/60 shadow-2xs">
-              <div class="w-8 h-8 rounded-lg bg-m3-primary text-white flex items-center justify-center shrink-0 font-bold text-xs">
-                01
-              </div>
-              <div>
-                <h4 class="text-xs sm:text-sm font-bold text-m3-on-surface">Standard 250 km / Day</h4>
-                <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Round trips follow 250 km/day (300 km for Tempo). Billed garage-to-garage from Chennai.</p>
-              </div>
-            </div>
-
-            <div class="flex items-start gap-3 p-3.5 rounded-xl bg-white border border-m3-outline-variant/60 shadow-2xs">
-              <div class="w-8 h-8 rounded-lg bg-m3-success-container text-m3-on-success-container flex items-center justify-center shrink-0 font-bold text-xs">
-                02
-              </div>
-              <div>
-                <h4 class="text-xs sm:text-sm font-bold text-m3-on-surface">Fixed One-Way Drops</h4>
-                <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">One-way drops to <a href="/services/chennai-to-bangalore-taxi/" class="text-m3-primary font-bold hover:underline">Bangalore</a>, <a href="/services/pondicherry-one-day-trip/" class="text-m3-primary font-bold hover:underline">Pondicherry</a>, or <a href="/services/tirupati-package/" class="text-m3-primary font-bold hover:underline">Tirupati</a> with zero return charges.</p>
-              </div>
-            </div>
-
-            <div class="flex items-start gap-3 p-3.5 rounded-xl bg-white border border-m3-outline-variant/60 shadow-2xs">
-              <div class="w-8 h-8 rounded-lg bg-m3-surface-container-high text-m3-primary flex items-center justify-center shrink-0 font-bold text-xs">
-                03
-              </div>
-              <div>
-                <h4 class="text-xs sm:text-sm font-bold text-m3-on-surface">Tolls &amp; Permits at Actuals</h4>
-                <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Fuel and AC 100% included in quotes. FASTag highway tolls and interstate permits at actual receipts.</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <p class="mt-4 text-xs text-m3-on-surface-variant text-center">
+          Standard minimum 250 km/day (300 km for Tempo) • Garage-to-garage distance • Fuel &amp; AC included • FASTag highway tolls &amp; permits at actuals.
+        </p>
 
         <!-- SEO/AEO: Visually-hidden fare summary for Google mobile-first index -->
         <div class="sr-only" aria-label="Chennai Outstation taxi fare summary" data-speakable="true">
@@ -1009,52 +896,6 @@ const faqSchema = {
             >
               All Temple Tours &rarr;
             </a>
-          </div>
-        </div>
-      </section>
-
-      <!-- 6. HIGHWAY SAFETY STANDARDS (4-Pillar Grid) -->
-      <section id="safety-benchmark" class="pt-8 sm:pt-12 mt-8 sm:mt-12 border-t border-m3-outline-variant my-12 sm:my-16 lg:my-20 scroll-mt-28">
-        <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
-          <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-m3-on-surface font-heading tracking-tight">
-            Our Standards for Safe Highway Trips
-          </h2>
-          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-2 leading-relaxed">
-            Built for peace of mind, family safety, and relaxed long-distance travel.
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5">
-          <div class="bg-white p-5 rounded-2xl border border-m3-outline-variant/60 shadow-2xs hover:shadow-ambient transition-all">
-            <div class="w-10 h-10 rounded-xl bg-m3-primary/10 text-m3-primary flex items-center justify-center mb-3">
-              <svg class="w-5 h-5 text-m3-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-            </div>
-            <h3 class="text-sm font-bold text-m3-on-surface font-heading">Honest Distance Meter</h3>
-            <p class="text-xs text-m3-on-surface-variant mt-1.5 leading-relaxed">Exact odometer start &amp; end readings shared via WhatsApp.</p>
-          </div>
-
-          <div class="bg-white p-5 rounded-2xl border border-m3-outline-variant/60 shadow-2xs hover:shadow-ambient transition-all">
-            <div class="w-10 h-10 rounded-xl bg-m3-primary/10 text-m3-primary flex items-center justify-center mb-3">
-              <svg class="w-5 h-5 text-m3-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            </div>
-            <h3 class="text-sm font-bold text-m3-on-surface font-heading">Chilled AC Guaranteed</h3>
-            <p class="text-xs text-m3-on-surface-variant mt-1.5 leading-relaxed">100% air-conditioned comfort across plains, highways, and Ghats.</p>
-          </div>
-
-          <div class="bg-white p-5 rounded-2xl border border-m3-outline-variant/60 shadow-2xs hover:shadow-ambient transition-all">
-            <div class="w-10 h-10 rounded-xl bg-m3-primary/10 text-m3-primary flex items-center justify-center mb-3">
-              <svg class="w-5 h-5 text-m3-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-            </div>
-            <h3 class="text-sm font-bold text-m3-on-surface font-heading">Highway Specialists</h3>
-            <p class="text-xs text-m3-on-surface-variant mt-1.5 leading-relaxed">Experienced chauffeurs with strict 80–90 km/h cruising discipline.</p>
-          </div>
-
-          <div class="bg-white p-5 rounded-2xl border border-m3-outline-variant/60 shadow-2xs hover:shadow-ambient transition-all">
-            <div class="w-10 h-10 rounded-xl bg-m3-primary/10 text-m3-primary flex items-center justify-center mb-3">
-              <svg class="w-5 h-5 text-m3-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            </div>
-            <h3 class="text-sm font-bold text-m3-on-surface font-heading">Nominal ₹500 Advance</h3>
-            <p class="text-xs text-m3-on-surface-variant mt-1.5 leading-relaxed">Lock designated car and driver with ₹500 advance. Pay balance post-trip.</p>
           </div>
         </div>
       </section>

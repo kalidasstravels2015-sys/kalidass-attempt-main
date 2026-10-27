@@ -209,32 +209,37 @@ const findKnownDistance = (origin, destination) => {
   return null;
 };
 
-const estimateRoadExtras = (pickup, drop, distanceKm, days, isRoundTrip) => {
+const estimateRoadExtras = (pickup, drop, distanceKm, days, isRoundTrip, vehicle) => {
   const p = (pickup || '').toLowerCase();
   const d = (drop || '').toLowerCase();
   const text = `${p} ${d}`;
   const totalKm = isRoundTrip ? (distanceKm || 0) * 2 : (distanceKm || 0);
   const nights = isRoundTrip ? Math.max(0, (days || 1) - 1) : 0;
   
+  const vStr = String(vehicle || '').toLowerCase();
+  const isTempo = vStr.includes('tempo') || vStr.includes('urbania') || vStr.includes('bus') || vStr.includes('coach');
+  const isMUV = vStr.includes('innova') || vStr.includes('crysta');
+  const isSUV = vStr.includes('ertiga') || vStr.includes('xl6');
+
   let stateName = 'Tamil Nadu';
   let statePermitEst = 0;
   let tollsEst = 0;
 
   if (text.includes('tirupati') || text.includes('tirumala') || text.includes('andhra') || text.includes('kalahasti') || text.includes('nellore') || text.includes('vijayawada') || text.includes('chittoor') || text.includes('renigunta')) {
     stateName = 'Andhra Pradesh';
-    statePermitEst = 500;
+    statePermitEst = isTempo ? 2000 : isMUV ? 900 : isSUV ? 700 : 500;
     tollsEst = isRoundTrip ? 400 : 220;
   } else if (text.includes('bangalore') || text.includes('bengaluru') || text.includes('karnataka') || text.includes('mysore') || text.includes('mysuru') || text.includes('hosur')) {
     stateName = 'Karnataka';
-    statePermitEst = 700;
+    statePermitEst = isTempo ? 2500 : isMUV ? 1500 : isSUV ? 1200 : 700;
     tollsEst = isRoundTrip ? 450 : 250;
   } else if (text.includes('pondicherry') || text.includes('puducherry') || text.includes('auroville')) {
     stateName = 'Puducherry (UT)';
-    statePermitEst = 0;
+    statePermitEst = isTempo ? 3500 : isMUV ? 2500 : isSUV ? 1600 : 500;
     tollsEst = isRoundTrip ? 250 : 130;
   } else if (text.includes('kerala') || text.includes('munnar') || text.includes('cochin') || text.includes('kochi') || text.includes('sabarimala') || text.includes('wayanad')) {
     stateName = 'Kerala';
-    statePermitEst = 800;
+    statePermitEst = isTempo ? 3000 : isMUV ? 1800 : isSUV ? 1400 : 800;
     tollsEst = isRoundTrip ? 650 : 350;
   } else {
     stateName = 'Tamil Nadu';
@@ -513,7 +518,7 @@ export default function OutstationQuotationModal() {
       const kmCost = chargeableKm * rate;
       totalCost = kmCost + bataTotal;
 
-      const extras = estimateRoadExtras(pickup, drop, effDistance, days, true);
+      const extras = estimateRoadExtras(pickup, drop, effDistance, days, true, vehicle.key || vehicle.name);
 
       bObj = {
         base_km: minKm,
@@ -538,7 +543,7 @@ export default function OutstationQuotationModal() {
       const chargeableKm = Math.max(minDropKm, effDistance);
       const kmCost = chargeableKm * rate;
       totalCost = kmCost + bata;
-      const extras = estimateRoadExtras(pickup, drop, effDistance, 1, false);
+      const extras = estimateRoadExtras(pickup, drop, effDistance, 1, false, vehicle.key || vehicle.name);
 
       bObj = {
         base_km: minDropKm,
@@ -1414,7 +1419,14 @@ Please save my quote & confirm live cab availability.` + omMapsBlock;
                         <div className="flex justify-between items-center py-0.5">
                           <span>State Permit:</span>
                           <span className="font-bold text-m3-on-surface">
-                            {breakdown?.state_permit_est > 0 ? `₹${breakdown.state_permit_est.toLocaleString('en-IN')}` : '₹0'}
+                            {breakdown?.state_permit_est > 0 ? (
+                              <span>
+                                ~₹{breakdown.state_permit_est.toLocaleString('en-IN')}{' '}
+                                <span className="text-[11px] font-normal text-m3-on-surface-variant">(Approx • At actuals)</span>
+                              </span>
+                            ) : (
+                              <span className="text-emerald-700 font-semibold text-xs">₹0 (Not required - TN)</span>
+                            )}
                           </span>
                         </div>
                         <div className="flex justify-between items-center py-0.5">
