@@ -160,6 +160,10 @@ export const GET: APIRoute = async ({ request, url }) => {
           const exists = bookings.some(b => b.bookingId.toLowerCase() === bId.toLowerCase());
           if (!exists) {
             const slip = dutySlipsMap.get(bId.toLowerCase()) || null;
+            const kycRaw = row[6] || 'Pending';
+            const advMatch = kycRaw.match(/(\d+)/);
+            const parsedAdv = advMatch ? parseInt(advMatch[1], 10) : (kycRaw.includes('Advance Paid') ? 500 : 0);
+            const termFare = parseInt(row[10] || '0', 10) || 0;
             bookings.push({
               bookingId: bId,
               guestNamePhone: row[1] || '',
@@ -167,15 +171,18 @@ export const GET: APIRoute = async ({ request, url }) => {
               pickupAddress: row[3] || '',
               vehicleCategory: row[4] || 'Sedan',
               partySize: row[5] || '4 Seats',
-              kycStatus: row[6] || 'Pending',
+              kycStatus: kycRaw,
               darshanStatus: row[7] || 'Unassigned',
               assignedChauffeur: row[8] || 'Unassigned',
               manifestStatus: manifestStatus,
-              terminalFare: parseInt(row[10] || '0', 10) || 0,
+              terminalFare: termFare,
               chauffeurPayout: parseInt(row[11] || '0', 10) || 0,
-              companyMargin: parseInt(row[12] || '0', 10) || ((parseInt(row[10] || '0', 10) || 0) - (parseInt(row[11] || '0', 10) || 0)),
+              companyMargin: parseInt(row[12] || '0', 10) || (termFare - (parseInt(row[11] || '0', 10) || 0)),
+              advancePaid: parsedAdv,
+              balanceDue: Math.max(0, termFare - parsedAdv),
               financialClosure: row[13] || 'Unreconciled',
               reviewStatus: row[14] || 'Pending',
+              notes: row[15] || '',
               dutySlip: slip
             });
           }
@@ -291,14 +298,20 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    // If updating an existing booking
-    if (data.action === 'update' && data.bookingId) {
+    // If updating an existing booking (or if bookingId already exists in CSV)
+    const existingRowIndex = bookingId
+      ? lines.findIndex((line, idx) => idx > 0 && (parseCsvLine(line)[0] || '').trim().toLowerCase() === bookingId.toLowerCase())
+      : -1;
+
+    if ((data.action === 'update' && data.bookingId) || existingRowIndex !== -1) {
       let updated = false;
       const newLines = lines.map((line, idx) => {
         if (idx === 0) return line;
         const row = parseCsvLine(line);
-        if (row[0] === data.bookingId) {
+        if ((row[0] || '').trim().toLowerCase() === bookingId.toLowerCase()) {
           updated = true;
+          const advVal = data.advancePaid !== undefined ? Number(data.advancePaid) : undefined;
+          const kycVal = advVal !== undefined ? (advVal > 0 ? `Advance Paid: ₹${advVal}` : 'Advance Pending') : (data.kycStatus !== undefined ? data.kycStatus : row[6]);
           const updatedRow = [
             row[0], // Booking ID
             data.guestNamePhone !== undefined ? data.guestNamePhone : row[1],
@@ -306,7 +319,7 @@ export const POST: APIRoute = async ({ request }) => {
             data.pickupAddress !== undefined ? data.pickupAddress : row[3],
             data.vehicleCategory !== undefined ? data.vehicleCategory : row[4],
             data.partySize !== undefined ? data.partySize : row[5],
-            data.kycStatus !== undefined ? data.kycStatus : row[6],
+            kycVal,
             data.darshanStatus !== undefined ? data.darshanStatus : row[7],
             data.assignedChauffeur !== undefined ? data.assignedChauffeur : row[8],
             data.manifestStatus !== undefined ? data.manifestStatus : row[9],
@@ -314,7 +327,8 @@ export const POST: APIRoute = async ({ request }) => {
             data.chauffeurPayout !== undefined ? data.chauffeurPayout : row[11],
             data.companyMargin !== undefined ? data.companyMargin : row[12],
             data.financialClosure !== undefined ? data.financialClosure : row[13],
-            data.reviewStatus !== undefined ? data.reviewStatus : (row[14] || 'Pending')
+            data.reviewStatus !== undefined ? data.reviewStatus : (row[14] || 'Pending'),
+            data.notes !== undefined ? data.notes : (row[15] || '')
           ];
           return updatedRow.map(escapeCsvCell).join(',');
         }
@@ -340,14 +354,14 @@ export const POST: APIRoute = async ({ request }) => {
           } catch (_) {}
         }
 
-        return new Response(JSON.stringify({ success: true, bookingId: data.bookingId, action: 'updated' }), {
+        return new Response(JSON.stringify({ success: true, bookingId: data.bookingId || bookingId, action: 'updated' }), {
           status: 200,
           headers: { 'Content-Type': 'application/json; charset=utf-8' }
         });
       }
     }
 
-    // Creating new booking (strictly requires valid booking contact or route)
+    // Creating new booking
     if (!data.guestNamePhone && !data.name && !data.phone && !data.pickupAddress && !data.pickup && action !== 'create') {
       return new Response(JSON.stringify({ success: false, error: 'No booking data provided', action, bookingId, url: targetUrl.toString() }), {
         status: 400,
@@ -355,25 +369,27 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    const rowNum = lines.length + 1;
-    const finalBookingId = bookingId || `#KT-BOOK-${100 + rowNum}`;
-    const guestNamePhone = data.guestNamePhone || `${data.name || 'Guest'} (+91 ${data.phone || '9840100000'})`;
-    const travelDateTime = data.travelDateTime || `${data.pickupDate || 'Today'} @ ${data.pickupTime || '04:30 AM'}`;
+    const rowNum = lines.length;
+    const finalBookingId = bookingId || `#KT-BK-${100 + rowNum}`;
+    const guestNamePhone = data.guestNamePhone || `${data.name || 'Customer'} (+91 ${data.phone || ''})`;
+    const travelDateTime = data.travelDateTime || `${data.pickupDate || 'Today'} @ ${data.pickupTime || '06:00 AM'}`;
     const pickupAddress = data.pickupAddress || data.pickup || 'Chennai';
     const vehicleCategory = data.vehicleCategory || data.vehicle || 'Sedan';
     const partySize = data.partySize || data.passengers || '4 Seats';
-    const kycStatus = data.kycStatus || 'Pending';
-    const darshanStatus = data.darshanStatus || 'Unassigned';
+    const advPaid = parseInt(String(data.advancePaid ?? data.advance ?? '500').replace(/[^0-9]/g, ''), 10) || 0;
+    const kycStatus = advPaid > 0 ? `Advance Paid: ₹${advPaid}` : (data.kycStatus || 'Advance Pending');
+    const darshanStatus = data.darshanStatus || data.tripType || 'Round Trip';
     const assignedChauffeur = data.assignedChauffeur || 'Unassigned';
-    const manifestStatus = data.manifestStatus || 'Pending';
-    const terminalFare = parseInt(String(data.terminalFare || data.fare || '650').replace(/[^0-9]/g, ''), 10) || 650;
-    const chauffeurPayout = parseInt(String(data.chauffeurPayout || Math.round(terminalFare * 0.8)).replace(/[^0-9]/g, ''), 10) || Math.round(terminalFare * 0.8);
+    const manifestStatus = data.manifestStatus || 'Need Driver';
+    const terminalFare = parseInt(String(data.terminalFare ?? data.fare ?? '0').replace(/[^0-9]/g, ''), 10) || 0;
+    const chauffeurPayout = parseInt(String(data.chauffeurPayout ?? Math.round(terminalFare * 0.82)).replace(/[^0-9]/g, ''), 10) || Math.round(terminalFare * 0.82);
     const companyMargin = terminalFare - chauffeurPayout;
     const financialClosure = data.financialClosure || 'Unreconciled';
     const reviewStatus = data.reviewStatus || 'Pending';
+    const notes = data.notes || '';
 
     const newRow = [
-      bookingId,
+      finalBookingId,
       guestNamePhone,
       travelDateTime,
       pickupAddress,
@@ -387,7 +403,8 @@ export const POST: APIRoute = async ({ request }) => {
       chauffeurPayout,
       companyMargin,
       financialClosure,
-      reviewStatus
+      reviewStatus,
+      notes
     ].map(escapeCsvCell).join(',');
 
     fs.appendFileSync(csvPath, newRow + '\n', 'utf8');
@@ -401,7 +418,7 @@ export const POST: APIRoute = async ({ request }) => {
           headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify({
             type: 'admin_booking_sync',
-            bookingId,
+            bookingId: finalBookingId,
             date: new Date().toLocaleString('en-IN'),
             name: guestNamePhone,
             phone: guestNamePhone,
@@ -411,13 +428,15 @@ export const POST: APIRoute = async ({ request }) => {
             vehicle: vehicleCategory,
             passengers: partySize,
             estimate: terminalFare,
-            travelDate: travelDateTime
+            advancePaid: advPaid,
+            travelDate: travelDateTime,
+            notes
           })
         }).catch(() => {});
       } catch (_) {}
     }
 
-    return new Response(JSON.stringify({ success: true, bookingId, action: 'created' }), {
+    return new Response(JSON.stringify({ success: true, bookingId: finalBookingId, action: 'created' }), {
       status: 200,
       headers: { 'Content-Type': 'application/json; charset=utf-8' }
     });

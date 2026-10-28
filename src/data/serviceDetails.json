@@ -3354,5 +3354,140 @@
     "serviceType": "TaxiService",
     "origin": "Chennai",
     "destination": "Bangalore"
+  },
+  {
+    "slug": "tiruchendur-temple-tour",
+    "category": "Temple Tours",
+    "title": "Chennai to Tiruchendur Murugan Temple Cab Package (2, 3 or 4 Days)",
+    "duration": "2, 3 or 4 Days (Seashore Temple, Kulasekarapattinam & Nava Tirupathi)",
+    "overview": "2, 3 or 4 Days Chennai to Tiruchendur Subramania Swamy Temple round-trip car rental with Satvik chauffeur. Flat rates: ₹19,500 (2 Days Express), ₹23,000 (3 Days Senior-Friendly Pace with Nava Tirupathi or Madurai), and ₹26,500 (4 Days Complete Southern Circuit) for AC Sedan. Zero-climb seashore temple layout with 60+ Senior Citizen Aadhaar queue drop, Nazhikinaru holy well & Valli Cave guidance, Kulasekarapattinam Mutharamman & Vanathirupathi included (highway FASTag tolls payable at actuals).",
+    "routePlan": [
+      {
+        "stop": "Day 1 (04:30 AM) — Chennai Doorstep Pickup",
+        "desc": "Punctual early morning pickup anywhere in Chennai by a polite, non-smoking Satvik chauffeur."
+      },
+      {
+        "stop": "NH 38 Senior-Friendly Bio-Breaks (Every 2.5 Hrs)",
+        "desc": "Planned comfort halts at Ulundurpet, Samayapuram (Trichy), Melur (Madurai), and Kovilpatti for clean Western restrooms, hot idli breakfast, and timely BP/diabetes medication."
+      },
+      {
+        "stop": "Day 1 Evening — Tiruchendur Arrival & Sayaraksha Darshan",
+        "desc": "Check in to your hotel/cottage and attend peaceful evening Sayaraksha or Palliyarai Pooja at the flat seashore temple complex (zero mountain climbing)."
+      },
+      {
+        "stop": "Day 2 (05:00 AM) — Nazhikinaru, Viswaroopa Darshan & Panchalinga",
+        "desc": "Drop right near Shanmuga Vilasa Mandapam & Nazhikinaru sacred spring. Assist seniors with 60+ Aadhaar Darshan queue, Subramania Swamy Moolavar, 5 Panchalinga shrines, and Valli Cave (Valli Guhai)."
+      },
+      {
+        "stop": "Kulasekarapattinam Mutharamman Temple (14 km)",
+        "desc": "Short 20-minute coastal drive south to the revered 300-year-old Arulmigu Mutharamman & Gnanamoorthieswarar shrine."
+      },
+      {
+        "stop": "Vanathirupathi (Punnai Nagar) & Highway Return",
+        "desc": "Darshan and Satvik lunch at Tirumalai Nayagam Perumal (Vanathirupathi) before smooth NH 38 return to Chennai."
+      },
+      {
+        "stop": "3-Day / 4-Day Circuit Extension — 9 Nava Tirupathi & Madurai",
+        "desc": "For 3-Day & 4-Day packages: Cover the 9 Nava Tirupathi Perumal Divya Desam (Navagraha) temples along the Thamirabarani river and Madurai Meenakshi Amman Temple at a relaxed pace for elders."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Seating Capacity",
+        "2-Day Package Cost",
+        "Key Highlights"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Passengers",
+          "₹19,500",
+          "Ideal for 2–3 passengers • Smooth NH 38 highway & coastal drive"
+        ],
+        [
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Passengers",
+          "₹23,500",
+          "Comfortable 6-seater • Dual AC & extra boot space for wet sea-bath clothes"
+        ],
+        [
+          "Toyota Innova",
+          "7 Passengers",
+          "₹26,500",
+          "Elders' Choice • Easy step-in height & plush legroom for 1,280 km journey"
+        ],
+        [
+          "Toyota Innova Crysta",
+          "7 Passengers",
+          "₹31,500",
+          "Executive captain seats • Zero highway fatigue for senior citizens across 2–4 days"
+        ],
+        [
+          "12-Seater Tempo Traveller",
+          "12 Passengers",
+          "₹37,000",
+          "12-seater coach • Pushback reclining seats for joint family Tiruchendur & Nava Tirupathi yatra"
+        ]
+      ],
+      "note": "Complete 2-day round trip covering ~1,280 km, vehicle hire, fuel, Kulasekarapattinam & Vanathirupathi visits, and driver daily halting allowance (bata). 3-Day Senior Pace & 4-Day Nava Tirupathi / Madurai Circuit selectable above. Highway FASTag tolls and parking payable at actuals."
+    },
+    "includes": [
+      "Doorstep pickup & drop anywhere across Chennai and suburbs",
+      "Complete sightseeing of Tiruchendur Temple, Valli Cave, Kulasekarapattinam (14 km) & Vanathirupathi",
+      "Driver daily & night halting allowance (Bata) included (highway FASTag tolls payable at actuals)",
+      "Direct senior citizen drop near Shanmuga Vilasa Mandapam & Nazhikinaru dress-changing room guidance",
+      "Planned 2.5-hour NH 38 bio-breaks at verified vegetarian plazas with clean Western restrooms"
+    ],
+    "excludes": [
+      "Temple special darshan tickets & Abhishekam sevas",
+      "Devotee hotel/Devasthanam cottage accommodation & meals",
+      "NH 38 FASTag highway tolls & temple parking (payable at actual receipts)"
+    ],
+    "travelGuide": {
+      "history": "• 2nd Arupadai Veedu: Only seashore abode of Lord Murugan (Zero hill climbing)\n• Sacred Guru Sthalam: Murugan worshipped Lord Shiva (Panchalingam) as Guru Bhagavan\n• Nazhikinaru Miracle: Freshwater spring just 100m from the salty Bay of Bengal\n• Valli Cave (Valli Guhai): Coastal rock shrine of Goddess Dheivanai & Valli",
+      "timings": "Subrabatham: 05:10 AM – 05:25 AM\nViswaroopa Darshan: 05:30 AM – 05:35 AM\nUdayamarthanda Abhishekam: 06:15 AM – 07:00 AM\nUchikala Pooja (Noon): 12:00 PM – 12:15 PM\nSayaraksha Pooja (Evening): 05:00 PM – 05:15 PM\nPalliyarai & Temple Close: 08:45 PM – 09:05 PM",
+      "dressCode": "Strict Traditional Attire:\n• Men: Dhoti, Panchakacham, or Pyjama with Upper Cloth (Men must remove shirts before entering the inner sanctum).\n• Women: Saree, Half-Saree, or Salwar Kameez with Dupatta.",
+      "tips": [
+        "Zero-Climb Seashore Layout: Unlike Palani or Tiruttani, Tiruchendur is built on flat coastal ground with zero mountain climbing—making it ideal for senior citizens.",
+        "60+ Senior Citizen Darshan Queue: Elderly devotees aged 60+ get a dedicated entry path with shaded seating benches. Carry original Aadhaar Card for age verification at the help desk.",
+        "Nazhikinaru Safe Bath Tip for Seniors: The sacred well has 24 narrow wet steps. Seniors with knee pain can avoid climbing down—family members can bring the holy water up for sacred Prokshanam (sprinkling on the head).",
+        "Wheelchair & Battery Car Point: Our chauffeur drops elders directly near Shanmuga Vilasa Mandapam where Devasthanam wheelchairs and battery cars operate.",
+        "Choose 3 Days for Elders: Because Chennai to Tiruchendur is ~640 km each way, we strongly recommend the 3-Day package for 65+ seniors to include Nava Tirupathi or a Madurai break without rushing."
+      ]
+    },
+    "faq": [
+      {
+        "q": "Are there steps to climb at Tiruchendur Murugan Temple for senior citizens?",
+        "a": "No! Unlike hill temples such as Palani or Tiruttani, Tiruchendur Subramania Swamy Temple is located right on the flat seashore with zero hill climbing. Inside the temple, there are only mild ramps and a few threshold steps, plus a dedicated 60+ Senior Citizen Darshan line with seating benches (carry Original Aadhaar Card)."
+      },
+      {
+        "q": "Can elderly passengers access Nazhikinaru (the sacred well) easily?",
+        "a": "Nazhikinaru is located 100 meters from the sea and has ~24 steps leading down to the water, which can be slippery for seniors with arthritis or knee pain. Our chauffeur drops you at the nearest gate and guides family members to fetch the sacred spring water for Prokshanam (sprinkling) if elders prefer not to step down."
+      },
+      {
+        "q": "Is a 2-Day or 3-Day package better when traveling with aged parents from Chennai?",
+        "a": "Chennai to Tiruchendur is ~640 km one-way (10–11 hours on NH 38). While our 2-Day Express package (₹19,500 Sedan) covers Tiruchendur, Kulasekarapattinam, and Vanathirupathi, we strongly recommend the 3-Day Senior-Friendly package (₹23,000 Sedan / ₹31,000 Innova) so elders can rest comfortably and also visit the 9 Nava Tirupathi Perumal temples or break the journey at Madurai."
+      },
+      {
+        "q": "What is the cab fare from Chennai to Tiruchendur for 2, 3, and 4 days?",
+        "a": "Round-trip package fares start at ₹19,500 for AC Sedan (Dzire/Etios), ₹23,500 for Ertiga SUV, ₹26,500 for Toyota Innova (Elders' Choice), ₹31,500 for Innova Crysta, and ₹37,000 for a 12-Seater Tempo Traveller for 2 Days (3 Days from ₹23,000; 4 Days Southern Circuit from ₹26,500). Fares include vehicle, fuel, and driver bata; NH 38 FASTag tolls are billed at actuals."
+      },
+      {
+        "q": "Can we combine the 9 Nava Tirupathi Divya Desam temples and Kulasekarapattinam with Tiruchendur?",
+        "a": "Yes! Kulasekarapattinam Mutharamman Temple (14 km away) and Vanathirupathi are included even in the 2-Day base itinerary. All 9 Nava Tirupathi Perumal temples (Navagraha Kshetrams on the Thamirabarani river, 25–40 km from Tiruchendur) are covered seamlessly in our 3-Day and 4-Day packages."
+      },
+      {
+        "q": "How often does the driver stop for restrooms and food on the 10-hour NH 38 highway drive?",
+        "a": "For senior citizen comfort, our chauffeurs follow a planned 2.5-hour bio-break schedule along NH 38 at verified vegetarian food plazas with clean Western toilets—including Ulundurpet, Samayapuram (Trichy bypass), Melur (Madurai bypass), and Kovilpatti."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I would like to book the Chennai to Tiruchendur Murugan Temple Cab Package.",
+    "metaTitle": "Chennai to Tiruchendur Murugan Temple Cab Package (2–4 Days) | Senior Friendly",
+    "metaDescription": "Chennai to Tiruchendur Murugan Temple 2, 3 or 4 days cab package from ₹19,500. Senior-friendly flat seashore darshan, Nazhikinaru, Kulasekarapattinam & Nava Tirupathi.",
+    "keywords": "chennai to tiruchendur cab package, tiruchendur temple tour from chennai, chennai to tiruchendur taxi fare, tiruchendur nava tirupathi tour package from chennai, senior citizen tiruchendur temple tour, chennai to tiruchendur innova crysta package, kulasekarapattinam vanathirupathi cab",
+    "serviceType": "TaxiService",
+    "origin": "Chennai",
+    "destination": "Tiruchendur & Nava Tirupathi"
   }
 ]

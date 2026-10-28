@@ -176,11 +176,14 @@ export function generateDutySlipCanvas(data) {
   if (data.extraKm > 0) {
     drawLineItem(`Extra Kilometers (${data.extraKm} KM @ Rs.${data.extraKmRate}/KM)`, `+ Rs. ${data.extraKmCharge}`);
   }
+  if (data.statePermit > 0) {
+    drawLineItem('State Entry Permit', `+ Rs. ${data.statePermit}`);
+  }
   if (data.tolls > 0) {
     drawLineItem('FASTag Toll Taxes (Actuals)', `+ Rs. ${data.tolls}`);
   }
   if (data.parking > 0) {
-    drawLineItem('Parking / State Border Permit', `+ Rs. ${data.parking}`);
+    drawLineItem('Parking Charges', `+ Rs. ${data.parking}`);
   }
   if (data.nightAllowance > 0) {
     drawLineItem('Night Driving Allowance', `+ Rs. ${data.nightAllowance}`);

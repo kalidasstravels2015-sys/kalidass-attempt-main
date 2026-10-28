@@ -106,7 +106,14 @@ export const GET: APIRoute = async ({ request, url }) => {
       for (let i = lines.length - 1; i >= 1; i--) {
         const row = parseCsvLine(lines[i]);
         if (row.length > 0 && row[0]) {
-          const item = {
+          const rawMeta = row[11] || '';
+          let parsedMeta: any = {};
+          if (rawMeta && rawMeta !== 'None' && rawMeta.startsWith('{')) {
+            try {
+              parsedMeta = JSON.parse(rawMeta);
+            } catch (_) {}
+          }
+          const item: any = {
             quoteId: row[0] || '',
             timestamp: row[1] || '',
             sourcePage: row[2] || '',
@@ -118,15 +125,23 @@ export const GET: APIRoute = async ({ request, url }) => {
             distanceKm: row[8] || '',
             estimatedFare: parseInt(row[9] || '0', 10) || 0,
             status: row[10] || 'Browsed',
-            metadata: row[11] || ''
+            metadata: rawMeta,
+            guestName: parsedMeta.guestName || '',
+            phone: parsedMeta.phone || '',
+            travelDate: parsedMeta.travelDate || '',
+            followUpTime: parsedMeta.followUpTime || '',
+            notes: parsedMeta.notes || ''
           };
+          const isManualLead = item.quoteId.startsWith('#ENQ') || item.quoteId.startsWith('#CALL') || item.quoteId.startsWith('#WA') || Boolean(item.phone || item.guestName);
           const isAnonymousZeroClick =
-            item.estimatedFare <= 0 ||
-            item.drop.toLowerCase().includes('whatsapp chat') ||
-            item.pickup.toLowerCase().includes('tariff card') ||
-            item.pickup.toLowerCase().includes('best cabs & temple tours') ||
-            item.pickup.toLowerCase().includes('outstation cabs from chennai') ||
-            item.pickup.toLowerCase().includes('airport taxi & cab booking');
+            !isManualLead && (
+              item.estimatedFare <= 0 ||
+              item.drop.toLowerCase().includes('whatsapp chat') ||
+              item.pickup.toLowerCase().includes('tariff card') ||
+              item.pickup.toLowerCase().includes('best cabs & temple tours') ||
+              item.pickup.toLowerCase().includes('outstation cabs from chennai') ||
+              item.pickup.toLowerCase().includes('airport taxi & cab booking')
+            );
 
           if (isAnonymousZeroClick) {
             continue;
@@ -135,13 +150,12 @@ export const GET: APIRoute = async ({ request, url }) => {
           // Avoid duplicates if already present in remote leads
           const exists = actionableLeads.some(l => l.quoteId === item.quoteId);
           if (!exists) {
-            const hasPhone = /[6-9]\d{9}/.test(`${item.sourcePage} ${item.pickup} ${item.drop} ${item.metadata}`);
+            const hasPhone = /[6-9]\d{9}/.test(`${item.phone} ${item.sourcePage} ${item.pickup} ${item.drop} ${item.metadata}`);
             const statusLower = (item.status || '').toLowerCase();
-            const isConfirmedContact = hasPhone || 
+            const isConfirmedContact = isManualLead || hasPhone || 
               statusLower.includes('advance') ||
-              (item.quoteId.startsWith('#CALL') && hasPhone) || 
-              (item.quoteId.startsWith('#ENQ') && hasPhone) || 
-              (item.quoteId.startsWith('#WA') && hasPhone);
+              statusLower.includes('follow-up') ||
+              statusLower.includes('quote sent');
             if (isConfirmedContact) {
               actionableLeads.push(item);
             } else {

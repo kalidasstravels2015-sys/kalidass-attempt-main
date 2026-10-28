@@ -650,7 +650,7 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
             </div>
             <div className="flex justify-between">
               <span className="text-m3-on-surface-variant">
-                State Permit
+                State Entry Permit
               </span>
               <span className="font-bold text-m3-on-surface">₹0</span>
             </div>

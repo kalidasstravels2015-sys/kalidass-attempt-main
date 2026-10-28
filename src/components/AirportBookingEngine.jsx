@@ -879,7 +879,7 @@ export default function AirportBookingEngine({
       '• Vehicle: ' + vehicle + ' (' + passengers + ' Seats)',
       '• Distance: ~' + (breakdown ? breakdown.actual_km : distanceKm) + ' km (' + (duration || 'Direct Highway') + ')',
       '• Quoted Total Fare: ₹' + estimate.toLocaleString('en-IN') + ' + Tolls/Parking Extra',
-      '• State Permit: ' + ((breakdown && breakdown.is_outstation && breakdown.state_permit_est > 0) ? ('₹' + breakdown.state_permit_est.toLocaleString('en-IN') + ' (Included in Total)') : '₹0 (Within Tamil Nadu / Not required)'),
+      '• State Entry Permit' + ((breakdown && breakdown.is_outstation && breakdown.state_permit_est > 0 && breakdown.state_name) ? (' (' + breakdown.state_name + ')') : '') + ': ' + ((breakdown && breakdown.is_outstation && breakdown.state_permit_est > 0) ? ('₹' + breakdown.state_permit_est.toLocaleString('en-IN') + ' (Included in Total)') : '₹0 (Within Tamil Nadu / Not required)'),
       '• Tolls & Parking: Extra (Pay at actuals as per receipts)',
       '• Payment Policy: Pay 50% (₹' + (breakdown ? breakdown.advance_to_pay : Math.round(estimate * 0.5)).toLocaleString('en-IN') + ') on cab arrival, balance after trip completion',
       '• Booking Fee: ₹0 (Zero advance to book)',
@@ -1473,7 +1473,7 @@ export default function AirportBookingEngine({
                       )}
                       {breakdown.is_outstation && breakdown.state_permit_est > 0 && (
                         <div className="flex justify-between items-center py-0.5">
-                          <span>State Permit:</span>
+                          <span>State Entry Permit:</span>
                           <span className="font-bold text-slate-900">
                             ₹{breakdown.state_permit_est.toLocaleString('en-IN')}
                           </span>

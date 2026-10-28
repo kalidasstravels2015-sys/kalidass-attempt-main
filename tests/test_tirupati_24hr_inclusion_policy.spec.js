@@ -28,11 +28,11 @@ test.describe('Tirupati 24-Hour Policy: Inclusive vs Extra (Actuals)', () => {
 
     // Hero price: ₹6,000 All-Inclusive Fixed Fare
     await expect(bookingSection.locator('[data-tour-fare="true"]').first()).toHaveText(/₹\s*6,000/);
-    await expect(bookingSection.getByText(/Fuel, Tolls, AP State Permit, Hill Climb & Parking/)).toBeVisible();
+    await expect(bookingSection.getByText(/Fuel, Tolls, AP State Entry Permit, Hill Climb & Parking/)).toBeVisible();
     await expect(bookingSection.getByText(/~320 km Round Trip/).first()).toBeVisible();
 
     // Check breakdown rows for <= 24 Hours
-    await expect(bookingSection.getByText('State Permit:')).toBeVisible();
+    await expect(bookingSection.getByText('State Entry Permit:')).toBeVisible();
     await expect(bookingSection.getByText('Tolls:')).toBeVisible();
     await expect(bookingSection.getByText('Parking:')).toBeVisible();
 
@@ -40,7 +40,7 @@ test.describe('Tirupati 24-Hour Policy: Inclusive vs Extra (Actuals)', () => {
     await returnDate.fill('2026-10-16T07:00'); // 25 hrs
     await expect(bookingSection.locator('[data-tour-fare="true"]').first()).toHaveText(/₹\s*6,150/);
     await expect(bookingSection.getByText(/Dedicated Cab Hire, Fuel & Driver Allowance, Tirumala Hill Climb/)).toBeVisible();
-    await expect(bookingSection.getByText('State Permit:')).toBeVisible();
+    await expect(bookingSection.getByText('State Entry Permit:')).toBeVisible();
     await expect(bookingSection.getByText('₹500', { exact: true }).first()).toBeVisible();
     await expect(bookingSection.getByText('Tolls:')).toBeVisible();
     await expect(bookingSection.getByText('Extra').first()).toBeVisible();

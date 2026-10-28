@@ -10,6 +10,7 @@ export default function TripSheetViewer() {
     endKm: '',
     tolls: '',
     parking: '',
+    statePermit: '',
     driverBata: '500'
   });
   const [isSavingOdo, setIsSavingOdo] = useState(false);
@@ -92,6 +93,7 @@ export default function TripSheetViewer() {
         endKm: String(b.dutySlip.endKm || ''),
         tolls: String(b.dutySlip.tollsFastag || ''),
         parking: String(b.dutySlip.parking || ''),
+        statePermit: String(b.dutySlip.statePermit || ''),
         driverBata: String(b.dutySlip.driverBata || '500')
       });
     }
@@ -134,9 +136,10 @@ export default function TripSheetViewer() {
   const extraKmCharge = extraKm * extraKmRate;
   const tollsNum = Number(editOdo.tolls) || 0;
   const parkingNum = Number(editOdo.parking) || 0;
+  const statePermitNum = Number(editOdo.statePermit) || 0;
   const baseFare = Number(trip?.terminalFare) || 6000;
   const advancePaid = Number(trip?.advancePaid || 1000);
-  const grossTotal = baseFare + extraKmCharge + tollsNum + parkingNum;
+  const grossTotal = baseFare + extraKmCharge + tollsNum + parkingNum + statePermitNum;
   const balanceToCollect = Math.max(0, grossTotal - advancePaid);
   const rawRoute = trip?.pickupAddress || '';
   const routeParts = rawRoute.split(/➔|->|→/).map(s => s.trim()).filter(Boolean);
@@ -164,7 +167,7 @@ export default function TripSheetViewer() {
         basePackageFare: baseFare,
         tollsFastag: tollsNum,
         parking: parkingNum,
-        statePermit: 0,
+        statePermit: statePermitNum,
         driverBata: Number(editOdo.driverBata) || 500,
         advancePaid,
         paymentMode: 'Cash/UPI at Drop'
@@ -416,6 +419,13 @@ export default function TripSheetViewer() {
                   </div>
                 )}
 
+                {statePermitNum > 0 && (
+                  <div className="flex justify-between text-m3-inverse-on-surface/80">
+                    <span>State Entry Permit:</span>
+                    <span>+₹{statePermitNum.toLocaleString('en-IN')}</span>
+                  </div>
+                )}
+
                 {tollsNum > 0 && (
                   <div className="flex justify-between text-m3-inverse-on-surface/80">
                     <span>FASTag Tolls:</span>
@@ -425,7 +435,7 @@ export default function TripSheetViewer() {
 
                 {parkingNum > 0 && (
                   <div className="flex justify-between text-m3-inverse-on-surface/80">
-                    <span>Parking & Permits:</span>
+                    <span>Parking Charges:</span>
                     <span>+₹{parkingNum.toLocaleString('en-IN')}</span>
                   </div>
                 )}
@@ -553,7 +563,20 @@ export default function TripSheetViewer() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-2.5">
+                <div>
+                  <label className="block text-[10px] font-bold text-m3-outline-variant uppercase mb-1">
+                    State Entry Permit (Rs)
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="0"
+                    value={editOdo.statePermit}
+                    onChange={(e) => setEditOdo({ ...editOdo, statePermit: e.target.value })}
+                    className="w-full bg-m3-inverse-surface border border-m3-outline-variant/40 rounded-xl p-2.5 text-xs font-mono text-white focus:outline-none focus:ring-2 focus:ring-m3-tertiary"
+                  />
+                </div>
+
                 <div>
                   <label className="block text-[10px] font-bold text-m3-outline-variant uppercase mb-1">
                     FASTag Tolls (Rs)
@@ -569,7 +592,7 @@ export default function TripSheetViewer() {
 
                 <div>
                   <label className="block text-[10px] font-bold text-m3-outline-variant uppercase mb-1">
-                    Parking / Permit (Rs)
+                    Parking Charges (Rs)
                   </label>
                   <input
                     type="number"

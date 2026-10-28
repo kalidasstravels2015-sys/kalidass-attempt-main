@@ -35,7 +35,20 @@ export const POST: APIRoute = async ({ request, url }) => {
     const distanceKm = data.distanceKm || (data.distance ? String(data.distance) : 'N/A');
     const fareNum = parseInt(String(data.estimatedFare || data.estimate || '0').replace(/[^0-9]/g, ''), 10) || 0;
     const status = data.status || 'Rate Locked';
-    const metadata = (data.meta ? JSON.stringify(data.meta).replace(/,/g, ';').replace(/"/g, '') : (data.metadata || 'None'));
+    let metaObj = data.meta || {};
+    if (typeof metaObj === 'string') {
+      try { metaObj = JSON.parse(metaObj); } catch (_) { metaObj = {}; }
+    }
+    if (data.guestName) metaObj.guestName = data.guestName;
+    if (data.phone) metaObj.phone = data.phone;
+    if (data.travelDate) metaObj.travelDate = data.travelDate;
+    if (data.followUpTime) metaObj.followUpTime = data.followUpTime;
+    if (data.notes) metaObj.notes = data.notes;
+
+    const hasMetaKeys = Object.keys(metaObj).length > 0;
+    const metadata = hasMetaKeys
+      ? JSON.stringify(metaObj).replace(/"/g, '""')
+      : (data.metadata || 'None');
 
     const CALC_HEADER = 'Quote ID,Timestamp,Source Page,Calculator Engine,Trip Type,Pickup Location,Drop Location,Vehicle,Distance (km),Calculated Fare (INR),Status,Metadata\n';
     if (!fs.existsSync(csvPath)) {
@@ -49,21 +62,25 @@ export const POST: APIRoute = async ({ request, url }) => {
       const lines = content.trim().split(/\r?\n/).filter(Boolean);
       const rowNum = lines.length;
 
-      // Only keep incoming quoteId if it is a valid continuous sequential number
-      const numMatch = quoteId ? String(quoteId).match(/(?:QT|ENQ|KT|CALC|CALL|WA)-?(\d+)/i) : null;
-      const n = numMatch ? parseInt(numMatch[1], 10) : 0;
-      const isValidSeq = n >= 101 && n <= (100 + rowNum + 50);
+      // Ensure unique sequential ID if not already unique
+      const existingIds = new Set(
+        lines.slice(1).map(l => (l.split(',')[0] || '').trim().toUpperCase())
+      );
 
-      if (!quoteId || !isValidSeq) {
-        if (data.leadType === 'call' || status.includes('Call')) {
-          quoteId = `#CALL-${100 + rowNum}`;
+      if (!quoteId || existingIds.has(String(quoteId).trim().toUpperCase())) {
+        let prefix = '#QT-';
+        if (String(quoteId || '').toUpperCase().startsWith('#ENQ') || data.leadType === 'enquiry' || data.type === 'enquiry' || status.includes('Follow-Up') || status.includes('Quote Sent')) {
+          prefix = '#ENQ-';
+        } else if (data.leadType === 'call' || status.includes('Call')) {
+          prefix = '#CALL-';
         } else if (data.leadType === 'whatsapp' || status.includes('WhatsApp')) {
-          quoteId = `#WA-${100 + rowNum}`;
-        } else if (data.leadType === 'enquiry' || data.type === 'enquiry') {
-          quoteId = `#ENQ-${100 + rowNum}`;
-        } else {
-          quoteId = `#QT-${100 + rowNum}`;
+          prefix = '#WA-';
         }
+        let seq = 101;
+        while (existingIds.has(`${prefix}${seq}`)) {
+          seq++;
+        }
+        quoteId = `${prefix}${seq}`;
       }
 
       const cleanDist = String(distanceKm).replace(/"/g, '""');

@@ -49,6 +49,8 @@ export const KNOWN_DISTANCES_FROM_CHENNAI: Record<string, number> = {
   kanyakumari: 708,
   rameshwaram: 575,
   rameswaram: 575,
+  tiruchendur: 635,
+  thiruchendur: 635,
   kodaikanal: 530,
   ooty: 555,
   munnar: 580,
@@ -233,6 +235,9 @@ export function parseConversationState(messages: ChatMessage[], pageContext?: an
     } else if (lower.includes('rameswaram') || lower.includes('rameshwaram') || lower.includes('dhanushkodi') || lower.includes('ராமேஸ்வரம்')) {
       state.activeDestination = 'rameswaram';
       state.serviceType = 'tour';
+    } else if (lower.includes('tiruchendur') || lower.includes('thiruchendur') || lower.includes('tiruchedur') || lower.includes('nava tirupathi') || lower.includes('kulasekarapattinam') || lower.includes('திருச்செந்தூர்')) {
+      state.activeDestination = 'tiruchendur';
+      state.serviceType = 'tour';
     } else if (lower.includes('sabarimala') || lower.includes('pamba') || lower.includes('ஐயப்பன்') || lower.includes('சபரிமலை')) {
       state.activeDestination = 'sabarimala';
       state.serviceType = 'tour';
@@ -298,6 +303,9 @@ export function parseConversationState(messages: ChatMessage[], pageContext?: an
         state.serviceType = 'tour';
       } else if (destStr.includes('rameswaram') || destStr.includes('rameshwaram')) {
         state.activeDestination = 'rameswaram';
+        state.serviceType = 'tour';
+      } else if (destStr.includes('tiruchendur') || destStr.includes('thiruchendur')) {
+        state.activeDestination = 'tiruchendur';
         state.serviceType = 'tour';
       } else if (destStr.includes('sabarimala') || destStr.includes('pamba')) {
         state.activeDestination = 'sabarimala';
@@ -531,7 +539,7 @@ export function processAiConciergeQuery(messages: ChatMessage[], pageContext?: a
   }
 
   // ─── 2. FIXED TEMPLE / TOUR PACKAGES ──────────────────────────────────────────
-  if (state.serviceType === 'tour' || state.activeDestination === 'tirupati' || state.activeDestination === 'chidambaram' || state.activeDestination === 'thiruvannamalai' || state.activeDestination === 'kanchipuram' || state.activeDestination === 'navagraha' || state.activeDestination === 'rameswaram' || state.activeDestination === 'sabarimala' || state.activeDestination === 'vellore' || state.activeDestination === 'pondicherry') {
+  if (state.serviceType === 'tour' || state.activeDestination === 'tirupati' || state.activeDestination === 'chidambaram' || state.activeDestination === 'thiruvannamalai' || state.activeDestination === 'kanchipuram' || state.activeDestination === 'navagraha' || state.activeDestination === 'rameswaram' || state.activeDestination === 'tiruchendur' || state.activeDestination === 'sabarimala' || state.activeDestination === 'vellore' || state.activeDestination === 'pondicherry') {
     const quote = getTourPackageQuote(state, isTa);
     if (quote) {
       return { reply: quote, source: 'autonomous_engine', meta: { type: 'tour_quote', destination: state.activeDestination, days: state.durationDays || 1 } };
@@ -605,13 +613,13 @@ export function processAiConciergeQuery(messages: ChatMessage[], pageContext?: a
 // ─────────────────────────────────────────────────────────────────────────────
 
 function calculateMultiDayTourRate(v: any, numDays: number): number {
-  if (numDays <= 3) {
+  if (numDays <= 3 || v.rates?.[numDays]) {
     return v.rates?.[numDays] || (v.rates?.[1] ? v.rates[1] * numDays : 0);
   }
   const extraDays = numDays - 3;
   const day2 = v.rates?.[2] || v.rates?.[1] || 0;
   const day1 = v.rates?.[1] || 0;
-  const extraPerDay = day2 - day1;
+  const extraPerDay = (day2 - day1) > 0 ? (day2 - day1) : ((v.rates?.[3] || day2) - day2);
   const base3 = v.rates?.[3] || (day1 * 3);
   return base3 + (extraDays * extraPerDay);
 }
@@ -628,6 +636,7 @@ function getTourPackageQuote(state: ConversationState, isTa: boolean): string | 
     kanchipuram: 'kanchipuram-temple-trip',
     navagraha: 'navagraha-tour',
     rameswaram: 'rameswaram-2-days',
+    tiruchendur: 'tiruchendur-temple-tour',
     sabarimala: 'sabarimala-trip',
     vellore: 'vellore-golden-temple',
     pondicherry: 'pondicherry-one-day-trip'
@@ -687,6 +696,8 @@ function getTourPackageQuote(state: ConversationState, isTa: boolean): string | 
     kumbakonam: 'கும்பகோணம்',
     rameswaram: 'ராமேஸ்வரம்',
     rameshwaram: 'ராமேஸ்வரம்',
+    tiruchendur: 'திருச்செந்தூர் முருகன் கோவில்',
+    thiruchendur: 'திருச்செந்தூர் முருகன் கோவில்',
     sabarimala: 'சபரிமலை',
     vellore: 'வேலூர் பொற்கோவில்',
     pondicherry: 'பாண்டிச்சேரி',

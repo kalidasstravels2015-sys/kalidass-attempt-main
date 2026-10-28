@@ -82,6 +82,20 @@ export default function TempleTours() {
       badge: 'Char Dham Sthalam'
     },
     {
+      id: 'tiruchendur',
+      type: 'multiday',
+      name: 'Tiruchendur Murugan & Nava Tirupathi',
+      duration: '2 or 3 Days (1,280 km)',
+      sedan: '₹19,500',
+      ertiga: '₹23,500',
+      innova: '₹26,500',
+      crysta: '₹31,500',
+      tempo: '₹37,000',
+      highlights: 'Zero-climb seashore temple, 60+ Senior Aadhaar queue, Nazhikinaru, Kulasekarapattinam & Nava Tirupathi',
+      slug: 'tiruchendur-temple-tour',
+      badge: '2nd Arupadai Veedu'
+    },
+    {
       id: 'navagraha',
       type: 'multiday',
       name: 'Kumbakonam 9 Navagraha Tour',
@@ -179,6 +193,15 @@ export default function TempleTours() {
       icon: Waves,
       desc: 'Char Dham holy island pilgrimage featuring 22 Theertham baths, Pamban bridge drive, Dhanushkodi ghost town, and APJ Memorial.',
       highlights: ['22 Theertham bath coordination', 'Dhanushkodi / Ram Setu drive', '2 Days driver bata included (Tolls at actuals)']
+    },
+    {
+      title: 'Tiruchendur & Nava Tirupathi',
+      duration: '2 or 3 Days',
+      badge: 'Starts ₹19,500 (1,280 km)',
+      slug: 'tiruchendur-temple-tour',
+      icon: Waves,
+      desc: 'Senior-friendly seashore Murugan & Guru Sthalam yatra with zero hill climbing, Nazhikinaru, Kulasekarapattinam (14 km), and 9 Nava Tirupathi temples.',
+      highlights: ['Zero-climb flat seashore temple', '60+ Senior Aadhaar queue drop', 'Planned 2.5-hr NH 38 bio-breaks']
     },
     {
       title: 'Kumbakonam 9 Navagraha Tour',

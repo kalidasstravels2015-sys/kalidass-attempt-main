@@ -88,6 +88,53 @@ const vanFleet = [
     whatsappMsg: "Hi Kalidass Travels Dispatch Desk, I would like to book a 12-Seater Tempo Traveller."
   },
   {
+    id: "van-urbania",
+    vehicleKey: "urbania",
+    name: "Force Urbania VIP Luxury Chauffeur Van",
+    shortTitle: "Force Urbania",
+    badge: "SUPER LUXURY VIP",
+    capacityNumber: 12,
+    dailyMinPrice: 11400,
+    perKmRate: 38,
+    seating: "10–12 Passengers",
+    baggage: "6–8 Executive Medium Trolleys (24\") + 12 Overhead Bins",
+    bootBags: "6–8 Executive Hard-Case Trolleys (24\")",
+    overheadBags: "12 Aircraft-Style Enclosed Overhead Bins",
+    roofCarrier: "Clean Aero Roof (Strictly Zero External Rack)",
+    roofCarrierBags: "Enclosed European Aerodynamic Monocoque Body",
+    bootDisplay: "6–8 Trolleys",
+    cabinDisplay: "12 Air Bins",
+    roofDisplay: "Aero Roof",
+    roofSubDisplay: "No Roof Carrier",
+    luggageSummary: "6–8 Executive Trolleys in Rear Hydraulic Hatch • 12 Aircraft Overhead Bins",
+    fitAdvice: "Best for 8–10 Seats with executive luggage, or 12 Seats with standard cabin bags",
+    headroom: "6.5 ft (1,980 mm) Flat Floor Walkthrough",
+    recline: "140° Executive Captain Recliner",
+    legroom: "35-Inch Business-Class Pitch",
+    acSystem: "Triple-Zone Automatic Climate Control",
+    charging: "Dual USB Fast Ports + Reading Lamp Per Seat",
+    suspension: "European Monocoque Independent Coil Suspension",
+    chassis: "Monocoque Architecture (3615 WB)",
+    engine: "Mercedes-Derived 2.6L FM CR (115 HP / 350 Nm)",
+    entertainment: "32\" Smart LED TV + Premium Acoustic Surround Sound",
+    elderStep: "Low Triple-Seal Sliding Door Step + Illuminated Boarding",
+    bodyType: "Executive Passenger Van",
+    cargoLiters: 1000,
+    cargoDesc: "Deep 1000L hydraulic rear hatch trunk holding 6-8 executive suitcases with sealed aircraft overhead bins.",
+    roofLoadKg: 0,
+    image: "/images/fleet/force-urbania.webp",
+    layout: "Independent Aircraft-Style Luxury Recliners",
+    idealFor: "VIP corporate delegations, luxury weddings, NRI temple tours, high-comfort vacations.",
+    comfortHighlights: [
+      "Next-generation European monocoque chassis for zero body roll",
+      "Aircraft-style individual AC vents and reading lights",
+      "Triple-zone climate control with acoustic noise deadening",
+      "Panoramic UV-cut privacy windows and ambient lighting",
+      "Electronic Stability Program (ESP) & advanced ABS braking"
+    ],
+    whatsappMsg: "Hi Kalidass Travels Dispatch Desk, I would like to book a Force Urbania Luxury Van."
+  },
+  {
     id: "van-14",
     vehicleKey: "14",
     name: "14-Seater Executive Force Tempo",
@@ -274,53 +321,6 @@ const vanFleet = [
       "Professional commercial heavy-vehicle certified chauffeur with hill-driving experience"
     ],
     whatsappMsg: "Hi Kalidass Travels Dispatch Desk, I would like to book a 26-Seater Mini Bus Coach."
-  },
-  {
-    id: "van-urbania",
-    vehicleKey: "urbania",
-    name: "Force Urbania VIP Luxury Chauffeur Van",
-    shortTitle: "Force Urbania",
-    badge: "SUPER LUXURY VIP",
-    capacityNumber: 12,
-    dailyMinPrice: 11400,
-    perKmRate: 38,
-    seating: "10–12 Passengers",
-    baggage: "6–8 Executive Medium Trolleys (24\") + 12 Overhead Bins",
-    bootBags: "6–8 Executive Hard-Case Trolleys (24\")",
-    overheadBags: "12 Aircraft-Style Enclosed Overhead Bins",
-    roofCarrier: "Clean Aero Roof (Strictly Zero External Rack)",
-    roofCarrierBags: "Enclosed European Aerodynamic Monocoque Body",
-    bootDisplay: "6–8 Trolleys",
-    cabinDisplay: "12 Air Bins",
-    roofDisplay: "Aero Roof",
-    roofSubDisplay: "No Roof Carrier",
-    luggageSummary: "6–8 Executive Trolleys in Rear Hydraulic Hatch • 12 Aircraft Overhead Bins",
-    fitAdvice: "Best for 8–10 Seats with executive luggage, or 12 Seats with standard cabin bags",
-    headroom: "6.5 ft (1,980 mm) Flat Floor Walkthrough",
-    recline: "140° Executive Captain Recliner",
-    legroom: "35-Inch Business-Class Pitch",
-    acSystem: "Triple-Zone Automatic Climate Control",
-    charging: "Dual USB Fast Ports + Reading Lamp Per Seat",
-    suspension: "European Monocoque Independent Coil Suspension",
-    chassis: "Monocoque Architecture (3615 WB)",
-    engine: "Mercedes-Derived 2.6L FM CR (115 HP / 350 Nm)",
-    entertainment: "32\" Smart LED TV + Premium Acoustic Surround Sound",
-    elderStep: "Low Triple-Seal Sliding Door Step + Illuminated Boarding",
-    bodyType: "Executive Passenger Van",
-    cargoLiters: 1000,
-    cargoDesc: "Deep 1000L hydraulic rear hatch trunk holding 6-8 executive suitcases with sealed aircraft overhead bins.",
-    roofLoadKg: 0,
-    image: "/images/fleet/force-urbania.webp",
-    layout: "Independent Aircraft-Style Luxury Recliners",
-    idealFor: "VIP corporate delegations, luxury weddings, NRI temple tours, high-comfort vacations.",
-    comfortHighlights: [
-      "Next-generation European monocoque chassis for zero body roll",
-      "Aircraft-style individual AC vents and reading lights",
-      "Triple-zone climate control with acoustic noise deadening",
-      "Panoramic UV-cut privacy windows and ambient lighting",
-      "Electronic Stability Program (ESP) & advanced ABS braking"
-    ],
-    whatsappMsg: "Hi Kalidass Travels Dispatch Desk, I would like to book a Force Urbania Luxury Van."
   }
 ];
 
@@ -489,6 +489,23 @@ const tariffMatrix = [
     badge: "MOST POPULAR FOR FAMILIES"
   },
   {
+    id: "urbania",
+    name: "Force Urbania VIP Luxury Chauffeur Van",
+    shortName: "Force Urbania VIP",
+    image: "/images/fleet/force-urbania.webp",
+    capacity: "10–12 Passengers",
+    luggage: "6–8 Trolleys + 12 Air Bins",
+    outstationRate: "₹38 / km",
+    minKm: "300 km / day",
+    driverBata: "₹1,100 / day",
+    nightBata: "₹400 (11 PM–6 AM)",
+    local5h50km: "₹6,000",
+    local10h100km: "₹11,000",
+    extraKm: "₹38 / km",
+    extraHr: "₹600 / hr",
+    badge: "SUPER LUXURY VIP"
+  },
+  {
     id: "14-seater",
     name: "14-Seater Executive Force",
     shortName: "14-Seater Executive",
@@ -555,23 +572,6 @@ const tariffMatrix = [
     extraKm: "₹36 / km",
     extraHr: "₹600 / hr",
     badge: "LARGE DELEGATIONS & BUS CHARTER"
-  },
-  {
-    id: "urbania",
-    name: "Force Urbania VIP Luxury Chauffeur Van",
-    shortName: "Force Urbania VIP",
-    image: "/images/fleet/force-urbania.webp",
-    capacity: "10–12 Passengers",
-    luggage: "6–8 Trolleys + 12 Air Bins",
-    outstationRate: "₹38 / km",
-    minKm: "300 km / day",
-    driverBata: "₹1,100 / day",
-    nightBata: "₹400 (11 PM–6 AM)",
-    local5h50km: "₹6,000",
-    local10h100km: "₹11,000",
-    extraKm: "₹38 / km",
-    extraHr: "₹600 / hr",
-    badge: "SUPER LUXURY VIP"
   }
 ];
 
@@ -1336,103 +1336,103 @@ const schema = {
                 <tr>
                   <th scope="col" class="py-3 px-4 font-semibold min-w-[140px]">Specification</th>
                   <th scope="col" class="py-3 px-4 font-semibold min-w-[160px] text-m3-primary">12-Seater Luxury</th>
+                  <th scope="col" class="py-3 px-4 font-semibold min-w-[160px] text-purple-700 dark:text-purple-400">Force Urbania VIP</th>
                   <th scope="col" class="py-3 px-4 font-semibold min-w-[160px] text-m3-primary">14-Seater Executive</th>
                   <th scope="col" class="py-3 px-4 font-semibold min-w-[170px] text-m3-primary">17-Seater (4020 WB)</th>
                   <th scope="col" class="py-3 px-4 font-semibold min-w-[160px] text-m3-primary">20-Seater Grand</th>
                   <th scope="col" class="py-3 px-4 font-semibold min-w-[160px] text-m3-primary">26-Seater Mini Bus</th>
-                  <th scope="col" class="py-3 px-4 font-semibold min-w-[160px] text-purple-700 dark:text-purple-400">Force Urbania VIP</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-m3-outline-variant/40">
                 <tr class="hover:bg-m3-surface-container-low/50 transition">
                   <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Passenger Capacity</td>
                   <td class="py-3 px-4 font-semibold">8 to 12 Passengers</td>
+                  <td class="py-3 px-4 font-semibold">10 to 12 Passengers</td>
                   <td class="py-3 px-4 font-semibold">10 to 14 Passengers</td>
                   <td class="py-3 px-4 font-semibold">13 to 17 Passengers</td>
                   <td class="py-3 px-4 font-semibold">16 to 20 Passengers</td>
                   <td class="py-3 px-4 font-semibold">20 to 26 Passengers</td>
-                  <td class="py-3 px-4 font-semibold">10 to 12 Passengers</td>
                 </tr>
                 <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
                   <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Standing Headroom</td>
                   <td class="py-3 px-4">6.2 ft (1,920 mm) Walk upright</td>
+                  <td class="py-3 px-4">6.5 ft (1,980 mm) Flat floor luxury</td>
                   <td class="py-3 px-4">6.2 ft (1,920 mm) Walk upright</td>
                   <td class="py-3 px-4">6.3 ft (1,950 mm) High roof walkthrough</td>
                   <td class="py-3 px-4">6.4 ft (1,960 mm) High roof walkthrough</td>
                   <td class="py-3 px-4">6.4 ft (1,960 mm) Wide coach gangway</td>
-                  <td class="py-3 px-4">6.5 ft (1,980 mm) Flat floor luxury</td>
                 </tr>
                 <tr class="hover:bg-m3-surface-container-low/50 transition">
                   <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Seat Pitch &amp; Recline</td>
                   <td class="py-3 px-4">135° Pushback Recliner • 32" Pitch</td>
+                  <td class="py-3 px-4">140° Executive Captain • 35" Pitch</td>
                   <td class="py-3 px-4">135° Pushback Recliner • 33" Pitch</td>
                   <td class="py-3 px-4">135° Deep Recline • 32" Pitch</td>
                   <td class="py-3 px-4">135° Deep Recline • 32" Pitch</td>
                   <td class="py-3 px-4">135° Pushback Coach • 31" Pitch</td>
-                  <td class="py-3 px-4">140° Executive Captain • 35" Pitch</td>
                 </tr>
                 <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
                   <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Internal Rear Boot</td>
                   <td class="py-3 px-4">3–4 Medium Trolleys (20"–24")</td>
+                  <td class="py-3 px-4">6–8 Executive Trolleys (Hydraulic Hatch)</td>
                   <td class="py-3 px-4">5–6 Medium Trolleys (Extended Trunk)</td>
                   <td class="py-3 px-4">6–7 Medium Trolleys (Deep 4020 Trunk)</td>
                   <td class="py-3 px-4">7–8 Medium Trolleys (High Trunk)</td>
                   <td class="py-3 px-4">10–12 Large / Medium Suitcases</td>
-                  <td class="py-3 px-4">6–8 Executive Trolleys (Hydraulic Hatch)</td>
                 </tr>
                 <tr class="hover:bg-m3-surface-container-low/50 transition">
                   <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Rooftop Carrier Status</td>
                   <td class="py-3 px-4 font-medium text-emerald-800 dark:text-emerald-400">None (RTO Compliant • Clean Roof)</td>
+                  <td class="py-3 px-4">Zero Roof Rack (European Monocoque)</td>
                   <td class="py-3 px-4 font-medium text-emerald-800 dark:text-emerald-400">None (All Internal Luggage)</td>
                   <td class="py-3 px-4 font-medium text-emerald-800 dark:text-emerald-400">None (Deep Internal Trunk)</td>
                   <td class="py-3 px-4 font-medium text-emerald-800 dark:text-emerald-400">None (Internal Rear Hold)</td>
                   <td class="py-3 px-4">Rear Coach Hold (No Open Carrier)</td>
-                  <td class="py-3 px-4">Zero Roof Rack (European Monocoque)</td>
                 </tr>
                 <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
                   <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Luggage Fit Advice</td>
                   <td class="py-3 px-4">8–10 Seats with bags • 12 Seats light</td>
+                  <td class="py-3 px-4">8–10 Seats with executive luggage</td>
                   <td class="py-3 px-4">10–12 Seats with multi-day bags</td>
                   <td class="py-3 px-4">13–15 Seats with luggage • 17 Seats std</td>
                   <td class="py-3 px-4">16–18 Seats with luggage • 20 Seats std</td>
                   <td class="py-3 px-4">20–24 Seats with suitcases</td>
-                  <td class="py-3 px-4">8–10 Seats with executive luggage</td>
                 </tr>
                 <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
                   <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">AC Configuration</td>
                   <td class="py-3 px-4">Dual Commercial AC + Overhead Louvers</td>
+                  <td class="py-3 px-4">Triple-Zone Automatic Climate Control</td>
                   <td class="py-3 px-4">Dual Commercial AC + Row Louvers</td>
                   <td class="py-3 px-4">Heavy-Duty Twin AC Compressors</td>
                   <td class="py-3 px-4">Twin Heavy-Duty High-CFM Dual AC</td>
                   <td class="py-3 px-4">Roof Commercial Bus AC Unit</td>
-                  <td class="py-3 px-4">Triple-Zone Automatic Climate Control</td>
                 </tr>
                 <tr class="hover:bg-m3-surface-container-low/50 transition">
                   <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Suspension &amp; Ride</td>
                   <td class="py-3 px-4">Parabolic Leaf Springs + Anti-Roll Bar</td>
+                  <td class="py-3 px-4">European Monocoque Coil Suspension</td>
                   <td class="py-3 px-4">Parabolic Leaf Springs + Anti-Roll Bar</td>
                   <td class="py-3 px-4">Parabolic Springs on 4020 Long WB</td>
                   <td class="py-3 px-4">Multi-Leaf Parabolic Suspension</td>
                   <td class="py-3 px-4">Long-Travel Leaf Springs + Heavy Shocks</td>
-                  <td class="py-3 px-4">European Monocoque Coil Suspension</td>
                 </tr>
                 <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
                   <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">In-Cabin Power</td>
                   <td class="py-3 px-4">2.4A USB Fast Ports Per Row</td>
+                  <td class="py-3 px-4">Dual USB + Reading Lamp Per Seat</td>
                   <td class="py-3 px-4">2.4A USB Fast Ports Per Row</td>
                   <td class="py-3 px-4">2.4A USB Fast Ports Per Row</td>
                   <td class="py-3 px-4">2.4A USB Fast Ports Per Row</td>
                   <td class="py-3 px-4">USB Fast Ports Across Cabin</td>
-                  <td class="py-3 px-4">Dual USB + Reading Lamp Per Seat</td>
                 </tr>
                 <tr class="hover:bg-m3-surface-container-low/50 transition">
                   <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Senior Accessibility</td>
                   <td class="py-3 px-4">280 mm Low Step + Sturdy Grab Rail</td>
+                  <td class="py-3 px-4">Triple-Seal Sliding Low Step + Light</td>
                   <td class="py-3 px-4">Low Boarding Footstep + Safety Grab Rail</td>
                   <td class="py-3 px-4">Automatic Electric Footstep + Grab Rail</td>
                   <td class="py-3 px-4">Low Footstep + Dual Handrails</td>
                   <td class="py-3 px-4">Illuminated Low Entrance Footsteps</td>
-                  <td class="py-3 px-4">Triple-Seal Sliding Low Step + Light</td>
                 </tr>
 
               </tbody>
@@ -1475,7 +1475,7 @@ const schema = {
                 </button>
               </div>
               <div class="mt-2 text-xs text-m3-on-surface-variant flex items-center justify-between">
-                <span>12S, 14S, 17S, 20S, 26S & Force Urbania</span>
+                <span>12S, Force Urbania, 14S, 17S, 20S & 26S</span>
                 <span class="text-xs font-semibold text-m3-primary flex items-center gap-1">
                   Swipe horizontal ↔
                 </span>
@@ -1490,103 +1490,103 @@ const schema = {
                     <tr>
                       <th scope="col" class="py-3 px-3.5 font-semibold min-w-[130px] bg-m3-surface-container-low">Specification</th>
                       <th scope="col" class="py-3 px-3.5 font-semibold min-w-[140px] text-m3-primary bg-m3-surface-container-low">12-Seater</th>
+                      <th scope="col" class="py-3 px-3.5 font-semibold min-w-[140px] text-purple-700 dark:text-purple-400 bg-m3-surface-container-low">Urbania VIP</th>
                       <th scope="col" class="py-3 px-3.5 font-semibold min-w-[140px] text-m3-primary bg-m3-surface-container-low">14-Seater</th>
                       <th scope="col" class="py-3 px-3.5 font-semibold min-w-[150px] text-m3-primary bg-m3-surface-container-low">17-Seater</th>
                       <th scope="col" class="py-3 px-3.5 font-semibold min-w-[140px] text-m3-primary bg-m3-surface-container-low">20-Seater</th>
                       <th scope="col" class="py-3 px-3.5 font-semibold min-w-[150px] text-m3-primary bg-m3-surface-container-low">26-Seater</th>
-                      <th scope="col" class="py-3 px-3.5 font-semibold min-w-[140px] text-purple-700 dark:text-purple-400 bg-m3-surface-container-low">Urbania VIP</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-m3-outline-variant/40">
                     <tr class="hover:bg-m3-surface-container-low/50 transition">
                       <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Capacity</td>
                       <td class="py-2.5 px-3.5 font-semibold">8–12 Seats</td>
+                      <td class="py-2.5 px-3.5 font-semibold">10–12 Seats</td>
                       <td class="py-2.5 px-3.5 font-semibold">10–14 Seats</td>
                       <td class="py-2.5 px-3.5 font-semibold">13–17 Seats</td>
                       <td class="py-2.5 px-3.5 font-semibold">16–20 Seats</td>
                       <td class="py-2.5 px-3.5 font-semibold">20–26 Seats</td>
-                      <td class="py-2.5 px-3.5 font-semibold">10–12 Seats</td>
                     </tr>
                     <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
                       <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Standing Headroom</td>
                       <td class="py-2.5 px-3.5">6.2 ft (Walk upright)</td>
+                      <td class="py-2.5 px-3.5">6.5 ft (Flat floor)</td>
                       <td class="py-2.5 px-3.5">6.2 ft (Walk upright)</td>
                       <td class="py-2.5 px-3.5">6.3 ft (High roof)</td>
                       <td class="py-2.5 px-3.5">6.4 ft (High roof)</td>
                       <td class="py-2.5 px-3.5">6.4 ft (Coach aisle)</td>
-                      <td class="py-2.5 px-3.5">6.5 ft (Flat floor)</td>
                     </tr>
                     <tr class="hover:bg-m3-surface-container-low/50 transition">
                       <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Seat Pitch &amp; Recline</td>
                       <td class="py-2.5 px-3.5">135° Recline • 32"</td>
+                      <td class="py-2.5 px-3.5">140° Captain • 35"</td>
                       <td class="py-2.5 px-3.5">135° Recline • 33"</td>
                       <td class="py-2.5 px-3.5">135° Deep • 32"</td>
                       <td class="py-2.5 px-3.5">135° Deep • 32"</td>
                       <td class="py-2.5 px-3.5">135° Coach • 31"</td>
-                      <td class="py-2.5 px-3.5">140° Captain • 35"</td>
                     </tr>
                     <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
                       <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Internal Rear Boot</td>
                       <td class="py-2.5 px-3.5">3–4 Trolleys (20"–24")</td>
+                      <td class="py-2.5 px-3.5">6–8 Trolleys (Hatch)</td>
                       <td class="py-2.5 px-3.5">5–6 Trolleys (Ext. Boot)</td>
                       <td class="py-2.5 px-3.5">6–7 Trolleys (4020 Trunk)</td>
                       <td class="py-2.5 px-3.5">7–8 Trolleys (High Trunk)</td>
                       <td class="py-2.5 px-3.5">10–12 Large Bags (Hold)</td>
-                      <td class="py-2.5 px-3.5">6–8 Trolleys (Hatch)</td>
                     </tr>
                     <tr class="hover:bg-m3-surface-container-low/50 transition">
                       <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Rooftop Carrier Status</td>
                       <td class="py-2.5 px-3.5 font-medium text-emerald-800 dark:text-emerald-400">None (RTO Compliant)</td>
+                      <td class="py-2.5 px-3.5">Zero Roof Rack</td>
                       <td class="py-2.5 px-3.5 font-medium text-emerald-800 dark:text-emerald-400">None (Inside Storage)</td>
                       <td class="py-2.5 px-3.5 font-medium text-emerald-800 dark:text-emerald-400">None (Inside Trunk)</td>
                       <td class="py-2.5 px-3.5 font-medium text-emerald-800 dark:text-emerald-400">None (Inside Hold)</td>
                       <td class="py-2.5 px-3.5">Rear Coach Hold</td>
-                      <td class="py-2.5 px-3.5">Zero Roof Rack</td>
                     </tr>
                     <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
                       <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Luggage Fit Advice</td>
                       <td class="py-2.5 px-3.5">8–10 Seats with bags</td>
+                      <td class="py-2.5 px-3.5">8–10 Seats executive</td>
                       <td class="py-2.5 px-3.5">10–12 Seats with bags</td>
                       <td class="py-2.5 px-3.5">13–15 Seats with bags</td>
                       <td class="py-2.5 px-3.5">16–18 Seats with bags</td>
                       <td class="py-2.5 px-3.5">20–24 Seats with bags</td>
-                      <td class="py-2.5 px-3.5">8–10 Seats executive</td>
                     </tr>
                     <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
                       <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">AC Configuration</td>
                       <td class="py-2.5 px-3.5">Dual AC + Louvers</td>
+                      <td class="py-2.5 px-3.5">Triple-Zone Climate</td>
                       <td class="py-2.5 px-3.5">Dual AC + Louvers</td>
                       <td class="py-2.5 px-3.5">Twin Compressors</td>
                       <td class="py-2.5 px-3.5">High-CFM Dual AC</td>
                       <td class="py-2.5 px-3.5">Bus AC Roof Unit</td>
-                      <td class="py-2.5 px-3.5">Triple-Zone Climate</td>
                     </tr>
                     <tr class="hover:bg-m3-surface-container-low/50 transition">
                       <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Suspension &amp; Ride</td>
                       <td class="py-2.5 px-3.5">Parabolic + Anti-Roll</td>
+                      <td class="py-2.5 px-3.5">European Coil Springs</td>
                       <td class="py-2.5 px-3.5">Parabolic + Anti-Roll</td>
                       <td class="py-2.5 px-3.5">Parabolic 4020 WB</td>
                       <td class="py-2.5 px-3.5">Multi-Leaf Parabolic</td>
                       <td class="py-2.5 px-3.5">Leaf + Heavy Shocks</td>
-                      <td class="py-2.5 px-3.5">European Coil Springs</td>
                     </tr>
                     <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
                       <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">In-Cabin Power</td>
                       <td class="py-2.5 px-3.5">2.4A USB / Row</td>
+                      <td class="py-2.5 px-3.5">Dual USB + Lamp</td>
                       <td class="py-2.5 px-3.5">2.4A USB / Row</td>
                       <td class="py-2.5 px-3.5">2.4A USB / Row</td>
                       <td class="py-2.5 px-3.5">2.4A USB / Row</td>
                       <td class="py-2.5 px-3.5">USB Across Cabin</td>
-                      <td class="py-2.5 px-3.5">Dual USB + Lamp</td>
                     </tr>
                     <tr class="hover:bg-m3-surface-container-low/50 transition">
                       <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Senior Accessibility</td>
                       <td class="py-2.5 px-3.5">280 mm Low Step</td>
+                      <td class="py-2.5 px-3.5">Sliding Low Step</td>
                       <td class="py-2.5 px-3.5">Low Step + Grab Rail</td>
                       <td class="py-2.5 px-3.5">Electric Footstep</td>
                       <td class="py-2.5 px-3.5">Low Step + 2 Rails</td>
                       <td class="py-2.5 px-3.5">Illuminated Coach Step</td>
-                      <td class="py-2.5 px-3.5">Sliding Low Step</td>
                     </tr>
 
                   </tbody>

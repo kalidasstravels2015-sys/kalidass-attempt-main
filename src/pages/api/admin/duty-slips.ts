@@ -145,7 +145,7 @@ export const POST: APIRoute = async ({ request }) => {
       netBalanceToCollect,
       paymentMode: data.paymentMode || 'Cash/UPI',
       notes: data.notes || '',
-      whatsappSummary: `*KALIDASS TRAVELS — TRIP DUTY SLIP*\nRef: ${data.bookingId}\nGuest: ${data.guestName}\nVehicle: ${data.vehiclePlate} (${data.chauffeurName})\n\nStart KM: ${startKm} | End KM: ${endKm}\nTotal KM: ${totalKm} km (Package: ${packageAllowedKm} km)\nExtra KM: ${extraKm} km @ Rs.${extraKmRate} = Rs.${extraKmCharge}\nBase Package: Rs.${basePackageFare}\nTolls (FASTag): Rs.${tollsFastag}\nPermit/Parking: Rs.${parking + statePermit}\nDriver Bata: Rs.${driverBata}\n---------------------------\n*Total Bill: Rs.${grossFare}*\nAdvance Received: -Rs.${advancePaid}\n*BALANCE TO PAY: Rs.${netBalanceToCollect}*\n\nThank you for choosing Kalidass Travels Chennai!`
+      whatsappSummary: `*KALIDASS TRAVELS — TRIP DUTY SLIP*\nRef: ${data.bookingId}\nGuest: ${data.guestName}\nVehicle: ${data.vehiclePlate} (${data.chauffeurName})\n\nStart KM: ${startKm} | End KM: ${endKm}\nTotal KM: ${totalKm} km (Package: ${packageAllowedKm} km)\nExtra KM: ${extraKm} km @ Rs.${extraKmRate} = Rs.${extraKmCharge}\nBase Package: Rs.${basePackageFare}\nState Entry Permit: Rs.${statePermit}\nTolls (FASTag): Rs.${tollsFastag}\nParking Charges: Rs.${parking}\nDriver Bata: Rs.${driverBata}\n---------------------------\n*Total Bill: Rs.${grossFare}*\nAdvance Received: -Rs.${advancePaid}\n*BALANCE TO PAY: Rs.${netBalanceToCollect}*\n\nThank you for choosing Kalidass Travels Chennai!`
     };
 
     existingSlips.unshift(slipRecord);

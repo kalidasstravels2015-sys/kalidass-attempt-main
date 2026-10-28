@@ -883,7 +883,7 @@ export default function OutstationQuotationModal() {
 💰 *ESTIMATED FARE & TERMS:*
 • Base Vehicle Meter Fare: ₹${(breakdown?.km_cost || finalEstimate).toLocaleString('en-IN')} (${breakdown?.chargeable_km || roundKm} km @ ₹${breakdown?.rate_per_km || (tripType === 'round' ? vehicle.roundTripRate : vehicle.oneWayRate)}/km)
 • Chauffeur Duty & Day Bata: ₹${(breakdown?.driver_bata || vehicle.bata * days).toLocaleString('en-IN')} (${days} ${days > 1 ? 'Days' : 'Day'})
-${breakdown?.state_permit_est > 0 ? `• State Permit (${breakdown.state_name}): ₹${breakdown.state_permit_est.toLocaleString('en-IN')}\n` : ''}• Quoted Total Fare: *₹${finalEstimate.toLocaleString('en-IN')} + Tolls/Parking Extra*
+${breakdown?.state_permit_est > 0 ? `• State Entry Permit (${breakdown.state_name}): ₹${breakdown.state_permit_est.toLocaleString('en-IN')}\n` : ''}• Quoted Total Fare: *₹${finalEstimate.toLocaleString('en-IN')} + Tolls/Parking Extra*
 • Highway FASTag Tolls: ${breakdown?.tolls_est > 0 ? `Approx. ~₹${breakdown.tolls_est} (Pay at Actuals as per FASTag receipts)` : 'Pay at Actuals as per FASTag receipts'}
 • Parking Charges: Pay at Actuals as per receipts
 • Payment Policy: Pay 50% (₹${Math.round(finalEstimate * 0.5).toLocaleString('en-IN')}) on cab arrival, balance 50% after trip completion
@@ -891,7 +891,7 @@ ${breakdown?.state_permit_est > 0 ? `• State Permit (${breakdown.state_name}):
 • Duration Standard: 1 Day = up to 24 hrs / 250 km. Duration above 24 hrs billed extra.
 
 ━━━━━━━━━━━━━━━━━━━━
-✅ *Inclusions:* Dedicated AC Vehicle, Fuel, Chauffeur Day Bata${breakdown?.state_permit_est > 0 ? ` & ${breakdown.state_name || ''} State Border Permit` : ''} Included
+✅ *Inclusions:* Dedicated AC Vehicle, Fuel, Chauffeur Day Bata${breakdown?.state_permit_est > 0 ? ` & ${breakdown.state_name || ''} State Entry Permit` : ''} Included
 ℹ️ *Terms:* Zero shed charges (billing from pickup point) • Only tolls and parking payable as per actual receipts.
 
 Please save my quote & confirm live cab availability.` + omMapsBlock;
@@ -1413,7 +1413,7 @@ Please save my quote & confirm live cab availability.` + omMapsBlock;
                         )}
                         {breakdown?.state_permit_est > 0 && (
                           <div className="flex justify-between items-center py-0.5">
-                            <span>State Permit:</span>
+                            <span>State Entry Permit:</span>
                             <span className="font-bold text-m3-on-surface">
                               ₹{breakdown.state_permit_est.toLocaleString('en-IN')}
                             </span>

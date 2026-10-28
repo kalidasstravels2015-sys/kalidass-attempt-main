@@ -120,7 +120,7 @@ All fare summary cards and checkout actions must prioritize a calm, frictionless
 - **Single "All-Inclusive" Invariant**:
   - The term "All-Inclusive" must appear **strictly once** on the entire rate summary card, placed in the badge directly beside the hero price (e.g., `₹ 6,000 [✓ All-Inclusive Fixed Fare]`).
   - Do NOT repeat "All-Inclusive", "Included", or "Inclusions" in the guarantee heading, inclusions subtext, or breakdown buttons.
-  - **Inclusions Subtext**: Use `Covers FASTag Tolls + AP Permit + Ghat Road + Driver Bata` (never `... Included`).
+  - **Inclusions Subtext**: Use `Covers FASTag Tolls + AP State Entry Permit + Ghat Road + Driver Bata` (never `... Included`).
   - **Breakdown Toggle**: Use `View Itemized Fare Breakdown` and `Hide Itemized Fare Breakdown` (never `... & Inclusions`).
 - **Transparent Itemized Distance & Rate Formula ("Km @ Rate/km")**:
   - In distance-based / outstation booking engines, the "Cab Hire" itemized bill line must NEVER hide the pricing formula behind generic labels (e.g. `Cab Hire ({vehicle} • Fuel included):`).
@@ -128,11 +128,11 @@ All fare summary cards and checkout actions must prioritize a calm, frictionless
     `Cab Hire (${chargeable_km} km @ ₹${rate_per_km}/km):`
     (Tamil: `வாகன கட்டணம் (${chargeable_km} கிமீ @ ₹${rate_per_km}/கிமீ):`).
   - Fuel & driver duty are already highlighted in the dedicated inclusions badge; the cab hire line exists for 100% mathematical pricing transparency.
-- **Separate Rows for Road Extras (State Permit, Tolls, Parking — Option 1 Senior-Friendly Standard)**:
+- **Separate Rows for Road Extras (State Entry Permit, Tolls, Parking — Option 1 Senior-Friendly Standard)**:
   - Road extras must NEVER be lumped together into a single composite line (such as `Tolls, Parking & Permits: Extra (At Actuals)`).
   - Never place verbose parenthetical explanations (`Approx. ~₹130 (At Actuals • May vary)`, `₹0 (Within Tamil Nadu / No Permit)`) in the right-hand value column.
-  - Keep all `₹` numeric rows on top (`Cab Hire`, `Driver Allowance`, `State Permit: ₹0`) and place all `Extra` rows at the bottom of the itemized list (`Tolls: Extra`, `Parking: Extra`), using the exact same word (`Extra` / `கூடுதல்`) as the `+ Extra` in the totals:
-    - `State Permit:` **₹0** (or exact interstate permit figure) / `மாநில அனுமதி வரி:` **₹0**
+  - Keep all `₹` numeric rows on top (`Cab Hire`, `Driver Allowance`, `State Entry Permit: ₹0`) and place all `Extra` rows at the bottom of the itemized list (`Tolls: Extra`, `Parking: Extra`), using the exact same word (`Extra` / `கூடுதல்`) as the `+ Extra` in the totals:
+    - `State Entry Permit:` **₹0** (or exact interstate permit figure) / `மாநில நுழைவு அனுமதி:` **₹0**
     - `Tolls:` **Extra** / `டோல் கட்டணம்:` **கூடுதல்**
     - `Parking:` **Extra** / `பார்க்கிங்:` **கூடுதல்**
 - **Minimalist Rate Summary (Zero Banner Fatigue)**:

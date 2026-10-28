@@ -16,7 +16,7 @@ Disallow: /api/private/
 # OpenAI (GPTBot, ChatGPT-User, OAI-SearchBot)
 # Anthropic (ClaudeBot, Claude-Web, anthropic-ai)
 # Perplexity AI (PerplexityBot, Perplexity-User)
-# Google (Google-Extended, GoogleOther)
+# Google (Googlebot, Google-Extended, GoogleOther, Google-CloudVertexBot, GoogleAgent-Mariner, Google-NotebookLM)
 # xAI / Grok (GrokBot, xAI-SearchBot, Grok)
 # Apple (Applebot, Applebot-Extended)
 # Microsoft (Bingbot, BingPreview, Copilot)

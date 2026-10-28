@@ -1542,9 +1542,19 @@ export default function AdminDashboard() {
                         <span>₹{slip.basePackageFare}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-m3-outline">Tolls & State Permit:</span>
-                        <span>₹{slip.tollsFastag + slip.statePermit}</span>
+                        <span className="text-m3-outline">State Entry Permit:</span>
+                        <span>₹{slip.statePermit || 0}</span>
                       </div>
+                      <div className="flex justify-between">
+                        <span className="text-m3-outline">FASTag Tolls:</span>
+                        <span>₹{slip.tollsFastag || 0}</span>
+                      </div>
+                      {slip.parking > 0 && (
+                        <div className="flex justify-between">
+                          <span className="text-m3-outline">Parking Charges:</span>
+                          <span>₹{slip.parking}</span>
+                        </div>
+                      )}
                       <div className="flex justify-between">
                         <span className="text-m3-outline">Driver Daily Bata:</span>
                         <span>₹{slip.driverBata}</span>
@@ -2168,7 +2178,7 @@ export default function AdminDashboard() {
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-m3-on-surface-variant">State Permit (₹):</label>
+                  <label className="font-semibold text-m3-on-surface-variant">State Entry Permit (₹):</label>
                   <input
                     type="number"
                     value={slipForm.statePermit}

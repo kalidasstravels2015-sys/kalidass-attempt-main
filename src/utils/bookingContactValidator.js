@@ -1,7 +1,7 @@
 /**
  * Booking Contact Validator
- * Enforces strict validation that Customer Name and a valid 10-digit Indian Mobile Number
- * are present before any enquiry/quote can be moved into Active Trips.
+ * Validates Customer Name and 10-digit Indian Mobile Number cleanly
+ * without blocking fast phone/WhatsApp bookings when a customer's name is not yet known.
  */
 
 const PLACEHOLDER_NAMES = [
@@ -26,7 +26,6 @@ export function isValidIndianMobile(phone) {
   const digits = String(phone).replace(/[^0-9]/g, '').slice(-10);
   if (digits.length !== 10) return false;
   if (!/^[6-9]\d{9}$/.test(digits)) return false;
-  // Disallow known dummy numbers used as testing placeholders
   if (digits === '9840100000' || digits === '9999999999' || digits === '9000000000') return false;
   return true;
 }
@@ -50,43 +49,45 @@ export function extractValidMobile(textOrItem) {
 }
 
 /**
- * Checks if a name is a placeholder rather than a real customer name
+ * Checks if a name is a generic placeholder rather than a specific customer name
  */
 export function isPlaceholderCustomerName(name) {
   if (!name) return true;
   const clean = String(name).trim().toLowerCase();
   if (clean.length < 2) return true;
-  return PLACEHOLDER_NAMES.some(placeholder => 
-    clean === placeholder || clean.startsWith(placeholder) || clean.startsWith(`${placeholder} (`)
+  return PLACEHOLDER_NAMES.some(placeholder =>
+    clean === placeholder || clean.startsWith(`${placeholder} (`) || clean.startsWith(`${placeholder} #`)
   );
 }
 
 /**
- * Validates customer contact details
+ * Validates customer contact details.
+ * If a valid 10-digit mobile number is provided, a missing/placeholder name
+ * automatically defaults to "Customer" so WhatsApp/Phone orders are never blocked.
  */
 export function validateCustomerContact(name, phone) {
-  const cleanName = String(name || '').trim();
+  const rawName = String(name || '').trim();
   const cleanPhone = String(phone || '').replace(/[^0-9]/g, '').slice(-10);
 
-  const hasValidName = cleanName.length >= 2 && !isPlaceholderCustomerName(cleanName);
   const hasValidPhone = isValidIndianMobile(cleanPhone);
+  const hasRealName = rawName.length >= 2 && !isPlaceholderCustomerName(rawName);
+
+  // If valid phone is present, allow booking even if name wasn't provided yet (common on WhatsApp)
+  const effectiveName = hasRealName ? rawName : (hasValidPhone ? (rawName || 'Customer') : '');
+  const isValid = hasValidPhone;
 
   let error = '';
-  if (!hasValidName && !hasValidPhone) {
-    error = 'Please enter Customer Name and a valid 10-digit Mobile Number.';
-  } else if (!hasValidName) {
-    error = 'Please enter a valid Customer Name (e.g. Ramesh Kumar).';
-  } else if (!hasValidPhone) {
-    error = 'Please enter a valid 10-digit Mobile Number starting with 6, 7, 8, or 9.';
+  if (!hasValidPhone) {
+    error = 'Please enter a valid 10-digit Mobile Number (starting with 6, 7, 8, or 9).';
   }
 
   return {
-    isValid: hasValidName && hasValidPhone,
-    hasValidName,
+    isValid,
+    hasValidName: Boolean(effectiveName),
     hasValidPhone,
-    cleanName: hasValidName ? cleanName : '',
+    cleanName: effectiveName,
     cleanPhone: hasValidPhone ? cleanPhone : '',
-    formattedGuestNamePhone: hasValidName && hasValidPhone ? `${cleanName} (+91 ${cleanPhone})` : '',
+    formattedGuestNamePhone: isValid ? `${effectiveName} (+91 ${cleanPhone})` : (effectiveName || cleanPhone),
     error
   };
 }
@@ -94,14 +95,13 @@ export function validateCustomerContact(name, phone) {
 /**
  * Parses and validates a combined guestNamePhone string such as:
  * - "Ramesh Kumar (+91 9840123456)" -> valid
- * - "Website Caller (#KT-4001)" -> invalid (no phone, placeholder name)
- * - "Customer (+91 9840100000)" -> invalid (dummy phone, placeholder name)
+ * - "Customer (+91 9944649858)" -> valid
+ * - "+91 99446 49858" -> valid
  */
 export function parseAndValidateContact(guestNamePhone, fallbackPhone = '') {
   const str = String(guestNamePhone || '').trim();
   const phone = extractValidMobile(`${str} ${fallbackPhone}`);
-  
-  // Extract name portion before (+91 or (
+
   let rawName = str.split('(')[0].split('+91')[0].replace(/[#\d]/g, '').trim();
   if (!rawName && str.includes('(')) {
     rawName = str.split('(')[0].trim();
@@ -112,18 +112,25 @@ export function parseAndValidateContact(guestNamePhone, fallbackPhone = '') {
 
 /**
  * Checks if a lead or inquiry is actionable:
- * Has positive estimated fare, is not a dummy whatsapp text,
- * and has a valid 10-digit customer phone OR a real named customer (not an anonymous website visitor).
+ * Shows all manual/phone/WhatsApp enquiries (even if fare is 0/TBD)
+ * while filtering out anonymous website zero-click logs.
  */
 export function isActionableLead(lead) {
   if (!lead) return false;
-  const fare = Number(lead.estimatedFare || lead.fare || 0);
-  if (fare <= 0) return false;
+  if (lead.status === 'Cancelled' || lead.status === 'Deleted') return false;
   if ((lead.drop || '').toLowerCase().includes('whatsapp chat')) return false;
 
+  const id = String(lead.quoteId || '').toUpperCase();
+  const isManualEnquiry = id.startsWith('#ENQ') || id.startsWith('#CALL') || id.startsWith('#WA');
   const phone = extractValidMobile(lead);
   const hasRealName = lead.guestName && !isPlaceholderCustomerName(lead.guestName);
-  return Boolean(phone || hasRealName);
+
+  if (isManualEnquiry || phone || hasRealName) {
+    return true;
+  }
+
+  const fare = Number(lead.estimatedFare || lead.fare || 0);
+  return fare > 0 && Boolean(phone || hasRealName);
 }
 
 /**
@@ -150,4 +157,3 @@ export function deduplicateCalculatorQuotes(quotes = []) {
   });
   return Array.from(map.values());
 }
-

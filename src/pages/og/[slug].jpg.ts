@@ -177,6 +177,7 @@ const tourImages: Record<string, string> = {
   "tirupati-package": "/images/temple/tirupati-balaji.webp",
   "thiruvannamalai-girivalam-trip": "/images/temple/thiruvannamalai-girivalam.webp",
   "rameswaram-2-days": "/images/temple/rameswaram.webp",
+  "tiruchendur-temple-tour": "/images/temple/tiruchendur-murugan.webp",
   "navagraha-tour": "/images/temple/navagraha.webp",
   "kanchipuram-temple-trip": "/images/temple/kanchipuram-temple.webp",
   "chidambaram-temple-trip": "/images/temple/chidambaram-natarajar-temple.webp",

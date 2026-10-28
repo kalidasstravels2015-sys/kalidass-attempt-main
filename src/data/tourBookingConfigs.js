@@ -16,12 +16,12 @@ export const TOUR_CONFIGS = {
     recommendedHours: 15,
     advisoryText: 'Chennai ⇄ Tirupati is ~320 km round trip (approx. 8–9 hrs highway & ghat road driving + temple darshan). Recommended same-day return window is 14–16 hours (minimum 12 hours required).',
     inclusions: {
-      standard: 'Covers FASTag Tolls + AP Permit + Hill Climb + Driver Bata + Parking',
-      multiDay: 'Covers Cab, Hill Climb & Driver Bata • Tolls & AP Permit Extra'
+      standard: 'Covers FASTag Tolls + AP State Entry Permit + Hill Climb + Driver Bata + Parking',
+      multiDay: 'Covers Cab, Hill Climb & Driver Bata • Tolls & AP State Entry Permit Extra'
     },
     itemizedInclusions: [
       { label: 'Tirumala Ghat Road Ascent & Hill Climb:', value: '₹0', multiDayValue: '₹0' },
-      { label: 'NH FASTag Tolls & AP State Border Permit:', value: '₹0', multiDayValue: 'Extra' },
+      { label: 'NH FASTag Tolls & AP State Entry Permit:', value: '₹0', multiDayValue: 'Extra' },
       { label: 'Tirupati & TTD Hilltop Parking:', value: '₹0', multiDayValue: 'Extra' }
     ],
     eventPrefix: 'tirupati_engine',
@@ -550,11 +550,11 @@ export const TOUR_CONFIGS = {
     recommendedHours: 72,
     advisoryText: 'Chennai to Sabarimala (Pamba / Nilakkal) round trip is ~1,350 km through Western Ghats routes. Minimum 3 Days (48–72 hrs) is required for safe driving and darshan.',
     inclusions: {
-      standard: 'Covers 1,350 km Run & Fuel • Kerala Interstate Permit, Tolls & Bata Extra',
-      multiDay: 'Covers Cab & 1,350 km Run • Kerala Permit, Tolls & Bata Extra'
+      standard: 'Covers 1,350 km Run & Fuel • Kerala State Entry Permit, Tolls & Bata Extra',
+      multiDay: 'Covers Cab & 1,350 km Run • Kerala State Entry Permit, Tolls & Bata Extra'
     },
     itemizedInclusions: [
-      { label: 'Kerala Motor Vehicles Interstate Permit:', value: '₹800', multiDayValue: '₹800' },
+      { label: 'Kerala State Entry Permit:', value: '₹800', multiDayValue: '₹800' },
       { label: 'NH Tolls & Pamba Hill Ghat Standby:', value: 'Extra', multiDayValue: 'Extra' },
       { label: 'Chauffeur Outstation Duty & Halting Bata:', value: 'Extra', multiDayValue: 'Extra' }
     ],
@@ -793,6 +793,94 @@ export const TOUR_CONFIGS = {
         vehicleHire: { 1: 9300, 2: 13200, 3: 17600 },
         driverBata: { 1: 1700, 2: 2300, 3: 2900 },
         extraHourRate: 300
+      }
+    ]
+  },
+
+  'tiruchendur-temple-tour': {
+    slug: 'tiruchendur-temple-tour',
+    serviceTitle: 'Chennai to Tiruchendur Murugan Temple Cab Package',
+    engineTitle: 'Book Chennai to Tiruchendur',
+    subtitle: 'Round trip private AC cab • Senior-friendly zero-climb seashore temple • ₹500 advance to confirm',
+    destination: {
+      name: 'Tiruchendur, Kulasekarapattinam & Nava Tirupathi',
+      roundTripKm: 1280,
+      editable: false,
+      isCircuit: true
+    },
+    minRealisticHours: 36,
+    recommendedHours: 60,
+    advisoryText: 'Chennai to Tiruchendur round trip is ~1,280 km (~10–11 hrs each way via NH 38). Minimum 2 Days (36–48 hrs) required; 3 Days (60–72 hrs) is strongly recommended for senior citizens and Nava Tirupathi darshan.',
+    inclusions: {
+      standard: 'Covers 1,280 km Run, Fuel, Kulasekarapattinam & Vanathirupathi • Tolls & Bata Extra',
+      multiDay: 'Covers Cab, 1,280+ km Run & Nava Tirupathi Circuit • Tolls & Bata Extra'
+    },
+    itemizedInclusions: [
+      { label: 'Kulasekarapattinam (14 km) & Vanathirupathi Visit:', value: '₹0', multiDayValue: '₹0' },
+      { label: 'NH 38 Highway FASTag Tolls & Temple Parking:', value: 'Extra', multiDayValue: 'Extra' },
+      { label: 'Chauffeur Outstation Duty & Halting Bata:', value: 'Extra', multiDayValue: 'Extra' }
+    ],
+    eventPrefix: 'tiruchendur_engine',
+    vehicles: [
+      {
+        id: 'dzire',
+        name: 'Swift Dzire / Toyota Etios',
+        shortName: 'AC Sedan',
+        capacity: 4,
+        luggage: '2 Bags',
+        tag: 'Best Value',
+        rates: { 1: 19500, 2: 19500, 3: 23000, 4: 26500 },
+        vehicleHire: { 1: 16500, 2: 16500, 3: 19400, 4: 22300 },
+        driverBata: { 1: 3000, 2: 3000, 3: 3600, 4: 4200 },
+        extraHourRate: 200
+      },
+      {
+        id: 'ertiga',
+        name: 'Maruti Ertiga / XL6',
+        shortName: 'Comfort SUV',
+        capacity: 6,
+        luggage: '3 Bags',
+        tag: 'Family Favorite',
+        rates: { 1: 23500, 2: 23500, 3: 27500, 4: 31500 },
+        vehicleHire: { 1: 19900, 2: 19900, 3: 23100, 4: 26300 },
+        driverBata: { 1: 3600, 2: 3600, 3: 4400, 4: 5200 },
+        extraHourRate: 250
+      },
+      {
+        id: 'innova',
+        name: 'Toyota Innova',
+        shortName: 'Spacious MUV',
+        capacity: 7,
+        luggage: '4 Bags',
+        tag: 'Elders Choice',
+        rates: { 1: 26500, 2: 26500, 3: 31000, 4: 35500 },
+        vehicleHire: { 1: 22500, 2: 22500, 3: 26100, 4: 29700 },
+        driverBata: { 1: 4000, 2: 4000, 3: 4900, 4: 5800 },
+        extraHourRate: 250
+      },
+      {
+        id: 'crysta',
+        name: 'Toyota Innova Crysta',
+        shortName: 'Luxury MUV',
+        capacity: 7,
+        luggage: '4 Bags',
+        tag: 'VIP Luxury',
+        rates: { 1: 31500, 2: 31500, 3: 36500, 4: 41500 },
+        vehicleHire: { 1: 26900, 2: 26900, 3: 30800, 4: 34700 },
+        driverBata: { 1: 4600, 2: 4600, 3: 5700, 4: 6800 },
+        extraHourRate: 350
+      },
+      {
+        id: 'tempo12',
+        name: '12-Seater Tempo Traveller',
+        shortName: 'Mini Coach',
+        capacity: 12,
+        luggage: '8 Bags',
+        tag: 'Group Darshan',
+        rates: { 1: 37000, 2: 37000, 3: 43000, 4: 49000 },
+        vehicleHire: { 1: 31600, 2: 31600, 3: 36300, 4: 41000 },
+        driverBata: { 1: 5400, 2: 5400, 3: 6700, 4: 8000 },
+        extraHourRate: 400
       }
     ]
   }

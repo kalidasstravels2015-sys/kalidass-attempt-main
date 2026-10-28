@@ -2217,9 +2217,12 @@ Please confirm driver & vehicle availability for this airport transfer (${quoteR
       : activeTab === 'oneway' ? 'One Way Drop' : `Round Trip (${days} ${days > 1 ? 'Days' : 'Day'})`;
 
     const hasPermit = (breakdown?.state_permit_est || 0) > 0;
-    const permitBreakupText = hasPermit ? ` + State Permit ₹${breakdown.state_permit_est.toLocaleString('en-IN')}` : '';
+    const permitBreakupText = hasPermit ? ` + State Entry Permit ₹${breakdown.state_permit_est.toLocaleString('en-IN')}` : '';
+    const statePermitLabel = hasPermit
+      ? `State Entry Permit (${breakdown.state_name || 'Interstate'})`
+      : 'State Entry Permit';
     const statePermitText = hasPermit
-      ? `₹${breakdown.state_permit_est.toLocaleString('en-IN')} (${breakdown.state_name || 'Interstate'} — Included in Total)`
+      ? `₹${breakdown.state_permit_est.toLocaleString('en-IN')} (Included in Total)`
       : '₹0 (Within Tamil Nadu / Not required)';
 
     const breakdownDetails = activeTab === 'local' ? `
@@ -2234,7 +2237,7 @@ Please confirm driver & vehicle availability for this airport transfer (${quoteR
 *FARE SUMMARY*
 • *Total Quoted Fare:* *₹${finalEst.toLocaleString('en-IN')} + Tolls/Parking Extra* (${breakdown.chargeable_km} km @ ₹${breakdown.rate_per_km}/km + Driver Allowance ₹${breakdown.driver_bata}${permitBreakupText})
 • *Included Distance:* ${breakdown.chargeable_km} km (Extra: ₹${extraKmPrice}/km)
-${hasPermit ? `• *State Permit:* ${statePermitText}\n` : ''}• *Highway Tolls & Parking:* Extra (Pay at actuals as per FASTag receipts)
+${hasPermit ? `• *${statePermitLabel}:* ${statePermitText}\n` : ''}• *Highway Tolls & Parking:* Extra (Pay at actuals as per FASTag receipts)
 • *Payment Policy:* Pay 50% (₹${advanceAmount.toLocaleString('en-IN')}) on cab arrival, balance (₹${balanceAmount.toLocaleString('en-IN')}) after trip completion
 • *Booking Advance:* ₹0 (Confirm ride with zero advance)
 • *Terms:* Zero shed charges (billing begins from your pickup point) • Transparent pricing.`
@@ -3547,7 +3550,7 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                             <>
                               {breakdown?.state_permit_est > 0 && (
                                 <div className="flex justify-between items-center py-0.5">
-                                  <span className="text-slate-600">{isTa ? 'மாநில அனுமதி வரி:' : 'State Permit:'}</span>
+                                  <span className="text-slate-600">{isTa ? 'மாநில நுழைவு அனுமதி:' : 'State Entry Permit:'}</span>
                                   <span className="font-bold text-slate-900 shrink-0 ml-2">
                                     ₹{breakdown.state_permit_est.toLocaleString('en-IN')}
                                   </span>

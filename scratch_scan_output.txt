@@ -1,0 +1,1664 @@
+=== 1. ICONS DIRECTLY INSIDE H2/H3 ===
+src\components\ActingDrivers.jsx (h2):
+<h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight font-heading text-m3-on-surface">
+            Transparent Chauffeur <span className="text-m3-primary">Tariffs</span>
+          </h2>
+---
+src\components\ActingDrivers.jsx (h2):
+<h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight leading-tight text-m3-on-surface font-heading">
+              How Booking Works <span className="text-m3-primary">(4 Simple Steps)</span>
+            </h2>
+---
+src\components\ActingDrivers.jsx (h2):
+<h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+              Frequently Asked <span className="text-m3-primary">Questions</span>
+            </h2>
+---
+src\components\ActingDrivers.jsx (h2):
+<h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight leading-tight mb-2.5 font-heading text-white">
+            Need an Acting Driver <span className="text-white">Today?</span>
+          </h2>
+---
+src\components\ActingDriverTariff.jsx (h3):
+<h3 className="text-xl font-bold text-m3-on-surface flex items-center gap-2 font-heading">
+          <Info className="w-5 h-5 text-m3-primary" />
+          <span>Acting Driver Tariff & Standard Rates</span>
+        </h3>
+---
+src\components\admin\FastQuoteDesk.jsx (h3):
+<h3 className="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+                    <span>Ask AI to Adjust Quote</span>
+                    <span className="text-[10px] font-semibold text-emerald-300 bg-emerald-950/70 border border-emerald-500/40 px-2 py-0.5 rounded-full flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      Live AI
+                    </span>
+                  </h3>
+---
+src\components\admin\solo\DeskChauffeurs.jsx (h2):
+<h2 className="text-sm font-bold text-m3-on-surface flex items-center gap-2">
+            <span className="material-symbols-outlined text-m3-primary text-lg">badge</span>
+            <span>Chauffeurs & Commercial Fleet Roster ({chauffeurs.length})</span>
+          </h2>
+---
+src\components\admin\solo\DeskInquiries.jsx (h2):
+<h2 className="text-sm font-extrabold text-m3-on-surface tracking-tight flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-m3-tertiary text-base">forum</span>
+                <span>Step 1: Enquiries from Google Ads, Website, WhatsApp & AI ({leads.length})</span>
+              </h2>
+---
+src\components\admin\solo\DeskKhataSettlement.jsx (h2):
+<h2 className="text-sm font-extrabold text-m3-on-surface flex items-center gap-1.5">
+          <span className="material-symbols-outlined text-m3-success text-base">account_balance_wallet</span>
+          <span>Daily Driver Khata & Cash Reconciliation</span>
+        </h2>
+---
+src\components\admin\solo\EnquiriesView.jsx (h3):
+<h3 className="text-sm font-bold text-m3-on-surface flex items-center gap-2">
+                    <span>Record Inbound Customer Call</span>
+                    <span className="text-[10px] bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 font-bold px-2 py-0.5 rounded-full border border-blue-200 dark:border-blue-800">Fast Track CAD Desk</span>
+                  </h3>
+---
+src\components\admin\solo\WebsiteRadarView.jsx (h2):
+<h2 className="text-m3-title-m font-bold text-m3-on-surface flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-m3-primary">radar</span>
+              <span>Website Fare Calculator Radar</span>
+            </h2>
+---
+src\components\admin\solo\WebsiteRadarView.jsx (h3):
+<h3 className="text-xs font-bold uppercase tracking-wider text-m3-on-surface flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-[18px] text-m3-primary">psychology</span>
+              <span>Why am I seeing these calculations & How does this work?</span>
+            </h3>
+---
+src\components\CorporateMobility.jsx (h2):
+<h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight font-heading text-m3-on-surface">
+                Enterprise Mobility &amp; <span className="text-m3-primary">Chauffeur Contracts</span>
+              </h2>
+---
+src\components\CorporateMobility.jsx (h2):
+<h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+              Comprehensive Corporate <span className="text-m3-primary">Fleet Solutions</span>
+            </h2>
+---
+src\components\CorporateMobility.jsx (h2):
+<h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+              Built for <span className="text-m3-primary">Enterprise Reliability</span>
+            </h2>
+---
+src\components\CorporateMobility.jsx (h2):
+<h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+              Corporate Mobility <span className="text-m3-primary">FAQs</span>
+            </h2>
+---
+src\components\CorporateMobility.jsx (h2):
+<h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight leading-tight mb-2.5 font-heading text-white">
+            Partner With Chennai's Trusted <span className="text-white">Corporate Mobility Fleet</span>
+          </h2>
+---
+src\components\Drivers.astro (h2):
+<h2
+        class="text-2xl md:text-4xl font-extrabold text-m3-on-surface inline-block relative mb-4 font-heading"
+      >
+        Our Professional Drivers
+        <div
+          class="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-20 h-1.5 bg-m3-primary rounded-m3-full"
+        >
+        </div>
+      </h2>
+---
+src\components\FleetRoll.astro (h2):
+<h2 class="text-2xl md:text-4xl font-extrabold text-m3-on-surface inline-block relative mb-4 font-heading">
+        Our Premium Fleet
+        <div class="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-20 h-1.5 bg-m3-primary rounded-m3-full"></div>
+      </h2>
+---
+src\components\Partners.astro (h2):
+<h2
+      class="text-2xl md:text-4xl font-extrabold text-m3-on-surface inline-block relative mb-4 font-heading"
+    >
+      Trusted By Industry Leaders
+      <div
+        class="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-20 h-1.5 bg-m3-primary rounded-m3-full"
+      >
+      </div>
+    </h2>
+---
+src\components\PartnersCarousel.astro (h2):
+<h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+      Trusted by <span class="text-m3-primary">Leading Organizations</span>
+    </h2>
+---
+src\components\PopularDestinations.jsx (h2):
+<h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight font-heading text-m3-on-surface">
+                Popular Outstation Trips &amp; <span className="text-m3-primary">Cab Tariffs</span>
+              </h2>
+---
+src\components\PopularDestinations.jsx (h2):
+<h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+              Featured Outstation <span className="text-m3-primary">Getaways</span>
+            </h2>
+---
+src\components\PopularDestinations.jsx (h2):
+<h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+              Why Travelers Choose <span className="text-m3-primary">Kalidass Outstation Cabs</span>
+            </h2>
+---
+src\components\PopularDestinations.jsx (h2):
+<h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+              Outstation Frequently <span className="text-m3-primary">Asked Questions</span>
+            </h2>
+---
+src\components\PopularDestinations.jsx (h2):
+<h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight leading-tight mb-2.5 font-heading text-white">
+            Planning a <span className="text-white">Weekend Road Trip?</span>
+          </h2>
+---
+src\components\QuickAnswer.astro (h2):
+<h2
+            class="text-xl sm:text-2xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading"
+          >
+            Quick Answer: <span class="text-m3-primary">Kalidass Travels at a Glance</span>
+          </h2>
+---
+src\components\react\PartnersCarousel.jsx (h2):
+<h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+                    Trusted by <span className="text-m3-primary">Leading Organizations</span>
+                </h2>
+---
+src\components\react\ReviewsCarousel.jsx (h2):
+<h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+                        Customer <span className="text-m3-primary">Experiences</span>
+                    </h2>
+---
+src\components\TempleTours.jsx (h2):
+<h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight font-heading text-m3-on-surface">
+                All Temple Tour Rates <span className="text-m3-primary">at a Glance</span>
+              </h2>
+---
+src\components\TempleTours.jsx (h2):
+<h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+              Explore Holy <span className="text-m3-primary">Pilgrimage Packages</span>
+            </h2>
+---
+src\components\TempleTours.jsx (h2):
+<h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+              The Kalidass <span className="text-m3-primary">Pilgrimage Difference</span>
+            </h2>
+---
+src\components\TempleTours.jsx (h2):
+<h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+              Temple Tour <span className="text-m3-primary">Frequently Asked Questions</span>
+            </h2>
+---
+src\components\TempleTours.jsx (h2):
+<h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight leading-tight mb-2.5 font-heading text-white">
+            Ready to Plan Your <span className="text-white">Sacred Pilgrimage?</span>
+          </h2>
+---
+src\components\TrustStrip.astro (h2):
+<h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+        Why 10,000+ Travelers <span class="text-m3-primary">Choose Us</span>
+      </h2>
+---
+src\pages\attach-cab.astro (h2):
+<h2 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading flex items-center gap-2">
+          <Wallet className="w-5 h-5 text-m3-primary shrink-0" />
+          <span>Driver Partner Benefits & Tariffs</span>
+        </h2>
+---
+src\pages\attach-cab.astro (h2):
+<h2 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading flex items-center justify-center sm:justify-start gap-2">
+            <HelpCircle className="w-5 h-5 text-m3-primary shrink-0" />
+            <span>Frequently Asked Questions</span>
+          </h2>
+---
+src\pages\calculator.astro (h2):
+<h2 id="fare-matrix-heading" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2 font-heading">
+            Chennai Taxi &amp; Cab <span class="text-m3-primary">Fare Benchmark Matrix</span>
+          </h2>
+---
+src\pages\calculator.astro (h2):
+<h2 id="howto-heading" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2 font-heading">
+            How to Calculate Your Trip Cost <span class="text-m3-primary">in 60 Seconds</span>
+          </h2>
+---
+src\pages\calculator.astro (h2):
+<h2 id="formula-heading" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2 font-heading">
+            Transparent Fare Calculation Formulas <span class="text-m3-primary">&amp; Rules</span>
+          </h2>
+---
+src\pages\calculator.astro (h2):
+<h2 id="zero-surge-heading" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2 font-heading">
+              Why Choose Kalidass Travels Over <span class="text-m3-primary">App Aggregators?</span>
+            </h2>
+---
+src\pages\calculator.astro (h2):
+<h2 id="eeat-heading" class="text-lg sm:text-xl font-extrabold text-m3-on-surface font-heading mb-2">
+                Tariff &amp; Calculation Methodology <span class="text-m3-primary">Verified by Operations Leadership</span>
+              </h2>
+---
+src\pages\calculator.astro (h2):
+<h2 id="faq-heading" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2 font-heading">
+            Chennai Taxi &amp; Cab Fare <span class="text-m3-primary">Calculator FAQs</span>
+          </h2>
+---
+src\pages\calculator.astro (h2):
+<h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-tight mb-3 font-heading text-white">
+          Need a Custom Quote or <span class="text-m3-success">Immediate Dispatch?</span>
+        </h2>
+---
+src\pages\privacy.astro (h2):
+<h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">1</span>
+            Scope & Applicability
+          </h2>
+---
+src\pages\privacy.astro (h2):
+<h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">2</span>
+            Information We Collect
+          </h2>
+---
+src\pages\privacy.astro (h2):
+<h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">3</span>
+            How We Use Your Data
+          </h2>
+---
+src\pages\privacy.astro (h2):
+<h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">4</span>
+            Third-Party Services & Cookies
+          </h2>
+---
+src\pages\privacy.astro (h2):
+<h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">5</span>
+            Data Security & Retention
+          </h2>
+---
+src\pages\privacy.astro (h2):
+<h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">6</span>
+            Grievance Officer & Contact Information
+          </h2>
+---
+src\pages\services\acting-drivers.astro (h3):
+<h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading flex items-center gap-2">
+                      <svg class="w-5 h-5 text-m3-primary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                      </svg>
+                      <span>Within Chennai Metro</span>
+                    </h3>
+---
+src\pages\services\acting-drivers.astro (h3):
+<h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading flex items-center gap-2">
+                      <svg class="w-5 h-5 text-m3-tertiary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M5 12h14"></path>
+                        <path d="m13 6 6 6-6 6"></path>
+                      </svg>
+                      <span>Outstation One-Way Drop</span>
+                    </h3>
+---
+src\pages\services\acting-drivers.astro (h3):
+<h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading flex items-center gap-2">
+                      <svg class="w-5 h-5 text-m3-primary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M7 16V4M7 4L3 8M7 4L11 8"></path>
+                        <path d="M17 8V20M17 20L21 16M17 20L13 16"></path>
+                      </svg>
+                      <span>Outstation Round Trip</span>
+                    </h3>
+---
+src\pages\services\tours\temple-tours.astro (h2):
+<h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
+            Chennai to Temple Cab Rates • <span class="text-m3-primary">Transparent Pricing</span>
+          </h2>
+---
+src\pages\services\tours\temple-tours.astro (h2):
+<h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading">
+            Temple Pilgrimage Tour <span class="text-m3-primary">FAQs</span>
+          </h2>
+---
+src\pages\services\[slug].astro (h3):
+<h3 class="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center gap-2 font-heading uppercase tracking-wide">
+                      <CheckCircle2 className="w-4 h-4 text-m3-secondary shrink-0" />
+                      <span>100% Included In Total Fare</span>
+                    </h3>
+---
+src\pages\services\[slug].astro (h3):
+<h3 class="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center gap-2 font-heading uppercase tracking-wide">
+                      <AlertCircle className="w-4 h-4 text-m3-primary shrink-0" />
+                      <span>{guideLabels.exclusionsLabel}</span>
+                    </h3>
+---
+src\pages\services\[slug].astro (h2):
+<h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-m3-on-surface flex items-center gap-2 font-heading">
+                <Compass className="w-5 h-5 sm:w-6 sm:h-6 text-m3-primary shrink-0" />
+                <span>{shortName} Route Schedule &amp; Key Stops</span>
+              </h2>
+---
+src\pages\services\[slug].astro (h2):
+<h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-m3-on-surface flex items-center gap-2 font-heading">
+              <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-m3-primary shrink-0" />
+              <span>{shortName} {guideLabels.sectionTitle}</span>
+            </h2>
+---
+src\pages\services\[slug].astro (h3):
+<h3 class="font-bold text-m3-on-surface text-xs sm:text-sm font-heading flex items-center gap-1.5">
+                    {isTour ? <Sparkles className="w-3.5 h-3.5 text-m3-tertiary shrink-0" /> : <Compass className="w-3.5 h-3.5 text-m3-primary shrink-0" />}
+                    <span>{guideLabels.col1Title}</span>
+                  </h3>
+---
+src\pages\services\[slug].astro (h3):
+<h3 class="font-bold text-m3-on-surface text-xs sm:text-sm font-heading flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                    <span>{guideLabels.col2Title}</span>
+                  </h3>
+---
+src\pages\services\[slug].astro (h3):
+<h3 class="font-bold text-m3-on-surface text-xs sm:text-sm font-heading flex items-center gap-1.5">
+                    {isTour ? <Sparkles className="w-3.5 h-3.5 text-m3-tertiary shrink-0" /> : <ShieldCheck className="w-3.5 h-3.5 text-m3-success shrink-0" />}
+                    <span>{guideLabels.dressCodeLabel}</span>
+                  </h3>
+---
+src\pages\services\[slug].astro (h3):
+<h3 class="font-bold text-m3-on-surface text-xs sm:text-sm font-heading flex items-center gap-1.5">
+                    <Lightbulb className="w-3.5 h-3.5 text-m3-tertiary shrink-0" />
+                    <span>{guideLabels.tipsTitle}</span>
+                  </h3>
+---
+src\pages\services\[slug].astro (h2):
+<h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-m3-on-surface flex items-center gap-2 font-heading">
+              <HelpCircle className="w-5 h-5 text-m3-primary shrink-0" />
+              <span>{shortName} FAQs &amp; Booking Information</span>
+            </h2>
+---
+src\pages\services\[slug].astro (h3):
+<h3 class="text-xs font-bold text-m3-on-primary-container uppercase tracking-wider mb-2 flex items-center gap-2 font-heading">
+                <Info className="w-4 h-4 text-m3-primary" />
+                <span>Important Terms &amp; Safety Notes</span>
+              </h3>
+---
+src\pages\sitemap.astro (h3):
+<h3 class="text-base font-bold text-m3-on-surface group-hover:text-m3-on-surface flex items-center gap-1.5">
+                <span>{item.title}</span>
+                <span class="text-m3-on-surface-variant group-hover:translate-x-0.5 transition-transform text-xs">→</span>
+              </h3>
+---
+src\pages\sitemap.astro (h3):
+<h3 class="text-base font-bold text-m3-on-surface group-hover:text-m3-on-surface flex items-center gap-1.5">
+                <span>{item.title}</span>
+                <span class="text-m3-on-surface-variant group-hover:translate-x-0.5 transition-transform text-xs">→</span>
+              </h3>
+---
+src\pages\sitemap.astro (h3):
+<h3 class="text-base font-bold text-m3-on-surface group-hover:text-m3-on-surface flex items-center gap-1.5">
+                  <span>{service.title}</span>
+                  <span class="text-m3-on-surface-variant group-hover:translate-x-0.5 transition-transform text-xs">→</span>
+                </h3>
+---
+src\pages\sitemap.astro (h3):
+<h3 class="text-base font-bold text-m3-on-surface group-hover:text-m3-on-surface flex items-center gap-1.5">
+                  <span>{service.title}</span>
+                  <span class="text-m3-on-surface-variant group-hover:translate-x-0.5 transition-transform text-xs">→</span>
+                </h3>
+---
+src\pages\sitemap.astro (h3):
+<h3 class="text-base font-bold text-m3-on-surface group-hover:text-m3-on-surface flex items-center gap-1.5">
+                  <span>{service.title}</span>
+                  <span class="text-m3-on-surface-variant group-hover:translate-x-0.5 transition-transform text-xs">→</span>
+                </h3>
+---
+src\pages\sitemap.astro (h3):
+<h3 class="text-base font-bold text-m3-on-surface group-hover:text-m3-on-surface flex items-center gap-1.5">
+                  <span>{service.title}</span>
+                  <span class="text-m3-on-surface-variant group-hover:translate-x-0.5 transition-transform text-xs">→</span>
+                </h3>
+---
+src\pages\tariff.astro (h2):
+<h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface font-heading">
+              Local City &amp; <span class="text-m3-primary">Hourly Packages</span>
+            </h2>
+---
+src\pages\tariff.astro (h2):
+<h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
+              Outstation Taxi Tariff &amp; Fare Chart <span class="text-m3-primary">(Per KM from Chennai)</span>
+            </h2>
+---
+src\pages\tariff.astro (h3):
+<h3 class="font-bold text-m3-on-surface mb-3 font-heading text-lg flex items-center gap-2">
+            <svg class="w-5 h-5 text-m3-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            Inclusions in Standard Tariff
+          </h3>
+---
+src\pages\tariff.astro (h3):
+<h3 class="font-bold text-m3-tertiary mb-3 font-heading text-lg flex items-center gap-2">
+            <svg class="w-5 h-5 text-m3-tertiary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            Exclusions (Billed on Actuals)
+          </h3>
+---
+src\pages\tariff.astro (h2):
+<h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+            Frequently Asked Questions <span class="text-m3-primary">About Chennai Tariffs</span>
+          </h2>
+---
+src\pages\tariff.astro (h2):
+<h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-tight mb-3 font-heading text-white">
+          Need an Exact Fare Estimation or <span class="text-white">Custom Booking?</span>
+        </h2>
+---
+src\pages\terms.astro (h2):
+<h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">1</span>
+            Booking Confirmation & Advance Deposit Policy
+          </h2>
+---
+src\pages\terms.astro (h2):
+<h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">2</span>
+            Transparent Tariffs, Tolls & Permits
+          </h2>
+---
+src\pages\terms.astro (h2):
+<h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">3</span>
+            Acting Driver Service Terms
+          </h2>
+---
+src\pages\terms.astro (h2):
+<h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">4</span>
+            Cancellation & Rescheduling
+          </h2>
+---
+src\pages\terms.astro (h2):
+<h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">5</span>
+            Passenger Conduct & Safety
+          </h2>
+---
+src\pages\terms.astro (h2):
+<h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">6</span>
+            Governing Law & Legal Jurisdiction
+          </h2>
+---
+
+=== 2. ICON BOXES BESIDE HEADINGS IN FLEX ROW ===
+src\components\admin\FastQuoteDesk.jsx (Line 623):
+          {/* Card 1: Interactive AI Assistant / Conversational Refiner */}
+          <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white rounded-2xl p-4 sm:p-5 border border-indigo-500/30 shadow-md space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-lg bg-blue-500/20 border border-blue-400/40 flex items-center justify-center">
+                  <Wand2 className="w-4 h-4 text-blue-400" />
+                </div>
+                <div>
+                  <h3 className="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+                    <span>Ask AI to Adjust Quote</span>
+                    <span className="text-[10px] font-semibold text-emerald-300 bg-emerald-950/70 border border-emerald-500/40 px-2 py-0.5 rounded-full flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+---
+src\components\admin\solo\OperatorRateCalcWorkspace.jsx (Line 276):
+      <div className="bg-m3-surface-container-lowest rounded-m3-xl border border-m3-outline-variant/70 shadow-m3-1 p-4 sm:p-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-m3-outline-variant/50">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-m3-md bg-m3-primary text-m3-on-primary flex items-center justify-center shadow-m3-1">
+              <Phone className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-base sm:text-lg font-bold text-m3-on-surface leading-tight">
+                  Operator Rate Calculator & Booking Workspace
+                </h2>
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-m3-secondary-container text-m3-on-secondary-container border border-m3-outline-variant/40">
+---
+src\components\admin\solo\OperatorRateCalcWorkspace.jsx (Line 628):
+
+      {/* ── UPI QR MODAL (FOR ADVANCE PAYMENT VIA PHONEPE/GPAY) ─────── */}
+      {showQrModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fadeIn">
+          <div className="w-full max-w-sm bg-m3-surface-container-lowest rounded-m3-2xl p-5 text-center shadow-m3-3 border border-m3-outline-variant/80">
+            <div className="flex items-center justify-between pb-3 border-b border-m3-outline-variant/50">
+              <div className="flex items-center gap-2">
+                <QrCode className="w-5 h-5 text-m3-primary" />
+                <h3 className="font-bold text-m3-on-surface text-sm">₹500 Advance QR Code</h3>
+              </div>
+              <button
+                onClick={() => setShowQrModal(false)}
+---
+src\components\AeoDirectAnswer.astro (Line 36):
+
+<section aria-labelledby={id} class:list={["max-w-4xl mx-auto my-6 px-4", className]}>
+  <div class="rounded-2xl border border-m3-outline-variant/60 bg-m3-surface-container-low p-5 sm:p-6 shadow-xs">
+    <div class="flex items-center gap-2 mb-2 text-m3-primary font-semibold text-m3-label-l">
+      <CheckCircle2 className="w-5 h-5 text-m3-primary shrink-0" aria-hidden="true" />
+      <span>Official Live Tariff & Policy Summary</span>
+    </div>
+
+    <h2 id={id} class="text-m3-title-m sm:text-m3-title-l font-bold text-m3-on-surface mb-3 tracking-tight">
+      {question}
+    </h2>
+    
+---
+src\components\AiFareAssistantModal.astro (Line 40):
+  >
+    <!-- M3 & Gemini Top App Bar: Minimal, Clean & Distinctive -->
+    <header class="flex items-center justify-between px-4 py-3 bg-white/90 dark:bg-[#131314]/90 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 shrink-0 select-none z-10">
+      <!-- Title & Official Google Gemini Sparkle -->
+      <div class="flex items-center gap-2 min-w-0">
+        <div class="relative w-7 h-7 rounded-full bg-gradient-to-tr from-[#4285F4]/15 via-[#9B72CB]/15 to-[#D96570]/15 border border-slate-200/70 dark:border-white/15 flex items-center justify-center shrink-0 shadow-xs">
+          <GeminiIcon class="w-4 h-4" />
+        </div>
+        <h2 id="ai-modal-title" class="font-bold text-sm sm:text-base text-slate-900 dark:text-white tracking-tight whitespace-nowrap">
+          Ask Gemini
+        </h2>
+      </div>
+---
+src\components\CorporateMobility.jsx (Line 387):
+                    <div className="w-12 h-12 rounded-m3-lg bg-m3-surface-container text-m3-primary flex items-center justify-center transition-colors duration-300 shadow-m3-1">
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <span className="px-2.5 py-0.5 bg-m3-primary-container text-m3-on-primary-container border border-m3-primary/20 rounded-m3-full text-xs font-bold">
+                      {srv.badge}
+                    </span>
+                  </div>
+
+                  <h3 className="text-lg sm:text-xl font-bold text-m3-on-surface group-hover:text-m3-primary transition-colors font-heading mb-1.5">
+                    {srv.title}
+                  </h3>
+
+---
+src\components\CorporateMobility.jsx (Line 438):
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+            <div className="bg-m3-surface rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between">
+              <div>
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-m3-lg bg-m3-surface-container text-m3-primary flex items-center justify-center mb-3">
+                  <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-m3-primary" />
+                </div>
+                <h3 className="text-xs sm:text-base font-bold text-m3-on-surface mb-1 font-heading">Women Employee Safety</h3>
+                <p className="text-m3-on-surface-variant text-badge sm:text-xs leading-relaxed">
+                  First-in/last-out algorithm, door-to-gate confirmations, GPS live route monitoring, and escort security guards.
+                </p>
+---
+src\components\CorporateMobility.jsx (Line 450):
+              </div>
+            </div>
+
+            <div className="bg-m3-surface rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between">
+              <div>
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-m3-lg bg-m3-surface-container text-m3-primary flex items-center justify-center mb-3">
+                  <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-m3-primary" />
+                </div>
+                <h3 className="text-xs sm:text-base font-bold text-m3-on-surface mb-1 font-heading">60-Min Replacement SLA</h3>
+                <p className="text-m3-on-surface-variant text-badge sm:text-xs leading-relaxed">
+                  Automated driver dispatch immediately replaces vehicles or drivers during maintenance or illness within 60 minutes.
+                </p>
+---
+src\components\CorporateMobility.jsx (Line 462):
+              </div>
+            </div>
+
+            <div className="bg-m3-surface rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between">
+              <div>
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-m3-lg bg-m3-surface-container text-m3-primary flex items-center justify-center mb-3">
+                  <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-m3-primary" />
+                </div>
+                <h3 className="text-xs sm:text-base font-bold text-m3-on-surface mb-1 font-heading">100% GST Tax Invoices</h3>
+                <p className="text-m3-on-surface-variant text-badge sm:text-xs leading-relaxed">
+                  Itemized electronic trip sheets, roster logs, and unified monthly GST invoices for seamless corporate input tax credits.
+                </p>
+---
+src\components\CorporateMobility.jsx (Line 474):
+              </div>
+            </div>
+
+            <div className="bg-m3-surface rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between">
+              <div>
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-m3-lg bg-m3-surface-container text-m3-primary flex items-center justify-center mb-3">
+                  <Users className="w-4 h-4 sm:w-5 sm:h-5 text-m3-primary" />
+                </div>
+                <h3 className="text-xs sm:text-base font-bold text-m3-on-surface mb-1 font-heading">100% Police Verified (PVC)</h3>
+                <p className="text-m3-on-surface-variant text-badge sm:text-xs leading-relaxed">
+                  Every commercial chauffeur holds background verification, commercial badge clearance, and corporate etiquette training.
+                </p>
+---
+src\components\DriverFeeEstimator.jsx (Line 552):
+    <div className={outerCls}>
+
+      {/* ── Header ── */}
+      {!embedded && showHeader ? (
+        <div className="p-4 pb-1 text-center">
+          <div className="w-10 h-10 rounded-m3-full bg-m3-primary-container flex items-center justify-center mx-auto mb-2">
+            <User className="w-5 h-5 text-m3-primary" />
+          </div>
+          <h3 className="text-lg sm:text-xl font-bold text-m3-on-surface font-heading">{title}</h3>
+          <p className="text-xs text-m3-on-surface-variant mt-0.5">{subtitle}</p>
+        </div>
+      ) : (
+---
+src\components\DriverFeeEstimator.jsx (Line 557):
+          <div className="w-10 h-10 rounded-m3-full bg-m3-primary-container flex items-center justify-center mx-auto mb-2">
+            <User className="w-5 h-5 text-m3-primary" />
+          </div>
+          <h3 className="text-lg sm:text-xl font-bold text-m3-on-surface font-heading">{title}</h3>
+          <p className="text-xs text-m3-on-surface-variant mt-0.5">{subtitle}</p>
+        </div>
+      ) : (
+        <div className="pt-3.5 sm:pt-4 pb-1 text-center px-4">
+          <h2 className="text-base sm:text-lg font-bold text-m3-on-surface font-heading tracking-tight">
+            Book Your Trip
+          </h2>
+        </div>
+---
+src\components\LocationPicker.jsx (Line 286):
+        
+        {/* 1. Modal Header Strip */}
+        <div className="px-4 py-3.5 sm:px-5 sm:py-4 border-b border-m3-outline-variant/60 flex items-center justify-between bg-m3-surface z-20 shrink-0">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${isPickup ? 'bg-m3-primary/10 text-m3-primary' : 'bg-m3-secondary/10 text-m3-secondary'}`}>
+              <MapPin className="w-4 h-4" />
+            </div>
+            <div className="min-w-0">
+              <h2 id="map-picker-heading" className="font-bold text-sm sm:text-base text-m3-on-surface truncate">
+                {modalTitle}
+              </h2>
+              <p className="text-[11px] text-m3-on-surface-variant hidden sm:block truncate">
+---
+src\components\PopularDestinations.jsx (Line 537):
+                    <div className="w-12 h-12 rounded-m3-lg bg-m3-surface-container text-m3-primary flex items-center justify-center transition-colors duration-300 shadow-m3-1">
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <span className="px-2.5 py-0.5 bg-m3-primary-container text-m3-on-primary-container border border-m3-primary/20 rounded-m3-full text-xs font-bold">
+                      {srv.badge}
+                    </span>
+                  </div>
+
+                  <h3 className="text-lg sm:text-xl font-bold text-m3-on-surface group-hover:text-m3-primary transition-colors font-heading mb-1.5">
+                    {srv.title}
+                  </h3>
+
+---
+src\components\PopularDestinations.jsx (Line 588):
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+            <div className="bg-m3-surface rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between">
+              <div>
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-m3-lg bg-m3-surface-container text-m3-primary flex items-center justify-center mb-3">
+                  <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-m3-primary" />
+                </div>
+                <h3 className="text-xs sm:text-base font-bold text-m3-on-surface mb-1 font-heading">Zero Surge Pricing</h3>
+                <p className="text-m3-on-surface-variant text-badge sm:text-xs leading-relaxed">
+                  Our rates remain fixed even during weekends, festival holidays, and peak monsoon seasons.
+                </p>
+---
+src\components\PopularDestinations.jsx (Line 600):
+              </div>
+            </div>
+
+            <div className="bg-m3-surface rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between">
+              <div>
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-m3-lg bg-m3-surface-container text-m3-primary flex items-center justify-center mb-3">
+                  <Car className="w-4 h-4 sm:w-5 sm:h-5 text-m3-primary" />
+                </div>
+                <h3 className="text-xs sm:text-base font-bold text-m3-on-surface mb-1 font-heading">Spotless Dual-AC Cars</h3>
+                <p className="text-m3-on-surface-variant text-badge sm:text-xs leading-relaxed">
+                  Vehicles are deep-cleaned and sanitized before every trip with ample luggage boot capacity.
+                </p>
+---
+src\components\PopularDestinations.jsx (Line 612):
+              </div>
+            </div>
+
+            <div className="bg-m3-surface rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between">
+              <div>
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-m3-lg bg-m3-surface-container text-m3-primary flex items-center justify-center mb-3">
+                  <Compass className="w-4 h-4 sm:w-5 sm:h-5 text-m3-primary" />
+                </div>
+                <h3 className="text-xs sm:text-base font-bold text-m3-on-surface mb-1 font-heading">Highway & Hill Experts</h3>
+                <p className="text-m3-on-surface-variant text-badge sm:text-xs leading-relaxed">
+                  Chauffeurs with minimum 8+ years expressway and ghat road experience for safe 80-90 km/h cruising.
+                </p>
+---
+src\components\PopularDestinations.jsx (Line 624):
+              </div>
+            </div>
+
+            <div className="bg-m3-surface rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between">
+              <div>
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-m3-lg bg-m3-surface-container text-m3-primary flex items-center justify-center mb-3">
+                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-m3-primary" />
+                </div>
+                <h3 className="text-xs sm:text-base font-bold text-m3-on-surface mb-1 font-heading">Flexible Route Stops</h3>
+                <p className="text-m3-on-surface-variant text-badge sm:text-xs leading-relaxed">
+                  Stop for photos on the ECR coast, enjoy traditional highway messes, or take tea breaks at your own pace.
+                </p>
+---
+src\components\QuickAnswer.astro (Line 29):
+          <!-- Eyebrow Pill -->
+          <div
+            class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide"
+          >
+            <CheckCircle2 className="w-4 h-4 text-m3-primary shrink-0" />
+            <span>AITP Certified Commercial Fleet · Serving Since 2019</span>
+          </div>
+
+          <h2
+            class="text-xl sm:text-2xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading"
+          >
+            Quick Answer: <span class="text-m3-primary">Kalidass Travels at a Glance</span>
+---
+src\components\QuotationEngine.jsx (Line 2477):
+                  <Car className="w-4 h-4 text-m3-primary" />
+                ) : headerIcon === 'clock' ? (
+                  <Clock className="w-4 h-4 text-m3-primary" />
+                ) : (
+                  headerIcon
+                )}
+              </div>
+            )}
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 font-heading leading-tight text-center">
+              {displayTitle}
+            </h2>
+          </div>
+---
+src\components\react\ReviewsCarousel.jsx (Line 65):
+                        <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200/80 dark:border-emerald-800/60 px-1.5 py-0.5 rounded-full leading-none shrink-0">
+                            <svg className="w-2.5 h-2.5 fill-current" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                            Verified
+                        </span>
+                        <ExternalLink className="w-3 h-3 text-slate-400 dark:text-slate-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200 shrink-0" />
+                    </a>
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+                        Customer <span className="text-m3-primary">Experiences</span>
+                    </h2>
+                    <p className="text-xs sm:text-sm md:text-base text-m3-on-surface-variant font-normal max-w-2xl mx-auto leading-relaxed mb-6 font-sans">
+---
+src\components\SafetySection.astro (Line 26):
+    <div class="grid grid-cols-2 gap-3 sm:gap-6 max-w-5xl mx-auto">
+      
+      <!-- Card 1: Travel Responsibility -->
+      <div class="bg-m3-surface rounded-m3-xl p-3.5 sm:p-6 shadow-m3-1 hover:shadow-m3-3 border border-m3-outline-variant transition-all duration-300 flex flex-col justify-between h-full">
+        <div>
+          <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-m3-md bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center mb-3 sm:mb-4 text-m3-primary">
+            <CheckCircle2 className="w-6 h-6 sm:w-7 sm:h-7 text-m3-primary" />
+          </div>
+          <h3 class="text-sm sm:text-lg font-bold text-m3-on-surface mb-1.5 sm:mb-2 font-heading leading-snug">
+            Travel Responsibility
+          </h3>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant font-normal leading-relaxed mb-3 sm:mb-4 line-clamp-3 sm:line-clamp-none">
+---
+src\components\SafetySection.astro (Line 51):
+      </div>
+
+      <!-- Card 2: Official Govt Resources -->
+      <div class="bg-m3-surface rounded-m3-xl p-3.5 sm:p-6 shadow-m3-1 hover:shadow-m3-3 border border-m3-outline-variant transition-all duration-300 flex flex-col justify-between h-full">
+        <div>
+          <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-m3-md bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center mb-3 sm:mb-4 text-m3-primary">
+            <Building2 className="w-6 h-6 sm:w-7 sm:h-7 text-m3-primary" />
+          </div>
+          <h3 class="text-sm sm:text-lg font-bold text-m3-on-surface mb-1.5 sm:mb-2 font-heading leading-snug">
+            Official Portals
+          </h3>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant font-normal leading-relaxed mb-3 sm:mb-4 line-clamp-3 sm:line-clamp-none">
+---
+src\components\SafetySection.astro (Line 76):
+      </div>
+
+      <!-- Card 3: Kaaval Uthavi App (Dual Android & iOS Links) -->
+      <div class="bg-m3-surface rounded-m3-xl p-3.5 sm:p-6 shadow-m3-1 hover:shadow-m3-3 border border-m3-outline-variant transition-all duration-300 flex flex-col justify-between h-full">
+        <div>
+          <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-m3-md bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center mb-3 sm:mb-4 text-m3-primary">
+            <Shield className="w-6 h-6 sm:w-7 sm:h-7 text-m3-primary" />
+          </div>
+          <h3 class="text-sm sm:text-lg font-bold text-m3-on-surface mb-1.5 sm:mb-2 font-heading leading-snug">
+            Kaaval Uthavi App
+          </h3>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant font-normal leading-relaxed mb-3 sm:mb-4 line-clamp-3 sm:line-clamp-none">
+---
+src\components\SafetySection.astro (Line 119):
+      </div>
+
+      <!-- Card 4: Emergency Helpline -->
+      <div class="bg-m3-surface rounded-m3-xl p-3.5 sm:p-6 shadow-m3-1 hover:shadow-m3-3 border border-m3-outline-variant transition-all duration-300 flex flex-col justify-between h-full">
+        <div>
+          <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-m3-md bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center mb-3 sm:mb-4 text-m3-primary">
+            <AlertTriangle className="w-6 h-6 sm:w-7 sm:h-7 text-m3-primary" />
+          </div>
+          <h3 class="text-sm sm:text-lg font-bold text-m3-on-surface mb-1.5 sm:mb-2 font-heading leading-snug">
+            Emergency Helpline
+          </h3>
+          <div class="text-xs sm:text-sm text-m3-on-surface-variant space-y-1 mb-3 sm:mb-4 font-normal leading-relaxed">
+---
+src\components\SafetySection.astro (Line 159):
+      <div class="bg-m3-surface rounded-m3-xl text-left overflow-hidden shadow-m3-4 border border-m3-outline-variant w-full">
+        <div class="p-6">
+          <div class="flex items-center gap-3 mb-4 pb-3 border-b border-m3-outline-variant/40">
+            <div class="w-10 h-10 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-m3-on-surface font-heading" id="modal-title">
+              Passenger Travel Checklist
+            </h3>
+          </div>
+---
+src\components\SafetySection.astro (Line 209):
+      <div class="bg-m3-surface rounded-m3-xl text-left overflow-hidden shadow-m3-4 border border-m3-outline-variant w-full">
+        <div class="p-6">
+          <div class="flex items-center gap-3 mb-4 pb-3 border-b border-m3-outline-variant/40">
+            <div class="w-10 h-10 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-m3-on-surface font-heading" id="resources-modal-title">
+              Official Government Travel Portals
+            </h3>
+          </div>
+---
+src\components\TempleTours.jsx (Line 533):
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+            <div className="bg-m3-surface rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between">
+              <div>
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-m3-lg bg-m3-surface-container text-m3-primary flex items-center justify-center mb-3">
+                  <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-m3-primary" />
+                </div>
+                <h3 className="text-xs sm:text-base font-bold text-m3-on-surface mb-1 font-heading">Temple Timing Mastery</h3>
+                <p className="text-m3-on-surface-variant text-badge sm:text-xs leading-relaxed">
+                  South Indian temples close between 12:30 PM and 4 PM. We sequence every stop so you never face locked gates.
+                </p>
+---
+src\components\TempleTours.jsx (Line 545):
+              </div>
+            </div>
+
+            <div className="bg-m3-surface rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between">
+              <div>
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-m3-lg bg-m3-surface-container text-m3-primary flex items-center justify-center mb-3">
+                  <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-m3-primary" />
+                </div>
+                <h3 className="text-xs sm:text-base font-bold text-m3-on-surface mb-1 font-heading">Satvik Dining Halts</h3>
+                <p className="text-m3-on-surface-variant text-badge sm:text-xs leading-relaxed">
+                  Stops exclusively at verified pure-vegetarian restaurants with clean, accessible restrooms for families and elders.
+                </p>
+---
+src\components\TempleTours.jsx (Line 557):
+              </div>
+            </div>
+
+            <div className="bg-m3-surface rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between">
+              <div>
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-m3-lg bg-m3-surface-container text-m3-primary flex items-center justify-center mb-3">
+                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-m3-primary" />
+                </div>
+                <h3 className="text-xs sm:text-base font-bold text-m3-on-surface mb-1 font-heading">Senior-Friendly Care</h3>
+                <p className="text-m3-on-surface-variant text-badge sm:text-xs leading-relaxed">
+                  Step-stools for easy car boarding, gopuram arch drop-offs before parking, and patient pacing for elderly parents.
+                </p>
+---
+src\components\TempleTours.jsx (Line 569):
+              </div>
+            </div>
+
+            <div className="bg-m3-surface rounded-m3-xl p-4 sm:p-5 border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between">
+              <div>
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-m3-lg bg-m3-surface-container text-m3-primary flex items-center justify-center mb-3">
+                  <Landmark className="w-4 h-4 sm:w-5 sm:h-5 text-m3-primary" />
+                </div>
+                <h3 className="text-xs sm:text-base font-bold text-m3-on-surface mb-1 font-heading">Devotional Atmosphere</h3>
+                <p className="text-m3-on-surface-variant text-badge sm:text-xs leading-relaxed">
+                  Clean, sanitized cabins equipped with devotional chants, suprabhatams, and strictly non-smoking, teetotaler drivers.
+                </p>
+---
+src\components\TourBookingEngine.jsx (Line 2090):
+            className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-m3-outline-variant overflow-hidden my-auto max-h-[92vh] flex flex-col animate-in zoom-in-95 duration-150"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="px-4 sm:px-6 py-3.5 bg-m3-inverse-surface text-m3-inverse-on-surface flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-2">
+                <FileText className="w-5 h-5 text-m3-success" />
+                <div>
+                  <h3 className="text-sm sm:text-base font-bold font-heading">
+                    {needGst ? 'PROFORMA TAX INVOICE & ESTIMATE' : 'TRIP FARE ESTIMATE & LETTERHEAD'}
+                  </h3>
+                  <p className="text-[10.5px] text-m3-inverse-on-surface/80">
+---
+src\components\Tours.astro (Line 149):
+<section id="tours" class="offscreen-defer py-10 md:py-14 bg-m3-surface-container-low border-t border-m3-outline-variant/60 scroll-mt-24 sm:scroll-mt-28">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Section Header -->
+    <div class="text-center max-w-3xl mx-auto mb-8">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-3.5 tracking-wide">
+        <Car className="w-4 h-4 text-m3-primary" />
+        <span>All-Inclusive Pilgrimage Cabs</span>
+      </div>
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2.5 font-heading">
+        Popular Temple Trips
+      </h2>
+      <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant font-normal max-w-2xl mx-auto leading-relaxed mb-6 font-sans">
+---
+src\components\VehicleRelocationCalculator.jsx (Line 466):
+
+  return (
+    <div className="w-full bg-m3-surface rounded-m3-2xl shadow-m3-2 border border-m3-outline-variant overflow-hidden max-w-md mx-auto font-sans p-6 text-m3-on-surface">
+      <div className="flex flex-col items-center text-center gap-2 mb-6">
+        <div className="w-12 h-12 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant flex items-center justify-center text-m3-primary">
+          <Car className="w-6 h-6 text-m3-primary" />
+        </div>
+        <div>
+          <h3 className="font-bold text-m3-on-surface text-xl font-heading">
+            Vehicle Relocation Quote
+          </h3>
+          <p className="text-xs text-m3-on-surface-variant font-normal">
+---
+src\pages\attach-cab.astro (Line 479):
+
+      {/* Success Confirmation Card */}
+      <div id="successCard" class="hidden bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-6 sm:p-8 shadow-m3-1 text-center space-y-4">
+        <div class="w-12 h-12 rounded-full bg-m3-surface-container text-m3-primary mx-auto flex items-center justify-center">
+          <CheckCircle2 className="w-6 h-6" />
+        </div>
+        
+        <div>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading">
+            Application Received Successfully
+          </h2>
+          <div class="text-xs text-m3-on-surface-variant font-mono mt-1 font-bold" id="confLeadId">
+---
+src\pages\calculator.astro (Line 369):
+        aria-label="Overview & Direct Fare Formula"
+        data-speakable="true"
+      >
+        <div class="flex items-start gap-3.5">
+          <div class="w-9 h-9 rounded-m3-full bg-m3-success-container/400/10 border border-m3-success/30 text-m3-success flex items-center justify-center shrink-0 mt-0.5">
+            <CheckCircle2 className="w-5 h-5 text-m3-success" />
+          </div>
+          <div class="flex-1">
+            <h2 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+              <span>Quick Answer: How are Taxi &amp; Outstation Fares Calculated in Chennai?</span>
+            </h2>
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant font-normal leading-relaxed">
+---
+src\pages\calculator.astro (Line 459):
+
+      <!-- SECTION 2: Step-by-Step "How to Use the Fare Calculator" (HowTo Schema & Featured Snippet) -->
+      <section class="mb-16 scroll-mt-36" aria-labelledby="howto-heading">
+        <div class="text-center max-w-3xl mx-auto mb-8">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-2.5 tracking-wide">
+            <Route className="w-4 h-4 text-m3-primary shrink-0" />
+            <span>4 Simple Steps to Calculate &amp; Book</span>
+          </div>
+          <h2 id="howto-heading" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2 font-heading">
+            How to Calculate Your Trip Cost <span class="text-m3-primary">in 60 Seconds</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant font-normal leading-relaxed max-w-2xl mx-auto font-sans">
+---
+src\pages\calculator.astro (Line 541):
+
+      <!-- SECTION 3: Detailed Fare Calculation Formulas & Billing Rules -->
+      <section class="mb-16 scroll-mt-36" aria-labelledby="formula-heading">
+        <div class="text-center max-w-3xl mx-auto mb-8">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-surface-container-high border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-m3-1 mb-2.5 tracking-wide">
+            <CalculatorIcon className="w-4 h-4 text-m3-primary shrink-0" />
+            <span>Billing Methodologies &amp; Policies</span>
+          </div>
+          <h2 id="formula-heading" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2 font-heading">
+            Transparent Fare Calculation Formulas <span class="text-m3-primary">&amp; Rules</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant font-normal leading-relaxed max-w-2xl mx-auto font-sans">
+---
+src\pages\calculator.astro (Line 555):
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <!-- Card 1: Chennai Airport Flat Rates -->
+          <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 sm:p-6 shadow-m3-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <Plane className="w-5 h-5 text-m3-primary shrink-0" aria-hidden="true" />
+                <h3 class="font-bold text-m3-on-surface font-heading text-base min-w-0">Chennai Airport Flat Tariff Formula</h3>
+              </div>
+              <div class="bg-m3-surface-container-low p-3 rounded-m3-lg font-mono text-xs text-m3-on-surface mb-3 border border-m3-outline-variant/60 leading-relaxed">
+                Total = Fixed Zone Slab Rate<br/>
+---
+src\pages\calculator.astro (Line 587):
+            </div>
+          </div>
+
+          <!-- Card 2: Local Hourly Packages -->
+          <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 sm:p-6 shadow-m3-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <Clock className="w-5 h-5 text-m3-primary shrink-0" aria-hidden="true" />
+                <h3 class="font-bold text-m3-on-surface font-heading text-base min-w-0">Local Hourly Rental Package Formula</h3>
+              </div>
+              <div class="bg-m3-surface-container-low p-3 rounded-m3-lg font-mono text-xs text-m3-on-surface mb-3 border border-m3-outline-variant/60 leading-relaxed">
+                Total = Base Package + (Extra KM × Extra KM Rate) + (Extra Hours × Extra Hour Rate)<br/>
+---
+src\pages\calculator.astro (Line 619):
+            </div>
+          </div>
+
+          <!-- Card 3: Outstation Cabs -->
+          <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 sm:p-6 shadow-m3-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <Car className="w-5 h-5 text-m3-primary shrink-0" aria-hidden="true" />
+                <h3 class="font-bold text-m3-on-surface font-heading text-base min-w-0">Outstation Cabs Calculation Formula</h3>
+              </div>
+              <div class="bg-m3-surface-container-low p-3 rounded-m3-lg font-mono text-xs text-m3-on-surface mb-3 border border-m3-outline-variant/60 leading-relaxed">
+                Round Trip = (Billable KM × Rate/KM) + (Days × Driver Bata) + Tolls<br/>
+---
+src\pages\calculator.astro (Line 651):
+            </div>
+          </div>
+
+          <!-- Card 4: Acting Driver Services -->
+          <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 sm:p-6 shadow-m3-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <UserCheck className="w-5 h-5 text-m3-primary shrink-0" aria-hidden="true" />
+                <h3 class="font-bold text-m3-on-surface font-heading text-base min-w-0">Acting Driver Charges Formula</h3>
+              </div>
+              <div class="bg-m3-surface-container-low p-3 rounded-m3-lg font-mono text-xs text-m3-on-surface mb-3 border border-m3-outline-variant/60 leading-relaxed">
+                City Duty = Base (₹750 for 4h / ₹1,200 for 8h) + (Extra Hrs × ₹120) + Night Bata (₹150)<br/>
+---
+src\pages\calculator.astro (Line 683):
+            </div>
+          </div>
+
+          <!-- Card 5: Intercity Vehicle Relocation (Previously Missing!) -->
+          <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 sm:p-6 shadow-m3-1 flex flex-col justify-between md:col-span-2 lg:col-span-1">
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <Truck className="w-5 h-5 text-m3-primary shrink-0" aria-hidden="true" />
+                <h3 class="font-bold text-m3-on-surface font-heading text-base min-w-0">Vehicle Relocation Charges Formula</h3>
+              </div>
+              <div class="bg-m3-surface-container-low p-3 rounded-m3-lg font-mono text-xs text-m3-on-surface mb-3 border border-m3-outline-variant/60 leading-relaxed">
+                Total = Tiered Driver Bata (from ₹1,400) + Food Allowance (₹300–₹600) + Return Bus Ticket (AC/Sleeper)
+---
+src\pages\calculator.astro (Line 776):
+      <!-- SECTION 4: Zero Surge Guarantee vs App Cabs (Trust & Conversion) -->
+      <section class="mb-16 scroll-mt-36" aria-labelledby="zero-surge-heading">
+        <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-6 sm:p-8 shadow-m3-1">
+          <div class="text-center max-w-3xl mx-auto mb-8">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-m3-full bg-m3-success-container/400/10 border border-m3-success/30 text-m3-success text-xs font-semibold shadow-m3-1 mb-2.5 tracking-wide">
+              <ShieldCheck className="w-4 h-4 text-m3-success shrink-0" />
+              <span>Our Fair Pricing Pledge</span>
+            </div>
+            <h2 id="zero-surge-heading" class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-2 font-heading">
+              Why Choose Kalidass Travels Over <span class="text-m3-primary">App Aggregators?</span>
+            </h2>
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant font-normal leading-relaxed max-w-2xl mx-auto font-sans">
+---
+src\pages\calculator.astro (Line 788):
+              Unlike Ola or Uber, we operate our own dedicated fleet with dedicated driver partnerships, eliminating surge multipliers and last-second trip cancellations.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            <div class="bg-m3-success-container/400/5 border border-m3-success/30 rounded-m3-lg p-5">
+              <div class="flex items-center gap-2 mb-3">
+                <CheckCircle2 className="w-5 h-5 text-m3-success shrink-0" />
+                <h3 class="font-bold text-m3-on-success-container font-heading text-sm sm:text-base">Kalidass Travels Guarantee</h3>
+              </div>
+              <ul class="space-y-2.5 text-xs text-m3-on-surface">
+                <li class="flex items-start gap-2">
+---
+src\pages\calculator.astro (Line 813):
+                  <span><strong>GST Corporate Compliance:</strong> Proper tax invoices detailing GST registration, distance, and driver bata for company claims.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="bg-m3-error-container/20 border border-m3-error/20 rounded-m3-lg p-5">
+              <div class="flex items-center gap-2 mb-3">
+                <AlertCircle className="w-5 h-5 text-m3-error shrink-0" />
+                <h3 class="font-bold text-m3-on-error-container font-heading text-sm sm:text-base">App Cabs (Ola / Uber) Pitfalls</h3>
+              </div>
+              <ul class="space-y-2.5 text-xs text-m3-on-surface">
+                <li class="flex items-start gap-2">
+---
+src\pages\calculator.astro (Line 933):
+          </p>
+        </div>
+
+        <FAQAccordion items={faqItems} columns={1} className="max-w-4xl mx-auto" />
+      </section>
+
+      <!-- SECTION 7: Bottom CTA Strip -->
+      <section class="text-center bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-xl p-8 sm:p-12 shadow-m3-3 relative overflow-hidden border border-m3-outline-variant/40" aria-label="Book Your Journey">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-tight mb-3 font-heading text-white">
+          Need a Custom Quote or <span class="text-m3-success">Immediate Dispatch?</span>
+        </h2>
+        <p class="text-xs sm:text-sm md:text-base text-m3-inverse-on-surface/80 max-w-xl mx-auto mb-8 font-sans font-normal leading-relaxed">
+---
+src\pages\drivers\[slug].astro (Line 219):
+              </div>
+            </div>
+          </div>
+
+          <!-- Official Verification Endorsements -->
+          <div class="pt-5 space-y-3">
+            <div class="flex items-center gap-1.5 pb-0.5">
+              <ShieldCheck className="w-4 h-4 text-m3-success shrink-0" />
+              <h2 class="text-xs sm:text-sm font-bold text-m3-on-surface uppercase tracking-wider font-heading">Official Verification &amp; Clearance Status</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+---
+src\pages\drivers\[slug].astro (Line 318):
+        </a>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <!-- 2. PROFESSIONAL PROFILE & ROUTE EXPERTISE -->
+      <!-- ═══════════════════════════════════════════════════════════════════ -->
+      <div class="bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant/60 p-5 sm:p-7 shadow-m3-1 mb-6 space-y-5">
+        <div>
+          <h2 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading mb-2">
+            About {driver.name} – Professional Driving Background
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed">
+---
+src\pages\drivers\[slug].astro (Line 348):
+                <ArrowRight className="w-4 h-4 text-m3-on-surface-variant group-hover:text-m3-primary transition-colors shrink-0" />
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <!-- Safety Commitments -->
+        <div class="pt-2 border-t border-m3-outline-variant/40">
+          <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface uppercase tracking-wider mb-2.5 font-heading">
+            Verified Safety &amp; Etiquette Checklist
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-m3-on-surface-variant">
+---
+src\pages\fleet.astro (Line 761):
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+          <div class="bg-white rounded-m3-xl p-5 border border-slate-200/90 shadow-2xs">
+            <div class="w-10 h-10 rounded-m3-lg bg-blue-50 text-m3-primary flex items-center justify-center mb-3">
+              <ShieldCheck className="w-5 h-5 shrink-0" />
+            </div>
+            <h3 class="text-sm font-bold text-slate-900 mb-1 font-heading">100% Commercial Yellow Plates</h3>
+            <p class="text-xs text-slate-600 leading-relaxed font-sans">
+              All vehicles operate with valid All-India Tourist Permits (AITP). Zero private white-plate police checkpost seizure risks.
+            </p>
+---
+src\pages\fleet.astro (Line 771):
+              All vehicles operate with valid All-India Tourist Permits (AITP). Zero private white-plate police checkpost seizure risks.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-m3-xl p-5 border border-slate-200/90 shadow-2xs">
+            <div class="w-10 h-10 rounded-m3-lg bg-emerald-50 text-emerald-700 flex items-center justify-center mb-3">
+              <CheckCircle2 className="w-5 h-5 shrink-0" />
+            </div>
+            <h3 class="text-sm font-bold text-slate-900 mb-1 font-heading">100% Inside Luggage Storage</h3>
+            <p class="text-xs text-slate-600 leading-relaxed font-sans">
+              Weather-safe internal luggage trunks on all Tempo Travellers and Urbania vans. Zero open rooftop carrier violations.
+            </p>
+---
+src\pages\fleet.astro (Line 781):
+              Weather-safe internal luggage trunks on all Tempo Travellers and Urbania vans. Zero open rooftop carrier violations.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-m3-xl p-5 border border-slate-200/90 shadow-2xs">
+            <div class="w-10 h-10 rounded-m3-lg bg-amber-50 text-amber-800 flex items-center justify-center mb-3">
+              <Navigation className="w-5 h-5 shrink-0" />
+            </div>
+            <h3 class="text-sm font-bold text-slate-900 mb-1 font-heading">Verified Satvik Chauffeurs</h3>
+            <p class="text-xs text-slate-600 leading-relaxed font-sans">
+              Police background-verified chauffeurs with minimum 5+ years commercial highway experience. Strictly non-smoking and satvik.
+            </p>
+---
+src\pages\fleet.astro (Line 791):
+              Police background-verified chauffeurs with minimum 5+ years commercial highway experience. Strictly non-smoking and satvik.
+            </p>
+          </div>
+
+          <div class="bg-white rounded-m3-xl p-5 border border-slate-200/90 shadow-2xs">
+            <div class="w-10 h-10 rounded-m3-lg bg-purple-50 text-purple-700 flex items-center justify-center mb-3">
+              <Sparkles className="w-5 h-5 shrink-0" />
+            </div>
+            <h3 class="text-sm font-bold text-slate-900 mb-1 font-heading">Itemized GST Invoicing</h3>
+            <p class="text-xs text-slate-600 leading-relaxed font-sans">
+              Complete invoice breakdown with base fare, km log, and actual FASTag toll slips for corporate and tax reimbursements.
+            </p>
+---
+src\pages\services\acting-drivers.astro (Line 415):
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 mb-4 border-b border-m3-outline-variant">
+          <div class="flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-m3-primary text-white flex items-center justify-center shrink-0 shadow-xs">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                <path d="m9 12 2 2 4-4"></path>
+              </svg>
+            </span>
+            <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface font-heading">
+              How Booking Works &amp; Chauffeur Allocation
+            </h2>
+          </div>
+---
+src\pages\services\chennai-airport-taxi.astro (Line 615):
+        <div class="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2.5 sm:gap-3 pb-3 mb-4 border-b border-m3-outline-variant">
+          <div class="flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-m3-primary text-white flex items-center justify-center shrink-0 shadow-xs">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <path d="m9 12 2 2 4-4"/>
+              </svg>
+            </span>
+            <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface font-heading leading-tight">
+              Terminal Pick Up &amp; Drop Guide (T1, T2 &amp; T4)
+            </h2>
+          </div>
+---
+src\pages\services\chennai-airport-taxi.astro (Line 779):
+            <div class="flex items-center gap-3 min-w-0">
+              <span class="w-10 h-10 rounded-xl bg-m3-surface-container-low text-m3-on-surface flex items-center justify-center shrink-0 border border-m3-outline-variant shadow-2xs">
+                <svg class="w-5 h-5 text-m3-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </span>
+              <div class="min-w-0">
+                <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-m3-on-surface font-heading leading-tight">
+                  Chennai Airport Outstation Taxi Fare &amp; Rates Chart
+                </h2>
+                <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-0.5">
+---
+src\pages\services\chennai-airport-taxi.astro (Line 1099):
+        aria-labelledby="prepaid-comparison-heading"
+      >
+        <div class="bg-m3-surface rounded-2xl border border-m3-outline-variant shadow-sm p-5 sm:p-8">
+          <div class="max-w-2xl mb-6 sm:mb-8">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-m3-success-container/30 text-m3-on-success-container text-xs font-bold uppercase tracking-wider mb-2.5 border border-m3-success/20">
+              <svg class="w-3.5 h-3.5 text-m3-success shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+              <span>Transparent Comparison</span>
+            </div>
+            <h2 id="prepaid-comparison-heading" class="text-xl sm:text-2xl md:text-3xl font-bold text-m3-on-surface font-heading tracking-tight">
+              Why Travelers Choose Kalidass Pre-Booked Cabs vs Airport Prepaid Taxi
+            </h2>
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant font-sans mt-2 leading-relaxed">
+---
+src\pages\services\corporate.astro (Line 1079):
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+          <div class="bg-m3-surface-container-lowest p-4 rounded-xl border border-m3-outline-variant shadow-2xs">
+            <div class="w-8 h-8 rounded-lg bg-m3-surface-container text-m3-on-surface flex items-center justify-center mb-2.5">
+              <ShieldCheck className="w-4 h-4 text-m3-primary" />
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Women Night Safety</h3>
+            <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">
+              Doorstep verification; female staff are never first-in or last-drop on night shifts (8 PM–6 AM) with active GPS.
+            </p>
+---
+src\pages\services\corporate.astro (Line 1089):
+              Doorstep verification; female staff are never first-in or last-drop on night shifts (8 PM–6 AM) with active GPS.
+            </p>
+          </div>
+
+          <div class="bg-m3-surface-container-lowest p-4 rounded-xl border border-m3-outline-variant shadow-2xs">
+            <div class="w-8 h-8 rounded-lg bg-m3-surface-container text-m3-on-surface flex items-center justify-center mb-2.5">
+              <Clock className="w-4 h-4 text-m3-primary" />
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">60-Min Backup SLA</h3>
+            <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">
+              Guaranteed emergency replacement vehicle and verified driver dispatched within 60 minutes anywhere in Chennai.
+            </p>
+---
+src\pages\services\corporate.astro (Line 1099):
+              Guaranteed emergency replacement vehicle and verified driver dispatched within 60 minutes anywhere in Chennai.
+            </p>
+          </div>
+
+          <div class="bg-m3-surface-container-lowest p-4 rounded-xl border border-m3-outline-variant shadow-2xs">
+            <div class="w-8 h-8 rounded-lg bg-m3-surface-container text-m3-on-surface flex items-center justify-center mb-2.5">
+              <CheckCircle2 className="w-4 h-4 text-m3-primary" />
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">100% GST Tax Invoicing</h3>
+            <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">
+              Itemized monthly B2B tax invoices with logbook reconciliation for your company's full Input Tax Credit (ITC).
+            </p>
+---
+src\pages\services\corporate.astro (Line 1109):
+              Itemized monthly B2B tax invoices with logbook reconciliation for your company's full Input Tax Credit (ITC).
+            </p>
+          </div>
+
+          <div class="bg-m3-surface-container-lowest p-4 rounded-xl border border-m3-outline-variant shadow-2xs">
+            <div class="w-8 h-8 rounded-lg bg-m3-surface-container text-m3-on-surface flex items-center justify-center mb-2.5">
+              <Award className="w-4 h-4 text-m3-primary" />
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Corporate Credit Terms</h3>
+            <p class="text-xs text-m3-on-surface-variant mt-1 leading-relaxed">
+              15-day and 30-day bill-to-company credit terms with designated corporate account onboarding.
+            </p>
+---
+src\pages\services\index.astro (Line 317):
+                </a>
+
+                <!-- Card Content -->
+                <div class="p-5 sm:p-6">
+                  <div class="flex items-center gap-2.5 mb-3">
+                    <div class="w-9 h-9 rounded-m3-lg bg-m3-surface-container-high text-m3-primary flex items-center justify-center border border-m3-outline-variant shrink-0">
+                      <IconComp className="w-5 h-5" />
+                    </div>
+                    <h2 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading leading-snug">
+                      <a href={srv.link} class="hover:text-m3-primary transition-colors">{srv.title}</a>
+                    </h2>
+                  </div>
+---
+src\pages\services\index.astro (Line 411):
+            Our Service Promises
+          </h2>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <ShieldCheck className="w-4 h-4 text-m3-primary" />
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Police Verification Certifieds</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Clean background checks with valid commercial transport badges.</p>
+          </div>
+
+---
+src\pages\services\index.astro (Line 419):
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Police Verification Certifieds</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Clean background checks with valid commercial transport badges.</p>
+          </div>
+
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <Sparkles className="w-4 h-4 text-m3-primary" />
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Zero Surge Pricing</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Fixed transparent tariffs that never surge during rains or holidays.</p>
+          </div>
+
+---
+src\pages\services\index.astro (Line 427):
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Zero Surge Pricing</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Fixed transparent tariffs that never surge during rains or holidays.</p>
+          </div>
+
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <Car className="w-4 h-4 text-m3-primary" />
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Tolls Covered on 1-Day Tours</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">1-day tour packages include highway FASTag tolls upfront. Multi-day &amp; outstation trips billed transparently with tolls at actual receipts.</p>
+          </div>
+
+---
+src\pages\services\index.astro (Line 435):
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Tolls Covered on 1-Day Tours</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">1-day tour packages include highway FASTag tolls upfront. Multi-day &amp; outstation trips billed transparently with tolls at actual receipts.</p>
+          </div>
+
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <Clock className="w-4 h-4 text-m3-primary" />
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">24/7 Phone Helpline</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Instant telephone dispatch desk for bookings and real-time support.</p>
+          </div>
+        </div>
+---
+src\pages\services\index.astro (Line 443):
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">24/7 Phone Helpline</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Instant telephone dispatch desk for bookings and real-time support.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. BOTTOM CONVERSION CTA BANNER -->
+      <section class="bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-2xl p-6 sm:p-10 text-center shadow-m3-2 border border-m3-outline-variant/30 my-8">
+        <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold font-heading text-white mb-2">
+          Need Help Selecting the Right Service?
+        </h2>
+        <p class="text-m3-inverse-on-surface/85 text-xs sm:text-sm max-w-lg mx-auto mb-6">
+---
+src\pages\services\outstation-cabs.astro (Line 540):
+        <div class="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2.5 sm:gap-3 pb-3 mb-4 border-b border-m3-outline-variant">
+          <div class="flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-m3-primary text-white flex items-center justify-center shrink-0 shadow-xs">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <path d="m9 12 2 2 4-4"/>
+              </svg>
+            </span>
+            <h3 id="commitments-card-heading" class="text-base sm:text-lg font-bold text-m3-on-surface font-heading">
+              Our 5 Outstation Travel Guarantees
+            </h3>
+          </div>
+---
+src\pages\services\outstation-cabs.astro (Line 729):
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="w-10 h-10 rounded-xl bg-m3-surface-container-low text-m3-on-surface flex items-center justify-center shrink-0 border border-m3-outline-variant shadow-2xs">
+              <svg class="w-5 h-5 text-m3-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+            </span>
+            <div class="min-w-0">
+              <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-m3-on-surface font-heading leading-tight">
+                Top Road Trip &amp; Drop Destinations from Chennai
+              </h2>
+              <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-0.5">
+---
+src\pages\services\outstation-cabs.astro (Line 873):
+              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform shrink-0" />
+            </div>
+          </a>
+        </div>
+
+        <!-- Cross-Navigation: Looking for Fixed Temple Tour Packages? -->
+        <div class="mt-6 p-4 sm:p-5 rounded-2xl bg-m3-surface-container-lowest border border-m3-outline-variant shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="space-y-1 text-center sm:text-left">
+            <h3 class="text-sm sm:text-base font-bold text-m3-on-surface font-heading">
+              Looking for All-Inclusive Temple Tours?
+            </h3>
+            <p class="text-xs text-m3-on-surface-variant">
+---
+src\pages\services\tempo-traveller-rental-chennai.astro (Line 1957):
+      </div>
+
+      <!-- Compact 2x2 Bento Grid on Mobile, 4-Col Grid on Desktop -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-6">
+        <div class="bg-m3-surface-container-lowest p-3.5 sm:p-5 rounded-xl sm:rounded-m3-2xl border border-m3-outline-variant/70 shadow-2xs flex flex-col justify-start">
+          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-m3-primary/10 text-m3-primary flex items-center justify-center font-bold text-base sm:text-lg mb-2 sm:mb-3 shrink-0">
+            <MapPin className="w-4 h-4 sm:w-6 sm:h-6 text-m3-primary" />
+          </div>
+          <h3 class="font-bold text-m3-on-surface text-xs sm:text-base mb-1 sm:mb-1.5 font-heading leading-tight">Doorstep Pickup &amp; Fair Drops</h3>
+          <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+            1 primary doorstep pickup &amp; drop in Chennai. Free en-route drops along your return highway corridor. Zero hidden garage charges in South Chennai &amp; Airport.
+          </p>
+---
+src\pages\services\tempo-traveller-rental-chennai.astro (Line 1967):
+            1 primary doorstep pickup &amp; drop in Chennai. Free en-route drops along your return highway corridor. Zero hidden garage charges in South Chennai &amp; Airport.
+          </p>
+        </div>
+
+        <div class="bg-m3-surface-container-lowest p-3.5 sm:p-5 rounded-xl sm:rounded-m3-2xl border border-m3-outline-variant/70 shadow-2xs flex flex-col justify-start">
+          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-amber-500/10 text-amber-700 dark:text-amber-400 flex items-center justify-center font-bold text-base sm:text-lg mb-2 sm:mb-3 shrink-0">
+            <Landmark className="w-4 h-4 sm:w-6 sm:h-6 text-amber-700 dark:text-amber-400" />
+          </div>
+          <h3 class="font-bold text-m3-on-surface text-xs sm:text-base mb-1 sm:mb-1.5 font-heading leading-tight">Satvik Pilgrimage Drivers</h3>
+          <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+            Exclusively vegetarian, teetotaler, non-smoking chauffeurs assigned for temple yatras (Tirupati, Sabarimala, Kumbakonam) respecting devotional sanctity.
+          </p>
+---
+src\pages\services\tempo-traveller-rental-chennai.astro (Line 1977):
+            Exclusively vegetarian, teetotaler, non-smoking chauffeurs assigned for temple yatras (Tirupati, Sabarimala, Kumbakonam) respecting devotional sanctity.
+          </p>
+        </div>
+
+        <div class="bg-m3-surface-container-lowest p-3.5 sm:p-5 rounded-xl sm:rounded-m3-2xl border border-m3-outline-variant/70 shadow-2xs flex flex-col justify-start">
+          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 flex items-center justify-center font-bold text-base sm:text-lg mb-2 sm:mb-3 shrink-0">
+            <Receipt className="w-4 h-4 sm:w-6 sm:h-6 text-emerald-700 dark:text-emerald-400" />
+          </div>
+          <h3 class="font-bold text-m3-on-surface text-xs sm:text-base mb-1 sm:mb-1.5 font-heading leading-tight">All Tolls &amp; Permits Cleared</h3>
+          <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+            All highway FASTag tolls and interstate Parivahan permits are pre-paid online. Zero check-post delays and zero cash disputes on the road.
+          </p>
+---
+src\pages\services\tempo-traveller-rental-chennai.astro (Line 1987):
+            All highway FASTag tolls and interstate Parivahan permits are pre-paid online. Zero check-post delays and zero cash disputes on the road.
+          </p>
+        </div>
+
+        <div class="bg-m3-surface-container-lowest p-3.5 sm:p-5 rounded-xl sm:rounded-m3-2xl border border-m3-outline-variant/70 shadow-2xs flex flex-col justify-start">
+          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-purple-500/10 text-purple-700 dark:text-purple-400 flex items-center justify-center font-bold text-base sm:text-lg mb-2 sm:mb-3 shrink-0">
+            <ShieldCheck className="w-4 h-4 sm:w-6 sm:h-6 text-purple-700 dark:text-purple-400" />
+          </div>
+          <h3 class="font-bold text-m3-on-surface text-xs sm:text-base mb-1 sm:mb-1.5 font-heading leading-tight">₹500 Advance Deduction</h3>
+          <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+            ₹500 locks your vehicle and chauffeur. 100% credited against your final trip balance with a 100% refund if cancelled 6+ hours before pickup.
+          </p>
+---
+src\pages\services\tours\temple-tours.astro (Line 551):
+                      <svg class="w-3.5 h-3.5 text-m3-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                      <span>{pkg.duration}</span>
+                    </span>
+                  </a>
+
+                  <!-- Card Content Body -->
+                  <div class="p-5 sm:p-6">
+                    <a href={leafUrl} class="block group/title">
+                      <h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading mb-1.5 group-hover/title:text-m3-primary transition-colors">
+                        {pkg.name}
+                      </h3>
+                    </a>
+---
+src\pages\services\tours\temple-tours.astro (Line 655):
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Satvik Chauffeurs</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Teetotaler, non-smoking polite drivers who respect temple rituals.</p>
+          </div>
+
+---
+src\pages\services\tours\temple-tours.astro (Line 663):
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Satvik Chauffeurs</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Teetotaler, non-smoking polite drivers who respect temple rituals.</p>
+          </div>
+
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Tolls Covered on 1-Day Tours</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">1-day tour packages include highway FASTag tolls upfront. Multi-day &amp; outstation trips billed transparently with tolls at actual receipts.</p>
+          </div>
+
+---
+src\pages\services\tours\temple-tours.astro (Line 671):
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Tolls Covered on 1-Day Tours</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">1-day tour packages include highway FASTag tolls upfront. Multi-day &amp; outstation trips billed transparently with tolls at actual receipts.</p>
+          </div>
+
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Senior Citizen Care</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Direct porch drops, smooth braking, and queue guidance for elders.</p>
+          </div>
+
+---
+src\pages\services\tours\temple-tours.astro (Line 679):
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Senior Citizen Care</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Direct porch drops, smooth braking, and queue guidance for elders.</p>
+          </div>
+
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Nominal ₹500 Advance</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Lock your vehicle with a nominal ₹500 advance. Remaining balance payable after trip.</p>
+          </div>
+        </div>
+---
+src\pages\services\tours\temple-tours.astro (Line 709):
+            <a href="/services/chennai-airport-taxi/" class="p-5 rounded-m3-xl bg-m3-success-container/400/5 border border-m3-success/30 hover:border-m3-success/50 transition-all group flex items-center justify-between">
+              <div>
+                <div class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase text-m3-on-success-container mb-1">
+                  <svg class="w-3.5 h-3.5 text-m3-success shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3.5c-.5-.5-2.5 0-4 1.5L13.5 8.5 5.3 6.7c-.8-.2-1.6.2-2 .9l-.3.5c-.4.7-.2 1.6.4 2.1l5.7 4.3-2.6 2.6-2.6-.9c-.5-.2-1.1 0-1.5.4l-.2.2c-.4.4-.4 1.1 0 1.5l2.4 2.4 2.4 2.4c.4.4 1.1.4 1.5 0l.2-.2c.4-.4.6-1 .4-1.5l-.9-2.6 2.6-2.6 4.3 5.7c.5.6 1.4.8 2.1.4l.5-.3c.7-.4 1.1-1.2.9-2z"/>
+                  </svg>
+                  <span>Airport Transfers (MAA)</span>
+                </div>
+                <h3 class="text-base sm:text-lg font-bold text-m3-on-surface group-hover:text-m3-on-success-container transition-colors font-heading">
+                  Chennai Airport Taxi Transfers
+                </h3>
+                <p class="text-xs text-m3-on-surface-variant mt-0.5">Direct airport pickup for outstation devotees &amp; NRI pilgrims heading to temple yatras.</p>
+---
+src\pages\services\tours\temple-tours.astro (Line 727):
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold uppercase text-m3-primary mb-1">
+                  <svg class="w-3.5 h-3.5 text-m3-primary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2 10.9 2 11.1 2 11.3V16c0 .6.4 1 1 1h2"/>
+                    <circle cx="7" cy="17" r="2"/>
+                    <circle cx="17" cy="17" r="2"/>
+                  </svg>
+                  <span>Per-KM Cabs &amp; One-Way</span>
+                </div>
+                <h3 class="text-base sm:text-lg font-bold text-m3-on-surface group-hover:text-m3-primary transition-colors font-heading">
+                  Outstation Cabs from ₹14 / KM
+                </h3>
+                <p class="text-xs text-m3-on-surface-variant mt-0.5">Sedans, Ertiga &amp; Innova Crysta for flexible highway trips across South India.</p>
+---
+src\pages\services\tours\temple-tours.astro (Line 740):
+              <ArrowRight className="w-5 h-5 text-m3-primary group-hover:translate-x-1 transition-transform shrink-0" />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. BOTTOM CONVERSION CTA BANNER -->
+      <section class="bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-2xl p-6 sm:p-10 text-center shadow-m3-2 border border-m3-outline-variant/20 my-8">
+        <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold font-heading text-white mb-2">
+          Planning a Spiritual Yatra with Family?
+        </h2>
+        <p class="text-m3-inverse-on-surface/80 text-xs sm:text-sm max-w-lg mx-auto mb-6">
+---
+src\pages\tariff.astro (Line 726):
+          <span>Explore Corporate Mobility</span>
+          <ArrowRight className="w-4 h-4 shrink-0" />
+        </a>
+      </div>
+
+      <!-- Inclusions / Exclusions -->
+      <div id="fare-rules" class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12 scroll-mt-40">
+        <div class="bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-xl p-6 shadow-m3-1">
+          <h3 class="font-bold text-m3-on-surface mb-3 font-heading text-lg flex items-center gap-2">
+            <svg class="w-5 h-5 text-m3-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            Inclusions in Standard Tariff
+          </h3>
+---

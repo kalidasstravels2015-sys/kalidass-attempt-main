@@ -130,6 +130,8 @@ function parseBookingInquiryClient(rawText, phoneInput = '', guestNameInput = ''
     vehicleCategory = 'Toyota Innova';
   } else if (/ertiga|xl6/i.test(lower)) {
     vehicleCategory = 'Ertiga (6 Seats)';
+  } else if (/urbania/i.test(lower)) {
+    vehicleCategory = 'Force Urbania';
   } else if (/tempo|traveller/i.test(lower)) {
     vehicleCategory = 'Tempo Traveller';
   } else if (/compact suv|suv/i.test(lower)) {
@@ -281,10 +283,12 @@ export default function AiBookingParser({ onBookingCreated, onLeadCreated, showT
   // Action 1: Save as Active Lead / Enquiry in Stage 1
   const handleSaveAsLead = () => {
     if (!parsedData) return;
+    const cleanPhone = (parsedData.phone || customerPhone || '').replace(/[^0-9]/g, '').slice(-10);
     const newLead = {
       quoteId: parsedData.quoteRefId,
       timestamp: new Date().toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' }),
-      guestName: parsedData.guestName || customerName || 'WhatsApp Customer',
+      guestName: parsedData.guestName || customerName || 'Customer',
+      phone: cleanPhone,
       sourcePage: parsedData.phone ? `${parsedData.serviceCategory} (${parsedData.phone})` : parsedData.serviceCategory,
       calculatorEngine: parsedData.serviceCategory,
       tripType: parsedData.tripType,

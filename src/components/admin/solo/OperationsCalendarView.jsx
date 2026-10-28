@@ -8,19 +8,8 @@ import {
 import { checkChauffeurConflict } from './ConflictDetector';
 import { buildMapsBlock } from '../../../utils/whatsapp';
 import { isActionableLead } from '../../../utils/bookingContactValidator';
+import QuickBookingModal from './QuickBookingModal';
 
-/**
- * OperationsCalendarView — Step 2.5: Interactive Operations & Follow-Up Calendar
- * Single-operator visual dispatch board:
- * - Month Grid & Day Agenda / Hourly Timeline
- * - 4-Stage Follow-Up Radar:
- *   1) 🟡 Pending ₹500 Advance
- *   2) 🔴 Need Driver (T-24h Warning)
- *   3) 🔵 Ready / Dispatched (T-2h)
- *   4) 🟢 Completed / 5★ Review Due
- * - Driver Overlap & Double-Booking Conflict Detection
- * - 1-Click WhatsApp Duty Slips, Google Calendar Sync & CSV Export
- */
 export default function OperationsCalendarView({
   bookings = [],
   leads = [],
@@ -28,6 +17,7 @@ export default function OperationsCalendarView({
   onAssignChauffeur,
   onStatusChange,
   onConvertToConfirmed,
+  onAddManualLead,
   onOpenDutySlip,
   showToast
 }) {
@@ -979,192 +969,24 @@ export default function OperationsCalendarView({
       )}
 
       {/* ========================================================= */}
-      {/* QUICK SCHEDULE / FOLLOW-UP REMINDER MODAL                 */}
+      {/* 1-MINUTE QUICK BOOKING / SCHEDULE MODAL                   */}
       {/* ========================================================= */}
-      {isScheduleModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-          <div className="w-full max-w-lg bg-m3-surface-container-high border border-m3-outline-variant/40 rounded-2xl p-6 shadow-2xl relative text-m3-on-surface">
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-m3-outline-variant/30">
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-m3-primary text-xl">event_upcoming</span>
-                <h3 className="text-lg font-bold text-m3-on-surface">
-                  Schedule Duty on {scheduleDateStr}
-                </h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsScheduleModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-m3-surface-container hover:bg-m3-surface-container-highest flex items-center justify-center text-m3-on-surface-variant"
-              >
-                <span className="material-symbols-outlined text-sm">close</span>
-              </button>
-            </div>
-
-            <form onSubmit={handleCreateScheduledDuty} className="space-y-4">
-              {/* Type Switcher: Confirmed Booking vs Follow-Up Enquiry */}
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setNewEntry({ ...newEntry, type: 'booking' })}
-                  className={`flex-1 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                    newEntry.type === 'booking'
-                      ? 'bg-m3-primary text-m3-on-primary shadow-sm'
-                      : 'bg-m3-surface-container text-m3-on-surface-variant'
-                  }`}
-                >
-                  Confirmed Duty (Advance Paid)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setNewEntry({ ...newEntry, type: 'enquiry' })}
-                  className={`flex-1 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                    newEntry.type === 'enquiry'
-                      ? 'bg-amber-500 text-black shadow-sm'
-                      : 'bg-m3-surface-container text-m3-on-surface-variant'
-                  }`}
-                >
-                  Enquiry Follow-Up
-                </button>
-              </div>
-
-              {/* Guest Name & Phone */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-bold text-m3-on-surface-variant mb-1">
-                    Customer Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Ramesh Kumar"
-                    value={newEntry.guestName}
-                    onChange={(e) => setNewEntry({ ...newEntry, guestName: e.target.value })}
-                    className="w-full h-10 px-3 bg-m3-surface-container-low border border-m3-outline-variant/60 rounded-xl text-xs text-m3-on-surface focus:outline-none focus:border-m3-primary"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-m3-on-surface-variant mb-1">
-                    Phone Number *
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    placeholder="9876543210"
-                    value={newEntry.phone}
-                    onChange={(e) => setNewEntry({ ...newEntry, phone: e.target.value })}
-                    className="w-full h-10 px-3 bg-m3-surface-container-low border border-m3-outline-variant/60 rounded-xl text-xs text-m3-on-surface focus:outline-none focus:border-m3-primary"
-                  />
-                </div>
-              </div>
-
-              {/* Route: Pickup & Drop */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-bold text-m3-on-surface-variant mb-1">
-                    Pickup Location
-                  </label>
-                  <input
-                    type="text"
-                    value={newEntry.pickup}
-                    onChange={(e) => setNewEntry({ ...newEntry, pickup: e.target.value })}
-                    className="w-full h-10 px-3 bg-m3-surface-container-low border border-m3-outline-variant/60 rounded-xl text-xs text-m3-on-surface focus:outline-none focus:border-m3-primary"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-m3-on-surface-variant mb-1">
-                    Drop Destination
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Pondicherry / Tirupati"
-                    value={newEntry.drop}
-                    onChange={(e) => setNewEntry({ ...newEntry, drop: e.target.value })}
-                    className="w-full h-10 px-3 bg-m3-surface-container-low border border-m3-outline-variant/60 rounded-xl text-xs text-m3-on-surface focus:outline-none focus:border-m3-primary"
-                  />
-                </div>
-              </div>
-
-              {/* Vehicle & Departure Time */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-bold text-m3-on-surface-variant mb-1">
-                    Vehicle Model
-                  </label>
-                  <select
-                    value={newEntry.vehicle}
-                    onChange={(e) => setNewEntry({ ...newEntry, vehicle: e.target.value })}
-                    className="w-full h-10 px-3 bg-m3-surface-container-low border border-m3-outline-variant/60 rounded-xl text-xs text-m3-on-surface focus:outline-none focus:border-m3-primary"
-                  >
-                    <option value="Sedan (Dzire / Etios)">Sedan (Dzire / Etios)</option>
-                    <option value="Maruti Ertiga / XL6">Maruti Ertiga / XL6</option>
-                    <option value="Toyota Innova">Toyota Innova</option>
-                    <option value="Innova Crysta">Innova Crysta</option>
-                    <option value="12-Seater Tempo Traveller">12-Seater Tempo Traveller</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-m3-on-surface-variant mb-1">
-                    Pickup Time
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 05:00 AM"
-                    value={newEntry.time}
-                    onChange={(e) => setNewEntry({ ...newEntry, time: e.target.value })}
-                    className="w-full h-10 px-3 bg-m3-surface-container-low border border-m3-outline-variant/60 rounded-xl text-xs text-m3-on-surface focus:outline-none focus:border-m3-primary"
-                  />
-                </div>
-              </div>
-
-              {/* Fare & Advance */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-bold text-m3-on-surface-variant mb-1">
-                    Total Fare (₹)
-                  </label>
-                  <input
-                    type="number"
-                    value={newEntry.fare}
-                    onChange={(e) => setNewEntry({ ...newEntry, fare: e.target.value })}
-                    className="w-full h-10 px-3 bg-m3-surface-container-low border border-m3-outline-variant/60 rounded-xl text-xs text-m3-on-surface focus:outline-none focus:border-m3-primary"
-                  />
-                </div>
-                {newEntry.type === 'booking' && (
-                  <div>
-                    <label className="block text-xs font-bold text-m3-on-surface-variant mb-1">
-                      Advance Paid (₹)
-                    </label>
-                    <input
-                      type="number"
-                      value={newEntry.advance}
-                      onChange={(e) => setNewEntry({ ...newEntry, advance: e.target.value })}
-                      className="w-full h-10 px-3 bg-m3-surface-container-low border border-m3-outline-variant/60 rounded-xl text-xs text-m3-on-surface focus:outline-none focus:border-m3-primary"
-                    />
-                  </div>
-                )}
-              </div>
-
-              {/* Submit / Cancel Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-m3-outline-variant/30">
-                <button
-                  type="button"
-                  onClick={() => setIsScheduleModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-m3-on-surface-variant hover:bg-m3-surface-container"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 rounded-xl text-xs font-bold bg-m3-primary text-m3-on-primary hover:bg-m3-primary/90 shadow-md flex items-center gap-1.5"
-                >
-                  <span className="material-symbols-outlined text-sm">check_circle</span>
-                  <span>Confirm Schedule</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <QuickBookingModal
+        isOpen={isScheduleModalOpen}
+        onClose={() => setIsScheduleModalOpen(false)}
+        initialDate={scheduleDateStr}
+        existingLeads={leads}
+        existingBookings={bookings}
+        onSaveLead={(newLead) => {
+          onAddManualLead?.(newLead);
+          setIsScheduleModalOpen(false);
+        }}
+        onConfirmBooking={(newBooking) => {
+          onConvertToConfirmed?.(newBooking);
+          setIsScheduleModalOpen(false);
+        }}
+        showToast={showToast}
+      />
     </div>
   );
 }

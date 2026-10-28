@@ -9,6 +9,7 @@ import SoloDutySlipModal from './solo/SoloDutySlipModal';
 import AiBookingParser from './solo/AiBookingParser';
 import WebsiteRadarView from './solo/WebsiteRadarView';
 import OperationsCalendarView from './solo/OperationsCalendarView';
+import QuickBookingModal from './solo/QuickBookingModal';
 import FastQuoteDesk from './FastQuoteDesk';
 import { getActiveGoogleSheetUrl, fetchRemoteGoogleSheetUrl } from '../../config/googleSheets';
 import { parseAndValidateContact, validateCustomerContact, isActionableLead, deduplicateCalculatorQuotes } from '../../utils/bookingContactValidator';
@@ -29,6 +30,7 @@ export default function SoloAdminDashboard() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Modals for focused tasks
+  const [isQuickBookingOpen, setIsQuickBookingOpen] = useState(false);
   const [isAiParserModalOpen, setIsAiParserModalOpen] = useState(false);
   const [isPhoneQuoteModalOpen, setIsPhoneQuoteModalOpen] = useState(false);
   const [activeDutySlipBooking, setActiveDutySlipBooking] = useState(null);
@@ -325,7 +327,8 @@ export default function SoloAdminDashboard() {
           if (l && l.quoteId) {
             const key = String(l.quoteId).trim().toLowerCase();
             if (!deletedSet.has(key) && l.status !== 'Cancelled' && l.status !== 'Deleted') {
-              map.set(key, l);
+              const existing = map.get(key) || {};
+              map.set(key, { ...l, ...existing });
             }
           }
         });
@@ -404,7 +407,8 @@ export default function SoloAdminDashboard() {
           if (b && b.bookingId) {
             const key = String(b.bookingId).trim().toLowerCase();
             if (!deletedSet.has(key) && b.manifestStatus !== 'Cancelled') {
-              map.set(key, b);
+              const existing = map.get(key) || {};
+              map.set(key, { ...b, ...existing });
             }
           }
         });
@@ -917,9 +921,9 @@ export default function SoloAdminDashboard() {
 
   return (
     <div className="min-h-screen bg-m3-surface text-m3-on-surface font-sans flex flex-col md:flex-row overflow-x-hidden">
-      {/* Toast Notification */}
+      {/* Toast Notification (z-[200] so it always renders above modals) */}
       {toast && (
-        <div className={`fixed bottom-20 md:bottom-6 right-4 z-50 px-4 py-3 rounded-m3-md shadow-m3-3 text-m3-label-m font-semibold flex items-center gap-2.5 animate-fadeIn ${
+        <div className={`fixed bottom-20 md:bottom-6 right-4 z-[200] px-4 py-3 rounded-m3-md shadow-m3-3 text-m3-label-m font-semibold flex items-center gap-2.5 animate-fadeIn ${
           toast.type === 'error'
             ? 'bg-m3-error text-m3-on-error'
             : 'bg-m3-inverse-surface text-m3-inverse-on-surface'
@@ -1074,6 +1078,16 @@ export default function SoloAdminDashboard() {
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <button
               type="button"
+              onClick={() => setIsQuickBookingOpen(true)}
+              className="h-9 px-3 sm:px-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-m3-full text-xs font-black flex items-center gap-1.5 transition-all shadow-sm"
+              title="1-Minute Quick Add Booking or Enquiry"
+            >
+              <span className="material-symbols-outlined text-[18px]">add_call</span>
+              <span>+ New Booking</span>
+            </button>
+
+            <button
+              type="button"
               onClick={() => setIsPhoneQuoteModalOpen(true)}
               className="h-9 px-2.5 sm:px-3.5 bg-m3-surface-container-low hover:bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant rounded-m3-full text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-none"
               title="Quick Rate Calculator"
@@ -1100,6 +1114,7 @@ export default function SoloAdminDashboard() {
           {currentView === 'ENQUIRIES' && (
             <EnquiriesView
               leads={leads}
+              bookings={bookings}
               calculatorQuotes={calculatorQuotes}
               onNavigateToRadar={() => setCurrentView('WEB_RADAR')}
               onAddManualLead={handleAddManualLead}
@@ -1123,6 +1138,7 @@ export default function SoloAdminDashboard() {
               onUpdateContact={handleUpdateBookingContact}
               onOpenDutySlip={(b) => setActiveDutySlipBooking(b)}
               onOpenDriversModal={() => setCurrentView('DRIVERS')}
+              onOpenQuickBooking={() => setIsQuickBookingOpen(true)}
               showToast={showToast}
             />
           )}
@@ -1136,6 +1152,7 @@ export default function SoloAdminDashboard() {
               onAssignChauffeur={handleAssignChauffeur}
               onStatusChange={handleStatusChange}
               onConvertToConfirmed={handleConvertToConfirmed}
+              onAddManualLead={handleAddManualLead}
               onOpenDutySlip={(b) => setActiveDutySlipBooking(b)}
               showToast={showToast}
             />
@@ -1278,6 +1295,23 @@ export default function SoloAdminDashboard() {
       {/* ========================================================= */}
       {/* FOCUSED TASK MODALS (Only When User Explicitly Clicks)     */}
       {/* ========================================================= */}
+
+      {/* Global 1-Minute Quick Booking / Enquiry Modal */}
+      <QuickBookingModal
+        isOpen={isQuickBookingOpen}
+        onClose={() => setIsQuickBookingOpen(false)}
+        existingLeads={leads}
+        existingBookings={bookings}
+        onSaveLead={(newLead) => {
+          handleAddManualLead(newLead);
+          setIsQuickBookingOpen(false);
+        }}
+        onConfirmBooking={(newBooking) => {
+          handleConvertToConfirmed(newBooking);
+          setIsQuickBookingOpen(false);
+        }}
+        showToast={showToast}
+      />
 
       {/* AI Booking Parser Modal */}
       {isAiParserModalOpen && (

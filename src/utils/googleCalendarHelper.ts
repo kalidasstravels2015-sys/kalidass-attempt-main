@@ -65,14 +65,16 @@ export function parseTravelDateToDate(dateStr?: string, refDate: Date = new Date
     dateBase.setDate(dateBase.getDate() - 1);
   }
 
-  // 2. Extract time portion if available (e.g. "@ 05:00 AM" or "06:30 PM" or "14:30" or "5 PM")
+  // 3. Extract time portion properly (only match HH:MM or H AM/PM, not bare date numbers like "24")
   let hours = 6;
   let minutes = 0;
-  const timeMatch = raw.match(/(\d{1,2})(?::(\d{2}))?(?::\d{2})?\s*(am|pm)?/i);
+  const timeMatch = raw.match(/(?:@\s*)?(\d{1,2}):(\d{2})(?::\d{2})?\s*(am|pm)?/i) ||
+                    raw.match(/(\d{1,2})\s*(am|pm)\b/i);
   if (timeMatch) {
     let h = parseInt(timeMatch[1], 10);
-    const m = timeMatch[2] ? parseInt(timeMatch[2], 10) : 0;
-    const meridian = (timeMatch[3] || '').toLowerCase();
+    const isShortMeridianOnly = timeMatch[2] && /^(am|pm)$/i.test(timeMatch[2]);
+    const m = (!isShortMeridianOnly && timeMatch[2]) ? parseInt(timeMatch[2], 10) : 0;
+    const meridian = (isShortMeridianOnly ? timeMatch[2] : (timeMatch[3] || '')).toLowerCase();
     if (meridian === 'pm' && h < 12) h += 12;
     if (meridian === 'am' && h === 12) h = 0;
     hours = h;
@@ -84,21 +86,50 @@ export function parseTravelDateToDate(dateStr?: string, refDate: Date = new Date
     return dateBase;
   }
 
-  // 3. Try standard ISO or parseable dates
-  // Remove '@' symbol for cleaner Date.parse
-  const cleanStr = raw.replace('@', ' ').replace(/\s+/g, ' ').trim();
-  const parsedTimestamp = Date.parse(cleanStr);
-  if (!isNaN(parsedTimestamp)) {
-    const d = new Date(parsedTimestamp);
-    // If the parse succeeded and gave 0:00:00 but raw had a time regex, preserve it
-    if (timeMatch && d.getHours() === 0 && d.getMinutes() === 0 && hours !== 0) {
-      d.setHours(hours, minutes, 0, 0);
+  // Strip range suffixes like "to 30" or "to Dec 30" or "- 30 Dec" so we parse the departure date cleanly
+  const primaryPart = raw
+    .split(/\s+(?:to|till|until|-)\s+/i)[0]
+    .replace(/\([^)]*\)/g, ' ')
+    .replace('@', ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  // 4. Try Month-Day or Day-Month formats (e.g. "Dec 24", "Dec 24 2026", "24 Dec", "24 Dec 2026")
+  const monthNames = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+  const mmmDayMatch = primaryPart.match(/\b([A-Za-z]{3,9})\s+(\d{1,2})(?:st|nd|rd|th)?(?:[\s,]+(\d{4}))?/i);
+  if (mmmDayMatch) {
+    const mIdx = monthNames.findIndex(m => mmmDayMatch[1].toLowerCase().startsWith(m));
+    if (mIdx !== -1) {
+      const day = parseInt(mmmDayMatch[2], 10);
+      const year = mmmDayMatch[3] ? parseInt(mmmDayMatch[3], 10) : refDate.getFullYear();
+      const customDate = new Date(year, mIdx, day, hours, minutes, 0, 0);
+      if (!isNaN(customDate.getTime())) return customDate;
     }
-    return d;
   }
 
-  // 4. Try DD/MM/YYYY or DD-MM-YYYY format
-  const dmyMatch = cleanStr.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})/);
+  const dayMmmMatch = primaryPart.match(/\b(\d{1,2})(?:st|nd|rd|th)?[\s-]+([A-Za-z]{3,9})(?:[\s,-]+(\d{4}))?/i);
+  if (dayMmmMatch) {
+    const mIdx = monthNames.findIndex(m => dayMmmMatch[2].toLowerCase().startsWith(m));
+    if (mIdx !== -1) {
+      const day = parseInt(dayMmmMatch[1], 10);
+      const year = dayMmmMatch[3] ? parseInt(dayMmmMatch[3], 10) : refDate.getFullYear();
+      const customDate = new Date(year, mIdx, day, hours, minutes, 0, 0);
+      if (!isNaN(customDate.getTime())) return customDate;
+    }
+  }
+
+  // 5. Try YYYY-MM-DD ISO date prefix
+  const isoMatch = primaryPart.match(/(\d{4})-(\d{2})-(\d{2})/);
+  if (isoMatch) {
+    const year = parseInt(isoMatch[1], 10);
+    const month = parseInt(isoMatch[2], 10) - 1;
+    const day = parseInt(isoMatch[3], 10);
+    const customDate = new Date(year, month, day, hours, minutes, 0, 0);
+    if (!isNaN(customDate.getTime())) return customDate;
+  }
+
+  // 6. Try DD/MM/YYYY or DD-MM-YYYY format
+  const dmyMatch = primaryPart.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})/);
   if (dmyMatch) {
     const day = parseInt(dmyMatch[1], 10);
     const month = parseInt(dmyMatch[2], 10) - 1;
@@ -107,18 +138,14 @@ export function parseTravelDateToDate(dateStr?: string, refDate: Date = new Date
     if (!isNaN(customDate.getTime())) return customDate;
   }
 
-  // 5. Try DD-MMM-YYYY (e.g. "25-Oct-2026")
-  const dMmmYMatch = cleanStr.match(/^(\d{1,2})[- ]([A-Za-z]{3,9})[- ](\d{4})/);
-  if (dMmmYMatch) {
-    const day = parseInt(dMmmYMatch[1], 10);
-    const monthName = dMmmYMatch[2].toLowerCase();
-    const year = parseInt(dMmmYMatch[3], 10);
-    const monthNames = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
-    const monthIdx = monthNames.findIndex(m => monthName.startsWith(m));
-    if (monthIdx !== -1) {
-      const customDate = new Date(year, monthIdx, day, hours, minutes, 0, 0);
-      if (!isNaN(customDate.getTime())) return customDate;
+  // 7. Try standard Date.parse
+  const parsedTimestamp = Date.parse(primaryPart);
+  if (!isNaN(parsedTimestamp)) {
+    const d = new Date(parsedTimestamp);
+    if (timeMatch && d.getHours() === 0 && d.getMinutes() === 0 && hours !== 0) {
+      d.setHours(hours, minutes, 0, 0);
     }
+    return d;
   }
 
   // Fallback: Return tomorrow 06:00 AM

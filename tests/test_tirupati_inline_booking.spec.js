@@ -25,12 +25,12 @@ test('Verify Option A Progressive Disclosure: Calm Fare Card, 1-Tap Booking, and
 
   // 3. Verify Calm Fare Card: ₹6,000 All-Inclusive Fixed Fare
   await expect(bookingSection.locator('.text-3xl, .text-4xl').first()).toHaveText(/₹\s*6,000/);
-  await expect(bookingSection.getByText(/Fuel, Tolls, AP State Permit, Hill Climb & Parking/)).toBeVisible();
+  await expect(bookingSection.getByText(/Fuel, Tolls, AP State Entry Permit, Hill Climb & Parking/)).toBeVisible();
 
   // 4. Verify Itemized Fare Breakdown
   await expect(bookingSection.getByText(/Cab Hire.*Swift Dzire.*Fuel included/)).toBeVisible();
   await expect(bookingSection.getByText(/Driver Allowance/)).toBeVisible();
-  await expect(bookingSection.getByText('State Permit:')).toBeVisible();
+  await expect(bookingSection.getByText('State Entry Permit:')).toBeVisible();
   await expect(bookingSection.getByText('Tolls:')).toBeVisible();
 
   // 5. Verify 1-Tap WhatsApp Booking is ready with optional devotee name

@@ -821,8 +821,8 @@ export default function TourBookingEngine({
       };
     }
 
-    // Standard Multi-Day (2 or 3 Days)
-    if (numDays <= 3) {
+    // Standard Multi-Day (2, 3, or explicit 4 Days)
+    if (numDays <= 3 || veh.rates[numDays]) {
       const totalFare = veh.rates[numDays] || (veh.rates[1] * numDays);
       const vehicleHireFare = veh.vehicleHire[numDays] || Math.round(totalFare * 0.8);
       const driverBata = veh.driverBata[numDays] || (totalFare - vehicleHireFare);
@@ -849,7 +849,7 @@ export default function TourBookingEngine({
     const extraDays = numDays - 3;
     const day2 = veh.rates[2] || veh.rates[1];
     const day1 = veh.rates[1];
-    const extraPerDay = day2 - day1;
+    const extraPerDay = (day2 - day1) > 0 ? (day2 - day1) : ((veh.rates[3] || day2) - day2);
     const base3 = veh.rates[3] || (day1 * 3);
     const totalFare = base3 + (extraDays * extraPerDay);
     const vehicleHireFare = Math.round(totalFare * 0.8);
@@ -1790,7 +1790,7 @@ Please confirm booking!` + tourMapsBlock;
                       {activePayableFare}
                     </div>
                     <div className="text-[11px] font-medium text-slate-500 mt-0.5">
-                      {isAfter24Hours ? '+ Tolls & parking extra (as per actual receipts)' : 'All-inclusive: Fuel, Tolls & Permit included'}
+                      {isAfter24Hours ? '+ Tolls & parking extra (as per actual receipts)' : 'All-inclusive: Fuel, Tolls & State Entry Permit included'}
                     </div>
                   </div>
                 </div>
@@ -1895,21 +1895,29 @@ Please confirm booking!` + tourMapsBlock;
                         {isAfter24Hours ? (
                           <>
                             <div className="flex justify-between items-center py-0.5">
-                              <span>State Permit:</span>
+                              <span>State Entry Permit:</span>
                               <span className="font-bold text-m3-on-surface">
                                 {isTirupati ? '₹500' : (serviceSlug === 'sabarimala-trip' ? '₹800' : '₹0')}
                               </span>
                             </div>
                             <div className="flex justify-between items-center py-0.5">
-                              <span>Tolls &amp; Parking:</span>
-                              <span className="font-bold text-m3-on-surface">As per actual receipts</span>
+                              <span>Tolls:</span>
+                              <span className="font-bold text-m3-on-surface">Extra</span>
+                            </div>
+                            <div className="flex justify-between items-center py-0.5">
+                              <span>Parking:</span>
+                              <span className="font-bold text-m3-on-surface">Extra</span>
                             </div>
                           </>
                         ) : (
                           <>
                             <div className="flex justify-between items-center py-0.5">
-                              <span>State Permit &amp; Tolls:</span>
-                              <span className="font-bold text-emerald-700">₹0 (All-inclusive in package)</span>
+                              <span>State Entry Permit:</span>
+                              <span className="font-bold text-emerald-700">₹0 (Included)</span>
+                            </div>
+                            <div className="flex justify-between items-center py-0.5">
+                              <span>Tolls:</span>
+                              <span className="font-bold text-emerald-700">₹0 (Included)</span>
                             </div>
                             <div className="flex justify-between items-center py-0.5">
                               <span>Parking:</span>
@@ -1925,7 +1933,7 @@ Please confirm booking!` + tourMapsBlock;
                           <span>
                             {isAfter24Hours
                               ? 'Dedicated Cab Hire, 100% Fuel & Driver Allowance included.'
-                              : (isTirupati ? 'Fuel, Tolls, AP State Permit, Hill Climb & Parking included. No hidden charges.' : `${config.inclusions?.standard || 'Fuel, Tolls, Permit & Driver Allowance'}. No hidden charges.`)}
+                              : (isTirupati ? 'Fuel, Tolls, AP State Entry Permit, Hill Climb & Parking included. No hidden charges.' : `${config.inclusions?.standard || 'Fuel, Tolls, State Entry Permit & Driver Allowance'}. No hidden charges.`)}
                           </span>
                         </div>
                         <div className="flex items-center gap-1.5 text-slate-500">
@@ -2195,7 +2203,7 @@ Please confirm booking!` + tourMapsBlock;
                     ) : (
                       <tr className="bg-emerald-50/70 text-emerald-950">
                         <td className="p-2 font-medium">
-                          <strong className="text-emerald-900">State Permit, Tolls &amp; Parking:</strong>
+                          <strong className="text-emerald-900">State Entry Permit, Tolls &amp; Parking:</strong>
                         </td>
                         <td className="p-2 text-right font-bold text-emerald-700">₹0</td>
                       </tr>

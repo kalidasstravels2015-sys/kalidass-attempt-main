@@ -124,7 +124,8 @@ export default function SoloDutySlipModal({
         extraKmCharge,
         basePackageFare: baseFare,
         tolls,
-        parking: parking + statePermit,
+        parking,
+        statePermit,
         nightAllowance,
         grossFare,
         advance,
@@ -164,7 +165,8 @@ export default function SoloDutySlipModal({
       extraKmCharge,
       basePackageFare: baseFare,
       tolls,
-      parking: parking + statePermit,
+      parking,
+      statePermit,
       nightAllowance,
       grossFare,
       advance,
@@ -238,7 +240,8 @@ export default function SoloDutySlipModal({
         extraKmRate: Number(form.extraKmRate),
         basePackageFare: baseFare,
         tollsFastag: tolls,
-        parking: parking + statePermit,
+        parking,
+        statePermit,
         driverBata,
         advancePaid: advance,
         grossFare,
@@ -476,7 +479,7 @@ export default function SoloDutySlipModal({
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-semibold text-m3-on-surface-variant mb-0.5">State Permit (Rs)</label>
+                  <label className="block text-[10px] font-semibold text-m3-on-surface-variant mb-0.5">State Entry Permit (Rs)</label>
                   <input
                     type="number"
                     placeholder="0"

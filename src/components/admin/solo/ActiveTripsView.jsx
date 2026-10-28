@@ -16,6 +16,7 @@ export default function ActiveTripsView({
   onUpdateContact,
   onOpenDutySlip,
   onOpenDriversModal,
+  onOpenQuickBooking,
   showToast
 }) {
   const [search, setSearch] = useState('');
@@ -244,16 +245,28 @@ export default function ActiveTripsView({
           </p>
         </div>
 
-        {onOpenDriversModal && (
-          <button
-            type="button"
-            onClick={onOpenDriversModal}
-            className="h-10 px-4 bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container rounded-m3-full text-xs font-semibold flex items-center gap-1.5 transition-colors"
-          >
-            <span className="material-symbols-outlined text-[18px]">badge</span>
-            <span>Manage Driver Roster ({chauffeurs.length})</span>
-          </button>
-        )}
+        <div className="flex flex-wrap items-center gap-2">
+          {onOpenQuickBooking && (
+            <button
+              type="button"
+              onClick={onOpenQuickBooking}
+              className="h-10 px-5 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-m3-full text-xs font-bold flex items-center gap-1.5 shadow-m3-1 transition-all cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-[18px]">add_circle</span>
+              <span>+ Quick Add Booking</span>
+            </button>
+          )}
+          {onOpenDriversModal && (
+            <button
+              type="button"
+              onClick={onOpenDriversModal}
+              className="h-10 px-4 bg-m3-secondary-container hover:bg-m3-secondary-container/80 text-m3-on-secondary-container rounded-m3-full text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-[18px]">badge</span>
+              <span>Driver Roster ({chauffeurs.length})</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Filter & Search Bar */}
@@ -310,8 +323,18 @@ export default function ActiveTripsView({
           </div>
           <h3 className="text-sm font-bold text-m3-on-surface">No Active Trips Found</h3>
           <p className="text-xs text-m3-on-surface-variant max-w-md mx-auto">
-            When an enquiry receives ₹500 advance in Step 1, it appears here to allot a driver and send Duty Slips.
+            Add a confirmed booking directly or move an enquiry from Step 1.
           </p>
+          {onOpenQuickBooking && (
+            <button
+              type="button"
+              onClick={onOpenQuickBooking}
+              className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-m3-full text-xs font-bold transition-colors cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-sm">add_circle</span>
+              <span>+ Quick Add Booking</span>
+            </button>
+          )}
         </div>
       ) : (
         <div className="space-y-3">
@@ -436,7 +459,13 @@ export default function ActiveTripsView({
                     </div>
                     <div className="text-xs text-m3-on-surface-variant mt-0.5">
                       🚗 {b.vehicleCategory} • {b.partySize || '4 Seats'}
+                      {b.darshanStatus && b.darshanStatus !== 'Unassigned' ? ` • ${b.darshanStatus}` : ''}
                     </div>
+                    {b.notes && (
+                      <div className="text-[11px] text-m3-on-surface-variant bg-m3-surface-container-low px-2 py-1 rounded border border-m3-outline-variant/50 mt-1">
+                        📝 {b.notes}
+                      </div>
+                    )}
                   </div>
 
                   {/* 3. Driver Allotment */}

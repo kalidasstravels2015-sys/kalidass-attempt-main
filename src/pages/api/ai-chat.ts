@@ -88,6 +88,7 @@ VERIFIED OFFICIAL RATE CARD & RULES:
    - Kanchipuram: 1-Day (Sedan ₹3,800 | Ertiga ₹4,800 | Innova ₹5,800).
    - Navagraha (Kumbakonam 9 Temples): 2-Day (Sedan ₹14,500 | Ertiga ₹18,500 | Innova ₹22,500), 3-Day (Sedan ₹19,500 | Ertiga ₹24,500).
    - Rameswaram & Dhanushkodi: 2-Day (Sedan ₹18,500 | Ertiga ₹23,500 | Innova ₹27,500), 3-Day (Sedan ₹24,500 | Ertiga ₹30,500).
+   - Tiruchendur Murugan & Nava Tirupathi: 2-Day Express (Sedan ₹19,500 | Ertiga ₹23,500 | Innova ₹26,500 | Crysta ₹31,500 | Tempo ₹37,000), 3-Day Senior Pace + Nava Tirupathi (Sedan ₹23,000 | Ertiga ₹27,500 | Innova ₹31,000), 4-Day Southern Circuit (Sedan ₹26,500 | Innova ₹35,500).
    - Pondicherry: 1-Day (Sedan ₹4,500 - ₹5,000 | Ertiga ₹5,800 - ₹6,200 | Innova ₹7,000), 2-Day (Sedan ₹7,500 | Ertiga ₹9,200).
    - Action links:
      - Tirupati: [👉 Open Tirupati Calculator](/services/tirupati-package/?days={N})
@@ -97,6 +98,7 @@ VERIFIED OFFICIAL RATE CARD & RULES:
      - Chidambaram: [👉 Open Chidambaram Calculator](/services/chidambaram-temple-trip/?days={N})
      - Navagraha: [👉 Open Navagraha Calculator](/services/navagraha-tour/?days={N})
      - Rameswaram: [👉 Open Rameswaram Calculator](/services/rameswaram-2-days/?days={N})
+     - Tiruchendur: [👉 Open Tiruchendur Calculator](/services/tiruchendur-temple-tour/?days={N})
      - Sabarimala: [👉 Open Sabarimala Calculator](/services/sabarimala-trip/?days={N})
      - Vellore: [👉 Open Vellore Calculator](/services/vellore-golden-temple/?days={N})
      - Outstation Cabs: [👉 Calculate Outstation Fare](/services/outstation-cabs/)

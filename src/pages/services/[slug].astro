@@ -16,6 +16,7 @@ import SabarimalaBookingEngine from '../../components/SabarimalaBookingEngine.js
 import ChidambaramBookingEngine from '../../components/ChidambaramBookingEngine.jsx';
 import VelloreBookingEngine from '../../components/VelloreBookingEngine.jsx';
 import PondicherryBookingEngine from '../../components/PondicherryBookingEngine.jsx';
+import TiruchendurBookingEngine from '../../components/TiruchendurBookingEngine.jsx';
 import TourBookingEngine from '../../components/TourBookingEngine.jsx';
 import VehicleCard from '../../components/VehicleCard.astro';
 import GoogleRatingBadge from '../../components/GoogleRatingBadge.astro';
@@ -63,7 +64,8 @@ const isSabarimala = service.slug === 'sabarimala-trip';
 const isChidambaram = service.slug === 'chidambaram-temple-trip';
 const isVellore = service.slug === 'vellore-golden-temple';
 const isPondicherry = service.slug === 'pondicherry-one-day-trip';
-const hasDedicatedEngine = isTirupati || isThiruvannamalai || isKanchipuram || isNavagraha || isRameswaram || isSabarimala || isChidambaram || isVellore || isPondicherry;
+const isTiruchendur = service.slug === 'tiruchendur-temple-tour';
+const hasDedicatedEngine = isTirupati || isThiruvannamalai || isKanchipuram || isNavagraha || isRameswaram || isSabarimala || isChidambaram || isVellore || isPondicherry || isTiruchendur;
 const isTour = ['Temple Tours', 'Popular Destinations'].includes(service.category) || hasDedicatedEngine;
 
 const guideLabels = isTour ? {
@@ -86,6 +88,7 @@ const tourImages: Record<string, string> = {
   "tirupati-package": "/images/temple/tirupati-balaji.webp",
   "thiruvannamalai-girivalam-trip": "/images/temple/thiruvannamalai-girivalam.webp",
   "rameswaram-2-days": "/images/temple/rameswaram.webp",
+  "tiruchendur-temple-tour": "/images/temple/tiruchendur-murugan.webp",
   "navagraha-tour": "/images/temple/navagraha.webp",
   "kanchipuram-temple-trip": "/images/temple/kanchipuram-temple.webp",
   "chidambaram-temple-trip": "/images/temple/chidambaram-natarajar-temple.webp",
@@ -116,6 +119,7 @@ const serviceShortNames: Record<string, string> = {
   "thiruvannamalai-girivalam-trip": "Thiruvannamalai Girivalam",
   "sabarimala-trip": "Sabarimala Pilgrim",
   "rameswaram-2-days": "Rameswaram & Dhanushkodi",
+  "tiruchendur-temple-tour": "Tiruchendur Murugan",
   "kanchipuram-temple-trip": "Kanchipuram Temple",
   "chidambaram-temple-trip": "Chidambaram & Pichavaram",
   "vellore-golden-temple": "Vellore Golden Temple",
@@ -379,6 +383,22 @@ const getPackageStayRates = (slug: string, vehicleName: string, basePriceNum: nu
       return { 1: 22500, 2: 22500, 3: 25500 };
     }
     return { 1: basePriceNum || 18500, 2: 18500, 3: 21000 };
+  }
+
+  if (slug === 'tiruchendur-temple-tour') {
+    if (v.includes('tempo') || v.includes('traveller')) {
+      return { 1: 37000, 2: 43000, 3: 49000 };
+    }
+    if (v.includes('crysta')) {
+      return { 1: 31500, 2: 36500, 3: 41500 };
+    }
+    if (v.includes('innova')) {
+      return { 1: 26500, 2: 31000, 3: 35500 };
+    }
+    if (v.includes('ertiga') || v.includes('xl6')) {
+      return { 1: 23500, 2: 27500, 3: 31500 };
+    }
+    return { 1: basePriceNum || 19500, 2: 23000, 3: 26500 };
   }
 
   if (slug === 'chidambaram-temple-trip') {
@@ -650,7 +670,7 @@ const PILGRIM_ROUTES: Record<string, {
           label: "2 Days / 1 Night (Driver Night Bata Included)", 
           km: `${2 * minKmDay} km Min Run (${minKmDay} km/day @ ₹${rateKm}/km = ₹${(2 * minKmDay * rateKm).toLocaleString('en-IN')})`,
           bata: `2 Calendar Days Bata: ₹${(2 * dailyBata).toLocaleString('en-IN')}`,
-          tolls: "FASTag Tolls & AP State Permit: Payable at Actuals",
+          tolls: "FASTag Tolls & AP State Entry Permit: Payable at Actuals",
           stay: `1 Night Driver Lodging Allowance Included (₹${stayLodging.toLocaleString('en-IN')})`,
           sightseeing: "Tirumala + Tiruchanur + Srinivasa Mangapuram + Kanipakam",
           inclusions: "Fuel & Driver Night Bata Included • Tolls & AP Permit at Actuals" 
@@ -662,7 +682,7 @@ const PILGRIM_ROUTES: Record<string, {
           label: "3 Days / 2 Nights (2 Nights Driver Bata Included)", 
           km: `${3 * minKmDay} km Min Run (${minKmDay} km/day @ ₹${rateKm}/km = ₹${(3 * minKmDay * rateKm).toLocaleString('en-IN')})`,
           bata: `3 Calendar Days Bata: ₹${(3 * dailyBata).toLocaleString('en-IN')}`,
-          tolls: "FASTag Tolls & AP State Permit: Payable at Actuals",
+          tolls: "FASTag Tolls & AP State Entry Permit: Payable at Actuals",
           stay: `2 Nights Driver Lodging Allowance Included (₹${(2 * stayLodging).toLocaleString('en-IN')})`,
           sightseeing: "Tirumala + Srikalahasti + Kanipakam + Local Temples",
           inclusions: "Fuel & 2 Nights Driver Bata Included • Tolls & AP Permit at Actuals" 
@@ -846,6 +866,39 @@ const PILGRIM_ROUTES: Record<string, {
       { feature: 'Advance Payment', kalidass: '₹500 Advance (Balance after trip completion)', aggregators: '100% upfront card/wallet prepayment with cancellation penalties' }
     ],
     ctaHeading: 'Ready to Book Your Chennai to Rameswaram Cab (2, 3 or 4 Days)?'
+  },
+  'tiruchendur-temple-tour': {
+    summaryTitle: 'Chennai to Tiruchendur Murugan Cab: Senior-Friendly Trip Facts & Fares',
+    summaryDesc: 'Planning a sacred family or senior citizen pilgrimage to Arulmigu Subramania Swamy Temple (2nd Arupadai Veedu & Guru Sthalam)? Kalidass Travels provides doorstep round-trip AC cabs with Satvik chauffeurs, 60+ Senior Citizen gate drop, Nazhikinaru & Valli Cave guidance, and Kulasekarapattinam & Nava Tirupathi coverage.',
+    distance: '~640 km (~1,280 km RT)',
+    distanceSub: 'Via Trichy & Madurai NH 38',
+    travelTime: '10 – 11 Hours',
+    travelTimeSub: 'With 2.5-Hr Senior Bio-Breaks',
+    startingFare: '₹19,500 Flat',
+    startingFareSub: 'AC Sedan 2-Day Round-Trip',
+    tollsLabel: 'FASTag Tolls & Parking',
+    tollsValue: 'Payable at Actuals',
+    tollsSub: '1,280 KM Run Covered',
+    calloutTitle: 'Zero-climb seashore temple • 60+ Senior Aadhaar queue drop • Nazhikinaru & Kulasekarapattinam • ₹500 Advance',
+    calloutDesc: 'Covers Subramania Swamy Temple, Panchalinga, Valli Cave, Nazhikinaru sacred well, Kulasekarapattinam Mutharamman (14 km), and Vanathirupathi.',
+    stayLabelSub: '1,280 KM & Driver Bata Included',
+    getDropdownOptions: (r) => [
+      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night (Express Tiruchendur & Kulasekarapattinam)", inclusions: "Fuel, Tiruchendur, Kulasekarapattinam, Vanathirupathi & 2 Days Driver Bata Included • Tolls at Actuals", label: "2 Days / 1 Night (Express Tiruchendur & Kulasekarapattinam • 1,280 km)", selected: true },
+      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights (Senior-Friendly Pace + Nava Tirupathi / Madurai)", inclusions: "Fuel, Tiruchendur + 9 Nava Tirupathi Divya Desams & 3 Days Driver Bata Included • Tolls at Actuals", label: "3 Days / 2 Nights (Senior Recommended: Tiruchendur + 9 Nava Tirupathi)" },
+      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights (Complete Southern Circuit: Madurai + Nava Tirupathi + Tiruchendur)", inclusions: "Fuel, Madurai Meenakshi + Nava Tirupathi + Tiruchendur & 4 Days Driver Bata Included • Tolls at Actuals", label: "4 Days / 3 Nights (Southern Circuit: Madurai + Nava Tirupathi + Tiruchendur)" }
+    ],
+    baseInclusionsText: 'Fuel, Kulasekarapattinam, Vanathirupathi & 2 Days Driver Bata Included (Tolls at Actuals)',
+    comparisonTitle: 'Why Senior Pilgrims & Families Choose Kalidass Travels for Tiruchendur',
+    comparisonDesc: 'A 1,280 km pilgrimage requires a patient chauffeur and transparent multi-day pricing. Here is how Kalidass Travels compares to online app aggregators:',
+    comparisonRows: [
+      { feature: 'Multi-Day Package Pricing', kalidass: '₹19,500 Flat 2D / ₹23,000 3D Senior Pace (Sedan)', aggregators: 'Per-km surprises; extra charges for Kulasekarapattinam & Nava Tirupathi detours' },
+      { feature: 'Senior Citizen Temple Drop', kalidass: 'Direct drop at Shanmuga Vilasa Mandapam & 60+ Aadhaar queue desk', aggregators: 'Dropped at distant municipal outer bus stand parking (1 km walk)' },
+      { feature: 'Nazhikinaru & Sea Bath Help', kalidass: 'Chauffeur coordinates dress-changing rooms & helps elders with Prokshanam water', aggregators: 'Drivers refuse to wait near beach road or guide families' },
+      { feature: 'NH 38 Highway Bio-Breaks', kalidass: 'Planned 2.5-hr stops at verified vegetarian plazas with clean Western toilets', aggregators: 'Rushed highway driving; unhygienic roadside tea-stall halts' },
+      { feature: 'Nearby Shrines Coverage', kalidass: 'Kulasekarapattinam (14 km) & Vanathirupathi included; Nava Tirupathi in 3D/4D', aggregators: 'Each local temple visit billed as an expensive extra-km add-on' },
+      { feature: 'Advance & Cancellation', kalidass: '₹500 Advance (Balance after trip; free reschedule for senior health)', aggregators: 'High upfront prepayment with strict non-refundable cancellation penalties' }
+    ],
+    ctaHeading: 'Ready to Book Your Chennai to Tiruchendur Murugan Cab (2, 3 or 4 Days)?'
   },
   'chidambaram-temple-trip': {
     summaryTitle: 'Chennai to Chidambaram Natarajar Cab: Key Trip Facts & Fares',
@@ -1107,6 +1160,15 @@ if (service.slug === 'tirupati-package') {
     { "@type": "Place", "name": "Pamban Island" },
     { "@type": "AdministrativeArea", "name": "Tamil Nadu" }
   );
+} else if (service.slug === 'tiruchendur-temple-tour') {
+  areas.push(
+    { "@type": "City", "name": "Chennai" },
+    { "@type": "City", "name": "Tiruchendur" },
+    { "@type": "Place", "name": "Kulasekarapattinam" },
+    { "@type": "Place", "name": "Srivaikuntam (Nava Tirupathi)" },
+    { "@type": "City", "name": "Thoothukudi" },
+    { "@type": "AdministrativeArea", "name": "Tamil Nadu" }
+  );
 } else if (service.slug === 'navagraha-tour') {
   areas.push(
     { "@type": "City", "name": "Chennai" },
@@ -1330,7 +1392,7 @@ if (!offersData && startingPrice) {
 
 const dynamicPriceRange = offersData
   ? `₹${Number(offersData.lowPrice || startingPrice || 3500).toLocaleString('en-IN')} - ₹${Number(offersData.highPrice || startingPrice || 40000).toLocaleString('en-IN')}`
-  : (isTirupati ? "₹6,000 - ₹27,000" : (isThiruvannamalai ? "₹6,500 - ₹18,500" : (isKanchipuram ? "₹3,500 - ₹18,000" : (isNavagraha ? "₹12,000 - ₹36,000" : (isRameswaram ? "₹18,500 - ₹48,000" : (isSabarimala ? "₹26,500 - ₹62,000" : (isChidambaram ? "₹7,400 - ₹26,500" : (isVellore ? "₹4,800 - ₹22,500" : (isPondicherry ? "₹4,500 - ₹19,000" : "₹₹")))))))));
+  : (isTirupati ? "₹6,000 - ₹27,000" : (isThiruvannamalai ? "₹6,500 - ₹18,500" : (isKanchipuram ? "₹3,500 - ₹18,000" : (isNavagraha ? "₹12,000 - ₹36,000" : (isRameswaram ? "₹18,500 - ₹48,000" : (isTiruchendur ? "₹19,500 - ₹49,000" : (isSabarimala ? "₹26,500 - ₹62,000" : (isChidambaram ? "₹7,400 - ₹26,500" : (isVellore ? "₹4,800 - ₹22,500" : (isPondicherry ? "₹4,500 - ₹19,000" : "₹₹"))))))))));
 
 // Construct Schema.org structured data
 const pageSchemas: any[] = [];
@@ -1647,6 +1709,8 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                   ? "Doorstep Chennai to Kumbakonam 9 Navagraha temples round-trip cab rental with verified chauffeur. Flat rates from ₹12,000 (Sedan) covering ~750 km 2-day parikrama route. ₹500 advance to confirm."
                   : isRameswaram
                   ? "Doorstep Chennai to Rameswaram & Dhanushkodi round-trip cab rental with verified chauffeur. Flat rates from ₹18,500 (Sedan) covering ~1,200 km, 22 holy theertham baths & Pamban bridge transit. ₹500 advance to confirm."
+                  : isTiruchendur
+                  ? "Senior-friendly doorstep Chennai to Tiruchendur Murugan Temple round-trip AC cab with Satvik chauffeur. Flat seashore temple (zero hill climbing) • 2-Day Express from ₹19,500, 3-Day Senior Pace + Nava Tirupathi from ₹23,000. Includes Kulasekarapattinam & Vanathirupathi. ₹500 advance to confirm."
                   : isSabarimala
                   ? "Doorstep Chennai to Sabarimala round-trip cab rental with satvik teetotaler chauffeur. Flat rates from ₹26,500 (Ertiga SUV) covering ~1,350 km, Nilakkal parking guidance & ₹500 advance to confirm."
                   : isChidambaram
@@ -1693,6 +1757,11 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                   />
                 ) : isRameswaram ? (
                   <RameswaramBookingEngine
+                    client:load
+                    serviceTitle={service.title}
+                  />
+                ) : isTiruchendur ? (
+                  <TiruchendurBookingEngine
                     client:load
                     serviceTitle={service.title}
                   />
@@ -1830,6 +1899,15 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
               <Sparkles className="w-3.5 h-3.5" />
               <span>Fares &amp; Book</span>
             </a>
+            {isTiruchendur && (
+              <a
+                href="#senior-comfort"
+                class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium flex items-center gap-1.5"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-m3-success" />
+                <span>Senior Comfort &amp; Bio-Breaks</span>
+              </a>
+            )}
             <a
               href="#route"
               class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium flex items-center gap-1.5"
@@ -1897,6 +1975,141 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
     <!-- 2. MAIN CONTENT BODY CONTAINER -->
     <div class="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 pt-4 sm:pt-8 space-y-4 sm:space-y-8">
       
+      {/* DEDICATED SENIOR CITIZEN COMFORT & ACCESSIBILITY BANNER + NH 38 BIO-BREAK SCHEDULE (Tiruchendur Specific) */}
+      {isTiruchendur && (
+        <section
+          id="senior-comfort"
+          aria-labelledby="senior-comfort-heading"
+          class="bg-m3-surface rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 overflow-hidden scroll-mt-40"
+        >
+          <div class="p-4 sm:p-6 bg-m3-success-container/20 border-b border-m3-outline-variant flex flex-wrap items-start justify-between gap-3">
+            <div class="space-y-1 max-w-2xl">
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-m3-full bg-m3-success-container/60 text-m3-on-success-container text-xs font-bold uppercase tracking-wider border border-m3-success/30">
+                <ShieldCheck className="w-3.5 h-3.5 text-m3-success shrink-0" />
+                <span>Designed for Aged Pilgrims (60–75+ Yrs) &amp; Families</span>
+              </div>
+              <h2 id="senior-comfort-heading" class="text-lg sm:text-2xl font-extrabold text-m3-on-surface font-heading tracking-tight">
+                Senior Citizen Temple Accessibility &amp; 1,280 km Highway Comfort Guide
+              </h2>
+              <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed">
+                Traveling 640 km from Chennai to Tiruchendur with elderly parents? Here is everything you need to know about temple steps, wheelchair queues, sacred well access, and planned NH 38 restroom stops.
+              </p>
+            </div>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-lg bg-m3-surface border border-m3-outline-variant text-xs font-bold text-m3-primary shrink-0 shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-m3-tertiary shrink-0" />
+              <span>Zero Hill Steps • Seashore Abode</span>
+            </span>
+          </div>
+
+          <div class="p-4 sm:p-6 space-y-5">
+            <!-- 4-Pillar Senior Accessibility Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div class="bg-m3-surface-container-low rounded-m3-xl p-3.5 sm:p-4 border border-m3-outline-variant/80 space-y-1.5">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-m3-success shrink-0" />
+                    <span>1. Zero Hill Climbing (Flat Seashore Layout)</span>
+                  </h3>
+                  <span class="text-[11px] font-bold px-2 py-0.5 rounded-m3-sm bg-m3-success-container/40 text-m3-on-success-container">Easy Walk</span>
+                </div>
+                <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+                  Unlike Palani or Tiruttani, Tiruchendur is the <strong>only Arupadai Veedu built on flat seashore ground</strong>. Entering the main Raja Gopuram and Praharam requires zero mountain climbing—only gentle ramps and short threshold steps.
+                </p>
+              </div>
+
+              <div class="bg-m3-surface-container-low rounded-m3-xl p-3.5 sm:p-4 border border-m3-outline-variant/80 space-y-1.5">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading flex items-center gap-1.5">
+                    <Users className="w-4 h-4 text-m3-primary shrink-0" />
+                    <span>2. 60+ Senior Queue &amp; Wheelchair Gate</span>
+                  </h3>
+                  <span class="text-[11px] font-bold px-2 py-0.5 rounded-m3-sm bg-m3-primary-container text-m3-on-primary-container">Carry Aadhaar</span>
+                </div>
+                <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+                  Our chauffeur drops elders right near <strong>Shanmuga Vilasa Mandapam</strong> where temple battery cars and wheelchairs operate. Devotees aged 60+ can use the dedicated <strong>Senior Citizen Darshan pathway</strong> with shaded seating benches (carry Original Aadhaar Card).
+                </p>
+              </div>
+
+              <div class="bg-m3-surface-container-low rounded-m3-xl p-3.5 sm:p-4 border border-m3-outline-variant/80 space-y-1.5">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading flex items-center gap-1.5">
+                    <AlertCircle className="w-4 h-4 text-m3-tertiary shrink-0" />
+                    <span>3. Nazhikinaru (Sacred Well) Step Caution</span>
+                  </h3>
+                  <span class="text-[11px] font-bold px-2 py-0.5 rounded-m3-sm bg-m3-tertiary-container/50 text-m3-on-surface">24 Wet Steps</span>
+                </div>
+                <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+                  The sacred freshwater spring (<em>Nazhikinaru</em>) has ~24 narrow wet steps. <strong>For seniors with knee pain or arthritis:</strong> you do not need to climb down—family members or our driver can assist in bringing the holy water up for sacred <em>Prokshanam</em> (sprinkling) and guide you to clean changing rooms.
+                </p>
+              </div>
+
+              <div class="bg-m3-surface-container-low rounded-m3-xl p-3.5 sm:p-4 border border-m3-outline-variant/80 space-y-1.5">
+                <div class="flex items-center justify-between gap-2">
+                  <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading flex items-center gap-1.5">
+                    <Car className="w-4 h-4 text-m3-primary shrink-0" />
+                    <span>4. Recommended Pacing &amp; Vehicle for Elders</span>
+                  </h3>
+                  <span class="text-[11px] font-bold px-2 py-0.5 rounded-m3-sm bg-m3-surface-container-high text-m3-on-surface">3 Days + Innova</span>
+                </div>
+                <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+                  To prevent leg swelling on a 1,280 km round trip, we recommend the <strong>3-Day / 2-Night Senior Pace</strong> (which also covers the 9 Nava Tirupathi Perumal temples or a Madurai rest halt) in a <strong>Toyota Innova / Crysta</strong> for easy step-in height and reclining knee room.
+                </p>
+              </div>
+            </div>
+
+            <!-- NH 38 Planned Bio-Break & Satvik Food Stop Schedule -->
+            <div class="space-y-2">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <h3 id="nh38-biobreak-caption" class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading flex items-center gap-1.5">
+                  <Clock className="w-4 h-4 text-m3-primary shrink-0" />
+                  <span>Planned NH 38 Highway Bio-Break &amp; Medication Schedule (Every 2.5 Hours)</span>
+                </h3>
+                <span class="text-xs text-m3-on-surface-variant font-medium">Clean Western Restrooms &amp; Pure Veg Motels</span>
+              </div>
+
+              <div tabindex="0" role="region" aria-labelledby="nh38-biobreak-caption" class="overflow-x-auto rounded-m3-xl border border-m3-outline-variant">
+                <table class="w-full text-left text-xs font-sans border-collapse">
+                  <thead class="bg-m3-surface-container text-m3-on-surface-variant font-bold uppercase tracking-wider">
+                    <tr>
+                      <th class="p-2.5 sm:p-3">Highway Sector</th>
+                      <th class="p-2.5 sm:p-3">Approx. Time / Distance</th>
+                      <th class="p-2.5 sm:p-3">Verified Halt Hub</th>
+                      <th class="p-2.5 sm:p-3">Senior Citizen Facilities</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-m3-outline-variant text-m3-on-surface">
+                    <tr class="hover:bg-m3-surface-container-low">
+                      <th scope="row" class="p-2.5 sm:p-3 font-bold whitespace-nowrap">Stop 1 • Morning Tea &amp; Tiffin</th>
+                      <td class="p-2.5 sm:p-3 whitespace-nowrap">07:15 AM (~195 km)</td>
+                      <td class="p-2.5 sm:p-3 font-semibold">Ulundurpet Toll Plaza Hub (NH 38)</td>
+                      <td class="p-2.5 sm:p-3 text-m3-on-surface-variant">Steaming Idli/Pongal for morning BP &amp; diabetes tablets + clean Western toilets</td>
+                    </tr>
+                    <tr class="hover:bg-m3-surface-container-low">
+                      <th scope="row" class="p-2.5 sm:p-3 font-bold whitespace-nowrap">Stop 2 • Mid-Morning Stretch</th>
+                      <td class="p-2.5 sm:p-3 whitespace-nowrap">09:45 AM (~315 km)</td>
+                      <td class="p-2.5 sm:p-3 font-semibold">Samayapuram / Trichy Bypass</td>
+                      <td class="p-2.5 sm:p-3 text-m3-on-surface-variant">15-min leg stretch walk, filter coffee &amp; optional quick Samayapuram Amman arch view</td>
+                    </tr>
+                    <tr class="hover:bg-m3-surface-container-low">
+                      <th scope="row" class="p-2.5 sm:p-3 font-bold whitespace-nowrap">Stop 3 • Satvik Lunch Halt</th>
+                      <td class="p-2.5 sm:p-3 whitespace-nowrap">12:30 PM (~450 km)</td>
+                      <td class="p-2.5 sm:p-3 font-semibold">Melur / Madurai Ring Road Plazas</td>
+                      <td class="p-2.5 sm:p-3 text-m3-on-surface-variant">Light South Indian vegetarian meals (curd rice/rasam) + shaded parking &amp; ramp access</td>
+                    </tr>
+                    <tr class="hover:bg-m3-surface-container-low">
+                      <th scope="row" class="p-2.5 sm:p-3 font-bold whitespace-nowrap">Stop 4 • Evening Refreshment</th>
+                      <td class="p-2.5 sm:p-3 whitespace-nowrap">02:45 PM (~550 km)</td>
+                      <td class="p-2.5 sm:p-3 font-semibold">Kovilpatti / Ettayapuram Bypass</td>
+                      <td class="p-2.5 sm:p-3 text-m3-on-surface-variant">Final restroom &amp; sukku-malli coffee halt before smooth 90-min coastal arrival into Tiruchendur</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+      
 
       <!-- 1. TARIFF & PRICING BREAKDOWN (Fleet Carousel for dedicated engine packages; cards/table for standard packages) -->
       {service.tariff && (
@@ -1909,7 +2122,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
               </h2>
               <p class="text-xs sm:text-sm text-m3-on-surface-variant font-sans mt-1">
                 {hasDedicatedEngine 
-                  ? (isNavagraha || isRameswaram || isSabarimala
+                  ? (isNavagraha || isRameswaram || isSabarimala || isTiruchendur
                       ? "Swipe through our verified fleet below. 1-day packages include tolls & driver bata; multi-day circuits cover vehicle hire & fuel with tolls and driver bata at actuals."
                       : "Swipe through our verified fleet below. 1-day package rates include tolls & driver bata; calculate custom return dates in booking above.")
                   : "Fixed round-trip rates with doorstep pickup, sanitized dual AC cars, FASTag tolls, and driver allowance."}
@@ -1989,10 +2202,10 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                     ? 6
                     : 4;
 
-                  const isMultiDay = isNavagraha || isRameswaram || isSabarimala;
+                  const isMultiDay = isNavagraha || isRameswaram || isSabarimala || isTiruchendur;
                   const cardPriceLabel = "Starting From";
                   const cardPriceSubtext = isMultiDay
-                    ? (isNavagraha ? "2-Day Circuit (Tolls & Bata Extra)" : isRameswaram ? "2-Day Circuit (Tolls & Bata Extra)" : "3-Day Base Fare (Tolls & Bata Extra)")
+                    ? (isNavagraha ? "2-Day Circuit (Tolls & Bata Extra)" : (isRameswaram || isTiruchendur) ? "2-Day Circuit (Tolls & Bata Extra)" : "3-Day Base Fare (Tolls & Bata Extra)")
                     : "1-Day (Tolls & Bata Inc.)";
 
                   return (
@@ -2281,6 +2494,9 @@ Please share availability and confirmed quote.`;
                       detail: { vehicleId: vehId, passengers: pax }
                     }));
                     window.dispatchEvent(new CustomEvent('select-pondicherry-vehicle', {
+                      detail: { vehicleId: vehId, passengers: pax }
+                    }));
+                    window.dispatchEvent(new CustomEvent('select-tiruchendur-temple-tour-vehicle', {
                       detail: { vehicleId: vehId, passengers: pax }
                     }));
                     const bookingEl = document.getElementById('booking');
