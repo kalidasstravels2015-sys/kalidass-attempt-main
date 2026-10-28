@@ -143,7 +143,7 @@
       "hsl": "hsl(217, 14%, 34%)",
       "cmyk": { "c": 60, "m": 48, "y": 43, "k": 15 },
       "pantone": "PMS 431 C",
-      "usage": "Secondary subtitles, baggage/pax specs, disclaimer fine print, route km distances.",
+      "usage": "Secondary subtitles, baggage/seats specs, disclaimer fine print, route km distances.",
       "wcagOnWhite": "7.2:1 (AAA)"
     }
   },

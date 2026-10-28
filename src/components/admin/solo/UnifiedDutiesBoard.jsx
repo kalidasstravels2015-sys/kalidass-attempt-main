@@ -239,7 +239,7 @@ export default function UnifiedDutiesBoard({
       travelDateTime: lead.travelDate || 'Tomorrow @ 05:00 AM',
       pickupAddress: routeLabel,
       vehicleCategory: lead.vehicle || 'Sedan (Dzire / Etios)',
-      partySize: '4 Pax',
+      partySize: '4 Seats',
       kycStatus: 'Advance Paid',
       darshanStatus: lead.sourcePage || lead.calculatorEngine || 'Direct Call',
       assignedChauffeur: 'Unassigned',
@@ -400,7 +400,7 @@ export default function UnifiedDutiesBoard({
       travelDateTime: quickEntry.travelDate || 'Tomorrow @ 05:00 AM',
       pickupAddress: `${quickEntry.pickup.trim() || 'Chennai'} ➔ ${quickEntry.drop.trim() || 'Outstation'}`,
       vehicleCategory: quickEntry.vehicle,
-      partySize: '4 Pax',
+      partySize: '4 Seats',
       kycStatus: 'Advance Paid',
       darshanStatus: quickEntry.source,
       assignedChauffeur: 'Unassigned',
@@ -693,10 +693,10 @@ export default function UnifiedDutiesBoard({
                     onChange={(e) => setQuickEntry({ ...quickEntry, vehicle: e.target.value })}
                     className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low font-bold text-xs"
                   >
-                    <option value="Sedan (Dzire / Etios)">Sedan (Dzire / Etios 4 Pax)</option>
-                    <option value="SUV (Ertiga 6+1)">SUV (Ertiga 6 Pax)</option>
-                    <option value="Innova Crysta (7+1)">Innova Crysta (7 Pax)</option>
-                    <option value="Tempo Traveller">Tempo Traveller (12 Pax)</option>
+                    <option value="Sedan (Dzire / Etios)">Sedan (Dzire / Etios 4 Seats)</option>
+                    <option value="SUV (Ertiga 6+1)">SUV (Ertiga 6 Seats)</option>
+                    <option value="Innova Crysta (7+1)">Innova Crysta (7 Seats)</option>
+                    <option value="Tempo Traveller">Tempo Traveller (12 Seats)</option>
                   </select>
                 </div>
 
@@ -1119,7 +1119,7 @@ export default function UnifiedDutiesBoard({
                         <span className="text-[11px] font-bold uppercase text-m3-on-surface-variant block">Route & Vehicle</span>
                         <div className="text-xs font-bold text-m3-on-surface mt-0.5">{b.pickupAddress}</div>
                         <div className="text-xs text-m3-on-surface-variant mt-0.5">
-                          🚗 {b.vehicleCategory} • {b.partySize || '4 Pax'}
+                          🚗 {b.vehicleCategory} • {b.partySize || '4 Seats'}
                         </div>
                       </div>
 

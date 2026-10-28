@@ -503,7 +503,7 @@ export function generateInvoiceLetterheadHtml(data = {}) {
       </div>
       <div class="journey-item">
         <span>Departure &amp; Return</span>
-        <strong>${durationLabel} (${passengers} Pax)</strong>
+        <strong>${durationLabel} (${passengers} Seats)</strong>
       </div>
       <div class="journey-item">
         <span>Trip Schedule</span>

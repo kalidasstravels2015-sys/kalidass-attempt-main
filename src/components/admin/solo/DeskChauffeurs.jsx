@@ -110,7 +110,7 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
           >
             <option value="ALL">All Cars</option>
             <option value="Sedan">Sedan (Dzire / Etios)</option>
-            <option value="Ertiga">Ertiga (6 Pax)</option>
+            <option value="Ertiga">Ertiga (6 Seats)</option>
             <option value="Innova">Innova Crysta</option>
             <option value="Tempo">Tempo Traveller</option>
           </select>
@@ -311,7 +311,7 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
                     className="w-full rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-lowest p-2 text-xs text-m3-on-surface focus:ring-2 focus:ring-m3-primary focus:outline-none font-semibold"
                   >
                     <option value="Sedan (Dzire / Etios)">Sedan (Dzire / Etios)</option>
-                    <option value="Ertiga (6 Pax)">Ertiga (6 Pax)</option>
+                    <option value="Ertiga (6 Seats)">Ertiga (6 Seats)</option>
                     <option value="Innova Crysta">Innova Crysta</option>
                     <option value="Tempo Traveller">Tempo Traveller</option>
                   </select>

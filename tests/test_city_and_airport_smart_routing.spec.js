@@ -56,7 +56,7 @@ test.describe('Cab Booking Engine Smart Routing & Tab Redesign', () => {
     // Verify airport transfer details are displayed
     await expect(resultCard.locator('text=Chennai Airport Transfer (MAA)')).toBeVisible();
     await expect(resultCard.locator('text=Fixed Flat Fare • Zero Surge')).toBeVisible();
-    await expect(resultCard.locator('text=Sedan (4 Pax)')).toBeVisible();
+    await expect(resultCard.locator('text=Sedan (4 Seats)')).toBeVisible();
 
     // Verify airport page CTA link
     const airportLink = resultCard.locator('a[href="/services/chennai-airport-taxi/"]');

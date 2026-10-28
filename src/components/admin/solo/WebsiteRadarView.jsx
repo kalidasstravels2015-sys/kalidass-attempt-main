@@ -230,7 +230,7 @@ export default function WebsiteRadarView({
       travelDateTime: convertForm.travelDateTime.trim() || 'Tomorrow @ 05:00 AM',
       pickupAddress: `${cleanFrom} ➔ ${cleanTo}`,
       vehicleCategory: convertingQuote.vehicle || 'Sedan (Dzire / Etios)',
-      partySize: '4 Pax',
+      partySize: '4 Seats',
       kycStatus: 'Advance Paid',
       darshanStatus: cleanEngineName(convertingQuote.calculatorEngine, convertingQuote.sourcePage),
       assignedChauffeur: 'Unassigned',

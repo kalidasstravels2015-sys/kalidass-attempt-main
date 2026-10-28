@@ -129,7 +129,7 @@ function parseBookingInquiryClient(rawText, phoneInput = '', guestNameInput = ''
   } else if (/innova/i.test(lower)) {
     vehicleCategory = 'Toyota Innova';
   } else if (/ertiga|xl6/i.test(lower)) {
-    vehicleCategory = 'Ertiga (6 Pax)';
+    vehicleCategory = 'Ertiga (6 Seats)';
   } else if (/tempo|traveller/i.test(lower)) {
     vehicleCategory = 'Tempo Traveller';
   } else if (/compact suv|suv/i.test(lower)) {
@@ -142,10 +142,10 @@ function parseBookingInquiryClient(rawText, phoneInput = '', guestNameInput = ''
   }
 
   // 9. Party Size
-  let partySize = '4 Pax';
+  let partySize = '4 Seats';
   const paxMatch = text.match(/(\d+)\s*(?:pax|people|persons?|passengers?|members?)/i);
   if (paxMatch) {
-    partySize = `${paxMatch[1]} Pax`;
+    partySize = `${paxMatch[1]} Seats`;
   } else if (serviceCategory === 'Acting Driver') {
     partySize = 'Car Owner Vehicle';
   }
@@ -505,7 +505,7 @@ Est. Total: ₹2,970`}
                 <span className="text-m3-primary text-[11px] font-bold block">{parsedData.pickupTime}</span>
               </div>
               <div className="p-2.5 rounded-m3-md bg-m3-surface-container-lowest border border-m3-outline-variant/60">
-                <span className="text-m3-on-surface-variant block text-[10px] uppercase font-semibold">Vehicle & Pax</span>
+                <span className="text-m3-on-surface-variant block text-[10px] uppercase font-semibold">Vehicle & Seats</span>
                 <span className="font-bold text-m3-on-surface block truncate">{parsedData.vehicleCategory}</span>
                 <span className="text-m3-on-surface-variant text-[11px] block">{parsedData.partySize}</span>
               </div>

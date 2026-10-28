@@ -5,7 +5,7 @@ const path = require('path');
 (async () => {
   console.log('--- Setting Up Test Booking in Operations Control CSV ---');
   const csvPath = path.resolve('Kalidass_Operations_Control_2026.csv');
-  const testBookingLine = '#KT-E2E-777,Suresh Kumar (+91 9840122222),Tomorrow @ 05:00 AM,"Medavakkam, Chennai -> Mahabalipuram",Sedan,4 Pax,Pending,N/A,Unassigned,Pending,3500,2800,700,Unreconciled,Pending\n';
+  const testBookingLine = '#KT-E2E-777,Suresh Kumar (+91 9840122222),Tomorrow @ 05:00 AM,"Medavakkam, Chennai -> Mahabalipuram",Sedan,4 Seats,Pending,N/A,Unassigned,Pending,3500,2800,700,Unreconciled,Pending\n';
   fs.appendFileSync(csvPath, testBookingLine);
 
   const browser = await chromium.launch({ headless: true });

@@ -166,7 +166,7 @@ export const GET: APIRoute = async ({ request, url }) => {
               travelDateTime: row[2] || '',
               pickupAddress: row[3] || '',
               vehicleCategory: row[4] || 'Sedan',
-              partySize: row[5] || '4 Pax',
+              partySize: row[5] || '4 Seats',
               kycStatus: row[6] || 'Pending',
               darshanStatus: row[7] || 'Unassigned',
               assignedChauffeur: row[8] || 'Unassigned',
@@ -361,7 +361,7 @@ export const POST: APIRoute = async ({ request }) => {
     const travelDateTime = data.travelDateTime || `${data.pickupDate || 'Today'} @ ${data.pickupTime || '04:30 AM'}`;
     const pickupAddress = data.pickupAddress || data.pickup || 'Chennai';
     const vehicleCategory = data.vehicleCategory || data.vehicle || 'Sedan';
-    const partySize = data.partySize || data.passengers || '4 Pax';
+    const partySize = data.partySize || data.passengers || '4 Seats';
     const kycStatus = data.kycStatus || 'Pending';
     const darshanStatus = data.darshanStatus || 'Unassigned';
     const assignedChauffeur = data.assignedChauffeur || 'Unassigned';

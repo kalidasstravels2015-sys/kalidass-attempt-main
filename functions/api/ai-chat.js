@@ -54,15 +54,15 @@ VERIFIED RATE CARD:
 ======================================================================
 
 1. CHENNAI ⇄ TIRUPATI / TIRUMALA PACKAGES (Round trip ~320 km, dedicated cab for all days):
-   - AC Sedan (Swift Dzire / Toyota Etios - 4 Pax):
+   - AC Sedan (Swift Dzire / Toyota Etios - 4 Seats):
      1 Day: ₹6,000 | 2 Days: ₹9,500 | 3 Days: ₹13,200 | 4 Days: ₹16,700 | 5 Days: ₹20,200 (Add ₹3,500/extra day beyond 3 days)
-   - Comfort SUV (Maruti Ertiga / XL6 - 6 Pax):
+   - Comfort SUV (Maruti Ertiga / XL6 - 6 Seats):
      1 Day: ₹7,500 | 2 Days: ₹11,500 | 3 Days: ₹15,800 | 4 Days: ₹19,800 | 5 Days: ₹23,800 (Add ₹4,000/extra day beyond 3 days)
-   - Spacious MUV (Toyota Innova - 7 Pax):
+   - Spacious MUV (Toyota Innova - 7 Seats):
      1 Day: ₹8,500 | 2 Days: ₹12,500 | 3 Days: ₹17,500 | 4 Days: ₹21,500 | 5 Days: ₹25,500 (Add ₹4,000/extra day beyond 3 days)
-   - Premium MUV (Toyota Innova Crysta - 7 Pax):
+   - Premium MUV (Toyota Innova Crysta - 7 Seats):
      1 Day: ₹10,000 | 2 Days: ₹16,000 | 3 Days: ₹22,500 | 4 Days: ₹28,500 | 5 Days: ₹34,500 (Add ₹6,000/extra day beyond 3 days)
-   - Tempo Traveller (12 Pax):
+   - Tempo Traveller (12 Seats):
      1 Day: ₹12,500 | 2 Days: ₹19,500 | 3 Days: ₹27,000 | 4 Days: ₹34,000 | 5 Days: ₹41,000 (Add ₹7,000/extra day beyond 3 days)
    * SAME-DAY INCLUSIONS (1 Day): Covers Dedicated Cab, Fuel, NH FASTag Tolls, AP Border Permit, Tirumala Ghat Road hill climb & Driver Bata. ₹500 advance to confirm (deducted from bill).
    * MULTI-DAY INCLUSIONS (2+ Days): Covers Dedicated Cab, Fuel, Tirumala hill climb & Driver Bata for all days. FASTag Tolls & AP permit at actual plazas (~₹950-₹1,100).
@@ -109,13 +109,13 @@ VERIFIED RATE CARD:
    - Sedan (Dzire / Etios):
      * 4 hrs / 40 km: ₹1,350 | 5 hrs / 50 km: ₹1,500 | 8 hrs / 80 km: ₹2,200 | 10 hrs / 100 km: ₹2,600 | 12 hrs / 120 km: ₹3,050
      * Extra km: ₹15 | Extra hr: ₹150
-   - Ertiga / XL6 (6 Pax):
+   - Ertiga / XL6 (6 Seats):
      * 4 hrs / 40 km: ₹1,700 | 5 hrs / 50 km: ₹2,000 | 8 hrs / 80 km: ₹2,800 | 10 hrs / 100 km: ₹3,400 | 12 hrs / 120 km: ₹3,900
      * Extra km: ₹17 | Extra hr: ₹200
-   - Toyota Innova (7 Pax):
+   - Toyota Innova (7 Seats):
      * 4 hrs / 40 km: ₹1,900 | 5 hrs / 50 km: ₹2,300 | 8 hrs / 80 km: ₹3,200 | 10 hrs / 100 km: ₹3,600 | 12 hrs / 120 km: ₹4,200
      * Extra km: ₹19 | Extra hr: ₹250
-   - Innova Crysta (7 Pax):
+   - Innova Crysta (7 Seats):
      * 4 hrs / 40 km: ₹2,800 | 5 hrs / 50 km: ₹3,200 | 8 hrs / 80 km: ₹4,500 | 10 hrs / 100 km: ₹5,200 | 12 hrs / 120 km: ₹6,000
      * Extra km: ₹22 | Extra hr: ₹350
    - Tempo Traveller (12 Seater):
@@ -191,11 +191,11 @@ function deterministicFallback(userText, pageContext) {
             `  Because your trip duration is **${hrs} hours** (rather than the full 48 hours), our transparent tariff charges you pro-rata for 1 Day + ${extraHrs} hrs, **saving you ${savings}** compared to the full 2-day package!\n\n` +
             `• **Full 48-Hour 2-Day Package Rates:**\n` +
             `  If you require the cab for the complete 48 hours (e.g. 2 full calendar days or returning late night on Day 2):\n` +
-            `  - **Swift Dzire / Etios (4 Pax):** ₹9,500\n` +
-            `  - **Maruti Ertiga / XL6 (6 Pax):** ₹11,500\n` +
-            `  - **Toyota Innova (7 Pax):** ₹12,500\n` +
-            `  - **Toyota Innova Crysta (7 Pax):** ₹16,000\n` +
-            `  - **Tempo Traveller (12 Pax):** ₹19,500\n\n` +
+            `  - **Swift Dzire / Etios (4 Seats):** ₹9,500\n` +
+            `  - **Maruti Ertiga / XL6 (6 Seats):** ₹11,500\n` +
+            `  - **Toyota Innova (7 Seats):** ₹12,500\n` +
+            `  - **Toyota Innova Crysta (7 Seats):** ₹16,000\n` +
+            `  - **Tempo Traveller (12 Seats):** ₹19,500\n\n` +
             `✅ **Inclusions:** Dedicated AC Cab & Experienced Chauffeur, Fuel, AP State Border Permit, Tirumala Ghat Road ascent, and Driver Bata.\n` +
             `🛡️ **Policy:** Nominal **₹500 advance** to confirm & lock cab (avoids last-minute cancellation). Remaining balance paid post-trip!`,
           actionSuggestion: {
@@ -239,11 +239,11 @@ function deterministicFallback(userText, pageContext) {
 
     return {
       reply: `Here are our official **Chennai ⇄ Tirupati ${durText} Package** rates:\n\n` +
-        `• **AC Sedan (Dzire / Etios - 4 Pax):** ₹${sedanRate.toLocaleString('en-IN')}\n` +
-        `• **Maruti Ertiga / XL6 (6 Pax):** ₹${ertigaRate.toLocaleString('en-IN')}\n` +
-        `• **Toyota Innova (7 Pax):** ₹${innovaRate.toLocaleString('en-IN')}\n` +
+        `• **AC Sedan (Dzire / Etios - 4 Seats):** ₹${sedanRate.toLocaleString('en-IN')}\n` +
+        `• **Maruti Ertiga / XL6 (6 Seats):** ₹${ertigaRate.toLocaleString('en-IN')}\n` +
+        `• **Toyota Innova (7 Seats):** ₹${innovaRate.toLocaleString('en-IN')}\n` +
         `• **Toyota Innova Crysta:** ₹${crystaRate.toLocaleString('en-IN')}\n` +
-        `• **Tempo Traveller (12 Pax):** ₹${tempoRate.toLocaleString('en-IN')}\n\n` +
+        `• **Tempo Traveller (12 Seats):** ₹${tempoRate.toLocaleString('en-IN')}\n\n` +
         `✅ **Included in ${durText} Package:** ${incl}\n` +
         `🛡️ **Policy:** Nominal ₹500 advance to confirm & lock cab (avoids last-minute cancellation). Balance post-trip.\n\n` +
         `[👉 Open Tirupati ${durText} Calculator & View Live Quote](${pageLink})`,
@@ -328,9 +328,9 @@ function deterministicFallback(userText, pageContext) {
   if (query.includes('pondy') || query.includes('pondicherry')) {
     return {
       reply: `For **Chennai ⇄ Pondicherry (Same Day Return)**:\n\n` +
-        `• **AC Sedan (4 Pax):** ~₹4,500 - ₹5,000 (Based on ~320 km round trip at ₹14/km + driver bata ₹400)\n` +
-        `• **Maruti Ertiga (6 Pax):** ~₹5,800 - ₹6,200 (At ₹17/km + driver bata ₹500)\n` +
-        `• **Toyota Innova (7 Pax):** ~₹7,000 (At ₹20/km + driver bata ₹600)\n\n` +
+        `• **AC Sedan (4 Seats):** ~₹4,500 - ₹5,000 (Based on ~320 km round trip at ₹14/km + driver bata ₹400)\n` +
+        `• **Maruti Ertiga (6 Seats):** ~₹5,800 - ₹6,200 (At ₹17/km + driver bata ₹500)\n` +
+        `• **Toyota Innova (7 Seats):** ~₹7,000 (At ₹20/km + driver bata ₹600)\n\n` +
         `*Tolls are payable at actual FASTag plazas. ₹500 advance to confirm booking (deducted from bill).*`,
       actionSuggestion: {
         type: 'pondicherry_package',

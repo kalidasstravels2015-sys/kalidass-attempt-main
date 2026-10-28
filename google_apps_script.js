@@ -146,7 +146,7 @@ function doGet(e) {
             guestNamePhone: String(bRow[2] || ''),
             pickupAddress: String(bRow[4] || ''),
             vehicleCategory: String(bRow[5] || 'Sedan'),
-            partySize: String(bRow[6] || '4 Pax'),
+            partySize: String(bRow[6] || '4 Seats'),
             terminalFare: fare,
             advancePaid: advance,
             balanceDue: Math.max(0, fare - advance),
@@ -222,7 +222,7 @@ function doPost(e) {
       var schedule = data.travelDateTime || data.travelDate || data.pickupDate || 'Tomorrow';
       var route = data.pickupAddress || (data.pickup ? (data.pickup + ' ➔ ' + (data.drop || 'Outstation')) : (data.drop || 'Chennai ➔ Outstation'));
       var vehicle = data.vehicleCategory || data.vehicle || 'Sedan';
-      var pax = data.partySize || data.passengers || '4 Pax';
+      var pax = data.partySize || data.passengers || '4 Seats';
       var fare = parseInt(String(data.terminalFare || data.fare || data.estimate || 0).replace(/[^0-9]/g, ''), 10) || 0;
       var advance = parseInt(String(data.advancePaid || data.advance || 0).replace(/[^0-9]/g, ''), 10) || 0;
       var payout = parseInt(String(data.chauffeurPayout || Math.round(fare * 0.8)).replace(/[^0-9]/g, ''), 10) || 0;
@@ -570,7 +570,7 @@ function syncBookingToGoogleCalendar(b) {
     'Booking ID: ' + bookingId,
     'Passenger: ' + b.guestNamePhone,
     'Route: ' + b.route,
-    'Vehicle: ' + b.vehicle + ' (' + (b.pax || '4 Pax') + ')',
+    'Vehicle: ' + b.vehicle + ' (' + (b.pax || '4 Seats') + ')',
     'Assigned Chauffeur: ' + (b.driver || 'Unassigned'),
     'Duty Status: ' + (b.status || 'Need Driver'),
     'Total Fare: ₹' + (b.fare || 0),

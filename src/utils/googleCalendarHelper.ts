@@ -306,7 +306,7 @@ export function exportMonthlyManifestToCsv(
       escapeCell(b.guestNamePhone || b.name || ''),
       escapeCell(b.pickupAddress || `${b.pickup || ''} ➔ ${b.drop || ''}`),
       escapeCell(b.vehicleCategory || b.vehicle || ''),
-      escapeCell(b.partySize || '4 Pax'),
+      escapeCell(b.partySize || '4 Seats'),
       escapeCell(fare),
       escapeCell(advance),
       escapeCell(balance),

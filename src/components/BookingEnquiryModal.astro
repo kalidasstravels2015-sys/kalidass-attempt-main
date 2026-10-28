@@ -7,7 +7,7 @@
  * - Locks in selected Vehicle, Service/Route, Duration & Price from card.
  * - Enforces mandatory Passenger Name, 10-Digit Mobile Number, Pickup Date/Time, and Doorstep Address.
  * - Context-aware fields: Flight Number & Direction toggle for Airport transfers.
- * - 1-tap Passenger count selector (1-4 Pax, 5-7 Pax, 8-12 Pax).
+ * - 1-tap Passenger count selector (1-4 Seats, 5-7 Seats, 8-12 Seats).
  * - Instant GPS geolocation & Google Places autocomplete.
  * - Background sync to Kalidass_Operations_Control_2026.csv & Google Sheets.
  * - Generates 100% complete, crystal-clear WhatsApp dispatch ticket.
@@ -230,24 +230,24 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
           <div id="sheetPassengerChips" class="flex items-center gap-1.5 text-micro font-bold">
             <button
               type="button"
-              data-pax="1-4 Pax"
+              data-pax="1-4 Seats"
               class="sheet-pax-btn px-2.5 py-1 rounded-full border transition-all cursor-pointer bg-m3-primary text-m3-on-primary border-m3-primary shadow-m3-1"
             >
-              1–4 Pax
+              1–4 Seats
             </button>
             <button
               type="button"
-              data-pax="5-7 Pax"
+              data-pax="5-7 Seats"
               class="sheet-pax-btn px-2.5 py-1 rounded-full border transition-all cursor-pointer bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface border-m3-outline-variant/60"
             >
-              5–7 Pax
+              5–7 Seats
             </button>
             <button
               type="button"
-              data-pax="8-12 Pax"
+              data-pax="8-12 Seats"
               class="sheet-pax-btn px-2.5 py-1 rounded-full border transition-all cursor-pointer bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface border-m3-outline-variant/60"
             >
-              8–12 Pax
+              8–12 Seats
             </button>
           </div>
         </div>
@@ -342,7 +342,7 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
       slug: 'chennai-airport-taxi',
       isAirport: false,
       direction: 'pickup',
-      passengers: '1-4 Pax',
+      passengers: '1-4 Seats',
       bookingId: '#KT-MAA-101'
     };
 
@@ -474,7 +474,7 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
       var paxBtns = document.querySelectorAll('.sheet-pax-btn');
       paxBtns.forEach(function (btn) {
         btn.addEventListener('click', function () {
-          var pax = btn.getAttribute('data-pax') || '1-4 Pax';
+          var pax = btn.getAttribute('data-pax') || '1-4 Seats';
           quickBookingContext.passengers = pax;
           paxBtns.forEach(function (b) {
             b.className = 'sheet-pax-btn px-2.5 py-1 rounded-full border transition-all cursor-pointer bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface border-m3-outline-variant/60';
@@ -743,7 +743,7 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
 📋 *PACKAGE & VEHICLE*
 • *Service:* ${quickBookingContext.packageTitle}
 • *Vehicle:* ${quickBookingContext.vehicleName}
-• *Party Size:* ${quickBookingContext.passengers || '4 Pax'}
+• *Party Size:* ${quickBookingContext.passengers || '4 Seats'}
 • *Trip Duration:* ${quickBookingContext.duration}
 • *Total Fare:* ${quickBookingContext.price} (Flat All-Inclusive)
 • *Advance to Confirm:* ₹500 (100% Deducted from bill)
@@ -771,7 +771,7 @@ Please confirm driver assignment and cab availability.`;
               phone: rawPhone,
               pickupAddress: area + (flightNo ? ' [Flight: ' + flightNo + ']' : ''),
               vehicle: quickBookingContext.vehicleName,
-              passengers: quickBookingContext.passengers || '4 Pax',
+              passengers: quickBookingContext.passengers || '4 Seats',
               package: quickBookingContext.packageTitle,
               days: quickBookingContext.days,
               pickupDate: formattedPickupDate,
@@ -937,9 +937,9 @@ Please confirm driver assignment and cab availability.`;
 
               // Auto-adjust passenger chips to vehicle size
               var vLower = fullName.toLowerCase();
-              var targetPax = '1-4 Pax';
-              if (vLower.indexOf('tempo') !== -1) targetPax = '8-12 Pax';
-              else if (vLower.indexOf('innova') !== -1 || vLower.indexOf('ertiga') !== -1 || vLower.indexOf('crysta') !== -1) targetPax = '5-7 Pax';
+              var targetPax = '1-4 Seats';
+              if (vLower.indexOf('tempo') !== -1) targetPax = '8-12 Seats';
+              else if (vLower.indexOf('innova') !== -1 || vLower.indexOf('ertiga') !== -1 || vLower.indexOf('crysta') !== -1) targetPax = '5-7 Seats';
               
               quickBookingContext.passengers = targetPax;
               var allPaxBtns = document.querySelectorAll('.sheet-pax-btn');

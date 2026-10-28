@@ -79,7 +79,7 @@ export default function FastQuoteDesk() {
     if (!text || typeof text !== 'string') return;
     const lower = text.toLowerCase();
 
-    // 1. Pax Count
+    // 1. Seat Count
     const paxMatch = lower.match(/(\d+)\s*(?:members?|people|pax|persons?|seats?)/) ||
                      lower.match(/people\s*[:\-\.]?\s*(\d+)/) ||
                      lower.match(/members\s*[:\-\.]?\s*(\d+)/);
@@ -258,7 +258,7 @@ export default function FastQuoteDesk() {
           tag = '\n*(Superior comfort & smooth highway ride)*';
         } else if (key === 'Tempo Traveller') {
           label = 'TEMPO TRAVELLER (12-Seater AC)';
-          tag = '\n*(Pushback bucket seats, high roof, extra space for 7+ pax & large bags)*';
+          tag = '\n*(Pushback bucket seats, high roof, extra space for 7+ seats & large bags)*';
         }
         const numEmoji = idx === 0 ? '1️⃣' : idx === 1 ? '2️⃣' : '3️⃣';
         return `${numEmoji} ${label}\n• ${c.billableKm.toLocaleString('en-IN')} km @ ₹${c.rate}/km : ₹${c.carHire.toLocaleString('en-IN')}\n• Driver Bata (${days} Days @ ₹${c.dailyBata}) : ₹${c.driverBataTotal.toLocaleString('en-IN')}\n👉 TOTAL ESTIMATE : ₹${c.totalFare.toLocaleString('en-IN')}${tag}`;
@@ -507,14 +507,14 @@ To book: Please confirm your vehicle choice with Kalidass Travels!`;
             {/* 1. Passenger Count */}
             <div>
               <span className="block text-[11px] font-semibold text-slate-600 mb-1.5 flex items-center gap-1">
-                <Users className="w-3 h-3" /> Passengers (Pax)
+                <Users className="w-3 h-3" /> Passengers (Seats)
               </span>
               <div className="grid grid-cols-2 gap-1.5">
                 {[
-                  { pax: 4, label: '1 - 4 Pax (Sedan)', v: 'Swift Dzire' },
-                  { pax: 6, label: '5 - 6 Pax (Ertiga)', v: 'Maruti Ertiga' },
-                  { pax: 7, label: '7 Pax (Innova)', v: 'Innova' },
-                  { pax: 12, label: '8 - 12 Pax (Tempo)', v: 'Tempo Traveller' }
+                  { pax: 4, label: '1 - 4 Seats (Sedan)', v: 'Swift Dzire' },
+                  { pax: 6, label: '5 - 6 Seats (Ertiga)', v: 'Maruti Ertiga' },
+                  { pax: 7, label: '7 Seats (Innova)', v: 'Innova' },
+                  { pax: 12, label: '8 - 12 Seats (Tempo)', v: 'Tempo Traveller' }
                 ].map((item) => (
                   <button
                     key={item.pax}

@@ -80,7 +80,7 @@ A high-performance, mobile-first web portal powered by Astro 4 and Material Desi
   - Offline South India distance lookup table for instant zero-latency estimates and resilience against Google Maps API quotas or failures.
   - Interactive map pin repositioning and reverse geocoding.
 - **Vehicle Selection & Price Transparency:**
-  - Instant live card comparison across: Swift Dzire (Sedan, 4 pax), Toyota Etios (Sedan, 4 pax), Maruti Ertiga (MUV, 6 pax), Toyota Innova (SUV, 7 pax), Toyota Innova Crysta (Premium SUV, 7 pax), Tempo Traveller (Group, 12–16 pax).
+  - Instant live card comparison across: Swift Dzire (Sedan, 4 seats), Toyota Etios (Sedan, 4 seats), Maruti Ertiga (MUV, 6 seats), Toyota Innova (SUV, 7 seats), Toyota Innova Crysta (Premium SUV, 7 seats), Tempo Traveller (Group, 12–16 seats).
   - Clear itemized price breakdown (Base fare, Driver Bata, Night allowance, Tolls & Permits notice).
 - **Conversion Mechanisms:**
   - "Book via WhatsApp": Pre-populates a structured text message containing origin, destination, vehicle, travel date, estimated distance, and quoted price directly to `+91 89395 39211`.

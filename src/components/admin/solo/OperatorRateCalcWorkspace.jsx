@@ -241,7 +241,7 @@ export default function OperatorRateCalcWorkspace({
       travelDateTime: currentCalc.pickupDateTime || 'Today / Tomorrow',
       pickupAddress: `${currentCalc.pickup || 'Chennai'} ➔ ${currentCalc.destination || 'Destination'}`,
       vehicleCategory: currentCalc.vehicleName || 'Sedan (Dzire / Etios)',
-      partySize: currentCalc.passengers ? `${currentCalc.passengers} Pax` : '4 Pax',
+      partySize: currentCalc.passengers ? `${currentCalc.passengers} Seats` : '4 Seats',
       kycStatus: 'Advance Paid',
       darshanStatus: source,
       assignedChauffeur: 'Unassigned',

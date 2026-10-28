@@ -64,7 +64,9 @@
 - **Rule 3.1.3 (Night Allowance):**
   - Night driving charge (+₹150 to +₹200) applies automatically for journeys operating between **10:00 PM and 5:00 AM**.
 - **Rule 3.1.4 (Tolls & State Permits for Outstation Trips):**
-  - Web quotations for open per-km outstation trips represent Base Fare + Driver Bata. Toll fees, parking fees, and interstate border entry permits (Andhra Pradesh, Karnataka, Pondicherry) are transparently billed at actuals.
+  - Web quotations for open per-km outstation trips represent Base Fare + Driver Bata + Statutory Interstate Entry Permit (Puducherry, Andhra Pradesh, Karnataka, Kerala). Mandatory state border entry permits are pre-calculated upfront into the Total Quoted Fare so passengers experience zero surprise border fees.
+  - Highway FASTag tolls and destination parking fees remain strictly payable at actuals as per official receipts.
+  - Booking & Payment Policy: Zero advance to reserve; 50% payable upon cab arrival at doorstep; remaining 50% balance payable upon trip completion.
 - **Rule 3.1.5 (The 1-Day Toll Invariant):**
   - Highway FASTag tolls and statutory state entry permits are pre-included upfront for **1-Day fixed tour packages ONLY** (e.g. Tirupati 1-Day, Thiruvannamalai 1-Day, Kanchipuram 1-Day, Pondicherry 1-Day, Vellore 1-Day, Chidambaram 1-Day, Mahabalipuram 1-Day).
   - For ALL multi-day packages (>1 Day, e.g. 2-Day, 3-Day, Kumbakonam Navagraha, Rameswaram, Sabarimala) and open per-km outstation rentals, tolls, parking, and state entry permits are strictly payable at actuals by the passenger as per official FASTag receipts.

@@ -38,11 +38,11 @@ const ENQUIRY_SOURCES = [
 ];
 
 const VEHICLE_KEYS = [
-  { key: 'Swift Dzire', name: 'Sedan (Dzire / Etios)', pax: '4 Pax', bags: '2 Bags' },
-  { key: 'Maruti Ertiga', name: 'SUV (Ertiga 6+1)', pax: '6 Pax', bags: '3 Bags' },
-  { key: 'Innova Crysta', name: 'Innova Crysta (7+1)', pax: '7 Pax', bags: '4 Bags' },
-  { key: 'Tempo Traveller', name: 'Tempo Traveller (12+1)', pax: '12 Pax', bags: '8 Bags' },
-  { key: 'Force Urbania', name: 'Force Urbania (12+1)', pax: '12 Pax', bags: '8 Bags' }
+  { key: 'Swift Dzire', name: 'Sedan (Dzire / Etios)', pax: '4 Seats', bags: '2 Bags' },
+  { key: 'Maruti Ertiga', name: 'SUV (Ertiga 6+1)', pax: '6 Seats', bags: '3 Bags' },
+  { key: 'Innova Crysta', name: 'Innova Crysta (7+1)', pax: '7 Seats', bags: '4 Bags' },
+  { key: 'Tempo Traveller', name: 'Tempo Traveller (12+1)', pax: '12 Seats', bags: '8 Bags' },
+  { key: 'Force Urbania', name: 'Force Urbania (12+1)', pax: '12 Seats', bags: '8 Bags' }
 ];
 
 export default function DeskPhoneQuoteEngine({
@@ -240,7 +240,7 @@ export default function DeskPhoneQuoteEngine({
       travelDateTime,
       pickupAddress: `${activePickup} ➔ ${activeDrop}`,
       vehicleCategory: selectedVehicle,
-      partySize: selectedVehicle.includes('Tempo') || selectedVehicle.includes('Urbania') ? '12 Pax' : selectedVehicle.includes('Crysta') ? '7 Pax' : selectedVehicle.includes('Ertiga') ? '6 Pax' : '4 Pax',
+      partySize: selectedVehicle.includes('Tempo') || selectedVehicle.includes('Urbania') ? '12 Seats' : selectedVehicle.includes('Crysta') ? '7 Seats' : selectedVehicle.includes('Ertiga') ? '6 Seats' : '4 Seats',
       kycStatus: 'Advance Paid',
       darshanStatus: source,
       assignedChauffeur: 'Unassigned',

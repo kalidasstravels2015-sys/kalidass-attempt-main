@@ -19,7 +19,8 @@ import {
   ChevronRight,
   Info,
   Clock,
-  Receipt
+  Receipt,
+  Edit2
 } from 'lucide-react';
 import LocationPicker from './LocationPicker';
 import WhatsAppButton from './react/WhatsAppButton.jsx';
@@ -108,6 +109,17 @@ const PASSENGER_OPTIONS = [
   { value: '12', label: '12 Passengers (Tempo)' },
   { value: '13', label: '13+ Passengers (Tempo 17)' }
 ];
+
+const TOUR_VEHICLE_IMAGES = {
+  dzire: '/images/fleet/swift-dzire.webp',
+  etios: '/images/fleet/toyoto-etios.webp',
+  ertiga: '/images/fleet/maruti-ertiga.webp',
+  innova: '/images/fleet/suv.webp',
+  crysta: '/images/fleet/suv.webp',
+  tempo12: '/images/fleet/tempo-12.webp',
+  tempo17: '/images/fleet/tempo-17.webp',
+  urbania: '/images/fleet/force-urbania.webp',
+};
 
 export default function TourBookingEngine({
   serviceSlug = 'tirupati-package',
@@ -599,6 +611,7 @@ export default function TourBookingEngine({
 
   // Passenger & Vehicle Selection — do not show price until pickup location is entered
   const [showResult, setShowResult] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const resultRef = useRef(null);
   const [passengers, setPassengers] = useState('4');
   const [vehicleIdState, setVehicleIdState] = useState(config.vehicles?.[0]?.id || 'dzire');
@@ -995,7 +1008,7 @@ export default function TourBookingEngine({
 • *Pickup:* ${pickup.trim() || 'Chennai'}
 • Destination: ${destinationDisplay}
 • *Date & Time:* ${formatDT(pickupDateTime)}${returnDateTime ? ` (Return: ${formatDT(returnDateTime)})` : ''}
-• *Vehicle:* ${activeVehicle ? activeVehicle.name : 'AC Cab'} (${passengers} Pax)
+• *Vehicle:* ${activeVehicle ? activeVehicle.name : 'AC Cab'} (${passengers} Seats)
 • *Fare:* ₹${taxableAmount?.toLocaleString('en-IN') || '0'} + 5% GST (₹${totalGst?.toLocaleString('en-IN') || '0'}) = *₹${finalNetPayable?.toLocaleString('en-IN') || '0'} Total*
 • *Payment:* ₹500 Adv | ${formattedBalancePayable || 'Remaining'} Bal
 ${fareBreakdown?.isAfter24Hours ? '• *Payable at Actuals:* FASTag Tolls & Parking paid directly as per actual receipts\n' : ''}• *Ref:* ${effectiveInvoiceRefNo}
@@ -1006,7 +1019,7 @@ Please confirm booking & issue GST proforma estimate!` + tourMapsBlock
 • *Pickup:* ${pickup.trim() || 'Chennai'}
 • Destination: ${destinationDisplay}
 • *Date & Time:* ${formatDT(pickupDateTime)}${returnDateTime ? ` (Return: ${formatDT(returnDateTime)})` : ''}
-• *Vehicle:* ${activeVehicle ? activeVehicle.name : 'AC Cab'} (${passengers} Pax)
+• *Vehicle:* ${activeVehicle ? activeVehicle.name : 'AC Cab'} (${passengers} Seats)
 • *Fare:* ${formattedFare || 'TBD'} (${fareBreakdown?.isAfter24Hours ? 'Multi-Day Tariff' : 'All-inclusive'} | ₹500 Adv / ${formattedBalancePayable || 'Remaining'} Bal)
 ${fareBreakdown?.isAfter24Hours ? '• *Payable at Actuals:* FASTag Tolls & Parking paid directly as per actual receipts\n' : ''}• *Ref:* ${effectiveInvoiceRefNo}${companyName.trim() ? ` (${companyName.trim()}${customerPhone.trim() ? ` • ${customerPhone.trim()}` : ''})` : (customerPhone.trim() ? ` (${customerPhone.trim()})` : '')}
 
@@ -1051,6 +1064,7 @@ Please confirm booking!` + tourMapsBlock;
       setReturnDateTime(getMinReturnDateTime(dep, config.minRealisticHours));
     }
     setValidationError('');
+    setIsCollapsed(true);
     setShowResult(true);
     setTimeout(() => {
       if (resultRef.current) {
@@ -1210,7 +1224,7 @@ Please confirm booking!` + tourMapsBlock;
         quoteId: invoiceRefNo,
         guestName: guestNameVal,
         phone: cleanPhone ? `+91 ${cleanPhone}` : '',
-        metadata: `Pax: ${passengers} | Fare: ₹${currentFare}`
+        metadata: `Seats: ${passengers} | Fare: ₹${currentFare}`
       };
       if (navigator.sendBeacon) {
         navigator.sendBeacon(window.location.origin + '/api/record-calculation', new Blob([JSON.stringify(leadPayload)], { type: 'application/json' }));
@@ -1240,7 +1254,7 @@ Please confirm booking!` + tourMapsBlock;
             estimatedFare: currentFare,
             distanceKm: `${config.destination?.roundTripKm || 320} km`,
             status: 'WhatsApp Clicked',
-            metadata: `Pax: ${passengers} | Fare: ₹${currentFare}`
+            metadata: `Seats: ${passengers} | Fare: ₹${currentFare}`
           })
         }).catch(() => {});
       }
@@ -1324,22 +1338,55 @@ Please confirm booking!` + tourMapsBlock;
     <>
       <section 
         aria-label={`${config.destination?.name || 'Tour'} Pilgrimage Booking Engine`}
-        className="w-full max-w-2xl mx-auto bg-white rounded-m3-2xl shadow-m3-1 sm:shadow-m3-2 border border-m3-outline-variant overflow-hidden font-sans booking-engine"
+        className="w-full max-w-2xl mx-auto font-sans booking-engine space-y-3.5 sm:space-y-4"
       >
-        {/* Title Header — Material 3 Standard Elevation */}
-        <div className="py-3 px-4 sm:px-5 border-b border-m3-outline-variant/60 flex flex-col items-center justify-center text-center bg-m3-surface">
-          <div className="w-full text-center">
-            <h2 className="text-lg sm:text-xl font-bold text-m3-on-surface font-heading leading-tight text-center">
-              {config.engineTitle}
-            </h2>
-            <p className="text-xs text-m3-on-surface-variant mt-1 font-medium text-center">
-              {config.subtitle}
-            </p>
-          </div>
+        {/* Title Header — Semantic Page Typography (Outside Card 1) */}
+        <div className="text-center px-3 py-1 space-y-1">
+          <h2 className="text-lg sm:text-xl font-bold text-slate-900 font-heading leading-tight text-center">
+            {config.engineTitle}
+          </h2>
+          <p className="text-xs text-slate-500 font-medium text-center">
+            {config.subtitle}
+          </p>
         </div>
 
-        {/* Form Body — Material 3 Standard Spacing */}
-        <div className="p-4 sm:p-5 space-y-3 sm:space-y-3.5">
+        {/* ─── CARD 1: Tour Input Card / Collapsed Summary Bar ─── */}
+        {isCollapsed && showResult && Boolean(pickup.trim()) ? (
+          <div id="tour-input-card-collapsed" className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-3 sm:p-3.5 space-y-2">
+            <div className="flex items-center justify-between gap-2">
+              <div className="min-w-0 pr-1">
+                <div className="font-bold text-slate-900 text-xs sm:text-sm truncate flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
+                  <span className="truncate">{pickup.split(',')[0]}</span>
+                  <span className="text-slate-400">➔</span>
+                  <span className="truncate">{dropDestination || config.destination?.name || 'Tour'}</span>
+                </div>
+                <div className="text-slate-500 text-[11px] font-medium mt-0.5 truncate flex items-center gap-2">
+                  <span>{pickupDateTime ? pickupDateTime.replace('T', ' ') : ''}</span>
+                  <span>•</span>
+                  <span>{config.destination?.name || 'Tour'} ({config.destination?.roundTripKm || 320} km)</span>
+                  <span>•</span>
+                  <span>{passengers} Seats</span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsCollapsed(false);
+                  setTimeout(() => {
+                    pickupInputRef.current?.focus();
+                  }, 100);
+                }}
+                className="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg text-blue-600 font-bold text-xs shrink-0 flex items-center gap-1 shadow-2xs cursor-pointer hover:border-blue-400 transition-colors"
+                title="Edit pickup, drop or dates"
+              >
+                <Edit2 className="w-3 h-3" />
+                <span>Edit</span>
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div id="tour-input-card" className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-4 sm:p-5 space-y-3 sm:space-y-3.5">
           
           {/* 1. Pickup Input Field (M3 Outlined Text Field) */}
           <div className="space-y-1.5">
@@ -1622,9 +1669,71 @@ Please confirm booking!` + tourMapsBlock;
             )}
           </div>
 
-                    {/* Hidden inputs to preserve selected vehicle & passenger values for seamless test / submission compatibility */}
-          <input type="hidden" id={passengersId} name="passengers" value={passengers} />
-          <input type="hidden" id={vehicleId} name="vehicle" value={vehicleIdState} />
+                    {/* 4. Passengers & Vehicle Selection Tiles */}
+          <div className="grid grid-cols-2 gap-2 sm:gap-3">
+            {/* Passengers Tile */}
+            <div className="group relative rounded-xl border border-m3-outline-variant bg-slate-50/70 hover:bg-slate-50 hover:border-m3-outline focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/20 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
+              <div className="flex items-center justify-between gap-1 mb-1">
+                <label 
+                  htmlFor={passengersId} 
+                  className="text-xs font-medium text-slate-600 flex items-center gap-1.5 cursor-pointer truncate"
+                >
+                  <Users className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
+                  <span className="truncate">Passengers</span>
+                </label>
+              </div>
+              <div className="relative">
+                <select
+                  id={passengersId}
+                  value={passengers}
+                  onChange={(e) => handlePassengerChange(e.target.value)}
+                  className="w-full bg-transparent appearance-none outline-none cursor-pointer pr-5 text-xs sm:text-sm font-semibold text-m3-on-surface truncate p-0"
+                >
+                  {PASSENGER_OPTIONS.map(opt => (
+                    <option key={opt.value} value={opt.value} className="text-m3-on-surface font-semibold">
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="w-3.5 h-3.5 text-m3-on-surface-variant pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 shrink-0" />
+              </div>
+            </div>
+
+            {/* Vehicle Model Tile */}
+            <div className="group relative rounded-xl border border-m3-outline-variant bg-slate-50/70 hover:bg-slate-50 hover:border-m3-outline focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/20 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
+              <div className="flex items-center justify-between gap-1 mb-1">
+                <label 
+                  htmlFor={vehicleId} 
+                  className="text-xs font-medium text-slate-600 flex items-center gap-1.5 cursor-pointer truncate"
+                >
+                  <Car className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
+                  <span className="truncate">Vehicle Model</span>
+                </label>
+              </div>
+              <div className="relative">
+                <select
+                  id={vehicleId}
+                  value={vehicleIdState}
+                  onChange={(e) => {
+                    setVehicleIdState(e.target.value);
+                    if (validationError) setValidationError('');
+                  }}
+                  className="w-full bg-transparent appearance-none outline-none cursor-pointer pr-5 text-xs sm:text-sm font-semibold text-m3-on-surface truncate p-0"
+                >
+                  {config.vehicles.map(veh => {
+                    const pax = parseInt(passengers, 10);
+                    const disabled = veh.capacity < pax;
+                    return (
+                      <option key={veh.id} value={veh.id} disabled={disabled} className="text-m3-on-surface font-semibold">
+                        {veh.name} ({veh.capacity} Seats)
+                      </option>
+                    );
+                  })}
+                </select>
+                <ChevronDown className="w-3.5 h-3.5 text-m3-on-surface-variant pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 shrink-0" />
+              </div>
+            </div>
+          </div>
 
 {/* Validation Feedback Text */}
           {validationError && (
@@ -1651,13 +1760,13 @@ Please confirm booking!` + tourMapsBlock;
               No phone number required to check fare
             </p>
           </div>
+        </div>
+      )}
 
-          {/* Dynamic Fare Result & Actions Area — Rate Summary with Complete Itemized Breakdown */}
-          {showResult && Boolean(pickup.trim()) && (
-            <div ref={resultRef} className="pt-3 border-t border-m3-outline-variant/60 space-y-3 animate-in fade-in duration-200">
-              {/* Rate Summary Card — Savaari Clean Standard */}
-              <div className="bg-slate-100 border border-slate-200 rounded-xl p-3.5 space-y-3 shadow-xs">
-                {/* Header: Vehicle Name, Pax & Total Fare */}
+      {/* ─── CARD 2: Dynamic Tour Fare Result & Direct Booking ─── */}
+      {showResult && Boolean(pickup.trim()) && (
+        <div ref={resultRef} id="tour-fare-result" className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 space-y-3.5 sm:space-y-4 shadow-sm animate-in fade-in duration-200">
+                {/* Header: Vehicle Name, Seats & Total Fare */}
                 <div className="flex items-start justify-between gap-3 pb-2.5 border-b border-slate-200">
                   <div>
                     <div className="flex items-center gap-1.5 flex-wrap">
@@ -1665,7 +1774,7 @@ Please confirm booking!` + tourMapsBlock;
                         {activeVehicle?.name || 'AC Cab'}
                       </span>
                       <span className="text-xs font-bold bg-[#1a73e8]/10 text-[#0b57d0] px-2 py-0.5 rounded-full">
-                        {activeVehicle?.capacity || passengers} Pax
+                        {activeVehicle?.capacity || passengers} Seats
                       </span>
                     </div>
                     <div className="text-xs text-m3-on-surface-variant font-medium mt-0.5">
@@ -1673,7 +1782,7 @@ Please confirm booking!` + tourMapsBlock;
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <div className="text-xs text-m3-on-surface-variant font-medium">Total Fare</div>
+                    <div className="text-xs text-m3-on-surface-variant font-medium">Quoted Fare</div>
                     <div 
                       data-tour-fare="true"
                       className="text-2xl sm:text-3xl font-extrabold text-m3-on-surface font-heading leading-tight"
@@ -1692,14 +1801,20 @@ Please confirm booking!` + tourMapsBlock;
                   <span>Pay 50% on cab arrival, balance after trip ends</span>
                 </div>
 
-                {/* 1-Tap Vehicle Switcher Tabs (No duplicate prices) */}
+                {/* 1-Tap Vehicle Switcher with Car Images */}
                 {config.vehicles && config.vehicles.length > 1 && (
                   <div className="pb-1">
-                    <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
-                      Select Vehicle:
+                    <div className="flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                      <span className="flex items-center gap-1.5">
+                        <Car className="w-3.5 h-3.5 text-[#1a73e8]" />
+                        <span>Select Vehicle:</span>
+                      </span>
+                      <span className="text-[11px] font-normal text-slate-400 capitalize">
+                        Tap to switch
+                      </span>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
-                      {config.vehicles.slice(0, 4).map((veh) => {
+                    <div className="flex gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-1 scroll-smooth">
+                      {config.vehicles.map((veh) => {
                         const paxNum = parseInt(passengers, 10) || 4;
                         const isDisabled = veh.capacity < paxNum;
                         const isSelected = vehicleIdState === veh.id;
@@ -1709,17 +1824,33 @@ Please confirm booking!` + tourMapsBlock;
                             type="button"
                             disabled={isDisabled}
                             onClick={() => setVehicleIdState(veh.id)}
-                            className={`p-2 rounded-xl border text-center transition-all cursor-pointer ${
+                            className={`group relative flex items-center gap-2 px-2.5 py-1.5 rounded-xl border shrink-0 transition-all cursor-pointer min-h-[50px] ${
                               isSelected
-                                ? 'bg-blue-50/90 border-[#1a73e8] ring-2 ring-[#1a73e8]/30 shadow-xs'
+                                ? 'border-[#1a73e8] bg-blue-50/90 shadow-2xs ring-1.5 ring-[#1a73e8]/30'
                                 : isDisabled
                                   ? 'bg-slate-100/60 text-slate-400 border-slate-200/60 opacity-50 cursor-not-allowed'
                                   : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-200 shadow-2xs'
                             }`}
                           >
-                            <div className={`text-xs font-bold truncate ${isSelected ? 'text-[#0b57d0]' : 'text-slate-800'}`}>
-                              {veh.shortName || veh.name.split('/')[0].trim()} ({veh.capacity}p)
+                            <img
+                              src={TOUR_VEHICLE_IMAGES[veh.id] || '/images/fleet/swift-dzire.webp'}
+                              alt={veh.name}
+                              className={`w-14 h-9 object-contain shrink-0 transition-transform ${isDisabled ? 'opacity-40 grayscale' : 'group-hover:scale-105'}`}
+                              loading="lazy"
+                              width="56"
+                              height="36"
+                            />
+                            <div className="text-left leading-tight pr-0.5">
+                              <div className={`text-xs font-bold whitespace-nowrap ${isSelected ? 'text-[#0b57d0]' : 'text-slate-800'}`}>
+                                {veh.shortName || veh.name.split('/')[0].trim()}
+                              </div>
+                              <div className={`text-[10px] ${isSelected ? 'text-blue-700 font-semibold' : 'text-slate-500'}`}>
+                                {veh.capacity} Seats
+                              </div>
                             </div>
+                            {isSelected && (
+                              <div className="w-1.5 h-1.5 rounded-full bg-[#1a73e8] shrink-0" />
+                            )}
                           </button>
                         );
                       })}
@@ -1809,7 +1940,6 @@ Please confirm booking!` + tourMapsBlock;
                     </div>
                   )}
                 </div>
-              </div>
 
               {/* Primary M3 Action Buttons (Full-Width WhatsApp + Secondary Call) */}
               <div className="pt-1 space-y-2">
@@ -1933,9 +2063,8 @@ Please confirm booking!` + tourMapsBlock;
                   </div>
                 )}
               </div>
-            </div>
-          )}
         </div>
+      )}
       </section>
 
       {/* POP-UP MODAL — OFFICIAL GST PROFORMA TAX INVOICE & TRIP ESTIMATE */}
@@ -2034,7 +2163,7 @@ Please confirm booking!` + tourMapsBlock;
                 </div>
                 <div className="bg-m3-surface-container-low p-2 rounded border border-m3-outline-variant">
                   <span className="text-m3-on-surface-variant/70 block text-xs uppercase font-bold">Passengers</span>
-                  <strong className="text-m3-on-surface truncate block">{passengers} Pax</strong>
+                  <strong className="text-m3-on-surface truncate block">{passengers} Seats</strong>
                 </div>
               </div>
 

@@ -202,7 +202,7 @@ export default function ActiveTripsView({
     const details =
       `📌 Booking ID: ${b.bookingId}\n` +
       `👤 Passenger: ${b.guestNamePhone}\n` +
-      `🚗 Vehicle: ${b.vehicleCategory} (${b.partySize || '4 Pax'})\n` +
+      `🚗 Vehicle: ${b.vehicleCategory} (${b.partySize || '4 Seats'})\n` +
       `📍 Route: ${b.pickupAddress}\n` +
       `⏰ Pickup Time: ${b.travelDateTime}\n` +
       `👨‍✈️ Driver: ${b.assignedChauffeur || 'Unassigned'}\n\n` +
@@ -435,7 +435,7 @@ export default function ActiveTripsView({
                       {b.pickupAddress ? b.pickupAddress.replace(/^undefined\s*(?:➔|->)+\s*/i, '') : 'Route not specified'}
                     </div>
                     <div className="text-xs text-m3-on-surface-variant mt-0.5">
-                      🚗 {b.vehicleCategory} • {b.partySize || '4 Pax'}
+                      🚗 {b.vehicleCategory} • {b.partySize || '4 Seats'}
                     </div>
                   </div>
 

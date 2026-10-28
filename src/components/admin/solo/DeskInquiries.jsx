@@ -129,7 +129,7 @@ export default function DeskInquiries({
       travelDateTime: `${advanceForm.travelDate} @ ${advanceForm.pickupTime}`,
       pickupAddress: advanceForm.pickupAddress,
       vehicleCategory: advanceForm.vehicleCategory,
-      partySize: advanceModalLead.partySize || '4 Pax',
+      partySize: advanceModalLead.partySize || '4 Seats',
       kycStatus: 'Verified',
       darshanStatus: 'Unassigned',
       assignedChauffeur: 'Unassigned',

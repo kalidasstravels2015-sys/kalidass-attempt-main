@@ -23,7 +23,7 @@ const fleetDetails: Record<string, { category: string; seats: number; luggage_ca
     seats: 6,
     luggage_capacity: "3 medium suitcases",
     ac_type: "Dual AC with rear vents",
-    best_for: "Small families, 5-6 pax temple tours"
+    best_for: "Small families, 5-6 seats temple tours"
   },
   "Innova": {
     category: "Premium MPV",

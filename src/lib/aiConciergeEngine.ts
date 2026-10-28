@@ -383,9 +383,9 @@ function getOnScreenContextReply(
         `  உங்கள் பயணம் முழு 48 மணிநேரம் இல்லாமல் **${hrs} மணிநேரம்** மட்டுமே என்பதால், காளிதாஸ் டிராவல்ஸ் நியாயமான புரோ-ரேட்டா முறையில் கணக்கிட்டு முழு 2-நாள் கட்டணத்தை விட **${savings} மிச்சப்படுத்துகிறது**!\n\n` +
         `• **முழு 48-மணிநேர 2-நாள் பேக்கேஜ்:**\n` +
         `  நீங்கள் காரை முழு 48 மணிநேரமும் (2 முழு நாள்கள்) பயன்படுத்த விரும்பினால்:\n` +
-        `  - **Swift Dzire / Etios (4 Pax):** ₹9,500\n` +
-        `  - **Maruti Ertiga / XL6 (6 Pax):** ₹11,500\n` +
-        `  - **Toyota Innova (7 Pax):** ₹12,500\n` +
+        `  - **Swift Dzire / Etios (4 Seats):** ₹9,500\n` +
+        `  - **Maruti Ertiga / XL6 (6 Seats):** ₹11,500\n` +
+        `  - **Toyota Innova (7 Seats):** ₹12,500\n` +
         `  - **Innova Crysta:** ₹16,000\n\n` +
         `✅ **உள்ளடக்கம்:** சுத்தமான ஏசி கார், டிரைவர் பேட்டா, ஆந்திரா பெர்மிட் & திருமலை மலைப்பாதை அனுமதி.\n` +
         `🛡️ **பாலிசி:** காரை உறுதிசெய்து லாக் செய்ய **₹500 முன்பணம்** மட்டுமே. மீதமுள்ள தொகை பயண முடிவில்!\n\n` +
@@ -399,11 +399,11 @@ function getOnScreenContextReply(
       `  Because your trip duration is **${hrs} hours** (rather than the full 48 hours), our transparent tariff charges you pro-rata for 1 Day + ${extraHrs} hrs, **saving you ${savings}** compared to the full 2-day package!\n\n` +
       `• **Full 48-Hour 2-Day Package Rates:**\n` +
       `  If you require the cab for the complete 48 hours (e.g. 2 full calendar days or returning late night on Day 2):\n` +
-      `  - **Swift Dzire / Etios (4 Pax):** ₹9,500\n` +
-      `  - **Maruti Ertiga / XL6 (6 Pax):** ₹11,500\n` +
-      `  - **Toyota Innova (7 Pax):** ₹12,500\n` +
-      `  - **Toyota Innova Crysta (7 Pax):** ₹16,000\n` +
-      `  - **Tempo Traveller (12 Pax):** ₹19,500\n\n` +
+      `  - **Swift Dzire / Etios (4 Seats):** ₹9,500\n` +
+      `  - **Maruti Ertiga / XL6 (6 Seats):** ₹11,500\n` +
+      `  - **Toyota Innova (7 Seats):** ₹12,500\n` +
+      `  - **Toyota Innova Crysta (7 Seats):** ₹16,000\n` +
+      `  - **Tempo Traveller (12 Seats):** ₹19,500\n\n` +
       `✅ **Inclusions:** Dedicated AC Cab & Experienced Chauffeur, Fuel, AP State Border Permit, Tirumala Ghat Road ascent, and Driver Bata.\n` +
       `🛡️ **Policy:** Nominal **₹500 advance** to confirm & lock cab (avoids last-minute cancellation). Remaining balance paid post-trip!\n\n` +
       `[👉 Confirm Booking on WhatsApp](${waUrl})`
@@ -419,11 +419,11 @@ function getOnScreenContextReply(
     return (
       `On your screen, you currently have the **1-Day Package (${fare})** for **${vehicle}**.\n\n` +
       `If you'd like to extend to our official **2-Day Package** for **${dest}**, here are the fixed rates:\n\n` +
-      `• **Swift Dzire / Etios (4 Pax):** ₹9,500\n` +
-      `• **Maruti Ertiga / XL6 (6 Pax):** ₹11,500\n` +
-      `• **Toyota Innova (7 Pax):** ₹12,500\n` +
-      `• **Toyota Innova Crysta (7 Pax):** ₹16,000\n` +
-      `• **Tempo Traveller (12 Pax):** ₹19,500\n\n` +
+      `• **Swift Dzire / Etios (4 Seats):** ₹9,500\n` +
+      `• **Maruti Ertiga / XL6 (6 Seats):** ₹11,500\n` +
+      `• **Toyota Innova (7 Seats):** ₹12,500\n` +
+      `• **Toyota Innova Crysta (7 Seats):** ₹16,000\n` +
+      `• **Tempo Traveller (12 Seats):** ₹19,500\n\n` +
       `✅ **Inclusions:** Dedicated AC cab & chauffeur for 2 days. Driver bata included.\n` +
       `🛡️ **Policy:** ₹500 advance to confirm & lock cab. Balance paid post-trip!\n\n` +
       `[👉 Confirm 2-Day Package on WhatsApp](${waUrl})`
@@ -667,7 +667,7 @@ function getTourPackageQuote(state: ConversationState, isTa: boolean): string | 
     const rate = calculateMultiDayTourRate(v, days);
     const name = v.name || v.shortName || 'Cab';
     const tag = v.tag ? ` *(${v.tag})*` : '';
-    lines.push(`• **${name} (${v.capacity} Pax):** ₹${rate.toLocaleString('en-IN')}${tag}`);
+    lines.push(`• **${name} (${v.capacity} Seats):** ₹${rate.toLocaleString('en-IN')}${tag}`);
   });
 
   const tourSlug = tourMap[dest] || 'tirupati-package';
@@ -753,20 +753,20 @@ function getOutstationDynamicQuote(state: ConversationState, isTa: boolean): str
 
   // Vehicle lines mapping
   const vehicleQuotesEn: Record<string, string> = {
-    sedan: `• **AC Sedan (Dzire / Etios - 4 Pax):** ~₹${sedanCost.toLocaleString('en-IN')} (₹14/km + ₹${days * 400} Bata)`,
-    ertiga: `• **Maruti Ertiga / XL6 (6 Pax):** ~₹${ertigaCost.toLocaleString('en-IN')} (₹17/km + ₹${days * 500} Bata)`,
-    innova: `• **Toyota Innova (7 Pax):** ~₹${innovaCost.toLocaleString('en-IN')} (₹20/km + ₹${days * 600} Bata)`,
-    crysta: `• **Toyota Innova Crysta (7 Pax):** ~₹${crystaCost.toLocaleString('en-IN')} (₹22/km + ₹${days * 700} Bata)`,
-    tempo: `• **Tempo Traveller (12 Pax):** ~₹${tempoCost.toLocaleString('en-IN')} (₹26/km + ₹${days * 800} Bata)`,
-    urbania: `• **Force Urbania (12-14 Pax Luxury):** ~₹${urbaniaCost.toLocaleString('en-IN')} (₹38/km + ₹${days * 1100} Bata)`
+    sedan: `• **AC Sedan (Dzire / Etios - 4 Seats):** ~₹${sedanCost.toLocaleString('en-IN')} (₹14/km + ₹${days * 400} Bata)`,
+    ertiga: `• **Maruti Ertiga / XL6 (6 Seats):** ~₹${ertigaCost.toLocaleString('en-IN')} (₹17/km + ₹${days * 500} Bata)`,
+    innova: `• **Toyota Innova (7 Seats):** ~₹${innovaCost.toLocaleString('en-IN')} (₹20/km + ₹${days * 600} Bata)`,
+    crysta: `• **Toyota Innova Crysta (7 Seats):** ~₹${crystaCost.toLocaleString('en-IN')} (₹22/km + ₹${days * 700} Bata)`,
+    tempo: `• **Tempo Traveller (12 Seats):** ~₹${tempoCost.toLocaleString('en-IN')} (₹26/km + ₹${days * 800} Bata)`,
+    urbania: `• **Force Urbania (12-14 Seats Luxury):** ~₹${urbaniaCost.toLocaleString('en-IN')} (₹38/km + ₹${days * 1100} Bata)`
   };
 
   const vehicleQuotesTa: Record<string, string> = {
-    sedan: `• **AC Sedan (Dzire / Etios - 4 Pax):** ~₹${sedanCost.toLocaleString('en-IN')} (₹14/கி.மீ + ₹${days * 400} பேட்டா)`,
-    ertiga: `• **Maruti Ertiga / XL6 (6 Pax):** ~₹${ertigaCost.toLocaleString('en-IN')} (₹17/கி.மீ + ₹${days * 500} பேட்டா)`,
-    innova: `• **Toyota Innova (7 Pax):** ~₹${innovaCost.toLocaleString('en-IN')} (₹20/கி.மீ + ₹${days * 600} பேட்டா)`,
-    crysta: `• **Toyota Innova Crysta (7 Pax):** ~₹${crystaCost.toLocaleString('en-IN')} (₹22/கி.மீ + ₹${days * 700} பேட்டா)`,
-    tempo: `• **Tempo Traveller (12 Pax):** ~₹${tempoCost.toLocaleString('en-IN')} (₹26/கி.மீ + ₹${days * 800} பேட்டா)`,
+    sedan: `• **AC Sedan (Dzire / Etios - 4 Seats):** ~₹${sedanCost.toLocaleString('en-IN')} (₹14/கி.மீ + ₹${days * 400} பேட்டா)`,
+    ertiga: `• **Maruti Ertiga / XL6 (6 Seats):** ~₹${ertigaCost.toLocaleString('en-IN')} (₹17/கி.மீ + ₹${days * 500} பேட்டா)`,
+    innova: `• **Toyota Innova (7 Seats):** ~₹${innovaCost.toLocaleString('en-IN')} (₹20/கி.மீ + ₹${days * 600} பேட்டா)`,
+    crysta: `• **Toyota Innova Crysta (7 Seats):** ~₹${crystaCost.toLocaleString('en-IN')} (₹22/கி.மீ + ₹${days * 700} பேட்டா)`,
+    tempo: `• **Tempo Traveller (12 Seats):** ~₹${tempoCost.toLocaleString('en-IN')} (₹26/கி.மீ + ₹${days * 800} பேட்டா)`,
     urbania: `• **Force Urbania (12-14 சொகுசு வேன்):** ~₹${urbaniaCost.toLocaleString('en-IN')} (₹38/கி.மீ + ₹${days * 1100} பேட்டா)`
   };
 
@@ -836,7 +836,7 @@ function getLocalRentalQuote(state: ConversationState, isTa: boolean): string {
     `  - 8 hrs / 80 km: ₹2,200 *(Most Popular for City Shopping & Meetings)*\n` +
     `  - 10 hrs / 100 km: ₹2,600\n` +
     `  - 12 hrs / 120 km: ₹3,050\n\n` +
-    `• **Maruti Ertiga / XL6 (6 Pax):**\n` +
+    `• **Maruti Ertiga / XL6 (6 Seats):**\n` +
     `  - 4 hrs / 40 km: ₹1,700 (Extra km: ₹17 | Extra hr: ₹200)\n` +
     `  - 8 hrs / 80 km: ₹2,800\n` +
     `  - 10 hrs / 100 km: ₹3,400\n\n` +
@@ -859,9 +859,9 @@ function getAirportTransferQuote(state: ConversationState, isTa: boolean): strin
   if (isTa) {
     return (
       `**சென்னை விமான நிலைய (MAA Airport) டாக்சி கட்டணங்கள் (${hubName}):**\n\n` +
-      `• **AC Sedan (Dzire / Etios - 4 Pax):** ₹${rates.sedan}\n` +
-      `• **Maruti Ertiga (6 Pax):** ₹${rates.ertiga}\n` +
-      `• **Toyota Innova (7 Pax):** ₹${rates.innova}\n\n` +
+      `• **AC Sedan (Dzire / Etios - 4 Seats):** ₹${rates.sedan}\n` +
+      `• **Maruti Ertiga (6 Seats):** ₹${rates.ertiga}\n` +
+      `• **Toyota Innova (7 Seats):** ₹${rates.innova}\n\n` +
       `✈️ **விமான நிலைய பிரத்யேக உத்தரவாதங்கள்:**\n` +
       `• **முன்கூட்டியே ஓட்டுநர் விவரங்கள்:** உங்கள் புறப்படும் விமான நிலையத்தில் நீங்கள் **விமானத்தில் ஏறும் முன்பே (Before Takeoff)** ஓட்டுநர் பெயர், எண் மற்றும் கார் விவரங்கள் வாட்ஸ்அப்பில் அனுப்பப்படும்!\n` +
       `• நேரடி விமான ரேடார் கண்காணிப்பு — விமான தாமதத்திற்கு கூடுதல் காத்திருப்பு கட்டணம் இல்லை (₹0 Waiting Charge).\n` +
@@ -873,9 +873,9 @@ function getAirportTransferQuote(state: ConversationState, isTa: boolean): strin
 
   return (
     `Here are our fixed **Chennai Airport (MAA) Taxi Transfer** rates to/from **${hubName}**:\n\n` +
-    `• **AC Sedan (Dzire / Etios - 4 Pax):** ₹${rates.sedan}\n` +
-    `• **Maruti Ertiga / XL6 (6 Pax):** ₹${rates.ertiga}\n` +
-    `• **Toyota Innova (7 Pax):** ₹${rates.innova}\n\n` +
+    `• **AC Sedan (Dzire / Etios - 4 Seats):** ₹${rates.sedan}\n` +
+    `• **Maruti Ertiga / XL6 (6 Seats):** ₹${rates.ertiga}\n` +
+    `• **Toyota Innova (7 Seats):** ₹${rates.innova}\n\n` +
     `✈️ **Airport Operational Guarantees:**\n` +
     `• **Chauffeur Details Before Takeoff:** Driver details (chauffeur name, mobile, vehicle number) are sent on WhatsApp **before your flight takes off** from your origin airport — offering 100% peace of mind before boarding!\n` +
     `• **Live Flight Radar Tracking:** Zero waiting charge penalty for flight delays.\n` +
@@ -1068,11 +1068,11 @@ function getGeneralOutstationTariff(isTa: boolean): string {
   if (isTa) {
     return (
       `Here are our official **Outstation Tariff Rates**:\n\n` +
-      `• **Swift Dzire / Etios (4 Pax):** ₹14 / கி.மீ (டிரைவர் பேட்டா ₹400/நாள்)\n` +
-      `• **Maruti Ertiga (6 Pax):** ₹17 / கி.மீ (டிரைவர் பேட்டா ₹500/நாள்)\n` +
-      `• **Toyota Innova (7 Pax):** ₹20 / கி.மீ (டிரைவர் பேட்டா ₹600/நாள்)\n` +
-      `• **Toyota Innova Crysta (7 Pax):** ₹22 / கி.மீ (டிரைவர் பேட்டா ₹700/நாள்)\n` +
-      `• **Tempo Traveller (12 Pax):** ₹26 / கி.மீ (டிரைவர் பேட்டா ₹800/நாள்)\n\n` +
+      `• **Swift Dzire / Etios (4 Seats):** ₹14 / கி.மீ (டிரைவர் பேட்டா ₹400/நாள்)\n` +
+      `• **Maruti Ertiga (6 Seats):** ₹17 / கி.மீ (டிரைவர் பேட்டா ₹500/நாள்)\n` +
+      `• **Toyota Innova (7 Seats):** ₹20 / கி.மீ (டிரைவர் பேட்டா ₹600/நாள்)\n` +
+      `• **Toyota Innova Crysta (7 Seats):** ₹22 / கி.மீ (டிரைவர் பேட்டா ₹700/நாள்)\n` +
+      `• **Tempo Traveller (12 Seats):** ₹26 / கி.மீ (டிரைவர் பேட்டா ₹800/நாள்)\n\n` +
       `📋 ஒரு நாளைக்கு குறைந்தபட்சம் 250 கி.மீ (டெம்போ 300 கி.மீ). ₹500 முன்பணம் செலுத்தி காரை லாக் செய்யலாம்.\n\n` +
       `📲 [👉 வாட்ஸ்அப்பில் புக் செய்ய](${waUrl})`
     );
@@ -1080,11 +1080,11 @@ function getGeneralOutstationTariff(isTa: boolean): string {
 
   return (
     `Here are our official **Outstation & Intercity Tariff Rates**:\n\n` +
-    `• **Swift Dzire / Etios (4 Pax):** ₹14 / km (Min 250 km/day, Driver Bata ₹400/day)\n` +
-    `• **Maruti Ertiga / XL6 (6 Pax):** ₹17 / km (Min 250 km/day, Driver Bata ₹500/day)\n` +
-    `• **Toyota Innova (7 Pax):** ₹20 / km (Min 250 km/day, Driver Bata ₹600/day)\n` +
-    `• **Toyota Innova Crysta (7 Pax):** ₹22 / km (Min 250 km/day, Driver Bata ₹700/day)\n` +
-    `• **Tempo Traveller (12 Pax):** ₹26 / km (Min 300 km/day, Driver Bata ₹800/day)\n\n` +
+    `• **Swift Dzire / Etios (4 Seats):** ₹14 / km (Min 250 km/day, Driver Bata ₹400/day)\n` +
+    `• **Maruti Ertiga / XL6 (6 Seats):** ₹17 / km (Min 250 km/day, Driver Bata ₹500/day)\n` +
+    `• **Toyota Innova (7 Seats):** ₹20 / km (Min 250 km/day, Driver Bata ₹600/day)\n` +
+    `• **Toyota Innova Crysta (7 Seats):** ₹22 / km (Min 250 km/day, Driver Bata ₹700/day)\n` +
+    `• **Tempo Traveller (12 Seats):** ₹26 / km (Min 300 km/day, Driver Bata ₹800/day)\n\n` +
     `🛡️ **Guarantee:** ₹500 advance to confirm & lock cab (avoids last-minute cancellation). Remaining balance post-trip.\n\n` +
     `📲 [👉 Book on WhatsApp](${waUrl})`
   );

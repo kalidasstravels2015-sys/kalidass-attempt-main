@@ -388,7 +388,7 @@ Return ONLY raw JSON matching this schema, no markdown code fence, no commentary
       tag = '\n*(Superior comfort & smooth highway ride)*';
     } else if (key === 'Tempo Traveller') {
       label = 'TEMPO TRAVELLER (12-Seater AC)';
-      tag = '\n*(Pushback bucket seats, high roof, ample space for 7+ pax & large luggage)*';
+      tag = '\n*(Pushback bucket seats, high roof, ample space for 7+ seats & large luggage)*';
     }
     const numEmoji = idx === 0 ? '1️⃣' : idx === 1 ? '2️⃣' : '3️⃣';
     return `${numEmoji} ${label}

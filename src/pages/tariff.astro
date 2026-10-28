@@ -35,13 +35,13 @@ const breadcrumbItems = [
 const vehicles = Object.entries(tariffConfig.vehicles);
 
 const vehicleCapacity: Record<string, string> = {
-  "Swift Dzire": "4 Pax",
-  "Toyota Etios": "4 Pax",
-  "Maruti Ertiga": "6 Pax",
-  "Innova": "6 Pax",
-  "Innova Crysta": "7 Pax",
-  "Tempo Traveller": "12 Pax",
-  "Force Urbania": "12 Pax",
+  "Swift Dzire": "4 Seats",
+  "Toyota Etios": "4 Seats",
+  "Maruti Ertiga": "6 Seats",
+  "Innova": "6 Seats",
+  "Innova Crysta": "7 Seats",
+  "Tempo Traveller": "12 Seats",
+  "Force Urbania": "12 Seats",
 };
 
 const vehicleImages: Record<string, string> = {
@@ -267,7 +267,7 @@ const faqSchema = {
                       </div>
                     </div>
                   </td>
-                  <td class="px-4 py-3.5 text-center text-m3-on-surface-variant font-medium whitespace-nowrap">{vehicleCapacity[name] || "4 Pax"}</td>
+                  <td class="px-4 py-3.5 text-center text-m3-on-surface-variant font-medium whitespace-nowrap">{vehicleCapacity[name] || "4 Seats"}</td>
                   <td class="px-4 py-3.5 text-center font-bold text-m3-on-surface tabular-nums">
                     ₹{v.local_5hr_pkg ? v.local_5hr_pkg.toLocaleString("en-IN") : "-"}
                   </td>
@@ -334,7 +334,7 @@ const faqSchema = {
                       <div class="flex items-center gap-2 mt-1">
                         <span class="text-xs text-[#1a73e8] font-bold uppercase tracking-wider">{vehicleBadges[name]}</span>
                         <span class="text-xs text-slate-600 font-medium bg-slate-100 px-2 py-0.5 rounded-full">
-                          {vehicleCapacity[name] || "4 Pax"}
+                          {vehicleCapacity[name] || "4 Seats"}
                         </span>
                       </div>
                     </div>
@@ -481,7 +481,7 @@ const faqSchema = {
                       </div>
                     </div>
                   </td>
-                  <td class="px-5 py-3.5 text-center text-m3-on-surface-variant font-medium">{vehicleCapacity[name] || "4 Pax"}</td>
+                  <td class="px-5 py-3.5 text-center text-m3-on-surface-variant font-medium">{vehicleCapacity[name] || "4 Seats"}</td>
                   <td class="px-5 py-3.5 text-center font-bold text-m3-on-surface tabular-nums">₹{v.one_way_rate}</td>
                   <td class="px-5 py-3.5 text-center font-bold text-m3-on-surface tabular-nums">₹{v.round_trip_rate}</td>
                   <td class="px-5 py-3.5 text-center text-m3-on-surface font-medium tabular-nums">{v.min_km_per_day} km</td>
@@ -529,7 +529,7 @@ const faqSchema = {
                       <div class="flex items-center gap-2 mt-1">
                         <span class="text-xs text-[#1a73e8] font-bold uppercase tracking-wider">{vehicleBadges[name]}</span>
                         <span class="text-xs text-slate-600 font-medium bg-slate-100 px-2 py-0.5 rounded-full">
-                          {vehicleCapacity[name] || "4 Pax"}
+                          {vehicleCapacity[name] || "4 Seats"}
                         </span>
                       </div>
                     </div>

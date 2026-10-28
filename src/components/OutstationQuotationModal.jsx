@@ -416,7 +416,7 @@ export default function OutstationQuotationModal() {
     name: 'Maruti Ertiga / XL6',
     badge: 'Family Favorite',
     image: '/images/fleet/maruti-ertiga.webp',
-    capacity: '6 Pax + 3 Bags',
+    capacity: '6 Seats + 3 Bags',
     roundTripRate: 17,
     oneWayRate: 19,
     minKm: 250,
@@ -516,9 +516,9 @@ export default function OutstationQuotationModal() {
       const freeBufferKm = Math.max(0, chargeableKm - actualRoundTripKm);
       const bataTotal = (days || 1) * bata;
       const kmCost = chargeableKm * rate;
-      totalCost = kmCost + bataTotal;
-
       const extras = estimateRoadExtras(pickup, drop, effDistance, days, true, vehicle.key || vehicle.name);
+      const permitAmount = extras?.statePermitEst || 0;
+      totalCost = kmCost + bataTotal + permitAmount;
 
       bObj = {
         base_km: minKm,
@@ -542,8 +542,9 @@ export default function OutstationQuotationModal() {
       const minDropKm = vehStr.includes('Tempo') || vehStr.includes('Urbania') ? 250 : 130;
       const chargeableKm = Math.max(minDropKm, effDistance);
       const kmCost = chargeableKm * rate;
-      totalCost = kmCost + bata;
       const extras = estimateRoadExtras(pickup, drop, effDistance, 1, false, vehicle.key || vehicle.name);
+      const permitAmount = extras?.statePermitEst || 0;
+      totalCost = kmCost + bata + permitAmount;
 
       bObj = {
         base_km: minDropKm,
@@ -753,7 +754,7 @@ export default function OutstationQuotationModal() {
         name: data.vehicleName || 'Maruti Ertiga / XL6',
         badge: data.badge || 'Family Favorite',
         image: data.image || '/images/fleet/maruti-ertiga.webp',
-        capacity: data.capacity || '6 Pax + 3 Bags',
+        capacity: data.capacity || '6 Seats + 3 Bags',
         roundTripRate: data.roundTripRate || 17,
         oneWayRate: data.oneWayRate || 19,
         minKm: data.minKm || 250,
@@ -882,16 +883,16 @@ export default function OutstationQuotationModal() {
 💰 *ESTIMATED FARE & TERMS:*
 • Base Vehicle Meter Fare: ₹${(breakdown?.km_cost || finalEstimate).toLocaleString('en-IN')} (${breakdown?.chargeable_km || roundKm} km @ ₹${breakdown?.rate_per_km || (tripType === 'round' ? vehicle.roundTripRate : vehicle.oneWayRate)}/km)
 • Chauffeur Duty & Day Bata: ₹${(breakdown?.driver_bata || vehicle.bata * days).toLocaleString('en-IN')} (${days} ${days > 1 ? 'Days' : 'Day'})
-${breakdown?.free_buffer_km > 0 ? `• Sightseeing Buffer: +${breakdown.free_buffer_km.toFixed(0)} km (Included ₹0)\n` : ''}• Net Estimated Base Total: *₹${finalEstimate.toLocaleString('en-IN')}*
-• Highway FASTag Tolls: ${breakdown?.tolls_est > 0 ? `Approx. ~₹${breakdown.tolls_est} (At Actuals • May vary)` : 'Paid at Actuals (May vary)'}
-• State Permit${breakdown?.state_name && breakdown.state_name !== 'Tamil Nadu' ? ` (${breakdown.state_name})` : ''}: ${breakdown?.state_permit_est > 0 ? `Approx. ~₹${breakdown.state_permit_est} (At Actuals • May vary)` : '₹0 (Within Tamil Nadu / No Permit)'}
+${breakdown?.state_permit_est > 0 ? `• State Permit (${breakdown.state_name}): ₹${breakdown.state_permit_est.toLocaleString('en-IN')}\n` : ''}• Quoted Total Fare: *₹${finalEstimate.toLocaleString('en-IN')} + Tolls/Parking Extra*
+• Highway FASTag Tolls: ${breakdown?.tolls_est > 0 ? `Approx. ~₹${breakdown.tolls_est} (Pay at Actuals as per FASTag receipts)` : 'Pay at Actuals as per FASTag receipts'}
+• Parking Charges: Pay at Actuals as per receipts
+• Payment Policy: Pay 50% (₹${Math.round(finalEstimate * 0.5).toLocaleString('en-IN')}) on cab arrival, balance 50% after trip completion
+• Booking Advance: ₹0 (Zero advance to confirm booking)
 • Duration Standard: 1 Day = up to 24 hrs / 250 km. Duration above 24 hrs billed extra.
-• Advance to Reserve Cab & Driver: *₹500*
-• Balance on Completion: *₹${Math.max(0, finalEstimate - 500).toLocaleString('en-IN')}* Base Fare + Extras at Actuals (Pay driver after trip)
 
 ━━━━━━━━━━━━━━━━━━━━
-✅ *Inclusions:* Dedicated AC Vehicle, Fuel & Chauffeur Day Bata Included
-ℹ️ *Terms:* We provide estimated base fare; all road extras are strictly at actuals.
+✅ *Inclusions:* Dedicated AC Vehicle, Fuel, Chauffeur Day Bata${breakdown?.state_permit_est > 0 ? ` & ${breakdown.state_name || ''} State Border Permit` : ''} Included
+ℹ️ *Terms:* Zero shed charges (billing from pickup point) • Only tolls and parking payable as per actual receipts.
 
 Please save my quote & confirm live cab availability.` + omMapsBlock;
 
@@ -950,7 +951,7 @@ Please save my quote & confirm live cab availability.` + omMapsBlock;
         {/* Scrollable Form Body */}
         <div className="p-4 sm:p-5 space-y-3.5 overflow-y-auto text-xs sm:text-sm">
           
-          {/* 1. Locked Vehicle Banner (Pre-selected, no vehicle dropdown, no pax selector) */}
+          {/* 1. Locked Vehicle Banner (Pre-selected, no vehicle dropdown, no seats selector) */}
           <div className="p-3 sm:p-3.5 rounded-m3-xl bg-m3-surface-container border border-m3-outline-variant/60">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3 min-w-0">
@@ -1401,7 +1402,7 @@ Please save my quote & confirm live cab availability.` + omMapsBlock;
                     <div className="pt-2 pb-1 space-y-2 text-xs border-t border-slate-200/60 animate-in fade-in duration-150">
                       <div className="space-y-1.5 text-m3-on-surface-variant">
                         <div className="flex justify-between items-center py-0.5">
-                          <span>Cab Hire ({vehicle.name} • Fuel included):</span>
+                          <span>Cab Hire ({breakdown?.chargeable_km && breakdown?.rate_per_km ? `${breakdown.chargeable_km} km @ ₹${breakdown.rate_per_km}/km` : vehicle.name}):</span>
                           <span className="font-bold text-m3-on-surface">₹{(breakdown?.km_cost || estimate).toLocaleString('en-IN')}</span>
                         </div>
                         {breakdown?.driver_bata > 0 && (
@@ -1410,35 +1411,28 @@ Please save my quote & confirm live cab availability.` + omMapsBlock;
                             <span className="font-bold text-m3-on-surface">₹{breakdown.driver_bata.toLocaleString('en-IN')}</span>
                           </div>
                         )}
-                        {breakdown?.free_buffer_km > 0 && (
+                        {breakdown?.state_permit_est > 0 && (
                           <div className="flex justify-between items-center py-0.5">
-                            <span>Free Sightseeing (+{breakdown.free_buffer_km.toFixed(0)} km):</span>
-                            <span className="font-bold text-emerald-700">₹0</span>
+                            <span>State Permit:</span>
+                            <span className="font-bold text-m3-on-surface">
+                              ₹{breakdown.state_permit_est.toLocaleString('en-IN')}
+                            </span>
                           </div>
                         )}
                         <div className="flex justify-between items-center py-0.5">
-                          <span>State Permit:</span>
-                          <span className="font-bold text-m3-on-surface">
-                            {breakdown?.state_permit_est > 0 ? (
-                              <span>
-                                ~₹{breakdown.state_permit_est.toLocaleString('en-IN')}{' '}
-                                <span className="text-[11px] font-normal text-m3-on-surface-variant">(Approx • At actuals)</span>
-                              </span>
-                            ) : (
-                              <span className="text-emerald-700 font-semibold text-xs">₹0 (Not required - TN)</span>
-                            )}
-                          </span>
+                          <span>Highway Tolls:</span>
+                          <span className="font-bold text-m3-on-surface">(Pay at actuals) Extra</span>
                         </div>
                         <div className="flex justify-between items-center py-0.5">
-                          <span>Tolls &amp; Parking:</span>
-                          <span className="font-bold text-m3-on-surface">As per actual receipts</span>
+                          <span>Parking Charges:</span>
+                          <span className="font-bold text-m3-on-surface">(Pay at actuals) Extra</span>
                         </div>
                       </div>
 
                       <div className="pt-2 border-t border-dashed border-slate-200 text-xs text-m3-on-surface-variant space-y-1">
                         <div className="flex items-center gap-1.5 text-emerald-800 font-medium">
                           <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                          <span>100% Fuel, Chauffeur &amp; AC Included. Zero garage charges.</span>
+                          <span>100% Fuel, Chauffeur & AC Included. Zero garage charges.</span>
                         </div>
                         <div className="flex items-center gap-1.5 text-slate-500">
                           <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />

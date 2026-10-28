@@ -212,7 +212,7 @@ export default function OperationsCalendarView({
       `🗓 *Pickup Time:* ${b.travelDateTime}\n` +
       `📍 *Route:* ${b.pickupAddress}\n` +
       `🚗 *Vehicle:* ${b.vehicleCategory}\n` +
-      `👥 *Passengers:* ${b.partySize || '4 Pax'}\n` +
+      `👥 *Passengers:* ${b.partySize || '4 Seats'}\n` +
       `💰 *Total Customer Fare:* ₹${fare.toLocaleString('en-IN')}\n` +
       `💵 *Driver Net Payout:* ₹${driverNet.toLocaleString('en-IN')} (Tolls & Parking Actuals)\n` +
       `--------------------------------\n` +
@@ -274,7 +274,7 @@ export default function OperationsCalendarView({
         travelDateTime: formattedSchedule,
         pickupAddress: `${newEntry.pickup} ➔ ${newEntry.drop || 'Outstation'}`,
         vehicleCategory: newEntry.vehicle,
-        partySize: '4 Pax',
+        partySize: '4 Seats',
         terminalFare: Number(newEntry.fare) || 3500,
         advancePaid: Number(newEntry.advance) || 500,
         chauffeurPayout: Math.round((Number(newEntry.fare) || 3500) * 0.8),

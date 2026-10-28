@@ -138,7 +138,7 @@ test.describe('Tempo Traveller Rental in Chennai Passenger-First Flow & SEO', ()
     // 12-seater shows 3–4 Trolleys in boot, 8–10 Packs in cabin, and No Carrier
     await expect(fleetSection).toContainText(/3–4 Trolleys/);
     await expect(fleetSection).toContainText(/No Carrier/);
-    await expect(fleetSection).toContainText(/Best for 8–10 Pax with luggage/);
+    await expect(fleetSection).toContainText(/Best for 8–10 Seats with luggage/);
   });
 
   test('JSON-LD Structured Data conforms to Google Search Central guidelines with numeric prices', async ({ page }) => {

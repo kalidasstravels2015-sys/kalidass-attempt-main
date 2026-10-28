@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Outstation Car Card Fare Calculator & Booking Modal', () => {
-  test('opens calculation modal for Maruti Ertiga with locked vehicle, no pax/vehicle dropdowns, and itemized breakdown', async ({ page }) => {
+  test('opens calculation modal for Maruti Ertiga with locked vehicle, no seats/vehicle dropdowns, and itemized breakdown', async ({ page }) => {
     // Mobile viewport matching user's mobile screenshot
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/services/outstation-cabs/', { waitUntil: 'networkidle' });
@@ -27,8 +27,8 @@ test.describe('Outstation Car Card Fare Calculator & Booking Modal', () => {
     // 5. Verify NO passenger dropdown and NO vehicle selection dropdown in modal
     const vehicleSelects = modal.locator('select');
     await expect(vehicleSelects).toHaveCount(0);
-    await expect(modal.locator('text=1-4 Pax')).toBeHidden();
-    await expect(modal.locator('text=5-7 Pax')).toBeHidden();
+    await expect(modal.locator('text=1-4 Seats')).toBeHidden();
+    await expect(modal.locator('text=5-7 Seats')).toBeHidden();
 
     // 6. Verify old enquiry modal (#bookingEnquiryModal) is NOT open
     const oldModal = page.locator('#bookingEnquiryModal');

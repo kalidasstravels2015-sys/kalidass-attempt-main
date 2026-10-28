@@ -151,7 +151,7 @@ export const POST: APIRoute = async ({ request }) => {
     } else if (/innova/i.test(lower)) {
       vehicleCategory = 'Toyota Innova';
     } else if (/ertiga|xl6/i.test(lower)) {
-      vehicleCategory = 'Ertiga (6 Pax)';
+      vehicleCategory = 'Ertiga (6 Seats)';
     } else if (/tempo|traveller/i.test(lower)) {
       vehicleCategory = 'Tempo Traveller';
     } else if (/compact suv|suv/i.test(lower)) {
@@ -164,10 +164,10 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // 9. Party Size
-    let partySize = '4 Pax';
+    let partySize = '4 Seats';
     const paxMatch = rawText.match(/(\d+)\s*(?:pax|people|persons?|passengers?|members?)/i);
     if (paxMatch) {
-      partySize = `${paxMatch[1]} Pax`;
+      partySize = `${paxMatch[1]} Seats`;
     } else if (serviceCategory === 'Acting Driver') {
       partySize = 'Car Owner Vehicle';
     }

@@ -31,7 +31,7 @@ export const POST: APIRoute = async ({ request }) => {
       else if (vLow.includes('innova')) vehCat = 'Innova';
       else if (vLow.includes('ertiga') || vLow.includes('xl6')) vehCat = 'Ertiga';
 
-      const partySize = data.passengers || '4 Pax';
+      const partySize = data.passengers || '4 Seats';
       const fareNum = parseInt(String(data.fare || '').replace(/[^0-9]/g, ''), 10) || 650;
       const payoutNum = Math.round(fareNum * 0.8);
 

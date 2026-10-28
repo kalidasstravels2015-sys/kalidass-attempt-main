@@ -145,7 +145,7 @@ const airportFleet = [
     badge: "BEST VALUE SEDAN",
     price: "₹650",
     caps: "4 Passengers + Chauffeur",
-    capsShort: "4 Pax",
+    capsShort: "4 Seats",
     luggage: "2 Suitcases + 2 Handbags",
     details: [
       "Dedicated 350L Airport Boot",
@@ -171,7 +171,7 @@ Please share availability and confirmed fare.`
     badge: "FAMILY FAVORITE",
     price: "₹1,150",
     caps: "6 Passengers + Chauffeur",
-    capsShort: "6 Pax",
+    capsShort: "6 Seats",
     luggage: "4 Suitcases + Handbags",
     details: [
       "Ample Boot Space for Family Bags",
@@ -197,7 +197,7 @@ Please share availability and confirmed fare.`
     badge: "EXECUTIVE LUXURY",
     price: "₹1,500",
     caps: "7 Passengers + Chauffeur",
-    capsShort: "7 Pax",
+    capsShort: "7 Seats",
     luggage: "5 Suitcases + Handbags",
     details: [
       "Reclining Executive Captain Seats",
@@ -223,7 +223,7 @@ Please share availability and confirmed fare.`
     badge: "GROUP COACH",
     price: "₹2,400",
     caps: "12–14 Passengers + Driver",
-    capsShort: "12 Pax",
+    capsShort: "12 Seats",
     luggage: "12+ Large Suitcases",
     details: [
       "Full Standing Height & Wide Aisle",
@@ -231,7 +231,7 @@ Please share availability and confirmed fare.`
       "Zero Delay Waiting Charges"
     ],
     bookingText: `*Kalidass Travels - Chennai Airport Transfer*
-• Vehicle: Tempo Traveller (12-14 Pax) - From ₹2,400
+• Vehicle: Tempo Traveller (12-14 Seats) - From ₹2,400
 • Transfer Type: [Airport Pickup / Airport Drop]
 • Travel Date: 
 • Flight Time / Pickup Time: 
@@ -463,7 +463,7 @@ const tripListSchema = {
       "offers": [
         {
           "@type": "Offer",
-          "name": `Sedan (4 Pax) — ${z.zone}`,
+          "name": `Sedan (4 Seats) — ${z.zone}`,
           "description": `Swift Dzire / Etios airport taxi to ${z.zone}. ${z.eta}, ${z.distance}.`,
           "price": z.sedan.replace(/[^0-9]/g, ''),
           "priceCurrency": "INR",
@@ -474,7 +474,7 @@ const tripListSchema = {
         },
         {
           "@type": "Offer",
-          "name": `Innova / Ertiga (6 Pax) — ${z.zone}`,
+          "name": `Innova / Ertiga (6 Seats) — ${z.zone}`,
           "description": `Maruti Ertiga / Innova airport taxi to ${z.zone}. ${z.eta}, ${z.distance}.`,
           "price": z.innova.replace(/[^0-9]/g, ''),
           "priceCurrency": "INR",
@@ -485,7 +485,7 @@ const tripListSchema = {
         },
         {
           "@type": "Offer",
-          "name": `Innova Crysta VIP (7 Pax) — ${z.zone}`,
+          "name": `Innova Crysta VIP (7 Seats) — ${z.zone}`,
           "description": `Innova Crysta executive airport taxi to ${z.zone}. ${z.eta}, ${z.distance}.`,
           "price": z.crysta.replace(/[^0-9]/g, ''),
           "priceCurrency": "INR",
@@ -496,7 +496,7 @@ const tripListSchema = {
         },
         {
           "@type": "Offer",
-          "name": `Tempo Traveller (12 Pax) — ${z.zone}`,
+          "name": `Tempo Traveller (12 Seats) — ${z.zone}`,
           "description": `Tempo Traveller group taxi to ${z.zone}. ${z.eta}, ${z.distance}.`,
           "price": z.tempo.replace(/[^0-9]/g, ''),
           "priceCurrency": "INR",
@@ -701,7 +701,7 @@ const tripListSchema = {
             aria-label="Airport Fleet Gallery"
           >
             {airportFleet.map((vehicle) => {
-              const seats = vehicle.capsShort.includes('Pax') ? vehicle.capsShort.replace('Pax', 'Passengers') : vehicle.capsShort;
+              const seats = vehicle.capsShort.includes('Seats') ? vehicle.capsShort.replace('Seats', 'Passengers') : vehicle.capsShort;
               const luggageShort = vehicle.type === 'tempo' ? '8–10 Bags' : vehicle.type === 'crysta' ? '5 Bags' : vehicle.type === 'innova' ? '4 Bags' : '2 Bags';
               return (
                 <VehicleCard
@@ -917,10 +917,10 @@ const tripListSchema = {
                     <tr>
                       <th class="px-4 py-3" id="table-col-location">Destination &amp; Landmarks</th>
                       <th class="px-3 py-3 text-center">Drive &amp; Distance</th>
-                      <th class="px-3 py-3 text-center">Sedan (4 Pax)</th>
-                      <th class="px-3 py-3 text-center">Innova (6 Pax)</th>
+                      <th class="px-3 py-3 text-center">Sedan (4 Seats)</th>
+                      <th class="px-3 py-3 text-center">Innova (6 Seats)</th>
                       <th class="px-3 py-3 text-center">Innova Crysta</th>
-                      <th class="px-3 py-3 text-center">Tempo (12 Pax)</th>
+                      <th class="px-3 py-3 text-center">Tempo (12 Seats)</th>
                       <th class="px-4 py-3 text-right">Instant Action</th>
                     </tr>
                   </thead>
@@ -1149,7 +1149,7 @@ const tripListSchema = {
                 </tr>
                 <tr class="hover:bg-m3-surface-container-low transition-colors">
                   <td class="p-3 sm:p-4 font-semibold align-top">Vehicle Selection</td>
-                  <td class="p-3 sm:p-4 bg-m3-success-container/15 font-bold text-m3-on-surface align-top">Choose Dzire, Ertiga (6 Pax), Crysta (7 Pax), or Tempo</td>
+                  <td class="p-3 sm:p-4 bg-m3-success-container/15 font-bold text-m3-on-surface align-top">Choose Dzire, Ertiga (6 Seats), Crysta (7 Seats), or Tempo</td>
                   <td class="p-3 sm:p-4 text-m3-on-surface-variant align-top">Random allocation; hard to get 6/7-seater SUVs</td>
                 </tr>
               </tbody>

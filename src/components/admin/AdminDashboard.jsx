@@ -13,7 +13,7 @@ const TOUR_PACKAGES = [
     rates: {
       'Sedan (Dzire / Etios)': '6000',
       'Sedan': '6000',
-      'Ertiga (6 Pax)': '7500',
+      'Ertiga (6 Seats)': '7500',
       'Ertiga': '7500',
       'Innova Crysta': '10000',
       'Tempo Traveller': '12500',
@@ -27,7 +27,7 @@ const TOUR_PACKAGES = [
     rates: {
       'Sedan (Dzire / Etios)': '13500',
       'Sedan': '13500',
-      'Ertiga (6 Pax)': '16500',
+      'Ertiga (6 Seats)': '16500',
       'Ertiga': '16500',
       'Innova Crysta': '21500',
       'Tempo Traveller': '26000',
@@ -41,7 +41,7 @@ const TOUR_PACKAGES = [
     rates: {
       'Sedan (Dzire / Etios)': '4500',
       'Sedan': '4500',
-      'Ertiga (6 Pax)': '5500',
+      'Ertiga (6 Seats)': '5500',
       'Ertiga': '5500',
       'Innova Crysta': '7500',
       'Tempo Traveller': '9500',
@@ -139,7 +139,7 @@ export default function AdminDashboard() {
     pickupTime: '04:30 AM',
     pickupAddress: '',
     vehicleCategory: 'Sedan',
-    partySize: '4 Pax',
+    partySize: '4 Seats',
     fare: '',
     kycStatus: 'Pending',
     darshanStatus: 'Unassigned',
@@ -300,7 +300,7 @@ export default function AdminDashboard() {
     const travelDate = dateMatch ? dateMatch[1] : todayFormatted;
     const pickupTime = '04:30 AM';
 
-    const partySize = (lead.metadata?.includes('4 ppl') || lead.pickup?.includes('4 Pax')) ? '4 Pax' : '4 Pax';
+    const partySize = (lead.metadata?.includes('4 ppl') || lead.pickup?.includes('4 Seats')) ? '4 Seats' : '4 Seats';
     const vehicleCat = lead.vehicle?.toLowerCase().includes('ertiga') ? 'Ertiga' : 'Sedan';
     const fare = Number(lead.estimatedFare) || 6000;
     const payout = Math.round(fare * 0.8);
@@ -394,7 +394,7 @@ export default function AdminDashboard() {
       pickupTime: '04:30 AM',
       pickupAddress: '',
       vehicleCategory: 'Sedan',
-      partySize: '4 Pax',
+      partySize: '4 Seats',
       fare: '',
       kycStatus: 'Pending',
       darshanStatus: 'Unassigned',
@@ -432,7 +432,7 @@ export default function AdminDashboard() {
       tripType: isWA ? 'Inbound WhatsApp Lead' : 'Inbound Phone Enquiry',
       pickup,
       drop: callForm.route || 'Chennai ➔ Tirupati Round Trip',
-      vehicle: callForm.vehicle || 'Innova Crysta (7 Pax)',
+      vehicle: callForm.vehicle || 'Innova Crysta (7 Seats)',
       distanceKm: 'N/A',
       estimatedFare: quotedFareNum,
       status: callForm.status || (isWA ? 'Active Enquiry' : 'Call Received - Quoted'),
@@ -2000,9 +2000,9 @@ export default function AdminDashboard() {
                     className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                   >
                     <option value="Sedan">Sedan (Dzire / Etios)</option>
-                    <option value="Ertiga">Ertiga (6 Pax)</option>
+                    <option value="Ertiga">Ertiga (6 Seats)</option>
                     <option value="Innova Crysta">Innova Crysta</option>
-                    <option value="Tempo">Tempo Traveller (12+ Pax)</option>
+                    <option value="Tempo">Tempo Traveller (12+ Seats)</option>
                   </select>
                 </div>
                 <div>
@@ -2367,9 +2367,9 @@ export default function AdminDashboard() {
                     className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2 text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                   >
                     <option value="Sedan (Dzire / Etios)">Sedan (Dzire / Etios)</option>
-                    <option value="Ertiga (6 Pax)">Ertiga (6 Pax)</option>
-                    <option value="Innova Crysta">Innova Crysta (7 Pax)</option>
-                    <option value="Tempo Traveller">Tempo Traveller (12+ Pax)</option>
+                    <option value="Ertiga (6 Seats)">Ertiga (6 Seats)</option>
+                    <option value="Innova Crysta">Innova Crysta (7 Seats)</option>
+                    <option value="Tempo Traveller">Tempo Traveller (12+ Seats)</option>
                   </select>
                 </div>
                 <div>

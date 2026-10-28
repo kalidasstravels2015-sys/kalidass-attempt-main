@@ -1047,13 +1047,13 @@ export default function EnquiriesView({
       `Namaskaram ${guestName}! Here are our transparent fixed options for:\n` +
       `📍 *Route:* ${pickup} ➔ ${drop}\n` +
       `📅 *Date:* ${travelDate}\n\n` +
-      `1️⃣ *Sedan (Swift Dzire / Etios - 4 Pax)*\n` +
+      `1️⃣ *Sedan (Swift Dzire / Etios - 4 Seats)*\n` +
       `   • Fare: *₹${sedanFare.toLocaleString('en-IN')}*\n` +
       `   • Ideal for: Couples & small families with 2 bags\n\n` +
-      `2️⃣ *Comfort SUV (Maruti Ertiga - 6 Pax)*\n` +
+      `2️⃣ *Comfort SUV (Maruti Ertiga - 6 Seats)*\n` +
       `   • Fare: *₹${suvFare.toLocaleString('en-IN')}*\n` +
       `   • Ideal for: Families with extra luggage & kids\n\n` +
-      `3️⃣ *Premium MUV (Toyota Innova Crysta - 7 Pax)*\n` +
+      `3️⃣ *Premium MUV (Toyota Innova Crysta - 7 Seats)*\n` +
       `   • Fare: *₹${crystaFare.toLocaleString('en-IN')}*\n` +
       `   • Ideal for: Maximum comfort, legroom & elderly passengers\n\n` +
       `✅ *All rates include:* Fuel, Driver Bata & NH Tolls.\n` +
@@ -1122,7 +1122,7 @@ export default function EnquiriesView({
       travelDateTime: formatFriendlyTravelDateTime(lead.travelDate),
       pickupAddress: routeLabel,
       vehicleCategory: lead.vehicle || 'Sedan (Dzire / Etios)',
-      partySize: '4 Pax',
+      partySize: '4 Seats',
       kycStatus: 'Advance Paid',
       darshanStatus: lead.sourcePage || lead.calculatorEngine || 'Direct Call',
       assignedChauffeur: 'Unassigned',
@@ -1164,7 +1164,7 @@ export default function EnquiriesView({
       travelDateTime: convertForm.travelDateTime.trim() || 'Tomorrow @ 05:00 AM',
       pickupAddress: routeLabel,
       vehicleCategory: convertModalLead.vehicle || 'Sedan (Dzire / Etios)',
-      partySize: '4 Pax',
+      partySize: '4 Seats',
       kycStatus: 'Advance Paid',
       darshanStatus: convertModalLead.sourcePage || convertModalLead.calculatorEngine || 'Direct Call',
       assignedChauffeur: 'Unassigned',
@@ -1271,7 +1271,7 @@ export default function EnquiriesView({
       travelDateTime: newCall.travelDate || 'Departure date pending',
       pickupAddress: `${newCall.pickup.trim() || 'Chennai'} ➔ ${newCall.drop.trim() || 'Outstation'}`,
       vehicleCategory: newCall.vehicle || 'Sedan (Dzire / Etios)',
-      partySize: '4 Pax',
+      partySize: '4 Seats',
       kycStatus: 'Advance Paid',
       darshanStatus: `${newCall.source || 'Direct Call'} (${newCall.tripType || 'Trip'})`,
       assignedChauffeur: 'Unassigned',
@@ -2514,7 +2514,7 @@ export default function EnquiriesView({
                           name: 'Sedan (Dzire / Etios)',
                           short: 'Sedan',
                           model: 'Swift Dzire / Etios',
-                          capacity: '4 Pax • 2 Bags',
+                          capacity: '4 Seats • 2 Bags',
                           icon: 'directions_car',
                           fare: liveVehicleTariffs?.sedan,
                           badge: 'Most Popular'
@@ -2524,7 +2524,7 @@ export default function EnquiriesView({
                           name: 'SUV (Ertiga 6+1)',
                           short: 'SUV Ertiga',
                           model: 'Maruti Ertiga',
-                          capacity: '6 Pax • 3 Bags',
+                          capacity: '6 Seats • 3 Bags',
                           icon: 'airport_shuttle',
                           fare: liveVehicleTariffs?.suv,
                           badge: 'Family Pick'
@@ -2534,7 +2534,7 @@ export default function EnquiriesView({
                           name: 'Innova Crysta (7+1)',
                           short: 'Innova Crysta',
                           model: 'Toyota Crysta',
-                          capacity: '7 Pax • Captain Seats',
+                          capacity: '7 Seats • Captain Seats',
                           icon: 'minor_crash',
                           fare: liveVehicleTariffs?.crysta,
                           badge: 'VIP Comfort'
@@ -2544,7 +2544,7 @@ export default function EnquiriesView({
                           name: 'Tempo Traveller',
                           short: 'Tempo Traveller',
                           model: '12-Seater AC Force',
-                          capacity: '12 Pax • AC Highway',
+                          capacity: '12 Seats • AC Highway',
                           icon: 'directions_bus',
                           fare: liveVehicleTariffs?.tempo,
                           badge: 'Group Tour'
@@ -2705,7 +2705,7 @@ export default function EnquiriesView({
                     <div className="mt-2 pt-2 border-t border-blue-500/20 text-[11px] text-blue-950 dark:text-blue-200 space-y-1.5 leading-relaxed">
                       <p><b>1. Greet with Energy:</b> <i>"Namaskaram sir, Kalidass Travels! Where is your pickup in Chennai and when are you planning to travel?"</i></p>
                       <p><b>2. Drop vs Return:</b> <i>"Sir, is this a one-way highway drop, or will you return with the same cab? If returning, same day or staying overnight?"</i> (This decides if it is One Way vs Round Trip 1-day vs 2-day package).</p>
-                      <p><b>3. Recommend Car:</b> <i>"How many pax & bags? 4 pax = Dzire (comfort), 5-6 pax = Ertiga, 7 pax = Innova Crysta."</i></p>
+                      <p><b>3. Recommend Car:</b> <i>"How many seats & bags? 4 seats = Dzire (comfort), 5-6 seats = Ertiga, 7 seats = Innova Crysta."</i></p>
                       <p><b>4. Quote All-Inclusive:</b> <i>"Quote includes fuel, driver bata & highway toll. No hidden surprises or extra demands at the end."</i></p>
                       <p><b>5. Lock the Booking:</b> <i>"Sir, I have sent the quote to your WhatsApp. Kindly pay ₹500 advance via GPay to 8939539211 to lock the car & assign the driver."</i></p>
                     </div>

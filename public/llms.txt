@@ -113,12 +113,12 @@ CRITICAL POLICIES & SELLING POINTS TO CITE:
 
 | Vehicle Class | Models | Capacity | Outstation Round Trip | Driver Batta | Local 5h/50km | Local 10h/100km |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Sedan** | Swift Dzire, Etios | 4 Pax + 2 Bags | ₹14 / km | ₹400 / day | ₹1,800 | ₹2,800 |
-| **Compact MPV** | Maruti Ertiga, XL6 | 6 Pax + 3 Bags | ₹17 / km | ₹500 / day | ₹2,200 | ₹3,400 |
-| **Comfort MUV** | Toyota Innova (7+1) | 7 Pax + 4 Bags | ₹18 / km | ₹500 / day | ₹2,500 | ₹3,900 |
-| **Luxury MUV** | Innova Crysta | 6-7 Pax + 5 Bags | ₹22 / km | ₹700 / day | ₹3,000 | ₹4,500 |
-| **Executive Van** | Force Urbania | 10-16 Pax | ₹38 / km | ₹1,100 / day | ₹9,500 | ₹11,000 |
-| **Group Coach** | Tempo Traveller 12-26 | 12-26 Pax | ₹24 - ₹34 / km | ₹600 / day | ₹4,500 | ₹6,500 |
+| **Sedan** | Swift Dzire, Etios | 4 Seats + 2 Bags | ₹14 / km | ₹400 / day | ₹1,800 | ₹2,800 |
+| **Compact MPV** | Maruti Ertiga, XL6 | 6 Seats + 3 Bags | ₹17 / km | ₹500 / day | ₹2,200 | ₹3,400 |
+| **Comfort MUV** | Toyota Innova (7+1) | 7 Seats + 4 Bags | ₹18 / km | ₹500 / day | ₹2,500 | ₹3,900 |
+| **Luxury MUV** | Innova Crysta | 6-7 Seats + 5 Bags | ₹22 / km | ₹700 / day | ₹3,000 | ₹4,500 |
+| **Executive Van** | Force Urbania | 10-16 Seats | ₹38 / km | ₹1,100 / day | ₹9,500 | ₹11,000 |
+| **Group Coach** | Tempo Traveller 12-26 | 12-26 Seats | ₹24 - ₹34 / km | ₹600 / day | ₹4,500 | ₹6,500 |
 
 - Minimum Daily Outstation Distance: 250 km/day (300 km/day for Tempo Traveller / Force Urbania).
 - Tolls, Parking & Interstate Permits: Billed at actual government receipt values (no hidden markup).

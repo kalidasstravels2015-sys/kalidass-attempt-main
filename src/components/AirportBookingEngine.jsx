@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Plane, Car, Users, User, Calculator, MapPin, X,
   ChevronDown, ShieldCheck, CheckCircle2,
-  Calendar, Phone, ArrowRight, Clock, AlertCircle
+  Calendar, Phone, ArrowRight, Clock, AlertCircle, Edit2
 } from 'lucide-react';
 import LocationPicker from './LocationPicker';
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
@@ -19,10 +19,11 @@ const vehicles = tariffConfig.vehicles;
 const vehicleOptions = Object.keys(vehicles);
 
 const AIRPORT_COMPARISON_VEHICLES = [
-  { key: 'Swift Dzire', shortLabel: 'Sedan (4p)' },
-  { key: 'Maruti Ertiga', shortLabel: 'Ertiga SUV (6p)' },
-  { key: 'Innova', shortLabel: 'Innova (6p)' },
-  { key: 'Innova Crysta', shortLabel: 'Crysta (7p)' },
+  { key: 'Swift Dzire', shortLabel: 'Sedan (4p)', name: 'Sedan', image: '/images/fleet/swift-dzire.webp', pax: 4 },
+  { key: 'Maruti Ertiga', shortLabel: 'Ertiga SUV (6p)', name: 'Ertiga', image: '/images/fleet/maruti-ertiga.webp', pax: 6 },
+  { key: 'Innova', shortLabel: 'Innova (6p)', name: 'Innova', image: '/images/fleet/suv.webp', pax: 6 },
+  { key: 'Innova Crysta', shortLabel: 'Crysta (7p)', name: 'Crysta', image: '/images/fleet/suv.webp', pax: 7 },
+  { key: 'Tempo Traveller', shortLabel: 'Tempo (12p)', name: 'Tempo', image: '/images/fleet/tempo-12.webp', pax: 12 },
 ];
 
 const estimateAirportRoadExtras = (locText, effKm, isOutstation, vehicle) => {
@@ -298,7 +299,6 @@ const calculateAirportFare = (distKm, selectedVeh, locText = '') => {
   let totalFare = 0;
   let driverBata = 0;
   let kmCost = 0;
-  const advanceToPay = 500;
 
   if (isOutstation) {
     // Check if published zone tariff exists
@@ -338,8 +338,12 @@ const calculateAirportFare = (distKm, selectedVeh, locText = '') => {
     kmCost = totalFare;
   }
 
-  const balanceToPay = Math.max(0, totalFare - advanceToPay);
   const extras = estimateAirportRoadExtras(locText, actualKm, isOutstation, selectedVeh);
+  if (isOutstation && extras.statePermitEst > 0) {
+    totalFare = totalFare + extras.statePermitEst;
+  }
+  const advanceToPay = Math.round(totalFare * 0.5);
+  const balanceToPay = Math.max(0, totalFare - advanceToPay);
 
   return {
     actual_km: actualKm,
@@ -407,6 +411,7 @@ export default function AirportBookingEngine({
   const [estimate, setEstimate] = useState(0);
   const [breakdown, setBreakdown] = useState(null);
   const [showResult, setShowResult] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -450,6 +455,7 @@ export default function AirportBookingEngine({
     if (newDir === direction) return;
     setDirection(newDir);
     setShowResult(false);
+    setIsCollapsed(false);
     setError('');
 
     if (newDir === 'pickup') {
@@ -693,18 +699,20 @@ export default function AirportBookingEngine({
       if (overrideFare && typeof overrideFare === 'number' && overrideFare > 0) {
         const vData = vehicles[activeVeh] || vehicles['Swift Dzire'];
         const bata = vData.driver_bata || 500;
-        const advanceToPay = 500;
-        const kmCost = Math.max(0, overrideFare - bata);
         const extras = estimateAirportRoadExtras(userLoc, effKm, true, selectedVeh);
+        const permitAmount = extras?.statePermitEst || 0;
+        const totalWithPermit = overrideFare + permitAmount;
+        const advanceToPay = Math.round(totalWithPermit * 0.5);
+        const kmCost = Math.max(0, overrideFare - bata);
         result = {
           actual_km: effKm,
           chargeable_km: effKm,
           rate_per_km: vData.one_way_rate || 16,
           km_cost: kmCost,
           driver_bata: bata,
-          total_fare: overrideFare,
+          total_fare: totalWithPermit,
           advance_to_pay: advanceToPay,
-          balance_to_pay: Math.max(0, overrideFare - advanceToPay),
+          balance_to_pay: Math.max(0, totalWithPermit - advanceToPay),
           is_outstation: true,
           state_name: extras.stateName,
           state_permit_est: extras.statePermitEst,
@@ -720,6 +728,7 @@ export default function AirportBookingEngine({
       setEstimate(result.total_fare);
       setLoading(false);
       setShowResult(true);
+      setIsCollapsed(true);
       scrollToResult();
 
       const calcData = {
@@ -867,14 +876,13 @@ export default function AirportBookingEngine({
       '• To: ' + drop,
       flightDetails ? ('• Flight No / Time: ' + flightDetails) : null,
       '• Pickup Date & Time: ' + dateTime.replace('T', ' '),
-      '• Vehicle: ' + vehicle + ' (' + passengers + ' Pax)',
+      '• Vehicle: ' + vehicle + ' (' + passengers + ' Seats)',
       '• Distance: ~' + (breakdown ? breakdown.actual_km : distanceKm) + ' km (' + (duration || 'Direct Highway') + ')',
-      '• Total Fare: ₹' + estimate.toLocaleString('en-IN') + ' + Extra',
-      '• State Permit: ' + ((breakdown && breakdown.is_outstation && breakdown.state_permit_est > 0) ? ('₹' + breakdown.state_permit_est.toLocaleString('en-IN')) : '₹0'),
-      '• Tolls & Parking: Extra',
-      '• Advance to Pay: -₹' + (breakdown ? breakdown.advance_to_pay : 500),
-      '• Balance to Pay Driver (After trip): ₹' + (breakdown ? breakdown.balance_to_pay : Math.max(0, estimate - 500)) + ' + Extra',
-      '• Payment Terms: ₹500 Advance to Confirm (Deducted from Fare) • Balance after trip',
+      '• Quoted Total Fare: ₹' + estimate.toLocaleString('en-IN') + ' + Tolls/Parking Extra',
+      '• State Permit: ' + ((breakdown && breakdown.is_outstation && breakdown.state_permit_est > 0) ? ('₹' + breakdown.state_permit_est.toLocaleString('en-IN') + ' (Included in Total)') : '₹0 (Within Tamil Nadu / Not required)'),
+      '• Tolls & Parking: Extra (Pay at actuals as per receipts)',
+      '• Payment Policy: Pay 50% (₹' + (breakdown ? breakdown.advance_to_pay : Math.round(estimate * 0.5)).toLocaleString('en-IN') + ') on cab arrival, balance after trip completion',
+      '• Booking Fee: ₹0 (Zero advance to book)',
       '',
       'Please save my quote & confirm live cab availability.',
       (() => {
@@ -948,59 +956,103 @@ export default function AirportBookingEngine({
         </div>
       )}
 
-      {/* Main Booking Card (QuotationEngine Inspired Material 3 Design) */}
+      {/* Main Booking Engine Container (Un-carded) */}
       <div
         ref={cardRef}
         id="airport-fare-finder"
         data-testid="airport-fare-finder"
-        className="w-full max-w-2xl mx-auto bg-white dark:bg-m3-surface-container rounded-m3-2xl shadow-m3-1 sm:shadow-m3-2 border border-m3-outline-variant overflow-hidden font-sans"
+        className="w-full max-w-2xl mx-auto font-sans space-y-3.5 sm:space-y-4"
       >
-        {/* 0. Card Header: "Book Your Trip" */}
-        <div className="pt-3.5 sm:pt-4 pb-1 text-center px-4">
-          <h2 className="text-base sm:text-lg font-bold text-slate-900 font-heading tracking-tight">
-            Book Your Trip
-          </h2>
-        </div>
-
-        {/* 1. Primary Toggles: Airport Pickup (FIRST/LEFT) & Airport Drop (SECOND/RIGHT) */}
-        <div className="px-3 sm:px-5 pt-3 pb-2">
-          <div role="tablist" aria-label="Transfer Direction" className="bg-slate-100 p-1 rounded-full flex gap-1 border border-slate-200">
-            <button
-              type="button"
-              role="tab"
-              data-testid="tab-pickup"
-              aria-selected={direction === 'pickup'}
-              onClick={() => handleDirectionChange('pickup')}
-              className={'flex-1 py-2 px-3 text-xs font-bold rounded-full transition-all min-h-[38px] cursor-pointer active:scale-[0.98] inline-flex items-center justify-center gap-1.5 ' + (
-                direction === 'pickup'
-                  ? 'bg-[#1a73e8] text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
-              )}
-            >
-              <Plane className="w-3.5 h-3.5 shrink-0" />
-              <span>Airport Pickup</span>
-            </button>
-
-            <button
-              type="button"
-              role="tab"
-              data-testid="tab-drop"
-              aria-selected={direction === 'drop'}
-              onClick={() => handleDirectionChange('drop')}
-              className={'flex-1 py-2 px-3 text-xs font-bold rounded-full transition-all min-h-[38px] cursor-pointer active:scale-[0.98] inline-flex items-center justify-center gap-1.5 ' + (
-                direction === 'drop'
-                  ? 'bg-[#1a73e8] text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
-              )}
-            >
-              <Plane className="w-3.5 h-3.5 shrink-0 rotate-45" />
-              <span>Airport Drop</span>
-            </button>
+        {/* Title Header — Semantic Page Typography (Outside Card 1) */}
+        {showHeader && (
+          <div className="text-center px-3 py-1 space-y-1">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 font-heading leading-tight text-center">
+              Chennai Airport Taxi Transfers
+            </h2>
+            <p className="text-xs text-slate-500 font-medium text-center">
+              Guaranteed Flat Rates from ₹650 • Zero Surge • Flight Delay Tracking
+            </p>
           </div>
-        </div>
+        )}
 
-        {/* Form Body */}
-        <form onSubmit={e => { e.preventDefault(); handleCalculateCost(); }} className="px-3 sm:px-5 pb-4 space-y-3">
+        {/* ─── CARD 1: Airport Search / Input Card or Collapsed Summary Bar ─── */}
+        {isCollapsed && showResult && breakdown ? (
+          <div id="airport-input-card-collapsed" className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-3 sm:p-3.5 space-y-2">
+            <div className="flex items-center justify-between gap-2">
+              <div className="min-w-0 pr-1">
+                <div className="font-bold text-slate-900 text-xs sm:text-sm truncate flex items-center gap-1.5">
+                  <Plane className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
+                  <span className="truncate">{direction === 'pickup' ? 'Chennai Airport (MAA)' : (pickup ? pickup.split(',')[0] : 'Doorstep Pickup')}</span>
+                  <span className="text-slate-400">➔</span>
+                  <span className="truncate">{direction === 'pickup' ? (drop ? drop.split(',')[0] : 'Destination') : 'Chennai Airport (MAA)'}</span>
+                </div>
+                <div className="text-slate-500 text-[11px] font-medium mt-0.5 truncate flex items-center gap-2">
+                  <span>{pickupDate ? pickupDate.replace('T', ' ') : ''}</span>
+                  <span>•</span>
+                  <span>{direction === 'pickup' ? 'Airport Pickup' : 'Airport Drop'}</span>
+                  <span>•</span>
+                  <span>~{breakdown.actual_km} km</span>
+                  <span>•</span>
+                  <span>{passengers} Seats</span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsCollapsed(false);
+                  setTimeout(() => {
+                    if (destInputRef.current) destInputRef.current.focus();
+                  }, 100);
+                }}
+                className="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg text-blue-600 font-bold text-xs shrink-0 flex items-center gap-1 shadow-2xs cursor-pointer hover:border-blue-400 transition-colors"
+                title="Edit airport transfer details"
+              >
+                <Edit2 className="w-3 h-3" />
+                <span>Edit</span>
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div id="airport-input-card" className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-4 sm:p-5 space-y-3.5">
+            {/* 1. Primary Toggles: Airport Pickup (FIRST/LEFT) & Airport Drop (SECOND/RIGHT) */}
+            <div className="pb-1">
+              <div role="tablist" aria-label="Transfer Direction" className="bg-slate-100 p-1 rounded-full flex gap-1 border border-slate-200">
+                <button
+                  type="button"
+                  role="tab"
+                  data-testid="tab-pickup"
+                  aria-selected={direction === 'pickup'}
+                  onClick={() => handleDirectionChange('pickup')}
+                  className={'flex-1 py-2 px-3 text-xs font-bold rounded-full transition-all min-h-[38px] cursor-pointer active:scale-[0.98] inline-flex items-center justify-center gap-1.5 ' + (
+                    direction === 'pickup'
+                      ? 'bg-[#1a73e8] text-white shadow-sm'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+                  )}
+                >
+                  <Plane className="w-3.5 h-3.5 shrink-0" />
+                  <span>Airport Pickup</span>
+                </button>
+
+                <button
+                  type="button"
+                  role="tab"
+                  data-testid="tab-drop"
+                  aria-selected={direction === 'drop'}
+                  onClick={() => handleDirectionChange('drop')}
+                  className={'flex-1 py-2 px-3 text-xs font-bold rounded-full transition-all min-h-[38px] cursor-pointer active:scale-[0.98] inline-flex items-center justify-center gap-1.5 ' + (
+                    direction === 'drop'
+                      ? 'bg-[#1a73e8] text-white shadow-sm'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+                  )}
+                >
+                  <Plane className="w-3.5 h-3.5 shrink-0 rotate-45" />
+                  <span>Airport Drop</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Form Body */}
+            <form onSubmit={e => { e.preventDefault(); handleCalculateCost(); }} className="space-y-3">
           {error && (
             <div className="p-2.5 bg-red-50 text-red-700 text-xs font-bold rounded-lg flex items-center gap-2 border border-red-200">
               <AlertCircle className="w-4 h-4 shrink-0" />
@@ -1199,6 +1251,60 @@ export default function AirportBookingEngine({
             </div>
           </div>
 
+          {/* Compact 1-Row Vehicle Selector with Car Images (Savaari / Uber style) */}
+          <div className="pt-2">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-600 mb-1 px-0.5">
+              <span className="flex items-center gap-1.5">
+                <Car className="w-3.5 h-3.5 text-[#1a73e8]" />
+                <span>Select Vehicle:</span>
+              </span>
+              <span className="text-[11px] font-normal text-slate-400">
+                Tap to choose cab
+              </span>
+            </div>
+            <div className="flex gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-1 scroll-smooth">
+              {AIRPORT_COMPARISON_VEHICLES.map((item) => {
+                const cap = VEHICLE_CAPACITY[item.key] ?? 4;
+                const isSelected = vehicle === item.key;
+                return (
+                  <button
+                    key={`init-${item.key}`}
+                    type="button"
+                    onClick={() => {
+                      setVehicle(item.key);
+                      setPassengers(String(cap));
+                    }}
+                    className={`group relative flex items-center gap-2 px-2.5 py-1.5 rounded-xl border shrink-0 transition-all cursor-pointer min-h-[50px] ${
+                      isSelected
+                        ? 'border-[#1a73e8] bg-blue-50/90 shadow-2xs ring-1.5 ring-[#1a73e8]/30'
+                        : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 shadow-2xs'
+                    }`}
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-14 h-9 object-contain shrink-0 transition-transform group-hover:scale-105"
+                      loading="lazy"
+                      width="56"
+                      height="36"
+                    />
+                    <div className="text-left leading-tight pr-0.5">
+                      <div className={`text-xs font-bold whitespace-nowrap ${isSelected ? 'text-[#0b57d0]' : 'text-slate-800'}`}>
+                        {item.name}
+                      </div>
+                      <div className={`text-[10px] ${isSelected ? 'text-blue-700 font-semibold' : 'text-slate-500'}`}>
+                        {cap} Seats
+                      </div>
+                    </div>
+                    {isSelected && (
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#1a73e8] shrink-0" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Primary View Instant Fare Button */}
           <div className="pt-1.5 flex flex-col items-center justify-center">
             <button
@@ -1224,21 +1330,24 @@ export default function AirportBookingEngine({
               No phone number required to check fare
             </div>
           </div>
+        </form>
+      </div>
+    )}
 
-          {/* 6. Inline Result Card Breakdown (Savaari Clean Standard) */}
-          {showResult && breakdown && (
-            <div
-              id="airport-fare-result-card"
-              data-testid="airport-fare-result-card"
-              ref={resultRef}
-              className="mt-3 p-3.5 sm:p-4 rounded-xl border border-slate-200 bg-slate-100 shadow-xs space-y-3 animate-in fade-in duration-200"
-            >
+    {/* ─── CARD 2: Inline Result Card & Booking Actions ─── */}
+    {showResult && breakdown && (
+      <div
+        id="airport-fare-result-card"
+        data-testid="airport-fare-result-card"
+        ref={resultRef}
+        className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 space-y-3.5 sm:space-y-4 shadow-sm animate-in fade-in duration-200"
+      >
               {/* Backward-compatibility alias for test assertions */}
               <div id="airport-booking-modal" className="sr-only">
                 {vehicle} {direction === 'pickup' ? drop : pickup} ₹{estimate}
               </div>
 
-              {/* Header: Vehicle Name, Pax & Total Fare */}
+              {/* Header: Vehicle Name, Seats & Total Fare */}
               <div className="flex items-start justify-between gap-3 pb-2.5 border-b border-slate-200">
                 <div>
                   <div className="flex items-center gap-1.5 flex-wrap">
@@ -1246,7 +1355,7 @@ export default function AirportBookingEngine({
                       {vehicle}
                     </span>
                     <span className="text-xs font-bold bg-[#1a73e8]/10 text-[#0b57d0] px-2 py-0.5 rounded-full">
-                      {passengers} Pax
+                      {passengers} Seats
                     </span>
                     {!breakdown.is_outstation && (
                       <span className="text-[11px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
@@ -1273,9 +1382,9 @@ export default function AirportBookingEngine({
               {/* Payment Split & Reassurance */}
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <div className="p-2.5 rounded-lg bg-emerald-50/80 border border-emerald-200 text-emerald-900">
-                  <span className="text-slate-500 block text-[11px] font-medium">Advance to Pay</span>
-                  <span className="font-extrabold text-sm text-emerald-800">₹{breakdown.advance_to_pay}</span>
-                  <span className="text-[10px] text-emerald-700/80 block mt-0.5">to reserve cab &amp; driver</span>
+                  <span className="text-slate-500 block text-[11px] font-medium">Payment on Arrival</span>
+                  <span className="font-extrabold text-sm text-emerald-800">50% (₹{breakdown.advance_to_pay?.toLocaleString('en-IN')})</span>
+                  <span className="text-[10px] text-emerald-700/80 block mt-0.5">Zero advance to book</span>
                 </div>
                 <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-900">
                   <span className="text-slate-500 block text-[11px] font-medium">Balance to Pay Driver</span>
@@ -1284,12 +1393,18 @@ export default function AirportBookingEngine({
                 </div>
               </div>
 
-              {/* 1-Tap Vehicle Switcher Tabs (No duplicate prices) */}
+              {/* 1-Tap Vehicle Switcher with Car Images */}
               <div className="pb-1">
-                <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
-                  Select Vehicle:
+                <div className="flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                  <span className="flex items-center gap-1.5">
+                    <Car className="w-3.5 h-3.5 text-[#1a73e8]" />
+                    <span>Select Vehicle:</span>
+                  </span>
+                  <span className="text-[11px] font-normal text-slate-400 capitalize">
+                    Tap to switch
+                  </span>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                <div className="flex gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-1 scroll-smooth">
                   {AIRPORT_COMPARISON_VEHICLES.map((item) => {
                     const cap = VEHICLE_CAPACITY[item.key] ?? 4;
                     const isSelected = vehicle === item.key;
@@ -1301,15 +1416,31 @@ export default function AirportBookingEngine({
                           setVehicle(item.key);
                           setPassengers(String(cap));
                         }}
-                        className={`p-2 rounded-xl border text-center transition-all cursor-pointer ${
+                        className={`group relative flex items-center gap-2 px-2.5 py-1.5 rounded-xl border shrink-0 transition-all cursor-pointer min-h-[50px] ${
                           isSelected
-                            ? 'bg-blue-50/90 border-[#1a73e8] ring-2 ring-[#1a73e8]/30 shadow-xs'
-                            : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-200 shadow-2xs'
+                            ? 'border-[#1a73e8] bg-blue-50/90 shadow-2xs ring-1.5 ring-[#1a73e8]/30'
+                            : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 shadow-2xs'
                         }`}
                       >
-                        <div className={`text-xs font-bold truncate ${isSelected ? 'text-[#0b57d0]' : 'text-slate-800'}`}>
-                          {item.shortLabel}
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-14 h-9 object-contain shrink-0 transition-transform group-hover:scale-105"
+                          loading="lazy"
+                          width="56"
+                          height="36"
+                        />
+                        <div className="text-left leading-tight pr-0.5">
+                          <div className={`text-xs font-bold whitespace-nowrap ${isSelected ? 'text-[#0b57d0]' : 'text-slate-800'}`}>
+                            {item.name}
+                          </div>
+                          <div className={`text-[10px] ${isSelected ? 'text-blue-700 font-semibold' : 'text-slate-500'}`}>
+                            {cap} Seats
+                          </div>
                         </div>
+                        {isSelected && (
+                          <div className="w-1.5 h-1.5 rounded-full bg-[#1a73e8] shrink-0" />
+                        )}
                       </button>
                     );
                   })}
@@ -1331,7 +1462,7 @@ export default function AirportBookingEngine({
                   <div className="pt-2 pb-1 space-y-2 text-xs border-t border-slate-200/60 animate-in fade-in duration-150">
                     <div className="space-y-1.5 text-slate-600">
                       <div className="flex justify-between items-center py-0.5">
-                        <span>Cab Hire ({breakdown?.chargeable_km && breakdown?.rate_per_km ? `${Math.round(breakdown.chargeable_km)} km @ ₹${breakdown.rate_per_km}/km` : `${vehicle} • Fuel included`}):</span>
+                        <span>Cab Hire ({breakdown?.chargeable_km && breakdown?.rate_per_km ? `${Math.round(breakdown.chargeable_km)} km @ ₹${breakdown.rate_per_km}/km` : vehicle}):</span>
                         <span className="font-bold text-slate-900">₹{breakdown.km_cost.toLocaleString('en-IN')}</span>
                       </div>
                       {breakdown.driver_bata > 0 && (
@@ -1340,37 +1471,21 @@ export default function AirportBookingEngine({
                           <span className="font-bold text-slate-900">₹{breakdown.driver_bata.toLocaleString('en-IN')}</span>
                         </div>
                       )}
+                      {breakdown.is_outstation && breakdown.state_permit_est > 0 && (
+                        <div className="flex justify-between items-center py-0.5">
+                          <span>State Permit:</span>
+                          <span className="font-bold text-slate-900">
+                            ₹{breakdown.state_permit_est.toLocaleString('en-IN')}
+                          </span>
+                        </div>
+                      )}
                       <div className="flex justify-between items-center py-0.5">
-                        <span>State Permit:</span>
-                        <span className="font-bold text-slate-900">
-                          {breakdown.is_outstation && breakdown.state_permit_est > 0 ? (
-                            <span>
-                              ~₹{breakdown.state_permit_est.toLocaleString('en-IN')}{' '}
-                              <span className="text-[11px] font-normal text-slate-500">(Approx • At actuals)</span>
-                            </span>
-                          ) : (
-                            <span className="text-emerald-700 font-semibold text-xs">₹0 (Not required - TN)</span>
-                          )}
-                        </span>
+                        <span>Highway Tolls:</span>
+                        <span className="font-bold text-slate-900">(Pay at actuals) Extra</span>
                       </div>
                       <div className="flex justify-between items-center py-0.5">
-                        <span>Tolls &amp; Parking:</span>
-                        <span className="font-bold text-slate-900">As per actual receipts</span>
-                      </div>
-                    </div>
-
-                    <div className="pt-2 border-t border-dashed border-slate-200 text-slate-600 space-y-1">
-                      <div className="flex items-center gap-1.5 text-emerald-800 font-medium">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                        <span>Dedicated AC Cab, 100% Fuel &amp; Chauffeur included.</span>
-                      </div>
-                      <div className="flex items-center gap-1.5 text-slate-500">
-                        <ShieldCheck className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
-                        <span>
-                          {direction === 'pickup'
-                            ? 'Free live flight tracking & pickup coordination at terminal exit.'
-                            : 'Doorstep pickup with verified commercial chauffeur.'}
-                        </span>
+                        <span>Parking Charges:</span>
+                        <span className="font-bold text-slate-900">(Pay at actuals) Extra</span>
                       </div>
                     </div>
                   </div>
@@ -1402,9 +1517,8 @@ export default function AirportBookingEngine({
                   ✓ Rate locked for 24 hours ({quoteRefId})
                 </p>
               </div>
-            </div>
-          )}
-        </form>
+        </div>
+      )}
       </div>
 
       {/* Location Picker Modal */}
