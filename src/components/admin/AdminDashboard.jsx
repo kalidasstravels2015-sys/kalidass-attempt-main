@@ -1,23 +1,28 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { getNextBookingId, getNextEnquiryId, isSequentialId } from '../../utils/sequenceGenerator';
+import tariffConfig from '../../data/tariff_config.json';
 
 // Chauffeurs Master Baseline
 const DEFAULT_CHAUFFEURS = [];
 
-// Curated Tour Packages Master (Chennai to Tirupati, Chennai to Madurai, Chennai to Pondicherry)
+const tp = tariffConfig.tour_packages || {};
+const tirupatiRates = tp['tirupati-package']?.vehicles || {};
+const pondyRates = tp['pondicherry-one-day-trip']?.vehicles || {};
+
+// Curated Tour Packages Master (Synchronized from Single Master Tariff)
 const TOUR_PACKAGES = [
   {
     id: 'chennai-tirupati',
     name: 'Chennai to Tirupati',
     shortName: 'Chennai ➔ Tirupati Round Trip',
     rates: {
-      'Sedan (Dzire / Etios)': '6000',
-      'Sedan': '6000',
-      'Ertiga (6 Seats)': '7500',
-      'Ertiga': '7500',
-      'Innova Crysta': '10000',
-      'Tempo Traveller': '12500',
-      'Tempo': '12500'
+      'Sedan (Dzire / Etios)': String(tirupatiRates.dzire?.rates?.['1'] || 6000),
+      'Sedan': String(tirupatiRates.dzire?.rates?.['1'] || 6000),
+      'Ertiga (6 Seats)': String(tirupatiRates.ertiga?.rates?.['1'] || 7500),
+      'Ertiga': String(tirupatiRates.ertiga?.rates?.['1'] || 7500),
+      'Innova Crysta': String(tirupatiRates.crysta?.rates?.['1'] || 10000),
+      'Tempo Traveller': String(tirupatiRates.tempo12?.rates?.['1'] || 12500),
+      'Tempo': String(tirupatiRates.tempo12?.rates?.['1'] || 12500)
     }
   },
   {
@@ -39,13 +44,13 @@ const TOUR_PACKAGES = [
     name: 'Chennai to Pondicherry',
     shortName: 'Chennai ➔ Pondicherry Round Trip',
     rates: {
-      'Sedan (Dzire / Etios)': '4500',
-      'Sedan': '4500',
-      'Ertiga (6 Seats)': '5500',
-      'Ertiga': '5500',
-      'Innova Crysta': '7500',
-      'Tempo Traveller': '9500',
-      'Tempo': '9500'
+      'Sedan (Dzire / Etios)': String(pondyRates.dzire?.rates?.['1'] || 4500),
+      'Sedan': String(pondyRates.dzire?.rates?.['1'] || 4500),
+      'Ertiga (6 Seats)': String(pondyRates.ertiga?.rates?.['1'] || 5800),
+      'Ertiga': String(pondyRates.ertiga?.rates?.['1'] || 5800),
+      'Innova Crysta': String(pondyRates.crysta?.rates?.['1'] || 8800),
+      'Tempo Traveller': String(pondyRates.tempo12?.rates?.['1'] || 11000),
+      'Tempo': String(pondyRates.tempo12?.rates?.['1'] || 11000)
     }
   }
 ];

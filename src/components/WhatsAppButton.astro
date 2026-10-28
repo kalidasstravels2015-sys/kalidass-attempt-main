@@ -41,15 +41,15 @@ const iconSize = {
   icon: "w-5 h-5"
 }[size];
 
-// M3 Surface & State Layer specifications - Authentic WhatsApp brand colors
+// M3 Surface & State Layer specifications - Harmonized M3 Blue theme
 const variantClasses = {
-  filled: "bg-[#075E54] hover:bg-[#128C7E] active:bg-[#054c44] text-white font-bold border border-[#075E54] shadow-sm hover:shadow-md",
-  elevated: "bg-[#075E54] hover:bg-[#128C7E] active:bg-[#054c44] text-white font-bold border border-[#075E54] shadow-m3-1 hover:shadow-m3-2",
-  tonal: "bg-[#25D366]/15 hover:bg-[#25D366]/25 active:bg-[#25D366]/30 text-[#075E54] font-bold border border-[#25D366]/30 shadow-xs",
-  outlined: "bg-white hover:bg-[#25D366]/10 text-[#075E54] border border-[#25D366]/50 shadow-xs"
-}[variant] || "bg-[#25D366]/15 hover:bg-[#25D366]/25 active:bg-[#25D366]/30 text-[#075E54] font-bold border border-[#25D366]/30 shadow-xs";
+  filled: "bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary font-bold border border-m3-primary shadow-m3-1 hover:shadow-m3-2",
+  elevated: "bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary font-bold border border-m3-primary shadow-m3-2 hover:shadow-m3-3",
+  tonal: "bg-m3-primary-container hover:bg-m3-primary-container/80 active:bg-m3-primary-container/90 text-m3-on-primary-container font-bold border border-m3-primary/20 shadow-xs",
+  outlined: "bg-transparent hover:bg-m3-primary/10 active:bg-m3-primary/20 text-m3-primary border border-m3-outline shadow-xs"
+}[variant] || "bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary font-bold border border-m3-primary shadow-m3-1";
 
-const iconVariant = (variant === 'filled' || variant === 'elevated') ? 'white' : 'brand';
+const iconVariant = (variant === 'filled' || variant === 'elevated') ? 'white' : (variant === 'tonal' || variant === 'outlined' ? 'monochrome' : 'brand');
 ---
 
 <a
@@ -57,7 +57,7 @@ const iconVariant = (variant === 'filled' || variant === 'elevated') ? 'white' :
   id={id}
   target="_blank"
   rel="noopener noreferrer nofollow"
-  class={`inline-flex items-center justify-center font-bold font-sans rounded-m3-full transition-all duration-200 cursor-pointer select-none active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-m3-success shadow-xs ${sizeClasses} ${variantClasses} ${className}`}
+  class={`inline-flex items-center justify-center font-bold font-sans rounded-m3-full transition-all duration-200 cursor-pointer select-none active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-m3-primary shadow-xs ${sizeClasses} ${variantClasses} ${className}`}
   {...rest}
 >
   <WhatsAppIcon variant={iconVariant} className={iconSize} />

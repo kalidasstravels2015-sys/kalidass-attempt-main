@@ -9,6 +9,7 @@ import WhatsAppButton from '../../components/WhatsAppButton.astro';
 import WhatsAppIcon from '../../components/WhatsAppIcon.astro';
 import AndroidPhoneIcon from '../../components/AndroidPhoneIcon.astro';
 import VehicleCard from '../../components/VehicleCard.astro';
+import HeroVisualCard from '../../components/HeroVisualCard.astro';
 import { 
   CheckCircle2, 
   Building2, 
@@ -252,8 +253,8 @@ const faqs = [
     a: "Yes, Chennai International Airport (MAA) has an Aviation Authority (AAI) prepaid taxi counter inside the arrival concourse. However, prepaid counters frequently have 20–40 minute queues during peak domestic and international arrival banks, unpredictable vehicle conditions, and limited 6-seater/7-seater SUV availability. By pre-booking online with Kalidass Travels, your chauffeur waits right outside the arrival gate holding a personalized name placard, tracks your flight radar live with zero waiting charges, provides a guaranteed clean AC vehicle of your choice, and requires only a nominal ₹500 advance to confirm (100% deducted from your final fare)."
   },
   {
-    q: "Are Chennai airport pickup charges different from airport drop charges?",
-    a: "No! At Kalidass Travels, Chennai airport pickup charges and airport drop charges have the exact same transparent base flat fare. We do not levy any extra airport arrival convenience surcharges, luggage fees, or midnight surge fees. Toll booth receipts and official airport parking tickets are billed at exact actual cost with zero markup."
+    q: "Do you provide airport taxi drop services from Chennai city to the airport?",
+    a: "We specialize exclusively in Airport Arrival Pickups directly from Chennai International Airport (MAA Terminals 1, 2 & 4) to any destination across Chennai city, suburbs, or outstation corridors (Pondicherry, Vellore, Tirupati, etc.). Your chauffeur meets you with a personalized name placard at the arrival gate exit and transfers you comfortably to your destination."
   },
   {
     q: "Where does the chauffeur meet me for Chennai airport arrival pick up?",
@@ -264,8 +265,8 @@ const faqs = [
     a: "We allot your driver and send chauffeur details (driver name, mobile number, and yellow-board cab registration) to your WhatsApp before you take off from your origin airport (not 24 hours prior or after you land). This guarantees complete peace of mind before boarding your flight, knowing your cab is locked in and your driver is tracking your flight live."
   },
   {
-    q: "Can I book a midnight (1:00 AM – 4:00 AM) or early morning Chennai airport taxi drop?",
-    a: "Yes, early morning (3:00 AM – 5:00 AM) airport drops and midnight arrival pickups are our specialty. For morning drops, chauffeur details and vehicle registration numbers are sent to your WhatsApp by 9:00 PM the previous evening. Your chauffeur arrives 20–30 minutes ahead of scheduled time at your doorstep with 100% guaranteed punctuality."
+    q: "Can I book a midnight (1:00 AM – 4:00 AM) or early morning Chennai airport arrival pickup?",
+    a: "Yes! 24/7 midnight arrival pickups and early morning flight arrivals are our specialty. Chauffeur details and vehicle registration numbers are sent to your WhatsApp before your flight takes off. Our operations desk tracks your flight live on radar, so even if your flight lands at 2:00 AM or 3:30 AM, your chauffeur is already waiting outside the arrival gate with zero waiting charges."
   },
   {
     q: "What happens if my arrival flight to Chennai is delayed by several hours?",
@@ -446,7 +447,7 @@ const tripListSchema = {
       "@type": "Trip",
       "@id": `https://kalidasstravels.in/services/chennai-airport-taxi/#route-${z.id}`,
       "name": `Chennai Airport (MAA) to ${z.zone} Taxi`,
-      "description": `Direct airport taxi from Chennai International Airport (MAA) to ${z.destinations}. Fixed flat rate — Sedan ₹${z.sedan}, Innova ${z.innova}, Innova Crysta ${z.crysta}, Tempo Traveller ${z.tempo}. Distance: ${z.distance}. Drive time: ${z.eta}. Zero surge, no advance payment.`,
+      "description": `Direct airport taxi from Chennai International Airport (MAA) to ${z.destinations}. Fixed flat rate — Sedan ₹${z.sedan}, Innova ${z.innova}, Innova Crysta ${z.crysta}, Tempo Traveller ${z.tempo}. Distance: ${z.distance}. Drive time: ${z.eta}. Zero surge, ₹500 advance to confirm.`,
       "provider": { "@id": "https://kalidasstravels.in/#localbusiness" },
       "itinerary": [
         {
@@ -536,21 +537,33 @@ const tripListSchema = {
           </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
           
-          <!-- Left Column: Visible on Desktop (lg+) -->
-          <div class="hidden lg:flex lg:col-span-5 flex-col justify-start pt-2">
-            <!-- Desktop H1 + Separate Google Star Rating Row -->
-            <h1 data-speakable="true" class="text-3xl lg:text-4xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight mb-2.5">
-              Chennai Airport Taxi &amp; Cab Booking
-            </h1>
-            <div class="mb-3.5">
-              <GoogleRatingBadge />
+          <!-- Left Column: Visible on Desktop (lg+) with Hero Image -->
+          <div class="hidden lg:flex lg:col-span-5 flex-col justify-between pt-1">
+            <div>
+              <!-- Desktop H1 + Separate Google Star Rating Row -->
+              <h1 data-speakable="true" class="text-3xl lg:text-[34px] font-extrabold text-m3-on-surface font-heading tracking-tight leading-[1.15] mb-2.5">
+                Chennai Airport Taxi &amp; Cab Booking
+              </h1>
+              <div class="mb-2.5">
+                <GoogleRatingBadge />
+              </div>
+
+              <p data-speakable="true" class="text-sm text-m3-on-surface-variant leading-relaxed">
+                24/7 doorstep pickups and terminal drops across T1, T2 &amp; T4. Fixed zone fares: <strong>₹650 (Sedan)</strong> • <strong>₹1,150 (Ertiga)</strong> • <strong>₹1,500 (Innova Crysta)</strong>. Includes automated flight delay tracking, 60-min free arrival wait, and ₹500 advance to confirm.
+              </p>
             </div>
 
-            <p data-speakable="true" class="text-sm text-m3-on-surface-variant leading-relaxed mb-4">
-              24/7 doorstep pickups and terminal drops across T1, T2 &amp; T4. Fixed zone fares: <strong>₹650 (Sedan)</strong> • <strong>₹1,150 (Ertiga)</strong> • <strong>₹1,500 (Innova Crysta)</strong>. Includes automated flight delay tracking, 60-min free arrival wait, and ₹500 advance to confirm.
-            </p>
+            <!-- Desktop Hero Visual Showcase Card -->
+            <HeroVisualCard
+              src="/images/services/airport-transfer.webp"
+              alt="Kalidass Travels Chennai Airport Taxi - Terminal pickup and drop at MAA"
+              badge="Official MAA Terminal Pickup & Drop"
+              headline="Meet & Greet at T1, T2 & T4 • Live Flight Tracking"
+              points={["Zero Surge Pricing", "60-Min Free Wait", "Fixed Zone Fares"]}
+              objectPosition="center 40%"
+            />
 
             <!-- Desktop Direct Call CTA -->
             <div class="flex items-center gap-3">
@@ -565,9 +578,9 @@ const tripListSchema = {
           </div>
 
           <!-- Right Column: Elevated Booking Engine Card -->
-          <div class="lg:col-span-7 w-full max-w-2xl mx-auto lg:max-w-none">
-            <div id="booking-section" class="scroll-mt-28 w-full">
-              <div id="fare-calculator" class="w-full rounded-m3-2xl shadow-m3-2 border border-m3-outline-variant/60 bg-white dark:bg-m3-surface-container p-2 sm:p-3">
+          <div class="lg:col-span-7 w-full max-w-2xl mx-auto lg:max-w-none flex flex-col">
+            <div id="booking-section" class="scroll-mt-28 w-full flex-1 flex flex-col">
+              <div id="fare-calculator" class="w-full flex-1 rounded-m3-2xl shadow-m3-2 border border-m3-outline-variant/60 bg-white dark:bg-m3-surface-container p-2 sm:p-3">
                 <AirportBookingEngine client:load showHeader={false} />
               </div>
             </div>
@@ -607,8 +620,11 @@ const tripListSchema = {
         <div class="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2.5 sm:gap-3 pb-3 mb-4 border-b border-m3-outline-variant">
           <div>
             <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface font-heading leading-tight">
-              Terminal Pick Up &amp; Drop Guide (T1, T2 &amp; T4)
+              Terminal Arrival Pick Up &amp; Meet-and-Greet Guide (T1, T2 &amp; T4)
             </h2>
+            <p class="text-xs text-m3-on-surface-variant mt-0.5">
+              Exclusive arrival transfers from Chennai International Airport (MAA) directly to your doorstep, hotel, or outstation destination.
+            </p>
           </div>
         </div>
 
@@ -641,30 +657,30 @@ const tripListSchema = {
             </ul>
           </div>
 
-          <!-- Airport Drop Protocol -->
+          <!-- Airport Doorstep Transfer Guarantee -->
           <div class="p-3.5 sm:p-4 rounded-xl bg-m3-surface border border-m3-outline-variant/80 shadow-2xs">
             <div class="flex items-center gap-2 font-bold text-xs sm:text-sm text-m3-primary pb-2 mb-2.5 border-b border-m3-outline-variant/50">
               <svg class="w-5 h-5 text-m3-primary shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M2.5 19h19v2h-19v-2zm19.57-9.36c-.21-.8-1.04-1.28-1.84-1.06L14.92 10 8.35 3.73c-.15-.14-.35-.23-.56-.23-.27 0-.52.12-.68.32l-.83.99c-.16.19-.22.44-.17.68.05.24.2.45.41.56l4.57 4.34-4.5 1.21-2.48-1.59c-.21-.14-.47-.19-.72-.15-.26.04-.49.18-.65.39l-.54.83c-.29.44-.17 1.03.26 1.33l3.77 2.76 14.15-3.8c.8-.21 1.28-1.05 1.06-1.84z"/>
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
               </svg>
-              <span>Doorstep Airport Drop Protocol</span>
+              <span>Flight Delay &amp; Doorstep Transfer Guarantee</span>
             </div>
             <ul class="space-y-2 text-m3-on-surface text-xs sm:text-sm font-medium">
               <li class="flex items-start gap-2">
                 <span class="w-4 h-4 rounded-full bg-m3-primary/10 text-m3-primary font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">1</span>
-                <span><strong>Guaranteed On-Time Doorstep Pickup:</strong> Chauffeur arrives ahead of schedule</span>
+                <span><strong>Zero Delay Surcharges:</strong> Flight delayed by 2 or 4 hours? Your driver adjusts pickup time with zero waiting penalty</span>
               </li>
               <li class="flex items-start gap-2">
                 <span class="w-4 h-4 rounded-full bg-m3-primary/10 text-m3-primary font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
-                <span><strong>Direct Elevated Ramp Drop:</strong> Curbside departure baggage drop at T1, T2 or T4 terminal</span>
+                <span><strong>Luggage Assistance:</strong> Chauffeur assists from arrival gate exit directly to the vehicle boot</span>
               </li>
               <li class="flex items-start gap-2">
                 <span class="w-4 h-4 rounded-full bg-m3-primary/10 text-m3-primary font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">3</span>
-                <span><strong>Driver Details Before Pickup:</strong> Chauffeur details sent 2 hrs prior (or by 9 PM previous night for early morning drops)</span>
+                <span><strong>Direct Non-Stop Ride:</strong> Direct to residence, hotel, hospital, or outstation city with no detours</span>
               </li>
               <li class="flex items-start gap-2">
                 <span class="w-4 h-4 rounded-full bg-m3-primary/10 text-m3-primary font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">4</span>
-                <span><strong>100% Fixed Transparent Fares:</strong> Zero midnight surge pricing; balance at airport</span>
+                <span><strong>100% Fixed Transparent Fares:</strong> Zero midnight surge pricing; balance paid comfortably at destination</span>
               </li>
             </ul>
           </div>
@@ -766,7 +782,7 @@ const tripListSchema = {
                 Chennai Airport Outstation Taxi Fare &amp; Rates Chart
               </h2>
               <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-0.5">
-                Fixed flat taxi rates from Chennai Airport (MAA) to popular outstation destinations. Same flat rate for pickups &amp; drops · Tolls and airport parking at actuals.
+                Fixed flat taxi rates from Chennai Airport (MAA) Arrivals to popular destinations across Tamil Nadu, Puducherry &amp; Andhra Pradesh · Tolls and airport parking at actuals.
               </p>
             </div>
             <span class="text-xs font-bold text-m3-on-surface bg-m3-surface-container-low px-3 py-1.5 rounded-full border border-m3-outline-variant shrink-0 hidden sm:inline-block">
@@ -1179,42 +1195,17 @@ const tripListSchema = {
     </div>
   </div>
 
-  <!-- Client-side Script for Interactive Direction Switcher (Drop vs Pickup) + Fleet Book Links + Neighborhood Booking -->
+  <!-- Client-side Script for Fleet Book Links + Neighborhood Booking -->
   <script>
     function setupAirportPage() {
-      // 1. Listen for Direction Changes from AirportBookingEngine
-      const protocolPickup = document.getElementById('protocol-banner-pickup');
-      const protocolDrop = document.getElementById('protocol-banner-drop');
-      const commitmentsSubtitle = document.getElementById('commitments-mode-subtitle');
-      function updateDirectionUI(dir: 'drop' | 'pickup') {
-        const isDrop = dir === 'drop';
-        if (protocolPickup && protocolDrop) {
-          if (isDrop) {
-            protocolDrop.classList.remove('hidden');
-            protocolPickup.classList.add('hidden');
-          } else {
-            protocolPickup.classList.remove('hidden');
-            protocolDrop.classList.add('hidden');
-          }
+      const mobileBtns = document.querySelectorAll<HTMLElement>('[id^="mobile-book-"]');
+      mobileBtns.forEach((btn) => {
+        btn.setAttribute('data-direction', 'pickup');
+        const label = btn.querySelector('span');
+        if (label) {
+          label.textContent = 'Book Airport Pickup';
         }
-        if (commitmentsSubtitle) {
-          commitmentsSubtitle.textContent = isDrop ? 'Drop Protocol' : 'Pickup Protocol';
-        }
-        const mobileBtns = document.querySelectorAll<HTMLElement>('[id^="mobile-book-"]');
-        mobileBtns.forEach((btn) => {
-          btn.setAttribute('data-direction', dir);
-          const label = btn.querySelector('span');
-          if (label) {
-            label.textContent = isDrop ? 'Book Drop' : 'Book Pickup';
-          }
-        });
-      }
-
-      window.addEventListener('airport-direction-change', ((e: CustomEvent) => {
-        if (e.detail?.direction) {
-          updateDirectionUI(e.detail.direction);
-        }
-      }) as EventListener);
+      });
 
       // 2. Connect Fleet Section Book Buttons directly to Booking Engine
       const specVehicleBtns = document.querySelectorAll<HTMLButtonElement>('.spec-book-vehicle-btn');

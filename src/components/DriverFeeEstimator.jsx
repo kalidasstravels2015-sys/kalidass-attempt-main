@@ -9,6 +9,7 @@ import WhatsAppIcon from './react/WhatsAppIcon.jsx';
 import WhatsAppButton from './react/WhatsAppButton.jsx';
 import { buildWhatsAppUrl, buildMapsLinks } from '../utils/whatsapp';
 import tnBusFares from '../data/tnBusFares.json';
+import tariffConfig from '../data/tariff_config.json';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import { trackCalculatorQuote, markQuoteConverted, trackEvent } from '../lib/analytics';
 import { getNextQuotationId, peekNextQuotationId } from '../utils/sequenceGenerator';
@@ -184,16 +185,16 @@ const findKnownDistance = (origin, dest) => {
   return null;
 };
 
-// ── Vehicle data (2026 Chennai & Tamil Nadu Chauffeur Standards w/ Outsource Margin) ──
-const VEHICLES = [
+// ── Vehicle data (from Single Master Tariff) ──
+const VEHICLES = tariffConfig.acting_drivers?.vehicles || [
   { key: 'hatchback', label: 'Hatchback & Sedan',  models: 'Dzire, Etios, Honda City, Verna', bata: 1400 },
   { key: 'suv',       label: 'Compact SUV / MPV',   models: 'Ertiga, Creta, Seltos, Carens',  bata: 1500 },
   { key: 'premium',   label: 'Premium SUV / MUV',   models: 'Innova Crysta, Fortuner, Safari', bata: 1600 },
   { key: 'luxury',    label: 'Luxury European',      models: 'BMW, Mercedes-Benz, Audi',        bata: 1900 },
 ];
 
-const FOOD_PER_DAY   = 300; // 2 meals @ ₹150
-const STAY_PER_NIGHT = 300; // Dormitory allowance
+const FOOD_PER_DAY   = tariffConfig.acting_drivers?.food_per_day || 300; // 2 meals @ ₹150
+const STAY_PER_NIGHT = tariffConfig.acting_drivers?.stay_per_night || 300; // Dormitory allowance
 
 export default function DriverFeeEstimator({
   title    = 'Outstation Driver Estimator',

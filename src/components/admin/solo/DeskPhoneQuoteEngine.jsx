@@ -3,6 +3,7 @@ import tariffConfig from '../../../data/tariff_config.json';
 import tnBusFares from '../../../data/tnBusFares.json';
 import { buildWhatsAppUrl, buildMapsBlock } from '../../../utils/whatsapp';
 import { getNextQuotationId } from '../../../utils/sequenceGenerator';
+import { getStatePermitForRoute } from '../../../utils/masterTariff';
 
 // Preset high-ticket highway outstation and airport routes targeting Google Ads & Outstation callers
 const POPULAR_CALL_ROUTES = [
@@ -101,15 +102,18 @@ export default function DeskPhoneQuoteEngine({
       if (tripType === 'Round Trip') {
         const totalKm = distanceKmOneWay * 2;
         const billableKm = Math.max(minKm, totalKm);
-        calculated = (billableKm * v.round_trip_rate) + driverBataTotal;
+        const permitInfo = getStatePermitForRoute(`${activePickup} ${activeDrop}`, key, true, distanceKmOneWay);
+        calculated = (billableKm * v.round_trip_rate) + driverBataTotal + permitInfo.permitCost;
       } else if (tripType === 'One Way Drop') {
         const billableKm = Math.max(v.min_drop_km || 130, distanceKmOneWay);
-        // Standard one-way formula: km * one_way_rate + 1 day bata
-        calculated = (billableKm * v.one_way_rate) + v.driver_bata;
+        const permitInfo = getStatePermitForRoute(`${activePickup} ${activeDrop}`, key, false, distanceKmOneWay);
+        // Standard one-way formula: km * one_way_rate + 1 day bata + state permit
+        calculated = (billableKm * v.one_way_rate) + v.driver_bata + permitInfo.permitCost;
       } else if (tripType === 'Airport Transfer') {
         // MAA Airport flat or KM rate
         const billableKm = Math.max(130, distanceKmOneWay);
-        calculated = (billableKm * v.one_way_rate) + 300; // Airport parking/bata
+        const permitInfo = getStatePermitForRoute(`${activePickup} ${activeDrop}`, key, false, distanceKmOneWay);
+        calculated = (billableKm * v.one_way_rate) + 300 + permitInfo.permitCost; // Airport parking/bata + permit
       } else {
         // Local 8hr / 80km package
         calculated = v.local_8hr_pkg || 2200;

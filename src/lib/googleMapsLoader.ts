@@ -25,6 +25,19 @@ export function loadGoogleMaps(apiKey = (typeof import.meta !== 'undefined' && i
         resolve();
         return;
       }
+      const onLoaded = () => {
+        window.removeEventListener('google-maps-loaded', onLoaded);
+        resolve();
+      };
+      window.addEventListener('google-maps-loaded', onLoaded);
+      const poll = setInterval(() => {
+        if ((window as any).google && (window as any).google.maps && (window as any).google.maps.places) {
+          clearInterval(poll);
+          window.removeEventListener('google-maps-loaded', onLoaded);
+          resolve();
+        }
+      }, 50);
+      return;
     }
 
     const callbackName = '__initGoogleMapsLazy';

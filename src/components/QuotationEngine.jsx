@@ -14,109 +14,13 @@ import siteContent from '../data/siteContent.json';
 import tariffConfig from '../data/tariff_config.json';
 import tnBusFares from '../data/tnBusFares.json';
 import tripsData from '../data/trips.json';
+import { estimateRoadExtrasFromMaster } from '../utils/masterTariff';
 
 const vehicles = tariffConfig.vehicles;
 const vehicleOptions = Object.keys(vehicles);
 
-// ─── Dedicated Tempo Traveller Fleet for tempo-only mode ───────────────────
-const TEMPO_VEHICLES = {
-  '12-Seater Luxury Force Tempo': {
-    name: '12-Seater Luxury Force Tempo',
-    shortName: '12-Seater',
-    round_trip_rate: 24,
-    one_way_rate: 26,
-    min_km_per_day: 300,
-    driver_bata: 800,
-    min_drop_km: 250,
-    local_4hr_pkg: 3500,
-    local_5hr_pkg: 3800,
-    local_8hr_pkg: 5500,
-    local_10hr_pkg: 6500,
-    local_12hr_pkg: 7000,
-    extra_km_rate: 24,
-    extra_hr_rate: 350,
-  },
-  '14-Seater Executive Force Tempo': {
-    name: '14-Seater Executive Force Tempo',
-    shortName: '14-Seater',
-    round_trip_rate: 25,
-    one_way_rate: 27,
-    min_km_per_day: 300,
-    driver_bata: 800,
-    min_drop_km: 250,
-    local_4hr_pkg: 3800,
-    local_5hr_pkg: 4200,
-    local_8hr_pkg: 5800,
-    local_10hr_pkg: 6800,
-    local_12hr_pkg: 7500,
-    extra_km_rate: 25,
-    extra_hr_rate: 400,
-  },
-  '17-Seater Executive Force Tempo': {
-    name: '17-Seater Executive Force Tempo',
-    shortName: '17-Seater',
-    round_trip_rate: 26,
-    one_way_rate: 29,
-    min_km_per_day: 300,
-    driver_bata: 800,
-    min_drop_km: 250,
-    local_4hr_pkg: 4200,
-    local_5hr_pkg: 4500,
-    local_8hr_pkg: 6200,
-    local_10hr_pkg: 7200,
-    local_12hr_pkg: 8000,
-    extra_km_rate: 26,
-    extra_hr_rate: 400,
-  },
-  '20-Seater Grand Force Tempo': {
-    name: '20-Seater Grand Force Tempo',
-    shortName: '20-Seater',
-    round_trip_rate: 30,
-    one_way_rate: 33,
-    min_km_per_day: 300,
-    driver_bata: 900,
-    min_drop_km: 250,
-    local_4hr_pkg: 4800,
-    local_5hr_pkg: 5500,
-    local_8hr_pkg: 7500,
-    local_10hr_pkg: 8500,
-    local_12hr_pkg: 9500,
-    extra_km_rate: 30,
-    extra_hr_rate: 500,
-  },
-  '26-Seater Mini Bus / Force Tempo': {
-    name: '26-Seater Mini Bus / Force Tempo',
-    shortName: '26-Seater Mini Bus',
-    round_trip_rate: 36,
-    one_way_rate: 40,
-    min_km_per_day: 350,
-    driver_bata: 1000,
-    min_drop_km: 300,
-    local_4hr_pkg: 6000,
-    local_5hr_pkg: 7000,
-    local_8hr_pkg: 9000,
-    local_10hr_pkg: 10500,
-    local_12hr_pkg: 12000,
-    extra_km_rate: 36,
-    extra_hr_rate: 600,
-  },
-  'Force Urbania VIP Luxury': {
-    name: 'Force Urbania VIP Luxury Van',
-    shortName: 'Urbania VIP',
-    round_trip_rate: 38,
-    one_way_rate: 42,
-    min_km_per_day: 300,
-    driver_bata: 1100,
-    min_drop_km: 250,
-    local_4hr_pkg: 5000,
-    local_5hr_pkg: 6000,
-    local_8hr_pkg: 9500,
-    local_10hr_pkg: 11000,
-    local_12hr_pkg: 13000,
-    extra_km_rate: 38,
-    extra_hr_rate: 600,
-  }
-};
+// ─── Dedicated Tempo Traveller Fleet for tempo-only mode (from Single Master Tariff) ───
+const TEMPO_VEHICLES = tariffConfig.tempo_fleet || {};
 
 const TEMPO_VEHICLE_CAPACITY = {
   '12-Seater Luxury Force Tempo': 12,
@@ -691,60 +595,9 @@ const findKnownDistance = (origin, destination) => {
   return null;
 };
 
-// Intelligent estimation of road tolls, interstate border permits, and driver night stay
+// Intelligent estimation of road tolls, interstate border permits, and driver night stay (Single Master Tariff)
 const estimateRoadExtras = (pickup, drop, distanceKm, days, isRoundTrip, vehicle) => {
-  const p = (pickup || '').toLowerCase();
-  const d = (drop || '').toLowerCase();
-  const text = `${p} ${d}`;
-  const totalKm = isRoundTrip ? (distanceKm || 0) * 2 : (distanceKm || 0);
-  const nights = isRoundTrip ? Math.max(0, (days || 1) - 1) : 0;
-  
-  const vStr = String(vehicle || '').toLowerCase();
-  const isTempo = vStr.includes('tempo') || vStr.includes('urbania') || vStr.includes('bus') || vStr.includes('coach');
-  const isMUV = vStr.includes('innova') || vStr.includes('crysta');
-  const isSUV = vStr.includes('ertiga') || vStr.includes('xl6');
-
-  let stateName = 'Tamil Nadu';
-  let statePermitEst = 0;
-  let tollsEst = 0;
-
-  // Detect interstate routes
-  if (text.includes('tirupati') || text.includes('tirumala') || text.includes('andhra') || text.includes('kalahasti') || text.includes('nellore') || text.includes('vijayawada') || text.includes('chittoor') || text.includes('renigunta')) {
-    stateName = 'Andhra Pradesh';
-    statePermitEst = isTempo ? 2000 : isMUV ? 900 : isSUV ? 700 : 500;
-    tollsEst = isRoundTrip ? 400 : 220;
-  } else if (text.includes('bangalore') || text.includes('bengaluru') || text.includes('karnataka') || text.includes('mysore') || text.includes('mysuru') || text.includes('hosur')) {
-    stateName = 'Karnataka';
-    statePermitEst = isTempo ? 2500 : isMUV ? 1500 : isSUV ? 1200 : 700;
-    tollsEst = isRoundTrip ? 450 : 250;
-  } else if (text.includes('pondicherry') || text.includes('puducherry') || text.includes('auroville')) {
-    stateName = 'Puducherry (UT)';
-    statePermitEst = isTempo ? 3500 : isMUV ? 2500 : isSUV ? 1600 : 500;
-    tollsEst = isRoundTrip ? 250 : 130;
-  } else if (text.includes('kerala') || text.includes('munnar') || text.includes('cochin') || text.includes('kochi') || text.includes('sabarimala') || text.includes('wayanad')) {
-    stateName = 'Kerala';
-    statePermitEst = isTempo ? 3000 : isMUV ? 1800 : isSUV ? 1400 : 800;
-    tollsEst = isRoundTrip ? 650 : 350;
-  } else {
-    // Within Tamil Nadu (Madurai, Trichy, Coimbatore, Salem, Ooty, Kodaikanal, etc.)
-    stateName = 'Tamil Nadu';
-    statePermitEst = 0;
-    tollsEst = Math.round((totalKm * 0.85) / 10) * 10;
-    if (tollsEst < 80 && totalKm >= 50) tollsEst = 80;
-  }
-
-  // Driver Night Stay Allowance (~₹450/night for driver room/dinner, waived if guest provides room)
-  const driverNightStayEst = nights * 450;
-  const roadExtrasEst = tollsEst + statePermitEst + driverNightStayEst;
-
-  return {
-    stateName,
-    statePermitEst,
-    tollsEst,
-    nights,
-    driverNightStayEst,
-    roadExtrasEst
-  };
+  return estimateRoadExtrasFromMaster(pickup, drop, distanceKm, days, isRoundTrip, vehicle);
 };
 
 const sanitizeInput = (input) => {
@@ -850,8 +703,11 @@ export default function QuotationEngine({
 
   const { scrollInputAboveKeyboard } = useVirtualKeyboard();
 
-  const visibleTabs = allowedTabs && allowedTabs.length > 0
-    ? allowedTabs
+  const normalizedAllowedTabs = allowedTabs 
+    ? allowedTabs.map(t => (t === 'outstation' ? 'round' : t)) 
+    : null;
+  const visibleTabs = normalizedAllowedTabs && normalizedAllowedTabs.length > 0
+    ? normalizedAllowedTabs
     : ['round', 'local'];
 
   const safeInitialTab = visibleTabs.includes(initialTab) ? initialTab : (visibleTabs[0] || 'round');
@@ -860,7 +716,7 @@ export default function QuotationEngine({
   const [vehicle, setVehicle] = useState(defaultVehicle);
   const [passengers, setPassengers] = useState(defaultPax);
   const [pickup, setPickup] = useState(() => initialPickup || '');
-  const [drop, setDrop] = useState(() => initialDrop || (safeInitialTab === 'local' ? 'Local Sightseeing (Chennai City)' : ''));
+  const [drop, setDrop] = useState(() => initialDrop || (safeInitialTab === 'local' ? 'Local Sightseeing (Chennai City)' : safeInitialTab === 'airport' ? 'Chennai International Airport (MAA)' : ''));
   
   const destLower = (drop || initialDrop || '').toLowerCase();
   const origLower = (pickup || initialPickup || '').toLowerCase();
@@ -1528,11 +1384,10 @@ export default function QuotationEngine({
     }
   }, [passengers]);
 
-  // Google Maps Autocomplete initialized once
+  // Google Maps Autocomplete initialized reliably
   useEffect(() => {
     let checkTimer = null;
     const initAutocomplete = () => {
-      if (autocompleteInitializedRef.current) return;
       if (!window.google || !window.google.maps || !window.google.maps.places) return;
 
       const options = {
@@ -1540,46 +1395,56 @@ export default function QuotationEngine({
         fields: ['place_id', 'geometry', 'name', 'formatted_address'],
       };
 
-      if (pickupInputRef.current) {
-        const pickupAutocomplete = new window.google.maps.places.Autocomplete(pickupInputRef.current, options);
-        pickupAutocomplete.addListener('place_changed', () => {
-          const place = pickupAutocomplete.getPlace();
-          pickupPlaceRef.current = place;
-          const addr = place.formatted_address || place.name;
-          if (addr) {
-            const sanitized = sanitizeInput(addr);
-            setPickup(sanitized);
-            pickupValueRef.current = sanitized;
-            setDistance(null);
-            setShowResult(false);
-            if (dropValueRef.current) {
-              calculateDistance(sanitized, dropValueRef.current);
+      if (pickupInputRef.current && !pickupInputRef.current.dataset.googleAttached) {
+        try {
+          const pickupAutocomplete = new window.google.maps.places.Autocomplete(pickupInputRef.current, options);
+          pickupAutocomplete.addListener('place_changed', () => {
+            const place = pickupAutocomplete.getPlace();
+            pickupPlaceRef.current = place;
+            const addr = place?.formatted_address || place?.name;
+            if (addr) {
+              const sanitized = sanitizeInput(addr);
+              setPickup(sanitized);
+              pickupValueRef.current = sanitized;
+              setDistance(null);
+              setShowResult(false);
+              if (dropValueRef.current) {
+                calculateDistance(sanitized, dropValueRef.current);
+              }
             }
-          }
-        });
+          });
+          pickupInputRef.current.dataset.googleAttached = "true";
+        } catch (_) {}
       }
 
-      if (dropInputRef.current) {
-        const dropAutocomplete = new window.google.maps.places.Autocomplete(dropInputRef.current, options);
-        dropAutocomplete.addListener('place_changed', () => {
-          const place = dropAutocomplete.getPlace();
-          dropPlaceRef.current = place;
-          const addr = place.formatted_address || place.name;
-          if (addr) {
-            const sanitized = sanitizeInput(addr);
-            setDrop(sanitized);
-            dropValueRef.current = sanitized;
-            setDistance(null);
-            setShowResult(false);
-            if (pickupValueRef.current) {
-              calculateDistance(pickupValueRef.current, sanitized);
+      if (dropInputRef.current && !dropInputRef.current.dataset.googleAttached) {
+        try {
+          const dropAutocomplete = new window.google.maps.places.Autocomplete(dropInputRef.current, options);
+          dropAutocomplete.addListener('place_changed', () => {
+            const place = dropAutocomplete.getPlace();
+            dropPlaceRef.current = place;
+            const addr = place?.formatted_address || place?.name;
+            if (addr) {
+              const sanitized = sanitizeInput(addr);
+              setDrop(sanitized);
+              dropValueRef.current = sanitized;
+              setDistance(null);
+              setShowResult(false);
+              if (pickupValueRef.current) {
+                calculateDistance(pickupValueRef.current, sanitized);
+              }
             }
-          }
-        });
+          });
+          dropInputRef.current.dataset.googleAttached = "true";
+        } catch (_) {}
       }
-
-      autocompleteInitializedRef.current = true;
     };
+
+    loadGoogleMaps()
+      .then(() => {
+        initAutocomplete();
+      })
+      .catch(() => {});
 
     if (window.google && window.google.maps && window.google.maps.places) {
       initAutocomplete();
@@ -1588,16 +1453,16 @@ export default function QuotationEngine({
       checkTimer = setInterval(() => {
         if (window.google && window.google.maps && window.google.maps.places) {
           initAutocomplete();
-          if (autocompleteInitializedRef.current && checkTimer) clearInterval(checkTimer);
+          if (checkTimer) clearInterval(checkTimer);
         }
-      }, 500);
+      }, 300);
     }
 
     return () => {
       window.removeEventListener('google-maps-loaded', initAutocomplete);
       if (checkTimer) clearInterval(checkTimer);
     };
-  }, []);
+  }, [activeTab]);
 
   const applyResolvedDistance = (distKm, durStr) => {
     setDistance(distKm);
@@ -2288,6 +2153,31 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
     }
 
     // 2. Validate Fields per Trip Type
+    if (activeTab === 'airport') {
+      if (!pickup.trim()) {
+        if (e) e.preventDefault();
+        setErrors(prev => ({
+          ...prev,
+          global: isTa ? 'பிக்கப் இடத்தை உள்ளிடவும்' : 'Please enter pickup location in Chennai or Airport',
+          pickup: isTa ? 'பிக்கப் இடத்தை உள்ளிடவும்' : 'Please enter pickup location'
+        }));
+        if (pickupInputRef.current) pickupInputRef.current.focus();
+        return;
+      }
+      if (!drop.trim()) {
+        setDrop('Chennai International Airport (MAA)');
+        dropValueRef.current = 'Chennai International Airport (MAA)';
+      }
+      setAirportDetected(true);
+      const locText = isAirportRoute(pickup, '') ? (drop || 'Chennai Central') : pickup;
+      const fare = getAirportTransferEstimate(locText, vehicle);
+      setEstimate(fare);
+      setDistance(15);
+      setShowResult(true);
+      scrollToResult();
+      return;
+    }
+
     const isDateValid = date ? activeValidate('date', date) : true;
     const isReturnDateValid = (activeTab === 'round') ? Boolean(returnDate && activeValidate('date', returnDate)) : true;
     const isPickupValid = pickup.trim().length > 0;
@@ -2449,7 +2339,7 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
   return (
     <section 
       aria-label={isTa ? 'பயண முன்பதிவு கால்குலேட்டர்' : 'Cab Booking & Fare Estimator'}
-      className="w-full max-w-2xl mx-auto font-sans booking-engine space-y-3.5 sm:space-y-4"
+      className="w-full max-w-4xl mx-auto font-sans booking-engine space-y-3.5 sm:space-y-4"
     >
       {/* Hidden Honeypot */}
       <input
@@ -2576,30 +2466,61 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                         setDate(getDefaultDepartureTime());
                       }
                       if (tab === 'round') {
+                        setAirportDetected(false);
                         const minReturn = getMinReturnDateTime(date || getDefaultDepartureTime(), tripReq.minRealisticHours);
                         if (returnDate && returnDate < minReturn) {
                           setReturnDate(minReturn);
                         }
-                      }
-                      if (tab === 'local') {
+                        if (drop === 'Local Sightseeing (Chennai City)' || (drop || '').includes('Airport') || (drop || '').includes('MAA')) {
+                          setDrop('');
+                          dropValueRef.current = '';
+                        }
+                        if (pickup && drop && distance) {
+                          setShowResult(true);
+                        } else {
+                          setShowResult(false);
+                        }
+                      } else if (tab === 'airport') {
+                        setAirportDetected(true);
+                        if (!drop || drop === 'Local Sightseeing (Chennai City)') {
+                          setDrop('Chennai International Airport (MAA)');
+                          dropValueRef.current = 'Chennai International Airport (MAA)';
+                        }
+                        if (pickup) {
+                          const locText = isAirportRoute(pickup, '') ? (drop || 'Chennai Central') : pickup;
+                          const est = getAirportTransferEstimate(locText, vehicle);
+                          setEstimate(est);
+                          setDistance(15);
+                          setShowResult(true);
+                        } else {
+                          setShowResult(false);
+                        }
+                      } else if (tab === 'local') {
+                        setAirportDetected(false);
+                        if (!drop || (drop || '').includes('Airport') || (drop || '').includes('MAA')) {
+                          setDrop('Local Sightseeing (Chennai City)');
+                          dropValueRef.current = 'Local Sightseeing (Chennai City)';
+                        }
                         if (autoCalculate) {
                           setShowResult(true);
                         } else {
                           setShowResult(false);
                         }
-                      } else if (pickup && drop && distance) {
-                        setShowResult(true);
-                      } else {
-                        setShowResult(false);
                       }
                     }}
-                    className={`flex-1 py-2 px-2.5 sm:px-4 text-xs font-bold rounded-full transition-all flex items-center justify-center gap-1 min-h-[38px] sm:min-h-[42px] cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1a73e8] ${
+                    className={`flex-1 py-2 px-2 sm:px-3 text-xs font-bold rounded-full transition-all flex items-center justify-center gap-1 min-h-[38px] sm:min-h-[42px] cursor-pointer active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1a73e8] ${
                       activeTab === tab 
                         ? 'bg-[#1a73e8] text-white shadow-sm' 
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
                     }`}
                   >
-                    <span className="capitalize">{tab === 'local' ? (isTa ? 'லோக்கல் பேக்கேஜ்' : 'Local Package') : (isTa ? 'சுற்றுப்பயணம் (இரு வழி)' : 'Outstation (Round Trip)')}</span>
+                    <span className="capitalize">
+                      {tab === 'local' 
+                        ? (isTa ? 'லோக்கல் பேக்கேஜ்' : 'Local Package') 
+                        : tab === 'airport'
+                        ? (isTa ? 'ஏர்போர்ட் பயணம்' : 'Airport Transfer')
+                        : (isTa ? 'சுற்றுப்பயணம் (இரு வழி)' : 'Outstation (Round Trip)')}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -2633,6 +2554,8 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
               </div>
             )}
 
+            {/* 1 & 2. Responsive 2-Col Search Grid on Desktop */}
+            <div className={activeTab === 'local' ? 'space-y-3' : 'grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4'}>
             {/* 1. Pickup Location Input Field */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
@@ -2649,7 +2572,8 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                   id={activeTab === 'local' ? 'local-pickup-input' : 'pickup-input'}
                   ref={pickupInputRef}
                   type="text"
-                  autoComplete="street-address"
+                  data-autocomplete-input="true"
+                  autoComplete="off"
                   autoCorrect="off"
                   inputMode="text"
                   enterKeyHint="next"
@@ -2757,7 +2681,8 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                   id="drop-input"
                   ref={dropInputRef}
                   type="text"
-                  autoComplete="street-address"
+                  data-autocomplete-input="true"
+                  autoComplete="off"
                   autoCorrect="off"
                   inputMode="text"
                   enterKeyHint="next"
@@ -2841,8 +2766,52 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                 </p>
               )}
 
+              {/* Popular Airport Route Quick Chips */}
+              {activeTab === 'airport' && (
+                <div className="flex items-center gap-1.5 flex-wrap pt-1.5">
+                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                    {isTa ? 'பிரபலமான பகுதிகள்:' : 'Popular:'}
+                  </span>
+                  {[
+                    { label: 'Medavakkam', val: 'Medavakkam, Chennai' },
+                    { label: 'Tambaram', val: 'Tambaram, Chennai' },
+                    { label: 'T. Nagar', val: 'T. Nagar, Chennai' },
+                    { label: 'Central', val: 'Chennai Central Railway Station' },
+                    { label: 'OMR', val: 'OMR / Sholinganallur, Chennai' },
+                    { label: 'Anna Nagar', val: 'Anna Nagar, Chennai' }
+                  ].map(zone => (
+                    <button
+                      key={zone.label}
+                      type="button"
+                      onClick={() => {
+                        const isAirportDrop = (drop || '').toLowerCase().includes('airport') || (drop || '').toLowerCase().includes('maa');
+                        if (isAirportDrop || !drop) {
+                          setPickup(zone.val);
+                          pickupValueRef.current = zone.val;
+                          if (!drop) {
+                            setDrop('Chennai International Airport (MAA)');
+                            dropValueRef.current = 'Chennai International Airport (MAA)';
+                          }
+                        } else {
+                          setDrop(zone.val);
+                          dropValueRef.current = zone.val;
+                        }
+                        setAirportDetected(true);
+                        setDistance(15);
+                        const est = getAirportTransferEstimate(zone.val, vehicle);
+                        setEstimate(est);
+                        setShowResult(true);
+                      }}
+                      className="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-[#1a73e8]/10 hover:border-[#1a73e8]/40 hover:text-[#0b57d0] text-slate-700 font-semibold border border-slate-200/80 transition-all cursor-pointer text-xs shadow-2xs active:scale-95"
+                    >
+                      {zone.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+
               {/* Popular Outstation Route Quick Chips (when drop is empty) */}
-              {!drop && activeTab !== 'local' && (
+              {!drop && activeTab === 'round' && (
                 <div className="flex items-center gap-1.5 flex-wrap pt-1.5">
                   <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                     {isTa ? 'பிரபலமான வழிகள்:' : 'Popular:'}
@@ -2876,8 +2845,9 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
               )}
             </div>
 
+            </div>
             {/* Multi-Stop / Many Places Helper Tile (4th-grade English) */}
-            {activeTab !== 'local' && (
+            {activeTab === 'round' && (
               <div className="p-2.5 sm:p-3 rounded-xl bg-gradient-to-r from-blue-50/90 to-indigo-50/70 border border-blue-200/90 text-xs space-y-1.5 animate-in fade-in">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
                   <div className="flex items-center gap-1.5 min-w-0">
@@ -3026,7 +2996,7 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                       className="text-xs font-medium text-slate-600 flex items-center gap-1.5 cursor-pointer truncate"
                     >
                       <Calendar className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
-                      <span className="truncate">{isTa ? 'புறப்படும் தேதி & நேரம்' : 'Pickup Date & Time'}</span>
+                      <span className="truncate">{activeTab === 'airport' ? (isTa ? 'பிக்கப் தேதி & விமான நேரம்' : 'Pickup Date & Flight Schedule') : (isTa ? 'புறப்படும் தேதி & நேரம்' : 'Pickup Date & Time')}</span>
                     </label>
                   </div>
                   <input
@@ -3127,59 +3097,6 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
               )}
             </div>
 
-            {/* Compact 1-Row Vehicle Selector with Car Images (Savaari / Uber style) */}
-            <div className="pt-2">
-              <div className="flex items-center justify-between text-xs font-bold text-slate-600 mb-1 px-0.5">
-                <span className="flex items-center gap-1.5">
-                  <Car className="w-3.5 h-3.5 text-[#1a73e8]" />
-                  <span>{isTa ? 'வாகனம் தேர்வு செய்யவும்:' : 'Select Vehicle:'}</span>
-                </span>
-                <span className="text-[11px] font-normal text-slate-400">
-                  {isTa ? 'கட்டணம் அறிய தட்டவும்' : 'Tap to choose'}
-                </span>
-              </div>
-              <div className="flex gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-1 scroll-smooth">
-                {activeComparisonVehicles.map((v) => {
-                  const isSelected = vehicle === v.key;
-                  return (
-                    <button
-                      key={`init-${v.key}`}
-                      type="button"
-                      onClick={() => {
-                        setVehicle(v.key);
-                        setPassengers(String(v.maxPax));
-                      }}
-                      className={`group relative flex items-center gap-2 px-2.5 py-1.5 rounded-xl border shrink-0 transition-all cursor-pointer min-h-[50px] ${
-                        isSelected
-                          ? 'border-[#1a73e8] bg-blue-50/90 shadow-2xs ring-1.5 ring-[#1a73e8]/30'
-                          : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 shadow-2xs'
-                      }`}
-                    >
-                      <img
-                        src={v.image || VEHICLE_IMAGES[v.key] || '/images/fleet/swift-dzire.webp'}
-                        alt={v.name}
-                        className="w-14 h-9 object-contain shrink-0 transition-transform group-hover:scale-105"
-                        loading="lazy"
-                        width="56"
-                        height="36"
-                      />
-                      <div className="text-left leading-tight pr-0.5">
-                        <div className={`text-xs font-bold whitespace-nowrap ${isSelected ? 'text-[#0b57d0]' : 'text-slate-800'}`}>
-                          {v.name}
-                        </div>
-                        <div className={`text-[10px] ${isSelected ? 'text-blue-700 font-semibold' : 'text-slate-500'}`}>
-                          {v.pax || `${v.maxPax} Seats`}
-                        </div>
-                      </div>
-                      {isSelected && (
-                        <div className="w-1.5 h-1.5 rounded-full bg-[#1a73e8] shrink-0" />
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
             {/* Hidden inputs to preserve selected vehicle & passenger values for seamless test / submission compatibility */}
             <input type="hidden" id={`${stableFormId}-passengers`} name="passengers" value={passengers} />
             <input type="hidden" id={`${stableFormId}-vehicle`} name="vehicle" value={VEHICLE_SLUGS[vehicle] || vehicle} />
@@ -3205,34 +3122,6 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
               <p className="text-xs text-m3-on-surface-variant/80 text-center font-medium max-w-sm">
                 {isTa ? 'கட்டணம் பார்க்க தொலைபேசி எண் தேவையில்லை' : 'No phone number required to check fare'}
               </p>
-
-              {/* Smart Airport Quick-Access Callout */}
-              {showAirportTab && !showResult && (
-                <div className="w-full pt-1.5">
-                  <a
-                    href="/services/chennai-airport-taxi/"
-                    className="flex items-center justify-between p-2.5 px-3.5 bg-m3-surface-container-high hover:bg-m3-surface-container-highest border border-m3-outline-variant hover:border-m3-primary/40 rounded-m3-xl transition-all text-xs group cursor-pointer"
-                    title={isTa ? 'சென்னை ஏர்போர்ட் டாக்ஸி முன்பதிவு' : 'Chennai Airport Taxi Transfers'}
-                  >
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className="p-1 sm:p-1.5 bg-m3-primary/10 text-m3-primary rounded-m3-full shrink-0 group-hover:scale-110 transition-transform">
-                        <Plane className="w-3.5 h-3.5" />
-                      </span>
-                      <div className="truncate text-left">
-                        <span className="font-bold text-m3-on-surface">
-                          {isTa ? 'சென்னை ஏர்போர்ட் டாக்ஸியா?' : 'Need Chennai Airport Pickup / Drop?'}
-                        </span>
-                        <span className="hidden sm:inline text-m3-on-surface-variant ml-1.5 text-xs">
-                          {isTa ? 'நிலையான கட்டணம் ₹650 முதல்' : 'Flat rates from ₹650 • Flight delay tracking'}
-                        </span>
-                      </div>
-                    </div>
-                    <span className="inline-flex items-center gap-0.5 text-xs font-bold text-m3-primary shrink-0 group-hover:translate-x-0.5 transition-transform">
-                      {isTa ? 'கட்டணங்கள்' : 'Airport Cabs'} <ChevronRight className="w-3.5 h-3.5" />
-                    </span>
-                  </a>
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -3301,9 +3190,9 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                   <button
                     type="button"
                     onClick={handleWhatsAppAirport}
-                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs sm:text-sm shadow-md transition-all cursor-pointer min-h-[42px]"
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary font-bold text-xs sm:text-sm shadow-m3-1 hover:shadow-m3-2 transition-all cursor-pointer min-h-[42px]"
                   >
-                    <WhatsAppIcon className="w-4 h-4" />
+                    <WhatsAppIcon variant="white" className="w-4 h-4" />
                     <span>{isTa ? 'வாட்ஸ்அப்' : 'WhatsApp'}</span>
                   </button>
                 </div>
@@ -3588,18 +3477,18 @@ Please confirm cab availability and lock this quotation (${quoteRefId}).` + maps
                     rel="noopener noreferrer"
                     onClick={handleWhatsApp}
                     data-direct-whatsapp="true"
-                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs sm:text-sm shadow-md transition-all active:scale-[0.99] cursor-pointer min-h-[44px]"
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary font-bold text-xs sm:text-sm shadow-m3-1 hover:shadow-m3-2 transition-all active:scale-[0.99] cursor-pointer min-h-[44px]"
                   >
-                    <WhatsAppIcon className="w-4 h-4 shrink-0" />
+                    <WhatsAppIcon variant="white" className="w-4 h-4 shrink-0" />
                     <span>{isTa ? 'வாட்ஸ்அப்பில் முன்பதிவு செய்க' : 'Book on WhatsApp'}</span>
                   </a>
 
                   <a
                     href="tel:+918939539211"
-                    className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-full border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-xs sm:text-sm transition-colors cursor-pointer shrink-0 min-h-[44px]"
+                    className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-full border border-m3-outline hover:bg-m3-primary/10 active:bg-m3-primary/20 text-m3-primary font-bold text-xs sm:text-sm transition-colors cursor-pointer shrink-0 min-h-[44px]"
                     aria-label="Call Passenger Booking Desk +91 89395 39211"
                   >
-                    <Phone className="w-4 h-4 text-emerald-700 shrink-0" />
+                    <Phone className="w-4 h-4 text-m3-primary shrink-0" />
                     <span>{callButtonLabel || (isTa ? 'அழைக்க' : 'Call Booking Desk')}</span>
                   </a>
                 </div>

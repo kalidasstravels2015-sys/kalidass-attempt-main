@@ -6,6 +6,7 @@ import WhatsAppButton from '../../components/WhatsAppButton.astro';
 import DriverFeeEstimator from '../../components/DriverFeeEstimator.jsx';
 import OptimizedImage from '../../components/OptimizedImage.astro';
 import GoogleRatingBadge from '../../components/GoogleRatingBadge.astro';
+import HeroVisualCard from '../../components/HeroVisualCard.astro';
 import { Phone } from 'lucide-react';
 
 const title = "Hire Acting Drivers in Chennai & Tamil Nadu from ₹750";
@@ -316,21 +317,33 @@ const tariffListSchema = {
           </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
           
-          <!-- Left Column: Visible on Desktop (lg+) -->
-          <div class="hidden lg:flex lg:col-span-5 flex-col justify-start pt-2">
-            <!-- Desktop H1 + Separate Google Star Rating Row -->
-            <h1 data-speakable="true" class="text-3xl lg:text-4xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight mb-2.5">
-              Hire An Acting Driver For Your Own Car
-            </h1>
-            <div class="mb-3.5">
-              <GoogleRatingBadge />
+          <!-- Left Column: Visible on Desktop (lg+) with Hero Image -->
+          <div class="hidden lg:flex lg:col-span-5 flex-col justify-between pt-1">
+            <div>
+              <!-- Desktop H1 + Separate Google Star Rating Row -->
+              <h1 data-speakable="true" class="text-3xl lg:text-[34px] font-extrabold text-m3-on-surface font-heading tracking-tight leading-[1.15] mb-2.5">
+                Hire An Acting Driver For Your Own Car
+              </h1>
+              <div class="mb-2.5">
+                <GoogleRatingBadge />
+              </div>
+
+              <p data-speakable="true" class="text-sm text-m3-on-surface-variant leading-relaxed">
+                Police-verified personal car drivers in Chennai for Manual, Automatic &amp; EV cars. City duty: <strong>₹750 (4 Hrs)</strong> • <strong>₹1,200 (8 Hrs)</strong>. Outstation: <strong>₹1,400/day + ₹300 food bata</strong>. Doorstep reporting in 30–45 mins, ₹500 advance to confirm.
+              </p>
             </div>
 
-            <p data-speakable="true" class="text-sm text-m3-on-surface-variant leading-relaxed mb-4">
-              Police-verified personal car drivers in Chennai for Manual, Automatic &amp; EV cars. City duty: <strong>₹750 (4 Hrs)</strong> • <strong>₹1,200 (8 Hrs)</strong>. Outstation: <strong>₹1,400/day + ₹300 food bata</strong>. Doorstep reporting in 30–45 mins, ₹500 advance to confirm.
-            </p>
+            <!-- Desktop Hero Visual Showcase Card -->
+            <HeroVisualCard
+              src="/images/services/acting-drivers.webp"
+              alt="Kalidass Travels police-verified acting driver for personal cars in Chennai"
+              badge="100% Police-Verified Chauffeurs"
+              headline="Manual, Automatic & EV Certified • Doorstep in 30–45 Mins"
+              points={["Zero Surge Pricing", "Pay Balance Post-Trip", "All 38 TN Districts"]}
+              objectPosition="center 40%"
+            />
 
             <!-- Desktop Direct Call CTA -->
             <div class="flex items-center gap-3">
@@ -345,8 +358,8 @@ const tariffListSchema = {
           </div>
 
           <!-- Right Column: Elevated Estimator Engine Card -->
-          <div class="lg:col-span-7 w-full max-w-2xl mx-auto lg:max-w-none">
-            <div id="trip-estimator" class="scroll-mt-28 w-full rounded-m3-2xl shadow-m3-2 border border-m3-outline-variant/60 bg-white dark:bg-m3-surface-container p-2 sm:p-3">
+          <div class="lg:col-span-7 w-full max-w-2xl mx-auto lg:max-w-none flex flex-col">
+            <div id="trip-estimator" class="scroll-mt-28 w-full flex-1 rounded-m3-2xl shadow-m3-2 border border-m3-outline-variant/60 bg-white dark:bg-m3-surface-container p-2 sm:p-3">
               <DriverFeeEstimator 
                 client:load
                 title="Acting Driver Cost Calculator"

@@ -468,7 +468,7 @@ export default function ActingDrivers() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <a
               href="#trip-estimator"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] active:scale-95 text-white px-6 py-3.5 rounded-m3-full font-bold text-xs sm:text-sm shadow-m3-2 transition-all cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 active:scale-95 text-m3-on-primary px-6 py-3.5 rounded-m3-full font-bold text-xs sm:text-sm shadow-m3-2 transition-all cursor-pointer"
             >
               <span>Calculate Driver Rate &amp; Book</span>
               <ArrowRight className="w-4 h-4" />

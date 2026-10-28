@@ -27,6 +27,7 @@ import { getNextQuotationId, peekNextQuotationId } from '../utils/sequenceGenera
 import tnBusFares from '../data/tnBusFares.json';
 import tripsData from '../data/trips.json';
 import tariffConfig from '../data/tariff_config.json';
+import { estimateRoadExtrasFromMaster } from '../utils/masterTariff';
 
 // Distance lookup table for South India routes from Chennai
 const COMMON_DISTANCES_FROM_CHENNAI = {
@@ -210,55 +211,7 @@ const findKnownDistance = (origin, destination) => {
 };
 
 const estimateRoadExtras = (pickup, drop, distanceKm, days, isRoundTrip, vehicle) => {
-  const p = (pickup || '').toLowerCase();
-  const d = (drop || '').toLowerCase();
-  const text = `${p} ${d}`;
-  const totalKm = isRoundTrip ? (distanceKm || 0) * 2 : (distanceKm || 0);
-  const nights = isRoundTrip ? Math.max(0, (days || 1) - 1) : 0;
-  
-  const vStr = String(vehicle || '').toLowerCase();
-  const isTempo = vStr.includes('tempo') || vStr.includes('urbania') || vStr.includes('bus') || vStr.includes('coach');
-  const isMUV = vStr.includes('innova') || vStr.includes('crysta');
-  const isSUV = vStr.includes('ertiga') || vStr.includes('xl6');
-
-  let stateName = 'Tamil Nadu';
-  let statePermitEst = 0;
-  let tollsEst = 0;
-
-  if (text.includes('tirupati') || text.includes('tirumala') || text.includes('andhra') || text.includes('kalahasti') || text.includes('nellore') || text.includes('vijayawada') || text.includes('chittoor') || text.includes('renigunta')) {
-    stateName = 'Andhra Pradesh';
-    statePermitEst = isTempo ? 2000 : isMUV ? 900 : isSUV ? 700 : 500;
-    tollsEst = isRoundTrip ? 400 : 220;
-  } else if (text.includes('bangalore') || text.includes('bengaluru') || text.includes('karnataka') || text.includes('mysore') || text.includes('mysuru') || text.includes('hosur')) {
-    stateName = 'Karnataka';
-    statePermitEst = isTempo ? 2500 : isMUV ? 1500 : isSUV ? 1200 : 700;
-    tollsEst = isRoundTrip ? 450 : 250;
-  } else if (text.includes('pondicherry') || text.includes('puducherry') || text.includes('auroville')) {
-    stateName = 'Puducherry (UT)';
-    statePermitEst = isTempo ? 3500 : isMUV ? 2500 : isSUV ? 1600 : 500;
-    tollsEst = isRoundTrip ? 250 : 130;
-  } else if (text.includes('kerala') || text.includes('munnar') || text.includes('cochin') || text.includes('kochi') || text.includes('sabarimala') || text.includes('wayanad')) {
-    stateName = 'Kerala';
-    statePermitEst = isTempo ? 3000 : isMUV ? 1800 : isSUV ? 1400 : 800;
-    tollsEst = isRoundTrip ? 650 : 350;
-  } else {
-    stateName = 'Tamil Nadu';
-    statePermitEst = 0;
-    tollsEst = Math.round((totalKm * 0.85) / 10) * 10;
-    if (tollsEst < 80 && totalKm >= 50) tollsEst = 80;
-  }
-
-  const driverNightStayEst = nights * 450;
-  const roadExtrasEst = tollsEst + statePermitEst + driverNightStayEst;
-
-  return {
-    stateName,
-    statePermitEst,
-    tollsEst,
-    nights,
-    driverNightStayEst,
-    roadExtrasEst
-  };
+  return estimateRoadExtrasFromMaster(pickup, drop, distanceKm, days, isRoundTrip, vehicle);
 };
 
 // Calculate billing days from pickup and return strings

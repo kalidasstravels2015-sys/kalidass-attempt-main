@@ -2,7 +2,7 @@ import React from 'react';
 import TourBookingEngine from './TourBookingEngine.jsx';
 
 export default function TiruchendurBookingEngine({
-  serviceTitle = 'Chennai to Tiruchendur Murugan Temple Cab Package',
+  serviceTitle = 'Chennai to Tiruchendur Murugan Temple Taxi Package',
   ...props
 }) {
   return (
@@ -13,4 +13,3 @@ export default function TiruchendurBookingEngine({
     />
   );
 }
-

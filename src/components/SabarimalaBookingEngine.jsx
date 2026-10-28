@@ -2,7 +2,7 @@ import React from 'react';
 import TourBookingEngine from './TourBookingEngine.jsx';
 
 export default function SabarimalaBookingEngine({
-  serviceTitle = 'Chennai to Sabarimala Temple Yatra Taxi Package',
+  serviceTitle = 'Chennai to Sabarimala Pilgrimage Taxi Package',
   ...props
 }) {
   return (

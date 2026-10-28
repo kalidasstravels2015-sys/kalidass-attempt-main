@@ -1,9 +1,11 @@
 // Master Tour Booking Configurations for Kalidass Travels Tour Engines
 // Strictly adheres to Motor Vehicles Rules, Consumer Protection Act, and .agents/rules/booking-engine-specifications.md
+import tariffConfig from './tariff_config.json' with { type: 'json' };
 
 export const TOUR_CONFIGS = {
   'tirupati-package': {
     slug: 'tirupati-package',
+    stateCode: 'AP',
     serviceTitle: 'Chennai to Tirupati Cab & Balaji Darshan Taxi Package',
     engineTitle: 'Book Chennai to Tirupati',
     subtitle: 'Dedicated Cab Service Only • We do not provide Darshan tickets',
@@ -17,7 +19,7 @@ export const TOUR_CONFIGS = {
     advisoryText: 'Chennai ⇄ Tirupati is ~320 km round trip (approx. 8–9 hrs highway & ghat road driving + temple darshan). Recommended same-day return window is 14–16 hours (minimum 12 hours required).',
     inclusions: {
       standard: 'Covers FASTag Tolls + AP State Entry Permit + Hill Climb + Driver Bata + Parking',
-      multiDay: 'Covers Cab, Hill Climb & Driver Bata • Tolls & AP State Entry Permit Extra'
+      multiDay: 'Covers Cab, Hill Climb, Driver Bata & AP State Entry Permit • Tolls & Parking Extra'
     },
     itemizedInclusions: [
       { label: 'Tirumala Ghat Road Ascent & Hill Climb:', value: '₹0', multiDayValue: '₹0' },
@@ -537,6 +539,7 @@ export const TOUR_CONFIGS = {
 
   'sabarimala-trip': {
     slug: 'sabarimala-trip',
+    stateCode: 'KL',
     serviceTitle: 'Chennai to Sabarimala Pilgrimage Cab Package',
     engineTitle: 'Book Chennai to Sabarimala',
     subtitle: 'Round trip private AC cab package • Fixed tariff with ₹500 advance to confirm booking',
@@ -550,13 +553,13 @@ export const TOUR_CONFIGS = {
     recommendedHours: 72,
     advisoryText: 'Chennai to Sabarimala (Pamba / Nilakkal) round trip is ~1,350 km through Western Ghats routes. Minimum 3 Days (48–72 hrs) is required for safe driving and darshan.',
     inclusions: {
-      standard: 'Covers 1,350 km Run & Fuel • Kerala State Entry Permit, Tolls & Bata Extra',
-      multiDay: 'Covers Cab & 1,350 km Run • Kerala State Entry Permit, Tolls & Bata Extra'
+      standard: 'Covers 1,350 km Run, Fuel, Driver Bata & Kerala State Entry Permit • NH Tolls & Parking Extra',
+      multiDay: 'Covers Cab, 1,350 km Run, Driver Bata & Kerala State Entry Permit • NH Tolls & Parking Extra'
     },
     itemizedInclusions: [
-      { label: 'Kerala State Entry Permit:', value: '₹800', multiDayValue: '₹800' },
+      { label: 'Kerala State Entry Permit (Parivahan):', value: 'Included in Total', multiDayValue: 'Included in Total' },
       { label: 'NH Tolls & Pamba Hill Ghat Standby:', value: 'Extra', multiDayValue: 'Extra' },
-      { label: 'Chauffeur Outstation Duty & Halting Bata:', value: 'Extra', multiDayValue: 'Extra' }
+      { label: 'Chauffeur Outstation Duty & Halting Bata:', value: 'Included', multiDayValue: 'Included' }
     ],
     eventPrefix: 'sabarimala_engine',
     vehicles: [
@@ -885,3 +888,31 @@ export const TOUR_CONFIGS = {
     ]
   }
 };
+
+// Synchronize all tour vehicle tariffs and state codes from Single Master Tariff (src/data/tariff_config.json)
+const masterTours = tariffConfig?.tour_packages || {};
+for (const [slug, tourData] of Object.entries(TOUR_CONFIGS)) {
+  const masterTour = masterTours[slug];
+  if (masterTour) {
+    if (masterTour.stateCode) {
+      tourData.stateCode = masterTour.stateCode;
+    }
+    if (masterTour.roundTripKm && tourData.destination) {
+      tourData.destination.roundTripKm = masterTour.roundTripKm;
+    }
+    if (masterTour.vehicles && Array.isArray(tourData.vehicles)) {
+      tourData.vehicles = tourData.vehicles.map((veh) => {
+        const mv = masterTour.vehicles[veh.id];
+        if (!mv) return veh;
+        return {
+          ...veh,
+          rates: mv.rates ? { ...veh.rates, ...mv.rates } : veh.rates,
+          vehicleHire: mv.vehicleHire ? { ...veh.vehicleHire, ...mv.vehicleHire } : veh.vehicleHire,
+          driverBata: mv.driverBata ? { ...veh.driverBata, ...mv.driverBata } : veh.driverBata,
+          extraHourRate: mv.extraHourRate ?? veh.extraHourRate
+        };
+      });
+    }
+  }
+}
+

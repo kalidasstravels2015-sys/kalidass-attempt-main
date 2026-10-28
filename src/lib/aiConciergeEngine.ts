@@ -4,6 +4,7 @@
 
 import { TOUR_CONFIGS } from '../data/tourBookingConfigs.js';
 import tariffConfig from '../data/tariff_config.json' with { type: 'json' };
+import { getStatePermitForRoute } from '../utils/masterTariff.js';
 import siteContent from '../data/siteContent.json' with { type: 'json' };
 import tnBusFares from '../data/tnBusFares.json' with { type: 'json' };
 import tripsData from '../data/trips.json' with { type: 'json' };
@@ -754,31 +755,38 @@ function getOutstationDynamicQuote(state: ConversationState, isTa: boolean): str
   const billedKmCar = Math.max(totalKm, days * 250);
   const billedKmTempo = Math.max(totalKm, days * 300);
 
-  // Exact calculations based on tariffConfig
-  const sedanCost = billedKmCar * 14 + days * 400;
-  const ertigaCost = billedKmCar * 17 + days * 500;
-  const innovaCost = billedKmCar * 20 + days * 600;
-  const crystaCost = billedKmCar * 22 + days * 700;
-  const tempoCost = billedKmTempo * 26 + days * 800;
-  const urbaniaCost = billedKmTempo * 38 + days * 1100;
+  // Exact calculations based on Master Tariff (including State Entry Permit)
+  const sedanPermit = getStatePermitForRoute({ destinationText: dest, vehicleIdOrName: 'Swift Dzire' }).amount || 0;
+  const ertigaPermit = getStatePermitForRoute({ destinationText: dest, vehicleIdOrName: 'Maruti Ertiga' }).amount || 0;
+  const innovaPermit = getStatePermitForRoute({ destinationText: dest, vehicleIdOrName: 'Innova' }).amount || 0;
+  const crystaPermit = getStatePermitForRoute({ destinationText: dest, vehicleIdOrName: 'Innova Crysta' }).amount || 0;
+  const tempoPermit = getStatePermitForRoute({ destinationText: dest, vehicleIdOrName: 'Tempo Traveller' }).amount || 0;
+  const urbaniaPermit = getStatePermitForRoute({ destinationText: dest, vehicleIdOrName: 'Force Urbania' }).amount || 0;
+
+  const sedanCost = billedKmCar * 14 + days * 500 + sedanPermit;
+  const ertigaCost = billedKmCar * 17 + days * 500 + ertigaPermit;
+  const innovaCost = billedKmCar * 20 + days * 600 + innovaPermit;
+  const crystaCost = billedKmCar * 22 + days * 700 + crystaPermit;
+  const tempoCost = billedKmTempo * 24 + days * 800 + tempoPermit;
+  const urbaniaCost = billedKmTempo * 34 + days * 1000 + urbaniaPermit;
 
   // Vehicle lines mapping
   const vehicleQuotesEn: Record<string, string> = {
-    sedan: `• **AC Sedan (Dzire / Etios - 4 Seats):** ~₹${sedanCost.toLocaleString('en-IN')} (₹14/km + ₹${days * 400} Bata)`,
-    ertiga: `• **Maruti Ertiga / XL6 (6 Seats):** ~₹${ertigaCost.toLocaleString('en-IN')} (₹17/km + ₹${days * 500} Bata)`,
-    innova: `• **Toyota Innova (7 Seats):** ~₹${innovaCost.toLocaleString('en-IN')} (₹20/km + ₹${days * 600} Bata)`,
-    crysta: `• **Toyota Innova Crysta (7 Seats):** ~₹${crystaCost.toLocaleString('en-IN')} (₹22/km + ₹${days * 700} Bata)`,
-    tempo: `• **Tempo Traveller (12 Seats):** ~₹${tempoCost.toLocaleString('en-IN')} (₹26/km + ₹${days * 800} Bata)`,
-    urbania: `• **Force Urbania (12-14 Seats Luxury):** ~₹${urbaniaCost.toLocaleString('en-IN')} (₹38/km + ₹${days * 1100} Bata)`
+    sedan: `• **AC Sedan (Dzire / Etios - 4 Seats):** ~₹${sedanCost.toLocaleString('en-IN')} (₹14/km + ₹${days * 500} Bata${sedanPermit > 0 ? ` + ₹${sedanPermit} State Permit` : ''})`,
+    ertiga: `• **Maruti Ertiga / XL6 (6 Seats):** ~₹${ertigaCost.toLocaleString('en-IN')} (₹17/km + ₹${days * 500} Bata${ertigaPermit > 0 ? ` + ₹${ertigaPermit} State Permit` : ''})`,
+    innova: `• **Toyota Innova (7 Seats):** ~₹${innovaCost.toLocaleString('en-IN')} (₹20/km + ₹${days * 600} Bata${innovaPermit > 0 ? ` + ₹${innovaPermit} State Permit` : ''})`,
+    crysta: `• **Toyota Innova Crysta (7 Seats):** ~₹${crystaCost.toLocaleString('en-IN')} (₹22/km + ₹${days * 700} Bata${crystaPermit > 0 ? ` + ₹${crystaPermit} State Permit` : ''})`,
+    tempo: `• **Tempo Traveller (12 Seats):** ~₹${tempoCost.toLocaleString('en-IN')} (₹24/km + ₹${days * 800} Bata${tempoPermit > 0 ? ` + ₹${tempoPermit} State Permit` : ''})`,
+    urbania: `• **Force Urbania (12-14 Seats Luxury):** ~₹${urbaniaCost.toLocaleString('en-IN')} (₹34/km + ₹${days * 1000} Bata${urbaniaPermit > 0 ? ` + ₹${urbaniaPermit} State Permit` : ''})`
   };
 
   const vehicleQuotesTa: Record<string, string> = {
-    sedan: `• **AC Sedan (Dzire / Etios - 4 Seats):** ~₹${sedanCost.toLocaleString('en-IN')} (₹14/கி.மீ + ₹${days * 400} பேட்டா)`,
-    ertiga: `• **Maruti Ertiga / XL6 (6 Seats):** ~₹${ertigaCost.toLocaleString('en-IN')} (₹17/கி.மீ + ₹${days * 500} பேட்டா)`,
-    innova: `• **Toyota Innova (7 Seats):** ~₹${innovaCost.toLocaleString('en-IN')} (₹20/கி.மீ + ₹${days * 600} பேட்டா)`,
-    crysta: `• **Toyota Innova Crysta (7 Seats):** ~₹${crystaCost.toLocaleString('en-IN')} (₹22/கி.மீ + ₹${days * 700} பேட்டா)`,
-    tempo: `• **Tempo Traveller (12 Seats):** ~₹${tempoCost.toLocaleString('en-IN')} (₹26/கி.மீ + ₹${days * 800} பேட்டா)`,
-    urbania: `• **Force Urbania (12-14 சொகுசு வேன்):** ~₹${urbaniaCost.toLocaleString('en-IN')} (₹38/கி.மீ + ₹${days * 1100} பேட்டா)`
+    sedan: `• **AC Sedan (Dzire / Etios - 4 Seats):** ~₹${sedanCost.toLocaleString('en-IN')} (₹14/கி.மீ + ₹${days * 500} பேட்டா${sedanPermit > 0 ? ` + ₹${sedanPermit} மாநில அனுமதி` : ''})`,
+    ertiga: `• **Maruti Ertiga / XL6 (6 Seats):** ~₹${ertigaCost.toLocaleString('en-IN')} (₹17/கி.மீ + ₹${days * 500} பேட்டா${ertigaPermit > 0 ? ` + ₹${ertigaPermit} மாநில அனுமதி` : ''})`,
+    innova: `• **Toyota Innova (7 Seats):** ~₹${innovaCost.toLocaleString('en-IN')} (₹20/கி.மீ + ₹${days * 600} பேட்டா${innovaPermit > 0 ? ` + ₹${innovaPermit} மாநில அனுமதி` : ''})`,
+    crysta: `• **Toyota Innova Crysta (7 Seats):** ~₹${crystaCost.toLocaleString('en-IN')} (₹22/கி.மீ + ₹${days * 700} பேட்டா${crystaPermit > 0 ? ` + ₹${crystaPermit} மாநில அனுமதி` : ''})`,
+    tempo: `• **Tempo Traveller (12 Seats):** ~₹${tempoCost.toLocaleString('en-IN')} (₹24/கி.மீ + ₹${days * 800} பேட்டா${tempoPermit > 0 ? ` + ₹${tempoPermit} மாநில அனுமதி` : ''})`,
+    urbania: `• **Force Urbania (12-14 சொகுசு வேன்):** ~₹${urbaniaCost.toLocaleString('en-IN')} (₹34/கி.மீ + ₹${days * 1000} பேட்டா${urbaniaPermit > 0 ? ` + ₹${urbaniaPermit} மாநில அனுமதி` : ''})`
   };
 
   let selectedVehicles = Object.keys(vehicleQuotesEn);
@@ -1068,8 +1076,8 @@ function getInclusionPolicyReply(isTa: boolean, destination: string | null, days
 
   return (
     `📋 **Tariff Inclusions & Transparent Billing:**\n\n` +
-    `• **Included in Quote:** Dedicated AC cab, complete vehicle fuel, and driver daily bata.\n` +
-    `• **Payable at Actuals:** Highway FASTag tolls, airport/parking charges, and interstate border entry permits (e.g. entering Kerala/Karnataka/AP) payable directly as per actual receipts.\n` +
+    `• **Included in Quote:** Dedicated AC cab, complete vehicle fuel, driver daily bata, and official State Entry Permit (Parivahan Checkpost Tax where applicable).\n` +
+    `• **Payable at Actuals:** Highway FASTag tolls and airport/parking charges are payable directly as per actual receipts.\n` +
     `🛡️ ₹500 advance locks cab, balance post-trip!`
   );
 }
@@ -1079,11 +1087,11 @@ function getGeneralOutstationTariff(isTa: boolean): string {
   if (isTa) {
     return (
       `Here are our official **Outstation Tariff Rates**:\n\n` +
-      `• **Swift Dzire / Etios (4 Seats):** ₹14 / கி.மீ (டிரைவர் பேட்டா ₹400/நாள்)\n` +
+      `• **Swift Dzire / Etios (4 Seats):** ₹14 / கி.மீ (டிரைவர் பேட்டா ₹500/நாள்)\n` +
       `• **Maruti Ertiga (6 Seats):** ₹17 / கி.மீ (டிரைவர் பேட்டா ₹500/நாள்)\n` +
       `• **Toyota Innova (7 Seats):** ₹20 / கி.மீ (டிரைவர் பேட்டா ₹600/நாள்)\n` +
       `• **Toyota Innova Crysta (7 Seats):** ₹22 / கி.மீ (டிரைவர் பேட்டா ₹700/நாள்)\n` +
-      `• **Tempo Traveller (12 Seats):** ₹26 / கி.மீ (டிரைவர் பேட்டா ₹800/நாள்)\n\n` +
+      `• **Tempo Traveller (12 Seats):** ₹24 / கி.மீ (டிரைவர் பேட்டா ₹800/நாள்)\n\n` +
       `📋 ஒரு நாளைக்கு குறைந்தபட்சம் 250 கி.மீ (டெம்போ 300 கி.மீ). ₹500 முன்பணம் செலுத்தி காரை லாக் செய்யலாம்.\n\n` +
       `📲 [👉 வாட்ஸ்அப்பில் புக் செய்ய](${waUrl})`
     );
@@ -1091,11 +1099,11 @@ function getGeneralOutstationTariff(isTa: boolean): string {
 
   return (
     `Here are our official **Outstation & Intercity Tariff Rates**:\n\n` +
-    `• **Swift Dzire / Etios (4 Seats):** ₹14 / km (Min 250 km/day, Driver Bata ₹400/day)\n` +
+    `• **Swift Dzire / Etios (4 Seats):** ₹14 / km (Min 250 km/day, Driver Bata ₹500/day)\n` +
     `• **Maruti Ertiga / XL6 (6 Seats):** ₹17 / km (Min 250 km/day, Driver Bata ₹500/day)\n` +
     `• **Toyota Innova (7 Seats):** ₹20 / km (Min 250 km/day, Driver Bata ₹600/day)\n` +
     `• **Toyota Innova Crysta (7 Seats):** ₹22 / km (Min 250 km/day, Driver Bata ₹700/day)\n` +
-    `• **Tempo Traveller (12 Seats):** ₹26 / km (Min 300 km/day, Driver Bata ₹800/day)\n\n` +
+    `• **Tempo Traveller (12 Seats):** ₹24 / km (Min 300 km/day, Driver Bata ₹800/day)\n\n` +
     `🛡️ **Guarantee:** ₹500 advance to confirm & lock cab (avoids last-minute cancellation). Remaining balance post-trip.\n\n` +
     `📲 [👉 Book on WhatsApp](${waUrl})`
   );

@@ -58,4 +58,13 @@
     - **Multi-Day & Outstation at Actuals:** For ALL multi-day packages (>1 Day, e.g. 2-Day, 3-Day, Kumbakonam Navagraha, Rameswaram, Sabarimala) and open per-km outstation rentals, highway tolls, parking fees, and state entry permits are strictly payable at actuals by the passenger as per official FASTag receipts.
     - **Strict UI & SEO Rule:** Never display "All Tolls Included", "Tolls Included", or pre-paid toll promises on multi-day tour cards, stay duration dropdowns, FAQs, or SEO metadata. Service promise badge must read `"Tolls Covered on 1-Day Tours"`.
 
+14. **Commercial Policy Transparency & Zero Competitor Brand Leaks (Google Compliance Standard):**
+    - **Advance Policy Uniformity:** Never state "Zero Advance to Book" if an advance deposit (e.g., ₹500) is required to lock a vehicle or chauffeur. All trust badges, cards, FAQs, and structured data schemas MUST strictly declare: `"₹500 Advance Locks Cab • 100% Deducted from Final Bill • Fully Refundable up to 6h Prior"`.
+    - **Zero Competitor Leaks Invariant:** NEVER display competitor brand names or reference benchmarks (e.g., "Savaari", "Savaari Standard", "Ola-style") anywhere in client-facing HTML, headers, calculator cards, or customer messages. Always use `"Kalidass Transparent Tariff"`.
+    - **Truth in Partnership & Institutional Claims:** Do not label clients or vendors as "Official Partner" of government bodies (e.g. Airport Authority of India, Tamil Nadu Police) unless verified by active legal contract. Use compliant phrases like `"Dedicated Corporate & Airport Corridor Provider"` or `"Institutional Mobility Provider"`.
+
+15. **LCP Preload Parity Invariant (Core Web Vitals Standard):**
+    - **Strict Asset Matching:** Whenever a hero background or banner image is preloaded via `<link rel="preload">` in page frontmatter or layouts, the preloaded URI/srcset MUST match the EXACT first image candidate rendered in the above-the-fold component.
+    - **Zero Phantom Preloads:** Never preload an unrendered or fallback asset that wastes user mobile bandwidth and delays the true LCP element.
+
 See [docs/03_RULES.md](./docs/03_RULES.md) for full quality standards.

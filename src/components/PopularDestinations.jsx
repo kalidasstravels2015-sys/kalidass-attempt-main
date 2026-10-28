@@ -691,7 +691,7 @@ export default function PopularDestinations() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <a
               href="/#booking-panel"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] active:scale-95 text-white px-6 py-3.5 rounded-m3-full font-bold text-xs sm:text-sm shadow-m3-2 transition-all cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 active:scale-95 text-m3-on-primary px-6 py-3.5 rounded-m3-full font-bold text-xs sm:text-sm shadow-m3-2 transition-all cursor-pointer"
             >
               <span>Calculate Fare &amp; Book Online</span>
               <ArrowRight className="w-4 h-4" />
@@ -700,7 +700,7 @@ export default function PopularDestinations() {
               href="tel:+918939539211"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-m3-surface hover:bg-m3-surface-container text-m3-on-surface px-6 py-3.5 rounded-m3-full font-semibold text-xs sm:text-sm shadow-m3-1 transition-all"
             >
-              <Phone className="w-4 h-4 text-m3-success" />
+              <Phone className="w-4 h-4 text-m3-primary" />
               <span>Call Outstation Desk</span>
             </a>
           </div>

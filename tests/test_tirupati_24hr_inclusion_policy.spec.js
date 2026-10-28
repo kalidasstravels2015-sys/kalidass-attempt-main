@@ -36,31 +36,31 @@ test.describe('Tirupati 24-Hour Policy: Inclusive vs Extra (Actuals)', () => {
     await expect(bookingSection.getByText('Tolls:')).toBeVisible();
     await expect(bookingSection.getByText('Parking:')).toBeVisible();
 
-    // TEST CASE B: 25 Hours (1 Day + 1 hr) -> Monotonic extension past 24 hrs (₹6,150) -> Transparent Multi-Day Tariff
+    // TEST CASE B: 25 Hours (1 Day + 1 hr) -> Monotonic extension past 24 hrs (₹6,150 + ₹600 AP Permit = ₹6,750) -> Transparent Multi-Day Tariff
     await returnDate.fill('2026-10-16T07:00'); // 25 hrs
-    await expect(bookingSection.locator('[data-tour-fare="true"]').first()).toHaveText(/₹\s*6,150/);
-    await expect(bookingSection.getByText(/Dedicated Cab Hire, Fuel & Driver Allowance, Tirumala Hill Climb/)).toBeVisible();
+    await expect(bookingSection.locator('[data-tour-fare="true"]').first()).toHaveText(/₹\s*6,750/);
+    await expect(bookingSection.getByText(/Dedicated Cab Hire, 100% Fuel & Driver Allowance/)).toBeVisible();
     await expect(bookingSection.getByText('State Entry Permit:')).toBeVisible();
-    await expect(bookingSection.getByText('₹500', { exact: true }).first()).toBeVisible();
+    await expect(bookingSection.getByText('₹600', { exact: true }).first()).toBeVisible();
     await expect(bookingSection.getByText('Tolls:')).toBeVisible();
     await expect(bookingSection.getByText('Extra').first()).toBeVisible();
     await bookingSection.screenshot({ path: 'tests/tirupati_24hr_simplified.png' });
 
-    // TEST CASE C: 48 Hours (2 Days Package) -> ₹9,500 -> Multi-Day Tariff
+    // TEST CASE C: 48 Hours (2 Days Package) -> ₹9,500 + ₹600 AP Permit = ₹10,100 -> Multi-Day Tariff
     await returnDate.fill('2026-10-17T06:00'); // 48 hrs
-    await expect(bookingSection.locator('[data-tour-fare="true"]').first()).toHaveText(/₹\s*9,500/);
+    await expect(bookingSection.locator('[data-tour-fare="true"]').first()).toHaveText(/₹\s*10,100/);
 
-    // TEST CASE D: 51 Hours (2 Days + 3 hrs) -> Pro-Rata Overage (₹9,500 + ₹450 = ₹9,950) -> Multi-Day Tariff
+    // TEST CASE D: 51 Hours (2 Days + 3 hrs) -> Pro-Rata Overage (₹9,500 + ₹450 + ₹600 AP Permit = ₹10,550) -> Multi-Day Tariff
     await returnDate.fill('2026-10-17T09:00'); // 51 hrs
-    await expect(bookingSection.locator('[data-tour-fare="true"]').first()).toHaveText(/₹\s*9,950/);
+    await expect(bookingSection.locator('[data-tour-fare="true"]').first()).toHaveText(/₹\s*10,550/);
 
-    // TEST CASE E: 72 Hours (3 Days Package) -> ₹13,200 -> Multi-Day Tariff
+    // TEST CASE E: 72 Hours (3 Days Package) -> ₹13,200 + ₹600 AP Permit = ₹13,800 -> Multi-Day Tariff
     await returnDate.fill('2026-10-18T06:00'); // 72 hrs
-    await expect(bookingSection.locator('[data-tour-fare="true"]').first()).toHaveText(/₹\s*13,200/);
+    await expect(bookingSection.locator('[data-tour-fare="true"]').first()).toHaveText(/₹\s*13,800/);
 
     // Verify WhatsApp link mentions tolls & AP permit ballpark and correct fare
     const waBtn = bookingSection.locator('a[data-direct-whatsapp="true"]').first();
     const waHref = await waBtn.getAttribute('href');
-    expect(waHref).toContain('13%2C200');
+    expect(waHref).toContain('13%2C800');
   });
 });

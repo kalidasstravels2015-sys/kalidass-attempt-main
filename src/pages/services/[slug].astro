@@ -20,6 +20,7 @@ import TiruchendurBookingEngine from '../../components/TiruchendurBookingEngine.
 import TourBookingEngine from '../../components/TourBookingEngine.jsx';
 import VehicleCard from '../../components/VehicleCard.astro';
 import GoogleRatingBadge from '../../components/GoogleRatingBadge.astro';
+import HeroVisualCard from '../../components/HeroVisualCard.astro';
 import { buildWhatsAppUrl, WHATSAPP_CONFIG } from '../../utils/whatsapp';
 import { 
   ShieldCheck, 
@@ -1686,19 +1687,20 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
             </div>
           </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-stretch">
             
-            <!-- Left Column: Package Overview (Visible on Desktop lg+) -->
-            <div class="hidden lg:flex lg:col-span-5 flex-col justify-start pt-1">
-              <h1 data-speakable="true" class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-m3-on-surface tracking-tight leading-[1.15] font-heading mb-2.5">
+            <!-- Left Column: Package Overview (Visible on Desktop lg+) with Hero Image -->
+            <div class="hidden lg:flex lg:col-span-5 flex-col justify-between pt-1">
+              <div>
+              <h1 data-speakable="true" class="text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-m3-on-surface tracking-tight leading-[1.15] font-heading mb-2.5">
                 {service.title}
               </h1>
-              <div class="mb-3.5">
+              <div class="mb-2.5">
                 <GoogleRatingBadge />
               </div>
 
               {/* Crisp, Direct Overview */}
-              <p data-speakable="true" class="text-xs sm:text-sm lg:text-base text-m3-on-surface-variant leading-relaxed mb-4 font-normal max-w-xl">
+              <p data-speakable="true" class="text-sm text-m3-on-surface-variant leading-relaxed font-normal max-w-xl">
                 {isTirupati
                   ? "Doorstep Chennai to Tirupati round-trip private cab rental with driver. Flat rates from ₹6,000 (Sedan), ₹7,500 (Ertiga), ₹8,500 (Innova) covering 300 km, highway tolls, AP entry permit & driver bata. ₹500 advance to confirm."
                   : isThiruvannamalai
@@ -1719,6 +1721,19 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                   ? "Doorstep Chennai to Vellore Sripuram Golden Temple round-trip cab rental with verified chauffeur. Flat rates from ₹4,800 (Sedan) covering ~300 km, NH 48 tolls, Fort & Jalakandeswarar stop. ₹500 advance to confirm."
                   : "Doorstep Chennai to Pondicherry round-trip private cab rental via scenic ECR. Flat rates from ₹4,500 (Sedan) covering 320 km, Auroville, French White Town, Promenade Beach & ECR tolls. ₹500 advance to confirm."}
               </p>
+              </div>
+
+              <!-- Desktop Hero Visual Showcase Card -->
+              {heroImage && (
+                <HeroVisualCard
+                  src={heroImage}
+                  alt={`${service.title} - Kalidass Travels doorstep cab from Chennai`}
+                  badge="100% Commercial Yellow-Board Fleet"
+                  headline={`${shortName} • Doorstep Pickup Across Chennai`}
+                  points={["Zero Surge Pricing", "Pay Balance Post-Trip", "Verified Chauffeurs"]}
+                  objectPosition="center 40%"
+                />
+              )}
 
               <!-- Direct Quick Action CTA -->
               <div class="flex flex-wrap items-center gap-2.5">
@@ -1733,8 +1748,8 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
             </div>
 
             <!-- Right Column: Instant Round-Trip Pilgrimage Booking Engine in Initial View -->
-            <div class="lg:col-span-7 w-full max-w-2xl mx-auto lg:max-w-none">
-              <section id="booking" aria-label={`Book ${service.title}`} class="scroll-mt-28 w-full rounded-m3-2xl shadow-m3-2 border border-m3-outline-variant/60 bg-white dark:bg-m3-surface-container p-2 sm:p-3">
+            <div class="lg:col-span-7 w-full max-w-2xl mx-auto lg:max-w-none flex flex-col">
+              <section id="booking" aria-label={`Book ${service.title}`} class="scroll-mt-28 w-full flex-1 rounded-m3-2xl shadow-m3-2 border border-m3-outline-variant/60 bg-white dark:bg-m3-surface-container p-2 sm:p-3">
                 {isTirupati ? (
                   <TirupatiBookingEngine
                     client:load
@@ -1777,6 +1792,11 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                   />
                 ) : isVellore ? (
                   <VelloreBookingEngine
+                    client:load
+                    serviceTitle={service.title}
+                  />
+                ) : isPondicherry ? (
+                  <PondicherryBookingEngine
                     client:load
                     serviceTitle={service.title}
                   />

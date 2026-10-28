@@ -14,6 +14,7 @@ import { getActiveGoogleSheetUrl } from '../config/googleSheets';
 import { getNextQuotationId, peekNextQuotationId } from '../utils/sequenceGenerator';
 import tariffConfig from '../data/tariff_config.json';
 import tnBusFares from '../data/tnBusFares.json';
+import { getStatePermitForRoute, getCityAirportFlatFareFromMaster } from '../utils/masterTariff';
 
 const vehicles = tariffConfig.vehicles;
 const vehicleOptions = Object.keys(vehicles);
@@ -30,39 +31,12 @@ const estimateAirportRoadExtras = (locText, effKm, isOutstation, vehicle) => {
   if (!isOutstation) {
     return { stateName: 'Tamil Nadu', statePermitEst: 0, tollsEst: 0 };
   }
-  const text = (locText || '').toLowerCase();
-  const vStr = String(vehicle || '').toLowerCase();
-  const isTempo = vStr.includes('tempo') || vStr.includes('urbania') || vStr.includes('bus') || vStr.includes('coach');
-  const isMUV = vStr.includes('innova') || vStr.includes('crysta');
-  const isSUV = vStr.includes('ertiga') || vStr.includes('xl6');
-
-  let stateName = 'Tamil Nadu';
-  let statePermitEst = 0;
-  let tollsEst = 0;
-
-  if (text.includes('tirupati') || text.includes('tirumala') || text.includes('andhra') || text.includes('kalahasti') || text.includes('nellore') || text.includes('chittoor') || text.includes('renigunta')) {
-    stateName = 'Andhra Pradesh';
-    statePermitEst = isTempo ? 2000 : isMUV ? 900 : isSUV ? 700 : 500;
-    tollsEst = 220;
-  } else if (text.includes('bangalore') || text.includes('bengaluru') || text.includes('karnataka') || text.includes('mysore') || text.includes('mysuru') || text.includes('hosur')) {
-    stateName = 'Karnataka';
-    statePermitEst = isTempo ? 2500 : isMUV ? 1500 : isSUV ? 1200 : 700;
-    tollsEst = 250;
-  } else if (text.includes('pondicherry') || text.includes('puducherry') || text.includes('auroville')) {
-    stateName = 'Puducherry (UT)';
-    statePermitEst = isTempo ? 3500 : isMUV ? 2500 : isSUV ? 1600 : 500;
-    tollsEst = 130;
-  } else if (text.includes('kerala') || text.includes('munnar') || text.includes('cochin') || text.includes('kochi')) {
-    stateName = 'Kerala';
-    statePermitEst = isTempo ? 3000 : isMUV ? 1800 : isSUV ? 1400 : 800;
-    tollsEst = 350;
-  } else {
-    stateName = 'Tamil Nadu';
-    statePermitEst = 0;
-    tollsEst = Math.max(80, Math.round((effKm * 0.85) / 10) * 10);
-  }
-
-  return { stateName, statePermitEst, tollsEst };
+  const permitInfo = getStatePermitForRoute(locText, vehicle, false, effKm);
+  return {
+    stateName: permitInfo.stateName,
+    statePermitEst: permitInfo.permitCost,
+    tollsEst: permitInfo.tollsEst
+  };
 };
 
 const VEHICLE_CAPACITY = {
@@ -196,47 +170,12 @@ const isAirportOutstationRoute = (text = '', distKm = 0) => {
   return false;
 };
 
-// Official published zone tariffs for outstation routes from Chennai Airport
-const PUBLISHED_AIRPORT_OUTSTATION_TARIFFS = {
-  'pondicherry': { distance: 151, duration: '2.5–3 hrs', sedan: 2820, ertiga: 3370, innova: 3370, crysta: 4480, tempo: 8050 },
-  'puducherry': { distance: 151, duration: '2.5–3 hrs', sedan: 2820, ertiga: 3370, innova: 3370, crysta: 4480, tempo: 8050 },
-  'auroville': { distance: 148, duration: '2.5–3 hrs', sedan: 2820, ertiga: 3370, innova: 3370, crysta: 4480, tempo: 8050 },
-  'vellore': { distance: 140, duration: '2.5–3 hrs', sedan: 2600, ertiga: 3120, innova: 3120, crysta: 4150, tempo: 7450 },
-  'tirupati': { distance: 135, duration: '3–3.5 hrs', sedan: 2560, ertiga: 3070, innova: 3070, crysta: 4080, tempo: 7250 },
-  'tirumala': { distance: 155, duration: '3.5–4 hrs', sedan: 2860, ertiga: 3370, innova: 3370, crysta: 4480, tempo: 7850 },
-  'mahabalipuram': { distance: 55, duration: '50–60 mins', sedan: 1650, ertiga: 2400, innova: 2400, crysta: 2950, tempo: 4200 },
-  'mamallapuram': { distance: 55, duration: '50–60 mins', sedan: 1650, ertiga: 2400, innova: 2400, crysta: 2950, tempo: 4200 },
-  'sriperumbudur': { distance: 42, duration: '45–55 mins', sedan: 1400, ertiga: 2100, innova: 2100, crysta: 2600, tempo: 3800 },
-  'kanchipuram': { distance: 75, duration: '1.5–1.8 hrs', sedan: 2100, ertiga: 2650, innova: 2650, crysta: 3400, tempo: 5200 },
-  'tiruvannamalai': { distance: 195, duration: '3.5–4 hrs', sedan: 3600, ertiga: 4350, innova: 4350, crysta: 5800, tempo: 9800 },
-  'thiruvannamalai': { distance: 195, duration: '3.5–4 hrs', sedan: 3600, ertiga: 4350, innova: 4350, crysta: 5800, tempo: 9800 }
-};
+// Official published zone tariffs for outstation routes from Chennai Airport (Single Master Tariff)
+const PUBLISHED_AIRPORT_OUTSTATION_TARIFFS = tariffConfig.airport_tariffs?.published_outstation_drops || {};
 
-// Fixed flat tariff benchmark for Chennai Airport Transfers (matching QuotationEngine & official FAQ)
+// Fixed flat tariff benchmark for Chennai Airport Transfers (from Single Master Tariff)
 const getCityAirportFlatFare = (locText = '', selectedVeh = 'Swift Dzire') => {
-  const t = (locText || '').toLowerCase();
-  let baseSedan = 650; // Default South Chennai (Tambaram, Guindy, Pallavaram, Medavakkam, Velachery)
-
-  if (t.includes('omr') || t.includes('sholinganallur') || t.includes('siruseri') || t.includes('navalur') || t.includes('perungudi') || t.includes('thoraipakkam') || t.includes('kelambakkam')) {
-    baseSedan = 1250;
-  } else if (t.includes('ecr') || t.includes('kovalam') || t.includes('muttukadu') || t.includes('kanathur') || t.includes('akkarai')) {
-    baseSedan = 1400;
-  } else if (t.includes('central') || t.includes('t nagar') || t.includes('t. nagar') || t.includes('anna nagar') || t.includes('egmore') || t.includes('mylapore') || t.includes('besant nagar') || t.includes('adyar') || t.includes('triplicane') || t.includes('marina') || t.includes('nungambakkam') || t.includes('vadapalani') || t.includes('koyambedu') || t.includes('kilpauk') || t.includes('royapettah') || t.includes('tiruvalluvar nagar') || t.includes('thiruvanmiyur')) {
-    baseSedan = 950;
-  } else if (t.includes('ambattur') || t.includes('avadi') || t.includes('madhavaram') || t.includes('redhills') || t.includes('red hills') || t.includes('kolathur')) {
-    baseSedan = 1150;
-  } else if (t.includes('tambaram') || t.includes('guindy') || t.includes('pallavaram') || t.includes('chromepet') || t.includes('alandur') || t.includes('velachery') || t.includes('medavakkam') || t.includes('madipakkam') || t.includes('porur') || t.includes('poonamallee')) {
-    baseSedan = 650;
-  } else {
-    baseSedan = 950; // General Chennai city default
-  }
-
-  const v = selectedVeh || '';
-  if (v.includes('Ertiga')) return Math.round(baseSedan * 1.5 / 50) * 50;
-  if (v.includes('Innova Crysta')) return Math.round(baseSedan * 2.0 / 50) * 50;
-  if (v.includes('Innova')) return Math.round(baseSedan * 1.8 / 50) * 50;
-  if (v.includes('Tempo') || v.includes('Urbania')) return Math.max(2400, Math.round(baseSedan * 2.8 / 50) * 50);
-  return baseSedan;
+  return getCityAirportFlatFareFromMaster(locText, selectedVeh);
 };
 
 const findKnownDistance = (origin, destination) => {
@@ -342,7 +281,8 @@ const calculateAirportFare = (distKm, selectedVeh, locText = '') => {
   if (isOutstation && extras.statePermitEst > 0) {
     totalFare = totalFare + extras.statePermitEst;
   }
-  const advanceToPay = Math.round(totalFare * 0.5);
+  // Airport transfers: flat ₹500 booking advance; balance collected at trip end
+  const advanceToPay = Math.min(500, totalFare);
   const balanceToPay = Math.max(0, totalFare - advanceToPay);
 
   return {
@@ -390,9 +330,9 @@ export default function AirportBookingEngine({
   operatorCallerName = '',
   onQuoteCalculated = null
 }) {
-  // 1. Primary Toggles & 2. Default Direction (Airport Pickup as Default)
-  const [direction, setDirection] = useState('pickup'); // 'pickup' | 'drop'
-  const [pickup, setPickup] = useState(AIRPORT_HUB);
+  // Airport Transfer is strictly Pickup from Airport (MAA) to Customer Destination
+  const direction = 'pickup';
+  const pickup = AIRPORT_HUB;
   const [drop, setDrop] = useState('');
 
   // 4. Date Inputs (Single DateTime + Flight Landing/Departure Time)
@@ -419,7 +359,7 @@ export default function AirportBookingEngine({
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [locationPickerOpen, setLocationPickerOpen] = useState(false);
   const [m3SearchOpen, setM3SearchOpen] = useState(false);
-  const [m3SearchTarget, setM3SearchTarget] = useState('drop'); // 'pickup' | 'drop'
+  const [m3SearchTarget, setM3SearchTarget] = useState('drop');
   const [showFareBreakup, setShowFareBreakup] = useState(false);
   const [quoteRefId, setQuoteRefId] = useState('#QT-101');
 
@@ -433,7 +373,7 @@ export default function AirportBookingEngine({
 
   useEffect(() => {
     if (showResult && distanceKm > 0) {
-      const userLoc = (direction === 'pickup' ? drop : pickup).trim();
+      const userLoc = drop.trim();
       const b = calculateAirportFare(distanceKm, vehicle, userLoc);
       setBreakdown(b);
       setEstimate(b.total_fare);
@@ -451,31 +391,7 @@ export default function AirportBookingEngine({
     setShowResult(false);
   };
 
-  const handleDirectionChange = (newDir) => {
-    if (newDir === direction) return;
-    setDirection(newDir);
-    setShowResult(false);
-    setIsCollapsed(false);
-    setError('');
-
-    if (newDir === 'pickup') {
-      const userLoc = pickup === AIRPORT_HUB ? '' : pickup;
-      setPickup(AIRPORT_HUB);
-      setDrop(userLoc);
-      if (userLoc) resolveTripDistance(userLoc, 'pickup');
-    } else {
-      const userLoc = drop === AIRPORT_HUB ? '' : drop;
-      setPickup(userLoc);
-      setDrop(AIRPORT_HUB);
-      if (userLoc) resolveTripDistance(userLoc, 'drop');
-    }
-
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('airport-direction-change', { detail: { direction: newDir } }));
-    }
-  };
-
-  const resolveTripDistance = (addr, dir = direction) => {
+  const resolveTripDistance = (addr) => {
     const clean = (addr || '').trim();
     if (!clean || clean === AIRPORT_HUB) return;
 
@@ -491,8 +407,8 @@ export default function AirportBookingEngine({
         const service = new window.google.maps.DistanceMatrixService();
         service.getDistanceMatrix(
           {
-            origins: [dir === 'pickup' ? AIRPORT_HUB : clean],
-            destinations: [dir === 'pickup' ? clean : AIRPORT_HUB],
+            origins: [AIRPORT_HUB],
+            destinations: [clean],
             travelMode: window.google.maps.TravelMode.DRIVING,
             unitSystem: window.google.maps.UnitSystem.METRIC,
           },
@@ -513,11 +429,7 @@ export default function AirportBookingEngine({
     if (!addr) return;
     const clean = addr.trim();
 
-    if (direction === 'pickup') {
-      setDrop(clean);
-    } else {
-      setPickup(clean);
-    }
+    setDrop(clean);
     setShowResult(false);
     setError('');
 
@@ -555,24 +467,57 @@ export default function AirportBookingEngine({
 
   useEffect(() => {
     let isMounted = true;
-    const timer = setTimeout(() => {
-      loadGoogleMaps().then(() => {
-        if (!isMounted || !destInputRef.current || !window.google || !window.google.maps || !window.google.maps.places) return;
+    let checkTimer = null;
+
+    const initAutocomplete = () => {
+      if (!isMounted || !destInputRef.current || !window.google?.maps?.places) return;
+      if (destInputRef.current.dataset.googleAttached) return;
+
+      try {
         const ac = new window.google.maps.places.Autocomplete(destInputRef.current, {
           componentRestrictions: { country: 'in' },
           fields: ['name', 'formatted_address', 'geometry'],
         });
 
         ac.addListener('place_changed', () => {
+          if (!isMounted) return;
           const place = ac.getPlace();
           const addr = place?.formatted_address || place?.name;
           if (!addr) return;
           handleLocationSelected(addr, place);
         });
-      }).catch(() => {});
-    }, 50);
+        destInputRef.current.dataset.googleAttached = 'true';
+      } catch (_) {}
+    };
 
-    return () => { isMounted = false; clearTimeout(timer); };
+    loadGoogleMaps()
+      .then(() => {
+        if (isMounted) initAutocomplete();
+      })
+      .catch(() => {});
+
+    if (window.google?.maps?.places) {
+      initAutocomplete();
+    } else {
+      window.addEventListener('google-maps-loaded', initAutocomplete);
+      checkTimer = setInterval(() => {
+        if (window.google?.maps?.places) {
+          initAutocomplete();
+          if (destInputRef.current?.dataset?.googleAttached && checkTimer) {
+            clearInterval(checkTimer);
+          }
+        }
+      }, 300);
+    }
+
+    return () => {
+      isMounted = false;
+      window.removeEventListener('google-maps-loaded', initAutocomplete);
+      if (checkTimer) clearInterval(checkTimer);
+      if (destInputRef.current) {
+        delete destInputRef.current.dataset.googleAttached;
+      }
+    };
   }, [direction]);
 
   useEffect(() => {
@@ -699,10 +644,10 @@ export default function AirportBookingEngine({
       if (overrideFare && typeof overrideFare === 'number' && overrideFare > 0) {
         const vData = vehicles[activeVeh] || vehicles['Swift Dzire'];
         const bata = vData.driver_bata || 500;
-        const extras = estimateAirportRoadExtras(userLoc, effKm, true, selectedVeh);
+        const extras = estimateAirportRoadExtras(userLoc, effKm, true, activeVeh);
         const permitAmount = extras?.statePermitEst || 0;
         const totalWithPermit = overrideFare + permitAmount;
-        const advanceToPay = Math.round(totalWithPermit * 0.5);
+        const advanceToPay = Math.min(500, totalWithPermit);
         const kmCost = Math.max(0, overrideFare - bata);
         result = {
           actual_km: effKm,
@@ -881,8 +826,8 @@ export default function AirportBookingEngine({
       '• Quoted Total Fare: ₹' + estimate.toLocaleString('en-IN') + ' + Tolls/Parking Extra',
       '• State Entry Permit' + ((breakdown && breakdown.is_outstation && breakdown.state_permit_est > 0 && breakdown.state_name) ? (' (' + breakdown.state_name + ')') : '') + ': ' + ((breakdown && breakdown.is_outstation && breakdown.state_permit_est > 0) ? ('₹' + breakdown.state_permit_est.toLocaleString('en-IN') + ' (Included in Total)') : '₹0 (Within Tamil Nadu / Not required)'),
       '• Tolls & Parking: Extra (Pay at actuals as per receipts)',
-      '• Payment Policy: Pay 50% (₹' + (breakdown ? breakdown.advance_to_pay : Math.round(estimate * 0.5)).toLocaleString('en-IN') + ') on cab arrival, balance after trip completion',
-      '• Booking Fee: ₹0 (Zero advance to book)',
+      '• Booking Advance: ₹' + (breakdown ? breakdown.advance_to_pay : Math.min(500, estimate)).toLocaleString('en-IN') + ' to confirm & lock cab (deducted from bill)',
+      '• Balance Payable: ₹' + (breakdown ? breakdown.balance_to_pay : Math.max(0, estimate - 500)).toLocaleString('en-IN') + ' to driver at trip end',
       '',
       'Please save my quote & confirm live cab availability.',
       (() => {
@@ -987,7 +932,7 @@ export default function AirportBookingEngine({
                   <span className="truncate">{direction === 'pickup' ? (drop ? drop.split(',')[0] : 'Destination') : 'Chennai Airport (MAA)'}</span>
                 </div>
                 <div className="text-slate-500 text-[11px] font-medium mt-0.5 truncate flex items-center gap-2">
-                  <span>{pickupDate ? pickupDate.replace('T', ' ') : ''}</span>
+                  <span>{dateTime ? dateTime.replace('T', ' ') : ''}</span>
                   <span>•</span>
                   <span>{direction === 'pickup' ? 'Airport Pickup' : 'Airport Drop'}</span>
                   <span>•</span>
@@ -1081,6 +1026,7 @@ export default function AirportBookingEngine({
                 id="airport-from-input"
                 data-testid="airport-from-input"
                 data-autocomplete-input="true"
+                autoComplete="off"
                 ref={direction === 'drop' ? destInputRef : null}
                 type="text"
                 value={pickup}
@@ -1154,6 +1100,7 @@ export default function AirportBookingEngine({
                 id="airport-to-input"
                 data-testid="airport-to-input"
                 data-autocomplete-input="true"
+                autoComplete="off"
                 ref={direction === 'pickup' ? destInputRef : null}
                 type="text"
                 value={drop}
@@ -1251,59 +1198,9 @@ export default function AirportBookingEngine({
             </div>
           </div>
 
-          {/* Compact 1-Row Vehicle Selector with Car Images (Savaari / Uber style) */}
-          <div className="pt-2">
-            <div className="flex items-center justify-between text-xs font-bold text-slate-600 mb-1 px-0.5">
-              <span className="flex items-center gap-1.5">
-                <Car className="w-3.5 h-3.5 text-[#1a73e8]" />
-                <span>Select Vehicle:</span>
-              </span>
-              <span className="text-[11px] font-normal text-slate-400">
-                Tap to choose cab
-              </span>
-            </div>
-            <div className="flex gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-1 scroll-smooth">
-              {AIRPORT_COMPARISON_VEHICLES.map((item) => {
-                const cap = VEHICLE_CAPACITY[item.key] ?? 4;
-                const isSelected = vehicle === item.key;
-                return (
-                  <button
-                    key={`init-${item.key}`}
-                    type="button"
-                    onClick={() => {
-                      setVehicle(item.key);
-                      setPassengers(String(cap));
-                    }}
-                    className={`group relative flex items-center gap-2 px-2.5 py-1.5 rounded-xl border shrink-0 transition-all cursor-pointer min-h-[50px] ${
-                      isSelected
-                        ? 'border-[#1a73e8] bg-blue-50/90 shadow-2xs ring-1.5 ring-[#1a73e8]/30'
-                        : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 shadow-2xs'
-                    }`}
-                  >
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-14 h-9 object-contain shrink-0 transition-transform group-hover:scale-105"
-                      loading="lazy"
-                      width="56"
-                      height="36"
-                    />
-                    <div className="text-left leading-tight pr-0.5">
-                      <div className={`text-xs font-bold whitespace-nowrap ${isSelected ? 'text-[#0b57d0]' : 'text-slate-800'}`}>
-                        {item.name}
-                      </div>
-                      <div className={`text-[10px] ${isSelected ? 'text-blue-700 font-semibold' : 'text-slate-500'}`}>
-                        {cap} Seats
-                      </div>
-                    </div>
-                    {isSelected && (
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#1a73e8] shrink-0" />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+          {/* Hidden inputs to preserve selected vehicle & passenger values for seamless test / submission compatibility */}
+          <input type="hidden" name="passengers" value={passengers} />
+          <input type="hidden" name="vehicle" value={vehicle} />
 
           {/* Primary View Instant Fare Button */}
           <div className="pt-1.5 flex flex-col items-center justify-center">
@@ -1382,14 +1279,14 @@ export default function AirportBookingEngine({
               {/* Payment Split & Reassurance */}
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <div className="p-2.5 rounded-lg bg-emerald-50/80 border border-emerald-200 text-emerald-900">
-                  <span className="text-slate-500 block text-[11px] font-medium">Payment on Arrival</span>
-                  <span className="font-extrabold text-sm text-emerald-800">50% (₹{breakdown.advance_to_pay?.toLocaleString('en-IN')})</span>
-                  <span className="text-[10px] text-emerald-700/80 block mt-0.5">Zero advance to book</span>
+                  <span className="text-slate-500 block text-[11px] font-medium">Booking Advance</span>
+                  <span className="font-extrabold text-sm text-emerald-800">₹{breakdown.advance_to_pay?.toLocaleString('en-IN')}</span>
+                  <span className="text-[10px] text-emerald-700/80 block mt-0.5">to confirm · deducted from bill</span>
                 </div>
                 <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-900">
                   <span className="text-slate-500 block text-[11px] font-medium">Balance to Pay Driver</span>
                   <span className="font-extrabold text-sm text-slate-900">₹{breakdown.balance_to_pay?.toLocaleString('en-IN')}</span>
-                  <span className="text-[10px] text-slate-500 block mt-0.5">after trip completion</span>
+                  <span className="text-[10px] text-slate-500 block mt-0.5">at trip end</span>
                 </div>
               </div>
 
@@ -1499,17 +1396,17 @@ export default function AirportBookingEngine({
                     type="button"
                     id="book-airport-whatsapp-btn"
                     onClick={handleWhatsAppBooking}
-                    className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-[#075E54] hover:bg-[#128C7E] active:bg-[#054c44] text-white font-bold text-sm shadow-md transition-all active:scale-[0.99] cursor-pointer"
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary font-bold text-sm shadow-m3-1 hover:shadow-m3-2 transition-all active:scale-[0.99] cursor-pointer"
                   >
-                    <WhatsAppIcon className="w-4 h-4" />
+                    <WhatsAppIcon variant="white" className="w-4 h-4 shrink-0" />
                     <span>Book {vehicle} on WhatsApp</span>
                   </button>
 
                   <a
                     href="tel:+918939539211"
-                    className="inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-full border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-xs sm:text-sm transition-colors cursor-pointer shrink-0"
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-full border border-m3-outline hover:bg-m3-primary/10 active:bg-m3-primary/20 text-m3-primary font-bold text-xs sm:text-sm transition-colors cursor-pointer shrink-0"
                   >
-                    <Phone className="w-4 h-4 text-slate-600" />
+                    <Phone className="w-4 h-4 text-m3-primary" />
                     <span>Call Desk</span>
                   </a>
                 </div>

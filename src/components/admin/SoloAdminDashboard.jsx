@@ -10,6 +10,7 @@ import AiBookingParser from './solo/AiBookingParser';
 import WebsiteRadarView from './solo/WebsiteRadarView';
 import OperationsCalendarView from './solo/OperationsCalendarView';
 import QuickBookingModal from './solo/QuickBookingModal';
+import MasterTariffView from './solo/MasterTariffView';
 import FastQuoteDesk from './FastQuoteDesk';
 import { getActiveGoogleSheetUrl, fetchRemoteGoogleSheetUrl } from '../../config/googleSheets';
 import { parseAndValidateContact, validateCustomerContact, isActionableLead, deduplicateCalculatorQuotes } from '../../utils/bookingContactValidator';
@@ -894,6 +895,14 @@ export default function SoloAdminDashboard() {
       description: 'Inbound phone tariff engine'
     },
     {
+      id: 'TARIFFS',
+      label: '📋 Master Tariff Card',
+      icon: 'payments',
+      badge: 'Master',
+      badgeColor: 'bg-emerald-700 text-white',
+      description: 'All rates & state permits at a glance'
+    },
+    {
       id: 'FAST_QUOTE',
       label: '⚡ Fast Quote Desk',
       icon: 'bolt',
@@ -1069,6 +1078,8 @@ export default function SoloAdminDashboard() {
                 {currentView === 'COMPLETED' && 'Step 3: Completed Trips'}
                 {currentView === 'DRIVERS' && 'Driver Roster'}
                 {currentView === 'CALCULATOR' && 'Rate Calculator'}
+                {currentView === 'TARIFFS' && 'Single Master Tariff & State Entry Permits'}
+                {currentView === 'FAST_QUOTE' && 'Fast Quote Desk'}
                 {currentView === 'WEB_RADAR' && 'Website Calc Radar'}
                 {currentView === 'SETTINGS' && 'System Settings'}
               </span>
@@ -1206,6 +1217,11 @@ export default function SoloAdminDashboard() {
               }}
               showToast={showToast}
             />
+          )}
+
+          {/* VIEW 5.2: SINGLE MASTER TARIFF & PERMIT MATRIX */}
+          {currentView === 'TARIFFS' && (
+            <MasterTariffView showToast={showToast} />
           )}
 
           {/* VIEW 5.5: FAST QUOTE DESK */}

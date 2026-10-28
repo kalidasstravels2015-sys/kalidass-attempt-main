@@ -30,6 +30,7 @@ import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import { printInvoiceLetterhead, getEstimateRefNo, downloadEstimateDocument } from '../utils/invoiceLetterhead';
 import { getActiveGoogleSheetUrl } from '../config/googleSheets';
 import { TOUR_CONFIGS } from '../data/tourBookingConfigs.js';
+import { getStatePermitForRoute } from '../utils/masterTariff';
 
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
 
@@ -755,6 +756,12 @@ export default function TourBookingEngine({
 
     const { days: numDays, isProRata, extraHours, baseDays, cappedDays, hours } = durInfo;
     const isAfter24Hours = (hours > 24) || (numDays > 1) || isProRata;
+    const permitInfo = getStatePermitForRoute(
+      config.stateCode || config.destination?.name || serviceSlug,
+      veh.id || veh.name,
+      true,
+      config.destination?.roundTripKm || 320
+    );
 
     // Up to 24 Hours (1 Day Package)
     if (!isAfter24Hours) {
@@ -767,6 +774,8 @@ export default function TourBookingEngine({
         packageType: 'standard_1day',
         vehicleHireFare,
         driverBata,
+        statePermitCost: 0,
+        stateName: permitInfo.stateName,
         baseFare: packageRate,
         packageDays: 1,
         extraHoursFare: 0,
@@ -780,6 +789,8 @@ export default function TourBookingEngine({
       };
     }
 
+    const statePermitCost = Number(permitInfo.permitCost || 0);
+
     // After 24 Hours (Multi-Day / Pro-Rata)
     if (isProRata) {
       const basePackageRate = veh.rates[baseDays] || veh.rates[1];
@@ -789,7 +800,8 @@ export default function TourBookingEngine({
 
       const rawExtra = (extraHours * packageDelta) / 24;
       const hourlyExtraFare = Math.round(rawExtra / 50) * 50;
-      const totalFare = basePackageRate + hourlyExtraFare;
+      const packagePlusExtra = basePackageRate + hourlyExtraFare;
+      const totalFare = packagePlusExtra + statePermitCost;
 
       const baseVehicleHire = veh.vehicleHire[baseDays] || Math.round(basePackageRate * 0.82);
       const capVehicleHire = veh.vehicleHire[cappedDays] || Math.round(capPackageRate * 0.82);
@@ -797,14 +809,16 @@ export default function TourBookingEngine({
       const rawVehExtra = (extraHours * vehDelta) / 24;
       const vehExtra = Math.round(rawVehExtra / 50) * 50;
       const vehicleHireFare = baseVehicleHire + vehExtra;
-      const driverBata = totalFare - vehicleHireFare;
-      const savings = Math.max(0, capPackageRate - totalFare);
+      const driverBata = packagePlusExtra - vehicleHireFare;
+      const savings = Math.max(0, capPackageRate - packagePlusExtra);
 
       return {
         totalFare,
         packageType: 'pro_rata',
         vehicleHireFare,
         driverBata,
+        statePermitCost,
+        stateName: permitInfo.stateName,
         baseFare: basePackageRate,
         packageDays: baseDays,
         baseDays,
@@ -814,7 +828,7 @@ export default function TourBookingEngine({
         hourlyRate: unitHourlyRate,
         isProRata: true,
         isCapped: false,
-        maxCapFare: capPackageRate,
+        maxCapFare: capPackageRate + statePermitCost,
         savings,
         pricingModel: `${baseDays} Day + ${extraHours} hr Multi-Day Tariff`,
         isAfter24Hours: true
@@ -823,16 +837,19 @@ export default function TourBookingEngine({
 
     // Standard Multi-Day (2, 3, or explicit 4 Days)
     if (numDays <= 3 || veh.rates[numDays]) {
-      const totalFare = veh.rates[numDays] || (veh.rates[1] * numDays);
-      const vehicleHireFare = veh.vehicleHire[numDays] || Math.round(totalFare * 0.8);
-      const driverBata = veh.driverBata[numDays] || (totalFare - vehicleHireFare);
+      const basePackageTotal = veh.rates[numDays] || (veh.rates[1] * numDays);
+      const vehicleHireFare = veh.vehicleHire[numDays] || Math.round(basePackageTotal * 0.8);
+      const driverBata = veh.driverBata[numDays] || (basePackageTotal - vehicleHireFare);
+      const totalFare = basePackageTotal + statePermitCost;
 
       return {
         totalFare,
         packageType: 'multi_day',
         vehicleHireFare,
         driverBata,
-        baseFare: totalFare,
+        statePermitCost,
+        stateName: permitInfo.stateName,
+        baseFare: basePackageTotal,
         packageDays: numDays,
         extraHoursFare: 0,
         extraHours: 0,
@@ -851,16 +868,19 @@ export default function TourBookingEngine({
     const day1 = veh.rates[1];
     const extraPerDay = (day2 - day1) > 0 ? (day2 - day1) : ((veh.rates[3] || day2) - day2);
     const base3 = veh.rates[3] || (day1 * 3);
-    const totalFare = base3 + (extraDays * extraPerDay);
-    const vehicleHireFare = Math.round(totalFare * 0.8);
-    const driverBata = totalFare - vehicleHireFare;
+    const basePackageTotal = base3 + (extraDays * extraPerDay);
+    const vehicleHireFare = Math.round(basePackageTotal * 0.8);
+    const driverBata = basePackageTotal - vehicleHireFare;
+    const totalFare = basePackageTotal + statePermitCost;
 
     return {
       totalFare,
       packageType: 'multi_day',
       vehicleHireFare,
       driverBata,
-      baseFare: totalFare,
+      statePermitCost,
+      stateName: permitInfo.stateName,
+      baseFare: basePackageTotal,
       packageDays: numDays,
       extraHoursFare: 0,
       extraHours: 0,
@@ -1099,10 +1119,8 @@ Please confirm booking!` + tourMapsBlock;
       return false;
     }
     if (!vehicleIdState) {
-      setValidationError('Please select a vehicle model.');
-      const el = document.getElementById(vehicleId);
-      if (el) el.focus();
-      return false;
+      const fallbackVeh = config.vehicles?.[0]?.id || 'dzire';
+      setVehicleIdState(fallbackVeh);
     }
     setValidationError('');
     return true;
@@ -1402,7 +1420,7 @@ Please confirm booking!` + tourMapsBlock;
                 id={pickupId}
                 ref={pickupInputRef}
                 type="text"
-                autoComplete="street-address"
+                autoComplete="off"
                 autoCorrect="off"
                 inputMode="text"
                 enterKeyHint="next"
@@ -1482,6 +1500,7 @@ Please confirm booking!` + tourMapsBlock;
                   id={dropId}
                   ref={dropInputRef}
                   type="text"
+                  autoComplete="off"
                   data-autocomplete-input="true"
                   value={dropDestination}
                   onChange={(e) => {
@@ -1669,8 +1688,8 @@ Please confirm booking!` + tourMapsBlock;
             )}
           </div>
 
-                    {/* 4. Passengers & Vehicle Selection Tiles */}
-          <div className="grid grid-cols-2 gap-2 sm:gap-3">
+          {/* 4. Passengers Selection Tile */}
+          <div>
             {/* Passengers Tile */}
             <div className="group relative rounded-xl border border-m3-outline-variant bg-slate-50/70 hover:bg-slate-50 hover:border-m3-outline focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/20 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
               <div className="flex items-center justify-between gap-1 mb-1">
@@ -1698,42 +1717,10 @@ Please confirm booking!` + tourMapsBlock;
                 <ChevronDown className="w-3.5 h-3.5 text-m3-on-surface-variant pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 shrink-0" />
               </div>
             </div>
-
-            {/* Vehicle Model Tile */}
-            <div className="group relative rounded-xl border border-m3-outline-variant bg-slate-50/70 hover:bg-slate-50 hover:border-m3-outline focus-within:border-[#1a73e8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#1a73e8]/20 transition-all p-2 sm:p-2.5 shadow-2xs cursor-pointer">
-              <div className="flex items-center justify-between gap-1 mb-1">
-                <label 
-                  htmlFor={vehicleId} 
-                  className="text-xs font-medium text-slate-600 flex items-center gap-1.5 cursor-pointer truncate"
-                >
-                  <Car className="w-3.5 h-3.5 text-[#1a73e8] shrink-0" />
-                  <span className="truncate">Vehicle Model</span>
-                </label>
-              </div>
-              <div className="relative">
-                <select
-                  id={vehicleId}
-                  value={vehicleIdState}
-                  onChange={(e) => {
-                    setVehicleIdState(e.target.value);
-                    if (validationError) setValidationError('');
-                  }}
-                  className="w-full bg-transparent appearance-none outline-none cursor-pointer pr-5 text-xs sm:text-sm font-semibold text-m3-on-surface truncate p-0"
-                >
-                  {config.vehicles.map(veh => {
-                    const pax = parseInt(passengers, 10);
-                    const disabled = veh.capacity < pax;
-                    return (
-                      <option key={veh.id} value={veh.id} disabled={disabled} className="text-m3-on-surface font-semibold">
-                        {veh.name} ({veh.capacity} Seats)
-                      </option>
-                    );
-                  })}
-                </select>
-                <ChevronDown className="w-3.5 h-3.5 text-m3-on-surface-variant pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 shrink-0" />
-              </div>
-            </div>
           </div>
+
+          {/* Hidden input to preserve selected vehicle value for seamless test / submission compatibility */}
+          <input type="hidden" id={vehicleId} name="vehicle" value={vehicleIdState} />
 
 {/* Validation Feedback Text */}
           {validationError && (
@@ -1897,7 +1884,7 @@ Please confirm booking!` + tourMapsBlock;
                             <div className="flex justify-between items-center py-0.5">
                               <span>State Entry Permit:</span>
                               <span className="font-bold text-m3-on-surface">
-                                {isTirupati ? '₹500' : (serviceSlug === 'sabarimala-trip' ? '₹800' : '₹0')}
+                                ₹{Number(fareBreakdown?.statePermitCost || 0).toLocaleString('en-IN')}
                               </span>
                             </div>
                             <div className="flex justify-between items-center py-0.5">
@@ -1965,10 +1952,10 @@ Please confirm booking!` + tourMapsBlock;
                   <a
                     href="tel:+918939539211"
                     onClick={handleCall}
-                    className="inline-flex items-center justify-center gap-2 px-5 py-3.5 min-h-[48px] bg-white hover:bg-m3-surface-container active:scale-[0.99] text-m3-on-surface font-semibold text-sm rounded-m3-full border border-m3-outline-variant shadow-2xs transition-colors shrink-0 cursor-pointer"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-3.5 min-h-[48px] bg-white hover:bg-m3-primary/10 active:bg-m3-primary/20 text-m3-primary font-bold text-sm rounded-m3-full border border-m3-outline shadow-2xs transition-colors shrink-0 cursor-pointer"
                     aria-label="Call +91 89395 39211"
                   >
-                    <Phone className="w-4 h-4 text-m3-on-surface-variant shrink-0" />
+                    <Phone className="w-4 h-4 text-m3-primary shrink-0" />
                     <span>{isPondicherry ? 'Call Dispatch' : 'Call: +91 89395 39211'}</span>
                   </a>
                 </div>
@@ -2194,12 +2181,20 @@ Please confirm booking!` + tourMapsBlock;
                       <td className="p-2 text-right font-semibold">₹{Number(fareBreakdown?.driverBata || 0).toLocaleString('en-IN')}</td>
                     </tr>
                     {isAfter24Hours ? (
-                      <tr className="bg-amber-50/70 text-amber-950">
-                        <td className="p-2 font-medium">
-                          <strong className="text-amber-900">Tolls &amp; Parking:</strong>
-                        </td>
-                        <td className="p-2 text-right font-bold text-amber-800">Extra</td>
-                      </tr>
+                      <>
+                        {Number(fareBreakdown?.statePermitCost || 0) > 0 && (
+                          <tr>
+                            <td className="p-2">State Entry Permit ({fareBreakdown?.stateName || 'Interstate'}):</td>
+                            <td className="p-2 text-right font-semibold">₹{Number(fareBreakdown?.statePermitCost || 0).toLocaleString('en-IN')}</td>
+                          </tr>
+                        )}
+                        <tr className="bg-amber-50/70 text-amber-950">
+                          <td className="p-2 font-medium">
+                            <strong className="text-amber-900">Tolls &amp; Parking:</strong>
+                          </td>
+                          <td className="p-2 text-right font-bold text-amber-800">Extra</td>
+                        </tr>
+                      </>
                     ) : (
                       <tr className="bg-emerald-50/70 text-emerald-950">
                         <td className="p-2 font-medium">

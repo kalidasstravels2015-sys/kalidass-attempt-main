@@ -1,6 +1,14 @@
 {
+  "meta": {
+    "version": "2026.2",
+    "lastUpdated": "2026-10-28",
+    "authority": "Kalidass Travels Master Tariff & Parivahan Statutory Checkpost Schedule",
+    "parivahanPortal": "https://checkpost.parivahan.gov.in/"
+  },
   "vehicles": {
     "Swift Dzire": {
+      "category": "sedan",
+      "seats": "4+1",
       "round_trip_rate": 14,
       "one_way_rate": 16,
       "min_km_per_day": 250,
@@ -15,6 +23,8 @@
       "extra_hr_rate": 150
     },
     "Toyota Etios": {
+      "category": "sedan",
+      "seats": "4+1",
       "round_trip_rate": 14,
       "one_way_rate": 16,
       "min_km_per_day": 250,
@@ -29,6 +39,8 @@
       "extra_hr_rate": 150
     },
     "Maruti Ertiga": {
+      "category": "suv",
+      "seats": "6+1",
       "round_trip_rate": 17,
       "one_way_rate": 19,
       "min_km_per_day": 250,
@@ -43,6 +55,8 @@
       "extra_hr_rate": 200
     },
     "Innova": {
+      "category": "muv",
+      "seats": "7+1",
       "round_trip_rate": 20,
       "one_way_rate": 22,
       "min_km_per_day": 250,
@@ -57,6 +71,8 @@
       "extra_hr_rate": 250
     },
     "Innova Crysta": {
+      "category": "muv",
+      "seats": "7+1",
       "round_trip_rate": 22,
       "one_way_rate": 25,
       "min_km_per_day": 250,
@@ -71,6 +87,8 @@
       "extra_hr_rate": 350
     },
     "Tempo Traveller": {
+      "category": "tempo",
+      "seats": "12+1",
       "round_trip_rate": 24,
       "one_way_rate": 26,
       "min_km_per_day": 300,
@@ -82,9 +100,11 @@
       "local_10hr_pkg": 6500,
       "local_12hr_pkg": 7000,
       "extra_km_rate": 24,
-      "extra_hr_rate": 500
+      "extra_hr_rate": 400
     },
     "Force Urbania": {
+      "category": "coach",
+      "seats": "16+1",
       "round_trip_rate": 38,
       "one_way_rate": 42,
       "min_km_per_day": 300,
@@ -97,6 +117,485 @@
       "local_12hr_pkg": 13000,
       "extra_km_rate": 38,
       "extra_hr_rate": 600
+    }
+  },
+  "tempo_fleet": {
+    "12-Seater Luxury Force Tempo": {
+      "name": "12-Seater Luxury Force Tempo",
+      "shortName": "12-Seater",
+      "category": "tempo",
+      "seats": "12+1",
+      "round_trip_rate": 24,
+      "one_way_rate": 26,
+      "min_km_per_day": 300,
+      "driver_bata": 800,
+      "min_drop_km": 250,
+      "local_4hr_pkg": 3500,
+      "local_5hr_pkg": 4200,
+      "local_8hr_pkg": 5500,
+      "local_10hr_pkg": 6500,
+      "local_12hr_pkg": 7000,
+      "extra_km_rate": 24,
+      "extra_hr_rate": 400
+    },
+    "14-Seater Executive Force Tempo": {
+      "name": "14-Seater Executive Force Tempo",
+      "shortName": "14-Seater",
+      "category": "tempo",
+      "seats": "14+1",
+      "round_trip_rate": 25,
+      "one_way_rate": 27,
+      "min_km_per_day": 300,
+      "driver_bata": 800,
+      "min_drop_km": 250,
+      "local_4hr_pkg": 3800,
+      "local_5hr_pkg": 4200,
+      "local_8hr_pkg": 5800,
+      "local_10hr_pkg": 6800,
+      "local_12hr_pkg": 7500,
+      "extra_km_rate": 25,
+      "extra_hr_rate": 400
+    },
+    "17-Seater Executive Force Tempo": {
+      "name": "17-Seater Executive Force Tempo",
+      "shortName": "17-Seater",
+      "category": "coach",
+      "seats": "17+1",
+      "round_trip_rate": 26,
+      "one_way_rate": 29,
+      "min_km_per_day": 300,
+      "driver_bata": 800,
+      "min_drop_km": 250,
+      "local_4hr_pkg": 4200,
+      "local_5hr_pkg": 4500,
+      "local_8hr_pkg": 6200,
+      "local_10hr_pkg": 7200,
+      "local_12hr_pkg": 8000,
+      "extra_km_rate": 26,
+      "extra_hr_rate": 400
+    },
+    "20-Seater Grand Force Tempo": {
+      "name": "20-Seater Grand Force Tempo",
+      "shortName": "20-Seater",
+      "category": "coach",
+      "seats": "20+1",
+      "round_trip_rate": 30,
+      "one_way_rate": 33,
+      "min_km_per_day": 300,
+      "driver_bata": 900,
+      "min_drop_km": 250,
+      "local_4hr_pkg": 4800,
+      "local_5hr_pkg": 5500,
+      "local_8hr_pkg": 7500,
+      "local_10hr_pkg": 8500,
+      "local_12hr_pkg": 9500,
+      "extra_km_rate": 30,
+      "extra_hr_rate": 500
+    },
+    "26-Seater Mini Bus / Force Tempo": {
+      "name": "26-Seater Mini Bus / Force Tempo",
+      "shortName": "26-Seater Mini Bus",
+      "category": "coach",
+      "seats": "26+1",
+      "round_trip_rate": 36,
+      "one_way_rate": 40,
+      "min_km_per_day": 350,
+      "driver_bata": 1000,
+      "min_drop_km": 300,
+      "local_4hr_pkg": 6000,
+      "local_5hr_pkg": 7000,
+      "local_8hr_pkg": 9000,
+      "local_10hr_pkg": 10500,
+      "local_12hr_pkg": 12000,
+      "extra_km_rate": 36,
+      "extra_hr_rate": 600
+    },
+    "Force Urbania VIP Luxury": {
+      "name": "Force Urbania VIP Luxury Van",
+      "shortName": "Urbania VIP",
+      "category": "coach",
+      "seats": "16+1",
+      "round_trip_rate": 38,
+      "one_way_rate": 42,
+      "min_km_per_day": 300,
+      "driver_bata": 1100,
+      "min_drop_km": 250,
+      "local_4hr_pkg": 5000,
+      "local_5hr_pkg": 6000,
+      "local_8hr_pkg": 9500,
+      "local_10hr_pkg": 11000,
+      "local_12hr_pkg": 13000,
+      "extra_km_rate": 38,
+      "extra_hr_rate": 600
+    }
+  },
+  "state_permits": {
+    "TN": {
+      "code": "TN",
+      "stateName": "Tamil Nadu",
+      "authority": "TN STA Home State Contract Carriage Permit",
+      "statutoryBasis": "Home State Registration (Zero Border Entry Tax)",
+      "portalUrl": "https://parivahan.gov.in/",
+      "rates": {
+        "sedan": 0,
+        "suv": 0,
+        "muv": 0,
+        "tempo": 0,
+        "coach": 0
+      },
+      "tolls_est": {
+        "one_way": 0,
+        "round_trip": 0,
+        "per_km_factor": 0.85,
+        "min_toll": 80
+      },
+      "keywords": []
+    },
+    "PY": {
+      "code": "PY",
+      "stateName": "Puducherry (UT)",
+      "authority": "Transport Department, Govt. of Puducherry (Gorimedu / Kalapet / Kanniakoil Checkpost)",
+      "statutoryBasis": "Puducherry MV Taxation Act — 7-Day Temporary/Special Permit & Checkpost Token",
+      "portalUrl": "https://transport.py.gov.in/",
+      "rates": {
+        "sedan": 500,
+        "suv": 800,
+        "muv": 1200,
+        "tempo": 2000,
+        "coach": 2500
+      },
+      "tolls_est": {
+        "one_way": 130,
+        "round_trip": 250
+      },
+      "keywords": [
+        "pondicherry",
+        "puducherry",
+        "auroville",
+        "pondy",
+        "karaikal",
+        "thirunallar",
+        "thiruvettakudy",
+        "nitpy"
+      ]
+    },
+    "AP": {
+      "code": "AP",
+      "stateName": "Andhra Pradesh",
+      "authority": "AP Transport Dept (e-Pragathi / Parivahan Checkpost)",
+      "statutoryBasis": "AP MV Taxation Act Sec 4(4) — Short-Term 7-Day License (Motor Cab / Maxi Cab)",
+      "portalUrl": "https://aptransport.org/",
+      "rates": {
+        "sedan": 600,
+        "suv": 1000,
+        "muv": 1800,
+        "tempo": 3000,
+        "coach": 4200
+      },
+      "tolls_est": {
+        "one_way": 220,
+        "round_trip": 400
+      },
+      "keywords": [
+        "tirupati",
+        "tirupathi",
+        "tirumala",
+        "andhra",
+        "kalahasti",
+        "srikalahasti",
+        "nellore",
+        "vijayawada",
+        "chittoor",
+        "renigunta",
+        "kanipakam",
+        "tada",
+        "sullurpeta",
+        "srisailam",
+        "vizag",
+        "visakhapatnam",
+        "guntur",
+        "kurnool",
+        "anantapur",
+        "kadapa",
+        "puttaparthi",
+        "mantralayam"
+      ]
+    },
+    "KA": {
+      "code": "KA",
+      "stateName": "Karnataka",
+      "authority": "Karnataka Transport Dept (Attibele / Kolar Checkpost)",
+      "statutoryBasis": "Karnataka MV Taxation Act 1957 Sec 3(2) Schedule Part B (≤7 Days Short-Term)",
+      "portalUrl": "https://transport.karnataka.gov.in/",
+      "rates": {
+        "sedan": 700,
+        "suv": 1200,
+        "muv": 1600,
+        "tempo": 2800,
+        "coach": 4000
+      },
+      "tolls_est": {
+        "one_way": 250,
+        "round_trip": 450
+      },
+      "keywords": [
+        "bangalore",
+        "bengaluru",
+        "karnataka",
+        "mysore",
+        "mysuru",
+        "coorg",
+        "madikeri",
+        "mangalore",
+        "mangaluru",
+        "udupi",
+        "chikmagalur",
+        "hampi",
+        "bellary",
+        "hubli",
+        "belgaum",
+        "shimoga",
+        "kolar",
+        "tumkur",
+        "kukke",
+        "dharmasthala",
+        "murudeshwar",
+        "gokarna"
+      ]
+    },
+    "KL": {
+      "code": "KL",
+      "stateName": "Kerala",
+      "authority": "Kerala Motor Vehicles Dept (Walayar / Kumily / Aryankavu Checkpost)",
+      "statutoryBasis": "Kerala MV Taxation Act 1976 — 7-Day Short-Term (1/10th of ₹2,500/seat/qtr + ₹110 Fee + Cess)",
+      "portalUrl": "https://mvd.kerala.gov.in/",
+      "rates": {
+        "sedan": 1000,
+        "suv": 1600,
+        "muv": 2000,
+        "tempo": 3500,
+        "coach": 4800
+      },
+      "tolls_est": {
+        "one_way": 350,
+        "round_trip": 650
+      },
+      "keywords": [
+        "kerala",
+        "sabarimala",
+        "pamba",
+        "nilakkal",
+        "munnar",
+        "cochin",
+        "kochi",
+        "wayanad",
+        "trivandrum",
+        "thiruvananthapuram",
+        "guruvayur",
+        "guruvayoor",
+        "alleppey",
+        "alappuzha",
+        "thekkady",
+        "kumarakom",
+        "kovalam",
+        "varkala",
+        "thrissur",
+        "palakkad",
+        "kozhikode",
+        "calicut",
+        "kannur",
+        "chottanikkara"
+      ]
+    }
+  },
+  "airport_tariffs": {
+    "city_zones": {
+      "south": {
+        "label": "South Chennai (Tambaram, Guindy, Pallavaram, Velachery, Medavakkam, Porur)",
+        "sedan_base": 650
+      },
+      "central": {
+        "label": "Central Chennai (T. Nagar, Anna Nagar, Egmore, Adyar, Mylapore, Koyambedu)",
+        "sedan_base": 950
+      },
+      "north_west": {
+        "label": "North / West Chennai (Ambattur, Avadi, Madhavaram, Red Hills, Kolathur)",
+        "sedan_base": 1150
+      },
+      "omr": {
+        "label": "OMR IT Corridor (Perungudi, Thoraipakkam, Sholinganallur, Navalur, Siruseri)",
+        "sedan_base": 1250
+      },
+      "ecr": {
+        "label": "ECR Coastal Belt (Akkarai, Injambakkam, Muttukadu, Kovalam)",
+        "sedan_base": 1400
+      }
+    },
+    "vehicle_multipliers": {
+      "sedan": 1.0,
+      "ertiga": 1.5,
+      "innova": 1.8,
+      "crysta": 2.0,
+      "tempo": 2.8,
+      "tempo_min_fare": 2400
+    },
+    "published_outstation_drops": {
+      "pondicherry": { "distance": 151, "duration": "2.5–3 hrs", "sedan": 2820, "ertiga": 3370, "innova": 3370, "crysta": 4480, "tempo": 8050 },
+      "puducherry": { "distance": 151, "duration": "2.5–3 hrs", "sedan": 2820, "ertiga": 3370, "innova": 3370, "crysta": 4480, "tempo": 8050 },
+      "auroville": { "distance": 148, "duration": "2.5–3 hrs", "sedan": 2820, "ertiga": 3370, "innova": 3370, "crysta": 4480, "tempo": 8050 },
+      "vellore": { "distance": 140, "duration": "2.5–3 hrs", "sedan": 2600, "ertiga": 3120, "innova": 3120, "crysta": 4150, "tempo": 7450 },
+      "tirupati": { "distance": 135, "duration": "3–3.5 hrs", "sedan": 2560, "ertiga": 3070, "innova": 3070, "crysta": 4080, "tempo": 7250 },
+      "tirumala": { "distance": 155, "duration": "3.5–4 hrs", "sedan": 2860, "ertiga": 3370, "innova": 3370, "crysta": 4480, "tempo": 7850 },
+      "mahabalipuram": { "distance": 55, "duration": "50–60 mins", "sedan": 1650, "ertiga": 2400, "innova": 2400, "crysta": 2950, "tempo": 4200 },
+      "mamallapuram": { "distance": 55, "duration": "50–60 mins", "sedan": 1650, "ertiga": 2400, "innova": 2400, "crysta": 2950, "tempo": 4200 },
+      "sriperumbudur": { "distance": 42, "duration": "45–55 mins", "sedan": 1400, "ertiga": 2100, "innova": 2100, "crysta": 2600, "tempo": 3800 },
+      "kanchipuram": { "distance": 75, "duration": "1.5–1.8 hrs", "sedan": 2100, "ertiga": 2650, "innova": 2650, "crysta": 3400, "tempo": 5200 },
+      "tiruvannamalai": { "distance": 195, "duration": "3.5–4 hrs", "sedan": 3600, "ertiga": 4350, "innova": 4350, "crysta": 5800, "tempo": 9800 },
+      "thiruvannamalai": { "distance": 195, "duration": "3.5–4 hrs", "sedan": 3600, "ertiga": 4350, "innova": 4350, "crysta": 5800, "tempo": 9800 }
+    }
+  },
+  "acting_drivers": {
+    "vehicles": [
+      { "key": "hatchback", "label": "Hatchback & Sedan", "models": "Dzire, Etios, Honda City, Verna", "bata": 1400 },
+      { "key": "suv", "label": "Compact SUV / MPV", "models": "Ertiga, Creta, Seltos, Carens", "bata": 1500 },
+      { "key": "premium", "label": "Premium SUV / MUV", "models": "Innova Crysta, Fortuner, Safari", "bata": 1600 },
+      { "key": "luxury", "label": "Luxury European", "models": "BMW, Mercedes-Benz, Audi", "bata": 1900 }
+    ],
+    "food_per_day": 300,
+    "stay_per_night": 300,
+    "outstation_cab_driver_night_stay": 450
+  },
+  "tour_packages": {
+    "tirupati-package": {
+      "name": "Chennai to Tirupati Balaji",
+      "stateCode": "AP",
+      "roundTripKm": 320,
+      "minDays": 1,
+      "vehicles": {
+        "dzire": { "rates": { "1": 6000, "2": 9500, "3": 13200 }, "vehicleHire": { "1": 5000, "2": 7700, "3": 10400 }, "driverBata": { "1": 1000, "2": 1800, "3": 2800 }, "extraHourRate": 200 },
+        "ertiga": { "rates": { "1": 7500, "2": 11500, "3": 15800 }, "vehicleHire": { "1": 6300, "2": 9300, "3": 12500 }, "driverBata": { "1": 1200, "2": 2200, "3": 3300 }, "extraHourRate": 250 },
+        "innova": { "rates": { "1": 8500, "2": 12500, "3": 17500 }, "vehicleHire": { "1": 7100, "2": 10100, "3": 13900 }, "driverBata": { "1": 1400, "2": 2400, "3": 3600 }, "extraHourRate": 250 },
+        "crysta": { "rates": { "1": 10000, "2": 16000, "3": 22500 }, "vehicleHire": { "1": 8400, "2": 13000, "3": 18000 }, "driverBata": { "1": 1600, "2": 3000, "3": 4500 }, "extraHourRate": 350 },
+        "tempo12": { "rates": { "1": 12500, "2": 19500, "3": 27000 }, "vehicleHire": { "1": 10500, "2": 15700, "3": 21500 }, "driverBata": { "1": 2000, "2": 3800, "3": 5500 }, "extraHourRate": 400 },
+        "tempo17": { "rates": { "1": 16500, "2": 24500, "3": 33500 }, "vehicleHire": { "1": 14000, "2": 20000, "3": 27000 }, "driverBata": { "1": 2500, "2": 4500, "3": 6500 }, "extraHourRate": 500 }
+      }
+    },
+    "pondicherry-one-day-trip": {
+      "name": "Chennai to Pondicherry & Auroville",
+      "stateCode": "PY",
+      "roundTripKm": 310,
+      "minDays": 1,
+      "vehicles": {
+        "dzire": { "rates": { "1": 4500, "2": 6800, "3": 9200 }, "vehicleHire": { "1": 3700, "2": 5600, "3": 7600 }, "driverBata": { "1": 800, "2": 1200, "3": 1600 }, "extraHourRate": 150 },
+        "ertiga": { "rates": { "1": 5800, "2": 8500, "3": 11200 }, "vehicleHire": { "1": 4800, "2": 7100, "3": 9400 }, "driverBata": { "1": 1000, "2": 1400, "3": 1800 }, "extraHourRate": 200 },
+        "innova": { "rates": { "1": 7000, "2": 10200, "3": 13500 }, "vehicleHire": { "1": 5800, "2": 8500, "3": 11400 }, "driverBata": { "1": 1200, "2": 1700, "3": 2100 }, "extraHourRate": 200 },
+        "crysta": { "rates": { "1": 8800, "2": 12500, "3": 16500 }, "vehicleHire": { "1": 7400, "2": 10600, "3": 14200 }, "driverBata": { "1": 1400, "2": 1900, "3": 2300 }, "extraHourRate": 250 },
+        "tempo12": { "rates": { "1": 11000, "2": 15500, "3": 20500 }, "vehicleHire": { "1": 9300, "2": 13200, "3": 17600 }, "driverBata": { "1": 1700, "2": 2300, "3": 2900 }, "extraHourRate": 300 }
+      }
+    },
+    "thiruvannamalai-girivalam-trip": {
+      "name": "Chennai to Thiruvannamalai Girivalam",
+      "stateCode": "TN",
+      "roundTripKm": 390,
+      "minDays": 1,
+      "vehicles": {
+        "dzire": { "rates": { "1": 6500, "2": 8900, "3": 11500 }, "vehicleHire": { "1": 5400, "2": 7400, "3": 9600 }, "driverBata": { "1": 1100, "2": 1500, "3": 1900 }, "extraHourRate": 150 },
+        "ertiga": { "rates": { "1": 7900, "2": 10900, "3": 13900 }, "vehicleHire": { "1": 6600, "2": 9200, "3": 11800 }, "driverBata": { "1": 1300, "2": 1700, "3": 2100 }, "extraHourRate": 200 },
+        "innova": { "rates": { "1": 9300, "2": 12900, "3": 16500 }, "vehicleHire": { "1": 7800, "2": 10900, "3": 14100 }, "driverBata": { "1": 1500, "2": 2000, "3": 2400 }, "extraHourRate": 200 },
+        "crysta": { "rates": { "1": 11100, "2": 15500, "3": 19900 }, "vehicleHire": { "1": 9400, "2": 13300, "3": 17200 }, "driverBata": { "1": 1700, "2": 2200, "3": 2700 }, "extraHourRate": 250 },
+        "tempo12": { "rates": { "1": 13500, "2": 18900, "3": 24300 }, "vehicleHire": { "1": 11500, "2": 16100, "3": 20700 }, "driverBata": { "1": 2000, "2": 2800, "3": 3600 }, "extraHourRate": 350 }
+      }
+    },
+    "kanchipuram-temple-trip": {
+      "name": "Chennai to Kanchipuram Temples & Silk",
+      "stateCode": "TN",
+      "roundTripKm": 150,
+      "minDays": 1,
+      "vehicles": {
+        "dzire": { "rates": { "1": 3500, "2": 5200, "3": 7000 }, "vehicleHire": { "1": 2800, "2": 4200, "3": 5700 }, "driverBata": { "1": 700, "2": 1000, "3": 1300 }, "extraHourRate": 150 },
+        "ertiga": { "rates": { "1": 4500, "2": 6600, "3": 8800 }, "vehicleHire": { "1": 3700, "2": 5400, "3": 7300 }, "driverBata": { "1": 800, "2": 1200, "3": 1500 }, "extraHourRate": 200 },
+        "innova": { "rates": { "1": 5500, "2": 8000, "3": 10600 }, "vehicleHire": { "1": 4600, "2": 6700, "3": 9000 }, "driverBata": { "1": 900, "2": 1300, "3": 1600 }, "extraHourRate": 200 },
+        "crysta": { "rates": { "1": 6800, "2": 9800, "3": 12900 }, "vehicleHire": { "1": 5700, "2": 8300, "3": 11000 }, "driverBata": { "1": 1100, "2": 1500, "3": 1900 }, "extraHourRate": 250 },
+        "tempo12": { "rates": { "1": 8500, "2": 12200, "3": 16000 }, "vehicleHire": { "1": 7100, "2": 10300, "3": 13600 }, "driverBata": { "1": 1400, "2": 1900, "3": 2400 }, "extraHourRate": 300 }
+      }
+    },
+    "vellore-golden-temple": {
+      "name": "Chennai to Vellore Golden Temple",
+      "stateCode": "TN",
+      "roundTripKm": 280,
+      "minDays": 1,
+      "vehicles": {
+        "dzire": { "rates": { "1": 4800, "2": 7000, "3": 9400 }, "vehicleHire": { "1": 3900, "2": 5700, "3": 7700 }, "driverBata": { "1": 900, "2": 1300, "3": 1700 }, "extraHourRate": 150 },
+        "ertiga": { "rates": { "1": 6200, "2": 8900, "3": 11800 }, "vehicleHire": { "1": 5100, "2": 7400, "3": 9900 }, "driverBata": { "1": 1100, "2": 1500, "3": 1900 }, "extraHourRate": 200 },
+        "innova": { "rates": { "1": 7400, "2": 10600, "3": 14000 }, "vehicleHire": { "1": 6100, "2": 8800, "3": 11800 }, "driverBata": { "1": 1300, "2": 1800, "3": 2200 }, "extraHourRate": 200 },
+        "crysta": { "rates": { "1": 9200, "2": 13000, "3": 17000 }, "vehicleHire": { "1": 7700, "2": 11000, "3": 14500 }, "driverBata": { "1": 1500, "2": 2000, "3": 2500 }, "extraHourRate": 250 },
+        "tempo12": { "rates": { "1": 11500, "2": 16200, "3": 21200 }, "vehicleHire": { "1": 9700, "2": 13700, "3": 18100 }, "driverBata": { "1": 1800, "2": 2500, "3": 3100 }, "extraHourRate": 300 }
+      }
+    },
+    "chidambaram-temple-trip": {
+      "name": "Chennai to Chidambaram & Pichavaram",
+      "stateCode": "TN",
+      "roundTripKm": 450,
+      "minDays": 1,
+      "vehicles": {
+        "dzire": { "rates": { "1": 7400, "2": 9800, "3": 12200 }, "vehicleHire": { "1": 6200, "2": 8200, "3": 10200 }, "driverBata": { "1": 1200, "2": 1600, "3": 2000 }, "extraHourRate": 150 },
+        "ertiga": { "rates": { "1": 9200, "2": 12000, "3": 14800 }, "vehicleHire": { "1": 7800, "2": 10200, "3": 12600 }, "driverBata": { "1": 1400, "2": 1800, "3": 2200 }, "extraHourRate": 200 },
+        "innova": { "rates": { "1": 11000, "2": 14500, "3": 18000 }, "vehicleHire": { "1": 9400, "2": 12500, "3": 15600 }, "driverBata": { "1": 1600, "2": 2000, "3": 2400 }, "extraHourRate": 200 },
+        "crysta": { "rates": { "1": 13000, "2": 17500, "3": 22000 }, "vehicleHire": { "1": 11200, "2": 15200, "3": 19200 }, "driverBata": { "1": 1800, "2": 2300, "3": 2800 }, "extraHourRate": 250 },
+        "tempo12": { "rates": { "1": 15800, "2": 21500, "3": 27200 }, "vehicleHire": { "1": 13600, "2": 18500, "3": 23400 }, "driverBata": { "1": 2200, "2": 3000, "3": 3800 }, "extraHourRate": 350 }
+      }
+    },
+    "navagraha-tour": {
+      "name": "Kumbakonam 9 Navagraha Circuit",
+      "stateCode": "TN",
+      "roundTripKm": 680,
+      "minDays": 2,
+      "vehicles": {
+        "dzire": { "rates": { "1": 12000, "2": 12000, "3": 16500 }, "vehicleHire": { "1": 10000, "2": 10000, "3": 13800 }, "driverBata": { "1": 2000, "2": 2000, "3": 2700 }, "extraHourRate": 200 },
+        "ertiga": { "rates": { "1": 14800, "2": 14800, "3": 19800 }, "vehicleHire": { "1": 12400, "2": 12400, "3": 16600 }, "driverBata": { "1": 2400, "2": 2400, "3": 3200 }, "extraHourRate": 250 },
+        "innova": { "rates": { "1": 16500, "2": 16500, "3": 22500 }, "vehicleHire": { "1": 13900, "2": 13900, "3": 19000 }, "driverBata": { "1": 2600, "2": 2600, "3": 3500 }, "extraHourRate": 250 },
+        "crysta": { "rates": { "1": 19800, "2": 19800, "3": 26500 }, "vehicleHire": { "1": 16800, "2": 16800, "3": 22600 }, "driverBata": { "1": 3000, "2": 3000, "3": 3900 }, "extraHourRate": 350 },
+        "tempo12": { "rates": { "1": 24500, "2": 24500, "3": 33000 }, "vehicleHire": { "1": 20900, "2": 20900, "3": 28200 }, "driverBata": { "1": 3600, "2": 3600, "3": 4800 }, "extraHourRate": 400 }
+      }
+    },
+    "rameswaram-2-days": {
+      "name": "Chennai to Rameswaram & Dhanushkodi",
+      "stateCode": "TN",
+      "roundTripKm": 1150,
+      "minDays": 2,
+      "vehicles": {
+        "dzire": { "rates": { "1": 18500, "2": 18500, "3": 24500 }, "vehicleHire": { "1": 15700, "2": 15700, "3": 20900 }, "driverBata": { "1": 2800, "2": 2800, "3": 3600 }, "extraHourRate": 200 },
+        "ertiga": { "rates": { "1": 22500, "2": 22500, "3": 29500 }, "vehicleHire": { "1": 19100, "2": 19100, "3": 25100 }, "driverBata": { "1": 3400, "2": 3400, "3": 4400 }, "extraHourRate": 250 },
+        "innova": { "rates": { "1": 25000, "2": 25000, "3": 33000 }, "vehicleHire": { "1": 21200, "2": 21200, "3": 28100 }, "driverBata": { "1": 3800, "2": 3800, "3": 4900 }, "extraHourRate": 250 },
+        "crysta": { "rates": { "1": 30000, "2": 30000, "3": 39500 }, "vehicleHire": { "1": 25600, "2": 25600, "3": 33800 }, "driverBata": { "1": 4400, "2": 4400, "3": 5700 }, "extraHourRate": 350 },
+        "tempo12": { "rates": { "1": 35000, "2": 35000, "3": 46000 }, "vehicleHire": { "1": 29800, "2": 29800, "3": 39300 }, "driverBata": { "1": 5200, "2": 5200, "3": 6700 }, "extraHourRate": 400 }
+      }
+    },
+    "sabarimala-trip": {
+      "name": "Chennai to Sabarimala Pilgrimage",
+      "stateCode": "KL",
+      "roundTripKm": 1350,
+      "minDays": 3,
+      "vehicles": {
+        "dzire": { "rates": { "1": 22500, "2": 22500, "3": 22500 }, "vehicleHire": { "1": 19000, "2": 19000, "3": 19000 }, "driverBata": { "1": 3500, "2": 3500, "3": 3500 }, "extraHourRate": 200 },
+        "ertiga": { "rates": { "1": 26500, "2": 26500, "3": 26500 }, "vehicleHire": { "1": 22500, "2": 22500, "3": 22500 }, "driverBata": { "1": 4000, "2": 4000, "3": 4000 }, "extraHourRate": 250 },
+        "innova": { "rates": { "1": 29500, "2": 29500, "3": 29500 }, "vehicleHire": { "1": 25000, "2": 25000, "3": 25000 }, "driverBata": { "1": 4500, "2": 4500, "3": 4500 }, "extraHourRate": 250 },
+        "crysta": { "rates": { "1": 34500, "2": 34500, "3": 34500 }, "vehicleHire": { "1": 29500, "2": 29500, "3": 29500 }, "driverBata": { "1": 5000, "2": 5000, "3": 5000 }, "extraHourRate": 350 },
+        "tempo12": { "rates": { "1": 42000, "2": 42000, "3": 42000 }, "vehicleHire": { "1": 36000, "2": 36000, "3": 36000 }, "driverBata": { "1": 6000, "2": 6000, "3": 6000 }, "extraHourRate": 400 }
+      }
+    },
+    "tiruchendur-temple-tour": {
+      "name": "Chennai to Tiruchendur Murugan",
+      "stateCode": "TN",
+      "roundTripKm": 1280,
+      "minDays": 2,
+      "vehicles": {
+        "dzire": { "rates": { "1": 19500, "2": 19500, "3": 23000, "4": 26500 }, "vehicleHire": { "1": 16500, "2": 16500, "3": 19400, "4": 22300 }, "driverBata": { "1": 3000, "2": 3000, "3": 3600, "4": 4200 }, "extraHourRate": 200 },
+        "ertiga": { "rates": { "1": 23500, "2": 23500, "3": 27500, "4": 31500 }, "vehicleHire": { "1": 19900, "2": 19900, "3": 23100, "4": 26300 }, "driverBata": { "1": 3600, "2": 3600, "3": 4400, "4": 5200 }, "extraHourRate": 250 },
+        "innova": { "rates": { "1": 26500, "2": 26500, "3": 31000, "4": 35500 }, "vehicleHire": { "1": 22500, "2": 22500, "3": 26100, "4": 29700 }, "driverBata": { "1": 4000, "2": 4000, "3": 4900, "4": 5800 }, "extraHourRate": 250 },
+        "crysta": { "rates": { "1": 31500, "2": 31500, "3": 36500, "4": 41500 }, "vehicleHire": { "1": 26900, "2": 26900, "3": 30800, "4": 34700 }, "driverBata": { "1": 4600, "2": 4600, "3": 5700, "4": 6800 }, "extraHourRate": 350 },
+        "tempo12": { "rates": { "1": 37000, "2": 37000, "3": 43000, "4": 49000 }, "vehicleHire": { "1": 31600, "2": 31600, "3": 36300, "4": 41000 }, "driverBata": { "1": 5400, "2": 5400, "3": 6700, "4": 8000 }, "extraHourRate": 400 }
+      }
     }
   }
 }

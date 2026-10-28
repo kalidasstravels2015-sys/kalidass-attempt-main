@@ -1,6 +1,8 @@
 // src/lib/quoteAssistantEngine.ts
 import fs from 'node:fs';
 import path from 'node:path';
+import baseTariffConfig from '../data/tariff_config.json';
+import { getStatePermitForRoute } from '../utils/masterTariff.js';
 
 // Known one-way distances from Chennai
 export const KNOWN_ONE_WAY_KM: Record<string, number> = {
@@ -65,16 +67,7 @@ export function loadTariffConfig() {
       return JSON.parse(fs.readFileSync(tariffPath, 'utf8'));
     }
   } catch (_) {}
-  return {
-    vehicles: {
-      'Swift Dzire': { round_trip_rate: 14, one_way_rate: 15, driver_bata: 500, min_km_per_day: 250 },
-      'Toyota Etios': { round_trip_rate: 14, one_way_rate: 15, driver_bata: 500, min_km_per_day: 250 },
-      'Maruti Ertiga': { round_trip_rate: 18, one_way_rate: 19, driver_bata: 500, min_km_per_day: 250 },
-      'Innova': { round_trip_rate: 20, one_way_rate: 22, driver_bata: 600, min_km_per_day: 300 },
-      'Innova Crysta': { round_trip_rate: 24, one_way_rate: 26, driver_bata: 700, min_km_per_day: 300 },
-      'Tempo Traveller': { round_trip_rate: 26, one_way_rate: 28, driver_bata: 800, min_km_per_day: 300 }
-    }
-  };
+  return baseTariffConfig;
 }
 
 export async function processQuoteAssistant(body: any) {
@@ -321,16 +314,36 @@ Return ONLY raw JSON matching this schema, no markdown code fence, no commentary
   const localSightseeingBufferKm = isRoundTrip && days > 1 ? (days - 1) * 40 : 20;
   const actualTotalEstimatedRunKm = baseDistanceKm + localSightseeingBufferKm;
 
-  // Helper to calculate single vehicle fare
+  // Helper to calculate single vehicle fare (Single Master Tariff + Official Parivahan State Permit)
   const calcFareForVehicle = (vKey: string) => {
     const vConf = (tariff.vehicles as any)[vKey] || (tariff.vehicles as any)['Swift Dzire'];
     const minKm = days * (vConf.min_km_per_day || 250);
     const billable = Math.max(minKm, actualTotalEstimatedRunKm);
     const rate = extracted.tripType === 'One Way Drop' ? vConf.one_way_rate : vConf.round_trip_rate;
-    const bataTotal = days * (vConf.driver_bata || 400);
+    const bataTotal = days * (vConf.driver_bata || 500);
     const carHire = billable * rate;
-    const total = carHire + bataTotal;
-    return { vConf, minKm, billable, rate, bataTotal, carHire, total, dailyBata: vConf.driver_bata || 400 };
+    const permitInfo = getStatePermitForRoute(
+      `${extracted.pickup} ${extracted.destination}`,
+      vKey,
+      isRoundTrip,
+      extracted.estimatedKmOneWay,
+      tariff
+    );
+    const statePermitEst = permitInfo.permitCost;
+    const total = carHire + bataTotal + statePermitEst;
+    return {
+      vConf,
+      minKm,
+      billable,
+      rate,
+      bataTotal,
+      carHire,
+      statePermitEst,
+      stateName: permitInfo.stateName,
+      tollsEst: permitInfo.tollsEst,
+      total,
+      dailyBata: vConf.driver_bata || 500
+    };
   };
 
   const primaryCalc = calcFareForVehicle(extracted.vehicleKey);
@@ -339,6 +352,7 @@ Return ONLY raw JSON matching this schema, no markdown code fence, no commentary
   const carAndFuelCharge = primaryCalc.carHire;
   const dailyBata = primaryCalc.dailyBata;
   const driverBataTotal = primaryCalc.bataTotal;
+  const statePermitEst = primaryCalc.statePermitEst;
   const totalQuoteFare = primaryCalc.total;
 
   // Internal Cost & Zero-Loss Calculation (Internal Operator Eyes Only)
@@ -346,25 +360,14 @@ Return ONLY raw JSON matching this schema, no markdown code fence, no commentary
   const estimatedLitres = actualTotalEstimatedRunKm / mileage;
   const realFuelCost = Math.round(estimatedLitres * DIESEL_PRICE_PER_LITRE);
   const realDriverPayout = driverBataTotal;
-  const hardOutOfPocketCost = realFuelCost + realDriverPayout;
+  const hardOutOfPocketCost = realFuelCost + realDriverPayout + statePermitEst;
   const netOwnerProfit = totalQuoteFare - hardOutOfPocketCost;
   const profitMarginPercent = Math.round((netOwnerProfit / totalQuoteFare) * 100);
   const isSafe = netOwnerProfit >= (days * 1200);
 
   // Road toll estimates based on route
-  let estimatedTollsText = 'approx ₹600 - ₹700 via Fastag actuals';
-  let tollsAmount = 700;
-  const destLower = String(extracted.destination).toLowerCase();
-  if (destLower.includes('tirupati')) {
-    estimatedTollsText = 'approx ₹400 Fastag + ₹500 AP Permit';
-    tollsAmount = 900;
-  } else if (destLower.includes('bangalore') || destLower.includes('bengaluru')) {
-    estimatedTollsText = 'approx ₹450 Fastag + ₹700 KA Permit';
-    tollsAmount = 1150;
-  } else if (destLower.includes('pondicherry') || destLower.includes('puducherry') || destLower.includes('pondi')) {
-    estimatedTollsText = 'approx ₹200 Fastag + approx ₹500 Puducherry Permit (at actuals)';
-    tollsAmount = 700;
-  }
+  const tollsAmount = primaryCalc.tollsEst || 400;
+  const estimatedTollsText = `approx ₹${tollsAmount.toLocaleString('en-IN')} via Fastag actuals`;
 
   // Determine appropriate multi-options based on passenger count
   let optionKeys = ['Swift Dzire', 'Maruti Ertiga', 'Innova'];
@@ -391,9 +394,12 @@ Return ONLY raw JSON matching this schema, no markdown code fence, no commentary
       tag = '\n*(Pushback bucket seats, high roof, ample space for 7+ seats & large luggage)*';
     }
     const numEmoji = idx === 0 ? '1️⃣' : idx === 1 ? '2️⃣' : '3️⃣';
+    const permitLine = c.statePermitEst > 0
+      ? `\n• State Entry Permit (${c.stateName}) : ₹${c.statePermitEst.toLocaleString('en-IN')}`
+      : '';
     return `${numEmoji} ${label}
 • ${c.billable.toLocaleString('en-IN')} km @ ₹${c.rate}/km : ₹${c.carHire.toLocaleString('en-IN')}
-• Driver Allowance (${days} Days @ ₹${c.dailyBata}) : ₹${c.bataTotal.toLocaleString('en-IN')}
+• Driver Allowance (${days} Days @ ₹${c.dailyBata}) : ₹${c.bataTotal.toLocaleString('en-IN')}${permitLine}
 👉 TOTAL ESTIMATE : ₹${c.total.toLocaleString('en-IN')}${tag}`;
   }).join('\n\n');
 
@@ -423,7 +429,7 @@ WHAT IS INCLUDED:
 ------------------------------------------
 ✅ Dedicated AC vehicle for all ${days} ${days === 1 ? 'day' : 'days'} (Doorstep pickup to drop)
 ✅ Fuel charges up to package km (${billableKm.toLocaleString('en-IN')} km run)
-✅ Driver allowance for all ${days} ${days === 1 ? 'day' : 'days'}
+✅ Driver allowance for all ${days} ${days === 1 ? 'day' : 'days'}${primaryCalc.statePermitEst > 0 ? `\n✅ Official State Entry Permit (${primaryCalc.statePermitInfo.stateName} Checkpost Tax Included)` : ''}
 ✅ Local sightseeing along the route
 
 EXTRA CHARGES (Actuals):
@@ -454,7 +460,7 @@ Passengers: ${extracted.paxCount} Members
 BILL BREAKUP
 ------------------------------------------
 1. Car and Fuel (${billableKm.toLocaleString('en-IN')} km @ ₹${ratePerKm}/km) : ₹${carAndFuelCharge.toLocaleString('en-IN')}
-2. Driver Allowance (${days} ${days === 1 ? 'Day' : 'Days'} @ ₹${dailyBata}/day) : ₹${driverBataTotal.toLocaleString('en-IN')}
+2. Driver Allowance (${days} ${days === 1 ? 'Day' : 'Days'} @ ₹${dailyBata}/day) : ₹${driverBataTotal.toLocaleString('en-IN')}${primaryCalc.statePermitEst > 0 ? `\n3. State Entry Permit (${primaryCalc.statePermitInfo.stateName}) : ₹${primaryCalc.statePermitEst.toLocaleString('en-IN')}` : ''}
 ------------------------------------------
 TOTAL ESTIMATE : ₹${totalQuoteFare.toLocaleString('en-IN')}
 ------------------------------------------
@@ -462,7 +468,7 @@ TOTAL ESTIMATE : ₹${totalQuoteFare.toLocaleString('en-IN')}
 What is included:
 - AC ${extracted.vehicleKey} for all ${days} ${days === 1 ? 'day' : 'days'}
 - Fuel charges for ${billableKm.toLocaleString('en-IN')} km run
-- Driver allowance for all ${days} ${days === 1 ? 'day' : 'days'}
+- Driver allowance for all ${days} ${days === 1 ? 'day' : 'days'}${primaryCalc.statePermitEst > 0 ? `\n- Official State Entry Permit (${primaryCalc.statePermitInfo.stateName}): ₹${primaryCalc.statePermitEst.toLocaleString('en-IN')}` : ''}
 
 Extra charges (pay on actual bill):
 - Highway tolls and parking (${estimatedTollsText})

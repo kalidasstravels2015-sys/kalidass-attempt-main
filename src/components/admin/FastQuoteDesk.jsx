@@ -22,6 +22,7 @@ import {
   Edit3
 } from 'lucide-react';
 import tariffConfig from '../../data/tariff_config.json';
+import { getStatePermitForRoute } from '../../utils/masterTariff';
 
 const POPULAR_DESTINATIONS = [
   { name: 'Puducherry / Pondy', km: 151, short: 'Pondy' },
@@ -37,7 +38,7 @@ const POPULAR_DESTINATIONS = [
 const QUICK_ADJUSTMENTS = [
   { label: '⚡ ₹300 Off', prompt: 'Give ₹300 special owner discount on the total estimate' },
   { label: '⚡ ₹500 Off', prompt: 'Give ₹500 special owner discount on the total estimate' },
-  { label: '⛰️ Tirupati Permit (+₹900)', prompt: 'Add AP border permit (₹500) and FASTag tolls (₹400) clearly into the quotation' },
+  { label: '⛰️ Include FASTag Tolls (+₹400)', prompt: 'Include highway FASTag tolls (₹400) directly inside the package total' },
   { label: '🌙 Night Stay (+₹350)', prompt: 'Add ₹350 driver night accommodation allowance under extra charges' },
   { label: '⏰ Pickup: 4:30 AM', prompt: 'Add morning 4:30 AM sharp pickup reporting time in trip details' },
   { label: '✂️ Shorter & Punchier', prompt: 'Condense this quote to be shorter, punchier, and faster to read on mobile WhatsApp' },
@@ -201,11 +202,16 @@ export default function FastQuoteDesk() {
     const billableKm = Math.max(minKm, actualEstimatedRun);
     const carHire = billableKm * rate;
     const driverBataTotal = days * dailyBata;
-    const totalFare = carHire + driverBataTotal;
+    const statePermitInfo = getStatePermitForRoute({
+      destinationText: `${pickup} ${destination}`,
+      vehicleIdOrName: vKey
+    });
+    const statePermitEst = statePermitInfo.amount || 0;
+    const totalFare = carHire + driverBataTotal + statePermitEst;
 
     const mileage = vKey.includes('Tempo') ? 7.5 : vKey.includes('Innova') ? 11.5 : 16.5;
     const realFuelCost = Math.round((actualEstimatedRun / mileage) * 93.5);
-    const hardCost = realFuelCost + driverBataTotal;
+    const hardCost = realFuelCost + driverBataTotal + statePermitEst;
     const netProfit = totalFare - hardCost;
 
     return {
@@ -214,6 +220,8 @@ export default function FastQuoteDesk() {
       carHire,
       dailyBata,
       driverBataTotal,
+      statePermitEst,
+      statePermitInfo,
       totalFare,
       realFuelCost,
       netProfit
@@ -223,7 +231,7 @@ export default function FastQuoteDesk() {
   // Primary calculation
   const primaryCalc = useMemo(() => {
     return getVehicleCalc(vehicleKey);
-  }, [vehicleKey, days, tripType, distanceKmOneWay]);
+  }, [vehicleKey, days, tripType, distanceKmOneWay, pickup, destination]);
 
   // Synchronize Live WhatsApp Quotation (auto-formula)
   useEffect(() => {
@@ -233,8 +241,8 @@ export default function FastQuoteDesk() {
     const greeting = customerName && customerName !== 'Guest' ? `${customerName} sir` : 'sir/madam';
     let tollsEstimate = 'approx ₹600 - ₹700 via Fastag actuals';
     const destLower = destination.toLowerCase();
-    if (destLower.includes('tirupati')) tollsEstimate = 'approx ₹400 Fastag + ₹500 AP Permit';
-    else if (destLower.includes('bangalore')) tollsEstimate = 'approx ₹450 Fastag + ₹700 KA Permit';
+    if (destLower.includes('tirupati')) tollsEstimate = 'approx ₹400 Fastag actuals';
+    else if (destLower.includes('bangalore')) tollsEstimate = 'approx ₹450 Fastag actuals';
 
     if (quoteStyle === 'multi') {
       let optionKeys = ['Swift Dzire', 'Maruti Ertiga', 'Innova'];
@@ -261,7 +269,8 @@ export default function FastQuoteDesk() {
           tag = '\n*(Pushback bucket seats, high roof, extra space for 7+ seats & large bags)*';
         }
         const numEmoji = idx === 0 ? '1️⃣' : idx === 1 ? '2️⃣' : '3️⃣';
-        return `${numEmoji} ${label}\n• ${c.billableKm.toLocaleString('en-IN')} km @ ₹${c.rate}/km : ₹${c.carHire.toLocaleString('en-IN')}\n• Driver Bata (${days} Days @ ₹${c.dailyBata}) : ₹${c.driverBataTotal.toLocaleString('en-IN')}\n👉 TOTAL ESTIMATE : ₹${c.totalFare.toLocaleString('en-IN')}${tag}`;
+        const permitLine = c.statePermitEst > 0 ? `\n• State Entry Permit (${c.statePermitInfo.stateName}) : ₹${c.statePermitEst.toLocaleString('en-IN')}` : '';
+        return `${numEmoji} ${label}\n• ${c.billableKm.toLocaleString('en-IN')} km @ ₹${c.rate}/km : ₹${c.carHire.toLocaleString('en-IN')}\n• Driver Bata (${days} Days @ ₹${c.dailyBata}) : ₹${c.driverBataTotal.toLocaleString('en-IN')}${permitLine}\n👉 TOTAL ESTIMATE : ₹${c.totalFare.toLocaleString('en-IN')}${tag}`;
       }).join('\n\n');
 
       const bill = `Hello ${greeting}, greetings from Kalidass Travels! 🙏
@@ -286,7 +295,7 @@ WHAT IS INCLUDED:
 ------------------------------------------
 ✅ Dedicated AC vehicle for all ${days} ${days === 1 ? 'day' : 'days'} (Doorstep pickup to drop)
 ✅ Fuel charges up to package km (${primaryCalc.billableKm.toLocaleString('en-IN')} km run)
-✅ Driver allowance for all ${days} ${days === 1 ? 'day' : 'days'}
+✅ Driver allowance for all ${days} ${days === 1 ? 'day' : 'days'}${primaryCalc.statePermitEst > 0 ? `\n✅ Official State Entry Permit (${primaryCalc.statePermitInfo.stateName} Checkpost Tax Included)` : ''}
 ✅ Local sightseeing along the route
 
 EXTRA CHARGES (Actuals):
@@ -318,7 +327,7 @@ Passengers: ${paxCount} Members
 BILL BREAKUP
 ------------------------------------------
 1. Car and Fuel (${primaryCalc.billableKm.toLocaleString('en-IN')} km @ ₹${primaryCalc.rate}/km) : ₹${primaryCalc.carHire.toLocaleString('en-IN')}
-2. Driver Allowance (${days} ${days === 1 ? 'Day' : 'Days'} @ ₹${primaryCalc.dailyBata}/day) : ₹${primaryCalc.driverBataTotal.toLocaleString('en-IN')}
+2. Driver Allowance (${days} ${days === 1 ? 'Day' : 'Days'} @ ₹${primaryCalc.dailyBata}/day) : ₹${primaryCalc.driverBataTotal.toLocaleString('en-IN')}${primaryCalc.statePermitEst > 0 ? `\n3. State Entry Permit (${primaryCalc.statePermitInfo.stateName}) : ₹${primaryCalc.statePermitEst.toLocaleString('en-IN')}` : ''}
 ------------------------------------------
 TOTAL ESTIMATE : ₹${primaryCalc.totalFare.toLocaleString('en-IN')}
 ------------------------------------------
@@ -326,7 +335,7 @@ TOTAL ESTIMATE : ₹${primaryCalc.totalFare.toLocaleString('en-IN')}
 What is included:
 - AC ${vehicleKey} for all ${days} ${days === 1 ? 'day' : 'days'}
 - Fuel charges for ${primaryCalc.billableKm.toLocaleString('en-IN')} km run
-- Driver allowance for all ${days} ${days === 1 ? 'day' : 'days'}
+- Driver allowance for all ${days} ${days === 1 ? 'day' : 'days'}${primaryCalc.statePermitEst > 0 ? `\n- Official State Entry Permit (${primaryCalc.statePermitInfo.stateName}): ₹${primaryCalc.statePermitEst.toLocaleString('en-IN')}` : ''}
 
 Extra charges (pay on actuals):
 - Highway tolls and parking (${tollsEstimate})

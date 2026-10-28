@@ -4,6 +4,7 @@ import WhatsAppIcon from './WhatsAppIcon.astro';
 
 interface Props {
   name: string;
+  subtitle?: string;
   image?: string;
   badge?: string;
   seats?: string;
@@ -25,6 +26,7 @@ interface Props {
 
 const {
   name,
+  subtitle,
   image,
   badge,
   seats = '4 Passengers',
@@ -53,9 +55,9 @@ const isWhatsApp = Boolean(actionHref && actionHref.includes('wa.me'));
 >
   <div>
     <!-- 1. Vehicle Photo Showcase Container -->
-    <div class="relative h-28 sm:h-32 bg-m3-surface-container-low flex items-center justify-center p-3 border-b border-slate-200/60">
+    <div class="relative h-36 sm:h-40 bg-m3-surface-container-low flex items-center justify-center pt-8 pb-3 px-4 border-b border-slate-200/60">
       {badge && (
-        <span class="absolute top-2.5 left-2.5 z-10 text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-m3-full bg-white/95 text-m3-on-surface border border-slate-200 shadow-xs">
+        <span class="absolute top-2.5 left-3 z-10 text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-m3-full bg-white/95 text-m3-on-surface border border-slate-200 shadow-xs">
           {badge}
         </span>
       )}
@@ -64,11 +66,11 @@ const isWhatsApp = Boolean(actionHref && actionHref.includes('wa.me'));
         <img
           src={image}
           alt={`${name} taxi rental - Kalidass Travels`}
-          width="160"
-          height="80"
+          width="220"
+          height="110"
           loading="lazy"
           decoding="async"
-          class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-xs"
+          class="w-auto max-w-[88%] max-h-24 sm:max-h-28 object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300"
         />
       ) : (
         <Car className="w-10 h-10 text-m3-on-surface-variant" />
@@ -77,33 +79,38 @@ const isWhatsApp = Boolean(actionHref && actionHref.includes('wa.me'));
 
     <!-- 2. Card Content -->
     <div class="p-4 sm:p-5">
-      <h3 class="text-sm sm:text-base font-bold text-m3-on-surface font-heading leading-tight truncate" title={name}>
+      <h3 class="text-base sm:text-[17px] font-bold text-m3-on-surface font-heading leading-snug truncate" title={name}>
         {name}
       </h3>
+      {subtitle && (
+        <p class="text-xs text-m3-on-surface-variant mt-0.5 truncate" title={subtitle}>
+          {subtitle}
+        </p>
+      )}
 
-      <!-- 3. Clean Seats & Luggage Spec (Strict Single Line) -->
-      <div class="flex items-center gap-2 text-xs text-slate-600 mt-2 font-medium whitespace-nowrap">
+      <!-- 3. Clean Seats & Luggage Spec -->
+      <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-600 mt-2.5 font-medium">
         <span class="inline-flex items-center gap-1.5 shrink-0">
           <Users className="w-4 h-4 text-slate-500 shrink-0" />
           <span>{seats}</span>
         </span>
         <span class="text-slate-300 shrink-0">•</span>
-        <span class="inline-flex items-center gap-1.5 shrink-0">
+        <span class="inline-flex items-center gap-1.5 min-w-0">
           <Luggage className="w-4 h-4 text-slate-500 shrink-0" />
-          <span>{baggage}</span>
+          <span class="truncate">{baggage}</span>
         </span>
       </div>
 
       <!-- 4. Transparent Fare Display -->
       {price && (
-        <div class="mt-3.5 pt-3 border-t border-slate-200/80 flex items-baseline justify-between">
-          <div>
-            <span class="block text-xs uppercase font-bold tracking-wider text-slate-500">
+        <div class="mt-3.5 pt-3 border-t border-slate-200/80 flex items-baseline justify-between gap-2">
+          <div class="min-w-0">
+            <span class="block text-[11px] uppercase font-bold tracking-wider text-slate-500">
               {priceLabel}
             </span>
-            <span class="text-xs font-semibold text-slate-600">{priceSubtext}</span>
+            <span class="text-xs font-semibold text-slate-600 block truncate">{priceSubtext}</span>
           </div>
-          <span class="text-base sm:text-lg font-extrabold text-m3-on-surface font-heading tabular-nums">
+          <span class="text-lg sm:text-xl font-extrabold text-m3-on-surface font-heading tabular-nums shrink-0">
             {price}
           </span>
         </div>
@@ -118,27 +125,27 @@ const isWhatsApp = Boolean(actionHref && actionHref.includes('wa.me'));
         href={actionHref}
         target={isWhatsApp ? "_blank" : undefined}
         rel={isWhatsApp ? "noopener noreferrer nofollow" : undefined}
-        class={`w-full inline-flex items-center justify-center gap-2 py-2.5 sm:py-3 px-4 min-h-[44px] rounded-m3-full ${
+        class={`w-full inline-flex items-center justify-center gap-2 py-2.5 sm:py-3 px-4 min-h-[44px] rounded-m3-full whitespace-nowrap ${
           isWhatsApp 
             ? 'bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white shadow-xs hover:shadow-sm' 
             : 'bg-m3-primary hover:bg-[#0B57D0] active:bg-[#0842A0] text-white shadow-xs hover:shadow-sm'
         } text-xs sm:text-sm font-bold transition-all cursor-pointer active:scale-[0.98] group/btn ${actionClass}`}
         {...dataAttributes}
       >
-        {isWhatsApp && <WhatsAppIcon variant="white" className="w-4 h-4" />}
+        {isWhatsApp && <WhatsAppIcon variant="white" className="w-4 h-4 shrink-0" />}
         <span>{actionText}</span>
-        {!isWhatsApp && <ChevronRight className="w-4 h-4 transform group-hover/btn:translate-x-0.5 transition-transform" />}
+        {!isWhatsApp && <ChevronRight className="w-4 h-4 shrink-0 transform group-hover/btn:translate-x-0.5 transition-transform" />}
       </a>
     ) : (
       <button
         type="button"
         data-select-vehicle={selectVehicleId}
         data-select-pax={selectPax}
-        class={`w-full inline-flex items-center justify-center gap-2 py-2.5 sm:py-3 px-4 min-h-[44px] rounded-m3-full bg-m3-primary hover:bg-[#0B57D0] active:bg-[#0842A0] text-white text-xs sm:text-sm font-bold transition-all cursor-pointer active:scale-[0.98] shadow-xs hover:shadow-sm group/btn ${actionClass}`}
+        class={`w-full inline-flex items-center justify-center gap-2 py-2.5 sm:py-3 px-4 min-h-[44px] rounded-m3-full whitespace-nowrap bg-m3-primary hover:bg-[#0B57D0] active:bg-[#0842A0] text-white text-xs sm:text-sm font-bold transition-all cursor-pointer active:scale-[0.98] shadow-xs hover:shadow-sm group/btn ${actionClass}`}
         {...dataAttributes}
       >
         <span>{actionText}</span>
-        <ChevronRight className="w-4 h-4 transform group-hover/btn:translate-x-0.5 transition-transform" />
+        <ChevronRight className="w-4 h-4 shrink-0 transform group-hover/btn:translate-x-0.5 transition-transform" />
       </button>
     )}
 

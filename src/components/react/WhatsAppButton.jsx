@@ -30,17 +30,17 @@ export default function WhatsAppButton({
   }[size] || "w-4 h-4 sm:w-5 sm:h-5";
 
   const variantClasses = {
-    filled: "bg-[#075E54] hover:bg-[#128C7E] active:bg-[#054c44] text-white font-bold shadow-m3-1 hover:shadow-m3-2",
-    elevated: "bg-[#075E54] hover:bg-[#128C7E] active:bg-[#054c44] text-white font-bold shadow-m3-1 hover:shadow-m3-2",
-    tonal: "bg-[#25D366]/15 hover:bg-[#25D366]/25 active:bg-[#25D366]/30 text-[#075E54] font-bold border border-[#25D366]/30 shadow-xs",
-    outlined: "bg-white hover:bg-[#25D366]/10 text-[#075E54] border border-[#25D366]/50 shadow-xs"
-  }[variant] || "bg-[#075E54] hover:bg-[#128C7E] active:bg-[#054c44] text-white font-bold shadow-m3-1";
+    filled: "bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary font-bold shadow-m3-1 hover:shadow-m3-2",
+    elevated: "bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary font-bold shadow-m3-2 hover:shadow-m3-3",
+    tonal: "bg-m3-primary-container hover:bg-m3-primary-container/80 active:bg-m3-primary-container/90 text-m3-on-primary-container font-bold border border-m3-primary/20 shadow-xs",
+    outlined: "bg-transparent hover:bg-m3-primary/10 active:bg-m3-primary/20 text-m3-primary border border-m3-outline shadow-xs"
+  }[variant] || "bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary font-bold shadow-m3-1";
 
-  const iconVariant = (variant === 'filled' || variant === 'elevated') ? 'white' : 'brand';
+  const iconVariant = (variant === 'filled' || variant === 'elevated') ? 'white' : (variant === 'tonal' || variant === 'outlined' ? 'monochrome' : 'brand');
   const label = children || text;
   const computedAria = ariaLabel || (typeof label === 'string' ? label : "Chat on WhatsApp");
 
-  const commonClass = `inline-flex items-center justify-center font-bold font-sans rounded-m3-full transition-all duration-200 cursor-pointer select-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#25D366] ${sizeClasses} ${variantClasses} ${className}`;
+  const commonClass = `inline-flex items-center justify-center font-bold font-sans rounded-m3-full transition-all duration-200 cursor-pointer select-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-m3-primary ${sizeClasses} ${variantClasses} ${className}`;
 
   const targetHref = href || (!onClick ? buildWhatsAppUrl(typeof label === 'string' ? label : undefined) : undefined);
 

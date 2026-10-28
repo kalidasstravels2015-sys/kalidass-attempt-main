@@ -1,8 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import QuotationEngine from "../components/QuotationEngine.jsx";
+import BookingEngine from "../components/BookingEngine.jsx";
 import LocalRentalBookingEngine from "../components/LocalRentalBookingEngine.jsx";
-import AirportBookingEngine from "../components/AirportBookingEngine.jsx";
 import DriverFeeEstimator from "../components/DriverFeeEstimator.jsx";
 import VehicleRelocationCalculator from "../components/VehicleRelocationCalculator.jsx";
 import Breadcrumbs from "../components/SEO/Breadcrumbs.astro";
@@ -311,7 +310,15 @@ const serviceSchemas = [
         
         {/* 1. Chennai Airport Taxi Engine */}
         <section id="airport-taxi-estimator" class="w-full flex justify-center scroll-mt-40" aria-label="Chennai Airport Taxi Estimator">
-          <AirportBookingEngine client:load showHeader={true} enableStickyBar={false} />
+          <BookingEngine
+            client:load
+            initialTab="airport"
+            allowedTabs={['airport']}
+            showHeader={true}
+            title="Chennai Airport Taxi Estimator"
+            subtitle="Fixed Zone Flat Rates & Outstation Transfers · Zero Surge"
+            variant="card"
+          />
         </section>
 
         {/* 2. Local City Rental Engine */}
@@ -325,15 +332,14 @@ const serviceSchemas = [
 
         {/* 3. Outstation Cab Engine */}
         <section id="outstation-estimator" class="w-full flex justify-center scroll-mt-40" aria-label="Outstation Cab Estimator">
-          <QuotationEngine
+          <BookingEngine
             client:load
-            initialTab="oneway"
-            allowedTabs={['oneway', 'round']}
+            initialTab="outstation"
+            allowedTabs={['outstation']}
+            showHeader={true}
             title="Outstation Cab Estimator"
-            subtitle="One-Way Drop & Round-Trip • Transparent Per-KM Rates"
-            headerIcon="car"
+            subtitle="Round-Trip & Airport Highway Drops · Transparent Per-KM Rates"
             variant="card"
-            showAirportTab={false}
           />
         </section>
 

@@ -1,0 +1,67 @@
+---
+/**
+ * HeroVisualCard — Desktop hero image showcase used beside booking engines
+ * on service pages (pattern originated on /services/outstation-cabs/).
+ * Fills vertical space in the left hero column with an image, top badge,
+ * and bottom trust overlay.
+ */
+import OptimizedImage from './OptimizedImage.astro';
+import { ShieldCheck } from 'lucide-react';
+
+interface Props {
+  src: string;
+  alt: string;
+  badge: string;
+  headline: string;
+  points?: string[];
+  objectPosition?: string;
+}
+
+const {
+  src,
+  alt,
+  badge,
+  headline,
+  points = [],
+  objectPosition = 'center 60%',
+} = Astro.props;
+---
+
+<div class="relative flex-1 min-h-[180px] my-3 rounded-2xl overflow-hidden shadow-md border border-m3-outline-variant/70 bg-m3-inverse-surface group">
+  <OptimizedImage
+    src={src}
+    alt={alt}
+    class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+    style={`object-position: ${objectPosition};`}
+    loading="eager"
+    fetchpriority="high"
+    sizes="(max-width: 1024px) 100vw, 480px"
+  />
+  <div class="absolute inset-0 bg-gradient-to-t from-[#041E49]/90 via-[#041E49]/25 to-transparent"></div>
+
+  <!-- Top Left Badge on Hero Image -->
+  <div class="absolute top-3 left-3 right-3 flex items-center justify-between gap-2">
+    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#041E49]/80 backdrop-blur-md border border-white/20 text-[11px] font-bold text-white shadow-xs">
+      <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+      <span>{badge}</span>
+    </span>
+  </div>
+
+  <!-- Bottom Trust Overlay on Hero Image -->
+  <div class="absolute bottom-3 left-3.5 right-3.5 text-white">
+    <p class="text-sm font-bold font-heading leading-snug drop-shadow-xs">
+      {headline}
+    </p>
+    {points.length > 0 && (
+      <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[11px] text-white/90 font-medium mt-1">
+        {points.map((pt, i) => (
+          <>
+            {i > 0 && <span>•</span>}
+            <span>✓ {pt}</span>
+          </>
+        ))}
+      </div>
+    )}
+  </div>
+</div>
+
