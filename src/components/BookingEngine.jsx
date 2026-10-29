@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { 
   Car, 
   Clock, 
@@ -13,6 +13,8 @@ import {
   ArrowRight,
   Edit2,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Receipt,
   Navigation
 } from 'lucide-react';
@@ -51,6 +53,62 @@ const KNOWN_DESTINATIONS = {
   'kodaikanal': { name: 'Kodaikanal Hills', roundTripKm: 1060, oneWayKm: 530, stateCode: 'TN', defaultDays: 3 },
   'munnar': { name: 'Munnar Tea Hills', roundTripKm: 1180, oneWayKm: 590, stateCode: 'KL', defaultDays: 3 }
 };
+
+// Route-specific minimum realistic round-trip hours
+const ROUTE_REALISTIC_HOURS = {
+  'tirupati': 12,
+  'tirumala': 12,
+  'thiruvannamalai': 14,
+  'tiruvannamalai': 14,
+  'pondicherry': 11,
+  'puducherry': 11,
+  'kanchipuram': 8,
+  'vellore': 10,
+  'mahabalipuram': 8,
+  'mamallapuram': 8,
+  'chidambaram': 14,
+  'kumbakonam': 36,
+  'navagraha': 36,
+  'rameswaram': 48,
+  'sabarimala': 48,
+  'tiruchendur': 36,
+  'bangalore': 24,
+  'bengaluru': 24,
+  'mysore': 36,
+  'coimbatore': 24,
+  'madurai': 24,
+  'trichy': 24,
+  'salem': 24,
+  'ooty': 48,
+  'kodaikanal': 48,
+  'munnar': 48
+};
+
+function getMinReturnDateTime(pickupIso, destKeyOrName, roundTripKm) {
+  if (!pickupIso) return '';
+  const d = new Date(pickupIso);
+  if (isNaN(d.getTime())) return '';
+  
+  const key = (destKeyOrName || '').toLowerCase().trim();
+  let minHours = 8;
+  for (const [k, hrs] of Object.entries(ROUTE_REALISTIC_HOURS)) {
+    if (key.includes(k)) {
+      minHours = hrs;
+      break;
+    }
+  }
+  if (minHours === 8 && roundTripKm) {
+    minHours = Math.max(8, Math.round(roundTripKm / 35));
+  }
+  
+  const minDate = new Date(d.getTime() + minHours * 60 * 60 * 1000);
+  const yyyy = minDate.getFullYear();
+  const mm = String(minDate.getMonth() + 1).padStart(2, '0');
+  const dd = String(minDate.getDate()).padStart(2, '0');
+  const hh = String(minDate.getHours()).padStart(2, '0');
+  const min = String(minDate.getMinutes()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+}
 
 // 5 Standard city packages
 const LOCAL_PACKAGES = [
@@ -122,6 +180,94 @@ const VEHICLE_SWITCHER_LIST = [
     category: 'tempo',
     airportMultiplier: 2.8,
     airportMinFare: 2400
+  },
+  {
+    key: 'Force Urbania VIP Luxury',
+    altKeys: ['Force Urbania', 'urbania', 'Urbania VIP', 'Urbania', 'Force Urbania VIP Luxury Chauffeur Van'],
+    name: 'Urbania',
+    fullName: 'Force Urbania VIP Luxury Van (12+1)',
+    seats: 12,
+    paxLabel: '12 Seats VIP',
+    image: '/images/fleet/force-urbania.webp',
+    category: 'coach',
+    airportMultiplier: 4.5,
+    airportMinFare: 4500
+  }
+];
+
+// Dedicated 1-tap switcher list for Tempo Traveller fleet in seat order (12 to 26 seats & Urbania)
+const TEMPO_SWITCHER_LIST = [
+  {
+    key: '12-Seater Luxury Force Tempo',
+    altKeys: ['12-Seater', '12', 'tempo-12', 'tempo 12', 'Tempo Traveller', '12-Seater Luxury Force Tempo'],
+    name: '12-Seater',
+    fullName: '12-Seater Luxury Force Tempo (12+1)',
+    seats: 12,
+    paxLabel: '12 Seats',
+    image: '/images/fleet/tempo-12.webp',
+    category: 'tempo',
+    airportMultiplier: 2.8,
+    airportMinFare: 2400
+  },
+  {
+    key: 'Force Urbania VIP Luxury',
+    altKeys: ['Force Urbania', 'urbania', 'Urbania VIP', 'Urbania', 'Force Urbania VIP Luxury Chauffeur Van'],
+    name: 'Force Urbania',
+    fullName: 'Force Urbania VIP Luxury Van (12+1)',
+    seats: 12,
+    paxLabel: '12 Seats VIP',
+    image: '/images/fleet/force-urbania.webp',
+    category: 'coach',
+    airportMultiplier: 4.5,
+    airportMinFare: 4500
+  },
+  {
+    key: '14-Seater Executive Force Tempo',
+    altKeys: ['14-Seater', '14', 'tempo-14', 'tempo 14', '14-Seater Executive Force Tempo'],
+    name: '14-Seater',
+    fullName: '14-Seater Executive Force Tempo (14+1)',
+    seats: 14,
+    paxLabel: '14 Seats',
+    image: '/images/fleet/tempo-12.webp',
+    category: 'tempo',
+    airportMultiplier: 3.0,
+    airportMinFare: 2600
+  },
+  {
+    key: '17-Seater Executive Force Tempo',
+    altKeys: ['17-Seater', '17', 'tempo-17', 'tempo 17', '17-Seater Executive Force Tempo', '17-Seater Executive Force Tempo (4020 WB)'],
+    name: '17-Seater',
+    fullName: '17-Seater Executive Force Tempo (17+1)',
+    seats: 17,
+    paxLabel: '17 Seats',
+    image: '/images/fleet/tempo-17.webp',
+    category: 'coach',
+    airportMultiplier: 3.2,
+    airportMinFare: 2800
+  },
+  {
+    key: '20-Seater Grand Force Tempo',
+    altKeys: ['20-Seater', '20', 'tempo-20', 'tempo 20', '20-Seater Grand Force Tempo', '20-Seater Grand Force Tempo (High Roof)'],
+    name: '20-Seater',
+    fullName: '20-Seater Grand Force Tempo (20+1)',
+    seats: 20,
+    paxLabel: '20 Seats',
+    image: '/images/fleet/tempo-17.webp',
+    category: 'coach',
+    airportMultiplier: 3.6,
+    airportMinFare: 3200
+  },
+  {
+    key: '26-Seater Mini Bus / Force Tempo',
+    altKeys: ['26-Seater', '26', 'tempo-26', 'tempo 26', '26-Seater Mini Bus', 'mini bus', '26-Seater Force Mini Bus Coach'],
+    name: '26-Seater',
+    fullName: '26-Seater Force Mini Bus Coach (26+1)',
+    seats: 26,
+    paxLabel: '26 Seats',
+    image: '/images/fleet/tempo.webp',
+    category: 'coach',
+    airportMultiplier: 4.2,
+    airportMinFare: 4000
   }
 ];
 
@@ -168,8 +314,43 @@ export default function BookingEngine({
   showHeader = true,
   title = '',
   subtitle = '',
-  variant = 'card'
+  variant = 'card',
+  fleetType = '',
+  customVehicles = null
 }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // 1. Detect if this is a dedicated Tempo Traveller context
+  const isTempoOnly = useMemo(() => {
+    if (fleetType === 'tempo') return true;
+    const slug = (serviceSlug || '').toLowerCase();
+    const title = (serviceTitle || '').toLowerCase();
+    return slug.includes('tempo-traveller') || slug.includes('tempo') || title.includes('tempo traveller');
+  }, [fleetType, serviceSlug, serviceTitle]);
+
+  // Active Vehicle Switcher List (Tempos only for Tempo services; Standard fleet for car services)
+  const activeVehicleList = useMemo(() => {
+    if (customVehicles && Array.isArray(customVehicles) && customVehicles.length > 0) {
+      return customVehicles;
+    }
+    return isTempoOnly ? TEMPO_SWITCHER_LIST : VEHICLE_SWITCHER_LIST;
+  }, [isTempoOnly, customVehicles]);
+
+  const findVehicleMeta = useCallback((vKey) => {
+    if (!vKey) return activeVehicleList[0];
+    const norm = String(vKey).toLowerCase().trim();
+    return activeVehicleList.find(v => {
+      if (v.key.toLowerCase() === norm) return true;
+      if (v.name.toLowerCase() === norm) return true;
+      if (v.fullName && v.fullName.toLowerCase() === norm) return true;
+      if (v.altKeys && v.altKeys.some(k => k.toLowerCase() === norm || norm.includes(k.toLowerCase()))) return true;
+      return false;
+    }) || activeVehicleList[0];
+  }, [activeVehicleList]);
+
   // 1. Normalize Initial Tab & Allowed Tabs
   const normalizedInitialTab = useMemo(() => {
     if (initialTab === 'round' || initialTab === 'oneway') return 'outstation';
@@ -232,19 +413,74 @@ export default function BookingEngine({
   // 6. Selected Vehicle
   const defaultVehicleKey = useMemo(() => {
     const v = (initialVehicle || prefill.vehicle || '').toLowerCase();
+    if (isTempoOnly) {
+      if (v.includes('urbania')) return 'Force Urbania VIP Luxury';
+      if (v.includes('14')) return '14-Seater Executive Force Tempo';
+      if (v.includes('17')) return '17-Seater Executive Force Tempo';
+      if (v.includes('20')) return '20-Seater Grand Force Tempo';
+      if (v.includes('26') || v.includes('bus')) return '26-Seater Mini Bus / Force Tempo';
+      return '12-Seater Luxury Force Tempo';
+    }
     const slug = (serviceSlug || '').toLowerCase();
+    if (v.includes('urbania') || slug.includes('urbania')) return 'Force Urbania VIP Luxury';
     if (v.includes('tempo') || slug.includes('tempo')) return 'Tempo Traveller';
     if (v.includes('ertiga') || slug.includes('ertiga')) return 'Maruti Ertiga';
     if (v.includes('crysta') || slug.includes('crysta')) return 'Innova Crysta';
     if (v.includes('innova') || slug.includes('innova')) return 'Innova';
     return 'Swift Dzire';
-  }, [initialVehicle, prefill.vehicle, serviceSlug]);
+  }, [initialVehicle, prefill.vehicle, serviceSlug, isTempoOnly]);
 
   const [selectedVehicleKey, setSelectedVehicleKey] = useState(defaultVehicleKey);
+
+  // 7. GST Invoice Preference
+  const [needGst, setNeedGst] = useState(false);
+  const [companyGstin, setCompanyGstin] = useState('');
+
+  useEffect(() => {
+    setSelectedVehicleKey(defaultVehicleKey);
+  }, [defaultVehicleKey]);
+
+  // Listen to custom booking events from vehicle showcase cards or package cards
+  useEffect(() => {
+    const handleSelectVehicle = (e) => {
+      const v = e?.detail?.vehicle;
+      if (v) {
+        const found = findVehicleMeta(v);
+        if (found) {
+          setSelectedVehicleKey(found.key);
+        }
+      }
+    };
+
+    const handleSelectPackage = (e) => {
+      const { destination, days, vehicle, tab } = e?.detail || {};
+      if (destination) setOutstationDrop(destination);
+      if (days) setOutstationDays(Number(days) || 1);
+      if (tab === 'round' || tab === 'oneway') {
+        setActiveTab('outstation');
+        setOutstationTripType(tab);
+      }
+      if (vehicle) {
+        const found = findVehicleMeta(vehicle);
+        if (found) setSelectedVehicleKey(found.key);
+      }
+      setViewMode('results');
+    };
+
+    window.addEventListener('select-quote-vehicle', handleSelectVehicle);
+    window.addEventListener('select-quote-package', handleSelectPackage);
+    return () => {
+      window.removeEventListener('select-quote-vehicle', handleSelectVehicle);
+      window.removeEventListener('select-quote-package', handleSelectPackage);
+    };
+  }, [findVehicleMeta]);
 
   // Google Places Autocomplete
   const pickupInputRef = useRef(null);
   const dropInputRef = useRef(null);
+  const returnInputRef = useRef(null);
+  const vehicleScrollerRef = useRef(null);
+  const [validationError, setValidationError] = useState('');
 
   useEffect(() => {
     if (viewMode !== 'form') return;
@@ -337,19 +573,84 @@ export default function BookingEngine({
     for (const [key, dest] of Object.entries(KNOWN_DESTINATIONS)) {
       if (raw.includes(key)) return dest;
     }
+    // Also check state_permits keywords
+    let detectedState = 'TN';
+    for (const [code, entry] of Object.entries(tariffConfig.state_permits || {})) {
+      if (code === 'TN') continue;
+      if (entry.keywords?.some(kw => raw.includes(kw.toLowerCase()))) {
+        detectedState = code;
+        break;
+      }
+    }
     return {
       name: outstationDrop || 'Outstation Trip',
       roundTripKm: outstationDays * 250,
       oneWayKm: 130,
-      stateCode: 'TN',
+      stateCode: detectedState,
       defaultDays: outstationDays
     };
   }, [outstationDrop, outstationDays]);
 
+  // Minimum realistic return date/time for outstation
+  const minReturnDateTime = useMemo(() => {
+    if (!pickupDateTime) return '';
+    return getMinReturnDateTime(
+      pickupDateTime,
+      resolvedDestination.name || outstationDrop,
+      resolvedDestination.roundTripKm
+    );
+  }, [pickupDateTime, resolvedDestination, outstationDrop]);
+
+  // Handle pickup change and auto-validate return schedule
+  const handlePickupChange = (val) => {
+    setPickupDateTime(val);
+    setValidationError('');
+    if (val && returnDateTime) {
+      const minReturn = getMinReturnDateTime(val, resolvedDestination.name || outstationDrop, resolvedDestination.roundTripKm);
+      if (returnDateTime < minReturn) {
+        setReturnDateTime('');
+        setOutstationDays(resolvedDestination.defaultDays || 1);
+      } else {
+        const pDate = new Date(val);
+        const rDate = new Date(returnDateTime);
+        const diffDays = Math.max(1, Math.ceil((rDate - pDate) / (1000 * 60 * 60 * 24)));
+        setOutstationDays(diffDays);
+      }
+    }
+  };
+
+  // Handle return change and calculate duration
+  const handleReturnChange = (val) => {
+    setReturnDateTime(val);
+    setValidationError('');
+    if (val && pickupDateTime) {
+      const pDate = new Date(pickupDateTime);
+      const rDate = new Date(val);
+      const diffDays = Math.max(1, Math.ceil((rDate - pDate) / (1000 * 60 * 60 * 24)));
+      setOutstationDays(diffDays);
+    } else {
+      setOutstationDays(resolvedDestination.defaultDays || 1);
+    }
+  };
+
   // Pricing calculation engine per vehicle
   const calculateVehiclePricing = (vKey) => {
-    const vConfig = tariffConfig.vehicles[vKey] || tariffConfig.vehicles['Swift Dzire'] || {};
-    const vehicleMeta = VEHICLE_SWITCHER_LIST.find(v => v.key === vKey) || VEHICLE_SWITCHER_LIST[0];
+    const vehicleMeta = findVehicleMeta(vKey);
+    const resolvedKey = vehicleMeta.key;
+    const vConfig = tariffConfig.tempo_fleet?.[resolvedKey] ||
+      tariffConfig.vehicles?.[resolvedKey] ||
+      tariffConfig.tempo_fleet?.[vKey] ||
+      tariffConfig.vehicles?.[vKey] ||
+      (isTempoOnly ? (tariffConfig.tempo_fleet?.['12-Seater Luxury Force Tempo'] || tariffConfig.vehicles?.['Tempo Traveller']) : tariffConfig.vehicles?.['Swift Dzire']) ||
+      {};
+
+    const isTempoOrLarge = Boolean(
+      isTempoOnly ||
+      (vehicleMeta.seats && vehicleMeta.seats >= 12) ||
+      vehicleMeta.category === 'tempo' ||
+      vehicleMeta.category === 'coach'
+    );
+    const advance = isTempoOrLarge ? 2000 : 500;
 
     if (activeTab === 'outstation') {
       const isRound = outstationTripType === 'round';
@@ -366,8 +667,12 @@ export default function BookingEngine({
         
         const stateCode = resolvedDestination.stateCode;
         const isInterstate = Boolean(stateCode && stateCode !== 'TN');
-        const totalFare = kmCost + totalBata;
-        const advance = 500;
+        const vehicleCategory = vehicleMeta.category || 'sedan';
+        const statePermit = isInterstate ? (tariffConfig.state_permits?.[stateCode]?.rates?.[vehicleCategory] || 0) : 0;
+        const baseSubtotal = kmCost + totalBata + statePermit;
+        const taxableAmount = kmCost + totalBata;
+        const gstAmount = needGst ? Math.round(taxableAmount * 0.05) : 0;
+        const totalFare = baseSubtotal + gstAmount;
 
         return {
           billedKm,
@@ -377,6 +682,10 @@ export default function BookingEngine({
           driverBata: totalBata,
           isInterstate,
           stateCode,
+          statePermit,
+          baseSubtotal,
+          taxableAmount,
+          gstAmount,
           totalFare,
           advance,
           routeSummary: `${outstationPickup.split(',')[0]} ⇄ ${resolvedDestination.name || outstationDrop || 'Outstation'}`,
@@ -392,8 +701,12 @@ export default function BookingEngine({
         const totalBata = bataPerDay;
         const stateCode = resolvedDestination.stateCode;
         const isInterstate = Boolean(stateCode && stateCode !== 'TN');
-        const totalFare = kmCost + totalBata;
-        const advance = 500;
+        const vehicleCategory = vehicleMeta.category || 'sedan';
+        const statePermit = isInterstate ? (tariffConfig.state_permits?.[stateCode]?.rates?.[vehicleCategory] || 0) : 0;
+        const baseSubtotal = kmCost + totalBata + statePermit;
+        const taxableAmount = kmCost + totalBata;
+        const gstAmount = needGst ? Math.round(taxableAmount * 0.05) : 0;
+        const totalFare = baseSubtotal + gstAmount;
 
         return {
           billedKm,
@@ -403,6 +716,10 @@ export default function BookingEngine({
           driverBata: totalBata,
           isInterstate,
           stateCode,
+          statePermit,
+          baseSubtotal,
+          taxableAmount,
+          gstAmount,
           totalFare,
           advance,
           routeSummary: `${outstationPickup.split(',')[0]} ➔ ${resolvedDestination.name || outstationDrop || 'Outstation'}`,
@@ -415,7 +732,10 @@ export default function BookingEngine({
       const baseFare = vConfig[pkg.key] || 2200;
       const extraKmRate = vConfig.extra_km_rate || 15;
       const extraHrRate = vConfig.extra_hr_rate || 150;
-      const advance = 500;
+      const baseSubtotal = baseFare;
+      const taxableAmount = baseFare;
+      const gstAmount = needGst ? Math.round(taxableAmount * 0.05) : 0;
+      const totalFare = baseSubtotal + gstAmount;
 
       return {
         billedKm: pkg.km,
@@ -424,7 +744,13 @@ export default function BookingEngine({
         driverBata: 0,
         extraKmRate,
         extraHrRate,
-        totalFare: baseFare,
+        isInterstate: false,
+        stateCode: 'TN',
+        statePermit: 0,
+        baseSubtotal,
+        taxableAmount,
+        gstAmount,
+        totalFare,
         advance,
         routeSummary: `Chennai Local (${pkg.label})`,
         tripSubtext: `Includes ${pkg.hours} Hrs / ${pkg.km} KM • Extra: ₹${extraKmRate}/km, ₹${extraHrRate}/hr`,
@@ -443,8 +769,12 @@ export default function BookingEngine({
         const kmCost = billedKm * ratePerKm;
         const driverBata = vConfig.driver_bata || 500;
         const isInterstate = Boolean(dest.stateCode && dest.stateCode !== 'TN');
-        const totalFare = kmCost + driverBata;
-        const advance = 500;
+        const vehicleCategory = vehicleMeta.category || 'sedan';
+        const statePermit = isInterstate ? (tariffConfig.state_permits?.[dest.stateCode]?.rates?.[vehicleCategory] || 0) : 0;
+        const baseSubtotal = kmCost + driverBata + statePermit;
+        const taxableAmount = kmCost + driverBata;
+        const gstAmount = needGst ? Math.round(taxableAmount * 0.05) : 0;
+        const totalFare = baseSubtotal + gstAmount;
 
         return {
           billedKm,
@@ -454,6 +784,10 @@ export default function BookingEngine({
           driverBata,
           isInterstate,
           stateCode: dest.stateCode,
+          statePermit,
+          baseSubtotal,
+          taxableAmount,
+          gstAmount,
           totalFare,
           advance,
           routeSummary: `Chennai Airport (MAA) ➔ ${dest.name}`,
@@ -467,13 +801,22 @@ export default function BookingEngine({
         if (vehicleMeta.airportMinFare && fare < vehicleMeta.airportMinFare) {
           fare = vehicleMeta.airportMinFare;
         }
-        const advance = 500;
+        const baseSubtotal = fare;
+        const taxableAmount = fare;
+        const gstAmount = needGst ? Math.round(taxableAmount * 0.05) : 0;
+        const totalFare = baseSubtotal + gstAmount;
 
         return {
           billedKm: zone.km,
           kmCost: fare,
           driverBata: 0,
-          totalFare: fare,
+          isInterstate: false,
+          stateCode: 'TN',
+          statePermit: 0,
+          baseSubtotal,
+          taxableAmount,
+          gstAmount,
+          totalFare,
           advance,
           routeSummary: airportDirection === 'pickup' 
             ? `Chennai Airport (MAA) ➔ ${airportDropAddress || 'Chennai City Area'}`
@@ -487,12 +830,12 @@ export default function BookingEngine({
 
   // Selected vehicle object & pricing breakdown
   const selectedVehicle = useMemo(() => {
-    return VEHICLE_SWITCHER_LIST.find(v => v.key === selectedVehicleKey) || VEHICLE_SWITCHER_LIST[0];
-  }, [selectedVehicleKey]);
+    return findVehicleMeta(selectedVehicleKey);
+  }, [selectedVehicleKey, findVehicleMeta]);
 
   const currentBreakdown = useMemo(() => {
     return calculateVehiclePricing(selectedVehicleKey);
-  }, [selectedVehicleKey, activeTab, outstationTripType, outstationDays, resolvedDestination, localPackageKey, airportDirection, airportDropAddress, outstationPickup, formattedPickupDate]);
+  }, [selectedVehicleKey, activeTab, outstationTripType, outstationDays, resolvedDestination, localPackageKey, airportDirection, airportDropAddress, outstationPickup, formattedPickupDate, needGst]);
 
   // Log calculation event silently for lead capture
   const logCalculationEvent = (vehicleName, fare) => {
@@ -505,34 +848,105 @@ export default function BookingEngine({
         vehicle: vehicleName,
         distanceKm: currentBreakdown.billedKm || 'N/A',
         estimatedFare: fare,
-        meta: { quoteRefId, tab: activeTab, days: outstationDays }
+        meta: { quoteRefId, tab: activeTab, days: outstationDays, needGst }
       };
       navigator.sendBeacon?.('/api/record-calculation', JSON.stringify(payload));
     } catch (_) {}
   };
 
-  // WhatsApp Message
+  // WhatsApp Message (100% mirrors the on-screen Rate Summary & Payment Rules)
   const getWhatsAppMessage = () => {
-    return `*KALIDASS TRAVELS — TRIP QUOTATION REQUEST*
----------------------------------
-• Ref: ${quoteRefId}
-• Route: ${currentBreakdown.routeSummary}
-• Vehicle: ${selectedVehicle.fullName} (${selectedVehicle.paxLabel})
-• Date & Time: ${formattedPickupDate}
-• Estimate: ₹${currentBreakdown.totalFare.toLocaleString('en-IN')} (Includes ${currentBreakdown.billedKm} KM)
----------------------------------
-• Advance to Lock Cab: ₹${currentBreakdown.advance} (Deducted in final bill)
-• Balance: Pay driver at trip end (UPI / Cash)
-• Tolls, State Tax & Parking: Extra as per actual government receipts
----------------------------------
+    const isLocal = activeTab === 'local';
+
+    // 1. Vehicle line with km & rate
+    const vehicleHireLine = isLocal
+      ? `• ${selectedVehicle.fullName} (${currentBreakdown.packageHours} Hrs / ${currentBreakdown.billedKm} KM Package): ₹${currentBreakdown.kmCost?.toLocaleString('en-IN')}`
+      : `• ${selectedVehicle.fullName} (${currentBreakdown.billedKm ? `${Math.round(currentBreakdown.billedKm)} km @ ₹${currentBreakdown.ratePerKm || 14}/km` : 'Hire'}): ₹${currentBreakdown.kmCost?.toLocaleString('en-IN')}`;
+
+    // 2. Driver Bata (if applicable)
+    const driverBataLine = currentBreakdown.driverBata > 0
+      ? `\n• Driver Bata (${outstationDays} Day${outstationDays > 1 ? 's' : ''}): ₹${currentBreakdown.driverBata?.toLocaleString('en-IN')}`
+      : '';
+
+    // 3. State Entry Tax (if interstate)
+    const permitLine = currentBreakdown.isInterstate && currentBreakdown.statePermit > 0
+      ? `\n• State Entry Tax (${currentBreakdown.stateCode}): ₹${currentBreakdown.statePermit?.toLocaleString('en-IN')}`
+      : '';
+
+    // 4. GST Tax (if selected)
+    const gstLine = needGst && currentBreakdown.gstAmount > 0
+      ? `\n• GST Tax (5% ITC Invoice): +₹${currentBreakdown.gstAmount?.toLocaleString('en-IN')}`
+      : '';
+
+    const kmLabel = currentBreakdown.billedKm
+      ? `${Math.round(currentBreakdown.billedKm)} km`
+      : (isLocal ? `${currentBreakdown.packageHours} Hrs / ${currentBreakdown.billedKm} KM` : 'Standard');
+
+    const totalFareText = needGst
+      ? `Estimated Total Fare (${kmLabel}): ₹${currentBreakdown.totalFare.toLocaleString('en-IN')} (Includes 5% GST) + Extras as per slip${companyGstin.trim() ? `\n• GSTIN / Company: ${companyGstin.trim()}` : ''}`
+      : `Estimated Total Fare (${kmLabel}): ₹${currentBreakdown.totalFare.toLocaleString('en-IN')} + Extras as per slip`;
+
+    // Extra KM / Extra Hr subtext for payment rules
+    const extraChargeRule = isLocal
+      ? `• Extra km: ₹${currentBreakdown.extraKmRate}/km • Extra hr: ₹${currentBreakdown.extraHrRate}/hr`
+      : `• Doorstep odometer reading • Extra km: ₹${currentBreakdown.extraKmRate || 14}/km`;
+
+    return `KALIDASS TRAVELS — TRIP QUOTATION REQUEST
+──────────────────────────────────────────
+Ref: ${quoteRefId}
+Route: ${currentBreakdown.routeSummary}
+${currentBreakdown.metaDateStr}
+──────────────────────────────────────────
+RATE SUMMARY:
+${vehicleHireLine}${driverBataLine}${permitLine}${gstLine}
+• Toll Gate Fees (FASTag): Extra as per slip
+• Parking Charges: Extra as per slip
+
+${totalFareText}
+──────────────────────────────────────────
+PAYMENT & BILLING RULES:
+• ₹${currentBreakdown.advance} advance to reserve cab (deducted in final invoice)
+• Pay balance to chauffeur at trip end (UPI / Cash)
+${extraChargeRule}
+• Free cancellation up to 6 hours before pickup
+──────────────────────────────────────────
 Dispatch Helpline: +91 89395 39211
 Please confirm chauffeur availability.`;
   };
 
   const handleCalculateClick = () => {
-    if (!outstationDrop && activeTab === 'outstation') {
-      setOutstationDrop('Pondicherry');
+    // Validate required fields before proceeding
+    if (activeTab === 'outstation') {
+      if (!pickupDateTime) {
+        setValidationError('Please select pickup date & time to view fare');
+        return;
+      }
+      if (outstationTripType === 'round' && !returnDateTime) {
+        setValidationError('Please select your return date & time to calculate round-trip fare');
+        if (returnInputRef.current) {
+          returnInputRef.current.focus();
+          try {
+            returnInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } catch (_) {}
+        }
+        return;
+      }
+      if (!outstationDrop) {
+        setOutstationDrop('Pondicherry');
+      }
+    } else if (activeTab === 'local') {
+      if (!pickupDateTime) {
+        setValidationError('Please select pickup date & time');
+        return;
+      }
+    } else if (activeTab === 'airport') {
+      if (!pickupDateTime) {
+        setValidationError('Please select pickup date & time');
+        return;
+      }
     }
+
+    setValidationError('');
     setViewMode('results');
     setTimeout(() => {
       const el = document.getElementById('fare-calculator');
@@ -559,7 +973,7 @@ Please confirm chauffeur availability.`;
   const waHref = buildWhatsAppUrl(getWhatsAppMessage());
 
   return (
-    <div id="fare-calculator" className={`w-full max-w-2xl mx-auto transition-all duration-200 ${variant === 'card' ? 'bg-white dark:bg-m3-surface rounded-m3-2xl shadow-m3-2 border border-m3-outline-variant/70 dark:border-m3-outline-variant/40 overflow-hidden' : ''}`}>
+    <div id="fare-calculator" data-hydrated={mounted ? "true" : undefined} className={`w-full max-w-2xl mx-auto transition-all duration-200 ${variant === 'card' ? 'bg-white dark:bg-m3-surface rounded-m3-2xl shadow-m3-2 border border-m3-outline-variant/70 dark:border-m3-outline-variant/40 overflow-hidden' : ''}`}>
       
       {/* ─────────────────────────────────────────────────────────────
           MODE A: THE SELECTION INTERFACE (M3-Compliant Selection Form)
@@ -723,8 +1137,9 @@ Please confirm chauffeur availability.`;
                     href={buildWhatsAppUrl("Hi Kalidass Travels, I want to plan a custom multi-destination / multi-temple tour package from Chennai. Please help me with itinerary and quotation.")}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 min-h-[34px] px-3.5 py-1 rounded-m3-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-m3-1 active:scale-[0.98] transition-all shrink-0 cursor-pointer"
+                    className="inline-flex items-center gap-1.5 min-h-[34px] px-3.5 py-1 rounded-m3-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white font-bold text-xs shadow-m3-1 active:scale-[0.98] hover:-translate-y-0.5 transition-all shrink-0 cursor-pointer"
                   >
+                    <WhatsAppIcon variant="white" className="w-3.5 h-3.5 shrink-0" />
                     <span>Plan My Trip</span>
                     <span>→</span>
                   </a>
@@ -745,7 +1160,7 @@ Please confirm chauffeur availability.`;
                     id="pickup-datetime-input"
                     type="datetime-local"
                     value={pickupDateTime}
-                    onChange={(e) => setPickupDateTime(e.target.value)}
+                    onChange={(e) => handlePickupChange(e.target.value)}
                     className="w-full px-2.5 min-h-[46px] sm:min-h-[48px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 rounded-m3-sm text-m3-on-surface dark:text-white font-medium focus:outline-none focus:border-2 focus:border-blue-600 transition-all"
                   />
                 </div>
@@ -756,24 +1171,29 @@ Please confirm chauffeur availability.`;
                       <Calendar className="w-3.5 h-3.5 text-blue-600" />
                       <span>Return Date</span>
                     </label>
-                    <span className="bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-m3-full">
-                      Select
-                    </span>
+                    {returnDateTime ? (
+                      <span className="bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950 dark:text-blue-300 text-[10px] font-bold px-2 py-0.5 rounded-m3-full">
+                        {outstationDays === 1 ? '1 Day (Same Day)' : `${outstationDays} Days (${outstationDays - 1}N)`}
+                      </span>
+                    ) : (
+                      <span className="bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-m3-full">
+                        Required
+                      </span>
+                    )}
                   </div>
                   <input
+                    ref={returnInputRef}
                     id="return-datetime-input"
                     type="datetime-local"
                     value={returnDateTime}
-                    onChange={(e) => {
-                      setReturnDateTime(e.target.value);
-                      if (e.target.value && pickupDateTime) {
-                        const pDate = new Date(pickupDateTime);
-                        const rDate = new Date(e.target.value);
-                        const diffDays = Math.max(1, Math.ceil((rDate - pDate) / (1000 * 60 * 60 * 24)));
-                        setOutstationDays(diffDays);
-                      }
-                    }}
-                    className="w-full px-2.5 min-h-[46px] sm:min-h-[48px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 rounded-m3-sm text-m3-on-surface dark:text-white font-medium focus:outline-none focus:border-2 focus:border-blue-600 transition-all"
+                    min={minReturnDateTime}
+                    disabled={!pickupDateTime}
+                    onChange={(e) => handleReturnChange(e.target.value)}
+                    className={`w-full px-2.5 min-h-[46px] sm:min-h-[48px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border rounded-m3-sm text-m3-on-surface dark:text-white font-medium focus:outline-none focus:border-2 focus:border-blue-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+                      validationError && !returnDateTime
+                        ? 'border-2 border-amber-500 ring-2 ring-amber-400/40 animate-pulse bg-amber-50/40 dark:bg-amber-950/30'
+                        : 'border-m3-outline-variant/80 dark:border-m3-outline-variant/60'
+                    }`}
                   />
                 </div>
               </div>
@@ -907,12 +1327,23 @@ Please confirm chauffeur availability.`;
           )}
 
           {/* Primary View Instant Fare Button (M3 High-Emphasis Filled Button with 48+dp touch target) */}
-          <div className="pt-2 text-center space-y-1.5">
+          <div className="pt-2 text-center space-y-2">
+            {validationError && (
+              <div
+                id="booking-validation-alert"
+                role="alert"
+                className="p-2.5 rounded-m3-md bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700/60 text-amber-900 dark:text-amber-200 text-xs flex items-center justify-center gap-1.5 font-semibold animate-fadeIn"
+              >
+                <span>⚠️</span>
+                <span>{validationError}</span>
+              </div>
+            )}
+
             <button
               type="button"
-              id="view-fare-btn"
+              id={activeTab === 'airport' ? 'get-flat-fare-btn' : (serviceSlug ? 'btn-calculate-fare' : 'view-fare-btn')}
               onClick={handleCalculateClick}
-              className="w-full min-h-[50px] sm:min-h-[52px] px-6 rounded-m3-full bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-bold text-sm sm:text-base tracking-wide shadow-m3-1 hover:shadow-m3-2 transition-all cursor-pointer flex items-center justify-center gap-2"
+              className="w-full min-h-[50px] sm:min-h-[52px] px-6 rounded-m3-full font-bold text-sm sm:text-base tracking-wide transition-all flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white shadow-m3-1 hover:shadow-m3-2 cursor-pointer"
             >
               {activeTab === 'airport' && <Receipt className="w-4 h-4" />}
               <span>View Instant Fare</span>
@@ -966,16 +1397,47 @@ Please confirm chauffeur availability.`;
           <div>
             <div className="flex items-center justify-between text-[11px] font-bold text-m3-on-surface-variant dark:text-gray-400 uppercase tracking-wider mb-1.5">
               <span className="flex items-center gap-1">
-                <Car className="w-3.5 h-3.5 text-blue-600" />
-                <span>Select Vehicle:</span>
+                {isTempoOnly ? <Users className="w-3.5 h-3.5 text-blue-600" /> : <Car className="w-3.5 h-3.5 text-blue-600" />}
+                <span>{isTempoOnly ? 'Select Tempo Traveller / Van:' : 'Select Vehicle:'}</span>
               </span>
-              <span className="text-[10px] font-normal text-slate-400">
-                Tap to switch rates
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-normal text-slate-400 hidden xs:inline">
+                  Tap to switch rates
+                </span>
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (vehicleScrollerRef.current) {
+                        vehicleScrollerRef.current.scrollBy({ left: -140, behavior: 'smooth' });
+                      }
+                    }}
+                    aria-label="Scroll left"
+                    className="w-5 h-5 rounded-full border border-m3-outline-variant/80 flex items-center justify-center text-slate-500 hover:text-blue-600 hover:border-blue-400 bg-white dark:bg-m3-surface transition-colors cursor-pointer"
+                  >
+                    <ChevronLeft className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (vehicleScrollerRef.current) {
+                        vehicleScrollerRef.current.scrollBy({ left: 140, behavior: 'smooth' });
+                      }
+                    }}
+                    aria-label="Scroll right"
+                    className="w-5 h-5 rounded-full border border-m3-outline-variant/80 flex items-center justify-center text-slate-500 hover:text-blue-600 hover:border-blue-400 bg-white dark:bg-m3-surface transition-colors cursor-pointer"
+                  >
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
             </div>
 
-            <div className="flex gap-2 overflow-x-auto no-scrollbar py-1 scroll-smooth">
-              {VEHICLE_SWITCHER_LIST.map((item) => {
+            <div 
+              ref={vehicleScrollerRef}
+              className="flex gap-2 overflow-x-auto no-scrollbar py-1 scroll-smooth"
+            >
+              {activeVehicleList.map((item) => {
                 const isSelected = selectedVehicleKey === item.key;
                 const vPricing = calculateVehiclePricing(item.key);
                 return (
@@ -983,7 +1445,7 @@ Please confirm chauffeur availability.`;
                     key={item.key}
                     type="button"
                     onClick={() => setSelectedVehicleKey(item.key)}
-                    className={`group relative flex items-center gap-2.5 px-3 py-1.5 rounded-m3-md border shrink-0 transition-all cursor-pointer min-h-[48px] sm:min-h-[52px] active:scale-95 ${
+                    className={`group relative flex items-center gap-2 px-2.5 py-1.5 rounded-m3-md border shrink-0 transition-all cursor-pointer min-h-[48px] sm:min-h-[52px] active:scale-95 ${
                       isSelected
                         ? 'border-blue-600 bg-blue-50/90 dark:bg-blue-950/60 shadow-m3-0 ring-1 ring-blue-600/30'
                         : 'border-m3-outline-variant/80 dark:border-m3-outline-variant/50 bg-white dark:bg-m3-surface hover:border-slate-300 hover:bg-slate-50'
@@ -992,7 +1454,7 @@ Please confirm chauffeur availability.`;
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="w-10 sm:w-12 h-6 sm:h-7 object-contain shrink-0 transition-transform group-hover:scale-105"
+                      className="w-10 sm:w-11 h-6 sm:h-7 object-contain shrink-0 transition-transform group-hover:scale-105"
                       loading="lazy"
                       width="44"
                       height="28"
@@ -1018,7 +1480,7 @@ Please confirm chauffeur availability.`;
           <div className="p-3.5 rounded-m3-lg border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 space-y-2 bg-white dark:bg-m3-surface-container-low shadow-m3-0">
             <div className="space-y-1.5 text-xs sm:text-sm text-slate-700 dark:text-gray-300">
               <div className="flex justify-between items-center py-0.5">
-                <span>Cab Hire ({currentBreakdown.billedKm ? `${Math.round(currentBreakdown.billedKm)} km @ ₹${currentBreakdown.ratePerKm || 14}/km` : selectedVehicle.fullName})</span>
+                <span>{selectedVehicle.fullName} ({currentBreakdown.billedKm ? `${Math.round(currentBreakdown.billedKm)} km @ ₹${currentBreakdown.ratePerKm || 14}/km` : 'Hire'})</span>
                 <span className="font-bold text-slate-900 dark:text-white">
                   ₹{currentBreakdown.kmCost?.toLocaleString('en-IN')}
                 </span>
@@ -1033,6 +1495,24 @@ Please confirm chauffeur availability.`;
                 </div>
               )}
 
+              {currentBreakdown.isInterstate && currentBreakdown.statePermit > 0 && (
+                <div className="flex justify-between items-center py-0.5">
+                  <span>State Entry Tax ({currentBreakdown.stateCode})</span>
+                  <span className="font-bold text-slate-900 dark:text-white">
+                    ₹{currentBreakdown.statePermit?.toLocaleString('en-IN')}
+                  </span>
+                </div>
+              )}
+
+              {needGst && currentBreakdown.gstAmount > 0 && (
+                <div className="flex justify-between items-center py-0.5 text-blue-700 dark:text-blue-400 font-medium">
+                  <span>GST Tax (5% ITC Invoice)</span>
+                  <span className="font-bold">
+                    +₹{currentBreakdown.gstAmount?.toLocaleString('en-IN')}
+                  </span>
+                </div>
+              )}
+
               <div className="flex justify-between items-center py-0.5 text-slate-500 dark:text-gray-400">
                 <span>Toll Gate Fees (FASTag)</span>
                 <span className="font-medium text-slate-700 dark:text-gray-300">Extra as per slip</span>
@@ -1043,21 +1523,51 @@ Please confirm chauffeur availability.`;
                 <span className="font-medium text-slate-700 dark:text-gray-300">Extra as per slip</span>
               </div>
 
-              {currentBreakdown.isInterstate && (
-                <div className="flex justify-between items-center py-0.5 text-slate-500 dark:text-gray-400">
-                  <span>State Entry Tax ({currentBreakdown.stateCode})</span>
-                  <span className="font-medium text-slate-700 dark:text-gray-300">Extra as per slip</span>
-                </div>
-              )}
+              {/* GST Tax Invoice Option Toggle */}
+              <div className="pt-2 pb-1 border-t border-dashed border-m3-outline-variant/70 dark:border-m3-outline-variant/50">
+                <label className="flex items-start justify-between gap-2.5 cursor-pointer group select-none">
+                  <div className="flex items-start gap-2.5">
+                    <input
+                      type="checkbox"
+                      checked={needGst}
+                      onChange={(e) => setNeedGst(e.target.checked)}
+                      className="w-4 h-4 mt-0.5 rounded text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 dark:bg-m3-surface cursor-pointer"
+                    />
+                    <div>
+                      <span className="text-xs sm:text-sm font-bold text-slate-800 dark:text-gray-200 group-hover:text-blue-600 transition-colors">
+                        Need GST Tax Invoice? (+5%)
+                      </span>
+                      <span className="block text-[10px] text-slate-500 dark:text-gray-400">
+                        100% corporate Input Tax Credit (ITC) compliant
+                      </span>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded-full border border-blue-200 dark:border-blue-800 shrink-0">
+                    5% GST
+                  </span>
+                </label>
+
+                {needGst && (
+                  <div className="mt-2 pl-6.5 pr-0.5 animate-fadeIn">
+                    <input
+                      type="text"
+                      value={companyGstin}
+                      onChange={(e) => setCompanyGstin(e.target.value)}
+                      placeholder="Company Name / GSTIN (Optional)"
+                      className="w-full text-xs px-2.5 py-1.5 rounded-m3-md border border-m3-outline-variant/80 dark:border-m3-outline-variant/50 bg-slate-50 dark:bg-m3-surface text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                )}
+              </div>
 
               {/* Solid Total Line */}
               <div className="pt-2.5 border-t border-m3-outline-variant/80 dark:border-m3-outline-variant/60 flex justify-between items-baseline">
                 <div>
                   <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white block">
-                    Estimated Fare ({currentBreakdown.billedKm ? `${Math.round(currentBreakdown.billedKm)} km` : 'Standard'})
+                    Estimated Total Fare ({currentBreakdown.billedKm ? `${Math.round(currentBreakdown.billedKm)} km` : 'Standard'})
                   </span>
                   <span className="text-[10px] text-slate-500 dark:text-gray-400">
-                    Base fare includes 5% GST
+                    {needGst ? 'Includes 5% GST (Tax invoice provided)' : 'Base fare (Excludes GST • Available on request)'}
                   </span>
                 </div>
                 <div className="text-right">
@@ -1094,10 +1604,11 @@ Please confirm chauffeur availability.`;
                 href={waHref}
                 target="_blank"
                 rel="noopener noreferrer nofollow"
+                data-direct-whatsapp="true"
                 onClick={() => logCalculationEvent(selectedVehicle.fullName, currentBreakdown.totalFare)}
-                className="flex-1 min-h-[48px] sm:min-h-[50px] inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary font-bold text-xs sm:text-sm shadow-m3-1 hover:shadow-m3-2 transition-all active:scale-[0.98] cursor-pointer"
+                className="flex-1 min-h-[48px] sm:min-h-[50px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-m3-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white font-bold text-xs sm:text-sm shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5 transition-all active:scale-[0.98] cursor-pointer border border-[#20ba5a]/25"
               >
-                <WhatsAppIcon variant="white" className="w-4 h-4 shrink-0" />
+                <WhatsAppIcon variant="white" className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
                 <span>Book {selectedVehicle.name} on WhatsApp</span>
               </a>
 

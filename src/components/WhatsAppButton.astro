@@ -8,7 +8,7 @@ interface Props {
   size?: 'sm' | 'md' | 'lg' | 'icon';
   fullWidth?: boolean;
   className?: string;
-  variant?: 'filled' | 'elevated' | 'tonal' | 'outlined';
+  variant?: 'brand' | 'filled' | 'elevated' | 'tonal' | 'outlined';
   ariaLabel?: string;
   id?: string;
   [key: string]: any;
@@ -41,15 +41,16 @@ const iconSize = {
   icon: "w-5 h-5"
 }[size];
 
-// M3 Surface & State Layer specifications - Harmonized M3 Blue theme
+// Official WhatsApp Brand & M3 Surface specifications
 const variantClasses = {
-  filled: "bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary font-bold border border-m3-primary shadow-m3-1 hover:shadow-m3-2",
-  elevated: "bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary font-bold border border-m3-primary shadow-m3-2 hover:shadow-m3-3",
+  brand: "bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white font-bold border border-[#20ba5a]/25 shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5",
+  filled: "bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white font-bold border border-[#20ba5a]/25 shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5",
+  elevated: "bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white font-bold border border-[#20ba5a]/25 shadow-m3-2 hover:shadow-m3-3 hover:-translate-y-0.5",
   tonal: "bg-m3-primary-container hover:bg-m3-primary-container/80 active:bg-m3-primary-container/90 text-m3-on-primary-container font-bold border border-m3-primary/20 shadow-xs",
   outlined: "bg-transparent hover:bg-m3-primary/10 active:bg-m3-primary/20 text-m3-primary border border-m3-outline shadow-xs"
-}[variant] || "bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary font-bold border border-m3-primary shadow-m3-1";
+}[variant] || "bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white font-bold border border-[#20ba5a]/25 shadow-m3-1";
 
-const iconVariant = (variant === 'filled' || variant === 'elevated') ? 'white' : (variant === 'tonal' || variant === 'outlined' ? 'monochrome' : 'brand');
+const iconVariant = (variant === 'brand' || variant === 'filled' || variant === 'elevated') ? 'white' : (variant === 'tonal' || variant === 'outlined' ? 'monochrome' : 'brand');
 ---
 
 <a

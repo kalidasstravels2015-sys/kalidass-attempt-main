@@ -449,7 +449,7 @@ export default function OutstationQuotationModal() {
 
   // Recalculate cost when tripType, vehicle, distance, or days change
   useEffect(() => {
-    if (!distance) {
+    if (!distance || (tripType === 'round' && !returnDate)) {
       setEstimate(0);
       setBreakdown(null);
       return;
@@ -1172,8 +1172,8 @@ Please save my quote & confirm live cab availability.` + omMapsBlock;
                       <Calendar className="w-3.5 h-3.5 text-m3-on-surface-variant shrink-0" />
                       <span>Return Date &amp; Time *</span>
                     </label>
-                    <span className="text-[10px] font-bold text-m3-primary bg-m3-primary/10 px-1.5 py-0.5 rounded-m3-xs">
-                      {returnDate ? `${days} ${days > 1 ? 'Days' : 'Day'}` : 'Select'}
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-m3-xs ${returnDate ? 'text-m3-primary bg-m3-primary/10' : 'bg-amber-100 text-amber-800'}`}>
+                      {returnDate ? `${days} ${days > 1 ? 'Days' : 'Day'}` : 'Required'}
                     </span>
                   </div>
                   <input
@@ -1228,6 +1228,14 @@ Please save my quote & confirm live cab availability.` + omMapsBlock;
                   </>
                 )}
               </button>
+            </div>
+          )}
+
+          {/* Prompt to select return date for round trips */}
+          {distance > 0 && tripType === 'round' && !returnDate && (
+            <div className="p-3 rounded-m3-md bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center gap-2 animate-in fade-in">
+              <Calendar className="w-4 h-4 text-amber-700 shrink-0" />
+              <span>Please select your <strong>Return Date &amp; Time</strong> above to calculate the round-trip fare.</span>
             </div>
           )}
 

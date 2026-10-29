@@ -1263,7 +1263,7 @@ const callUrl = `tel:${phone}`;
         p = p.replace(/\[(.*?)\]\(((?:\/|https?:\/\/)[^\s\)]+)\)/g, function(match, label, href) {
           const isWa = href.includes('wa.me') || href.includes('whatsapp.com');
           if (isWa) {
-            return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary text-xs font-semibold shadow-xs transition-all active:scale-95 no-underline my-1.5">${label}</a>`;
+            return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white text-xs font-bold shadow-xs transition-all active:scale-95 no-underline my-1.5">${label}</a>`;
           }
           return `<a href="${href}" class="ai-action-link inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs font-bold shadow-md transition-all no-underline my-1.5 cursor-pointer border border-blue-500/40"><span>⚡ ${label}</span> <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg></a>`;
         });
@@ -1305,7 +1305,7 @@ const callUrl = `tel:${phone}`;
               href="https://wa.me/918939539211?text=${waText}"
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary text-xs font-semibold shadow-xs transition-all active:scale-95"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white text-xs font-bold shadow-xs transition-all active:scale-95"
             >
               <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
                 <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.586 1.761.882 2.796.883h.005c3.179 0 5.767-2.587 5.767-5.766.001-3.187-2.575-5.77-5.772-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.353.101.173.449.741.964 1.201.663.591 1.221.774 1.394.86.173.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.203c.044.072.044.419-.1.824z"/>
@@ -1622,14 +1622,16 @@ const callUrl = `tel:${phone}`;
         const inclusionText = isTirupati1Day
           ? 'AC cab, fuel, NH FASTag toll plaza receipts, AP border permit, and chauffeur allowance.'
           : 'AC cab, fuel, and chauffeur allowance. Highway tolls, parking, and interstate state border permits are strictly NOT included and payable at actual checkposts.';
+        const isTempoOrLarge = /tempo|urbania|12-seater|14-seater|17-seater|20-seater|26-seater|mini\s*bus/i.test(vehName || '');
+        const advAmt = isTempoOrLarge ? 2000 : 500;
         const waBookingMsg = encodeURIComponent(
-          `🚖 *KALIDASS TRAVELS — VERIFIED ONLINE BOOKING*\n━━━━━━━━━━━━━━━━━━━━\n📍 Destination: ${destName}\n🚗 Quoted Vehicle: ${vehName}\n💰 Quoted Total: ${fareFormatted}\n📋 Inclusions: ${inclusionText}\n💳 Advance to Lock: ₹500 (Deducted from bill)\n━━━━━━━━━━━━━━━━━━━━\nPlease confirm booking & driver assignment.`
+          `🚖 *KALIDASS TRAVELS — VERIFIED ONLINE BOOKING*\n━━━━━━━━━━━━━━━━━━━━\n📍 Destination: ${destName}\n🚗 Quoted Vehicle: ${vehName}\n💰 Quoted Total: ${fareFormatted}\n📋 Inclusions: ${inclusionText}\n💳 Advance to Lock: ₹${advAmt.toLocaleString('en-IN')} (Deducted from bill)\n━━━━━━━━━━━━━━━━━━━━\nPlease confirm booking & driver assignment.`
         );
         return `Here is the explanation of your on-screen quote for **${destName}**:\n\n` +
           `• **Quoted Vehicle:** ${vehName}\n` +
           `• **Quoted Total:** **${fareFormatted}**\n` +
           `• **Inclusions:** ${inclusionText}\n` +
-          `• **Booking Advance:** Pay ₹500 to lock vehicle (deducted from final bill). Pay remaining balance post-trip.\n\n` +
+          `• **Booking Advance:** Pay ₹${advAmt.toLocaleString('en-IN')} to lock ${isTempoOrLarge ? 'tempo' : 'vehicle'} (deducted from final bill). Pay remaining balance post-trip.\n\n` +
           `[👉 Confirm Booking on WhatsApp](https://wa.me/918939539211?text=${waBookingMsg})`;
       }
 
@@ -1659,7 +1661,7 @@ const callUrl = `tel:${phone}`;
         `- **Force Urbania VIP Luxury**: ₹34/km + ₹1,000 driver bata/day (Min 300 km/day)\n\n` +
         `• **Your Cab & Chauffeur:** The vehicle stays with you for all days with zero extra hourly charges.\n` +
         `• **Tolls, Parking & State Permits (NOT INCLUDED):** State border entry permits, highway tolls, and parking tickets are NOT included in the car rate. Pay actual receipts at toll plazas and border checkposts.\n` +
-        `• **Booking Advance:** ₹500 to lock your car (deducted from final bill).\n\n` +
+        `• **Booking Advance:** ₹500 to lock your car / ₹2,000 for Tempo Travellers (deducted from final bill).\n\n` +
         `[👉 Calculate Exact Fare Online](/#booking-panel)`;
     }
   })();

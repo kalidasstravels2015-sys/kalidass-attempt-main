@@ -74,7 +74,7 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
               ₹650
             </strong>
             <span class="text-[9px] text-m3-on-surface-variant font-medium">All-Inclusive</span>
-            <span class="text-[9px] text-emerald-700 font-bold block">₹500 Advance to Lock</span>
+            <span id="sheetAdvanceBadge" class="text-[9px] text-emerald-700 font-bold block">₹500 Advance to Lock</span>
           </div>
         </div>
 
@@ -294,19 +294,19 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
           <span id="sheetErrorMsg">Please enter your pickup location in Chennai.</span>
         </div>
 
-        <!-- Primary CTA: 1-Tap WhatsApp (M3 Primary Palette) -->
+        <!-- Primary CTA: 1-Tap WhatsApp (Official Meta WhatsApp Brand Style) -->
         <div class="flex justify-center pt-1">
           <button
             type="button"
             id="sheetSubmitBtn"
-            class="inline-flex items-center justify-center gap-2 py-2.5 px-6 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary font-bold text-xs sm:text-sm shadow-m3-1 hover:shadow-m3-2 transition-all cursor-pointer select-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-m3-primary"
+            class="inline-flex items-center justify-center gap-2 py-2.5 px-6 rounded-m3-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white font-bold text-xs sm:text-sm shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5 border border-[#20ba5a]/25 transition-all cursor-pointer select-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#25D366]"
           >
-            <WhatsAppIcon variant="white" className="w-4 h-4 shrink-0" />
+            <WhatsAppIcon variant="white" className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
             <span>Book on WhatsApp</span>
           </button>
         </div>
 
-        <p class="text-center text-[11px] text-m3-on-surface-variant font-medium">
+        <p id="sheetAdvancePolicyText" class="text-center text-[11px] text-m3-on-surface-variant font-medium">
           ₹500 Advance to Confirm Cab (100% Deducted from Fare) • Balance After Trip
         </p>
       </form>
@@ -728,7 +728,9 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
         }
 
         var numFare = parseInt(String(quickBookingContext.price || '').replace(/[^0-9]/g, ''), 10) || 0;
-        var advAmt = 500;
+        var isTempoOrLarge = /tempo|urbania|12-seater|14-seater|17-seater|20-seater|26-seater|mini\s*bus/i.test((quickBookingContext.vehicleName || '') + ' ' + (quickBookingContext.packageTitle || '') + ' ' + (quickBookingContext.slug || '')) ||
+          parseInt((quickBookingContext.passengers || '').match(/\d+/)?.[0] || '0', 10) >= 12;
+        var advAmt = isTempoOrLarge ? 2000 : 500;
         var balText = numFare >= advAmt
           ? '₹' + (numFare - advAmt).toLocaleString('en-IN') + ' (Pay driver after trip completion)'
           : 'Remaining balance payable after trip completion';
@@ -746,7 +748,7 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
 • *Party Size:* ${quickBookingContext.passengers || '4 Seats'}
 • *Trip Duration:* ${quickBookingContext.duration}
 • *Total Fare:* ${quickBookingContext.price} (Flat All-Inclusive)
-• *Advance to Confirm:* ₹500 (100% Deducted from bill)
+• *Advance to Confirm:* ₹${advAmt.toLocaleString('en-IN')} (100% Deducted from bill)
 • *Balance Due at Drop:* ${balText}
 
 📅 *SCHEDULE & ROUTE*
@@ -756,7 +758,7 @@ ${routeDetails}
 
 ━━━━━━━━━━━━━━━━━━━━
 ✅ *Inclusions:* ${quickBookingContext.inclusions || 'Fuel, Highway Tolls, Parking, Driver Allowance & GST Invoice'}
-💰 *Payment Policy:* ₹500 Advance to confirm & lock cab (deducted from bill). Balance payable to driver after trip completion.
+💰 *Payment Policy:* ₹${advAmt.toLocaleString('en-IN')} Advance to confirm & lock ${isTempoOrLarge ? 'tempo' : 'cab'} (deducted from bill). Balance payable to driver after trip completion.
 
 Please confirm driver assignment and cab availability.`;
 
@@ -778,9 +780,9 @@ Please confirm driver assignment and cab availability.`;
               pickupTime: formattedPickupTime,
               returnDate: formattedReturnDate,
               fare: quickBookingContext.price,
-              advance: 500,
-              advancePaid: 500,
-              balance: Math.max(0, numFare - 500)
+              advance: advAmt,
+              advancePaid: advAmt,
+              balance: Math.max(0, numFare - advAmt)
             })
           }).catch(function () {});
         } catch (err) {}
@@ -805,9 +807,9 @@ Please confirm driver assignment and cab availability.`;
                 pickup: area,
                 vehicle: quickBookingContext.vehicleName,
                 estimate: quickBookingContext.price,
-                advance: 500,
-                advancePaid: 500,
-                balance: Math.max(0, numFare - 500),
+                advance: advAmt,
+                advancePaid: advAmt,
+                balance: Math.max(0, numFare - advAmt),
                 travelDate: formattedPickupDate + ' @ ' + formattedPickupTime,
                 returnDate: formattedReturnDate,
                 days: quickBookingContext.days,
@@ -957,6 +959,7 @@ Please confirm driver assignment and cab availability.`;
                 p.className = 'px-2.5 py-1 rounded-full text-[11px] font-medium border transition-all shrink-0 cursor-pointer bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface border-m3-outline-variant/60';
               });
               pillBtn.className = 'px-2.5 py-1 rounded-full text-[11px] font-bold border transition-all shrink-0 cursor-pointer bg-m3-primary text-m3-on-primary border-m3-primary shadow-m3-1';
+              syncAdvanceDisplay();
             });
 
             vehiclePillsContainer.appendChild(pillBtn);
@@ -968,6 +971,18 @@ Please confirm driver assignment and cab availability.`;
         quickBookingContext.rates = null;
         if (vehicleSelectorContainer) vehicleSelectorContainer.classList.add('hidden');
       }
+
+      function syncAdvanceDisplay() {
+        var isTempoOrLarge = /tempo|urbania|12-seater|14-seater|17-seater|20-seater|26-seater|mini\s*bus/i.test((quickBookingContext.vehicleName || '') + ' ' + (quickBookingContext.packageTitle || '') + ' ' + (quickBookingContext.slug || '')) ||
+          parseInt((quickBookingContext.passengers || '').match(/\d+/)?.[0] || '0', 10) >= 12;
+        var adv = isTempoOrLarge ? 2000 : 500;
+        var advFormatted = '₹' + adv.toLocaleString('en-IN');
+        var badge = document.getElementById('sheetAdvanceBadge');
+        if (badge) badge.textContent = advFormatted + ' Advance to Lock';
+        var policy = document.getElementById('sheetAdvancePolicyText');
+        if (policy) policy.textContent = advFormatted + ' Advance to Confirm ' + (isTempoOrLarge ? 'Tempo' : 'Cab') + ' (100% Deducted from Fare) • Balance After Trip';
+      }
+      syncAdvanceDisplay();
 
       if (vehicleNameEl) vehicleNameEl.textContent = quickBookingContext.vehicleName;
       if (durationEl) durationEl.textContent = quickBookingContext.duration;

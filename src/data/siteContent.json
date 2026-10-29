@@ -11,7 +11,10 @@
     ],
     "cta": "Call Now",
     "phone": "+91 89395 39211",
-    "additionalPhones": ["+91 63819 39769", "+91 90923 03060"],
+    "additionalPhones": [
+      "+91 63819 39769",
+      "+91 90923 03060"
+    ],
     "email": "kalidasstravels2015@gmail.com"
   },
   "ui_labels": {
@@ -491,7 +494,13 @@
       "name": "Saravanan",
       "role": "Google Maps Review",
       "rating": 5,
-      "quote": "Good driver and travels. Clean vehicle, timely pickup, and very safe driving for family trips."
+      "quote": "Best package for Chennai to tirupati"
+    },
+    {
+      "name": "Elumalai Anandan",
+      "role": "Google Maps Review",
+      "rating": 5,
+      "quote": "Manikumar super driver long travel good Kundrathur to Orissa travel good experience safe and secure my family trip"
     },
     {
       "name": "Suresh Mani",

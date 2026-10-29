@@ -12,7 +12,6 @@ import {
   Phone,
   ShieldCheck,
   CheckCircle2,
-  Info,
   MapPin,
   Landmark,
   Receipt,
@@ -24,7 +23,7 @@ import {
   ArrowUpDown,
   ArrowRight,
   SlidersHorizontal,
-  X
+  ChevronDown
 } from "lucide-react";
 
 const title = "Tempo Traveller Rental in Chennai | 12, 17 Seater & Urbania | Kalidass Travels";
@@ -92,7 +91,7 @@ const vanFleet = [
     id: "van-urbania",
     vehicleKey: "urbania",
     name: "Force Urbania VIP Luxury Chauffeur Van",
-    shortTitle: "Force Urbania",
+    shortTitle: "Urbania VIP",
     badge: "SUPER LUXURY VIP",
     capacityNumber: 12,
     dailyMinPrice: 11400,
@@ -448,8 +447,8 @@ const passengerFaqs = [
     a: "Yes. All our fixed tour packages (Tirupati, Pondicherry, Kumbakonam, Sabarimala) are 100% all-inclusive covering vehicle hire, commercial diesel, driver bata, NH FASTag tolls, and interstate border permits. There are zero surprise road expenses."
   },
   {
-    q: "How does the ₹500 booking advance work?",
-    a: "We collect a nominal ₹500 advance to confirm your vehicle and assign your chauffeur. Crucially, this ₹500 is 100% deducted from your final bill (Total Package Price − ₹500 = Net Balance payable to driver upon trip completion). If cancelled 6+ hours prior, it is 100% refunded."
+    q: "How does the ₹2,000 booking advance work?",
+    a: "We collect a nominal ₹2,000 advance to confirm your vehicle and assign your chauffeur. Crucially, this ₹2,000 is 100% deducted from your final bill (Total Package Price − ₹2,000 = Net Balance payable to driver upon trip completion). If cancelled 6+ hours prior, it is 100% refunded."
   },
   {
     q: "Can we arrange multiple doorstep pickups in Chennai?",
@@ -586,8 +585,8 @@ const bookingSteps = [
   },
   {
     step: "02",
-    title: "Confirm with ₹500 Advance",
-    desc: "Lock in your vehicle and chauffeur with a nominal ₹500 advance via UPI/GPay. Crucially, ₹500 is 100% credited against your final trip balance.",
+    title: "Confirm with ₹2,000 Advance",
+    desc: "Lock in your vehicle and chauffeur with a nominal ₹2,000 advance via UPI/GPay. Crucially, ₹2,000 is 100% credited against your final trip balance.",
     icon: "ShieldCheck"
   },
   {
@@ -870,7 +869,7 @@ const schema = {
               </div>
 
               <p data-speakable="true" class="text-sm text-m3-on-surface-variant leading-relaxed">
-                12 to 20-Seater Force Tempo Travellers &amp; Luxury Force Urbania in Chennai. Outstation rates: <strong>₹24/km (12S)</strong> • <strong>₹26/km (17S)</strong> • <strong>₹30/km (20S)</strong> • <strong>₹38/km (Urbania VIP)</strong>. Local packages from ₹4,200 (5h/50km), ₹500 advance to confirm.
+                12 to 20-Seater Force Tempo Travellers &amp; Luxury Force Urbania in Chennai. Outstation rates: <strong>₹24/km (12S)</strong> • <strong>₹26/km (17S)</strong> • <strong>₹30/km (20S)</strong> • <strong>₹38/km (Urbania VIP)</strong>. Local packages from ₹4,200 (5h/50km), ₹2,000 advance to confirm.
               </p>
             </div>
 
@@ -947,24 +946,23 @@ const schema = {
         </div>
       </nav>
 
-      <!-- SECTION 2: VEHICLE SPECIFICATIONS & LUGGAGE CAPACITIES -->
+      <!-- SECTION 2: VEHICLE SPECIFICATIONS & LUGGAGE CAPACITIES (Unified Split-Screen Explorer) -->
       <section id="fleet-section" class="pt-2 sm:pt-4 mb-10 sm:mb-14 scroll-mt-28">
         <span id="per-km-table" class="scroll-mt-28"></span>
-        <div class="text-center max-w-2xl mx-auto mb-6 sm:mb-10">
+        <div class="text-center max-w-3xl mx-auto mb-6 sm:mb-8 px-4">
           <span class="text-xs font-bold uppercase tracking-wider text-m3-primary">Verified Dimensions &amp; Capacities</span>
           <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-m3-on-surface font-heading tracking-tight mt-1">
             Vehicle Specifications &amp; Luggage Capacities
           </h2>
           <p class="text-m3-on-surface-variant mt-2 text-xs sm:text-sm">
-            Standing 6.2 ft walkthrough cabins, 135° pushback recliners, dual AC blowers, and certified 3-zone luggage architecture.
+            Standing 6.2+ ft walkthrough cabins, pushback luxury recliners, dual commercial AC blowers, and certified zero-gangway luggage architecture.
           </p>
         </div>
 
-        <!-- 1. Interactive Tabbed Vehicle Spotlight (Uber Reserve / Tesla style) -->
-        <div class="mb-10">
-          <!-- Segmented Tab Switcher (Desktop Only) -->
-          <div class="hidden md:flex items-center justify-center mb-5">
-            <div class="flex items-center justify-center gap-1.5 p-1 bg-m3-surface-container-low rounded-full border border-m3-outline-variant/60 shadow-xs max-w-2xl w-full" role="tablist" aria-label="Select Tempo Traveller Model">
+        <!-- Unified Fleet Model Tabs (Horizontally scrollable on mobile, centered pill deck on desktop) -->
+        <div class="mb-6 sm:mb-8">
+          <div class="flex items-center justify-start md:justify-center overflow-x-auto no-scrollbar py-1 px-2">
+            <div class="inline-flex items-center gap-1.5 p-1.5 bg-m3-surface-container-low rounded-full border border-m3-outline-variant/60 shadow-xs shrink-0" role="tablist" aria-label="Select Tempo Traveller Model">
               {vanFleet.map((vehicle, idx) => (
                 <button
                   type="button"
@@ -972,147 +970,107 @@ const schema = {
                   aria-selected={idx === 0 ? "true" : "false"}
                   id={`tab-${vehicle.id}`}
                   aria-controls={`panel-${vehicle.id}`}
-                  class={`flex-1 min-h-[42px] py-2 px-3.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer text-center truncate spec-tab-btn select-none ${
+                  class={`min-h-[42px] py-2 px-3.5 sm:px-4 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap spec-tab-btn select-none flex items-center gap-1.5 ${
                     idx === 0
                       ? 'bg-m3-primary text-white shadow-2xs'
                       : 'text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-high'
                   }`}
                   data-target-tab={vehicle.id}
                 >
-                  {vehicle.shortTitle}
+                  <span>{vehicle.shortTitle}</span>
+                  <span class={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                    idx === 0
+                      ? 'bg-white/20 text-white'
+                      : 'bg-m3-surface-container text-m3-on-surface-variant'
+                  } spec-tab-badge`}>
+                    {vehicle.capacityNumber}S
+                  </span>
                 </button>
               ))}
             </div>
           </div>
+        </div>
 
-          <!-- Spotlight Showcase Panels (Desktop Only) -->
-          <div class="hidden md:block max-w-2xl mx-auto">
-            {vanFleet.map((vehicle, idx) => (
-              <div
-                id={`panel-${vehicle.id}`}
-                role="tabpanel"
-                aria-labelledby={`tab-${vehicle.id}`}
-                class={`spec-panel transition-all duration-300 ${idx === 0 ? 'block opacity-100' : 'hidden opacity-0'}`}
-              >
-                <div class="bg-m3-surface-container-lowest rounded-3xl border border-m3-outline-variant/70 shadow-xs hover:shadow-m3-1 transition-all overflow-hidden">
+        <!-- Split-Screen Interactive Fleet Showcase (Desktop 2-Col Split / Mobile Adaptive Stack) -->
+        <div class="max-w-6xl mx-auto px-2 sm:px-4">
+          {vanFleet.map((vehicle, idx) => (
+            <div
+              id={`panel-${vehicle.id}`}
+              role="tabpanel"
+              aria-labelledby={`tab-${vehicle.id}`}
+              class={`spec-panel transition-all duration-300 ${idx === 0 ? 'block opacity-100' : 'hidden opacity-0'}`}
+            >
+              <div class="bg-m3-surface-container-lowest rounded-3xl border border-m3-outline-variant/70 shadow-xs hover:shadow-m3-1 transition-all overflow-hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-12">
                   
-                  <!-- Top Vehicle Studio Stage -->
-                  <div class="relative bg-gradient-to-b from-m3-surface-container-low/80 via-m3-surface-container-low/40 to-m3-surface-container-lowest pt-5 pb-4 px-4 sm:px-6 border-b border-m3-outline-variant/50 flex flex-col items-center overflow-hidden">
+                  <!-- Left Studio Column: Visual Stage, Identity, Pricing & CTAs -->
+                  <div class="lg:col-span-5 bg-gradient-to-b from-m3-surface-container-low/70 via-m3-surface-container-low/25 to-m3-surface-container-lowest p-5 sm:p-7 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-m3-outline-variant/50 relative overflow-hidden">
                     
-                    <!-- Subtle Radial Spotlight Background -->
-                    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-m3-primary/5 via-transparent to-transparent pointer-events-none"></div>
+                    <!-- Ambient Glow -->
+                    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-m3-primary/5 via-transparent to-transparent pointer-events-none"></div>
 
-                    <!-- Top Badge Bar -->
-                    <div class="w-full flex items-center justify-between gap-2 mb-2 relative z-10">
-                      <span class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-m3-primary/10 text-m3-primary border border-m3-primary/20">
-                        <span class="w-1.5 h-1.5 rounded-full bg-m3-primary animate-pulse"></span>
-                        {vehicle.badge}
-                      </span>
-                      <span class="text-xs font-medium text-m3-on-surface-variant bg-m3-surface-container px-2.5 py-0.5 rounded-full border border-m3-outline-variant/60">
-                        {vehicle.chassis.split(' (')[0]}
-                      </span>
-                    </div>
-
-                    <!-- Vehicle Image with Ground Reflection Shadow -->
-                    <div class="relative my-1 flex flex-col items-center">
-                      <img
-                        src={vehicle.image}
-                        alt={`${vehicle.name} - Kalidass Travels Chennai`}
-                        width="240"
-                        height="120"
-                        loading="lazy"
-                        decoding="async"
-                        class="h-28 sm:h-36 max-w-full object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.10)] transition-transform duration-300 hover:scale-[1.02]"
-                      />
-                      <!-- Soft Oval Contact Ground Shadow -->
-                      <div class="w-3/4 h-2 bg-slate-950/15 dark:bg-black/30 rounded-[100%] blur-[4px] -mt-1"></div>
-                    </div>
-
-                    <!-- Vehicle Title & Layout Subtitle -->
-                    <div class="text-center mt-2 relative z-10">
-                      <h3 class="text-lg sm:text-xl font-bold text-m3-on-surface tracking-tight leading-snug">
-                        {vehicle.name}
-                      </h3>
-                      <p class="text-xs sm:text-sm text-m3-on-surface-variant font-medium mt-0.5 flex items-center justify-center gap-1.5">
-                        <span>{vehicle.layout}</span>
-                      </p>
-                    </div>
-                  </div>
-
-                  <!-- Card Body Content -->
-                  <div class="p-4 sm:p-6 space-y-4">
-                    
-                    <!-- 4 Minimal Stat Chips (2x2 on mobile, 4-in-a-row on desktop) -->
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5">
-                      <div class="p-2.5 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/60 text-center">
-                        <Users className="w-4 h-4 text-m3-primary mx-auto mb-1" />
-                        <div class="text-xs sm:text-sm font-bold text-m3-on-surface leading-tight tabular-nums">{vehicle.capacityNumber} Seats</div>
-                        <div class="text-xs text-m3-on-surface-variant font-medium mt-0.5">{vehicle.recline.split(' ')[0]} Recline</div>
-                      </div>
-
-                      <div class="p-2.5 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/60 text-center">
-                        <ArrowUpDown className="w-4 h-4 text-m3-primary mx-auto mb-1" />
-                        <div class="text-xs sm:text-sm font-bold text-m3-on-surface leading-tight tabular-nums">{vehicle.headroom.split(' ')[0]} {vehicle.headroom.split(' ')[1]}</div>
-                        <div class="text-xs text-m3-on-surface-variant font-medium mt-0.5">Walk upright</div>
-                      </div>
-
-                      <div class="p-2.5 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/60 text-center">
-                        <Wind className="w-4 h-4 text-m3-primary mx-auto mb-1" />
-                        <div class="text-xs sm:text-sm font-bold text-m3-on-surface leading-tight tabular-nums">Dual AC Vents</div>
-                        <div class="text-xs text-m3-on-surface-variant font-medium mt-0.5">Every Single Row</div>
-                      </div>
-
-                      <div class="p-2.5 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/60 text-center">
-                        <Zap className="w-4 h-4 text-m3-primary mx-auto mb-1" />
-                        <div class="text-xs sm:text-sm font-bold text-m3-on-surface leading-tight tabular-nums">2.4A Fast USB</div>
-                        <div class="text-xs text-m3-on-surface-variant font-medium mt-0.5">At Every Row</div>
-                      </div>
-                    </div>
-
-                    <!-- Visual 3-Zone Luggage Capacity Strip -->
-                    <div class="p-3 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/60">
-                      <div class="flex items-center justify-between text-xs font-bold mb-2">
-                        <span class="flex items-center gap-1.5 text-m3-on-surface">
-                          <Luggage className="w-3.5 h-3.5 text-m3-primary" />
-                          <span>Certified Luggage Capacity</span>
+                    <div>
+                      <!-- Badge Row -->
+                      <div class="w-full flex items-center justify-between gap-2 mb-3 relative z-10">
+                        <span class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-m3-primary/10 text-m3-primary border border-m3-primary/20">
+                          <span class="w-1.5 h-1.5 rounded-full bg-m3-primary animate-pulse"></span>
+                          {vehicle.badge}
                         </span>
-                        <span class="text-xs font-semibold text-emerald-800 dark:text-emerald-300 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-                          Zero Gangway Bags
+                        <span class="text-xs font-medium text-m3-on-surface-variant bg-m3-surface-container px-2.5 py-0.5 rounded-full border border-m3-outline-variant/60">
+                          {vehicle.chassis.split(' (')[0]}
                         </span>
                       </div>
-                      
-                      <div class="grid grid-cols-3 gap-2 text-center">
-                        <div class="p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant/60 shadow-2xs">
-                          <span class="block text-xs font-semibold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider">Boot</span>
-                          <span class="block text-xs sm:text-sm font-bold text-m3-on-surface mt-0.5 leading-tight tabular-nums">{vehicle.bootDisplay}</span>
-                          <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">Rear Space</span>
-                        </div>
-                        <div class="p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant/60 shadow-2xs">
-                          <span class="block text-xs font-semibold text-m3-primary uppercase tracking-wider">Cabin</span>
-                          <span class="block text-xs sm:text-sm font-bold text-m3-on-surface mt-0.5 leading-tight tabular-nums">{vehicle.cabinDisplay}</span>
-                          <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">Racks &amp; Seats</span>
-                        </div>
-                        <div class="p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant/60 shadow-2xs">
-                          <span class="block text-xs font-semibold text-purple-700 dark:text-purple-400 uppercase tracking-wider">Storage</span>
-                          <span class="block text-xs sm:text-sm font-bold text-m3-on-surface mt-0.5 leading-tight tabular-nums">{vehicle.roofDisplay}</span>
-                          <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">{vehicle.roofSubDisplay}</span>
-                        </div>
+
+                      <!-- Vehicle Image with Ground Contact Shadow -->
+                      <div class="relative my-3 sm:my-5 flex flex-col items-center">
+                        <img
+                          src={vehicle.image}
+                          alt={`${vehicle.name} - Kalidass Travels Chennai`}
+                          width="340"
+                          height="180"
+                          loading="lazy"
+                          decoding="async"
+                          class="h-32 sm:h-44 max-w-full object-contain filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.12)] transition-transform duration-300 hover:scale-105"
+                        />
+                        <div class="w-4/5 h-2.5 bg-slate-950/15 dark:bg-black/30 rounded-[100%] blur-[5px] -mt-1"></div>
                       </div>
 
-                      <!-- Real Passenger & Luggage Fit Guidance -->
-                      <div class="mt-2.5 pt-2 border-t border-m3-outline-variant/50 text-left">
-                        <p class="text-xs text-m3-on-surface-variant font-medium flex items-start gap-1.5 leading-normal">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
-                          <span><strong class="text-m3-on-surface font-semibold">Fit Guide:</strong> {vehicle.fitAdvice}</span>
+                      <!-- Title & Configuration -->
+                      <div class="text-center mt-2 relative z-10">
+                        <h3 class="text-xl sm:text-2xl font-bold text-m3-on-surface tracking-tight leading-snug">
+                          {vehicle.name}
+                        </h3>
+                        <p class="text-xs sm:text-sm text-m3-on-surface-variant font-medium mt-1">
+                          {vehicle.layout}
                         </p>
                       </div>
+
+                      <!-- Transparent Pricing Anchor -->
+                      <div class="mt-4 p-3.5 rounded-2xl bg-m3-surface-container-low/70 border border-m3-outline-variant/60 text-center relative z-10">
+                        <div class="flex items-baseline justify-center gap-1.5">
+                          <span class="text-xs font-semibold text-m3-on-surface-variant">Starting</span>
+                          <span class="text-xl sm:text-2xl font-bold text-m3-primary tracking-tight tabular-nums">₹{vehicle.perKmRate}</span>
+                          <span class="text-xs font-semibold text-m3-on-surface-variant">/ km</span>
+                        </div>
+                        <div class="text-xs text-m3-on-surface-variant mt-0.5 flex items-center justify-center gap-1.5">
+                          <span>₹{vehicle.dailyMinPrice.toLocaleString('en-IN')}/day min (300 km)</span>
+                          <span>•</span>
+                          <span class="text-emerald-800 dark:text-emerald-400 font-semibold">Zero Surge</span>
+                        </div>
+                      </div>
+
+                      <!-- Best Trip Suitability -->
+                      <div class="mt-3.5 p-3 rounded-2xl bg-m3-surface-container-lowest/80 border border-m3-outline-variant/40 text-xs text-m3-on-surface-variant leading-relaxed">
+                        <span class="font-bold text-m3-on-surface block mb-0.5">Recommended Trip Types:</span>
+                        {vehicle.idealFor}
+                      </div>
                     </div>
 
-                    <!-- Action Button -->
-                    <div class="pt-2 border-t border-m3-outline-variant/50 flex items-center justify-center">
+                    <!-- Direct Action Buttons -->
+                    <div class="mt-5 pt-4 border-t border-m3-outline-variant/50 flex flex-col gap-2 relative z-10">
                       <button
                         type="button"
-                        class="w-full sm:w-auto min-h-[46px] inline-flex items-center justify-center gap-2 py-2.5 px-8 rounded-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-white text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-xs hover:shadow-sm active:scale-[0.98] spec-book-vehicle-btn group/btn"
+                        class="w-full min-h-[46px] inline-flex items-center justify-center gap-2 py-3 px-6 rounded-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-white text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-xs hover:shadow-sm active:scale-[0.98] spec-book-vehicle-btn group/btn"
                         data-vehicle-key={vehicle.vehicleKey}
                         data-vehicle-name={vehicle.name}
                         data-badge={vehicle.badge}
@@ -1124,504 +1082,275 @@ const schema = {
                         <span>Calculate Fare &amp; Book</span>
                         <ChevronRight className="w-4 h-4 transform group-hover/btn:translate-x-0.5 transition-transform" />
                       </button>
+
+                      <a
+                        href={`https://wa.me/${WHATSAPP_CONFIG.phone}?text=${encodeURIComponent(vehicle.whatsappMsg)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="w-full py-2 px-4 rounded-full text-center text-xs font-semibold text-emerald-800 dark:text-emerald-300 hover:bg-emerald-500/10 transition-colors flex items-center justify-center gap-1.5"
+                      >
+                        <span>Need advice? Chat on WhatsApp</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </a>
                     </div>
 
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
 
-          <!-- Mobile Horizontal Swipe Fleet Deck (Mobile Only) -->
-          <div class="block md:hidden mb-4">
-            <div
-              id="spec-fleet-scroller"
-              class="flex gap-4 overflow-x-auto snap-x snap-mandatory py-2 pb-4 no-scrollbar scroll-smooth px-1 focus:outline-none"
-              tabindex="0"
-              role="region"
-              aria-label="Tempo Fleet Showcase"
-            >
-              {vanFleet.map((vehicle) => (
-                <div class="shrink-0 w-[88vw] max-w-sm snap-center">
-                  <div class="bg-m3-surface-container-lowest rounded-3xl border border-m3-outline-variant/70 shadow-xs overflow-hidden flex flex-col justify-between h-full">
+                  <!-- Right Specs Column: 4 Key Dimensions, Luggage Breakdown, Senior Access -->
+                  <div class="lg:col-span-7 p-5 sm:p-7 flex flex-col justify-between space-y-5">
                     
-                    <!-- Top Vehicle Studio Stage -->
-                    <div class="relative bg-gradient-to-b from-m3-surface-container-low/80 via-m3-surface-container-low/40 to-m3-surface-container-lowest pt-5 pb-4 px-4 border-b border-m3-outline-variant/50 flex flex-col items-center overflow-hidden">
-                      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-m3-primary/5 via-transparent to-transparent pointer-events-none"></div>
+                    <!-- 1. Four Core Passenger Dimensions (Clean Grid, High Legibility) -->
+                    <div>
+                      <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-bold uppercase tracking-wider text-m3-primary">Passenger Comfort Standards</span>
+                        <span class="text-xs text-m3-on-surface-variant font-medium">All-Inclusive Amenities</span>
+                      </div>
 
-                      <div class="w-full flex items-center justify-between gap-2 mb-2 relative z-10">
-                        <span class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-m3-primary/10 text-m3-primary border border-m3-primary/20">
-                          <span class="w-1.5 h-1.5 rounded-full bg-m3-primary animate-pulse"></span>
-                          {vehicle.badge}
+                      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <div class="p-3.5 rounded-2xl bg-m3-surface-container-low/70 border border-m3-outline-variant/60 flex items-start gap-3">
+                          <span class="w-8 h-8 rounded-xl bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0 mt-0.5">
+                            <Users className="w-4 h-4" />
+                          </span>
+                          <div class="min-w-0">
+                            <div class="text-xs sm:text-sm font-bold text-m3-on-surface">{vehicle.capacityNumber} Luxury Pushback Seats</div>
+                            <div class="text-xs text-m3-on-surface-variant mt-0.5 leading-snug">{vehicle.recline} • {vehicle.legroom}</div>
+                          </div>
+                        </div>
+
+                        <div class="p-3.5 rounded-2xl bg-m3-surface-container-low/70 border border-m3-outline-variant/60 flex items-start gap-3">
+                          <span class="w-8 h-8 rounded-xl bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0 mt-0.5">
+                            <ArrowUpDown className="w-4 h-4" />
+                          </span>
+                          <div class="min-w-0">
+                            <div class="text-xs sm:text-sm font-bold text-m3-on-surface">{vehicle.headroom.split(' ')[0]} {vehicle.headroom.split(' ')[1]} Walkthrough</div>
+                            <div class="text-xs text-m3-on-surface-variant mt-0.5 leading-snug">Walk upright inside cabin without stooping</div>
+                          </div>
+                        </div>
+
+                        <div class="p-3.5 rounded-2xl bg-m3-surface-container-low/70 border border-m3-outline-variant/60 flex items-start gap-3">
+                          <span class="w-8 h-8 rounded-xl bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0 mt-0.5">
+                            <Wind className="w-4 h-4" />
+                          </span>
+                          <div class="min-w-0">
+                            <div class="text-xs sm:text-sm font-bold text-m3-on-surface">Dual Commercial AC</div>
+                            <div class="text-xs text-m3-on-surface-variant mt-0.5 leading-snug">{vehicle.acSystem}</div>
+                          </div>
+                        </div>
+
+                        <div class="p-3.5 rounded-2xl bg-m3-surface-container-low/70 border border-m3-outline-variant/60 flex items-start gap-3">
+                          <span class="w-8 h-8 rounded-xl bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0 mt-0.5">
+                            <Zap className="w-4 h-4" />
+                          </span>
+                          <div class="min-w-0">
+                            <div class="text-xs sm:text-sm font-bold text-m3-on-surface">Fast USB Charging &amp; LED TV</div>
+                            <div class="text-xs text-m3-on-surface-variant mt-0.5 leading-snug">{vehicle.charging} • {vehicle.entertainment.split('+')[0]}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- 2. Certified 3-Zone Luggage Architecture -->
+                    <div class="p-4 sm:p-5 rounded-2xl bg-m3-surface-container-low/80 border border-m3-outline-variant/70">
+                      <div class="flex items-center justify-between gap-2 mb-3">
+                        <span class="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-m3-on-surface">
+                          <Luggage className="w-4 h-4 text-m3-primary shrink-0" />
+                          <span>Certified Luggage Capacity</span>
                         </span>
-                        <span class="text-xs font-medium text-m3-on-surface-variant bg-m3-surface-container px-2.5 py-0.5 rounded-full border border-m3-outline-variant/60">
-                          {vehicle.chassis.split(' (')[0]}
+                        <span class="text-[11px] sm:text-xs font-semibold text-emerald-800 dark:text-emerald-300 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20 whitespace-nowrap">
+                          Zero Gangway Bags
                         </span>
                       </div>
 
-                      <div class="relative my-1 flex flex-col items-center">
-                        <img
-                          src={vehicle.image}
-                          alt={`${vehicle.name} - Kalidass Travels Chennai`}
-                          width="240"
-                          height="120"
-                          loading="lazy"
-                          decoding="async"
-                          class="h-28 max-w-full object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.10)]"
-                        />
-                        <div class="w-3/4 h-2 bg-slate-950/15 dark:bg-black/30 rounded-[100%] blur-[4px] -mt-1"></div>
+                      <div class="grid grid-cols-3 gap-2 sm:gap-3 text-center">
+                        <div class="p-3 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant/60 shadow-2xs">
+                          <span class="block text-[11px] sm:text-xs font-bold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider">Dedicated Boot</span>
+                          <span class="block text-xs sm:text-sm font-bold text-m3-on-surface mt-1 leading-tight tabular-nums">{vehicle.bootDisplay}</span>
+                          <span class="block text-[11px] text-m3-on-surface-variant mt-0.5 line-clamp-1">{vehicle.bootBags.split('(')[0]}</span>
+                        </div>
+
+                        <div class="p-3 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant/60 shadow-2xs">
+                          <span class="block text-[11px] sm:text-xs font-bold text-m3-primary uppercase tracking-wider">Cabin Racks</span>
+                          <span class="block text-xs sm:text-sm font-bold text-m3-on-surface mt-1 leading-tight tabular-nums">{vehicle.cabinDisplay}</span>
+                          <span class="block text-[11px] text-m3-on-surface-variant mt-0.5 line-clamp-1">Overhead Parcel</span>
+                        </div>
+
+                        <div class="p-3 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant/60 shadow-2xs">
+                          <span class="block text-[11px] sm:text-xs font-bold text-purple-700 dark:text-purple-400 uppercase tracking-wider">Weather Protection</span>
+                          <span class="block text-xs sm:text-sm font-bold text-m3-on-surface mt-1 leading-tight tabular-nums">{vehicle.roofDisplay}</span>
+                          <span class="block text-[11px] text-m3-on-surface-variant mt-0.5 line-clamp-1">100% Inside Cabin</span>
+                        </div>
                       </div>
 
-                      <div class="text-center mt-2 relative z-10">
-                        <h3 class="text-lg font-bold text-m3-on-surface tracking-tight leading-snug">
-                          {vehicle.name}
-                        </h3>
-                        <p class="text-xs sm:text-sm text-m3-on-surface-variant font-medium mt-0.5 flex items-center justify-center gap-1.5">
-                          <span>{vehicle.layout}</span>
+                      <!-- Fit Guide Banner -->
+                      <div class="mt-3 pt-3 border-t border-m3-outline-variant/50 text-left">
+                        <p class="text-xs text-m3-on-surface-variant font-medium flex items-start gap-1.5 leading-relaxed">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                          <span><strong class="text-m3-on-surface font-semibold">Fit Guide:</strong> {vehicle.fitAdvice}</span>
                         </p>
                       </div>
                     </div>
 
-                    <!-- Card Body Content -->
-                    <div class="p-4 space-y-4">
-                      <!-- 4 Minimal Stat Chips -->
-                      <div class="grid grid-cols-2 gap-2">
-                        <div class="p-2.5 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/60 text-center">
-                          <Users className="w-4 h-4 text-m3-primary mx-auto mb-1" />
-                          <div class="text-xs sm:text-sm font-bold text-m3-on-surface leading-tight tabular-nums">{vehicle.capacityNumber} Seats</div>
-                          <div class="text-xs text-m3-on-surface-variant font-medium mt-0.5">{vehicle.recline.split(' ')[0]} Recline</div>
-                        </div>
-
-                        <div class="p-2.5 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/60 text-center">
-                          <ArrowUpDown className="w-4 h-4 text-m3-primary mx-auto mb-1" />
-                          <div class="text-xs sm:text-sm font-bold text-m3-on-surface leading-tight tabular-nums">{vehicle.headroom.split(' ')[0]} {vehicle.headroom.split(' ')[1]}</div>
-                          <div class="text-xs text-m3-on-surface-variant font-medium mt-0.5">Walk upright</div>
-                        </div>
-
-                        <div class="p-2.5 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/60 text-center">
-                          <Wind className="w-4 h-4 text-m3-primary mx-auto mb-1" />
-                          <div class="text-xs sm:text-sm font-bold text-m3-on-surface leading-tight tabular-nums">Dual AC Vents</div>
-                          <div class="text-xs text-m3-on-surface-variant font-medium mt-0.5">Every Row</div>
-                        </div>
-
-                        <div class="p-2.5 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/60 text-center">
-                          <Zap className="w-4 h-4 text-m3-primary mx-auto mb-1" />
-                          <div class="text-xs sm:text-sm font-bold text-m3-on-surface leading-tight tabular-nums">2.4A Fast USB</div>
-                          <div class="text-xs text-m3-on-surface-variant font-medium mt-0.5">At Every Row</div>
+                    <!-- 3. Senior Citizen Boarding & Clean Cabin Guarantee -->
+                    <div class="p-3.5 rounded-2xl bg-m3-surface-container-lowest border border-m3-outline-variant/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs">
+                      <div class="flex items-center gap-2 text-m3-on-surface">
+                        <span class="w-7 h-7 rounded-lg bg-m3-surface-container flex items-center justify-center shrink-0 border border-m3-outline-variant/60">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                        </span>
+                        <div>
+                          <strong class="font-semibold block text-m3-on-surface">Senior-Friendly Boarding:</strong>
+                          <span class="text-m3-on-surface-variant">{vehicle.elderStep}</span>
                         </div>
                       </div>
-
-                      <!-- Visual 3-Zone Luggage Capacity Strip -->
-                      <div class="p-3 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/60">
-                        <div class="flex items-center justify-between text-xs font-bold mb-2">
-                          <span class="flex items-center gap-1.5 text-m3-on-surface">
-                            <Luggage className="w-3.5 h-3.5 text-m3-primary" />
-                            <span>Certified Luggage Capacity</span>
-                          </span>
-                          <span class="text-xs font-semibold text-emerald-800 dark:text-emerald-300 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-                            Zero Gangway Bags
-                          </span>
-                        </div>
-                        
-                        <div class="grid grid-cols-3 gap-2 text-center">
-                          <div class="p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant/60 shadow-2xs">
-                            <span class="block text-xs font-semibold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider">Boot</span>
-                            <span class="block text-xs sm:text-sm font-bold text-m3-on-surface mt-0.5 leading-tight tabular-nums">{vehicle.bootDisplay}</span>
-                            <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">Rear Space</span>
-                          </div>
-                          <div class="p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant/60 shadow-2xs">
-                            <span class="block text-xs font-semibold text-m3-primary uppercase tracking-wider">Cabin</span>
-                            <span class="block text-xs sm:text-sm font-bold text-m3-on-surface mt-0.5 leading-tight tabular-nums">{vehicle.cabinDisplay}</span>
-                            <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">Racks &amp; Seats</span>
-                          </div>
-                          <div class="p-2.5 rounded-xl bg-m3-surface-container-lowest border border-m3-outline-variant/60 shadow-2xs">
-                            <span class="block text-xs font-semibold text-purple-700 dark:text-purple-400 uppercase tracking-wider">Storage</span>
-                            <span class="block text-xs sm:text-sm font-bold text-m3-on-surface mt-0.5 leading-tight tabular-nums">{vehicle.roofDisplay}</span>
-                            <span class="block text-xs text-m3-on-surface-variant mt-0.5 font-normal">{vehicle.roofSubDisplay}</span>
-                          </div>
-                        </div>
-
-                        <!-- Real Passenger & Luggage Fit Guidance -->
-                        <div class="mt-2.5 pt-2 border-t border-m3-outline-variant/50 text-left">
-                          <p class="text-xs text-m3-on-surface-variant font-medium flex items-start gap-1.5 leading-normal">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
-                            <span><strong class="text-m3-on-surface font-semibold">Fit Guide:</strong> {vehicle.fitAdvice}</span>
-                          </p>
-                        </div>
-                      </div>
-
-                      <!-- Action Button -->
-                      <div class="pt-2 border-t border-m3-outline-variant/50">
-                        <button
-                          type="button"
-                          class="w-full min-h-[46px] inline-flex items-center justify-center gap-2 py-2.5 px-7 rounded-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-white text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-xs active:scale-[0.98] spec-book-vehicle-btn group/btn"
-                          data-vehicle-key={vehicle.vehicleKey}
-                          data-vehicle-name={vehicle.name}
-                          data-badge={vehicle.badge}
-                          data-image={vehicle.image}
-                          data-capacity={vehicle.seating}
-                          data-round-rate={vehicle.perKmRate.toString()}
-                          data-min-km="300"
-                        >
-                          <span>Calculate Fare &amp; Book</span>
-                          <ChevronRight className="w-4 h-4 transform group-hover/btn:translate-x-0.5 transition-transform" />
-                        </button>
-                      </div>
-
+                      <span class="text-[11px] font-semibold text-emerald-800 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20 whitespace-nowrap self-start sm:self-auto">
+                        100% Clean Cabin Floors Guaranteed
+                      </span>
                     </div>
+
                   </div>
+
                 </div>
-              ))}
+              </div>
             </div>
+          ))}
+        </div>
 
-            <!-- Mobile Scroll Indicator Dots -->
-            <div class="flex justify-center items-center gap-1.5 mt-3" aria-hidden="true" id="spec-fleet-dots">
-              {vanFleet.map((_, idx) => (
-                <button
-                  type="button"
-                  class="min-w-[32px] min-h-[32px] flex items-center justify-center p-1.5 cursor-pointer spec-dot"
-                  data-spec-index={idx}
-                  aria-label={`Go to vehicle ${idx + 1}`}
-                >
-                  <span class={`h-1.5 rounded-full transition-all duration-300 spec-dot-bar ${idx === 0 ? 'bg-m3-primary w-5' : 'bg-m3-outline-variant w-1.5'}`}></span>
-                </button>
-              ))}
-            </div>
-
-            <!-- Mobile Swipe Hint -->
-            <div class="flex items-center justify-center gap-1.5 text-xs font-medium text-m3-on-surface-variant mt-1.5">
-              <span>👉 Swipe horizontally to compare vehicles</span>
-            </div>
-          </div>
-
-          <!-- Mobile-Only Action Card to open Full Technical Comparison Modal -->
-          <div class="mt-4 md:hidden">
-            <button
-              type="button"
-              id="open-spec-modal-btn"
-              class="w-full py-3.5 px-4 rounded-2xl bg-m3-surface-container-lowest hover:bg-m3-surface-container-low border border-m3-outline-variant/70 shadow-xs flex items-center justify-between text-left group active:scale-[0.99] transition cursor-pointer"
-              aria-haspopup="dialog"
-              aria-controls="specModal"
-            >
+        <!-- Streamlined Expandable Side-by-Side Model Comparison Matrix -->
+        <div id="spec-comparison" class="max-w-6xl mx-auto mt-8 px-2 sm:px-4 scroll-mt-28">
+          <details id="spec-details-accordion" class="group rounded-3xl border border-m3-outline-variant/70 bg-m3-surface-container-lowest overflow-hidden shadow-xs hover:shadow-m3-1 transition-all">
+            
+            <!-- Accordion Header Button -->
+            <summary class="p-4 sm:p-5 flex items-center justify-between gap-3 cursor-pointer list-none select-none bg-m3-surface-container-low/50 hover:bg-m3-surface-container-low transition">
               <div class="flex items-center gap-3">
-                <span class="w-9 h-9 rounded-xl bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0 border border-m3-primary/20 shadow-2xs">
+                <span class="w-9 h-9 rounded-2xl bg-m3-primary/10 text-m3-primary flex items-center justify-center shrink-0 border border-m3-primary/20 shadow-2xs">
                   <SlidersHorizontal className="w-4 h-4" />
                 </span>
                 <div>
-                  <div class="text-xs sm:text-sm font-bold text-m3-on-surface flex items-center gap-1.5">
-                    <span>Compare Technical Specifications</span>
-                    <span class="text-xs font-semibold px-2 py-0.5 bg-m3-primary/10 text-m3-primary rounded-full uppercase tracking-wider">Matrix</span>
+                  <div class="flex items-center gap-2">
+                    <h3 class="text-sm sm:text-base font-bold text-m3-on-surface">
+                      Side-by-Side Model Comparison Matrix
+                    </h3>
+                    <span class="hidden sm:inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 bg-m3-primary/10 text-m3-primary rounded-full border border-m3-primary/20">
+                      All 6 Models
+                    </span>
                   </div>
-                  <div class="text-xs text-m3-on-surface-variant font-normal mt-0.5">Headroom, recliner pitch, luggage &amp; AC side-by-side</div>
+                  <p class="text-xs text-m3-on-surface-variant mt-0.5">
+                    Compare passenger capacities, standing headroom, luggage limits, and per-km tariffs side-by-side.
+                  </p>
                 </div>
               </div>
-              <span class="text-xs font-semibold text-m3-primary flex items-center gap-1 shrink-0 bg-m3-surface-container px-2.5 py-1.5 rounded-full border border-m3-outline-variant/60 group-hover:bg-m3-primary group-hover:text-white transition-colors">
-                <span>Compare</span>
-                <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-              </span>
-            </button>
-
-            <!-- Mobile Clean Floor Guarantee -->
-            <div class="mt-3 text-center">
-              <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-800 dark:text-emerald-400">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                <span>Clean floor guarantee: zero luggage piled in gangways.</span>
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 2. Side-by-Side Fleet Technical Comparison Matrix Table (Desktop Only) -->
-        <div id="spec-comparison" class="hidden md:block scroll-mt-32 mt-8 pt-4 border-t border-m3-outline-variant/60">
-          <div class="text-center max-w-2xl mx-auto mb-6">
-            <span class="text-xs font-bold uppercase tracking-wider text-m3-primary">Quick Technical Matrix</span>
-            <h3 class="text-xl sm:text-2xl font-bold text-m3-on-surface tracking-tight mt-1">
-              Side-by-Side Model Comparison
-            </h3>
-            <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">
-              Compare standing height, recliner pitch, and luggage capacities at a glance:
-            </p>
-          </div>
-
-          <div class="overflow-x-auto no-scrollbar rounded-2xl border border-m3-outline-variant/70 shadow-xs bg-m3-surface-container-lowest">
-            <table class="w-full text-xs text-left text-m3-on-surface" role="table">
-              <thead class="text-xs uppercase tracking-wider font-semibold bg-m3-surface-container-low border-b border-m3-outline-variant/60 text-m3-on-surface-variant">
-                <tr>
-                  <th scope="col" class="py-3 px-4 font-semibold min-w-[140px]">Specification</th>
-                  <th scope="col" class="py-3 px-4 font-semibold min-w-[160px] text-m3-primary">12-Seater Luxury</th>
-                  <th scope="col" class="py-3 px-4 font-semibold min-w-[160px] text-purple-700 dark:text-purple-400">Force Urbania VIP</th>
-                  <th scope="col" class="py-3 px-4 font-semibold min-w-[160px] text-m3-primary">14-Seater Executive</th>
-                  <th scope="col" class="py-3 px-4 font-semibold min-w-[170px] text-m3-primary">17-Seater (4020 WB)</th>
-                  <th scope="col" class="py-3 px-4 font-semibold min-w-[160px] text-m3-primary">20-Seater Grand</th>
-                  <th scope="col" class="py-3 px-4 font-semibold min-w-[160px] text-m3-primary">26-Seater Mini Bus</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-m3-outline-variant/40">
-                <tr class="hover:bg-m3-surface-container-low/50 transition">
-                  <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Passenger Capacity</td>
-                  <td class="py-3 px-4 font-semibold">8 to 12 Passengers</td>
-                  <td class="py-3 px-4 font-semibold">10 to 12 Passengers</td>
-                  <td class="py-3 px-4 font-semibold">10 to 14 Passengers</td>
-                  <td class="py-3 px-4 font-semibold">13 to 17 Passengers</td>
-                  <td class="py-3 px-4 font-semibold">16 to 20 Passengers</td>
-                  <td class="py-3 px-4 font-semibold">20 to 26 Passengers</td>
-                </tr>
-                <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
-                  <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Standing Headroom</td>
-                  <td class="py-3 px-4">6.2 ft (1,920 mm) Walk upright</td>
-                  <td class="py-3 px-4">6.5 ft (1,980 mm) Flat floor luxury</td>
-                  <td class="py-3 px-4">6.2 ft (1,920 mm) Walk upright</td>
-                  <td class="py-3 px-4">6.3 ft (1,950 mm) High roof walkthrough</td>
-                  <td class="py-3 px-4">6.4 ft (1,960 mm) High roof walkthrough</td>
-                  <td class="py-3 px-4">6.4 ft (1,960 mm) Wide coach gangway</td>
-                </tr>
-                <tr class="hover:bg-m3-surface-container-low/50 transition">
-                  <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Seat Pitch &amp; Recline</td>
-                  <td class="py-3 px-4">135° Pushback Recliner • 32" Pitch</td>
-                  <td class="py-3 px-4">140° Executive Captain • 35" Pitch</td>
-                  <td class="py-3 px-4">135° Pushback Recliner • 33" Pitch</td>
-                  <td class="py-3 px-4">135° Deep Recline • 32" Pitch</td>
-                  <td class="py-3 px-4">135° Deep Recline • 32" Pitch</td>
-                  <td class="py-3 px-4">135° Pushback Coach • 31" Pitch</td>
-                </tr>
-                <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
-                  <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Internal Rear Boot</td>
-                  <td class="py-3 px-4">3–4 Medium Trolleys (20"–24")</td>
-                  <td class="py-3 px-4">6–8 Executive Trolleys (Hydraulic Hatch)</td>
-                  <td class="py-3 px-4">5–6 Medium Trolleys (Extended Trunk)</td>
-                  <td class="py-3 px-4">6–7 Medium Trolleys (Deep 4020 Trunk)</td>
-                  <td class="py-3 px-4">7–8 Medium Trolleys (High Trunk)</td>
-                  <td class="py-3 px-4">10–12 Large / Medium Suitcases</td>
-                </tr>
-                <tr class="hover:bg-m3-surface-container-low/50 transition">
-                  <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Rooftop Carrier Status</td>
-                  <td class="py-3 px-4 font-medium text-emerald-800 dark:text-emerald-400">None (RTO Compliant • Clean Roof)</td>
-                  <td class="py-3 px-4">Zero Roof Rack (European Monocoque)</td>
-                  <td class="py-3 px-4 font-medium text-emerald-800 dark:text-emerald-400">None (All Internal Luggage)</td>
-                  <td class="py-3 px-4 font-medium text-emerald-800 dark:text-emerald-400">None (Deep Internal Trunk)</td>
-                  <td class="py-3 px-4 font-medium text-emerald-800 dark:text-emerald-400">None (Internal Rear Hold)</td>
-                  <td class="py-3 px-4">Rear Coach Hold (No Open Carrier)</td>
-                </tr>
-                <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
-                  <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Luggage Fit Advice</td>
-                  <td class="py-3 px-4">8–10 Seats with bags • 12 Seats light</td>
-                  <td class="py-3 px-4">8–10 Seats with executive luggage</td>
-                  <td class="py-3 px-4">10–12 Seats with multi-day bags</td>
-                  <td class="py-3 px-4">13–15 Seats with luggage • 17 Seats std</td>
-                  <td class="py-3 px-4">16–18 Seats with luggage • 20 Seats std</td>
-                  <td class="py-3 px-4">20–24 Seats with suitcases</td>
-                </tr>
-                <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
-                  <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">AC Configuration</td>
-                  <td class="py-3 px-4">Dual Commercial AC + Overhead Louvers</td>
-                  <td class="py-3 px-4">Triple-Zone Automatic Climate Control</td>
-                  <td class="py-3 px-4">Dual Commercial AC + Row Louvers</td>
-                  <td class="py-3 px-4">Heavy-Duty Twin AC Compressors</td>
-                  <td class="py-3 px-4">Twin Heavy-Duty High-CFM Dual AC</td>
-                  <td class="py-3 px-4">Roof Commercial Bus AC Unit</td>
-                </tr>
-                <tr class="hover:bg-m3-surface-container-low/50 transition">
-                  <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Suspension &amp; Ride</td>
-                  <td class="py-3 px-4">Parabolic Leaf Springs + Anti-Roll Bar</td>
-                  <td class="py-3 px-4">European Monocoque Coil Suspension</td>
-                  <td class="py-3 px-4">Parabolic Leaf Springs + Anti-Roll Bar</td>
-                  <td class="py-3 px-4">Parabolic Springs on 4020 Long WB</td>
-                  <td class="py-3 px-4">Multi-Leaf Parabolic Suspension</td>
-                  <td class="py-3 px-4">Long-Travel Leaf Springs + Heavy Shocks</td>
-                </tr>
-                <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
-                  <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">In-Cabin Power</td>
-                  <td class="py-3 px-4">2.4A USB Fast Ports Per Row</td>
-                  <td class="py-3 px-4">Dual USB + Reading Lamp Per Seat</td>
-                  <td class="py-3 px-4">2.4A USB Fast Ports Per Row</td>
-                  <td class="py-3 px-4">2.4A USB Fast Ports Per Row</td>
-                  <td class="py-3 px-4">2.4A USB Fast Ports Per Row</td>
-                  <td class="py-3 px-4">USB Fast Ports Across Cabin</td>
-                </tr>
-                <tr class="hover:bg-m3-surface-container-low/50 transition">
-                  <td class="py-3 px-4 font-semibold text-m3-on-surface-variant">Senior Accessibility</td>
-                  <td class="py-3 px-4">280 mm Low Step + Sturdy Grab Rail</td>
-                  <td class="py-3 px-4">Triple-Seal Sliding Low Step + Light</td>
-                  <td class="py-3 px-4">Low Boarding Footstep + Safety Grab Rail</td>
-                  <td class="py-3 px-4">Automatic Electric Footstep + Grab Rail</td>
-                  <td class="py-3 px-4">Low Footstep + Dual Handrails</td>
-                  <td class="py-3 px-4">Illuminated Low Entrance Footsteps</td>
-                </tr>
-
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Desktop Clean Floor Guarantee -->
-          <div class="mt-4 text-center">
-            <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-800 dark:text-emerald-400">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-              <span>The Kalidass Guarantee: 100% clean cabin floors — zero luggage piled in gangways or under passenger seats.</span>
-            </span>
-          </div>
-        </div>
-
-        <!-- MODAL: Full Technical Specifications Comparison Matrix (Mobile & On-Demand) -->
-        <dialog
-          id="specModal"
-          aria-labelledby="specModalTitle"
-          aria-modal="true"
-          class="fixed inset-x-0 bottom-0 sm:inset-0 sm:m-auto z-50 w-full sm:max-w-2xl max-h-[90vh] p-0 rounded-t-3xl sm:rounded-3xl bg-m3-surface text-m3-on-surface border border-m3-outline-variant shadow-2xl backdrop:bg-slate-950/70 backdrop:backdrop-blur-sm outline-none overflow-hidden open:animate-slideUp"
-        >
-          <div class="flex flex-col max-h-[90vh]">
-            <!-- Modal Header with mobile drag pill -->
-            <header class="px-5 pt-3.5 pb-3 bg-m3-surface-container-low border-b border-m3-outline-variant/60 shrink-0 relative">
-              <div class="w-10 h-1 rounded-full bg-m3-outline-variant/80 mx-auto mb-2 sm:hidden"></div>
-              <div class="flex items-center justify-between gap-3">
-                <div>
-                  <span class="text-xs font-bold uppercase tracking-wider text-m3-primary block">Technical Matrix</span>
-                  <h2 id="specModalTitle" class="text-base sm:text-lg font-bold text-m3-on-surface leading-tight">
-                    Side-by-Side Model Comparison
-                  </h2>
-                </div>
-                <button
-                  type="button"
-                  class="close-spec-modal-btn p-2 rounded-full text-m3-on-surface-variant hover:text-m3-on-surface hover:bg-m3-surface-container transition cursor-pointer"
-                  aria-label="Close specifications comparison"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-              <div class="mt-2 text-xs text-m3-on-surface-variant flex items-center justify-between">
-                <span>12S, Force Urbania, 14S, 17S, 20S & 26S</span>
-                <span class="text-xs font-semibold text-m3-primary flex items-center gap-1">
-                  Swipe horizontal ↔
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="text-xs font-semibold text-m3-primary hidden md:inline-block group-open:hidden">
+                  View Full Matrix
+                </span>
+                <span class="text-xs font-semibold text-m3-primary hidden md:group-open:inline-block">
+                  Collapse Matrix
+                </span>
+                <span class="w-7 h-7 rounded-full bg-m3-surface-container flex items-center justify-center text-m3-on-surface-variant group-hover:text-m3-primary transition-colors">
+                  <ChevronDown className="w-4 h-4 transform group-open:rotate-180 transition-transform duration-200" />
                 </span>
               </div>
-            </header>
+            </summary>
 
-            <!-- Modal Body: Scrollable -->
-            <div class="p-3 sm:p-5 overflow-y-auto overscroll-contain">
-              <div class="overflow-x-auto no-scrollbar rounded-2xl border border-m3-outline-variant/70 shadow-2xs bg-m3-surface-container-lowest">
+            <!-- Expanded Comparison Table Content -->
+            <div class="p-3 sm:p-6 border-t border-m3-outline-variant/60">
+              <div class="overflow-x-auto no-scrollbar rounded-2xl border border-m3-outline-variant/70 bg-m3-surface-container-lowest">
                 <table class="w-full text-xs text-left text-m3-on-surface" role="table">
-                  <thead class="text-xs uppercase tracking-wider font-semibold bg-m3-surface-container-low border-b border-m3-outline-variant/60 text-m3-on-surface-variant sticky top-0 z-10">
+                  <thead class="text-xs uppercase tracking-wider font-semibold bg-m3-surface-container-low border-b border-m3-outline-variant/60 text-m3-on-surface-variant">
                     <tr>
-                      <th scope="col" class="py-3 px-3.5 font-semibold min-w-[130px] bg-m3-surface-container-low">Specification</th>
-                      <th scope="col" class="py-3 px-3.5 font-semibold min-w-[140px] text-m3-primary bg-m3-surface-container-low">12-Seater</th>
-                      <th scope="col" class="py-3 px-3.5 font-semibold min-w-[140px] text-purple-700 dark:text-purple-400 bg-m3-surface-container-low">Urbania VIP</th>
-                      <th scope="col" class="py-3 px-3.5 font-semibold min-w-[140px] text-m3-primary bg-m3-surface-container-low">14-Seater</th>
-                      <th scope="col" class="py-3 px-3.5 font-semibold min-w-[150px] text-m3-primary bg-m3-surface-container-low">17-Seater</th>
-                      <th scope="col" class="py-3 px-3.5 font-semibold min-w-[140px] text-m3-primary bg-m3-surface-container-low">20-Seater</th>
-                      <th scope="col" class="py-3 px-3.5 font-semibold min-w-[150px] text-m3-primary bg-m3-surface-container-low">26-Seater</th>
+                      <th scope="col" class="py-3.5 px-4 min-w-[140px] font-bold text-m3-on-surface sticky left-0 bg-m3-surface-container-low z-10">
+                        Specification
+                      </th>
+                      {vanFleet.map(v => (
+                        <th scope="col" class="py-3.5 px-4 min-w-[170px] text-center font-bold">
+                          <div class="flex flex-col items-center gap-1.5">
+                            <span class="text-xs font-bold text-m3-on-surface">{v.shortTitle}</span>
+                            <span class="text-[10px] font-semibold text-m3-primary bg-m3-primary/10 px-2 py-0.5 rounded-full border border-m3-primary/20">
+                              ₹{v.perKmRate}/km
+                            </span>
+                          </div>
+                        </th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-m3-outline-variant/40">
-                    <tr class="hover:bg-m3-surface-container-low/50 transition">
-                      <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Capacity</td>
-                      <td class="py-2.5 px-3.5 font-semibold">8–12 Seats</td>
-                      <td class="py-2.5 px-3.5 font-semibold">10–12 Seats</td>
-                      <td class="py-2.5 px-3.5 font-semibold">10–14 Seats</td>
-                      <td class="py-2.5 px-3.5 font-semibold">13–17 Seats</td>
-                      <td class="py-2.5 px-3.5 font-semibold">16–20 Seats</td>
-                      <td class="py-2.5 px-3.5 font-semibold">20–26 Seats</td>
+                    <tr class="hover:bg-m3-surface-container-low/40 transition">
+                      <td class="py-3 px-4 font-semibold text-m3-on-surface-variant sticky left-0 bg-m3-surface-container-lowest z-10">Passenger Seating</td>
+                      {vanFleet.map(v => (
+                        <td class="py-3 px-4 text-center font-bold text-m3-on-surface">{v.seating}</td>
+                      ))}
                     </tr>
-                    <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
-                      <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Standing Headroom</td>
-                      <td class="py-2.5 px-3.5">6.2 ft (Walk upright)</td>
-                      <td class="py-2.5 px-3.5">6.5 ft (Flat floor)</td>
-                      <td class="py-2.5 px-3.5">6.2 ft (Walk upright)</td>
-                      <td class="py-2.5 px-3.5">6.3 ft (High roof)</td>
-                      <td class="py-2.5 px-3.5">6.4 ft (High roof)</td>
-                      <td class="py-2.5 px-3.5">6.4 ft (Coach aisle)</td>
+                    <tr class="hover:bg-m3-surface-container-low/40 transition bg-m3-surface-container-low/20">
+                      <td class="py-3 px-4 font-semibold text-m3-on-surface-variant sticky left-0 bg-m3-surface-container-lowest z-10">Standing Headroom</td>
+                      {vanFleet.map(v => (
+                        <td class="py-3 px-4 text-center">{v.headroom.split(' ')[0]} {v.headroom.split(' ')[1]} (Walk upright)</td>
+                      ))}
                     </tr>
-                    <tr class="hover:bg-m3-surface-container-low/50 transition">
-                      <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Seat Pitch &amp; Recline</td>
-                      <td class="py-2.5 px-3.5">135° Recline • 32"</td>
-                      <td class="py-2.5 px-3.5">140° Captain • 35"</td>
-                      <td class="py-2.5 px-3.5">135° Recline • 33"</td>
-                      <td class="py-2.5 px-3.5">135° Deep • 32"</td>
-                      <td class="py-2.5 px-3.5">135° Deep • 32"</td>
-                      <td class="py-2.5 px-3.5">135° Coach • 31"</td>
+                    <tr class="hover:bg-m3-surface-container-low/40 transition">
+                      <td class="py-3 px-4 font-semibold text-m3-on-surface-variant sticky left-0 bg-m3-surface-container-lowest z-10">Seat Recline &amp; Pitch</td>
+                      {vanFleet.map(v => (
+                        <td class="py-3 px-4 text-center">{v.recline.split(' ')[0]} • {v.legroom.split(' ')[0]} Pitch</td>
+                      ))}
                     </tr>
-                    <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
-                      <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Internal Rear Boot</td>
-                      <td class="py-2.5 px-3.5">3–4 Trolleys (20"–24")</td>
-                      <td class="py-2.5 px-3.5">6–8 Trolleys (Hatch)</td>
-                      <td class="py-2.5 px-3.5">5–6 Trolleys (Ext. Boot)</td>
-                      <td class="py-2.5 px-3.5">6–7 Trolleys (4020 Trunk)</td>
-                      <td class="py-2.5 px-3.5">7–8 Trolleys (High Trunk)</td>
-                      <td class="py-2.5 px-3.5">10–12 Large Bags (Hold)</td>
+                    <tr class="hover:bg-m3-surface-container-low/40 transition bg-m3-surface-container-low/20">
+                      <td class="py-3 px-4 font-semibold text-m3-on-surface-variant sticky left-0 bg-m3-surface-container-lowest z-10">Internal Rear Boot</td>
+                      {vanFleet.map(v => (
+                        <td class="py-3 px-4 text-center font-medium text-emerald-800 dark:text-emerald-400">{v.bootDisplay}</td>
+                      ))}
                     </tr>
-                    <tr class="hover:bg-m3-surface-container-low/50 transition">
-                      <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Rooftop Carrier Status</td>
-                      <td class="py-2.5 px-3.5 font-medium text-emerald-800 dark:text-emerald-400">None (RTO Compliant)</td>
-                      <td class="py-2.5 px-3.5">Zero Roof Rack</td>
-                      <td class="py-2.5 px-3.5 font-medium text-emerald-800 dark:text-emerald-400">None (Inside Storage)</td>
-                      <td class="py-2.5 px-3.5 font-medium text-emerald-800 dark:text-emerald-400">None (Inside Trunk)</td>
-                      <td class="py-2.5 px-3.5 font-medium text-emerald-800 dark:text-emerald-400">None (Inside Hold)</td>
-                      <td class="py-2.5 px-3.5">Rear Coach Hold</td>
+                    <tr class="hover:bg-m3-surface-container-low/40 transition">
+                      <td class="py-3 px-4 font-semibold text-m3-on-surface-variant sticky left-0 bg-m3-surface-container-lowest z-10">Luggage Fit Advice</td>
+                      {vanFleet.map(v => (
+                        <td class="py-3 px-4 text-center text-m3-on-surface-variant leading-snug">{v.fitAdvice}</td>
+                      ))}
                     </tr>
-                    <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
-                      <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Luggage Fit Advice</td>
-                      <td class="py-2.5 px-3.5">8–10 Seats with bags</td>
-                      <td class="py-2.5 px-3.5">8–10 Seats executive</td>
-                      <td class="py-2.5 px-3.5">10–12 Seats with bags</td>
-                      <td class="py-2.5 px-3.5">13–15 Seats with bags</td>
-                      <td class="py-2.5 px-3.5">16–18 Seats with bags</td>
-                      <td class="py-2.5 px-3.5">20–24 Seats with bags</td>
+                    <tr class="hover:bg-m3-surface-container-low/40 transition bg-m3-surface-container-low/20">
+                      <td class="py-3 px-4 font-semibold text-m3-on-surface-variant sticky left-0 bg-m3-surface-container-lowest z-10">AC Architecture</td>
+                      {vanFleet.map(v => (
+                        <td class="py-3 px-4 text-center text-m3-on-surface-variant">{v.acSystem.split('+')[0]}</td>
+                      ))}
                     </tr>
-                    <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
-                      <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">AC Configuration</td>
-                      <td class="py-2.5 px-3.5">Dual AC + Louvers</td>
-                      <td class="py-2.5 px-3.5">Triple-Zone Climate</td>
-                      <td class="py-2.5 px-3.5">Dual AC + Louvers</td>
-                      <td class="py-2.5 px-3.5">Twin Compressors</td>
-                      <td class="py-2.5 px-3.5">High-CFM Dual AC</td>
-                      <td class="py-2.5 px-3.5">Bus AC Roof Unit</td>
+                    <tr class="hover:bg-m3-surface-container-low/40 transition">
+                      <td class="py-3 px-4 font-semibold text-m3-on-surface-variant sticky left-0 bg-m3-surface-container-lowest z-10">Senior Accessibility</td>
+                      {vanFleet.map(v => (
+                        <td class="py-3 px-4 text-center text-m3-on-surface-variant">{v.elderStep.split('+')[0]}</td>
+                      ))}
                     </tr>
-                    <tr class="hover:bg-m3-surface-container-low/50 transition">
-                      <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Suspension &amp; Ride</td>
-                      <td class="py-2.5 px-3.5">Parabolic + Anti-Roll</td>
-                      <td class="py-2.5 px-3.5">European Coil Springs</td>
-                      <td class="py-2.5 px-3.5">Parabolic + Anti-Roll</td>
-                      <td class="py-2.5 px-3.5">Parabolic 4020 WB</td>
-                      <td class="py-2.5 px-3.5">Multi-Leaf Parabolic</td>
-                      <td class="py-2.5 px-3.5">Leaf + Heavy Shocks</td>
+                    <tr class="hover:bg-m3-surface-container-low/40 transition bg-m3-surface-container-low/20">
+                      <td class="py-3.5 px-4 font-semibold text-m3-on-surface-variant sticky left-0 bg-m3-surface-container-lowest z-10">Quick Book</td>
+                      {vanFleet.map(v => (
+                        <td class="py-3.5 px-4 text-center">
+                          <button
+                            type="button"
+                            class="inline-flex items-center justify-center gap-1.5 py-1.5 px-4 rounded-full bg-m3-primary hover:bg-m3-primary/90 text-white text-xs font-bold transition shadow-2xs active:scale-[0.98] cursor-pointer spec-book-vehicle-btn"
+                            data-vehicle-key={v.vehicleKey}
+                            data-vehicle-name={v.name}
+                            data-badge={v.badge}
+                            data-image={v.image}
+                            data-capacity={v.seating}
+                            data-round-rate={v.perKmRate.toString()}
+                            data-min-km="300"
+                          >
+                            <span>Book {v.shortTitle}</span>
+                            <ChevronRight className="w-3.5 h-3.5" />
+                          </button>
+                        </td>
+                      ))}
                     </tr>
-                    <tr class="hover:bg-m3-surface-container-low/50 transition bg-m3-surface-container-low/20">
-                      <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">In-Cabin Power</td>
-                      <td class="py-2.5 px-3.5">2.4A USB / Row</td>
-                      <td class="py-2.5 px-3.5">Dual USB + Lamp</td>
-                      <td class="py-2.5 px-3.5">2.4A USB / Row</td>
-                      <td class="py-2.5 px-3.5">2.4A USB / Row</td>
-                      <td class="py-2.5 px-3.5">2.4A USB / Row</td>
-                      <td class="py-2.5 px-3.5">USB Across Cabin</td>
-                    </tr>
-                    <tr class="hover:bg-m3-surface-container-low/50 transition">
-                      <td class="py-2.5 px-3.5 font-semibold text-m3-on-surface-variant">Senior Accessibility</td>
-                      <td class="py-2.5 px-3.5">280 mm Low Step</td>
-                      <td class="py-2.5 px-3.5">Sliding Low Step</td>
-                      <td class="py-2.5 px-3.5">Low Step + Grab Rail</td>
-                      <td class="py-2.5 px-3.5">Electric Footstep</td>
-                      <td class="py-2.5 px-3.5">Low Step + 2 Rails</td>
-                      <td class="py-2.5 px-3.5">Illuminated Coach Step</td>
-                    </tr>
-
                   </tbody>
                 </table>
               </div>
+
+              <!-- Clean Cabin Floor Notice -->
+              <div class="mt-4 text-center">
+                <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-800 dark:text-emerald-400">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <span>The Kalidass Guarantee: 100% clean cabin floors — zero luggage piled in gangways or under passenger seats.</span>
+                </span>
+              </div>
             </div>
 
-            <!-- Modal Footer -->
-            <footer class="p-4 bg-m3-surface-container-low border-t border-m3-outline-variant/60 flex items-center justify-between gap-3 shrink-0">
-              <span class="text-xs text-emerald-800 dark:text-emerald-400 font-semibold flex items-center gap-1.5 truncate">
-                <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-                <span class="truncate">100% clean cabin floor guarantee</span>
-              </span>
-              <button
-                type="button"
-                class="close-spec-modal-btn px-5 py-2 rounded-full bg-m3-primary text-white text-xs font-bold hover:bg-m3-primary/90 transition shadow-xs cursor-pointer shrink-0"
-              >
-                Close
-              </button>
-            </footer>
-          </div>
-        </dialog>
+          </details>
+        </div>
       </section>
 
     </div>
@@ -1997,9 +1726,9 @@ const schema = {
           <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-purple-500/10 text-purple-700 dark:text-purple-400 flex items-center justify-center font-bold text-base sm:text-lg mb-2 sm:mb-3 shrink-0">
             <ShieldCheck className="w-4 h-4 sm:w-6 sm:h-6 text-purple-700 dark:text-purple-400" />
           </div>
-          <h3 class="font-bold text-m3-on-surface text-xs sm:text-base mb-1 sm:mb-1.5 font-heading leading-tight">₹500 Advance Deduction</h3>
+          <h3 class="font-bold text-m3-on-surface text-xs sm:text-base mb-1 sm:mb-1.5 font-heading leading-tight">₹2,000 Advance Deduction</h3>
           <p class="text-xs text-m3-on-surface-variant leading-relaxed">
-            ₹500 locks your vehicle and chauffeur. 100% credited against your final trip balance with a 100% refund if cancelled 6+ hours before pickup.
+            ₹2,000 locks your vehicle and chauffeur. 100% credited against your final trip balance with a 100% refund if cancelled 6+ hours before pickup.
           </p>
         </div>
       </div>
@@ -2119,12 +1848,25 @@ const schema = {
         specTabBtns.forEach(b => {
           const isSelected = (b === btn);
           b.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+          const badge = b.querySelector('.spec-tab-badge');
           if (isSelected) {
-            b.className = 'flex-1 min-h-[42px] py-2 px-3.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer text-center truncate spec-tab-btn select-none bg-m3-primary text-white shadow-2xs';
+            b.classList.add('bg-m3-primary', 'text-white', 'shadow-2xs');
+            b.classList.remove('text-m3-on-surface-variant');
+            if (badge) {
+              badge.className = 'text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-white/20 text-white spec-tab-badge';
+            }
           } else {
-            b.className = 'flex-1 min-h-[42px] py-2 px-3.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer text-center truncate spec-tab-btn select-none text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-high';
+            b.classList.remove('bg-m3-primary', 'text-white', 'shadow-2xs');
+            b.classList.add('text-m3-on-surface-variant');
+            if (badge) {
+              badge.className = 'text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-m3-surface-container text-m3-on-surface-variant spec-tab-badge';
+            }
           }
         });
+
+        // Center clicked tab on mobile devices
+        btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+
         specPanels.forEach(panel => {
           if (panel.id === `panel-${targetId}`) {
             panel.classList.remove('hidden');
@@ -2140,37 +1882,6 @@ const schema = {
         });
       });
     });
-
-    // 2b. Mobile Fleet Scroller Dots Indicator
-    const specScroller = document.getElementById('spec-fleet-scroller');
-    const specDots = document.querySelectorAll('.spec-dot');
-    if (specScroller && specDots.length > 0) {
-      const updateSpecDots = function() {
-        const scrollLeft = specScroller.scrollLeft;
-        const cardWidth = specScroller.offsetWidth * 0.88;
-        const activeIdx = Math.min(Math.round(scrollLeft / cardWidth), specDots.length - 1);
-        specDots.forEach(function(dot, idx) {
-          const bar = dot.querySelector('.spec-dot-bar');
-          if (bar) {
-            if (idx === activeIdx) {
-              bar.className = 'h-1.5 rounded-full transition-all duration-300 spec-dot-bar bg-m3-primary w-5';
-            } else {
-              bar.className = 'h-1.5 rounded-full transition-all duration-300 spec-dot-bar bg-m3-outline-variant w-1.5';
-            }
-          }
-        });
-      };
-      specScroller.addEventListener('scroll', updateSpecDots, { passive: true });
-      specDots.forEach(function(dot) {
-        dot.onclick = function() {
-          const idx = parseInt(dot.dataset.specIndex || '0', 10);
-          const cards = specScroller.children;
-          if (cards[idx]) {
-            cards[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-          }
-        };
-      });
-    }
 
     // 3. Top Outstation Packages Scroller Dots Indicator (Mobile)
     const pkgScroller = document.getElementById('packages-carousel-track');
@@ -2205,53 +1916,13 @@ const schema = {
       });
     }
 
-    // 4. Side-by-Side Model Comparison: Modal Trigger on Mobile / Smooth Scroll on Desktop
-    const specModal = document.getElementById('specModal');
-    const openSpecModalBtn = document.getElementById('open-spec-modal-btn');
-    const closeSpecModalBtns = document.querySelectorAll('.close-spec-modal-btn');
-
-    function openSpecModal() {
-      if (specModal && typeof specModal.showModal === 'function') {
-        specModal.showModal();
-      }
-    }
-
-    function closeSpecModal() {
-      if (specModal && typeof specModal.close === 'function') {
-        specModal.close();
-      }
-    }
-
-    if (openSpecModalBtn) {
-      openSpecModalBtn.addEventListener('click', openSpecModal);
-    }
-
-    closeSpecModalBtns.forEach(btn => {
-      btn.addEventListener('click', closeSpecModal);
-    });
-
-    // Close modal when clicking outside dialog (on backdrop)
-    if (specModal) {
-      specModal.addEventListener('click', (e) => {
-        const dialogDimensions = specModal.getBoundingClientRect();
-        if (
-          e.clientX < dialogDimensions.left ||
-          e.clientX > dialogDimensions.right ||
-          e.clientY < dialogDimensions.top ||
-          e.clientY > dialogDimensions.bottom
-        ) {
-          specModal.close();
-        }
-      });
-    }
-
-    // Quick-nav link "#spec-comparison": open modal on mobile, scroll to section on desktop
+    // 4. Side-by-Side Model Comparison: Accordion Navigation Handler
+    const specDetailsAccordion = document.getElementById('spec-details-accordion');
     const specNavLinks = document.querySelectorAll('a[href="#spec-comparison"]');
     specNavLinks.forEach(link => {
-      link.addEventListener('click', function(e) {
-        if (window.innerWidth < 768) {
-          e.preventDefault();
-          openSpecModal();
+      link.addEventListener('click', function() {
+        if (specDetailsAccordion) {
+          specDetailsAccordion.open = true;
         }
       });
     });
@@ -2297,11 +1968,7 @@ const schema = {
 </script>
 
 <style>
-  dialog#specModal:modal {
-    overscroll-behavior: contain;
-  }
-  dialog#specModal::backdrop {
-    overflow: hidden;
-    overscroll-behavior: contain;
+  #spec-details-accordion[open] summary {
+    border-bottom: 1px solid var(--md-sys-color-outline-variant, #cac4d0);
   }
 </style>

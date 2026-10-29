@@ -22,14 +22,15 @@ export default function TempoQuotationEngine({
       <BookingEngine
         initialTab={mappedTab}
         allowedTabs={mappedAllowed}
-        initialVehicle="Tempo Traveller"
+        initialVehicle="12-Seater Luxury Force Tempo"
+        fleetType="tempo"
         initialDrop={initialDrop}
         initialPickup={initialPickup}
         serviceSlug="tempo-traveller-rental-chennai"
         prefill={{
           pickup: initialPickup,
           destination: initialDrop,
-          vehicle: 'Tempo Traveller'
+          vehicle: '12-Seater Luxury Force Tempo'
         }}
         variant="card"
         title={title || "Tempo Traveller Fare Calculator"}
