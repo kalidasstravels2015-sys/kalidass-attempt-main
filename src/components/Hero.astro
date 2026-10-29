@@ -1,7 +1,9 @@
 ---
 import OptimizedImage from "./OptimizedImage.astro";
 import GoogleRatingBadge from "./GoogleRatingBadge.astro";
-import { Check } from "lucide-react";
+import WhatsAppIcon from "./WhatsAppIcon.astro";
+import { Check, Phone } from "lucide-react";
+import { WHATSAPP_CONFIG } from "../utils/whatsapp";
 
 const heroSlides = [
   {
@@ -111,6 +113,33 @@ const heroSlides = [
         <Check className="w-4 h-4 text-emerald-400 shrink-0 stroke-[2.5]" />
         <span>Zero Surge Pricing</span>
       </span>
+    </div>
+
+    <!-- High-Converting Google Ads Hero Action Buttons (Direct Call & WhatsApp) -->
+    <div class="mt-5 sm:mt-6 flex flex-wrap items-center justify-center gap-3 sm:gap-4 w-full max-w-lg">
+      <a
+        href="tel:+918939539211"
+        class="inline-flex items-center justify-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-white hover:bg-slate-50 text-[#041E49] font-extrabold text-sm sm:text-base shadow-[0_8px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.4)] transition-all transform hover:-translate-y-0.5 active:translate-y-0 border border-white/30 cursor-pointer min-h-[46px]"
+        aria-label="Call 24/7 Helpline: +91 89395 39211"
+      >
+        <span class="relative flex h-2.5 w-2.5">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+        </span>
+        <Phone className="w-4 h-4 text-[#0B57D0] shrink-0" />
+        <span>Call Now: 89395 39211</span>
+      </a>
+
+      <a
+        href={`https://wa.me/${WHATSAPP_CONFIG.phone}?text=${encodeURIComponent('Hi Kalidass Travels, I need a cab quote and availability details.')}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm sm:text-base shadow-[0_8px_20px_rgba(16,185,129,0.35)] hover:shadow-[0_12px_28px_rgba(16,185,129,0.45)] transition-all transform hover:-translate-y-0.5 active:translate-y-0 border border-emerald-400/30 cursor-pointer min-h-[46px]"
+        aria-label="Chat on WhatsApp: +91 89395 39211"
+      >
+        <WhatsAppIcon className="w-4 h-4 text-white shrink-0 fill-current" />
+        <span>WhatsApp Booking</span>
+      </a>
     </div>
   </div>
 </section>

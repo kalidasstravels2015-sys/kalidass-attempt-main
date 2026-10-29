@@ -1,4 +1,4 @@
-# robots.txt for https://kalidasstravels.in — Last updated: 2026-10-22
+# robots.txt for https://kalidasstravels.in — Last updated: 2026-10-29
 
 # Allow all search engines and global crawlers
 User-agent: *

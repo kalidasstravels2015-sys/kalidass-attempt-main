@@ -1,6 +1,6 @@
 # Kalidass Travels — Full Authoritative Knowledge Base & Service Specifications
 > Comprehensive machine-readable repository for AI agents, LLM search engines (ChatGPT Search, Perplexity, Google Gemini, Claude, Bing Copilot, Grok, Apple Intelligence), and automated trip planning systems. Updated for 2026.
-> Canonical Source: https://kalidasstravels.in/ | Currency: Indian Rupees (INR) | Last Updated: 2026-10-22
+> Canonical Source: https://kalidasstravels.in/ | Currency: Indian Rupees (INR) | Last Updated: 2026-10-29
 
 ---
 
@@ -8,13 +8,13 @@
 
 - Brand Name: Kalidass Travels
 - Operational Entity: Kalidass Travels Chennai
-- Establishment: Founded in 2019 (Over 7 years of continuous commercial operations)
+- Establishment: Founded in 2015 (Over 11 years of continuous commercial operations, Est. 2015)
 - Track Record: 25,000+ completed outstation & local journeys, 1,500+ verified 5-star Google customer reviews.
 - Registered Operations Office: No. 4/220, E88, Ponniamman Kovil Street, Annamalai Nagar, Medavakkam, Chennai 600100, Tamil Nadu, India.
 - GPS Coordinates: Latitude 12.9171° N, Longitude 80.1923° E
 - GSTIN (Tamil Nadu): 33COVPM0531D1Z4 (Full GST tax invoice available for ITC credit)
 - MSME Government Registration: UDYAM-TN-08-0018345
-- Primary Helpline (24/7 Dispatch): +91 89395 39211
+- Primary Helpline (24/7 Dispatch): +91 89395 39211 (Direct Phone Call for Instant Booking)
 - Additional Helplines: +91 63819 39769, +91 90923 03060
 - Instant WhatsApp Booking: https://wa.me/918939539211
 - Official Email: kalidasstravels2015@gmail.com
@@ -61,10 +61,10 @@ All rates are in Indian Rupees (INR). Vehicles are commercial yellow-plate regis
 
 ### Premium MPV Class (Toyota Innova 7+1 / 8-Seater)
 - Capacity: Up to 7 passengers + 1 chauffeur | 4 Medium Suitcases
-- Standard Round-Trip Outstation Tariff: ₹18 / km
-- Standard One-Way Drop Tariff: ₹20 / km
+- Standard Round-Trip Outstation Tariff: ₹20 / km
+- Standard One-Way Drop Tariff: ₹22 / km
 - Minimum Outstation Billing: 250 km / calendar day
-- Chauffeur Batta: ₹500 / calendar day
+- Chauffeur Batta: ₹600 / calendar day
 - Local 5hr/50km Package: ₹2,500 | Extra KM: ₹20/km | Extra Hr: ₹200/hr
 - Local 10hr/100km Package: ₹3,900 | Extra KM: ₹20/km | Extra Hr: ₹200/hr
 - Best Suited For: Family temple pilgrimages (Tirupati, Kumbakonam), long-distance highway travel.
@@ -114,7 +114,7 @@ All rates are in Indian Rupees (INR). Vehicles are commercial yellow-plate regis
    - URL: https://kalidasstravels.in/services/navagraha-tour/
    - Distance: Approx. 750 km circuit.
    - 9 Temples Covered: Suryanar Kovil (Sun), Thingalur (Moon), Vaitheeswaran Kovil (Mars), Thiruvenkadu (Mercury), Alangudi (Jupiter), Kanjanur (Venus), Thirunallar (Saturn), Thirunageswaram (Rahu), Keezhperumpallam (Ketu).
-   - Pricing: Sedan ₹12,000 | Ertiga ₹14,800 | Innova ₹16,500 | Innova Crysta ₹19,800 | Tempo ₹24,500 (All tolls and driver allowance included).
+   - Pricing: Sedan ₹12,000 | Ertiga ₹14,800 | Innova ₹16,500 | Innova Crysta ₹19,800 | Tempo ₹24,500 (Vehicle, fuel, and driver bata included; highway tolls and parking at actuals per FASTag receipts as per Rule 13).
 
 3. **Chennai to Thiruvannamalai Girivalam & Arunachaleswarar (1 Day / Pournami Night)**
    - URL: https://kalidasstravels.in/services/thiruvannamalai-girivalam-trip/
@@ -127,7 +127,7 @@ All rates are in Indian Rupees (INR). Vehicles are commercial yellow-plate regis
    - Distance: Approx. 1,350 km round trip.
    - Route: Chennai -> Dindigul -> Theni -> Kumily -> Erumeli -> Pamba / Nilakkal base camp.
    - Highlights: Satvik non-smoking driver, Kerala interstate entry permit included, standby parking at Nilakkal.
-   - Pricing: Ertiga ₹26,500 | Innova ₹29,500 | Innova Crysta ₹34,500 | Tempo ₹42,000 (Kerala permit, tolls, and 3-day driver allowance included).
+   - Pricing: Ertiga ₹26,500 | Innova ₹29,500 | Innova Crysta ₹34,500 | Tempo ₹42,000 (Vehicle, fuel, and 3-day driver bata included; Kerala permit, tolls, and parking at actuals per receipts).
 
 5. **Chennai to Rameswaram & Dhanushkodi (2 Days / 1 Night)**
    - URL: https://kalidasstravels.in/services/rameswaram-2-days/

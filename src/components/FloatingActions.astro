@@ -1,6 +1,8 @@
 ---
 import AiFareAssistantModal from './AiFareAssistantModal.astro';
 import GeminiIcon from './GeminiIcon.astro';
+import WhatsAppIcon from './WhatsAppIcon.astro';
+import { Phone } from 'lucide-react';
 import { WHATSAPP_CONFIG } from '../utils/whatsapp';
 
 interface Props {
@@ -12,44 +14,117 @@ interface Props {
 const {
   phone = `+${WHATSAPP_CONFIG.phone}`,
   displayPhone = WHATSAPP_CONFIG.formattedPhone,
+  whatsappMsg = 'Hi Kalidass Travels, I need a cab quotation and availability details.',
 } = Astro.props;
+
+const rawPhone = WHATSAPP_CONFIG.phone;
+const cleanPhone = `+${rawPhone}`;
+const whatsappUrl = `https://wa.me/${rawPhone}?text=${encodeURIComponent(whatsappMsg)}`;
 ---
 
-<!-- Single Floating "Plan My Trip" Pill Button -->
-<div 
+<!-- Global Floating Contact & AI Actions Container (Hides automatically during modals) -->
+<aside 
   id="floating-actions-container"
-  class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex items-center pointer-events-none select-none pb-[env(safe-area-inset-bottom,0px)] pr-[env(safe-area-inset-right,0px)] transition-all duration-300"
+  class="fixed bottom-2.5 left-2.5 right-2.5 sm:left-auto sm:right-6 sm:bottom-6 z-50 pointer-events-none select-none pb-[env(safe-area-inset-bottom,0px)] pr-[env(safe-area-inset-right,0px)] pl-[env(safe-area-inset-left,0px)] transition-all duration-300"
   role="region"
-  aria-label="Plan My Trip - Outstation & Tour Fare"
+  aria-label="Direct Booking Helplines & AI Trip Planner"
 >
-  <!-- Tactile Extended FAB Pill Button -->
-  <button
-    type="button"
-    id="floating-ai-btn"
-    class="pointer-events-auto group relative flex items-center gap-2 pl-3 pr-3.5 py-2 sm:pl-3.5 sm:pr-4 sm:py-2.5 rounded-full bg-white/95 dark:bg-[#1E252D]/95 backdrop-blur-md text-slate-800 dark:text-white shadow-[0_10px_25px_-3px_rgba(66,133,244,0.22),0_4px_10px_-2px_rgba(0,0,0,0.08),inset_0_1px_1.5px_rgba(255,255,255,0.95)] hover:shadow-[0_14px_30px_-3px_rgba(66,133,244,0.38),0_6px_14px_-2px_rgba(0,0,0,0.14)] border border-slate-200/90 dark:border-white/15 hover:border-blue-400/50 transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-blue-400 cursor-pointer"
-    aria-label="Plan My Trip AI - Ask me for trip fare"
-    title="Plan My Trip - Multi-Stop & Tour Fare"
-    onclick="window.toggleAiFareModal ? window.toggleAiFareModal() : (window.openAiFareModal && window.openAiFareModal())"
-  >
-    <!-- Living Aurora Halo -->
-    <span class="absolute -inset-1 rounded-full bg-gradient-to-r from-[#4285F4]/30 via-[#9B72CB]/30 to-[#D96570]/30 blur-sm opacity-80 group-hover:opacity-100 animate-pulse pointer-events-none transition-opacity"></span>
-
-    <!-- Official Google Gemini Brand Sparkle -->
-    <div class="relative z-10 w-5 h-5 flex items-center justify-center shrink-0">
-      <GeminiIcon class="w-4 h-4 sm:w-4.5 sm:h-4.5 transition-transform duration-300 group-hover:scale-110 drop-shadow-xs" />
-    </div>
-
-    <!-- "Plan My Trip" Label with Gemini AI Pill -->
-    <div class="relative z-10 flex items-center gap-1.5 pr-0.5">
-      <span class="text-xs sm:text-sm font-bold tracking-tight text-slate-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors whitespace-nowrap">
-        Plan My Trip
+  <!-- Mobile Persistent Bottom Quick-Action Dock (Screen < 640px) -->
+  <div class="flex sm:hidden items-center justify-between gap-1.5 p-1 rounded-full bg-slate-900/90 dark:bg-[#111827]/95 backdrop-blur-lg border border-white/20 shadow-[0_8px_25px_rgba(0,0,0,0.35)] pointer-events-auto">
+    <!-- Call Now Button (Primary Phone Dial) -->
+    <a
+      href={`tel:${cleanPhone}`}
+      class="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full bg-[#0B57D0] hover:bg-[#0842A0] active:scale-95 text-white font-extrabold text-xs tracking-tight shadow-md transition-all cursor-pointer min-h-[44px]"
+      aria-label="Call 24/7 Helpline: +91 89395 39211"
+    >
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
       </span>
-      <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-blue-500/10 dark:bg-blue-400/15 text-blue-600 dark:text-blue-400 font-bold border border-blue-500/20 tracking-wider uppercase">
-        AI
+      <Phone className="w-3.5 h-3.5 text-white shrink-0" />
+      <span class="truncate">Call: 89395 39211</span>
+    </a>
+
+    <!-- WhatsApp Quick Booking Button -->
+    <a
+      href={whatsappUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center justify-center gap-1.5 py-2.5 px-3.5 rounded-full bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold text-xs tracking-tight shadow-md transition-all cursor-pointer min-h-[44px]"
+      aria-label="Chat on WhatsApp"
+    >
+      <WhatsAppIcon className="w-3.5 h-3.5 text-white shrink-0 fill-current" />
+      <span>WhatsApp</span>
+    </a>
+
+    <!-- Plan AI Pill Button -->
+    <button
+      type="button"
+      id="floating-ai-mobile-btn"
+      class="inline-flex items-center justify-center gap-1 py-2 px-2.5 rounded-full bg-white/15 hover:bg-white/25 active:scale-95 text-white font-semibold text-[11px] border border-white/20 transition-all cursor-pointer min-h-[44px]"
+      aria-label="Plan My Trip AI"
+      title="Plan My Trip with AI"
+      onclick="window.toggleAiFareModal ? window.toggleAiFareModal() : (window.openAiFareModal && window.openAiFareModal())"
+    >
+      <GeminiIcon class="w-3.5 h-3.5 text-blue-300 shrink-0" />
+      <span>AI Plan</span>
+    </button>
+  </div>
+
+  <!-- Desktop Floating Action Cluster (Screen >= 640px) -->
+  <div class="hidden sm:flex items-center gap-2 pointer-events-auto">
+    <!-- Desktop Direct Phone Call Button -->
+    <a
+      href={`tel:${cleanPhone}`}
+      class="group relative flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#0B57D0] hover:bg-[#0842A0] text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-blue-400 cursor-pointer border border-white/20"
+      aria-label="Call 24/7 Helpline: +91 89395 39211"
+      title="Call Dispatch Desk for Instant Booking"
+    >
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
       </span>
-    </div>
-  </button>
-</div>
+      <Phone className="w-4 h-4 text-white shrink-0" />
+      <span class="text-xs sm:text-sm font-bold tracking-tight">Call: 89395 39211</span>
+    </a>
+
+    <!-- Desktop WhatsApp Direct Action -->
+    <a
+      href={whatsappUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="group relative flex items-center gap-1.5 px-3.5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-emerald-400 cursor-pointer border border-white/20"
+      aria-label="Chat on WhatsApp"
+      title="Chat on WhatsApp with Dispatcher"
+    >
+      <WhatsAppIcon className="w-4 h-4 text-white shrink-0 fill-current" />
+      <span class="text-xs sm:text-sm font-bold tracking-tight">WhatsApp</span>
+    </a>
+
+    <!-- Desktop Plan My Trip AI Extended FAB -->
+    <button
+      type="button"
+      id="floating-ai-btn"
+      class="group relative flex items-center gap-2 pl-3 pr-3.5 py-2 sm:pl-3.5 sm:pr-4 sm:py-2.5 rounded-full bg-white/95 dark:bg-[#1E252D]/95 backdrop-blur-md text-slate-800 dark:text-white shadow-[0_10px_25px_-3px_rgba(66,133,244,0.22),0_4px_10px_-2px_rgba(0,0,0,0.08),inset_0_1px_1.5px_rgba(255,255,255,0.95)] hover:shadow-[0_14px_30px_-3px_rgba(66,133,244,0.38),0_6px_14px_-2px_rgba(0,0,0,0.14)] border border-slate-200/90 dark:border-white/15 hover:border-blue-400/50 transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-blue-400 cursor-pointer"
+      aria-label="Plan My Trip AI - Ask me for trip fare"
+      title="Plan My Trip - Multi-Stop & Tour Fare"
+      onclick="window.toggleAiFareModal ? window.toggleAiFareModal() : (window.openAiFareModal && window.openAiFareModal())"
+    >
+      <span class="absolute -inset-1 rounded-full bg-gradient-to-r from-[#4285F4]/30 via-[#9B72CB]/30 to-[#D96570]/30 blur-sm opacity-80 group-hover:opacity-100 animate-pulse pointer-events-none transition-opacity"></span>
+      <div class="relative z-10 w-5 h-5 flex items-center justify-center shrink-0">
+        <GeminiIcon class="w-4 h-4 sm:w-4.5 sm:h-4.5 transition-transform duration-300 group-hover:scale-110 drop-shadow-xs" />
+      </div>
+      <div class="relative z-10 flex items-center gap-1.5 pr-0.5">
+        <span class="text-xs sm:text-sm font-bold tracking-tight text-slate-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors whitespace-nowrap">
+          Plan My Trip
+        </span>
+        <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-blue-500/10 dark:bg-blue-400/15 text-blue-600 dark:text-blue-400 font-bold border border-blue-500/20 tracking-wider uppercase">
+          AI
+        </span>
+      </div>
+    </button>
+  </div>
+</aside>
 
 <!-- AI Fare Concierge Modal Window (Features Prominent Call Helpline Button) -->
-<AiFareAssistantModal phone={phone} displayPhone={displayPhone} />
+<AiFareAssistantModal phone={cleanPhone} displayPhone={displayPhone} />
