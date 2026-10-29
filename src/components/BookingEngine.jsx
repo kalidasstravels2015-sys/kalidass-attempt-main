@@ -1141,29 +1141,6 @@ Please confirm chauffeur availability.`;
                 ))}
               </div>
 
-              {/* Multi-City Banner Card */}
-              <div className="p-3.5 rounded-m3-lg bg-blue-50/70 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/50 space-y-1.5">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-1.5 font-bold text-xs sm:text-sm text-m3-on-surface dark:text-white">
-                    <span>🗺️</span>
-                    <span>Going to more than 1 place or temple?</span>
-                  </div>
-                  <a
-                    href={buildWhatsAppUrl("Hi Kalidass Travels, I want to plan a custom multi-destination / multi-temple tour package from Chennai. Please help me with itinerary and quotation.")}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 min-h-[34px] px-3.5 py-1 rounded-m3-full bg-[#075E54] hover:bg-[#054c44] active:bg-[#043e37] text-white font-bold text-xs shadow-m3-1 active:scale-[0.98] hover:-translate-y-0.5 transition-all shrink-0 cursor-pointer"
-                  >
-                    <WhatsAppIcon variant="white" className="w-3.5 h-3.5 shrink-0" />
-                    <span>Plan My Trip</span>
-                    <span>→</span>
-                  </a>
-                </div>
-                <p className="text-[11px] text-m3-on-surface-variant dark:text-slate-300 leading-tight">
-                  Visiting 2 or more towns, temples, or sightseeing spots? Get a package quote or send your places on WhatsApp!
-                </p>
-              </div>
-
               {/* 2-Column Date & Time */}
               <div className="grid grid-cols-2 gap-2.5 pt-0.5">
                 <div>

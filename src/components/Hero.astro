@@ -1,9 +1,7 @@
 ---
 import OptimizedImage from "./OptimizedImage.astro";
 import GoogleRatingBadge from "./GoogleRatingBadge.astro";
-import WhatsAppIcon from "./WhatsAppIcon.astro";
-import { Check, Phone } from "lucide-react";
-import { WHATSAPP_CONFIG } from "../utils/whatsapp";
+import { Check } from "lucide-react";
 
 const heroSlides = [
   {
@@ -27,7 +25,7 @@ const heroSlides = [
 
 <section
   id="hero"
-  class="hero-container relative flex items-center justify-center overflow-hidden pt-8 pb-20 sm:pt-12 sm:pb-28 lg:pt-16 lg:pb-36 bg-[#041E49]"
+  class="hero-container relative flex items-center justify-center overflow-hidden pt-4 pb-16 sm:pt-12 sm:pb-28 lg:pt-16 lg:pb-36 bg-[#041E49]"
 >
   <!-- Background Image Carousel with High-Contrast Gradient Scrim -->
   <div class="absolute inset-0 z-0">
@@ -94,52 +92,25 @@ const heroSlides = [
 
     <!-- Direct Fare-Centric Display Headline -->
     <h1
-      class="text-2xl min-[380px]:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-3 sm:mb-4 font-heading drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]"
+      class="text-xl min-[380px]:text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-snug mb-2 sm:mb-4 font-heading drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]"
     >
       Outstation Cabs, Temple Tours &amp; Airport Transfers across South India
     </h1>
 
-    <!-- Clean High-Contrast Trust Assurance Pills (Legible for All Ages) -->
-    <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm text-white font-semibold">
-      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 shadow-xs">
-        <Check className="w-4 h-4 text-emerald-400 shrink-0 stroke-[2.5]" />
+    <!-- Clean High-Contrast Trust Assurance (Compact on Mobile, Expanded on Desktop) -->
+    <div class="flex flex-wrap items-center justify-center gap-1.5 sm:gap-3 text-[11px] sm:text-sm text-white font-semibold">
+      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 shadow-xs">
+        <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 stroke-[2.5]" />
         <span>₹500 Advance Locks Cab</span>
       </span>
-      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 shadow-xs">
-        <Check className="w-4 h-4 text-emerald-400 shrink-0 stroke-[2.5]" />
-        <span>100% Deducted from Final Bill</span>
-      </span>
-      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 shadow-xs">
-        <Check className="w-4 h-4 text-emerald-400 shrink-0 stroke-[2.5]" />
+      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 shadow-xs">
+        <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 stroke-[2.5]" />
         <span>Zero Surge Pricing</span>
       </span>
-    </div>
-
-    <!-- High-Converting Google Ads Hero Action Buttons (Direct Call & WhatsApp) -->
-    <div class="mt-5 sm:mt-6 flex flex-wrap items-center justify-center gap-3 sm:gap-4 w-full max-w-lg">
-      <a
-        href="tel:+918939539211"
-        class="inline-flex items-center justify-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-white hover:bg-slate-50 text-[#041E49] font-extrabold text-sm sm:text-base shadow-[0_8px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.4)] transition-all transform hover:-translate-y-0.5 active:translate-y-0 border border-white/30 cursor-pointer min-h-[46px]"
-        aria-label="Call 24/7 Helpline: +91 89395 39211"
-      >
-        <span class="relative flex h-2.5 w-2.5">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-        </span>
-        <Phone className="w-4 h-4 text-[#0B57D0] shrink-0" />
-        <span>Call Now: 89395 39211</span>
-      </a>
-
-      <a
-        href={`https://wa.me/${WHATSAPP_CONFIG.phone}?text=${encodeURIComponent('Hi Kalidass Travels, I need a cab quote and availability details.')}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center justify-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm sm:text-base shadow-[0_8px_20px_rgba(16,185,129,0.35)] hover:shadow-[0_12px_28px_rgba(16,185,129,0.45)] transition-all transform hover:-translate-y-0.5 active:translate-y-0 border border-emerald-400/30 cursor-pointer min-h-[46px]"
-        aria-label="Chat on WhatsApp: +91 89395 39211"
-      >
-        <WhatsAppIcon className="w-4 h-4 text-white shrink-0 fill-current" />
-        <span>WhatsApp Booking</span>
-      </a>
+      <span class="hidden min-[480px]:inline-flex items-center gap-1 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 shadow-xs">
+        <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 stroke-[2.5]" />
+        <span>100% Deducted from Final Bill</span>
+      </span>
     </div>
   </div>
 </section>

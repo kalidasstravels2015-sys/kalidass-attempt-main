@@ -449,38 +449,13 @@ const faqSchema = {
 
       <!-- Top Hero Section (M3 Adaptive: 2-Column Split on Desktop, App-First on Mobile) -->
       <section class="mb-5 sm:mb-7">
-        <!-- Mobile ONLY Heading + Separate Google Rating Row + Mobile CTA Row -->
+        <!-- Mobile ONLY Heading + Separate Google Rating Row -->
         <div class="block lg:hidden text-center max-w-xl mx-auto mb-3">
           <p role="heading" aria-level="1" data-speakable="true" class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight">
             Chennai Outstation Cabs &amp; Intercity Taxi
           </p>
           <div class="mt-2 flex justify-center">
             <GoogleRatingBadge />
-          </div>
-          <!-- Mobile Direct Quick-Action Row for Google Ads Visitors -->
-          <div class="mt-3 flex items-center justify-center gap-2.5">
-            <a
-              href="tel:+918939539211"
-              class="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full bg-[#0B57D0] hover:bg-[#0842A0] text-white text-xs font-extrabold shadow-sm active:scale-95 transition-all min-h-[44px]"
-              aria-label="Call Outstation Cab Helpline: +91 89395 39211"
-            >
-              <span class="relative flex h-2 w-2">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
-              <Phone className="w-3.5 h-3.5 text-white shrink-0" />
-              <span>Call: 89395 39211</span>
-            </a>
-            <a
-              href={`https://wa.me/918939539211?text=${encodeURIComponent('Hi Kalidass Travels, I need outstation cab rates and availability from Chennai.')}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center justify-center gap-1.5 py-2.5 px-3.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-sm active:scale-95 transition-all min-h-[44px]"
-              aria-label="Chat on WhatsApp for Outstation Cab"
-            >
-              <WhatsAppIcon className="w-3.5 h-3.5 text-white shrink-0 fill-current" />
-              <span>WhatsApp</span>
-            </a>
           </div>
         </div>
 
