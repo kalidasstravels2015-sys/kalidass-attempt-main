@@ -1,5 +1,5 @@
 ---
-import QuotationEngine from "./QuotationEngine.jsx";
+import BookingEngine from "./BookingEngine.jsx";
 const { lang = "en" } = Astro.props;
 ---
 
@@ -10,14 +10,11 @@ const { lang = "en" } = Astro.props;
   <!-- Accessible Semantic SEO Heading -->
   <h2 class="sr-only">Plan Your Journey &amp; Calculate Fare - Instant Cab Estimator</h2>
 
-  <!-- Interactive Quotation Engine Card -->
-  <div id="fare-calculator" class="w-full flex-1 rounded-2xl sm:rounded-3xl shadow-2xl shadow-blue-950/20 border border-gray-200/90 dark:border-white/10 bg-white dark:bg-m3-surface-container p-3 sm:p-5">
-    <QuotationEngine 
-      client:load 
-      currentLang={lang}
-      allowedTabs={['round', 'local', 'airport']}
-      variant="card" 
-      showHeader={false}
-    />
-  </div>
+  <!-- Interactive Unified Booking Engine Card -->
+  <BookingEngine 
+    client:load 
+    initialTab="outstation" 
+    allowedTabs={['outstation', 'local', 'airport']} 
+    variant="card" 
+  />
 </section>

@@ -6,7 +6,7 @@ import OptimizedImage from '../../components/OptimizedImage.astro';
 import GoogleRatingBadge from '../../components/GoogleRatingBadge.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
 import VehicleCard from '../../components/VehicleCard.astro';
-import QuotationEngine from '../../components/QuotationEngine.jsx';
+import BookingEngine from '../../components/BookingEngine.jsx';
 import OutstationQuotationModal from '../../components/OutstationQuotationModal.jsx';
 import { 
   ShieldCheck, 
@@ -450,9 +450,9 @@ const faqSchema = {
       <section class="mb-5 sm:mb-7">
         <!-- Mobile ONLY Heading + Separate Google Rating Row (No Hero CTA on Mobile) -->
         <div class="block lg:hidden text-center max-w-xl mx-auto mb-3">
-          <h1 data-speakable="true" class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight">
+          <p role="heading" aria-level="1" data-speakable="true" class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight">
             Chennai Outstation Cabs &amp; Intercity Taxi
-          </h1>
+          </p>
           <div class="mt-2 flex justify-center">
             <GoogleRatingBadge />
           </div>
@@ -538,10 +538,11 @@ const faqSchema = {
 
           <!-- Right Column: Elevated Booking Engine Card -->
           <div class="lg:col-span-7 w-full max-w-2xl mx-auto lg:max-w-none flex flex-col">
-            <div id="fare-calculator" class="scroll-mt-28 w-full flex-1 rounded-m3-2xl shadow-m3-2 border border-m3-outline-variant/60 bg-white dark:bg-m3-surface-container p-2 sm:p-3">
-              <QuotationEngine 
+            <div id="fare-calculator" class="scroll-mt-28 w-full flex-1">
+              <BookingEngine 
                 client:load 
-                showAirportTab={false} 
+                initialTab="outstation" 
+                allowedTabs={['outstation']} 
                 variant="card" 
                 showHeader={false}
               />

@@ -1465,6 +1465,13 @@ if (isTour) {
     "brand": {
       "@type": "Brand",
       "name": "Kalidass Travels"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5.0",
+      "reviewCount": "12",
+      "bestRating": "5",
+      "worstRating": "1"
     }
   };
   if (offersData) {
@@ -1679,9 +1686,9 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
         <div class="max-w-6xl mx-auto">
           <!-- Mobile ONLY Heading + Separate Google Rating Row -->
           <div class="block lg:hidden text-center max-w-xl mx-auto mb-3">
-            <h1 data-speakable="true" class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight">
+            <p role="heading" aria-level="1" data-speakable="true" class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight">
               {service.title}
-            </h1>
+            </p>
             <div class="mt-2 flex justify-center">
               <GoogleRatingBadge />
             </div>
@@ -1749,7 +1756,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
 
             <!-- Right Column: Instant Round-Trip Pilgrimage Booking Engine in Initial View -->
             <div class="lg:col-span-7 w-full max-w-2xl mx-auto lg:max-w-none flex flex-col">
-              <section id="booking" aria-label={`Book ${service.title}`} class="scroll-mt-28 w-full flex-1 rounded-m3-2xl shadow-m3-2 border border-m3-outline-variant/60 bg-white dark:bg-m3-surface-container p-2 sm:p-3">
+              <section id="booking" aria-label={`Book ${service.title}`} class="scroll-mt-28 w-full flex-1">
                 {isTirupati ? (
                   <TirupatiBookingEngine
                     client:load
