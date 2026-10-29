@@ -518,25 +518,58 @@ export default function BookingEngine({
       }
     };
 
-    loadGoogleMaps()
-      .then(() => initAutocomplete())
-      .catch(() => {});
+    let mapsLoading = false;
+    const ensureGoogleMaps = () => {
+      if (window.google?.maps?.places) {
+        initAutocomplete();
+        return;
+      }
+      if (mapsLoading) return;
+      mapsLoading = true;
+      loadGoogleMaps()
+        .then(() => initAutocomplete())
+        .catch(() => {});
+    };
+
+    let idleId = null;
+    let timeoutId = null;
 
     if (window.google?.maps?.places) {
       initAutocomplete();
     } else {
       window.addEventListener('google-maps-loaded', initAutocomplete);
+
+      const container = document.getElementById('fare-calculator') || document.getElementById('booking-panel');
+      const triggers = ['focusin', 'pointerdown', 'touchstart'];
+      const onInteraction = () => {
+        triggers.forEach((evt) => container?.removeEventListener(evt, onInteraction));
+        ensureGoogleMaps();
+      };
+      if (container) {
+        triggers.forEach((evt) => container.addEventListener(evt, onInteraction, { once: true, passive: true }));
+      }
+
+      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+        idleId = window.requestIdleCallback(() => ensureGoogleMaps(), { timeout: 6000 });
+      } else if (typeof window !== 'undefined') {
+        timeoutId = setTimeout(ensureGoogleMaps, 4500);
+      }
+
       checkTimer = setInterval(() => {
         if (window.google?.maps?.places) {
           initAutocomplete();
           if (pickupInputRef.current?.dataset?.googleAttached && checkTimer) clearInterval(checkTimer);
         }
-      }, 300);
+      }, 400);
     }
 
     return () => {
       window.removeEventListener('google-maps-loaded', initAutocomplete);
       if (checkTimer) clearInterval(checkTimer);
+      if (idleId && typeof window !== 'undefined' && 'cancelIdleCallback' in window) {
+        window.cancelIdleCallback(idleId);
+      }
+      if (timeoutId) clearTimeout(timeoutId);
     };
   }, [viewMode, activeTab]);
 
@@ -1107,7 +1140,7 @@ Please confirm chauffeur availability.`;
 
               {/* Popular Chips (M3 Filter / Assist Chips with 40dp ergonomics) */}
               <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mr-0.5">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mr-0.5">
                   POPULAR:
                 </span>
                 {['Tirupati', 'Pondicherry', 'Mahabalipuram', 'Kumbakonam', 'Bangalore'].map(city => (
@@ -1137,7 +1170,7 @@ Please confirm chauffeur availability.`;
                     href={buildWhatsAppUrl("Hi Kalidass Travels, I want to plan a custom multi-destination / multi-temple tour package from Chennai. Please help me with itinerary and quotation.")}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 min-h-[34px] px-3.5 py-1 rounded-m3-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white font-bold text-xs shadow-m3-1 active:scale-[0.98] hover:-translate-y-0.5 transition-all shrink-0 cursor-pointer"
+                    className="inline-flex items-center gap-1.5 min-h-[34px] px-3.5 py-1 rounded-m3-full bg-[#075E54] hover:bg-[#054c44] active:bg-[#043e37] text-white font-bold text-xs shadow-m3-1 active:scale-[0.98] hover:-translate-y-0.5 transition-all shrink-0 cursor-pointer"
                   >
                     <WhatsAppIcon variant="white" className="w-3.5 h-3.5 shrink-0" />
                     <span>Plan My Trip</span>
@@ -1606,7 +1639,7 @@ Please confirm chauffeur availability.`;
                 rel="noopener noreferrer nofollow"
                 data-direct-whatsapp="true"
                 onClick={() => logCalculationEvent(selectedVehicle.fullName, currentBreakdown.totalFare)}
-                className="flex-1 min-h-[48px] sm:min-h-[50px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-m3-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white font-bold text-xs sm:text-sm shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5 transition-all active:scale-[0.98] cursor-pointer border border-[#20ba5a]/25"
+                className="flex-1 min-h-[48px] sm:min-h-[50px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-m3-full bg-[#075E54] hover:bg-[#054c44] active:bg-[#043e37] text-white font-bold text-xs sm:text-sm shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5 transition-all active:scale-[0.98] cursor-pointer border border-[#054c44]/30"
               >
                 <WhatsAppIcon variant="white" className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
                 <span>Book {selectedVehicle.name} on WhatsApp</span>
@@ -1622,7 +1655,7 @@ Please confirm chauffeur availability.`;
               </a>
             </div>
 
-            <p className="text-[10px] text-slate-400 text-center font-medium">
+            <p className="text-[10px] text-slate-600 dark:text-slate-400 text-center font-medium">
               24/7 Helpline: +91 89395 39211
             </p>
           </div>

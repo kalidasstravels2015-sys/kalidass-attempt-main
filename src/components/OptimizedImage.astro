@@ -13,6 +13,7 @@ interface Props {
   sizes?: string;
   format?: "webp" | "avif";
   quality?: number;
+  widths?: number[];
 }
 
 const {
@@ -26,6 +27,7 @@ const {
   sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
   format = "webp",
   quality = 75,
+  widths = [240, 360, 480, 540, 640, 800, 1080, 1440, 1920],
 } = Astro.props;
 
 // glob all images from src/assets/images
@@ -83,7 +85,7 @@ if (!isRemote) {
       alt={alt}
       class={className}
       style={style}
-      widths={[240, 360, 480, 640, 800, 1080, 1440, 1920]}
+      widths={widths}
       sizes={sizes}
       format={format}
       loading={loading}

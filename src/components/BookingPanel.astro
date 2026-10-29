@@ -12,7 +12,7 @@ const { lang = "en" } = Astro.props;
 
   <!-- Interactive Unified Booking Engine Card -->
   <BookingEngine 
-    client:load 
+    client:idle 
     initialTab="outstation" 
     allowedTabs={['outstation', 'local', 'airport']} 
     variant="card" 

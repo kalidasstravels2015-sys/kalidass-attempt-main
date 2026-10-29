@@ -39,17 +39,33 @@ const heroSlides = [
           data-index={index}
           aria-hidden={index === 0 ? "false" : "true"}
         >
-          <OptimizedImage
-            src={slide.image}
-            alt={slide.alt}
-            class="w-full h-full object-cover object-center"
-            loading={index === 0 ? "eager" : "lazy"}
-            decoding="async"
-            fetchpriority={index === 0 ? "high" : "low"}
-            sizes="100vw"
-            format="avif"
-            quality={index === 0 ? 75 : 72}
-          />
+          {index === 0 ? (
+            <OptimizedImage
+              src={slide.image}
+              alt={slide.alt}
+              class="w-full h-full object-cover object-center"
+              loading="eager"
+              decoding="async"
+              fetchpriority="high"
+              sizes="100vw"
+              format="avif"
+              quality={50}
+            />
+          ) : (
+            <template class="hero-deferred-slide">
+              <OptimizedImage
+                src={slide.image}
+                alt={slide.alt}
+                class="w-full h-full object-cover object-center"
+                loading="lazy"
+                decoding="async"
+                fetchpriority="low"
+                sizes="100vw"
+                format="avif"
+                quality={50}
+              />
+            </template>
+          )}
         </div>
       ))}
     </div>
@@ -119,7 +135,23 @@ const heroSlides = [
 
     let currentIndex = 0;
 
+    function activateSlide(index) {
+      const slide = slides[index];
+      if (!slide) return;
+      const tpl = slide.querySelector('template.hero-deferred-slide');
+      if (tpl && tpl.content) {
+        slide.appendChild(tpl.content.cloneNode(true));
+        tpl.remove();
+      }
+    }
+
+    // Pre-warm the next slide 2 seconds before transition
+    function prewarmNext(nextIndex) {
+      activateSlide(nextIndex);
+    }
+
     function setSlide(index) {
+      activateSlide(index);
       slides.forEach(function(slide, i) {
         if (i === index) {
           slide.classList.add('opacity-100', 'scale-100');
@@ -133,9 +165,17 @@ const heroSlides = [
       });
     }
 
-    setInterval(function() {
-      currentIndex = (currentIndex + 1) % slides.length;
-      setSlide(currentIndex);
-    }, 6500);
+    // Only start carousel rotation after initial page load and idle
+    setTimeout(function() {
+      prewarmNext(1);
+      setInterval(function() {
+        const next = (currentIndex + 1) % slides.length;
+        setSlide(next);
+        currentIndex = next;
+        // Pre-warm following slide
+        const following = (currentIndex + 1) % slides.length;
+        setTimeout(function() { prewarmNext(following); }, 3500);
+      }, 7000);
+    }, 5000);
   })();
 </script>
