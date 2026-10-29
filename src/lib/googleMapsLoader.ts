@@ -40,6 +40,19 @@ export function loadGoogleMaps(apiKey = (typeof import.meta !== 'undefined' && i
       return;
     }
 
+    // Suppress Google Maps Autocomplete deprecation warning if logged
+    if (typeof console !== 'undefined' && console.warn && !(console.warn as any).__gmPatched) {
+      const origWarn = console.warn;
+      const patchedWarn = function (...args: any[]) {
+        if (typeof args[0] === 'string' && (args[0].includes('google.maps.places.Autocomplete') || args[0].includes('PlaceAutocompleteElement'))) {
+          return;
+        }
+        origWarn.apply(console, args);
+      };
+      (patchedWarn as any).__gmPatched = true;
+      console.warn = patchedWarn;
+    }
+
     const callbackName = '__initGoogleMapsLazy';
     (window as any)[callbackName] = () => {
       window.dispatchEvent(new CustomEvent('google-maps-loaded'));

@@ -531,9 +531,6 @@ export default function BookingEngine({
         .catch(() => {});
     };
 
-    let idleId = null;
-    let timeoutId = null;
-
     if (window.google?.maps?.places) {
       initAutocomplete();
     } else {
@@ -548,28 +545,11 @@ export default function BookingEngine({
       if (container) {
         triggers.forEach((evt) => container.addEventListener(evt, onInteraction, { once: true, passive: true }));
       }
-
-      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-        idleId = window.requestIdleCallback(() => ensureGoogleMaps(), { timeout: 6000 });
-      } else if (typeof window !== 'undefined') {
-        timeoutId = setTimeout(ensureGoogleMaps, 4500);
-      }
-
-      checkTimer = setInterval(() => {
-        if (window.google?.maps?.places) {
-          initAutocomplete();
-          if (pickupInputRef.current?.dataset?.googleAttached && checkTimer) clearInterval(checkTimer);
-        }
-      }, 400);
     }
 
     return () => {
       window.removeEventListener('google-maps-loaded', initAutocomplete);
       if (checkTimer) clearInterval(checkTimer);
-      if (idleId && typeof window !== 'undefined' && 'cancelIdleCallback' in window) {
-        window.cancelIdleCallback(idleId);
-      }
-      if (timeoutId) clearTimeout(timeoutId);
     };
   }, [viewMode, activeTab]);
 
@@ -1092,6 +1072,7 @@ Please confirm chauffeur availability.`;
                     data-autocomplete-input="true"
                     autoComplete="off"
                     value={outstationPickup}
+                    onFocus={() => loadGoogleMaps().catch(() => {})}
                     onChange={(e) => setOutstationPickup(e.target.value)}
                     placeholder="e.g. T. Nagar, Central, Airport, OMR"
                     className="w-full pl-3.5 pr-20 min-h-[48px] sm:min-h-[50px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 rounded-m3-sm text-m3-on-surface dark:text-white placeholder-slate-400 focus:outline-none focus:border-2 focus:border-blue-600 focus:bg-white dark:focus:bg-m3-surface transition-all"
@@ -1128,6 +1109,7 @@ Please confirm chauffeur availability.`;
                     data-autocomplete-input="true"
                     autoComplete="off"
                     value={outstationDrop}
+                    onFocus={() => loadGoogleMaps().catch(() => {})}
                     onChange={(e) => setOutstationDrop(e.target.value)}
                     placeholder="e.g. Pondicherry, Tirupati, Bangalore"
                     className="w-full pl-3.5 pr-10 min-h-[48px] sm:min-h-[50px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 rounded-m3-sm text-m3-on-surface dark:text-white placeholder-slate-400 font-medium focus:outline-none focus:border-2 focus:border-blue-600 focus:bg-white dark:focus:bg-m3-surface transition-all"

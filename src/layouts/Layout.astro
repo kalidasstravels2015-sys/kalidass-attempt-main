@@ -660,6 +660,8 @@ const unifiedSchemaGraph = {
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content" />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://maps.googleapis.com" />
     <!-- Public Google Sheet webhook (build-time) so CUSTOMER browsers can log enquiries to the admin sheet -->
     <script is:inline define:vars={{ ktSheetUrl: import.meta.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL || '' }}>
       window.KT_SHEET_WEBHOOK_URL = ktSheetUrl;
@@ -1491,13 +1493,11 @@ const unifiedSchemaGraph = {
           return;
         }
 
-        var scheduledTimer = null;
-        var events = ['pointerdown', 'touchstart', 'keydown', 'click'];
+        var events = ['pointerdown', 'touchstart', 'keydown', 'click', 'scroll'];
         function cleanup() {
           events.forEach(function (evt) {
             window.removeEventListener(evt, scheduleOnInteraction);
           });
-          if (scheduledTimer) clearTimeout(scheduledTimer);
         }
 
         // INP Protection: Only genuine human interactions load third parties (ignores synthetic scroll/audit triggers)
@@ -1506,33 +1506,16 @@ const unifiedSchemaGraph = {
           cleanup();
           if ('requestIdleCallback' in window) {
             requestIdleCallback(function () {
-              setTimeout(loadThirdParties, 800);
-            }, { timeout: 2500 });
+              setTimeout(loadThirdParties, 500);
+            }, { timeout: 2000 });
           } else {
-            setTimeout(loadThirdParties, 1000);
+            setTimeout(loadThirdParties, 500);
           }
         }
 
         events.forEach(function (evt) {
           window.addEventListener(evt, scheduleOnInteraction, { once: true, passive: true });
         });
-
-        // Idle fallback: automatically loads when visitor has been idle on page (9s post load, outside audit window)
-        function scheduleIdleLoad() {
-          scheduledTimer = setTimeout(function () {
-            if ('requestIdleCallback' in window) {
-              requestIdleCallback(loadThirdParties, { timeout: 4000 });
-            } else {
-              loadThirdParties();
-            }
-          }, 9000);
-        }
-
-        if (document.readyState === 'complete') {
-          scheduleIdleLoad();
-        } else {
-          window.addEventListener('load', scheduleIdleLoad, { once: true });
-        }
       })();
     </script>
   </head>

@@ -49,9 +49,9 @@ const heroSlides = [
               loading="eager"
               decoding="async"
               fetchpriority="high"
-              sizes="100vw"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1920px"
               format="avif"
-              quality={50}
+              quality={42}
             />
           ) : (
             <template class="hero-deferred-slide">
@@ -62,9 +62,9 @@ const heroSlides = [
                 loading="lazy"
                 decoding="async"
                 fetchpriority="low"
-                sizes="100vw"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1920px"
                 format="avif"
-                quality={50}
+                quality={42}
               />
             </template>
           )}
