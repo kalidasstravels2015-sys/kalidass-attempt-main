@@ -115,7 +115,7 @@ const gridColsClass = fleet.length === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3';
       >
         {fleet.map((vehicle: any) => (
           <VehicleCard
-            className="shrink-0 w-[240px] sm:w-[260px] md:w-auto snap-start"
+            className="shrink-0 w-[275px] sm:w-[290px] md:w-auto snap-start"
             name={vehicle.name}
             image={vehicle.image}
             badge={getBadge(vehicle.name)}
@@ -175,13 +175,13 @@ const gridColsClass = fleet.length === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3';
 
     if (prevBtn) {
       prevBtn.addEventListener('click', () => {
-        track.scrollBy({ left: -270, behavior: 'smooth' });
+        track.scrollBy({ left: -280, behavior: 'smooth' });
       });
     }
 
     if (nextBtn) {
       nextBtn.addEventListener('click', () => {
-        track.scrollBy({ left: 270, behavior: 'smooth' });
+        track.scrollBy({ left: 280, behavior: 'smooth' });
       });
     }
 
@@ -193,7 +193,7 @@ const gridColsClass = fleet.length === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3';
           if (!scrollTicking) {
             window.requestAnimationFrame(() => {
               const scrollLeft = track.scrollLeft;
-              const cardWidth = 250;
+              const cardWidth = 280;
               const activeIndex = Math.min(dots.length - 1, Math.max(0, Math.round(scrollLeft / cardWidth)));
               dots.forEach((dot, idx) => {
                 if (idx === activeIndex) {

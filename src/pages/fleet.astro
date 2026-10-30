@@ -572,7 +572,11 @@ const schema = {
                     height="140"
                     loading="lazy"
                     decoding="async"
-                    class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-md"
+                    class={`max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-md ${
+                      vehicle.image.includes('swift-dzire') ? 'scale-120 sm:scale-125' :
+                      vehicle.image.includes('suv') ? 'scale-115 sm:scale-120' :
+                      vehicle.image.includes('ertiga') ? 'scale-110 sm:scale-115' : ''
+                    }`}
                   />
                 </div>
 

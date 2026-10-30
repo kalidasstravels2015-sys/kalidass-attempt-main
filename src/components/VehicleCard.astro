@@ -48,6 +48,15 @@ const {
 } = Astro.props;
 
 const isWhatsApp = Boolean(actionHref && actionHref.includes('wa.me'));
+
+const getVehicleScale = (img?: string) => {
+  if (!img) return '';
+  if (img.includes('swift-dzire')) return 'scale-125 sm:scale-130';
+  if (img.includes('suv') || img.includes('innova')) return 'scale-120 sm:scale-125';
+  if (img.includes('ertiga')) return 'scale-115 sm:scale-120';
+  if (img.includes('etios')) return 'scale-115 sm:scale-120';
+  return 'scale-110 sm:scale-115';
+};
 ---
 
 <div
@@ -56,9 +65,9 @@ const isWhatsApp = Boolean(actionHref && actionHref.includes('wa.me'));
 >
   <div>
     <!-- 1. Vehicle Photo Showcase Container -->
-    <div class="relative h-36 sm:h-40 bg-m3-surface-container-low flex items-center justify-center pt-8 pb-3 px-4 border-b border-slate-200/60">
+    <div class="relative h-44 sm:h-48 bg-m3-surface-container-low flex items-center justify-center pt-7 pb-2 px-3 sm:px-4 sm:pt-8 sm:pb-3 border-b border-slate-200/60 overflow-hidden">
       {badge && (
-        <span class="absolute top-2.5 left-3 z-10 text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-m3-full bg-white/95 text-m3-on-surface border border-slate-200 shadow-xs">
+        <span class="absolute top-2.5 left-3 z-10 text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-m3-full bg-white/95 text-m3-on-surface border border-slate-200 shadow-xs backdrop-blur-xs">
           {badge}
         </span>
       )}
@@ -69,14 +78,12 @@ const isWhatsApp = Boolean(actionHref && actionHref.includes('wa.me'));
           alt={`${name} taxi rental - Kalidass Travels`}
           loading="lazy"
           decoding="async"
-          sizes="(max-width: 640px) 240px, 280px"
-          quality={70}
-          class={`w-auto max-w-[92%] max-h-24 sm:max-h-28 object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300 ${
-            image.includes('swift-dzire') ? 'scale-120 sm:scale-125' : ''
-          }`}
+          sizes="(max-width: 640px) 320px, 400px"
+          quality={75}
+          class={`w-auto max-w-[96%] h-full max-h-34 sm:max-h-38 object-contain mix-blend-multiply transition-transform duration-300 group-hover:scale-110 drop-shadow-xs ${getVehicleScale(image)}`}
         />
       ) : (
-        <Car className="w-10 h-10 text-m3-on-surface-variant" />
+        <Car className="w-12 h-12 text-m3-on-surface-variant" />
       )}
     </div>
 

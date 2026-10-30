@@ -1882,12 +1882,18 @@ Please confirm chauffeur availability.`;
                         </div>
 
                         {/* Prominent Vehicle Showcase Stage (Spacious, bold & properly scaled for Sedan) */}
-                        <div className="h-18 sm:h-22 flex items-center justify-center my-2 w-full overflow-hidden">
+                        <div className="h-20 sm:h-22 flex items-center justify-center my-1.5 w-full overflow-hidden">
                           <img
                             src={item.image}
                             alt={item.name}
-                            className={`w-auto h-full max-h-16 sm:max-h-20 object-contain transition-transform group-hover:scale-105 drop-shadow-xs ${
-                              item.key === 'Swift Dzire' ? 'scale-130 sm:scale-135' : 'scale-105'
+                            className={`w-auto h-full max-h-18 sm:max-h-20 object-contain transition-transform group-hover:scale-105 drop-shadow-xs ${
+                              item.key === 'Swift Dzire'
+                                ? 'scale-125 sm:scale-130'
+                                : item.key.includes('Innova') || item.key.includes('Crysta')
+                                ? 'scale-115 sm:scale-120'
+                                : item.key.includes('Ertiga')
+                                ? 'scale-110 sm:scale-115'
+                                : 'scale-105 sm:scale-110'
                             }`}
                             loading="lazy"
                             width="125"
@@ -2056,10 +2062,10 @@ Please confirm chauffeur availability.`;
                         <img
                           src={item.image}
                           alt={item.name}
-                          className="w-10 sm:w-11 h-6 sm:h-7 object-contain shrink-0 transition-transform group-hover:scale-105"
+                          className="w-12 sm:w-13 h-7 sm:h-8 object-contain shrink-0 transition-transform group-hover:scale-105"
                           loading="lazy"
-                          width="44"
-                          height="28"
+                          width="52"
+                          height="32"
                         />
                         <div className="text-left leading-tight pr-0.5">
                           <div className={`text-xs font-bold whitespace-nowrap ${isSelected ? 'text-blue-600 dark:text-blue-400' : 'text-slate-800 dark:text-gray-200'}`}>

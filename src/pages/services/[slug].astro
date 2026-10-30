@@ -2262,7 +2262,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
 
                   return (
                     <VehicleCard
-                      className="shrink-0 w-[240px] sm:w-[260px] snap-start"
+                      className="shrink-0 w-[275px] sm:w-[290px] snap-start"
                       name={vehicleName}
                       image={vehicleImg || undefined}
                       badge={badge}
@@ -2373,14 +2373,16 @@ Please share availability and confirmed quote.`;
                             </div>
                           </div>
                           {vehicleImg ? (
-                            <div class="shrink-0 w-20 h-12 sm:w-24 sm:h-14 flex items-center justify-end">
+                            <div class="shrink-0 w-24 h-14 sm:w-28 sm:h-16 flex items-center justify-end">
                               <img
                                 src={vehicleImg}
                                 alt={`${vehicleName} cab rental - Kalidass Travels`}
-                                width="112"
-                                height="56"
+                                width="120"
+                                height="70"
                                 decoding="async"
-                                class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-xs"
+                                class={`max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-300 drop-shadow-xs ${
+                                  vehicleImg.includes('swift-dzire') ? 'scale-120 sm:scale-125' : vehicleImg.includes('suv') ? 'scale-115 sm:scale-120' : 'scale-105 sm:scale-110'
+                                }`}
                                 loading="lazy"
                               />
                             </div>
