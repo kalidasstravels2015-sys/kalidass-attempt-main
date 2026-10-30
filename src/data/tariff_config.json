@@ -692,6 +692,19 @@
         "crysta": { "rates": { "1": 31500, "2": 31500, "3": 36500, "4": 41500 }, "vehicleHire": { "1": 26900, "2": 26900, "3": 30800, "4": 34700 }, "driverBata": { "1": 4600, "2": 4600, "3": 5700, "4": 6800 }, "extraHourRate": 350 },
         "tempo12": { "rates": { "1": 37000, "2": 37000, "3": 43000, "4": 49000 }, "vehicleHire": { "1": 31600, "2": 31600, "3": 36300, "4": 41000 }, "driverBata": { "1": 5400, "2": 5400, "3": 6700, "4": 8000 }, "extraHourRate": 400 }
       }
+    },
+    "madurai-meenakshi-temple-tour": {
+      "name": "Chennai to Madurai Meenakshi Amman Temple",
+      "stateCode": "TN",
+      "roundTripKm": 924,
+      "minDays": 2,
+      "vehicles": {
+        "dzire": { "rates": { "1": 15000, "2": 15000, "3": 18800 }, "vehicleHire": { "1": 13200, "2": 13200, "3": 16000 }, "driverBata": { "1": 1800, "2": 1800, "3": 2800 }, "extraHourRate": 200 },
+        "ertiga": { "rates": { "1": 18000, "2": 18000, "3": 22500 }, "vehicleHire": { "1": 15800, "2": 15800, "3": 19500 }, "driverBata": { "1": 2200, "2": 2200, "3": 3000 }, "extraHourRate": 250 },
+        "innova": { "rates": { "1": 21000, "2": 21000, "3": 26000 }, "vehicleHire": { "1": 18600, "2": 18600, "3": 22600 }, "driverBata": { "1": 2400, "2": 2400, "3": 3400 }, "extraHourRate": 250 },
+        "crysta": { "rates": { "1": 24000, "2": 24000, "3": 30000 }, "vehicleHire": { "1": 21200, "2": 21200, "3": 26200 }, "driverBata": { "1": 2800, "2": 2800, "3": 3800 }, "extraHourRate": 350 },
+        "tempo12": { "rates": { "1": 26500, "2": 26500, "3": 33000 }, "vehicleHire": { "1": 23300, "2": 23300, "3": 28600 }, "driverBata": { "1": 3200, "2": 3200, "3": 4400 }, "extraHourRate": 400 }
+      }
     }
   }
 }

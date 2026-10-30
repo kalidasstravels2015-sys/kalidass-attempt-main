@@ -287,7 +287,7 @@ export const TOUR_CONFIGS = {
     },
     minRealisticHours: 8,
     recommendedHours: 10,
-    advisoryText: 'Chennai to Kanchipuram round trip covers ~150 km (~3 hrs driving + Kamakshi Amman, Ekambareswarar, Varadharaja Perumal & Silk saree weaver visits). Recommended window is 8–10 hours.',
+    advisoryText: 'Chennai to Kanchipuram round trip covers ~150 km (~3 hrs driving + Kailasanathar, Ekambareswarar, Kamakshi Amman, Varadharaja Perumal & Silk saree weaver visits). Recommended window is 8–10 hours.',
     inclusions: {
       standard: 'Covers NH 48 Tolls + Weaver Waiting + Driver Bata',
       multiDay: 'Covers Cab, Weaver Waiting & Halting Bata • Tolls Extra'
@@ -883,6 +883,94 @@ export const TOUR_CONFIGS = {
         rates: { 1: 37000, 2: 37000, 3: 43000, 4: 49000 },
         vehicleHire: { 1: 31600, 2: 31600, 3: 36300, 4: 41000 },
         driverBata: { 1: 5400, 2: 5400, 3: 6700, 4: 8000 },
+        extraHourRate: 400
+      }
+    ]
+  },
+
+  'madurai-meenakshi-temple-tour': {
+    slug: 'madurai-meenakshi-temple-tour',
+    serviceTitle: 'Chennai to Madurai Meenakshi Amman Temple Tour Package',
+    engineTitle: 'Book Chennai to Madurai Temple Tour',
+    subtitle: 'Dedicated Cab & Tempo • Meenakshi Amman, Alagar Kovil & Thiruparankundram • ₹500 advance to confirm',
+    destination: {
+      name: 'Madurai Meenakshi Amman, Thiruparankundram & Alagar Kovil',
+      roundTripKm: 924,
+      editable: false,
+      isCircuit: true
+    },
+    minRealisticHours: 36,
+    recommendedHours: 48,
+    advisoryText: 'Chennai to Madurai round trip is ~924 km (~7–8 hrs driving each way via NH 38 / NH 45). 2 Days (36–48 hrs) is ideal for Meenakshi Amman, Thiruparankundram, and Alagar Kovil. 3 Days recommended for senior citizens or adding Pazhamudircholai.',
+    inclusions: {
+      standard: 'Covers 924 km Run, Fuel, Meenakshi Amman, Alagar Kovil & Thiruparankundram Circuit • Tolls & Bata Extra',
+      multiDay: 'Covers Cab, 924+ km Run, Local Temple Sightseeing & Night Halts • Tolls & Bata Extra'
+    },
+    itemizedInclusions: [
+      { label: 'Thiruparankundram & Alagar Kovil Circuit:', value: '₹0', multiDayValue: '₹0' },
+      { label: 'NH 38 / NH 45 FASTag Tolls & Temple Parking:', value: 'Extra', multiDayValue: 'Extra' },
+      { label: 'Chauffeur Outstation Duty & Halting Bata:', value: 'Extra', multiDayValue: 'Extra' }
+    ],
+    eventPrefix: 'madurai_temple_engine',
+    vehicles: [
+      {
+        id: 'dzire',
+        name: 'Swift Dzire / Toyota Etios',
+        shortName: 'AC Sedan',
+        capacity: 4,
+        luggage: '2 Bags',
+        tag: 'Best Value',
+        rates: { 1: 15000, 2: 15000, 3: 18800 },
+        vehicleHire: { 1: 13200, 2: 13200, 3: 16000 },
+        driverBata: { 1: 1800, 2: 1800, 3: 2800 },
+        extraHourRate: 200
+      },
+      {
+        id: 'ertiga',
+        name: 'Maruti Ertiga / XL6',
+        shortName: 'Comfort SUV',
+        capacity: 6,
+        luggage: '3 Bags',
+        tag: 'Family Favorite',
+        rates: { 1: 18000, 2: 18000, 3: 22500 },
+        vehicleHire: { 1: 15800, 2: 15800, 3: 19500 },
+        driverBata: { 1: 2200, 2: 2200, 3: 3000 },
+        extraHourRate: 250
+      },
+      {
+        id: 'innova',
+        name: 'Toyota Innova',
+        shortName: 'Spacious MUV',
+        capacity: 7,
+        luggage: '4 Bags',
+        tag: 'Elders Choice',
+        rates: { 1: 21000, 2: 21000, 3: 26000 },
+        vehicleHire: { 1: 18600, 2: 18600, 3: 22600 },
+        driverBata: { 1: 2400, 2: 2400, 3: 3400 },
+        extraHourRate: 250
+      },
+      {
+        id: 'crysta',
+        name: 'Toyota Innova Crysta',
+        shortName: 'Luxury MUV',
+        capacity: 7,
+        luggage: '4 Bags',
+        tag: 'VIP Luxury',
+        rates: { 1: 24000, 2: 24000, 3: 30000 },
+        vehicleHire: { 1: 21200, 2: 21200, 3: 26200 },
+        driverBata: { 1: 2800, 2: 2800, 3: 3800 },
+        extraHourRate: 350
+      },
+      {
+        id: 'tempo12',
+        name: '12-Seater Tempo Traveller',
+        shortName: 'Mini Coach',
+        capacity: 12,
+        luggage: '8 Bags',
+        tag: 'Group Darshan',
+        rates: { 1: 26500, 2: 26500, 3: 33000 },
+        vehicleHire: { 1: 23300, 2: 23300, 3: 28600 },
+        driverBata: { 1: 3200, 2: 3200, 3: 4400 },
         extraHourRate: 400
       }
     ]

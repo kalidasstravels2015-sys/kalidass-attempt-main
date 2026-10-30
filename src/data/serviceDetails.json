@@ -662,35 +662,35 @@
     "category": "Temple Tours",
     "title": "Chennai to Kanchipuram One Day Temple Tour Cab & Taxi",
     "duration": "1, 2 or 3 Days (Same Day Return or Overnight Stay)",
-    "overview": "One-day Chennai to Kanchipuram round-trip cab service. Covers Kamakshi Amman, Ekambareswarar, and Varadharaja Perumal temples, plus silk saree shopping. Fixed fares include car, fuel, tolls, and driver bata.",
+    "overview": "One-day Chennai to Kanchipuram round-trip cab service. Covers Kailasanathar, Ekambareswarar, Kamakshi Amman, and Varadharaja Perumal temples, plus silk saree shopping. Fixed fares include car, fuel, tolls, and driver bata.",
     "routePlan": [
       {
         "stop": "Chennai Departure",
-        "desc": "06:30 AM morning pickup from your home."
-      },
-      {
-        "stop": "Ekambareswarar Temple",
-        "desc": "08:30 AM darshan at Prithvi Lingam (Earth element)."
-      },
-      {
-        "stop": "Kamakshi Amman Temple",
-        "desc": "10:30 AM darshan at sacred Shakti Peetham."
-      },
-      {
-        "stop": "Silk Saree Weavers",
-        "desc": "01:00 PM lunch & stop at authentic cooperative silk weaver societies."
-      },
-      {
-        "stop": "Varadharaja Perumal Temple",
-        "desc": "04:30 PM darshan at ancient Divya Desam temple."
+        "desc": "06:30 AM morning pickup from your doorstep across Chennai."
       },
       {
         "stop": "Kailasanathar Temple",
-        "desc": "06:00 PM visit to 7th-century Pallava architectural monument."
+        "desc": "08:15 AM – 09:15 AM visit to the 7th-century Pallava architectural monument (peaceful morning darshan & photography before sunset closure)."
+      },
+      {
+        "stop": "Ekambareswarar Temple",
+        "desc": "09:30 AM – 10:45 AM darshan at sacred Prithvi Lingam (Earth element) & the 3,500-year-old sacred Mango Tree."
+      },
+      {
+        "stop": "Kamakshi Amman Temple",
+        "desc": "11:00 AM – 12:30 PM darshan at sacred Shakti Peetham & Srichakra sanctum before the 12:30 PM afternoon closure."
+      },
+      {
+        "stop": "Lunch & Silk Saree Weavers",
+        "desc": "12:45 PM – 04:00 PM traditional satvik lunch & relaxed shopping at registered handloom weaver cooperative societies during temple afternoon closure."
+      },
+      {
+        "stop": "Varadharaja Perumal Temple",
+        "desc": "04:15 PM – 05:45 PM evening darshan at ancient Divya Desam, Hastagiri sanctum, and sacred Gold & Silver Lizards."
       },
       {
         "stop": "Chennai Return",
-        "desc": "08:30 PM return drop at your doorstep in Chennai."
+        "desc": "06:00 PM highway departure with 08:00 – 08:30 PM return drop at your doorstep in Chennai or Chennai Airport."
       }
     ],
     "tariff": {
@@ -764,7 +764,7 @@
       },
       {
         "q": "Which temples are visited in the 1-day Kanchipuram temple tour?",
-        "a": "The 1-day circuit covers Sri Kamakshi Amman Temple, Ekambareswarar Temple (Earth Stalam), Varadharaja Perumal Temple, and Kailasanathar Temple, with time for lunch and silk shopping."
+        "a": "The 1-day circuit covers Kailasanathar Temple (Pallava architecture), Ekambareswarar Temple (Earth Stalam), Sri Kamakshi Amman Temple (Shakti Peetham), and Varadharaja Perumal Temple (Divya Desam), with dedicated time for lunch and authentic silk saree weaver shopping."
       },
       {
         "q": "Can the driver take us to authentic Kanchipuram silk saree handloom societies?",
@@ -3489,5 +3489,252 @@
     "serviceType": "TaxiService",
     "origin": "Chennai",
     "destination": "Tiruchendur & Nava Tirupathi"
+  },
+  {
+    "slug": "chennai-to-madurai-taxi",
+    "category": "Outstation Cabs",
+    "title": "Chennai to Madurai Taxi & Cab Booking (One-Way & Round Trip)",
+    "duration": "~460 km / 7.5–8.5 hrs via NH-38 (GST Road)",
+    "overview": "Doorstep Chennai to Madurai cab rental via NH-38 / NH-45 (460 km). One-way drops from ₹7,500; round-trip packages from ₹14/km. Sanitized AC Sedans, Innova Crysta, and 12-Seater Tempo Travellers with verified highway chauffeurs. Looking for Meenakshi Amman Temple darshan? View our dedicated Madurai Temple Tour Package.",
+    "routePlan": [
+      {
+        "stop": "Chennai Doorstep",
+        "desc": "Pickup from your residence, workplace, or Chennai Airport (MAA)."
+      },
+      {
+        "stop": "Tindivanam / Villupuram Bypass",
+        "desc": "Join 4-lane GST Road / NH-38 highway corridor."
+      },
+      {
+        "stop": "Trichy Bypass",
+        "desc": "Halfway comfort stop for hot meals, coffee, and clean highway restrooms."
+      },
+      {
+        "stop": "Dindigul Bypass",
+        "desc": "Smooth highway drive past Dindigul junction towards Madurai."
+      },
+      {
+        "stop": "Madurai City",
+        "desc": "Drop at any address, railway station, hospital, or hotel in Madurai."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Seating Capacity",
+        "Package Tariff",
+        "Key Highlights"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Passengers",
+          "₹14/km Round Trip • ₹7,500 One-Way",
+          "AC Sedan • 2 Bags • Ideal for small families & solo business visits"
+        ],
+        [
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Passengers",
+          "₹17/km Round Trip • ₹9,500 One-Way",
+          "3-Row AC SUV • 3 Bags • Great family legroom & rear AC vents"
+        ],
+        [
+          "Toyota Innova",
+          "7 Passengers",
+          "₹20/km Round Trip • ₹11,500 One-Way",
+          "Highway King • 4 Bags • Proven comfort on 460 km GST highway"
+        ],
+        [
+          "Toyota Innova Crysta (Luxury)",
+          "7 Passengers",
+          "₹22/km Round Trip • ₹13,500 One-Way",
+          "Executive Luxury • Plush captain seats • Smooth cruise"
+        ],
+        [
+          "12-Seater Tempo Traveller",
+          "12 Passengers",
+          "₹24/km Round Trip • ₹17,000 One-Way",
+          "Group Coach • 8–10 Bags • Pushback seats & high roof aisle"
+        ]
+      ],
+      "note": "Round trips billed at minimum 250 km/day (300 km/day for Crysta & Tempo). Driver bata ₹500–₹800/day. Highway FASTag tolls and parking billed at actuals."
+    },
+    "includes": [
+      "Doorstep pickup anywhere in Chennai and drop at your chosen Madurai destination",
+      "Verified commercial highway chauffeur with 5+ years experience",
+      "Clean commercial yellow-plate AC vehicle sanitized before departure",
+      "Fuel charges and driver allowance (bata)",
+      "Flexible highway tea/coffee halts at quality food plazas"
+    ],
+    "excludes": [
+      "Highway FASTag tolls (~₹650 on NH-38, billed at actuals)",
+      "Parking charges at private venues or hotels",
+      "Night driving allowance (if travel continues past 10:00 PM)"
+    ],
+    "travelGuide": {
+      "history": "• Chennai to Madurai Highway: 460 km direct corridor via NH-38 (GST Road)\n• Route: Chennai → Chengalpattu → Tindivanam → Villupuram → Trichy → Dindigul → Madurai\n• Fleets Available: Sedans, Ertiga SUVs, Innova Crysta, and Tempo Travellers\n• 24/7 Dispatch: Day and night departures with advance notice",
+      "timings": "• Best Departure: 05:00 AM – 06:00 AM to beat Tambaram/Perungalathur traffic\n• Ideal Travel Time: 7.5 to 8.5 hours via NH-38\n• Recommended Halts: Tindivanam Highway Plaza, Trichy Highway Food Village\n• 24/7 Availability: Round-the-clock booking and dispatch",
+      "dressCode": "Clean, polite, verified chauffeur in professional attire with company ID badge.",
+      "tips": [
+        "Beat Perungalathur Traffic: Starting before 06:00 AM avoids the GST Road city exit bottleneck.",
+        "Dedicated Darshan Itinerary: If your main plan is temple darshan, choose our Madurai Meenakshi Amman Temple Tour Package for included circuit coverage.",
+        "Senior Citizen Comfort: For parents and elders, Innova Crysta offers unmatched comfort on this 8-hour stretch.",
+        "Zero Cancellation Penalty: Reschedule or cancel free of charge up to 3 hours prior to pickup.",
+        "UPI & Cash Settlement: Drivers accept GPay/PhonePe; tax invoices issued on request."
+      ]
+    },
+    "faq": [
+      {
+        "q": "How much is the taxi fare from Chennai to Madurai?",
+        "a": "One-way drop fares start from ₹7,500 for an AC Sedan (Dzire / Etios) and ₹9,500 for an Ertiga SUV. Round trips are billed on per-km basis starting at ₹14/km for Sedans (min 250 km/day) + ₹500 driver bata."
+      },
+      {
+        "q": "What is the driving distance and travel time from Chennai to Madurai?",
+        "a": "The road distance is approximately 460 km via NH-38 (GST Road) and takes about 7.5 to 8.5 hours with normal highway food and fuel halts."
+      },
+      {
+        "q": "What is the difference between this Outstation taxi and the Madurai Temple Tour package?",
+        "a": "This outstation taxi service is for point-to-point drop or flexible travel for business, family functions, or custom schedules. The Madurai Temple Tour package is an itinerary-based package covering Meenakshi Amman Temple, Thiruparankundram, and Alagar Kovil."
+      },
+      {
+        "q": "Can I get picked up directly from Chennai Airport (MAA)?",
+        "a": "Yes! Our chauffeur picks you up right outside the Chennai Airport arrival terminal and heads straight onto the GST Road highway."
+      },
+      {
+        "q": "How much advance payment is required to book a Chennai to Madurai cab?",
+        "a": "Only a nominal ₹500 advance locks your cab. The advance is 100% deducted from your final bill, and you can pay the balance to the driver via cash or UPI."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I would like to book a taxi from Chennai to Madurai. Please confirm availability.",
+    "metaTitle": "Chennai to Madurai Taxi | One-Way & Round Trip Cabs from ₹14/km",
+    "metaDescription": "Book Chennai to Madurai taxi from ₹14/km round trip or ₹7,500 one-way drop. Clean AC Sedans, Innova Crysta & Tempo Travellers. Doorstep pickup across Chennai. ₹500 advance to confirm.",
+    "keywords": "chennai to madurai taxi, chennai to madurai cab fare, one way cab chennai to madurai, chennai to madurai outstation taxi, chennai to madurai innova crysta, madurai drop taxi chennai",
+    "serviceType": "TaxiService",
+    "origin": "Chennai",
+    "destination": "Madurai"
+  },
+  {
+    "slug": "madurai-meenakshi-temple-tour",
+    "category": "Temple Tours",
+    "title": "Chennai to Madurai Meenakshi Temple Tour Package (2 Days / 3 Days)",
+    "duration": "2 Days / 1 Night or 3 Days / 2 Nights (Meenakshi Amman, Thiruparankundram & Alagar Kovil)",
+    "overview": "Private 2 or 3-Day Chennai to Madurai Meenakshi Amman Temple pilgrimage tour with dedicated Satvik chauffeur. Covers Meenakshi Sundareswarar Temple, Thiruparankundram Murugan Temple, Alagar Kovil, and Pazhamudircholai. Clean AC cabs & Tempo Travellers. Looking only for direct city drop? View our Chennai to Madurai Outstation Taxi.",
+    "routePlan": [
+      {
+        "stop": "Day 1: Chennai Doorstep Pickup",
+        "desc": "Early morning (05:00 AM) doorstep pickup in Chennai. Travel via NH-38 to Madurai with breakfast halt."
+      },
+      {
+        "stop": "Day 1: Madurai Arrival & Meenakshi Amman Darshan",
+        "desc": "Check-in at your hotel, refresh, and proceed for evening Darshan at Arulmigu Meenakshi Sundareswarar Temple."
+      },
+      {
+        "stop": "Day 2: Thiruparankundram Murugan Temple",
+        "desc": "Morning darshan at the first Arupadai Veedu of Lord Murugan carved into the rock hill."
+      },
+      {
+        "stop": "Day 2: Alagar Kovil & Pazhamudircholai",
+        "desc": "Scenic drive to Kallazhagar Temple and Solaimalai Murugan Temple on the wooded hills."
+      },
+      {
+        "stop": "Day 2 / 3: Thirumalai Nayakkar Mahal & Return",
+        "desc": "Visit the historic palace, shop for Madurai Sungudi sarees and famous Jigarthanda, and return safely to Chennai."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Devotee Capacity",
+        "2-Day Package",
+        "3-Day Package"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Passengers",
+          "₹15,000 Flat",
+          "₹18,800 Flat"
+        ],
+        [
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Passengers",
+          "₹18,000 Flat",
+          "₹22,500 Flat"
+        ],
+        [
+          "Toyota Innova",
+          "7 Passengers",
+          "₹21,000 Flat",
+          "₹26,000 Flat"
+        ],
+        [
+          "Toyota Innova Crysta (Luxury)",
+          "7 Passengers",
+          "₹24,000 Flat",
+          "₹30,000 Flat"
+        ],
+        [
+          "12-Seater Tempo Traveller",
+          "12 Passengers",
+          "₹26,500 Flat",
+          "₹33,000 Flat"
+        ]
+      ],
+      "note": "Package rates include sanitized AC vehicle, fuel, driver outstation bata, and full temple circuit coverage (924 km + local temple runs). Highway FASTag tolls and parking slips at actuals."
+    },
+    "includes": [
+      "Doorstep pickup in Chennai and dedicated cab throughout the tour",
+      "Verified Satvik teetotaler chauffeur familiar with Madurai temple entry timings",
+      "Full coverage of Meenakshi Amman Temple, Thiruparankundram, and Alagar Kovil",
+      "Clean AC vehicle with luggage assistance for senior citizens",
+      "Fuel charges and driver day/night outstation allowance included"
+    ],
+    "excludes": [
+      "Highway FASTag tolls (~₹650 each way, billed at actuals)",
+      "Temple special darshan tickets and camera entry charges",
+      "Devotee accommodation and meals",
+      "Parking slips at temple lots (at actuals)"
+    ],
+    "travelGuide": {
+      "history": "• Meenakshi Sundareswarar Temple: 2,500-year-old historic landmark with 14 gopurams and Hall of Thousand Pillars\n• Arupadai Veedu: Thiruparankundram & Pazhamudircholai nearby Murugan shrines\n• Chauffeurs: Courteous, non-smoking, satvik chauffeurs with temple circuit experience\n• Senior Devotee Care: Porch drops close to temple towers to avoid long walking for grandparents",
+      "timings": "• Meenakshi Temple Timings: 05:00 AM – 12:30 PM & 04:00 PM – 10:00 PM\n• Thiruparankundram Timings: 05:30 AM – 01:00 PM & 04:00 PM – 09:00 PM\n• Alagar Kovil Timings: 06:00 AM – 12:30 PM & 03:30 PM – 08:00 PM\n• Best Days: Weekday mornings offer fastest darshan with minimal crowd queues",
+      "dressCode": "Strict traditional attire required for Meenakshi Amman Temple. Men: Dhoti/Veshti or trousers with shirt. Women: Saree, half saree, or churidar with dupatta. Shorts and lungis strictly prohibited.",
+      "tips": [
+        "Evening Darshan Recommended: Witness the Palliarai pooja (night procession) at Meenakshi Temple around 09:00 PM.",
+        "Mobile Phone Locker: Phones are not allowed inside Meenakshi Temple; safely store them in hotel or the official temple counter.",
+        "Senior Citizen Special Queue: Senior citizens can access prioritized queue lines at South Tower entrance.",
+        "Point-to-Point Rental: If you only need direct travel without the temple circuit, book our Chennai to Madurai Outstation Taxi.",
+        "Lock with ₹500 Advance: Book in advance to secure confirmed vehicle with zero cancellation penalty up to 6 hours prior."
+      ]
+    },
+    "faq": [
+      {
+        "q": "How many days are needed for Chennai to Madurai temple tour?",
+        "a": "A 2-Day (1 Night) tour is ideal for covering Meenakshi Amman Temple and Thiruparankundram. A 3-Day (2 Nights) tour is recommended for senior citizens or if you wish to include Alagar Kovil, Pazhamudircholai, and Srivilliputhur."
+      },
+      {
+        "q": "What temples are covered in this Madurai package?",
+        "a": "Our standard circuit covers Arulmigu Meenakshi Sundareswarar Temple, Thiruparankundram Murugan Temple, Alagar Kovil (Kallazhagar), and Pazhamudircholai Solaimalai Murugan Temple."
+      },
+      {
+        "q": "Which vehicle is best suited for senior citizens on the Madurai tour?",
+        "a": "For family pilgrimages with senior citizens, we recommend the Toyota Innova or Innova Crysta. They provide comfortable captain seating, easy low-step boarding, and superior suspension on the 460 km highway stretch."
+      },
+      {
+        "q": "Are darshan tickets included in the cab package?",
+        "a": "No, we provide dedicated private vehicle and chauffeur service. Special darshan tickets and prasadam tokens can be obtained directly at the official HR&CE temple counters."
+      },
+      {
+        "q": "How do I confirm the booking for the Madurai temple tour?",
+        "a": "A nominal advance of ₹500 confirms your booking and reserves your vehicle. The remaining balance can be settled with the driver during the trip via cash or UPI."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I would like to book the Chennai to Madurai Meenakshi Temple Tour Package. Please confirm availability.",
+    "metaTitle": "Chennai to Madurai Meenakshi Temple Tour Package | 2 & 3 Days Cabs",
+    "metaDescription": "Book Chennai to Madurai Meenakshi Temple tour package from ₹15,000 for 2 Days. AC Sedans, Innova Crysta & Tempo. Covers Meenakshi Amman, Thiruparankundram & Alagar Kovil.",
+    "keywords": "chennai to madurai temple tour package, chennai to madurai car package, madurai meenakshi amman temple taxi, chennai to madurai tempo traveller, madurai temple darshan package from chennai",
+    "serviceType": "TaxiService",
+    "origin": "Chennai",
+    "destination": "Madurai Meenakshi Amman Temple"
   }
 ]
