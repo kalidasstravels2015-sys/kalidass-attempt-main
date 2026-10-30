@@ -18,8 +18,8 @@ import {
 } from 'lucide-react';
 
 const title = "Chennai Airport Taxi & Cab Booking (MAA) | Fares from ₹650";
-const description = "Book 24/7 Chennai airport taxi & cab transfers from ₹650. Transparent fares, live flight tracking, verified chauffeurs & pay at drop. 5.0★ Google Maps rated.";
-const keywords = "chennai airport taxi, chennai airport taxi fare, chennai airport taxi booking, book airport transfer taxi in chennai, taxi in chennai airport, airport taxi chennai, chennai airport drop, chennai airport taxi rates, taxi from chennai airport, taxi service at chennai airport, chennai airport cab service, chennai airport cab, chennai airport taxi charges, airport drop chennai, chennai taxi to airport, chennai airport transfers, airport taxi in chennai, chennai airport pickup charges, chennai airport arrival pick up, chennai airport taxi service, cabs at chennai airport, taxi at chennai airport, chennai international airport prepaid taxi, prepaid taxi at chennai airport, chennai airport prepaid taxi, chennai prepaid taxi, chennai cab service airport, prepaid taxi chennai airport, chennai airport prepaid taxi booking, cab service in chennai airport, prepaid taxi in chennai airport, taxis in chennai airport, chennai international airport taxi service";
+const description = "Book 24/7 Chennai airport arrival taxi from ₹650. Transparent flat fares, live flight tracking, verified chauffeurs & pay after arrival. 5.0★ Google Maps rated.";
+const keywords = "chennai airport taxi, chennai airport taxi fare, chennai airport taxi booking, book airport transfer taxi in chennai, taxi in chennai airport, airport taxi chennai, chennai airport arrival taxi, chennai airport taxi rates, taxi from chennai airport, taxi service at chennai airport, chennai airport cab service, chennai airport cab, chennai airport taxi charges, airport arrival pickup chennai, chennai airport arrival cab, chennai airport transfers, airport taxi in chennai, chennai airport pickup charges, chennai airport arrival pick up, chennai airport taxi service, cabs at chennai airport, taxi at chennai airport, chennai international airport prepaid taxi, prepaid taxi at chennai airport, chennai airport prepaid taxi, chennai prepaid taxi, chennai cab service airport, prepaid taxi chennai airport, chennai airport prepaid taxi booking, cab service in chennai airport, prepaid taxi in chennai airport, taxis in chennai airport, chennai international airport taxi service";
 
 const breadcrumbItems = [
   { name: "Home", item: "/" },
@@ -40,7 +40,6 @@ const zoneTariffs = [
     distance: "151 km",
     eta: "2.5–3 hrs",
     popular: true,
-    whatsappDrop: "Hi Kalidass Travels, I need a Direct Highway Airport DROP from Pondicherry / Auroville to Chennai Airport (MAA). Date: , Pickup Time: , Address: ",
     whatsappPickup: "Hi Kalidass Travels, I need a Direct Highway Airport PICKUP from Chennai Airport (MAA) to Pondicherry / Auroville. Flight No: , Landing Date & Time: "
   },
   {
@@ -55,7 +54,6 @@ const zoneTariffs = [
     distance: "140 km",
     eta: "2.5–3 hrs",
     popular: true,
-    whatsappDrop: "Hi Kalidass Travels, I need a Direct Highway Airport DROP from CMC Vellore / VIT to Chennai Airport (MAA). Date: , Pickup Time: , Address: ",
     whatsappPickup: "Hi Kalidass Travels, I need a Direct Highway Airport PICKUP from Chennai Airport (MAA) to CMC Vellore / VIT. Flight No: , Landing Date & Time: "
   },
   {
@@ -70,7 +68,6 @@ const zoneTariffs = [
     distance: "135 km",
     eta: "3–3.5 hrs",
     popular: true,
-    whatsappDrop: "Hi Kalidass Travels, I need a Direct Highway Airport DROP from Tirupati to Chennai Airport (MAA). Date: , Pickup Time: , Address: ",
     whatsappPickup: "Hi Kalidass Travels, I need a Direct Highway Airport PICKUP from Chennai Airport (MAA) to Tirupati Balaji Temple. Flight No: , Landing Date & Time: "
   },
   {
@@ -85,8 +82,7 @@ const zoneTariffs = [
     distance: "55 km",
     eta: "50–60 mins",
     popular: true,
-    whatsappDrop: "Hi Kalidass Travels, I need a Direct Highway Airport DROP from Mahabalipuram to Chennai Airport (MAA). Date: , Pickup Time: , Address: ",
-    whatsappPickup: "Hi Kalidass Travels, I need an airport transfer between Chennai Airport (MAA) and Mahabalipuram / ECR Resorts. Flight No: , Date & Time: "
+    whatsappPickup: "Hi Kalidass Travels, I need an airport pickup from Chennai Airport (MAA) to Mahabalipuram / ECR Resorts. Flight No: , Date & Time: "
   },
   {
     id: "zone-sriperumbudur",
@@ -100,7 +96,6 @@ const zoneTariffs = [
     distance: "42 km",
     eta: "45–55 mins",
     popular: false,
-    whatsappDrop: "Hi Kalidass Travels, I need a Direct Airport DROP from Sriperumbudur / Oragadam to Chennai Airport (MAA). Date: , Pickup Time: , Address: ",
     whatsappPickup: "Hi Kalidass Travels, I need a Direct Airport PICKUP from Chennai Airport (MAA) to Sriperumbudur / Oragadam SIPCOT. Flight No: , Landing Date & Time: "
   },
   {
@@ -115,7 +110,6 @@ const zoneTariffs = [
     distance: "75 km",
     eta: "1.5–1.8 hrs",
     popular: false,
-    whatsappDrop: "Hi Kalidass Travels, I need a Direct Highway Airport DROP from Kanchipuram to Chennai Airport (MAA). Date: , Pickup Time: , Address: ",
     whatsappPickup: "Hi Kalidass Travels, I need a Direct Highway Airport PICKUP from Chennai Airport (MAA) to Kanchipuram Silk Stores. Flight No: , Landing Date & Time: "
   },
   {
@@ -130,7 +124,6 @@ const zoneTariffs = [
     distance: "195 km",
     eta: "3.5–4 hrs",
     popular: false,
-    whatsappDrop: "Hi Kalidass Travels, I need a Direct Highway Airport DROP from Tiruvannamalai to Chennai Airport (MAA). Date: , Pickup Time: , Address: ",
     whatsappPickup: "Hi Kalidass Travels, I need a Direct Highway Airport PICKUP from Chennai Airport (MAA) to Tiruvannamalai Ramana Ashram. Flight No: , Landing Date & Time: "
   }
 ];
@@ -150,12 +143,12 @@ const airportFleet = [
     luggage: "2 Suitcases + 2 Handbags",
     details: [
       "Dedicated 350L Airport Boot",
-      "Doorstep Pickup & Terminal Drop",
+      "MAA Arrival Pickup to Doorstep",
       "Zero Delay Waiting Charges"
     ],
     bookingText: `*Kalidass Travels - Chennai Airport Transfer*
 • Vehicle: Sedan (Dzire / Etios) - From ₹650
-• Transfer Type: [Airport Pickup / Airport Drop]
+• Transfer Type: Airport Arrival Pickup
 • Travel Date: 
 • Flight Time / Pickup Time: 
 • Chennai Address / Area: 
@@ -181,7 +174,7 @@ Please share availability and confirmed fare.`
     ],
     bookingText: `*Kalidass Travels - Chennai Airport Transfer*
 • Vehicle: SUV (Maruti Ertiga) - From ₹1,150
-• Transfer Type: [Airport Pickup / Airport Drop]
+• Transfer Type: Airport Arrival Pickup
 • Travel Date: 
 • Flight Time / Pickup Time: 
 • Chennai Address / Area: 
@@ -207,7 +200,7 @@ Please share availability and confirmed fare.`
     ],
     bookingText: `*Kalidass Travels - Chennai Airport Transfer*
 • Vehicle: Toyota Innova Crysta - From ₹1,500
-• Transfer Type: [Airport Pickup / Airport Drop]
+• Transfer Type: Airport Arrival Pickup
 • Travel Date: 
 • Flight Time / Pickup Time: 
 • Chennai Address / Area: 
@@ -233,7 +226,7 @@ Please share availability and confirmed fare.`
     ],
     bookingText: `*Kalidass Travels - Chennai Airport Transfer*
 • Vehicle: Tempo Traveller (12-14 Seats) - From ₹2,400
-• Transfer Type: [Airport Pickup / Airport Drop]
+• Transfer Type: Airport Arrival Pickup
 • Travel Date: 
 • Flight Time / Pickup Time: 
 • Chennai Address / Area: 
@@ -254,7 +247,7 @@ const faqs = [
   },
   {
     q: "Do you provide airport taxi drop services from Chennai city to the airport?",
-    a: "We specialize exclusively in Airport Arrival Pickups directly from Chennai International Airport (MAA Terminals 1, 2 & 4) to any destination across Chennai city, suburbs, or outstation corridors (Pondicherry, Vellore, Tirupati, etc.). Your chauffeur meets you with a personalized name placard at the arrival gate exit and transfers you comfortably to your destination."
+    a: "No, Kalidass Travels specializes 100% exclusively in Airport Arrival Pickups directly from Chennai International Airport (MAA Terminals 1, 2 & 4) to any destination across Chennai city, suburbs, or outstation corridors (Pondicherry, Vellore, Tirupati, etc.). We do not provide city-to-airport drops, ensuring all our vehicles and chauffeurs are dedicated to tracking incoming flights and providing guaranteed meet-and-greet pickup service."
   },
   {
     q: "Where does the chauffeur meet me for Chennai airport arrival pick up?",
@@ -298,7 +291,7 @@ const faqs = [
   },
   {
     q: "Are Chennai airport transfer rates fixed or subject to rain/traffic surge pricing?",
-    a: "Our flat zone rates are 100% fixed for both airport pickups and airport drops. Rain, morning peak office hours, or midnight arrivals never alter your flat agreed fare. Official airport parking receipts and highway toll tickets are billed at exact actual cost with zero hidden markups."
+    a: "Our flat zone rates are 100% fixed for Chennai airport arrival pickups. Rain, morning peak office hours, or midnight arrivals never alter your flat agreed fare. Official airport parking receipts and highway toll tickets are billed at exact actual cost with zero hidden markups."
   },
   {
     q: "Do you provide corporate GST invoices for company travel reimbursement?",
@@ -361,7 +354,7 @@ const taxiServiceSchema = {
     "offers": zoneTariffs.map((z) => ({
       "@type": "Offer",
       "name": `${z.zone} Airport Taxi (${z.destinations})`,
-      "description": `Doorstep airport drop or terminal arrival pickup between Chennai Airport (MAA) and ${z.destinations}. Fixed flat rate with zero surge charges.`,
+      "description": `Terminal arrival pickup from Chennai Airport (MAA) to ${z.destinations}. Fixed flat rate with zero surge charges.`,
       "priceCurrency": "INR",
       "price": z.sedan.replace(/[^0-9]/g, ''),
       "priceValidUntil": "2027-12-31",
@@ -382,7 +375,7 @@ const taxiServiceSchema = {
     "itemListElement": zoneTariffs.map((z) => ({
       "@type": "Offer",
       "name": `${z.zone} Airport Taxi (${z.destinations})`,
-      "description": `Doorstep airport drop or terminal arrival pickup between Chennai Airport (MAA) and ${z.destinations}`,
+      "description": `Terminal arrival pickup from Chennai Airport (MAA) to ${z.destinations}`,
       "priceCurrency": "INR",
       "price": z.sedan.replace(/[^0-9]/g, ''),
       "priceValidUntil": "2027-12-31",
@@ -400,7 +393,7 @@ const taxiServiceSchema = {
   "potentialAction": {
     "@type": "ReserveAction",
     "name": "Reserve Chennai Airport Taxi",
-    "description": "Reserve doorstep airport drop or arrival terminal pickup with ₹500 advance to confirm cab",
+    "description": "Reserve Chennai airport arrival terminal pickup with ₹500 advance to confirm cab",
     "target": {
       "@type": "EntryPoint",
       "urlTemplate": "https://kalidasstravels.in/services/chennai-airport-taxi/#booking-section",
@@ -552,15 +545,15 @@ const tripListSchema = {
               </div>
 
               <p data-speakable="true" class="text-sm text-m3-on-surface-variant leading-relaxed">
-                24/7 doorstep pickups and terminal drops across T1, T2 &amp; T4. Fixed zone fares: <strong>₹650 (Sedan)</strong> • <strong>₹1,150 (Ertiga)</strong> • <strong>₹1,500 (Innova Crysta)</strong>. Includes automated flight delay tracking, 60-min free arrival wait, and ₹500 advance to confirm.
+                24/7 arrival pickups across T1, T2 &amp; T4 directly to your doorstep. Fixed zone fares: <strong>₹650 (Sedan)</strong> • <strong>₹1,150 (Ertiga)</strong> • <strong>₹1,500 (Innova Crysta)</strong>. Includes automated flight delay tracking, 60-min free arrival wait, and ₹500 advance to confirm.
               </p>
             </div>
 
             <!-- Desktop Hero Visual Showcase Card -->
             <HeroVisualCard
               src="/images/services/airport-transfer.webp"
-              alt="Kalidass Travels Chennai Airport Taxi - Terminal pickup and drop at MAA"
-              badge="Official MAA Terminal Pickup & Drop"
+              alt="Kalidass Travels Chennai Airport Taxi - Arrival Terminal pickup at MAA"
+              badge="Official MAA Terminal Arrival Pickup"
               headline="Meet & Greet at T1, T2 & T4 • Live Flight Tracking"
               points={["Zero Surge Pricing", "60-Min Free Wait", "Fixed Zone Fares"]}
               objectPosition="center 40%"
@@ -722,7 +715,7 @@ const tripListSchema = {
                   seats={seats}
                   baggage={luggageShort}
                   priceLabel="Airport Flat"
-                  priceSubtext="Ramp Drop & Tolls Inc."
+                  priceSubtext="Airport Parking & Tolls Inc."
                   price={vehicle.price}
                   actionText={`Book ${vehicle.shortName}`}
                   actionClass="spec-book-vehicle-btn"
@@ -752,7 +745,7 @@ const tripListSchema = {
         </div>
 
         <p class="mt-4 text-xs text-m3-on-surface-variant text-center">
-          Fixed flat rates for terminal pickups and doorstep drops • Free flight delay waiting • Tolls &amp; airport parking at actual receipts • GST invoices available.
+          Fixed flat rates for terminal arrival pickups • Free flight delay waiting • Tolls &amp; airport parking at actual receipts • GST invoices available.
         </p>
 
         <!-- SEO/AEO: Visually-hidden fare summary for Google mobile-first index -->
@@ -1163,7 +1156,7 @@ const tripListSchema = {
       <section id="airport-faq" class="max-w-3xl mx-auto my-14 sm:my-20 scroll-mt-28">
         <span id="faqs" class="scroll-mt-28"></span>
         <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-m3-on-surface font-heading mb-6 text-center tracking-tight">
-          Airport Transfer FAQs (Pickups &amp; Drops)
+          Chennai Airport Arrival Pickup FAQs
         </h2>
         <FAQAccordion items={faqs} columns={1} name="airport-faq" />
       </section>
@@ -1171,17 +1164,17 @@ const tripListSchema = {
       <!-- 7. BOTTOM CONVERSION STRIP -->
       <section class="rounded-2xl bg-gradient-to-br from-[#0B57D0] via-[#0842A0] to-[#041E49] text-white p-8 sm:p-12 text-center shadow-md my-14 sm:my-20 border border-[#0B57D0]/20">
         <h2 class="text-xl sm:text-2xl md:text-3xl font-bold font-heading text-white mb-3 tracking-tight">
-          Flying into or out of Chennai International Airport (MAA)?
+          Flying into Chennai International Airport (MAA)?
         </h2>
         <p class="text-white/90 text-sm sm:text-base max-w-lg mx-auto mb-8 leading-relaxed">
-          Book your doorstep airport drop or arrival terminal pickup in seconds on WhatsApp.
+          Book your arrival terminal pickup to anywhere in Chennai or outstation in seconds on WhatsApp.
         </p>
         <div class="flex flex-wrap items-center justify-center gap-3.5">
           <WhatsAppButton 
             href="#booking-section"
             size="lg"
             variant="filled"
-            text="Calculate & Book Airport Transfer"
+            text="Calculate & Book Airport Pickup"
           />
           <a 
             href="tel:+918939539211"

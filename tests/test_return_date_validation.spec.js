@@ -11,9 +11,14 @@ test.describe('BookingEngine Return Date Strict Validation Audit', () => {
     await bookingSection.scrollIntoViewIfNeeded();
 
     const pickupInput = bookingSection.locator('#pickup-datetime-input');
+    const dropInput = bookingSection.locator('#drop-input');
     const returnInput = bookingSection.locator('#return-datetime-input');
     const viewFareBtn = bookingSection.locator('#view-fare-btn');
     const returnBadge = bookingSection.locator('label[for="return-datetime-input"] + span');
+
+    // Pre-fill destination so we specifically test return date validation
+    await dropInput.fill('Pondicherry');
+    await page.waitForTimeout(300);
 
     // 1. Initial State: Button is active (NOT greyed out), return date is empty with 'Required' badge
     await expect(returnInput).toHaveValue('');
@@ -71,8 +76,12 @@ test.describe('BookingEngine Return Date Strict Validation Audit', () => {
     await bookingSection.scrollIntoViewIfNeeded();
 
     const pickupInput = bookingSection.locator('#pickup-datetime-input');
+    const dropInput = bookingSection.locator('#drop-input');
     const returnInput = bookingSection.locator('#return-datetime-input');
     const returnBadge = bookingSection.locator('label[for="return-datetime-input"] + span');
+
+    await dropInput.fill('Pondicherry');
+    await page.waitForTimeout(300);
 
     const pickupVal = await pickupInput.inputValue();
     const pickupDate = new Date(pickupVal);
@@ -88,6 +97,40 @@ test.describe('BookingEngine Return Date Strict Validation Audit', () => {
     await expect(viewFareBtn).toBeEnabled();
     await viewFareBtn.click();
     await expect(page.locator('#fare-result-summary-card')).toBeVisible();
+  });
+
+  test('Outstation: Selecting a return date earlier than pickup date is strictly prevented and snaps to valid minimum', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/', { waitUntil: 'networkidle' });
+
+    const bookingSection = page.locator('#fare-calculator[data-hydrated="true"]');
+    await bookingSection.waitFor({ state: 'visible', timeout: 10000 });
+    await bookingSection.scrollIntoViewIfNeeded();
+
+    const pickupInput = bookingSection.locator('#pickup-datetime-input');
+    const dropInput = bookingSection.locator('#drop-input');
+    const returnInput = bookingSection.locator('#return-datetime-input');
+
+    await dropInput.fill('Pondicherry');
+    await page.waitForTimeout(300);
+
+    const pickupVal = await pickupInput.inputValue();
+    const pickupDate = new Date(pickupVal);
+    // Try to force a past date: 1 day BEFORE pickup
+    const pastDate = new Date(pickupDate.getTime() - 24 * 60 * 60 * 1000);
+    const pastIso = `${pastDate.getFullYear()}-${String(pastDate.getMonth() + 1).padStart(2, '0')}-${String(pastDate.getDate()).padStart(2, '0')}T${String(pastDate.getHours()).padStart(2, '0')}:${String(pastDate.getMinutes()).padStart(2, '0')}`;
+
+    await returnInput.fill(pastIso);
+    await page.waitForTimeout(300);
+
+    // Verify it automatically adjusted and did NOT keep the past date
+    const returnVal = await returnInput.inputValue();
+    expect(new Date(returnVal).getTime()).toBeGreaterThan(pickupDate.getTime());
+
+    // Validation alert informs the user
+    const alert = bookingSection.locator('#booking-validation-alert');
+    await expect(alert).toBeVisible();
+    await expect(alert).toContainText(/Return date & time must be after pickup|Automatically adjusted/i);
   });
 
 });

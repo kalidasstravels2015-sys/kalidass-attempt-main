@@ -194,4 +194,42 @@ All pages providing structured data must adhere to the site's unified `@graph` a
 - **Mandatory Lucide React Import**: Always import vector SVG components from `lucide-react` (e.g. `import { Car, MapPin, Camera, FileText, Send, CheckCircle2 } from "lucide-react"`).
 - **Zero Font Dependencies**: Lucide React components are pure vector SVGs that render instantly with 100% reliability across all browsers and viewports.
 
+## 13. Universal UX & Anti-Clutter Invariants Across All Booking Engines
+To prevent visual clutter, redundant actions, and dishonest UI patterns, every booking engine, fare calculator, and quotation interface must strictly follow these rules:
+
+1. **Zero Fake Trust Badges (Honesty Invariant)**:
+   - NEVER place badges such as "Live Radar", "Live Satellite Tracking", or "Flight Tracker" next to flight or trip inputs unless real-time flight telemetry backend APIs are genuinely active.
+   - Simply label the field `Flight No. (Optional)` with placeholder `e.g. 6E-241 @ 14:30`.
+2. **Clean CTA Typography (Zero Glyph / Icon Clutter)**:
+   - Primary calculation buttons (e.g., `View Instant Fare`) must never contain decorative cash/currency bill icons (`[$]`, `Receipt`).
+   - Use clean, confident typography: `View Instant Fare →`.
+3. **Structured Route Summary Hierarchy**:
+   - The post-calculation summary bar must cleanly separate the journey:
+     - `[Icon] Pickup Location ➔ Drop Destination`
+     - Subline: `Date & Time • Trip Type`
+   - NEVER embed seating capacity (e.g., "• 4 Seats") in the top route header before a vehicle is chosen; seating capacity belongs strictly to vehicle selection.
+   - Clean, compact `[ ✏ Edit ]` pill button at top right.
+4. **Mandatory Passenger & Bag Capacity on Vehicle Cards**:
+   - Everyday customers do not intuitively know vehicle seating capacities from brand names alone (e.g., Sedan vs. Ertiga vs. Innova vs. Crysta).
+   - Every vehicle card MUST prominently display:
+     - **Sedan:** `4 Seats • 2 Bags`
+     - **Ertiga:** `6 Seats • 3 Bags`
+     - **Innova:** `7 Seats • 4 Bags`
+     - **Innova Crysta:** `7 Seats • 5 Bags`
+     - **Tempo Traveller:** `12 / 17 Seats`
+   - Vehicle selector must be thumb-friendly with smooth horizontal touch scrolling (`overflow-x-auto` with touch snap).
+5. **Zero Duplicate Contact CTAs (Single Call Rule)**:
+   - Prohibit repeating call buttons and phone numbers within the same viewport (e.g., top header Call button + bottom "Call Us" button + bottom "24/7 Helpline: +91...").
+   - WhatsApp is the primary conversion channel (`Book [Vehicle] on WhatsApp`).
+   - Provide exactly ONE secondary phone touchpoint (either integrate the number into the Call button or display a clean text action), eliminating redundant identical CTAs.
+6. **Scoped Layout Standard (Airport & Local Rentals vs. Outstation)**:
+   - **Airport Taxi & Local Hourly Rentals**: Point-to-point and fixed packages have simple single-tier pricing. Deployed with the Clean Modern Layout: spacious showcase vehicle cards with seats/bags, compact trust strip (tolls/parking at actuals, advance policy), and dynamic 1-tap WhatsApp CTA with vehicle name and price (`Book Sedan on WhatsApp — ₹650`). NEVER render a redundant duplicate bill receipt container or nested billing rules box repeating the same price.
+   - **Outstation Cabs (Multi-Day / Round-Trip / Cross-Border)**: Multi-day and interstate trips involve complex per-km calculations, driver daily batas, and interstate permits. Strictly preserve the Classic Outstation Layout with compact vehicle switcher pills (`min-h-[48px]`), full itemized Bill Receipt table, Payment & Billing Rules box, and action CTAs. NEVER deploy the Clean Layout's large showcase cards or direct vehicle card pricing to Outstation trips.
+7. **Strict Destination Validation & Zero-Fabrication Invariant (No Rates Without Destination)**:
+   - Fares MUST NOT be computed or displayed without an explicitly provided destination/drop location.
+   - Clicking `View Instant Fare` on an empty destination input MUST halt execution, display an unambiguous warning (`Please enter your destination / hotel / area in Chennai`), apply an error ring to the destination input, and scroll/focus to the field.
+   - Never substitute silent default locations (such as 'Chennai City Area') or fabricate a fake default distance/price (e.g., ₹650) when the user hasn't specified where they want to go.
+
+
+
 

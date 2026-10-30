@@ -84,6 +84,55 @@ const ROUTE_REALISTIC_HOURS = {
   'munnar': 48
 };
 
+// Local Chennai localities to prevent mistaken outstation bookings inside Chennai
+const CHENNAI_LOCAL_KEYWORDS = [
+  'chennai', 'pallavaram', 'tambaram', 'chromepet', 'guindy', 'velachery', 
+  't. nagar', 't nagar', 'anna nagar', 'adyar', 'ambattur', 'avadi', 
+  'porur', 'koyambedu', 'central', 'egmore', 'madhavaram', 'meenambakkam', 
+  'sholinganallur', 'thoraipakkam', 'perungudi', 'alandur', 'poonamallee',
+  'besant nagar', 'mylapore', 'nandanam', 'nungambakkam', 'vadapalani',
+  'kodambakkam', 'saidapet', 'triplicane', 'royapettah', 'kilpauk', 
+  'choolaimedu', 'ashok nagar', 'kk nagar', 'k.k. nagar', 'valasaravakkam',
+  'manapakkam', 'virugambakkam', 'mugalivakkam', 'ramapuram', 'madipakkam',
+  'medavakkam', 'nanmangalam', 'keelkattalai', 'kovilambakkam', 'perungalathur',
+  'vandalur', 'guduvanchery', 'urapakkam', 'red hills', 'redhills', 'puzhal', 
+  'kolathur', 'villivakkam', 'ayanavaram', 'perambur', 'vyasarpadi', 
+  'tondiarpet', 'washermanpet', 'royapuram', 'george town', 'alwarpet',
+  'san thome', 'santhome', 'raja annamalai puram', 'ra puram', 'teynampet',
+  'gopalapuram', 'chetpet', 'chetput', 'aminjikarai', 'shenoy nagar',
+  'arumbakkam', 'mogappair', 'nolambur', 'thiruvanmiyur', 'kottivakkam',
+  'palavakkam', 'neelankarai', 'injambakkam', 'chennai airport', 'maa airport'
+];
+
+function getNowIsoString() {
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  const hh = String(now.getHours()).padStart(2, '0');
+  const min = String(now.getMinutes()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+}
+
+function formatDateTimeDisplay(isoStr) {
+  if (!isoStr) return '';
+  try {
+    const d = new Date(isoStr);
+    if (isNaN(d.getTime())) return isoStr;
+    const day = String(d.getDate()).padStart(2, '0');
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const month = monthNames[d.getMonth()];
+    const year = d.getFullYear();
+    const hours = d.getHours();
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const hr12 = hours % 12 || 12;
+    return `${day} ${month} ${year}, ${String(hr12).padStart(2, '0')}:${minutes} ${ampm}`;
+  } catch (_) {
+    return isoStr;
+  }
+}
+
 function getMinReturnDateTime(pickupIso, destKeyOrName, roundTripKm) {
   if (!pickupIso) return '';
   const d = new Date(pickupIso);
@@ -135,7 +184,10 @@ const VEHICLE_SWITCHER_LIST = [
     name: 'Sedan',
     fullName: 'Swift Dzire / Toyota Etios',
     seats: 4,
+    bags: 2,
     paxLabel: '4 Seats',
+    capacityLabel: '4 Seats + 2 Bags',
+    sizeTag: 'Compact 4S',
     image: '/images/fleet/swift-dzire.webp',
     category: 'sedan',
     airportMultiplier: 1.0
@@ -145,7 +197,10 @@ const VEHICLE_SWITCHER_LIST = [
     name: 'Ertiga',
     fullName: 'Maruti Ertiga / XL6',
     seats: 6,
+    bags: 3,
     paxLabel: '6 Seats',
+    capacityLabel: '6 Seats + 3 Bags',
+    sizeTag: 'Mid SUV 6S',
     image: '/images/fleet/maruti-ertiga.webp',
     category: 'suv',
     airportMultiplier: 1.5
@@ -155,7 +210,10 @@ const VEHICLE_SWITCHER_LIST = [
     name: 'Innova',
     fullName: 'Toyota Innova (7+1)',
     seats: 7,
-    paxLabel: '6-7 Seats',
+    bags: 4,
+    paxLabel: '7 Seats',
+    capacityLabel: '7 Seats + 4 Bags',
+    sizeTag: 'Large SUV 7S',
     image: '/images/fleet/suv.webp',
     category: 'muv',
     airportMultiplier: 1.8
@@ -165,7 +223,10 @@ const VEHICLE_SWITCHER_LIST = [
     name: 'Crysta',
     fullName: 'Toyota Innova Crysta',
     seats: 7,
+    bags: 5,
     paxLabel: '7 Seats',
+    capacityLabel: '7 Seats + 5 Bags',
+    sizeTag: 'Premium SUV 7S',
     image: '/images/fleet/suv.webp',
     category: 'muv',
     airportMultiplier: 2.0
@@ -175,7 +236,10 @@ const VEHICLE_SWITCHER_LIST = [
     name: 'Tempo',
     fullName: 'Force Tempo Traveller (12+1)',
     seats: 12,
+    bags: 10,
     paxLabel: '12 Seats',
+    capacityLabel: '12 Seats + 10 Bags',
+    sizeTag: 'Group Van 12S',
     image: '/images/fleet/tempo-12.webp',
     category: 'tempo',
     airportMultiplier: 2.8,
@@ -187,7 +251,10 @@ const VEHICLE_SWITCHER_LIST = [
     name: 'Urbania',
     fullName: 'Force Urbania VIP Luxury Van (12+1)',
     seats: 12,
+    bags: 12,
     paxLabel: '12 Seats VIP',
+    capacityLabel: '12 Seats + 12 Bags',
+    sizeTag: 'Luxury Coach 12S',
     image: '/images/fleet/force-urbania.webp',
     category: 'coach',
     airportMultiplier: 4.5,
@@ -204,7 +271,9 @@ const TEMPO_SWITCHER_LIST = [
     fullName: '12-Seater Luxury Force Tempo (12+1)',
     seats: 12,
     paxLabel: '12 Seats',
+    capacityLabel: '12 Seats',
     image: '/images/fleet/tempo-12.webp',
+    imgClass: 'w-28 sm:w-34 h-15 sm:h-18',
     category: 'tempo',
     airportMultiplier: 2.8,
     airportMinFare: 2400
@@ -216,7 +285,9 @@ const TEMPO_SWITCHER_LIST = [
     fullName: 'Force Urbania VIP Luxury Van (12+1)',
     seats: 12,
     paxLabel: '12 Seats VIP',
+    capacityLabel: '12 Seats VIP',
     image: '/images/fleet/force-urbania.webp',
+    imgClass: 'w-28 sm:w-34 h-15 sm:h-18',
     category: 'coach',
     airportMultiplier: 4.5,
     airportMinFare: 4500
@@ -228,7 +299,9 @@ const TEMPO_SWITCHER_LIST = [
     fullName: '14-Seater Executive Force Tempo (14+1)',
     seats: 14,
     paxLabel: '14 Seats',
+    capacityLabel: '14 Seats',
     image: '/images/fleet/tempo-12.webp',
+    imgClass: 'w-28 sm:w-34 h-15 sm:h-18',
     category: 'tempo',
     airportMultiplier: 3.0,
     airportMinFare: 2600
@@ -240,7 +313,9 @@ const TEMPO_SWITCHER_LIST = [
     fullName: '17-Seater Executive Force Tempo (17+1)',
     seats: 17,
     paxLabel: '17 Seats',
+    capacityLabel: '17 Seats',
     image: '/images/fleet/tempo-17.webp',
+    imgClass: 'w-28 sm:w-34 h-15 sm:h-18',
     category: 'coach',
     airportMultiplier: 3.2,
     airportMinFare: 2800
@@ -252,7 +327,9 @@ const TEMPO_SWITCHER_LIST = [
     fullName: '20-Seater Grand Force Tempo (20+1)',
     seats: 20,
     paxLabel: '20 Seats',
+    capacityLabel: '20 Seats',
     image: '/images/fleet/tempo-17.webp',
+    imgClass: 'w-28 sm:w-34 h-15 sm:h-18',
     category: 'coach',
     airportMultiplier: 3.6,
     airportMinFare: 3200
@@ -264,7 +341,9 @@ const TEMPO_SWITCHER_LIST = [
     fullName: '26-Seater Force Mini Bus Coach (26+1)',
     seats: 26,
     paxLabel: '26 Seats',
+    capacityLabel: '26 Seats',
     image: '/images/fleet/tempo.webp',
+    imgClass: 'w-30 sm:w-36 h-16 sm:h-19',
     category: 'coach',
     airportMultiplier: 4.2,
     airportMinFare: 4000
@@ -391,6 +470,8 @@ export default function BookingEngine({
   const [outstationDays, setOutstationDays] = useState(defaultDaysForDest);
 
   // Pickup & Return Date Times
+  const minPickupDateTime = useMemo(() => getNowIsoString(), []);
+
   const [pickupDateTime, setPickupDateTime] = useState(() => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -407,7 +488,7 @@ export default function BookingEngine({
 
   // 5. Form State: Airport
   const [airportDirection, setAirportDirection] = useState('pickup'); // 'pickup' | 'drop'
-  const [airportDropAddress, setAirportDropAddress] = useState('');
+  const [airportDropAddress, setAirportDropAddress] = useState(initialDrop || prefill.destination || '');
   const [flightNumber, setFlightNumber] = useState('');
 
   // 6. Selected Vehicle
@@ -476,51 +557,69 @@ export default function BookingEngine({
   }, [findVehicleMeta]);
 
   // Google Places Autocomplete
+  const containerRef = useRef(null);
   const pickupInputRef = useRef(null);
   const dropInputRef = useRef(null);
+  const localPickupInputRef = useRef(null);
+  const airportLocationInputRef = useRef(null);
   const returnInputRef = useRef(null);
   const vehicleScrollerRef = useRef(null);
   const [validationError, setValidationError] = useState('');
 
+  const initAutocomplete = useCallback(() => {
+    if (!window.google?.maps?.places?.Autocomplete) return;
+
+    const options = {
+      componentRestrictions: { country: 'in' },
+      fields: ['name', 'formatted_address', 'geometry'],
+    };
+
+    const attach = (inputRef, onSelect) => {
+      const el = inputRef?.current;
+      if (!el || el.dataset.googleAttached === 'true') return;
+      try {
+        const ac = new window.google.maps.places.Autocomplete(el, options);
+        ac.addListener('place_changed', () => {
+          const place = ac.getPlace();
+          const addr = place?.formatted_address || place?.name;
+          if (addr) onSelect(addr);
+        });
+        el.dataset.googleAttached = 'true';
+      } catch (_) {}
+    };
+
+    attach(pickupInputRef, (addr) => {
+      setOutstationPickup(addr);
+      setValidationError('');
+    });
+    attach(dropInputRef, (addr) => {
+      setOutstationDrop(addr);
+      setValidationError('');
+    });
+    attach(localPickupInputRef, (addr) => {
+      setOutstationPickup(addr);
+      setValidationError('');
+    });
+    attach(airportLocationInputRef, (addr) => {
+      setAirportDropAddress(addr);
+      setValidationError('');
+    });
+  }, []);
+
+  const handleInputFocus = useCallback(() => {
+    if (window.google?.maps?.places?.Autocomplete) {
+      initAutocomplete();
+    } else {
+      loadGoogleMaps().then(() => initAutocomplete()).catch(() => {});
+    }
+  }, [initAutocomplete]);
+
   useEffect(() => {
     if (viewMode !== 'form') return;
-    let checkTimer = null;
-    const initAutocomplete = () => {
-      if (!window.google?.maps?.places) return;
-
-      const options = {
-        componentRestrictions: { country: 'in' },
-        fields: ['name', 'formatted_address', 'geometry'],
-      };
-
-      if (pickupInputRef.current && !pickupInputRef.current.dataset.googleAttached) {
-        try {
-          const ac = new window.google.maps.places.Autocomplete(pickupInputRef.current, options);
-          ac.addListener('place_changed', () => {
-            const place = ac.getPlace();
-            const addr = place?.formatted_address || place?.name;
-            if (addr) setOutstationPickup(addr);
-          });
-          pickupInputRef.current.dataset.googleAttached = 'true';
-        } catch (_) {}
-      }
-
-      if (dropInputRef.current && !dropInputRef.current.dataset.googleAttached) {
-        try {
-          const ac = new window.google.maps.places.Autocomplete(dropInputRef.current, options);
-          ac.addListener('place_changed', () => {
-            const place = ac.getPlace();
-            const addr = place?.formatted_address || place?.name;
-            if (addr) setOutstationDrop(addr);
-          });
-          dropInputRef.current.dataset.googleAttached = 'true';
-        } catch (_) {}
-      }
-    };
 
     let mapsLoading = false;
     const ensureGoogleMaps = () => {
-      if (window.google?.maps?.places) {
+      if (window.google?.maps?.places?.Autocomplete) {
         initAutocomplete();
         return;
       }
@@ -528,15 +627,16 @@ export default function BookingEngine({
       mapsLoading = true;
       loadGoogleMaps()
         .then(() => initAutocomplete())
-        .catch(() => {});
+        .catch(() => {})
+        .finally(() => { mapsLoading = false; });
     };
 
-    if (window.google?.maps?.places) {
+    if (window.google?.maps?.places?.Autocomplete) {
       initAutocomplete();
     } else {
       window.addEventListener('google-maps-loaded', initAutocomplete);
 
-      const container = document.getElementById('fare-calculator') || document.getElementById('booking-panel');
+      const container = containerRef.current || document.getElementById('fare-calculator') || document.getElementById('booking-panel');
       const triggers = ['focusin', 'pointerdown', 'touchstart'];
       const onInteraction = () => {
         triggers.forEach((evt) => container?.removeEventListener(evt, onInteraction));
@@ -547,11 +647,21 @@ export default function BookingEngine({
       }
     }
 
+    const checkTimer = setInterval(() => {
+      if (window.google?.maps?.places?.Autocomplete) {
+        initAutocomplete();
+      }
+    }, 250);
+    const stopTimer = setTimeout(() => {
+      clearInterval(checkTimer);
+    }, 5000);
+
     return () => {
       window.removeEventListener('google-maps-loaded', initAutocomplete);
-      if (checkTimer) clearInterval(checkTimer);
+      clearInterval(checkTimer);
+      clearTimeout(stopTimer);
     };
-  }, [viewMode, activeTab]);
+  }, [viewMode, activeTab, airportDirection, initAutocomplete]);
 
   // Quote Reference ID (Sequential fallback)
   const [quoteRefId, setQuoteRefId] = useState('#QT-101');
@@ -604,6 +714,35 @@ export default function BookingEngine({
     };
   }, [outstationDrop, outstationDays]);
 
+  // Check if drop location entered for outstation is actually within Chennai
+  const isDropInChennai = useMemo(() => {
+    if (!outstationDrop || activeTab !== 'outstation') return false;
+    const raw = outstationDrop.toLowerCase().trim();
+    for (const key of Object.keys(KNOWN_DESTINATIONS)) {
+      if (raw.includes(key)) return false;
+    }
+    const outstationCities = [
+      'pondicherry', 'puducherry', 'tirupati', 'bangalore', 'bengaluru', 
+      'mysore', 'mysuru', 'coimbatore', 'madurai', 'trichy', 'tiruchirappalli', 
+      'salem', 'ooty', 'kodaikanal', 'munnar', 'vellore', 'kanchipuram', 
+      'mahabalipuram', 'mamallapuram', 'thiruvannamalai', 'tiruvannamalai', 
+      'chidambaram', 'kumbakonam', 'rameswaram', 'sabarimala', 'tiruchendur',
+      'kanyakumari', 'thanjavur', 'tanjore', 'yelagiri', 'yercaud', 'hyderabad',
+      'kochi', 'cochin', 'wayanad', 'alleppey', 'alappuzha', 'thekkady',
+      'dindigul', 'tirunelveli', 'thoothukudi', 'tuticorin', 'nagercoil',
+      'hosur', 'dharmapuri', 'krishnagiri', 'erode', 'tirupur', 'pollachi',
+      'karur', 'namakkal', 'pudukkottai', 'karaikudi', 'sivakasi', 'virudhunagar'
+    ];
+    if (outstationCities.some(city => raw.includes(city))) return false;
+    return CHENNAI_LOCAL_KEYWORDS.some(loc => raw.includes(loc));
+  }, [outstationDrop, activeTab]);
+
+  // Destination select / change handler
+  const handleDestinationSelect = (destination) => {
+    setOutstationDrop(destination);
+    setValidationError('');
+  };
+
   // Minimum realistic return date/time for outstation
   const minReturnDateTime = useMemo(() => {
     if (!pickupDateTime) return '';
@@ -618,30 +757,84 @@ export default function BookingEngine({
   const handlePickupChange = (val) => {
     setPickupDateTime(val);
     setValidationError('');
-    if (val && returnDateTime) {
+    if (!val) return;
+
+    const pDate = new Date(val);
+    const now = new Date();
+    if (pDate.getTime() < now.getTime() - 5 * 60 * 1000) {
+      setValidationError('Pickup date & time cannot be in the past');
+      return;
+    }
+
+    if (returnDateTime) {
+      const rDate = new Date(returnDateTime);
       const minReturn = getMinReturnDateTime(val, resolvedDestination.name || outstationDrop, resolvedDestination.roundTripKm);
-      if (returnDateTime < minReturn) {
-        setReturnDateTime('');
-        setOutstationDays(resolvedDestination.defaultDays || 1);
+      if (rDate <= pDate || (minReturn && returnDateTime < minReturn)) {
+        // Industry Standard: Auto-advance return date to earliest feasible return
+        const safeReturn = minReturn || val;
+        setReturnDateTime(safeReturn);
+        const rNew = new Date(safeReturn);
+        const pDay = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate());
+        const rDay = new Date(rNew.getFullYear(), rNew.getMonth(), rNew.getDate());
+        const calendarDays = Math.max(1, Math.round((rDay - pDay) / (1000 * 60 * 60 * 24)) + 1);
+        setOutstationDays(calendarDays);
       } else {
-        const pDate = new Date(val);
-        const rDate = new Date(returnDateTime);
-        const diffDays = Math.max(1, Math.ceil((rDate - pDate) / (1000 * 60 * 60 * 24)));
-        setOutstationDays(diffDays);
+        const pDay = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate());
+        const rDay = new Date(rDate.getFullYear(), rDate.getMonth(), rDate.getDate());
+        const calendarDays = Math.max(1, Math.round((rDay - pDay) / (1000 * 60 * 60 * 24)) + 1);
+        setOutstationDays(calendarDays);
       }
     }
   };
 
   // Handle return change and calculate duration
   const handleReturnChange = (val) => {
-    setReturnDateTime(val);
-    setValidationError('');
-    if (val && pickupDateTime) {
+    if (!val) {
+      setReturnDateTime('');
+      setValidationError('');
+      setOutstationDays(resolvedDestination.defaultDays || 1);
+      return;
+    }
+
+    if (pickupDateTime) {
       const pDate = new Date(pickupDateTime);
       const rDate = new Date(val);
-      const diffDays = Math.max(1, Math.ceil((rDate - pDate) / (1000 * 60 * 60 * 24)));
-      setOutstationDays(diffDays);
+
+      if (rDate <= pDate) {
+        // Industry Standard: Hard constraint - Return Date CANNOT be before or same as pickup date.
+        // Auto-snap to minimum realistic return date and inform user
+        const safeReturn = minReturnDateTime || getMinReturnDateTime(pickupDateTime, resolvedDestination.name || outstationDrop, resolvedDestination.roundTripKm);
+        setReturnDateTime(safeReturn);
+        setValidationError(`Return date & time must be after pickup. Automatically adjusted to earliest return: ${formatDateTimeDisplay(safeReturn)}`);
+        
+        const rNew = new Date(safeReturn);
+        const pDay = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate());
+        const rDay = new Date(rNew.getFullYear(), rNew.getMonth(), rNew.getDate());
+        const calendarDays = Math.max(1, Math.round((rDay - pDay) / (1000 * 60 * 60 * 24)) + 1);
+        setOutstationDays(calendarDays);
+        return;
+      }
+
+      const minReturn = getMinReturnDateTime(pickupDateTime, resolvedDestination.name || outstationDrop, resolvedDestination.roundTripKm);
+      if (minReturn && val < minReturn) {
+        setReturnDateTime(minReturn);
+        setValidationError(`Minimum realistic round-trip duration for this route requires returning after ${formatDateTimeDisplay(minReturn)}. Automatically adjusted.`);
+        const rNew = new Date(minReturn);
+        const pDay = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate());
+        const rDay = new Date(rNew.getFullYear(), rNew.getMonth(), rNew.getDate());
+        const calendarDays = Math.max(1, Math.round((rDay - pDay) / (1000 * 60 * 60 * 24)) + 1);
+        setOutstationDays(calendarDays);
+        return;
+      }
+
+      setReturnDateTime(val);
+      setValidationError('');
+      const pDay = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate());
+      const rDay = new Date(rDate.getFullYear(), rDate.getMonth(), rDate.getDate());
+      const calendarDays = Math.max(1, Math.round((rDay - pDay) / (1000 * 60 * 60 * 24)) + 1);
+      setOutstationDays(calendarDays);
     } else {
+      setReturnDateTime(val);
       setOutstationDays(resolvedDestination.defaultDays || 1);
     }
   };
@@ -687,6 +880,9 @@ export default function BookingEngine({
         const gstAmount = needGst ? Math.round(taxableAmount * 0.05) : 0;
         const totalFare = baseSubtotal + gstAmount;
 
+        const originName = outstationPickup.split(',')[0].trim();
+        const destName = resolvedDestination.name || (outstationDrop ? outstationDrop.split(',')[0].trim() : 'Outstation');
+
         return {
           billedKm,
           ratePerKm,
@@ -701,9 +897,12 @@ export default function BookingEngine({
           gstAmount,
           totalFare,
           advance,
-          routeSummary: `${outstationPickup.split(',')[0]} ⇄ ${resolvedDestination.name || outstationDrop || 'Outstation'}`,
+          originName,
+          destName,
+          tripTypeTag: `Round Trip (${outstationDays} Day${outstationDays > 1 ? 's' : ''})`,
+          routeSummary: `${originName} ⇄ ${destName}`,
           tripSubtext: `Includes ${billedKm} km (${outstationDays} Day${outstationDays > 1 ? 's' : ''}) • Extra: ₹${ratePerKm}/km`,
-          metaDateStr: `${formattedPickupDate} • Round Trip • ~${billedKm} km • ${vehicleMeta.seats} Seats`
+          metaDateStr: `${formattedPickupDate} • Round Trip • ~${billedKm} km`
         };
       } else {
         // One-Way Drop
@@ -721,6 +920,9 @@ export default function BookingEngine({
         const gstAmount = needGst ? Math.round(taxableAmount * 0.05) : 0;
         const totalFare = baseSubtotal + gstAmount;
 
+        const originName = outstationPickup.split(',')[0].trim();
+        const destName = resolvedDestination.name || (outstationDrop ? outstationDrop.split(',')[0].trim() : 'Outstation');
+
         return {
           billedKm,
           ratePerKm,
@@ -735,9 +937,12 @@ export default function BookingEngine({
           gstAmount,
           totalFare,
           advance,
-          routeSummary: `${outstationPickup.split(',')[0]} ➔ ${resolvedDestination.name || outstationDrop || 'Outstation'}`,
+          originName,
+          destName,
+          tripTypeTag: 'One-Way Drop',
+          routeSummary: `${originName} ➔ ${destName}`,
           tripSubtext: `Includes ${billedKm} km One-Way Drop • Extra: ₹${ratePerKm}/km`,
-          metaDateStr: `${formattedPickupDate} • One-Way Drop • ~${billedKm} km • ${vehicleMeta.seats} Seats`
+          metaDateStr: `${formattedPickupDate} • One-Way Drop • ~${billedKm} km`
         };
       }
     } else if (activeTab === 'local') {
@@ -765,9 +970,12 @@ export default function BookingEngine({
         gstAmount,
         totalFare,
         advance,
+        originName: 'Chennai City',
+        destName: pkg.label,
+        tripTypeTag: `Local Rental (${pkg.hours}h / ${pkg.km}km)`,
         routeSummary: `Chennai Local (${pkg.label})`,
         tripSubtext: `Includes ${pkg.hours} Hrs / ${pkg.km} KM • Extra: ₹${extraKmRate}/km, ₹${extraHrRate}/hr`,
-        metaDateStr: `${formattedPickupDate} • City Rental • ${pkg.label} • ${vehicleMeta.seats} Seats`
+        metaDateStr: `${formattedPickupDate} • City Rental • ${pkg.label}`
       };
     } else {
       // Airport Tab
@@ -789,6 +997,10 @@ export default function BookingEngine({
         const gstAmount = needGst ? Math.round(taxableAmount * 0.05) : 0;
         const totalFare = baseSubtotal + gstAmount;
 
+        const isAirportPickup = airportDirection === 'from_airport';
+        const originName = isAirportPickup ? 'Chennai Airport (MAA)' : (dest.name || 'City');
+        const destName = isAirportPickup ? (dest.name || 'Outstation') : 'Chennai Airport (MAA)';
+
         return {
           billedKm,
           ratePerKm,
@@ -803,13 +1015,29 @@ export default function BookingEngine({
           gstAmount,
           totalFare,
           advance,
-          routeSummary: `Chennai Airport (MAA) ➔ ${dest.name}`,
-          tripSubtext: `Includes ${billedKm} km Airport Drop • Extra: ₹${ratePerKm}/km`,
-          metaDateStr: `${formattedPickupDate} • Airport Drop • ~${billedKm} km • ${vehicleMeta.seats} Seats`
+          originName,
+          destName,
+          tripTypeTag: isAirportPickup ? 'Airport Pickup' : 'Airport Drop',
+          routeSummary: `${originName} ➔ ${destName}`,
+          tripSubtext: `Includes ${billedKm} km Airport Transfer • Extra: ₹${ratePerKm}/km`,
+          metaDateStr: `${formattedPickupDate} • ${isAirportPickup ? 'Airport Pickup' : 'Airport Drop'} • ~${billedKm} km`
         };
       } else {
-        // City Airport Flat Zone Transfer
-        const zone = AIRPORT_ZONES[0];
+        // City Airport Flat Zone Transfer (Auto-resolve zone from address)
+        let matchedZone = AIRPORT_ZONES[0];
+        const destLower = rawDest;
+        if (destLower.includes('t. nagar') || destLower.includes('t nagar') || destLower.includes('anna nagar') || destLower.includes('egmore') || destLower.includes('adyar') || destLower.includes('mylapore') || destLower.includes('nungambakkam') || destLower.includes('central') || destLower.includes('triplicane') || destLower.includes('royapettah') || destLower.includes('kodambakkam') || destLower.includes('besant nagar')) {
+          matchedZone = AIRPORT_ZONES.find(z => z.key === 'central') || AIRPORT_ZONES[1];
+        } else if (destLower.includes('ambattur') || destLower.includes('avadi') || destLower.includes('madhavaram') || destLower.includes('red hills') || destLower.includes('kolathur') || destLower.includes('porur') || destLower.includes('poonamallee')) {
+          matchedZone = AIRPORT_ZONES.find(z => z.key === 'north_west') || AIRPORT_ZONES[2];
+        } else if (destLower.includes('omr') || destLower.includes('perungudi') || destLower.includes('thoraipakkam') || destLower.includes('sholinganallur') || destLower.includes('siruseri') || destLower.includes('navalur')) {
+          matchedZone = AIRPORT_ZONES.find(z => z.key === 'omr') || AIRPORT_ZONES[3];
+        } else if (destLower.includes('ecr') || destLower.includes('injambakkam') || destLower.includes('neelankarai') || destLower.includes('akkarai') || destLower.includes('kovalam') || destLower.includes('mahabalipuram')) {
+          matchedZone = AIRPORT_ZONES.find(z => z.key === 'ecr') || AIRPORT_ZONES[4];
+        } else if (destLower.includes('medavakkam') || destLower.includes('tambaram') || destLower.includes('guindy') || destLower.includes('velachery') || destLower.includes('chromepet') || destLower.includes('pallavaram') || destLower.includes('alandur')) {
+          matchedZone = AIRPORT_ZONES.find(z => z.key === 'south') || AIRPORT_ZONES[0];
+        }
+        const zone = matchedZone;
         let fare = Math.round(zone.sedan * vehicleMeta.airportMultiplier);
         if (vehicleMeta.airportMinFare && fare < vehicleMeta.airportMinFare) {
           fare = vehicleMeta.airportMinFare;
@@ -818,6 +1046,15 @@ export default function BookingEngine({
         const taxableAmount = fare;
         const gstAmount = needGst ? Math.round(taxableAmount * 0.05) : 0;
         const totalFare = baseSubtotal + gstAmount;
+
+        const isAirportPickup = airportDirection === 'from_airport';
+        // Clean up user address to show neighborhood and city cleanly, omitting country/state trailing strings
+        const cleanAddress = airportDropAddress
+          ? airportDropAddress.split(',').slice(0, 2).map(s => s.trim()).filter(Boolean).join(', ')
+          : 'Chennai Destination';
+
+        const originName = isAirportPickup ? 'Chennai Airport (MAA)' : cleanAddress;
+        const destName = isAirportPickup ? cleanAddress : 'Chennai Airport (MAA)';
 
         return {
           billedKm: zone.km,
@@ -831,11 +1068,12 @@ export default function BookingEngine({
           gstAmount,
           totalFare,
           advance,
-          routeSummary: airportDirection === 'pickup' 
-            ? `Chennai Airport (MAA) ➔ ${airportDropAddress || 'Chennai City Area'}`
-            : `${airportDropAddress || 'Chennai City Area'} ➔ Chennai Airport (MAA)`,
+          originName,
+          destName,
+          tripTypeTag: isAirportPickup ? 'Airport Pickup' : 'Airport Drop',
+          routeSummary: `${originName} ➔ ${destName}`,
           tripSubtext: `Fixed Flat Fare · Free Flight Delay Buffer`,
-          metaDateStr: `${formattedPickupDate} • Airport Transfer • ${vehicleMeta.seats} Seats`
+          metaDateStr: `${formattedPickupDate} • ${isAirportPickup ? 'Airport Pickup' : 'Airport Drop'}`
         };
       }
     }
@@ -928,33 +1166,85 @@ Please confirm chauffeur availability.`;
   };
 
   const handleCalculateClick = () => {
+    const now = new Date();
+
     // Validate required fields before proceeding
     if (activeTab === 'outstation') {
+      if (!outstationDrop || !outstationDrop.trim()) {
+        setValidationError('Please enter your destination city / drop location');
+        dropInputRef.current?.focus();
+        return;
+      }
       if (!pickupDateTime) {
         setValidationError('Please select pickup date & time to view fare');
         return;
       }
-      if (outstationTripType === 'round' && !returnDateTime) {
-        setValidationError('Please select your return date & time to calculate round-trip fare');
-        if (returnInputRef.current) {
-          returnInputRef.current.focus();
+      if (new Date(pickupDateTime).getTime() < now.getTime() - 5 * 60 * 1000) {
+        setValidationError('Pickup date & time cannot be in the past');
+        return;
+      }
+      if (isDropInChennai) {
+        setValidationError(`"${outstationDrop.split(',')[0]}" is inside Chennai city limits. Outstation round trips are for inter-city travel (min 250 km/day). Please switch to Local Package or choose an outstation city.`);
+        return;
+      }
+      if (outstationTripType === 'round') {
+        if (!returnDateTime) {
+          setValidationError('Please select your return date & time to calculate round-trip fare');
+          if (returnInputRef.current) {
+            returnInputRef.current.focus();
+            try {
+              returnInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } catch (_) {}
+          }
+          return;
+        }
+        if (new Date(returnDateTime).getTime() <= new Date(pickupDateTime).getTime()) {
+          setValidationError('Return date & time must be after pickup date & time');
+          returnInputRef.current?.focus();
+          return;
+        }
+        if (minReturnDateTime && returnDateTime < minReturnDateTime) {
+          setValidationError(`Minimum realistic round-trip duration for this route requires returning after ${formatDateTimeDisplay(minReturnDateTime)}`);
+          returnInputRef.current?.focus();
+          return;
+        }
+      }
+    } else if (activeTab === 'local') {
+      if (!outstationPickup || !outstationPickup.trim()) {
+        setValidationError('Please enter your pickup area in Chennai');
+        if (localPickupInputRef.current) {
+          localPickupInputRef.current.focus();
           try {
-            returnInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            localPickupInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
           } catch (_) {}
         }
         return;
       }
-      if (!outstationDrop) {
-        setOutstationDrop('Pondicherry');
-      }
-    } else if (activeTab === 'local') {
       if (!pickupDateTime) {
-        setValidationError('Please select pickup date & time');
+        setValidationError('Please select pickup date & time to view fare');
+        return;
+      }
+      if (new Date(pickupDateTime).getTime() < now.getTime() - 5 * 60 * 1000) {
+        setValidationError('Pickup date & time cannot be in the past');
         return;
       }
     } else if (activeTab === 'airport') {
+      if (!airportDropAddress || !airportDropAddress.trim()) {
+        setValidationError('Please enter your destination / hotel / area in Chennai');
+        if (airportLocationInputRef.current) {
+          airportLocationInputRef.current.focus();
+          try {
+            airportLocationInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } catch (_) {}
+        }
+        return;
+      }
       if (!pickupDateTime) {
-        setValidationError('Please select pickup date & time');
+        setValidationError('Please select pickup date & time to view fare');
+        return;
+      }
+      if (new Date(pickupDateTime).getTime() < now.getTime() - 5 * 60 * 1000) {
+        setValidationError('Pickup date & time cannot be in the past');
         return;
       }
     }
@@ -962,7 +1252,7 @@ Please confirm chauffeur availability.`;
     setValidationError('');
     setViewMode('results');
     setTimeout(() => {
-      const el = document.getElementById('fare-calculator');
+      const el = containerRef.current || document.getElementById('fare-calculator');
       if (el) {
         const yOffset = -70;
         const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
@@ -974,7 +1264,7 @@ Please confirm chauffeur availability.`;
   const handleEditClick = () => {
     setViewMode('form');
     setTimeout(() => {
-      const el = document.getElementById('fare-calculator');
+      const el = containerRef.current || document.getElementById('fare-calculator');
       if (el) {
         const yOffset = -70;
         const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
@@ -986,7 +1276,7 @@ Please confirm chauffeur availability.`;
   const waHref = buildWhatsAppUrl(getWhatsAppMessage());
 
   return (
-    <div id="fare-calculator" data-hydrated={mounted ? "true" : undefined} className={`w-full max-w-2xl mx-auto transition-all duration-200 ${variant === 'card' ? 'bg-white dark:bg-m3-surface rounded-m3-2xl shadow-m3-2 border border-m3-outline-variant/70 dark:border-m3-outline-variant/40 overflow-hidden' : ''}`}>
+    <div ref={containerRef} id="fare-calculator" data-hydrated={mounted ? "true" : undefined} className={`w-full max-w-2xl mx-auto transition-all duration-200 ${variant === 'card' ? 'bg-white dark:bg-m3-surface rounded-m3-2xl shadow-m3-2 border border-m3-outline-variant/70 dark:border-m3-outline-variant/40 overflow-hidden' : ''}`}>
       
       {/* ─────────────────────────────────────────────────────────────
           MODE A: THE SELECTION INTERFACE (M3-Compliant Selection Form)
@@ -1027,31 +1317,9 @@ Please confirm chauffeur availability.`;
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-2 p-1 bg-m3-surface-container-high dark:bg-m3-surface-container-high rounded-m3-full min-h-[44px]">
-              <button
-                type="button"
-                onClick={() => setAirportDirection('pickup')}
-                className={`flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full text-xs sm:text-sm font-bold transition-all duration-150 cursor-pointer active:scale-[0.98] ${
-                  airportDirection === 'pickup'
-                    ? 'bg-blue-600 text-white shadow-m3-1'
-                    : 'text-m3-on-surface-variant hover:text-m3-on-surface dark:text-slate-300 dark:hover:text-white'
-                }`}
-              >
-                <Plane className="w-3.5 h-3.5" />
-                <span>Airport Pickup</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setAirportDirection('drop')}
-                className={`flex items-center justify-center gap-1.5 py-2 px-3 rounded-m3-full text-xs sm:text-sm font-bold transition-all duration-150 cursor-pointer active:scale-[0.98] ${
-                  airportDirection === 'drop'
-                    ? 'bg-blue-600 text-white shadow-m3-1'
-                    : 'text-m3-on-surface-variant hover:text-m3-on-surface dark:text-slate-300 dark:hover:text-white'
-                }`}
-              >
-                <Plane className="w-3.5 h-3.5 rotate-45" />
-                <span>Airport Drop</span>
-              </button>
+            <div className="flex items-center justify-center gap-2 py-2.5 px-4 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-m3-full text-xs sm:text-sm font-bold text-blue-700 dark:text-blue-300 shadow-2xs">
+              <Plane className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
+              <span>Airport Arrival Pickup (MAA Terminal 1, 2 &amp; 4)</span>
             </div>
           )}
 
@@ -1072,7 +1340,7 @@ Please confirm chauffeur availability.`;
                     data-autocomplete-input="true"
                     autoComplete="off"
                     value={outstationPickup}
-                    onFocus={() => loadGoogleMaps().catch(() => {})}
+                    onFocus={handleInputFocus}
                     onChange={(e) => setOutstationPickup(e.target.value)}
                     placeholder="e.g. T. Nagar, Central, Airport, OMR"
                     className="w-full pl-3.5 pr-20 min-h-[48px] sm:min-h-[50px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 rounded-m3-sm text-m3-on-surface dark:text-white placeholder-slate-400 focus:outline-none focus:border-2 focus:border-blue-600 focus:bg-white dark:focus:bg-m3-surface transition-all"
@@ -1109,15 +1377,42 @@ Please confirm chauffeur availability.`;
                     data-autocomplete-input="true"
                     autoComplete="off"
                     value={outstationDrop}
-                    onFocus={() => loadGoogleMaps().catch(() => {})}
-                    onChange={(e) => setOutstationDrop(e.target.value)}
+                    onFocus={handleInputFocus}
+                    onChange={(e) => handleDestinationSelect(e.target.value)}
                     placeholder="e.g. Pondicherry, Tirupati, Bangalore"
-                    className="w-full pl-3.5 pr-10 min-h-[48px] sm:min-h-[50px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 rounded-m3-sm text-m3-on-surface dark:text-white placeholder-slate-400 font-medium focus:outline-none focus:border-2 focus:border-blue-600 focus:bg-white dark:focus:bg-m3-surface transition-all"
+                    className={`w-full pl-3.5 pr-10 min-h-[48px] sm:min-h-[50px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border rounded-m3-sm text-m3-on-surface dark:text-white placeholder-slate-400 font-medium focus:outline-none focus:border-2 transition-all ${
+                      validationError && !outstationDrop.trim()
+                        ? 'border-2 border-red-500 ring-2 ring-red-400/40 bg-red-50/40 dark:bg-red-950/30 focus:border-red-600'
+                        : isDropInChennai
+                        ? 'border-amber-500 focus:border-amber-600 focus:bg-amber-50/20'
+                        : 'border-m3-outline-variant/80 dark:border-m3-outline-variant/60 focus:border-blue-600 focus:bg-white dark:focus:bg-m3-surface'
+                    }`}
                   />
                   <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none">
                     <MapPin className="w-4 h-4 text-blue-600" />
                   </div>
                 </div>
+
+                {isDropInChennai && (
+                  <div className="mt-2 p-2.5 bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700/60 rounded-m3-md text-xs text-amber-900 dark:text-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 animate-fadeIn">
+                    <div className="flex items-start gap-1.5">
+                      <Info className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                      <span>
+                        <strong>{outstationDrop.split(',')[0]}</strong> is inside Chennai city limits. Outstation fares require a minimum 250 km/day billing. For local travel within Chennai, switch to <strong>Local Package</strong> or <strong>Airport Transfer</strong>.
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setActiveTab('local');
+                        setValidationError('');
+                      }}
+                      className="shrink-0 px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-m3-full text-[11px] transition-colors cursor-pointer text-center"
+                    >
+                      Switch to Local Package
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Popular Chips (M3 Filter / Assist Chips with 40dp ergonomics) */}
@@ -1129,7 +1424,7 @@ Please confirm chauffeur availability.`;
                   <button
                     key={city}
                     type="button"
-                    onClick={() => setOutstationDrop(city)}
+                    onClick={() => handleDestinationSelect(city)}
                     className={`min-h-[34px] px-3.5 py-1 text-xs font-medium rounded-m3-full border transition-all duration-150 cursor-pointer active:scale-95 inline-flex items-center justify-center ${
                       outstationDrop.toLowerCase().includes(city.toLowerCase())
                         ? 'bg-blue-50 border-blue-600 text-blue-700 font-semibold shadow-m3-0'
@@ -1152,6 +1447,7 @@ Please confirm chauffeur availability.`;
                     id="pickup-datetime-input"
                     type="datetime-local"
                     value={pickupDateTime}
+                    min={minPickupDateTime}
                     onChange={(e) => handlePickupChange(e.target.value)}
                     className="w-full px-2.5 min-h-[46px] sm:min-h-[48px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 rounded-m3-sm text-m3-on-surface dark:text-white font-medium focus:outline-none focus:border-2 focus:border-blue-600 transition-all"
                   />
@@ -1163,27 +1459,41 @@ Please confirm chauffeur availability.`;
                       <Calendar className="w-3.5 h-3.5 text-blue-600" />
                       <span>Return Date</span>
                     </label>
-                    {returnDateTime ? (
-                      <span className="bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950 dark:text-blue-300 text-[10px] font-bold px-2 py-0.5 rounded-m3-full">
-                        {outstationDays === 1 ? '1 Day (Same Day)' : `${outstationDays} Days (${outstationDays - 1}N)`}
-                      </span>
-                    ) : (
-                      <span className="bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-m3-full">
-                        Required
-                      </span>
-                    )}
+                    {(() => {
+                      if (!returnDateTime) {
+                        return (
+                          <span className="bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-m3-full">
+                            Required
+                          </span>
+                        );
+                      }
+                      const isInvalidDate = pickupDateTime && new Date(returnDateTime).getTime() <= new Date(pickupDateTime).getTime();
+                      if (isInvalidDate || outstationDays <= 0) {
+                        return (
+                          <span className="bg-red-100 text-red-700 border border-red-300 dark:bg-red-950 dark:text-red-300 text-[10px] font-bold px-2 py-0.5 rounded-m3-full animate-pulse">
+                            Invalid Date (Before Pickup)
+                          </span>
+                        );
+                      }
+                      return (
+                        <span className="bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950 dark:text-blue-300 text-[10px] font-bold px-2 py-0.5 rounded-m3-full">
+                          {outstationDays === 1 ? '1 Day (Same Day)' : `${outstationDays} Days (${outstationDays - 1}N)`}
+                        </span>
+                      );
+                    })()}
                   </div>
                   <input
                     ref={returnInputRef}
                     id="return-datetime-input"
                     type="datetime-local"
                     value={returnDateTime}
-                    min={minReturnDateTime}
+                    min={minReturnDateTime || pickupDateTime}
                     disabled={!pickupDateTime}
                     onChange={(e) => handleReturnChange(e.target.value)}
                     className={`w-full px-2.5 min-h-[46px] sm:min-h-[48px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border rounded-m3-sm text-m3-on-surface dark:text-white font-medium focus:outline-none focus:border-2 focus:border-blue-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
-                      validationError && !returnDateTime
-                        ? 'border-2 border-amber-500 ring-2 ring-amber-400/40 animate-pulse bg-amber-50/40 dark:bg-amber-950/30'
+                      (returnDateTime && pickupDateTime && new Date(returnDateTime).getTime() <= new Date(pickupDateTime).getTime()) ||
+                      (validationError && !returnDateTime)
+                        ? 'border-2 border-red-500 ring-2 ring-red-400/40 bg-red-50/40 dark:bg-red-950/30'
                         : 'border-m3-outline-variant/80 dark:border-m3-outline-variant/60'
                     }`}
                   />
@@ -1215,14 +1525,30 @@ Please confirm chauffeur availability.`;
                 <label htmlFor="local-pickup-input" className="block text-xs font-semibold text-m3-on-surface-variant dark:text-slate-300 mb-1">
                   Pickup Area in Chennai
                 </label>
-                <input
-                  id="local-pickup-input"
-                  type="text"
-                  value={outstationPickup}
-                  onChange={(e) => setOutstationPickup(e.target.value)}
-                  placeholder="e.g. Medavakkam, T. Nagar, Velachery"
-                  className="w-full px-3.5 min-h-[48px] sm:min-h-[50px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 rounded-m3-sm text-m3-on-surface dark:text-white focus:outline-none focus:border-2 focus:border-blue-600 transition-all"
-                />
+                <div className="relative flex items-center">
+                  <input
+                    id="local-pickup-input"
+                    ref={localPickupInputRef}
+                    type="text"
+                    data-autocomplete-input="true"
+                    autoComplete="off"
+                    value={outstationPickup}
+                    onFocus={handleInputFocus}
+                    onChange={(e) => {
+                      setOutstationPickup(e.target.value);
+                      if (validationError) setValidationError('');
+                    }}
+                    placeholder="e.g. Medavakkam, T. Nagar, Velachery"
+                    className={`w-full pl-3.5 pr-10 min-h-[48px] sm:min-h-[50px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border rounded-m3-sm text-m3-on-surface dark:text-white placeholder-slate-400 focus:outline-none focus:border-2 transition-all ${
+                      validationError && !outstationPickup.trim()
+                        ? 'border-2 border-red-500 ring-2 ring-red-400/40 bg-red-50/40 dark:bg-red-950/30 focus:border-red-600'
+                        : 'border-m3-outline-variant/80 dark:border-m3-outline-variant/60 focus:border-blue-600 focus:bg-white dark:focus:bg-m3-surface'
+                    }`}
+                  />
+                  <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none">
+                    <MapPin className="w-4 h-4 text-blue-600" />
+                  </div>
+                </div>
               </div>
 
               <div>
@@ -1234,7 +1560,8 @@ Please confirm chauffeur availability.`;
                   id="local-datetime-input"
                   type="datetime-local"
                   value={pickupDateTime}
-                  onChange={(e) => setPickupDateTime(e.target.value)}
+                  min={minPickupDateTime}
+                  onChange={(e) => handlePickupChange(e.target.value)}
                   className="w-full px-2.5 min-h-[46px] sm:min-h-[48px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 rounded-m3-sm text-m3-on-surface dark:text-white font-medium focus:outline-none focus:border-2 focus:border-blue-600 transition-all"
                 />
               </div>
@@ -1253,7 +1580,7 @@ Please confirm chauffeur availability.`;
                 <input
                   type="text"
                   disabled
-                  value={airportDirection === 'pickup' ? "Chennai International Airport (MAA)" : (airportDropAddress || "Chennai City Area")}
+                  value="Chennai International Airport (MAA)"
                   className="w-full px-3.5 min-h-[48px] sm:min-h-[50px] text-xs sm:text-sm bg-slate-50 dark:bg-m3-surface-container-low border border-m3-outline-variant/60 rounded-m3-sm text-m3-on-surface dark:text-white font-medium cursor-not-allowed opacity-90"
                 />
               </div>
@@ -1267,15 +1594,54 @@ Please confirm chauffeur availability.`;
                 <div className="relative flex items-center">
                   <input
                     id="airport-dest-input"
+                    ref={airportLocationInputRef}
                     type="text"
+                    data-autocomplete-input="true"
+                    autoComplete="off"
                     value={airportDropAddress}
-                    onChange={(e) => setAirportDropAddress(e.target.value)}
+                    onFocus={handleInputFocus}
+                    onChange={(e) => {
+                      setAirportDropAddress(e.target.value);
+                      if (validationError) setValidationError('');
+                    }}
                     placeholder="Enter hotel / area / destination city"
-                    className="w-full pl-3.5 pr-10 min-h-[48px] sm:min-h-[50px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 rounded-m3-sm text-m3-on-surface dark:text-white placeholder-slate-400 font-medium focus:outline-none focus:border-2 focus:border-blue-600 focus:bg-white dark:focus:bg-m3-surface transition-all"
+                    className={`w-full pl-3.5 pr-10 min-h-[48px] sm:min-h-[50px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border rounded-m3-sm text-m3-on-surface dark:text-white placeholder-slate-400 font-medium focus:outline-none focus:border-2 transition-all ${
+                      validationError && !airportDropAddress.trim()
+                        ? 'border-2 border-red-500 ring-2 ring-red-400/40 bg-red-50/40 dark:bg-red-950/30 focus:border-red-600'
+                        : 'border-m3-outline-variant/80 dark:border-m3-outline-variant/60 focus:border-blue-600 focus:bg-white dark:focus:bg-m3-surface'
+                    }`}
                   />
                   <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none">
                     <MapPin className="w-4 h-4 text-blue-600" />
                   </div>
+                </div>
+
+                {/* Popular Chennai Area Quick-Chips */}
+                <div className="flex flex-wrap items-center gap-1.5 pt-1.5">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mr-0.5">
+                    POPULAR:
+                  </span>
+                  {['T. Nagar', 'Central / Egmore', 'OMR / Perungudi', 'Velachery', 'Anna Nagar', 'Mahabalipuram'].map(area => {
+                    const keyWord = area.split('/')[0].trim().toLowerCase();
+                    const isSelected = airportDropAddress.toLowerCase().includes(keyWord);
+                    return (
+                      <button
+                        key={area}
+                        type="button"
+                        onClick={() => {
+                          setAirportDropAddress(area);
+                          if (validationError) setValidationError('');
+                        }}
+                        className={`min-h-[32px] px-3 py-1 text-xs font-medium rounded-m3-full border transition-all duration-150 cursor-pointer active:scale-95 inline-flex items-center justify-center ${
+                          isSelected
+                            ? 'bg-blue-50 border-blue-600 text-blue-700 font-semibold shadow-m3-0'
+                            : 'bg-white dark:bg-m3-surface border-m3-outline-variant/80 dark:border-m3-outline-variant/60 text-m3-on-surface dark:text-slate-300 hover:border-blue-400'
+                        }`}
+                      >
+                        {area}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -1290,27 +1656,23 @@ Please confirm chauffeur availability.`;
                     id="airport-pickup-datetime"
                     type="datetime-local"
                     value={pickupDateTime}
-                    onChange={(e) => setPickupDateTime(e.target.value)}
+                    min={minPickupDateTime}
+                    onChange={(e) => handlePickupChange(e.target.value)}
                     className="w-full px-2.5 min-h-[46px] sm:min-h-[48px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 rounded-m3-sm text-m3-on-surface dark:text-white font-medium focus:outline-none focus:border-2 focus:border-blue-600 transition-all"
                   />
                 </div>
 
                 <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <label htmlFor="flight-no-input" className="flex items-center gap-1 text-[11px] font-semibold text-m3-on-surface-variant dark:text-slate-300">
-                      <Plane className="w-3.5 h-3.5 text-blue-600" />
-                      <span>Flight No. / Time</span>
-                    </label>
-                    <span className="bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 text-[10px] font-bold px-2 py-0.5 rounded-m3-full">
-                      Live Radar
-                    </span>
-                  </div>
+                  <label htmlFor="flight-no-input" className="flex items-center gap-1 text-[11px] font-semibold text-m3-on-surface-variant dark:text-slate-300 mb-1">
+                    <Plane className="w-3.5 h-3.5 text-blue-600" />
+                    <span>Flight Number (Optional)</span>
+                  </label>
                   <input
                     id="flight-no-input"
                     type="text"
                     value={flightNumber}
                     onChange={(e) => setFlightNumber(e.target.value)}
-                    placeholder="e.g. 6E-241 @ 14:30"
+                    placeholder="e.g. 6E-241"
                     className="w-full px-2.5 min-h-[46px] sm:min-h-[48px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 rounded-m3-sm text-m3-on-surface dark:text-white font-medium placeholder-slate-400 focus:outline-none focus:border-2 focus:border-blue-600 transition-all"
                   />
                 </div>
@@ -1337,8 +1699,7 @@ Please confirm chauffeur availability.`;
               onClick={handleCalculateClick}
               className="w-full min-h-[50px] sm:min-h-[52px] px-6 rounded-m3-full font-bold text-sm sm:text-base tracking-wide transition-all flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white shadow-m3-1 hover:shadow-m3-2 cursor-pointer"
             >
-              {activeTab === 'airport' && <Receipt className="w-4 h-4" />}
-              <span>View Instant Fare</span>
+              <span>View Instant Fare →</span>
             </button>
             <p className="text-xs text-m3-on-surface-variant dark:text-slate-400">
               No phone number required to check fare
@@ -1355,168 +1716,156 @@ Please confirm chauffeur availability.`;
           id="fare-result-summary-card" 
           className="bg-white dark:bg-m3-surface p-4 sm:p-6 space-y-3.5 animate-fadeIn transition-opacity duration-200 ease-out"
         >
-          {/* Top Route Bar with [ Edit ] Button */}
-          <div className="flex items-center justify-between gap-2 pb-3 border-b border-m3-outline-variant/60 dark:border-m3-outline-variant/40">
-            <div>
-              <div className="flex items-center gap-1.5">
-                {activeTab === 'airport' ? (
-                  <Plane className="w-4 h-4 text-blue-600 shrink-0" />
-                ) : activeTab === 'local' ? (
-                  <Clock className="w-4 h-4 text-blue-600 shrink-0" />
-                ) : (
-                  <Car className="w-4 h-4 text-blue-600 shrink-0" />
-                )}
-                <span className="font-extrabold text-sm sm:text-base text-m3-on-surface dark:text-white font-heading">
-                  {currentBreakdown.routeSummary}
-                </span>
-              </div>
-              <div className="text-[11px] text-m3-on-surface-variant dark:text-gray-400 font-medium mt-0.5">
-                {currentBreakdown.metaDateStr}
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={handleEditClick}
-              className="inline-flex items-center gap-1 min-h-[34px] px-3.5 py-1 text-xs font-bold text-blue-600 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-m3-full hover:bg-blue-100 active:scale-95 transition-all cursor-pointer shrink-0"
-            >
-              <Edit2 className="w-3 h-3" />
-              <span>Edit</span>
-            </button>
-          </div>
-
-          {/* STEP 1: 1-Tap Horizontal Vehicle Switcher on TOP */}
-          <div>
-            <div className="flex items-center justify-between text-[11px] font-bold text-m3-on-surface-variant dark:text-gray-400 uppercase tracking-wider mb-1.5">
-              <span className="flex items-center gap-1">
-                {isTempoOnly ? <Users className="w-3.5 h-3.5 text-blue-600" /> : <Car className="w-3.5 h-3.5 text-blue-600" />}
-                <span>{isTempoOnly ? 'Select Tempo Traveller / Van:' : 'Select Vehicle:'}</span>
-              </span>
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-normal text-slate-400 hidden xs:inline">
-                  Tap to switch rates
-                </span>
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (vehicleScrollerRef.current) {
-                        vehicleScrollerRef.current.scrollBy({ left: -140, behavior: 'smooth' });
-                      }
-                    }}
-                    aria-label="Scroll left"
-                    className="w-5 h-5 rounded-full border border-m3-outline-variant/80 flex items-center justify-center text-slate-500 hover:text-blue-600 hover:border-blue-400 bg-white dark:bg-m3-surface transition-colors cursor-pointer"
-                  >
-                    <ChevronLeft className="w-3.5 h-3.5" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (vehicleScrollerRef.current) {
-                        vehicleScrollerRef.current.scrollBy({ left: 140, behavior: 'smooth' });
-                      }
-                    }}
-                    aria-label="Scroll right"
-                    className="w-5 h-5 rounded-full border border-m3-outline-variant/80 flex items-center justify-center text-slate-500 hover:text-blue-600 hover:border-blue-400 bg-white dark:bg-m3-surface transition-colors cursor-pointer"
-                  >
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
+          {/* Formatted Trip Summary Box with [ Edit ] Button */}
+          <div className="p-3 rounded-m3-lg bg-slate-50 dark:bg-m3-surface-container-low border border-m3-outline-variant/70 dark:border-m3-outline-variant/50">
+            <div className="flex items-start justify-between gap-2.5">
+              <div className="space-y-1 min-w-0">
+                <div className="flex items-center gap-1.5 text-xs sm:text-sm font-extrabold text-m3-on-surface dark:text-white truncate">
+                  {activeTab === 'airport' ? (
+                    <Plane className="w-4 h-4 text-blue-600 shrink-0" />
+                  ) : activeTab === 'local' ? (
+                    <Clock className="w-4 h-4 text-blue-600 shrink-0" />
+                  ) : (
+                    <Car className="w-4 h-4 text-blue-600 shrink-0" />
+                  )}
+                  <span className="truncate">{currentBreakdown.routeSummary}</span>
+                </div>
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-m3-on-surface-variant dark:text-gray-400 font-medium">
+                  <span>{formattedPickupDate}</span>
+                  <span>•</span>
+                  <span className="text-blue-700 dark:text-blue-400 font-semibold">{currentBreakdown.tripTypeTag || (activeTab === 'airport' ? 'Airport Transfer' : 'Outstation')}</span>
+                  {currentBreakdown.billedKm ? (
+                    <>
+                      <span>•</span>
+                      <span>~{Math.round(currentBreakdown.billedKm)} km</span>
+                    </>
+                  ) : null}
                 </div>
               </div>
-            </div>
 
-            <div 
-              ref={vehicleScrollerRef}
-              className="flex gap-2 overflow-x-auto no-scrollbar py-1 scroll-smooth"
-            >
-              {activeVehicleList.map((item) => {
-                const isSelected = selectedVehicleKey === item.key;
-                const vPricing = calculateVehiclePricing(item.key);
-                return (
-                  <button
-                    key={item.key}
-                    type="button"
-                    onClick={() => setSelectedVehicleKey(item.key)}
-                    className={`group relative flex items-center gap-2 px-2.5 py-1.5 rounded-m3-md border shrink-0 transition-all cursor-pointer min-h-[48px] sm:min-h-[52px] active:scale-95 ${
-                      isSelected
-                        ? 'border-blue-600 bg-blue-50/90 dark:bg-blue-950/60 shadow-m3-0 ring-1 ring-blue-600/30'
-                        : 'border-m3-outline-variant/80 dark:border-m3-outline-variant/50 bg-white dark:bg-m3-surface hover:border-slate-300 hover:bg-slate-50'
-                    }`}
-                  >
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-10 sm:w-11 h-6 sm:h-7 object-contain shrink-0 transition-transform group-hover:scale-105"
-                      loading="lazy"
-                      width="44"
-                      height="28"
-                    />
-                    <div className="text-left leading-tight pr-0.5">
-                      <div className={`text-xs font-bold whitespace-nowrap ${isSelected ? 'text-blue-600 dark:text-blue-400' : 'text-slate-800 dark:text-gray-200'}`}>
-                        {item.name}
-                      </div>
-                      <div className="text-[10px] font-bold text-slate-900 dark:text-white mt-0.5">
-                        ₹{vPricing.totalFare.toLocaleString('en-IN')}
-                      </div>
+              <button
+                type="button"
+                onClick={handleEditClick}
+                className="inline-flex items-center gap-1 min-h-[32px] px-3 py-1 text-xs font-bold text-blue-600 bg-white dark:bg-blue-950/70 border border-blue-200 dark:border-blue-800 rounded-m3-full hover:bg-blue-50 active:scale-95 transition-all cursor-pointer shrink-0 shadow-2xs"
+              >
+                <Edit2 className="w-3 h-3" />
+                <span>Edit</span>
+              </button>
+            </div>
+          </div>
+
+          {/* CONDITIONAL LAYOUT:
+              1. AIRPORT TAXI & LOCAL RENTALS: Clean Modern Layout (Uber / Grab standard — Zero Duplicate Invoice)
+              2. OUTSTATION TRIPS (Multi-Day / Round-Trip / Cross-Border): Classic Transparent Layout (Compact Switcher, Complete Bill Receipt, Payment Rules)
+          */}
+          {(activeTab === 'airport' || activeTab === 'local') ? (
+            /* ───────────────────────────────────────────────────────────
+               LAYOUT 1: AIRPORT & LOCAL RENTALS (Clean Modern Standard)
+               ─────────────────────────────────────────────────────────── */
+            <>
+              {/* STEP 1: 1-Tap Spacious Horizontal Vehicle Showcase Cards */}
+              <div>
+                <div className="flex items-center justify-between text-[11px] font-bold text-m3-on-surface-variant dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                  <span className="flex items-center gap-1">
+                    {isTempoOnly ? <Users className="w-3.5 h-3.5 text-blue-600" /> : <Car className="w-3.5 h-3.5 text-blue-600" />}
+                    <span>{isTempoOnly ? 'Select Tempo Traveller / Van:' : 'Select Vehicle:'}</span>
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-normal text-slate-400 hidden xs:inline">
+                      Swipe or tap to switch
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (vehicleScrollerRef.current) {
+                            vehicleScrollerRef.current.scrollBy({ left: -150, behavior: 'smooth' });
+                          }
+                        }}
+                        aria-label="Scroll left"
+                        className="w-5 h-5 rounded-full border border-m3-outline-variant/80 flex items-center justify-center text-slate-500 hover:text-blue-600 hover:border-blue-400 bg-white dark:bg-m3-surface transition-colors cursor-pointer"
+                      >
+                        <ChevronLeft className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (vehicleScrollerRef.current) {
+                            vehicleScrollerRef.current.scrollBy({ left: 150, behavior: 'smooth' });
+                          }
+                        }}
+                        aria-label="Scroll right"
+                        className="w-5 h-5 rounded-full border border-m3-outline-variant/80 flex items-center justify-center text-slate-500 hover:text-blue-600 hover:border-blue-400 bg-white dark:bg-m3-surface transition-colors cursor-pointer"
+                      >
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </button>
                     </div>
-                    {isSelected && (
-                      <div className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0" />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+                  </div>
+                </div>
 
-          {/* STEP 2: Bill Receipt (Zepto / Blinkit cut-and-dried style in M3 Outlined Container) */}
-          <div className="p-3.5 rounded-m3-lg border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 space-y-2 bg-white dark:bg-m3-surface-container-low shadow-m3-0">
-            <div className="space-y-1.5 text-xs sm:text-sm text-slate-700 dark:text-gray-300">
-              <div className="flex justify-between items-center py-0.5">
-                <span>{selectedVehicle.fullName} ({currentBreakdown.billedKm ? `${Math.round(currentBreakdown.billedKm)} km @ ₹${currentBreakdown.ratePerKm || 14}/km` : 'Hire'})</span>
-                <span className="font-bold text-slate-900 dark:text-white">
-                  ₹{currentBreakdown.kmCost?.toLocaleString('en-IN')}
-                </span>
+                <div 
+                  ref={vehicleScrollerRef}
+                  className="flex gap-2.5 overflow-x-auto no-scrollbar py-1 scroll-smooth snap-x snap-mandatory"
+                >
+                  {activeVehicleList.map((item) => {
+                    const isSelected = selectedVehicleKey === item.key;
+                    const vPricing = calculateVehiclePricing(item.key);
+                    return (
+                      <button
+                        key={item.key}
+                        type="button"
+                        onClick={() => setSelectedVehicleKey(item.key)}
+                        className={`min-w-[155px] sm:min-w-[172px] p-3 sm:p-3.5 rounded-m3-md border shrink-0 transition-all cursor-pointer text-left snap-start active:scale-95 flex flex-col justify-between ${
+                          isSelected
+                            ? 'border-blue-600 bg-blue-50/90 dark:bg-blue-950/60 shadow-m3-0 ring-2 ring-blue-600/30'
+                            : 'border-m3-outline-variant/80 dark:border-m3-outline-variant/50 bg-white dark:bg-m3-surface hover:border-slate-300 hover:bg-slate-50'
+                        }`}
+                      >
+                        {/* Header: Radio selection circle only (Zero duplicate seater pill) */}
+                        <div className="flex items-center justify-end w-full">
+                          <span className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 border transition-all ${
+                            isSelected 
+                              ? 'border-blue-600 bg-blue-600' 
+                              : 'border-slate-300 dark:border-slate-600 bg-transparent'
+                          }`}>
+                            {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
+                          </span>
+                        </div>
+
+                        {/* Prominent Vehicle Showcase Stage (Spacious, bold & properly scaled for Sedan) */}
+                        <div className="h-18 sm:h-22 flex items-center justify-center my-2 w-full overflow-hidden">
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            className={`w-auto h-full max-h-16 sm:max-h-20 object-contain transition-transform group-hover:scale-105 drop-shadow-xs ${
+                              item.key === 'Swift Dzire' ? 'scale-130 sm:scale-135' : 'scale-105'
+                            }`}
+                            loading="lazy"
+                            width="125"
+                            height="70"
+                          />
+                        </div>
+
+                        {/* Vehicle Details & Single Bold Capacity Line ("Seats + Bags") */}
+                        <div className="mt-1 leading-tight">
+                          <div className={`text-xs sm:text-sm font-extrabold whitespace-nowrap ${isSelected ? 'text-blue-600 dark:text-blue-400' : 'text-slate-900 dark:text-white'}`}>
+                            {item.name}
+                          </div>
+                          <div className="text-xs sm:text-[13px] font-bold text-slate-700 dark:text-slate-200 mt-1 whitespace-nowrap">
+                            {item.capacityLabel || `${item.seats} Seats + ${item.bags || 2} Bags`}
+                          </div>
+                          <div className="text-base sm:text-lg font-black text-slate-900 dark:text-white mt-1.5 tracking-tight">
+                            ₹{vPricing.totalFare.toLocaleString('en-IN')}
+                          </div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
-              {currentBreakdown.driverBata > 0 && (
-                <div className="flex justify-between items-center py-0.5">
-                  <span>Driver Bata ({outstationDays} Day{outstationDays > 1 ? 's' : ''})</span>
-                  <span className="font-bold text-slate-900 dark:text-white">
-                    ₹{currentBreakdown.driverBata?.toLocaleString('en-IN')}
-                  </span>
-                </div>
-              )}
-
-              {currentBreakdown.isInterstate && currentBreakdown.statePermit > 0 && (
-                <div className="flex justify-between items-center py-0.5">
-                  <span>State Entry Tax ({currentBreakdown.stateCode})</span>
-                  <span className="font-bold text-slate-900 dark:text-white">
-                    ₹{currentBreakdown.statePermit?.toLocaleString('en-IN')}
-                  </span>
-                </div>
-              )}
-
-              {needGst && currentBreakdown.gstAmount > 0 && (
-                <div className="flex justify-between items-center py-0.5 text-blue-700 dark:text-blue-400 font-medium">
-                  <span>GST Tax (5% ITC Invoice)</span>
-                  <span className="font-bold">
-                    +₹{currentBreakdown.gstAmount?.toLocaleString('en-IN')}
-                  </span>
-                </div>
-              )}
-
-              <div className="flex justify-between items-center py-0.5 text-slate-500 dark:text-gray-400">
-                <span>Toll Gate Fees (FASTag)</span>
-                <span className="font-medium text-slate-700 dark:text-gray-300">Extra as per slip</span>
-              </div>
-
-              <div className="flex justify-between items-center py-0.5 text-slate-500 dark:text-gray-400">
-                <span>Parking Charges</span>
-                <span className="font-medium text-slate-700 dark:text-gray-300">Extra as per slip</span>
-              </div>
-
-              {/* GST Tax Invoice Option Toggle */}
-              <div className="pt-2 pb-1 border-t border-dashed border-m3-outline-variant/70 dark:border-m3-outline-variant/50">
+              {/* Optional Corporate GST Invoice Toggle */}
+              <div className="p-3 rounded-m3-md border border-m3-outline-variant/70 dark:border-m3-outline-variant/50 bg-slate-50/60 dark:bg-m3-surface-container-low">
                 <label className="flex items-start justify-between gap-2.5 cursor-pointer group select-none">
                   <div className="flex items-start gap-2.5">
                     <input
@@ -1546,78 +1895,290 @@ Please confirm chauffeur availability.`;
                       value={companyGstin}
                       onChange={(e) => setCompanyGstin(e.target.value)}
                       placeholder="Company Name / GSTIN (Optional)"
-                      className="w-full text-xs px-2.5 py-1.5 rounded-m3-md border border-m3-outline-variant/80 dark:border-m3-outline-variant/50 bg-slate-50 dark:bg-m3-surface text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-blue-500"
+                      className="w-full text-xs px-2.5 py-1.5 rounded-m3-md border border-m3-outline-variant/80 dark:border-m3-outline-variant/50 bg-white dark:bg-m3-surface text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-blue-500"
                     />
                   </div>
                 )}
               </div>
 
-              {/* Solid Total Line */}
-              <div className="pt-2.5 border-t border-m3-outline-variant/80 dark:border-m3-outline-variant/60 flex justify-between items-baseline">
-                <div>
-                  <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white block">
-                    Estimated Total Fare ({currentBreakdown.billedKm ? `${Math.round(currentBreakdown.billedKm)} km` : 'Standard'})
-                  </span>
-                  <span className="text-[10px] text-slate-500 dark:text-gray-400">
-                    {needGst ? 'Includes 5% GST (Tax invoice provided)' : 'Base fare (Excludes GST • Available on request)'}
-                  </span>
+              {/* 2-Line Clean Trust & Policy Badges */}
+              <div className="p-2.5 rounded-m3-md bg-slate-50/80 dark:bg-m3-surface-container-low border border-m3-outline-variant/60 text-[11px] text-slate-600 dark:text-slate-400 space-y-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-blue-600 font-bold shrink-0">ℹ️</span>
+                  <span>Toll gate fees &amp; parking charges extra as per official slip.</span>
                 </div>
-                <div className="text-right">
-                  <span className="text-lg sm:text-2xl font-black text-slate-900 dark:text-white font-heading block">
-                    ₹{currentBreakdown.totalFare.toLocaleString('en-IN')}
-                  </span>
-                  <span className="text-[10px] font-semibold text-slate-500 dark:text-gray-400">
-                    + Extras as per slip
-                  </span>
+                <div className="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-medium">
+                  <span className="shrink-0">✓</span>
+                  <span>₹{currentBreakdown.advance} advance locks cab • Free cancellation up to 6 hours before pickup.</span>
                 </div>
               </div>
-            </div>
-          </div>
 
-          {/* STEP 3: Payment & Billing Rules */}
-          <div className="p-3 rounded-m3-lg bg-slate-50 dark:bg-m3-surface-container-low border border-m3-outline-variant/70 dark:border-m3-outline-variant/50 text-[11px] sm:text-xs">
-            <div className="font-bold text-slate-800 dark:text-gray-200 uppercase tracking-wider text-[10px] mb-1">
-              Payment &amp; Billing Rules
-            </div>
-            <div className="space-y-0.5 text-slate-700 dark:text-gray-300">
-              <div>• ₹{currentBreakdown.advance} advance to reserve cab (deducted in final invoice)</div>
-              <div>• Pay balance to chauffeur at trip end (UPI / Cash)</div>
-              <div>• Doorstep odometer reading • Extra km: ₹{currentBreakdown.extraKmRate || 14}/km</div>
-              <div className="text-emerald-700 dark:text-emerald-400 font-semibold">
-                • Free cancellation up to 6 hours before pickup
+              {/* Dynamic Direct Booking CTA */}
+              <div className="pt-1 space-y-2">
+                <a
+                  href={waHref}
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                  data-direct-whatsapp="true"
+                  onClick={() => logCalculationEvent(selectedVehicle.fullName, currentBreakdown.totalFare)}
+                  className="w-full min-h-[48px] sm:min-h-[50px] inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-m3-full bg-[#075E54] hover:bg-[#054c44] active:bg-[#043e37] text-white font-bold text-sm shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5 transition-all active:scale-[0.98] cursor-pointer border border-[#054c44]/30"
+                >
+                  <WhatsAppIcon variant="white" className="w-5 h-5 shrink-0" />
+                  <span>Book {selectedVehicle.name} on WhatsApp — ₹{currentBreakdown.totalFare.toLocaleString('en-IN')}</span>
+                </a>
+
+                <div className="text-center pt-0.5">
+                  <a
+                    href={`tel:${WHATSAPP_CONFIG.phone}`}
+                    onClick={() => logCalculationEvent(selectedVehicle.fullName, currentBreakdown.totalFare)}
+                    className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 transition-colors py-1 cursor-pointer"
+                  >
+                    <Phone className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                    <span>Prefer to speak? Call +91 89395 39211 (24/7 Helpline)</span>
+                  </a>
+                </div>
               </div>
-            </div>
-          </div>
+            </>
+          ) : (
+            /* ───────────────────────────────────────────────────────────
+               LAYOUT 2: OUTSTATION TRIPS (Classic Transparent Standard)
+               ─────────────────────────────────────────────────────────── */
+            <>
+              {/* STEP 1: Compact Horizontal Vehicle Switcher on TOP */}
+              <div>
+                <div className="flex items-center justify-between text-[11px] font-bold text-m3-on-surface-variant dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                  <span className="flex items-center gap-1">
+                    {isTempoOnly ? <Users className="w-3.5 h-3.5 text-blue-600" /> : <Car className="w-3.5 h-3.5 text-blue-600" />}
+                    <span>{isTempoOnly ? 'Select Tempo Traveller / Van:' : 'Select Vehicle:'}</span>
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-normal text-slate-400 hidden xs:inline">
+                      Tap to switch rates
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (vehicleScrollerRef.current) {
+                            vehicleScrollerRef.current.scrollBy({ left: -140, behavior: 'smooth' });
+                          }
+                        }}
+                        aria-label="Scroll left"
+                        className="w-5 h-5 rounded-full border border-m3-outline-variant/80 flex items-center justify-center text-slate-500 hover:text-blue-600 hover:border-blue-400 bg-white dark:bg-m3-surface transition-colors cursor-pointer"
+                      >
+                        <ChevronLeft className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (vehicleScrollerRef.current) {
+                            vehicleScrollerRef.current.scrollBy({ left: 140, behavior: 'smooth' });
+                          }
+                        }}
+                        aria-label="Scroll right"
+                        className="w-5 h-5 rounded-full border border-m3-outline-variant/80 flex items-center justify-center text-slate-500 hover:text-blue-600 hover:border-blue-400 bg-white dark:bg-m3-surface transition-colors cursor-pointer"
+                      >
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
 
-          {/* STEP 4: Action CTAs (M3 Full Pills with 48+dp touch targets) */}
-          <div className="pt-0.5 space-y-1.5">
-            <div className="flex gap-2">
-              <a
-                href={waHref}
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-                data-direct-whatsapp="true"
-                onClick={() => logCalculationEvent(selectedVehicle.fullName, currentBreakdown.totalFare)}
-                className="flex-1 min-h-[48px] sm:min-h-[50px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-m3-full bg-[#075E54] hover:bg-[#054c44] active:bg-[#043e37] text-white font-bold text-xs sm:text-sm shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5 transition-all active:scale-[0.98] cursor-pointer border border-[#054c44]/30"
-              >
-                <WhatsAppIcon variant="white" className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
-                <span>Book {selectedVehicle.name} on WhatsApp</span>
-              </a>
+                <div 
+                  ref={vehicleScrollerRef}
+                  className="flex gap-2 overflow-x-auto no-scrollbar py-1 scroll-smooth"
+                >
+                  {activeVehicleList.map((item) => {
+                    const isSelected = selectedVehicleKey === item.key;
+                    const vPricing = calculateVehiclePricing(item.key);
+                    return (
+                      <button
+                        key={item.key}
+                        type="button"
+                        onClick={() => setSelectedVehicleKey(item.key)}
+                        className={`group relative flex items-center gap-2 px-2.5 py-1.5 rounded-m3-md border shrink-0 transition-all cursor-pointer min-h-[48px] sm:min-h-[52px] active:scale-95 ${
+                          isSelected
+                            ? 'border-blue-600 bg-blue-50/90 dark:bg-blue-950/60 shadow-m3-0 ring-1 ring-blue-600/30'
+                            : 'border-m3-outline-variant/80 dark:border-m3-outline-variant/50 bg-white dark:bg-m3-surface hover:border-slate-300 hover:bg-slate-50'
+                        }`}
+                      >
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-10 sm:w-11 h-6 sm:h-7 object-contain shrink-0 transition-transform group-hover:scale-105"
+                          loading="lazy"
+                          width="44"
+                          height="28"
+                        />
+                        <div className="text-left leading-tight pr-0.5">
+                          <div className={`text-xs font-bold whitespace-nowrap ${isSelected ? 'text-blue-600 dark:text-blue-400' : 'text-slate-800 dark:text-gray-200'}`}>
+                            {item.name}
+                          </div>
+                          <div className="text-[10px] font-bold text-slate-900 dark:text-white mt-0.5">
+                            ₹{vPricing.totalFare.toLocaleString('en-IN')}
+                          </div>
+                        </div>
+                        {isSelected && (
+                          <div className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
-              <a
-                href={`tel:${WHATSAPP_CONFIG.phone}`}
-                onClick={() => logCalculationEvent(selectedVehicle.fullName, currentBreakdown.totalFare)}
-                className="min-h-[48px] sm:min-h-[50px] inline-flex items-center justify-center gap-1 px-4 py-2.5 rounded-m3-full border border-m3-outline hover:bg-m3-primary/10 active:bg-m3-primary/20 text-m3-primary font-bold text-xs transition-colors cursor-pointer shrink-0 active:scale-95"
-              >
-                <Phone className="w-3.5 h-3.5 text-m3-primary" />
-                <span>Call Us</span>
-              </a>
-            </div>
+              {/* STEP 2: Bill Receipt (Outstation multi-day / per-km math) */}
+              <div className="p-3.5 rounded-m3-lg border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 space-y-2 bg-white dark:bg-m3-surface-container-low shadow-m3-0">
+                <div className="space-y-1.5 text-xs sm:text-sm text-slate-700 dark:text-gray-300">
+                  <div className="flex justify-between items-center py-0.5">
+                    <span>{selectedVehicle.fullName} ({currentBreakdown.billedKm ? `${Math.round(currentBreakdown.billedKm)} km @ ₹${currentBreakdown.ratePerKm || 14}/km` : 'Hire'})</span>
+                    <span className="font-bold text-slate-900 dark:text-white">
+                      ₹{currentBreakdown.kmCost?.toLocaleString('en-IN')}
+                    </span>
+                  </div>
 
-            <p className="text-[10px] text-slate-600 dark:text-slate-400 text-center font-medium">
-              24/7 Helpline: +91 89395 39211
-            </p>
-          </div>
+                  {currentBreakdown.driverBata > 0 && (
+                    <div className="flex justify-between items-center py-0.5">
+                      <span>Driver Bata ({outstationDays} Day{outstationDays > 1 ? 's' : ''})</span>
+                      <span className="font-bold text-slate-900 dark:text-white">
+                        ₹{currentBreakdown.driverBata?.toLocaleString('en-IN')}
+                      </span>
+                    </div>
+                  )}
+
+                  {currentBreakdown.isInterstate && currentBreakdown.statePermit > 0 && (
+                    <div className="flex justify-between items-center py-0.5">
+                      <span>State Entry Tax ({currentBreakdown.stateCode})</span>
+                      <span className="font-bold text-slate-900 dark:text-white">
+                        ₹{currentBreakdown.statePermit?.toLocaleString('en-IN')}
+                      </span>
+                    </div>
+                  )}
+
+                  {needGst && currentBreakdown.gstAmount > 0 && (
+                    <div className="flex justify-between items-center py-0.5 text-blue-700 dark:text-blue-400 font-medium">
+                      <span>GST Tax (5% ITC Invoice)</span>
+                      <span className="font-bold">
+                        +₹{currentBreakdown.gstAmount?.toLocaleString('en-IN')}
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="flex justify-between items-center py-0.5 text-slate-500 dark:text-gray-400">
+                    <span>Toll Gate Fees (FASTag)</span>
+                    <span className="font-medium text-slate-700 dark:text-gray-300">Extra as per slip</span>
+                  </div>
+
+                  <div className="flex justify-between items-center py-0.5 text-slate-500 dark:text-gray-400">
+                    <span>Parking Charges</span>
+                    <span className="font-medium text-slate-700 dark:text-gray-300">Extra as per slip</span>
+                  </div>
+
+                  {/* GST Tax Invoice Option Toggle */}
+                  <div className="pt-2 pb-1 border-t border-dashed border-m3-outline-variant/70 dark:border-m3-outline-variant/50">
+                    <label className="flex items-start justify-between gap-2.5 cursor-pointer group select-none">
+                      <div className="flex items-start gap-2.5">
+                        <input
+                          type="checkbox"
+                          checked={needGst}
+                          onChange={(e) => setNeedGst(e.target.checked)}
+                          className="w-4 h-4 mt-0.5 rounded text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 dark:bg-m3-surface cursor-pointer"
+                        />
+                        <div>
+                          <span className="text-xs sm:text-sm font-bold text-slate-800 dark:text-gray-200 group-hover:text-blue-600 transition-colors">
+                            Need GST Tax Invoice? (+5%)
+                          </span>
+                          <span className="block text-[10px] text-slate-500 dark:text-gray-400">
+                            100% corporate Input Tax Credit (ITC) compliant
+                          </span>
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded-full border border-blue-200 dark:border-blue-800 shrink-0">
+                        5% GST
+                      </span>
+                    </label>
+
+                    {needGst && (
+                      <div className="mt-2 pl-6.5 pr-0.5 animate-fadeIn">
+                        <input
+                          type="text"
+                          value={companyGstin}
+                          onChange={(e) => setCompanyGstin(e.target.value)}
+                          placeholder="Company Name / GSTIN (Optional)"
+                          className="w-full text-xs px-2.5 py-1.5 rounded-m3-md border border-m3-outline-variant/80 dark:border-m3-outline-variant/50 bg-slate-50 dark:bg-m3-surface text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-blue-500"
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Solid Total Line */}
+                  <div className="pt-2.5 border-t border-m3-outline-variant/80 dark:border-m3-outline-variant/60 flex justify-between items-baseline">
+                    <div>
+                      <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white block">
+                        Estimated Total Fare ({currentBreakdown.billedKm ? `${Math.round(currentBreakdown.billedKm)} km` : 'Standard'})
+                      </span>
+                      <span className="text-[10px] text-slate-500 dark:text-gray-400">
+                        {needGst ? 'Includes 5% GST (Tax invoice provided)' : 'Base fare (Excludes GST • Available on request)'}
+                      </span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-lg sm:text-2xl font-black text-slate-900 dark:text-white font-heading block">
+                        ₹{currentBreakdown.totalFare.toLocaleString('en-IN')}
+                      </span>
+                      <span className="text-[10px] font-semibold text-slate-500 dark:text-gray-400">
+                        + Extras as per slip
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* STEP 3: Payment & Billing Rules */}
+              <div className="p-3 rounded-m3-lg bg-slate-50 dark:bg-m3-surface-container-low border border-m3-outline-variant/70 dark:border-m3-outline-variant/50 text-[11px] sm:text-xs">
+                <div className="font-bold text-slate-800 dark:text-gray-200 uppercase tracking-wider text-[10px] mb-1">
+                  Payment &amp; Billing Rules
+                </div>
+                <div className="space-y-0.5 text-slate-700 dark:text-gray-300">
+                  <div>• ₹{currentBreakdown.advance} advance to reserve cab (deducted in final invoice)</div>
+                  <div>• Pay balance to chauffeur at trip end (UPI / Cash)</div>
+                  <div>• Doorstep odometer reading • Extra km: ₹{currentBreakdown.extraKmRate || 14}/km</div>
+                  <div className="text-emerald-700 dark:text-emerald-400 font-semibold">
+                    • Free cancellation up to 6 hours before pickup
+                  </div>
+                </div>
+              </div>
+
+              {/* STEP 4: Action CTAs */}
+              <div className="pt-0.5 space-y-1.5">
+                <div className="flex gap-2">
+                  <a
+                    href={waHref}
+                    target="_blank"
+                    rel="noopener noreferrer nofollow"
+                    data-direct-whatsapp="true"
+                    onClick={() => logCalculationEvent(selectedVehicle.fullName, currentBreakdown.totalFare)}
+                    className="flex-1 min-h-[48px] sm:min-h-[50px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-m3-full bg-[#075E54] hover:bg-[#054c44] active:bg-[#043e37] text-white font-bold text-xs sm:text-sm shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5 transition-all active:scale-[0.98] cursor-pointer border border-[#054c44]/30"
+                  >
+                    <WhatsAppIcon variant="white" className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+                    <span>Book {selectedVehicle.name} on WhatsApp</span>
+                  </a>
+
+                  <a
+                    href={`tel:${WHATSAPP_CONFIG.phone}`}
+                    onClick={() => logCalculationEvent(selectedVehicle.fullName, currentBreakdown.totalFare)}
+                    className="min-h-[48px] sm:min-h-[50px] inline-flex items-center justify-center gap-1 px-4 py-2.5 rounded-m3-full border border-m3-outline hover:bg-m3-primary/10 active:bg-m3-primary/20 text-m3-primary font-bold text-xs transition-colors cursor-pointer shrink-0 active:scale-95"
+                  >
+                    <Phone className="w-3.5 h-3.5 text-m3-primary" />
+                    <span>Call Us</span>
+                  </a>
+                </div>
+
+                <p className="text-[10px] text-slate-600 dark:text-slate-400 text-center font-medium">
+                  24/7 Helpline: +91 89395 39211
+                </p>
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>

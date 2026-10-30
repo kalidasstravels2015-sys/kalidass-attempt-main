@@ -67,4 +67,17 @@
     - **Strict Asset Matching:** Whenever a hero background or banner image is preloaded via `<link rel="preload">` in page frontmatter or layouts, the preloaded URI/srcset MUST match the EXACT first image candidate rendered in the above-the-fold component.
     - **Zero Phantom Preloads:** Never preload an unrendered or fallback asset that wastes user mobile bandwidth and delays the true LCP element.
 
+16. **Booking Engine Clarity & Zero-Gimmick UX Standard (Universal Invariant Across All Engines):**
+    - **Zero Fake Trust Badges:** Never display fake tech badges (e.g., "Live Radar", "Live Satellite Tracking", "AI Radar") on flight or trip inputs unless real-time telemetry APIs are genuinely integrated. Keep labels honest and minimal: `Flight Number (Optional)`.
+    - **Clean Button Typography (No Glyph Clutter):** Fare calculation CTAs must never contain decorative cash/currency bill icons (`[$]`, `Receipt`). Keep action labels clean, bold, and readable: `View Instant Fare →`.
+    - **Structured Journey Summary Header:** When transitioning to the fare summary, never pack route, date, and vehicle specs into a dense unformatted run-on string. Separate Pickup, Drop, and Date/Time into clean visual tiers. Never display seating capacity in the route header—seating belongs strictly to vehicle selection.
+    - **Mandatory Seating & Luggage Capacity on Vehicle Cards:** Every vehicle selection card (Sedan, Ertiga, Innova, Crysta, Tempo Traveller) MUST explicitly declare passenger and baggage capacity on the card itself (e.g. `Sedan: 4 Seats • 2 Bags`, `Ertiga: 6 Seats • 3 Bags`, `Innova: 7 Seats • 4 Bags`). Never expect users to know car model seating by name. Cards must be thumb-friendly with smooth horizontal swipe/scroll.
+    - **Zero Duplicate Contact CTAs:** Never stack redundant contact triggers in the same view (e.g., top header Call button + bottom "Call Us" button + bottom "24/7 Helpline" text). Keep WhatsApp as the primary high-conversion action, paired with a single unified secondary phone contact.
+    - **Zero Duplicate Invoice on Airport Taxi & Local Rentals ONLY:** The Clean Modern Layout (large showcase vehicle cards with prices, compact trust strip, and zero duplicate bill receipt) is strictly deployed for Airport Taxi and Local Hourly Rentals ONLY. Outstation multi-day / per-km trips strictly preserve the Classic Outstation Layout with compact switcher pills, detailed itemized math (km cost, driver bata, interstate taxes), and full payment rules. Never apply the Clean Layout's large showcase cards or direct pricing to Outstation trips.
+
+17. **Strict Input Validation & Zero-Fabrication Invariant (Never Show Rates Without Destination):**
+    - **No Phantom Calculations:** Never calculate or transition to fare results without a validated drop location/destination entered by the user.
+    - **Explicit Blocking Validation:** Clicking `View Instant Fare` with an empty destination MUST immediately halt calculation, display an unambiguous validation alert (e.g., `Please enter your destination / hotel / area in Chennai`), highlight the empty input field with an error ring, and scroll/focus to the input.
+    - **Zero Silent Defaults:** Never silently substitute a default dummy location (e.g. 'Chennai City Area') or fabricate a fake default distance/price when the user hasn't specified their destination.
+
 See [docs/03_RULES.md](./docs/03_RULES.md) for full quality standards.

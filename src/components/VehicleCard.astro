@@ -71,7 +71,9 @@ const isWhatsApp = Boolean(actionHref && actionHref.includes('wa.me'));
           decoding="async"
           sizes="(max-width: 640px) 240px, 280px"
           quality={70}
-          class="w-auto max-w-[88%] max-h-24 sm:max-h-28 object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300"
+          class={`w-auto max-w-[92%] max-h-24 sm:max-h-28 object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300 ${
+            image.includes('swift-dzire') ? 'scale-120 sm:scale-125' : ''
+          }`}
         />
       ) : (
         <Car className="w-10 h-10 text-m3-on-surface-variant" />

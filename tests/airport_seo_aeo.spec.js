@@ -13,7 +13,7 @@ test.describe('Chennai Airport Taxi SEO, AEO & SERP Enhancements', () => {
     const metaDesc = page.locator('meta[name="description"]');
     await expect(metaDesc).toHaveAttribute(
       'content',
-      /Book 24\/7 Chennai airport taxi & cab transfers from ₹650/
+      /Book 24\/7 Chennai airport arrival taxi from ₹650/
     );
 
     // 3. Verify Keywords Meta Tag contains GSC queries (fare, drop, pickup charges, prepaid taxi)
@@ -28,13 +28,11 @@ test.describe('Chennai Airport Taxi SEO, AEO & SERP Enhancements', () => {
   });
 
   test('AEO Quick Facts direct answer snippet box is rendered at the top', async ({ page }) => {
-    const aeoBox = page.locator('section[aria-label="Quick summary of Chennai Airport taxi and cab services"]');
-    await expect(aeoBox).toBeVisible();
-    await expect(aeoBox).toContainText(/Quick Facts: Chennai Airport Taxi & Cab Service \(MAA\)/);
-    await expect(aeoBox).toContainText(/₹650 Flat/);
-    await expect(aeoBox).toContainText(/T1, T2 & T4/);
-    await expect(aeoBox).toContainText(/100% Free Wait/);
-    await expect(aeoBox).toContainText(/Chennai airport prepaid taxi/);
+    const heroSummary = page.locator('p[data-speakable="true"]').filter({ hasText: '₹650' });
+    await expect(heroSummary).toBeVisible();
+    await expect(heroSummary).toContainText(/₹650/);
+    await expect(heroSummary).toContainText(/T1, T2 & T4/);
+    await expect(heroSummary).toContainText(/60-min free arrival wait/);
   });
 
   test('Prepaid Taxi vs Pre-booked Cab comparison section is present and structured', async ({ page }) => {
@@ -49,18 +47,18 @@ test.describe('Chennai Airport Taxi SEO, AEO & SERP Enhancements', () => {
   });
 
   test('Pickup Charges clarification is present in FAQ and Schema', async ({ page }) => {
-    const faqQuestion = page.locator('#airport-faq').getByText('Are Chennai airport pickup charges different from airport drop charges?');
+    const faqQuestion = page.locator('#airport-faq').getByText('Do you provide airport taxi drop services from Chennai city to the airport?');
     await expect(faqQuestion).toBeAttached();
   });
 
-  test('Terminal Pick Up & Drop Guide (T1, T2 & T4) is attached with complete procedures', async ({ page }) => {
+  test('Terminal Pick Up Guide (T1, T2 & T4) is attached with complete procedures', async ({ page }) => {
     const terminalGuide = page.locator('#terminal-pickup-drop-guide');
     await expect(terminalGuide).toBeAttached();
     await expect(terminalGuide).toContainText(/Arrival Pick Up Protocol \(Terminal 1, 2 & 4\)/);
-    await expect(terminalGuide).toContainText(/Doorstep Airport Drop Protocol/);
+    await expect(terminalGuide).toContainText(/Flight Delay & Doorstep Transfer Guarantee/);
     await expect(terminalGuide).toContainText(/Automated Flight Tracking/);
     await expect(terminalGuide).toContainText(/Terminal Exit Meet & Greet/);
-    await expect(terminalGuide).toContainText(/Direct Elevated Ramp Drop/);
+    await expect(terminalGuide).toContainText(/Luggage Assistance/);
   });
 
   test('JSON-LD Structured Data includes TaxiService, FAQPage and ItemList', async ({ page }) => {
@@ -96,7 +94,7 @@ test.describe('Chennai Airport Taxi SEO, AEO & SERP Enhancements', () => {
     const qTexts = faqPage.mainEntity.map((q) => q.name);
     expect(qTexts).toContain('What is the Chennai airport taxi fare to different parts of Chennai?');
     expect(qTexts).toContain('Is prepaid taxi available at Chennai airport, and should I choose prepaid or pre-book online?');
-    expect(qTexts).toContain('Are Chennai airport pickup charges different from airport drop charges?');
+    expect(qTexts).toContain('Do you provide airport taxi drop services from Chennai city to the airport?');
     expect(qTexts).toContain('Where does the chauffeur meet me for Chennai airport arrival pick up?');
 
     // Find ItemList (Trip list for zone tariffs)

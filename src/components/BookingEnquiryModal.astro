@@ -90,7 +90,7 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
 
         <div class="mt-2 pt-2 border-t border-m3-outline-variant/40">
           <p id="sheetInclusionsText" class="text-[10px] sm:text-[11px] text-m3-on-surface-variant font-medium leading-relaxed">
-            Fuel, Highway FASTag Tolls, Airport Ramp Drop &amp; Chauffeur Bata Included
+            Fuel, Highway FASTag Tolls, Airport Parking &amp; Chauffeur Bata Included
           </p>
         </div>
       </div>
@@ -135,23 +135,10 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
         <div id="sheetAirportDetailsRow" class="hidden grid grid-cols-2 gap-2 pt-0.5">
           <div>
             <label class="block text-[11px] font-bold text-m3-on-surface mb-1">
-              Airport Direction *
+              Airport Transfer *
             </label>
-            <div class="flex rounded-m3-lg p-0.5 bg-m3-surface-container border border-m3-outline-variant/60 text-[11px] font-bold">
-              <button
-                type="button"
-                id="sheetDirPickupBtn"
-                class="flex-1 py-1 rounded-m3-md text-center transition-all bg-m3-primary text-m3-on-primary shadow-m3-1 cursor-pointer select-none"
-              >
-                Pickup (MAA)
-              </button>
-              <button
-                type="button"
-                id="sheetDirDropBtn"
-                class="flex-1 py-1 rounded-m3-md text-center transition-all text-m3-on-surface-variant hover:text-m3-on-surface cursor-pointer select-none"
-              >
-                Drop (To MAA)
-              </button>
+            <div class="flex rounded-m3-lg py-1.5 px-2 bg-m3-surface-container border border-m3-outline-variant/60 text-[11px] font-bold text-m3-primary justify-center items-center">
+              <span>Arrival Pickup (MAA)</span>
             </div>
           </div>
           <div>
@@ -1093,7 +1080,7 @@ Please confirm driver assignment and cab availability.`;
         btn.getAttribute('data-inclusions') ||
         (card !== document ? card.getAttribute('data-inclusions') : null) ||
         (card !== document ? card.querySelector('.tariff-inclusions-text')?.textContent?.trim() : null) ||
-        (isAirportPage ? 'Fuel, FASTag Tolls, Airport Ramp Drop & Chauffeur Bata Included' : 'Fuel, Highway Tolls & Driver Bata Included');
+        (isAirportPage ? 'Fuel, FASTag Tolls, Airport Parking & Chauffeur Bata Included' : 'Fuel, Highway Tolls & Driver Bata Included');
 
       var slug = 
         btn.getAttribute('data-slug') ||

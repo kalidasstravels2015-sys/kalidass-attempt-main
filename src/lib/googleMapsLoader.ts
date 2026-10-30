@@ -3,6 +3,11 @@
  * Loads Google Maps on-demand (e.g. when user focuses address inputs) to avoid blocking initial page load.
  */
 
+/**
+ * Lazy Google Maps Places API Loader
+ * Loads Google Maps on-demand (e.g. when user focuses address inputs) to avoid blocking initial page load.
+ */
+
 let loadPromise: Promise<void> | null = null;
 
 export function loadGoogleMaps(apiKey = (typeof import.meta !== 'undefined' && import.meta.env?.PUBLIC_GOOGLE_MAPS_API_KEY) || 'AIzaSyBPpRgTPIkv20IMdaBqqdlz0S0FEGU5400'): Promise<void> {
@@ -10,8 +15,8 @@ export function loadGoogleMaps(apiKey = (typeof import.meta !== 'undefined' && i
 
   (window as any).loadGoogleMaps = loadGoogleMaps;
 
-  // If already available, resolve immediately
-  if ((window as any).google && (window as any).google.maps && (window as any).google.maps.places) {
+  // If already available with Autocomplete, resolve immediately
+  if ((window as any).google?.maps?.places?.Autocomplete) {
     return Promise.resolve();
   }
 
@@ -21,7 +26,7 @@ export function loadGoogleMaps(apiKey = (typeof import.meta !== 'undefined' && i
     // Check if script already in document
     const existing = document.querySelector('script[src*="maps.googleapis.com/maps/api/js"]');
     if (existing) {
-      if ((window as any).google && (window as any).google.maps && (window as any).google.maps.places) {
+      if ((window as any).google?.maps?.places?.Autocomplete) {
         resolve();
         return;
       }
@@ -30,11 +35,20 @@ export function loadGoogleMaps(apiKey = (typeof import.meta !== 'undefined' && i
         resolve();
       };
       window.addEventListener('google-maps-loaded', onLoaded);
-      const poll = setInterval(() => {
-        if ((window as any).google && (window as any).google.maps && (window as any).google.maps.places) {
+      const poll = setInterval(async () => {
+        if ((window as any).google?.maps?.places?.Autocomplete) {
           clearInterval(poll);
           window.removeEventListener('google-maps-loaded', onLoaded);
           resolve();
+        } else if ((window as any).google?.maps?.importLibrary) {
+          try {
+            await (window as any).google.maps.importLibrary('places');
+            if ((window as any).google?.maps?.places?.Autocomplete) {
+              clearInterval(poll);
+              window.removeEventListener('google-maps-loaded', onLoaded);
+              resolve();
+            }
+          } catch (_) {}
         }
       }, 50);
       return;
@@ -54,7 +68,12 @@ export function loadGoogleMaps(apiKey = (typeof import.meta !== 'undefined' && i
     }
 
     const callbackName = '__initGoogleMapsLazy';
-    (window as any)[callbackName] = () => {
+    (window as any)[callbackName] = async () => {
+      try {
+        if ((window as any).google?.maps?.importLibrary) {
+          await (window as any).google.maps.importLibrary('places');
+        }
+      } catch (_) {}
       window.dispatchEvent(new CustomEvent('google-maps-loaded'));
       resolve();
       try {
@@ -74,4 +93,8 @@ export function loadGoogleMaps(apiKey = (typeof import.meta !== 'undefined' && i
   });
 
   return loadPromise;
+}
+
+if (typeof window !== 'undefined') {
+  (window as any).loadGoogleMaps = loadGoogleMaps;
 }
