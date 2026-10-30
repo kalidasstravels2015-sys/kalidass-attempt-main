@@ -155,6 +155,23 @@
   - Customer messages must refer to `"Our Pilgrimage Ticketing Desk"` under statutory guidelines.
   - Procurement dossiers must state the formal desk title and enforce the 120-minute SLA requirement.
 
+### 8.7 Mobile Horizontal Swipe Hint Affordance
+- **Rule 8.7.1 (Mobile Swipe Affordance Mandate):** Any section featuring a horizontal carousel, scrollable track, or wide data table on mobile/tablet breakpoints must include a visible swipe affordance label directly below or above the track/indicator dots.
+- **Rule 8.7.2 (Standard Microcopy & Markup):**
+  ```html
+  <!-- Mobile Swipe Hint -->
+  <div class="flex items-center justify-center gap-1.5 text-xs font-medium text-m3-on-surface-variant md:hidden mt-1">
+    <span>👉 Swipe horizontally to compare all vehicle tariffs</span>
+  </div>
+  ```
+- **Rule 8.7.3 (Responsive Hiding):** Must always include `md:hidden` or `sm:hidden` so it stays hidden on desktop screens where horizontal scrolling is not active or where content is laid out in multi-column CSS grids.
+- **Rule 8.7.4 (Contextual Variations):**
+  - Vehicle Tariffs: `👉 Swipe horizontally to compare all vehicle tariffs` (or `...to compare vehicles`)
+  - Packages: `👉 Swipe horizontally to view all [N] packages`
+  - Chauffeurs: `👉 Swipe horizontally to view all verified chauffeurs`
+  - Customer Reviews: `👉 Swipe horizontally to read all customer reviews`
+  - Specifications Tables: `👉 Swipe horizontally to compare all vehicle specifications`
+
 ---
 
 ## 9. Paid Advertising & Acquisition Standards

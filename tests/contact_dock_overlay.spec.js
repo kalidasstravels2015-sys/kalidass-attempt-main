@@ -17,7 +17,7 @@ test.describe('Popups hide the floating call button', () => {
     await expect(floatingDock).toBeVisible();
     await expect(quickNav).toBeVisible();
 
-    const aiBtn = page.locator('#floating-ai-mobile-btn, #floating-ai-btn').locator('visible=true');
+    const aiBtn = page.locator('#navbar-ai-plan-btn, #desktop-navbar-ai-plan-btn, #floating-ai-mobile-btn, #floating-ai-btn').locator('visible=true');
     await aiBtn.click();
 
     const modal = page.locator('#ai-fare-modal');

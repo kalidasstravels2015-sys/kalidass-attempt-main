@@ -80,4 +80,21 @@
     - **Explicit Blocking Validation:** Clicking `View Instant Fare` with an empty destination MUST immediately halt calculation, display an unambiguous validation alert (e.g., `Please enter your destination / hotel / area in Chennai`), highlight the empty input field with an error ring, and scroll/focus to the input.
     - **Zero Silent Defaults:** Never silently substitute a default dummy location (e.g. 'Chennai City Area') or fabricate a fake default distance/price when the user hasn't specified their destination.
 
+18. **Mobile Horizontal Swipe Hint Affordance Standard (`👉 Swipe horizontally`):**
+    - **Invariant:** Whenever a component or page presents a horizontally scrollable container / carousel on mobile (e.g. vehicle comparison carousels, packages scroll track, driver profiles, customer reviews, booking engine vehicle selectors, or wide tables), ALWAYS provide a mobile-only hint directly beneath or above the track/indicator dots.
+    - **Standard Markup & Styling:**
+      ```html
+      <!-- Mobile Swipe Hint -->
+      <div class="flex items-center justify-center gap-1.5 text-xs font-medium text-m3-on-surface-variant md:hidden mt-1">
+        <span>👉 Swipe horizontally to compare all vehicle tariffs</span>
+      </div>
+      ```
+    - **Contextual Copy Variations:**
+      - Fleet / Tariff Carousels: `👉 Swipe horizontally to compare all vehicle tariffs` (or `...to compare vehicles`)
+      - Tour Packages: `👉 Swipe horizontally to view all [N] packages`
+      - Chauffeurs: `👉 Swipe horizontally to view all verified chauffeurs`
+      - Customer Reviews: `👉 Swipe horizontally to read all customer reviews`
+      - Wide Data Tables: `👉 Swipe horizontally to compare all vehicle specifications` (or `...view full table`)
+    - **Breakpoints:** Use responsive utility (`md:hidden` or `sm:hidden`) so the hint displays strictly on touch/mobile screens where swipe gestures apply, and remains cleanly hidden on desktop grid views.
+
 See [docs/03_RULES.md](./docs/03_RULES.md) for full quality standards.

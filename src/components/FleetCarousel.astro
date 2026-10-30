@@ -143,6 +143,11 @@ const gridColsClass = fleet.length === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3';
         ))}
       </div>
 
+      <!-- Mobile Swipe Hint -->
+      <div class="flex items-center justify-center gap-1.5 text-xs font-medium text-m3-on-surface-variant md:hidden mt-1">
+        <span>👉 Swipe horizontally to compare all vehicle tariffs</span>
+      </div>
+
       {/* View All Fleet Link Button (M3 Outlined Button) */}
       {limit && (
         <div class="text-center mt-8">

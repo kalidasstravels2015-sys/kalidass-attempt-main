@@ -1,5 +1,7 @@
 ---
 import AiFareAssistantModal from './AiFareAssistantModal.astro';
+import AndroidPhoneIcon from './AndroidPhoneIcon.astro';
+import WhatsAppIcon from './WhatsAppIcon.astro';
 import { WHATSAPP_CONFIG } from '../utils/whatsapp';
 
 interface Props {
@@ -11,11 +13,62 @@ interface Props {
 const {
   phone = `+${WHATSAPP_CONFIG.phone}`,
   displayPhone = WHATSAPP_CONFIG.formattedPhone,
+  whatsappMsg = 'Hi Kalidass Travels, I need cab quotation and availability details.',
 } = Astro.props;
 
 const rawPhone = WHATSAPP_CONFIG.phone;
 const cleanPhone = `+${rawPhone}`;
+const callUrl = `tel:${cleanPhone}`;
+const whatsappUrl = `https://wa.me/${rawPhone}?text=${encodeURIComponent(whatsappMsg)}`;
 ---
 
-<!-- AI Fare Concierge Modal Window -->
+<!-- Global Floating Contact Actions (Compact Circular FABs: WhatsApp Above, Call Below) -->
+<div 
+  id="floating-actions-container"
+  class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-center gap-2.5 pointer-events-none select-none pb-[env(safe-area-inset-bottom,0px)] pr-[env(safe-area-inset-right,0px)] transition-all duration-300"
+  role="region"
+  aria-label="Direct Booking Helplines"
+>
+  <!-- WhatsApp Circular FAB (Above Call Button) -->
+  <a
+    href={whatsappUrl}
+    id="floating-whatsapp-btn"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="pointer-events-auto group relative flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#25D366] hover:bg-[#20bd5a] active:bg-[#1da851] text-white shadow-md hover:shadow-lg active:shadow-sm active:scale-95 transition-all duration-200 border border-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 cursor-pointer"
+    aria-label={`Chat on WhatsApp (${displayPhone})`}
+    title={`Chat on WhatsApp: ${displayPhone}`}
+  >
+    <WhatsAppIcon variant="white" className="w-5 h-5 text-white shrink-0 fill-current" />
+    
+    <!-- Desktop Tooltip on Hover -->
+    <span 
+      class="hidden md:group-hover:inline-flex md:group-focus-visible:inline-flex absolute right-full mr-2.5 top-1/2 -translate-y-1/2 whitespace-nowrap px-2.5 py-1 rounded-md bg-slate-900/90 text-white text-xs font-semibold shadow-md pointer-events-none transition-opacity duration-150 z-20 border border-white/10"
+      role="tooltip"
+    >
+      WhatsApp Us
+    </span>
+  </a>
+
+  <!-- Call Helpline Circular FAB (Compact 44-48dp Circular FAB) -->
+  <a
+    href={callUrl}
+    id="floating-call-btn"
+    class="pointer-events-auto group relative flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary shadow-md hover:shadow-lg active:shadow-sm active:scale-95 transition-all duration-200 border border-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary/50 cursor-pointer"
+    aria-label={`Call Helpline (${displayPhone})`}
+    title={`Call Helpline: ${displayPhone}`}
+  >
+    <AndroidPhoneIcon className="w-5 h-5 text-white group-hover:rotate-12 transition-transform duration-300 shrink-0" />
+    
+    <!-- Desktop Tooltip on Hover -->
+    <span 
+      class="hidden md:group-hover:inline-flex md:group-focus-visible:inline-flex absolute right-full mr-2.5 top-1/2 -translate-y-1/2 whitespace-nowrap px-2.5 py-1 rounded-md bg-slate-900/90 text-white text-xs font-semibold shadow-md pointer-events-none transition-opacity duration-150 z-20 border border-white/10"
+      role="tooltip"
+    >
+      Call {displayPhone}
+    </span>
+  </a>
+</div>
+
+<!-- AI Fare Concierge Modal Window (Embedded so openAiFareModal() works from navbar & page buttons) -->
 <AiFareAssistantModal phone={cleanPhone} displayPhone={displayPhone} />

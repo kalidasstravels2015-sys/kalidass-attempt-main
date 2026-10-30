@@ -41,6 +41,8 @@ const KNOWN_DESTINATIONS = {
   'navagraha': { name: 'Kumbakonam Navagraha', roundTripKm: 650, oneWayKm: 310, stateCode: 'TN', defaultDays: 2 },
   'rameswaram': { name: 'Rameswaram Jyotirlinga', roundTripKm: 1100, oneWayKm: 550, stateCode: 'TN', defaultDays: 3 },
   'sabarimala': { name: 'Sabarimala Pilgrimage', roundTripKm: 1300, oneWayKm: 650, stateCode: 'KL', defaultDays: 3 },
+  'nilakkal': { name: 'Sabarimala (Nilakkal)', roundTripKm: 1300, oneWayKm: 650, stateCode: 'KL', defaultDays: 3 },
+  'pamba': { name: 'Sabarimala (Pamba)', roundTripKm: 1300, oneWayKm: 650, stateCode: 'KL', defaultDays: 3 },
   'tiruchendur': { name: 'Tiruchendur Murugan', roundTripKm: 1250, oneWayKm: 625, stateCode: 'TN', defaultDays: 2 },
   'bangalore': { name: 'Bangalore / Bengaluru', roundTripKm: 700, oneWayKm: 350, stateCode: 'KA', defaultDays: 2 },
   'bengaluru': { name: 'Bangalore / Bengaluru', roundTripKm: 700, oneWayKm: 350, stateCode: 'KA', defaultDays: 2 },
@@ -71,6 +73,8 @@ const ROUTE_REALISTIC_HOURS = {
   'navagraha': 36,
   'rameswaram': 48,
   'sabarimala': 48,
+  'nilakkal': 48,
+  'pamba': 48,
   'tiruchendur': 36,
   'bangalore': 24,
   'bengaluru': 24,
@@ -270,8 +274,9 @@ const TEMPO_SWITCHER_LIST = [
     name: '12-Seater',
     fullName: '12-Seater Luxury Force Tempo (12+1)',
     seats: 12,
+    bags: 10,
     paxLabel: '12 Seats',
-    capacityLabel: '12 Seats',
+    capacityLabel: '12 Seats + 10 Bags',
     image: '/images/fleet/tempo-12.webp',
     imgClass: 'w-28 sm:w-34 h-15 sm:h-18',
     category: 'tempo',
@@ -284,8 +289,9 @@ const TEMPO_SWITCHER_LIST = [
     name: 'Force Urbania',
     fullName: 'Force Urbania VIP Luxury Van (12+1)',
     seats: 12,
+    bags: 12,
     paxLabel: '12 Seats VIP',
-    capacityLabel: '12 Seats VIP',
+    capacityLabel: '12 Seats + 12 Bags',
     image: '/images/fleet/force-urbania.webp',
     imgClass: 'w-28 sm:w-34 h-15 sm:h-18',
     category: 'coach',
@@ -298,8 +304,9 @@ const TEMPO_SWITCHER_LIST = [
     name: '14-Seater',
     fullName: '14-Seater Executive Force Tempo (14+1)',
     seats: 14,
+    bags: 12,
     paxLabel: '14 Seats',
-    capacityLabel: '14 Seats',
+    capacityLabel: '14 Seats + 12 Bags',
     image: '/images/fleet/tempo-12.webp',
     imgClass: 'w-28 sm:w-34 h-15 sm:h-18',
     category: 'tempo',
@@ -312,8 +319,9 @@ const TEMPO_SWITCHER_LIST = [
     name: '17-Seater',
     fullName: '17-Seater Executive Force Tempo (17+1)',
     seats: 17,
+    bags: 15,
     paxLabel: '17 Seats',
-    capacityLabel: '17 Seats',
+    capacityLabel: '17 Seats + 15 Bags',
     image: '/images/fleet/tempo-17.webp',
     imgClass: 'w-28 sm:w-34 h-15 sm:h-18',
     category: 'coach',
@@ -326,8 +334,9 @@ const TEMPO_SWITCHER_LIST = [
     name: '20-Seater',
     fullName: '20-Seater Grand Force Tempo (20+1)',
     seats: 20,
+    bags: 18,
     paxLabel: '20 Seats',
-    capacityLabel: '20 Seats',
+    capacityLabel: '20 Seats + 18 Bags',
     image: '/images/fleet/tempo-17.webp',
     imgClass: 'w-28 sm:w-34 h-15 sm:h-18',
     category: 'coach',
@@ -340,8 +349,9 @@ const TEMPO_SWITCHER_LIST = [
     name: '26-Seater',
     fullName: '26-Seater Force Mini Bus Coach (26+1)',
     seats: 26,
+    bags: 22,
     paxLabel: '26 Seats',
-    capacityLabel: '26 Seats',
+    capacityLabel: '26 Seats + 22 Bags',
     image: '/images/fleet/tempo.webp',
     imgClass: 'w-30 sm:w-36 h-16 sm:h-19',
     category: 'coach',
@@ -395,7 +405,13 @@ export default function BookingEngine({
   subtitle = '',
   variant = 'card',
   fleetType = '',
-  customVehicles = null
+  customVehicles = null,
+  showTabs = undefined,
+  showPopularChips = true,
+  forceEmptyLocations = false,
+  pickupPlaceholder = '',
+  dropPlaceholder = '',
+  initialDays = undefined
 }) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
@@ -445,6 +461,12 @@ export default function BookingEngine({
     return Array.from(new Set(valid.length > 0 ? valid : ['outstation']));
   }, [allowedTabs]);
 
+  const shouldRenderTabs = useMemo(() => {
+    if (showTabs === false) return false;
+    if (showTabs === true) return true;
+    return normalizedAllowedTabs.length > 1;
+  }, [showTabs, normalizedAllowedTabs]);
+
   const [activeTab, setActiveTab] = useState(normalizedInitialTab);
 
   // 2. Resolve default destination
@@ -458,14 +480,19 @@ export default function BookingEngine({
   // 3. Form State: Outstation & General
   const defaultTripType = (initialTab === 'oneway' || prefill.tripType === 'oneway') ? 'oneway' : 'round';
   const [outstationTripType, setOutstationTripType] = useState(defaultTripType);
-  const [outstationPickup, setOutstationPickup] = useState(initialPickup || prefill.pickup || 'Chennai, Tamil Nadu');
-  const [outstationDrop, setOutstationDrop] = useState(detectedDestination || '');
+  const [outstationPickup, setOutstationPickup] = useState(
+    forceEmptyLocations ? '' : (initialPickup || prefill.pickup || 'Chennai, Tamil Nadu')
+  );
+  const [outstationDrop, setOutstationDrop] = useState(
+    forceEmptyLocations ? '' : (detectedDestination || '')
+  );
   
   // Resolve default days based on destination
   const defaultDaysForDest = useMemo(() => {
+    if (initialDays) return Number(initialDays);
     const destObj = KNOWN_DESTINATIONS[(detectedDestination || '').toLowerCase()];
     return destObj?.defaultDays || (prefill.days ? Number(prefill.days) : 1);
-  }, [detectedDestination, prefill.days]);
+  }, [detectedDestination, prefill.days, initialDays]);
 
   const [outstationDays, setOutstationDays] = useState(defaultDaysForDest);
 
@@ -1291,36 +1318,38 @@ Please confirm chauffeur availability.`;
           </div>
 
           {/* 1. M3 Segmented Button / Tab Switcher */}
-          {activeTab !== 'airport' ? (
-            <div className="grid grid-cols-2 p-1 bg-m3-surface-container-high dark:bg-m3-surface-container-high rounded-m3-full min-h-[44px]">
-              <button
-                type="button"
-                onClick={() => setActiveTab('outstation')}
-                className={`py-2 px-3 rounded-m3-full text-xs sm:text-sm font-bold transition-all duration-150 cursor-pointer active:scale-[0.98] ${
-                  activeTab === 'outstation'
-                    ? 'bg-blue-600 text-white shadow-m3-1'
-                    : 'text-m3-on-surface-variant hover:text-m3-on-surface dark:text-slate-300 dark:hover:text-white'
-                }`}
-              >
-                Outstation (Round Trip)
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab('local')}
-                className={`py-2 px-3 rounded-m3-full text-xs sm:text-sm font-bold transition-all duration-150 cursor-pointer active:scale-[0.98] ${
-                  activeTab === 'local'
-                    ? 'bg-blue-600 text-white shadow-m3-1'
-                    : 'text-m3-on-surface-variant hover:text-m3-on-surface dark:text-slate-300 dark:hover:text-white'
-                }`}
-              >
-                Local Package
-              </button>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center gap-2 py-2.5 px-4 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-m3-full text-xs sm:text-sm font-bold text-blue-700 dark:text-blue-300 shadow-2xs">
-              <Plane className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
-              <span>Airport Arrival Pickup (MAA Terminal 1, 2 &amp; 4)</span>
-            </div>
+          {shouldRenderTabs && (
+            activeTab !== 'airport' ? (
+              <div className="grid grid-cols-2 p-1 bg-m3-surface-container-high dark:bg-m3-surface-container-high rounded-m3-full min-h-[44px]">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('outstation')}
+                  className={`py-2 px-3 rounded-m3-full text-xs sm:text-sm font-bold transition-all duration-150 cursor-pointer active:scale-[0.98] ${
+                    activeTab === 'outstation'
+                      ? 'bg-blue-600 text-white shadow-m3-1'
+                      : 'text-m3-on-surface-variant hover:text-m3-on-surface dark:text-slate-300 dark:hover:text-white'
+                  }`}
+                >
+                  Outstation (Round Trip)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('local')}
+                  className={`py-2 px-3 rounded-m3-full text-xs sm:text-sm font-bold transition-all duration-150 cursor-pointer active:scale-[0.98] ${
+                    activeTab === 'local'
+                      ? 'bg-blue-600 text-white shadow-m3-1'
+                      : 'text-m3-on-surface-variant hover:text-m3-on-surface dark:text-slate-300 dark:hover:text-white'
+                  }`}
+                >
+                  Local Package
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center gap-2 py-2.5 px-4 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-m3-full text-xs sm:text-sm font-bold text-blue-700 dark:text-blue-300 shadow-2xs">
+                <Plane className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
+                <span>Airport Arrival Pickup (MAA Terminal 1, 2 &amp; 4)</span>
+              </div>
+            )
           )}
 
           {/* 2. Outstation Form Fields */}
@@ -1342,14 +1371,17 @@ Please confirm chauffeur availability.`;
                     value={outstationPickup}
                     onFocus={handleInputFocus}
                     onChange={(e) => setOutstationPickup(e.target.value)}
-                    placeholder="e.g. T. Nagar, Central, Airport, OMR"
+                    placeholder={pickupPlaceholder || "e.g. T. Nagar, Central, Airport, OMR"}
                     className="w-full pl-3.5 pr-20 min-h-[48px] sm:min-h-[50px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 rounded-m3-sm text-m3-on-surface dark:text-white placeholder-slate-400 focus:outline-none focus:border-2 focus:border-blue-600 focus:bg-white dark:focus:bg-m3-surface transition-all"
                   />
                   <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center">
                     {outstationPickup && (
                       <button
                         type="button"
-                        onClick={() => setOutstationPickup('')}
+                        onClick={() => {
+                          setOutstationPickup('');
+                          pickupInputRef.current?.focus();
+                        }}
                         className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-white active:scale-90 transition-transform cursor-pointer text-xs"
                         aria-label="Clear pickup"
                       >
@@ -1379,8 +1411,8 @@ Please confirm chauffeur availability.`;
                     value={outstationDrop}
                     onFocus={handleInputFocus}
                     onChange={(e) => handleDestinationSelect(e.target.value)}
-                    placeholder="e.g. Pondicherry, Tirupati, Bangalore"
-                    className={`w-full pl-3.5 pr-10 min-h-[48px] sm:min-h-[50px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border rounded-m3-sm text-m3-on-surface dark:text-white placeholder-slate-400 font-medium focus:outline-none focus:border-2 transition-all ${
+                    placeholder={dropPlaceholder || "e.g. Pondicherry, Tirupati, Bangalore"}
+                    className={`w-full pl-3.5 pr-20 min-h-[48px] sm:min-h-[50px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border rounded-m3-sm text-m3-on-surface dark:text-white placeholder-slate-400 font-medium focus:outline-none focus:border-2 transition-all ${
                       validationError && !outstationDrop.trim()
                         ? 'border-2 border-red-500 ring-2 ring-red-400/40 bg-red-50/40 dark:bg-red-950/30 focus:border-red-600'
                         : isDropInChennai
@@ -1388,8 +1420,23 @@ Please confirm chauffeur availability.`;
                         : 'border-m3-outline-variant/80 dark:border-m3-outline-variant/60 focus:border-blue-600 focus:bg-white dark:focus:bg-m3-surface'
                     }`}
                   />
-                  <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none">
-                    <MapPin className="w-4 h-4 text-blue-600" />
+                  <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center">
+                    {outstationDrop && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setOutstationDrop('');
+                          dropInputRef.current?.focus();
+                        }}
+                        className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-white active:scale-90 transition-transform cursor-pointer text-xs"
+                        aria-label="Clear drop location"
+                      >
+                        ✕
+                      </button>
+                    )}
+                    <div className="w-8 h-8 flex items-center justify-center pointer-events-none">
+                      <MapPin className="w-4 h-4 text-blue-600" />
+                    </div>
                   </div>
                 </div>
 
@@ -1416,25 +1463,27 @@ Please confirm chauffeur availability.`;
               </div>
 
               {/* Popular Chips (M3 Filter / Assist Chips with 40dp ergonomics) */}
-              <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mr-0.5">
-                  POPULAR:
-                </span>
-                {['Tirupati', 'Pondicherry', 'Mahabalipuram', 'Kumbakonam', 'Bangalore'].map(city => (
-                  <button
-                    key={city}
-                    type="button"
-                    onClick={() => handleDestinationSelect(city)}
-                    className={`min-h-[34px] px-3.5 py-1 text-xs font-medium rounded-m3-full border transition-all duration-150 cursor-pointer active:scale-95 inline-flex items-center justify-center ${
-                      outstationDrop.toLowerCase().includes(city.toLowerCase())
-                        ? 'bg-blue-50 border-blue-600 text-blue-700 font-semibold shadow-m3-0'
-                        : 'bg-white dark:bg-m3-surface border-m3-outline-variant/80 dark:border-m3-outline-variant/60 text-m3-on-surface dark:text-slate-300 hover:border-blue-400'
-                    }`}
-                  >
-                    {city}
-                  </button>
-                ))}
-              </div>
+              {showPopularChips && (
+                <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mr-0.5">
+                    POPULAR:
+                  </span>
+                  {['Tirupati', 'Pondicherry', 'Mahabalipuram', 'Kumbakonam', 'Bangalore'].map(city => (
+                    <button
+                      key={city}
+                      type="button"
+                      onClick={() => handleDestinationSelect(city)}
+                      className={`min-h-[34px] px-3.5 py-1 text-xs font-medium rounded-m3-full border transition-all duration-150 cursor-pointer active:scale-95 inline-flex items-center justify-center ${
+                        outstationDrop.toLowerCase().includes(city.toLowerCase())
+                          ? 'bg-blue-50 border-blue-600 text-blue-700 font-semibold shadow-m3-0'
+                          : 'bg-white dark:bg-m3-surface border-m3-outline-variant/80 dark:border-m3-outline-variant/60 text-m3-on-surface dark:text-slate-300 hover:border-blue-400'
+                      }`}
+                    >
+                      {city}
+                    </button>
+                  ))}
+                </div>
+              )}
 
               {/* 2-Column Date & Time */}
               <div className="grid grid-cols-2 gap-2.5 pt-0.5">
@@ -1772,7 +1821,7 @@ Please confirm chauffeur availability.`;
                   </span>
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-normal text-slate-400 hidden xs:inline">
-                      Swipe or tap to switch
+                      Swipe or tap to switch vehicle
                     </span>
                     <div className="flex items-center gap-1">
                       <button
@@ -1852,15 +1901,17 @@ Please confirm chauffeur availability.`;
                             {item.name}
                           </div>
                           <div className="text-xs sm:text-[13px] font-bold text-slate-700 dark:text-slate-200 mt-1 whitespace-nowrap">
-                            {item.capacityLabel || `${item.seats} Seats + ${item.bags || 2} Bags`}
-                          </div>
-                          <div className="text-base sm:text-lg font-black text-slate-900 dark:text-white mt-1.5 tracking-tight">
-                            ₹{vPricing.totalFare.toLocaleString('en-IN')}
+                            {item.seats} Seats + {item.bags ? `${item.bags} Bags` : (item.seats >= 12 ? '10 Bags' : '2 Bags')}
                           </div>
                         </div>
                       </button>
                     );
                   })}
+                </div>
+
+                {/* Mobile Swipe Hint */}
+                <div className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-slate-500 dark:text-slate-400 sm:hidden mt-1.5">
+                  <span>👉 Swipe horizontally to compare vehicles</span>
                 </div>
               </div>
 
@@ -1953,7 +2004,7 @@ Please confirm chauffeur availability.`;
                   </span>
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-normal text-slate-400 hidden xs:inline">
-                      Tap to switch rates
+                      Tap to switch vehicle
                     </span>
                     <div className="flex items-center gap-1">
                       <button
@@ -2014,8 +2065,10 @@ Please confirm chauffeur availability.`;
                           <div className={`text-xs font-bold whitespace-nowrap ${isSelected ? 'text-blue-600 dark:text-blue-400' : 'text-slate-800 dark:text-gray-200'}`}>
                             {item.name}
                           </div>
-                          <div className="text-[10px] font-bold text-slate-900 dark:text-white mt-0.5">
-                            ₹{vPricing.totalFare.toLocaleString('en-IN')}
+                          <div className="text-[10px] text-slate-600 dark:text-slate-300 font-medium mt-0.5 whitespace-nowrap flex items-center gap-1">
+                            <span>{item.seats} Seats</span>
+                            <span>•</span>
+                            <span>{item.bags ? `${item.bags} Bags` : (item.seats >= 12 ? '10+ Bags' : '2 Bags')}</span>
                           </div>
                         </div>
                         {isSelected && (
@@ -2024,6 +2077,11 @@ Please confirm chauffeur availability.`;
                       </button>
                     );
                   })}
+                </div>
+
+                {/* Mobile Swipe Hint */}
+                <div className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-slate-500 dark:text-slate-400 sm:hidden mt-1.5">
+                  <span>👉 Swipe horizontally to compare vehicles</span>
                 </div>
               </div>
 

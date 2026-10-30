@@ -16,6 +16,10 @@ export default function TourBookingEngine({
       <BookingEngine
         initialTab="outstation"
         allowedTabs={['outstation']}
+        showTabs={false}
+        showPopularChips={false}
+        forceEmptyLocations={true}
+        pickupPlaceholder="Enter doorstep pickup address / area in Chennai"
         serviceSlug={serviceSlug}
         serviceTitle={serviceTitle}
         variant="card"
