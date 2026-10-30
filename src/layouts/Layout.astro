@@ -1564,10 +1564,10 @@ const unifiedSchemaGraph = {
           </div>
 
           <!-- M3 Desktop Navigation Pills (Option A: Cabs & Rentals + Tour Packages) -->
-          <div class="hidden md:flex items-center space-x-1 lg:space-x-1.5">
+          <div class="hidden md:flex items-center space-x-0.5 lg:space-x-1 xl:space-x-1.5 shrink-0 flex-nowrap">
             <a
               href="/"
-              class={`px-3 py-2 rounded-full text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary ${
+              class={`px-2.5 xl:px-3 py-2 rounded-full text-xs xl:text-sm whitespace-nowrap shrink-0 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary ${
                 isHome
                   ? "bg-m3-primary/10 text-m3-primary font-bold shadow-xs"
                   : "text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold"
@@ -1578,9 +1578,9 @@ const unifiedSchemaGraph = {
             </a>
 
             <!-- 1. Cabs & Rentals Dropdown -->
-            <div class="relative group">
+            <div class="relative group shrink-0">
               <button
-                class={`flex items-center gap-1 px-3 py-2 rounded-full text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary ${
+                class={`flex items-center gap-1 px-2.5 xl:px-3 py-2 rounded-full text-xs xl:text-sm whitespace-nowrap shrink-0 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary ${
                   isCabsAndRentals
                     ? "bg-m3-primary/10 text-m3-primary font-bold shadow-xs"
                     : "text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold"
@@ -1588,9 +1588,9 @@ const unifiedSchemaGraph = {
                 aria-expanded="false"
                 aria-haspopup="true"
               >
-                <span>Cabs &amp; Rentals</span>
+                <span class="whitespace-nowrap">Cabs &amp; Rentals</span>
                 <svg
-                  class="w-3.5 h-3.5 text-m3-on-surface-variant transition-transform group-hover:rotate-180"
+                  class="w-3.5 h-3.5 shrink-0 text-m3-on-surface-variant transition-transform group-hover:rotate-180"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1669,9 +1669,9 @@ const unifiedSchemaGraph = {
             </div>
 
             <!-- 2. Temple Tours Dropdown -->
-            <div class="relative group">
+            <div class="relative group shrink-0">
               <button
-                class={`flex items-center gap-1 px-3 py-2 rounded-full text-xs xl:text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary ${
+                class={`flex items-center gap-1 px-2.5 xl:px-3 py-2 rounded-full text-xs xl:text-sm whitespace-nowrap shrink-0 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary ${
                   isTempleTours
                     ? "bg-m3-primary/10 text-m3-primary font-bold shadow-xs"
                     : "text-m3-on-surface hover:text-m3-primary hover:bg-m3-surface-container font-semibold"
@@ -1679,10 +1679,10 @@ const unifiedSchemaGraph = {
                 aria-expanded="false"
                 aria-haspopup="true"
               >
-                <span>Temple Tours</span>
-                <span class="px-1.5 py-0.2 rounded-full bg-m3-tertiary-container text-m3-on-tertiary-container text-[10px] font-bold">Popular</span>
+                <span class="whitespace-nowrap">Temple Tours</span>
+                <span class="px-1.5 py-0.2 rounded-full bg-m3-tertiary-container text-m3-on-tertiary-container text-[10px] font-bold whitespace-nowrap shrink-0">Popular</span>
                 <svg
-                  class="w-3.5 h-3.5 text-m3-on-surface-variant transition-transform group-hover:rotate-180"
+                  class="w-3.5 h-3.5 shrink-0 text-m3-on-surface-variant transition-transform group-hover:rotate-180"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1830,19 +1830,6 @@ const unifiedSchemaGraph = {
 
           <!-- M3 Desktop Action Button & Mobile Hamburger -->
           <div class="flex items-center gap-3">
-            <!-- Compact Desktop Plan with AI Action Button -->
-            <button
-              type="button"
-              id="desktop-navbar-ai-plan-btn"
-              onclick="window.toggleAiFareModal ? window.toggleAiFareModal() : (window.openAiFareModal && window.openAiFareModal())"
-              class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-[#0B57D0] via-[#1A73E8] to-[#4F46E5] hover:from-[#0842A0] hover:to-[#4338CA] text-white text-xs font-bold rounded-full shadow-2xs hover:shadow-xs transition-all transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer border border-white/20"
-              aria-label="Plan My Trip AI"
-              title="Plan My Trip with AI"
-            >
-              <GeminiIcon class="w-3.5 h-3.5 text-blue-200 shrink-0" />
-              <span>AI Plan</span>
-            </button>
-
             <!-- Desktop Executive Call CTA with Multi-Number Quick Popover -->
             <div class="relative group hidden sm:block">
               <a
