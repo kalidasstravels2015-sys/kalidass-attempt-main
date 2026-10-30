@@ -227,7 +227,7 @@ export function parseConversationState(messages: ChatMessage[], pageContext?: an
     } else if (lower.includes('thiruvannamalai') || lower.includes('tiruvannamalai') || lower.includes('girivalam') || lower.includes('திருவண்ணாமலை')) {
       state.activeDestination = 'thiruvannamalai';
       state.serviceType = 'tour';
-    } else if (lower.includes('kanchipuram') || lower.includes('kanchi') || lower.includes('காஞ்சிபுரம்')) {
+    } else if (lower.includes('kanchipuram') || lower.includes('kanchi') || lower.includes('kancheepuram') || lower.includes('kanchee') || lower.includes('kanchepuram') || lower.includes('kanjipuram') || lower.includes('kanji') || lower.includes('kanhipuram') || lower.includes('காஞ்சிபுரம்') || lower.includes('காஞ்சி') || lower.includes('kamakshi') || lower.includes('ekambareswarar')) {
       state.activeDestination = 'kanchipuram';
       state.serviceType = 'tour';
     } else if (lower.includes('navagraha') || lower.includes('kumbakonam') || lower.includes('நவக்கிரக') || lower.includes('கும்பகோணம்')) {
@@ -296,7 +296,7 @@ export function parseConversationState(messages: ChatMessage[], pageContext?: an
       } else if (destStr.includes('thiruvannamalai') || destStr.includes('tiruvannamalai') || destStr.includes('girivalam')) {
         state.activeDestination = 'thiruvannamalai';
         state.serviceType = 'tour';
-      } else if (destStr.includes('kanchipuram') || destStr.includes('kanchi')) {
+      } else if (destStr.includes('kanchipuram') || destStr.includes('kanchi') || destStr.includes('kancheepuram') || destStr.includes('kanchee') || destStr.includes('kanchepuram') || destStr.includes('kanjipuram') || destStr.includes('kanji') || destStr.includes('kanhipuram') || destStr.includes('காஞ்சிபுரம்') || destStr.includes('காஞ்சி')) {
         state.activeDestination = 'kanchipuram';
         state.serviceType = 'tour';
       } else if (destStr.includes('navagraha') || destStr.includes('kumbakonam')) {

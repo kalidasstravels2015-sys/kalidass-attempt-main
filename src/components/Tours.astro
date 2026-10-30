@@ -8,6 +8,7 @@ import { Car, Clock, CheckCircle2, ArrowRight } from "lucide-react";
 // 1. Temple Trips (Strictly religious/pilgrimage)
 const templeTripsSlugs = [
   "tirupati-package",
+  "kanchipuram-temple-trip",
   "sabarimala-trip",
   "thiruvannamalai-girivalam-trip",
   "rameswaram-2-days",
@@ -23,6 +24,7 @@ const templeTrips = templeTripsSlugs
 // Image Mapping
 const tourImages: Record<string, string> = {
   "tirupati-package": "/images/temple/tirupati-balaji.webp",
+  "kanchipuram-temple-trip": "/images/temple/kanchipuram-temple.webp",
   "thiruvannamalai-girivalam-trip": "/images/temple/thiruvannamalai-girivalam.webp",
   "rameswaram-2-days": "/images/temple/rameswaram.webp",
   "tiruchendur-temple-tour": "/images/temple/tiruchendur-murugan.webp",
@@ -33,6 +35,7 @@ const tourImages: Record<string, string> = {
 
 const tourImageAlts: Record<string, string> = {
   "tirupati-package": "Tirupati Balaji Temple darshan package with taxi service from Chennai",
+  "kanchipuram-temple-trip": "Chennai to Kanchipuram one day temple tour cab package",
   "thiruvannamalai-girivalam-trip": "Thiruvannamalai Girivalam full moon day trip from Chennai",
   "rameswaram-2-days": "Rameswaram 2-day pilgrimage tour including Dhanushkodi beach",
   "tiruchendur-temple-tour": "Tiruchendur Murugan seashore temple & Nava Tirupathi senior-friendly tour from Chennai",
@@ -54,6 +57,21 @@ interface TourMeta {
 }
 
 const templePackageMeta: Record<string, TourMeta> = {
+  "kanchipuram-temple-trip": {
+    cleanTitle: "Chennai to Kanchipuram One Day Tour",
+    badge: "Popular Day Trip",
+    durationLabel: "1 Day (150 km Round Trip)",
+    startingPrice: "₹3,500",
+    carType: "Sedan",
+    highlights: [
+      "06:30 AM Doorstep Chennai pickup & evening return",
+      "Kamakshi Amman, Ekambareswarar & Varadharaja Perumal",
+      "Handloom silk saree weaver cooperative visit included"
+    ],
+    inclusionPill: "Car, Fuel, Tolls & Driver Bata Included",
+    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Kanchipuram One Day Temple Tour."
+  },
+
   "tirupati-package": {
     cleanTitle: "Chennai to Tirupati Balaji Darshan",
     badge: "Most Popular",

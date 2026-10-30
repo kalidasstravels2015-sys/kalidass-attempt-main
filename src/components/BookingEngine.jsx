@@ -33,6 +33,11 @@ const KNOWN_DESTINATIONS = {
   'thiruvannamalai': { name: 'Thiruvannamalai Girivalam', roundTripKm: 390, oneWayKm: 195, stateCode: 'TN', defaultDays: 1 },
   'tiruvannamalai': { name: 'Thiruvannamalai Girivalam', roundTripKm: 390, oneWayKm: 195, stateCode: 'TN', defaultDays: 1 },
   'kanchipuram': { name: 'Kanchipuram Temples', roundTripKm: 150, oneWayKm: 75, stateCode: 'TN', defaultDays: 1 },
+  'kancheepuram': { name: 'Kanchipuram Temples', roundTripKm: 150, oneWayKm: 75, stateCode: 'TN', defaultDays: 1 },
+  'kanchi': { name: 'Kanchipuram Temples', roundTripKm: 150, oneWayKm: 75, stateCode: 'TN', defaultDays: 1 },
+  'kanchepuram': { name: 'Kanchipuram Temples', roundTripKm: 150, oneWayKm: 75, stateCode: 'TN', defaultDays: 1 },
+  'kanjipuram': { name: 'Kanchipuram Temples', roundTripKm: 150, oneWayKm: 75, stateCode: 'TN', defaultDays: 1 },
+  'kanhipuram': { name: 'Kanchipuram Temples', roundTripKm: 150, oneWayKm: 75, stateCode: 'TN', defaultDays: 1 },
   'vellore': { name: 'Vellore Golden Temple & CMC', roundTripKm: 280, oneWayKm: 140, stateCode: 'TN', defaultDays: 1 },
   'mahabalipuram': { name: 'Mahabalipuram Shore', roundTripKm: 120, oneWayKm: 55, stateCode: 'TN', defaultDays: 1 },
   'mamallapuram': { name: 'Mahabalipuram Shore', roundTripKm: 120, oneWayKm: 55, stateCode: 'TN', defaultDays: 1 },
@@ -65,6 +70,11 @@ const ROUTE_REALISTIC_HOURS = {
   'pondicherry': 11,
   'puducherry': 11,
   'kanchipuram': 8,
+  'kancheepuram': 8,
+  'kanchi': 8,
+  'kanchepuram': 8,
+  'kanjipuram': 8,
+  'kanhipuram': 8,
   'vellore': 10,
   'mahabalipuram': 8,
   'mamallapuram': 8,
@@ -370,7 +380,7 @@ function resolveInitialDestination(drop, prefillDest, slug, sTitle) {
   if (text.includes('tirumala')) return 'Tirumala';
   if (text.includes('pondicherry') || text.includes('puducherry') || text.includes('auroville')) return 'Pondicherry';
   if (text.includes('thiruvannamalai') || text.includes('tiruvannamalai') || text.includes('girivalam')) return 'Thiruvannamalai';
-  if (text.includes('kanchipuram') || text.includes('kanchi')) return 'Kanchipuram';
+  if (text.includes('kanchipuram') || text.includes('kanchi') || text.includes('kanchee') || text.includes('kancheepuram') || text.includes('kanchepuram') || text.includes('kanjipuram') || text.includes('kanji') || text.includes('kanhipuram')) return 'Kanchipuram';
   if (text.includes('vellore')) return 'Vellore';
   if (text.includes('mahabalipuram') || text.includes('mamallapuram')) return 'Mahabalipuram';
   if (text.includes('chidambaram')) return 'Chidambaram';
@@ -1468,7 +1478,7 @@ Please confirm chauffeur availability.`;
                   <span className="text-[10px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mr-0.5">
                     POPULAR:
                   </span>
-                  {['Tirupati', 'Pondicherry', 'Mahabalipuram', 'Kumbakonam', 'Bangalore'].map(city => (
+                  {['Tirupati', 'Kanchipuram', 'Pondicherry', 'Mahabalipuram', 'Kumbakonam', 'Bangalore'].map(city => (
                     <button
                       key={city}
                       type="button"

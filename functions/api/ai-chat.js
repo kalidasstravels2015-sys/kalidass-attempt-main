@@ -422,17 +422,21 @@ function deterministicFallback(userText, pageContext) {
     };
   }
 
-  if (query.includes('kanchipuram') || query.includes('kanchi')) {
+  if (query.includes('kanchipuram') || query.includes('kanchi') || query.includes('kancheepuram') || query.includes('kanchee') || query.includes('kanchepuram') || query.includes('kanjipuram') || query.includes('kanji') || query.includes('kanhipuram') || query.includes('காஞ்சி') || query.includes('kamakshi') || query.includes('ekambareswarar')) {
     return {
-      reply: `Here are our **Chennai ⇄ Kanchipuram Temple & Silk Tour** rates:\n\n` +
-        `• **Same-Day Return:** AC Sedan: ₹3,800 | Maruti Ertiga: ₹4,800 | Toyota Innova: ₹5,800\n\n` +
-        `✅ Covers Kamakshi Amman, Ekambareswarar, Varadharaja Perumal & handloom weaver centers.\n` +
-        `🛡️ ₹500 advance to lock cab (deducted from bill); balance paid post-trip!\n\n` +
-        `[👉 Open Kanchipuram Calculator](/services/kanchipuram-temple-trip/)`,
+      reply: `Here are our official **Chennai ⇄ Kanchipuram 1-Day Temple Tour** rates:\n\n` +
+        `• **Swift Dzire / Toyota Etios (4 Seats):** ₹3,500\n` +
+        `• **Maruti Ertiga / XL6 (6 Seats):** ₹4,500\n` +
+        `• **Toyota Innova (7 Seats):** ₹5,500\n` +
+        `• **Toyota Innova Crysta (7 Seats):** ₹6,800\n` +
+        `• **12-Seater Tempo Traveller:** ₹8,500\n\n` +
+        `✅ **What is Included:** Dedicated AC cab for entire day, fuel, Chennai doorstep pickup & return drop, highway FASTag tolls, driver bata, and waiting at temples & silk saree weaver centers (Kamakshi Amman, Ekambareswarar, Varadharaja Perumal, Kailasanathar).\n` +
+        `🛡️ **Policy:** Nominal ₹500 advance to confirm & lock cab (100% deducted from your bill). Remaining balance paid post-trip!\n\n` +
+        `[👉 Open Kanchipuram 1-Day Tour Page & Live Calculator](/services/kanchipuram-temple-trip/)`,
       actionSuggestion: {
         type: 'tour_quote',
         label: 'Book Kanchipuram on WhatsApp',
-        whatsappText: 'Hi Kalidass Travels, I want to book Kanchipuram Tour.'
+        whatsappText: 'Hi Kalidass Travels, I want to book Chennai to Kanchipuram 1-Day Temple Tour.'
       }
     };
   }
@@ -614,7 +618,7 @@ export async function onRequestPost({ request, env }) {
     };
 
     let candidateText = '';
-    for (const model of ['gemini-3.8-flash', 'gemini-3.5-flash', 'gemini-3-flash', 'gemini-flash-latest']) {
+    for (const model of ['gemini-2.5-flash', 'gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-flash-latest']) {
       try {
         const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
         const geminiRes = await fetch(geminiUrl, {
