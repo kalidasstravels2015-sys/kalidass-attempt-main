@@ -256,8 +256,14 @@ const getVehicleFleetImage = (name: string) => {
   if (v.includes('ertiga') || v.includes('xl6')) {
     return '/images/fleet/maruti-ertiga.webp';
   }
-  if (v.includes('crysta') || v.includes('innova') || v.includes('suv') || v.includes('muv') || v.includes('mpv')) {
-    return '/images/fleet/suv.webp';
+  if (v.includes('crysta')) {
+    return '/images/fleet/innova-crysta.webp';
+  }
+  if (v.includes('innova')) {
+    return '/images/fleet/toyota-innova.webp';
+  }
+  if (v.includes('suv') || v.includes('muv') || v.includes('mpv')) {
+    return '/images/fleet/innova-crysta.webp';
   }
   if (v.includes('dzire') || v.includes('etios') || v.includes('sedan') || v.includes('aura') || v.includes('car')) {
     return '/images/fleet/swift-dzire.webp';
@@ -2271,7 +2277,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                       priceLabel={cardPriceLabel}
                       priceSubtext={cardPriceSubtext}
                       price={flatPrice}
-                      actionText="Select Car"
+                      actionText={flatPrice ? `Book ${vehicleName.split('/')[0].trim()} • ${flatPrice}` : `Book ${vehicleName.split('/')[0].trim()}`}
                       selectVehicleId={engineVehId}
                       selectPax={paxCount}
                     />

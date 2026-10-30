@@ -1,4 +1,664 @@
 ---
-// Permanent 301 Redirect to canonical Outstation Cabs hub
-return Astro.redirect('/services/outstation-cabs/', 301);
+import Layout from '../../../layouts/Layout.astro';
+import Breadcrumbs from '../../../components/SEO/Breadcrumbs.astro';
+import ServiceExplainer3Step from '../../../components/ServiceExplainer3Step.astro';
+import FAQAccordion from '../../../components/FAQAccordion.astro';
+import WhatsAppButton from '../../../components/WhatsAppButton.astro';
+import { buildWhatsAppUrl } from '../../../utils/whatsapp';
+import OptimizedImage from '../../../components/OptimizedImage.astro';
+import GoogleRatingBadge from '../../../components/GoogleRatingBadge.astro';
+import { ChevronRight, ArrowRight, ShieldCheck, Palmtree, Compass, MapPin, Sparkles } from 'lucide-react';
+
+const title = "Weekend & Holiday Tour Packages from Chennai (From ₹2,200)";
+const description = "Explore top weekend getaways & holiday road trips from Chennai: Pondicherry, Mahabalipuram, Yelagiri Hills, Yercaud & Bangalore. Verified AC cabs, friendly chauffeurs & all-inclusive pricing.";
+const keywords = "weekend tour packages from chennai, holiday packages from chennai, chennai to pondicherry cab package, chennai to mahabalipuram taxi, chennai to yelagiri car rental, chennai to yercaud taxi package, outstation holiday cabs chennai";
+
+const breadcrumbItems = [
+  { name: "Home", item: "/" },
+  { name: "Services", item: "/services/" },
+  { name: "Tour Packages", item: "/services/tours/" },
+  { name: "Weekend & Holidays", item: "/services/tours/weekend-packages/" },
+];
+
+const explainerSteps = [
+  {
+    stepNumber: "1",
+    badge: "Step 1: Choose Getaway",
+    title: "Pick Your Holiday Route",
+    desc: "Select your getaway (Pondicherry beaches, Mahabalipuram shore, Yelagiri hills, or Yercaud retreat) and your car size.",
+    illustrationTitle: "Select Destination & Cab",
+    illustrationSub: "Sedan • Ertiga • Crysta • Tempo",
+    theme: "amber" as const,
+    iconType: "car" as const
+  },
+  {
+    stepNumber: "2",
+    badge: "Step 2: Doorstep Pickup",
+    title: "Punctual Morning Chauffeur",
+    desc: "On-time doorstep pickup from anywhere in Chennai. Courteous, experienced highway chauffeurs who know scenic photo stops.",
+    illustrationTitle: "Doorstep Chennai Pickup",
+    illustrationSub: "Sanitized AC Cabs • Punctual Drivers",
+    theme: "blue" as const,
+    iconType: "pickup" as const
+  },
+  {
+    stepNumber: "3",
+    badge: "Step 3: Scenic Relaxation",
+    title: "All-Inclusive Stress-Free Trip",
+    desc: "Stop whenever you like for tender coconut, coastal cafes, or viewpoints. All 1-day tours include fuel, tolls, and driver bata.",
+    illustrationTitle: "Scenic Holiday Experience",
+    illustrationSub: "Zero Surge • Transparent Billing",
+    theme: "emerald" as const,
+    iconType: "relax" as const
+  }
+];
+
+const fleetTierSpecs = [
+  { type: "Sedan", names: "Swift Dzire / Etios", passengers: "4 Passengers", baggage: "2 Bags" },
+  { type: "Family SUV", names: "Maruti Ertiga / XL6", passengers: "6 Passengers", baggage: "3 Bags" },
+  { type: "Comfort MUV", names: "Toyota Innova", passengers: "7 Passengers", baggage: "4 Bags" },
+  { type: "Luxury MPV", names: "Innova Crysta", passengers: "7 Passengers", baggage: "4 Bags" },
+  { type: "Group Coach", names: "12S Tempo Traveller", passengers: "12 Passengers", baggage: "8+ Bags" },
+];
+
+function createPackageRates(prices: [string, string, string, string, string]) {
+  return fleetTierSpecs.map((spec, i) => ({
+    ...spec,
+    price: prices[i],
+  }));
+}
+
+const weekendPackages = [
+  {
+    id: "pondicherry",
+    name: "Chennai to Pondicherry Beach & Auroville Tour",
+    duration: "1 or 2 Days (310 km Round Trip)",
+    badge: "Top Weekend Choice",
+    slug: "pondicherry-one-day-trip",
+    image: "/images/temple/pondicherry.webp",
+    rates: createPackageRates(["₹4,500", "₹5,800", "₹6,800", "₹8,200", "₹10,500"]),
+    highlights: "Promenade Beach, French White Town cafes, Auroville Matrimandir, Sri Aurobindo Ashram & Paradise Beach. Tolls & Puducherry border entry permit covered on 1-day trips.",
+    whatsappMsg: `*Kalidass Travels - Pondicherry Weekend Tour Enquiry*
+• Tour: Chennai to Pondicherry Beach & Auroville Tour
+• Travel Date: 
+• Duration: [1 Day / 2 Days]
+• Pickup Time (e.g. 06:00 AM): 
+• Pickup Area (Chennai): 
+• Vehicle Preference: [Sedan / Ertiga / Innova / Crysta / Tempo]
+• Passengers: 
+
+Please share availability and confirmed all-inclusive quote.`
+  },
+  {
+    id: "mahabalipuram",
+    name: "Chennai to Mahabalipuram & ECR Coastal Drive",
+    duration: "1 Day (120 km Round Trip)",
+    badge: "Quick 1-Day Getaway",
+    slug: "mahabalipuram-ecr-temple-route",
+    image: "/images/temple/mahabalipuram-ecr-temples.webp",
+    rates: createPackageRates(["₹2,200", "₹3,200", "₹3,800", "₹4,800", "₹6,000"]),
+    highlights: "UNESCO Shore Temple, Pancha Rathas, Krishna's Butter Ball, Kovalam surf beach, Muttukadu boating & DakshinaChitra cultural museum. ECR toll included.",
+    whatsappMsg: `*Kalidass Travels - Mahabalipuram Tour Enquiry*
+• Tour: Chennai to Mahabalipuram & ECR Drive (1 Day)
+• Travel Date: 
+• Pickup Time: 
+• Pickup Area (Chennai): 
+• Vehicle Preference: [Sedan / Ertiga / Innova / Crysta / Tempo]
+• Passengers: 
+
+Please share availability and confirmed all-inclusive quote.`
+  },
+  {
+    id: "yelagiri",
+    name: "Chennai to Yelagiri Hills Weekend Retreat",
+    duration: "2 Days / 1 Night (460 km Round Trip)",
+    badge: "Hill Station Escape",
+    slug: "yelagiri-hills-weekend",
+    image: "/images/hero/outstation-highway.webp",
+    rates: createPackageRates(["₹7,500", "₹9,200", "₹11,000", "₹13,000", "₹16,500"]),
+    highlights: "Scenic 14 hairpin bends drive, Punganoor Lake boating, Swamimalai viewpoint, Jalagamparai waterfalls & Nature Park. 2-Day vehicle hire + fuel covered.",
+    whatsappMsg: `*Kalidass Travels - Yelagiri Hills Enquiry*
+• Tour: Chennai to Yelagiri Hills Weekend (2 Days)
+• Travel Date: 
+• Pickup Time: 
+• Pickup Area (Chennai): 
+• Vehicle Preference: [Sedan / Ertiga / Innova / Crysta / Tempo]
+• Passengers: 
+
+Please share availability and confirmed quote.`
+  },
+  {
+    id: "yercaud",
+    name: "Chennai to Yercaud Hill Station (Shevaroy Range)",
+    duration: "2–3 Days (720 km Round Trip)",
+    badge: "Coffee Plantation Hills",
+    slug: "yercaud-hills-weekend",
+    image: "/images/hero/outstation-highway.webp",
+    rates: createPackageRates(["₹11,500", "₹14,000", "₹16,800", "₹19,500", "₹24,000"]),
+    highlights: "Emerald Lake, Lady's Seat & Pagoda Point viewpoints, Killiyur Falls, botanical garden & aromatic coffee plantation walks. Hill road experienced drivers.",
+    whatsappMsg: `*Kalidass Travels - Yercaud Hills Enquiry*
+• Tour: Chennai to Yercaud Hill Station (2-3 Days)
+• Travel Date: 
+• Pickup Time: 
+• Pickup Area (Chennai): 
+• Vehicle Preference: [Sedan / Ertiga / Innova / Crysta / Tempo]
+• Passengers: 
+
+Please share availability and confirmed quote.`
+  },
+  {
+    id: "chennai-city",
+    name: "Chennai Full Day City Heritage & Coastal Tour",
+    duration: "1 Day (80–100 km / 8–10 Hours)",
+    badge: "Local City Special",
+    slug: "one-day-chennai-city-tour",
+    image: "/images/temple/chennai-city.webp",
+    rates: createPackageRates(["₹2,200", "₹3,200", "₹3,800", "₹4,800", "₹6,000"]),
+    highlights: "Marina Beach promenade, San Thome Basilica, Fort St. George Museum, Kapaleeshwarar Temple & Guindy National Park. Doorstep pickup and drop within Chennai.",
+    whatsappMsg: `*Kalidass Travels - Chennai City Tour Enquiry*
+• Tour: Chennai Full Day City Sightseeing
+• Travel Date: 
+• Pickup Time: 
+• Pickup Area (Chennai): 
+• Vehicle Preference: [Sedan / Ertiga / Innova / Crysta / Tempo]
+• Passengers: 
+
+Please share availability and confirmed quote.`
+  },
+  {
+    id: "bangalore",
+    name: "Chennai to Bangalore Garden City & Highway Trip",
+    duration: "2–3 Days (700+ km Round Trip)",
+    badge: "Metropolitan Weekend",
+    slug: "chennai-to-bangalore-taxi",
+    image: "/images/hero/coimbatore.webp",
+    rates: [
+      { type: "Sedan", names: "Swift Dzire / Etios", passengers: "4 Passengers", baggage: "2 Bags", price: "₹14 / km" },
+      { type: "Family SUV", names: "Maruti Ertiga / XL6", passengers: "6 Passengers", baggage: "3 Bags", price: "₹17 / km" },
+      { type: "Comfort MUV", names: "Toyota Innova", passengers: "7 Passengers", baggage: "4 Bags", price: "₹20 / km" },
+      { type: "Luxury MPV", names: "Innova Crysta", passengers: "7 Passengers", baggage: "4 Bags", price: "₹24 / km" },
+      { type: "Group Coach", names: "12S Tempo Traveller", passengers: "12 Passengers", baggage: "8+ Bags", price: "₹28 / km" },
+    ],
+    highlights: "Smooth express corridor ride to Lalbagh Botanical Garden, Cubbon Park, Bangalore Palace & Commercial Street. Karnataka interstate permit assistance.",
+    whatsappMsg: `*Kalidass Travels - Bangalore Highway Cab Enquiry*
+• Route: Chennai to Bangalore Round Trip
+• Travel Date: 
+• Pickup Time: 
+• Pickup Area (Chennai): 
+• Vehicle Preference: [Sedan / Ertiga / Innova / Crysta / Tempo]
+• Passengers: 
+
+Please share per-km tariff and confirmed estimate.`
+  }
+];
+
+const holidayFleetGuide = [
+  {
+    type: "AC Sedan",
+    names: "Swift Dzire / Toyota Etios",
+    passengers: "4 Passengers",
+    baggage: "2 Medium Bags + Handbags",
+    image: "/images/fleet/swift-dzire.webp",
+    badge: "Best for Couples & Solos",
+    bestFor: "Day trips to Mahabalipuram, Pondicherry coastal drives, or couples weekend getaways.",
+    features: ["Chilled Dual AC", "Smooth highway cruising", "Fits 2 medium suitcases in boot"]
+  },
+  {
+    type: "Family SUV",
+    names: "Maruti Ertiga / XL6",
+    passengers: "6 Passengers",
+    baggage: "3 Bags (with 3rd row adjusted)",
+    image: "/images/fleet/maruti-ertiga.webp",
+    badge: "Family Favorite",
+    bestFor: "Families with kids planning hill-station weekends to Yelagiri or beach vacations in Pondy.",
+    features: ["Rear AC blowers for all rows", "Flexible 60:40 seats", "High mileage economy"]
+  },
+  {
+    type: "Comfort MUV",
+    names: "Toyota Innova",
+    passengers: "7 Passengers",
+    baggage: "4 Large Suitcases",
+    image: "/images/fleet/toyota-innova.webp",
+    badge: "Ultimate Road Trip King",
+    bestFor: "Steep hill roads (Yelagiri hairpin bends, Yercaud ghats) and multi-day holiday road trips.",
+    features: ["Exceptional ghat road suspension", "High ground clearance", "Captain chair comfort"]
+  },
+  {
+    type: "Luxury MPV",
+    names: "Toyota Innova Crysta",
+    passengers: "7 Passengers",
+    baggage: "4 Large Suitcases",
+    image: "/images/fleet/innova-crysta.webp",
+    badge: "Executive Leisure",
+    bestFor: "Luxury holiday escapes, corporate executive weekend retreats, and premium family getaways.",
+    features: ["Acoustic quiet cabin", "Reclining leather captain chairs", "Multi-zone climate control"]
+  },
+  {
+    type: "Group Coach",
+    names: "12-Seater Tempo Traveller",
+    passengers: "12 Passengers",
+    baggage: "8–10 Large Bags (Separate boot)",
+    image: "/images/fleet/tempo.webp",
+    badge: "Group Holiday Coach",
+    bestFor: "Friends reunions, bachelor trips, joint family getaways & corporate team outings.",
+    features: ["Full standing aisle height", "Pushback 2x1 seats", "High-power AC & music system"]
+  }
+];
+
+const faqs = [
+  {
+    q: "How are 1-day weekend packages billed versus multi-day trips?",
+    a: "Our popular 1-day holiday trips (such as Chennai to Mahabalipuram or 1-day Pondicherry) are fixed all-inclusive flat rates covering vehicle hire, fuel, FASTag tolls, and driver allowance upfront. For multi-day trips (such as 2-day Yelagiri, Yercaud, or Bangalore), packages cover vehicle hire and fuel, while highway tolls and daily driver night bata (₹400/night) are billed at actuals."
+  },
+  {
+    q: "Can we make spontaneous photo stops and restaurant detours on the way?",
+    a: "Absolutely! Unlike rigid tour buses or app-based shared rides, your private Kalidass cab is exclusively dedicated to your party. You can stop along the East Coast Road for tender coconut, coastal cafes, beach viewpoints, or local seafood joints without any rush or penalty."
+  },
+  {
+    q: "Are the drivers experienced with hill station hairpin bends?",
+    a: "Yes. For destinations with mountain ghat roads like Yelagiri (14 hairpin bends) and Yercaud (20 hairpin bends), we assign verified senior chauffeurs with over 7+ years of certified hill-driving experience. Vehicles are inspected for brake pad wear and tire tread before every mountain dispatch."
+  },
+  {
+    q: "How early in advance should we book a weekend holiday cab?",
+    a: "For weekend peak dates (Friday evening to Sunday), we recommend booking at least 24 to 48 hours in advance to guarantee your preferred vehicle model (especially Innova Crysta and 12-Seater Tempo Travellers which sell out fast)."
+  },
+  {
+    q: "What is your cancellation and rescheduling policy?",
+    a: "We offer zero-penalty rescheduling up to 6 hours before your scheduled pickup. Your ₹500 advance lock token is fully credited towards your revised travel date or refundable if cancelled in advance."
+  }
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "TaxiService",
+  "@id": "https://kalidasstravels.in/services/tours/weekend-packages/#service",
+  "name": title,
+  "description": description,
+  "url": "https://kalidasstravels.in/services/tours/weekend-packages/",
+  "image": "https://kalidasstravels.in/images/temple/pondicherry.webp",
+  "telephone": "+918939539211",
+  "priceRange": "₹2,200 - ₹28,000",
+  "providerMobility": "dynamic",
+  "serviceType": "Weekend & Holiday Tour Cab Packages",
+  "provider": {
+    "@id": "https://kalidasstravels.in/#localbusiness"
+  },
+  "areaServed": [
+    { "@type": "City", "name": "Chennai" },
+    { "@type": "AdministrativeArea", "name": "Tamil Nadu" },
+    { "@type": "AdministrativeArea", "name": "Puducherry" },
+    { "@type": "AdministrativeArea", "name": "Karnataka" }
+  ]
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": "https://kalidasstravels.in/services/tours/weekend-packages/#faq",
+  "name": "Weekend & Holiday Tour FAQs",
+  "description": "Frequently asked questions regarding weekend holiday cab packages, ECR beach drives, hill station trips, and group rentals from Chennai.",
+  "mainEntity": faqs.map(item => ({
+    "@type": "Question",
+    "name": item.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.a
+    }
+  }))
+};
 ---
+
+<Layout 
+  title={`${title} | Kalidass Travels`}
+  description={description}
+  keywords={keywords}
+  image="/images/temple/pondicherry.webp"
+  ogImage="/og/temple-tours.jpg"
+  schema={[schema, faqSchema]}
+>
+  <Breadcrumbs items={breadcrumbItems} />
+
+  <main class="bg-m3-surface text-m3-on-surface font-sans pb-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10">
+
+      <!-- 1. HERO SECTION -->
+      <section class="max-w-4xl mx-auto mb-8 sm:mb-10 text-center">
+        <!-- Eyebrow Row: Google Rating & Holiday Badge -->
+        <div class="flex flex-wrap items-center justify-center gap-2 mb-3">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-2xs">
+            <Palmtree className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span>Scenic Weekend Road Trips &amp; Holidays • From ₹2,200</span>
+          </div>
+          <GoogleRatingBadge />
+        </div>
+
+        <h1 data-speakable="true" class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-m3-on-surface tracking-tight leading-tight mb-3 font-heading">
+          Chennai to <span class="text-m3-primary">Weekend &amp; Holiday Getaways</span>
+        </h1>
+        <p data-speakable="true" class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant max-w-2xl mx-auto leading-relaxed font-normal mb-5">
+          Escape the city routine with private, sanitized AC cabs to South India's top coastal beaches, French heritage quarters, and cool hill stations. No surge pricing, no forced itineraries.
+        </p>
+
+        <!-- Destination Quick Chips -->
+        <div class="flex flex-wrap items-center justify-center gap-2 mb-6 text-xs">
+          <a href="/services/pondicherry-one-day-trip/" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high border border-m3-outline-variant/60 font-semibold text-m3-on-surface transition-colors shadow-2xs">
+            Pondicherry (From ₹4,500)
+          </a>
+          <a href="/services/mahabalipuram-ecr-temple-route/" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high border border-m3-outline-variant/60 font-semibold text-m3-on-surface transition-colors shadow-2xs">
+            Mahabalipuram ECR (From ₹2,200)
+          </a>
+          <a href="/services/yelagiri-hills-weekend/" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high border border-m3-outline-variant/60 font-semibold text-m3-on-surface transition-colors shadow-2xs">
+            Yelagiri Hills (From ₹7,500)
+          </a>
+          <a href="/services/yercaud-hills-weekend/" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high border border-m3-outline-variant/60 font-semibold text-m3-on-surface transition-colors shadow-2xs">
+            Yercaud Retreat (From ₹11,500)
+          </a>
+          <a href="/services/one-day-chennai-city-tour/" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high border border-m3-outline-variant/60 font-semibold text-m3-on-surface transition-colors shadow-2xs">
+            Chennai Sightseeing (From ₹2,200)
+          </a>
+          <a href="/services/chennai-to-bangalore-taxi/" class="px-3 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high border border-m3-outline-variant/60 font-semibold text-m3-on-surface transition-colors shadow-2xs">
+            Bangalore (₹14/km)
+          </a>
+        </div>
+
+        <!-- Visual Hero Showcase Banner -->
+        <div class="relative w-full h-48 sm:h-56 md:h-64 rounded-m3-2xl overflow-hidden shadow-m3-1 border border-m3-outline-variant/60 bg-m3-inverse-surface group text-left">
+          <OptimizedImage
+            src="/images/temple/pondicherry.webp"
+            alt="Kalidass Travels - Weekend & Holiday Cab Getaways from Chennai"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90"
+            sizes="(max-width: 640px) 100vw, 896px"
+            loading="eager"
+            fetchpriority="high"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-m3-inverse-surface/90 via-m3-inverse-surface/30 to-transparent pointer-events-none"></div>
+          <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between pointer-events-none text-white text-xs font-semibold gap-2">
+            <span class="px-3 py-1 rounded-m3-full bg-m3-inverse-surface/90 backdrop-blur-md border border-white/20 flex items-center gap-1.5 shadow-xs truncate max-w-[65%]">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+              <span class="truncate">Doorstep Chennai Pickup • Chilled AC • Flexible Photo Stops</span>
+            </span>
+            <span class="px-3 py-1 rounded-m3-full bg-m3-primary text-m3-on-primary text-xs font-bold shadow-xs shrink-0">
+              From ₹2,200 All-Inclusive
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- STICKY QUICK-NAV JUMP BAR -->
+      <nav data-quick-nav aria-label="Weekend Tours Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-y border-m3-outline-variant/60 shadow-xs py-3 mb-10 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto flex items-center gap-2 text-xs font-semibold text-m3-on-surface whitespace-nowrap overflow-x-auto no-scrollbar py-0.5 pe-6 scroll-px-4">
+          <a href="#how-it-works" data-active="true" aria-current="true" class="px-3.5 py-2 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs transition-all shrink-0 hover:bg-m3-primary hover:text-white">
+            How It Works
+          </a>
+          <a href="#weekend-packages" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+            Holiday Packages &amp; Rates
+          </a>
+          <a href="#holiday-fleet" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+            Fleet &amp; Capacity
+          </a>
+          <a href="#holiday-promise" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+            Why Kalidass Travels
+          </a>
+          <a href="#faqs" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+            Holiday FAQs
+          </a>
+        </div>
+      </nav>
+
+      <!-- 2. 3-STEP VISUAL WORKFLOW ILLUSTRATION -->
+      <div id="how-it-works" class="scroll-mt-40">
+        <ServiceExplainer3Step 
+          title="How Weekend Holiday Road Trips Work"
+          subtitle="Easy private cab bookings with zero surge and personalized travel flexibility"
+          steps={explainerSteps}
+        />
+      </div>
+
+      <!-- 3. UPFRONT PACKAGES MATRIX -->
+      <section id="weekend-packages" class="my-10 md:my-14 scroll-mt-40">
+        <div class="text-center max-w-2xl mx-auto mb-8">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container text-m3-on-surface text-xs font-bold uppercase tracking-wider mb-2 border border-m3-outline-variant">
+            <span>Verified Getaway Packages</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
+            Weekend Getaway Rates • <span class="text-m3-primary">Transparent Pricing</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1.5 font-sans">
+            1-day coastal packages include vehicle hire, fuel, FASTag tolls, and driver bata upfront. Multi-day hill station packages cover vehicle and fuel, with highway tolls and driver night bata at actuals.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {weekendPackages.map((pkg) => {
+            const leafUrl = `/services/${pkg.slug}/`;
+            const waUrl = buildWhatsAppUrl(pkg.whatsappMsg);
+
+            return (
+              <div class="tariff-card bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between hover:shadow-m3-2 hover:border-m3-primary/30 transition-all overflow-hidden group">
+                <div>
+                  <!-- Media Image Header with Badges & Leaf Link -->
+                  <a href={leafUrl} class="block h-48 sm:h-52 overflow-hidden relative bg-m3-surface-container-high cursor-pointer group/img" aria-label={`View ${pkg.name} Details`}>
+                    <OptimizedImage
+                      src={pkg.image}
+                      alt={pkg.name}
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 relative z-10"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                    <div class="absolute inset-0 bg-gradient-to-t from-m3-inverse-surface/80 via-transparent to-transparent z-10"></div>
+
+                    <!-- Top USP Badge -->
+                    <span class="absolute top-3 left-3 bg-m3-inverse-surface/85 backdrop-blur-md border border-white/20 text-white text-[11px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-m3-full shadow-xs z-20">
+                      {pkg.badge}
+                    </span>
+
+                    <!-- Duration Overlay -->
+                    <span class="absolute bottom-3 left-3 bg-white/95 text-m3-on-surface text-xs font-semibold px-2.5 py-1 rounded-m3-md shadow-xs z-20 flex items-center gap-1">
+                      <Compass className="w-3.5 h-3.5 text-m3-primary" />
+                      {pkg.duration}
+                    </span>
+                  </a>
+
+                  <!-- Card Body -->
+                  <div class="p-5">
+                    <h3 class="text-base sm:text-lg font-bold text-m3-on-surface mb-2 leading-snug group-hover:text-m3-primary transition-colors">
+                      <a href={leafUrl} class="hover:underline">
+                        {pkg.name}
+                      </a>
+                    </h3>
+                    
+                    <p class="text-xs text-m3-on-surface-variant mb-4 leading-relaxed line-clamp-3">
+                      {pkg.highlights}
+                    </p>
+
+                    <!-- Fleet Tier Price Table -->
+                    <div class="bg-m3-surface-container-low rounded-m3-xl p-3 border border-m3-outline-variant/60 mb-4">
+                      <p class="text-[11px] font-bold text-m3-on-surface-variant uppercase tracking-wider mb-2">
+                        All-Inclusive Vehicle Rates
+                      </p>
+                      <div class="space-y-1.5 text-xs">
+                        {pkg.rates.map((tier) => (
+                          <div class="flex items-center justify-between py-1 border-b border-m3-outline-variant/30 last:border-0">
+                            <span class="text-m3-on-surface font-medium truncate max-w-[140px] sm:max-w-[160px]">
+                              {tier.type} <span class="text-[10px] text-m3-on-surface-variant hidden sm:inline">({tier.names.split('/')[0]})</span>
+                            </span>
+                            <span class="font-extrabold text-m3-primary">
+                              {tier.price}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Footer CTAs -->
+                <div class="p-5 pt-0 flex flex-col gap-2">
+                  <a
+                    href={waUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-m3-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition-colors"
+                  >
+                    <span>Instant WhatsApp Booking</span>
+                  </a>
+                  <a
+                    href={leafUrl}
+                    class="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface font-semibold text-xs border border-m3-outline-variant transition-colors"
+                  >
+                    <span>View Full Itinerary &amp; Sightseeing</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      <!-- 4. FLEET GUIDE FOR HOLIDAY & HILL ROAD TRIPS -->
+      <section id="holiday-fleet" class="my-12 md:my-16 scroll-mt-40">
+        <div class="text-center max-w-2xl mx-auto mb-8">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container text-m3-on-surface text-xs font-bold uppercase tracking-wider mb-2 border border-m3-outline-variant">
+            <span>Vehicles for Leisure &amp; Ghat Roads</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
+            Choose the Right Cab for Your <span class="text-m3-primary">Getaway</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1.5 font-sans">
+            From budget-friendly sedans for couples to luxury Innova Crystas and 12-seater coaches for group reunions.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {holidayFleetGuide.map((car) => (
+            <div class="bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 p-5 flex flex-col justify-between">
+              <div>
+                <div class="h-36 sm:h-40 rounded-m3-xl overflow-hidden bg-m3-surface-container-high mb-4 relative">
+                  <OptimizedImage
+                    src={car.image}
+                    alt={car.names}
+                    class="w-full h-full object-cover"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
+                  <span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-m3-full bg-m3-inverse-surface/85 backdrop-blur-md text-white text-[10px] font-bold">
+                    {car.badge}
+                  </span>
+                </div>
+
+                <div class="flex items-center justify-between mb-1">
+                  <h3 class="font-bold text-m3-on-surface text-base">{car.type}</h3>
+                  <span class="text-xs font-medium text-m3-on-surface-variant">{car.passengers}</span>
+                </div>
+                <p class="text-xs text-m3-primary font-semibold mb-3">{car.names}</p>
+
+                <p class="text-xs text-m3-on-surface-variant mb-4 leading-relaxed">
+                  <span class="font-semibold text-m3-on-surface">Best for:</span> {car.bestFor}
+                </p>
+
+                <ul class="space-y-1.5 text-xs text-m3-on-surface mb-5">
+                  {car.features.map((feat) => (
+                    <li class="flex items-center gap-1.5">
+                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                      <span>{feat}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <a
+                href="/fleet/"
+                class="w-full py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface font-semibold text-xs text-center border border-m3-outline-variant transition-colors"
+              >
+                View Vehicle Specs &amp; Luggage Space
+              </a>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- 5. WHY KALIDASS FOR HOLIDAY TOURS -->
+      <section id="holiday-promise" class="my-12 md:my-16 scroll-mt-40 bg-m3-surface-container-low rounded-m3-2xl p-6 sm:p-10 border border-m3-outline-variant">
+        <div class="max-w-3xl mx-auto text-center mb-8">
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
+            Why Travelers Choose Kalidass for <span class="text-m3-primary">Vacation Road Trips</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-2">
+            The comfort of having a private vehicle without the stress of driving on congested highways or winding ghat roads.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
+          <div class="bg-m3-surface-container-lowest p-5 rounded-m3-xl border border-m3-outline-variant shadow-2xs">
+            <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-sm mb-3">
+              1
+            </div>
+            <h3 class="font-bold text-sm text-m3-on-surface mb-1.5">Flexible Photo &amp; Cafe Stops</h3>
+            <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+              Want to stop for seaside breakfast on ECR, buy fresh mangoes in Yelagiri, or click photos at hairpin viewpoints? Your driver gladly accommodates your pace.
+            </p>
+          </div>
+
+          <div class="bg-m3-surface-container-lowest p-5 rounded-m3-xl border border-m3-outline-variant shadow-2xs">
+            <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-sm mb-3">
+              2
+            </div>
+            <h3 class="font-bold text-sm text-m3-on-surface mb-1.5">Ghat-Road Certified Drivers</h3>
+            <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+              Every driver assigned to hill station destinations is strictly verified with years of experience navigating hairpins, blind curves, and misty downhill descents safely.
+            </p>
+          </div>
+
+          <div class="bg-m3-surface-container-lowest p-5 rounded-m3-xl border border-m3-outline-variant shadow-2xs">
+            <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-sm mb-3">
+              3
+            </div>
+            <h3 class="font-bold text-sm text-m3-on-surface mb-1.5">100% Tolls Included on 1-Day Trips</h3>
+            <p class="text-xs text-m3-on-surface-variant leading-relaxed">
+              Zero highway cash hassles. For 1-day tours to Pondicherry, Mahabalipuram, and Chennai city, all tolls and driver charges are pre-calculated upfront.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. FREQUENTLY ASKED QUESTIONS -->
+      <section id="faqs" class="my-12 md:my-16 scroll-mt-40">
+        <div class="text-center max-w-2xl mx-auto mb-8">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container text-m3-on-surface text-xs font-bold uppercase tracking-wider mb-2 border border-m3-outline-variant">
+            <span>Got Questions?</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
+            Weekend Tour <span class="text-m3-primary">Frequently Asked Questions</span>
+          </h2>
+        </div>
+
+        <div class="max-w-3xl mx-auto">
+          <FAQAccordion items={faqs} />
+        </div>
+      </section>
+
+      <!-- 7. BOTTOM CTA BANNER -->
+      <div class="mt-12 bg-gradient-to-r from-m3-primary to-blue-700 text-white rounded-m3-2xl p-6 sm:p-10 text-center shadow-m3-2">
+        <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold mb-3">
+          Ready for a Refreshing Weekend Road Trip?
+        </h2>
+        <p class="text-xs sm:text-sm text-white/90 max-w-xl mx-auto mb-6">
+          Book your private sanitized cab with a professional chauffeur today. Confirm on WhatsApp in less than 2 minutes with just ₹500 advance.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <a
+            href="tel:+918939539211"
+            class="px-6 py-3 rounded-m3-full bg-white text-m3-primary font-bold text-xs sm:text-sm hover:bg-slate-100 transition-colors shadow-xs"
+          >
+            Call +91 89395 39211
+          </a>
+          <WhatsAppButton
+            message="Hi Kalidass Travels, I want to book a weekend tour package from Chennai."
+            label="Chat on WhatsApp"
+            className="px-6 py-3 rounded-m3-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm shadow-xs transition-colors"
+          />
+        </div>
+      </div>
+
+    </div>
+  </main>
+</Layout>

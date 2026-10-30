@@ -17,7 +17,7 @@ const { items, columns = 1, name, className = "" } = Astro.props;
 ---
 
 <div class={`font-sans ${columns === 2 ? 'grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 items-start' : 'space-y-3'} ${className}`}>
-  {items.map((item) => (
+  {(items || []).map((item) => (
     <details
       class="group bg-m3-surface-container-lowest rounded-m3-xl border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all overflow-hidden"
       name={name}

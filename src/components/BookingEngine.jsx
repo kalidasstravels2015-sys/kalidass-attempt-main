@@ -228,7 +228,7 @@ const VEHICLE_SWITCHER_LIST = [
     paxLabel: '7 Seats',
     capacityLabel: '7 Seats + 4 Bags',
     sizeTag: 'Large SUV 7S',
-    image: '/images/fleet/suv.webp',
+    image: '/images/fleet/toyota-innova.webp',
     category: 'muv',
     airportMultiplier: 1.8
   },
@@ -241,7 +241,7 @@ const VEHICLE_SWITCHER_LIST = [
     paxLabel: '7 Seats',
     capacityLabel: '7 Seats + 5 Bags',
     sizeTag: 'Premium SUV 7S',
-    image: '/images/fleet/suv.webp',
+    image: '/images/fleet/innova-crysta.webp',
     category: 'muv',
     airportMultiplier: 2.0
   },
@@ -421,7 +421,10 @@ export default function BookingEngine({
   forceEmptyLocations = false,
   pickupPlaceholder = '',
   dropPlaceholder = '',
-  initialDays = undefined
+  initialDays = undefined,
+  lockDestination = false,
+  hideDestination = false,
+  ctaText = ''
 }) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
@@ -484,25 +487,34 @@ export default function BookingEngine({
     return resolveInitialDestination(initialDrop, prefill.destination, serviceSlug, serviceTitle);
   }, [initialDrop, prefill.destination, serviceSlug, serviceTitle]);
 
+  const isTourService = useMemo(() => {
+    return Boolean(lockDestination);
+  }, [lockDestination]);
+
+  const effectiveLockDestination = Boolean(lockDestination);
+
   // Strictly either 'form' or 'results' — In-place swap!
   const [viewMode, setViewMode] = useState('form');
 
   // 3. Form State: Outstation & General
-  const defaultTripType = (initialTab === 'oneway' || prefill.tripType === 'oneway') ? 'oneway' : 'round';
-  const [outstationTripType, setOutstationTripType] = useState(defaultTripType);
+  // 3. Form State: Outstation & General (Strictly Round Trip)
+  const [outstationTripType, setOutstationTripType] = useState('round');
   const [outstationPickup, setOutstationPickup] = useState(
-    forceEmptyLocations ? '' : (initialPickup || prefill.pickup || 'Chennai, Tamil Nadu')
+    forceEmptyLocations ? '' : (initialPickup || prefill.pickup || (isTourService ? '' : 'Chennai, Tamil Nadu'))
   );
   const [outstationDrop, setOutstationDrop] = useState(
-    forceEmptyLocations ? '' : (detectedDestination || '')
+    detectedDestination || initialDrop || ''
   );
   
   // Resolve default days based on destination
   const defaultDaysForDest = useMemo(() => {
     if (initialDays) return Number(initialDays);
-    const destObj = KNOWN_DESTINATIONS[(detectedDestination || '').toLowerCase()];
-    return destObj?.defaultDays || (prefill.days ? Number(prefill.days) : 1);
-  }, [detectedDestination, prefill.days, initialDays]);
+    const raw = (detectedDestination || initialDrop || '').toLowerCase().trim();
+    for (const [key, dest] of Object.entries(KNOWN_DESTINATIONS)) {
+      if (raw.includes(key)) return dest.defaultDays || 1;
+    }
+    return prefill.days ? Number(prefill.days) : 1;
+  }, [detectedDestination, initialDrop, prefill.days, initialDays]);
 
   const [outstationDays, setOutstationDays] = useState(defaultDaysForDest);
 
@@ -518,7 +530,17 @@ export default function BookingEngine({
     return `${yyyy}-${mm}-${dd}T06:00`;
   });
 
-  const [returnDateTime, setReturnDateTime] = useState('');
+  const [returnDateTime, setReturnDateTime] = useState(() => {
+    if (prefill.return) return prefill.return;
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const daysOffset = Math.max(0, (defaultDaysForDest || 1) - 1);
+    tomorrow.setDate(tomorrow.getDate() + daysOffset);
+    const yyyy = tomorrow.getFullYear();
+    const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+    const dd = String(tomorrow.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}T21:00`;
+  });
 
   // 4. Form State: Local Rental
   const [localPackageKey, setLocalPackageKey] = useState(prefill.package || 'local_8hr_pkg');
@@ -561,7 +583,7 @@ export default function BookingEngine({
   // Listen to custom booking events from vehicle showcase cards or package cards
   useEffect(() => {
     const handleSelectVehicle = (e) => {
-      const v = e?.detail?.vehicle;
+      const v = e?.detail?.vehicle || e?.detail?.vehicleId;
       if (v) {
         const found = findVehicleMeta(v);
         if (found) {
@@ -585,10 +607,24 @@ export default function BookingEngine({
       setViewMode('results');
     };
 
-    window.addEventListener('select-quote-vehicle', handleSelectVehicle);
+    const tourEventNames = [
+      'select-quote-vehicle',
+      'select-kanchipuram-vehicle',
+      'select-tirupati-vehicle',
+      'select-thiruvannamalai-vehicle',
+      'select-navagraha-vehicle',
+      'select-rameswaram-vehicle',
+      'select-sabarimala-vehicle',
+      'select-chidambaram-vehicle',
+      'select-vellore-vehicle',
+      'select-pondicherry-vehicle',
+      'select-tiruchendur-temple-tour-vehicle'
+    ];
+
+    tourEventNames.forEach(evt => window.addEventListener(evt, handleSelectVehicle));
     window.addEventListener('select-quote-package', handleSelectPackage);
     return () => {
-      window.removeEventListener('select-quote-vehicle', handleSelectVehicle);
+      tourEventNames.forEach(evt => window.removeEventListener(evt, handleSelectVehicle));
       window.removeEventListener('select-quote-package', handleSelectPackage);
     };
   }, [findVehicleMeta]);
@@ -790,7 +826,21 @@ export default function BookingEngine({
     );
   }, [pickupDateTime, resolvedDestination, outstationDrop]);
 
-  // Handle pickup change and auto-validate return schedule
+  // Handle pickup change
+  // Calculate calendar days between pickup and return dates
+  const getDaysBetween = (pIso, rIso) => {
+    if (!pIso || !rIso) return 1;
+    const p = new Date(pIso);
+    const r = new Date(rIso);
+    if (isNaN(p.getTime()) || isNaN(r.getTime())) return 1;
+    const pDay = new Date(p.getFullYear(), p.getMonth(), p.getDate());
+    const rDay = new Date(r.getFullYear(), r.getMonth(), r.getDate());
+    const diffTime = rDay.getTime() - pDay.getTime();
+    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    return Math.max(1, diffDays);
+  };
+
+  // Handle pickup change and update duration
   const handlePickupChange = (val) => {
     setPickupDateTime(val);
     setValidationError('');
@@ -800,79 +850,48 @@ export default function BookingEngine({
     const now = new Date();
     if (pDate.getTime() < now.getTime() - 5 * 60 * 1000) {
       setValidationError('Pickup date & time cannot be in the past');
-      return;
     }
 
     if (returnDateTime) {
       const rDate = new Date(returnDateTime);
-      const minReturn = getMinReturnDateTime(val, resolvedDestination.name || outstationDrop, resolvedDestination.roundTripKm);
-      if (rDate <= pDate || (minReturn && returnDateTime < minReturn)) {
-        // Industry Standard: Auto-advance return date to earliest feasible return
-        const safeReturn = minReturn || val;
-        setReturnDateTime(safeReturn);
-        const rNew = new Date(safeReturn);
-        const pDay = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate());
-        const rDay = new Date(rNew.getFullYear(), rNew.getMonth(), rNew.getDate());
-        const calendarDays = Math.max(1, Math.round((rDay - pDay) / (1000 * 60 * 60 * 24)) + 1);
-        setOutstationDays(calendarDays);
+      if (rDate.getTime() <= pDate.getTime()) {
+        const newR = new Date(pDate);
+        const daysOffset = Math.max(0, (defaultDaysForDest || 1) - 1);
+        newR.setDate(newR.getDate() + daysOffset);
+        newR.setHours(21, 0, 0, 0);
+        if (newR.getTime() <= pDate.getTime()) {
+          newR.setTime(pDate.getTime() + 10 * 60 * 60 * 1000);
+        }
+        const yyyy = newR.getFullYear();
+        const mm = String(newR.getMonth() + 1).padStart(2, '0');
+        const dd = String(newR.getDate()).padStart(2, '0');
+        const hh = String(newR.getHours()).padStart(2, '0');
+        const min = String(newR.getMinutes()).padStart(2, '0');
+        const adjustedReturn = `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+        setReturnDateTime(adjustedReturn);
+        setOutstationDays(getDaysBetween(val, adjustedReturn));
       } else {
-        const pDay = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate());
-        const rDay = new Date(rDate.getFullYear(), rDate.getMonth(), rDate.getDate());
-        const calendarDays = Math.max(1, Math.round((rDay - pDay) / (1000 * 60 * 60 * 24)) + 1);
-        setOutstationDays(calendarDays);
+        const days = getDaysBetween(val, returnDateTime);
+        setOutstationDays(days);
       }
     }
   };
 
-  // Handle return change and calculate duration
+  // Handle return change and update duration
   const handleReturnChange = (val) => {
+    setReturnDateTime(val);
+    setValidationError('');
     if (!val) {
-      setReturnDateTime('');
-      setValidationError('');
-      setOutstationDays(resolvedDestination.defaultDays || 1);
+      setOutstationDays(defaultDaysForDest || 1);
       return;
     }
 
     if (pickupDateTime) {
-      const pDate = new Date(pickupDateTime);
-      const rDate = new Date(val);
-
-      if (rDate <= pDate) {
-        // Industry Standard: Hard constraint - Return Date CANNOT be before or same as pickup date.
-        // Auto-snap to minimum realistic return date and inform user
-        const safeReturn = minReturnDateTime || getMinReturnDateTime(pickupDateTime, resolvedDestination.name || outstationDrop, resolvedDestination.roundTripKm);
-        setReturnDateTime(safeReturn);
-        setValidationError(`Return date & time must be after pickup. Automatically adjusted to earliest return: ${formatDateTimeDisplay(safeReturn)}`);
-        
-        const rNew = new Date(safeReturn);
-        const pDay = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate());
-        const rDay = new Date(rNew.getFullYear(), rNew.getMonth(), rNew.getDate());
-        const calendarDays = Math.max(1, Math.round((rDay - pDay) / (1000 * 60 * 60 * 24)) + 1);
-        setOutstationDays(calendarDays);
-        return;
+      const days = getDaysBetween(pickupDateTime, val);
+      setOutstationDays(days);
+      if (new Date(val).getTime() <= new Date(pickupDateTime).getTime()) {
+        setValidationError('Return date & time must be after pickup date & time');
       }
-
-      const minReturn = getMinReturnDateTime(pickupDateTime, resolvedDestination.name || outstationDrop, resolvedDestination.roundTripKm);
-      if (minReturn && val < minReturn) {
-        setReturnDateTime(minReturn);
-        setValidationError(`Minimum realistic round-trip duration for this route requires returning after ${formatDateTimeDisplay(minReturn)}. Automatically adjusted.`);
-        const rNew = new Date(minReturn);
-        const pDay = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate());
-        const rDay = new Date(rNew.getFullYear(), rNew.getMonth(), rNew.getDate());
-        const calendarDays = Math.max(1, Math.round((rDay - pDay) / (1000 * 60 * 60 * 24)) + 1);
-        setOutstationDays(calendarDays);
-        return;
-      }
-
-      setReturnDateTime(val);
-      setValidationError('');
-      const pDay = new Date(pDate.getFullYear(), pDate.getMonth(), pDate.getDate());
-      const rDay = new Date(rDate.getFullYear(), rDate.getMonth(), rDate.getDate());
-      const calendarDays = Math.max(1, Math.round((rDay - pDay) / (1000 * 60 * 60 * 24)) + 1);
-      setOutstationDays(calendarDays);
-    } else {
-      setReturnDateTime(val);
-      setOutstationDays(resolvedDestination.defaultDays || 1);
     }
   };
 
@@ -917,7 +936,7 @@ export default function BookingEngine({
         const gstAmount = needGst ? Math.round(taxableAmount * 0.05) : 0;
         const totalFare = baseSubtotal + gstAmount;
 
-        const originName = outstationPickup.split(',')[0].trim();
+        const originName = (outstationPickup && outstationPickup.trim()) ? outstationPickup.split(',')[0].trim() : 'Chennai';
         const destName = resolvedDestination.name || (outstationDrop ? outstationDrop.split(',')[0].trim() : 'Outstation');
 
         return {
@@ -957,7 +976,7 @@ export default function BookingEngine({
         const gstAmount = needGst ? Math.round(taxableAmount * 0.05) : 0;
         const totalFare = baseSubtotal + gstAmount;
 
-        const originName = outstationPickup.split(',')[0].trim();
+        const originName = (outstationPickup && outstationPickup.trim()) ? outstationPickup.split(',')[0].trim() : 'Chennai';
         const destName = resolvedDestination.name || (outstationDrop ? outstationDrop.split(',')[0].trim() : 'Outstation');
 
         return {
@@ -1207,7 +1226,7 @@ Please confirm chauffeur availability.`;
 
     // Validate required fields before proceeding
     if (activeTab === 'outstation') {
-      if (!outstationDrop || !outstationDrop.trim()) {
+      if (!hideDestination && (!outstationDrop || !outstationDrop.trim())) {
         setValidationError('Please enter your destination city / drop location');
         dropInputRef.current?.focus();
         return;
@@ -1220,31 +1239,17 @@ Please confirm chauffeur availability.`;
         setValidationError('Pickup date & time cannot be in the past');
         return;
       }
-      if (isDropInChennai) {
+      if (!hideDestination && isDropInChennai) {
         setValidationError(`"${outstationDrop.split(',')[0]}" is inside Chennai city limits. Outstation round trips are for inter-city travel (min 250 km/day). Please switch to Local Package or choose an outstation city.`);
         return;
       }
-      if (outstationTripType === 'round') {
-        if (!returnDateTime) {
-          setValidationError('Please select your return date & time to calculate round-trip fare');
-          if (returnInputRef.current) {
-            returnInputRef.current.focus();
-            try {
-              returnInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } catch (_) {}
-          }
-          return;
-        }
-        if (new Date(returnDateTime).getTime() <= new Date(pickupDateTime).getTime()) {
-          setValidationError('Return date & time must be after pickup date & time');
-          returnInputRef.current?.focus();
-          return;
-        }
-        if (minReturnDateTime && returnDateTime < minReturnDateTime) {
-          setValidationError(`Minimum realistic round-trip duration for this route requires returning after ${formatDateTimeDisplay(minReturnDateTime)}`);
-          returnInputRef.current?.focus();
-          return;
-        }
+      if (!returnDateTime) {
+        setValidationError('Please select return date & time to calculate round-trip fare');
+        return;
+      }
+      if (new Date(returnDateTime).getTime() <= new Date(pickupDateTime).getTime()) {
+        setValidationError('Return date & time must be after pickup date & time');
+        return;
       }
     } else if (activeTab === 'local') {
       if (!outstationPickup || !outstationPickup.trim()) {
@@ -1323,7 +1328,7 @@ Please confirm chauffeur availability.`;
           {/* Centered Heading (M3 Title Large) */}
           <div className="text-center pb-0.5">
             <h3 className="text-lg sm:text-xl font-bold font-heading text-m3-on-surface dark:text-white tracking-tight">
-              Book Your Trip
+              {title || (detectedDestination ? `Book Your ${detectedDestination} Cab` : 'Book Your Trip')}
             </h3>
           </div>
 
@@ -1340,7 +1345,7 @@ Please confirm chauffeur availability.`;
                       : 'text-m3-on-surface-variant hover:text-m3-on-surface dark:text-slate-300 dark:hover:text-white'
                   }`}
                 >
-                  Outstation (Round Trip)
+                  Outstation
                 </button>
                 <button
                   type="button"
@@ -1406,74 +1411,76 @@ Please confirm chauffeur availability.`;
               </div>
 
               {/* Drop Location */}
-              <div>
-                <label htmlFor="drop-input" className="flex items-center gap-1.5 text-xs font-semibold text-m3-on-surface-variant dark:text-slate-300 mb-1">
-                  <Navigation className="w-3.5 h-3.5 text-slate-500 rotate-45" />
-                  <span>Drop Location / City</span>
-                </label>
-                <div className="relative flex items-center">
-                  <input
-                    id="drop-input"
-                    ref={dropInputRef}
-                    type="text"
-                    data-autocomplete-input="true"
-                    autoComplete="off"
-                    value={outstationDrop}
-                    onFocus={handleInputFocus}
-                    onChange={(e) => handleDestinationSelect(e.target.value)}
-                    placeholder={dropPlaceholder || "e.g. Pondicherry, Tirupati, Bangalore"}
-                    className={`w-full pl-3.5 pr-20 min-h-[48px] sm:min-h-[50px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border rounded-m3-sm text-m3-on-surface dark:text-white placeholder-slate-400 font-medium focus:outline-none focus:border-2 transition-all ${
-                      validationError && !outstationDrop.trim()
-                        ? 'border-2 border-red-500 ring-2 ring-red-400/40 bg-red-50/40 dark:bg-red-950/30 focus:border-red-600'
-                        : isDropInChennai
-                        ? 'border-amber-500 focus:border-amber-600 focus:bg-amber-50/20'
-                        : 'border-m3-outline-variant/80 dark:border-m3-outline-variant/60 focus:border-blue-600 focus:bg-white dark:focus:bg-m3-surface'
-                    }`}
-                  />
-                  <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center">
-                    {outstationDrop && (
+              {!hideDestination && (
+                <div>
+                  <label htmlFor="drop-input" className="flex items-center gap-1.5 text-xs font-semibold text-m3-on-surface-variant dark:text-slate-300 mb-1">
+                    <Navigation className="w-3.5 h-3.5 text-slate-500 rotate-45" />
+                    <span>Drop Location / City</span>
+                  </label>
+                  <div className="relative flex items-center">
+                    <input
+                      id="drop-input"
+                      ref={dropInputRef}
+                      type="text"
+                      data-autocomplete-input="true"
+                      autoComplete="off"
+                      value={outstationDrop}
+                      onFocus={handleInputFocus}
+                      onChange={(e) => handleDestinationSelect(e.target.value)}
+                      placeholder={dropPlaceholder || "e.g. Pondicherry, Tirupati, Bangalore"}
+                      className={`w-full pl-3.5 pr-20 min-h-[48px] sm:min-h-[50px] text-xs sm:text-sm border rounded-m3-sm font-medium transition-all ${
+                        validationError && !outstationDrop.trim()
+                          ? 'border-2 border-red-500 ring-2 ring-red-400/40 bg-red-50/40 dark:bg-red-950/30 focus:border-red-600 bg-m3-surface-container-low'
+                          : isDropInChennai
+                          ? 'border-amber-500 focus:border-amber-600 focus:bg-amber-50/20 bg-m3-surface-container-low'
+                          : 'border-m3-outline-variant/80 dark:border-m3-outline-variant/60 focus:border-blue-600 focus:bg-white dark:focus:bg-m3-surface bg-m3-surface-container-low dark:bg-m3-surface-container-low text-m3-on-surface dark:text-white placeholder-slate-400'
+                      }`}
+                    />
+                    <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center">
+                      {outstationDrop && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setOutstationDrop('');
+                            dropInputRef.current?.focus();
+                          }}
+                          className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-white active:scale-90 transition-transform cursor-pointer text-xs"
+                          aria-label="Clear drop location"
+                        >
+                          ✕
+                        </button>
+                      )}
+                      <div className="w-8 h-8 flex items-center justify-center pointer-events-none">
+                        <MapPin className="w-4 h-4 text-blue-600" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {isDropInChennai && (
+                    <div className="mt-2 p-2.5 bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700/60 rounded-m3-md text-xs text-amber-900 dark:text-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 animate-fadeIn">
+                      <div className="flex items-start gap-1.5">
+                        <Info className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                        <span>
+                          <strong>{outstationDrop.split(',')[0]}</strong> is inside Chennai city limits. Outstation fares require a minimum 250 km/day billing. For local travel within Chennai, switch to <strong>Local Package</strong> or <strong>Airport Transfer</strong>.
+                        </span>
+                      </div>
                       <button
                         type="button"
                         onClick={() => {
-                          setOutstationDrop('');
-                          dropInputRef.current?.focus();
+                          setActiveTab('local');
+                          setValidationError('');
                         }}
-                        className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-white active:scale-90 transition-transform cursor-pointer text-xs"
-                        aria-label="Clear drop location"
+                        className="shrink-0 px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-m3-full text-[11px] transition-colors cursor-pointer text-center"
                       >
-                        ✕
+                        Switch to Local Package
                       </button>
-                    )}
-                    <div className="w-8 h-8 flex items-center justify-center pointer-events-none">
-                      <MapPin className="w-4 h-4 text-blue-600" />
                     </div>
-                  </div>
+                  )}
                 </div>
-
-                {isDropInChennai && (
-                  <div className="mt-2 p-2.5 bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700/60 rounded-m3-md text-xs text-amber-900 dark:text-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 animate-fadeIn">
-                    <div className="flex items-start gap-1.5">
-                      <Info className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-                      <span>
-                        <strong>{outstationDrop.split(',')[0]}</strong> is inside Chennai city limits. Outstation fares require a minimum 250 km/day billing. For local travel within Chennai, switch to <strong>Local Package</strong> or <strong>Airport Transfer</strong>.
-                      </span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setActiveTab('local');
-                        setValidationError('');
-                      }}
-                      className="shrink-0 px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-m3-full text-[11px] transition-colors cursor-pointer text-center"
-                    >
-                      Switch to Local Package
-                    </button>
-                  </div>
-                )}
-              </div>
+              )}
 
               {/* Popular Chips (M3 Filter / Assist Chips with 40dp ergonomics) */}
-              {showPopularChips && (
+              {!hideDestination && showPopularChips && (
                 <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mr-0.5">
                     POPULAR:
@@ -1495,7 +1502,7 @@ Please confirm chauffeur availability.`;
                 </div>
               )}
 
-              {/* 2-Column Date & Time */}
+              {/* 2-Column Date & Time Pickers (Pickup & Return) */}
               <div className="grid grid-cols-2 gap-2.5 pt-0.5">
                 <div>
                   <label htmlFor="pickup-datetime-input" className="flex items-center gap-1 text-[11px] font-semibold text-m3-on-surface-variant dark:text-slate-300 mb-1">
@@ -1516,42 +1523,22 @@ Please confirm chauffeur availability.`;
                   <div className="flex items-center justify-between mb-1">
                     <label htmlFor="return-datetime-input" className="flex items-center gap-1 text-[11px] font-semibold text-m3-on-surface-variant dark:text-slate-300">
                       <Calendar className="w-3.5 h-3.5 text-blue-600" />
-                      <span>Return Date</span>
+                      <span>Return Date &amp; Time</span>
                     </label>
-                    {(() => {
-                      if (!returnDateTime) {
-                        return (
-                          <span className="bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-m3-full">
-                            Required
-                          </span>
-                        );
-                      }
-                      const isInvalidDate = pickupDateTime && new Date(returnDateTime).getTime() <= new Date(pickupDateTime).getTime();
-                      if (isInvalidDate || outstationDays <= 0) {
-                        return (
-                          <span className="bg-red-100 text-red-700 border border-red-300 dark:bg-red-950 dark:text-red-300 text-[10px] font-bold px-2 py-0.5 rounded-m3-full animate-pulse">
-                            Invalid Date (Before Pickup)
-                          </span>
-                        );
-                      }
-                      return (
-                        <span className="bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950 dark:text-blue-300 text-[10px] font-bold px-2 py-0.5 rounded-m3-full">
-                          {outstationDays === 1 ? '1 Day (Same Day)' : `${outstationDays} Days (${outstationDays - 1}N)`}
-                        </span>
-                      );
-                    })()}
+                    {returnDateTime && pickupDateTime && new Date(returnDateTime).getTime() > new Date(pickupDateTime).getTime() && (
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800">
+                        {outstationDays === 1 ? 'Same Day Return' : `${outstationDays} Days (${outstationDays - 1}N)`}
+                      </span>
+                    )}
                   </div>
                   <input
-                    ref={returnInputRef}
                     id="return-datetime-input"
                     type="datetime-local"
                     value={returnDateTime}
-                    min={minReturnDateTime || pickupDateTime}
-                    disabled={!pickupDateTime}
+                    min={pickupDateTime || minPickupDateTime}
                     onChange={(e) => handleReturnChange(e.target.value)}
-                    className={`w-full px-2.5 min-h-[46px] sm:min-h-[48px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border rounded-m3-sm text-m3-on-surface dark:text-white font-medium focus:outline-none focus:border-2 focus:border-blue-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
-                      (returnDateTime && pickupDateTime && new Date(returnDateTime).getTime() <= new Date(pickupDateTime).getTime()) ||
-                      (validationError && !returnDateTime)
+                    className={`w-full px-2.5 min-h-[46px] sm:min-h-[48px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border rounded-m3-sm text-m3-on-surface dark:text-white font-medium focus:outline-none focus:border-2 focus:border-blue-600 transition-all ${
+                      validationError && (!returnDateTime || (pickupDateTime && new Date(returnDateTime).getTime() <= new Date(pickupDateTime).getTime()))
                         ? 'border-2 border-red-500 ring-2 ring-red-400/40 bg-red-50/40 dark:bg-red-950/30'
                         : 'border-m3-outline-variant/80 dark:border-m3-outline-variant/60'
                     }`}
@@ -1758,10 +1745,10 @@ Please confirm chauffeur availability.`;
               onClick={handleCalculateClick}
               className="w-full min-h-[50px] sm:min-h-[52px] px-6 rounded-m3-full font-bold text-sm sm:text-base tracking-wide transition-all flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white shadow-m3-1 hover:shadow-m3-2 cursor-pointer"
             >
-              <span>View Instant Fare →</span>
+              <span>{ctaText || (effectiveLockDestination ? 'Check Fare & Book Cab →' : 'View Instant Fare & Book →')}</span>
             </button>
             <p className="text-xs text-m3-on-surface-variant dark:text-slate-400">
-              No phone number required to check fare
+              No phone number required to check fare • Instant online quote
             </p>
           </div>
         </div>

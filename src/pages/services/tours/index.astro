@@ -1,4 +1,216 @@
 ---
-// Permanent 301 Redirect to canonical Temple Tours hub
-return Astro.redirect('/services/tours/temple-tours/', 301);
+import Layout from '../../../layouts/Layout.astro';
+import Breadcrumbs from '../../../components/SEO/Breadcrumbs.astro';
+import OptimizedImage from '../../../components/OptimizedImage.astro';
+import { ArrowRight, Palmtree, MapPin, Sparkles, CheckCircle2 } from 'lucide-react';
+
+const title = "Tour Packages from Chennai – Temple Yatras & Weekend Getaways | Kalidass Travels";
+const description = "Explore all tour packages from Chennai: Sacred temple darshans (Tirupati, Kanchipuram, Navagraha, Rameswaram) & scenic holiday getaways (Pondicherry, Mahabalipuram, Yelagiri, Yercaud).";
+const keywords = "tour packages from chennai, chennai tour packages, south india temple tours, weekend getaways from chennai, holiday packages from chennai, kalidass travels tours";
+
+const breadcrumbItems = [
+  { name: "Home", item: "/" },
+  { name: "Services", item: "/services/" },
+  { name: "Tour Packages", item: "/services/tours/" },
+];
+
+const templeHighlights = [
+  { name: "Tirupati Balaji Darshan", time: "1 Day (320 km)", fare: "From ₹6,000", slug: "tirupati-package", img: "/images/temple/tirupati-balaji.webp" },
+  { name: "Kanchipuram Temple & Silk Tour", time: "1 Day (150 km)", fare: "From ₹3,500", slug: "kanchipuram-temple-trip", img: "/images/temple/kanchipuram-temple.webp" },
+  { name: "Thiruvannamalai Girivalam", time: "1 Day (390 km)", fare: "From ₹6,500", slug: "thiruvannamalai-girivalam-trip", img: "/images/temple/thiruvannamalai-girivalam.webp" },
+  { name: "Kumbakonam 9 Navagraha", time: "2 Days (750 km)", fare: "From ₹12,000", slug: "navagraha-tour", img: "/images/temple/navagraha.webp" },
+  { name: "Rameswaram & Dhanushkodi", time: "2 Days (1,100 km)", fare: "From ₹18,500", slug: "rameswaram-2-days", img: "/images/temple/rameswaram.webp" },
+  { name: "Madurai Meenakshi Amman", time: "2–3 Days (924 km)", fare: "From ₹15,000", slug: "madurai-meenakshi-temple-tour", img: "/images/temple/madurai.webp" },
+];
+
+const holidayHighlights = [
+  { name: "Pondicherry Beach & Auroville", time: "1 or 2 Days (310 km)", fare: "From ₹4,500", slug: "pondicherry-one-day-trip", img: "/images/temple/pondicherry.webp" },
+  { name: "Mahabalipuram & ECR Coast", time: "1 Day (120 km)", fare: "From ₹2,200", slug: "mahabalipuram-ecr-temple-route", img: "/images/temple/mahabalipuram-ecr-temples.webp" },
+  { name: "Yelagiri Hills Weekend", time: "2 Days (460 km)", fare: "From ₹7,500", slug: "yelagiri-hills-weekend", img: "/images/hero/outstation-highway.webp" },
+  { name: "Yercaud Hill Station Retreat", time: "2–3 Days (720 km)", fare: "From ₹11,500", slug: "yercaud-hills-weekend", img: "/images/hero/outstation-highway.webp" },
+  { name: "Chennai City Sightseeing", time: "1 Day (80–100 km)", fare: "From ₹2,200", slug: "one-day-chennai-city-tour", img: "/images/temple/chennai-city.webp" },
+  { name: "Bangalore & Mysore Highway", time: "2–3 Days (700+ km)", fare: "From ₹14/km", slug: "chennai-to-bangalore-taxi", img: "/images/hero/coimbatore.webp" },
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "TouristTrip",
+  "@id": "https://kalidasstravels.in/services/tours/#service",
+  "name": title,
+  "description": description,
+  "url": "https://kalidasstravels.in/services/tours/",
+  "provider": {
+    "@type": "TravelAgency",
+    "name": "Kalidass Travels",
+    "telephone": "+918939539211",
+    "url": "https://kalidasstravels.in/"
+  }
+};
 ---
+
+<Layout
+  title={title}
+  description={description}
+  keywords={keywords}
+  schema={schema}
+>
+  <div class="bg-m3-surface text-m3-on-surface">
+    <!-- Breadcrumbs -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+      <Breadcrumbs items={breadcrumbItems} />
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+      <!-- HERO -->
+      <section class="text-center max-w-3xl mx-auto mb-12">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-m3-primary/10 text-m3-primary text-xs font-bold uppercase tracking-wider mb-3">
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>Curated South India Journeys</span>
+        </span>
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-m3-on-surface tracking-tight font-heading leading-tight mb-4">
+          Tour Packages from Chennai
+        </h1>
+        <p class="text-sm sm:text-base text-m3-on-surface-variant leading-relaxed">
+          Whether you are seeking sacred spiritual darshans or a refreshing weekend escape to beaches and hill stations, Kalidass Travels provides dedicated AC cabs with polite, verified highway chauffeurs.
+        </p>
+      </section>
+
+      <!-- TWO MAIN PATHWAYS (HERO CARDS) -->
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+        <!-- 1. TEMPLE TOURS BANNER -->
+        <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-amber-500/10 via-orange-500/10 to-amber-500/5 border border-amber-500/30 flex flex-col justify-between">
+          <div>
+            <span class="inline-block px-3 py-1 rounded-full bg-amber-500/20 text-amber-800 dark:text-amber-200 text-xs font-bold uppercase tracking-wider mb-3">
+              🕉️ Pilgrimage Yatras
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-m3-on-surface font-heading mb-3">
+              South India Temple Tours
+            </h2>
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed mb-6">
+              10 sacred pilgrimage circuits with verified satvik teetotaler drivers. Doorstep Chennai pickup, temple opening timing guidance, and all-inclusive tolls on 1-day yatras.
+            </p>
+
+            <ul class="space-y-2 mb-6">
+              <li class="flex items-center gap-2 text-xs font-semibold text-m3-on-surface">
+                <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0" />
+                <span>Tirupati, Kanchipuram, Thiruvannamalai, Kumbakonam &amp; Rameswaram</span>
+              </li>
+              <li class="flex items-center gap-2 text-xs font-semibold text-m3-on-surface">
+                <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0" />
+                <span>Senior-friendly assistance, low-step vehicle boarding &amp; luggage care</span>
+              </li>
+              <li class="flex items-center gap-2 text-xs font-semibold text-m3-on-surface">
+                <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0" />
+                <span>Fixed fares from ₹3,500 with ₹500 advance to confirm &amp; lock</span>
+              </li>
+            </ul>
+          </div>
+
+          <a
+            href="/services/tours/temple-tours/"
+            class="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm shadow-sm transition-colors"
+          >
+            <span>Explore Temple Tour Packages</span>
+            <ArrowRight className="w-4 h-4" />
+          </a>
+        </div>
+
+        <!-- 2. WEEKEND & HOLIDAY GETAWAYS BANNER -->
+        <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-emerald-500/10 via-teal-500/10 to-emerald-500/5 border border-emerald-500/30 flex flex-col justify-between">
+          <div>
+            <span class="inline-block px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-800 dark:text-emerald-200 text-xs font-bold uppercase tracking-wider mb-3">
+              🏖️ Holiday Getaways
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-m3-on-surface font-heading mb-3">
+              Weekend &amp; Holiday Tours
+            </h2>
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed mb-6">
+              Recharge with family and friends on scenic coastal drives and misty hill stations. Private dedicated cab staying with your group for 100% flexible vacation pace.
+            </p>
+
+            <ul class="space-y-2 mb-6">
+              <li class="flex items-center gap-2 text-xs font-semibold text-m3-on-surface">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Pondicherry French Quarter, Mahabalipuram Beach, Yelagiri &amp; Yercaud Hills</span>
+              </li>
+              <li class="flex items-center gap-2 text-xs font-semibold text-m3-on-surface">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Flexible halts for seaside cafes, viewpoints, water sports &amp; photo spots</span>
+              </li>
+              <li class="flex items-center gap-2 text-xs font-semibold text-m3-on-surface">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Packages from ₹2,200 with Swift Dzire, Ertiga, Innova Crysta &amp; Tempo</span>
+              </li>
+            </ul>
+          </div>
+
+          <a
+            href="/services/tours/weekend-packages/"
+            class="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-sm transition-colors"
+          >
+            <span>Explore Weekend &amp; Holiday Packages</span>
+            <ArrowRight className="w-4 h-4" />
+          </a>
+        </div>
+      </section>
+
+      <!-- PREVIEW SECTION 1: POPULAR TEMPLE TRIPS -->
+      <section class="mb-14">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <span class="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">Pilgrimage Circuits</span>
+            <h3 class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading">Popular Temple Yatras</h3>
+          </div>
+          <a href="/services/tours/temple-tours/" class="text-xs font-bold text-amber-700 dark:text-amber-400 hover:underline inline-flex items-center gap-1">
+            <span>View All 10 Temples</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </a>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+          {templeHighlights.map((t) => (
+            <a href={`/services/${t.slug}/`} class="group p-3 rounded-2xl bg-m3-surface border border-m3-outline-variant hover:border-amber-500/50 hover:shadow-md transition-all flex flex-col justify-between">
+              <div>
+                <div class="relative h-24 rounded-xl overflow-hidden bg-m3-surface-container-high mb-2.5">
+                  <OptimizedImage src={t.img} alt={t.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" sizes="150px" />
+                </div>
+                <h4 class="text-xs font-bold text-m3-on-surface group-hover:text-amber-600 transition-colors line-clamp-2 leading-snug">{t.name}</h4>
+                <div class="text-[10px] text-m3-on-surface-variant mt-1">{t.time}</div>
+              </div>
+              <div class="text-xs font-extrabold text-amber-700 dark:text-amber-300 mt-2 pt-2 border-t border-m3-outline-variant/60">{t.fare}</div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <!-- PREVIEW SECTION 2: POPULAR WEEKEND GETAWAYS -->
+      <section class="mb-14">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">Holiday Escapes</span>
+            <h3 class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading">Beaches &amp; Hill Station Getaways</h3>
+          </div>
+          <a href="/services/tours/weekend-packages/" class="text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline inline-flex items-center gap-1">
+            <span>View All 6 Getaways</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </a>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+          {holidayHighlights.map((h) => (
+            <a href={`/services/${h.slug}/`} class="group p-3 rounded-2xl bg-m3-surface border border-m3-outline-variant hover:border-emerald-500/50 hover:shadow-md transition-all flex flex-col justify-between">
+              <div>
+                <div class="relative h-24 rounded-xl overflow-hidden bg-m3-surface-container-high mb-2.5">
+                  <OptimizedImage src={h.img} alt={h.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" sizes="150px" />
+                </div>
+                <h4 class="text-xs font-bold text-m3-on-surface group-hover:text-emerald-600 transition-colors line-clamp-2 leading-snug">{h.name}</h4>
+                <div class="text-[10px] text-m3-on-surface-variant mt-1">{h.time}</div>
+              </div>
+              <div class="text-xs font-extrabold text-emerald-700 dark:text-emerald-300 mt-2 pt-2 border-t border-m3-outline-variant/60">{h.fare}</div>
+            </a>
+          ))}
+        </div>
+      </section>
+    </main>
+  </div>
+</Layout>
