@@ -209,7 +209,7 @@ function doPost(e) {
       var bLast = bookSheet.getLastRow();
       var bMaxAllowed = (101 - 1) + Math.max(bLast + 50, 100);
       if (incomingBookingId) {
-        var bNumMatch = incomingBookingId.match(/(?:KT|BK|CAB|MAA|OUT|TPT|PDY|TMP|ACT)-?(\d+)/i);
+        var bNumMatch = incomingBookingId.match(/(?:QT|ENQ|WA|CALL|KT|BK|CAB|MAA|OUT|TPT|PDY|TMP|ACT)-?(\d+)/i);
         if (bNumMatch) {
           var bn = parseInt(bNumMatch[1], 10);
           if (!isNaN(bn) && bn >= 101 && bn <= bMaxAllowed) {

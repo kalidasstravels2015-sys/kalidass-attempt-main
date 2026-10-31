@@ -21,10 +21,10 @@ const callUrl = `tel:${cleanPhone}`;
 const whatsappUrl = `https://wa.me/${rawPhone}?text=${encodeURIComponent(whatsappMsg)}`;
 ---
 
-<!-- Global Floating Contact Actions (Compact Circular FABs: WhatsApp Above, Call Below) -->
+<!-- Global Floating Contact Actions (Standard 56x56 M3 Circular FABs: WhatsApp Above, Call Below) -->
 <div 
   id="floating-actions-container"
-  class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-center gap-2.5 pointer-events-none select-none pb-[env(safe-area-inset-bottom,0px)] pr-[env(safe-area-inset-right,0px)] transition-all duration-300"
+  class="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-center gap-3 pointer-events-none select-none pb-[env(safe-area-inset-bottom,0px)] pr-[env(safe-area-inset-right,0px)] transition-all duration-300 transform translate-y-0 opacity-100 will-change-transform"
   role="region"
   aria-label="Direct Booking Helplines"
 >
@@ -34,11 +34,11 @@ const whatsappUrl = `https://wa.me/${rawPhone}?text=${encodeURIComponent(whatsap
     id="floating-whatsapp-btn"
     target="_blank"
     rel="noopener noreferrer"
-    class="pointer-events-auto group relative flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#25D366] hover:bg-[#20bd5a] active:bg-[#1da851] text-white shadow-md hover:shadow-lg active:shadow-sm active:scale-95 transition-all duration-200 border border-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 cursor-pointer"
+    class="pointer-events-auto group relative flex items-center justify-center w-14 h-14 rounded-full bg-[#25D366] hover:bg-[#20bd5a] active:bg-[#1da851] text-white shadow-m3-2 hover:shadow-m3-3 active:scale-95 transition-all duration-200 border border-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 cursor-pointer"
     aria-label={`Chat on WhatsApp (${displayPhone})`}
     title={`Chat on WhatsApp: ${displayPhone}`}
   >
-    <WhatsAppIcon variant="white" className="w-5 h-5 text-white shrink-0 fill-current" />
+    <WhatsAppIcon variant="white" className="w-7 h-7 text-white shrink-0 fill-current" />
     
     <!-- Desktop Tooltip on Hover -->
     <span 
@@ -49,15 +49,15 @@ const whatsappUrl = `https://wa.me/${rawPhone}?text=${encodeURIComponent(whatsap
     </span>
   </a>
 
-  <!-- Call Helpline Circular FAB (Compact 44-48dp Circular FAB) -->
+  <!-- Call Helpline M3 Circular FAB (Standard 56dp circle, Elevation Level 3, Mobile Only) -->
   <a
     href={callUrl}
     id="floating-call-btn"
-    class="pointer-events-auto group relative flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary shadow-md hover:shadow-lg active:shadow-sm active:scale-95 transition-all duration-200 border border-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary/50 cursor-pointer"
+    class="pointer-events-auto group relative hidden md:hidden items-center justify-center w-14 h-14 rounded-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary shadow-m3-2 hover:shadow-m3-3 active:scale-95 transition-all duration-200 border border-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary/50 cursor-pointer"
     aria-label={`Call Helpline (${displayPhone})`}
     title={`Call Helpline: ${displayPhone}`}
   >
-    <AndroidPhoneIcon className="w-5 h-5 text-white group-hover:rotate-12 transition-transform duration-300 shrink-0" />
+    <AndroidPhoneIcon className="w-6 h-6 text-white group-hover:rotate-12 transition-transform duration-300 shrink-0" />
     
     <!-- Desktop Tooltip on Hover -->
     <span 
@@ -68,3 +68,113 @@ const whatsappUrl = `https://wa.me/${rawPhone}?text=${encodeURIComponent(whatsap
     </span>
   </a>
 </div>
+
+<script>
+  function initFloatingActionsController() {
+    const container = document.getElementById('floating-actions-container');
+    const callBtn = document.getElementById('floating-call-btn');
+    if (!container) return;
+
+    let lastScrollY = window.scrollY;
+    let isInputFocused = false;
+    let ticking = false;
+
+    // Thresholds
+    const HERO_SCROLL_THRESHOLD = 260; // Past header Call button & Hero booking card
+    const SCROLL_DELTA_THRESHOLD = 8;  // Minimum scroll movement to trigger hide/show
+
+    function updateVisibility() {
+      const currentScrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const isNearBottom = currentScrollY + windowHeight >= documentHeight - 150;
+      const isPastHero = currentScrollY > HERO_SCROLL_THRESHOLD;
+
+      // 1. Mobile Call FAB: Hidden at the top of the page (Hero) because the header Call button is already visible.
+      // Shows on mobile once user scrolls past the Hero booking section.
+      if (callBtn) {
+        if (window.innerWidth < 768) {
+          if (!isPastHero) {
+            callBtn.classList.add('hidden');
+            callBtn.classList.remove('flex');
+          } else {
+            callBtn.classList.remove('hidden');
+            callBtn.classList.add('flex');
+          }
+        } else {
+          callBtn.classList.add('hidden');
+          callBtn.classList.remove('flex');
+        }
+      }
+
+      // 2. Form Input Protection: Hide dock when user is typing/booking so inputs & autocomplete are never blocked
+      if (isInputFocused) {
+        container.classList.add('translate-y-28', 'opacity-0', 'pointer-events-none');
+        container.classList.remove('translate-y-0', 'opacity-100');
+        ticking = false;
+        return;
+      }
+
+      // 3. Smart Scroll Direction Behavior (Mobile & Desktop)
+      const delta = currentScrollY - lastScrollY;
+
+      if (isNearBottom) {
+        // Always reveal near bottom of page so user can easily convert
+        container.classList.remove('translate-y-28', 'opacity-0', 'pointer-events-none');
+        container.classList.add('translate-y-0', 'opacity-100');
+      } else if (Math.abs(delta) > SCROLL_DELTA_THRESHOLD) {
+        if (delta > 0 && currentScrollY > 100) {
+          // Scrolling DOWN -> User is reading content -> Auto-hide to keep view unobstructed
+          container.classList.add('translate-y-28', 'opacity-0', 'pointer-events-none');
+          container.classList.remove('translate-y-0', 'opacity-100');
+        } else if (delta < 0) {
+          // Scrolling UP -> User looking for contact/action -> Smoothly reveal
+          container.classList.remove('translate-y-28', 'opacity-0', 'pointer-events-none');
+          container.classList.add('translate-y-0', 'opacity-100');
+        }
+      }
+
+      lastScrollY = currentScrollY;
+      ticking = false;
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(updateVisibility);
+        ticking = true;
+      }
+    }
+
+    // Input focus protection: hide when mobile keyboard opens or user focuses booking fields
+    document.addEventListener('focusin', (e) => {
+      const target = e.target as HTMLElement | null;
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'SELECT' || target.tagName === 'TEXTAREA')) {
+        isInputFocused = true;
+        updateVisibility();
+      }
+    });
+
+    document.addEventListener('focusout', (e) => {
+      const target = e.target as HTMLElement | null;
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'SELECT' || target.tagName === 'TEXTAREA')) {
+        isInputFocused = false;
+        // slight delay to prevent flicker when switching between booking inputs
+        setTimeout(() => {
+          if (!isInputFocused) updateVisibility();
+        }, 150);
+      }
+    });
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', updateVisibility, { passive: true });
+    updateVisibility();
+  }
+
+  // Initialize on load and Astro view transitions
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFloatingActionsController);
+  } else {
+    initFloatingActionsController();
+  }
+  document.addEventListener('astro:page-load', initFloatingActionsController);
+</script>

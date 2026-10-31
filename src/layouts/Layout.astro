@@ -1190,26 +1190,28 @@ const unifiedSchemaGraph = {
         pointer-events: none;
       }
 
-      /* Quick-Navigation Sticky Pill Bar - Guaranteed High-Contrast Active & Inactive States */
+      /* Quick-Navigation Sticky M3 Filter Chips - Authentic M3 Tonal Container & Elevation */
       nav[data-quick-nav] a[data-active="true"],
       nav[data-quick-nav] a[data-active="true"]:hover,
       nav[data-quick-nav] a[data-active="true"]:focus,
       nav[data-quick-nav] a[data-active="true"]:active {
-        background-color: #0B57D0 !important;
-        color: #FFFFFF !important;
-        font-weight: 700 !important;
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+        background-color: var(--md-sys-color-secondary-container) !important;
+        color: var(--md-sys-color-on-secondary-container) !important;
+        font-weight: 600 !important;
+        border-color: var(--md-sys-color-outline) !important;
+        box-shadow: none !important;
       }
 
       nav[data-quick-nav] a:not([data-active="true"]) {
-        background-color: #ECEEF1;
-        color: #111827;
+        background-color: var(--md-sys-color-surface);
+        color: var(--md-sys-color-on-surface-variant);
+        border: 1px solid var(--md-sys-color-outline-variant);
       }
 
       nav[data-quick-nav] a:not([data-active="true"]):hover,
       nav[data-quick-nav] a:not([data-active="true"]):focus {
-        background-color: #E5E7EB;
-        color: #111827;
+        background-color: var(--md-sys-color-surface-container-high);
+        color: var(--md-sys-color-on-surface);
       }
 
       /* =========================================================================
@@ -2014,16 +2016,6 @@ const unifiedSchemaGraph = {
                 </div>
               </div>
             </div>
-
-            <!-- Mobile Quick Call Pill -->
-            <a
-              href="tel:+918939539211"
-              class="md:hidden min-h-[44px] inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary text-xs font-bold shadow-m3-1 hover:shadow-m3-2 transition-all mr-1"
-              aria-label="Call 89395 39211"
-            >
-              <Phone className="w-4 h-4 text-m3-on-primary" />
-              <span>Call</span>
-            </a>
 
             <!-- Mobile Icon Button (M3 Standard Icon Button) -->
             <button

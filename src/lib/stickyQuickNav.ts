@@ -16,38 +16,45 @@ interface QuickNavItem {
 const ALL_STATE_CLASSES = [
   'bg-m3-primary',
   'bg-m3-primary-container',
+  'bg-m3-secondary-container',
+  'bg-m3-surface',
   'bg-m3-surface-container',
   'bg-m3-surface-container-high',
   'bg-m3-surface-container-low',
   'text-white',
   'text-m3-on-primary',
   'text-m3-on-primary-container',
+  'text-m3-on-secondary-container',
   'text-m3-on-surface',
   'text-m3-on-surface-variant',
   'font-bold',
+  'font-semibold',
   'font-medium',
+  'border-m3-outline',
+  'border-m3-outline-variant',
   'shadow-xs',
   'shadow-m3-1',
   'scale-[1.02]',
   'hover:bg-m3-surface-container-high',
   'hover:bg-m3-primary',
+  'hover:bg-m3-secondary-container',
   'hover:text-white',
   'hover:text-m3-on-surface'
 ];
 
 const ACTIVE_CLASSES = [
-  'bg-m3-primary',
-  'text-white',
-  'font-bold',
-  'shadow-xs',
-  'hover:bg-m3-primary',
-  'hover:text-white'
+  'bg-m3-secondary-container',
+  'text-m3-on-secondary-container',
+  'font-semibold',
+  'border-m3-outline',
+  'hover:bg-m3-secondary-container'
 ];
 
 const INACTIVE_CLASSES = [
-  'bg-m3-surface-container',
-  'text-m3-on-surface',
+  'bg-m3-surface',
+  'text-m3-on-surface-variant',
   'font-medium',
+  'border-m3-outline-variant',
   'hover:bg-m3-surface-container-high',
   'hover:text-m3-on-surface'
 ];

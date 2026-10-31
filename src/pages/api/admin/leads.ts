@@ -24,12 +24,24 @@ function escapeCsvCell(cell: any): string {
   return str;
 }
 
+function getEnvWebhook(): string {
+  try {
+    const envPath = path.resolve(process.cwd(), '.env');
+    if (fs.existsSync(envPath)) {
+      const raw = fs.readFileSync(envPath, 'utf8');
+      const match = raw.match(/(?:PUBLIC_)?GOOGLE_SHEET_WEBHOOK_URL=([^\r\n]+)/);
+      if (match && match[1]) return match[1].trim();
+    }
+  } catch (_) {}
+  return process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL || '';
+}
+
 export const GET: APIRoute = async ({ request, url }) => {
   try {
     const targetUrl = url || new URL(request.url);
     const actionQuery = (request.headers.get('x-action') || targetUrl.searchParams.get('action') || '').trim().toLowerCase();
     const quoteIdQuery = (request.headers.get('x-quote-id') || targetUrl.searchParams.get('quoteId') || targetUrl.searchParams.get('id') || targetUrl.searchParams.get('ref') || '').trim();
-    const customWebhook = targetUrl.searchParams.get('webhook') || process.env.GOOGLE_SHEET_WEBHOOK_URL;
+    const customWebhook = targetUrl.searchParams.get('webhook') || getEnvWebhook();
     const csvPath = path.resolve(process.cwd(), 'Kalidass_Calculations_Log_2026.csv');
 
     // Handle Delete / Cancel enquiry

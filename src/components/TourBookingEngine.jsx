@@ -12,6 +12,7 @@ export default function TourBookingEngine({
   customConfig = null,
   pickupPlaceholder = 'Enter doorstep pickup address / area in Chennai (e.g. T. Nagar, Airport)',
   hideDestination = undefined,
+  forceEmptyLocations = true,
   ...restProps
 }) {
   const slug = (serviceSlug || '').toLowerCase();
@@ -36,7 +37,7 @@ export default function TourBookingEngine({
         allowedTabs={['outstation']}
         showTabs={false}
         showPopularChips={false}
-        forceEmptyLocations={false}
+        forceEmptyLocations={forceEmptyLocations}
         lockDestination={false}
         hideDestination={isTempleTour}
         pickupPlaceholder={pickupPlaceholder}

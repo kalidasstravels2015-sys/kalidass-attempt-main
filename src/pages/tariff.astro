@@ -168,10 +168,10 @@ const faqSchema = {
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-2 overflow-x-auto no-scrollbar pe-6 scroll-px-4">
           <div class="flex items-center gap-1.5 sm:gap-2 text-xs font-semibold whitespace-nowrap py-0.5">
             <span class="text-xs uppercase tracking-wider text-m3-on-surface-variant mr-1 font-bold hidden sm:inline">Jump To:</span>
-            <a href="#local-rates" data-active="true" aria-current="true" class="px-3.5 py-2 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs transition-all shrink-0 hover:bg-m3-primary hover:text-white">Local Hourly</a>
-            <a href="#outstation-rates" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">Outstation Per-KM</a>
-            <a href="#fare-rules" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">Inclusions &amp; Terms</a>
-            <a href="#faq" class="px-3.5 py-2 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">Tariff FAQs</a>
+            <a href="#local-rates" data-active="true" aria-current="true" class="px-3.5 py-2 rounded-m3-full bg-m3-secondary-container text-m3-on-secondary-container font-semibold border border-m3-outline transition-all shrink-0">Local Hourly</a>
+            <a href="#outstation-rates" class="px-3.5 py-2 rounded-m3-full bg-m3-surface text-m3-on-surface-variant hover:bg-m3-surface-container-high hover:text-m3-on-surface border border-m3-outline-variant transition-colors shrink-0 font-medium">Outstation Per-KM</a>
+            <a href="#fare-rules" class="px-3.5 py-2 rounded-m3-full bg-m3-surface text-m3-on-surface-variant hover:bg-m3-surface-container-high hover:text-m3-on-surface border border-m3-outline-variant transition-colors shrink-0 font-medium">Inclusions &amp; Terms</a>
+            <a href="#faq" class="px-3.5 py-2 rounded-m3-full bg-m3-surface text-m3-on-surface-variant hover:bg-m3-surface-container-high hover:text-m3-on-surface border border-m3-outline-variant transition-colors shrink-0 font-medium">Tariff FAQs</a>
           </div>
           <div class="flex items-center gap-2 shrink-0">
             <a
@@ -195,12 +195,12 @@ const faqSchema = {
             <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant leading-relaxed font-sans mt-1">Standard hourly packages for city sightseeing, business meetings, and local errands.</p>
           </div>
           <div class="flex items-center gap-3">
-            <!-- View switcher for Local Packages -->
-            <div class="hidden md:inline-flex items-center p-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant text-xs font-semibold select-none">
+            <!-- M3 Segmented Button for Local Packages -->
+            <div class="hidden md:inline-flex items-stretch rounded-m3-full border border-m3-outline divide-x divide-m3-outline overflow-hidden bg-m3-surface text-xs font-semibold select-none min-h-[36px]">
               <button
                 type="button"
                 id="local-btn-table"
-                class="px-3.5 py-1.5 rounded-m3-full bg-m3-primary text-m3-on-primary shadow-xs transition-all cursor-pointer font-bold"
+                class="px-3.5 py-1.5 transition-colors cursor-pointer font-semibold bg-m3-secondary-container text-m3-on-secondary-container"
                 aria-pressed="true"
               >
                 Table View
@@ -208,7 +208,7 @@ const faqSchema = {
               <button
                 type="button"
                 id="local-btn-cards"
-                class="px-3.5 py-1.5 rounded-m3-full text-m3-on-surface-variant hover:text-m3-on-surface transition-all cursor-pointer font-medium"
+                class="px-3.5 py-1.5 transition-colors cursor-pointer font-medium bg-transparent text-m3-on-surface-variant hover:bg-m3-surface-container-high"
                 aria-pressed="false"
               >
                 Cards View
@@ -416,12 +416,12 @@ const faqSchema = {
             <p class="text-xs sm:text-sm md:text-base text-m3-on-surface-variant leading-relaxed font-sans mt-1">Round-trip and one-way per-km slabs for Pondicherry, Bangalore, and all South India routes. For all-inclusive pilgrimage trips, see our <a href="/services/tirupati-package/" class="text-m3-primary font-bold hover:underline">Chennai to Tirupati Cab Package</a> (₹6,000 flat with all tolls &amp; AP permit included).</p>
           </div>
           <div class="flex items-center gap-3">
-            <!-- View switcher for Outstation -->
-            <div class="hidden md:inline-flex items-center p-1 rounded-m3-full bg-m3-surface-container border border-m3-outline-variant text-xs font-semibold select-none">
+            <!-- M3 Segmented Button for Outstation Packages -->
+            <div class="hidden md:inline-flex items-stretch rounded-m3-full border border-m3-outline divide-x divide-m3-outline overflow-hidden bg-m3-surface text-xs font-semibold select-none min-h-[36px]">
               <button
                 type="button"
                 id="outstation-btn-table"
-                class="px-3.5 py-1.5 rounded-m3-full bg-m3-primary text-m3-on-primary shadow-xs transition-all cursor-pointer font-bold"
+                class="px-3.5 py-1.5 transition-colors cursor-pointer font-semibold bg-m3-secondary-container text-m3-on-secondary-container"
                 aria-pressed="true"
               >
                 Table View
@@ -429,7 +429,7 @@ const faqSchema = {
               <button
                 type="button"
                 id="outstation-btn-cards"
-                class="px-3.5 py-1.5 rounded-m3-full text-m3-on-surface-variant hover:text-m3-on-surface transition-all cursor-pointer font-medium"
+                class="px-3.5 py-1.5 transition-colors cursor-pointer font-medium bg-transparent text-m3-on-surface-variant hover:bg-m3-surface-container-high"
                 aria-pressed="false"
               >
                 Cards View
@@ -648,6 +648,9 @@ const faqSchema = {
                 if (btnTable.dataset.switcherBound === 'true') return;
                 btnTable.dataset.switcherBound = 'true';
 
+                const activeClasses = ['bg-m3-secondary-container', 'text-m3-on-secondary-container', 'font-semibold'];
+                const inactiveClasses = ['bg-transparent', 'text-m3-on-surface-variant', 'font-medium'];
+
                 btnTable.addEventListener('click', function() {
                   // Show Table on desktop, hide Cards on desktop
                   viewTable.classList.remove('md:hidden');
@@ -655,12 +658,12 @@ const faqSchema = {
                   viewCards.classList.remove('md:block');
                   viewCards.classList.add('block', 'md:hidden');
 
-                  btnTable.classList.add('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs', 'font-bold');
-                  btnTable.classList.remove('text-m3-on-surface-variant', 'font-medium');
+                  btnTable.classList.add(...activeClasses);
+                  btnTable.classList.remove(...inactiveClasses);
                   btnTable.setAttribute('aria-pressed', 'true');
 
-                  btnCards.classList.remove('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs', 'font-bold');
-                  btnCards.classList.add('text-m3-on-surface-variant', 'font-medium');
+                  btnCards.classList.remove(...activeClasses);
+                  btnCards.classList.add(...inactiveClasses);
                   btnCards.setAttribute('aria-pressed', 'false');
                 });
 
@@ -671,12 +674,12 @@ const faqSchema = {
                   viewCards.classList.remove('md:hidden');
                   viewCards.classList.add('block', 'md:block');
 
-                  btnCards.classList.add('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs', 'font-bold');
-                  btnCards.classList.remove('text-m3-on-surface-variant', 'font-medium');
+                  btnCards.classList.add(...activeClasses);
+                  btnCards.classList.remove(...inactiveClasses);
                   btnCards.setAttribute('aria-pressed', 'true');
 
-                  btnTable.classList.remove('bg-m3-primary', 'text-m3-on-primary', 'shadow-xs', 'font-bold');
-                  btnTable.classList.add('text-m3-on-surface-variant', 'font-medium');
+                  btnTable.classList.remove(...activeClasses);
+                  btnTable.classList.add(...inactiveClasses);
                   btnTable.setAttribute('aria-pressed', 'false');
                 });
               }

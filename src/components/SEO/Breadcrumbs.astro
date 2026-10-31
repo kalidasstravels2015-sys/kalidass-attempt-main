@@ -1,9 +1,11 @@
 ---
 interface Props {
   items: { name: string; item: string }[];
+  variant?: 'light' | 'dark';
+  skipSchema?: boolean;
 }
 
-const { items = [] } = Astro.props;
+const { items = [], variant = 'light', skipSchema = false } = Astro.props;
 
 // Ensure "Home" is the root element without duplicating it
 const normalizedItems =
@@ -39,23 +41,25 @@ const schema = {
 };
 ---
 
-<script type="application/ld+json" set:html={JSON.stringify(schema)} />
+{!skipSchema && (
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+)}
 
-<nav aria-label="Breadcrumb" class="py-2 sm:py-2.5 px-4 sm:px-6 max-w-4xl mx-auto overflow-hidden">
-  <ol class="flex items-center list-none p-0 text-xs sm:text-sm text-m3-on-surface-variant overflow-x-auto whitespace-nowrap scrollbar-hide no-scrollbar">
+<nav aria-label="Breadcrumb" class={`py-2 sm:py-2.5 px-4 sm:px-6 max-w-4xl mx-auto overflow-hidden ${variant === 'dark' ? 'text-slate-300' : 'text-m3-on-surface-variant'}`}>
+  <ol class="flex items-center list-none p-0 text-xs sm:text-sm overflow-x-auto whitespace-nowrap scrollbar-hide no-scrollbar">
     {
       normalizedItems.map((item, index) => (
         <li class="flex items-center shrink-0">
           {index === normalizedItems.length - 1 ? (
-            <span class="text-m3-on-surface font-semibold max-w-[200px] sm:max-w-none truncate" aria-current="page" title={item.name}>
+            <span class={`font-semibold max-w-[200px] sm:max-w-none truncate ${variant === 'dark' ? 'text-white drop-shadow-xs' : 'text-m3-on-surface'}`} aria-current="page" title={item.name}>
               {item.name}
             </span>
           ) : (
             <>
-              <a href={item.item} class="hover:text-m3-primary transition-colors">
+              <a href={item.item} class={`transition-colors ${variant === 'dark' ? 'text-slate-300 hover:text-white' : 'hover:text-m3-primary'}`}>
                 {item.name}
               </a>
-              <svg class="h-3.5 w-3.5 mx-1.5 sm:mx-2 text-m3-outline shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <svg class={`h-3.5 w-3.5 mx-1.5 sm:mx-2 shrink-0 ${variant === 'dark' ? 'text-slate-400' : 'text-m3-outline'}`} fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path
                   fill-rule="evenodd"
                   d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"

@@ -488,8 +488,31 @@ export default function BookingEngine({
   }, [initialDrop, prefill.destination, serviceSlug, serviceTitle]);
 
   const isTourService = useMemo(() => {
-    return Boolean(lockDestination);
-  }, [lockDestination]);
+    if (lockDestination || hideDestination) return true;
+    const slug = (serviceSlug || '').toLowerCase();
+    const title = (serviceTitle || '').toLowerCase();
+    return Boolean(
+      slug.includes('tour') ||
+      slug.includes('package') ||
+      slug.includes('trip') ||
+      slug.includes('tirupati') ||
+      slug.includes('kanchipuram') ||
+      slug.includes('thiruvannamalai') ||
+      slug.includes('navagraha') ||
+      slug.includes('kumbakonam') ||
+      slug.includes('rameswaram') ||
+      slug.includes('sabarimala') ||
+      slug.includes('chidambaram') ||
+      slug.includes('vellore') ||
+      slug.includes('tiruchendur') ||
+      slug.includes('madurai') ||
+      slug.includes('pondicherry') ||
+      title.includes('tour') ||
+      title.includes('package') ||
+      title.includes('darshan') ||
+      title.includes('pilgrimage')
+    );
+  }, [lockDestination, hideDestination, serviceSlug, serviceTitle]);
 
   const effectiveLockDestination = Boolean(lockDestination);
 
@@ -1161,6 +1184,42 @@ export default function BookingEngine({
     } catch (_) {}
   };
 
+  // Dispatches booking intent to server & Google Sheets before launching WhatsApp
+  const handleWhatsAppBookClick = (vehicleName, fare) => {
+    try {
+      logCalculationEvent(vehicleName, fare);
+
+      const bookingPayload = {
+        bookingId: quoteRefId,
+        route: currentBreakdown.routeSummary || `${outstationPickup || 'Chennai'} ➔ ${outstationDrop || 'Outstation'}`,
+        pickup: outstationPickup || 'Chennai',
+        drop: outstationDrop || 'Outstation',
+        travelDateTime: `${formattedPickupDate || 'Tomorrow'} @ ${formattedPickupTime || '06:00 AM'}`,
+        pickupDate: formattedPickupDate,
+        pickupTime: formattedPickupTime,
+        vehicle: vehicleName,
+        passengers: selectedVehicle?.seats ? `${selectedVehicle.seats} Seats` : '4 Seats',
+        fare: fare || currentBreakdown.totalFare,
+        advance: 500,
+        advancePaid: 0,
+        manifestStatus: 'Need Driver',
+        name: 'Website WhatsApp Lead',
+        notes: `Website WhatsApp Click: ${quoteRefId} (${currentBreakdown.routeSummary || 'Outstation'})`
+      };
+
+      if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
+        navigator.sendBeacon('/api/record-booking', JSON.stringify(bookingPayload));
+      } else {
+        fetch('/api/record-booking', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(bookingPayload),
+          keepalive: true
+        }).catch(() => {});
+      }
+    } catch (_) {}
+  };
+
   // WhatsApp Message (100% mirrors the on-screen Rate Summary & Payment Rules)
   const getWhatsAppMessage = () => {
     const isLocal = activeTab === 'local';
@@ -1332,35 +1391,45 @@ Please confirm chauffeur availability.`;
             </h3>
           </div>
 
-          {/* 1. M3 Segmented Button / Tab Switcher */}
+          {/* 1. M3 Segmented Button */}
           {shouldRenderTabs && (
             activeTab !== 'airport' ? (
-              <div className="grid grid-cols-2 p-1 bg-m3-surface-container-high dark:bg-m3-surface-container-high rounded-m3-full min-h-[44px]">
+              <div 
+                className="grid grid-cols-2 w-full rounded-m3-full border border-slate-300 dark:border-m3-outline divide-x divide-slate-300 dark:divide-m3-outline overflow-hidden bg-slate-50 dark:bg-m3-surface min-h-[40px] select-none"
+                role="tablist"
+                aria-label="Trip Category"
+              >
                 <button
                   type="button"
+                  role="tab"
+                  aria-selected={activeTab === 'outstation'}
                   onClick={() => setActiveTab('outstation')}
-                  className={`py-2 px-3 rounded-m3-full text-xs sm:text-sm font-bold transition-all duration-150 cursor-pointer active:scale-[0.98] ${
+                  className={`py-2 px-3 text-xs sm:text-sm transition-colors cursor-pointer flex items-center justify-center gap-1.5 ${
                     activeTab === 'outstation'
-                      ? 'bg-blue-600 text-white shadow-m3-1'
-                      : 'text-m3-on-surface-variant hover:text-m3-on-surface dark:text-slate-300 dark:hover:text-white'
+                      ? 'bg-blue-600 text-white font-semibold shadow-xs'
+                      : 'bg-transparent text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white font-medium'
                   }`}
                 >
-                  Outstation
+                  <Car className="w-3.5 h-3.5 shrink-0" />
+                  <span>Outstation</span>
                 </button>
                 <button
                   type="button"
+                  role="tab"
+                  aria-selected={activeTab === 'local'}
                   onClick={() => setActiveTab('local')}
-                  className={`py-2 px-3 rounded-m3-full text-xs sm:text-sm font-bold transition-all duration-150 cursor-pointer active:scale-[0.98] ${
+                  className={`py-2 px-3 text-xs sm:text-sm transition-colors cursor-pointer flex items-center justify-center gap-1.5 ${
                     activeTab === 'local'
-                      ? 'bg-blue-600 text-white shadow-m3-1'
-                      : 'text-m3-on-surface-variant hover:text-m3-on-surface dark:text-slate-300 dark:hover:text-white'
+                      ? 'bg-blue-600 text-white font-semibold shadow-xs'
+                      : 'bg-transparent text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white font-medium'
                   }`}
                 >
-                  Local Package
+                  <Clock className="w-3.5 h-3.5 shrink-0" />
+                  <span>Local Package</span>
                 </button>
               </div>
             ) : (
-              <div className="flex items-center justify-center gap-2 py-2.5 px-4 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-m3-full text-xs sm:text-sm font-bold text-blue-700 dark:text-blue-300 shadow-2xs">
+              <div className="flex items-center justify-center gap-2 py-2.5 px-4 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 rounded-m3-full text-xs sm:text-sm font-semibold text-blue-700 dark:text-blue-300">
                 <Plane className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
                 <span>Airport Arrival Pickup (MAA Terminal 1, 2 &amp; 4)</span>
               </div>
@@ -1479,26 +1548,32 @@ Please confirm chauffeur availability.`;
                 </div>
               )}
 
-              {/* Popular Chips (M3 Filter / Assist Chips with 40dp ergonomics) */}
+              {/* Popular Chips (M3 Single-Line Horizontal Suggestion Chip Row) */}
               {!hideDestination && showPopularChips && (
-                <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mr-0.5">
+                <div className="relative flex items-center gap-2 pt-0.5">
+                  <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 select-none">
                     POPULAR:
                   </span>
-                  {['Tirupati', 'Kanchipuram', 'Pondicherry', 'Mahabalipuram', 'Kumbakonam', 'Bangalore'].map(city => (
-                    <button
-                      key={city}
-                      type="button"
-                      onClick={() => handleDestinationSelect(city)}
-                      className={`min-h-[34px] px-3.5 py-1 text-xs font-medium rounded-m3-full border transition-all duration-150 cursor-pointer active:scale-95 inline-flex items-center justify-center ${
-                        outstationDrop.toLowerCase().includes(city.toLowerCase())
-                          ? 'bg-blue-50 border-blue-600 text-blue-700 font-semibold shadow-m3-0'
-                          : 'bg-white dark:bg-m3-surface border-m3-outline-variant/80 dark:border-m3-outline-variant/60 text-m3-on-surface dark:text-slate-300 hover:border-blue-400'
-                      }`}
-                    >
-                      {city}
-                    </button>
-                  ))}
+                  <div className="relative flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar scroll-smooth py-0.5 touch-pan-x pr-5">
+                      {['Tirupati', 'Kanchipuram', 'Pondicherry', 'Mahabalipuram', 'Kumbakonam', 'Bangalore'].map(city => (
+                        <button
+                          key={city}
+                          type="button"
+                          onClick={() => handleDestinationSelect(city)}
+                          className={`shrink-0 min-h-[32px] px-3 py-1 text-xs rounded-m3-full border transition-all duration-150 cursor-pointer active:scale-95 inline-flex items-center justify-center whitespace-nowrap focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:outline-none ${
+                            outstationDrop.toLowerCase().includes(city.toLowerCase())
+                              ? 'bg-blue-600 border-blue-600 text-white font-semibold shadow-xs'
+                              : 'bg-white dark:bg-m3-surface border-slate-300 dark:border-m3-outline-variant text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-m3-surface-container-high font-medium'
+                          }`}
+                        >
+                          {city}
+                        </button>
+                      ))}
+                    </div>
+                    {/* M3 Trailing edge gradient affordance */}
+                    <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-white dark:from-m3-surface to-transparent" />
+                  </div>
                 </div>
               )}
 
@@ -1520,17 +1595,10 @@ Please confirm chauffeur availability.`;
                 </div>
 
                 <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <label htmlFor="return-datetime-input" className="flex items-center gap-1 text-[11px] font-semibold text-m3-on-surface-variant dark:text-slate-300">
-                      <Calendar className="w-3.5 h-3.5 text-blue-600" />
-                      <span>Return Date &amp; Time</span>
-                    </label>
-                    {returnDateTime && pickupDateTime && new Date(returnDateTime).getTime() > new Date(pickupDateTime).getTime() && (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800">
-                        {outstationDays === 1 ? 'Same Day Return' : `${outstationDays} Days (${outstationDays - 1}N)`}
-                      </span>
-                    )}
-                  </div>
+                  <label htmlFor="return-datetime-input" className="flex items-center gap-1 text-[11px] font-semibold text-m3-on-surface-variant dark:text-slate-300 mb-1">
+                    <Calendar className="w-3.5 h-3.5 text-blue-600" />
+                    <span>Return Date &amp; Time</span>
+                  </label>
                   <input
                     id="return-datetime-input"
                     type="datetime-local"
@@ -1662,32 +1730,38 @@ Please confirm chauffeur availability.`;
                   </div>
                 </div>
 
-                {/* Popular Chennai Area Quick-Chips */}
-                <div className="flex flex-wrap items-center gap-1.5 pt-1.5">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mr-0.5">
+                {/* Popular Chennai Area Quick-Chips (M3 Single-Line Horizontal Suggestion Chip Row) */}
+                <div className="relative flex items-center gap-2 pt-1.5">
+                  <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 select-none">
                     POPULAR:
                   </span>
-                  {['T. Nagar', 'Central / Egmore', 'OMR / Perungudi', 'Velachery', 'Anna Nagar', 'Mahabalipuram'].map(area => {
-                    const keyWord = area.split('/')[0].trim().toLowerCase();
-                    const isSelected = airportDropAddress.toLowerCase().includes(keyWord);
-                    return (
-                      <button
-                        key={area}
-                        type="button"
-                        onClick={() => {
-                          setAirportDropAddress(area);
-                          if (validationError) setValidationError('');
-                        }}
-                        className={`min-h-[32px] px-3 py-1 text-xs font-medium rounded-m3-full border transition-all duration-150 cursor-pointer active:scale-95 inline-flex items-center justify-center ${
-                          isSelected
-                            ? 'bg-blue-50 border-blue-600 text-blue-700 font-semibold shadow-m3-0'
-                            : 'bg-white dark:bg-m3-surface border-m3-outline-variant/80 dark:border-m3-outline-variant/60 text-m3-on-surface dark:text-slate-300 hover:border-blue-400'
-                        }`}
-                      >
-                        {area}
-                      </button>
-                    );
-                  })}
+                  <div className="relative flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar scroll-smooth py-0.5 touch-pan-x pr-5">
+                      {['T. Nagar', 'Central / Egmore', 'OMR / Perungudi', 'Velachery', 'Anna Nagar', 'Mahabalipuram'].map(area => {
+                        const keyWord = area.split('/')[0].trim().toLowerCase();
+                        const isSelected = airportDropAddress.toLowerCase().includes(keyWord);
+                        return (
+                          <button
+                            key={area}
+                            type="button"
+                            onClick={() => {
+                              setAirportDropAddress(area);
+                              if (validationError) setValidationError('');
+                            }}
+                            className={`shrink-0 min-h-[32px] px-3 py-1 text-xs rounded-m3-full border transition-all duration-150 cursor-pointer active:scale-95 inline-flex items-center justify-center whitespace-nowrap focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:outline-none ${
+                              isSelected
+                                ? 'bg-blue-600 border-blue-600 text-white font-semibold shadow-xs'
+                                : 'bg-white dark:bg-m3-surface border-slate-300 dark:border-m3-outline-variant text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-m3-surface-container-high font-medium'
+                            }`}
+                          >
+                            {area}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {/* M3 Trailing edge gradient affordance */}
+                    <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-white dark:from-m3-surface to-transparent" />
+                  </div>
                 </div>
               </div>
 
@@ -1974,7 +2048,7 @@ Please confirm chauffeur availability.`;
                   target="_blank"
                   rel="noopener noreferrer nofollow"
                   data-direct-whatsapp="true"
-                  onClick={() => logCalculationEvent(selectedVehicle.fullName, currentBreakdown.totalFare)}
+                  onClick={() => handleWhatsAppBookClick(selectedVehicle.fullName, currentBreakdown.totalFare)}
                   className="w-full min-h-[48px] sm:min-h-[50px] inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-m3-full bg-[#075E54] hover:bg-[#054c44] active:bg-[#043e37] text-white font-bold text-sm shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5 transition-all active:scale-[0.98] cursor-pointer border border-[#054c44]/30"
                 >
                   <WhatsAppIcon variant="white" className="w-5 h-5 shrink-0" />
@@ -2217,7 +2291,7 @@ Please confirm chauffeur availability.`;
                     target="_blank"
                     rel="noopener noreferrer nofollow"
                     data-direct-whatsapp="true"
-                    onClick={() => logCalculationEvent(selectedVehicle.fullName, currentBreakdown.totalFare)}
+                    onClick={() => handleWhatsAppBookClick(selectedVehicle.fullName, currentBreakdown.totalFare)}
                     className="flex-1 min-h-[48px] sm:min-h-[50px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-m3-full bg-[#075E54] hover:bg-[#054c44] active:bg-[#043e37] text-white font-bold text-xs sm:text-sm shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5 transition-all active:scale-[0.98] cursor-pointer border border-[#054c44]/30"
                   >
                     <WhatsAppIcon variant="white" className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />

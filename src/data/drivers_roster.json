@@ -1,0 +1,50 @@
+[
+  {
+    "id": "DRV-01",
+    "name": "Moorthy",
+    "phone": "7305282977",
+    "vehicle": "Maruti XL6",
+    "plate": "TN85W4093",
+    "category": "6-Seater / SUV"
+  },
+  {
+    "id": "DRV-02",
+    "name": "Rajesh Kumar",
+    "phone": "8072619904",
+    "vehicle": "Toyota Etios",
+    "plate": "TN18BQ1558",
+    "category": "Sedan"
+  },
+  {
+    "id": "DRV-03",
+    "name": "Siva",
+    "phone": "9840100000",
+    "vehicle": "Swift Dzire",
+    "plate": "TN11AB1234",
+    "category": "Sedan"
+  },
+  {
+    "id": "DRV-04",
+    "name": "Hariharan",
+    "phone": "8939539211",
+    "vehicle": "Maruti Ertiga",
+    "plate": "TN14AK2026",
+    "category": "6-Seater"
+  },
+  {
+    "id": "DRV-05",
+    "name": "Murugan",
+    "phone": "8939539211",
+    "vehicle": "Innova Crysta",
+    "plate": "TN09BZ5544",
+    "category": "Prime SUV"
+  },
+  {
+    "id": "DRV-06",
+    "name": "Elumalai",
+    "phone": "8939539211",
+    "vehicle": "Tempo Traveller (12S)",
+    "plate": "TN11CD9988",
+    "category": "Tempo"
+  }
+]

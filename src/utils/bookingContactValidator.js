@@ -7,6 +7,7 @@
 const PLACEHOLDER_NAMES = [
   'website caller',
   'website visitor',
+  'website whatsapp lead',
   'phone caller',
   'customer',
   'guest',
@@ -120,17 +121,20 @@ export function isActionableLead(lead) {
   if (lead.status === 'Cancelled' || lead.status === 'Deleted') return false;
   if ((lead.drop || '').toLowerCase().includes('whatsapp chat')) return false;
 
-  const id = String(lead.quoteId || '').toUpperCase();
-  const isManualEnquiry = id.startsWith('#ENQ') || id.startsWith('#CALL') || id.startsWith('#WA');
+  const id = String(lead.quoteId || lead.bookingId || '').toUpperCase();
   const phone = extractValidMobile(lead);
   const hasRealName = lead.guestName && !isPlaceholderCustomerName(lead.guestName);
+  const notes = String(lead.notes || lead.metadata || '');
+  const isDirectBooking = notes.includes('WhatsApp Click') || lead.manifestStatus === 'Need Driver';
+  const isDirectOperatorEntry = id.startsWith('#CALL-') || id.startsWith('#WA-');
 
-  if (isManualEnquiry || phone || hasRealName) {
+  // Must have a real phone number, a real customer name, be an explicit operator entry, or an explicit WhatsApp booking click
+  if (phone || hasRealName || isDirectOperatorEntry || isDirectBooking) {
     return true;
   }
 
-  const fare = Number(lead.estimatedFare || lead.fare || 0);
-  return fare > 0 && Boolean(phone || hasRealName);
+  // Any anonymous website visitor with no phone and no real name is NOT an actionable enquiry
+  return false;
 }
 
 /**

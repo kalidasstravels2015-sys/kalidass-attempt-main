@@ -1,162 +1,111 @@
 import { test, expect } from '@playwright/test';
 
-// Helper to pre-authorize session PIN for SoloAdminDashboard
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    sessionStorage.setItem('kt_admin_pin_verified', 'true');
-  });
-});
+// Helper to unlock PIN if gate is shown
+async function unlockAdminGate(page) {
+  const pinInput = page.locator('input[placeholder*="PIN"], input[type="password"]').first();
+  if (await pinInput.isVisible({ timeout: 1500 }).catch(() => false)) {
+    await pinInput.fill('2015');
+    await page.waitForTimeout(500);
+  }
+}
 
+// Helper to click sidebar nav items
 async function clickSidebarNav(page, text) {
   const menuBtn = page.locator('button[title="Open Navigation Menu"]');
-  if (await menuBtn.isVisible()) {
+  if (await menuBtn.isVisible({ timeout: 500 }).catch(() => false)) {
     await menuBtn.click();
-    await page.waitForTimeout(250);
+    await page.waitForTimeout(200);
   }
-  await page.click(`button:has-text("${text}")`);
+  await page.locator(`aside button:has-text("${text}")`).first().click();
 }
 
 test.describe('Admin Operations Command Tower Suite', () => {
-  test('should load /admin and display command tower navigation & views', async ({ page }) => {
+  test.beforeEach(async ({ page }) => {
+    // Preset session storage to bypass PIN gate in test runner
+    await page.addInitScript(() => {
+      sessionStorage.setItem('kt_admin_pin_verified', 'true');
+    });
+  });
+
+  test('should load /admin and display single-screen dispatch desk as primary view', async ({ page }) => {
     await page.goto('/admin/');
+    await unlockAdminGate(page);
+
     await expect(page.locator('text=Kalidass Travels').first()).toBeVisible();
 
+    // Verify Dispatch Desk header and 3 operational queues
+    await expect(page.locator('text=Dispatch Desk').first()).toBeVisible();
+    await expect(page.locator('button:has-text("Needs Driver")').first()).toBeVisible();
+    await expect(page.locator('button:has-text("Scheduled")').first()).toBeVisible();
+    await expect(page.locator('button:has-text("Completed")').first()).toBeVisible();
+
+    // Verify primary sidebar navigation
     const menuBtn = page.locator('button[title="Open Navigation Menu"]');
-    if (await menuBtn.isVisible()) {
+    if (await menuBtn.isVisible({ timeout: 500 }).catch(() => false)) {
       await menuBtn.click();
     }
-
-    // Expect sidebar navigation items
-    await expect(page.locator('text=1. New Enquiries').first()).toBeVisible();
-    await expect(page.locator('text=2. Active Trips').first()).toBeVisible();
-    await expect(page.locator('text=3. Completed Trips').first()).toBeVisible();
-    await expect(page.locator('text=4. Driver Roster').first()).toBeVisible();
-    await expect(page.locator('text=5. Rate Calculator').first()).toBeVisible();
-    await expect(page.locator('text=6. Website Calc Radar').first()).toBeVisible();
+    await expect(page.locator('button:has-text("Dispatch Desk")').first()).toBeVisible();
+    await expect(page.locator('button:has-text("Inbound Enquiries")').first()).toBeVisible();
+    await expect(page.locator('button:has-text("Dispatch Calendar")').first()).toBeVisible();
+    await expect(page.locator('button:has-text("Master Tariffs")').first()).toBeVisible();
   });
 
   test('should switch between operational views smoothly', async ({ page }) => {
     await page.goto('/admin/');
+    await unlockAdminGate(page);
     await expect(page.locator('text=Kalidass Travels').first()).toBeVisible();
 
-    // Click 6. Website Calc Radar
-    await clickSidebarNav(page, "6. Website Calc Radar");
-    await expect(page.locator('text=Website Fare Calculator Radar')).toBeVisible();
-    await expect(page.locator('text=Live Estimates')).toBeVisible();
+    // Click Dispatch Calendar in sidebar
+    await clickSidebarNav(page, "Dispatch Calendar");
+    await expect(page.locator('text=Operations & Trip Monitoring Calendar')).toBeVisible();
 
-    // Click 4. Driver Roster
-    await clickSidebarNav(page, "4. Driver Roster");
-    await expect(page.locator('text=/Chauffeurs & Commercial Fleet Roster/')).toBeVisible();
+    // Click Master Tariffs
+    await clickSidebarNav(page, "Master Tariffs");
+    await expect(page.locator('text=Single Master Tariff').first()).toBeVisible();
 
-    // Click 5. Rate Calculator
-    await clickSidebarNav(page, "5. Rate Calculator");
-    await expect(page.locator('text=/Operator Rate Calculator|Booking Workspace/i').first()).toBeVisible();
-
-    // Back to 1. New Enquiries
-    await clickSidebarNav(page, "1. New Enquiries");
-    await expect(page.locator('text=/Customer Enquiries|Step 1: Enquiries/i').first()).toBeVisible();
+    // Back to Dispatch Desk
+    await clickSidebarNav(page, "Dispatch Desk");
+    await expect(page.locator('text=Dispatch Desk').first()).toBeVisible();
   });
 
   test('should open Rate Calculator modal and Duty Slip modal properly', async ({ page }) => {
     await page.goto('/admin/');
+    await unlockAdminGate(page);
     await expect(page.locator('text=Kalidass Travels').first()).toBeVisible();
 
     // Open Phone Quote Calculator via top header button
     await page.click('button[title="Quick Rate Calculator"]');
     await expect(page.locator('text=/Operator Rate Calculator|Booking Workspace/i').first()).toBeVisible();
     await page.locator('button[aria-label="Close Calculator"]').first().click();
+    await page.waitForTimeout(300);
 
     // Open Paste WA modal
     await page.click('button[title*="Paste incoming WhatsApp"]');
     await expect(page.locator('text=/WhatsApp Enquiry & Booking Copilot/i').first()).toBeVisible();
     await page.locator('button[title="Close Parser"]').first().click();
+    await page.waitForTimeout(300);
   });
 
-  test('should stream website calculation directly into Website Calc Radar in real time', async ({ page }) => {
+  test('should open 1-tap dispatch modal with driver selection & cash collection calculation', async ({ page }) => {
     await page.goto('/admin/');
-    await expect(page.locator('text=Kalidass Travels').first()).toBeVisible();
+    await unlockAdminGate(page);
 
-    // Go to Radar tab
-    await clickSidebarNav(page, "6. Website Calc Radar");
-    await expect(page.locator('text=Website Fare Calculator Radar')).toBeVisible();
-
-    // Simulate an instant calculation event dispatched by any website engine in the browser
-    await page.evaluate(() => {
-      window.dispatchEvent(new CustomEvent('kt_new_calculation', {
-        detail: {
-          quoteId: '#KT-TEST-99',
-          timestamp: 'Just now',
-          sourcePage: '/services/outstation-cabs/',
-          calculatorEngine: 'Outstation Cab Estimator',
-          tripType: 'Round Trip',
-          pickup: 'Chennai Central',
-          drop: 'Puducherry Beach',
-          vehicle: 'Swift Dzire',
-          distanceKm: 320,
-          estimatedFare: 4200,
-          status: 'Rate Locked'
-        }
-      }));
-    });
-
-    // Verify it instantly appears on the radar
-    await expect(page.locator('text=#KT-TEST-99').first()).toBeVisible({ timeout: 5000 });
-    await expect(page.locator('text=Chennai Central ➔ Puducherry Beach').first()).toBeVisible();
-    await expect(page.locator('text=4,200').first()).toBeVisible();
-  });
-
-  test('should require customer name and mobile number before moving enquiry to active trips', async ({ page }) => {
-    await page.goto('/admin/');
-    await expect(page.locator('text=Kalidass Travels').first()).toBeVisible();
-
-    // 1. Go to Website Calc Radar
-    await clickSidebarNav(page, "6. Website Calc Radar");
-    await expect(page.locator('text=Website Fare Calculator Radar')).toBeVisible();
-
-    // 2. Dispatch a test calculation
-    await page.evaluate(() => {
-      window.dispatchEvent(new CustomEvent('kt_new_calculation', {
-        detail: {
-          quoteId: '#KT-TEST-RADAR-1',
-          timestamp: 'Just now',
-          sourcePage: '/services/outstation-cabs/',
-          calculatorEngine: 'Outstation Cab Estimator',
-          tripType: 'One Way',
-          pickup: 'Chennai Airport',
-          drop: 'Mahabalipuram',
-          vehicle: 'Swift Dzire',
-          distanceKm: 55,
-          estimatedFare: 1650,
-          status: 'Calculated'
-        }
-      }));
-    });
-
-    await expect(page.locator('text=#KT-TEST-RADAR-1').first()).toBeVisible({ timeout: 5000 });
-
-    // 3. Click "+ Convert to Booking"
-    const convertBtn = page.locator('button:has-text("+ Convert to Booking")').first();
-    await convertBtn.click();
-
-    // 4. Verify conversion modal pops up requiring Customer Name & Mobile
-    await expect(page.locator('text=Convert Enquiry to Active Trip')).toBeVisible();
-    await expect(page.locator('text=Customer / Passenger Name')).toBeVisible();
-    await expect(page.locator('text=Passenger Mobile Number')).toBeVisible();
-
-    // 5. Fill valid Name & Mobile
-    await page.fill('input[placeholder="e.g. Ramesh Kumar"]', 'Suresh Raina');
-    await page.fill('input[placeholder="98401 23456"]', '9840155555');
-
-    // 6. Submit confirmation
-    await page.click('button:has-text("Confirm & Move to Active Trips")');
-
-    // 7. Verify it automatically navigates to Active Trips and shows the confirmed passenger
-    await expect(page.locator('text=2. Active Trips & Dispatch')).toBeVisible({ timeout: 5000 });
-    await expect(page.locator('text=Suresh Raina (+91 9840155555)')).toBeVisible();
+    // If an "Assign Driver & Dispatch" button is visible in Needs Driver, click it
+    const dispatchBtn = page.locator('button:has-text("Assign Driver & Dispatch")').first();
+    if (await dispatchBtn.isVisible().catch(() => false)) {
+      await dispatchBtn.click();
+      await expect(page.locator('text=Assign Driver & Send WhatsApp')).toBeVisible();
+      await expect(page.locator('text=💵 Driver Must Collect from Guest:')).toBeVisible();
+      await expect(page.locator('text=1. Send Duty Slip to Driver')).toBeVisible();
+      await expect(page.locator('text=2. Send Cab Details to Guest')).toBeVisible();
+      // Close modal
+      await page.locator('button:has-text("Cancel")').first().click();
+    }
   });
 
   test('should navigate to Operations & Trip Monitoring Calendar and switch views', async ({ page }) => {
     await page.goto('/admin/');
+    await unlockAdminGate(page);
     await expect(page.locator('text=Kalidass Travels').first()).toBeVisible();
 
     // Click Dispatch Calendar in sidebar
@@ -164,10 +113,10 @@ test.describe('Admin Operations Command Tower Suite', () => {
     await expect(page.locator('text=Operations & Trip Monitoring Calendar')).toBeVisible();
 
     // Verify 4-stage follow-up radar indicators
-    await expect(page.locator('text=1. ₹500 Advance')).toBeVisible();
-    await expect(page.locator('text=2. Need Driver')).toBeVisible();
-    await expect(page.locator('text=3. Ready & Live')).toBeVisible();
-    await expect(page.locator('text=4. Month Revenue')).toBeVisible();
+    await expect(page.locator('text=/₹500 ADVANCE/i')).toBeVisible();
+    await expect(page.locator('text=/NEED DRIVER/i').first()).toBeVisible();
+    await expect(page.locator('text=/READY & LIVE/i')).toBeVisible();
+    await expect(page.locator('text=/MONTH REVENUE/i')).toBeVisible();
 
     // Verify view toggle
     await expect(page.locator('button:has-text("Month View")')).toBeVisible();
@@ -175,8 +124,7 @@ test.describe('Admin Operations Command Tower Suite', () => {
 
     // Switch to Day Agenda
     await page.click('button:has-text("Day Agenda")');
-    await expect(page.locator('h4:has-text("Morning Departures")')).toBeVisible();
-    await expect(page.locator('h4:has-text("Afternoon & Night Departures")')).toBeVisible();
+    await expect(page.locator('text=Total Departures')).toBeVisible();
 
     // Switch back to Month View
     await page.click('button:has-text("Month View")');

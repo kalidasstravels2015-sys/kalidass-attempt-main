@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import SingleScreenDispatchDesk from './solo/SingleScreenDispatchDesk';
 import EnquiriesView from './solo/EnquiriesView';
 import ActiveTripsView from './solo/ActiveTripsView';
 import CompletedTripsView from './solo/CompletedTripsView';
@@ -25,9 +26,8 @@ const STORAGE_KEYS = {
 };
 
 export default function SoloAdminDashboard() {
-  // Dedicated Page/View Navigation:
-  // 'ENQUIRIES' | 'ACTIVE_TRIPS' | 'COMPLETED' | 'DRIVERS' | 'CALCULATOR' | 'SETTINGS'
-  const [currentView, setCurrentView] = useState('ENQUIRIES');
+  // Dedicated Page/View Navigation: Default to High-Speed Dispatch Desk
+  const [currentView, setCurrentView] = useState('DISPATCH');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Modals for focused tasks
@@ -143,7 +143,9 @@ export default function SoloAdminDashboard() {
         if (cached) {
           const parsed = JSON.parse(cached);
           if (Array.isArray(parsed)) {
-            return parsed.filter(l => l && l.quoteId && !deletedSet.has(String(l.quoteId).trim().toLowerCase()) && l.status !== 'Cancelled' && l.status !== 'Deleted');
+            const valid = parsed.filter(l => l && l.quoteId && !deletedSet.has(String(l.quoteId).trim().toLowerCase()) && l.status !== 'Cancelled' && l.status !== 'Deleted' && isActionableLead(l));
+            localStorage.setItem(STORAGE_KEYS.LEADS, JSON.stringify(valid));
+            return valid;
           }
         }
       } catch (_) {}
@@ -849,20 +851,20 @@ export default function SoloAdminDashboard() {
   // Navigation Items
   const navItems = [
     {
+      id: 'DISPATCH',
+      label: '⚡ Dispatch Desk',
+      icon: 'local_taxi',
+      badge: needDriverCount > 0 ? `🔴 ${needDriverCount}` : (activeBookings.length > 0 ? activeBookings.length : null),
+      badgeColor: needDriverCount > 0 ? 'bg-rose-600 text-white' : 'bg-emerald-600 text-white',
+      description: 'Single-screen 1-tap dispatch feed'
+    },
+    {
       id: 'ENQUIRIES',
-      label: '1. New Enquiries',
+      label: 'Inbound Enquiries',
       icon: 'phone_in_talk',
       badge: validLeads.length > 0 ? validLeads.length : null,
       badgeColor: 'bg-m3-primary-container text-m3-on-primary-container',
       description: 'Calls, WhatsApp & quotes'
-    },
-    {
-      id: 'ACTIVE_TRIPS',
-      label: '2. Active Trips',
-      icon: 'local_taxi',
-      badge: activeBookings.length > 0 ? (needDriverCount > 0 ? `⚠️ ${activeBookings.length}` : activeBookings.length) : null,
-      badgeColor: needDriverCount > 0 ? 'bg-m3-error-container text-m3-on-error-container' : 'bg-m3-secondary-container text-m3-on-secondary-container',
-      description: 'Driver allotment & Duty Slips'
     },
     {
       id: 'CALENDAR',
@@ -873,54 +875,14 @@ export default function SoloAdminDashboard() {
       description: 'Month & day dispatch schedule'
     },
     {
-      id: 'COMPLETED',
-      label: '3. Completed Trips',
-      icon: 'verified',
-      badge: completedBookings.length > 0 ? completedBookings.length : null,
-      badgeColor: 'bg-m3-secondary-container text-m3-on-secondary-container',
-      description: 'Closed duties & 5★ reviews'
-    },
-    {
-      id: 'DRIVERS',
-      label: '4. Driver Roster',
-      icon: 'badge',
-      badge: chauffeurs.length > 0 ? chauffeurs.length : null,
-      badgeColor: 'bg-m3-surface-container-high text-m3-on-surface',
-      description: 'Partner drivers & cars'
-    },
-    {
-      id: 'CALCULATOR',
-      label: '5. Rate Calculator',
-      icon: 'calculate',
-      description: 'Inbound phone tariff engine'
-    },
-    {
       id: 'TARIFFS',
-      label: '📋 Master Tariff Card',
+      label: '📋 Master Tariffs',
       icon: 'payments',
-      badge: 'Master',
-      badgeColor: 'bg-emerald-700 text-white',
-      description: 'All rates & state permits at a glance'
-    },
-    {
-      id: 'FAST_QUOTE',
-      label: '⚡ Fast Quote Desk',
-      icon: 'bolt',
-      badge: 'New',
-      badgeColor: 'bg-emerald-600 text-white',
-      description: 'Zero-loss WhatsApp quote generator'
-    },
-    {
-      id: 'WEB_RADAR',
-      label: '6. Website Calc Radar',
-      icon: 'radar',
-      badge: validCalculatorQuotes.length > 0 ? validCalculatorQuotes.length : null,
-      badgeColor: 'bg-m3-primary-container text-m3-on-primary-container',
-      description: 'Live visitor fare calculations'
+      description: 'All rates & state permits'
     },
     {
       id: 'SETTINGS',
-      label: '7. Google Sheet Sync',
+      label: 'Google Sheet Sync',
       icon: 'table_chart',
       badge: isSheetConnected ? 'Synced' : 'Offline',
       badgeColor: isSheetConnected ? 'bg-m3-secondary-container text-m3-on-secondary-container' : 'bg-m3-error-container text-m3-on-error-container',
@@ -1072,6 +1034,7 @@ export default function SoloAdminDashboard() {
 
             <div className="flex items-center gap-2 min-w-0">
               <span className="text-xs font-black uppercase text-m3-primary tracking-wider truncate">
+                {currentView === 'DISPATCH' && 'Dispatch Desk — 1-Tap WhatsApp Operations'}
                 {currentView === 'ENQUIRIES' && 'Step 1: Enquiries'}
                 {currentView === 'ACTIVE_TRIPS' && 'Step 2: Active Trips'}
                 {currentView === 'CALENDAR' && 'Operations & Trip Calendar'}
@@ -1116,11 +1079,54 @@ export default function SoloAdminDashboard() {
               <span className="material-symbols-outlined text-[17px]">content_paste</span>
               <span className="hidden sm:inline">Paste WA</span>
             </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                if (window.confirm('Clear all old phone-less visitor entries and refresh live data?')) {
+                  if (typeof window !== 'undefined' && window.localStorage) {
+                    localStorage.removeItem(STORAGE_KEYS.LEADS);
+                  }
+                  setLeads([]);
+                  refreshData();
+                  showToast('Cleaned old cache! Loading live bookings.', 'success');
+                }
+              }}
+              className="h-9 px-2.5 sm:px-3 bg-m3-surface-container-low hover:bg-rose-50 text-rose-700 border border-rose-300 rounded-m3-full text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer"
+              title="Clear stale anonymous visitor logs from browser"
+            >
+              <span className="material-symbols-outlined text-[16px]">cleaning_services</span>
+              <span className="hidden md:inline">Clean Cache</span>
+            </button>
           </div>
         </header>
 
         {/* View Switcher: Dedicated Clean Views with Bottom Padding for Mobile Nav */}
         <main className="flex-1 p-3 sm:p-5 lg:p-6 overflow-y-auto pb-20 md:pb-6">
+          {/* PRIMARY VIEW: SINGLE-SCREEN DISPATCH DESK */}
+          {currentView === 'DISPATCH' && (
+            <SingleScreenDispatchDesk
+              bookings={bookings}
+              leads={leads}
+              onUpdateBooking={async (updatedBooking) => {
+                const next = bookings.map(b => b.bookingId === updatedBooking.bookingId ? updatedBooking : b);
+                setBookings(next);
+                if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(next));
+                await syncBookingToRemote(updatedBooking);
+              }}
+              onAddBooking={async (newBooking) => {
+                const next = [newBooking, ...bookings];
+                setBookings(next);
+                if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(next));
+                await syncBookingToRemote(newBooking);
+              }}
+              onDeleteBooking={handleDeleteBooking}
+              onSyncGoogleSheets={refreshData}
+              isSyncing={isResetting}
+              showToast={showToast}
+            />
+          )}
+
           {/* VIEW 1: ENQUIRIES */}
           {currentView === 'ENQUIRIES' && (
             <EnquiriesView
@@ -1128,12 +1134,15 @@ export default function SoloAdminDashboard() {
               bookings={bookings}
               calculatorQuotes={calculatorQuotes}
               onNavigateToRadar={() => setCurrentView('WEB_RADAR')}
+              onNavigateToActive={() => setCurrentView('ACTIVE_TRIPS')}
               onAddManualLead={handleAddManualLead}
               onConvertToConfirmed={handleConvertToConfirmed}
               onDeleteLead={handleDeleteLead}
               onUpdateLead={handleUpdateLead}
+              onOpenDutySlip={(b) => setActiveDutySlipBooking(b)}
               onOpenPhoneQuoteEngine={() => setIsPhoneQuoteModalOpen(true)}
               onOpenAiParser={() => setIsAiParserModalOpen(true)}
+              onOpenQuickBooking={() => setIsQuickBookingOpen(true)}
               showToast={showToast}
             />
           )}
@@ -1263,10 +1272,9 @@ export default function SoloAdminDashboard() {
       {/* ========================================================= */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 h-16 bg-m3-surface-container-lowest/95 backdrop-blur-md border-t border-m3-outline-variant/60 flex items-center justify-around px-1 shadow-m3-2">
         {[
+          { id: 'DISPATCH', label: 'Dispatch', icon: 'local_taxi', badge: needDriverCount > 0 ? '🔴' : null },
           { id: 'ENQUIRIES', label: 'Enquiries', icon: 'phone_in_talk', badge: validLeads.length > 0 ? validLeads.length : null },
-          { id: 'CALENDAR', label: 'Calendar', icon: 'calendar_month', badge: needDriverCount > 0 ? '!' : null },
-          { id: 'ACTIVE_TRIPS', label: 'Active', icon: 'local_taxi', badge: activeBookings.length > 0 ? (needDriverCount > 0 ? '!' : activeBookings.length) : null },
-          { id: 'COMPLETED', label: 'Done', icon: 'verified', badge: null },
+          { id: 'CALENDAR', label: 'Calendar', icon: 'calendar_month', badge: null },
           { id: 'MENU', label: 'More', icon: 'menu', badge: null }
         ].map((tab) => {
           const isActive = currentView === tab.id;

@@ -14,11 +14,13 @@ export default function EnquiriesView({
   bookings = [],
   calculatorQuotes = [],
   onNavigateToRadar,
+  onNavigateToActive,
   onAddManualLead,
   onConvertToConfirmed,
   onDeleteLead,
   onUpdateLead,
   onOpenQuickBooking,
+  onOpenDutySlip,
   showToast
 }) {
   const [search, setSearch] = useState('');
@@ -59,6 +61,10 @@ export default function EnquiriesView({
     () => leads.filter(isActionableLead),
     [leads]
   );
+
+  const pendingWebsiteBookings = useMemo(() => {
+    return (bookings || []).filter(b => b && b.manifestStatus !== 'Completed' && b.manifestStatus !== 'Cancelled');
+  }, [bookings]);
 
   const validVisitorQuotes = useMemo(
     () => deduplicateCalculatorQuotes(calculatorQuotes),
@@ -360,6 +366,100 @@ export default function EnquiriesView({
             ))}
           </div>
         </div>
+
+        {/* Real Confirmed/Pending Bookings from Website */}
+        {pendingWebsiteBookings.length > 0 && (
+          <div className="space-y-3 p-4 rounded-m3-xl bg-blue-50/70 dark:bg-m3-primary-container/20 border-2 border-m3-primary/40 shadow-m3-1">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse"></span>
+                <h3 className="text-sm font-extrabold text-m3-on-surface flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-m3-primary text-base">local_taxi</span>
+                  <span>Active Website Bookings & Dispatch Queue</span>
+                  <span className="text-xs bg-m3-primary text-m3-on-primary font-mono-code font-bold px-2 py-0.5 rounded-full ml-1">
+                    {pendingWebsiteBookings.length}
+                  </span>
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={onNavigateToActive}
+                className="text-xs font-bold text-m3-primary hover:underline flex items-center gap-1 cursor-pointer"
+              >
+                <span>View All Active Trips</span>
+                <span className="material-symbols-outlined text-sm">arrow_forward</span>
+              </button>
+            </div>
+
+            <div className="space-y-2">
+              {pendingWebsiteBookings.map((booking, bIdx) => {
+                const isUnassigned = !booking.assignedChauffeur || booking.assignedChauffeur === 'Unassigned';
+
+                return (
+                  <div
+                    key={(booking.bookingId || bIdx) + '_quick'}
+                    className="p-3.5 rounded-m3-lg bg-m3-surface-container-lowest border border-m3-outline-variant/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-m3-primary transition-colors shadow-sm"
+                  >
+                    <div className="space-y-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-mono-code text-xs font-black bg-m3-primary text-m3-on-primary px-2.5 py-0.5 rounded-full">
+                          {booking.bookingId}
+                        </span>
+                        <span className="text-xs font-bold text-m3-on-surface">
+                          👤 {booking.guestNamePhone || 'Website Booking'}
+                        </span>
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                          isUnassigned ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-emerald-100 text-emerald-900'
+                        }`}>
+                          {isUnassigned ? 'Need Driver' : `Driver: ${booking.assignedChauffeur}`}
+                        </span>
+                      </div>
+                      <div className="text-xs text-m3-on-surface font-semibold flex flex-wrap items-center gap-1.5">
+                        <span className="material-symbols-outlined text-m3-primary text-sm">near_me</span>
+                        <span>{booking.pickupAddress}</span>
+                        <span className="text-m3-outline">•</span>
+                        <span>🚗 {booking.vehicleCategory}</span>
+                        <span className="text-m3-outline">•</span>
+                        <span className="text-m3-primary font-bold">🗓️ {booking.travelDateTime}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      <div className="text-right mr-1">
+                        <div className="text-sm font-black font-mono-code text-m3-on-surface">
+                          ₹{Number(booking.terminalFare || 0).toLocaleString('en-IN')}
+                        </div>
+                        <div className="text-[10px] text-m3-on-surface-variant">
+                          Adv: ₹{Number(booking.advancePaid || 0)}
+                        </div>
+                      </div>
+
+                      {onOpenDutySlip && (
+                        <button
+                          type="button"
+                          onClick={() => onOpenDutySlip(booking)}
+                          className="h-8 px-3 rounded-full bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface text-xs font-bold flex items-center gap-1 border border-m3-outline-variant/60 cursor-pointer"
+                        >
+                          <span className="material-symbols-outlined text-[15px]">description</span>
+                          <span>Duty Slip</span>
+                        </button>
+                      )}
+
+                      <button
+                        type="button"
+                        onClick={onNavigateToActive}
+                        className="h-8 px-3.5 rounded-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary text-xs font-bold flex items-center gap-1 shadow-m3-1 cursor-pointer"
+                      >
+                        <span className="material-symbols-outlined text-[15px]">drive_eta</span>
+                        <span>{isUnassigned ? 'Assign Driver' : 'View Trip'}</span>
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Enquiries List */}
         {filteredLeads.length === 0 ? (
