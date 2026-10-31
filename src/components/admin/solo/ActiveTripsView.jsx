@@ -14,6 +14,7 @@ export default function ActiveTripsView({
   onStatusChange,
   onDeleteBooking,
   onUpdateContact,
+  onUpdateBookingFinancials,
   onOpenDutySlip,
   onOpenDriversModal,
   onOpenQuickBooking,
@@ -23,6 +24,16 @@ export default function ActiveTripsView({
   const [statusFilter, setStatusFilter] = useState('ALL'); // 'ALL' | 'NEED_DRIVER' | 'ON_TRIP'
   const [showOutsideFormId, setShowOutsideFormId] = useState(null);
   const [outsideDriverMap, setOutsideDriverMap] = useState({});
+
+  // Inline Financials Editor State: Total Fare, Advance, Driver Payout, Driver Collection, Settlement Note
+  const [editingFinanceId, setEditingFinanceId] = useState(null);
+  const [financeForm, setFinanceForm] = useState({
+    fare: '',
+    advance: '',
+    driverPayout: '',
+    driverCollection: '',
+    settlementNote: ''
+  });
 
   // Modal State: Update passenger details for incomplete/existing trips
   const [editingContactBooking, setEditingContactBooking] = useState(null);
@@ -81,7 +92,9 @@ export default function ActiveTripsView({
         manifestStatus: booking.manifestStatus,
         terminalFare: booking.terminalFare,
         chauffeurPayout: booking.chauffeurPayout,
-        advancePaid: booking.advancePaid || 0
+        advancePaid: booking.advancePaid || 0,
+        driverCollectionAmount: booking.driverCollectionAmount,
+        settlementNote: booking.settlementNote
       };
       return `${base}&d=${encodeURIComponent(btoa(encodeURIComponent(JSON.stringify(compact))))}`;
     } catch (_) {
@@ -89,11 +102,48 @@ export default function ActiveTripsView({
     }
   };
 
+  // Helper: Open Financial Editor
+  const handleStartEditFinance = (b) => {
+    const fare = Number(b.terminalFare) || 0;
+    const adv = b.advancePaid !== undefined && b.advancePaid !== '' ? Number(b.advancePaid) : 0;
+    const defaultPayout = Number(b.chauffeurPayout) || (fare > 0 ? Math.round(fare * 0.82) : 0);
+    const defaultCollect = b.driverCollectionAmount !== undefined && b.driverCollectionAmount !== ''
+      ? Number(b.driverCollectionAmount)
+      : Math.max(0, fare - adv);
+
+    setEditingFinanceId(b.bookingId);
+    setFinanceForm({
+      fare: String(fare),
+      advance: String(adv),
+      driverPayout: String(defaultPayout),
+      driverCollection: String(defaultCollect),
+      settlementNote: b.settlementNote || ''
+    });
+  };
+
+  // Helper: Save Financial Editor
+  const handleSaveFinancials = (bookingId) => {
+    const fareNum = Number(financeForm.fare) || 0;
+    const advNum = financeForm.advance === '' ? 0 : (Number(financeForm.advance) || 0);
+    const payoutNum = Number(financeForm.driverPayout) || 0;
+    const collectNum = financeForm.driverCollection === '' ? Math.max(0, fareNum - advNum) : (Number(financeForm.driverCollection) || 0);
+
+    onUpdateBookingFinancials?.(bookingId, {
+      terminalFare: fareNum,
+      advancePaid: advNum,
+      chauffeurPayout: payoutNum,
+      driverCollectionAmount: collectNum,
+      settlementNote: financeForm.settlementNote.trim()
+    });
+
+    setEditingFinanceId(null);
+  };
+
   // Broadcast to Driver Group
   const handleBroadcastToDriverGroup = (b) => {
     const fare = Number(b.terminalFare) || 0;
-    const margin = Number(b.companyMargin) || Math.round(fare * 0.18);
-    const driverNet = Math.max(0, fare - margin);
+    const payout = Number(b.chauffeurPayout) || 0;
+    const driverNet = payout > 0 ? payout : Math.max(0, fare - Math.round(fare * 0.18));
     const msg =
       `🚕 *DUTY AVAILABLE — KALIDASS TRAVELS*\n` +
       `Trip ID: *${b.bookingId}*\n` +
@@ -112,7 +162,9 @@ export default function ActiveTripsView({
     const tripUrl = getTripUrl(b);
     const fare = Number(b.terminalFare) || 0;
     const adv = Number(b.advancePaid) || 0;
-    const bal = Math.max(0, fare - adv);
+    const bal = b.driverCollectionAmount !== undefined && b.driverCollectionAmount !== ''
+      ? Number(b.driverCollectionAmount)
+      : Math.max(0, fare - adv);
     const msg =
       `🚖 *KALIDASS TRAVELS — CAB & DRIVER DETAILS*\n` +
       `Booking ID: *${b.bookingId}*\n\n` +
@@ -121,8 +173,8 @@ export default function ActiveTripsView({
       `🗓 *Pickup Time:* ${b.travelDateTime}\n` +
       `📍 *Route:* ${b.pickupAddress}\n\n` +
       `💰 *Total Fare:* ₹${fare.toLocaleString('en-IN')}\n` +
-      `🟢 *Advance Paid:* ₹${adv.toLocaleString('en-IN')}\n` +
-      `🔴 *Balance to Pay Driver:* ₹${bal.toLocaleString('en-IN')}\n\n` +
+      `🟢 *Advance Paid:* ₹${adv.toLocaleString('en-IN')}${adv === 0 ? ' (Regular Customer)' : ''}\n` +
+      `🔴 *Balance to Pay Driver:* ₹${bal.toLocaleString('en-IN')}${bal === 0 ? ' (Nil - Paid / Office Direct)' : ''}\n\n` +
       `📱 *Open Live Digital Duty Slip:*\n${tripUrl}\n\n` +
       `Have a safe and pleasant journey! ✨\n` +
       `📞 24/7 Helpline: +91 89395 39211`;
@@ -130,16 +182,25 @@ export default function ActiveTripsView({
     showToast?.(`Duty slip sent to customer ${guestName}!`, 'success');
   };
 
-  // Driver Duty Slip
+  // Driver Duty Slip (with custom collection & settlement instructions)
   const handleSendDriverDutySlip = (b) => {
     const phoneMatch = (b.assignedChauffeur || '').match(/[6-9]\d{9}/);
     const cleanPhone = phoneMatch ? phoneMatch[0] : '';
     const tripUrl = getTripUrl(b);
     const fare = Number(b.terminalFare) || 0;
     const adv = Number(b.advancePaid) || 0;
-    const bal = Math.max(0, fare - adv);
-    const driverShare = Number(b.chauffeurPayout) || Math.round(fare * 0.82);
+    const collectAmt = b.driverCollectionAmount !== undefined && b.driverCollectionAmount !== ''
+      ? Number(b.driverCollectionAmount)
+      : Math.max(0, fare - adv);
+    const driverShare = Number(b.chauffeurPayout) || (fare > 0 ? Math.round(fare * 0.82) : 0);
     const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.pickupAddress || 'Chennai')}`;
+    
+    const collectionLine = collectAmt === 0
+      ? `💵 *Collect from Customer:* *₹0 (NIL - Customer pays Office directly via UPI)*\n`
+      : `💵 *Collect from Customer at Drop:* *₹${collectAmt.toLocaleString('en-IN')}*\n`;
+
+    const noteLine = b.settlementNote ? `📝 *Settlement Note:* ${b.settlementNote}\n\n` : '\n';
+
     const msg =
       `🚕 *KALIDASS TRAVELS — DRIVER DUTY SLIP*\n` +
       `Trip ID: *${b.bookingId}*\n\n` +
@@ -147,8 +208,9 @@ export default function ActiveTripsView({
       `🗓 *Pickup Time:* ${b.travelDateTime}\n` +
       `📍 *Route:* ${b.pickupAddress}\n` +
       `🗺️ *Google Maps Pin:* ${mapsLink}\n\n` +
-      `💵 *Collect Balance from Customer at Drop:* *₹${bal.toLocaleString('en-IN')}*\n` +
-      `🤝 *Your Net Driver Share:* ₹${driverShare.toLocaleString('en-IN')}\n\n` +
+      collectionLine +
+      `🤝 *Your Net Driver Share:* ₹${driverShare.toLocaleString('en-IN')}\n` +
+      noteLine +
       `📱 *Enter Start/End KM & Close Bill Here:*\n${tripUrl}`;
     window.open(cleanPhone ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     showToast?.(`Duty slip sent to driver!`, 'success');
@@ -241,7 +303,7 @@ export default function ActiveTripsView({
             )}
           </div>
           <p className="text-xs text-m3-on-surface-variant mt-0.5">
-            Confirmed bookings with advance paid. Assign driver and send Duty Slips on WhatsApp.
+            Active bookings and driver dispatch. Flexible advance for regulars, adjusted rates & custom driver collection instructions.
           </p>
         </div>
 
@@ -341,8 +403,10 @@ export default function ActiveTripsView({
           {filteredBookings.map((b) => {
             const isUnassigned = !b.assignedChauffeur || b.assignedChauffeur === 'Unassigned';
             const fare = Number(b.terminalFare) || 0;
-            const adv = Number(b.advancePaid) || 0;
-            const balanceDue = Math.max(0, fare - adv);
+            const adv = b.advancePaid !== undefined && b.advancePaid !== '' ? Number(b.advancePaid) : 0;
+            const balanceDue = b.driverCollectionAmount !== undefined && b.driverCollectionAmount !== ''
+              ? Number(b.driverCollectionAmount)
+              : Math.max(0, fare - adv);
             const driverShare = Number(b.chauffeurPayout) || (fare > 0 ? Math.round(fare * 0.82) : 0);
             const profit = Math.max(0, fare - driverShare);
 
@@ -535,30 +599,209 @@ export default function ActiveTripsView({
                   </div>
 
                   {/* 4. Money & Balance Summary */}
-                  <div className="p-2.5 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant/60 text-xs space-y-1">
-                    <div className="flex justify-between">
+                  <div className="p-2.5 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant/60 text-xs space-y-1 relative">
+                    <div className="flex justify-between items-center">
                       <span className="text-m3-on-surface-variant font-medium">Total Fare:</span>
-                      <strong className="text-m3-on-surface font-black">₹{fare.toLocaleString('en-IN')}</strong>
+                      <div className="flex items-center gap-1.5">
+                        <strong className="text-m3-on-surface font-black">₹{fare.toLocaleString('en-IN')}</strong>
+                        <button
+                          type="button"
+                          onClick={() => handleStartEditFinance(b)}
+                          className="w-5 h-5 rounded hover:bg-m3-primary/10 text-m3-primary flex items-center justify-center transition-colors"
+                          title="Adjust Fare, Advance, Driver Payout & Collection"
+                        >
+                          <span className="material-symbols-outlined text-[15px]">edit</span>
+                        </button>
+                      </div>
                     </div>
                     <div className="flex justify-between text-m3-on-surface">
                       <span className="font-semibold">Advance Paid:</span>
-                      <span className="font-bold">₹{adv}</span>
+                      <span className="font-bold">
+                        {adv > 0 ? `₹${adv.toLocaleString('en-IN')}` : <span className="text-emerald-700 font-bold">₹0 (Regular)</span>}
+                      </span>
                     </div>
                     <div className="flex justify-between border-t border-m3-outline-variant/50 pt-1 font-bold text-m3-on-surface">
-                      <span>Balance to Collect:</span>
-                      <span className="text-sm font-black font-mono-code">₹{balanceDue.toLocaleString('en-IN')}</span>
+                      <span>Driver Collects:</span>
+                      <span className="text-sm font-black font-mono-code">
+                        {balanceDue === 0 ? (
+                          <span className="text-amber-700 text-xs font-bold">₹0 (Office GPay/UPI)</span>
+                        ) : (
+                          `₹${balanceDue.toLocaleString('en-IN')}`
+                        )}
+                      </span>
                     </div>
                     <div className="flex justify-between text-[11px] text-m3-on-surface-variant pt-0.5">
-                      <span>Driver: ₹{driverShare}</span>
-                      <span className="text-m3-primary font-bold">Profit: +₹{profit}</span>
+                      <span>Driver: ₹{driverShare.toLocaleString('en-IN')}</span>
+                      <span className="text-m3-primary font-bold">Profit: +₹{profit.toLocaleString('en-IN')}</span>
                     </div>
+                    {b.settlementNote && (
+                      <div className="text-[10px] bg-m3-surface-container-high text-m3-on-surface-variant px-1.5 py-0.5 rounded border border-m3-outline-variant/60 font-medium truncate mt-0.5" title={b.settlementNote}>
+                        📝 {b.settlementNote}
+                      </div>
+                    )}
                   </div>
                 </div>
+
+                {/* Inline Rate & Driver Collection Editor */}
+                {editingFinanceId === b.bookingId && (
+                  <div className="p-3.5 rounded-m3-lg bg-m3-surface-container-lowest border-2 border-m3-primary/50 shadow-m3-1 space-y-3 animate-fadeIn">
+                    <div className="flex items-center justify-between border-b border-m3-outline-variant/60 pb-2">
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-m3-on-surface">
+                        <span className="material-symbols-outlined text-m3-primary text-[18px]">currency_rupee</span>
+                        <span>Adjust Trip Rates & Driver Collection Instructions ({b.bookingId})</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setEditingFinanceId(null)}
+                        className="text-xs text-m3-on-surface-variant hover:text-m3-on-surface font-bold"
+                      >
+                        ✕ Close
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5 text-xs">
+                      <div>
+                        <label className="text-[11px] font-bold text-m3-on-surface-variant block mb-1">
+                          Total Fare (₹)
+                        </label>
+                        <input
+                          type="number"
+                          value={financeForm.fare}
+                          onChange={(e) => setFinanceForm({ ...financeForm, fare: e.target.value })}
+                          className="w-full p-2 border border-m3-outline-variant rounded-m3-sm font-mono-code font-bold text-xs bg-white text-m3-on-surface focus:border-m3-primary"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[11px] font-bold text-m3-on-surface-variant block mb-1">
+                          Advance Received (₹)
+                        </label>
+                        <input
+                          type="number"
+                          placeholder="0"
+                          value={financeForm.advance}
+                          onChange={(e) => setFinanceForm({ ...financeForm, advance: e.target.value })}
+                          className="w-full p-2 border border-m3-outline-variant rounded-m3-sm font-mono-code font-bold text-xs bg-white text-m3-on-surface focus:border-m3-primary"
+                        />
+                        <div className="flex gap-1 mt-1">
+                          <button
+                            type="button"
+                            onClick={() => setFinanceForm({ ...financeForm, advance: '0' })}
+                            className={`text-[10px] px-1.5 py-0.5 rounded font-bold border transition-colors ${
+                              financeForm.advance === '0'
+                                ? 'bg-m3-primary text-m3-on-primary border-m3-primary'
+                                : 'bg-m3-surface-container-high text-m3-on-surface-variant border-m3-outline-variant/60 hover:bg-m3-surface-container-highest'
+                            }`}
+                          >
+                            ₹0 (Regular)
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setFinanceForm({ ...financeForm, advance: '500' })}
+                            className="text-[10px] px-1.5 py-0.5 rounded font-medium border border-m3-outline-variant/60 bg-m3-surface-container-high text-m3-on-surface-variant hover:bg-m3-surface-container-highest"
+                          >
+                            ₹500
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setFinanceForm({ ...financeForm, advance: '1000' })}
+                            className="text-[10px] px-1.5 py-0.5 rounded font-medium border border-m3-outline-variant/60 bg-m3-surface-container-high text-m3-on-surface-variant hover:bg-m3-surface-container-highest"
+                          >
+                            ₹1k
+                          </button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="text-[11px] font-bold text-m3-on-surface-variant block mb-1">
+                          Agreed Driver Payout (₹)
+                        </label>
+                        <input
+                          type="number"
+                          value={financeForm.driverPayout}
+                          onChange={(e) => setFinanceForm({ ...financeForm, driverPayout: e.target.value })}
+                          className="w-full p-2 border border-m3-outline-variant rounded-m3-sm font-mono-code font-bold text-xs bg-white text-m3-on-surface focus:border-m3-primary"
+                        />
+                        <span className="text-[10px] font-bold text-emerald-700 block mt-1">
+                          Profit: +₹{Math.max(0, (Number(financeForm.fare) || 0) - (Number(financeForm.driverPayout) || 0)).toLocaleString('en-IN')}
+                        </span>
+                      </div>
+
+                      <div>
+                        <label className="text-[11px] font-bold text-m3-on-surface-variant block mb-1">
+                          Driver Collects at Drop (₹)
+                        </label>
+                        <input
+                          type="number"
+                          value={financeForm.driverCollection}
+                          onChange={(e) => setFinanceForm({ ...financeForm, driverCollection: e.target.value })}
+                          className="w-full p-2 border border-m3-outline-variant rounded-m3-sm font-mono-code font-bold text-xs bg-white text-m3-on-surface focus:border-m3-primary"
+                        />
+                        <div className="flex gap-1 mt-1">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const diff = Math.max(0, (Number(financeForm.fare) || 0) - (Number(financeForm.advance) || 0));
+                              setFinanceForm({ ...financeForm, driverCollection: String(diff) });
+                            }}
+                            className="text-[10px] px-1.5 py-0.5 rounded font-bold border border-m3-outline-variant/60 bg-m3-surface-container-high text-m3-on-surface-variant hover:bg-m3-surface-container-highest"
+                            title="Set to Total Fare - Advance"
+                          >
+                            Full Balance
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setFinanceForm({ ...financeForm, driverCollection: '0' })}
+                            className={`text-[10px] px-1.5 py-0.5 rounded font-bold border transition-colors ${
+                              financeForm.driverCollection === '0'
+                                ? 'bg-amber-600 text-white border-amber-600'
+                                : 'bg-amber-50 text-amber-900 border-amber-300 hover:bg-amber-100'
+                            }`}
+                            title="Driver collects ₹0 (Customer pays office directly)"
+                          >
+                            ₹0 (Office GPay)
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-[11px] font-bold text-m3-on-surface-variant block mb-1">
+                        Driver WhatsApp Settlement Note (Appears in Driver Duty Slip)
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Collect ₹3,500 cash, keep ₹3,200 and GPay ₹300 to office (8939539211)"
+                        value={financeForm.settlementNote}
+                        onChange={(e) => setFinanceForm({ ...financeForm, settlementNote: e.target.value })}
+                        className="w-full p-2 border border-m3-outline-variant rounded-m3-sm text-xs bg-white text-m3-on-surface focus:border-m3-primary"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-end gap-2 pt-1 border-t border-m3-outline-variant/40">
+                      <button
+                        type="button"
+                        onClick={() => setEditingFinanceId(null)}
+                        className="h-8 px-3.5 rounded-full text-xs font-semibold text-m3-on-surface-variant hover:bg-m3-surface-container-high transition-colors"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleSaveFinancials(b.bookingId)}
+                        className="h-8 px-4 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-full text-xs font-bold shadow-m3-1 transition-all cursor-pointer flex items-center gap-1"
+                      >
+                        <span className="material-symbols-outlined text-[16px]">check</span>
+                        <span>Save Rates & Instructions</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {/* Inline Outside Driver Input Form */}
                 {showOutsideFormId === b.bookingId && (
                   <div className="p-3 rounded-m3-md bg-m3-surface-container-low border border-m3-outline-variant flex flex-wrap items-center gap-2 text-xs animate-fadeIn">
-                    <span className="font-bold text-m3-on-surface text-xs w-full">Enter Outside Market Driver:</span>
+                    <span className="font-bold text-m3-on-surface text-xs w-full">Enter Outside Market Driver & Negotiated Rate:</span>
                     <input
                       type="text"
                       placeholder="Driver Name (e.g. Mani)"
@@ -580,6 +823,13 @@ export default function ActiveTripsView({
                       onChange={(e) => setOutsideDriverMap({ ...outsideDriverMap, [b.bookingId]: { ...(outsideDriverMap[b.bookingId] || {}), plate: e.target.value.toUpperCase() } })}
                       className="flex-1 min-w-[120px] p-2 rounded-m3-sm border border-m3-outline-variant bg-m3-surface-container-lowest font-mono-code uppercase"
                     />
+                    <input
+                      type="number"
+                      placeholder={`Agreed Driver Payout ₹ (Default ₹${Math.round(Number(b.terminalFare || 0) * 0.82)})`}
+                      value={outsideDriverMap[b.bookingId]?.payout || ''}
+                      onChange={(e) => setOutsideDriverMap({ ...outsideDriverMap, [b.bookingId]: { ...(outsideDriverMap[b.bookingId] || {}), payout: e.target.value } })}
+                      className="flex-1 min-w-[140px] p-2 rounded-m3-sm border border-m3-outline-variant bg-m3-surface-container-lowest font-mono-code font-bold"
+                    />
                     <button
                       type="button"
                       onClick={() => {
@@ -588,9 +838,19 @@ export default function ActiveTripsView({
                           showToast?.('Please enter Driver Name and Vehicle Plate', 'error');
                           return;
                         }
-                        onAssignChauffeur?.(b.bookingId, `${d.name} (${d.plate}) - +91 ${d.phone || ''}`);
+                        const agreedPayout = d.payout !== undefined && d.payout !== ''
+                          ? Number(d.payout)
+                          : (fare > 0 ? Math.round(fare * 0.82) : 0);
+                        onAssignChauffeur?.(
+                          b.bookingId,
+                          `${d.name} (${d.plate}) - +91 ${d.phone || ''}`,
+                          {
+                            chauffeurPayout: agreedPayout,
+                            companyMargin: Math.max(0, fare - agreedPayout)
+                          }
+                        );
                         setShowOutsideFormId(null);
-                        showToast?.(`Outside driver assigned to ${b.bookingId}!`, 'success');
+                        showToast?.(`Outside driver assigned to ${b.bookingId} at ₹${agreedPayout}!`, 'success');
                       }}
                       className="h-8 px-3.5 bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary rounded-m3-full font-semibold text-xs shadow-m3-1"
                     >

@@ -75,7 +75,7 @@ export default function QuickBookingModal({
   const [customDateText, setCustomDateText] = useState('');
   const [vehicle, setVehicle] = useState('Sedan (Dzire / Etios)');
   const [fare, setFare] = useState('');
-  const [advance, setAdvance] = useState('500');
+  const [advance, setAdvance] = useState('0'); // Flexible advance: defaults to 0 for regular/flexible customers
   const [notes, setNotes] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -238,7 +238,10 @@ export default function QuickBookingModal({
     onSaveLead?.(newLead);
 
     if (sendWhatsApp) {
-      const advNum = Number(advance) || 500;
+      const advNum = advance === '' ? 0 : (Number(advance) || 0);
+      const advSection = advNum > 0
+        ? `\n🔒 *To Confirm Booking:*\n• Advance to book: *₹${advNum.toLocaleString('en-IN')}* via UPI: *8939539211@okbizaxis* (Kalidass Travels)\n`
+        : `\n✨ *Regular Customer Booking:*\n• Advance: *₹0 (Nil)* — Balance payable upon trip completion.\n`;
       const msg =
         `🚕 *KALIDASS TRAVELS — TRIP QUOTE*\n\n` +
         `• Customer: ${nameVal}\n` +
@@ -248,8 +251,7 @@ export default function QuickBookingModal({
         `• Vehicle: ${newLead.vehicle}\n` +
         (fareNum > 0 ? `• Estimate Fare: ₹${fareNum.toLocaleString('en-IN')}\n` : '') +
         (notes.trim() ? `• Rate Details: ${notes.trim()}\n` : '') +
-        `\n🔒 *To Confirm Booking:*\n` +
-        `• Advance to book: *₹${advNum.toLocaleString('en-IN')}* via UPI: *8939539211@okbizaxis* (Kalidass Travels)\n` +
+        advSection +
         `📞 24/7 Helpline: +91 89395 39211`;
       window.open(
         cleanPhone.length === 10
@@ -278,7 +280,7 @@ export default function QuickBookingModal({
     const pickupVal = pickup.trim() || 'Chennai';
     const dropVal = drop.trim() || 'Outstation';
     const fareNum = Number(fare) || 0;
-    const advNum = Number(advance) || 0;
+    const advNum = advance === '' ? 0 : (Number(advance) || 0);
     const driverShare = Math.round(fareNum * 0.82);
     const scheduleStr = buildTravelDateString();
     const days = getDurationDays();
@@ -292,7 +294,7 @@ export default function QuickBookingModal({
       pickupAddress: `${pickupVal} ➔ ${dropVal}`,
       vehicleCategory: vehicle || 'Sedan (Dzire / Etios)',
       partySize: vObj?.seats || '4 Seats',
-      kycStatus: advNum > 0 ? `Advance Paid: ₹${advNum}` : 'Confirmed',
+      kycStatus: advNum > 0 ? `Advance Paid: ₹${advNum}` : 'Confirmed (Regular)',
       darshanStatus: tripLabel,
       assignedChauffeur: 'Unassigned',
       manifestStatus: 'Need Driver',
@@ -301,6 +303,8 @@ export default function QuickBookingModal({
       companyMargin: Math.max(0, fareNum - driverShare),
       advancePaid: advNum,
       balanceDue: Math.max(0, fareNum - advNum),
+      driverCollectionAmount: Math.max(0, fareNum - advNum),
+      settlementNote: '',
       financialClosure: 'Unreconciled',
       reviewStatus: 'Pending',
       notes: notes.trim()
@@ -605,30 +609,35 @@ export default function QuickBookingModal({
 
             <div>
               <label className="block font-bold text-slate-800 mb-1">
-                Advance Paid (₹)
+                Advance Paid (₹) <span className="text-[10px] font-normal text-slate-500">(₹0 for Regulars)</span>
               </label>
               <div className="flex gap-1">
                 <input
                   type="number"
-                  placeholder="500"
+                  placeholder="0"
                   value={advance}
                   onChange={(e) => setAdvance(e.target.value)}
                   className="w-full p-2 rounded-lg border border-slate-300 bg-white font-mono-code font-bold text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-600"
                 />
               </div>
-              <div className="flex gap-1 mt-1">
-                {['0', '500', '1000', '2000', '5000'].map((amt) => (
+              <div className="flex gap-1 mt-1 flex-wrap">
+                {[
+                  { label: '₹0 (Regular)', val: '0' },
+                  { label: '₹500', val: '500' },
+                  { label: '₹1,000', val: '1000' },
+                  { label: '₹2,000', val: '2000' }
+                ].map(({ label, val }) => (
                   <button
-                    key={amt}
+                    key={val}
                     type="button"
-                    onClick={() => setAdvance(amt)}
-                    className={`px-1.5 py-0.5 rounded text-[10px] font-bold border ${
-                      advance === amt
+                    onClick={() => setAdvance(val)}
+                    className={`px-1.5 py-0.5 rounded text-[10px] font-bold border transition-colors ${
+                      advance === val
                         ? 'bg-emerald-700 text-white border-emerald-700'
-                        : 'bg-white text-slate-600 border-slate-300'
+                        : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50'
                     }`}
                   >
-                    ₹{amt}
+                    {label}
                   </button>
                 ))}
               </div>

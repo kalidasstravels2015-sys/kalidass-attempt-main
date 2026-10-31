@@ -734,21 +734,49 @@ export default function SoloAdminDashboard() {
     return true;
   };
 
-  // Assign Driver
-  const handleAssignChauffeur = async (bookingId, assignedChauffeur) => {
+  // Assign Driver (supports optional payout and settlement notes for outside drivers)
+  const handleAssignChauffeur = async (bookingId, assignedChauffeur, extraFields = {}) => {
     const updated = bookings.map(b => (
       b.bookingId === bookingId
         ? {
             ...b,
             assignedChauffeur,
-            manifestStatus: assignedChauffeur === 'Unassigned' ? 'Need Driver' : 'Allotted'
+            manifestStatus: assignedChauffeur === 'Unassigned' ? 'Need Driver' : 'Allotted',
+            ...extraFields
           }
         : b
     ));
     setBookings(updated);
     if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(updated));
 
-    await syncBookingToRemote({ action: 'update', bookingId, assignedChauffeur });
+    await syncBookingToRemote({ action: 'update', bookingId, assignedChauffeur, ...extraFields });
+  };
+
+  // Update Trip Financials: Fare, Advance (0 or custom), Driver Payout, Driver Collection Amount, Settlement Note
+  const handleUpdateBookingFinancials = async (bookingId, financials = {}) => {
+    const fareNum = Number(financials.terminalFare) || 0;
+    const advNum = financials.advancePaid === '' ? 0 : (Number(financials.advancePaid) || 0);
+    const driverPayoutNum = Number(financials.chauffeurPayout) || 0;
+    const driverCollectNum = financials.driverCollectionAmount !== undefined && financials.driverCollectionAmount !== ''
+      ? Number(financials.driverCollectionAmount)
+      : Math.max(0, fareNum - advNum);
+
+    const patch = {
+      terminalFare: fareNum,
+      advancePaid: advNum,
+      chauffeurPayout: driverPayoutNum,
+      companyMargin: Math.max(0, fareNum - driverPayoutNum),
+      driverCollectionAmount: driverCollectNum,
+      balanceDue: driverCollectNum,
+      settlementNote: financials.settlementNote || ''
+    };
+
+    const updated = bookings.map(b => (b.bookingId === bookingId ? { ...b, ...patch } : b));
+    setBookings(updated);
+    if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEYS.BOOKINGS, JSON.stringify(updated));
+
+    await syncBookingToRemote({ action: 'update', bookingId, ...patch });
+    showToast(`Updated rates & driver collection for ${bookingId}!`, 'success');
   };
 
   // Change Trip Status
@@ -1156,6 +1184,7 @@ export default function SoloAdminDashboard() {
               onStatusChange={handleStatusChange}
               onDeleteBooking={handleDeleteBooking}
               onUpdateContact={handleUpdateBookingContact}
+              onUpdateBookingFinancials={handleUpdateBookingFinancials}
               onOpenDutySlip={(b) => setActiveDutySlipBooking(b)}
               onOpenDriversModal={() => setCurrentView('DRIVERS')}
               onOpenQuickBooking={() => setIsQuickBookingOpen(true)}
