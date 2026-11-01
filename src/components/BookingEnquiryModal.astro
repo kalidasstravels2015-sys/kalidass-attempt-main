@@ -806,6 +806,25 @@ Please confirm driver assignment and cab availability.`;
           }
         } catch (err) {}
 
+        // Report Google Ads conversion event (Request quote)
+        if (typeof window !== 'undefined') {
+          if (typeof window.reportGoogleAdsConversion === 'function') {
+            window.reportGoogleAdsConversion('booking', {
+              value: numFare,
+              fare: numFare,
+              quoteId: 'KT-MAA-' + nextSeq,
+              event_label: 'Booking Enquiry Modal - ' + (quickBookingContext.packageTitle || 'Cab Booking')
+            });
+          } else if (typeof window.gtag === 'function') {
+            window.gtag('event', 'ads_conversion_Request_quote_1', {
+              value: numFare,
+              currency: 'INR',
+              event_category: 'Qualified Lead',
+              event_label: 'Booking Enquiry Modal - ' + (quickBookingContext.packageTitle || 'Cab Booking')
+            });
+          }
+        }
+
         // Open WhatsApp Web/App
         var waUrl = 'https://wa.me/918939539211?text=' + encodeURIComponent(message);
         window.open(waUrl, '_blank');

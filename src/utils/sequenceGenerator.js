@@ -3,14 +3,15 @@
  * Centralized sequential numbering engine for Kalidass Travels.
  *
  * Strict Rules:
- * - Quotations start from 101 in continuous order: #QT-101, #QT-102, #QT-103...
- * - Enquiries start from 101 in continuous order:   #ENQ-101, #ENQ-102, #ENQ-103...
- * - Website Calculations start from 101 in continuous order: #QT-101, #QT-102...
- * - Confirmed Bookings start from 101 in continuous order: #KT-BK-101, #KT-BK-102...
+ * - Quotations follow date-coded continuous format: Q-DDMMYY-XXX (e.g. Q-011126-101)
+ * - Enquiries follow continuous order: #ENQ-101, #ENQ-102, #ENQ-103...
+ * - Confirmed Bookings follow: #KT-BK-101, #KT-BK-102...
  * - NEVER generate random numbers.
  */
 
 export const START_SEQ = 101;
+
+let memoryQuoteSeq = START_SEQ - 1;
 
 export const STORAGE_KEYS = {
   QUOTATION: 'kt_last_quotation_seq',
@@ -20,14 +21,24 @@ export const STORAGE_KEYS = {
 };
 
 /**
- * Extract integer sequence number from string (e.g. #QT-101, #ENQ-101, #KT-BK-101, #KT-OUT-101, #CALC-101, CT/EST/1026/101).
+ * Returns 6-digit date string: DDMMYY (e.g. 011126 for 01-Nov-2026)
+ */
+export function getFormattedDateCode(d = new Date()) {
+  const dd = String(d.getDate()).padStart(2, '0');
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const yy = String(d.getFullYear()).slice(-2);
+  return `${dd}${mm}${yy}`;
+}
+
+/**
+ * Extract integer sequence number from string (e.g. Q-011126-101, #QT-101, #ENQ-101, #KT-BK-101, #KT-OUT-101, #CALC-101).
  * Filters out legacy random numbers (e.g. > maxThreshold).
  */
 export function extractSequenceNumber(idStr, maxThreshold = 9999) {
   if (!idStr || typeof idStr !== 'string') return null;
   const clean = idStr.trim();
   // Match prefix-based formats first
-  const match = clean.match(/(?:QT|ENQ|KT|CALC|CALL|WA|BK|CAB|MAA|OUT|TPT|PDY|TMP|ACT|EST)[-_/A-Za-z0-9]*[-_](\d+)(?:[^\d]|$)/i) ||
+  const match = clean.match(/(?:Q|QT|ENQ|KT|CALC|CALL|WA|BK|CAB|MAA|OUT|TPT|PDY|TMP|ACT|EST)[-_/A-Za-z0-9]*[-_](\d+)(?:[^\d]|$)/i) ||
                 clean.match(/(\d{3,})(?:[^\d]|$)/);
   if (!match) return null;
   const num = parseInt(match[1], 10);
@@ -98,47 +109,57 @@ export function peekContinuousSeq(storageKey = STORAGE_KEYS.QUOTATION, startSeq 
 }
 
 /**
- * Generate next Quotation Number (#QT-101, #QT-102, #QT-103...)
- * Strictly continuous sequence starting from 101.
+ * Generate next Quotation Number (Q-DDMMYY-XXX e.g. Q-011126-101, Q-011126-102...)
+ * Strictly continuous sequence starting from 101 for each date.
  */
-export function getNextQuotationId(existingQuotes = [], prefix = '#QT-') {
+export function getNextQuotationId(existingQuotes = [], prefix = null) {
+  const dateCode = getFormattedDateCode();
+  const actualPrefix = prefix !== null ? prefix : `Q-${dateCode}-`;
+  const storageKey = `${STORAGE_KEYS.QUOTATION}_${dateCode}`;
+
   let stored = 0;
   if (typeof window !== 'undefined' && window.localStorage) {
     try {
-      stored = parseInt(localStorage.getItem(STORAGE_KEYS.QUOTATION) || '0', 10);
+      stored = parseInt(localStorage.getItem(storageKey) || localStorage.getItem(STORAGE_KEYS.QUOTATION) || '0', 10);
     } catch (_) {}
   }
 
   // Threshold: dynamically caps acceptable sequential numbers so past random numbers are ignored
   const threshold = (START_SEQ - 1) + Math.max(existingQuotes.length + 50, 100);
-  const maxFromList = getMaxFromList(existingQuotes, /#?(QT|CALC|KT)/i, threshold);
+  const maxFromList = getMaxFromList(existingQuotes, /#?(Q|QT|CALC|KT)/i, threshold);
 
-  const base = Math.max(START_SEQ - 1, stored, maxFromList);
+  const base = Math.max(START_SEQ - 1, stored, maxFromList, memoryQuoteSeq);
   const nextNum = base + 1;
+  memoryQuoteSeq = nextNum;
 
   if (typeof window !== 'undefined' && window.localStorage) {
     try {
+      localStorage.setItem(storageKey, String(nextNum));
       localStorage.setItem(STORAGE_KEYS.QUOTATION, String(nextNum));
     } catch (_) {}
   }
 
-  return `${prefix}${nextNum}`;
+  return `${actualPrefix}${nextNum}`;
 }
 
 /**
- * Preview next Quotation Number without incrementing storage
+ * Preview next Quotation Number without incrementing storage (Q-DDMMYY-XXX e.g. Q-011126-101)
  */
-export function peekNextQuotationId(existingQuotes = [], prefix = '#QT-') {
+export function peekNextQuotationId(existingQuotes = [], prefix = null) {
+  const dateCode = getFormattedDateCode();
+  const actualPrefix = prefix !== null ? prefix : `Q-${dateCode}-`;
+  const storageKey = `${STORAGE_KEYS.QUOTATION}_${dateCode}`;
+
   let stored = 0;
   if (typeof window !== 'undefined' && window.localStorage) {
     try {
-      stored = parseInt(localStorage.getItem(STORAGE_KEYS.QUOTATION) || '0', 10);
+      stored = parseInt(localStorage.getItem(storageKey) || localStorage.getItem(STORAGE_KEYS.QUOTATION) || '0', 10);
     } catch (_) {}
   }
   const threshold = (START_SEQ - 1) + Math.max(existingQuotes.length + 50, 100);
-  const maxFromList = getMaxFromList(existingQuotes, /#?(QT|CALC|KT)/i, threshold);
+  const maxFromList = getMaxFromList(existingQuotes, /#?(Q|QT|CALC|KT)/i, threshold);
   const base = Math.max(START_SEQ - 1, stored, maxFromList);
-  return `${prefix}${base + 1}`;
+  return `${actualPrefix}${base + 1}`;
 }
 
 /**
@@ -156,8 +177,9 @@ export function getNextEnquiryId(existingLeads = [], prefix = '#ENQ-') {
   const threshold = (START_SEQ - 1) + Math.max(existingLeads.length + 50, 100);
   const maxFromList = getMaxFromList(existingLeads, /#?(ENQ|KT|CALL|WA)/i, threshold);
 
-  const base = Math.max(START_SEQ - 1, stored, maxFromList);
+  const base = Math.max(START_SEQ - 1, stored, maxFromList, memoryQuoteSeq);
   const nextNum = base + 1;
+  memoryQuoteSeq = nextNum;
 
   if (typeof window !== 'undefined' && window.localStorage) {
     try {
@@ -199,8 +221,9 @@ export function getNextBookingId(existingBookings = [], prefix = '#KT-BK-') {
   const threshold = (START_SEQ - 1) + Math.max(existingBookings.length + 50, 100);
   const maxFromList = getMaxFromList(existingBookings, /#?(KT|BK|CAB)/i, threshold);
 
-  const base = Math.max(START_SEQ - 1, stored, maxFromList);
+  const base = Math.max(START_SEQ - 1, stored, maxFromList, memoryQuoteSeq);
   const nextNum = base + 1;
+  memoryQuoteSeq = nextNum;
 
   if (typeof window !== 'undefined' && window.localStorage) {
     try {

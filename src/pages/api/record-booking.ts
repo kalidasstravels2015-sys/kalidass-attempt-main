@@ -35,8 +35,12 @@ export const POST: APIRoute = async ({ request, url }) => {
     const csvPath = path.resolve(process.cwd(), 'Kalidass_Operations_Control_2026.csv');
 
     if (!bookingId) {
+      const d = new Date();
+      const dd = String(d.getDate()).padStart(2, '0');
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const yy = String(d.getFullYear()).slice(-2);
       const rowCount = fs.existsSync(csvPath) ? fs.readFileSync(csvPath, 'utf8').trim().split(/\r?\n/).length : 1;
-      bookingId = `#KT-BK-${100 + rowCount}`;
+      bookingId = `Q-${dd}${mm}${yy}-${100 + rowCount}`;
     }
 
     const guestNamePhone = data.phone

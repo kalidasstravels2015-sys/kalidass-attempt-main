@@ -7,6 +7,7 @@ import GoogleRatingBadge from '../../components/GoogleRatingBadge.astro';
 import WhatsAppButton from '../../components/WhatsAppButton.astro';
 import WhatsAppIcon from '../../components/WhatsAppIcon.astro';
 import VehicleCard from '../../components/VehicleCard.astro';
+import HeroVisualCard from '../../components/HeroVisualCard.astro';
 import BookingEngine from '../../components/BookingEngine.jsx';
 import OutstationQuotationModal from '../../components/OutstationQuotationModal.jsx';
 import { 
@@ -442,104 +443,67 @@ const faqSchema = {
   ogImage="/og/outstation-cabs.jpg"
   schema={[taxiServiceSchema, faqSchema]}
 >
-  <Breadcrumbs items={breadcrumbItems} />
+  <!-- Hero Section: Unified Framed Visual Card on Desktop, Clean App-First Hero on Mobile -->
+  <section
+    id="outstation-hero"
+    class="relative overflow-hidden bg-m3-surface lg:bg-[#041E49] pt-2 pb-5 sm:pb-7 lg:pt-3 lg:pb-10 border-b border-m3-outline-variant/60 lg:border-white/10"
+  >
+    <div class="relative z-20 max-w-6xl mx-auto px-3 sm:px-6 lg:px-8">
+      <!-- Breadcrumbs (Light on mobile, Dark on desktop) -->
+      <div class="w-full -mt-0.5 mb-2 sm:mb-3">
+        <div class="block lg:hidden">
+          <Breadcrumbs items={breadcrumbItems} />
+        </div>
+        <div class="hidden lg:block">
+          <Breadcrumbs items={breadcrumbItems} variant="dark" />
+        </div>
+      </div>
 
-  <div class="bg-m3-surface text-m3-on-surface font-sans pb-16">
-    <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 pt-2 sm:pt-4">
+      <!-- Mobile ONLY Heading + Separate Google Rating Row -->
+      <div class="block lg:hidden text-center max-w-xl mx-auto mb-3">
+        <p role="heading" aria-level="1" data-speakable="true" class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight">
+          Chennai Outstation Cabs &amp; Intercity Taxi
+        </p>
+        <div class="mt-2 flex justify-center">
+          <GoogleRatingBadge />
+        </div>
+      </div>
 
-      <!-- Top Hero Section (M3 Adaptive: 2-Column Split on Desktop, App-First on Mobile) -->
-      <section class="mb-5 sm:mb-7">
-        <!-- Mobile ONLY Heading + Separate Google Rating Row -->
-        <div class="block lg:hidden text-center max-w-xl mx-auto mb-3">
-          <p role="heading" aria-level="1" data-speakable="true" class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight">
-            Chennai Outstation Cabs &amp; Intercity Taxi
-          </p>
-          <div class="mt-2 flex justify-center">
-            <GoogleRatingBadge />
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-start">
+        
+        <!-- Left Column: Visible on Desktop (lg+) with Title, Rating, Overview, Visual Card & Helpline CTA -->
+        <div class="hidden lg:flex lg:col-span-5 flex-col justify-between text-white pt-1">
+          <div>
+            <!-- Google Rating Eyebrow Badge -->
+            <div class="mb-2 sm:mb-2.5">
+              <GoogleRatingBadge variant="dark" />
+            </div>
+
+            <!-- Desktop H1 -->
+            <h1 data-speakable="true" class="text-xl min-[380px]:text-2xl sm:text-3xl lg:text-[32px] font-extrabold text-white tracking-tight leading-[1.18] font-heading mb-2 sm:mb-3 drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
+              Chennai Outstation Cabs &amp; Intercity Taxi
+            </h1>
+
+            <p data-speakable="true" class="hidden sm:block text-xs sm:text-sm text-white/90 leading-relaxed font-normal max-w-xl drop-shadow-sm mb-3 sm:mb-4">
+              Doorstep outstation cabs across South India. Round-trip rates: <strong>₹14/km (Sedan)</strong> • <strong>₹17/km (Ertiga)</strong> • <strong>₹20/km (Innova)</strong> • <strong>₹22/km (Crysta)</strong>. Fuel &amp; AC included, FASTag tolls at actuals, and zero surge pricing.
+            </p>
           </div>
+
+          <!-- Desktop Hero Framed Visual Card -->
+          <HeroVisualCard
+            src="/images/hero/outstation-highway.webp"
+            alt="Kalidass Travels Outstation Cab - Commercial Yellow Board Toyota Innova on ECR Highway"
+            objectPosition="center 60%"
+            badge="100% Commercial Yellow-Board Fleet"
+            headline="Verified Highway Chauffeurs • Doorstep Pickup Across Chennai"
+            points={["Zero Surge Pricing", "Pay Balance Post-Trip", "80–90 km/h Safe Cruising"]}
+          />
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
-          
-          <!-- Left Column: Visible on Desktop (lg+) with Hero Image & Desktop-Only Hero CTA -->
-          <div class="hidden lg:flex lg:col-span-5 flex-col justify-between pt-1">
-            <div>
-              <!-- Desktop Eyebrow + Google Star Rating Row -->
-              <div class="flex flex-wrap items-center gap-2 mb-2.5">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant text-m3-on-surface text-xs font-semibold shadow-2xs">
-                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                  <span>24/7 Highway Dispatch • Flat ₹14/km</span>
-                </span>
-                <GoogleRatingBadge />
-              </div>
-
-              <!-- Desktop H1 -->
-              <h1 data-speakable="true" class="text-3xl lg:text-[34px] font-extrabold text-m3-on-surface font-heading tracking-tight leading-[1.15] mb-2.5">
-                Chennai Outstation Cabs &amp; Intercity Taxi
-              </h1>
-
-              <p data-speakable="true" class="text-sm text-m3-on-surface-variant leading-relaxed">
-                Doorstep outstation cabs across South India. Round-trip rates: <strong>₹14/km (Sedan)</strong> • <strong>₹17/km (Ertiga)</strong> • <strong>₹20/km (Innova)</strong> • <strong>₹22/km (Crysta)</strong>. Fuel &amp; AC included, FASTag tolls at actuals, and ₹500 advance to confirm.
-              </p>
-            </div>
-
-            <!-- Desktop Hero Visual Showcase Card (Fills vertical space alongside Booking Engine) -->
-            <div class="relative flex-1 min-h-[180px] my-3 rounded-2xl overflow-hidden shadow-md border border-m3-outline-variant/70 bg-m3-inverse-surface group">
-              <OptimizedImage
-                src="/images/hero/outstation-highway.webp"
-                alt="Kalidass Travels Outstation Cab - Commercial Yellow Board Toyota Innova on ECR Highway"
-                class="absolute inset-0 w-full h-full object-cover object-[center_60%] group-hover:scale-105 transition-transform duration-700"
-                loading="eager"
-                fetchpriority="high"
-                sizes="(max-width: 1024px) 100vw, 480px"
-              />
-              <div class="absolute inset-0 bg-gradient-to-t from-[#041E49]/90 via-[#041E49]/25 to-transparent"></div>
-
-              <!-- Top Left Badge on Hero Image -->
-              <div class="absolute top-3 left-3 right-3 flex items-center justify-between gap-2">
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#041E49]/80 backdrop-blur-md border border-white/20 text-[11px] font-bold text-white shadow-xs">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <span>100% Commercial Yellow-Board Fleet</span>
-                </span>
-              </div>
-
-              <!-- Bottom Trust Overlay on Hero Image -->
-              <div class="absolute bottom-3 left-3.5 right-3.5 text-white">
-                <p class="text-sm font-bold font-heading leading-snug drop-shadow-xs">
-                  Verified Highway Chauffeurs • Doorstep Pickup Across Chennai
-                </p>
-                <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[11px] text-white/90 font-medium mt-1">
-                  <span>✓ Zero Surge Pricing</span>
-                  <span>•</span>
-                  <span>✓ Pay Balance Post-Trip</span>
-                  <span>•</span>
-                  <span>✓ 80–90 km/h Safe Cruising</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Desktop ONLY Hero CTA Row -->
-            <div class="hidden lg:flex flex-wrap items-center gap-2.5">
-              <a
-                href="tel:+918939539211"
-                class="inline-flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-m3-full bg-m3-primary hover:bg-[#0842A0] text-white text-sm font-bold shadow-xs hover:shadow-sm transition-all"
-              >
-                <Phone className="w-4 h-4 shrink-0" />
-                <span>Call 24/7 Helpline: +91 89395 39211</span>
-              </a>
-              <a
-                href="#fleet-section"
-                class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-m3-full bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface text-xs font-bold border border-m3-outline-variant transition-all"
-              >
-                <span>View Vehicle Rates</span>
-                <ArrowRight className="w-3.5 h-3.5 text-m3-primary shrink-0" />
-              </a>
-            </div>
-          </div>
-
-          <!-- Right Column: Elevated Booking Engine Card -->
-          <div class="lg:col-span-7 w-full max-w-2xl mx-auto lg:max-w-none flex flex-col">
-            <div id="fare-calculator" class="scroll-mt-28 w-full flex-1">
+        <!-- Right Column: Elevated Booking Engine Card -->
+        <div class="lg:col-span-7 w-full max-w-2xl mx-auto lg:max-w-none flex flex-col relative z-30">
+          <div id="booking-section" class="scroll-mt-28 w-full flex-1 flex flex-col">
+            <div id="fare-calculator" class="w-full flex-1">
               <BookingEngine 
                 client:load 
                 initialTab="outstation" 
@@ -549,9 +513,14 @@ const faqSchema = {
               />
             </div>
           </div>
-
         </div>
-      </section>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="bg-m3-surface text-m3-on-surface font-sans pb-16">
+    <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 pt-2 sm:pt-4">
 
       <!-- STICKY QUICK-NAV JUMP BAR -->
       <nav data-quick-nav aria-label="Outstation Cabs Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-b border-m3-outline-variant/60 shadow-xs py-2.5 mb-6 px-4 sm:px-6 lg:px-8">

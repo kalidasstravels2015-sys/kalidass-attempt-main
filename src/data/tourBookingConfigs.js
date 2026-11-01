@@ -107,7 +107,7 @@ export const TOUR_CONFIGS = {
     slug: 'chidambaram-temple-trip',
     serviceTitle: 'Chennai to Chidambaram Natarajar Temple & Pichavaram Tour',
     engineTitle: 'Book Chennai to Chidambaram',
-    subtitle: 'Round trip private AC cab package • Fixed tariff with ₹500 advance to confirm booking',
+    subtitle: 'Round trip private AC cab package • Fixed transparent tariff & zero hidden charges',
     destination: {
       name: 'Chidambaram & Pichavaram',
       roundTripKm: 450,
@@ -193,7 +193,7 @@ export const TOUR_CONFIGS = {
     slug: 'thiruvannamalai-girivalam-trip',
     serviceTitle: 'Chennai to Thiruvannamalai Girivalam & Arunachaleswarar Tour',
     engineTitle: 'Book Chennai to Thiruvannamalai',
-    subtitle: 'Round trip private AC cab package • Fixed tariff with ₹500 advance to confirm booking',
+    subtitle: 'Round trip private AC cab package • Fixed transparent tariff & zero hidden charges',
     destination: {
       name: 'Arunachaleswarar & Girivalam',
       roundTripKm: 390,
@@ -279,7 +279,7 @@ export const TOUR_CONFIGS = {
     slug: 'kanchipuram-temple-trip',
     serviceTitle: 'Chennai to Kanchipuram Temple & Silk Weavers Day Trip',
     engineTitle: 'Book Chennai to Kanchipuram',
-    subtitle: 'Round trip private AC cab package • Fixed tariff with ₹500 advance to confirm booking',
+    subtitle: 'Round trip private AC cab package • Fixed transparent tariff & zero hidden charges',
     destination: {
       name: 'Kanchipuram & Silk Weavers',
       roundTripKm: 150,
@@ -365,7 +365,7 @@ export const TOUR_CONFIGS = {
     slug: 'navagraha-tour',
     serviceTitle: 'Chennai to Kumbakonam 9 Navagraha Temples Pilgrimage Tour',
     engineTitle: 'Book Kumbakonam Navagraha Tour',
-    subtitle: 'Round trip private AC cab package • Fixed tariff with ₹500 advance to confirm booking',
+    subtitle: 'Round trip private AC cab package • Fixed transparent tariff & zero hidden charges',
     destination: {
       name: '9 Navagraha Temples Circuit',
       roundTripKm: 680,
@@ -453,7 +453,7 @@ export const TOUR_CONFIGS = {
     slug: 'rameswaram-2-days',
     serviceTitle: 'Chennai to Rameswaram & Dhanushkodi 2-Day Yatra Package',
     engineTitle: 'Book Chennai to Rameswaram',
-    subtitle: 'Round trip private AC cab package • Fixed tariff with ₹500 advance to confirm booking',
+    subtitle: 'Round trip private AC cab package • Fixed transparent tariff & zero hidden charges',
     destination: {
       name: 'Ramanathaswamy & Dhanushkodi',
       roundTripKm: 1150,
@@ -542,7 +542,7 @@ export const TOUR_CONFIGS = {
     stateCode: 'KL',
     serviceTitle: 'Chennai to Sabarimala Pilgrimage Cab Package',
     engineTitle: 'Book Chennai to Sabarimala',
-    subtitle: 'Round trip private AC cab package • Fixed tariff with ₹500 advance to confirm booking',
+    subtitle: 'Round trip private AC cab package • Fixed transparent tariff & zero hidden charges',
     destination: {
       name: 'Nilakkal & Pamba Base Camp',
       roundTripKm: 1350,
@@ -630,7 +630,7 @@ export const TOUR_CONFIGS = {
     slug: 'vellore-golden-temple',
     serviceTitle: 'Chennai to Vellore Sripuram Golden Temple Cab Package',
     engineTitle: 'Book Chennai to Vellore',
-    subtitle: 'Round trip private AC cab package • Fixed tariff with ₹500 advance to confirm booking',
+    subtitle: 'Round trip private AC cab package • Fixed transparent tariff & zero hidden charges',
     destination: {
       name: 'Sripuram Golden Temple & Fort',
       roundTripKm: 280,
@@ -716,7 +716,7 @@ export const TOUR_CONFIGS = {
     slug: 'pondicherry-one-day-trip',
     serviceTitle: 'Chennai to Pondicherry Taxi & Sightseeing Tour',
     engineTitle: 'Book Chennai to Pondicherry',
-    subtitle: 'ECR Scenic Highway • Auroville • French White Town • ₹500 Advance to Confirm',
+    subtitle: 'ECR Scenic Highway • Auroville • French White Town • Transparent Fixed Fares',
     destination: {
       name: 'Pondicherry & French Town',
       roundTripKm: 310,
@@ -804,7 +804,7 @@ export const TOUR_CONFIGS = {
     slug: 'tiruchendur-temple-tour',
     serviceTitle: 'Chennai to Tiruchendur Murugan Temple Cab Package',
     engineTitle: 'Book Chennai to Tiruchendur',
-    subtitle: 'Round trip private AC cab • Senior-friendly zero-climb seashore temple • ₹500 advance to confirm',
+    subtitle: 'Round trip private AC cab • Senior-friendly zero-climb seashore temple • Transparent Pricing',
     destination: {
       name: 'Tiruchendur, Kulasekarapattinam & Nava Tirupathi',
       roundTripKm: 1280,
@@ -892,7 +892,7 @@ export const TOUR_CONFIGS = {
     slug: 'madurai-meenakshi-temple-tour',
     serviceTitle: 'Chennai to Madurai Meenakshi Amman Temple Tour Package',
     engineTitle: 'Book Chennai to Madurai Temple Tour',
-    subtitle: 'Dedicated Cab & Tempo • Meenakshi Amman, Alagar Kovil & Thiruparankundram • ₹500 advance to confirm',
+    subtitle: 'Dedicated Cab & Tempo • Meenakshi Amman, Alagar Kovil & Thiruparankundram • Transparent Pricing',
     destination: {
       name: 'Madurai Meenakshi Amman, Thiruparankundram & Alagar Kovil',
       roundTripKm: 924,

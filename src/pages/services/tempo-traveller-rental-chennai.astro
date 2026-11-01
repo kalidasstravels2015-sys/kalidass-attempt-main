@@ -33,7 +33,7 @@ const keywords = "tempo traveller rental chennai, tempo traveller in chennai, 12
 
 const breadcrumbItems = [
   { name: "Home", item: "/" },
-  { name: "Services", item: "/services/" },
+  { name: "Fleet", item: "/fleet/" },
   { name: "Tempo Traveller Rental Chennai", item: "/services/tempo-traveller-rental-chennai/" },
 ];
 
@@ -869,7 +869,7 @@ const schema = {
               </div>
 
               <p data-speakable="true" class="text-sm text-m3-on-surface-variant leading-relaxed">
-                12 to 20-Seater Force Tempo Travellers &amp; Luxury Force Urbania in Chennai. Outstation rates: <strong>₹24/km (12S)</strong> • <strong>₹26/km (17S)</strong> • <strong>₹30/km (20S)</strong> • <strong>₹38/km (Urbania VIP)</strong>. Local packages from ₹4,200 (5h/50km), ₹2,000 advance to confirm.
+                12 to 20-Seater Force Tempo Travellers &amp; Luxury Force Urbania in Chennai. Outstation rates: <strong>₹24/km (12S)</strong> • <strong>₹26/km (17S)</strong> • <strong>₹30/km (20S)</strong> • <strong>₹38/km (Urbania VIP)</strong>. Local packages from ₹4,200 (5h/50km) with transparent billing.
               </p>
             </div>
 
@@ -877,22 +877,11 @@ const schema = {
             <HeroVisualCard
               src="/images/fleet/tempo-17.webp"
               alt="Kalidass Travels Force Tempo Traveller rental in Chennai for group tours"
+              objectPosition="center 55%"
               badge="Commercial Yellow-Board Force Fleet"
               headline="Pushback Recliners • 6.2 ft Walkthrough Cabin • Dual AC"
               points={["Satvik Chauffeurs", "Pay Balance Post-Trip", "Zero Surge"]}
-              objectPosition="center 55%"
             />
-
-            <!-- Desktop Direct Call CTA -->
-            <div class="flex items-center gap-3">
-              <a
-                href="tel:+918939539211"
-                class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface text-sm font-semibold border border-m3-outline-variant shadow-2xs hover:shadow-xs transition-all"
-              >
-                <Phone className="w-4 h-4 text-m3-primary shrink-0" />
-                <span>Call Van Booking: +91 89395 39211</span>
-              </a>
-            </div>
           </div>
 
           <!-- Right Column: Elevated Booking Engine Card -->
@@ -942,6 +931,9 @@ const schema = {
           </a>
           <a href="#faq-section" class="px-3.5 py-1.5 rounded-full font-medium text-m3-on-surface bg-m3-surface-container hover:bg-m3-surface-container-high transition shrink-0">
             Passenger FAQs
+          </a>
+          <a href="/fleet/" class="px-3.5 py-1.5 rounded-full font-semibold text-m3-primary border border-m3-primary/40 hover:bg-m3-primary/10 transition shrink-0">
+            All Fleet →
           </a>
         </div>
       </nav>
@@ -1350,6 +1342,23 @@ const schema = {
             </div>
 
           </details>
+        </div>
+
+        <!-- Cross-Fleet Discovery Bar (links back to the /fleet showroom) -->
+        <div class="max-w-6xl mx-auto px-2 sm:px-4 mt-5 sm:mt-8">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded-2xl bg-m3-surface-container-low border border-m3-outline-variant/60">
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant">
+              <span class="font-semibold text-m3-on-surface">Smaller group?</span>
+              Compare sedans, Ertiga, Innova &amp; Crysta in our full commercial fleet.
+            </p>
+            <a
+              href="/fleet/"
+              class="inline-flex items-center gap-1.5 shrink-0 px-4 py-2 min-h-[40px] rounded-full bg-m3-primary hover:bg-[#0B57D0] text-white text-xs sm:text-sm font-bold shadow-2xs transition"
+            >
+              <span>View Entire Fleet</span>
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          </div>
         </div>
       </section>
 
@@ -1882,6 +1891,18 @@ const schema = {
         });
       });
     });
+
+    // 2b. Deep-link support from /fleet (e.g. #van-urbania, #van-17) — open matching tab
+    const openTabFromHash = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (!hash.startsWith('van-')) return;
+      const targetBtn = document.querySelector(`.spec-tab-btn[data-target-tab="${hash}"]`);
+      if (!targetBtn) return;
+      targetBtn.click();
+      document.getElementById('fleet-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    openTabFromHash();
+    window.addEventListener('hashchange', openTabFromHash);
 
     // 3. Top Outstation Packages Scroller Dots Indicator (Mobile)
     const pkgScroller = document.getElementById('packages-carousel-track');

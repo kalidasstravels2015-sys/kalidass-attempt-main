@@ -1,7 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
-import BookingPanel from "../components/BookingPanel.astro";
 import SectionNavigator from "../components/react/SectionNavigator.jsx";
 import Services from "../components/Services.astro";
 import FleetCarousel from "../components/FleetCarousel.astro";
@@ -51,9 +50,8 @@ const preloadHero = heroOptimized
   <!-- Desktop Floating Section Progress Rail (Desktop Only) -->
   <SectionNavigator client:media="(min-width: 1024px)" />
 
-  <!-- 1. Hero + Instant Booking Engine -->
+  <!-- 1. Unified Hero + Instant Booking Engine (2-Column Desktop, App-First Mobile) -->
   <Hero />
-  <BookingPanel lang="en" />
 
   <!-- 2. Core Services -->
   <Services />

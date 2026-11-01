@@ -759,8 +759,14 @@ export default function BookingEngine({
     };
   }, [viewMode, activeTab, airportDirection, initAutocomplete]);
 
-  // Quote Reference ID (Sequential fallback)
-  const [quoteRefId, setQuoteRefId] = useState('#QT-101');
+  // Quote Reference ID (Sequential format: Q-DDMMYY-XXX)
+  const [quoteRefId, setQuoteRefId] = useState(() => {
+    try {
+      return peekNextQuotationId?.() || 'Q-011126-101';
+    } catch (_) {
+      return 'Q-011126-101';
+    }
+  });
   useEffect(() => {
     try {
       const nextId = peekNextQuotationId?.();
@@ -1207,6 +1213,26 @@ export default function BookingEngine({
         notes: `Website WhatsApp Click: ${quoteRefId} (${currentBreakdown.routeSummary || 'Outstation'})`
       };
 
+      // Report Google Ads conversion event (Request quote)
+      if (typeof window !== 'undefined') {
+        const finalFare = Number(fare || currentBreakdown.totalFare || 1.0);
+        if (typeof window.reportGoogleAdsConversion === 'function') {
+          window.reportGoogleAdsConversion('booking', {
+            value: finalFare,
+            fare: finalFare,
+            quoteId: quoteRefId,
+            event_label: `Booking Engine - ${selectedVehicle?.fullName || 'Cab'} (${currentBreakdown.routeSummary || 'Outstation'})`
+          });
+        } else if (typeof window.gtag === 'function') {
+          window.gtag('event', 'ads_conversion_Request_quote_1', {
+            value: finalFare,
+            currency: 'INR',
+            event_category: 'Qualified Lead',
+            event_label: `Booking Engine - ${selectedVehicle?.fullName || 'Cab'}`
+          });
+        }
+      }
+
       if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
         navigator.sendBeacon('/api/record-booking', JSON.stringify(bookingPayload));
       } else {
@@ -1377,7 +1403,7 @@ Please confirm chauffeur availability.`;
   const waHref = buildWhatsAppUrl(getWhatsAppMessage());
 
   return (
-    <div ref={containerRef} id="fare-calculator" data-hydrated={mounted ? "true" : undefined} className={`w-full max-w-2xl mx-auto transition-all duration-200 ${variant === 'card' ? 'bg-white dark:bg-m3-surface rounded-m3-2xl shadow-m3-2 border border-m3-outline-variant/70 dark:border-m3-outline-variant/40 overflow-hidden' : ''}`}>
+    <div ref={containerRef} id="fare-calculator" data-hydrated={mounted ? "true" : undefined} className={`w-full max-w-2xl mx-auto transition-all duration-200 ${variant === 'card' ? 'bg-white dark:bg-m3-surface rounded-2xl shadow-xl border border-slate-200/90 dark:border-m3-outline-variant/60 ring-1 ring-black/5 overflow-hidden' : ''}`}>
       
       {/* ─────────────────────────────────────────────────────────────
           MODE A: THE SELECTION INTERFACE (M3-Compliant Selection Form)

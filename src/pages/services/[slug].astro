@@ -1683,37 +1683,12 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
 >
   <main class="bg-m3-surface-container-low text-m3-on-surface min-h-screen pb-16 font-sans">
     
-    <!-- Hero Section: Cinematic Full-Width Backdrop on Desktop, Clean App-First Hero on Mobile -->
-    {heroImage && hasDedicatedEngine ? (
+    <!-- Hero Section: Unified Framed Visual Card on Desktop, Clean App-First Hero on Mobile -->
+    {heroImage ? (
       <section
         id="tour-hero"
         class="relative overflow-hidden bg-m3-surface lg:bg-[#041E49] pt-2 pb-5 sm:pb-7 lg:pt-3 lg:pb-10 border-b border-m3-outline-variant/60 lg:border-white/10"
       >
-        <!-- Background Image with High-Contrast Gradient Scrim: DESKTOP ONLY -->
-        <div class="hidden lg:block absolute inset-0 z-0">
-          <OptimizedImage
-            src={heroImage}
-            alt={`${service.title} - Kalidass Travels`}
-            class="w-full h-full object-cover object-center lg:object-[center_35%]"
-            loading="eager"
-            decoding="async"
-            fetchpriority="high"
-            sizes="100vw"
-            format="avif"
-            quality={65}
-          />
-          <!-- Multi-stop Cinema Scrim: Dark navy on left/bottom to guarantee 100% WCAG AAA text contrast while letting the majestic monument shine through -->
-          <div
-            class="absolute inset-0 bg-gradient-to-t from-[#041E49] via-[#041E49]/80 to-[#041E49]/55 lg:bg-gradient-to-r lg:from-[#041E49]/95 lg:via-[#041E49]/80 lg:to-[#041E49]/50 z-10"
-          >
-          </div>
-          <!-- Soft Radial Vignette for Central Focus -->
-          <div
-            class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#041E49]/20 to-[#041E49]/70 z-10 pointer-events-none"
-          >
-          </div>
-        </div>
-
         <div class="relative z-20 max-w-6xl mx-auto px-3 sm:px-6 lg:px-8">
           <!-- Breadcrumbs (Light on mobile, Dark on desktop) -->
           <div class="w-full -mt-0.5 mb-2 sm:mb-3">
@@ -1761,42 +1736,38 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                 <!-- Direct Overview Text (Full on Desktop, Clean on Mobile) -->
                 <p data-speakable="true" class="hidden sm:block text-xs sm:text-sm text-white/90 leading-relaxed font-normal max-w-xl drop-shadow-sm mb-3 sm:mb-4">
                   {isTirupati
-                    ? "Doorstep Chennai to Tirupati round-trip private cab rental with driver. Flat rates from ₹6,000 (Sedan), ₹7,500 (Ertiga), ₹8,500 (Innova) covering 300 km, highway tolls, AP entry permit & driver bata. ₹500 advance to confirm."
+                    ? "Doorstep Chennai to Tirupati round-trip private cab rental with driver. Flat rates from ₹6,000 (Sedan), ₹7,500 (Ertiga), ₹8,500 (Innova) covering 300 km, highway tolls, AP entry permit & driver bata."
                     : isThiruvannamalai
-                    ? "Doorstep Chennai to Thiruvannamalai round-trip private cab rental with verified chauffeur. Flat rates from ₹6,500 (Sedan), 14 km Pournami Girivalam car standby, NH tolls & driver bata included. ₹500 advance to confirm."
+                    ? "Doorstep Chennai to Thiruvannamalai round-trip private cab rental with verified chauffeur. Flat rates from ₹6,500 (Sedan), 14 km Pournami Girivalam car standby, NH tolls & driver bata included."
                     : isKanchipuram
-                    ? "Doorstep Chennai to Kanchipuram round-trip private cab rental with verified chauffeur. Flat rates from ₹3,500 (Sedan) covering Kamakshi Amman darshan, silk weaver shopping wait & NH 48 tolls. ₹500 advance to confirm."
+                    ? "Doorstep Chennai to Kanchipuram round-trip private cab rental with verified chauffeur. Flat rates from ₹3,500 (Sedan) covering Kamakshi Amman darshan, silk weaver shopping wait & NH 48 tolls."
                     : isNavagraha
-                    ? "Doorstep Chennai to Kumbakonam 9 Navagraha temples round-trip cab rental with verified chauffeur. Flat rates from ₹12,000 (Sedan) covering ~750 km 2-day parikrama route. ₹500 advance to confirm."
+                    ? "Doorstep Chennai to Kumbakonam 9 Navagraha temples round-trip cab rental with verified chauffeur. Flat rates from ₹12,000 (Sedan) covering ~750 km 2-day parikrama route with zero surge pricing."
                     : isRameswaram
-                    ? "Doorstep Chennai to Rameswaram & Dhanushkodi round-trip cab rental with verified chauffeur. Flat rates from ₹18,500 (Sedan) covering ~1,200 km, 22 holy theertham baths & Pamban bridge transit. ₹500 advance to confirm."
+                    ? "Doorstep Chennai to Rameswaram & Dhanushkodi round-trip cab rental with verified chauffeur. Flat rates from ₹18,500 (Sedan) covering ~1,200 km, 22 holy theertham baths & Pamban bridge transit."
                     : isTiruchendur
-                    ? "Senior-friendly doorstep Chennai to Tiruchendur Murugan Temple round-trip AC cab with Satvik chauffeur. Flat seashore temple (zero hill climbing) • 2-Day Express from ₹19,500, 3-Day Senior Pace + Nava Tirupathi from ₹23,000. Includes Kulasekarapattinam & Vanathirupathi. ₹500 advance to confirm."
+                    ? "Senior-friendly doorstep Chennai to Tiruchendur Murugan Temple round-trip AC cab with Satvik chauffeur. Flat seashore temple (zero hill climbing) • 2-Day Express from ₹19,500, 3-Day Senior Pace + Nava Tirupathi from ₹23,000. Includes Kulasekarapattinam & Vanathirupathi."
                     : isSabarimala
-                    ? "Doorstep Chennai to Sabarimala round-trip cab rental with satvik teetotaler chauffeur. Flat rates from ₹26,500 (Ertiga SUV) covering ~1,350 km, Nilakkal parking guidance & ₹500 advance to confirm."
+                    ? "Doorstep Chennai to Sabarimala round-trip cab rental with satvik teetotaler chauffeur. Flat rates from ₹26,500 (Ertiga SUV) covering ~1,350 km, Nilakkal parking guidance & transparent billing."
                     : isChidambaram
-                    ? "Doorstep Chennai to Chidambaram Natarajar Temple & Pichavaram round-trip cab rental with verified chauffeur. Flat rates from ₹7,400 (Sedan) covering ~450 km via ECR & mangrove boating stop. ₹500 advance to confirm."
+                    ? "Doorstep Chennai to Chidambaram Natarajar Temple & Pichavaram round-trip cab rental with verified chauffeur. Flat rates from ₹7,400 (Sedan) covering ~450 km via ECR & mangrove boating stop."
                     : isVellore
-                    ? "Doorstep Chennai to Vellore Sripuram Golden Temple round-trip cab rental with verified chauffeur. Flat rates from ₹4,800 (Sedan) covering ~300 km, NH 48 tolls, Fort & Jalakandeswarar stop. ₹500 advance to confirm."
-                    : "Doorstep Chennai to Pondicherry round-trip private cab rental via scenic ECR. Flat rates from ₹4,500 (Sedan) covering 320 km, Auroville, French White Town, Promenade Beach & ECR tolls. ₹500 advance to confirm."}
+                    ? "Doorstep Chennai to Vellore Sripuram Golden Temple round-trip cab rental with verified chauffeur. Flat rates from ₹4,800 (Sedan) covering ~300 km, NH 48 tolls, Fort & Jalakandeswarar stop."
+                    : isPondicherry
+                    ? "Doorstep Chennai to Pondicherry round-trip private cab rental via scenic ECR. Flat rates from ₹4,500 (Sedan) covering 320 km, Auroville, French White Town, Promenade Beach & ECR tolls."
+                    : service.overview}
                 </p>
               </div>
 
-              <!-- Direct Quick Action Helpline Pill (Desktop only to keep mobile above-fold) -->
-              <div class="hidden lg:flex flex-wrap items-center gap-2.5 pt-1">
-                <a
-                  href={`tel:${WHATSAPP_CONFIG.formattedPhone.replace(/\s+/g, '')}`}
-                  class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-white/15 hover:bg-white/25 text-white text-xs sm:text-sm font-semibold border border-white/25 backdrop-blur-md shadow-xs transition-all"
-                >
-                  <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Call 24/7 Helpline: +91 89395 39211</span>
-                </a>
-              </div>
-            </div>
-                  <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Call 24/7 Helpline: +91 89395 39211</span>
-                </a>
-              </div>
+              <!-- Desktop Hero Framed Visual Card (single photo, no full-bleed backdrop) -->
+              <HeroVisualCard
+                src={heroImage}
+                alt={`${service.title} - Kalidass Travels`}
+                objectPosition="center center"
+                badge="100% Commercial Yellow-Board Fleet"
+                headline={`${shortName} • Doorstep Pickup Across Chennai`}
+                points={["Zero Surge Pricing", "Transparent Billing", "Verified Satvik Chauffeur"]}
+              />
             </div>
 
             <!-- Right Column: Booking Engine (At the very top in initial view!) -->
@@ -1902,49 +1873,36 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
               {/* Crisp, Direct Overview */}
               <p data-speakable="true" class="text-sm text-m3-on-surface-variant leading-relaxed font-normal max-w-xl">
                 {isTirupati
-                  ? "Doorstep Chennai to Tirupati round-trip private cab rental with driver. Flat rates from ₹6,000 (Sedan), ₹7,500 (Ertiga), ₹8,500 (Innova) covering 300 km, highway tolls, AP entry permit & driver bata. ₹500 advance to confirm."
+                  ? "Doorstep Chennai to Tirupati round-trip private cab rental with driver. Flat rates from ₹6,000 (Sedan), ₹7,500 (Ertiga), ₹8,500 (Innova) covering 300 km, highway tolls, AP entry permit & driver bata."
                   : isThiruvannamalai
-                  ? "Doorstep Chennai to Thiruvannamalai round-trip private cab rental with verified chauffeur. Flat rates from ₹6,500 (Sedan), 14 km Pournami Girivalam car standby, NH tolls & driver bata included. ₹500 advance to confirm."
+                  ? "Doorstep Chennai to Thiruvannamalai round-trip private cab rental with verified chauffeur. Flat rates from ₹6,500 (Sedan), 14 km Pournami Girivalam car standby, NH tolls & driver bata included."
                   : isKanchipuram
-                  ? "Doorstep Chennai to Kanchipuram round-trip private cab rental with verified chauffeur. Flat rates from ₹3,500 (Sedan) covering Kamakshi Amman darshan, silk weaver shopping wait & NH 48 tolls. ₹500 advance to confirm."
+                  ? "Doorstep Chennai to Kanchipuram round-trip private cab rental with verified chauffeur. Flat rates from ₹3,500 (Sedan) covering Kamakshi Amman darshan, silk weaver shopping wait & NH 48 tolls."
                   : isNavagraha
-                  ? "Doorstep Chennai to Kumbakonam 9 Navagraha temples round-trip cab rental with verified chauffeur. Flat rates from ₹12,000 (Sedan) covering ~750 km 2-day parikrama route. ₹500 advance to confirm."
+                  ? "Doorstep Chennai to Kumbakonam 9 Navagraha temples round-trip cab rental with verified chauffeur. Flat rates from ₹12,000 (Sedan) covering ~750 km 2-day parikrama route with zero surge pricing."
                   : isRameswaram
-                  ? "Doorstep Chennai to Rameswaram & Dhanushkodi round-trip cab rental with verified chauffeur. Flat rates from ₹18,500 (Sedan) covering ~1,200 km, 22 holy theertham baths & Pamban bridge transit. ₹500 advance to confirm."
+                  ? "Doorstep Chennai to Rameswaram & Dhanushkodi round-trip cab rental with verified chauffeur. Flat rates from ₹18,500 (Sedan) covering ~1,200 km, 22 holy theertham baths & Pamban bridge transit."
                   : isTiruchendur
-                  ? "Senior-friendly doorstep Chennai to Tiruchendur Murugan Temple round-trip AC cab with Satvik chauffeur. Flat seashore temple (zero hill climbing) • 2-Day Express from ₹19,500, 3-Day Senior Pace + Nava Tirupathi from ₹23,000. Includes Kulasekarapattinam & Vanathirupathi. ₹500 advance to confirm."
+                  ? "Senior-friendly doorstep Chennai to Tiruchendur Murugan Temple round-trip AC cab with Satvik chauffeur. Flat seashore temple (zero hill climbing) • 2-Day Express from ₹19,500, 3-Day Senior Pace + Nava Tirupathi from ₹23,000. Includes Kulasekarapattinam & Vanathirupathi."
                   : isSabarimala
-                  ? "Doorstep Chennai to Sabarimala round-trip cab rental with satvik teetotaler chauffeur. Flat rates from ₹26,500 (Ertiga SUV) covering ~1,350 km, Nilakkal parking guidance & ₹500 advance to confirm."
+                  ? "Doorstep Chennai to Sabarimala round-trip cab rental with satvik teetotaler chauffeur. Flat rates from ₹26,500 (Ertiga SUV) covering ~1,350 km, Nilakkal parking guidance & transparent billing."
                   : isChidambaram
-                  ? "Doorstep Chennai to Chidambaram Natarajar Temple & Pichavaram round-trip cab rental with verified chauffeur. Flat rates from ₹7,400 (Sedan) covering ~450 km via ECR & mangrove boating stop. ₹500 advance to confirm."
+                  ? "Doorstep Chennai to Chidambaram Natarajar Temple & Pichavaram round-trip cab rental with verified chauffeur. Flat rates from ₹7,400 (Sedan) covering ~450 km via ECR & mangrove boating stop."
                   : isVellore
-                  ? "Doorstep Chennai to Vellore Sripuram Golden Temple round-trip cab rental with verified chauffeur. Flat rates from ₹4,800 (Sedan) covering ~300 km, NH 48 tolls, Fort & Jalakandeswarar stop. ₹500 advance to confirm."
-                  : "Doorstep Chennai to Pondicherry round-trip private cab rental via scenic ECR. Flat rates from ₹4,500 (Sedan) covering 320 km, Auroville, French White Town, Promenade Beach & ECR tolls. ₹500 advance to confirm."}
+                  ? "Doorstep Chennai to Vellore Sripuram Golden Temple round-trip cab rental with verified chauffeur. Flat rates from ₹4,800 (Sedan) covering ~300 km, NH 48 tolls, Fort & Jalakandeswarar stop."
+                  : isPondicherry
+                  ? "Doorstep Chennai to Pondicherry round-trip private cab rental via scenic ECR. Flat rates from ₹4,500 (Sedan) covering 320 km, Auroville, French White Town, Promenade Beach & ECR tolls."
+                  : service.overview}
               </p>
               </div>
 
-              <!-- Desktop Hero Visual Showcase Card -->
-              {heroImage && (
-                <HeroVisualCard
-                  src={heroImage}
-                  alt={`${service.title} - Kalidass Travels doorstep cab from Chennai`}
-                  badge="100% Commercial Yellow-Board Fleet"
-                  headline={`${shortName} • Doorstep Pickup Across Chennai`}
-                  points={["Zero Surge Pricing", "Pay Balance Post-Trip", "Verified Chauffeurs"]}
-                  objectPosition="center 40%"
-                />
-              )}
-
-              <!-- Direct Quick Action CTA -->
-              <div class="flex flex-wrap items-center gap-2.5">
-                <a
-                  href={`tel:${WHATSAPP_CONFIG.formattedPhone.replace(/\s+/g, '')}`}
-                  class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface text-xs sm:text-sm font-semibold border border-m3-outline-variant shadow-2xs hover:shadow-xs transition-all"
-                >
-                  <Phone className="w-4 h-4 text-m3-primary shrink-0" />
-                  <span>Call 24/7 Helpline: +91 89395 39211</span>
-                </a>
-              </div>
+              <!-- Desktop Hero Trust Showcase Card -->
+              <HeroVisualCard
+                variant="solid"
+                badge="100% Commercial Yellow-Board Fleet"
+                headline={`${shortName} • Doorstep Pickup Across Chennai`}
+                points={["Zero Surge Pricing", "Pay Balance Post-Trip", "Verified Chauffeurs"]}
+              />
             </div>
 
             <!-- Right Column: Instant Round-Trip Pilgrimage Booking Engine in Initial View -->
@@ -3330,7 +3288,7 @@ Please share availability and confirmed quote.`;
         <div class="relative z-10 max-w-2xl mx-auto text-center space-y-4">
           <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs font-bold text-white uppercase tracking-wider">
             <Sparkles className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-            <span>{hasDedicatedEngine ? "Interactive Fare Calculator" : "Fixed Tariff Rates • ₹500 Advance to Reserve"}</span>
+            <span>{hasDedicatedEngine ? "Interactive Fare Calculator" : "Fixed Tariff Rates • Zero Hidden Charges"}</span>
           </div>
 
           <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold font-heading text-white tracking-tight leading-tight">

@@ -514,74 +514,78 @@ const tripListSchema = {
   ogImage="/og/chennai-airport-taxi.jpg"
   schema={[taxiServiceSchema, faqSchema, tripListSchema]}
 >
-  <Breadcrumbs items={breadcrumbItems} />
+  <!-- Hero Section: Unified Framed Visual Card on Desktop, Clean App-First Hero on Mobile -->
+  <section
+    id="airport-hero"
+    class="relative overflow-hidden bg-m3-surface lg:bg-[#041E49] pt-2 pb-5 sm:pb-7 lg:pt-3 lg:pb-10 border-b border-m3-outline-variant/60 lg:border-white/10"
+  >
+    <div class="relative z-20 max-w-6xl mx-auto px-3 sm:px-6 lg:px-8">
+      <!-- Breadcrumbs (Light on mobile, Dark on desktop) -->
+      <div class="w-full -mt-0.5 mb-2 sm:mb-3">
+        <div class="block lg:hidden">
+          <Breadcrumbs items={breadcrumbItems} />
+        </div>
+        <div class="hidden lg:block">
+          <Breadcrumbs items={breadcrumbItems} variant="dark" />
+        </div>
+      </div>
+
+      <!-- Mobile ONLY Heading + Separate Google Rating Row -->
+      <div class="block lg:hidden text-center max-w-xl mx-auto mb-3">
+        <p role="heading" aria-level="1" data-speakable="true" class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight">
+          Chennai Airport Taxi &amp; Cab Booking
+        </p>
+        <div class="mt-2 flex justify-center">
+          <GoogleRatingBadge />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-start">
+        
+        <!-- Left Column: Visible on Desktop (lg+) with Title, Rating, Overview, Visual Card & Helpline CTA -->
+        <div class="hidden lg:flex lg:col-span-5 flex-col justify-between text-white pt-1">
+          <div>
+            <!-- Google Rating Eyebrow Badge -->
+            <div class="mb-2 sm:mb-2.5">
+              <GoogleRatingBadge variant="dark" />
+            </div>
+
+            <!-- Desktop H1 -->
+            <h1 data-speakable="true" class="text-xl min-[380px]:text-2xl sm:text-3xl lg:text-[32px] font-extrabold text-white tracking-tight leading-[1.18] font-heading mb-2 sm:mb-3 drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
+              Chennai Airport Taxi &amp; Cab Booking
+            </h1>
+
+            <p data-speakable="true" class="hidden sm:block text-xs sm:text-sm text-white/90 leading-relaxed font-normal max-w-xl drop-shadow-sm mb-3 sm:mb-4">
+              24/7 arrival pickups across T1, T2 &amp; T4 directly to your doorstep. Fixed zone fares: <strong>₹650 (Sedan)</strong> • <strong>₹1,150 (Ertiga)</strong> • <strong>₹1,500 (Innova Crysta)</strong>. Includes automated flight delay tracking, 60-min free arrival wait, and zero hidden charges.
+            </p>
+          </div>
+
+          <!-- Desktop Hero Framed Visual Card -->
+          <HeroVisualCard
+            src="/images/services/airport-transfer.webp"
+            alt="Kalidass Travels Chennai Airport Taxi - Arrival Terminal pickup at MAA"
+            objectPosition="top center"
+            badge="Official MAA Terminal Arrival Pickup"
+            headline="Meet & Greet at T1, T2 & T4 • Live Flight Tracking"
+            points={["Zero Surge Pricing", "60-Min Free Wait", "Fixed Zone Fares"]}
+          />
+        </div>
+
+        <!-- Right Column: Elevated Booking Engine Card -->
+        <div class="lg:col-span-7 w-full max-w-2xl mx-auto lg:max-w-none flex flex-col relative z-30">
+          <div id="booking-section" class="scroll-mt-28 w-full flex-1 flex flex-col">
+            <div id="fare-calculator" class="w-full flex-1">
+              <BookingEngine client:load initialTab="airport" allowedTabs={['airport']} showHeader={false} variant="card" />
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
 
   <div class="bg-m3-surface text-m3-on-surface font-sans pb-16">
     <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 pt-2 sm:pt-4">
-
-      <!-- Top Hero Section (M3 Adaptive: 2-Column Split on Desktop, App-First on Mobile) -->
-      <section class="mb-5 sm:mb-7">
-        <!-- Mobile ONLY Heading + Separate Google Rating Row -->
-        <div class="block lg:hidden text-center max-w-xl mx-auto mb-3">
-          <p role="heading" aria-level="1" data-speakable="true" class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading tracking-tight leading-tight">
-            Chennai Airport Taxi &amp; Cab Booking
-          </p>
-          <div class="mt-2 flex justify-center">
-            <GoogleRatingBadge />
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
-          
-          <!-- Left Column: Visible on Desktop (lg+) with Hero Image -->
-          <div class="hidden lg:flex lg:col-span-5 flex-col justify-between pt-1">
-            <div>
-              <!-- Desktop H1 + Separate Google Star Rating Row -->
-              <h1 data-speakable="true" class="text-3xl lg:text-[34px] font-extrabold text-m3-on-surface font-heading tracking-tight leading-[1.15] mb-2.5">
-                Chennai Airport Taxi &amp; Cab Booking
-              </h1>
-              <div class="mb-2.5">
-                <GoogleRatingBadge />
-              </div>
-
-              <p data-speakable="true" class="text-sm text-m3-on-surface-variant leading-relaxed">
-                24/7 arrival pickups across T1, T2 &amp; T4 directly to your doorstep. Fixed zone fares: <strong>₹650 (Sedan)</strong> • <strong>₹1,150 (Ertiga)</strong> • <strong>₹1,500 (Innova Crysta)</strong>. Includes automated flight delay tracking, 60-min free arrival wait, and ₹500 advance to confirm.
-              </p>
-            </div>
-
-            <!-- Desktop Hero Visual Showcase Card -->
-            <HeroVisualCard
-              src="/images/services/airport-transfer.webp"
-              alt="Kalidass Travels Chennai Airport Taxi - Arrival Terminal pickup at MAA"
-              badge="Official MAA Terminal Arrival Pickup"
-              headline="Meet & Greet at T1, T2 & T4 • Live Flight Tracking"
-              points={["Zero Surge Pricing", "60-Min Free Wait", "Fixed Zone Fares"]}
-              objectPosition="center 40%"
-            />
-
-            <!-- Desktop Direct Call CTA -->
-            <div class="flex items-center gap-3">
-              <a
-                href="tel:+918939539211"
-                class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-surface-container-highest text-m3-on-surface text-sm font-semibold border border-m3-outline-variant shadow-2xs hover:shadow-xs transition-all"
-              >
-                <Phone className="w-4 h-4 text-m3-primary shrink-0" />
-                <span>Call 24/7 Helpline: +91 89395 39211</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- Right Column: Elevated Booking Engine Card -->
-          <div class="lg:col-span-7 w-full max-w-2xl mx-auto lg:max-w-none flex flex-col">
-            <div id="booking-section" class="scroll-mt-28 w-full flex-1 flex flex-col">
-              <div id="fare-calculator" class="w-full flex-1">
-                <BookingEngine client:load initialTab="airport" allowedTabs={['airport']} showHeader={false} variant="card" />
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
 
       <!-- STICKY QUICK-NAV JUMP BAR -->
       <nav data-quick-nav aria-label="Airport Taxi Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-b border-m3-outline-variant/60 shadow-xs py-2.5 mb-6 px-4 sm:px-6 lg:px-8">

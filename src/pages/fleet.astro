@@ -402,6 +402,51 @@ const fleetVehicles: FleetVehicle[] = [
   }
 ];
 
+// ─── Dedicated Vehicle Page Routing ───────────────────────────────────────────
+// Each fleet card links to its dedicated service/booking page (NOT the homepage
+// outstation booking panel). Car pages are resolved at build time: if the
+// dedicated page file exists it is used, otherwise we fall back to the tariff
+// anchor so no card ever links to a 404 while pages are being rolled out.
+const TEMPO_PAGE = "/services/tempo-traveller-rental-chennai/";
+const servicePageFiles = import.meta.glob("./services/*.astro");
+const servicePageExists = (slug: string) => `./services/${slug}.astro` in servicePageFiles;
+
+const dedicatedPageSlugs: Record<string, string> = {
+  dzire: "swift-dzire-rental-chennai",
+  etios: "swift-dzire-rental-chennai", // Etios grouped into the sedan hub page
+  ertiga: "ertiga-car-rental-chennai",
+  innova: "toyota-innova-rental-chennai",
+  crysta: "innova-crysta-rental-chennai",
+};
+
+// Tempo/Urbania cards deep-link to the matching tab on the tempo page
+const tempoAnchors: Record<string, string> = {
+  "tempo-12": "van-12",
+  "tempo-14": "van-14",
+  "tempo-17": "van-17",
+  "tempo-20": "van-20",
+  "tempo-26": "van-26",
+  urbania: "van-urbania",
+};
+
+const getDetailHref = (v: FleetVehicle): string => {
+  if (tempoAnchors[v.id]) return `${TEMPO_PAGE}#${tempoAnchors[v.id]}`;
+  const slug = dedicatedPageSlugs[v.id];
+  if (slug && servicePageExists(slug)) return `/services/${slug}/`;
+  return v.tariffHref;
+};
+
+const getWhatsAppQuoteHref = (v: FleetVehicle): string =>
+  buildWhatsAppUrl(
+    `*Kalidass Travels - Vehicle Enquiry*\n` +
+    `• Vehicle: ${v.name} (${v.seats})\n` +
+    `• Outstation Rate: ₹${v.roundTripRate}/km (min ${v.minKm} km/day, bata ₹${v.driverBata}/day)\n` +
+    `• Pickup Location: \n` +
+    `• Destination / Route: \n` +
+    `• Travel Date: \n\n` +
+    `Please share the best quote.`
+  );
+
 const categories = [
   { key: "all", label: "All Vehicles", count: fleetVehicles.length },
   { key: "sedan", label: "Sedans", count: fleetVehicles.filter(v => v.category === "sedan").length },
@@ -655,27 +700,30 @@ const schema = {
               <!-- Card Actions -->
               <div class="p-4 sm:p-5 pt-0 space-y-2">
                 <a
-                  href={`/?vehicle=${encodeURIComponent(vehicle.bookingSlug)}#booking-panel`}
+                  href={getDetailHref(vehicle)}
                   class="w-full inline-flex items-center justify-center gap-2 py-3 px-4 min-h-[44px] rounded-m3-full bg-m3-primary hover:bg-[#0B57D0] active:bg-[#0842A0] text-white text-xs sm:text-sm font-bold shadow-xs hover:shadow-sm transition-all cursor-pointer group/btn"
+                  aria-label={`View details and book ${vehicle.name}`}
                 >
-                  <span>Reserve This Cab</span>
+                  <span>View Details &amp; Book</span>
                   <ChevronRight className="w-4 h-4 transform group-hover/btn:translate-x-0.5 transition-transform" />
                 </a>
 
                 <div class="flex items-center justify-between gap-2 pt-1 text-xs">
                   <a
-                    href={`/?vehicle=${encodeURIComponent(vehicle.bookingSlug)}#booking-panel`}
+                    href={getWhatsAppQuoteHref(vehicle)}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     class="inline-flex items-center gap-1.5 text-emerald-700 hover:text-emerald-800 font-bold transition-colors"
                   >
                     <WhatsAppIcon variant="brand" className="w-3.5 h-3.5" />
-                    <span>Instant Fare Quote</span>
+                    <span>Quick WhatsApp Quote</span>
                   </a>
 
                   <a
-                    href={vehicle.tariffHref}
+                    href={getDetailHref(vehicle)}
                     class="inline-flex items-center gap-1 text-slate-600 hover:text-m3-primary font-bold transition-colors"
                   >
-                    <span>{vehicle.tariffLabel}</span>
+                    <span>Full Specs &amp; Tariff</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </a>
                 </div>
@@ -732,10 +780,10 @@ const schema = {
                     <td class="py-3.5 px-4 text-slate-600 whitespace-nowrap">₹{v.driverBata}/day</td>
                     <td class="py-3.5 px-4 text-center whitespace-nowrap">
                       <a
-                        href={`/?vehicle=${encodeURIComponent(v.bookingSlug)}#booking-panel`}
+                        href={getDetailHref(v)}
                         class="inline-flex items-center justify-center px-3 py-1.5 rounded-m3-full bg-m3-primary hover:bg-[#0B57D0] text-white text-xs font-bold transition-all shadow-2xs"
                       >
-                        Book
+                        Details &amp; Book
                       </a>
                     </td>
                   </tr>
