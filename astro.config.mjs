@@ -11,6 +11,7 @@ import { fileURLToPath } from 'node:url';
 export default defineConfig({
   site: 'https://kalidasstravels.in',
   trailingSlash: 'always',
+  compressHTML: true,
   prefetch: {
     prefetchAll: false,
     defaultStrategy: 'hover',
@@ -113,7 +114,7 @@ export default defineConfig({
     compress({
       CSS: true,
       HTML: false,
-      JavaScript: false,
+      JavaScript: true,
     }),
   ],
   build: {

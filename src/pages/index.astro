@@ -20,8 +20,8 @@ const heroOptimized = import.meta.env.PROD
   ? await getImage({
       src: heroImg,
       width: 800,
-      widths: [360, 480, 640, 800, 1200],
-      sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1920px",
+      widths: [640, 800, 1200],
+      sizes: "(min-width: 640px) 100vw, 1920px",
       format: "avif",
       quality: 42,
     })
@@ -31,11 +31,10 @@ const preloadHero = heroOptimized
   ? {
       href: heroOptimized.src,
       srcset: heroOptimized.srcSet.attribute,
-      sizes: "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1920px",
+      sizes: "(min-width: 640px) 100vw, 1920px",
+      media: "(min-width: 640px)",
     }
-  : {
-      href: "/images/temple/tirupati-balaji.webp",
-    };
+  : null;
 
 ---
 

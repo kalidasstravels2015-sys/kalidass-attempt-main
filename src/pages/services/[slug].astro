@@ -66,16 +66,31 @@ const isChidambaram = service.slug === 'chidambaram-temple-trip';
 const isVellore = service.slug === 'vellore-golden-temple';
 const isPondicherry = service.slug === 'pondicherry-one-day-trip';
 const isTiruchendur = service.slug === 'tiruchendur-temple-tour';
-const hasDedicatedEngine = isTirupati || isThiruvannamalai || isKanchipuram || isNavagraha || isRameswaram || isSabarimala || isChidambaram || isVellore || isPondicherry || isTiruchendur;
-const isTour = ['Temple Tours', 'Popular Destinations'].includes(service.category) || hasDedicatedEngine;
+const isYelagiri = service.slug === 'yelagiri-hills-weekend';
+const isYercaud = service.slug === 'yercaud-hills-weekend';
+const isMahabalipuram = service.slug === 'mahabalipuram-ecr-temple-route';
+const isChennaiCity = service.slug === 'one-day-chennai-city-tour';
 
-const guideLabels = isTour ? {
+const isWeekendTrip = isPondicherry || isYelagiri || isYercaud || isMahabalipuram || isChennaiCity;
+const isTempleTour = service.category === 'Temple Tours' || isTirupati || isThiruvannamalai || isKanchipuram || isNavagraha || isRameswaram || isSabarimala || isChidambaram || isVellore || isTiruchendur;
+
+const hasDedicatedEngine = isTirupati || isThiruvannamalai || isKanchipuram || isNavagraha || isRameswaram || isSabarimala || isChidambaram || isVellore || isPondicherry || isTiruchendur || isYelagiri || isYercaud || isMahabalipuram || isChennaiCity;
+const isTour = isTempleTour || isWeekendTrip || ['Temple Tours', 'Popular Destinations'].includes(service.category) || hasDedicatedEngine;
+
+const guideLabels = isTempleTour ? {
   sectionTitle: "Travel Guide & Pilgrimage Information",
   col1Title: "Temple Significance & Sacred Traditions",
   col2Title: "Darshan Timings & Guidelines",
   dressCodeLabel: "Devotee Traditional Dress Code",
   exclusionsLabel: "Package Exclusions (Not Included)",
   tipsTitle: "Practical Tips for Pilgrims & Travelers"
+} : isWeekendTrip ? {
+  sectionTitle: "Sightseeing Guide & Holiday Information",
+  col1Title: "Top Attractions & Sightseeing Highlights",
+  col2Title: "Visiting Hours & Schedule",
+  dressCodeLabel: "Dress Guidelines & Packing Checklist",
+  exclusionsLabel: "Package Exclusions (Entry Tickets / Personal Expenses)",
+  tipsTitle: "Practical Tips for Weekend Travelers"
 } : {
   sectionTitle: "Service Protocol & Booking Information",
   col1Title: "Service Scope & Coverage",
@@ -1755,6 +1770,14 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                     ? "Doorstep Chennai to Vellore Sripuram Golden Temple round-trip cab rental with verified chauffeur. Flat rates from ₹4,800 (Sedan) covering ~300 km, NH 48 tolls, Fort & Jalakandeswarar stop."
                     : isPondicherry
                     ? "Doorstep Chennai to Pondicherry round-trip private cab rental via scenic ECR. Flat rates from ₹4,500 (Sedan) covering 320 km, Auroville, French White Town, Promenade Beach & ECR tolls."
+                    : isYelagiri
+                    ? "Doorstep Chennai to Yelagiri Hills round-trip weekend cab rental with hill-certified chauffeur. Flat rates from ₹7,500 (Sedan) covering 460 km, 14 hairpin bends, Punganoor Lake & Swamimalai."
+                    : isYercaud
+                    ? "Doorstep Chennai to Yercaud Hill Station round-trip weekend getaway with ghat-road chauffeur. Flat rates from ₹11,500 (Sedan) covering 720 km, Emerald Lake & coffee plantation viewpoints."
+                    : isMahabalipuram
+                    ? "Doorstep Chennai to Mahabalipuram round-trip coastal ECR day tour with private chauffeur. Flat rates from ₹2,200 (Sedan) covering Shore Temple, Pancha Rathas & Butter Ball."
+                    : isChennaiCity
+                    ? "Doorstep full-day Chennai city sightseeing tour with private AC cab. Flat rates from ₹2,200 (Sedan) covering Marina Beach, San Thome Basilica, Kapaleeshwarar Temple & museum."
                     : service.overview}
                 </p>
               </div>
@@ -1766,7 +1789,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                 objectPosition="center center"
                 badge="100% Commercial Yellow-Board Fleet"
                 headline={`${shortName} • Doorstep Pickup Across Chennai`}
-                points={["Zero Surge Pricing", "Transparent Billing", "Verified Satvik Chauffeur"]}
+                points={["Zero Surge Pricing", "Transparent Billing", isWeekendTrip ? "Experienced Highway Chauffeur" : "Verified Satvik Chauffeur"]}
               />
             </div>
 
@@ -1892,6 +1915,14 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                   ? "Doorstep Chennai to Vellore Sripuram Golden Temple round-trip cab rental with verified chauffeur. Flat rates from ₹4,800 (Sedan) covering ~300 km, NH 48 tolls, Fort & Jalakandeswarar stop."
                   : isPondicherry
                   ? "Doorstep Chennai to Pondicherry round-trip private cab rental via scenic ECR. Flat rates from ₹4,500 (Sedan) covering 320 km, Auroville, French White Town, Promenade Beach & ECR tolls."
+                  : isYelagiri
+                  ? "Doorstep Chennai to Yelagiri Hills round-trip weekend cab rental with hill-certified chauffeur. Flat rates from ₹7,500 (Sedan) covering 460 km, 14 hairpin bends, Punganoor Lake & Swamimalai."
+                  : isYercaud
+                  ? "Doorstep Chennai to Yercaud Hill Station round-trip weekend getaway with ghat-road chauffeur. Flat rates from ₹11,500 (Sedan) covering 720 km, Emerald Lake & coffee plantation viewpoints."
+                  : isMahabalipuram
+                  ? "Doorstep Chennai to Mahabalipuram round-trip coastal ECR day tour with private chauffeur. Flat rates from ₹2,200 (Sedan) covering Shore Temple, Pancha Rathas & Butter Ball."
+                  : isChennaiCity
+                  ? "Doorstep full-day Chennai city sightseeing tour with private AC cab. Flat rates from ₹2,200 (Sedan) covering Marina Beach, San Thome Basilica, Kapaleeshwarar Temple & museum."
                   : service.overview}
               </p>
               </div>
@@ -1901,7 +1932,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                 variant="solid"
                 badge="100% Commercial Yellow-Board Fleet"
                 headline={`${shortName} • Doorstep Pickup Across Chennai`}
-                points={["Zero Surge Pricing", "Pay Balance Post-Trip", "Verified Chauffeurs"]}
+                points={["Zero Surge Pricing", "Pay Balance Post-Trip", isWeekendTrip ? "Experienced Highway Chauffeur" : "Verified Chauffeurs"]}
               />
             </div>
 
@@ -2161,7 +2192,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                 href="#guide"
                 class="px-3 py-1.5 rounded-m3-full bg-m3-surface text-m3-on-surface-variant hover:bg-m3-surface-container-high hover:text-m3-on-surface border border-m3-outline-variant transition-colors shrink-0 font-medium"
               >
-                {isTour ? "Darshan Guide" : "Guidelines"}
+                {isTempleTour ? "Darshan Guide" : (isWeekendTrip ? "Sightseeing Guide" : (isTour ? "Travel Guide" : "Guidelines"))}
               </a>
             )}
             {service.faq && (
@@ -2323,13 +2354,19 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
           <div class="p-5 sm:p-7 bg-m3-surface-container-low border-b border-m3-outline-variant">
             <div class="max-w-xl">
               <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
-                {hasDedicatedEngine ? "Available Cars & Pilgrimage Fleet" : `${shortName} Tariff & Package Rates`}
+                {hasDedicatedEngine 
+                  ? (isWeekendTrip ? "Available Cabs & Getaway Fleet" : "Available Cars & Pilgrimage Fleet") 
+                  : `${shortName} Tariff & Package Rates`}
               </h2>
               <p class="text-xs sm:text-sm text-m3-on-surface-variant font-sans mt-1">
                 {hasDedicatedEngine 
-                  ? (isNavagraha || isRameswaram || isSabarimala || isTiruchendur
-                      ? "Swipe through our verified fleet below. 1-day packages include tolls & driver bata; multi-day circuits cover vehicle hire & fuel with tolls and driver bata at actuals."
-                      : "Swipe through our verified fleet below. 1-day package rates include tolls & driver bata; calculate custom return dates in booking above.")
+                  ? (isWeekendTrip
+                      ? (isYelagiri || isYercaud
+                          ? "Swipe through our verified fleet below. Multi-day hill station packages cover vehicle hire & fuel; FASTag tolls and driver night bata payable at actuals."
+                          : "Swipe through our verified fleet below. 1-day getaway rates include tolls & driver bata; calculate custom return dates in booking above.")
+                      : (isNavagraha || isRameswaram || isSabarimala || isTiruchendur
+                          ? "Swipe through our verified fleet below. 1-day packages include tolls & driver bata; multi-day circuits cover vehicle hire & fuel with tolls and driver bata at actuals."
+                          : "Swipe through our verified fleet below. 1-day package rates include tolls & driver bata; calculate custom return dates in booking above."))
                   : "Fixed round-trip rates with doorstep pickup, sanitized dual AC cars, FASTag tolls, and driver allowance."}
               </p>
             </div>
@@ -2407,10 +2444,16 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                     ? 6
                     : 4;
 
-                  const isMultiDay = isNavagraha || isRameswaram || isSabarimala || isTiruchendur;
+                  const isMultiDay = isNavagraha || isRameswaram || isSabarimala || isTiruchendur || isYelagiri || isYercaud;
                   const cardPriceLabel = "Starting From";
                   const cardPriceSubtext = isMultiDay
-                    ? (isNavagraha ? "2-Day Circuit (Tolls & Bata Extra)" : (isRameswaram || isTiruchendur) ? "2-Day Circuit (Tolls & Bata Extra)" : "3-Day Base Fare (Tolls & Bata Extra)")
+                    ? (isYelagiri || isYercaud
+                        ? "2-Day Trip (Tolls & Bata at Actuals)"
+                        : isNavagraha 
+                        ? "2-Day Circuit (Tolls & Bata Extra)" 
+                        : (isRameswaram || isTiruchendur) 
+                        ? "2-Day Circuit (Tolls & Bata Extra)" 
+                        : "3-Day Base Fare (Tolls & Bata Extra)")
                     : "1-Day (Tolls & Bata Inc.)";
 
                   return (
@@ -2711,6 +2754,9 @@ Please share availability and confirmed quote.`;
                     window.dispatchEvent(new CustomEvent('select-tiruchendur-temple-tour-vehicle', {
                       detail: { vehicleId: vehId, passengers: pax }
                     }));
+                    window.dispatchEvent(new CustomEvent('select-quote-vehicle', {
+                      detail: { vehicleId: vehId, passengers: pax }
+                    }));
                     const bookingEl = document.getElementById('booking');
                     if (bookingEl) {
                       bookingEl.scrollIntoView({ behavior: 'smooth' });
@@ -2943,7 +2989,7 @@ Please share availability and confirmed quote.`;
               class="guide-tab-btn flex-1 min-h-[40px] px-3 flex items-center justify-center gap-1.5 text-xs font-medium transition-colors bg-transparent text-m3-on-surface-variant hover:bg-m3-surface-container-high"
             >
               <Sparkles className="w-3.5 h-3.5 shrink-0" />
-              <span>{isTour && !isPondicherry ? "Sthala Puranam & Tips" : "Places & Tips"}</span>
+              <span>{isWeekendTrip ? "Places & Tips" : (isTempleTour ? "Sthala Puranam & Tips" : "Scope & Tips")}</span>
             </button>
           </div>
 
@@ -2959,7 +3005,7 @@ Please share availability and confirmed quote.`;
                     <span>{guideLabels.col1Title}</span>
                   </h3>
                   <span class="text-xs font-bold uppercase tracking-wider text-m3-on-surface-variant bg-m3-surface-container px-2 py-0.5 rounded-m3-sm border border-m3-outline-variant/50">
-                    {isTour ? "Sthala Puranam" : "Coverage"}
+                    {isWeekendTrip ? "Highlights" : (isTempleTour ? "Sthala Puranam" : "Coverage")}
                   </span>
                 </div>
 
@@ -2990,7 +3036,7 @@ Please share availability and confirmed quote.`;
 
               <div class="mt-2.5 pt-2 border-t border-m3-outline-variant/40 flex items-center gap-1.5 text-xs font-semibold text-m3-success">
                 <CheckCircle2 className="w-3.5 h-3.5 text-m3-success shrink-0" />
-                <span>{isTour ? (isPondicherry ? "Coastal tour circuit with flexible halts at Auroville, White Town & beaches" : "Sacred yatra circuit coordinated with verified sanctum pooja timings") : "Doorstep pickup & return across all Chennai neighborhoods"}</span>
+                <span>{isWeekendTrip ? "Leisure holiday circuit with flexible scenic photo & refreshment halts" : (isTour ? "Sacred yatra circuit coordinated with verified sanctum pooja timings" : "Doorstep pickup & return across all Chennai neighborhoods")}</span>
               </div>
             </div>
 
@@ -3003,7 +3049,7 @@ Please share availability and confirmed quote.`;
                     <span>{guideLabels.col2Title}</span>
                   </h3>
                   <span class="text-xs font-bold uppercase tracking-wider text-m3-on-surface-variant bg-m3-surface-container px-2 py-0.5 rounded-m3-sm border border-m3-outline-variant/50">
-                    {isTour ? "Darshan Slots" : "Operational SLA"}
+                    {isWeekendTrip ? "Visiting Hours" : (isTempleTour ? "Darshan Slots" : "Operational SLA")}
                   </span>
                 </div>
 
@@ -3055,7 +3101,7 @@ Please share availability and confirmed quote.`;
                     <span>{guideLabels.dressCodeLabel}</span>
                   </h3>
                   <span class="text-xs font-bold uppercase tracking-wider text-m3-on-surface-variant bg-m3-surface-container px-2 py-0.5 rounded-m3-sm border border-m3-outline-variant/50">
-                    {isTour ? "Mandatory Policy" : "Chauffeur Standard"}
+                    {isWeekendTrip ? "Travel Advice" : (isTempleTour ? "Mandatory Policy" : "Chauffeur Standard")}
                   </span>
                 </div>
 
@@ -3094,11 +3140,18 @@ Please share availability and confirmed quote.`;
                 )}
               </div>
 
-              {isTour ? (
+              {isTempleTour ? (
                 <div class="mt-2 p-2 bg-m3-tertiary-container/30 border border-m3-tertiary/30 rounded-m3-md text-xs text-m3-on-surface flex items-start gap-1.5">
                   <AlertCircle className="w-3.5 h-3.5 text-m3-tertiary shrink-0 mt-0.5" />
                   <span class="leading-snug">
                     <strong class="font-bold">Strict Rule:</strong> Western wear, jeans, shorts, and Bermudas are prohibited inside sanctums.
+                  </span>
+                </div>
+              ) : isWeekendTrip ? (
+                <div class="mt-2 p-2 bg-m3-surface-container border border-m3-outline-variant/60 rounded-m3-md text-xs text-m3-on-surface flex items-start gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                  <span class="leading-snug">
+                    <strong class="font-bold">Comfort First:</strong> Light cottons for coastal getaways; comfortable walking shoes & light woolens for hill stations.
                   </span>
                 </div>
               ) : (
@@ -3120,7 +3173,7 @@ Please share availability and confirmed quote.`;
                     <span>{guideLabels.tipsTitle}</span>
                   </h3>
                   <span class="text-xs font-bold uppercase tracking-wider text-m3-on-surface-variant bg-m3-surface-container px-2 py-0.5 rounded-m3-sm border border-m3-outline-variant/50">
-                    {isTour ? "Pilgrim Tips" : "Checklist"}
+                    {isWeekendTrip ? "Travel Tips" : (isTempleTour ? "Pilgrim Tips" : "Checklist")}
                   </span>
                 </div>
 

@@ -388,6 +388,9 @@ function resolveInitialDestination(drop, prefillDest, slug, sTitle) {
   if (text.includes('rameswaram') || text.includes('rameshwaram')) return 'Rameswaram';
   if (text.includes('sabarimala')) return 'Sabarimala';
   if (text.includes('tiruchendur')) return 'Tiruchendur';
+  if (text.includes('yelagiri')) return 'Yelagiri Hills';
+  if (text.includes('yercaud')) return 'Yercaud';
+  if (text.includes('chennai city') || text.includes('one-day-chennai')) return 'Chennai Sightseeing';
   if (text.includes('bangalore') || text.includes('bengaluru')) return 'Bangalore';
   if (text.includes('mysore') || text.includes('mysuru')) return 'Mysore';
   if (text.includes('coimbatore')) return 'Coimbatore';
@@ -507,6 +510,10 @@ export default function BookingEngine({
       slug.includes('tiruchendur') ||
       slug.includes('madurai') ||
       slug.includes('pondicherry') ||
+      slug.includes('yelagiri') ||
+      slug.includes('yercaud') ||
+      slug.includes('mahabalipuram') ||
+      slug.includes('weekend') ||
       title.includes('tour') ||
       title.includes('package') ||
       title.includes('darshan') ||
@@ -1412,9 +1419,9 @@ Please confirm chauffeur availability.`;
         <div className="p-4 sm:p-6 space-y-4 bg-white dark:bg-m3-surface transition-opacity duration-200 ease-out">
           {/* Centered Heading (M3 Title Large) */}
           <div className="text-center pb-0.5">
-            <h3 className="text-lg sm:text-xl font-bold font-heading text-m3-on-surface dark:text-white tracking-tight">
+            <h2 className="text-lg sm:text-xl font-bold font-heading text-m3-on-surface dark:text-white tracking-tight">
               {title || (detectedDestination ? `Book Your ${detectedDestination} Cab` : 'Book Your Trip')}
-            </h3>
+            </h2>
           </div>
 
           {/* 1. M3 Segmented Button */}

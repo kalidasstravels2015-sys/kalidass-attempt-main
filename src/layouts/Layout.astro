@@ -9,12 +9,14 @@ interface Props {
   schema?: object;
   keywords?: string;
   showFloatingActions?: boolean;
-  preloadHero?: { href: string; srcset?: string; sizes?: string };
+  preloadHero?: { href: string; srcset?: string; sizes?: string; media?: string };
 }
 
 import siteContent from "../data/siteContent.json";
 import FloatingActions from "../components/FloatingActions.astro";
 import BookingEnquiryModal from "../components/BookingEnquiryModal.astro";
+import AiFareAssistantModal from "../components/AiFareAssistantModal.astro";
+import GeminiIcon from "../components/GeminiIcon.astro";
 import AndroidPhoneIcon from "../components/AndroidPhoneIcon.astro";
 import { Phone, Menu, CheckCircle2, ShieldCheck, MapPin, Mail } from "lucide-react";
 
@@ -686,6 +688,7 @@ const unifiedSchemaGraph = {
         href={preloadHero.href}
         imagesrcset={preloadHero.srcset}
         imagesizes={preloadHero.sizes}
+        media={preloadHero.media}
         fetchpriority="high"
       />
     )}
@@ -693,14 +696,6 @@ const unifiedSchemaGraph = {
     <link
       rel="preload"
       href="/fonts/plus-jakarta-sans-latin.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <!-- Self-hosted Material Symbols Font Preload (Instant Icon Render) -->
-    <link
-      rel="preload"
-      href="/fonts/material-symbols-outlined.woff2"
       as="font"
       type="font/woff2"
       crossorigin
@@ -1570,7 +1565,6 @@ const unifiedSchemaGraph = {
                 class="h-9 min-[400px]:h-10 sm:h-11 md:h-12 w-auto object-contain"
                 width="273"
                 height="48"
-                fetchpriority="high"
                 loading="eager"
                 decoding="async"
               />
@@ -2176,7 +2170,7 @@ const unifiedSchemaGraph = {
               </svg>
               <div class="flex items-center gap-1.5">
                 <span class="text-xs font-bold tracking-tight text-m3-on-surface">Weekend &amp; Holidays</span>
-                <span class="px-1.5 py-0.2 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 text-[9px] font-bold">Getaways</span>
+                <span class="px-1.5 py-0.2 rounded-full bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 text-[9px] font-bold">Getaways</span>
               </div>
             </div>
             <svg id="weekend-chevron" class="w-3.5 h-3.5 text-m3-on-surface-variant transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2418,7 +2412,10 @@ const unifiedSchemaGraph = {
   <!-- Universal Booking & Enquiry Modal -->
   <BookingEnquiryModal />
 
-  <!-- Floating Quick Actions (Call & WhatsApp) -->
+  <!-- AI Fare Assistant Modal (Gemini) — Global -->
+  <AiFareAssistantModal />
+
+  <!-- Floating Quick Actions (Call & WhatsApp / AI Plan) -->
   {showFloatingActions && <FloatingActions />}
   </body>
 
@@ -2550,6 +2547,28 @@ const unifiedSchemaGraph = {
   </script>
 
 
+
+  <!-- Ask Gemini Modal Controller -->
+  <script is:inline>
+    (function () {
+      function openAiFareModal() {
+        var modal = document.getElementById('ai-fare-modal');
+        var modalBox = document.getElementById('ai-modal-box');
+        if (!modal || !modalBox) return;
+        modal.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+        modal.classList.add('flex');
+        requestAnimationFrame(function () {
+          modal.classList.add('opacity-100');
+          modal.classList.remove('opacity-0');
+          modalBox.classList.remove('translate-y-full', 'translate-x-full');
+          modal.setAttribute('aria-hidden', 'false');
+        });
+        document.body.style.overflow = 'hidden';
+      }
+
+      window.openAiFareModal = openAiFareModal;
+    })();
+  </script>
 
   <!-- Sticky Quick-Navigation Scroll Spy -->
   <script>

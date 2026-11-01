@@ -16,7 +16,7 @@ export default function TourBookingEngine({
   ...restProps
 }) {
   const slug = (serviceSlug || '').toLowerCase();
-  const isTempleTour = hideDestination !== undefined ? hideDestination : Boolean(
+  const isFixedTour = hideDestination !== undefined ? hideDestination : Boolean(
     slug.includes('tirupati') ||
     slug.includes('kanchipuram') ||
     slug.includes('thiruvannamalai') ||
@@ -27,7 +27,12 @@ export default function TourBookingEngine({
     slug.includes('chidambaram') ||
     slug.includes('vellore') ||
     slug.includes('tiruchendur') ||
-    slug.includes('madurai')
+    slug.includes('madurai') ||
+    slug.includes('pondicherry') ||
+    slug.includes('yelagiri') ||
+    slug.includes('yercaud') ||
+    slug.includes('mahabalipuram') ||
+    slug.includes('chennai-city')
   );
 
   return (
@@ -39,7 +44,7 @@ export default function TourBookingEngine({
         showPopularChips={false}
         forceEmptyLocations={forceEmptyLocations}
         lockDestination={false}
-        hideDestination={isTempleTour}
+        hideDestination={isFixedTour}
         pickupPlaceholder={pickupPlaceholder}
         serviceSlug={serviceSlug}
         serviceTitle={serviceTitle}

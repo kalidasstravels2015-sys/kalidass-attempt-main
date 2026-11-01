@@ -3,10 +3,9 @@ import Layout from '../../../layouts/Layout.astro';
 import Breadcrumbs from '../../../components/SEO/Breadcrumbs.astro';
 import ServiceExplainer3Step from '../../../components/ServiceExplainer3Step.astro';
 import FAQAccordion from '../../../components/FAQAccordion.astro';
-import WhatsAppButton from '../../../components/WhatsAppButton.astro';
-import { buildWhatsAppUrl } from '../../../utils/whatsapp';
 import OptimizedImage from '../../../components/OptimizedImage.astro';
 import GoogleRatingBadge from '../../../components/GoogleRatingBadge.astro';
+import VehicleCard from '../../../components/VehicleCard.astro';
 import { ChevronRight, ArrowRight, ShieldCheck, Palmtree, Compass, MapPin, Sparkles } from 'lucide-react';
 
 const title = "Weekend & Holiday Tour Packages from Chennai (From ₹2,200)";
@@ -431,7 +430,6 @@ const faqSchema = {
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {weekendPackages.map((pkg) => {
             const leafUrl = `/services/${pkg.slug}/`;
-            const waUrl = buildWhatsAppUrl(pkg.whatsappMsg);
 
             return (
               <div class="tariff-card bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 flex flex-col justify-between hover:shadow-m3-2 hover:border-m3-primary/30 transition-all overflow-hidden group">
@@ -451,62 +449,57 @@ const faqSchema = {
                       {pkg.badge}
                     </span>
 
-                    <!-- Duration Overlay -->
-                    <span class="absolute bottom-3 left-3 bg-white/95 text-m3-on-surface text-xs font-semibold px-2.5 py-1 rounded-m3-md shadow-xs z-20 flex items-center gap-1">
-                      <Compass className="w-3.5 h-3.5 text-m3-primary" />
-                      {pkg.duration}
+                    <!-- Duration Chip (clock icon, same as temple-tours) -->
+                    <span class="absolute bottom-3 left-3 inline-flex items-center gap-1.5 bg-white/95 backdrop-blur-md text-m3-on-surface text-xs font-semibold px-2.5 py-1 rounded-m3-full shadow-xs z-20">
+                      <svg class="w-3.5 h-3.5 text-m3-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                      <span>{pkg.duration}</span>
                     </span>
                   </a>
 
-                  <!-- Card Body -->
-                  <div class="p-5">
-                    <h3 class="text-base sm:text-lg font-bold text-m3-on-surface mb-2 leading-snug group-hover:text-m3-primary transition-colors">
-                      <a href={leafUrl} class="hover:underline">
+                  <!-- Card Content Body -->
+                  <div class="p-5 sm:p-6">
+                    <a href={leafUrl} class="block group/title">
+                      <h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading mb-1.5 group-hover/title:text-m3-primary transition-colors">
                         {pkg.name}
-                      </a>
-                    </h3>
-                    
-                    <p class="text-xs text-m3-on-surface-variant mb-4 leading-relaxed line-clamp-3">
+                      </h3>
+                    </a>
+                    <p class="text-xs text-m3-on-surface-variant mb-4 leading-relaxed">
                       {pkg.highlights}
                     </p>
 
-                    <!-- Fleet Tier Price Table -->
-                    <div class="bg-m3-surface-container-low rounded-m3-xl p-3 border border-m3-outline-variant/60 mb-4">
-                      <p class="text-[11px] font-bold text-m3-on-surface-variant uppercase tracking-wider mb-2">
-                        All-Inclusive Vehicle Rates
-                      </p>
-                      <div class="space-y-1.5 text-xs">
-                        {pkg.rates.map((tier) => (
-                          <div class="flex items-center justify-between py-1 border-b border-m3-outline-variant/30 last:border-0">
-                            <span class="text-m3-on-surface font-medium truncate max-w-[140px] sm:max-w-[160px]">
-                              {tier.type} <span class="text-[10px] text-m3-on-surface-variant hidden sm:inline">({tier.names.split('/')[0]})</span>
+                    <!-- Vehicle Price Slabs Grid (matching temple-tours format) -->
+                    <div class="bg-m3-surface-container-low p-3 sm:p-3.5 rounded-m3-xl border border-m3-outline-variant/60 space-y-2">
+                      <div class="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-m3-on-surface-variant border-b border-m3-outline-variant/60 pb-1.5">
+                        <span>Vehicle (Model) • Capacity</span>
+                        <span class="text-right">Flat Fare</span>
+                      </div>
+                      {pkg.rates.map((r) => (
+                        <div class="flex items-center justify-between text-xs py-1.5 border-b border-m3-outline-variant/40 last:border-0 gap-2">
+                          <div class="min-w-0 pr-1">
+                            <span class="font-bold text-m3-on-surface block text-xs truncate">
+                              {r.type} <span class="text-m3-on-surface-variant font-medium text-[11px]">({r.names})</span>
                             </span>
-                            <span class="font-extrabold text-m3-primary">
-                              {tier.price}
+                            <span class="text-[10px] text-m3-on-surface-variant font-medium flex items-center gap-1.5 mt-0.5">
+                              <span class="text-m3-success font-semibold">{r.passengers}</span>
+                              <span>•</span>
+                              <span>{r.baggage}</span>
                             </span>
                           </div>
-                        ))}
-                      </div>
+                          <strong class="text-m3-primary font-heading font-black text-sm shrink-0 whitespace-nowrap">{r.price}</strong>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
 
-                <!-- Footer CTAs -->
-                <div class="p-5 pt-0 flex flex-col gap-2">
-                  <a
-                    href={waUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-m3-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition-colors"
-                  >
-                    <span>Instant WhatsApp Booking</span>
-                  </a>
+                <!-- Card Actions: View Itinerary (single button, same as temple-tours) -->
+                <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-2 mt-auto">
                   <a
                     href={leafUrl}
-                    class="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface font-semibold text-xs border border-m3-outline-variant transition-colors"
+                    class="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-m3-full bg-m3-primary hover:bg-m3-primary/90 text-m3-on-primary text-xs font-bold transition-all shadow-m3-1"
                   >
-                    <span>View Full Itinerary &amp; Sightseeing</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <span>View Itinerary</span>
+                    <ChevronRight className="w-4 h-4" />
                   </a>
                 </div>
               </div>
@@ -516,7 +509,7 @@ const faqSchema = {
       </section>
 
       <!-- 4. FLEET GUIDE FOR HOLIDAY & HILL ROAD TRIPS -->
-      <section id="holiday-fleet" class="my-12 md:my-16 scroll-mt-40">
+      <section id="holiday-fleet" class="my-10 md:my-14 bg-m3-surface-container-low rounded-m3-2xl p-6 sm:p-8 border border-m3-outline-variant scroll-mt-40">
         <div class="text-center max-w-2xl mx-auto mb-8">
           <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container text-m3-on-surface text-xs font-bold uppercase tracking-wider mb-2 border border-m3-outline-variant">
             <span>Vehicles for Leisure &amp; Ghat Roads</span>
@@ -529,93 +522,72 @@ const faqSchema = {
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {holidayFleetGuide.map((car) => (
-            <div class="bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 p-5 flex flex-col justify-between">
-              <div>
-                <div class="h-36 sm:h-40 rounded-m3-xl overflow-hidden bg-m3-surface-container-high mb-4 relative">
-                  <OptimizedImage
-                    src={car.image}
-                    alt={car.names}
-                    class="w-full h-full object-cover"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                  <span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-m3-full bg-m3-inverse-surface/85 backdrop-blur-md text-white text-[10px] font-bold">
-                    {car.badge}
-                  </span>
-                </div>
-
-                <div class="flex items-center justify-between mb-1">
-                  <h3 class="font-bold text-m3-on-surface text-base">{car.type}</h3>
-                  <span class="text-xs font-medium text-m3-on-surface-variant">{car.passengers}</span>
-                </div>
-                <p class="text-xs text-m3-primary font-semibold mb-3">{car.names}</p>
-
-                <p class="text-xs text-m3-on-surface-variant mb-4 leading-relaxed">
-                  <span class="font-semibold text-m3-on-surface">Best for:</span> {car.bestFor}
-                </p>
-
-                <ul class="space-y-1.5 text-xs text-m3-on-surface mb-5">
-                  {car.features.map((feat) => (
-                    <li class="flex items-center gap-1.5">
-                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                      <span>{feat}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <a
-                href="/fleet/"
-                class="w-full py-2 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface font-semibold text-xs text-center border border-m3-outline-variant transition-colors"
-              >
-                View Vehicle Specs &amp; Luggage Space
-              </a>
-            </div>
-          ))}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {holidayFleetGuide.map((fleet) => {
+            const baggageClean = fleet.baggage.split('(')[0].replace('+ Handbags', '').replace('Large Suitcases', 'Bags').replace('Medium Bags', 'Bags').trim();
+            const startingRate = fleet.names.includes('Dzire') || fleet.names.includes('Etios') ? '₹2,200'
+              : fleet.names.includes('Ertiga') || fleet.names.includes('XL6') ? '₹3,200'
+              : fleet.names.includes('Crysta') ? '₹4,800'
+              : fleet.names.includes('Innova') ? '₹3,800'
+              : '₹6,000';
+            return (
+              <VehicleCard
+                className="w-full"
+                name={fleet.names}
+                image={fleet.image}
+                badge={fleet.badge}
+                seats={fleet.passengers}
+                baggage={baggageClean}
+                priceLabel="Starting From"
+                priceSubtext="1-Day (Tolls & Driver Inc.)"
+                price={startingRate}
+                actionText="View Rates"
+                actionHref="#weekend-packages"
+              />
+            );
+          })}
         </div>
       </section>
 
-      <!-- 5. WHY KALIDASS FOR HOLIDAY TOURS -->
-      <section id="holiday-promise" class="my-12 md:my-16 scroll-mt-40 bg-m3-surface-container-low rounded-m3-2xl p-6 sm:p-10 border border-m3-outline-variant">
-        <div class="max-w-3xl mx-auto text-center mb-8">
-          <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
-            Why Travelers Choose Kalidass for <span class="text-m3-primary">Vacation Road Trips</span>
+      <!-- 5. HOLIDAY TRAVEL GUARANTEES (4 PILLARS) -->
+      <section id="holiday-promise" class="my-10 md:my-14 bg-m3-surface-container-low rounded-m3-2xl p-6 sm:p-8 border border-m3-outline-variant scroll-mt-40">
+        <div class="text-center max-w-2xl mx-auto mb-6 sm:mb-8">
+          <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-m3-on-surface font-heading">
+            Why Travelers Choose Kalidass for Vacation Road Trips
           </h2>
-          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-2">
-            The comfort of having a private vehicle without the stress of driving on congested highways or winding ghat roads.
-          </p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
-          <div class="bg-m3-surface-container-lowest p-5 rounded-m3-xl border border-m3-outline-variant shadow-2xs">
-            <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-sm mb-3">
-              1
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             </div>
-            <h3 class="font-bold text-sm text-m3-on-surface mb-1.5">Flexible Photo &amp; Cafe Stops</h3>
-            <p class="text-xs text-m3-on-surface-variant leading-relaxed">
-              Want to stop for seaside breakfast on ECR, buy fresh mangoes in Yelagiri, or click photos at hairpin viewpoints? Your driver gladly accommodates your pace.
-            </p>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Flexible Photo & Cafe Stops</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Stop for seaside breakfast, fresh coconut, or viewpoints — your dedicated cab, your pace.</p>
           </div>
 
-          <div class="bg-m3-surface-container-lowest p-5 rounded-m3-xl border border-m3-outline-variant shadow-2xs">
-            <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-sm mb-3">
-              2
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
             </div>
-            <h3 class="font-bold text-sm text-m3-on-surface mb-1.5">Ghat-Road Certified Drivers</h3>
-            <p class="text-xs text-m3-on-surface-variant leading-relaxed">
-              Every driver assigned to hill station destinations is strictly verified with years of experience navigating hairpins, blind curves, and misty downhill descents safely.
-            </p>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Ghat-Road Certified Drivers</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Verified senior chauffeurs with 7+ years of hill-road experience for Yelagiri & Yercaud routes.</p>
           </div>
 
-          <div class="bg-m3-surface-container-lowest p-5 rounded-m3-xl border border-m3-outline-variant shadow-2xs">
-            <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-sm mb-3">
-              3
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
-            <h3 class="font-bold text-sm text-m3-on-surface mb-1.5">100% Tolls Included on 1-Day Trips</h3>
-            <p class="text-xs text-m3-on-surface-variant leading-relaxed">
-              Zero highway cash hassles. For 1-day tours to Pondicherry, Mahabalipuram, and Chennai city, all tolls and driver charges are pre-calculated upfront.
-            </p>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">100% Tolls Included on 1-Day Trips</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Zero highway cash hassles. All tolls pre-calculated upfront for Pondicherry, Mahabalipuram & Chennai city tours.</p>
+          </div>
+
+          <div class="bg-m3-surface p-4 rounded-m3-xl border border-m3-outline-variant shadow-xs">
+            <div class="w-8 h-8 rounded-m3-md bg-m3-surface-container-high text-m3-primary flex items-center justify-center mb-2.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+            <h3 class="text-xs sm:text-sm font-bold text-m3-on-surface font-heading">Nominal ₹500 Advance</h3>
+            <p class="text-micro sm:text-xs text-m3-on-surface-variant mt-1 leading-relaxed">Lock your vehicle with just ₹500 advance. Free rescheduling up to 6 hours before pickup.</p>
           </div>
         </div>
       </section>
@@ -636,28 +608,46 @@ const faqSchema = {
         </div>
       </section>
 
-      <!-- 7. BOTTOM CTA BANNER -->
-      <div class="mt-12 bg-gradient-to-r from-m3-primary to-blue-700 text-white rounded-m3-2xl p-6 sm:p-10 text-center shadow-m3-2">
-        <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold mb-3">
-          Ready for a Refreshing Weekend Road Trip?
-        </h2>
-        <p class="text-xs sm:text-sm text-white/90 max-w-xl mx-auto mb-6">
-          Book your private sanitized cab with a professional chauffeur today. Confirm on WhatsApp in less than 2 minutes with just ₹500 advance.
-        </p>
-        <div class="flex flex-wrap items-center justify-center gap-3">
-          <a
-            href="tel:+918939539211"
-            class="px-6 py-3 rounded-m3-full bg-white text-m3-primary font-bold text-xs sm:text-sm hover:bg-slate-100 transition-colors shadow-xs"
-          >
-            Call +91 89395 39211
-          </a>
-          <WhatsAppButton
-            message="Hi Kalidass Travels, I want to book a weekend tour package from Chennai."
-            label="Chat on WhatsApp"
-            className="px-6 py-3 rounded-m3-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm shadow-xs transition-colors"
-          />
+      <!-- Cross Navigation to Airport Taxi & Outstation Cabs -->
+      <section class="py-8 my-6 bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant/60 p-5 sm:p-7">
+        <div class="max-w-6xl mx-auto">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <a href="/services/chennai-airport-taxi/" class="p-5 rounded-m3-xl bg-m3-success-container/400/5 border border-m3-success/30 hover:border-m3-success/50 transition-all group flex items-center justify-between">
+              <div>
+                <div class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase text-m3-on-success-container mb-1">
+                  <svg class="w-3.5 h-3.5 text-m3-success shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3.5c-.5-.5-2.5 0-4 1.5L13.5 8.5 5.3 6.7c-.8-.2-1.6.2-2 .9l-.3.5c-.4.7-.2 1.6.4 2.1l5.7 4.3-2.6 2.6-2.6-.9c-.5-.2-1.1 0-1.5.4l-.2.2c-.4.4-.4 1.1 0 1.5l2.4 2.4 2.4 2.4c.4.4 1.1.4 1.5 0l.2-.2c.4-.4.6-1 .4-1.5l-.9-2.6 2.6-2.6 4.3 5.7c.5.6 1.4.8 2.1.4l.5-.3c.7-.4 1.1-1.2.9-2z"/>
+                  </svg>
+                  <span>Airport Transfers (MAA)</span>
+                </div>
+                <h3 class="text-base sm:text-lg font-bold text-m3-on-surface group-hover:text-m3-on-success-container transition-colors font-heading">
+                  Chennai Airport Taxi Transfers
+                </h3>
+                <p class="text-xs text-m3-on-surface-variant mt-0.5">Direct airport pickup for outstation visitors & holidaymakers heading to Chennai getaways.</p>
+              </div>
+              <ArrowRight className="w-5 h-5 text-m3-success group-hover:translate-x-1 transition-transform shrink-0" />
+            </a>
+
+            <a href="/services/outstation-cabs/" class="p-5 rounded-m3-xl bg-m3-surface-container border border-m3-outline-variant hover:border-m3-primary/50 transition-all group flex items-center justify-between">
+              <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold uppercase text-m3-primary mb-1">
+                  <svg class="w-3.5 h-3.5 text-m3-primary shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2 10.9 2 11.1 2 11.3V16c0 .6.4 1 1 1h2"/>
+                    <circle cx="7" cy="17" r="2"/>
+                    <circle cx="17" cy="17" r="2"/>
+                  </svg>
+                  <span>Per-KM Cabs &amp; One-Way</span>
+                </div>
+                <h3 class="text-base sm:text-lg font-bold text-m3-on-surface group-hover:text-m3-primary transition-colors font-heading">
+                  Outstation Cabs from ₹14 / KM
+                </h3>
+                <p class="text-xs text-m3-on-surface-variant mt-0.5">Sedans, Ertiga &amp; Innova Crysta for flexible highway trips across South India.</p>
+              </div>
+              <ArrowRight className="w-5 h-5 text-m3-primary group-hover:translate-x-1 transition-transform shrink-0" />
+            </a>
+          </div>
         </div>
-      </div>
+      </section>
 
     </div>
   </main>

@@ -35,7 +35,7 @@ const heroSlides = [
       {heroSlides.map((slide, index) => (
         <div
           class:list={[
-            "hero-slide-item absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out",
+            "hero-slide-item absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out",
             index === 0 ? "opacity-100 scale-100" : "opacity-0 scale-105 pointer-events-none"
           ]}
           data-index={index}
@@ -45,11 +45,12 @@ const heroSlides = [
             <OptimizedImage
               src={slide.image}
               alt={slide.alt}
-              class="w-full h-full object-cover object-center"
+              class="w-full h-full object-cover object-center hidden sm:block"
               loading="eager"
-              decoding="async"
+              decoding="sync"
               fetchpriority="high"
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1920px"
+              widths={[640, 800, 1200]}
+              sizes="(min-width: 640px) 100vw, 1920px"
               format="avif"
               quality={42}
             />
