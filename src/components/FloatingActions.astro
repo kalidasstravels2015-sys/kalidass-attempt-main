@@ -23,46 +23,25 @@ const whatsappUrl = `https://wa.me/${rawPhone}?text=${encodeURIComponent(whatsap
 ---
 
 <!-- Global Floating Contact & AI Actions -->
-<!-- Desktop: WhatsApp (Top) + AI Plan Pill (Bottom) -->
-<!-- Mobile: Call (Top, past hero) + AI Plan Pill (Bottom, always) -->
+<!-- Initial View: Phone + WhatsApp visible immediately -->
+<!-- On Scroll: AI Plan button reveals with 'AI Plan' below Gemini icon -->
 <div 
   id="floating-actions-container"
   class="fixed bottom-4 right-3 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end gap-2.5 sm:gap-3 pointer-events-none select-none pb-[env(safe-area-inset-bottom,0px)] pr-[env(safe-area-inset-right,0px)] transition-all duration-300 transform translate-y-0 opacity-100 will-change-transform"
   role="region"
   aria-label="Direct Booking & AI Helplines"
 >
-  <!-- 1. TOP BUTTON: WhatsApp (Desktop Only) -->
-  <a
-    href={whatsappUrl}
-    id="floating-whatsapp-btn"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="pointer-events-auto group relative hidden md:flex items-center justify-center w-14 h-14 rounded-full bg-[#25D366] hover:bg-[#20bd5a] active:bg-[#1da851] text-white shadow-m3-2 hover:shadow-m3-3 active:scale-95 transition-all duration-200 border border-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 cursor-pointer"
-    aria-label={`Chat on WhatsApp (${displayPhone})`}
-    title={`Chat on WhatsApp: ${displayPhone}`}
-  >
-    <WhatsAppIcon variant="white" className="w-7 h-7 text-white shrink-0 fill-current" />
-    
-    <!-- Desktop Tooltip on Hover -->
-    <span 
-      class="hidden md:group-hover:inline-flex md:group-focus-visible:inline-flex absolute right-full mr-2.5 top-1/2 -translate-y-1/2 whitespace-nowrap px-2.5 py-1 rounded-md bg-slate-900/90 text-white text-xs font-semibold shadow-md pointer-events-none transition-opacity duration-150 z-20 border border-white/10"
-      role="tooltip"
-    >
-      WhatsApp Us
-    </span>
-  </a>
-
-  <!-- 1. TOP BUTTON: Call Helpline (Mobile Only: Hidden at Hero top, reveals once scrolled past Hero) -->
+  <!-- 1. Call Helpline (Visible on initial view across Mobile & Desktop) -->
   <a
     href={callUrl}
     id="floating-call-btn"
-    class="pointer-events-auto group relative hidden md:hidden items-center justify-center w-12 h-12 rounded-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary shadow-m3-2 hover:shadow-m3-3 active:scale-95 transition-all duration-200 border border-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary/50 cursor-pointer"
+    class="pointer-events-auto group relative flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-m3-primary hover:bg-m3-primary/90 active:bg-m3-primary/80 text-m3-on-primary shadow-m3-2 hover:shadow-m3-3 active:scale-95 transition-all duration-200 border border-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary/50 cursor-pointer"
     aria-label={`Call Helpline (${displayPhone})`}
     title={`Call Helpline: ${displayPhone}`}
   >
-    <AndroidPhoneIcon className="w-5 h-5 text-white group-hover:rotate-12 transition-transform duration-300 shrink-0" />
+    <AndroidPhoneIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white group-hover:rotate-12 transition-transform duration-300 shrink-0" />
     
-    <!-- Desktop Tooltip on Hover (fallback) -->
+    <!-- Tooltip on Hover -->
     <span 
       class="hidden md:group-hover:inline-flex md:group-focus-visible:inline-flex absolute right-full mr-2.5 top-1/2 -translate-y-1/2 whitespace-nowrap px-2.5 py-1 rounded-md bg-slate-900/90 text-white text-xs font-semibold shadow-md pointer-events-none transition-opacity duration-150 z-20 border border-white/10"
       role="tooltip"
@@ -71,29 +50,47 @@ const whatsappUrl = `https://wa.me/${rawPhone}?text=${encodeURIComponent(whatsap
     </span>
   </a>
 
-  <!-- 2. BOTTOM BUTTON: AI Plan Extended Pill FAB (Always visible on Both Mobile & Desktop) -->
+  <!-- 2. WhatsApp Button (Visible on initial view across Mobile & Desktop) -->
+  <a
+    href={whatsappUrl}
+    id="floating-whatsapp-btn"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="pointer-events-auto group relative flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#25D366] hover:bg-[#20bd5a] active:bg-[#1da851] text-white shadow-m3-2 hover:shadow-m3-3 active:scale-95 transition-all duration-200 border border-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 cursor-pointer"
+    aria-label={`Chat on WhatsApp (${displayPhone})`}
+    title={`Chat on WhatsApp: ${displayPhone}`}
+  >
+    <WhatsAppIcon variant="white" className="w-6 h-6 sm:w-7 sm:h-7 text-white shrink-0 fill-current" />
+    
+    <!-- Tooltip on Hover -->
+    <span 
+      class="hidden md:group-hover:inline-flex md:group-focus-visible:inline-flex absolute right-full mr-2.5 top-1/2 -translate-y-1/2 whitespace-nowrap px-2.5 py-1 rounded-md bg-slate-900/90 text-white text-xs font-semibold shadow-md pointer-events-none transition-opacity duration-150 z-20 border border-white/10"
+      role="tooltip"
+    >
+      WhatsApp Us
+    </span>
+  </a>
+
+  <!-- 3. AI Plan Button (Reveals on scroll, with 'AI Plan' text below Gemini icon) -->
   <button
     type="button"
     id="floating-ai-plan-btn"
-    class="pointer-events-auto group relative flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full bg-white dark:bg-[#1E1F20] text-slate-800 dark:text-white shadow-m3-2 hover:shadow-m3-3 active:scale-95 transition-all duration-200 border border-[#4285F4]/40 hover:border-[#4285F4]/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4285F4]/50 cursor-pointer select-none"
+    class="pointer-events-none group relative flex flex-col items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white dark:bg-[#1E1F20] text-slate-800 dark:text-white shadow-m3-2 hover:shadow-m3-3 active:scale-95 transition-all duration-300 border border-[#4285F4]/40 hover:border-[#4285F4]/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4285F4]/50 cursor-pointer select-none opacity-0 scale-90 translate-y-2 pointer-events-none"
     aria-label="AI Plan - Plan trip with AI Assistant"
     title="Plan your journey & calculate fares with AI Assistant"
   >
     <!-- Gemini Sparkle Icon with animated attention pulse -->
     <span class="relative flex items-center justify-center shrink-0">
-      <GeminiIcon class="w-5 h-5 sm:w-5.5 sm:h-5.5" />
-      <span class="ai-fab-pulse absolute -inset-1.5 rounded-full border border-[#4285F4]/50 animate-ping pointer-events-none" aria-hidden="true"></span>
+      <GeminiIcon class="w-4 h-4 sm:w-5 sm:h-5" />
+      <span class="ai-fab-pulse absolute -inset-1 rounded-full border border-[#4285F4]/50 animate-ping pointer-events-none" aria-hidden="true"></span>
     </span>
     
-    <!-- AI Plan Text Label -->
-    <span class="font-bold text-xs sm:text-sm tracking-tight text-slate-900 dark:text-slate-100 whitespace-nowrap">
+    <!-- AI Plan Text Label Below Icon -->
+    <span class="font-bold text-[9px] sm:text-[10px] tracking-tight text-slate-900 dark:text-slate-100 leading-none mt-0.5 whitespace-nowrap">
       AI Plan
     </span>
 
-    <!-- Subtle colored dot indicator -->
-    <span class="w-1.5 h-1.5 rounded-full bg-[#4285F4] animate-pulse"></span>
-
-    <!-- Desktop Tooltip on Hover -->
+    <!-- Tooltip on Hover -->
     <span 
       class="hidden md:group-hover:inline-flex md:group-focus-visible:inline-flex absolute right-full mr-2.5 top-1/2 -translate-y-1/2 whitespace-nowrap px-2.5 py-1 rounded-md bg-slate-900/90 text-white text-xs font-semibold shadow-md pointer-events-none transition-opacity duration-150 z-20 border border-white/10"
       role="tooltip"
@@ -106,7 +103,6 @@ const whatsappUrl = `https://wa.me/${rawPhone}?text=${encodeURIComponent(whatsap
 <script>
   function initFloatingActionsController() {
     const container = document.getElementById('floating-actions-container');
-    const callBtn = document.getElementById('floating-call-btn');
     const aiPlanBtn = document.getElementById('floating-ai-plan-btn');
     if (!container) return;
 
@@ -125,66 +121,36 @@ const whatsappUrl = `https://wa.me/${rawPhone}?text=${encodeURIComponent(whatsap
       });
     }
 
-    let lastScrollY = window.scrollY;
     let isInputFocused = false;
     let ticking = false;
 
-    // Thresholds
-    const HERO_SCROLL_THRESHOLD = 260; // Past header Call button & Hero booking card
-    const SCROLL_DELTA_THRESHOLD = 8;  // Minimum scroll movement to trigger hide/show
+    // Reveal AI Plan button when scrolled past 60px
+    const SCROLL_THRESHOLD = 60;
 
     function updateVisibility() {
+      if (!container) return;
       const currentScrollY = window.scrollY;
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      const isNearBottom = currentScrollY + windowHeight >= documentHeight - 150;
-      const isPastHero = currentScrollY > HERO_SCROLL_THRESHOLD;
 
-      // 1. Mobile Call FAB: Hidden at the top of the page (Hero) because header Call button is visible.
-      // Reveals on mobile once user scrolls past the Hero booking section.
-      if (callBtn) {
-        if (window.innerWidth < 768) {
-          if (!isPastHero) {
-            callBtn.classList.add('hidden');
-            callBtn.classList.remove('flex');
-          } else {
-            callBtn.classList.remove('hidden');
-            callBtn.classList.add('flex');
-          }
+      // 1. AI Plan Button: Hidden on initial view, smoothly reveals on scroll
+      if (aiPlanBtn) {
+        if (currentScrollY > SCROLL_THRESHOLD) {
+          aiPlanBtn.classList.remove('opacity-0', 'scale-90', 'translate-y-2', 'pointer-events-none');
+          aiPlanBtn.classList.add('opacity-100', 'scale-100', 'translate-y-0', 'pointer-events-auto');
         } else {
-          callBtn.classList.add('hidden');
-          callBtn.classList.remove('flex');
+          aiPlanBtn.classList.remove('opacity-100', 'scale-100', 'translate-y-0', 'pointer-events-auto');
+          aiPlanBtn.classList.add('opacity-0', 'scale-90', 'translate-y-2', 'pointer-events-none');
         }
       }
 
-      // 2. Form Input Protection: Hide dock when user is typing/booking so inputs & autocomplete are never blocked
+      // 2. Form Input Protection: Hide dock when typing/booking so inputs & mobile keyboard are never blocked
       if (isInputFocused) {
         container.classList.add('translate-y-28', 'opacity-0', 'pointer-events-none');
         container.classList.remove('translate-y-0', 'opacity-100');
-        ticking = false;
-        return;
-      }
-
-      // 3. Smart Scroll Direction Behavior (Mobile & Desktop)
-      const delta = currentScrollY - lastScrollY;
-
-      if (isNearBottom) {
-        // Always reveal near bottom of page so user can easily convert
+      } else {
         container.classList.remove('translate-y-28', 'opacity-0', 'pointer-events-none');
         container.classList.add('translate-y-0', 'opacity-100');
-      } else if (Math.abs(delta) > SCROLL_DELTA_THRESHOLD) {
-        if (delta > 0 && currentScrollY > 100) {
-          // Scrolling DOWN -> User is reading content -> Auto-hide to keep view unobstructed
-          container.classList.add('translate-y-28', 'opacity-0', 'pointer-events-none');
-          container.classList.remove('translate-y-0', 'opacity-100');
-        } else if (delta < 0) {
-          // Scrolling UP -> User looking for contact/action -> Smoothly reveal
-          container.classList.remove('translate-y-28', 'opacity-0', 'pointer-events-none');
-          container.classList.add('translate-y-0', 'opacity-100');
-        }
       }
 
-      lastScrollY = currentScrollY;
       ticking = false;
     }
 
@@ -208,7 +174,6 @@ const whatsappUrl = `https://wa.me/${rawPhone}?text=${encodeURIComponent(whatsap
       const target = e.target as HTMLElement | null;
       if (target && (target.tagName === 'INPUT' || target.tagName === 'SELECT' || target.tagName === 'TEXTAREA')) {
         isInputFocused = false;
-        // slight delay to prevent flicker when switching between booking inputs
         setTimeout(() => {
           if (!isInputFocused) updateVisibility();
         }, 150);
