@@ -9,7 +9,6 @@ import OptimizedImage from "../../components/OptimizedImage.astro";
 import HeroVisualCard from "../../components/HeroVisualCard.astro";
 import { WHATSAPP_CONFIG } from "../../utils/whatsapp";
 import {
-  Phone,
   ShieldCheck,
   CheckCircle2,
   MapPin,
@@ -854,27 +853,6 @@ const schema = {
             <GoogleRatingBadge />
           </div>
 
-          <!-- Mobile Hero Instant Action CTAs (Call & WhatsApp) -->
-          <div class="mt-3 flex items-center justify-center gap-2 px-2">
-            <a
-              href="tel:+918939539211"
-              class="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full bg-m3-primary hover:bg-m3-primary/90 text-white font-bold text-xs shadow-m3-1 active:scale-95 transition-transform"
-              aria-label="Call Dispatch Desk: +91 89395 39211"
-            >
-              <Phone className="w-3.5 h-3.5 text-white shrink-0" />
-              <span>Call 89395 39211</span>
-            </a>
-            <a
-              href="https://wa.me/918939539211?text=Hi%20Kalidass%20Travels%2C%20I%20need%20a%20Tempo%20Traveller%20quote%20for%20Chennai%20trip."
-              target="_blank"
-              rel="noopener noreferrer"
-              class="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs shadow-m3-1 active:scale-95 transition-transform"
-              aria-label="WhatsApp Instant Quote"
-            >
-              <WhatsAppIcon variant="white" className="w-4 h-4 text-white shrink-0 fill-current" />
-              <span>WhatsApp Quote</span>
-            </a>
-          </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">

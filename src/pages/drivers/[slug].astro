@@ -116,6 +116,7 @@ const faqSchema = {
   title={`${driver.name} – Verified Chauffeur (${driver.experience}) | Kalidass Travels`}
   description={`Verified driver profile for ${driver.name}: ${driver.experience}, ${driver.specialty}. Police verified (PVC cleared), ${driver.trips} trips, rating ${driver.rating}/5 at Kalidass Travels Chennai.`}
   schema={[personSchema, faqSchema]}
+  whatsappMsg={`Hi Kalidass Travels, I would like to request chauffeur ${driver.name} for my upcoming travel.`}
 >
   <Breadcrumbs items={breadcrumbItems} />
 

@@ -64,6 +64,7 @@ export default defineConfig({
         } else if (
           url.includes('/services/chennai-airport-taxi/') ||
           url.includes('/services/outstation-cabs/') ||
+          url.includes('/services/tempo-traveller-rental-chennai/') ||
           url.includes('/services/tirupati-package/') ||
           url.includes('/tariff/')
         ) {
@@ -75,6 +76,11 @@ export default defineConfig({
           url.includes('/services/thiruvannamalai-girivalam-trip/') ||
           url.includes('/services/sabarimala-trip/') ||
           url.includes('/services/rameswaram-2-days/') ||
+          url.includes('/services/tiruchendur-temple-tour/') ||
+          url.includes('/services/madurai-meenakshi-temple-tour/') ||
+          url.includes('/services/chennai-to-madurai-taxi/') ||
+          url.includes('/services/chennai-to-bangalore-taxi/') ||
+          url.includes('/services/pondicherry-one-day-trip/') ||
           url.includes('/services/acting-drivers/') ||
           url.includes('/services/corporate/')
         ) {

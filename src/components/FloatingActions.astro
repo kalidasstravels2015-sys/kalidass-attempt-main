@@ -1,7 +1,7 @@
 ---
 import WhatsAppIcon from './WhatsAppIcon.astro';
 import GeminiIcon from './GeminiIcon.astro';
-import { WHATSAPP_CONFIG } from '../utils/whatsapp';
+import { WHATSAPP_CONFIG, getPageWhatsAppMessage } from '../utils/whatsapp';
 
 interface Props {
   phone?: string;
@@ -11,11 +11,13 @@ interface Props {
 
 const {
   displayPhone = WHATSAPP_CONFIG.formattedPhone,
-  whatsappMsg = 'Hi Kalidass Travels, I need cab quotation and availability details.',
+  whatsappMsg,
 } = Astro.props;
 
+const currentPath = Astro.url.pathname;
+const resolvedWhatsAppMsg = whatsappMsg || getPageWhatsAppMessage(currentPath);
 const rawPhone = WHATSAPP_CONFIG.phone;
-const whatsappUrl = `https://wa.me/${rawPhone}?text=${encodeURIComponent(whatsappMsg)}`;
+const whatsappUrl = `https://wa.me/${rawPhone}?text=${encodeURIComponent(resolvedWhatsAppMsg)}`;
 ---
 
 <!-- Global Floating Contact & AI Actions -->

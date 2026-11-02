@@ -70,11 +70,12 @@ const isYelagiri = service.slug === 'yelagiri-hills-weekend';
 const isYercaud = service.slug === 'yercaud-hills-weekend';
 const isMahabalipuram = service.slug === 'mahabalipuram-ecr-temple-route';
 const isChennaiCity = service.slug === 'one-day-chennai-city-tour';
+const isBangalore = service.slug === 'chennai-to-bangalore-taxi';
 
-const isWeekendTrip = isPondicherry || isYelagiri || isYercaud || isMahabalipuram || isChennaiCity;
+const isWeekendTrip = isPondicherry || isYelagiri || isYercaud || isMahabalipuram || isChennaiCity || isBangalore;
 const isTempleTour = service.category === 'Temple Tours' || isTirupati || isThiruvannamalai || isKanchipuram || isNavagraha || isRameswaram || isSabarimala || isChidambaram || isVellore || isTiruchendur;
 
-const hasDedicatedEngine = isTirupati || isThiruvannamalai || isKanchipuram || isNavagraha || isRameswaram || isSabarimala || isChidambaram || isVellore || isPondicherry || isTiruchendur || isYelagiri || isYercaud || isMahabalipuram || isChennaiCity;
+const hasDedicatedEngine = isTirupati || isThiruvannamalai || isKanchipuram || isNavagraha || isRameswaram || isSabarimala || isChidambaram || isVellore || isPondicherry || isTiruchendur || isYelagiri || isYercaud || isMahabalipuram || isChennaiCity || isBangalore;
 const isTour = isTempleTour || isWeekendTrip || ['Temple Tours', 'Popular Destinations'].includes(service.category) || hasDedicatedEngine;
 
 const guideLabels = isTempleTour ? {
@@ -302,6 +303,18 @@ const getVehicleBaggage = (name: string) => {
     return '2 Bags';
   }
   return '2–3 Bags';
+};
+
+// Helper to get simple, punchy book button label (e.g. "Book Sedan", "Book Ertiga")
+const getVehicleActionLabel = (name: string) => {
+  const v = (name || '').toLowerCase();
+  if (v.includes('tempo') || v.includes('traveller') || v === 'tt') return 'Book Tempo';
+  if (v.includes('crysta')) return 'Book Crysta';
+  if (v.includes('innova')) return 'Book Innova';
+  if (v.includes('ertiga') || v.includes('xl6')) return 'Book Ertiga';
+  if (v.includes('sedan') || v.includes('dzire') || v.includes('etios') || v.includes('swift')) return 'Book Sedan';
+  const clean = (name || '').split('/')[0].replace(/\(.*?\)/g, '').trim();
+  return clean ? `Book ${clean}` : 'Book Now';
 };
 
 // Multi-day & stay duration package rates for all pilgrimage packages
@@ -1431,7 +1444,7 @@ if (isTour) {
       "@id": "https://kalidasstravels.in/#localbusiness",
     },
     "providerMobility": "dynamic",
-    "serviceType": service.serviceType || "Pilgrimage Outstation Cab Package",
+    "serviceType": service.serviceType || (isWeekendTrip ? "Weekend & Holiday Tour Cab Package" : "Pilgrimage Outstation Cab Package"),
     "areaServed": areas,
     "url": `https://kalidasstravels.in/services/${service.slug}/`,
     "priceRange": dynamicPriceRange,
@@ -1442,7 +1455,7 @@ if (isTour) {
   }
   pageSchemas.push(taxiServiceSchema);
 
-  // 2. TouristTrip node: handles the pilgrimage route itinerary, sacred stops & devotion
+  // 2. TouristTrip node: handles the route itinerary, attractions & traveler type
   const touristTripSchema: Record<string, any> = {
     "@type": "TouristTrip",
     "@id": `https://kalidasstravels.in/services/${service.slug}/#trip`,
@@ -1453,7 +1466,9 @@ if (isTour) {
       "@id": "https://kalidasstravels.in/#localbusiness",
     },
     "url": `https://kalidasstravels.in/services/${service.slug}/`,
-    "touristType": ["Pilgrims", "Devotees", "Families"]
+    "touristType": isWeekendTrip 
+      ? ["Tourists", "Families", "Couples", "Holidaymakers"] 
+      : ["Pilgrims", "Devotees", "Families"]
   };
   if (service.routePlan && service.routePlan.length > 0) {
     touristTripSchema.itinerary = {
@@ -1475,30 +1490,33 @@ if (isTour) {
   }
   pageSchemas.push(touristTripSchema);
 
-  // 3. Product node: enables Google Rich Snippet Search Review Stars & Price Badge
-  const productSchema: Record<string, any> = {
-    "@type": "Product",
-    "@id": `https://kalidasstravels.in/services/${service.slug}/#product`,
-    "name": service.metaTitle || `${service.title} – Private Chauffeur Package`,
-    "description": service.metaDescription || service.overview,
-    "image": heroImage ? `https://kalidasstravels.in${heroImage}` : "https://kalidasstravels.in/images/logo.webp",
-    "sku": `KT-${service.slug.toUpperCase()}`,
-    "brand": {
-      "@type": "Brand",
-      "name": "Kalidass Travels"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "5.0",
-      "reviewCount": "12",
-      "bestRating": "5",
-      "worstRating": "1"
+  // 3. Product node: enables Google Rich Snippet Search Review Stars & Price Badge for temple/general tours
+  // Omitted for weekend trips to keep clean TouristTrip + TaxiService schema per design
+  if (!isWeekendTrip) {
+    const productSchema: Record<string, any> = {
+      "@type": "Product",
+      "@id": `https://kalidasstravels.in/services/${service.slug}/#product`,
+      "name": service.metaTitle || `${service.title} – Private Chauffeur Package`,
+      "description": service.metaDescription || service.overview,
+      "image": heroImage ? `https://kalidasstravels.in${heroImage}` : "https://kalidasstravels.in/images/logo.webp",
+      "sku": `KT-${service.slug.toUpperCase()}`,
+      "brand": {
+        "@type": "Brand",
+        "name": "Kalidass Travels"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5.0",
+        "reviewCount": "12",
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    };
+    if (offersData) {
+      productSchema.offers = offersData;
     }
-  };
-  if (offersData) {
-    productSchema.offers = offersData;
+    pageSchemas.push(productSchema);
   }
-  pageSchemas.push(productSchema);
 } else {
   // Non-tour services: Acting Drivers or regular Taxi Transfers
   const singleSchema: Record<string, any> = {
@@ -1695,6 +1713,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
   ogImage={`/og/${service.slug}.jpg`}
   type="article"
   schema={pageSchemas}
+  whatsappMsg={service.whatsappMsg || `Hi Kalidass Travels, I want to book the ${service.title} package. Please share vehicle availability and quotation.`}
 >
   <main class="bg-m3-surface-container-low text-m3-on-surface min-h-screen pb-16 font-sans">
     
@@ -2156,7 +2175,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
               class="px-3 py-1.5 rounded-m3-full bg-m3-surface text-m3-on-surface-variant hover:bg-m3-surface-container-high hover:text-m3-on-surface border border-m3-outline-variant transition-colors shrink-0 font-medium flex items-center gap-1.5"
             >
               <FileText className="w-3.5 h-3.5" />
-              <span>Darshan Guide</span>
+              <span>{isTempleTour ? "Darshan Guide" : (isWeekendTrip ? "Sightseeing Guide" : "Travel Guide")}</span>
             </a>
             <a
               href="#faq"
@@ -2467,7 +2486,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                       priceLabel={cardPriceLabel}
                       priceSubtext={cardPriceSubtext}
                       price={flatPrice}
-                      actionText={flatPrice ? `Book ${vehicleName.split('/')[0].trim()} • ${flatPrice}` : `Book ${vehicleName.split('/')[0].trim()}`}
+                      actionText={getVehicleActionLabel(vehicleName)}
                       selectVehicleId={engineVehId}
                       selectPax={paxCount}
                     />
@@ -2903,7 +2922,13 @@ Please share availability and confirmed quote.`;
                 <Compass className="w-5 h-5 sm:w-6 sm:h-6 text-m3-primary shrink-0" />
                 <span>{shortName} Route Schedule &amp; Key Stops</span>
               </h2>
-              <p class="text-xs text-m3-on-surface-variant mt-0.5">Optimized timeline designed to ensure timely darshan entry</p>
+              <p class="text-xs text-m3-on-surface-variant mt-0.5">
+                {isTempleTour 
+                  ? "Optimized timeline designed to ensure timely darshan entry" 
+                  : (isWeekendTrip 
+                    ? "Flexible timeline tailored for scenic sightseeing, photo stops & relaxed dining" 
+                    : "Timely door-to-door transit schedule")}
+              </p>
             </div>
             {service.duration && (
               <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface-container-high text-m3-on-surface text-xs font-semibold">
@@ -2959,9 +2984,11 @@ Please share availability and confirmed quote.`;
               <span>{shortName} {guideLabels.sectionTitle}</span>
             </h2>
             <p class="text-xs text-m3-on-surface-variant mt-0.5">
-              {isTour 
+              {isTempleTour 
                 ? "Essential darshan timings, dress code regulations & practical pilgrim tips" 
-                : "Operational timings, chauffeur standards & verified booking guidelines"}
+                : (isWeekendTrip 
+                  ? "Essential visiting hours, packing checklist & holiday road trip tips" 
+                  : "Operational timings, chauffeur standards & verified booking guidelines")}
             </p>
           </div>
 
@@ -3199,7 +3226,9 @@ Please share availability and confirmed quote.`;
               </div>
 
               <div class="mt-2.5 pt-2 border-t border-m3-outline-variant/40 flex items-center justify-between text-xs text-m3-on-surface-variant">
-                <span class="font-semibold text-m3-success">Assistance during darshan &amp; temple queues</span>
+                <span class="font-semibold text-m3-success">
+                  {isTempleTour ? "Assistance during darshan & temple queues" : "Dedicated chauffeur on standby throughout trip"}
+                </span>
                 <span class="font-bold text-m3-primary">24/7 Helpline</span>
               </div>
             </div>
@@ -3303,7 +3332,13 @@ Please share availability and confirmed quote.`;
               <HelpCircle className="w-5 h-5 text-m3-primary shrink-0" />
               <span>{shortName} FAQs &amp; Booking Information</span>
             </h2>
-            <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">Instant answers to common booking, darshan timings &amp; permit queries</p>
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">
+              {isTempleTour 
+                ? "Instant answers to common booking, darshan timings & permit queries" 
+                : (isWeekendTrip 
+                  ? "Instant answers to common booking, sightseeing stops & highway toll queries" 
+                  : "Instant answers to common booking, rates & vehicle queries")}
+            </p>
           </div>
 
           <FAQAccordion items={service.faq} columns={1} name="faq-accordion" />

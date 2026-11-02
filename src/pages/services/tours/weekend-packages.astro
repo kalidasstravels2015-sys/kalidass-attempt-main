@@ -305,6 +305,32 @@ const faqSchema = {
     }
   }))
 };
+
+const itemListSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "@id": "https://kalidasstravels.in/services/tours/weekend-packages/#trips",
+  "name": "Weekend & Holiday Tour Packages from Chennai",
+  "description": "Curated list of top weekend getaways, hill stations, and coastal road trip packages by private cab from Chennai.",
+  "numberOfItems": weekendPackages.length,
+  "itemListElement": weekendPackages.map((pkg, idx) => ({
+    "@type": "ListItem",
+    "position": idx + 1,
+    "item": {
+      "@type": "TouristTrip",
+      "name": pkg.name,
+      "description": pkg.highlights,
+      "url": `https://kalidasstravels.in/services/${pkg.slug}/`,
+      "touristType": ["Tourists", "Families", "Couples", "Holidaymakers"],
+      "offers": {
+        "@type": "AggregateOffer",
+        "priceCurrency": "INR",
+        "lowPrice": pkg.rates[0]?.price?.replace(/[^\d]/g, '') || "2200",
+        "offerCount": pkg.rates.length
+      }
+    }
+  }))
+};
 ---
 
 <Layout 
@@ -312,8 +338,8 @@ const faqSchema = {
   description={description}
   keywords={keywords}
   image="/images/temple/pondicherry.webp"
-  ogImage="/og/temple-tours.jpg"
-  schema={[schema, faqSchema]}
+  ogImage="/images/temple/pondicherry.webp"
+  schema={[schema, itemListSchema, faqSchema]}
 >
   <Breadcrumbs items={breadcrumbItems} />
 

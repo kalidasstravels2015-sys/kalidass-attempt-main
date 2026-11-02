@@ -110,3 +110,146 @@ export function buildMapsBlock(
     (directions ? `• 🧭 Route Map: ${directions}`    : '')
   );
 }
+
+/**
+ * Resolves a context-relevant, natural WhatsApp prefilled message based on the page pathname,
+ * optional page title, and explicit custom override.
+ */
+export function getPageWhatsAppMessage(
+  pathname: string = '',
+  pageTitle?: string,
+  customOverride?: string
+): string {
+  if (customOverride && customOverride.trim().length > 0) {
+    return customOverride.trim();
+  }
+
+  // Normalize path (strip query/hash and trailing slashes for consistent matching)
+  const path = (pathname || '')
+    .split('?')[0]
+    .split('#')[0]
+    .toLowerCase()
+    .replace(/\/+$/, '') || '/';
+
+  // 1. Airport Taxi
+  if (path.includes('airport')) {
+    return 'Hi Kalidass Travels, I need a Chennai Airport Taxi pickup / drop. Please share fare quotation and cab availability.';
+  }
+
+  // 2. Tempo Traveller / Force Urbania
+  if (path.includes('tempo-traveller') || path.includes('urbania')) {
+    return 'Hi Kalidass Travels, I am looking to hire a Tempo Traveller / Force Urbania. Please share seating options, tariff, and availability.';
+  }
+
+  // 3. Outstation Cabs
+  if (path.includes('outstation')) {
+    return 'Hi Kalidass Travels, I am looking for an outstation cab from Chennai. Please share tariff and available vehicle options.';
+  }
+
+  // 4. Corporate Travel
+  if (path.includes('corporate')) {
+    return 'Hi Kalidass Travels, I would like to inquire about corporate travel and employee transport services.';
+  }
+
+  // 5. Acting Drivers
+  if (path.includes('acting-driver')) {
+    return 'Hi Kalidass Travels, I need a professional acting driver for my car in Chennai. Please share hourly/day rates and driver availability.';
+  }
+
+  // 6. Specific Temple & Pilgrimage Tours
+  if (
+    path.includes('temple-tour') ||
+    path.includes('tirupati') ||
+    path.includes('navagraha') ||
+    path.includes('girivalam') ||
+    path.includes('sabarimala') ||
+    path.includes('rameswaram') ||
+    path.includes('kumbakonam') ||
+    path.includes('kanchipuram') ||
+    path.includes('vellore') ||
+    path.includes('chidambaram') ||
+    path.includes('tiruchendur')
+  ) {
+    return 'Hi Kalidass Travels, I am interested in your South India temple tour packages. Please share itineraries, vehicle options, and pricing.';
+  }
+
+  // 7. Weekend & Holiday Packages
+  if (
+    path.includes('weekend') ||
+    path.includes('pondicherry') ||
+    path.includes('mahabalipuram') ||
+    path.includes('yelagiri') ||
+    path.includes('yercaud') ||
+    path.includes('city-tour') ||
+    path.includes('bangalore')
+  ) {
+    return 'Hi Kalidass Travels, I am planning a weekend getaway from Chennai. Please share available tour packages and cab quotes.';
+  }
+
+  // 8. Tours directory
+  if (path.startsWith('/services/tours')) {
+    return 'Hi Kalidass Travels, I am interested in exploring your tour packages and outstation holiday trips. Please share details.';
+  }
+
+  // 9. General Services hub or dynamic service slug
+  if (path.startsWith('/services/')) {
+    const slug = path.replace('/services/', '');
+    if (slug) {
+      const cleanSlug = slug.replace(/-/g, ' ');
+      const formattedTitle = pageTitle
+        ? pageTitle.replace(/\s*\|.*$/, '').replace(/\s*-.*$/, '').trim()
+        : cleanSlug;
+      return `Hi Kalidass Travels, I want to book the ${formattedTitle} package. Please share vehicle availability and quotation.`;
+    }
+    return 'Hi Kalidass Travels, I am exploring your cab services and tour packages. Please assist me with vehicle availability and rates.';
+  }
+
+  if (path === '/services') {
+    return 'Hi Kalidass Travels, I am exploring your cab services and tour packages. Please assist me with vehicle availability and rates.';
+  }
+
+  // 10. Tariff & Fare Calculator
+  if (path.includes('tariff')) {
+    return 'Hi Kalidass Travels, I was reviewing your tariff chart on the website and would like a customized fare estimate for my travel.';
+  }
+
+  if (path.includes('calculator')) {
+    return 'Hi Kalidass Travels, I calculated my trip estimate on your website calculator and would like to confirm cab availability and booking.';
+  }
+
+  // 11. Fleet
+  if (path.includes('fleet')) {
+    return 'Hi Kalidass Travels, I am looking to book a vehicle from your fleet. Please share available car models (Sedan / SUV / Tempo) and rates.';
+  }
+
+  // 12. Partner & Driver Join
+  if (path.includes('attach-cab')) {
+    return 'Hi Kalidass Travels, I want to attach my commercial vehicle with your fleet. Please share the partner onboarding process and daily duty details.';
+  }
+
+  if (path.includes('driver-join')) {
+    return 'Hi Kalidass Travels, I am an experienced chauffeur and would like to join Kalidass Travels. Please share driver registration details.';
+  }
+
+  if (path.startsWith('/drivers/')) {
+    const driverSlug = path.replace('/drivers/', '');
+    if (driverSlug) {
+      const formattedName = pageTitle
+        ? pageTitle.replace(/\s*\|.*$/, '').replace(/\s*-.*$/, '').trim()
+        : driverSlug.replace(/-/g, ' ');
+      return `Hi Kalidass Travels, I would like to request chauffeur ${formattedName} for my upcoming travel.`;
+    }
+  }
+
+  if (path === '/drivers') {
+    return 'Hi Kalidass Travels, I would like to enquire about your verified chauffeur services for my trip.';
+  }
+
+  // 13. Homepage
+  if (path === '/' || path === '') {
+    return 'Hi Kalidass Travels, I need cab quotation and availability details.';
+  }
+
+  // Default fallback
+  return WHATSAPP_CONFIG.defaultGreeting;
+}

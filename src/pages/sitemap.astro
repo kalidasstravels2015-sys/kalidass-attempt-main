@@ -227,13 +227,46 @@ const machineEndpoints = [
   },
 ];
 
-// Schema for Sitemap Directory
+// Schema for Sitemap Directory with comprehensive ItemList for SEO/AEO
 const sitemapDirectorySchema = {
+  "@context": "https://schema.org",
   "@type": "ItemList",
   "@id": `${canonicalURL}#directory`,
-  "name": "Kalidass Travels Complete Directory",
-  "description": "Index of all web pages, services, tour packages, fleet categories, and machine-readable resources.",
-  "numberOfItems": corePortals.length + coreHubs.length + serviceDetails.length + driversList.length + machineEndpoints.length
+  "name": "Kalidass Travels Complete Directory & Sitemap",
+  "description": "Index of all web pages, outstation routes, airport transfer hubs, temple pilgrimages, vehicle fleets, verified chauffeurs, and machine-readable AI resources.",
+  "numberOfItems": corePortals.length + coreHubs.length + serviceDetails.length + driversList.length + machineEndpoints.length,
+  "itemListElement": [
+    ...corePortals.map((p, idx) => ({
+      "@type": "ListItem",
+      "position": idx + 1,
+      "name": p.title,
+      "item": `https://kalidasstravels.in${p.url}`
+    })),
+    ...coreHubs.map((h, idx) => ({
+      "@type": "ListItem",
+      "position": corePortals.length + idx + 1,
+      "name": h.title,
+      "item": `https://kalidasstravels.in${h.url}`
+    })),
+    ...serviceDetails.map((s, idx) => ({
+      "@type": "ListItem",
+      "position": corePortals.length + coreHubs.length + idx + 1,
+      "name": s.title,
+      "item": `https://kalidasstravels.in/services/${s.slug}/`
+    })),
+    ...driversList.map((d, idx) => ({
+      "@type": "ListItem",
+      "position": corePortals.length + coreHubs.length + serviceDetails.length + idx + 1,
+      "name": `Chauffeur ${d.name} (${d.experience})`,
+      "item": `https://kalidasstravels.in/drivers/${d.slug}/`
+    })),
+    ...machineEndpoints.map((m, idx) => ({
+      "@type": "ListItem",
+      "position": corePortals.length + coreHubs.length + serviceDetails.length + driversList.length + idx + 1,
+      "name": m.title,
+      "item": `https://kalidasstravels.in${m.url}`
+    }))
+  ]
 };
 ---
 
@@ -265,7 +298,7 @@ const sitemapDirectorySchema = {
           <div class="text-xs text-m3-on-surface-variant mt-0.5">Tour &amp; Transit Routes</div>
         </div>
         <div class="bg-m3-primary border border-m3-outline-variant/60 rounded-xl p-3.5 text-center">
-          <div class="text-2xl font-bold text-white">18</div>
+          <div class="text-2xl font-bold text-white">{driversList.length}</div>
           <div class="text-xs text-m3-on-surface-variant mt-0.5">Verified Chauffeurs</div>
         </div>
         <div class="bg-m3-primary border border-m3-outline-variant/60 rounded-xl p-3.5 text-center">
@@ -499,7 +532,7 @@ const sitemapDirectorySchema = {
         <div class="flex items-center gap-3 mb-6">
           <div class="w-10 h-10 rounded-xl bg-m3-primary text-white flex items-center justify-center font-bold text-lg">7</div>
           <div>
-            <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface">Verified Chauffeur Profiles (18 Chauffeurs)</h2>
+            <h2 class="text-xl sm:text-2xl font-bold text-m3-on-surface">Verified Chauffeur Profiles ({driversList.length} Chauffeurs)</h2>
             <p class="text-xs sm:text-sm text-m3-on-surface-variant">Individual profile pages for each police-verified commercial chauffeur on our staff.</p>
           </div>
         </div>

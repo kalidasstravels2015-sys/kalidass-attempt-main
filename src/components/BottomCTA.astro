@@ -1,11 +1,19 @@
 ---
 import { Calculator, ArrowRight, Phone } from "lucide-react";
 import WhatsAppIcon from "./WhatsAppIcon.astro";
-import { WHATSAPP_CONFIG } from "../utils/whatsapp";
+import { WHATSAPP_CONFIG, getPageWhatsAppMessage } from "../utils/whatsapp";
+
+interface Props {
+  whatsappMsg?: string;
+}
+
+const { whatsappMsg } = Astro.props;
+const currentPath = Astro.url.pathname;
+const resolvedWhatsAppMsg = whatsappMsg || getPageWhatsAppMessage(currentPath);
 
 const phone = `+${WHATSAPP_CONFIG.phone}`;
 const displayPhone = WHATSAPP_CONFIG.formattedPhone;
-const whatsappUrl = `https://wa.me/${WHATSAPP_CONFIG.phone}?text=${encodeURIComponent('Hi Kalidass Travels, I need a cab quotation and availability details.')}`;
+const whatsappUrl = `https://wa.me/${WHATSAPP_CONFIG.phone}?text=${encodeURIComponent(resolvedWhatsAppMsg)}`;
 ---
 
 <section class="offscreen-defer py-12 md:py-18 bg-gradient-to-br from-[#0B57D0] via-[#0842A0] to-[#041E49] text-white relative overflow-hidden border-t border-[#0B57D0]/20">
