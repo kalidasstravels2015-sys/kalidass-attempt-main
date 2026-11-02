@@ -562,14 +562,7 @@ export default function BookingEngine({
 
   const [returnDateTime, setReturnDateTime] = useState(() => {
     if (prefill.return) return prefill.return;
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const daysOffset = Math.max(0, (defaultDaysForDest || 1) - 1);
-    tomorrow.setDate(tomorrow.getDate() + daysOffset);
-    const yyyy = tomorrow.getFullYear();
-    const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
-    const dd = String(tomorrow.getDate()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}T21:00`;
+    return '';
   });
 
   // 4. Form State: Local Rental
@@ -2013,6 +2006,11 @@ Please confirm chauffeur availability.`;
                           <div className="text-xs sm:text-[13px] font-bold text-slate-700 dark:text-slate-200 mt-1 whitespace-nowrap">
                             {item.seats} Seats + {item.bags ? `${item.bags} Bags` : (item.seats >= 12 ? '10 Bags' : '2 Bags')}
                           </div>
+                          {activeTab === 'airport' && vPricing?.totalFare ? (
+                            <div className={`text-sm sm:text-base font-black mt-1.5 tabular-nums ${isSelected ? 'text-blue-700 dark:text-blue-300' : 'text-slate-900 dark:text-white'}`}>
+                              ₹{vPricing.totalFare.toLocaleString('en-IN')}
+                            </div>
+                          ) : null}
                         </div>
                       </button>
                     );
@@ -2085,7 +2083,7 @@ Please confirm chauffeur availability.`;
                   className="w-full min-h-[48px] sm:min-h-[50px] inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-m3-full bg-[#075E54] hover:bg-[#054c44] active:bg-[#043e37] text-white font-bold text-sm shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5 transition-all active:scale-[0.98] cursor-pointer border border-[#054c44]/30"
                 >
                   <WhatsAppIcon variant="white" className="w-5 h-5 shrink-0" />
-                  <span>Book {selectedVehicle.name} on WhatsApp — ₹{currentBreakdown.totalFare.toLocaleString('en-IN')}</span>
+                  <span>Book {selectedVehicle.name} on WhatsApp{activeTab === 'airport' ? '' : ` — ₹${currentBreakdown.totalFare.toLocaleString('en-IN')}`}</span>
                 </a>
 
                 <div className="text-center pt-0.5">
