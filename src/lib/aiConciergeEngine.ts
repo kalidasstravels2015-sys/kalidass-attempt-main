@@ -768,7 +768,7 @@ function getOutstationDynamicQuote(state: ConversationState, isTa: boolean): str
   const innovaCost = billedKmCar * 20 + days * 600 + innovaPermit;
   const crystaCost = billedKmCar * 22 + days * 700 + crystaPermit;
   const tempoCost = billedKmTempo * 24 + days * 800 + tempoPermit;
-  const urbaniaCost = billedKmTempo * 34 + days * 1000 + urbaniaPermit;
+  const urbaniaCost = billedKmTempo * 38 + days * 1100 + urbaniaPermit;
 
   // Vehicle lines mapping
   const vehicleQuotesEn: Record<string, string> = {
@@ -777,7 +777,7 @@ function getOutstationDynamicQuote(state: ConversationState, isTa: boolean): str
     innova: `• **Toyota Innova (7 Seats):** ~₹${innovaCost.toLocaleString('en-IN')} (₹20/km + ₹${days * 600} Bata${innovaPermit > 0 ? ` + ₹${innovaPermit} State Permit` : ''})`,
     crysta: `• **Toyota Innova Crysta (7 Seats):** ~₹${crystaCost.toLocaleString('en-IN')} (₹22/km + ₹${days * 700} Bata${crystaPermit > 0 ? ` + ₹${crystaPermit} State Permit` : ''})`,
     tempo: `• **Tempo Traveller (12 Seats):** ~₹${tempoCost.toLocaleString('en-IN')} (₹24/km + ₹${days * 800} Bata${tempoPermit > 0 ? ` + ₹${tempoPermit} State Permit` : ''})`,
-    urbania: `• **Force Urbania (12-14 Seats Luxury):** ~₹${urbaniaCost.toLocaleString('en-IN')} (₹34/km + ₹${days * 1000} Bata${urbaniaPermit > 0 ? ` + ₹${urbaniaPermit} State Permit` : ''})`
+    urbania: `• **Force Urbania VIP Luxury (12+1 Seats):** ~₹${urbaniaCost.toLocaleString('en-IN')} (₹38/km + ₹${days * 1100} Bata${urbaniaPermit > 0 ? ` + ₹${urbaniaPermit} State Permit` : ''})`
   };
 
   const vehicleQuotesTa: Record<string, string> = {
@@ -786,7 +786,7 @@ function getOutstationDynamicQuote(state: ConversationState, isTa: boolean): str
     innova: `• **Toyota Innova (7 Seats):** ~₹${innovaCost.toLocaleString('en-IN')} (₹20/கி.மீ + ₹${days * 600} பேட்டா${innovaPermit > 0 ? ` + ₹${innovaPermit} மாநில அனுமதி` : ''})`,
     crysta: `• **Toyota Innova Crysta (7 Seats):** ~₹${crystaCost.toLocaleString('en-IN')} (₹22/கி.மீ + ₹${days * 700} பேட்டா${crystaPermit > 0 ? ` + ₹${crystaPermit} மாநில அனுமதி` : ''})`,
     tempo: `• **Tempo Traveller (12 Seats):** ~₹${tempoCost.toLocaleString('en-IN')} (₹24/கி.மீ + ₹${days * 800} பேட்டா${tempoPermit > 0 ? ` + ₹${tempoPermit} மாநில அனுமதி` : ''})`,
-    urbania: `• **Force Urbania (12-14 சொகுசு வேன்):** ~₹${urbaniaCost.toLocaleString('en-IN')} (₹34/கி.மீ + ₹${days * 1000} பேட்டா${urbaniaPermit > 0 ? ` + ₹${urbaniaPermit} மாநில அனுமதி` : ''})`
+    urbania: `• **Force Urbania VIP Luxury (12+1 சொகுசு வேன்):** ~₹${urbaniaCost.toLocaleString('en-IN')} (₹38/கி.மீ + ₹${days * 1100} பேட்டா${urbaniaPermit > 0 ? ` + ₹${urbaniaPermit} மாநில அனுமதி` : ''})`
   };
 
   let selectedVehicles = Object.keys(vehicleQuotesEn);

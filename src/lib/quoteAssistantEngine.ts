@@ -316,10 +316,10 @@ Return ONLY raw JSON matching this schema, no markdown code fence, no commentary
 
   // Helper to calculate single vehicle fare (Single Master Tariff + Official Parivahan State Permit)
   const calcFareForVehicle = (vKey: string) => {
-    const vConf = (tariff.vehicles as any)[vKey] || (tariff.vehicles as any)['Swift Dzire'];
-    const minKm = days * (vConf.min_km_per_day || 250);
+    const vConf = (tariff.tempo_fleet as any)?.[vKey] || (tariff.vehicles as any)?.[vKey] || (tariff.vehicles as any)['Swift Dzire'];
+    const minKm = days * (vConf.min_km_per_day || (vConf.category === 'tempo' || vConf.category === 'coach' ? 300 : 250));
     const billable = Math.max(minKm, actualTotalEstimatedRunKm);
-    const rate = extracted.tripType === 'One Way Drop' ? vConf.one_way_rate : vConf.round_trip_rate;
+    const rate = extracted.tripType === 'One Way Drop' ? (vConf.one_way_rate || vConf.round_trip_rate + 2) : vConf.round_trip_rate;
     const bataTotal = days * (vConf.driver_bata || 500);
     const carHire = billable * rate;
     const permitInfo = getStatePermitForRoute(

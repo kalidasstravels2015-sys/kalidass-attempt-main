@@ -78,9 +78,9 @@ VERIFIED OFFICIAL RATE CARD & RULES:
        - Tempo 14-Seater Executive: ₹25/km + ₹900 driver bata/day (Min 350 km/day)
        - Tempo 20-Seater Grand: ₹30/km + ₹900 driver bata/day (Min 300 km/day)
        - Tempo 26-Seater Mini Bus: ₹36/km + ₹1,000 driver bata/day (Min 350 km/day)
-       - Force Urbania VIP Luxury: ₹34/km + ₹1,000 driver bata/day (Min 300 km/day)
-     • **Tolls, Parking & State Permits (NOT INCLUDED):** State border entry permits, highway tolls, and parking tickets are NOT included in the car rate. Pay actual receipts at toll plazas and border checkposts.
-     • **Booking Advance:** ₹500 to lock your vehicle (deducted from your final bill). Pay the rest after your trip.
+       - Force Urbania VIP Luxury: ₹38/km + ₹1,100 driver bata/day (Min 300 km/day)
+     • **Tolls, Parking & State Permits:** State border entry permits, highway tolls, and parking tickets are itemised per official FASTag slips.
+     • **Booking Advance:** ₹500 (Sedan/SUV/Acting Driver) or ₹2,000 (Tempo/Urbania) to lock your vehicle (100% deducted from your final bill). Pay balance after your trip.
      • [🚖 Calculate Exact Fare & Book Online](/#booking-panel)
 
 2. TIRUPATI & TOUR PACKAGES (ALWAYS FIXED PACKAGE RATES, NEVER PER-KM):
@@ -113,18 +113,29 @@ VERIFIED OFFICIAL RATE CARD & RULES:
      - Local Hourly Rental: [👉 View Local Packages](/tariff#local)
 
 3. LOCAL CHENNAI HOURLY RENTALS:
-   - Sedan: 4hr/40km ₹1,350 | 8hr/80km ₹2,200 (Extra km: ₹15, hr: ₹150)
-   - Ertiga: 4hr/40km ₹1,700 | 8hr/80km ₹2,800 (Extra km: ₹17, hr: ₹200)
-   - Innova: 8hr/80km ₹3,200 | Innova Crysta: 8hr/80km ₹4,500
+   - Sedan (Dzire / Etios): 4hr/40km ₹1,600 | 5hr/50km ₹1,800 | 8hr/80km ₹2,600 | 10hr/100km ₹3,100 | 12hr/120km ₹3,700 (Extra km: ₹15, hr: ₹150)
+   - Ertiga: 4hr/40km ₹2,000 | 5hr/50km ₹2,400 | 8hr/80km ₹3,400 | 10hr/100km ₹4,100 | 12hr/120km ₹4,700 (Extra km: ₹17, hr: ₹200)
+   - Innova: 4hr/40km ₹2,300 | 5hr/50km ₹2,800 | 8hr/80km ₹3,800 | 10hr/100km ₹4,300 | 12hr/120km ₹5,000 (Extra km: ₹19, hr: ₹250)
+   - Innova Crysta: 4hr/40km ₹3,400 | 5hr/50km ₹3,800 | 8hr/80km ₹5,400 | 10hr/100km ₹6,200 | 12hr/120km ₹7,200 (Extra km: ₹22, hr: ₹350)
+   - Tempo 12S: 4hr/40km ₹4,200 | 5hr/50km ₹5,000 | 8hr/80km ₹6,600 | 10hr/100km ₹7,800 | 12hr/120km ₹8,800 (Extra km: ₹24, hr: ₹400)
+   - Deep link: [👉 View Local Hourly Packages](/services/local-hourly-cabs/)
 
 4. ACTING DRIVERS FOR PERSONAL CAR:
-   - City duty: 4hr ₹500 | 8hr ₹800 (Extra hour: ₹100, Night charge 10 PM - 6 AM ₹150)
-   - Outstation round trip (Driver meals included):
-     • Hatchback & Sedan: ₹1,400 / day
-     • Compact SUV / MPV (Ertiga, Creta, Seltos): ₹1,500 / day
-     • Premium SUV / MUV (Innova Crysta, Fortuner): ₹1,600 / day
-     • Luxury European (BMW, Mercedes-Benz, Audi): ₹1,800 / day
-   - Deep link: [👉 Hire Acting Driver](/services/acting-drivers/)
+   - City Duty: 4hr ₹750 | 8hr ₹1,200 (Extra hour: ₹120 flat, zero peak surge)
+   - Outstation round trip (Driver meals included in tariff):
+     • Hatchback & Sedan: ₹1,700 / day
+     • Compact SUV / MPV (Ertiga, Creta, Seltos): ₹1,800 / day
+     • Premium SUV / MUV (Innova Crysta, Fortuner): ₹1,900 / day
+     • Luxury European (BMW, Mercedes-Benz, Audi): ₹2,200 / day
+     • Free driver hotel dorm (or ₹300/night lodging if private Airbnb)
+   - Outstation One-Way Car Relocation / Drop:
+     • Chennai → Pondicherry: ₹1,900
+     • Chennai → Bangalore: ₹2,820
+     • Chennai → Trichy: ₹2,770
+     • Chennai → Madurai: ₹3,750
+     • Chennai → Coimbatore: ₹3,800
+   - Advance: ₹500 to confirm driver.
+   - Deep link: [👉 Hire Acting Driver](/services/acting-drivers/#tariff)
 
 5. CHENNAI AIRPORT (MAA) TAXI:
    - AC Sedan City Hubs: Velachery ₹650 | Tambaram ₹550 | Guindy ₹500 | Chromepet ₹450 | T. Nagar ₹700 | Adyar ₹700 | OMR ₹750 | Anna Nagar ₹800 | Central ₹850. (Ertiga: +₹200 to ₹250 | Innova: +₹450 to ₹550)
