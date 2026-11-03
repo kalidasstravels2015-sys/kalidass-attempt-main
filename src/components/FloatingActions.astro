@@ -50,22 +50,25 @@ const whatsappUrl = `https://wa.me/${rawPhone}?text=${encodeURIComponent(resolve
     </span>
   </a>
 
-  <!-- 2. AI Plan Button (Mobile: reveals on scroll & visible at bottom of page; Desktop: always visible) -->
+  <!-- 2. Plan Trip Button (Mobile: reveals on scroll & visible at bottom of page; Desktop: always visible) -->
   <button
     type="button"
     id="floating-ai-plan-btn"
-    class="hidden md:flex pointer-events-none md:pointer-events-auto group relative flex-col items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white dark:bg-[#1E1F20] text-slate-800 dark:text-white shadow-m3-2 hover:shadow-m3-3 active:scale-95 transition-all duration-300 border border-[#4285F4]/40 hover:border-[#4285F4]/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4285F4]/50 cursor-pointer select-none opacity-0 md:opacity-100 scale-90 md:scale-100 translate-y-2 md:translate-y-0 z-10"
-    aria-label="AI Plan - Plan trip with AI Assistant"
-    title="Plan your journey & calculate fares with AI Assistant"
+    class="hidden md:flex pointer-events-none md:pointer-events-auto group relative flex-col items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white dark:bg-[#1E1F20] text-slate-800 dark:text-white shadow-m3-2 hover:shadow-m3-3 active:scale-95 transition-all duration-300 border border-[#006D3B]/40 hover:border-[#006D3B] dark:border-emerald-500/40 dark:hover:border-emerald-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006D3B]/50 cursor-pointer select-none opacity-0 md:opacity-100 scale-90 md:scale-100 translate-y-2 md:translate-y-0 z-10"
+    aria-label="Plan Trip - Custom Itinerary & Tariff Planner"
+    title="Plan your trip & estimate fares with Kalidass Travels"
   >
-    <!-- Gemini Sparkle Icon (Clean, no animation) -->
+    <!-- Route / Compass Travel Icon -->
     <span class="relative flex items-center justify-center shrink-0">
-      <GeminiIcon class="w-4 h-4 sm:w-5 sm:h-5" />
+      <svg class="w-4 h-4 sm:w-5 sm:h-5 text-[#006D3B] dark:text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/>
+        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" fill-opacity="0.2"/>
+      </svg>
     </span>
     
-    <!-- AI Plan Text Label Below Icon -->
+    <!-- Plan Trip Text Label Below Icon -->
     <span class="font-bold text-[9px] sm:text-[10px] tracking-tight text-slate-900 dark:text-slate-100 leading-none mt-0.5 whitespace-nowrap">
-      AI Plan
+      Plan Trip
     </span>
 
     <!-- Tooltip on Hover -->
@@ -73,7 +76,7 @@ const whatsappUrl = `https://wa.me/${rawPhone}?text=${encodeURIComponent(resolve
       class="hidden md:group-hover:inline-flex md:group-focus-visible:inline-flex absolute right-full mr-2.5 top-1/2 -translate-y-1/2 whitespace-nowrap px-2.5 py-1 rounded-md bg-slate-900/90 text-white text-xs font-semibold shadow-md pointer-events-none transition-opacity duration-150 z-20 border border-white/10"
       role="tooltip"
     >
-      Ask Gemini to Plan Journey
+      Plan Your Trip &amp; Fares
     </span>
   </button>
 </div>

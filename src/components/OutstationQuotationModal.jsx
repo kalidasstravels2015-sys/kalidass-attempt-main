@@ -839,8 +839,8 @@ export default function OutstationQuotationModal() {
 ${breakdown?.state_permit_est > 0 ? `• State Entry Permit (${breakdown.state_name}): ₹${breakdown.state_permit_est.toLocaleString('en-IN')}\n` : ''}• Quoted Total Fare: *₹${finalEstimate.toLocaleString('en-IN')} + Tolls/Parking Extra*
 • Highway FASTag Tolls: ${breakdown?.tolls_est > 0 ? `Approx. ~₹${breakdown.tolls_est} (Pay at Actuals as per FASTag receipts)` : 'Pay at Actuals as per FASTag receipts'}
 • Parking Charges: Pay at Actuals as per receipts
-• Payment Policy: Pay 50% (₹${Math.round(finalEstimate * 0.5).toLocaleString('en-IN')}) on cab arrival, balance 50% after trip completion
-• Booking Advance: ₹0 (Zero advance to confirm booking)
+• Payment Policy: Pay 50% (₹${Math.round(finalEstimate * 0.5).toLocaleString('en-IN')}) on cab arrival, balance after trip completion
+• Booking Advance: ₹${((vehicle?.seats && vehicle.seats >= 9) || vehicle?.category === 'tempo' || /tempo|urbania/i.test(vehicle?.fullName || vehicle?.name || '')) ? '2,000' : '500'} to confirm & lock cab (100% deducted from final bill)
 • Duration Standard: 1 Day = up to 24 hrs / 250 km. Duration above 24 hrs billed extra.
 
 ━━━━━━━━━━━━━━━━━━━━

@@ -937,9 +937,10 @@ export default function BookingEngine({
 
     const isTempoOrLarge = Boolean(
       isTempoOnly ||
-      (vehicleMeta.seats && vehicleMeta.seats >= 12) ||
+      (vehicleMeta.seats && vehicleMeta.seats >= 9) ||
       vehicleMeta.category === 'tempo' ||
-      vehicleMeta.category === 'coach'
+      vehicleMeta.category === 'coach' ||
+      /tempo|urbania/i.test(vehicleMeta.fullName || '')
     );
     const advance = isTempoOrLarge ? 2000 : 500;
 

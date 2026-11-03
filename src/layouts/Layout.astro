@@ -2555,25 +2555,27 @@ const unifiedSchemaGraph = {
 
 
 
-  <!-- Ask Gemini Modal Controller -->
+  <!-- Trip Plan Modal Controller (Fallback safety) -->
   <script is:inline>
     (function () {
-      function openAiFareModal() {
-        var modal = document.getElementById('ai-fare-modal');
-        var modalBox = document.getElementById('ai-modal-box');
-        if (!modal || !modalBox) return;
-        modal.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
-        modal.classList.add('flex');
-        requestAnimationFrame(function () {
-          modal.classList.add('opacity-100');
-          modal.classList.remove('opacity-0');
-          modalBox.classList.remove('translate-y-full', 'translate-x-full');
-          modal.setAttribute('aria-hidden', 'false');
-        });
-        document.body.style.overflow = 'hidden';
+      if (!window.openAiFareModal) {
+        window.openAiFareModal = function () {
+          var modal = document.getElementById('ai-fare-modal');
+          var modalBox = document.getElementById('ai-modal-box');
+          if (!modal || !modalBox) return;
+          modal.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+          modal.classList.add('flex');
+          requestAnimationFrame(function () {
+            modal.classList.add('opacity-100');
+            modal.classList.remove('opacity-0');
+            modalBox.classList.remove('translate-y-full', 'sm:translate-x-full');
+            modalBox.classList.add('translate-y-0', 'sm:translate-x-0');
+            modal.setAttribute('aria-hidden', 'false');
+          });
+          document.body.style.overflow = 'hidden';
+        };
       }
-
-      window.openAiFareModal = openAiFareModal;
+      window.openTripPlanModal = window.openAiFareModal;
     })();
   </script>
 

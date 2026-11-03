@@ -34,11 +34,14 @@ const callUrl = `tel:${phone}`;
     <header class="flex items-center justify-between px-4 py-3 bg-white/90 dark:bg-[#131314]/90 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 shrink-0 select-none z-10">
       <!-- Title & Official Google Gemini Sparkle -->
       <div class="flex items-center gap-2 min-w-0">
-        <div class="relative w-7 h-7 rounded-full bg-gradient-to-tr from-[#4285F4]/15 via-[#9B72CB]/15 to-[#D96570]/15 border border-slate-200/70 dark:border-white/15 flex items-center justify-center shrink-0 shadow-xs">
-          <GeminiIcon class="w-4 h-4" />
+        <div class="relative w-7 h-7 rounded-full bg-[#006D3B]/10 dark:bg-emerald-500/20 border border-[#006D3B]/30 dark:border-emerald-500/30 flex items-center justify-center shrink-0 shadow-xs">
+          <svg class="w-4 h-4 text-[#006D3B] dark:text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" fill-opacity="0.2"/>
+          </svg>
         </div>
         <h2 id="ai-modal-title" class="font-bold text-sm sm:text-base text-slate-900 dark:text-white tracking-tight whitespace-nowrap">
-          Ask Gemini
+          Plan Your Trip
         </h2>
       </div>
 
@@ -126,16 +129,18 @@ const callUrl = `tel:${phone}`;
     >
       <!-- Initial Welcome Hero (Empty State, Exactly like Google Ask Gemini) -->
       <div id="ai-welcome-hero" class="py-6 sm:py-8 px-2 flex flex-col items-center text-center select-none">
-        <!-- Glowing Gemini Animated Sparkle -->
+        <!-- Kalidass Emblem -->
         <div class="relative mb-4 flex items-center justify-center">
-          <span class="absolute -inset-3 rounded-full bg-gradient-to-r from-[#4285F4]/30 via-[#9B72CB]/30 to-[#D96570]/30 blur-lg animate-pulse"></span>
-          <div class="relative w-14 h-14 rounded-2xl bg-white dark:bg-[#1E1F20] border border-slate-200/90 dark:border-white/15 shadow-xl flex items-center justify-center">
-            <GeminiIcon class="w-8 h-8" />
+          <div class="relative w-14 h-14 rounded-2xl bg-[#006D3B]/10 dark:bg-emerald-950/40 border border-[#006D3B]/25 dark:border-emerald-500/30 shadow-md flex items-center justify-center">
+            <svg class="w-7 h-7 text-[#006D3B] dark:text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" fill-opacity="0.2"/>
+            </svg>
           </div>
         </div>
 
         <h3 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white mb-1.5">
-          Plan your journey with Gemini
+          Plan Your Journey with Kalidass
         </h3>
         <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xs leading-relaxed mb-6">
           Ask about outstation itineraries, temple circuits, or compare car and tempo options with 100% verified rates.
@@ -321,7 +326,7 @@ const callUrl = `tel:${phone}`;
         <textarea
           id="ai-user-input"
           rows="1"
-          placeholder="Ask Gemini or plan your trip (destinations, dates, seats)..."
+          placeholder="Type destinations, stops, or travel questions..."
           class="w-full px-2 py-1 bg-transparent text-slate-900 dark:text-white placeholder:text-slate-400 text-xs sm:text-sm focus:outline-none resize-none min-h-[38px] max-h-[140px] leading-relaxed block"
           autocomplete="off"
           required
@@ -402,10 +407,9 @@ const callUrl = `tel:${phone}`;
         </div>
       </form>
 
-      <!-- Official Google Gemini AI Attribution -->
-      <div class="mt-2 text-center text-[10px] text-slate-500 dark:text-slate-500 font-medium tracking-wide flex items-center justify-center gap-1.5 select-none">
-        <GeminiIcon class="w-3.5 h-3.5" id="modal-footer-gemini" />
-        <span>Powered by Google Gemini 3.8 Flash</span>
+      <!-- Kalidass Travels Footer -->
+      <div class="mt-2 text-center text-[10px] text-slate-500 dark:text-slate-400 font-medium tracking-wide flex items-center justify-center gap-1.5 select-none">
+        <span>Kalidass Travels • 100% Commercial Fleet • Medavakkam, Chennai</span>
       </div>
     </footer>
 
@@ -760,6 +764,7 @@ const callUrl = `tel:${phone}`;
 
       setTimeout(() => {
         modalBox.classList.remove('translate-y-full', 'sm:translate-x-full');
+        modalBox.classList.add('translate-y-0', 'sm:translate-x-0');
         if (!isMobileDevice()) {
           userInput?.focus();
         }
@@ -780,6 +785,7 @@ const callUrl = `tel:${phone}`;
       stopListening(false);
       closeLangModal();
 
+      modalBox.classList.remove('translate-y-0', 'sm:translate-x-0');
       modalBox.classList.add('translate-y-full', 'sm:translate-x-full');
       modal.classList.add('opacity-0');
 
@@ -801,6 +807,7 @@ const callUrl = `tel:${phone}`;
     }
 
     window.openAiFareModal = openAiModal;
+    window.openTripPlanModal = openAiModal;
     window.closeAiFareModal = closeAiModal;
     window.toggleAiFareModal = toggleAiModal;
 
