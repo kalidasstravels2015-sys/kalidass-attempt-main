@@ -50,33 +50,38 @@ const whatsappUrl = `https://wa.me/${rawPhone}?text=${encodeURIComponent(resolve
     </span>
   </a>
 
-  <!-- 2. Plan Trip Button (Mobile: reveals on scroll & visible at bottom of page; Desktop: always visible) -->
+  <!-- 2. Plan My Trip Button (Mobile: reveals on scroll & visible at bottom of page; Desktop: always visible) -->
   <button
     type="button"
     id="floating-ai-plan-btn"
-    class="hidden md:flex pointer-events-none md:pointer-events-auto group relative flex-col items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white dark:bg-[#1E1F20] text-slate-800 dark:text-white shadow-m3-2 hover:shadow-m3-3 active:scale-95 transition-all duration-300 border border-[#006D3B]/40 hover:border-[#006D3B] dark:border-emerald-500/40 dark:hover:border-emerald-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#006D3B]/50 cursor-pointer select-none opacity-0 md:opacity-100 scale-90 md:scale-100 translate-y-2 md:translate-y-0 z-10"
-    aria-label="Plan Trip - Custom Itinerary & Tariff Planner"
+    class="hidden md:flex pointer-events-none md:pointer-events-auto group relative items-center gap-2 h-11 sm:h-12 px-3.5 sm:px-4 rounded-full bg-[#D97706] hover:bg-[#B45309] active:bg-[#92400E] text-white shadow-m3-2 hover:shadow-m3-3 active:scale-95 transition-all duration-300 border border-white/25 hover:border-white/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 cursor-pointer select-none opacity-0 md:opacity-100 scale-90 md:scale-100 translate-y-2 md:translate-y-0 z-10"
+    aria-label="Plan My Trip - Custom Itinerary & Tariff Planner"
     title="Plan your trip & estimate fares with Kalidass Travels"
   >
-    <!-- Route / Compass Travel Icon -->
+    <!-- Route / Compass Travel Icon in Crisp White -->
     <span class="relative flex items-center justify-center shrink-0">
-      <svg class="w-4 h-4 sm:w-5 sm:h-5 text-[#006D3B] dark:text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="12" cy="12" r="10"/>
-        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" fill-opacity="0.2"/>
+        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" fill-opacity="0.25"/>
       </svg>
     </span>
     
-    <!-- Plan Trip Text Label Below Icon -->
-    <span class="font-bold text-[9px] sm:text-[10px] tracking-tight text-slate-900 dark:text-slate-100 leading-none mt-0.5 whitespace-nowrap">
-      Plan Trip
+    <!-- Plan My Trip Text Label -->
+    <span class="font-bold text-xs sm:text-sm tracking-tight text-white leading-none whitespace-nowrap">
+      Plan My Trip
     </span>
+
+    <!-- Forward Arrow in Crisp White -->
+    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/90 group-hover:text-white group-hover:translate-x-0.5 transition-all shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M5 12h14M12 5l7 7-7 7"/>
+    </svg>
 
     <!-- Tooltip on Hover -->
     <span 
       class="hidden md:group-hover:inline-flex md:group-focus-visible:inline-flex absolute right-full mr-2.5 top-1/2 -translate-y-1/2 whitespace-nowrap px-2.5 py-1 rounded-md bg-slate-900/90 text-white text-xs font-semibold shadow-md pointer-events-none transition-opacity duration-150 z-20 border border-white/10"
       role="tooltip"
     >
-      Plan Your Trip &amp; Fares
+      Plan My Trip &amp; Fares
     </span>
   </button>
 </div>

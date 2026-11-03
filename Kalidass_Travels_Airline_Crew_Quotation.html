@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Kalidass Travels - Airline Crew Transportation Rate Card</title>
+<style>
+  @page {
+    size: A4;
+    margin: 12mm 14mm 12mm 14mm;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    color: #0f172a;
+    background: #f8fafc;
+    margin: 0;
+    padding: 20px;
+    font-size: 12.5px;
+    line-height: 1.35;
+  }
+  .doc-container {
+    max-width: 860px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 30px 36px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+  .header {
+    text-align: center;
+    border-bottom: 2px solid #0f172a;
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    margin: 0 0 2px 0;
+    font-size: 23px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: #0f172a;
+  }
+  .header p {
+    margin: 2px 0;
+    color: #475569;
+    font-size: 11.5px;
+  }
+  .header .contacts {
+    font-weight: 700;
+    color: #2563eb;
+    margin-top: 4px;
+    font-size: 12px;
+  }
+  .title-strip {
+    background: #047857;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  h3 {
+    font-size: 12.5px;
+    margin: 14px 0 6px 0;
+    color: #0f172a;
+    font-weight: 800;
+    border-left: 3px solid #2563eb;
+    padding-left: 8px;
+    text-transform: uppercase;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    font-size: 11.5px;
+  }
+  th {
+    background: #0f172a;
+    color: #ffffff;
+    padding: 6px 8px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 11.5px;
+  }
+  th.right, td.right {
+    text-align: right;
+  }
+  td {
+    padding: 5px 8px;
+    border-bottom: 1px solid #e2e8f0;
+    color: #1e293b;
+  }
+  tr.category-row td {
+    background: #f1f5f9;
+    font-weight: 800;
+    color: #0f172a;
+    text-transform: uppercase;
+    font-size: 10.5px;
+    letter-spacing: 0.4px;
+    padding: 4px 8px;
+  }
+  .badge {
+    display: inline-block;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 9.5px;
+    font-weight: 700;
+    background: #e0f2fe;
+    color: #0369a1;
+    margin-left: 4px;
+  }
+  .rules-box {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-top: 10px;
+  }
+  .rules-box h4 {
+    margin: 0 0 6px 0;
+    color: #b91c1c;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 800;
+  }
+  .rules-list {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 11px;
+    color: #334155;
+    line-height: 1.4;
+  }
+  .rules-list li {
+    margin-bottom: 4px;
+  }
+  .rules-list strong {
+    color: #0f172a;
+  }
+  .sign-block {
+    margin-top: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .print-btn {
+    display: inline-block;
+    background: #2563eb;
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 12px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    border: none;
+  }
+  @media print {
+    body { background: #fff; padding: 0; }
+    .doc-container { border: none; box-shadow: none; padding: 0; }
+    .print-btn { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div style="max-width: 860px; margin: 0 auto; text-align: right;">
+  <button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+</div>
+
+<div class="doc-container">
+  <div class="header">
+    <h1>KALIDASS TRAVELS — CHENNAI</h1>
+    <p>No. 3/182, Mount Poonamallee High Road, Chennai, Tamil Nadu (Operating Hub: 10-15 mins to MAA Airport)</p>
+    <p class="contacts">24x7 Operations Desk &amp; WhatsApp: +91 89395 39211 &nbsp;|&nbsp; Email: kalidasstravels2015@gmail.com</p>
+  </div>
+
+  <div class="title-strip">
+    <span>★ ALL-INCLUSIVE 24x7 AIRLINE CREW TRANSFER RATE CARD</span>
+    <span>INCLUDES: Car + Chauffeur + Fuel + AAI Parking + Tolls (ZERO Crew Cash)</span>
+  </div>
+
+  <h3>1. Point-to-Point Hotel Transfer Rates (MAA Airport ⇄ Hotels)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 44%;">Destination Hotel / Locality</th>
+        <th style="width: 10%;">Distance</th>
+        <th class="right" style="width: 15%;">Sedan (Dzire/Etios)<br><small style="font-weight:normal;opacity:0.8;">[Max 2 Pax + 2 Bags]</small></th>
+        <th class="right" style="width: 15%;">Mid SUV (Ertiga)<br><small style="font-weight:normal;opacity:0.8;">[Max 4 Pax + 4 Bags]</small></th>
+        <th class="right" style="width: 16%;">Crysta (7 Seater)<br><small style="font-weight:normal;opacity:0.8;">[Captains / VIP Crew]</small></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="category-row"><td colspan="5">AIRPORT &amp; IMMEDIATE GST ROAD CORRIDOR (3 – 6 KM)</td></tr>
+      <tr>
+        <td>Trident Chennai (GST Road, Meenambakkam)</td>
+        <td>3 km</td>
+        <td class="right"><strong>₹ 1,300</strong></td>
+        <td class="right"><strong>₹ 1,700</strong></td>
+        <td class="right"><strong>₹ 2,300</strong></td>
+      </tr>
+      <tr>
+        <td>Radisson Blu Hotel GRT (GST Road, Airport)</td>
+        <td>4 km</td>
+        <td class="right"><strong>₹ 1,300</strong></td>
+        <td class="right"><strong>₹ 1,700</strong></td>
+        <td class="right"><strong>₹ 2,300</strong></td>
+      </tr>
+      <tr>
+        <td>Accord Chrome (Chromepet / GST Road)</td>
+        <td>6 km</td>
+        <td class="right"><strong>₹ 1,300</strong></td>
+        <td class="right"><strong>₹ 1,700</strong></td>
+        <td class="right"><strong>₹ 2,300</strong></td>
+      </tr>
+
+      <tr class="category-row"><td colspan="5">GUINDY, VELACHERY &amp; MANAPAKKAM CORRIDOR (8 – 12 KM)</td></tr>
+      <tr>
+        <td>The Westin Chennai (Velachery Main Road) <span class="badge">Lufthansa Layover</span></td>
+        <td>10 km</td>
+        <td class="right"><strong>₹ 1,500</strong></td>
+        <td class="right"><strong>₹ 1,950</strong></td>
+        <td class="right"><strong>₹ 2,650</strong></td>
+      </tr>
+      <tr>
+        <td>Feathers - A Radha Hotel (Manapakkam) <span class="badge">Domestic Roster</span></td>
+        <td>8 km</td>
+        <td class="right"><strong>₹ 1,400</strong></td>
+        <td class="right"><strong>₹ 1,850</strong></td>
+        <td class="right"><strong>₹ 2,550</strong></td>
+      </tr>
+      <tr>
+        <td>Park Hyatt Chennai (Guindy / Raj Bhavan) <span class="badge">Cathay Pacific</span></td>
+        <td>8 km</td>
+        <td class="right"><strong>₹ 1,500</strong></td>
+        <td class="right"><strong>₹ 1,950</strong></td>
+        <td class="right"><strong>₹ 2,650</strong></td>
+      </tr>
+      <tr>
+        <td>Hilton Chennai (Guindy / 100 Ft Rd)</td>
+        <td>8 km</td>
+        <td class="right"><strong>₹ 1,500</strong></td>
+        <td class="right"><strong>₹ 1,950</strong></td>
+        <td class="right"><strong>₹ 2,650</strong></td>
+      </tr>
+      <tr>
+        <td>ITC Grand Chola (Guindy)</td>
+        <td>8 km</td>
+        <td class="right"><strong>₹ 1,500</strong></td>
+        <td class="right"><strong>₹ 1,950</strong></td>
+        <td class="right"><strong>₹ 2,650</strong></td>
+      </tr>
+      <tr>
+        <td>Le Royal Méridien (GST / Kathipara)</td>
+        <td>6 km</td>
+        <td class="right"><strong>₹ 1,400</strong></td>
+        <td class="right"><strong>₹ 1,850</strong></td>
+        <td class="right"><strong>₹ 2,550</strong></td>
+      </tr>
+
+      <tr class="category-row"><td colspan="5">CENTRAL CHENNAI &amp; CITY BUSINESS BELT (13 – 16 KM)</td></tr>
+      <tr>
+        <td>Courtyard by Marriott (Anna Salai / Teynampet)</td>
+        <td>14 km</td>
+        <td class="right"><strong>₹ 1,650</strong></td>
+        <td class="right"><strong>₹ 2,100</strong></td>
+        <td class="right"><strong>₹ 2,850</strong></td>
+      </tr>
+      <tr>
+        <td>Hyatt Regency Chennai (Anna Salai / Teynampet)</td>
+        <td>14 km</td>
+        <td class="right"><strong>₹ 1,650</strong></td>
+        <td class="right"><strong>₹ 2,100</strong></td>
+        <td class="right"><strong>₹ 2,850</strong></td>
+      </tr>
+      <tr>
+        <td>Tidel Park Area / Tharamani (Turyaa / Ginger)</td>
+        <td>15 km</td>
+        <td class="right"><strong>₹ 1,650</strong></td>
+        <td class="right"><strong>₹ 2,100</strong></td>
+        <td class="right"><strong>₹ 2,850</strong></td>
+      </tr>
+
+      <tr class="category-row"><td colspan="5">OMR IT CORRIDOR &amp; EXTENDED COASTAL ROUTES</td></tr>
+      <tr>
+        <td>Four Points by Sheraton (OMR Perungudi)</td>
+        <td>16 km</td>
+        <td class="right"><strong>₹ 1,650</strong></td>
+        <td class="right"><strong>₹ 2,100</strong></td>
+        <td class="right"><strong>₹ 2,850</strong></td>
+      </tr>
+      <tr>
+        <td>Holiday Inn Chennai (OMR IT Expressway)</td>
+        <td>14 km</td>
+        <td class="right"><strong>₹ 1,650</strong></td>
+        <td class="right"><strong>₹ 2,100</strong></td>
+        <td class="right"><strong>₹ 2,850</strong></td>
+      </tr>
+      <tr>
+        <td>Navalur (OMR) - Aloft / Novotel SIPCOT</td>
+        <td>28 km</td>
+        <td class="right"><strong>₹ 1,950</strong></td>
+        <td class="right"><strong>₹ 2,550</strong></td>
+        <td class="right"><strong>₹ 3,450</strong></td>
+      </tr>
+      <tr>
+        <td>Mahabalipuram (Radisson Temple Bay / Sheraton)</td>
+        <td>55 km</td>
+        <td class="right"><strong>₹ 2,800</strong></td>
+        <td class="right"><strong>₹ 3,600</strong></td>
+        <td class="right"><strong>₹ 4,900</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>2. Extra Charges, Waiting &amp; Standby Blocks</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 50%;">Billing Parameter / Retention Item</th>
+        <th class="right" style="width: 16%;">Sedan</th>
+        <th class="right" style="width: 17%;">Ertiga</th>
+        <th class="right" style="width: 17%;">Innova Crysta</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Extra Running Rate (Beyond hotel destination)</td>
+        <td class="right">₹ 15 / km</td>
+        <td class="right">₹ 17 / km</td>
+        <td class="right">₹ 22 / km</td>
+      </tr>
+      <tr>
+        <td>Detention / Waiting (Beyond 45 mins landing buffer)</td>
+        <td class="right">₹ 150 / hr</td>
+        <td class="right">₹ 200 / hr</td>
+        <td class="right">₹ 350 / hr</td>
+      </tr>
+      <tr>
+        <td>Additional Drop-Off Point / Multi-Hotel Stop (within 5 km)</td>
+        <td class="right">₹ 350 / stop</td>
+        <td class="right">₹ 350 / stop</td>
+        <td class="right">₹ 450 / stop</td>
+      </tr>
+      <tr>
+        <td>Urgent Short-Notice Call-Out (&lt; 60 mins notice)</td>
+        <td class="right">₹ 200 / call</td>
+        <td class="right">₹ 200 / call</td>
+        <td class="right">₹ 300 / call</td>
+      </tr>
+      <tr>
+        <td>Half-Day Standby Retention Block (4 Hours / 40 KM)</td>
+        <td class="right">₹ 1,600</td>
+        <td class="right">₹ 2,000</td>
+        <td class="right">₹ 3,400</td>
+      </tr>
+      <tr>
+        <td>Full-Day Standby Retention Block (8 Hours / 80 KM)</td>
+        <td class="right">₹ 2,600</td>
+        <td class="right">₹ 3,400</td>
+        <td class="right">₹ 5,400</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="rules-box">
+    <h4>4. Operational Shield &amp; Terms (Non-Negotiable Binding Rules)</h4>
+    <ol class="rules-list">
+      <li><strong>Waiting Time Clock:</strong> 45 minutes complimentary waiting starting strictly from <strong>actual flight wheel-touchdown time</strong> (tracked live on radar). Hourly waiting applies automatically thereafter.</li>
+      <li><strong>Mandatory 2-Hour Delay Notice:</strong> Delays over 1 hour must be notified at least 2 hours prior to scheduled landing. If vehicle already reported at airport before notice, waiting charges apply from original reporting time.</li>
+      <li><strong>Single Hotel Drop Policy:</strong> Quoted rate covers 1 hotel destination only. Any split drops (e.g., Captain at Westin, Cabin crew at Radisson) will be billed at ₹ 350 per additional stop within 5 km.</li>
+      <li><strong>Cancellation &amp; Mid-Air Diversion (Dry Run):</strong> Notice &lt; 2 hours or after garage dispatch: Flat ₹ 800 (Sedan) / ₹ 1,200 (SUV) dry-run fee. If flight diverts mid-air to BLR/TRZ after car reaches MAA, 100% base fare is billable.</li>
+      <li><strong>Billing &amp; Payment Credit:</strong> Consolidated corporate billing every 15 days against duty logs. Payment credit strictly 15 days from invoice date. GST 5% applicable extra.</li>
+    </ol>
+  </div>
+
+  <div class="sign-block">
+    <div style="font-size: 11px;">
+      <strong>For Kalidass Travels, Chennai</strong><br>
+      <span style="color: #64748b;">Fleet Operations &amp; Corporate Logistics Desk</span>
+    </div>
+    <div style="font-size: 10px; color: #94a3b8;">
+      Contract Schedule Ref: KT-CREW-2026-V2
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

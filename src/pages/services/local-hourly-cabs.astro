@@ -1,0 +1,452 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/SEO/Breadcrumbs.astro';
+import FAQAccordion from '../../components/FAQAccordion.astro';
+import OptimizedImage from '../../components/OptimizedImage.astro';
+import GoogleRatingBadge from '../../components/GoogleRatingBadge.astro';
+import WhatsAppButton from '../../components/WhatsAppButton.astro';
+import WhatsAppIcon from '../../components/WhatsAppIcon.astro';
+import BookingEngine from '../../components/BookingEngine.jsx';
+import { 
+  ShieldCheck, 
+  Clock, 
+  MapPin, 
+  Phone, 
+  CheckCircle2, 
+  Car, 
+  Users, 
+  Luggage, 
+  ArrowRight,
+  Sparkles,
+  Info
+} from 'lucide-react';
+
+const title = "Local Hourly Car Rental in Chennai – 4h, 8h & 12h Packages | Kalidass Travels";
+const description = "Hire local cabs in Chennai by the hour with private chauffeurs. 4h/40km from ₹1,600, 8h/80km from ₹2,600. Innova Crysta 4h rental ₹3,400. Zero surge pricing.";
+const keywords = "local car rental chennai, hourly cab booking chennai, 4 hours cab rental chennai, 8 hours car rental chennai, innova crysta hourly rental chennai, city taxi packages chennai, car rental medavakkam, cab hire for shopping chennai";
+
+const breadcrumbItems = [
+  { name: "Home", item: "/" },
+  { name: "Services", item: "/services/" },
+  { name: "Local Hourly Cabs", item: "/services/local-hourly-cabs/" },
+];
+
+const hourlyTariff = [
+  {
+    vehicle: "Swift Dzire / Toyota Etios",
+    vehicleKey: "Swift Dzire",
+    category: "Sedan",
+    capacity: "4 Seats • 2 Bags",
+    image: "/images/fleet/swift-dzire.webp",
+    badge: "Best Value Sedan",
+    pkg4hr: "₹1,600",
+    pkg5hr: "₹1,800",
+    pkg8hr: "₹2,600",
+    pkg10hr: "₹3,100",
+    pkg12hr: "₹3,700",
+    extraKm: "₹15 / km",
+    extraHr: "₹150 / hr",
+    description: "Ideal for quick city hops, airport drop-offs, hospital appointments, and couple shopping trips."
+  },
+  {
+    vehicle: "Maruti Ertiga / XL6",
+    vehicleKey: "Maruti Ertiga",
+    category: "Family SUV",
+    capacity: "6 Seats • 3 Bags",
+    image: "/images/fleet/maruti-ertiga.webp",
+    badge: "Family Favorite",
+    pkg4hr: "₹2,000",
+    pkg5hr: "₹2,400",
+    pkg8hr: "₹3,400",
+    pkg10hr: "₹4,100",
+    pkg12hr: "₹4,700",
+    extraKm: "₹17 / km",
+    extraHr: "₹200 / hr",
+    description: "Spacious 6-seater for family outings, T. Nagar shopping runs, temple visits, and wedding guest transfers."
+  },
+  {
+    vehicle: "Toyota Innova",
+    vehicleKey: "Innova",
+    category: "Comfort MUV",
+    capacity: "7 Seats • 4 Bags",
+    image: "/images/fleet/toyota-innova.webp",
+    badge: "Comfort Ride",
+    pkg4hr: "₹2,300",
+    pkg5hr: "₹2,800",
+    pkg8hr: "₹3,800",
+    pkg10hr: "₹4,300",
+    pkg12hr: "₹5,000",
+    extraKm: "₹19 / km",
+    extraHr: "₹250 / hr",
+    description: "Legendary comfort and suspension. Perfect for elderly parents, corporate client visits, and full-day city travel."
+  },
+  {
+    vehicle: "Toyota Innova Crysta",
+    vehicleKey: "Innova Crysta",
+    category: "Premium MPV",
+    capacity: "7 Seats • 4 Bags",
+    image: "/images/fleet/innova-crysta.webp",
+    badge: "Executive Luxury",
+    pkg4hr: "₹3,400",
+    pkg5hr: "₹3,800",
+    pkg8hr: "₹5,400",
+    pkg10hr: "₹6,200",
+    pkg12hr: "₹7,200",
+    extraKm: "₹22 / km",
+    extraHr: "₹350 / hr",
+    description: "Top-tier executive travel. Captain seats, plush dual-zone climate control, and unmatched luxury for VIP delegates."
+  },
+  {
+    vehicle: "Tempo Traveller (12 Seater)",
+    vehicleKey: "Tempo Traveller",
+    category: "Group Coach",
+    capacity: "12 Seats • 8+ Bags",
+    image: "/images/fleet/tempo.webp",
+    badge: "Large Group Van",
+    pkg4hr: "₹4,200",
+    pkg5hr: "₹5,000",
+    pkg8hr: "₹6,600",
+    pkg10hr: "₹7,800",
+    pkg12hr: "₹8,800",
+    extraKm: "₹24 / km",
+    extraHr: "₹400 / hr",
+    description: "AC pushback seats with high-roof comfort. Ideal for family functions, airport group transfers, and school reunions."
+  }
+];
+
+const faqs = [
+  {
+    question: "How much is an Innova Crysta rental for 4 hours in Chennai?",
+    answer: "Kalidass Travels charges ₹3,400 flat for an Innova Crysta on the 4 Hours / 40 KM package. Extra distance is billed at ₹22/km and extra time at ₹350/hour. Driver and fuel are included."
+  },
+  {
+    question: "What packages are available for local hourly car rentals in Chennai?",
+    answer: "We offer 5 standard city packages: 4 Hrs / 40 KM, 5 Hrs / 50 KM (Half Day), 8 Hrs / 80 KM (Full Day), 10 Hrs / 100 KM, and 12 Hrs / 120 KM (Extended Day)."
+  },
+  {
+    question: "What is included in the hourly package fare?",
+    answer: "The package fare includes the private air-conditioned vehicle, fuel, and professional chauffeur for the booked duration and kilometer limit. Parking fees and toll charges are payable at actuals."
+  },
+  {
+    question: "What are the charges if I exceed my booked hours or kilometers?",
+    answer: "Extra kilometers and hours are billed transparently. Sedan: ₹15/km, ₹150/hr. Ertiga: ₹17/km, ₹200/hr. Innova: ₹19/km, ₹250/hr. Crysta: ₹22/km, ₹350/hr. Tempo Traveller: ₹24/km, ₹400/hr."
+  },
+  {
+    question: "How do I confirm my local hourly cab booking?",
+    answer: "A nominal ₹500 advance is collected via UPI to lock your vehicle and chauffeur assignment. This ₹500 is 100% deducted from your final bill upon trip completion."
+  },
+  {
+    question: "Can I use the hourly cab for multiple stops and waiting?",
+    answer: "Yes, you have complete freedom to make multiple stops for shopping, dining, client meetings, or waiting throughout your booked package duration with zero waiting charges."
+  },
+  {
+    question: "Do you provide doorstep pickup across Chennai?",
+    answer: "Yes, we provide 24/7 doorstep pickup and drop across all Chennai neighborhoods including Medavakkam, Velachery, OMR, Tambaram, Anna Nagar, T. Nagar, and Chennai Airport."
+  }
+];
+
+// Rich Schema.org Graph for LLM Crawlers & Google Rich Snippets
+const localHourlySchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TaxiService",
+      "@id": "https://kalidasstravels.in/services/local-hourly-cabs/#service",
+      "name": "Local Hourly Car Rental & Chauffeur Service Chennai",
+      "description": description,
+      "provider": {
+        "@id": "https://kalidasstravels.in/#localbusiness"
+      },
+      "serviceType": "Hourly Car Rental",
+      "areaServed": [
+        { "@type": "City", "name": "Chennai" },
+        { "@type": "AdministrativeArea", "name": "Medavakkam" },
+        { "@type": "AdministrativeArea", "name": "OMR" },
+        { "@type": "AdministrativeArea", "name": "Velachery" },
+        { "@type": "AdministrativeArea", "name": "Tambaram" }
+      ],
+      "url": "https://kalidasstravels.in/services/local-hourly-cabs/",
+      "priceRange": "₹1,600 - ₹8,800",
+      "termsOfService": "https://kalidasstravels.in/terms/",
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Chennai City Hourly Rental Packages",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "name": "Swift Dzire - 4 Hours / 40 KM",
+            "price": "1600",
+            "priceCurrency": "INR",
+            "eligibleDuration": "PT4H",
+            "availability": "https://schema.org/InStock",
+            "url": "https://kalidasstravels.in/services/local-hourly-cabs/?vehicle=Swift%20Dzire&pkg=local_4hr_pkg"
+          },
+          {
+            "@type": "Offer",
+            "name": "Maruti Ertiga - 4 Hours / 40 KM",
+            "price": "2000",
+            "priceCurrency": "INR",
+            "eligibleDuration": "PT4H",
+            "availability": "https://schema.org/InStock",
+            "url": "https://kalidasstravels.in/services/local-hourly-cabs/?vehicle=Maruti%20Ertiga&pkg=local_4hr_pkg"
+          },
+          {
+            "@type": "Offer",
+            "name": "Toyota Innova Crysta - 4 Hours / 40 KM",
+            "price": "3400",
+            "priceCurrency": "INR",
+            "eligibleDuration": "PT4H",
+            "availability": "https://schema.org/InStock",
+            "url": "https://kalidasstravels.in/services/local-hourly-cabs/?vehicle=Innova%20Crysta&pkg=local_4hr_pkg"
+          },
+          {
+            "@type": "Offer",
+            "name": "Toyota Innova Crysta - 8 Hours / 80 KM",
+            "price": "5400",
+            "priceCurrency": "INR",
+            "eligibleDuration": "PT8H",
+            "availability": "https://schema.org/InStock",
+            "url": "https://kalidasstravels.in/services/local-hourly-cabs/?vehicle=Innova%20Crysta&pkg=local_8hr_pkg"
+          },
+          {
+            "@type": "Offer",
+            "name": "Tempo Traveller 12S - 8 Hours / 80 KM",
+            "price": "6600",
+            "priceCurrency": "INR",
+            "eligibleDuration": "PT8H",
+            "availability": "https://schema.org/InStock",
+            "url": "https://kalidasstravels.in/services/local-hourly-cabs/?vehicle=Tempo%20Traveller&pkg=local_8hr_pkg"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://kalidasstravels.in/services/local-hourly-cabs/#faq",
+      "mainEntity": faqs.map(f => ({
+        "@type": "Question",
+        "name": f.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": f.answer
+        }
+      }))
+    }
+  ]
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  keywords={keywords}
+  schema={localHourlySchema}
+>
+  <main class="bg-m3-surface-container-low text-m3-on-surface min-h-screen pb-16 font-sans">
+    
+    <!-- Hero Section with Booking Engine -->
+    <section class="relative bg-[#041E49] text-white pt-6 pb-12 px-4 sm:px-6 lg:px-8 border-b border-white/10">
+      <div class="max-w-6xl mx-auto">
+        <div class="mb-4">
+          <Breadcrumbs items={breadcrumbItems} />
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div class="lg:col-span-7 space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-emerald-400 text-xs font-semibold uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Zero Surge Pricing • 100% Punctual</span>
+            </div>
+            
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
+              Local Hourly Car Rental in Chennai
+            </h1>
+            
+            <p class="text-base sm:text-lg text-slate-300 max-w-2xl">
+              Flexible 4, 8 & 12-hour city rental packages with professional chauffeurs. Travel seamlessly for shopping, weddings, business meetings, and multi-stop family travel.
+            </p>
+            
+            <div class="grid grid-cols-3 gap-3 pt-2 text-center sm:text-left">
+              <div class="bg-white/5 border border-white/10 rounded-xl p-3">
+                <div class="text-xl sm:text-2xl font-black text-amber-400">₹1,600</div>
+                <div class="text-xs text-slate-300">Sedan 4h / 40km</div>
+              </div>
+              <div class="bg-white/5 border border-white/10 rounded-xl p-3">
+                <div class="text-xl sm:text-2xl font-black text-amber-400">₹3,400</div>
+                <div class="text-xs text-slate-300">Crysta 4h / 40km</div>
+              </div>
+              <div class="bg-white/5 border border-white/10 rounded-xl p-3">
+                <div class="text-xl sm:text-2xl font-black text-amber-400">₹500</div>
+                <div class="text-xs text-slate-300">Advance to Confirm</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Booking Engine Island with Local Pre-selected -->
+          <div class="lg:col-span-5">
+            <div class="bg-white rounded-2xl shadow-2xl p-2 sm:p-4 text-slate-900">
+              <BookingEngine 
+                client:load 
+                allowedTabs={['local']} 
+                initialTab="local" 
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Static Raw HTML Pricing Table (Parsed by LLM Crawlers: GPTBot, Gemini, Grok, Perplexity) -->
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="text-center max-w-3xl mx-auto mb-10">
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mb-3">
+          Transparent Chennai Hourly Package Rate Card
+        </h2>
+        <p class="text-slate-600 text-sm sm:text-base">
+          All rates include sanitized AC car, fuel, and professional chauffeur. Tolls and parking at actuals.
+        </p>
+      </div>
+
+      <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm mb-12">
+        <table class="w-full text-left text-sm text-slate-700">
+          <thead class="bg-slate-50 text-slate-900 font-bold border-b border-slate-200 text-xs uppercase tracking-wider">
+            <tr>
+              <th scope="col" class="py-4 px-4 sm:px-6">Vehicle Model</th>
+              <th scope="col" class="py-4 px-3 sm:px-4">Capacity</th>
+              <th scope="col" class="py-4 px-3 sm:px-4">4h / 40km</th>
+              <th scope="col" class="py-4 px-3 sm:px-4">8h / 80km</th>
+              <th scope="col" class="py-4 px-3 sm:px-4">12h / 120km</th>
+              <th scope="col" class="py-4 px-3 sm:px-4">Extra Km</th>
+              <th scope="col" class="py-4 px-3 sm:px-4">Extra Hr</th>
+              <th scope="col" class="py-4 px-4 sm:px-6 text-right">Quick Book</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            {hourlyTariff.map((item) => (
+              <tr class="hover:bg-slate-50/80 transition-colors">
+                <td class="py-4 px-4 sm:px-6 font-semibold text-slate-900 flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-lg overflow-hidden bg-slate-100 hidden sm:block shrink-0">
+                    <img src={item.image} alt={item.vehicle} class="w-full h-full object-cover" loading="lazy" />
+                  </div>
+                  <div>
+                    <div>{item.vehicle}</div>
+                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                      {item.badge}
+                    </span>
+                  </div>
+                </td>
+                <td class="py-4 px-3 sm:px-4 whitespace-nowrap text-xs text-slate-600">{item.capacity}</td>
+                <td class="py-4 px-3 sm:px-4 font-bold text-slate-900">{item.pkg4hr}</td>
+                <td class="py-4 px-3 sm:px-4 font-bold text-slate-900">{item.pkg8hr}</td>
+                <td class="py-4 px-3 sm:px-4 font-bold text-slate-900">{item.pkg12hr}</td>
+                <td class="py-4 px-3 sm:px-4 text-xs text-slate-600">{item.extraKm}</td>
+                <td class="py-4 px-3 sm:px-4 text-xs text-slate-600">{item.extraHr}</td>
+                <td class="py-4 px-4 sm:px-6 text-right">
+                  <a
+                    href={`/?tab=local&vehicle=${encodeURIComponent(item.vehicleKey)}&pkg=local_4hr_pkg`}
+                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 text-white font-medium text-xs hover:bg-blue-700 transition-colors"
+                  >
+                    <span>Book</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Fleet Vehicle Showcase Cards with Instant Deep Link Actions -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+        {hourlyTariff.map((item) => (
+          <div class="bg-white rounded-2xl border border-slate-200 p-6 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                  {item.badge}
+                </span>
+                <span class="text-xs text-slate-500 font-medium">{item.category}</span>
+              </div>
+              <h3 class="text-lg font-bold text-slate-900 mb-1">{item.vehicle}</h3>
+              <p class="text-xs text-slate-500 mb-4">{item.description}</p>
+              
+              <div class="aspect-[16/9] w-full rounded-xl overflow-hidden bg-slate-50 mb-4 border border-slate-100">
+                <img src={item.image} alt={item.vehicle} class="w-full h-full object-cover" loading="lazy" />
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 text-xs bg-slate-50 p-3 rounded-xl mb-4 border border-slate-100">
+                <div>
+                  <div class="text-slate-500">4 Hours / 40 KM</div>
+                  <div class="font-bold text-slate-900 text-sm">{item.pkg4hr}</div>
+                </div>
+                <div>
+                  <div class="text-slate-500">8 Hours / 80 KM</div>
+                  <div class="font-bold text-slate-900 text-sm">{item.pkg8hr}</div>
+                </div>
+                <div>
+                  <div class="text-slate-500">Extra KM</div>
+                  <div class="font-bold text-slate-900">{item.extraKm}</div>
+                </div>
+                <div>
+                  <div class="text-slate-500">Extra Hour</div>
+                  <div class="font-bold text-slate-900">{item.extraHr}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 pt-2">
+              <a
+                href={`/?tab=local&vehicle=${encodeURIComponent(item.vehicleKey)}&pkg=local_4hr_pkg`}
+                class="flex-1 text-center py-2 px-3 rounded-xl bg-blue-600 text-white font-semibold text-xs hover:bg-blue-700 transition-colors"
+              >
+                Book 4h Package
+              </a>
+              <a
+                href={`/?tab=local&vehicle=${encodeURIComponent(item.vehicleKey)}&pkg=local_8hr_pkg`}
+                class="flex-1 text-center py-2 px-3 rounded-xl bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition-colors"
+              >
+                Book 8h Package
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- FAQ Accordion Section -->
+      <section class="max-w-4xl mx-auto pt-6 border-t border-slate-200">
+        <div class="text-center mb-8">
+          <h2 class="text-2xl font-black text-slate-900 mb-2">
+            Frequently Asked Questions — Local Hourly Rentals
+          </h2>
+          <p class="text-sm text-slate-600">
+            Everything you need to know about booking city hourly cabs in Chennai.
+          </p>
+        </div>
+        
+        <div class="space-y-4">
+          {faqs.map((faq) => (
+            <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+              <h3 class="text-base font-bold text-slate-900 mb-2">{faq.question}</h3>
+              <p class="text-sm text-slate-600 leading-relaxed">{faq.answer}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Bottom WhatsApp Callout -->
+      <div class="mt-12 bg-emerald-50 border border-emerald-200 rounded-2xl p-6 sm:p-8 text-center max-w-3xl mx-auto">
+        <h3 class="text-xl font-black text-emerald-950 mb-2">Need a Custom City Package or VIP Luxury Booking?</h3>
+        <p class="text-sm text-emerald-800 mb-4 max-w-xl mx-auto">
+          Contact our 24/7 Medavakkam dispatch desk directly on WhatsApp for instant confirmation.
+        </p>
+        <div class="inline-block">
+          <WhatsAppButton 
+            text="Chat with Dispatch on WhatsApp"
+            message="Hi Kalidass Travels, I need a Local Hourly Cab rental in Chennai. Please share availability."
+          />
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+

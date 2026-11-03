@@ -101,51 +101,75 @@
     "faq": [
       {
         "q": "What is the fare breakdown for Chennai to Tirupati 1 Day, 2 Days, and 3 Days car packages?",
-        "a": "1-Day same-day packages include vehicle hire, fuel, FASTag tolls, AP border permit, Tirumala ghat road climb, parking & driver allowance upfront. For multi-day packages (2 Days & 3 Days), rates include vehicle hire, fuel coverage, and calendar-day driver bata/night stay; highway FASTag tolls and AP border permit are paid directly at toll plazas as per actual receipts: Swift Dzire / Etios: 1 Day ₹6,000 | 2 Days ₹9,500 | 3 Days ₹13,200. Maruti Ertiga / XL6: 1 Day ₹7,500 | 2 Days ₹11,500 | 3 Days ₹15,800. Toyota Innova: 1 Day ₹8,500 | 2 Days ₹12,500 | 3 Days ₹17,500. Innova Crysta: 1 Day ₹10,000 | 2 Days ₹16,000 | 3 Days ₹22,500. 12-Seater Tempo Traveller: 1 Day ₹12,500 | 2 Days ₹19,500 | 3 Days ₹27,000. Note: Passenger hotel accommodation and food are not included in cab rental packages."
+        "a": "1-Day same-day packages include vehicle hire, fuel, FASTag tolls, AP border permit, Tirumala ghat road climb, parking & driver allowance upfront. For multi-day packages (2 Days & 3 Days), rates include vehicle hire, fuel coverage, and calendar-day driver bata/night stay; highway FASTag tolls and AP border permit are paid directly at toll plazas as per actual receipts: Swift Dzire / Etios: 1 Day ₹6,000 | 2 Days ₹9,500 | 3 Days ₹13,200. Maruti Ertiga / XL6: 1 Day ₹7,500 | 2 Days ₹11,500 | 3 Days ₹15,800. Toyota Innova: 1 Day ₹8,500 | 2 Days ₹12,500 | 3 Days ₹17,500. Innova Crysta: 1 Day ₹10,000 | 2 Days ₹16,000 | 3 Days ₹22,500. 12-Seater Tempo Traveller: 1 Day ₹12,500 | 2 Days ₹19,500 | 3 Days ₹27,000. Note: Passenger hotel accommodation and food are not included in cab rental packages.",
+        "question": "What is the fare breakdown for Chennai to Tirupati 1 Day, 2 Days, and 3 Days car packages?",
+        "answer": "1-Day same-day packages include vehicle hire, fuel, FASTag tolls, AP border permit, Tirumala ghat road climb, parking & driver allowance upfront. For multi-day packages (2 Days & 3 Days), rates include vehicle hire, fuel coverage, and calendar-day driver bata/night stay; highway FASTag tolls and AP border permit are paid directly at toll plazas as per actual receipts: Swift Dzire / Etios: 1 Day ₹6,000 | 2 Days ₹9,500 | 3 Days ₹13,200. Maruti Ertiga / XL6: 1 Day ₹7,500 | 2 Days ₹11,500 | 3 Days ₹15,800. Toyota Innova: 1 Day ₹8,500 | 2 Days ₹12,500 | 3 Days ₹17,500. Innova Crysta: 1 Day ₹10,000 | 2 Days ₹16,000 | 3 Days ₹22,500. 12-Seater Tempo Traveller: 1 Day ₹12,500 | 2 Days ₹19,500 | 3 Days ₹27,000. Note: Passenger hotel accommodation and food are not included in cab rental packages."
       },
       {
         "q": "How much does a cab from Chennai to Tirupati cost?",
-        "a": "Round-trip all-inclusive cab packages start at ₹6,000 for 4-passenger AC Sedans (Swift Dzire / Toyota Etios), ₹7,500 for 6-seater SUVs (Maruti Ertiga / XL6), ₹8,500 for 7-seater MUVs (Toyota Innova), ₹10,000 for Innova Crysta, and ₹12,500 for a 12-seater Tempo Traveller. All rates include fuel, highway tolls, AP border permit, parking, and driver allowance with zero hidden charges."
+        "a": "Round-trip all-inclusive cab packages start at ₹6,000 for 4-passenger AC Sedans (Swift Dzire / Toyota Etios), ₹7,500 for 6-seater SUVs (Maruti Ertiga / XL6), ₹8,500 for 7-seater MUVs (Toyota Innova), ₹10,000 for Innova Crysta, and ₹12,500 for a 12-seater Tempo Traveller. All rates include fuel, highway tolls, AP border permit, parking, and driver allowance with zero hidden charges.",
+        "question": "How much does a cab from Chennai to Tirupati cost?",
+        "answer": "Round-trip all-inclusive cab packages start at ₹6,000 for 4-passenger AC Sedans (Swift Dzire / Toyota Etios), ₹7,500 for 6-seater SUVs (Maruti Ertiga / XL6), ₹8,500 for 7-seater MUVs (Toyota Innova), ₹10,000 for Innova Crysta, and ₹12,500 for a 12-seater Tempo Traveller. All rates include fuel, highway tolls, AP border permit, parking, and driver allowance with zero hidden charges."
       },
       {
         "q": "What is the distance and travel time from Chennai to Tirupati by cab?",
-        "a": "The road distance from Chennai to Tirupati foothills (Alipiri Checkpost) is approx. 135 km, and to Tirumala Hilltop is approx. 155 km. Travel time is around 3.5 to 4 hours via NH 716 (Chennai – Thiruvallur – Tiruttani – Nagari – Tirupati). Our drivers know the route and ghat road ascent well."
+        "a": "The road distance from Chennai to Tirupati foothills (Alipiri Checkpost) is approx. 135 km, and to Tirumala Hilltop is approx. 155 km. Travel time is around 3.5 to 4 hours via NH 716 (Chennai – Thiruvallur – Tiruttani – Nagari – Tirupati). Our drivers know the route and ghat road ascent well.",
+        "question": "What is the distance and travel time from Chennai to Tirupati by cab?",
+        "answer": "The road distance from Chennai to Tirupati foothills (Alipiri Checkpost) is approx. 135 km, and to Tirumala Hilltop is approx. 155 km. Travel time is around 3.5 to 4 hours via NH 716 (Chennai – Thiruvallur – Tiruttani – Nagari – Tirupati). Our drivers know the route and ghat road ascent well."
       },
       {
         "q": "Are highway tolls and Andhra Pradesh border permit included in the fare?",
-        "a": "For our 1-Day flat package, yes, 100% included upfront (highway tolls, AP border permit, ghat road climb and parking). For multi-day packages (2 or 3 days), vehicle hire, fuel, and driver allowances are included, while tolls and AP permit are paid directly at toll gates as per actual receipts with zero markups."
+        "a": "For our 1-Day flat package, yes, 100% included upfront (highway tolls, AP border permit, ghat road climb and parking). For multi-day packages (2 or 3 days), vehicle hire, fuel, and driver allowances are included, while tolls and AP permit are paid directly at toll gates as per actual receipts with zero markups.",
+        "question": "Are highway tolls and Andhra Pradesh border permit included in the fare?",
+        "answer": "For our 1-Day flat package, yes, 100% included upfront (highway tolls, AP border permit, ghat road climb and parking). For multi-day packages (2 or 3 days), vehicle hire, fuel, and driver allowances are included, while tolls and AP permit are paid directly at toll gates as per actual receipts with zero markups."
       },
       {
         "q": "Why choose Kalidass Travels over online cab aggregators for Tirupati?",
-        "a": "Online aggregators often advertise low base fares, but add AP permit fees, NH tolls, and driver waiting charges at the end of the trip, plus drivers often cancel last minute if they do not want to climb the Tirumala ghat road. Kalidass Travels gives you 100% transparent all-inclusive pricing, ₹500 advance to reserve cab & driver, doorstep pickup anywhere in Chennai, and experienced drivers who guide you with darshan queue timings and luggage lockers."
+        "a": "Online aggregators often advertise low base fares, but add AP permit fees, NH tolls, and driver waiting charges at the end of the trip, plus drivers often cancel last minute if they do not want to climb the Tirumala ghat road. Kalidass Travels gives you 100% transparent all-inclusive pricing, ₹500 advance to reserve cab & driver, doorstep pickup anywhere in Chennai, and experienced drivers who guide you with darshan queue timings and luggage lockers.",
+        "question": "Why choose Kalidass Travels over online cab aggregators for Tirupati?",
+        "answer": "Online aggregators often advertise low base fares, but add AP permit fees, NH tolls, and driver waiting charges at the end of the trip, plus drivers often cancel last minute if they do not want to climb the Tirumala ghat road. Kalidass Travels gives you 100% transparent all-inclusive pricing, ₹500 advance to reserve cab & driver, doorstep pickup anywhere in Chennai, and experienced drivers who guide you with darshan queue timings and luggage lockers."
       },
       {
         "q": "Can we complete Tirupati Darshan from Chennai in one day?",
-        "a": "Yes. Our same-day 1-day trip departs at 04:00 AM, reaches Tirumala by 08:30 AM, completes darshan by afternoon, visits Tiruchanur Sri Padmavathi Ammavari Temple, and drops you back at your Chennai doorstep by 09:00 PM."
+        "a": "Yes. Our same-day 1-day trip departs at 04:00 AM, reaches Tirumala by 08:30 AM, completes darshan by afternoon, visits Tiruchanur Sri Padmavathi Ammavari Temple, and drops you back at your Chennai doorstep by 09:00 PM.",
+        "question": "Can we complete Tirupati Darshan from Chennai in one day?",
+        "answer": "Yes. Our same-day 1-day trip departs at 04:00 AM, reaches Tirumala by 08:30 AM, completes darshan by afternoon, visits Tiruchanur Sri Padmavathi Ammavari Temple, and drops you back at your Chennai doorstep by 09:00 PM."
       },
       {
         "q": "Can the cab go up to Tirumala hilltop directly?",
-        "a": "Yes. Our vehicles have valid permits to drive up the second ghat road directly to Tirumala hilltop after security inspection at the Alipiri checkpost. The driver will drop you close to the TTD queue complex and cloakrooms."
+        "a": "Yes. Our vehicles have valid permits to drive up the second ghat road directly to Tirumala hilltop after security inspection at the Alipiri checkpost. The driver will drop you close to the TTD queue complex and cloakrooms.",
+        "question": "Can the cab go up to Tirumala hilltop directly?",
+        "answer": "Yes. Our vehicles have valid permits to drive up the second ghat road directly to Tirumala hilltop after security inspection at the Alipiri checkpost. The driver will drop you close to the TTD queue complex and cloakrooms."
       },
       {
         "q": "Can you arrange or bundle TTD ₹300 Darshan tickets?",
-        "a": "No. TTD mandates that devotees book tickets directly on ttdevasthanams.ap.gov.in using their personal Aadhaar or Passport. Travel operators cannot legally resell tickets. We time vehicle pickup to perfectly match your darshan slot."
+        "a": "No. TTD mandates that devotees book tickets directly on ttdevasthanams.ap.gov.in using their personal Aadhaar or Passport. Travel operators cannot legally resell tickets. We time vehicle pickup to perfectly match your darshan slot.",
+        "question": "Can you arrange or bundle TTD ₹300 Darshan tickets?",
+        "answer": "No. TTD mandates that devotees book tickets directly on ttdevasthanams.ap.gov.in using their personal Aadhaar or Passport. Travel operators cannot legally resell tickets. We time vehicle pickup to perfectly match your darshan slot."
       },
       {
         "q": "What if we don't have online TTD ₹300 tickets booked in advance?",
-        "a": "You can get free Slotted Sarva Darshan (SSD) tokens directly at Tirupati counters with your original Aadhaar. For SSD darshan, we recommend our 2 Days / 1 Night package."
+        "a": "You can get free Slotted Sarva Darshan (SSD) tokens directly at Tirupati counters with your original Aadhaar. For SSD darshan, we recommend our 2 Days / 1 Night package.",
+        "question": "What if we don't have online TTD ₹300 tickets booked in advance?",
+        "answer": "You can get free Slotted Sarva Darshan (SSD) tokens directly at Tirupati counters with your original Aadhaar. For SSD darshan, we recommend our 2 Days / 1 Night package."
       },
       {
         "q": "What is the official dress code for Tirupati Darshan?",
-        "a": "Men must wear dhoti with shirt or kurta pyjama. Women must wear saree, half-saree, or chudidhar with dupatta. Western wear, jeans, and t-shirts are strictly prohibited inside the sanctum."
+        "a": "Men must wear dhoti with shirt or kurta pyjama. Women must wear saree, half-saree, or chudidhar with dupatta. Western wear, jeans, and t-shirts are strictly prohibited inside the sanctum.",
+        "question": "What is the official dress code for Tirupati Darshan?",
+        "answer": "Men must wear dhoti with shirt or kurta pyjama. Women must wear saree, half-saree, or chudidhar with dupatta. Western wear, jeans, and t-shirts are strictly prohibited inside the sanctum."
       },
       {
         "q": "Is Sri Padmavathi Ammavari Temple (Tiruchanur) included?",
-        "a": "Yes. A dedicated stop at Sri Padmavathi Ammavari Temple in Tiruchanur is included before returning to Chennai, which traditionally completes the pilgrimage."
+        "a": "Yes. A dedicated stop at Sri Padmavathi Ammavari Temple in Tiruchanur is included before returning to Chennai, which traditionally completes the pilgrimage.",
+        "question": "Is Sri Padmavathi Ammavari Temple (Tiruchanur) included?",
+        "answer": "Yes. A dedicated stop at Sri Padmavathi Ammavari Temple in Tiruchanur is included before returning to Chennai, which traditionally completes the pilgrimage."
       },
       {
         "q": "Is advance payment required to book the vehicle?",
-        "a": "Only a nominal ₹500 advance is required to reserve your cab and driver. The remaining balance is payable after boarding or trip completion via Cash, UPI, or Bank Transfer."
+        "a": "Only a nominal ₹500 advance is required to reserve your cab and driver. The remaining balance is payable after boarding or trip completion via Cash, UPI, or Bank Transfer.",
+        "question": "Is advance payment required to book the vehicle?",
+        "answer": "Only a nominal ₹500 advance is required to reserve your cab and driver. The remaining balance is payable after boarding or trip completion via Cash, UPI, or Bank Transfer."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I would like to book the Chennai to Tirupati Balaji Car Package. Please share vehicle availability.",
@@ -260,23 +284,33 @@
     "faq": [
       {
         "q": "Can we cover all 9 temples in 2 days comfortably?",
-        "a": "Yes. Our route schedule is planned so you visit 4 temples on Day 1 and the remaining 5 on Day 2 without rushing."
+        "a": "Yes. Our route schedule is planned so you visit 4 temples on Day 1 and the remaining 5 on Day 2 without rushing.",
+        "question": "Can we cover all 9 temples in 2 days comfortably?",
+        "answer": "Yes. Our route schedule is planned so you visit 4 temples on Day 1 and the remaining 5 on Day 2 without rushing."
       },
       {
         "q": "Can we start from Kumbakonam Railway Station instead of Chennai?",
-        "a": "Yes. If you arrive by train, we provide pickup and drop directly at Kumbakonam Railway Station."
+        "a": "Yes. If you arrive by train, we provide pickup and drop directly at Kumbakonam Railway Station.",
+        "question": "Can we start from Kumbakonam Railway Station instead of Chennai?",
+        "answer": "Yes. If you arrive by train, we provide pickup and drop directly at Kumbakonam Railway Station."
       },
       {
         "q": "Which 9 Navagraha temples are visited in the Kumbakonam package?",
-        "a": "The tour visits Suryanar Kovil (Sun), Thingalur (Moon), Vaitheeswaran Koil (Mars), Thiruvenkadu (Mercury), Alangudi (Jupiter), Kanjanoor (Venus), Thirunallar (Saturn), Thirunageswaram (Rahu), and Keezhaperumpallam (Ketu)."
+        "a": "The tour visits Suryanar Kovil (Sun), Thingalur (Moon), Vaitheeswaran Koil (Mars), Thiruvenkadu (Mercury), Alangudi (Jupiter), Kanjanoor (Venus), Thirunallar (Saturn), Thirunageswaram (Rahu), and Keezhaperumpallam (Ketu).",
+        "question": "Which 9 Navagraha temples are visited in the Kumbakonam package?",
+        "answer": "The tour visits Suryanar Kovil (Sun), Thingalur (Moon), Vaitheeswaran Koil (Mars), Thiruvenkadu (Mercury), Alangudi (Jupiter), Kanjanoor (Venus), Thirunallar (Saturn), Thirunageswaram (Rahu), and Keezhaperumpallam (Ketu)."
       },
       {
         "q": "What is the total price for the 2-day Kumbakonam Navagraha package?",
-        "a": "Round-trip fares start from ₹12,000 for Sedan (Dzire/Etios), ₹14,800 for Ertiga (6 seats), ₹16,500 for Innova, ₹19,800 for Innova Crysta, and ₹24,500 for 12-seater Tempo Traveller for 2 Days (or 3 Days from ₹14,500). Vehicle hire, fuel, and driver allowances are included; highway FASTag tolls and parking are paid directly at actuals."
+        "a": "Round-trip fares start from ₹12,000 for Sedan (Dzire/Etios), ₹14,800 for Ertiga (6 seats), ₹16,500 for Innova, ₹19,800 for Innova Crysta, and ₹24,500 for 12-seater Tempo Traveller for 2 Days (or 3 Days from ₹14,500). Vehicle hire, fuel, and driver allowances are included; highway FASTag tolls and parking are paid directly at actuals.",
+        "question": "What is the total price for the 2-day Kumbakonam Navagraha package?",
+        "answer": "Round-trip fares start from ₹12,000 for Sedan (Dzire/Etios), ₹14,800 for Ertiga (6 seats), ₹16,500 for Innova, ₹19,800 for Innova Crysta, and ₹24,500 for 12-seater Tempo Traveller for 2 Days (or 3 Days from ₹14,500). Vehicle hire, fuel, and driver allowances are included; highway FASTag tolls and parking are paid directly at actuals."
       },
       {
         "q": "What is the temple dress code for Navagraha temples?",
-        "a": "Traditional attire is required: Dhoti with shirt or angavastram for men (pants allowed at most shrines; dhotis mandatory for inner sanctorum rituals); sarees, churidars, or salwar kameez with dupatta for women. Jeans, shorts, and sleeveless tops are strictly prohibited."
+        "a": "Traditional attire is required: Dhoti with shirt or angavastram for men (pants allowed at most shrines; dhotis mandatory for inner sanctorum rituals); sarees, churidars, or salwar kameez with dupatta for women. Jeans, shorts, and sleeveless tops are strictly prohibited.",
+        "question": "What is the temple dress code for Navagraha temples?",
+        "answer": "Traditional attire is required: Dhoti with shirt or angavastram for men (pants allowed at most shrines; dhotis mandatory for inner sanctorum rituals); sarees, churidars, or salwar kameez with dupatta for women. Jeans, shorts, and sleeveless tops are strictly prohibited."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I want to book the Kumbakonam Navagraha 9 Temples 2-Day Package.",
@@ -383,23 +417,33 @@
     "faq": [
       {
         "q": "Can the car stay on standby while we walk the 14 km Girivalam?",
-        "a": "Yes! The vehicle and driver remain on standby in Thiruvannamalai throughout your Girivalam to assist family and senior citizens."
+        "a": "Yes! The vehicle and driver remain on standby in Thiruvannamalai throughout your Girivalam to assist family and senior citizens.",
+        "question": "Can the car stay on standby while we walk the 14 km Girivalam?",
+        "answer": "Yes! The vehicle and driver remain on standby in Thiruvannamalai throughout your Girivalam to assist family and senior citizens."
       },
       {
         "q": "Are there extra night charges for overnight Pournami trips?",
-        "a": "No. Our flat rate is all-inclusive with zero surprise night fees."
+        "a": "No. Our flat rate is all-inclusive with zero surprise night fees.",
+        "question": "Are there extra night charges for overnight Pournami trips?",
+        "answer": "No. Our flat rate is all-inclusive with zero surprise night fees."
       },
       {
         "q": "How long is the Thiruvannamalai Girivalam path and does the driver wait during Girivalam?",
-        "a": "The sacred Girivalam path around Arunachala Hill is approximately 14 kilometers, taking 3.5 to 5 hours on foot. Our cab and chauffeur remain on dedicated standby at an agreed meeting point throughout your walk."
+        "a": "The sacred Girivalam path around Arunachala Hill is approximately 14 kilometers, taking 3.5 to 5 hours on foot. Our cab and chauffeur remain on dedicated standby at an agreed meeting point throughout your walk.",
+        "question": "How long is the Thiruvannamalai Girivalam path and does the driver wait during Girivalam?",
+        "answer": "The sacred Girivalam path around Arunachala Hill is approximately 14 kilometers, taking 3.5 to 5 hours on foot. Our cab and chauffeur remain on dedicated standby at an agreed meeting point throughout your walk."
       },
       {
         "q": "What are the Pournami Girivalam traffic and parking arrangements?",
-        "a": "During full moon (Pournami), outer ring road diversions and temporary parking zones are enforced by district police. Our experienced drivers know designated pilgrim parking areas and coordinate mobile pickup smoothly."
+        "a": "During full moon (Pournami), outer ring road diversions and temporary parking zones are enforced by district police. Our experienced drivers know designated pilgrim parking areas and coordinate mobile pickup smoothly.",
+        "question": "What are the Pournami Girivalam traffic and parking arrangements?",
+        "answer": "During full moon (Pournami), outer ring road diversions and temporary parking zones are enforced by district police. Our experienced drivers know designated pilgrim parking areas and coordinate mobile pickup smoothly."
       },
       {
         "q": "What is the round-trip cab package fare from Chennai to Thiruvannamalai?",
-        "a": "Fixed package fares start from ₹6,500 for Swift Dzire/Etios, ₹7,900 for Ertiga, ₹9,300 for Innova, and ₹11,100 for Innova Crysta, covering Chennai-to-Thiruvannamalai round trip (~400 km), highway tolls, fuel, and driver bata."
+        "a": "Fixed package fares start from ₹6,500 for Swift Dzire/Etios, ₹7,900 for Ertiga, ₹9,300 for Innova, and ₹11,100 for Innova Crysta, covering Chennai-to-Thiruvannamalai round trip (~400 km), highway tolls, fuel, and driver bata.",
+        "question": "What is the round-trip cab package fare from Chennai to Thiruvannamalai?",
+        "answer": "Fixed package fares start from ₹6,500 for Swift Dzire/Etios, ₹7,900 for Ertiga, ₹9,300 for Innova, and ₹11,100 for Innova Crysta, covering Chennai-to-Thiruvannamalai round trip (~400 km), highway tolls, fuel, and driver bata."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I would like to book the Thiruvannamalai Girivalam Tour Package.",
@@ -507,23 +551,33 @@
     "faq": [
       {
         "q": "Is the Kerala Interstate Permit included in the package?",
-        "a": "Yes. The Kerala Interstate Commercial Vehicle Permit is 100% arranged and included in the package rate."
+        "a": "Yes. The Kerala Interstate Commercial Vehicle Permit is 100% arranged and included in the package rate.",
+        "question": "Is the Kerala Interstate Permit included in the package?",
+        "answer": "Yes. The Kerala Interstate Commercial Vehicle Permit is 100% arranged and included in the package rate."
       },
       {
         "q": "Can the vehicle go up to Pamba directly?",
-        "a": "Under Kerala Police and Motor Vehicle regulations, all private cabs and vans must park at Nilakkal base camp. Devotees take the official KSRTC non-stop electric shuttle buses from Nilakkal to Pamba (approx. 18 km)."
+        "a": "Under Kerala Police and Motor Vehicle regulations, all private cabs and vans must park at Nilakkal base camp. Devotees take the official KSRTC non-stop electric shuttle buses from Nilakkal to Pamba (approx. 18 km).",
+        "question": "Can the vehicle go up to Pamba directly?",
+        "answer": "Under Kerala Police and Motor Vehicle regulations, all private cabs and vans must park at Nilakkal base camp. Devotees take the official KSRTC non-stop electric shuttle buses from Nilakkal to Pamba (approx. 18 km)."
       },
       {
         "q": "What route is taken from Chennai to Sabarimala (Pamba / Nilakkal)?",
-        "a": "The standard route (~720 km / 14–16 hrs) goes via Tindivanam, Trichy, Dindigul, Theni, Kumily, and Vandiperiyar to Nilakkal base camp, with pre-planned satvik meal and refreshment halts."
+        "a": "The standard route (~720 km / 14–16 hrs) goes via Tindivanam, Trichy, Dindigul, Theni, Kumily, and Vandiperiyar to Nilakkal base camp, with pre-planned satvik meal and refreshment halts.",
+        "question": "What route is taken from Chennai to Sabarimala (Pamba / Nilakkal)?",
+        "answer": "The standard route (~720 km / 14–16 hrs) goes via Tindivanam, Trichy, Dindigul, Theni, Kumily, and Vandiperiyar to Nilakkal base camp, with pre-planned satvik meal and refreshment halts."
       },
       {
         "q": "Are Kerala interstate road permits and highway tolls included in the Sabarimala package?",
-        "a": "The commercial Kerala interstate tourist permit, vehicle hire, fuel, and driver outstation bata are pre-included. Highway FASTag tolls and Nilakkal vehicle parking are paid directly as per actual receipts for 100% transparency."
+        "a": "The commercial Kerala interstate tourist permit, vehicle hire, fuel, and driver outstation bata are pre-included. Highway FASTag tolls and Nilakkal vehicle parking are paid directly as per actual receipts for 100% transparency.",
+        "question": "Are Kerala interstate road permits and highway tolls included in the Sabarimala package?",
+        "answer": "The commercial Kerala interstate tourist permit, vehicle hire, fuel, and driver outstation bata are pre-included. Highway FASTag tolls and Nilakkal vehicle parking are paid directly as per actual receipts for 100% transparency."
       },
       {
         "q": "Do you provide satvik vegetarian drivers for the Sabarimala yatra?",
-        "a": "Yes. For Sabarimala pilgrimages, we deploy satvik teetotaler drivers who respect temple rituals, know the ghat road hairpin bends between Kumily and Nilakkal, and maintain calm pacing."
+        "a": "Yes. For Sabarimala pilgrimages, we deploy satvik teetotaler drivers who respect temple rituals, know the ghat road hairpin bends between Kumily and Nilakkal, and maintain calm pacing.",
+        "question": "Do you provide satvik vegetarian drivers for the Sabarimala yatra?",
+        "answer": "Yes. For Sabarimala pilgrimages, we deploy satvik teetotaler drivers who respect temple rituals, know the ghat road hairpin bends between Kumily and Nilakkal, and maintain calm pacing."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I would like to book a Sabarimala Yatra Package.",
@@ -630,23 +684,33 @@
     "faq": [
       {
         "q": "Can Dhanushkodi be reached by our taxi directly?",
-        "a": "Yes! The all-weather road extends up to Arichal Munai (Land's End). Our vehicle drives you right to the beach and viewpoint."
+        "a": "Yes! The all-weather road extends up to Arichal Munai (Land's End). Our vehicle drives you right to the beach and viewpoint.",
+        "question": "Can Dhanushkodi be reached by our taxi directly?",
+        "answer": "Yes! The all-weather road extends up to Arichal Munai (Land's End). Our vehicle drives you right to the beach and viewpoint."
       },
       {
         "q": "How does the 22 Theertham bath work?",
-        "a": "Devotees first take a bath at Agni Theertham (sea), then enter the temple where temple staff pour water from each of the 22 sacred wells. Drivers guide you to changing rooms."
+        "a": "Devotees first take a bath at Agni Theertham (sea), then enter the temple where temple staff pour water from each of the 22 sacred wells. Drivers guide you to changing rooms.",
+        "question": "How does the 22 Theertham bath work?",
+        "answer": "Devotees first take a bath at Agni Theertham (sea), then enter the temple where temple staff pour water from each of the 22 sacred wells. Drivers guide you to changing rooms."
       },
       {
         "q": "Can we cover both Ramanathaswamy Temple (22 Theerthams) and Dhanushkodi in 2 days?",
-        "a": "Yes! Day 1 covers Chennai to Rameswaram with Agni Theertham and evening temple darshan. Day 2 begins with 22 Theertham holy snanam, Ramanathaswamy sanctum darshan, followed by Dhanushkodi Point, APJ Abdul Kalam Memorial, and Pamban Bridge."
+        "a": "Yes! Day 1 covers Chennai to Rameswaram with Agni Theertham and evening temple darshan. Day 2 begins with 22 Theertham holy snanam, Ramanathaswamy sanctum darshan, followed by Dhanushkodi Point, APJ Abdul Kalam Memorial, and Pamban Bridge.",
+        "question": "Can we cover both Ramanathaswamy Temple (22 Theerthams) and Dhanushkodi in 2 days?",
+        "answer": "Yes! Day 1 covers Chennai to Rameswaram with Agni Theertham and evening temple darshan. Day 2 begins with 22 Theertham holy snanam, Ramanathaswamy sanctum darshan, followed by Dhanushkodi Point, APJ Abdul Kalam Memorial, and Pamban Bridge."
       },
       {
         "q": "What is the fare for Chennai to Rameswaram 2-day cab package?",
-        "a": "Round-trip fares start from ₹18,500 for Sedan (Dzire/Etios), ₹22,500 for Ertiga, ₹25,000 for Innova, ₹30,000 for Innova Crysta, and ₹35,000 for 12-seater Tempo Traveller for 2 Days (3 Days from ₹21,000), covering ~1,200 km, vehicle hire, fuel, and driver allowances (highway tolls at actuals)."
+        "a": "Round-trip fares start from ₹18,500 for Sedan (Dzire/Etios), ₹22,500 for Ertiga, ₹25,000 for Innova, ₹30,000 for Innova Crysta, and ₹35,000 for 12-seater Tempo Traveller for 2 Days (3 Days from ₹21,000), covering ~1,200 km, vehicle hire, fuel, and driver allowances (highway tolls at actuals).",
+        "question": "What is the fare for Chennai to Rameswaram 2-day cab package?",
+        "answer": "Round-trip fares start from ₹18,500 for Sedan (Dzire/Etios), ₹22,500 for Ertiga, ₹25,000 for Innova, ₹30,000 for Innova Crysta, and ₹35,000 for 12-seater Tempo Traveller for 2 Days (3 Days from ₹21,000), covering ~1,200 km, vehicle hire, fuel, and driver allowances (highway tolls at actuals)."
       },
       {
         "q": "What scenic and heritage stops can we visit along the Rameswaram route?",
-        "a": "En route, you can visit the Brihadeeswarar Temple in Thanjavur, Trichy Rockfort, or Thirumayam Fort, and enjoy panoramic views while crossing the iconic Pamban Sea Bridge."
+        "a": "En route, you can visit the Brihadeeswarar Temple in Thanjavur, Trichy Rockfort, or Thirumayam Fort, and enjoy panoramic views while crossing the iconic Pamban Sea Bridge.",
+        "question": "What scenic and heritage stops can we visit along the Rameswaram route?",
+        "answer": "En route, you can visit the Brihadeeswarar Temple in Thanjavur, Trichy Rockfort, or Thirumayam Fort, and enjoy panoramic views while crossing the iconic Pamban Sea Bridge."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I would like to book the Rameswaram 2-Day Pilgrimage Package.",
@@ -756,23 +820,33 @@
     "faq": [
       {
         "q": "Can we buy authentic Kanchipuram silk sarees during the tour?",
-        "a": "Yes! Our drivers take you to government-recognized weaver cooperative societies with zero commission markups."
+        "a": "Yes! Our drivers take you to government-recognized weaver cooperative societies with zero commission markups.",
+        "question": "Can we buy authentic Kanchipuram silk sarees during the tour?",
+        "answer": "Yes! Our drivers take you to government-recognized weaver cooperative societies with zero commission markups."
       },
       {
         "q": "Are highway tolls and waiting time included?",
-        "a": "Yes, completely included. Zero extra parking or waiting charges."
+        "a": "Yes, completely included. Zero extra parking or waiting charges.",
+        "question": "Are highway tolls and waiting time included?",
+        "answer": "Yes, completely included. Zero extra parking or waiting charges."
       },
       {
         "q": "Which temples are visited in the 1-day Kanchipuram temple tour?",
-        "a": "The 1-day circuit covers Kailasanathar Temple (Pallava architecture), Ekambareswarar Temple (Earth Stalam), Sri Kamakshi Amman Temple (Shakti Peetham), and Varadharaja Perumal Temple (Divya Desam), with dedicated time for lunch and authentic silk saree weaver shopping."
+        "a": "The 1-day circuit covers Kailasanathar Temple (Pallava architecture), Ekambareswarar Temple (Earth Stalam), Sri Kamakshi Amman Temple (Shakti Peetham), and Varadharaja Perumal Temple (Divya Desam), with dedicated time for lunch and authentic silk saree weaver shopping.",
+        "question": "Which temples are visited in the 1-day Kanchipuram temple tour?",
+        "answer": "The 1-day circuit covers Kailasanathar Temple (Pallava architecture), Ekambareswarar Temple (Earth Stalam), Sri Kamakshi Amman Temple (Shakti Peetham), and Varadharaja Perumal Temple (Divya Desam), with dedicated time for lunch and authentic silk saree weaver shopping."
       },
       {
         "q": "Can the driver take us to authentic Kanchipuram silk saree handloom societies?",
-        "a": "Yes. Our drivers can guide you directly to registered master weavers' cooperative societies (such as Thirubuvanam or Kanchipuram Murugan Co-op) for authentic certified silk sarees with Silk Mark."
+        "a": "Yes. Our drivers can guide you directly to registered master weavers' cooperative societies (such as Thirubuvanam or Kanchipuram Murugan Co-op) for authentic certified silk sarees with Silk Mark.",
+        "question": "Can the driver take us to authentic Kanchipuram silk saree handloom societies?",
+        "answer": "Yes. Our drivers can guide you directly to registered master weavers' cooperative societies (such as Thirubuvanam or Kanchipuram Murugan Co-op) for authentic certified silk sarees with Silk Mark."
       },
       {
         "q": "What is the taxi package fare from Chennai to Kanchipuram round trip?",
-        "a": "Day trip package fares start from ₹3,500 for Swift Dzire/Etios, ₹4,500 for Ertiga, ₹5,500 for Innova, and ₹6,800 for Innova Crysta, covering ~160 km round trip, Chennai-Bangalore highway tolls, driver bata, and free waiting time."
+        "a": "Day trip package fares start from ₹3,500 for Swift Dzire/Etios, ₹4,500 for Ertiga, ₹5,500 for Innova, and ₹6,800 for Innova Crysta, covering ~160 km round trip, Chennai-Bangalore highway tolls, driver bata, and free waiting time.",
+        "question": "What is the taxi package fare from Chennai to Kanchipuram round trip?",
+        "answer": "Day trip package fares start from ₹3,500 for Swift Dzire/Etios, ₹4,500 for Ertiga, ₹5,500 for Innova, and ₹6,800 for Innova Crysta, covering ~160 km round trip, Chennai-Bangalore highway tolls, driver bata, and free waiting time."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I want to book the Kanchipuram Temple Day Trip.",
@@ -878,23 +952,33 @@
     "faq": [
       {
         "q": "Can we combine Chidambaram with Pichavaram Mangrove boating in one day?",
-        "a": "Yes! Pichavaram is just 15 km from Chidambaram. Our one-day package perfectly balances morning temple darshan and afternoon boat riding."
+        "a": "Yes! Pichavaram is just 15 km from Chidambaram. Our one-day package perfectly balances morning temple darshan and afternoon boat riding.",
+        "question": "Can we combine Chidambaram with Pichavaram Mangrove boating in one day?",
+        "answer": "Yes! Pichavaram is just 15 km from Chidambaram. Our one-day package perfectly balances morning temple darshan and afternoon boat riding."
       },
       {
         "q": "What is the dress code inside Chidambaram Natarajar Temple?",
-        "a": "Men must wear dhoti and remove their upper garment (shirt/vest) before entering the inner sanctum. Women must wear traditional Indian attire."
+        "a": "Men must wear dhoti and remove their upper garment (shirt/vest) before entering the inner sanctum. Women must wear traditional Indian attire.",
+        "question": "What is the dress code inside Chidambaram Natarajar Temple?",
+        "answer": "Men must wear dhoti and remove their upper garment (shirt/vest) before entering the inner sanctum. Women must wear traditional Indian attire."
       },
       {
         "q": "What are the darshan timings for Chidambaram Natarajar Temple?",
-        "a": "The temple is open from 6:00 AM to 12:30 PM in the morning and from 4:30 PM to 10:00 PM in the evening. The morning Spatika Linga Abhishekam takes place around 10:00 AM."
+        "a": "The temple is open from 6:00 AM to 12:30 PM in the morning and from 4:30 PM to 10:00 PM in the evening. The morning Spatika Linga Abhishekam takes place around 10:00 AM.",
+        "question": "What are the darshan timings for Chidambaram Natarajar Temple?",
+        "answer": "The temple is open from 6:00 AM to 12:30 PM in the morning and from 4:30 PM to 10:00 PM in the evening. The morning Spatika Linga Abhishekam takes place around 10:00 AM."
       },
       {
         "q": "Can we include Pichavaram Mangrove Forest boating in the same day trip?",
-        "a": "Yes! Pichavaram is located just 15 km from Chidambaram. Our package includes cab transit to the TTDC Mangrove Boating Centre for scenic boat rides through the world's second largest mangrove forest."
+        "a": "Yes! Pichavaram is located just 15 km from Chidambaram. Our package includes cab transit to the TTDC Mangrove Boating Centre for scenic boat rides through the world's second largest mangrove forest.",
+        "question": "Can we include Pichavaram Mangrove Forest boating in the same day trip?",
+        "answer": "Yes! Pichavaram is located just 15 km from Chidambaram. Our package includes cab transit to the TTDC Mangrove Boating Centre for scenic boat rides through the world's second largest mangrove forest."
       },
       {
         "q": "What is the round-trip cab fare from Chennai to Chidambaram and Pichavaram?",
-        "a": "Round-trip fares start from ₹7,400 for Sedan, ₹9,200 for Ertiga, ₹11,000 for Innova, ₹13,500 for Innova Crysta, and ₹16,500 for 12-seater Tempo Traveller, covering ~450 km, ECR/NH tolls, fuel, and chauffeur charges."
+        "a": "Round-trip fares start from ₹7,400 for Sedan, ₹9,200 for Ertiga, ₹11,000 for Innova, ₹13,500 for Innova Crysta, and ₹16,500 for 12-seater Tempo Traveller, covering ~450 km, ECR/NH tolls, fuel, and chauffeur charges.",
+        "question": "What is the round-trip cab fare from Chennai to Chidambaram and Pichavaram?",
+        "answer": "Round-trip fares start from ₹7,400 for Sedan, ₹9,200 for Ertiga, ₹11,000 for Innova, ₹13,500 for Innova Crysta, and ₹16,500 for 12-seater Tempo Traveller, covering ~450 km, ECR/NH tolls, fuel, and chauffeur charges."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I would like to book the Chidambaram & Pichavaram Day Trip.",
@@ -1000,23 +1084,33 @@
     "faq": [
       {
         "q": "How far is Vellore Golden Temple from Chennai?",
-        "a": "It is approximately 140 km from Chennai via Chennai-Bangalore Highway, taking around 3 hours by car."
+        "a": "It is approximately 140 km from Chennai via Chennai-Bangalore Highway, taking around 3 hours by car.",
+        "question": "How far is Vellore Golden Temple from Chennai?",
+        "answer": "It is approximately 140 km from Chennai via Chennai-Bangalore Highway, taking around 3 hours by car."
       },
       {
         "q": "Are mobile phones allowed inside the Golden Temple?",
-        "a": "No. Mobile phones and electronic items are strictly prohibited inside the complex. Secure cloakrooms are available near the entrance."
+        "a": "No. Mobile phones and electronic items are strictly prohibited inside the complex. Secure cloakrooms are available near the entrance.",
+        "question": "Are mobile phones allowed inside the Golden Temple?",
+        "answer": "No. Mobile phones and electronic items are strictly prohibited inside the complex. Secure cloakrooms are available near the entrance."
       },
       {
         "q": "What are the darshan timings and entry options at Sripuram Golden Temple?",
-        "a": "The temple is open daily from 8:00 AM to 8:00 PM. General queue darshan is free. Special express darshan tickets (₹100 to ₹500) can be purchased directly at temple counters upon arrival."
+        "a": "The temple is open daily from 8:00 AM to 8:00 PM. General queue darshan is free. Special express darshan tickets (₹100 to ₹500) can be purchased directly at temple counters upon arrival.",
+        "question": "What are the darshan timings and entry options at Sripuram Golden Temple?",
+        "answer": "The temple is open daily from 8:00 AM to 8:00 PM. General queue darshan is free. Special express darshan tickets (₹100 to ₹500) can be purchased directly at temple counters upon arrival."
       },
       {
         "q": "Can we also visit Vellore Fort and Jalakandeswarar Temple on the same day trip?",
-        "a": "Yes! The historic 16th-century granite Vellore Fort and ancient Jalakandeswarar Temple are located just 8 km from the Golden Temple and are included in the day trip itinerary."
+        "a": "Yes! The historic 16th-century granite Vellore Fort and ancient Jalakandeswarar Temple are located just 8 km from the Golden Temple and are included in the day trip itinerary.",
+        "question": "Can we also visit Vellore Fort and Jalakandeswarar Temple on the same day trip?",
+        "answer": "Yes! The historic 16th-century granite Vellore Fort and ancient Jalakandeswarar Temple are located just 8 km from the Golden Temple and are included in the day trip itinerary."
       },
       {
         "q": "What is the cab package fare from Chennai to Vellore round trip?",
-        "a": "Same-day round-trip fares start from ₹4,800 for Sedan (Dzire/Etios), ₹6,000 for Ertiga, ₹7,200 for Innova, ₹8,800 for Innova Crysta, and ₹10,500 for 12-seater Tempo Traveller, covering ~300 km, Chennai-Bangalore highway tolls, and driver bata."
+        "a": "Same-day round-trip fares start from ₹4,800 for Sedan (Dzire/Etios), ₹6,000 for Ertiga, ₹7,200 for Innova, ₹8,800 for Innova Crysta, and ₹10,500 for 12-seater Tempo Traveller, covering ~300 km, Chennai-Bangalore highway tolls, and driver bata.",
+        "question": "What is the cab package fare from Chennai to Vellore round trip?",
+        "answer": "Same-day round-trip fares start from ₹4,800 for Sedan (Dzire/Etios), ₹6,000 for Ertiga, ₹7,200 for Innova, ₹8,800 for Innova Crysta, and ₹10,500 for 12-seater Tempo Traveller, covering ~300 km, Chennai-Bangalore highway tolls, and driver bata."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I would like to book the Vellore Golden Temple Trip.",
@@ -1076,15 +1170,21 @@
     "faq": [
       {
         "q": "Can I extend the duty if my shopping or event takes longer?",
-        "a": "Yes! You do not need to call the office. Inform your driver directly. Extra hours are billed at a flat ₹120/hr at final settlement."
+        "a": "Yes! You do not need to call the office. Inform your driver directly. Extra hours are billed at a flat ₹120/hr at final settlement.",
+        "question": "Can I extend the duty if my shopping or event takes longer?",
+        "answer": "Yes! You do not need to call the office. Inform your driver directly. Extra hours are billed at a flat ₹120/hr at final settlement."
       },
       {
         "q": "Are your drivers experienced with high-end automatic / luxury cars?",
-        "a": "Yes. Our roster includes chauffeurs certified to handle luxury automatic and EV vehicles including BMW, Audi, Mercedes-Benz, Volvo, Innova Crysta, and DCT/CVT models."
+        "a": "Yes. Our roster includes chauffeurs certified to handle luxury automatic and EV vehicles including BMW, Audi, Mercedes-Benz, Volvo, Innova Crysta, and DCT/CVT models.",
+        "question": "Are your drivers experienced with high-end automatic / luxury cars?",
+        "answer": "Yes. Our roster includes chauffeurs certified to handle luxury automatic and EV vehicles including BMW, Audi, Mercedes-Benz, Volvo, Innova Crysta, and DCT/CVT models."
       },
       {
         "q": "What is the cancellation policy?",
-        "a": "Free cancellation up to 2 hours before the scheduled reporting time. Cancellations made after driver dispatch incur a ₹200 driver conveyance fee."
+        "a": "Free cancellation up to 2 hours before the scheduled reporting time. Cancellations made after driver dispatch incur a ₹200 driver conveyance fee.",
+        "question": "What is the cancellation policy?",
+        "answer": "Free cancellation up to 2 hours before the scheduled reporting time. Cancellations made after driver dispatch incur a ₹200 driver conveyance fee."
       }
     ],
     "notes": [
@@ -1172,15 +1272,21 @@
     "faq": [
       {
         "q": "How is 1 outstation day calculated?",
-        "a": "A calendar day (12:00 AM to 11:59 PM) counts as 1 day, covering up to 14 hours of total duty/driving."
+        "a": "A calendar day (12:00 AM to 11:59 PM) counts as 1 day, covering up to 14 hours of total duty/driving.",
+        "question": "How is 1 outstation day calculated?",
+        "answer": "A calendar day (12:00 AM to 11:59 PM) counts as 1 day, covering up to 14 hours of total duty/driving."
       },
       {
         "q": "What about the driver's food and stay?",
-        "a": "You can either invite the driver to eat satvik meals at the same highway restaurants (paying base bata from ₹1,400/day) or include ₹300/day food allowance. For overnight stay, if your hotel has a driver dorm, no fee is charged; otherwise, a ₹300/night room allowance applies."
+        "a": "You can either invite the driver to eat satvik meals at the same highway restaurants (paying base bata from ₹1,400/day) or include ₹300/day food allowance. For overnight stay, if your hotel has a driver dorm, no fee is charged; otherwise, a ₹300/night room allowance applies.",
+        "question": "What about the driver's food and stay?",
+        "answer": "You can either invite the driver to eat satvik meals at the same highway restaurants (paying base bata from ₹1,400/day) or include ₹300/day food allowance. For overnight stay, if your hotel has a driver dorm, no fee is charged; otherwise, a ₹300/night room allowance applies."
       },
       {
         "q": "Are your drivers trained for hill stations (Ooty, Kodaikanal)?",
-        "a": "Yes! For hill station trips, we specifically assign drivers with verified ghat road experience on hairpin bends and engine braking techniques."
+        "a": "Yes! For hill station trips, we specifically assign drivers with verified ghat road experience on hairpin bends and engine braking techniques.",
+        "question": "Are your drivers trained for hill stations (Ooty, Kodaikanal)?",
+        "answer": "Yes! For hill station trips, we specifically assign drivers with verified ghat road experience on hairpin bends and engine braking techniques."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I need an Outstation Round-Trip Acting Driver for my car.",
@@ -1249,19 +1355,27 @@
     "faq": [
       {
         "q": "How is the One-Way Drop acting driver price calculated?",
-        "a": "Pricing follows our transparent 4-tier distance formula: Driver Bata (1.0x up to 250 km, 1.5x for 251–450 km, 2.0x for 451–650 km, 2.5x above 650 km) + Return AC/Sleeper Bus Ticket + Food Allowance (₹300–₹600)."
+        "a": "Pricing follows our transparent 4-tier distance formula: Driver Bata (1.0x up to 250 km, 1.5x for 251–450 km, 2.0x for 451–650 km, 2.5x above 650 km) + Return AC/Sleeper Bus Ticket + Food Allowance (₹300–₹600).",
+        "question": "How is the One-Way Drop acting driver price calculated?",
+        "answer": "Pricing follows our transparent 4-tier distance formula: Driver Bata (1.0x up to 250 km, 1.5x for 251–450 km, 2.0x for 451–650 km, 2.5x above 650 km) + Return AC/Sleeper Bus Ticket + Food Allowance (₹300–₹600)."
       },
       {
         "q": "How is my car's safety verified before handover?",
-        "a": "Before starting, our driver photographs the odometer reading, fuel gauge, and vehicle exterior in your presence. Upon delivery at the destination, a handover signoff is completed."
+        "a": "Before starting, our driver photographs the odometer reading, fuel gauge, and vehicle exterior in your presence. Upon delivery at the destination, a handover signoff is completed.",
+        "question": "How is my car's safety verified before handover?",
+        "answer": "Before starting, our driver photographs the odometer reading, fuel gauge, and vehicle exterior in your presence. Upon delivery at the destination, a handover signoff is completed."
       },
       {
         "q": "Can my family members travel inside the car during the relocation?",
-        "a": "Yes! Up to the car's permitted seating capacity, your family members can travel comfortably while our driver takes the wheel."
+        "a": "Yes! Up to the car's permitted seating capacity, your family members can travel comfortably while our driver takes the wheel.",
+        "question": "Can my family members travel inside the car during the relocation?",
+        "answer": "Yes! Up to the car's permitted seating capacity, your family members can travel comfortably while our driver takes the wheel."
       },
       {
         "q": "How does return transit work for one-way car relocation drivers?",
-        "a": "The acting driver safely delivers your car to your destination address, completes the vehicle handover checklist, and returns independently to Chennai via public bus or train (actual return bus/train fare covered by customer)."
+        "a": "The acting driver safely delivers your car to your destination address, completes the vehicle handover checklist, and returns independently to Chennai via public bus or train (actual return bus/train fare covered by customer).",
+        "question": "How does return transit work for one-way car relocation drivers?",
+        "answer": "The acting driver safely delivers your car to your destination address, completes the vehicle handover checklist, and returns independently to Chennai via public bus or train (actual return bus/train fare covered by customer)."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I need an Outstation One-Way Car Relocation driver.",
@@ -1335,19 +1449,27 @@
     "faq": [
       {
         "q": "What if driver is sick?",
-        "a": "We send a replacement automatically."
+        "a": "We send a replacement automatically.",
+        "question": "What if driver is sick?",
+        "answer": "We send a replacement automatically."
       },
       {
         "q": "Can I extend hours?",
-        "a": "Yes, ₹100/hr overtime."
+        "a": "Yes, ₹100/hr overtime.",
+        "question": "Can I extend hours?",
+        "answer": "Yes, ₹100/hr overtime."
       },
       {
         "q": "What is included in the monthly corporate car retainer package?",
-        "a": "The retainer includes a dedicated sanitized vehicle (Sedan, Ertiga, or Innova Crysta), full-time uniformed chauffeur, 26 days / 10 hours duty, GPS tracking, and a guaranteed 60-minute emergency breakdown replacement."
+        "a": "The retainer includes a dedicated sanitized vehicle (Sedan, Ertiga, or Innova Crysta), full-time uniformed chauffeur, 26 days / 10 hours duty, GPS tracking, and a guaranteed 60-minute emergency breakdown replacement.",
+        "question": "What is included in the monthly corporate car retainer package?",
+        "answer": "The retainer includes a dedicated sanitized vehicle (Sedan, Ertiga, or Innova Crysta), full-time uniformed chauffeur, 26 days / 10 hours duty, GPS tracking, and a guaranteed 60-minute emergency breakdown replacement."
       },
       {
         "q": "Do you provide 100% GST compliant invoicing for corporate car retainers?",
-        "a": "Yes. Kalidass Travels (GSTIN: 33COVPM0531D1Z4) provides monthly GST tax invoices with detailed logbook mileage reconciliation for input tax credit (ITC) and corporate tax compliance."
+        "a": "Yes. Kalidass Travels (GSTIN: 33COVPM0531D1Z4) provides monthly GST tax invoices with detailed logbook mileage reconciliation for input tax credit (ITC) and corporate tax compliance.",
+        "question": "Do you provide 100% GST compliant invoicing for corporate car retainers?",
+        "answer": "Yes. Kalidass Travels (GSTIN: 33COVPM0531D1Z4) provides monthly GST tax invoices with detailed logbook mileage reconciliation for input tax credit (ITC) and corporate tax compliance."
       }
     ],
     "whatsappMsg": "Hi, I need a monthly corporate car plan.",
@@ -1400,23 +1522,33 @@
     "faq": [
       {
         "q": "Is multi-stop allowed?",
-        "a": "Yes → ₹50–₹100 per extra stop."
+        "a": "Yes → ₹50–₹100 per extra stop.",
+        "question": "Is multi-stop allowed?",
+        "answer": "Yes → ₹50–₹100 per extra stop."
       },
       {
         "q": "What safety protocols are followed for female employees during night shifts?",
-        "a": "Female employee security is our highest priority: female passengers are never the first pickup or last drop during night shifts (8 PM – 6 AM). All vehicles are GPS-tracked with SOS alerts, and emergency contact verification is maintained."
+        "a": "Female employee security is our highest priority: female passengers are never the first pickup or last drop during night shifts (8 PM – 6 AM). All vehicles are GPS-tracked with SOS alerts, and emergency contact verification is maintained.",
+        "question": "What safety protocols are followed for female employees during night shifts?",
+        "answer": "Female employee security is our highest priority: female passengers are never the first pickup or last drop during night shifts (8 PM – 6 AM). All vehicles are GPS-tracked with SOS alerts, and emergency contact verification is maintained."
       },
       {
         "q": "Do you provide real-time GPS tracking and route optimization for employee cabs?",
-        "a": "Yes. Our corporate fleet operations utilize automated route optimization to minimize commute times, combined with 24/7 central control room monitoring and automated digital attendance logs."
+        "a": "Yes. Our corporate fleet operations utilize automated route optimization to minimize commute times, combined with 24/7 central control room monitoring and automated digital attendance logs.",
+        "question": "Do you provide real-time GPS tracking and route optimization for employee cabs?",
+        "answer": "Yes. Our corporate fleet operations utilize automated route optimization to minimize commute times, combined with 24/7 central control room monitoring and automated digital attendance logs."
       },
       {
         "q": "What vehicle categories are available for corporate employee transport (ETS)?",
-        "a": "We deploy fuel-efficient AC Sedans (Swift Dzire/Etios), 6-seater MUVs (Maruti Ertiga), and 12–20 seater Tempo Travellers, all operating under commercial yellow-board registration and comprehensive passenger insurance."
+        "a": "We deploy fuel-efficient AC Sedans (Swift Dzire/Etios), 6-seater MUVs (Maruti Ertiga), and 12–20 seater Tempo Travellers, all operating under commercial yellow-board registration and comprehensive passenger insurance.",
+        "question": "What vehicle categories are available for corporate employee transport (ETS)?",
+        "answer": "We deploy fuel-efficient AC Sedans (Swift Dzire/Etios), 6-seater MUVs (Maruti Ertiga), and 12–20 seater Tempo Travellers, all operating under commercial yellow-board registration and comprehensive passenger insurance."
       },
       {
         "q": "What is the backup vehicle guarantee in case of unexpected delays or breakdowns?",
-        "a": "We maintain an active standby fleet across Chennai's IT hubs (OMR, Guindy, Ambattur, MEPZ). If any vehicle experiences a mechanical issue, a replacement vehicle is dispatched within 30 to 45 minutes guaranteed."
+        "a": "We maintain an active standby fleet across Chennai's IT hubs (OMR, Guindy, Ambattur, MEPZ). If any vehicle experiences a mechanical issue, a replacement vehicle is dispatched within 30 to 45 minutes guaranteed.",
+        "question": "What is the backup vehicle guarantee in case of unexpected delays or breakdowns?",
+        "answer": "We maintain an active standby fleet across Chennai's IT hubs (OMR, Guindy, Ambattur, MEPZ). If any vehicle experiences a mechanical issue, a replacement vehicle is dispatched within 30 to 45 minutes guaranteed."
       }
     ],
     "whatsappMsg": "Hi, I am interested in Employee Pickup & Drop services.",
@@ -1557,23 +1689,33 @@
     "faq": [
       {
         "q": "How far is Pondicherry from Chennai?",
-        "a": "Pondicherry is approximately 155 km from Chennai via ECR (East Coast Road). The scenic coastal drive takes about 2.5 – 3 hours depending on traffic."
+        "a": "Pondicherry is approximately 155 km from Chennai via ECR (East Coast Road). The scenic coastal drive takes about 2.5 – 3 hours depending on traffic.",
+        "question": "How far is Pondicherry from Chennai?",
+        "answer": "Pondicherry is approximately 155 km from Chennai via ECR (East Coast Road). The scenic coastal drive takes about 2.5 – 3 hours depending on traffic."
       },
       {
         "q": "Is the ECR route included in the package?",
-        "a": "Yes. All ECR FASTag tolls are included in the package price. We use the scenic ECR route for a comfortable and enjoyable coastal drive."
+        "a": "Yes. All ECR FASTag tolls are included in the package price. We use the scenic ECR route for a comfortable and enjoyable coastal drive.",
+        "question": "Is the ECR route included in the package?",
+        "answer": "Yes. All ECR FASTag tolls are included in the package price. We use the scenic ECR route for a comfortable and enjoyable coastal drive."
       },
       {
         "q": "Can I customize the sightseeing stops?",
-        "a": "Absolutely. Our driver is flexible. You can add stops like Mahabalipuram Shore Temple, Covelong Beach, or Paradise Beach. Just let us know your preferences while booking."
+        "a": "Absolutely. Our driver is flexible. You can add stops like Mahabalipuram Shore Temple, Covelong Beach, or Paradise Beach. Just let us know your preferences while booking.",
+        "question": "Can I customize the sightseeing stops?",
+        "answer": "Absolutely. Our driver is flexible. You can add stops like Mahabalipuram Shore Temple, Covelong Beach, or Paradise Beach. Just let us know your preferences while booking."
       },
       {
         "q": "What is the pickup time recommended?",
-        "a": "We recommend 6:00 AM pickup to make the most of the day. This lets you reach Auroville by 9:00 AM when it opens, and gives you ample time at each spot before heading back comfortably by evening."
+        "a": "We recommend 6:00 AM pickup to make the most of the day. This lets you reach Auroville by 9:00 AM when it opens, and gives you ample time at each spot before heading back comfortably by evening.",
+        "question": "What is the pickup time recommended?",
+        "answer": "We recommend 6:00 AM pickup to make the most of the day. This lets you reach Auroville by 9:00 AM when it opens, and gives you ample time at each spot before heading back comfortably by evening."
       },
       {
         "q": "Are there any extra charges beyond the package price?",
-        "a": "The package covers up to 320 km round trip. If the total distance exceeds this (e.g., extra detours), additional km is charged at the per-km rate. Meals, entry tickets, and guide fees are not included."
+        "a": "The package covers up to 320 km round trip. If the total distance exceeds this (e.g., extra detours), additional km is charged at the per-km rate. Meals, entry tickets, and guide fees are not included.",
+        "question": "Are there any extra charges beyond the package price?",
+        "answer": "The package covers up to 320 km round trip. If the total distance exceeds this (e.g., extra detours), additional km is charged at the per-km rate. Meals, entry tickets, and guide fees are not included."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I want to book the Chennai to Pondicherry 1-Day Trip Package. Please share availability and cab options.",
@@ -1671,23 +1813,33 @@
     "faq": [
       {
         "q": "What places are covered in the One Day Chennai City Tour?",
-        "a": "The tour covers major heritage and cultural highlights including Kapaleeshwarar Temple (Mylapore), Santhome Cathedral Basilica, Fort St. George, Government Museum (Egmore), Marina Beach, and Besant Nagar (Edward Elliot's Beach)."
+        "a": "The tour covers major heritage and cultural highlights including Kapaleeshwarar Temple (Mylapore), Santhome Cathedral Basilica, Fort St. George, Government Museum (Egmore), Marina Beach, and Besant Nagar (Edward Elliot's Beach).",
+        "question": "What places are covered in the One Day Chennai City Tour?",
+        "answer": "The tour covers major heritage and cultural highlights including Kapaleeshwarar Temple (Mylapore), Santhome Cathedral Basilica, Fort St. George, Government Museum (Egmore), Marina Beach, and Besant Nagar (Edward Elliot's Beach)."
       },
       {
         "q": "How much does the 1-day Chennai city sightseeing taxi package cost?",
-        "a": "Fares start from ₹2,500 for Swift Dzire/Etios (4 seats), ₹3,200 for Maruti Ertiga (6 seats), ₹3,800 for Toyota Innova, and ₹6,500 for Tempo Traveller for an 8-hour / 80-km package. Extra hours and kilometers are billed at transparent flat rates."
+        "a": "Fares start from ₹2,500 for Swift Dzire/Etios (4 seats), ₹3,200 for Maruti Ertiga (6 seats), ₹3,800 for Toyota Innova, and ₹6,500 for Tempo Traveller for an 8-hour / 80-km package. Extra hours and kilometers are billed at transparent flat rates.",
+        "question": "How much does the 1-day Chennai city sightseeing taxi package cost?",
+        "answer": "Fares start from ₹2,500 for Swift Dzire/Etios (4 seats), ₹3,200 for Maruti Ertiga (6 seats), ₹3,800 for Toyota Innova, and ₹6,500 for Tempo Traveller for an 8-hour / 80-km package. Extra hours and kilometers are billed at transparent flat rates."
       },
       {
         "q": "Can we customize the sightseeing locations or start time?",
-        "a": "Yes! This is a 100% private cab rental. You can choose your pickup time (typically 8:30 AM or 9:00 AM) and customize the itinerary to include shopping in T. Nagar, DakshinaChitra, or specific temples."
+        "a": "Yes! This is a 100% private cab rental. You can choose your pickup time (typically 8:30 AM or 9:00 AM) and customize the itinerary to include shopping in T. Nagar, DakshinaChitra, or specific temples.",
+        "question": "Can we customize the sightseeing locations or start time?",
+        "answer": "Yes! This is a 100% private cab rental. You can choose your pickup time (typically 8:30 AM or 9:00 AM) and customize the itinerary to include shopping in T. Nagar, DakshinaChitra, or specific temples."
       },
       {
         "q": "Are parking charges and monument entry fees included in the package?",
-        "a": "The package includes the sanitized AC vehicle, fuel, and chauffeur charges. Monument entry tickets and temple/beach parking fees are paid directly as per actuals."
+        "a": "The package includes the sanitized AC vehicle, fuel, and chauffeur charges. Monument entry tickets and temple/beach parking fees are paid directly as per actuals.",
+        "question": "Are parking charges and monument entry fees included in the package?",
+        "answer": "The package includes the sanitized AC vehicle, fuel, and chauffeur charges. Monument entry tickets and temple/beach parking fees are paid directly as per actuals."
       },
       {
         "q": "Where does the driver pick us up and drop us off?",
-        "a": "Doorstep pickup and drop are provided anywhere within Chennai city limits, including your home, hotel, Chennai Central Railway Station (MAS), or Chennai Airport (MAA)."
+        "a": "Doorstep pickup and drop are provided anywhere within Chennai city limits, including your home, hotel, Chennai Central Railway Station (MAS), or Chennai Airport (MAA).",
+        "question": "Where does the driver pick us up and drop us off?",
+        "answer": "Doorstep pickup and drop are provided anywhere within Chennai city limits, including your home, hotel, Chennai Central Railway Station (MAS), or Chennai Airport (MAA)."
       }
     ]
   },
@@ -1736,23 +1888,33 @@
     "faq": [
       {
         "q": "What wedding car options are available for rent in Chennai?",
-        "a": "We offer premium bridal sedans (Toyota Camry, Honda City), luxury executive MPVs (Toyota Innova Crysta, Hycross), and 12-to-20 seater Tempo Travellers for marriage guest transit and family conveyance."
+        "a": "We offer premium bridal sedans (Toyota Camry, Honda City), luxury executive MPVs (Toyota Innova Crysta, Hycross), and 12-to-20 seater Tempo Travellers for marriage guest transit and family conveyance.",
+        "question": "What wedding car options are available for rent in Chennai?",
+        "answer": "We offer premium bridal sedans (Toyota Camry, Honda City), luxury executive MPVs (Toyota Innova Crysta, Hycross), and 12-to-20 seater Tempo Travellers for marriage guest transit and family conveyance."
       },
       {
         "q": "Can fresh flower decoration be arranged for the wedding car?",
-        "a": "Yes. We can coordinate custom floral decoration with natural fresh flowers, ribbons, and bouquets at your wedding venue or residence prior to the bride and groom's departure."
+        "a": "Yes. We can coordinate custom floral decoration with natural fresh flowers, ribbons, and bouquets at your wedding venue or residence prior to the bride and groom's departure.",
+        "question": "Can fresh flower decoration be arranged for the wedding car?",
+        "answer": "Yes. We can coordinate custom floral decoration with natural fresh flowers, ribbons, and bouquets at your wedding venue or residence prior to the bride and groom's departure."
       },
       {
         "q": "Are the chauffeurs trained for VIP and marriage event protocols?",
-        "a": "Yes. Our senior wedding chauffeurs are dressed in clean formal attire, possess 10+ years of driving experience, arrive 30 minutes before schedule, and are familiar with all marriage halls and convention centres across Chennai."
+        "a": "Yes. Our senior wedding chauffeurs are dressed in clean formal attire, possess 10+ years of driving experience, arrive 30 minutes before schedule, and are familiar with all marriage halls and convention centres across Chennai.",
+        "question": "Are the chauffeurs trained for VIP and marriage event protocols?",
+        "answer": "Yes. Our senior wedding chauffeurs are dressed in clean formal attire, possess 10+ years of driving experience, arrive 30 minutes before schedule, and are familiar with all marriage halls and convention centres across Chennai."
       },
       {
         "q": "How is wedding car rental priced in Chennai?",
-        "a": "Wedding rentals are structured as 8-hour / 80-km or 12-hour / 100-km packages starting from ₹3,500 for premium Sedans and ₹7,000 for Innova Crysta. Additional hours and distance have transparent flat rates with zero surge pricing."
+        "a": "Wedding rentals are structured as 8-hour / 80-km or 12-hour / 100-km packages starting from ₹3,500 for premium Sedans and ₹7,000 for Innova Crysta. Additional hours and distance have transparent flat rates with zero surge pricing.",
+        "question": "How is wedding car rental priced in Chennai?",
+        "answer": "Wedding rentals are structured as 8-hour / 80-km or 12-hour / 100-km packages starting from ₹3,500 for premium Sedans and ₹7,000 for Innova Crysta. Additional hours and distance have transparent flat rates with zero surge pricing."
       },
       {
         "q": "Can we book multiple vehicles for wedding guest transfers?",
-        "a": "Yes! We specialize in bulk wedding fleet management, coordinating simultaneous airport and railway station pickups, mandapam shuttles, and outstation family transfers with dedicated trip dispatchers."
+        "a": "Yes! We specialize in bulk wedding fleet management, coordinating simultaneous airport and railway station pickups, mandapam shuttles, and outstation family transfers with dedicated trip dispatchers.",
+        "question": "Can we book multiple vehicles for wedding guest transfers?",
+        "answer": "Yes! We specialize in bulk wedding fleet management, coordinating simultaneous airport and railway station pickups, mandapam shuttles, and outstation family transfers with dedicated trip dispatchers."
       }
     ]
   },
@@ -1871,15 +2033,21 @@
     "faq": [
       {
         "q": "Is Mahabalipuram good for a family day trip from Chennai?",
-        "a": "Yes — it is one of the most popular family-friendly day trips. The monuments are open-air, children enjoy the large rock formations and beaches, and the ECR drive itself is very scenic."
+        "a": "Yes — it is one of the most popular family-friendly day trips. The monuments are open-air, children enjoy the large rock formations and beaches, and the ECR drive itself is very scenic.",
+        "question": "Is Mahabalipuram good for a family day trip from Chennai?",
+        "answer": "Yes — it is one of the most popular family-friendly day trips. The monuments are open-air, children enjoy the large rock formations and beaches, and the ECR drive itself is very scenic."
       },
       {
         "q": "What is the best time to visit Mahabalipuram from Chennai?",
-        "a": "October to March is ideal (cool coastal weather). Avoid May–June (peak summer heat at open-air sites). The monuments are gorgeous in the golden morning light."
+        "a": "October to March is ideal (cool coastal weather). Avoid May–June (peak summer heat at open-air sites). The monuments are gorgeous in the golden morning light.",
+        "question": "What is the best time to visit Mahabalipuram from Chennai?",
+        "answer": "October to March is ideal (cool coastal weather). Avoid May–June (peak summer heat at open-air sites). The monuments are gorgeous in the golden morning light."
       },
       {
         "q": "Are entry tickets included in the cab package?",
-        "a": "No — ASI monument tickets (₹40–₹80 per person) are paid separately at the gate. Your driver knows the exact entry points."
+        "a": "No — ASI monument tickets (₹40–₹80 per person) are paid separately at the gate. Your driver knows the exact entry points.",
+        "question": "Are entry tickets included in the cab package?",
+        "answer": "No — ASI monument tickets (₹40–₹80 per person) are paid separately at the gate. Your driver knows the exact entry points."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I want to book the Chennai to Mahabalipuram 1-Day ECR Temple & Beach Tour.",
@@ -2012,15 +2180,21 @@
     "faq": [
       {
         "q": "Is Yelagiri suitable for senior citizens and young children?",
-        "a": "Yes — the ghat road is manageable and not as steep as Ooty. Our experienced drivers navigate hairpin bends safely. Punganur Lake is accessible and Nature Park is flat-terrain friendly."
+        "a": "Yes — the ghat road is manageable and not as steep as Ooty. Our experienced drivers navigate hairpin bends safely. Punganur Lake is accessible and Nature Park is flat-terrain friendly.",
+        "question": "Is Yelagiri suitable for senior citizens and young children?",
+        "answer": "Yes — the ghat road is manageable and not as steep as Ooty. Our experienced drivers navigate hairpin bends safely. Punganur Lake is accessible and Nature Park is flat-terrain friendly."
       },
       {
         "q": "What is the best season to visit Yelagiri from Chennai?",
-        "a": "October to February is ideal — pleasant 15–22°C temperatures, green hills, and Jalagamparai Falls flowing at its best. Avoid May–June when hills are dry and hot."
+        "a": "October to February is ideal — pleasant 15–22°C temperatures, green hills, and Jalagamparai Falls flowing at its best. Avoid May–June when hills are dry and hot.",
+        "question": "What is the best season to visit Yelagiri from Chennai?",
+        "answer": "October to February is ideal — pleasant 15–22°C temperatures, green hills, and Jalagamparai Falls flowing at its best. Avoid May–June when hills are dry and hot."
       },
       {
         "q": "Are hotel bookings included in the cab package?",
-        "a": "No — accommodation at Yelagiri is arranged and paid separately. Popular options include Hotel Vignesh Comforts, Yelagiri Nature Resort, and TTDC Hotel. We can recommend options upon request."
+        "a": "No — accommodation at Yelagiri is arranged and paid separately. Popular options include Hotel Vignesh Comforts, Yelagiri Nature Resort, and TTDC Hotel. We can recommend options upon request.",
+        "question": "Are hotel bookings included in the cab package?",
+        "answer": "No — accommodation at Yelagiri is arranged and paid separately. Popular options include Hotel Vignesh Comforts, Yelagiri Nature Resort, and TTDC Hotel. We can recommend options upon request."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I want to book an outstation cab from Chennai to Yelagiri Hills. Please share fare quotation and vehicle options.",
@@ -2161,15 +2335,21 @@
     "faq": [
       {
         "q": "How long is the drive from Chennai to Yercaud?",
-        "a": "Approximately 5 to 5.5 hours (350 km one way) via the Chennai–Salem Expressway (NH 44) plus the 20-hairpin ghat road ascent from Salem base."
+        "a": "Approximately 5 to 5.5 hours (350 km one way) via the Chennai–Salem Expressway (NH 44) plus the 20-hairpin ghat road ascent from Salem base.",
+        "question": "How long is the drive from Chennai to Yercaud?",
+        "answer": "Approximately 5 to 5.5 hours (350 km one way) via the Chennai–Salem Expressway (NH 44) plus the 20-hairpin ghat road ascent from Salem base."
       },
       {
         "q": "Is the Yercaud ghat road safe for night driving?",
-        "a": "We always plan the ghat ascent during daylight hours for safety. Our drivers are experienced in mountain road driving, but we recommend scheduling arrival before sunset."
+        "a": "We always plan the ghat ascent during daylight hours for safety. Our drivers are experienced in mountain road driving, but we recommend scheduling arrival before sunset.",
+        "question": "Is the Yercaud ghat road safe for night driving?",
+        "answer": "We always plan the ghat ascent during daylight hours for safety. Our drivers are experienced in mountain road driving, but we recommend scheduling arrival before sunset."
       },
       {
         "q": "What is the best time to visit Killiyur Falls?",
-        "a": "August to January (post-monsoon season) is ideal when the falls flow strongly. During March–June, the falls may be reduced to a trickle due to dry season."
+        "a": "August to January (post-monsoon season) is ideal when the falls flow strongly. During March–June, the falls may be reduced to a trickle due to dry season.",
+        "question": "What is the best time to visit Killiyur Falls?",
+        "answer": "August to January (post-monsoon season) is ideal when the falls flow strongly. During March–June, the falls may be reduced to a trickle due to dry season."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I want to book an outstation cab from Chennai to Yercaud. Please share fare quotation and vehicle options.",
@@ -2279,51 +2459,75 @@
     "faq": [
       {
         "q": "Where is Kalidass Travels located in Medavakkam?",
-        "a": "Our registered office and operations hub is at No. 4/220, E88, Ponniamman Kovil Street, Annamalai Nagar, Medavakkam, Chennai 600100. We are stationed right at the Medavakkam junction."
+        "a": "Our registered office and operations hub is at No. 4/220, E88, Ponniamman Kovil Street, Annamalai Nagar, Medavakkam, Chennai 600100. We are stationed right at the Medavakkam junction.",
+        "question": "Where is Kalidass Travels located in Medavakkam?",
+        "answer": "Our registered office and operations hub is at No. 4/220, E88, Ponniamman Kovil Street, Annamalai Nagar, Medavakkam, Chennai 600100. We are stationed right at the Medavakkam junction."
       },
       {
         "q": "How quickly can a cab arrive in Medavakkam or Perumbakkam?",
-        "a": "Because our drivers and fleet are stationed locally in Medavakkam, our average doorstep arrival time is just 5 to 10 minutes."
+        "a": "Because our drivers and fleet are stationed locally in Medavakkam, our average doorstep arrival time is just 5 to 10 minutes.",
+        "question": "How quickly can a cab arrive in Medavakkam or Perumbakkam?",
+        "answer": "Because our drivers and fleet are stationed locally in Medavakkam, our average doorstep arrival time is just 5 to 10 minutes."
       },
       {
         "q": "What is the airport taxi fare from Medavakkam to Chennai Airport (MAA)?",
-        "a": "We offer a flat fixed fare of ₹650 for an AC Sedan (Dzire / Etios) and ₹950 for an Ertiga SUV with zero surge pricing, even during midnight or early morning departures."
+        "a": "We offer a flat fixed fare of ₹650 for an AC Sedan (Dzire / Etios) and ₹950 for an Ertiga SUV with zero surge pricing, even during midnight or early morning departures.",
+        "question": "What is the airport taxi fare from Medavakkam to Chennai Airport (MAA)?",
+        "answer": "We offer a flat fixed fare of ₹650 for an AC Sedan (Dzire / Etios) and ₹950 for an Ertiga SUV with zero surge pricing, even during midnight or early morning departures."
       },
       {
         "q": "Do you serve neighboring areas like Nanmangalam, Kovilambakkam, and Sithalapakkam?",
-        "a": "Yes! We provide full 24/7 doorstep pickup across Medavakkam, Perumbakkam, Kovilambakkam, Nanmangalam, Sithalapakkam, Pallikaranai, and Sholinganallur link road."
+        "a": "Yes! We provide full 24/7 doorstep pickup across Medavakkam, Perumbakkam, Kovilambakkam, Nanmangalam, Sithalapakkam, Pallikaranai, and Sholinganallur link road.",
+        "question": "Do you serve neighboring areas like Nanmangalam, Kovilambakkam, and Sithalapakkam?",
+        "answer": "Yes! We provide full 24/7 doorstep pickup across Medavakkam, Perumbakkam, Kovilambakkam, Nanmangalam, Sithalapakkam, Pallikaranai, and Sholinganallur link road."
       },
       {
         "q": "Can I book outstation cabs from Medavakkam?",
-        "a": "Yes, we specialize in round-trip and one-way outstation cabs from Medavakkam to Pondicherry, Tirupati, Bangalore, Kumbakonam, Vellore, and all South India destinations starting from ₹14/km."
+        "a": "Yes, we specialize in round-trip and one-way outstation cabs from Medavakkam to Pondicherry, Tirupati, Bangalore, Kumbakonam, Vellore, and all South India destinations starting from ₹14/km.",
+        "question": "Can I book outstation cabs from Medavakkam?",
+        "answer": "Yes, we specialize in round-trip and one-way outstation cabs from Medavakkam to Pondicherry, Tirupati, Bangalore, Kumbakonam, Vellore, and all South India destinations starting from ₹14/km."
       },
       {
         "q": "Can I hire an acting driver for my own car in Medavakkam?",
-        "a": "Yes. If you need a police-verified professional driver to drive your manual, automatic, or luxury car within Chennai or outstation, you can hire an acting driver starting from ₹750."
+        "a": "Yes. If you need a police-verified professional driver to drive your manual, automatic, or luxury car within Chennai or outstation, you can hire an acting driver starting from ₹750.",
+        "question": "Can I hire an acting driver for my own car in Medavakkam?",
+        "answer": "Yes. If you need a police-verified professional driver to drive your manual, automatic, or luxury car within Chennai or outstation, you can hire an acting driver starting from ₹750."
       },
       {
         "q": "Do your cabs charge surge pricing during peak hours or heavy rains?",
-        "a": "Never. Unlike app aggregators whose fares double during rush hour or rain, Kalidass Travels maintains 100% fixed, transparent rates with zero surge pricing."
+        "a": "Never. Unlike app aggregators whose fares double during rush hour or rain, Kalidass Travels maintains 100% fixed, transparent rates with zero surge pricing.",
+        "question": "Do your cabs charge surge pricing during peak hours or heavy rains?",
+        "answer": "Never. Unlike app aggregators whose fares double during rush hour or rain, Kalidass Travels maintains 100% fixed, transparent rates with zero surge pricing."
       },
       {
         "q": "Are your drivers police-verified and local to South Chennai?",
-        "a": "Yes, all our chauffeurs are 100% police-verified (PVC verified), non-smoking, courteous, and familiar with all South Chennai localities and shortcuts."
+        "a": "Yes, all our chauffeurs are 100% police-verified (PVC verified), non-smoking, courteous, and familiar with all South Chennai localities and shortcuts.",
+        "question": "Are your drivers police-verified and local to South Chennai?",
+        "answer": "Yes, all our chauffeurs are 100% police-verified (PVC verified), non-smoking, courteous, and familiar with all South Chennai localities and shortcuts."
       },
       {
         "q": "Can I pre-book a cab for early morning 03:00 AM?",
-        "a": "Yes. Pre-book via WhatsApp or phone call anytime, and your cab will be at your doorstep 10 minutes before the scheduled time with zero delay."
+        "a": "Yes. Pre-book via WhatsApp or phone call anytime, and your cab will be at your doorstep 10 minutes before the scheduled time with zero delay.",
+        "question": "Can I pre-book a cab for early morning 03:00 AM?",
+        "answer": "Yes. Pre-book via WhatsApp or phone call anytime, and your cab will be at your doorstep 10 minutes before the scheduled time with zero delay."
       },
       {
         "q": "How do I make the payment for my trip?",
-        "a": "You can pay via UPI (Google Pay, PhonePe, Paytm, BHIM), Cash, or Net Banking directly after the completion of your journey."
+        "a": "You can pay via UPI (Google Pay, PhonePe, Paytm, BHIM), Cash, or Net Banking directly after the completion of your journey.",
+        "question": "How do I make the payment for my trip?",
+        "answer": "You can pay via UPI (Google Pay, PhonePe, Paytm, BHIM), Cash, or Net Banking directly after the completion of your journey."
       },
       {
         "q": "Do you provide AC Tempo Travellers for group travel from Medavakkam?",
-        "a": "Yes, we provide 12-seater, 14-seater, and 17-seater AC Tempo Travellers with pushback seats and high roof for family functions, temple trips, and group outings."
+        "a": "Yes, we provide 12-seater, 14-seater, and 17-seater AC Tempo Travellers with pushback seats and high roof for family functions, temple trips, and group outings.",
+        "question": "Do you provide AC Tempo Travellers for group travel from Medavakkam?",
+        "answer": "Yes, we provide 12-seater, 14-seater, and 17-seater AC Tempo Travellers with pushback seats and high roof for family functions, temple trips, and group outings."
       },
       {
         "q": "How do I book a cab in Medavakkam right now?",
-        "a": "Call us directly at +91 89395 39211 or tap the WhatsApp button. Our Medavakkam dispatch desk is online 24/7."
+        "a": "Call us directly at +91 89395 39211 or tap the WhatsApp button. Our Medavakkam dispatch desk is online 24/7.",
+        "question": "How do I book a cab in Medavakkam right now?",
+        "answer": "Call us directly at +91 89395 39211 or tap the WhatsApp button. Our Medavakkam dispatch desk is online 24/7."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels Medavakkam, I need a cab. Please share vehicle availability and rate.",
@@ -2429,51 +2633,75 @@
     "faq": [
       {
         "q": "What is the cab fare from Velachery to Chennai Airport?",
-        "a": "Our flat fare is ₹650 for an AC Sedan (Swift Dzire / Etios), ₹950 for a Maruti Ertiga SUV, ₹1,200 for a Toyota Innova, and ₹2,500 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing."
+        "a": "Our flat fare is ₹650 for an AC Sedan (Swift Dzire / Etios), ₹950 for a Maruti Ertiga SUV, ₹1,200 for a Toyota Innova, and ₹2,500 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing.",
+        "question": "What is the cab fare from Velachery to Chennai Airport?",
+        "answer": "Our flat fare is ₹650 for an AC Sedan (Swift Dzire / Etios), ₹950 for a Maruti Ertiga SUV, ₹1,200 for a Toyota Innova, and ₹2,500 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing."
       },
       {
         "q": "How long does it take to travel from Velachery to Chennai Airport by taxi?",
-        "a": "The distance is about 10 to 12 km. During early morning and late night off-peak hours, it takes only 18 to 22 minutes. During peak hours, expect about 30 to 35 minutes via the Inner Ring Road and Kathipara Flyover."
+        "a": "The distance is about 10 to 12 km. During early morning and late night off-peak hours, it takes only 18 to 22 minutes. During peak hours, expect about 30 to 35 minutes via the Inner Ring Road and Kathipara Flyover.",
+        "question": "How long does it take to travel from Velachery to Chennai Airport by taxi?",
+        "answer": "The distance is about 10 to 12 km. During early morning and late night off-peak hours, it takes only 18 to 22 minutes. During peak hours, expect about 30 to 35 minutes via the Inner Ring Road and Kathipara Flyover."
       },
       {
         "q": "Do you provide airport pickups from Chennai Airport to Velachery?",
-        "a": "Yes! We track your flight arrival in real-time. Your chauffeur will be waiting at Terminal 1, Terminal 2, or Terminal 4 to assist with your luggage and drive you safely to your Velachery address."
+        "a": "Yes! We track your flight arrival in real-time. Your chauffeur will be waiting at Terminal 1, Terminal 2, or Terminal 4 to assist with your luggage and drive you safely to your Velachery address.",
+        "question": "Do you provide airport pickups from Chennai Airport to Velachery?",
+        "answer": "Yes! We track your flight arrival in real-time. Your chauffeur will be waiting at Terminal 1, Terminal 2, or Terminal 4 to assist with your luggage and drive you safely to your Velachery address."
       },
       {
         "q": "What if my flight is delayed?",
-        "a": "We track all flights online. If your arrival is delayed or rescheduled, your pickup automatically adjusts at no extra fee or cancellation penalty."
+        "a": "We track all flights online. If your arrival is delayed or rescheduled, your pickup automatically adjusts at no extra fee or cancellation penalty.",
+        "question": "What if my flight is delayed?",
+        "answer": "We track all flights online. If your arrival is delayed or rescheduled, your pickup automatically adjusts at no extra fee or cancellation penalty."
       },
       {
         "q": "Which areas in Velachery do you cover?",
-        "a": "We cover all of Velachery including Vijayanagar, Baby Nagar, TNHB Colony, Dhandeeswaram Nagar, Bhuvaneshwari Nagar, Gandhi Salai, 100 Feet Road, and Phoenix MarketCity vicinity."
+        "a": "We cover all of Velachery including Vijayanagar, Baby Nagar, TNHB Colony, Dhandeeswaram Nagar, Bhuvaneshwari Nagar, Gandhi Salai, 100 Feet Road, and Phoenix MarketCity vicinity.",
+        "question": "Which areas in Velachery do you cover?",
+        "answer": "We cover all of Velachery including Vijayanagar, Baby Nagar, TNHB Colony, Dhandeeswaram Nagar, Bhuvaneshwari Nagar, Gandhi Salai, 100 Feet Road, and Phoenix MarketCity vicinity."
       },
       {
         "q": "Is there surge pricing during early morning hours like 03:00 AM?",
-        "a": "No, absolutely not. Kalidass Travels has a strict zero surge pricing policy 24 hours a day, 365 days a year."
+        "a": "No, absolutely not. Kalidass Travels has a strict zero surge pricing policy 24 hours a day, 365 days a year.",
+        "question": "Is there surge pricing during early morning hours like 03:00 AM?",
+        "answer": "No, absolutely not. Kalidass Travels has a strict zero surge pricing policy 24 hours a day, 365 days a year."
       },
       {
         "q": "How do I book an airport taxi from Velachery?",
-        "a": "You can book instantly via WhatsApp or call us at +91 89395 39211. Provide your pickup location, flight time, and passenger count for instant confirmation."
+        "a": "You can book instantly via WhatsApp or call us at +91 89395 39211. Provide your pickup location, flight time, and passenger count for instant confirmation.",
+        "question": "How do I book an airport taxi from Velachery?",
+        "answer": "You can book instantly via WhatsApp or call us at +91 89395 39211. Provide your pickup location, flight time, and passenger count for instant confirmation."
       },
       {
         "q": "Can I fit 3 large suitcases in a Sedan?",
-        "a": "Sedans accommodate 2 large check-in bags comfortably. For 3 or more large international bags, we recommend booking a Maruti Ertiga or Toyota Innova."
+        "a": "Sedans accommodate 2 large check-in bags comfortably. For 3 or more large international bags, we recommend booking a Maruti Ertiga or Toyota Innova.",
+        "question": "Can I fit 3 large suitcases in a Sedan?",
+        "answer": "Sedans accommodate 2 large check-in bags comfortably. For 3 or more large international bags, we recommend booking a Maruti Ertiga or Toyota Innova."
       },
       {
         "q": "Do your drivers help with heavy luggage?",
-        "a": "Yes, our courteous chauffeurs assist you with loading and unloading your bags at both your doorstep and the airport departure terminal."
+        "a": "Yes, our courteous chauffeurs assist you with loading and unloading your bags at both your doorstep and the airport departure terminal.",
+        "question": "Do your drivers help with heavy luggage?",
+        "answer": "Yes, our courteous chauffeurs assist you with loading and unloading your bags at both your doorstep and the airport departure terminal."
       },
       {
         "q": "Can I pay using Google Pay or PhonePe?",
-        "a": "Yes, all drivers accept UPI payments (GPay, PhonePe, Paytm), cash, and net banking."
+        "a": "Yes, all drivers accept UPI payments (GPay, PhonePe, Paytm), cash, and net banking.",
+        "question": "Can I pay using Google Pay or PhonePe?",
+        "answer": "Yes, all drivers accept UPI payments (GPay, PhonePe, Paytm), cash, and net banking."
       },
       {
         "q": "Is advance payment required?",
-        "a": "Only a nominal ₹500 advance is required to confirm and lock your cab (100% deducted from the final fare). The remaining balance is payable after reaching your destination."
+        "a": "Only a nominal ₹500 advance is required to confirm and lock your cab (100% deducted from the final fare). The remaining balance is payable after reaching your destination.",
+        "question": "Is advance payment required?",
+        "answer": "Only a nominal ₹500 advance is required to confirm and lock your cab (100% deducted from the final fare). The remaining balance is payable after reaching your destination."
       },
       {
         "q": "Can I book a return airport drop from Velachery?",
-        "a": "Yes, you can schedule round-trip airport transfers at the same time to ensure hassle-free travel for both your departure and return flights."
+        "a": "Yes, you can schedule round-trip airport transfers at the same time to ensure hassle-free travel for both your departure and return flights.",
+        "question": "Can I book a return airport drop from Velachery?",
+        "answer": "Yes, you can schedule round-trip airport transfers at the same time to ensure hassle-free travel for both your departure and return flights."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I need an airport taxi from Velachery to Chennai Airport. Please confirm cab availability.",
@@ -2583,51 +2811,75 @@
     "faq": [
       {
         "q": "What corporate mobility services do you offer on OMR Chennai?",
-        "a": "We provide end-to-end employee transportation (ETS routed shuttles), monthly executive car retainers with dedicated chauffeurs, ad-hoc client airport delegations, and corporate event transit across the entire OMR IT corridor."
+        "a": "We provide end-to-end employee transportation (ETS routed shuttles), monthly executive car retainers with dedicated chauffeurs, ad-hoc client airport delegations, and corporate event transit across the entire OMR IT corridor.",
+        "question": "What corporate mobility services do you offer on OMR Chennai?",
+        "answer": "We provide end-to-end employee transportation (ETS routed shuttles), monthly executive car retainers with dedicated chauffeurs, ad-hoc client airport delegations, and corporate event transit across the entire OMR IT corridor."
       },
       {
         "q": "Which IT parks and SEZs on OMR do you cover?",
-        "a": "We service all major IT parks along OMR including Tidel Park, Ascendas International Tech Park, RMZ Millenia, ASV Suntech Park, Brigade Vantage, Elcot SEZ (Sholinganallur), Pacifica Tech Park (Navalur), and Siruseri SIPCOT IT Park."
+        "a": "We service all major IT parks along OMR including Tidel Park, Ascendas International Tech Park, RMZ Millenia, ASV Suntech Park, Brigade Vantage, Elcot SEZ (Sholinganallur), Pacifica Tech Park (Navalur), and Siruseri SIPCOT IT Park.",
+        "question": "Which IT parks and SEZs on OMR do you cover?",
+        "answer": "We service all major IT parks along OMR including Tidel Park, Ascendas International Tech Park, RMZ Millenia, ASV Suntech Park, Brigade Vantage, Elcot SEZ (Sholinganallur), Pacifica Tech Park (Navalur), and Siruseri SIPCOT IT Park."
       },
       {
         "q": "Do you provide GST-compliant invoices for corporate tax deductions?",
-        "a": "Yes, 100%. All billing is issued under our registered GSTIN (33COVPM0531D1Z4) with formal trip sheets, log summaries, and SAC code 9966 for seamless Input Tax Credit (ITC) claiming."
+        "a": "Yes, 100%. All billing is issued under our registered GSTIN (33COVPM0531D1Z4) with formal trip sheets, log summaries, and SAC code 9966 for seamless Input Tax Credit (ITC) claiming.",
+        "question": "Do you provide GST-compliant invoices for corporate tax deductions?",
+        "answer": "Yes, 100%. All billing is issued under our registered GSTIN (33COVPM0531D1Z4) with formal trip sheets, log summaries, and SAC code 9966 for seamless Input Tax Credit (ITC) claiming."
       },
       {
         "q": "What safety measures are in place for female employees on night shifts?",
-        "a": "We adhere to strict NASSCOM and government safety protocols: 100% police-verified chauffeurs, live GPS vehicle tracking, route geofencing, panic buttons, and safe drop-confirmation where the driver waits until the employee safely enters her premises."
+        "a": "We adhere to strict NASSCOM and government safety protocols: 100% police-verified chauffeurs, live GPS vehicle tracking, route geofencing, panic buttons, and safe drop-confirmation where the driver waits until the employee safely enters her premises.",
+        "question": "What safety measures are in place for female employees on night shifts?",
+        "answer": "We adhere to strict NASSCOM and government safety protocols: 100% police-verified chauffeurs, live GPS vehicle tracking, route geofencing, panic buttons, and safe drop-confirmation where the driver waits until the employee safely enters her premises."
       },
       {
         "q": "Can we hire a monthly car with a dedicated driver for our CEO or executives?",
-        "a": "Yes. We offer executive retainers with premium Sedans (Etios, Dzire, Ciaz) and Luxury SUVs (Innova Crysta) dedicated exclusively to your leadership team on 10-hour or 12-hour daily shifts."
+        "a": "Yes. We offer executive retainers with premium Sedans (Etios, Dzire, Ciaz) and Luxury SUVs (Innova Crysta) dedicated exclusively to your leadership team on 10-hour or 12-hour daily shifts.",
+        "question": "Can we hire a monthly car with a dedicated driver for our CEO or executives?",
+        "answer": "Yes. We offer executive retainers with premium Sedans (Etios, Dzire, Ciaz) and Luxury SUVs (Innova Crysta) dedicated exclusively to your leadership team on 10-hour or 12-hour daily shifts."
       },
       {
         "q": "What is the SLA if a vehicle breaks down on route?",
-        "a": "We maintain backup staged vehicles along the OMR corridor and guarantee a replacement vehicle within 30 minutes to ensure zero disruption to employee shifts."
+        "a": "We maintain backup staged vehicles along the OMR corridor and guarantee a replacement vehicle within 30 minutes to ensure zero disruption to employee shifts.",
+        "question": "What is the SLA if a vehicle breaks down on route?",
+        "answer": "We maintain backup staged vehicles along the OMR corridor and guarantee a replacement vehicle within 30 minutes to ensure zero disruption to employee shifts."
       },
       {
         "q": "What vehicle types are available for employee commute?",
-        "a": "Our fleet includes 4-seater Sedans, 6-seater Ertiga MUVs, 7-seater Innovas, and 12-to-26 seater Tempo Travellers and mini-buses."
+        "a": "Our fleet includes 4-seater Sedans, 6-seater Ertiga MUVs, 7-seater Innovas, and 12-to-26 seater Tempo Travellers and mini-buses.",
+        "question": "What vehicle types are available for employee commute?",
+        "answer": "Our fleet includes 4-seater Sedans, 6-seater Ertiga MUVs, 7-seater Innovas, and 12-to-26 seater Tempo Travellers and mini-buses."
       },
       {
         "q": "How does corporate billing and payment work?",
-        "a": "We offer flexible billing: 15-day or 30-day corporate credit terms upon contract signing, supported by consolidated digital trip sheets and monthly GST invoices."
+        "a": "We offer flexible billing: 15-day or 30-day corporate credit terms upon contract signing, supported by consolidated digital trip sheets and monthly GST invoices.",
+        "question": "How does corporate billing and payment work?",
+        "answer": "We offer flexible billing: 15-day or 30-day corporate credit terms upon contract signing, supported by consolidated digital trip sheets and monthly GST invoices."
       },
       {
         "q": "Can we run a trial service before signing an annual contract?",
-        "a": "Yes. We offer a 1-week or 2-week pilot trial so your facilities and transport team can experience our on-time SLAs, vehicle cleanliness, and driver professionalism."
+        "a": "Yes. We offer a 1-week or 2-week pilot trial so your facilities and transport team can experience our on-time SLAs, vehicle cleanliness, and driver professionalism.",
+        "question": "Can we run a trial service before signing an annual contract?",
+        "answer": "Yes. We offer a 1-week or 2-week pilot trial so your facilities and transport team can experience our on-time SLAs, vehicle cleanliness, and driver professionalism."
       },
       {
         "q": "Do you provide acting drivers for company-owned cars?",
-        "a": "Yes, you can hire verified acting drivers on daily or monthly retainers to drive corporate fleet vehicles or executive personal cars."
+        "a": "Yes, you can hire verified acting drivers on daily or monthly retainers to drive corporate fleet vehicles or executive personal cars.",
+        "question": "Do you provide acting drivers for company-owned cars?",
+        "answer": "Yes, you can hire verified acting drivers on daily or monthly retainers to drive corporate fleet vehicles or executive personal cars."
       },
       {
         "q": "Are your drivers trained in English and corporate etiquette?",
-        "a": "Yes, our executive chauffeurs are trained in professional corporate conduct, route navigation via Google Maps, punctual reporting, and courteous communication."
+        "a": "Yes, our executive chauffeurs are trained in professional corporate conduct, route navigation via Google Maps, punctual reporting, and courteous communication.",
+        "question": "Are your drivers trained in English and corporate etiquette?",
+        "answer": "Yes, our executive chauffeurs are trained in professional corporate conduct, route navigation via Google Maps, punctual reporting, and courteous communication."
       },
       {
         "q": "How do we get a corporate transportation proposal for our company?",
-        "a": "Contact our corporate desk directly at +91 89395 39211 or email kalidasstravels2015@gmail.com with your employee shift headcount and route pin codes. We provide customized route-optimized quotes within 24 hours."
+        "a": "Contact our corporate desk directly at +91 89395 39211 or email kalidasstravels2015@gmail.com with your employee shift headcount and route pin codes. We provide customized route-optimized quotes within 24 hours.",
+        "question": "How do we get a corporate transportation proposal for our company?",
+        "answer": "Contact our corporate desk directly at +91 89395 39211 or email kalidasstravels2015@gmail.com with your employee shift headcount and route pin codes. We provide customized route-optimized quotes within 24 hours."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels Corporate Desk, We would like to inquire about corporate cab services and employee transport on OMR. Please contact us.",
@@ -2729,23 +2981,33 @@
     "faq": [
       {
         "q": "What is the taxi fare from Tambaram to Chennai Airport?",
-        "a": "Our flat fare is ₹650 for an AC Sedan (Swift Dzire / Etios), ₹1,150 for a Maruti Ertiga SUV, ₹1,400 for a Toyota Innova, and ₹2,400 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing."
+        "a": "Our flat fare is ₹650 for an AC Sedan (Swift Dzire / Etios), ₹1,150 for a Maruti Ertiga SUV, ₹1,400 for a Toyota Innova, and ₹2,400 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing.",
+        "question": "What is the taxi fare from Tambaram to Chennai Airport?",
+        "answer": "Our flat fare is ₹650 for an AC Sedan (Swift Dzire / Etios), ₹1,150 for a Maruti Ertiga SUV, ₹1,400 for a Toyota Innova, and ₹2,400 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing."
       },
       {
         "q": "How long does it take from Tambaram to Chennai Airport by cab?",
-        "a": "The distance is about 11 km along GST Road (NH-32). Off-peak travel takes 15 to 20 minutes; peak hour transit takes 25 to 30 minutes."
+        "a": "The distance is about 11 km along GST Road (NH-32). Off-peak travel takes 15 to 20 minutes; peak hour transit takes 25 to 30 minutes.",
+        "question": "How long does it take from Tambaram to Chennai Airport by cab?",
+        "answer": "The distance is about 11 km along GST Road (NH-32). Off-peak travel takes 15 to 20 minutes; peak hour transit takes 25 to 30 minutes."
       },
       {
         "q": "Do you provide late night or early morning 03:00 AM pickups in Tambaram?",
-        "a": "Yes, our dispatch operates 24/7 with zero night surcharge or surge pricing."
+        "a": "Yes, our dispatch operates 24/7 with zero night surcharge or surge pricing.",
+        "question": "Do you provide late night or early morning 03:00 AM pickups in Tambaram?",
+        "answer": "Yes, our dispatch operates 24/7 with zero night surcharge or surge pricing."
       },
       {
         "q": "Which areas in Tambaram do you cover?",
-        "a": "We provide doorstep pickups across Tambaram East, Tambaram West, Tambaram Sanatorium, Kadaperi, Mudichur Road, and MEPZ vicinity."
+        "a": "We provide doorstep pickups across Tambaram East, Tambaram West, Tambaram Sanatorium, Kadaperi, Mudichur Road, and MEPZ vicinity.",
+        "question": "Which areas in Tambaram do you cover?",
+        "answer": "We provide doorstep pickups across Tambaram East, Tambaram West, Tambaram Sanatorium, Kadaperi, Mudichur Road, and MEPZ vicinity."
       },
       {
         "q": "Can I book a return taxi from Chennai Airport back to Tambaram?",
-        "a": "Yes. Share your arrival flight number, and our chauffeur will track your landing and receive you at the arrival exit."
+        "a": "Yes. Share your arrival flight number, and our chauffeur will track your landing and receive you at the arrival exit.",
+        "question": "Can I book a return taxi from Chennai Airport back to Tambaram?",
+        "answer": "Yes. Share your arrival flight number, and our chauffeur will track your landing and receive you at the arrival exit."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I need an airport taxi from Tambaram to Chennai Airport. Please confirm cab availability.",
@@ -2847,23 +3109,33 @@
     "faq": [
       {
         "q": "What is the taxi fare from T. Nagar to Chennai Airport?",
-        "a": "Our flat fare is ₹950 for an AC Sedan (Swift Dzire / Etios), ₹1,550 for a Maruti Ertiga SUV, ₹1,800 for a Toyota Innova, and ₹2,900 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing."
+        "a": "Our flat fare is ₹950 for an AC Sedan (Swift Dzire / Etios), ₹1,550 for a Maruti Ertiga SUV, ₹1,800 for a Toyota Innova, and ₹2,900 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing.",
+        "question": "What is the taxi fare from T. Nagar to Chennai Airport?",
+        "answer": "Our flat fare is ₹950 for an AC Sedan (Swift Dzire / Etios), ₹1,550 for a Maruti Ertiga SUV, ₹1,800 for a Toyota Innova, and ₹2,900 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing."
       },
       {
         "q": "How long does it take from T. Nagar to Chennai Airport by cab?",
-        "a": "The distance is about 15 km. Off-peak transit takes 25 to 30 minutes; peak hour transit takes 35 to 45 minutes via Mount Road and Kathipara Flyover."
+        "a": "The distance is about 15 km. Off-peak transit takes 25 to 30 minutes; peak hour transit takes 35 to 45 minutes via Mount Road and Kathipara Flyover.",
+        "question": "How long does it take from T. Nagar to Chennai Airport by cab?",
+        "answer": "The distance is about 15 km. Off-peak transit takes 25 to 30 minutes; peak hour transit takes 35 to 45 minutes via Mount Road and Kathipara Flyover."
       },
       {
         "q": "Do you pick up from hotels and residences in T. Nagar?",
-        "a": "Yes, we provide doorstep pickups from any residential street, hotel (Residency, Grand Chennai, Benzz Park), or shopping location in T. Nagar."
+        "a": "Yes, we provide doorstep pickups from any residential street, hotel (Residency, Grand Chennai, Benzz Park), or shopping location in T. Nagar.",
+        "question": "Do you pick up from hotels and residences in T. Nagar?",
+        "answer": "Yes, we provide doorstep pickups from any residential street, hotel (Residency, Grand Chennai, Benzz Park), or shopping location in T. Nagar."
       },
       {
         "q": "Can I pay using UPI (Google Pay, PhonePe)?",
-        "a": "Yes, all chauffeurs accept UPI, Google Pay, PhonePe, and cash upon reaching the airport."
+        "a": "Yes, all chauffeurs accept UPI, Google Pay, PhonePe, and cash upon reaching the airport.",
+        "question": "Can I pay using UPI (Google Pay, PhonePe)?",
+        "answer": "Yes, all chauffeurs accept UPI, Google Pay, PhonePe, and cash upon reaching the airport."
       },
       {
         "q": "How do I book a cab from T. Nagar to Chennai Airport?",
-        "a": "You can book in 30 seconds via WhatsApp or call +91 89395 39211 with your pickup address and flight time for instant confirmation."
+        "a": "You can book in 30 seconds via WhatsApp or call +91 89395 39211 with your pickup address and flight time for instant confirmation.",
+        "question": "How do I book a cab from T. Nagar to Chennai Airport?",
+        "answer": "You can book in 30 seconds via WhatsApp or call +91 89395 39211 with your pickup address and flight time for instant confirmation."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I need an airport taxi from T. Nagar to Chennai Airport. Please confirm cab availability.",
@@ -2965,23 +3237,33 @@
     "faq": [
       {
         "q": "What is the taxi fare from Anna Nagar to Chennai Airport?",
-        "a": "Our flat fare is ₹1,150 for an AC Sedan (Swift Dzire / Etios), ₹1,750 for a Maruti Ertiga SUV, ₹2,000 for a Toyota Innova, and ₹3,200 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing."
+        "a": "Our flat fare is ₹1,150 for an AC Sedan (Swift Dzire / Etios), ₹1,750 for a Maruti Ertiga SUV, ₹2,000 for a Toyota Innova, and ₹3,200 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing.",
+        "question": "What is the taxi fare from Anna Nagar to Chennai Airport?",
+        "answer": "Our flat fare is ₹1,150 for an AC Sedan (Swift Dzire / Etios), ₹1,750 for a Maruti Ertiga SUV, ₹2,000 for a Toyota Innova, and ₹3,200 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing."
       },
       {
         "q": "How long does it take from Anna Nagar to Chennai Airport by cab?",
-        "a": "The distance is about 20 km. Off-peak travel takes 30 to 35 minutes; peak hour transit takes 45 to 55 minutes via 100 Feet Road and Koyambedu."
+        "a": "The distance is about 20 km. Off-peak travel takes 30 to 35 minutes; peak hour transit takes 45 to 55 minutes via 100 Feet Road and Koyambedu.",
+        "question": "How long does it take from Anna Nagar to Chennai Airport by cab?",
+        "answer": "The distance is about 20 km. Off-peak travel takes 30 to 35 minutes; peak hour transit takes 45 to 55 minutes via 100 Feet Road and Koyambedu."
       },
       {
         "q": "Which areas in Anna Nagar do you cover?",
-        "a": "We cover all of Anna Nagar including Anna Nagar East, West, West Extension, Shanthi Colony, Roundtana, Thirumangalam, Mogappair, and Shenoy Nagar."
+        "a": "We cover all of Anna Nagar including Anna Nagar East, West, West Extension, Shanthi Colony, Roundtana, Thirumangalam, Mogappair, and Shenoy Nagar.",
+        "question": "Which areas in Anna Nagar do you cover?",
+        "answer": "We cover all of Anna Nagar including Anna Nagar East, West, West Extension, Shanthi Colony, Roundtana, Thirumangalam, Mogappair, and Shenoy Nagar."
       },
       {
         "q": "Can I fit 3 large suitcases in a Sedan?",
-        "a": "Sedans accommodate 2 large check-in bags comfortably. For 3 or more large international bags, we recommend booking a Maruti Ertiga or Toyota Innova."
+        "a": "Sedans accommodate 2 large check-in bags comfortably. For 3 or more large international bags, we recommend booking a Maruti Ertiga or Toyota Innova.",
+        "question": "Can I fit 3 large suitcases in a Sedan?",
+        "answer": "Sedans accommodate 2 large check-in bags comfortably. For 3 or more large international bags, we recommend booking a Maruti Ertiga or Toyota Innova."
       },
       {
         "q": "How do I book an airport taxi from Anna Nagar?",
-        "a": "You can book instantly via WhatsApp or call +91 89395 39211 with your address and departure time for immediate confirmation."
+        "a": "You can book instantly via WhatsApp or call +91 89395 39211 with your address and departure time for immediate confirmation.",
+        "question": "How do I book an airport taxi from Anna Nagar?",
+        "answer": "You can book instantly via WhatsApp or call +91 89395 39211 with your address and departure time for immediate confirmation."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I need an airport taxi from Anna Nagar to Chennai Airport. Please confirm cab availability.",
@@ -3083,23 +3365,33 @@
     "faq": [
       {
         "q": "What is the taxi fare from Sholinganallur to Chennai Airport?",
-        "a": "Our flat fare is ₹1,250 for an AC Sedan (Swift Dzire / Etios), ₹1,850 for a Maruti Ertiga SUV, ₹2,100 for a Toyota Innova, and ₹3,400 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing."
+        "a": "Our flat fare is ₹1,250 for an AC Sedan (Swift Dzire / Etios), ₹1,850 for a Maruti Ertiga SUV, ₹2,100 for a Toyota Innova, and ₹3,400 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing.",
+        "question": "What is the taxi fare from Sholinganallur to Chennai Airport?",
+        "answer": "Our flat fare is ₹1,250 for an AC Sedan (Swift Dzire / Etios), ₹1,850 for a Maruti Ertiga SUV, ₹2,100 for a Toyota Innova, and ₹3,400 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing."
       },
       {
         "q": "How long does it take from Sholinganallur to Chennai Airport by taxi?",
-        "a": "The distance is about 18 km via the 200 Feet Radial Road. Off-peak travel takes 25 to 30 minutes; peak hour transit takes 35 to 45 minutes."
+        "a": "The distance is about 18 km via the 200 Feet Radial Road. Off-peak travel takes 25 to 30 minutes; peak hour transit takes 35 to 45 minutes.",
+        "question": "How long does it take from Sholinganallur to Chennai Airport by taxi?",
+        "answer": "The distance is about 18 km via the 200 Feet Radial Road. Off-peak travel takes 25 to 30 minutes; peak hour transit takes 35 to 45 minutes."
       },
       {
         "q": "Do you provide corporate GST invoices for business airport trips?",
-        "a": "Yes, 100%. All billing includes GSTIN (33COVPM0531D1Z4) for seamless corporate input tax credit (ITC) reimbursement."
+        "a": "Yes, 100%. All billing includes GSTIN (33COVPM0531D1Z4) for seamless corporate input tax credit (ITC) reimbursement.",
+        "question": "Do you provide corporate GST invoices for business airport trips?",
+        "answer": "Yes, 100%. All billing includes GSTIN (33COVPM0531D1Z4) for seamless corporate input tax credit (ITC) reimbursement."
       },
       {
         "q": "Which areas in Sholinganallur do you cover?",
-        "a": "We cover all of Sholinganallur including ELCOT SEZ, Wipro Junction, Classic Farms, Semmancheri, and Dollar City."
+        "a": "We cover all of Sholinganallur including ELCOT SEZ, Wipro Junction, Classic Farms, Semmancheri, and Dollar City.",
+        "question": "Which areas in Sholinganallur do you cover?",
+        "answer": "We cover all of Sholinganallur including ELCOT SEZ, Wipro Junction, Classic Farms, Semmancheri, and Dollar City."
       },
       {
         "q": "How do I book a cab from Sholinganallur to Chennai Airport?",
-        "a": "You can book in 30 seconds via WhatsApp or call +91 89395 39211 with your pickup address and flight time for instant confirmation."
+        "a": "You can book in 30 seconds via WhatsApp or call +91 89395 39211 with your pickup address and flight time for instant confirmation.",
+        "question": "How do I book a cab from Sholinganallur to Chennai Airport?",
+        "answer": "You can book in 30 seconds via WhatsApp or call +91 89395 39211 with your pickup address and flight time for instant confirmation."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I need an airport taxi from Sholinganallur to Chennai Airport. Please confirm cab availability.",
@@ -3201,23 +3493,33 @@
     "faq": [
       {
         "q": "What is the taxi fare from Porur to Chennai Airport?",
-        "a": "Our flat fare is ₹750 for an AC Sedan (Swift Dzire / Etios), ₹1,250 for a Maruti Ertiga SUV, ₹1,500 for a Toyota Innova, and ₹2,600 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing."
+        "a": "Our flat fare is ₹750 for an AC Sedan (Swift Dzire / Etios), ₹1,250 for a Maruti Ertiga SUV, ₹1,500 for a Toyota Innova, and ₹2,600 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing.",
+        "question": "What is the taxi fare from Porur to Chennai Airport?",
+        "answer": "Our flat fare is ₹750 for an AC Sedan (Swift Dzire / Etios), ₹1,250 for a Maruti Ertiga SUV, ₹1,500 for a Toyota Innova, and ₹2,600 for a 12-seater Tempo Traveller. All fares are fixed with zero surge pricing."
       },
       {
         "q": "How long does it take from Porur to Chennai Airport by taxi?",
-        "a": "The distance is about 14 km via Mount Poonamallee Road. Off-peak travel takes 20 to 25 minutes; peak hour transit takes 30 to 40 minutes."
+        "a": "The distance is about 14 km via Mount Poonamallee Road. Off-peak travel takes 20 to 25 minutes; peak hour transit takes 30 to 40 minutes.",
+        "question": "How long does it take from Porur to Chennai Airport by taxi?",
+        "answer": "The distance is about 14 km via Mount Poonamallee Road. Off-peak travel takes 20 to 25 minutes; peak hour transit takes 30 to 40 minutes."
       },
       {
         "q": "Do you cover DLF IT Park and Ramapuram?",
-        "a": "Yes, we provide 24/7 doorstep pickup across DLF IT Park, Ramapuram, Mugalivakkam, Manapakkam, and Porur Junction."
+        "a": "Yes, we provide 24/7 doorstep pickup across DLF IT Park, Ramapuram, Mugalivakkam, Manapakkam, and Porur Junction.",
+        "question": "Do you cover DLF IT Park and Ramapuram?",
+        "answer": "Yes, we provide 24/7 doorstep pickup across DLF IT Park, Ramapuram, Mugalivakkam, Manapakkam, and Porur Junction."
       },
       {
         "q": "Can I pay using UPI (Google Pay, PhonePe)?",
-        "a": "Yes, all chauffeurs accept UPI, Google Pay, PhonePe, and cash upon reaching the airport."
+        "a": "Yes, all chauffeurs accept UPI, Google Pay, PhonePe, and cash upon reaching the airport.",
+        "question": "Can I pay using UPI (Google Pay, PhonePe)?",
+        "answer": "Yes, all chauffeurs accept UPI, Google Pay, PhonePe, and cash upon reaching the airport."
       },
       {
         "q": "How do I book a cab from Porur to Chennai Airport?",
-        "a": "You can book in 30 seconds via WhatsApp or call +91 89395 39211 with your pickup address and flight time for instant confirmation."
+        "a": "You can book in 30 seconds via WhatsApp or call +91 89395 39211 with your pickup address and flight time for instant confirmation.",
+        "question": "How do I book a cab from Porur to Chennai Airport?",
+        "answer": "You can book in 30 seconds via WhatsApp or call +91 89395 39211 with your pickup address and flight time for instant confirmation."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I need an airport taxi from Porur to Chennai Airport. Please confirm cab availability.",
@@ -3328,23 +3630,33 @@
     "faq": [
       {
         "q": "How much is the taxi fare from Chennai to Bangalore?",
-        "a": "One-way drop taxi fares start from ₹5,500 for an AC Sedan (Swift Dzire / Etios), ₹7,200 for an Ertiga SUV, ₹8,500 for an Innova, and ₹14,500 for a 12-seater Tempo Traveller. Same-day or multi-day round trips start at ₹9,500 for Sedans."
+        "a": "One-way drop taxi fares start from ₹5,500 for an AC Sedan (Swift Dzire / Etios), ₹7,200 for an Ertiga SUV, ₹8,500 for an Innova, and ₹14,500 for a 12-seater Tempo Traveller. Same-day or multi-day round trips start at ₹9,500 for Sedans.",
+        "question": "How much is the taxi fare from Chennai to Bangalore?",
+        "answer": "One-way drop taxi fares start from ₹5,500 for an AC Sedan (Swift Dzire / Etios), ₹7,200 for an Ertiga SUV, ₹8,500 for an Innova, and ₹14,500 for a 12-seater Tempo Traveller. Same-day or multi-day round trips start at ₹9,500 for Sedans."
       },
       {
         "q": "What is the distance and travel time from Chennai to Bangalore by road?",
-        "a": "The road distance is approximately 350 km via NH-48 and takes about 5.5 to 6.5 hours depending on departure time and city traffic at Hosur."
+        "a": "The road distance is approximately 350 km via NH-48 and takes about 5.5 to 6.5 hours depending on departure time and city traffic at Hosur.",
+        "question": "What is the distance and travel time from Chennai to Bangalore by road?",
+        "answer": "The road distance is approximately 350 km via NH-48 and takes about 5.5 to 6.5 hours depending on departure time and city traffic at Hosur."
       },
       {
         "q": "Are tolls and Karnataka border entry tax included in the fare?",
-        "a": "Our base package includes vehicle, fuel, and driver bata. Highway FASTag tolls (~₹480) and Karnataka commercial border entry permit (~₹500 for cars) are billed at actual government receipts for 100% transparency."
+        "a": "Our base package includes vehicle, fuel, and driver bata. Highway FASTag tolls (~₹480) and Karnataka commercial border entry permit (~₹500 for cars) are billed at actual government receipts for 100% transparency.",
+        "question": "Are tolls and Karnataka border entry tax included in the fare?",
+        "answer": "Our base package includes vehicle, fuel, and driver bata. Highway FASTag tolls (~₹480) and Karnataka commercial border entry permit (~₹500 for cars) are billed at actual government receipts for 100% transparency."
       },
       {
         "q": "Can I book a one-way cab from Chennai Airport directly to Bangalore?",
-        "a": "Yes! We pick up directly from Chennai Airport (MAA) terminal exit gates and proceed straight onto the Bangalore highway via the bypass."
+        "a": "Yes! We pick up directly from Chennai Airport (MAA) terminal exit gates and proceed straight onto the Bangalore highway via the bypass.",
+        "question": "Can I book a one-way cab from Chennai Airport directly to Bangalore?",
+        "answer": "Yes! We pick up directly from Chennai Airport (MAA) terminal exit gates and proceed straight onto the Bangalore highway via the bypass."
       },
       {
         "q": "Is advance payment required to book a Chennai to Bangalore cab?",
-        "a": "Only a nominal ₹500 advance is required to lock your cab (100% deducted from your total fare). You can pay the remaining balance to the driver upon reaching Bangalore via cash or UPI."
+        "a": "Only a nominal ₹500 advance is required to lock your cab (100% deducted from your total fare). You can pay the remaining balance to the driver upon reaching Bangalore via cash or UPI.",
+        "question": "Is advance payment required to book a Chennai to Bangalore cab?",
+        "answer": "Only a nominal ₹500 advance is required to lock your cab (100% deducted from your total fare). You can pay the remaining balance to the driver upon reaching Bangalore via cash or UPI."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I would like to book a taxi from Chennai to Bangalore. Please confirm availability.",
@@ -3459,27 +3771,39 @@
     "faq": [
       {
         "q": "Are there steps to climb at Tiruchendur Murugan Temple for senior citizens?",
-        "a": "No! Unlike hill temples such as Palani or Tiruttani, Tiruchendur Subramania Swamy Temple is located right on the flat seashore with zero hill climbing. Inside the temple, there are only mild ramps and a few threshold steps, plus a dedicated 60+ Senior Citizen Darshan line with seating benches (carry Original Aadhaar Card)."
+        "a": "No! Unlike hill temples such as Palani or Tiruttani, Tiruchendur Subramania Swamy Temple is located right on the flat seashore with zero hill climbing. Inside the temple, there are only mild ramps and a few threshold steps, plus a dedicated 60+ Senior Citizen Darshan line with seating benches (carry Original Aadhaar Card).",
+        "question": "Are there steps to climb at Tiruchendur Murugan Temple for senior citizens?",
+        "answer": "No! Unlike hill temples such as Palani or Tiruttani, Tiruchendur Subramania Swamy Temple is located right on the flat seashore with zero hill climbing. Inside the temple, there are only mild ramps and a few threshold steps, plus a dedicated 60+ Senior Citizen Darshan line with seating benches (carry Original Aadhaar Card)."
       },
       {
         "q": "Can elderly passengers access Nazhikinaru (the sacred well) easily?",
-        "a": "Nazhikinaru is located 100 meters from the sea and has ~24 steps leading down to the water, which can be slippery for seniors with arthritis or knee pain. Our chauffeur drops you at the nearest gate and guides family members to fetch the sacred spring water for Prokshanam (sprinkling) if elders prefer not to step down."
+        "a": "Nazhikinaru is located 100 meters from the sea and has ~24 steps leading down to the water, which can be slippery for seniors with arthritis or knee pain. Our chauffeur drops you at the nearest gate and guides family members to fetch the sacred spring water for Prokshanam (sprinkling) if elders prefer not to step down.",
+        "question": "Can elderly passengers access Nazhikinaru (the sacred well) easily?",
+        "answer": "Nazhikinaru is located 100 meters from the sea and has ~24 steps leading down to the water, which can be slippery for seniors with arthritis or knee pain. Our chauffeur drops you at the nearest gate and guides family members to fetch the sacred spring water for Prokshanam (sprinkling) if elders prefer not to step down."
       },
       {
         "q": "Is a 2-Day or 3-Day package better when traveling with aged parents from Chennai?",
-        "a": "Chennai to Tiruchendur is ~640 km one-way (10–11 hours on NH 38). While our 2-Day Express package (₹19,500 Sedan) covers Tiruchendur, Kulasekarapattinam, and Vanathirupathi, we strongly recommend the 3-Day Senior-Friendly package (₹23,000 Sedan / ₹31,000 Innova) so elders can rest comfortably and also visit the 9 Nava Tirupathi Perumal temples or break the journey at Madurai."
+        "a": "Chennai to Tiruchendur is ~640 km one-way (10–11 hours on NH 38). While our 2-Day Express package (₹19,500 Sedan) covers Tiruchendur, Kulasekarapattinam, and Vanathirupathi, we strongly recommend the 3-Day Senior-Friendly package (₹23,000 Sedan / ₹31,000 Innova) so elders can rest comfortably and also visit the 9 Nava Tirupathi Perumal temples or break the journey at Madurai.",
+        "question": "Is a 2-Day or 3-Day package better when traveling with aged parents from Chennai?",
+        "answer": "Chennai to Tiruchendur is ~640 km one-way (10–11 hours on NH 38). While our 2-Day Express package (₹19,500 Sedan) covers Tiruchendur, Kulasekarapattinam, and Vanathirupathi, we strongly recommend the 3-Day Senior-Friendly package (₹23,000 Sedan / ₹31,000 Innova) so elders can rest comfortably and also visit the 9 Nava Tirupathi Perumal temples or break the journey at Madurai."
       },
       {
         "q": "What is the cab fare from Chennai to Tiruchendur for 2, 3, and 4 days?",
-        "a": "Round-trip package fares start at ₹19,500 for AC Sedan (Dzire/Etios), ₹23,500 for Ertiga SUV, ₹26,500 for Toyota Innova (Elders' Choice), ₹31,500 for Innova Crysta, and ₹37,000 for a 12-Seater Tempo Traveller for 2 Days (3 Days from ₹23,000; 4 Days Southern Circuit from ₹26,500). Fares include vehicle, fuel, and driver bata; NH 38 FASTag tolls are billed at actuals."
+        "a": "Round-trip package fares start at ₹19,500 for AC Sedan (Dzire/Etios), ₹23,500 for Ertiga SUV, ₹26,500 for Toyota Innova (Elders' Choice), ₹31,500 for Innova Crysta, and ₹37,000 for a 12-Seater Tempo Traveller for 2 Days (3 Days from ₹23,000; 4 Days Southern Circuit from ₹26,500). Fares include vehicle, fuel, and driver bata; NH 38 FASTag tolls are billed at actuals.",
+        "question": "What is the cab fare from Chennai to Tiruchendur for 2, 3, and 4 days?",
+        "answer": "Round-trip package fares start at ₹19,500 for AC Sedan (Dzire/Etios), ₹23,500 for Ertiga SUV, ₹26,500 for Toyota Innova (Elders' Choice), ₹31,500 for Innova Crysta, and ₹37,000 for a 12-Seater Tempo Traveller for 2 Days (3 Days from ₹23,000; 4 Days Southern Circuit from ₹26,500). Fares include vehicle, fuel, and driver bata; NH 38 FASTag tolls are billed at actuals."
       },
       {
         "q": "Can we combine the 9 Nava Tirupathi Divya Desam temples and Kulasekarapattinam with Tiruchendur?",
-        "a": "Yes! Kulasekarapattinam Mutharamman Temple (14 km away) and Vanathirupathi are included even in the 2-Day base itinerary. All 9 Nava Tirupathi Perumal temples (Navagraha Kshetrams on the Thamirabarani river, 25–40 km from Tiruchendur) are covered seamlessly in our 3-Day and 4-Day packages."
+        "a": "Yes! Kulasekarapattinam Mutharamman Temple (14 km away) and Vanathirupathi are included even in the 2-Day base itinerary. All 9 Nava Tirupathi Perumal temples (Navagraha Kshetrams on the Thamirabarani river, 25–40 km from Tiruchendur) are covered seamlessly in our 3-Day and 4-Day packages.",
+        "question": "Can we combine the 9 Nava Tirupathi Divya Desam temples and Kulasekarapattinam with Tiruchendur?",
+        "answer": "Yes! Kulasekarapattinam Mutharamman Temple (14 km away) and Vanathirupathi are included even in the 2-Day base itinerary. All 9 Nava Tirupathi Perumal temples (Navagraha Kshetrams on the Thamirabarani river, 25–40 km from Tiruchendur) are covered seamlessly in our 3-Day and 4-Day packages."
       },
       {
         "q": "How often does the driver stop for restrooms and food on the 10-hour NH 38 highway drive?",
-        "a": "For senior citizen comfort, our chauffeurs follow a planned 2.5-hour bio-break schedule along NH 38 at verified vegetarian food plazas with clean Western toilets—including Ulundurpet, Samayapuram (Trichy bypass), Melur (Madurai bypass), and Kovilpatti."
+        "a": "For senior citizen comfort, our chauffeurs follow a planned 2.5-hour bio-break schedule along NH 38 at verified vegetarian food plazas with clean Western toilets—including Ulundurpet, Samayapuram (Trichy bypass), Melur (Madurai bypass), and Kovilpatti.",
+        "question": "How often does the driver stop for restrooms and food on the 10-hour NH 38 highway drive?",
+        "answer": "For senior citizen comfort, our chauffeurs follow a planned 2.5-hour bio-break schedule along NH 38 at verified vegetarian food plazas with clean Western toilets—including Ulundurpet, Samayapuram (Trichy bypass), Melur (Madurai bypass), and Kovilpatti."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I would like to book the Chennai to Tiruchendur Murugan Temple Cab Package.",
@@ -3586,23 +3910,33 @@
     "faq": [
       {
         "q": "How much is the taxi fare from Chennai to Madurai?",
-        "a": "One-way drop fares start from ₹7,500 for an AC Sedan (Dzire / Etios) and ₹9,500 for an Ertiga SUV. Round trips are billed on per-km basis starting at ₹14/km for Sedans (min 250 km/day) + ₹500 driver bata."
+        "a": "One-way drop fares start from ₹7,500 for an AC Sedan (Dzire / Etios) and ₹9,500 for an Ertiga SUV. Round trips are billed on per-km basis starting at ₹14/km for Sedans (min 250 km/day) + ₹500 driver bata.",
+        "question": "How much is the taxi fare from Chennai to Madurai?",
+        "answer": "One-way drop fares start from ₹7,500 for an AC Sedan (Dzire / Etios) and ₹9,500 for an Ertiga SUV. Round trips are billed on per-km basis starting at ₹14/km for Sedans (min 250 km/day) + ₹500 driver bata."
       },
       {
         "q": "What is the driving distance and travel time from Chennai to Madurai?",
-        "a": "The road distance is approximately 460 km via NH-38 (GST Road) and takes about 7.5 to 8.5 hours with normal highway food and fuel halts."
+        "a": "The road distance is approximately 460 km via NH-38 (GST Road) and takes about 7.5 to 8.5 hours with normal highway food and fuel halts.",
+        "question": "What is the driving distance and travel time from Chennai to Madurai?",
+        "answer": "The road distance is approximately 460 km via NH-38 (GST Road) and takes about 7.5 to 8.5 hours with normal highway food and fuel halts."
       },
       {
         "q": "What is the difference between this Outstation taxi and the Madurai Temple Tour package?",
-        "a": "This outstation taxi service is for point-to-point drop or flexible travel for business, family functions, or custom schedules. The Madurai Temple Tour package is an itinerary-based package covering Meenakshi Amman Temple, Thiruparankundram, and Alagar Kovil."
+        "a": "This outstation taxi service is for point-to-point drop or flexible travel for business, family functions, or custom schedules. The Madurai Temple Tour package is an itinerary-based package covering Meenakshi Amman Temple, Thiruparankundram, and Alagar Kovil.",
+        "question": "What is the difference between this Outstation taxi and the Madurai Temple Tour package?",
+        "answer": "This outstation taxi service is for point-to-point drop or flexible travel for business, family functions, or custom schedules. The Madurai Temple Tour package is an itinerary-based package covering Meenakshi Amman Temple, Thiruparankundram, and Alagar Kovil."
       },
       {
         "q": "Can I get picked up directly from Chennai Airport (MAA)?",
-        "a": "Yes! Our chauffeur picks you up right outside the Chennai Airport arrival terminal and heads straight onto the GST Road highway."
+        "a": "Yes! Our chauffeur picks you up right outside the Chennai Airport arrival terminal and heads straight onto the GST Road highway.",
+        "question": "Can I get picked up directly from Chennai Airport (MAA)?",
+        "answer": "Yes! Our chauffeur picks you up right outside the Chennai Airport arrival terminal and heads straight onto the GST Road highway."
       },
       {
         "q": "How much advance payment is required to book a Chennai to Madurai cab?",
-        "a": "Only a nominal ₹500 advance locks your cab. The advance is 100% deducted from your final bill, and you can pay the balance to the driver via cash or UPI."
+        "a": "Only a nominal ₹500 advance locks your cab. The advance is 100% deducted from your final bill, and you can pay the balance to the driver via cash or UPI.",
+        "question": "How much advance payment is required to book a Chennai to Madurai cab?",
+        "answer": "Only a nominal ₹500 advance locks your cab. The advance is 100% deducted from your final bill, and you can pay the balance to the driver via cash or UPI."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I would like to book a taxi from Chennai to Madurai. Please confirm availability.",
@@ -3710,23 +4044,33 @@
     "faq": [
       {
         "q": "How many days are needed for Chennai to Madurai temple tour?",
-        "a": "A 2-Day (1 Night) tour is ideal for covering Meenakshi Amman Temple and Thiruparankundram. A 3-Day (2 Nights) tour is recommended for senior citizens or if you wish to include Alagar Kovil, Pazhamudircholai, and Srivilliputhur."
+        "a": "A 2-Day (1 Night) tour is ideal for covering Meenakshi Amman Temple and Thiruparankundram. A 3-Day (2 Nights) tour is recommended for senior citizens or if you wish to include Alagar Kovil, Pazhamudircholai, and Srivilliputhur.",
+        "question": "How many days are needed for Chennai to Madurai temple tour?",
+        "answer": "A 2-Day (1 Night) tour is ideal for covering Meenakshi Amman Temple and Thiruparankundram. A 3-Day (2 Nights) tour is recommended for senior citizens or if you wish to include Alagar Kovil, Pazhamudircholai, and Srivilliputhur."
       },
       {
         "q": "What temples are covered in this Madurai package?",
-        "a": "Our standard circuit covers Arulmigu Meenakshi Sundareswarar Temple, Thiruparankundram Murugan Temple, Alagar Kovil (Kallazhagar), and Pazhamudircholai Solaimalai Murugan Temple."
+        "a": "Our standard circuit covers Arulmigu Meenakshi Sundareswarar Temple, Thiruparankundram Murugan Temple, Alagar Kovil (Kallazhagar), and Pazhamudircholai Solaimalai Murugan Temple.",
+        "question": "What temples are covered in this Madurai package?",
+        "answer": "Our standard circuit covers Arulmigu Meenakshi Sundareswarar Temple, Thiruparankundram Murugan Temple, Alagar Kovil (Kallazhagar), and Pazhamudircholai Solaimalai Murugan Temple."
       },
       {
         "q": "Which vehicle is best suited for senior citizens on the Madurai tour?",
-        "a": "For family pilgrimages with senior citizens, we recommend the Toyota Innova or Innova Crysta. They provide comfortable captain seating, easy low-step boarding, and superior suspension on the 460 km highway stretch."
+        "a": "For family pilgrimages with senior citizens, we recommend the Toyota Innova or Innova Crysta. They provide comfortable captain seating, easy low-step boarding, and superior suspension on the 460 km highway stretch.",
+        "question": "Which vehicle is best suited for senior citizens on the Madurai tour?",
+        "answer": "For family pilgrimages with senior citizens, we recommend the Toyota Innova or Innova Crysta. They provide comfortable captain seating, easy low-step boarding, and superior suspension on the 460 km highway stretch."
       },
       {
         "q": "Are darshan tickets included in the cab package?",
-        "a": "No, we provide dedicated private vehicle and chauffeur service. Special darshan tickets and prasadam tokens can be obtained directly at the official HR&CE temple counters."
+        "a": "No, we provide dedicated private vehicle and chauffeur service. Special darshan tickets and prasadam tokens can be obtained directly at the official HR&CE temple counters.",
+        "question": "Are darshan tickets included in the cab package?",
+        "answer": "No, we provide dedicated private vehicle and chauffeur service. Special darshan tickets and prasadam tokens can be obtained directly at the official HR&CE temple counters."
       },
       {
         "q": "How do I confirm the booking for the Madurai temple tour?",
-        "a": "A nominal advance of ₹500 confirms your booking and reserves your vehicle. The remaining balance can be settled with the driver during the trip via cash or UPI."
+        "a": "A nominal advance of ₹500 confirms your booking and reserves your vehicle. The remaining balance can be settled with the driver during the trip via cash or UPI.",
+        "question": "How do I confirm the booking for the Madurai temple tour?",
+        "answer": "A nominal advance of ₹500 confirms your booking and reserves your vehicle. The remaining balance can be settled with the driver during the trip via cash or UPI."
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I would like to book the Chennai to Madurai Meenakshi Temple Tour Package. Please confirm availability.",
@@ -3736,5 +4080,644 @@
     "serviceType": "TaxiService",
     "origin": "Chennai",
     "destination": "Madurai Meenakshi Amman Temple"
+  },
+  {
+    "slug": "local-hourly-cabs",
+    "category": "Popular Destinations",
+    "title": "Local Hourly Car Rental in Chennai – 4h, 8h & 12h Packages",
+    "duration": "Flexible (4 Hrs, 5 Hrs, 8 Hrs, 10 Hrs, 12 Hrs)",
+    "overview": "Book local hourly car rentals in Chennai with private chauffeurs. Ideal for business meetings, shopping in T. Nagar, family functions, hospital visits, and flexible city travel. Transparent packages from 4 Hrs / 40 KM to 12 Hrs / 120 KM. Zero surge pricing, spotless AC vehicles, and punctual doorstep pickup.",
+    "routePlan": [
+      {
+        "stop": "Doorstep Chennai Pickup",
+        "time": "Customer Choice",
+        "desc": "Chauffeur arrives at your home, office, hotel, or transit hub anywhere in Chennai."
+      },
+      {
+        "stop": "Flexible City Transit & Waiting",
+        "time": "Duration of Package",
+        "desc": "Travel across multiple stops, client meetings, or shopping hubs with zero waiting penalties during package hours."
+      },
+      {
+        "stop": "Final Doorstep Drop",
+        "time": "Package Completion",
+        "desc": "Return to your origin or drop at any Chennai location. Transparent billing based strictly on package odometer and clock."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Seats",
+        "4 Hrs / 40 KM",
+        "8 Hrs / 80 KM",
+        "12 Hrs / 120 KM",
+        "Extra KM",
+        "Extra Hour"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4+1",
+          "₹1,600",
+          "₹2,600",
+          "₹3,700",
+          "₹15/km",
+          "₹150/hr"
+        ],
+        [
+          "Maruti Ertiga",
+          "6+1",
+          "₹2,000",
+          "₹3,400",
+          "₹4,700",
+          "₹17/km",
+          "₹200/hr"
+        ],
+        [
+          "Toyota Innova",
+          "7+1",
+          "₹2,300",
+          "₹3,800",
+          "₹5,000",
+          "₹19/km",
+          "₹250/hr"
+        ],
+        [
+          "Toyota Innova Crysta",
+          "7+1",
+          "₹3,400",
+          "₹5,400",
+          "₹7,200",
+          "₹22/km",
+          "₹350/hr"
+        ],
+        [
+          "Tempo Traveller (12 Seater)",
+          "12+1",
+          "₹4,200",
+          "₹6,600",
+          "₹8,800",
+          "₹24/km",
+          "₹400/hr"
+        ]
+      ],
+      "note": "Packages include clean AC cab, fuel, and chauffeur. Parking and city toll charges at actuals. Nominal ₹500 advance to confirm; balance payable upon trip completion."
+    },
+    "includes": [
+      "Dedicated clean AC vehicle with polite professional chauffeur",
+      "Doorstep pickup & drop anywhere across Chennai city limits",
+      "Package hours and kilometer allowance included upfront",
+      "Fuel costs included in package tariff",
+      "Multiple stops and waiting within booked hours included",
+      "24/7 customer support and live dispatch coordination"
+    ],
+    "excludes": [
+      "Parking charges and mall fees (payable at actuals per receipt)",
+      "City toll booth charges if applicable (at actuals)",
+      "Extra kilometers beyond package allowance",
+      "Extra hours beyond package duration",
+      "Driver night allowance if rental extends past 10:00 PM (₹300)"
+    ],
+    "travelGuide": {
+      "significance": "Chennai is a bustling metropolis. Navigating between IT corridors, central business districts, and traditional retail hubs can be tiring. Having a dedicated car with an experienced chauffeur eliminates parking hassles and surge pricing uncertainty.",
+      "timings": "Available 24 hours a day, 7 days a week. Advance booking recommended for early morning or peak business hours.",
+      "dressCode": "Casual or formal as per your schedule. Vehicles are fully air-conditioned.",
+      "tips": [
+        "Choose the 8 Hr / 80 KM package for full-day office visits or family shopping.",
+        "Choose the 4 Hr / 40 KM package for quick airport meets or single hospital visits.",
+        "Innova Crysta is highly recommended for VIP clients, executive delegates, and senior citizens.",
+        "Keep parking slips handy for transparency during trip settlement."
+      ]
+    },
+    "faq": [
+      {
+        "question": "How much is an Innova Crysta rental for 4 hours in Chennai?",
+        "answer": "Kalidass Travels charges ₹3,400 flat for an Innova Crysta for 4 Hours / 40 KM. Extra distance is billed at ₹22/km and extra time at ₹350/hour.",
+        "q": "How much is an Innova Crysta rental for 4 hours in Chennai?",
+        "a": "Kalidass Travels charges ₹3,400 flat for an Innova Crysta for 4 Hours / 40 KM. Extra distance is billed at ₹22/km and extra time at ₹350/hour."
+      },
+      {
+        "question": "What is included in the Chennai local hourly cab package?",
+        "answer": "The package includes a private AC vehicle, fuel, and professional driver for the booked duration and kilometers. Parking and toll receipts are payable at actuals.",
+        "q": "What is included in the Chennai local hourly cab package?",
+        "a": "The package includes a private AC vehicle, fuel, and professional driver for the booked duration and kilometers. Parking and toll receipts are payable at actuals."
+      },
+      {
+        "question": "What happens if my trip exceeds 4 hours or 40 kilometers?",
+        "answer": "Additional usage is calculated transparently. For a sedan, extra km is ₹15/km and extra time is ₹150/hr. For Ertiga, extra km is ₹17/km and extra time is ₹200/hr. For Crysta, extra km is ₹22/km and extra time is ₹350/hr.",
+        "q": "What happens if my trip exceeds 4 hours or 40 kilometers?",
+        "a": "Additional usage is calculated transparently. For a sedan, extra km is ₹15/km and extra time is ₹150/hr. For Ertiga, extra km is ₹17/km and extra time is ₹200/hr. For Crysta, extra km is ₹22/km and extra time is ₹350/hr."
+      },
+      {
+        "question": "Is advance payment required to book a local hourly rental?",
+        "answer": "A nominal ₹500 advance is collected to confirm and lock the vehicle assignment. Crucially, this ₹500 is 100% deducted from your final bill.",
+        "q": "Is advance payment required to book a local hourly rental?",
+        "a": "A nominal ₹500 advance is collected to confirm and lock the vehicle assignment. Crucially, this ₹500 is 100% deducted from your final bill."
+      },
+      {
+        "question": "Can I use the local package cab for multiple stops across Chennai?",
+        "answer": "Yes. You have complete freedom to travel to multiple locations, stop for shopping or meals, and keep the driver waiting within your booked hours.",
+        "q": "Can I use the local package cab for multiple stops across Chennai?",
+        "a": "Yes. You have complete freedom to travel to multiple locations, stop for shopping or meals, and keep the driver waiting within your booked hours."
+      },
+      {
+        "question": "Are your drivers familiar with Chennai routes and traffic?",
+        "answer": "Yes, all Kalidass Travels chauffeurs have 7+ years of driving experience across Chennai, OMR, ECR, and central business corridors.",
+        "q": "Are your drivers familiar with Chennai routes and traffic?",
+        "a": "Yes, all Kalidass Travels chauffeurs have 7+ years of driving experience across Chennai, OMR, ECR, and central business corridors."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I want to book a Local Hourly Cab in Chennai (%PACKAGE%, %VEHICLE%). Please confirm availability.",
+    "metaTitle": "Local Hourly Car Rental in Chennai – 4h, 8h & 12h Packages | Kalidass Travels",
+    "metaDescription": "Hire local cabs in Chennai by the hour. 4 Hrs (₹1,600), 8 Hrs (₹2,600) & 12 Hrs packages across Dzire, Ertiga, Crysta & Tempo. Zero surge, transparent per-km billing.",
+    "keywords": "local car rental chennai, hourly cab booking chennai, 4 hours cab rental chennai, 8 hours car rental chennai, innova crysta hourly rental chennai, city taxi packages chennai",
+    "serviceType": "Hourly Car Rental",
+    "origin": "Chennai",
+    "destination": "Chennai Local"
+  },
+  {
+    "slug": "chennai-to-ooty-taxi",
+    "category": "Outstation Cabs",
+    "title": "Chennai to Ooty Taxi & Cab Booking (3-Day Holiday Package)",
+    "duration": "3 Days / 2 Nights (1,110 KM Round Trip)",
+    "overview": "Private highway cab service from Chennai to Ooty (Udhagamandalam) and Coonoor. Travel in comfort through scenic ghat roads with experienced hill-station drivers. Enjoy botanical gardens, Doddabetta Peak, Ooty Lake, and tea estates. Zero surge pricing with transparent per-km rates.",
+    "routePlan": [
+      {
+        "stop": "Chennai Departure",
+        "time": "5:00 AM (Day 1)",
+        "desc": "Early morning doorstep pickup in Chennai. Drive via NH 48 & NH 544 via Salem, Erode, and Mettupalayam."
+      },
+      {
+        "stop": "Mettupalayam & Nilgiri Ghats",
+        "time": "2:00 PM (Day 1)",
+        "desc": "Ascend the Nilgiri hills via Burliyar and Coonoor with stops for fresh hill tea and viewpoints."
+      },
+      {
+        "stop": "Ooty Sightseeing & Tea Estates",
+        "time": "Full Day (Day 2)",
+        "desc": "Explore Ooty Lake, Government Botanical Garden, Rose Garden, Doddabetta Peak, and Pykara Falls."
+      },
+      {
+        "stop": "Coonoor & Return to Chennai",
+        "time": "Day 3",
+        "desc": "Visit Sim's Park and Dolphin's Nose in Coonoor before descending to plains and returning to Chennai by night."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Seating",
+        "Rate/km",
+        "Driver Bata (3 Days)",
+        "Estimated Total Cost"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Passengers",
+          "₹14/km",
+          "₹1,500 (₹500/day)",
+          "₹17,040"
+        ],
+        [
+          "Maruti Ertiga",
+          "6 Passengers",
+          "₹17/km",
+          "₹1,500 (₹500/day)",
+          "₹20,370"
+        ],
+        [
+          "Toyota Innova",
+          "7 Passengers",
+          "₹20/km",
+          "₹1,800 (₹600/day)",
+          "₹24,000"
+        ],
+        [
+          "Toyota Innova Crysta",
+          "7 Passengers",
+          "₹22/km",
+          "₹2,100 (₹700/day)",
+          "₹26,520"
+        ],
+        [
+          "Tempo Traveller (12 Seater)",
+          "12 Passengers",
+          "₹24/km",
+          "₹2,400 (₹800/day)",
+          "₹29,040"
+        ]
+      ],
+      "note": "Total cost estimated for ~1,110 km round trip. Includes AC vehicle, fuel, and driver allowance. Tolls, state permit, and parking payable at actuals."
+    },
+    "includes": [
+      "Doorstep pickup & drop anywhere in Chennai",
+      "Dedicated AC vehicle for all 3 days",
+      "Skilled hill-driving chauffeur with ghat road expertise",
+      "100% fuel charges included",
+      "Driver bata (daily food & lodging allowance) included",
+      "Local sightseeing in Ooty and Coonoor included"
+    ],
+    "excludes": [
+      "Highway FASTag tolls and hill checkpost permit fees (at actuals)",
+      "Sightseeing entry tickets and boat ride fees",
+      "Hotel accommodation and passenger food",
+      "Parking fees at tourist viewpoints"
+    ],
+    "travelGuide": {
+      "significance": "Ooty is the Queen of Hill Stations in the Nilgiris, perched at 2,240 meters. It offers cool mountain climate, heritage architecture, and lush tea plantations.",
+      "timings": "Best visited from September to May. Early morning start from Chennai is strongly recommended to avoid city traffic.",
+      "dressCode": "Warm woolens and jackets are essential year-round, especially in evenings and mornings.",
+      "tips": [
+        "Ensure your cab driver is well-experienced with the 36 hairpin bends on Kallatti Ghat or Kotagiri route.",
+        "Book boat tickets online at Pykara and Ooty Lake during summer season.",
+        "Stop at Mettupalayam for authentic South Indian breakfast."
+      ]
+    },
+    "faq": [
+      {
+        "question": "What is the taxi fare from Chennai to Ooty for 3 days?",
+        "answer": "A 3-day round trip (approx 1,110 km) starts at ₹17,040 for a Sedan (Dzire/Etios) and ₹20,370 for an Ertiga SUV, inclusive of vehicle, fuel, and driver bata.",
+        "q": "What is the taxi fare from Chennai to Ooty for 3 days?",
+        "a": "A 3-day round trip (approx 1,110 km) starts at ₹17,040 for a Sedan (Dzire/Etios) and ₹20,370 for an Ertiga SUV, inclusive of vehicle, fuel, and driver bata."
+      },
+      {
+        "question": "How long does it take to reach Ooty from Chennai by road?",
+        "answer": "The distance is about 555 km one way and takes roughly 10 to 11 hours via NH 48 and NH 544.",
+        "q": "How long does it take to reach Ooty from Chennai by road?",
+        "a": "The distance is about 555 km one way and takes roughly 10 to 11 hours via NH 48 and NH 544."
+      },
+      {
+        "question": "Can your drivers safely handle Nilgiri ghat road hairpin bends?",
+        "answer": "Yes, all our outstation drivers assigned to hill routes possess over 8 years of ghat road experience and maintain vehicle hill-assist standards.",
+        "q": "Can your drivers safely handle Nilgiri ghat road hairpin bends?",
+        "a": "Yes, all our outstation drivers assigned to hill routes possess over 8 years of ghat road experience and maintain vehicle hill-assist standards."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I need a 3-Day Chennai to Ooty cab package (%VEHICLE%). Please send quotation.",
+    "metaTitle": "Chennai to Ooty Taxi & Cab Booking (3 Days) | Kalidass Travels",
+    "metaDescription": "Book Chennai to Ooty round-trip taxi with hill-expert chauffeurs. Sedan from ₹14/km, Ertiga from ₹17/km, Crysta from ₹22/km. Clean AC cabs, zero hidden fees.",
+    "keywords": "chennai to ooty taxi, chennai to ooty cab package, ooty 3 days car rental from chennai, ooty tour cab chennai, ooty outstation taxi",
+    "serviceType": "Outstation Cabs",
+    "origin": "Chennai",
+    "destination": "Ooty"
+  },
+  {
+    "slug": "chennai-to-kodaikanal-taxi",
+    "category": "Outstation Cabs",
+    "title": "Chennai to Kodaikanal Taxi & Cab Booking (3-Day Holiday Package)",
+    "duration": "3 Days / 2 Nights (1,060 KM Round Trip)",
+    "overview": "Scenic outstation taxi package from Chennai to Kodaikanal (Princess of Hill Stations). Travel comfortably through the Western Ghats with visits to Kodai Lake, Coaker's Walk, Pillar Rocks, and Silver Cascade Falls. Verified hill chauffeurs and spotless AC cabs.",
+    "routePlan": [
+      {
+        "stop": "Chennai Departure",
+        "time": "5:00 AM (Day 1)",
+        "desc": "Doorstep pickup in Chennai. Drive south on NH 45 (GST Road) via Villupuram, Trichy, and Dindigul."
+      },
+      {
+        "stop": "Ghat Ascent & Silver Cascade",
+        "time": "2:30 PM (Day 1)",
+        "desc": "Ascend the scenic Kodai hills from Batlagundu. Quick stop at Silver Cascade Waterfalls before hotel check-in."
+      },
+      {
+        "stop": "Kodaikanal Sightseeing",
+        "time": "Full Day (Day 2)",
+        "desc": "Visit Kodai Lake, Bryant Park, Coaker's Walk, Pillar Rocks, Guna Caves, and Pine Forest."
+      },
+      {
+        "stop": "Return to Chennai",
+        "time": "Day 3",
+        "desc": "Morning boating at Kodai Lake, homemade chocolate shopping, and comfortable return journey to Chennai."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Seating",
+        "Rate/km",
+        "Driver Bata (3 Days)",
+        "Estimated Total Cost"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Passengers",
+          "₹14/km",
+          "₹1,500 (₹500/day)",
+          "₹16,340"
+        ],
+        [
+          "Maruti Ertiga",
+          "6 Passengers",
+          "₹17/km",
+          "₹1,500 (₹500/day)",
+          "₹19,520"
+        ],
+        [
+          "Toyota Innova",
+          "7 Passengers",
+          "₹20/km",
+          "₹1,800 (₹600/day)",
+          "₹23,000"
+        ],
+        [
+          "Toyota Innova Crysta",
+          "7 Passengers",
+          "₹22/km",
+          "₹2,100 (₹700/day)",
+          "₹25,420"
+        ],
+        [
+          "Tempo Traveller (12 Seater)",
+          "12 Passengers",
+          "₹24/km",
+          "₹2,400 (₹800/day)",
+          "₹27,840"
+        ]
+      ],
+      "note": "Total cost estimated for ~1,060 km round trip. Includes AC vehicle, fuel, and driver allowance. Tolls and parking at actuals."
+    },
+    "includes": [
+      "Doorstep pickup & drop anywhere in Chennai",
+      "Dedicated AC vehicle for 3 complete days",
+      "Experienced hill-driving chauffeur",
+      "100% fuel charges included",
+      "Driver daily allowance (bata) included",
+      "Local sightseeing in Kodaikanal"
+    ],
+    "excludes": [
+      "Highway FASTag tolls and Kodai municipality entry fees",
+      "Boating, cycling, and park entry tickets",
+      "Passenger hotel stay and food"
+    ],
+    "travelGuide": {
+      "significance": "Kodaikanal is located at an altitude of 2,133 meters in the Palani Hills. Famous for its star-shaped lake, mist-covered valleys, and pine forests.",
+      "timings": "Pleasant throughout the year. April to June is peak summer season; September to February is cold and misty.",
+      "dressCode": "Warm clothing, sweaters, and comfortable walking shoes.",
+      "tips": [
+        "Start early to beat the Trichy highway congestion.",
+        "Try cycling around the 5 km Kodai Lake perimeter.",
+        "Buy authentic Eucalyptus oil and homemade spices in town."
+      ]
+    },
+    "faq": [
+      {
+        "question": "What is the cab fare from Chennai to Kodaikanal for 3 days?",
+        "answer": "A 3-day round trip (approx 1,060 km) starts at ₹16,340 for a Sedan, ₹19,520 for an Ertiga SUV, and ₹25,420 for an Innova Crysta, including fuel and driver bata.",
+        "q": "What is the cab fare from Chennai to Kodaikanal for 3 days?",
+        "a": "A 3-day round trip (approx 1,060 km) starts at ₹16,340 for a Sedan, ₹19,520 for an Ertiga SUV, and ₹25,420 for an Innova Crysta, including fuel and driver bata."
+      },
+      {
+        "question": "What is the driving distance from Chennai to Kodaikanal?",
+        "answer": "The one-way driving distance is approximately 530 km, taking about 9.5 to 10.5 hours via NH 45 through Villupuram, Trichy, and Dindigul.",
+        "q": "What is the driving distance from Chennai to Kodaikanal?",
+        "a": "The one-way driving distance is approximately 530 km, taking about 9.5 to 10.5 hours via NH 45 through Villupuram, Trichy, and Dindigul."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I want to book a 3-Day Chennai to Kodaikanal cab (%VEHICLE%). Please send details.",
+    "metaTitle": "Chennai to Kodaikanal Taxi & Cab Booking (3 Days) | Kalidass Travels",
+    "metaDescription": "Chennai to Kodaikanal outstation taxi package. Reliable AC cabs, expert hill drivers, 24/7 support. Sedan ₹14/km, Ertiga ₹17/km, Crysta ₹22/km.",
+    "keywords": "chennai to kodaikanal taxi, chennai to kodaikanal cab package, kodaikanal outstation taxi chennai, kodai tour cab",
+    "serviceType": "Outstation Cabs",
+    "origin": "Chennai",
+    "destination": "Kodaikanal"
+  },
+  {
+    "slug": "chennai-to-mysore-taxi",
+    "category": "Outstation Cabs",
+    "title": "Chennai to Mysore Taxi & Cab Booking (3-Day Holiday Tour)",
+    "duration": "3 Days / 2 Nights (960 KM Round Trip)",
+    "overview": "Comfortable private cab travel from Chennai to Mysore (Mysuru). Visit the grand Mysore Palace, Chamundi Hills, Brindavan Gardens musical fountains, and Srirangapatna heritage sites. Zero surge pricing, spotless AC vehicles, and knowledgeable highway chauffeurs.",
+    "routePlan": [
+      {
+        "stop": "Chennai Departure",
+        "time": "6:00 AM (Day 1)",
+        "desc": "Pickup from your Chennai residence. Travel via NH 48 through Vellore and Bangalore NICE Road to Mysore expressway."
+      },
+      {
+        "stop": "Srirangapatna & Mysore Check-in",
+        "time": "3:00 PM (Day 1)",
+        "desc": "Visit Tipu Sultan's Summer Palace and Ranganathaswamy Temple before evening arrival in Mysore."
+      },
+      {
+        "stop": "Mysore Palace & Chamundi Hills",
+        "time": "Full Day (Day 2)",
+        "desc": "Morning darshan at Chamundeshwari Temple atop Chamundi Hills. Afternoon tour of Mysore Palace. Evening illumination at Brindavan Gardens."
+      },
+      {
+        "stop": "Mysore Zoo & Return Journey",
+        "time": "Day 3",
+        "desc": "Visit Sri Chamarajendra Zoological Gardens and local silk emporiums before smooth return to Chennai."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Seating",
+        "Rate/km",
+        "Driver Bata (3 Days)",
+        "Estimated Total Cost"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Passengers",
+          "₹14/km",
+          "₹1,500 (₹500/day)",
+          "₹14,940"
+        ],
+        [
+          "Maruti Ertiga",
+          "6 Passengers",
+          "₹17/km",
+          "₹1,500 (₹500/day)",
+          "₹17,820"
+        ],
+        [
+          "Toyota Innova",
+          "7 Passengers",
+          "₹20/km",
+          "₹1,800 (₹600/day)",
+          "₹21,000"
+        ],
+        [
+          "Toyota Innova Crysta",
+          "7 Passengers",
+          "₹22/km",
+          "₹2,100 (₹700/day)",
+          "₹23,220"
+        ],
+        [
+          "Tempo Traveller (12 Seater)",
+          "12 Passengers",
+          "₹24/km",
+          "₹2,400 (₹800/day)",
+          "₹25,440"
+        ]
+      ],
+      "note": "Total cost based on ~960 km round trip. Includes AC vehicle, fuel, and driver bata. Karnataka state entry permit and highway FASTag tolls at actuals."
+    },
+    "includes": [
+      "Doorstep pickup & drop anywhere in Chennai",
+      "Dedicated AC vehicle for all 3 days",
+      "Experienced interstate highway chauffeur",
+      "100% fuel charges included",
+      "Driver daily allowance (bata) included",
+      "Sightseeing across Mysore, Srirangapatna, and Brindavan Gardens"
+    ],
+    "excludes": [
+      "Highway FASTag tolls and Karnataka statutory state entry permit",
+      "Palace entry tickets, zoo tickets, and garden illumination fees",
+      "Passenger hotel stay and food"
+    ],
+    "travelGuide": {
+      "significance": "Mysore is the cultural capital of Karnataka, celebrated for its royal heritage, intricate sandalwood carvings, world-famous Mysore silk, and grand Dasara festivities.",
+      "timings": "Mysore Palace illumination occurs on Sundays and public holidays from 7:00 PM to 7:45 PM. Brindavan Gardens musical fountain runs every evening.",
+      "dressCode": "Modest attire recommended for Chamundi Hills temple. Normal casual wear for sightseeing.",
+      "tips": [
+        "Use Bangalore NICE Road to bypass city congestion effortlessly.",
+        "Buy authentic Mysore Pak from Guru Sweets (heritage creators).",
+        "Visit Chamundi Hills early in the morning for crisp views over the city."
+      ]
+    },
+    "faq": [
+      {
+        "question": "How much is the taxi fare from Chennai to Mysore?",
+        "answer": "A 3-day round trip (approx 960 km) starts at ₹14,940 for a Sedan (Dzire/Etios), ₹17,820 for an Ertiga SUV, and ₹23,220 for an Innova Crysta, inclusive of vehicle, fuel, and driver bata.",
+        "q": "How much is the taxi fare from Chennai to Mysore?",
+        "a": "A 3-day round trip (approx 960 km) starts at ₹14,940 for a Sedan (Dzire/Etios), ₹17,820 for an Ertiga SUV, and ₹23,220 for an Innova Crysta, inclusive of vehicle, fuel, and driver bata."
+      },
+      {
+        "question": "How long does the road journey take between Chennai and Mysore?",
+        "answer": "The 480 km one-way drive takes approximately 8.5 to 9 hours via NH 48, Bangalore NICE Road, and the Bengaluru-Mysuru Expressway.",
+        "q": "How long does the road journey take between Chennai and Mysore?",
+        "a": "The 480 km one-way drive takes approximately 8.5 to 9 hours via NH 48, Bangalore NICE Road, and the Bengaluru-Mysuru Expressway."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I need a 3-Day Chennai to Mysore cab package (%VEHICLE%). Please send quotation.",
+    "metaTitle": "Chennai to Mysore Taxi & Cab Booking (3 Days) | Kalidass Travels",
+    "metaDescription": "Chennai to Mysore 3-day holiday tour cab. Visit Mysore Palace, Chamundi Hills, Brindavan Gardens. Clean AC cabs, transparent pricing. Sedan ₹14/km, Ertiga ₹17/km.",
+    "keywords": "chennai to mysore taxi, chennai to mysore cab package, mysore tour cab chennai, chennai to mysore outstation car rental",
+    "serviceType": "Outstation Cabs",
+    "origin": "Chennai",
+    "destination": "Mysore"
+  },
+  {
+    "slug": "chennai-to-trichy-taxi",
+    "category": "Outstation Cabs",
+    "title": "Chennai to Trichy Taxi & Cab Booking (One-Way & Round Trip)",
+    "duration": "1 to 2 Days (664 KM Round Trip / 332 KM One-Way)",
+    "overview": "Reliable highway cab booking between Chennai and Trichy (Tiruchirappalli). Fast doorstep travel via NH 45 (GST Road) for Srirangam Ranganathaswamy Temple darshan, Rockfort Ucchi Pillayar Temple, and business trips. Transparent per-km billing, zero surge, and polite chauffeurs.",
+    "routePlan": [
+      {
+        "stop": "Chennai Departure",
+        "time": "6:00 AM",
+        "desc": "Doorstep pickup in Chennai. Drive south on smooth 6-lane NH 45 through Chengalpattu, Tindivanam, and Villupuram."
+      },
+      {
+        "stop": "Midway Breakfast Stop",
+        "time": "8:30 AM",
+        "desc": "Relaxing breakfast stop at clean highway highway restaurants near Ulundurpet."
+      },
+      {
+        "stop": "Srirangam Temple Darshan",
+        "time": "12:30 PM",
+        "desc": "Arrive at Srirangam. Chauffeur assists with drop near the temple Rajagopuram for peaceful darshan."
+      },
+      {
+        "stop": "Rockfort Temple & Return",
+        "time": "4:00 PM",
+        "desc": "Visit the historic Rockfort Ucchi Pillayar Temple before evening return or overnight hotel drop."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Seating",
+        "Rate/km",
+        "Driver Bata",
+        "Round-Trip Cost (2 Days)"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Passengers",
+          "₹14/km",
+          "₹500/day",
+          "₹10,296"
+        ],
+        [
+          "Maruti Ertiga",
+          "6 Passengers",
+          "₹17/km",
+          "₹500/day",
+          "₹12,288"
+        ],
+        [
+          "Toyota Innova",
+          "7 Passengers",
+          "₹20/km",
+          "₹600/day",
+          "₹14,480"
+        ],
+        [
+          "Toyota Innova Crysta",
+          "7 Passengers",
+          "₹22/km",
+          "₹700/day",
+          "₹16,008"
+        ],
+        [
+          "Tempo Traveller (12 Seater)",
+          "12 Passengers",
+          "₹24/km",
+          "₹800/day",
+          "₹17,536"
+        ]
+      ],
+      "note": "Round-trip cost based on ~664 km (2 days). One-way drop also available with transparent dead-mileage billing. FASTag tolls and parking at actuals."
+    },
+    "includes": [
+      "Doorstep pickup & drop anywhere in Chennai",
+      "Dedicated clean AC vehicle with highway chauffeur",
+      "100% fuel charges included",
+      "Driver bata included",
+      "Temple drops at Srirangam, Rockfort, and Samayapuram included"
+    ],
+    "excludes": [
+      "Highway FASTag tolls and parking fees (payable at actuals per receipt)",
+      "Temple special darshan tickets",
+      "Passenger hotel accommodation and food"
+    ],
+    "travelGuide": {
+      "significance": "Trichy is home to Sri Ranganathaswamy Temple in Srirangam (the largest functioning Hindu temple in the world) and the iconic 7th-century Rockfort Temple.",
+      "timings": "Srirangam darshan timings: 6:00 AM – 1:00 PM and 3:30 PM – 9:00 PM. Rockfort is best visited in late afternoon.",
+      "dressCode": "Traditional South Indian temple attire (Dhoti/Kurta for men, Saree/Salwar for women).",
+      "tips": [
+        "NH 45 is a high-speed expressway, allowing smooth travel in under 6 hours.",
+        "Consider an early morning start by 5:30 AM to complete Srirangam darshan before midday sanctum closure."
+      ]
+    },
+    "faq": [
+      {
+        "question": "What is the cab fare from Chennai to Trichy?",
+        "answer": "A 2-day round trip (approx 664 km) starts at ₹10,296 for a Sedan, ₹12,288 for an Ertiga, and ₹16,008 for an Innova Crysta. One-way drops are also available.",
+        "q": "What is the cab fare from Chennai to Trichy?",
+        "a": "A 2-day round trip (approx 664 km) starts at ₹10,296 for a Sedan, ₹12,288 for an Ertiga, and ₹16,008 for an Innova Crysta. One-way drops are also available."
+      },
+      {
+        "question": "How long does it take from Chennai to Trichy by cab?",
+        "answer": "The 332 km drive takes roughly 5.5 to 6.5 hours via NH 45 (GST Road) depending on traffic.",
+        "q": "How long does it take from Chennai to Trichy by cab?",
+        "a": "The 332 km drive takes roughly 5.5 to 6.5 hours via NH 45 (GST Road) depending on traffic."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I need a Chennai to Trichy cab (%VEHICLE%). Please send fare details.",
+    "metaTitle": "Chennai to Trichy Taxi & Cab Booking | Kalidass Travels",
+    "metaDescription": "Book Chennai to Trichy cabs with verified highway chauffeurs. Srirangam temple tours, one-way drops & round trips. Sedan ₹14/km, Ertiga ₹17/km. 24/7 service.",
+    "keywords": "chennai to trichy taxi, chennai to srirangam cab, chennai to trichy one way cab, trichy outstation taxi chennai",
+    "serviceType": "Outstation Cabs",
+    "origin": "Chennai",
+    "destination": "Trichy"
   }
 ]

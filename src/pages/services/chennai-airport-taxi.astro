@@ -1010,41 +1010,19 @@ const tripListSchema = {
                           </button>
                         </td>
                         <td class="px-4 py-3 text-right whitespace-nowrap">
-                          <div class="inline-flex items-center gap-1.5 justify-end">
-                            <a
-                              href="tel:+918939539211"
-                              aria-label={`Call to book Chennai airport to ${t.zone} taxi`}
-                              class="min-h-[36px] inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-800 border border-slate-200 text-xs font-bold shadow-2xs transition-all select-none active:scale-[0.98]"
-                            >
-                              <AndroidPhoneIcon className="w-3.5 h-3.5 text-slate-700 shrink-0" />
-                              <span>Call</span>
-                            </a>
-                            <button
-                              type="button"
-                              data-corridor={t.zone.split('&')[0].trim()}
-                              data-vehicle="Swift Dzire"
-                              data-pax="4"
-                              data-fare={t.sedan}
-                              data-distance={t.distance}
-                              data-eta={t.eta}
-                              class="highway-vehicle-select-btn min-h-[36px] inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white shadow-xs text-xs font-bold transition-all cursor-pointer active:scale-[0.98]"
-                            >
-                              <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0 brightness-0 invert" />
-                              <span>Calculate</span>
-                            </button>
-                            <button
-                              type="button"
-                              data-corridor={t.zone.split('&')[0].trim()}
-                              data-vehicle="Swift Dzire"
-                              data-pax="4"
-                              data-fare={t.sedan}
-                              data-distance={t.distance}
-                              data-eta={t.eta}
-                              class="highway-vehicle-select-btn inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#1a73e8] hover:bg-[#1557b0] text-white text-micro font-bold shadow-xs transition-all cursor-pointer"
-                            >
-                              <span>Book Online</span>
-                            </button>
-                          </div>
+                          <button
+                            type="button"
+                            data-corridor={t.zone.split('&')[0].trim()}
+                            data-vehicle="Swift Dzire"
+                            data-pax="4"
+                            data-fare={t.sedan}
+                            data-distance={t.distance}
+                            data-eta={t.eta}
+                            class="highway-vehicle-select-btn min-h-[36px] inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#1a73e8] hover:bg-[#1557b0] active:bg-[#124ca0] text-white text-xs font-bold shadow-xs transition-all cursor-pointer select-none active:scale-[0.98]"
+                          >
+                            <span>Book Now</span>
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                          </button>
                         </td>
                       </tr>
                     ))}

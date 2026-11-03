@@ -83,25 +83,25 @@ const gridColsClass = fleet.length === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3';
 
     {/* Fleet Grid / Carousel Container */}
     <div class="relative">
-      {/* Desktop Prev/Next Slide Arrows (When carousel view is active on mobile or multi-card) */}
-      <div class="hidden sm:flex items-center justify-end gap-1.5 mb-3 px-1">
+      {/* Prev/Next Slide Arrows - Fat thumb friendly */}
+      <div class="flex items-center justify-end gap-2 mb-3 px-1">
         <button
           type="button"
           id="fleet-home-carousel-prev"
           aria-label="Previous Vehicle"
           title="Previous Vehicle"
-          class="w-8 h-8 rounded-full bg-white border border-m3-outline-variant hover:bg-m3-surface-container text-m3-on-surface flex items-center justify-center shadow-2xs transition-colors cursor-pointer"
+          class="w-10 h-10 min-w-[40px] min-h-[40px] rounded-full bg-white dark:bg-m3-surface border-2 border-slate-200 dark:border-slate-700 hover:border-blue-500 hover:bg-blue-50/60 dark:hover:bg-blue-950/40 text-slate-700 dark:text-slate-200 hover:text-blue-600 flex items-center justify-center shadow-xs active:scale-90 active:bg-blue-100 dark:active:bg-blue-900/60 transition-all cursor-pointer touch-manipulation select-none"
         >
-          <ChevronDown className="w-4 h-4 rotate-90" />
+          <ChevronDown className="w-5 h-5 rotate-90" strokeWidth={2.5} />
         </button>
         <button
           type="button"
           id="fleet-home-carousel-next"
           aria-label="Next Vehicle"
           title="Next Vehicle"
-          class="w-8 h-8 rounded-full bg-white border border-m3-outline-variant hover:bg-m3-surface-container text-m3-on-surface flex items-center justify-center shadow-2xs transition-colors cursor-pointer"
+          class="w-10 h-10 min-w-[40px] min-h-[40px] rounded-full bg-white dark:bg-m3-surface border-2 border-slate-200 dark:border-slate-700 hover:border-blue-500 hover:bg-blue-50/60 dark:hover:bg-blue-950/40 text-slate-700 dark:text-slate-200 hover:text-blue-600 flex items-center justify-center shadow-xs active:scale-90 active:bg-blue-100 dark:active:bg-blue-900/60 transition-all cursor-pointer touch-manipulation select-none"
         >
-          <ChevronDown className="w-4 h-4 -rotate-90" />
+          <ChevronDown className="w-5 h-5 -rotate-90" strokeWidth={2.5} />
         </button>
       </div>
 

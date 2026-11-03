@@ -7,6 +7,11 @@ import WhatsAppIcon from "../components/WhatsAppIcon.astro";
 import AndroidPhoneIcon from "../components/AndroidPhoneIcon.astro";
 import { buildWhatsAppUrl } from "../utils/whatsapp";
 import { Calculator, Briefcase, ArrowRight, Phone, ShieldCheck, Receipt, Sparkles, CheckCircle2 } from "lucide-react";
+import {
+  getDeduplicatedTariffVehicles,
+  getSlugAliases,
+  getVehicleMetadata
+} from "../utils/vehicleMetadata";
 
 const tariffFaqs = [
   {
@@ -33,36 +38,7 @@ const breadcrumbItems = [
 ];
 
 const vehicles = Object.entries(tariffConfig.vehicles);
-
-const vehicleCapacity: Record<string, string> = {
-  "Swift Dzire": "4 Seats",
-  "Toyota Etios": "4 Seats",
-  "Maruti Ertiga": "6 Seats",
-  "Innova": "6 Seats",
-  "Innova Crysta": "7 Seats",
-  "Tempo Traveller": "12 Seats",
-  "Force Urbania": "12 Seats",
-};
-
-const vehicleImages: Record<string, string> = {
-  "Swift Dzire": "/images/fleet/swift-dzire.webp",
-  "Toyota Etios": "/images/fleet/toyoto-etios.webp",
-  "Maruti Ertiga": "/images/fleet/maruti-ertiga.webp",
-  "Innova": "/images/fleet/toyota-innova.webp",
-  "Innova Crysta": "/images/fleet/innova-crysta.webp",
-  "Tempo Traveller": "/images/fleet/tempo.webp",
-  "Force Urbania": "/images/fleet/force-urbania.webp",
-};
-
-const vehicleBadges: Record<string, string> = {
-  "Swift Dzire": "Best Value Sedan",
-  "Toyota Etios": "Comfort Sedan",
-  "Maruti Ertiga": "Popular 7-Seater MPV",
-  "Innova": "Legendary Comfort MUV",
-  "Innova Crysta": "VIP Executive Luxury",
-  "Tempo Traveller": "Group Travel Special",
-  "Force Urbania": "Super Luxury VIP Van",
-};
+const vehiclesList = getDeduplicatedTariffVehicles(tariffConfig.vehicles);
 
 const getVehicleSlug = (name: string) =>
   (name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -73,7 +49,18 @@ const tariffSchema = {
   "@id": "https://kalidasstravels.in/tariff/#offercatalog",
   name: "Chennai Taxi & Car Rental Tariff Rates",
   description: "Official local hourly and outstation tariff card for Kalidass Travels in Chennai, covering 5hr/50km, 8hr/80km, 10hr/100km, CPWD/government tender benchmarks, and per-km outstation rates.",
-  itemListElement: vehicles.flatMap(([name, v]: [string, any]) => [
+  itemListElement: vehiclesList.flatMap(([name, v, meta]) => [
+    {
+      "@type": "Offer",
+      name: `${name} Local 4 Hrs / 40 KM Package (Chennai)`,
+      price: v.local_4hr_pkg,
+      priceCurrency: "INR",
+      priceValidUntil: "2027-12-31",
+      availability: "https://schema.org/InStock",
+      description: `${name} local city package within Chennai for 4 hours and 40 kilometers. Extra km: ₹${v.extra_km_rate}/km, Extra hr: ₹${v.extra_hr_rate}/hr.`,
+      eligibleRegion: { "@type": "City", name: "Chennai" },
+      url: `https://kalidasstravels.in/services/local-hourly-cabs/?vehicle=${encodeURIComponent(name)}&pkg=local_4hr_pkg`
+    },
     {
       "@type": "Offer",
       name: `${name} Local 5 Hrs / 50 KM Package (Chennai)`,
@@ -83,6 +70,18 @@ const tariffSchema = {
       availability: "https://schema.org/InStock",
       description: `${name} local city package within Chennai for 5 hours and 50 kilometers. Extra km: ₹${v.extra_km_rate}/km, Extra hr: ₹${v.extra_hr_rate}/hr.`,
       eligibleRegion: { "@type": "City", name: "Chennai" },
+      url: `https://kalidasstravels.in/services/local-hourly-cabs/?vehicle=${encodeURIComponent(name)}&pkg=local_5hr_pkg`
+    },
+    {
+      "@type": "Offer",
+      name: `${name} Local 8 Hrs / 80 KM Package (Chennai)`,
+      price: v.local_8hr_pkg,
+      priceCurrency: "INR",
+      priceValidUntil: "2027-12-31",
+      availability: "https://schema.org/InStock",
+      description: `${name} full-day local city package within Chennai for 8 hours and 80 kilometers. Extra km: ₹${v.extra_km_rate}/km, Extra hr: ₹${v.extra_hr_rate}/hr.`,
+      eligibleRegion: { "@type": "City", name: "Chennai" },
+      url: `https://kalidasstravels.in/services/local-hourly-cabs/?vehicle=${encodeURIComponent(name)}&pkg=local_8hr_pkg`
     },
     {
       "@type": "Offer",
@@ -93,6 +92,18 @@ const tariffSchema = {
       availability: "https://schema.org/InStock",
       description: `${name} standard 10 hours / 100 kilometers package within Chennai. Extra km: ₹${v.extra_km_rate}/km, Extra hr: ₹${v.extra_hr_rate}/hr. Compliant with CPWD / tender rate standards.`,
       eligibleRegion: { "@type": "City", name: "Chennai" },
+      url: `https://kalidasstravels.in/services/local-hourly-cabs/?vehicle=${encodeURIComponent(name)}&pkg=local_10hr_pkg`
+    },
+    {
+      "@type": "Offer",
+      name: `${name} Local 12 Hrs / 120 KM Package (Chennai)`,
+      price: v.local_12hr_pkg,
+      priceCurrency: "INR",
+      priceValidUntil: "2027-12-31",
+      availability: "https://schema.org/InStock",
+      description: `${name} extended 12 hours / 120 kilometers city package within Chennai. Extra km: ₹${v.extra_km_rate}/km, Extra hr: ₹${v.extra_hr_rate}/hr.`,
+      eligibleRegion: { "@type": "City", name: "Chennai" },
+      url: `https://kalidasstravels.in/services/local-hourly-cabs/?vehicle=${encodeURIComponent(name)}&pkg=local_12hr_pkg`
     },
     {
       "@type": "Offer",
@@ -237,22 +248,24 @@ const faqSchema = {
               </tr>
             </thead>
             <tbody class="divide-y divide-m3-outline-variant/40">
-              {vehicles.map(([name, v]: [string, any], i) => (
+              {vehiclesList.map(([name, v, meta], i) => {
+                const aliases = getSlugAliases(name);
+                return (
                 <tr
                   id={`local-row-${getVehicleSlug(name)}`}
                   data-vehicle-slug={getVehicleSlug(name)}
                   class={`scroll-mt-36 sm:scroll-mt-40 transition-colors ${i % 2 === 0 ? "bg-m3-surface hover:bg-m3-surface-container" : "bg-m3-surface-container-lowest hover:bg-m3-surface-container"}`}
                 >
                   <td class={`px-5 py-3.5 font-bold text-m3-on-surface sticky left-0 z-10 font-heading ${i % 2 === 0 ? "bg-m3-surface" : "bg-m3-surface-container-lowest"}`}>
-                    <div class="flex items-center gap-3">
-                      <div class="w-14 h-9 shrink-0 flex items-center justify-center bg-m3-surface-container-low rounded-m3-md p-1 border border-m3-outline-variant/50">
+                    <div class="flex items-center gap-3.5">
+                      <div class="w-22 h-14 sm:w-24 sm:h-15 shrink-0 flex items-center justify-center bg-m3-surface-container-low rounded-m3-md p-1 border border-m3-outline-variant/50 overflow-hidden">
                         <img
-                          src={vehicleImages[name] || "/images/fleet/swift-dzire.webp"}
+                          src={meta.image}
                           alt={`${name} taxi rental in Chennai`}
-                          width="56"
-                          height="36"
+                          width="96"
+                          height="60"
                           decoding="async"
-                          class={`max-w-full max-h-full object-contain ${(vehicleImages[name] || '').includes('swift-dzire') ? 'scale-120' : ''}`}
+                          class={`max-w-full max-h-full object-contain transition-transform ${meta.image.includes('swift-dzire') ? 'scale-125' : meta.image.includes('tempo') ? 'scale-120' : meta.image.includes('urbania') ? 'scale-120' : 'scale-115'}`}
                           loading="lazy"
                         />
                       </div>
@@ -263,11 +276,11 @@ const faqSchema = {
                             <span class="text-xs font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-m3-xs bg-m3-surface-container-high text-m3-on-surface border border-m3-outline-variant">7-Seater</span>
                           )}
                         </div>
-                        <span class="text-xs text-m3-primary font-semibold uppercase tracking-wider block">{vehicleBadges[name]}</span>
+                        <span class="text-xs text-m3-primary font-semibold uppercase tracking-wider block">{meta.badge}</span>
                       </div>
                     </div>
                   </td>
-                  <td class="px-4 py-3.5 text-center text-m3-on-surface-variant font-medium whitespace-nowrap">{vehicleCapacity[name] || "4 Seats"}</td>
+                  <td class="px-4 py-3.5 text-center text-m3-on-surface-variant font-medium whitespace-nowrap">{meta.capacity}</td>
                   <td class="px-4 py-3.5 text-center font-bold text-m3-on-surface tabular-nums">
                     ₹{v.local_5hr_pkg ? v.local_5hr_pkg.toLocaleString("en-IN") : "-"}
                   </td>
@@ -307,7 +320,7 @@ const faqSchema = {
                     </div>
                   </td>
                 </tr>
-              ))}
+              )})}
             </tbody>
           </table>
         </div>
@@ -315,12 +328,17 @@ const faqSchema = {
         {/* Cards View (Default on mobile, toggleable on desktop) */}
         <div id="local-cards-view" class="block md:hidden">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {vehicles.map(([name, v]: [string, any]) => (
+            {vehiclesList.map(([name, v, meta]) => {
+              const aliases = getSlugAliases(name);
+              return (
               <div
                 id={`local-${getVehicleSlug(name)}`}
                 data-vehicle-slug={getVehicleSlug(name)}
-                class="scroll-mt-36 sm:scroll-mt-40 bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-slate-200/90 shadow-2xs hover:shadow-sm hover:border-slate-300 flex flex-col justify-between transition-all"
+                class="scroll-mt-36 sm:scroll-mt-40 bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-slate-200/90 shadow-2xs hover:shadow-sm hover:border-slate-300 flex flex-col justify-between transition-all relative"
               >
+                {aliases.map(alias => (
+                  <span id={`local-${alias}`} class="absolute -top-36 pointer-events-none opacity-0" aria-hidden="true"></span>
+                ))}
                 <div>
                   <!-- Header with vehicle name, badge, and prominent CAR IMAGE -->
                   <div class="flex items-center justify-between gap-3 mb-3.5">
@@ -332,20 +350,20 @@ const faqSchema = {
                         )}
                       </div>
                       <div class="flex items-center gap-2 mt-1">
-                        <span class="text-xs text-[#1a73e8] font-bold uppercase tracking-wider">{vehicleBadges[name]}</span>
+                        <span class="text-xs text-[#1a73e8] font-bold uppercase tracking-wider">{meta.badge}</span>
                         <span class="text-xs text-slate-600 font-medium bg-slate-100 px-2 py-0.5 rounded-full">
-                          {vehicleCapacity[name] || "4 Seats"}
+                          {meta.capacity}
                         </span>
                       </div>
                     </div>
-                    <div class="shrink-0 w-24 h-15 sm:w-28 sm:h-17 flex items-center justify-center bg-slate-50/80 rounded-xl p-1.5 border border-slate-200/70 overflow-hidden">
+                    <div class="shrink-0 w-28 h-18 sm:w-32 sm:h-20 flex items-center justify-center bg-slate-50/90 rounded-2xl p-1 border border-slate-200/80 overflow-hidden shadow-2xs">
                       <img
-                        src={vehicleImages[name] || "/images/fleet/swift-dzire.webp"}
+                        src={meta.image}
                         alt={`${name} taxi rental in Chennai`}
-                        width="112"
-                        height="64"
+                        width="128"
+                        height="80"
                         decoding="async"
-                        class={`max-w-full max-h-full object-contain ${(vehicleImages[name] || '').includes('swift-dzire') ? 'scale-125' : (vehicleImages[name] || '').includes('suv') ? 'scale-115' : (vehicleImages[name] || '').includes('ertiga') ? 'scale-110' : ''}`}
+                        class={`max-w-full max-h-full object-contain ${meta.image.includes('swift-dzire') ? 'scale-130' : meta.image.includes('tempo') ? 'scale-120' : meta.image.includes('urbania') ? 'scale-120' : 'scale-115'}`}
                         loading="lazy"
                       />
                     </div>
@@ -397,7 +415,7 @@ const faqSchema = {
                   </a>
                 </div>
               </div>
-            ))}
+            )})}
           </div>
         </div>
 
@@ -456,32 +474,34 @@ const faqSchema = {
               </tr>
             </thead>
             <tbody class="divide-y divide-m3-outline-variant/40">
-              {vehicles.map(([name, v]: [string, any], i) => (
+              {vehiclesList.map(([name, v, meta], i) => {
+                const aliases = getSlugAliases(name);
+                return (
                 <tr
                   id={`outstation-row-${getVehicleSlug(name)}`}
                   data-vehicle-slug={getVehicleSlug(name)}
                   class={`scroll-mt-36 sm:scroll-mt-40 transition-colors ${i % 2 === 0 ? "bg-m3-surface hover:bg-m3-surface-container" : "bg-m3-surface-container-lowest hover:bg-m3-surface-container"}`}
                 >
                   <td class={`px-5 py-3.5 font-bold text-m3-on-surface sticky left-0 z-10 font-heading ${i % 2 === 0 ? "bg-m3-surface" : "bg-m3-surface-container-lowest"}`}>
-                    <div class="flex items-center gap-3">
-                      <div class="w-14 h-9 shrink-0 flex items-center justify-center bg-m3-surface-container-low rounded-m3-md p-1 border border-m3-outline-variant/50">
+                    <div class="flex items-center gap-3.5">
+                      <div class="w-22 h-14 sm:w-24 sm:h-15 shrink-0 flex items-center justify-center bg-m3-surface-container-low rounded-m3-md p-1 border border-m3-outline-variant/50 overflow-hidden">
                         <img
-                          src={vehicleImages[name] || "/images/fleet/swift-dzire.webp"}
+                          src={meta.image}
                           alt={`${name} outstation taxi in Chennai`}
-                          width="56"
-                          height="36"
+                          width="96"
+                          height="60"
                           decoding="async"
-                          class={`max-w-full max-h-full object-contain ${(vehicleImages[name] || '').includes('swift-dzire') ? 'scale-120' : ''}`}
+                          class={`max-w-full max-h-full object-contain transition-transform ${meta.image.includes('swift-dzire') ? 'scale-125' : meta.image.includes('tempo') ? 'scale-120' : meta.image.includes('urbania') ? 'scale-120' : 'scale-115'}`}
                           loading="lazy"
                         />
                       </div>
                       <div>
                         <span class="text-sm font-bold text-m3-on-surface block">{name}</span>
-                        <span class="text-xs text-m3-primary font-semibold uppercase tracking-wider">{vehicleBadges[name]}</span>
+                        <span class="text-xs text-m3-primary font-semibold uppercase tracking-wider">{meta.badge}</span>
                       </div>
                     </div>
                   </td>
-                  <td class="px-5 py-3.5 text-center text-m3-on-surface-variant font-medium">{vehicleCapacity[name] || "4 Seats"}</td>
+                  <td class="px-5 py-3.5 text-center text-m3-on-surface-variant font-medium">{meta.capacity}</td>
                   <td class="px-5 py-3.5 text-center font-bold text-m3-on-surface tabular-nums">₹{v.one_way_rate}</td>
                   <td class="px-5 py-3.5 text-center font-bold text-m3-on-surface tabular-nums">₹{v.round_trip_rate}</td>
                   <td class="px-5 py-3.5 text-center text-m3-on-surface font-medium tabular-nums">{v.min_km_per_day} km</td>
@@ -507,7 +527,7 @@ const faqSchema = {
                     </div>
                   </td>
                 </tr>
-              ))}
+              )})}
             </tbody>
           </table>
         </div>
@@ -515,32 +535,37 @@ const faqSchema = {
         <!-- Cards View (Default on mobile, toggleable on desktop) -->
         <div id="outstation-cards-view" class="block md:hidden">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 font-sans">
-            {vehicles.map(([name, v]: [string, any]) => (
+            {vehiclesList.map(([name, v, meta]) => {
+              const aliases = getSlugAliases(name);
+              return (
               <div
                 id={`outstation-${getVehicleSlug(name)}`}
                 data-vehicle-slug={getVehicleSlug(name)}
-                class="scroll-mt-36 sm:scroll-mt-40 bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-slate-200/90 shadow-2xs hover:shadow-sm hover:border-slate-300 flex flex-col justify-between transition-all"
+                class="scroll-mt-36 sm:scroll-mt-40 bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-slate-200/90 shadow-2xs hover:shadow-sm hover:border-slate-300 flex flex-col justify-between transition-all relative"
               >
+                {aliases.map(alias => (
+                  <span id={`outstation-${alias}`} class="absolute -top-36 pointer-events-none opacity-0" aria-hidden="true"></span>
+                ))}
                 <div>
                   <!-- Header with vehicle name, badge, and prominent CAR IMAGE -->
                   <div class="flex items-center justify-between gap-3 mb-3.5">
                     <div class="min-w-0 flex-1">
                       <h3 class="font-bold text-[#111827] font-heading text-base">{name}</h3>
                       <div class="flex items-center gap-2 mt-1">
-                        <span class="text-xs text-[#1a73e8] font-bold uppercase tracking-wider">{vehicleBadges[name]}</span>
+                        <span class="text-xs text-[#1a73e8] font-bold uppercase tracking-wider">{meta.badge}</span>
                         <span class="text-xs text-slate-600 font-medium bg-slate-100 px-2 py-0.5 rounded-full">
-                          {vehicleCapacity[name] || "4 Seats"}
+                          {meta.capacity}
                         </span>
                       </div>
                     </div>
-                    <div class="shrink-0 w-24 h-15 sm:w-28 sm:h-17 flex items-center justify-center bg-slate-50/80 rounded-xl p-1.5 border border-slate-200/70 overflow-hidden">
+                    <div class="shrink-0 w-28 h-18 sm:w-32 sm:h-20 flex items-center justify-center bg-slate-50/90 rounded-2xl p-1 border border-slate-200/80 overflow-hidden shadow-2xs">
                       <img
-                        src={vehicleImages[name] || "/images/fleet/swift-dzire.webp"}
+                        src={meta.image}
                         alt={`${name} outstation cab in Chennai`}
-                        width="112"
-                        height="64"
+                        width="128"
+                        height="80"
                         decoding="async"
-                        class={`max-w-full max-h-full object-contain ${(vehicleImages[name] || '').includes('swift-dzire') ? 'scale-125' : (vehicleImages[name] || '').includes('suv') ? 'scale-115' : (vehicleImages[name] || '').includes('ertiga') ? 'scale-110' : ''}`}
+                        class={`max-w-full max-h-full object-contain ${meta.image.includes('swift-dzire') ? 'scale-130' : meta.image.includes('tempo') ? 'scale-120' : meta.image.includes('urbania') ? 'scale-120' : 'scale-115'}`}
                         loading="lazy"
                       />
                     </div>
@@ -584,7 +609,7 @@ const faqSchema = {
                   </a>
                 </div>
               </div>
-            ))}
+            )})}
           </div>
         </div>
 
@@ -607,7 +632,16 @@ const faqSchema = {
 
             if (match) {
               const section = outstationMatch ? 'outstation' : 'local';
-              const rawSlug = match[1].replace(/^row-/, '');
+              let rawSlug = match[1].replace(/^row-/, '');
+
+              // Alias resolution for legacy bookmarks & external inbound links
+              if (rawSlug === 'tempo-traveller' || rawSlug === 'tempo-12') rawSlug = '12-seater-luxury-force-tempo';
+              if (rawSlug === 'force-urbania') rawSlug = 'force-urbania-vip-luxury';
+              if (rawSlug === 'tempo-14') rawSlug = '14-seater-executive-force-tempo';
+              if (rawSlug === 'tempo-17') rawSlug = '17-seater-executive-force-tempo';
+              if (rawSlug === 'tempo-20') rawSlug = '20-seater-grand-force-tempo';
+              if (rawSlug === 'tempo-26' || rawSlug === 'mini-bus') rawSlug = '26-seater-mini-bus-force-tempo';
+
               const cardId = `${section}-${rawSlug}`;
               const rowId = `${section}-row-${rawSlug}`;
 

@@ -34,8 +34,8 @@ const callUrl = `tel:${phone}`;
     <header class="flex items-center justify-between px-4 py-3 bg-white/90 dark:bg-[#131314]/90 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10 shrink-0 select-none z-10">
       <!-- Title & Official Google Gemini Sparkle -->
       <div class="flex items-center gap-2 min-w-0">
-        <div class="relative w-7 h-7 rounded-full bg-[#006D3B]/10 dark:bg-emerald-500/20 border border-[#006D3B]/30 dark:border-emerald-500/30 flex items-center justify-center shrink-0 shadow-xs">
-          <svg class="w-4 h-4 text-[#006D3B] dark:text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <div class="relative w-7 h-7 rounded-full bg-[#D97706]/10 dark:bg-amber-500/20 border border-[#D97706]/30 dark:border-amber-500/30 flex items-center justify-center shrink-0 shadow-xs">
+          <svg class="w-4 h-4 text-[#D97706] dark:text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"/>
             <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" fill-opacity="0.2"/>
           </svg>
@@ -131,8 +131,8 @@ const callUrl = `tel:${phone}`;
       <div id="ai-welcome-hero" class="py-6 sm:py-8 px-2 flex flex-col items-center text-center select-none">
         <!-- Kalidass Emblem -->
         <div class="relative mb-4 flex items-center justify-center">
-          <div class="relative w-14 h-14 rounded-2xl bg-[#006D3B]/10 dark:bg-emerald-950/40 border border-[#006D3B]/25 dark:border-emerald-500/30 shadow-md flex items-center justify-center">
-            <svg class="w-7 h-7 text-[#006D3B] dark:text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <div class="relative w-14 h-14 rounded-2xl bg-[#D97706]/10 dark:bg-amber-950/40 border border-[#D97706]/25 dark:border-amber-500/30 shadow-md flex items-center justify-center">
+            <svg class="w-7 h-7 text-[#D97706] dark:text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"/>
               <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" fill-opacity="0.2"/>
             </svg>
@@ -1340,17 +1340,17 @@ const callUrl = `tel:${phone}`;
         `;
       }
 
-      const bubbleClasses = isUser
-        ? 'bg-blue-600 text-white p-3 rounded-2xl rounded-tr-xs shadow-xs text-sm font-medium whitespace-pre-wrap break-words leading-relaxed'
-        : 'flex-1 bg-white dark:bg-[#1E1F20] p-4 rounded-2xl rounded-tl-xs border border-slate-200/80 dark:border-white/10 shadow-xs text-slate-800 dark:text-[#E3E3E3] space-y-2 leading-relaxed text-sm';
-
-      msgDiv.innerHTML = `
-        ${avatar}
-        <div class="${bubbleClasses}">
-          <div class="ai-msg-content">${isUser ? escapeHtml(content) : formatMarkdown(content)}</div>
-          ${actionHtml}
-        </div>
-      `;
+      if (isUser) {
+        msgDiv.innerHTML = `<div class="bg-blue-600 text-white px-3.5 py-2.5 rounded-2xl rounded-tr-xs shadow-xs text-sm font-medium break-words leading-normal"><div class="ai-msg-content whitespace-pre-wrap">${escapeHtml(content.trim())}</div></div>`;
+      } else {
+        msgDiv.innerHTML = `
+          ${avatar}
+          <div class="flex-1 bg-white dark:bg-[#1E1F20] p-4 rounded-2xl rounded-tl-xs border border-slate-200/80 dark:border-white/10 shadow-xs text-slate-800 dark:text-[#E3E3E3] space-y-2 leading-relaxed text-sm">
+            <div class="ai-msg-content">${formatMarkdown(content)}</div>
+            ${actionHtml}
+          </div>
+        `;
+      }
 
       const copyBtn = msgDiv.querySelector('.ai-copy-btn');
       copyBtn?.addEventListener('click', () => {

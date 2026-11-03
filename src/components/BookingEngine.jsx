@@ -566,7 +566,7 @@ export default function BookingEngine({
   });
 
   // 4. Form State: Local Rental
-  const [localPackageKey, setLocalPackageKey] = useState(prefill.package || 'local_8hr_pkg');
+  const [localPackageKey, setLocalPackageKey] = useState(prefill.package || 'local_4hr_pkg');
 
   // 5. Form State: Airport
   const [airportDirection, setAirportDirection] = useState('pickup'); // 'pickup' | 'drop'
@@ -650,6 +650,62 @@ export default function BookingEngine({
       tourEventNames.forEach(evt => window.removeEventListener(evt, handleSelectVehicle));
       window.removeEventListener('select-quote-package', handleSelectPackage);
     };
+  }, [findVehicleMeta]);
+
+  // Deep Link URL Query Parameters Parser for AI Assistants (ChatGPT, Gemini, Grok, Perplexity)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tabParam = (urlParams.get('tab') || urlParams.get('service') || '').toLowerCase();
+      const vehicleParam = urlParams.get('vehicle') || urlParams.get('car') || '';
+      const pkgParam = (urlParams.get('package') || urlParams.get('pkg') || '').toLowerCase();
+      const destParam = urlParams.get('dest') || urlParams.get('destination') || '';
+      const pickupParam = urlParams.get('pickup') || urlParams.get('from') || '';
+      const daysParam = urlParams.get('days');
+      const tripTypeParam = (urlParams.get('type') || urlParams.get('triptype') || '').toLowerCase();
+      const autoView = urlParams.get('view') === 'results' || urlParams.get('auto') === '1';
+
+      if (tabParam && ['outstation', 'local', 'airport'].includes(tabParam)) {
+        setActiveTab(tabParam);
+      }
+
+      if (vehicleParam) {
+        const found = findVehicleMeta(vehicleParam);
+        if (found) {
+          setSelectedVehicleKey(found.key);
+        }
+      }
+
+      if (pkgParam) {
+        if (pkgParam.includes('4hr') || pkgParam === '4' || pkgParam === '40') setLocalPackageKey('local_4hr_pkg');
+        else if (pkgParam.includes('5hr') || pkgParam === '5' || pkgParam === '50') setLocalPackageKey('local_5hr_pkg');
+        else if (pkgParam.includes('8hr') || pkgParam === '8' || pkgParam === '80') setLocalPackageKey('local_8hr_pkg');
+        else if (pkgParam.includes('10hr') || pkgParam === '10' || pkgParam === '100') setLocalPackageKey('local_10hr_pkg');
+        else if (pkgParam.includes('12hr') || pkgParam === '12' || pkgParam === '120') setLocalPackageKey('local_12hr_pkg');
+        else setLocalPackageKey(pkgParam);
+      }
+
+      if (destParam) {
+        setOutstationDrop(destParam);
+      }
+      if (pickupParam) {
+        setOutstationPickup(pickupParam);
+      }
+      if (daysParam) {
+        const parsedDays = parseInt(daysParam, 10);
+        if (!isNaN(parsedDays) && parsedDays > 0) setOutstationDays(parsedDays);
+      }
+      if (tripTypeParam && ['round', 'oneway'].includes(tripTypeParam)) {
+        setOutstationTripType(tripTypeParam);
+      }
+
+      if (autoView || (tabParam === 'local' && (vehicleParam || pkgParam)) || (tabParam === 'outstation' && destParam)) {
+        setViewMode('results');
+      }
+    } catch (err) {
+      console.warn('Could not parse URL query parameters for BookingEngine:', err);
+    }
   }, [findVehicleMeta]);
 
   // Google Places Autocomplete
@@ -1032,7 +1088,7 @@ export default function BookingEngine({
         };
       }
     } else if (activeTab === 'local') {
-      const pkg = LOCAL_PACKAGES.find(p => p.key === localPackageKey) || LOCAL_PACKAGES[2];
+      const pkg = LOCAL_PACKAGES.find(p => p.key === localPackageKey) || LOCAL_PACKAGES[0];
       const baseFare = vConfig[pkg.key] || 2200;
       const extraKmRate = vConfig.extra_km_rate || 15;
       const extraHrRate = vConfig.extra_hr_rate || 150;
@@ -1058,7 +1114,7 @@ export default function BookingEngine({
         advance,
         originName: 'Chennai City',
         destName: pkg.label,
-        tripTypeTag: `Local Rental (${pkg.hours}h / ${pkg.km}km)`,
+        tripTypeTag: `Local Rental (${pkg.hours} Hrs / ${pkg.km} Km)`,
         routeSummary: `Chennai Local (${pkg.label})`,
         tripSubtext: `Includes ${pkg.hours} Hrs / ${pkg.km} KM • Extra: ₹${extraKmRate}/km, ₹${extraHrRate}/hr`,
         metaDateStr: `${formattedPickupDate} • City Rental • ${pkg.label}`
@@ -1899,6 +1955,40 @@ Please confirm chauffeur availability.`;
                 <span>Edit</span>
               </button>
             </div>
+
+            {/* In-place Quick Package Hours Selector for Local Rentals */}
+            {activeTab === 'local' && (
+              <div className="mt-2.5 pt-2.5 border-t border-m3-outline-variant/60 dark:border-m3-outline-variant/40">
+                <div className="flex items-center justify-between text-[11px] font-bold text-m3-on-surface-variant dark:text-gray-400 mb-1.5">
+                  <span className="flex items-center gap-1">
+                    <Clock className="w-3 h-3 text-blue-600" />
+                    <span>Package Duration:</span>
+                  </span>
+                  <span className="text-[10px] text-blue-600 dark:text-blue-400 font-medium">
+                    Tap to change
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {LOCAL_PACKAGES.map((pkg) => {
+                    const isSelectedPkg = localPackageKey === pkg.key;
+                    return (
+                      <button
+                        key={pkg.key}
+                        type="button"
+                        onClick={() => setLocalPackageKey(pkg.key)}
+                        className={`px-2.5 py-1 rounded-m3-full text-xs font-bold transition-all cursor-pointer active:scale-95 flex items-center gap-1 ${
+                          isSelectedPkg
+                            ? 'bg-blue-600 text-white shadow-xs ring-2 ring-blue-600/30'
+                            : 'bg-white dark:bg-m3-surface text-slate-700 dark:text-slate-300 border border-m3-outline-variant/80 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50/50'
+                        }`}
+                      >
+                        <span>{pkg.hours} Hrs / {pkg.km} Km</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* CONDITIONAL LAYOUT:
@@ -1912,39 +2002,41 @@ Please confirm chauffeur availability.`;
             <>
               {/* STEP 1: 1-Tap Spacious Horizontal Vehicle Showcase Cards */}
               <div>
-                <div className="flex items-center justify-between text-[11px] font-bold text-m3-on-surface-variant dark:text-gray-400 uppercase tracking-wider mb-1.5">
-                  <span className="flex items-center gap-1">
-                    {isTempoOnly ? <Users className="w-3.5 h-3.5 text-blue-600" /> : <Car className="w-3.5 h-3.5 text-blue-600" />}
+                <div className="flex items-center justify-between text-[11px] font-bold text-m3-on-surface-variant dark:text-gray-400 uppercase tracking-wider mb-2">
+                  <span className="flex items-center gap-1.5">
+                    {isTempoOnly ? <Users className="w-4 h-4 text-blue-600" /> : <Car className="w-4 h-4 text-blue-600" />}
                     <span>{isTempoOnly ? 'Select Tempo Traveller / Van:' : 'Select Vehicle:'}</span>
                   </span>
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-normal text-slate-400 hidden xs:inline">
+                    <span className="text-[10px] font-normal text-slate-400 hidden sm:inline">
                       Swipe or tap to switch vehicle
                     </span>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-2">
                       <button
                         type="button"
                         onClick={() => {
                           if (vehicleScrollerRef.current) {
-                            vehicleScrollerRef.current.scrollBy({ left: -150, behavior: 'smooth' });
+                            vehicleScrollerRef.current.scrollBy({ left: -180, behavior: 'smooth' });
                           }
                         }}
                         aria-label="Scroll left"
-                        className="w-5 h-5 rounded-full border border-m3-outline-variant/80 flex items-center justify-center text-slate-500 hover:text-blue-600 hover:border-blue-400 bg-white dark:bg-m3-surface transition-colors cursor-pointer"
+                        title="Scroll left"
+                        className="w-10 h-10 min-w-[40px] min-h-[40px] rounded-full border-2 border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-blue-600 hover:border-blue-500 hover:bg-blue-50/60 dark:hover:bg-blue-950/40 bg-white dark:bg-m3-surface shadow-xs active:scale-90 active:bg-blue-100 dark:active:bg-blue-900/60 transition-all cursor-pointer touch-manipulation select-none"
                       >
-                        <ChevronLeft className="w-3.5 h-3.5" />
+                        <ChevronLeft className="w-5 h-5" strokeWidth={2.5} />
                       </button>
                       <button
                         type="button"
                         onClick={() => {
                           if (vehicleScrollerRef.current) {
-                            vehicleScrollerRef.current.scrollBy({ left: 150, behavior: 'smooth' });
+                            vehicleScrollerRef.current.scrollBy({ left: 180, behavior: 'smooth' });
                           }
                         }}
                         aria-label="Scroll right"
-                        className="w-5 h-5 rounded-full border border-m3-outline-variant/80 flex items-center justify-center text-slate-500 hover:text-blue-600 hover:border-blue-400 bg-white dark:bg-m3-surface transition-colors cursor-pointer"
+                        title="Scroll right"
+                        className="w-10 h-10 min-w-[40px] min-h-[40px] rounded-full border-2 border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-blue-600 hover:border-blue-500 hover:bg-blue-50/60 dark:hover:bg-blue-950/40 bg-white dark:bg-m3-surface shadow-xs active:scale-90 active:bg-blue-100 dark:active:bg-blue-900/60 transition-all cursor-pointer touch-manipulation select-none"
                       >
-                        <ChevronRight className="w-3.5 h-3.5" />
+                        <ChevronRight className="w-5 h-5" strokeWidth={2.5} />
                       </button>
                     </div>
                   </div>
@@ -1979,19 +2071,19 @@ Please confirm chauffeur availability.`;
                           </span>
                         </div>
 
-                        {/* Prominent Vehicle Showcase Stage (Spacious, bold & properly scaled for Sedan) */}
-                        <div className="h-20 sm:h-22 flex items-center justify-center my-1.5 w-full overflow-hidden">
+                        {/* Prominent Vehicle Showcase Stage */}
+                        <div className="h-20 sm:h-22 flex items-center justify-center my-1.5 w-full">
                           <img
                             src={item.image}
                             alt={item.name}
                             className={`w-auto h-full max-h-18 sm:max-h-20 object-contain transition-transform group-hover:scale-105 drop-shadow-xs ${
                               item.key === 'Swift Dzire'
-                                ? 'scale-125 sm:scale-130'
+                                ? 'scale-100'
                                 : item.key.includes('Innova') || item.key.includes('Crysta')
-                                ? 'scale-115 sm:scale-120'
+                                ? 'scale-105 sm:scale-110'
                                 : item.key.includes('Ertiga')
-                                ? 'scale-110 sm:scale-115'
-                                : 'scale-105 sm:scale-110'
+                                ? 'scale-105 sm:scale-110'
+                                : 'scale-100 sm:scale-105'
                             }`}
                             loading="lazy"
                             width="125"
@@ -2007,7 +2099,7 @@ Please confirm chauffeur availability.`;
                           <div className="text-xs sm:text-[13px] font-bold text-slate-700 dark:text-slate-200 mt-1 whitespace-nowrap">
                             {item.seats} Seats + {item.bags ? `${item.bags} Bags` : (item.seats >= 12 ? '10 Bags' : '2 Bags')}
                           </div>
-                          {activeTab === 'airport' && vPricing?.totalFare ? (
+                          {vPricing?.totalFare ? (
                             <div className={`text-sm sm:text-base font-black mt-1.5 tabular-nums ${isSelected ? 'text-blue-700 dark:text-blue-300' : 'text-slate-900 dark:text-white'}`}>
                               ₹{vPricing.totalFare.toLocaleString('en-IN')}
                             </div>
@@ -2084,7 +2176,7 @@ Please confirm chauffeur availability.`;
                   className="w-full min-h-[48px] sm:min-h-[50px] inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-m3-full bg-[#075E54] hover:bg-[#054c44] active:bg-[#043e37] text-white font-bold text-sm shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5 transition-all active:scale-[0.98] cursor-pointer border border-[#054c44]/30"
                 >
                   <WhatsAppIcon variant="white" className="w-5 h-5 shrink-0" />
-                  <span>Book {selectedVehicle.name} on WhatsApp{activeTab === 'airport' ? '' : ` — ₹${currentBreakdown.totalFare.toLocaleString('en-IN')}`}</span>
+                  <span>Book {selectedVehicle.name} on WhatsApp</span>
                 </a>
 
                 <div className="text-center pt-0.5">
@@ -2106,39 +2198,41 @@ Please confirm chauffeur availability.`;
             <>
               {/* STEP 1: Compact Horizontal Vehicle Switcher on TOP */}
               <div>
-                <div className="flex items-center justify-between text-[11px] font-bold text-m3-on-surface-variant dark:text-gray-400 uppercase tracking-wider mb-1.5">
-                  <span className="flex items-center gap-1">
-                    {isTempoOnly ? <Users className="w-3.5 h-3.5 text-blue-600" /> : <Car className="w-3.5 h-3.5 text-blue-600" />}
+                <div className="flex items-center justify-between text-[11px] font-bold text-m3-on-surface-variant dark:text-gray-400 uppercase tracking-wider mb-2">
+                  <span className="flex items-center gap-1.5">
+                    {isTempoOnly ? <Users className="w-4 h-4 text-blue-600" /> : <Car className="w-4 h-4 text-blue-600" />}
                     <span>{isTempoOnly ? 'Select Tempo Traveller / Van:' : 'Select Vehicle:'}</span>
                   </span>
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-normal text-slate-400 hidden xs:inline">
-                      Tap to switch vehicle
+                    <span className="text-[10px] font-normal text-slate-400 hidden sm:inline">
+                      Tap or swipe to switch vehicle
                     </span>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-2">
                       <button
                         type="button"
                         onClick={() => {
                           if (vehicleScrollerRef.current) {
-                            vehicleScrollerRef.current.scrollBy({ left: -140, behavior: 'smooth' });
+                            vehicleScrollerRef.current.scrollBy({ left: -160, behavior: 'smooth' });
                           }
                         }}
                         aria-label="Scroll left"
-                        className="w-5 h-5 rounded-full border border-m3-outline-variant/80 flex items-center justify-center text-slate-500 hover:text-blue-600 hover:border-blue-400 bg-white dark:bg-m3-surface transition-colors cursor-pointer"
+                        title="Scroll left"
+                        className="w-10 h-10 min-w-[40px] min-h-[40px] rounded-full border-2 border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-blue-600 hover:border-blue-500 hover:bg-blue-50/60 dark:hover:bg-blue-950/40 bg-white dark:bg-m3-surface shadow-xs active:scale-90 active:bg-blue-100 dark:active:bg-blue-900/60 transition-all cursor-pointer touch-manipulation select-none"
                       >
-                        <ChevronLeft className="w-3.5 h-3.5" />
+                        <ChevronLeft className="w-5 h-5" strokeWidth={2.5} />
                       </button>
                       <button
                         type="button"
                         onClick={() => {
                           if (vehicleScrollerRef.current) {
-                            vehicleScrollerRef.current.scrollBy({ left: 140, behavior: 'smooth' });
+                            vehicleScrollerRef.current.scrollBy({ left: 160, behavior: 'smooth' });
                           }
                         }}
                         aria-label="Scroll right"
-                        className="w-5 h-5 rounded-full border border-m3-outline-variant/80 flex items-center justify-center text-slate-500 hover:text-blue-600 hover:border-blue-400 bg-white dark:bg-m3-surface transition-colors cursor-pointer"
+                        title="Scroll right"
+                        className="w-10 h-10 min-w-[40px] min-h-[40px] rounded-full border-2 border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-200 hover:text-blue-600 hover:border-blue-500 hover:bg-blue-50/60 dark:hover:bg-blue-950/40 bg-white dark:bg-m3-surface shadow-xs active:scale-90 active:bg-blue-100 dark:active:bg-blue-900/60 transition-all cursor-pointer touch-manipulation select-none"
                       >
-                        <ChevronRight className="w-3.5 h-3.5" />
+                        <ChevronRight className="w-5 h-5" strokeWidth={2.5} />
                       </button>
                     </div>
                   </div>

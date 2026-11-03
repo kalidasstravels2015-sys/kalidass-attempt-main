@@ -1,95 +1,34 @@
 import type { APIRoute } from 'astro';
 import tariffConfig from '../../data/tariff_config.json';
+import { getVehicleMetadata } from '../../utils/vehicleMetadata';
 
 export const prerender = true;
 
-const fleetDetails: Record<string, { category: string; seats: number; luggage_capacity: string; ac_type: string; best_for: string }> = {
-  "Swift Dzire": {
-    category: "Sedan",
-    seats: 4,
-    luggage_capacity: "2 medium suitcases + 2 handbags",
-    ac_type: "Dual Zone AC",
-    best_for: "Airport transfers, business transits, couple weekend trips"
-  },
-  "Toyota Etios": {
-    category: "Sedan",
-    seats: 4,
-    luggage_capacity: "2 medium suitcases + 2 handbags",
-    ac_type: "Standard AC",
-    best_for: "City duty, outstation day packages"
-  },
-  "Maruti Ertiga": {
-    category: "Compact MPV",
-    seats: 6,
-    luggage_capacity: "3 medium suitcases",
-    ac_type: "Dual AC with rear vents",
-    best_for: "Small families, 5-6 seats temple tours"
-  },
-  "Innova": {
-    category: "Premium MPV",
-    seats: 7,
-    luggage_capacity: "4 suitcases",
-    ac_type: "Dual AC with roof vents",
-    best_for: "Family pilgrimages, Tirupati Balaji tours"
-  },
-  "Innova Crysta": {
-    category: "Luxury MPV",
-    seats: 7,
-    luggage_capacity: "5 large suitcases",
-    ac_type: "Automatic climate control",
-    best_for: "VIP corporate transfers, hill station travel (Munnar/Ooty)"
-  },
-  "Tempo Traveller": {
-    category: "Group Van",
-    seats: 12,
-    luggage_capacity: "3-4 medium suitcases + 8-10 soft bags (100% inside rear boot)",
-    ac_type: "High-capacity dual commercial AC",
-    best_for: "Navagraha temple circuits, family reunions, joint pilgrimages"
-  },
-  "Tempo Traveller 12": {
-    category: "Group Van",
-    seats: 12,
-    luggage_capacity: "3-4 medium suitcases + 8-10 soft bags (100% inside rear boot)",
-    ac_type: "High-capacity dual blower AC",
-    best_for: "Navagraha temple circuits, family reunions"
-  },
-  "Tempo Traveller 17": {
-    category: "Group Coach",
-    seats: 17,
-    luggage_capacity: "6-7 medium suitcases + 14-16 soft bags (deep 4020 trunk)",
-    ac_type: "Heavy-duty twin commercial AC",
-    best_for: "Corporate team outings, wedding guest transfers, Sabarimala yatra"
-  },
-  "Force Urbania": {
-    category: "Executive Luxury Van",
-    seats: 12,
-    luggage_capacity: "6-8 executive suitcases + 12 overhead aircraft bins",
-    ac_type: "Triple-zone automatic climate control",
-    best_for: "Luxury corporate delegations, VIP airport transfers, destination weddings"
-  }
-};
-
 export const GET: APIRoute = async () => {
   const fleet = Object.entries(tariffConfig.vehicles).map(([model, data]) => {
-    const details = fleetDetails[model] || {
-      category: "Car Rental",
-      seats: 4,
-      luggage_capacity: "2 bags",
-      ac_type: "AC",
-      best_for: "Outstation travel"
-    };
+    const meta = getVehicleMetadata(model, data);
 
     return {
       model,
-      category: details.category,
-      seats: details.seats,
-      luggage_capacity: details.luggage_capacity,
+      category: meta.category,
+      seats: meta.seatCount,
+      luggage_capacity: meta.luggage,
       rate_per_km_inr: data.round_trip_rate,
       one_way_rate_per_km_inr: (data as any).one_way_rate || data.round_trip_rate + 2,
       driver_batta_per_day_inr: (data as any).driver_bata || 500,
       min_km_per_day: data.min_km_per_day || 250,
-      ac_type: details.ac_type,
-      best_for: details.best_for
+      local_hourly_packages_inr: {
+        "4h_40km": (data as any).local_4hr_pkg || null,
+        "5h_50km": (data as any).local_5hr_pkg || null,
+        "8h_80km": (data as any).local_8hr_pkg || null,
+        "10h_100km": (data as any).local_10hr_pkg || null,
+        "12h_120km": (data as any).local_12hr_pkg || null,
+        extra_km_rate: (data as any).extra_km_rate || null,
+        extra_hr_rate: (data as any).extra_hr_rate || null
+      },
+      ac_type: meta.acType,
+      best_for: meta.badge,
+      image: meta.image
     };
   });
 
