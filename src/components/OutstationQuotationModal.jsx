@@ -304,16 +304,20 @@ const getTripDrivingRequirements = (oneWayKm, isRoundTrip, durationStr) => {
   };
 };
 
-const getMinReturnDateTime = (pickupVal, minHours) => {
+const getMinReturnDateTime = (pickupVal, minHours, minDays = 1) => {
   if (!pickupVal) return '';
   const d = new Date(pickupVal);
   if (isNaN(d.getTime())) return '';
-  d.setHours(d.getHours() + Math.ceil(minHours || 4));
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  const hours = String(d.getHours()).padStart(2, '0');
-  const minutes = String(d.getMinutes()).padStart(2, '0');
+  const minByHours = new Date(d.getTime() + Math.ceil(minHours || 4) * 60 * 60 * 1000);
+  const effectiveMinDays = Math.max(1, Number(minDays) || 1);
+  const minByDays = new Date(d.getFullYear(), d.getMonth(), d.getDate() + (effectiveMinDays - 1), 6, 0);
+  const finalMin = minByHours.getTime() > minByDays.getTime() ? minByHours : minByDays;
+
+  const year = finalMin.getFullYear();
+  const month = String(finalMin.getMonth() + 1).padStart(2, '0');
+  const day = String(finalMin.getDate()).padStart(2, '0');
+  const hours = String(finalMin.getHours()).padStart(2, '0');
+  const minutes = String(finalMin.getMinutes()).padStart(2, '0');
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 };
 
@@ -527,7 +531,7 @@ export default function OutstationQuotationModal() {
 
     if (tripType === 'round' && distKm) {
       const req = getTripDrivingRequirements(distKm, true, durStr);
-      const minReturn = getMinReturnDateTime(date || getDefaultDepartureTime(), req.minRealisticHours);
+      const minReturn = getMinReturnDateTime(date || getDefaultDepartureTime(), req.minRealisticHours, req.minDays);
       if (returnDate && returnDate < minReturn) {
         setReturnDate(minReturn);
         const computed = calculateCalendarDays(date || getDefaultDepartureTime(), minReturn);
@@ -1148,7 +1152,7 @@ Please save my quote & confirm live cab availability.` + omMapsBlock;
                     const val = e.target.value;
                     setDate(val);
                     if (val && tripType === 'round') {
-                      const minReturn = getMinReturnDateTime(val, tripReq.minRealisticHours);
+                      const minReturn = getMinReturnDateTime(val, tripReq.minRealisticHours, tripReq.minDays);
                       if (returnDate && returnDate < minReturn) {
                         setReturnDate(minReturn);
                       }
@@ -1179,7 +1183,7 @@ Please save my quote & confirm live cab availability.` + omMapsBlock;
                   <input
                     type="datetime-local"
                     value={returnDate}
-                    min={tripReq.minRealisticHours ? getMinReturnDateTime(date, tripReq.minRealisticHours) : date}
+                    min={tripReq.minRealisticHours ? getMinReturnDateTime(date, tripReq.minRealisticHours, tripReq.minDays) : date}
                     onChange={(e) => setReturnDate(e.target.value)}
                     className="w-full bg-white border border-m3-outline-variant focus:border-m3-primary focus:ring-1 focus:ring-m3-primary rounded-m3-lg py-2 px-2.5 text-xs font-semibold text-m3-on-surface outline-none transition-all shadow-2xs"
                   />

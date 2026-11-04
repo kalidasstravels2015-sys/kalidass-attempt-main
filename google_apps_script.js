@@ -72,7 +72,29 @@ function setupSheets() {
     bookSheet.setFrozenRows(1);
   }
 
-  return { enqSheet: enqSheet, bookSheet: bookSheet };
+  // 3. Driver Leads Sheet
+  var driverSheet = ss.getSheetByName('Driver Leads');
+  if (!driverSheet) {
+    driverSheet = ss.insertSheet('Driver Leads');
+    var dHeaders = [
+      'Lead ID',
+      'Timestamp',
+      'Applicant Name',
+      'Phone Number',
+      'Category',
+      'Fleet / License Details',
+      'Operating Area',
+      'Driving License (Drive Link)',
+      'RC Book (Drive Link)',
+      'Status',
+      'Notes'
+    ];
+    driverSheet.appendRow(dHeaders);
+    driverSheet.getRange(1, 1, 1, dHeaders.length).setFontWeight('bold').setBackground('#673ab7').setFontColor('#ffffff');
+    driverSheet.setFrozenRows(1);
+  }
+
+  return { enqSheet: enqSheet, bookSheet: bookSheet, driverSheet: driverSheet };
 }
 
 /**
@@ -84,6 +106,7 @@ function doGet(e) {
     var sheets = setupSheets();
     var enqSheet = sheets.enqSheet;
     var bookSheet = sheets.bookSheet;
+    var driverSheet = sheets.driverSheet;
 
     var leads = [];
     var lastEnqRow = enqSheet.getLastRow();
@@ -160,12 +183,40 @@ function doGet(e) {
       }
     }
 
+    var driverLeads = [];
+    var lastDrvRow = driverSheet.getLastRow();
+    if (lastDrvRow > 1) {
+      var dStartRow = Math.max(2, lastDrvRow - 99);
+      var dNumRows = lastDrvRow - dStartRow + 1;
+      var dValues = driverSheet.getRange(dStartRow, 1, dNumRows, 11).getValues();
+
+      for (var d = dValues.length - 1; d >= 0; d--) {
+        var dRow = dValues[d];
+        if (dRow[0]) {
+          driverLeads.push({
+            leadId: String(dRow[0] || ''),
+            timestamp: String(dRow[1] || ''),
+            name: String(dRow[2] || ''),
+            phone: String(dRow[3] || ''),
+            category: String(dRow[4] || ''),
+            details: String(dRow[5] || ''),
+            city: String(dRow[6] || ''),
+            dlDriveUrl: String(dRow[7] || ''),
+            rcDriveUrl: String(dRow[8] || ''),
+            status: String(dRow[9] || 'Pending Review'),
+            notes: String(dRow[10] || '')
+          });
+        }
+      }
+    }
+
     var result = {
       success: true,
       count: leads.length,
       leads: leads,
       calculatorQuotes: leads,
       bookings: bookings,
+      driverLeads: driverLeads,
       syncedAt: new Date().toISOString()
     };
 
@@ -196,6 +247,65 @@ function doPost(e) {
     var sheets = setupSheets();
     var enqSheet = sheets.enqSheet;
     var bookSheet = sheets.bookSheet;
+    var driverSheet = sheets.driverSheet;
+    var driverSheet = sheets.driverSheet;
+
+    var isDriverLead = data.type === 'driver_lead' ||
+                       Boolean(data.leadId && String(data.leadId).indexOf('DRV') !== -1) ||
+                       (data.tripType && String(data.tripType).indexOf('Driver Lead') !== -1) ||
+                       (data.category && (data.category === 'Attach Car' || data.category === 'Acting Driver'));
+
+    if (isDriverLead) {
+      var dLast = driverSheet.getLastRow();
+      var incomingLeadId = String(data.leadId || data.referenceId || '').trim();
+      var leadId = incomingLeadId || getNextSequenceId(driverSheet, '#KT-DRV-');
+      var timestamp = data.timestamp || data.date || Utilities.formatDate(new Date(), 'Asia/Kolkata', 'dd MMM yyyy, hh:mm a');
+      var name = data.name || data.guestName || 'Driver Applicant';
+      var rawPhone = data.phone || data.mobile || '';
+      var cleanPhone = String(rawPhone).replace(/[^0-9]/g, '').slice(-10);
+      var category = data.category || 'Attach Car';
+      var details = data.details || (category === 'Attach Car' 
+        ? ((data.carCount || '') + ' (' + (data.cars || '') + ') - Plate: ' + (data.plateType || 'Yellow Board'))
+        : ((data.licenseType || '') + ' - Exp: ' + (data.experience || '') + ' - Duty: ' + (data.preferredDuty || 'All')));
+      var city = data.city || data.pickup || 'Chennai';
+      var notes = data.notes || data.drop || '';
+
+      var dlDriveUrl = 'Not Uploaded';
+      var rcDriveUrl = 'Not Uploaded';
+
+      if (data.dlFile && data.dlFile.base64) {
+        dlDriveUrl = saveDocumentToGoogleDrive(data.dlFile.base64, leadId + '-DL.jpg', data.dlFile.mimeType || 'image/jpeg');
+      }
+      if (data.rcFile && data.rcFile.base64) {
+        rcDriveUrl = saveDocumentToGoogleDrive(data.rcFile.base64, leadId + '-RC.jpg', data.rcFile.mimeType || 'image/jpeg');
+      }
+
+      var dRowData = [
+        leadId,
+        timestamp,
+        name,
+        cleanPhone ? "'+91 " + cleanPhone : '',
+        category,
+        details,
+        city,
+        dlDriveUrl,
+        rcDriveUrl,
+        'Pending Review',
+        notes
+      ];
+
+      driverSheet.appendRow(dRowData);
+
+      return ContentService
+        .createTextOutput(JSON.stringify({
+          success: true,
+          leadId: leadId,
+          dlDriveUrl: dlDriveUrl,
+          rcDriveUrl: rcDriveUrl,
+          action: 'created'
+        }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
 
     var isBooking = (data.type === 'admin_booking_sync' ||
                      data.type === 'booking' ||
@@ -604,4 +714,28 @@ function syncBookingToGoogleCalendar(b) {
     newEvent.addPopupReminder(120);
   }
 }
+
+/**
+ * Save Base64 file into Google Drive in designated folder
+ */
+function saveDocumentToGoogleDrive(base64Data, fileName, mimeType) {
+  try {
+    if (!base64Data) return 'Not Provided';
+    var cleanBase64 = String(base64Data).replace(/^data:image\/[a-z]+;base64,/, '');
+    var folderName = 'Kalidass Driver Documents';
+    var folders = DriveApp.getFoldersByName(folderName);
+    var folder = folders.hasNext() ? folders.next() : DriveApp.createFolder(folderName);
+    
+    var decoded = Utilities.base64Decode(cleanBase64);
+    var blob = Utilities.newBlob(decoded, mimeType || 'image/jpeg', fileName);
+    var file = folder.createFile(blob);
+    try {
+      file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    } catch (_) {}
+    return file.getUrl();
+  } catch (err) {
+    return 'Drive Upload Error: ' + err.toString();
+  }
+}
+
 

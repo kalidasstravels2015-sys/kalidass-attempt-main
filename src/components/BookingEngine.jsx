@@ -147,7 +147,7 @@ function formatDateTimeDisplay(isoStr) {
   }
 }
 
-function getMinReturnDateTime(pickupIso, destKeyOrName, roundTripKm) {
+function getMinReturnDateTime(pickupIso, destKeyOrName, roundTripKm, minDays = 1) {
   if (!pickupIso) return '';
   const d = new Date(pickupIso);
   if (isNaN(d.getTime())) return '';
@@ -164,12 +164,36 @@ function getMinReturnDateTime(pickupIso, destKeyOrName, roundTripKm) {
     minHours = Math.max(8, Math.round(roundTripKm / 35));
   }
   
-  const minDate = new Date(d.getTime() + minHours * 60 * 60 * 1000);
-  const yyyy = minDate.getFullYear();
-  const mm = String(minDate.getMonth() + 1).padStart(2, '0');
-  const dd = String(minDate.getDate()).padStart(2, '0');
-  const hh = String(minDate.getHours()).padStart(2, '0');
-  const min = String(minDate.getMinutes()).padStart(2, '0');
+  const minByHours = new Date(d.getTime() + minHours * 60 * 60 * 1000);
+  const effectiveMinDays = Math.max(1, Number(minDays) || 1);
+  // Day 1 is pickup day. Day N is pickup + (minDays - 1). Earliest return on Day N is 06:00 AM or minByHours
+  const minByDays = new Date(d.getFullYear(), d.getMonth(), d.getDate() + (effectiveMinDays - 1), 6, 0);
+  const finalMin = minByHours.getTime() > minByDays.getTime() ? minByHours : minByDays;
+
+  const yyyy = finalMin.getFullYear();
+  const mm = String(finalMin.getMonth() + 1).padStart(2, '0');
+  const dd = String(finalMin.getDate()).padStart(2, '0');
+  const hh = String(finalMin.getHours()).padStart(2, '0');
+  const min = String(finalMin.getMinutes()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+}
+
+function getDefaultReturnDateTime(pickupIso, days = 1) {
+  if (!pickupIso) return '';
+  const d = new Date(pickupIso);
+  if (isNaN(d.getTime())) return '';
+  const returnDate = new Date(d);
+  const daysOffset = Math.max(0, Number(days) - 1);
+  returnDate.setDate(returnDate.getDate() + daysOffset);
+  returnDate.setHours(21, 0, 0, 0); // Standard 9:00 PM return
+  if (returnDate.getTime() <= d.getTime()) {
+    returnDate.setTime(d.getTime() + 8 * 60 * 60 * 1000);
+  }
+  const yyyy = returnDate.getFullYear();
+  const mm = String(returnDate.getMonth() + 1).padStart(2, '0');
+  const dd = String(returnDate.getDate()).padStart(2, '0');
+  const hh = String(returnDate.getHours()).padStart(2, '0');
+  const min = String(returnDate.getMinutes()).padStart(2, '0');
   return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
 }
 
@@ -536,15 +560,17 @@ export default function BookingEngine({
     detectedDestination || initialDrop || ''
   );
   
-  // Resolve default days based on destination
-  const defaultDaysForDest = useMemo(() => {
+  // Resolve default days based on destination and package
+  const minDaysForTrip = useMemo(() => {
     if (initialDays) return Number(initialDays);
-    const raw = (detectedDestination || initialDrop || '').toLowerCase().trim();
+    const raw = (outstationDrop || detectedDestination || initialDrop || '').toLowerCase().trim();
     for (const [key, dest] of Object.entries(KNOWN_DESTINATIONS)) {
       if (raw.includes(key)) return dest.defaultDays || 1;
     }
     return prefill.days ? Number(prefill.days) : 1;
-  }, [detectedDestination, initialDrop, prefill.days, initialDays]);
+  }, [outstationDrop, detectedDestination, initialDrop, prefill.days, initialDays]);
+
+  const defaultDaysForDest = minDaysForTrip;
 
   const [outstationDays, setOutstationDays] = useState(defaultDaysForDest);
 
@@ -552,6 +578,7 @@ export default function BookingEngine({
   const minPickupDateTime = useMemo(() => getNowIsoString(), []);
 
   const [pickupDateTime, setPickupDateTime] = useState(() => {
+    if (prefill.pickup) return prefill.pickup;
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const yyyy = tomorrow.getFullYear();
@@ -562,8 +589,25 @@ export default function BookingEngine({
 
   const [returnDateTime, setReturnDateTime] = useState(() => {
     if (prefill.return) return prefill.return;
-    return '';
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const yyyy = tomorrow.getFullYear();
+    const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+    const dd = String(tomorrow.getDate()).padStart(2, '0');
+    const defPickup = prefill.pickup || `${yyyy}-${mm}-${dd}T06:00`;
+    
+    const raw = (detectedDestination || initialDrop || '').toLowerCase().trim();
+    let initDays = initialDays ? Number(initialDays) : (prefill.days ? Number(prefill.days) : 1);
+    for (const [key, dest] of Object.entries(KNOWN_DESTINATIONS)) {
+      if (raw.includes(key)) {
+        initDays = Math.max(initDays, dest.defaultDays || 1);
+        break;
+      }
+    }
+    return getDefaultReturnDateTime(defPickup, initDays);
   });
+
+  const [clampedNotice, setClampedNotice] = useState('');
 
   // 4. Form State: Local Rental
   const [localPackageKey, setLocalPackageKey] = useState(prefill.package || 'local_4hr_pkg');
@@ -899,6 +943,29 @@ export default function BookingEngine({
   const handleDestinationSelect = (destination) => {
     setOutstationDrop(destination);
     setValidationError('');
+
+    const raw = (destination || '').toLowerCase().trim();
+    let destMinDays = initialDays ? Number(initialDays) : 1;
+    let foundDest = null;
+    for (const [key, dest] of Object.entries(KNOWN_DESTINATIONS)) {
+      if (raw.includes(key)) {
+        destMinDays = Math.max(destMinDays, dest.defaultDays || 1);
+        foundDest = dest;
+        break;
+      }
+    }
+
+    if (pickupDateTime && destMinDays > outstationDays) {
+      const newReturn = getDefaultReturnDateTime(pickupDateTime, destMinDays);
+      setReturnDateTime(newReturn);
+      setOutstationDays(destMinDays);
+      const destLabel = foundDest?.name || destination;
+      setClampedNotice(
+        `${destLabel} requires a minimum ${destMinDays}-day round trip. Return date set to ${formatDateTimeDisplay(newReturn)}.`
+      );
+    } else {
+      setClampedNotice('');
+    }
   };
 
   // Minimum realistic return date/time for outstation
@@ -907,9 +974,10 @@ export default function BookingEngine({
     return getMinReturnDateTime(
       pickupDateTime,
       resolvedDestination.name || outstationDrop,
-      resolvedDestination.roundTripKm
+      resolvedDestination.roundTripKm,
+      minDaysForTrip
     );
-  }, [pickupDateTime, resolvedDestination, outstationDrop]);
+  }, [pickupDateTime, resolvedDestination, outstationDrop, minDaysForTrip]);
 
   // Handle pickup change
   // Calculate calendar days between pickup and return dates
@@ -925,10 +993,11 @@ export default function BookingEngine({
     return Math.max(1, diffDays);
   };
 
-  // Handle pickup change and update duration
+  // Handle pickup change and auto-shift return date
   const handlePickupChange = (val) => {
     setPickupDateTime(val);
     setValidationError('');
+    setClampedNotice('');
     if (!val) return;
 
     const pDate = new Date(val);
@@ -937,46 +1006,51 @@ export default function BookingEngine({
       setValidationError('Pickup date & time cannot be in the past');
     }
 
-    if (returnDateTime) {
-      const rDate = new Date(returnDateTime);
-      if (rDate.getTime() <= pDate.getTime()) {
-        const newR = new Date(pDate);
-        const daysOffset = Math.max(0, (defaultDaysForDest || 1) - 1);
-        newR.setDate(newR.getDate() + daysOffset);
-        newR.setHours(21, 0, 0, 0);
-        if (newR.getTime() <= pDate.getTime()) {
-          newR.setTime(pDate.getTime() + 10 * 60 * 60 * 1000);
-        }
-        const yyyy = newR.getFullYear();
-        const mm = String(newR.getMonth() + 1).padStart(2, '0');
-        const dd = String(newR.getDate()).padStart(2, '0');
-        const hh = String(newR.getHours()).padStart(2, '0');
-        const min = String(newR.getMinutes()).padStart(2, '0');
-        const adjustedReturn = `${yyyy}-${mm}-${dd}T${hh}:${min}`;
-        setReturnDateTime(adjustedReturn);
-        setOutstationDays(getDaysBetween(val, adjustedReturn));
-      } else {
-        const days = getDaysBetween(val, returnDateTime);
-        setOutstationDays(days);
-      }
-    }
+    // Maintain current duration or destination minimum days (whichever is larger)
+    const effectiveDays = Math.max(outstationDays || 1, minDaysForTrip || 1);
+    const shiftedReturn = getDefaultReturnDateTime(val, effectiveDays);
+    setReturnDateTime(shiftedReturn);
+    setOutstationDays(effectiveDays);
   };
 
-  // Handle return change and update duration
+  // Handle return change and update duration with strict minimum clamping
   const handleReturnChange = (val) => {
-    setReturnDateTime(val);
     setValidationError('');
     if (!val) {
-      setOutstationDays(defaultDaysForDest || 1);
+      // If user clears return, restore default return for destination
+      const defReturn = getDefaultReturnDateTime(pickupDateTime, minDaysForTrip);
+      setReturnDateTime(defReturn);
+      setOutstationDays(minDaysForTrip);
+      setClampedNotice('');
       return;
     }
 
+    const minReturn = getMinReturnDateTime(
+      pickupDateTime,
+      resolvedDestination.name || outstationDrop,
+      resolvedDestination.roundTripKm,
+      minDaysForTrip
+    );
+
+    // If user typed/picked a return earlier than allowed minimum
+    if (minReturn && val < minReturn) {
+      const clampedReturn = getDefaultReturnDateTime(pickupDateTime, minDaysForTrip);
+      setReturnDateTime(clampedReturn);
+      setOutstationDays(minDaysForTrip);
+      const destName = resolvedDestination.name || outstationDrop || 'Outstation trip';
+      const kmText = resolvedDestination.roundTripKm ? `~${resolvedDestination.roundTripKm.toLocaleString('en-IN')} km` : '';
+      setClampedNotice(
+        `${destName} ${kmText ? `(${kmText}) ` : ''}requires a minimum ${minDaysForTrip}-day round trip. Return date set to ${formatDateTimeDisplay(clampedReturn)}.`
+      );
+      return;
+    }
+
+    // Valid return date
+    setClampedNotice('');
+    setReturnDateTime(val);
     if (pickupDateTime) {
       const days = getDaysBetween(pickupDateTime, val);
-      setOutstationDays(days);
-      if (new Date(val).getTime() <= new Date(pickupDateTime).getTime()) {
-        setValidationError('Return date & time must be after pickup date & time');
-      }
+      setOutstationDays(Math.max(minDaysForTrip, days));
     }
   };
 
@@ -1393,6 +1467,11 @@ Please confirm chauffeur availability.`;
         setValidationError('Return date & time must be after pickup date & time');
         return;
       }
+      if (minReturnDateTime && returnDateTime < minReturnDateTime) {
+        const destName = resolvedDestination.name || outstationDrop || 'This destination';
+        setValidationError(`${destName} requires a minimum ${minDaysForTrip}-day round trip. Earliest return date & time is ${formatDateTimeDisplay(minReturnDateTime)}.`);
+        return;
+      }
     } else if (activeTab === 'local') {
       if (!outstationPickup || !outstationPickup.trim()) {
         setValidationError('Please enter your pickup area in Chennai');
@@ -1678,15 +1757,20 @@ Please confirm chauffeur availability.`;
                 </div>
 
                 <div>
-                  <label htmlFor="return-datetime-input" className="flex items-center gap-1 text-[11px] font-semibold text-m3-on-surface-variant dark:text-slate-300 mb-1">
-                    <Calendar className="w-3.5 h-3.5 text-blue-600" />
-                    <span>Return Date &amp; Time</span>
+                  <label htmlFor="return-datetime-input" className="flex items-center justify-between text-[11px] font-semibold text-m3-on-surface-variant dark:text-slate-300 mb-1">
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-3.5 h-3.5 text-blue-600" />
+                      <span>Return Date &amp; Time</span>
+                    </span>
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300 rounded">
+                      {outstationDays} {outstationDays > 1 ? 'Days' : 'Day'}
+                    </span>
                   </label>
                   <input
                     id="return-datetime-input"
                     type="datetime-local"
                     value={returnDateTime}
-                    min={pickupDateTime || minPickupDateTime}
+                    min={minReturnDateTime || pickupDateTime || minPickupDateTime}
                     onChange={(e) => handleReturnChange(e.target.value)}
                     className={`w-full px-2.5 min-h-[46px] sm:min-h-[48px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border rounded-m3-sm text-m3-on-surface dark:text-white font-medium focus:outline-none focus:border-2 focus:border-blue-600 transition-all ${
                       validationError && (!returnDateTime || (pickupDateTime && new Date(returnDateTime).getTime() <= new Date(pickupDateTime).getTime()))
@@ -1696,6 +1780,14 @@ Please confirm chauffeur availability.`;
                   />
                 </div>
               </div>
+
+              {/* Clamped minimum duration alert / notification */}
+              {clampedNotice && (
+                <div className="mt-2 p-2 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/60 rounded-m3-sm text-[11px] text-blue-800 dark:text-blue-300 flex items-center gap-1.5 animate-fadeIn">
+                  <Info className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                  <span>{clampedNotice}</span>
+                </div>
+              )}
             </div>
           )}
 
@@ -2074,19 +2166,11 @@ Please confirm chauffeur availability.`;
                         </div>
 
                         {/* Prominent Vehicle Showcase Stage */}
-                        <div className="h-20 sm:h-22 flex items-center justify-center my-1.5 w-full">
+                        <div className="h-16 sm:h-18 flex items-center justify-center my-1.5 w-full px-1 overflow-hidden">
                           <img
                             src={item.image}
                             alt={item.name}
-                            className={`w-auto h-full max-h-18 sm:max-h-20 object-contain transition-transform group-hover:scale-105 drop-shadow-xs ${
-                              item.key === 'Swift Dzire'
-                                ? 'scale-100'
-                                : item.key.includes('Innova') || item.key.includes('Crysta')
-                                ? 'scale-105 sm:scale-110'
-                                : item.key.includes('Ertiga')
-                                ? 'scale-105 sm:scale-110'
-                                : 'scale-100 sm:scale-105'
-                            }`}
+                            className="max-w-full max-h-full w-auto h-auto object-contain transition-transform group-hover:scale-105 drop-shadow-xs"
                             loading="lazy"
                             width="125"
                             height="70"
@@ -2095,7 +2179,7 @@ Please confirm chauffeur availability.`;
 
                         {/* Vehicle Details & Single Bold Capacity Line ("Seats + Bags") */}
                         <div className="mt-1 leading-tight">
-                          <div className={`text-xs sm:text-sm font-extrabold whitespace-nowrap ${isSelected ? 'text-blue-600 dark:text-blue-400' : 'text-slate-900 dark:text-white'}`}>
+                          <div className={`text-xs sm:text-sm font-extrabold ${isSelected ? 'text-blue-600 dark:text-blue-400' : 'text-slate-900 dark:text-white'}`}>
                             {item.name}
                           </div>
                           <div className="text-xs sm:text-[13px] font-bold text-slate-700 dark:text-slate-200 mt-1 whitespace-nowrap">

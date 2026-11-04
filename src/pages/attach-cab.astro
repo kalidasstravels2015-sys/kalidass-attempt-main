@@ -780,18 +780,77 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
     });
     window.addEventListener('google-maps-loaded', initAutocomplete);
 
-    // 10. File Input Listeners
-    dlFileInput.addEventListener('change', () => {
+    // 10. File Input Listeners with Automatic Compression
+    let dlFileData: { base64: string; mimeType: string; name: string } | null = null;
+    let rcFileData: { base64: string; mimeType: string; name: string } | null = null;
+
+    async function processImageFile(file: File): Promise<{ base64: string; mimeType: string; name: string } | null> {
+      if (!file) return null;
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const maxDim = 1600;
+            let width = img.width;
+            let height = img.height;
+            if (width > maxDim || height > maxDim) {
+              if (width > height) {
+                height = Math.round((height * maxDim) / width);
+                width = maxDim;
+              } else {
+                width = Math.round((width * maxDim) / height);
+                height = maxDim;
+              }
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+              ctx.drawImage(img, 0, 0, width, height);
+              const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+              const base64 = dataUrl.split(',')[1] || '';
+              resolve({ base64, mimeType: 'image/jpeg', name: file.name });
+              return;
+            }
+            const raw = (e.target?.result as string) || '';
+            const base64 = raw.split(',')[1] || '';
+            resolve({ base64, mimeType: file.type || 'image/jpeg', name: file.name });
+          };
+          img.onerror = () => {
+            const raw = (e.target?.result as string) || '';
+            const base64 = raw.split(',')[1] || '';
+            resolve({ base64, mimeType: file.type || 'image/jpeg', name: file.name });
+          };
+          img.src = e.target?.result as string;
+        };
+        reader.onerror = () => resolve(null);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    dlFileInput.addEventListener('change', async () => {
       if (dlFileInput.files && dlFileInput.files[0]) {
-        hasDlFile = true;
-        dlFileStatus.textContent = dlFileInput.files[0].name;
+        const file = dlFileInput.files[0];
+        dlFileStatus.textContent = `Processing ${file.name}...`;
+        dlFileData = await processImageFile(file);
+        dlFileStatus.textContent = `${file.name} (Ready)`;
+      } else {
+        dlFileData = null;
+        dlFileStatus.textContent = 'No file chosen';
       }
     });
 
-    rcFileInput.addEventListener('change', () => {
+    rcFileInput.addEventListener('change', async () => {
       if (rcFileInput.files && rcFileInput.files[0]) {
-        hasRcFile = true;
-        rcFileStatus.textContent = rcFileInput.files[0].name;
+        const file = rcFileInput.files[0];
+        rcFileStatus.textContent = `Processing ${file.name}...`;
+        rcFileData = await processImageFile(file);
+        rcFileStatus.textContent = `${file.name} (Ready)`;
+      } else {
+        rcFileData = null;
+        rcFileStatus.textContent = 'No file chosen';
       }
     });
 
@@ -840,8 +899,11 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
         experience: selectedExperienceInput.value,
         preferredDuty: selectedPreferredDutyInput.value,
         city,
-        hasDlPhoto: hasDlFile,
-        hasRcPhoto: hasRcFile,
+        hasDlPhoto: Boolean(dlFileData),
+        hasRcPhoto: Boolean(rcFileData),
+        dlFile: dlFileData,
+        rcFile: rcFileData,
+        webhookUrl: getActiveGoogleSheetUrl(),
         notes: category === 'Attach Car' 
           ? `Fleet: ${selectedCarCountInput.value} (${selectedCarsInput.value}) | Plate: ${selectedPlateTypeInput.value}`
           : `License: ${selectedLicenseTypeInput.value} | Exp: ${selectedExperienceInput.value} | Duty: ${selectedPreferredDutyInput.value}`
@@ -871,13 +933,16 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
             mode: 'no-cors',
             headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify({
+              type: 'driver_lead',
+              leadId: leadId,
               date: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
-              tripType: `Driver Lead: ${category}`,
               name: leadPayload.name,
               phone: leadPayload.phone,
-              pickup: leadPayload.city,
-              drop: leadPayload.notes,
-              notes: `DL Uploaded: ${hasDlFile ? 'YES' : 'NO'} | RC Uploaded: ${hasRcFile ? 'YES' : 'NO'}`,
+              category: leadPayload.category,
+              city: leadPayload.city,
+              notes: leadPayload.notes,
+              dlFile: dlFileData,
+              rcFile: rcFileData,
               referenceId: leadId
             })
           }).catch(() => {});
@@ -905,8 +970,8 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
 
     resetFormBtn?.addEventListener('click', () => {
       form.reset();
-      hasDlFile = false;
-      hasRcFile = false;
+      dlFileData = null;
+      rcFileData = null;
       dlFileStatus.textContent = 'No file chosen';
       rcFileStatus.textContent = 'No file chosen';
       submitBtn.disabled = false;
