@@ -481,13 +481,14 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
        
       <div className="space-y-4">
         <div>
-          <label className="block text-xs font-medium text-slate-600 mb-1 flex items-center gap-1.5">
+          <label htmlFor="vr-pickup-input" className="block text-xs font-medium text-slate-600 mb-1 flex items-center gap-1.5">
             <MapPin className="w-3.5 h-3.5 text-m3-primary shrink-0" />
             <span>Pickup City</span>
           </label>
           <div className="relative">
             <input 
               id="vr-pickup-input"
+              aria-label="Pickup City"
               ref={pickupRef}
               type="text" 
               data-autocomplete-input="true"
@@ -532,13 +533,14 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-slate-600 mb-1 flex items-center gap-1.5">
+          <label htmlFor="vr-drop-input" className="block text-xs font-medium text-slate-600 mb-1 flex items-center gap-1.5">
             <Navigation className="w-3.5 h-3.5 text-m3-primary shrink-0" />
             <span>Drop City</span>
           </label>
           <div className="relative">
             <input 
               id="vr-drop-input"
+              aria-label="Drop City"
               ref={dropRef}
               type="text" 
               data-autocomplete-input="true"

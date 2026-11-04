@@ -311,7 +311,7 @@ const serviceSchemas = [
         {/* 1. Chennai Airport Taxi Engine */}
         <section id="airport-taxi-estimator" class="w-full flex justify-center scroll-mt-40" aria-label="Chennai Airport Taxi Estimator">
           <BookingEngine
-            client:load
+            client:idle
             initialTab="airport"
             allowedTabs={['airport']}
             showHeader={true}
@@ -324,7 +324,7 @@ const serviceSchemas = [
         {/* 2. Local City Rental Engine */}
         <section id="local-rental-estimator" class="w-full flex justify-center scroll-mt-40" aria-label="Local City Rental Estimator">
           <LocalRentalBookingEngine
-            client:load
+            client:idle
             showHeader={true}
             title="Chennai Local City Rental"
           />
@@ -333,7 +333,7 @@ const serviceSchemas = [
         {/* 3. Outstation Cab Engine */}
         <section id="outstation-estimator" class="w-full flex justify-center scroll-mt-40" aria-label="Outstation Cab Estimator">
           <BookingEngine
-            client:load
+            client:idle
             initialTab="outstation"
             allowedTabs={['outstation']}
             showHeader={true}
@@ -346,7 +346,7 @@ const serviceSchemas = [
         {/* 4. Acting Driver Engine */}
         <section id="acting-driver-estimator" class="w-full flex justify-center scroll-mt-40" aria-label="Acting Driver Estimator">
           <DriverFeeEstimator
-            client:load
+            client:idle
             title="Acting Driver Estimator"
             subtitle="Hourly City Duty & Outstation Daily Bata"
           />
@@ -355,7 +355,7 @@ const serviceSchemas = [
         {/* 5. Intercity Vehicle Relocation Engine */}
         <section id="vehicle-relocation-estimator" class="w-full flex justify-center lg:col-span-2 scroll-mt-40 pt-2" aria-label="Vehicle Relocation Estimator">
           <div class="w-full max-w-4xl mx-auto">
-            <VehicleRelocationCalculator client:load />
+            <VehicleRelocationCalculator client:visible />
           </div>
         </section>
 
@@ -902,8 +902,8 @@ const serviceSchemas = [
             <div class="flex flex-col sm:flex-row lg:flex-col gap-2.5 shrink-0 lg:min-w-[200px]">
               <a
                 href="#booking"
-                class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-m3-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs shadow-m3-1 transition-all"
-                aria-label="Calculate instant fare above"
+                class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-m3-full bg-[#075E54] hover:bg-[#064e46] text-white font-bold text-xs shadow-m3-1 transition-all"
+                aria-label="Calculate Fare Above"
               >
                 <WhatsAppIcon variant="brand" className="w-3.5 h-3.5 shrink-0 brightness-0 invert" />
                 <span>Calculate Fare Above</span>
@@ -911,7 +911,7 @@ const serviceSchemas = [
               <a
                 href="tel:+918939539211"
                 class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-m3-full bg-m3-surface-container-high hover:bg-m3-surface-container border border-m3-outline-variant text-m3-on-surface font-bold text-xs shadow-m3-1 transition-all"
-                aria-label="Call Kalidass Travels operations desk"
+                aria-label="Call +91 89395 39211"
               >
                 <Phone className="w-4 h-4 text-m3-primary shrink-0" />
                 <span>Call +91 89395 39211</span>
@@ -942,7 +942,7 @@ const serviceSchemas = [
       <!-- SECTION 7: Bottom CTA Strip -->
       <section class="text-center bg-m3-inverse-surface text-m3-inverse-on-surface rounded-m3-xl p-8 sm:p-12 shadow-m3-3 relative overflow-hidden border border-m3-outline-variant/40" aria-label="Book Your Journey">
         <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-tight mb-3 font-heading text-white">
-          Need a Custom Quote or <span class="text-m3-success">Immediate Dispatch?</span>
+          Need a Custom Quote or <span class="text-emerald-400">Immediate Dispatch?</span>
         </h2>
         <p class="text-xs sm:text-sm md:text-base text-m3-inverse-on-surface/80 max-w-xl mx-auto mb-8 font-sans font-normal leading-relaxed">
           Our 24/7 Medavakkam operations desk is ready to help you plan your temple pilgrimage, airport drop, outstation family road trip, or corporate event with zero surge rates.
@@ -959,7 +959,7 @@ const serviceSchemas = [
             href="tel:+918939539211"
             class="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white/10 hover:bg-white/20 text-white font-bold rounded-m3-full transition-all text-sm border border-white/20 shadow-m3-1"
           >
-            <Phone className="w-4 h-4 text-m3-success shrink-0" />
+            <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>Call +91 89395 39211</span>
           </a>
         </div>

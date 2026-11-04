@@ -1770,14 +1770,16 @@ Please confirm chauffeur availability.`;
             <div className="space-y-3.5">
               {/* Airport Origin */}
               <div>
-                <label className="flex items-center gap-1.5 text-xs font-semibold text-m3-on-surface-variant dark:text-slate-300 mb-1">
+                <label htmlFor="airport-origin-hub" className="flex items-center gap-1.5 text-xs font-semibold text-m3-on-surface-variant dark:text-slate-300 mb-1">
                   <Plane className="w-3.5 h-3.5 text-blue-600" />
                   <span>From (Airport Pickup Hub)</span>
                 </label>
                 <input
+                  id="airport-origin-hub"
                   type="text"
                   disabled
                   value="Chennai International Airport (MAA)"
+                  aria-label="From (Airport Pickup Hub)"
                   className="w-full px-3.5 min-h-[48px] sm:min-h-[50px] text-xs sm:text-sm bg-slate-50 dark:bg-m3-surface-container-low border border-m3-outline-variant/60 rounded-m3-sm text-m3-on-surface dark:text-white font-medium cursor-not-allowed opacity-90"
                 />
               </div>
@@ -2147,6 +2149,7 @@ Please confirm chauffeur availability.`;
                       value={companyGstin}
                       onChange={(e) => setCompanyGstin(e.target.value)}
                       placeholder="Company Name / GSTIN (Optional)"
+                      aria-label="Company Name / GSTIN (Optional)"
                       className="w-full text-xs px-2.5 py-1.5 rounded-m3-md border border-m3-outline-variant/80 dark:border-m3-outline-variant/50 bg-white dark:bg-m3-surface text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-blue-500"
                     />
                   </div>

@@ -602,13 +602,15 @@ export default function DriverFeeEstimator({
             {/* Column 1: Vehicle Type */}
             <div>
               <div className="flex items-center mb-1">
-                <label className={`${labelCls} !mb-0 truncate flex items-center gap-1.5`}>
+                <label htmlFor="acting-driver-vehicle-select" className={`${labelCls} !mb-0 truncate flex items-center gap-1.5`}>
                   <Car className="w-3.5 h-3.5 text-m3-primary shrink-0" />
                   <span>Vehicle Type</span>
                 </label>
               </div>
               <div className={`${inputWrap} cursor-pointer px-2.5 sm:px-3`}>
                 <select
+                  id="acting-driver-vehicle-select"
+                  aria-label="Vehicle Type"
                   value={vehicleKey}
                   onChange={e => { setVehicleKey(e.target.value); setShowResult(false); }}
                   className="bg-transparent w-full outline-none text-xs sm:text-sm font-semibold text-m3-on-surface appearance-none cursor-pointer pr-4 sm:pr-6 truncate"
@@ -652,7 +654,7 @@ export default function DriverFeeEstimator({
               </div>
             </div>
           </div>
-          <p className="text-xs text-slate-500 mt-1.5 flex items-center gap-1">
+          <p className="text-xs text-slate-600 mt-1.5 flex items-center gap-1">
             <span className="font-medium text-slate-600 shrink-0">Models:</span>
             <span className="truncate">{vehicle.models}</span>
           </p>
@@ -660,13 +662,14 @@ export default function DriverFeeEstimator({
 
         {/* ── Pickup Location (both tabs) ── */}
         <div>
-          <label className={`${labelCls} flex items-center gap-1.5`}>
+          <label htmlFor="acting-driver-pickup-input" className={`${labelCls} flex items-center gap-1.5`}>
             <MapPin className="w-3.5 h-3.5 text-m3-primary shrink-0" />
             <span>Pickup Location</span>
           </label>
           <div className={`${inputWrap} ${fieldErrors.pickup ? 'border-m3-error ring-1 ring-m3-error bg-m3-error-container/20' : ''}`}>
             <input
               id="acting-driver-pickup-input"
+              aria-label="Pickup Location"
               ref={pickupRef}
               type="text"
               data-autocomplete-input="true"
@@ -711,10 +714,10 @@ export default function DriverFeeEstimator({
 
         {/* ── Drop / Destination Location ── */}
         <div>
-          <label className={`${labelCls} flex items-center gap-1.5`}>
+          <label htmlFor="acting-driver-drop-input" className={`${labelCls} flex items-center gap-1.5`}>
             <Navigation className="w-3.5 h-3.5 text-m3-primary shrink-0" />
             {activeTab === 'round' ? (
-              <span>Destination City / Outstation Route <span className="normal-case font-normal text-slate-500 text-[11px]">(optional for round trip)</span></span>
+              <span>Destination City / Outstation Route <span className="normal-case font-normal text-slate-600 text-[11px]">(optional for round trip)</span></span>
             ) : (
               <span>Drop Location</span>
             )}
@@ -722,6 +725,7 @@ export default function DriverFeeEstimator({
           <div className={`${inputWrap} ${fieldErrors.drop ? 'border-m3-error ring-1 ring-m3-error bg-m3-error-container/20' : ''}`}>
             <input
               id="acting-driver-drop-input"
+              aria-label={activeTab === 'round' ? 'Destination City or Outstation Route' : 'Drop Location'}
               ref={dropRef}
               type="text"
               data-autocomplete-input="true"
@@ -763,7 +767,7 @@ export default function DriverFeeEstimator({
             </p>
           )}
           {activeTab === 'round' && (
-            <p className="text-xs text-slate-500 mt-1 flex items-center gap-1.5">
+            <p className="text-xs text-slate-600 mt-1 flex items-center gap-1.5">
               <Info className="w-3.5 h-3.5 text-slate-500 shrink-0" />
               <span>Round trip returns to pickup — cost is time-based (days × bata) with zero return km fee.</span>
             </p>
@@ -774,13 +778,15 @@ export default function DriverFeeEstimator({
         <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
           <div>
             <div className="flex items-center mb-1">
-              <label className={`${labelCls} !mb-0 truncate flex items-center gap-1.5`}>
+              <label htmlFor="acting-driver-travel-date" className={`${labelCls} !mb-0 truncate flex items-center gap-1.5`}>
                 <Calendar className="w-3.5 h-3.5 text-m3-primary shrink-0" />
                 <span>Travel Date</span>
               </label>
             </div>
             <div className={`${inputWrap} px-2.5 sm:px-3`}>
               <input
+                id="acting-driver-travel-date"
+                aria-label="Travel Date"
                 type="date"
                 min={new Date().toISOString().split('T')[0]}
                 value={travelDate}
@@ -791,7 +797,7 @@ export default function DriverFeeEstimator({
           </div>
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className={`${labelCls} !mb-0 truncate flex items-center gap-1.5`}>
+              <label htmlFor="acting-driver-time-picker" className={`${labelCls} !mb-0 truncate flex items-center gap-1.5`}>
                 <Clock className="w-3.5 h-3.5 text-m3-primary shrink-0" />
                 <span>Reporting Time</span>
               </label>
@@ -804,6 +810,7 @@ export default function DriverFeeEstimator({
             <div className={`${inputWrap} px-2.5 sm:px-3`}>
               <input
                 id="acting-driver-time-picker"
+                aria-label="Reporting Time"
                 type="time"
                 value={reportingTime}
                 onChange={e => { setReportingTime(e.target.value); setShowResult(false); }}
@@ -816,12 +823,14 @@ export default function DriverFeeEstimator({
         {/* ── Round Trip Extra Duration ── */}
         {activeTab === 'round' && (
           <div>
-            <label className={`${labelCls} flex items-center gap-1.5`}>
+            <label htmlFor="acting-driver-days-input" className={`${labelCls} flex items-center gap-1.5`}>
               <Calendar className="w-3.5 h-3.5 text-m3-primary shrink-0" />
               <span>Total Duration (Days)</span>
             </label>
             <div className={inputWrap}>
               <input
+                id="acting-driver-days-input"
+                aria-label="Total Duration in Days"
                 type="text"
                 inputMode="numeric"
                 value={days}
@@ -843,6 +852,8 @@ export default function DriverFeeEstimator({
           <label className="flex items-start gap-3 p-3 border border-m3-outline-variant rounded-m3-md cursor-pointer hover:border-m3-primary/50 transition-colors bg-m3-surface-container-low">
             <div className="relative flex items-center mt-0.5 shrink-0">
               <input
+                id="acting-driver-food-checkbox"
+                aria-label="I will provide Driver Food"
                 type="checkbox"
                 checked={foodProvided}
                 onChange={e => { setFoodProvided(e.target.checked); setShowResult(false); }}
@@ -852,7 +863,7 @@ export default function DriverFeeEstimator({
             </div>
             <div>
               <span className="block text-xs font-medium text-slate-800">I will provide Driver Food</span>
-              <span className="block text-[11px] text-slate-500 mt-0.5 font-normal">
+              <span className="block text-[11px] text-slate-600 mt-0.5 font-normal">
                 {activeTab === 'round' 
                   ? `Saves ${fmtRs(FOOD_PER_DAY)}/day — invite driver at halts.`
                   : `Saves ${fmtRs(FOOD_PER_DAY)} — invite driver at halts.`}
@@ -864,6 +875,8 @@ export default function DriverFeeEstimator({
             <label className="flex items-start gap-3 p-3 border border-m3-outline-variant rounded-m3-md cursor-pointer hover:border-m3-primary/50 transition-colors bg-m3-surface-container-low">
               <div className="relative flex items-center mt-0.5 shrink-0">
                 <input
+                  id="acting-driver-stay-checkbox"
+                  aria-label="I will provide Driver Stay"
                   type="checkbox"
                   checked={stayProvided}
                   onChange={e => { setStayProvided(e.target.checked); setShowResult(false); }}
@@ -873,7 +886,7 @@ export default function DriverFeeEstimator({
               </div>
               <div>
                 <span className="block text-xs font-medium text-slate-800">I will provide Driver Stay</span>
-                <span className="block text-[11px] text-slate-500 mt-0.5 font-normal">
+                <span className="block text-[11px] text-slate-600 mt-0.5 font-normal">
                   Saves {fmtRs(STAY_PER_NIGHT)}/night — hotel driver dorm.
                 </span>
               </div>

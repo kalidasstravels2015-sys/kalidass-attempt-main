@@ -505,7 +505,7 @@ const faqSchema = {
           <div id="booking-section" class="scroll-mt-28 w-full flex-1 flex flex-col">
             <div id="fare-calculator" class="w-full flex-1">
               <BookingEngine 
-                client:load 
+                client:idle 
                 initialTab="outstation" 
                 allowedTabs={['outstation']} 
                 variant="card" 
@@ -986,7 +986,7 @@ const faqSchema = {
       </section>
 
       <!-- Interactive Outstation Fare Calculator & Booking Modal (Locked Vehicle) -->
-      <OutstationQuotationModal client:load />
+      <OutstationQuotationModal client:idle />
 
     </div>
   </div>

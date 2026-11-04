@@ -7,6 +7,8 @@ interface Props {
   alt: string;
   class?: string;
   style?: string;
+  width?: number | `${number}`;
+  height?: number | `${number}`;
   loading?: "eager" | "lazy";
   decoding?: "async" | "auto" | "sync";
   fetchpriority?: "high" | "low" | "auto";
@@ -21,6 +23,8 @@ const {
   alt,
   class: className,
   style,
+  width,
+  height,
   loading = "lazy",
   decoding = "async",
   fetchpriority,
@@ -39,7 +43,8 @@ const images = import.meta.glob<{ default: ImageMetadata }>(
 // We need to map it to absolute src path if it exists in src/assets
 const isRemote = src.startsWith("http") || src.startsWith("//");
 const assetsPrefix = "/src/assets";
-const imagePath = `${assetsPrefix}${src}`;
+const normalizedSrc = (src || "").replace(/\\/g, "/");
+const imagePath = `${assetsPrefix}${normalizedSrc.startsWith("/") ? normalizedSrc : `/${normalizedSrc}`}`;
 
 let imageData: ImageMetadata | null = null;
 if (!isRemote) {
@@ -66,6 +71,8 @@ if (!isRemote) {
       loading={loading}
       decoding={decoding}
       fetchpriority={fetchpriority}
+      width={width}
+      height={height}
     />
   ) : import.meta.env.DEV ? (
     <img
@@ -76,8 +83,8 @@ if (!isRemote) {
       loading={loading}
       decoding={decoding}
       fetchpriority={fetchpriority}
-      width={imageData?.width}
-      height={imageData?.height}
+      width={width || imageData?.width}
+      height={height || imageData?.height}
     />
   ) : imageData ? (
     <Image
@@ -92,6 +99,8 @@ if (!isRemote) {
       decoding={decoding}
       quality={quality}
       fetchpriority={fetchpriority}
+      width={width || imageData.width}
+      height={height || imageData.height}
     />
   ) : (
     <img
@@ -102,6 +111,8 @@ if (!isRemote) {
       loading={loading}
       decoding={decoding}
       fetchpriority={fetchpriority}
+      width={width}
+      height={height}
     />
   )
 }
