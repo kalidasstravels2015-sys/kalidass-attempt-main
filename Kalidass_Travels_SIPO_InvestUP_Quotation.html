@@ -6,7 +6,7 @@
 <style>
   @page {
     size: A4;
-    margin: 10mm 12mm 10mm 12mm;
+    margin: 10mm 14mm 10mm 14mm;
   }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -14,11 +14,11 @@
     background: #f8fafc;
     margin: 0;
     padding: 20px;
-    font-size: 12px;
+    font-size: 11.5px;
     line-height: 1.35;
   }
   .doc-container {
-    max-width: 880px;
+    max-width: 860px;
     margin: 0 auto;
     background: #ffffff;
     padding: 28px 36px;
@@ -29,92 +29,77 @@
     text-align: center;
     border-bottom: 2px solid #0f172a;
     padding-bottom: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
-  .header h1 {
+  .brand-title {
+    font-family: "Georgia", "Times New Roman", serif;
+    font-size: 32px;
+    font-weight: 700;
+    font-style: italic;
+    color: #b91c1c;
     margin: 0 0 2px 0;
-    font-size: 23px;
-    font-weight: 800;
     letter-spacing: 0.5px;
-    color: #0f172a;
   }
-  .header p {
-    margin: 1px 0;
-    color: #475569;
-    font-size: 11px;
+  .header .tagline {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0284c7;
+    margin: 2px 0;
   }
   .header .contacts {
-    font-weight: 700;
-    color: #2563eb;
-    margin-top: 3px;
     font-size: 11.5px;
+    color: #0f172a;
+    margin: 2px 0;
   }
-  .gst-tag {
-    display: inline-block;
-    background: #047857;
-    color: #ffffff;
-    font-weight: 700;
-    font-size: 10.5px;
-    padding: 2px 8px;
-    border-radius: 3px;
-    margin-top: 3px;
-  }
-  .title-banner {
-    background: #0f172a;
-    color: #ffffff;
-    padding: 6px 12px;
-    border-radius: 4px;
-    font-size: 11.5px;
-    font-weight: 700;
-    margin: 10px 0;
-    text-align: center;
-    letter-spacing: 0.3px;
-  }
-  .meta-grid {
-    display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: 10px;
-    background: #f8fafc;
-    border: 1px solid #cbd5e1;
-    padding: 10px 14px;
-    border-radius: 5px;
+  .top-meta {
+    display: flex;
+    justify-content: space-between;
     font-size: 11px;
-    margin-bottom: 8px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 10px;
   }
-  .meta-grid strong {
+  .to-block {
+    font-size: 11px;
+    line-height: 1.4;
+    color: #1e293b;
+    margin-bottom: 12px;
+  }
+  .to-block strong {
     color: #0f172a;
   }
-  .subject-box {
-    background: #e2e8f0;
+  .subject-block {
+    background: #f1f5f9;
     border-left: 4px solid #0f172a;
     padding: 6px 10px;
     font-size: 11px;
-    margin-bottom: 10px;
+    font-weight: 700;
     color: #0f172a;
-    font-weight: 600;
+    margin-bottom: 14px;
+    line-height: 1.4;
   }
   h3 {
     font-size: 11.5px;
-    margin: 12px 0 5px 0;
+    margin: 14px 0 6px 0;
     color: #0f172a;
     font-weight: 800;
-    border-left: 3px solid #2563eb;
-    padding-left: 6px;
     text-transform: uppercase;
+    letter-spacing: 0.3px;
   }
   table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     font-size: 11px;
   }
   th {
-    background: #0f172a;
-    color: #ffffff;
-    padding: 5px 7px;
+    background: #ffffff;
+    color: #0f172a;
+    padding: 6px 6px;
     text-align: left;
     font-weight: 700;
-    font-size: 11px;
+    border: 1px solid #0f172a;
+    font-size: 10.5px;
   }
   th.right, td.right {
     text-align: right;
@@ -123,45 +108,51 @@
     text-align: center;
   }
   td {
-    padding: 4px 7px;
-    border-bottom: 1px solid #e2e8f0;
-    color: #1e293b;
-  }
-  tr.highlight {
-    background: #f8fafc;
-  }
-  .badge-compliant {
-    background: #ecfdf5;
-    color: #047857;
-    font-weight: 800;
-    font-size: 10px;
-    padding: 1px 5px;
-    border-radius: 3px;
-    display: inline-block;
-  }
-  .info-box {
-    background: #f8fafc;
-    border: 1px solid #cbd5e1;
-    border-radius: 5px;
-    padding: 8px 12px;
-    margin-top: 8px;
-    font-size: 10.5px;
-    line-height: 1.4;
-  }
-  .info-box strong {
+    padding: 5px 6px;
+    border: 1px solid #0f172a;
     color: #0f172a;
   }
-  .sign-grid {
+  tr.preferred-row {
+    background: #f8fafc;
+    font-weight: 600;
+  }
+  .terms-list {
+    margin: 0;
+    padding-left: 14px;
+    font-size: 10.5px;
+    line-height: 1.45;
+    color: #1e293b;
+  }
+  .terms-list li {
+    margin-bottom: 3px;
+  }
+  .terms-list strong {
+    color: #0f172a;
+  }
+  .signature-block {
+    margin-top: 24px;
+    text-align: right;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+  .signature-block .signer {
+    font-weight: 700;
+    color: #0f172a;
+  }
+  .footer-bar {
     margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
+    border-top: 2px solid #0f172a;
+    padding-top: 8px;
+    text-align: center;
+    font-size: 10.5px;
+    color: #0f172a;
+    font-weight: 600;
   }
   .print-btn {
     background: #2563eb;
     color: #fff;
     padding: 6px 14px;
-    border-radius: 5px;
+    border-radius: 4px;
     text-decoration: none;
     font-weight: 700;
     font-size: 11.5px;
@@ -178,219 +169,189 @@
 </head>
 <body>
 
-<div style="max-width: 880px; margin: 0 auto; text-align: right;">
+<div style="max-width: 860px; margin: 0 auto; text-align: right;">
   <button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
 </div>
 
 <div class="doc-container">
   <div class="header">
-    <h1>KALIDASS TRAVELS — CHENNAI</h1>
-    <p>Corporate Mobility Solutions &amp; Commercial Chauffeur Services (Est. 2015)</p>
-    <p>Operating Hubs: Guindy / Mount Poonamallee Road / Medavakkam, Chennai - 600 089, Tamil Nadu</p>
-    <p class="contacts">24x7 Operations: +91 89395 39211 &nbsp;|&nbsp; Email: kalidasstravels2015@gmail.com &nbsp;|&nbsp; Web: kalidasstravels.in</p>
-    <div class="gst-tag">SUPPLIER GSTIN: 33AAIFK7823P1Z9 | STATE: TAMIL NADU (CODE: 33) | SAC: 996601</div>
+    <div class="brand-title">Kalidass Travels</div>
+    <div class="tagline">Airport Drops | Destination Tours | Corporate Mobility</div>
+    <div class="contacts">Mobile : 6381939769, 8939539211 | Website : kalidasstravels.in</div>
   </div>
 
-  <div class="title-banner">
-    FORMAL COMMERCIAL GST QUOTATION &amp; BOQ RESPONSE (RULE 46 COMPLIANT)
+  <div class="top-meta">
+    <div>REF NO: QUO/2026-27/043</div>
+    <div>DATE: 05-11-2026</div>
   </div>
 
-  <div class="meta-grid">
-    <div>
-      <strong>Ref No:</strong> KT/SIPO-INVESTUP/2026-27/092<br>
-      <strong>Date:</strong> 04-November-2026 &nbsp;|&nbsp; <strong>Validity:</strong> 30 Days<br><br>
-      <strong>TO:</strong><br>
-      <strong>The General Manager / State Investment Promotion Officer</strong><br>
-      <strong>State Investment Promotion Office (SIPO) Chennai</strong><br>
-      <strong>Invest UP (Government of Uttar Pradesh)</strong><br>
-      Olympia Cyberspace Pvt. Ltd., No. 21 &amp; 22, Arulayiammanpettai,<br>
-      2nd Street, Alandur Road, Guindy, Chennai - 600 032.<br>
-      <strong>Email:</strong> gmsipo_chennai@investup.org.in | <strong>Attn:</strong> Logapriya Loks
-    </div>
-    <div style="text-align: right;">
-      <strong>Place of Supply (POS):</strong> 33 - Tamil Nadu<br>
-      <strong>Requisition:</strong> Dedicated Monthly Vehicle on Hiring Model<br>
-      <strong>Corridor:</strong> KTCC Industrial Cluster (Kanchipuram, Thiruvallur, Chennai, Chengalpattu)<br>
-      <strong>Monthly Usage Limit:</strong> 2,000 KM per month<br>
-      <strong>Reporting Hub:</strong> Olympia Cyberspace, Guindy (Zero Dead KM)<br>
-      <strong>Client GSTIN:</strong> [To be furnished by Invest UP]
-    </div>
+  <div class="to-block">
+    <strong>TO:</strong><br>
+    The Office In Charge,<br>
+    State Investment Promotion Office (SIPO) Chennai,<br>
+    Invest UP,<br>
+    Olympia Cyberspace Pvt. Ltd. No. 21 &amp; 22, Arulayiammanpettai, 2nd Street,<br>
+    Alandur Road, Guindy, Chennai - 600 032.<br>
+    Email: gmsipo_chennai@investup.org.in
   </div>
 
-  <div class="subject-box">
-    <strong>SUBJECT:</strong> Commercial Quotation &amp; BOQ for Monthly Hiring of Dedicated MUV (Maruti Ertiga / Kia Carens) with Chauffeur and Fuel for SIPO Chennai Office &amp; KTCC Industrial Operations.
+  <div class="subject-block">
+    SUBJECT: Commercial Quotation &amp; BOQ for Monthly Dedicated Hiring of Brand New BS-VI MUV (Kia Carens [Preferred] &amp; Maruti Suzuki Ertiga) with Chauffeur, Fuel &amp; Complete Capital Maintenance for Invest UP SIPO Chennai.
   </div>
 
-  <h3>1. Commercial Bill of Quantities (BOQ) — 8 Hours &amp; 12 Hours Duty Slabs</h3>
+  <h3>SECTION 1: COMMERCIAL BOQ — BS-VI VEHICLE (10 HOURS / 26 DAYS / 2,000 KM)</h3>
   <table>
     <thead>
       <tr>
-        <th style="width: 6%;" class="center">Item</th>
-        <th style="width: 29%;">Vehicle Class &amp; Technical Grade</th>
-        <th style="width: 10%;" class="center">SAC</th>
-        <th style="width: 17%;" class="center">Monthly Duty Slab<br><small>(26 Days / 2000 KM)</small></th>
-        <th style="width: 12%;" class="right">Taxable (₹)</th>
-        <th style="width: 9%;" class="right">CGST (2.5%)</th>
-        <th style="width: 9%;" class="right">SGST (2.5%)</th>
-        <th style="width: 13%;" class="right">Landed Total<br><small>(Incl. 5% GST)</small></th>
+        <th style="width: 7%;" class="center">Sl. No</th>
+        <th style="width: 27%;">Name of Vehicle</th>
+        <th style="width: 10%;" class="center">SAC Code</th>
+        <th style="width: 15%;" class="center">Duty Shift</th>
+        <th style="width: 13%;" class="right">Taxable Value</th>
+        <th style="width: 9%;" class="right">CGST 2.5%</th>
+        <th style="width: 9%;" class="right">SGST 2.5%</th>
+        <th style="width: 10%;" class="right">Total GST 5%</th>
+        <th style="width: 13%;" class="right">Total Amount</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td class="center"><strong>1A</strong></td>
-        <td><strong>Maruti Suzuki Ertiga (Brand New BS-VI, AC, Smart Hybrid)</strong><br><small style="color:#64748b;">Dedicated 0-KM / Latest Batch | 6+1 Seater | Commercial T-Board</small></td>
+      <tr class="preferred-row">
+        <td class="center"><strong>1</strong></td>
+        <td><strong>Kia Carens (Brand New BS-VI, AC, 6+1)</strong><br><small style="color:#047857;font-weight:700;">★ PREFERRED CHOICE</small></td>
         <td class="center">996601</td>
-        <td class="center"><strong>08 Hours / Day</strong></td>
-        <td class="right">₹ 72,000.00</td>
-        <td class="right">₹ 1,800.00</td>
-        <td class="right">₹ 1,800.00</td>
-        <td class="right"><strong>₹ 75,600.00</strong></td>
-      </tr>
-      <tr class="highlight">
-        <td class="center"><strong>1B</strong></td>
-        <td><strong>Maruti Suzuki Ertiga (Brand New BS-VI, AC, Smart Hybrid)</strong><br><small style="color:#64748b;">Dedicated 0-KM / Latest Batch | 6+1 Seater | Commercial T-Board</small></td>
-        <td class="center">996601</td>
-        <td class="center"><strong>12 Hours / Day</strong></td>
-        <td class="right">₹ 78,000.00</td>
-        <td class="right">₹ 1,950.00</td>
-        <td class="right">₹ 1,950.00</td>
-        <td class="right"><strong>₹ 81,900.00</strong></td>
+        <td class="center"><strong>10 Hours / Day</strong></td>
+        <td class="right"><strong>78,000.00</strong></td>
+        <td class="right">1,950.00</td>
+        <td class="right">1,950.00</td>
+        <td class="right">3,900.00</td>
+        <td class="right"><strong>81,900.00</strong></td>
       </tr>
       <tr>
-        <td class="center"><strong>2A</strong></td>
-        <td><strong>Kia Carens (Brand New BS-VI, Executive Premium MUV, AC)</strong><br><small style="color:#64748b;">Dedicated 0-KM / Latest Batch | 6+1 Seater | Commercial T-Board</small></td>
+        <td class="center"><strong>2</strong></td>
+        <td><strong>Maruti Suzuki Ertiga (Brand New BS-VI, AC, 6+1)</strong><br><small style="color:#475569;">OPTION 2 (ECONOMY)</small></td>
         <td class="center">996601</td>
-        <td class="center"><strong>08 Hours / Day</strong></td>
-        <td class="right">₹ 80,000.00</td>
-        <td class="right">₹ 2,000.00</td>
-        <td class="right">₹ 2,000.00</td>
-        <td class="right"><strong>₹ 84,000.00</strong></td>
-      </tr>
-      <tr class="highlight">
-        <td class="center"><strong>2B</strong></td>
-        <td><strong>Kia Carens (Brand New BS-VI, Executive Premium MUV, AC)</strong><br><small style="color:#64748b;">Dedicated 0-KM / Latest Batch | 6+1 Seater | Commercial T-Board</small></td>
-        <td class="center">996601</td>
-        <td class="center"><strong>12 Hours / Day</strong></td>
-        <td class="right">₹ 88,000.00</td>
-        <td class="right">₹ 2,200.00</td>
-        <td class="right">₹ 2,200.00</td>
-        <td class="right"><strong>₹ 92,400.00</strong></td>
+        <td class="center"><strong>10 Hours / Day</strong></td>
+        <td class="right"><strong>68,000.00</strong></td>
+        <td class="right">1,700.00</td>
+        <td class="right">1,700.00</td>
+        <td class="right">3,400.00</td>
+        <td class="right"><strong>71,400.00</strong></td>
       </tr>
     </tbody>
   </table>
 
-  <h3>2. Extra Usage Surcharges (Beyond 2,000 KM &amp; Scheduled Duty)</h3>
+  <h3>SECTION 2: EXTRA RUNNING CHARGES &amp; OVERTIME SLABS (BEYOND MONTHLY 2,000 KM QUOTA)</h3>
   <table>
     <thead>
       <tr>
-        <th style="width: 40%;">Billing Parameter</th>
-        <th style="width: 20%;" class="center">Maruti Suzuki Ertiga</th>
-        <th style="width: 20%;" class="center">Kia Carens</th>
-        <th style="width: 20%;" class="center">Tax Treatment</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Extra Running Rate (Beyond 2,000 KM in calendar month)</td>
-        <td class="center"><strong>₹ 17.00 / km</strong></td>
-        <td class="center"><strong>₹ 20.00 / km</strong></td>
-        <td class="center">+ 5% GST (SAC 996601)</td>
-      </tr>
-      <tr>
-        <td>Extra Duty Hours (Beyond selected 8h or 12h daily shift)</td>
-        <td class="center"><strong>₹ 150.00 / hr</strong></td>
-        <td class="center"><strong>₹ 180.00 / hr</strong></td>
-        <td class="center">+ 5% GST (SAC 996601)</td>
-      </tr>
-      <tr>
-        <td>Sunday / Gazetted Holiday Deployment (Chauffeur Allowance)</td>
-        <td class="center"><strong>₹ 1,200.00 / day</strong></td>
-        <td class="center"><strong>₹ 1,200.00 / day</strong></td>
-        <td class="center">Driver Allowance</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h3>3. Invest UP 7-Point RFP Specification &amp; Compliance Matrix</h3>
-  <table>
-    <thead>
-      <tr>
-        <th style="width: 6%;" class="center">No.</th>
-        <th style="width: 32%;">Invest UP BOQ Condition</th>
-        <th style="width: 46%;">Kalidass Travels Contractual Commitment</th>
-        <th style="width: 16%;" class="center">Status</th>
+        <th style="width: 7%;" class="center">Sl. No</th>
+        <th style="width: 43%;">Billing Parameter / Operational Surcharge</th>
+        <th style="width: 18%;" class="center">Kia Carens (Preferred)</th>
+        <th style="width: 16%;" class="center">Maruti Ertiga</th>
+        <th style="width: 16%;" class="center">Tax Treatment &amp; GST Slab</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td class="center">1</td>
-        <td><strong>2000 KM per month</strong></td>
-        <td>Fully included in base monthly rental. Odometer logged daily on duty slips.</td>
-        <td class="center"><span class="badge-compliant">100% COMPLIANT</span></td>
+        <td>Extra Running Rate (Beyond 2,000 KM in calendar month)</td>
+        <td class="center"><strong>18.00 / km</strong></td>
+        <td class="center">16.00 / km</td>
+        <td class="center">5% GST (SAC 996601)</td>
       </tr>
       <tr>
         <td class="center">2</td>
-        <td><strong>Monthly billing</strong></td>
-        <td>Consolidated monthly GST tax invoice submitted on last working day with signed duty slips.</td>
-        <td class="center"><span class="badge-compliant">100% COMPLIANT</span></td>
+        <td>Extra Duty Hours (Beyond selected 10h daily shift)</td>
+        <td class="center"><strong>180.00 / hr</strong></td>
+        <td class="center">150.00 / hr</td>
+        <td class="center">5% GST (SAC 996601)</td>
       </tr>
       <tr>
         <td class="center">3</td>
-        <td><strong>Fully insured, PUC, DL, RC, BS 6</strong></td>
-        <td>Yellow-board commercial vehicle with Comprehensive Passenger Insurance, PUC, RC, FC &amp; PSV badge.</td>
-        <td class="center"><span class="badge-compliant">100% COMPLIANT</span></td>
+        <td>Sunday / Gazetted Holiday Deployment (Chauffeur Allowance)</td>
+        <td class="center">1,200.00 / day</td>
+        <td class="center">1,200.00 / day</td>
+        <td class="center">Chauffeur Allowance</td>
       </tr>
       <tr>
         <td class="center">4</td>
-        <td><strong>Cost to include fuel &amp; driver (8h / 12h)</strong></td>
-        <td>Wet Lease Model: 100% fuel, driver salary, uniform, and duty allowance included in quote.</td>
-        <td class="center"><span class="badge-compliant">100% COMPLIANT</span></td>
-      </tr>
-      <tr>
-        <td class="center">5</td>
-        <td><strong>Region: KTCC Industrial Corridor</strong></td>
-        <td>Unconstrained coverage across Sriperumbudur, Oragadam, Irungattukottai, Mahindra World City.</td>
-        <td class="center"><span class="badge-compliant">100% COMPLIANT</span></td>
-      </tr>
-      <tr>
-        <td class="center">6</td>
-        <td><strong>Vehicle Age: Less than 3 years</strong></td>
-        <td>Strictly 2024 / 2025 / 2026 registered pristine commercial vehicles deployed.</td>
-        <td class="center"><span class="badge-compliant">100% COMPLIANT</span></td>
-      </tr>
-      <tr>
-        <td class="center">7</td>
-        <td><strong>Vehicle Class: Ertiga / KIA Carens</strong></td>
-        <td>Dedicated 7-seater MUV with guaranteed 60-90 min backup replacement vehicle.</td>
-        <td class="center"><span class="badge-compliant">100% COMPLIANT</span></td>
+        <td>Toll Charges, FASTag, State Entry Taxes &amp; Parking Fees</td>
+        <td class="center">At Actuals</td>
+        <td class="center">At Actuals</td>
+        <td class="center">Actuals with receipts</td>
       </tr>
     </tbody>
   </table>
 
-  <h3>4. Statutory GST, Reverse Charge (RCM) &amp; Bank Details</h3>
-  <div class="info-box">
-    <strong>• Service Classification:</strong> SAC 996601 (Rental services of passenger motor vehicles with operator and fuel / Wet Lease).<br>
-    <strong>• GST &amp; RCM Treatment:</strong> 5% GST (2.5% CGST + 2.5% SGST). As per Notification 22/2019 &amp; 29/2019-CT(R), 5% GST is payable by Client under Reverse Charge Mechanism (RCM) if Body Corporate, or billed via GST Tax Invoice under Forward Charge.<br>
-    <strong>• Bank Particulars:</strong> Beneficiary: <strong>KALIDASS TRAVELS</strong> | Bank: <strong>State Bank of India</strong> | Current A/c No: <strong>38921104823</strong> | IFSC: <strong>SBIN0012345</strong> (Medavakkam Branch, Chennai).<br>
-    <strong>• Zero Dead-Mileage:</strong> Daily duty starts and ends strictly at Client's Guindy Office (Olympia Cyberspace). Tolls charged on actuals via FASTag.<br>
-    <strong>• Payment Terms:</strong> Monthly consolidated billing against verified duty log sheets. Payment credit: <strong>15 calendar days</strong> from invoice submission date.
+  <h3>SECTION 3: INVEST UP 7-POINT SPECIFICATION &amp; TECHNICAL COMPLIANCE MATRIX</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 8%;" class="center">Sl. No</th>
+        <th style="width: 72%;">Invest UP BOQ Parameter / Tender Condition</th>
+        <th style="width: 20%;" class="center">Compliance Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="center">1</td>
+        <td>2,000 KM Monthly Usage Quota</td>
+        <td class="center" style="color:#047857;font-weight:700;">✔ Yes</td>
+      </tr>
+      <tr>
+        <td class="center">2</td>
+        <td>Consolidated Monthly Billing</td>
+        <td class="center" style="color:#047857;font-weight:700;">✔ Yes</td>
+      </tr>
+      <tr>
+        <td class="center">3</td>
+        <td>Statutory Validity: Insurance, PUC, DL, RC, BS-VI</td>
+        <td class="center" style="color:#047857;font-weight:700;">✔ Yes</td>
+      </tr>
+      <tr>
+        <td class="center">4</td>
+        <td>All-Inclusive Cost: Fuel &amp; Chauffeur (10h duty shift)</td>
+        <td class="center" style="color:#047857;font-weight:700;">✔ Yes</td>
+      </tr>
+      <tr>
+        <td class="center">5</td>
+        <td>Operational Corridor: KTCC Region (Kanchipuram, Thiruvallur, Chennai, Chengalpattu)</td>
+        <td class="center" style="color:#047857;font-weight:700;">✔ Yes</td>
+      </tr>
+      <tr>
+        <td class="center">6</td>
+        <td>Vehicle Age: Less than 3 Years (Brand New / BS-VI)</td>
+        <td class="center" style="color:#047857;font-weight:700;">✔ Yes</td>
+      </tr>
+      <tr>
+        <td class="center">7</td>
+        <td>Vehicle Class: Dedicated MUV (Kia Carens / Maruti Ertiga)</td>
+        <td class="center" style="color:#047857;font-weight:700;">✔ Yes</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>SECTION 4: TERMS &amp; CONDITIONS</h3>
+  <ul class="terms-list">
+    <li><strong>Monthly Package Inclusions:</strong> Includes 2,000 km/month, dedicated chauffeur, vehicle EMI, 100% fuel, and scheduled maintenance.</li>
+    <li><strong>Zero Dead-Mileage Policy:</strong> Duty hours and KM start/end at Invest UP SIPO office (Guindy). No garage dead-KM charged.</li>
+    <li><strong>Duty Slips &amp; Overtime Billing:</strong> Extra km (&gt;2,000 km) and overtime (&gt;10h) logged daily on signed duty slips; billed per Section 2 rates.</li>
+    <li><strong>Toll Charges, Parking &amp; FASTag:</strong> Toll, FASTag, state entry taxes, and parking charged at actuals against computerized receipts.</li>
+    <li><strong>Sunday / Holiday Deployment:</strong> ₹1,200/day chauffeur allowance applies on Sundays/holidays upon prior client requisition.</li>
+    <li><strong>Statutory GST Compliance:</strong> SAC 996601 at 5% GST (2.5% CGST + 2.5% SGST). Payable under RCM by corporate or FCM.</li>
+    <li><strong>Payment &amp; Credit Terms:</strong> Payment within 15 days of monthly invoice submission with certified duty slips via NEFT / RTGS.</li>
+  </ul>
+
+  <div class="signature-block">
+    <div class="signer">Digitally signed by Saravanan Kuppusamy</div>
+    <div>Date: 2026.11.05 13:30:00 +05'30'</div>
+    <div style="margin-top: 10px; font-weight: 700;">Authorised Signatory</div>
+    <div style="font-size: 10.5px; color: #475569;">For KALIDASS TRAVELS, CHENNAI</div>
   </div>
 
-  <div class="sign-grid">
-    <div>
-      <p style="margin: 0; font-size: 11px; color: #475569;">Confirmed &amp; Accepted by Invest UP (SIPO Chennai):</p>
-      <div style="margin-top: 36px; border-top: 1px dashed #94a3b8; width: 220px; text-align: center; font-size: 10.5px; padding-top: 3px;">
-        Authorized Signatory &amp; Departmental Seal
-      </div>
-    </div>
-
-    <div style="text-align: right;">
-      <p style="margin: 0; font-size: 11.5px; font-weight: 700; color: #0f172a;">For KALIDASS TRAVELS, CHENNAI</p>
-      <div style="margin-top: 36px; border-top: 1px solid #0f172a; width: 240px; text-align: center; font-size: 10.5px; padding-top: 3px; font-weight: 600;">
-        Authorized Signatory — Corporate Fleet Desk<br>
-        <span style="font-size: 10px; color: #64748b;">+91 89395 39211 | kalidasstravels2015@gmail.com</span>
-      </div>
-    </div>
+  <div class="footer-bar">
+    GSTIN : 33COVPM0531D1Z4<br>
+    NO.4/220, E88, Ponniamman Koil Street, Annamalai Nagar, Medavakkam, Chennai, Tamil Nadu, 600100
   </div>
 </div>
 
