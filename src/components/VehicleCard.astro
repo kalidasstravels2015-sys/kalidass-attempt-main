@@ -48,6 +48,11 @@ const {
 } = Astro.props;
 
 const isWhatsApp = Boolean(actionHref && actionHref.includes('wa.me'));
+const isSedan = Boolean(
+  (image && (image.includes('swift-dzire') || image.includes('aura') || image.includes('etios'))) ||
+  name.toLowerCase().includes('dzire') ||
+  name.toLowerCase().includes('sedan')
+);
 ---
 
 <div
@@ -70,10 +75,14 @@ const isWhatsApp = Boolean(actionHref && actionHref.includes('wa.me'));
           loading="lazy"
           decoding="async"
           sizes="(max-width: 640px) 280px, 320px"
-          quality={75}
+          quality={80}
           width={320}
-          height={140}
-          class="w-auto h-auto max-w-full max-h-26 sm:max-h-28 object-contain mix-blend-multiply transition-transform duration-300 group-hover:scale-105 drop-shadow-xs"
+          height={160}
+          class={`w-auto h-auto max-w-full object-contain mix-blend-multiply transition-transform duration-300 drop-shadow-xs ${
+            isSedan
+              ? 'max-h-28 sm:max-h-30 scale-110 sm:scale-115 group-hover:scale-115 sm:group-hover:scale-120'
+              : 'max-h-26 sm:max-h-28 group-hover:scale-105'
+          }`}
         />
       ) : (
         <Car className="w-12 h-12 text-m3-on-surface-variant" />

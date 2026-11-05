@@ -18,6 +18,7 @@ import FloatingActions from "../components/FloatingActions.astro";
 import { getPageWhatsAppMessage } from "../utils/whatsapp";
 import BookingEnquiryModal from "../components/BookingEnquiryModal.astro";
 import AiFareAssistantModal from "../components/AiFareAssistantModal.astro";
+import ExitIntentModal from "../components/ExitIntentModal.astro";
 import GeminiIcon from "../components/GeminiIcon.astro";
 import AndroidPhoneIcon from "../components/AndroidPhoneIcon.astro";
 import { Phone, Menu, CheckCircle2, ShieldCheck, MapPin, Mail } from "lucide-react";
@@ -2433,6 +2434,9 @@ const unifiedSchemaGraph = {
 
   <!-- AI Fare Assistant Modal (Gemini) — Global -->
   <AiFareAssistantModal />
+
+  <!-- Exit Intent & Back-Button Intercept Modal -->
+  <ExitIntentModal />
 
   <!-- Floating Quick Actions (Call & WhatsApp / AI Plan) -->
   {showFloatingActions && <FloatingActions whatsappMsg={resolvedWhatsAppMsg} />}

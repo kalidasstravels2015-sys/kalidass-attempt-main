@@ -39,6 +39,8 @@ const FleetCard = ({ vehicle, isVisible, priority }) => {
     const seats = formatSeats(vehicle.caps);
     const baggage = vehicle.bags || '2 Bags';
 
+    const isSedan = (vehicle.name || '').toLowerCase().includes('dzire') || (vehicle.name || '').toLowerCase().includes('sedan') || (vehicle.image || '').includes('swift-dzire');
+
     return (
         <div className="shrink-0 w-[240px] sm:w-[260px] md:w-auto snap-start bg-white rounded-2xl border border-m3-outline-variant/90 shadow-2xs hover:shadow-md hover:border-m3-outline-variant transition-all flex flex-col justify-between overflow-hidden group select-none">
             <div>
@@ -56,7 +58,7 @@ const FleetCard = ({ vehicle, isVisible, priority }) => {
                         height="80"
                         loading="lazy"
                         decoding="async"
-                        className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-xs"
+                        className={`max-w-full max-h-full object-contain transition-transform duration-300 drop-shadow-xs ${isSedan ? 'scale-115 group-hover:scale-120' : 'group-hover:scale-105'}`}
                     />
                 </div>
 
