@@ -2015,7 +2015,7 @@ Please confirm chauffeur availability.`;
                   <circle cx="12" cy="12" r="10"/>
                   <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" fillOpacity="0.25"/>
                 </svg>
-                <span>✨ Multi-City or Custom Tour? Plan with AI →</span>
+                <span>Multiple destinations? Get a custom route & fare estimate →</span>
               </button>
             </div>
           </div>

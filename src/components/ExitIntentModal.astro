@@ -34,24 +34,19 @@ const defaultWaText = isTempoPage
 const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(defaultWaText)}`;
 ---
 
-<!-- Google Material Design 3 (M3) Dispatch & Booking Dialog -->
+<!-- Google Material Design 3 (M3) Centered Dispatch & Booking Dialog -->
 <div
   id="exit-intent-modal"
-  class="fixed inset-0 z-[100] hidden items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/40 backdrop-blur-xs opacity-0 transition-opacity duration-300 font-sans select-none"
+  class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-xs opacity-0 transition-opacity duration-300 font-sans select-none"
   role="dialog"
   aria-modal="true"
   aria-labelledby="exit-modal-title"
 >
-  <!-- M3 Dialog Container: Mobile Bottom Sheet (rounded-t-[28px]) & Desktop Centered Dialog (rounded-[28px]) -->
+  <!-- M3 Dialog Container: Centered in the middle with 28px rounded corners -->
   <div
     id="exit-modal-card"
-    class="w-full sm:max-w-md bg-white dark:bg-[#1E1F20] text-slate-900 dark:text-slate-100 rounded-t-[28px] sm:rounded-[28px] shadow-m3-3 border border-slate-200/70 dark:border-white/10 overflow-hidden transform translate-y-full sm:translate-y-4 sm:scale-95 transition-all duration-300 max-h-[90vh] flex flex-col"
+    class="w-full max-w-md mx-auto my-auto bg-white dark:bg-[#1E1F20] text-slate-900 dark:text-slate-100 rounded-[28px] shadow-m3-3 border border-slate-200/70 dark:border-white/10 overflow-hidden transform scale-95 opacity-0 transition-all duration-300 max-h-[90vh] flex flex-col"
   >
-    <!-- Mobile M3 Drag Handle -->
-    <div class="sm:hidden pt-3 pb-1 flex justify-center">
-      <div class="w-8 h-1 rounded-full bg-slate-300 dark:bg-slate-700"></div>
-    </div>
-
     <div class="p-6 sm:p-8 text-center relative">
       <!-- M3 Standard Icon Close Button -->
       <button
@@ -159,11 +154,12 @@ const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(defaultWaText)}`
       isModalOpen = true;
 
       modal.classList.remove('hidden');
+      modal.classList.add('flex');
       requestAnimationFrame(() => {
         modal.classList.remove('opacity-0');
         modal.classList.add('opacity-100');
-        card.classList.remove('translate-y-full', 'sm:translate-y-4', 'sm:scale-95');
-        card.classList.add('translate-y-0', 'sm:translate-y-0', 'sm:scale-100');
+        card.classList.remove('scale-95', 'opacity-0');
+        card.classList.add('scale-100', 'opacity-100');
       });
     }
 
@@ -173,11 +169,12 @@ const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(defaultWaText)}`
 
       modal.classList.remove('opacity-100');
       modal.classList.add('opacity-0');
-      card.classList.remove('translate-y-0', 'sm:translate-y-0', 'sm:scale-100');
-      card.classList.add('translate-y-full', 'sm:translate-y-4', 'sm:scale-95');
+      card.classList.remove('scale-100', 'opacity-100');
+      card.classList.add('scale-95', 'opacity-0');
 
       setTimeout(() => {
         modal.classList.add('hidden');
+        modal.classList.remove('flex');
       }, 300);
     }
 
