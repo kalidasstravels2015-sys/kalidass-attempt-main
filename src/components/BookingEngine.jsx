@@ -2001,6 +2001,23 @@ Please confirm chauffeur availability.`;
             <p className="text-xs text-m3-on-surface-variant dark:text-slate-400">
               No phone number required to check fare • Instant online quote
             </p>
+            <div className="pt-1 flex items-center justify-center">
+              <button
+                type="button"
+                onClick={() => {
+                  if (typeof window !== 'undefined' && typeof window.openAiFareModal === 'function') {
+                    window.openAiFareModal();
+                  }
+                }}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-blue-700 dark:text-blue-400 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/50 transition-colors cursor-pointer border border-blue-200 dark:border-blue-800/60"
+              >
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" fillOpacity="0.25"/>
+                </svg>
+                <span>✨ Multi-City or Custom Tour? Plan with AI →</span>
+              </button>
+            </div>
           </div>
         </div>
       )}

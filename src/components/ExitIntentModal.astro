@@ -14,16 +14,16 @@ const isTempoPage = currentPath.includes('tempo');
 const isActingDriver = currentPath.includes('acting-driver');
 
 const defaultTitle = isTempoPage 
-  ? "Need a Tempo Traveller Quote?" 
+  ? "Need a Tempo Traveller?" 
   : isActingDriver 
-    ? "Need an Acting Driver for Your Car?" 
-    : "Need Help Planning Your Route?";
+    ? "Need a Driver for Your Car?" 
+    : "Get Confirmed Cab Rates in 60s";
 
 const defaultSubtitle = isTempoPage
-  ? "Connect directly with our fleet manager for 12, 17-Seater & Urbania rates with transparent billing."
+  ? "12, 17-Seater & Urbania. Direct fleet rates with zero middleman markup."
   : isActingDriver
-    ? "Hire a verified highway pilot from ₹1,400/day. Professional and punctual chauffeurs."
-    : "Connect directly with our 24/7 Medavakkam dispatch desk for instant quotes and vehicle availability.";
+    ? "Verified highway pilots from ₹1,400/day. Stress-free outstation driving."
+    : "Talk directly with our 24/7 Chennai desk. Fixed per-km fares, zero surge.";
 
 const defaultWaText = isTempoPage
   ? "Hi Kalidass Travels, I need a Tempo Traveller quote. Please share vehicle availability."
@@ -88,12 +88,12 @@ const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(defaultWaText)}`
         <a
           href={`tel:+${phone}`}
           id="exit-modal-call-btn"
-          class="h-12 w-full rounded-full bg-slate-900 hover:bg-slate-800 active:bg-black dark:bg-white dark:hover:bg-slate-100 dark:active:bg-slate-200 text-white dark:text-slate-900 font-medium text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-m3-1 hover:shadow-m3-2 active:shadow-m3-0 transition-all cursor-pointer"
+          class="h-12 w-full rounded-full bg-slate-900 hover:bg-slate-800 active:bg-black dark:bg-white dark:hover:bg-slate-100 dark:active:bg-slate-200 text-white dark:text-slate-900 font-semibold text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-m3-1 hover:shadow-m3-2 active:shadow-m3-0 transition-all cursor-pointer"
         >
           <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
           </svg>
-          <span>Call Dispatch Desk: +91 89395 39211</span>
+          <span>Call Now: +91 89395 39211</span>
         </a>
 
         <!-- 2. M3 Tonal / Outlined Button: WhatsApp -->
@@ -102,25 +102,25 @@ const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(defaultWaText)}`
           target="_blank"
           rel="noopener noreferrer"
           id="exit-modal-wa-btn"
-          class="h-12 w-full rounded-full border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 font-medium text-sm sm:text-base flex items-center justify-center gap-2.5 transition-colors cursor-pointer"
+          class="h-12 w-full rounded-full border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 font-semibold text-sm sm:text-base flex items-center justify-center gap-2.5 transition-colors cursor-pointer"
         >
           <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.966.528 1.945.813 3.023.813 3.179 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-6.002-5.77zm3.364 8.204c-.14.394-.807.747-1.127.794-.32.047-.732.067-1.189-.08-.456-.148-1.044-.343-1.804-1.002-.958-.832-1.577-1.848-1.767-2.115-.19-.267-.406-.541-.406-.993 0-.452.235-.675.319-.76.084-.085.183-.106.244-.106.061 0 .122.001.176.004.056.003.131-.021.205.155.075.176.257.629.28.675.023.047.038.102.008.162-.03.06-.045.097-.09.149-.045.052-.095.116-.136.156-.045.044-.092.092-.04.181.052.09.231.381.496.617.342.304.63.399.72.444.09.045.143.038.196-.023.053-.061.228-.266.289-.357.061-.091.122-.076.205-.045.083.03 1.233.581 1.446.687.213.106.355.158.406.248.053.09.053.523-.087.917z"/>
           </svg>
-          <span>Chat on WhatsApp</span>
+          <span>Chat on WhatsApp (Instant Reply)</span>
         </a>
       </div>
 
       <!-- M3 Assist Chips: Key Service Guarantees -->
       <div class="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
-        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-          Transparent Per-KM
+        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/50">
+          Zero Surge
         </span>
-        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-          No Hidden Charges
+        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300 border border-blue-200/60 dark:border-blue-800/50">
+          Fixed Per-KM
         </span>
-        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-          Direct Fleet
+        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/70 dark:border-slate-700/60">
+          Instant Vehicle Confirm
         </span>
       </div>
 
@@ -146,11 +146,16 @@ const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(defaultWaText)}`
 
     let isModalOpen = false;
 
-    function showModal() {
+    function showModal(force = false) {
       if (isModalOpen) return;
-      if (sessionStorage.getItem('kt_exit_modal_shown')) return;
+      const lastShown = sessionStorage.getItem('kt_exit_modal_shown_ts');
+      const now = Date.now();
+      // Only throttle automated triggers (allow showing again after 5 mins or if forced)
+      if (!force && lastShown && (now - parseInt(lastShown, 10) < 5 * 60 * 1000)) {
+        return;
+      }
 
-      sessionStorage.setItem('kt_exit_modal_shown', 'true');
+      sessionStorage.setItem('kt_exit_modal_shown_ts', now.toString());
       isModalOpen = true;
 
       modal.classList.remove('hidden');
@@ -185,15 +190,33 @@ const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(defaultWaText)}`
       }
     });
 
-    // Clean trigger: Desktop mouse-leave exit intent only (no invasive mobile back-button trap)
-    document.addEventListener('mouseleave', (e) => {
-      if (e.clientY <= 8) {
+    // 1. Desktop Exit Intent (Reliable mouseout to top of viewport)
+    function onMouseOut(e: MouseEvent) {
+      if (!e.relatedTarget && !(e as any).toElement && e.clientY <= 25) {
+        showModal();
+      }
+    }
+    document.addEventListener('mouseout', onMouseOut);
+    document.addEventListener('mouseleave', (e: MouseEvent) => {
+      if (e.clientY <= 25) {
         showModal();
       }
     });
 
-    // Provide globally so any button can open the M3 Dispatch Helpline dialog explicitly
-    (window as any).openDispatchHelplineModal = showModal;
+    // 2. Mobile Exit Guard (Respectful Back-button intercept)
+    if (window.innerWidth < 768 && window.history && window.history.pushState) {
+      try {
+        if (!history.state?.ktExitGuard) {
+          window.history.pushState({ ktExitGuard: true }, document.title, window.location.href);
+        }
+        window.addEventListener('popstate', () => {
+          showModal();
+        });
+      } catch (err) {}
+    }
+
+    // Expose globally so it can always be opened on demand
+    (window as any).openDispatchHelplineModal = (force = true) => showModal(force);
   }
 
   if (document.readyState === 'loading') {
