@@ -4,12 +4,23 @@ import path from 'node:path';
 
 export const prerender = false;
 
-let inMemoryWebhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL || '';
+function getEnvUrl(): string {
+  try {
+    const envPath = path.resolve(process.cwd(), '.env');
+    if (fs.existsSync(envPath)) {
+      const raw = fs.readFileSync(envPath, 'utf8');
+      const match = raw.match(/(?:PUBLIC_)?GOOGLE_SHEET_WEBHOOK_URL=([^\r\n]+)/);
+      if (match && match[1]) return match[1].trim();
+    }
+  } catch (_) {}
+  return process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL || '';
+}
 
 export const GET: APIRoute = async () => {
+  const activeUrl = inMemoryWebhookUrl || getEnvUrl();
   return new Response(JSON.stringify({
     success: true,
-    webhookUrl: inMemoryWebhookUrl
+    webhookUrl: activeUrl
   }), {
     status: 200,
     headers: {

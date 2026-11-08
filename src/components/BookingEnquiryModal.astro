@@ -31,7 +31,7 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
             Instant Cab Booking Request
           </h2>
           <span id="sheetBookingIdBadge" class="text-[10px] font-bold text-m3-on-primary-container bg-m3-primary-container px-2 py-0.5 rounded-full inline-block mt-0.5">
-            Ref: #KT-MAA-101
+            Ref: #KT-MAA-1
           </span>
         </div>
         <button
@@ -330,7 +330,7 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
       isAirport: false,
       direction: 'pickup',
       passengers: '1-4 Seats',
-      bookingId: '#KT-MAA-101'
+      bookingId: '#KT-MAA-1'
     };
 
     function formatDate(dateStr) {
@@ -740,7 +740,7 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
 
 📅 *SCHEDULE & ROUTE*
 • *Pickup Date:* ${formattedPickupDate}
-• *Pickup Time:* ${formattedPickupTime}${quickBookingContext.days > 1 ? '\n• *Return Date:* ' + formattedReturnDate : ''}
+• *Pickup Time:* ${formattedPickupTime}${quickBookingContext.days > 1 ? '\n• *Return Date:* ' + formattedReturnDate + ' (' + quickBookingContext.days + ' Days)' : (quickBookingContext.days === 1 && !quickBookingContext.isAirport ? '\n• *Return Date:* Same Day (' + formattedPickupDate + ')' : '')}
 ${routeDetails}
 
 ━━━━━━━━━━━━━━━━━━━━
@@ -749,8 +749,46 @@ ${routeDetails}
 
 Please confirm driver assignment and cab availability.`;
 
-        // Background POST to Operations Control CSV
+        // Background POST to Google Sheets Operations Desk & CSV
         try {
+          var sheetPayload = {
+            action: 'SAVE_TRIP',
+            trip: {
+              id: quickBookingContext.bookingId,
+              customerName: name,
+              phone: rawPhone,
+              tripCategory: quickBookingContext.packageTitle || 'Enquiry Package',
+              vehicle: quickBookingContext.vehicleName || 'Sedan',
+              route: area,
+              pickupDate: formattedPickupDate,
+              pickupTime: formattedPickupTime,
+              pickupLocation: area + (flightNo ? ' [Flight: ' + flightNo + ']' : ''),
+              dropLocation: '',
+              agreedRate: numFare,
+              advance: advAmt,
+              balance: Math.max(0, numFare - advAmt),
+              driverName: '',
+              driverPhone: '',
+              vehicleNumber: '',
+              manifestStatus: 'Unassigned',
+              notes: 'Quick Enquiry Modal' + (flightNo ? ' | Flight: ' + flightNo : ''),
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+            }
+          };
+
+          var targetSheetUrl = (window.localStorage && window.localStorage.getItem('kt_admin_google_sheet_webhook_v1')) || 'https://script.google.com/macros/s/AKfycbzpTM1pLXWLF-E80-HAXjj2ghAC_0tvFW1blTJC7rJojqUhTcKIwQz0t-NQMCScN2VA/exec';
+          if (navigator.sendBeacon) {
+            navigator.sendBeacon(targetSheetUrl, new Blob([JSON.stringify(sheetPayload)], { type: 'text/plain;charset=utf-8' }));
+          } else {
+            fetch(targetSheetUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify(sheetPayload),
+              keepalive: true
+            }).catch(function() {});
+          }
+
           fetch('/api/record-booking', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -856,7 +894,7 @@ Please confirm driver assignment and cab availability.`;
       else if (slug.indexOf('temple') !== -1) prefix = '#KT-TMP-';
       else if (slug.indexOf('acting') !== -1) prefix = '#KT-ACT-';
 
-      var nextSeq = getNextContinuousSeq('kt_last_enquiry_seq', 101);
+      var nextSeq = getNextContinuousSeq('kt_last_enquiry_seq', 1);
       quickBookingContext.bookingId = prefix + nextSeq;
       quickBookingContext.slug = slug;
       if (options.packageTitle) quickBookingContext.packageTitle = options.packageTitle;

@@ -9,9 +9,11 @@
  * - NEVER generate random numbers.
  */
 
-export const START_SEQ = 101;
+export const START_SEQ = 1;
+export const START_QUOTE_SEQ = 1;
 
-let memoryQuoteSeq = START_SEQ - 1;
+let memoryQuoteDate = '';
+let memoryQuoteSeq = 0;
 
 export const STORAGE_KEYS = {
   QUOTATION: 'kt_last_quotation_seq',
@@ -109,33 +111,47 @@ export function peekContinuousSeq(storageKey = STORAGE_KEYS.QUOTATION, startSeq 
 }
 
 /**
- * Generate next Quotation Number (Q-DDMMYY-XXX e.g. Q-011126-101, Q-011126-102...)
- * Strictly continuous sequence starting from 101 for each date.
+ * Generate next Quotation Number (Q-DDMMYY-X e.g. Q-071126-1, Q-071126-2...)
+ * Strictly continuous sequence starting from 1 for each date.
  */
 export function getNextQuotationId(existingQuotes = [], prefix = null) {
   const dateCode = getFormattedDateCode();
   const actualPrefix = prefix !== null ? prefix : `Q-${dateCode}-`;
   const storageKey = `${STORAGE_KEYS.QUOTATION}_${dateCode}`;
 
+  if (memoryQuoteDate !== dateCode) {
+    memoryQuoteDate = dateCode;
+    memoryQuoteSeq = 0;
+  }
+
   let stored = 0;
   if (typeof window !== 'undefined' && window.localStorage) {
     try {
-      stored = parseInt(localStorage.getItem(storageKey) || localStorage.getItem(STORAGE_KEYS.QUOTATION) || '0', 10);
+      stored = parseInt(localStorage.getItem(storageKey) || '0', 10);
     } catch (_) {}
   }
 
-  // Threshold: dynamically caps acceptable sequential numbers so past random numbers are ignored
-  const threshold = (START_SEQ - 1) + Math.max(existingQuotes.length + 50, 100);
-  const maxFromList = getMaxFromList(existingQuotes, /#?(Q|QT|CALC|KT)/i, threshold);
+  // Find max sequence number strictly for today's date from existing list
+  let maxFromList = 0;
+  if (Array.isArray(existingQuotes)) {
+    const todayRegex = new RegExp(`Q-${dateCode}-(\\d+)`, 'i');
+    for (const item of existingQuotes) {
+      const rawId = item?.quoteId || item?.quoteRefId || item?.bookingId || (typeof item === 'string' ? item : '');
+      const m = rawId ? rawId.match(todayRegex) : null;
+      if (m) {
+        const val = parseInt(m[1], 10);
+        if (!isNaN(val) && val > maxFromList) maxFromList = val;
+      }
+    }
+  }
 
-  const base = Math.max(START_SEQ - 1, stored, maxFromList, memoryQuoteSeq);
+  const base = Math.max(0, stored, maxFromList, memoryQuoteSeq);
   const nextNum = base + 1;
   memoryQuoteSeq = nextNum;
 
   if (typeof window !== 'undefined' && window.localStorage) {
     try {
       localStorage.setItem(storageKey, String(nextNum));
-      localStorage.setItem(STORAGE_KEYS.QUOTATION, String(nextNum));
     } catch (_) {}
   }
 
@@ -143,22 +159,40 @@ export function getNextQuotationId(existingQuotes = [], prefix = null) {
 }
 
 /**
- * Preview next Quotation Number without incrementing storage (Q-DDMMYY-XXX e.g. Q-011126-101)
+ * Preview next Quotation Number without incrementing storage (Q-DDMMYY-X e.g. Q-071126-1)
  */
 export function peekNextQuotationId(existingQuotes = [], prefix = null) {
   const dateCode = getFormattedDateCode();
   const actualPrefix = prefix !== null ? prefix : `Q-${dateCode}-`;
   const storageKey = `${STORAGE_KEYS.QUOTATION}_${dateCode}`;
 
+  if (memoryQuoteDate !== dateCode) {
+    memoryQuoteDate = dateCode;
+    memoryQuoteSeq = 0;
+  }
+
   let stored = 0;
   if (typeof window !== 'undefined' && window.localStorage) {
     try {
-      stored = parseInt(localStorage.getItem(storageKey) || localStorage.getItem(STORAGE_KEYS.QUOTATION) || '0', 10);
+      stored = parseInt(localStorage.getItem(storageKey) || '0', 10);
     } catch (_) {}
   }
-  const threshold = (START_SEQ - 1) + Math.max(existingQuotes.length + 50, 100);
-  const maxFromList = getMaxFromList(existingQuotes, /#?(Q|QT|CALC|KT)/i, threshold);
-  const base = Math.max(START_SEQ - 1, stored, maxFromList);
+
+  // Find max sequence number strictly for today's date from existing list
+  let maxFromList = 0;
+  if (Array.isArray(existingQuotes)) {
+    const todayRegex = new RegExp(`Q-${dateCode}-(\\d+)`, 'i');
+    for (const item of existingQuotes) {
+      const rawId = item?.quoteId || item?.quoteRefId || item?.bookingId || (typeof item === 'string' ? item : '');
+      const m = rawId ? rawId.match(todayRegex) : null;
+      if (m) {
+        const val = parseInt(m[1], 10);
+        if (!isNaN(val) && val > maxFromList) maxFromList = val;
+      }
+    }
+  }
+
+  const base = Math.max(0, stored, maxFromList, memoryQuoteSeq);
   return `${actualPrefix}${base + 1}`;
 }
 

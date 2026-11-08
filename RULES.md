@@ -46,6 +46,7 @@
    - **Pre-Cleared Parivahan E-Permits & Zero Cash Demands:** Chauffeurs and dispatchers must pre-pay and print Andhra Pradesh, Kerala, or Karnataka state tourist vehicle permits online via Parivahan before rollout. Zero checkpost delays and zero cash demands from passengers on the road. Only monument/temple parking slips are paid at actuals by the passenger.
    - **Doorstep vs. Garage Origin Radius:** Zero garage fees for pickups within Medavakkam, Velachery, Tambaram, Pallavaram, and Chennai Airport (MAA). Flat ₹500 vehicle positioning charge for pickups north of Koyambedu / Anna Nagar.
    - **Chauffeur Vetting Protocol:** Minimum 5+ years commercial HPV license badge; strictly satvik, teetotaler, non-smoking chauffeurs assigned to temple tours (Tirupati, Sabarimala, Navagraha).
+   - **Booking Advance Standard (Strict Vehicle Differentiation):** Standard cabs (Sedan, Ertiga, Innova) require ₹500 advance to lock booking. ANY booking involving a **Tempo Traveller, Force Urbania, or Mini Bus** strictly requires a **₹2,000 booking advance** (100% credited against final bill; fully refundable if cancelled 6+ hours prior). Never quote ₹500 when a Tempo is involved.
 
 12. **Vector SVG Icon Standardization (Lucide React vs. Material Symbols Font):**
    - **Strict Invariant:** NEVER use `<span class="material-symbols-outlined">...</span>` on new or modified pages/components.
@@ -96,5 +97,13 @@
       - Customer Reviews: `👉 Swipe horizontally to read all customer reviews`
       - Wide Data Tables: `👉 Swipe horizontally to compare all vehicle specifications` (or `...view full table`)
     - **Breakpoints:** Use responsive utility (`md:hidden` or `sm:hidden`) so the hint displays strictly on touch/mobile screens where swipe gestures apply, and remains cleanly hidden on desktop grid views.
+
+19. **Cut-and-Dried Quotations & Zero AI Gimmick Paragraphs:**
+    - **Zero AI Narrative / Preamble:** Never generate AI fluff, empathy scripts, or conversational storytelling in quotation drafts or operational dispatches.
+    - **Receipt-Style Structure:** Quotes must present strictly factual billing lines: Route, Vehicle, Timings, Fare, Inclusions, and Exclusions.
+
+20. **Advance Payment Method: QR Scanner Attached (Never Text UPI ID):**
+    - **Zero Raw UPI Text Invariant:** In all customer messages, quotes, and advance requests, NEVER type out raw UPI IDs (e.g. `8939539211@okbizaxis`).
+    - **Standard Copy:** Always instruct `"Please scan and transfer [₹Amount] advance using the official QR scanner attached below"` (dispatched alongside the company QR image).
 
 See [docs/03_RULES.md](./docs/03_RULES.md) for full quality standards.

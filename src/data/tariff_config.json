@@ -1,7 +1,7 @@
 {
   "meta": {
-    "version": "2026.3",
-    "lastUpdated": "2026-10-31",
+    "version": "2026.4",
+    "lastUpdated": "2026-11-08",
     "authority": "Kalidass Travels Master Tariff & Parivahan Statutory Checkpost Schedule",
     "parivahanPortal": "https://checkpost.parivahan.gov.in/"
   },
@@ -354,11 +354,11 @@
       "statutoryBasis": "Puducherry MV Taxation Act — 7-Day Temporary Permit & Checkpost Token (₹100/seat)",
       "portalUrl": "https://transport.py.gov.in/",
       "rates": {
-        "sedan": 400,
-        "suv": 700,
-        "muv": 800,
-        "tempo": 1500,
-        "coach": 2500
+        "sedan": 500,
+        "suv": 800,
+        "muv": 900,
+        "tempo": 1600,
+        "coach": 2600
       },
       "tolls_est": {
         "one_way": 130,
@@ -382,11 +382,11 @@
       "statutoryBasis": "AP MV Taxation Act Sec 4(4) — 7-Day Short-Term License (Parivahan Checkpost e-Receipt)",
       "portalUrl": "https://aptransport.org/",
       "rates": {
-        "sedan": 400,
-        "suv": 750,
-        "muv": 1800,
-        "tempo": 3000,
-        "coach": 4200
+        "sedan": 500,
+        "suv": 850,
+        "muv": 1900,
+        "tempo": 3100,
+        "coach": 4300
       },
       "tolls_est": {
         "one_way": 220,
@@ -424,11 +424,11 @@
       "statutoryBasis": "Karnataka MV Taxation Act 1957 Sec 3(2) Schedule Part B (≤7 Days Short-Term Permit)",
       "portalUrl": "https://transport.karnataka.gov.in/",
       "rates": {
-        "sedan": 400,
-        "suv": 1000,
-        "muv": 1400,
-        "tempo": 2800,
-        "coach": 4000
+        "sedan": 500,
+        "suv": 1100,
+        "muv": 1500,
+        "tempo": 2900,
+        "coach": 4100
       },
       "tolls_est": {
         "one_way": 250,
@@ -466,11 +466,11 @@
       "statutoryBasis": "Kerala MV Taxation Act 1976 — 7-Day Short-Term (Walayar Checkpost e-Receipt: MV Tax + ₹250 Permit + ₹110 Fee + Cess)",
       "portalUrl": "https://mvd.kerala.gov.in/",
       "rates": {
-        "sedan": 600,
-        "suv": 1500,
-        "muv": 2150,
-        "tempo": 3550,
-        "coach": 4800
+        "sedan": 700,
+        "suv": 1600,
+        "muv": 2250,
+        "tempo": 3650,
+        "coach": 4900
       },
       "tolls_est": {
         "one_way": 350,

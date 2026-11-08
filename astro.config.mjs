@@ -16,6 +16,10 @@ export default defineConfig({
     prefetchAll: false,
     defaultStrategy: 'hover',
   },
+  server: {
+    host: true,
+    port: 4321,
+  },
   redirects: {
     '/outstation': '/services/outstation-cabs/',
     '/services/outstation': '/services/outstation-cabs/',

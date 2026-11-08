@@ -23,3 +23,16 @@
    - State technical facts, tradeoffs, errors, and solutions plainly.
    - When executing an instruction, proceed directly to the work without verbose acknowledgments or servile affirmations.
 
+5. **Zero AI Gimmick Paragraphs & Pure Cut-and-Dried Format**:
+   - Never write conversational preamble, pleasantries, empathy scripts, or AI boilerplate (e.g., "We understand that traveling with elderly...", "We would be pleased/honored to host...", "Given that you are 9 passengers...").
+   - Cut straight to the numbers, vehicle, route, and exact rate card line items.
+   - Structure customer quotes strictly as a clean, cut-and-dried dispatch bill: Vehicle, Route, Timing, Fare, Inclusions, and Exclusions. Zero storytelling.
+
+6. **Booking Advance Rules (Strict Vehicle Differentiation)**:
+   - Standard cabs (Sedan, Ertiga, Innova): ₹500 advance.
+   - Any booking involving a **Tempo Traveller, Force Urbania, or Mini Bus**: strictly **₹2,000 advance** (100% credited against final bill; fully refundable if cancelled 6+ hours prior). Never quote ₹500 when a Tempo is involved.
+
+7. **Advance Payment Method: QR Scanner Attached (Never Text UPI ID)**:
+   - In all customer messages and quotation drafts, NEVER print raw text UPI IDs (e.g., `8939539211@okbizaxis` or `saravn.appu@okhdfcbank`).
+   - Always instruct: `"Please scan and transfer [₹Amount] advance using the official QR scanner attached below"`. Chauffeur dispatchers always send the physical QR code scanner image in WhatsApp.
+

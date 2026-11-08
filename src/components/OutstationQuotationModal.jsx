@@ -28,6 +28,7 @@ import tnBusFares from '../data/tnBusFares.json';
 import tripsData from '../data/trips.json';
 import tariffConfig from '../data/tariff_config.json';
 import { estimateRoadExtrasFromMaster } from '../utils/masterTariff';
+import { logBookingToGoogleSheet } from '../utils/recordWebsiteBooking.js';
 
 // Distance lookup table for South India routes from Chennai
 const COMMON_DISTANCES_FROM_CHENNAI = {
@@ -395,7 +396,7 @@ export default function OutstationQuotationModal() {
   const [loading, setLoading] = useState(false);
   const [gettingLocation, setGettingLocation] = useState(false);
   const [errors, setErrors] = useState({});
-  const [bookingId, setBookingId] = useState(() => (typeof window !== 'undefined' ? peekNextQuotationId([], '#KT-OUT-') : '#KT-OUT-101'));
+  const [bookingId, setBookingId] = useState(() => (typeof window !== 'undefined' ? peekNextQuotationId([], '#KT-OUT-') : '#KT-OUT-1'));
   const [locationPickerOpen, setLocationPickerOpen] = useState(false);
   const [pickerField, setPickerField] = useState('pickup');
 
@@ -792,8 +793,24 @@ export default function OutstationQuotationModal() {
       quote_id: bookingId
     });
 
-    // Record booking in operations system
+    // Record booking in operations system & Google Sheets Live Desk
     try {
+      logBookingToGoogleSheet({
+        bookingId: bookingId,
+        name: 'Direct WhatsApp Guest',
+        phone: '',
+        pickupAddress: pickup,
+        vehicle: vehicle.name,
+        passengers: vehicle.capacity,
+        package: `Outstation Cab (${tripType === 'round' ? 'Round Trip' : 'One Way'})`,
+        days: days,
+        pickupDate: formattedPickupDate,
+        pickupTime: '',
+        returnDate: formattedReturnDate,
+        fare: finalEstimate,
+        route: `${pickup} ➔ ${drop}`
+      });
+
       fetch('/api/record-booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

@@ -21,8 +21,9 @@ import {
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
 import { buildWhatsAppUrl, WHATSAPP_CONFIG } from '../utils/whatsapp';
 import tariffConfig from '../data/tariff_config.json';
-import { peekNextQuotationId } from '../utils/sequenceGenerator';
+import { peekNextQuotationId, getNextQuotationId, getFormattedDateCode } from '../utils/sequenceGenerator';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
+import { logBookingToGoogleSheet } from '../utils/recordWebsiteBooking.js';
 
 // ── Master database of known outstation destinations from Chennai ──────────
 const KNOWN_DESTINATIONS = {
@@ -859,12 +860,12 @@ export default function BookingEngine({
     };
   }, [viewMode, activeTab, airportDirection, initAutocomplete]);
 
-  // Quote Reference ID (Sequential format: Q-DDMMYY-XXX)
+  // Quote Reference ID (Sequential format: Q-DDMMYY-X e.g. Q-071126-1)
   const [quoteRefId, setQuoteRefId] = useState(() => {
     try {
-      return peekNextQuotationId?.() || 'Q-011126-101';
+      return peekNextQuotationId?.() || `Q-${getFormattedDateCode?.() || '071126'}-1`;
     } catch (_) {
-      return 'Q-011126-101';
+      return 'Q-071126-1';
     }
   });
   useEffect(() => {
@@ -872,6 +873,24 @@ export default function BookingEngine({
       const nextId = peekNextQuotationId?.();
       if (nextId) setQuoteRefId(nextId);
     } catch (_) {}
+
+    // Centralized server synchronization across all devices/visitors
+    if (typeof fetch === 'function') {
+      fetch('/api/next-quote-id')
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.quoteId) {
+            setQuoteRefId(data.quoteId);
+            const dateCode = data.dateCode;
+            if (dateCode && data.currentSeq !== undefined) {
+              try {
+                localStorage.setItem(`kt_last_quotation_seq_${dateCode}`, String(data.currentSeq));
+              } catch (_) {}
+            }
+          }
+        })
+        .catch(() => {});
+    }
   }, []);
 
   // Formatted date string for summary
@@ -891,6 +910,24 @@ export default function BookingEngine({
       return pickupDateTime;
     }
   }, [pickupDateTime]);
+
+  // Formatted return date string for round trips
+  const formattedReturnDate = useMemo(() => {
+    if (!returnDateTime) return '';
+    try {
+      const d = new Date(returnDateTime);
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const year = d.getFullYear();
+      const hours = d.getHours();
+      const minutes = String(d.getMinutes()).padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const hr12 = hours % 12 || 12;
+      return `${day}-${month}-${year} ${String(hr12).padStart(2, '0')}:${minutes} ${ampm}`;
+    } catch (_) {
+      return returnDateTime;
+    }
+  }, [returnDateTime]);
 
   // Resolve current destination object
   const resolvedDestination = useMemo(() => {
@@ -1118,7 +1155,9 @@ export default function BookingEngine({
           tripTypeTag: `Round Trip (${outstationDays} Day${outstationDays > 1 ? 's' : ''})`,
           routeSummary: `${originName} ⇄ ${destName}`,
           tripSubtext: `Includes ${billedKm} km (${outstationDays} Day${outstationDays > 1 ? 's' : ''}) • Extra: ₹${ratePerKm}/km`,
-          metaDateStr: `${formattedPickupDate} • Round Trip • ~${billedKm} km`
+          metaDateStr: formattedReturnDate
+            ? `Pickup: ${formattedPickupDate}\nReturn: ${formattedReturnDate}\nRound Trip (${outstationDays} Day${outstationDays > 1 ? 's' : ''}) • ~${billedKm} km`
+            : `Pickup: ${formattedPickupDate} • Round Trip • ~${billedKm} km`
         };
       } else {
         // One-Way Drop
@@ -1158,7 +1197,7 @@ export default function BookingEngine({
           tripTypeTag: 'One-Way Drop',
           routeSummary: `${originName} ➔ ${destName}`,
           tripSubtext: `Includes ${billedKm} km One-Way Drop • Extra: ₹${ratePerKm}/km`,
-          metaDateStr: `${formattedPickupDate} • One-Way Drop • ~${billedKm} km`
+          metaDateStr: `Pickup: ${formattedPickupDate} • One-Way Drop • ~${billedKm} km`
         };
       }
     } else if (activeTab === 'local') {
@@ -1191,7 +1230,7 @@ export default function BookingEngine({
         tripTypeTag: `Local Rental (${pkg.hours} Hrs / ${pkg.km} Km)`,
         routeSummary: `Chennai Local (${pkg.label})`,
         tripSubtext: `Includes ${pkg.hours} Hrs / ${pkg.km} KM • Extra: ₹${extraKmRate}/km, ₹${extraHrRate}/hr`,
-        metaDateStr: `${formattedPickupDate} • City Rental • ${pkg.label}`
+        metaDateStr: `Pickup: ${formattedPickupDate} • City Rental • ${pkg.label}`
       };
     } else {
       // Airport Tab
@@ -1236,7 +1275,7 @@ export default function BookingEngine({
           tripTypeTag: isAirportPickup ? 'Airport Pickup' : 'Airport Drop',
           routeSummary: `${originName} ➔ ${destName}`,
           tripSubtext: `Includes ${billedKm} km Airport Transfer • Extra: ₹${ratePerKm}/km`,
-          metaDateStr: `${formattedPickupDate} • ${isAirportPickup ? 'Airport Pickup' : 'Airport Drop'} • ~${billedKm} km`
+          metaDateStr: `Pickup: ${formattedPickupDate} • ${isAirportPickup ? 'Airport Pickup' : 'Airport Drop'} • ~${billedKm} km`
         };
       } else {
         // City Airport Flat Zone Transfer (Auto-resolve zone from address)
@@ -1289,7 +1328,7 @@ export default function BookingEngine({
           tripTypeTag: isAirportPickup ? 'Airport Pickup' : 'Airport Drop',
           routeSummary: `${originName} ➔ ${destName}`,
           tripSubtext: `Fixed Flat Fare · Free Flight Delay Buffer`,
-          metaDateStr: `${formattedPickupDate} • ${isAirportPickup ? 'Airport Pickup' : 'Airport Drop'}`
+          metaDateStr: `Pickup: ${formattedPickupDate} • ${isAirportPickup ? 'Airport Pickup' : 'Airport Drop'}`
         };
       }
     }
@@ -1302,7 +1341,20 @@ export default function BookingEngine({
 
   const currentBreakdown = useMemo(() => {
     return calculateVehiclePricing(selectedVehicleKey);
-  }, [selectedVehicleKey, activeTab, outstationTripType, outstationDays, resolvedDestination, localPackageKey, airportDirection, airportDropAddress, outstationPickup, formattedPickupDate, needGst]);
+  }, [
+    selectedVehicleKey,
+    activeTab,
+    outstationTripType,
+    outstationDays,
+    resolvedDestination,
+    localPackageKey,
+    airportDirection,
+    airportDropAddress,
+    outstationPickup,
+    formattedPickupDate,
+    formattedReturnDate,
+    needGst
+  ]);
 
   // Log calculation event silently for lead capture
   const logCalculationEvent = (vehicleName, fare) => {
@@ -1315,7 +1367,14 @@ export default function BookingEngine({
         vehicle: vehicleName,
         distanceKm: currentBreakdown.billedKm || 'N/A',
         estimatedFare: fare,
-        meta: { quoteRefId, tab: activeTab, days: outstationDays, needGst }
+        meta: {
+          quoteRefId,
+          tab: activeTab,
+          days: outstationDays,
+          pickupDate: formattedPickupDate,
+          returnDate: (activeTab === 'outstation' && outstationTripType === 'round') ? formattedReturnDate : '',
+          needGst
+        }
       };
       navigator.sendBeacon?.('/api/record-calculation', JSON.stringify(payload));
     } catch (_) {}
@@ -1324,16 +1383,40 @@ export default function BookingEngine({
   // Dispatches booking intent to server & Google Sheets before launching WhatsApp
   const handleWhatsAppBookClick = (vehicleName, fare) => {
     try {
+      const confirmedId = quoteRefId;
+
+      // 1. Commit and advance sequential counter on centralized server
+      if (typeof fetch === 'function') {
+        fetch('/api/next-quote-id', { method: 'POST', keepalive: true })
+          .then(res => res.json())
+          .then(data => {
+            if (data && data.nextQuoteId) {
+              setQuoteRefId(data.nextQuoteId);
+            }
+          })
+          .catch(() => {});
+      }
+
+      // 2. Also increment local sequential counter for instant fallback
+      try {
+        const nextLocal = getNextQuotationId?.();
+        if (nextLocal) {
+          setTimeout(() => setQuoteRefId(nextLocal), 120);
+        }
+      } catch (_) {}
+
       logCalculationEvent(vehicleName, fare);
 
       const bookingPayload = {
-        bookingId: quoteRefId,
+        bookingId: confirmedId,
         route: currentBreakdown.routeSummary || `${outstationPickup || 'Chennai'} ➔ ${outstationDrop || 'Outstation'}`,
         pickup: outstationPickup || 'Chennai',
         drop: outstationDrop || 'Outstation',
-        travelDateTime: `${formattedPickupDate || 'Tomorrow'} @ ${formattedPickupTime || '06:00 AM'}`,
+        travelDateTime: (activeTab === 'outstation' && outstationTripType === 'round' && formattedReturnDate)
+          ? `${formattedPickupDate} to ${formattedReturnDate}`
+          : `${formattedPickupDate || 'Tomorrow'}`,
         pickupDate: formattedPickupDate,
-        pickupTime: formattedPickupTime,
+        returnDate: (activeTab === 'outstation' && outstationTripType === 'round') ? formattedReturnDate : '',
         vehicle: vehicleName,
         passengers: selectedVehicle?.seats ? `${selectedVehicle.seats} Seats` : '4 Seats',
         fare: fare || currentBreakdown.totalFare,
@@ -1341,7 +1424,7 @@ export default function BookingEngine({
         advancePaid: 0,
         manifestStatus: 'Need Driver',
         name: 'Website WhatsApp Lead',
-        notes: `Website WhatsApp Click: ${quoteRefId} (${currentBreakdown.routeSummary || 'Outstation'})`
+        notes: `Website WhatsApp Click: ${confirmedId} (${currentBreakdown.routeSummary || 'Outstation'})`
       };
 
       // Report Google Ads conversion event (Request quote)
@@ -1363,6 +1446,9 @@ export default function BookingEngine({
           });
         }
       }
+
+      // Direct Cloud Sync to Google Sheets Live Operations Desk
+      logBookingToGoogleSheet(bookingPayload);
 
       if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
         navigator.sendBeacon('/api/record-booking', JSON.stringify(bookingPayload));
@@ -2044,8 +2130,14 @@ Please confirm chauffeur availability.`;
                   )}
                   <span className="truncate">{currentBreakdown.routeSummary}</span>
                 </div>
-                <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-m3-on-surface-variant dark:text-gray-400 font-medium">
-                  <span>{formattedPickupDate}</span>
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-m3-on-surface-variant dark:text-gray-400 font-medium">
+                  <span>Pickup: {formattedPickupDate}</span>
+                  {activeTab === 'outstation' && outstationTripType === 'round' && formattedReturnDate ? (
+                    <>
+                      <span>•</span>
+                      <span className="text-emerald-700 dark:text-emerald-400 font-semibold">Return: {formattedReturnDate}</span>
+                    </>
+                  ) : null}
                   <span>•</span>
                   <span className="text-blue-700 dark:text-blue-400 font-semibold">{currentBreakdown.tripTypeTag || (activeTab === 'airport' ? 'Airport Transfer' : 'Outstation')}</span>
                   {currentBreakdown.billedKm ? (

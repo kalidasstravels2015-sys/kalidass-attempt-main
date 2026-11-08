@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import fs from 'node:fs';
 import path from 'node:path';
+import { getDailySequence, saveDailySequence } from './next-quote-id';
 
 export const prerender = false;
 
@@ -30,6 +31,7 @@ export const POST: APIRoute = async ({ request, url }) => {
 
     const targetUrl = url || new URL(request.url);
     const webhookUrl = targetUrl.searchParams.get('webhook') || (data && data.webhookUrl) || getEnvWebhook();
+    console.log('[API_RECORD_BOOKING] Received bookingId:', bookingId, 'webhookUrl:', webhookUrl);
 
     let bookingId = data.bookingId || data.quoteId || data.quoteRefId;
     const csvPath = path.resolve(process.cwd(), 'Kalidass_Operations_Control_2026.csv');
@@ -39,8 +41,20 @@ export const POST: APIRoute = async ({ request, url }) => {
       const dd = String(d.getDate()).padStart(2, '0');
       const mm = String(d.getMonth() + 1).padStart(2, '0');
       const yy = String(d.getFullYear()).slice(-2);
-      const rowCount = fs.existsSync(csvPath) ? fs.readFileSync(csvPath, 'utf8').trim().split(/\r?\n/).length : 1;
-      bookingId = `Q-${dd}${mm}${yy}-${100 + rowCount}`;
+      const dateCode = `${dd}${mm}${yy}`;
+      const nextSeq = getDailySequence(dateCode) + 1;
+      saveDailySequence(dateCode, nextSeq);
+      bookingId = `Q-${dateCode}-${nextSeq}`;
+    } else {
+      // If bookingId matches Q-dateCode-X, ensure server daily sequence records it
+      const m = String(bookingId).match(/^Q-(\d{6})-(\d+)$/i);
+      if (m) {
+        const dateCode = m[1];
+        const num = parseInt(m[2], 10);
+        if (!isNaN(num) && num > getDailySequence(dateCode)) {
+          saveDailySequence(dateCode, num);
+        }
+      }
     }
 
     const guestNamePhone = data.phone
@@ -80,10 +94,36 @@ export const POST: APIRoute = async ({ request, url }) => {
     // 2. Synchronously or fire-and-forget sync to Google Sheets Webhook
     if (webhookUrl && webhookUrl.startsWith('http')) {
       try {
+        const tripPayload = {
+          id: bookingId,
+          customerName: data.name || (data.phone ? `Guest (+91 ${String(data.phone).replace(/[^0-9]/g, '').slice(-10)})` : 'Website Guest'),
+          phone: String(data.phone || '').replace(/[^0-9]/g, '').slice(-10),
+          tripCategory: data.package || (cleanAddress.includes('➔') ? 'Outstation' : 'Website Booking'),
+          vehicle: data.vehicle || vehCat,
+          route: cleanAddress,
+          pickupDate: data.pickupDate || new Date().toISOString().split('T')[0],
+          pickupTime: data.pickupTime || '06:00 AM',
+          pickupLocation: data.pickup || cleanAddress.split('➔')[0]?.trim() || cleanAddress,
+          dropLocation: data.drop || cleanAddress.split('➔')[1]?.trim() || '',
+          agreedRate: fareNum,
+          advance: advanceNum,
+          balance: Math.max(0, fareNum - advanceNum),
+          driverName: '',
+          driverPhone: '',
+          vehicleNumber: '',
+          manifestStatus: 'Unassigned',
+          notes: notes,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+
         await fetch(webhookUrl, {
           method: 'POST',
-          headers: { 'Content-Type': 'text/plain' },
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({
+            action: 'SAVE_TRIP',
+            trip: tripPayload,
+            // Legacy fallbacks
             type: 'booking',
             bookingId: bookingId,
             guestNamePhone: guestNamePhone,

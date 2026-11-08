@@ -1,5 +1,6 @@
 ---
 import { WHATSAPP_CONFIG } from '../utils/whatsapp';
+import WhatsAppIcon from './WhatsAppIcon.astro';
 
 interface Props {
   phone?: string;
@@ -99,9 +100,7 @@ const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(defaultWaText)}`
           id="exit-modal-wa-btn"
           class="h-12 w-full rounded-full border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 font-semibold text-sm sm:text-base flex items-center justify-center gap-2.5 transition-colors cursor-pointer"
         >
-          <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.966.528 1.945.813 3.023.813 3.179 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-6.002-5.77zm3.364 8.204c-.14.394-.807.747-1.127.794-.32.047-.732.067-1.189-.08-.456-.148-1.044-.343-1.804-1.002-.958-.832-1.577-1.848-1.767-2.115-.19-.267-.406-.541-.406-.993 0-.452.235-.675.319-.76.084-.085.183-.106.244-.106.061 0 .122.001.176.004.056.003.131-.021.205.155.075.176.257.629.28.675.023.047.038.102.008.162-.03.06-.045.097-.09.149-.045.052-.095.116-.136.156-.045.044-.092.092-.04.181.052.09.231.381.496.617.342.304.63.399.72.444.09.045.143.038.196-.023.053-.061.228-.266.289-.357.061-.091.122-.076.205-.045.083.03 1.233.581 1.446.687.213.106.355.158.406.248.053.09.053.523-.087.917z"/>
-          </svg>
+          <WhatsAppIcon variant="two-tone" class="w-5 h-5 shrink-0" size={20} />
           <span>Chat on WhatsApp (Instant Reply)</span>
         </a>
       </div>

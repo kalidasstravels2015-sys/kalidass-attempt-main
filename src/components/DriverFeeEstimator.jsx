@@ -224,7 +224,7 @@ export default function DriverFeeEstimator({
   const [fieldErrors,   setFieldErrors]   = useState({});
   const [locationPickerOpen, setLocationPickerOpen] = useState(false);
   const [pickerField, setPickerField] = useState('pickup');
-  const [quoteRefId, setQuoteRefId] = useState('#QT-101');
+  const [quoteRefId, setQuoteRefId] = useState(() => (typeof window !== 'undefined' ? peekNextQuotationId() : 'Q-071126-1'));
 
   useEffect(() => {
     setQuoteRefId(peekNextQuotationId());
