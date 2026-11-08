@@ -122,6 +122,27 @@ const callUrl = `tel:${phone}`;
       </div>
     </header>
 
+    <!-- Interactive Mode Switcher: 💬 Fare Chat vs 🗺️ Multi-Day Tour Planner -->
+    <div class="px-3.5 py-1.5 bg-slate-100/90 dark:bg-[#1E1F20]/90 border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between gap-2 shrink-0 select-none">
+      <div class="flex items-center gap-1 p-0.5 bg-white dark:bg-[#131314] rounded-xl border border-slate-200/80 dark:border-white/10 w-full shadow-2xs">
+        <button
+          type="button"
+          id="ai-tab-chat"
+          class="flex-1 py-1.5 px-3 rounded-lg text-xs font-bold transition-all text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
+        >
+          <span>💬 Fare Assistant</span>
+        </button>
+        <button
+          type="button"
+          id="ai-tab-planner"
+          class="flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+        >
+          <span>🗺️ Tour Planner</span>
+          <span class="px-1.5 py-0.2 bg-gradient-to-r from-amber-500 to-orange-500 text-[9px] font-extrabold text-white rounded-full">Interactive</span>
+        </button>
+      </div>
+    </div>
+
     <!-- Main Content Area: Seamlessly hosts Welcome Hero OR Active Chat Thread -->
     <main
       id="ai-chat-thread"
@@ -148,6 +169,34 @@ const callUrl = `tel:${phone}`;
 
         <!-- Vertically Stacked Prompt Starter Cards (Ask Gemini Style) -->
         <div class="w-full max-w-sm space-y-2 text-left" id="ai-welcome-prompts">
+          <!-- Standout Interactive Tour Planner Hero Card -->
+          <button
+            type="button"
+            id="ai-hero-planner-card"
+            class="welcome-prompt-card w-full p-3 rounded-2xl bg-gradient-to-r from-blue-50/90 via-indigo-50/60 to-white dark:from-blue-950/40 dark:via-indigo-950/20 dark:to-[#1E1F20] hover:border-blue-500/80 border border-blue-200 dark:border-blue-800/60 transition-all duration-200 cursor-pointer active:scale-[0.99] flex items-center justify-between gap-3 shadow-xs hover:shadow-md group text-left"
+          >
+            <div class="flex items-center gap-3 min-w-0">
+              <span class="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition-transform shadow-xs">
+                🗺️
+              </span>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-xs text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                    Plan Multi-Day Tour Itinerary
+                  </span>
+                  <span class="px-1.5 py-0.2 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 text-[9px] font-extrabold uppercase">
+                    Interactive
+                  </span>
+                </div>
+                <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                  Custom day-by-day temple darshan, routes & car fares
+                </div>
+              </div>
+            </div>
+            <svg class="w-4 h-4 text-blue-600 group-hover:translate-x-1 transition-all shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
           <button
             type="button"
             data-quick-prompt="We are going to multiple places. How do you calculate the outstation car cost for 2 or 3 days?"
@@ -249,6 +298,178 @@ const callUrl = `tel:${phone}`;
 
       <!-- Chat Bubbles will be appended here dynamically -->
     </main>
+
+    <!-- Interactive Multi-Day Tour Planner View (Visual Wizard Tab) -->
+    <div
+      id="ai-tour-planner-view"
+      class="hidden flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 text-sm scroll-smooth bg-slate-50/50 dark:bg-[#131314]"
+    >
+      <div class="max-w-md mx-auto space-y-4">
+        <!-- Header Info Banner -->
+        <div class="p-3.5 rounded-2xl bg-gradient-to-r from-blue-600/10 via-indigo-600/10 to-purple-600/10 border border-blue-500/20 shadow-2xs">
+          <div class="flex items-center justify-between gap-2 mb-1">
+            <div class="flex items-center gap-2 font-bold text-xs sm:text-sm text-slate-900 dark:text-white">
+              <span class="text-base">🗺️</span>
+              <span>Interactive Multi-Day Tour Builder</span>
+            </div>
+            <span class="px-2 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-bold">24/7 AI Planner</span>
+          </div>
+          <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            Select your spiritual circuit or custom destinations. Get a complete day-by-day darshan plan, realistic driving schedule, and verified car & van fares.
+          </p>
+        </div>
+
+        <!-- Step 1: Circuit Selection -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
+            1. Select Spiritual or Holiday Circuit
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="planner-circuits-container">
+            <button
+              type="button"
+              class="planner-circuit-btn p-2.5 rounded-xl border border-blue-500 bg-blue-50/80 dark:bg-blue-950/40 text-left transition-all cursor-pointer shadow-2xs"
+              data-circuit="South Tamil Nadu Temple Circuit (Madurai • Rameshwaram • Kanyakumari)"
+              data-default-days="3"
+            >
+              <div class="font-bold text-xs text-slate-900 dark:text-white">🕉️ South Heritage Circuit</div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate">Madurai • Rameshwaram • Kanyakumari</div>
+            </button>
+
+            <button
+              type="button"
+              class="planner-circuit-btn p-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1E1F20] hover:border-slate-300 text-left transition-all cursor-pointer shadow-2xs"
+              data-circuit="Kumbakonam Navagraha 9 Temples & Thanjavur Tour"
+              data-default-days="3"
+            >
+              <div class="font-bold text-xs text-slate-900 dark:text-white">🛕 Navagraha 9 Temples</div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate">Kumbakonam • Vaitheeswaran • Thanjavur</div>
+            </button>
+
+            <button
+              type="button"
+              class="planner-circuit-btn p-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1E1F20] hover:border-slate-300 text-left transition-all cursor-pointer shadow-2xs"
+              data-circuit="Tirupati Balaji & Srikalahasti 2-Day Darshan Tour"
+              data-default-days="2"
+            >
+              <div class="font-bold text-xs text-slate-900 dark:text-white">⛰️ Tirupati & Kalahasti</div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate">Tirumala Balaji • Padmavathi • Kalahasti</div>
+            </button>
+
+            <button
+              type="button"
+              class="planner-circuit-btn p-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1E1F20] hover:border-slate-300 text-left transition-all cursor-pointer shadow-2xs"
+              data-circuit="Pondicherry, Pichavaram Mangroves & Chidambaram Heritage Tour"
+              data-default-days="2"
+            >
+              <div class="font-bold text-xs text-slate-900 dark:text-white">🏖️ Pondicherry & Chidambaram</div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate">Auroville • Promenade • Pichavaram</div>
+            </button>
+
+            <button
+              type="button"
+              class="planner-circuit-btn p-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1E1F20] hover:border-slate-300 text-left transition-all cursor-pointer shadow-2xs"
+              data-circuit="Ooty, Coonoor & Mudumalai Hill Station Tour"
+              data-default-days="4"
+            >
+              <div class="font-bold text-xs text-slate-900 dark:text-white">🌲 Ooty & Nilgiris</div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate">Ooty Lake • Botanical • Coonoor</div>
+            </button>
+
+            <button
+              type="button"
+              class="planner-circuit-btn p-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1E1F20] hover:border-slate-300 text-left transition-all cursor-pointer shadow-2xs"
+              data-circuit="Custom Multi-City Tour"
+              data-default-days="3"
+            >
+              <div class="font-bold text-xs text-slate-900 dark:text-white">📍 Custom Destination List</div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate">Specify your personal stop list</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Custom Stops Input (revealed when custom selected) -->
+        <div id="planner-custom-stops-row" class="hidden">
+          <label for="planner-custom-stops-input" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+            Your Custom Destinations / Stops
+          </label>
+          <input
+            type="text"
+            id="planner-custom-stops-input"
+            placeholder="e.g. Chennai ➔ Vellore ➔ Tiruvannamalai ➔ Pondy"
+            class="w-full px-3 py-2 rounded-xl bg-white dark:bg-[#1E1F20] border border-slate-200 dark:border-white/15 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-blue-500"
+          />
+        </div>
+
+        <!-- Step 2: Trip Duration -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
+            2. Trip Duration
+          </label>
+          <div class="flex items-center gap-1.5" id="planner-days-container">
+            <button type="button" class="planner-day-pill flex-1 py-1.5 rounded-xl text-xs font-bold border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1E1F20] text-slate-700 dark:text-slate-300 cursor-pointer transition-all" data-days="2">2 Days</button>
+            <button type="button" class="planner-day-pill flex-1 py-1.5 rounded-xl text-xs font-bold border border-blue-500 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 cursor-pointer shadow-2xs transition-all" data-days="3">3 Days</button>
+            <button type="button" class="planner-day-pill flex-1 py-1.5 rounded-xl text-xs font-bold border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1E1F20] text-slate-700 dark:text-slate-300 cursor-pointer transition-all" data-days="4">4 Days</button>
+            <button type="button" class="planner-day-pill flex-1 py-1.5 rounded-xl text-xs font-bold border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1E1F20] text-slate-700 dark:text-slate-300 cursor-pointer transition-all" data-days="5">5 Days</button>
+            <button type="button" class="planner-day-pill flex-1 py-1.5 rounded-xl text-xs font-bold border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1E1F20] text-slate-700 dark:text-slate-300 cursor-pointer transition-all" data-days="7">7 Days</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Vehicle & Passengers -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
+            3. Vehicle Class & Group Size
+          </label>
+          <div class="grid grid-cols-2 gap-2" id="planner-veh-container">
+            <button type="button" class="planner-veh-pill p-2 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1E1F20] text-left cursor-pointer transition-all" data-veh="Sedan (Dzire/Etios 4+1)">
+              <div class="font-bold text-xs text-slate-900 dark:text-white">🚗 Sedan (4+1)</div>
+              <div class="text-[10px] text-slate-500 dark:text-slate-400">₹14/km • 1-4 Pax</div>
+            </button>
+            <button type="button" class="planner-veh-pill p-2 rounded-xl border border-blue-500 bg-blue-50 dark:bg-blue-950/40 text-left cursor-pointer shadow-2xs transition-all" data-veh="Ertiga AC (6+1)">
+              <div class="font-bold text-xs text-slate-900 dark:text-white">🚘 Ertiga AC (6+1)</div>
+              <div class="text-[10px] text-blue-600 dark:text-blue-400 font-medium">₹17/km • 5-6 Pax + Carrier</div>
+            </button>
+            <button type="button" class="planner-veh-pill p-2 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1E1F20] text-left cursor-pointer transition-all" data-veh="Innova Crysta AC (7+1)">
+              <div class="font-bold text-xs text-slate-900 dark:text-white">🚙 Innova Crysta (7+1)</div>
+              <div class="text-[10px] text-slate-500 dark:text-slate-400">₹22/km • Executive Recliners</div>
+            </button>
+            <button type="button" class="planner-veh-pill p-2 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1E1F20] text-left cursor-pointer transition-all" data-veh="Tempo Traveller (12+1)">
+              <div class="font-bold text-xs text-slate-900 dark:text-white">🚐 Tempo Traveller (12+1)</div>
+              <div class="text-[10px] text-slate-500 dark:text-slate-400">₹24/km • Group Tour</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 4: Special Pacing & Notes -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
+            4. Special Preferences
+          </label>
+          <div class="flex flex-wrap gap-1.5" id="planner-pref-container">
+            <button type="button" class="planner-pref-pill px-2.5 py-1 rounded-full text-[11px] font-semibold border border-blue-500 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 cursor-pointer transition-all" data-pref="Temple Darshan Timings">
+              ✓ 🕉️ Temple Darshan Timings
+            </button>
+            <button type="button" class="planner-pref-pill px-2.5 py-1 rounded-full text-[11px] font-semibold border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1E1F20] text-slate-600 dark:text-slate-400 cursor-pointer transition-all" data-pref="Senior-Citizen Friendly Pacing">
+              👴 Senior-Citizen Friendly Pacing
+            </button>
+            <button type="button" class="planner-pref-pill px-2.5 py-1 rounded-full text-[11px] font-semibold border border-slate-200 dark:border-white/10 bg-white dark:bg-[#1E1F20] text-slate-600 dark:text-slate-400 cursor-pointer transition-all" data-pref="Rooftop Luggage Carrier">
+              🧳 Rooftop Luggage Carrier
+            </button>
+          </div>
+        </div>
+
+        <!-- Generate Button -->
+        <button
+          type="button"
+          id="planner-generate-btn"
+          class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:opacity-95 active:scale-[0.99] text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+        >
+          <span>✨ Generate Interactive Tour Plan & Fare</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+          </svg>
+        </button>
+      </div>
+    </div>
 
     <!-- Google Ask Gemini Bottom Bar: Context Pill + Capsule Input + Attribution -->
     <footer class="p-3 sm:p-3.5 bg-white dark:bg-[#131314] border-t border-slate-200/80 dark:border-white/10 shrink-0">
@@ -502,6 +723,148 @@ const callUrl = `tel:${phone}`;
     const welcomeHero = document.getElementById('ai-welcome-hero');
     const sendBtn = document.getElementById('ai-send-btn');
     const welcomePromptCards = document.querySelectorAll('.welcome-prompt-card');
+
+    // Mode Switcher Elements
+    const tabChat = document.getElementById('ai-tab-chat');
+    const tabPlanner = document.getElementById('ai-tab-planner');
+    const tourPlannerView = document.getElementById('ai-tour-planner-view');
+    const heroPlannerCard = document.getElementById('ai-hero-planner-card');
+    const chatFooter = modalBox ? modalBox.querySelector('footer') : null;
+
+    let currentViewMode = 'chat'; // 'chat' | 'planner'
+
+    function switchViewMode(mode) {
+      currentViewMode = mode;
+      if (mode === 'planner') {
+        chatThread?.classList.add('hidden');
+        if (chatFooter) chatFooter.classList.add('hidden');
+        tourPlannerView?.classList.remove('hidden');
+
+        tabPlanner?.classList.add('bg-blue-50', 'dark:bg-blue-950/40', 'text-blue-600', 'dark:text-blue-400', 'font-bold', 'shadow-xs');
+        tabPlanner?.classList.remove('text-slate-600', 'dark:text-slate-400', 'font-semibold');
+        tabChat?.classList.remove('bg-blue-50', 'dark:bg-blue-950/40', 'text-blue-600', 'dark:text-blue-400', 'font-bold', 'shadow-xs');
+        tabChat?.classList.add('text-slate-600', 'dark:text-slate-400', 'font-semibold');
+      } else {
+        tourPlannerView?.classList.add('hidden');
+        chatThread?.classList.remove('hidden');
+        if (chatFooter) chatFooter.classList.remove('hidden');
+
+        tabChat?.classList.add('bg-blue-50', 'dark:bg-blue-950/40', 'text-blue-600', 'dark:text-blue-400', 'font-bold', 'shadow-xs');
+        tabChat?.classList.remove('text-slate-600', 'dark:text-slate-400', 'font-semibold');
+        tabPlanner?.classList.remove('bg-blue-50', 'dark:bg-blue-950/40', 'text-blue-600', 'dark:text-blue-400', 'font-bold', 'shadow-xs');
+        tabPlanner?.classList.add('text-slate-600', 'dark:text-slate-400', 'font-semibold');
+      }
+    }
+
+    tabChat?.addEventListener('click', () => switchViewMode('chat'));
+    tabPlanner?.addEventListener('click', () => switchViewMode('planner'));
+    heroPlannerCard?.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchViewMode('planner');
+    });
+
+    // Tour Planner Wizard State & Logic
+    let selectedCircuit = 'South Tamil Nadu Temple Circuit (Madurai • Rameshwaram • Kanyakumari)';
+    let selectedDays = 3;
+    let selectedVeh = 'Ertiga AC (6+1)';
+    let selectedPrefs = ['Temple Darshan Timings'];
+
+    const circuitBtns = document.querySelectorAll('.planner-circuit-btn');
+    const customStopsRow = document.getElementById('planner-custom-stops-row');
+    const customStopsInput = document.getElementById('planner-custom-stops-input');
+    const dayPills = document.querySelectorAll('.planner-day-pill');
+    const vehPills = document.querySelectorAll('.planner-veh-pill');
+    const prefPills = document.querySelectorAll('.planner-pref-pill');
+    const generateBtn = document.getElementById('planner-generate-btn');
+
+    circuitBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        circuitBtns.forEach(b => {
+          b.classList.remove('border-blue-500', 'bg-blue-50/80', 'dark:bg-blue-950/40');
+          b.classList.add('border-slate-200', 'dark:border-white/10', 'bg-white', 'dark:bg-[#1E1F20]');
+        });
+        btn.classList.remove('border-slate-200', 'dark:border-white/10', 'bg-white', 'dark:bg-[#1E1F20]');
+        btn.classList.add('border-blue-500', 'bg-blue-50/80', 'dark:bg-blue-950/40');
+
+        selectedCircuit = btn.getAttribute('data-circuit') || '';
+        const defDays = parseInt(btn.getAttribute('data-default-days') || '3', 10);
+        if (defDays && dayPills.length > 0) {
+          selectedDays = defDays;
+          dayPills.forEach(dp => {
+            const d = parseInt(dp.getAttribute('data-days') || '0', 10);
+            if (d === defDays) {
+              dp.classList.add('border-blue-500', 'bg-blue-50', 'dark:bg-blue-950/40', 'text-blue-600', 'dark:text-blue-400');
+              dp.classList.remove('border-slate-200', 'dark:border-white/10', 'bg-white', 'dark:bg-[#1E1F20]', 'text-slate-700', 'dark:text-slate-300');
+            } else {
+              dp.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-950/40', 'text-blue-600', 'dark:text-blue-400');
+              dp.classList.add('border-slate-200', 'dark:border-white/10', 'bg-white', 'dark:bg-[#1E1F20]', 'text-slate-700', 'dark:text-slate-300');
+            }
+          });
+        }
+
+        if (selectedCircuit.includes('Custom')) {
+          customStopsRow?.classList.remove('hidden');
+          customStopsInput?.focus();
+        } else {
+          customStopsRow?.classList.add('hidden');
+        }
+      });
+    });
+
+    dayPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        dayPills.forEach(p => {
+          p.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-950/40', 'text-blue-600', 'dark:text-blue-400');
+          p.classList.add('border-slate-200', 'dark:border-white/10', 'bg-white', 'dark:bg-[#1E1F20]', 'text-slate-700', 'dark:text-slate-300');
+        });
+        pill.classList.remove('border-slate-200', 'dark:border-white/10', 'bg-white', 'dark:bg-[#1E1F20]', 'text-slate-700', 'dark:text-slate-300');
+        pill.classList.add('border-blue-500', 'bg-blue-50', 'dark:bg-blue-950/40', 'text-blue-600', 'dark:text-blue-400');
+        selectedDays = parseInt(pill.getAttribute('data-days') || '3', 10);
+      });
+    });
+
+    vehPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        vehPills.forEach(p => {
+          p.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-950/40');
+          p.classList.add('border-slate-200', 'dark:border-white/10', 'bg-white', 'dark:bg-[#1E1F20]');
+        });
+        pill.classList.remove('border-slate-200', 'dark:border-white/10', 'bg-white', 'dark:bg-[#1E1F20]');
+        pill.classList.add('border-blue-500', 'bg-blue-50', 'dark:bg-blue-950/40');
+        selectedVeh = pill.getAttribute('data-veh') || 'Ertiga AC (6+1)';
+      });
+    });
+
+    prefPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        const pref = pill.getAttribute('data-pref') || '';
+        const idx = selectedPrefs.indexOf(pref);
+        if (idx >= 0) {
+          selectedPrefs.splice(idx, 1);
+          pill.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-950/40', 'text-blue-600', 'dark:text-blue-400');
+          pill.classList.add('border-slate-200', 'dark:border-white/10', 'bg-white', 'dark:bg-[#1E1F20]', 'text-slate-600', 'dark:text-slate-400');
+          pill.textContent = pill.textContent.replace('✓ ', '');
+        } else {
+          selectedPrefs.push(pref);
+          pill.classList.remove('border-slate-200', 'dark:border-white/10', 'bg-white', 'dark:bg-[#1E1F20]', 'text-slate-600', 'dark:text-slate-400');
+          pill.classList.add('border-blue-500', 'bg-blue-50', 'dark:bg-blue-950/40', 'text-blue-600', 'dark:text-blue-400');
+          if (!pill.textContent.includes('✓')) {
+            pill.textContent = '✓ ' + pill.textContent.trim();
+          }
+        }
+      });
+    });
+
+    generateBtn?.addEventListener('click', () => {
+      let circuitText = selectedCircuit;
+      if (circuitText.includes('Custom') && customStopsInput && customStopsInput.value.trim()) {
+        circuitText = `Custom Tour (${customStopsInput.value.trim()})`;
+      }
+      const prefText = selectedPrefs.length > 0 ? ` with ${selectedPrefs.join(', ')}` : '';
+      const prompt = `Plan my ${selectedDays}-day ${circuitText} in ${selectedVeh}${prefText}. Please provide day-by-day temple darshan timings, driving schedule, and exact fare estimate.`;
+      switchViewMode('chat');
+      handleUserSubmit(prompt);
+    });
 
     function autoResizeInput() {
       if (!userInput) return;
@@ -1202,12 +1565,257 @@ const callUrl = `tel:${phone}`;
       return `<div class="my-2.5 p-3 rounded-2xl bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-transparent border border-blue-500/20 shadow-2xs"><div class="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-1">📐 Transparent Billing Formula</div><div class="font-mono text-xs text-slate-900 dark:text-white font-semibold">${escapeHtml(formula)}</div></div>`;
     }
 
+    let itineraryCardCounter = 0;
+    function createInteractiveItineraryCard(data) {
+      itineraryCardCounter++;
+      const cardId = `itin-card-${itineraryCardCounter}`;
+      const title = escapeHtml(data.title || 'Multi-Day Tour Plan');
+      const days = data.days || 3;
+      const circuit = escapeHtml(data.circuit || 'Custom Route');
+      const totalKm = data.totalKm || 1200;
+      const vehicles = data.vehicles || [];
+      const schedule = data.schedule || [];
+
+      // Default active vehicle: Ertiga if present, otherwise first
+      const defaultVeh = vehicles.find((v) => v.id === 'ertiga') || vehicles[0] || { name: 'Sedan', fare: 0, pax: '4+1', perKm: '₹14/km' };
+
+      // Day tabs
+      const dayTabsHtml = schedule.map((item, idx) => {
+        const isActive = idx === 0;
+        return `
+          <button
+            type="button"
+            class="itinerary-day-tab px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${isActive ? 'bg-blue-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/15'}"
+            data-day="${item.day}"
+          >
+            Day ${item.day}
+          </button>
+        `;
+      }).join('');
+
+      // Day content panels
+      const dayPanelsHtml = schedule.map((item, idx) => {
+        const isHidden = idx !== 0 ? 'hidden' : '';
+        return `
+          <div class="itinerary-day-content ${isHidden} space-y-2 pt-2.5" data-day="${item.day}">
+            <div class="flex items-center justify-between gap-2 pb-1.5 border-b border-slate-100 dark:border-white/5">
+              <div class="font-bold text-xs text-blue-600 dark:text-blue-400 flex items-center gap-1.5">
+                <span>📍</span>
+                <span>${escapeHtml(item.title || `Day ${item.day}`)}</span>
+              </div>
+              <span class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">${escapeHtml(item.route || '')}</span>
+            </div>
+
+            <div class="grid grid-cols-1 gap-2 text-xs">
+              ${item.morning ? `
+                <div class="p-2.5 rounded-xl bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-800/30">
+                  <div class="font-bold text-[11px] text-amber-700 dark:text-amber-400 flex items-center gap-1 mb-1">
+                    <span>🌅 Morning Schedule & Darshan</span>
+                  </div>
+                  <div class="text-slate-700 dark:text-slate-300 leading-relaxed text-[11px] sm:text-xs">${escapeHtml(item.morning)}</div>
+                </div>
+              ` : ''}
+
+              ${item.afternoon ? `
+                <div class="p-2.5 rounded-xl bg-blue-50/70 dark:bg-blue-950/20 border border-blue-200/60 dark:border-blue-800/30">
+                  <div class="font-bold text-[11px] text-blue-700 dark:text-blue-400 flex items-center gap-1 mb-1">
+                    <span>☀️ Afternoon Travel & Sights</span>
+                  </div>
+                  <div class="text-slate-700 dark:text-slate-300 leading-relaxed text-[11px] sm:text-xs">${escapeHtml(item.afternoon)}</div>
+                </div>
+              ` : ''}
+
+              ${item.evening ? `
+                <div class="p-2.5 rounded-xl bg-purple-50/70 dark:bg-purple-950/20 border border-purple-200/60 dark:border-purple-800/30">
+                  <div class="font-bold text-[11px] text-purple-700 dark:text-purple-400 flex items-center gap-1 mb-1">
+                    <span>🌙 Evening Aarti & Night Stay</span>
+                  </div>
+                  <div class="text-slate-700 dark:text-slate-300 leading-relaxed text-[11px] sm:text-xs">${escapeHtml(item.evening)}</div>
+                </div>
+              ` : ''}
+            </div>
+
+            ${item.nightHalt ? `
+              <div class="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400 pt-1">
+                <span class="font-semibold text-slate-700 dark:text-slate-300">🏨 Night Halt:</span>
+                <span>${escapeHtml(item.nightHalt)}</span>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+
+      // Vehicle switcher cards
+      const vehicleCardsHtml = vehicles.map((v) => {
+        const isSelected = v.id === defaultVeh.id;
+        return `
+          <button
+            type="button"
+            class="itinerary-vehicle-btn text-left p-2.5 rounded-xl border transition-all cursor-pointer ${isSelected ? 'border-blue-500 bg-blue-50/80 dark:bg-blue-950/40 shadow-xs' : 'border-slate-200 dark:border-white/10 bg-white dark:bg-[#1E1F20] hover:border-slate-300 dark:hover:border-white/20'}"
+            data-veh-id="${v.id}"
+            data-veh-name="${escapeHtml(v.name)}"
+            data-veh-fare="${v.fare}"
+            data-veh-pax="${escapeHtml(v.pax || '')}"
+            data-veh-perkm="${escapeHtml(v.perKm || '')}"
+          >
+            <div class="flex items-center justify-between gap-1 mb-1">
+              <span class="font-bold text-xs text-slate-900 dark:text-white truncate">${escapeHtml(v.name)}</span>
+              <span class="text-[10px] font-semibold text-slate-500 dark:text-slate-400">${escapeHtml(v.pax || '')}</span>
+            </div>
+            <div class="flex items-baseline justify-between gap-1">
+              <span class="font-extrabold text-sm text-blue-600 dark:text-blue-400">₹${Number(v.fare).toLocaleString('en-IN')}</span>
+              <span class="text-[10px] text-slate-500 dark:text-slate-400">${escapeHtml(v.perKm || '')}</span>
+            </div>
+            ${v.luggage ? `<div class="text-[9px] text-emerald-600 dark:text-emerald-400 font-medium truncate mt-0.5">✓ ${escapeHtml(v.luggage)}</div>` : ''}
+          </button>
+        `;
+      }).join('');
+
+      const initialWaText = encodeURIComponent(
+        `🚖 *KALIDASS TRAVELS — MULTI-DAY TOUR BOOKING*\n━━━━━━━━━━━━━━━━━━━━\nTour: ${data.title}\nDays: ${days} Days (${circuit})\nVehicle: ${defaultVeh.name} (${defaultVeh.pax})\nTotal Estimate: ₹${Number(defaultVeh.fare).toLocaleString('en-IN')}\n━━━━━━━━━━━━━━━━━━━━\nPlease confirm driver & car availability!`
+      );
+
+      return `
+        <div id="${cardId}" class="ai-itinerary-card my-3 rounded-2xl bg-white dark:bg-[#1A1B1E] border border-blue-500/30 dark:border-blue-400/20 shadow-md overflow-hidden text-slate-800 dark:text-white">
+          <div class="p-3.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white">
+            <div class="flex items-center justify-between gap-2 mb-1">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="text-base shrink-0">🗺️</span>
+                <span class="font-bold text-sm truncate">${title}</span>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-xs text-[11px] font-bold shrink-0">
+                ${days} Days
+              </span>
+            </div>
+            <div class="text-xs text-white/90 truncate flex items-center gap-1.5 mt-0.5">
+              <span>Route:</span>
+              <span class="font-medium">${circuit}</span>
+            </div>
+            <div class="flex items-center gap-3 text-[10px] text-white/80 mt-2 pt-2 border-t border-white/15">
+              <span>🚗 Est. ~${totalKm} km</span>
+              <span>•</span>
+              <span>👨‍✈️ 24/7 Dedicated Chauffeur</span>
+              <span>•</span>
+              <span>₹500 Advance Lock</span>
+            </div>
+          </div>
+
+          <div class="p-3 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-[#141517]">
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                Day-by-Day Schedule:
+              </span>
+              <span class="text-[10px] text-blue-600 dark:text-blue-400 font-semibold">Click day to view</span>
+            </div>
+            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+              ${dayTabsHtml}
+            </div>
+            <div class="itinerary-days-container">
+              ${dayPanelsHtml}
+            </div>
+          </div>
+
+          <div class="p-3 bg-white dark:bg-[#1A1B1E]">
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                Select Vehicle to Compare Fares:
+              </span>
+              <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">100% Verified Tariff</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 mb-3">
+              ${vehicleCardsHtml}
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+              <div class="min-w-0">
+                <div class="text-[11px] text-slate-500 dark:text-slate-400">Total Estimated Package Fare:</div>
+                <div class="flex items-baseline gap-2">
+                  <span class="itinerary-selected-fare font-extrabold text-base sm:text-lg text-slate-900 dark:text-white">
+                    ₹${Number(defaultVeh.fare).toLocaleString('en-IN')}
+                  </span>
+                  <span class="itinerary-selected-veh text-xs text-blue-600 dark:text-blue-400 font-semibold truncate">
+                    for ${escapeHtml(defaultVeh.name)}
+                  </span>
+                </div>
+                <div class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">
+                  Includes ${days} days AC cab + Chauffeur Bata. Tolls/Permits as per slip.
+                </div>
+              </div>
+
+              <a
+                href="https://wa.me/918939539211?text=${initialWaText}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="itinerary-book-btn inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] active:scale-95 text-white text-xs font-bold shadow-md transition-all shrink-0 cursor-pointer"
+              >
+                <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
+                  <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.586 1.761.882 2.796.883h.005c3.179 0 5.767-2.587 5.767-5.766.001-3.187-2.575-5.77-5.772-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.353.101.173.449.741.964 1.201.663.591 1.221.774 1.394.86.173.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.203c.044.072.044.419-.1.824z"/>
+                </svg>
+                <span>Book Tour on WhatsApp</span>
+              </a>
+            </div>
+
+            <div class="mt-3 pt-2.5 border-t border-slate-100 dark:border-white/5">
+              <div class="text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 uppercase tracking-wider">
+                Refine & Ask Assistant:
+              </div>
+              <div class="flex flex-wrap gap-1.5">
+                <button
+                  type="button"
+                  class="itinerary-quick-chip px-2.5 py-1 rounded-full bg-slate-100 dark:bg-white/10 hover:bg-blue-50 dark:hover:bg-blue-950/40 text-[11px] font-semibold text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer border border-transparent hover:border-blue-300"
+                  data-prompt="What is the luggage capacity and roof carrier advice for ${escapeHtml(title)} with 6 passengers?"
+                >
+                  🧳 Luggage advice for 6 pax
+                </button>
+                <button
+                  type="button"
+                  class="itinerary-quick-chip px-2.5 py-1 rounded-full bg-slate-100 dark:bg-white/10 hover:bg-blue-50 dark:hover:bg-blue-950/40 text-[11px] font-semibold text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer border border-transparent hover:border-blue-300"
+                  data-prompt="Can you explain the temple darshan opening and closing timings for each day in this tour?"
+                >
+                  🕉️ Temple darshan timings
+                </button>
+                <button
+                  type="button"
+                  class="itinerary-quick-chip px-2.5 py-1 rounded-full bg-slate-100 dark:bg-white/10 hover:bg-blue-50 dark:hover:bg-blue-950/40 text-[11px] font-semibold text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer border border-transparent hover:border-blue-300"
+                  data-prompt="Can we extend this tour by 1 more day (${days + 1} days)? How does the fare change?"
+                >
+                  ➕ Add 1 extra day (${days + 1} days)
+                </button>
+                <button
+                  type="button"
+                  class="itinerary-quick-chip px-2.5 py-1 rounded-full bg-slate-100 dark:bg-white/10 hover:bg-blue-50 dark:hover:bg-blue-950/40 text-[11px] font-semibold text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer border border-transparent hover:border-blue-300"
+                  data-prompt="Is this itinerary comfortable for senior citizens? What accommodations and rest stops are recommended?"
+                >
+                  👴 Senior-citizen comfort
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
     // Advanced Rich Card & Clean Markdown Synthesizer
     function formatMarkdown(text) {
       if (!text) return '';
 
+      // 0. Extract structured multi-day itinerary blocks before line processing
+      const itineraryBlocks = [];
+      let clean = text.replace(/:::ITINERARY_PLAN:::([\s\S]*?):::END_ITINERARY_PLAN:::/g, (_, jsonStr) => {
+        try {
+          const data = JSON.parse(jsonStr.trim());
+          const html = createInteractiveItineraryCard(data);
+          const placeholder = `:::ITIN_PLACEHOLDER_${itineraryBlocks.length}:::`;
+          itineraryBlocks.push(html);
+          return `\n${placeholder}\n`;
+        } catch (e) {
+          console.error('Failed to parse itinerary JSON:', e);
+          return '';
+        }
+      });
+
       // 1. Clean accidental LaTeX math blocks ($$ or \[ \]) into a sleek formula card
-      let clean = text
+      clean = clean
         .replace(/\$\$([\s\S]*?)\$\$/g, (_, math) => {
           const formula = math.replace(/\\text\{([^}]+)\}/g, '$1').replace(/\\times/g, '×').replace(/\\pm/g, '±').trim();
           return `\n:::FORMULA:::${formula}:::ENDFORMULA:::\n`;
@@ -1221,7 +1829,7 @@ const callUrl = `tel:${phone}`;
       // 2. Convert accidental markdown table rows
       clean = clean.replace(/(?:^|\n)\|([^\n]+)\|/g, (match, row) => {
         if (/^[\s\-:|]+$/.test(row)) return '';
-        const cells = row.split('|').map(c => c.trim()).filter(Boolean);
+        const cells = row.split('|').map((c) => c.trim()).filter(Boolean);
         if (cells.length === 0) return '';
         if (/^(?:vehicle|capacity|rate|model|fare)/i.test(cells[0])) {
           return '\n• **' + cells.join(' | ') + '**';
@@ -1234,6 +1842,14 @@ const callUrl = `tel:${phone}`;
 
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
+
+        if (line.includes(':::ITIN_PLACEHOLDER_')) {
+          const match = line.match(/:::ITIN_PLACEHOLDER_(\d+):::/);
+          if (match && itineraryBlocks[Number(match[1])]) {
+            processedLines.push(itineraryBlocks[Number(match[1])]);
+            continue;
+          }
+        }
 
         if (line.includes(':::FORMULA:::')) {
           const fMatch = line.match(/:::FORMULA:::([\s\S]*?):::ENDFORMULA:::/);
@@ -1265,8 +1881,8 @@ const callUrl = `tel:${phone}`;
       }
 
       // Convert standard markdown tokens without breaking HTML card attributes
-      let parsed = processedLines.map(l => {
-        if (l.startsWith('<div class="my-2 p-3') || l.startsWith('<div class="my-2.5 p-3')) {
+      let parsed = processedLines.map((l) => {
+        if (l.startsWith('<div class="my-2 p-3') || l.startsWith('<div class="my-2.5 p-3') || l.startsWith('<div id="itin-card-') || l.includes('ai-itinerary-card')) {
           return l;
         }
         let p = l.replace(/(?:^|\n)###\s*(.+)/g, '<div class="font-bold text-sm text-slate-900 dark:text-white mt-2.5 mb-1">$1</div>');
@@ -1361,6 +1977,77 @@ const callUrl = `tel:${phone}`;
 
       chatThread.appendChild(msgDiv);
       chatThread.scrollTop = chatThread.scrollHeight;
+
+      // Wire interactive events for Multi-Day Tour Itinerary Cards
+      const itinCards = msgDiv.querySelectorAll('.ai-itinerary-card');
+      itinCards.forEach((itinCard) => {
+        // 1. Day Tab Switching
+        const dayTabs = itinCard.querySelectorAll('.itinerary-day-tab');
+        const dayPanels = itinCard.querySelectorAll('.itinerary-day-content');
+        dayTabs.forEach((tab) => {
+          tab.addEventListener('click', () => {
+            const day = tab.getAttribute('data-day');
+            dayTabs.forEach((t) => {
+              t.classList.remove('bg-blue-600', 'text-white', 'shadow-xs');
+              t.classList.add('bg-slate-100', 'dark:bg-white/10', 'text-slate-600', 'dark:text-slate-300');
+            });
+            tab.classList.remove('bg-slate-100', 'dark:bg-white/10', 'text-slate-600', 'dark:text-slate-300');
+            tab.classList.add('bg-blue-600', 'text-white', 'shadow-xs');
+
+            dayPanels.forEach((p) => {
+              if (p.getAttribute('data-day') === day) {
+                p.classList.remove('hidden');
+              } else {
+                p.classList.add('hidden');
+              }
+            });
+          });
+        });
+
+        // 2. Vehicle Selection & Live Fare Update
+        const vehBtns = itinCard.querySelectorAll('.itinerary-vehicle-btn');
+        const fareDisplay = itinCard.querySelector('.itinerary-selected-fare');
+        const vehDisplay = itinCard.querySelector('.itinerary-selected-veh');
+        const bookBtn = itinCard.querySelector('.itinerary-book-btn');
+
+        vehBtns.forEach((btn) => {
+          btn.addEventListener('click', () => {
+            vehBtns.forEach((b) => {
+              b.classList.remove('border-blue-500', 'bg-blue-50/80', 'dark:bg-blue-950/40', 'shadow-xs');
+              b.classList.add('border-slate-200', 'dark:border-white/10', 'bg-white', 'dark:bg-[#1E1F20]');
+            });
+            btn.classList.remove('border-slate-200', 'dark:border-white/10', 'bg-white', 'dark:bg-[#1E1F20]');
+            btn.classList.add('border-blue-500', 'bg-blue-50/80', 'dark:bg-blue-950/40', 'shadow-xs');
+
+            const vehName = btn.getAttribute('data-veh-name') || 'Cab';
+            const vehFare = Number(btn.getAttribute('data-veh-fare') || 0);
+            const vehPax = btn.getAttribute('data-veh-pax') || '';
+
+            if (fareDisplay) fareDisplay.textContent = `₹${vehFare.toLocaleString('en-IN')}`;
+            if (vehDisplay) vehDisplay.textContent = `for ${vehName}`;
+
+            if (bookBtn) {
+              const titleEl = itinCard.querySelector('.font-bold.text-sm');
+              const titleText = titleEl ? titleEl.textContent.trim() : 'Tour';
+              const newWaText = encodeURIComponent(
+                `🚖 *KALIDASS TRAVELS — MULTI-DAY TOUR BOOKING*\n━━━━━━━━━━━━━━━━━━━━\nTour: ${titleText}\nVehicle: ${vehName} (${vehPax})\nTotal Estimate: ₹${vehFare.toLocaleString('en-IN')}\n━━━━━━━━━━━━━━━━━━━━\nPlease confirm driver & car availability!`
+              );
+              bookBtn.setAttribute('href', `https://wa.me/918939539211?text=${newWaText}`);
+            }
+          });
+        });
+
+        // 3. Quick Refinement Chips
+        const quickChips = itinCard.querySelectorAll('.itinerary-quick-chip');
+        quickChips.forEach((chip) => {
+          chip.addEventListener('click', () => {
+            const prompt = chip.getAttribute('data-prompt');
+            if (prompt) {
+              handleUserSubmit(prompt);
+            }
+          });
+        });
+      });
     }
 
     function showTypingIndicator() {

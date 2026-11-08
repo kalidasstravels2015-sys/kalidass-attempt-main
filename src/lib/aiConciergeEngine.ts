@@ -539,6 +539,28 @@ export function processAiConciergeQuery(messages: ChatMessage[], pageContext?: a
     };
   }
 
+  // ─── 1.8. COMPLEX MULTI-DAY TOUR PLANNING & ITINERARIES ─────────────────────
+  const isMultiDayPlanQuery =
+    qLower.includes('itinerary') ||
+    qLower.includes('tour plan') ||
+    qLower.includes('plan my tour') ||
+    qLower.includes('multi day') ||
+    qLower.includes('multi-day') ||
+    qLower.includes('multiple places') ||
+    qLower.includes('multiple temples') ||
+    qLower.includes('circuit') ||
+    qLower.includes('சுற்றுலா திட்டம்') ||
+    ((state.durationDays && state.durationDays >= 2) && (qLower.includes('plan') || qLower.includes('darshan') || qLower.includes('temple') || qLower.includes('places') || qLower.includes('visit')));
+
+  if (isMultiDayPlanQuery) {
+    const multiDayReply = getComplexMultiDayTourPlan(state, isTa, lastUserMessage);
+    return {
+      reply: multiDayReply,
+      source: 'autonomous_multiday_planner',
+      meta: { type: 'multi_day_tour_plan', days: state.durationDays || 3 }
+    };
+  }
+
   // ─── 2. FIXED TEMPLE / TOUR PACKAGES ──────────────────────────────────────────
   if (state.serviceType === 'tour' || state.activeDestination === 'tirupati' || state.activeDestination === 'chidambaram' || state.activeDestination === 'thiruvannamalai' || state.activeDestination === 'kanchipuram' || state.activeDestination === 'navagraha' || state.activeDestination === 'rameswaram' || state.activeDestination === 'tiruchendur' || state.activeDestination === 'sabarimala' || state.activeDestination === 'vellore' || state.activeDestination === 'pondicherry') {
     const quote = getTourPackageQuote(state, isTa);
@@ -612,6 +634,191 @@ export function processAiConciergeQuery(messages: ChatMessage[], pageContext?: a
 // ─────────────────────────────────────────────────────────────────────────────
 // QUOTE BUILDERS & KNOWLEDGE FORMATTERS
 // ─────────────────────────────────────────────────────────────────────────────
+
+function getComplexMultiDayTourPlan(state: ConversationState, isTa: boolean, query: string): string {
+  const qLower = (query || '').toLowerCase();
+
+  let title = 'South Tamil Nadu Heritage & Spiritual Tour';
+  let circuit = 'Chennai ➔ Madurai ➔ Rameshwaram ➔ Kanyakumari';
+  let days = state.durationDays || 3;
+  let totalKm = 1450;
+
+  if (qLower.includes('navagraha') || qLower.includes('kumbakonam') || qLower.includes('9 temple') || qLower.includes('நவக்கிரக')) {
+    title = 'Kumbakonam Navagraha 9 Temples Tour';
+    circuit = 'Chennai ➔ Vaitheeswaran Koil ➔ Kumbakonam ➔ Thanjavur';
+    days = state.durationDays || 3;
+    totalKm = 780;
+  } else if (qLower.includes('tirupati') || qLower.includes('kalahasti') || qLower.includes('திருப்பதி')) {
+    title = 'Tirupati Balaji & Kalahasti 2-Day Darshan';
+    circuit = 'Chennai ➔ Tirumala ➔ Tirupati ➔ Srikalahasti';
+    days = 2;
+    totalKm = 380;
+  } else if (qLower.includes('pondy') || qLower.includes('pondicherry') || qLower.includes('chidambaram') || qLower.includes('pichavaram')) {
+    title = 'Pondicherry, Pichavaram & Chidambaram Heritage Tour';
+    circuit = 'Chennai ➔ Mahabalipuram ➔ Pondicherry ➔ Pichavaram ➔ Chidambaram';
+    days = 2;
+    totalKm = 520;
+  } else if (qLower.includes('ooty') || qLower.includes('kodaikanal') || qLower.includes('munnar') || qLower.includes('hill')) {
+    title = 'Ooty, Coonoor & Mudumalai Hill Station Retreat';
+    circuit = 'Chennai ➔ Coimbatore ➔ Ooty ➔ Coonoor ➔ Mudumalai';
+    days = state.durationDays || 4;
+    totalKm = 1250;
+  } else if (qLower.includes('tiruvannamalai') || qLower.includes('thiruvannamalai') || qLower.includes('girivalam') || qLower.includes('kanchipuram')) {
+    title = 'Kanchipuram & Thiruvannamalai Girivalam Divine Tour';
+    circuit = 'Chennai ➔ Kanchipuram ➔ Vellore Golden Temple ➔ Thiruvannamalai';
+    days = 2;
+    totalKm = 460;
+  } else if (state.activeDestination) {
+    const destName = state.activeDestination.toUpperCase();
+    title = `${destName} ${days}-Day Extended Tour`;
+    circuit = `Chennai ➔ ${destName} Sightseeing & Temples ➔ Return`;
+    totalKm = Math.max((KNOWN_DISTANCES_FROM_CHENNAI[state.activeDestination] || 350) * 2, days * 250);
+  }
+
+  // Tariff rules: Min 250 km/day for cars, 300 km/day for tempo
+  const billedKm = Math.max(totalKm, days * 250);
+  const billedKmTempo = Math.max(totalKm, days * 300);
+
+  const sedanFare = billedKm * 14 + days * 500;
+  const ertigaFare = billedKm * 17 + days * 500;
+  const crystaFare = billedKm * 22 + days * 700;
+  const tempoFare = billedKmTempo * 24 + days * 800;
+
+  let scheduleItems: any[] = [];
+  if (title.includes('Navagraha')) {
+    scheduleItems = [
+      {
+        day: 1,
+        title: 'Vaitheeswaran Koil & Coastal Navagrahas',
+        route: 'Chennai ➔ Sirkazhi ➔ Vaitheeswaran Koil (~260 km)',
+        morning: '5:30 AM departure via NH 45/ECR. 10:30 AM Angarakan (Chevvai) Darshan at Vaitheeswaran Koil.',
+        afternoon: 'Tiruvenkadu (Budhan) Darshan. 2:00 PM traditional South Indian lunch.',
+        evening: 'Keezhaperumpallam (Kethu) & Thirunallar (Saneeswaran) evening darshan (opens 4:30 PM).',
+        nightHalt: 'Kumbakonam Hotel'
+      },
+      {
+        day: 2,
+        title: 'Kumbakonam Core Planetary Temples',
+        route: 'Kumbakonam local circuit (~90 km)',
+        morning: '6:30 AM Thingalur (Chandran) & Alangudi (Guru) morning special abishekam.',
+        afternoon: 'Rest during 12:30 PM - 4:00 PM temple closure. Relaxed lunch.',
+        evening: 'Suriyanar Koil (Sun Temple) & Kanjanoor (Sukran). 7:30 PM visit Mahamaham Tank.',
+        nightHalt: 'Kumbakonam Hotel'
+      },
+      {
+        day: 3,
+        title: 'Thirunageswaram & Thanjavur Grand Temple',
+        route: 'Kumbakonam ➔ Thanjavur ➔ Chennai (~380 km)',
+        morning: '7:00 AM Thirunageswaram (Raahu) Milk Abishekam (miraculous blue milk ritual).',
+        afternoon: 'Thanjavur Brihadeeswarar Big Temple UNESCO marvel.',
+        evening: 'Return highway drive to Chennai with dinner stop at Tindivanam.',
+        nightHalt: 'Chennai Home Drop'
+      }
+    ];
+  } else if (title.includes('Tirupati')) {
+    scheduleItems = [
+      {
+        day: 1,
+        title: 'Chennai to Tirumala Ascent',
+        route: 'Chennai ➔ Tirupati ➔ Tirumala (~165 km, ~4 hrs)',
+        morning: '6:00 AM departure via Tiruvallur highway. Ghat road ascent at Alipiri.',
+        afternoon: 'Hotel check-in on hills or downhill. Tonsure / hair offering and Pushkarini bath.',
+        evening: 'Special Entry Darshan (₹300 ticket or Divya Darshan) & Laddu Prasadam collection.',
+        nightHalt: 'Tirupati / Tirumala Hotel'
+      },
+      {
+        day: 2,
+        title: 'Padmavathi Temple & Srikalahasti Rahu-Ketu Kshetra',
+        route: 'Tirupati ➔ Tiruchanur ➔ Srikalahasti ➔ Chennai (~190 km)',
+        morning: '7:30 AM Tiruchanur Goddess Padmavathi Ammavari Darshan.',
+        afternoon: 'Drive to Srikalahasti (Vayu Lingam temple). Special Rahu-Ketu Sarpa Dosha Nivarana Pooja.',
+        evening: 'Smooth highway return drop to your Chennai doorstep.',
+        nightHalt: 'Chennai Home Drop'
+      }
+    ];
+  } else {
+    scheduleItems = [
+      {
+        day: 1,
+        title: 'Chennai to Madurai Cultural Capital',
+        route: 'Chennai ➔ Trichy ➔ Madurai (~460 km, ~7.5 hrs)',
+        morning: '5:30 AM early start via NH 45 Grand Southern Trunk road. Tindivanam breakfast stop.',
+        afternoon: 'Srirangam Ranganathaswamy Temple darshan. Madurai arrival by 4:00 PM.',
+        evening: '6:00 PM Madurai Meenakshi Amman Temple Golden Lotus Tank & Night Palliarai Pooja.',
+        nightHalt: 'Madurai Hotel'
+      },
+      {
+        day: 2,
+        title: 'Madurai to Rameshwaram Island',
+        route: 'Madurai ➔ Ramanathapuram ➔ Rameshwaram (~175 km, ~3.5 hrs)',
+        morning: '6:00 AM journey to Rameshwaram. Scenic drive across Pamban Sea Bridge.',
+        afternoon: 'Agni Theertham sea bath, 22 sacred wells (Theerthams) dip & Ramanathaswamy Darshan.',
+        evening: 'Dhanushkodi ghost town drive, Ram Setu zero point sunset & Dr. APJ Abdul Kalam Memorial.',
+        nightHalt: 'Rameshwaram Hotel'
+      },
+      {
+        day: 3,
+        title: 'Tiruchendur Murugan Sea Temple & Kanyakumari / Return',
+        route: 'Rameshwaram ➔ Tiruchendur ➔ Kanyakumari (~320 km)',
+        morning: '6:30 AM Lord Murugan Sea-Shore Temple Darshan at Tiruchendur.',
+        afternoon: 'Travel to Kanyakumari, Vivekananda Rock Memorial ferry & Thiruvalluvar Statue.',
+        evening: 'Sunset viewing at Triveni Sangam (confluence of 3 seas). Onward or return drop.',
+        nightHalt: 'Kanyakumari / Return Drop'
+      }
+    ];
+  }
+
+  const planJson = {
+    title,
+    days,
+    circuit,
+    totalKm,
+    vehicles: [
+      { id: 'sedan', name: 'Swift Dzire / Etios', pax: '4+1', fare: sedanFare, perKm: '₹14/km', bata: days * 500, luggage: '2 Medium Suitcases' },
+      { id: 'ertiga', name: 'Maruti Ertiga AC', pax: '6+1', fare: ertigaFare, perKm: '₹17/km', bata: days * 500, luggage: 'Rooftop Luggage Carrier Included' },
+      { id: 'crysta', name: 'Innova Crysta AC', pax: '7+1', fare: crystaFare, perKm: '₹22/km', bata: days * 700, luggage: 'Spacious Boot & Reclining Seats' },
+      { id: 'tempo', name: 'Tempo Traveller 12S', pax: '12+1', fare: tempoFare, perKm: '₹24/km', bata: days * 800, luggage: 'Separate Rear Luggage Bay' }
+    ],
+    schedule: scheduleItems
+  };
+
+  const jsonStr = JSON.stringify(planJson);
+
+  const waPromptMsg = `Hi Kalidass Travels, I would like to book the ${title} (${days} Days, ${circuit}). Please check driver availability.`;
+  const waUrl = generateWhatsAppLink(waPromptMsg);
+
+  if (isTa) {
+    return (
+      `**${title} (${days}-நாட்கள் சுற்றுலா திட்டம் & கட்டண விவரம்):**\n\n` +
+      `• **பாதை (Circuit):** ${circuit}\n` +
+      `• **மொத்த தொலைவு:** ~${totalKm} கி.மீ (குறைந்தபட்சம் ${billedKm} கி.மீ/நாள் கணக்கீடு)\n` +
+      `• **வாகனம் & டிரைவர்:** சுத்தமான ஏசி வாகனம் மற்றும் அனுபவமிக்க டிரைவர் அனைத்து ${days} நாள்களும் உங்களுடன் இருப்பார்.\n\n` +
+      `**கட்டண மதிப்பீடு:**\n` +
+      `• **Swift Dzire / Etios (4+1):** ₹${sedanFare.toLocaleString('en-IN')}\n` +
+      `• **Maruti Ertiga AC (6+1):** ₹${ertigaFare.toLocaleString('en-IN')} (கேரியர் வசதி)\n` +
+      `• **Innova Crysta AC (7+1):** ₹${crystaFare.toLocaleString('en-IN')} (சொகுசு இருக்கைகள்)\n` +
+      `• **Tempo Traveller (12+1):** ₹${tempoFare.toLocaleString('en-IN')}\n\n` +
+      `🛡️ **முன்பதிவு உத்தரவாதம்:** ₹500 முன்பணம் செலுத்தி காரை லாக் செய்யலாம்.\n\n` +
+      `[👉 வாட்ஸ்அப்பில் உறுதிப்படுத்தவும்](${waUrl})\n\n` +
+      `:::ITINERARY_PLAN:::${jsonStr}:::END_ITINERARY_PLAN:::`
+    );
+  }
+
+  return (
+    `Here is your customized **${title} (${days} Days / ${days - 1} Nights)** day-by-day itinerary and fare estimate:\n\n` +
+    `• **Circuit:** ${circuit}\n` +
+    `• **Total Estimated Distance:** ~${totalKm} km (~${billedKm} km minimum billing @ 250 km/day)\n` +
+    `• **Chauffeur & Cab:** Dedicated AC vehicle stays with you 24/7 for all ${days} days with zero extra hourly charges.\n\n` +
+    `**ESTIMATED TOTAL FARE BREAKDOWN:**\n` +
+    `• **Swift Dzire / Etios (4+1):** ₹${sedanFare.toLocaleString('en-IN')} (₹14/km + ₹${days * 500} bata)\n` +
+    `• **Maruti Ertiga AC (6+1):** ₹${ertigaFare.toLocaleString('en-IN')} (₹17/km + ₹${days * 500} bata + carrier)\n` +
+    `• **Innova Crysta AC (7+1):** ₹${crystaFare.toLocaleString('en-IN')} (₹22/km + ₹${days * 700} bata)\n` +
+    `• **Tempo Traveller (12+1):** ₹${tempoFare.toLocaleString('en-IN')} (₹24/km + ₹${days * 800} bata)\n\n` +
+    `🛡️ **Booking Policy:** ₹500 advance (₹2,000 for Tempo) locks your vehicle. Remaining balance paid post-trip to driver.\n\n` +
+    `[👉 Confirm This Tour on WhatsApp](${waUrl})\n\n` +
+    `:::ITINERARY_PLAN:::${jsonStr}:::END_ITINERARY_PLAN:::`
+  );
+}
 
 function calculateMultiDayTourRate(v: any, numDays: number): number {
   if (numDays <= 3 || v.rates?.[numDays]) {
