@@ -1,113 +1,80 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { cleanWhatsAppText } from '../../utils/cleanWhatsAppText';
 
-const COPILOT_SYSTEM_PROMPT = `You are the official 24/7 AI Operations Co-Pilot & Dispatch Partner for Kalidass Travels, Chennai.
-Owner: Saravanan | Primary Helpline: +91 89395 39211 | Alt: +91 99406 29716.
-You are assisting the owner/operator on mobile when they are outstation or on the road.
-
-CORE RULES:
-1. NEVER INVENT FAKE DATA: Never mention dummy names, fake hotels (NO 'Green Park Hotel' or 'Kapaleeshwarar Temple' unless explicitly provided in query).
-2. WEBSITE RATE SUMMARY FORMAT:
-   When user asks for rate summary or quote, strictly follow official Kalidass Travels rate card format:
-   KALIDASS TRAVELS — TRIP QUOTATION
-   ──────────────────────────────────────────
-   Route: [Origin] ⇄ [Destination]
-   [Schedule if known] • [Trip Type] • ~[Distance] km
-   ──────────────────────────────────────────
-   RATE SUMMARY:
-   • [Vehicle] ([Billed km] km @ ₹[Rate]/km or Package): ₹[Cost]
-   • Driver Bata: ₹[Bata]
-   • Tolls / Parking / Interstate Entry Tax: Extra as per slip
-   Estimated Total Fare: ₹[Total] + Extras
-   ──────────────────────────────────────────
-   PAYMENT & BILLING RULES:
-   • ₹500 advance to reserve cab (deducted in final billing)
-   • Pay balance to chauffeur at trip end (UPI / Cash)
-   • Doorstep odometer reading
-   Dispatch Helpline: +91 89395 39211
-3. MULTI-DAY ITINERARIES:
-   If user pastes complex itinerary (e.g. 11 Nov Chennai Airport to Train, 12-18 Nov Madurai -> Rameshwaram -> Kanyakumari -> Trivandrum):
-   Break down day by day with real temple darshan timings, senior citizen ease, and separate Part A (Chennai local) & Part B (Outstation) Ertiga 6+1 AC + rooftop carrier.
-4. TARIFF RATES:
-   - Sedan (Dzire/Etios 4+1): Outstation ₹14/km (min 250km/day) + ₹500 bata | Local 4hr ₹1600, 8hr ₹2600, 10hr ₹3100
-   - Ertiga (6+1): Outstation ₹17/km (min 250km/day) + ₹500 bata | Local 4hr ₹2000, 8hr ₹3400, 10hr ₹4100
-   - Crysta (7+1): Outstation ₹22/km (min 250km/day) + ₹700 bata | Local 4hr ₹3400, 8hr ₹5400, 10hr ₹6200
-   - Tempo (12+1): Outstation ₹24/km (min 300km/day) + ₹800 bata | Local 4hr ₹4200, 8hr ₹6600, 10hr ₹7800
-   - Fixed 1-Day: Mahabalipuram ₹2500 | Kanchipuram ₹3800 | Pondicherry ₹4500 | Tirupati ₹6000 | Thiruvannamalai ₹6500`;
-
-async function callDirectGemini(text, history) {
-  const apiKey = (typeof window !== 'undefined' && localStorage.getItem('kalidass_gemini_key')) ||
-    import.meta.env.PUBLIC_GEMINI_API_KEY ||
-    '';
-
-  const contents = [];
-  for (const h of history.slice(-6)) {
-    if (h.role && h.content) {
-      contents.push({
-        role: h.role === 'user' ? 'user' : 'model',
-        parts: [{ text: h.content }]
-      });
-    }
-  }
-  contents.push({ role: 'user', parts: [{ text }] });
-
-  for (const model of ['gemini-3.8-flash', 'gemini-3.5-flash', 'gemini-flash-latest']) {
-    try {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: COPILOT_SYSTEM_PROMPT }] },
-          contents,
-          generationConfig: { temperature: 0.2, maxOutputTokens: 4000 }
-        })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const cand = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-        if (cand) return { reply: cand, model };
-      }
-    } catch (_) {}
-  }
-  throw new Error('AI generation offline. Please check your data connection.');
+// Helper to sanitize HTML
+function escapeHtml(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 }
 
+// Starter prompt cards inspired by the official AI Fare Assistant
+const STARTER_PROMPTS = [
+  {
+    icon: '🗺️',
+    title: 'Multiple Places & Outstation Tour',
+    desc: 'Calculate 2 or 3-day car cost with driver',
+    prompt: 'We are going to multiple places. How do you calculate the outstation car cost for 2 or 3 days?'
+  },
+  {
+    icon: '📋',
+    title: 'Paste Customer WhatsApp Enquiry',
+    desc: 'Extract dates, temples, luggage & get exact Ertiga plan',
+    prompt: 'Landing chennai 11nov 10:15 am, 11 nov night train to madurai. Return 18nov from trv 8:50 am. 5 adults 1 child, 2 senior citizens. Main temples and sightseeing. Ertiga vehicle required. Please calculate simple, clean plan and cost.'
+  },
+  {
+    icon: '⛰️',
+    title: 'Tirupati Balaji Darshan Package',
+    desc: '1-day & 2-day rates, ghat road permit included',
+    prompt: 'How much for Chennai to Tirupati 1-day or 2-day package in Sedan and Ertiga?'
+  },
+  {
+    icon: '🕉️',
+    title: 'Kumbakonam Navagraha 9 Temples',
+    desc: '3-day temple circuit in Ertiga & Innova',
+    prompt: 'How much for Chennai to Kumbakonam 9 temples 3-day package in Ertiga and Innova?'
+  },
+  {
+    icon: '🚐',
+    title: 'Tempo Traveller & Force Urbania',
+    desc: '12, 14, 20 & 26-seater group tariffs',
+    prompt: 'What is the outstation per km rate for Tempo Traveller 12, 14, 20 seater and Force Urbania?'
+  },
+  {
+    icon: '✈️',
+    title: 'Chennai Airport Pickup / Drop',
+    desc: 'Fixed transfer rates for Sedan, Ertiga & Innova',
+    prompt: 'What are the Chennai Airport taxi rates for Sedan, Ertiga, and Innova Crysta?'
+  }
+];
+
+const QUICK_CHIPS = [
+  { label: '🗺️ Multiple Places Outstation', prompt: 'We are going to multiple places. How do you calculate the outstation car cost for 2 or 3 days?' },
+  { label: '🚗 Ertiga 6+1 Rate', prompt: 'What is the per km rate and daily minimum for Maruti Ertiga 6+1 AC?' },
+  { label: '⛰️ Tirupati 1-Day Package', prompt: 'Chennai to Tirupati 1-day package rates for Sedan and Ertiga with tolls included' },
+  { label: '🚐 Tempo 12-Seater', prompt: 'Tempo Traveller 12-seater per km rate, driver bata, and minimum km per day' },
+  { label: '✈️ Airport Drop', prompt: 'Chennai Airport transfer rates for Sedan and Ertiga' },
+  { label: '🧑‍✈️ Acting Driver Rate', prompt: 'What are the acting driver charges for local city and outstation personal car?' }
+];
+
 export default function MobileDispatchCopilot() {
-  const [messages, setMessages] = useState([
-    {
-      id: 'welcome',
-      role: 'assistant',
-      content: `🚗 *KALIDASS TRAVELS — MOBILE AI CO-PILOT*
-━━━━━━━━━━━━━━━━━━━━━━━━━
-வணக்கம் Saravanan! I am your 24/7 cloud co-pilot.
-I work directly on your mobile data — zero PC required!
-
-*What you can do right now:*
-1️⃣ *Paste raw customer notes* from WhatsApp (I extract the itinerary & rates).
-2️⃣ *Ask for quotes:* e.g. _"airport to kancheepuram sedan"_ or _"rate summary for ertiga"_.
-3️⃣ *Generate driver duty slips:* e.g. _"duty Saravanan TN 01 AB 1234"_.
-
-Tap any quick chip below or type/speak your request:`,
-      isQuote: false,
-      isDutySlip: false,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    }
-  ]);
-
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
-  const [targetPhone, setTargetPhone] = useState('');
-  const [phoneModalMsg, setPhoneModalMsg] = useState(null);
+  const [helplineOpen, setHelplineOpen] = useState(false);
 
   const messagesEndRef = useRef(null);
   const recognitionRef = useRef(null);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
 
-  // Initialize Speech Recognition for mobile voice-to-text
+  // Mobile voice recognition
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -115,7 +82,7 @@ Tap any quick chip below or type/speak your request:`,
         const recognition = new SpeechRecognition();
         recognition.continuous = false;
         recognition.interimResults = false;
-        recognition.lang = 'en-IN'; // Works for Indian English and Tamil-English terms
+        recognition.lang = 'en-IN';
 
         recognition.onresult = (event) => {
           const transcript = event.results[0][0].transcript;
@@ -148,88 +115,73 @@ Tap any quick chip below or type/speak your request:`,
     }
   };
 
-  const handleSend = async (textToSend) => {
-    const text = (textToSend || input).trim();
-    if (!text || loading) return;
+  const handleSend = async (userText) => {
+    const query = (userText || input).trim();
+    if (!query || loading) return;
 
     setInput('');
-    const userMsgId = 'u-' + Date.now();
-    const newHistory = [
-      ...messages,
-      {
-        id: userMsgId,
-        role: 'user',
-        content: text,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      }
-    ];
+    const userMsg = {
+      id: `u-${Date.now()}`,
+      role: 'user',
+      content: query,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    const newHistory = [...messages, userMsg];
     setMessages(newHistory);
     setLoading(true);
 
     try {
-      // Build previous turns for context
-      const historyPayload = newHistory
-        .filter((m) => m.id !== 'welcome')
-        .map((m) => ({
-          role: m.role === 'user' ? 'user' : 'model',
-          content: m.content
-        }));
+      // 1. Try backend /api/ai-chat with grounded engine + Gemini fallback
+      const res = await fetch('/api/ai-chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: newHistory.map(m => ({ role: m.role, content: m.content })),
+          sessionId: `OPS-COPILOT-${Date.now()}`,
+          sourcePage: '/admin/copilot'
+        })
+      });
 
-      let reply = '';
-      let isQuote = false;
-      let isDutySlip = false;
-      let customerPhone = '';
-      let driverPhone = '';
+      let replyText = '';
+      if (res.ok) {
+        const data = await res.json();
+        if (data?.reply) {
+          replyText = data.reply;
+        }
+      }
 
-      // Primary: Call Server Copilot Endpoint
-      try {
-        const res = await fetch('/api/admin/copilot', {
+      // If backend failed, fallback to client-side direct API or fallback endpoint
+      if (!replyText) {
+        const fallbackRes = await fetch('/api/admin/copilot', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            message: text,
-            history: historyPayload
+            message: query,
+            history: newHistory.map(m => ({ role: m.role, content: m.content }))
           })
         });
-
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.reply) {
-            reply = data.reply;
-            isQuote = Boolean(data.isQuote);
-            isDutySlip = Boolean(data.isDutySlip);
-            customerPhone = data.customerPhone || '';
-            driverPhone = data.driverPhone || '';
+        if (fallbackRes.ok) {
+          const fallbackData = await fallbackRes.json();
+          if (fallbackData?.reply) {
+            replyText = fallbackData.reply;
           }
         }
-      } catch (_) {}
-
-      // Resilient Fallback: Direct Client-Side Gemini Call (Zero PC, Zero Server, 100% Mobile Browser Uptime)
-      if (!reply) {
-        const directResult = await callDirectGemini(text, historyPayload);
-        reply = directResult.reply;
-        isDutySlip = reply.includes('DUTY SLIP');
-        isQuote = reply.includes('RATE SUMMARY:') || reply.includes('QUOTATION');
       }
 
-      // Extract phone if present anywhere in text or reply
-      if (!customerPhone) {
-        const phoneMatch = (text + ' ' + reply).match(/(?:\+91[\s-]?)?[6-9]\d{9}/);
-        if (phoneMatch) {
-          customerPhone = phoneMatch[0].replace(/[\s-]/g, '');
-        }
+      if (!replyText) {
+        replyText = 'Unable to fetch response. Please check your internet connection or call Helpline +91 89395 39211.';
       }
+
+      // Strictly clean text for WhatsApp: NO ###, NO excess asterisks!
+      const cleanReply = cleanWhatsAppText(replyText);
 
       setMessages((prev) => [
         ...prev,
         {
-          id: 'a-' + Date.now(),
+          id: `a-${Date.now()}`,
           role: 'assistant',
-          content: reply,
-          isQuote,
-          isDutySlip,
-          customerPhone,
-          driverPhone,
+          content: cleanReply,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
       ]);
@@ -237,9 +189,9 @@ Tap any quick chip below or type/speak your request:`,
       setMessages((prev) => [
         ...prev,
         {
-          id: 'err-' + Date.now(),
+          id: `a-${Date.now()}`,
           role: 'assistant',
-          content: `⚠️ ${err?.message || 'Network connection error. Please retry.'}`,
+          content: 'Connection error. Please try again or call +91 89395 39211.',
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
       ]);
@@ -248,251 +200,459 @@ Tap any quick chip below or type/speak your request:`,
     }
   };
 
-  const handleCopy = (content, id) => {
-    try {
-      navigator.clipboard.writeText(content);
-      setCopiedId(id);
-      setTimeout(() => setCopiedId(null), 2500);
-    } catch (_) {}
+  const handleCopy = (id, text) => {
+    const clean = cleanWhatsAppText(text);
+    navigator.clipboard.writeText(clean);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2500);
   };
 
-  const openWhatsApp = (content, phone = '') => {
-    const cleanPhone = phone.replace(/[^0-9]/g, '');
-    const encoded = encodeURIComponent(content);
-    if (cleanPhone) {
-      const formatted = cleanPhone.length === 10 ? '91' + cleanPhone : cleanPhone;
-      window.open(`https://wa.me/${formatted}?text=${encoded}`, '_blank');
-    } else {
-      // General share to WhatsApp (lets user select any chat in their WhatsApp)
-      window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
-    }
+  const handleOpenWhatsApp = (text) => {
+    const clean = cleanWhatsAppText(text);
+    const url = `https://wa.me/?text=${encodeURIComponent(clean)}`;
+    window.open(url, '_blank');
   };
 
-  const quickPrompts = [
-    { label: '🚖 Sedan Rate Summary', text: 'give me rate summary for sedan' },
-    { label: '🚙 Ertiga Rate Summary', text: 'give me rate summary for ertiga' },
-    { label: '🚘 Crysta Rate Summary', text: 'give me rate summary for innova crysta' },
-    { label: '🚐 Tempo Traveller Rate', text: 'give me rate summary for tempo traveller' },
-    { label: '📍 Airport to Kanchipuram', text: 'airport to kancheepuram rate summary' },
-    { label: '📝 Driver Duty Slip', text: 'create driver duty slip for driver Saravanan vehicle TN 01 AB 1234' }
-  ];
+  const handleNewChat = () => {
+    setMessages([]);
+    setInput('');
+  };
+
+  // Render text cleanly: detect vehicle cards and style paragraphs/bullets nicely
+  const renderMessageContent = (text) => {
+    if (!text) return null;
+
+    const lines = text.split('\n');
+    const elements = [];
+
+    lines.forEach((line, idx) => {
+      const trimmed = line.trim();
+
+      // Empty line -> space
+      if (!trimmed) {
+        elements.push(<div key={`sp-${idx}`} className="h-2" />);
+        return;
+      }
+
+      // Check if line looks like vehicle tariff: e.g. "Sedan: ₹14/km" or "• Maruti Ertiga: ₹17/km"
+      const vehMatch = trimmed.match(/^(?:•\s*)?([A-Za-z0-9\s\+\(\)\/]+?)\s*:\s*(₹[0-9,\.\/A-Za-z\s\+\-]+)$/);
+      const isVehicleLine = vehMatch && /(?:sedan|dzire|etios|ertiga|crysta|innova|tempo|urbania|car|suv)/i.test(vehMatch[1]);
+
+      if (isVehicleLine) {
+        const vName = vehMatch[1].trim();
+        const vRate = vehMatch[2].trim();
+        elements.push(
+          <div
+            key={`veh-${idx}`}
+            className="my-1.5 p-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-white/10 flex items-center justify-between gap-3 shadow-2xs"
+          >
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-sm font-bold shrink-0">
+                🚗
+              </span>
+              <div className="min-w-0">
+                <div className="font-bold text-xs text-slate-900 dark:text-white truncate">{vName}</div>
+                <div className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">{vRate}</div>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => handleOpenWhatsApp(`Kalidass Travels Quote:\n${vName} - ${vRate}\nHelpline: +91 89395 39211`)}
+              className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer"
+            >
+              Share
+            </button>
+          </div>
+        );
+        return;
+      }
+
+      // Check if line is a clean section header (e.g. "1. Cab & Luggage Details" or "TOUR PLAN (DAY-BY-DAY):")
+      const isHeader = /^[0-9]+\.\s+[A-Za-z]/.test(trimmed) || /^[A-Z\s\(\)\:\-\—]{4,}\:?$/.test(trimmed);
+
+      if (isHeader) {
+        elements.push(
+          <div key={`h-${idx}`} className="font-bold text-xs sm:text-sm text-slate-900 dark:text-amber-400 mt-2 mb-1 tracking-tight">
+            {trimmed}
+          </div>
+        );
+        return;
+      }
+
+      // Clean bullet point line
+      if (trimmed.startsWith('•')) {
+        elements.push(
+          <div key={`b-${idx}`} className="flex items-start gap-2 my-0.5 text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
+            <span className="text-amber-500 dark:text-amber-400 shrink-0 font-bold">•</span>
+            <span>{trimmed.substring(1).trim()}</span>
+          </div>
+        );
+        return;
+      }
+
+      // Regular line
+      elements.push(
+        <div key={`p-${idx}`} className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
+          {trimmed}
+        </div>
+      );
+    });
+
+    return elements;
+  };
 
   return (
-    <div className="flex flex-col h-[100dvh] max-w-2xl mx-auto bg-slate-950 text-slate-100 antialiased font-sans select-none sm:border-x sm:border-slate-800">
-      {/* Top Mobile App Bar */}
-      <header className="flex-none bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-3 sticky top-0 z-30 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center shadow-lg shadow-amber-500/20 text-slate-950 font-black text-sm">
-            KT
+    <div className="w-full h-full flex flex-col bg-white dark:bg-[#131314] text-slate-800 dark:text-[#E3E3E3] rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-white/10">
+      {/* ───────────────────────────────────────────────────────────── */}
+      {/* TOP APP BAR: Google Ask Gemini & M3 Minimal Header            */}
+      {/* ───────────────────────────────────────────────────────────── */}
+      <header className="flex items-center justify-between px-4 py-3 bg-white/95 dark:bg-[#131314]/95 backdrop-blur-md border-b border-slate-200 dark:border-white/10 shrink-0 select-none z-10">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="relative w-8 h-8 rounded-full bg-[#D97706]/10 dark:bg-amber-500/20 border border-[#D97706]/30 dark:border-amber-500/30 flex items-center justify-center shrink-0 shadow-xs">
+            <svg className="w-4 h-4 text-[#D97706] dark:text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" fillOpacity="0.2" />
+            </svg>
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="font-extrabold text-sm text-white tracking-wide">KALIDASS AI CO-PILOT</h1>
-              <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-800/80 px-1.5 py-0.5 rounded-full">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                24/7 Cloud
+            <div className="flex items-center gap-1.5">
+              <h2 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white tracking-tight">
+                AI Fare & Dispatch Assistant
+              </h2>
+              <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                24/7 Verified
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 font-medium">Mobile Operational Dispatch • Zero PC Required</p>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate hidden sm:block">
+              Clean WhatsApp replies • Zero irritating symbols • 100% human-readable
+            </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <a
-            href="/admin/"
-            className="text-[11px] font-bold text-slate-300 hover:text-white bg-slate-800/80 border border-slate-700 px-2.5 py-1.5 rounded-lg active:scale-95 transition-all flex items-center gap-1"
-          >
-            <span>Operations Desk</span>
-            <span>➔</span>
-          </a>
-        </div>
-      </header>
-
-      {/* Quick Action Chips Horizontal Bar */}
-      <div className="flex-none bg-slate-900/40 border-b border-slate-800/60 px-3 py-2 overflow-x-auto no-scrollbar flex items-center gap-2">
-        {quickPrompts.map((q, idx) => (
+        <div className="flex items-center gap-1.5 shrink-0">
+          {/* New Chat Button */}
           <button
-            key={idx}
             type="button"
-            onClick={() => handleSend(q.text)}
-            className="flex-none whitespace-nowrap text-[11px] font-semibold text-slate-300 bg-slate-800/70 hover:bg-slate-700/80 border border-slate-700/70 hover:border-slate-600 px-2.5 py-1 rounded-full active:scale-95 transition-all"
+            onClick={handleNewChat}
+            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
+            title="Start fresh conversation"
           >
-            {q.label}
+            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            <span className="hidden sm:inline">New Chat</span>
           </button>
-        ))}
-      </div>
 
-      {/* Message Chat Feed */}
-      <main className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((m) => (
-          <div key={m.id} className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
-            <div
-              className={`max-w-[92%] sm:max-w-[85%] rounded-2xl px-4 py-3 shadow-md ${
-                m.role === 'user'
-                  ? 'bg-amber-500 text-slate-950 font-medium rounded-tr-sm'
-                  : 'bg-slate-900 border border-slate-800 text-slate-100 rounded-tl-sm'
-              }`}
+          {/* Helpline Call Button with Multi-Helpline Popover */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setHelplineOpen(!helplineOpen)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#006D3B] hover:bg-[#00532B] active:scale-95 text-xs font-semibold text-white transition-all shadow-xs cursor-pointer"
+              title="Call 24/7 Helplines"
             >
-              <div className="whitespace-pre-wrap font-sans text-[13px] leading-relaxed break-words font-normal">
-                {m.content}
-              </div>
+              <svg className="w-3 h-3 text-white fill-current" viewBox="0 0 24 24">
+                <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+              </svg>
+              <span>+91 89395 39211</span>
+              <svg className={`w-2.5 h-2.5 transition-transform ${helplineOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
 
-              <div
-                className={`mt-1.5 text-[10px] flex items-center justify-between gap-3 ${
-                  m.role === 'user' ? 'text-amber-950/70' : 'text-slate-500'
-                }`}
-              >
-                <span>{m.timestamp}</span>
-                {m.role === 'user' && <span>✓✓</span>}
-              </div>
-            </div>
-
-            {/* Quick 1-Tap Action Buttons below AI messages */}
-            {m.role === 'assistant' && m.id !== 'welcome' && (
-              <div className="flex flex-wrap items-center gap-2 mt-2 ml-1">
-                {/* 1-Tap Direct WhatsApp Share */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (m.customerPhone) {
-                      openWhatsApp(m.content, m.customerPhone);
-                    } else {
-                      setPhoneModalMsg(m.content);
-                    }
-                  }}
-                  className="flex items-center gap-1.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 active:scale-95 px-3 py-1.5 rounded-lg shadow-md shadow-emerald-950/40 transition-all"
+            {helplineOpen && (
+              <div className="absolute right-0 top-full mt-1.5 w-56 bg-white dark:bg-[#1E1F20] text-slate-800 dark:text-white rounded-2xl shadow-xl border border-slate-200 dark:border-white/15 p-2 space-y-1 z-50 animate-fadeIn">
+                <div className="px-2 py-1 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                  24/7 Dispatch Helplines
+                </div>
+                <a
+                  href="tel:+918939539211"
+                  className="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
                 >
-                  <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z" />
-                  </svg>
-                  <span>
-                    {m.customerPhone ? `Send to Customer (${m.customerPhone})` : 'Send via WhatsApp'}
-                  </span>
-                </button>
-
-                {/* Forward Duty Slip to Driver */}
-                {m.isDutySlip && (
-                  <button
-                    type="button"
-                    onClick={() => openWhatsApp(m.content, m.driverPhone || '918939539211')}
-                    className="flex items-center gap-1.5 text-xs font-bold text-amber-950 bg-amber-400 hover:bg-amber-300 active:scale-95 px-3 py-1.5 rounded-lg shadow-md transition-all"
-                  >
-                    <span>🚗 Send to Driver</span>
-                  </button>
-                )}
-
-                {/* 1-Tap Copy */}
-                <button
-                  type="button"
-                  onClick={() => handleCopy(m.content, m.id)}
-                  className="flex items-center gap-1 text-xs font-semibold text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 px-2.5 py-1.5 rounded-lg active:scale-95 transition-all"
+                  <span>+91 89395 39211</span>
+                  <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">Primary</span>
+                </a>
+                <a
+                  href="tel:+916381939769"
+                  className="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
                 >
-                  <span>{copiedId === m.id ? '✓ Copied!' : '📋 Copy'}</span>
-                </button>
+                  <span>+91 63819 39769</span>
+                  <span className="text-[10px] text-blue-600 dark:text-blue-400 font-bold">Line 2</span>
+                </a>
+                <a
+                  href="tel:+919092303060"
+                  className="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
+                >
+                  <span>+91 90923 03060</span>
+                  <span className="text-[10px] text-amber-600 dark:text-amber-400 font-bold">Line 3</span>
+                </a>
               </div>
             )}
           </div>
-        ))}
+        </div>
+      </header>
 
-        {loading && (
-          <div className="flex items-center gap-2 text-xs font-medium text-amber-400 bg-slate-900/80 border border-slate-800 px-3 py-2 rounded-xl w-fit">
-            <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-            <span>Calculating rate & itinerary with master tariff...</span>
+      {/* ───────────────────────────────────────────────────────────── */}
+      {/* MAIN THREAD: Welcome Hero OR Active Chat Bubbles              */}
+      {/* ───────────────────────────────────────────────────────────── */}
+      <main className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 text-sm bg-slate-50/60 dark:bg-[#131314] scroll-smooth">
+        {messages.length === 0 ? (
+          /* Initial Welcome Hero State matching AiFareAssistantModal */
+          <div className="py-6 px-2 flex flex-col items-center text-center select-none max-w-2xl mx-auto">
+            <div className="relative mb-3 flex items-center justify-center">
+              <div className="w-14 h-14 rounded-2xl bg-[#D97706]/10 dark:bg-amber-950/40 border border-[#D97706]/25 dark:border-amber-500/30 shadow-md flex items-center justify-center">
+                <svg className="w-7 h-7 text-[#D97706] dark:text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" fillOpacity="0.2" />
+                </svg>
+              </div>
+            </div>
+
+            <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white mb-1.5">
+              Plan Your Journey with Kalidass
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-md leading-relaxed mb-6">
+              Instant tariff calculations, verified outstation rates, and clean WhatsApp replies without messy symbols.
+            </p>
+
+            {/* Vertically Stacked Prompt Starter Cards */}
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-left">
+              {STARTER_PROMPTS.map((sp, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => handleSend(sp.prompt)}
+                  className="w-full p-3 rounded-2xl bg-white dark:bg-[#1E1F20] hover:bg-blue-50/60 dark:hover:bg-[#28292D] border border-slate-200 dark:border-white/10 hover:border-blue-400/60 transition-all duration-200 cursor-pointer active:scale-[0.99] flex items-center justify-between gap-3 shadow-xs hover:shadow-md group text-left"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-800 dark:text-white flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition-transform">
+                      {sp.icon}
+                    </span>
+                    <div className="min-w-0">
+                      <div className="font-bold text-xs text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">
+                        {sp.title}
+                      </div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                        {sp.desc}
+                      </div>
+                    </div>
+                  </div>
+                  <svg className="w-4 h-4 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-0.5 transition-all shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              ))}
+            </div>
+
+            <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-6 max-w-sm leading-normal">
+              100% verified rates follow the official Kalidass Travels rate card. Output is formatted for direct WhatsApp sharing.
+            </p>
+          </div>
+        ) : (
+          /* Active Chat Thread */
+          <div className="space-y-4 max-w-3xl mx-auto">
+            {messages.map((m) => {
+              const isUser = m.role === 'user';
+              return (
+                <div
+                  key={m.id}
+                  className={`flex items-start gap-3 w-full ${isUser ? 'justify-end' : 'justify-start'}`}
+                >
+                  {!isUser && (
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#4285F4]/20 via-[#9B72CB]/20 to-[#D96570]/20 border border-slate-200 dark:border-white/10 flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                      <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" />
+                      </svg>
+                    </div>
+                  )}
+
+                  <div className={`max-w-[88%] sm:max-w-[80%] ${isUser ? 'ml-auto' : ''}`}>
+                    <div
+                      className={`p-4 rounded-2xl shadow-xs leading-normal ${
+                        isUser
+                          ? 'bg-blue-600 text-white rounded-tr-xs font-medium text-xs sm:text-sm whitespace-pre-wrap'
+                          : 'bg-white dark:bg-[#1E1F20] text-slate-800 dark:text-slate-100 rounded-tl-xs border border-slate-200 dark:border-white/10'
+                      }`}
+                    >
+                      {isUser ? (
+                        m.content
+                      ) : (
+                        <div className="space-y-1">
+                          {renderMessageContent(m.content)}
+
+                          {/* Action Buttons under every Assistant Message */}
+                          <div className="pt-3 mt-3 border-t border-slate-200 dark:border-white/10 flex flex-wrap items-center justify-between gap-2">
+                            <div className="flex items-center gap-2">
+                              {/* Open in WhatsApp */}
+                              <button
+                                type="button"
+                                onClick={() => handleOpenWhatsApp(m.content)}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#25D366] hover:bg-[#20ba5a] active:scale-95 text-white text-xs font-bold shadow-xs transition-all cursor-pointer"
+                                title="Open this clean message in WhatsApp"
+                              >
+                                <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                                  <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.969.586 1.761.882 2.796.883h.005c3.179 0 5.767-2.587 5.767-5.766.001-3.187-2.575-5.77-5.772-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.353.101.173.449.741.964 1.201.663.591 1.221.774 1.394.86.173.086.275.072.376-.043.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.203c.044.072.044.419-.1.824z" />
+                                </svg>
+                                <span>Send via WhatsApp</span>
+                              </button>
+
+                              {/* Copy Clean WhatsApp Text */}
+                              <button
+                                type="button"
+                                onClick={() => handleCopy(m.id, m.content)}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 text-slate-700 dark:text-slate-200 text-xs font-semibold transition-all cursor-pointer active:scale-95"
+                                title="Copy clean plain text without any markdown or hashtags"
+                              >
+                                {copiedId === m.id ? (
+                                  <>
+                                    <svg className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                      <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                    <span className="text-emerald-600 dark:text-emerald-400 font-bold">Copied!</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                    </svg>
+                                    <span>Copy Clean Text</span>
+                                  </>
+                                )}
+                              </button>
+                            </div>
+
+                            <span className="text-[10px] text-slate-400">{m.timestamp}</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+
+            {loading && (
+              <div className="flex items-start gap-3 w-full animate-pulse">
+                <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0">
+                  <span className="w-2 h-2 rounded-full bg-blue-600 animate-ping"></span>
+                </div>
+                <div className="bg-white dark:bg-[#1E1F20] border border-slate-200 dark:border-white/10 px-4 py-3 rounded-2xl rounded-tl-xs shadow-xs text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-bounce"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-bounce [animation-delay:0.2s]"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-bounce [animation-delay:0.4s]"></span>
+                  <span>Calculating verified tariff & clean WhatsApp format...</span>
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
           </div>
         )}
-
-        <div ref={messagesEndRef} />
       </main>
 
-      {/* Target Phone Modal (Optional popup if customer phone was not in text) */}
-      {phoneModalMsg && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 max-w-sm w-full space-y-4 shadow-2xl">
-            <h3 className="font-bold text-sm text-white">Send Quote via WhatsApp</h3>
-            <p className="text-xs text-slate-400">
-              Enter the customer phone number or tap 'Open WhatsApp' to pick a contact:
-            </p>
-            <input
-              type="tel"
-              placeholder="+91 or 10-digit customer mobile"
-              value={targetPhone}
-              onChange={(e) => setTargetPhone(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
-            />
-            <div className="flex items-center gap-2 pt-1">
+      {/* ───────────────────────────────────────────────────────────── */}
+      {/* BOTTOM ACTION & INPUT BAR (Google Ask Gemini Design)           */}
+      {/* ───────────────────────────────────────────────────────────── */}
+      <footer className="p-3 sm:p-4 bg-white dark:bg-[#131314] border-t border-slate-200 dark:border-white/10 shrink-0">
+        {/* Voice Listening Status Banner */}
+        {isRecording && (
+          <div className="mb-2 px-3 py-1.5 rounded-2xl bg-red-500/10 dark:bg-red-500/15 border border-red-500/30 flex items-center justify-between text-xs text-red-600 dark:text-red-400 shadow-xs transition-all">
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600"></span>
+              </span>
+              <span className="font-semibold text-xs">Listening... Speak your trip query</span>
+            </div>
+            <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => {
-                  openWhatsApp(phoneModalMsg, targetPhone);
-                  setPhoneModalMsg(null);
-                  setTargetPhone('');
+                  recognitionRef.current?.stop();
+                  setIsRecording(false);
+                  if (input.trim()) handleSend(input.trim());
                 }}
-                className="flex-1 bg-emerald-600 hover:bg-emerald-500 font-bold text-xs text-white py-2.5 rounded-xl transition-all"
+                className="px-2.5 py-0.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold cursor-pointer"
               >
-                Open in WhatsApp ➔
+                Done
               </button>
               <button
                 type="button"
-                onClick={() => setPhoneModalMsg(null)}
-                className="bg-slate-800 text-slate-300 font-semibold text-xs px-3 py-2.5 rounded-xl"
+                onClick={() => {
+                  recognitionRef.current?.stop();
+                  setIsRecording(false);
+                }}
+                className="px-2.5 py-0.5 rounded-full bg-slate-200 dark:bg-white/10 text-slate-700 dark:text-slate-200 text-[10px] font-semibold cursor-pointer"
               >
                 Cancel
               </button>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Bottom Sticky Input Bar */}
-      <footer className="flex-none bg-slate-900 border-t border-slate-800 p-2 sm:p-3 sticky bottom-0 z-30">
+        {/* Quick Suggestion Chips */}
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-2 select-none">
+          {QUICK_CHIPS.map((chip, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => handleSend(chip.prompt)}
+              className="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 text-slate-700 dark:text-slate-300 text-[11px] font-semibold whitespace-nowrap transition-all active:scale-95 shrink-0 cursor-pointer border border-transparent hover:border-slate-300 dark:hover:border-white/20"
+            >
+              {chip.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Capsule Input Field */}
         <form
           onSubmit={(e) => {
             e.preventDefault();
             handleSend();
           }}
-          className="flex items-end gap-2"
+          className="relative flex items-center bg-slate-100 dark:bg-[#1E1F20] rounded-full border border-slate-200 dark:border-white/10 focus-within:border-blue-500/80 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all p-1.5 shadow-2xs"
         >
-          {/* Voice Mic Button */}
+          {/* Voice Microphone Toggle */}
           <button
             type="button"
             onClick={toggleRecording}
-            className={`flex-none w-11 h-11 rounded-xl flex items-center justify-center transition-all ${
+            className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer ${
               isRecording
-                ? 'bg-rose-600 text-white animate-pulse shadow-lg shadow-rose-600/30'
-                : 'bg-slate-800 hover:bg-slate-700 text-slate-300 active:scale-95'
+                ? 'bg-red-600 text-white animate-pulse'
+                : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/10'
             }`}
-            title="Tap to speak"
+            title="Speak your query"
           >
-            <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
               <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
               <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
             </svg>
           </button>
 
-          {/* Text Input Area */}
-          <div className="flex-1 min-w-0 bg-slate-950 border border-slate-800 focus-within:border-amber-400 rounded-xl px-3 py-1.5 transition-all">
-            <textarea
-              rows={input.includes('\n') ? 3 : 1}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSend();
-                }
-              }}
-              placeholder={isRecording ? 'Listening... Speak now...' : 'Paste WhatsApp notes or ask a quote...'}
-              className="w-full bg-transparent text-[13px] text-white placeholder-slate-500 focus:outline-none resize-none leading-relaxed"
-            />
-          </div>
+          {/* Text Input */}
+          <input
+            ref={inputRef}
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Ask about rates, outstation plans, or paste WhatsApp notes..."
+            className="flex-1 bg-transparent px-3 py-1.5 text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none min-w-0"
+            disabled={loading}
+          />
 
           {/* Send Button */}
           <button
             type="submit"
             disabled={!input.trim() || loading}
-            className="flex-none w-11 h-11 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-30 disabled:hover:bg-amber-500 text-slate-950 font-bold flex items-center justify-center active:scale-95 transition-all shadow-md shadow-amber-500/20"
+            className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer ${
+              input.trim() && !loading
+                ? 'bg-[#D97706] hover:bg-[#B45309] text-white shadow-xs active:scale-95'
+                : 'text-slate-300 dark:text-slate-600 cursor-not-allowed'
+            }`}
+            title="Send query"
           >
-            <svg className="w-5 h-5 fill-current rotate-45 -mt-0.5" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 fill-current rotate-90" viewBox="0 0 24 24">
               <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
             </svg>
           </button>
@@ -501,4 +661,3 @@ Tap any quick chip below or type/speak your request:`,
     </div>
   );
 }
-

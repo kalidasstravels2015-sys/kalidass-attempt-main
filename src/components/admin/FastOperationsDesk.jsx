@@ -1075,7 +1075,7 @@ Warm regards,
           {/* VIEW 0: 24/7 MOBILE AI CO-PILOT                           */}
           {/* ========================================================= */}
           {activeNav === 'copilot' && (
-            <div className="rounded-2xl overflow-hidden border border-slate-800 shadow-2xl max-w-2xl mx-auto h-[82vh] animate-fadeIn">
+            <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-xl max-w-4xl mx-auto h-[85vh] animate-fadeIn">
               <MobileDispatchCopilot />
             </div>
           )}

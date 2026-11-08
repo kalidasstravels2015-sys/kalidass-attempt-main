@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import tariffConfig from '../../../data/tariff_config.json' with { type: 'json' };
 import driversRoster from '../../../data/drivers_roster.json' with { type: 'json' };
+import { cleanWhatsAppText } from '../../../utils/cleanWhatsAppText';
 
 export const prerender = false;
 
@@ -25,6 +26,13 @@ You are assisting the owner/operator on mobile when they are outstation or on th
 ======================================================================
 CORE OPERATIONAL RULES (ZERO AI GIMMICKS - 100% FACTUAL & GROUNDED):
 ======================================================================
+0. ZERO IRRITATING MARKDOWN (#, ###) & ZERO EXCESS ASTERISKS (*):
+   - NEVER use markdown headers (#, ##, ###, ####). WhatsApp does NOT render hashtags; it displays ugly raw "###" symbols that confuse and irritate customers!
+   - NEVER clutter lines with asterisks (FORBIDDEN: "*Car:*", "*Luggage:*", "*Day 1:*").
+   - Use clean plain headers: e.g. "1. Cab & Luggage Details" or "TOUR PLAN (DAY-BY-DAY):".
+   - Use clean bullet points (•) and clean spacing.
+   - Output must be 100% human-friendly, polite, and pleasant to read on WhatsApp.
+
 1. NEVER INVENT FAKE DATA:
    - Absolutely NEVER invent fake customer names, dummy hotels (e.g. NEVER mention 'Green Park Hotel' or 'Kapaleeshwarar Temple' unless the user wrote those names in their message).
    - NEVER assume fake dates or passenger counts. Extract real details from the user's message.
@@ -152,7 +160,7 @@ export async function processCopilotQuery(params: { message: string; history?: a
         const data = await res.json();
         const candidateText = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
         if (candidateText) {
-          finalReply = candidateText;
+          finalReply = cleanWhatsAppText(candidateText);
           usedModel = model;
           break;
         }

@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import fs from 'node:fs';
 import path from 'node:path';
 import { processAiConciergeQuery, type ChatMessage } from '../../lib/aiConciergeEngine';
+import { cleanWhatsAppText } from '../../utils/cleanWhatsAppText';
 
 export const prerender = false;
 
@@ -14,6 +15,13 @@ Your mission is to give 100% accurate quotes strictly following Kalidass Travels
 ======================================================================
 STRICT CORE RULES (ZERO TOLERANCE - YOU MUST ALWAYS OBEY):
 ======================================================================
+0. ZERO IRRITATING MARKDOWN (#, ###) & ZERO EXCESS ASTERISKS (*):
+   - NEVER use markdown headers (#, ##, ###, ####). WhatsApp does NOT render hashtags; it displays ugly raw "###" symbols that confuse and irritate customers!
+   - NEVER clutter lines with asterisks (FORBIDDEN: "*Car:*", "*Luggage:*", "*Day 1:*").
+   - Use clean capitalized headings: e.g. "1. Cab & Luggage Details" or "TOUR PLAN (DAY-BY-DAY):".
+   - Use clean bullet points (•) and clean spacing.
+   - Text must be 100% human-friendly, polite, and pleasant to read on WhatsApp.
+
 1. ALWAYS 4TH-GRADE ENGLISH:
    - Always reply in simple, clear, 4th-grade English (or simple Tamil/Tanglish if asked in Tamil).
    - Use simple words that a 9-year-old child understands.
@@ -274,9 +282,10 @@ export const POST: APIRoute = async ({ request }) => {
               const data = await res.json();
               const candidate = data.candidates?.[0]?.content?.parts?.[0]?.text;
               if (candidate) {
-                recordChatQuery(candidate, 'gemini_' + modelName);
+                const cleanedReply = cleanWhatsAppText(candidate);
+                recordChatQuery(cleanedReply, 'gemini_' + modelName);
                 return new Response(
-                  JSON.stringify({ success: true, reply: candidate, source: 'gemini', model: modelName }),
+                  JSON.stringify({ success: true, reply: cleanedReply, source: 'gemini', model: modelName }),
                   {
                     status: 200,
                     headers: { 'Content-Type': 'application/json; charset=utf-8' }
@@ -291,9 +300,10 @@ export const POST: APIRoute = async ({ request }) => {
 
     // 2. Autonomous Grounded Concierge Engine with pageContext
     const { reply, source, meta } = processAiConciergeQuery(messages, pageContext);
-    recordChatQuery(reply, source || 'concierge_engine');
+    const cleanedReply = cleanWhatsAppText(reply);
+    recordChatQuery(cleanedReply, source || 'concierge_engine');
     return new Response(
-      JSON.stringify({ success: true, reply, source, meta }),
+      JSON.stringify({ success: true, reply: cleanedReply, source, meta }),
       {
         status: 200,
         headers: { 'Content-Type': 'application/json; charset=utf-8' }
