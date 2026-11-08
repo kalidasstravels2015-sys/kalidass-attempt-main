@@ -1,3 +1,7 @@
+// SAFETY LOCK: Automatic background WhatsApp bot has been disabled to prevent unauthorized message dispatch.
+console.error("🛑 WhatsApp Auto-Bot is disabled for safety. Use the Dispatch Co-Pilot web dashboard instead.");
+process.exit(0);
+
 import { makeWASocket, useMultiFileAuthState, DisconnectReason, downloadMediaMessage, jidNormalizedUser } from '@whiskeysockets/baileys';
 import qrcodeTerminal from 'qrcode-terminal';
 import QRCode from 'qrcode';
@@ -22,6 +26,8 @@ function updateStatus(data) {
 
 // Track sent messages to avoid any self-echo loops
 const sentMessageIds = new Set();
+// Record process start time to ignore historical synced messages
+const botStartTime = Math.floor(Date.now() / 1000);
 
 async function startWhatsAppBot() {
   console.log('\n======================================================');
@@ -84,6 +90,12 @@ async function startWhatsAppBot() {
     // Process messages regardless of type ('notify' or 'append' for self-messages)
     for (const m of messages) {
       if (!m.message) continue;
+
+      // Ignore historical messages from before bot started (allow 10 sec buffer)
+      const msgTimestamp = Number(m.messageTimestamp || 0);
+      if (msgTimestamp && msgTimestamp < (botStartTime - 10)) {
+        continue;
+      }
 
       // Skip messages sent by this bot instance
       if (m.key?.id && sentMessageIds.has(m.key.id)) continue;

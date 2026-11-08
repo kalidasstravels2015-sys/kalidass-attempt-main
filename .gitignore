@@ -48,6 +48,8 @@ download-font.cjs
 verify_fare.js
 
 # Runtime customer logs, calculations, duty slips, and operational data (SENSITIVE - NEVER COMMIT)
+data/whatsapp_session/
+data/whatsapp_status.json
 Kalidass_Calculations_Log_*.csv
 Kalidass_Operations_Control_*.csv
 Kalidass_Ai_Chat_Queries_*.csv

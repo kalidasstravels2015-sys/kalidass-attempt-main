@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import MobileDispatchCopilot from './MobileDispatchCopilot.jsx';
 import tariffConfig from '../../data/tariff_config.json' with { type: 'json' };
 import driversRosterData from '../../data/drivers_roster.json' with { type: 'json' };
 import { getFormattedDateCode } from '../../utils/sequenceGenerator.js';
@@ -840,6 +841,7 @@ Warm regards,
   // Navigation Items Config
   const NAV_ITEMS = [
     { id: 'dispatch', label: 'Live Dispatch Desk', icon: 'view_kanban', badge: unassignedTrips.length },
+    { id: 'copilot', label: '24/7 Mobile AI Co-Pilot', icon: 'smart_toy' },
     { id: 'quotes', label: 'Rate & Quote Generator', icon: 'calculate' },
     { id: 'new-booking', label: 'New Booking Entry', icon: 'add_circle' },
     { id: 'drivers', label: 'Drivers & Fleet Roster', icon: 'badge', badge: drivers.length },
@@ -1025,6 +1027,16 @@ Warm regards,
 
           {/* Quick Header Actions */}
           <div className="flex items-center gap-2">
+            <a
+              href="/copilot"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 rounded-lg text-xs font-bold shadow-md shadow-amber-500/20 flex items-center gap-1.5 transition active:scale-95"
+            >
+              <span className="material-symbols-outlined text-sm">smart_toy</span>
+              <span className="hidden sm:inline">24/7 Mobile AI Co-Pilot</span>
+              <span className="sm:hidden">AI Co-Pilot</span>
+            </a>
             {googleSheetUrl && (
               <button
                 onClick={() => fetchTripsFromGoogleSheet()}
@@ -1058,6 +1070,15 @@ Warm regards,
 
         {/* MAIN BODY AREA (ONE FOCUSED VIEW AT A TIME) */}
         <main className="p-4 sm:p-6 max-w-7xl w-full mx-auto flex-1 space-y-6">
+
+          {/* ========================================================= */}
+          {/* VIEW 0: 24/7 MOBILE AI CO-PILOT                           */}
+          {/* ========================================================= */}
+          {activeNav === 'copilot' && (
+            <div className="rounded-2xl overflow-hidden border border-slate-800 shadow-2xl max-w-2xl mx-auto h-[82vh] animate-fadeIn">
+              <MobileDispatchCopilot />
+            </div>
+          )}
 
           {/* ========================================================= */}
           {/* VIEW 1: LIVE DISPATCH DESK                                */}

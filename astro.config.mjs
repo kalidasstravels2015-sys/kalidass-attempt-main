@@ -400,6 +400,25 @@ ${promptCtx}`;
               return;
             }
 
+            if (req.method === 'POST' && (url === '/api/admin/copilot' || url === '/api/admin/copilot/')) {
+              let body = '';
+              req.on('data', (chunk) => { body += chunk; });
+              req.on('end', async () => {
+                try {
+                  const data = JSON.parse(body || '{}');
+                  const { processCopilotQuery } = await import('./src/pages/api/admin/copilot.ts?t=' + Date.now());
+                  const result = await processCopilotQuery(data);
+                  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                  res.end(JSON.stringify(result));
+                } catch (err) {
+                  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                  res.statusCode = 500;
+                  res.end(JSON.stringify({ success: false, error: err.message }));
+                }
+              });
+              return;
+            }
+
             if (req.method === 'POST' && url === '/api/record-booking') {
               let body = '';
               req.on('data', (chunk) => { body += chunk; });

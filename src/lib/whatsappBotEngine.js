@@ -176,7 +176,7 @@ export async function processWhatsAppMessage(incomingText = '', audioBuffer = nu
           contents,
           generationConfig: {
             temperature: 0.2,
-            maxOutputTokens: 1200
+            maxOutputTokens: 4000
           }
         })
       }

@@ -4,6 +4,8 @@ import path from 'node:path';
 
 export const prerender = false;
 
+let inMemoryWebhookUrl = '';
+
 function getEnvUrl(): string {
   try {
     const envPath = path.resolve(process.cwd(), '.env');
