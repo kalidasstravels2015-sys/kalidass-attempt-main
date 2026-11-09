@@ -27,9 +27,19 @@ export function cleanWhatsAppText(text) {
   // 6. Clean up bullets: normalize '-', '*' at start of line to clean bullet '• '
   clean = clean.replace(/^\s*[\-\*]\s+/gm, '• ');
 
-  // 7. Remove markdown links [Text](url) -> Text (url) or just Text if anchor
-  clean = clean.replace(/\[([^\]]+)\]\((?:https?:\/\/[^\s)]+|[^)]+)\)/g, (match, title, url) => {
-    if (url.startsWith('/')) return title;
+  // 7. Strip out any WhatsApp click-to-chat links (wa.me or api.whatsapp.com) and associated CTA text
+  // e.g. "📲 Send route on WhatsApp for quick quote (https://wa.me/...)"
+  // e.g. "📲 WhatsApp us for instant booking (https://wa.me/...)"
+  // e.g. "[👉 Confirm Booking on WhatsApp](https://wa.me/...)"
+  clean = clean.replace(/\[(?:[^\]]*?(?:WhatsApp|quote|booking|route)[^\]]*?)\]\((?:https?:\/\/)?(?:wa\.me|api\.whatsapp\.com)[^\)]*\)/gi, '');
+  clean = clean.replace(/^[•\s\-\*📲👉]*.*?(?:https?:\/\/)?(?:wa\.me|api\.whatsapp\.com)[^\r\n]*(?:\r?\n|$)/gmi, '');
+  clean = clean.replace(/\(https?:\/\/(?:wa\.me|api\.whatsapp\.com)[^)]*\)/gi, '');
+  clean = clean.replace(/^[•\s\-\*📲👉]*(?:Send route on WhatsApp[^\r\n]*|WhatsApp us for[^\r\n]*|Confirm (?:this tour|booking) on WhatsApp[^\r\n]*|Book on WhatsApp[^\r\n]*)(?:\r?\n|$)/gmi, '');
+
+  // 8. Remove markdown links [Text](url) -> Text (url) or just Text if anchor
+  clean = clean.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, title, rawUrl) => {
+    const url = typeof rawUrl === 'string' ? rawUrl.trim() : '';
+    if (!url || url.startsWith('/') || url.startsWith('#')) return title;
     return `${title} (${url})`;
   });
 

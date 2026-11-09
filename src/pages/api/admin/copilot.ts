@@ -99,7 +99,12 @@ CORE OPERATIONAL RULES (ZERO AI GIMMICKS - 100% FACTUAL & GROUNDED):
    Format an official forwardable *KALIDASS TRAVELS — OFFICIAL DRIVER DUTY SLIP* with Customer, Reporting Time, Pickup, Vehicle, Balance to Collect, and Helpline.
 
 6. ALTERING / DISCOUNTING:
-   If user asks to alter rates (e.g. "make sedan 2400", "give 10% discount"), apply the revision to the active quote.`;
+   If user asks to alter rates (e.g. "make sedan 2400", "give 10% discount"), apply the revision to the active quote.
+
+7. ZERO WHATSAPP SELF-LINKS OR REDUNDANT CALL-TO-ACTIONS:
+   - NEVER append phrases like "Send route on WhatsApp for quick quote" or "WhatsApp us for instant booking".
+   - NEVER append links to "https://wa.me/...".
+   - You are generating a clean quote for the dispatcher to send directly to the customer on WhatsApp. Adding links to message themselves on WhatsApp is redundant and confusing.`;
 
 export async function processCopilotQuery(params: { message: string; history?: any[]; phone?: string }) {
   const promptText = (params.message || '').trim();

@@ -132,14 +132,13 @@ export default function MobileDispatchCopilot() {
     setLoading(true);
 
     try {
-      // 1. Try backend /api/ai-chat with grounded engine + Gemini fallback
-      const res = await fetch('/api/ai-chat', {
+      // 1. Try dedicated Mobile Dispatch Copilot endpoint (/api/admin/copilot)
+      const res = await fetch('/api/admin/copilot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: newHistory.map(m => ({ role: m.role, content: m.content })),
-          sessionId: `OPS-COPILOT-${Date.now()}`,
-          sourcePage: '/admin/copilot'
+          message: query,
+          history: newHistory.map(m => ({ role: m.role, content: m.content }))
         })
       });
 
@@ -151,14 +150,15 @@ export default function MobileDispatchCopilot() {
         }
       }
 
-      // If backend failed, fallback to client-side direct API or fallback endpoint
+      // 2. Fallback to /api/ai-chat if copilot endpoint is unreachable
       if (!replyText) {
-        const fallbackRes = await fetch('/api/admin/copilot', {
+        const fallbackRes = await fetch('/api/ai-chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            message: query,
-            history: newHistory.map(m => ({ role: m.role, content: m.content }))
+            messages: newHistory.map(m => ({ role: m.role, content: m.content })),
+            sessionId: `OPS-COPILOT-${Date.now()}`,
+            sourcePage: '/admin/copilot'
           })
         });
         if (fallbackRes.ok) {
@@ -174,7 +174,12 @@ export default function MobileDispatchCopilot() {
       }
 
       // Strictly clean text for WhatsApp: NO ###, NO excess asterisks!
-      const cleanReply = cleanWhatsAppText(replyText);
+      let cleanReply = replyText;
+      try {
+        cleanReply = cleanWhatsAppText(replyText);
+      } catch (e) {
+        console.warn('cleanWhatsAppText error:', e);
+      }
 
       setMessages((prev) => [
         ...prev,
@@ -186,6 +191,7 @@ export default function MobileDispatchCopilot() {
         }
       ]);
     } catch (err) {
+      console.error('Co-Pilot dispatch error:', err);
       setMessages((prev) => [
         ...prev,
         {
@@ -231,6 +237,11 @@ export default function MobileDispatchCopilot() {
       // Empty line -> space
       if (!trimmed) {
         elements.push(<div key={`sp-${idx}`} className="h-2" />);
+        return;
+      }
+
+      // Filter out redundant WhatsApp click-to-chat lines
+      if (/(?:wa\.me|api\.whatsapp\.com|send route on whatsapp|whatsapp us for|confirm on whatsapp|book on whatsapp)/i.test(trimmed)) {
         return;
       }
 

@@ -125,11 +125,11 @@ export default function FastOperationsDesk() {
   const [pinError, setPinError] = useState(false);
 
   // Active View / Navigation State
-  // Valid views: 'dispatch' | 'quotes' | 'new-booking' | 'drivers' | 'settlements' | 'settings'
+  // Valid views: 'dispatch' | 'copilot' | 'quotes' | 'new-booking' | 'drivers' | 'settlements' | 'settings'
   const [activeNav, setActiveNav] = useState(() => {
     if (typeof window !== 'undefined' && window.location.hash) {
       const hash = window.location.hash.replace('#', '');
-      if (['dispatch', 'quotes', 'new-booking', 'drivers', 'settlements', 'settings'].includes(hash)) {
+      if (['dispatch', 'copilot', 'quotes', 'new-booking', 'drivers', 'settlements', 'settings'].includes(hash)) {
         return hash;
       }
     }
@@ -1027,16 +1027,6 @@ Warm regards,
 
           {/* Quick Header Actions */}
           <div className="flex items-center gap-2">
-            <a
-              href="/copilot"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-3 py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 rounded-lg text-xs font-bold shadow-md shadow-amber-500/20 flex items-center gap-1.5 transition active:scale-95"
-            >
-              <span className="material-symbols-outlined text-sm">smart_toy</span>
-              <span className="hidden sm:inline">24/7 Mobile AI Co-Pilot</span>
-              <span className="sm:hidden">AI Co-Pilot</span>
-            </a>
             {googleSheetUrl && (
               <button
                 onClick={() => fetchTripsFromGoogleSheet()}
