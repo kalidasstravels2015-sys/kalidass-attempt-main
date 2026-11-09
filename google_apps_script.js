@@ -84,8 +84,7 @@ function setupSheets() {
       'Category',
       'Fleet / License Details',
       'Operating Area',
-      'Driving License (Drive Link)',
-      'RC Book (Drive Link)',
+      'Google Drive Folder',
       'Status',
       'Notes'
     ];
@@ -248,7 +247,6 @@ function doPost(e) {
     var enqSheet = sheets.enqSheet;
     var bookSheet = sheets.bookSheet;
     var driverSheet = sheets.driverSheet;
-    var driverSheet = sheets.driverSheet;
 
     var isDriverLead = data.type === 'driver_lead' ||
                        Boolean(data.leadId && String(data.leadId).indexOf('DRV') !== -1) ||
@@ -270,26 +268,81 @@ function doPost(e) {
       var city = data.city || data.pickup || 'Chennai';
       var notes = data.notes || data.drop || '';
 
-      var dlDriveUrl = 'Not Uploaded';
-      var rcDriveUrl = 'Not Uploaded';
+      // 1. Create dedicated applicant folder in Google Drive
+      var folder = getOrCreateApplicantFolder(leadId, name, cleanPhone, category);
+      var folderUrl = folder.getUrl();
 
+      // 2. Save Driving License Photo
       if (data.dlFile && data.dlFile.base64) {
-        dlDriveUrl = saveDocumentToGoogleDrive(data.dlFile.base64, leadId + '-DL.jpg', data.dlFile.mimeType || 'image/jpeg');
+        saveBase64ToFolder(folder, data.dlFile.base64, leadId + '-DL-License.jpg', data.dlFile.mimeType || 'image/jpeg');
       }
+
+      // 3. Save RC Book Photo
       if (data.rcFile && data.rcFile.base64) {
-        rcDriveUrl = saveDocumentToGoogleDrive(data.rcFile.base64, leadId + '-RC.jpg', data.rcFile.mimeType || 'image/jpeg');
+        saveBase64ToFolder(folder, data.rcFile.base64, leadId + '-RC-Book.jpg', data.rcFile.mimeType || 'image/jpeg');
       }
+
+      // 4. Save Car Front Photo
+      if (data.carFile && data.carFile.base64) {
+        saveBase64ToFolder(folder, data.carFile.base64, leadId + '-CAR-Front-Plate.jpg', data.carFile.mimeType || 'image/jpeg');
+      }
+
+      // 5. Create Applicant Summary Text File in the folder
+      var summaryText = [
+        '=====================================================',
+        '  KALIDASS TRAVELS — DRIVER / CAB ATTACHMENT DETAILS',
+        '=====================================================',
+        'Reference ID       : ' + leadId,
+        'Submission Date    : ' + timestamp,
+        'Applicant Name     : ' + name,
+        'Phone Number       : ' + (cleanPhone ? '+91 ' + cleanPhone : 'Not Provided'),
+        'Category           : ' + category,
+        'Vehicle / License  : ' + details,
+        'Operating Area     : ' + city,
+        'Review Status      : Pending Review',
+        'Additional Notes   : ' + (notes || 'None'),
+        'Drive Folder Link  : ' + folderUrl,
+        '=====================================================',
+        'Official Portal    : https://kalidasstravels.in/attach-cab/',
+        'Dispatch Desk      : +91 90923 03060 / +91 89395 39211'
+      ].join('\n');
+      folder.createFile('Applicant_Details.txt', summaryText, 'text/plain');
+
+      // 6. Ensure header structure in Driver Leads sheet
+      var dHeaders = [
+        'Lead ID',
+        'Timestamp',
+        'Applicant Name',
+        'Phone Number',
+        'Category',
+        'Fleet / License Details',
+        'Operating Area',
+        'Google Drive Folder',
+        'Status',
+        'Notes'
+      ];
+      if (dLast <= 1) {
+        driverSheet.clearContents();
+        driverSheet.appendRow(dHeaders);
+        driverSheet.getRange(1, 1, 1, dHeaders.length).setFontWeight('bold').setBackground('#673ab7').setFontColor('#ffffff');
+        driverSheet.setFrozenRows(1);
+      } else {
+        driverSheet.getRange(1, 1, 1, dHeaders.length).setValues([dHeaders]);
+        driverSheet.getRange(1, 1, 1, dHeaders.length).setFontWeight('bold').setBackground('#673ab7').setFontColor('#ffffff');
+      }
+
+      var folderHyperlink = '=HYPERLINK("' + folderUrl + '", "📂 Open Drive Folder")';
+      var cleanPhoneCell = cleanPhone ? ("'" + cleanPhone) : '';
 
       var dRowData = [
         leadId,
         timestamp,
         name,
-        cleanPhone ? "'+91 " + cleanPhone : '',
+        cleanPhoneCell,
         category,
         details,
         city,
-        dlDriveUrl,
-        rcDriveUrl,
+        folderHyperlink,
         'Pending Review',
         notes
       ];
@@ -300,8 +353,7 @@ function doPost(e) {
         .createTextOutput(JSON.stringify({
           success: true,
           leadId: leadId,
-          dlDriveUrl: dlDriveUrl,
-          rcDriveUrl: rcDriveUrl,
+          driveFolderUrl: folderUrl,
           action: 'created'
         }))
         .setMimeType(ContentService.MimeType.JSON);
@@ -716,16 +768,35 @@ function syncBookingToGoogleCalendar(b) {
 }
 
 /**
- * Save Base64 file into Google Drive in designated folder
+ * Create or get a dedicated subfolder for an applicant inside the Master Folder:
+ * Master: "Kalidass Driver & Cab Attachments"
+ * Subfolder: "[#KT-DRV-101] Saravanan - 9952749408 (Attach Car)"
  */
-function saveDocumentToGoogleDrive(base64Data, fileName, mimeType) {
+function getOrCreateApplicantFolder(leadId, name, phone, category) {
+  var masterFolderName = 'Kalidass Driver & Cab Attachments';
+  var masterFolders = DriveApp.getFoldersByName(masterFolderName);
+  var masterFolder = masterFolders.hasNext() ? masterFolders.next() : DriveApp.createFolder(masterFolderName);
+  
+  var cleanPhone = String(phone || '').replace(/[^0-9]/g, '').slice(-10);
+  var folderName = '[' + leadId + '] ' + (name || 'Driver') + (cleanPhone ? ' - ' + cleanPhone : '') + ' (' + (category || 'Lead') + ')';
+  
+  var subFolders = masterFolder.getFoldersByName(folderName);
+  var folder = subFolders.hasNext() ? subFolders.next() : masterFolder.createFolder(folderName);
+  
   try {
-    if (!base64Data) return 'Not Provided';
-    var cleanBase64 = String(base64Data).replace(/^data:image\/[a-z]+;base64,/, '');
-    var folderName = 'Kalidass Driver Documents';
-    var folders = DriveApp.getFoldersByName(folderName);
-    var folder = folders.hasNext() ? folders.next() : DriveApp.createFolder(folderName);
-    
+    folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  } catch (_) {}
+  
+  return folder;
+}
+
+/**
+ * Save Base64 file into a specific Google Drive folder
+ */
+function saveBase64ToFolder(folder, base64Data, fileName, mimeType) {
+  try {
+    if (!base64Data) return null;
+    var cleanBase64 = String(base64Data).replace(/^data:[a-zA-Z0-9\/\+\-]+;base64,/, '');
     var decoded = Utilities.base64Decode(cleanBase64);
     var blob = Utilities.newBlob(decoded, mimeType || 'image/jpeg', fileName);
     var file = folder.createFile(blob);
@@ -734,7 +805,7 @@ function saveDocumentToGoogleDrive(base64Data, fileName, mimeType) {
     } catch (_) {}
     return file.getUrl();
   } catch (err) {
-    return 'Drive Upload Error: ' + err.toString();
+    return null;
   }
 }
 

@@ -6,6 +6,8 @@ export const prerender = false;
 
 let devDriverSeq = 101;
 
+const DEFAULT_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzjPh0a2ju-Xv9KRFQ5gCg9s5Y4P8QR9C2rkO4nh4XYBBO5QD-tbKIXWcDav2ydgaUW/exec';
+
 function getEnvWebhook(): string {
   try {
     const envPath = path.resolve(process.cwd(), '.env');
@@ -15,7 +17,7 @@ function getEnvWebhook(): string {
       if (match && match[1]) return match[1].trim();
     }
   } catch (_) {}
-  return process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL || '';
+  return process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL || DEFAULT_WEBHOOK_URL;
 }
 
 export const POST: APIRoute = async ({ request }) => {
@@ -69,10 +71,9 @@ export const POST: APIRoute = async ({ request }) => {
       console.warn('Local document save error:', saveErr);
     }
 
-    // 2. Forward to Google Apps Script (Auto-save in Google Drive + Google Sheet)
+    // 2. Forward to Google Apps Script (Auto-save in dedicated applicant folder in Google Drive + Google Sheet)
     const webhookUrl = (data && data.webhookUrl) || getEnvWebhook();
-    let dlDriveUrl = '';
-    let rcDriveUrl = '';
+    let driveFolderUrl = '';
 
     if (webhookUrl && webhookUrl.startsWith('https://script.google.com/macros/s/')) {
       try {
@@ -95,15 +96,15 @@ export const POST: APIRoute = async ({ request }) => {
             city: data.city,
             notes: data.notes,
             dlFile: data.dlFile,
-            rcFile: data.rcFile
+            rcFile: data.rcFile,
+            carFile: data.carFile
           })
         });
 
         if (gRes.ok) {
           const gData = await gRes.json().catch(() => null);
           if (gData && gData.success) {
-            dlDriveUrl = gData.dlDriveUrl || '';
-            rcDriveUrl = gData.rcDriveUrl || '';
+            driveFolderUrl = gData.driveFolderUrl || '';
           }
         }
       } catch (gErr: any) {
@@ -115,10 +116,10 @@ export const POST: APIRoute = async ({ request }) => {
     const csvPath = path.resolve(process.cwd(), 'Kalidass_Driver_Leads_2026.csv');
     try {
       if (!fs.existsSync(csvPath)) {
-        fs.writeFileSync(csvPath, 'LeadID,Timestamp,Name,Phone,Category,CarCount,Cars,LicenseType,Experience,City,DL_Local,RC_Local,GoogleDrive_DL,GoogleDrive_RC,Notes\n', 'utf8');
+        fs.writeFileSync(csvPath, 'LeadID,Timestamp,Name,Phone,Category,CarCount,Cars,LicenseType,Experience,City,DL_Local,RC_Local,GoogleDrive_Folder,Notes\n', 'utf8');
       }
       const cleanNotes = (data.notes || '').replace(/"/g, '""');
-      const row = `${leadId},"${timestamp}","${data.name || ''}","${data.phone || ''}","${data.category || ''}","${data.carCount || ''}","${data.cars || ''}","${data.licenseType || ''}","${data.experience || ''}","${data.city || ''}","${dlLocalUrl}","${rcLocalUrl}","${dlDriveUrl}","${rcDriveUrl}","${cleanNotes}"\n`;
+      const row = `${leadId},"${timestamp}","${data.name || ''}","${data.phone || ''}","${data.category || ''}","${data.carCount || ''}","${data.cars || ''}","${data.licenseType || ''}","${data.experience || ''}","${data.city || ''}","${dlLocalUrl}","${rcLocalUrl}","${driveFolderUrl}","${cleanNotes}"\n`;
       fs.appendFileSync(csvPath, row, 'utf8');
     } catch (_) {}
 
@@ -128,8 +129,7 @@ export const POST: APIRoute = async ({ request }) => {
       timestamp,
       dlLocalUrl,
       rcLocalUrl,
-      dlDriveUrl,
-      rcDriveUrl
+      driveFolderUrl
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json; charset=utf-8' }

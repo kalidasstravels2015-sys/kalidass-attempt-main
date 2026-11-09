@@ -4,8 +4,9 @@
  */
 
 export const STORAGE_KEY_WEBHOOK_URL = 'kt_google_sheet_webhook_url';
+export const DEFAULT_GOOGLE_SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzjPh0a2ju-Xv9KRFQ5gCg9s5Y4P8QR9C2rkO4nh4XYBBO5QD-tbKIXWcDav2ydgaUW/exec';
 
-let memoryWebhookUrl = '';
+let memoryWebhookUrl = DEFAULT_GOOGLE_SHEET_WEBHOOK_URL;
 
 export function getActiveGoogleSheetUrl() {
   if (memoryWebhookUrl && memoryWebhookUrl.startsWith('http')) {
@@ -36,7 +37,7 @@ export function getActiveGoogleSheetUrl() {
     }
   }
 
-  return '';
+  return DEFAULT_GOOGLE_SHEET_WEBHOOK_URL;
 }
 
 export function saveActiveGoogleSheetUrl(url) {

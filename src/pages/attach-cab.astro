@@ -400,24 +400,25 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
 
           </div>
 
-          {/* 5. Document Photos (Direct Mobile Uploads) */}
+          {/* 5. Document Photos (Direct Mobile Uploads to Drive) */}
           <div class="space-y-3 pt-2 border-t border-m3-outline-variant/40">
             <div>
-              <label class="block text-xs font-bold text-m3-on-surface">
-                Document Photos (Upload on Form Only)
+              <label class="block text-xs font-bold text-m3-on-surface flex items-center justify-between">
+                <span>Upload Required Document Photos</span>
+                <span class="text-[11px] font-semibold text-m3-primary">Saved into Google Drive</span>
               </label>
               <p class="text-[11px] text-m3-on-surface-variant mt-0.5">
-                Capture photo using your phone camera or select from storage.
+                Capture photo using phone camera or select from storage. Files are automatically organized in your application folder.
               </p>
             </div>
 
-            {/* DL Photo */}
+            {/* DL Photo (Mandatory for all) */}
             <div class="flex items-center justify-between p-3 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 gap-3">
               <div class="flex items-center gap-2.5 min-w-0">
-                <BadgeCheck className="w-5 h-5 text-m3-on-surface-variant shrink-0" />
+                <BadgeCheck className="w-5 h-5 text-m3-primary shrink-0" />
                 <div class="truncate">
-                  <div class="text-xs font-bold text-m3-on-surface">Driving License (Front)</div>
-                  <div class="text-[10px] text-m3-on-surface-variant" id="dlFileStatus">No file chosen</div>
+                  <div class="text-xs font-bold text-m3-on-surface">Driving License Photo <span class="text-red-500">*</span></div>
+                  <div class="text-[10px] text-m3-on-surface-variant font-mono" id="dlFileStatus">Required (No file chosen)</div>
                 </div>
               </div>
               <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-md bg-white border border-m3-outline-variant text-xs font-semibold text-m3-on-surface hover:bg-m3-surface-container shadow-2xs transition-all shrink-0">
@@ -427,19 +428,35 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
               </label>
             </div>
 
-            {/* RC Photo (Car Owners Only) */}
+            {/* RC Photo (Mandatory for Car Owners) */}
             <div id="rcDocBox" class="flex items-center justify-between p-3 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 gap-3">
               <div class="flex items-center gap-2.5 min-w-0">
-                <FileText className="w-5 h-5 text-m3-on-surface-variant shrink-0" />
+                <FileText className="w-5 h-5 text-m3-primary shrink-0" />
                 <div class="truncate">
-                  <div class="text-xs font-bold text-m3-on-surface">Vehicle RC Book Photo</div>
-                  <div class="text-[10px] text-m3-on-surface-variant" id="rcFileStatus">No file chosen</div>
+                  <div class="text-xs font-bold text-m3-on-surface">Vehicle RC Book Photo <span class="text-red-500">*</span></div>
+                  <div class="text-[10px] text-m3-on-surface-variant font-mono" id="rcFileStatus">Required (No file chosen)</div>
                 </div>
               </div>
               <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-md bg-white border border-m3-outline-variant text-xs font-semibold text-m3-on-surface hover:bg-m3-surface-container shadow-2xs transition-all shrink-0">
                 <Camera className="w-3.5 h-3.5 shrink-0" />
                 <span>Select Photo</span>
                 <input type="file" id="rcFileInput" accept="image/*" capture="environment" class="hidden" />
+              </label>
+            </div>
+
+            {/* Car Front Photo with Number Plate (Mandatory for Car Owners) */}
+            <div id="carDocBox" class="flex items-center justify-between p-3 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 gap-3">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <Car className="w-5 h-5 text-m3-primary shrink-0" />
+                <div class="truncate">
+                  <div class="text-xs font-bold text-m3-on-surface">Car Front Photo with Number Plate <span class="text-red-500">*</span></div>
+                  <div class="text-[10px] text-m3-on-surface-variant font-mono" id="carFileStatus">Required (No file chosen)</div>
+                </div>
+              </div>
+              <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-md bg-white border border-m3-outline-variant text-xs font-semibold text-m3-on-surface hover:bg-m3-surface-container shadow-2xs transition-all shrink-0">
+                <Camera className="w-3.5 h-3.5 shrink-0" />
+                <span>Select Photo</span>
+                <input type="file" id="carFileInput" accept="image/*" capture="environment" class="hidden" />
               </label>
             </div>
           </div>
@@ -508,18 +525,33 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
           </div>
         </div>
 
+        <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-m3-lg text-emerald-900 text-xs max-w-md mx-auto flex items-center justify-center gap-2">
+          <BadgeCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+          <span>All documents uploaded and organized in your dedicated verification folder.</span>
+        </div>
+
         <p class="text-xs text-m3-on-surface-variant max-w-sm mx-auto">
-          Our dispatch coordinator will review your submission and call your mobile number directly. Please do not send documents on WhatsApp.
+          Our dispatch team (+91 90923 03060) will review your documents and call you directly. No need to resend documents on WhatsApp.
         </p>
 
-        <div class="pt-2">
+        <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <a
+            id="notifyWhatsAppBtn"
+            href="https://wa.me/919092303060"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs shadow-2xs transition-all"
+          >
+            <span>Notify Dispatch on WhatsApp</span>
+          </a>
+
           <button
             type="button"
             id="resetFormBtn"
             class="inline-flex items-center gap-1.5 text-xs font-semibold text-m3-primary hover:underline cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5 shrink-0" />
-            <span>Register another vehicle or driver</span>
+            <span>Register another vehicle/driver</span>
           </button>
         </div>
       </div>
@@ -611,8 +643,13 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
     const rcFileInput = document.getElementById('rcFileInput') as HTMLInputElement;
     const rcFileStatus = document.getElementById('rcFileStatus') as HTMLElement;
 
-    let hasDlFile = false;
-    let hasRcFile = false;
+    const carFileInput = document.getElementById('carFileInput') as HTMLInputElement;
+    const carFileStatus = document.getElementById('carFileStatus') as HTMLElement;
+    const carDocBox = document.getElementById('carDocBox') as HTMLElement;
+
+    let dlFileData: { base64: string; mimeType: string; name: string } | null = null;
+    let rcFileData: { base64: string; mimeType: string; name: string } | null = null;
+    let carFileData: { base64: string; mimeType: string; name: string } | null = null;
 
     // 1. Category Switcher
     const categoryBtns = document.querySelectorAll('.category-btn');
@@ -632,11 +669,13 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
         if (cat === 'Attach Car') {
           carOwnerSection.classList.remove('hidden');
           driverJobSection.classList.add('hidden');
-          rcDocBox.classList.remove('hidden');
+          rcDocBox?.classList.remove('hidden');
+          carDocBox?.classList.remove('hidden');
         } else {
           carOwnerSection.classList.add('hidden');
           driverJobSection.classList.remove('hidden');
-          rcDocBox.classList.add('hidden');
+          rcDocBox?.classList.add('hidden');
+          carDocBox?.classList.add('hidden');
         }
       });
     });
@@ -781,9 +820,6 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
     window.addEventListener('google-maps-loaded', initAutocomplete);
 
     // 10. File Input Listeners with Automatic Compression
-    let dlFileData: { base64: string; mimeType: string; name: string } | null = null;
-    let rcFileData: { base64: string; mimeType: string; name: string } | null = null;
-
     async function processImageFile(file: File): Promise<{ base64: string; mimeType: string; name: string } | null> {
       if (!file) return null;
       return new Promise((resolve) => {
@@ -833,24 +869,36 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
     dlFileInput.addEventListener('change', async () => {
       if (dlFileInput.files && dlFileInput.files[0]) {
         const file = dlFileInput.files[0];
-        dlFileStatus.textContent = `Processing ${file.name}...`;
+        dlFileStatus.textContent = `Compressing ${file.name}...`;
         dlFileData = await processImageFile(file);
         dlFileStatus.textContent = `${file.name} (Ready)`;
       } else {
         dlFileData = null;
-        dlFileStatus.textContent = 'No file chosen';
+        dlFileStatus.textContent = 'Required (No file chosen)';
       }
     });
 
     rcFileInput.addEventListener('change', async () => {
       if (rcFileInput.files && rcFileInput.files[0]) {
         const file = rcFileInput.files[0];
-        rcFileStatus.textContent = `Processing ${file.name}...`;
+        rcFileStatus.textContent = `Compressing ${file.name}...`;
         rcFileData = await processImageFile(file);
         rcFileStatus.textContent = `${file.name} (Ready)`;
       } else {
         rcFileData = null;
-        rcFileStatus.textContent = 'No file chosen';
+        rcFileStatus.textContent = 'Required (No file chosen)';
+      }
+    });
+
+    carFileInput?.addEventListener('change', async () => {
+      if (carFileInput.files && carFileInput.files[0]) {
+        const file = carFileInput.files[0];
+        carFileStatus.textContent = `Compressing ${file.name}...`;
+        carFileData = await processImageFile(file);
+        carFileStatus.textContent = `${file.name} (Ready)`;
+      } else {
+        carFileData = null;
+        carFileStatus.textContent = 'Required (No file chosen)';
       }
     });
 
@@ -882,10 +930,30 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
         return;
       }
 
+      // Strict Document Validation
+      if (!dlFileData) {
+        showError('Driving License photo is required. Please capture or select a photo.');
+        dlFileInput.click();
+        return;
+      }
+
+      if (category === 'Attach Car') {
+        if (!rcFileData) {
+          showError('Vehicle RC Book photo is required. Please capture or select a photo.');
+          rcFileInput.click();
+          return;
+        }
+        if (!carFileData) {
+          showError('Car Front photo with number plate is required. Please capture or select a photo.');
+          carFileInput.click();
+          return;
+        }
+      }
+
       submitBtn.disabled = true;
       submitBtn.innerHTML = `
         <span class="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-        <span>Submitting...</span>
+        <span>Uploading to Google Drive...</span>
       `;
 
       const leadPayload = {
@@ -901,8 +969,10 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
         city,
         hasDlPhoto: Boolean(dlFileData),
         hasRcPhoto: Boolean(rcFileData),
+        hasCarPhoto: Boolean(carFileData),
         dlFile: dlFileData,
         rcFile: rcFileData,
+        carFile: carFileData,
         webhookUrl: getActiveGoogleSheetUrl(),
         notes: category === 'Attach Car' 
           ? `Fleet: ${selectedCarCountInput.value} (${selectedCarsInput.value}) | Plate: ${selectedPlateTypeInput.value}`
@@ -910,6 +980,7 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
       };
 
       let leadId = `#KT-DRV-${Date.now().toString().slice(-4)}`;
+      let submissionSuccess = false;
 
       try {
         const res = await fetch('/api/record-driver-lead', {
@@ -921,6 +992,7 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
           const resData = await res.json();
           if (resData && resData.leadId) {
             leadId = resData.leadId;
+            submissionSuccess = true;
           }
         }
       } catch (_) {}
@@ -928,7 +1000,7 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
       try {
         const sheetUrl = getActiveGoogleSheetUrl();
         if (sheetUrl && sheetUrl.startsWith('https://script.google.com/macros/s/')) {
-          fetch(sheetUrl, {
+          await fetch(sheetUrl, {
             method: 'POST',
             mode: 'no-cors',
             headers: { 'Content-Type': 'text/plain' },
@@ -943,9 +1015,11 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
               notes: leadPayload.notes,
               dlFile: dlFileData,
               rcFile: rcFileData,
+              carFile: carFileData,
               referenceId: leadId
             })
           }).catch(() => {});
+          submissionSuccess = true;
         }
       } catch (_) {}
 
@@ -957,6 +1031,14 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
       (document.getElementById('confDetails') as HTMLElement).textContent = category === 'Attach Car' 
         ? `${selectedCarCountInput.value} - ${selectedCarsInput.value}` 
         : `${selectedLicenseTypeInput.value} (${selectedExperienceInput.value})`;
+
+      const notifyWhatsAppBtn = document.getElementById('notifyWhatsAppBtn') as HTMLAnchorElement | null;
+      if (notifyWhatsAppBtn) {
+        const prefilledText = encodeURIComponent(
+          `Hi Kalidass Travels, I have submitted my partner attachment application (${leadId}) on your website with all documents attached. Please review.`
+        );
+        notifyWhatsAppBtn.href = `https://wa.me/919092303060?text=${prefilledText}`;
+      }
 
       formWrapper.classList.add('hidden');
       successCard.classList.remove('hidden');
@@ -972,8 +1054,10 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
       form.reset();
       dlFileData = null;
       rcFileData = null;
-      dlFileStatus.textContent = 'No file chosen';
-      rcFileStatus.textContent = 'No file chosen';
+      carFileData = null;
+      dlFileStatus.textContent = 'Required (No file chosen)';
+      rcFileStatus.textContent = 'Required (No file chosen)';
+      carFileStatus.textContent = 'Required (No file chosen)';
       submitBtn.disabled = false;
       submitBtn.innerHTML = `
         <span>Submit Registration</span>

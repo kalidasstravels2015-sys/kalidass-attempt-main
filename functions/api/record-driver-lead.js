@@ -1,3 +1,5 @@
+const DEFAULT_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzjPh0a2ju-Xv9KRFQ5gCg9s5Y4P8QR9C2rkO4nh4XYBBO5QD-tbKIXWcDav2ydgaUW/exec';
+
 let edgeDriverSeq = 101;
 
 // Cloudflare Pages Function: /api/record-driver-lead
@@ -17,10 +19,11 @@ export async function onRequestPost({ request, env }) {
     const timestamp = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
 
     // Asynchronously forward to Google Apps Script Webhook backup if configured
-    const webhookUrl = data.webhookUrl || (env && (env.GOOGLE_SHEET_WEBHOOK_URL || env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL));
+    const webhookUrl = data.webhookUrl || (env && (env.GOOGLE_SHEET_WEBHOOK_URL || env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL)) || DEFAULT_WEBHOOK_URL;
+    let driveFolderUrl = '';
     if (webhookUrl && webhookUrl.startsWith('http')) {
       try {
-        await fetch(webhookUrl, {
+        const gRes = await fetch(webhookUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify({
@@ -37,13 +40,24 @@ export async function onRequestPost({ request, env }) {
             city: data.city || '',
             hasDlPhoto: Boolean(data.hasDlPhoto),
             hasRcPhoto: Boolean(data.hasRcPhoto),
-            notes: data.notes || ''
+            notes: data.notes || '',
+            dlFile: data.dlFile || null,
+            rcFile: data.rcFile || null,
+            carFile: data.carFile || null
           })
         });
+        if (gRes.ok) {
+          try {
+            const gData = await gRes.json();
+            if (gData && gData.driveFolderUrl) {
+              driveFolderUrl = gData.driveFolderUrl;
+            }
+          } catch (_) {}
+        }
       } catch (_) {}
     }
 
-    return new Response(JSON.stringify({ success: true, leadId, timestamp }), {
+    return new Response(JSON.stringify({ success: true, leadId, timestamp, driveFolderUrl }), {
       status: 200,
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
