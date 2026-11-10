@@ -61,7 +61,7 @@ const isSedan = Boolean(
 >
   <div>
     <!-- 1. Vehicle Photo Showcase Container -->
-    <div class="relative h-38 sm:h-42 bg-m3-surface-container-low flex items-center justify-center pt-7 pb-3 px-5 sm:px-6 border-b border-slate-200/60 overflow-hidden">
+    <div class="relative h-36 sm:h-40 bg-m3-surface-container-low flex items-center justify-center pt-7 pb-2 px-4 sm:px-6 border-b border-slate-200/60 overflow-hidden">
       {badge && (
         <span class="absolute top-2.5 left-3 z-10 text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-m3-full bg-white/95 text-m3-on-surface border border-slate-200 shadow-xs backdrop-blur-xs">
           {badge}
@@ -78,10 +78,11 @@ const isSedan = Boolean(
           quality={80}
           width={320}
           height={160}
-          class={`w-auto h-auto max-w-full object-contain mix-blend-multiply transition-transform duration-300 drop-shadow-xs ${
+          widths={[240, 320, 480, 640]}
+          class={`w-auto h-20 sm:h-24 max-h-24 sm:max-h-28 max-w-[88%] object-contain mix-blend-multiply transition-transform duration-300 drop-shadow-xs ${
             isSedan
-              ? 'max-h-28 sm:max-h-30 scale-110 sm:scale-115 group-hover:scale-115 sm:group-hover:scale-120'
-              : 'max-h-26 sm:max-h-28 group-hover:scale-105'
+              ? 'scale-110 sm:scale-115 group-hover:scale-115 sm:group-hover:scale-120'
+              : 'group-hover:scale-105'
           }`}
         />
       ) : (

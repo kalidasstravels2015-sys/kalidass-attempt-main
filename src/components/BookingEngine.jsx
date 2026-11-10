@@ -313,7 +313,7 @@ const TEMPO_SWITCHER_LIST = [
     paxLabel: '12 Seats',
     capacityLabel: '12 Seats + 10 Bags',
     image: '/images/fleet/tempo-12.webp',
-    imgClass: 'w-28 sm:w-34 h-15 sm:h-18',
+    imgClass: 'w-28 sm:w-32 h-14 sm:h-16',
     category: 'tempo',
     airportMultiplier: 2.8,
     airportMinFare: 2400
@@ -328,7 +328,7 @@ const TEMPO_SWITCHER_LIST = [
     paxLabel: '12 Seats VIP',
     capacityLabel: '12 Seats + 12 Bags',
     image: '/images/fleet/force-urbania.webp',
-    imgClass: 'w-28 sm:w-34 h-15 sm:h-18',
+    imgClass: 'w-28 sm:w-32 h-14 sm:h-16',
     category: 'coach',
     airportMultiplier: 4.5,
     airportMinFare: 4500
@@ -343,7 +343,7 @@ const TEMPO_SWITCHER_LIST = [
     paxLabel: '14 Seats',
     capacityLabel: '14 Seats + 12 Bags',
     image: '/images/fleet/tempo-12.webp',
-    imgClass: 'w-28 sm:w-34 h-15 sm:h-18',
+    imgClass: 'w-28 sm:w-32 h-14 sm:h-16',
     category: 'tempo',
     airportMultiplier: 3.0,
     airportMinFare: 2600
@@ -358,7 +358,7 @@ const TEMPO_SWITCHER_LIST = [
     paxLabel: '17 Seats',
     capacityLabel: '17 Seats + 15 Bags',
     image: '/images/fleet/tempo-17.webp',
-    imgClass: 'w-28 sm:w-34 h-15 sm:h-18',
+    imgClass: 'w-28 sm:w-32 h-14 sm:h-16',
     category: 'coach',
     airportMultiplier: 3.2,
     airportMinFare: 2800
@@ -373,7 +373,7 @@ const TEMPO_SWITCHER_LIST = [
     paxLabel: '20 Seats',
     capacityLabel: '20 Seats + 18 Bags',
     image: '/images/fleet/tempo-17.webp',
-    imgClass: 'w-28 sm:w-34 h-15 sm:h-18',
+    imgClass: 'w-28 sm:w-32 h-14 sm:h-16',
     category: 'coach',
     airportMultiplier: 3.6,
     airportMinFare: 3200
@@ -388,7 +388,7 @@ const TEMPO_SWITCHER_LIST = [
     paxLabel: '26 Seats',
     capacityLabel: '26 Seats + 22 Bags',
     image: '/images/fleet/tempo.webp',
-    imgClass: 'w-30 sm:w-36 h-16 sm:h-19',
+    imgClass: 'w-28 sm:w-36 h-16 sm:h-20',
     category: 'coach',
     airportMultiplier: 4.2,
     airportMinFare: 4000
@@ -2275,7 +2275,7 @@ Please confirm chauffeur availability.`;
                         </div>
 
                         {/* Prominent Vehicle Showcase Stage */}
-                        <div className="h-16 sm:h-18 flex items-center justify-center my-1.5 w-full px-1 overflow-hidden">
+                        <div className="h-16 sm:h-20 flex items-center justify-center my-1.5 w-full px-1 overflow-hidden">
                           <img
                             src={item.image}
                             alt={item.name}
@@ -2455,7 +2455,7 @@ Please confirm chauffeur availability.`;
                         <img
                           src={item.image}
                           alt={item.name}
-                          className="w-12 sm:w-13 h-7 sm:h-8 object-contain shrink-0 transition-transform group-hover:scale-105"
+                          className="w-12 sm:w-14 h-7 sm:h-8 object-contain shrink-0 transition-transform group-hover:scale-105"
                           loading="lazy"
                           width="52"
                           height="32"
