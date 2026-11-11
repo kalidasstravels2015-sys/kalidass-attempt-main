@@ -193,6 +193,13 @@ export function peekNextQuotationId(existingQuotes = [], prefix = null) {
   }
 
   const base = Math.max(0, stored, maxFromList, memoryQuoteSeq);
+  if (base === 0) {
+    // Generate a temporary non-colliding fallback sequence based on the current minute/seconds
+    // to prevent two simultaneous visitors from both displaying #1 before server sync completes
+    const now = new Date();
+    const tempSeq = (now.getHours() * 60 + now.getMinutes()) || 1;
+    return `${actualPrefix}${tempSeq}`;
+  }
   return `${actualPrefix}${base + 1}`;
 }
 

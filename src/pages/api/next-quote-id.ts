@@ -56,18 +56,23 @@ export function saveDailySequence(dateCode: string, seq: number): void {
   } catch (_) {}
 }
 
-export const GET: APIRoute = async () => {
+export const GET: APIRoute = async ({ url }) => {
   const dateCode = getDateCode();
   const currentMax = getDailySequence(dateCode);
+  const claim = url.searchParams.get('claim') === 'true' || url.searchParams.get('advance') === 'true';
   const nextSeq = currentMax + 1;
+  if (claim) {
+    saveDailySequence(dateCode, nextSeq);
+  }
   const quoteId = `Q-${dateCode}-${nextSeq}`;
 
   return new Response(JSON.stringify({
     success: true,
     dateCode,
     currentSeq: currentMax,
-    nextSeq,
-    quoteId
+    nextSeq: claim ? nextSeq : nextSeq,
+    quoteId,
+    claimed: claim
   }), {
     status: 200,
     headers: {

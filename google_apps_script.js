@@ -107,6 +107,59 @@ function doGet(e) {
     var bookSheet = sheets.bookSheet;
     var driverSheet = sheets.driverSheet;
 
+    // Dedicated Atomic Sequence Coordinator for Website Quotations (Q-DDMMYY-X)
+    var action = (e && e.parameter && e.parameter.action) || '';
+    if (action === 'next_quote_id' || action === 'quote_id') {
+      var lock = LockService.getScriptLock();
+      var gotLock = lock.tryLock(5000);
+      try {
+        var dateCode = (e && e.parameter && e.parameter.dateCode) || Utilities.formatDate(new Date(), 'Asia/Kolkata', 'ddMMyy');
+        var props = PropertiesService.getScriptProperties();
+        var propKey = 'quote_seq_' + dateCode;
+        var currentSeq = parseInt(props.getProperty(propKey) || '0', 10);
+
+        // If not initialized in Script Properties today, scan Enquiries sheet for highest today
+        if (currentSeq === 0) {
+          var enqLast = enqSheet.getLastRow();
+          if (enqLast > 1) {
+            var enqIds = enqSheet.getRange(2, 1, enqLast - 1, 1).getValues();
+            var qRegex = new RegExp('^Q-' + dateCode + '-(\\d+)$', 'i');
+            for (var r = 0; r < enqIds.length; r++) {
+              var qVal = String(enqIds[r][0] || '').trim();
+              var qMatch = qVal.match(qRegex);
+              if (qMatch) {
+                var qNum = parseInt(qMatch[1], 10);
+                if (!isNaN(qNum) && qNum > currentSeq) {
+                  currentSeq = qNum;
+                }
+              }
+            }
+          }
+        }
+
+        var shouldAdvance = Boolean(e && e.parameter && (e.parameter.claim === 'true' || e.parameter.advance === 'true' || e.parameter.reserve === 'true'));
+        var nextSeq = currentSeq + 1;
+        if (shouldAdvance) {
+          props.setProperty(propKey, String(nextSeq));
+        }
+
+        var assignedId = 'Q-' + dateCode + '-' + (shouldAdvance ? nextSeq : nextSeq);
+
+        return ContentService
+          .createTextOutput(JSON.stringify({
+            success: true,
+            dateCode: dateCode,
+            currentSeq: currentSeq,
+            nextSeq: nextSeq,
+            quoteId: assignedId,
+            claimed: shouldAdvance
+          }))
+          .setMimeType(ContentService.MimeType.JSON);
+      } finally {
+        if (gotLock) lock.releaseLock();
+      }
+    }
+
     var leads = [];
     var lastEnqRow = enqSheet.getLastRow();
     if (lastEnqRow > 1) {
@@ -247,6 +300,53 @@ function doPost(e) {
     var enqSheet = sheets.enqSheet;
     var bookSheet = sheets.bookSheet;
     var driverSheet = sheets.driverSheet;
+
+    // Fast-path: Centralized atomic quote ID allocation
+    if (data.action === 'next_quote_id' || data.type === 'next_quote_id') {
+      var lock = LockService.getScriptLock();
+      var gotLock = lock.tryLock(5000);
+      try {
+        var dateCode = data.dateCode || Utilities.formatDate(new Date(), 'Asia/Kolkata', 'ddMMyy');
+        var props = PropertiesService.getScriptProperties();
+        var propKey = 'quote_seq_' + dateCode;
+        var currentSeq = parseInt(props.getProperty(propKey) || '0', 10);
+
+        if (currentSeq === 0) {
+          var enqLast = enqSheet.getLastRow();
+          if (enqLast > 1) {
+            var enqIds = enqSheet.getRange(2, 1, enqLast - 1, 1).getValues();
+            var qRegex = new RegExp('^Q-' + dateCode + '-(\\d+)$', 'i');
+            for (var r = 0; r < enqIds.length; r++) {
+              var qVal = String(enqIds[r][0] || '').trim();
+              var qMatch = qVal.match(qRegex);
+              if (qMatch) {
+                var qNum = parseInt(qMatch[1], 10);
+                if (!isNaN(qNum) && qNum > currentSeq) {
+                  currentSeq = qNum;
+                }
+              }
+            }
+          }
+        }
+
+        var newSeq = currentSeq + 1;
+        props.setProperty(propKey, String(newSeq));
+        var quoteId = 'Q-' + dateCode + '-' + newSeq;
+
+        return ContentService
+          .createTextOutput(JSON.stringify({
+            success: true,
+            dateCode: dateCode,
+            currentSeq: currentSeq,
+            seq: newSeq,
+            quoteId: quoteId,
+            nextQuoteId: 'Q-' + dateCode + '-' + (newSeq + 1)
+          }))
+          .setMimeType(ContentService.MimeType.JSON);
+      } finally {
+        if (gotLock) lock.releaseLock();
+      }
+    }
 
     var isDriverLead = data.type === 'driver_lead' ||
                        Boolean(data.leadId && String(data.leadId).indexOf('DRV') !== -1) ||
@@ -477,7 +577,20 @@ function doPost(e) {
       var eLast = enqSheet.getLastRow();
       var eMaxAllowed = (101 - 1) + Math.max(eLast + 50, 100);
 
-      if (incomingId) {
+      var dateQuoteMatch = incomingId.match(/^Q-(\d{6})-(\d+)$/i);
+      if (dateQuoteMatch) {
+        hasSeqNum = true;
+        try {
+          var qdCode = dateQuoteMatch[1];
+          var qdNum = parseInt(dateQuoteMatch[2], 10);
+          var qprops = PropertiesService.getScriptProperties();
+          var qpropKey = 'quote_seq_' + qdCode;
+          var curProp = parseInt(qprops.getProperty(qpropKey) || '0', 10);
+          if (qdNum > curProp) {
+            qprops.setProperty(qpropKey, String(qdNum));
+          }
+        } catch (_) {}
+      } else if (incomingId) {
         var numMatch = incomingId.match(/(?:QT|ENQ|KT|CALC|CALL|WA)[-_/A-Za-z0-9]*[-_]?(\d+)/i) || incomingId.match(/(\d+)/);
         if (numMatch) {
           var n = parseInt(numMatch[1], 10);

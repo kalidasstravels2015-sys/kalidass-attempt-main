@@ -885,17 +885,17 @@ export default function BookingEngine({
       if (nextId) setQuoteRefId(nextId);
     } catch (_) {}
 
-    // Centralized server synchronization across all devices/visitors
+    // Centralized server synchronization across all devices/visitors (Option 2: Live Sync)
     if (typeof fetch === 'function') {
-      fetch('/api/next-quote-id')
+      fetch('/api/next-quote-id?claim=true')
         .then(res => res.json())
         .then(data => {
           if (data && data.quoteId) {
             setQuoteRefId(data.quoteId);
             const dateCode = data.dateCode;
-            if (dateCode && data.currentSeq !== undefined) {
+            if (dateCode && (data.currentSeq !== undefined || data.nextSeq !== undefined)) {
               try {
-                localStorage.setItem(`kt_last_quotation_seq_${dateCode}`, String(data.currentSeq));
+                localStorage.setItem(`kt_last_quotation_seq_${dateCode}`, String(data.nextSeq || data.currentSeq));
               } catch (_) {}
             }
           }
@@ -1630,6 +1630,18 @@ To confirm: Call +91 89395 39211 (${advanceAmount} advance)`;
 
     setValidationError('');
     setViewMode('results');
+
+    // Fresh claim check on calculation to guarantee atomic sequence from Google Sheets
+    if (typeof fetch === 'function') {
+      fetch('/api/next-quote-id?claim=true')
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.quoteId) {
+            setQuoteRefId(data.quoteId);
+          }
+        })
+        .catch(() => {});
+    }
     setTimeout(() => {
       const el = containerRef.current || document.getElementById('fare-calculator');
       if (el) {
