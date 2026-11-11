@@ -780,6 +780,8 @@ export default function BookingEngine({
           const place = ac.getPlace();
           const addr = place?.formatted_address || place?.name;
           if (addr) onSelect(addr);
+          // Dismiss mobile soft keyboard upon selection to reveal rates
+          try { el.blur(); } catch (_) {}
         });
         el.dataset.googleAttached = 'true';
       } catch (_) {}
@@ -803,7 +805,16 @@ export default function BookingEngine({
     });
   }, []);
 
-  const handleInputFocus = useCallback(() => {
+  const handleInputFocus = useCallback((e) => {
+    const el = e?.target;
+    // On mobile screens, auto-scroll input towards upper viewport to leave maximum room for the autocomplete dropdown
+    if (el && typeof el.scrollIntoView === 'function') {
+      setTimeout(() => {
+        try {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } catch (_) {}
+      }, 150);
+    }
     if (window.google?.maps?.places?.Autocomplete) {
       initAutocomplete();
     } else {
@@ -1463,64 +1474,83 @@ export default function BookingEngine({
     } catch (_) {}
   };
 
-  // WhatsApp Message (100% mirrors the on-screen Rate Summary & Payment Rules)
+  // WhatsApp Message (Audited Universal Car Rental Standard: Zero emojis, zero AI jargon, strict separation of Tolls vs Overages)
   const getWhatsAppMessage = () => {
     const isLocal = activeTab === 'local';
+    const isAirport = activeTab === 'airport';
+    const fareFormatted = `₹${currentBreakdown.totalFare?.toLocaleString('en-IN')}`;
+    const advanceAmount = `₹${(currentBreakdown.advance || 500).toLocaleString('en-IN')}`;
 
-    // 1. Vehicle line with km & rate
-    const vehicleHireLine = isLocal
-      ? `• ${selectedVehicle.fullName} (${currentBreakdown.packageHours} Hrs / ${currentBreakdown.billedKm} KM Package): ₹${currentBreakdown.kmCost?.toLocaleString('en-IN')}`
-      : `• ${selectedVehicle.fullName} (${currentBreakdown.billedKm ? `${Math.round(currentBreakdown.billedKm)} km @ ₹${currentBreakdown.ratePerKm || 14}/km` : 'Hire'}): ₹${currentBreakdown.kmCost?.toLocaleString('en-IN')}`;
+    if (isLocal) {
+      const pkgHours = currentBreakdown.packageHours || 8;
+      const pkgKm = currentBreakdown.billedKm || 80;
+      const pickupTime = formattedPickupDate || 'As requested';
 
-    // 2. Driver Bata (if applicable)
-    const driverBataLine = currentBreakdown.driverBata > 0
-      ? `\n• Driver Bata (${outstationDays} Day${outstationDays > 1 ? 's' : ''}): ₹${currentBreakdown.driverBata?.toLocaleString('en-IN')}`
-      : '';
-
-    // 3. State Entry Tax (if interstate)
-    const permitLine = currentBreakdown.isInterstate && currentBreakdown.statePermit > 0
-      ? `\n• State Entry Tax (${currentBreakdown.stateCode}): ₹${currentBreakdown.statePermit?.toLocaleString('en-IN')}`
-      : '';
-
-    // 4. GST Tax (if selected)
-    const gstLine = needGst && currentBreakdown.gstAmount > 0
-      ? `\n• GST Tax (5% ITC Invoice): +₹${currentBreakdown.gstAmount?.toLocaleString('en-IN')}`
-      : '';
-
-    const kmLabel = currentBreakdown.billedKm
-      ? `${Math.round(currentBreakdown.billedKm)} km`
-      : (isLocal ? `${currentBreakdown.packageHours} Hrs / ${currentBreakdown.billedKm} KM` : 'Standard');
-
-    const totalFareText = needGst
-      ? `Estimated Total Fare (${kmLabel}): ₹${currentBreakdown.totalFare.toLocaleString('en-IN')} (Includes 5% GST) + Extras as per slip${companyGstin.trim() ? `\n• GSTIN / Company: ${companyGstin.trim()}` : ''}`
-      : `Estimated Total Fare (${kmLabel}): ₹${currentBreakdown.totalFare.toLocaleString('en-IN')} + Extras as per slip`;
-
-    // Extra KM / Extra Hr subtext for payment rules
-    const extraChargeRule = isLocal
-      ? `• Extra km: ₹${currentBreakdown.extraKmRate}/km • Extra hr: ₹${currentBreakdown.extraHrRate}/hr`
-      : `• Doorstep odometer reading • Extra km: ₹${currentBreakdown.extraKmRate || 14}/km`;
-
-    return `KALIDASS TRAVELS — TRIP QUOTATION REQUEST
-──────────────────────────────────────────
+      return `KALIDASS TRAVELS
 Ref: ${quoteRefId}
-Route: ${currentBreakdown.routeSummary}
-${currentBreakdown.metaDateStr}
-──────────────────────────────────────────
-RATE SUMMARY:
-${vehicleHireLine}${driverBataLine}${permitLine}${gstLine}
-• Toll Gate Fees (FASTag): Extra as per slip
-• Parking Charges: Extra as per slip
 
-${totalFareText}
-──────────────────────────────────────────
-PAYMENT & BILLING RULES:
-• ₹${currentBreakdown.advance} advance to reserve cab (deducted in final invoice)
-• Pay balance to chauffeur at trip end (UPI / Cash)
-${extraChargeRule}
-• Free cancellation up to 6 hours before pickup
-──────────────────────────────────────────
-Dispatch Helpline: +91 89395 39211
-Please confirm chauffeur availability.`;
+Trip: Chennai Local (${pkgHours} Hr / ${pkgKm} Km)
+Vehicle: ${selectedVehicle.fullName} AC
+Pickup: ${pickupTime}
+
+Base Fare: ${fareFormatted} (Includes ${pkgHours} hrs, ${pkgKm} km, Fuel & Driver)
+Toll & Parking: Extra (Pay as per actual slip)
+
+If package exceeds:
+• Beyond ${pkgKm} km: ₹${currentBreakdown.extraKmRate || 15} / km
+• Beyond ${pkgHours} hrs: ₹${currentBreakdown.extraHrRate || 150} / hr
+
+To confirm: Call +91 89395 39211 (${advanceAmount} advance)`;
+    }
+
+    if (isAirport) {
+      const pickupTime = formattedPickupDate || 'As requested';
+      const routeText = currentBreakdown.routeSummary || 'Airport Transfer';
+
+      return `KALIDASS TRAVELS
+Ref: ${quoteRefId}
+
+Trip: ${routeText}
+Vehicle: ${selectedVehicle.fullName} AC
+Pickup: ${pickupTime}
+
+Base Fare: ${fareFormatted} (Includes Fuel & Driver)
+Toll & Airport Parking: Extra (Pay as per actual slip)
+
+To confirm: Call +91 89395 39211 (${advanceAmount} advance)`;
+    }
+
+    // Outstation Trips
+    const scheduleStr = formattedReturnDate
+      ? `${formattedPickupDate} to ${formattedReturnDate}`
+      : `${formattedPickupDate || 'As requested'}`;
+    const tripModeStr = outstationTripType === 'round'
+      ? `Round Trip, ${outstationDays} Day${outstationDays > 1 ? 's' : ''}`
+      : 'One-Way Drop';
+
+    const permitText = currentBreakdown.isInterstate && currentBreakdown.statePermit > 0
+      ? ` & ${currentBreakdown.stateCode} State Permit`
+      : '';
+    const gstText = needGst ? ' + 5% GST' : '';
+
+    const nightStayLine = outstationTripType === 'round'
+      ? `\n• Driver night stay: ₹350 (only if hotel has no driver room, 10 PM - 6 AM)`
+      : '';
+
+    return `KALIDASS TRAVELS
+Ref: ${quoteRefId}
+
+Trip: ${currentBreakdown.routeSummary || 'Outstation Trip'} (${tripModeStr})
+Vehicle: ${selectedVehicle.fullName} AC
+Schedule: ${scheduleStr}
+
+Estimated Fare: ${fareFormatted}${gstText} (Includes ${currentBreakdown.billedKm || 250} km, Fuel & Driver Bata${permitText})
+Toll & Parking: Extra (Pay as per actual slip)
+
+If trip exceeds:
+• Beyond ${currentBreakdown.billedKm || 250} km: ₹${currentBreakdown.extraKmRate || 14} / km${nightStayLine}
+
+To confirm: Call +91 89395 39211 (${advanceAmount} advance)`;
   };
 
   const handleCalculateClick = () => {
@@ -1564,7 +1594,7 @@ Please confirm chauffeur availability.`;
         if (localPickupInputRef.current) {
           localPickupInputRef.current.focus();
           try {
-            localPickupInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            localPickupInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
           } catch (_) {}
         }
         return;
@@ -1583,7 +1613,7 @@ Please confirm chauffeur availability.`;
         if (airportLocationInputRef.current) {
           airportLocationInputRef.current.focus();
           try {
-            airportLocationInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            airportLocationInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
           } catch (_) {}
         }
         return;

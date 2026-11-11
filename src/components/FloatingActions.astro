@@ -69,36 +69,72 @@ const whatsappUrl = `https://wa.me/${rawPhone}?text=${encodeURIComponent(resolve
   </a>
 </div>
 
-<script>
-  function initFloatingActionsController() {
-    const container = document.getElementById('floating-actions-container');
-    if (!container) return;
+<script is:inline>
+  (function () {
+    function initFloatingActionsController() {
+      var container = document.getElementById('floating-actions-container');
+      if (!container) return;
 
-    // Input focus protection: hide floating dock when user is typing in forms so keyboard is unblocked
-    document.addEventListener('focusin', (e) => {
-      const target = e.target as HTMLElement | null;
-      if (target && (target.tagName === 'INPUT' || target.tagName === 'SELECT' || target.tagName === 'TEXTAREA')) {
-        container.classList.add('translate-y-28', 'opacity-0', 'pointer-events-none');
-        container.classList.remove('translate-y-0', 'opacity-100');
+      var restoreTimer = null;
+
+      function hideActions() {
+        if (restoreTimer) {
+          clearTimeout(restoreTimer);
+          restoreTimer = null;
+        }
+        container.classList.add('is-hidden-typing', 'pointer-events-none', 'opacity-0');
+        document.documentElement.setAttribute('data-keyboard-open', 'true');
       }
-    });
 
-    document.addEventListener('focusout', (e) => {
-      const target = e.target as HTMLElement | null;
-      if (target && (target.tagName === 'INPUT' || target.tagName === 'SELECT' || target.tagName === 'TEXTAREA')) {
-        setTimeout(() => {
-          container.classList.remove('translate-y-28', 'opacity-0', 'pointer-events-none');
-          container.classList.add('translate-y-0', 'opacity-100');
-        }, 150);
+      function restoreActions() {
+        var activeEl = document.activeElement;
+        var isEditing = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'SELECT' || activeEl.tagName === 'TEXTAREA');
+        if (isEditing) return;
+
+        if (window.visualViewport && (window.innerHeight - window.visualViewport.height > 100)) {
+          return;
+        }
+
+        container.classList.remove('is-hidden-typing', 'pointer-events-none', 'opacity-0');
+        document.documentElement.removeAttribute('data-keyboard-open');
       }
-    });
-  }
 
-  // Initialize on load and Astro view transitions
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initFloatingActionsController);
-  } else {
-    initFloatingActionsController();
-  }
-  document.addEventListener('astro:page-load', initFloatingActionsController);
+      // 1. Capture focusin across all inputs/textareas/selects
+      document.addEventListener('focusin', function (e) {
+        var target = e.target;
+        if (target && (target.tagName === 'INPUT' || target.tagName === 'SELECT' || target.tagName === 'TEXTAREA')) {
+          hideActions();
+        }
+      }, true);
+
+      // 2. Debounce focusout so moving between fields does not flash buttons
+      document.addEventListener('focusout', function (e) {
+        var target = e.target;
+        if (target && (target.tagName === 'INPUT' || target.tagName === 'SELECT' || target.tagName === 'TEXTAREA')) {
+          if (restoreTimer) clearTimeout(restoreTimer);
+          restoreTimer = setTimeout(restoreActions, 200);
+        }
+      }, true);
+
+      // 3. Viewport resize detection (Android & iOS virtual keyboard open/close)
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', function () {
+          var keyboardOpen = (window.innerHeight - window.visualViewport.height) > 100;
+          if (keyboardOpen) {
+            hideActions();
+          } else {
+            if (restoreTimer) clearTimeout(restoreTimer);
+            restoreTimer = setTimeout(restoreActions, 150);
+          }
+        });
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initFloatingActionsController);
+    } else {
+      initFloatingActionsController();
+    }
+    document.addEventListener('astro:page-load', initFloatingActionsController);
+  })();
 </script>

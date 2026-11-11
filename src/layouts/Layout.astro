@@ -1080,7 +1080,7 @@ const unifiedSchemaGraph = {
         margin-top: 4px !important;
         font-family: "Plus Jakarta Sans", sans-serif !important;
         overflow-y: auto !important;
-        max-height: min(300px, calc(100dvh - var(--keyboard-height, 0px) - 180px)) !important;
+        max-height: min(280px, calc(100dvh - 120px)) !important;
         -webkit-overflow-scrolling: touch !important;
         pointer-events: auto !important;
         overscroll-behavior: contain !important;
@@ -1090,6 +1090,17 @@ const unifiedSchemaGraph = {
         margin-bottom: 4px !important;
         box-shadow: 0 -12px 28px -4px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(15, 23, 42, 0.08) !important;
         border-radius: 12px !important;
+      }
+
+      /* Instantly hide floating actions when user focuses an input or keyboard is active */
+      body:has(input:focus, textarea:focus, select:focus) #floating-actions-container,
+      html[data-keyboard-open="true"] #floating-actions-container,
+      #floating-actions-container.is-hidden-typing {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        transform: translateY(3rem) scale(0.85) !important;
+        transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease !important;
       }
       .pac-item {
         padding: 9px 12px !important;
@@ -2652,6 +2663,55 @@ const unifiedSchemaGraph = {
           applyHeight(e.target.boundingRect.height);
         });
       }
+    })();
+  </script>
+
+  <!-- Global Google Places Autocomplete Viewport & Blur Controller -->
+  <script is:inline>
+    (function () {
+      function initGlobalPlacesAutocompleteEnhancer() {
+        // 1. Auto-scroll any autocomplete/pickup/drop input into upper viewport on focus
+        document.addEventListener('focusin', function (e) {
+          var target = e.target;
+          if (!target || typeof target.getBoundingClientRect !== 'function') return;
+          var isAutocompleteInput = 
+            target.classList.contains('pac-target-input') ||
+            target.hasAttribute('data-autocomplete-input') ||
+            (target.tagName === 'INPUT' && (
+              target.id.includes('pickup') || 
+              target.id.includes('drop') || 
+              target.id.includes('dest') || 
+              target.id.includes('location')
+            ));
+
+          if (isAutocompleteInput && window.innerWidth < 768) {
+            setTimeout(function () {
+              try {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              } catch (_) {}
+            }, 180);
+          }
+        }, true);
+
+        // 2. Dismiss keyboard automatically when any suggestion in .pac-container is tapped
+        document.addEventListener('click', function (e) {
+          var pacItem = e.target && e.target.closest && e.target.closest('.pac-item');
+          if (pacItem) {
+            setTimeout(function () {
+              if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                document.activeElement.blur();
+              }
+            }, 50);
+          }
+        }, true);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initGlobalPlacesAutocompleteEnhancer, { once: true });
+      } else {
+        initGlobalPlacesAutocompleteEnhancer();
+      }
+      document.addEventListener('astro:page-load', initGlobalPlacesAutocompleteEnhancer);
     })();
   </script>
 

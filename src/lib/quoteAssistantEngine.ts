@@ -377,110 +377,60 @@ Return ONLY raw JSON matching this schema, no markdown code fence, no commentary
     optionKeys = ['Maruti Ertiga', 'Innova', 'Innova Crysta'];
   }
 
-  const multiVehicleLines = optionKeys.map((key, idx) => {
+  const multiVehicleLines = optionKeys.map((key) => {
     const c = calcFareForVehicle(key);
     let tag = '';
     let label = key;
-    if (key === 'Swift Dzire') label = 'SWIFT DZIRE (Sedan AC)';
-    else if (key === 'Maruti Ertiga') label = 'MARUTI ERTIGA (6+1 Seater AC)';
+    if (key === 'Swift Dzire') label = 'Swift Dzire (Sedan AC)';
+    else if (key === 'Maruti Ertiga') label = 'Maruti Ertiga (6+1 Seater AC)';
     else if (key === 'Innova') {
-      label = 'TOYOTA INNOVA (7+1 Seater AC)';
-      tag = extracted.paxCount >= 7 ? '\n*(Best value for 7 members with soft luggage)*' : '';
+      label = 'Toyota Innova (7+1 Seater AC)';
+      tag = extracted.paxCount >= 7 ? ' *(Best for 7 pax)*' : '';
     } else if (key === 'Innova Crysta') {
-      label = 'INNOVA CRYSTA (7+1 Seater AC)';
-      tag = '\n*(Superior comfort & smooth highway ride)*';
+      label = 'Innova Crysta (7+1 Seater AC)';
+      tag = ' *(Luxury ride)*';
     } else if (key === 'Tempo Traveller') {
-      label = 'TEMPO TRAVELLER (12-Seater AC)';
-      tag = '\n*(Pushback bucket seats, high roof, ample space for 7+ seats & large luggage)*';
+      label = 'Tempo Traveller (12-Seater AC)';
+      tag = ' *(Spacious for groups)*';
     }
-    const numEmoji = idx === 0 ? '1️⃣' : idx === 1 ? '2️⃣' : '3️⃣';
     const permitLine = c.statePermitEst > 0
-      ? `\n• State Entry Permit (${c.stateName}) : ₹${c.statePermitEst.toLocaleString('en-IN')}`
+      ? ` & ${c.stateName} State Permit`
       : '';
-    return `${numEmoji} ${label}
-• ${c.billable.toLocaleString('en-IN')} km @ ₹${c.rate}/km : ₹${c.carHire.toLocaleString('en-IN')}
-• Driver Allowance (${days} Days @ ₹${c.dailyBata}) : ₹${c.bataTotal.toLocaleString('en-IN')}${permitLine}
-👉 TOTAL ESTIMATE : ₹${c.total.toLocaleString('en-IN')}${tag}`;
+    return `• ${label}${tag}\n  Fare: ₹${c.total.toLocaleString('en-IN')} (Includes ${c.billable.toLocaleString('en-IN')} km, Fuel & Driver Bata${permitLine})\n  Extra km: ₹${c.rate}/km`;
   }).join('\n\n');
 
-  // Customer Name greeting
-  const custGreeting = extracted.customerName && extracted.customerName !== 'Guest' ? `${extracted.customerName} sir` : 'Sir/Madam';
+  // Multi-Option Clean WhatsApp Bill
+  const whatsappMultiBill = `KALIDASS TRAVELS
 
-  // Multi-Option High-Converting WhatsApp Bill
-  const whatsappMultiBill = `Hello ${custGreeting}, greetings from Kalidass Travels! 🙏
-
-Here is the customized fare quotation for your ${days}-Day ${extracted.destination} trip:
-
-📋 TRIP DETAILS:
-• Pickup: ${extracted.pickup}
-• Destination: ${extracted.destination} (${extracted.tripType})
-• Dates: ${extracted.travelDates} (${days} ${days === 1 ? 'Day' : 'Days'})
-• Passengers: ${extracted.paxCount} Members
-• Package Allowance: ${billableKm.toLocaleString('en-IN')} km included (Covers round trip + local sightseeing)
-
-------------------------------------------
-VEHICLE FARE OPTIONS (${days} ${days === 1 ? 'DAY' : 'DAYS'})
-------------------------------------------
-
-${multiVehicleLines}
-
-------------------------------------------
-WHAT IS INCLUDED:
-------------------------------------------
-✅ Dedicated AC vehicle for all ${days} ${days === 1 ? 'day' : 'days'} (Doorstep pickup to drop)
-✅ Fuel charges up to package km (${billableKm.toLocaleString('en-IN')} km run)
-✅ Driver allowance for all ${days} ${days === 1 ? 'day' : 'days'}${primaryCalc.statePermitEst > 0 ? `\n✅ Official State Entry Permit (${primaryCalc.statePermitInfo.stateName} Checkpost Tax Included)` : ''}
-✅ Local sightseeing along the route
-
-EXTRA CHARGES (Actuals):
-• Highway Tolls & Parking (${estimatedTollsText})
-• Driver night stay: ₹350 (only if accommodation is not provided by your hotel)
-• Extra km beyond package (billed at standard per km vehicle rate)
-
-------------------------------------------
-PAYMENT TERMS:
-------------------------------------------
-1. Booking Advance: ₹500 to confirm & lock your vehicle and chauffeur
-   (UPI: 8939539211@okbizaxis - Kalidass Travels)
-2. At Trip Start: 50% upon boarding
-3. At Trip End: Remaining balance settled at final drop
-
-Please let us know your preferred vehicle choice to confirm your booking! 🚖`;
-
-  // Fallback single-vehicle bill
-  const whatsappSingleBill = `KALIDASS TRAVELS - TRIP QUOTATION
-
-Customer: ${extracted.customerName}
-Trip: ${extracted.pickup} to ${extracted.destination}
-Car: ${extracted.vehicleKey} AC
-Dates: ${extracted.travelDates} (${days} ${days === 1 ? 'Day' : 'Days'})
+Trip: ${extracted.pickup} to ${extracted.destination} (${days} ${days === 1 ? 'Day' : 'Days'}, ${extracted.tripType})
+Dates: ${extracted.travelDates}
 Passengers: ${extracted.paxCount} Members
 
-------------------------------------------
-BILL BREAKUP
-------------------------------------------
-1. Car and Fuel (${billableKm.toLocaleString('en-IN')} km @ ₹${ratePerKm}/km) : ₹${carAndFuelCharge.toLocaleString('en-IN')}
-2. Driver Allowance (${days} ${days === 1 ? 'Day' : 'Days'} @ ₹${dailyBata}/day) : ₹${driverBataTotal.toLocaleString('en-IN')}${primaryCalc.statePermitEst > 0 ? `\n3. State Entry Permit (${primaryCalc.statePermitInfo.stateName}) : ₹${primaryCalc.statePermitEst.toLocaleString('en-IN')}` : ''}
-------------------------------------------
-TOTAL ESTIMATE : ₹${totalQuoteFare.toLocaleString('en-IN')}
-------------------------------------------
+VEHICLE OPTIONS:
+${multiVehicleLines}
 
-What is included:
-- AC ${extracted.vehicleKey} for all ${days} ${days === 1 ? 'day' : 'days'}
-- Fuel charges for ${billableKm.toLocaleString('en-IN')} km run
-- Driver allowance for all ${days} ${days === 1 ? 'day' : 'days'}${primaryCalc.statePermitEst > 0 ? `\n- Official State Entry Permit (${primaryCalc.statePermitInfo.stateName}): ₹${primaryCalc.statePermitEst.toLocaleString('en-IN')}` : ''}
+Toll & Parking: Extra (Pay as per actual slip)
+Driver night stay: ₹350 (only if hotel has no driver room, 10 PM - 6 AM)
 
-Extra charges (pay on actual bill):
-- Highway tolls and parking (${estimatedTollsText})
-- Driver night stay (₹350 per night, only if hotel has no driver room)
-- Extra run above ${billableKm.toLocaleString('en-IN')} km (₹${ratePerKm} per km)
+To confirm: Call +91 89395 39211 (₹500 advance)`;
 
-Payment Terms:
-1. Booking Advance: ₹500 to lock vehicle and chauffeur (UPI: 8939539211@okbizaxis)
-2. At Trip Start: 50% upon boarding
-3. At Trip End: Remaining balance settled at final drop
+  // Fallback single-vehicle bill
+  const permitText = primaryCalc.statePermitEst > 0 ? ` & ${primaryCalc.statePermitInfo.stateName} State Permit` : '';
 
-To book: Please confirm your vehicle choice with Kalidass Travels!`;
+  const whatsappSingleBill = `KALIDASS TRAVELS
+
+Trip: ${extracted.pickup} to ${extracted.destination} (${days} ${days === 1 ? 'Day' : 'Days'}, ${extracted.tripType})
+Vehicle: ${extracted.vehicleKey} AC
+Schedule: ${extracted.travelDates}
+
+Estimated Fare: ₹${totalQuoteFare.toLocaleString('en-IN')} (Includes ${billableKm.toLocaleString('en-IN')} km, Fuel & Driver Bata${permitText})
+Toll & Parking: Extra (Pay as per actual slip)
+
+If trip exceeds:
+• Beyond ${billableKm.toLocaleString('en-IN')} km: ₹${ratePerKm} / km
+• Driver night stay: ₹350 (only if hotel has no driver room, 10 PM - 6 AM)
+
+To confirm: Call +91 89395 39211 (₹500 advance)`;
 
   return {
     success: true,
