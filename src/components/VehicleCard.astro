@@ -23,6 +23,7 @@ interface Props {
   selectPax?: number;
   className?: string;
   id?: string;
+  loading?: 'eager' | 'lazy';
 }
 
 const {
@@ -45,6 +46,7 @@ const {
   selectPax,
   className = '',
   id,
+  loading = 'lazy',
 } = Astro.props;
 
 const isWhatsApp = Boolean(actionHref && actionHref.includes('wa.me'));
@@ -72,13 +74,13 @@ const isSedan = Boolean(
         <OptimizedImage
           src={image}
           alt={`${name} taxi rental - Kalidass Travels`}
-          loading="lazy"
+          loading={loading}
           decoding="async"
-          sizes="(max-width: 640px) 280px, 320px"
-          quality={80}
+          sizes="(max-width: 640px) 240px, 300px"
+          quality={75}
           width={320}
           height={160}
-          widths={[240, 320, 480, 640]}
+          widths={[240, 320, 480]}
           class={`w-auto h-20 sm:h-24 max-h-24 sm:max-h-28 max-w-[88%] object-contain mix-blend-multiply transition-transform duration-300 drop-shadow-xs ${
             isSedan
               ? 'scale-110 sm:scale-115 group-hover:scale-115 sm:group-hover:scale-120'

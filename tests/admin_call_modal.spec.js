@@ -118,7 +118,7 @@ test.describe('Fast Track Travel Desk CAD Console & 6 Quotation Engines Suite', 
 
     // 7. Enter Customer Details & Select Enquiry Source
     await page.fill('input[placeholder="e.g. Dhanalakshmi / Ramesh"]', 'Dhanalakshmi Ammal');
-    await page.fill('input[placeholder="e.g. 99406 29716"]', '9940629716');
+    await page.fill('input[placeholder="e.g. 98401 23456"]', '9840123456');
     await page.locator('#new-call-cad-form button:has-text("Google Ads")').click();
 
     // 8. Verify Sticky Footer with the 3 distinct action buttons

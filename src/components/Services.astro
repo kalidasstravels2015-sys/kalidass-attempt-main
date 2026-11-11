@@ -30,7 +30,10 @@ const services = siteContent.services;
             src={service.image}
             alt={`Kalidass Travels - ${service.title}`}
             class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-90"
-            sizes="(max-width: 640px) 200px, (max-width: 1024px) 300px, 300px"
+            loading="lazy"
+            widths={[240, 360, 480]}
+            sizes="(max-width: 640px) 45vw, 280px"
+            quality={72}
           />
 
           <!-- High-Contrast Sapphire Scrim Gradient Overlay -->

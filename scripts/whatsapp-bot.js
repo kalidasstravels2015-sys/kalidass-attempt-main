@@ -155,7 +155,7 @@ async function startWhatsAppBot() {
       if (
         text.includes('KALIDASS TRAVELS —') ||
         text.includes('KALIDASS TRAVELS -') ||
-        text.includes('Office Helpline: 99406 29716') ||
+        text.includes('Dispatch Desk: 90923 03060') ||
         text.includes('24/7 Dispatch Helpline') ||
         text.includes('Kalidass AI Ops Desk is live') ||
         text.includes('Primary Helpline: +91 89395 39211') ||

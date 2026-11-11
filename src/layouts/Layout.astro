@@ -1163,16 +1163,9 @@ const unifiedSchemaGraph = {
         -webkit-overflow-scrolling: touch;
       }
 
-      /* Modern Web Guidance: Defer rendering and asset decoding for offscreen sections without layout shifts */
+      /* Containment without content-visibility:auto so Chrome's 2500px slow-network image lookahead preloads lazy images ahead of scroll */
       .offscreen-defer {
-        content-visibility: auto;
-        contain-intrinsic-size: auto 650px;
-      }
-
-      @supports not (content-visibility: auto) {
-        .offscreen-defer {
-          contain: layout style paint;
-        }
+        contain: layout style;
       }
 
       /* Modern Web Standards: Pure Compositor CSS Scroll-Driven Animation (Zero JS scroll overhead) */
@@ -1493,30 +1486,60 @@ const unifiedSchemaGraph = {
         // Skip heavy 3rd parties for audit bots UNLESS it is Google Tag Assistant / Google Ad verification
         if (isAutomatedBot && !isGoogleAuditOrAd) return;
 
-        var loaded = false;
-        function loadThirdParties() {
-          if (loaded) return;
-          loaded = true;
-          cleanup();
+        var scheduled = false;
+        var injected = false;
+        function isSlowNetwork() {
+          try {
+            var conn = navigator && (navigator.connection || navigator.mozConnection || navigator.webkitConnection);
+            if (!conn) return false;
+            if (conn.saveData) return true;
+            var et = String(conn.effectiveType || '').toLowerCase();
+            return et === 'slow-2g' || et === '2g' || et === '3g';
+          } catch (_) {
+            return false;
+          }
+        }
 
-          // External Google Tag Manager
+        function injectThirdPartyScripts() {
+          if (injected) return;
+          injected = true;
+          // External Google Tag Manager (Always loaded for 100% Google Ads & GA4 attribution)
           var gtmScript = document.createElement('script');
           gtmScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + (window.GOOGLE_ADS_ID || gaId);
           gtmScript.async = true;
           document.head.appendChild(gtmScript);
 
-          // Microsoft Clarity
-          (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-          })(window, document, "clarity", "script", "yqqrmf11qu");
+          // Skip heavy Microsoft Clarity DOM screen-recording on slow 2G/3G or Data-Saver networks
+          if (!isSlowNetwork()) {
+            (function(c,l,a,r,i,t,y){
+              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "yqqrmf11qu");
+          }
         }
-        window.loadThirdParties = loadThirdParties;
+
+        function loadThirdParties(forceImmediate) {
+          if (injected) return;
+          cleanup();
+
+          // Always inject immediately if forced (e.g., conversion click or Google Ads gclid) or if window.load already finished
+          if (forceImmediate || document.readyState === 'complete') {
+            injectThirdPartyScripts();
+            return;
+          }
+
+          if (scheduled) return;
+          scheduled = true;
+          window.addEventListener('load', function () {
+            setTimeout(injectThirdPartyScripts, 250);
+          }, { once: true });
+        }
+        window.loadThirdParties = function () { loadThirdParties(true); };
 
         // Fast-path: Load immediately if arriving with Google Click ID or Tag Assistant
         if (isGoogleAuditOrAd) {
-          loadThirdParties();
+          loadThirdParties(true);
           return;
         }
 
@@ -1533,10 +1556,10 @@ const unifiedSchemaGraph = {
           cleanup();
           if ('requestIdleCallback' in window) {
             requestIdleCallback(function () {
-              setTimeout(loadThirdParties, 500);
-            }, { timeout: 2000 });
+              setTimeout(function () { loadThirdParties(false); }, 500);
+            }, { timeout: 2500 });
           } else {
-            setTimeout(loadThirdParties, 500);
+            setTimeout(function () { loadThirdParties(false); }, 500);
           }
         }
 
