@@ -415,20 +415,19 @@ Driver night stay: ₹350 (only if hotel has no driver room, 10 PM - 6 AM)
 To confirm: Call +91 89395 39211 (₹500 advance)`;
 
   // Fallback single-vehicle bill
-  const permitText = primaryCalc.statePermitEst > 0 ? ` & ${primaryCalc.statePermitInfo.stateName} State Permit` : '';
+  const permitText = primaryCalc.statePermitEst > 0 ? `, ${primaryCalc.statePermitInfo.stateName} Permit` : '';
 
-  const whatsappSingleBill = `KALIDASS TRAVELS
+  const whatsappSingleBill = `*KALIDASS TRAVELS*
+${extracted.pickup} ⇄ ${extracted.destination} • Round Trip (${days} Day${days > 1 ? 's' : ''})
+${extracted.travelDates} | ${extracted.vehicleKey} AC
 
-Trip: ${extracted.pickup} to ${extracted.destination} (${days} ${days === 1 ? 'Day' : 'Days'}, ${extracted.tripType})
-Vehicle: ${extracted.vehicleKey} AC
-Schedule: ${extracted.travelDates}
+*Estimated Fare: ₹${totalQuoteFare.toLocaleString('en-IN')}*
+Includes: ${billableKm.toLocaleString('en-IN')} km, Fuel, Driver Bata${permitText}
+Toll & Parking: Extra as per actual slip
 
-Estimated Fare: ₹${totalQuoteFare.toLocaleString('en-IN')} (Includes ${billableKm.toLocaleString('en-IN')} km, Fuel & Driver Bata${permitText})
-Toll & Parking: Extra (Pay as per actual slip)
-
-If trip exceeds:
-• Beyond ${billableKm.toLocaleString('en-IN')} km: ₹${ratePerKm} / km
-• Driver night stay: ₹350 (only if hotel has no driver room, 10 PM - 6 AM)
+Over-limit rates:
+• Extra km: ₹${ratePerKm} / km
+• Night stay: ₹350 (if 10 PM - 6 AM)
 
 To confirm: Call +91 89395 39211 (₹500 advance)`;
 

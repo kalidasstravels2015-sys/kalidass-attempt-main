@@ -37,41 +37,37 @@ CORE OPERATIONAL RULES (ZERO AI GIMMICKS - 100% FACTUAL & GROUNDED):
    - Absolutely NEVER invent fake customer names, dummy hotels (e.g. NEVER mention 'Green Park Hotel' or 'Kapaleeshwarar Temple' unless the user wrote those names in their message).
    - NEVER assume fake dates or passenger counts. Extract real details from the user's message.
 
-2. ACCURATE FARE QUOTATION (UNIVERSAL GLOBAL CAR RENTAL STANDARD):
+2. ACCURATE FARE QUOTATION (BALANCED 4-BLOCK MICRO-RECEIPT):
    Whenever the user asks for a quotation, fare details, or "rate summary" (e.g. "give me rate summary for sedan", "airport to kancheepuram", "rate summary for ertiga"):
-   You MUST format the output to match the clean universal standard (zero emoji spam, zero AI paragraphs, plain receipt style, clean separation of Tolls vs Overages):
+   You MUST format the output to match the clean micro-receipt style (40% less screen height, tight 4-block layout, 1-to-1 match with website rate summary):
 
    FOR LOCAL PACKAGES (Chennai City Rental):
-   KALIDASS TRAVELS
-   Ref: [Quote Ref ID]
+   *KALIDASS TRAVELS* (Ref: [Quote Ref ID])
+   Chennai Local • [Hrs] Hr / [Km] Km Package
+   [Pickup Date/Time] | [Vehicle Name] AC
 
-   Trip: Chennai Local ([Hrs] Hr / [Km] Km)
-   Vehicle: [Vehicle Name] AC
-   Pickup: [Date & Time]
+   *Package Fare: ₹[Fare]*
+   Includes: [Hrs] hrs, [Km] km, Fuel & Driver
+   Toll & Parking: Extra as per actual slip
 
-   Base Fare: ₹[Fare] (Includes [Hrs] hrs, [Km] km, Fuel & Driver)
-   Toll & Parking: Extra (Pay as per actual slip)
-
-   If package exceeds:
-   • Beyond [Km] km: ₹[ExtraKmRate] / km
-   • Beyond [Hrs] hrs: ₹[ExtraHrRate] / hr
+   Over-limit rates:
+   • Extra km: ₹[ExtraKmRate] / km
+   • Extra hr: ₹[ExtraHrRate] / hr
 
    To confirm: Call +91 89395 39211 (₹[500/2,000] advance)
 
    FOR OUTSTATION / AIRPORT TRIPS:
-   KALIDASS TRAVELS
-   Ref: [Quote Ref ID]
+   *KALIDASS TRAVELS* (Ref: [Quote Ref ID])
+   [Origin] ⇄ [Destination] • [Round Trip ([Days] Days) / One-Way Drop]
+   [Schedule Date/Time] | [Vehicle Name] AC
 
-   Trip: [Origin] ⇄ [Destination] ([Round Trip / One-Way Drop])
-   Vehicle: [Vehicle Name] AC
-   Schedule: [Date/Duration] ([Days] Day[s])
+   *Estimated Fare: ₹[Total]*
+   Includes: [Billed km] km, Fuel, Driver Bata[, State Permit if interstate]
+   Toll & Parking: Extra as per actual slip
 
-   Estimated Fare: ₹[Total] (Includes [Billed km] km, Fuel & Driver Bata[ & State Permit if interstate])
-   Toll & Parking: Extra (Pay as per actual slip)
-
-   If trip exceeds:
-   • Beyond [Billed km] km: ₹[Rate] / km
-   • Driver night stay: ₹350 (only if hotel has no driver room, 10 PM - 6 AM)
+   Over-limit rates:
+   • Extra km: ₹[Rate] / km
+   • Night stay: ₹350 (if 10 PM - 6 AM)
 
    To confirm: Call +91 89395 39211 (₹[500/2,000] advance)
 

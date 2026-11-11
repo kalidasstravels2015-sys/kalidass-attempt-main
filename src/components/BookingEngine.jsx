@@ -1474,7 +1474,7 @@ export default function BookingEngine({
     } catch (_) {}
   };
 
-  // WhatsApp Message (Audited Universal Car Rental Standard: Zero emojis, zero AI jargon, strict separation of Tolls vs Overages)
+  // WhatsApp Message (Audited Balanced 4-Block Micro-Receipt: 40% less screen height, 1-to-1 mirror of website Rate Summary)
   const getWhatsAppMessage = () => {
     const isLocal = activeTab === 'local';
     const isAirport = activeTab === 'airport';
@@ -1486,19 +1486,17 @@ export default function BookingEngine({
       const pkgKm = currentBreakdown.billedKm || 80;
       const pickupTime = formattedPickupDate || 'As requested';
 
-      return `KALIDASS TRAVELS
-Ref: ${quoteRefId}
+      return `*KALIDASS TRAVELS* (Ref: ${quoteRefId})
+Chennai Local • ${pkgHours} Hr / ${pkgKm} Km Package
+${pickupTime} | ${selectedVehicle.name} AC
 
-Trip: Chennai Local (${pkgHours} Hr / ${pkgKm} Km)
-Vehicle: ${selectedVehicle.fullName} AC
-Pickup: ${pickupTime}
+*Package Fare: ${fareFormatted}*
+Includes: ${pkgHours} hrs, ${pkgKm} km, Fuel & Driver
+Toll & Parking: Extra as per actual slip
 
-Base Fare: ${fareFormatted} (Includes ${pkgHours} hrs, ${pkgKm} km, Fuel & Driver)
-Toll & Parking: Extra (Pay as per actual slip)
-
-If package exceeds:
-• Beyond ${pkgKm} km: ₹${currentBreakdown.extraKmRate || 15} / km
-• Beyond ${pkgHours} hrs: ₹${currentBreakdown.extraHrRate || 150} / hr
+Over-limit rates:
+• Extra km: ₹${currentBreakdown.extraKmRate || 15} / km
+• Extra hr: ₹${currentBreakdown.extraHrRate || 150} / hr
 
 To confirm: Call +91 89395 39211 (${advanceAmount} advance)`;
     }
@@ -1507,48 +1505,44 @@ To confirm: Call +91 89395 39211 (${advanceAmount} advance)`;
       const pickupTime = formattedPickupDate || 'As requested';
       const routeText = currentBreakdown.routeSummary || 'Airport Transfer';
 
-      return `KALIDASS TRAVELS
-Ref: ${quoteRefId}
+      return `*KALIDASS TRAVELS* (Ref: ${quoteRefId})
+${routeText}
+${pickupTime} | ${selectedVehicle.name} AC
 
-Trip: ${routeText}
-Vehicle: ${selectedVehicle.fullName} AC
-Pickup: ${pickupTime}
-
-Base Fare: ${fareFormatted} (Includes Fuel & Driver)
-Toll & Airport Parking: Extra (Pay as per actual slip)
+*Base Fare: ${fareFormatted}*
+Includes: Fuel & Driver
+Toll & Airport Parking: Extra as per actual slip
 
 To confirm: Call +91 89395 39211 (${advanceAmount} advance)`;
     }
 
     // Outstation Trips
     const scheduleStr = formattedReturnDate
-      ? `${formattedPickupDate} to ${formattedReturnDate}`
+      ? `${formattedPickupDate} – ${formattedReturnDate}`
       : `${formattedPickupDate || 'As requested'}`;
     const tripModeStr = outstationTripType === 'round'
-      ? `Round Trip, ${outstationDays} Day${outstationDays > 1 ? 's' : ''}`
+      ? `Round Trip (${outstationDays} Day${outstationDays > 1 ? 's' : ''})`
       : 'One-Way Drop';
 
     const permitText = currentBreakdown.isInterstate && currentBreakdown.statePermit > 0
-      ? ` & ${currentBreakdown.stateCode} State Permit`
+      ? `, ${currentBreakdown.stateCode} Permit`
       : '';
-    const gstText = needGst ? ' + 5% GST' : '';
+    const gstText = needGst ? ' (+5% GST)' : '';
 
     const nightStayLine = outstationTripType === 'round'
-      ? `\n• Driver night stay: ₹350 (only if hotel has no driver room, 10 PM - 6 AM)`
+      ? `\n• Night stay: ₹350 (if 10 PM - 6 AM)`
       : '';
 
-    return `KALIDASS TRAVELS
-Ref: ${quoteRefId}
+    return `*KALIDASS TRAVELS* (Ref: ${quoteRefId})
+${currentBreakdown.routeSummary || 'Outstation Trip'} • ${tripModeStr}
+${scheduleStr} | ${selectedVehicle.name} AC
 
-Trip: ${currentBreakdown.routeSummary || 'Outstation Trip'} (${tripModeStr})
-Vehicle: ${selectedVehicle.fullName} AC
-Schedule: ${scheduleStr}
+*Estimated Fare: ${fareFormatted}${gstText}*
+Includes: ${currentBreakdown.billedKm || 250} km, Fuel, Driver Bata${permitText}
+Toll & Parking: Extra as per actual slip
 
-Estimated Fare: ${fareFormatted}${gstText} (Includes ${currentBreakdown.billedKm || 250} km, Fuel & Driver Bata${permitText})
-Toll & Parking: Extra (Pay as per actual slip)
-
-If trip exceeds:
-• Beyond ${currentBreakdown.billedKm || 250} km: ₹${currentBreakdown.extraKmRate || 14} / km${nightStayLine}
+Over-limit rates:
+• Extra km: ₹${currentBreakdown.extraKmRate || 14} / km${nightStayLine}
 
 To confirm: Call +91 89395 39211 (${advanceAmount} advance)`;
   };
@@ -2353,53 +2347,109 @@ To confirm: Call +91 89395 39211 (${advanceAmount} advance)`;
                 </div>
               </div>
 
-              {/* Optional Corporate GST Invoice Toggle */}
-              <div className="p-3 rounded-m3-md border border-m3-outline-variant/70 dark:border-m3-outline-variant/50 bg-slate-50/60 dark:bg-m3-surface-container-low">
-                <label className="flex items-start justify-between gap-2.5 cursor-pointer group select-none">
-                  <div className="flex items-start gap-2.5">
-                    <input
-                      type="checkbox"
-                      checked={needGst}
-                      onChange={(e) => setNeedGst(e.target.checked)}
-                      className="w-4 h-4 mt-0.5 rounded text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 dark:bg-m3-surface cursor-pointer"
-                    />
-                    <div>
-                      <span className="text-xs sm:text-sm font-bold text-slate-800 dark:text-gray-200 group-hover:text-blue-600 transition-colors">
-                        Need GST Tax Invoice? (+5%)
+              {/* Local Package Rate Breakdown Card */}
+              <div className="p-3.5 rounded-m3-lg border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 space-y-2 bg-white dark:bg-m3-surface-container-low shadow-m3-0">
+                <div className="space-y-1.5 text-xs sm:text-sm text-slate-700 dark:text-gray-300">
+                  <div className="flex justify-between items-center py-0.5">
+                    <span className="font-medium text-slate-800 dark:text-gray-200">
+                      {selectedVehicle.name} ({currentBreakdown.packageHours} Hrs / {currentBreakdown.billedKm} Km Package)
+                    </span>
+                    <span className="font-bold text-slate-900 dark:text-white">
+                      ₹{currentBreakdown.kmCost?.toLocaleString('en-IN')}
+                    </span>
+                  </div>
+
+                  {needGst && currentBreakdown.gstAmount > 0 && (
+                    <div className="flex justify-between items-center py-0.5 text-blue-700 dark:text-blue-400 font-medium">
+                      <span>GST Tax (5% ITC Invoice)</span>
+                      <span className="font-bold">
+                        +₹{currentBreakdown.gstAmount?.toLocaleString('en-IN')}
                       </span>
-                      <span className="block text-[10px] text-slate-500 dark:text-gray-400">
-                        100% corporate Input Tax Credit (ITC) compliant
+                    </div>
+                  )}
+
+                  {/* GST Tax Invoice Option Toggle */}
+                  <div className="pt-2 pb-1 border-t border-dashed border-m3-outline-variant/70 dark:border-m3-outline-variant/50">
+                    <label className="flex items-start justify-between gap-2.5 cursor-pointer group select-none">
+                      <div className="flex items-start gap-2.5">
+                        <input
+                          type="checkbox"
+                          checked={needGst}
+                          onChange={(e) => setNeedGst(e.target.checked)}
+                          className="w-4 h-4 mt-0.5 rounded text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 dark:bg-m3-surface cursor-pointer"
+                        />
+                        <div>
+                          <span className="text-xs sm:text-sm font-bold text-slate-800 dark:text-gray-200 group-hover:text-blue-600 transition-colors">
+                            Need GST Tax Invoice? (+5%)
+                          </span>
+                          <span className="block text-[10px] text-slate-500 dark:text-gray-400">
+                            100% corporate Input Tax Credit (ITC) compliant
+                          </span>
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded-full border border-blue-200 dark:border-blue-800 shrink-0">
+                        5% GST
+                      </span>
+                    </label>
+
+                    {needGst && (
+                      <div className="mt-2 pl-6.5 pr-0.5 animate-fadeIn">
+                        <input
+                          type="text"
+                          value={companyGstin}
+                          onChange={(e) => setCompanyGstin(e.target.value)}
+                          placeholder="Company Name / GSTIN (Optional)"
+                          aria-label="Company Name / GSTIN (Optional)"
+                          className="w-full text-xs px-2.5 py-1.5 rounded-m3-md border border-m3-outline-variant/80 dark:border-m3-outline-variant/50 bg-white dark:bg-m3-surface text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-blue-500"
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Solid Total Line */}
+                  <div className="pt-2.5 border-t border-m3-outline-variant/80 dark:border-m3-outline-variant/60 flex justify-between items-baseline">
+                    <div>
+                      <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white block">
+                        Estimated Total Fare ({currentBreakdown.packageHours} Hrs / {currentBreakdown.billedKm} Km)
+                      </span>
+                      <span className="text-[10px] text-slate-500 dark:text-gray-400">
+                        {needGst ? 'Includes 5% GST (Tax invoice provided)' : 'Base fare (Excludes GST • Available on request)'}
+                      </span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-lg sm:text-2xl font-black text-slate-900 dark:text-white font-heading block">
+                        ₹{currentBreakdown.totalFare.toLocaleString('en-IN')}
+                      </span>
+                      <span className="text-[10px] font-semibold text-slate-500 dark:text-gray-400">
+                        + Toll &amp; Parking as per actual slip
                       </span>
                     </div>
                   </div>
-                  <span className="text-[10px] font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded-full border border-blue-200 dark:border-blue-800 shrink-0">
-                    5% GST
-                  </span>
-                </label>
-
-                {needGst && (
-                  <div className="mt-2 pl-6.5 pr-0.5 animate-fadeIn">
-                    <input
-                      type="text"
-                      value={companyGstin}
-                      onChange={(e) => setCompanyGstin(e.target.value)}
-                      placeholder="Company Name / GSTIN (Optional)"
-                      aria-label="Company Name / GSTIN (Optional)"
-                      className="w-full text-xs px-2.5 py-1.5 rounded-m3-md border border-m3-outline-variant/80 dark:border-m3-outline-variant/50 bg-white dark:bg-m3-surface text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-blue-500"
-                    />
-                  </div>
-                )}
+                </div>
               </div>
 
-              {/* 2-Line Clean Trust & Policy Badges */}
-              <div className="p-2.5 rounded-m3-md bg-slate-50/80 dark:bg-m3-surface-container-low border border-m3-outline-variant/60 text-[11px] text-slate-600 dark:text-slate-400 space-y-1">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-blue-600 font-bold shrink-0">ℹ️</span>
-                  <span>Toll gate fees &amp; parking charges extra as per official slip.</span>
+              {/* STEP 3A: Standalone Over-limit Rates Card */}
+              <div className="p-3 rounded-m3-lg bg-slate-50 dark:bg-m3-surface-container-low border border-m3-outline-variant/70 dark:border-m3-outline-variant/50 text-[11px] sm:text-xs space-y-1">
+                <div className="font-bold text-slate-800 dark:text-gray-200 uppercase tracking-wider text-[10px]">
+                  Over-limit Rates (Only if you exceed package)
                 </div>
-                <div className="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-medium">
-                  <span className="shrink-0">✓</span>
-                  <span>₹{currentBreakdown.advance} advance locks cab • Free cancellation up to 6 hours before pickup.</span>
+                <div className="space-y-0.5 text-slate-700 dark:text-gray-300">
+                  <div>• Extra Distance: ₹{currentBreakdown.extraKmRate || 15} / km</div>
+                  <div>• Extra Time: ₹{currentBreakdown.extraHrRate || 150} / hr</div>
+                </div>
+              </div>
+
+              {/* STEP 3B: Standalone Booking & Payment Rules */}
+              <div className="p-3 rounded-m3-lg bg-slate-50/70 dark:bg-m3-surface-container-low border border-m3-outline-variant/60 text-[11px] sm:text-xs space-y-1">
+                <div className="font-bold text-slate-800 dark:text-gray-200 uppercase tracking-wider text-[10px]">
+                  Booking &amp; Payment
+                </div>
+                <div className="space-y-0.5 text-slate-700 dark:text-gray-300">
+                  <div className="text-emerald-700 dark:text-emerald-400 font-semibold">
+                    ✓ ₹{currentBreakdown.advance} advance locks cab (deducted in final invoice)
+                  </div>
+                  <div>• Pay balance to chauffeur at trip end (UPI / Cash)</div>
+                  <div>• Free cancellation up to 6 hours before pickup</div>
                 </div>
               </div>
 
@@ -2563,16 +2613,6 @@ To confirm: Call +91 89395 39211 (${advanceAmount} advance)`;
                     </div>
                   )}
 
-                  <div className="flex justify-between items-center py-0.5 text-slate-500 dark:text-gray-400">
-                    <span>Toll Gate Fees (FASTag)</span>
-                    <span className="font-medium text-slate-700 dark:text-gray-300">Extra as per slip</span>
-                  </div>
-
-                  <div className="flex justify-between items-center py-0.5 text-slate-500 dark:text-gray-400">
-                    <span>Parking Charges</span>
-                    <span className="font-medium text-slate-700 dark:text-gray-300">Extra as per slip</span>
-                  </div>
-
                   {/* GST Tax Invoice Option Toggle */}
                   <div className="pt-2 pb-1 border-t border-dashed border-m3-outline-variant/70 dark:border-m3-outline-variant/50">
                     <label className="flex items-start justify-between gap-2.5 cursor-pointer group select-none">
@@ -2625,25 +2665,37 @@ To confirm: Call +91 89395 39211 (${advanceAmount} advance)`;
                         ₹{currentBreakdown.totalFare.toLocaleString('en-IN')}
                       </span>
                       <span className="text-[10px] font-semibold text-slate-500 dark:text-gray-400">
-                        + Extras as per slip
+                        + Toll &amp; Parking as per actual slip
                       </span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* STEP 3: Payment & Billing Rules */}
-              <div className="p-3 rounded-m3-lg bg-slate-50 dark:bg-m3-surface-container-low border border-m3-outline-variant/70 dark:border-m3-outline-variant/50 text-[11px] sm:text-xs">
-                <div className="font-bold text-slate-800 dark:text-gray-200 uppercase tracking-wider text-[10px] mb-1">
-                  Payment &amp; Billing Rules
+              {/* STEP 3A: Standalone Over-limit Rates Card */}
+              <div className="p-3 rounded-m3-lg bg-slate-50 dark:bg-m3-surface-container-low border border-m3-outline-variant/70 dark:border-m3-outline-variant/50 text-[11px] sm:text-xs space-y-1">
+                <div className="font-bold text-slate-800 dark:text-gray-200 uppercase tracking-wider text-[10px]">
+                  Over-limit Rates (Beyond {currentBreakdown.billedKm ? `${Math.round(currentBreakdown.billedKm)} km` : 'Package'})
                 </div>
                 <div className="space-y-0.5 text-slate-700 dark:text-gray-300">
-                  <div>• ₹{currentBreakdown.advance} advance to reserve cab (deducted in final invoice)</div>
-                  <div>• Pay balance to chauffeur at trip end (UPI / Cash)</div>
-                  <div>• Doorstep odometer reading • Extra km: ₹{currentBreakdown.extraKmRate || 14}/km</div>
+                  <div>• Extra Distance: ₹{currentBreakdown.extraKmRate || 14} / km</div>
+                  {outstationTripType === 'round' && (
+                    <div>• Driver Night Stay: ₹350 (only if 10 PM - 6 AM)</div>
+                  )}
+                </div>
+              </div>
+
+              {/* STEP 3B: Standalone Booking & Payment Rules */}
+              <div className="p-3 rounded-m3-lg bg-slate-50/70 dark:bg-m3-surface-container-low border border-m3-outline-variant/60 text-[11px] sm:text-xs space-y-1">
+                <div className="font-bold text-slate-800 dark:text-gray-200 uppercase tracking-wider text-[10px]">
+                  Booking &amp; Payment
+                </div>
+                <div className="space-y-0.5 text-slate-700 dark:text-gray-300">
                   <div className="text-emerald-700 dark:text-emerald-400 font-semibold">
-                    • Free cancellation up to 6 hours before pickup
+                    ✓ ₹{currentBreakdown.advance} advance locks cab (deducted in final invoice)
                   </div>
+                  <div>• Pay balance to chauffeur at trip end (UPI / Cash)</div>
+                  <div>• Free cancellation up to 6 hours before pickup</div>
                 </div>
               </div>
 
