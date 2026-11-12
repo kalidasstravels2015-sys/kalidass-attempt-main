@@ -24,6 +24,7 @@ import tariffConfig from '../data/tariff_config.json';
 import { peekNextQuotationId, getNextQuotationId, getFormattedDateCode } from '../utils/sequenceGenerator';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import { logBookingToGoogleSheet } from '../utils/recordWebsiteBooking.js';
+import { getFleetImageDimensions } from '../utils/vehicleMetadata';
 
 // ── Master database of known outstation destinations from Chennai ──────────
 const KNOWN_DESTINATIONS = {
@@ -127,6 +128,39 @@ function getNowIsoString() {
   const hh = String(now.getHours()).padStart(2, '0');
   const min = String(now.getMinutes()).padStart(2, '0');
   return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+}
+
+function isValidIsoDateTime(str) {
+  if (!str || typeof str !== 'string') return false;
+  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(str.trim())) return false;
+  const d = new Date(str);
+  return !isNaN(d.getTime());
+}
+
+function getDefaultPickupDateTime() {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const yyyy = tomorrow.getFullYear();
+  const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+  const dd = String(tomorrow.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}T06:00`;
+}
+
+function formatCompactDateTime(isoStr) {
+  if (!isValidIsoDateTime(isoStr)) return '';
+  try {
+    const d = new Date(isoStr);
+    const day = String(d.getDate()).padStart(2, '0');
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const month = monthNames[d.getMonth()];
+    const hours = d.getHours();
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const hr12 = hours % 12 || 12;
+    return `${day} ${month}, ${String(hr12).padStart(2, '0')}:${minutes} ${ampm}`;
+  } catch (_) {
+    return '';
+  }
 }
 
 function formatDateTimeDisplay(isoStr) {
@@ -452,7 +486,8 @@ export default function BookingEngine({
   initialDays = undefined,
   lockDestination = false,
   hideDestination = false,
-  ctaText = ''
+  ctaText = '',
+  engineId = 'fare-calculator'
 }) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
@@ -555,7 +590,9 @@ export default function BookingEngine({
   // 3. Form State: Outstation & General (Strictly Round Trip)
   const [outstationTripType, setOutstationTripType] = useState('round');
   const [outstationPickup, setOutstationPickup] = useState(
-    forceEmptyLocations ? '' : (initialPickup || prefill.pickup || (isTourService ? '' : 'Chennai, Tamil Nadu'))
+    forceEmptyLocations
+      ? ''
+      : (initialPickup || prefill.pickupLocation || (!isValidIsoDateTime(prefill.pickup) && prefill.pickup) || (isTourService ? '' : 'Chennai, Tamil Nadu'))
   );
   const [outstationDrop, setOutstationDrop] = useState(
     detectedDestination || initialDrop || ''
@@ -576,26 +613,20 @@ export default function BookingEngine({
   const [outstationDays, setOutstationDays] = useState(defaultDaysForDest);
 
   // Pickup & Return Date Times
-  const minPickupDateTime = useMemo(() => getNowIsoString(), []);
+  const [minPickupDateTime, setMinPickupDateTime] = useState(() => getNowIsoString());
 
   const [pickupDateTime, setPickupDateTime] = useState(() => {
-    if (prefill.pickup) return prefill.pickup;
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const yyyy = tomorrow.getFullYear();
-    const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
-    const dd = String(tomorrow.getDate()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}T06:00`;
+    if (isValidIsoDateTime(prefill.pickupDateTime)) return prefill.pickupDateTime;
+    if (isValidIsoDateTime(prefill.pickup)) return prefill.pickup;
+    return getDefaultPickupDateTime();
   });
 
   const [returnDateTime, setReturnDateTime] = useState(() => {
-    if (prefill.return) return prefill.return;
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const yyyy = tomorrow.getFullYear();
-    const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
-    const dd = String(tomorrow.getDate()).padStart(2, '0');
-    const defPickup = prefill.pickup || `${yyyy}-${mm}-${dd}T06:00`;
+    if (isValidIsoDateTime(prefill.returnDateTime)) return prefill.returnDateTime;
+    if (isValidIsoDateTime(prefill.return)) return prefill.return;
+    const defPickup = isValidIsoDateTime(prefill.pickupDateTime)
+      ? prefill.pickupDateTime
+      : (isValidIsoDateTime(prefill.pickup) ? prefill.pickup : getDefaultPickupDateTime());
     
     const raw = (detectedDestination || initialDrop || '').toLowerCase().trim();
     let initDays = initialDays ? Number(initialDays) : (prefill.days ? Number(prefill.days) : 1);
@@ -607,6 +638,24 @@ export default function BookingEngine({
     }
     return getDefaultReturnDateTime(defPickup, initDays);
   });
+
+  // Ensure client-side clock syncs default dates if SSR build timestamp is in the past
+  useEffect(() => {
+    setMinPickupDateTime(getNowIsoString());
+    setPickupDateTime((prev) => {
+      if (!isValidIsoDateTime(prev) || new Date(prev).getTime() < Date.now() - 5 * 60 * 1000) {
+        const freshPickup = getDefaultPickupDateTime();
+        setReturnDateTime((prevRet) => {
+          if (!isValidIsoDateTime(prevRet) || new Date(prevRet).getTime() <= new Date(freshPickup).getTime()) {
+            return getDefaultReturnDateTime(freshPickup, minDaysForTrip || 1);
+          }
+          return prevRet;
+        });
+        return freshPickup;
+      }
+      return prev;
+    });
+  }, [minDaysForTrip]);
 
   const [clampedNotice, setClampedNotice] = useState('');
 
@@ -807,13 +856,20 @@ export default function BookingEngine({
 
   const handleInputFocus = useCallback((e) => {
     const el = e?.target;
-    // On mobile screens, auto-scroll input towards upper viewport to leave maximum room for the autocomplete dropdown
-    if (el && typeof el.scrollIntoView === 'function') {
-      setTimeout(() => {
-        try {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        } catch (_) {}
-      }, 150);
+    // On mobile screens, only scroll location text inputs if they are not already visible in the upper viewport
+    if (el && typeof el.scrollIntoView === 'function' && typeof window !== 'undefined' && window.innerWidth < 768) {
+      const inputType = (el.type || '').toLowerCase();
+      if (inputType === 'text' || inputType === 'search') {
+        setTimeout(() => {
+          try {
+            const rect = el.getBoundingClientRect();
+            const inUpperViewport = rect.top >= 64 && rect.bottom <= window.innerHeight * 0.55;
+            if (!inUpperViewport) {
+              el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          } catch (_) {}
+        }, 150);
+      }
     }
     if (window.google?.maps?.places?.Autocomplete) {
       initAutocomplete();
@@ -1065,10 +1121,7 @@ export default function BookingEngine({
   const handleReturnChange = (val) => {
     setValidationError('');
     if (!val) {
-      // If user clears return, restore default return for destination
-      const defReturn = getDefaultReturnDateTime(pickupDateTime, minDaysForTrip);
-      setReturnDateTime(defReturn);
-      setOutstationDays(minDaysForTrip);
+      setReturnDateTime('');
       setClampedNotice('');
       return;
     }
@@ -1661,7 +1714,7 @@ To confirm: Call +91 89395 39211 (${advanceAmount} advance)`;
   const waHref = buildWhatsAppUrl(getWhatsAppMessage());
 
   return (
-    <div ref={containerRef} id="fare-calculator" data-hydrated={mounted ? "true" : undefined} className={`w-full max-w-2xl mx-auto transition-all duration-200 ${variant === 'card' ? 'bg-white dark:bg-m3-surface rounded-2xl shadow-xl border border-slate-200/90 dark:border-m3-outline-variant/60 ring-1 ring-black/5 overflow-hidden' : ''}`}>
+    <div ref={containerRef} id={engineId} data-hydrated={mounted ? "true" : undefined} className={`w-full max-w-2xl mx-auto transition-all duration-200 ${variant === 'card' ? 'bg-white dark:bg-m3-surface rounded-2xl shadow-xl border border-slate-200/90 dark:border-m3-outline-variant/60 ring-1 ring-black/5 overflow-hidden' : ''}`}>
       
       {/* ─────────────────────────────────────────────────────────────
           MODE A: THE SELECTION INTERFACE (M3-Compliant Selection Form)
@@ -1868,14 +1921,37 @@ To confirm: Call +91 89395 39211 (${advanceAmount} advance)`;
                     <Calendar className="w-3.5 h-3.5 text-blue-600" />
                     <span>Pickup Date &amp; Time</span>
                   </label>
-                  <input
-                    id="pickup-datetime-input"
-                    type="datetime-local"
-                    value={pickupDateTime}
-                    min={minPickupDateTime}
-                    onChange={(e) => handlePickupChange(e.target.value)}
-                    className="w-full px-2.5 min-h-[46px] sm:min-h-[48px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 rounded-m3-sm text-m3-on-surface dark:text-white font-medium focus:outline-none focus:border-2 focus:border-blue-600 transition-all"
-                  />
+                  <div className="relative flex items-center">
+                    <input
+                      id="pickup-datetime-input"
+                      type="datetime-local"
+                      value={isValidIsoDateTime(pickupDateTime) ? pickupDateTime : ''}
+                      min={minPickupDateTime}
+                      onClick={(e) => {
+                        try { e.currentTarget.showPicker?.(); } catch (_) {}
+                      }}
+                      onChange={(e) => {
+                        handlePickupChange(e.target.value);
+                        try { e.currentTarget.blur(); } catch (_) {}
+                      }}
+                      className="kt-datetime-input w-full px-2.5 min-h-[46px] sm:min-h-[48px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 rounded-m3-sm text-m3-on-surface dark:text-white font-medium focus:outline-none focus:border-2 focus:border-blue-600 focus:bg-white dark:focus:bg-m3-surface transition-all cursor-pointer"
+                    />
+                    <div
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-0 px-2.5 sm:px-3 flex items-center justify-between gap-1 overflow-hidden"
+                    >
+                      <span
+                        className={`text-xs sm:text-sm truncate select-none ${
+                          formatCompactDateTime(pickupDateTime)
+                            ? 'font-semibold text-m3-on-surface dark:text-white'
+                            : 'font-medium text-slate-400 dark:text-slate-400'
+                        }`}
+                      >
+                        {formatCompactDateTime(pickupDateTime) || 'Select date & time'}
+                      </span>
+                      <ChevronDown className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
+                    </div>
+                  </div>
                 </div>
 
                 <div>
@@ -1888,18 +1964,41 @@ To confirm: Call +91 89395 39211 (${advanceAmount} advance)`;
                       {outstationDays} {outstationDays > 1 ? 'Days' : 'Day'}
                     </span>
                   </label>
-                  <input
-                    id="return-datetime-input"
-                    type="datetime-local"
-                    value={returnDateTime}
-                    min={minReturnDateTime || pickupDateTime || minPickupDateTime}
-                    onChange={(e) => handleReturnChange(e.target.value)}
-                    className={`w-full px-2.5 min-h-[46px] sm:min-h-[48px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border rounded-m3-sm text-m3-on-surface dark:text-white font-medium focus:outline-none focus:border-2 focus:border-blue-600 transition-all ${
-                      validationError && (!returnDateTime || (pickupDateTime && new Date(returnDateTime).getTime() <= new Date(pickupDateTime).getTime()))
-                        ? 'border-2 border-red-500 ring-2 ring-red-400/40 bg-red-50/40 dark:bg-red-950/30'
-                        : 'border-m3-outline-variant/80 dark:border-m3-outline-variant/60'
-                    }`}
-                  />
+                  <div className="relative flex items-center">
+                    <input
+                      id="return-datetime-input"
+                      type="datetime-local"
+                      value={isValidIsoDateTime(returnDateTime) ? returnDateTime : ''}
+                      min={minReturnDateTime || pickupDateTime || minPickupDateTime}
+                      onClick={(e) => {
+                        try { e.currentTarget.showPicker?.(); } catch (_) {}
+                      }}
+                      onChange={(e) => {
+                        handleReturnChange(e.target.value);
+                        try { e.currentTarget.blur(); } catch (_) {}
+                      }}
+                      className={`kt-datetime-input w-full px-2.5 min-h-[46px] sm:min-h-[48px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border rounded-m3-sm text-m3-on-surface dark:text-white font-medium focus:outline-none focus:border-2 focus:border-blue-600 focus:bg-white dark:focus:bg-m3-surface transition-all cursor-pointer ${
+                        validationError && (!returnDateTime || (pickupDateTime && new Date(returnDateTime).getTime() <= new Date(pickupDateTime).getTime()))
+                          ? 'border-2 border-red-500 ring-2 ring-red-400/40 bg-red-50/40 dark:bg-red-950/30'
+                          : 'border-m3-outline-variant/80 dark:border-m3-outline-variant/60'
+                      }`}
+                    />
+                    <div
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-0 px-2.5 sm:px-3 flex items-center justify-between gap-1 overflow-hidden"
+                    >
+                      <span
+                        className={`text-xs sm:text-sm truncate select-none ${
+                          formatCompactDateTime(returnDateTime)
+                            ? 'font-semibold text-m3-on-surface dark:text-white'
+                            : 'font-medium text-slate-400 dark:text-slate-400'
+                        }`}
+                      >
+                        {formatCompactDateTime(returnDateTime) || 'Select date & time'}
+                      </span>
+                      <ChevronDown className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -1967,14 +2066,37 @@ To confirm: Call +91 89395 39211 (${advanceAmount} advance)`;
                   <Calendar className="w-3.5 h-3.5 text-blue-600" />
                   <span>Pickup Date &amp; Time</span>
                 </label>
-                <input
-                  id="local-datetime-input"
-                  type="datetime-local"
-                  value={pickupDateTime}
-                  min={minPickupDateTime}
-                  onChange={(e) => handlePickupChange(e.target.value)}
-                  className="w-full px-2.5 min-h-[46px] sm:min-h-[48px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 rounded-m3-sm text-m3-on-surface dark:text-white font-medium focus:outline-none focus:border-2 focus:border-blue-600 transition-all"
-                />
+                <div className="relative flex items-center">
+                  <input
+                    id="local-datetime-input"
+                    type="datetime-local"
+                    value={isValidIsoDateTime(pickupDateTime) ? pickupDateTime : ''}
+                    min={minPickupDateTime}
+                    onClick={(e) => {
+                      try { e.currentTarget.showPicker?.(); } catch (_) {}
+                    }}
+                    onChange={(e) => {
+                      handlePickupChange(e.target.value);
+                      try { e.currentTarget.blur(); } catch (_) {}
+                    }}
+                    className="kt-datetime-input w-full px-2.5 min-h-[46px] sm:min-h-[48px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 rounded-m3-sm text-m3-on-surface dark:text-white font-medium focus:outline-none focus:border-2 focus:border-blue-600 focus:bg-white dark:focus:bg-m3-surface transition-all cursor-pointer"
+                  />
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 px-2.5 sm:px-3 flex items-center justify-between gap-1 overflow-hidden"
+                  >
+                    <span
+                      className={`text-xs sm:text-sm truncate select-none ${
+                        formatCompactDateTime(pickupDateTime)
+                          ? 'font-semibold text-m3-on-surface dark:text-white'
+                          : 'font-medium text-slate-400 dark:text-slate-400'
+                      }`}
+                    >
+                      {formatCompactDateTime(pickupDateTime) || 'Select date & time'}
+                    </span>
+                    <ChevronDown className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -2071,14 +2193,37 @@ To confirm: Call +91 89395 39211 (${advanceAmount} advance)`;
                     <Calendar className="w-3.5 h-3.5 text-blue-600" />
                     <span>Pickup Date &amp; Time</span>
                   </label>
-                  <input
-                    id="airport-pickup-datetime"
-                    type="datetime-local"
-                    value={pickupDateTime}
-                    min={minPickupDateTime}
-                    onChange={(e) => handlePickupChange(e.target.value)}
-                    className="w-full px-2.5 min-h-[46px] sm:min-h-[48px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 rounded-m3-sm text-m3-on-surface dark:text-white font-medium focus:outline-none focus:border-2 focus:border-blue-600 transition-all"
-                  />
+                  <div className="relative flex items-center">
+                    <input
+                      id="airport-pickup-datetime"
+                      type="datetime-local"
+                      value={isValidIsoDateTime(pickupDateTime) ? pickupDateTime : ''}
+                      min={minPickupDateTime}
+                      onClick={(e) => {
+                        try { e.currentTarget.showPicker?.(); } catch (_) {}
+                      }}
+                      onChange={(e) => {
+                        handlePickupChange(e.target.value);
+                        try { e.currentTarget.blur(); } catch (_) {}
+                      }}
+                      className="kt-datetime-input w-full px-2.5 min-h-[46px] sm:min-h-[48px] text-xs sm:text-sm bg-m3-surface-container-low dark:bg-m3-surface-container-low border border-m3-outline-variant/80 dark:border-m3-outline-variant/60 rounded-m3-sm text-m3-on-surface dark:text-white font-medium focus:outline-none focus:border-2 focus:border-blue-600 focus:bg-white dark:focus:bg-m3-surface transition-all cursor-pointer"
+                    />
+                    <div
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-0 px-2.5 sm:px-3 flex items-center justify-between gap-1 overflow-hidden"
+                    >
+                      <span
+                        className={`text-xs sm:text-sm truncate select-none ${
+                          formatCompactDateTime(pickupDateTime)
+                            ? 'font-semibold text-m3-on-surface dark:text-white'
+                            : 'font-medium text-slate-400 dark:text-slate-400'
+                        }`}
+                      >
+                        {formatCompactDateTime(pickupDateTime) || 'Select date & time'}
+                      </span>
+                      <ChevronDown className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
+                    </div>
+                  </div>
                 </div>
 
                 <div>
@@ -2114,7 +2259,7 @@ To confirm: Call +91 89395 39211 (${advanceAmount} advance)`;
 
             <button
               type="button"
-              id={activeTab === 'airport' ? 'get-flat-fare-btn' : (serviceSlug ? 'btn-calculate-fare' : 'view-fare-btn')}
+              id={activeTab === 'airport' ? 'get-flat-fare-btn' : (engineId !== 'fare-calculator' ? `${engineId}-btn` : (serviceSlug ? 'btn-calculate-fare' : 'view-fare-btn'))}
               onClick={handleCalculateClick}
               className="w-full min-h-[50px] sm:min-h-[52px] px-6 rounded-m3-full font-bold text-sm sm:text-base tracking-wide transition-all flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white shadow-m3-1 hover:shadow-m3-2 cursor-pointer"
             >
@@ -2317,8 +2462,8 @@ To confirm: Call +91 89395 39211 (${advanceAmount} advance)`;
                             alt={item.name}
                             className="max-w-full max-h-full w-auto h-auto object-contain transition-transform group-hover:scale-105 drop-shadow-xs"
                             loading="lazy"
-                            width="125"
-                            height="70"
+                            width={getFleetImageDimensions(item.image, 125).width}
+                            height={getFleetImageDimensions(item.image, 125).height}
                           />
                         </div>
 
@@ -2549,8 +2694,8 @@ To confirm: Call +91 89395 39211 (${advanceAmount} advance)`;
                           alt={item.name}
                           className="w-12 sm:w-14 h-7 sm:h-8 object-contain shrink-0 transition-transform group-hover:scale-105"
                           loading="lazy"
-                          width="52"
-                          height="32"
+                          width={getFleetImageDimensions(item.image, 56).width}
+                          height={getFleetImageDimensions(item.image, 56).height}
                         />
                         <div className="text-left leading-tight pr-0.5">
                           <div className={`text-xs font-bold whitespace-nowrap ${isSelected ? 'text-blue-600 dark:text-blue-400' : 'text-slate-800 dark:text-gray-200'}`}>

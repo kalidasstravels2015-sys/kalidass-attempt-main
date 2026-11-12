@@ -28,7 +28,7 @@ export default function TempoQuotationEngine({
         initialPickup={initialPickup}
         serviceSlug="tempo-traveller-rental-chennai"
         prefill={{
-          pickup: initialPickup,
+          pickupLocation: initialPickup,
           destination: initialDrop,
           vehicle: '12-Seater Luxury Force Tempo'
         }}

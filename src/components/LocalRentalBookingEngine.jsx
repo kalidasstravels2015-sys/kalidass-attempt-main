@@ -15,6 +15,7 @@ export default function LocalRentalBookingEngine({
   return (
     <div id="local-city-rental-engine" className="w-full">
       <BookingEngine
+        engineId="local-fare-calculator"
         initialTab="local"
         allowedTabs={['local']}
         showHeader={showHeader}

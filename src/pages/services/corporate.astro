@@ -8,6 +8,7 @@ import AndroidPhoneIcon from '../../components/AndroidPhoneIcon.astro';
 import { buildWhatsAppUrl } from '../../utils/whatsapp';
 import OptimizedImage from '../../components/OptimizedImage.astro';
 import GoogleRatingBadge from '../../components/GoogleRatingBadge.astro';
+import { getFleetImageDimensions } from '../../utils/vehicleMetadata';
 import { 
   Sparkles, 
   CheckCircle2, 
@@ -795,8 +796,8 @@ const faqSchema = {
                     <img
                       src={vehicle.image}
                       alt={vehicle.cars}
-                      width="80"
-                      height="48"
+                      width={getFleetImageDimensions(vehicle.image, 80).width}
+                      height={getFleetImageDimensions(vehicle.image, 80).height}
                       loading="lazy"
                       decoding="async"
                       class="max-w-full max-h-full object-contain"
@@ -945,8 +946,8 @@ const faqSchema = {
                 <img
                   src={tempo.image}
                   alt={tempo.name}
-                  width="112"
-                  height="56"
+                  width={getFleetImageDimensions(tempo.image, 112).width}
+                  height={getFleetImageDimensions(tempo.image, 112).height}
                   loading="lazy"
                   decoding="async"
                   class="max-w-full max-h-full object-contain"
@@ -1043,7 +1044,7 @@ const faqSchema = {
                   src={wo.logo}
                   alt={wo.alt || wo.name}
                   width="110"
-                  height="40"
+                  height="55"
                   loading="lazy"
                   decoding="async"
                   class="max-w-full max-h-full object-contain"

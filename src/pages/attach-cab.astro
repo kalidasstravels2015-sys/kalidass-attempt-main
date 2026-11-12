@@ -172,9 +172,9 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
           
           {/* 1. Category Switcher (M3 Tonal Toggle Bar) */}
           <div>
-            <label class="block text-xs font-bold text-m3-on-surface-variant mb-2">
+            <div class="block text-xs font-bold text-m3-on-surface-variant mb-2">
               Select Registration Type
-            </label>
+            </div>
             <div class="grid grid-cols-2 rounded-m3-lg p-1 bg-m3-surface-container-low border border-m3-outline-variant/60" id="categoryToggle">
               <button
                 type="button"
@@ -201,9 +201,9 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
             
             {/* Number of Cars */}
             <div>
-              <label class="block text-xs font-bold text-m3-on-surface-variant mb-2">
+              <div class="block text-xs font-bold text-m3-on-surface-variant mb-2">
                 Number of Vehicles
-              </label>
+              </div>
               <div class="grid grid-cols-3 gap-2" id="carCountGroup">
                 <button type="button" data-val="1 Car" class="car-count-btn active py-2 px-3 rounded-m3-lg border text-xs sm:text-sm font-semibold transition-all bg-m3-surface-container border-m3-primary text-m3-primary cursor-pointer">
                   1 Car
@@ -220,9 +220,9 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
 
             {/* Vehicle Models */}
             <div>
-              <label class="block text-xs font-bold text-m3-on-surface-variant mb-2">
+              <div class="block text-xs font-bold text-m3-on-surface-variant mb-2">
                 Available Vehicle Models <span class="font-normal text-m3-on-surface-variant/70">(Tap all that apply)</span>
-              </label>
+              </div>
               <div class="flex flex-wrap gap-2" id="carsGroup">
                 <button type="button" data-car="Swift / Dzire" class="car-chip-btn active px-3 py-1.5 rounded-m3-full border text-xs font-semibold transition-all bg-m3-surface-container border-m3-primary text-m3-primary cursor-pointer">
                   Swift / Dzire
@@ -245,9 +245,9 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
 
             {/* Plate Type */}
             <div>
-              <label class="block text-xs font-bold text-m3-on-surface-variant mb-2">
+              <div class="block text-xs font-bold text-m3-on-surface-variant mb-2">
                 Vehicle Permit Type
-              </label>
+              </div>
               <div class="grid grid-cols-2 gap-2" id="plateTypeGroup">
                 <button type="button" data-plate="Yellow Board (Commercial Taxi)" class="plate-btn active py-2 px-3 rounded-m3-lg border text-xs sm:text-sm font-semibold transition-all bg-m3-surface-container border-m3-primary text-m3-primary cursor-pointer text-center">
                   Yellow Board (Taxi)
@@ -266,9 +266,9 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
             
             {/* License Type */}
             <div>
-              <label class="block text-xs font-bold text-m3-on-surface-variant mb-2">
+              <div class="block text-xs font-bold text-m3-on-surface-variant mb-2">
                 License Classification
-              </label>
+              </div>
               <div class="grid grid-cols-3 gap-2" id="licenseGroup">
                 <button type="button" data-lic="Car (LMV)" class="license-btn active py-2 px-2 rounded-m3-lg border text-xs sm:text-sm font-semibold transition-all bg-m3-surface-container border-m3-primary text-m3-primary cursor-pointer text-center">
                   Car (LMV)
@@ -285,9 +285,9 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
 
             {/* Experience */}
             <div>
-              <label class="block text-xs font-bold text-m3-on-surface-variant mb-2">
+              <div class="block text-xs font-bold text-m3-on-surface-variant mb-2">
                 Highway Driving Experience
-              </label>
+              </div>
               <div class="grid grid-cols-3 gap-2" id="expGroup">
                 <button type="button" data-exp="1 to 3 Years" class="exp-btn py-2 px-2 rounded-m3-lg border text-xs sm:text-sm font-semibold transition-all bg-white border-m3-outline-variant text-m3-on-surface cursor-pointer text-center">
                   1 - 3 Yrs
@@ -304,9 +304,9 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
 
             {/* Preferred Duty */}
             <div>
-              <label class="block text-xs font-bold text-m3-on-surface-variant mb-2">
+              <div class="block text-xs font-bold text-m3-on-surface-variant mb-2">
                 Preferred Duty Type
-              </label>
+              </div>
               <div class="grid grid-cols-2 gap-2" id="dutyGroup">
                 <button type="button" data-duty="Outstation Trips" class="duty-btn active py-2 px-3 rounded-m3-lg border text-xs sm:text-sm font-semibold transition-all bg-m3-surface-container border-m3-primary text-m3-primary cursor-pointer text-center">
                   Outstation Highway
@@ -403,10 +403,10 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
           {/* 5. Document Photos (Direct Mobile Uploads to Drive) */}
           <div class="space-y-3 pt-2 border-t border-m3-outline-variant/40">
             <div>
-              <label class="block text-xs font-bold text-m3-on-surface flex items-center justify-between">
+              <div class="block text-xs font-bold text-m3-on-surface flex items-center justify-between">
                 <span>Upload Required Document Photos</span>
                 <span class="text-[11px] font-semibold text-m3-primary">Saved into Google Drive</span>
-              </label>
+              </div>
               <p class="text-[11px] text-m3-on-surface-variant mt-0.5">
                 Capture photo using phone camera or select from storage. Files are automatically organized in your application folder.
               </p>

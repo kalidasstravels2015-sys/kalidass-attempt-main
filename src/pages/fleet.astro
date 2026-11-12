@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import WhatsAppIcon from "../components/WhatsAppIcon.astro";
 import { buildWhatsAppUrl } from "../utils/whatsapp";
+import { getFleetImageDimensions } from "../utils/vehicleMetadata";
 
 const breadcrumbItems = [
   { name: "Home", item: "/" },
@@ -613,8 +614,8 @@ const schema = {
                   <img
                     src={vehicle.image}
                     alt={vehicle.alt}
-                    width="260"
-                    height="140"
+                    width={getFleetImageDimensions(vehicle.image, 260).width}
+                    height={getFleetImageDimensions(vehicle.image, 260).height}
                     loading="lazy"
                     decoding="async"
                     class={`max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-md ${

@@ -634,7 +634,7 @@ export default function DriverFeeEstimator({
             {/* Column 2: Transmission (Gear) */}
             <div>
               <div className="flex items-center mb-1">
-                <label className={`${labelCls} !mb-0 truncate`}>Transmission</label>
+                <span className={`${labelCls} !mb-0 truncate`}>Transmission</span>
               </div>
               <div className="grid grid-cols-2 gap-1 p-0.5 bg-m3-surface-container-low border border-m3-outline-variant rounded-m3-md min-h-[44px] sm:min-h-[48px] items-center">
                 <button

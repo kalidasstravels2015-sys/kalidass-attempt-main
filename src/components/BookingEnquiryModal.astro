@@ -134,9 +134,9 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
         <!-- Dynamic Airport Row (Shown only for Airport transfers) -->
         <div id="sheetAirportDetailsRow" class="hidden grid grid-cols-2 gap-2 pt-0.5">
           <div>
-            <label class="block text-[11px] font-bold text-m3-on-surface mb-1">
+            <span class="block text-[11px] font-bold text-m3-on-surface mb-1">
               Airport Transfer *
-            </label>
+            </span>
             <div class="flex rounded-m3-lg py-1.5 px-2 bg-m3-surface-container border border-m3-outline-variant/60 text-[11px] font-bold text-m3-primary justify-center items-center">
               <span>Arrival Pickup (MAA)</span>
             </div>
@@ -241,7 +241,7 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
 
         <!-- Field 3: Guest Name & Mobile Number (MANDATORY) -->
         <div>
-          <label class="block text-xs font-bold text-m3-on-surface mb-1">
+          <label for="sheetGuestName" class="block text-xs font-bold text-m3-on-surface mb-1">
             3. Passenger Name &amp; Contact Number *
           </label>
           <div class="grid grid-cols-2 gap-2">
@@ -260,6 +260,7 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
                 type="tel"
                 id="sheetGuestPhone"
                 name="guestPhone"
+                aria-label="Passenger 10-digit mobile number"
                 required
                 maxlength="10"
                 pattern="[0-9]{10}"

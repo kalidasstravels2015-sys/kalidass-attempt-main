@@ -429,7 +429,7 @@ To confirm: Call +91 89395 39211 (₹500 advance)`;
           {/* Box 1: Textarea with Generate Button */}
           <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-2.5">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+              <label htmlFor="fq-raw-inquiry" className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-blue-600" />
                 Customer Inquiry Text
               </label>
@@ -441,6 +441,8 @@ To confirm: Call +91 89395 39211 (₹500 advance)`;
             </div>
 
             <textarea
+              id="fq-raw-inquiry"
+              name="rawInquiry"
               rows={4}
               value={rawText}
               onChange={(e) => {
@@ -551,8 +553,10 @@ To confirm: Call +91 89395 39211 (₹500 advance)`;
             {/* 4. Phone & Name Input (Compact) */}
             <div className="grid grid-cols-2 gap-2 pt-1 border-t border-slate-100">
               <div>
-                <label className="block text-[10px] font-semibold text-slate-500 mb-0.5">Customer Name</label>
+                <label htmlFor="fq-customer-name" className="block text-[10px] font-semibold text-slate-500 mb-0.5">Customer Name</label>
                 <input
+                  id="fq-customer-name"
+                  name="customerName"
                   type="text"
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
@@ -561,8 +565,10 @@ To confirm: Call +91 89395 39211 (₹500 advance)`;
                 />
               </div>
               <div>
-                <label className="block text-[10px] font-semibold text-slate-500 mb-0.5">WhatsApp Phone</label>
+                <label htmlFor="fq-customer-phone" className="block text-[10px] font-semibold text-slate-500 mb-0.5">WhatsApp Phone</label>
                 <input
+                  id="fq-customer-phone"
+                  name="customerPhone"
                   type="text"
                   value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value)}
@@ -620,6 +626,9 @@ To confirm: Call +91 89395 39211 (₹500 advance)`;
             >
               <div className="relative flex-1">
                 <input
+                  id="fq-ai-instruction"
+                  name="aiInstruction"
+                  aria-label="AI adjustment instruction"
                   type="text"
                   value={aiInstruction}
                   onChange={(e) => setAiInstruction(e.target.value)}
@@ -754,6 +763,9 @@ To confirm: Call +91 89395 39211 (₹500 advance)`;
             {/* Editable Quote Textarea */}
             <div className="relative">
               <textarea
+                id="fq-editable-bill"
+                name="editableBill"
+                aria-label="Generated WhatsApp quote editor"
                 rows={16}
                 value={editableBill}
                 onChange={(e) => {

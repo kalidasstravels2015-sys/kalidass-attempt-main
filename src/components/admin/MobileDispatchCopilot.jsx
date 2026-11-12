@@ -427,6 +427,9 @@ export default function MobileDispatchCopilot() {
       {/* Hidden File Input for Multiple Photos & PDF Documents */}
       <input
         type="file"
+        id="copilot-file-upload"
+        name="attachments"
+        aria-label="Upload photos or PDF documents"
         ref={fileInputRef}
         accept="image/*,application/pdf"
         multiple
@@ -930,6 +933,9 @@ export default function MobileDispatchCopilot() {
           <input
             ref={inputRef}
             type="text"
+            id="copilot-chat-input"
+            name="prompt"
+            aria-label="Ask anything, paste notes, or attach photos and PDFs"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={

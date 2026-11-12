@@ -1,21 +1,36 @@
 {
-  "name": "Kalidass Travels Chennai",
+  "name": "Kalidass Travels — Car Rental & Tempo Traveller in Chennai",
   "short_name": "Kalidass Travels",
-  "description": "Premium taxi, temple tour, acting drivers, and corporate cab services across Chennai and South India.",
+  "description": "4.9★ Rated Car Rental, Chennai Airport Taxi, Outstation Cabs & Luxury Force Tempo Traveller Rental in Chennai since 2012.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F9FAFB",
-  "theme_color": "#1E252D",
+  "background_color": "#ffffff",
+  "theme_color": "#0B57D0",
+  "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/images/favicon.webp",
+      "src": "/images/icon-192.webp",
       "sizes": "192x192",
-      "type": "image/webp"
+      "type": "image/webp",
+      "purpose": "any"
     },
     {
-      "src": "/images/favicon.png",
+      "src": "/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/icon-512.webp",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/webp",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }

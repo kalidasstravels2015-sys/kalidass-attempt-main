@@ -862,6 +862,9 @@ Warm regards,
           <form onSubmit={handleUnlockPin} className="space-y-4">
             <div>
               <input
+                id="admin-owner-pin"
+                name="pin"
+                aria-label="Enter Owner PIN"
                 type="password"
                 inputMode="numeric"
                 maxLength={4}

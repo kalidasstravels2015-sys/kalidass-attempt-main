@@ -59,6 +59,13 @@ if (!isRemote) {
     // console.log(`Image not found in src/assets: ${imagePath}`);
   }
 }
+
+const resolvedWidth = imageData
+  ? (width ? Number(width) : imageData.width)
+  : width;
+const resolvedHeight = imageData
+  ? (width ? Math.round(Number(width) * (imageData.height / imageData.width)) : (height ? Number(height) : imageData.height))
+  : height;
 ---
 
 {
@@ -83,8 +90,8 @@ if (!isRemote) {
       loading={loading}
       decoding={decoding}
       fetchpriority={fetchpriority}
-      width={width || imageData?.width}
-      height={height || imageData?.height}
+      width={resolvedWidth}
+      height={resolvedHeight}
     />
   ) : imageData ? (
     <Image
@@ -99,8 +106,8 @@ if (!isRemote) {
       decoding={decoding}
       quality={quality}
       fetchpriority={fetchpriority}
-      width={width || imageData.width}
-      height={height || imageData.height}
+      width={resolvedWidth}
+      height={resolvedHeight}
     />
   ) : (
     <img

@@ -1078,6 +1078,24 @@ ${promptCtx}`;
             next();
           });
         },
+        configurePreviewServer(server) {
+          server.middlewares.use((req, res, next) => {
+            res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+            res.setHeader('X-Content-Type-Options', 'nosniff');
+            res.setHeader('X-Frame-Options', 'DENY');
+            res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+            res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+            res.setHeader('Permissions-Policy', 'camera=(), microphone=(self), geolocation=(self "https://maps.googleapis.com")');
+            res.setHeader(
+              'Content-Security-Policy',
+              "default-src 'self'; script-src 'self' 'unsafe-inline' https://*.googletagmanager.com https://*.google.com https://*.google.co.in https://*.googleadservices.com https://*.doubleclick.net https://maps.googleapis.com https://*.cloudflareinsights.com https://*.clarity.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://maps.gstatic.com https://maps.googleapis.com https://images.unsplash.com https://*.google.com https://*.google.co.in https://*.google-analytics.com https://*.googletagmanager.com https://*.doubleclick.net https://*.googleadservices.com https://*.cloudinary.com https://*.clarity.ms https://*.bing.com https://www.tamilnadutourism.tn.gov.in; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; connect-src 'self' https://*.google.com https://*.google.co.in https://*.google-analytics.com https://*.googletagmanager.com https://*.doubleclick.net https://*.googleadservices.com https://maps.googleapis.com https://*.cloudflareinsights.com https://script.google.com https://script.googleusercontent.com https://*.clarity.ms https://*.bing.com https://nominatim.openstreetmap.org; worker-src 'self' blob:; frame-src 'self' https://*.google.com https://*.google.co.in https://*.doubleclick.net https://*.googleadservices.com; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://wa.me https://api.whatsapp.com;"
+            );
+            if (req.url && req.url.match(/\.(webp|png|jpg|jpeg|svg|ico|woff2?|ttf|eot|css|js)(\?.*)?$/)) {
+              res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+            }
+            next();
+          });
+        },
       },
     ],
   },

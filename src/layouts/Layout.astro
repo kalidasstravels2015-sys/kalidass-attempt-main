@@ -716,9 +716,9 @@ const unifiedSchemaGraph = {
       />
     )}
     <meta name="theme-color" content="#0B57D0" />
-    <link rel="icon" type="image/webp" href="/images/favicon.webp" />
-    <link rel="icon" type="image/png" href="/images/favicon.png" />
-    <link rel="apple-touch-icon" href="/images/favicon.webp" />
+    <link rel="icon" type="image/webp" sizes="192x192" href="/images/icon-192.webp" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="description" content={description} />
     <meta name="keywords" content={keywords} />
@@ -1149,6 +1149,37 @@ const unifiedSchemaGraph = {
       .pac-target-input,
       [data-autocomplete-input] {
         scroll-margin-top: 75px !important;
+      }
+
+      /* Custom formatted overlay for datetime-local inputs (prevents blank mobile boxes & 2-col truncation) */
+      input[type="datetime-local"].kt-datetime-input {
+        color: transparent !important;
+        -webkit-text-fill-color: transparent !important;
+        caret-color: transparent !important;
+        background: transparent !important;
+      }
+      input[type="datetime-local"].kt-datetime-input::-webkit-datetime-edit,
+      input[type="datetime-local"].kt-datetime-input::-webkit-datetime-edit-fields-wrapper,
+      input[type="datetime-local"].kt-datetime-input::-webkit-datetime-edit-text,
+      input[type="datetime-local"].kt-datetime-input::-webkit-datetime-edit-month-field,
+      input[type="datetime-local"].kt-datetime-input::-webkit-datetime-edit-day-field,
+      input[type="datetime-local"].kt-datetime-input::-webkit-datetime-edit-year-field,
+      input[type="datetime-local"].kt-datetime-input::-webkit-datetime-edit-hour-field,
+      input[type="datetime-local"].kt-datetime-input::-webkit-datetime-edit-minute-field,
+      input[type="datetime-local"].kt-datetime-input::-webkit-datetime-edit-ampm-field {
+        color: transparent !important;
+        -webkit-text-fill-color: transparent !important;
+        background: transparent !important;
+      }
+      input[type="datetime-local"].kt-datetime-input::-webkit-calendar-picker-indicator {
+        opacity: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        position: absolute !important;
+        inset: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        cursor: pointer !important;
       }
 
       /* Clean swipeable containers without ugly desktop/mobile scrollbars */
@@ -2693,14 +2724,17 @@ const unifiedSchemaGraph = {
   <script is:inline>
     (function () {
       function initGlobalPlacesAutocompleteEnhancer() {
-        // 1. Auto-scroll any autocomplete/pickup/drop input into upper viewport on focus
+        // 1. Auto-scroll any autocomplete text input into upper viewport on focus (strictly excluding date/time pickers)
         document.addEventListener('focusin', function (e) {
           var target = e.target;
           if (!target || typeof target.getBoundingClientRect !== 'function') return;
+          var inputType = (target.type || '').toLowerCase();
+          if (inputType === 'datetime-local' || inputType === 'date' || inputType === 'time') return;
+
           var isAutocompleteInput = 
             target.classList.contains('pac-target-input') ||
             target.hasAttribute('data-autocomplete-input') ||
-            (target.tagName === 'INPUT' && (
+            (target.tagName === 'INPUT' && (inputType === 'text' || inputType === 'search') && (
               target.id.includes('pickup') || 
               target.id.includes('drop') || 
               target.id.includes('dest') || 
@@ -2710,7 +2744,11 @@ const unifiedSchemaGraph = {
           if (isAutocompleteInput && window.innerWidth < 768) {
             setTimeout(function () {
               try {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                var rect = target.getBoundingClientRect();
+                var inUpperViewport = rect.top >= 64 && rect.bottom <= window.innerHeight * 0.55;
+                if (!inUpperViewport) {
+                  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
               } catch (_) {}
             }, 180);
           }

@@ -25,8 +25,10 @@ export default function QuotationEngine({
     <BookingEngine
       initialTab={mappedTab}
       allowedTabs={mappedAllowed}
+      initialPickup={initialPickup}
+      initialDrop={initialDrop}
       prefill={{
-        pickup: initialPickup,
+        pickupLocation: initialPickup,
         destination: initialDrop
       }}
       title={title}

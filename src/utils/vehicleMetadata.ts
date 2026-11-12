@@ -332,3 +332,32 @@ export function getSlugAliases(vehicleName: string): string[] {
   }
   return [];
 }
+
+/**
+ * Natural dimensions of fleet images in /images/fleet/*.webp
+ * Used to compute exact intrinsic aspect-ratio width/height attributes for Lighthouse Best Practices.
+ */
+export const FLEET_IMAGE_NATURAL_DIMS: Record<string, { width: number; height: number }> = {
+  "swift-dzire.webp": { width: 478, height: 236 },
+  "toyoto-etios.webp": { width: 600, height: 399 },
+  "maruti-ertiga.webp": { width: 600, height: 298 },
+  "toyota-innova.webp": { width: 600, height: 287 },
+  "innova-crysta.webp": { width: 475, height: 207 },
+  "tempo-12.webp": { width: 1161, height: 658 },
+  "tempo-17.webp": { width: 1169, height: 647 },
+  "tempo.webp": { width: 442, height: 253 },
+  "force-urbania.webp": { width: 677, height: 405 },
+};
+
+export function getFleetImageDimensions(imagePath: string, targetWidth: number = 128): { width: number; height: number } {
+  const filename = (imagePath || "").split("/").pop()?.split("?")[0] || "";
+  const dims = FLEET_IMAGE_NATURAL_DIMS[filename];
+  if (!dims) {
+    return { width: targetWidth, height: Math.round(targetWidth * 0.5) };
+  }
+  return {
+    width: targetWidth,
+    height: Math.round(targetWidth * (dims.height / dims.width)),
+  };
+}
+

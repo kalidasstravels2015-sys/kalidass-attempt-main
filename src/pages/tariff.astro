@@ -10,7 +10,8 @@ import { Calculator, Briefcase, ArrowRight, Phone, ShieldCheck, Receipt, Sparkle
 import {
   getDeduplicatedTariffVehicles,
   getSlugAliases,
-  getVehicleMetadata
+  getVehicleMetadata,
+  getFleetImageDimensions
 } from "../utils/vehicleMetadata";
 
 const tariffFaqs = [
@@ -262,8 +263,8 @@ const faqSchema = {
                         <img
                           src={meta.image}
                           alt={`${name} taxi rental in Chennai`}
-                          width="96"
-                          height="60"
+                          width={getFleetImageDimensions(meta.image, 96).width}
+                          height={getFleetImageDimensions(meta.image, 96).height}
                           decoding="async"
                           class={`max-w-full max-h-full object-contain transition-transform ${meta.image.includes('swift-dzire') ? 'scale-125' : meta.image.includes('tempo') ? 'scale-120' : meta.image.includes('urbania') ? 'scale-120' : 'scale-115'}`}
                           loading="lazy"
@@ -360,8 +361,8 @@ const faqSchema = {
                       <img
                         src={meta.image}
                         alt={`${name} taxi rental in Chennai`}
-                        width="128"
-                        height="80"
+                        width={getFleetImageDimensions(meta.image, 128).width}
+                        height={getFleetImageDimensions(meta.image, 128).height}
                         decoding="async"
                         class={`max-w-full max-h-full object-contain ${meta.image.includes('swift-dzire') ? 'scale-130' : meta.image.includes('tempo') ? 'scale-120' : meta.image.includes('urbania') ? 'scale-120' : 'scale-115'}`}
                         loading="lazy"
@@ -488,8 +489,8 @@ const faqSchema = {
                         <img
                           src={meta.image}
                           alt={`${name} outstation taxi in Chennai`}
-                          width="96"
-                          height="60"
+                          width={getFleetImageDimensions(meta.image, 96).width}
+                          height={getFleetImageDimensions(meta.image, 96).height}
                           decoding="async"
                           class={`max-w-full max-h-full object-contain transition-transform ${meta.image.includes('swift-dzire') ? 'scale-125' : meta.image.includes('tempo') ? 'scale-120' : meta.image.includes('urbania') ? 'scale-120' : 'scale-115'}`}
                           loading="lazy"
@@ -562,8 +563,8 @@ const faqSchema = {
                       <img
                         src={meta.image}
                         alt={`${name} outstation cab in Chennai`}
-                        width="128"
-                        height="80"
+                        width={getFleetImageDimensions(meta.image, 128).width}
+                        height={getFleetImageDimensions(meta.image, 128).height}
                         decoding="async"
                         class={`max-w-full max-h-full object-contain ${meta.image.includes('swift-dzire') ? 'scale-130' : meta.image.includes('tempo') ? 'scale-120' : meta.image.includes('urbania') ? 'scale-120' : 'scale-115'}`}
                         loading="lazy"

@@ -22,6 +22,7 @@ import VehicleCard from '../../components/VehicleCard.astro';
 import GoogleRatingBadge from '../../components/GoogleRatingBadge.astro';
 import HeroVisualCard from '../../components/HeroVisualCard.astro';
 import { buildWhatsAppUrl, WHATSAPP_CONFIG } from '../../utils/whatsapp';
+import { getFleetImageDimensions } from '../../utils/vehicleMetadata';
 import { 
   ShieldCheck, 
   Clock, 
@@ -2601,8 +2602,8 @@ Please share availability and confirmed quote.`;
                               <img
                                 src={vehicleImg}
                                 alt={`${vehicleName} cab rental - Kalidass Travels`}
-                                width="120"
-                                height="70"
+                                width={getFleetImageDimensions(vehicleImg, 120).width}
+                                height={getFleetImageDimensions(vehicleImg, 120).height}
                                 decoding="async"
                                 class={`max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-300 drop-shadow-xs ${
                                   vehicleImg.includes('swift-dzire') ? 'scale-120 sm:scale-125' : vehicleImg.includes('suv') ? 'scale-115 sm:scale-120' : 'scale-105 sm:scale-110'
@@ -2626,26 +2627,28 @@ Please share availability and confirmed quote.`;
 
                             return (
                               <div class="pb-2.5 mb-2.5 border-b border-m3-outline-variant/50">
-                                <label class="block text-xs font-bold uppercase tracking-wider text-m3-on-surface-variant mb-1.5">
-                                  <span>Trip Duration</span>
+                                <label>
+                                  <span class="block text-xs font-bold uppercase tracking-wider text-m3-on-surface-variant mb-1.5">
+                                    Trip Duration
+                                  </span>
+                                  <select 
+                                    class="tirupati-stay-select w-full bg-m3-surface border border-m3-outline-variant hover:border-m3-primary rounded-m3-lg py-1.5 px-2.5 text-xs sm:text-sm font-bold text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary outline-none transition-all cursor-pointer shadow-2xs"
+                                    aria-label={`Select trip duration for ${vehicleName}`}
+                                    data-vehicle-name={vehicleName}
+                                  >
+                                    {stayOptions.map((opt) => (
+                                      <option 
+                                        value={opt.value} 
+                                        data-price={opt.price} 
+                                        data-duration={opt.duration} 
+                                        data-inclusions={opt.inclusions}
+                                        selected={opt.selected}
+                                      >
+                                        {opt.label}
+                                      </option>
+                                    ))}
+                                  </select>
                                 </label>
-                                <select 
-                                  class="tirupati-stay-select w-full bg-m3-surface border border-m3-outline-variant hover:border-m3-primary rounded-m3-lg py-1.5 px-2.5 text-xs sm:text-sm font-bold text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary outline-none transition-all cursor-pointer shadow-2xs"
-                                  aria-label={`Select trip duration for ${vehicleName}`}
-                                  data-vehicle-name={vehicleName}
-                                >
-                                  {stayOptions.map((opt) => (
-                                    <option 
-                                      value={opt.value} 
-                                      data-price={opt.price} 
-                                      data-duration={opt.duration} 
-                                      data-inclusions={opt.inclusions}
-                                      selected={opt.selected}
-                                    >
-                                      {opt.label}
-                                    </option>
-                                  ))}
-                                </select>
                               </div>
                             );
                           })()}
