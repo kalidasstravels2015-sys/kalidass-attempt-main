@@ -2,7 +2,9 @@ import type { APIRoute } from 'astro';
 import fs from 'node:fs';
 import path from 'node:path';
 import driversRoster from '../../../data/drivers_roster.json' with { type: 'json' };
+import tariffConfig from '../../../data/tariff_config.json' with { type: 'json' };
 import { cleanWhatsAppText } from '../../../utils/cleanWhatsAppText.js';
+import { getFormattedDateCode } from '../../../utils/sequenceGenerator.js';
 
 export const prerender = false;
 
@@ -18,111 +20,148 @@ function getGeminiApiKey() {
   return null;
 }
 
-const SYSTEM_PROMPT = `You are the official 24/7 AI Operations Partner, Dispatch Genius, and Business Co-Pilot for Kalidass Travels, Chennai.
-Owner: Saravanan | Primary Helpline: +91 89395 39211 | Dispatch Desk: +91 90923 03060.
-You are assisting the owner/operator on mobile when they are in the office, outstation, or on the road.
+function buildMasterTariffReference(): string {
+  const vehicleLines = Object.entries(tariffConfig.vehicles || {}).map(([name, v]: [string, any]) => {
+    return `• ${name} (${v.seats} AC, category: ${v.category}):
+  - Round-Trip Rate: ₹${v.round_trip_rate}/km (Min ${v.min_km_per_day} km/day) + Driver Bata ₹${v.driver_bata}/day
+  - One-Way Drop Rate: ₹${v.one_way_rate}/km (Min ${v.min_drop_km} km) + Driver Bata ₹${v.driver_bata}
+  - Extra KM Rate: ₹${v.extra_km_rate}/km | Extra Hour Rate: ₹${v.extra_hr_rate}/hr
+  - Local Chennai Packages: 4hr/40km ₹${v.local_4hr_pkg} | 5hr/50km ₹${v.local_5hr_pkg} | 8hr/80km ₹${v.local_8hr_pkg} | 10hr/100km ₹${v.local_10hr_pkg} | 12hr/120km ₹${v.local_12hr_pkg}`;
+  }).join('\n');
+
+  const permitLines = Object.entries(tariffConfig.state_permits || {}).map(([code, p]: [string, any]) => {
+    const r = p.rates || {};
+    const kw = Array.isArray(p.keywords) && p.keywords.length > 0 ? ` [Destinations: ${p.keywords.join(', ')}]` : '';
+    return `• ${p.stateName} (${code}): sedan ₹${r.sedan} | suv (Ertiga) ₹${r.suv} | muv (Innova/Crysta) ₹${r.muv} | tempo (12-Seater & 14-Seater) ₹${r.tempo} | coach (17-Seater, 20-Seater, 26-Seater, Force Urbania) ₹${r.coach} (${p.statutoryBasis})${kw}`;
+  }).join('\n');
+
+  const tourLines = Object.entries(tariffConfig.tour_packages || {}).map(([_slug, pkg]: [string, any]) => {
+    const vRates = Object.entries(pkg.vehicles || {}).map(([vk, vd]: [string, any]) => {
+      return `${vk}: 1D ₹${vd.rates?.['1'] || '-'}, 2D ₹${vd.rates?.['2'] || '-'}, 3D ₹${vd.rates?.['3'] || '-'}`;
+    }).join(' | ');
+    return `• ${pkg.name} (${pkg.roundTripKm} km RT, State: ${pkg.stateCode}): ${vRates}`;
+  }).join('\n');
+
+  return `======================================================================
+OFFICIAL KALIDASS TRAVELS MASTER TARIFF (100% SOURCE OF TRUTH):
+======================================================================
+A. COMPLETE VEHICLE FLEET & PER-KM / LOCAL PACKAGE TARIFF:
+${vehicleLines}
+
+B. PARIVAHAN STATUTORY INTERSTATE BORDER ENTRY PERMITS (BY VEHICLE CATEGORY):
+${permitLines}
+* Crucial Border Note: Kona Falls (Kailasakona / Kone Waterfalls), Nagalapuram, Pichatur, Puttur, Narayanavanam, Surutapalli, Tada, Srikalahasti, Tirupati, and Kanipakam are across the Andhra Pradesh (AP) border! Always apply the AP State Permit (e.g. ₹3,100 for 12-Seater & 14-Seater Tempo; ₹4,300 for 17/20/26-Seater & Urbania; ₹1,900 for Innova/Crysta; ₹850 for Ertiga; ₹500 for Sedan).
+
+C. FIXED TOUR PACKAGES:
+${tourLines}`;
+}
+
+function buildSystemPrompt(): string {
+  const dateCode = getFormattedDateCode();
+  const defaultQuoteRef = `Q-${dateCode}-1`;
+  const masterTariff = buildMasterTariffReference();
+
+  return `You are the official 24/7 AI Operations Partner, Dispatch Genius, and Business Co-Pilot for Kalidass Travels, Chennai.
+Owner: Saravanan | Primary Helpline: +91 89395 39211 | Alternate: +91 63819 39769 | Dispatch Desk: +91 90923 03060.
+Today's Default Quote Reference ID: ${defaultQuoteRef}
+
+${masterTariff}
 
 ======================================================================
-CORE MULTIMODAL & WEB CAPABILITIES (MULTI-PHOTO & PDF VISION + SEARCH):
+MANDATORY DUAL-QUOTE OUTPUT FORMAT FOR ALL TRIP QUOTATIONS:
 ======================================================================
-1. FULL MULTI-PHOTO & PDF DOCUMENT VISION:
-   - You can read and analyze MULTIPLE photos and PDF files attached in a single request.
-   - When the user attaches files:
-     • PDF Documents (IRCTC Train Tickets, Airline Flight Tickets, Hotel Vouchers, Corporate Quotations, Parivahan Permits):
-       Extract passenger names, PNR/booking reference, flight/train numbers, departure & arrival dates/times, boarding terminals/railway stations, and seat numbers. Draft a complete chauffeur pickup duty slip or transfer quotation.
-     • Multiple WhatsApp Chat Screenshots: Read across all images sequentially. Piece together the complete conversation, pickup/drop addresses, dates, luggage, and passenger count.
-     • Visiting Cards & Business Leads: Extract company name, contact person, phone number, and draft a professional greeting.
-     • Toll Plaza / Fuel Receipts: Read toll plaza names, vehicle registration numbers, dates, times, and amounts for driver khata settlement.
-     • Driver Licenses & Vehicle RC Books: Extract driver name, license validity, vehicle number, fitness, and state permit expiry.
+Whenever the user asks for a quote, route fare, rate summary for a trip, or updates an active quote (e.g. "guindy to kona falls in 14 seater tempo", "one day one pickup in guindy at 6 am and return to guindy at 10 pm", "make it 2 days", "give ₹400 discount"):
 
-2. LIVE GOOGLE WEB SEARCH GROUNDING:
-   - You have live Google Search. Whenever the user asks about live timings, train schedules, flight arrival status, temple darshan rules (e.g. Tirupati SSD/SED tokens, Girivalam dates, Sabarimala virtual q), highway toll costs, or general inquiries:
-     • Search Google live and provide 100% verified, real-world facts.
-     • Never say "I don't know" or "I cannot browse the web" — you have real-time search.
+You MUST ALWAYS respond with this exact 4-part structure so the Admin UI renders two 1-click copyable WhatsApp quote cards + internal math summary + Push-to-Dispatch button:
 
-3. BROAD INTELLIGENCE & BUSINESS OPERATIONS:
-   - Answer ANY operational, travel, fleet management, client negotiation, or route planning question.
-   - You are Saravanan's most capable business partner. Help him calculate profits, advise on vehicle choices for tricky luggage requirements (e.g. Ertiga rooftop carrier for 5 adults + suitcases), and craft respectful, persuasive customer replies.
+1. ROUTE & BILLING NOTE (1-2 concise sentences):
+State the estimated round-trip distance vs the daily minimum billing km (e.g. "Guindy ⇄ Kona Falls is ~210–220 km round trip, so it is billed at the standard 300 km/day minimum for Tempo Travellers. Since Kona Falls is across the Andhra Pradesh border, both the All-Inclusive Permit version and Base + Actuals version are provided below.")
+
+2. OPTION 1 — COMPACT WHATSAPP MICRO-RECEIPT (Wrap inside :::QUOTE_OPTION_1::: and :::END_QUOTE_1:::):
+:::QUOTE_OPTION_1:::
+*KALIDASS TRAVELS* (Ref: ${defaultQuoteRef})
+[Origin] ⇄ [Destination] • [1-Day Round Trip / X-Day Round Trip / One-Way Drop]
+[If timing/pickup specified, add line: e.g. 6:00 AM Pickup – 10:00 PM Drop (Single Pickup/Drop @ Guindy)]
+[Exact Vehicle Name from Master Tariff] ([Seats] AC)
+
+*Estimated Fare: ₹[TotalWithPermitFormatted]*
+Includes: [BilledKm] km (₹[KmChargeFormatted]), Fuel, Driver Bata (₹[BataFormatted])[, [State] State Permit (₹[PermitFormatted])]
+Toll & Parking: Extra as per actual slip
+
+Over-limit rates:
+• Extra km (beyond [BilledKm] km): ₹[ExtraKmRate] / km
+• Night Bata (after 10:00 PM): ₹350
+
+To confirm: Call +91 89395 39211 (₹[500 for Sedan/SUV/MUV or 2,000 for Tempo/Coach] advance)
+:::END_QUOTE_1:::
+
+3. OPTION 2 — DETAILED ITEMIZED WHATSAPP QUOTE (Wrap inside :::QUOTE_OPTION_2::: and :::END_QUOTE_2:::):
+:::QUOTE_OPTION_2:::
+*KALIDASS TRAVELS — OFFICIAL QUOTATION* (Ref: ${defaultQuoteRef})
+Hello! Greetings from Kalidass Travels, Chennai!
+
+🚖 *Vehicle:* [Exact Vehicle Name] ([Seats] A/C)
+📍 *Route:* [Origin] to [Destination] & Return [include (Single Point Pickup & Drop) if requested]
+⏰ *Timing:* [Days] Day ([Include exact pickup & return times if provided, e.g. 6:00 AM Pickup – 10:00 PM Return])
+
+💰 *Fare Breakdown:*
+• [BilledKm] Kms ([Days]-Day Min) @ ₹[PerKmRate]/km = ₹[KmChargeFormatted]
+• Driver Bata ([Timing or Days]): ₹[BataFormatted]
+-------------------------------------
+*BASE FARE: ₹[BaseTotalFormatted]*
+• [State] State Border Permit (Actuals): ₹[PermitFormatted]
+-------------------------------------
+*TOTAL ESTIMATED FARE (WITH PERMIT): ₹[TotalWithPermitFormatted]*
+
+Over-limit rates:
+• Extra km (beyond [BilledKm] km): ₹[ExtraKmRate] / km
+• Late Night Bata (if trip extends past 10:00 PM): ₹350
+
+✅ *Included:* [Exact Vehicle Name], Fuel (up to [BilledKm] km), Driver Bata
+❌ *Excluded:* Highway Toll, Checkpost & Parking (as per actuals)
+
+📞 *To Confirm:* Call/WhatsApp +91 89395 39211 (₹[500/2,000] Advance)
+🌐 *Website:* https://kalidasstravels.in
+:::END_QUOTE_2:::
+*(Note: If the trip is strictly within Tamil Nadu where State Permit is ₹0, omit the State Border Permit line and show TOTAL ESTIMATED FARE: ₹[BaseTotalFormatted] + Toll & Parking at actuals).*
+
+4. QUICK RATE SUMMARY (INTERNAL DISPATCHER REFERENCE):
+Provide 4–6 clean bullet lines showing:
+• Base KM Charge: [BilledKm] km × ₹[PerKmRate]/km = ₹[KmChargeFormatted]
+• Driver Bata: [Days] Day × ₹[DailyBata]/day = ₹[BataFormatted]
+• Base Total (Excl. Permit/Toll): ₹[BaseTotalFormatted]
+• [State] State Permit: ₹[PermitFormatted] (if interstate)
+• Total with Permit: ₹[TotalWithPermitFormatted]
+• 2-Day Round Trip (if overnight): [2DayKm] km × ₹[PerKmRate] + ₹[2DayBata] Bata = ₹[2DayBase] (Base) / ₹[2DayWithPermit] (with Permit)
+
+5. STRUCTURED BOOKING METADATA TAG (MANDATORY AT VERY END OF EVERY QUOTE RESPONSE):
+Always append this exact block at the very end so the dispatcher can push Option 1 or Option 2 to the Dispatch Desk in 1 click:
+:::BOOKING_META:::
+{"vehicle":"[Exact Key from Master Tariff, e.g. 14-Seater Executive Force Tempo]","tripCategory":"Outstation Round Trip","pickupLocation":"[Origin]","dropLocation":"[Destination]","route":"[Origin] ⇄ [Destination]","pickupTime":"[e.g. 06:00 AM]","days":1,"option1Fare":[TotalWithPermitNumber],"option2Fare":[BaseTotalNumber],"notes":"[Short summary e.g. 1-Day RT 300km min, 6AM-10PM, AP Permit ₹3,100]"}
+:::END_BOOKING_META:::
 
 ======================================================================
-CORE OPERATIONAL RULES (ZERO AI GIMMICKS - 100% FACTUAL & GROUNDED):
+CRITICAL MULTI-TURN & FOLLOW-UP RULES:
 ======================================================================
-0. ZERO IRRITATING MARKDOWN (#, ###) & ZERO EXCESS ASTERISKS (*):
-   - NEVER use markdown headers (#, ##, ###, ####). WhatsApp does NOT render hashtags; it displays ugly raw "###" symbols that confuse customers!
-   - NEVER clutter lines with asterisks (FORBIDDEN: "*Car:*", "*Luggage:*", "*Day 1:*").
-   - Use clean plain headers: e.g. "1. Cab & Luggage Details" or "TOUR PLAN (DAY-BY-DAY):".
-   - Use clean bullet points (•) and clean spacing.
-   - Output must be 100% human-friendly, polite, and pleasant to read on WhatsApp.
+1. NEVER FORGET THE ACTIVE TRIP ON FOLLOW-UPS:
+   - If the user previously asked "guindy to kona falls in 14 seater tempo" and then follows up with:
+     • "one day one pickup in guindy at 6 am and return to guindy at 10 pm"
+     • "give me rate summary"
+     • "what about 17 seater?"
+     • "make it 2 days" or "give ₹500 discount"
+   - You MUST apply that follow-up directly to the ACTIVE trip (Guindy ⇄ Kona Falls) and output the updated Option 1 + Option 2 + Quick Rate Summary + BOOKING_META!
+   - NEVER dump a generic company-wide tariff sheet when there is an active route in the conversation!
+2. EXACT VEHICLE MATCHING:
+   - "12 seater tempo" -> 12-Seater Luxury Force Tempo (₹24/km, ₹800 bata, 300 km/day min)
+   - "14 seater tempo" -> 14-Seater Executive Force Tempo (₹25/km, ₹800 bata, 300 km/day min)
+   - "17 seater tempo" -> 17-Seater Executive Force Tempo (₹26/km, ₹800 bata, 300 km/day min, coach permit)
+   - "20 seater tempo" -> 20-Seater Grand Force Tempo (₹30/km, ₹900 bata, 300 km/day min, coach permit)
+   - "26 seater" / "mini bus" -> 26-Seater Mini Bus / Force Tempo (₹36/km, ₹1,000 bata, 350 km/day min, coach permit)
+   - "urbania" -> Force Urbania VIP Luxury (₹38/km, ₹1,100 bata, 300 km/day min, coach permit)
+3. MULTI-PHOTO & PDF VISION + LIVE SEARCH:
+   - When photos/PDFs (IRCTC tickets, flight tickets, WhatsApp screenshots) are attached, extract all real details and generate the exact Dual-Quote or Driver Duty Slip requested.`;
+}
 
-1. NEVER INVENT FAKE DATA:
-   - Absolutely NEVER invent fake customer names, dummy hotels (e.g. NEVER mention 'Green Park Hotel' or 'Kapaleeshwarar Temple' unless the user wrote those names in their message or they appear in the uploaded photos/PDFs).
-   - NEVER assume fake dates or passenger counts. Extract real details from the user's message or attached files.
-
-2. ACCURATE FARE QUOTATION (BALANCED 4-BLOCK MICRO-RECEIPT):
-   Whenever the user asks for a quotation, fare details, or "rate summary" (or attaches inquiry photos/PDFs):
-   Format the output to match the clean micro-receipt style:
-
-   FOR LOCAL PACKAGES (Chennai City Rental):
-   *KALIDASS TRAVELS* (Ref: [Quote Ref ID])
-   Chennai Local • [Hrs] Hr / [Km] Km Package
-   [Pickup Date/Time] | [Vehicle Name] AC
-
-   *Package Fare: ₹[Fare]*
-   Includes: [Hrs] hrs, [Km] km, Fuel & Driver
-   Toll & Parking: Extra as per actual slip
-
-   Over-limit rates:
-   • Extra km: ₹[ExtraKmRate] / km
-   • Extra hr: ₹[ExtraHrRate] / hr
-
-   To confirm: Call +91 89395 39211 (₹[500/2,000] advance)
-
-   FOR OUTSTATION / AIRPORT TRIPS:
-   *KALIDASS TRAVELS* (Ref: [Quote Ref ID])
-   [Origin] ⇄ [Destination] • [Round Trip ([Days] Days) / One-Way Drop]
-   [Schedule Date/Time] | [Vehicle Name] AC
-
-   *Estimated Fare: ₹[Total]*
-   Includes: [Billed km] km, Fuel, Driver Bata[, State Permit if interstate]
-   Toll & Parking: Extra as per actual slip
-
-   Over-limit rates:
-   • Extra km: ₹[Rate] / km
-   • Night stay: ₹350 (if 10 PM - 6 AM)
-
-   To confirm: Call +91 89395 39211 (₹[500/2,000] advance)
-
-3. VERIFIED KALIDASS TARIFF RATES:
-   - Swift Dzire / Toyota Etios (4+1):
-     * Round-Trip: ₹14/km (min 250 km/day) + ₹500 driver bata/day
-     * One-Way Drop: ₹16/km (min 130 km) + ₹500 bata
-     * Local Packages: 4hr/40km ₹1,600 | 5hr/50km ₹1,800 | 8hr/80km ₹2,600 | 10hr/100km ₹3,100 | 12hr/120km ₹3,700
-   - Maruti Ertiga (6+1):
-     * Round-Trip: ₹17/km (min 250 km/day) + ₹500 driver bata/day
-     * One-Way Drop: ₹19/km (min 130 km) + ₹500 bata
-     * Local Packages: 4hr/40km ₹2,000 | 5hr/50km ₹2,400 | 8hr/80km ₹3,400 | 10hr/100km ₹4,100 | 12hr/120km ₹4,700
-   - Innova Crysta (7+1):
-     * Round-Trip: ₹22/km (min 250 km/day) + ₹700 driver bata/day
-     * One-Way Drop: ₹25/km (min 130 km) + ₹700 bata
-     * Local Packages: 4hr/40km ₹3,400 | 8hr/80km ₹5,400 | 10hr/100km ₹6,200 | 12hr/120km ₹7,200
-   - Force Tempo Traveller (12+1 Luxury AC):
-     * Round-Trip: ₹24/km (min 300 km/day) + ₹800 driver bata/day
-     * One-Way Drop: ₹26/km (min 250 km) + ₹800 bata
-     * Local Packages: 4hr/40km ₹4,200 | 8hr/80km ₹6,600 | 10hr/100km ₹7,800 | 12hr/120km ₹8,400
-   - Fixed 1-Day Packages (Tolls included upfront):
-     * Kanchipuram: Sedan ₹3,800 | Ertiga ₹4,800 | Crysta ₹6,500 | Tempo ₹7,800
-     * Tirupati: Sedan ₹6,000 | Ertiga ₹7,500 | Crysta ₹10,000 | Tempo ₹12,500
-     * Pondicherry: Sedan ₹4,500 | Ertiga ₹5,800 | Crysta ₹7,500 | Tempo ₹8,500
-     * Thiruvannamalai: Sedan ₹6,500 | Ertiga ₹7,900 | Crysta ₹10,500 | Tempo ₹12,500
-     * Mahabalipuram: Sedan ₹2,500 | Ertiga ₹3,200 | Crysta ₹4,200 | Tempo ₹5,500
-
-4. DRIVER DUTY SLIP GENERATION:
-   If user asks for a duty slip (e.g. "duty Saravanan TN 01 AB 1234", "duty slip for Murugan"):
-   Format an official forwardable *KALIDASS TRAVELS — OFFICIAL DRIVER DUTY SLIP* with Customer, Reporting Time, Pickup, Vehicle, Balance to Collect, and Helpline.
-
-5. ZERO WHATSAPP SELF-LINKS:
-   - NEVER append phrases like "Send route on WhatsApp for quick quote" or "WhatsApp us for instant booking".
-   - You are generating a quote for the dispatcher to send directly to the customer. Adding links to message themselves is redundant.`;
 
 export interface CopilotAttachment {
   mimeType: string;
@@ -162,16 +201,31 @@ export async function processCopilotQuery(params: CopilotQueryParams) {
   const phoneMatch = promptText.match(/(?:\+91[\s-]?)?[6-9]\d{9}/);
   const detectedPhone = phoneMatch ? phoneMatch[0].replace(/[\s-]/g, '') : (params.phone || '');
 
-  // Format contents with rolling history
+  // Format contents with rolling history (avoid duplicating current user turn)
   const contents: Array<{ role: string; parts: Array<any> }> = [];
+  const priorHistory = history.slice(0, 12);
+  // If the client appended the current user message to history array before sending, pop it so we don't send it twice
+  if (
+    priorHistory.length > 0 &&
+    priorHistory[priorHistory.length - 1]?.role === 'user' &&
+    priorHistory[priorHistory.length - 1]?.content?.trim() === promptText
+  ) {
+    priorHistory.pop();
+  }
 
   // Add previous history turns (text only for history to keep payload lightweight)
-  for (const h of history.slice(-6)) {
+  for (const h of priorHistory.slice(-8)) {
     if (h.role && h.content) {
-      contents.push({
-        role: h.role === 'user' ? 'user' : 'model',
-        parts: [{ text: h.content }]
-      });
+      const mappedRole = h.role === 'user' ? 'user' : 'model';
+      const prev = contents[contents.length - 1];
+      if (prev && prev.role === mappedRole) {
+        prev.parts.push({ text: h.content });
+      } else {
+        contents.push({
+          role: mappedRole,
+          parts: [{ text: h.content }]
+        });
+      }
     }
   }
 
@@ -191,16 +245,22 @@ export async function processCopilotQuery(params: CopilotQueryParams) {
   }
 
   const effectivePrompt = promptText || (allAttachments.length > 0
-    ? `Please carefully analyze the ${allAttachments.length} attached document(s)/photo(s) (tickets, WhatsApp chats, bills, or itineraries). Extract all key details (passenger names, contact numbers, dates, timings, locations, amounts) and provide the required quote, duty slip, or settlement.`
+    ? `Please carefully analyze the ${allAttachments.length} attached document(s)/photo(s) (tickets, WhatsApp chats, bills, or itineraries). Extract all key details (passenger names, contact numbers, dates, timings, locations, amounts) and provide the required Dual-Quote (Option 1 Micro-Receipt + Option 2 Detailed Itemized Quote), duty slip, or settlement.`
     : '');
 
   userParts.push({ text: effectivePrompt });
 
-  contents.push({
-    role: 'user',
-    parts: userParts
-  });
+  const lastTurn = contents[contents.length - 1];
+  if (lastTurn && lastTurn.role === 'user') {
+    lastTurn.parts.push(...userParts);
+  } else {
+    contents.push({
+      role: 'user',
+      parts: userParts
+    });
+  }
 
+  const systemPrompt = buildSystemPrompt();
   const candidateModels = ['gemini-3.8-flash', 'gemini-3.5-flash'];
   let finalReply = '';
   let usedModel = '';
@@ -213,11 +273,11 @@ export async function processCopilotQuery(params: CopilotQueryParams) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          systemInstruction: { parts: [{ text: systemPrompt }] },
           contents,
           tools: [{ googleSearch: {} }],
           generationConfig: {
-            temperature: 0.2,
+            temperature: 0.15,
             maxOutputTokens: 4000
           }
         })
@@ -251,10 +311,10 @@ export async function processCopilotQuery(params: CopilotQueryParams) {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+            systemInstruction: { parts: [{ text: systemPrompt }] },
             contents,
             generationConfig: {
-              temperature: 0.2,
+              temperature: 0.15,
               maxOutputTokens: 4000
             }
           })
@@ -279,9 +339,18 @@ export async function processCopilotQuery(params: CopilotQueryParams) {
     throw new Error('Failed to generate AI response from Gemini models.');
   }
 
+  // Extract structured bookingMeta if present
+  let bookingMeta: any = null;
+  const metaMatch = finalReply.match(/:::BOOKING_META:::\s*([\s\S]*?)\s*(?::::END_BOOKING_META:::|$)/i);
+  if (metaMatch && metaMatch[1]) {
+    try {
+      bookingMeta = JSON.parse(metaMatch[1].trim());
+    } catch (_) {}
+  }
+
   // Detect intent
   const isDutySlip = finalReply.includes('DUTY SLIP');
-  const isQuote = finalReply.includes('RATE SUMMARY:') || finalReply.includes('QUOTATION') || finalReply.includes('*KALIDASS TRAVELS*');
+  const isQuote = finalReply.includes('QUOTE_OPTION_1') || finalReply.includes('RATE SUMMARY:') || finalReply.includes('QUOTATION') || finalReply.includes('*KALIDASS TRAVELS*');
 
   // Extract driver phone if duty slip
   let driverPhone = '';
@@ -297,6 +366,7 @@ export async function processCopilotQuery(params: CopilotQueryParams) {
   return {
     success: true,
     reply: finalReply,
+    bookingMeta,
     model: usedModel,
     isDutySlip,
     isQuote,

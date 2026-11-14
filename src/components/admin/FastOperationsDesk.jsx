@@ -374,52 +374,75 @@ export default function FastOperationsDesk() {
   // VIEW 1: RATE CALCULATOR & QUOTE GENERATOR
   // ==========================================
   const [calcTripType, setCalcTripType] = useState('outstation_round');
-  const [calcVehicle, setCalcVehicle] = useState('Swift Dzire');
+  const [calcVehicle, setCalcVehicle] = useState('14-Seater Executive Force Tempo');
   const [calcLocalPkg, setCalcLocalPkg] = useState('4hr_40km');
   const [calcTourKey, setCalcTourKey] = useState('tirupati-package');
-  const [calcRoute, setCalcRoute] = useState('Chennai to Pondicherry & return');
+  const [calcRoute, setCalcRoute] = useState('Guindy to Kona Falls & Return');
+  const [calcTimingNote, setCalcTimingNote] = useState('6:00 AM Pickup – 10:00 PM Return');
+  const [calcStateOverride, setCalcStateOverride] = useState('AUTO');
   const [calcDays, setCalcDays] = useState(1);
-  const [calcDistanceKm, setCalcDistanceKm] = useState(300);
+  const [calcDistanceKm, setCalcDistanceKm] = useState(220);
   const [calcTollParking, setCalcTollParking] = useState(0);
   const [calcExtraHours, setCalcExtraHours] = useState(0);
   const [calcExtraKm, setCalcExtraKm] = useState(0);
   const [calcCustName, setCalcCustName] = useState('');
   const [calcCustPhone, setCalcCustPhone] = useState('');
   const [calcQuoteText, setCalcQuoteText] = useState('');
+  const [calcOption1Text, setCalcOption1Text] = useState('');
+
+  // Auto-detect state permit code from route text
+  const detectedStateCode = useMemo(() => {
+    if (calcStateOverride && calcStateOverride !== 'AUTO') return calcStateOverride;
+    const lowerRoute = String(calcRoute || '').toLowerCase();
+    for (const [code, p] of Object.entries(tariffConfig.state_permits || {})) {
+      if (code === 'TN') continue;
+      if (Array.isArray(p.keywords) && p.keywords.some(kw => lowerRoute.includes(kw.toLowerCase()))) {
+        return code;
+      }
+    }
+    return 'TN';
+  }, [calcRoute, calcStateOverride]);
 
   const calculatedFare = useMemo(() => {
     const v = tariffConfig.vehicles[calcVehicle] || tariffConfig.vehicles['Swift Dzire'];
+    const vehCat = v.category || 'sedan';
     let base = 0;
     let driverBataTotal = 0;
+    let statePermitAmt = 0;
+    let chargeableKm = 0;
+    let kmRate = v.round_trip_rate || 14;
     let tollEstimate = Number(calcTollParking) || 0;
     let breakdownLines = [];
 
     if (calcTripType === 'outstation_round') {
       const minKmPerDay = v.min_km_per_day || 250;
       const minRequiredKm = minKmPerDay * Math.max(1, Number(calcDays));
-      const chargeableKm = Math.max(minRequiredKm, Number(calcDistanceKm) || 0);
-      const kmRate = v.round_trip_rate || 14;
+      chargeableKm = Math.max(minRequiredKm, Number(calcDistanceKm) || 0);
+      kmRate = v.round_trip_rate || 14;
       base = chargeableKm * kmRate;
       driverBataTotal = (v.driver_bata || 500) * Math.max(1, Number(calcDays));
+      statePermitAmt = tariffConfig.state_permits?.[detectedStateCode]?.rates?.[vehCat] || 0;
       breakdownLines.push(`${chargeableKm} Kms @ ₹${kmRate}/km = ₹${base.toLocaleString('en-IN')}`);
       breakdownLines.push(`Driver Bata (${calcDays} day${calcDays > 1 ? 's' : ''}): ₹${driverBataTotal.toLocaleString('en-IN')}`);
     } else if (calcTripType === 'outstation_oneway') {
       const minDropKm = v.min_drop_km || 130;
-      const chargeableKm = Math.max(minDropKm, Number(calcDistanceKm) || 0);
-      const kmRate = v.one_way_rate || 16;
+      chargeableKm = Math.max(minDropKm, Number(calcDistanceKm) || 0);
+      kmRate = v.one_way_rate || 16;
       base = chargeableKm * kmRate;
       driverBataTotal = (v.driver_bata || 500);
+      statePermitAmt = tariffConfig.state_permits?.[detectedStateCode]?.rates?.[vehCat] || 0;
       breakdownLines.push(`${chargeableKm} Kms @ ₹${kmRate}/km (One-Way Drop) = ₹${base.toLocaleString('en-IN')}`);
       breakdownLines.push(`Driver Bata: ₹${driverBataTotal.toLocaleString('en-IN')}`);
     } else if (calcTripType === 'local_package') {
       const pkgKeyMap = {
-        '4hr_40km': { key: 'local_4hr_pkg', label: '4 Hr / 40 Km' },
-        '5hr_50km': { key: 'local_5hr_pkg', label: '5 Hr / 50 Km' },
-        '8hr_80km': { key: 'local_8hr_pkg', label: '8 Hr / 80 Km' },
-        '10hr_100km': { key: 'local_10hr_pkg', label: '10 Hr / 100 Km' },
-        '12hr_120km': { key: 'local_12hr_pkg', label: '12 Hr / 120 Km' },
+        '4hr_40km': { key: 'local_4hr_pkg', label: '4 Hr / 40 Km', km: 40, hr: 4 },
+        '5hr_50km': { key: 'local_5hr_pkg', label: '5 Hr / 50 Km', km: 50, hr: 5 },
+        '8hr_80km': { key: 'local_8hr_pkg', label: '8 Hr / 80 Km', km: 80, hr: 8 },
+        '10hr_100km': { key: 'local_10hr_pkg', label: '10 Hr / 100 Km', km: 100, hr: 10 },
+        '12hr_120km': { key: 'local_12hr_pkg', label: '12 Hr / 120 Km', km: 120, hr: 12 },
       };
       const sel = pkgKeyMap[calcLocalPkg] || pkgKeyMap['4hr_40km'];
+      chargeableKm = sel.km;
       base = v[sel.key] || 1600;
       breakdownLines.push(`Base Rental (${sel.label}): ₹${base.toLocaleString('en-IN')}`);
       if (Number(calcExtraHours) > 0) {
@@ -435,75 +458,133 @@ export default function FastOperationsDesk() {
     } else if (calcTripType === 'tour_package') {
       const pkg = tariffConfig.tour_packages?.[calcTourKey];
       if (pkg) {
-        const pkgVehicles = pkg.fixed_rates_by_vehicle || {};
-        base = pkgVehicles[calcVehicle] || 4500;
-        breakdownLines.push(`${pkg.name} (${calcVehicle}): ₹${base.toLocaleString('en-IN')}`);
-        if (pkg.driver_bata_included === false) {
-          driverBataTotal = (v.driver_bata || 500) * (pkg.duration_days || 1);
-          breakdownLines.push(`Driver Bata: ₹${driverBataTotal.toLocaleString('en-IN')}`);
-        }
+        const vMap = {
+          'Swift Dzire': 'dzire',
+          'Toyota Etios': 'dzire',
+          'Maruti Ertiga': 'ertiga',
+          'Innova': 'innova',
+          'Innova Crysta': 'crysta',
+          'Tempo Traveller': 'tempo12',
+          '12-Seater Luxury Force Tempo': 'tempo12',
+          '14-Seater Executive Force Tempo': 'tempo12',
+          '17-Seater Executive Force Tempo': 'tempo17'
+        };
+        const tKey = vMap[calcVehicle] || 'dzire';
+        const vPkg = pkg.vehicles?.[tKey] || pkg.vehicles?.dzire;
+        chargeableKm = pkg.roundTripKm || 300;
+        base = vPkg?.rates?.[String(calcDays)] || vPkg?.rates?.['1'] || 4500;
+        breakdownLines.push(`${pkg.name} (${calcVehicle}, ${calcDays}D): ₹${base.toLocaleString('en-IN')}`);
       }
     }
 
+    const baseTotal = base + driverBataTotal;
+    if (statePermitAmt > 0) {
+      breakdownLines.push(`${detectedStateCode} State Permit (Statutory): ₹${statePermitAmt.toLocaleString('en-IN')}`);
+    }
     if (tollEstimate > 0) {
       breakdownLines.push(`Toll & Parking (Est.): ₹${tollEstimate.toLocaleString('en-IN')}`);
     }
 
-    const total = base + driverBataTotal + tollEstimate;
-    return { base, driverBata: driverBataTotal, tollEstimate, total, breakdownLines };
-  }, [calcTripType, calcVehicle, calcLocalPkg, calcTourKey, calcDays, calcDistanceKm, calcTollParking, calcExtraHours, calcExtraKm]);
+    const total = baseTotal + statePermitAmt + tollEstimate;
+    return {
+      base,
+      driverBata: driverBataTotal,
+      baseTotal,
+      stateCode: detectedStateCode,
+      statePermitAmt,
+      chargeableKm,
+      kmRate,
+      extraKmRate: v.extra_km_rate || kmRate,
+      seats: v.seats || 'AC',
+      advanceAmt: (v.category === 'tempo' || v.category === 'coach') ? 2000 : 500,
+      tollEstimate,
+      total,
+      breakdownLines
+    };
+  }, [calcTripType, calcVehicle, calcLocalPkg, calcTourKey, calcDays, calcDistanceKm, calcTollParking, calcExtraHours, calcExtraKm, detectedStateCode]);
 
   useEffect(() => {
+    const quoteRef = `Q-${getFormattedDateCode()}-1`;
     const greeting = calcCustName ? `Dear *${calcCustName.trim()}*,` : 'Hello!';
     let tripTitle = '';
-    if (calcTripType === 'outstation_round') tripTitle = `Outstation Round Trip (${calcDays} Days)`;
+    if (calcTripType === 'outstation_round') tripTitle = `${calcDays}-Day Round Trip`;
     else if (calcTripType === 'outstation_oneway') tripTitle = 'One-Way Drop';
     else if (calcTripType === 'local_package') tripTitle = `Local Chennai Rental (${calcLocalPkg.replace('_', ' ')})`;
     else if (calcTripType === 'tour_package') tripTitle = tariffConfig.tour_packages?.[calcTourKey]?.name || 'Temple Tour';
 
-    const text = `*KALIDASS TRAVELS — OFFICIAL QUOTATION*
+    const permitSnippet = calculatedFare.statePermitAmt > 0
+      ? `, ${calculatedFare.stateCode} State Permit (₹${calculatedFare.statePermitAmt.toLocaleString('en-IN')})`
+      : '';
+
+    // Option 1: Compact WhatsApp Micro-Receipt
+    const opt1 = `*KALIDASS TRAVELS* (Ref: ${quoteRef})
+${calcRoute || 'Chennai Outstation'} • ${tripTitle}${calcTimingNote ? `\n${calcTimingNote}` : ''}
+${calcVehicle} (${calculatedFare.seats} AC)
+
+*Estimated Fare: ₹${calculatedFare.total.toLocaleString('en-IN')}*
+Includes: ${calculatedFare.chargeableKm} km (₹${calculatedFare.base.toLocaleString('en-IN')}), Fuel, Driver Bata (₹${calculatedFare.driverBata.toLocaleString('en-IN')})${permitSnippet}
+Toll & Parking: Extra as per actual slip
+
+Over-limit rates:
+• Extra km (beyond ${calculatedFare.chargeableKm} km): ₹${calculatedFare.extraKmRate} / km
+• Night Bata (after 10:00 PM): ₹350
+
+To confirm: Call +91 89395 39211 (₹${calculatedFare.advanceAmt.toLocaleString('en-IN')} advance)`;
+
+    // Option 2: Detailed Itemized WhatsApp Quote
+    const opt2 = `*KALIDASS TRAVELS — OFFICIAL QUOTATION* (Ref: ${quoteRef})
 ${greeting} Greetings from Kalidass Travels, Chennai!
 
-🚖 *Vehicle:* ${calcVehicle} (A/C)
-📍 *Trip Plan:* ${calcRoute || 'As requested'}
-📋 *Package Category:* ${tripTitle}
+🚖 *Vehicle:* ${calcVehicle} (${calculatedFare.seats} A/C)
+📍 *Route:* ${calcRoute || 'As requested'}
+⏰ *Timing:* ${tripTitle}${calcTimingNote ? ` (${calcTimingNote})` : ''}
 
-💰 *Fare Quotation:*
-${calculatedFare.breakdownLines.map(l => `• ${l}`).join('\n')}
+💰 *Fare Breakdown:*
+• ${calculatedFare.chargeableKm} Kms (${calcDays}-Day Min) @ ₹${calculatedFare.kmRate}/km = ₹${calculatedFare.base.toLocaleString('en-IN')}
+• Driver Bata (${calcTimingNote || `${calcDays} day`}): ₹${calculatedFare.driverBata.toLocaleString('en-IN')}
 -------------------------------------
-*TOTAL ESTIMATED FARE: ₹${calculatedFare.total.toLocaleString('en-IN')}*
+*BASE FARE: ₹${calculatedFare.baseTotal.toLocaleString('en-IN')}*${
+      calculatedFare.statePermitAmt > 0
+        ? `\n• ${calculatedFare.stateCode} State Border Permit (Actuals): ₹${calculatedFare.statePermitAmt.toLocaleString('en-IN')}\n-------------------------------------\n*TOTAL ESTIMATED FARE (WITH PERMIT): ₹${calculatedFare.total.toLocaleString('en-IN')}*`
+        : ''
+    }
 
-✅ *Included:* Sanitized Cab, Professional Chauffeur, Fuel
-❌ *Excluded:* Toll, Parking, State Permits (unless specified)
+Over-limit rates:
+• Extra km (beyond ${calculatedFare.chargeableKm} km): ₹${calculatedFare.extraKmRate} / km
+• Late Night Bata (if trip extends past 10:00 PM): ₹350
 
-📞 *Call/WhatsApp:* +91 89395 39211 / +91 63819 39769
-🌐 *Website:* https://kalidasstravels.in
-_Thank you for choosing Kalidass Travels!_`;
+✅ *Included:* ${calcVehicle}, Fuel (up to ${calculatedFare.chargeableKm} km), Driver Bata
+❌ *Excluded:* Highway Toll, Checkpost & Parking (as per actuals)
 
-    setCalcQuoteText(text);
-  }, [calculatedFare, calcVehicle, calcRoute, calcCustName, calcTripType, calcDays, calcLocalPkg, calcTourKey]);
+📞 *To Confirm:* Call/WhatsApp +91 89395 39211 (₹${calculatedFare.advanceAmt.toLocaleString('en-IN')} Advance)
+🌐 *Website:* https://kalidasstravels.in`;
 
-  const handleSendWhatsAppQuote = () => {
+    setCalcOption1Text(opt1);
+    setCalcQuoteText(opt2);
+  }, [calculatedFare, calcVehicle, calcRoute, calcTimingNote, calcCustName, calcTripType, calcDays, calcLocalPkg, calcTourKey]);
+
+  const handleSendWhatsAppQuote = (textToUse = calcQuoteText) => {
     let phone = calcCustPhone.replace(/\D/g, '');
     if (phone.length === 10) phone = '91' + phone;
     const url = phone
-      ? `https://wa.me/${phone}?text=${encodeURIComponent(calcQuoteText)}`
-      : `https://wa.me/?text=${encodeURIComponent(calcQuoteText)}`;
+      ? `https://wa.me/${phone}?text=${encodeURIComponent(textToUse)}`
+      : `https://wa.me/?text=${encodeURIComponent(textToUse)}`;
     window.open(url, '_blank');
   };
 
-  const handleCopyQuote = () => {
-    navigator.clipboard.writeText(calcQuoteText);
-    showToast('Quote copied to clipboard!');
+  const handleCopyQuote = (textToUse = calcQuoteText, label = 'Quote') => {
+    navigator.clipboard.writeText(textToUse);
+    showToast(`${label} copied to clipboard!`);
   };
 
-  const handleTransferToBooking = () => {
+  const handleTransferToBooking = (overrideFare = null) => {
     setFormCustName(calcCustName || '');
     setFormCustPhone(calcCustPhone || '');
     setFormVehicle(calcVehicle);
-    setFormAgreedRate(calculatedFare.total);
+    setFormAgreedRate(overrideFare !== null ? overrideFare : calculatedFare.total);
     setFormAdvance(0);
     setFormDropLocation(calcRoute);
+    if (calcTimingNote) setFormNotes(calcTimingNote);
     if (calcTripType === 'outstation_round') setFormTripCategory('Outstation Round Trip');
     else if (calcTripType === 'outstation_oneway') setFormTripCategory('Outstation One-Way Drop');
     else if (calcTripType === 'local_package') setFormTripCategory('Local Chennai Rental');
@@ -511,6 +592,23 @@ _Thank you for choosing Kalidass Travels!_`;
 
     navigateTo('new-booking');
     showToast('Quote details populated into Booking Form!');
+  };
+
+  const handlePushFromCopilot = (meta) => {
+    if (!meta) return;
+    if (meta.vehicle && tariffConfig.vehicles[meta.vehicle]) {
+      setFormVehicle(meta.vehicle);
+    }
+    if (meta.tripCategory) setFormTripCategory(meta.tripCategory);
+    if (meta.pickupLocation) setFormPickupLocation(meta.pickupLocation);
+    if (meta.dropLocation) setFormDropLocation(meta.dropLocation);
+    else if (meta.route) setFormDropLocation(meta.route);
+    if (meta.pickupTime) setFormPickupTime(meta.pickupTime);
+    if (meta.agreedRate) setFormAgreedRate(Number(meta.agreedRate));
+    if (meta.notes) setFormNotes(meta.notes);
+    setFormAdvance(0);
+    navigateTo('new-booking');
+    showToast(`Pushed ${meta.vehicle || 'Trip'} (₹${Number(meta.agreedRate || 0).toLocaleString('en-IN')}) to Booking Form!`);
   };
 
   // ==========================================
@@ -527,6 +625,19 @@ _Thank you for choosing Kalidass Travels!_`;
   const [formAgreedRate, setFormAgreedRate] = useState(4000);
   const [formAdvance, setFormAdvance] = useState(0);
   const [formNotes, setFormNotes] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.sessionStorage) {
+      try {
+        const raw = window.sessionStorage.getItem('kt_copilot_pushed_booking');
+        if (raw) {
+          window.sessionStorage.removeItem('kt_copilot_pushed_booking');
+          const parsed = JSON.parse(raw);
+          handlePushFromCopilot(parsed);
+        }
+      } catch (_) {}
+    }
+  }, []);
 
   const handleCreateBooking = (e) => {
     e.preventDefault();
@@ -1401,7 +1512,7 @@ Warm regards,
           {/* ========================================================= */}
           {activeNav === 'copilot' && (
             <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-xl max-w-4xl mx-auto h-[85vh] animate-fadeIn">
-              <MobileDispatchCopilot />
+              <MobileDispatchCopilot onPushToDispatch={handlePushFromCopilot} />
             </div>
           )}
 
@@ -1863,7 +1974,7 @@ Warm regards,
                         type="text"
                         value={calcRoute}
                         onChange={(e) => setCalcRoute(e.target.value)}
-                        placeholder="e.g. Chennai -> Pondicherry -> Chennai"
+                        placeholder="e.g. Guindy to Kona Falls & Return"
                         className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
                       />
                     </div>
@@ -1912,6 +2023,39 @@ Warm regards,
                     )}
                   </div>
 
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                        Pickup & Return Timing Note
+                      </label>
+                      <input
+                        type="text"
+                        value={calcTimingNote}
+                        onChange={(e) => setCalcTimingNote(e.target.value)}
+                        placeholder="e.g. 6:00 AM Pickup – 10:00 PM Return (Single Pickup)"
+                        className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                        State Border Permit ({calculatedFare.stateCode} — ₹{calculatedFare.statePermitAmt.toLocaleString('en-IN')})
+                      </label>
+                      <select
+                        value={calcStateOverride}
+                        onChange={(e) => setCalcStateOverride(e.target.value)}
+                        className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
+                      >
+                        <option value="AUTO">Auto-Detect from Route ({calculatedFare.stateCode})</option>
+                        <option value="TN">Tamil Nadu (TN — ₹0 Home State)</option>
+                        <option value="AP">Andhra Pradesh (AP — Kona Falls / Tirupati)</option>
+                        <option value="PY">Puducherry (PY — Pondicherry)</option>
+                        <option value="KA">Karnataka (KA — Bangalore / Mysore)</option>
+                        <option value="KL">Kerala (KL — Sabarimala / Munnar)</option>
+                      </select>
+                    </div>
+                  </div>
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
                     <div>
                       <label className="block text-xs font-medium text-slate-600 mb-1">Customer Name (Optional)</label>
@@ -1936,64 +2080,112 @@ Warm regards,
                   </div>
                 </div>
 
-                {/* Summary & Quote Right */}
-                <div className="lg:col-span-5 bg-slate-900 text-white rounded-2xl p-5 flex flex-col justify-between shadow-inner">
+                {/* Summary & Dual Quote Output Right */}
+                <div className="lg:col-span-5 bg-slate-900 text-white rounded-2xl p-5 flex flex-col justify-between shadow-inner space-y-4">
                   <div>
                     <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-                      <span className="text-xs uppercase font-bold text-slate-400 tracking-wider">Calculated Tariff</span>
-                      <span className="text-2xl font-extrabold text-emerald-400 font-mono">
-                        ₹{calculatedFare.total.toLocaleString('en-IN')}
-                      </span>
+                      <div>
+                        <span className="text-xs uppercase font-bold text-slate-400 tracking-wider block">
+                          Base Fare: ₹{calculatedFare.baseTotal.toLocaleString('en-IN')}
+                        </span>
+                        <span className="text-[11px] text-slate-400">
+                          {calculatedFare.statePermitAmt > 0
+                            ? `+ ${calculatedFare.stateCode} Permit ₹${calculatedFare.statePermitAmt.toLocaleString('en-IN')}`
+                            : 'TN Home State (₹0 Permit)'}
+                        </span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[10px] uppercase font-bold text-emerald-400 block">Total w/ Permit</span>
+                        <span className="text-2xl font-extrabold text-emerald-400 font-mono">
+                          ₹{calculatedFare.total.toLocaleString('en-IN')}
+                        </span>
+                      </div>
                     </div>
 
-                    <div className="py-3 space-y-1.5 text-xs text-slate-300 font-mono">
+                    <div className="py-2.5 space-y-1 text-xs text-slate-300 font-mono border-b border-slate-800">
                       {calculatedFare.breakdownLines.map((line, idx) => (
                         <div key={idx} className="flex justify-between">
-                          <span>{line}</span>
+                          <span>• {line}</span>
                         </div>
                       ))}
                     </div>
 
-                    <div className="mt-3">
-                      <label className="block text-[11px] font-bold text-slate-400 uppercase mb-1.5">
-                        WhatsApp Message Output
-                      </label>
+                    {/* Option 1 Card */}
+                    <div className="mt-3 space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold text-emerald-400 uppercase">
+                          Option 1: Compact Micro-Receipt
+                        </span>
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => handleCopyQuote(calcOption1Text, 'Option 1 Micro-Receipt')}
+                            className="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] font-bold text-white border border-slate-700 cursor-pointer"
+                          >
+                            📋 Copy Opt 1
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleSendWhatsAppQuote(calcOption1Text)}
+                            className="px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-[11px] font-bold text-white cursor-pointer"
+                          >
+                            📲 WA
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleTransferToBooking(calculatedFare.total)}
+                            className="px-2 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-[11px] font-bold text-white cursor-pointer"
+                          >
+                            🚀 Push
+                          </button>
+                        </div>
+                      </div>
                       <textarea
                         readOnly
-                        rows={8}
-                        value={calcQuoteText}
-                        className="w-full text-xs font-mono bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 focus:outline-none resize-none"
+                        rows={6}
+                        value={calcOption1Text}
+                        className="w-full text-xs font-mono bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none resize-none"
                       />
                     </div>
-                  </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-5 pt-3 border-t border-slate-800">
-                    <button
-                      type="button"
-                      onClick={handleSendWhatsAppQuote}
-                      className="py-2.5 px-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-lg shadow-emerald-900/40"
-                    >
-                      <span className="material-symbols-outlined text-sm">send</span>
-                      <span>Send WhatsApp</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={handleCopyQuote}
-                      className="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl font-semibold text-xs flex items-center justify-center gap-1.5 transition border border-slate-700"
-                    >
-                      <span className="material-symbols-outlined text-sm">content_copy</span>
-                      <span>Copy</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={handleTransferToBooking}
-                      className="py-2.5 px-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-lg shadow-blue-900/40"
-                    >
-                      <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                      <span>Book Trip</span>
-                    </button>
+                    {/* Option 2 Card */}
+                    <div className="mt-3 space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold text-blue-400 uppercase">
+                          Option 2: Detailed Itemized Quote
+                        </span>
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => handleCopyQuote(calcQuoteText, 'Option 2 Detailed Quote')}
+                            className="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] font-bold text-white border border-slate-700 cursor-pointer"
+                          >
+                            📋 Copy Opt 2
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleSendWhatsAppQuote(calcQuoteText)}
+                            className="px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-[11px] font-bold text-white cursor-pointer"
+                          >
+                            📲 WA
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleTransferToBooking(calculatedFare.baseTotal)}
+                            className="px-2 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-[11px] font-bold text-white cursor-pointer"
+                            title="Push Base Fare to Dispatch Desk"
+                          >
+                            🚀 Push
+                          </button>
+                        </div>
+                      </div>
+                      <textarea
+                        readOnly
+                        rows={7}
+                        value={calcQuoteText}
+                        className="w-full text-xs font-mono bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-slate-200 focus:outline-none resize-none"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

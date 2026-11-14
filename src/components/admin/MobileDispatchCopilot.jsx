@@ -46,15 +46,15 @@ const STARTER_PROMPTS = [
 ];
 
 const QUICK_CHIPS = [
+  { label: '🚐 Guindy ⇄ Kona Falls (14S Tempo)', prompt: 'guindy to kona falls in 14 seater tempo, one day one pickup in guindy at 6 am and return to guindy at 10 pm' },
   { label: '📷 Analyze Attachments', prompt: 'Please read all attached photos and PDF tickets, extract all trip details and calculate the verified quote.' },
   { label: '📄 Read PDF Ticket', prompt: 'Extract PNR, station/terminal, scheduled arrival time, and prepare chauffeur pickup duty slip.' },
   { label: '🌐 Live Darshan Timings', prompt: 'Search Google live for today Tirupati Balaji darshan token rules and timings' },
   { label: '🚗 Ertiga 6+1 Rate', prompt: 'What is the per km rate and daily minimum for Maruti Ertiga 6+1 AC?' },
-  { label: '⛰️ Tirupati 1-Day Package', prompt: 'Chennai to Tirupati 1-day package rates for Sedan and Ertiga with tolls included' },
-  { label: '🚐 Tempo 12-Seater', prompt: 'Tempo Traveller 12-seater per km rate, driver bata, and minimum km per day' }
+  { label: '⛰️ Tirupati 1-Day Package', prompt: 'Chennai to Tirupati 1-day package rates for Sedan and Ertiga with tolls included' }
 ];
 
-export default function MobileDispatchCopilot() {
+export default function MobileDispatchCopilot({ onPushToDispatch = null } = {}) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -213,6 +213,7 @@ export default function MobileDispatchCopilot() {
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
+    const priorHistory = messages.map((m) => ({ role: m.role, content: m.content }));
     const newHistory = [...messages, userMsg];
     setMessages(newHistory);
     setLoading(true);
@@ -230,7 +231,7 @@ export default function MobileDispatchCopilot() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: query,
-          history: newHistory.map((m) => ({ role: m.role, content: m.content })),
+          history: priorHistory,
           files: payloadFiles,
           // backwards compatibility for single image
           image: payloadFiles.length === 1 ? payloadFiles[0] : undefined
@@ -240,6 +241,7 @@ export default function MobileDispatchCopilot() {
       let replyText = '';
       let groundingData = null;
       let usedModel = '';
+      let bookingMeta = null;
 
       if (res.ok) {
         const data = await res.json();
@@ -247,6 +249,7 @@ export default function MobileDispatchCopilot() {
           replyText = data.reply;
           groundingData = data.grounding || null;
           usedModel = data.model || '';
+          bookingMeta = data.bookingMeta || null;
         }
       } else {
         try {
@@ -281,7 +284,6 @@ export default function MobileDispatchCopilot() {
         replyText = 'Unable to fetch response from Gemini. Please check your internet connection or call Helpline +91 89395 39211.';
       }
 
-      // Strictly clean text for WhatsApp: NO ###, NO excess asterisks!
       let cleanReply = replyText;
       try {
         cleanReply = cleanWhatsAppText(replyText);
@@ -295,6 +297,7 @@ export default function MobileDispatchCopilot() {
           id: `a-${Date.now()}`,
           role: 'assistant',
           content: cleanReply,
+          bookingMeta,
           grounding: groundingData,
           model: usedModel,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -316,17 +319,53 @@ export default function MobileDispatchCopilot() {
     }
   };
 
+  // Strip internal :::TAGS::: when copying/sharing full text
+  const stripInternalTags = (raw) => {
+    if (!raw) return '';
+    return String(raw)
+      .replace(/:::BOOKING_META:::[\s\S]*?(?::::END_BOOKING_META:::|$)/gi, '')
+      .replace(/:::(?:END_)?QUOTE_OPTION_[12]:::/gi, '')
+      .replace(/:::END_QUOTE_[12]:::/gi, '')
+      .trim();
+  };
+
   const handleCopy = (id, text) => {
-    const clean = cleanWhatsAppText(text);
+    const clean = cleanWhatsAppText(stripInternalTags(text));
     navigator.clipboard.writeText(clean);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2500);
   };
 
   const handleOpenWhatsApp = (text) => {
-    const clean = cleanWhatsAppText(text);
+    const clean = cleanWhatsAppText(stripInternalTags(text));
     const url = `https://wa.me/?text=${encodeURIComponent(clean)}`;
     window.open(url, '_blank');
+  };
+
+  const handlePushOptionToDispatch = (quoteText, optionNumber, metaObj = null) => {
+    let fare = optionNumber === 1 ? metaObj?.option1Fare : metaObj?.option2Fare;
+    if (!fare) {
+      const m = String(quoteText).match(/(?:Estimated Fare|TOTAL ESTIMATED FARE[^\n:]*|BASE FARE)\s*:\s*₹\s*([0-9,]+)/i);
+      if (m) fare = parseInt(m[1].replace(/,/g, ''), 10);
+    }
+    const payload = {
+      vehicle: metaObj?.vehicle || '14-Seater Executive Force Tempo',
+      tripCategory: metaObj?.tripCategory || 'Outstation Round Trip',
+      pickupLocation: metaObj?.pickupLocation || '',
+      dropLocation: metaObj?.dropLocation || '',
+      route: metaObj?.route || '',
+      pickupTime: metaObj?.pickupTime || '06:00 AM',
+      agreedRate: Number(fare) || 0,
+      notes: metaObj?.notes || `Pushed from AI Co-Pilot (Option ${optionNumber})`
+    };
+    if (onPushToDispatch) {
+      onPushToDispatch(payload);
+    } else if (typeof window !== 'undefined') {
+      try {
+        window.sessionStorage?.setItem('kt_copilot_pushed_booking', JSON.stringify(payload));
+      } catch (_) {}
+      window.location.href = '/admin/#new-booking';
+    }
   };
 
   const handleNewChat = () => {
@@ -335,72 +374,93 @@ export default function MobileDispatchCopilot() {
     setAttachments([]);
   };
 
-  // Render text cleanly: detect vehicle cards and style paragraphs/bullets nicely
-  const renderMessageContent = (text) => {
-    if (!text) return null;
+  // Parse structured Option 1, Option 2, and Booking Meta from assistant response
+  const parseStructuredQuoteResponse = (text, savedMeta = null) => {
+    if (!text) return { hasDualQuotes: false, plainText: '' };
 
+    let working = String(text);
+    let parsedMeta = savedMeta || null;
+
+    const metaMatch = working.match(/:::BOOKING_META:::\s*([\s\S]*?)\s*(?::::END_BOOKING_META:::|$)/i);
+    if (metaMatch) {
+      if (!parsedMeta && metaMatch[1]) {
+        try {
+          parsedMeta = JSON.parse(metaMatch[1].trim());
+        } catch (_) {}
+      }
+      working = working.replace(metaMatch[0], '').trim();
+    }
+
+    const opt1Match = working.match(/:::QUOTE_OPTION_1:::\s*([\s\S]*?)\s*(?::::END_QUOTE_1:::|:::QUOTE_OPTION_2:::)/i);
+    const opt2Match = working.match(/:::QUOTE_OPTION_2:::\s*([\s\S]*?)\s*(?::::END_QUOTE_2:::|$)/i);
+
+    if (!opt1Match && !opt2Match) {
+      return { hasDualQuotes: false, plainText: working, bookingMeta: parsedMeta };
+    }
+
+    const option1 = opt1Match ? opt1Match[1].trim() : '';
+    const option2 = opt2Match ? opt2Match[1].trim() : '';
+
+    // Extract text before Option 1 (Route note) and after Option 2 (Quick Rate Summary)
+    let beforeOpt1 = '';
+    if (opt1Match) {
+      const idx1 = working.indexOf(opt1Match[0]);
+      if (idx1 > 0) {
+        beforeOpt1 = working.slice(0, idx1).replace(/(?:Option 1|2\.\s*OPTION 1)[^\n]*$/i, '').trim();
+      }
+    }
+
+    let afterOpt2 = '';
+    if (opt2Match) {
+      const idx2 = working.indexOf(opt2Match[0]) + opt2Match[0].length;
+      if (idx2 < working.length) {
+        afterOpt2 = working.slice(idx2).replace(/^:::\s*END_QUOTE_2\s*:::/i, '').trim();
+      }
+    }
+
+    return {
+      hasDualQuotes: true,
+      beforeOpt1,
+      option1,
+      option2,
+      afterOpt2,
+      bookingMeta: parsedMeta
+    };
+  };
+
+  // Render plain text lines (notes, bullets, headers)
+  const renderPlainLines = (text, keyPrefix = 'ln') => {
+    if (!text) return null;
     const lines = text.split('\n');
     const elements = [];
 
     lines.forEach((line, idx) => {
       const trimmed = line.trim();
-
-      // Empty line -> space
       if (!trimmed) {
-        elements.push(<div key={`sp-${idx}`} className="h-2" />);
+        elements.push(<div key={`${keyPrefix}-sp-${idx}`} className="h-1.5" />);
+        return;
+      }
+      if (/^(?:Option [12]|2\.\s*OPTION 1|3\.\s*OPTION 2)/i.test(trimmed)) {
         return;
       }
 
-      // Filter out redundant WhatsApp click-to-chat lines
-      if (/(?:wa\.me|api\.whatsapp\.com|send route on whatsapp|whatsapp us for|confirm on whatsapp|book on whatsapp)/i.test(trimmed)) {
-        return;
-      }
-
-      // Check if line looks like vehicle tariff: e.g. "Sedan: ₹14/km" or "• Maruti Ertiga: ₹17/km"
-      const vehMatch = trimmed.match(/^(?:•\s*)?([A-Za-z0-9\s\+\(\)\/]+?)\s*:\s*(₹[0-9,\.\/A-Za-z\s\+\-]+)$/);
-      const isVehicleLine = vehMatch && /(?:sedan|dzire|etios|ertiga|crysta|innova|tempo|urbania|car|suv)/i.test(vehMatch[1]);
-
-      if (isVehicleLine) {
-        elements.push(
-          <div
-            key={`veh-${idx}`}
-            className="my-1.5 p-2 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-between gap-2 shadow-2xs"
-          >
-            <div className="flex items-center gap-2">
-              <span className="w-6 h-6 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xs font-bold shrink-0">
-                🚗
-              </span>
-              <span className="font-semibold text-xs text-slate-800 dark:text-slate-100">
-                {vehMatch[1].trim()}
-              </span>
-            </div>
-            <span className="font-extrabold text-xs text-emerald-600 dark:text-emerald-400 font-mono">
-              {vehMatch[2].trim()}
-            </span>
-          </div>
-        );
-        return;
-      }
-
-      // Section header
-      const isHeader = /^[0-9]+\.\s+[A-Za-z]/.test(trimmed) || /^[A-Z\s\(\)\:\-\—]{4,}\:?$/.test(trimmed);
+      const isHeader = /^[0-9]+\.\s+[A-Za-z]/.test(trimmed) || /^[A-Z\s\(\)\:\-\—]{4,}\:?$/.test(trimmed) || /^Quick Rate Summary/i.test(trimmed);
       if (isHeader) {
         elements.push(
           <div
-            key={`hd-${idx}`}
+            key={`${keyPrefix}-hd-${idx}`}
             className="font-bold text-xs uppercase tracking-wider text-slate-900 dark:text-white pt-2 pb-0.5 border-b border-slate-200/60 dark:border-white/10 mb-1"
           >
-            {trimmed}
+            {trimmed.replace(/^\*+|\*+$/g, '')}
           </div>
         );
         return;
       }
 
-      // Bullet point
       if (trimmed.startsWith('•') || trimmed.startsWith('-')) {
         const bulletText = trimmed.replace(/^[•\-]\s*/, '');
         elements.push(
-          <div key={`bl-${idx}`} className="flex items-start gap-2 py-0.5 text-xs text-slate-700 dark:text-slate-300">
+          <div key={`${keyPrefix}-bl-${idx}`} className="flex items-start gap-2 py-0.5 text-xs text-slate-700 dark:text-slate-300">
             <span className="text-blue-500 font-bold shrink-0 leading-tight">•</span>
             <span className="leading-relaxed">{bulletText}</span>
           </div>
@@ -408,15 +468,131 @@ export default function MobileDispatchCopilot() {
         return;
       }
 
-      // Default paragraph
       elements.push(
-        <p key={`p-${idx}`} className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+        <p key={`${keyPrefix}-p-${idx}`} className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
           {trimmed}
         </p>
       );
     });
 
     return elements;
+  };
+
+  // Render message content with Dual Quote Cards (Option 1 + Option 2) + 1-Click Actions
+  const renderMessageContent = (text, msgId = 'msg', savedMeta = null) => {
+    if (!text) return null;
+
+    const parsed = parseStructuredQuoteResponse(text, savedMeta);
+
+    if (!parsed.hasDualQuotes) {
+      return renderPlainLines(parsed.plainText, msgId);
+    }
+
+    const renderQuoteCard = (quoteText, optNum, title, subtitle, badgeColor) => {
+      if (!quoteText) return null;
+      const copyKey = `${msgId}-opt-${optNum}`;
+      const farePreview = optNum === 1 ? parsed.bookingMeta?.option1Fare : parsed.bookingMeta?.option2Fare;
+
+      return (
+        <div
+          key={copyKey}
+          className="my-3 rounded-2xl border border-slate-200 dark:border-white/15 bg-slate-950 text-slate-100 overflow-hidden shadow-md"
+        >
+          {/* Card Header */}
+          <div className="px-3.5 py-2.5 bg-slate-900 border-b border-slate-800 flex items-center justify-between gap-2 flex-wrap">
+            <div className="flex items-center gap-2">
+              <span className={`px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider ${badgeColor}`}>
+                Option {optNum}
+              </span>
+              <span className="font-bold text-xs text-white">{title}</span>
+              {subtitle && <span className="text-[11px] text-slate-400 hidden sm:inline">({subtitle})</span>}
+            </div>
+            {farePreview ? (
+              <span className="font-mono font-extrabold text-xs text-emerald-400">
+                ₹{Number(farePreview).toLocaleString('en-IN')}
+              </span>
+            ) : null}
+          </div>
+
+          {/* Monospace WhatsApp Quote Body */}
+          <pre className="p-3.5 text-xs font-mono text-slate-100 whitespace-pre-wrap leading-relaxed overflow-x-auto select-all">
+            {quoteText}
+          </pre>
+
+          {/* 1-Click Action Buttons Bar */}
+          <div className="px-3.5 py-2.5 bg-slate-900/90 border-t border-slate-800 flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => handleCopy(copyKey, quoteText)}
+              className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold flex items-center gap-1.5 border border-slate-700 transition cursor-pointer active:scale-95"
+            >
+              {copiedId === copyKey ? (
+                <>
+                  <span className="text-emerald-400">✓</span>
+                  <span className="text-emerald-400">Copied Option {optNum}!</span>
+                </>
+              ) : (
+                <>
+                  <span>📋</span>
+                  <span>Copy Option {optNum}</span>
+                </>
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleOpenWhatsApp(quoteText)}
+              className="px-3 py-1.5 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition cursor-pointer active:scale-95"
+            >
+              <span>📲</span>
+              <span>Send WhatsApp</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handlePushOptionToDispatch(quoteText, optNum, parsed.bookingMeta)}
+              className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition cursor-pointer active:scale-95 ml-auto"
+              title="Pre-fill this quote directly into New Booking / Dispatch Desk"
+            >
+              <span>🚀</span>
+              <span>+ Push to Dispatch Desk</span>
+            </button>
+          </div>
+        </div>
+      );
+    };
+
+    return (
+      <div className="space-y-2">
+        {parsed.beforeOpt1 && (
+          <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/25 text-xs text-slate-800 dark:text-slate-200">
+            {renderPlainLines(parsed.beforeOpt1, `${msgId}-pre`)}
+          </div>
+        )}
+
+        {renderQuoteCard(
+          parsed.option1,
+          1,
+          'Compact WhatsApp Micro-Receipt',
+          'All-Inclusive / Permit Included',
+          'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+        )}
+
+        {renderQuoteCard(
+          parsed.option2,
+          2,
+          'Detailed Itemized WhatsApp Quote',
+          'Base + Permit & Tolls Breakdown',
+          'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+        )}
+
+        {parsed.afterOpt2 && (
+          <div className="mt-2 pt-2 border-t border-slate-200 dark:border-white/10">
+            {renderPlainLines(parsed.afterOpt2, `${msgId}-post`)}
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -665,7 +841,7 @@ export default function MobileDispatchCopilot() {
                         </div>
                       ) : (
                         <div className="space-y-1">
-                          {renderMessageContent(m.content)}
+                          {renderMessageContent(m.content, m.id, m.bookingMeta)}
 
                           {/* Live Google Search Grounding Badge */}
                           {m.grounding?.webQueries?.length > 0 && (
