@@ -22,8 +22,13 @@ function getGeminiApiKey() {
 function logCalculationToCsv(data) {
   try {
     const csvPath = path.resolve(process.cwd(), 'Kalidass_Calculations_Log_2026.csv');
+    let rowCount = 1;
+    if (fs.existsSync(csvPath)) {
+      rowCount = fs.readFileSync(csvPath, 'utf8').trim().split(/\r?\n/).filter(Boolean).length;
+    }
+    const seqQuoteId = data.quoteId || `#WA-${rowCount}`;
     const timestamp = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
-    const row = `"${timestamp}","${data.quoteId || '#WA-ENQ'}","${data.customerName || 'WhatsApp Customer'}","${data.phone || ''}","${data.vehicle || 'Multi-Fleet'}","${data.route || ''}","${data.rate || 0}","WhatsApp AI Co-Pilot"\n`;
+    const row = `"${timestamp}","${seqQuoteId}","${data.customerName || 'WhatsApp Customer'}","${data.phone || ''}","${data.vehicle || 'Multi-Fleet'}","${data.route || ''}","${data.rate || 0}","WhatsApp AI Co-Pilot"\n`;
     fs.appendFileSync(csvPath, row, 'utf8');
   } catch (_) {}
 }
@@ -211,7 +216,6 @@ export async function processWhatsAppMessage(incomingText = '', audioBuffer = nu
     // Log calculation if quote was requested
     if (reply.includes('QUOTATION') || reply.includes('₹')) {
       logCalculationToCsv({
-        quoteId: `#WA-${Date.now().toString().slice(-4)}`,
         customerName: 'WhatsApp Inquiry',
         route: promptText.slice(0, 50),
         rate: 0

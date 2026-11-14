@@ -1,50 +1,80 @@
 [
   {
-    "id": "DRV-01",
+    "id": "DRV-1",
     "name": "Moorthy",
     "phone": "7305282977",
     "vehicle": "Maruti XL6",
-    "plate": "TN85W4093",
-    "category": "6-Seater / SUV"
+    "plate": "TN 85 W 4093",
+    "category": "SUV / Ertiga",
+    "zone": "South & OMR",
+    "area": "Medavakkam",
+    "boardType": "Yellow Board",
+    "carrier": "With Carrier",
+    "partnerType": "Owner-Driver"
   },
   {
-    "id": "DRV-02",
+    "id": "DRV-2",
     "name": "Rajesh Kumar",
     "phone": "8072619904",
     "vehicle": "Toyota Etios",
-    "plate": "TN18BQ1558",
-    "category": "Sedan"
+    "plate": "TN 18 BQ 1558",
+    "category": "Sedan",
+    "zone": "GST & Airport",
+    "area": "Tambaram",
+    "boardType": "Yellow Board",
+    "carrier": "With Carrier",
+    "partnerType": "Owner-Driver"
   },
   {
-    "id": "DRV-03",
+    "id": "DRV-3",
     "name": "Siva",
     "phone": "9840100000",
     "vehicle": "Swift Dzire",
-    "plate": "TN11AB1234",
-    "category": "Sedan"
+    "plate": "TN 11 AB 1234",
+    "category": "Sedan",
+    "zone": "South & OMR",
+    "area": "Velachery",
+    "boardType": "Yellow Board",
+    "carrier": "No Carrier",
+    "partnerType": "Owner-Driver"
   },
   {
-    "id": "DRV-04",
+    "id": "DRV-4",
     "name": "Hariharan",
     "phone": "8939539211",
     "vehicle": "Maruti Ertiga",
-    "plate": "TN14AK2026",
-    "category": "6-Seater"
+    "plate": "TN 14 AK 2026",
+    "category": "SUV / Ertiga",
+    "zone": "South & OMR",
+    "area": "Sholinganallur",
+    "boardType": "Yellow Board",
+    "carrier": "With Carrier",
+    "partnerType": "Owner-Driver"
   },
   {
-    "id": "DRV-05",
+    "id": "DRV-5",
     "name": "Murugan",
     "phone": "8939539211",
     "vehicle": "Innova Crysta",
-    "plate": "TN09BZ5544",
-    "category": "Prime SUV"
+    "plate": "TN 09 BZ 5544",
+    "category": "Innova Crysta",
+    "zone": "Central Chennai",
+    "area": "Guindy",
+    "boardType": "Yellow Board",
+    "carrier": "With Carrier",
+    "partnerType": "Fleet Partner"
   },
   {
-    "id": "DRV-06",
+    "id": "DRV-6",
     "name": "Elumalai",
     "phone": "8939539211",
-    "vehicle": "Tempo Traveller (12S)",
-    "plate": "TN11CD9988",
-    "category": "Tempo"
+    "vehicle": "Tempo Traveller 12-Seater",
+    "plate": "TN 11 CD 9988",
+    "category": "Tempo Traveller",
+    "zone": "GST & Airport",
+    "area": "Chromepet",
+    "boardType": "Yellow Board",
+    "carrier": "With Carrier",
+    "partnerType": "Fleet Partner"
   }
 ]

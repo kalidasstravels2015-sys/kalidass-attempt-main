@@ -3,6 +3,7 @@ import DispatchActionModal from './DispatchActionModal';
 import QuickBookingModal from './QuickBookingModal';
 import defaultDrivers from '../../../data/drivers_roster.json';
 import { buildWhatsAppUrl, buildGoogleReviewMessage, buildAdvancePaymentRequestMessage } from '../../../utils/whatsappTemplates';
+import { getNextDriverRosterId } from '../../../utils/sequenceGenerator';
 
 export default function SingleScreenDispatchDesk({
   bookings = [],
@@ -82,7 +83,7 @@ export default function SingleScreenDispatchDesk({
       return;
     }
     const newEntry = {
-      id: `DRV-${Date.now().toString().slice(-4)}`,
+      id: getNextDriverRosterId(drivers, 0),
       name: newDriverForm.name.trim(),
       phone: newDriverForm.phone.replace(/[^0-9]/g, '').slice(-10),
       vehicle: newDriverForm.vehicle.trim() || 'Cab',

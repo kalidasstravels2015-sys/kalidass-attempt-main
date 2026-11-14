@@ -1,10 +1,21 @@
 // Cloudflare Pages Function: /api/admin/sheet-config
 // Serves and caches Google Sheet Webhook URL for clients
 
+const DEFAULT_TRIPS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzpTM1pLXWLF-E80-HAXjj2ghAC_0tvFW1blTJC7rJojqUhTcKIwQz0t-NQMCScN2VA/exec';
+
 let inMemoryWebhookUrl = '';
 
+function sanitizeTripsUrl(rawUrl) {
+  const clean = (rawUrl || '').trim();
+  if (!clean || clean.includes('AKfycbzjPh0a2ju')) {
+    return DEFAULT_TRIPS_WEBHOOK_URL;
+  }
+  return clean;
+}
+
 export async function onRequestGet({ env }) {
-  const url = inMemoryWebhookUrl || (env && (env.GOOGLE_SHEET_WEBHOOK_URL || env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL)) || '';
+  const rawUrl = inMemoryWebhookUrl || (env && (env.GOOGLE_SHEET_WEBHOOK_URL || env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL)) || DEFAULT_TRIPS_WEBHOOK_URL;
+  const url = sanitizeTripsUrl(rawUrl);
   return new Response(JSON.stringify({
     success: true,
     webhookUrl: url

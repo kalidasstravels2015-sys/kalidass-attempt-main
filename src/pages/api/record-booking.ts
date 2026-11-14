@@ -5,16 +5,26 @@ import { getDailySequence, saveDailySequence } from './next-quote-id';
 
 export const prerender = false;
 
+const DEFAULT_TRIPS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzpTM1pLXWLF-E80-HAXjj2ghAC_0tvFW1blTJC7rJojqUhTcKIwQz0t-NQMCScN2VA/exec';
+
+function sanitizeWebhookUrl(rawUrl: string): string {
+  const clean = (rawUrl || '').trim();
+  if (!clean || !clean.startsWith('http') || clean.includes('AKfycbzjPh0a2ju')) {
+    return DEFAULT_TRIPS_WEBHOOK_URL;
+  }
+  return clean;
+}
+
 function getEnvWebhook(): string {
   try {
     const envPath = path.resolve(process.cwd(), '.env');
     if (fs.existsSync(envPath)) {
       const raw = fs.readFileSync(envPath, 'utf8');
       const match = raw.match(/(?:PUBLIC_)?GOOGLE_SHEET_WEBHOOK_URL=([^\r\n]+)/);
-      if (match && match[1]) return match[1].trim();
+      if (match && match[1]) return sanitizeWebhookUrl(match[1]);
     }
   } catch (_) {}
-  return process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL || '';
+  return sanitizeWebhookUrl(process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL || DEFAULT_TRIPS_WEBHOOK_URL);
 }
 
 export const POST: APIRoute = async ({ request, url }) => {
@@ -30,10 +40,10 @@ export const POST: APIRoute = async ({ request, url }) => {
     }
 
     const targetUrl = url || new URL(request.url);
-    const webhookUrl = targetUrl.searchParams.get('webhook') || (data && data.webhookUrl) || getEnvWebhook();
+    const webhookUrl = sanitizeWebhookUrl(targetUrl.searchParams.get('webhook') || (data && data.webhookUrl) || getEnvWebhook());
+    let bookingId = data.bookingId || data.quoteId || data.quoteRefId;
     console.log('[API_RECORD_BOOKING] Received bookingId:', bookingId, 'webhookUrl:', webhookUrl);
 
-    let bookingId = data.bookingId || data.quoteId || data.quoteRefId;
     const csvPath = path.resolve(process.cwd(), 'Kalidass_Operations_Control_2026.csv');
 
     if (!bookingId) {
@@ -91,14 +101,15 @@ export const POST: APIRoute = async ({ request, url }) => {
       fs.appendFileSync(csvPath, newRow, 'utf8');
     } catch (_) {}
 
-    // 2. Synchronously or fire-and-forget sync to Google Sheets Webhook
+    // 2. Synchronously sync to Google Sheets Webhook (with collision protection)
     if (webhookUrl && webhookUrl.startsWith('http')) {
       try {
+        const originalId = bookingId;
         const tripPayload = {
           id: bookingId,
-          customerName: data.name || (data.phone ? `Guest (+91 ${String(data.phone).replace(/[^0-9]/g, '').slice(-10)})` : 'Website Guest'),
+          customerName: data.name || (data.phone ? `Guest (+91 ${String(data.phone).replace(/[^0-9]/g, '').slice(-10)})` : 'Website WhatsApp Lead'),
           phone: String(data.phone || '').replace(/[^0-9]/g, '').slice(-10),
-          tripCategory: data.package || (cleanAddress.includes('➔') ? 'Outstation' : 'Website Booking'),
+          tripCategory: data.package || data.tripCategory || (cleanAddress.includes('➔') ? 'Outstation' : 'Website Booking'),
           vehicle: data.vehicle || vehCat,
           route: cleanAddress,
           pickupDate: data.pickupDate || new Date().toISOString().split('T')[0],
@@ -117,28 +128,78 @@ export const POST: APIRoute = async ({ request, url }) => {
           updatedAt: new Date().toISOString()
         };
 
-        await fetch(webhookUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({
-            action: 'SAVE_TRIP',
-            trip: tripPayload,
-            // Legacy fallbacks
-            type: 'booking',
-            bookingId: bookingId,
-            guestNamePhone: guestNamePhone,
-            travelDateTime: schedule,
-            pickupAddress: cleanAddress,
-            vehicleCategory: vehCat,
-            partySize: partySize,
-            terminalFare: fareNum,
-            advancePaid: advanceNum,
-            chauffeurPayout: payoutNum,
-            assignedChauffeur: driver,
-            manifestStatus: manifestStatus,
-            metadata: notes
-          })
-        });
+        // Check existing trips in Google Sheet to prevent overwriting another visitor's quote with the same Q-DDMMYY-X ID
+        let alreadySaved = false;
+        try {
+          const checkRes = await fetch(webhookUrl, { method: 'GET', redirect: 'follow' });
+          if (checkRes.ok) {
+            const sheetData = await checkRes.json();
+            if (sheetData && Array.isArray(sheetData.trips)) {
+              const existingRow = sheetData.trips.find((r: any) => String(r.id) === String(tripPayload.id));
+              if (existingRow) {
+                const rowCreatedMs = existingRow.createdAt ? new Date(existingRow.createdAt).getTime() : 0;
+                const isRecentSameTrip =
+                  rowCreatedMs > 0 &&
+                  Math.abs(Date.now() - rowCreatedMs) < 60000 &&
+                  String(existingRow.route || '') === String(tripPayload.route || '') &&
+                  Number(existingRow.agreedRate || 0) === Number(tripPayload.agreedRate || 0) &&
+                  String(existingRow.vehicle || '') === String(tripPayload.vehicle || '');
+
+                if (isRecentSameTrip) {
+                  alreadySaved = true;
+                } else {
+                  const idMatch = String(originalId).match(/^Q-(\d{6})-(\d+)$/i);
+                  const d = new Date();
+                  const fallbackDateCode = `${String(d.getDate()).padStart(2, '0')}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getFullYear()).slice(-2)}`;
+                  const dateCode = idMatch ? idMatch[1] : fallbackDateCode;
+                  const seqRegex = new RegExp(`Q-${dateCode}-(\\d+)`, 'gi');
+                  let maxSeq = idMatch ? parseInt(idMatch[2], 10) : getDailySequence(dateCode);
+                  for (const r of sheetData.trips) {
+                    const textToScan = `${r?.id || ''} ${r?.notes || ''}`;
+                    let m;
+                    seqRegex.lastIndex = 0;
+                    while ((m = seqRegex.exec(textToScan)) !== null) {
+                      const n = parseInt(m[1], 10);
+                      if (!isNaN(n) && n > maxSeq) maxSeq = n;
+                    }
+                  }
+                  const newSeq = maxSeq + 1;
+                  saveDailySequence(dateCode, newSeq);
+                  bookingId = `Q-${dateCode}-${newSeq}`;
+                  tripPayload.id = bookingId;
+                  if (!tripPayload.notes.includes(`WA Ref: ${originalId}`)) {
+                    tripPayload.notes = `${tripPayload.notes} [WA Ref: ${originalId}]`;
+                  }
+                }
+              }
+            }
+          }
+        } catch (_) {}
+
+        if (!alreadySaved) {
+          await fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'SAVE_TRIP',
+              trip: tripPayload,
+              // Legacy fallbacks
+              type: 'booking',
+              bookingId: bookingId,
+              guestNamePhone: guestNamePhone,
+              travelDateTime: schedule,
+              pickupAddress: cleanAddress,
+              vehicleCategory: vehCat,
+              partySize: partySize,
+              terminalFare: fareNum,
+              advancePaid: advanceNum,
+              chauffeurPayout: payoutNum,
+              assignedChauffeur: driver,
+              manifestStatus: manifestStatus,
+              metadata: tripPayload.notes
+            })
+          });
+        }
       } catch (e: any) {
         console.warn('Google Sheet webhook sync error:', e?.message);
       }

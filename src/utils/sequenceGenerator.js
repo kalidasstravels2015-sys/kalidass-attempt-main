@@ -19,7 +19,9 @@ export const STORAGE_KEYS = {
   QUOTATION: 'kt_last_quotation_seq',
   ENQUIRY: 'kt_last_enquiry_seq',
   BOOKING: 'kt_last_booking_seq',
-  CALCULATION: 'kt_last_calculation_seq'
+  CALCULATION: 'kt_last_calculation_seq',
+  DRIVER_LEAD: 'kt_last_driver_lead_seq',
+  DRIVER_ROSTER: 'kt_last_driver_roster_seq'
 };
 
 /**
@@ -312,4 +314,76 @@ export function getOrderedEnquiryId(lead, idx = 0, totalCount = 0) {
   }
 
   return `#ENQ-${START_SEQ + idx}`;
+}
+
+/**
+ * Generate next Driver Partner Application Ref ID (#KT-DRV-1, #KT-DRV-2, #KT-DRV-3...)
+ * Strictly continuous sequence starting from 1. NEVER generates random numbers.
+ */
+export function getNextDriverLeadId(existingLeads = [], prefix = '#KT-DRV-') {
+  let stored = 0;
+  if (typeof window !== 'undefined' && window.localStorage) {
+    try {
+      stored = parseInt(localStorage.getItem(STORAGE_KEYS.DRIVER_LEAD) || '0', 10);
+    } catch (_) {}
+  }
+
+  let maxFromList = 0;
+  if (Array.isArray(existingLeads)) {
+    for (const item of existingLeads) {
+      const rawId = item?.leadId || item?.id || (typeof item === 'string' ? item : '');
+      const m = rawId ? String(rawId).match(/KT-DRV-(\d+)/i) : null;
+      if (m) {
+        const val = parseInt(m[1], 10);
+        if (!isNaN(val) && val >= 1 && val <= 9999 && val > maxFromList) {
+          maxFromList = val;
+        }
+      }
+    }
+  }
+
+  const nextNum = Math.max(0, stored, maxFromList) + 1;
+  if (typeof window !== 'undefined' && window.localStorage) {
+    try {
+      localStorage.setItem(STORAGE_KEYS.DRIVER_LEAD, String(nextNum));
+    } catch (_) {}
+  }
+
+  return `${prefix}${nextNum}`;
+}
+
+/**
+ * Generate next Driver Roster Card ID (DRV-1, DRV-2, DRV-3...)
+ * Strictly continuous sequence starting from 1. NEVER generates random numbers.
+ */
+export function getNextDriverRosterId(existingDrivers = [], offset = 0, prefix = 'DRV-') {
+  let stored = 0;
+  if (typeof window !== 'undefined' && window.localStorage) {
+    try {
+      stored = parseInt(localStorage.getItem(STORAGE_KEYS.DRIVER_ROSTER) || '0', 10);
+    } catch (_) {}
+  }
+
+  let maxFromList = 0;
+  if (Array.isArray(existingDrivers)) {
+    for (const item of existingDrivers) {
+      const rawId = item?.id || (typeof item === 'string' ? item : '');
+      const m = rawId ? String(rawId).match(/^DRV-0*(\d+)$/i) : null;
+      if (m) {
+        const val = parseInt(m[1], 10);
+        if (!isNaN(val) && val >= 1 && val <= 999 && val > maxFromList) {
+          maxFromList = val;
+        }
+      }
+    }
+  }
+
+  const nextNum = Math.max(0, stored, maxFromList, Array.isArray(existingDrivers) ? existingDrivers.length : 0) + 1 + offset;
+  if (typeof window !== 'undefined' && window.localStorage) {
+    try {
+      localStorage.setItem(STORAGE_KEYS.DRIVER_ROSTER, String(nextNum));
+    } catch (_) {}
+  }
+
+  return `${prefix}${nextNum}`;
 }

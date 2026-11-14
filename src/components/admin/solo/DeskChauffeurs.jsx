@@ -1,14 +1,26 @@
 import React, { useState, useMemo } from 'react';
+import {
+  VEHICLE_CATEGORIES,
+  CHENNAI_ZONES,
+  formatIndianPlateNumber,
+  normalizeVehicleCategory
+} from '../../../data/chennaiFleetStandards';
 
 export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddChauffeur, onDeleteChauffeur, showToast }) {
   const [search, setSearch] = useState('');
   const [filterCategory, setFilterCategory] = useState('ALL');
+  const [filterZone, setFilterZone] = useState('ALL');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [newDriver, setNewDriver] = useState({
     name: '',
     phone: '',
     plate: '',
-    category: 'Sedan (Dzire / Etios)',
+    category: 'Sedan',
+    vehicle: 'Swift Dzire',
+    zone: 'South & OMR',
+    area: 'Medavakkam',
+    boardType: 'Yellow Board',
+    carrier: 'With Carrier',
     rating: '4.9'
   });
 
@@ -32,12 +44,19 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
   // Filtered list
   const filtered = useMemo(() => {
     return chauffeursWithDuty.filter(c => {
-      const matchCategory = filterCategory === 'ALL' || (c.category || '').toLowerCase().includes(filterCategory.toLowerCase());
-      const query = `${c.name || ''} ${c.plate || ''} ${c.phone || ''} ${c.category || ''}`.toLowerCase();
+      const catNorm = c.category ? normalizeVehicleCategory(c.category) : normalizeVehicleCategory(c.vehicle || '');
+      const matchCategory =
+        filterCategory === 'ALL' ||
+        catNorm === filterCategory ||
+        (c.category || '').toLowerCase().includes(filterCategory.toLowerCase());
+      const matchZone =
+        filterZone === 'ALL' ||
+        (c.zone || 'South & OMR') === filterZone;
+      const query = `${c.name || ''} ${c.plate || ''} ${c.phone || ''} ${c.category || ''} ${c.vehicle || ''} ${c.area || ''} ${c.zone || ''}`.toLowerCase();
       const matchSearch = !search || query.includes(search.toLowerCase());
-      return matchCategory && matchSearch;
+      return matchCategory && matchZone && matchSearch;
     });
-  }, [chauffeursWithDuty, filterCategory, search]);
+  }, [chauffeursWithDuty, filterCategory, filterZone, search]);
 
   const handleCall = (phone) => {
     window.open(`tel:${phone.replace(/[^0-9+]/g, '')}`, '_self');
@@ -59,8 +78,13 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
     const formatted = {
       name: newDriver.name.trim(),
       phone: newDriver.phone.trim().startsWith('+91') ? newDriver.phone.trim() : `+91 ${newDriver.phone.trim()}`,
-      plate: newDriver.plate.trim().toUpperCase(),
+      plate: formatIndianPlateNumber(newDriver.plate.trim()),
       category: newDriver.category,
+      vehicle: newDriver.vehicle,
+      zone: newDriver.zone,
+      area: newDriver.area,
+      boardType: newDriver.boardType,
+      carrier: newDriver.carrier,
       status: 'Available',
       rating: newDriver.rating || '4.9'
     };
@@ -70,7 +94,12 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
       name: '',
       phone: '',
       plate: '',
-      category: 'Sedan (Dzire / Etios)',
+      category: 'Sedan',
+      vehicle: 'Swift Dzire',
+      zone: 'South & OMR',
+      area: 'Medavakkam',
+      boardType: 'Yellow Board',
+      carrier: 'With Carrier',
       rating: '4.9'
     });
     setIsAddModalOpen(false);
@@ -108,11 +137,21 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
             onChange={(e) => setFilterCategory(e.target.value)}
             className="py-1.5 px-3 text-xs rounded-full border border-m3-outline-variant bg-m3-surface-container-lowest font-medium text-m3-on-surface focus:ring-2 focus:ring-m3-primary"
           >
-            <option value="ALL">All Cars</option>
-            <option value="Sedan">Sedan (Dzire / Etios)</option>
-            <option value="Ertiga">Ertiga (6 Seats)</option>
-            <option value="Innova">Innova Crysta</option>
-            <option value="Tempo">Tempo Traveller</option>
+            <option value="ALL">All Vehicle Classes</option>
+            {VEHICLE_CATEGORIES.map((c) => (
+              <option key={c.id} value={c.id}>{c.label}</option>
+            ))}
+          </select>
+
+          <select
+            value={filterZone}
+            onChange={(e) => setFilterZone(e.target.value)}
+            className="py-1.5 px-3 text-xs rounded-full border border-m3-outline-variant bg-m3-surface-container-lowest font-medium text-m3-on-surface focus:ring-2 focus:ring-m3-primary"
+          >
+            <option value="ALL">All Chennai Zones</option>
+            {CHENNAI_ZONES.map((z) => (
+              <option key={z.id} value={z.id}>{z.shortLabel}</option>
+            ))}
           </select>
 
           <button
@@ -204,8 +243,14 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
                   {/* Vehicle Details */}
                   <div className="p-2.5 bg-m3-surface-container-low rounded-m3-lg border border-m3-outline-variant/40 mb-3 space-y-1">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-m3-on-surface-variant font-medium">Vehicle Class:</span>
-                      <span className="font-bold text-m3-on-surface">{driver.category}</span>
+                      <span className="text-m3-on-surface-variant font-medium">Vehicle Model:</span>
+                      <span className="font-bold text-m3-on-surface">{driver.vehicle || driver.category}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-m3-on-surface-variant font-medium">Base Location:</span>
+                      <span className="font-semibold text-m3-on-surface">
+                        {driver.area || 'Medavakkam'} ({driver.zone || 'South & OMR'})
+                      </span>
                     </div>
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-m3-on-surface-variant font-medium">Plate Number:</span>
@@ -307,27 +352,83 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
                   <label className="block text-[11px] font-semibold text-m3-on-surface mb-1">Vehicle Class</label>
                   <select
                     value={newDriver.category}
-                    onChange={(e) => setNewDriver({ ...newDriver, category: e.target.value })}
+                    onChange={(e) => {
+                      const catId = e.target.value;
+                      const catObj = VEHICLE_CATEGORIES.find(c => c.id === catId);
+                      setNewDriver({
+                        ...newDriver,
+                        category: catId,
+                        vehicle: catObj && catObj.models[0] ? catObj.models[0] : newDriver.vehicle
+                      });
+                    }}
                     className="w-full rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-lowest p-2 text-xs text-m3-on-surface focus:ring-2 focus:ring-m3-primary focus:outline-none font-semibold"
                   >
-                    <option value="Sedan (Dzire / Etios)">Sedan (Dzire / Etios)</option>
-                    <option value="Ertiga (6 Seats)">Ertiga (6 Seats)</option>
-                    <option value="Innova Crysta">Innova Crysta</option>
-                    <option value="Tempo Traveller">Tempo Traveller</option>
+                    {VEHICLE_CATEGORIES.map(c => (
+                      <option key={c.id} value={c.id}>{c.label}</option>
+                    ))}
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-semibold text-m3-on-surface mb-1">Car Plate Number</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. TN 09 CZ 1234"
-                    value={newDriver.plate}
-                    onChange={(e) => setNewDriver({ ...newDriver, plate: e.target.value })}
-                    className="w-full rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-lowest p-2 text-xs text-m3-on-surface focus:ring-2 focus:ring-m3-primary focus:outline-none font-mono uppercase"
-                  />
+                  <label className="block text-[11px] font-semibold text-m3-on-surface mb-1">Exact Vehicle Model</label>
+                  <select
+                    value={newDriver.vehicle}
+                    onChange={(e) => setNewDriver({ ...newDriver, vehicle: e.target.value })}
+                    className="w-full rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-lowest p-2 text-xs text-m3-on-surface focus:ring-2 focus:ring-m3-primary focus:outline-none font-semibold"
+                  >
+                    {(VEHICLE_CATEGORIES.find(c => c.id === newDriver.category)?.models || ['Swift Dzire']).map(m => (
+                      <option key={m} value={m}>{m}</option>
+                    ))}
+                  </select>
                 </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-[11px] font-semibold text-m3-on-surface mb-1">Chennai Zone</label>
+                  <select
+                    value={newDriver.zone}
+                    onChange={(e) => {
+                      const zId = e.target.value;
+                      const zObj = CHENNAI_ZONES.find(z => z.id === zId);
+                      setNewDriver({
+                        ...newDriver,
+                        zone: zId,
+                        area: zObj && zObj.areas[0] ? zObj.areas[0].name : newDriver.area
+                      });
+                    }}
+                    className="w-full rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-lowest p-2 text-xs text-m3-on-surface focus:ring-2 focus:ring-m3-primary focus:outline-none font-semibold"
+                  >
+                    {CHENNAI_ZONES.map(z => (
+                      <option key={z.id} value={z.id}>{z.shortLabel}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold text-m3-on-surface mb-1">Base Area</label>
+                  <select
+                    value={newDriver.area}
+                    onChange={(e) => setNewDriver({ ...newDriver, area: e.target.value })}
+                    className="w-full rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-lowest p-2 text-xs text-m3-on-surface focus:ring-2 focus:ring-m3-primary focus:outline-none font-semibold"
+                  >
+                    {(CHENNAI_ZONES.find(z => z.id === newDriver.zone)?.areas || []).map(a => (
+                      <option key={a.name} value={a.name}>{a.name} ({a.pincode})</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-semibold text-m3-on-surface mb-1">Car Plate Number</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. TN 14 AK 2026"
+                  value={newDriver.plate}
+                  onChange={(e) => setNewDriver({ ...newDriver, plate: formatIndianPlateNumber(e.target.value) })}
+                  className="w-full rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-lowest p-2 text-xs text-m3-on-surface focus:ring-2 focus:ring-m3-primary focus:outline-none font-mono uppercase"
+                />
               </div>
 
               <div className="pt-2 flex items-center justify-end gap-2 border-t border-m3-outline-variant/60">

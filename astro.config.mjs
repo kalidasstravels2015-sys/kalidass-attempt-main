@@ -1061,6 +1061,11 @@ ${promptCtx}`;
                     try { fs.unlinkSync(settlePath); } catch (_) {}
                   }
 
+                  const drvLeadsPath = path.resolve(cwd, 'public', 'uploads', 'driver-leads.json');
+                  if (fs.existsSync(drvLeadsPath)) {
+                    try { fs.unlinkSync(drvLeadsPath); } catch (_) {}
+                  }
+
                   res.setHeader('Content-Type', 'application/json; charset=utf-8');
                   res.end(JSON.stringify({
                     success: true,
@@ -1073,6 +1078,164 @@ ${promptCtx}`;
                 }
               });
               return;
+            }
+
+            if (url === '/api/record-driver-lead' || url === '/api/record-driver-lead/') {
+              const leadsJsonPath = path.resolve(process.cwd(), 'public', 'uploads', 'driver-leads.json');
+              const uploadDir = path.resolve(process.cwd(), 'public', 'uploads', 'driver-docs');
+
+              const readLeads = () => {
+                try {
+                  if (fs.existsSync(leadsJsonPath)) {
+                    const parsed = JSON.parse(fs.readFileSync(leadsJsonPath, 'utf8'));
+                    if (Array.isArray(parsed)) return parsed;
+                  }
+                } catch (_) {}
+                return [];
+              };
+
+              const writeLeads = (list) => {
+                try {
+                  const dir = path.dirname(leadsJsonPath);
+                  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+                  fs.writeFileSync(leadsJsonPath, JSON.stringify(list, null, 2), 'utf8');
+                } catch (_) {}
+              };
+
+              if (req.method === 'GET') {
+                const leads = readLeads();
+                res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                res.end(JSON.stringify({ success: true, leads }));
+                return;
+              }
+
+              if (req.method === 'PATCH') {
+                let body = '';
+                req.on('data', (c) => { body += c; });
+                req.on('end', () => {
+                  try {
+                    const parsed = JSON.parse(body || '{}');
+                    const leads = readLeads();
+                    const updated = leads.map((item) =>
+                      item.leadId === parsed.leadId
+                        ? { ...item, status: parsed.status || 'Approved', updatedAt: new Date().toISOString() }
+                        : item
+                    );
+                    writeLeads(updated);
+                    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                    res.end(JSON.stringify({ success: true, leads: updated }));
+                  } catch (e) {
+                    res.statusCode = 500;
+                    res.end(JSON.stringify({ success: false, error: e.message }));
+                  }
+                });
+                return;
+              }
+
+              if (req.method === 'POST') {
+                let body = '';
+                req.on('data', (c) => { body += c; });
+                req.on('end', () => {
+                  try {
+                    const data = JSON.parse(body || '{}');
+                    const existingLeads = readLeads();
+                    let maxExisting = 0;
+                    for (const item of existingLeads) {
+                      const m = String(item?.leadId || '').match(/KT-DRV-(\d+)/i);
+                      if (m) {
+                        const n = parseInt(m[1], 10);
+                        if (!isNaN(n) && n >= 1 && n <= 9999 && n > maxExisting) {
+                          maxExisting = n;
+                        }
+                      }
+                    }
+                    const nextNum = Math.max(1, maxExisting + 1, existingLeads.length + 1);
+                    const leadId = `#KT-DRV-${nextNum}`;
+                    const cleanLeadId = leadId.replace(/[^a-zA-Z0-9_-]/g, '');
+                    const timestamp = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+
+                    if (!fs.existsSync(uploadDir)) {
+                      try { fs.mkdirSync(uploadDir, { recursive: true }); } catch (_) {}
+                    }
+
+                    let dlLocalUrl = '';
+                    if (data.dlFile?.base64) {
+                      try {
+                        const cleanBase64 = data.dlFile.base64.replace(/^data:image\/[a-z]+;base64,/, '');
+                        const dlFileName = `${cleanLeadId}-DL.jpg`;
+                        fs.writeFileSync(path.join(uploadDir, dlFileName), Buffer.from(cleanBase64, 'base64'));
+                        dlLocalUrl = `/uploads/driver-docs/${dlFileName}`;
+                      } catch (_) {}
+                    }
+
+                    const rawVehicles = Array.isArray(data.vehicles) && data.vehicles.length > 0 ? data.vehicles : [];
+                    const savedVehicles = rawVehicles.map((v, idx) => {
+                      const vTag = `V${idx + 1}`;
+                      let vRcUrl = '';
+                      let vCarUrl = '';
+                      if (v.rcFile?.base64) {
+                        try {
+                          const clean = v.rcFile.base64.replace(/^data:image\/[a-z]+;base64,/, '');
+                          const fName = `${cleanLeadId}-${vTag}-RC.jpg`;
+                          fs.writeFileSync(path.join(uploadDir, fName), Buffer.from(clean, 'base64'));
+                          vRcUrl = `/uploads/driver-docs/${fName}`;
+                        } catch (_) {}
+                      }
+                      if (v.carFile?.base64) {
+                        try {
+                          const clean = v.carFile.base64.replace(/^data:image\/[a-z]+;base64,/, '');
+                          const fName = `${cleanLeadId}-${vTag}-CAR.jpg`;
+                          fs.writeFileSync(path.join(uploadDir, fName), Buffer.from(clean, 'base64'));
+                          vCarUrl = `/uploads/driver-docs/${fName}`;
+                        } catch (_) {}
+                      }
+                      return {
+                        vehicleIndex: idx + 1,
+                        category: v.category || 'Sedan',
+                        model: v.model || 'Swift Dzire',
+                        plate: v.plate || 'Plate TBD',
+                        boardType: v.boardType || 'Yellow Board',
+                        carrier: v.carrier || 'With Carrier',
+                        rcUrl: vRcUrl,
+                        carUrl: vCarUrl
+                      };
+                    });
+
+                    const newRecord = {
+                      leadId,
+                      timestamp,
+                      status: 'Pending Verification',
+                      name: data.name || 'Partner Driver',
+                      phone: data.phone || '',
+                      category: data.category || 'Attach Car',
+                      partnerType: data.partnerType || (savedVehicles.length > 1 ? 'Fleet Partner' : 'Owner-Driver'),
+                      zone: data.zone || 'South & OMR',
+                      area: data.area || data.city || 'Medavakkam',
+                      city: data.city || 'Medavakkam',
+                      licenseType: data.licenseType || 'Commercial Badge',
+                      experience: data.experience || '3 to 5 Years',
+                      preferredDuty: data.preferredDuty || 'Outstation & Local Acting',
+                      dlLocalUrl,
+                      vehicles: savedVehicles
+                    };
+
+                    existingLeads.unshift(newRecord);
+                    writeLeads(existingLeads.slice(0, 200));
+
+                    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+                    res.end(JSON.stringify({
+                      success: true,
+                      leadId,
+                      dlLocalUrl,
+                      vehicles: savedVehicles
+                    }));
+                  } catch (e) {
+                    res.statusCode = 500;
+                    res.end(JSON.stringify({ success: false, error: e.message }));
+                  }
+                });
+                return;
+              }
             }
 
             next();

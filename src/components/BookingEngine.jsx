@@ -958,7 +958,7 @@ export default function BookingEngine({
         })
         .catch(() => {});
     }
-  }, []);
+  }, [viewMode]);
 
   // Formatted date string for summary
   const formattedPickupDate = useMemo(() => {

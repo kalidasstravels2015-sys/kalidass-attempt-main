@@ -4,20 +4,19 @@ import Breadcrumbs from "../components/SEO/Breadcrumbs.astro";
 import FAQAccordion from "../components/FAQAccordion.astro";
 import {
   Handshake,
-  Info,
   Car,
   UserCheck,
   MapPin,
   BadgeCheck,
-  FileText,
   Camera,
   Send,
   CheckCircle2,
   ArrowLeft,
   AlertCircle,
-  Wallet,
-  HelpCircle
+  HelpCircle,
+  Plus
 } from "lucide-react";
+import { ALL_CHENNAI_LOCALITIES } from "../data/chennaiFleetStandards.js";
 
 const site = "https://kalidasstravels.in";
 const pageUrl = `${site}/attach-cab/`;
@@ -30,24 +29,24 @@ const breadcrumbItems = [
 // Single source of truth for FAQs (rendered visibly and marked up in Schema)
 const faqItems = [
   {
-    q: "Can I send my driving license or RC on WhatsApp?",
-    a: "No. Do not send identity or vehicle documents on WhatsApp chat. All driver applications and document photos must be uploaded directly through this official registration form for secure verification by our dispatch team."
+    q: "How does trip settlement and commission work for attached vehicles?",
+    a: "We operate on a transparent per-trip outsourced model (not a fixed monthly salary). Standard agency commission is 10% on outsourced bookings, meaning 90% of the trip fare goes to the vehicle partner. If the customer pays the balance directly to you at trip completion, you simply settle the net commission difference with our dispatch desk."
   },
   {
-    q: "How quickly are trip settlements paid to attached drivers?",
-    a: "Trip payments and driver allowances (batta) are settled promptly on the same day or within 24 hours of completing outstation duties. We maintain transparent per-km billing with zero hidden deductions."
+    q: "How do I register if I have 2 or more cars (Fleet Partner)?",
+    a: "Fill in the details and upload the RC & Car Front photo for Vehicle #1 first, then tap the '+ Add Another Vehicle' button right below it to add Vehicle #2, #3, etc. Each vehicle gets its own dedicated assignable card in our dispatch roster."
   },
   {
-    q: "Can I attach more than one car?",
-    a: "Yes. Small fleet operators with 2 to 5+ commercial vehicles (Sedans, Ertiga, Innova Crysta, or Tempo Travellers) can attach their fleet under our corporate employee transport and South India tour dispatch network."
+    q: "Are both Yellow Board and White Board vehicles accepted?",
+    a: "Yes. You can select either Yellow Board or White Board inside each vehicle box along with whether your vehicle has a luggage roof carrier."
   },
   {
-    q: "What types of duties are available for attached drivers?",
-    a: "We provide regular round-trip outstation duties across Tamil Nadu, Pondicherry, Andhra Pradesh, and Karnataka, MAA Airport round-the-clock pickups/drops, and corporate shift transport contracts."
+    q: "Can I send my driving license or RC on WhatsApp instead of this form?",
+    a: "Please upload your Driving License, RC Book, and Car Front photo with number plate directly through this form first. It automatically organizes your documents and places your profile into our Dispatch Roster verification queue."
   },
   {
     q: "Is there any onboarding or registration fee to attach a cab?",
-    a: "No. Registration and driver partner onboarding at Kalidass Travels is 100% free of charge (₹0). We never ask for upfront registration fees."
+    a: "No. Registration and partner onboarding at Kalidass Travels is 100% free of charge (₹0). We never ask for upfront registration fees."
   }
 ];
 
@@ -57,7 +56,7 @@ const webPageSchema = {
   "@id": `${pageUrl}#webpage`,
   "url": pageUrl,
   "name": "Attach Car & Driver Registration | Kalidass Travels Chennai",
-  "description": "Official driver onboarding and commercial vehicle attachment portal for Kalidass Travels Medavakkam Hub. Attach taxis or join as outstation chauffeurs.",
+  "description": "Official driver onboarding and vehicle attachment portal for Kalidass Travels Chennai. Attach sedans, SUVs, Innova Crysta, or Tempo Travellers, or join as an acting driver.",
   "isPartOf": { "@id": `${site}/#website` },
   "about": { "@id": `${site}/#localbusiness` },
   "breadcrumb": { "@id": `${pageUrl}#breadcrumb` },
@@ -68,8 +67,8 @@ const webPageSchema = {
 const serviceSchema = {
   "@type": "Service",
   "@id": `${pageUrl}#service`,
-  "name": "Commercial Taxi & Fleet Attachment Program",
-  "serviceType": "Commercial Vehicle Attachment & Dispatch Service",
+  "name": "Cab & Fleet Partner Attachment Program",
+  "serviceType": "Vehicle Attachment & Outsourced Dispatch Network",
   "url": pageUrl,
   "provider": { "@id": `${site}/#localbusiness` },
   "areaServed": [
@@ -77,7 +76,7 @@ const serviceSchema = {
     { "@type": "AdministrativeArea", "name": "Tamil Nadu" },
     { "@type": "AdministrativeArea", "name": "Puducherry" }
   ],
-  "description": "Attach commercial yellow-board sedans (Dzire, Etios), SUVs (Innova Crysta, Ertiga), and Tempo Travellers for outstation duties, airport transfers, and corporate employee transport with same-day settlements.",
+  "description": "Attach sedans (Swift Dzire, Toyota Etios), SUVs (Innova Crysta, Maruti Ertiga), and Tempo Travellers for outstation duties, airport transfers, and local packages with transparent per-trip settlement.",
   "offers": {
     "@type": "Offer",
     "name": "Driver & Fleet Partner Onboarding",
@@ -88,7 +87,7 @@ const serviceSchema = {
   },
   "audience": {
     "@type": "Audience",
-    "audienceType": "Commercial Taxi Owners & Fleet Operators"
+    "audienceType": "Car Owners, Fleet Operators & Chauffeurs"
   }
 };
 
@@ -106,16 +105,15 @@ const faqSchema = {
   }))
 };
 
-// Flat schema array passed to Layout for unified @graph integration (JobPosting excluded to isolate driver inquiries)
 const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
 ---
 
 <Layout
-  title="Commercial Cab & Fleet Attachment | Kalidass Travels Chennai"
-  description="Official commercial vehicle attachment portal for taxi owners and fleet operators. Attach Swift Dzire, Innova Crysta, Ertiga, or Tempo Traveller with Kalidass Travels Medavakkam Hub."
-  keywords="attach taxi chennai, attach car travels chennai, cab attachment kalidass travels, fleet attachment chennai, commercial vehicle attachment medavakkam"
+  title="Cab & Fleet Partner Attachment | Kalidass Travels Chennai"
+  description="Official vehicle attachment and driver onboarding portal for car owners, fleet operators, and acting chauffeurs in Chennai. Attach Swift Dzire, Ertiga, Innova Crysta, or Tempo Traveller."
+  keywords="attach taxi chennai, attach car travels chennai, cab attachment kalidass travels, fleet attachment chennai, vehicle attachment medavakkam"
   schema={pageSchemas}
-  showFloatingActions={false}
+  whatsappMsg="Hi Kalidass Travels, I want to attach my vehicle / join as a driver partner with your fleet. Please share the partner onboarding process and trip duty details."
 >
   <Breadcrumbs items={breadcrumbItems} />
 
@@ -126,7 +124,7 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
       <div class="bg-amber-50 border border-amber-200 rounded-m3-xl p-3.5 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-amber-950">
         <div class="flex items-center gap-2">
           <span class="text-base shrink-0">🚖</span>
-          <span><strong>Looking to book a cab for a trip?</strong> This portal is strictly for commercial car owners & driver partners.</span>
+          <span><strong>Looking to book a cab for a trip?</strong> This portal is strictly for car owners, fleet vendors &amp; chauffeurs.</span>
         </div>
         <a
           href="tel:+918939539211"
@@ -140,323 +138,239 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
       <div class="text-center">
         <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-surface border border-m3-outline-variant/60 text-xs font-semibold text-m3-on-surface-variant shadow-2xs mb-2.5">
           <Handshake className="w-4 h-4 text-m3-primary shrink-0" />
-          <span>Commercial Fleet & Partner Registration</span>
+          <span>Official Partner &amp; Dispatch Roster Onboarding</span>
         </div>
         <h1 class="text-2xl sm:text-3xl font-extrabold text-m3-on-surface tracking-tight font-heading">
-          Commercial Cab &amp; Fleet Attachment
+          Cab, Fleet &amp; Chauffeur Attachment
         </h1>
         <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1.5 max-w-lg mx-auto">
-          Yellow-board sedans, SUVs &amp; Tempo Travellers · South India tours &amp; corporate transport · Same-day settlements
+          Outsourced website bookings across Chennai &amp; South India · Transparent per-trip settlement · Zero registration fee
         </p>
         <p class="text-[11px] font-semibold text-m3-primary mt-2">
-          Driver &amp; Fleet Helpdesk: <a href="tel:+919092303060" class="hover:underline">+91 90923 03060</a> (10:00 AM – 6:00 PM)
+          Partner Dispatch Desk: <a href="tel:+919092303060" class="hover:underline">+91 90923 03060</a> (10:00 AM – 6:00 PM)
         </p>
       </div>
 
-      {/* Notice Banner */}
-      <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-4 shadow-2xs flex items-start gap-3">
-        <Info className="w-5 h-5 text-m3-on-surface-variant shrink-0 mt-0.5" />
-        <div class="text-xs sm:text-sm leading-relaxed">
-          <span class="font-bold text-m3-on-surface block">
-            Notice: Do NOT Send Documents on WhatsApp
-          </span>
-          <span class="text-m3-on-surface-variant mt-0.5 block">
-            Please do not send identity cards or vehicle documents on personal WhatsApp. All applications must be submitted through this official form. Our onboarding team (+91 90923 03060) will review and call you directly.
-          </span>
-        </div>
-      </div>
-
-      {/* Flat Unified Form Container (No Nested Boxed Sub-Panels) */}
+      {/* Main Registration Form Container */}
       <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 sm:p-7 shadow-m3-1" id="formWrapper">
         <form id="driverForm" class="space-y-6" novalidate>
           
-          {/* 1. Category Switcher (M3 Tonal Toggle Bar) */}
+          {/* 1. Partner Category Switcher */}
           <div>
-            <div class="block text-xs font-bold text-m3-on-surface-variant mb-2">
-              Select Registration Type
+            <div class="block text-xs font-bold text-m3-on-surface mb-2">
+              1. Select Registration Type
             </div>
-            <div class="grid grid-cols-2 rounded-m3-lg p-1 bg-m3-surface-container-low border border-m3-outline-variant/60" id="categoryToggle">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 p-1.5 rounded-m3-xl bg-m3-surface-container-low border border-m3-outline-variant/60" id="categoryToggle">
               <button
                 type="button"
                 data-category="Attach Car"
-                class="category-btn active py-2.5 px-3 rounded-m3-md text-xs sm:text-sm font-bold text-center transition-all bg-m3-primary text-m3-on-primary shadow-2xs cursor-pointer flex items-center justify-center gap-1.5"
+                class="category-btn active py-3 px-3 rounded-m3-lg text-xs sm:text-sm font-bold text-left transition-all bg-m3-primary text-m3-on-primary shadow-2xs cursor-pointer flex items-center gap-2.5"
               >
-                <Car className="w-4 h-4 shrink-0" />
-                <span>I Have Car(s)</span>
+                <Car className="w-5 h-5 shrink-0" />
+                <div>
+                  <div class="leading-tight">Attach Vehicle(s)</div>
+                  <div class="text-[10px] font-normal opacity-90">1 Car (Owner-Driver) or 2+ Cars (Fleet)</div>
+                </div>
               </button>
               <button
                 type="button"
                 data-category="Driver Job Only"
-                class="category-btn py-2.5 px-3 rounded-m3-md text-xs sm:text-sm font-bold text-center transition-all text-m3-on-surface-variant hover:text-m3-on-surface cursor-pointer flex items-center justify-center gap-1.5"
+                class="category-btn py-3 px-3 rounded-m3-lg text-xs sm:text-sm font-bold text-left transition-all text-m3-on-surface-variant hover:text-m3-on-surface cursor-pointer flex items-center gap-2.5"
               >
-                <UserCheck className="w-4 h-4 shrink-0" />
-                <span>Driver Job Only</span>
+                <UserCheck className="w-5 h-5 shrink-0" />
+                <div>
+                  <div class="leading-tight">Acting / Chauffeur Driver</div>
+                  <div class="text-[10px] font-normal opacity-80">I don't own a car (Driver duty only)</div>
+                </div>
               </button>
             </div>
             <input type="hidden" name="category" id="selectedCategory" value="Attach Car" />
           </div>
 
-          {/* 2. Car Owner Section */}
-          <div id="carOwnerSection" class="space-y-5 pt-1">
-            
-            {/* Number of Cars */}
-            <div>
-              <div class="block text-xs font-bold text-m3-on-surface-variant mb-2">
-                Number of Vehicles
+          {/* 2. Dynamic Vehicle Cards Section (For Car Owners & Fleet Partners) */}
+          <div id="carOwnerSection" class="space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="text-xs sm:text-sm font-bold text-m3-on-surface">
+                  2. Vehicle Details &amp; Photos
+                </h2>
+                <p class="text-[11px] text-m3-on-surface-variant">
+                  Select your car model, enter plate number, and upload RC &amp; Car Front photo. Own a 2nd car? Tap <strong>"+ Add Another Vehicle"</strong> below.
+                </p>
               </div>
-              <div class="grid grid-cols-3 gap-2" id="carCountGroup">
-                <button type="button" data-val="1 Car" class="car-count-btn active py-2 px-3 rounded-m3-lg border text-xs sm:text-sm font-semibold transition-all bg-m3-surface-container border-m3-primary text-m3-primary cursor-pointer">
-                  1 Car
-                </button>
-                <button type="button" data-val="2 to 3 Cars" class="car-count-btn py-2 px-3 rounded-m3-lg border text-xs sm:text-sm font-semibold transition-all bg-white border-m3-outline-variant text-m3-on-surface cursor-pointer">
-                  2 to 3 Cars
-                </button>
-                <button type="button" data-val="4+ Cars (Fleet)" class="car-count-btn py-2 px-3 rounded-m3-lg border text-xs sm:text-sm font-semibold transition-all bg-white border-m3-outline-variant text-m3-on-surface cursor-pointer">
-                  4+ Cars (Fleet)
-                </button>
-              </div>
-              <input type="hidden" name="carCount" id="selectedCarCount" value="1 Car" />
+              <span id="vehicleCountBadge" class="px-2.5 py-1 rounded-full bg-m3-primary/10 text-m3-primary font-bold text-xs shrink-0">
+                1 Vehicle
+              </span>
             </div>
 
-            {/* Vehicle Models */}
-            <div>
-              <div class="block text-xs font-bold text-m3-on-surface-variant mb-2">
-                Available Vehicle Models <span class="font-normal text-m3-on-surface-variant/70">(Tap all that apply)</span>
-              </div>
-              <div class="flex flex-wrap gap-2" id="carsGroup">
-                <button type="button" data-car="Swift / Dzire" class="car-chip-btn active px-3 py-1.5 rounded-m3-full border text-xs font-semibold transition-all bg-m3-surface-container border-m3-primary text-m3-primary cursor-pointer">
-                  Swift / Dzire
-                </button>
-                <button type="button" data-car="Innova / Crysta" class="car-chip-btn px-3 py-1.5 rounded-m3-full border text-xs font-semibold transition-all bg-white border-m3-outline-variant text-m3-on-surface cursor-pointer">
-                  Innova / Crysta
-                </button>
-                <button type="button" data-car="Ertiga" class="car-chip-btn px-3 py-1.5 rounded-m3-full border text-xs font-semibold transition-all bg-white border-m3-outline-variant text-m3-on-surface cursor-pointer">
-                  Ertiga
-                </button>
-                <button type="button" data-car="Tempo Traveller" class="car-chip-btn px-3 py-1.5 rounded-m3-full border text-xs font-semibold transition-all bg-white border-m3-outline-variant text-m3-on-surface cursor-pointer">
-                  Tempo Traveller
-                </button>
-                <button type="button" data-car="Other Commercial Cab" class="car-chip-btn px-3 py-1.5 rounded-m3-full border text-xs font-semibold transition-all bg-white border-m3-outline-variant text-m3-on-surface cursor-pointer">
-                  Other Model
-                </button>
-              </div>
-              <input type="hidden" name="cars" id="selectedCars" value="Swift / Dzire" />
-            </div>
+            {/* Vehicle Cards List Container */}
+            <div id="vehicleCardsContainer" class="space-y-4"></div>
 
-            {/* Plate Type */}
-            <div>
-              <div class="block text-xs font-bold text-m3-on-surface-variant mb-2">
-                Vehicle Permit Type
-              </div>
-              <div class="grid grid-cols-2 gap-2" id="plateTypeGroup">
-                <button type="button" data-plate="Yellow Board (Commercial Taxi)" class="plate-btn active py-2 px-3 rounded-m3-lg border text-xs sm:text-sm font-semibold transition-all bg-m3-surface-container border-m3-primary text-m3-primary cursor-pointer text-center">
-                  Yellow Board (Taxi)
-                </button>
-                <button type="button" data-plate="White Board" class="plate-btn py-2 px-3 rounded-m3-lg border text-xs sm:text-sm font-semibold transition-all bg-white border-m3-outline-variant text-m3-on-surface cursor-pointer text-center">
-                  White Board
-                </button>
-              </div>
-              <input type="hidden" name="plateType" id="selectedPlateType" value="Yellow Board (Commercial Taxi)" />
-            </div>
-
+            {/* + Add Another Vehicle Button */}
+            <button
+              type="button"
+              id="addVehicleBtn"
+              class="w-full py-3 px-4 rounded-m3-xl border-2 border-dashed border-m3-primary/50 hover:border-m3-primary bg-m3-primary/5 hover:bg-m3-primary/10 text-m3-primary font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
+            >
+              <Plus className="w-4 h-4 shrink-0" />
+              <span>+ Add Another Vehicle (If you own 2 or more cars)</span>
+            </button>
           </div>
 
-          {/* 3. Driver Job Section */}
-          <div id="driverJobSection" class="space-y-5 pt-1 hidden">
-            
-            {/* License Type */}
-            <div>
-              <div class="block text-xs font-bold text-m3-on-surface-variant mb-2">
-                License Classification
+          {/* 2B. Chauffeur / Acting Driver Only Section (Clean Dropdowns) */}
+          <div id="driverJobSection" class="space-y-4 pt-1 hidden">
+            <div class="p-4 rounded-m3-xl bg-m3-surface-container-low border border-m3-outline-variant/60 space-y-3">
+              <div class="text-xs sm:text-sm font-bold text-m3-on-surface">
+                2. Chauffeur License &amp; Experience Details
               </div>
-              <div class="grid grid-cols-3 gap-2" id="licenseGroup">
-                <button type="button" data-lic="Car (LMV)" class="license-btn active py-2 px-2 rounded-m3-lg border text-xs sm:text-sm font-semibold transition-all bg-m3-surface-container border-m3-primary text-m3-primary cursor-pointer text-center">
-                  Car (LMV)
-                </button>
-                <button type="button" data-lic="Commercial Badge" class="license-btn py-2 px-2 rounded-m3-lg border text-xs sm:text-sm font-semibold transition-all bg-white border-m3-outline-variant text-m3-on-surface cursor-pointer text-center">
-                  With Badge
-                </button>
-                <button type="button" data-lic="Heavy (HMV / Bus)" class="license-btn py-2 px-2 rounded-m3-lg border text-xs sm:text-sm font-semibold transition-all bg-white border-m3-outline-variant text-m3-on-surface cursor-pointer text-center">
-                  Heavy (HMV)
-                </button>
-              </div>
-              <input type="hidden" name="licenseType" id="selectedLicenseType" value="Car (LMV)" />
-            </div>
 
-            {/* Experience */}
-            <div>
-              <div class="block text-xs font-bold text-m3-on-surface-variant mb-2">
-                Highway Driving Experience
-              </div>
-              <div class="grid grid-cols-3 gap-2" id="expGroup">
-                <button type="button" data-exp="1 to 3 Years" class="exp-btn py-2 px-2 rounded-m3-lg border text-xs sm:text-sm font-semibold transition-all bg-white border-m3-outline-variant text-m3-on-surface cursor-pointer text-center">
-                  1 - 3 Yrs
-                </button>
-                <button type="button" data-exp="3 to 5 Years" class="exp-btn active py-2 px-2 rounded-m3-lg border text-xs sm:text-sm font-semibold transition-all bg-m3-surface-container border-m3-primary text-m3-primary cursor-pointer text-center">
-                  3 - 5 Yrs
-                </button>
-                <button type="button" data-exp="5+ Years" class="exp-btn py-2 px-2 rounded-m3-lg border text-xs sm:text-sm font-semibold transition-all bg-white border-m3-outline-variant text-m3-on-surface cursor-pointer text-center">
-                  5+ Yrs
-                </button>
-              </div>
-              <input type="hidden" name="experience" id="selectedExperience" value="3 to 5 Years" />
-            </div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label for="selectedLicenseType" class="block text-xs font-bold text-m3-on-surface mb-1">
+                    License Type *
+                  </label>
+                  <select
+                    id="selectedLicenseType"
+                    name="licenseType"
+                    class="w-full bg-white border border-m3-outline-variant focus:border-m3-primary rounded-m3-lg py-2.5 px-3 text-xs sm:text-sm font-semibold text-m3-on-surface outline-none shadow-2xs"
+                  >
+                    <option value="Commercial Badge">Commercial Badge (Yellow)</option>
+                    <option value="Car (LMV)">Car License (LMV)</option>
+                    <option value="Heavy (HMV / Bus)">Heavy License (HMV / Bus)</option>
+                  </select>
+                </div>
 
-            {/* Preferred Duty */}
-            <div>
-              <div class="block text-xs font-bold text-m3-on-surface-variant mb-2">
-                Preferred Duty Type
-              </div>
-              <div class="grid grid-cols-2 gap-2" id="dutyGroup">
-                <button type="button" data-duty="Outstation Trips" class="duty-btn active py-2 px-3 rounded-m3-lg border text-xs sm:text-sm font-semibold transition-all bg-m3-surface-container border-m3-primary text-m3-primary cursor-pointer text-center">
-                  Outstation Highway
-                </button>
-                <button type="button" data-duty="Monthly Salary" class="duty-btn py-2 px-3 rounded-m3-lg border text-xs sm:text-sm font-semibold transition-all bg-white border-m3-outline-variant text-m3-on-surface cursor-pointer text-center">
-                  Monthly Chauffeur
-                </button>
-              </div>
-              <input type="hidden" name="preferredDuty" id="selectedPreferredDuty" value="Outstation Trips" />
-            </div>
+                <div>
+                  <label for="selectedExperience" class="block text-xs font-bold text-m3-on-surface mb-1">
+                    Driving Experience *
+                  </label>
+                  <select
+                    id="selectedExperience"
+                    name="experience"
+                    class="w-full bg-white border border-m3-outline-variant focus:border-m3-primary rounded-m3-lg py-2.5 px-3 text-xs sm:text-sm font-semibold text-m3-on-surface outline-none shadow-2xs"
+                  >
+                    <option value="3 to 5 Years">3 to 5 Years</option>
+                    <option value="5+ Years">5+ Years</option>
+                    <option value="1 to 3 Years">1 to 3 Years</option>
+                  </select>
+                </div>
 
+                <div>
+                  <label for="selectedPreferredDuty" class="block text-xs font-bold text-m3-on-surface mb-1">
+                    Preferred Duty *
+                  </label>
+                  <select
+                    id="selectedPreferredDuty"
+                    name="preferredDuty"
+                    class="w-full bg-white border border-m3-outline-variant focus:border-m3-primary rounded-m3-lg py-2.5 px-3 text-xs sm:text-sm font-semibold text-m3-on-surface outline-none shadow-2xs"
+                  >
+                    <option value="Outstation & Local Acting">Both Local &amp; Outstation</option>
+                    <option value="Outstation Trips">Outstation Only</option>
+                    <option value="Local City Acting">Local City Only</option>
+                  </select>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* 4. Common Contact Fields */}
-          <div class="space-y-4 pt-2 border-t border-m3-outline-variant/40">
-            
-            {/* Full Name */}
-            <div>
-              <label for="driverName" class="block text-xs font-bold text-m3-on-surface mb-1.5">
-                Full Name *
-              </label>
-              <div class="relative flex items-center bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-lg transition-colors focus-within:border-m3-primary focus-within:ring-2 focus-within:ring-m3-primary/20 shadow-2xs">
-                <input
-                  type="text"
-                  id="driverName"
-                  name="name"
-                  required
-                  placeholder="Enter full name"
-                  class="w-full bg-transparent py-2.5 px-3.5 text-xs sm:text-sm font-medium text-m3-on-surface outline-none"
-                />
+          {/* 3. Owner / Driver Details, Base Area & Driving License */}
+          <div class="space-y-4 pt-3 border-t border-m3-outline-variant/50">
+            <h2 class="text-xs sm:text-sm font-bold text-m3-on-surface">
+              3. Driver Contact, Base Area &amp; License *
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Full Name */}
+              <div>
+                <label for="driverName" class="block text-xs font-bold text-m3-on-surface mb-1.5">
+                  Owner / Driver Full Name *
+                </label>
+                <div class="relative flex items-center bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-lg transition-colors focus-within:border-m3-primary focus-within:ring-2 focus-within:ring-m3-primary/20 shadow-2xs">
+                  <input
+                    type="text"
+                    id="driverName"
+                    name="name"
+                    required
+                    placeholder="e.g. Ramesh Kumar"
+                    class="w-full bg-transparent py-2.5 px-3.5 text-xs sm:text-sm font-medium text-m3-on-surface outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Mobile Number */}
+              <div>
+                <label for="driverPhone" class="block text-xs font-bold text-m3-on-surface mb-1.5">
+                  WhatsApp / Mobile Number *
+                </label>
+                <div class="relative flex items-center bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-lg transition-colors focus-within:border-m3-primary focus-within:ring-2 focus-within:ring-m3-primary/20 shadow-2xs">
+                  <span class="pl-3.5 pr-1.5 text-xs sm:text-sm font-semibold text-m3-on-surface-variant select-none">
+                    +91
+                  </span>
+                  <input
+                    type="tel"
+                    id="driverPhone"
+                    name="phone"
+                    required
+                    inputmode="numeric"
+                    pattern="[0-9]{10}"
+                    maxlength="10"
+                    placeholder="98401 23456"
+                    class="w-full bg-transparent py-2.5 pr-3.5 text-xs sm:text-sm font-semibold tracking-wide text-m3-on-surface outline-none"
+                  />
+                </div>
               </div>
             </div>
 
-            {/* Mobile Number */}
+            {/* Single Clean Base Parking Area / Stand Input (Auto-detects Chennai Zone silently) */}
             <div>
-              <label for="driverPhone" class="block text-xs font-bold text-m3-on-surface mb-1.5">
-                Mobile Number *
-              </label>
-              <div class="relative flex items-center bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-lg transition-colors focus-within:border-m3-primary focus-within:ring-2 focus-within:ring-m3-primary/20 shadow-2xs">
-                <span class="pl-3.5 pr-1.5 text-xs sm:text-sm font-semibold text-m3-on-surface-variant select-none">
-                  +91
+              <div class="flex items-center justify-between mb-1.5">
+                <label for="localitySearchInput" class="block text-xs font-bold text-m3-on-surface">
+                  Base Parking Area / Stand in Chennai *
+                </label>
+                <span id="selectedLocalityBadge" class="text-[11px] font-semibold text-emerald-700">
+                  ✓ Medavakkam
                 </span>
-                <input
-                  type="tel"
-                  id="driverPhone"
-                  name="phone"
-                  required
-                  inputmode="numeric"
-                  pattern="[0-9]{10}"
-                  maxlength="10"
-                  placeholder="98401 23456"
-                  class="w-full bg-transparent py-2.5 pr-3.5 text-xs sm:text-sm font-semibold tracking-wide text-m3-on-surface outline-none"
-                />
               </div>
+              <div class="relative">
+                <div class="flex items-center bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-lg focus-within:border-m3-primary focus-within:ring-2 focus-within:ring-m3-primary/20 shadow-2xs">
+                  <MapPin className="w-4 h-4 text-m3-on-surface-variant ml-3.5 mr-2 shrink-0 pointer-events-none" />
+                  <input
+                    type="text"
+                    id="localitySearchInput"
+                    list="chennaiLocalitiesDatalist"
+                    value="Medavakkam"
+                    placeholder="Type area name or Pincode (e.g. Medavakkam, Tambaram, Velachery, 600100)..."
+                    autocomplete="off"
+                    class="w-full bg-transparent py-2.5 pr-3.5 text-xs sm:text-sm font-medium text-m3-on-surface outline-none"
+                  />
+                </div>
+                <datalist id="chennaiLocalitiesDatalist">
+                  {ALL_CHENNAI_LOCALITIES.map((loc) => (
+                    <option value={loc.name}>{`${loc.name} (${loc.pincode})`}</option>
+                  ))}
+                </datalist>
+                <div
+                  id="localitySearchDropdown"
+                  class="hidden absolute left-0 right-0 top-full mt-1 max-h-48 overflow-y-auto bg-white border border-m3-outline-variant rounded-m3-lg shadow-m3-3 z-30 divide-y divide-m3-outline-variant/30"
+                ></div>
+              </div>
+              <input type="hidden" id="selectedZoneInput" name="zone" value="South & OMR" />
+              <input type="hidden" id="driverCity" name="city" value="Medavakkam" required />
             </div>
 
-            {/* City / Base Area (With Google Places Autocomplete) */}
-            <div>
-              <label for="driverCity" class="block text-xs font-bold text-m3-on-surface mb-1.5">
-                City / Base Operating Area *
-              </label>
-              <div class="relative flex items-center bg-white border border-m3-outline-variant hover:border-m3-outline rounded-m3-lg transition-colors focus-within:border-m3-primary focus-within:ring-2 focus-within:ring-m3-primary/20 shadow-2xs">
-                <MapPin className="w-4 h-4 text-m3-on-surface-variant ml-3.5 mr-1 shrink-0 pointer-events-none" />
-                <input
-                  type="text"
-                  id="driverCity"
-                  name="city"
-                  required
-                  placeholder="Type area name (e.g. Medavakkam, Chennai)..."
-                  class="w-full bg-transparent py-2.5 px-2 text-xs sm:text-sm font-medium text-m3-on-surface outline-none"
-                />
-              </div>
-
-              {/* Quick Select Chips */}
-              <div class="flex flex-wrap items-center gap-1.5 mt-2">
-                <span class="text-[11px] text-m3-on-surface-variant">Common hubs:</span>
-                <button type="button" class="city-quick-chip text-[11px] font-medium px-2 py-0.5 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant/60 text-m3-on-surface hover:border-m3-primary transition-all cursor-pointer" data-city="Medavakkam, Chennai">
-                  Medavakkam
-                </button>
-                <button type="button" class="city-quick-chip text-[11px] font-medium px-2 py-0.5 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant/60 text-m3-on-surface hover:border-m3-primary transition-all cursor-pointer" data-city="Tambaram, Chennai">
-                  Tambaram
-                </button>
-                <button type="button" class="city-quick-chip text-[11px] font-medium px-2 py-0.5 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant/60 text-m3-on-surface hover:border-m3-primary transition-all cursor-pointer" data-city="Kanchipuram, Tamil Nadu">
-                  Kanchipuram
-                </button>
-                <button type="button" class="city-quick-chip text-[11px] font-medium px-2 py-0.5 rounded-m3-full bg-m3-surface-container-low border border-m3-outline-variant/60 text-m3-on-surface hover:border-m3-primary transition-all cursor-pointer" data-city="Chennai Airport, Meenambakkam">
-                  Airport
-                </button>
-              </div>
-            </div>
-
-          </div>
-
-          {/* 5. Document Photos (Direct Mobile Uploads to Drive) */}
-          <div class="space-y-3 pt-2 border-t border-m3-outline-variant/40">
-            <div>
-              <div class="block text-xs font-bold text-m3-on-surface flex items-center justify-between">
-                <span>Upload Required Document Photos</span>
-                <span class="text-[11px] font-semibold text-m3-primary">Saved into Google Drive</span>
-              </div>
-              <p class="text-[11px] text-m3-on-surface-variant mt-0.5">
-                Capture photo using phone camera or select from storage. Files are automatically organized in your application folder.
-              </p>
-            </div>
-
-            {/* DL Photo (Mandatory for all) */}
-            <div class="flex items-center justify-between p-3 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 gap-3">
+            {/* Driving License Photo (Mandatory for all) */}
+            <div class="flex items-center justify-between p-3.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 gap-3">
               <div class="flex items-center gap-2.5 min-w-0">
                 <BadgeCheck className="w-5 h-5 text-m3-primary shrink-0" />
                 <div class="truncate">
-                  <div class="text-xs font-bold text-m3-on-surface">Driving License Photo <span class="text-red-500">*</span></div>
-                  <div class="text-[10px] text-m3-on-surface-variant font-mono" id="dlFileStatus">Required (No file chosen)</div>
+                  <div class="text-xs font-bold text-m3-on-surface">Driving License (DL) Photo <span class="text-red-500">*</span></div>
+                  <div class="text-[10px] text-m3-on-surface-variant font-mono" id="dlFileStatus">Required (Tap to capture or select)</div>
                 </div>
               </div>
-              <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-md bg-white border border-m3-outline-variant text-xs font-semibold text-m3-on-surface hover:bg-m3-surface-container shadow-2xs transition-all shrink-0">
-                <Camera className="w-3.5 h-3.5 shrink-0" />
-                <span>Select Photo</span>
-                <input type="file" id="dlFileInput" accept="image/*" capture="environment" class="hidden" />
-              </label>
-            </div>
-
-            {/* RC Photo (Mandatory for Car Owners) */}
-            <div id="rcDocBox" class="flex items-center justify-between p-3 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 gap-3">
-              <div class="flex items-center gap-2.5 min-w-0">
-                <FileText className="w-5 h-5 text-m3-primary shrink-0" />
-                <div class="truncate">
-                  <div class="text-xs font-bold text-m3-on-surface">Vehicle RC Book Photo <span class="text-red-500">*</span></div>
-                  <div class="text-[10px] text-m3-on-surface-variant font-mono" id="rcFileStatus">Required (No file chosen)</div>
-                </div>
-              </div>
-              <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-md bg-white border border-m3-outline-variant text-xs font-semibold text-m3-on-surface hover:bg-m3-surface-container shadow-2xs transition-all shrink-0">
-                <Camera className="w-3.5 h-3.5 shrink-0" />
-                <span>Select Photo</span>
-                <input type="file" id="rcFileInput" accept="image/*" capture="environment" class="hidden" />
-              </label>
-            </div>
-
-            {/* Car Front Photo with Number Plate (Mandatory for Car Owners) */}
-            <div id="carDocBox" class="flex items-center justify-between p-3 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60 gap-3">
-              <div class="flex items-center gap-2.5 min-w-0">
-                <Car className="w-5 h-5 text-m3-primary shrink-0" />
-                <div class="truncate">
-                  <div class="text-xs font-bold text-m3-on-surface">Car Front Photo with Number Plate <span class="text-red-500">*</span></div>
-                  <div class="text-[10px] text-m3-on-surface-variant font-mono" id="carFileStatus">Required (No file chosen)</div>
-                </div>
-              </div>
-              <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-md bg-white border border-m3-outline-variant text-xs font-semibold text-m3-on-surface hover:bg-m3-surface-container shadow-2xs transition-all shrink-0">
-                <Camera className="w-3.5 h-3.5 shrink-0" />
-                <span>Select Photo</span>
-                <input type="file" id="carFileInput" accept="image/*" capture="environment" class="hidden" />
+              <label class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-2 rounded-m3-md bg-white border border-m3-outline-variant text-xs font-semibold text-m3-on-surface hover:bg-m3-surface-container shadow-2xs transition-all shrink-0">
+                <Camera className="w-3.5 h-3.5 text-m3-primary shrink-0" />
+                <span>Upload DL</span>
+                <input type="file" id="dlFileInput" accept="image/*" class="hidden" />
               </label>
             </div>
           </div>
@@ -467,7 +381,7 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
             <span id="errorMessage">Please complete all required fields.</span>
           </div>
 
-          {/* Action Row - Strict Ban on w-full Buttons (Rule 3 in standardized-whatsapp-button.md) */}
+          {/* Submit Action Row */}
           <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
               type="submit"
@@ -475,12 +389,12 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
               class="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-m3-full bg-m3-primary text-m3-on-primary font-bold text-sm shadow-m3-1 hover:shadow-m3-2 transition-all cursor-pointer select-none"
             >
               <Send className="w-4 h-4 shrink-0" />
-              <span>Submit Registration</span>
+              <span>Submit Partner Registration</span>
             </button>
           </div>
 
           <div class="text-center text-[11px] text-m3-on-surface-variant">
-            Registration is free of charge. Fleet &amp; Driver Partner Desk: <a href="tel:+919092303060" class="font-bold text-m3-primary hover:underline">+91 90923 03060</a>.
+            100% Free Onboarding. Partner Dispatch Desk: <a href="tel:+919092303060" class="font-bold text-m3-primary hover:underline">+91 90923 03060</a>.
           </div>
 
         </form>
@@ -494,17 +408,17 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
         
         <div>
           <h2 class="text-xl sm:text-2xl font-extrabold text-m3-on-surface font-heading">
-            Application Received Successfully
+            Partner Registration Received
           </h2>
           <div class="text-xs text-m3-on-surface-variant font-mono mt-1 font-bold" id="confLeadId">
-            Ref ID: #KT-DRV-101
+            Ref ID: #KT-DRV-1
           </div>
         </div>
 
         {/* Summary Table */}
         <div class="bg-m3-surface-container-low rounded-m3-lg p-3.5 text-left text-xs space-y-1.5 border border-m3-outline-variant/60 max-w-md mx-auto">
           <div class="flex justify-between py-1 border-b border-m3-outline-variant/30">
-            <span class="text-m3-on-surface-variant">Name:</span>
+            <span class="text-m3-on-surface-variant">Partner Name:</span>
             <span class="font-bold text-m3-on-surface" id="confName">-</span>
           </div>
           <div class="flex justify-between py-1 border-b border-m3-outline-variant/30">
@@ -512,32 +426,32 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
             <span class="font-bold text-m3-on-surface" id="confPhone">-</span>
           </div>
           <div class="flex justify-between py-1 border-b border-m3-outline-variant/30">
-            <span class="text-m3-on-surface-variant">Category:</span>
+            <span class="text-m3-on-surface-variant">Partner Type:</span>
             <span class="font-bold text-m3-on-surface" id="confCategory">-</span>
           </div>
-          <div class="flex justify-between py-1 border-b border-m3-outline-variant/30">
-            <span class="text-m3-on-surface-variant">Details:</span>
-            <span class="font-bold text-m3-on-surface" id="confDetails">-</span>
+          <div class="flex justify-between py-1 border-b border-m3-outline-variant/30 gap-3">
+            <span class="text-m3-on-surface-variant shrink-0">Registered Details:</span>
+            <span class="font-bold text-m3-on-surface text-right" id="confDetails">-</span>
           </div>
           <div class="flex justify-between py-1">
-            <span class="text-m3-on-surface-variant">Operating Base:</span>
+            <span class="text-m3-on-surface-variant">Base Area:</span>
             <span class="font-bold text-m3-on-surface" id="confCity">-</span>
           </div>
         </div>
 
         <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-m3-lg text-emerald-900 text-xs max-w-md mx-auto flex items-center justify-center gap-2">
           <BadgeCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-          <span>All documents uploaded and organized in your dedicated verification folder.</span>
+          <span>Added to Kalidass Travels Dispatch Roster verification queue.</span>
         </div>
 
         <p class="text-xs text-m3-on-surface-variant max-w-sm mx-auto">
-          Our dispatch team (+91 90923 03060) will review your documents and call you directly. No need to resend documents on WhatsApp.
+          Tap the button below to send your structured registration card to our Dispatch Desk (+91 90923 03060) for instant roster activation.
         </p>
 
         <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
           <a
             id="notifyWhatsAppBtn"
-            href="https://wa.me/919092303060"
+            href="https://wa.me/919092303060?text=Hi%20Kalidass%20Travels%2C%20I%20have%20submitted%20my%20partner%20attachment%20application%20on%20your%20website%20with%20all%20documents%20attached.%20Please%20review."
             target="_blank"
             rel="noopener noreferrer"
             class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs shadow-2xs transition-all"
@@ -556,41 +470,7 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
         </div>
       </div>
 
-      {/* Driver Partner & Fleet Attachment Program Highlights (Satisfies JobPosting & Service visible content) */}
-      <div class="bg-m3-surface border border-m3-outline-variant rounded-m3-xl p-5 sm:p-6 shadow-2xs space-y-4">
-        <h2 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading flex items-center gap-2">
-          <Wallet className="w-5 h-5 text-m3-primary shrink-0" />
-          <span>Driver Partner Benefits & Tariffs</span>
-        </h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
-          <div class="p-3.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60">
-            <div class="font-bold text-m3-on-surface mb-1">💰 Monthly Earnings</div>
-            <div class="text-m3-on-surface-variant leading-relaxed">
-              <strong>₹25,000 – ₹45,000 / month</strong> based on outstation round-trips & corporate duty volume. Same-day settlement with zero hidden cuts.
-            </div>
-          </div>
-          <div class="p-3.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60">
-            <div class="font-bold text-m3-on-surface mb-1">🍛 Driver Batta & Allowances</div>
-            <div class="text-m3-on-surface-variant leading-relaxed">
-              Daily food allowance and night stay batta included on all outstation duties. Driver rest and welfare guaranteed.
-            </div>
-          </div>
-          <div class="p-3.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60">
-            <div class="font-bold text-m3-on-surface mb-1">🚖 Attached Vehicles Eligible</div>
-            <div class="text-m3-on-surface-variant leading-relaxed">
-              Commercial yellow-board Dzire, Etios, Ertiga, Innova Crysta, and 12–26 seater Tempo Travellers.
-            </div>
-          </div>
-          <div class="p-3.5 rounded-m3-lg bg-m3-surface-container-low border border-m3-outline-variant/60">
-            <div class="font-bold text-m3-on-surface mb-1">📍 Central Dispatch Hub</div>
-            <div class="text-m3-on-surface-variant leading-relaxed">
-              Kalidass Travels Medavakkam Hub (No. 4/220, E88, Ponniamman Kovil Street, Chennai 600100). Zero registration fee.
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Frequently Asked Questions Section (Visibly rendered for FAQPage Schema compliance) */}
+      {/* Frequently Asked Questions Section */}
       <section class="space-y-3 pt-2">
         <div class="text-center sm:text-left">
           <h2 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading flex items-center justify-center sm:justify-start gap-2">
@@ -598,7 +478,7 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
             <span>Frequently Asked Questions</span>
           </h2>
           <p class="text-xs text-m3-on-surface-variant mt-0.5">
-            Key details for driver partners and commercial car owners attaching to Kalidass Travels.
+            Clear answers for car owners, fleet operators, and chauffeurs partnering with Kalidass Travels.
           </p>
         </div>
         <FAQAccordion items={faqItems} />
@@ -609,8 +489,32 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
 </Layout>
 
 <script>
-  import { loadGoogleMaps } from '../lib/googleMapsLoader';
   import { getActiveGoogleSheetUrl } from '../config/googleSheets';
+  import {
+    VEHICLE_CATEGORIES,
+    formatIndianPlateNumber,
+    isValidIndianPlateNumber,
+    matchChennaiLocality,
+    normalizeVehicleCategory
+  } from '../data/chennaiFleetStandards.js';
+  import { getNextDriverLeadId, STORAGE_KEYS } from '../utils/sequenceGenerator.js';
+
+  interface FilePayload {
+    base64: string;
+    mimeType: string;
+    name: string;
+  }
+
+  interface VehicleEntry {
+    id: string;
+    category: string;
+    model: string;
+    plate: string;
+    boardType: string;
+    carrier: string;
+    rcFile: FilePayload | null;
+    carFile: FilePayload | null;
+  }
 
   document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('driverForm') as HTMLFormElement;
@@ -623,211 +527,51 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
 
     const carOwnerSection = document.getElementById('carOwnerSection') as HTMLElement;
     const driverJobSection = document.getElementById('driverJobSection') as HTMLElement;
-    const rcDocBox = document.getElementById('rcDocBox') as HTMLElement;
+    const vehicleCardsContainer = document.getElementById('vehicleCardsContainer') as HTMLElement;
+    const addVehicleBtn = document.getElementById('addVehicleBtn') as HTMLButtonElement;
+    const vehicleCountBadge = document.getElementById('vehicleCountBadge') as HTMLElement;
 
     const selectedCategoryInput = document.getElementById('selectedCategory') as HTMLInputElement;
-    const selectedCarCountInput = document.getElementById('selectedCarCount') as HTMLInputElement;
-    const selectedCarsInput = document.getElementById('selectedCars') as HTMLInputElement;
-    const selectedPlateTypeInput = document.getElementById('selectedPlateType') as HTMLInputElement;
-    const selectedLicenseTypeInput = document.getElementById('selectedLicenseType') as HTMLInputElement;
-    const selectedExperienceInput = document.getElementById('selectedExperience') as HTMLInputElement;
-    const selectedPreferredDutyInput = document.getElementById('selectedPreferredDuty') as HTMLInputElement;
+    const selectedLicenseTypeInput = document.getElementById('selectedLicenseType') as HTMLSelectElement;
+    const selectedExperienceInput = document.getElementById('selectedExperience') as HTMLSelectElement;
+    const selectedPreferredDutyInput = document.getElementById('selectedPreferredDuty') as HTMLSelectElement;
+
+    const selectedZoneInput = document.getElementById('selectedZoneInput') as HTMLInputElement;
+    const cityInput = document.getElementById('driverCity') as HTMLInputElement;
+    const localitySearchInput = document.getElementById('localitySearchInput') as HTMLInputElement;
+    const localitySearchDropdown = document.getElementById('localitySearchDropdown') as HTMLElement;
+    const selectedLocalityBadge = document.getElementById('selectedLocalityBadge') as HTMLElement;
 
     const nameInput = document.getElementById('driverName') as HTMLInputElement;
     const phoneInput = document.getElementById('driverPhone') as HTMLInputElement;
-    const cityInput = document.getElementById('driverCity') as HTMLInputElement;
-
     const dlFileInput = document.getElementById('dlFileInput') as HTMLInputElement;
     const dlFileStatus = document.getElementById('dlFileStatus') as HTMLElement;
 
-    const rcFileInput = document.getElementById('rcFileInput') as HTMLInputElement;
-    const rcFileStatus = document.getElementById('rcFileStatus') as HTMLElement;
+    let dlFileData: FilePayload | null = null;
 
-    const carFileInput = document.getElementById('carFileInput') as HTMLInputElement;
-    const carFileStatus = document.getElementById('carFileStatus') as HTMLElement;
-    const carDocBox = document.getElementById('carDocBox') as HTMLElement;
+    // State for Vehicle Cards (Starts with 1 clean Vehicle Box)
+    let vehiclesState: VehicleEntry[] = [
+      {
+        id: 'veh-1',
+        category: 'Sedan',
+        model: 'Swift Dzire',
+        plate: '',
+        boardType: 'Yellow Board',
+        carrier: 'With Carrier',
+        rcFile: null,
+        carFile: null
+      }
+    ];
 
-    let dlFileData: { base64: string; mimeType: string; name: string } | null = null;
-    let rcFileData: { base64: string; mimeType: string; name: string } | null = null;
-    let carFileData: { base64: string; mimeType: string; name: string } | null = null;
-
-    // 1. Category Switcher
-    const categoryBtns = document.querySelectorAll('.category-btn');
-    categoryBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const cat = btn.getAttribute('data-category') || 'Attach Car';
-        selectedCategoryInput.value = cat;
-
-        categoryBtns.forEach((b) => {
-          b.classList.remove('active', 'bg-m3-primary', 'text-m3-on-primary', 'shadow-2xs');
-          b.classList.add('text-m3-on-surface-variant');
-        });
-
-        btn.classList.add('active', 'bg-m3-primary', 'text-m3-on-primary', 'shadow-2xs');
-        btn.classList.remove('text-m3-on-surface-variant');
-
-        if (cat === 'Attach Car') {
-          carOwnerSection.classList.remove('hidden');
-          driverJobSection.classList.add('hidden');
-          rcDocBox?.classList.remove('hidden');
-          carDocBox?.classList.remove('hidden');
-        } else {
-          carOwnerSection.classList.add('hidden');
-          driverJobSection.classList.remove('hidden');
-          rcDocBox?.classList.add('hidden');
-          carDocBox?.classList.add('hidden');
-        }
-      });
-    });
-
-    // 2. Car Count Switcher
-    const carCountBtns = document.querySelectorAll('.car-count-btn');
-    carCountBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const val = btn.getAttribute('data-val') || '1 Car';
-        selectedCarCountInput.value = val;
-        carCountBtns.forEach((b) => {
-          b.classList.remove('active', 'bg-m3-surface-container', 'border-m3-primary', 'text-m3-primary');
-          b.classList.add('bg-white', 'border-m3-outline-variant', 'text-m3-on-surface');
-        });
-        btn.classList.add('active', 'bg-m3-surface-container', 'border-m3-primary', 'text-m3-primary');
-        btn.classList.remove('bg-white', 'border-m3-outline-variant', 'text-m3-on-surface');
-      });
-    });
-
-    // 3. Multi-Select Car Chips
-    const carChipBtns = document.querySelectorAll('.car-chip-btn');
-    const selectedCarsSet = new Set(['Swift / Dzire']);
-
-    carChipBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const car = btn.getAttribute('data-car') || '';
-        if (selectedCarsSet.has(car)) {
-          if (selectedCarsSet.size > 1) {
-            selectedCarsSet.delete(car);
-            btn.classList.remove('active', 'bg-m3-surface-container', 'border-m3-primary', 'text-m3-primary');
-            btn.classList.add('bg-white', 'border-m3-outline-variant', 'text-m3-on-surface');
-          }
-        } else {
-          selectedCarsSet.add(car);
-          btn.classList.add('active', 'bg-m3-surface-container', 'border-m3-primary', 'text-m3-primary');
-          btn.classList.remove('bg-white', 'border-m3-outline-variant', 'text-m3-on-surface');
-        }
-        selectedCarsInput.value = Array.from(selectedCarsSet).join(', ');
-      });
-    });
-
-    // 4. Plate Type Switcher
-    const plateBtns = document.querySelectorAll('.plate-btn');
-    plateBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const plate = btn.getAttribute('data-plate') || 'Yellow Board (Commercial Taxi)';
-        selectedPlateTypeInput.value = plate;
-        plateBtns.forEach((b) => {
-          b.classList.remove('active', 'bg-m3-surface-container', 'border-m3-primary', 'text-m3-primary');
-          b.classList.add('bg-white', 'border-m3-outline-variant', 'text-m3-on-surface');
-        });
-        btn.classList.add('active', 'bg-m3-surface-container', 'border-m3-primary', 'text-m3-primary');
-        btn.classList.remove('bg-white', 'border-m3-outline-variant', 'text-m3-on-surface');
-      });
-    });
-
-    // 5. License Classification Switcher
-    const licenseBtns = document.querySelectorAll('.license-btn');
-    licenseBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const lic = btn.getAttribute('data-lic') || 'Car (LMV)';
-        selectedLicenseTypeInput.value = lic;
-        licenseBtns.forEach((b) => {
-          b.classList.remove('active', 'bg-m3-surface-container', 'border-m3-primary', 'text-m3-primary');
-          b.classList.add('bg-white', 'border-m3-outline-variant', 'text-m3-on-surface');
-        });
-        btn.classList.add('active', 'bg-m3-surface-container', 'border-m3-primary', 'text-m3-primary');
-        btn.classList.remove('bg-white', 'border-m3-outline-variant', 'text-m3-on-surface');
-      });
-    });
-
-    // 6. Experience Switcher
-    const expBtns = document.querySelectorAll('.exp-btn');
-    expBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const exp = btn.getAttribute('data-exp') || '3 to 5 Years';
-        selectedExperienceInput.value = exp;
-        expBtns.forEach((b) => {
-          b.classList.remove('active', 'bg-m3-surface-container', 'border-m3-primary', 'text-m3-primary');
-          b.classList.add('bg-white', 'border-m3-outline-variant', 'text-m3-on-surface');
-        });
-        btn.classList.add('active', 'bg-m3-surface-container', 'border-m3-primary', 'text-m3-primary');
-        btn.classList.remove('bg-white', 'border-m3-outline-variant', 'text-m3-on-surface');
-      });
-    });
-
-    // 7. Duty Type Switcher
-    const dutyBtns = document.querySelectorAll('.duty-btn');
-    dutyBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const duty = btn.getAttribute('data-duty') || 'Outstation Trips';
-        selectedPreferredDutyInput.value = duty;
-        dutyBtns.forEach((b) => {
-          b.classList.remove('active', 'bg-m3-surface-container', 'border-m3-primary', 'text-m3-primary');
-          b.classList.add('bg-white', 'border-m3-outline-variant', 'text-m3-on-surface');
-        });
-        btn.classList.add('active', 'bg-m3-surface-container', 'border-m3-primary', 'text-m3-primary');
-        btn.classList.remove('bg-white', 'border-m3-outline-variant', 'text-m3-on-surface');
-      });
-    });
-
-    // 8. Quick City Chips
-    const cityChips = document.querySelectorAll('.city-quick-chip');
-    cityChips.forEach((chip) => {
-      chip.addEventListener('click', () => {
-        const c = chip.getAttribute('data-city') || '';
-        cityInput.value = c;
-        cityInput.focus();
-      });
-    });
-
-    // 9. Google Places Autocomplete Integration
-    let autocompleteInitialized = false;
-    const initAutocomplete = () => {
-      if (autocompleteInitialized || !cityInput) return;
-      if (!(window as any).google || !(window as any).google.maps || !(window as any).google.maps.places) return;
-
-      try {
-        const options = {
-          componentRestrictions: { country: 'in' },
-          bounds: new (window as any).google.maps.LatLngBounds(
-            new (window as any).google.maps.LatLng(12.7, 79.8),
-            new (window as any).google.maps.LatLng(13.4, 80.4)
-          ),
-          fields: ['formatted_address', 'name'],
-          strictBounds: false
-        };
-        const ac = new (window as any).google.maps.places.Autocomplete(cityInput, options);
-        ac.addListener('place_changed', () => {
-          const place = ac.getPlace();
-          if (place && (place.formatted_address || place.name)) {
-            cityInput.value = place.formatted_address || place.name;
-          }
-        });
-        autocompleteInitialized = true;
-      } catch (_) {}
-    };
-
-    cityInput.addEventListener('focus', () => {
-      loadGoogleMaps().then(initAutocomplete).catch(() => {});
-    });
-    window.addEventListener('google-maps-loaded', initAutocomplete);
-
-    // 10. File Input Listeners with Automatic Compression
-    async function processImageFile(file: File): Promise<{ base64: string; mimeType: string; name: string } | null> {
+    // Image compression helper
+    async function processImageFile(file: File): Promise<FilePayload | null> {
       if (!file) return null;
       return new Promise((resolve) => {
         const reader = new FileReader();
         reader.onload = (e) => {
           const img = new Image();
           img.onload = () => {
-            const maxDim = 1600;
+            const maxDim = 1500;
             let width = img.width;
             let height = img.height;
             if (width > maxDim || height > maxDim) {
@@ -845,7 +589,7 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
             const ctx = canvas.getContext('2d');
             if (ctx) {
               ctx.drawImage(img, 0, 0, width, height);
-              const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+              const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
               const base64 = dataUrl.split(',')[1] || '';
               resolve({ base64, mimeType: 'image/jpeg', name: file.name });
               return;
@@ -866,51 +610,410 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
       });
     }
 
-    dlFileInput.addEventListener('change', async () => {
+    // Render all Vehicle Cards using clean native <select> dropdowns (no pill clutter)
+    function renderVehicleCards() {
+      if (!vehicleCardsContainer) return;
+      vehicleCountBadge.textContent =
+        vehiclesState.length === 1
+          ? '1 Vehicle (Owner-Driver)'
+          : `${vehiclesState.length} Vehicles (Fleet Partner)`;
+
+      if (vehiclesState.length >= 5) {
+        addVehicleBtn.classList.add('hidden');
+      } else {
+        addVehicleBtn.classList.remove('hidden');
+      }
+
+      vehicleCardsContainer.innerHTML = vehiclesState
+        .map((v, idx) => {
+          return `
+            <div class="p-4 sm:p-5 rounded-m3-xl bg-m3-surface-container-low border border-m3-outline-variant/80 space-y-3.5 relative" data-veh-idx="${idx}">
+              <div class="flex items-center justify-between border-b border-m3-outline-variant/40 pb-2">
+                <div class="flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-m3-primary text-m3-on-primary text-xs font-extrabold flex items-center justify-center">
+                    ${idx + 1}
+                  </span>
+                  <span class="text-xs sm:text-sm font-extrabold text-m3-on-surface">
+                    Vehicle #${idx + 1}: <span class="text-m3-primary">${v.model}</span>
+                  </span>
+                </div>
+                ${
+                  vehiclesState.length > 1
+                    ? `<button type="button" data-remove-idx="${idx}" class="remove-veh-btn inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-red-50 hover:bg-red-100 text-red-700 text-[11px] font-bold transition-colors cursor-pointer">
+                        <span>Remove</span>
+                      </button>`
+                    : `<span class="text-[11px] font-semibold text-m3-on-surface-variant">Primary Cab</span>`
+                }
+              </div>
+
+              <!-- Row 1: Single Car Model Dropdown + Registration Plate Input -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-bold text-m3-on-surface mb-1">
+                    Select Car Model *
+                  </label>
+                  <select
+                    data-model-select-idx="${idx}"
+                    class="veh-model-select w-full bg-white border border-m3-outline-variant focus:border-m3-primary rounded-m3-lg py-2.5 px-3 text-xs sm:text-sm font-bold text-m3-on-surface outline-none shadow-2xs"
+                  >
+                    ${VEHICLE_CATEGORIES.map(
+                      (cat) => `
+                        <optgroup label="${cat.label} (${cat.seats})">
+                          ${cat.models
+                            .map(
+                              (m) => `
+                                <option value="${m}" ${v.model === m ? 'selected' : ''}>
+                                  ${m}
+                                </option>
+                              `
+                            )
+                            .join('')}
+                        </optgroup>
+                      `
+                    ).join('')}
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold text-m3-on-surface mb-1">
+                    Car Plate Number *
+                  </label>
+                  <input
+                    type="text"
+                    data-plate-idx="${idx}"
+                    value="${v.plate}"
+                    maxlength="13"
+                    placeholder="TN 14 AK 2026"
+                    class="veh-plate-input w-full bg-white border border-m3-outline-variant focus:border-m3-primary rounded-m3-lg py-2.5 px-3 text-xs sm:text-sm font-mono font-bold uppercase text-m3-on-surface outline-none shadow-2xs"
+                  />
+                </div>
+              </div>
+
+              <!-- Row 2: Board Type + Roof Carrier Dropdowns -->
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-bold text-m3-on-surface mb-1">
+                    Board / Permit Type
+                  </label>
+                  <select
+                    data-board-select-idx="${idx}"
+                    class="veh-board-select w-full bg-white border border-m3-outline-variant focus:border-m3-primary rounded-m3-lg py-2 px-3 text-xs sm:text-sm font-semibold text-m3-on-surface outline-none shadow-2xs"
+                  >
+                    <option value="Yellow Board" ${v.boardType === 'Yellow Board' ? 'selected' : ''}>Yellow Board (T-Permit)</option>
+                    <option value="White Board" ${v.boardType === 'White Board' ? 'selected' : ''}>White Board</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold text-m3-on-surface mb-1">
+                    Luggage Roof Carrier
+                  </label>
+                  <select
+                    data-carrier-select-idx="${idx}"
+                    class="veh-carrier-select w-full bg-white border border-m3-outline-variant focus:border-m3-primary rounded-m3-lg py-2 px-3 text-xs sm:text-sm font-semibold text-m3-on-surface outline-none shadow-2xs"
+                  >
+                    <option value="With Carrier" ${v.carrier === 'With Carrier' ? 'selected' : ''}>With Roof Carrier</option>
+                    <option value="No Carrier" ${v.carrier === 'No Carrier' ? 'selected' : ''}>No Carrier</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Row 3: RC & Car Front Photos for THIS Vehicle -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 border-t border-m3-outline-variant/40">
+                <div class="flex items-center justify-between p-2.5 rounded-m3-lg bg-white border border-m3-outline-variant/80 gap-2">
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-m3-on-surface truncate">RC Book Photo #${idx + 1} <span class="text-red-500">*</span></div>
+                    <div class="text-[10px] font-mono ${v.rcFile ? 'text-emerald-700 font-bold' : 'text-m3-on-surface-variant'}" id="rcStatus-${idx}">
+                      ${v.rcFile ? `✓ ${v.rcFile.name}` : 'Required (No photo)'}
+                    </div>
+                  </div>
+                  <label class="cursor-pointer inline-flex items-center gap-1 px-2.5 py-1.5 rounded-m3-md bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant text-[11px] font-bold text-m3-on-surface shrink-0">
+                    <span>${v.rcFile ? 'Change' : 'Upload RC'}</span>
+                    <input type="file" data-rc-idx="${idx}" accept="image/*" class="veh-rc-input hidden" />
+                  </label>
+                </div>
+
+                <div class="flex items-center justify-between p-2.5 rounded-m3-lg bg-white border border-m3-outline-variant/80 gap-2">
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-m3-on-surface truncate">Car Front Photo #${idx + 1} <span class="text-red-500">*</span></div>
+                    <div class="text-[10px] font-mono ${v.carFile ? 'text-emerald-700 font-bold' : 'text-m3-on-surface-variant'}" id="carStatus-${idx}">
+                      ${v.carFile ? `✓ ${v.carFile.name}` : 'Show Plate No.'}
+                    </div>
+                  </div>
+                  <label class="cursor-pointer inline-flex items-center gap-1 px-2.5 py-1.5 rounded-m3-md bg-m3-surface-container-low hover:bg-m3-surface-container border border-m3-outline-variant text-[11px] font-bold text-m3-on-surface shrink-0">
+                    <span>${v.carFile ? 'Change' : 'Upload Car'}</span>
+                    <input type="file" data-car-idx="${idx}" accept="image/*" class="veh-car-input hidden" />
+                  </label>
+                </div>
+              </div>
+            </div>
+          `;
+        })
+        .join('');
+
+      bindVehicleCardEvents();
+    }
+
+    function bindVehicleCardEvents() {
+      // Single Car Model Dropdown change (auto-assigns category silently)
+      vehicleCardsContainer.querySelectorAll('.veh-model-select').forEach((sel) => {
+        sel.addEventListener('change', (e) => {
+          const target = e.target as HTMLSelectElement;
+          const idx = Number(target.getAttribute('data-model-select-idx'));
+          const chosenModel = target.value || 'Swift Dzire';
+          vehiclesState[idx].model = chosenModel;
+          vehiclesState[idx].category = normalizeVehicleCategory(chosenModel);
+          renderVehicleCards();
+        });
+      });
+
+      // Plate Number live auto-formatting
+      vehicleCardsContainer.querySelectorAll('.veh-plate-input').forEach((inp) => {
+        inp.addEventListener('input', (e) => {
+          const target = e.target as HTMLInputElement;
+          const idx = Number(target.getAttribute('data-plate-idx'));
+          const formatted = formatIndianPlateNumber(target.value);
+          target.value = formatted;
+          vehiclesState[idx].plate = formatted;
+        });
+      });
+
+      // Board Type dropdown change
+      vehicleCardsContainer.querySelectorAll('.veh-board-select').forEach((sel) => {
+        sel.addEventListener('change', (e) => {
+          const target = e.target as HTMLSelectElement;
+          const idx = Number(target.getAttribute('data-board-select-idx'));
+          vehiclesState[idx].boardType = target.value || 'Yellow Board';
+        });
+      });
+
+      // Roof Carrier dropdown change
+      vehicleCardsContainer.querySelectorAll('.veh-carrier-select').forEach((sel) => {
+        sel.addEventListener('change', (e) => {
+          const target = e.target as HTMLSelectElement;
+          const idx = Number(target.getAttribute('data-carrier-select-idx'));
+          vehiclesState[idx].carrier = target.value || 'With Carrier';
+        });
+      });
+
+      // Remove Vehicle
+      vehicleCardsContainer.querySelectorAll('.remove-veh-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const idx = Number(btn.getAttribute('data-remove-idx'));
+          if (vehiclesState.length > 1) {
+            vehiclesState.splice(idx, 1);
+            renderVehicleCards();
+          }
+        });
+      });
+
+      // RC File Upload per Vehicle
+      vehicleCardsContainer.querySelectorAll('.veh-rc-input').forEach((inp) => {
+        inp.addEventListener('change', async (e) => {
+          const target = e.target as HTMLInputElement;
+          const idx = Number(target.getAttribute('data-rc-idx'));
+          const statusEl = document.getElementById(`rcStatus-${idx}`);
+          if (target.files && target.files[0]) {
+            const file = target.files[0];
+            if (statusEl) statusEl.textContent = `Compressing ${file.name}...`;
+            vehiclesState[idx].rcFile = await processImageFile(file);
+            renderVehicleCards();
+          }
+        });
+      });
+
+      // Car Front File Upload per Vehicle
+      vehicleCardsContainer.querySelectorAll('.veh-car-input').forEach((inp) => {
+        inp.addEventListener('change', async (e) => {
+          const target = e.target as HTMLInputElement;
+          const idx = Number(target.getAttribute('data-car-idx'));
+          const statusEl = document.getElementById(`carStatus-${idx}`);
+          if (target.files && target.files[0]) {
+            const file = target.files[0];
+            if (statusEl) statusEl.textContent = `Compressing ${file.name}...`;
+            vehiclesState[idx].carFile = await processImageFile(file);
+            renderVehicleCards();
+          }
+        });
+      });
+    }
+
+    // Add Another Vehicle button
+    addVehicleBtn?.addEventListener('click', () => {
+      if (vehiclesState.length >= 5) return;
+      vehiclesState.push({
+        id: `veh-${Date.now()}`,
+        category: 'Sedan',
+        model: 'Swift Dzire',
+        plate: '',
+        boardType: 'Yellow Board',
+        carrier: 'With Carrier',
+        rcFile: null,
+        carFile: null
+      });
+      renderVehicleCards();
+    });
+
+    // Initial render of Vehicle #1
+    renderVehicleCards();
+
+    // 1. Category Switcher (Attach Vehicle(s) vs Acting Driver Only)
+    const categoryBtns = document.querySelectorAll('.category-btn');
+    categoryBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const cat = btn.getAttribute('data-category') || 'Attach Car';
+        selectedCategoryInput.value = cat;
+
+        categoryBtns.forEach((b) => {
+          b.classList.remove('active', 'bg-m3-primary', 'text-m3-on-primary', 'shadow-2xs');
+          b.classList.add('text-m3-on-surface-variant');
+        });
+
+        btn.classList.add('active', 'bg-m3-primary', 'text-m3-on-primary', 'shadow-2xs');
+        btn.classList.remove('text-m3-on-surface-variant');
+
+        if (cat === 'Attach Car') {
+          carOwnerSection.classList.remove('hidden');
+          driverJobSection.classList.add('hidden');
+        } else {
+          carOwnerSection.classList.add('hidden');
+          driverJobSection.classList.remove('hidden');
+        }
+      });
+    });
+
+    // 2. Single Base Area Input (Auto-detects Chennai Zone silently in background)
+    function setCanonicalLocality(areaName: string, zoneId: string) {
+      selectedZoneInput.value = zoneId;
+      cityInput.value = areaName;
+      if (selectedLocalityBadge) {
+        selectedLocalityBadge.textContent = `✓ ${areaName}`;
+      }
+    }
+
+    localitySearchInput?.addEventListener('input', () => {
+      const q = localitySearchInput.value.trim();
+      if (!q) {
+        localitySearchDropdown.classList.add('hidden');
+        return;
+      }
+      const matches = matchChennaiLocality(q).slice(0, 8);
+      if (matches.length === 0) {
+        cityInput.value = q;
+        localitySearchDropdown.classList.add('hidden');
+        return;
+      }
+
+      // Immediately update silent canonical match from top result
+      setCanonicalLocality(matches[0].name, matches[0].zoneId);
+
+      localitySearchDropdown.innerHTML = matches
+        .map(
+          (loc) => `
+          <button
+            type="button"
+            data-loc-name="${loc.name}"
+            data-loc-zone="${loc.zoneId}"
+            class="loc-match-item w-full text-left px-3.5 py-2.5 hover:bg-m3-surface-container-low flex items-center justify-between text-xs cursor-pointer"
+          >
+            <span class="font-bold text-m3-on-surface">${loc.name}</span>
+            <span class="font-mono text-[11px] text-m3-primary font-semibold">${loc.pincode}</span>
+          </button>
+        `
+        )
+        .join('');
+
+      localitySearchDropdown.classList.remove('hidden');
+
+      localitySearchDropdown.querySelectorAll('.loc-match-item').forEach((item) => {
+        item.addEventListener('click', () => {
+          const name = item.getAttribute('data-loc-name') || 'Medavakkam';
+          const zone = item.getAttribute('data-loc-zone') || 'South & OMR';
+          setCanonicalLocality(name, zone);
+          localitySearchInput.value = name;
+          localitySearchDropdown.classList.add('hidden');
+        });
+      });
+    });
+
+    localitySearchInput?.addEventListener('blur', () => {
+      setTimeout(() => {
+        localitySearchDropdown.classList.add('hidden');
+        const q = localitySearchInput.value.trim();
+        if (q) {
+          const topMatch = matchChennaiLocality(q)[0];
+          if (topMatch) {
+            setCanonicalLocality(topMatch.name, topMatch.zoneId);
+            localitySearchInput.value = topMatch.name;
+          } else {
+            cityInput.value = q;
+          }
+        }
+      }, 180);
+    });
+
+    setCanonicalLocality('Medavakkam', 'South & OMR');
+
+    // DL Photo Listener
+    dlFileInput?.addEventListener('change', async () => {
       if (dlFileInput.files && dlFileInput.files[0]) {
         const file = dlFileInput.files[0];
         dlFileStatus.textContent = `Compressing ${file.name}...`;
         dlFileData = await processImageFile(file);
-        dlFileStatus.textContent = `${file.name} (Ready)`;
+        dlFileStatus.textContent = `✓ ${file.name} (Ready)`;
+        dlFileStatus.classList.add('text-emerald-700', 'font-bold');
       } else {
         dlFileData = null;
-        dlFileStatus.textContent = 'Required (No file chosen)';
+        dlFileStatus.textContent = 'Required (Tap to capture or select)';
+        dlFileStatus.classList.remove('text-emerald-700', 'font-bold');
       }
     });
 
-    rcFileInput.addEventListener('change', async () => {
-      if (rcFileInput.files && rcFileInput.files[0]) {
-        const file = rcFileInput.files[0];
-        rcFileStatus.textContent = `Compressing ${file.name}...`;
-        rcFileData = await processImageFile(file);
-        rcFileStatus.textContent = `${file.name} (Ready)`;
-      } else {
-        rcFileData = null;
-        rcFileStatus.textContent = 'Required (No file chosen)';
-      }
-    });
-
-    carFileInput?.addEventListener('change', async () => {
-      if (carFileInput.files && carFileInput.files[0]) {
-        const file = carFileInput.files[0];
-        carFileStatus.textContent = `Compressing ${file.name}...`;
-        carFileData = await processImageFile(file);
-        carFileStatus.textContent = `${file.name} (Ready)`;
-      } else {
-        carFileData = null;
-        carFileStatus.textContent = 'Required (No file chosen)';
-      }
-    });
-
-    // 11. Form Submission
+    // Form Submission
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       errorAlert.classList.add('hidden');
 
+      const rawArea = (localitySearchInput.value || cityInput.value || '').trim();
+      if (rawArea) {
+        const topMatch = matchChennaiLocality(rawArea)[0];
+        if (topMatch) {
+          setCanonicalLocality(topMatch.name, topMatch.zoneId);
+        } else {
+          cityInput.value = rawArea;
+        }
+      }
+
       const name = nameInput.value.trim();
       const phone = phoneInput.value.replace(/\D/g, '');
-      const city = cityInput.value.trim();
+      const zone = selectedZoneInput.value.trim() || 'South & OMR';
+      const area = cityInput.value.trim();
       const category = selectedCategoryInput.value;
+
+      if (category === 'Attach Car') {
+        for (let i = 0; i < vehiclesState.length; i++) {
+          const v = vehiclesState[i];
+          if (!v.plate || !isValidIndianPlateNumber(v.plate)) {
+            showError(`Please enter a valid Vehicle Plate Number (e.g. TN 14 AK 2026) for Vehicle #${i + 1} (${v.model}).`);
+            const plateEl = vehicleCardsContainer.querySelector(`[data-plate-idx="${i}"]`) as HTMLInputElement;
+            plateEl?.focus();
+            return;
+          }
+          if (!v.rcFile) {
+            showError(`Please upload the RC Book photo for Vehicle #${i + 1} (${v.model}).`);
+            return;
+          }
+          if (!v.carFile) {
+            showError(`Please upload the Car Front photo with number plate for Vehicle #${i + 1} (${v.model}).`);
+            return;
+          }
+        }
+      }
+
+      if (!area || !zone) {
+        showError('Please select your Chennai Operating Zone and Base Area.');
+        return;
+      }
 
       if (!name || name.length < 2) {
         showError('Please enter your full name.');
@@ -924,63 +1027,55 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
         return;
       }
 
-      if (!city) {
-        showError('Please select or enter your operating area.');
-        cityInput.focus();
-        return;
-      }
-
-      // Strict Document Validation
       if (!dlFileData) {
-        showError('Driving License photo is required. Please capture or select a photo.');
+        showError('Driving License (DL) photo is required. Please upload your DL photo.');
         dlFileInput.click();
         return;
-      }
-
-      if (category === 'Attach Car') {
-        if (!rcFileData) {
-          showError('Vehicle RC Book photo is required. Please capture or select a photo.');
-          rcFileInput.click();
-          return;
-        }
-        if (!carFileData) {
-          showError('Car Front photo with number plate is required. Please capture or select a photo.');
-          carFileInput.click();
-          return;
-        }
       }
 
       submitBtn.disabled = true;
       submitBtn.innerHTML = `
         <span class="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-        <span>Uploading to Google Drive...</span>
+        <span>Uploading & Saving to Dispatch Roster...</span>
       `;
+
+      const partnerType =
+        category === 'Driver Job Only'
+          ? 'Acting Driver'
+          : vehiclesState.length > 1
+          ? 'Fleet Partner'
+          : 'Owner-Driver';
+
+      const vehiclesSummaryText =
+        category === 'Attach Car'
+          ? vehiclesState
+              .map((v, i) => `#${i + 1}: ${v.model} [${v.plate} • ${v.boardType} • ${v.carrier}]`)
+              .join(' | ')
+          : `License: ${selectedLicenseTypeInput.value} | Exp: ${selectedExperienceInput.value} | Duty: ${selectedPreferredDutyInput.value}`;
 
       const leadPayload = {
         name,
         phone,
         category,
-        carCount: selectedCarCountInput.value,
-        cars: selectedCarsInput.value,
-        plateType: selectedPlateTypeInput.value,
+        partnerType,
+        zone,
+        area,
+        city: `${area} (${zone})`,
+        carCount: category === 'Attach Car' ? `${vehiclesState.length} Vehicle(s)` : 'Driver Only',
+        cars: category === 'Attach Car' ? vehiclesState.map((v) => v.model).join(', ') : 'Acting Driver',
+        plateType: category === 'Attach Car' ? vehiclesState.map((v) => v.boardType).join(', ') : '',
         licenseType: selectedLicenseTypeInput.value,
         experience: selectedExperienceInput.value,
         preferredDuty: selectedPreferredDutyInput.value,
-        city,
-        hasDlPhoto: Boolean(dlFileData),
-        hasRcPhoto: Boolean(rcFileData),
-        hasCarPhoto: Boolean(carFileData),
         dlFile: dlFileData,
-        rcFile: rcFileData,
-        carFile: carFileData,
+        rcFile: vehiclesState[0]?.rcFile || null,
+        carFile: vehiclesState[0]?.carFile || null,
+        vehicles: category === 'Attach Car' ? vehiclesState : [],
         webhookUrl: getActiveGoogleSheetUrl(),
-        notes: category === 'Attach Car' 
-          ? `Fleet: ${selectedCarCountInput.value} (${selectedCarsInput.value}) | Plate: ${selectedPlateTypeInput.value}`
-          : `License: ${selectedLicenseTypeInput.value} | Exp: ${selectedExperienceInput.value} | Duty: ${selectedPreferredDutyInput.value}`
+        notes: vehiclesSummaryText
       };
 
-      let leadId = `#KT-DRV-${Date.now().toString().slice(-4)}`;
-      let submissionSuccess = false;
+      let leadId = getNextDriverLeadId();
 
       try {
         const res = await fetch('/api/record-driver-lead', {
@@ -992,7 +1087,12 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
           const resData = await res.json();
           if (resData && resData.leadId) {
             leadId = resData.leadId;
-            submissionSuccess = true;
+            const m = String(leadId).match(/KT-DRV-(\d+)/i);
+            if (m && typeof window !== 'undefined' && window.localStorage) {
+              try {
+                localStorage.setItem(STORAGE_KEYS.DRIVER_LEAD, m[1]);
+              } catch (_) {}
+            }
           }
         }
       } catch (_) {}
@@ -1006,38 +1106,52 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
             headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify({
               type: 'driver_lead',
-              leadId: leadId,
+              leadId,
               date: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
               name: leadPayload.name,
               phone: leadPayload.phone,
-              category: leadPayload.category,
+              category: leadPayload.partnerType,
+              zone: leadPayload.zone,
+              area: leadPayload.area,
               city: leadPayload.city,
               notes: leadPayload.notes,
               dlFile: dlFileData,
-              rcFile: rcFileData,
-              carFile: carFileData,
+              rcFile: vehiclesState[0]?.rcFile || null,
+              carFile: vehiclesState[0]?.carFile || null,
               referenceId: leadId
             })
           }).catch(() => {});
-          submissionSuccess = true;
         }
       } catch (_) {}
 
       (document.getElementById('confLeadId') as HTMLElement).textContent = `Ref ID: ${leadId}`;
       (document.getElementById('confName') as HTMLElement).textContent = name;
       (document.getElementById('confPhone') as HTMLElement).textContent = `+91 ${phone}`;
-      (document.getElementById('confCategory') as HTMLElement).textContent = category;
-      (document.getElementById('confCity') as HTMLElement).textContent = city;
-      (document.getElementById('confDetails') as HTMLElement).textContent = category === 'Attach Car' 
-        ? `${selectedCarCountInput.value} - ${selectedCarsInput.value}` 
-        : `${selectedLicenseTypeInput.value} (${selectedExperienceInput.value})`;
+      (document.getElementById('confCategory') as HTMLElement).textContent = partnerType;
+      (document.getElementById('confCity') as HTMLElement).textContent = `${area} (${zone})`;
+      (document.getElementById('confDetails') as HTMLElement).textContent =
+        category === 'Attach Car'
+          ? vehiclesState.map((v) => `${v.model} (${v.plate})`).join(', ')
+          : `${selectedLicenseTypeInput.value} • ${selectedExperienceInput.value}`;
 
       const notifyWhatsAppBtn = document.getElementById('notifyWhatsAppBtn') as HTMLAnchorElement | null;
       if (notifyWhatsAppBtn) {
-        const prefilledText = encodeURIComponent(
-          `Hi Kalidass Travels, I have submitted my partner attachment application (${leadId}) on your website with all documents attached. Please review.`
-        );
-        notifyWhatsAppBtn.href = `https://wa.me/919092303060?text=${prefilledText}`;
+        const waLines = [
+          `*KALIDASS TRAVELS — PARTNER REGISTRATION*`,
+          `Ref ID: ${leadId}`,
+          `Name: ${name}`,
+          `Phone: +91 ${phone}`,
+          `Type: ${partnerType}`,
+          `Base Zone: ${zone}`,
+          `Base Area: ${area}`,
+          ...(category === 'Attach Car'
+            ? vehiclesState.map(
+                (v, i) => `Vehicle #${i + 1}: ${v.model} | Plate: ${v.plate} | ${v.boardType} | ${v.carrier}`
+              )
+            : [`Driver: ${selectedLicenseTypeInput.value} | ${selectedExperienceInput.value} | ${selectedPreferredDutyInput.value}`]),
+          `Documents: Uploaded on Portal`
+        ];
+        notifyWhatsAppBtn.href = `https://wa.me/919092303060?text=${encodeURIComponent(waLines.join('\n'))}`;
       }
 
       formWrapper.classList.add('hidden');
@@ -1053,18 +1167,26 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
     resetFormBtn?.addEventListener('click', () => {
       form.reset();
       dlFileData = null;
-      rcFileData = null;
-      carFileData = null;
-      dlFileStatus.textContent = 'Required (No file chosen)';
-      rcFileStatus.textContent = 'Required (No file chosen)';
-      carFileStatus.textContent = 'Required (No file chosen)';
+      dlFileStatus.textContent = 'Required (Tap to capture or select)';
+      dlFileStatus.classList.remove('text-emerald-700', 'font-bold');
+      vehiclesState = [
+        {
+          id: 'veh-1',
+          category: 'Sedan',
+          model: 'Swift Dzire',
+          plate: '',
+          boardType: 'Yellow Board',
+          carrier: 'With Carrier',
+          rcFile: null,
+          carFile: null
+        }
+      ];
+      renderVehicleCards();
+      setCanonicalLocality('Medavakkam', 'South & OMR');
       submitBtn.disabled = false;
-      submitBtn.innerHTML = `
-        <span>Submit Registration</span>
-      `;
+      submitBtn.innerHTML = `<span>Submit Partner Registration</span>`;
       successCard.classList.add('hidden');
       formWrapper.classList.remove('hidden');
     });
-
   });
 </script>

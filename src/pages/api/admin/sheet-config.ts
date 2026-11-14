@@ -4,7 +4,17 @@ import path from 'node:path';
 
 export const prerender = false;
 
+const DEFAULT_TRIPS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzpTM1pLXWLF-E80-HAXjj2ghAC_0tvFW1blTJC7rJojqUhTcKIwQz0t-NQMCScN2VA/exec';
+
 let inMemoryWebhookUrl = '';
+
+function sanitizeTripsUrl(rawUrl: string): string {
+  const clean = (rawUrl || '').trim();
+  if (!clean || clean.includes('AKfycbzjPh0a2ju')) {
+    return DEFAULT_TRIPS_WEBHOOK_URL;
+  }
+  return clean;
+}
 
 function getEnvUrl(): string {
   try {
@@ -12,14 +22,14 @@ function getEnvUrl(): string {
     if (fs.existsSync(envPath)) {
       const raw = fs.readFileSync(envPath, 'utf8');
       const match = raw.match(/(?:PUBLIC_)?GOOGLE_SHEET_WEBHOOK_URL=([^\r\n]+)/);
-      if (match && match[1]) return match[1].trim();
+      if (match && match[1]) return sanitizeTripsUrl(match[1]);
     }
   } catch (_) {}
-  return process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL || '';
+  return sanitizeTripsUrl(process.env.GOOGLE_SHEET_WEBHOOK_URL || process.env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL || DEFAULT_TRIPS_WEBHOOK_URL);
 }
 
 export const GET: APIRoute = async () => {
-  const activeUrl = inMemoryWebhookUrl || getEnvUrl();
+  const activeUrl = sanitizeTripsUrl(inMemoryWebhookUrl || getEnvUrl());
   return new Response(JSON.stringify({
     success: true,
     webhookUrl: activeUrl

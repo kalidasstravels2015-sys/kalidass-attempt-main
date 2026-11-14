@@ -1,11 +1,19 @@
 // Cloudflare Pages Function: /api/next-quote-id
 // Centralized atomic daily quotation sequence coordinator for Kalidass Travels.
-// Synchronizes with Google Sheets ScriptProperties and maintains edge cache.
+// Synchronizes with Google Sheets Trips database and maintains edge cache.
 
-const DEFAULT_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzjPh0a2ju-Xv9KRFQ5gCg9s5Y4P8QR9C2rkO4nh4XYBBO5QD-tbKIXWcDav2ydgaUW/exec';
+const DEFAULT_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzpTM1pLXWLF-E80-HAXjj2ghAC_0tvFW1blTJC7rJojqUhTcKIwQz0t-NQMCScN2VA/exec';
 
 let edgeDateCode = '';
 let edgeSeq = 0;
+
+function sanitizeTripsWebhookUrl(rawUrl) {
+  const clean = (rawUrl || '').trim();
+  if (!clean || !clean.startsWith('http') || clean.includes('AKfycbzjPh0a2ju')) {
+    return DEFAULT_WEBHOOK_URL;
+  }
+  return clean;
+}
 
 // Format 6-digit date string DDMMYY in Asia/Kolkata
 function getKolkataDateCode() {
@@ -19,9 +27,26 @@ function getKolkataDateCode() {
   return `${dd}${mm}${yy}`;
 }
 
+function extractMaxSeqFromTrips(trips, dateCode) {
+  if (!Array.isArray(trips)) return 0;
+  let maxSeq = 0;
+  const regex = new RegExp(`Q-${dateCode}-(\\d+)`, 'gi');
+  for (const row of trips) {
+    const searchStr = `${row?.id || ''} ${row?.notes || ''}`;
+    let m;
+    regex.lastIndex = 0;
+    while ((m = regex.exec(searchStr)) !== null) {
+      const val = parseInt(m[1], 10);
+      if (!isNaN(val) && val > maxSeq) maxSeq = val;
+    }
+  }
+  return maxSeq;
+}
+
 async function fetchFromGoogleSheets(webhookUrl, dateCode, claim = false) {
-  if (!webhookUrl || !webhookUrl.startsWith('http')) return null;
-  const target = `${webhookUrl}?action=next_quote_id&dateCode=${dateCode}${claim ? '&claim=true' : ''}`;
+  const cleanUrl = sanitizeTripsWebhookUrl(webhookUrl);
+  if (!cleanUrl) return null;
+  const target = `${cleanUrl}?action=next_quote_id&dateCode=${dateCode}${claim ? '&claim=true' : ''}`;
   const res = await fetch(target, {
     method: 'GET',
     redirect: 'follow',
@@ -34,6 +59,20 @@ async function fetchFromGoogleSheets(webhookUrl, dateCode, claim = false) {
       const data = JSON.parse(text);
       if (data && data.success && data.quoteId) {
         return data;
+      }
+      if (data && Array.isArray(data.trips)) {
+        const maxSheetSeq = extractMaxSeqFromTrips(data.trips, dateCode);
+        const baseSeq = Math.max(maxSheetSeq, edgeSeq);
+        const nextSeq = baseSeq + 1;
+        if (claim) {
+          edgeSeq = nextSeq;
+        }
+        return {
+          success: true,
+          currentSeq: baseSeq,
+          nextSeq,
+          quoteId: `Q-${dateCode}-${nextSeq}`
+        };
       }
     } catch (_) {}
   }
