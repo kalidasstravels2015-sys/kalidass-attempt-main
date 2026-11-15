@@ -577,14 +577,15 @@ interface StayDropdownOption {
 
 const getVehiclePricingSpecs = (vehicleName: string) => {
   const v = (vehicleName || '').toLowerCase();
+  const isUrbania = v.includes('urbania');
   const isTempo = v.includes('tempo') || v.includes('traveller');
   const isCrysta = v.includes('crysta');
   const isInnova = v.includes('innova');
   const isErtiga = v.includes('ertiga') || v.includes('xl6');
 
-  const minKmDay = (isCrysta || isTempo) ? 300 : 250;
-  const rateKm = isTempo ? 24 : isCrysta ? 22 : isInnova ? 18 : isErtiga ? 17 : 14;
-  const dailyBata = isTempo ? 800 : isCrysta ? 600 : isInnova ? 500 : isErtiga ? 400 : 300;
+  const minKmDay = (isCrysta || isTempo || isUrbania) ? 300 : 250;
+  const rateKm = isUrbania ? 38 : isTempo ? 24 : isCrysta ? 22 : isInnova ? 20 : isErtiga ? 17 : 14;
+  const dailyBata = isUrbania ? 1100 : isTempo ? 800 : isCrysta ? 700 : isInnova ? 600 : isErtiga ? 500 : 500;
   const stayLodging = isTempo ? 1500 : isCrysta ? 1200 : isInnova ? 1100 : isErtiga ? 1000 : 800;
 
   return { minKmDay, rateKm, dailyBata, stayLodging };
