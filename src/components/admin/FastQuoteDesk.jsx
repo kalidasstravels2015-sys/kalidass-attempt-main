@@ -288,21 +288,33 @@ To confirm: Call +91 89395 39211 (₹500 advance)`;
 
       setEditableBill(bill);
     } else {
-      const permitText = primaryCalc.statePermitEst > 0 ? `, ${primaryCalc.statePermitInfo.stateName} Permit` : '';
+      const permitLine = primaryCalc.statePermitEst > 0
+        ? `\n• ${primaryCalc.statePermitInfo.stateName} Permit = ₹${primaryCalc.statePermitEst.toLocaleString('en-IN')}`
+        : '';
+      const balanceAmt = Math.max(0, primaryCalc.totalFare - 500);
 
       const bill = `*KALIDASS TRAVELS*
-${pickup} ⇄ ${destination} • Round Trip (${days} Day${days > 1 ? 's' : ''})
-${travelDates} | ${vehicleKey} AC
+${pickup} ⇄ ${destination} (${days} Day${days > 1 ? 's' : ''})
+Pickup: ${travelDates}
+Vehicle: ${vehicleKey} AC
 
-*Estimated Fare: ₹${primaryCalc.totalFare.toLocaleString('en-IN')}*
-Includes: ${primaryCalc.billableKm.toLocaleString('en-IN')} km, Fuel, Driver Bata${permitText}
-Toll & Parking: Extra as per actual slip
+*BILLING (${primaryCalc.billableKm.toLocaleString('en-IN')} KM PACKAGE)*
+• ${primaryCalc.billableKm.toLocaleString('en-IN')} km × ₹${primaryCalc.rate}/km = ₹${primaryCalc.carHire.toLocaleString('en-IN')}
+• Driver Bata (${days} Day${days > 1 ? 's' : ''}) = ₹${primaryCalc.driverBataTotal.toLocaleString('en-IN')}${permitLine}
+*Estimated Fare: ₹${primaryCalc.totalFare.toLocaleString('en-IN')} + Extra*
+(Pickup to drop + local visits)
 
-Over-limit rates:
+*Extra (Pay as per slip):*
+• Toll & Parking
+
+*Over-limit (Only if > ${primaryCalc.billableKm.toLocaleString('en-IN')} km):*
 • Extra km: ₹${primaryCalc.rate} / km
-• Night stay: ₹350 (if 10 PM - 6 AM)
+• Night drive (10 PM–6 AM): ₹350
 
-To confirm: Call +91 89395 39211 (₹500 advance)`;
+*To Confirm:*
+• Advance now: ₹500
+• Balance to driver: ₹${balanceAmt.toLocaleString('en-IN')} + Extra
+Call: +91 89395 39211`;
 
       setEditableBill(bill);
     }

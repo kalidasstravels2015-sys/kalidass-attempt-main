@@ -43,10 +43,25 @@ export function cleanWhatsAppText(text) {
   // 8. Clean up separator lines (like ━━━━━━━━ or ──────) into standard 37-dash WhatsApp divider
   clean = clean.replace(/^[━─_=]{3,}$/gm, '-------------------------------------');
 
-  // 9. Collapse multiple consecutive empty lines to maximum 2
+  // 9. Prevent WhatsApp from turning numeric DD-MM-YYYY or DD/MM/YYYY dates into green phone links
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  clean = clean.replace(/\b(0?[1-9]|[12]\d|3[01])[-/](0?[1-9]|1[0-2])[-/](20\d{2})\b/g, (_, d, m, y) => {
+    const mIdx = parseInt(m, 10) - 1;
+    return `${String(d).padStart(2, '0')} ${months[mIdx] || m} ${y}`;
+  });
+
+  // 10. Convert numeric Q-DDMMYY-X ref IDs into non-clickable KT/DDMMM/XX and strip first-line (Ref: ...)
+  clean = clean.replace(/^\*KALIDASS TRAVELS\*\s*\(Ref:\s*[^)]+\)/im, '*KALIDASS TRAVELS*');
+  clean = clean.replace(/\bQ-(\d{2})(\d{2})\d{2}-(\d+)\b/gi, (_, dd, mm, seq) => {
+    const mIdx = Math.max(0, Math.min(11, parseInt(mm, 10) - 1));
+    const mUpper = (months[mIdx] || 'NOV').toUpperCase();
+    return `KT/${dd}${mUpper}/${String(seq).padStart(2, '0')}`;
+  });
+
+  // 11. Collapse multiple consecutive empty lines to maximum 2
   clean = clean.replace(/\n{3,}/g, '\n\n');
 
-  // 10. Remove trailing whitespaces on each line
+  // 12. Remove trailing whitespaces on each line
   clean = clean.split('\n').map(l => l.trimEnd()).join('\n').trim();
 
   return clean;

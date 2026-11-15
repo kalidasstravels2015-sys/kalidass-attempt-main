@@ -21,7 +21,7 @@ import {
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
 import { buildWhatsAppUrl, WHATSAPP_CONFIG } from '../utils/whatsapp';
 import tariffConfig from '../data/tariff_config.json';
-import { peekNextQuotationId, getNextQuotationId, getFormattedDateCode } from '../utils/sequenceGenerator';
+import { peekNextQuotationId, getNextQuotationId, getFormattedDateCode, formatWhatsAppRefId } from '../utils/sequenceGenerator';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import { logBookingToGoogleSheet } from '../utils/recordWebsiteBooking.js';
 import { getFleetImageDimensions } from '../utils/vehicleMetadata';
@@ -960,41 +960,56 @@ export default function BookingEngine({
     }
   }, [viewMode]);
 
-  // Formatted date string for summary
+  // Formatted date string for summary (WhatsApp link-proof: "Sat, 21 Nov, 06:00 AM")
   const formattedPickupDate = useMemo(() => {
-    if (!pickupDateTime) return 'Tomorrow 06:00 AM';
+    if (!pickupDateTime) return 'Tomorrow, 06:00 AM';
     try {
       const d = new Date(pickupDateTime);
+      const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       const day = String(d.getDate()).padStart(2, '0');
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const year = d.getFullYear();
       const hours = d.getHours();
       const minutes = String(d.getMinutes()).padStart(2, '0');
       const ampm = hours >= 12 ? 'PM' : 'AM';
       const hr12 = hours % 12 || 12;
-      return `${day}-${month}-${year} ${String(hr12).padStart(2, '0')}:${minutes} ${ampm}`;
+      return `${dayNames[d.getDay()]}, ${day} ${monthNames[d.getMonth()]}, ${String(hr12).padStart(2, '0')}:${minutes} ${ampm}`;
     } catch (_) {
       return pickupDateTime;
     }
   }, [pickupDateTime]);
 
-  // Formatted return date string for round trips
+  // Formatted return date string for round trips (WhatsApp link-proof: "Mon, 23 Nov, 09:00 AM")
   const formattedReturnDate = useMemo(() => {
     if (!returnDateTime) return '';
     try {
       const d = new Date(returnDateTime);
+      const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       const day = String(d.getDate()).padStart(2, '0');
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const year = d.getFullYear();
       const hours = d.getHours();
       const minutes = String(d.getMinutes()).padStart(2, '0');
       const ampm = hours >= 12 ? 'PM' : 'AM';
       const hr12 = hours % 12 || 12;
-      return `${day}-${month}-${year} ${String(hr12).padStart(2, '0')}:${minutes} ${ampm}`;
+      return `${dayNames[d.getDay()]}, ${day} ${monthNames[d.getMonth()]}, ${String(hr12).padStart(2, '0')}:${minutes} ${ampm}`;
     } catch (_) {
       return returnDateTime;
     }
   }, [returnDateTime]);
+
+  // Clean up long Google Maps address into a short, readable city/locality name without 6-digit PIN codes
+  const shortenPlaceName = useCallback((rawPlace, fallback = 'Outstation') => {
+    if (!rawPlace || typeof rawPlace !== 'string') return fallback;
+    const cleaned = rawPlace
+      .replace(/\b\d{6}\b/g, '')
+      .replace(/,\s*(?:India|Tamil Nadu|Andhra Pradesh|Karnataka|Kerala|Puducherry|Pondicherry)\b/gi, '')
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean);
+    if (cleaned.length === 0) return fallback;
+    const first = cleaned[0];
+    if (first.length <= 24) return first;
+    return first.slice(0, 24).trim();
+  }, []);
 
   // Resolve current destination object
   const resolvedDestination = useMemo(() => {
@@ -1012,13 +1027,13 @@ export default function BookingEngine({
       }
     }
     return {
-      name: outstationDrop || 'Outstation Trip',
+      name: shortenPlaceName(outstationDrop, 'Outstation Trip'),
       roundTripKm: outstationDays * 250,
       oneWayKm: 130,
       stateCode: detectedState,
       defaultDays: outstationDays
     };
-  }, [outstationDrop, outstationDays]);
+  }, [outstationDrop, outstationDays, shortenPlaceName]);
 
   // Check if drop location entered for outstation is actually within Chennai
   const isDropInChennai = useMemo(() => {
@@ -1166,14 +1181,7 @@ export default function BookingEngine({
       (isTempoOnly ? (tariffConfig.tempo_fleet?.['12-Seater Luxury Force Tempo'] || tariffConfig.vehicles?.['Tempo Traveller']) : tariffConfig.vehicles?.['Swift Dzire']) ||
       {};
 
-    const isTempoOrLarge = Boolean(
-      isTempoOnly ||
-      (vehicleMeta.seats && vehicleMeta.seats >= 9) ||
-      vehicleMeta.category === 'tempo' ||
-      vehicleMeta.category === 'coach' ||
-      /tempo|urbania/i.test(vehicleMeta.fullName || '')
-    );
-    const advance = isTempoOrLarge ? 2000 : 500;
+    const advance = 500;
 
     if (activeTab === 'outstation') {
       const isRound = outstationTripType === 'round';
@@ -1527,77 +1535,127 @@ export default function BookingEngine({
     } catch (_) {}
   };
 
-  // WhatsApp Message (Audited Balanced 4-Block Micro-Receipt: 40% less screen height, 1-to-1 mirror of website Rate Summary)
+  // WhatsApp Message (Auditor-Approved Short-Line Format: Zero Fake Date/Number Links, 100% Transparent Math)
   const getWhatsAppMessage = () => {
     const isLocal = activeTab === 'local';
     const isAirport = activeTab === 'airport';
-    const fareFormatted = `₹${currentBreakdown.totalFare?.toLocaleString('en-IN')}`;
-    const advanceAmount = `₹${(currentBreakdown.advance || 500).toLocaleString('en-IN')}`;
+    const totalFareNum = Number(currentBreakdown.totalFare || 0);
+    const advNum = Number(currentBreakdown.advance || 500);
+    const balNum = Math.max(0, totalFareNum - advNum);
+    const fareFormatted = `₹${totalFareNum.toLocaleString('en-IN')}`;
+    const advanceAmount = `₹${advNum.toLocaleString('en-IN')}`;
+    const balanceAmount = `₹${balNum.toLocaleString('en-IN')}`;
+    const cleanRef = formatWhatsAppRefId(quoteRefId);
 
     if (isLocal) {
       const pkgHours = currentBreakdown.packageHours || 8;
       const pkgKm = currentBreakdown.billedKm || 80;
       const pickupTime = formattedPickupDate || 'As requested';
+      const gstLine = needGst && currentBreakdown.gstAmount > 0
+        ? `\n• GST (5%) = ₹${currentBreakdown.gstAmount.toLocaleString('en-IN')}`
+        : '';
 
-      return `*KALIDASS TRAVELS* (Ref: ${quoteRefId})
-Chennai Local • ${pkgHours} Hr / ${pkgKm} Km Package
-${pickupTime} | ${selectedVehicle.name} AC
+      return `*KALIDASS TRAVELS*
+Chennai Local (${pkgHours} Hr / ${pkgKm} Km)
+Pickup: ${pickupTime}
+Vehicle: ${selectedVehicle.name} AC
 
-*Package Fare: ${fareFormatted}*
-Includes: ${pkgHours} hrs, ${pkgKm} km, Fuel & Driver
-Toll & Parking: Extra as per actual slip
+*BILLING*
+• ${pkgHours} Hrs & ${pkgKm} Km Package = ₹${(currentBreakdown.kmCost || totalFareNum).toLocaleString('en-IN')}
+• Fuel & Driver = Included${gstLine}
+*Estimated Fare: ${fareFormatted} + Extra*
 
-Over-limit rates:
+*Extra (Pay as per slip):*
+• Toll & Parking
+
+*Over-limit (If > ${pkgHours} Hr / ${pkgKm} Km):*
 • Extra km: ₹${currentBreakdown.extraKmRate || 15} / km
 • Extra hr: ₹${currentBreakdown.extraHrRate || 150} / hr
 
-To confirm: Call +91 89395 39211 (${advanceAmount} advance)`;
+*To Confirm:*
+• Advance now: ${advanceAmount}
+• Balance to driver: ${balanceAmount} + Extra
+Call: +91 89395 39211
+Ref: ${cleanRef}`;
     }
 
     if (isAirport) {
       const pickupTime = formattedPickupDate || 'As requested';
       const routeText = currentBreakdown.routeSummary || 'Airport Transfer';
+      const gstLine = needGst && currentBreakdown.gstAmount > 0
+        ? `\n• GST (5%) = ₹${currentBreakdown.gstAmount.toLocaleString('en-IN')}`
+        : '';
 
-      return `*KALIDASS TRAVELS* (Ref: ${quoteRefId})
+      return `*KALIDASS TRAVELS*
 ${routeText}
-${pickupTime} | ${selectedVehicle.name} AC
+Pickup: ${pickupTime}
+Vehicle: ${selectedVehicle.name} AC
 
-*Base Fare: ${fareFormatted}*
-Includes: Fuel & Driver
-Toll & Airport Parking: Extra as per actual slip
+*BILLING*
+• Airport Transfer = ₹${(currentBreakdown.kmCost || totalFareNum).toLocaleString('en-IN')}
+• Fuel & Driver = Included${gstLine}
+*Estimated Fare: ${fareFormatted} + Extra*
 
-To confirm: Call +91 89395 39211 (${advanceAmount} advance)`;
+*Extra (Pay as per slip):*
+• Toll & Airport Parking
+
+*To Confirm:*
+• Advance now: ${advanceAmount}
+• Balance to driver: ${balanceAmount} + Extra
+Call: +91 89395 39211
+Ref: ${cleanRef}`;
     }
 
-    // Outstation Trips
-    const scheduleStr = formattedReturnDate
-      ? `${formattedPickupDate} – ${formattedReturnDate}`
-      : `${formattedPickupDate || 'As requested'}`;
-    const tripModeStr = outstationTripType === 'round'
-      ? `Round Trip (${outstationDays} Day${outstationDays > 1 ? 's' : ''})`
+    // Outstation Trips (Round Trip or One-Way Drop)
+    const isRound = outstationTripType === 'round';
+    const billedKm = currentBreakdown.billedKm || 250;
+    const ratePerKm = currentBreakdown.ratePerKm || currentBreakdown.extraKmRate || 14;
+    const kmCost = currentBreakdown.kmCost || (billedKm * ratePerKm);
+    const driverBata = currentBreakdown.driverBata || 500;
+    const tripModeStr = isRound
+      ? `${outstationDays} Day${outstationDays > 1 ? 's' : ''}`
       : 'One-Way Drop';
 
-    const permitText = currentBreakdown.isInterstate && currentBreakdown.statePermit > 0
-      ? `, ${currentBreakdown.stateCode} Permit`
-      : '';
-    const gstText = needGst ? ' (+5% GST)' : '';
-
-    const nightStayLine = outstationTripType === 'round'
-      ? `\n• Night stay: ₹350 (if 10 PM - 6 AM)`
+    const returnLine = isRound && formattedReturnDate
+      ? `\nReturn: ${formattedReturnDate}`
       : '';
 
-    return `*KALIDASS TRAVELS* (Ref: ${quoteRefId})
-${currentBreakdown.routeSummary || 'Outstation Trip'} • ${tripModeStr}
-${scheduleStr} | ${selectedVehicle.name} AC
+    const permitLine = currentBreakdown.isInterstate && currentBreakdown.statePermit > 0
+      ? `\n• ${currentBreakdown.stateCode} Permit = ₹${currentBreakdown.statePermit.toLocaleString('en-IN')}`
+      : '';
+    const gstLine = needGst && currentBreakdown.gstAmount > 0
+      ? `\n• GST (5%) = ₹${currentBreakdown.gstAmount.toLocaleString('en-IN')}`
+      : '';
 
-*Estimated Fare: ${fareFormatted}${gstText}*
-Includes: ${currentBreakdown.billedKm || 250} km, Fuel, Driver Bata${permitText}
-Toll & Parking: Extra as per actual slip
+    const usageSubNote = isRound
+      ? `\n(Pickup to drop + local visits)`
+      : `\n(Pickup to drop one-way)`;
 
-Over-limit rates:
-• Extra km: ₹${currentBreakdown.extraKmRate || 14} / km${nightStayLine}
+    const nightStayLine = isRound
+      ? `\n• Night drive (10 PM–6 AM): ₹350`
+      : '';
 
-To confirm: Call +91 89395 39211 (${advanceAmount} advance)`;
+    return `*KALIDASS TRAVELS*
+${currentBreakdown.routeSummary || 'Outstation Trip'} (${tripModeStr})
+Pickup: ${formattedPickupDate || 'As requested'}${returnLine}
+Vehicle: ${selectedVehicle.name} AC
+
+*BILLING (${billedKm} KM PACKAGE)*
+• ${billedKm} km × ₹${ratePerKm}/km = ₹${kmCost.toLocaleString('en-IN')}
+• Driver Bata (${isRound ? `${outstationDays} Day${outstationDays > 1 ? 's' : ''}` : '1 Day'}) = ₹${driverBata.toLocaleString('en-IN')}${permitLine}${gstLine}
+*Estimated Fare: ${fareFormatted} + Extra*${usageSubNote}
+
+*Extra (Pay as per slip):*
+• Toll & Parking
+
+*Over-limit (Only if > ${billedKm} km):*
+• Extra km: ₹${currentBreakdown.extraKmRate || ratePerKm} / km${nightStayLine}
+
+*To Confirm:*
+• Advance now: ${advanceAmount}
+• Balance to driver: ${balanceAmount} + Extra
+Call: +91 89395 39211
+Ref: ${cleanRef}`;
   };
 
   const handleCalculateClick = () => {

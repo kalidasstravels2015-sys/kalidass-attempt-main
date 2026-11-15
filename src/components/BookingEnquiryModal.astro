@@ -716,39 +716,26 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
         }
 
         var numFare = parseInt(String(quickBookingContext.price || '').replace(/[^0-9]/g, ''), 10) || 0;
-        var isTempoOrLarge = /tempo|urbania|12-seater|14-seater|17-seater|20-seater|26-seater|mini\s*bus/i.test((quickBookingContext.vehicleName || '') + ' ' + (quickBookingContext.packageTitle || '') + ' ' + (quickBookingContext.slug || '')) ||
-          parseInt((quickBookingContext.passengers || '').match(/\d+/)?.[0] || '0', 10) >= 12;
-        var advAmt = isTempoOrLarge ? 2000 : 500;
+        var advAmt = 500;
         var balText = numFare >= advAmt
-          ? '₹' + (numFare - advAmt).toLocaleString('en-IN') + ' (Pay driver after trip completion)'
-          : 'Remaining balance payable after trip completion';
+          ? '₹' + (numFare - advAmt).toLocaleString('en-IN') + ' + Extra'
+          : 'Balance payable to driver';
 
-        // Auto-compile 100% complete WhatsApp booking entry
+        // Auto-compile short-line WhatsApp booking entry
         var message = 
-`*Kalidass Travels — Confirmed Booking Request* 🚕
-━━━━━━━━━━━━━━━━━━━━
-📌 *Booking ID:* ${quickBookingContext.bookingId}
-👤 *Passenger:* ${name} (+91 ${rawPhone})
+`*KALIDASS TRAVELS*
+${quickBookingContext.packageTitle}
+Pickup: ${formattedPickupDate}, ${formattedPickupTime}${quickBookingContext.days > 1 ? '\nReturn: ' + formattedReturnDate + ' (' + quickBookingContext.days + ' Days)' : ''}
+Vehicle: ${quickBookingContext.vehicleName}
+Guest: ${name} (+91 ${rawPhone})
+Address: ${area}${flightNo ? ' (Flight: ' + flightNo + ')' : ''}
 
-📋 *PACKAGE & VEHICLE*
-• *Service:* ${quickBookingContext.packageTitle}
-• *Vehicle:* ${quickBookingContext.vehicleName}
-• *Party Size:* ${quickBookingContext.passengers || '4 Seats'}
-• *Trip Duration:* ${quickBookingContext.duration}
-• *Total Fare:* ${quickBookingContext.price} (Flat All-Inclusive)
-• *Advance to Confirm:* ₹${advAmt.toLocaleString('en-IN')} (100% Deducted from bill)
-• *Balance Due at Drop:* ${balText}
+*BILLING*
+• Package Fare = ${quickBookingContext.price}
+• Advance now = ₹500
+• Balance to driver = ${balText}
 
-📅 *SCHEDULE & ROUTE*
-• *Pickup Date:* ${formattedPickupDate}
-• *Pickup Time:* ${formattedPickupTime}${quickBookingContext.days > 1 ? '\n• *Return Date:* ' + formattedReturnDate + ' (' + quickBookingContext.days + ' Days)' : (quickBookingContext.days === 1 && !quickBookingContext.isAirport ? '\n• *Return Date:* Same Day (' + formattedPickupDate + ')' : '')}
-${routeDetails}
-
-━━━━━━━━━━━━━━━━━━━━
-✅ *Inclusions:* ${quickBookingContext.inclusions || 'Fuel, Highway Tolls, Parking, Driver Allowance & GST Invoice'}
-💰 *Payment Policy:* ₹${advAmt.toLocaleString('en-IN')} Advance to confirm & lock ${isTempoOrLarge ? 'tempo' : 'cab'} (deducted from bill). Balance payable to driver after trip completion.
-
-Please confirm driver assignment and cab availability.`;
+Ref: ${quickBookingContext.bookingId}`;
 
         // Background POST to Google Sheets Operations Desk & CSV
         try {
@@ -1018,14 +1005,12 @@ Please confirm driver assignment and cab availability.`;
       }
 
       function syncAdvanceDisplay() {
-        var isTempoOrLarge = /tempo|urbania|12-seater|14-seater|17-seater|20-seater|26-seater|mini\s*bus/i.test((quickBookingContext.vehicleName || '') + ' ' + (quickBookingContext.packageTitle || '') + ' ' + (quickBookingContext.slug || '')) ||
-          parseInt((quickBookingContext.passengers || '').match(/\d+/)?.[0] || '0', 10) >= 12;
-        var adv = isTempoOrLarge ? 2000 : 500;
+        var adv = 500;
         var advFormatted = '₹' + adv.toLocaleString('en-IN');
         var badge = document.getElementById('sheetAdvanceBadge');
         if (badge) badge.textContent = advFormatted + ' Advance to Lock';
         var policy = document.getElementById('sheetAdvancePolicyText');
-        if (policy) policy.textContent = advFormatted + ' Advance to Confirm ' + (isTempoOrLarge ? 'Tempo' : 'Cab') + ' (100% Deducted from Fare) • Balance After Trip';
+        if (policy) policy.textContent = advFormatted + ' Advance to Confirm Cab (100% Deducted from Fare) • Balance After Trip';
       }
       syncAdvanceDisplay();
 

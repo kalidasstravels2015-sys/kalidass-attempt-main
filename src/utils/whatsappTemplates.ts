@@ -4,6 +4,20 @@
  * 100% mirrors the exact real-world operations workflow.
  */
 
+const SHORT_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+/**
+ * Replaces numeric DD-MM-YYYY or DD/MM/YYYY dates with written month names (e.g. "01 Nov 2026")
+ * so WhatsApp never underlines dates as clickable phone numbers.
+ */
+export function sanitizeWhatsAppDate(str: string): string {
+  if (!str) return '';
+  return String(str).replace(/\b(0?[1-9]|[12]\d|3[01])[-/](0?[1-9]|1[0-2])[-/](20\d{2})\b/g, (_, d, m, y) => {
+    const mIdx = parseInt(m, 10) - 1;
+    return `${String(d).padStart(2, '0')} ${SHORT_MONTHS[mIdx] || m} ${y}`;
+  });
+}
+
 export function buildWhatsAppUrl(phone: string, text: string): string {
   const cleanPhone = String(phone || '').replace(/[^0-9]/g, '');
   const encodedText = encodeURIComponent(text.trim());
@@ -28,13 +42,14 @@ export function buildDriverDutySlipMessage(params: {
 }): string {
   const pickup = params.pickupAddress || 'Chennai';
   const drop = params.dropAddress ? `\n• Drop: ${params.dropAddress}` : '';
+  const safePickupTime = sanitizeWhatsAppDate(params.travelDateTime);
   const collectionStr = params.collectionAmount > 0
     ? `Collect ₹${params.collectionAmount.toLocaleString('en-IN')} + Tolls + Parking at the end of the trip.`
     : 'All Paid Online / ₹0 to collect (+ Tolls/Parking as per slip).';
 
   return `🚖 NEW DUTY - KALIDASS TRAVELS
-${params.bookingId ? `Ref: ${params.bookingId}\n` : ''}
-• Pickup Time: ${params.travelDateTime}
+
+• Pickup Time: ${safePickupTime}
 • Pickup: ${pickup}${drop}
 
 • Guest: ${params.guestName}
@@ -55,19 +70,19 @@ export function buildCustomerCabDetailsMessage(params: {
   vehiclePlate: string;
   collectionAmount: number;
 }): string {
-  const refLine = params.bookingId ? `Ref: ${params.bookingId}\n\n` : '\n';
   const balLine = params.collectionAmount > 0
-    ? `\n💵 Balance amount ₹${params.collectionAmount.toLocaleString('en-IN')} + actual tolls & parking can be paid directly to the driver at the end of the trip.\n`
-    : '\n💵 Total fare is pre-paid. Tolls & parking as per slip to driver at trip end.\n';
+    ? `\nBalance to driver: ₹${params.collectionAmount.toLocaleString('en-IN')} + Toll & Parking\n`
+    : '\nFare is pre-paid. Toll & Parking as per slip to driver.\n';
 
-  return `🚖 KALIDASS TRAVELS — CAB & DRIVER DETAILS
-${refLine}Driver Name: ${params.driverName}
-Phone No: ${params.driverPhone}
-Vehicle name: ${params.vehicleName}
+  return `*KALIDASS TRAVELS — CAB DETAILS*
+
+Driver: ${params.driverName}
+Phone: +91 ${String(params.driverPhone || '').replace(/^\+?91\s*/, '')}
+Vehicle: ${params.vehicleName}
 Vehicle No: ${params.vehiclePlate}
 ${balLine}
-Have a safe and pleasant journey!
-24/7 Helpline: +91 89395 39211`;
+Safe & happy journey!
+Helpline: +91 89395 39211`;
 }
 
 export function buildAdvancePaymentRequestMessage(params: {
@@ -77,20 +92,14 @@ export function buildAdvancePaymentRequestMessage(params: {
   advanceAmount?: number;
   balanceAmount?: number;
   upiId?: string;
-}): string {
+} = {}): string {
   const adv = params.advanceAmount || 500;
-  const bal = params.balanceAmount ? `\n(Balance amount ₹${params.balanceAmount.toLocaleString('en-IN')} + actual tolls & parking can be paid directly to the driver at the end of the trip).\n` : '';
-  const vehicle = params.vehicleCategory ? `the ${params.vehicleCategory}` : 'the cab';
-  const nameGreeting = params.guestName ? ` ${params.guestName}` : ' Sir';
-  const refLine = params.bookingId ? ` (Ref: ${params.bookingId})` : '';
+  return `Yes Sir/Mam, vehicle is available.
 
-  return `Great, thank you${nameGreeting}!
-
-Please transfer the ₹${adv} advance to reserve ${vehicle}${refLine}:
-UPI ID: ${params.upiId || 'saravn.appu@okhdfcbank'}
-Name: Saravanan K
-${bal}
-Please share the payment screenshot once transferred.`;
+To confirm booking:
+1. Share *Pickup Address*
+2. Pay *₹${adv} advance* via attached QR
+   UPI: ${params.upiId || 'saravn.appu@okhdfcbank'} (Saravanan K)`;
 }
 
 export function buildGoogleReviewMessage(guestName: string = 'Sir/Madam'): string {

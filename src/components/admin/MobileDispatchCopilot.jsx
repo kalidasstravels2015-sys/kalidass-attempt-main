@@ -573,16 +573,16 @@ export default function MobileDispatchCopilot({ onPushToDispatch = null } = {}) 
         {renderQuoteCard(
           parsed.option1,
           1,
-          'Compact WhatsApp Micro-Receipt',
-          'All-Inclusive / Permit Included',
+          'Short-Line WhatsApp Quote',
+          'Auditor Math + ₹500 Advance',
           'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
         )}
 
         {renderQuoteCard(
           parsed.option2,
           2,
-          'Detailed Itemized WhatsApp Quote',
-          'Base + Permit & Tolls Breakdown',
+          'Cab Available + ₹500 QR Reply',
+          '1-Click Customer Confirmation Reply',
           'bg-blue-500/20 text-blue-300 border border-blue-500/30'
         )}
 

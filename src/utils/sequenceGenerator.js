@@ -34,6 +34,29 @@ export function getFormattedDateCode(d = new Date()) {
   return `${dd}${mm}${yy}`;
 }
 
+const MONTH_SHORT_UPPER = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+
+/**
+ * Formats a quotation/booking ID into a WhatsApp-safe non-clickable Reference ID
+ * e.g. "Q-141126-4" -> "KT/14NOV/04" (prevents WhatsApp from turning numeric IDs into phone links)
+ */
+export function formatWhatsAppRefId(rawId = '') {
+  const str = String(rawId || '').trim();
+  const qMatch = str.match(/Q-(\d{2})(\d{2})\d{2}-(\d+)/i);
+  if (qMatch) {
+    const dd = qMatch[1];
+    const mmIdx = Math.max(0, Math.min(11, parseInt(qMatch[2], 10) - 1));
+    const seq = String(qMatch[3]).padStart(2, '0');
+    return `KT/${dd}${MONTH_SHORT_UPPER[mmIdx]}/${seq}`;
+  }
+  const now = new Date();
+  const dd = String(now.getDate()).padStart(2, '0');
+  const mmm = MONTH_SHORT_UPPER[now.getMonth()];
+  const numMatch = str.match(/(\d+)$/);
+  const seq = numMatch ? String(numMatch[1]).padStart(2, '0') : '01';
+  return `KT/${dd}${mmm}/${seq}`;
+}
+
 /**
  * Extract integer sequence number from string (e.g. Q-011126-101, #QT-101, #ENQ-101, #KT-BK-101, #KT-OUT-101, #CALC-101).
  * Filters out legacy random numbers (e.g. > maxThreshold).

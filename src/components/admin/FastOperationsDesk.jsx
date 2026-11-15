@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import MobileDispatchCopilot from './MobileDispatchCopilot.jsx';
 import tariffConfig from '../../data/tariff_config.json' with { type: 'json' };
 import driversRosterData from '../../data/drivers_roster.json' with { type: 'json' };
-import { getFormattedDateCode, getNextDriverRosterId } from '../../utils/sequenceGenerator.js';
+import { getFormattedDateCode, getNextDriverRosterId, formatWhatsAppRefId } from '../../utils/sequenceGenerator.js';
 import {
   VEHICLE_CATEGORIES,
   CHENNAI_ZONES,
@@ -496,7 +496,7 @@ export default function FastOperationsDesk() {
       kmRate,
       extraKmRate: v.extra_km_rate || kmRate,
       seats: v.seats || 'AC',
-      advanceAmt: (v.category === 'tempo' || v.category === 'coach') ? 2000 : 500,
+      advanceAmt: 500,
       tollEstimate,
       total,
       breakdownLines
@@ -504,60 +504,49 @@ export default function FastOperationsDesk() {
   }, [calcTripType, calcVehicle, calcLocalPkg, calcTourKey, calcDays, calcDistanceKm, calcTollParking, calcExtraHours, calcExtraKm, detectedStateCode]);
 
   useEffect(() => {
-    const quoteRef = `Q-${getFormattedDateCode()}-1`;
-    const greeting = calcCustName ? `Dear *${calcCustName.trim()}*,` : 'Hello!';
+    const cleanRef = formatWhatsAppRefId(`Q-${getFormattedDateCode()}-1`);
     let tripTitle = '';
-    if (calcTripType === 'outstation_round') tripTitle = `${calcDays}-Day Round Trip`;
+    if (calcTripType === 'outstation_round') tripTitle = `${calcDays} Day${calcDays > 1 ? 's' : ''}`;
     else if (calcTripType === 'outstation_oneway') tripTitle = 'One-Way Drop';
-    else if (calcTripType === 'local_package') tripTitle = `Local Chennai Rental (${calcLocalPkg.replace('_', ' ')})`;
+    else if (calcTripType === 'local_package') tripTitle = `Local (${calcLocalPkg.replace('_', ' ')})`;
     else if (calcTripType === 'tour_package') tripTitle = tariffConfig.tour_packages?.[calcTourKey]?.name || 'Temple Tour';
 
-    const permitSnippet = calculatedFare.statePermitAmt > 0
-      ? `, ${calculatedFare.stateCode} State Permit (₹${calculatedFare.statePermitAmt.toLocaleString('en-IN')})`
+    const permitLine = calculatedFare.statePermitAmt > 0
+      ? `\n• ${calculatedFare.stateCode} Permit = ₹${calculatedFare.statePermitAmt.toLocaleString('en-IN')}`
       : '';
+    const balanceAmt = Math.max(0, calculatedFare.total - calculatedFare.advanceAmt);
 
-    // Option 1: Compact WhatsApp Micro-Receipt
-    const opt1 = `*KALIDASS TRAVELS* (Ref: ${quoteRef})
-${calcRoute || 'Chennai Outstation'} • ${tripTitle}${calcTimingNote ? `\n${calcTimingNote}` : ''}
-${calcVehicle} (${calculatedFare.seats} AC)
+    // Option 1: Auditor Short-Line WhatsApp Quote
+    const opt1 = `*KALIDASS TRAVELS*
+${calcRoute || 'Chennai Outstation'} (${tripTitle})${calcTimingNote ? `\nPickup: ${calcTimingNote}` : ''}
+Vehicle: ${calcVehicle} AC
 
-*Estimated Fare: ₹${calculatedFare.total.toLocaleString('en-IN')}*
-Includes: ${calculatedFare.chargeableKm} km (₹${calculatedFare.base.toLocaleString('en-IN')}), Fuel, Driver Bata (₹${calculatedFare.driverBata.toLocaleString('en-IN')})${permitSnippet}
-Toll & Parking: Extra as per actual slip
+*BILLING (${calculatedFare.chargeableKm} KM PACKAGE)*
+• ${calculatedFare.chargeableKm} km × ₹${calculatedFare.kmRate}/km = ₹${calculatedFare.base.toLocaleString('en-IN')}
+• Driver Bata (${calcDays} Day${calcDays > 1 ? 's' : ''}) = ₹${calculatedFare.driverBata.toLocaleString('en-IN')}${permitLine}
+*Estimated Fare: ₹${calculatedFare.total.toLocaleString('en-IN')} + Extra*
+(Pickup to drop + local visits)
 
-Over-limit rates:
-• Extra km (beyond ${calculatedFare.chargeableKm} km): ₹${calculatedFare.extraKmRate} / km
-• Night Bata (after 10:00 PM): ₹350
+*Extra (Pay as per slip):*
+• Toll & Parking
 
-To confirm: Call +91 89395 39211 (₹${calculatedFare.advanceAmt.toLocaleString('en-IN')} advance)`;
+*Over-limit (Only if > ${calculatedFare.chargeableKm} km):*
+• Extra km: ₹${calculatedFare.extraKmRate} / km
+• Night drive (10 PM–6 AM): ₹350
 
-    // Option 2: Detailed Itemized WhatsApp Quote
-    const opt2 = `*KALIDASS TRAVELS — OFFICIAL QUOTATION* (Ref: ${quoteRef})
-${greeting} Greetings from Kalidass Travels, Chennai!
+*To Confirm:*
+• Advance now: ₹${calculatedFare.advanceAmt.toLocaleString('en-IN')}
+• Balance to driver: ₹${balanceAmt.toLocaleString('en-IN')} + Extra
+Call: +91 89395 39211
+Ref: ${cleanRef}`;
 
-🚖 *Vehicle:* ${calcVehicle} (${calculatedFare.seats} A/C)
-📍 *Route:* ${calcRoute || 'As requested'}
-⏰ *Timing:* ${tripTitle}${calcTimingNote ? ` (${calcTimingNote})` : ''}
+    // Option 2: Ultra-Short 'Cab Available + ₹500 QR' Reply
+    const opt2 = `Yes Sir/Mam, vehicle is available.
 
-💰 *Fare Breakdown:*
-• ${calculatedFare.chargeableKm} Kms (${calcDays}-Day Min) @ ₹${calculatedFare.kmRate}/km = ₹${calculatedFare.base.toLocaleString('en-IN')}
-• Driver Bata (${calcTimingNote || `${calcDays} day`}): ₹${calculatedFare.driverBata.toLocaleString('en-IN')}
--------------------------------------
-*BASE FARE: ₹${calculatedFare.baseTotal.toLocaleString('en-IN')}*${
-      calculatedFare.statePermitAmt > 0
-        ? `\n• ${calculatedFare.stateCode} State Border Permit (Actuals): ₹${calculatedFare.statePermitAmt.toLocaleString('en-IN')}\n-------------------------------------\n*TOTAL ESTIMATED FARE (WITH PERMIT): ₹${calculatedFare.total.toLocaleString('en-IN')}*`
-        : ''
-    }
-
-Over-limit rates:
-• Extra km (beyond ${calculatedFare.chargeableKm} km): ₹${calculatedFare.extraKmRate} / km
-• Late Night Bata (if trip extends past 10:00 PM): ₹350
-
-✅ *Included:* ${calcVehicle}, Fuel (up to ${calculatedFare.chargeableKm} km), Driver Bata
-❌ *Excluded:* Highway Toll, Checkpost & Parking (as per actuals)
-
-📞 *To Confirm:* Call/WhatsApp +91 89395 39211 (₹${calculatedFare.advanceAmt.toLocaleString('en-IN')} Advance)
-🌐 *Website:* https://kalidasstravels.in`;
+To confirm booking:
+1. Share *Pickup Address*
+2. Pay *₹${calculatedFare.advanceAmt.toLocaleString('en-IN')} advance* via attached QR
+   UPI: saravn.appu@okhdfcbank (Saravanan K)`;
 
     setCalcOption1Text(opt1);
     setCalcQuoteText(opt2);
