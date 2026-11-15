@@ -8,6 +8,7 @@ Disallow: /admin/
 Disallow: /ops/
 Disallow: /trip/
 Disallow: /api/admin/
+Disallow: /services/search
 
 # ─── OpenAI (ChatGPT, SearchGPT, GPT-4, GPT-5) ───
 User-agent: GPTBot
@@ -49,6 +50,7 @@ Disallow: /admin/
 Disallow: /ops/
 Disallow: /trip/
 Disallow: /api/admin/
+Disallow: /services/search
 
 User-agent: Googlebot-Image
 Allow: /

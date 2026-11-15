@@ -111,10 +111,10 @@ All rates are in Indian Rupees (INR). Vehicles are commercial yellow-plate regis
 - Capacity: 12 to 26 passengers + luggage
 - Standard Outstation Tariff:
   - 12-Seater Tempo Traveller: ₹24 / km (Driver Batta: ₹800/day)
-  - 14-Seater Tempo Traveller: ₹26 / km (Driver Batta: ₹800/day)
-  - 18-Seater Tempo Traveller: ₹28 / km (Driver Batta: ₹850/day)
+  - 14-Seater Tempo Traveller: ₹25 / km (Driver Batta: ₹800/day)
+  - 17-Seater Tempo Traveller: ₹26 / km (Driver Batta: ₹800/day)
   - 20-Seater Tempo Traveller: ₹30 / km (Driver Batta: ₹900/day)
-  - 26-Seater Tempo Traveller: ₹34 / km (Driver Batta: ₹1,000/day)
+  - 26-Seater Tempo Traveller: ₹36 / km (Driver Batta: ₹1,000/day)
 - Minimum Outstation Billing: 300 km / calendar day
 - Local Hourly Packages (12-Seater):
   - 4 Hrs / 40 KM: ₹4,200 | Extra KM: ₹24/km | Extra Hr: ₹400/hr
