@@ -152,6 +152,89 @@ export default defineConfig({
           server.middlewares.use((req, res, next) => {
             const url = req.url?.split('?')[0] || '';
 
+            if (url === '/api/whatsapp-webhook' || url === '/api/whatsapp-webhook/') {
+              if (req.method === 'GET') {
+                (async () => {
+                  try {
+                    const mod = await server.ssrLoadModule('/src/lib/whatsappCloudApi.ts');
+                    const params = new URL(req.url || '/', 'http://localhost').searchParams;
+                    const mode = params.get('hub.mode');
+                    const token = params.get('hub.verify_token');
+                    const challenge = params.get('hub.challenge');
+                    const { verifyToken } = mod.getWhatsAppConfig();
+
+                    if (mode === 'subscribe' && verifyToken && token === verifyToken && challenge) {
+                      res.statusCode = 200;
+                      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+                      res.end(challenge);
+                      return;
+                    }
+                    res.statusCode = 403;
+                    res.end('Forbidden');
+                  } catch (err) {
+                    res.statusCode = 500;
+                    res.end('Webhook error');
+                  }
+                })();
+                return;
+              }
+
+              if (req.method === 'POST') {
+                let rawBody = '';
+                req.on('data', (chunk) => { rawBody += chunk; });
+                req.on('end', async () => {
+                  try {
+                    const mod = await server.ssrLoadModule('/src/lib/whatsappCloudApi.ts');
+                    const sig = req.headers['x-hub-signature-256'];
+                    const sigStr = Array.isArray(sig) ? sig[0] : (sig ?? null);
+                    const { appSecret } = mod.getWhatsAppConfig();
+
+                    if (!mod.verifyMetaSignature(rawBody, sigStr, appSecret)) {
+                      res.statusCode = 401;
+                      res.end('Invalid signature');
+                      return;
+                    }
+
+                    const payload = JSON.parse(rawBody || '{}');
+                    if (payload?.object === 'whatsapp_business_account') {
+                      for (const entry of (payload.entry || [])) {
+                        for (const change of (entry.changes || [])) {
+                          for (const msg of (change?.value?.messages || [])) {
+                            const from = msg?.from;
+                            const messageId = msg?.id;
+                            if (!from || !messageId) continue;
+
+                            let text = '';
+                            if (msg.type === 'text') text = msg.text?.body?.trim() || '';
+                            else if (msg.type === 'interactive') {
+                              text = msg.interactive?.button_reply?.title || msg.interactive?.list_reply?.title || '';
+                            } else if (msg.type === 'button') {
+                              text = msg.button?.text || '';
+                            }
+
+                            if (text) {
+                              await mod.handleIncomingWhatsAppMessage({ messageId, from, text });
+                            } else {
+                              await mod.sendWhatsAppTextMessage(
+                                from,
+                                'Vanakkam! Please send your trip details as a text message (Pickup, Drop, Date & Vehicle), or call our 24/7 Dispatch Desk at +91 89395 39211.'
+                              );
+                            }
+                          }
+                        }
+                      }
+                    }
+                    res.statusCode = 200;
+                    res.end('EVENT_RECEIVED');
+                  } catch (err) {
+                    res.statusCode = 400;
+                    res.end('Bad Request');
+                  }
+                });
+                return;
+              }
+            }
+
             if (req.method === 'POST' && (url === '/api/ai-chat' || url === '/api/ai-chat/')) {
               let body = '';
               req.on('data', (chunk) => { body += chunk; });
