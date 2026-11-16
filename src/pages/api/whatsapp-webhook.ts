@@ -1,8 +1,7 @@
 import type { APIRoute } from 'astro';
 import {
+  dispatchWebhookPayload,
   getWhatsAppConfig,
-  handleIncomingWhatsAppMessage,
-  sendWhatsAppTextMessage,
   verifyMetaSignature,
 } from '../../lib/whatsappCloudApi';
 
@@ -53,45 +52,7 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response('Bad Request', { status: 400 });
   }
 
-  if (payload?.object !== 'whatsapp_business_account') {
-    return new Response('Ignored', { status: 200 });
-  }
-
-  const entries = Array.isArray(payload.entry) ? payload.entry : [];
-  for (const entry of entries) {
-    const changes = Array.isArray(entry.changes) ? entry.changes : [];
-    for (const change of changes) {
-      const messages = change?.value?.messages;
-      if (!Array.isArray(messages)) continue;
-
-      for (const msg of messages) {
-        const from = msg?.from;
-        const messageId = msg?.id;
-        if (!from || !messageId) continue;
-
-        let text = '';
-        if (msg.type === 'text') {
-          text = msg.text?.body?.trim() || '';
-        } else if (msg.type === 'interactive') {
-          text =
-            msg.interactive?.button_reply?.title ||
-            msg.interactive?.list_reply?.title ||
-            '';
-        } else if (msg.type === 'button') {
-          text = msg.button?.text || '';
-        }
-
-        if (text) {
-          await handleIncomingWhatsAppMessage({ messageId, from, text });
-        } else {
-          await sendWhatsAppTextMessage(
-            from,
-            'Vanakkam! Please send your trip details as a text message (Pickup, Drop, Date & Vehicle), or call our 24/7 Dispatch Desk at +91 89395 39211.'
-          );
-        }
-      }
-    }
-  }
+  await dispatchWebhookPayload(payload);
 
   return new Response('EVENT_RECEIVED', { status: 200 });
 };

@@ -196,34 +196,7 @@ export default defineConfig({
                     }
 
                     const payload = JSON.parse(rawBody || '{}');
-                    if (payload?.object === 'whatsapp_business_account') {
-                      for (const entry of (payload.entry || [])) {
-                        for (const change of (entry.changes || [])) {
-                          for (const msg of (change?.value?.messages || [])) {
-                            const from = msg?.from;
-                            const messageId = msg?.id;
-                            if (!from || !messageId) continue;
-
-                            let text = '';
-                            if (msg.type === 'text') text = msg.text?.body?.trim() || '';
-                            else if (msg.type === 'interactive') {
-                              text = msg.interactive?.button_reply?.title || msg.interactive?.list_reply?.title || '';
-                            } else if (msg.type === 'button') {
-                              text = msg.button?.text || '';
-                            }
-
-                            if (text) {
-                              await mod.handleIncomingWhatsAppMessage({ messageId, from, text });
-                            } else {
-                              await mod.sendWhatsAppTextMessage(
-                                from,
-                                'Vanakkam! Please send your trip details as a text message (Pickup, Drop, Date & Vehicle), or call our 24/7 Dispatch Desk at +91 89395 39211.'
-                              );
-                            }
-                          }
-                        }
-                      }
-                    }
+                    await mod.dispatchWebhookPayload(payload);
                     res.statusCode = 200;
                     res.end('EVENT_RECEIVED');
                   } catch (err) {
