@@ -409,7 +409,7 @@ async function generateBotAction(
   audioAttachment?: { base64: string; mimeType: string } | null
 ): Promise<{ action: BotAction; source: string }> {
   if (geminiApiKey) {
-    const candidateModels = ['gemini-2.5-flash', 'gemini-flash-latest'];
+    const candidateModels = ['gemini-3.8-flash', 'gemini-flash-latest'];
     for (const modelName of candidateModels) {
       try {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${geminiApiKey}`;
