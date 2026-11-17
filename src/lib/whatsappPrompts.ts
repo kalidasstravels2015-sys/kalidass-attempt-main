@@ -1,4 +1,4 @@
-import tariffConfig from '../data/tariff_config.json' with { type: 'json' };
+import tariffConfig from '../data/tariff_config.json';
 import { cleanWhatsAppText } from '../utils/cleanWhatsAppText';
 
 export interface InteractiveOption {
