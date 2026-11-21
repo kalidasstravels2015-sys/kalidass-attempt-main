@@ -1434,7 +1434,7 @@ Please save my quote & confirm live cab availability.` + omMapsBlock;
                   size="md"
                   data-direct-whatsapp="true"
                   className="flex-1 px-4 py-3 min-h-[46px] text-xs sm:text-sm font-bold shadow-m3-1 justify-center active:scale-[0.99]"
-                  text="Book on WhatsApp"
+                  text="Book Now"
                 />
 
                 <a

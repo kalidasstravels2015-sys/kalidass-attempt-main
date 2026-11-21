@@ -1,0 +1,26 @@
+Kalidass Travels — Booking, Advance & Payment Rules
+
+1. Standard Booking Confirmation Flow
+1. Inquiry: Collect Pickup Location, Drop Location, Date & Time, Trip Type (Local / Outstation / Airport), and Vehicle Type.
+2. Quotation: Share the exact fare calculation (Base km/package + Driver Bata + mention Tolls/Parking/State Permit at actuals).
+3. Advance Payment: Request a booking advance via UPI / QR Code to lock the vehicle and driver.
+4. Payment Confirmation: Once UPI screenshot or payment arrives, confirm receipt immediately (e.g., "Received Sir/Mam, your booking is confirmed.").
+5. Dispatch: Share Driver Name, Phone Number, and Vehicle Registration Number before pickup.
+6. Trip Completion & Balance: Customer pays the remaining balance directly via UPI or cash at trip end (or via corporate invoice for B2B clients).
+
+2. Billing & Extra Charges Policy
+- Garage-to-Garage / Point-to-Point: Clarify pickup & drop points upfront.
+- Extra Hours / Extra Km: Charged as per the Master Tariff table when local package limits are exceeded.
+- Tolls, Parking & Interstate Permits: Billed at actuals (FASTag / Parivahan receipts provided on request), unless booked under an all-inclusive tour package.
+- Outstation Minimum Km: Minimum 250 km/day for cars (300 km/day for Tempo Traveller / Urbania) on round trips.
+- Night Driving / Stay: Outstation cab driver night stay allowance is ₹450/night when applicable.
+
+3. Quick WhatsApp Reply Templates
+- Asking for Trip Details:
+  "Sure Sir/Mam! Please share your Pickup Location, Drop Location, Date & Time, and number of passengers so I can give you the exact best rate."
+- Requesting Advance:
+  "To confirm your cab booking, please pay the advance using our official UPI ID / QR code and share the screenshot here."
+- Confirming Advance Receipt:
+  "Received Sir/Mam! Thank you. Your booking is confirmed. We will share the driver and vehicle details before pickup."
+- Sharing Driver Details:
+  "Your cab is assigned! Driver: [Name], Phone: [Number], Vehicle: [Model & Reg No]. Have a safe journey with Kalidass Travels!"

@@ -93,7 +93,20 @@ function setupSheets() {
     driverSheet.setFrozenRows(1);
   }
 
-  return { enqSheet: enqSheet, bookSheet: bookSheet, driverSheet: driverSheet };
+  // 4. Active Drivers Roster Sheet (2-way sync with /admin/#drivers)
+  var activeDriversSheet = ss.getSheetByName('Drivers');
+  if (!activeDriversSheet) {
+    activeDriversSheet = ss.insertSheet('Drivers');
+    var adHeaders = [
+      'id', 'name', 'phone', 'category', 'vehicle', 'plate', 'zone', 'area',
+      'languages', 'boardType', 'carrier', 'partnerType', 'notes', 'createdAt', 'updatedAt'
+    ];
+    activeDriversSheet.appendRow(adHeaders);
+    activeDriversSheet.getRange(1, 1, 1, adHeaders.length).setFontWeight('bold').setBackground('#0b57d0').setFontColor('#ffffff');
+    activeDriversSheet.setFrozenRows(1);
+  }
+
+  return { enqSheet: enqSheet, bookSheet: bookSheet, driverSheet: driverSheet, activeDriversSheet: activeDriversSheet };
 }
 
 /**
@@ -262,13 +275,31 @@ function doGet(e) {
       }
     }
 
+    var activeDrivers = [];
+    var activeDriversSheet = sheets.activeDriversSheet;
+    if (activeDriversSheet && activeDriversSheet.getLastRow() > 1) {
+      var adRows = activeDriversSheet.getDataRange().getValues();
+      var adHeaders = adRows[0];
+      for (var adIdx = 1; adIdx < adRows.length; adIdx++) {
+        var adRow = adRows[adIdx];
+        if (!adRow[0] && !adRow[1]) continue;
+        var drvObj = {};
+        for (var adCol = 0; adCol < adHeaders.length; adCol++) {
+          drvObj[adHeaders[adCol]] = adRow[adCol];
+        }
+        activeDrivers.push(drvObj);
+      }
+    }
+
     var result = {
       success: true,
+      schemaVersion: 2,
       count: leads.length,
       leads: leads,
       calculatorQuotes: leads,
       bookings: bookings,
       driverLeads: driverLeads,
+      drivers: activeDrivers,
       syncedAt: new Date().toISOString()
     };
 
@@ -298,6 +329,48 @@ function doPost(e) {
 
     var sheets = setupSheets();
     var enqSheet = sheets.enqSheet;
+    var activeDriversSheet = sheets.activeDriversSheet;
+
+    // Active Drivers Roster CRUD (2-way sync with /admin/#drivers)
+    if (data.action === 'SAVE_DRIVER' && data.driver && activeDriversSheet) {
+      var drv = data.driver;
+      var adRows = activeDriversSheet.getDataRange().getValues();
+      var adHeaders = adRows[0];
+      var adIdIdx = adHeaders.indexOf('id');
+      if (adIdIdx < 0) adIdIdx = 0;
+      var foundDrvRow = -1;
+      for (var dr = 1; dr < adRows.length; dr++) {
+        if (String(adRows[dr][adIdIdx]) === String(drv.id)) {
+          foundDrvRow = dr + 1;
+          break;
+        }
+      }
+      var drvRowData = [];
+      for (var dc = 0; dc < adHeaders.length; dc++) {
+        var val = drv[adHeaders[dc]];
+        if (Array.isArray(val)) val = val.join(', ');
+        drvRowData.push(val !== undefined && val !== null ? val : '');
+      }
+      if (foundDrvRow > 0) {
+        activeDriversSheet.getRange(foundDrvRow, 1, 1, drvRowData.length).setValues([drvRowData]);
+      } else {
+        activeDriversSheet.appendRow(drvRowData);
+      }
+      return ContentService.createTextOutput(JSON.stringify({ success: true, id: drv.id })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    if (data.action === 'DELETE_DRIVER' && data.id && activeDriversSheet) {
+      var delRows = activeDriversSheet.getDataRange().getValues();
+      var delIdIdx = delRows[0].indexOf('id');
+      if (delIdIdx < 0) delIdIdx = 0;
+      for (var dli = 1; dli < delRows.length; dli++) {
+        if (String(delRows[dli][delIdIdx]) === String(data.id)) {
+          activeDriversSheet.deleteRow(dli + 1);
+          break;
+        }
+      }
+      return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(ContentService.MimeType.JSON);
+    }
     var bookSheet = sheets.bookSheet;
     var driverSheet = sheets.driverSheet;
 

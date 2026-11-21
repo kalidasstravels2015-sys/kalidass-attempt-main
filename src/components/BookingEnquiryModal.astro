@@ -287,10 +287,10 @@ import WhatsAppIcon from "./react/WhatsAppIcon.jsx";
           <button
             type="button"
             id="sheetSubmitBtn"
-            class="inline-flex items-center justify-center gap-2 py-2.5 px-6 rounded-m3-full bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-white font-bold text-xs sm:text-sm shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5 border border-[#20ba5a]/25 transition-all cursor-pointer select-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#25D366]"
+            class="inline-flex items-center justify-center gap-2 py-2.5 px-6 rounded-m3-full bg-[#25D366] hover:bg-[#20bd5a] active:bg-[#1da851] text-white font-bold text-xs sm:text-sm shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5 border border-[#20bd5a]/30 transition-all cursor-pointer select-none active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#25D366]"
           >
             <WhatsAppIcon variant="white" className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
-            <span>Book on WhatsApp</span>
+            <span>Book Now</span>
           </button>
         </div>
 
@@ -765,7 +765,7 @@ Ref: ${quickBookingContext.bookingId}`;
             }
           };
 
-          var targetSheetUrl = (window.localStorage && window.localStorage.getItem('kt_admin_google_sheet_webhook_v1')) || 'https://script.google.com/macros/s/AKfycbzpTM1pLXWLF-E80-HAXjj2ghAC_0tvFW1blTJC7rJojqUhTcKIwQz0t-NQMCScN2VA/exec';
+          var targetSheetUrl = (window.localStorage && window.localStorage.getItem('kt_admin_google_sheet_webhook_v1')) || 'https://script.google.com/macros/s/AKfycbzyfKwbaG83dNG3EAWf719-UWbWxWpEoBQoRoRbJsHjD-Bx8uKUfytP5Eb2RXaJfgDz/exec';
           if (navigator.sendBeacon) {
             navigator.sendBeacon(targetSheetUrl, new Blob([JSON.stringify(sheetPayload)], { type: 'text/plain;charset=utf-8' }));
           } else {

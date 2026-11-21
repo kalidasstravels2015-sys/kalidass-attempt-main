@@ -2,7 +2,7 @@
 // Centralized atomic daily quotation sequence coordinator for Kalidass Travels.
 // Synchronizes with Google Sheets Trips database and maintains edge cache.
 
-const DEFAULT_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzpTM1pLXWLF-E80-HAXjj2ghAC_0tvFW1blTJC7rJojqUhTcKIwQz0t-NQMCScN2VA/exec';
+const DEFAULT_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzyfKwbaG83dNG3EAWf719-UWbWxWpEoBQoRoRbJsHjD-Bx8uKUfytP5Eb2RXaJfgDz/exec';
 
 let edgeDateCode = '';
 let edgeSeq = 0;

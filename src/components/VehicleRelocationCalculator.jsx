@@ -718,7 +718,7 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
               }}
               variant="filled"
               size="md"
-              text="Book Relocation on WhatsApp"
+              text="Book Now"
             />
           </div>
         </div>

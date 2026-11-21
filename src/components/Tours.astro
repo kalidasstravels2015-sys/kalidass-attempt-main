@@ -5,11 +5,11 @@ import WhatsAppIcon from "./WhatsAppIcon.astro";
 import serviceDetails from "../data/serviceDetails.json";
 import { Car, Clock, CheckCircle2, ArrowRight } from "lucide-react";
 
-// 1. Temple Trips (Strictly religious/pilgrimage)
+// 1. Temple Trips (Strictly religious/pilgrimage — Sabarimala #1 for Mandala–Makaravilakku Season)
 const templeTripsSlugs = [
+  "sabarimala-trip",
   "tirupati-package",
   "kanchipuram-temple-trip",
-  "sabarimala-trip",
   "thiruvannamalai-girivalam-trip",
   "rameswaram-2-days",
   "tiruchendur-temple-tour",
@@ -41,7 +41,7 @@ const tourImageAlts: Record<string, string> = {
   "tiruchendur-temple-tour": "Tiruchendur Murugan seashore temple & Nava Tirupathi senior-friendly tour from Chennai",
   "navagraha-tour": "Complete Navagraha temple tour package Kumbakonam taxi",
   "chidambaram-temple-trip": "Chidambaram Nataraja Temple spiritual visit taxi service",
-  "sabarimala-trip": "Sabarimala Mandala Pooja pilgrimage taxi package from Chennai",
+  "sabarimala-trip": "Chennai to Sabarimalai (Sabarimala) Mandala Pooja pilgrimage cab and taxi package",
 };
 
 // Clarity & Conversion Metadata for Temple Trips
@@ -157,18 +157,18 @@ const templePackageMeta: Record<string, TourMeta> = {
     whatsappMsg: "Hi Kalidass Travels, I want to book the Chidambaram & Pichavaram Tour."
   },
   "sabarimala-trip": {
-    cleanTitle: "Chennai to Sabarimala Yatra",
+    cleanTitle: "Chennai to Sabarimala (Sabarimalai) Cab & Taxi",
     badge: "Mandala Season",
     durationLabel: "3 Days / 2 Nights (1,350 km)",
     startingPrice: "₹26,500",
     carType: "Ertiga",
     highlights: [
       "Satvik teetotaler driver & devotional audio system",
-      "Direct drop to Nilakkal / Pamba base camp",
-      "3 Days vehicle hire & fuel (Permits & Bata at actuals)"
+      "Direct drop to Nilakkal / Pamba + optional Erumeli stop",
+      "Kerala permit, fuel & 3-day driver bata included"
     ],
-    inclusionPill: "3-Day Base Fare • Tolls & Bata at Actuals",
-    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Sabarimala 3-Day Package."
+    inclusionPill: "3-Day Package • Kerala Permit & Bata Included",
+    whatsappMsg: "Hi Kalidass Travels, I want to book the Chennai to Sabarimalai (Sabarimala) 3-Day Cab Package."
   }
 };
 ---

@@ -2664,10 +2664,10 @@ Ref: ${cleanRef}`;
                   rel="noopener noreferrer nofollow"
                   data-direct-whatsapp="true"
                   onClick={() => handleWhatsAppBookClick(selectedVehicle.fullName, currentBreakdown.totalFare)}
-                  className="w-full min-h-[48px] sm:min-h-[50px] inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-m3-full bg-[#075E54] hover:bg-[#054c44] active:bg-[#043e37] text-white font-bold text-sm shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5 transition-all active:scale-[0.98] cursor-pointer border border-[#054c44]/30"
+                  className="w-full min-h-[48px] sm:min-h-[50px] inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-m3-full bg-[#25D366] hover:bg-[#20bd5a] active:bg-[#1da851] text-white font-bold text-sm shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5 transition-all active:scale-[0.98] cursor-pointer border border-[#20bd5a]/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#25D366]"
                 >
                   <WhatsAppIcon variant="white" className="w-5 h-5 shrink-0" />
-                  <span>Book {selectedVehicle.name} on WhatsApp</span>
+                  <span>Book Now</span>
                 </a>
 
                 <div className="text-center pt-0.5">
@@ -2911,10 +2911,10 @@ Ref: ${cleanRef}`;
                     rel="noopener noreferrer nofollow"
                     data-direct-whatsapp="true"
                     onClick={() => handleWhatsAppBookClick(selectedVehicle.fullName, currentBreakdown.totalFare)}
-                    className="flex-1 min-h-[48px] sm:min-h-[50px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-m3-full bg-[#075E54] hover:bg-[#054c44] active:bg-[#043e37] text-white font-bold text-xs sm:text-sm shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5 transition-all active:scale-[0.98] cursor-pointer border border-[#054c44]/30"
+                    className="flex-1 min-h-[48px] sm:min-h-[50px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-m3-full bg-[#25D366] hover:bg-[#20bd5a] active:bg-[#1da851] text-white font-bold text-xs sm:text-sm shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5 transition-all active:scale-[0.98] cursor-pointer border border-[#20bd5a]/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#25D366]"
                   >
                     <WhatsAppIcon variant="white" className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
-                    <span>Book {selectedVehicle.name} on WhatsApp</span>
+                    <span>Book Now</span>
                   </a>
 
                   <a

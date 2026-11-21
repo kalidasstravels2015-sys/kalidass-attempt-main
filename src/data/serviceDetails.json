@@ -457,33 +457,37 @@
   {
     "slug": "sabarimala-trip",
     "category": "Temple Tours",
-    "title": "Chennai to Sabarimala Pilgrim Cab & Van Package (Pamba / Nilakkal)",
+    "title": "Chennai to Sabarimala (Sabarimalai) Cab & Taxi Package (Pamba / Nilakkal)",
     "duration": "3, 4 or 5 Days (Nilakkal Base Camp or Extended Kerala Yatra)",
-    "overview": "3, 4 or 5 Days Chennai to Sabarimala round-trip pilgrim cab and van service to Nilakkal / Pamba. Realistic rates: ₹26,500 (3 Days Ertiga) and ₹29,500 (3 Days Innova). Includes 1,350 km coverage, Kerala interstate tourist permit, fuel, and 3-day driver allowance (highway tolls & Nilakkal parking payable at actuals). Handled by hill-specialist teetotaler drivers.",
+    "overview": "Book reliable Chennai to Sabarimalai (Sabarimala) round-trip cab, taxi, and Tempo Traveller packages (~680–720 km one-way, 13–15 hrs drive) to Nilakkal (Nilackal) / Pamba (Pampa). Realistic 3-day fares: ₹26,500 (Ertiga), ₹29,500 (Innova), ₹34,500 (Crysta), and ₹42,000 (12-Seater Tempo). Includes 1,350 km coverage, Kerala interstate tourist permit, fuel, optional Erumeli stopover, and 3-day driver allowance (highway tolls & Nilakkal parking at actuals). Handled by hill-specialist satvik teetotaler drivers.",
     "routePlan": [
       {
         "stop": "Chennai Departure",
-        "desc": "Early morning departure with satvik pilgrimage music."
+        "desc": "Early morning doorstep pickup across Chennai with devotional Ayyappa music and Irumudi luggage loading."
       },
       {
-        "stop": "Trichy / Samayapuram",
-        "desc": "Breakfast halt and optional darshan at Samayapuram Mariamman Temple."
+        "stop": "Trichy / Samayapuram (NH-38)",
+        "desc": "Pure vegetarian breakfast halt and optional darshan at Samayapuram Mariamman Temple."
       },
       {
-        "stop": "Dindigul / Kumily",
-        "desc": "Lunch halt and entry into scenic Western Ghats."
+        "stop": "Dindigul / Theni / Kumily",
+        "desc": "Lunch halt and Kerala border checkpost clearance before entering the Western Ghats."
       },
       {
-        "stop": "Nilakkal Base Camp",
-        "desc": "Arrival at Nilakkal vehicle base camp; board KSRTC electric shuttle to Pamba."
+        "stop": "Erumeli (Optional Petta Thullal)",
+        "desc": "Optional stop at Erumeli Sree Dharma Sastha Temple and Vavar Shrine for traditional Petta Thullal."
       },
       {
-        "stop": "Pamba & Sannidhanam",
-        "desc": "Holy dip in Pamba river, trek to Sannidhanam and 18-step darshan."
+        "stop": "Nilakkal (Nilackal) Base Camp",
+        "desc": "Arrival at Nilakkal official vehicle parking camp; board non-stop KSRTC electric shuttle to Pamba (Pampa)."
       },
       {
-        "stop": "Return Journey",
-        "desc": "Descent to Pamba, boarding vehicle at Nilakkal and safe return to Chennai."
+        "stop": "Pamba & Sannidhanam Darshan",
+        "desc": "Holy dip in Pamba river, traditional Neeli Mala trek to Sabarimalai Sannidhanam, and 18-step Pathinettampadi darshan."
+      },
+      {
+        "stop": "Return Journey to Chennai",
+        "desc": "Descent to Pamba, shuttle back to waiting cab at Nilakkal, and safe overnight/daytime return to Chennai."
       }
     ],
     "tariff": {
@@ -575,18 +579,42 @@
       },
       {
         "q": "Do you provide satvik vegetarian drivers for the Sabarimala yatra?",
-        "a": "Yes. For Sabarimala pilgrimages, we deploy satvik teetotaler drivers who respect temple rituals, know the ghat road hairpin bends between Kumily and Nilakkal, and maintain calm pacing.",
+        "a": "Yes. For Sabarimalai (Sabarimala) pilgrimages, we deploy satvik teetotaler drivers who respect temple rituals, know the ghat road hairpin bends between Kumily, Erumeli, and Nilakkal, and maintain calm pacing.",
         "question": "Do you provide satvik vegetarian drivers for the Sabarimala yatra?",
-        "answer": "Yes. For Sabarimala pilgrimages, we deploy satvik teetotaler drivers who respect temple rituals, know the ghat road hairpin bends between Kumily and Nilakkal, and maintain calm pacing."
+        "answer": "Yes. For Sabarimalai (Sabarimala) pilgrimages, we deploy satvik teetotaler drivers who respect temple rituals, know the ghat road hairpin bends between Kumily, Erumeli, and Nilakkal, and maintain calm pacing."
+      },
+      {
+        "q": "What is the distance and driving time from Chennai to Sabarimalai by car?",
+        "a": "The road distance from Chennai to Sabarimalai (Nilakkal base camp) is approximately 680 to 720 km one-way (around 1,350 to 1,450 km round trip), taking 13 to 15 hours via the NH-38 Trichy–Dindigul–Theni–Kumily–Vandiperiyar highway.",
+        "question": "What is the distance and driving time from Chennai to Sabarimalai by car?",
+        "answer": "The road distance from Chennai to Sabarimalai (Nilakkal base camp) is approximately 680 to 720 km one-way (around 1,350 to 1,450 km round trip), taking 13 to 15 hours via the NH-38 Trichy–Dindigul–Theni–Kumily–Vandiperiyar highway."
+      },
+      {
+        "q": "How to reach Sabarimalai from Chennai — is a private cab better than train or bus?",
+        "a": "There is no direct train or airport at Sabarimalai. Train passengers must alight at Chengannur (90 km away) or Kottayam (115 km away) and transfer by bus or local taxi. A dedicated Chennai to Sabarimalai cab or Tempo Traveller offers direct doorstep pickup, safe Irumudi storage, flexible Erumeli stopovers, and guaranteed return transport from Nilakkal.",
+        "question": "How to reach Sabarimalai from Chennai — is a private cab better than train or bus?",
+        "answer": "There is no direct train or airport at Sabarimalai. Train passengers must alight at Chengannur (90 km away) or Kottayam (115 km away) and transfer by bus or local taxi. A dedicated Chennai to Sabarimalai cab or Tempo Traveller offers direct doorstep pickup, safe Irumudi storage, flexible Erumeli stopovers, and guaranteed return transport from Nilakkal."
+      },
+      {
+        "q": "Can I book a Sedan or one-way drop taxi from Chennai to Sabarimalai?",
+        "a": "We strongly recommend 3-day round-trip SUVs (Ertiga, Innova, Crysta) or Tempo Travellers for Sabarimalai due to steep Western Ghats hairpins, high ground clearance, and dedicated waiting at Nilakkal. However, AC Sedan round-trip packages (for 3–4 devotees) and custom one-way drops to Nilakkal / Chengannur / Kottayam can be arranged on request via WhatsApp.",
+        "question": "Can I book a Sedan or one-way drop taxi from Chennai to Sabarimalai?",
+        "answer": "We strongly recommend 3-day round-trip SUVs (Ertiga, Innova, Crysta) or Tempo Travellers for Sabarimalai due to steep Western Ghats hairpins, high ground clearance, and dedicated waiting at Nilakkal. However, AC Sedan round-trip packages (for 3–4 devotees) and custom one-way drops to Nilakkal / Chengannur / Kottayam can be arranged on request via WhatsApp."
+      },
+      {
+        "q": "Can we include Erumeli Petta Thullal on our Chennai to Sabarimalai cab route?",
+        "a": "Yes. Our 3-day and 4-day Sabarimalai cab packages can easily include a stopover at Erumeli Sree Dharma Sastha Temple and Vavar Mosque before proceeding to Nilakkal base camp. Just mention Erumeli when booking.",
+        "question": "Can we include Erumeli Petta Thullal on our Chennai to Sabarimalai cab route?",
+        "answer": "Yes. Our 3-day and 4-day Sabarimalai cab packages can easily include a stopover at Erumeli Sree Dharma Sastha Temple and Vavar Mosque before proceeding to Nilakkal base camp. Just mention Erumeli when booking."
       }
     ],
-    "whatsappMsg": "Hi Kalidass Travels, I would like to book a Sabarimala Yatra Package.",
-    "metaTitle": "Chennai to Sabarimala Yatra Cab & Van Package | Kalidass Travels",
-    "metaDescription": "Book cabs, Innova Crysta & Tempo Travellers from Chennai to Sabarimala (Pamba). 3–5 Days with satvik ghat drivers. Transparent rates with Kerala permit & driver stay included.",
-    "keywords": "chennai to sabarimala cab, chennai to sabarimala taxi, chennai to sabarimala tempo traveller, sabarimala taxi package from chennai, ayyappa yatra cab booking, chennai to pamba cab hire",
+    "whatsappMsg": "Hi Kalidass Travels, I would like to book a Chennai to Sabarimalai (Sabarimala) Yatra Cab Package.",
+    "metaTitle": "Chennai to Sabarimala (Sabarimalai) Taxi & Cab Package | Kalidass",
+    "metaDescription": "Chennai to Sabarimalai (Sabarimala) cab & taxi packages (~700 km, 14 hrs). 3–5 Days Ertiga, Innova Crysta & Tempo to Nilakkal / Pamba with Kerala permit & satvik drivers.",
+    "keywords": "chennai to sabarimalai, chennai to sabarimala, chennai to sabarimalai taxi, chennai to sabarimalai cab, chennai to sabarimala cab, chennai to sabarimala taxi, chennai to sabarimala tempo traveller, sabarimalai taxi package from chennai, chennai to sabarimalai distance, chennai to pamba cab hire, chennai to nilakkal taxi, erumeli sabarimala cab",
     "serviceType": "TaxiService",
     "origin": "Chennai",
-    "destination": "Sabarimala (Pamba / Nilakkal)"
+    "destination": "Sabarimala / Sabarimalai (Pamba / Nilakkal)"
   },
   {
     "slug": "rameswaram-2-days",
@@ -3807,7 +3835,7 @@
       }
     ],
     "whatsappMsg": "Hi Kalidass Travels, I would like to book the Chennai to Tiruchendur Murugan Temple Cab Package.",
-    "metaTitle": "Chennai to Tiruchendur Murugan Temple Cab Package (2–4 Days) | Senior Friendly",
+    "metaTitle": "Chennai to Tiruchendur Murugan Temple Cab Package | Kalidass",
     "metaDescription": "Chennai to Tiruchendur Murugan Temple 2, 3 or 4 days cab package from ₹19,500. Senior-friendly flat seashore darshan, Nazhikinaru, Kulasekarapattinam & Nava Tirupathi.",
     "keywords": "chennai to tiruchendur cab package, tiruchendur temple tour from chennai, chennai to tiruchendur taxi fare, tiruchendur nava tirupathi tour package from chennai, senior citizen tiruchendur temple tour, chennai to tiruchendur innova crysta package, kulasekarapattinam vanathirupathi cab",
     "serviceType": "TaxiService",

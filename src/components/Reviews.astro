@@ -1,8 +1,11 @@
 ---
 import siteContent from '../data/siteContent.json';
+import externalProfiles from '../data/externalProfiles.json';
 import GoogleRatingBadge from './GoogleRatingBadge.astro';
-import { MapPin, ArrowRight } from "lucide-react";
+import { MapPin, ArrowRight, ExternalLink } from "lucide-react";
 const reviews = siteContent.reviews;
+const googleMapsUrl = externalProfiles.googleMaps?.url || "https://maps.app.goo.gl/i2LdJhWMi2ZgAiCa8";
+const tripadvisorBusinessUrl = externalProfiles.tripadvisor?.businessUrl?.trim() || "";
 ---
 
 <section id="reviews" class="offscreen-defer py-10 md:py-16 bg-m3-surface-container-low scroll-mt-24 sm:scroll-mt-28">
@@ -62,12 +65,18 @@ const reviews = siteContent.reviews;
       <span>👉 Swipe horizontally to read all customer reviews</span>
     </div>
 
-    <div class="text-center mt-6">
-      <a href="https://maps.app.goo.gl/i2LdJhWMi2ZgAiCa8" target="_blank" rel="noopener noreferrer nofollow" class="inline-flex items-center justify-center min-h-[44px] gap-2 px-4 py-2 text-m3-primary hover:text-m3-primary/80 font-bold text-xs sm:text-sm hover:underline transition group">
+    <div class="text-center mt-6 flex flex-wrap items-center justify-center gap-3">
+      <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer nofollow" class="inline-flex items-center justify-center min-h-[44px] gap-2 px-4 py-2 text-m3-primary hover:text-m3-primary/80 font-bold text-xs sm:text-sm hover:underline transition group">
         <MapPin className="w-4 h-4 text-m3-primary shrink-0" />
         <span>See More Reviews on Google Maps</span>
         <ArrowRight className="w-4 h-4 text-m3-primary transform group-hover:translate-x-1 transition-transform shrink-0" />
       </a>
+      {tripadvisorBusinessUrl && (
+        <a href={tripadvisorBusinessUrl} target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center min-h-[44px] gap-2 px-4 py-2 text-m3-on-surface hover:text-m3-primary font-bold text-xs sm:text-sm hover:underline transition group">
+          <span>Read Reviews on Tripadvisor</span>
+          <ExternalLink className="w-4 h-4 text-m3-primary shrink-0" />
+        </a>
+      )}
     </div>
   </div>
 </section>

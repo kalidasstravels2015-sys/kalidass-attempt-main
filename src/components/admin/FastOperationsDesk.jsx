@@ -1,11 +1,27 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import MobileDispatchCopilot from './MobileDispatchCopilot.jsx';
+import DirectBookingIntakeForm from './DirectBookingIntakeForm.jsx';
 import tariffConfig from '../../data/tariff_config.json' with { type: 'json' };
-import driversRosterData from '../../data/drivers_roster.json' with { type: 'json' };
 import { getFormattedDateCode, getNextDriverRosterId, formatWhatsAppRefId } from '../../utils/sequenceGenerator.js';
 import {
+  encodeTripForSheet,
+  decodeTripFromSheet,
+  getCleanNotes,
+  buildCompactTermsSummary,
+  formatShortDate,
+  computeTripDays,
+  isTripActiveOnDate,
+  buildWhatsAppUrl,
+  formatPhoneForDisplay,
+  buildCustomerBookingSummaryWA,
+  buildEnhancedDriverDutySlipWA,
+  buildFollowUpReminderWA
+} from '../../utils/adminBookingHelper.js';
+import {
   VEHICLE_CATEGORIES,
+  ALL_STANDARDIZED_MODELS,
   CHENNAI_ZONES,
+  ALL_CHENNAI_LOCALITIES,
   formatIndianPlateNumber,
   inferZoneFromAddress,
   normalizeVehicleCategory
@@ -14,53 +30,150 @@ import {
 // Configuration keys
 const PIN_KEY = 'kt_admin_pin_verified';
 const GOOGLE_SHEET_URL_KEY = 'kt_admin_google_sheet_webhook_v1';
-const LOCAL_BACKUP_KEY = 'kt_admin_offline_trips_backup_v1';
-const DRIVERS_STORAGE_KEY = 'kt_admin_drivers_roster_v1';
+const LOCAL_BACKUP_KEY = 'kt_admin_offline_trips_backup_v2';
+const DRIVERS_STORAGE_KEY = 'kt_admin_drivers_roster_v2';
+const LEGACY_STORAGE_KEYS = ['kt_admin_offline_trips_backup_v1', 'kt_admin_drivers_roster_v1'];
 const GOOGLE_REVIEW_URL = 'https://search.google.com/local/writereview?placeid=ChIJ8_e8xR1kUjoRh2-wL0T6j9M';
+const DRIVER_LANGUAGES = ['Tamil', 'English', 'Telugu', 'Kannada', 'Malayalam', 'Hindi'];
 
-// Sample Google Apps Script template for 1-click copy
-const APPS_SCRIPT_TEMPLATE = `// KALIDASS TRAVELS — GOOGLE SHEETS LIVE 2-WAY DATABASE
-// Paste this in Extensions -> Apps Script in your Google Sheet, then click 'Deploy -> New deployment -> Web app'
-// Set 'Execute as: Me' and 'Who has access: Anyone'. Copy the Web app URL and paste into your Dispatch Desk!
-
-function doGet(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var rows = sheet.getDataRange().getValues();
-  if (rows.length <= 1) {
-    return ContentService.createTextOutput(JSON.stringify({ trips: [] })).setMimeType(ContentService.MimeType.JSON);
+function normalizeLanguages(val, fallback = []) {
+  if (Array.isArray(val)) {
+    const cleaned = val.map(v => String(v || '').trim()).filter(Boolean);
+    return cleaned.length > 0 ? [...new Set(cleaned)] : fallback;
   }
+  if (typeof val === 'string' && val.trim()) {
+    const cleaned = val.split(',').map(v => v.trim()).filter(Boolean);
+    return cleaned.length > 0 ? [...new Set(cleaned)] : fallback;
+  }
+  return fallback;
+}
+
+// Unified Google Apps Script template (v3: 2-way sync for Trips with Multi-Day/Guest/Terms + Drivers)
+const APPS_SCRIPT_TEMPLATE = `// KALIDASS TRAVELS — GOOGLE SHEETS LIVE 2-WAY DATABASE (v3: TRIPS + MULTI-DAY/TERMS + DRIVERS)
+// Paste this in Extensions -> Apps Script in your Google Sheet, then click 'Deploy -> Manage deployments -> Edit -> New version -> Deploy'
+// (Or 'Deploy -> New deployment -> Web app', Execute as: Me, Who has access: Anyone).
+
+var TRIP_HEADERS = [
+  "id", "customerName", "phone", "tripCategory", "vehicle", "route",
+  "pickupDate", "pickupTime", "pickupLocation", "dropLocation",
+  "agreedRate", "advance", "balance", "driverName", "driverPhone",
+  "vehicleNumber", "manifestStatus", "notes", "createdAt", "updatedAt",
+  "returnDate", "days", "guestName", "guestPhone", "paxCount", "quoteRef", "billingTerms", "dayPlanJson"
+];
+
+var DRIVER_HEADERS = [
+  "id", "name", "phone", "category", "vehicle", "plate", "zone", "area",
+  "languages", "boardType", "carrier", "partnerType", "notes", "createdAt", "updatedAt"
+];
+
+function getOrCreateSheet(ss, name, headers) {
+  var sheet = ss.getSheetByName(name);
+  if (!sheet) {
+    sheet = ss.insertSheet(name);
+  }
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(headers);
+    sheet.getRange(1, 1, 1, headers.length).setFontWeight("bold");
+    sheet.setFrozenRows(1);
+  }
+  return sheet;
+}
+
+function readSheetObjects(sheet) {
+  var rows = sheet.getDataRange().getValues();
+  if (rows.length <= 1) return [];
   var headers = rows[0];
-  var trips = [];
+  var items = [];
   for (var i = 1; i < rows.length; i++) {
     var row = rows[i];
-    var trip = {};
+    if (!row[0] && !row[1]) continue;
+    var obj = {};
     for (var j = 0; j < headers.length; j++) {
-      trip[headers[j]] = row[j];
+      obj[headers[j]] = row[j];
     }
-    trips.push(trip);
+    items.push(obj);
   }
-  return ContentService.createTextOutput(JSON.stringify({ trips: trips })).setMimeType(ContentService.MimeType.JSON);
+  return items;
+}
+
+function upsertRowById(sheet, headers, record) {
+  var rows = sheet.getDataRange().getValues();
+  var sheetHeaders = rows.length > 0 ? rows[0] : headers;
+  var idIndex = sheetHeaders.indexOf("id");
+  if (idIndex < 0) idIndex = 0;
+
+  var foundRow = -1;
+  for (var i = 1; i < rows.length; i++) {
+    if (String(rows[i][idIndex]) === String(record.id)) {
+      foundRow = i + 1;
+      break;
+    }
+  }
+  var rowData = [];
+  for (var j = 0; j < sheetHeaders.length; j++) {
+    var key = sheetHeaders[j];
+    var val = record[key];
+    if (Array.isArray(val)) val = val.join(", ");
+    rowData.push(val !== undefined && val !== null ? val : "");
+  }
+  if (foundRow > 0) {
+    sheet.getRange(foundRow, 1, 1, rowData.length).setValues([rowData]);
+  } else {
+    sheet.appendRow(rowData);
+  }
+}
+
+function deleteRowById(sheet, id) {
+  var rows = sheet.getDataRange().getValues();
+  if (rows.length <= 1) return;
+  var idIndex = rows[0].indexOf("id");
+  if (idIndex < 0) idIndex = 0;
+  for (var i = 1; i < rows.length; i++) {
+    if (String(rows[i][idIndex]) === String(id)) {
+      sheet.deleteRow(i + 1);
+      break;
+    }
+  }
+}
+
+function doGet(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var tripsSheet = ss.getSheets()[0];
+  if (tripsSheet.getLastRow() === 0) {
+    tripsSheet.appendRow(TRIP_HEADERS);
+  }
+  var driversSheet = getOrCreateSheet(ss, "Drivers", DRIVER_HEADERS);
+  var trips = readSheetObjects(tripsSheet);
+  var drivers = readSheetObjects(driversSheet);
+  return ContentService.createTextOutput(JSON.stringify({
+    schemaVersion: 2,
+    trips: trips,
+    drivers: drivers
+  })).setMimeType(ContentService.MimeType.JSON);
 }
 
 function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow([
-      "id", "customerName", "phone", "tripCategory", "vehicle", "route",
-      "pickupDate", "pickupTime", "pickupLocation", "dropLocation",
-      "agreedRate", "advance", "balance", "driverName", "driverPhone",
-      "vehicleNumber", "manifestStatus", "notes", "createdAt", "updatedAt"
-    ]);
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var tripsSheet = ss.getSheets()[0];
+  if (tripsSheet.getLastRow() === 0) {
+    tripsSheet.appendRow(TRIP_HEADERS);
   }
-  
-  var contents = e.postData.contents;
+  var driversSheet = getOrCreateSheet(ss, "Drivers", DRIVER_HEADERS);
+
+  var contents = e.postData ? e.postData.contents : "{}";
   var data = JSON.parse(contents);
-  var rows = sheet.getDataRange().getValues();
-  var headers = rows[0];
-  var idIndex = headers.indexOf("id");
-  
-  // Parse incoming payload
+
+  // 1. Driver Roster Operations
+  if (data.action === "SAVE_DRIVER" && data.driver) {
+    upsertRowById(driversSheet, DRIVER_HEADERS, data.driver);
+    return ContentService.createTextOutput(JSON.stringify({ success: true, id: data.driver.id })).setMimeType(ContentService.MimeType.JSON);
+  }
+  if (data.action === "DELETE_DRIVER" && data.id) {
+    deleteRowById(driversSheet, data.id);
+    return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(ContentService.MimeType.JSON);
+  }
+
+  // 2. Trip / Booking Operations
   var trip = data.trip;
   if (!trip && (data.bookingId || data.type === 'booking')) {
     var rawPhone = data.phone || (data.guestNamePhone ? String(data.guestNamePhone).replace(/[^0-9]/g, '').slice(-10) : '');
@@ -89,36 +202,17 @@ function doPost(e) {
   }
 
   if (trip) {
-    var foundRow = -1;
-    for (var i = 1; i < rows.length; i++) {
-      if (String(rows[i][idIndex]) === String(trip.id)) {
-        foundRow = i + 1;
-        break;
-      }
-    }
-    var rowData = [];
-    for (var j = 0; j < headers.length; j++) {
-      rowData.push(trip[headers[j]] !== undefined ? trip[headers[j]] : "");
-    }
-    if (foundRow > 0) {
-      sheet.getRange(foundRow, 1, 1, rowData.length).setValues([rowData]);
-    } else {
-      sheet.appendRow(rowData);
-    }
+    upsertRowById(tripsSheet, TRIP_HEADERS, trip);
     return ContentService.createTextOutput(JSON.stringify({ success: true, id: trip.id })).setMimeType(ContentService.MimeType.JSON);
-  } else if (data.action === "DELETE_TRIP") {
-    for (var i = 1; i < rows.length; i++) {
-      if (String(rows[i][idIndex]) === String(data.id)) {
-        sheet.deleteRow(i + 1);
-        break;
-      }
-    }
+  }
+  if (data.action === "DELETE_TRIP" && data.id) {
+    deleteRowById(tripsSheet, data.id);
     return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(ContentService.MimeType.JSON);
   }
   return ContentService.createTextOutput(JSON.stringify({ error: "Unknown action" })).setMimeType(ContentService.MimeType.JSON);
 }`;
 
-const DEFAULT_GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzpTM1pLXWLF-E80-HAXjj2ghAC_0tvFW1blTJC7rJojqUhTcKIwQz0t-NQMCScN2VA/exec';
+const DEFAULT_GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzyfKwbaG83dNG3EAWf719-UWbWxWpEoBQoRoRbJsHjD-Bx8uKUfytP5Eb2RXaJfgDz/exec';
 
 export default function FastOperationsDesk() {
   // Security PIN (Owner PIN: 2015)
@@ -158,7 +252,7 @@ export default function FastOperationsDesk() {
   // Google Sheets Config
   const sanitizeSheetUrl = (rawUrl) => {
     const clean = (rawUrl || '').trim();
-    if (!clean || !clean.startsWith('https://script.google.com/') || clean.includes('AKfycbzjPh0a2ju')) {
+    if (!clean || !clean.startsWith('https://script.google.com/') || clean.includes('AKfycbzjPh0a2ju') || clean.includes('AKfycbzpTM1pLXWLF')) {
       return DEFAULT_GOOGLE_SHEET_URL;
     }
     return clean;
@@ -188,26 +282,34 @@ export default function FastOperationsDesk() {
         const raw = localStorage.getItem(LOCAL_BACKUP_KEY);
         if (raw) {
           const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed)) return parsed;
+          if (Array.isArray(parsed)) return parsed.map(decodeTripFromSheet);
         }
       } catch (_) {}
     }
     return [];
   });
 
-  // Drivers Fleet Roster State
+  // Drivers Fleet Roster State (clean slate — never seeds dummy drivers)
   const [drivers, setDrivers] = useState(() => {
     if (typeof window !== 'undefined' && window.localStorage) {
       try {
+        // Purge legacy v1 dummy-seeded cache once
+        LEGACY_STORAGE_KEYS.forEach((k) => localStorage.removeItem(k));
         const raw = localStorage.getItem(DRIVERS_STORAGE_KEY);
         if (raw) {
           const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          if (Array.isArray(parsed)) {
+            return parsed.map((d) => ({
+              ...d,
+              languages: normalizeLanguages(d.languages, ['Tamil'])
+            }));
+          }
         }
       } catch (_) {}
     }
-    return driversRosterData;
+    return [];
   });
+  const [driverSyncSupported, setDriverSyncSupported] = useState(null); // null | true | false
 
   // Search & Filter State in Dispatch Board
   const [searchQuery, setSearchQuery] = useState('');
@@ -264,7 +366,8 @@ export default function FastOperationsDesk() {
           return s;
         };
 
-        const formatted = data.trips.map(row => ({
+        const formatted = data.trips.map(row => decodeTripFromSheet({
+          ...row,
           id: row.id || `KT-BK-${Date.now()}`,
           customerName: row.customerName || 'Customer',
           phone: String(row.phone || ''),
@@ -287,8 +390,38 @@ export default function FastOperationsDesk() {
           updatedAt: row.updatedAt || new Date().toISOString()
         })).reverse();
         setTrips(formatted);
-        setSyncStatus('synced');
-        setSyncMessage(`Synced ${formatted.length} trips live from Google Sheet`);
+
+        // 2-way Drivers sync (when Apps Script v2 is deployed)
+        if (Array.isArray(data.drivers)) {
+          const formattedDrivers = data.drivers
+            .filter(row => row && (row.name || row.phone))
+            .map((row, idx) => ({
+              id: row.id || `DRV-${idx + 1}`,
+              name: String(row.name || '').trim(),
+              phone: String(row.phone || '').replace(/\D/g, '').slice(-10),
+              category: row.category || normalizeVehicleCategory(row.vehicle || ''),
+              vehicle: String(row.vehicle || '').trim() || 'Swift Dzire',
+              plate: row.plate ? formatIndianPlateNumber(String(row.plate)) : '',
+              zone: row.zone || inferZoneFromAddress(row.area || '') || 'South & OMR',
+              area: String(row.area || '').trim(),
+              languages: normalizeLanguages(row.languages, ['Tamil']),
+              boardType: row.boardType || 'Yellow Board',
+              carrier: row.carrier || 'With Carrier',
+              partnerType: row.partnerType || 'Owner-Driver',
+              notes: String(row.notes || '').trim(),
+              createdAt: row.createdAt || '',
+              updatedAt: row.updatedAt || ''
+            }))
+            .reverse();
+          setDrivers(formattedDrivers);
+          setDriverSyncSupported(true);
+          setSyncStatus('synced');
+          setSyncMessage(`Synced ${formatted.length} trips & ${formattedDrivers.length} drivers live from Google Sheet`);
+        } else {
+          setDriverSyncSupported(false);
+          setSyncStatus('synced');
+          setSyncMessage(`Synced ${formatted.length} trips from Google Sheet (update Apps Script in Settings to sync Drivers too)`);
+        }
       } else if (url !== DEFAULT_GOOGLE_SHEET_URL) {
         // Self-heal if pointed to a non-trips sheet (e.g. Driver Leads sheet)
         setGoogleSheetUrl(DEFAULT_GOOGLE_SHEET_URL);
@@ -340,10 +473,11 @@ export default function FastOperationsDesk() {
     if (!googleSheetUrl || !googleSheetUrl.startsWith('https://script.google.com/')) return;
     try {
       setSyncStatus('syncing');
+      const encodedTrip = encodeTripForSheet(trip);
       await fetch(googleSheetUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'SAVE_TRIP', trip })
+        body: JSON.stringify({ action: 'SAVE_TRIP', trip: encodedTrip })
       });
       setSyncStatus('synced');
       setSyncMessage('Saved live to Google Sheet');
@@ -370,18 +504,59 @@ export default function FastOperationsDesk() {
     }
   };
 
+  const saveDriverToGoogleSheet = async (driver) => {
+    if (!googleSheetUrl || !googleSheetUrl.startsWith('https://script.google.com/')) return;
+    try {
+      setSyncStatus('syncing');
+      await fetch(googleSheetUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'SAVE_DRIVER',
+          driver: {
+            ...driver,
+            languages: normalizeLanguages(driver.languages, ['Tamil']).join(', '),
+            updatedAt: new Date().toISOString()
+          }
+        })
+      });
+      setSyncStatus('synced');
+      setSyncMessage('Driver synced live to Google Sheet');
+    } catch (err) {
+      console.warn('Google Sheet driver save warning:', err);
+      setSyncStatus('error');
+      setSyncMessage('Driver saved locally; check Google Sheet connection');
+    }
+  };
+
+  const deleteDriverFromGoogleSheet = async (id) => {
+    if (!googleSheetUrl || !googleSheetUrl.startsWith('https://script.google.com/')) return;
+    try {
+      setSyncStatus('syncing');
+      await fetch(googleSheetUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'DELETE_DRIVER', id })
+      });
+      setSyncStatus('synced');
+      setSyncMessage('Driver removed from Google Sheet');
+    } catch (err) {
+      console.warn('Google Sheet driver delete warning:', err);
+    }
+  };
+
   // ==========================================
   // VIEW 1: RATE CALCULATOR & QUOTE GENERATOR
   // ==========================================
   const [calcTripType, setCalcTripType] = useState('outstation_round');
-  const [calcVehicle, setCalcVehicle] = useState('14-Seater Executive Force Tempo');
+  const [calcVehicle, setCalcVehicle] = useState('Swift Dzire');
   const [calcLocalPkg, setCalcLocalPkg] = useState('4hr_40km');
   const [calcTourKey, setCalcTourKey] = useState('tirupati-package');
-  const [calcRoute, setCalcRoute] = useState('Guindy to Kona Falls & Return');
-  const [calcTimingNote, setCalcTimingNote] = useState('6:00 AM Pickup – 10:00 PM Return');
+  const [calcRoute, setCalcRoute] = useState('');
+  const [calcTimingNote, setCalcTimingNote] = useState('');
   const [calcStateOverride, setCalcStateOverride] = useState('AUTO');
   const [calcDays, setCalcDays] = useState(1);
-  const [calcDistanceKm, setCalcDistanceKm] = useState(220);
+  const [calcDistanceKm, setCalcDistanceKm] = useState(250);
   const [calcTollParking, setCalcTollParking] = useState(0);
   const [calcExtraHours, setCalcExtraHours] = useState(0);
   const [calcExtraKm, setCalcExtraKm] = useState(0);
@@ -566,54 +741,97 @@ To confirm booking:
     showToast(`${label} copied to clipboard!`);
   };
 
-  const handleTransferToBooking = (overrideFare = null) => {
-    setFormCustName(calcCustName || '');
-    setFormCustPhone(calcCustPhone || '');
-    setFormVehicle(calcVehicle);
-    setFormAgreedRate(overrideFare !== null ? overrideFare : calculatedFare.total);
-    setFormAdvance(0);
-    setFormDropLocation(calcRoute);
-    if (calcTimingNote) setFormNotes(calcTimingNote);
-    if (calcTripType === 'outstation_round') setFormTripCategory('Outstation Round Trip');
-    else if (calcTripType === 'outstation_oneway') setFormTripCategory('Outstation One-Way Drop');
-    else if (calcTripType === 'local_package') setFormTripCategory('Local Chennai Rental');
-    else setFormTripCategory('Tour Package');
+  const [bookingPrefill, setBookingPrefill] = useState(null);
 
+  const handleTransferToBooking = (overrideFare = null) => {
+    let tripCat = 'Tour Package';
+    if (calcTripType === 'outstation_round') tripCat = 'Outstation Round Trip';
+    else if (calcTripType === 'outstation_oneway') tripCat = 'Outstation One-Way Drop';
+    else if (calcTripType === 'local_package') tripCat = 'Local Chennai Rental';
+
+    setBookingPrefill({
+      _nonce: Date.now(),
+      customerName: calcCustName || '',
+      phone: calcCustPhone || '',
+      vehicle: calcVehicle,
+      agreedRate: overrideFare !== null ? overrideFare : calculatedFare.total,
+      advance: 0,
+      dropLocation: calcRoute,
+      notes: calcTimingNote || '',
+      tripCategory: tripCat,
+      includedKm: calculatedFare.chargeableKm || 0,
+      statePermit: calculatedFare.statePermitAmt || 0,
+      driverBata: calculatedFare.driverBata || 0
+    });
     navigateTo('new-booking');
     showToast('Quote details populated into Booking Form!');
   };
 
   const handlePushFromCopilot = (meta) => {
     if (!meta) return;
-    if (meta.vehicle && tariffConfig.vehicles[meta.vehicle]) {
-      setFormVehicle(meta.vehicle);
-    }
-    if (meta.tripCategory) setFormTripCategory(meta.tripCategory);
-    if (meta.pickupLocation) setFormPickupLocation(meta.pickupLocation);
-    if (meta.dropLocation) setFormDropLocation(meta.dropLocation);
-    else if (meta.route) setFormDropLocation(meta.route);
-    if (meta.pickupTime) setFormPickupTime(meta.pickupTime);
-    if (meta.agreedRate) setFormAgreedRate(Number(meta.agreedRate));
-    if (meta.notes) setFormNotes(meta.notes);
-    setFormAdvance(0);
+    setBookingPrefill({
+      _nonce: Date.now(),
+      vehicle: meta.vehicle && tariffConfig.vehicles[meta.vehicle] ? meta.vehicle : 'Swift Dzire',
+      tripCategory: meta.tripCategory || 'Outstation Round Trip',
+      pickupLocation: meta.pickupLocation || '',
+      dropLocation: meta.dropLocation || meta.route || '',
+      pickupTime: meta.pickupTime || '',
+      agreedRate: meta.agreedRate ? Number(meta.agreedRate) : '',
+      notes: meta.notes || '',
+      advance: 0
+    });
     navigateTo('new-booking');
     showToast(`Pushed ${meta.vehicle || 'Trip'} (₹${Number(meta.agreedRate || 0).toLocaleString('en-IN')}) to Booking Form!`);
   };
 
   // ==========================================
-  // VIEW 2: DIRECT BOOKING INTAKE FORM
+  // VIEW 2: DIRECT BOOKING INTAKE FORM & EDIT
   // ==========================================
-  const [formCustName, setFormCustName] = useState('');
-  const [formCustPhone, setFormCustPhone] = useState('');
-  const [formVehicle, setFormVehicle] = useState('Swift Dzire');
-  const [formTripCategory, setFormTripCategory] = useState('Outstation Round Trip');
-  const [formPickupDate, setFormPickupDate] = useState(() => new Date().toISOString().split('T')[0]);
-  const [formPickupTime, setFormPickupTime] = useState('06:00 AM');
-  const [formPickupLocation, setFormPickupLocation] = useState('');
-  const [formDropLocation, setFormDropLocation] = useState('');
-  const [formAgreedRate, setFormAgreedRate] = useState(4000);
-  const [formAdvance, setFormAdvance] = useState(0);
-  const [formNotes, setFormNotes] = useState('');
+  // Edit Booking Modal State
+  const [editingTrip, setEditingTrip] = useState(null);
+
+  const handleOpenEditTrip = (trip) => {
+    setEditingTrip({
+      ...trip,
+      agreedRate: trip.agreedRate ?? '',
+      advance: trip.advance ?? 0,
+      notes: getCleanNotes(trip.notes)
+    });
+  };
+
+  const handleSaveEditedTrip = (e) => {
+    e.preventDefault();
+    if (!editingTrip) return;
+    const agreed = Number(editingTrip.agreedRate) || 0;
+    const adv = Number(editingTrip.advance) || 0;
+    const pickupLoc = String(editingTrip.pickupLocation || '').trim();
+    const dropLoc = String(editingTrip.dropLocation || '').trim();
+    const days = editingTrip.returnDate && editingTrip.pickupDate
+      ? computeTripDays(editingTrip.pickupDate, editingTrip.returnDate)
+      : (Number(editingTrip.days) || 1);
+    const updatedTrip = {
+      ...editingTrip,
+      customerName: String(editingTrip.customerName || '').trim() || 'Customer',
+      phone: String(editingTrip.phone || '').trim(),
+      guestName: String(editingTrip.guestName || '').trim(),
+      guestPhone: String(editingTrip.guestPhone || '').trim(),
+      paxCount: String(editingTrip.paxCount || '').trim(),
+      quoteRef: String(editingTrip.quoteRef || '').trim(),
+      pickupLocation: pickupLoc,
+      dropLocation: dropLoc,
+      days,
+      route: pickupLoc || dropLoc ? `${pickupLoc || 'Chennai'} -> ${dropLoc || 'Destination'}` : (editingTrip.route || ''),
+      agreedRate: agreed,
+      advance: adv,
+      balance: Math.max(0, agreed - adv),
+      notes: getCleanNotes(editingTrip.notes),
+      updatedAt: new Date().toISOString()
+    };
+    setTrips(prev => prev.map(t => (t.id === updatedTrip.id ? updatedTrip : t)));
+    saveTripToGoogleSheet(updatedTrip);
+    setEditingTrip(null);
+    showToast(`Booking #${updatedTrip.id} updated & synced!`);
+  };
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.sessionStorage) {
@@ -628,40 +846,14 @@ To confirm booking:
     }
   }, []);
 
-  const handleCreateBooking = (e) => {
-    e.preventDefault();
-    if (!formCustName.trim()) {
-      showToast('Please enter customer name', 'error');
-      return;
-    }
-    if (!formCustPhone.trim()) {
-      showToast('Please enter customer phone number', 'error');
-      return;
-    }
-
+  const handleSaveNewBooking = (payload, { sendWhatsApp = false } = {}) => {
     const newId = `KT-${getFormattedDateCode()}-${String(trips.length + 101).slice(-3)}`;
-    const agreed = Number(formAgreedRate) || 0;
-    const adv = Number(formAdvance) || 0;
-
     const newTrip = {
+      ...payload,
       id: newId,
-      customerName: formCustName.trim(),
-      phone: formCustPhone.trim(),
-      tripCategory: formTripCategory,
-      vehicle: formVehicle,
-      route: `${formPickupLocation || 'Chennai'} -> ${formDropLocation || 'Destination'}`,
-      pickupDate: formPickupDate,
-      pickupTime: formPickupTime,
-      pickupLocation: formPickupLocation.trim(),
-      dropLocation: formDropLocation.trim(),
-      agreedRate: agreed,
-      advance: adv,
-      balance: Math.max(0, agreed - adv),
       driverName: '',
       driverPhone: '',
       vehicleNumber: '',
-      manifestStatus: 'Unassigned',
-      notes: formNotes.trim(),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -669,17 +861,35 @@ To confirm booking:
     const updated = [newTrip, ...trips];
     setTrips(updated);
     saveTripToGoogleSheet(newTrip);
+    setBookingPrefill(null);
 
-    // Reset Form
-    setFormCustName('');
-    setFormCustPhone('');
-    setFormPickupLocation('');
-    setFormDropLocation('');
-    setFormNotes('');
-    setFormAdvance(0);
+    if (sendWhatsApp) {
+      const waText = buildCustomerBookingSummaryWA(newTrip);
+      window.open(buildWhatsAppUrl(newTrip.phone, waText), '_blank');
+    }
 
-    showToast(`Booking ${newId} created in Unassigned queue!`);
+    showToast(
+      newTrip.manifestStatus === 'Follow-up'
+        ? `Inquiry ${newId} saved to Pending / Follow-up!`
+        : `Booking ${newId} created in Unassigned queue!`
+    );
     navigateTo('dispatch');
+  };
+
+  const handlePromoteFollowUpToDispatch = (trip) => {
+    const updatedTrip = {
+      ...trip,
+      manifestStatus: 'Unassigned',
+      updatedAt: new Date().toISOString()
+    };
+    setTrips(prev => prev.map(t => (t.id === trip.id ? updatedTrip : t)));
+    saveTripToGoogleSheet(updatedTrip);
+    showToast(`Booking #${trip.id} confirmed & moved to 1. Unassigned!`);
+  };
+
+  const handleSendFollowUpWA = (trip) => {
+    const text = buildFollowUpReminderWA(trip);
+    window.open(buildWhatsAppUrl(trip.phone, text), '_blank');
   };
 
   // ==========================================
@@ -693,6 +903,7 @@ To confirm booking:
   const [assignCommissionPct, setAssignCommissionPct] = useState(10);
   const [assignVehicleFilter, setAssignVehicleFilter] = useState('ALL');
   const [assignZoneFilter, setAssignZoneFilter] = useState('ALL');
+  const [assignLanguageFilter, setAssignLanguageFilter] = useState('ALL');
   const [assignSearchQuery, setAssignSearchQuery] = useState('');
 
   // Compute commission & settlement math for a trip
@@ -729,6 +940,7 @@ To confirm booking:
     setAssignVehicleFilter(detectedVehCat || 'ALL');
     const detectedZone = inferZoneFromAddress(trip.pickupLocation || trip.route || '');
     setAssignZoneFilter(detectedZone || 'ALL');
+    setAssignLanguageFilter('ALL');
     setAssignSearchQuery('');
   };
 
@@ -809,57 +1021,29 @@ ${
 
   const handleSendDriverDutySlip = (trip) => {
     const math = computeSettlementMath(trip, trip.commissionPct ?? 10);
-    const settlementLine =
-      math.settlementDirection === 'DRIVER_PAYS_OFFICE'
-        ? `🔄 *Settlement:* Driver pays Office ₹${math.settlementAmount.toLocaleString('en-IN')} (Commission: ₹${math.commissionAmt.toLocaleString('en-IN')} | Net Driver Share: ₹${math.driverNetShare.toLocaleString('en-IN')})`
-        : `🔄 *Settlement:* Office pays Driver ₹${math.settlementAmount.toLocaleString('en-IN')} (Commission: ₹${math.commissionAmt.toLocaleString('en-IN')} | Net Driver Share: ₹${math.driverNetShare.toLocaleString('en-IN')})`;
-
-    const text = `*KALIDASS TRAVELS — OFFICIAL DRIVER DUTY SLIP*
-Trip ID: #${trip.id}
-
-👤 *Passenger:* ${trip.customerName}
-📞 *Passenger Mobile:* ${trip.phone}
-🚖 *Assigned Cab:* ${trip.vehicle} (${trip.vehicleNumber || 'Plate TBD'})
-📅 *Pickup Date/Time:* ${trip.pickupDate} @ ${trip.pickupTime}
-📍 *Pickup Location:* ${trip.pickupLocation || 'Chennai'}
-🏁 *Destination / Route:* ${trip.dropLocation || trip.route}
-
-💰 *Total Trip Fare:* ₹${Number(trip.agreedRate).toLocaleString('en-IN')}
-💵 *Advance Paid to Office:* ₹${Number(trip.advance).toLocaleString('en-IN')}
-📲 *Collect Balance from Guest:* ₹${Number(trip.balance).toLocaleString('en-IN')} (+ Extra KM / Tolls / Parking)
-${settlementLine}
-${trip.notes ? `📝 *Special Notes:* ${trip.notes}\n` : ''}
-_Report 15 mins early in clean uniform & AC cab._
-*Dispatch Desk:* +91 89395 39211 / +91 90923 03060`;
-
-    let phone = (trip.driverPhone || '').replace(/\D/g, '');
-    if (phone.length === 10) phone = '91' + phone;
-    const url = phone
-      ? `https://wa.me/${phone}?text=${encodeURIComponent(text)}`
-      : `https://wa.me/?text=${encodeURIComponent(text)}`;
-    window.open(url, '_blank');
+    const text = buildEnhancedDriverDutySlipWA(trip, math);
+    window.open(buildWhatsAppUrl(trip.driverPhone, text), '_blank');
   };
 
   const handleSendCustomerConfirmation = (trip) => {
+    const dateLine = trip.returnDate && trip.returnDate !== trip.pickupDate
+      ? `${formatShortDate(trip.pickupDate, true)} → ${formatShortDate(trip.returnDate, true)} (${trip.days || computeTripDays(trip.pickupDate, trip.returnDate)} Days) @ ${trip.pickupTime || 'ASAP'}`
+      : `${trip.pickupDate} @ ${trip.pickupTime}`;
+
     const text = `*KALIDASS TRAVELS — TRIP CONFIRMATION*
-Dear ${trip.customerName}, your booking is confirmed!
+Dear ${trip.customerName}, your booking is confirmed!${trip.quoteRef ? ` (Ref: ${trip.quoteRef})` : ''}
 
 🚖 *Vehicle:* ${trip.vehicle} (${trip.vehicleNumber || 'Confirmed'})
 👨‍✈️ *Driver Name:* ${trip.driverName || 'Designated Chauffeur'}
-📞 *Driver Contact:* ${trip.driverPhone ? `+91 ${trip.driverPhone}` : 'Will call you before arrival'}
-📅 *Pickup Date/Time:* ${trip.pickupDate} @ ${trip.pickupTime}
+📞 *Driver Contact:* ${trip.driverPhone ? formatPhoneForDisplay(trip.driverPhone) : 'Will call you before arrival'}
+📅 *Schedule:* ${dateLine}
 📍 *Pickup Address:* ${trip.pickupLocation || 'Chennai'}
 🏁 *Route:* ${trip.dropLocation || trip.route}
 
 Our chauffeur will report on time and assist with your luggage. Have a comfortable and pleasant journey!
 *For any queries/changes:* +91 89395 39211`;
 
-    let phone = (trip.phone || '').replace(/\D/g, '');
-    if (phone.length === 10) phone = '91' + phone;
-    const url = phone
-      ? `https://wa.me/${phone}?text=${encodeURIComponent(text)}`
-      : `https://wa.me/?text=${encodeURIComponent(text)}`;
-    window.open(url, '_blank');
+    window.open(buildWhatsAppUrl(trip.phone, text), '_blank');
   };
 
   const handleCompleteTrip = (trip) => {
@@ -888,12 +1072,7 @@ We look forward to serving you and your family again!
 Warm regards,
 *Kalidass Travels, Chennai*`;
 
-    let phone = (trip.phone || '').replace(/\D/g, '');
-    if (phone.length === 10) phone = '91' + phone;
-    const url = phone
-      ? `https://wa.me/${phone}?text=${encodeURIComponent(text)}`
-      : `https://wa.me/?text=${encodeURIComponent(text)}`;
-    window.open(url, '_blank');
+    window.open(buildWhatsAppUrl(trip.phone, text), '_blank');
   };
 
   const handleDeleteTrip = (id) => {
@@ -905,35 +1084,32 @@ Warm regards,
     }
   };
 
-  // Filtered Trips for Dispatch Desk
+  // Filtered Trips for Dispatch Desk (Multi-Day Aware)
   const filteredTrips = useMemo(() => {
     const now = new Date();
     const todayIso = now.toISOString().split('T')[0];
-    const todayDmy = `${String(now.getDate()).padStart(2, '0')}-${String(now.getMonth() + 1).padStart(2, '0')}-${now.getFullYear()}`;
 
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const tomorrowIso = tomorrow.toISOString().split('T')[0];
-    const tomorrowDmy = `${String(tomorrow.getDate()).padStart(2, '0')}-${String(tomorrow.getMonth() + 1).padStart(2, '0')}-${tomorrow.getFullYear()}`;
-
-    const matchesDate = (rawDate, isoTarget, dmyTarget) => {
-      const s = String(rawDate || '');
-      return s.includes(isoTarget) || s.includes(dmyTarget);
-    };
 
     return trips.filter(trip => {
-      if (dateFilter === 'today' && !matchesDate(trip.pickupDate, todayIso, todayDmy)) return false;
-      if (dateFilter === 'tomorrow' && !matchesDate(trip.pickupDate, tomorrowIso, tomorrowDmy)) return false;
+      if (dateFilter === 'today' && !isTripActiveOnDate(trip, todayIso)) return false;
+      if (dateFilter === 'tomorrow' && !isTripActiveOnDate(trip, tomorrowIso)) return false;
 
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
         const match =
           (trip.customerName || '').toLowerCase().includes(q) ||
+          (trip.guestName || '').toLowerCase().includes(q) ||
           (trip.phone || '').includes(q) ||
+          (trip.guestPhone || '').includes(q) ||
           (trip.id || '').toLowerCase().includes(q) ||
+          (trip.quoteRef || '').toLowerCase().includes(q) ||
           (trip.driverName || '').toLowerCase().includes(q) ||
           (trip.vehicleNumber || '').toLowerCase().includes(q) ||
           (trip.route || '').toLowerCase().includes(q) ||
+          (trip.hotelName || '').toLowerCase().includes(q) ||
           (trip.notes || '').toLowerCase().includes(q);
         if (!match) return false;
       }
@@ -941,6 +1117,7 @@ Warm regards,
     });
   }, [trips, searchQuery, dateFilter]);
 
+  const followUpTrips = useMemo(() => filteredTrips.filter(t => t.manifestStatus === 'Follow-up'), [filteredTrips]);
   const unassignedTrips = useMemo(() => filteredTrips.filter(t => !t.manifestStatus || t.manifestStatus === 'Unassigned' || t.manifestStatus === 'Need Driver'), [filteredTrips]);
   const activeTrips = useMemo(() => filteredTrips.filter(t => t.manifestStatus === 'Active'), [filteredTrips]);
   const settledTrips = useMemo(() => filteredTrips.filter(t => t.manifestStatus === 'Settled'), [filteredTrips]);
@@ -951,19 +1128,34 @@ Warm regards,
   const [newDriverName, setNewDriverName] = useState('');
   const [newDriverPhone, setNewDriverPhone] = useState('');
   const [newDriverCategory, setNewDriverCategory] = useState('Sedan');
-  const [newDriverVehicle, setNewDriverVehicle] = useState('Swift Dzire');
+  const [newDriverVehicle, setNewDriverVehicle] = useState('');
   const [newDriverPlate, setNewDriverPlate] = useState('');
-  const [newDriverZone, setNewDriverZone] = useState('South & OMR');
-  const [newDriverArea, setNewDriverArea] = useState('Medavakkam');
+  const [newDriverZone, setNewDriverZone] = useState('');
+  const [newDriverArea, setNewDriverArea] = useState('');
+  const [newDriverLanguages, setNewDriverLanguages] = useState(['Tamil']);
   const [newDriverBoard, setNewDriverBoard] = useState('Yellow Board');
   const [newDriverCarrier, setNewDriverCarrier] = useState('With Carrier');
   const [newDriverPartnerType, setNewDriverPartnerType] = useState('Owner-Driver');
+  const [newDriverNotes, setNewDriverNotes] = useState('');
+  const [showMoreDriverFields, setShowMoreDriverFields] = useState(false);
+
+  // Edit Driver Modal State
+  const [editingDriver, setEditingDriver] = useState(null);
 
   // Roster Filters
   const [rosterVehicleFilter, setRosterVehicleFilter] = useState('ALL');
   const [rosterZoneFilter, setRosterZoneFilter] = useState('ALL');
+  const [rosterLanguageFilter, setRosterLanguageFilter] = useState('ALL');
   const [rosterBoardFilter, setRosterBoardFilter] = useState('ALL');
   const [rosterSearchQuery, setRosterSearchQuery] = useState('');
+
+  const toggleLanguageInList = (list, lang) => {
+    const arr = normalizeLanguages(list, []);
+    if (arr.includes(lang)) {
+      return arr.length > 1 ? arr.filter(l => l !== lang) : arr;
+    }
+    return [...arr, lang];
+  };
 
   // Pending Applications from /attach-cab/
   const [pendingLeads, setPendingLeads] = useState([]);
@@ -1030,7 +1222,8 @@ Warm regards,
       });
     }
 
-    setDrivers(prev => [...newCards, ...prev]);
+    setDrivers(prev => [...newCards.map(c => ({ ...c, languages: normalizeLanguages(c.languages, ['Tamil']), createdAt: new Date().toISOString() })), ...prev]);
+    newCards.forEach(c => saveDriverToGoogleSheet({ ...c, languages: normalizeLanguages(c.languages, ['Tamil']), createdAt: new Date().toISOString() }));
 
     try {
       await fetch('/api/record-driver-lead', {
@@ -1111,41 +1304,101 @@ Warm regards,
       });
     }
 
-    setDrivers(prev => [...created, ...prev]);
+    const createdWithLangs = created.map(c => ({ ...c, languages: ['Tamil'], createdAt: new Date().toISOString() }));
+    setDrivers(prev => [...createdWithLangs, ...prev]);
+    createdWithLangs.forEach(c => saveDriverToGoogleSheet(c));
     setWaPasteText('');
     setWaPasteModalOpen(false);
-    showToast(`Imported ${created.length} card(s) for ${name} into Roster!`);
+    showToast(`Imported ${createdWithLangs.length} card(s) for ${name} into Roster!`);
   };
 
   const handleAddDriver = (e) => {
     e.preventDefault();
     if (!newDriverName.trim() || !newDriverPhone.trim()) {
-      showToast('Enter driver name and phone', 'error');
+      showToast('Enter driver name and 10-digit phone number', 'error');
       return;
     }
-    const formattedPlate =
-      newDriverPartnerType === 'Acting Driver'
-        ? 'ACTING-DRV'
-        : formatIndianPlateNumber(newDriverPlate) || 'Plate TBD';
+    const isActing = newDriverPartnerType === 'Acting Driver';
+    const rawVehicle = newDriverVehicle.trim();
+    const resolvedVehicle = isActing ? 'Acting Driver (Chauffeur)' : (rawVehicle || 'Swift Dzire');
+    const resolvedCategory = isActing ? 'Acting Driver' : (rawVehicle ? normalizeVehicleCategory(rawVehicle) : newDriverCategory);
+    const resolvedArea = newDriverArea.trim() || 'Chennai';
+    const resolvedZone = newDriverZone || inferZoneFromAddress(resolvedArea) || 'South & OMR';
+    const formattedPlate = isActing
+      ? 'ACTING-DRV'
+      : (newDriverPlate.trim() ? formatIndianPlateNumber(newDriverPlate) : '');
+    const resolvedLangs = normalizeLanguages(newDriverLanguages, ['Tamil']);
 
     const newEntry = {
       id: getNextDriverRosterId(drivers, 0),
       name: newDriverName.trim(),
       phone: newDriverPhone.replace(/\D/g, '').slice(-10),
-      category: newDriverPartnerType === 'Acting Driver' ? 'Acting Driver' : newDriverCategory,
-      vehicle: newDriverPartnerType === 'Acting Driver' ? 'Acting Driver (Chauffeur)' : newDriverVehicle,
+      category: resolvedCategory,
+      vehicle: resolvedVehicle,
       plate: formattedPlate,
-      zone: newDriverZone,
-      area: newDriverArea,
-      boardType: newDriverPartnerType === 'Acting Driver' ? 'Acting Driver' : newDriverBoard,
-      carrier: newDriverPartnerType === 'Acting Driver' ? 'No Carrier' : newDriverCarrier,
-      partnerType: newDriverPartnerType
+      zone: resolvedZone,
+      area: resolvedArea,
+      languages: resolvedLangs,
+      boardType: isActing ? 'Acting Driver' : newDriverBoard,
+      carrier: isActing ? 'No Carrier' : newDriverCarrier,
+      partnerType: newDriverPartnerType,
+      notes: newDriverNotes.trim(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     };
     setDrivers([newEntry, ...drivers]);
+    saveDriverToGoogleSheet(newEntry);
+
+    // Reset quick-add fields
     setNewDriverName('');
     setNewDriverPhone('');
+    setNewDriverVehicle('');
     setNewDriverPlate('');
-    showToast(`${newEntry.name} (${newEntry.vehicle} • ${newEntry.area}) added to roster!`);
+    setNewDriverArea('');
+    setNewDriverZone('');
+    setNewDriverLanguages(['Tamil']);
+    setNewDriverNotes('');
+    setShowMoreDriverFields(false);
+    showToast(`${newEntry.name} (${newEntry.vehicle}) added & synced!`);
+  };
+
+  const handleOpenEditDriver = (driver) => {
+    setEditingDriver({
+      ...driver,
+      languages: normalizeLanguages(driver.languages, ['Tamil']),
+      notes: driver.notes || ''
+    });
+  };
+
+  const handleSaveEditedDriver = (e) => {
+    e.preventDefault();
+    if (!editingDriver || !editingDriver.name?.trim() || !editingDriver.phone?.trim()) {
+      showToast('Driver name and phone are required', 'error');
+      return;
+    }
+    const isActing = editingDriver.partnerType === 'Acting Driver';
+    const rawVehicle = String(editingDriver.vehicle || '').trim();
+    const resolvedVehicle = isActing ? 'Acting Driver (Chauffeur)' : (rawVehicle || 'Swift Dzire');
+    const resolvedCategory = isActing ? 'Acting Driver' : normalizeVehicleCategory(resolvedVehicle);
+    const resolvedArea = String(editingDriver.area || '').trim() || 'Chennai';
+    const resolvedZone = editingDriver.zone || inferZoneFromAddress(resolvedArea) || 'South & OMR';
+    const updatedDriver = {
+      ...editingDriver,
+      name: editingDriver.name.trim(),
+      phone: String(editingDriver.phone).replace(/\D/g, '').slice(-10),
+      category: resolvedCategory,
+      vehicle: resolvedVehicle,
+      plate: isActing ? 'ACTING-DRV' : (editingDriver.plate ? formatIndianPlateNumber(editingDriver.plate) : ''),
+      area: resolvedArea,
+      zone: resolvedZone,
+      languages: normalizeLanguages(editingDriver.languages, ['Tamil']),
+      notes: String(editingDriver.notes || '').trim(),
+      updatedAt: new Date().toISOString()
+    };
+    setDrivers(prev => prev.map(d => (d.id === updatedDriver.id ? updatedDriver : d)));
+    saveDriverToGoogleSheet(updatedDriver);
+    setEditingDriver(null);
+    showToast(`Updated ${updatedDriver.name} & synced to Google Sheet!`);
   };
 
   // Filtered Roster Drivers for VIEW 4
@@ -1154,18 +1407,23 @@ Warm regards,
       const cat = d.category || normalizeVehicleCategory(d.vehicle);
       if (rosterVehicleFilter !== 'ALL' && cat !== rosterVehicleFilter) return false;
       if (rosterZoneFilter !== 'ALL' && (d.zone || 'South & OMR') !== rosterZoneFilter) return false;
+      if (rosterLanguageFilter !== 'ALL') {
+        const langs = normalizeLanguages(d.languages, []);
+        if (!langs.some(l => l.toLowerCase() === rosterLanguageFilter.toLowerCase())) return false;
+      }
       if (rosterBoardFilter === 'Yellow Board' && (d.boardType || 'Yellow Board') !== 'Yellow Board') return false;
       if (rosterBoardFilter === 'White Board' && d.boardType !== 'White Board') return false;
       if (rosterBoardFilter === 'With Carrier' && d.carrier !== 'With Carrier') return false;
 
       if (rosterSearchQuery.trim()) {
         const q = rosterSearchQuery.toLowerCase();
-        const hay = `${d.name || ''} ${d.phone || ''} ${d.vehicle || ''} ${d.plate || ''} ${d.zone || ''} ${d.area || ''} ${d.partnerType || ''}`.toLowerCase();
+        const langsStr = normalizeLanguages(d.languages, []).join(' ');
+        const hay = `${d.name || ''} ${d.phone || ''} ${d.vehicle || ''} ${d.plate || ''} ${d.zone || ''} ${d.area || ''} ${d.partnerType || ''} ${langsStr} ${d.notes || ''}`.toLowerCase();
         if (!hay.includes(q)) return false;
       }
       return true;
     });
-  }, [drivers, rosterVehicleFilter, rosterZoneFilter, rosterBoardFilter, rosterSearchQuery]);
+  }, [drivers, rosterVehicleFilter, rosterZoneFilter, rosterLanguageFilter, rosterBoardFilter, rosterSearchQuery]);
 
   // Filtered Roster Drivers inside Assign Modal
   const filteredAssignDrivers = useMemo(() => {
@@ -1173,19 +1431,25 @@ Warm regards,
       const cat = d.category || normalizeVehicleCategory(d.vehicle);
       if (assignVehicleFilter !== 'ALL' && cat !== assignVehicleFilter) return false;
       if (assignZoneFilter !== 'ALL' && (d.zone || 'South & OMR') !== assignZoneFilter) return false;
+      if (assignLanguageFilter !== 'ALL') {
+        const langs = normalizeLanguages(d.languages, []);
+        if (!langs.some(l => l.toLowerCase() === assignLanguageFilter.toLowerCase())) return false;
+      }
       if (assignSearchQuery.trim()) {
         const q = assignSearchQuery.toLowerCase();
-        const hay = `${d.name || ''} ${d.phone || ''} ${d.vehicle || ''} ${d.plate || ''} ${d.zone || ''} ${d.area || ''}`.toLowerCase();
+        const langsStr = normalizeLanguages(d.languages, []).join(' ');
+        const hay = `${d.name || ''} ${d.phone || ''} ${d.vehicle || ''} ${d.plate || ''} ${d.zone || ''} ${d.area || ''} ${langsStr}`.toLowerCase();
         if (!hay.includes(q)) return false;
       }
       return true;
     });
-  }, [drivers, assignVehicleFilter, assignZoneFilter, assignSearchQuery]);
+  }, [drivers, assignVehicleFilter, assignZoneFilter, assignLanguageFilter, assignSearchQuery]);
 
   const handleDeleteDriver = (id) => {
     if (window.confirm('Remove driver/vehicle from roster?')) {
       setDrivers(drivers.filter(d => d.id !== id));
-      showToast('Removed from roster.');
+      deleteDriverFromGoogleSheet(id);
+      showToast('Removed from roster & synced.');
     }
   };
 
@@ -1571,6 +1835,96 @@ Warm regards,
                 </div>
               </div>
 
+              {/* Pending / Follow-up Inquiries Queue (Unconfirmed Leads) */}
+              {followUpTrips.length > 0 && (
+                <div className="bg-amber-50/80 border border-amber-200 rounded-2xl p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="material-symbols-outlined text-amber-600 text-lg">schedule_send</span>
+                      <h3 className="font-bold text-sm text-amber-950">Pending / Follow-up Inquiries</h3>
+                      <span className="px-2 py-0.5 text-xs font-bold bg-amber-200 text-amber-900 rounded-full">
+                        {followUpTrips.length}
+                      </span>
+                    </div>
+                    <span className="text-[11px] font-semibold text-amber-800">
+                      Not yet confirmed — click Confirm once customer locks dates
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {followUpTrips.map(trip => (
+                      <div key={trip.id} className="bg-white border border-amber-200/80 rounded-xl p-3 space-y-2 shadow-2xs">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <h4 className="font-bold text-xs text-slate-900 truncate">{trip.customerName}</h4>
+                              {trip.quoteRef && (
+                                <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-mono text-[10px] font-bold">
+                                  {trip.quoteRef}
+                                </span>
+                              )}
+                            </div>
+                            <a href={`tel:${trip.phone}`} className="text-[11px] font-mono text-blue-600 hover:underline">
+                              {formatPhoneForDisplay(trip.phone)}
+                            </a>
+                          </div>
+                          {Number(trip.agreedRate) > 0 && (
+                            <span className="font-mono font-bold text-xs text-slate-900 shrink-0">
+                              ₹{Number(trip.agreedRate).toLocaleString('en-IN')}
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-[11px] text-slate-600 space-y-0.5">
+                          <div className="font-semibold text-slate-800 truncate">
+                            {trip.vehicle} • {trip.tripCategory}
+                          </div>
+                          <div className="truncate">
+                            {trip.pickupDate ? formatShortDate(trip.pickupDate, true) : 'Date TBD'} • {trip.dropLocation || trip.route}
+                          </div>
+                          {getCleanNotes(trip.notes) && (
+                            <div className="text-amber-700 italic truncate">{getCleanNotes(trip.notes)}</div>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-1.5 pt-1">
+                          <button
+                            type="button"
+                            onClick={() => handlePromoteFollowUpToDispatch(trip)}
+                            className="flex-1 py-1.5 px-2.5 bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold rounded-lg transition flex items-center justify-center gap-1"
+                          >
+                            <span className="material-symbols-outlined text-xs">check_circle</span>
+                            <span>Confirm → Dispatch</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleSendFollowUpWA(trip)}
+                            className="py-1.5 px-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-[11px] font-bold rounded-lg transition"
+                            title="Send WhatsApp Follow-up"
+                          >
+                            WA
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleOpenEditTrip(trip)}
+                            className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg"
+                            title="Edit inquiry"
+                          >
+                            <span className="material-symbols-outlined text-xs">edit</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteTrip(trip.id)}
+                            className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg"
+                            title="Delete inquiry"
+                          >
+                            <span className="material-symbols-outlined text-xs">delete</span>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* 3-Column Kanban Board */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* 1. UNASSIGNED */}
@@ -1593,26 +1947,47 @@ Warm regards,
                         <span>No unassigned trips pending</span>
                       </div>
                     ) : (
-                      unassignedTrips.map(trip => (
+                      unassignedTrips.map(trip => {
+                        const termsSummary = buildCompactTermsSummary(trip);
+                        const cleanNote = getCleanNotes(trip.notes);
+                        const isMultiDay = trip.returnDate && trip.returnDate !== trip.pickupDate;
+                        return (
                         <div
                           key={trip.id}
                           className="bg-white border border-amber-100 hover:border-amber-300 rounded-xl p-3.5 shadow-xs space-y-2.5 transition"
                         >
-                          <div className="flex items-start justify-between">
-                            <div>
-                              <div className="flex items-center gap-2">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-1.5 flex-wrap">
                                 <h4 className="font-bold text-sm text-slate-900">{trip.customerName}</h4>
                                 <span className="text-[10px] font-mono text-slate-400">#{trip.id}</span>
+                                {trip.quoteRef && (
+                                  <span className="px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-100 text-[10px] font-mono font-bold">
+                                    {trip.quoteRef}
+                                  </span>
+                                )}
                               </div>
-                              <a
-                                href={`tel:${trip.phone}`}
-                                className="text-xs text-blue-600 hover:underline font-mono inline-flex items-center gap-1 mt-0.5"
-                              >
-                                <span className="material-symbols-outlined text-xs">call</span>
-                                <span>{trip.phone}</span>
-                              </a>
+                              <div className="flex items-center gap-2 flex-wrap mt-0.5">
+                                <a
+                                  href={`tel:${trip.phone}`}
+                                  className="text-xs text-blue-600 hover:underline font-mono inline-flex items-center gap-1"
+                                >
+                                  <span className="material-symbols-outlined text-xs">call</span>
+                                  <span>{formatPhoneForDisplay(trip.phone)}</span>
+                                </a>
+                                {trip.paxCount && (
+                                  <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] font-bold">
+                                    {trip.paxCount}
+                                  </span>
+                                )}
+                              </div>
+                              {(trip.guestName || trip.guestPhone) && (
+                                <div className="text-[11px] text-indigo-700 font-medium mt-0.5">
+                                  Guest: {trip.guestName || 'Alt Contact'}{trip.guestPhone ? ` (${formatPhoneForDisplay(trip.guestPhone)})` : ''}
+                                </div>
+                              )}
                             </div>
-                            <div className="text-right">
+                            <div className="text-right shrink-0">
                               <span className="font-mono font-bold text-sm text-slate-900">
                                 ₹{Number(trip.agreedRate).toLocaleString('en-IN')}
                               </span>
@@ -1623,27 +1998,67 @@ Warm regards,
                           </div>
 
                           <div className="text-xs text-slate-600 space-y-1 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                            <div className="flex items-center gap-1.5 font-semibold text-slate-800">
-                              <span className="material-symbols-outlined text-xs text-blue-600">directions_car</span>
-                              <span>{trip.vehicle} • {trip.tripCategory}</span>
+                            <div className="flex items-center justify-between gap-1.5 font-semibold text-slate-800">
+                              <span className="flex items-center gap-1.5 truncate">
+                                <span className="material-symbols-outlined text-xs text-blue-600">directions_car</span>
+                                <span className="truncate">{trip.vehicle} • {trip.tripCategory}</span>
+                              </span>
+                              {isMultiDay && (
+                                <span className="px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-800 text-[10px] font-extrabold shrink-0">
+                                  {trip.days || computeTripDays(trip.pickupDate, trip.returnDate)}D
+                                </span>
+                              )}
                             </div>
                             <div className="flex items-center gap-1.5">
                               <span className="material-symbols-outlined text-xs text-slate-400">schedule</span>
-                              <span>{trip.pickupDate} @ {trip.pickupTime}</span>
+                              <span>
+                                {isMultiDay
+                                  ? `${formatShortDate(trip.pickupDate)} → ${formatShortDate(trip.returnDate)}`
+                                  : trip.pickupDate}
+                                {trip.pickupTime ? ` @ ${trip.pickupTime}` : ''}
+                              </span>
                             </div>
+                            {(trip.flightNumber || trip.terminal) && (
+                              <div className="flex items-center gap-1.5 text-[11px] text-sky-700 font-semibold">
+                                <span className="material-symbols-outlined text-xs">flight</span>
+                                <span>{[trip.airportDirection, trip.terminal, trip.flightNumber].filter(Boolean).join(' • ')}</span>
+                              </div>
+                            )}
                             <div className="flex items-start gap-1.5">
                               <span className="material-symbols-outlined text-xs text-slate-400 mt-0.5">location_on</span>
                               <span className="line-clamp-2">{trip.pickupLocation || 'Chennai'} → {trip.dropLocation || trip.route}</span>
                             </div>
-                            {trip.notes && (
+                            {Array.isArray(trip.dayPlan) && trip.dayPlan.length > 0 && (
+                              <div className="mt-1.5 pt-1.5 border-t border-slate-200/70 space-y-1">
+                                {trip.dayPlan.map((d, idx) => (
+                                  <div key={idx} className="text-[11px] flex items-start justify-between gap-2 text-slate-700">
+                                    <span className="truncate">
+                                      <strong className="text-indigo-700">D{d.day || idx + 1}</strong>
+                                      {d.date ? ` (${formatShortDate(d.date)})` : ''}: {d.pkg ? `[${d.pkg}] ` : ''}{d.duty}
+                                    </span>
+                                    {Number(d.rate) > 0 && (
+                                      <span className="font-mono font-bold text-slate-800 shrink-0">
+                                        ₹{Number(d.rate).toLocaleString('en-IN')}
+                                      </span>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                            {termsSummary && (
+                              <div className="text-[10px] font-semibold text-slate-600 bg-white border border-slate-200/80 rounded px-2 py-1 mt-1">
+                                {termsSummary}
+                              </div>
+                            )}
+                            {cleanNote && (
                               <div className="text-[11px] text-amber-700 italic border-t border-slate-200/60 pt-1 mt-1">
-                                Note: {trip.notes}
+                                Note: {cleanNote}
                               </div>
                             )}
                           </div>
 
                           {/* Actions */}
-                          <div className="flex items-center gap-2 pt-1">
+                          <div className="flex items-center gap-1.5 pt-1">
                             <button
                               type="button"
                               onClick={() => handleOpenAssignModal(trip)}
@@ -1651,6 +2066,15 @@ Warm regards,
                             >
                               <span className="material-symbols-outlined text-sm">badge</span>
                               <span>Assign Driver & Cab</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleOpenEditTrip(trip)}
+                              className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                              title="Edit booking"
+                            >
+                              <span className="material-symbols-outlined text-sm">edit</span>
                             </button>
 
                             <button
@@ -1663,7 +2087,8 @@ Warm regards,
                             </button>
                           </div>
                         </div>
-                      ))
+                        );
+                      })
                     )}
                   </div>
                 </div>
@@ -1723,12 +2148,32 @@ Warm regards,
                             </div>
                             <div className="text-slate-600 flex items-center gap-1.5">
                               <span className="material-symbols-outlined text-xs text-slate-400">schedule</span>
-                              <span>{trip.pickupDate} @ {trip.pickupTime}</span>
+                              <span>
+                                {trip.returnDate && trip.returnDate !== trip.pickupDate
+                                  ? `${formatShortDate(trip.pickupDate)} → ${formatShortDate(trip.returnDate)} (${trip.days || computeTripDays(trip.pickupDate, trip.returnDate)}D)`
+                                  : trip.pickupDate}
+                                {trip.pickupTime ? ` @ ${trip.pickupTime}` : ''}
+                              </span>
                             </div>
+                            {(trip.guestName || trip.guestPhone) && (
+                              <div className="text-[11px] text-indigo-700 font-medium">
+                                Guest: {trip.guestName || 'Alt Contact'}{trip.guestPhone ? ` (${formatPhoneForDisplay(trip.guestPhone)})` : ''}{trip.paxCount ? ` • ${trip.paxCount}` : ''}
+                              </div>
+                            )}
                             <div className="text-slate-600 flex items-start gap-1.5">
                               <span className="material-symbols-outlined text-xs text-slate-400 mt-0.5">location_on</span>
                               <span className="line-clamp-2">{trip.route}</span>
                             </div>
+                            {Array.isArray(trip.dayPlan) && trip.dayPlan.length > 0 && (
+                              <div className="pt-1 border-t border-slate-200/60 space-y-0.5 text-[11px] text-slate-700">
+                                {trip.dayPlan.map((d, idx) => (
+                                  <div key={idx} className="truncate">
+                                    <strong className="text-indigo-700">D{d.day || idx + 1}</strong>
+                                    {d.date ? ` (${formatShortDate(d.date)})` : ''}: {d.duty}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
                             {(() => {
                               const math = computeSettlementMath(trip, trip.commissionPct ?? 10);
                               return (
@@ -1770,14 +2215,22 @@ Warm regards,
                             </button>
                           </div>
 
-                          <div className="pt-1">
+                          <div className="flex items-center gap-1.5 pt-1">
                             <button
                               type="button"
                               onClick={() => handleCompleteTrip(trip)}
-                              className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg transition flex items-center justify-center gap-1 shadow-xs"
+                              className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg transition flex items-center justify-center gap-1 shadow-xs"
                             >
                               <span className="material-symbols-outlined text-sm">done_all</span>
-                              <span>Mark Trip Completed & Settle</span>
+                              <span>Mark Completed & Settle</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleOpenEditTrip(trip)}
+                              className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                              title="Edit booking"
+                            >
+                              <span className="material-symbols-outlined text-sm">edit</span>
                             </button>
                           </div>
                         </div>
@@ -2182,191 +2635,16 @@ Warm regards,
           )}
 
           {/* ========================================================= */}
-          {/* VIEW 3: NEW BOOKING ENTRY FORM                            */}
+          {/* VIEW 3: NEW BOOKING ENTRY FORM (TYPE-ADAPTIVE + WA PASTE) */}
           {/* ========================================================= */}
           {activeNav === 'new-booking' && (
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 animate-fadeIn max-w-4xl mx-auto space-y-6">
-              <div className="border-b border-slate-100 pb-4">
-                <h3 className="text-lg font-bold text-slate-900">Direct Booking Intake Form</h3>
-                <p className="text-xs text-slate-500">Record a confirmed trip into operations and sync directly to Google Sheets.</p>
-              </div>
-
-              <form onSubmit={handleCreateBooking} className="space-y-6">
-                <div>
-                  <h4 className="text-xs font-bold uppercase text-slate-400 tracking-wider mb-3">1. Passenger Information</h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                        Customer Full Name <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={formCustName}
-                        onChange={(e) => setFormCustName(e.target.value)}
-                        placeholder="e.g. Aarti Venkatesh"
-                        className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                        Mobile Number / WhatsApp <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="tel"
-                        required
-                        value={formCustPhone}
-                        onChange={(e) => setFormCustPhone(e.target.value)}
-                        placeholder="e.g. 9840100000"
-                        className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="text-xs font-bold uppercase text-slate-400 tracking-wider mb-3">2. Vehicle & Itinerary</h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1.5">Vehicle Type</label>
-                      <select
-                        value={formVehicle}
-                        onChange={(e) => setFormVehicle(e.target.value)}
-                        className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
-                      >
-                        {Object.keys(tariffConfig.vehicles).map(vKey => (
-                          <option key={vKey} value={vKey}>{vKey}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1.5">Trip Category</label>
-                      <select
-                        value={formTripCategory}
-                        onChange={(e) => setFormTripCategory(e.target.value)}
-                        className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
-                      >
-                        <option value="Outstation Round Trip">Outstation Round Trip</option>
-                        <option value="Outstation One-Way Drop">Outstation One-Way Drop</option>
-                        <option value="Local Chennai Rental">Local Chennai Rental</option>
-                        <option value="Airport Transfer">Airport Transfer</option>
-                        <option value="Tour Package">Tour Package</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1.5">Pickup Date</label>
-                      <input
-                        type="date"
-                        value={formPickupDate}
-                        onChange={(e) => setFormPickupDate(e.target.value)}
-                        className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1.5">Pickup Time</label>
-                      <input
-                        type="text"
-                        value={formPickupTime}
-                        onChange={(e) => setFormPickupTime(e.target.value)}
-                        placeholder="e.g. 06:00 AM"
-                        className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1.5">Pickup Address / Land Mark</label>
-                      <input
-                        type="text"
-                        value={formPickupLocation}
-                        onChange={(e) => setFormPickupLocation(e.target.value)}
-                        placeholder="e.g. Airport T2 Arrival / Anna Nagar East"
-                        className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1.5">Destination / Route</label>
-                      <input
-                        type="text"
-                        value={formDropLocation}
-                        onChange={(e) => setFormDropLocation(e.target.value)}
-                        placeholder="e.g. Green Park Hotel / Pondicherry"
-                        className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="text-xs font-bold uppercase text-slate-400 tracking-wider mb-3">3. Fare & Financials</h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1.5">Agreed Rate (₹)</label>
-                      <input
-                        type="number"
-                        required
-                        value={formAgreedRate}
-                        onChange={(e) => setFormAgreedRate(Number(e.target.value) || 0)}
-                        className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-mono font-bold focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1.5">Advance Received (₹)</label>
-                      <input
-                        type="number"
-                        value={formAdvance}
-                        onChange={(e) => setFormAdvance(Number(e.target.value) || 0)}
-                        className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-mono font-medium focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1.5">Balance To Collect (₹)</label>
-                      <div className="w-full text-sm bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-800 font-mono font-bold">
-                        ₹{Math.max(0, (Number(formAgreedRate) || 0) - (Number(formAdvance) || 0)).toLocaleString('en-IN')}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1.5">Special Instructions / Passenger Notes</label>
-                  <input
-                    type="text"
-                    value={formNotes}
-                    onChange={(e) => setFormNotes(e.target.value)}
-                    placeholder="e.g. 6 adults + 2 kids, flight 6E-243 arriving 8:05am"
-                    className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
-                  />
-                </div>
-
-                <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
-                  <button
-                    type="button"
-                    onClick={() => navigateTo('dispatch')}
-                    className="py-2.5 px-5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="py-3 px-8 bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm rounded-xl transition shadow-lg shadow-blue-600/30 flex items-center gap-2"
-                  >
-                    <span className="material-symbols-outlined text-lg">check</span>
-                    <span>Save & Add to Dispatch Desk</span>
-                  </button>
-                </div>
-              </form>
-            </div>
+            <DirectBookingIntakeForm
+              tariffConfig={tariffConfig}
+              prefill={bookingPrefill}
+              onSaveBooking={handleSaveNewBooking}
+              onCancel={() => navigateTo('dispatch')}
+              showToast={showToast}
+            />
           )}
 
           {/* ========================================================= */}
@@ -2513,12 +2791,39 @@ Warm regards,
                 </div>
               )}
 
-              {/* Add Standardized Vehicle / Driver Card */}
+              {/* Cloud Driver Sync Upgrade Notice (shown only if connected Apps Script is older v1) */}
+              {driverSyncSupported === false && (
+                <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                  <div className="flex items-start gap-2.5 text-blue-950">
+                    <span className="material-symbols-outlined text-blue-600 text-lg shrink-0 mt-0.5">cloud_sync</span>
+                    <div>
+                      <strong className="block">Enable 2-Way Google Sheet Sync for Drivers</strong>
+                      <span className="text-blue-800">
+                        Your current Google Sheet script only syncs Trips. Copy &amp; update the new script in Settings once so Drivers sync across phone &amp; PC automatically.
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => navigateTo('settings')}
+                    className="px-3.5 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shrink-0 transition"
+                  >
+                    Open Sheet Settings
+                  </button>
+                </div>
+              )}
+
+              {/* Fast Quick-Add Vehicle / Driver Card */}
               <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <h4 className="text-xs font-bold uppercase text-slate-500 tracking-wider">
-                    Add Standardized Vehicle / Chauffeur to Roster
-                  </h4>
+                  <div>
+                    <h4 className="text-xs font-bold uppercase text-slate-700 tracking-wider">
+                      Quick Add Driver / Vehicle
+                    </h4>
+                    <p className="text-[11px] text-slate-500">
+                      Just enter Name, Phone, Vehicle, Area &amp; Languages — extra details are optional.
+                    </p>
+                  </div>
                   <div className="flex items-center gap-1.5">
                     {['Owner-Driver', 'Fleet Partner', 'Acting Driver'].map((pt) => (
                       <button
@@ -2537,10 +2842,22 @@ Warm regards,
                   </div>
                 </div>
 
-                <form onSubmit={handleAddDriver} className="space-y-3">
+                <form onSubmit={handleAddDriver} className="space-y-3.5">
+                  <datalist id="kt-vehicle-models-list">
+                    {ALL_STANDARDIZED_MODELS.map((m) => (
+                      <option key={m.model} value={m.model} />
+                    ))}
+                  </datalist>
+                  <datalist id="kt-chennai-areas-list">
+                    {ALL_CHENNAI_LOCALITIES.map((loc) => (
+                      <option key={`${loc.name}-${loc.pincode}`} value={loc.name} />
+                    ))}
+                  </datalist>
+
+                  {/* Primary 4 Fields */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                     <div>
-                      <label className="block text-[11px] font-bold text-slate-600 mb-1">Driver / Owner Name *</label>
+                      <label className="block text-[11px] font-bold text-slate-600 mb-1">Driver Name *</label>
                       <input
                         type="text"
                         required
@@ -2558,226 +2875,261 @@ Warm regards,
                         maxLength={10}
                         value={newDriverPhone}
                         onChange={(e) => setNewDriverPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                        placeholder="e.g. 9840123456"
+                        placeholder="10-digit mobile"
                         className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-blue-500 font-mono font-semibold"
                       />
                     </div>
+                    {newDriverPartnerType !== 'Acting Driver' && (
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-600 mb-1">Vehicle / Model</label>
+                        <input
+                          type="text"
+                          list="kt-vehicle-models-list"
+                          value={newDriverVehicle}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setNewDriverVehicle(val);
+                            if (val.trim()) setNewDriverCategory(normalizeVehicleCategory(val));
+                          }}
+                          placeholder="e.g. Swift Dzire, Innova Crysta..."
+                          className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-blue-500 font-medium"
+                        />
+                      </div>
+                    )}
                     <div>
-                      <label className="block text-[11px] font-bold text-slate-600 mb-1">Chennai Base Zone *</label>
-                      <select
-                        value={newDriverZone}
-                        onChange={(e) => {
-                          const zId = e.target.value;
-                          setNewDriverZone(zId);
-                          const zObj = CHENNAI_ZONES.find(z => z.id === zId);
-                          if (zObj && zObj.areas[0]) setNewDriverArea(zObj.areas[0].name);
-                        }}
-                        className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-blue-500 font-semibold"
-                      >
-                        {CHENNAI_ZONES.map(z => (
-                          <option key={z.id} value={z.id}>{z.label}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-[11px] font-bold text-slate-600 mb-1">Base Area (Standardized) *</label>
-                      <select
+                      <label className="block text-[11px] font-bold text-slate-600 mb-1">Base Area</label>
+                      <input
+                        type="text"
+                        list="kt-chennai-areas-list"
                         value={newDriverArea}
-                        onChange={(e) => setNewDriverArea(e.target.value)}
-                        className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-blue-500 font-semibold"
-                      >
-                        {(CHENNAI_ZONES.find(z => z.id === newDriverZone)?.areas || []).map(a => (
-                          <option key={a.name} value={a.name}>{a.name} ({a.pincode})</option>
-                        ))}
-                      </select>
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setNewDriverArea(val);
+                          const inferred = inferZoneFromAddress(val);
+                          if (inferred) setNewDriverZone(inferred);
+                        }}
+                        placeholder="e.g. Medavakkam, Tambaram..."
+                        className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-blue-500 font-medium"
+                      />
                     </div>
                   </div>
 
-                  {newDriverPartnerType !== 'Acting Driver' && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-1">
-                      <div>
-                        <label className="block text-[11px] font-bold text-slate-600 mb-1">Vehicle Class</label>
-                        <select
-                          value={newDriverCategory}
-                          onChange={(e) => {
-                            const catId = e.target.value;
-                            setNewDriverCategory(catId);
-                            const catObj = VEHICLE_CATEGORIES.find(c => c.id === catId);
-                            if (catObj && catObj.models[0]) setNewDriverVehicle(catObj.models[0]);
-                          }}
-                          className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-blue-500 font-semibold"
-                        >
-                          {VEHICLE_CATEGORIES.map(c => (
-                            <option key={c.id} value={c.id}>{c.label}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-[11px] font-bold text-slate-600 mb-1">Exact Model (No Typos)</label>
-                        <select
-                          value={newDriverVehicle}
-                          onChange={(e) => setNewDriverVehicle(e.target.value)}
-                          className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-blue-500 font-semibold"
-                        >
-                          {(VEHICLE_CATEGORIES.find(c => c.id === newDriverCategory)?.models || []).map(m => (
-                            <option key={m} value={m}>{m}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-[11px] font-bold text-slate-600 mb-1">Plate Number</label>
-                        <input
-                          type="text"
-                          value={newDriverPlate}
-                          maxLength={13}
-                          onChange={(e) => setNewDriverPlate(formatIndianPlateNumber(e.target.value))}
-                          placeholder="TN 14 AK 2026"
-                          className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 uppercase font-mono font-bold focus:outline-none focus:border-blue-500"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[11px] font-bold text-slate-600 mb-1">Board &amp; Carrier</label>
-                        <div className="grid grid-cols-2 gap-1.5">
-                          <select
-                            value={newDriverBoard}
-                            onChange={(e) => setNewDriverBoard(e.target.value)}
-                            className="text-[11px] bg-slate-50 border border-slate-200 rounded-xl px-2 py-2.5 font-semibold"
+                  {/* Languages Spoken (1-Tap Toggles) + Submit */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="text-[11px] font-bold text-slate-600 mr-1">Languages Spoken:</span>
+                      {DRIVER_LANGUAGES.map((lang) => {
+                        const active = newDriverLanguages.includes(lang);
+                        return (
+                          <button
+                            key={lang}
+                            type="button"
+                            onClick={() => setNewDriverLanguages(toggleLanguageInList(newDriverLanguages, lang))}
+                            className={`px-2.5 py-1 rounded-full text-xs font-bold border transition ${
+                              active
+                                ? 'bg-indigo-600 text-white border-indigo-600 shadow-2xs'
+                                : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                            }`}
                           >
-                            <option value="Yellow Board">Yellow</option>
-                            <option value="White Board">White</option>
-                          </select>
-                          <select
-                            value={newDriverCarrier}
-                            onChange={(e) => setNewDriverCarrier(e.target.value)}
-                            className="text-[11px] bg-slate-50 border border-slate-200 rounded-xl px-2 py-2.5 font-semibold"
-                          >
-                            <option value="With Carrier">Carrier</option>
-                            <option value="No Carrier">No Carrier</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div className="flex items-end">
-                        <button
-                          type="submit"
-                          className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl transition shadow-sm flex items-center justify-center gap-1.5"
-                        >
-                          <span className="material-symbols-outlined text-sm">add</span>
-                          <span>Add to Roster</span>
-                        </button>
-                      </div>
+                            {lang}
+                          </button>
+                        );
+                      })}
                     </div>
-                  )}
 
-                  {newDriverPartnerType === 'Acting Driver' && (
-                    <div className="flex justify-end pt-1">
+                    <div className="flex items-center gap-2 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => setShowMoreDriverFields(!showMoreDriverFields)}
+                        className="px-3 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition flex items-center gap-1"
+                      >
+                        <span className="material-symbols-outlined text-sm">
+                          {showMoreDriverFields ? 'expand_less' : 'tune'}
+                        </span>
+                        <span>{showMoreDriverFields ? 'Hide Details' : 'Plate / More'}</span>
+                      </button>
                       <button
                         type="submit"
-                        className="py-2.5 px-6 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl transition shadow-sm flex items-center justify-center gap-1.5"
+                        className="py-2.5 px-5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl transition shadow-sm flex items-center justify-center gap-1.5"
                       >
                         <span className="material-symbols-outlined text-sm">add</span>
-                        <span>Add Acting Driver to Roster</span>
+                        <span>Add Driver</span>
                       </button>
+                    </div>
+                  </div>
+
+                  {/* Collapsible Optional Details */}
+                  {showMoreDriverFields && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-3 border-t border-slate-100 animate-fadeIn">
+                      {newDriverPartnerType !== 'Acting Driver' && (
+                        <div>
+                          <label className="block text-[11px] font-bold text-slate-600 mb-1">Plate Number (Optional)</label>
+                          <input
+                            type="text"
+                            value={newDriverPlate}
+                            maxLength={13}
+                            onChange={(e) => setNewDriverPlate(formatIndianPlateNumber(e.target.value))}
+                            placeholder="e.g. TN 14 AK 2026"
+                            className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 uppercase font-mono font-bold focus:outline-none focus:border-blue-500"
+                          />
+                        </div>
+                      )}
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-600 mb-1">Chennai Zone (Auto)</label>
+                        <select
+                          value={newDriverZone}
+                          onChange={(e) => setNewDriverZone(e.target.value)}
+                          className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-blue-500 font-semibold"
+                        >
+                          <option value="">Auto-detect from Area</option>
+                          {CHENNAI_ZONES.map(z => (
+                            <option key={z.id} value={z.id}>{z.label}</option>
+                          ))}
+                        </select>
+                      </div>
+                      {newDriverPartnerType !== 'Acting Driver' && (
+                        <div>
+                          <label className="block text-[11px] font-bold text-slate-600 mb-1">Board &amp; Carrier</label>
+                          <div className="grid grid-cols-2 gap-1.5">
+                            <select
+                              value={newDriverBoard}
+                              onChange={(e) => setNewDriverBoard(e.target.value)}
+                              className="text-[11px] bg-slate-50 border border-slate-200 rounded-xl px-2 py-2.5 font-semibold"
+                            >
+                              <option value="Yellow Board">Yellow</option>
+                              <option value="White Board">White</option>
+                            </select>
+                            <select
+                              value={newDriverCarrier}
+                              onChange={(e) => setNewDriverCarrier(e.target.value)}
+                              className="text-[11px] bg-slate-50 border border-slate-200 rounded-xl px-2 py-2.5 font-semibold"
+                            >
+                              <option value="With Carrier">Carrier</option>
+                              <option value="No Carrier">No Carrier</option>
+                            </select>
+                          </div>
+                        </div>
+                      )}
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-600 mb-1">Notes (Optional)</label>
+                        <input
+                          type="text"
+                          value={newDriverNotes}
+                          onChange={(e) => setNewDriverNotes(e.target.value)}
+                          placeholder="e.g. Good for Sabarimala / night trips"
+                          className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-blue-500 font-medium"
+                        />
+                      </div>
                     </div>
                   )}
                 </form>
               </div>
 
-              {/* Multi-Filter Bar: Sort by Vehicle Class, Chennai Hub Zone, Board/Carrier & Search */}
+              {/* Compact Filter Bar: Search, Vehicle, Zone & Language */}
               <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs space-y-3">
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-                  {/* Vehicle Category Filter Pills */}
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    <span className="text-[11px] font-bold text-slate-400 uppercase mr-1">Vehicle:</span>
-                    {[
-                      { id: 'ALL', label: 'All Vehicles' },
-                      { id: 'Sedan', label: 'Sedan (4+1)' },
-                      { id: 'SUV / Ertiga', label: 'Ertiga / SUV' },
-                      { id: 'Innova Crysta', label: 'Innova Crysta' },
-                      { id: 'Tempo Traveller', label: 'Tempo / Van' },
-                      { id: 'Acting Driver', label: 'Acting Drivers' }
-                    ].map(vTab => (
-                      <button
-                        key={vTab.id}
-                        type="button"
-                        onClick={() => setRosterVehicleFilter(vTab.id)}
-                        className={`px-3 py-1.5 rounded-full text-xs font-bold border transition ${
-                          rosterVehicleFilter === vTab.id
-                            ? 'bg-slate-900 text-white border-slate-900'
-                            : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
-                        }`}
-                      >
-                        {vTab.label}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Search Input */}
-                  <div className="relative sm:w-64">
+                <div className="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
+                  <div className="relative sm:col-span-5">
                     <span className="material-symbols-outlined absolute left-3 top-2 text-slate-400 text-base">search</span>
                     <input
                       type="text"
                       value={rosterSearchQuery}
                       onChange={(e) => setRosterSearchQuery(e.target.value)}
-                      placeholder="Search area, name, plate, phone..."
-                      className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-full focus:outline-none focus:border-blue-500"
+                      placeholder="Search name, phone, area, vehicle, plate, language..."
+                      className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500"
                     />
                   </div>
+                  <select
+                    value={rosterVehicleFilter}
+                    onChange={(e) => setRosterVehicleFilter(e.target.value)}
+                    className="sm:col-span-3 text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-semibold text-slate-700 focus:outline-none focus:border-blue-500"
+                  >
+                    <option value="ALL">All Vehicles</option>
+                    <option value="Sedan">Sedan (4+1)</option>
+                    <option value="SUV / Ertiga">Ertiga / SUV</option>
+                    <option value="Innova Crysta">Innova Crysta</option>
+                    <option value="Tempo Traveller">Tempo / Van</option>
+                    <option value="Acting Driver">Acting Drivers</option>
+                  </select>
+                  <select
+                    value={rosterZoneFilter}
+                    onChange={(e) => setRosterZoneFilter(e.target.value)}
+                    className="sm:col-span-2 text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-semibold text-slate-700 focus:outline-none focus:border-blue-500"
+                  >
+                    <option value="ALL">All Zones</option>
+                    {CHENNAI_ZONES.map(z => (
+                      <option key={z.id} value={z.id}>{z.label}</option>
+                    ))}
+                  </select>
+                  <select
+                    value={rosterBoardFilter}
+                    onChange={(e) => setRosterBoardFilter(e.target.value)}
+                    className="sm:col-span-2 text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-semibold text-slate-700 focus:outline-none focus:border-blue-500"
+                  >
+                    <option value="ALL">All Specs</option>
+                    <option value="Yellow Board">Yellow Board</option>
+                    <option value="White Board">White Board</option>
+                    <option value="With Carrier">With Carrier</option>
+                  </select>
                 </div>
 
-                {/* Zone Filter Pills + Board/Carrier Filter */}
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100">
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    <span className="text-[11px] font-bold text-slate-400 uppercase mr-1">Zone:</span>
+                {/* Language Filter Pills */}
+                <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-100">
+                  <span className="text-[11px] font-bold text-slate-400 uppercase mr-1">Language:</span>
+                  <button
+                    type="button"
+                    onClick={() => setRosterLanguageFilter('ALL')}
+                    className={`px-2.5 py-1 rounded-full text-[11px] font-bold border transition ${
+                      rosterLanguageFilter === 'ALL'
+                        ? 'bg-slate-900 text-white border-slate-900'
+                        : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+                    }`}
+                  >
+                    All Languages
+                  </button>
+                  {DRIVER_LANGUAGES.map((lang) => (
                     <button
+                      key={lang}
                       type="button"
-                      onClick={() => setRosterZoneFilter('ALL')}
-                      className={`px-2.5 py-1 rounded-lg text-[11px] font-bold border transition ${
-                        rosterZoneFilter === 'ALL'
-                          ? 'bg-blue-600 text-white border-blue-600'
+                      onClick={() => setRosterLanguageFilter(lang)}
+                      className={`px-2.5 py-1 rounded-full text-[11px] font-bold border transition ${
+                        rosterLanguageFilter === lang
+                          ? 'bg-indigo-600 text-white border-indigo-600'
                           : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
                       }`}
                     >
-                      All Zones
+                      {lang}
                     </button>
-                    {CHENNAI_ZONES.map(z => (
-                      <button
-                        key={z.id}
-                        type="button"
-                        onClick={() => setRosterZoneFilter(z.id)}
-                        className={`px-2.5 py-1 rounded-lg text-[11px] font-bold border transition ${
-                          rosterZoneFilter === z.id
-                            ? 'bg-blue-600 text-white border-blue-600'
-                            : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
-                        }`}
-                      >
-                        {z.label}
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center gap-1.5">
-                    {['ALL', 'Yellow Board', 'White Board', 'With Carrier'].map(bf => (
-                      <button
-                        key={bf}
-                        type="button"
-                        onClick={() => setRosterBoardFilter(bf)}
-                        className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition ${
-                          rosterBoardFilter === bf
-                            ? 'bg-emerald-600 text-white border-emerald-600'
-                            : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
-                        }`}
-                      >
-                        {bf === 'ALL' ? 'All Specs' : bf}
-                      </button>
-                    ))}
-                  </div>
+                  ))}
                 </div>
               </div>
 
-              {/* Drivers Grid */}
-              {filteredRosterDrivers.length === 0 ? (
-                <div className="bg-white border border-dashed border-slate-200 rounded-2xl p-10 text-center text-slate-400 text-xs">
-                  No attached vehicles or drivers match the selected Vehicle / Zone filter.
+              {/* Drivers Grid / Clean Empty State */}
+              {drivers.length === 0 ? (
+                <div className="bg-white border border-dashed border-slate-300 rounded-2xl p-10 text-center space-y-2.5">
+                  <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto">
+                    <span className="material-symbols-outlined text-2xl">badge</span>
+                  </div>
+                  <h4 className="text-sm font-bold text-slate-900">Your Fleet Roster is Clean &amp; Empty</h4>
+                  <p className="text-xs text-slate-500 max-w-md mx-auto">
+                    Add your first real driver using the Quick Add form above — it will automatically save to your Google Sheet and sync across your phone &amp; PC.
+                  </p>
+                </div>
+              ) : filteredRosterDrivers.length === 0 ? (
+                <div className="bg-white border border-dashed border-slate-200 rounded-2xl p-10 text-center text-slate-500 text-xs space-y-2">
+                  <p>No drivers match the selected search or filter.</p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRosterVehicleFilter('ALL');
+                      setRosterZoneFilter('ALL');
+                      setRosterLanguageFilter('ALL');
+                      setRosterBoardFilter('ALL');
+                      setRosterSearchQuery('');
+                    }}
+                    className="text-blue-600 font-bold hover:underline"
+                  >
+                    Reset all filters
+                  </button>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -2786,6 +3138,7 @@ Warm regards,
                       t => (t.driverPhone && driver.phone && t.driverPhone.includes(driver.phone.slice(-10))) ||
                            (t.vehicleNumber && driver.plate && t.vehicleNumber === driver.plate)
                     );
+                    const driverLangs = normalizeLanguages(driver.languages, []);
                     return (
                       <div key={driver.id} className="bg-white border border-slate-200 hover:border-blue-300 rounded-2xl p-4 shadow-xs flex flex-col justify-between space-y-3 transition">
                         <div>
@@ -2808,18 +3161,24 @@ Warm regards,
                                   </span>
                                 </div>
                                 <div className="text-[11px] font-semibold text-emerald-700 flex items-center gap-1 mt-0.5">
-                                  <span>📍 {driver.area || 'Medavakkam'}</span>
-                                  <span className="text-slate-400">•</span>
-                                  <span className="text-slate-500">{driver.zone || 'South & OMR'}</span>
+                                  <span>📍 {driver.area || 'Chennai'}</span>
+                                  {driver.zone && (
+                                    <>
+                                      <span className="text-slate-400">•</span>
+                                      <span className="text-slate-500">{driver.zone}</span>
+                                    </>
+                                  )}
                                 </div>
                               </div>
                             </div>
-                            <span className="px-2 py-0.5 bg-slate-100 text-slate-800 font-mono text-xs rounded border border-slate-200 font-bold shrink-0">
-                              {driver.plate}
-                            </span>
+                            {driver.plate && (
+                              <span className="px-2 py-0.5 bg-slate-100 text-slate-800 font-mono text-xs rounded border border-slate-200 font-bold shrink-0">
+                                {driver.plate}
+                              </span>
+                            )}
                           </div>
 
-                          <div className="mt-3 text-xs text-slate-700 bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-1.5">
+                          <div className="mt-3 text-xs text-slate-700 bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-2">
                             <div className="flex items-center justify-between">
                               <span className="font-bold text-slate-900 flex items-center gap-1.5">
                                 <span className="material-symbols-outlined text-xs text-blue-600">directions_car</span>
@@ -2831,8 +3190,24 @@ Warm regards,
                                 {activeDuty ? `On Trip #${activeDuty.id}` : 'Available'}
                               </span>
                             </div>
+
+                            {/* Languages Spoken Chips */}
+                            {driverLangs.length > 0 && (
+                              <div className="flex flex-wrap items-center gap-1 pt-1 border-t border-slate-200/60">
+                                <span className="material-symbols-outlined text-[13px] text-indigo-500">translate</span>
+                                {driverLangs.map((lang) => (
+                                  <span
+                                    key={lang}
+                                    className="px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-100 text-[10px] font-bold"
+                                  >
+                                    {lang}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+
                             <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-slate-200/60">
-                              <div className="flex items-center gap-1.5">
+                              <div className="flex items-center gap-1.5 flex-wrap">
                                 {driver.boardType && driver.boardType !== 'Acting Driver' && (
                                   <span className={`px-1.5 py-0.5 rounded font-semibold ${
                                     driver.boardType === 'Yellow Board'
@@ -2852,10 +3227,16 @@ Warm regards,
                                 {driver.phone}
                               </a>
                             </div>
+
+                            {driver.notes && (
+                              <div className="text-[11px] text-slate-600 italic pt-1 border-t border-slate-200/60">
+                                {driver.notes}
+                              </div>
+                            )}
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-2 pt-1 border-t border-slate-100">
+                        <div className="flex items-center gap-1.5 pt-1 border-t border-slate-100">
                           <a
                             href={`tel:${driver.phone}`}
                             className="flex-1 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1 transition shadow-2xs"
@@ -2864,7 +3245,7 @@ Warm regards,
                             <span>Call</span>
                           </a>
                           <a
-                            href={`https://wa.me/91${driver.phone.replace(/\D/g, '').slice(-10)}?text=${encodeURIComponent(`Namaskaram ${driver.name} (${driver.vehicle} • ${driver.plate}), checking your availability for a Kalidass Travels trip near ${driver.area || 'Chennai'}.`)}`}
+                            href={`https://wa.me/91${driver.phone.replace(/\D/g, '').slice(-10)}?text=${encodeURIComponent(`Namaskaram ${driver.name} (${driver.vehicle}${driver.plate ? ` • ${driver.plate}` : ''}), checking your availability for a Kalidass Travels trip near ${driver.area || 'Chennai'}.`)}`}
                             target="_blank"
                             rel="noreferrer"
                             className="flex-1 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg text-xs font-bold flex items-center justify-center gap-1 transition"
@@ -2873,8 +3254,17 @@ Warm regards,
                             <span>WhatsApp</span>
                           </a>
                           <button
+                            type="button"
+                            onClick={() => handleOpenEditDriver(driver)}
+                            className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                            title="Edit Driver"
+                          >
+                            <span className="material-symbols-outlined text-sm">edit</span>
+                          </button>
+                          <button
+                            type="button"
                             onClick={() => handleDeleteDriver(driver.id)}
-                            className="p-1.5 text-slate-400 hover:text-red-500 rounded-lg"
+                            className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition"
                             title="Delete Vehicle / Driver"
                           >
                             <span className="material-symbols-outlined text-sm">delete</span>
@@ -3069,7 +3459,7 @@ Warm regards,
                   </button>
                 </div>
                 <p className="text-[11px] text-slate-500 mt-1.5">
-                  Save this URL once. Every computer or phone opening this desk will automatically load and save live trips from your Google Sheet.
+                  Save this URL once. Every phone or PC opening <code>/admin</code> will automatically sync both <strong>Trips</strong> and <strong>Drivers Roster</strong> (including languages spoken) live with your Google Sheet.
                 </p>
               </div>
 
@@ -3140,9 +3530,14 @@ Warm regards,
           const dCat = d.category || normalizeVehicleCategory(d.vehicle);
           if (assignVehicleFilter !== 'ALL' && dCat !== assignVehicleFilter) return false;
           if (assignZoneFilter !== 'ALL' && (d.zone || 'South & OMR') !== assignZoneFilter) return false;
+          if (assignLanguageFilter !== 'ALL') {
+            const langs = normalizeLanguages(d.languages, []);
+            if (!langs.some(l => l.toLowerCase() === assignLanguageFilter.toLowerCase())) return false;
+          }
           if (assignSearchQuery.trim()) {
             const q = assignSearchQuery.toLowerCase();
-            const hay = `${d.name || ''} ${d.phone || ''} ${d.plate || ''} ${d.vehicle || ''} ${d.area || ''} ${d.zone || ''}`.toLowerCase();
+            const langsStr = normalizeLanguages(d.languages, []).join(' ');
+            const hay = `${d.name || ''} ${d.phone || ''} ${d.plate || ''} ${d.vehicle || ''} ${d.area || ''} ${d.zone || ''} ${langsStr}`.toLowerCase();
             if (!hay.includes(q)) return false;
           }
           return true;
@@ -3233,6 +3628,7 @@ Warm regards,
                     onClick={() => {
                       setAssignVehicleFilter('ALL');
                       setAssignZoneFilter('ALL');
+                      setAssignLanguageFilter('ALL');
                       setAssignSearchQuery('');
                     }}
                     className="text-[11px] text-blue-600 hover:underline font-semibold"
@@ -3282,7 +3678,38 @@ Warm regards,
                             : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
                         }`}
                       >
-                        {z.shortLabel}
+                        {z.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-1">
+                  <span className="text-[11px] font-bold uppercase text-slate-500 block mb-1">3. Filter by Language Spoken:</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setAssignLanguageFilter('ALL')}
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${
+                        assignLanguageFilter === 'ALL'
+                          ? 'bg-indigo-600 text-white'
+                          : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
+                      }`}
+                    >
+                      Any Language
+                    </button>
+                    {DRIVER_LANGUAGES.map((lang) => (
+                      <button
+                        key={lang}
+                        type="button"
+                        onClick={() => setAssignLanguageFilter(lang)}
+                        className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${
+                          assignLanguageFilter === lang
+                            ? 'bg-indigo-600 text-white'
+                            : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
+                        }`}
+                      >
+                        {lang}
                       </button>
                     ))}
                   </div>
@@ -3349,10 +3776,14 @@ Warm regards,
                             </div>
                             <div className="flex flex-wrap items-center gap-2 text-[11px] text-slate-500">
                               <span>📍 <strong>{d.area || 'Chennai'}</strong> ({d.zone || 'South & OMR'})</span>
-                              <span>•</span>
-                              <span>{d.boardType || 'Yellow Board'}</span>
-                              <span>•</span>
-                              <span>{d.carrier || 'With Carrier'}</span>
+                              {normalizeLanguages(d.languages, []).length > 0 && (
+                                <>
+                                  <span>•</span>
+                                  <span className="text-indigo-700 font-semibold">
+                                    🗣️ {normalizeLanguages(d.languages, []).join(', ')}
+                                  </span>
+                                </>
+                              )}
                               <span>•</span>
                               <span className="font-mono">{d.phone}</span>
                             </div>
@@ -3457,6 +3888,375 @@ Warm regards,
           </div>
         );
       })()}
+
+      {/* EDIT DRIVER MODAL */}
+      {editingDriver && (
+        <div className="fixed inset-0 z-50 bg-slate-900/65 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 max-w-lg w-full shadow-2xl space-y-4 animate-fadeIn my-auto">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div>
+                <h3 className="font-bold text-base text-slate-900">Edit Driver / Vehicle</h3>
+                <p className="text-[11px] text-slate-500">Updates immediately sync to your Google Sheet.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingDriver(null)}
+                className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100"
+              >
+                <span className="material-symbols-outlined text-lg">close</span>
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveEditedDriver} className="space-y-3.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Driver Name *</label>
+                  <input
+                    type="text"
+                    required
+                    value={editingDriver.name || ''}
+                    onChange={(e) => setEditingDriver({ ...editingDriver, name: e.target.value })}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-medium focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Mobile / WhatsApp *</label>
+                  <input
+                    type="tel"
+                    required
+                    maxLength={10}
+                    value={editingDriver.phone || ''}
+                    onChange={(e) => setEditingDriver({ ...editingDriver, phone: e.target.value.replace(/\D/g, '').slice(0, 10) })}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-mono font-semibold focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Vehicle / Model</label>
+                  <input
+                    type="text"
+                    list="kt-vehicle-models-list"
+                    value={editingDriver.vehicle || ''}
+                    onChange={(e) => setEditingDriver({ ...editingDriver, vehicle: e.target.value })}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-medium focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Plate Number</label>
+                  <input
+                    type="text"
+                    maxLength={13}
+                    value={editingDriver.plate || ''}
+                    onChange={(e) => setEditingDriver({ ...editingDriver, plate: formatIndianPlateNumber(e.target.value) })}
+                    placeholder="e.g. TN 14 AK 2026"
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 uppercase font-mono font-bold focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Base Area</label>
+                  <input
+                    type="text"
+                    list="kt-chennai-areas-list"
+                    value={editingDriver.area || ''}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      const inferred = inferZoneFromAddress(val);
+                      setEditingDriver({ ...editingDriver, area: val, ...(inferred ? { zone: inferred } : {}) });
+                    }}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-medium focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Partner Type</label>
+                  <select
+                    value={editingDriver.partnerType || 'Owner-Driver'}
+                    onChange={(e) => setEditingDriver({ ...editingDriver, partnerType: e.target.value })}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-semibold focus:outline-none focus:border-blue-500"
+                  >
+                    <option value="Owner-Driver">Owner-Driver</option>
+                    <option value="Fleet Partner">Fleet Partner</option>
+                    <option value="Acting Driver">Acting Driver</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-slate-600 mb-1.5">Languages Spoken</label>
+                <div className="flex flex-wrap gap-1.5">
+                  {DRIVER_LANGUAGES.map((lang) => {
+                    const active = normalizeLanguages(editingDriver.languages, []).includes(lang);
+                    return (
+                      <button
+                        key={lang}
+                        type="button"
+                        onClick={() =>
+                          setEditingDriver({
+                            ...editingDriver,
+                            languages: toggleLanguageInList(editingDriver.languages, lang)
+                          })
+                        }
+                        className={`px-2.5 py-1 rounded-full text-xs font-bold border transition ${
+                          active
+                            ? 'bg-indigo-600 text-white border-indigo-600'
+                            : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                        }`}
+                      >
+                        {lang}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Board Type</label>
+                  <select
+                    value={editingDriver.boardType || 'Yellow Board'}
+                    onChange={(e) => setEditingDriver({ ...editingDriver, boardType: e.target.value })}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-semibold"
+                  >
+                    <option value="Yellow Board">Yellow Board</option>
+                    <option value="White Board">White Board</option>
+                    <option value="Acting Driver">Acting Driver</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Roof Carrier</label>
+                  <select
+                    value={editingDriver.carrier || 'With Carrier'}
+                    onChange={(e) => setEditingDriver({ ...editingDriver, carrier: e.target.value })}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-semibold"
+                  >
+                    <option value="With Carrier">With Carrier</option>
+                    <option value="No Carrier">No Carrier</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-slate-600 mb-1">Notes</label>
+                <input
+                  type="text"
+                  value={editingDriver.notes || ''}
+                  onChange={(e) => setEditingDriver({ ...editingDriver, notes: e.target.value })}
+                  placeholder="Optional notes..."
+                  className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-medium focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setEditingDriver(null)}
+                  className="py-2 px-4 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="py-2.5 px-5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold shadow-sm flex items-center gap-1.5"
+                >
+                  <span className="material-symbols-outlined text-sm">save</span>
+                  <span>Save Changes</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* EDIT BOOKING MODAL */}
+      {editingTrip && (
+        <div className="fixed inset-0 z-50 bg-slate-900/65 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 max-w-lg w-full shadow-2xl space-y-4 animate-fadeIn my-auto">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div>
+                <h3 className="font-bold text-base text-slate-900">Edit Booking #{editingTrip.id}</h3>
+                <p className="text-[11px] text-slate-500">Fix fare, advance, schedule, or passenger details — syncs live to Google Sheet.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingTrip(null)}
+                className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100"
+              >
+                <span className="material-symbols-outlined text-lg">close</span>
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveEditedTrip} className="space-y-3.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Customer Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={editingTrip.customerName || ''}
+                    onChange={(e) => setEditingTrip({ ...editingTrip, customerName: e.target.value })}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-medium focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Customer Phone</label>
+                  <input
+                    type="tel"
+                    required
+                    value={editingTrip.phone || ''}
+                    onChange={(e) => setEditingTrip({ ...editingTrip, phone: e.target.value })}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-mono font-semibold focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Pickup Date</label>
+                  <input
+                    type="date"
+                    value={editingTrip.pickupDate || ''}
+                    onChange={(e) => setEditingTrip({ ...editingTrip, pickupDate: e.target.value })}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-medium focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Return Date (Multi-Day)</label>
+                  <input
+                    type="date"
+                    value={editingTrip.returnDate || ''}
+                    onChange={(e) => setEditingTrip({ ...editingTrip, returnDate: e.target.value })}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-medium focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Pickup Time</label>
+                  <input
+                    type="text"
+                    value={editingTrip.pickupTime || ''}
+                    onChange={(e) => setEditingTrip({ ...editingTrip, pickupTime: e.target.value })}
+                    placeholder="e.g. 06:00 AM"
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-medium focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Booking Status</label>
+                  <select
+                    value={editingTrip.manifestStatus || 'Unassigned'}
+                    onChange={(e) => setEditingTrip({ ...editingTrip, manifestStatus: e.target.value })}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-semibold"
+                  >
+                    <option value="Follow-up">Pending / Follow-up</option>
+                    <option value="Unassigned">Unassigned (Needs Driver)</option>
+                    <option value="Active">Active / On Trip</option>
+                    <option value="Settled">Settled / Closed</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Alt Guest Name</label>
+                  <input
+                    type="text"
+                    value={editingTrip.guestName || ''}
+                    onChange={(e) => setEditingTrip({ ...editingTrip, guestName: e.target.value })}
+                    placeholder="Optional on-ground guest"
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-medium focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Alt Phone / Pax</label>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    <input
+                      type="tel"
+                      value={editingTrip.guestPhone || ''}
+                      onChange={(e) => setEditingTrip({ ...editingTrip, guestPhone: e.target.value })}
+                      placeholder="Alt phone"
+                      className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2.5 font-mono"
+                    />
+                    <input
+                      type="text"
+                      value={editingTrip.paxCount || ''}
+                      onChange={(e) => setEditingTrip({ ...editingTrip, paxCount: e.target.value })}
+                      placeholder="3 Pax"
+                      className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2.5 font-medium"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Pickup Location</label>
+                  <input
+                    type="text"
+                    value={editingTrip.pickupLocation || ''}
+                    onChange={(e) => setEditingTrip({ ...editingTrip, pickupLocation: e.target.value })}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-medium focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Drop / Route</label>
+                  <input
+                    type="text"
+                    value={editingTrip.dropLocation || ''}
+                    onChange={(e) => setEditingTrip({ ...editingTrip, dropLocation: e.target.value })}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-medium focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Vehicle</label>
+                  <select
+                    value={editingTrip.vehicle || 'Swift Dzire'}
+                    onChange={(e) => setEditingTrip({ ...editingTrip, vehicle: e.target.value })}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-semibold"
+                  >
+                    {Object.keys(tariffConfig.vehicles).map(vKey => (
+                      <option key={vKey} value={vKey}>{vKey}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Agreed Fare (₹)</label>
+                    <input
+                      type="number"
+                      value={editingTrip.agreedRate}
+                      onChange={(e) => setEditingTrip({ ...editingTrip, agreedRate: e.target.value })}
+                      className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-mono font-bold"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Advance (₹)</label>
+                    <input
+                      type="number"
+                      value={editingTrip.advance}
+                      onChange={(e) => setEditingTrip({ ...editingTrip, advance: e.target.value })}
+                      className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-mono font-medium"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-slate-600 mb-1">Notes</label>
+                <input
+                  type="text"
+                  value={editingTrip.notes || ''}
+                  onChange={(e) => setEditingTrip({ ...editingTrip, notes: e.target.value })}
+                  className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-medium focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setEditingTrip(null)}
+                  className="py-2 px-4 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="py-2.5 px-5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold shadow-sm flex items-center gap-1.5"
+                >
+                  <span className="material-symbols-outlined text-sm">save</span>
+                  <span>Save Booking</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

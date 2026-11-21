@@ -1,7 +1,7 @@
 // Cloudflare Pages Function: /api/record-booking
 // Records website WhatsApp quotes and bookings to the Operations Google Sheet without overwriting earlier quotes.
 
-const DEFAULT_TRIPS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzpTM1pLXWLF-E80-HAXjj2ghAC_0tvFW1blTJC7rJojqUhTcKIwQz0t-NQMCScN2VA/exec';
+const DEFAULT_TRIPS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzyfKwbaG83dNG3EAWf719-UWbWxWpEoBQoRoRbJsHjD-Bx8uKUfytP5Eb2RXaJfgDz/exec';
 
 let edgeBookingSeq = 1;
 

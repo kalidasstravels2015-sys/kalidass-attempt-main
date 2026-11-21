@@ -498,7 +498,7 @@ const breadcrumbsSchema = {
   keywords={keywords}
   image="/images/services/corporate.webp"
   ogImage="/og/local-hourly-cabs.jpg"
-  schema={[taxiServiceSchema, faqSchema, breadcrumbsSchema]}
+  schema={[taxiServiceSchema, faqSchema]}
 >
   <!-- Hero Section: Unified Framed Visual Card on Desktop, Clean App-First Hero on Mobile -->
   <section
@@ -512,7 +512,7 @@ const breadcrumbsSchema = {
           <Breadcrumbs items={breadcrumbItems} />
         </div>
         <div class="hidden lg:block">
-          <Breadcrumbs items={breadcrumbItems} variant="dark" />
+          <Breadcrumbs items={breadcrumbItems} variant="dark" skipSchema={true} />
         </div>
       </div>
 

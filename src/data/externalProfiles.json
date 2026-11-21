@@ -1,0 +1,15 @@
+{
+  "googleMaps": {
+    "url": "https://maps.app.goo.gl/i2LdJhWMi2ZgAiCa8",
+    "label": "Google Maps"
+  },
+  "tripadvisor": {
+    "businessUrl": "",
+    "reviewUrl": "",
+    "label": "Tripadvisor"
+  },
+  "viator": {
+    "supplierUrl": "",
+    "label": "Viator"
+  }
+}

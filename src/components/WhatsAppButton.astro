@@ -15,7 +15,7 @@ interface Props {
 }
 
 const {
-  text = "Book on WhatsApp",
+  text = "Book Now",
   href = buildWhatsAppUrl(typeof text === 'string' ? text : undefined),
   size = "md",
   fullWidth = false,
@@ -41,16 +41,16 @@ const iconSize = {
   icon: "w-5 h-5"
 }[size];
 
-// Official WhatsApp Brand & M3 Surface specifications - WCAG AA Contrast Guaranteed
+// Official WhatsApp Brand Palette matching Floating WhatsApp FAB (#25D366)
 const variantClasses = {
-  brand: "bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-emerald-950 font-extrabold border border-[#20ba5a]/30 shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5",
-  filled: "bg-[#075E54] hover:bg-[#064e46] active:bg-[#053f38] text-white font-bold border border-[#128C7E]/40 shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5",
-  elevated: "bg-[#075E54] hover:bg-[#064e46] active:bg-[#053f38] text-white font-bold border border-[#128C7E]/40 shadow-m3-2 hover:shadow-m3-3 hover:-translate-y-0.5",
+  brand: "bg-[#25D366] hover:bg-[#20bd5a] active:bg-[#1da851] text-white font-bold border border-[#20bd5a]/30 shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5",
+  filled: "bg-[#25D366] hover:bg-[#20bd5a] active:bg-[#1da851] text-white font-bold border border-[#20bd5a]/30 shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5",
+  elevated: "bg-[#25D366] hover:bg-[#20bd5a] active:bg-[#1da851] text-white font-bold border border-[#20bd5a]/30 shadow-m3-2 hover:shadow-m3-3 hover:-translate-y-0.5",
   tonal: "bg-m3-primary-container hover:bg-m3-primary-container/80 active:bg-m3-primary-container/90 text-m3-on-primary-container font-bold border border-m3-primary/20 shadow-xs",
   outlined: "bg-transparent hover:bg-m3-primary/10 active:bg-m3-primary/20 text-m3-primary border border-m3-outline shadow-xs"
-}[variant] || "bg-[#075E54] hover:bg-[#064e46] active:bg-[#053f38] text-white font-bold border border-[#128C7E]/40 shadow-m3-1";
+}[variant] || "bg-[#25D366] hover:bg-[#20bd5a] active:bg-[#1da851] text-white font-bold border border-[#20bd5a]/30 shadow-m3-1";
 
-const iconVariant = (variant === 'filled' || variant === 'elevated') ? 'white' : (variant === 'brand' ? 'brand' : (variant === 'tonal' || variant === 'outlined' ? 'monochrome' : 'white'));
+const iconVariant = (variant === 'filled' || variant === 'elevated' || variant === 'brand') ? 'white' : (variant === 'tonal' || variant === 'outlined' ? 'monochrome' : 'white');
 ---
 
 <a
@@ -58,7 +58,7 @@ const iconVariant = (variant === 'filled' || variant === 'elevated') ? 'white' :
   id={id}
   target="_blank"
   rel="noopener noreferrer nofollow"
-  class={`inline-flex items-center justify-center font-bold font-sans rounded-m3-full transition-all duration-200 cursor-pointer select-none active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-m3-primary shadow-xs ${sizeClasses} ${variantClasses} ${className}`}
+  class={`inline-flex items-center justify-center font-bold font-sans rounded-m3-full transition-all duration-200 cursor-pointer select-none active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#25D366] shadow-xs ${sizeClasses} ${variantClasses} ${className}`}
   {...rest}
 >
   <WhatsAppIcon variant={iconVariant} className={iconSize} />

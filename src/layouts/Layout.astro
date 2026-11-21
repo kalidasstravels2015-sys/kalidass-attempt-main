@@ -14,6 +14,7 @@ interface Props {
 }
 
 import siteContent from "../data/siteContent.json";
+import externalProfiles from "../data/externalProfiles.json";
 import FloatingActions from "../components/FloatingActions.astro";
 import { getPageWhatsAppMessage } from "../utils/whatsapp";
 import BookingEnquiryModal from "../components/BookingEnquiryModal.astro";
@@ -102,6 +103,14 @@ const adsLabelWhatsApp = import.meta.env.PUBLIC_ADS_CONVERSION_LABEL_WHATSAPP ||
 const adsLabelQuote = import.meta.env.PUBLIC_ADS_CONVERSION_LABEL_QUOTE || '';
 const adsLabelBooking = import.meta.env.PUBLIC_ADS_CONVERSION_LABEL_BOOKING || '';
 
+const externalSameAs = [
+  externalProfiles.googleMaps?.url,
+  externalProfiles.tripadvisor?.businessUrl,
+  externalProfiles.viator?.supplierUrl,
+].filter((u): u is string => Boolean(u && u.trim().length > 0));
+
+const tripadvisorBusinessUrl = externalProfiles.tripadvisor?.businessUrl?.trim() || "";
+
 const organizationSchema = {
   "@type": "Organization",
   "@id": "https://kalidasstravels.in/#organization",
@@ -144,9 +153,7 @@ const organizationSchema = {
       availableLanguage: ["en", "ta"],
     },
   ],
-  sameAs: [
-    "https://maps.app.goo.gl/i2LdJhWMi2ZgAiCa8",
-  ],
+  sameAs: externalSameAs,
 };
 
 const localBusinessSchema = {
@@ -161,7 +168,8 @@ const localBusinessSchema = {
   taxID: "33COVPM0531D1Z4",
   foundingDate: "2019",
   url: "https://kalidasstravels.in/",
-  hasMap: "https://maps.app.goo.gl/i2LdJhWMi2ZgAiCa8",
+  hasMap: externalProfiles.googleMaps?.url || "https://maps.app.goo.gl/i2LdJhWMi2ZgAiCa8",
+  sameAs: externalSameAs,
   priceRange: "₹₹",
   currenciesAccepted: "INR",
   paymentAccepted: "Cash, UPI, Credit Card, Net Banking",
@@ -421,19 +429,19 @@ const localBusinessSchema = {
       },
       {
         "@type": "Offer",
-        name: "Chennai to Sabarimala Pilgrim Yatra Cab Package",
-        price: "24000",
+        name: "Chennai to Sabarimala (Sabarimalai) Pilgrim Cab & Taxi Package",
+        price: "26500",
         priceCurrency: "INR",
         priceValidUntil: "2027-12-31",
         availability: "https://schema.org/InStock",
         url: "https://kalidasstravels.in/services/sabarimala-trip/",
-        description: "3 Days / 2 Nights Sabarimala yatra to Pamba/Nilakkal in AC Sedan (₹24,000), Ertiga (₹30,000), or Innova (₹36,000) with experienced ghat driver.",
+        description: "3 Days / 2 Nights Chennai to Sabarimalai (Sabarimala) yatra to Nilakkal / Pamba in AC Ertiga (₹26,500), Innova (₹29,500), Crysta (₹34,500), or Tempo Traveller (₹42,000) with Kerala permit & satvik ghat driver.",
         seller: {
           "@id": "https://kalidasstravels.in/#localbusiness",
         },
         itemOffered: {
           "@type": "TaxiService",
-          name: "Chennai to Sabarimala Pilgrim Yatra Cab Package",
+          name: "Chennai to Sabarimala (Sabarimalai) Pilgrim Cab & Taxi Package",
           serviceType: "Pilgrimage Taxi Package",
         },
       },
@@ -1819,10 +1827,10 @@ const unifiedSchemaGraph = {
                     </svg>
                     <div>
                       <div class="flex items-center gap-1.5">
-                        <span class="text-xs font-bold text-m3-on-surface group-hover/item:text-m3-primary">Sabarimala Yatra</span>
+                        <span class="text-xs font-bold text-m3-on-surface group-hover/item:text-m3-primary">Sabarimala / Sabarimalai Yatra</span>
                         <span class="px-1.5 py-0.2 rounded-full bg-m3-tertiary-container text-m3-on-tertiary-container text-[9px] font-bold">3 Days</span>
                       </div>
-                      <div class="text-[11px] text-m3-on-surface-variant">Mandala Season • Kerala permit &amp; Nilakkal drop</div>
+                      <div class="text-[11px] text-m3-on-surface-variant">Mandala Season cab &amp; taxi • Kerala permit &amp; Nilakkal drop</div>
                     </div>
                   </a>
                   <a href="/services/thiruvannamalai-girivalam-trip/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-m3-primary-container/40 transition-colors group/item" role="menuitem">
@@ -2470,6 +2478,17 @@ const unifiedSchemaGraph = {
               <span>kalidasstravels2015@gmail.com</span>
             </a>
             <!--/email_off-->
+            {tripadvisorBusinessUrl && (
+              <a
+                href={tripadvisorBusinessUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center gap-2 text-xs text-m3-inverse-on-surface/80 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs"
+              >
+                <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <span>Reviews on Tripadvisor</span>
+              </a>
+            )}
           </div>
         </div>
       </div>

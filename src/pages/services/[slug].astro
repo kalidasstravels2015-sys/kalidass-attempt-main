@@ -1443,6 +1443,18 @@ const dynamicPriceRange = offersData
 // Construct Schema.org structured data
 const pageSchemas: any[] = [];
 
+const compactOffersSummary = offersData
+  ? {
+      "@type": "AggregateOffer",
+      "priceCurrency": "INR",
+      "lowPrice": offersData.lowPrice,
+      "highPrice": offersData.highPrice,
+      "offerCount": offersData.offerCount,
+      "availability": "https://schema.org/InStock",
+      "url": `https://kalidasstravels.in/services/${service.slug}/`
+    }
+  : null;
+
 if (isTour) {
   // 1. TaxiService node: handles commercial cab booking, vehicle rates & mobility
   const taxiServiceSchema: Record<string, any> = {
@@ -1462,7 +1474,8 @@ if (isTour) {
     "termsOfService": "https://kalidasstravels.in/terms/"
   };
   if (offersData) {
-    taxiServiceSchema.offers = offersData;
+    // Keep full offers on Product for non-weekend tours to avoid 3x JSON-LD bloat
+    taxiServiceSchema.offers = isWeekendTrip ? offersData : compactOffersSummary;
   }
   pageSchemas.push(taxiServiceSchema);
 
@@ -1496,8 +1509,8 @@ if (isTour) {
       }))
     };
   }
-  if (offersData) {
-    touristTripSchema.offers = offersData;
+  if (compactOffersSummary) {
+    touristTripSchema.offers = compactOffersSummary;
   }
   pageSchemas.push(touristTripSchema);
 
@@ -1741,7 +1754,7 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
               <Breadcrumbs items={breadcrumbItems} />
             </div>
             <div class="hidden lg:block">
-              <Breadcrumbs items={breadcrumbItems} variant="dark" />
+              <Breadcrumbs items={breadcrumbItems} variant="dark" skipSchema={true} />
             </div>
           </div>
 
@@ -3327,6 +3340,122 @@ Please share availability and confirmed quote.`;
                 ))}
               </tbody>
             </table>
+          </div>
+        </section>
+      )}
+
+      {/* CHENNAI TO SABARIMALAI COMPLETE ROUTE, DISTANCE & HOW-TO-REACH GUIDE */}
+      {isSabarimala && (
+        <section
+          id="sabarimalai-route-guide"
+          aria-label="Chennai to Sabarimalai Distance, Route and Travel Guide"
+          class="bg-m3-surface rounded-m3-2xl border border-m3-outline-variant shadow-m3-1 p-5 sm:p-7 space-y-5 scroll-mt-40"
+        >
+          <div class="border-b border-m3-outline-variant/60 pb-3">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-primary-container text-m3-on-primary-container text-xs font-bold uppercase tracking-wider mb-2">
+              <Compass className="w-3.5 h-3.5 shrink-0" />
+              <span>2026–27 Mandala &amp; Makaravilakku Route Guide</span>
+            </span>
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-m3-on-surface font-heading tracking-tight">
+              Chennai to Sabarimalai (Sabarimala) Distance, Route &amp; How to Reach
+            </h2>
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1 leading-relaxed">
+              Complete road travel briefing for Ayyappa devotees planning a <strong>Chennai to Sabarimalai</strong> pilgrimage by private cab, SUV, or Tempo Traveller to <strong>Nilakkal (Nilackal)</strong> and <strong>Pamba (Pampa)</strong>.
+            </p>
+          </div>
+
+          {/* Quick Facts Grid */}
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <div class="p-3 sm:p-4 rounded-m3-xl bg-m3-surface-container-low border border-m3-outline-variant">
+              <p class="text-[11px] font-bold uppercase tracking-wider text-m3-on-surface-variant">Road Distance</p>
+              <p class="text-sm sm:text-base font-extrabold text-m3-on-surface font-heading mt-1">~680 – 720 km</p>
+              <p class="text-xs text-m3-on-surface-variant mt-0.5">One-way (~1,350–1,450 km round trip)</p>
+            </div>
+            <div class="p-3 sm:p-4 rounded-m3-xl bg-m3-surface-container-low border border-m3-outline-variant">
+              <p class="text-[11px] font-bold uppercase tracking-wider text-m3-on-surface-variant">Driving Time</p>
+              <p class="text-sm sm:text-base font-extrabold text-m3-on-surface font-heading mt-1">13 – 15 Hours</p>
+              <p class="text-xs text-m3-on-surface-variant mt-0.5">Via NH-38 Trichy – Kumily highway</p>
+            </div>
+            <div class="p-3 sm:p-4 rounded-m3-xl bg-m3-surface-container-low border border-m3-outline-variant">
+              <p class="text-[11px] font-bold uppercase tracking-wider text-m3-on-surface-variant">Cab Drop Point</p>
+              <p class="text-sm sm:text-base font-extrabold text-m3-on-surface font-heading mt-1">Nilakkal Base Camp</p>
+              <p class="text-xs text-m3-on-surface-variant mt-0.5">KSRTC electric shuttle to Pamba (18 km)</p>
+            </div>
+            <div class="p-3 sm:p-4 rounded-m3-xl bg-m3-surface-container-low border border-m3-outline-variant">
+              <p class="text-[11px] font-bold uppercase tracking-wider text-m3-on-surface-variant">Peak Season</p>
+              <p class="text-sm sm:text-base font-extrabold text-m3-on-surface font-heading mt-1">Nov – Jan</p>
+              <p class="text-xs text-m3-on-surface-variant mt-0.5">Mandala Pooja &amp; Makaravilakku</p>
+            </div>
+          </div>
+
+          {/* Two Best Driving Routes */}
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 rounded-m3-xl bg-m3-surface-container-low border border-m3-outline-variant space-y-2">
+              <h3 class="text-sm sm:text-base font-bold text-m3-on-surface font-heading">
+                Route 1: Fastest Highway (Via Kumily — ~690 km)
+              </h3>
+              <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed">
+                <strong>Chennai → Tindivanam → Trichy → Dindigul → Theni → Kumily → Vandiperiyar → Nilakkal (Nilackal).</strong> Preferred for smooth 4-lane NH-38 driving, clean pure-veg highway restaurants, and direct entry into the Pathanamthitta hill corridor.
+              </p>
+            </div>
+            <div class="p-4 rounded-m3-xl bg-m3-surface-container-low border border-m3-outline-variant space-y-2">
+              <h3 class="text-sm sm:text-base font-bold text-m3-on-surface font-heading">
+                Route 2: Traditional Erumeli Circuit (~720 km)
+              </h3>
+              <p class="text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed">
+                <strong>Chennai → Salem → Coimbatore / Dindigul → Kottayam / Kanjirappally → Erumeli → Nilakkal.</strong> Ideal for devotees performing traditional <em>Petta Thullal</em> at Erumeli Sree Dharma Sastha Temple and Vavar Shrine before ascending to Pamba.
+              </p>
+            </div>
+          </div>
+
+          {/* Multi-Modal Comparison Table (Why Private Cab Beats Train / Bus / Flight) */}
+          <div class="space-y-2">
+            <h3 class="text-base sm:text-lg font-bold text-m3-on-surface font-heading">
+              Why Devotees Prefer a Private Cab Over Train, Bus or Flight to Sabarimalai
+            </h3>
+            <div class="overflow-x-auto rounded-m3-xl border border-m3-outline-variant">
+              <table class="w-full text-left text-xs sm:text-sm font-sans border-collapse">
+                <thead class="bg-m3-surface-container text-m3-on-surface-variant font-bold uppercase tracking-wider text-xs">
+                  <tr>
+                    <th class="p-2.5 sm:p-3.5">Travel Option</th>
+                    <th class="p-2.5 sm:p-3.5">Drop Point</th>
+                    <th class="p-2.5 sm:p-3.5">Total Time</th>
+                    <th class="p-2.5 sm:p-3.5">Pilgrim Experience &amp; Practicality</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-m3-outline-variant text-m3-on-surface">
+                  <tr class="bg-m3-success-container/15">
+                    <td class="p-2.5 sm:p-3.5 font-bold">Private Cab / Tempo Traveller (Kalidass)</td>
+                    <td class="p-2.5 sm:p-3.5 font-semibold">Direct to Nilakkal Base Camp (+ Erumeli stop)</td>
+                    <td class="p-2.5 sm:p-3.5 whitespace-nowrap font-semibold">13 – 15 hrs</td>
+                    <td class="p-2.5 sm:p-3.5 font-medium">Doorstep Chennai pickup, safe <em>Irumudi</em> storage, pure-veg halts, flexible darshan pacing, and your cab waits at Nilakkal for the return trip.</td>
+                  </tr>
+                  <tr>
+                    <td class="p-2.5 sm:p-3.5 font-semibold">Train (No Direct Station)</td>
+                    <td class="p-2.5 sm:p-3.5">Stops at Chengannur (90 km) or Kottayam (115 km)</td>
+                    <td class="p-2.5 sm:p-3.5 whitespace-nowrap">16 – 19 hrs</td>
+                    <td class="p-2.5 sm:p-3.5 text-m3-on-surface-variant">Heavy Mandala waiting lists, no direct rail access to Sabarimalai, and tiring luggage/<em>Irumudi</em> transfers onto crowded local buses or overpriced station taxis.</td>
+                  </tr>
+                  <tr>
+                    <td class="p-2.5 sm:p-3.5 font-semibold">Public / Private Bus</td>
+                    <td class="p-2.5 sm:p-3.5">Fixed boarding points &amp; rigid schedules</td>
+                    <td class="p-2.5 sm:p-3.5 whitespace-nowrap">15 – 17 hrs</td>
+                    <td class="p-2.5 sm:p-3.5 text-m3-on-surface-variant">Cramped seating for elders, no Erumeli temple stopover, limited luggage space for <em>Irumudi</em>, and no guaranteed wait if darshan queues run late.</td>
+                  </tr>
+                  <tr>
+                    <td class="p-2.5 sm:p-3.5 font-semibold">Flight (No Direct Airport)</td>
+                    <td class="p-2.5 sm:p-3.5">Kochi Airport (165 km) + 5-hr ghat cab</td>
+                    <td class="p-2.5 sm:p-3.5 whitespace-nowrap">7 – 9 hrs</td>
+                    <td class="p-2.5 sm:p-3.5 text-m3-on-surface-variant">High seasonal airfare per person for families/groups, strict baggage rules for <em>Irumudi</em>/ghee coconuts, and still requires hiring a separate 5-hour taxi.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Vehicle & One-Way / Sedan Guidance */}
+          <div class="p-4 rounded-m3-xl bg-m3-primary-container/25 border border-m3-primary/20 text-xs sm:text-sm text-m3-on-surface leading-relaxed">
+            <strong>Choosing the Right Sabarimalai Taxi (SUV vs Sedan &amp; One-Way Drop):</strong> For the steep Western Ghats hairpins between Kumily, Erumeli, and Nilakkal, we recommend high-ground-clearance <strong>Maruti Ertiga, Toyota Innova, Innova Crysta, or 12/17-Seater Tempo Travellers</strong> on a 3–5 day round-trip package so your cab waits safely at Nilakkal. Need a budget <strong>AC Sedan (Dzire / Etios)</strong> for 3–4 devotees or a <strong>one-way drop taxi</strong> from Chennai to Nilakkal, Chengannur, or Kottayam? Call or WhatsApp our 24/7 desk for an instant custom fare.
           </div>
         </section>
       )}
