@@ -47,18 +47,18 @@ export function buildDriverDutySlipMessage(params: {
     ? `Collect ₹${params.collectionAmount.toLocaleString('en-IN')} + Tolls + Parking at the end of the trip.`
     : 'All Paid Online / ₹0 to collect (+ Tolls/Parking as per slip).';
 
-  return `🚖 NEW DUTY - KALIDASS TRAVELS
+  return `*NEW DUTY - KALIDASS TRAVELS*
 
-• Pickup Time: ${safePickupTime}
-• Pickup: ${pickup}${drop}
+- Pickup Time: ${safePickupTime}
+- Pickup: ${pickup}${drop}
 
-• Guest: ${params.guestName}
-• Phone: ${params.guestPhone.startsWith('+') ? params.guestPhone : `+91 ${params.guestPhone}`}
+- Guest: ${params.guestName}
+- Phone: ${params.guestPhone.startsWith('+') ? params.guestPhone : `+91 ${params.guestPhone}`}
 
-• Vehicle: ${params.vehicleName}${params.vehiclePlate ? ` (${params.vehiclePlate})` : ''}
-• Driver: Mr. ${params.driverName}
+- Vehicle: ${params.vehicleName}${params.vehiclePlate ? ` (${params.vehiclePlate})` : ''}
+- Driver: Mr. ${params.driverName}
 
-💵 Collection Amount:
+*Amount to Collect:*
 ${collectionStr}`;
 }
 

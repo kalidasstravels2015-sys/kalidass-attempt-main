@@ -58,6 +58,10 @@ export function cleanWhatsAppText(text) {
     return `KT/${dd}${mUpper}/${String(seq).padStart(2, '0')}`;
   });
 
+  // 10b. Strip all emojis and icon characters from WhatsApp messages
+  clean = clean.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0E}\u{FE0F}\u{200D}]/gu, '');
+  clean = clean.replace(/^[ \t]+/gm, '');
+
   // 11. Collapse multiple consecutive empty lines to maximum 2
   clean = clean.replace(/\n{3,}/g, '\n\n');
 

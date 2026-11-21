@@ -956,26 +956,19 @@ To confirm booking:
 
   // Send WA Duty Offer WITHOUT revealing customer phone number (before assignment)
   const handleSendDriverDutyOffer = (driver, trip) => {
-    const math = computeSettlementMath(trip, assignCommissionPct);
+    const balanceToCollect = Number(trip.balance ?? Math.max(0, (Number(trip.agreedRate) || 0) - (Number(trip.advance) || 0)));
     const text = `*KALIDASS TRAVELS — DUTY AVAILABILITY CHECK*
-Namaskaram *${driver.name}* (${driver.vehicle} • ${driver.plate}),
+Namaskaram *${driver.name}* (${driver.vehicle} - ${driver.plate}),
 Are you available for this upcoming trip?
 
-📅 *Date & Time:* ${trip.pickupDate || 'Today'} @ ${trip.pickupTime || 'ASAP'}
-📍 *Pickup Area:* ${trip.pickupLocation || 'Chennai'}
-🏁 *Route / Drop:* ${trip.dropLocation || trip.route}
-🚖 *Required Cab:* ${trip.vehicle} (${trip.tripCategory})
+*Date & Time:* ${trip.pickupDate || 'Today'} @ ${trip.pickupTime || 'ASAP'}
+*Pickup Area:* ${trip.pickupLocation || 'Chennai'}
+*Route / Drop:* ${trip.dropLocation || trip.route}
+*Required Cab:* ${trip.vehicle} (${trip.tripCategory})
 
-💰 *Total Trip Fare:* ₹${math.fare.toLocaleString('en-IN')}
-🏢 *Agency Commission (${math.pct}%):* ₹${math.commissionAmt.toLocaleString('en-IN')}
-💵 *Your Net Share (90%):* ₹${math.driverNetShare.toLocaleString('en-IN')} (+ Tolls/Parking actuals)
-${
-  math.settlementDirection === 'DRIVER_PAYS_OFFICE'
-    ? `📲 *Customer Balance You Collect:* ₹${math.customerBalanceToDriver.toLocaleString('en-IN')} (Settle ₹${math.settlementAmount.toLocaleString('en-IN')} to Office)`
-    : `📲 *Customer Balance You Collect:* ₹${math.customerBalanceToDriver.toLocaleString('en-IN')} (Office pays you ₹${math.settlementAmount.toLocaleString('en-IN')})`
-}
+*Amount to Collect:* *₹${balanceToCollect.toLocaleString('en-IN')}${trip.tollPolicy === 'All-Inclusive' ? ' (All-Inclusive)' : ' + Toll & Parking (Actuals)'}*
 
-*Reply YES immediately to lock this duty & receive Passenger Contact Slip!*`;
+*Reply YES immediately to lock this duty & receive Passenger Contact Slip.*`;
 
     let phone = (driver.phone || '').replace(/\D/g, '');
     if (phone.length === 10) phone = '91' + phone;
@@ -1027,20 +1020,20 @@ ${
 
   const handleSendCustomerConfirmation = (trip) => {
     const dateLine = trip.returnDate && trip.returnDate !== trip.pickupDate
-      ? `${formatShortDate(trip.pickupDate, true)} → ${formatShortDate(trip.returnDate, true)} (${trip.days || computeTripDays(trip.pickupDate, trip.returnDate)} Days) @ ${trip.pickupTime || 'ASAP'}`
+      ? `${formatShortDate(trip.pickupDate, true)} to ${formatShortDate(trip.returnDate, true)} (${trip.days || computeTripDays(trip.pickupDate, trip.returnDate)} Days) @ ${trip.pickupTime || 'ASAP'}`
       : `${trip.pickupDate} @ ${trip.pickupTime}`;
 
     const text = `*KALIDASS TRAVELS — TRIP CONFIRMATION*
-Dear ${trip.customerName}, your booking is confirmed!${trip.quoteRef ? ` (Ref: ${trip.quoteRef})` : ''}
+Dear ${trip.customerName}, your booking is confirmed.${trip.quoteRef ? ` (Ref: ${trip.quoteRef})` : ''}
 
-🚖 *Vehicle:* ${trip.vehicle} (${trip.vehicleNumber || 'Confirmed'})
-👨‍✈️ *Driver Name:* ${trip.driverName || 'Designated Chauffeur'}
-📞 *Driver Contact:* ${trip.driverPhone ? formatPhoneForDisplay(trip.driverPhone) : 'Will call you before arrival'}
-📅 *Schedule:* ${dateLine}
-📍 *Pickup Address:* ${trip.pickupLocation || 'Chennai'}
-🏁 *Route:* ${trip.dropLocation || trip.route}
+*Vehicle:* ${trip.vehicle} (${trip.vehicleNumber || 'Confirmed'})
+*Driver Name:* ${trip.driverName || 'Designated Chauffeur'}
+*Driver Contact:* ${trip.driverPhone ? formatPhoneForDisplay(trip.driverPhone) : 'Will call you before arrival'}
+*Schedule:* ${dateLine}
+*Pickup Address:* ${trip.pickupLocation || 'Chennai'}
+*Route:* ${trip.dropLocation || trip.route}
 
-Our chauffeur will report on time and assist with your luggage. Have a comfortable and pleasant journey!
+Our chauffeur will report on time and assist with your luggage. Have a comfortable and pleasant journey.
 *For any queries/changes:* +91 89395 39211`;
 
     window.open(buildWhatsAppUrl(trip.phone, text), '_blank');
@@ -1061,14 +1054,14 @@ Our chauffeur will report on time and assist with your luggage. Have a comfortab
 
   const handleSendGoogleReviewRequest = (trip) => {
     const text = `Dear ${trip.customerName},
-Thank you for travelling with Kalidass Travels!
+Thank you for travelling with Kalidass Travels.
 
 We hope you had a peaceful and smooth journey with chauffeur ${trip.driverName || 'our driver'}.
 
 Could you please take 30 seconds to share your experience on Google? Your review means the world to our family-run team:
-⭐️ ${GOOGLE_REVIEW_URL}
+${GOOGLE_REVIEW_URL}
 
-We look forward to serving you and your family again!
+We look forward to serving you and your family again.
 Warm regards,
 *Kalidass Travels, Chennai*`;
 

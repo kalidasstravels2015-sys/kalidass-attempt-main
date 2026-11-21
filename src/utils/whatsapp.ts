@@ -105,9 +105,9 @@ export function buildMapsBlock(
   const { pickupPin, directions } = buildMapsLinks(pickup, drop, tripType);
   if (!pickupPin && !directions) return '';
   return (
-    `\n\n🗺️ NAVIGATION LINKS:\n` +
-    (pickupPin  ? `• 📍 Pickup Pin: ${pickupPin}\n`  : '') +
-    (directions ? `• 🧭 Route Map: ${directions}`    : '')
+    `\n\nNAVIGATION LINKS:\n` +
+    (pickupPin  ? `- Pickup Pin: ${pickupPin}\n`  : '') +
+    (directions ? `- Route Map: ${directions}`    : '')
   );
 }
 
