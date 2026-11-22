@@ -882,7 +882,7 @@ export default function DirectBookingIntakeForm({
 
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
-                Quote Ref <span className="text-slate-400 font-normal">(Auto-filled)</span>
+                Trip / Ref ID <span className="text-slate-400 font-normal">(Auto-filled or next seq)</span>
               </label>
               <input
                 type="text"

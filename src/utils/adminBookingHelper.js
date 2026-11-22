@@ -42,6 +42,33 @@ const MONTH_MAP = {
 // PHONE & WHATSAPP HELPERS (INTERNATIONAL SAFE)
 // ==========================================
 
+const MONTH_SHORT_UPPER = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+
+/**
+ * Normalizes any quotation/booking reference into the single unified KT/DDMMM/NN format
+ * (e.g. "Q-221126-7" -> "KT/22NOV/07", "#kt/22nov/07" -> "KT/22NOV/07").
+ */
+export function normalizeUnifiedTripId(rawId = '') {
+  const s = String(rawId || '').trim().replace(/^#+/, '').trim();
+  if (!s) return '';
+  const qMatch = s.match(/^Q-(\d{2})(\d{2})\d{2}-(\d+)$/i);
+  if (qMatch) {
+    const dd = qMatch[1];
+    const mmIdx = Math.max(0, Math.min(11, parseInt(qMatch[2], 10) - 1));
+    const seq = String(parseInt(qMatch[3], 10)).padStart(2, '0');
+    return `KT/${dd}${MONTH_SHORT_UPPER[mmIdx] || 'NOV'}/${seq}`;
+  }
+  const ktMatch = s.match(/^KT\/(\d{1,2})([A-Za-z]{3})\/0*(\d+)(.*)$/i);
+  if (ktMatch) {
+    const dd = ktMatch[1].padStart(2, '0');
+    const mon = ktMatch[2].toUpperCase();
+    const seq = String(parseInt(ktMatch[3], 10)).padStart(2, '0');
+    const suffix = (ktMatch[4] || '').trim();
+    return `KT/${dd}${mon}/${seq}${suffix}`;
+  }
+  return s.toUpperCase();
+}
+
 export function normalizePhoneNumber(raw) {
   const s = String(raw || '').trim();
   if (!s) return '';
@@ -497,7 +524,7 @@ export function parseWhatsAppBookingText(rawText, tariffConfig = {}) {
   // 1. Quote Ref (e.g., Ref: Q-141126-4, Ref: KT/19NOV/02, Quote Ref: #...)
   const refMatch = text.match(/(?:Quote\s*Ref|Ref)\s*[:#-]?\s*([A-Za-z0-9#/_-]{4,})/i);
   if (refMatch) {
-    parsed.quoteRef = refMatch[1].replace(/[)*.]+$/, '').trim();
+    parsed.quoteRef = normalizeUnifiedTripId(refMatch[1].replace(/[)*.]+$/, '').trim());
     highlights.push(`Ref: ${parsed.quoteRef}`);
   }
 
@@ -827,9 +854,10 @@ export function buildCustomerBookingSummaryWA(trip) {
     ? `${formatShortDate(trip.pickupDate, true)} to ${formatShortDate(trip.returnDate, true)} (${trip.days || computeTripDays(trip.pickupDate, trip.returnDate)} Days)`
     : `${formatShortDate(trip.pickupDate, true) || trip.pickupDate}${trip.pickupTime ? ` @ ${trip.pickupTime}` : ''}`;
 
+  const unifiedId = normalizeUnifiedTripId(trip.id || trip.quoteRef) || trip.id;
   const lines = [
     `*KALIDASS TRAVELS — BOOKING SUMMARY*`,
-    `Booking ID: *#${trip.id}*${trip.quoteRef ? ` (Ref: ${trip.quoteRef})` : ''}`,
+    `Ref: *${unifiedId}*`,
     ``,
     `*Booker:* ${trip.customerName}`,
   ];
@@ -884,9 +912,10 @@ export function buildEnhancedDriverDutySlipWA(trip) {
     ? `${formatShortDate(trip.pickupDate, true)} to ${formatShortDate(trip.returnDate, true)} (${trip.days || computeTripDays(trip.pickupDate, trip.returnDate)} Days) @ ${trip.pickupTime || 'ASAP'}`
     : `${formatShortDate(trip.pickupDate, true) || trip.pickupDate} @ ${trip.pickupTime || 'ASAP'}`;
 
+  const unifiedId = normalizeUnifiedTripId(trip.id || trip.quoteRef) || trip.id;
   const lines = [
     `*DUTY SLIP — KALIDASS TRAVELS*`,
-    `Trip ID: #${trip.id}${trip.quoteRef ? ` | Ref: ${trip.quoteRef}` : ''}`,
+    `Ref: *${unifiedId}*`,
     ``,
     `*Pickup:* ${dateLine}`,
   ];
@@ -939,9 +968,10 @@ export function buildEnhancedDriverDutySlipWA(trip) {
 }
 
 export function buildFollowUpReminderWA(trip) {
+  const unifiedId = normalizeUnifiedTripId(trip.id || trip.quoteRef) || trip.id;
   return `Vanakkam ${trip.customerName} Sir/Mam,
 
-Following up on your enquiry with *Kalidass Travels* for *${trip.vehicle}* (${trip.dropLocation || trip.route || trip.tripCategory})${trip.pickupDate ? ` on ${formatShortDate(trip.pickupDate, true)}` : ''}.
+Following up on your enquiry${unifiedId ? ` (Ref: *${unifiedId}*)` : ''} with *Kalidass Travels* for *${trip.vehicle}* (${trip.dropLocation || trip.route || trip.tripCategory})${trip.pickupDate ? ` on ${formatShortDate(trip.pickupDate, true)}` : ''}.
 
 Have your travel plans been finalized? Please let us know if you would like us to reserve the vehicle for your dates.
 

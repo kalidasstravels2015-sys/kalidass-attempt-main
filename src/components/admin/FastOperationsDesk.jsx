@@ -23,7 +23,8 @@ import {
   shouldAutoMoveToOnTrip,
   isOverdueWithoutDriver,
   parseWhatsAppBookingText,
-  normalizePhoneNumber
+  normalizePhoneNumber,
+  normalizeUnifiedTripId
 } from '../../utils/adminBookingHelper.js';
 import {
   VEHICLE_CATEGORIES,
@@ -265,8 +266,19 @@ function doPost(e) {
   var trip = data.trip;
   if (!trip && (data.bookingId || data.type === 'booking')) {
     var rawPhone = data.phone || (data.guestNamePhone ? String(data.guestNamePhone).replace(/[^0-9]/g, '').slice(-10) : '');
+    var rawBid = String(data.bookingId || "").trim().replace(/^#+/, "");
+    var qm = rawBid.match(/^Q-(\d{2})(\d{2})\d{2}-(\d+)$/i);
+    if (qm) {
+      var mArr = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+      var mIdx = Math.max(0, Math.min(11, parseInt(qm[2], 10) - 1));
+      var seqPad = String(parseInt(qm[3], 10));
+      if (seqPad.length < 2) seqPad = "0" + seqPad;
+      rawBid = "KT/" + qm[1] + (mArr[mIdx] || "NOV") + "/" + seqPad;
+    }
+    var finalWebId = rawBid || ("KT-WEB-" + Date.now());
     trip = {
-      id: data.bookingId || ("KT-WEB-" + Date.now()),
+      id: finalWebId,
+      quoteRef: finalWebId,
       customerName: data.name || (data.guestNamePhone ? String(data.guestNamePhone).split('(')[0].trim() : 'Website Guest'),
       phone: rawPhone,
       tripCategory: data.package || data.tripCategory || 'Website Lead',
@@ -989,32 +1001,60 @@ To confirm booking:
     }
   }, []);
 
-  const handleSaveNewBooking = (payload, { sendWhatsApp = false } = {}) => {
-    const newId = `KT-${getFormattedDateCode()}-${String(trips.length + 101).slice(-3)}`;
-    const newTrip = {
-      ...payload,
-      id: newId,
-      driverName: '',
-      driverPhone: '',
-      vehicleNumber: '',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
+  const handleSaveNewBooking = async (payload, { sendWhatsApp = false } = {}) => {
+    const providedRef = normalizeUnifiedTripId(payload.quoteRef || '');
+    const unifiedId = providedRef || (await claimAtomicQuoteRef());
+    const nowIso = new Date().toISOString();
 
-    const updated = [newTrip, ...trips];
+    const existingTrip = trips.find(
+      t =>
+        String(t.id || '').trim().toLowerCase() === unifiedId.toLowerCase() ||
+        (t.quoteRef && String(t.quoteRef).trim().toLowerCase() === unifiedId.toLowerCase())
+    );
+
+    const savedTrip = existingTrip
+      ? {
+          ...existingTrip,
+          ...payload,
+          id: unifiedId,
+          quoteRef: unifiedId,
+          driverName: existingTrip.driverName || '',
+          driverPhone: existingTrip.driverPhone || '',
+          vehicleNumber: existingTrip.vehicleNumber || '',
+          createdAt: existingTrip.createdAt || nowIso,
+          updatedAt: nowIso
+        }
+      : {
+          ...payload,
+          id: unifiedId,
+          quoteRef: unifiedId,
+          driverName: '',
+          driverPhone: '',
+          vehicleNumber: '',
+          createdAt: nowIso,
+          updatedAt: nowIso
+        };
+
+    const updated = existingTrip
+      ? trips.map(t => (t.id === existingTrip.id ? savedTrip : t))
+      : [savedTrip, ...trips];
     setTrips(updated);
-    saveTripToGoogleSheet(newTrip);
+    saveTripToGoogleSheet(savedTrip);
     setBookingPrefill(null);
 
     if (sendWhatsApp) {
-      const waText = buildCustomerBookingSummaryWA(newTrip);
-      window.open(buildWhatsAppUrl(newTrip.phone, waText), '_blank');
+      const waText = buildCustomerBookingSummaryWA(savedTrip);
+      window.open(buildWhatsAppUrl(savedTrip.phone, waText), '_blank');
     }
 
+    const stageLabel =
+      normalizeManifestStatus(savedTrip.manifestStatus) === 'Quotation'
+        ? '1. Quotation / Enquiry'
+        : '2. Confirmed';
     showToast(
-      normalizeManifestStatus(newTrip.manifestStatus) === 'Quotation'
-        ? `Quotation ${newId} saved to 1. Quotation / Enquiry!`
-        : `Booking ${newId} saved to 2. Confirmed!`
+      existingTrip
+        ? `${unifiedId} updated & promoted to ${stageLabel}!`
+        : `${unifiedId} saved to ${stageLabel}!`
     );
     navigateTo('dispatch');
   };
@@ -1289,7 +1329,7 @@ Are you available for this upcoming trip?
       : `${trip.pickupDate} @ ${trip.pickupTime}`;
 
     const text = `*KALIDASS TRAVELS — TRIP CONFIRMATION*
-Dear ${trip.customerName}, your booking is confirmed.${trip.quoteRef ? ` (Ref: ${trip.quoteRef})` : ''}
+Dear ${trip.customerName}, your booking is confirmed. (Ref: *${trip.id}*)
 
 *Vehicle:* ${trip.vehicle} (${trip.vehicleNumber || 'Confirmed'})
 *Driver Name:* ${trip.driverName || 'Designated Chauffeur'}
@@ -2270,7 +2310,7 @@ Warm regards,
                               <div className="min-w-0">
                                 <div className="flex items-center gap-1.5 flex-wrap">
                                   <h4 className="font-bold text-xs text-slate-900 truncate">{trip.customerName}</h4>
-                                  <span className="text-[10px] font-mono text-slate-400">#{trip.id}</span>
+                                  <span className="text-[10px] font-mono font-bold text-slate-500">{trip.id}</span>
                                 </div>
                                 {trip.phone ? (
                                   <a
@@ -2413,7 +2453,7 @@ Warm regards,
                                   Needs Driver Assignment
                                 </span>
                               )}
-                              <span className="text-[10px] font-mono text-slate-400 shrink-0">#{trip.id}</span>
+                              <span className="text-[10px] font-mono font-bold text-slate-500 shrink-0">{trip.id}</span>
                             </div>
 
                             <div className="flex items-start justify-between gap-2">
@@ -2753,7 +2793,7 @@ Warm regards,
                             <div className="flex items-start justify-between gap-2">
                               <div className="min-w-0">
                                 <h4 className="font-bold text-xs text-slate-900 truncate">{trip.customerName}</h4>
-                                <span className="text-[10px] text-slate-500 font-mono">#{trip.id} • {trip.vehicle}</span>
+                                <span className="text-[10px] text-slate-500 font-mono">{trip.id} • {trip.vehicle}</span>
                               </div>
                               <div className="text-right shrink-0">
                                 <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold text-[10px] rounded font-mono">

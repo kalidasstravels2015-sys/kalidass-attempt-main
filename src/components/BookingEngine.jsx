@@ -1454,7 +1454,7 @@ export default function BookingEngine({
   // Dispatches booking intent to server & Google Sheets before launching WhatsApp
   const handleWhatsAppBookClick = (vehicleName, fare) => {
     try {
-      const confirmedId = quoteRefId;
+      const confirmedId = formatWhatsAppRefId(quoteRefId);
 
       // 1. Commit and advance sequential counter on centralized server
       if (typeof fetch === 'function') {
